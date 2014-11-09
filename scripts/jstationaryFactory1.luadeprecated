@@ -1,0 +1,519 @@
+
+local boolAllreadyDead=false
+local boolAllreadyStarted=false
+local boolMurdered=true
+local mexID = -666
+SIG_RESET=1
+SIG_MOVE=2
+SIG_WIP=4
+SIG_FOLD=8
+SIG_UNFOLD=16
+
+boolUnDeployed=false
+local boolSafetyFirst=false
+boolMightBeAReset=false
+local boolreVert=false
+--Created
+
+teamID=Spring.GetUnitTeam(unitID)
+center=piece"Main"
+stair =piece "stair"
+dother =piece "dother"
+roof =piece "roof"
+blarot1 =piece "blarot1"
+blarot2 =piece "blarot2"
+blarot3 =piece "blarot3"
+blarot4 =piece "blarot4"
+
+blakblade1 =piece "blakblade1"
+blakblade2 =piece "blakblade2"
+blakblade3 =piece "blakblade3"
+blakblade4 =piece "blakblader4"
+buildPoint =piece "buildPoint"
+buildMove=piece "buildmov"
+nanrot1 =piece "nanrot1"
+nanrot2 =piece "nanrot2"
+nanrot3 =piece "nanrot3"
+
+leaveAbsence={}
+for i=1,35,1 do
+	leaveAbsence[i]={}
+	tempEL="leaf"..i
+	leaveAbsence[i]=piece(tempEL)
+
+	end
+
+
+nanemit={}
+for i=1,12,1 do
+nanemit[i]={}
+
+
+temp1="nanemit"..i
+
+
+nanemit[i]=piece(temp1)
+
+
+end
+
+dotter={}
+eggs={}
+for i=1,5,1 do
+dotter[i]={}
+eggs[i]={}
+
+temp1="dotter"..i
+temp2="egg0"..i
+
+dotter[i]=piece(temp1)
+eggs[i]=piece(temp2)
+
+
+end
+
+SIG_MOVE=1
+appendix={}
+for i=1,7,1 do
+appendix[i]={}
+appendix[i+7]={}
+temp1="apendix0"..i
+temp2="sloptec0"..i
+appendix[i]=piece(temp1)
+appendix[i+7]=piece(temp2)
+
+end
+
+feetFetish={}
+for i=1, 6, 1 do
+feetFetish[i]={}
+feetFetish[i][1]={}-- the Upper joint
+feetFetish[i][2]={} -- upper leg
+feetFetish[i][3]={} --lower joint
+feetFetish[i][4]={} --lower leg
+feetFetish[i][5]={} --dirt emitter
+
+temp1= "UpJoin0"..i
+temp2= "UpLeg0"..i
+temp3= "LoJoin0"..i
+temp4= "LoLeg0"..i
+temp5= "DirEmit"..i
+
+feetFetish[i][1]=piece(temp1)-- the Upper joint
+feetFetish[i][2]=piece(temp2) -- upper leg
+feetFetish[i][3]=piece(temp3) --lower joint
+feetFetish[i][4]=piece(temp4) --lower leg
+feetFetish[i][5]=piece(temp5) --dir emitter
+end
+
+
+function wiggleEggs()
+	while(true) do
+		for i=1,table.getn(eggs) do
+		diceBeNice=math.random(0,1)
+			if diceBeNice==1 then
+			randspeed=math.random(0.5,5)
+			x=math.random(-20,20)
+			Turn(eggs[i],x_axis,math.rad(randspeed),randspeed)
+			z=math.random(-20,20)
+			Turn(eggs[i],z_axis,math.rad(randspeed),randspeed)
+			end
+		end
+
+	randI=math.ceil(math.random(100,400))
+	Sleep(randI)
+	end
+end
+
+
+lightEmit=piece "lightEmit"
+function emitLight()
+while(true) do
+EmitSfx(lightEmit,1026)
+Sleep(50)
+end
+end
+
+function fruitLoop()
+while(boolBuilding==true) do
+EmitSfx(lightEmit,1027)
+Sleep(50)
+end
+end
+
+
+function growth()
+	for i=1,35,1 do
+	x=math.random(0,360)
+	y=math.random(0,360)
+	z=math.random(0,360)
+	randSpeed=math.random(0.01,0.05)
+	one=math.random(0,7)
+		if one== 1 then 
+		deCidre=math.ceil(math.random(1,34))
+		StartThread(dropLeave,deCidre)
+		end
+	Turn(leaveAbsence[i],x_axis,math.rad(x),randSpeed)
+	Turn(leaveAbsence[i],y_axis,math.rad(y),randSpeed)
+	Turn(leaveAbsence[i],z_axis,math.rad(z),randSpeed)
+	end
+
+
+end
+
+function breath()
+StartThread(emitLight)
+WaitForMove(center,y_axis)
+while(true) do
+
+Move(center,y_axis,-30.75,0.2)
+
+Move(blakblade1,z_axis,-5,1.3)
+Move(blakblade2,z_axis,-5,1.3)
+Move(blakblade3,z_axis,-5,1.3)
+Move(blakblade4,z_axis,-5,1.3)
+LaPlaceDice=math.random(1,6)
+if LaPlaceDice == 2 then growth() end
+
+WaitForMove(center,y_axis)
+Move(center,y_axis,-29.5,0.2)
+
+Move(blakblade1,z_axis,0,1.3)
+Move(blakblade2,z_axis,0,1.3)
+Move(blakblade3,z_axis,0,1.3)
+Move(blakblade4,z_axis,0,1.3)
+
+WaitForMove(center,y_axis)
+end
+end
+boolFolded=true
+function unfold()
+--Spring.Echo("Reaching UNFolD")
+SetSignalMask(SIG_UNFOLD)
+
+
+Show(dotter[5])
+
+Move(dotter[1],y_axis,-65,12.5)
+WaitForMove(dotter[1],y_axis)
+
+Show(dotter[4])
+
+Move(dotter[1],y_axis,-55,12.5)
+WaitForMove(dotter[1],y_axis) 
+Show(dotter[3])
+
+Move(dotter[1],y_axis,-45,12.5)
+WaitForMove(dotter[1],y_axis) 
+Show(dotter[2])
+
+Move(dotter[1],y_axis,-34,12.5)
+ WaitForMove(dotter[1],y_axis) 
+
+Show(dotter[1])
+
+Move(dotter[1],y_axis,0,12.5)
+WaitForMove(dotter[1],y_axis) 
+
+boolFolded=false
+
+
+
+end
+
+function fold(boolInstant)
+--Spring.Echo("ReachingFolD")
+SetSignalMask(SIG_FOLD)
+if boolInstant==true then
+Move(dotter[1],y_axis,-65,0)
+
+for i=1, table.getn(dotter) do
+Hide(dotter[i])
+end
+
+else
+Move(dotter[1],y_axis,-17,17.5)
+ WaitForMove(dotter[1],y_axis) 
+Hide(dotter[1])
+
+Move(dotter[1],y_axis,-34,17.5)
+ WaitForMove(dotter[1],y_axis) 
+Hide(dotter[2])
+
+Move(dotter[1],y_axis,-45,17.5)
+WaitForMove(dotter[1],y_axis) 
+Hide(dotter[3])
+
+Move(dotter[1],y_axis,-55,17.5)
+WaitForMove(dotter[1],y_axis) 
+Hide(dotter[4])
+
+
+Move(dotter[1],y_axis,-65,17.5)
+WaitForMove(dotter[1],y_axis)
+
+
+Hide(dotter[5])
+end
+boolFolded=true
+end
+
+
+upTheValue=0.2
+
+
+
+boolOnlyOnce=true
+function circler()
+----Spring.Echo("Wee Im alive!")
+StartThread(wiggleEggs)
+StartThread(breath)
+----Spring.Echo("Not dead yet!")
+	while(true) do
+----Spring.Echo("Wonna go for a walk!")
+	if boolBuilding==true then 
+		Signal(SIG_FOLD)
+		StartThread(unfold)
+
+		
+----Spring.Echo("I feel happy!")
+					while(boolBuilding==true) do
+				
+----Spring.Echo(budProgress)
+						if budProgress < 0.7 then
+						
+						elseif budProgress >= 0.7 then
+						
+							if boolOnlyOnce==true then 
+							StartThread(fruitLoop)
+							StartThread(positionSetter,budProgress) 
+							end
+						end
+					Sleep(100)
+					end
+		else
+			Signal(SIG_UNFOLD)
+			StartThread(fold,false)
+	
+				while(boolBuilding==false) do
+				
+			
+				Sleep(150)
+				end
+			
+		end
+	Sleep(25)
+	end
+end
+
+
+function wobble()
+	while(true) do
+		while(boolFolded==false) do
+
+
+
+			for i=1,table.getn(dotter),1 do
+			round=math.random(-0.2,0.2)
+			upDown=math.random(-1,1)
+			
+			Move(dotter[i],y_axis,upDown,1.8)
+			Turn(dotter[i],y_axis,math.rad(round),0.12)
+
+			end
+		Sleep(150)
+		WaitForMove(dotter[4],y_axis)
+		end
+	Sleep(100)	
+	end	
+end
+
+budProgress=0
+
+function workInProgress()
+Signal(SIG_WIP)
+SetSignalMask(SIG_WIP)
+buildID=nil
+buildIDofOld=nil
+
+local spGetUnitIsBuilding=Spring.GetUnitIsBuilding
+local spSetUnitNoDraw=Spring.SetUnitNoDraw
+local spGetUnitHealth=Spring.GetUnitHealth
+local spValUnitID=Spring.ValidUnitID
+
+	while(true)do
+	buildID=spGetUnitIsBuilding(unitID)
+			if buildID ~=nil then
+			buildIDofOld=buildID
+		--	spSetUnitNoDraw(buildID,true)
+			_,_,_,_,budProgress=spGetUnitHealth(buildID)
+
+			elseif buildID == nil and buildIDofOld ~= nil and spValUnitID(buildIDofOld)==true then
+			--spSetUnitNoDraw(buildIDofOld,false)
+			buildIDofOld=nil
+			budProgress=0
+	
+			end
+
+	Sleep(120)
+	end
+end
+boolBuilding=false
+
+
+
+
+function waitingGame()
+	while(true) do
+	----Spring.Echo("Alive")
+	----Spring.Echo("BoolRevert",boolreVert)
+					if boolreVert == true  then
+					
+					local x,y,z=Spring.GetUnitPosition (unitID)
+				    local teamID = Spring.GetUnitTeam (unitID)
+					mexID= Spring.CreateUnit("jmfactory1", x, y, z, 0, teamID) 
+					health=Spring.GetUnitHealth(unitID)
+					Spring.SetUnitHealth(mexID,health)	
+					Spring.DestroyUnit (unitID,false,true)
+					end
+					
+	Sleep(1000)
+	end
+end
+
+--Killed
+function script.QueryBuildInfo() 
+
+
+  return (buildPoint)
+  
+end
+
+circVal=1
+counter=0
+function onThreeTurn()
+rand=math.ceil(math.random(1,6))
+counter=(counter+1)%rand
+
+	if counter==0 then 
+	circVal=math.ceil(math.random(1,11))
+	xVal=math.random(0,360)
+	Turn(nanrot1,y_axis,math.rad(xVal),0)
+	Turn(nanrot2,y_axis,math.rad(xVal),0)
+	Turn(nanrot3,y_axis,math.rad(xVal),0)
+	end
+
+end
+
+function script.QueryNanoPiece()
+onThreeTurn()
+
+     return nanemit[circVal]
+end
+
+function script.Activate ( )
+
+
+
+	SetUnitValue(COB.YARD_OPEN, 1)
+	SetUnitValue(COB.INBUILDSTANCE, 1)
+	SetUnitValue(COB.BUGGER_OFF, 1)
+
+	return 1
+  end
+  
+function script.Deactivate ( )
+
+
+
+
+
+	SetUnitValue(COB.YARD_OPEN, 0)
+	SetUnitValue(COB.INBUILDSTANCE, 0)
+	SetUnitValue(COB.BUGGER_OFF, 0)
+	return 0
+  end
+
+  
+function liftFeet(nr)
+Turn(feetFetish[nr][1],x_axis,math.rad(19),1.7)
+Turn(feetFetish[nr][3],x_axis,math.rad(9),1.7)
+
+end
+
+function liftFeet()
+for i=1, table.getn(feetFetish),1 do
+liftFeet(i)
+end
+end
+
+function isBuilding()
+while(true) do
+		if boolMightBeAReset==true then
+		boolMightBeAReset=false
+		StartThread(resetedByBuilding)
+		end
+	
+	
+	if Spring.GetUnitIsBuilding(unitID) ~= nil  then
+	
+	----Spring.Echo("ReseterOffLine")
+	boolMightBeAReset=false
+	end
+	
+Sleep(150)
+end
+
+end
+
+function script.StopBuilding()
+
+	--animation
+
+----Spring.Echo("ReseterOffLine")
+
+boolMightBeAReset=true
+
+end
+function leave()
+	for i=1,35,1 do
+	x=math.random(0,360)
+	y=math.random(0,360)
+	z=math.random(0,360)
+	
+	Turn(leaveAbsence[i],x_axis,math.rad(x),0)
+	Turn(leaveAbsence[i],y_axis,math.rad(y),0)
+	Turn(leaveAbsence[i],z_axis,math.rad(z),0)
+	end
+
+
+
+
+end
+
+function script.Create()
+StartThread(wobble)
+Spin(dother,y_axis,math.rad(2),0.012358)
+Turn(blarot1,y_axis,math.rad(28.3),0)
+Turn(blarot2,y_axis,math.rad(-31.5),0)
+Turn(blarot3,y_axis,math.rad(-149.7),0)
+Turn(blarot4,y_axis,math.rad(-210),0)
+
+leave()
+Turn(stair,z_axis,math.rad(103),1.235813)
+StartThread(fold,true)
+Spin(buildPoint,y_axis,math.rad(22),0.2)
+Spin(buildPoint,x_axis,math.rad(12),0.2)
+Spin(buildPoint,z_axis,math.rad(-15),0.2)
+	
+
+Move(center,y_axis,-30,8.7)
+
+StartThread(isBuilding)
+
+StartThread(circler)
+StartThread(workInProgress)
+StartThread(waitingGame)
+
+end
+

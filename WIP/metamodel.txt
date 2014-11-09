@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autosar:HW_Component xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:autosar="http://autosar/2.0">
+  <topLogic Master="true" UID="1">
+    <HasHWPorts/>
+    <HasHWPorts Adress="2"/>
+    <HasHWPorts Adress="4"/>
+    <Contains Name="MainComponents">
+      <Hold Name="BT"/>
+      <Stores Name="BTUNPACK" UsesPort="//@topLogic.0/@Contains.0/@Hold.0" RUNABLEEVENT="//@topLogic.1/@MustHave/@Holds.1 //@topLogic.1/@MustHave/@Holds.0"/>
+      <Stores Name="RTS" PORTDEFINES="1" RUNABLEEVENT="//@topLogic.0/@MustHave/@Holds.0"/>
+      <Stores Name="LTS" RUNABLEEVENT="//@topLogic.0/@MustHave/@Holds.1"/>
+    </Contains>
+    <Contains Name="DriveComponents">
+      <Stores Name="DRIVEFORWARD" Calls="//@topLogic.0/@Contains.1/@Stores.4" RUNABLEEVENT="//@topLogic.0/@MustHave/@Holds.2"/>
+      <Stores Name="DRIVEBACKWARD" Calls="//@topLogic.0/@Contains.1/@Stores.4" RUNABLEEVENT="//@topLogic.0/@MustHave/@Holds.5"/>
+      <Stores Name="TURN90CW" Calls="//@topLogic.0/@Contains.1/@Stores.4" RUNABLEEVENT="//@topLogic.0/@MustHave/@Holds.3"/>
+      <Stores Name="TURN90CCW" Calls="//@topLogic.0/@Contains.1/@Stores.4" RUNABLEEVENT="//@topLogic.0/@MustHave/@Holds.4"/>
+      <Stores Name="MOTORCTRL" Calls="//@topLogic.0/@Contains.1/@Stores.4"/>
+    </Contains>
+    <MustHave>
+      <RunsOn Name="DRIVE" Executes="//@topLogic.0/@Contains.1/@Stores.1 //@topLogic.0/@Contains.1/@Stores.0 //@topLogic.0/@Contains.1/@Stores.3 //@topLogic.0/@Contains.1/@Stores.2" Consumes="//@topLogic.0/@MustHave/@Holds.5 //@topLogic.0/@MustHave/@Holds.2 //@topLogic.0/@MustHave/@Holds.3 //@topLogic.0/@MustHave/@Holds.4"/>
+      <RunsOn Name="MAIN" Executes="//@topLogic.0/@Contains.0/@Stores.2 //@topLogic.0/@Contains.0/@Stores.0 //@topLogic.0/@Contains.0/@Stores.1" Consumes="//@topLogic.0/@MustHave/@Holds.1 //@topLogic.0/@MustHave/@Holds.0 //@topLogic.1/@MustHave/@Holds.1 //@topLogic.1/@MustHave/@Holds.0" AUTOSTART="true"/>
+      <Holds Name="RT"/>
+      <Holds Name="LT"/>
+      <Holds Name="PD"/>
+      <Holds Name="PL"/>
+      <Holds Name="PR"/>
+      <Holds Name="PB"/>
+    </MustHave>
+  </topLogic>
+  <topLogic>
+    <HasHWPorts Adress="2"/>
+    <Contains>
+      <Hold Name="BT" Connected="//@topLogic.1/@HasHWPorts.0" Protocoll="//@topLogic.1/@Contains.0/@Hold.0"/>
+      <Stores Name="BTPACK" RUNABLEEVENT="//@topLogic.1/@MustHave/@Holds.1 //@topLogic.1/@MustHave/@Holds.0"/>
+    </Contains>
+    <MustHave>
+      <RunsOn Name="Main" Raise="//@topLogic.1/@MustHave/@Holds.1 //@topLogic.1/@MustHave/@Holds.0" Executes="//@topLogic.1/@Contains.0/@Stores.0 //@topLogic.1/@MustHave/@RunsOn.0/@Contains.0">
+        <Contains Name="E2C" ReturnType="VOID"/>
+      </RunsOn>
+      <Holds Name="RB"/>
+      <Holds Name="LB"/>
+    </MustHave>
+  </topLogic>
+</autosar:HW_Component>

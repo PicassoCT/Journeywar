@@ -1,0 +1,150 @@
+center=piece"center"
+rotationspot=piece"rotationspot"
+Carrier3DS=piece"Carrier.3DS"
+Turb1=piece"Turb1"
+Main=piece"Main"
+
+function playRadomBattleSound(Nr,chanceIt)
+local spPlaySoundFile=Spring.PlaySoundFile
+FourString="sounds/gCrubbleHeap/city_battle"
+SecondString=".wav"
+y=1
+if chanceIt==true then
+y=math.random(0,1)
+end
+
+if y==1 then
+	for i=1,Nr,1 do
+	rand=math.random(1,19)
+	resultString=FourString..rand
+	resultString=resultString..SecondString
+	spPlaySoundFile(resultString)
+	napTime=math.random(1700,3500)
+	Sleep(napTime)
+
+	end
+end
+	
+end
+
+function playBattleLoop()
+local spPlaySoundFile=Spring.PlaySoundFile
+dice=math.random(0,1)
+if dice== 1 then
+decDicer=math.random(0,1)
+	if decDicer==1 then
+	spPlaySoundFile("sounds/gCrubbleHeap/battle_loop1.wav")
+	else
+	spPlaySoundFile("sounds/gCrubbleHeap/battle_loop2.wav")
+	end
+else
+
+end
+Sleep(30000)
+end
+
+function soundEmit()
+for i=0,4,1 do
+--firstMinute
+if i==1 then
+StartThread(playRadomBattleSound,12,false)
+playBattleLoop()
+StartThread(playRadomBattleSound,8,false)
+playBattleLoop()
+
+	elseif i==2 then
+	--secondMinute
+	StartThread(playRadomBattleSound,5,false)
+	playBattleLoop()
+	StartThread(playRadomBattleSound,12,true)
+	playBattleLoop()
+		else
+	StartThread(playRadomBattleSound,9,true)
+	Sleep(60000)
+		end
+
+end
+
+end
+
+function script.Create()
+StartThread(Emit)
+Spring.SetUnitNeutral(unitID,true)
+Spring.SetUnitNoSelect(unitID,true)
+Turn(center,x_axis,math.rad(23),0)
+StartThread(dropFromTheSky)
+x=math.random(-360,360)
+Turn(rotationspot,y_axis,math.rad(x),0)
+end
+
+function dropFromTheSky()
+Move(Carrier3DS,z_axis,200,0)
+
+Turn(center,x_axis,math.rad(0),0.010)
+Sleep(31000)
+Spring.PlaySoundFile("sounds/Missions/hornblowImpact.wav") 
+WaitForTurn(center,x_axis)
+Move(Carrier3DS,z_axis,0,350)
+EmitSfx(rotationspot,1026)
+Sleep(100)
+x,y,z=Spring.GetUnitPosition(unitID)
+teamID=Spring.GetUnitTeam(unitID)
+Spring.CreateUnit("gcvehiccorpse",x,y,z, 0,teamID ) 
+Spring.CreateUnit("gcvehiccorpse",x+35,y,z+35, 0,teamID ) 
+Spring.CreateUnit("gcvehiccorpse",x+35,y,z-35, 0,teamID ) 
+Spring.CreateUnit("gcvehiccorpse",x-35,y,z-35, 0,teamID ) 
+Spring.CreateUnit("gcvehiccorpse",x-35,y,z+35, 0,teamID ) 
+Spring.CreateUnit("gmiss1decalfactory",x,y,z, 0,teamID ) 
+--Spring.CreateUnit("gmiss1decalfactory",x,y,z, 0,teamID ) 
+
+EmitSfx(rotationspot,1026)
+for i=1, 500,1 do
+	EmitSfx(rotationspot,1027)
+	EmitSfx(rotationspot,1028)
+	EmitSfx(rotationspot,1024)
+	EmitSfx(rotationspot,1025)
+	EmitSfx(Turb1,1025)
+	EmitSfx(Carrier3DS,1025)
+	Sleep(50)
+	end
+
+
+	
+id1,id2,id3,id4="doa","doa","doa","doa"	
+	for i=1,25,1 do
+	time=math.ceil(math.random(1900,29000))
+		Sleep(time)
+		dx=math.ceil(math.random(-120,120))
+		dz=math.ceil(math.random(-120,120))
+		rot=math.floor(math.random(1,3))
+		
+	Spring.CreateFeature( "bgcorpse", x+dx,y,z+dz, rot)		
+		dx=math.ceil(math.random(-120,120))
+		dz=math.ceil(math.random(-120,120))
+		rot=math.floor(math.random(1,3))
+	Spring.CreateFeature( "cInfantryCorpse", x+dx,y,z+dz, rot)
+		
+	if i%6== 0 then StartThread(soundEmit) end
+
+	end
+	id=Spring.CreateUnit("ccomendernuke",x,y,z, 0,teamID ) 
+	Spring.SetUnitNeutral(id,true)
+	Spring.SetUnitNoSelect(id,true)
+	Sleep(2000)
+	Explode(Main,SFX.SHATTER)
+	Spring.DestroyUnit(unitID,false,true)
+end
+
+function script.Killed()
+
+end
+
+function Emit()
+Sleep(42000)
+local emitor=piece"emitor"
+	while true do
+	EmitSfx(emitor,1029)
+	Sleep(10)
+	end
+
+end

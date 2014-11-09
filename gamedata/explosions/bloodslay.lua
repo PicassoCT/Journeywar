@@ -1,0 +1,86 @@
+-- blood_spray
+
+return {
+  ["bloodslay"] = {
+	blooddrops = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      water              = false,
+      properties = {
+        airdrag            = 1,
+        colormap           = [[0.7 0.1 0.1 .01   0.8 0.1 0.05 .01		0 0 0 0.01]],
+        directional        = true,
+        emitrot            = 0,
+        emitrotspread      = 5,
+        emitvector         = [[0,1,0]],
+        gravity            = [[0, -0.07, 0]],
+        numparticles       = 1,
+        particlelife       = 19,
+        particlelifespread = 4,
+        particlesize       = 0.5,
+        particlesizespread = 1,
+        particlespeed      = 1,
+        particlespeedspread = 0.5,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = [[0.0 r.35]],
+        sizemod            = 1.0,
+        texture            = [[bloodsplat]],
+        useairlos          = false,
+      },
+    },
+		
+	flare = {
+      air                = true,
+      class              = [[CBitmapMuzzleFlame]],
+      ground             = false,
+      water              = true,
+      properties = {
+        colormap           = [[1 1 1 1   1 1 1 1   0 0 0 0]],
+        dir                = [[dir]],
+        frontoffset        = 0,
+        fronttexture       = [[bloodsplat]],
+        length             = 2,
+        sidetexture        = [[bloodsplat]],
+        size               = 3,
+        sizegrowth         = 16,
+        ttl                = 18,
+      },
+    },
+	
+	
+	blooddrops = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      water              = false,
+      properties = {
+        airdrag            = 1,
+        colormap           = [[0.7 0.1 0.1 .01   0.8 0.1 0.05 .01		0 0 0 0.01]],
+        directional        = true,
+        emitrot            = 0,
+        emitrotspread      = 5,
+        emitvector         = [[dir]],
+        gravity            = [[0, -0.07, 0]],
+        numparticles       = 2,
+        particlelife       = 19,
+        particlelifespread = 22,
+        particlesize       = 0.5,
+        particlesizespread = 1,
+        particlespeed      = 1,
+        particlespeedspread = 0.5,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = [[0.0 r.35]],
+        sizemod            = 1.0,
+        texture            = [[gunshot]],
+        useairlos          = false,
+      },
+    },
+		
+	
+	
+  },
+
+}

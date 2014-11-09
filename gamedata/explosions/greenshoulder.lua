@@ -1,0 +1,72 @@
+-- greenshoulder
+
+return {
+  ["greenshoulder"] = {
+    bitmapmuzzleflame = {
+      air                = true,
+      class              = [[CBitmapMuzzleFlame]],
+      count              = 1,
+      ground             = true,
+      underwater         = 1,
+      water              = true,
+      properties = {
+        colormap           = [[1.0 1.0 1.0 0.01	0.0 0.8 0.1 0.01	0.1 0.3 0.1 0.01]],
+        dir                = [[dir]],
+        frontoffset        = 0,
+        fronttexture       = [[flash3]],
+        length             = 10,
+        sidetexture        = [[burstside]],
+        size               = 1,
+        sizegrowth         = 5,
+        ttl                = 10,
+      },
+    },
+    poof = {
+      air                = true,
+      class              = [[heatcloud]],
+      count              = 1,
+      ground             = true,
+      water              = true,
+      properties = {
+        heat               = 10,
+        heatfalloff        = 2,
+        maxheat            = 10,
+        pos                = [[0, 0, 0]],
+        size               = 1,
+        sizegrowth         = 4,
+        speed              = [[0, 0, 0]],
+        texture            = [[greennovaexplo]],
+      },
+    },
+    smoke = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 22,
+      ground             = true,
+      water              = true,
+      properties = {
+        airdrag            = 0.6,
+        alwaysvisible      = true,
+        colormap           = [[0.3 0.5 0.3 0.5   0.4 0.5 0.4 0.3	0.0 0.0 0.0 0.0]],
+        directional        = true,
+        emitrot            = 2,
+        emitrotspread      = 1,
+        emitvector         = [[dir]],
+        gravity            = [[r-0.1 r0.1, r-0.1 r1, r-0.1 r0.1]],
+        numparticles       = 1,
+        particlelife       = 9,
+        particlelifespread = 3,
+        particlesize       = 1,
+        particlesizespread = 3,
+        particlespeed      = [[-2 i1]],
+        particlespeedspread = 2,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = -0.5,
+        sizemod            = 1.0,
+        texture            = [[dirt]],
+      },
+    },
+  },
+
+}
+

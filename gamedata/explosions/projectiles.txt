@@ -1,0 +1,57 @@
+Class: CTracerProjectile.  Scriptname: tracer
+	length: float
+	speed: float3
+	pos: float3
+
+
+Class: CSmokeProjectile2.  Scriptname: smoke2
+	color: float
+	ageSpeed: float
+	size: float
+	startSize: float
+	sizeExpansion: float
+	wantedPos: float3
+	glowFalloff: float
+	speed: float3
+	pos: float3
+
+
+Class: CSmokeProjectile.  Scriptname: smoke
+	color: float
+	size: float
+	startSize: float
+	sizeExpansion: float
+	ageSpeed: float
+	speed: float3
+	pos: float3
+
+
+Class: CHeatCloudProjectile.  Scriptname: heatcloud
+	heat: float
+	maxheat: float
+	heatFalloff: float
+	size: float
+	sizeGrowth: float
+	sizemod: float
+	sizemodmod: float
+	speed: float3
+	pos: float3
+
+
+Class: CGfxProjectile.  Scriptname: gfx
+	creationTime: int
+	lifeTime: int
+	color: uchar[4]
+	speed: float3
+	pos: float3
+
+
+Class: CDirtProjectile.  Scriptname: dirt
+	alpha: float
+	alphaFalloff: float
+	size: float
+	sizeExpansion: float
+	slowdown: float
+	color: float3
+	speed: float3
+	pos: float3

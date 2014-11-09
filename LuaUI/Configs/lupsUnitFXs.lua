@@ -1,0 +1,225 @@
+-- note that the order of the MergeTable args matters for nested tables (such as colormaps)!
+
+local presets = {
+	commandAuraRed = {
+		{class='StaticParticles', options=commandCoronaRed},
+		{class='GroundFlash', options=MergeTable(groundFlashRed, {radiusFactor=3.5,mobile=true,life=60,
+			colormap={ {1, 0.2, 0.2, 1},{1, 0.2, 0.2, 0.85},{1, 0.2, 0.2, 1} }})},
+	},
+	commandAuraOrange = {
+	    {class='StaticParticles', options=commandCoronaOrange},
+		{class='GroundFlash', options=MergeTable(groundFlashOrange, {radiusFactor=3.5,mobile=true,life=math.huge,
+			colormap={ {0.8, 0, 0.2, 1},{0.8, 0, 0.2, 0.85},{0.8, 0, 0.2, 1} }})},
+	},
+	commandAuraGreen = {
+		{class='StaticParticles', options=commandCoronaGreen},
+		{class='GroundFlash', options=MergeTable(groundFlashGreen, {radiusFactor=3.5,mobile=true,life=math.huge,
+			colormap={ {0.2, 1, 0.2, 1},{0.2, 1, 0.2, 0.85},{0.2, 1, 0.2, 1} }})},
+	},
+	commandAuraBlue = {
+		{class='StaticParticles', options=commandCoronaBlue},
+		{class='GroundFlash', options=MergeTable(groundFlashBlue, {radiusFactor=3.5,mobile=true,life=math.huge,
+			colormap={ {0.2, 0.2, 1, 1},{0.2, 0.2, 1, 0.85},{0.2, 0.2, 1, 1} }})},
+	},	
+	commandAuraViolet = {
+		{class='StaticParticles', options=commandCoronaViolet},
+		{class='GroundFlash', options=MergeTable(groundFlashViolet, {radiusFactor=3.5,mobile=true,life=math.huge,
+			colormap={ {0.8, 0, 0.8, 1},{0.8, 0, 0.8, 0.85},{0.8, 0, 0.8, 1} }})},
+	},	
+	
+	commAreaShield = {
+		{class='ShieldJitter', options={delay=0, life=math.huge, heightFactor = 0.75, size=350, strength = .001, precision=50, repeatEffect=true, quality=4}},
+	},
+	
+	commandShieldRed = {
+		{class='ShieldSphere', options=MergeTable({colormap1 = {{1, 0.1, 0.1, 0.6}}, colormap2 = {{1, 0.1, 0.1, 0.15}}}, commandShieldSphere)},
+--		{class='StaticParticles', options=commandCoronaRed},
+--		{class='GroundFlash', options=MergeTable(groundFlashRed, {radiusFactor=3.5,mobile=true,life=60,
+--			colormap={ {1, 0.2, 0.2, 1},{1, 0.2, 0.2, 0.85},{1, 0.2, 0.2, 1} }})},	
+	},
+	commandShieldOrange = {
+		{class='ShieldSphere', options=MergeTable({colormap1 = {{0.8, 0.3, 0.1, 0.6}}, colormap2 = {{0.8, 0.3, 0.1, 0.15}}}, commandShieldSphere)},
+	},	
+	commandShieldGreen = {
+		{class='ShieldSphere', options=MergeTable({colormap1 = {{0.1, 1, 0.1, 0.6}}, colormap2 = {{0.1, 1, 0.1, 0.15}}}, commandShieldSphere)},
+	},
+	commandShieldBlue= {
+		{class='ShieldSphere', options=MergeTable({colormap1 = {{0.1, 0.1, 0.8, 0.6}}, colormap2 = {{0.1, 0.1, 1, 0.15}}}, commandShieldSphere)},
+	},	
+	commandShieldViolet = {
+		{class='ShieldSphere', options=MergeTable({colormap1 = {{0.6, 0.1, 0.75, 0.6}}, colormap2 = {{0.6, 0.1, 0.75, 0.15}}}, commandShieldSphere)},
+	},	
+}
+
+
+effectUnitDefs = {
+
+citadell=  {
+	
+	{class='ShieldSphere', options={life=math.huge, pos={0,496,0}, size=1000, onActive=true, colormap1 = {{0.2, 0.8, 0.9, 0.8}}, repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,496,0}, size=1024,onActive=true, precision=22, strength   = 0.042,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,498,0}, size=5, precision=22, strength   = 0.15,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,613,0}, size=100, precision=22, strength   = 0.005,  repeatEffect=true}},
+  },
+
+jshroudshrike={
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,496,0}, size=  "if Spring.GetUnitIsDead(id)==false then return GG.jShroudShrikes[id] else return math.max(1,GG.jShroudShrikes[id]-25) end end",onActive=true, precision=22, strength   = 0.042,  repeatEffect=true}},
+	 },
+  
+  
+  gvolcano=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,70,0}, size=150, precision=22, strength   = 0.01,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,1200,0}, size=250, precision=22, strength   = 0.005,  repeatEffect=true}},
+ --  	{class='SphereDistortion', options={layer=1, worldspace = true, life=math.huge, pos={0,496,0}, growth=135.5, strength=0.15, repeatEffect=true,  dieGameFrame = math.huge}},--size=1000 precision=22,piece="cishadersp"
+  },  
+ 
+ glava=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength   = 0.015,  repeatEffect=true}},
+	},
+	
+ cairbase=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength   = 0.001,  repeatEffect=true}},
+	},
+	
+ fclvlone=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,35,10}, size=42, precision=22, strength   = 0.003,  repeatEffect=true}},
+	},
+	
+jwatergate=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,45,0}, size=20, precision=22, strength   = 0.015,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,15,0}, size=20, precision=28, strength   = 0.007,  repeatEffect=true}},
+	},
+	
+cwaterextractor=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,116,0}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},
+
+	},
+	
+bbind=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,10,0}, size=96, precision=22, strength   = 0.003,  repeatEffect=true}},
+	},
+
+
+  cgunship=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={-2,5,-31}, size=20, precision=22, strength   = 0.015,  repeatEffect=true}},     
+  },
+  
+  mdigg=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,24,-20}, size=30, precision=22, strength   = 0.005,  repeatEffect=true}},     
+  },
+    
+beanstalk=  {
+	{class='ShieldSphere', options={life=math.huge, pos={0,25,0}, size=300,  colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,150,0}, size=220, colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,300,0}, size=150,   colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,400,0}, size=140,   colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,500,0}, size=130,   colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
+
+	{class='ShieldSphere', options={life=math.huge, pos={0,650,0}, size=120,   colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,700,0}, size=110,   colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,750,0}, size=100,   colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,800,0}, size=90,   colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
+	{class='ShieldSphere', options={life=math.huge, pos={0,850,0}, size=90,   colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},
+
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength   = 0.005,  repeatEffect=true}},     
+  },
+  
+ jestorage=  {
+	{class='ShieldSphere', options={life=math.huge, pos={0,18,2.3}, size=13.57,  colormap1 = {{0.9, 0.6, 0.09, 0.8}}, repeatEffect=true}}
+  },
+ 
+  
+gcvehiccorpsemini=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=5, precision=12, strength   = 0.005,  repeatEffect=true}},     
+  },
+  
+gcvehiccorpse=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=9, precision=22, strength   = 0.005,  repeatEffect=true}},     
+  },
+  
+
+ --{class='ShieldJitter', options={layer=-16, life=math.huge, pos={0,58.9,0}, size=100, precision=22, strength = 0.001, repeatEffect=true}},
+  jbeefeater=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,36,-12.5}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,36,-56 }, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,36,-92}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+  },
+	
+ jbeefeatertail=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,18,44}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,18,22}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+  },
+
+
+  jbeefeatermiddle=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,57}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,92}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,124}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}}, 
+	
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,-37}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,-69}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,-101}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},     
+  }
+  
+ 
+ }
+ 
+ 
+effectUnitDefsXmas = {}
+
+local levelScale = {
+    1,
+    1.1,
+    1.2,
+    1.25,
+    1.3,
+}
+
+-- load presets from unitdefs
+for i=1,#UnitDefs do
+	local unitDef = UnitDefs[i]
+	
+	if unitDef.customParams and unitDef.customParams.commtype then
+		local s = levelScale[tonumber(unitDef.customParams.level) or 1]
+		if unitDef.customParams.commtype == "1" then
+			effectUnitDefsXmas[unitDef.name] = {
+				{class='SantaHat', options={color={0,0.7,0,1}, pos={0,4*s,0.35*s}, emitVector={0.3,1,0.2}, width=2.7*s, height=6*s, ballSize=0.7*s, piece="head"}},
+			}
+		elseif unitDef.customParams.commtype == "2" then
+			effectUnitDefsXmas[unitDef.name] = {
+				{class='SantaHat', options={pos={0,6*s,2*s}, emitVector={0.4,1,0.2}, width=2.7*s, height=6*s, ballSize=0.7*s, piece="head"}},
+			}
+		elseif unitDef.customParams.commtype == "3" then 
+			effectUnitDefsXmas[unitDef.name] = {
+				{class='SantaHat', options={color={0,0.7,0,1}, pos={1.5*s,4*s,0.5*s}, emitVector={0.7,1.6,0.2}, width=2.2*s, height=6*s, ballSize=0.7*s, piece="head"}},
+			}
+		elseif unitDef.customParams.commtype == "4" then 
+			effectUnitDefsXmas[unitDef.name] = {
+				{class='SantaHat', options={pos={0,3.8*s,0.35*s}, emitVector={0,1,0}, width=2.7*s, height=6*s, ballSize=0.7*s, piece="head"}},
+			}
+		elseif unitDef.customParams.commtype == "5" then 
+			effectUnitDefsXmas[unitDef.name] = {
+				{class='SantaHat', options={color={0,0,0.7,1}, pos={0,0,0}, emitVector={0,1,0.1}, width=2.7*s, height=6*s, ballSize=0.7*s, piece="hat"}},
+			}	    
+		elseif unitDef.customParams.commtype == "6" then 
+			effectUnitDefsXmas[unitDef.name] = {
+				{class='SantaHat', options={color={0,0,0.7,1}, pos={0,0,0}, emitVector={0,1,-0.1}, width=4.05*s, height=9*s, ballSize=1.05*s, piece="hat"}},
+			}	    
+		end
+	end
+	
+	if unitDef.customParams then
+		local fxTableStr = unitDef.customParams.lups_unit_fxs
+		if fxTableStr then
+			local fxTableFunc = loadstring("return "..fxTableStr)
+			local fxTable = fxTableFunc()
+			effectUnitDefs[unitDef.name] = effectUnitDefs[unitDef.name] or {}
+			for i=1,#fxTable do	-- for each item in preset table
+				local toAdd = presets[fxTable[i]]
+				for i=1,#toAdd do
+					table.insert(effectUnitDefs[unitDef.name],toAdd[i])	-- append to unit's lupsFX table
+				end
+			end
+		end
+	end
+end

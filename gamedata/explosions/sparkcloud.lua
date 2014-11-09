@@ -1,0 +1,63 @@
+-- dirt
+
+return {
+  ["sparkcloud"] = {
+    sparkcloudg = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 2,
+      ground             = false,
+      properties = {
+        airdrag            = 0.4,
+        alwaysvisible      = true,
+        colormap           = [[0.2 1 0.8 1.0 0.8 1 1 1.0	0 0 0 0.0]],
+        directional        = true,
+        emitrot            = 90,
+        emitrotspread      = 3,
+        emitvector         = [[0, 1, 0]],
+        gravity            = [[0, 0.0 0.0, 0]],
+        numparticles       = 40,
+        particlelife       = 45,
+        particlelifespread = 20,
+        particlesize       = [[22 r4]],
+        particlesizespread = 10,
+        particlespeed      = 5,
+        particlespeedspread = 6,
+        pos                = [[r-0.5 r0.5, 1 r2, r-0.5 r0.5]],
+        sizegrowth         = 1.2,
+        sizemod            = 1.0,
+        texture            = [[sparkcloud]],
+        useairlos          = true,
+      },
+    },
+    sparkcloud = {
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      water              = false,
+      properties = {
+        airdrag            = 0,
+        alwaysvisible      = true,
+        colormap           = [[0.3 1 1 0.5	0.6 0.5 1 0.8	0 0 0 0.0]],
+        directional        = true,
+        emitrot            = 90,
+        emitrotspread      = 0,
+        emitvector         = [[0, 1, 0]],
+        gravity            = [[0, 0.3 r0.3, 0]],
+        numparticles       = 3,
+        particlelife       = 25,
+        particlelifespread = 20,
+        particlesize       = [[7 r4]],
+        particlesizespread = 2,
+        particlespeed      = 20,
+        particlespeedspread = 6,
+        pos                = [[r-0.5 r0.5, 1 r2, r-0.5 r0.5]],
+        sizegrowth         = 1.0,
+        sizemod            = 3.0,
+        texture            = [[sparkcloud]],
+        useairlos          = true,
+      },
+    },
+  },
+
+}
+

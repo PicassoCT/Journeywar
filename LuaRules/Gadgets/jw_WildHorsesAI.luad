@@ -1,0 +1,111 @@
+-- In-game, type /luarules kpai in the console to toggle the ai debug messages
+ 
+function gadget:GetInfo()
+        return {
+                name = "Wild Horses AI",
+                desc = "Generic Emergent AI",
+                author = "Picasso",
+                date = "around since last tuesday",
+                license = "GPL - by reading this you are basically allready infected.",
+                layer = 82,
+                enabled = false
+        }
+end
+ 
+local STATE_EMPTY    =0
+local STATE_OWN      =1
+local STATE_ENEMY    =2
+local STATE_HOMEBASE =3 -- Not used anymore
+local STATE_LOCKED   =4
+ 
+local KPAI_Debug_Mode=0 -- Must be 0 or 1
+ 
+if (gadgetHandler:IsSyncedCode()) then
+ 
+--SYNCED
+ 
+local teamData={}
+local unitPos={}
+local spots={} --GeoVents
+ 
+local orders={}
+
+deducedWeightedBuildTreeJ= {} -- Buildings sorted by priority
+deducedWeightedBuildTreeC= {}
+ 
+ TeamUnitCountyByType  -- Type =priorty/numberInExi
+ 
+ 
+--VFS.Include("LuaRules/Gadgets/kpunittypes.lua",nil)
+
+ 
+local function ChangeAIDebugVerbosity(cmd,line,words,player)
+        local lvl=tonumber(words[1])
+        if lvl then
+                KPAI_Debug_Mode=lvl
+                Spring.Echo("KPAI debug verbosity set to "..KPAI_Debug_Mode)
+        else
+                if KPAI_Debug_Mode>0 then
+                        KPAI_Debug_Mode=0
+                else
+                        KPAI_Debug_Mode=1
+                end
+                Spring.Echo("KPAI debug verbosity toggled to "..KPAI_Debug_Mode)
+        end
+        return true
+end
+ 
+local function SetupCmdChangeAIDebugVerbosity()
+        local cmd,func,help
+        cmd  = "kpai"
+        func = ChangeAIDebugVerbosity
+        help = " [0|1]: make the KP LUA AI shut up or fill your infolog"
+        gadgetHandler:AddChatAction(cmd,func,help)
+        Script.AddActionFallback(cmd..' ',help)
+end
+ 
+local function KPAIDebugMessage(t,message)
+        if(KPAI_Debug_Mode>0) then
+                Spring.Echo("Team["..t.."] "..message)
+        end
+end
+ 
+function gadget:Initialize()
+     
+        SetupCmdChangeAIDebugVerbosity()
+end
+ 
+ 
+function gadget:UnitCreated(u,ud,team,builder)
+end
+ 
+function gadget:UnitDamaged(u,ud,team, damage, para, weapon,attacker,aud,ateam)
+end
+ 
+function gadget:UnitFinished(u, ud, team, builder)
+end
+ 
+function gadget:UnitDestroyed(u,ud,team)
+end
+ 
+function gadget:UnitTaken(u,ud,team,newteam)
+        
+end
+ 
+function gadget:UnitGiven(u,ud,team,oldteam)
+        
+end
+ 
+function gadget:GameFrame(f)
+ 
+end
+ 
+else
+ 
+--UNSYNCED
+ 
+--return false
+ 
+function gadget:DrawWorldPreUnit()
+ 
+end

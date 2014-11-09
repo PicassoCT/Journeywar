@@ -1,0 +1,118 @@
+Turn(tlHead,y_axis,math.rad(37),3)
+	Turn(tlHead,z_axis,math.rad(-8),1.2)
+	Turn(tigLil,x_axis,math.rad(10),1.2)
+	Turn(tigLil,z_axis,math.rad(1),1)
+	--Legs
+	Turn(tllegUpR,x_axis,math.rad(20),1.2)
+	Turn(tllegUpR,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR,z_axis,math.rad(11),1.2)
+	
+	Turn(tllegLowR,x_axis,math.rad(-26),0.3)
+	Turn(tllegLowR,y_axis,math.rad(-6),0.3)
+	Turn(tllegLowR,z_axis,math.rad(0),1.2)
+
+	Turn(tllegUpR01,x_axis,math.rad(-11),1.2)
+	Turn(tllegUpR01,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR01,z_axis,math.rad(5),1.2)
+	
+	Turn(tllegLowR0,x_axis,math.rad(-17),1.2)
+	Turn(tllegLowR0,y_axis,math.rad(-11),1.2)
+	Turn(tllegLowR0,z_axis,math.rad(-4),1.2)
+
+Sleep(220)
+--Spring.Echo("combinedFeatureScript::2")
+	--HeadBody
+	Turn(tlHead,x_axis,math.rad(-19),1.2)
+	Turn(tlHead,y_axis,math.rad(-3),1.2)
+	Turn(tlHead,z_axis,math.rad(1),1.2)
+	Turn(tigLil,x_axis,math.rad(6),0.3)
+	Turn(tigLil,z_axis,math.rad(3),1.2)
+	--Legs
+	Turn(tllegUpR,x_axis,math.rad(8),1.2)
+	Turn(tllegUpR,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR,z_axis,math.rad(11),1.2)
+	
+	Turn(tllegLowR,x_axis,math.rad(-32),1.2)
+	Turn(tllegLowR,y_axis,math.rad(0),1.2)
+	Turn(tllegLowR,z_axis,math.rad(3),1.2)
+
+	Turn(tllegUpR01,x_axis,math.rad(-21),1.2)
+	Turn(tllegUpR01,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR01,z_axis,math.rad(12),1.2)
+	
+	Turn(tllegLowR0,x_axis,math.rad(0),1.2)
+	Turn(tllegLowR0,y_axis,math.rad(-11),1.2)
+	Turn(tllegLowR0,z_axis,math.rad(-4),1.2)
+Sleep(520)
+--Spring.Echo("combinedFeatureScript::3")
+	--HeadBody
+	Turn(tlHead,x_axis,math.rad(-7),1.2)
+	Turn(tlHead,y_axis,math.rad(-39),2.2)
+	Turn(tlHead,z_axis,math.rad(12),1.2)
+	Turn(tigLil,x_axis,math.rad(6),0.3)
+	Turn(tigLil,z_axis,math.rad(-5),1.2)
+	--Legs
+	Turn(tllegUpR,x_axis,math.rad(-4),1.2)
+	Turn(tllegUpR,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR,z_axis,math.rad(3),1.2)
+	
+	Turn(tllegLowR,x_axis,math.rad(0),1.2)
+	Turn(tllegLowR,y_axis,math.rad(0),1.2)
+	Turn(tllegLowR,z_axis,math.rad(0),1.2)
+
+	Turn(tllegUpR01,x_axis,math.rad(3),1.2)
+	Turn(tllegUpR01,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR01,z_axis,math.rad(-1),1.2)
+	
+	Turn(tllegLowR0,x_axis,math.rad(-53),2.6)
+	Turn(tllegLowR0,y_axis,math.rad(-30),1.3)
+	Turn(tllegLowR0,z_axis,math.rad(-4),1.2)
+
+	--HeadBody
+	Turn(tlHead,x_axis,math.rad(0),1.2)
+	Turn(tlHead,y_axis,math.rad(0),1.2)
+	Turn(tlHead,z_axis,math.rad(0),1.2)
+	Turn(tigLil,x_axis,math.rad(6),0.3)
+	Turn(tigLil,z_axis,math.rad(0),1.2)
+	--Legs
+	Turn(tllegUpR,x_axis,math.rad(-26),1.3)
+	Turn(tllegUpR,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR,z_axis,math.rad(6),0.3)
+	
+	Turn(tllegLowR,x_axis,math.rad(-11),1.2)
+	Turn(tllegLowR,y_axis,math.rad(0),1.2)
+	Turn(tllegLowR,z_axis,math.rad(14),1.2)
+
+	Turn(tllegUpR01,x_axis,math.rad(28),1.2)
+	Turn(tllegUpR01,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR01,z_axis,math.rad(-3),1.2)
+	
+	Turn(tllegLowR0,x_axis,math.rad(-36),1.4)
+	Turn(tllegLowR0,y_axis,math.rad(0),1.2)
+	Turn(tllegLowR0,z_axis,math.rad(0),1.2)
+Sleep(450)
+--Spring.Echo("combinedFeatureScript::4")
+	--HeadBody
+	Turn(tlHead,x_axis,math.rad(-1),1.2)
+	Turn(tlHead,y_axis,math.rad(0),1.2)
+	Turn(tlHead,z_axis,math.rad(15),1.2)
+	Turn(tigLil,x_axis,math.rad(6),0.3)
+	Turn(tigLil,z_axis,math.rad(-4),1.2)
+	--Legs
+	Turn(tllegUpR,x_axis,math.rad(17),1.2)
+	Turn(tllegUpR,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR,z_axis,math.rad(2),1.2)
+	
+	Turn(tllegLowR,x_axis,math.rad(-41),1.5)
+	Turn(tllegLowR,y_axis,math.rad(0),1.2)
+	Turn(tllegLowR,z_axis,math.rad(-20),1.2)
+
+	Turn(tllegUpR01,x_axis,math.rad(14),1.2)--
+	Turn(tllegUpR01,y_axis,math.rad(0),1.2)
+	Turn(tllegUpR01,z_axis,math.rad(-3),1.2)
+	
+	Turn(tllegLowR0,x_axis,math.rad(-2),1.2)
+	Turn(tllegLowR0,y_axis,math.rad(0),1.2)
+	Turn(tllegLowR0,z_axis,math.rad(0),1.2)
+
+	Sleep(450)

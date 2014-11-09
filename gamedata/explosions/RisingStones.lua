@@ -1,0 +1,65 @@
+-- dirt
+
+return {
+  ["risingdirt"] = {
+    dirtg = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      properties = {
+        airdrag            = 0.7,
+        alwaysvisible      = true,
+        colormap           = [[0.25 0.20 0.10 1.0 0.25 0.20 0.10 1.0 0.25 0.20 0.10 1.0	0 0 0 0.0]],
+        directional        = false,
+        emitrot            = 50,
+        emitrotspread      = 75,
+        emitvector         = [[0, 1, 0]],
+        gravity            = [[0, 0.32 r0.3, 0]],
+        numparticles       = 4,
+        particlelife       = 185,
+        particlelifespread = 120,
+        particlesize       = [[2 r12]],
+        particlesizespread = 29,
+        particlespeed      = 0.2,
+        particlespeedspread = 5,
+        pos                = [[1 r82 , 1 r2,1 r82]],
+        sizegrowth         = 0.99999999999999,
+        sizemod            = 0.97,
+        texture            = [[cbss]],
+        useairlos          = false,
+      },
+    },  
+	dirtground = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      properties = {
+        airdrag            = 0.7,
+        alwaysvisible      = true,
+        colormap           = [[0.25 0.20 0.10 0.5 	0.25 0.20 0.10 0.35	 0.25 0.20 0.10 0.25		0 0 0 0.0]],
+        directional        = false,
+        emitrot            = 50,
+        emitrotspread      = 75,
+        emitvector         = [[0, 1, 0]],
+        gravity            = [[0, 0.22 r0.3, 0]],
+        numparticles       = 1,
+        particlelife       = 185,
+        particlelifespread = 260,
+        particlesize       = [[22 r12]],
+        particlesizespread = 6,
+        particlespeed      = 0.2,
+        particlespeedspread = 5,
+        pos                = [[1 r82 , 1 r22,1 r82]],
+        sizegrowth         = 0.99999999999999,
+        sizemod            = 0.99,
+        texture            = [[dirt]],
+        useairlos          = false,
+      },
+    },
+
+  },
+
+}
+

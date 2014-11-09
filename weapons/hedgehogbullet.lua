@@ -1,0 +1,63 @@
+---http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
+local weaponName = "hedgehogbullet"
+local weaponDef = {
+
+   name                    = "hedgehoghitting",
+
+weaponType=[[StarburstLauncher]],
+vlaunch=1,
+
+
+--Physic/flight path
+range=2000,
+reloadtime=9,
+weaponVelocity=1000,
+startVelocity=250,
+weaponAcceleration=200,
+flightTime=5.5,
+
+cameraShake=12;
+FixedLauncher=true,
+dance=0,
+wobble=0.5,
+trajectoryheight=0.8,
+accuracy = 1200,
+tolerance=3000,
+tracks=false,
+Turnrate=16000,
+collideFriendly=true,
+WeaponTimer=4,
+----APPEARANCE
+model="cDarkMatterProj.s3o",
+smokeTrail=false,
+
+explosionGenerator=[[custom:artillery_explosion]], 
+--CegTag="smoketrail",
+--cegtag="CARTDM_STARFX",
+
+----TARGETING
+turret=true,
+--CylinderTargetting=true,
+avoidFeature=false,
+avoidFriendly=false,--artillery doesent know friend or foe, only worthwile targets
+
+
+--commandfire=true,
+
+----DAMAGE
+damage={
+default=0,
+heavyarmor=0,
+},
+areaOfEffect=1,
+craterMult=0,
+
+lineOfSight=false,
+
+
+--sound
+--soundHit="cart/darkmExplo",
+
+}
+
+return lowerkeys ({[weaponName]=weaponDef})

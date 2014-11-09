@@ -1,0 +1,277 @@
+
+flares={}
+for i=1,8,1 do
+flares[i]={}
+temp="flare"..i
+flares[i]=piece(temp)
+end
+
+
+--unitPieces
+
+local nanoemit=piece"nanoemit"
+
+local condrone=piece "condrone"
+local Contornado=piece "Contornado"
+
+
+
+
+local boolOnlyOnce=true
+local boolMoving=false
+local SIG_ONTHEFLY=4
+local SIG_BUILD=2
+local SIG_LANDED=8
+local SIG_HOVER=16
+local SIG_CHECK=32
+local SIG_WIND=64
+
+local SIG_MOMENTUM=128
+local SIG_EXAUST=256
+local SIG_TIMER=512
+
+ 
+ 
+function script.Activate()
+				       --activates the secondary weapon 
+			
+					--	return 1
+					end
+
+		function script.Deactivate()
+		  --deactivates the secondary weapon 
+	
+			
+				--return 0
+		end
+
+
+ 
+ function exaust()
+Signal(SIG_EXAUST)
+SetSignalMask(SIG_EXAUST)
+	while(true) do
+		for i=1,table.getn(flares),1 do
+			dice=math.random(-1,3)
+			 if dice==1 then EmitSfx(flares[i],1024) 
+				 elseif dice== 2 then  EmitSfx(flares[i],1025) 
+					else  EmitSfx(flares[i],1026) end
+		 end
+	randSleep=math.ceil(math.random(50,250))	 
+	Sleep(50)
+	end 
+ end
+ 
+local function timedelayedExaustExtinct()
+ SetSignalMask(SIG_TIMER)
+Sleep(4000) 
+Signal(SIG_EXAUST)
+ end
+ 
+local function landed()
+
+
+
+end
+ 
+ 
+ local function onTheFly()
+
+
+
+ 
+
+
+end
+
+ 
+
+
+
+
+function unitBuiltCheck()
+--test if unit built is a soldier
+while buildID == nil or buildID == -666 do
+Sleep(150)
+  buildID= Spring.GetUnitIsBuilding(unitID)
+end	
+	local unitDefID= Spring.GetUnitDefID(buildID)
+
+		if  unitDefID == UnitDefNames["bg"].id then 
+		   
+			return true
+					
+			else
+			  
+					return false
+					end								
+end
+
+
+
+function suddenDeath(unitID)
+
+--moveX=unitPosX -birthX
+--moveZ=birthZ-unitPosZ
+
+Move(condrone,y_axis,425,82)
+Sleep(1200)
+Move(condrone,y_axis,625,150)
+Sleep(2000)
+Move(condrone,y_axis,825,200)
+--Move(condrone,x_axis,moveX,9)
+--Move(condrone,z_axis,moveZ,9)
+--WaitForMove(condrone,x_axis)
+--WaitForMove(condrone,z_axis)
+
+end
+
+function moveStateCheck()
+	while(true) do
+
+			if boolMoving == true then
+			Signal(SIG_EXAUST)
+			StartThread(exaust)
+			onTheFly()
+			Sleep(500)
+			
+			end
+
+					if boolMoving == false and boolShortStop == false then
+					Sleep(512)
+						if boolShortStop == false then
+							boolRopeRelease=true
+							boolLongStop=true
+						end
+					end
+			if boolLongStop == true then
+			landed()
+		
+			end
+			
+			
+	Sleep(500)
+	end
+
+
+end
+
+
+
+function script.StartMoving()
+
+	--windGet()
+	if boolOnlyOnce==true then
+	 boolOnlyOnce=false
+	 StartThread(moveStateCheck)
+	 end
+	 
+   boolMoving=true
+   boolShortStop=true
+ 
+    
+end
+
+function script.StopMoving()
+
+Signal(SIG_TIMER)
+StartThread(timedelayedExaustExtinct)
+ boolMoving=false
+ boolShortStop=false
+end
+
+
+
+
+
+
+
+
+local function workInProgress()
+
+							
+	
+	SetSignalMask(SIG_HOVER)
+	while(true)do
+	
+	actualHealth=Spring.GetUnitHealth (unitID ) 
+												if actualHealth == 1 then
+												actualHealth=actualHealth-1
+												 Spring.SetUnitNoSelect (unitID, true)
+												--makes the Unit go home, to the place it was born- west Virginia
+												suddenDeath(unitID)
+												
+												Spring.SetUnitHealth(unitID,actualHealth)
+												end
+	actualHealth=actualHealth-1
+	Spring.SetUnitHealth(unitID,actualHealth)
+												
+	Sleep(250)
+		if boolUnitIsSoldier== true then
+		boolUnitIsSoldier=false
+		StartThread(ropeThread)	
+		Sleep(10)
+		end
+end
+StopSpin (conspin, y_axis,1)
+end
+
+
+function script.Create()
+
+Spin(Contornado,z_axis,math.rad(128),0)
+
+birthX,birthY,birthZ=Spring.GetUnitPosition(unitID)
+ --updateDelete
+ for i=1,8, 1 do
+ Hide(flares[i])
+ end
+
+
+landed()
+
+end
+
+function script.Killed()
+
+Spring.SetUnitCrashing(unitID,true)
+--needsWreckageFeature
+--fixxed
+
+  
+Sleep(400)
+return 0
+end
+
+
+
+
+
+--------BUILDING---------
+function script.StopBuilding()
+	Signal(SIG_HOVER)
+
+		
+	SetUnitValue(COB.INBUILDSTANCE, 0)
+end
+
+function script.StartBuilding(heading, pitch)
+ 
+	boolRopeRelease=false
+	Signal(SIG_HOVER)
+	--Signal(SIG_CHECK)
+	StartThread(workInProgress)
+	
+							
+	SetUnitValue(COB.INBUILDSTANCE, 1)
+end
+
+function script.QueryNanoPiece()
+     return nanoemit
+end
+
+
+
+
+
+
