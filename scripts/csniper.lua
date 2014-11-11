@@ -136,13 +136,15 @@
 	return deg
 	end
 
+			Infantry={}
+		Infantry[UnitDefNames["bg"].id]=true
+		Infantry[UnitDefNames["tiglil"].id]=true
+		Infantry[ UnitDefNames["skinfantry"].id]=true
+		Infantry[ UnitDefNames["vort"].id]=true
+		Infantry[ UnitDefNames["css"].id]=true
+		
 	function isInfantry(passengerDefID)
-
-		if passengerDefID== UnitDefNames["bg"].id or passengerDefID== UnitDefNames["tiglil"].id or passengerDefID== UnitDefNames["skinfantry"].id or passengerDefID== UnitDefNames["vort"].id then
-		return true
-			else
-			return false
-			end
+	if Infantry[passengerDefID] then return true else return false end
 	end
 
 	function draggingOn()

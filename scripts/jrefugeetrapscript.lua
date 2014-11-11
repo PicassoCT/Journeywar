@@ -32,7 +32,8 @@ end
 
 --Keytable containing 
 AllreadyPassingUnits={}
-count=0
+carcount=0
+infcount=0
 GoingBoom=false
 function CountPassingByEnemys()
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -43,7 +44,7 @@ function CountPassingByEnemys()
 	Sleep(300)
 
 	count=countKey(AllreadyPassingUnits)
-		Spring.Echo("JW:Refugeetrap"..count)
+
 		if count > 1 and GoingBoom==false then
 		GoingBoom=true
 		StartThread(spawnUprising, TIMETILLREVENGE)
@@ -51,10 +52,31 @@ function CountPassingByEnemys()
 	end
 end
 
+function countByType(Keytable)
+
+
+end
+
 function spawnUprising(RestTime)
 Sleep(RestTime)
-	for i=1,count do
-	Spring.Echo("SpawningUprising")
+teamID=Spring.GetUnitTeam(unitID)
+Spring.Echo("SpawningUprising")
+	
+	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
+	for i=1,carcount do
+	Show(Car)
+		if px then 
+		GG.UnitsToSpawn:PushCreateUnit("jmadmax",px,py,pz,0,teamID)
+		Hide(Car)
+		end
+	Sleep(1000)
+	end
+	
+	for i=1,infcount do
+	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
+		if px then 
+		GG.UnitsToSpawn:PushCreateUnit("jresistancewarrior",px,py,pz,0,teamID)
+		end
 	Sleep(500)
 	end
 
@@ -66,12 +88,10 @@ suddenDeathV(recentDamage)
 return 1
 end
 
-
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return center 
 end
-
 
 function script.QueryWeapon1() 
 	return center

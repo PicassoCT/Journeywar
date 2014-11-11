@@ -37,6 +37,9 @@
 			resT(TreePiece)
 			resetPiece(center,0)
 			StartThread(BuildLtree)
+				StartThread(playSoundByUnitTypOS,unitID,0.5,{
+												{name="sounds/jtree/accidtrees.ogg",time=15000}
+												})
 	end
 
 	--Contains Fixed Production Rules
@@ -190,9 +193,48 @@ FixFunctionTabel[2]= function ()
 		Show(TreePiece[i])
 		mx,mz=math.random(-90,90),math.random(-90,90)
 			
-		MoveUnitPieceToGroundPos(unitID,TreePiece[i],mx,mz,0,5)
-				
+		MoveUnitPieceToGroundPos(unitID,TreePiece[i],mx,mz,0,5)		
 		end
+		Sleep(100)
+		if maRa() then
+		--wiggle dat field
+		--function getJobDone(unitID, dataT, jobFunction, checkFunction,rest)
+		StartThread(getJobDone,
+					   unitID, 
+					TreePiece, 
+					function(unitID,Data)
+							if math.random(0,1)==1 then
+								synX,synY= math.random(-90,90),math.random(-360,360)
+								for i=1,#Data do 
+								v=math.random(0.01,0.05)
+								randoVal=math.random(-10,10)
+								TurnPieceTowards(Data[i],synX+randoVal, synY,0,v)
+								end 
+						
+							else
+								for i=1,#Data do 
+								v=math.random(0.01,0.05)
+								turnPieceRandDir(Data[i],v,90,-90,360,-360,0,0)
+								end
+							end
+						WaitForTurn(Data[table.getn(Data)],y_axis)
+						return true	
+					end,
+					
+					function(unitID,Data) 
+						if math.random(0,1)==1 then 
+							for i=1,#Data do 
+							v=math.random(0.01,0.05)
+							TurnPieceTowards(Data[i],0, 0,0,v)
+							end 
+							WaitForTurn(Data[table.getn(Data)],y_axis)
+						end
+					return false 
+					end,
+					24200)
+
+		end
+		
 	return false
 	end
 	
@@ -235,6 +277,37 @@ FixFunctionTabel[2]= function ()
 	return true
 	end
 	
+	-- Spiralltree
+	FixFunctionTabel[6]=	function ()
+	--Spring.Echo("FixFunctionTabel::BallWheed")
+		showT(TreePiece)
+		showT(EndPiece)
+		x,y,z=Spring.GetUnitPosition(unitID)
+	
+			it=10
+			for i=1,NUMBEROFPIECES,2 do
+	
+			val=(SIZEOFPIECE)*(i/4)
+				it=it+math.random(10,20)
+				Move(TreePiece[i],y_axis,(val),0)
+			
+				Turn(TreePiece[i],y_axis,math.rad(it),0)		
+                               
+				Move(TreePiece[i+1],y_axis,(val),0)
+				Turn(TreePiece[i+1],y_axis,math.rad(180+it),0)
+				
+					v=math.random(-95,-85)
+					Turn(TreePiece[i+1],x_axis,math.rad(v),0,true)
+					v=math.random(-95,-85)
+					Turn(TreePiece[i],x_axis,math.rad(math.random(-95,-85)),0,true)
+				
+				
+			end
+		
+			
+	return true
+		end
+
 	
 	--concatenates some random gramarRules, thus really creating new form of plants
 	function getRandomGramarProcution(ElementTable, NrOfElements, Recursionstart, RecursionEnd)
@@ -1024,7 +1097,7 @@ end
 					--consume a Nibble
 					if NrOfNibblesStored < it then
 						if Spring.UseUnitResource(unitID,"m",aNibble)==true then
-						NrOfNibblesStored=math.max(it,NrOfNibblesStored+1)
+						NrOfNibblesStored=math.min(it,NrOfNibblesStored+1)
 						end
 					end
 				showT(TreePiece,1,NrOfNibblesStored,600)
@@ -1034,7 +1107,7 @@ end
 			end
 			
 			--surplus release
-			while currentLevel < aNibble and NrOfNibblesStored > 0 do
+			while currentLevel < storage-12*aNibble and NrOfNibblesStored > 0 do
 			currentLevel,storage,pull,income,expense,share,sent,received =spGetTeamRessources(teamID,"metal")
 				if NrOfNibblesStored > 1 then
 				NrOfNibblesStored=math.max(1,NrOfNibblesStored-1)
@@ -1092,7 +1165,7 @@ end
 		boolTakeATurn=FixFunctionTabel[math.random(1,#FixFunctionTabel)]()
 			else
 			dice=math.random(1,#gramarTable)
-
+	
 			x,y,z=Spring.GetUnitPosition(unitID)
 
 			--Spring.Echo("JLTREE:GramaNr"..dice.. " - "..gramarTable[dice].name)

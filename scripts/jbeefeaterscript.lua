@@ -122,14 +122,17 @@ Signal(SIG_IDLE)
 	Hide(tonguetip)
 end
 
-function isInfantry(unitIDOfChoice)
-passengerDefID=Spring.GetUnitDefID(unitIDOfChoice)
-if passengerDefID== UnitDefNames["bg"].id or passengerDefID== UnitDefNames["tiglil"].id or passengerDefID== UnitDefNames["skinfantry"].id or passengerDefID== UnitDefNames["vort"].id then
-return true
-else
-return false
-end
-end
+		Infantry={}
+		Infantry[UnitDefNames["bg"].id]=true
+		Infantry[UnitDefNames["tiglil"].id]=true
+		Infantry[ UnitDefNames["skinfantry"].id]=true
+		Infantry[ UnitDefNames["vort"].id]=true
+		Infantry[ UnitDefNames["css"].id]=true
+		
+	function isInfantry(passengerDefID)
+	if Infantry[passengerDefID] then return true else return false end
+	end
+
 
 function timedelaySound()
 Sleep(1900)

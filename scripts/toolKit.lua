@@ -1,17 +1,74 @@
 --This Section contains standalone functions to be executed as independent systems monitoring and handling lua-stuff
 --mini OS Threads
-function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
-while true do
-Turn(Piecename,axis,math.rad(math.random(rangeStart,rangeEnd)),speed)
-WaitForTurn(Piecename,axis)
-Sleep(1000)
+
+--> jobfunc header jobFunction(unitID,x,y,z, Previousoutcome)  --> checkFuncHeader  checkFunction(unitID,x,y,z,outcome)
+function getJobDone(unitID, dataT, jobFunction, checkFunction,rest)
+local spGetUnitPosition=Spring.GetUnitPosition
+x,y,z=spGetUnitPosition(unitID)
+outcome=false
+
+	while checkFunction(unitID,dataT,x,y,z,outcome) ==false do
+	x,y,z=spGetUnitPosition(unitID)
+	outcome=jobFunction(unitID, dataT, x,y,z, outcome)
+	Sleep(rest)
+	end
+
 end
 
+--> genericOS
+function genericOS(unitID, dataT,jobFunctionT, checkFunctionT,rest)
+local spGetUnitPosition=Spring.GetUnitPosition
+x,y,z=spGetUnitPosition(unitID)
+outcomeTable=iniT(#jobFunctionT,false)
+boolAtLeastOneNotDone=true
+	while boolAtLeastOneNotDone ==true do
+	x,y,z=spGetUnitPosition(unitID)
+		for i=1,#jobFunctionT do
+		outcomeTable[i]=jobFunctionT[i](unitID,x,y,z, outcomeTable[i])
+		Sleep(rest)
+		end
+	boolAtLeastOneNotDone=true
+		for i=1,#checkFunctionT do
+		boolAtLeastOneNotDone= checkFunction(unitID,x,y,z,outcomeTable[i]) and boolAtLeastOneNotDone
+		Sleep(rest)
+		end
+	
+	end
+end
+
+
+function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
+	while true do
+	Turn(Piecename,axis,math.rad(math.random(rangeStart,rangeEnd)),speed)
+	WaitForTurn(Piecename,axis)
+	Sleep(1000)
+	end
+
+end
+
+-->plays the sounds handed over in a table 
+function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeTable)
+	 unitdef=Spring.GetUnitDefID(unitID)
+	
+	while true do
+	dice=math.random(1,#SoundNameTimeTable)
+
+	PlaySoundByUnitType(unitdef, SoundNameTimeTable[dice].name,loudness, SoundNameTimeTable[dice].time, 1)
+	Sleep(1000)
+	end
 end
 
 --===================================================================================================================
 --Game specific functions
-
+--> creates a table from names to check unittypes against
+function getaTypeTable(Stringtable,UnitDefNames)
+retVal={}
+	for i=1,#Stringtable do
+	assert(UnitDefNames[Stringtable[i]], "Error: Unitdef of Unittype "..Stringtable[i].. " does not exists")
+	retVal[UnitDefNames[Stringtable[i]].id]=true
+	end
+return retVal
+end
 
 --> JW specific function returning the factorys of the game
 function getFactoryTypeTable(IWant)
@@ -91,10 +148,16 @@ function convPointsToDeg(ox,oz,bx,bz)
 end
 
 -->Turn a piece towards a random direction
-function turnPieceRandDir(Piece,speed)
+function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,LIMLOWZ)
+if not limUpX then
 Turn(piecename,x_axis,math.rad(math.random(-360,360)),speed)
 Turn(piecename,y_axis,math.rad(math.random(-360,360)),speed)
 Turn(piecename,z_axis,math.rad(math.random(-360,360)),speed)
+else
+Turn(piecename,x_axis,math.rad(math.random(LIMLOWX,LIMUPX)),speed)
+Turn(piecename,y_axis,math.rad(math.random(LIMLOWY,LIMUPY)),speed)
+Turn(piecename,z_axis,math.rad(math.random(LIMLOWZ,LIMUPZ)),speed)
+end
 end
 -->Reset a Piece at speed
 function resetPiece(piecename,speed)
@@ -900,6 +963,14 @@ function debugDisplayPieceChain(Tables)
 
 end
 
+function iniT(size,val)
+T={}
+	for i=1,size do
+	T[i]=val
+	end
+return T
+end
+
 function vectorMinus(v1,v2)
 return{x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
 end
@@ -1325,7 +1396,7 @@ if loud==0 then loud= 1 end
 if GG.UnitDefSoundLock == nil then  GG.UnitDefSoundLock={} end
 if GG.UnitDefSoundLock[unitdef] == nil then  GG.UnitDefSoundLock[unitdef]=0 end
 
-	if GG.UnitDefSoundLock[unitdef] < nrOfUnitsParallel then
+	if  GG.UnitDefSoundLock[unitdef] < nrOfUnitsParallel then
 	GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]+1
 	Spring.PlaySoundFile(soundfile,loud)
 		if time <= 0 then time =2500 end

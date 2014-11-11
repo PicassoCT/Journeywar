@@ -1,4 +1,4 @@
-
+include "toolKit.lua"
 include "suddenDeath.lua"
 local builux = piece "builux"
 local bldoor1  = piece  "bldoor1"
@@ -330,6 +330,11 @@ end
 		StartThread(upgraDDe)
 		StartThread(alarmCheck)--
 		StartThread(windyS)
+		StartThread(playSoundByUnitTypOS,unitID,0.5,{
+												{name="sounds/cbuilux/neverendingparty.ogg",time=15000},
+												{name="sounds/cbuilux/neverendingpartyup.ogg",time=15000},
+												{name="sounds/cbuilux/neverendingpartyup2.ogg",time=15000},
+												})
 		end
 
 

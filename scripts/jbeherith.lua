@@ -833,16 +833,17 @@ local 	checkRange=60
 	--Intertia is detected via synchronized Turns and MoveComands (Saves Engine Calls)
 	--function:computes the Inertia resulting from the old Inertia and the new Inertia
 
-		function isInfantry(id)
-	passengerDefID=Spring.GetUnitDefID(id)
-			if passengerDefID== UnitDefNames["bg"].id or passengerDefID== UnitDefNames["tiglil"].id or passengerDefID== UnitDefNames["skinfantry"].id or passengerDefID== UnitDefNames["vort"].id then
-			return true
-				else
-				return false
-				end
-		end
-
-
+			Infantry={}
+		Infantry[UnitDefNames["bg"].id]=true
+		Infantry[UnitDefNames["tiglil"].id]=true
+		Infantry[ UnitDefNames["skinfantry"].id]=true
+		Infantry[ UnitDefNames["vort"].id]=true
+		Infantry[ UnitDefNames["css"].id]=true
+		
+	function isInfantry(passengerDefID)
+	if Infantry[passengerDefID] then return true else return false end
+	end
+	
 
 
 	function emitFootStepSound()

@@ -1121,13 +1121,14 @@ end
 		end
 	end
 	
-	isInfantry={
-	[UnitDefNames["bg"].id]=true,
-	[UnitDefNames["skinfantry"].id]=true,
-	[UnitDefNames["css"].id]=true,
-	[UnitDefNames["tiglil"].id]=true,
-	[UnitDefNames["gcivillian"].id]=true
-	}
+	isInfantry=getTypeTable({
+		"bg",
+		"vort",
+		"skinfantry",
+		"css",
+		"tiglil",
+		"gcivillian"
+	},UnitDefNames)
 	
 	
 	local spSpawnCEG=Spring.SpawnCEG
