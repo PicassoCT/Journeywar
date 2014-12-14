@@ -111,9 +111,20 @@ end
 function script.Killed(recentDamage, maxHealth)
 	EmitSfx(amturret,1025)
 	Explode(amturret,SFX.FIRE +SFX.FALL)
+	x,_,z=Spring.GetUnitPosition(unitID)
+	
+
+	process(filterTableByTable( grabEveryone(unitID,x,z,90,teamID),
+								{[1]=UnitDefNames["campro"].id},
+								function(f1,f2)
+								def=Spring.GetUnitDefID(f1) 
+								return def==f2 
+								end)
+								,
+								function(id)Spring.DestroyUnit(id) end )
+	 
 	Sleep(450)
-	suddenDeathVM(recentDamage)
-	----Spring.Echo ("He is dead, Jim!")
+	EmitSfx(amturret,1025)
 end
 --Building
 

@@ -47,7 +47,7 @@
 	
 	-- Turn the whole plant into a Ball Weed
 	FixFunctionTabel[1]=	function ()
-	--Spring.Echo("FixFunctionTabel::BallWheed")
+	Spring.Echo("FixFunctionTabel::BallWheed")
 		showT(TreePiece)
 		showT(EndPiece)
 		x,y,z=Spring.GetUnitPosition(unitID)
@@ -72,7 +72,7 @@
 	--FruitBambooColony
 FixFunctionTabel[2]= function ()
 	resT(TreePiece)
-	--Spring.Echo("FixFunctionTabel::Centrallized Colony")
+	Spring.Echo("FixFunctionTabel::Centrallized Colony")
 	
 	x,y,z=Spring.GetUnitPosition(unitID)
 	sizeOfPlant=math.ceil(math.random(2,5))
@@ -133,7 +133,7 @@ FixFunctionTabel[2]= function ()
 	
 	--Arcs
 	FixFunctionTabel[3]= function ()
-	--Spring.Echo("FixFunctionTabel::FruitArcs")
+	Spring.Echo("FixFunctionTabel::FruitArcs")
 		showT(TreePiece)
 		showT(EndPiece)
 	val=15.2
@@ -176,7 +176,7 @@ FixFunctionTabel[2]= function ()
 		-- FruitField
 	FixFunctionTabel[4]= function ()
 	
-	--Spring.Echo("FixFunctionTabel::FruitField")
+	Spring.Echo("FixFunctionTabel::FruitField")
 	x,y,z=Spring.GetUnitPosition(unitID)
 	sizeOfPlant=math.ceil(math.random(1,5))
 		degT={}
@@ -193,10 +193,10 @@ FixFunctionTabel[2]= function ()
 		Show(TreePiece[i])
 		mx,mz=math.random(-90,90),math.random(-90,90)
 			
-		MoveUnitPieceToGroundPos(unitID,TreePiece[i],mx,mz,0,5)		
+		MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(i,#TreePiece)],mx,mz,0,5)		
 		end
 		Sleep(100)
-		if maRa() then
+		if maRa() ==true then
 		--wiggle dat field
 		--function getJobDone(unitID, dataT, jobFunction, checkFunction,rest)
 		StartThread(getJobDone,
@@ -232,16 +232,14 @@ FixFunctionTabel[2]= function ()
 					return false 
 					end,
 					24200)
-
 		end
-		
 	return false
 	end
 	
 	-- FruitTonguePad
 	FixFunctionTabel[5]= function ()
 	
-	--Spring.Echo("FixFunctionTabel::FruitTongue")
+	Spring.Echo("FixFunctionTabel::FruitTongue")
 	local spGetGroundHeight=Spring.GetGroundHeight
 		totalIndex=0
 		relativeIndex=11
@@ -279,7 +277,7 @@ FixFunctionTabel[2]= function ()
 	
 	-- Spiralltree
 	FixFunctionTabel[6]=	function ()
-	--Spring.Echo("FixFunctionTabel::BallWheed")
+	Spring.Echo("FixFunctionTabel::Spiraltree")
 		showT(TreePiece)
 		showT(EndPiece)
 		x,y,z=Spring.GetUnitPosition(unitID)
@@ -301,13 +299,134 @@ FixFunctionTabel[2]= function ()
 					v=math.random(-95,-85)
 					Turn(TreePiece[i],x_axis,math.rad(math.random(-95,-85)),0,true)
 				
-				
 			end
-		
-			
+
 	return true
 		end
+	
+	
+	-- Turn the whole plant into a Ground Ball Weed(s)
+	FixFunctionTabel[7]=	function ()
+	Spring.Echo("FixFunctionTabel::GroundBallWheed")
+		showT(TreePiece)
+		showT(EndPiece)
+		randCent=math.ceil(math.random(1,5))
+		x,y,z=Spring.GetUnitPosition(unitID)
+		
+		for k=1,randCent do
+		ex,ez=x+math.random(-90,90),z+math.random(-90,90)
+		
+		start,End=(k-1)*(NUMBEROFPIECES/randCent)+1,k*(NUMBEROFPIECES/randCent)
+			for i=start,End,1 do
+				p= TreePiece[math.min(math.max(1,i),#TreePiece)]
+				if p then
+				MoveUnitPieceToGroundPos(unitID,p,ex,ez,0,SIZEOFPIECE/2)
+				turnPieceRandDir(TreePiece[i],0.5)
+				end
+			end
 
+		end
+		return true
+		end
+		
+		
+
+		-- RingWeed
+	FixFunctionTabel[8]=	function ()
+	Spring.Echo("FixFunctionTabel::RingWeed")
+		showT(TreePiece)
+		showT(EndPiece)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		
+			for i=1,NUMBEROFPIECES,9 do
+			boolAtLeastOnce=true
+		
+				start=-90
+				prevPiece=TreePiece[i]
+				if maRa()==true  then
+					for j=i,math.min(NUMBEROFPIECES,i+8), 1 do
+					MovePieceToPiece(TreePiece[i],prevPiece,0)
+					start=start+45
+					Turn(TreePiece[i],x_axis,math.rad(start),0)
+						if boolAtLeastOnce==true or math.random(0,2)==1 and ((j-i) %6)>2 then
+						x,y,z=Spring.GetUnitPiecePosition(unitID,TreePiece[j]) 
+						boolAtLeastOnce=false
+						end
+					prevPiece=TreePiece[j]
+						if not prevPiece then break end
+					end
+				else
+					for j=i,i+8, 1 do
+					MovePieceToPiece(TreePiece[i],prevPiece,0)
+					start=start+45
+					Turn(TreePiece[i],z_axis,math.rad(start),0)
+						if boolAtLeastOnce==true or math.random(0,2)==1 and ((j-i) %6)>2 then
+						x,y,z=Spring.GetUnitPiecePosition(unitID,TreePiece[j]) 
+						boolAtLeastOnce=false
+						end
+					prevPiece=TreePiece[j]
+					if not prevPiece then break end
+					end
+				
+				end
+			end
+	return true
+	end
+	
+
+	
+		
+	-- Turn the whole plant into a Bucky Ball
+	FixFunctionTabel[9]=	function ()
+	Spring.Echo("FixFunctionTabel::Buckyball")
+		showT(TreePiece)
+		showT(EndPiece)
+		x,y,z=Spring.GetUnitPosition(unitID)
+			
+		--Store Point 
+		PointPairs={}
+		--centercoord
+		cx,cy,cz=0,2*SIZEOFPIECE,0 	
+		--SetUp the base hexagon
+		
+		--first and last row have equal number of pentagons and hexagons
+		--2:1  hexagons : pentagons 
+			for i=6,#TreePiece,1 do
+			
+			--hexagon circle
+			
+			--pentagoncircle
+			end
+	return true
+		end
+	
+			FixFunctionTabel[10]=	function ()
+	Spring.Echo("FixFunctionTabel::StarPlants")
+		showT(TreePiece)
+		showT(EndPiece)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		randCent=math.ceil(math.random(4,9))
+		x,y,z=Spring.GetUnitPosition(unitID)
+			for k=1,randCent do
+			ex,ez=x+math.random(-90,90),z+math.random(-90,90)
+			
+			start,End=(k-1)*(NUMBEROFPIECES/randCent)+1,k*(NUMBEROFPIECES/randCent)
+			flowerdeg= math.random(15,85)
+				for i=start,End,1 do
+				MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(math.max(1,i),#TreePiece)],ex,ez,0,SIZEOFPIECE/2)
+					if i > start then
+					Turn(TreePiece[i],y_axis,math.rad(((i-start+1)*(360/randCent))),0,true)
+					Turn(TreePiece[i],x_axis,flowerdeg,0)
+					end
+				end
+	
+			end
+		return true
+		end
+
+		
+
+	
 	
 	--concatenates some random gramarRules, thus really creating new form of plants
 	function getRandomGramarProcution(ElementTable, NrOfElements, Recursionstart, RecursionEnd)

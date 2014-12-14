@@ -65,7 +65,7 @@ Spring.Echo("SpawningUprising")
 	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
 	for i=1,carcount do
 	Show(Car)
-		if px then 
+		if px and UnitDefNames["jmadmax"] then 
 		GG.UnitsToSpawn:PushCreateUnit("jmadmax",px,py,pz,0,teamID)
 		Hide(Car)
 		end
@@ -74,7 +74,7 @@ Spring.Echo("SpawningUprising")
 	
 	for i=1,infcount do
 	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
-		if px then 
+		if px and UnitDefNames["jresistancewarrior"] then 
 		GG.UnitsToSpawn:PushCreateUnit("jresistancewarrior",px,py,pz,0,teamID)
 		end
 	Sleep(500)

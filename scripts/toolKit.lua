@@ -2,7 +2,8 @@
 --mini OS Threads
 
 --> jobfunc header jobFunction(unitID,x,y,z, Previousoutcome)  --> checkFuncHeader  checkFunction(unitID,x,y,z,outcome)
-function getJobDone(unitID, dataT, jobFunction, checkFunction,rest)
+function getJobDone(unitID, dataTable, jobFunction, checkFunction,rest)
+local dataT=dataTable
 local spGetUnitPosition=Spring.GetUnitPosition
 x,y,z=spGetUnitPosition(unitID)
 outcome=false
@@ -15,16 +16,29 @@ outcome=false
 
 end
 
+--PieceDebug loop
+	function PieceLight(unitID, piecename,cegname)
+		while true do
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
+		Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
+		Sleep(250)
+		end
+	end
+
 --> genericOS
-function genericOS(unitID, dataT,jobFunctionT, checkFunctionT,rest)
+function genericOS(unitID, dataTable,jobFunctionTable, checkFunctionTable,rest)
+local checkFunctionT	=checkFunctionTable
+local jobFunctionT		=jobFunctionTable
+local dataT				=dataTable
 local spGetUnitPosition=Spring.GetUnitPosition
+
 x,y,z=spGetUnitPosition(unitID)
 outcomeTable=iniT(#jobFunctionT,false)
 boolAtLeastOneNotDone=true
 	while boolAtLeastOneNotDone ==true do
 	x,y,z=spGetUnitPosition(unitID)
 		for i=1,#jobFunctionT do
-		outcomeTable[i]=jobFunctionT[i](unitID,x,y,z, outcomeTable[i])
+		outcomeTable[i]=jobFunctionT[i](unitID,x,y,z, outcomeTable[i],dataT)
 		Sleep(rest)
 		end
 	boolAtLeastOneNotDone=true
@@ -36,7 +50,7 @@ boolAtLeastOneNotDone=true
 	end
 end
 
-
+-->Turn Piece into various diretions within range
 function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
 	while true do
 	Turn(Piecename,axis,math.rad(math.random(rangeStart,rangeEnd)),speed)
@@ -47,7 +61,8 @@ function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
 end
 
 -->plays the sounds handed over in a table 
-function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeTable)
+function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeT)
+local SoundNameTimeTable=SoundNameTimeT
 	 unitdef=Spring.GetUnitDefID(unitID)
 	
 	while true do
@@ -61,7 +76,8 @@ end
 --===================================================================================================================
 --Game specific functions
 --> creates a table from names to check unittypes against
-function getaTypeTable(Stringtable,UnitDefNames)
+function getTypeTable(UnitDefNames,StringTable)
+local Stringtable=StringTable
 retVal={}
 	for i=1,#Stringtable do
 	assert(UnitDefNames[Stringtable[i]], "Error: Unitdef of Unittype "..Stringtable[i].. " does not exists")
@@ -71,7 +87,7 @@ return retVal
 end
 
 --> JW specific function returning the factorys of the game
-function getFactoryTypeTable(IWant)
+function getFactoryTypeTable(UnitDefNames,IWant)
 FactoryTypes={}	
 
 
@@ -186,11 +202,35 @@ Move(piecename,z_axis,Z,speed,true)
 
 end
 
+-->Moves a UnitPiece to a UnitPiece at speed
+function MovePieceToPiece(piecename, piecenameB,speed)
+if not piecenameB or not piecename then return end
+x,y,z=Spring.GetUnitPiecePosition(unitID,piecenameB)
+Move(piecename,x_axis,x,speed)
+Move(piecename,y_axis,y,speed)
+Move(piecename,z_axis,z,speed,true)	
+
+end
+
+
 -->Turns a Piece towards a direction 
 function TurnPieceTowards(piecename,x,y,z,speed)
-Move(piecename,x_axis,math.rad(x),speed)
-Move(piecename,y_axis,math.rad(y),speed)
-Move(piecename,z_axis,math.rad(z),speed,true)	
+
+	Turn(piecename,x_axis,math.rad(x),speed)
+	Turn(piecename,y_axis,math.rad(y),speed)
+	Turn(piecename,z_axis,math.rad(z),speed,true)	
+	
+end
+
+-->Turn a Piece towards another Piece 
+function TurnPieceTowardsPiece(piecename,pieceB,speed)
+		x,y,z=Spring.GetUnitPiecePosition(unitID,piecename)
+		px,py,pz=Spring.GetUnitPiecePosition(unitID,pieceB)
+		px,py,pz=x-px,y-py,z-pz
+		dx,dy,dz=math.rad(math.atan2(dy,dz)),math.rad(math.atan2(px,pz)),math.rad(math.atan2(dy,dx))
+			if py then
+			TurnPieceTowards(piecename,dx,dy,dz,speed)
+			end
 
 end
 
@@ -204,9 +244,40 @@ Move(piecename,z_axis,z,speed,true)
 
 end
 
--->Returns randomized Values regarding truth 
+-->Returns randomized Boolean
 function maRa()
 return math.random(0,1)==1 
+end
+
+-->Move with a speed Curve
+function moveSpeedCurve(piecename, axis, NumberOfArgs, now, timeTotal , distToGo, Offset,...)
+--!TODO calcSpeedUpId from functionkeys,check calculations for repetitons and store that key in to often as result in GG
+--should handle all sort of equations of the type 0.3*x^2+0.1*x^1+offset
+-- in our case that would be [2]=0.3 ,[1]=0.1 and so forth
+
+ArgFactorTable={}
+NrCopy=NumberOfArgs
+      for _, factor in pairs(arg) do
+                ArgFactorTable[NrCopy]=factor	  
+				NrCopy=NrCopy-1
+	  end
+
+--init tangent table
+tangentTable={n=#ArgFactorTable-1}
+
+
+--first derivative 
+--http://en.wikipedia.org/wiki/Derivative
+for i=table.getn(tangentTable), 1, -1 do
+tangentTable[i]=(i+1)*ArgFactorTable[i+1]
+end
+	  
+	Totalspeed=Offset
+	for i=1, NumberOfArgs-1 do
+	Totalspeed=Totalspeed+tangentTable[i]*(now^i)
+	end
+	
+Move(piecename, axis, distToGo, Totalspeed)
 end
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
@@ -217,11 +288,26 @@ Move(piecename,z_axis,Z,0,true)
 x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
 	myHeight=Spring.GetGroundHeight(x,z)
 	heightdifference=math.abs(globalHeightUnit-myHeight)
-	if myHeight < globalHeightUnit then heightdifference=-heightdifference end
+		if myHeight < globalHeightUnit then heightdifference=-heightdifference end
 Move(piecename,y_axis,heightdifference+offset,speed,true)
 end
 
+-->Paint a Piece Pattern 
+function PaintPatternPieces(ListOfPieces, ListOfCoords,sx,sy,sz)
+prevx,prevy,prevz=sx,sy,sz
 
+
+	MovePieceToPos(ListOfPieces[1],ListOfCoords[1].x,ListOfCoords[1].y,ListOfCoords[i].z)
+	TurnPieceTowards(ListOfPieces[1],sx,sy,sz,0)
+	prevx,prevy,prevz=ListOfCoords[1].x,ListOfCoords[1].y,ListOfCoords[i].z
+	
+
+	for i=2,#ListOfCoords-1 do
+	MovePieceToPos(ListOfPieces[i],ListOfCoords[i].x,ListOfCoords[i].y,ListOfCoords[i].z)
+	TurnPieceTowardsPiece(ListOfPieces[i],ListOfPieces[i-1],0)
+	end
+
+end
 
 -->Moves a Piece to a Position on the Ground in Worldspace
 function MoveUnitPieceToRelativeWorldPos(unitID,piecename, relX,relZ,speed,offset)
@@ -1855,6 +1941,16 @@ a=0
 return a
 end
 
+	function PieceLight(unitID, piecename,cegname)
+		while true do
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
+		Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
+		Sleep(250)
+		end
+	end
+	
+
+
 --> Forms a Tree from handed over Table
 --	this function needs a global Itterator and but is threadsafe, as in only one per unit
 	--	it calls itself, waits for all other threads running parallel to reach the same recursion Depth
@@ -1973,4 +2069,58 @@ end
 		releaseLocalLock(recursiveItterator)
 		--Spring.Echo("Thread Level "..recursiveItterator.." signing off")
 		return
+end
+
+-->prepares large speaches for the release to the world
+function prep(unitID, Speach, Name,Limit, Alpha, DefaultSleepByline)
+T={}
+itterator=1
+	while lineend < #Speach do  
+
+	lineend=string.find(Speach, " ", iterrator+Limit)
+	subString=string.sub(Speach,itterator,lineend)
+		if subString then
+		T[#T+1]={line= subString ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}
+			else
+			break
+			end
+	itterator=lineend
+	end
+	return T
+end
+
+
+--> Displays Text at UnitPos Thread
+ -->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
+function say(UnitID, TableOfLineAndT, redrawDelay, NameColour, TextColour,OptionString)
+local LineNameTimeT= TableOfLineAndT
+local spGetUnitPosition=Spring.GetUnitPosition
+
+height=gl.GetTextHeight(LineNameTimeT[#LineNameTimeT].text)
+totalHeight=height*(#LineNameTimeT+1)
+NameSize=12
+TextSize=10
+
+
+NameC=  NameColour or "\9\241\255\255"
+TextC=  TextColour or "\9\241\255"
+OptionS= OperationString or "las"
+redrawD=redrawDelay or 15
+
+	for i=1, #LineNameTimeT, 1 do
+	LineNameTimeT[i].alpha=math.max(LineNameTimeT[i].alpha-1,0)
+	
+		while LineNameTimeT[i].DelayByLine > 0 do 
+		x,y,z=spGetUnitPosition(unitID)
+		z=z+ totalHeight- (i* height)
+		--Name
+		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].name.." : ",x,z,NameSize, OptionS)
+		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
+		LineNameTimeT[i].DelayByLine =LineNameTimeT[i].DelayByLine -redrawD
+		
+		--Display Text LineNameTimeT[i].line
+		Sleep(redrawD)
+		end
+	end
+
 end

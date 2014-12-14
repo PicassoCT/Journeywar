@@ -17,7 +17,7 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 --local functions
 local boolDebug=false
-local boolMission=(math.random(0,2)==1)
+local boolMission=(math.random(0,1)==1)
 
 local cout= Spring.Echo
 local spCreateUnit=Spring.CreateUnit
@@ -1889,13 +1889,14 @@ if math.random(0,5)==2 then currentMission=1 end
 --</DEBUG>
 --</necessaryInfo>
 
-frameValue=15
+local frameValue=15
 
 
 
 
 function gadget:GameFrame(frame)
-		if frame%frameValue == 0 and boolMission and boolMission==true then
+		if frame%frameValue == 0   then
+		if boolMission==true then
 			if MissionFunctionTable~= nil then
 			
 			
@@ -1942,10 +1943,11 @@ function gadget:GameFrame(frame)
 				
 				end	
 			else
-			if boolJustOnce==true then
-			boolJustOnce=false
-			spawnProceduralFeatures()	
-			boolMission=nil
+				if boolJustOnce==true then
+				boolJustOnce=false
+				spawnProceduralFeatures()	
+				boolMission=nil
+				end
 			end
 			end
 	end

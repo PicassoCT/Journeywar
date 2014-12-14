@@ -42,7 +42,8 @@
 		Move(BodyPieces[i],y_axis,0,0)
 		
 		if i < DoubleMax and i %2 ==0 then
-		DoubleBodyPieces[BodyPieces[i-1]]=BodyPieces[i]		
+		DoubleBodyPieces[#DoubleBodyPieces+1]={k=BodyPieces[i-1],v=BodyPieces[i]}
+	
 											
 		end
 	end
@@ -71,7 +72,7 @@
 		--add the linear connections
 		
 			if i < ArmMax and i %2 ==0 then
-			DoubleArmPieces[ArmPieces[i-1]]=ArmPieces[i]													
+			DoubleArmPieces[#DoubleArmPieces+1]={k=ArmPieces[i-1],v=ArmPieces[i]			}
 			end
 		
 	
@@ -93,7 +94,7 @@
 		--add the linear connections
 		
 		if i < HeadMax and i %2 ==0 then
-		DoubleHeadPieces[HeadPieces[i-1]]=HeadPieces[i]													
+		DoubleHeadPieces[#DoubleHeadPieces+1]={k=HeadPieces[i-1],v=HeadPieces[i]			}											
 		end
 		
 
@@ -109,10 +110,10 @@
 		
 		bodyPieceName="Deco"..i
 		DecoPieces[i]=piece(bodyPieceName)
-		--add the linear connections
+		--add the linear connectionsk
 		
 		if i < DecoMax and i %2 ==0 then
-		DoubleDecoPieces[DecoPieces[i-1]]=DecoPieces[i]													
+		DoubleDecoPieces[#DoubleDecoPieces+1]={k=DecoPieces[i-1],v=DecoPieces[i]			}							
 		end
 	Hide(DecoPieces[i])
 
@@ -286,11 +287,18 @@
     end
 	
 	function DoubleCheckPiece(tablename)
-	for k,v in pairs(tablename) do
-		if k and v and  AllReadyUsed[k]==nil and  AllReadyUsed[v]==nil then
-		tablename[k]=nil
-		return k,v
+	--Rewrite
+	local SymPairedPieces= tablename
+	for i=1, #SymPairedPieces, 1 do
+	if SymPairedPieces[i] then
+	k,v=SymPairedPieces[i].k , SymPairedPieces[i].v
+	
+		if k and v and not AllReadyUsed[k] and not AllReadyUsed[v] then
+		retA,retB= SymPairedPieces[i].k, SymPairedPieces[i].v
+		SymPairedPieces[i]=nil
+		return retA,retB
 		end
+	end
 	end
 	--exists a symetric pair- and a symetric socket pair
 
@@ -854,9 +862,9 @@ end
 	
 		for i=1,#ArmTable,1 do
 		--check wether the Arm is in DoubleArmPieces and its counterpart is in 
-			if DoubleArmPieces[ArmTable[i]] and temp[DoubleArmPieces[ArmTable[i]]] and not AllReadyUsed[temp[DoubleArmPieces[ArmTable[i]]]] then
+			if getValByKeyObj(DoubleArmPieces,ArmTable[i]) and temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])] and not AllReadyUsed[temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])]] then
 			SymPairArms={[1]=ArmTable[i],
-						 [2]= temp[DoubleArmPieces[ArmTable[i]]],}
+						 [2]= temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])],}
 			else
 			LinArms[#LinArms+1]=ArmTable[i]
 			end
@@ -865,6 +873,12 @@ end
 	
 	end
 	
+	function getValByKeyObj(Table,key)
+	local T= Table
+		for i=1,#T do
+			if T.k== key then return T.v end
+		end
+	end
 
 
 	function moveLeg(delay, speed,  degvec, pieceA,pieceB, spieceA,spieceB)
@@ -1121,14 +1135,14 @@ end
 		end
 	end
 	
-	isInfantry=getTypeTable({
+	isInfantry=getTypeTable(UnitDefNames,{
 		"bg",
 		"vort",
 		"skinfantry",
 		"css",
 		"tiglil",
 		"gcivillian"
-	},UnitDefNames)
+	})
 	
 	
 	local spSpawnCEG=Spring.SpawnCEG

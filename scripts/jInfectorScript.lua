@@ -8,7 +8,7 @@ include "toolKit.lua"
 	
 	RANGEOFINFLUENCA=900
 function isFactory(typed)
-T=getFactoryTypeTable("IwantItAll")
+T=getFactoryTypeTable(UnitDefNames,"IwantItAll")
 return (T[typed] ~= nil and T[typed])
 end
 
