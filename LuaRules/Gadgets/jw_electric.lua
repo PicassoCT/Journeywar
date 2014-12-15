@@ -249,7 +249,7 @@ end
 	 ------Spring.Echo("validateUnitTable")
 	for i=1,table.getn(unifiedUnitTable),1 do
            
-                    if unifiedUnitTable[i][1] and Spring.ValidUnitID((unifiedUnitTable[i][1]))~=true then
+                    if unifiedUnitTable[i] and unifiedUnitTable[i][1] and Spring.ValidUnitID((unifiedUnitTable[i][1]))~=true then
                     removeUnit(unifiedUnitTable[i][1])
                     x=x-1
                     i=i-1

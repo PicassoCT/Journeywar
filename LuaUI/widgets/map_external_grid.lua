@@ -295,13 +295,13 @@ end
 
 local function DrawTiles()
 	gl.PushAttrib(GL.ALL_ATTRIB_BITS)
-	--gl.DepthTest(false)
+	gl.DepthTest(false) --comented out in org
 	gl.DepthMask(true)
 	gl.Texture(gridTex)
 	gl.BeginEnd(GL.QUADS,TilesVerticesOutside)
 	gl.Texture(false)
 	gl.DepthMask(false)
-	--gl.DepthTest(false)
+	gl.DepthTest(false) --comented out in org
 	TextOutside()
 	glColor(0.5,0.5,0.5,0.01)
 	gl.PopAttrib()

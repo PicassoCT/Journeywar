@@ -1618,7 +1618,7 @@ end
 			Sleep(800)
 			 Hide(buibaicity)
 	
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 	return 0
 end
 

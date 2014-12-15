@@ -1,6 +1,7 @@
 	include "jVitalFunctions.lua"
 	include "suddenDeath.lua"
 	--Pieces
+	treeSpot=piece"treeSpot"
 	nomnom1=piece"nomnom1"
 
 	frontAppendixTable={}
@@ -678,18 +679,18 @@ local 	checkRange=60
 
 	function script.Deactivate()
 			--set the MovementSpeed back to the original speed
-		
+		--boolAmok Code
 			--SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
-		if boolAmok== false then
-		boolAmok=true		
-		SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533	
-		Hide(gullcircle)
-
-		Hide(jBeGuBig)
-		Hide(jBeGuSmal0)
-		StartThread(tickTockTackle)
-
-		end	
+		--if boolAmok== false then
+		--boolAmok=true		
+		--SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533	
+		--Hide(gullcircle)
+        --
+		--Hide(jBeGuBig)
+		--Hide(jBeGuSmal0)
+		--StartThread(tickTockTackle)
+        --
+		--end	
 			return 0
 			end
 			
@@ -1203,12 +1204,6 @@ local 	checkRange=60
 	 return 1
 	end
 	--function: Shows and Hides Objects (Gallertas, Collibribirdwings)
-	function showHideFXLoop()
-	while(true) do
-
-	end
-
-	end
 
 	--OS-Loop watches for damage: If massive Damage is detected Trees and plants are SFXed and Blood is oozed
 	function damageWatcher()
@@ -1250,7 +1245,8 @@ local 	checkRange=60
 	--func: called by the engine when units starts moving	
 	function script.StartMoving()
 	Signal(SIG_MOVE)
-	StartThread(constMoveDetec)													
+	StartThread(constMoveDetec)		
+	boolMoving=true	
 																									
 	end
 	--func:resets legs
@@ -1273,6 +1269,7 @@ local 	checkRange=60
 	end
 
 	function script.StopMoving()
+	boolMoving=false
 	Signal(SIG_MOVE)
 	Signal(SIG_WALK)
 	legs_down()
@@ -1560,6 +1557,7 @@ local aVd=acquireVehicleDegree()
 
 
 	function script.Create()
+	StartThread(treeTrample)
 	StartThread(mONmoNmoN)
 	beheBodyBuilder()
 	setUp()
@@ -1571,6 +1569,40 @@ local aVd=acquireVehicleDegree()
 	--StartThread(FloraPhysixLoop)
 	end
 				
+				
+	TrampledTrees={}
+	boolMoving=false
+	function treeTrample()
+	local myTeam=Spring.GetUnitTeam(unitID)
+	local	treeTypeTable=getTypeTable(UnitDefNames,{
+												"jtree",
+												"jtreedummy",
+												"jtree2",
+												"jtree2dummy",
+												"jtree3",
+												"jtree3dummy",
+												"jtreel"
+												})
+		while true do
+		
+			while boolMoving==true do
+			x,_,z=Spring.GetUnitPiecePosDir(unitID,treeSpot)
+			T=grabEveryone(unitID,x,z,50,myTeam)
+				if T then
+				T=filterUnitTableforDefIDTable(T,treeTypeTable)
+					if T then
+					TableMergeTable(TrampledTrees,T)
+					end
+				end
+			Sleep(150)
+			end
+		Sleep(300)	
+		end
+	
+	end
+	
+	
+					
 			
 	--WEAPONS	
 	--------------------------------------------------------------------------

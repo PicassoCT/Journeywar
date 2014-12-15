@@ -181,7 +181,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.CreateUnit("jresistancewarrior",x+25,y,z-25,0,teamID)
 	end
 end
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 return 0
 end
 

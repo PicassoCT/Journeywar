@@ -889,10 +889,11 @@ Hide(bldoor2)
 StartThread(PartyManager)
 StartThread(windyS)
 StartThread(alarmCheck)--
-StartThread(playSoundByUnitTypOS,unitID,0.5,{
+StartThread(playSoundByUnitTypOS,unitID,0.7,{
 												{name="sounds/cbuilux/neverendingparty.ogg",time=15000},
 												{name="sounds/cbuilux/neverendingpartyup.ogg",time=15000},
 												{name="sounds/cbuilux/neverendingpartyup2.ogg",time=15000},
+												{name="sounds/cbuilux/neverendingpartyup3.ogg",time=10000},
 												})
 end
 
@@ -901,7 +902,7 @@ end
 -- Explode(mbuilux,SFX.SHATTER)
 -- Explode(bldoor1,SFX.FIRE)
 -- Explode(bldoor2,SFX.FIRE)
--- suddenDeath(unitIDrecentDamage)
+-- suddenDeath(unitID,recentDamage)
 -- return 0
 -- end
 

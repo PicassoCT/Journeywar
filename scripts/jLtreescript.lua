@@ -24,6 +24,26 @@
 	 TreePiece[#TreePiece+1]=piece(name)
 	 EndPiece[#EndPiece+1]=piece(namet)
 	end
+	
+	function TreeTrample()
+	
+	for i=1, NUMBEROFPIECES do
+		if maRa()==true then 
+		StartThread(DropPieceToGround,
+					unitID,TreePiece[i],
+					35,
+					true,
+					true,
+					Spring.UnitScript.Explode ,
+					SFX.FALL+SFX.NO_HEATCLOUD)
+		--drop to the ground
+		end
+	end
+	
+	Spring.DestroyUnit(unitID,true,false)
+	end
+	
+	
 	SIZEOFPIECE=22
 -->>/PieceDefinitions<<--
  
@@ -1241,7 +1261,7 @@ end
 
 	function script.Killed(recentDamage,_)
 
-	suddenDeathV(recentDamage)
+	suddenDeathjBuildCorpse(unitID, recentDamage)
 	return 1
 	end
 

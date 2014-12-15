@@ -175,7 +175,7 @@ local prevEnergyStorage=10
 local boolDrippIn=false
  itterator=1
 local teamid=Spring.GetUnitTeam(unitID)
-
+percenTage=0
 function updateMyEnergyStorage()
  currentLevel,storage, pull, income, expense, share,sent, received=Spring.GetTeamResources(teamid,"energy")
 
@@ -305,9 +305,27 @@ local ldropReal=dropRealistic
 	end
 end
 
-function script.Killed(recentDamage,_)
 
-suddenDeathV(recentDamage)
+explosionRange=1.5
+function script.Killed(recentDamage,_)
+Spring.PlaySoundFile("sounds/jestorage/good_explosion.wav",1) 
+if percenTage then
+Range=math.ceil(percenTage*explosionRange)
+x,y,z=Spring.GetUnitPosition(unitID)
+T=grabEveryone(unitID,x,z,Range)
+defID=Spring.GetUnitDefID(unitID)	
+Spring.SpawnCEG("factory_explosion",x,y+15,z,0,1,0,50,0)
+	for i=1,#T do 
+	thyID=Spring.GetUnitDefID(T[i])
+		if thyID ~=defID then
+		Spring.AddUnitDamage(T[i],math.ceil(percenTage*4))
+			else
+			Spring.DestroyUnit(T[i],true,false,unitID)
+			end
+		end	
+		
+	end
+--suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 end
 comonValue=0

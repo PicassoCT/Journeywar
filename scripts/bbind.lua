@@ -243,7 +243,7 @@
 	function script.Killed(recentDamage,_)
 	Explode (rotator, SFX.SHATTER)
 	Explode (crane, SFX.FIRE)
-	suddenDeath(unitIDrecentDamage)
+	suddenDeath(unitID,recentDamage)
 	return 1
 	end
 

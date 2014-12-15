@@ -1,6 +1,6 @@
 
 jgeohive=piece"jgeohive"
-naptime=90000
+naptime=80000
 howManyHoneyPots=5
 
 monsterTable={}
@@ -17,7 +17,7 @@ local spSetUnitNoSelect=Spring.SetUnitNoSelect
 
 local x,y,z = Spring.GetUnitPosition(unitID)
 
-local teamID=Spring.GetUnitTeam(unitID)
+ teamID=Spring.GetUnitTeam(unitID)
 
 while(true) do
 ----Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
@@ -31,7 +31,7 @@ if enemyID ~= nil then
 	eteam=Spring.GetUnitTeam(enemyID)
 	ex,ey,ez=Spring.GetTeamStartPosition(eteam)
 	end
-	
+	Spring.SetUnitBlocking(unitID,false)
 	for i=1, howManyHoneyPots,1 do
 	spEmitSfx(jgeohive,1025)
 	spEmitSfx(jgeohive,1025)
@@ -65,7 +65,89 @@ if enemyID ~= nil then
 	spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
 	table.insert(monsterTable,spawnedUnit)
 	end
+	Sleep(10000)
+	Spring.SetUnitBlocking(unitID,true)
 end
+end
+end
+
+State="BUILDUP"
+BuildUPTime=30000
+PEAKFADETIME=30000
+time=0
+RandVAl=0
+
+function NextState()
+if State=="BUILDUP" and time > BuildUPTime then State="PEAK" time=0 end
+if State=="PEAK" and time > 85000 then State="PEAKFADE" time=0 end
+if State=="PEAKFADE" and time > PEAKFADETIME then State= "RELAX" time=0 end
+if State=="RELAX" and time > 60000+RandVAl then 
+State= "BUILDUP" 
+time=0 
+RandVAl= math.ceil(math.random(4000,60000)) end
+end
+
+funcTable={}
+
+			funcTable["PEAK"]= PEAK
+			funcTable["PEAKFADE"]=PEAKFADE
+			funcTable["BUILDUP"]=BUILDUP
+			funcTable["RELAX"]=RELAX
+
+
+--attack relentless
+function PEAK(monsterID, enemyID,Time,mteam)
+eteam=Spring.GetUnitTeam(enemyID)
+ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+return ex,ey,ez
+end
+PEAKFADEHALF=PEAKFADETIME/4
+function PEAKFADE(monsterID, enemyID,Time,mteam)
+if Time/PEAKFADETIME < 0.5 or math.random(1,Time,mteam)/PEAKFADEHALF > 1 then
+ex,ey,ez=Spring.GetUnitPosition(enemyID)
+return ex,ey,ez
+else
+eteam=Spring.GetUnitTeam(enemyID)
+ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+ax,ay,az=Spring.GetTeamStartPosition(mteam)
+cof=Time/PEAKFADETIME
+return (1-cof)*ex+ax*cof,ay,(1-cof)*ez+az*cof
+end
+
+end
+
+function BUILDUP(monsterID, enemyID,Time,mteam)
+coef=Time/BuildUPTime
+Inv=1-coef
+--we try to calc a midvalue -- and get everyone to assemble there
+ecx,ecy,ecz=Spring.GetUnitPosition(enemyID)
+eteam=Spring.GetUnitTeam(enemyID)
+ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+rx,ry,rz=(ecx*Inv+ex*coef)*0.5,(ecy+ey)*0.5,(ecz*Inv+ez*coef)*0.5
+--well away from the mainbase
+if math.abs(ex-rx)> 1000 and math.abs(ez-rz)> 1000 then 
+return rx,ry,rz 
+else --we assmeble at the middistance to our ally
+ally=Spring.GetUnitNearestEnemy(enemyID)
+ax,ay,az=Spring.GetUnitPosition(ally)
+return(ex*Inv+ax*coef)/2,(ey*Inf+ay*coef)/2,(ez*Inv+az*coef)/2
+
+end
+
+end
+
+function RELAX(monsterID, enemyID,Time,mteam)
+ally=Spring.GetUnitNearestEnemy(enemyID)
+eteam=Spring.GetUnitTeam(enemyID)
+if ally then
+ax,ay,az=Spring.GetUnitPosition(ally)
+return ax+math.random(-100,100),ay,az+math.random(-100,100)
+else
+ax,ay,azz=Spring.GetTeamStartPosition(mteam)
+ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+mx,my,mz=(ax+ex)*0.5+math.random(-100,100),(ay+ey)*0.5,(az+ez)*0.5+math.random(-100,100)
+return mx,my,mz
+
 end
 end
 
@@ -75,23 +157,30 @@ local spValidUnitID=Spring.ValidUnitID
 local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 local spGetUnitPosition=Spring.GetUnitPosition
 local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
-
+	
 	while(true) do
 	Sleep(5000)
+	time=time+5000
 		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
+		NextState()
 			for i=1,table.getn(monsterTable),1 do
-				if  (spValidUnitID(monsterTable[i]))== true then 
+				v=(spValidUnitID(monsterTable[i]))
+				if  v and v == true then 
+				
+				
+				
+				
+				
 					enemyID= spGetUnitNearestEnemy(monsterTable[i])
-						if enemyID ~= nil then
-						ex,ey,ez = spGetUnitPosition(enemyID)
-							if math.random(0,1)==1 then 
-							eteam=Spring.GetUnitTeam(enemyID)
-							ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-							end
+						if enemyID then
+						assert(funcTable[State])
+						assert(monsterTable[i])
+						ex,ey,ez = funcTable[State](monsterTable[i],enemyID,time,teamID)
+			
 						spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
 						end
 				end
-			Sleep(250)
+			
 			end
 		end
 

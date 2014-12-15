@@ -111,12 +111,14 @@ end
 		 
 	---- /////////////////////////////////// ZONEFUNCTIONS
 	function addReservoireZone(unitID,unitDefID,teamID)
-	
+		if not MasterTable[teamID]then MasterTable[teamID]={}	end
+		
 		if MasterTable[teamID][1] == nil then MasterTable[teamID][1]={} 	end
 		MasterTable[teamID][1][unitID] = unitID
 		end
 					
 	function addActionZone(unitID,unitDefID,teamID)
+		
 			if MasterTable[teamID][2] == nil then MasterTable[teamID][2]={}	end
 			MasterTable[teamID][2][unitID] = unitID
 			end	

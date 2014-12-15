@@ -172,7 +172,7 @@ local	boolDEBUG=true
 				
 	function resolveKinematics(x,y,z,  tPx,tPy,tPz, lorgx,lorgy,lorgz, number,targPoint)
  -- StartThread(markPosOnMap,tPx,tPy,tPz,"greenlight")
- -- StartThread( markPosOnMap,lorgx,lorgy,lorgz,"redlight")
+
 	--zero-Vector from the legsocket, to the groundtargPoint
 
 	zvx,zvy,zvz=(tPx-lorgx),tPy-lorgy,(tPz-lorgz)

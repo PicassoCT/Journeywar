@@ -17,7 +17,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local JBUILDANIM="NOTYPE"
 
 	--all units that are buildings
-	local jBuilding={
+	jBuilding={
 	[UnitDefNames["jswiftspear"].id]=true,
  	[UnitDefNames["jmovingfac1"].id]=true,	
 	[UnitDefNames["jdrilltree"].id]=true,
@@ -51,11 +51,11 @@ if (gadgetHandler:IsSyncedCode()) then
    local SyncedDataTable={}-- Table that contains some data about some units
    local scaleTable={}
    local jWorkInProgress={}
-   local buildList={}
+    buildList={}
    
     function gadget:UnitCreated(unitID, unitDefID, unitTeam)
       if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id  or 
-	  
+		boolPulse=false
 	    StartScale=0.06
 	--	if unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id then StartScale=0.52 end
 		
@@ -65,7 +65,10 @@ if (gadgetHandler:IsSyncedCode()) then
 		if unitDefID== UnitDefNames["jswiftspear"].id then ScaleFactorProFrame=0.001 		end --or unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id 	
 		if unitDefID== UnitDefNames["jbeherith"].id 	then ScaleFactorProFrame=0.0005 	end
 		if unitDefID== UnitDefNames["jsungodcattle"].id then ScaleFactorProFrame=0.0006 	end
-		if unitDefID== UnitDefNames["jspacebornembryo"].id then ScaleFactorProFrame=0 		end
+		if unitDefID== UnitDefNames["jspacebornembryo"].id then 
+		ScaleFactorProFrame=0 
+		boolPulse=true	
+		end
 		
 		if unitDefID== UnitDefNames["cawilduniverseappears"].id then 
 		ScaleFactorProFrame=0.05 
@@ -82,7 +85,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		ScaleUpLimit=3.14159
 		end
 		
-		scaleTable[unitID]={ scale=StartScale ,factor=ScaleFactorProFrame,utype=unitDefID,uid=unitID, scaleLimit=ScaleUpLimit}
+		scaleTable[unitID]={ scale=StartScale ,factor=ScaleFactorProFrame,utype=unitDefID,uid=unitID, scaleLimit=ScaleUpLimit, pulse=boolPulse}
 
 		
       -- Here the chosen units will be all moving unit. Put your own filter obviously!
@@ -95,9 +98,9 @@ if (gadgetHandler:IsSyncedCode()) then
       end
 		--if journeybuild animation
 	  	 if jBuilding[unitDefID] then
-		 Spring.Echo("JourneyBuilding Inserted")
-		 buildList[#buildList+1]={}
-		 buildList[#buildList]={unitID=unitID, unitDefID=unitDefID, unitTeam=unitTeam}		
+		 --Spring.Echo("JourneyBuilding Inserted")
+		 index=#buildList+1
+		 buildList[index]={unitID=unitID, unitDefID=unitDefID, unitTeam=unitTeam}		
 		 end
 	  
    end
@@ -133,21 +136,22 @@ if (gadgetHandler:IsSyncedCode()) then
 	
    
 		 if frame > 0 then
-			 if frame%2 == 0 then
+			 if frame%7 == 0 then
 					if table.getn(buildList) > 0 then 
-						for i=1, table.getn(buildList),1  do
+						for i=1, #buildList,1  do
 							x,y,z=Spring.GetUnitPosition(buildList[i].unitID)
 							id=Spring.CreateUnit("jbuildanim",x,y,z+4,0,buildList[i].unitTeam)			 
-							if id then
-							scaleTable[id]={scale=0.001, utype=JBUILDANIM, uid=id, scaleLimit=1+math.random(0.1,0.3)}
-							Spring.SetUnitAlwaysVisible(buildList[i].unitID,false)
-							Spring.SetUnitNoSelect(id,true)
-							jWorkInProgress[buildList[i].unitID] = id
-							
-									
-							SyncedDataTable[buildList[i].unitID] = {}
-							SyncedDataTable[buildList[i].unitID] = { birth=buildList[i].unitID + frame }	
-							end
+								if id then
+								guid=buildList[i].unitID
+								scaleTable[id]={scale=0.001, utype=JBUILDANIM, uid=id, scaleLimit=1+math.random(0.1,0.3), pulse=true}
+								Spring.SetUnitAlwaysVisible(guid,false)
+								Spring.SetUnitNoSelect(id,true)
+								jWorkInProgress[guid] = id
+								
+										
+								SyncedDataTable[guid] = {}
+								SyncedDataTable[guid] = { birth=buildList[i].unitID + frame }	
+								end
 						end
 					buildList={}
 					end

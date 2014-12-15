@@ -7,7 +7,7 @@ Pieces={}
 
 local ExcludeDefIDs={}
 ExcludeDefIDs[UnitDefNames["ccomender"].id]=true
-ExcludeDefIDs[UnitDefNames["jcomender"].id]=true
+ExcludeDefIDs[UnitDefNames["jabyss"].id]=true
 ExcludeDefIDs[UnitDefNames["citadell"].id]=true
 ExcludeDefIDs[UnitDefNames["beanstalk"].id]=true
 

@@ -99,7 +99,7 @@ end
 
 
 function script.Killed(recentDamage,_)
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 Sleep(10)
 return 0
 end

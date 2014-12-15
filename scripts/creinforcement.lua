@@ -262,7 +262,7 @@ end
 
 function script.Killed(recentDamage,_)
 
-	suddenDeath(unitIDrecentDamage)
+	suddenDeath(unitID,recentDamage)
 return 0
 end
 

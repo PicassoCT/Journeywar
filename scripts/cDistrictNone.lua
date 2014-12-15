@@ -275,7 +275,7 @@ local spGetUnitHealth=Spring.GetUnitHealth
 		
 			if math.random(0,1) ==1 then
 				maRa=math.random(1,8)
-				if replicPoints[maRa] then
+				if replicPoints[maRa] and replicPoints[maRa][1] and replicPoints[maRa][2] then
 				heapID=Spring.CreateUnit("gCiVillian",replicPoints[maRa][1],y, replicPoints[maRa][2], teamID)
 				end
 			end
@@ -303,7 +303,7 @@ function script.Killed(recentDamage,_)
 	heapID=Spring.CreateUnit("cRewarder",spx,spy,spz, math.max(teamID,-1))
 	Sleep(200)
 	
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 	
 	
 return 1

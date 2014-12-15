@@ -330,6 +330,12 @@ end
 
 -- overwrites engine's WaitForMove
 function Spring.UnitScript.WaitForMove(piece, axis)
+		if not piece then 
+			activeUnit	=GetActiveUnit()
+			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
+			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has error in a waitformove")               
+		end
+
         if sp_WaitForMove(piece, axis) then
                 local activeUnit = GetActiveUnit()
                 return WaitForAnim(activeUnit.threads, activeUnit.waitingForMove, piece, axis)
@@ -338,6 +344,8 @@ end
 
 -- overwrites engine's WaitForTurn
 function Spring.UnitScript.WaitForTurn(piece, axis)
+
+	
         if sp_WaitForTurn(piece, axis) then
                 local activeUnit = GetActiveUnit()
                 return WaitForAnim(activeUnit.threads, activeUnit.waitingForTurn, piece, axis)
@@ -358,6 +366,10 @@ function Spring.UnitScript.Sleep(milliseconds)
 
         local activeUnit = GetActiveUnit() or error("[Sleep] no active unit on stack?", 2)
         local activeThread = activeUnit.threads[co_running() or error("[Sleep] not in a thread?", 2)]
+		--if not activeThread then 
+		--	local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
+		--	Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a unthreaded Sleep")               
+		--end
 
         zzz[#zzz+1] = activeThread
         activeThread.container = zzz

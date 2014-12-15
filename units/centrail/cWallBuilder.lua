@@ -61,7 +61,7 @@ buildDistance = 155,
 SelfDestructAs="electric_explosion",
 buildoptions = 
 	{
-	"efence","bonker","geohive","chopper","combinedfeature",
+	"efence","bonker","geohive","chopper","combinedfeature","cdefusormine"
 	},
 	
 NoWeapon=false,
@@ -81,8 +81,6 @@ explodeAs = "factory_explosion",
 category=[[LAND]],
 
 weapons = {
-
-
 	[1]={name  = "cwallbuildw",
 	onlyTargetCategory = [[LAND]],
 	},
@@ -95,14 +93,6 @@ weapons = {
 	[4]={name  = "cwallbuildw",
 		onlyTargetCategory = [[LAND]],
 		},
-	-- [5]={name  = "lightningrocket",
-	-- onlyTargetCategory = [[LAND]],
-	-- },
-	-- [6]={name  = "lightningrocket",
-	-- onlyTargetCategory = [[LAND]],
-	-- },	
-
-		
 		},
 
 		

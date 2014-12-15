@@ -408,6 +408,7 @@ boolFirstActivation=false
 		Spring.CreateUnit("ccomederbunkerdecalfactory",x,y,z, 0, teamID)  
 		Sleep(10)
 	  HisID=	Spring.CreateUnit("ccomender",x,y,z, 0, teamID)  
+	  Spring.SetUnitBlocking(unitID,false)
 	  Spring.SetUnitMoveGoal(HisID,x+250,y,z)
 	  Hide(MEcha)
 return HisID

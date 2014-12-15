@@ -1,5 +1,5 @@
 
-
+include "toolKit.lua"
 
 --unitPieces
 local nanopiece = piece "nanopiece"
@@ -85,6 +85,23 @@ else
 xi= -8
 
 end
+--case its a health bomb
+hp=Spring.GetUnitHealth(unitID)
+	if hp > 0 then
+	x,y,z=Spring.GetUnitPosition(unitID)
+	teamid=SPring.GetUnitTeam(unitID)
+	T=grabEveryone(unitID,x,z,90,teamid)
+	hp=math.ceil(math.ceil(hp/2)/#T)
+		for i=1,#T do
+		EmitSfx(cdleg[(i%8)+1],1024)
+			p=Spring.GetUnitHealth(T[i])
+			if p then
+			Spring.SetUnitHealth(T[i],p+hp)
+			end
+		end
+	
+	
+	end
 
 Spin(conRoach,y_axis,math.rad(xi),0.1)
 Turn(conRoach,x_axis,math.rad(180),20)

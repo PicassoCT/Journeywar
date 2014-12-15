@@ -5,7 +5,7 @@ include "toolKit.lua"
 UnitsImune={}
 --added due to massive complaints on how unfair this is
 UnitsImune[UnitDefNames["ccomender"].id]=	true
---UnitsImune[UnitDefNames["jcomender"].id]=	true
+--UnitsImune[UnitDefNames["jabyss"].id]=	true
 UnitsImune[UnitDefNames["citadell"].id]=		true
 UnitsImune[UnitDefNames["beanstalk"].id]=	true
 UnitsImune[UnitDefNames["jglowworms"].id]=	true
@@ -19,7 +19,7 @@ UnitsImune[UnitDefNames["operatrans"].id]=	true
 UnitsImune[UnitDefNames["jsempresequoia"].id]=	true
 UnitsImune[UnitDefNames["jbutterfly"].id]=	true
 UnitsImune[UnitDefNames["jeliah"].id]=	true
-UnitsImune[UnitDefNames["jfiredanceglider"].id]=	true
+UnitsImune[UnitDefNames["jfiredancebomb"].id]=	true
 UnitsImune[UnitDefNames["jviciouscycler"].id]=	true
 UnitsImune[UnitDefNames["jstealthdrone"].id]=	true
 

@@ -20,7 +20,7 @@ turnrate=12200,
 tolerance=16000,
 tracks=true,
 Turnrate=32000,
-collideFriendly=true,
+collideFriendly=false,
 
 ----APPEARANCE
 model="cdDrone.s3o",
@@ -44,7 +44,7 @@ heavyarmor=350,
 },
 areaOfEffect=100,
 craterMult=0,
-
+noFriendlyCollide =true,
 --?FIXME***
 lineOfSight=true,
 

@@ -1,3 +1,4 @@
+include "toolKit.lua"
 local spiralCenter= piece"spiralCenter"
 local fireSpiral1= piece"fireSpiral1"
 local fireSpiral2= piece"fireSpiral2"
@@ -172,8 +173,16 @@ end
 
 function downCloud()
 	xor=0
+	
+	local spGetUnitPiecePosition =Spring.GetUnitPiecePosition
+	ox,oy,oz=spGetUnitPiecePosition(unitID,fireFx1)
+	ax,ay,az=spGetUnitPiecePosition(unitID,fireFx2)
+	bx,by,bz=spGetUnitPiecePosition(unitID,fireFx2)
 	while xor <explosionTotalTime do
 	EmitSfx(fireFx1,1034)
+	x,y,z=spGetUnitPiecePosition(unitID,fireFx1)
+	y=math.min(y+math.random(-10,10),oy)
+	MovePieceToPos(fireFx1,x+math.random(-10,10),y,z+math.random(-10,10),22)
 	EmitSfx(fireFx2,1034)
 	EmitSfx(fireFx3,1034)
 	d=math.ceil(math.random(200,400))
@@ -181,30 +190,29 @@ function downCloud()
 	xor=xor+d
 	end
 	
+	MovePieceToPos(fireFx1,ox,oy,oz,0)
+	WaitForMove(fireFx1,y_axis)
 	
 	while boolSmokeOnTheSlaughter == true do
 	rot=math.random(0,360)
 	Turn(spiralCenter,y_axis,math.rad(rot),0)
-	x=math.random(-55,55)
-	z=math.random(-55,55)
-	Move(fireFx1,x_axis,x,0)
-	Move(fireFx1,z_axis,z,0)
+
 	x=math.random(-55,55)
 	z=math.random(-55,55)
 	Move(fireFx3,x_axis,x,0)
 	Move(fireFx3,z_axis,z,0)
-	x=math.random(-35,35)
-	z=math.random(-35,35)
-	Move(fireFx2,x_axis,x,0)
-	Move(fireFx2,z_axis,z,0)
+
 	
+
+	MovePieceToPos(fireFx1,ox+math.random(-50,50),oy+math.random(0,10),oz+math.random(-50,50),0)
+	if math.random(0,1)==1 then 	EmitSfx(fireFx1,1035) else EmitSfx(fireFx1,1035) 	 end
+	--
+	MovePieceToPos(fireFx3,ax+math.random(-35,35),ay+math.random(0,10),oz+math.random(-35,35),0)
 	
-	
-	if math.random(0,1)==1 then 	EmitSfx(fireFx1,1030) else EmitSfx(fireFx1,1034) 	 end
-	
-	if math.random(0,1)==1 then 	EmitSfx(fireFx3,1030) else EmitSfx(fireFx3,1034) end
-	
-	if math.random(0,1)==1 then 	EmitSfx(fireFx2,1030) else 	EmitSfx(fireFx2,1034) end
+	if math.random(0,1)==1 then 	EmitSfx(fireFx3,1035) else EmitSfx(fireFx3,1027) end
+	--
+	MovePieceToPos(fireFx2,bx+math.random(-85,85),by+math.random(0,20),bz+math.random(-85,85),0)
+	if math.random(0,1)==1 then 	EmitSfx(fireFx2,1030) else 	EmitSfx(fireFx2,1035) end
 	d=math.ceil(math.random(5,15))
 	Sleep(d)
 
@@ -241,12 +249,25 @@ Sleep(125)
 end
 end
 
-function haveSoundArround()
-
+function additionalSound()
+Sleep(3500)
 Spring.PlaySoundFile("sounds/cComEnder/nukular.wav",1) 
 end
 
+function haveSoundArround()
 
+Spring.PlaySoundFile("sounds/cComEnder/nuke.ogg",1) 
+StartThread(additionalSound)
+end
+
+function shroom()
+
+for i=1,15 do
+EmitSfx(center,1036)
+Sleep(350)
+end
+
+end
 
  function damageFunction()
 
@@ -516,7 +537,7 @@ end
 	function threadMill()
 		--while true do
 	StartThread(actualExplosion)
-		
+	StartThread(shroom)	
 	--[[	 	
 		for i=1,(45000), 1 do
 		Sleep(12)

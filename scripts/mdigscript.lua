@@ -1,6 +1,7 @@
-
+include "toolKit.lua"
 local spinAroundSpot= piece "spinAroundSpot"
 
+treeSpot=piece"treeSpot"
 local mdwheelcenter= piece "mdwheelcenter"
 local mdwheell= piece"mdwheell"
 local mdwheelr= piece "mdwheelr"
@@ -35,7 +36,7 @@ local boolMurdered=false
 local boolAllreadyDeployed=false
 mexID = -666
 local boolCheckActive=false
-local boolStoped=true
+local boolMoving=false
 boolDeploy=false
 boolShortStop=false
 boolLongStop=false
@@ -89,11 +90,11 @@ Sleep(512)
 		end
 		
 end
-
+   local teamID = Spring.GetUnitTeam (unitID)
 --gets the Units Position, creates the Mex
 function makeMex()
 		   local x,y,z=Spring.GetUnitPosition (unitID)
-		   local teamID = Spring.GetUnitTeam (unitID)
+		
 		   mexID= Spring.CreateUnit("mdiggMex", x, y, z, 0, teamID)      --replace with your mex name
 	if (Spring.ValidUnitID (mexID)) == true then
 		   health=Spring.GetUnitHealth(unitID)
@@ -125,55 +126,55 @@ end
 function workInProgress()
 Signal(SIG_WIP)
 SetSignalMask(SIG_WIP)
-while(true)do
-Spin(mdwheelcenter,x_axis,math.rad(-40),9)
-Spin(mdwheell,y_axis,math.rad(-40),9)
-Spin(mdwheelr,y_axis,math.rad(40),9)
-Turn(mdmeltingp,y_axis,math.rad(-55),3)
-WaitForTurn(mdmeltingp,y_axis)
-unitX,unitY,unitZ =Spring.GetUnitPosition(unitID)
-CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,smokepiece )
-Spring.SpawnCEG("fireSparks",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
-EmitSfx(smokepiece, 258)
-StartThread(dirtEmit)
-Sleep(120)
-EmitSfx(smokepiece, 258)
---DustEmits?
-Turn(mdmeltingp,y_axis,math.rad(-120),3)
-WaitForTurn(mdmeltingp,y_axis)
-EmitSfx(smokepiece, 258)
-sparkEmit()
-StartThread(dirtEmit)
-Sleep(120)
-EmitSfx(smokepiece, 258)
-Turn(mdmeltingp,y_axis,math.rad(-180),3)
-WaitForTurn(mdmeltingp,y_axis)
-EmitSfx(smokepiece, 258)
-sparkEmit()
-StartThread(dirtEmit)
-Sleep(120)
-EmitSfx(smokepiece, 258)
-Turn(mdmeltingp,y_axis,math.rad(-230),3)
-WaitForTurn(mdmeltingp,y_axis)
-EmitSfx(smokepiece, 258)
-sparkEmit()
-StartThread(dirtEmit)
-Sleep(120)
-EmitSfx(smokepiece, 258)
-Turn(mdmeltingp,y_axis,math.rad(-300),3)
-WaitForTurn(mdmeltingp,y_axis)
-EmitSfx(smokepiece, 258)
-sparkEmit()
-StartThread(dirtEmit)
-Sleep(120)
-EmitSfx(smokepiece, 258)
-Turn(mdmeltingp,y_axis,math.rad(-360),3)
-WaitForTurn(mdmeltingp,y_axis)
-EmitSfx(smokepiece, 258)
-sparkEmit()
-StartThread(dirtEmit)
-Sleep(120)
-end
+	while(true)do
+	Spin(mdwheelcenter,x_axis,math.rad(-40),9)
+	Spin(mdwheell,y_axis,math.rad(-40),9)
+	Spin(mdwheelr,y_axis,math.rad(40),9)
+	Turn(mdmeltingp,y_axis,math.rad(-55),3)
+	WaitForTurn(mdmeltingp,y_axis)
+	unitX,unitY,unitZ =Spring.GetUnitPosition(unitID)
+	CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,smokepiece )
+	Spring.SpawnCEG("fireSparks",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
+	EmitSfx(smokepiece, 258)
+	StartThread(dirtEmit)
+	Sleep(120)
+	EmitSfx(smokepiece, 258)
+	--DustEmits?
+	Turn(mdmeltingp,y_axis,math.rad(-120),3)
+	WaitForTurn(mdmeltingp,y_axis)
+	EmitSfx(smokepiece, 258)
+	sparkEmit()
+	StartThread(dirtEmit)
+	Sleep(120)
+	EmitSfx(smokepiece, 258)
+	Turn(mdmeltingp,y_axis,math.rad(-180),3)
+	WaitForTurn(mdmeltingp,y_axis)
+	EmitSfx(smokepiece, 258)
+	sparkEmit()
+	StartThread(dirtEmit)
+	Sleep(120)
+	EmitSfx(smokepiece, 258)
+	Turn(mdmeltingp,y_axis,math.rad(-230),3)
+	WaitForTurn(mdmeltingp,y_axis)
+	EmitSfx(smokepiece, 258)
+	sparkEmit()
+	StartThread(dirtEmit)
+	Sleep(120)
+	EmitSfx(smokepiece, 258)
+	Turn(mdmeltingp,y_axis,math.rad(-300),3)
+	WaitForTurn(mdmeltingp,y_axis)
+	EmitSfx(smokepiece, 258)
+	sparkEmit()
+	StartThread(dirtEmit)
+	Sleep(120)
+	EmitSfx(smokepiece, 258)
+	Turn(mdmeltingp,y_axis,math.rad(-360),3)
+	WaitForTurn(mdmeltingp,y_axis)
+	EmitSfx(smokepiece, 258)
+	sparkEmit()
+	StartThread(dirtEmit)
+	Sleep(120)
+	end
 end
 
 function killMex()
@@ -246,7 +247,7 @@ function Killed()
 end
 
 function script.StartMoving()
-
+boolMoving=true
 Signal(SIG_MINE)
 		killMex()
 		
@@ -263,6 +264,7 @@ Signal(SIG_MINE)
 end
 
 function script.StopMoving()
+boolMoving=false
 StartThread(delayedCheck)
 ----Spring.Echo("Stoped Moving")
 boolShortStop=true
@@ -280,12 +282,7 @@ end
 --Killed
 
 function script.Create()
---[[<buildanimationscript>
-x,y,z=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
-Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
-
---</buildanimationscript>]]
+StartThread(treeTrample)
 
 	Hide(mdprojecti)
 ----Spring.Echo("I speak, therefore I exist.")
@@ -293,13 +290,38 @@ end
 
 
 ------------------------------------------------------------------------------------------
+	TrampledTrees={}
+
+	function treeTrample()
+	local	treeTypeTable=getTypeTable(UnitDefNames,{
+												"jtree",
+												"jtreedummy",
+												"jtree2",
+												"jtree2dummy",
+												"jtree3",
+												"jtree3dummy",
+												"jtreel"
+												})
+		while true do
+		
+			while boolMoving==true do
+			x,_,z=Spring.GetUnitPiecePosDir(unitID,treeSpot)
+			T=grabEveryone(unitID,x,z,50,teamID)
+				if T then
+				T=filterUnitTableforDefIDTable(T,treeTypeTable)
+					if T then
+					TableMergeTable(TrampledTrees,T)
+					end
+				end
+			Sleep(150)
+			end
+		Sleep(300)	
+		end
+
+	end
 
 
-
-
-
-
-  
+	  
   
 
 

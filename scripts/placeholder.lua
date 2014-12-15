@@ -1,12 +1,13 @@
 include "suddenDeath.lua"
 include "toolKit.lua"
---HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
+function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+end
 center=piece"center"
 
 function script.Create()
 generatepiecesTableAndArrayCode(unitID)
-StartThread(testEmit)
+
 end
 
 function script.Killed(recentDamage,_)
@@ -21,22 +22,6 @@ function script.AimFromWeapon1()
 	return center 
 end
 
-function testEmit()
-Sleep(500)
-Kugel=piece"Kugel02"
-Move(Kugel,y_axis, -40,0)
-Move(Kugel,x_axis,100,0)
-Hide(Kugel)
-	if Kugel then
-		while true do
-	
-		EmitSfx( Kugel,1025)
-		Sleep(1300)
-		EmitSfx(Kugel,1024 )
-		Sleep(10000)
-		end
-	end
-end
 
 
 function script.QueryWeapon1() 

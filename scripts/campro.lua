@@ -1,4 +1,5 @@
 include "suddenDeath.lua"
+include "toolKit.lua"
 --Define the wheel pieces
 
 --Define the pieces of the weapon
@@ -52,10 +53,10 @@ proChoice=Spring.GetUnitsInCylinder(piecePosX, piecePosZ,selectRange )--no idea 
 end
 					
 
-
+maxspeed=math.ceil(UnitDefNames["campro"].speed *65533)
+				
 boolReadyFire=true
 function flareThread()
-SetSignalMask(SIG_FLARE)
 Spring.PlaySoundFile("sounds/campro/antimatter.wav")
 Sleep(1000)
 boolReadyFire=false
@@ -80,6 +81,9 @@ for i=1,14,1 do
 	
 Sleep(1900)
 boolReadyFire=true
+boolMove=true
+assert(maxspeed)
+SetUnitValue(COB.MAX_SPEED,maxspeed)
 end
 
 
@@ -93,6 +97,8 @@ function script.QueryWeapon1()
 end
 
 	function script.AimWeapon1( heading, pitch )
+	if boolMove==false then return false end
+	
 	Turn(amturret,y_axis,heading,2.1)
 	WaitForTurn(amturret,y_axis)
 	if boolReadyFire== true then
@@ -102,8 +108,11 @@ end
 	end
 
 	end
-
+	
+boolMove=true
 function script.FireWeapon1()	
+boolMove=false
+SetUnitValue(COB.MAX_SPEED,1)
 StartThread(flareThread)
 	return true
 end
@@ -112,13 +121,13 @@ function script.Killed(recentDamage, maxHealth)
 	EmitSfx(amturret,1025)
 	Explode(amturret,SFX.FIRE +SFX.FALL)
 	x,_,z=Spring.GetUnitPosition(unitID)
-	
+	defID=UnitDefNames["campro"].id
 
 	process(filterTableByTable( grabEveryone(unitID,x,z,90,teamID),
-								{[1]=UnitDefNames["campro"].id},
-								function(f1,f2)
-								def=Spring.GetUnitDefID(f1) 
-								return def==f2 
+								defID,
+								function(id, defID)
+								def=Spring.GetUnitDefID(id) 
+								return def==defID 
 								end)
 								,
 								function(id)Spring.DestroyUnit(id) end )
@@ -131,9 +140,10 @@ end
 
 
 function script.StartMoving()
-Signal(SIG_FLARE)
+if boolMove==true then
 Turn(amturret, y_axis, math.rad(0), 4)											
-																								
+end	
+																							
 end
 
 function script.StopMoving()

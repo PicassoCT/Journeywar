@@ -219,7 +219,7 @@ Sleep(400)
 
 Explode(potato,SFX.FALL+SFX.NO_HEATCLOUD)
 Hide(potato) 
-
+suddenDeathjBuildCorpse(unitID, recentDamage)
 end
 
 function radiation()

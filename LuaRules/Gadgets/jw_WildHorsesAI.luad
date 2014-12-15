@@ -11,7 +11,33 @@ function gadget:GetInfo()
                 enabled = false
         }
 end
- 
+
+--wishlist
+FutureUseDefID={DefID={Base Def Aggr}}
+
+CurrentUseDefID={DefID={Base Def Aggr}}
+
+ExpUseDefID ={DefID={Base Def Aggr}}
+
+--Observe
+Agg:  Basically a copy running on the enemys side - merged with real Observations
+Def:  Reevaluate  MexPositions and Factorys
+Base: Detect Stall,
+
+--Think
+Movement
+
+
+Fund Distribution
+	If you got funding- split it by three
+		if you got funding for aggr most wanted wish fund it
+		else default aggr funding to def
+		if you got funding for def most wanted wish fund it
+		else default funding to base
+		
+--Act		
+
+--================================================================================================
 local STATE_EMPTY    =0
 local STATE_OWN      =1
 local STATE_ENEMY    =2

@@ -1,8 +1,12 @@
+include "toolKit.lua"
+
 center=piece"center"
 rotationspot=piece"rotationspot"
 Carrier3DS=piece"Carrier.3DS"
 Turb1=piece"Turb1"
 Main=piece"Main"
+
+unitdef=Spring.GetUnitDefID(unitID)
 
 function playRadomBattleSound(Nr,chanceIt)
 local spPlaySoundFile=Spring.PlaySoundFile
@@ -18,9 +22,8 @@ if y==1 then
 	rand=math.random(1,19)
 	resultString=FourString..rand
 	resultString=resultString..SecondString
-	spPlaySoundFile(resultString)
-	napTime=math.random(1700,3500)
-	Sleep(napTime)
+	PlaySoundByUnitType(unitdef, resultString,1.0, 3500, 1)
+
 
 	end
 end
@@ -28,23 +31,20 @@ end
 end
 
 function playBattleLoop()
-local spPlaySoundFile=Spring.PlaySoundFile
-dice=math.random(0,1)
-if dice== 1 then
-decDicer=math.random(0,1)
-	if decDicer==1 then
-	spPlaySoundFile("sounds/gCrubbleHeap/battle_loop1.wav")
-	else
-	spPlaySoundFile("sounds/gCrubbleHeap/battle_loop2.wav")
-	end
-else
 
-end
+	if maRa()==true then
+	decDicer=math.random(0,1)
+		if decDicer==1 then
+		PlaySoundByUnitType(unitdef, "sounds/gCrubbleHeap/battle_loop1.wav",1.0, 30000, 1)
+		else
+		PlaySoundByUnitType(unitdef, "sounds/gCrubbleHeap/battle_loop2.wav",1.0, 30000, 1)
+		end
+	end
 Sleep(30000)
 end
 
 function soundEmit()
-for i=0,4,1 do
+for i=1,4,1 do
 --firstMinute
 if i==1 then
 StartThread(playRadomBattleSound,12,false)
@@ -71,6 +71,7 @@ function script.Create()
 StartThread(Emit)
 Spring.SetUnitNeutral(unitID,true)
 Spring.SetUnitNoSelect(unitID,true)
+Spring.SetUnitAlwaysVisible(unitID,true)
 Turn(center,x_axis,math.rad(23),0)
 StartThread(dropFromTheSky)
 x=math.random(-360,360)
@@ -110,7 +111,7 @@ for i=1, 500,1 do
 
 
 	
-id1,id2,id3,id4="doa","doa","doa","doa"	
+
 	for i=1,25,1 do
 	time=math.ceil(math.random(1900,29000))
 		Sleep(time)
@@ -124,7 +125,7 @@ id1,id2,id3,id4="doa","doa","doa","doa"
 		rot=math.floor(math.random(1,3))
 	Spring.CreateFeature( "cInfantryCorpse", x+dx,y,z+dz, rot)
 		
-	if i%6== 0 then StartThread(soundEmit) end
+		if i%6== 0 then StartThread(soundEmit) end
 
 	end
 	id=Spring.CreateUnit("ccomendernuke",x,y,z, 0,teamID ) 

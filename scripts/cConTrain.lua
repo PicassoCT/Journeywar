@@ -13,7 +13,7 @@ ctgoresub={}
 
 for i=1,7,1 do
 ctgoresub[i]={}
-local ctgore= "ctgore"..i
+ctgore= "ctgore"..i
 ctgoresub[i]=piece (ctgore)
 end
 
@@ -35,29 +35,29 @@ local uCanTurnMeOn= piece "uCanTurnMeOn"
 
 railCirc ={}
 --the Ring Rail
-local cRailCirc0 = piece "cRailCirc0"
+  cRailCirc0 = piece "cRailCirc0"
 railCirc[1]=cRailCirc0 
-local cRailCirc1 = piece "cRailCirc1"
+  cRailCirc1 = piece "cRailCirc1"
 railCirc[2]=cRailCirc1 
-local cRailCirc2= piece "cRailCirc2"
+  cRailCirc2= piece "cRailCirc2"
 railCirc[3]=cRailCirc2 
-local cRailCirc3= piece "cRailCirc3"
+  cRailCirc3= piece "cRailCirc3"
 railCirc[4]=cRailCirc3 
-local cRailCirc4= piece "cRailCirc4"
+  cRailCirc4= piece "cRailCirc4"
 railCirc[5]=cRailCirc4 
-local cRailCirc5= piece "cRailCirc5"
+  cRailCirc5= piece "cRailCirc5"
 railCirc[6]=cRailCirc5 
-local cRailCirc6= piece "cRailCirc6"
+  cRailCirc6= piece "cRailCirc6"
 railCirc[7]=cRailCirc6 
-local cRailCirc7= piece "cRailCirc7"
+  cRailCirc7= piece "cRailCirc7"
  railCirc[8]=cRailCirc7 
-local cRailCirc8= piece "cRailCirc8"
+  cRailCirc8= piece "cRailCirc8"
 railCirc[9]=cRailCirc8 
-local cRailCirc9= piece "cRailCirc9"
+  cRailCirc9= piece "cRailCirc9"
 railCirc[10]=cRailCirc9 
-local cRailCirc10= piece "cRailCirc10"
+  cRailCirc10= piece "cRailCirc10"
  railCirc[11]=cRailCirc10 
-local cRailCirc11= piece "cRailCirc11"
+  cRailCirc11= piece "cRailCirc11"
 railCirc[12]=cRailCirc11 
 
 -----------------------------------------------------------------------------------
@@ -242,7 +242,7 @@ pillar6[#pillar6+1]=intFeetUnder
 --train
 
 
-local usul={}
+usul={}
 usul[#usul+1]=pillar1
 usul[#usul+1]=pillar2
 usul[#usul+1]=pillar3
@@ -284,8 +284,8 @@ local STurn=2 -- Situation Train is turning
 local SMove=4 -- Situation Train is moving
 
 --SignalMaks
-local SIG_MOVE=2
-local SIG_MDETEC=4
+ SIG_MOVE=2
+ SIG_MDETEC=4
  SIG_PIL1=8
  SIG_PIL2=16
  SIG_PIL3=32
@@ -336,16 +336,6 @@ table.insert(boolLocks,1,boolCMLock)
 table.insert(globalBooleans,2,boolConstantTurn)
 table.insert(boolLocks,2,boolCTLock)
 
-local function getSpeed()
---local currentSpeed=0
-----Spring.Echo("CurrentSpeed",currentSpeed)
---it only computes the speed every third call,to avoid spaming the engine
-
-
-
-return currentSpeed
-
-end
 
  function workInProgress()
 
@@ -377,9 +367,6 @@ end
 
 function script.StopBuilding()
 	Signal(SIG_WIP)
-
-
-
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
 
@@ -499,7 +486,7 @@ proLife=table.getn(proChoice)
 										Spring.UnitScript.DropUnit(trainFullDeathID)
 										end
 
-										tempSpeed=getSpeed()
+										tempSpeed=currentSpeed
 										Move(iWantAHug,x_axis,-132.04, tempSpeed)
 										Spring.SetUnitNoDraw(trainFullDeathID,true)
 										Spring.UnitScript.DropUnit(trainFullDeathID)
@@ -562,18 +549,10 @@ local spGetUnitVelocity=Spring.GetUnitVelocity
 				velX,velY,velZ=spGetUnitVelocity(unitID)
 				Sleep(100)
 				end
-
-
-				Sleep(15)
 				
-
-
+				Sleep(15)
 							 currentSpeed= math.sqrt(velX*velX + velZ*velZ)
-						
-
 	Sleep(300)
-
-	----Spring.Echo("CurrentSpeed:", currentSpeed)
 	end
 
 end
@@ -619,23 +598,18 @@ function motionDetec()
 ----Spring.Echo("ComeAlive")
 boolFirstCompare=false
 
-
-
 	while(true) do
 
-		if speedBiggerThenMin(getSpeed()) == true then
+		if speedBiggerThenMin(currentSpeed) == true then
 		boolFirstCompare=true
 		end
 		Sleep(150)
-		if speedBiggerThenMin(getSpeed()) == true  and boolFirstCompare == true then
+		if speedBiggerThenMin(currentSpeed) == true  and boolFirstCompare == true then
 		   threadSafety(1,true,1)
 		else
 		boolFirstCompare=false
 		  threadSafety(1,false,1)
 		end
-
-		----Spring.Echo("boolFirstCompare",boolFirstCompare)
-
 
 	Sleep(150)
 	end
@@ -663,8 +637,8 @@ local function speedTransForm(boolT_PillarMov_F_MoveSpeed,speed, pillarNumber)
 	return speedTotal
 						else
 						--determine the speed
-						--TempSpeed=getSpeed()
-						--STspeed=getSpeed()/7.2 --between 0 -1
+						--TempSpeed=currentSpeed
+						--STspeed=currentSpeed/7.2 --between 0 -1
 						--then deterinate the range the unit makes at max in one second
 						--range=STspeed*216       --distance the unit gets across in one second
 						--nrOfPillars=range/61 --   0.1 - 3.1        --how many pillars the unit does cross in one second
@@ -672,9 +646,6 @@ local function speedTransForm(boolT_PillarMov_F_MoveSpeed,speed, pillarNumber)
 						--distance/time = velocity
 						veloCity=61/(1/(((speed/7.2)*216 )/61))
 						 --61
-				--		--Spring.Echo("VeloCity:",veloCity)
-
-
 						return veloCity
 						end
 end
@@ -688,9 +659,8 @@ function foldPillar(number,callingSituation,boolInstReset)
 Sicknall=siGnall[number]
 SetSignalMask(Sicknall)
 local speedO=0
-if number==nil then --Spring.Echo ("Error: Pillar number handed to fold Thread is nil") 
-end
-speed=getSpeed()
+
+speed=currentSpeed
 if speed== nil then speed=0 end
 
 -- this function uses comonPillarSpeed update in the situation-While-loop to save performance
@@ -767,7 +737,7 @@ WaitForTurn(usul[number][2],z_axis)
 																--This loop wont end, before the pillar is underground)
 																while(true==Spring.UnitScript.IsInMove (piece ("cPilar"..number), y_axis)) do
 																--check if speed has changed
-																currentSpeed=getSpeed()
+																currentSpeed=currentSpeed
 																currentSpeed=currentSpeed-speed --calc the Difference
 																	if speedCompare(currentSpeed,speedO,speedCompareTolerance) == true then
 																	currentSpeed=currentSpeed+speed
@@ -793,7 +763,7 @@ local speedU=0
 	if number== nil then
 	--Spring.Echo("Error:Nil-Number handed over to a UnfoldPillar-Method")
 	end
-speed=getSpeed()
+speed=currentSpeed
 if speed== nil or speed== 0 then speed=0 end
 
 	if number == 4 and callingSituation== SMove then
@@ -987,7 +957,7 @@ function AdjustPillarHeight()
 
 	while(true) do
 	----Spring.Echo("Pillar Loop Reportin In")
-	tempCurrSpeed=getSpeed()--gets the currentspeed
+	tempCurrSpeed=currentSpeed--gets the currentspeed
 
 
 		if tempCurrSpeed < 1  then
@@ -1046,14 +1016,14 @@ end
 
 --function: OS-Loop which if the contrain moves constantly, makes sure moveIt Threads are called constantly
 function movMent()
-local 	speedOfOld	=speedTransForm(false,getSpeed())
+local 	speedOfOld	=speedTransForm(false,currentSpeed)
 
 Sleep(75)
 --local 	newSpeed	=0
 --local   boolFinnish=true
 --local   boolDontMove
 local lgetConstantMove=getConstantMove
-local lgetSpeed=getSpeed
+
 local lspeedCompare=speedCompare
 local lresetTracks=resetTracks
 	while(true) do
@@ -1062,9 +1032,9 @@ local lresetTracks=resetTracks
 
 					if lgetConstantMove()==true then
 
-										while lgetConstantMove()==true and lgetSpeed() > 0.05 do-- added the getSpeed() compare to avoid it getting into Movement with zeroSpeed
+										while lgetConstantMove()==true and currentSpeed > 0.05 do-- added the currentSpeed compare to avoid it getting into Movement with zeroSpeed
 
-										newSpeed=speedTransForm(false,lgetSpeed())
+										newSpeed=speedTransForm(false,currentSpeed)
 
 
 
@@ -1352,7 +1322,7 @@ local lspeedTransForm=speedTransForm
 
 	while(getConstantMove()==true and getConstantTurn()==false)==true do
 	--loop updates the comonPillarSpeed
-	comonPillarSpeed=lspeedTransForm(true,getSpeed(),1)
+	comonPillarSpeed=lspeedTransForm(true,currentSpeed,1)
 
 	----Spring.Echo("SitMove")
     Sleep(175)
@@ -1370,7 +1340,7 @@ function PillarManager()
 local newSituation=SStop
 local oldSituation=SStop
 
-local speedOfOld=getSpeed()
+local speedOfOld=currentSpeed
 local lgetConstantMove=getConstantMove
 local lsitStop=sitStop
 local lsitTurn=sitTurn
@@ -1393,7 +1363,7 @@ local currySpeed=0
 									 end
 					 ----Spring.Echo("new Situation:",newSituation)
 					 --speedUpdate
-					 currySpeed=getSpeed()
+					 currySpeed=currentSpeed
 						--if speed changes out of tolerance
 					 if  newSituation ~= oldSituation or (speedCompare(currySpeed,speedOfOld,1.08,false)== true) then
 

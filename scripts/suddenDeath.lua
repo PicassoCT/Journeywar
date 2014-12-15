@@ -1,3 +1,5 @@
+include "toolKit.lua"
+
 function suddenDeath(unitID,recentDamage)
 --<RubbleScript>
 	if unitID and Spring.ValidUnitID(unitID)==true  then
@@ -106,6 +108,36 @@ if recentDamage== nil or  recentDamage > 1 then
 	heading=Spring.GetUnitHeading(unitID)
 	heapID=Spring.CreateUnit("gJMedBioWaste",spx,spy,spz, 1, teamID)
 	
+	Spring.SetUnitDirection(heapID,dx,dy,dz)
+	--Spring.SetUnitDirection(heapID,dirx,diry,dirz)
+	Spring.SetUnitNeutral(heapID,true)
+
+end 	
+
+
+end
+
+
+function suddenDeathjBuildCorpse(unitID, recentDamage)
+teamID=Spring.GetUnitTeam(unitID)
+
+if recentDamage and  recentDamage > 1 then
+	--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
+	spx,spy,spz=Spring.GetUnitPosition(unitID)
+	--teamID=Spring.GetUnitTeam(unitID)
+
+	--dirx,diry,dirz=Spring.GetUnitDirection(unitID)
+	dx,dy,dz=Spring.GetUnitDirection(unitID)
+	heading=Spring.GetUnitHeading(unitID)
+	heapID=0
+	DefID=Spring.GetUnitDefID(unitID)
+	DefT=getTreeTypeTable(UnitDefNames)
+	
+	if not DefT[DefID] then
+	heapID=Spring.CreateUnit("jscrapheap",spx,spy,spz, 1, teamID)
+	else
+	heapID=Spring.CreateUnit("jscrapheap_tree",spx,spy,spz, 1, teamID)
+	end
 	Spring.SetUnitDirection(heapID,dx,dy,dz)
 	--Spring.SetUnitDirection(heapID,dirx,diry,dirz)
 	Spring.SetUnitNeutral(heapID,true)

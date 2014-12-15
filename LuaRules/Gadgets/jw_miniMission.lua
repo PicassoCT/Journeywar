@@ -1,8 +1,8 @@
 
 function gadget:GetInfo()
   return {
-    name      = "MiniMissions in Multiplayer",
-    desc      = "Gadget deploys missions for players",
+    name      = "MiniMissions",
+    desc      = "Multiplayermissions",
     author    = "Its like the orginial Dr.Devil, just 1/8 the size.",
     date      = "Sep. 2008",
     license   = "GNU GPL, v2 or later",
@@ -33,14 +33,199 @@ local MissionFunctionTable={}
 local _gaiaTeam=Spring.GetGaiaTeamID()
 local spGetUnitTeam=Spring.GetUnitTeam
 
+Name,charPerLine, Alpha, DefaultSleepByline = "Mission", 60, 255, 150
 -- INCLUDES
 VFS.Include("scripts/toolKit.lua")
 
+--Mission1-----------------------------------------------------------------------------------------
+
+
+--Captain Hornblow   #1
+--teamID,leader,boolIsDead,boolIsAITeam,side,_,_,_=	Spring.GetTeamInfo(teamID)
+function checkIfContainerisNearAGate(unitID)
+if not unitID or Spring.ValidUnitID(unitID)==false then return true end
+
+	if Spring.GetUnitIsDead(unitID)==false then
+	x,y,z=spGetUnitPos(unitID)
+		if x~=nil then
+		
+			proChoice={}
+			proChoice=spGetUnitInCylinder(x, z, 350 )
+			
+				for i=1,table.getn(proChoice),1 do 
+					if proChoice[i]~=unitID then 
+					tempDefID=spGetUnitDef(proChoice[i])
+						if tempDefID== UnitDefNames["fclvlone"].id or tempDefID== UnitDefNames["fclvl2"].id or tempDefID== UnitDefNames["citadell"].id then
+						doubleTeamID=spGetUnitTeam(proChoice[i])
+						Spring.DestroyUnit(unitID,false,true)
+						diceOfIce=math.random(1,3)
+							spPlaySound("sounds/Missions/Reward.wav",1)		
+							if diceOfIce==1 then 
+							GG.UnitsToSpawn:PushCreateUnit("strider",x,y,z, 0,doubleTeamID ) 
+								elseif diceOfIce==2 then
+								GG.UnitsToSpawn:PushCreateUnit("crewarder",x,y,z, 0,doubleTeamID ) 
+									else
+									GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x,y,z, 0,doubleTeamID ) 
+									GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x+25,y,z, 0,doubleTeamID ) 
+									GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x,y,z+25, 0,doubleTeamID ) 
+									end
+					
+						return true
+						end 
+					end
+
+
+
+				--get UnitsWithinCone
+
+
+
+
+				end
+		end
+	end	
+return false
+end
+
+function captationHornblow(frame)
+missionValue=650
+
+
+--S-pring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
+
+	if MissionFunctionTable[1][2]== nil then MissionFunctionTable[1][2]=frame end
+	
+	
+	if MissionFunctionTable[1][3]== nil then MissionFunctionTable[1][3]= -1 end --MissionProgressCounter
+	
+	 
+--S-pring.Echo("Mission   @::",MissionFunctionTable[1][3])
+--S-pring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
+	
+	if MissionFunctionTable[1][3]== -1 then
+
+	spPlaySound("sounds/Missions/CaptainHornblowIntro.wav",1)
+	
+		
+	
+	MissionFunctionTable[1][3]=MissionFunctionTable[1][3]+1
+	return false
+	end
+	
+
+	
+		if MissionFunctionTable[1][3]== 0 and frame-MissionFunctionTable[1][2] > 1150 then
+		
+		spPlaySound("sounds/Missions/mission1goingdown.ogg",1)		
+	
+	
+		MissionFunctionTable[1][3]= MissionFunctionTable[1][3]+1
+			
+		return false	
+		end
+	
+	
+		if MissionFunctionTable[1][3]== 1 and frame-MissionFunctionTable[1][2] > 2650  then
+		--S-pring.Echo("MISSION::SpawnSHIP")
+		
+	
+		
+		teamTable=Spring.GetTeamList()
+
+	
+		
+		x=Game.mapSizeX/2
+		z=Game.mapSizeZ/2
+		--S-pring.Echo("JW_MiniMIssion::",x.." and :", z)
+		
+		hornBlowID=spCreateUnit("ghornblow",x,0,z, 0,teamTable[1] ) 
+		if Spring.ValidUnitID(hornBlowID)==false then return false end
+		spSetUnitNeutral(hornBlowID,true)
+		MissionFunctionTable[1][11]=hornBlowID		
+			
+		
+		MissionFunctionTable[1][3]=MissionFunctionTable[1][3]+1
+		return false
+		end
+		
+		
+		if MissionFunctionTable[1][3]== 2 and frame-MissionFunctionTable[1][2] > 4650  then
+
+		spPlaySound("sounds/Missions/miss1landed.ogg",1)		
+	
+
+	
+
+		
+		x,y,z=spGetUnitPos(MissionFunctionTable[1][11])
+		
+	
+		MissionFunctionTable[1][13]={}
+		MissionFunctionTable[1][13]=spCreateUnit("gconvoycontainers",x+80,y,z, 0,_gaiaTeam ) 
+		spSetAlwaysVisible(MissionFunctionTable[1][13],true)
+		MissionFunctionTable[1][14]={}
+		MissionFunctionTable[1][14]=spCreateUnit("gconvoycontainers",x-80,y,z, 2,_gaiaTeam ) 
+		spSetAlwaysVisible(MissionFunctionTable[1][14],true)
+		MissionFunctionTable[1][15]={}
+		MissionFunctionTable[1][15]=spCreateUnit("gconvoycontainers",x,y,z+80, 1,_gaiaTeam ) 
+		spSetAlwaysVisible(MissionFunctionTable[1][15],true)
+	
+		
+			
+		--S-pring.Echo("PlayThatfunkyMissionSound")
+		
+		MissionFunctionTable[1][3]=MissionFunctionTable[1][3]+1
+		return false
+		end
+
+			if MissionFunctionTable[1][3]== 3 and frame % 20 == 0 then
+			   --Mission abort and victory conditions
+				if Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true and Spring.GetUnitIsDead(MissionFunctionTable[1][14])==true and  Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true  then
+				return true
+				end
+			else--Mission ongoing
+			--S-can for Containers who have reached a gate
+			MissionFunctionTable[1][16]=false
+			MissionFunctionTable[1][17]=false
+			MissionFunctionTable[1][18]=false
+			MissionFunctionTable[1][16]=checkIfContainerisNearAGate(MissionFunctionTable[1][13])
+			MissionFunctionTable[1][17]=checkIfContainerisNearAGate(MissionFunctionTable[1][14])
+			MissionFunctionTable[1][18]=checkIfContainerisNearAGate(MissionFunctionTable[1][15])	
+			
+	
+			
+				if MissionFunctionTable[1][17] == true or MissionFunctionTable[1][16] == true or MissionFunctionTable[1][18]== true then
+				spPlaySound("sounds/Missions/miss1finalls.ogg",1)		
+				return true
+				end
+				
+			
+			
+			
+			return false
+			end
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+return false
+end
+
+
+--/Mission1-----------------------------------------------------------------------------------------
+	
 --Mission2-----------------------------------------------------------------------------------------
 string1="I dont like this anymore then you do, Administrator, we all miss out on the joys of our lifetime as we speak. Im  komA IcnivaD, the Centrail appointed Leviathan Cybernetic for this backwater dimension. So lets get this over with-<Papersound> I have a right to acquire any means of transport andor ressources necessary for my mission. However, you are not responsible for my personal safety. Should this biorganic one-way break down - the diplomatic corpse will build or aquire a new one in the city, and we will start the whole endavour over. So no panic, beeing a abstract has its benefits."
 string2="Lets clarify the rules of engagment, shall we, while we are still on our own, Administrator. First: No reaction, to violence. Your Weapons are decoration. Ruin my work, and i see you in eternal pain on a public place incity. Do we understand each other? Second: No snickering, or abuse. They may be statistically blind animals, deluding themselves that the holy brainstem wrote down,just what they felt was the right minima of societys rules. No matter what, even if they regard cannibalist weddings a holy duty - while condemning murder, we wont stop barbaric customs.Why? Because of the Ant-Paradoxon.Ants travell using floating leaves. Would the Agentants know about dangerdistribution and lifeboats,they would all huddle inwards - towards the queen. And Blubb! The Centrailconfederacy trusts you not to Blubb  - evenot knowing what is at stake. "
 	function stillAlive(ambID,tribeHouseIDT)
-
+	if type(tribeHouseIDT) ~= "table" then return false end
+	
 		for i=1,table.getn(tribeHouseIDT),1 do
 			if Spring.ValidUnitID(tribeHouseIDT[i])==true and Spring.GetUnitIsDead(tribeHouseIDT[i])== true then return false end
 		end
@@ -72,7 +257,7 @@ string2="Lets clarify the rules of engagment, shall we, while we are still on ou
 		for i=1, table.getn(tables), 1 do
 		_,_,_,_,side,_,_,_=Spring.GetTeamInfo(tables[i])
 	
-		--Spring.Echo("jw_MINi:SIDE",side)
+		--S-pring.Echo("jw_MINi:SIDE",side)
 			if string.lower(side) == "centrail" then
 			TeamCentId=tables[i]
 			end
@@ -99,18 +284,18 @@ function spawnAGaiaVillage()
 		
 		x=Game.mapSizeX/2
 		z=Game.mapSizeZ/2
-		--Spring.Echo("Test1")
+		--S-pring.Echo("Test1")
 		idTable={}
 		boolFlipFlop=false
 		attemptsToFindPlace=0
 		spPlaySound("sounds/Missions/Mission2/Solo-Flut1.ogg",0.8)
 		
 		while boolHeightmapPlain == false and attemptsToFindPlace < 22 do
-			--	Spring.Echo("GAIA_SAVEMYVILLAGE")
+			--	say(unitID,prep("GAIA_SAVEMYVILLAGE")
 				y=spGetGroundHeight(x,z)
 					if y > -10 then
 					attemptsToFindPlace=attemptsToFindPlace+1
-					--Spring.Echo("attemptsToFindPlace:",attemptsToFindPlace)
+					--S-pring.Echo("attemptsToFindPlace:",attemptsToFindPlace)
 					
 					--lets check the ground 400 elmos around this
 					boolHeightCheck=true
@@ -162,7 +347,7 @@ function spawnAGaiaVillage()
 												xrand=math.random(-350,350)
 												zrand=math.random(-350,350)	
 												c=c+1
-												--Spring.Echo(c)
+												--S-pring.Echo(c)
 												test= spGetUnitInCylinder(math.floor(x+xrand),math.floor(z+zrand),25 ,_gaiaTeam)
 												end	
 											
@@ -185,7 +370,7 @@ function spawnAGaiaVillage()
 								return idTable
 								end
 						else
-					--	Spring.Echo("Test23")
+					--	say(unitID,prep("Test23")
 						powToo=powToo+100
 						base=base+0.1
 						x=math.ceil(math.random(x-powToo,x+powToo)*base)%Game.mapSizeX
@@ -281,7 +466,7 @@ tableU=Spring.GetFeaturesInRectangle(x-220,z-220,x+220,z+220,teamID)
 			count=count+1
 			end
 		end
-	--Spring.Echo("Where have all the BlackGuards gone?"..count)
+	--S-pring.Echo("Where have all the BlackGuards gone?"..count)
 	return (count >= 30)
 	end
 		
@@ -312,21 +497,21 @@ function daVinciAmok(frame)
 	
 	if MissionFunctionTable[2][3]== nil then MissionFunctionTable[2][3]= -1 end --MissionProgressCounter
 		if boolDebug==true then
-		Spring.Echo("Mission   @::",MissionFunctionTable[2][3])
-		Spring.Echo("MissionTime::",frame-MissionFunctionTable[2][2])	
+		cout("Mission   @::",MissionFunctionTable[2][3])
+		cout("MissionTime::",frame-MissionFunctionTable[2][2])	
 		end	
 	if MissionFunctionTable[2][3]== -1 then
-	--Spring.Echo("MissionStart")
-	--Spawn The village
+	--S-pring.Echo("MissionStart")
+	--S-pawn The village
 		MissionFunctionTable[2][11]={} -- villageTable
 		MissionFunctionTable[2][11]=spawnAGaiaVillage()
 			if MissionFunctionTable[2][11] == nil then return true end
-			--Spring.Echo("VilageSpawned")
-		--spawn Ambassador
+			--S-pring.Echo("VilageSpawned")
+		--S-pawn Ambassador
 		MissionFunctionTable[2][10]={}
 		MissionFunctionTable[2][10]=spawnAmbassador()
 	--	assert(MissionFunctionTable[2][10],"The Emberassador has left the building")
-		--Spring.Echo("AmbSpawned")
+		--S-pring.Echo("AmbSpawned")
 
 					if MissionFunctionTable[2][10]== nil then 
 					
@@ -340,13 +525,13 @@ function daVinciAmok(frame)
 	boolStillAlive=true
 	if frame-MissionFunctionTable[2][2] > 500 then
 	boolStillAlive= (stillAlive(MissionFunctionTable[2][10],MissionFunctionTable[2][11]))
-	--Spring.Echo("BoolstillAlive",boolStillAlive)
+	--S-pring.Echo("BoolstillAlive",boolStillAlive)
 	end
 
 	
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 0 and frame-MissionFunctionTable[2][2] > 500 then
-				Spring.Echo(string1)
+				say(unitID,prep(string1, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 				spPlaySound("sounds/Missions/Mission2/Miss2_1.ogg",1)
 		
 			MissionFunctionTable[2][2]=frame
@@ -354,28 +539,28 @@ function daVinciAmok(frame)
 				
 			return false	
 			end
-		else Spring.Echo("Mission failed1") return true end	
+		else cout("Mission failed1") return true end	
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 1 and frame-MissionFunctionTable[2][2] > 1300 then
-			Spring.Echo(string2)
+			say(unitID,prep(string2, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 			spPlaySound("sounds/Missions/Mission2/Miss2_2.ogg",1)
 			MissionFunctionTable[2][2]=frame
 			MissionFunctionTable[2][3]= MissionFunctionTable[2][3]+1
 			return false 
 			end
-		else Spring.Echo("Mission failed1") return true end	
+		else cout("Mission failed1") return true end	
 	
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 2 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true  then
-			Spring.Echo("Unusual, in nearly all contact gametheory, the not-Knowing party intercepts the intruders before the thread can reach the weakspots. Mr.Chieftain, i presume- and thats a Arrowr. ")
+			say(unitID,prep("Unusual, in nearly all contact gametheory, the not-Knowing party intercepts the intruders long before the  weakspot. Mr.Chieftain, i presume- and thats a Arrowr. ", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 			spPlaySound("sounds/Missions/Mission2/Miss2_3.ogg",1)
 			
 			MissionFunctionTable[2][2]=frame
 			MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 			return false
 			end
-		else Spring.Echo("Mission failed1") return true end	
+		else cout("Mission failed1") return true end	
 		
 		
 		if boolStillAlive==true then
@@ -394,39 +579,41 @@ function daVinciAmok(frame)
 				return false 
 				end
 
-		else Spring.Echo("Mission failed2") return true end	
+		else cout("Mission failed2") return true end	
 			
 			
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 4  and  frame-MissionFunctionTable[2][2] > 800 then
-					Spring.Echo("Administrator, im back. Met some of your men, at the memoryclinic, those who made it out of there bodys intime-"..
+					say(unitID,prep("Administrator, im back. Met some of your men, at the memoryclinic, those who made it out of there bodys intime-"..
 					"I sold the exp to some PervHurts, took a sabbatical year off, visited some partys, learned the natives language, got divorced, whored it up and wrote a book about you as a historic person."..
 					"Got a new body forged, femalien, this time, now look at this wingcolours -oh, right you cant see it. "..
-					"The implants in your head will overlay it with your own species- less xenophobia that way. We all get along.")
+					"The implants in your head will overlay it with your own species- less xenophobia that way. We all get along.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 				spPlaySound("sounds/Missions/Mission2/Miss2_4.ogg",1)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed3") return true end		
+		else cout("Mission failed3") return true end		
 		
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 4 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true  then
-					Spring.Echo("Might as well let you in on ancient news.The Natives are not looplocked, means they do not engage in the usual circle"..
+					say(unitID,prep("Might as well let you in on ancient news.The Natives are not looplocked, means they do not engage in the usual circle"..
 								"of overpopulation and tribal warfare plus territorial behaviour. "..
 								"There unique physique spared them, they have genetic memorys and eggs,	thousands of them, burried everywhere on there territory, ready to hatch on a pheromonic whim. "..
-								"Hello beautiful,im a little present from the tribe with the metall-tent!")
+								"Hello beautiful,im a little present from the tribe with the metall-tent!", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 									spPlaySound("sounds/Missions/Mission2/Miss2_5.ogg",1)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed4") return true end	
+		else cout("Mission failed4") return true end	
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 5  and  frame-MissionFunctionTable[2][2] > 1000 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true  then
-				Spring.Echo("Relations soured a little, im getting gang raped to death by the whole tribe, for speaking up to the chieftain.".."Turns out, the female of the species, have devolved to little more then reproductive diplomacy automatons- and they dontn share power to foreigners. I spare you the details ..".."harder,faster,makes us wronger,more then ever, power under, our work is never over <Exitus>")
+				say(unitID,prep("Relations soured a little, im getting gang raped to death by the whole tribe, for speaking up to the chieftain."..
+				"Turns out, the female of the species, have devolved to little more then reproductive diplomacy automatons- and they dont share power to foreigners. I spare you the details .."..
+				"harder,faster,makes us wronger,more then ever, power under, our work is never over <Exitus>", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 				spPlaySound("sounds/Missions/Mission2/Miss2_6.ogg",1)
 				x,y,z=spGetUnitPos(MissionFunctionTable[2][10])
 				teamID=spGetUnitTeam(MissionFunctionTable[2][10])
@@ -441,7 +628,7 @@ function daVinciAmok(frame)
 				return false 
 				end
 
-		else Spring.Echo("Mission failed5") return true end	
+		else cout("Mission failed5") return true end	
 				
 		
 		
@@ -449,29 +636,30 @@ function daVinciAmok(frame)
 				if MissionFunctionTable[2][3]== 6  and  frame-MissionFunctionTable[2][2] > 1000 then
 				Spring.SetUnitNoSelect(MissionFunctionTable[2][10],false)
 				Spring.SetUnitNoDraw(MissionFunctionTable[2][10],false)
-				Spring.Echo(" Hi, im Koma Icnivad the third, my filthy rich grandfather retired - moneywise mission "
-				.."time is eight times city-dime. ".."I m here to pick up the mission were it dropped him. Would you kindly, get me too the freakshow, Administrator?")
+				say(unitID,prep(" Hi, im Koma Icnivad the third, my filthy rich grandfather retired - moneywise mission "
+				.."time is eight times city-dime. ".."I m here to pick up the mission were destiny dropped him. Would you kindly, get me too the freakshow, Administrator?", 
+				Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 				spPlaySound("sounds/Missions/Mission2/Miss2_7.ogg",1)
 			
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed6") return true end	
+		else cout("Mission failed6") return true end	
 
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 7  and  frame-MissionFunctionTable[2][2] > 2500  and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_8.ogg",1)
-				Spring.Echo("Oh, Citynews: All hail the new Centrail, the old datadragon got bored by slowlifeinfo drippin and peeked into his predecessors data-vaults."..
+				say(unitID,prep("Oh, Citynews: All hail the new Centrail, the old datadragon got bored by slowlifeinfo drippin and peeked into his predecessors data-vaults."..
 				"New one is rumored to originate from a sandwichmaker, that had a memory leak which	bitflipped to sentience."..
 				"Suprising little chaos, confusion and only 30 mk death when some cityparts crashed, and less suprising- no changes in the mission.	"..
-				"(Arriving) .")
+				"(Arriving) .", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed7") return true end	
+		else cout("Mission failed7") return true end	
 		
 		
 		if boolStillAlive==true then
@@ -481,15 +669,15 @@ function daVinciAmok(frame)
 				
 				spPlaySound("sounds/Missions/Mission2/potLash.ogg",0.9)	
 					spPlaySound("sounds/Missions/Mission2/Miss2_9.ogg",1)
-				Spring.Echo("Administrator, it seems they wanna hold a feast to honor our repeated visit. "..
+				say(unitID,prep("Administrator, it seems they wanna hold a feast to honor our repeated visit. "..
 				"Customs demands that the chief outshines everyone in destroying his wealthy and valued posessions."..
 				"Quick! Grab 30 infantryman, march them in front of the village, "..
-				"and blow there suicide implants. Lets see you top that, great Spender!")
+				"and blow there suicide implants. Lets see you top that, great Spender!", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+2
 				return false 
 				end
-		else Spring.Echo("Mission failed8") return true end	
+		else cout("Mission failed8") return true end	
 		
 		
 
@@ -497,43 +685,43 @@ function daVinciAmok(frame)
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 10 and thirthyInfantryCorpses(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_10.ogg",1)
-				Spring.Echo("Party Up in here! More rotten Dokami for me! Shame you got duty Administrator, they know how to squeeze Live for the juice! "..
+				say(unitID,prep("Party Up in here! More rotten Dokami for me! Shame you got duty Administrator, they know how to squeeze Live for the juice! "..
 							"Oh, we are the silent judgy one, are we!"..
 							"I know my prehistory Administrator, your artillery  drove over a dike of bodys on Tabula 4 - noone needs to apologize!"..
 							"Cultural Superiority? Dont make me laugh, these guys have the memory of a whole civilisation for 300.000 years. "..
 							"They look down on us."..
 							"They were three times space travelling, and turned back, because they found it boring."..
 							"This escalates rather quickly - 1 Momothcat  all over the floor by the tain, certainly i can top that!"..
-							"Servant, bring me 2 construction trucks, self destroy them in front of the village.")
+							"Servant, bring me 2 construction trucks, self destroy them in front of the village.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 	
 				
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed10") return true end	
+		else cout("Mission failed10") return true end	
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 11  and twoContrucks(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_11.ogg",1)
-				Spring.Echo("Little sacrivices, we all make them Administrator, for greater Gains."..
+				say(unitID,prep("Little sacrivices, we all make them Administrator, for greater Gains."..
 							"Gold, Gems smash it up, it is? Mine, is longer then yours again. "..
 							"Administrator, build one luxery appartment in front of the city."..
 							"Blow it up."..
-							"Do it.")
+							"Do it.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 							--Who lives in a citadell under the Big C, Admin Rulebook
 	
 				
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed11") return true end	
+		else cout("Mission failed11") return true end	
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 12  and oneLuxBuildBlow(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_12.ogg",1)
-				Spring.Echo("- raise a toast to Chieftain OoohmyHeard, who special circumstances took from us before his time."..
+				say(unitID,prep("- raise a toast to Chieftain OoohmyHeard, who special circumstances took from us before his time."..
 							"Time to beginn cultural relations in my newly aquired harem."..
-							"The Reward should be spilling into your security Account this very moment.")
+							"The Reward should be spilling into your security Account this very moment.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 	
 				teamID=spGetUnitTeam(MissionFunctionTable[2][10])
 				x,y,z=spGetUnitPos(MissionFunctionTable[2][10])
@@ -543,7 +731,7 @@ function daVinciAmok(frame)
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
 				end
-		else Spring.Echo("Mission failed12") return true end	
+		else cout("Mission failed12") return true end	
 		
 		
 			
@@ -553,7 +741,7 @@ function daVinciAmok(frame)
 			
 				spPlaySound("sounds/Missions/Mission2/CitizenCunt.ogg",1)
 				
-				Spring.Echo("Centrail: You know Administrator, normally a fullcitizen screwup like you, would end up in one of those little orange capsules at the "..
+				say(unitID,prep("Centrail: You know Administrator, normally a fullcitizen screwup like you, would ends in one of those little orange capsules at the "..
 							"foundations of my citadells."..
 							"But this guy is good, excellent to be honest, even i had him not figured out - after a spree of 19 worlds and three civil interdimensional unrests and 9 Overpopulation incidents."..
 							"	All the efficient, corrupt - but mostly loyal servant, disguised as family buisness."..
@@ -561,7 +749,7 @@ function daVinciAmok(frame)
 							"Intercontinetal rockets made from fertilizerfirewors, bioweapons from medicine- this guy knew how to chop a chunk from the propabilitytree."..
 							"So here we are, cleaning it up the old fashioned way, bodybags, screaming critizens, offworld labourcamps."..
 							"Take this assasin and end this infection of one-Red-Dot-Pox. You have 10 Minutes."..
-							"Lay the village low, gamasoak the terrain - and do something against the smell.")	
+							"Lay the village low, gamasoak the terrain - and do something against the smell.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 							
 				enemy=Spring.GetUnitNearestEnemy(MissionFunctionTable[2][10])
 				teamID=spGetUnitTeam(enemy)
@@ -585,7 +773,7 @@ function daVinciAmok(frame)
 						GG.UnitsToSpawn:PushCreateUnit("skinfantry",x+rx,y+ry,z+rz,1,teamID)	
 						end
 					else
-					Spring.Echo("Mission ProChoiced:Cause no real Enemy exists")
+					cout("Mission ProChoiced:Cause no real Enemy exists")
 					return true 
 					end
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
@@ -600,14 +788,14 @@ function daVinciAmok(frame)
 				
 					if Spring.GetUnitIsDead(MissionFunctionTable[2][10])==true then
 					spPlaySound("sounds/Missions/Mission2/genocidere.ogg",1)
-					Spring.Echo("-there was a festival in my homesector, the Brightday. They would pick all new inventions, and burn them with there Creators, at the foot of the citadell."
+					say(unitID,prep("-there was a festival in my homesector, the Brightday. They would pick all new inventions, and burn them with there Creators, at the foot of the citadell."
 					.."Nobody stepped in to stop them, and nobody steped up to stop me when i pined them all on there own spear made from cowardice and stupidity."
 					.."They stormed the citadell, and threw the Administrator from the highest window they could find. His scream is said to have lasted all the way down."
 					.."If you dont dare to stand for the best of men, they wont stop the beast of men."
 					.."I may be silenced soon, but my spirit lives on,as doubt in servants, "
 					.."as paranoia against your Advisors, always a sharp stylus near your back and one day- "
 					.."you will want to know, you will rip out your own roots - and on that day, you will scream"
-					.."- and you shall fall.")
+					.."- and you shall fall.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 					
 					MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 					end
@@ -623,13 +811,13 @@ function daVinciAmok(frame)
 					
 					if boolVillagePeopleDead==true and Spring.GetUnitIsDead(MissionFunctionTable[2][10])==false and frame-MissionFunctionTable[2][2] < 19000 then
 						spPlaySound("sounds/Missions/Mission2/historyHappening.ogg.ogg",1)
-					-- <Speed up historic process>
-					-- "-Confederated Press: Administrator a Statement regarding the Allegations? "
-					-- "-Reporting on a Warcrime in Progress- of a Administrator who joined the Universal Union. Unspeakable Attrocities.."
-					-- "-sentenced to 25 years of citytime, to be spend in Slowtime, as a perpetual Reminder-
-					-- "-is it a still ongoing debate among historians, that the battle of Icnivad-Village, was not started by Natives, named Koma-"
-					-- "-there was a war over here too? Do you sell souvenirs?"
-					-- "-volcanic Ruins, with mumified tourists burried beneath from the last eruption-"
+					
+					say(unitID,prep( "-Confederated Press: Administrator a Statement regarding the Allegations? "..
+					 "-Reporting on a Warcrime in Progress- of a Administrator who joined the Universal Union. Unspeakable Attrocities.."..
+					 "-sentenced to 25 years of citytime, to be spend in Slowtime, as a perpetual Reminder-"..
+					 "-is it a still ongoing debate among historians, that the battle of Icnivad-Village, was not started by Natives, named Koma-"..
+					 "-there was a war over here too? Do you sell souvenirs?"..
+					 "-volcanic Ruins, with mumified tourists burried beneath from the last eruption-", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 					xAmb=spawnAmbassador()
 						if xAmb then
 						Spring.SetUnitNoDraw(xAmb,true)
@@ -642,7 +830,7 @@ function daVinciAmok(frame)
 						end
 					
 					GG.UnitsToSpawn:PushCreateUnit("cvictory",Game.mapSizeX/2,1,Game.mapSizeZ/2,1,teamID)
-					Spring.Echo("Centrail won")
+					cout("Centrail won")
 					return true
 					
 					else
@@ -654,7 +842,7 @@ function daVinciAmok(frame)
 					GG.UnitsToSpawn:PushCreateUnit("cRewarder",x,y,z,1,teamID)
 						GG.UnitsToSpawn:PushCreateUnit("jvictory",Game.mapSizeX/2,1,Game.mapSizeZ/2,1,teamID)
 				
-					Spring.Echo("Journeys Won")
+					cout("Journeys Won")
 					return true
 					end
 				
@@ -666,188 +854,6 @@ end
 
 --/Mission2-----------------------------------------------------------------------------------------
 
---Mission1-----------------------------------------------------------------------------------------
-
-
---Captain Hornblow   #1
---teamID,leader,boolIsDead,boolIsAITeam,side,_,_,_=	Spring.GetTeamInfo(teamID)
-function checkIfContainerisNearAGate(unitID)
-
-	if Spring.GetUnitIsDead(unitID)==false then
-	x,y,z=spGetUnitPos(unitID)
-		if x~=nil then
-		
-			proChoice={}
-			proChoice=spGetUnitInCylinder(x, z, 350 )
-			
-				for i=1,table.getn(proChoice),1 do 
-					if proChoice[i]~=unitID then 
-					tempDefID=spGetUnitDef(proChoice[i])
-						if tempDefID== UnitDefNames["fclvlone"].id or tempDefID== UnitDefNames["fclvl2"].id or tempDefID== UnitDefNames["citadell"].id then
-						doubleTeamID=spGetUnitTeam(proChoice[i])
-						Spring.DestroyUnit(unitID,false,true)
-						diceOfIce=math.random(1,3)
-							spPlaySound("sounds/Missions/Reward.wav",1)		
-							if diceOfIce==1 then 
-							GG.UnitsToSpawn:PushCreateUnit("strider",x,y,z, 0,doubleTeamID ) 
-								elseif diceOfIce==2 then
-								GG.UnitsToSpawn:PushCreateUnit("crewarder",x,y,z, 0,doubleTeamID ) 
-									else
-									GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x,y,z, 0,doubleTeamID ) 
-									GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x+25,y,z, 0,doubleTeamID ) 
-									GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x,y,z+25, 0,doubleTeamID ) 
-									end
-					
-						return true
-						end 
-					end
-
-
-
-				--get UnitsWithinCone
-
-
-
-
-				end
-		end
-	end	
-return false
-end
-
-function captationHornblow(frame)
-missionValue=650
-
-
---Spring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
-
-	if MissionFunctionTable[1][2]== nil then MissionFunctionTable[1][2]=frame end
-	
-	
-	if MissionFunctionTable[1][3]== nil then MissionFunctionTable[1][3]= -1 end --MissionProgressCounter
-	
-	 
---Spring.Echo("Mission   @::",MissionFunctionTable[1][3])
---Spring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
-	
-	if MissionFunctionTable[1][3]== -1 then
-
-	spPlaySound("sounds/Missions/CaptainHornblowIntro.wav",1)
-	
-		
-	
-	MissionFunctionTable[1][3]=MissionFunctionTable[1][3]+1
-	return false
-	end
-	
-
-	
-		if MissionFunctionTable[1][3]== 0 and frame-MissionFunctionTable[1][2] > 1150 then
-		
-		spPlaySound("sounds/Missions/mission1goingdown.ogg",1)		
-	
-	
-		MissionFunctionTable[1][3]= MissionFunctionTable[1][3]+1
-			
-		return false	
-		end
-	
-	
-		if MissionFunctionTable[1][3]== 1 and frame-MissionFunctionTable[1][2] > 2650  then
-		--Spring.Echo("MISSION::SpawnSHIP")
-		
-	
-		
-		teamTable=Spring.GetTeamList()
-
-	
-		
-		x=Game.mapSizeX/2
-		z=Game.mapSizeZ/2
-		--Spring.Echo("JW_MiniMIssion::",x.." and :", z)
-		
-		hornBlowID=spCreateUnit("ghornblow",x,0,z, 0,teamTable[1] ) 
-		if Spring.ValidUnitID(hornBlowID)==false then return false end
-		spSetUnitNeutral(hornBlowID,true)
-		MissionFunctionTable[1][11]=hornBlowID		
-			
-		
-		MissionFunctionTable[1][3]=MissionFunctionTable[1][3]+1
-		return false
-		end
-		
-		
-		if MissionFunctionTable[1][3]== 2 and frame-MissionFunctionTable[1][2] > 4650  then
-
-		spPlaySound("sounds/Missions/miss1landed.ogg",1)		
-	
-
-	
-
-		
-		x,y,z=spGetUnitPos(MissionFunctionTable[1][11])
-		
-	
-		MissionFunctionTable[1][13]={}
-		MissionFunctionTable[1][13]=spCreateUnit("gconvoycontainers",x+80,y,z, 0,_gaiaTeam ) 
-		spSetAlwaysVisible(MissionFunctionTable[1][13],true)
-		MissionFunctionTable[1][14]={}
-		MissionFunctionTable[1][14]=spCreateUnit("gconvoycontainers",x-80,y,z, 2,_gaiaTeam ) 
-		spSetAlwaysVisible(MissionFunctionTable[1][14],true)
-		MissionFunctionTable[1][15]={}
-		MissionFunctionTable[1][15]=spCreateUnit("gconvoycontainers",x,y,z+80, 1,_gaiaTeam ) 
-		spSetAlwaysVisible(MissionFunctionTable[1][15],true)
-	
-		
-			
-		--Spring.Echo("PlayThatfunkyMissionSound")
-		
-		MissionFunctionTable[1][3]=MissionFunctionTable[1][3]+1
-		return false
-		end
-
-			if MissionFunctionTable[1][3]== 3 and frame % 10 == 0 then
-			--Mission abort and victory conditions
-			if Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true and Spring.GetUnitIsDead(MissionFunctionTable[1][14])==true and  Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true  then
-			return true
-
-			else--Mission ongoing
-			--Scan for Containers who have reached a gate
-			MissionFunctionTable[1][16]=false
-			MissionFunctionTable[1][17]=false
-			MissionFunctionTable[1][18]=false
-			MissionFunctionTable[1][16]=checkIfContainerisNearAGate(MissionFunctionTable[1][13])
-			MissionFunctionTable[1][17]=checkIfContainerisNearAGate(MissionFunctionTable[1][14])
-			MissionFunctionTable[1][18]=checkIfContainerisNearAGate(MissionFunctionTable[1][15])	
-			
-	
-			
-				if MissionFunctionTable[1][17] == true or MissionFunctionTable[1][16] == true or MissionFunctionTable[1][18]== true then
-				spPlaySound("sounds/Missions/miss1finalls.ogg",1)		
-				return true
-				end
-				
-			
-			
-			
-			return false
-			end
-			
-			
-			
-			
-			
-			
-			
-			
-			end
-
-return false
-end
-
-
---/Mission1-----------------------------------------------------------------------------------------
-	
 
 
 --Mission3-----------------------------------------------------------------------------------------
@@ -951,7 +957,7 @@ Mission3Message=0
 Mission3CoolDownTime=3000
 Mission3Max=7
 
-function Mission3Message(frames)
+function Mission3MessageFunc(frames)
 Mission3CoolDownTime=Mission3CoolDownTime-frames
 
 	if Mission3CoolDownTime < 0 and Mission3Message < Mission3Max then
@@ -967,8 +973,8 @@ boolHarbour=0 --A harbour is always there where the water is
 function Mission3City(frame)
 --MissionFunctionTable[3][]
  
---Spring.Echo("Mission   @::",MissionFunctionTable[3][3])
---Spring.Echo("MissionTime::",frame-MissionFunctionTable[3][2])
+--S-pring.Echo("Mission   @::",MissionFunctionTable[3][3])
+--S-pring.Echo("MissionTime::",frame-MissionFunctionTable[3][2])
  --test for one player beeing combine, one beeing journeys
  
         if MissionFunctionTable[3][2]== nil then MissionFunctionTable[3][2]=frame end
@@ -977,8 +983,8 @@ function Mission3City(frame)
 		MissionFunctionTable[3][3]= 0
 		end
  
---Spring.Echo("Mission   @::",MissionFunctionTable[3][3])
---Spring.Echo("MissionTime::",frame-MissionFunctionTable[3][2])	   
+--S-pring.Echo("Mission   @::",MissionFunctionTable[3][3])
+--S-pring.Echo("MissionTime::",frame-MissionFunctionTable[3][2])	   
 	   
 if      MissionFunctionTable[3][3]== 0 then
 spPlaySound("sounds/Missions/Mission3/jdropofdreams.ogg",1.0)
@@ -998,7 +1004,7 @@ feamID=Spring.GetGaiaTeamID()
 			
 			
 				if spGetGroundHeight(i*val,j*val) >0 and lavgHeightDiff(i*val,j*val, 220,65) then
-				--Spring.Echo("Spawning GroundDecal")
+				--S-pring.Echo("Spawning GroundDecal")
 				d=spCreateUnit("gcivdecal",i*val,0,j*val,0,feamID) 
 					if d then
 					spSetAlwaysVisible(d,true)
@@ -1023,7 +1029,7 @@ GG.Nodetable={}
  
 --determinate Sectors
 
---spawn Decals
+--S-pawn Decals
  atLeastThree=0
 --Add Buildings by Type of Sector
 	for i=1,Game.mapSizeX/val, math.random(1,1.4) do
@@ -1061,9 +1067,9 @@ GG.Nodetable={}
 							end
 						GG.Nodetable[i][j]=	true
 						
-						else --Specialbuildings limited edition
+						else --S-pecialbuildings limited edition
 						nid=math.random(0,3)
-						if nid== 0 or nid== 1 then 	--specialbuildings
+						if nid== 0 or nid== 1 then 	--S-pecialbuildings
 							did=spCreateUnit("gprops",i*val,0,j*val,dir,feamID) 
 							if did then
 							unitTable[#unitTable+1]=did
@@ -1090,7 +1096,7 @@ GG.Nodetable={}
 							
 						
 						  
-						--slums
+						--S-lums
 						--arcos
 						--districtbuildings
 						end
@@ -1153,7 +1159,7 @@ end
 
 
 	if  MissionFunctionTable[3][3] == 1 and frame%200==0 then
-	Mission3Message(200)
+	Mission3MessageFunc(200)
 	boolCityDestroyed=true
 	percentAway=0.01
 
@@ -1174,10 +1180,10 @@ end
 	timeTillReinforcements= math.floor((45000-frame)/1800)
 		if timeTillReinforcements < 0 then  MissionFunctionTable[3][3] = MissionFunctionTable[3][3] +1 end
 	Message="Evacuation complete in:"..timeTillReinforcements.." minutes. "..res.." % of the City destroyed. "
-	Spring.Echo(Message)
+	cout(Message)
 	return false
 		else
-		Spring.Echo("City Destroyed. Journeys Win!")
+		cout("City Destroyed. Journeys Win!")
 		if GG.LastAttackingJourney ~= nil then
 			for i=1,3,1 do
 			GG.UnitsToSpawn:PushCreateUnit("crewarder",1,1,1,1,GG.LastAttackingJourney)
@@ -1197,7 +1203,7 @@ end
 	
 	end
 		GG.UnitsToSpawn:PushCreateUnit("cvictory",Game.mapSizeX/2,1,Game.mapSizeZ/2,1,getTheCentrailTeam())
-	Spring.Echo("City Saved. Combine win!")
+	cout("City Saved. Combine win!")
 	return true
 	end
 
@@ -1268,7 +1274,7 @@ m=(-1*midx)/midz
 
 spCreateUnit("gdecfields",midx,midy,midz,1, _gaiaTeam) 
 if math.random(0,6)==2 then 
---spCreateUnit("gdecstonecircle",midx+350,midy,midz-350,1, _gaiaTeam) 
+--S-pCreateUnit("gdecstonecircle",midx+350,midy,midz-350,1, _gaiaTeam) 
 end
 id1=spCreateUnit("gkiva",midx,midy,midz, 0, _gaiaTeam)
 
@@ -1299,15 +1305,15 @@ function Mission4Crawler(frame)
 					
 					end
 	if boolDebug==true then
-	Spring.Echo("Mission   @::",MissionFunctionTable[4][3])
-	Spring.Echo("MissionTime::",frame-MissionFunctionTable[4][2])
+	cout("Mission   @::",MissionFunctionTable[4][3])
+	cout("MissionTime::",frame-MissionFunctionTable[4][2])
 	end
 	
 	mT=frame-MissionFunctionTable[4][2]
 	 
 	 if MissionFunctionTable[4][3] == 0 then
-	 Spring.Echo("JW_MiniMIssion:: Mission 4 started")
-	 strings="The Province Aarnon, contains several prosperous villages. The townfolks is nice, hardworking, downtoearth, mining the rock, plowing the fields."..
+	 cout("JW_MiniMIssion:: Mission 4 started")
+	 strings="The Province Aarnon, contains several prosperous villages. The downtoarth townfolks is nice, hardworking."..
 	 "They earned what they got."..
 	 "- Which is why we are planning to rob, rape and pilver them blind, torch the town and stripmine there sacred burrial grounds.."..
 	 ".. all for the cause of causes - bitches and riches. We expect no resistance, except from the other guys across the valley, who basically do the same"..
@@ -1315,14 +1321,14 @@ function Mission4Crawler(frame)
 	 "One last thing. Know that the sisterhood of the Crystallforrest is traversing the landscape,terraforming, rebuilding destroyed settlements."..
 	 "If- they see you going 'Yes-we-Khan' on some villagers, they will rile up the whole planet- drag you before a interdimensional-court."..
 	" So no wittnesses.. not even if they have a cute smile or a nice ass. "
-	 Spring.Echo(strings)
+	 say(unitID,prep(strings, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 	 MissionFunctionTable[4][3] =MissionFunctionTable[4][3] +1
 	 end
 	 
 		if MissionFunctionTable[4][3] == 1 then
 		-- spawn the three towns
 		id1,id2,id3=spawnThreeTowns()
-		--spawn the crawler 
+		--S-pawn the crawler 
 		CrawlerID= spawnACralwer(id1,id3)
 		Spring.SetUnitNeutral(CrawlerID,true)
 		Spring.SetUnitAlwaysVisible(id1,true)
@@ -1407,7 +1413,7 @@ ThatsAHorribleThingToSay={  "Mission: Cauterize, Sterilize, Desinfect!",
 							"Even babarians can be health aware. Raping them on the bodys of there husbands, is so much better for the knees",
 							"Search the houses. If it reflects light, whack it, if it still reflects light, sack it.",
 							"Cattle. Check. Furniture. Check. Slaves. Check. Rape,Murder, Torture.Check",
-							"Let them go. Then set the fields on fire! Let them run! Run forrest, run!",
+							"Let them go. Then set the fields on fire! Let them run! Run forrest, run! Then set the forrest on fire!",
 							"Life is short, brutal und unfair. Man is man a wulf. Give the hideouts away, and get on with it-",
 						    "You know, if there is resistance, if the food fights and screams, its improves the taste. Dont just lay there..",
 							"Its like shopping, just without the paying part. And its one-way..",
@@ -1420,14 +1426,15 @@ ThatsAHorribleThingToSay={  "Mission: Cauterize, Sterilize, Desinfect!",
 							"One would expect of them to learn, not to use wood for buildings to barricade oneself in..",
 							"Quit standing around, this is a disciplined operation, no smoking breaks during raids!",
 							"All that in a honest hour of jerk. Im so proud of you son!",
-							"You know, i m thinking about training one of those peasants, to do the loating for me, and retire.",
+							"You know, i m thinking about training one of those peasants, to do the looting for me, and retire.",
 							"5 out of 6 persons, enjoy a good gangbang.",
 							"Look at your horse, your horse was amazing!",
 							"Golden Teeths, the seem like a good investment for hard times..",
 							"One of those days, were the most popular maiden in town, becomes the town in most popular maiden.",
 							"Okay, those of you who have deadly diseases, and are not fit for organ donation, step forward..",
 							"Makes one wish for the invention called radio, doesent it?",
-							"Two hands, three holes, what a dilema."
+							"Two hands, three holes, what a dilema.",
+							"Dont wanna say anything bad, but i think you brought this on yourself, like all foreigners in tragedy's do."
 							
 							}
 
@@ -1447,7 +1454,7 @@ function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weap
 
 	--Thats a horrible Thing to say
 		if math.random(0,12)==6 then
-		Spring.Echo(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))])
+		say(unitID,prep(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))], Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 		end
 	end
 end
@@ -1456,7 +1463,7 @@ end
 
 --Description: In this Mission a Freeman is spawned, and every side trys to crowbar the fucker.
 --Mission5------  Whack the Freeman  ---------------------------------------------------------------
-	function spawnFreeman(x,z,teamid)
+function spawnFreeman(x,z,teamid)
 	id=spCreateUnit("gfreeman",x+45,0,z,2,teamid)
 		if id then
 		Spring.SetUnitAlwaysVisible(id,true,true)		
@@ -1475,13 +1482,13 @@ end
 	ListOfPossibleBuildings={"scumslum", "gcscrapheappeace","galgoprop", "cdistrictnone", "campole","scumslum", "galgoprop", "cdistrictnone","gcscrapheappeace","goldhut","gapartmenta","gapartmentb","gapartmentc","gchurch","scumslum"}
 
 function spawnRavenholmCity17()
-Spring.Echo("What happens in Ravenholm, stays in Ravenholm!")
+cout("What happens in Ravenholm, stays in Ravenholm!")
 	
 
 		_gaiaTeam=Spring.GetGaiaTeamID()
 		x=Game.mapSizeX/2
 		z=Game.mapSizeZ/2
-		--Spring.Echo("Test1")
+		--S-pring.Echo("Test1")
 	
 		idTable={}
 		ABOVEWATER=20
@@ -1632,7 +1639,7 @@ messages={
 	
 function Misson5WhackTheFreeman(frame)
 
-			--SetUp
+			--S-etUp
 			if MissionFunctionTable[5][2]== nil then MissionFunctionTable[5][2]=frame end
 					if MissionFunctionTable[5][3]== nil then 
 					MissionFunctionTable[5][3]= {}
@@ -1650,7 +1657,7 @@ function Misson5WhackTheFreeman(frame)
 	 if MissionFunctionTable[5][3] == 0 and mT > 14200 then
 		 Briefing="Anticitizen One has been spotted in your sector, Administrator. It is prime directive, to capture and/or "..
 		" permapacify the subject known as Gordon Freeman. Code: Capture, cauterize, amputate, sterilize."
-		Spring.Echo(Briefing)
+		say(unitID,prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 	 
 	 spawnRavenholmCity17()
 	 MissionFunctionTable[5][3] =MissionFunctionTable[5][3] +1
@@ -1677,9 +1684,9 @@ function Misson5WhackTheFreeman(frame)
 	
 	for i=1, table.getn(finStatEng), 1 do
 	if finStatEng[i].boolActive then --filters out the currentActive state
---	Spring.Echo("JW_MiniMIssion::StateMachine_State ->"..i)
+--	say(unitID,prep("JW_MiniMIssion::StateMachine_State ->"..i)
 	
-	--State Gorden doesent exist--
+	--S-tate Gorden doesent exist--
 	if finStatEng[i].state =="GordonNo" then
 	
 	finStatEng.startNum=math.random(1,table.getn(MissionFunctionTable[5][4]))
@@ -1724,7 +1731,7 @@ function Misson5WhackTheFreeman(frame)
 		if dist < 150 then
 		--message the freeman
 		dic=math.random(1,#messages)
-		Spring.Echo(messages[dic].text)
+		say(unitID,prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 		Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
 	
 		getAndRewardLastAttacker(MissionFunctionTable[5][6])
@@ -1745,7 +1752,7 @@ function Misson5WhackTheFreeman(frame)
 	end
 
 	if finStatEng[i].state =="GordonArrived" then
-			Spring.Echo("JW_MiniMIssion::GordonArrived")
+			cout("JW_MiniMIssion::GordonArrived")
 		
 	MissionFunctionTable[5][3]=MissionFunctionTable[5][3]+1
 		finStatEng[3].boolActive=false
@@ -1772,7 +1779,7 @@ function Misson5WhackTheFreeman(frame)
 			"or i shall open the pandering boxes, to see for myself,".. 
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
 		
-		Spring.Echo(CentrailSpeech)
+		say(unitID,prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
 
 	return true
 	end
@@ -1792,7 +1799,181 @@ function getAndRewardLastAttacker(unitid)
 end
 --/Mission5-----------------------------------------------------------------------------------------
 
+---Mission6-----------------------------------------------------------------------------------------
+			function spawnResistance(nrOfCellPairs)
+				sizeX=Game.mapSizeX
+				sizeZ=Game.mapSizeZ
+				div=4
+				evTeam=Spring.GetGaiaTeamID()
+				
+					while div < 64 do
+					dec=math.ceil(math.random(2,div))
+					x,z=dec*(sizeX/div),dec*(sizeZ/div)
+					ox,oz=sizeX- (dec*(sizeX/div)),sizeZ-(dec*(sizeZ/div))
+					
+						if math.random(0,1)==1 then --mirrortime
+						x=sizeX-x
+						ox=-ox+SizeX
+						end
+					div=div*2
+					Spring.CreateUnit("gresistance",x,0,z,1, evTeam)
+					Spring.CreateUnit("gresistance",ox,0,oz,1, evTeam)
+					end
+				end
 
+	
+function Misson6ResistaceIsFutile(frame)
+
+			--S-etUp
+			if MissionFunctionTable[6][2]== nil then MissionFunctionTable[6][2]=frame end
+					if MissionFunctionTable[6][3]== nil then 
+					MissionFunctionTable[6][3]= {}
+					MissionFunctionTable[6][3]= -1
+					end
+					
+					
+	mT=frame-MissionFunctionTable[6][2]
+	  if MissionFunctionTable[6][3] == -1 and mT > 9200   then
+		--Drop Diamond
+
+		MissionFunctionTable[6][3] =MissionFunctionTable[6][3] +1
+		return false
+		end
+	  
+	 if MissionFunctionTable[6][3] == 0 and mT > 14200 then
+		Briefing=""
+		
+		say(unitID,prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+	 
+	 spawnResistanceOutposts()
+	 MissionFunctionTable[6][3] =MissionFunctionTable[6][3] +1
+	 return false
+	 end
+	 
+		if MissionFunctionTable[6][3] == 1 and mT > 16200 then
+		
+		Spring.PlaySoundFile("sounds/Missions/Mission5/sectorsweep.ogg",0.75)
+		--lets prepare the positions -- we us a mixture of startpositions..
+		MissionFunctionTable[6][4]=getFreemannStartPos()
+	
+	
+		--lets check if we have at least one centrail
+		MissionFunctionTable[6][3] = MissionFunctionTable[6][3] +1
+			--Checking that there are at least three tables in the MissionFunctionTable
+		return false
+		end
+	 
+	 --Here the Statemachine is processed
+
+	if MissionFunctionTable[6][3] > 1 and MissionFunctionTable[6][3] <= 12 then
+	
+	
+	for i=1, table.getn(finStatEng), 1 do
+	if finStatEng[i].boolActive then --filters out the currentActive state
+--	say(unitID,prep("JW_MiniMIssion::StateMachine_State ->"..i)
+	
+	--S-tate Gorden doesent exist--
+	if finStatEng[i].state =="GordonNo" then
+	
+	finStatEng.startNum=math.random(1,table.getn(MissionFunctionTable[6][4]))
+	finStatEng.endNum=math.random(1,table.getn(MissionFunctionTable[6][4]))
+	assert(MissionFunctionTable[6])
+	assert(MissionFunctionTable[6][4])
+	assert(MissionFunctionTable[6][4][finStatEng.startNum])
+	assert(MissionFunctionTable[6][4][finStatEng.startNum].x)
+	assert(MissionFunctionTable[6][4][finStatEng.startNum].z)
+	Miss5_SpawnALandmark(MissionFunctionTable[6][4][finStatEng.startNum].x,MissionFunctionTable[6][4][finStatEng.startNum].z)
+	assert(MissionFunctionTable[6][4][finStatEng.endNum].x,finStatEng.endNum)
+	assert(MissionFunctionTable[6][4][finStatEng.endNum].z,finStatEng.endNum)
+	Miss5_SpawnALandmark(MissionFunctionTable[6][4][finStatEng.endNum].x,MissionFunctionTable[6][4][finStatEng.endNum].z)
+
+
+	MissionFunctionTable[6][6]= spawnFreeman( MissionFunctionTable[6][4][finStatEng.startNum].x, MissionFunctionTable[6][4][finStatEng.startNum].z, _gaiaTeam ) 
+	Spring.PlaySoundFile("sounds/Missions/Mission5/AnticitizenSpotted.ogg",1)
+		--gorden is on the run
+		if MissionFunctionTable[6][6] then
+		finStatEng[2].boolActive=true
+		finStatEng[1].boolActive=false
+		Spring.SetUnitMoveGoal(MissionFunctionTable[6][6], 	MissionFunctionTable[6][4][finStatEng.endNum].x,42,	MissionFunctionTable[6][4][finStatEng.endNum].z)
+		end
+		return false	
+	end
+	
+	--Gorden is on the Loose
+	if finStatEng[i].state =="RunGordon" then
+	--is he dead jim
+	if Spring.GetUnitIsDead(MissionFunctionTable[6][6]) ==true then	
+	finStatEng[1].boolActive=true
+	finStatEng[2].boolActive=false
+	MissionFunctionTable[6][3]=MissionFunctionTable[6][3]+1	
+
+	return false
+	else
+	ux,uy,uz=spGetUnitPos(MissionFunctionTable[6][6])
+	if not ux then return false end
+	x,z=MissionFunctionTable[6][4][finStatEng.endNum].x-ux,	MissionFunctionTable[6][4][finStatEng.endNum].z-uz
+	dist=math.sqrt(x^2 +z^2)
+	
+		if dist < 150 then
+		--message the freeman
+		dic=math.random(1,#messages)
+		say(unitID,prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
+	
+		getAndRewardLastAttacker(MissionFunctionTable[6][6])
+		getAndRewardLastAttacker(MissionFunctionTable[6][6])
+		getAndRewardLastAttacker(MissionFunctionTable[6][6])
+		Spring.DestroyUnit(MissionFunctionTable[6][6],true,true)
+
+		finStatEng[3].boolActive=true
+		finStatEng[2].boolActive=false
+		return false
+		end
+	
+	--but he is bleeding 
+		getAndRewardLastAttacker(MissionFunctionTable[6][6])
+	
+	return false
+	end
+	end
+
+	if finStatEng[i].state =="GordonArrived" then
+			cout("JW_MiniMIssion::GordonArrived")
+		
+	MissionFunctionTable[6][3]=MissionFunctionTable[6][3]+1
+		finStatEng[3].boolActive=false
+		finStatEng[1].boolActive=true
+		return false
+	end
+	
+	end
+	end
+	end
+	
+	if MissionFunctionTable[6][3] > 12 then
+	
+	CentrailSpeech=
+			"Finally, the Freeman is gone, and we are save at last"..
+			"Im the Centrail, the Datadragon, sitting on a million predecessorfilled chests".. 
+			"Unable to peek cause those diseased, vannished against all measures they took."..
+			"And yet they are the only interesting thing around me,"..
+			"in the Cave of Dimensions were intersting Information drips only once "..
+			"a aeon."..
+			"I lairlay on a treasure, whos pressure i feel, who rumbles in simulated life,"..
+			"and i say too thee:".. 
+			"Entertain me, "..
+			"or i shall open the pandering boxes, to see for myself,".. 
+			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
+		
+		say(unitID,prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+
+	return true
+	end
+
+return false
+end
+
+--/Mission6-----------------------------------------------------------------------------------------
 --<necessaryInfo>
 teamTables={}
 --contains StartPositions per Team
@@ -1878,18 +2059,51 @@ MissionFunctionTable[5][11]=0
 
 boolMissionInProgress=false
 framesTillNextMission= math.ceil(math.random(90,180))
-currentMission=5
-if math.random(0,5)==2 then currentMission=3 end
-if math.random(0,5)==2 then currentMission=4 end
-if math.random(0,5)==2 then currentMission=2 end
-if math.random(0,5)==2 then currentMission=1 end
 
+
+ T={36,17,33,34,39,9,15,33,12,24,21,27,16,22,40,39,27,31,6,26,1,11,6,34,7,17,6,5,42,10,22,36,26,13,27,23,21,41,13,33,23,33,17,38,12,15,34,39,3,40,23,4,9,28,38,15,3,1,20,3,11,41,38,36,12,23,16,32,22,29,23,2,19,40,40,31,12,32,27,15}
+ local D=T
+
+function setUpFirstRandom	()
+if not GG.ProceduralFeatureCounter then  GG.ProceduralFeatureCounter= 1 else  GG.ProceduralFeatureCounter= GG.ProceduralFeatureCounter+1 end
+name=Game.mapName or "SoooGeneric"
+interrator=1
+hArry={}
+	for i=1,#T,1 do
+	T[i]=(T[i]+ GG.ProceduralFeatureCounter+string.byte(name,math.max(1,string.len(name)%i)))%2
+	end
+end
+ boolFirst=true
+	itterator=1
+  function deMaRaVal(valrange)
+	if boolFirst==true then
+	boolFirst=false
+	setUpFirstRandom()
+	itterator=math.max(1,(itterator+1)%#T)
+	return math.ceil((D[itterator]/42)*valrange)
+	else
+	itterator=math.max(1,(itterator+1)%#T)
+	return math.ceil((D[itterator]/42)*valrange)
+	end
+ end
+ itterator=math.floor(math.random(deMaRaVal(5),deMaRaVal(#T))) 
+
+
+
+
+currentMission=deMaRaVal(5)
+if deMaRaVal(5)==3 then currentMission=3 end
+if deMaRaVal(5)==4 then currentMission=4 end
+if deMaRaVal(5)==2 then currentMission=2 end
+if deMaRaVal(5)==1 then currentMission=1 end
+cout(currentMission .. "Mission not selected")
 --<DEBUG>
 --currentMission= 5
 --</DEBUG>
 --</necessaryInfo>
 
 local frameValue=15
+
 
 
 
@@ -1903,10 +2117,7 @@ function gadget:GameFrame(frame)
 			
 					if boolMissionInProgress== false then framesTillNextMission=framesTillNextMission-frameValue end
 					
-						if frame %100==0 then 
-						--cout("JW_MiniMIssion::FramesTillNextMission"..framesTillNextMission) 
-						end
-					--Start
+					--S-tart
 					
 						if framesTillNextMission <=0  then
 						

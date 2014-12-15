@@ -117,7 +117,7 @@ function script.Killed(recentDamage,_)
 	for k,v in pairs(AddictList) do
 		if k then Spring.DestroyUnit(k,true,false) end
 	end
-suddenDeathV(recentDamage)
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 end
 

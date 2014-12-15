@@ -24,7 +24,17 @@
 	sbranch3=piece"sbranch3"
 	sbranch4=piece"sbranch4"
 	
-
+	
+	function TreeTrample()
+	Turn(center,z_axis,math.rad(30),0.3)
+	WaitForTurn(center,z_axis)
+	Turn(center,z_axis,math.rad(60),1)
+	WaitForTurn(center,z_axis)
+	Turn(center,z_axis,math.rad(65),2.2)
+	WaitForTurn(center,z_axis)
+	Turn(center,z_axis,math.rad(89),6)
+	Spring.DestroyUnit(unitID,false)
+	end
 	
 		rotable[table.getn(rotable)+1]={}
 		rotable[table.getn(rotable)]=sbranch1
@@ -273,7 +283,7 @@ WaitForTurn(center,x_axis)
 Sleep(4500)
 Move(center,y_axis,-32,3.141)--circle
 WaitForMove(center,y_axis)
-
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 
 end

@@ -15,6 +15,7 @@
 	local SIG_DIRT=4
 	local SIG_PIPE=8
 	local SIG_LEAVE=16
+	local SIG_SHIELD=32
 	teamID=Spring.GetUnitTeam(unitID)
 	local currentpiece=piece"somemit1"
 	buildemitcenter= piece"buildemitcenter"
@@ -112,7 +113,7 @@
 	function spawny()
 	blimelyLookAtTheTime=1500
 		if total > 0 then
-		slice=math.floor(math.random(1,5))
+		slice=math.ceil(math.random(1,5))
 		px, py, pz, dx, dy, dz =Spring.GetUnitPiecePosDir(unitID,pumps[slice])
 		GG.UnitsToSpawn:PushCreateUnit("tiglil",px,py,pz, 0, teamID)  
 		total=total-1
@@ -121,6 +122,8 @@
 			Sleep(23000)
 			total=10
 			boolOnce=true
+			blimelyLookAtTheTime=0
+			
 			end
 	Sleep(1500)
 	blimelyLookAtTheTime=0
@@ -141,10 +144,21 @@
 	function HitByWeapon ( x, z, weaponDefID, damage )
 		if blimelyLookAtTheTime == 0 and damage > 15 then
 		StartThread(spawny)
+		Signal(SIG_SHIELD)
+		StartThread(shield)
 		end
-
+	return damage
 	end
 
+	function shield()
+	SetSignalMask(SIG_SHIELD)
+	Sleep(500)
+	Spring.SetUnitShieldState(unitID,1,true)	
+	Sleep(22000)
+	Spring.SetUnitShieldState(unitID,1,false)	
+	end
+	
+	
 	function emitDirt()
 	SetSignalMask(SIG_DIRT)
 	StartThread(cyclesOfFire)
@@ -184,9 +198,7 @@
 			if ProRany == 1 then
 			EmitSfx(greenSleaves[i],1031)
 			Sleep(25)
-			EmitSfx(greenSleaves[i],1031)
-			else
-			Explode((greenSleaves[i]),SFX.NO_HEATCLOUD + SFX.FALL)
+			EmitSfx(greenSleaves[i],1031)		
 			end
 			
 		
@@ -195,6 +207,48 @@
 		end
 	end
 
+	function dropLeave(nr)
+	
+	while true do
+	Spin(greenSleaves[nr],y_axis,math.rad(math.random(-22,22)),0.01)
+
+	Show(greenSleaves[nr])
+	Move(greenSleaves[nr],y_axis,0,0,true)
+	Move(greenSleaves[nr],y_axis,-800,math.random(5,10))
+			while (true==Spring.UnitScript.IsInMove (greenSleaves[nr], y_axis)) do
+			xval=math.random(1,5)
+			zval=math.random(1,5)
+			deci= 1
+			if math.random(0,1)==1 then deci=-1 end
+
+			Turn(greenSleaves[nr],x_axis,math.rad(xval),0.1)
+			Turn(greenSleaves[nr],z_axis,math.rad(zval*deci),0.1)
+				if math.abs(xval) > math.abs(zval) then
+				WaitForTurn(greenSleaves[nr],x_axis)
+					else
+					WaitForTurn(greenSleaves[nr],z_axis)
+					end
+			Sleep(100)
+			Turn(greenSleaves[nr],x_axis,math.rad(xval*-1),0.1)
+			Turn(greenSleaves[nr],z_axis,math.rad(zval*deci*-1),0.1)
+				if math.abs(xval) > math.abs(zval) then
+				WaitForTurn(greenSleaves[nr],x_axis)
+					else
+					WaitForTurn(greenSleaves[nr],z_axis)
+					end
+			Sleep(100)
+			end
+	
+	
+	WaitForMove(greenSleaves[nr],y_axis)	
+
+
+		
+		Sleep(2000)
+		
+	end
+
+	end
 
 	function emitSparks()
 	while(true) do
@@ -362,6 +416,9 @@
 	Show(bean1)
 	Show(bean2)
 	Show(bean3)
+		for i=1,table.getn(greenSleaves),1 do
+		Hide(greenSleaves[i])
+		end
 	StartThread(emitSparks)
 	Hide(rootRotate)
 		for i=1,6,1 do
@@ -440,7 +497,11 @@
 	Sleep(9000)
 	StartThread(unfoldLeaves)
 	Show(rootRotate)
-
+	for i=1,table.getn(greenSleaves),1 do	
+			if math.random(0,1) == 1 then			
+			StartThread(dropLeave,i)
+			end
+	end
 
 	WaitForMove(bean1,y_axis)
 	--Spawning the beanstalks groundplate
@@ -479,9 +540,7 @@
 			SpinArrest(wurzelballen[i])
 		end
 
-		for i=1,table.getn(greenSleaves),1 do
-		Hide(greenSleaves[i])
-		end
+	
 	Hide(rootgrow)
 	SpinArrest(rootgrow)
 	Hide(rootRotate)
@@ -592,7 +651,7 @@
 
 	function script.Activate ( )
 	boolreVert=false
-
+	
 	--boolUnDeployed=false
 	--boolSafetyFirst=true
 		return 1

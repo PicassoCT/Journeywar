@@ -37,7 +37,7 @@ end
 for i=1,12,1 do
 Show(pillar1[i])
 end
-speedO=3
+speedO=15
 
 														
 														

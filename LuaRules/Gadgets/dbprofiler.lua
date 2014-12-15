@@ -263,9 +263,7 @@ else
     gadgetHandler.actionHandler.AddSyncAction(gadget, "prf_started",SyncedCallinStarted) 
     gadgetHandler.actionHandler.AddSyncAction(gadget, "prf_finished",SyncedCallinFinished) 
 
-    gadgetHandler.actionHandler.AddChatAction(gadget, 'uprofile', Start,
-      " : starts the gadget profiler (for debugging issues)"
-    )
+    gadgetHandler.actionHandler.AddChatAction(gadget, 'uprofile', Start,    " : starts the gadget profiler (for debugging issues)"   )
     gadgetHandler.actionHandler.AddChatAction(gadget, 'profile', StartSYNCED,"")
 	gadgetHandler.actionHandler.AddChatAction(gadget, 'ap', StartBoth,"")
     --StartHook()

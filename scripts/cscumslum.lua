@@ -288,7 +288,7 @@ Move(scumslum,y_axis,-109.7,42)
 WaitForMove(scumslum,y_axis)
 Spring.SpawnCEG("factory_explosion",unitx,unity,unitz,0,1,0,50,0)
 	
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 Sleep(10)
 return 0
 end

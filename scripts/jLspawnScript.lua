@@ -13,7 +13,7 @@ function WaitForBuilding()
 Sleep(100)
 health,  maxHealth,  paralyzeDamage,  captureProgress,  buildProgress=Spring.GetUnitHealth(unitID)
 	while (buildProgress and buildProgress < 1.0) do
-	Spring.Echo("JLTReeSpawn:"..buildProgress)
+	--Spring.Echo("JLTReeSpawn:"..buildProgress)
 health,  maxHealth,  paralyzeDamage,  captureProgress,  buildProgress=Spring.GetUnitHealth(unitID)
 	Sleep(100)
 	end

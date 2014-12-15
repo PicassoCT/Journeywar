@@ -8,7 +8,7 @@ TEDClass = "PLANT",
 
 
 objectName = "placeholder.s3o",
-script = "placeholder.lua",
+script = "not_implemented_yet.lua",
 buildPic = "cfc2.dds",
 	explodeAs="cArtDM",
 	selfDestructAs="cArtDM",

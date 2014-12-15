@@ -72,6 +72,10 @@ weapons = {
 [2]={name  = "bgMtwTele",
 	onlyTargetCategory = [[LAND]],
 	},	
+[3]={name  = "cmtwgrenade",
+	onlyTargetCategory = [[LAND]],
+
+	},	
 	
 },
 }

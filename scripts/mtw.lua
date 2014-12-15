@@ -16,6 +16,7 @@ local mtwchain2= piece "mtwchain2"
 local mtwthemwhe = piece "mtwthemwhe"
 local sfbucky = piece"sfbucky"
 local mtwsfxball=piece"mtwsfxball"
+
 local SIG_WIP=2
 local boolCanBuild=true
 local treadEnder=false
@@ -91,17 +92,20 @@ function script.AimFromWeapon1()
 	return turret 
 end
 
+
 function script.QueryWeapon1() 
 	return flare 
 end
 function script.QueryNanoPiece()
      return mtwteletur
 end
+boolTurretAimed=true
 function script.AimWeapon1( heading ,pitch)	
+
 	--aiming animation: instantly turn the gun towards the enemy
 	Turn(turret, y_axis, heading, 25)
 	WaitForTurn(turret,y_axis)
-	
+
 	return true
 end
 
@@ -524,3 +528,33 @@ end
 function script.FireWeapon2()	
 return true
 end
+
+
+function script.AimFromWeapon3() 
+	return turret 
+end
+
+
+function script.AimWeapon3( heading ,pitch)	
+	
+
+	return 	boolTurretAimed
+end
+
+
+it=1
+function script.QueryWeapon3() 
+return turret
+end
+
+function Weapon3Reload()
+Sleep(10000)
+boolTurretAimed=true
+end
+
+function script.FireWeapon3()	
+boolTurretAimed=false
+StartThread(Weapon3Reload)
+return true
+end
+

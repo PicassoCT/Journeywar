@@ -29,9 +29,11 @@ local unitDef  =  {
     MaxSlope = 7,
     MaxVelocity = 2.0,
     MaxWaterDepth = 20,
-    MovementClass = "Default2x2",
+    floater=true,
+    MovementClass = "HOVER2x2",
     TurnRate = 50,
     mass                = 3750,
+	
 	
 nanocolor=[[0 0.9 0.9]],
   smoothAnim          = true,

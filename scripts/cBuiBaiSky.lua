@@ -35,13 +35,14 @@ function nothingEverHappend(datTeamID)
 if datTeamID ~= teamID then boolDamaged=true end
 previouslyAttackingTeam=lastAttackingTeamID
 lastAttackingTeamID=datTeamID
-if previouslyAttackingTeam== nil then previouslyAttackingTeam=lastAttackingTeamID end
+if not previouslyAttackingTeam then previouslyAttackingTeam=lastAttackingTeamID end
 end
 
 function investMent()
 	while true do
 		if boolDamaged== true then
 		StartThread(fireEmit)
+		if previouslyAttackingTeam then
 			for i=1, 25, 1 do
 			Spring.AddTeamResource(teamID, "metal",math.ceil(basicMetallStorage/15))
 			Spring.AddTeamResource(teamID, "energy",math.ceil(basicEnergyStorage/15))
@@ -49,6 +50,7 @@ function investMent()
 			Spring.UseTeamResource(previouslyAttackingTeam,"energy",math.ceil(basicEnergyStorage*2/15))		
 			Sleep(8000)
 			end
+		end
 		boolDamaged=false	
 		end
 	Sleep(500)
@@ -130,7 +132,7 @@ Timer=0
 
 
 	end
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 return 1
 end
 

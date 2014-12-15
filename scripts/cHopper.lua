@@ -48,6 +48,8 @@ function script.AimWeapon1( heading, pitch )
    
 end
 
+
+
 function script.FireWeapon1()
 tempPiece=minetable[sixShots]
 EmitSfx(tempPiece,1024)

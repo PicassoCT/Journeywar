@@ -276,7 +276,7 @@ end
 
 function script.Killed(recentDamage,_)
 
-suddenDeathV(recentDamage)
+suddenDeathjBuildCorpse(unitID, recentDamage)
 end
 
 function script.StartMoving()

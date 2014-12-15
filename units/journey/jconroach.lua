@@ -1,7 +1,7 @@
 local unitName = "jconroach"
 local unitDef = {
 name = "conroach",
-Description = "Builds your buildings, consuming its own health.",
+Description = "consumes its own health building and healing.",
 objectName = "conRoach.s3o",
 script = "jconroach.lua",
 buildPic = "conroach.png",
@@ -26,7 +26,7 @@ MovementClass = "Default2x2",
 TurnRate = 320,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
-
+	selfDestructCountdown =1,
 
 sightDistance = 300,
 CanBeAssisted = true,
@@ -44,6 +44,15 @@ LeaveTracks = false,
 nanocolor=[[0.2 0.9 0.5]],
 Category = [[LAND]],
 
+ sfxtypes = {
+    explosiongenerators = {
+	   "custom:jconroach_heal",
+
+	   
+	   
+						  },
+	
+			},
 
 }
 

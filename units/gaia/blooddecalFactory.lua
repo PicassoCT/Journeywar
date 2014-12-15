@@ -49,7 +49,7 @@ LeaveTracks = false,
       
 		usebuildinggrounddecal = true,
 
-		buildinggrounddecaldecayspeed = 0.002,
+		buildinggrounddecaldecayspeed = 0.02,
 		buildinggrounddecalsizex = 2,
 		buildinggrounddecalsizey = 2,
 		buildinggrounddecaltype = "bloody.dds",

@@ -1,28 +1,29 @@
 #GET TESTWORTHY
 
+Units needing MiniGame
+--> Builders?
+--> Pax Centrail :  Magnetic Projectiles
 
+--> TODO add button-press workerboost
+--> Crab Bejewelled Weapon
 
-CREATE jConverter
-Debug Skinfantrys/Tiglil Ambushcode
+--> Ghostdancer --> only produces shadows when not spotted					
+--> Sempre Sequoi - overshooot
+
+--> beefeater -> poop -> diggested unit travells  through unit and can be saved by killing piece it travells through
+
+--> SpeedUp
+
 
 Debug ComEnderWeapons
-Debug celectricityGadget
 Debug Hedgehog
 
 Debug Strider Inversekinematiks
 Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most of them)
-Debug Skinfantrysound
 
-Add Guardians At The Gate as BackgroundMusic in a Version with loading Vehicles etc..
->>ComEnderSpeach:
-We are the evil guys, but not the reason nobody else is in the sky ?
-Surely not because off retardation, we were perfect from the start,
-overcoming animals, using ancient sun at heart.
-So in no need for this are we, stepping in right through the door,
-we will never go in circles, of overpopulation and war.
-Never shine a beam of misssery on just another rock, telling the tale,
-of  yet another selftamed flock.--> Devolution
 Get BulletImpact DeformationShadder running
+Add Guardians At The Gate as BackgroundMusic in a Version with loading Vehicles etc..
+
 
 >PHYSICS
  >> Put a bullet into spring

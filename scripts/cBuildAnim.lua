@@ -1191,6 +1191,8 @@ function updateBuildProgress(buildID)
 while buildID == nil do
 _,_,buildID=identifyUnit()
 Sleep(200)
+res= Spring.GetUnitIsDead(buildID)
+if not res or res==true then buildID=nil end
 end
  _,_,_,_,bP= Spring.GetUnitHealth(buildID)
 

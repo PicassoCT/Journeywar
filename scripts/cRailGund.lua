@@ -245,7 +245,7 @@ function script.Create()
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
-Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
+  GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 
 --</buildanimationscript>
 if boolRailGunTerraForm==true then

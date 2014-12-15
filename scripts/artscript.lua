@@ -87,7 +87,7 @@ end
 local function move()
     boolSoundPlaying=true
 while(boolStop==false) do
-	Spring.PlaySoundFile("sounds/cart/artilleryMove2.wav",0.4)
+	Spring.PlaySoundFile("sounds/cart/artilleryMove2.wav",0.1)
 	Sleep(3500)
 end	
 	boolSoundPlaying=false

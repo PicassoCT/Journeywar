@@ -120,7 +120,7 @@ end
 
 function script.Killed(recentDamage,_)
 
-suddenDeathjMedCorpse(recentDamage)
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 end
 

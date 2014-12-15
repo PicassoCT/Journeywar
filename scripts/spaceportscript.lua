@@ -298,7 +298,7 @@ Timer=0
 			end
 		if Timer== 28 then
 
-		Move(buibaicity,y_axis,-180,44)
+		Move(center,y_axis,-180,44)
 		end
 
 
@@ -309,7 +309,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.CreateUnit("jresistancewarrior",x+25,y,z-25,0,teamID)
 	end
 end
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 return 0
 end
 

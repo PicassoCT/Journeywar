@@ -1,6 +1,14 @@
 local moveDefs =
 {
 	{
+		name = "HOVER2x2",
+		footprintY = 3,
+		footprintX = 3,
+		maxWaterDepth = 1000,
+		maxSlope = 20,
+		crushStrength = 0,
+	},
+	{
 		name = "Default2x2",
 		footprintX = 2,
 		maxWaterDepth = 10,

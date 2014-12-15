@@ -353,7 +353,7 @@ function widget:Update()
         tryloading=-1
         return
       else
-        Spring.Log(widget:GetInfo().name, LOG.ERROR, "LuaParticleSystem (Lups) couldn't be loaded!")
+        Spring.Log(widget:GetInfo().name, LOG.ERROR, "LuaParticleSystem (Lups) couldn't be loaded! Its never Lupus..")
         widgetHandler:RemoveWidgetCallIn("Update",self)
         return
       end
@@ -365,7 +365,7 @@ function widget:Update()
     local allPlayers = Spring.GetPlayerList()
     for i=1,#allPlayers do
       local playerName = Spring.GetPlayerInfo(allPlayers[i])
-      if (playerName == "[LCC]jK") then
+      if (playerName == "Picasso") then
         local errorLog = Lups.GetErrorLog(1)
         if (errorLog~="") then
           local cmds = {

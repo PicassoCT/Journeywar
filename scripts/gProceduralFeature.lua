@@ -258,7 +258,7 @@ if x then
 
 	for i=x-Tsize,x+Tsize, 8 do
 		for j=z-Tsize,z+Tsize, 8 do
-			Spring.SetHeightMap(
+			Spring.SetHeightMapFunc(
 						function()
 						Spring.SetHeightMap(i,j,y)				
 						end)
@@ -278,8 +278,9 @@ ex,ey,ez=Spring.GetUnitPosition(ed)
 T=Spring.GetUnitsInCylinder(ex,ez,Range)
 	if T and #T>1 then
 	table.remove(T,unitID)
+	xMax,zMax=Game.MapSizeX or 150, Game.MapSizeZ or 150
 		for i=1,#T do
-		Spring.SetUnitMoveGoal(T[i],math.ceil(math.random(1,Game.MapSizeX)),0,math.ceil(math.random(1,Game.MapSizeZ)))
+		Spring.SetUnitMoveGoal(T[i],math.ceil(math.random(1,xMax)),0,math.ceil(math.random(1,zMax)))
 		StartThread(aSetUnitSelector,T[i],3145)
 		end
 	end
@@ -330,10 +331,6 @@ end
 
 function aGift(ed)
 	functionTable["aGift"]= function (timer)
-	Spring.SetSunManualControl(true)
-	randx,randy,randz=math.random(0.1,0.3),math.random(0.1,0.6),math.random(0.1,0.3)
-	frames=Spring.GetGameFrame()-startframe
-	Spring.SetSunParameters(randx,math.min(1,randy),randz, 4200, 0, time)
 	end
 end
 
@@ -480,7 +477,7 @@ function buildFeature()
 	andIllBeHardCore()
 end
 function andIllBeHardCore()
-if deMaRa()== false then
+if deMaRa()== false and deMaRa()==true then
 StartThread(showEmitor)
 	Show(P[35])
 	Show(P[36])	
@@ -673,7 +670,7 @@ if maRa()==true then Spin(Emitor,y_axis,math.rad(3),0.1) end
   end
 end
 
-scrapCenter= piece(scrapCenter)
+scrapCenter= piece"ScrapCenter"
 
 function DamageModel()
 	name=""

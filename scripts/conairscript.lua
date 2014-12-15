@@ -120,7 +120,7 @@ SetSignalMask(SIG_EXAUST)
 	end 
  end
  
-local function timedelayedExaustExtinct()
+ function timedelayedExaustExtinct()
  SetSignalMask(SIG_TIMER)
 Sleep(4000) 
 Signal(SIG_EXAUST)
@@ -218,7 +218,7 @@ function updateBuildProgress()
 			
 	end
 end
-
+local BGID=UnitDefNames["bg"].id 
 function unitBuiltCheck()
 --test if unit built is a soldier
 while buildID == nil or buildID == -666 do
@@ -227,7 +227,7 @@ Sleep(150)
 end	
 	local unitDefID= Spring.GetUnitDefID(buildID)
 
-		if  unitDefID == UnitDefNames["bg"].id then 
+		if  unitDefID == BGID then 
 		   
 			return true
 					
@@ -500,6 +500,7 @@ boolRopeRelease=false
 	flopFlip=flopFlip*(-1)
 	unitPosX, unitPosY, unitPosZ=Spring.GetUnitPosition(unitID)
 	countStartDependBuildProgress=buildProgress
+	if not countStartDependBuildProgress then 	ropeDrop()	break	end
 
 																																	-- adds the updated position as swing_value
 																																	if boolFirstTimeForEverything == true then
@@ -537,6 +538,7 @@ boolRopeRelease=false
 								
 									repeat 	
 										countStartDependBuildProgress=updateBuildProgress()
+										if not countStartDependBuildProgress then 	ropeDrop()	break	end
 										----Spring.Echo("InnerLoop")
 										flopFlip=flopFlip*(-1)
 										--
@@ -895,6 +897,7 @@ function script.StartMoving()
  
     
 end
+boolSelfKill=false
 
 function script.StopMoving()
 
@@ -906,12 +909,38 @@ end
 
 
 
+	function script.HitByWeapon ( x, z, weaponDefID, damage )
+	
+	if damage/maxHealth > 0.75 and boolSelfKill==false then
+	hp=Spring.GetUnitHealth(unitID)
+		if hp-damage <= 0 then
+			Spring.SetUnitCrashing(unitID, true)
+			Spring.SetUnitNoSelect(unitID, true)
+			Spring.SetUnitNeutral(unitID,true)
+		end
+	end
+	return damage
+end
 
+boolIwantToGoHome=false
 
+function home()
+													Spring.SetUnitMoveGoal(unitID,xorg,yorg,zorg)
+													x,y,z=Spring.GetUnitPosition(unitID)
+													Sleep(200)
+													return x,y,z
 
-
+end
 
 local function workInProgress()
+if boolIwantToGoHome==true then
+		x,y,z=Spring.GetUnitPosition(unitID)
+		while (math.abs(x-xorg)<25 and math.abs(z-zorg)<25)==false do
+		x,y,z=home()
+		end
+		Spring.DestroyUnit(unitID,false,true)
+end
+
 boolUnitIsSoldier=unitBuiltCheck()
      Spin (conspin, y_axis, math.rad(45),7)
 							
@@ -924,15 +953,23 @@ boolUnitIsSoldier=unitBuiltCheck()
 	WaitForTurn(conairfron,x_axis)
 	WaitForTurn(conairRear,x_axis)
 	actualHealth=Spring.GetUnitHealth (unitID ) 
+
+	
 												if actualHealth == 1 then
-												actualHealth=actualHealth-1
+												boolIwantToGoHome=true
+												Hide(condepot)
 												Spring.SetUnitNoSelect (unitID, true)
+													x,y,z=Spring.GetUnitPosition(unitID)
+													while (math.abs(x-xorg)<25 and math.abs(z-zorg)<25)==false do
+													x,y,z=home()
+													end
+												Spring.DestroyUnit(unitID,false,true)
+
 												--makes the Unit go home, to the place it was born- west Virginia
-												suddenDeath(unitID)
-												
-												Spring.SetUnitHealth(unitID,actualHealth)
+												--mountain mama
 												end
 	actualHealth=actualHealth-1
+	if actualHealth <= 0 then boolSelfKill=true end
 	Spring.SetUnitHealth(unitID,actualHealth)
 												
 	Sleep(250)
@@ -944,7 +981,7 @@ boolUnitIsSoldier=unitBuiltCheck()
 end
 StopSpin (conspin, y_axis,1)
 end
-
+xorg,yorg,zorg=Spring.GetUnitPosition(unitID)
 
 function script.Create()
 
@@ -982,25 +1019,25 @@ Hide(bgdrop)
 landed()
 Spring.PlaySoundFile("sounds/conair/cConAir.wav")
 end
+_,maxhealth=Spring.GetUnitHealth(unitID)
 
-function script.Killed()
+function script.Killed(recentDamage)
+	if boolSelfKill == false then
+	
 
-Spring.SetUnitCrashing(unitID,true)
-	SetUnitValue(COB.CRASHING, 1)
---needsWreckageFeature
---fixxed
-Explode( jetemit3,SFX.FIRE +SFX.SMOKE)      
-Explode( jetemit2,SFX.FIRE +SFX.SMOKE)      
-Explode( jetemit1,SFX.FIRE +SFX.SMOKE)      
-Explode( jetemit4,SFX.FIRE +SFX.SMOKE)      
-Explode( conspin,SFX.FIRE +SFX.SMOKE)      
-Explode( nanoemit,SFX.FIRE +SFX.SMOKE)      
-Explode( conair , SFX.FALL+SFX.FIRE+SFX.EXPLODE_ON_HIT)     
-Explode( conairfron ,SFX.FIRE +SFX.SMOKE)      
-Explode( conairRear ,SFX.FIRE +SFX.SMOKE)      
-Explode( condepot ,SFX.FIRE +SFX.SMOKE)     
-  
-Sleep(400)
+	
+		Explode( jetemit3,SFX.FIRE +SFX.SMOKE)      
+		Explode( jetemit2,SFX.FIRE +SFX.SMOKE)      
+		Explode( jetemit1,SFX.FIRE +SFX.SMOKE)      
+		Explode( jetemit4,SFX.FIRE +SFX.SMOKE)      
+		Explode( conspin,SFX.FIRE +SFX.SMOKE)      
+		Explode( nanoemit,SFX.FIRE +SFX.SMOKE)      
+		Explode( conair , SFX.FALL+SFX.FIRE+SFX.EXPLODE_ON_HIT)     
+		Explode( conairfron ,SFX.FIRE +SFX.SMOKE)      
+		Explode( conairRear ,SFX.FIRE +SFX.SMOKE)      
+		Hide(condepot)   
+		
+	end
 return 0
 end
 

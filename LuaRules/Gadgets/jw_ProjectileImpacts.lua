@@ -38,6 +38,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local glavaWeaponID= WeaponDefNames["glavaweapon"].id
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
+	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
 	local slicergun = WeaponDefNames["slicergun"].id
 
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
@@ -62,6 +63,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(cRestrictorThumperID , true)
 	Script.SetWatchWeapon(jDrugIncectorID , true)
 
+	Script.SetWatchWeapon(cmtwgrenade , true)
 	Script.SetWatchWeapon(jHiveHoundID , true)
 	Script.SetWatchWeapon(jSwiftSpearID , true)
 	Script.SetWatchWeapon(weapondatID , true)
@@ -81,7 +83,12 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 	
 	
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
-
+			
+			if weaponID== cmtwgrenade then
+			teamid=Spring.GetUnitTeam(AttackerID)
+			Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
+			end
+			
 			if weaponID== cUniverseGun then
 			tid=Spring.CreateUnit("cawilduniverseappears",px,py,pz, 1, gaiaTeamID)
 			Spring.SetUnitAlwaysVisible(tid,true)

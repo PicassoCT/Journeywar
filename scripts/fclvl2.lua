@@ -58,7 +58,7 @@ Move(nano,y_axis, 2048,360)
 WaitForMove(nano,y_axis)
 Hide(nano)
 Explode (nano, SFX.SHATTER)
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 Sleep(10)
 return 0
 end

@@ -7,7 +7,7 @@ Accuracy=2000,
 
 --Physic/flight path
 range=600,
-reloadtime=1,
+reloadtime=0.1,
 weaponVelocity=1000,
 startVelocity=150,
 weaponAcceleration=250,
@@ -39,8 +39,8 @@ avoidFriendly=true,
 
 ----DAMAGE
 damage={
-default=150,
-heavyarmor=150,
+default=15,
+heavyarmor=15,
 },
 areaOfEffect=10,
 craterMult=0,

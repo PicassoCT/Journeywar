@@ -53,6 +53,7 @@ Category = [[NONTARGET]],
 	   
 	   "custom:firecloudnuke",--1034
 	   "custom:permacloudnuke",--1035
+	   "custom:nukeshroom",--1036
 
 	 
 	   

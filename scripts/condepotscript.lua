@@ -13,17 +13,17 @@ local condbolt4= piece "condbolt4"
 
 local cdturningpoint= piece"cdturningpoint"
 
-local buildspottrain= piece"buildspottrain"
+buildspottrain= piece"buildspottrain"
 
-local buildspotplan1 = piece "buildspotplane"
-local buildspotplane2 = piece "buildspotplane2"
-local buildspotplane3 = piece "buildspotplane3"
-local buildspotplane4 = piece "buildspotplane4"
+buildspotplan1 = piece "buildspotplane"
+buildspotplane2 = piece "buildspotplane2"
+buildspotplane3 = piece "buildspotplane3"
+buildspotplane4 = piece "buildspotplane4"
 
-local buildspottruck1 = piece "buildspottruck"
-local buildspottruck2 = piece "buildspottruck2"
-local buildspottruck3 = piece "buildspottruck3"
-local buildspottruck4 = piece "buildspottruck4"
+buildspottruck1 = piece "buildspottruck"
+buildspottruck2 = piece "buildspottruck2"
+buildspottruck3 = piece "buildspottruck3"
+buildspottruck4 = piece "buildspottruck4"
 
 local condepotli = piece"condepotli"
 local condepotl2 = piece"condepotl2"
@@ -66,7 +66,7 @@ function script.Create()
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 
-Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
+GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 
 --</buildanimationscript>
 
@@ -307,7 +307,7 @@ Hide(cdcontain8)
 
 WaitForTurn(condepotre,x_axis)
 
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 Explode(condepotre, SFX.SHATTER)
 Sleep(10)
 return 0

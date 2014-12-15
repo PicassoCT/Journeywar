@@ -30,7 +30,8 @@ MovementClass = "Default2x2",
 TurnRate = 150,
 nanocolor=[[0 0.9 0.9]],
 sightDistance = 500,
-
+ crashDrag = 0.02,
+ canCrash=true,
  collisionVolumeScales		= [[23 30 62]],
  collisionVolumeOffsets	= [[-5 -8 3]],
  collisionVolumeTest	    = 1,
@@ -60,7 +61,7 @@ mass                = 1225,
 canSubmerge         = false,
 useSmoothMesh =false,
 collide             = true,
-crashDrag =0.1,
+
 
 
 

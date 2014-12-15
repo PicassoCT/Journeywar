@@ -81,6 +81,10 @@ Turn(cssBody,x_axis,math.rad(20),0)
 	end
 end
 
+function lua_FlameShot(weapon)
+
+return 0;
+end
 
 function script.StartMoving()
 
@@ -129,6 +133,10 @@ end
 
 function script.Create()
 StartThread(letsWalkAndTalk)
+	Signal(SIG_IDLE)
+	Signal(SIG_LEG)
+	Signal(SIG_AIM)
+	StartThread(walk)
   ----Spring.Echo "This was a Triumph! Im making a note here huge Success!"
   --Spring.UnitScript.Play("centerdeploy")
 
@@ -169,7 +177,7 @@ flare02 end
 	
 	
 	function script.FireWeapon1()
-	
+	lua_FlameShot(1)
 	end
 	
 function script.QueryWeapon2() return 
@@ -205,6 +213,6 @@ flare01 end
 		Sleep(800)
 		StartThread(playSound2)
 		end
-	
+		lua_FlameShot(2)
 	end
 	

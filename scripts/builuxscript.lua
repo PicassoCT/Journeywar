@@ -310,7 +310,7 @@ end
 		--<buildanimationscript>
 		x,y,z=Spring.GetUnitPosition(unitID)
 		teamID=Spring.GetUnitTeam(unitID)
-		Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
+		 GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 
 		--</buildanimationscript>
 		
@@ -330,12 +330,13 @@ end
 		StartThread(upgraDDe)
 		StartThread(alarmCheck)--
 		StartThread(windyS)
-		StartThread(playSoundByUnitTypOS,unitID,0.5,{
+		StartThread(playSoundByUnitTypOS,unitID,0.7,{
 												{name="sounds/cbuilux/neverendingparty.ogg",time=15000},
 												{name="sounds/cbuilux/neverendingpartyup.ogg",time=15000},
 												{name="sounds/cbuilux/neverendingpartyup2.ogg",time=15000},
+												{name="sounds/cbuilux/neverendingpartyup3.ogg",time=10000},
 												})
-		end
+end
 
 
 			function script.Killed(recentDamage,_)
@@ -343,7 +344,7 @@ end
 			Explode(builux,SFX.SHATTER)
 			Explode(bldoor1,SFX.FIRE)
 			Explode(bldoor2,SFX.FIRE)
-			suddenDeath(unitIDrecentDamage)
+			suddenDeath(unitID,recentDamage)
 			return 0
 			end
 

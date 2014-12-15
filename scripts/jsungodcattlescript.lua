@@ -80,7 +80,9 @@ LegTable[#LegTable]= Lupleg3
 
 RateOfDecrease=65
 ItterationsTillReSpawn=0
-MAGICRESPAWNNUMBER=8000
+MAGICRESPAWNNUMBER=Spring.GetUnitHealth(unitID)
+MAGICRESPAWNNUMBER=MAGICRESPAWNNUMBER/2
+
 SIG_MOVE=1
 SIG_LAY=2
 
@@ -112,11 +114,11 @@ local lGetUnitHealth=Spring.GetUnitHealth
 
 							WaitForTurn(LegTable[15],y_axis)
 							health=lGetUnitHealth(unitID)
-							lSetUnitHealth(unitID,health-RateOfDecrease)
+							lSetUnitHealth(unitID,health-RateOfDecrease*(0.05*math.max(1,GG.SunGodCattleTable[teamID])))
 						end
 						
 				health=lGetUnitHealth(unitID)
-				lSetUnitHealth(unitID,health-2)
+				lSetUnitHealth(unitID,health-2*(0.05*math.max(1,GG.SunGodCattleTable[teamID])))
 	
 				Sleep(1000)
 	end
@@ -312,9 +314,11 @@ end
 
 boolDefBuffActive=true
 
+
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 
-	if damage > 2 then
+	if damage  then
+	
 	boolDefBuffActive=false
 	Signal(SIG_MOVE)
 	degree=math.deg(math.atan2(x,z))
@@ -327,7 +331,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 		
 	Spring.SetUnitHealth(unitID,originalHealth)
 	end
-return  nil
+return  0
 end
 
 boolThreadStart=false
@@ -336,15 +340,18 @@ function threadStartLoop()
 	Sleep(500)
 		if boolThreadStart==true then
 				boolThreadStart=false
-				MAGICRESPAWNNUMBER=MAGICRESPAWNNUMBER*3
-				x,y,z=Spring.GetUnitPosition(unitID)
-				myYoung=Spring.CreateUnit("jsungodcattle",x,y+15,z+15, 0, teamID)  
 				ItterationsTillReSpawn=ItterationsTillReSpawn-MAGICRESPAWNNUMBER
-				StartThread(timeDelayedMoveGoal,myYoung,x,y,z)
+				x,y,z=Spring.GetUnitPosition(unitID)
+				GG.UnitsToSpawn:PushCreateUnit("jsuneggnogg",x,y+15,z+15, 0, teamID) 
+				hp=Spring.GetUnitHealth(unitID)
+				Spring.SetUnitHealth(unitID,math.ceil(hp*0.8))
+				
+				--StartThread(timeDelayedMoveGoal,myYoung,x,y,z)
 		end
 	end
 end
 function script.Killed(damage,_)
+GG.SunGodCattleTable[teamID]=GG.SunGodCattleTable[teamID]-1
 --fallingDown Animation
 
 return 0
@@ -417,8 +424,11 @@ function threatenToStart()
 Sleep(1500)
 boolHitIt=true
 end
-function script.Create()
 
+function script.Create()
+if not GG.SunGodCattleTable then GG.SunGodCattleTable ={} end
+if not GG.SunGodCattleTable[teamID] then GG.SunGodCattleTable[teamID] =0 end
+GG.SunGodCattleTable[teamID]=GG.SunGodCattleTable[teamID]+1
 StartThread(threadStarter)
 StartThread(threatenToStart)
 StartThread(threadStartLoop)

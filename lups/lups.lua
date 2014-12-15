@@ -180,14 +180,14 @@ LocalAllyTeamID = 0
 thisGameFrame   = 0
 frameOffset     = 0
 LupsConfig      = {}
-
+local boolversion=Game.version=="0.76b1"
 local noDrawUnits = {}
+
 function SetUnitLuaDraw(unitID,nodraw)
   if (nodraw) then
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) + 1
     if (noDrawUnits[unitID]==1) then
       --if (Game.version=="0.76b1") then
-		
         Spring.UnitRendering.ActivateMaterial(unitID,1)
         --Spring.UnitRendering.SetLODLength(unitID,1,-1000)
         for pieceID in ipairs(Spring.GetUnitPieceList(unitID) or {}) do
@@ -196,15 +196,12 @@ function SetUnitLuaDraw(unitID,nodraw)
       --else
       --  Spring.UnitRendering.SetUnitLuaDraw(unitID,true)
       --end
-		
     end
   else
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) - 1
     if (noDrawUnits[unitID]==0) then
       --if (Game.version=="0.76b1") then
-	 
         Spring.UnitRendering.DeactivateMaterial(unitID,1)
-	 
       --else
       --  Spring.UnitRendering.SetUnitLuaDraw(unitID,false)
       --end

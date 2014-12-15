@@ -159,7 +159,7 @@
 	Explode(mestorage,SFX.SHATTER)
 	Explode(meelevator,SFX.FALL+SFX.FIRE)
 
-		suddenDeath(unitIDrecentDamage)
+		suddenDeath(unitID,recentDamage)
 
 	return 0
 	end

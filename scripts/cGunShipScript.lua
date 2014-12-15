@@ -55,7 +55,18 @@ function script.Activate()
 		end
 
 
- 
+ 	function script.HitByWeapon ( x, z, weaponDefID, damage )
+	
+	if damage/maxHealth > 0.75  then
+	hp=Spring.GetUnitHealth(unitID)
+		if hp-damage <= 0 then
+			Spring.SetUnitCrashing(unitID, true)
+			Spring.SetUnitNoSelect(unitID, true)
+			Spring.SetUnitNeutral(unitID,true)
+		end
+	end
+	return damage
+end
 
  
 function flySound()
@@ -125,7 +136,7 @@ end
 function script.Killed()
 Spring.SetUnitCrashing(unitID, true)
 Spring.SetUnitNeutral(unitID,true)
-Spring.SetUnitCOBValue(unitID, COB.CRASHING, 1)
+
 
 StartThread(emitSmoke)
 EmitSfx(bady,1028)

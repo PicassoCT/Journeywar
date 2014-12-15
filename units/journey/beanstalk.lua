@@ -84,6 +84,7 @@ buildoptions =
 	"jdragongrass",
 	"jbeehive",
 	"jfungiforrest",
+	"jrefugeetrap",
 	
 	--endgame
 	"jabyss"
@@ -95,6 +96,9 @@ Category = [[LAND BUILDING]],
 weapons = {
 [1]={name  = "jbeanstalkphoenix",
 	onlyTargetCategory = [[LAND AIR]],
+	},
+[2]={name  = "jbeanstalkshield",
+--	onlyTargetCategory = [[LAND AIR]],
 	},
 },
 

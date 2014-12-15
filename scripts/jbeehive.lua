@@ -64,7 +64,7 @@ end
 
 
 function script.Killed(recentDamage, maxHealth)
-
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 end
 --Building

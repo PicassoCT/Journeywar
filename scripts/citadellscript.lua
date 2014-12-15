@@ -1,4 +1,5 @@
  include "suddenDeath.lua"
+ include "toolKit.lua"
  
  boolPressedButtonTwice=false
  
@@ -26,6 +27,15 @@ shields[i]={}
 shielda= "shield"..i
 shields[i]=piece (shielda)
 end
+
+addArmor={}
+for i=1,6,1 do
+addArmor[i]={}
+stone= "AdArm0"..i
+addArmor[i]=piece (stone)
+end
+ArmorSpawn=piece"ArmorSpawn"
+FirstArmor=piece"FirstArmor"
 
 rocks={}
 for i=1,71,1 do
@@ -538,16 +548,14 @@ Hide(shield)
 Move(shield,y_axis,0,0)
 end
 
-
+boolTwice=false
 					function script.Activate()	
+					if boolTwice==true then 
 					boolShield=true
-					StartThread(shieldDraw)					
-					boolPressedButtonTwice=true
-					if boolBloodyVirginMary==true then
-				--	StartThread(spawnDecal)
-					boolBloodyVirginMary=false
-					--StartThread(reInforCements)
+					else
+					boolTwice=true
 					end
+										
 				        Signal(SIG_DUST)
 						if DustStomp then
 						StartThread(DustStomp)    
@@ -557,7 +565,7 @@ end
 
 		function script.Deactivate()
 		          Signal(SIG_DUST)
-		
+	
 					for i=1,12,1 do
 					Show(shields[i])
 					end
@@ -579,6 +587,11 @@ Hide(shield)
 for r=1,8,1 do
 Hide(rocks[r])
 end
+
+
+hideT(addArmor)
+Hide(ArmorSpawn)
+Hide(FirstArmor)
 
 StartThread(CriticalHitDetector)
 StartThread(delayedSet)
@@ -623,9 +636,10 @@ Hide( citadel )
 Hide( shater )   
     
 StartThread(WarpEntry)
-                
+StartThread(shieldDraw)                
 
 StartThread(reInforCements)
+StartThread(armorOS)
 
 end
 
@@ -708,6 +722,25 @@ StartThread(FireCloud)
 	Explode (citurret04, SFX.FIRE)
 	Explode (citurret, SFX.FIRE)
 
+	--PortalStorm
+	for i=1,5 do
+	EmitSfx(citadel,1033)
+	Sleep(math.ceil(500/i))	
+	end
+	T={}
+	T=grabEveryone(unitID,cx,cz,256,teamID)
+	DestroyTable(T, 
+				false,
+				true, 
+				function(id) 
+				hp=Spring.GetUnitHealth(id) 
+					if hp > 800 then 
+					return false 
+					else 
+					return true
+					end 
+				end,
+				unitID)
 
 boolFireCloud=false
 -- --<RubbleScript>
@@ -926,71 +959,88 @@ function script.FireWeapon5()
 	return true
 end
 
+
 --here be shielding
+function script.AimFromWeapon6() 
+	return cidronesem 
+end
+
+function script.QueryWeapon6() 
+return cidronesem
+end
+
+function script.AimWeapon6( heading ,pitch)	
+	
+	return true
+end
+
+function script.FireWeapon6()	
+
+	return true
+end
 
 SHIELDRADIUS=420
 cx,cy,cz=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
 
-boolShield=true
+boolShield=false
 function shieldDraw()
+
 local teamid=Spring.GetUnitTeam(unitID)
---Clear Buildings from Shieldzone - 
-T=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS+22)
-N=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS-22)
-if T and N then 
-T=SubSetFromSet(KeyValueTableConverter(T),KeyValueTableConverter(N))
-end
---Makes one wish there was a slice into animations
-DestroyTable(T)
---add Decals were shield hits the ground..
-if not Spring.GetProjectileDirection then return end
+if boolShield==true then 	Spring.SetUnitShieldState(unitID,5,true) else 	Spring.SetUnitShieldState(unitID,5,false) end
 
-	while boolShield do
-	--get All Projectiles inside()
-	P=GetAllProjInside(SHIELDRADIUS-90)
-	--get All Projectiles outside()
-	O=GetAllProjInside(SHIELDRADIUS+40)
-	if P and O then
-	T=SubSetFromSet(O,P)
-	ProjectilesReflect(T)
-	end
+	while true do
 	
-	--if you dont have the energy no shield
-	if Spring.UseTeamResource(teamid,"energy",42) == false then
-		boolShield=false
-	
-		Spring. GiveOrderToUnit(unitID, CMD.ONOFF, { 0 }, { })
-	
-	return 
-	end
-	
-	--Repulse Units from outside
-	T=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS+60)
-	N=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS-22)
-	T=SubSetFromSet(T,N)
-		factor=190
-		if T then
-			for i=1, #T do
-				if T[i] then
-				tx,ty,tz=Spring.GetUnitPosition(T[i])
-				tx,ty,tz=tx-cy,ty-cy,tz-cz
-				norm=math.sqrt(tx*tx+ ty*ty + tz*tz)
-				
-				Spring.AddUnitDamage(T[i],12, 1400, unitID,  -1, factor*(tx/norm),factor*( ty/norm),factor*( tz/norm))
+			while boolShield==true do
+			Spring.SetUnitShieldState(unitID,5,true)
+			--Clear Buildings from Shieldzone - 
+			T=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS+12)
+			N=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS-12)
+				if T and N then 
+				T=SubSetFromSet(KeyValueTableConverter(T),KeyValueTableConverter(N))
 				end
-			end		
-		Sleep(100)
-		--Spring.CreateUnit("gdecshields",cx+math.random(-25,25),cy+math.random(-25,25),cz+math.random(-25,25), 0, teamID)  
+			
+			--Repulse Units from outside
+				T=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS+60)
+				N=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS)
+				T=KeyValueTableConverter(T)
+				N=KeyValueTableConverter(N)
+				
+				T=SubSetFromSet(T,N)
+					factor=190
+					if T then
+						for i=1, #T do
+							if T[i] then
+							tx,ty,tz=Spring.GetUnitPosition(T[i])
+							tx,ty,tz=tx-cx,ty-cy,tz-cz
+							norm=math.sqrt(tx*tx+ ty*ty + tz*tz)
+							if maRa()==true then
+							spawnCEGatUnit(T[i], "cshieldsparks", math.random(-15,15),math.random(5,25), math.random(-15,15))
+							end
+							Spring.AddUnitDamage(T[i],12, 1400, unitID,  -1, factor*(tx/norm),factor*( ty/norm),factor*( tz/norm))
+							end
+						end		
+				
+					--Spring.CreateUnit("gdecshields",cx+math.random(-25,25),cy+math.random(-25,25),cz+math.random(-25,25), 0, teamID)  
+					end
+			Sleep(100)
+			end
+		Spring.SetUnitShieldState(unitID,5,false)
+			Sleep(500)
 		end
-	end
-end
 
-function DestroyTable(T)
-if T then 
-	for i=1,#T, 1 do
-	Spring.DestroyUnit(T[i],true, false, unitID)
 	end
+
+	
+	boolArmorOut=false
+function script.HitByWeapon(damage)
+
+
+
+if boolArmorOut==false then
+return damage
+else 
+return math.ceil(damage/2)
 end
 end
 
@@ -1016,6 +1066,105 @@ end
 function GetAllProjInside(Radius)
 T=Spring.GetProjectilesInRectangle(cx-Radius,cz-Radius,cx+Radius, cz+Radius)
 return KeyValueTableConverter(T)
+end
+
+function ArmorOutAnimation()
+Move(ArmorSpawn,y_axis,70,0)
+Show(ArmorSpawn)
+Move(ArmorSpawn,y_axis,0,12)
+WaitForMove(ArmorSpawn,y_axis)
+
+for i=6,1, -1 do
+
+
+Move(ArmorSpawn,y_axis,20,12)
+WaitForMove(ArmorSpawn,y_axis)
+Move(FirstArmor,y_axis,0,0)
+Move(ArmorSpawn,y_axis,0,12)
+Show(FirstArmor)
+Move(FirstArmor,y_axis,-60,16)
+WaitForMove(FirstArmor,y_axis)
+WaitForMove(ArmorSpawn,y_axis)
+StartThread(moveArmorOut,i)
+Sleep(500)
+Hide(FirstArmor)
+Sleep(500)
+end
+Hide(FirstArmor)
+Move(FirstArmor,y_axis,0,0)
+Move(ArmorSpawn,y_axis,70,12)
+WaitForMove(ArmorSpawn,y_axis)
+Hide(ArmorSpawn)
+Sleep(120000)
+boolArmorOut=true
+end
+
+function armorOS()
+
+Sleep(30000)
+hp,maxhp=Spring.GetUnitHealth(unitID)
+
+
+	while true do
+	hp,maxhp=Spring.GetUnitHealth(unitID)
+		if hp < maxhp then ArmorOutAnimation()
+		elseif 	boolArmorOut ==true then
+		ArmorInAnimation() 
+		end
+	WaitForMove(addArmor[1],y_axis)
+	Sleep(1500)
+	end
+
+end
+
+function moveArmorOut(nr)
+MovePieceToPiece(addArmor[nr], FirstArmor,0)
+Show(addArmor[nr])
+Move(addArmor[nr],x_axis,0,12)
+Move(addArmor[nr],z_axis,0,12)
+WaitForMove(addArmor[nr],x_axis)
+WaitForMove(addArmor[nr],z_axis)
+Move(addArmor[nr],y_axis,0,12)
+Move(FirstArmor,y_axis,0,0)
+end
+
+function ArmorInAnimation()
+Show(ArmorSpawn)
+for i=1,6, 1 do
+Hide(FirstArmor)
+Move(ArmorSpawn,y_axis,0,12)
+Move(FirstArmor,y_axis,-60,0)
+WaitForMove(FirstArmor,y_axis)
+WaitForMove(ArmorSpawn,y_axis)
+moveArmorIn(i)
+Hide(addArmor[i])
+Show(FirstArmor)
+Move(FirstArmor,y_axis,0,12)
+WaitForMove(FirstArmor,y_axis)
+Move(ArmorSpawn,y_axis,45,12)
+WaitForMove(ArmorSpawn,y_axis)
+end
+
+Move(FirstArmor,y_axis,0,12)
+WaitForMove(FirstArmor,y_axis)
+Move(ArmorSpawn,y_axis,70,12)
+WaitForMove(ArmorSpawn,y_axis)
+Hide(ArmorSpawn)
+Hide(FirstArmor)
+Sleep(12000)
+boolArmorOut=false
+end
+
+function moveArmorIn(nr)
+px,py,pz=Spring.GetUnitPiecePosition(unitID,addArmor[nr])
+ax,ay,az=Spring.GetUnitPiecePosition(unitID,FirstArmor)
+Move(addArmor[nr],y_axis,-1*(py-ay),12)
+WaitForMove(addArmor[nr],y_axis)
+MovePieceToPiece(addArmor[nr], FirstArmor,12)
+WaitForMove(addArmor[nr],x_axis)
+WaitForMove(addArmor[nr],z_axis)
+Hide(addArmor[nr])
+
 end
 
 function ProjectilesReflect(T)

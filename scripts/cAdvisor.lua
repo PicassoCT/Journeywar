@@ -29,6 +29,7 @@ local SIG_LEG=16
 local boolStillAttackin=false
 local booldIdle=true
 local boolUnitAttached=false
+boolHandsfree=true
 
 function idle()
 SetSignalMask(SIG_IDLE)
@@ -49,6 +50,7 @@ end
 function script.Create()
 StartThread(idle)
 StartThread(lightMyFire)
+StartThread(bulletOS)
 Spin(fourRealGpoint,y_axis,math.rad(-9),0.5)
 Spin(circCenter,y_axis,math.rad(9),-0.5)
 Move(circIcon,x_axis,-55,0)
@@ -281,3 +283,83 @@ end
 	function script.FireWeapon1()
 	StartThread(getUnitsInRange)
 	end
+
+	
+	--[[
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+   MA 02110-1301, USA.
+   
+]]--
+
+include "toolKit.lua"
+
+CurrentlyControlledProjectiles={}
+Counter=0
+TimeTillDestroy=22000
+
+function bulletOS()
+	
+	while true do
+		if boolUnitAttached==false then
+		ux,uy,uz=catchProjectiles()
+		end
+		whirlAndDropProjectiles(200,ux,uy,uz)
+	
+	Sleep(200)
+	end
+end
+
+
+function catchProjectiles()
+T={}
+ux,uy,uz=Spring.GetUnitPosition(unitID)
+T=Spring.GetProjectilesInRectangle(ux-50,uz-50,ux+50,uz+50)
+
+	for i=1,#T,1  do
+		if Counter < 5 then
+		Spring.SetProjectileMoveControl(T[i],true)
+		CurrentlyControlledProjectiles[T[i]]=TimeTillDestroy
+		Counter=Counter+1
+		end
+	end
+
+return ux,uy,uz
+
+end
+
+function whirlAndDropProjectiles(timeSinceLastCall,ux,uy,uz)
+	
+	
+	--0.001999198 = 1/TimeTillDestroy*NrOfTotalSpins
+	for k,v in pairs(CurrentlyControlledProjectiles) do
+	x,y,z=Spring.GetProjectilePosition(k)
+		if x and ux then
+		SpeedAtStart=(v*2)/TimeTillDestroy
+		x,z=NDrehMatrix(ux-x,uz-z,math.rad(v*0.001999198*(SpeedAtStart)))
+		CurrentlyControlledProjectiles[k]=v-timeSinceLastCall
+			if v <= 0 or boolUnitAttached==true then 
+			Spring.SetProjectileGravity(k,9000)
+			CurrentlyControlledProjectiles[k]=nil
+			Counter=math.max(0,Counter-1)	
+			end	
+		end
+	end
+
+ 
+end
+
+
+
+	

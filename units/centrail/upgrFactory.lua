@@ -4,7 +4,7 @@ local unitDef = {
 name = "Upgrade Factory",
 Description = "transform the Factory into a Nanoforge",
 objectName = "emptyObjectIsEmpty.s3o",
-script = "placeholder.lua",
+script = "not_implemented_yet.lua",
 buildPic = "placeholder.png",
 --floater = true,
 --cost

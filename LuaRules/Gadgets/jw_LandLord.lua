@@ -975,7 +975,7 @@ function TerraInFormTable()
 						--Spring.Echo("all TheVars:x:",x.."| z:",z)
 						--Spring.Echo("Table:",table.getn(orgTerrainMap[cceil(x/8)]))
 						--						
-						if orgTerrainMap[cceil(x/8)][cceil(z/8)]== nil then Spring.Echo("JW::LANDLORD:: No orgTerrainMap @".. cceil(x/8) .. " / "..cceil(z/8))
+						if not orgTerrainMap[cceil(x/8)] or not orgTerrainMap[cceil(x/8)][cceil(z/8)] then Spring.Echo("JW::LANDLORD:: No orgTerrainMap @".. cceil(x/8) .. " / "..cceil(z/8))
 							--Spring.Echo(endVarZ)
 							--Spring.Echo(endVarX)
 							--Spring.Echo("JWL_orgTerrainMapUndefied at x",cceil(x/8).." and  z: ",cceil(z/8))

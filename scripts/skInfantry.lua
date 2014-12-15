@@ -68,7 +68,7 @@ StartThread(cloakCheckAndAmbushLoad)
   StartThread(coolDownTimer)
 end
 
-local function idle()
+function idle()
 
 sleeper=math.random(1024,8192)
 
@@ -510,12 +510,12 @@ boolAmbushInProgress=false
 boolFiringWeapon=false
 
 function AmbushinProgressThread()
-Spring.Echo("AmbushActivated")
+Spring.Echo("SkinFantry:AmbushActivated")
 resetwaitPosition()
 boolAmbushInProgress=true
 Sleep(AMBUSHTIME)
 boolAmbushInProgress=false
-Spring.Echo("AmbushEnded")
+Spring.Echo("SkinFantry:AmbushEnded")
 end
 
 function waitPosition()
@@ -537,7 +537,7 @@ Sleep(AMBUSHLOADTIME)
 boolAmbushCharged=true
 Spring.Echo("AmbushReady")
 end
-local boolCloaked=false
+boolCloaked=false
 function cloakCheckAndAmbushLoad()
 local boolPrevCloaked=false
 
@@ -563,7 +563,7 @@ local boolPrevCloaked=false
 
 		--if cloaked and boolMove is true, uncloak, reset Fire Status --resetFirstTime
 		if boolCloaked==true and (boolFiringWeapon==true or boolMoving==true) then
-			Spring.Echo("Cloaking abandoned- Ambushing if charged")
+
 		SetUnitValue(COB.WANT_CLOAK, 0)
 		SetUnitValue(COB.CLOAKED, 0)
 		boolPrevCloaked=false

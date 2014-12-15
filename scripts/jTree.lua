@@ -28,7 +28,9 @@
 	ast[i]=piece (asttemp)
 	end
 	
-	
+	function TreeTrample()
+	Spring.DestroyUnit(unitID,true,false)
+	end
 	
 	
 	 ast3L2=piece "ast3L2"
@@ -353,7 +355,7 @@ end
 Sleep(4500)
 Move(center,y_axis,-32,3.141)--circle
 WaitForMove(center,y_axis)
-
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 
 end

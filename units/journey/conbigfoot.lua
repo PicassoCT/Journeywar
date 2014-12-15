@@ -13,7 +13,7 @@ buildTime = 24,
 maxDamage = 1200,
 idleAutoHeal = 0,
 maxwaterdepth=80,
-
+canSubmerge=true,
 --Movement
 MaxVelocity=0.3,
 Acceleration = 0.1,
@@ -22,7 +22,7 @@ FootprintX = 2,
 FootprintZ = 2,
 MaxSlope = 20,
 MaxVelocity = 7.2,
-MaxWaterDepth = 20,
+
 MovementClass = "Default2x2",
 TurnRate = 220,
 

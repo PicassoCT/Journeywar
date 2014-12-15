@@ -16,6 +16,7 @@ end
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 
 if (gadgetHandler:IsSyncedCode()) then
+VFS.Include("scripts/toolKit.lua")
 
 	-- Configuration:
 
@@ -116,6 +117,7 @@ end
      end
 eliahDefID=UnitDefNames["jeliah"].id
 jtree3DefID=UnitDefNames["jtree3"].id
+conAirDefID=UnitDefNames["conair"].id
 
 function inRandomRange(x,z,Range)
 xR=math.random(1,Range)
@@ -127,8 +129,36 @@ z=math.abs(math.ceil(z+(signed*zR)))
 return x,z
 end
 
+local spGetUnitPosition=Spring.GetUnitPosition
+local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","advisor","zombie","bg2","jhivehoundmoma"})
+local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","jcrabcreeper","jconroach","vort","jvaryfoo"})
 
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
+		if c_infantryTypeTable[unitDefID] then
+		x,y,z=spGetUnitPosition(unitID)
+			if x then
+			Spring.CreateUnit("blooddecalfactory",x,y,z,0,teamID)
+			end
+		end
+		
+		if j_infantryTypeTable[unitDefID] then
+			x,y,z=spGetUnitPosition(unitID)
+			if x then
+			Spring.CreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
+			end
+		end
+	
+		if unitDefID== conAirDefID and attackerID and teamID ~= attackerTeamID then
+			x,y,z=Spring.GetUnitPosition(unitID)
+			vx,vy,vz,vl=Spring.GetUnitVelocity(unitID)
+			
+			id=Spring.CreateUnit("cconaircontainer",x,y,z,0,teamID)
+			Spring.SetUnitVelocity(id,vx,vy,vz)
+			Spring.SetUnitNeutral(id,true)
+			Spring.SetUnitNoSelect(id,true)
+
+		end
+	
 		if unitDefID== eliahDefID then
 		--Spring.Echo("Eliah died")
 			--get the Position where he died
@@ -168,6 +198,7 @@ end
 		
 		end
 	
+		
 	
 	end
 	

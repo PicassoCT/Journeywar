@@ -69,7 +69,7 @@ buildoptions =
 	"bbind","ctransithub","coverworldgate",
 	"condepot","fclvlone","cairbase",
 	"cdistrictnone","buibaicity2","buibaicity1",
-	"crailgun","sentry","bonker", 
+	"crailgun","sentry","bonker", "cdefusermine",
 	"chopper","comendbonker","geohive",
 	},
 	
@@ -120,6 +120,9 @@ weapons = {
 	onlyTargetCategory = [[LAND AIR]],
 	},
 [5]={name  = "ccitadelltur",
+	onlyTargetCategory = [[LAND AIR]],
+	},
+[6]={name  = "ccitadellshield",
 	onlyTargetCategory = [[LAND AIR]],
 	},	
 		},

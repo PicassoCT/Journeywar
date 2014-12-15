@@ -272,6 +272,6 @@ displayNumber()
 end
 function script.Killed(recentDamage,_)
 if Spring.ValidUnitID(buildID)== true then Spring.DestroyUnit(buildID,true,false)end
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 return 0
 end

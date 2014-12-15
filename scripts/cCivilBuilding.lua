@@ -203,7 +203,7 @@ end
 if math.random(0,1)==1 then
 GG.UnitsToSpawn:PushCreateUnit("gwood",x,0,z,0,teamID)
 end
-suddenDeath(unitIDrecentDamage)
+suddenDeath(unitID,recentDamage)
 return 0
 end
 

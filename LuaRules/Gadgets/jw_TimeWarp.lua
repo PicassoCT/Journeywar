@@ -27,6 +27,7 @@ local SetGunshipMoveTypeData = Spring.MoveCtrl.SetGunshipMoveTypeData
 local timeWarperNames = {
 --  [UnitDefNames["tpjeep"].id] = true,
   [UnitDefNames["gfreeman"].id] = true,
+  [UnitDefNames["jshroudshrike"].id] = true,
 }
 local timeWarpers = {} --[unitid][frame] .x .y .z
 local timewarpUpdateRate = 30   --how often a new position is saved

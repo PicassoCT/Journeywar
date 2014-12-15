@@ -172,7 +172,7 @@ end	 ]]
 	 
 	--Spring.Echo( RouteTabel[i][2],"invalid number in RouteTabel"..i)
 	 
-	return i, RouteTabel[i][x][1], RouteTabel[i][x][2]
+	return i, RouteTabel[i][x][1], RouteTabel[i][x][2] or  RouteTabel[i][x][1]
 	end
 	
 	
