@@ -68,10 +68,10 @@ local tweakUiWidth, tweakUiHeight	  = 240, 305
 local tweakUiPosX, tweakUiPosY		  = 500, 220
 
 -- images
-local optContrast			          = "LuaUI/Images/enemyspotter/contrast.png"
-local optMinPlus			              = "LuaUI/Images/enemyspotter/minplus.png"
-local optCheckBoxOn			          = "LuaUI/Images/enemyspotter/chkBoxOn.png"
-local optCheckBoxOff			      = "LuaUI/Images/enemyspotter/chkBoxOff.png"
+local optContrast			          = "LuaUI/images/enemyspotter/contrast.png"
+local optMinPlus			              = "LuaUI/images/enemyspotter/minplus.png"
+local optCheckBoxOn			          = "LuaUI/images/enemyspotter/chkBoxOn.png"
+local optCheckBoxOff			      = "LuaUI/images/enemyspotter/chkBoxOff.png"
 
 
 --------------------------------------------------------------------------------

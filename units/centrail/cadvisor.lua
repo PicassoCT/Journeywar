@@ -5,7 +5,7 @@ name = "Advisor Stalker",
 Description = "Psionic Information Unit: Extracts Infos from captured Units",
 objectName = "advisor.s3o",
 script = "cAdvisor.lua",
-buildPic = "placeholder.png",
+buildPic = "advstalker.png",
 --cost
 buildCostMetal = 100,
 buildCostEnergy = 450,

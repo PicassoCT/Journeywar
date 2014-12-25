@@ -5,7 +5,7 @@ name = "GamaBurst Landscape Sterilization Unit",
 Description = "Cooking the Weed",
 objectName = "gama.s3o",
 script = "cgamagardener.lua",
-buildPic = "placeholder.png",
+buildPic = "cgama.png",
 --cost
 buildCostMetal = 550,
 buildCostEnergy = 250,

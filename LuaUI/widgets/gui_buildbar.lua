@@ -338,12 +338,12 @@ local function DrawButton(rect, unitDefID, options)
 
   -- loop status?
   if options['repeat'] then
-    DrawTexRect({rect[3]-repIcoSize,rect[2],rect[3],rect[2]-repIcoSize}, 'LuaUI/Images/repeat.png', 0.65)
+    DrawTexRect({rect[3]-repIcoSize,rect[2],rect[3],rect[2]-repIcoSize}, 'LuaUI/images/repeat.png', 0.65)
   end
 
   -- hover or pressed?
   if (options.hovered_repeat) then
-    DrawTexRect({rect[3]-repIcoSize,rect[2],rect[3],rect[2]-repIcoSize}, 'LuaUI/Images/repeat.png')
+    DrawTexRect({rect[3]-repIcoSize,rect[2],rect[3],rect[2]-repIcoSize}, 'LuaUI/images/repeat.png')
   elseif (options.pressed) then
     DrawRect(rect, { 0, 0, 0, 0.35 })  -- pressed
   elseif (options.hovered) then

@@ -51,10 +51,6 @@ shownanoframe=0,
 	   "custom:AR2Muzzle",
 	   "custom:AR2Projectile",
 	   "custom:bloodspray"
-	   
-	   
-	   
-	   
 						  },
 	
 			},

@@ -5,7 +5,7 @@ name = "Upgrade Factory",
 Description = "transform the Factory into a Nanoforge",
 objectName = "emptyObjectIsEmpty.s3o",
 script = "not_implemented_yet.lua",
-buildPic = "placeholder.png",
+buildPic = "nanoupgrade.dds",
 --floater = true,
 --cost
 buildCostMetal = 0,
@@ -25,8 +25,8 @@ MaxWaterDepth =0,
 
 
 sightDistance = 300,
-	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM",
+	explodeAs="zombieweapon",
+	selfDestructAs="zombieweapon",
 
 
 

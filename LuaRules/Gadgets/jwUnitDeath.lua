@@ -129,6 +129,7 @@ z=math.abs(math.ceil(z+(signed*zR)))
 return x,z
 end
 
+blooddecals={"blooddecalfactory","blooddecalfactory1","blooddecalfactory2","blooddecalfactory3"}
 local spGetUnitPosition=Spring.GetUnitPosition
 local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","advisor","zombie","bg2","jhivehoundmoma"})
 local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","jcrabcreeper","jconroach","vort","jvaryfoo"})
@@ -136,15 +137,20 @@ local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","jcra
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
 		if c_infantryTypeTable[unitDefID] then
 		x,y,z=spGetUnitPosition(unitID)
+		name="blooddecal".."factory"
 			if x then
-			Spring.CreateUnit("blooddecalfactory",x,y,z,0,teamID)
+			Spring.CreateUnit(blooddecals[math.random(1,#blooddecals)],x,y,z,0,teamID)
 			end
 		end
 		
 		if j_infantryTypeTable[unitDefID] then
 			x,y,z=spGetUnitPosition(unitID)
 			if x then
+			if math.random(0,1)==1 then
 			Spring.CreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
+			else
+			Spring.CreateUnit("blueblooddecalfactory2",x,y,z,0,teamID)
+			end
 			end
 		end
 	

@@ -53,9 +53,10 @@ sightDistance = 300,
 CanPatrol = true,
 
 ShowNanoSpray = false,
-CanBeAssisted = false,
+
 CanReclaim=false,
 canmove=true,	
+canBeAssisted =false,
 Reclaimable = true,
 buildDistance = 200,
 terraformSpeed = 50,
@@ -74,16 +75,13 @@ terraformSpeed = 50,
 	workerTime = 0.54,
 	buildoptions = 
 	{
-	"upgradefactory","mtw","campro","advisor","restrictor","cgamagardener","csniper"
+	"genupgrade","upgradefactory","mtw","campro","advisor","restrictor","cgamagardener","csniper"
 	},
 	
 	   customParams = {},
  sfxtypes = {
 				explosiongenerators = {
-				
-				   "custom:factorywarp", --1024
-				   --
-				   
+				"custom:factorywarp", --1024
 				},
 				},
 	

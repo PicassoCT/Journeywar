@@ -1,4 +1,4 @@
-
+include "toolKit.lua"
 include "suddenDeath.lua"
 
 
@@ -12,7 +12,12 @@ shaft2=piece"shaft2"
 teamID=Spring.GetUnitTeam(unitID)
 SIG_STILT=2
 
-
+buildIconTable={}
+for i=1,20 do
+strings="troop"..i
+buildIconTable[#buildIconTable+1]=piece(strings)
+end
+hideT(buildIconTable)
 
 ringTable={}
 for i=1,5, 1 do
@@ -46,10 +51,30 @@ teamID=Spring.GetUnitTeam(unitID)
 monsterTable={}
 boolPoweredUp=false
 
+totalTime=0
+boolReady=false
+function estimateTotalTime()
+while boolReady==false do
+totalTime=totalTime+100
+Sleep(100)
+end
+end
+
+function LoadAnimation()
+step=math.floor(totalTime/20)
+for i=1,20, 1 do
+Show(buildIconTable[i])
+Sleep(step)
+end
+hideT(buildIconTable)
+end
+
 function powerUp()
 Move(outergate,y_axis,-359,0)
 Move(shaft1,y_axis,-17,0.3)
 Move(shaft2,y_axis,-35,0.3)
+if totalTime ~= 0 then StartThread(LoadAnimation) end
+if boolReady==false then StartThread(estimateTotalTime) end
 WaitForMove(shaft1,y_axis)
 WaitForMove(shaft2,y_axis)
 Spin(outergate,y_axis,math.rad(42),0.01)
@@ -60,6 +85,7 @@ Spin(outergate,y_axis,math.rad(42),0.01)
 Move(shaft1,y_axis,0,9)
 Move(shaft2,y_axis,0,15)	
 Sleep(13000)
+boolReady=true
 Move(outergate,y_axis,0,32)
 Show(outergate)
 Spring.PlaySoundFile("sounds/cOverWorldGate/coverworldgateOpen.wav")		

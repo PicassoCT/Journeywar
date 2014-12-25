@@ -133,10 +133,13 @@
 	function soundSleeper()
 	restTime=math.ceil(math.random(900000,1900000))
 	Sleep(restTime)
-	if math.random(0,1)==1 then
+	d=math.random(0,2)
+	if d==1 then
 	Spring.PlaySoundFile("sounds/jBeanStalk/propAgenda.ogg",1.0)
-	else
+	elseif d==0 then
 	Spring.PlaySoundFile("sounds/jBeanStalk/propAgenda2.wav",1.0)
+	elseif d==2 then
+		Spring.PlaySoundFile("sounds/jBeanStalk/propAgenda3.wav",1.0)
 	end
 
 	end

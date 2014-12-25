@@ -1,8 +1,8 @@
 local unitName = "conair"
 
 local unitDef = {
-name = "conair",
-Description = "Construction Aircraft",
+name = "Construction Aircraft",
+Description = "builds your base, using up health",
 objectName = "conair.s3o",
 script = "conairscript.lua",
 buildPic = "conair.dds",

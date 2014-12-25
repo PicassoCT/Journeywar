@@ -1225,23 +1225,35 @@ function solveSpring(s, sucessor, frictionConstant)
 return s,sucessor	
 end
 
+function stringOfLength(char,length)
+strings=""
+for i=1,length do strings=strings..char end
+return strings
+end
+
 function rEchoTable(T,layer)
 l=layer or 0
-
-if type(T)=='table' then
-Spring.Echo("============================= RTable ======================================")
-for i=1,#T,1 do
-rEchoTable(T[i],l+1)
-end
-Spring.Echo("============================= RTable ======================================")
-else
-	Concated=""
-	for i=1,l, 1 do
-	Concated=Concated.."	"
+	if T then
+		if type(T)=='table' then
+		Spring.Echo("+"..(stringOfLength("_",l)).."___ RTable ")
+			for k,v in pairs(T) do
+			rEchoTable(T[k],l+1)
+			end
+		Spring.Echo((stringOfLength("_",l)))
+		else
+			Concated=stringOfLength(" ",math.max(1,l)-1).."|"
+			
+			typus= type(T)
+			if typus == "number" or typus == "string" then
+			Spring.Echo(Concated..T)
+				elseif typus=="boolean" then
+				Spring.Echo(Concated.."boolean"..((T==true) and "True"))
+					else
+					Spring.Echo(Concated.."function")
+					end
+		end
+	
 	end
-Spring.Echo(Concated..T)
-end
-
 end
 
 function echoTable(T,boolAssertTable)
@@ -1577,6 +1589,8 @@ return
 end
 
 function turnTableRand(t, axis, up, down,speed,boolInstantUpdate)
+	if down > up then down=down*-1-1 end
+	
 	if boolInstantUpdate then
 		for i=1,#t,1 do
 		Turn(t[i],axis,math.rad(math.random(down,up)),0,true)
@@ -1596,9 +1610,19 @@ function turnTableRand(t, axis, up, down,speed,boolInstantUpdate)
 return
 end
 
-function spawnCegAtPiece(unitID,pieceId,cegname)
+function spawnCegAtPiece(unitID,pieceId,cegname,offset)
+boolAdd=offset or 10
+
+
+if not unitID then error("ToolKit::Not enough arguments to spawnCEGatUnit") end
+if  not pieceId then  error("ToolKit::Not enough arguments to spawnCEGatUnit") end
+if not cegname then error("ToolKit::Not enough arguments to spawnCEGatUnit") end
 x,y,z=Spring.GetUnitPiecePosDir(unitID,pieceId)
-	Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
+
+if y then
+	y=y+boolAdd
+	Spring.SpawnCEG(cegname,x,y,z,0,1,0,0,0)
+end
 end
 
 --> Play a soundfile only by unittype
@@ -1912,6 +1936,17 @@ end
 	return T
 	end
 	
+	function accessInOrder(T,...)
+	local TC=T
+	  for _, f in pairs(arg) do
+	  executableString="function(TC) if TC["..f.."] then TC=TC[f] return true,TC else return false,TC end end"
+	  f=string.load(executableString)
+	  TC,bool=f(TC)
+		if bool ==false then return false end
+	  
+	  end
+	return true
+	end
 	-->filters Out TransportUnits
     function filterOutTransport		(T)
    returnTable={}  
@@ -2272,23 +2307,32 @@ end
 		--Spring.Echo("Thread Level "..recursiveItterator.." signing off")
 		return
 end
+
+function assertAllTheArgs(...)
+
+for k,v in pairs(arg) do
+if not v then return false end
+end
+return true 
+end
 	
 -->prepares large speaches for the release to the world
 function prep( Speach, Name,Limit, Alpha, DefaultSleepByline)
+if (assertAllTheArgs( Speach, Name,Limit, Alpha, DefaultSleepByline)==false) then return end
 T={}
 itterator=1
-lineend=Limit
+lineend=Limit or (string.len(Speach))
 size=string.len(Speach)
 
 assert(type(Speach)=="string","Speach not of type string", Speach)
-assert(type(Limit)=="number","Limit not a number", Limit)
+assert(type(lineend)=="number","Limit not a number", Limit)
 assert(type(size)=="number","Limit not a number", Limit)
 
 
 
 	while lineend < size do  
 
-	lineend=string.find(Speach, "[^a-zA-Z0-9]", iterrator+Limit)
+	lineend=string.find(Speach, "[^a-zA-Z0-9]", itterator+Limit)
 	subString=string.sub(Speach,itterator,lineend)
 		
 		if subString then
@@ -2296,8 +2340,10 @@ assert(type(size)=="number","Limit not a number", Limit)
 		else
 		break
 		end
-			
-	itterator=lineend+1
+		
+		if not lineend then itterator =size else
+		itterator=lineend+1
+		end
 	end
 	return T
 end
@@ -2407,6 +2453,7 @@ end
 function PieceDropTillStop(unitID,piece,speedPerSecond, speedMax, bounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
 if not unitID or not piece or not speedPerSecond or not speedMax then return end
 bConstant= bounceConstant or 0.25
+speed=speedPerSecond or 0.5
 Drift= driftFunc or function (unitID,piece,x,y,z,time,speed) 
 							dx,dy,dz =Spring.GetGroundNormal(x,z) 
 							Move(piece,x_axis,dx*y* (1/time), speed)
@@ -2488,6 +2535,9 @@ end
 	StopSpin(piece,y_axis,0)
 	StopSpin(piece,z_axis,0)
 	end
+x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+MoveUnitPieceToGroundPos(unitID,piece,x,z,22, 5)
+	
 end
 
 function holdsForAll(Var,fillterConditionString,...)
@@ -2593,4 +2643,91 @@ end
 if holdsForAll(areax, " <= ", areay, areaz)then Spin(piecename,x_axis,math.rad(degree), speed) return end
 if holdsForAll(areay, " <= ", areaz, areax)then Spin(piecename,y_axis,math.rad(degree), speed) return end
 if holdsForAll(areaz, " <= ", areay, areax)then Spin(piecename,z_axis,math.rad(degree), speed) return end
+end
+
+function returnPieceChildrenTable(piecename)
+T=Spring.GetUnitPieceInfo(unitID,piecename)
+return T.children, T.max
+end
+
+--Hashmap of pieces --> with Weight below every 
+
+function recursiveAddTable(T,piecename,parent)
+C, max=returnPieceChildrenTable(piecename)
+nr=1
+if piecename ~= parent and not T[parent] then T[parent]={} end
+	
+	if C then
+		for i=1,#C do
+		T,nr=recursiveAddTable(T,C[i],piecename)
+		end
+	T[parent].weight=max[1]*max[2]*max[3]
+	
+	else
+	T[parent][piecename].weight=max[1]*max[2]*max[3]
+	end
+return T
+end
+
+function ragDoll(tableOfPieces)
+deltaMovement=1
+
+
+
+end
+
+
+function feetThread()
+
+while true do
+while GG.MovementOS_Table[unitID].boolmoving==true do
+-- if stableTable
+	pushBody(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+--feet go over knees if FeetLiftForce > totalWeight of Leg
+	liftFeedForward(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+--fall forward
+--catch
+	catch(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+
+--rebalance
+	stabilize(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+end
+--setFeetInStableStance
+end
+end
+
+function	liftFeedForward(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+end
+
+function	catch(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+end
+
+function	stabilize(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
+end
+tCenterX=0
+tCenterY=0
+tCenterZ=0
+--expects a Table containing:
+--unitID,centerNode,conterNodes, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce
+function adaptiveAnimation(Table)
+piecesTable=Spring.GetUnitPieceList(unitID)
+pieceMap[Table.centerNode]={}
+recursiveAddTable(pieceMap,Table.centerNode, Table.centerNode)
+
+stableTable={}
+goingTable={}
+balancersTable={}
+frame=0
+--for feetTable
+-- StartFeetThreads
+--end
+
+	while true do
+	--update Turn/Position 
+	--Do ConTurns
+		--getFeetPositions/Status
+		--calculate Stability via FeetTip/Orth
+		
+	
+	end
 end

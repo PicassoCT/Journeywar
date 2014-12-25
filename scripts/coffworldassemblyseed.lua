@@ -9,7 +9,6 @@ end
 
 function script.Killed(recentDamage,_)
 
-suddenDeathV(recentDamage)
 return 1
 end
 
@@ -66,7 +65,7 @@ Spring.CreateUnit("coffworldassembly",x,y,z,1,teamid)
 Spring.DestroyUnit(unitID,true,false)
 end
 
-function script.Active()
+function script.Activate()
 	if boolSetActive==true  then
 	boolChange=true
 	end

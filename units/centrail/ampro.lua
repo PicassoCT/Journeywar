@@ -5,7 +5,7 @@ name = "Anti Matter Projector",
 Description = "Dissolving the Matters at hand",
 objectName = "ampro.s3o",
 script = "campro.lua",
-buildPic = "placeholder.png",
+buildPic = "campro.png",
 --cost
 buildCostMetal = 550,
 buildCostEnergy = 250,

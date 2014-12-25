@@ -29,13 +29,14 @@ end
 
 function goTooKillThemAllPicaMon(piecename)
 
-selectRange=26
+selectRange=32
 piecePosX,piecePosY,piecePosZ,_,_,_=Spring.GetUnitPiecePosDir(unitID,  piecename) 
 
 ----Spring.Echo("PiecePosX:",piecePosX.."      | PiecePosZ:",piecePosZ)
 --get Piece Position
 proChoice={}
 proChoice=Spring.GetUnitsInCylinder(piecePosX, piecePosZ,selectRange )--no idea why 2.9 but satan told me so
+table.remove(proChoice,unitID)
 
 	if proChoice ~= nil then
 							
@@ -44,8 +45,7 @@ proChoice=Spring.GetUnitsInCylinder(piecePosX, piecePosZ,selectRange )--no idea 
 											--Kill the Unit
 			for i=1,table.getn(proChoice),1 do		
 													if proChoice[i] ~= unitID then
-													Spring.SetUnitNoDraw(proChoice[i],true)
-													Spring.DestroyUnit(proChoice[i],true,true) --leave no wreck
+													StartThread(unitVannishSFX,proChoice[i],math.ceil(math.random(1200,12500)))
 												    end
 			end
 
@@ -96,16 +96,81 @@ function script.QueryWeapon1()
 	return amturret 
 end
 
+function getPieceMap(id)
+
+dpiecesTable=Spring.GetUnitPieceMap(id)
+ux,uy,uz=Spring.GetUnitPosition(id)
+tpiecesTable={}
+i=1
+for k,v in pairs(dpiecesTable) do
+x,y,z=Spring.GetUnitPiecePosDir(id,v)
+tpiecesTable[i]={}
+tpiecesTable[i].pid=v
+tpiecesTable[i].x=x or ux
+tpiecesTable[i].y=y or uy
+tpiecesTable[i].z=z or uz
+i=i+1
+end
+return tpiecesTable
+end
+
+killed={}
+function unitVannishSFX(id,time)
+if killed[id] then return end
+killed[id]=true
+
+Spring.SetUnitNoSelect(id,true)
+boolIsBuilding=UnitDefs[Spring.GetUnitDefID(id)].id
+ux,uy,uz=Spring.GetUnitPosition(id)
+if boolIsBuilding and boolIsBuilding==false then
+Spring.SetUnitMoveGoal(unitID,ux+math.random(-100,100),uy,uz+math.random(-100,100))
+end
+
+local spCEG=Spring.SpawnCEG
+	heighest=math.huge*-1
+	it=0
+	counter=0
+	tpiecesTable=getPieceMap(id)
+	while time > 0 do
+	if counter %6 then
+	tpiecesTable=getPieceMap(id)
+	end
+	while time > 0  do
+		
+		for i=1,#tpiecesTable do
+		if boolIsBuilding and boolIsBuilding==true then
+		spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",0)
+		else
+		spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",0)
+		end
+			if tpiecesTable[i].y > heighest then
+			it=i 
+			heighest=tpiecesTable[i].y 
+			end
+		end
+	if it ~= 0 then	table.remove(tpiecesTable,it)	end
+	Sleep(150)
+	
+	time=time-150
+	
+	end
+	counter=counter+1
+	Spring.SetUnitAlwaysVisible(id,false)
+	end
+	 Spring.DestroyUnit(id,true,true) 
+	 killed[id]=nil
+end
+
 	function script.AimWeapon1( heading, pitch )
 	if boolMove==false then return false end
 	
 	Turn(amturret,y_axis,heading,2.1)
 	WaitForTurn(amturret,y_axis)
-	if boolReadyFire== true then
-	return true
-	else
-	return false
-	end
+		if boolReadyFire== true then
+		return true
+			else
+			return false
+			end
 
 	end
 	

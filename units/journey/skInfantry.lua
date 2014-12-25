@@ -20,7 +20,7 @@ BrakeRate = 0.3,
 FootprintX = 1,
 FootprintZ = 1,
 MaxSlope =72,
-MaxVelocity = 2.9,
+MaxVelocity = 2.25,
 MaxWaterDepth = 20,
 
 

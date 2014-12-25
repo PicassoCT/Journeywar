@@ -1,8 +1,8 @@
 local unitName = "contrain"
 
 local unitDef = {
-name = "contrain",
-Description = "Construction Train, passe over nearly every terrain, extremely expensive, fast. Turns slowly",
+name = "Construction Train",
+Description = "supports construction & heals units, using up health.",
 objectName = "conTrain.s3o",
 script = "cConTrain.lua",
 buildPic = "ccontrain.dds",
@@ -54,6 +54,7 @@ terraformSpeed = 0.2,
 				explosiongenerators = {
 				   "custom:dirt",     
 				   "custom:bloodspray",
+				      "custom:healtrain",
 				     --electric Sparc
 				     --electric Sparc
 				   

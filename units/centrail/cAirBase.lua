@@ -58,7 +58,7 @@ Builder = true,
 ShowNanoSpray = true,
 CanBeAssisted = true,
 CanReclaim=true,	
-workerTime = 0.04,
+workerTime = 0.4,
 buildDistance = 200,
 terraformSpeed = 50,
 
@@ -75,7 +75,7 @@ selfDestructAs="citadelldrone",
 	Builder = true,
     Reclaimable = false,
 	ShowNanoSpray = true,
-	CanBeAssisted = true,	
+	canBeAssisted =false,
 
 	buildoptions = 
 	{

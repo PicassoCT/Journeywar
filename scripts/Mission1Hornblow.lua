@@ -90,12 +90,12 @@ EmitSfx(rotationspot,1026)
 Sleep(100)
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
-Spring.CreateUnit("gcvehiccorpse",x,y,z, 0,teamID ) 
-Spring.CreateUnit("gcvehiccorpse",x+35,y,z+35, 0,teamID ) 
-Spring.CreateUnit("gcvehiccorpse",x+35,y,z-35, 0,teamID ) 
-Spring.CreateUnit("gcvehiccorpse",x-35,y,z-35, 0,teamID ) 
-Spring.CreateUnit("gcvehiccorpse",x-35,y,z+35, 0,teamID ) 
-Spring.CreateUnit("gmiss1decalfactory",x,y,z, 0,teamID ) 
+GG.UnitsToSpawn:PushCreateUnit("gcvehiccorpse",x,y,z, 0,teamID ) 
+GG.UnitsToSpawn:PushCreateUnit("gcvehiccorpse",x+35,y,z+35, 0,teamID ) 
+GG.UnitsToSpawn:PushCreateUnit("gcvehiccorpse",x+35,y,z-35, 0,teamID ) 
+GG.UnitsToSpawn:PushCreateUnit("gcvehiccorpse",x-35,y,z-35, 0,teamID ) 
+GG.UnitsToSpawn:PushCreateUnit("gcvehiccorpse",x-35,y,z+35, 0,teamID ) 
+GG.UnitsToSpawn:PushCreateUnit("gmiss1decalfactory",x,y,z, 0,teamID ) 
 --Spring.CreateUnit("gmiss1decalfactory",x,y,z, 0,teamID ) 
 
 EmitSfx(rotationspot,1026)
@@ -128,21 +128,20 @@ for i=1, 500,1 do
 		if i%6== 0 then StartThread(soundEmit) end
 
 	end
-	id=Spring.CreateUnit("ccomendernuke",x,y,z, 0,teamID ) 
-	Spring.SetUnitNeutral(id,true)
-	Spring.SetUnitNoSelect(id,true)
+	GG.UnitsToSpawn:PushCreateUnit("ccomendernuke",x,y,z, 0,teamID ) 
+
 	Sleep(2000)
 	Explode(Main,SFX.SHATTER)
 	Spring.DestroyUnit(unitID,false,true)
 end
 
 function script.Killed()
-
+return 1
 end
 
 function Emit()
 Sleep(42000)
-local emitor=piece"emitor"
+emitor=piece"emitor"
 	while true do
 	EmitSfx(emitor,1029)
 	Sleep(10)

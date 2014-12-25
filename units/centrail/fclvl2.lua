@@ -12,7 +12,7 @@ script = "fclvl2.lua",
 buildPic = "cfc2.dds",
 	explodeAs="cArtDM",
 	selfDestructAs="cArtDM",
-
+canBeAssisted =false,
  corpse             = "bgcorpse",
 	RadarDistance = 0,
 	SightDistance = 400,	
@@ -72,11 +72,11 @@ terraformSpeed = 50,
 	Builder = true,
     Reclaimable = false,
 	ShowNanoSpray = true,
-	CanBeAssisted = true,	
+
 	workerTime = 1,
 	buildoptions = 
 	{
-	"upgradefactory","operatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+	"coffworldassemblyseed","operatrans","art","sentrynell","cwallbuilder","cheadlauncher",
 	},
 	
 	   customParams = {},

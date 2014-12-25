@@ -28,7 +28,7 @@ local weaponDef = {
 		  --appearance
 		  rgbColor                = [[0.05 0.05 0.05]],		  	      
           size                    = 0.002,
-
+		energyPerShot=250,
 
 
 ---------------------------------------------------------------

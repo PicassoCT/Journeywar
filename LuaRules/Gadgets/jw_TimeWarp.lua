@@ -31,7 +31,7 @@ local timeWarperNames = {
 }
 local timeWarpers = {} --[unitid][frame] .x .y .z
 local timewarpUpdateRate = 30   --how often a new position is saved
-local nWarpPoints = 10          --how far back the warp goes
+local nWarpPoints = 4          --how far back the warp goes
 local gameframe = 0
 local randoVal=math.random(3200,9200)
  
@@ -56,7 +56,8 @@ function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
                 local ms = UnitDefs[unitDefID].speed    
                 --Spring.Echo ("command added")
                 timeWarpers[unitID] = {}
-                --timeWarpers[unitID].x, timeWarpers[unitID].y, timeWarpers[unitID].z = Spring.GetUnitPosition (unitID)
+                timeWarpers[unitID].active = false
+                timeWarpers[unitID].x, timeWarpers[unitID].y, timeWarpers[unitID].z = Spring.GetUnitPosition (unitID)
                 updateTimeWarpersPos ()
         end
 end
@@ -64,9 +65,13 @@ end
 function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
   timeWarpers[unitID] = nil
 end
+
+  function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	  if timeWarpers[unitID] then   timeWarpers[unitID].active=true end   
+  end
  
 function TimeWarp()
-						randoVal=math.random(800,3200)
+						
 						local f = saveFrame (gameframe)+1
                         if (f > nWarpPoints) then f = 0 end
                         --Spring.Echo ("time warping to saveFrame " .. f)
@@ -82,7 +87,14 @@ function gadget:GameFrame (f)
         --Spring.Echo (f .."->" .. saveFrame (f))
         if (f%timewarpUpdateRate==0) then updateTimeWarpersPos () end
         if ((f-1)%timewarpUpdateRate==0) then showTimeWarpersPath () end
-		if (f% randoVal==0 ) then TimeWarp() end
+		if (f% randoVal==0 ) then 
+		for k,v in pairs(timeWarpers) do
+			if timeWarpers[k].active==true then
+			 TimeWarp(k)
+			
+			end
+		end
+		end
 end
  
 function updateTimeWarpersPos ()

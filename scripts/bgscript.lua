@@ -1,9 +1,12 @@
+include "toolKit.lua"
+
 --a walking animation using threads
 --smoothly aiming the weapon, also using threads
 local bgbase= piece "bgbase"
 local bgtorso= piece "bgtorso"
-local bgtorso2= piece "bgtorso2"
-local riotshield= piece "riotshield"
+
+riotshield= piece "riotshield"
+local riotshield2= piece "riotshield2"
 local bgarm= piece "bgarm"
 local flare01= piece "flare01"
 local flare02= piece "flare02"
@@ -26,24 +29,40 @@ local SIG_AIMRESET=64
 local SIG_ATTACK=128
 local leg_movespeed = 12+math.random(-1,1)
 local leg_movedistance = 10
+defID=Spring.GetUnitDefID(unitID)
+LArm	=""
+RArm	=""
+Head	=""
+Gun		=""
+Neck= ""
+if defID==UnitDefNames["bg"].id then
+
+LArm	=piece"LArm"
+RArm	=piece"RArm"
+Head	=piece"Head"
+Gun		=piece"Gun"
+Neck= piece"Neck"
+end
+
 
 function bodyBuilder()
+if defID== bgID then
+Hide(LArm)
+Hide(RArm)
+Hide(Gun)
+
 decIsion=math.random(1,3)
 	if decIsion==1 then
-	Show(bgtorso)
-	Hide(bgtorso2)
+
 	Hide(riotshield)
 		elseif decIsion==2 then
-		Hide(bgtorso)
-		Show(bgtorso2)
-		Hide(riotshield)
+
+		Hide(riotshield2)
 			else
-			Hide(bgtorso)
-			Show(bgtorso2)
-			Show(riotshield)
-
+			Hide(riotshield)
+			Hide(riotshield2)
 			end
-
+end
 end
 
 local function legs_down()
@@ -122,11 +141,12 @@ end
 function idle()
 Signal(SIG_IDLE)
 sleeper=math.random(1024,8192)
-
+signum=-1
 SetSignalMask(SIG_IDLE)
 	while(true)do
 	Sleep(sleeper)
-
+	signum=signum*-1
+	Turn(Head,y_axis,math.rad(math.random(35*signum,45*signum*signum)),2)
 		aynRandValue=math.random(0,12)
 			if aynRandValue== 8 then
 			Move(bgbase,y_axis,-4,10)
@@ -284,6 +304,7 @@ function script.StartMoving()
 
 
 	Signal(SIG_IDLE)
+	Turn(Head,y_axis,math.rad(0),12)
 	Move(bgbase,y_axis,0,12)
     Turn(bgtorso,y_axis,0,4)
 	
@@ -330,6 +351,17 @@ end
 boolOnlyOnce=true
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 --can be used delay the shooting until a "turn turret" animation is completed
+boolHeadTurn=false
+function Headturn(heading) 
+	boolHeadTurn=true
+	Turn(Head,y_axis,heading,12)
+	WaitForTurn(Head,y_axis)
+	Turn(Head,y_axis,0,3)
+	WaitForTurn(Head,y_axis)
+	Sleep(500)
+	boolHeadTurn=false
+ end
+
 function script.AimWeapon1( heading, pitch )
 Signal(SIG_AIMRESET)
 StartThread(aimReseter)
@@ -339,7 +371,7 @@ boolNotAiming=false
 	--make sure the aiming animation is only run once
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
-		
+		if boolHeadTurn==false then StartThread(Headturn,heading) end
 	
 		Turn(deathpivot,y_axis,math.rad(0),12)
 		Turn(bgtorso, y_axis, heading, 3)
@@ -383,9 +415,110 @@ StartThread(shootFiredReseter)
 	end
 end
 
-----death animation: fall over & explode
-function script.Killed(recentDamage, maxHealth)
+function headexplode(time,intervall)
+for i=1,time,intervall do
 
+spawnCegAtPiece(unitID,Neck,"bghdexplode",0)
+Sleep(intervall)
+end
+
+end
+
+function offOverHead()
+Move(bgbase,y_axis,-4.6,10)
+Turn(bglowlegr,x_axis,math.rad(107),45)
+Turn(bglowleg ,x_axis,math.rad(95),45)
+WaitForMove(bgbase,y_axis)
+spawnCegAtPiece(unitID,Head,"bloodspray",0)
+
+Explode(Head,SFX.FALL+SFX.NO_HEATCLOUD)
+Hide(Head)
+wavetime=math.ceil(math.random(2000,4000))
+itterator=1
+Show(LArm)
+Show(RArm)
+Hide(bgarm)
+Turn(RArm,x_axis,math.rad(-108*itterator),5)
+Turn(LArm,x_axis,math.rad(-108*itterator),5)
+StartThread(headexplode,wavetime,18)
+	while wavetime > 0 do
+		for i=1,10 do 
+		
+	spawnCegAtPiece(unitID,bgbase,"bgbloodslay",false)
+		Sleep(120)
+		end
+	itterator=itterator*0.9	
+	Turn(RArm,x_axis,math.rad(-108*itterator),3)
+	Turn(LArm,x_axis,math.rad(-108*itterator),8)
+	Sleep(800)
+	wavetime=wavetime-2000
+	end
+Turn(RArm,x_axis,math.rad(90),12)
+Turn(RArm,y_axis,math.rad(math.random(-20,20)),12)
+
+Turn(LArm,x_axis,math.rad(90),12)
+Turn(RArm,y_axis,math.rad(math.random(-20,20)),12)
+
+Turn(deathpivot,x_axis,math.rad(-90),5)
+Move(bgbase,y_axis,0,35)
+Turn(bglowlegr,x_axis,math.rad(0),12)
+Turn(bglowleg ,x_axis,math.rad(0),12)
+Sleep(2500)
+
+return 1
+end
+----death animation: fall over & explode
+TIGLILDAMAGE=325
+bgID=UnitDefNames["bg"].id 
+function script.Killed(recentDamage, maxHealth)
+Signal(SIG_AIM)
+Signal(SIG_IDLE)
+Signal(SIG_COUNTER)
+Signal(SIG_KNEE)
+Signal(SIG_FIRE)
+spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
+if defID== bgID then
+if math.random(0,1) then
+StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 3, true, 0.15)
+Show(Gun)
+else
+Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)
+end
+Move(Gun,x_axis,math.random(-15,15), 7) 
+Move(Gun,z_axis,math.random(-15,15), 7) 
+
+if recentDamage/maxHealth > 0.3 and math.random(0,1)==1 then return offOverHead() end
+Hide(bgarm)
+Show(LArm)
+Show(RArm)
+  Turn(LArm,x_axis,math.rad(-29),90)
+  Turn(RArm,x_axis,math.rad(math.random(-29,12)),90)
+	Turn(bglegr,x_axis,math.rad(-30), 45)
+	Turn(bglowlegr,x_axis,math.rad(54),32)
+	Turn(bgleg,x_axis,math.rad(-28),32)
+	Turn(bgleg,y_axis,math.rad(-29),42)
+	Turn(bglowleg,x_axis,math.rad(0),32)
+	Turn(deathpivot,x_axis,math.rad(-38),45)
+	EmitSfx(bgtorso, 1027)
+	WaitForTurn(RArm,x_axis)
+		WaitForTurn(bglegr,x_axis)
+			WaitForTurn(bglowlegr,x_axis)
+				WaitForTurn(bgleg,x_axis)
+					WaitForTurn(bgleg,y_axis)
+						WaitForTurn(bglowleg,x_axis)
+						Sleep(120)
+						Turn(bgtorso,x_axis,math.rad(-14),84)
+						WaitForTurn(bgtorso,x_axis)
+	Turn(bgleg,x_axis,math.rad(0),15)
+	Turn(bglegr,x_axis,math.rad(0),15)
+	WaitForTurn(bgleg,x_axis)
+	WaitForTurn(bglegr,x_axis)
+	Turn(LArm, x_axis, math.rad(-90),85)
+	Turn(deathpivot,x_axis,math.rad(-90),75)
+	WaitForTurn(deathpivot,x_axis)
+	Sleep (150)
+	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
+elseif math.random(0,1)==1 then
     Turn(bgarm,x_axis,math.rad(-29),90)
 	Turn(bglegr,x_axis,math.rad(-30), 45)
 	Turn(bglowlegr,x_axis,math.rad(54),32)
@@ -411,11 +544,14 @@ function script.Killed(recentDamage, maxHealth)
 	Turn(deathpivot,x_axis,math.rad(-90),75)
 	WaitForTurn(deathpivot,x_axis)
 	Sleep (150)
-	Explode(bgarm, SFX.FALL+SFX.NO_HEATCLOUD)
 	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
+else
+ragdoll({[bgbase]={LArm,RArm, [bglegr]={bglowlegr},[bleg]={bglowleg}}})
 
+end
 		return 1 
 end
+--]]
 
 function OnceInAWhileReseter()
 SetSignalMask(SIG_FIRE)

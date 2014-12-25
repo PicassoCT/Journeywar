@@ -71,7 +71,7 @@ EnergyStorage = 0,
 	EnergyUse = 75,
 	MetalStorage = 0,
 	EnergyMake = 0, 
-	MakesMetal = 16, 
+	MakesMetal = 6, 
 	MetalMake = 0,	
   acceleration           = 0,
   

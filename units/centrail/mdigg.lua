@@ -2,7 +2,7 @@ local unitName = "mdigg"
 
 local unitDef = {
 name = "Metalldiggester",
-Description = "Harvests Metall, can be used for stripmining and artillery",
+Description = "diggs for Material once deployed",
 objectName = "mdigg.s3o",
 script = "mdigscript.lua",
 buildPic = "mdiggMex.dds",
@@ -23,7 +23,7 @@ MaxSlope = 5,
 MaxVelocity = 0.5,
 MaxWaterDepth = 20,
 MovementClass = "Default2x2",
-TurnRate = 200,
+TurnRate = 100,
 isMetalExtractor = false,
 sightDistance = 500,
 nanocolor=[[0 0.9 0.9]],
@@ -48,9 +48,9 @@ EnergyStorage = 0,
 	EnergyUse = 15,
 	MetalStorage = 0,
 	EnergyMake = 0, 
-	MakesMetal = 25, 
+	MakesMetal = 1, 
 	MetalMake = 0,	
-   customParams = {},
+   customParams = {ability_description="Start\n Mining"},
  sfxtypes = {
 				explosiongenerators = {
 				   "custom:dirt",             --Thumper

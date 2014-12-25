@@ -1,4 +1,5 @@
 include "suddenDeath.lua"
+include "toolKit.lua"
 --this is the rewrite of the conTrain
 --the pieces of the train and the pillars
 
@@ -310,8 +311,7 @@ SIG_UNFPIL3=4096
 SIG_UNFPIL4=8192
 SIG_UNFPIL5=16384
 SIG_UNFPIL6=32768
-SIG_IDLESOUND=65536
-SIG_MOVESOUND=131072
+SIG_HEAL=65536
 SIG_RAZOR	=262144
 
 
@@ -925,7 +925,40 @@ Spring.SetUnitNoDraw(unitID,false)
 
 
 end
+boolSelfRepairedToDeath=false 
 
+function healWhileStandingStill()
+Sleep(3000)
+SetSignalMask(SIG_HEAL)
+teamid=Spring.GetUnitTeam(unitID)
+conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair"})
+
+while true do
+	boolHealedOne=false
+	x,y,z=Spring.GetUnitPosition(unitID)
+	hp=Spring.GetUnitHealth(unitID)
+	if hp then
+	T=grabEveryone(unitID,x,z,300,teamid)
+	hp=math.ceil(math.ceil(hp*0.5)/#T)
+	hpcopy=hp
+		for i=1,#T do
+		defID=Spring.GetUnitDefID(T[i])
+		if UnitDefs[defID].isBuilding ==false and conTypeTable[defID] == nil then
+			p,maxhp=Spring.GetUnitHealth(T[i])
+			if p and p < maxhp and maxhp > 400 then
+			boolHealedOne=true
+			Spring.SetUnitHealth(T[i],p+hp)
+			if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
+			Spring.AddUnitDamage(unitID,hp)
+			
+			end
+		end
+		end
+	end
+if boolHealedOne==true then for i=1,3 do EmitSfx(center,1026) Sleep(50) end end
+Sleep(750)
+end
+end
 
 --Set PillarHeight Block
 
@@ -1463,16 +1496,18 @@ end
 
 function script.StartMoving()
 
+Signal(SIG_HEAL)
 end
 
 function script.StopMoving()
-
+Signal(SIG_HEAL)
+StartThread(healWhileStandingStill)
 end
 
 
 function script.Killed()
 
-
+if boolSelfRepairedToDeath ==true then return 1 end
 
 if getConstantMove()==true then
 																				   for i=5,12,1 do

@@ -1424,19 +1424,19 @@ function SetSidePics()
 	for _, team in ipairs(teamList) do
 		_,_,_,_,teamside = Spring_GetTeamInfo(team)
 		if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside..".png") then
-			sidePics[team] = ":n:LuaUI/Images/Advplayerslist/"..teamside..".png"
+			sidePics[team] = ":n:LuaUI/images/Advplayerslist/"..teamside..".png"
 			if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside.."WO.png") then
-				sidePicsWO[team] = ":n:LuaUI/Images/Advplayerslist/"..teamside.."WO.png"
+				sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/"..teamside.."WO.png"
 			else
-				sidePicsWO[team] = ":n:LuaUI/Images/Advplayerslist/noWO.png"
+				sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/noWO.png"
 			end
 		else
 			if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside.."_default.png") then
-				sidePics[team] = ":n:LuaUI/Images/Advplayerslist/"..teamside.."_default.png"
+				sidePics[team] = ":n:LuaUI/images/Advplayerslist/"..teamside.."_default.png"
 				if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside.."WO_default.png") then
-					sidePicsWO[team] = ":n:LuaUI/Images/Advplayerslist/"..teamside.."WO_default.png"
+					sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/"..teamside.."WO_default.png"
 				else
-					sidePicsWO[team] = ":n:LuaUI/Images/Advplayerslist/noWO.png"
+					sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/noWO.png"
 				end
 			else
 				if teamside ~= "" then

@@ -5,7 +5,7 @@ name = "MannedTransportVehicle",
 Description = "Deploys CombinedFeatures. Currently holds: 0 0 0 0 0 0. Currently builds:",
 objectName = "mtw.s3o",
 script = "mtw.lua",
-buildPic = "placeholder.png",
+buildPic = "cmtw.png",
 --cost
 buildCostMetal = 550,
 buildCostEnergy = 250,

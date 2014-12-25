@@ -39,13 +39,13 @@ VFS.Include("scripts/toolKit.lua")
 
 --Mission1-----------------------------------------------------------------------------------------
 
-
+gateTypeTable=getTypeTable(UnitDefNames,{"fclvlone","fclvl2","citadell"})
 --Captain Hornblow   #1
 --teamID,leader,boolIsDead,boolIsAITeam,side,_,_,_=	Spring.GetTeamInfo(teamID)
 function checkIfContainerisNearAGate(unitID)
 if not unitID or Spring.ValidUnitID(unitID)==false then return true end
-
-	if Spring.GetUnitIsDead(unitID)==false then
+	lifesign=Spring.GetUnitIsDead(unitID)
+	if lifesign and lifesign ==false then
 	x,y,z=spGetUnitPos(unitID)
 		if x~=nil then
 		
@@ -55,7 +55,7 @@ if not unitID or Spring.ValidUnitID(unitID)==false then return true end
 				for i=1,table.getn(proChoice),1 do 
 					if proChoice[i]~=unitID then 
 					tempDefID=spGetUnitDef(proChoice[i])
-						if tempDefID== UnitDefNames["fclvlone"].id or tempDefID== UnitDefNames["fclvl2"].id or tempDefID== UnitDefNames["citadell"].id then
+					if gateTypeTable[tempDefID] then
 						doubleTeamID=spGetUnitTeam(proChoice[i])
 						Spring.DestroyUnit(unitID,false,true)
 						diceOfIce=math.random(1,3)
@@ -88,10 +88,9 @@ return false
 end
 
 function captationHornblow(frame)
-missionValue=650
 
 
---S-pring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
+--Spring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
 
 	if MissionFunctionTable[1][2]== nil then MissionFunctionTable[1][2]=frame end
 	
@@ -99,7 +98,7 @@ missionValue=650
 	if MissionFunctionTable[1][3]== nil then MissionFunctionTable[1][3]= -1 end --MissionProgressCounter
 	
 	 
---S-pring.Echo("Mission   @::",MissionFunctionTable[1][3])
+Spring.Echo("Mission Nr.1  @::"..MissionFunctionTable[1][3])
 --S-pring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
 	
 	if MissionFunctionTable[1][3]== -1 then
@@ -179,22 +178,20 @@ missionValue=650
 		end
 
 			if MissionFunctionTable[1][3]== 3 and frame % 20 == 0 then
+			Spring.Echo("Entering Mission1 .. 3")
 			   --Mission abort and victory conditions
-				if Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true and Spring.GetUnitIsDead(MissionFunctionTable[1][14])==true and  Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true  then
+				if Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true and Spring.GetUnitIsDead(MissionFunctionTable[1][14])==true and  Spring.GetUnitIsDead(MissionFunctionTable[1][15])==true  then
 				return true
 				end
-			else--Mission ongoing
+			--Mission ongoing
 			--S-can for Containers who have reached a gate
-			MissionFunctionTable[1][16]=false
-			MissionFunctionTable[1][17]=false
-			MissionFunctionTable[1][18]=false
 			MissionFunctionTable[1][16]=checkIfContainerisNearAGate(MissionFunctionTable[1][13])
 			MissionFunctionTable[1][17]=checkIfContainerisNearAGate(MissionFunctionTable[1][14])
 			MissionFunctionTable[1][18]=checkIfContainerisNearAGate(MissionFunctionTable[1][15])	
-			
+				Spring.Echo("Mission1 .. 3 Container Checked")
 	
 			
-				if MissionFunctionTable[1][17] == true or MissionFunctionTable[1][16] == true or MissionFunctionTable[1][18]== true then
+				if MissionFunctionTable[1][17] == true and MissionFunctionTable[1][16] == true and MissionFunctionTable[1][18]== true then
 				spPlaySound("sounds/Missions/miss1finalls.ogg",1)		
 				return true
 				end
@@ -2096,9 +2093,9 @@ if deMaRaVal(5)==3 then currentMission=3 end
 if deMaRaVal(5)==4 then currentMission=4 end
 if deMaRaVal(5)==2 then currentMission=2 end
 if deMaRaVal(5)==1 then currentMission=1 end
-cout(currentMission .. "Mission not selected")
+cout(currentMission .. "Mission selected")
 --<DEBUG>
---currentMission= 5
+currentMission= 5
 --</DEBUG>
 --</necessaryInfo>
 
@@ -2110,7 +2107,7 @@ local frameValue=15
 
 function gadget:GameFrame(frame)
 		if frame%frameValue == 0   then
-		if boolMission==true then
+		if boolMission and boolMission==true then
 			if MissionFunctionTable~= nil then
 			
 			

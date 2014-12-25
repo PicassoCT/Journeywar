@@ -58,7 +58,9 @@ for	k,_ in pairs(UnitDefs) do
 	T={}
 	T.def=k
 	for	v,_ in pairs(UnitDefs) do
+	if math.random(0,1)==1 and math.random(0,1)==1 then
 	T[#T+1]=v
+	end
 	end
 UnitDefPairsTable[#UnitDefPairsTable+1]=T
 end
