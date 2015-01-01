@@ -1,8 +1,8 @@
 local unitName = "csniper"
 
 local unitDef = {
-name = "Combine Safari Sniper",
-Description = "Sniper - Can drag harpooned dead enemys to base",
+name = "Sniper",
+Description = "needs to deploy to fire - can drag harpooned bodys to base",
 objectName = "csniper.s3o",
 script = "csniper.lua",
 buildPic = "csniper.dds",

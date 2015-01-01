@@ -169,7 +169,7 @@ function legz()
 
 end
 
-local function walk()
+function walk()
 	Sleep(5)
     Signal(SIG_LEG)
 	SetSignalMask(SIG_WALK)
@@ -231,6 +231,7 @@ local function walk()
 	end
 
 	function script.StopMoving()
+		Signal(SIG_WALK)
 		StartThread(legs_down)
 		Turn(deathpivot,y_axis,math.rad(0),7)
 		
@@ -268,33 +269,28 @@ function script.AimWeapon1( heading ,pitch)
 	
 	Signal(SIG_AIM2)
 	Signal(SIG_LEG)
-	Signal(SIG_WALK)
+	
 
 	SetSignalMask(SIG_AIM2)
-			Turn(deathpivot,y_axis,heading,7)
-			deci= math.random(5,55)
-	 	    Turn(crabattack1,y_axis,math.rad(deci),4)
-			zup=math.random(8,28)
-	 	    Turn(crabattack1,z_axis,math.rad(zup),4)
-		 	Turn(crabattack2,y_axis,math.rad(-deci),4)
-			zup=math.random(8,28)
-	 	    Turn(crabattack2,z_axis,math.rad(zup),4)
+			Turn(deathpivot,y_axis,heading,7)	
+	 	    Turn(crabattack1,y_axis,math.rad(-61),4)
+			Turn(crabattack2,y_axis,math.rad(62),4)			
 			WaitForTurn(deathpivot,y_axis)
 			WaitForTurn(crabattack1,y_axis)
 			WaitForTurn(crabattack2,y_axis)
-		  
+	
 	return true
 end
 
 function Clawanimation()
- 	        Turn(crabattack1,y_axis,math.rad(0),34)
-		 	Turn(crabattack2,y_axis,math.rad(0),44)
-			
+ 	        Turn(crabattack1,y_axis,math.rad(0),64)
+		 	Turn(crabattack2,y_axis,math.rad(0),64)			
 			WaitForTurn(crabattack1,y_axis)
 			WaitForTurn(crabattack2,y_axis)
 end
 
 function script.FireWeapon1()	
+
 	Spring.PlaySoundFile("sounds/jcrabcreep/crabattack.wav",1)
 Clawanimation()
 	return true

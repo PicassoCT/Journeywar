@@ -35,7 +35,8 @@ RArm	=""
 Head	=""
 Gun		=""
 Neck= ""
-if defID==UnitDefNames["bg"].id then
+boolCityTrooper=(defID==UnitDefNames["bg"].id )
+if boolCityTrooper ==true then
 
 LArm	=piece"LArm"
 RArm	=piece"RArm"
@@ -146,7 +147,9 @@ SetSignalMask(SIG_IDLE)
 	while(true)do
 	Sleep(sleeper)
 	signum=signum*-1
+	if boolCityTrooper ==true then
 	Turn(Head,y_axis,math.rad(math.random(35*signum,45*signum*signum)),2)
+	end
 		aynRandValue=math.random(0,12)
 			if aynRandValue== 8 then
 			Move(bgbase,y_axis,-4,10)
@@ -371,7 +374,7 @@ boolNotAiming=false
 	--make sure the aiming animation is only run once
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
-		if boolHeadTurn==false then StartThread(Headturn,heading) end
+		if boolCityTrooper ==true and boolHeadTurn==false then StartThread(Headturn,heading) end
 	
 		Turn(deathpivot,y_axis,math.rad(0),12)
 		Turn(bgtorso, y_axis, heading, 3)
@@ -518,7 +521,7 @@ Show(RArm)
 	WaitForTurn(deathpivot,x_axis)
 	Sleep (150)
 	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
-elseif math.random(0,1)==1 then
+else
     Turn(bgarm,x_axis,math.rad(-29),90)
 	Turn(bglegr,x_axis,math.rad(-30), 45)
 	Turn(bglowlegr,x_axis,math.rad(54),32)
@@ -545,8 +548,6 @@ elseif math.random(0,1)==1 then
 	WaitForTurn(deathpivot,x_axis)
 	Sleep (150)
 	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
-else
-ragdoll({[bgbase]={LArm,RArm, [bglegr]={bglowlegr},[bleg]={bglowleg}}})
 
 end
 		return 1 

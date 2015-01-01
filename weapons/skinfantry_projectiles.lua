@@ -6,7 +6,7 @@ weaponType=[[MissileLauncher]],
 Accuracy=150,
 
 --Physic/flight path
-range=500,
+range=420,
 reloadtime=4,
 weaponVelocity=1150,
 startVelocity=550,

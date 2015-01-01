@@ -5,7 +5,7 @@ name = "Black Guard",
 Description = "Combine Soldier",
 objectName = "bg.s3o",
 script = "bgscript.lua",
-buildPic = "placeholder.png",
+buildPic = "cbg.png",
 moveState =3,
  fireState=2,
 --cost

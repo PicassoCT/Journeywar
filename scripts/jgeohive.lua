@@ -21,7 +21,7 @@ local x,y,z = Spring.GetUnitPosition(unitID)
 
 while(true) do
 ----Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
-Sleep(naptime)
+Sleep(80000)
 enemyID=Spring.GetUnitNearestEnemy(unitID)
 
 if enemyID ~= nil then
@@ -87,12 +87,6 @@ time=0
 RandVAl= math.ceil(math.random(4000,60000)) end
 end
 
-funcTable={}
-
-			funcTable["PEAK"]= PEAK
-			funcTable["PEAKFADE"]=PEAKFADE
-			funcTable["BUILDUP"]=BUILDUP
-			funcTable["RELAX"]=RELAX
 
 
 --attack relentless
@@ -102,8 +96,9 @@ ex,ey,ez=Spring.GetTeamStartPosition(eteam)
 return ex,ey,ez
 end
 PEAKFADEHALF=PEAKFADETIME/4
+
 function PEAKFADE(monsterID, enemyID,Time,mteam)
-if Time/PEAKFADETIME < 0.5 or math.random(1,Time,mteam)/PEAKFADEHALF > 1 then
+if Time/PEAKFADETIME < 0.5 or math.random(1,Time)/PEAKFADEHALF > 1 then
 ex,ey,ez=Spring.GetUnitPosition(enemyID)
 return ex,ey,ez
 else
@@ -111,6 +106,7 @@ eteam=Spring.GetUnitTeam(enemyID)
 ex,ey,ez=Spring.GetTeamStartPosition(eteam)
 ax,ay,az=Spring.GetTeamStartPosition(mteam)
 cof=Time/PEAKFADETIME
+cof= math.max(cof,0.5)
 return (1-cof)*ex+ax*cof,ay,(1-cof)*ez+az*cof
 end
 
@@ -151,6 +147,14 @@ return mx,my,mz
 end
 end
 
+funcTable={}
+
+			funcTable["PEAK"]= PEAK
+			funcTable["PEAKFADE"]=PEAKFADE
+			funcTable["BUILDUP"]=BUILDUP
+			funcTable["RELAX"]=RELAX
+
+
 function TargetOS()
 
 local spValidUnitID=Spring.ValidUnitID
@@ -173,8 +177,8 @@ local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
 				
 					enemyID= spGetUnitNearestEnemy(monsterTable[i])
 						if enemyID then
-						assert(funcTable[State])
-						assert(monsterTable[i])
+						if not State then State="PEAK" end
+
 						ex,ey,ez = funcTable[State](monsterTable[i],enemyID,time,teamID)
 			
 						spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)

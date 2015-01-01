@@ -1,10 +1,19 @@
+include "toolKit.lua"
+
 local emitHer=piece "emitHer"
 local center=piece "center"
-local advisor=piece "advisor"
+advisor=""
+
+ advisor1=piece "advisor1"
+
+ advisor2=piece "advisor2"
+
 local advleg1=piece"advleg1"
 local advleg2=piece "advleg2"
 local advarm1=piece"advarm1"
+local advarm1low=piece"advarm1low"
 local advarm2=piece"advarm2"
+local advarm2low=piece"advarml2ow"
 local advGluePoint=piece"advGluePoint"
 local circCenter=piece"circCenter"
 local circIcon=piece"circIcon"
@@ -15,7 +24,7 @@ local aheadGetter=piece"aheadGetter"
 local attachunit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
 
-local UnitHealthReduce=2
+local UnitHealthReduce=42
 local orgSensorRad=-50
 local currentSensorRad=orgSensorRad
 local addUpRad=5
@@ -30,6 +39,7 @@ local boolStillAttackin=false
 local booldIdle=true
 local boolUnitAttached=false
 boolHandsfree=true
+local boolStalker=false
 
 function idle()
 SetSignalMask(SIG_IDLE)
@@ -48,6 +58,10 @@ end
 
 
 function script.Create()
+Hide(advisor1)
+Hide(advleg1)
+Hide(advleg2)
+
 StartThread(idle)
 StartThread(lightMyFire)
 StartThread(bulletOS)
@@ -62,26 +76,105 @@ function script.Killed()
 
 return 1
 end
+ox,oy,oz=Spring.GetUnitPosition(unitID)
+boolOnce=true
+numbers={["1"]=true,["2"]=true,["3"]=true,["4"]=true,["5"]=true,["6"]=true,["7"]=true,["8"]=true,["9"]=true}
+advisorDef=Spring.GetUnitDefID(unitID)
+function reportForNeuralEnhancement()
+strings="Citizen Nr:"
+PlaySoundByUnitType(advisorDef, "sounds/cadvisor/advisorreportA.ogg",1, 1000, 1)
+
+unitidstring=""..unitID..""
+for i=1,string.len(unitidstring) do
+
+     c = string.sub(i,i)
+	 Spring.Echo(c)
+	 if numbers[c] then
+    -- do something with c
+	strings=strings..c
+	success=false
+		while success==false do
+		success=PlaySoundByUnitType(advisorDef, "sounds/numbers/"..c..".ogg",1, 650, 1)
+		Sleep(500)
+		end
+	end
+
+end
+PlaySoundByUnitType(advisorDef, "sounds/cadvisor/advisorreportB.ogg",1, 25000, 1)
+Spring.Echo(strings.." please report to administration for a performance review")	
+end
+
+function punnish()
+Spring.SetUnitNoSelect(unitID,true)
+
+nx,ny,nz =Spring.GetUnitPosition(unitID)
+ux,uy,uz =Spring.GetUnitPosition(unitID)
+reportForNeuralEnhancement()
+while math.abs(ux-ox) >85 or math.abs(uy-oy)>85 or math.abs( uz-oz) >85 do
+Spring.SetUnitMoveGoal(unitID,ox,oy,oz)
+ux,uy,uz =Spring.GetUnitPosition(unitID)
+Sleep(1000)
+end
+boolStalker=true
+PSIrange=320
+orgSensorRad=100
+Move(advisor2,y_axis,0,0)
+Hide(advisor2)
+Show(advisor1)
+Show(advleg1)
+Show(advleg2)
+Spring.SetUnitMoveGoal(unitID,nx,ny,nz)
+Spring.SetUnitNoSelect(unitID,false)
+end
+boolOnce=false
+    function script.Activate()
+			if boolOnce==false then boolOnce=true 
+            StartThread(punnish)
+			end    
+           
+            return 1
+    end
+     
+    function script.Deactivate()
+        
+            return 0
+    end
+     
+     
 
 function walk()
 SetSignalMask(SIG_WALK)
 	while(true) do
 	dolo=math.random(0,5)
 	if dolo==1 then
-	Move(advisor,y_axis,5,0.1)
+	Move(advisor1,y_axis,5,0.1)
 	elseif dolo==2 then
-	Move(advisor,y_axis,0,0.1)
+	Move(advisor1,y_axis,0,0.1)
 	end
 	Turn(advleg1,x_axis,math.rad(-22),6)
 	Turn(advleg2,x_axis,math.rad(22),6)
-	Turn(advisor,x_axis,math.rad(1.2),0.5)
+	if boolOnce == true then
+	Turn(advisor1,x_axis,math.rad(1.2),0.5)
+
 	WaitForTurn(advleg2,x_axis)	
 	WaitForTurn(advleg1,x_axis)
 	Turn(advleg1,x_axis,math.rad(22),6)
 	Turn(advleg2,x_axis,math.rad(-22),6)
-	Turn(advisor,x_axis,math.rad(-0.8),0.5)
+	Turn(advisor1,x_axis,math.rad(-0.8),0.5)
 	WaitForTurn(advleg2,x_axis)	
 	WaitForTurn(advleg1,x_axis)
+	else
+	Move(advisor2,y_axis,math.random(0,50),3)
+	Sleep(300)
+	end
+	val=math.random(10,60)
+	zval=math.random(0,56)
+	Turn(advarm1,y_axis,math.rad(-val),1.2)
+	Turn(advarm1,z_axis,math.rad(zval),1.2)
+	Turn(advarm1low,y_axis,math.rad(val*2),3.2)	
+	Turn(advarm2,y_axis,math.rad(val),1.2)
+	Turn(advarm2,z_axis,math.rad(-zval),1.2)
+	Turn(advarm2low,y_axis,math.rad(val*-2),3.2)
 	end
 end
 
@@ -94,23 +187,29 @@ end
 function legs_down()
 SetSignalMask(SIG_LEG)
 Sleep(250)
-Move(advisor,y_axis,0,3)	
-Move(advisor,x_axis,0,3)	
-Move(advisor,z_axis,0,3)	
+Move(advisor1,y_axis,0,3)	
+Move(advisor1,x_axis,0,3)	
+Move(advisor1,z_axis,0,3)	
 
-Turn(advisor,y_axis,math.rad(0),6)
+Turn(advisor1,y_axis,math.rad(0),6)
 Turn(advleg1,x_axis,math.rad(0),6)
 Turn(advleg2,x_axis,math.rad(0),6)
 
- Turn(advisor,x_axis,math.rad(0),9)
+ Turn(advisor1,x_axis,math.rad(0),9)
+	val=70
+	zval=25
+	Turn(advarm1,y_axis,math.rad(-val),1.2)
+	Turn(advarm1,z_axis,math.rad(zval),1.2)
+	Turn(advarm1low,y_axis,math.rad(val*2),3.2)	
+	Turn(advarm2,y_axis,math.rad(val),1.2)
+	Turn(advarm2,z_axis,math.rad(-zval),1.2)
+	Turn(advarm2low,y_axis,math.rad(val*-2),3.2)
+ 
 end
 
 function script.StopMoving()
 Signal(SIG_WALK)
-StartThread(legs_down)
-
-	
-		
+StartThread(legs_down)		
 end
 
 
@@ -173,7 +272,7 @@ function lightMyFire()
 	while true do
 		while boolLightMyFire==true do
 					EmitSfx(emitHer,1024)
-					EmitSfx(advisor,1024)
+					EmitSfx(advisor1,1024)
 			Sleep(50)
 		end
 	Sleep(500)
@@ -265,12 +364,20 @@ end
 	function script.AimFromWeapon1() 
 	--soundstart="sentryalert"
 	return advGluePoint end
-	
+	val=math.random(10,60)
+	zval=math.random(0,56)
 	function script.AimWeapon1( heading, pitch )
+		val=math.random(10,60)
+	Turn(advarm1,y_axis,math.rad(-val),1.2)
+	Turn(advarm1,z_axis,math.rad(zval),1.2)
+	Turn(advarm1low,y_axis,math.rad(val*2),3.2)	
+	Turn(advarm2,y_axis,math.rad(val),1.2)
+	Turn(advarm2,z_axis,math.rad(-zval),1.2)
+	Turn(advarm2low,y_axis,math.rad(val*-2),3.2)
     if boolUnitAttached==false then
-		   Turn(advisor,y_axis,heading,2.0)
-		--   Turn(advisor,x_axis,-pitch,2.0)
-		   WaitForTurn(advisor,y_axis)
+		   Turn(advisor1,y_axis,heading,2.0)
+		--   Turn(advisor1,x_axis,-pitch,2.0)
+		   WaitForTurn(advisor1,y_axis)
 	
  
 		return true
@@ -281,6 +388,8 @@ end
 	
 
 	function script.FireWeapon1()
+	val=math.random(10,37)
+	zval=math.random(0,56)
 	StartThread(getUnitsInRange)
 	end
 
@@ -311,9 +420,10 @@ TimeTillDestroy=22000
 
 function bulletOS()
 	
-	while true do
+	while boolStalker==false do
+		ux,uy,uz=Spring.GetUnitPosition(unitID)
 		if boolUnitAttached==false then
-		ux,uy,uz=catchProjectiles()
+		catchProjectiles(ux,uy,uz)
 		end
 		whirlAndDropProjectiles(200,ux,uy,uz)
 	
@@ -322,10 +432,10 @@ function bulletOS()
 end
 
 
-function catchProjectiles()
+function catchProjectiles(ux,uy,uz)
 T={}
-ux,uy,uz=Spring.GetUnitPosition(unitID)
-T=Spring.GetProjectilesInRectangle(ux-50,uz-50,ux+50,uz+50)
+
+T=Spring.GetProjectilesInRectangle(ux-100,uz-100,ux+100,uz+100)
 
 	for i=1,#T,1  do
 		if Counter < 5 then
@@ -335,7 +445,6 @@ T=Spring.GetProjectilesInRectangle(ux-50,uz-50,ux+50,uz+50)
 		end
 	end
 
-return ux,uy,uz
 
 end
 
@@ -344,15 +453,18 @@ function whirlAndDropProjectiles(timeSinceLastCall,ux,uy,uz)
 	
 	--0.001999198 = 1/TimeTillDestroy*NrOfTotalSpins
 	for k,v in pairs(CurrentlyControlledProjectiles) do
-	x,y,z=Spring.GetProjectilePosition(k)
-		if x and ux then
+	px,py,pz=Spring.GetProjectilePosition(k)
+		if px and ux then
 		SpeedAtStart=(v*2)/TimeTillDestroy
-		x,z=NDrehMatrix(ux-x,uz-z,math.rad(v*0.001999198*(SpeedAtStart)))
+		x,z=NDrehMatrix(px-ux,pz-uz,math.rad(v*0.001999198*(SpeedAtStart)))
+		Spring.SetProjectilePosition(k,x+ux,py,z+uz)
 		CurrentlyControlledProjectiles[k]=v-timeSinceLastCall
+		
 			if v <= 0 or boolUnitAttached==true then 
-			Spring.SetProjectileGravity(k,9000)
+			Spring.SetProjectileGravity(k,9000)				
+			Spring.SetProjectileMoveControl(k,false)
 			CurrentlyControlledProjectiles[k]=nil
-			Counter=math.max(0,Counter-1)	
+			Counter=math.max(0,Counter-1)
 			end	
 		end
 	end

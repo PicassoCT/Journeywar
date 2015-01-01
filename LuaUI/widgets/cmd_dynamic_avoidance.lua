@@ -238,7 +238,7 @@ function RefreshUnitList(attacker)
 			local unitSpeed =unitDef["speed"]
 			local unitInView = metaForVisibleUnits[unitID] --transfer "yes" or "nil" from meta table into a local variable
 			if (unitSpeed>0) then 
-				if (unitDef["builder"] or unitDef["canCloak"]) and not unitDef.customParams.commtype then --only include only cloakies and constructor, and not com (ZK)
+				if (unitDef.isBuilder or unitDef["canCloak"]) and not unitDef.customParams.commtype then --only include only cloakies and constructor, and not com (ZK)
 					local unitShieldPower, reloadableWeaponIndex = -1, -1
 					unitShieldPower, reloadableWeaponIndex = CheckWeaponsAndShield(unitDef)
 					arrayIndex=arrayIndex+1
@@ -572,7 +572,7 @@ function GetAllUnitsInRectangle(unitID, losRadius, attacker)
 	local x,y,z = spGetUnitPosition(unitID)
 	local unitDefID = spGetUnitDefID(unitID)
 	local unitDef = UnitDefs[unitDefID]
-	local iAmConstructor = unitDef["builder"]
+	local iAmConstructor = unitDef.isBuilder
 	local unitState = spGetUnitStates(unitID)
 	local iAmNotCloaked = not unitState["cloak"]
 	

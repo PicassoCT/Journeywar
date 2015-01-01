@@ -1,8 +1,0 @@
-Todays Todo:
-
-+Find out how to pass the shellscripts password to the bourneshell
-+ Mousescript absolutvalue höher setzen
-+ MouseAcceleration in Ubuntu deaktivieren
-+ ech out RESET
-
-popen((" bash -c "+commandString).c_str(),"r");

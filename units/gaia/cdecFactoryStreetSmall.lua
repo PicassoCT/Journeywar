@@ -43,7 +43,7 @@ LeaveTracks = false,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"gLava",
+	"glava",
 	},
 
 

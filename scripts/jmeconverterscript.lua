@@ -187,7 +187,7 @@ comonSpeed=0.2
 	liftFeet(5)
 	lowerFeet(2,true)
 	Turn(center,y_axis,math.rad(2),0.1)
-	Turn(roof,x_axis,math.rad(0.5),0.025)
+--	Turn(roof,x_axis,math.rad(0.5),0.025)
 	comonValue=comonValue-5
 
 	TurnF(3,40,false)
@@ -200,7 +200,7 @@ comonSpeed=0.2
 	liftFeet(6)
 	WaitForTurn(center,y_axis)
 	Turn(center,y_axis,math.rad(-2),0.1)
-	Turn(roof,x_axis,math.rad(-0.5),0.025)
+--	Turn(roof,x_axis,math.rad(-0.5),0.025)
 	comonValue=comonValue+5
 	comonSpeed=0.2
 	TurnF(4,-56,false)

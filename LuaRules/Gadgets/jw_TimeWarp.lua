@@ -7,7 +7,7 @@ function gadget:GetInfo()
     date      = "Mar 2011",
     license   = "gooooooooooodbye horses",
     layer     = 1,
-    enabled   = true,
+    enabled   = false,
   }
 end
  
@@ -70,10 +70,10 @@ end
 	  if timeWarpers[unitID] then   timeWarpers[unitID].active=true end   
   end
  
-function TimeWarp()
+function TimeWarp(unitID)
 						
 						local f = saveFrame (gameframe)+1
-                        if (f > nWarpPoints) then f = 0 end
+                        if (f > nWarpPoints) then f = 1 end
                         --Spring.Echo ("time warping to saveFrame " .. f)
                         if (timeWarpers[unitID] and timeWarpers[unitID][f]) then
                                 Spring.SetUnitPosition (unitID, timeWarpers[unitID][f].x, timeWarpers[unitID][f].y, timeWarpers[unitID][f].z,0)
@@ -102,17 +102,20 @@ function updateTimeWarpersPos ()
                 f = saveFrame(gameframe)
                 --Spring.Echo ("updateTimeWarpersPos gameframe="..gameframe .." saveFrame="..f)
                 timeWarpers[unitID][f] ={}
-                timeWarpers[unitID][f].x, timeWarpers[unitID][f].y, timeWarpers[unitID][f].z = Spring.GetUnitPosition (unitID)
+				x,y,z=Spring.GetUnitPosition (unitID)
+                timeWarpers[unitID][f].x, timeWarpers[unitID][f].y, timeWarpers[unitID][f].z = x,y,z
         end
 end
  
 function showTimeWarpersPath ()
         for unitID in pairs(timeWarpers) do
                 for sF in pairs(timeWarpers[unitID]) do
+				if timeWarpers[unitID][sF] then
                         local x = timeWarpers[unitID][sF].x
                         local y = timeWarpers[unitID][sF].y
                         local z = timeWarpers[unitID][sF].z
                         Spring.SpawnCEG ("mech_electric_discharge",x,y,z)
+                end
                 end
         end
 end

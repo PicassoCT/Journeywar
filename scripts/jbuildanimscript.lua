@@ -60,8 +60,11 @@ end
 
 function catchAndUpdateBP()
 while true do
+
+bp=updateBuildProgress()
+if bp then BUILDPROGRESS=bp end
 Sleep(1500)
-BUILDPROGRESS=updateBuildProgress()
+
 end
 end
 

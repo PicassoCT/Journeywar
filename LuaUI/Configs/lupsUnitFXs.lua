@@ -63,7 +63,7 @@ citadell=  {
   },
 
 jshroudshrike={
-	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,496,0}, size=  "if Spring.GetUnitIsDead(id)==false then return GG.jShroudShrikes[id] else return math.max(1,GG.jShroudShrikes[id]-25) end end",onActive=true, precision=22, strength   = 0.042,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=  300 ,onActive=true, precision=22, strength   = 0.042,  repeatEffect=true}},
 	 },
   
   

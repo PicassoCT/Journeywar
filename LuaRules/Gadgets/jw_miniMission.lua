@@ -33,7 +33,7 @@ local MissionFunctionTable={}
 local _gaiaTeam=Spring.GetGaiaTeamID()
 local spGetUnitTeam=Spring.GetUnitTeam
 
-Name,charPerLine, Alpha, DefaultSleepByline = "Mission", 60, 255, 150
+Name,charPerLine, Alpha, DefaultSleepByline = "Dramatis Persona", 60, 255, 150
 -- INCLUDES
 VFS.Include("scripts/toolKit.lua")
 
@@ -98,7 +98,7 @@ function captationHornblow(frame)
 	if MissionFunctionTable[1][3]== nil then MissionFunctionTable[1][3]= -1 end --MissionProgressCounter
 	
 	 
-Spring.Echo("Mission Nr.1  @::"..MissionFunctionTable[1][3])
+--Spring.Echo("Mission Nr.1  @::"..MissionFunctionTable[1][3])
 --S-pring.Echo("MissionTime::",frame-MissionFunctionTable[1][2])
 	
 	if MissionFunctionTable[1][3]== -1 then
@@ -288,7 +288,7 @@ function spawnAGaiaVillage()
 		spPlaySound("sounds/Missions/Mission2/Solo-Flut1.ogg",0.8)
 		
 		while boolHeightmapPlain == false and attemptsToFindPlace < 22 do
-			--	say(unitID,prep("GAIA_SAVEMYVILLAGE")
+			--	T=prep("GAIA_SAVEMYVILLAGE")
 				y=spGetGroundHeight(x,z)
 					if y > -10 then
 					attemptsToFindPlace=attemptsToFindPlace+1
@@ -367,7 +367,7 @@ function spawnAGaiaVillage()
 								return idTable
 								end
 						else
-					--	say(unitID,prep("Test23")
+					--	T=prep("Test23")
 						powToo=powToo+100
 						base=base+0.1
 						x=math.ceil(math.random(x-powToo,x+powToo)*base)%Game.mapSizeX
@@ -528,7 +528,8 @@ function daVinciAmok(frame)
 	
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 0 and frame-MissionFunctionTable[2][2] > 500 then
-				say(unitID,prep(string1, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+				T=prep(string1, Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_1.ogg",1)
 		
 			MissionFunctionTable[2][2]=frame
@@ -540,7 +541,8 @@ function daVinciAmok(frame)
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 1 and frame-MissionFunctionTable[2][2] > 1300 then
-			say(unitID,prep(string2, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+			T=prep(string2, Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/Mission2/Miss2_2.ogg",1)
 			MissionFunctionTable[2][2]=frame
 			MissionFunctionTable[2][3]= MissionFunctionTable[2][3]+1
@@ -550,7 +552,8 @@ function daVinciAmok(frame)
 	
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 2 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true  then
-			say(unitID,prep("Unusual, in nearly all contact gametheory, the not-Knowing party intercepts the intruders long before the  weakspot. Mr.Chieftain, i presume- and thats a Arrowr. ", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+			T=prep("Unusual, in nearly all contact gametheory, the not-Knowing party intercepts the intruders long before the  weakspot. Mr.Chieftain, i presume- and thats a Arrowr. ", Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/Mission2/Miss2_3.ogg",1)
 			
 			MissionFunctionTable[2][2]=frame
@@ -581,10 +584,11 @@ function daVinciAmok(frame)
 			
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 4  and  frame-MissionFunctionTable[2][2] > 800 then
-					say(unitID,prep("Administrator, im back. Met some of your men, at the memoryclinic, those who made it out of there bodys intime-"..
+					T=prep("Administrator, im back. Met some of your men, at the memoryclinic, those who made it out of there bodys intime-"..
 					"I sold the exp to some PervHurts, took a sabbatical year off, visited some partys, learned the natives language, got divorced, whored it up and wrote a book about you as a historic person."..
 					"Got a new body forged, femalien, this time, now look at this wingcolours -oh, right you cant see it. "..
-					"The implants in your head will overlay it with your own species- less xenophobia that way. We all get along.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+					"The implants in your head will overlay it with your own species- less xenophobia that way. We all get along.", Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_4.ogg",1)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
@@ -595,10 +599,11 @@ function daVinciAmok(frame)
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 4 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true  then
-					say(unitID,prep("Might as well let you in on ancient news.The Natives are not looplocked, means they do not engage in the usual circle"..
+					T=prep("Might as well let you in on ancient news.The Natives are not looplocked, means they do not engage in the usual circle"..
 								"of overpopulation and tribal warfare plus territorial behaviour. "..
 								"There unique physique spared them, they have genetic memorys and eggs,	thousands of them, burried everywhere on there territory, ready to hatch on a pheromonic whim. "..
-								"Hello beautiful,im a little present from the tribe with the metall-tent!", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+								"Hello beautiful,im a little present from the tribe with the metall-tent!", Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 									spPlaySound("sounds/Missions/Mission2/Miss2_5.ogg",1)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
@@ -608,9 +613,10 @@ function daVinciAmok(frame)
 		
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 5  and  frame-MissionFunctionTable[2][2] > 1000 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true  then
-				say(unitID,prep("Relations soured a little, im getting gang raped to death by the whole tribe, for speaking up to the chieftain."..
+				T=prep("Relations soured a little, im getting gang raped to death by the whole tribe, for speaking up to the chieftain."..
 				"Turns out, the female of the species, have devolved to little more then reproductive diplomacy automatons- and they dont share power to foreigners. I spare you the details .."..
-				"harder,faster,makes us wronger,more then ever, power under, our work is never over <Exitus>", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+				"harder,faster,makes us wronger,more then ever, power under, our work is never over <Exitus>", Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_6.ogg",1)
 				x,y,z=spGetUnitPos(MissionFunctionTable[2][10])
 				teamID=spGetUnitTeam(MissionFunctionTable[2][10])
@@ -633,9 +639,10 @@ function daVinciAmok(frame)
 				if MissionFunctionTable[2][3]== 6  and  frame-MissionFunctionTable[2][2] > 1000 then
 				Spring.SetUnitNoSelect(MissionFunctionTable[2][10],false)
 				Spring.SetUnitNoDraw(MissionFunctionTable[2][10],false)
-				say(unitID,prep(" Hi, im Koma Icnivad the third, my filthy rich grandfather retired - moneywise mission "
+				T=prep(" Hi, im Koma Icnivad the third, my filthy rich grandfather retired - moneywise mission "
 				.."time is eight times city-dime. ".."I m here to pick up the mission were destiny dropped him. Would you kindly, get me too the freakshow, Administrator?", 
-				Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+				Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_7.ogg",1)
 			
 				MissionFunctionTable[2][2]=frame
@@ -648,10 +655,11 @@ function daVinciAmok(frame)
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 7  and  frame-MissionFunctionTable[2][2] > 2500  and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_8.ogg",1)
-				say(unitID,prep("Oh, Citynews: All hail the new Centrail, the old datadragon got bored by slowlifeinfo drippin and peeked into his predecessors data-vaults."..
+				T=prep("Oh, Citynews: All hail the new Centrail, the old datadragon got bored by slowlifeinfo drippin and peeked into his predecessors data-vaults."..
 				"New one is rumored to originate from a sandwichmaker, that had a memory leak which	bitflipped to sentience."..
 				"Suprising little chaos, confusion and only 30 mk death when some cityparts crashed, and less suprising- no changes in the mission.	"..
-				"(Arriving) .", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+				"(Arriving) .", Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 				return false 
@@ -666,10 +674,11 @@ function daVinciAmok(frame)
 				
 				spPlaySound("sounds/Missions/Mission2/potLash.ogg",0.9)	
 					spPlaySound("sounds/Missions/Mission2/Miss2_9.ogg",1)
-				say(unitID,prep("Administrator, it seems they wanna hold a feast to honor our repeated visit. "..
+				T=prep("Administrator, it seems they wanna hold a feast to honor our repeated visit. "..
 				"Customs demands that the chief outshines everyone in destroying his wealthy and valued posessions."..
 				"Quick! Grab 30 infantryman, march them in front of the village, "..
-				"and blow there suicide implants. Lets see you top that, great Spender!", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+				"and blow there suicide implants. Lets see you top that, great Spender!", Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				MissionFunctionTable[2][2]=frame
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+2
 				return false 
@@ -682,14 +691,15 @@ function daVinciAmok(frame)
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 10 and thirthyInfantryCorpses(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_10.ogg",1)
-				say(unitID,prep("Party Up in here! More rotten Dokami for me! Shame you got duty Administrator, they know how to squeeze Live for the juice! "..
+				T=prep("Party Up in here! More rotten Dokami for me! Shame you got duty Administrator, they know how to squeeze Live for the juice! "..
 							"Oh, we are the silent judgy one, are we!"..
 							"I know my prehistory Administrator, your artillery  drove over a dike of bodys on Tabula 4 - noone needs to apologize!"..
 							"Cultural Superiority? Dont make me laugh, these guys have the memory of a whole civilisation for 300.000 years. "..
 							"They look down on us."..
 							"They were three times space travelling, and turned back, because they found it boring."..
 							"This escalates rather quickly - 1 Momothcat  all over the floor by the tain, certainly i can top that!"..
-							"Servant, bring me 2 construction trucks, self destroy them in front of the village.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+							"Servant, bring me 2 construction trucks, self destroy them in front of the village.", Name,charPerLine, Alpha, DefaultSleepByline)
+				say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 	
 				
 				MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
@@ -700,11 +710,13 @@ function daVinciAmok(frame)
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 11  and twoContrucks(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_11.ogg",1)
-				say(unitID,prep("Little sacrivices, we all make them Administrator, for greater Gains."..
+				T=prep("Little sacrivices, we all make them Administrator, for greater Gains."..
 							"Gold, Gems smash it up, it is? Mine, is longer then yours again. "..
 							"Administrator, build one luxery appartment in front of the city."..
 							"Blow it up."..
-							"Do it.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+							"Do it.", Name,charPerLine, Alpha, DefaultSleepByline)
+							
+				say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 							--Who lives in a citadell under the Big C, Admin Rulebook
 	
 				
@@ -716,9 +728,11 @@ function daVinciAmok(frame)
 		if boolStillAlive==true then
 				if MissionFunctionTable[2][3]== 12  and oneLuxBuildBlow(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_12.ogg",1)
-				say(unitID,prep("- raise a toast to Chieftain OoohmyHeard, who special circumstances took from us before his time."..
+				T=prep("- raise a toast to Chieftain OoohmyHeard, who special circumstances took from us before his time."..
 							"Time to beginn cultural relations in my newly aquired harem."..
-							"The Reward should be spilling into your security Account this very moment.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+							"The Reward should be spilling into your security Account this very moment.", Name,charPerLine, Alpha, DefaultSleepByline)
+							
+				say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 	
 				teamID=spGetUnitTeam(MissionFunctionTable[2][10])
 				x,y,z=spGetUnitPos(MissionFunctionTable[2][10])
@@ -737,8 +751,7 @@ function daVinciAmok(frame)
 				spPlaySound("sounds/Missions/Mission2/genocide.ogg",0.9)
 			
 				spPlaySound("sounds/Missions/Mission2/CitizenCunt.ogg",1)
-				
-				say(unitID,prep("Centrail: You know Administrator, normally a fullcitizen screwup like you, would ends in one of those little orange capsules at the "..
+				T=prep("Centrail: You know Administrator, normally a fullcitizen screwup like you, would ends in one of those little orange capsules at the "..
 							"foundations of my citadells."..
 							"But this guy is good, excellent to be honest, even i had him not figured out - after a spree of 19 worlds and three civil interdimensional unrests and 9 Overpopulation incidents."..
 							"	All the efficient, corrupt - but mostly loyal servant, disguised as family buisness."..
@@ -746,7 +759,9 @@ function daVinciAmok(frame)
 							"Intercontinetal rockets made from fertilizerfirewors, bioweapons from medicine- this guy knew how to chop a chunk from the propabilitytree."..
 							"So here we are, cleaning it up the old fashioned way, bodybags, screaming critizens, offworld labourcamps."..
 							"Take this assasin and end this infection of one-Red-Dot-Pox. You have 10 Minutes."..
-							"Lay the village low, gamasoak the terrain - and do something against the smell.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+							"Lay the village low, gamasoak the terrain - and do something against the smell.", Name,charPerLine, Alpha, DefaultSleepByline)
+							
+				say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 							
 				enemy=Spring.GetUnitNearestEnemy(MissionFunctionTable[2][10])
 				teamID=spGetUnitTeam(enemy)
@@ -785,14 +800,16 @@ function daVinciAmok(frame)
 				
 					if Spring.GetUnitIsDead(MissionFunctionTable[2][10])==true then
 					spPlaySound("sounds/Missions/Mission2/genocidere.ogg",1)
-					say(unitID,prep("-there was a festival in my homesector, the Brightday. They would pick all new inventions, and burn them with there Creators, at the foot of the citadell."
+					T=prep("-there was a festival in my homesector, the Brightday. They would pick all new inventions, and burn them with there Creators, at the foot of the citadell."
 					.."Nobody stepped in to stop them, and nobody steped up to stop me when i pined them all on there own spear made from cowardice and stupidity."
 					.."They stormed the citadell, and threw the Administrator from the highest window they could find. His scream is said to have lasted all the way down."
 					.."If you dont dare to stand for the best of men, they wont stop the beast of men."
 					.."I may be silenced soon, but my spirit lives on,as doubt in servants, "
 					.."as paranoia against your Advisors, always a sharp stylus near your back and one day- "
 					.."you will want to know, you will rip out your own roots - and on that day, you will scream"
-					.."- and you shall fall.", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+					.."- and you shall fall.", Name,charPerLine, Alpha, DefaultSleepByline)
+					
+					say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 					
 					MissionFunctionTable[2][3]=MissionFunctionTable[2][3]+1
 					end
@@ -808,13 +825,13 @@ function daVinciAmok(frame)
 					
 					if boolVillagePeopleDead==true and Spring.GetUnitIsDead(MissionFunctionTable[2][10])==false and frame-MissionFunctionTable[2][2] < 19000 then
 						spPlaySound("sounds/Missions/Mission2/historyHappening.ogg.ogg",1)
-					
-					say(unitID,prep( "-Confederated Press: Administrator a Statement regarding the Allegations? "..
+					T=prep( "-Confederated Press: Administrator a Statement regarding the Allegations? "..
 					 "-Reporting on a Warcrime in Progress- of a Administrator who joined the Universal Union. Unspeakable Attrocities.."..
 					 "-sentenced to 25 years of citytime, to be spend in Slowtime, as a perpetual Reminder-"..
 					 "-is it a still ongoing debate among historians, that the battle of Icnivad-Village, was not started by Natives, named Koma-"..
 					 "-there was a war over here too? Do you sell souvenirs?"..
-					 "-volcanic Ruins, with mumified tourists burried beneath from the last eruption-", Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+					 "-volcanic Ruins, with mumified tourists burried beneath from the last eruption-", Name,charPerLine, Alpha, DefaultSleepByline)
+					say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 					xAmb=spawnAmbassador()
 						if xAmb then
 						Spring.SetUnitNoDraw(xAmb,true)
@@ -1318,7 +1335,8 @@ function Mission4Crawler(frame)
 	 "One last thing. Know that the sisterhood of the Crystallforrest is traversing the landscape,terraforming, rebuilding destroyed settlements."..
 	 "If- they see you going 'Yes-we-Khan' on some villagers, they will rile up the whole planet- drag you before a interdimensional-court."..
 	" So no wittnesses.. not even if they have a cute smile or a nice ass. "
-	 say(unitID,prep(strings, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+	 T=prep(strings, Name,charPerLine, Alpha, DefaultSleepByline)
+	 say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 	 MissionFunctionTable[4][3] =MissionFunctionTable[4][3] +1
 	 end
 	 
@@ -1451,7 +1469,8 @@ function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weap
 
 	--Thats a horrible Thing to say
 		if math.random(0,12)==6 then
-		say(unitID,prep(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))], Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))], Name,charPerLine, Alpha, DefaultSleepByline)
+		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 		end
 	end
 end
@@ -1589,10 +1608,10 @@ Teams=Spring.GetTeamList()
 		end
 	AllPositions[#AllPositions+1]=Pos[i]
 	end
-AllPositions[#AllPositions+1]={x=Game.mapSizeX*0.25,y=0,z=Game.mapSizeZ*0.25}
-AllPositions[#AllPositions+1]={x=Game.mapSizeX*0.25,y=0,z=Game.mapSizeZ*0.75}
-AllPositions[#AllPositions+1]={x=Game.mapSizeX*0.75,y=0,z=Game.mapSizeZ*0.25}
-AllPositions[#AllPositions+1]={x=Game.mapSizeX*0.75,y=0,z=Game.mapSizeZ*0.75}
+AllPositions[#AllPositions+1]={x=Game.mapSizeX/4,y=0,z=(Game.mapSizeZ/4)}
+AllPositions[#AllPositions+1]={x=Game.mapSizeX/4,y=0,z=(Game.mapSizeZ/4)*3}
+AllPositions[#AllPositions+1]={x=(Game.mapSizeX/4)*3,y=0,z=Game.mapSizeZ/4}
+AllPositions[#AllPositions+1]={x=(Game.mapSizeX/4)*3,y=0,z=(Game.mapSizeZ/4)*3}
 AllPositions[#AllPositions+1]={x=Game.mapSizeX/2,y=0,z=Game.mapSizeZ/2}
 
 	for i=1,#AllPositions, 1 do 
@@ -1654,7 +1673,8 @@ function Misson5WhackTheFreeman(frame)
 	 if MissionFunctionTable[5][3] == 0 and mT > 14200 then
 		 Briefing="Anticitizen One has been spotted in your sector, Administrator. It is prime directive, to capture and/or "..
 		" permapacify the subject known as Gordon Freeman. Code: Capture, cauterize, amputate, sterilize."
-		say(unitID,prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline)
+say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 	 
 	 spawnRavenholmCity17()
 	 MissionFunctionTable[5][3] =MissionFunctionTable[5][3] +1
@@ -1681,7 +1701,7 @@ function Misson5WhackTheFreeman(frame)
 	
 	for i=1, table.getn(finStatEng), 1 do
 	if finStatEng[i].boolActive then --filters out the currentActive state
---	say(unitID,prep("JW_MiniMIssion::StateMachine_State ->"..i)
+--	T=prep("JW_MiniMIssion::StateMachine_State ->"..i)
 	
 	--S-tate Gorden doesent exist--
 	if finStatEng[i].state =="GordonNo" then
@@ -1728,7 +1748,8 @@ function Misson5WhackTheFreeman(frame)
 		if dist < 150 then
 		--message the freeman
 		dic=math.random(1,#messages)
-		say(unitID,prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
+		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 		Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
 	
 		getAndRewardLastAttacker(MissionFunctionTable[5][6])
@@ -1775,8 +1796,8 @@ function Misson5WhackTheFreeman(frame)
 			"Entertain me, "..
 			"or i shall open the pandering boxes, to see for myself,".. 
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
-		
-		say(unitID,prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
+		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 
 	return true
 	end
@@ -1839,8 +1860,8 @@ function Misson6ResistaceIsFutile(frame)
 	  
 	 if MissionFunctionTable[6][3] == 0 and mT > 14200 then
 		Briefing=""
-		
-		say(unitID,prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline)
+		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 	 
 	 spawnResistanceOutposts()
 	 MissionFunctionTable[6][3] =MissionFunctionTable[6][3] +1
@@ -1867,7 +1888,7 @@ function Misson6ResistaceIsFutile(frame)
 	
 	for i=1, table.getn(finStatEng), 1 do
 	if finStatEng[i].boolActive then --filters out the currentActive state
---	say(unitID,prep("JW_MiniMIssion::StateMachine_State ->"..i)
+--	T=prep("JW_MiniMIssion::StateMachine_State ->"..i)
 	
 	--S-tate Gorden doesent exist--
 	if finStatEng[i].state =="GordonNo" then
@@ -1914,7 +1935,8 @@ function Misson6ResistaceIsFutile(frame)
 		if dist < 150 then
 		--message the freeman
 		dic=math.random(1,#messages)
-		say(unitID,prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
+				say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 		Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
 	
 		getAndRewardLastAttacker(MissionFunctionTable[6][6])
@@ -1961,8 +1983,8 @@ function Misson6ResistaceIsFutile(frame)
 			"Entertain me, "..
 			"or i shall open the pandering boxes, to see for myself,".. 
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
-		
-		say(unitID,prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline),redrawDelay, NameColour, TextColour,OptionString)
+		T=prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
+		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 
 	return true
 	end
@@ -2095,7 +2117,7 @@ if deMaRaVal(5)==2 then currentMission=2 end
 if deMaRaVal(5)==1 then currentMission=1 end
 cout(currentMission .. "Mission selected")
 --<DEBUG>
-currentMission= 5
+
 --</DEBUG>
 --</necessaryInfo>
 

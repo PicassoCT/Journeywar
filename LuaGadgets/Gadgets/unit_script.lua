@@ -366,10 +366,10 @@ function Spring.UnitScript.Sleep(milliseconds)
 
         local activeUnit = GetActiveUnit() or error("[Sleep] no active unit on stack?", 2)
         local activeThread = activeUnit.threads[co_running() or error("[Sleep] not in a thread?", 2)]
-		--if not activeThread then 
-		--	local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
-		--	Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a unthreaded Sleep")               
-		--end
+		if not activeThread then 
+			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
+			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a unthreaded Sleep")               
+		end
 
         zzz[#zzz+1] = activeThread
         activeThread.container = zzz

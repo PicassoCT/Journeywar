@@ -22,7 +22,7 @@ local unitDef = {
 	radardistance=0,
 	sightDistance = 500,
 
-	EnergyStorage = 200,
+	EnergyStorage = 50,
 	EnergyUse = 5,
 	MetalStorage = 0,
 	EnergyMake = 48, 

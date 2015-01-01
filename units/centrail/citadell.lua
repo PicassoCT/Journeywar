@@ -70,7 +70,7 @@ buildoptions =
 	"condepot","fclvlone","cairbase",
 	"cdistrictnone","buibaicity2","buibaicity1",
 	"crailgun","sentry","bonker", "cdefusermine",
-	"chopper","comendbonker","geohive",
+	"chopper","comendbonker",
 	},
 	
 sounds = {

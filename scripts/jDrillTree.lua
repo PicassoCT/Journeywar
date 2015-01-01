@@ -1,10 +1,10 @@
-
+include "toolKit.lua"
 
 --<CopyPasteTemplate for TerraFormingUnit>
 --include "terraForm.lua"
 --global Infomartion
  boolUnitIsDigginDown=false
-local radiationRange=60
+ radiationRange=60
 local damagePerSecond=12
 
 
@@ -190,10 +190,10 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	if GG.Extrema == nil then 
 	GG.Extrema= {}
 	min,max=Spring.GetGroundExtremes()
-	GG.Extrema= max+math.abs(min)+math.ceil(math.random(10,100))
+	GG.Extrema= max+math.abs(min)+100
 	end
 	
-	while(not GG.Extrema  or y < GG.Extrema) do
+	while( y < GG.Extrema) do
 		if x ~= nil and z~= nil then
 			y=spGetGroundHeight(x,z)
 			else
@@ -223,14 +223,15 @@ suddenDeathjBuildCorpse(unitID, recentDamage)
 end
 
 function radiation()
-local x,y,z=Spring.GetUnitPosition(unitID)
+x,y,z=Spring.GetUnitPosition(unitID)
 local spGetUnitHealth=Spring.GetUnitHealth
 local spSetUnitHealth=Spring.SetUnitHealth
 	while(true) do
 	UnitsTable={}
-	UnitsTable=Spring.GetUnitsInCircle(x,z,radiationRange)
+	UnitsTable=grabEveryone(unitID,x,z,radiationRange)
+	
 		if UnitsTable~=nil and table.getn(UnitsTable)~= 0 then
-			table.remove(UnitsTable,unitID)
+		
 			for i=1,table.getn(UnitsTable),1 do
 			tempHealth=spGetUnitHealth(UnitsTable[i])
 			tempHealth=tempHealth-damagePerSecond

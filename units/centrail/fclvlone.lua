@@ -1,8 +1,8 @@
 local unitName = "fclvlone"
 
 local unitDef = {
-name = "fclvlone",
-Description = "Orders Units from another Dimension",
+name = "Farcaster",
+Description = "orders units from a higher Dimension",
 TEDClass = "PLANT",
 
 

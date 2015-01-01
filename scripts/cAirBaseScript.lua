@@ -1,4 +1,5 @@
 include"suddenDeath.lua"
+include "toolKit.lua"
 
 local buildspot = piece "buildspot"
 winke=piece"winke"
@@ -31,6 +32,16 @@ local SIG_UNFOLD=4
 local SIG_FOLD=8
 local SIG_WELD=16
 
+Generators={}
+Cables={}
+for i=1,7,1 do
+
+name="generator"..i
+cname="cable0"..i
+Generators[i]=piece(name)
+Cables[i]=piece(cname)
+end
+
 function toInfinityAndBeyond()
 Hide(rred)
 Hide(lred)
@@ -55,7 +66,60 @@ Hide(lgreen)
 Hide(rgreen)
 end
 
+
+function setUpGenerator(nr)
+
+
+ux,uy,uz=Spring.GetUnitPosition(unitID)
+local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+local spGetGroundHeight=Spring.GetGroundHeight
+while true do
+dir=math.random(-1,1)
+dir=math.abs(dir)/dir
+x,y,z=spGetUnitPiecePosDir(unitID,Generators[nr])
+gh=spGetGroundHeight(x,z)
+totalDeg=0
+itVal=math.random(5,25)
+
+
+
+	for j=0,360,itVal do
+
+	Turn(Cables[nr],y_axis,math.rad(j*dir),0,true)
+	Turn(Cables[nr],x_axis,math.rad(0),0,true)
+	x,y,z=spGetUnitPiecePosDir(unitID,Generators[nr])
+	gh=spGetGroundHeight(x,z)
+
+
+			for i=0,360,3  do
+			totalDeg=i*dir
+			Turn(Cables[nr],x_axis,math.rad(totalDeg),0,true)
+			x,y,z=spGetUnitPiecePosDir(unitID,Generators[nr])
+			gh=spGetGroundHeight(x,z)
+
+
+				if y-gh > 0 and y-gh <5 then
+				enddeg=totalDeg-(5*dir)
+				Turn(Cables[nr],x_axis,math.rad(enddeg),0,true)
+				Turn(Generators[nr],x_axis,math.rad(-1*enddeg),0,true)
+				Show(Generators[nr])
+				Show(Cables[nr])
+				return
+				end
+
+			end
+
+
+	end
+	Sleep(10)
+
+end
+
+end
+
 function script.Create()
+hideT(Cables)
+hideT(Generators)
 x=math.ceil(math.random(0,3))
 Turn(center,y_axis,math.rad(x*90),0)
 Hide(lgreen)
@@ -67,7 +131,7 @@ Show(cityblock1)
 Show(roof)
 Show(plaza)
 
-
+StartThread(delayedUpgrade)
 Hide(base)
 if(math.random(0,1))==1 then Hide(cityblock1) end
 if(math.random(0,1))==1 then Hide(cityblock2) end
@@ -164,6 +228,70 @@ Turn(spine6,y_axis,math.rad(88),1)
 
 
 end
+
+
+GENUPGRADEDEFID=UnitDefNames["genupgrade"].id
+upgrade=0
+amount=1000
+buildup=0.1
+myDefID=Spring.GetUnitDefID(unitID)
+teamID=Spring.GetUnitTeam(unitID)
+orgBuildSpeed=	UnitDefs[myDefID].buildSpeed
+buildSpeedMax=orgBuildSpeed + buildup*#Generators
+myBuildSpeed=orgBuildSpeed
+
+function delayedUpgrade()
+while true do
+Sleep(1000)
+id=Spring.GetUnitIsBuilding(unitID)
+
+
+if id and  Spring.ValidUnitID(id)==true then
+	
+	defID=Spring.GetUnitDefID(id)
+	if  GENUPGRADEDEFID==defID and Spring.ValidUnitID(id)==true then
+
+		if upgrade < #Generators then
+		boolm=Spring.UseUnitResource(unitID,"m",amount)
+		boole=Spring.UseUnitResource(unitID,"e",amount)
+		
+			if boolm and boole and boolm==true and boole==true then
+			StartThread(setUpGenerator,upgrade+1)
+			val=math.min(myBuildSpeed+buildup,buildSpeedMax)
+			Spring.SetUnitBuildSpeed(unitID,val)
+			upgrade=upgrade+1
+			myBuildSpeed=myBuildSpeed+buildup
+			resetUpgradeCmd(unitID)	
+			else --Rückerstattung
+			if boolm and boolm==true then Spring.AddTeamResource(teamID,"m",amount) end
+			if boole and boole==true then Spring.AddTeamResource(teamID,"e",amount) end
+			end
+		else
+		resetUpgradeCmd(unitID)
+		fold()
+		end
+	end
+			
+
+	
+	
+
+end
+end
+end
+
+function resetUpgradeCmd(factoryID)
+
+      local upgrades = {[GENUPGRADEDEFID]=true,[UPGRADEDEFID]=true}
+      local facCmds = Spring.GetFactoryCommands(factoryID)
+ 
+      if facCmds then -- nil check
+		local cmd = facCmds[1]
+         Spring.GiveOrderToUnit(factoryID, CMD.REMOVE, {i,cmd.tag}, {"ctrl"})
+
+      end
+   end
+
 
 function fold()
 SetSignalMask(SIG_FOLD)

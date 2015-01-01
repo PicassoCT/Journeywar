@@ -119,7 +119,7 @@ Spin(EverythingIsBetterWithWheels[i],x_axis,math.rad(42),0.6)
 end
 
 	while(boolmove==true) do 
-	de=math.ceil(math.random(90,190))
+	de=math.ceil(math.random(190,360))
 	Sleep(de)
 	EmitSfx(dustemit1,1024)
 	EmitSfx(dustemit2,1024)

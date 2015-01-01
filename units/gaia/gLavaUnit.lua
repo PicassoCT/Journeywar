@@ -1,10 +1,10 @@
-local unitName = "gLava"
+local unitName = "glava"
 
 local unitDef = {
 name = "Lava(Gaia)",
 Description = "Lavastream",
-objectName = "gLavaUnit.s3o",
-script = "gLavaUnit.lua",
+objectName = "glavaUnit.s3o",
+script = "glavaUnit.lua",
 buildPic = "placeholder.png",
 levelGround =false,
 --cost
@@ -70,7 +70,7 @@ EnergyStorage = 0,
   activateWhenBuilt      = true,
  ]] 
 weapons = {
-[1]={name  = "gLavaWeapon",
+[1]={name  = "glavaWeapon",
 	onlyTargetCategory = [[LAND]],
 	},
 },

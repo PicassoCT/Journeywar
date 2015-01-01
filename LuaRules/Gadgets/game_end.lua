@@ -145,6 +145,7 @@ end
 local function KillTeamsZeroUnits()
 -- kill all the teams that have zero units
 	for teamID, unitCount in pairs(teamsUnitCount) do
+	if teamID and unitCount then
 		max=spGetTeamStats(teamID)
 		Stratss={}
 		Stratss=spGetTeamStats(teamID,max,max)
@@ -152,6 +153,7 @@ local function KillTeamsZeroUnits()
 		if unitCount == 0 and (Stratss[1].unitsDied  >= (Stratss[1].unitsCaptured +Stratss[1].unitsReceived +Stratss[1].unitsProduced )) then
 		spKillTeam( teamID )
 		end
+	end
 	end
 end
 
@@ -191,7 +193,7 @@ for i=StepSize/2, Game.mapSizeX, StepSize do
 for j=StepSize/2, Game.mapSizeX, StepSize do
 h=spGetGroundHeight(i,j)
 	if h and h > 6 then
-	spCreateUnit("gwood",i,h,j,0,teamID)
+		GG.UnitsToSpawn:PushCreateUnit("gwood",i,h,j,0,teamID)
 	end
 end
 end

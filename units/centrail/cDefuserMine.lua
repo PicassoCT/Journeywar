@@ -6,7 +6,7 @@ Description = "launches anti-dart Projectiles",
 
 objectName = "cdefusormine.s3o",
 script = "cdefusermine_script.lua",
-buildPic = "placeholder.png",
+buildPic = "cdefuserdart.png",
 
 
 	RadarDistance = 0,

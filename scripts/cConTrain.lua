@@ -297,12 +297,12 @@ local SMove=4 -- Situation Train is moving
 
  siGnall ={}
 
-siGnall[1]=SIG_PIL1 
-siGnall[2]=SIG_PIL2 
-siGnall[3]=SIG_PIL3 
-siGnall[4]=SIG_PIL4 
-siGnall[5]=SIG_PIL5 
-siGnall[6]=SIG_PIL6 
+siGnall[1]=true 
+siGnall[2]=true 
+siGnall[3]=true 
+siGnall[4]=true 
+siGnall[5]=true 
+siGnall[6]=true 
 
 selectRange=10
 SIG_UNFPIL1=1024
@@ -317,12 +317,12 @@ SIG_RAZOR	=262144
 
 SigTableUnfold={}
 
-SigTableUnfold[1]=SIG_UNFPIL1 
-SigTableUnfold[2]=SIG_UNFPIL2 
-SigTableUnfold[3]=SIG_UNFPIL3 
-SigTableUnfold[4]=SIG_UNFPIL4 
-SigTableUnfold[5]=SIG_UNFPIL5 
-SigTableUnfold[6]=SIG_UNFPIL6 
+SigTableUnfold[1]=true
+SigTableUnfold[2]=true
+SigTableUnfold[3]=true
+SigTableUnfold[4]=true
+SigTableUnfold[5]=true
+SigTableUnfold[6]=true
 
 boolConstantMove=false
 boolCMLock=false
@@ -656,8 +656,8 @@ end
 --folds the pillar - into a Polygon Origami Pillar
 function foldPillar(number,callingSituation,boolInstReset)
 --	case one or six, wait till pillar is folded, then move it Under
-Sicknall=siGnall[number]
-SetSignalMask(Sicknall)
+
+
 local speedO=0
 
 speed=currentSpeed
@@ -735,7 +735,7 @@ WaitForTurn(usul[number][2],z_axis)
 
 														        local storeHeightAwayTemp=lowestHeight
 																--This loop wont end, before the pillar is underground)
-																while(true==Spring.UnitScript.IsInMove (piece ("cPilar"..number), y_axis)) do
+																while(siGnall[number]==true and true==Spring.UnitScript.IsInMove (piece ("cPilar"..number), y_axis)) do
 																--check if speed has changed
 																currentSpeed=currentSpeed
 																currentSpeed=currentSpeed-speed --calc the Difference
@@ -751,14 +751,13 @@ WaitForTurn(usul[number][2],z_axis)
 																Sleep(72)
 																end
 																usul[number][13]=lowestHeight
-
+																siGnall[number]=true
 
 end
 
 --unfolds the pillar - is hated by the function above
 local function unfoldPillar(number, callingSituation,boolInstReset)
-Sicknall=SigTableUnfold[number]
-SetSignalMask(Sicknall)
+
 local speedU=0
 	if number== nil then
 	--Spring.Echo("Error:Nil-Number handed over to a UnfoldPillar-Method")
@@ -784,7 +783,7 @@ if speed== nil or speed== 0 then speed=0 end
 
 
 														Move(usul[number][1],y_axis,0,speedU)
-																while(true==Spring.UnitScript.IsInMove (piece ("cPilar"..number), y_axis)) do
+																while(SigTableUnfold[number]==true and true==Spring.UnitScript.IsInMove (piece ("cPilar"..number), y_axis)) do
 																--check if speed has changed
 																	if speedCompare(speedU,comonPillarSpeed,speedCompareTolerance)==true then
 																	speedU=comonPillarSpeed
@@ -794,7 +793,7 @@ if speed== nil or speed== 0 then speed=0 end
 																	then speedU= 0 end
 																Sleep(172)
 																end
-
+																SigTableUnfold[number]=true
 																	if speedCompare(speedU,comonPillarSpeed,speedCompareTolerance)==true then
 																	speedU=comonPillarSpeed
 																	end
@@ -932,7 +931,7 @@ Sleep(3000)
 SetSignalMask(SIG_HEAL)
 teamid=Spring.GetUnitTeam(unitID)
 conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair"})
-
+local ud=UnitDefs
 while true do
 	boolHealedOne=false
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -943,9 +942,10 @@ while true do
 	hpcopy=hp
 		for i=1,#T do
 		defID=Spring.GetUnitDefID(T[i])
-		if UnitDefs[defID].isBuilding ==false and conTypeTable[defID] == nil then
-			p,maxhp=Spring.GetUnitHealth(T[i])
-			if p and p < maxhp and maxhp > 400 then
+		if ud[defID].isBuilding ==false and not conTypeTable[defID]  then
+			p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
+			 
+			if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
 			boolHealedOne=true
 			Spring.SetUnitHealth(T[i],p+hp)
 			if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
@@ -1075,10 +1075,9 @@ local lresetTracks=resetTracks
 																												if boolFinnish==true or lspeedCompare(speedOfOld,newSpeed,speedCompareTolerance)== false then
 																													----Spring.Echo("Firing Off New Pillar",boolFinnish)
 																													Signal(SIG_MOVE)
-																													SIGFOLD=siGnall[4]
-																													Signal(SIGFOLD)
-																													SIGUNFOLD=SigTableUnfold[4]
-																													Signal(SIGUNFOLD)
+																													siGnall[4]=false
+																													SigTableUnfold[4]=false
+																												
 																													StartThread(moveIt,newSpeed)
 																													----Spring.Echo("MoveItFunction Executed. Off with its over-head")
 																												end
@@ -1243,9 +1242,9 @@ Hide(cRailTurn)
 				for i=2,5,1 do
 					if i~=4 then --for all pillars except one and six, stop all folding or unfolding
 					tempSig=siGnall[i]
-					Signal(tempSig)
-					tempUnfoldSig=SigTableUnfold[i]
-					Signal(tempUnfoldSig)
+					siGnall[i]=false
+					SigTableUnfold[i]=false
+					
 					StartThread(unfoldPillar,i,SStop,false) --unfold said Pillars
 					end
 				end
@@ -1270,10 +1269,8 @@ boolDontMove=true
 		resetTracks()
 
 																	for i=2,6,1 do
-																							tempSig=siGnall[i]
-																							Signal(tempSig)
-																							tempUnfoldSig=SigTableUnfold[i]
-																							Signal(tempUnfoldSig)
+																								siGnall[i]=false
+																								SigTableUnfold[i]=false
 																						StartThread(foldPillar,i,STurn,false)
 
 																	end
@@ -1291,10 +1288,8 @@ boolDontMove=true
 																	resetTracks()
 
 																	for i=2,6,1 do
-																							tempSig=siGnall[i]
-																							Signal(tempSig)
-																							tempUnfoldSig=SigTableUnfold[i]
-																							Signal(tempUnfoldSig)
+																								siGnall[i]=false
+																								SigTableUnfold[i]=false
 
 
 
@@ -1338,10 +1333,8 @@ local lspeedTransForm=speedTransForm
 
 			     	for i=2,6,1 do
 						if i~=4 then
-																							tempSig=siGnall[i]
-																							Signal(tempSig)
-																							tempUnfoldSig=SigTableUnfold[i]
-																							Signal(tempUnfoldSig)
+																								siGnall[i]=false
+																								SigTableUnfold[i]=false
 						StartThread(unfoldPillar,i,SMove,false)
 						end
 					end

@@ -17,7 +17,7 @@
 		
 		bodyPieceName="body"..i.."s2"
 		BodyPieces[i]=piece(bodyPieceName)
-		
+		assert(BodyPieces[i])
 		--add the linear connections
 		ConPieces[BodyPieces[i]]={}
 		ConPieces[BodyPieces[i]].Symetric={}
@@ -27,12 +27,14 @@
 			name="lcon"..i..j
 			ConPieces[BodyPieces[i]].Linear[j]={}
 			ConPieces[BodyPieces[i]].Linear[j]=piece(name)
+			assert(ConPieces[BodyPieces[i]].Linear[j])
 			end
 		--add the symetric connections
 			
 			for j=1,2,1 do
 			name="scon"..i..j
 			ConPieces[BodyPieces[i]].Symetric[j]=piece(name)
+			assert(ConPieces[BodyPieces[i]].Symetric[j])
 			end
 			
 	--	--Spring.Echo("JW:VaryFoo:SymetricConections"..table.getn(ConPieces[BodyPieces[i]].Symetric))
@@ -65,6 +67,9 @@
 		ArmPieces[i][1]=	piece(bodyPieceName1)
 		ArmPieces[i][2]=	piece(bodyPieceName2)
 		ArmPieces[i][3]=	piece(bodyPieceName3)
+		assert(ArmPieces[i][1])
+		assert(ArmPieces[i][2])
+		assert(ArmPieces[i][3])
 		Hide(ArmPieces[i][1])
 		Hide(ArmPieces[i][2])
 	
@@ -92,7 +97,8 @@
 		bodyPieceName="HeadCon"..i
 		HeadCon[i]=piece(bodyPieceName)
 		--add the linear connections
-		
+		assert(HeadPieces[i])
+		assert(HeadCon[i])
 		if i < HeadMax and i %2 ==0 then
 		DoubleHeadPieces[#DoubleHeadPieces+1]={k=HeadPieces[i-1],v=HeadPieces[i]			}											
 		end
@@ -111,7 +117,7 @@
 		bodyPieceName="Deco"..i
 		DecoPieces[i]=piece(bodyPieceName)
 		--add the linear connectionsk
-		
+				assert(DecoPieces[i])
 		if i < DecoMax and i %2 ==0 then
 		DoubleDecoPieces[#DoubleDecoPieces+1]={k=DecoPieces[i-1],v=DecoPieces[i]			}							
 		end
@@ -430,6 +436,7 @@
 	end
 	
 	function getSymHeadCon()
+	Spring.Echo("TODO: getSymHeadCon")
 	--find two SymBodyCon who are frontal 
 	end
 	
@@ -637,8 +644,7 @@ function LinearExpandArm()
 				end
 			end
 		end
-	alignLegsToGround()
-	processAddedArms()
+
 
 	
 	headdice=math.ceil(math.random(1,HeadMax))
@@ -688,11 +694,12 @@ function LinearExpandArm()
 			end
 		end		
 	end		
-		
+	alignLegsToGround()
+	processAddedArms()	
 end		
 
 function getSymDecoCon()
-
+Spring.Echo("TODO: getSymDecoCon")
 end
 
 --StartPoint
@@ -792,12 +799,12 @@ end
 	
 	function alignLegsToGround()
 		if #ArmTable > 0 then
-		rEchoTable(ArmTable)
+		--rEchoTable(ArmTable)
 		local spGetUnitPiecePos=Spring.GetUnitPiecePosition
 		oldMaxDif=99999
 		smallestIntervallSoFar=1	
 		
-			for i=1,360,3 do
+			for i=1,360,6 do
 			----Spring.Echo("JW:VaryFoo:Align"..i)
 			Turn(center,x_axis,math.rad(i),0,true)
 			

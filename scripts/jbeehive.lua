@@ -40,13 +40,16 @@ function script.QueryWeapon1()
 	return start
 end
 
+salvoValid=1
+
 function script.AimWeapon1( heading ,pitch)	
 
+	
 	Turn(start, y_axis, heading,4)
 	Turn(start, x_axis, -pitch, 4)
 	WaitForTurn(start,y_axis)
 	
-	return true
+	return salvoValid < 6
 end
 
 boolPlaySound=false
@@ -57,7 +60,19 @@ Sleep(4500)
 boolPlaySound=false
 end
 
+function salvoReload()
+Sleep(4000)
+salvoValid=1
+boolOnce=false
+end
+
+boolOnce=false
 function script.FireWeapon1()	
+salvoValid=salvoValid+1
+if salvoValid >= 6 and boolOnce==false then
+boolOnce=true
+StartThread(salvoReload)
+end
 if boolPlaySound==false then StartThread(playActivateSound) end
 	return true
 end

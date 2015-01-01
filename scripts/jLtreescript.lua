@@ -398,24 +398,22 @@ FixFunctionTabel[2]= function ()
 		
 	-- Turn the whole plant into a Bucky Ball
 	FixFunctionTabel[9]=	function ()
-	Spring.Echo("FixFunctionTabel::Buckyball")
+	Spring.Echo("FixFunctionTabel::Suckyball")
 		showT(TreePiece)
 		showT(EndPiece)
 		x,y,z=Spring.GetUnitPosition(unitID)
 			
-		--Store Point 
-		PointPairs={}
-		--centercoord
-		cx,cy,cz=0,2*SIZEOFPIECE,0 	
-		--SetUp the base hexagon
+		PiecesToGrowUpon={}
+		PiecesToGrowUpon={EndPiece[1],EndPiece[2]}
 		
 		--first and last row have equal number of pentagons and hexagons
 		--2:1  hexagons : pentagons 
-			for i=6,#TreePiece,1 do
-			
-			--hexagon circle
-			
-			--pentagoncircle
+		for i=3,NUMBEROFPIECES,1 do
+		MovePieceToPiece(TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
+		turnPieceRandDir(TreePiece[i],0, 0,90,0,360,0,90)
+		table.insert(PiecesToGrowUpon,EndPiece[i])
+				
+				
 			end
 	return true
 		end

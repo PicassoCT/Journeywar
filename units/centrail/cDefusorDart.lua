@@ -5,7 +5,7 @@ name = "Defuse Dart",
 Description = "destroys Journey Race Darts close-up",
 objectName = "cdefusordart.s3o",
 script = "cdefusordart_script.lua",
-buildPic = "placeholder.png",
+buildPic = "cdefuserdart.png",
 --cost
 buildCostMetal = 550,
 buildCostEnergy = 250,

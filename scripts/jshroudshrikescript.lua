@@ -2,8 +2,28 @@ include "suddenDeath.lua"
 include "toolKit.lua"
 --include "spring_lua_dsl.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
+rootspin1=piece"rootspin1"
+rootspin2=piece"rootspin2"
 
+SpinT={}
+for i=1,23 do
+name="Spin"..i
+SpinT[#SpinT+1]=piece(name)
+end
 
+hideT(SpinT)
+GMAN=piece"GMAN"
+standing=piece"standing"
+face=piece"face"
+Root={}
+for i=1,3 do
+name="Root"..i
+Root[#Root+1]=piece(name)
+end
+hideT(Root)
+Hide(GMAN)
+Hide(standing)
+Hide(face)
 
 
 local INFLUENCERADIUS=120
@@ -22,7 +42,38 @@ dice = piece"dice"
 
 piecesTable[#piecesTable+1]= dice
 
+function restartRoots()
+resT(Root)
+for i=1,#Root do
 
+Spin(Root[i],y_axis,math.rad(math.random(10,64)),0.5)
+Show(Root[i])
+end
+
+for i=1,#SpinT do
+Turn(SpinT[i],z_axis,math.rad(-90),0,true)
+Turn(SpinT[i],z_axis,math.rad(0),0.3)
+Show(SpinT[i])
+Spin(SpinT[i],y_axis,math.rad(math.random(22)*-12),0.5)
+
+end
+end
+
+function dissapearRoots()
+for i=1,#Root do
+Move(Root[i],y_axis,-30,0)
+end
+WaitForMove(Root[3],y_axis)
+hideT(Root)
+for i=1,#SpinT do
+Turn(SpinT[i],z_axis,math.rad(-90),3)
+Turn(SpinT[i],z_axis,math.rad(0),3)
+StopSpin(SpinT[i],y_axis,0.5)
+
+end
+WaitForTurn(SpinT[i],z_axis)
+hideT(SpinT)
+end
 
 x,y,z=0,0,0
 UnitPieceTable={}
@@ -118,7 +169,7 @@ Spring.Echo("JW:SHROUDSRIKE:: VAL before rand"..dice)
 
 function script.Killed(recentDamage,_)
 
-suddenDeathV(recentDamage)
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 end
 
@@ -150,6 +201,8 @@ function expandingSphere()
 	Sleep(400)
 	end
 	Signal(SIG_TREE)
+Show(standing)
+Show(face)
 Spring.SetUnitAlwaysVisible(unitID,false)
 Spring.SetUnitNoSelect(unitID,true)
 Spring.SetUnitNeutral(unitID,true)
@@ -163,8 +216,10 @@ Table={}
 SpRa=INFLUENCERADIUS
 
 Table=Spring.GetUnitsInCylinder(x,z,SpRa)
-table.insert(Table,Spring.GetUnitNearestAlly(unitID))
-table.insert(Table,Spring.GetUnitNearestEnemy(unitID))
+al=Spring.GetUnitNearestAlly(unitID)
+if al then table.insert(Table,al) end
+el=Spring.GetUnitNearestEnemy(unitID)
+if el then table.insert(Table,el) end
 table.remove(Table,unitID)
 local SoleSurvivor=Table[math.floor(1,#Table)]
 local SoleSurvivorDefID=Spring.GetUnitDefID(SoleSurvivor)
@@ -350,36 +405,45 @@ function treeLoop()
 SetSignalMask(SIG_TREE)
 --Localisations
 --test
+boolOnce=true
 		while true do
 		Sleep(100)
-		
+		if boolOnce==true then
+		restartRoots()
+		boolOnce=false
+		end
+			Hide(standing)
+			Hide(face)
 			while boolMoving==false do
-			posToCont={}
-			posToCont[1]={x=0,y=0,z=0}
-			Sleep(1000)
-				while #posToCont >0 do
-				Sleep(100)
-				itterator=math.min(7,#posToCont)
-					while itterator > 0 and posToCont[itterator] do
-				--for all pos do
-					--diceEmit
-					emitFork(posToCont[itterator].x,posToCont[itterator].y,posToCont[itterator].z) 
-					
-					table.remove(posToCont,itterator)
-					itterator=itterator-1
-					--deletePosition
+			Move(Root[1],x_axis,math.rad(math.random(-26,26),0.3))
+			Move(Root[2],x_axis,math.rad(math.random(-26,26),0.3))
+			Spin(rootspin1,y_axis,math.rad(math.random(-42,42)),0.3)
+			Spin(rootspin2,y_axis,math.rad(math.random(-42,42)),0.3)
+				for i=1,#SpinT do
+					if maRa()==true then
+					Move(SpinT[i],y_axis,math.rad(math.random(0,55)*2),4.5)
 					end
-				
-				
-					
 				end
+
+			
+			
+			
+			Show(GMAN)
+			
 			Sleep(5000)		
 			end
+				if boolOnce==false then
+				dissapearRoots()
+				boolOnce=true
+				end
+				Hide(GMAN)
+				Show(dice)
 
 		StartVal=128
 		HalfWay=32
 		local CopyVal=StartVal
 		local speed=256
+		
 				while boolMoving==true do
 				Sleep(100)
 				Turn(dice,x_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
@@ -410,6 +474,9 @@ SetSignalMask(SIG_TREE)
 				end
 			Sleep(1000)
 			Hide(dice)
+			Hide(GMAN)
+			showT(SpinT)
+			showT(Root)
 		end
 
 end

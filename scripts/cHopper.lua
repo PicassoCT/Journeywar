@@ -40,7 +40,8 @@ end
 function script.AimWeapon1( heading, pitch )
 
 	if sixShots>0 then
-	
+	Move(minetable[sixShots],y_axis,42,72)
+	WaitForMove(minetable[sixShots],y_axis)
 	return true
 	else
 	return false

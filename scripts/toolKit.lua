@@ -382,6 +382,7 @@ end
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
+if not piecena then return error("No piecename given") end
 loffset=offset or 0
 x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 Move(piecename,x_axis,X,0)
@@ -945,7 +946,7 @@ function NDrehMatrix(x,z,rad)
 	   sinus=math.sin(rad)
 	   cosinus= math.cos(rad)
 					
-	return x*cosinus + z*sinus*-1, x*sinus  + z*cosinus
+	return x*cosinus + z*-sinus, x*sinus  + z*cosinus
 end
 
 
@@ -2309,7 +2310,7 @@ end
 end
 
 function assertAllTheArgs(...)
-
+if not arg then error("No arguments were given") return end
 for k,v in pairs(arg) do
 if not v then return false end
 end
@@ -2317,16 +2318,23 @@ return true
 end
 	
 -->prepares large speaches for the release to the world
-function prep( Speach, Name,Limit, Alpha, DefaultSleepByline)
-if (assertAllTheArgs( Speach, Name,Limit, Alpha, DefaultSleepByline)==false) then return end
+function prep( Speach, Names,Limits, Alphas, DefaultSleepBylines)
+--if only Speach 
+if Speach and not Names and not Limits then return Speach end
+if not Speach or not Names or not Limits then return nil end
+Name       			=Names or "Dramatis Persona"
+Limit             	= Limits or 42
+Alpha           	= Alphas   or 0.9
+DefaultSleepByline	= DefaultSleepBylines or 750
+
 T={}
 itterator=1
-lineend=Limit or (string.len(Speach))
-size=string.len(Speach)
-
-assert(type(Speach)=="string","Speach not of type string", Speach)
-assert(type(lineend)=="number","Limit not a number", Limit)
-assert(type(size)=="number","Limit not a number", Limit)
+lineend=Limit
+size=string.len(Speach) or #Speach or Limit
+assert(size,"Size does matter")
+assert(Speach and type(Speach)=="string","Speach not of type string", Speach)
+assert(lineend and type(lineend)=="number","Limit not a number", Limit)
+assert(size and type(size)=="number","Limit not a number", Limit)
 
 
 
@@ -2341,17 +2349,27 @@ assert(type(size)=="number","Limit not a number", Limit)
 		break
 		end
 		
-		if not lineend then itterator =size else
+		if not lineend then 
+		break
+		else
 		itterator=lineend+1
 		end
+		assert(lineend)
+		assert(size)
 	end
-	return T
+	return T, true
 end
 
 
 --> Displays Text at UnitPos Thread
  -->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
-function say(UnitID, TableOfLineAndT, redrawDelay, NameColour, TextColour,OptionString)
+function say( TableOfLineAndT, redrawDelay, NameColour, TextColour,OptionString,UnitID)
+if type(TableOfLineAndT) == "string" then Spring.Echo(TableOfLineAndT) return end
+px,py,pz=0,0,0
+if not UnitID or Spring.ValidUnitID(UnitID)==false then
+return 
+end
+
 local LineNameTimeT= TableOfLineAndT
 
 	--catching the case that there is not direct Unit speaking
@@ -2366,37 +2384,49 @@ local LineNameTimeT= TableOfLineAndT
 	
 local spGetUnitPosition=Spring.GetUnitPosition	
 
-height=gl.GetTextHeight(LineNameTimeT[#LineNameTimeT].text)
-totalHeight=height*(#LineNameTimeT+1)
-NameSize=12
-TextSize=10
 
-
-local NameC=  NameColour or "\9\241\255\255"
-local TextC=  TextColour or "\9\241\255"
-local OptionS= OptionString or "las"
-local redrawD=redrawDelay or 15
-local space = "    "
 	for i=1, #LineNameTimeT, 1 do
-	LineNameTimeT[i].alpha=math.max(LineNameTimeT[i].alpha-1,0)
 	
-		while LineNameTimeT[i].DelayByLine > 0 do 
-		x,y,z=spGetUnitPosition(unitID)
-		z=z+ totalHeight- (i* height)
-		--Name --Display Text LineNameTimeT[i].li
-		if i==1 then
-		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].name.." : ",x,z,NameSize, OptionS)
-		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
-		else
-		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. space .." : ",x,z,NameSize, OptionS)
-		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
-		end
-		LineNameTimeT[i].DelayByLine =LineNameTimeT[i].DelayByLine -redrawD
-		
-		
-		Sleep(redrawD)
-		end
+spaceString=stringOfLength(" ",string.len(TableOfLineAndT[i].name))
+	--Sleep time till next line
+	px,py,pz=Spring.GetUnitPosition(UnitID)
+	if not GG.Dialog then GG.Dialog ={} end
+	GG.Dialog[#GG.Dialog+1]={frames, txt, x=px, y=py, z=pz}
+	Sleep( LineNameTimeT[i].DelayByLine)
 	end
+
+--height=gl.GetTextHeight(LineNameTimeT[#LineNameTimeT].text)
+--totalHeight=height*(#LineNameTimeT+1)
+--NameSize=12
+--TextSize=10
+--
+--
+--local NameC=  NameColour or "\9\241\255\255"
+--local TextC=  TextColour or "\9\241\255"
+--local OptionS= OptionString or "las"
+--local redrawD=redrawDelay or 15
+--local space = "    "
+--	
+--		
+--		while LineNameTimeT[i].DelayByLine > 0 do 
+--		x,y,z=spGetUnitPosition(unitID)
+--		z=z+ totalHeight- (i* height)
+--		--Name --Display Text LineNameTimeT[i].li
+--		
+--	
+--		if i==1 then
+--		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].name.." : ",x,z,NameSize, OptionS)
+--		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
+--		else
+--		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. space .." : ",x,z,NameSize, OptionS)
+--		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
+--		end
+--		LineNameTimeT[i].DelayByLine =LineNameTimeT[i].DelayByLine -redrawD
+--		
+--		
+--		Sleep(redrawD)
+--		end
+--	end
 
 end
 

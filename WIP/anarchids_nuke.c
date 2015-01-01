@@ -49,7 +49,7 @@ if (within(781,frame,MaxFrame)) return Stage_Peak;
 
 }
 
-void randNom()
+float randNom()
 {
 	return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }

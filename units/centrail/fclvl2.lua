@@ -1,8 +1,8 @@
 local unitName = "fclvl2"
 
 local unitDef = {
-name = "FarcasterLvl2",
-Description = "Orders and Delivers Advcanced Units Offworld",
+name = "Worldgate",
+Description = "orders Advcanced Units Offworld",
 TEDClass = "PLANT",
 
 
@@ -76,7 +76,7 @@ terraformSpeed = 50,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"coffworldassemblyseed","operatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+	"genupgrade","coffworldassemblyseed","operatrans","art","sentrynell","cwallbuilder","cheadlauncher",
 	},
 	
 	   customParams = {},

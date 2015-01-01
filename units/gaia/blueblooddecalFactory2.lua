@@ -42,7 +42,7 @@ LeaveTracks = false,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"gLava",
+	"glava",
 	},
 
 
@@ -52,7 +52,7 @@ LeaveTracks = false,
 		buildinggrounddecaldecayspeed = 0.02,
 		buildinggrounddecalsizex = 1,
 		buildinggrounddecalsizey = 1,
-		buildinggrounddecaltype = "jnogutsnoglory.dds",
+		buildinggrounddecaltype = "jnogutsnoglory.png",
 
 
 

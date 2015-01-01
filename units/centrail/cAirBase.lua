@@ -79,7 +79,7 @@ selfDestructAs="citadelldrone",
 
 	buildoptions = 
 	{
-	"chunterchopper","csuborbital","conair","cgunship"
+		"genupgrade","chunterchopper","csuborbital","conair","cgunship"
 	},
 	
 	 customParams = {},

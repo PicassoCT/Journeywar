@@ -54,48 +54,48 @@ if (gadgetHandler:IsSyncedCode()) then
     buildList={}
    
     function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-      if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id  or 
-		boolPulse=false
-	    StartScale=0.06
-	--	if unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id then StartScale=0.52 end
-		
-	    ScaleFactorProFrame=0.001
-
-		ScaleUpLimit=1
-		if unitDefID== UnitDefNames["jswiftspear"].id then ScaleFactorProFrame=0.001 		end --or unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id 	
-		if unitDefID== UnitDefNames["jbeherith"].id 	then ScaleFactorProFrame=0.0005 	end
-		if unitDefID== UnitDefNames["jsungodcattle"].id then ScaleFactorProFrame=0.0006 	end
-		if unitDefID== UnitDefNames["jspacebornembryo"].id then 
-		ScaleFactorProFrame=0 
-		boolPulse=true	
+		if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id  or 
+			boolPulse=false
+			StartScale=0.06
+		--	if unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id then StartScale=0.52 end
+			
+			ScaleFactorProFrame=0.001
+	
+			ScaleUpLimit=1
+			if unitDefID== UnitDefNames["jswiftspear"].id then ScaleFactorProFrame=0.001 		end --or unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id 	
+			if unitDefID== UnitDefNames["jbeherith"].id 	then ScaleFactorProFrame=0.0005 	end
+			if unitDefID== UnitDefNames["jsungodcattle"].id then ScaleFactorProFrame=0.0006 	end
+			if unitDefID== UnitDefNames["jspacebornembryo"].id then 
+			ScaleFactorProFrame=0 
+			boolPulse=true	
+			end
+			
+			if unitDefID== UnitDefNames["cawilduniverseappears"].id then 
+			ScaleFactorProFrame=0.05 
+			ScaleUpLimit=3.14159
+			end
+			
+			if unitDefID== UnitDefNames["ghohymen"].id then 		
+			ScaleFactorProFrame=0.0005
+			ScaleUpLimit=2.14159
+			end
+			
+			if unitDefID== UnitDefNames["jvaryfoo"].id then 		
+			ScaleFactorProFrame=0.0005
+			ScaleUpLimit=3.14159
+			end
+			
+			scaleTable[unitID]={ scale=StartScale ,factor=ScaleFactorProFrame,utype=unitDefID,uid=unitID, scaleLimit=ScaleUpLimit, pulse=boolPulse}
+	
+			
+		-- Here the chosen units will be all moving unit. Put your own filter obviously!
+				-- The key is the unitID
+			-- The value must be something else than false and nil
+			SyncedDataTable[unitID]={}
+			SyncedDataTable[unitID]={ birth=unitID+  Spring.GetGameFrame() }
+			-- Here I put as value a table with the time of birth, but could be anything
+	
 		end
-		
-		if unitDefID== UnitDefNames["cawilduniverseappears"].id then 
-		ScaleFactorProFrame=0.05 
-		ScaleUpLimit=3.14159
-		end
-		
-		if unitDefID== UnitDefNames["ghohymen"].id then 		
-		ScaleFactorProFrame=0.0005
-		ScaleUpLimit=2.14159
-		end
-		
-		if unitDefID== UnitDefNames["jvaryfoo"].id then 		
-		ScaleFactorProFrame=0.0005
-		ScaleUpLimit=3.14159
-		end
-		
-		scaleTable[unitID]={ scale=StartScale ,factor=ScaleFactorProFrame,utype=unitDefID,uid=unitID, scaleLimit=ScaleUpLimit, pulse=boolPulse}
-
-		
-      -- Here the chosen units will be all moving unit. Put your own filter obviously!
-	         -- The key is the unitID
-         -- The value must be something else than false and nil
-         SyncedDataTable[unitID]={}
-         SyncedDataTable[unitID]={ birth=unitID+  Spring.GetGameFrame() }
-         -- Here I put as value a table with the time of birth, but could be anything
-
-      end
 		--if journeybuild animation
 	  	 if jBuilding[unitDefID] then
 		 --Spring.Echo("JourneyBuilding Inserted")

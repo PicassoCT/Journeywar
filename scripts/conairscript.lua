@@ -52,16 +52,16 @@ local changeZ=0
 
 local boolOnlyOnce=true
 local boolMoving=false
-local SIG_ONTHEFLY=4
-local SIG_BUILD=2
-local SIG_LANDED=8
-local SIG_HOVER=16
-local SIG_CHECK=32
-local SIG_WIND=64
+ SIG_ONTHEFLY=4
+ SIG_BUILD=2
+ SIG_LANDED=8
+ SIG_HOVER=16
+ SIG_CHECK=32
+ SIG_WIND=64
 
-local SIG_MOMENTUM=128
-local SIG_EXAUST=256
-local SIG_TIMER=512
+ SIG_MOMENTUM=128
+ SIG_EXAUST=256
+ SIG_TIMER=512
 
 local ropePieces_n=20
 local buildProgress=1
@@ -126,7 +126,7 @@ Sleep(4000)
 Signal(SIG_EXAUST)
  end
  
-local function landed()
+ function landed()
 
 StopSpin (conspin, y_axis, 1)
 
@@ -143,7 +143,7 @@ Spin (conspin, y_axis, math.rad(35),2)
 end
  
  
- local function onTheFly()
+  function onTheFly()
 
 
 Spin (conspin, y_axis, math.rad(60),9)
@@ -207,7 +207,7 @@ function updateBuildProgress()
 								until buildID ~= nil or buildID ~= -666
 					end  
 	if buildID and Spring.ValidUnitID(buildID)			then		
-	local health,maxHealth,paralyzeDamage,captureProgress,Progress=Spring.GetUnitHealth(buildID)
+	local health,maxhealth,paralyzeDamage,captureProgress,Progress=Spring.GetUnitHealth(buildID)
 						if  Progress == nil or Progress == 0 then
 						Progress = 0.05
 						end
@@ -408,7 +408,7 @@ zDistanceOfOld=DistanceZ
 
 
 function ropeShow()
-		local sleep=90
+		sleep=90
 		for i=1, table.getn(rope), 1 do
 
 		Show(rope[i])
@@ -911,7 +911,7 @@ end
 
 	function script.HitByWeapon ( x, z, weaponDefID, damage )
 	
-	if damage/maxHealth > 0.75 and boolSelfKill==false then
+	if damage/maxhealth > 0.75 and boolSelfKill==false then
 	hp=Spring.GetUnitHealth(unitID)
 		if hp-damage <= 0 then
 			Spring.SetUnitCrashing(unitID, true)
@@ -932,7 +932,7 @@ function home()
 
 end
 
-local function workInProgress()
+function workInProgress()
 if boolIwantToGoHome==true then
 		x,y,z=Spring.GetUnitPosition(unitID)
 		while (math.abs(x-xorg)<25 and math.abs(z-zorg)<25)==false do
