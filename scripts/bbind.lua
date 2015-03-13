@@ -1,4 +1,5 @@
 	include "suddenDeath.lua"
+	include "toolKit.lua"
 	local rotator = piece "rotator"
 	local lightning= piece "bbindyaga0"
 	local crane = piece "bbindcrane"
@@ -287,6 +288,9 @@
 					StartThread(constFlame,math.ceil(naptime/25))
 					end	
 				Sleep(naptime)
+				if math.random(0,1)==1 then
+				EmitSfx(fireemit2,1032)
+				end
 						for ni=1,15,1 do
 						EmitSfx(fireemit2,1025)
 						EmitSfx(fireemit2,1025)
@@ -294,6 +298,9 @@
 						end
 					
 					dice=math.random(0,1)
+					if math.random(0,1)==1 then
+					EmitSfx(fireemit2,1032)
+					end
 						if dice==1 then
 						StartThread(constFlame,18)
 						end
@@ -908,7 +915,10 @@
 					EmitSfx(fireemit1,1025)
 				--	EmitSfx(fireemit1,1029)
 					end
-
+					if math.random(0,1)==1 then
+					EmitSfx(fireemit1,1032)
+					EmitSfx(fireemit2,1032)
+					end
 	end
 
 	function buildanim(modulator)

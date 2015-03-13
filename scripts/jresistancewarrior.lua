@@ -315,10 +315,9 @@ end
 
 
 
-
 ---AIMING & SHOOTING---
 function script.AimFromWeapon1() 
-	return submg 
+	return flare01 
 end
 
 function script.QueryWeapon1() 
@@ -397,8 +396,9 @@ end
 --weapon2 
 boolReloadedRpg=true
 function reloader()
-Sleep(500)
 boolReloadedRpg=false
+Sleep(500)
+
 Show(submg)
 Hide(launchRPG)
 Sleep(32000)
@@ -418,17 +418,15 @@ end
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 --can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon2( heading, pitch )
-	if boolReloadedRpg == true then
+
+
 	Turn(respelvis,y_axis,heading,1.18)
 	Turn(resarmupl,x_axis,-pitch,1.5)
 	Turn(resarmupr,x_axis,-pitch,1.5)
 	WaitForTurn(respelvis,y_axis)
 
-	return true
+	return boolReloadedRpg
 
-	else 
-	return false
-	end
 
 end
 

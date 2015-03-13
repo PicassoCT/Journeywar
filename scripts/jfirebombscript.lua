@@ -31,6 +31,11 @@ distance=math.sqrt((nx-x)*(nx-x)+(nz-z)*(nz-z))
 	Sleep(100)
 	EmitSfx(center,1024)
 	end
+
+	x,y,z=Spring.GetUnitPosition(unitID)
+	if not GG.AddFire then GG.AddFire={} end
+	GG.AddFire[#GG.AddFire+1]={x=x,y=y,z=z}
+	
 	Spring.DestroyUnit(unitID,false,false)
 end
 function script.Activate()

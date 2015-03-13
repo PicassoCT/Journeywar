@@ -1,7 +1,17 @@
 
 	include "toolKit.lua"
---HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-
+	include "suddenDeath.lua"
+function script.HitByWeapon ( x, z, weaponDefID, damage )
+hp=Spring.GetUnitHealth(unitID)
+if hp and  hp-damage < 0 then
+Spring.SetUnitCrashing(unitID,true)
+SetUnitValue(COB.CRASHING, 1)
+Spring.SetUnitNeutral(unitID,true)
+Spring.SetUnitNoSelect(unitID,true)
+return 0
+end
+return damage
+end
 tenTacles={}
 for i=1,5 do
 tenTacles[i]={}
@@ -236,14 +246,14 @@ function script.Create()
 --Spring.PlaySoundFile("sounds/conair/cConAir.wav")
 end
 
-function script.Killed()
+function script.Killed(recentDamage)
 
-Spring.SetUnitCrashing(unitID,true)
-	SetUnitValue(COB.CRASHING, 1)
+
 --needsWreckageFeature
 
   
 Sleep(400)
+suddenDeathjBuildCorpse(unitID, recentDamage)
 return 0
 end
 
@@ -520,6 +530,7 @@ Move(ETTable[4],x_axis,22,4)
 WaitForMove(ETTable[1],x_axis)
 px,py,pz=spGetUnitPosition(unitID)
 x,y,z=spGetUnitPosition(target)
+if x then
 x,y,z=x-px,y-py,z-pz
 x_rad=math.atan2(math.sqrt(x*x+z*z),y)
 
@@ -527,6 +538,7 @@ x_rad=math.atan2(math.sqrt(x*x+z*z),y)
 	for i=1,#ETTable do
 	Turn(ETTable[i],x_axis,x_rad,4)
 	end
+end	
 end
 
 function script.FireWeapon1()	

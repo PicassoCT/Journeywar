@@ -174,14 +174,14 @@ function script.Deactivate()
 return 0
 end
 
-
+landaim=piece"landaim"
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
-	return center 
+	return landaim 
 end
 
 function script.QueryWeapon1() 
-	return center 
+	return landaim 
 end
 
 local SIG_WEAPON1=1

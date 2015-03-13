@@ -16,95 +16,114 @@ piecesTable[#piecesTable]= Base
 
 BUILDPROGRESS=0.0001
 Down=-208
+--Hide(Base)
+--Hide(Egg)
 function script.Create()
 Spring.SetUnitBlocking(unitID,false)
-Hide(Base)
-Hide(Egg)
-Move(center,y_axis,Down,0)
-StartThread(catchAndUpdateBP)
+
+
+
 StartThread(fourMinsMax)
 StartThread(doSomething)
 end
 
 function identifyUnit()
-searchRange=15
+searchRange=55
 x,y,z=Spring.GetUnitPosition(unitID)
 TableTop={}
 TableTop=Spring.GetUnitsInCylinder(x,z,searchRange)
 table.remove(TableTop,unitID)
 --itterate throught table, searching a familiar building
-if TableTop == nil then return end
-if #TableTop == 1 then return TableTop[1] end
+if not TableTop or #TableTop == 0 then return end
 
 	for i=1,table.getn(TableTop),1 do
+	if Spring.ValidUnitID(TableTop[i]) then
 	health,   maxHealth,   paralyzeDamage, captureProgress,   buildProgress=Spring.GetUnitHealth(TableTop[i])
-		if buildProgress and buildProgress < 1 or health/maxHealth < 1 then
+		if buildProgress and buildProgress < 1  then
 		return TableTop[i]
 		end
 	end
+	end
 end
 
-local buildID = "none"
+buildID= "null"
+function killMe()
+Signal(SIG_BUILD)
+Move(Egg,y_axis,-140,30)
+WaitForMove(Egg,y_axis)
+Spring.DestroyUnit(unitID)
 
-function updateBuildProgress()
-while not buildID or buildID == "none"  do
-buildID=identifyUnit()
-Sleep(200)
 end
 
- _,_,_,_,bP= Spring.GetUnitHealth(buildID)
-
-	 if bP== nil then return 0.001 else return bP end
+function updateBP()
+boolDead=Spring.GetUnitIsDead(buildID)
+	if boolDead and boolDead==false then
+	_,_,_,_,bP= Spring.GetUnitHealth(buildID)
+		if bP then return bP else return 1 end
 	
-end
-
-function catchAndUpdateBP()
-while true do
-
-bp=updateBuildProgress()
-if bp then BUILDPROGRESS=bp end
-Sleep(1500)
-
-end
+	end
+return 1 
 end
 
 function script.Killed(recentDamage,_)
 
-
+if buildID and buildID ~="null"and Spring.ValidUnitID(buildID)==true then Spring.SetUnitAlwaysVisible(buildID,true) end
 return 1
 end
 SIG_BUILD=2
 function doSomething()
 
-Show(Egg)
+buildID=unitID
+counter=0
+Spring.Echo("doSomething1")
+while counter < 50 and not buildID or buildID== unitID   do
+buildID=identifyUnit()
+Sleep(100)
+counter=counter+1
+end
+if counter == 50 or not buildID or not Spring.ValidUnitID(buildID)  then Spring.DestroyUnit(unitID,false,false) end
+
+Spring.SetUnitAlwaysVisible(buildID,false)
 
 SetSignalMask(SIG_BUILD)
-	while BUILDPROGRESS < 0.4 do
-	distance= Down* (1-(BUILDPROGRESS/0.4))
-	Move(center,y_axis,distance,3)
-	WaitForMove(center,y_axis)
+Spring.Echo("doSomething2")
+
+	Move(center,y_axis,Down,0,true)
 	Sleep(500)
-	end
+	
+Show(Egg)
+Show(Base)
+
 signum=-1
 currently=1
-Move(center,y_axis,0,3)
+Spring.Echo("doSomething3")
 StartThread(randomRotate,Egg,y_axis,0.03,-5,5)
 StartThread(randomRotate,Egg,x_axis,0.03,-15,15)
 StartThread(randomRotate,Egg,z_axis,0.03,-5,5)
-Show(Base)
-	while true do
-	resetPiece(center,0.02)
+Spring.Echo(BUILDPROGRESS)
+BUILDPROGRESS=updateBP()
+	while BUILDPROGRESS and BUILDPROGRESS < 1 do
+	BUILDPROGRESS=updateBP()
+	Move(center,y_axis,0,22)
+
+	resetPieceDir(center,0.2)
 	Sleep(4000)
 	currently=currently*signum
-	Up=math.random(0,35)*currently
-	Move(center,y_axis,Up,0.3)
+	Up=math.random(0,5)*currently
+	Move(Egg,y_axis,Up,3.3)
 	Move(Base,y_axis,-Up,0.3)
 	StopSpin(Egg,y_axis,0.1)
-	Spin(Egg,y_axis,math.rad(math.random(3*signum,4*signum^2)),1.1)
-	Spin(Base,y_axis,math.rad(math.random(3*signum,4*signum^2)),1.1)
+	Spin(Egg,y_axis,math.rad(math.random(2*signum,3*signum^2)),1.1)
+	Spin(Base,y_axis,math.rad(math.random(0.01*signum,0.02*signum^2)),1.1)
 	
 	Sleep(4000)
 	end
+	Hide(Egg)
+	Sleep(3000)
+	Move(Base,y_axis,-50,3)
+	WaitForMove(Base,y_axis)
+	Spring.SetUnitAlwaysVisible(buildID,true)
+	Spring.DestroyUnit(unitID,true,false)
 end
 
 function fourMinsMax()
@@ -112,34 +131,8 @@ Sleep(280000)
 Signal(SIG_BUILD)
 Move(center,y_axis,-1000,0.5)
 WaitForMove(center,y_axis)
+Spring.SetUnitAlwaysVisible(buildID,true)
 Spring.DestroyUnit(unitID,true,false)
 end
 
-
-function script.StartMoving()
-
-end
-
-function script.StopMoving()
-		
-		
-end
-
-function script.Activate()
-
-return 1
-end
-
-function script.Deactivate()
-
-return 0
-end
-
-function script.QueryBuildInfo() 
-  return center 
-end
-
-function script.QueryNanoPiece()
-     return center
-end
 

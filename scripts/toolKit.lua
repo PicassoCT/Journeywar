@@ -21,6 +21,24 @@
 --This Section contains standalone functions to be executed as independent systems monitoring and handling lua-stuff
 --mini OS Threads
 
+--> Unit Statemachine
+	function stateMachine(unitid, sleepTime,State, stateT)
+	local time=0
+	local StateMachine=stateT
+	local stateStorage={}
+		while true do
+		
+		if not stateStorage[State]then stateStorage[State]={} end
+		
+		State, stateStorage =StateMachine[State](unitid,time,stateStorage)
+		Sleep(sleepTime)
+		time=time+sleepTime
+		end
+	end
+
+
+
+
 --> Gadget:missionScript expects frame, the missionTable, which contains per missionstep the following functions
 -- e.g. [1]= {situationFunction(frame,TABLE,nr), continuecondtion(frame,TABLE,nr,boolsuccess), continuecondtion(frame,TABLE,nr,boolsuccess)}
 -- in Addition every Functions Table contains a MissionMap which consists basically of a statediagramm starting at one
@@ -165,6 +183,15 @@ return FactoryTypes
 
 end
 
+function getPyroProofTable(UnitDefNames)
+FireProofTypes={}
+FireProofTypes[UnitDefNames["css"].id]=true
+FireProofTypes[UnitDefNames["jfireflower"].id]=true
+FireProofTypes[UnitDefNames["citadell"].id]=true
+FireProofTypes[UnitDefNames["beanstalk"].id]=true
+return FireProofTypes
+end
+
 function getTreeTypeTable(UnitDefNames)
 FactoryTypes={}
 FactoryTypes[UnitDefNames["jtree2"].id]=true
@@ -238,16 +265,18 @@ end
 
 -->Turn a piece towards a random direction
 function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,LIMLOWZ)
-if not limUpX then
-Turn(piecename,x_axis,math.rad(math.random(-360,360)),speed)
-Turn(piecename,y_axis,math.rad(math.random(-360,360)),speed)
-Turn(piecename,z_axis,math.rad(math.random(-360,360)),speed)
-else
-Turn(piecename,x_axis,math.rad(math.random(LIMLOWX,LIMUPX)),speed)
-Turn(piecename,y_axis,math.rad(math.random(LIMLOWY,LIMUPY)),speed)
-Turn(piecename,z_axis,math.rad(math.random(LIMLOWZ,LIMUPZ)),speed)
+	if not limUpX then
+	Turn(piecename,x_axis,math.rad(math.random(-360,360)),speed)
+	Turn(piecename,y_axis,math.rad(math.random(-360,360)),speed)
+	Turn(piecename,z_axis,math.rad(math.random(-360,360)),speed)
+	else
+	Turn(piecename,x_axis,math.rad(math.random(LIMLOWX,LIMUPX)),speed)
+	Turn(piecename,y_axis,math.rad(math.random(LIMLOWY,LIMUPY)),speed)
+	Turn(piecename,z_axis,math.rad(math.random(LIMLOWZ,LIMUPZ)),speed)
+	end
 end
-end
+
+
 -->Reset a Piece at speed
 function resetPiece(piecename,speed)
 Turn(piecename,x_axis,0,speed)
@@ -259,11 +288,54 @@ Move(piecename,y_axis,0,speed)
 Move(piecename,z_axis,0,speed,true)
 end
 
+function tP(piecename,x_val,y_val,z_val,speed)
+Turn(piecename,x_axis,math.rad(x_val),speed)
+Turn(piecename,y_axis,math.rad(y_val),speed)
+Turn(piecename,z_axis,math.rad(z_val),speed)
+end
+
+function tPrad(piecename,x_val,y_val,z_val,speed)
+Turn(piecename,x_axis,x_val,speed)
+Turn(piecename,y_axis,y_val,speed)
+Turn(piecename,z_axis,z_val,speed)
+end
+
+function mP(piecename,x_val,y_val,z_val,speed)
+Move(piecename,x_axis,x_val,speed)
+Move(piecename,y_axis,y_val,speed)
+Move(piecename,z_axis,z_val,speed)
+end
+
+
+-->Creates basically a table of piecenamed enumerated strings
+function makeTableOfPieceNames(name, nr,startnr)
+T={}
+start=startnr or 1
+	for i=start,nr do
+	T[i]=name..nr
+	end
+return T
+end
+
+function resetPieceDir(piecename,speed)
+Turn(piecename,x_axis,0,speed)
+Turn(piecename,y_axis,0,speed)
+Turn(piecename,z_axis,0,speed)
+
+
+end
+
 -->Reset a Table of Pieces at speed
 function resT(tableName,speed)
 	for i=1,#tableName do
 	resetPiece(tableName[i],speed)
 	end
+end
+
+function getUnitSide(unitID)
+teamid=Spring.GetUnitTeam(unitID)
+teamID,    leader,      isDead,    isAiTeam, side,  allyTeam,  customTeamKeys,  incomeMultiplier=Spring.GetTeamInfo(teamid)
+return side
 end
 
 -->Moves a UnitPiece to Position at speed
@@ -309,6 +381,19 @@ function TurnPieceTowardsPiece(piecename,pieceB,speed)
 
 end
 
+--> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
+function TurnPieTowardsPoint (piecename, x,y,z,Speed, tpx,tpy,tpz)
+pvec={x=0,y=0,z=0}
+px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
+pvec=normalizeVector(pvec)
+
+vec={}
+vec.x,vec.y,vec.z=x-px,y-py,z-pz
+v=normalizeVector(v)
+v=VsubV(v,pvec)
+v=normalizeVector(v)
+tPrad(math.atan2(vec.y,vec.z),math.atan2(vec.x,vec.z),math.atan2(vec.x,vec.y),Speed)
+end
 
 
 --> Moves a Piece to a WorldPosition relative to the Units Position
@@ -324,6 +409,11 @@ end
 -->Returns randomized Boolean
 function maRa()
 return math.random(0,1)==1 
+end
+
+-->Returns not nil if random
+function maRo()
+if math.random(0,1)==1 then return true else return end
 end
 
 -->Move with a speed Curve
@@ -382,7 +472,7 @@ end
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
-if not piecena then return error("No piecename given") end
+if not piecename then return error("No piecename given") end
 loffset=offset or 0
 x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 Move(piecename,x_axis,X,0)
@@ -525,6 +615,37 @@ reSulTanane=math.bit_inv(value)
 return value
 end
 
+-->Get the Ground Normal, uses a handed over function and returns a corresponding Table
+function getGroundMapTable(Resolution, HandedInFunction)
+ReT={}
+	for x=1, Game.mapSizeX, Resolution do
+	ReT[x]={}
+		for y=1, Game.mapSizeY, Resolution do
+		dx,dy,dz=Spring.GetGroundNormal(x,y)
+		ReT[x][y]=Helperfunction(dx,dy,dz)
+		end
+	end
+return ReT
+end
+
+-->Generalized map processing Function
+-->Get the Ground Normal, uses all handed over functions for processing and returns a corresponding Table
+function doForMapPos(Resolution,...)
+for k,v in pairs(arg) do if type(v)~="function" then return Spring.Echo(" Argument is not a processing function") end end
+
+ReT={}
+	for x=1, Game.mapSizeX, Resolution do
+	ReT[x]={}
+		for y=1, Game.mapSizeY, Resolution do
+			res={}
+			for k,v in pairs(arg) do
+			res=arg(x,y,res) 
+			end
+			ReT[x][y]=res 
+		end
+	end
+return ReT
+end
 
 -->Rotates a point around another Point
 function drehMatrix (x, y, zx, zy, degree)
@@ -796,6 +917,23 @@ end
 	
 
 end ]]
+
+-->generates a Pieces List Keyed to the PieceName
+function generateKeyPiecesTable(unitID,piecefunction)
+
+returnTable={}
+piecesTable=Spring.GetUnitPieceList(unitID)
+
+	if piecesTable ~= nil then
+		for i=1,#piecesTable,1 do
+		returnTable[piecesTable[i]]=piecefunction(piecesTable[i])
+
+		end
+
+	end
+return returnTable
+end
+
 -->generates a Pieces List 
 function generatepiecesTableAndArrayCode(unitID)
 Spring.Echo("--PIECESLIST::BEGIN  |>----------------------------")
@@ -822,6 +960,8 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 
 Spring.Echo("PIECESLIST::END   |>-----------------------------")
 end
+
+
 
 --> Transfers a World Position into Unit Space
 function worldPosToLocPos(owpX,owpY,owpZ,wpX,wpY,wpZ)
@@ -1184,7 +1324,7 @@ v=vectorMinus(v1,v2)
 return math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
 end
 
-function vDiv(v1, val)
+function VdivV(v1, val)
 if not val.x then
 return {x=v1.x/val,y=v1.y/val,z=v1.z/val}
 else
@@ -1192,16 +1332,20 @@ return {x=v1.x/val.x,y=v1.y/val.y,z=v1.z/val.y}
 end
 end
 
-function vAddV(v1,val)
+function VaddV(v1,val)
 return {x= v1.x+val.x, y= v1.y+val.y,z=v1.z+val.z}
 end
 
-function vSubV(v1,v2)
+function Vsub(v1,val)
+return {x=v1.x-val,y=v1.y-val,z=v1.z-val}
+end
+
+function VsubV(v1,v2)
 return {x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
 end
 
 function applyForce(force,force2)
-return vAddV(force,force2)
+return VaddV(force,force2)
 end
 
 function normalizeVector(v)
@@ -1217,12 +1361,12 @@ function solveSpring(s, sucessor, frictionConstant)
         force={x=0,y=0,z=0}                         -- Force Initially Has A Zero Value
          
         if r ~= 0 then                         -- To Avoid A Division By Zero... Check If r Is Zero  
-            force = vAddV(vMul(vMul(vDiv(springVector, r),-1),((r - s.length) * s.springConstant)),force)
+            force = VaddV(vMul(vMul(VdivV(springVector, r),-1),((r - s.length) * s.springConstant)),force)
 		end
-		    force = vAddV(force, vMul(vSubV(s.mass1.vel, sucessor.mass1.vel),-1*frictionConstant))     -- The Friction Force Is Added To The force
+		    force = VaddV(force, vMul(VsubV(s.mass1.vel, sucessor.mass1.vel),-1*frictionConstant))     -- The Friction Force Is Added To The force
                                     -- With This Addition We Obtain The Net Force Of The Spring
-	s.mass1=vAddV(s.mass1,force)			-- Force Is Applied To mass1
-	sucessor.mass1=vAddV(sucessor.mass1,vMul(force,-1))	-- The Opposite Of Force Is Applied To mass2	
+	s.mass1=VaddV(s.mass1,force)			-- Force Is Applied To mass1
+	sucessor.mass1=VaddV(sucessor.mass1,vMul(force,-1))	-- The Opposite Of Force Is Applied To mass2	
 return s,sucessor	
 end
 
@@ -1394,12 +1538,12 @@ local ObjT={}
 		if ffT.pieceList then
 			for k in ipairs(fft.piecelist) do
 				if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x,ObjT[k].posdir.y,ObjT[k].posdir.z) == true then
-				ObjT[k].mass1.force=vAddV(ObjT[k].mass1.force, vMul(ffT[j].acceleration,ObjT[k].mass1.mass))		  
+				ObjT[k].mass1.force=VaddV(ObjT[k].mass1.force, vMul(ffT[j].acceleration,ObjT[k].mass1.mass))		  
 				end
 			end
 		else
 			for i=1,#ObjT, 1 do
-			ObjT[i].mass1.force=vAddV(ObjT[i].mass1.force, vMul(ffT[j].acceleration,ObjT[i].mass1.mass))		
+			ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force, vMul(ffT[j].acceleration,ObjT[i].mass1.mass))		
 			end
 		end
 		end	
@@ -1414,11 +1558,11 @@ local ObjT={}
 	for i=1,#ObjT, 2 do              -- Start A Loop To Apply Forces Which Are Common For All Masses
 		local Succesor=Limit(i,1,ObjT)
 		
-		ObjT[i].mass1.force=vAddV(ObjT[i].mass1.force,vMul(gravitation,ObjT[i].mass1.mass))
+		ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force,vMul(gravitation,ObjT[i].mass1.mass))
 	
 		--    masses[a]->applyForce(gravitation * masses[a]->m);    -- The Gravitational Force
         -- The air friction
-		ObjT[i].mass1.force=vAddV(ObjT[i].mass1.force, vMul(ObjT[i].vel, airFrictionConstant*-1))
+		ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force, vMul(ObjT[i].vel, airFrictionConstant*-1))
 		
     --    masses[a]->applyForce(-masses[a]->vel * airFrictionConstant);
  
@@ -1441,8 +1585,8 @@ local ObjT={}
             -- In The Absorption Effect.
  
             -- Ground Friction Force Is Applied   
-			ObjT[i].mass1.force=vAddV(ObjT[i].mass1.force,vMul(vMul(v1,-1),groundFrictionConstant))
-			ObjT[Succesor].mass1.force=vAddV(ObjT[Succesor].mass1.force,vMul(vMul(v2,-1),groundFrictionConstant))			
+			ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force,vMul(vMul(v1,-1),groundFrictionConstant))
+			ObjT[Succesor].mass1.force=VaddV(ObjT[Succesor].mass1.force,vMul(vMul(v2,-1),groundFrictionConstant))			
          
  
             v1 =ObjT[i].mass1.vel              -- Get The Velocity
@@ -1455,11 +1599,11 @@ local ObjT={}
             -- The Absorption Force
  
             if (v1.y < 0) then              
-            	ObjT[i].mass1.force=vAddV(ObjT[i].mass1.force, vMul(vMul(vMul(v1,-1),groundAbsorptionConstant)))  
+            	ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force, vMul(vMul(vMul(v1,-1),groundAbsorptionConstant)))  
 			end
 			
 			if ( v2.y < 0) then
-			 	ObjT[Succesor].mass1.force=vAddV(ObjT[Succesor].mass1.force, vMul(vMul(vMul(v2,-1),groundAbsorptionConstant)))
+			 	ObjT[Succesor].mass1.force=VaddV(ObjT[Succesor].mass1.force, vMul(vMul(vMul(v2,-1),groundAbsorptionConstant)))
 			end
             
 			x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,ObjT[i].piecename)
@@ -1473,17 +1617,17 @@ local ObjT={}
 				f1=vMul(vMul({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[i].mass1.pos.y)
 				f2=vMul(vMul({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[Succesor].mass1.pos.y)
 				
-				ObjT[Succesor].mass1.force=vAddV(ObjT[Succesor].mass1.force,f2)		
-				ObjT[i].mass1.force=vAddV(ObjT[i].mass1.force,f1)		      -- The Ground Repulsion Force Is Applied
+				ObjT[Succesor].mass1.force=VaddV(ObjT[Succesor].mass1.force,f2)		
+				ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force,f1)		      -- The Ground Repulsion Force Is Applied
 			end
 	end	   
 		  --simulate 
 			for i=1, #ObjT, 1 do
 			--vel += (force/mass)* dt
-			ObjT[i].mass1.vel= vAddV(ObjT[i].mass1.vel,vMul( vDiv(ObjT[i].mass1.force,ObjT[i].mass1.m),timeInMS))
-			ObjT[Succesor].mass1.vel= vAddV(ObjT[Succesor].mass1.vel,vMul( vDiv(ObjT[Succesor].mass1.force,ObjT[Succesor].mass1.m),timeInMS))
-			ObjT[i].mass1.pos=vAddV(ObjT[i].mass1.pos, vSub(ObjT[i].mass1.vel,timeInMS))
-			ObjT[Succesor].mass1.pos=vAddV(ObjT[Succesor].mass1.pos, vSub(ObjT[Succesor].mass1.vel,timeInMS))
+			ObjT[i].mass1.vel= VaddV(ObjT[i].mass1.vel,vMul( VdivV(ObjT[i].mass1.force,ObjT[i].mass1.m),timeInMS))
+			ObjT[Succesor].mass1.vel= VaddV(ObjT[Succesor].mass1.vel,vMul( VdivV(ObjT[Succesor].mass1.force,ObjT[Succesor].mass1.m),timeInMS))
+			ObjT[i].mass1.pos=VaddV(ObjT[i].mass1.pos, Vsub(ObjT[i].mass1.vel,timeInMS))
+			ObjT[Succesor].mass1.pos=VaddV(ObjT[Succesor].mass1.pos, Vsub(ObjT[Succesor].mass1.vel,timeInMS))
 			end
 		--TranslatePieces to new Positions
 		
@@ -1589,7 +1733,10 @@ function turnTable(t, axis, deg,speed,boolInstantUpdate)
 return
 end
 
-function turnTableRand(t, axis, up, down,speed,boolInstantUpdate)
+function turnTableRand(t, taxis, uparg, downarg,speed,boolInstantUpdate)
+axis=taxis or 2  --y_axis as default
+down=downarg or math.random(-50,0)
+up=uparg or math.random(0,50)
 	if down > up then down=down*-1-1 end
 	
 	if boolInstantUpdate then
@@ -1627,7 +1774,9 @@ end
 end
 
 --> Play a soundfile only by unittype
-function PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
+function PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
+if predelay then Sleep(predelay) end
+
 loud=loudness or 1
 if loud==0 then loud= 1 end
 
@@ -1844,7 +1993,7 @@ end
 	T=Spring.GetUnitsInCylinder(x,z,Range)
 	end
 	
-	if T and #T>1 then
+	if T and #T>1 and type(unitID)=='number' then
 		table.remove(T,unitID)
 		end
 	return T
@@ -1948,16 +2097,42 @@ end
 	  end
 	return true
 	end
+	
+	-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
+	function filterOutUnitsOfType(Table, UnitTypeTable,Cache)
+	if Cache then
+		for i=1, #T do
+			if Cache[T[i]] and Cache[T[i]]==true or not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
+			Cache[T[i]]=true
+			returnTable[#returnTable+1]=Table[i]
+			else
+			Cache[T[i]]=false
+			
+			end
+		end
+		return returnTable,Cache
+		
+	else
+	returnTable={}
+		for i=1, #T do
+			if not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
+			returnTable[#returnTable+1]=Table[i]
+			end
+		
+		end
+	return returnTable
+	end
+	end
 	-->filters Out TransportUnits
     function filterOutTransport		(T)
    returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isTransport		 then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isTransport		 then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end  
 
  -->filters Out Immobile Units
 	function filterOutImmobile (T)
@@ -1984,160 +2159,169 @@ return returnTable
 --> filters Out Builders
     function filterOutBuilder        (T)
    returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isBuilder          then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isBuilder          then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
 
 --> filters Out Mobile Builders
     function filterOutMobileBuilder  (T)
    returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isMobileBuilder    then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutStaticBuilder  (T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isStaticBuilder    then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutFactory        (T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isFactory          then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutExtractor      (T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isExtractor        then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutGroundUnit     (T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isGroundUnit       then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutAirUnit        (T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isAirUnit          then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutStrafingAirUnit(T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isStrafingAirUnit  then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutHoveringAirUnit(T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isHoveringAirUnit  then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutFighterAirUnit (T)
-   returnTable={}  
- for i=1,#T do    
-  def=Spring.GetUnitDefID(T[i])    
-   if false== UnitDefs[def].isFighterAirUnit   then 
-  returnTable[#returnTable+1]=T[i] end  
- end  
-return returnTable  
- end
-    function filterOutBomberAirUnit  (T)
-   returnTable={}  
-	for i=1,#T do    
-	def=Spring.GetUnitDefID(T[i])    
-	if false== UnitDefs[def].isBomberAirUnit    then 
-	returnTable[#returnTable+1]=T[i]
-	end  
-	end  
-return returnTable  
- end
-
- -->Spawn CEG at unit
- function spawnCEGatUnit(unitID,cegname,xoffset,yoffset,zoffset)
- x,y,z=Spring.GetUnitPosition(unitID)
-		if xoffset then
-		Spring.SpawnCEG(cegname,x+xoffset,y+yoffset,z+zoffset,0,1,0,50,0)
-		else
-		Spring.SpawnCEG(cegname,x,y,z,0,1,0,50,0)
-		end
-	end
-    
-function funcyMeta (T, ...)
-         for _, f in pairs(arg) do
-                 T=f(T)
-         end
- return T
- end
- 
- --> Apply a function on a Table
-function forTableUseFunction(Table,func,metafunc)
-T={}
-	for i=1,#Table do
-	T[i]=func(Table[i])
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isMobileBuilder    then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
 	end
 	
-return metafunc(T)
-end
+    function filterOutStaticBuilder  (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isStaticBuilder    then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+	
+    function filterOutFactory        (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isFactory          then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+	
+    function filterOutExtractor      (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isExtractor        then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+   
+   function filterOutGroundUnit     (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isGroundUnit       then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+   
+   function filterOutAirUnit        (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isAirUnit          then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+    
+	function filterOutStrafingAirUnit(T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isStrafingAirUnit  then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+ 
+    function filterOutHoveringAirUnit(T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isHoveringAirUnit  then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+	
+    function filterOutFighterAirUnit (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isFighterAirUnit   then 
+		returnTable[#returnTable+1]=T[i] end  
+		end  
+	return returnTable  
+	end
+    
+	function filterOutBomberAirUnit  (T)
+   returnTable={}  
+		for i=1,#T do    
+		def=Spring.GetUnitDefID(T[i])    
+		if false== UnitDefs[def].isBomberAirUnit    then 
+		returnTable[#returnTable+1]=T[i]
+		end  
+		end  
+	return returnTable  
+	end
 
-function getLowest(Table)
-lowest=0
-val=0
-	for k,v in pairs(Table) do
-		if v < val then 
-		val=v
-		lowest=k
+	 -->Spawn CEG at unit
+	 function spawnCEGatUnit(unitID,cegname,xoffset,yoffset,zoffset)
+	 x,y,z=Spring.GetUnitPosition(unitID)
+			if xoffset then
+			Spring.SpawnCEG(cegname,x+xoffset,y+yoffset,z+zoffset,0,1,0,50,0)
+			else
+			Spring.SpawnCEG(cegname,x,y,z,0,1,0,50,0)
+			end
+		end
+		
+	function funcyMeta (T, ...)
+			 for _, f in pairs(arg) do
+					 T=f(T)
+			 end
+	 return T
+	 end
+	 
+	 --> Apply a function on a Table
+	function forTableUseFunction(Table,func,metafunc)
+	T={}
+		for i=1,#Table do
+		T[i]=func(Table[i])
+		end
+		
+	return metafunc(T)
+	end
+
+	function getLowest(Table)
+	lowest=0
+	val=0
+		for k,v in pairs(Table) do
+			if v < val then 
+			val=v
+			lowest=k
+			end
 		end
 	end
-end
 
-function sumTable(Table)
-a=0
-	for i=1,#Table do
-	a=a+Table[i]
+	function sumTable(Table)
+	a=0
+		for i=1,#Table do
+		a=a+Table[i]
+		end
+	return a
 	end
-return a
-end
 
-function sumTableKV(Table)
-a=0
-	for k,v in pairs(Table) do
-	a=a+v
+	function sumTableKV(Table)
+	a=0
+		for k,v in pairs(Table) do
+		a=a+v
+		end
+	return a
 	end
-return a
-end
 
 	function PieceLight(unitID, piecename,cegname)
 		while true do
@@ -2154,40 +2338,41 @@ end
 	end
 	return reT
 	end
-	
-function TableMergeTable(TA,TB)
-T={}
-	if #TA >= #TB then
-	T=numTabletokeyTable(TA)
-	
-		for i=1,#TB do
-			if not T[TB[i]] then
-			TA[#TA+1]=TB[i]
+		
+	function TableMergeTable(TA,TB)
+	T={}
+		if #TA >= #TB then
+		T=numTabletokeyTable(TA)
+		
+			for i=1,#TB do
+				if not T[TB[i]] then
+				TA[#TA+1]=TB[i]
+				end
 			end
-		end
-	return  TA
-	else
-	T=numTabletokeyTable(TB)
-		for i=1,#TA do
-			if not T[TA[i]] then
-			TB[#TB+1]=TA[i]
+		return  TA
+		else
+		T=numTabletokeyTable(TB)
+			for i=1,#TA do
+				if not T[TA[i]] then
+				TB[#TB+1]=TA[i]
+				end
 			end
+		return  TB
 		end
-	return  TB
+		
 	end
 	
-end
 
-function filterUnitTableforDefIDTable(unitIDT,KeyDefIDT)
-Tid={}
-	for i=1,#unitIDT do 
-	a=Spring.GetUnitDefID(unitIDT[i])
-		if KeyDefIDT[a] then
-		Tid[#Tid+1]=unitIDT[i]
+	function filterUnitTableforDefIDTable(unitIDT,KeyDefIDT)
+	Tid={}
+		for i=1,#unitIDT do 
+		a=Spring.GetUnitDefID(unitIDT[i])
+			if KeyDefIDT[a] then
+			Tid[#Tid+1]=unitIDT[i]
+			end
 		end
+	return Tid
 	end
-return Tid
-end
 
 --> Forms a Tree from handed over Table
 --	this function needs a global Itterator and but is threadsafe, as in only one per unit
@@ -2309,455 +2494,947 @@ end
 		return
 end
 
-function assertAllTheArgs(...)
-if not arg then error("No arguments were given") return end
-for k,v in pairs(arg) do
-if not v then return false end
-end
-return true 
-end
-	
--->prepares large speaches for the release to the world
-function prep( Speach, Names,Limits, Alphas, DefaultSleepBylines)
---if only Speach 
-if Speach and not Names and not Limits then return Speach end
-if not Speach or not Names or not Limits then return nil end
-Name       			=Names or "Dramatis Persona"
-Limit             	= Limits or 42
-Alpha           	= Alphas   or 0.9
-DefaultSleepByline	= DefaultSleepBylines or 750
-
-T={}
-itterator=1
-lineend=Limit
-size=string.len(Speach) or #Speach or Limit
-assert(size,"Size does matter")
-assert(Speach and type(Speach)=="string","Speach not of type string", Speach)
-assert(lineend and type(lineend)=="number","Limit not a number", Limit)
-assert(size and type(size)=="number","Limit not a number", Limit)
-
-
-
-	while lineend < size do  
-
-	lineend=string.find(Speach, "[^a-zA-Z0-9]", itterator+Limit)
-	subString=string.sub(Speach,itterator,lineend)
-		
-		if subString then
-		T[#T+1]={line= subString ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}
-		else
-		break
-		end
-		
-		if not lineend then 
-		break
-		else
-		itterator=lineend+1
-		end
-		assert(lineend)
-		assert(size)
+	function assertAllArgs(...)
+	if not arg then error("No arguments were given") return end
+	nr=1
+	for k,v in pairs(arg) do
+	if not v then error("Argument Nr"..nr.." is nil "); return false end
+	nr=1+nr
 	end
-	return T, true
-end
-
-
---> Displays Text at UnitPos Thread
- -->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
-function say( TableOfLineAndT, redrawDelay, NameColour, TextColour,OptionString,UnitID)
-if type(TableOfLineAndT) == "string" then Spring.Echo(TableOfLineAndT) return end
-px,py,pz=0,0,0
-if not UnitID or Spring.ValidUnitID(UnitID)==false then
-return 
-end
-
-local LineNameTimeT= TableOfLineAndT
-
-	--catching the case that there is not direct Unit speaking
-	if type(UnitID)=="string" then 
-	Spring.Echo(LineNameTimeT[1].name.. ": "..LineNameTimeT[i].line)
-		if not 	LineNameTimeT[2].line then return end
-		for i=2, #LineNameTimeT, 1 do
-		Spring.Echo(LineNameTimeT[i].line)		
-		end
-	return
+	return true 
 	end
-	
-local spGetUnitPosition=Spring.GetUnitPosition	
+		
+	-->prepares large speaches for the release to the world
+	function prep( Speach, Names,Limits, Alphas, DefaultSleepBylines)
+	--if only Speach 
+	if Speach and not Names and not Limits then return Speach end
+	if not Speach or not Names or not Limits then return nil end
+	Name       			=Names or "Dramatis Persona"
+	Limit             	= Limits or 42
+	Alpha           	= Alphas   or 0.9
+	DefaultSleepByline	= DefaultSleepBylines or 750
+
+	T={}
+	itterator=1
+	lineend=Limit
+	size=string.len(Speach) or #Speach or Limit
+	assert(size,"Size does matter")
+	assert(Speach and type(Speach)=="string","Speach not of type string", Speach)
+	assert(lineend and type(lineend)=="number","Limit not a number", Limit)
+	assert(size and type(size)=="number","Limit not a number", Limit)
 
 
-	for i=1, #LineNameTimeT, 1 do
-	
-spaceString=stringOfLength(" ",string.len(TableOfLineAndT[i].name))
-	--Sleep time till next line
-	px,py,pz=Spring.GetUnitPosition(UnitID)
-	if not GG.Dialog then GG.Dialog ={} end
-	GG.Dialog[#GG.Dialog+1]={frames, txt, x=px, y=py, z=pz}
-	Sleep( LineNameTimeT[i].DelayByLine)
+
+		while lineend < size do  
+
+		lineend=string.find(Speach, "[^a-zA-Z0-9]", itterator+Limit)
+		subString=string.sub(Speach,itterator,lineend)
+			
+			if subString then
+			T[#T+1]={line= subString ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}
+			else
+			break
+			end
+			
+			if not lineend then 
+			break
+			else
+			itterator=lineend+1
+			end
+			assert(lineend)
+			assert(size)
+		end
+		return T, true
 	end
 
---height=gl.GetTextHeight(LineNameTimeT[#LineNameTimeT].text)
---totalHeight=height*(#LineNameTimeT+1)
---NameSize=12
---TextSize=10
---
---
---local NameC=  NameColour or "\9\241\255\255"
---local TextC=  TextColour or "\9\241\255"
---local OptionS= OptionString or "las"
---local redrawD=redrawDelay or 15
---local space = "    "
---	
---		
---		while LineNameTimeT[i].DelayByLine > 0 do 
---		x,y,z=spGetUnitPosition(unitID)
---		z=z+ totalHeight- (i* height)
---		--Name --Display Text LineNameTimeT[i].li
---		
---	
---		if i==1 then
---		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].name.." : ",x,z,NameSize, OptionS)
---		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
---		else
---		font:Print(NameC .."\\".. LineNameTimeT[i].alpha .. space .." : ",x,z,NameSize, OptionS)
---		font:Print(TextC .."\\".. LineNameTimeT[i].alpha .. LineNameTimeT[i].line.."\n", x,z, TextSize,OptionS)
---		end
---		LineNameTimeT[i].DelayByLine =LineNameTimeT[i].DelayByLine -redrawD
---		
---		
---		Sleep(redrawD)
---		end
---	end
 
-end
+	--> Displays Text at UnitPos Thread
+	 -->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
+	function say( TableOfLineAndT, redrawDelay, NameColour, TextColour,OptionString,UnitID)
+	if type(TableOfLineAndT) == "string" then Spring.Echo(TableOfLineAndT) return end
+	px,py,pz=0,0,0
+	if not UnitID or Spring.ValidUnitID(UnitID)==false then
+	return 
+	end
 
---> finds GenericNames and Creates Tables with them
-function GeneratePiecesTablebyNames(boolMakePiecesTable)
+	local LineNameTimeT= TableOfLineAndT
 
-piecesTable=Spring.GetUnitPieceList(unitID)
-TableByName={}
-NameAndNumber={}
-	
-		for i=1,#piecesTable,1 do
-			s=string.reverse(piecesTable[i])
+		--catching the case that there is not direct Unit speaking
+		if type(UnitID)=="string" then 
+		Spring.Echo(LineNameTimeT[1].name.. ": "..LineNameTimeT[i].line)
+			if not 	LineNameTimeT[2].line then return end
+			for i=2, #LineNameTimeT, 1 do
+			Spring.Echo(LineNameTimeT[i].line)		
+			end
+		return
+		end
 		
-			for w in string.gmatch(s,"%d+") do
-			if w then
-				s=string.sub(s,string.len(w),string.len(s))
-				NameAndNumber[i]={name=string.sub(piecesTable[i],1,string.len(piecesTable[i])-string.len(w)),
-								  number=string.reverse(w)
-								}
+	local spGetUnitPosition=Spring.GetUnitPosition	
+
+		for i=1, #LineNameTimeT, 1 do
+		
+	spaceString=stringOfLength(" ",string.len(TableOfLineAndT[i].name))
+		--Sleep time till next line
+		px,py,pz=Spring.GetUnitPosition(UnitID)
+		if not GG.Dialog then GG.Dialog ={} end
+		GG.Dialog[#GG.Dialog+1]={frames=120, txt, x=px, y=py, z=pz}
+		Sleep( LineNameTimeT[i].DelayByLine)
+		end
+
+	for i= #GG.Dialog, 1, -1 do
+		if GG.Dialog[i].frames <=0 then table.remove(GG.Dialog,i) end	
+	end
+
+	end
+
+	--> creates a table of pieces with name
+	function makeTableOfNames(name,startnr,endnr)
+	T={}
+		for i=startnr, endnr, 1 do
+		T[#T+1]=name..i	
+		end
+	return T
+	end
+
+	--> finds GenericNames and Creates Tables with them
+	function GeneratePiecesTablebyNames(boolMakePiecesTable)
+
+	piecesTable=Spring.GetUnitPieceList(unitID)
+	TableByName={}
+	NameAndNumber={}
+		
+			for i=1,#piecesTable,1 do
+				s=string.reverse(piecesTable[i])
+			
+				for w in string.gmatch(s,"%d+") do
+				if w then
+					s=string.sub(s,string.len(w),string.len(s))
+					NameAndNumber[i]={name=string.sub(piecesTable[i],1,string.len(piecesTable[i])-string.len(w)),
+									  number=string.reverse(w)
+									}
+									
+					if TableByName[	NameAndNumber[i].name] then TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 else TableByName[NameAndNumber[i].name] =1 end
+					break
 								
-				if TableByName[	NameAndNumber[i].name] then TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 else TableByName[NameAndNumber[i].name] =1 end
-				break
-							
+				end
+				end
+			if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end
+			
+			
 			end
+		
+		for k,v in pairs(TableByName) do
+			if v > 1 then
+			Spring.Echo(k.. " = {}")
 			end
-		if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end
+		end
 		
 		
+		for k,v in pairs(NameAndNumber) do
+		
+			if v and v.number then
+			Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
+			Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
+			else
+			Spring.Echo(v.name.." = piece("..v.name..")")
+			end
 		end
-	
-	for k,v in pairs(TableByName) do
-		if v > 1 then
-		Spring.Echo(k.. " = {}")
+		
+		if boolMakePiecesTable and boolMakePiecesTable ==true then
+		generatepiecesTableAndArrayCode(unitID)
 		end
+		
 	end
-	
-	
-	for k,v in pairs(NameAndNumber) do
-	
-		if v and v.number then
-		Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
-		Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
-		else
-		Spring.Echo(v.name.." = piece("..v.name..")")
+
+	-->Drops a unitpiece towards the ground
+	function PieceDropTillStop(unitID,piece,speedPerSecond, speedMax, bounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
+	if not unitID or not piece or not speedPerSecond or not speedMax then return end
+	bConstant= bounceConstant or 0.25
+	speed=speedPerSecond or 0.5
+	Drift= driftFunc or function (unitID,piece,x,y,z,time,speed) 
+								dx,dy,dz =Spring.GetGroundNormal(x,z) 
+								Move(piece,x_axis,dx*y* (1/time), speed)
+								Move(piece,z_axis,dz*y* (1/time), speed)
+								end
+
+	if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
+	SpinAlongSmallestAxis(unitID,piece, math.random(-5,5),0.2)
+	end
+	if bounceNr then
+	while bounceNr > 1 do
+
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		time=0
+		gh=Spring.GetGroundHeight(x,z)
+		while speed < speedMax or y > gh do 
+		Move(piece,y_axis, -y+gh,speed)
+		time=time+1
+		Sleep(1000)   
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		Drift(unitID,piece,x,y,z,time,speed)
+		gh=Spring.GetGroundHeight(x,z)
+		speed=math.min(math.log(time+1)*4.905,speedMax)
 		end
+		
+		upperLimit= y*bConstant
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		y=y-gh
+		time=0
+		while speed > 1 and y < upperLimit do 
+		Move(piece,y_axis,y+speed,speed)
+		y=y+speed
+		speed=speed/2
+		Sleep(1000)
+		time=time+1   
+		x,_,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		Drift(unitID,piece,x,y,z,time,speed)
+		end
+
+
+
+
+	bounceNr=bounceNr-1
 	end
-	
-	if boolMakePiecesTable and boolMakePiecesTable ==true then
-	generatepiecesTableAndArrayCode(unitID)
-	end
-	
-end
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		gh=Spring.GetGroundHeight(x,z)
+		time=0
+		speedMax=9.81
+		
+		while speed < speedMax or y > gh do 
+		Move(piece,y_axis, -y+gh,speed)
+		Sleep(1000)
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		gh=Spring.GetGroundHeight(x,z)
+		time=time+1   
+		Drift(unitID,piece,x,y,z,time,speed)
+		speed=math.min(math.log(time+1)*4.905,speedMax)
+		end
 
-function PieceDropTillStop(unitID,piece,speedPerSecond, speedMax, bounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
-if not unitID or not piece or not speedPerSecond or not speedMax then return end
-bConstant= bounceConstant or 0.25
-speed=speedPerSecond or 0.5
-Drift= driftFunc or function (unitID,piece,x,y,z,time,speed) 
-							dx,dy,dz =Spring.GetGroundNormal(x,z) 
-							Move(piece,x_axis,dx*y* (1/time), speed)
-							Move(piece,z_axis,dz*y* (1/time), speed)
-							end
-
-if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
-SpinAlongSmallestAxis(unitID,piece, math.random(-5,5),0.2)
-end
-if bounceNr then
-while bounceNr > 1 do
-
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	time=0
-	gh=Spring.GetGroundHeight(x,z)
-	while speed < speedMax or y > gh do 
-	Move(piece,y_axis, -y+gh,speed)
-	time=time+1
-	Sleep(1000)   
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	Drift(unitID,piece,x,y,z,time,speed)
-	gh=Spring.GetGroundHeight(x,z)
-	speed=math.min(math.log(time+1)*4.905,speedMax)
-	end
-	
-	upperLimit= y*bConstant
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	y=y-gh
-	time=0
-	while speed > 1 and y < upperLimit do 
-	Move(piece,y_axis,y+speed,speed)
-	y=y+speed
-	speed=speed/2
-	Sleep(1000)
-	time=time+1   
-	x,_,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	Drift(unitID,piece,x,y,z,time,speed)
-	end
-
-
-
-
-bounceNr=bounceNr-1
-end
+	else 
 	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 	gh=Spring.GetGroundHeight(x,z)
 	time=0
 	speedMax=9.81
-	
-	while speed < speedMax or y > gh do 
-	Move(piece,y_axis, -y+gh,speed)
-	Sleep(1000)
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	gh=Spring.GetGroundHeight(x,z)
-	time=time+1   
-	Drift(unitID,piece,x,y,z,time,speed)
-	speed=math.min(math.log(time+1)*4.905,speedMax)
-	end
-
-else 
-x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-gh=Spring.GetGroundHeight(x,z)
-time=0
-speedMax=9.81
+			
 		
-	
-	while speed < speedMax or y > gh do 
-	Move(piece,y_axis, -y+gh,speed)
-	Sleep(1000)
-	time=time+1
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	gh=Spring.GetGroundHeight(x,z)   
-	Drift(unitID,piece,x,y,z,time,speed)
-	speed=math.min(math.log(time+1)*4.905,speedMax)
-	end
-end
-	if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
-	StopSpin(piece,x_axis,0)
-	StopSpin(piece,y_axis,0)
-	StopSpin(piece,z_axis,0)
-	end
-x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-MoveUnitPieceToGroundPos(unitID,piece,x,z,22, 5)
-	
-end
-
-function holdsForAll(Var,fillterConditionString,...)
-if arg then
-	for k,Val in pairs(arg) do
-		if string.load("Var"..fillterConditionString.."Val")==false then return end
-	end
-return true
-else
-return true
-end
-end
-
-function is(Var,fillterConditionString,...)
-f=string.load(fillterConditionString)
-	if type(f)=="function" then
-		for k,Val in pairs(arg) do
-			if( f(Var,Val)==true )then return true end
+		while speed < speedMax or y > gh do 
+		Move(piece,y_axis, -y+gh,speed)
+		Sleep(1000)
+		time=time+1
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+		gh=Spring.GetGroundHeight(x,z)   
+		Drift(unitID,piece,x,y,z,time,speed)
+		speed=math.min(math.log(time+1)*4.905,speedMax)
 		end
+	end
+		if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
+		StopSpin(piece,x_axis,0)
+		StopSpin(piece,y_axis,0)
+		StopSpin(piece,z_axis,0)
+		end
+	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+	MoveUnitPieceToGroundPos(unitID,piece,x,z,22, 5)
 		
+	end
+
+	--> GetDistanceNearestEnemy
+	function GetDistanceNearestEnemy(id)
+	ed=Spring.GetUnitNearestEnemy(id)
+	return GetUnitDistance(id,ed)
+	end
+
+	function holdsForAll(Var,fillterConditionString,...)
+	if arg then
+		for k,Val in pairs(arg) do
+			if string.load("Var"..fillterConditionString.."Val")==false then return end
+		end
+	return true
 	else
-		
-		for k,Val in pairs(arg) do
-			if string.load("Var"..fillterConditionString.."Val")==true then return true end
-		end
-		
-		return false
+	return true
 	end
-end
+	end
 
-function MovePieceInRelation(piece,axis,distance, speed, worldCoordPiece)
---move Vector
-dx,dy,dz=Spring.UnitScript.GetPieceRotation(worldCoordPiece)
+	function is(Var,fillterConditionString,...)
+	f=string.load(fillterConditionString)
+		if type(f)=="function" then
+			for k,Val in pairs(arg) do
+				if( f(Var,Val)==true )then return true end
+			end
+			
+		else
+			
+			for k,Val in pairs(arg) do
+				if string.load("Var"..fillterConditionString.."Val")==true then return true end
+			end
+			
+			return false
+		end
+	end
 
+	function MovePieceInRelation(piece,axis,distance, speed, worldCoordPiece)
+	--move Vector
+	dx,dy,dz=Spring.UnitScript.GetPieceRotation(worldCoordPiece)
+	V={}
 
-if axis== "x_axis" then
-V[4]=distance
-elseif axis== "y_axis" then
-V[8]=distance
-else --z_axis 
-V[12]=distance
-end
-
-
---make a counter rotation matrice
-V=RotationMatrice
-
-
-
-end
-function makeNewAffirmativeMatrice()
-V={	[1]=1,	[2]=	0,	[3]=	0,[4]=	0,
-	[5]=0,	[6]=	1,	[7]=	0,[8]=	0,
-	[9]=0,	[10]=	0,	[11]=	1,[12]=	0,
-	[13]=0,	[14]=	0,	[15]=	0,[16]=	1	
-	}
-	function V.Mul(other)
-	V[1]	= 0;	V[2]	=	0;	V[3] 	=	0;V[4]		=0	;
-	V[5]	= 0;	V[6]	=	0;	V[7] 	=	0;V[8]		=0	;
-	V[9]	= 0;	V[10]	=	0;	V[11]	=	0;V[12]	=0	;
-	V[13]	= 0;	V[14]	=	0;	V[15]	=	0;V[16]	=0	
-	end	
---TODO
---http://springrts.com/phpbb/viewtopic.php?f=21&t=32246
-return V
-end
-
-
-
-function makeAffirmativeRotationMatrice(axis, deg)
-V=makeNewAffirmativeMatrice()
-	if axis=="x_axis" then
-	V[6]=math.cos(-deg)	
-	V[7]=-1*math.sin(-deg)	
-	V[10]=math.sin(-deg)
-	V[11]=math.cos(-deg)	
-	
+	if axis== "x_axis" then
+	V[4]=distance
 	elseif axis== "y_axis" then
-	V[1]=math.cos(-deg)	
-	V[3]=math.sin(-deg)	
-	V[9]=-1*math.sin(-deg)
-	V[11]=math.cos(-deg)	
-	else
-	V[1]=math.cos(-deg)	
-	V[5]=math.sin(-deg)	
-	V[2]=-1*math.sin(-deg)
-	V[6]=math.cos(-deg)
+	V[8]=distance
+	else --z_axis 
+	V[12]=distance
 	end
-return V	
-end
 
-function MultiplyAffirmativeMatrice(self, other)
-	
 
-end
-function SpinAlongSmallestAxis(unitID,piecename,degree, speed)
-if not piecename then return end
-vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
-if vx and vy and vz then
-areax,areay,areaz=vy*vz,vx*vz,vy*vx
-end
+	--make a counter rotation matrice
+	V=RotationMatrice
 
-if holdsForAll(areax, " <= ", areay, areaz)then Spin(piecename,x_axis,math.rad(degree), speed) return end
-if holdsForAll(areay, " <= ", areaz, areax)then Spin(piecename,y_axis,math.rad(degree), speed) return end
-if holdsForAll(areaz, " <= ", areay, areax)then Spin(piecename,z_axis,math.rad(degree), speed) return end
-end
-
-function returnPieceChildrenTable(piecename)
-T=Spring.GetUnitPieceInfo(unitID,piecename)
-return T.children, T.max
-end
-
---Hashmap of pieces --> with Weight below every 
-
-function recursiveAddTable(T,piecename,parent)
-C, max=returnPieceChildrenTable(piecename)
-nr=1
-if piecename ~= parent and not T[parent] then T[parent]={} end
-	
-	if C then
-		for i=1,#C do
-		T,nr=recursiveAddTable(T,C[i],piecename)
-		end
-	T[parent].weight=max[1]*max[2]*max[3]
-	
-	else
-	T[parent][piecename].weight=max[1]*max[2]*max[3]
 	end
-return T
-end
 
-function ragDoll(tableOfPieces)
-deltaMovement=1
+	function makeNewAffirmativeMatrice()
+	V={	[1]=1,	[2]=	0,	[3]=	0,[4]=	0,
+		[5]=0,	[6]=	1,	[7]=	0,[8]=	0,
+		[9]=0,	[10]=	0,	[11]=	1,[12]=	0,
+		[13]=0,	[14]=	0,	[15]=	0,[16]=	1	
+		}
+		function V.Mul(other)
+		V[1]	= 0;	V[2]	=	0;	V[3] 	=	0;V[4]		=0	;
+		V[5]	= 0;	V[6]	=	0;	V[7] 	=	0;V[8]		=0	;
+		V[9]	= 0;	V[10]	=	0;	V[11]	=	0;V[12]	=0	;
+		V[13]	= 0;	V[14]	=	0;	V[15]	=	0;V[16]	=0	
+		end	
+	--TODO
+	--http://springrts.com/phpbb/viewtopic.php?f=21&t=32246
+	return V
+	end
 
 
 
-end
-
-
-function feetThread()
-
-while true do
-while GG.MovementOS_Table[unitID].boolmoving==true do
--- if stableTable
-	pushBody(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
---feet go over knees if FeetLiftForce > totalWeight of Leg
-	liftFeedForward(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
---fall forward
---catch
-	catch(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
-
---rebalance
-	stabilize(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
-end
---setFeetInStableStance
-end
-end
-
-function	liftFeedForward(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
-end
-
-function	catch(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
-end
-
-function	stabilize(stableTable,goingTable,balancersTable,centerNode, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce)
-end
-tCenterX=0
-tCenterY=0
-tCenterZ=0
---expects a Table containing:
---unitID,centerNode,conterNodes, nrofLegs, FeetTable,SensorTable,frameRate, FeetLiftForce
-function adaptiveAnimation(Table)
-piecesTable=Spring.GetUnitPieceList(unitID)
-pieceMap[Table.centerNode]={}
-recursiveAddTable(pieceMap,Table.centerNode, Table.centerNode)
-
-stableTable={}
-goingTable={}
-balancersTable={}
-frame=0
---for feetTable
--- StartFeetThreads
---end
-
-	while true do
-	--update Turn/Position 
-	--Do ConTurns
-		--getFeetPositions/Status
-		--calculate Stability via FeetTip/Orth
+	function makeAffirmativeRotationMatrice(axis, deg)
+	V=makeNewAffirmativeMatrice()
+		if axis=="x_axis" then
+		V[6]=math.cos(-deg)	
+		V[7]=-1*math.sin(-deg)	
+		V[10]=math.sin(-deg)
+		V[11]=math.cos(-deg)	
 		
-	
+		elseif axis== "y_axis" then
+		V[1]=math.cos(-deg)	
+		V[3]=math.sin(-deg)	
+		V[9]=-1*math.sin(-deg)
+		V[11]=math.cos(-deg)	
+		else
+		V[1]=math.cos(-deg)	
+		V[5]=math.sin(-deg)	
+		V[2]=-1*math.sin(-deg)
+		V[6]=math.cos(-deg)
+		end
+	return V	
 	end
-end
+
+	-->Returns a Unit from the Game without killing it
+	function removeFromWorld(unit,offx,offy,offz)
+	--TODO - keepStates in general and commandqueu
+	pox,poy,poz=Spring.GetUnitPosition(unit)
+	Spring.SetUnitAlwaysVisible(unit,false)
+	Spring.SetUnitBlocking(unit,false,false,false)
+	Spring.SetUnitNoSelect(unit,true)
+	Spring.MoveCtrl.Enable(unit,true)
+		if offx then
+		Spring.SetUnitPosition(unit,offx,offy,offz)
+		end
+	end
+	-->Removes a Unit from the Game without killing it
+	function returnToWorld(unit,px,py,pz)
+	Spring.MoveCtrl.Enable(unit,false)
+		if pz then
+		Spring.SetUnitPosition(unit,px,py,pz)
+		end
+	Spring.SetUnitAlwaysVisible(unit,true)
+	Spring.SetUnitBlocking(unit,true,true,true)
+	Spring.SetUnitNoSelect(unit,false)
+	end
+
+	function MultiplyAffirmativeMatrice(self, other)
+		
+
+	end
+	
+	
+	function SpinAlongSmallestAxis(unitID,piecename,degree, speed)
+	if not piecename then return end
+	vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
+	if vx and vy and vz then
+	areax,areay,areaz=vy*vz,vx*vz,vy*vx
+	end
+
+	if holdsForAll(areax, " <= ", areay, areaz)then Spin(piecename,x_axis,math.rad(degree), speed) return end
+	if holdsForAll(areay, " <= ", areaz, areax)then Spin(piecename,y_axis,math.rad(degree), speed) return end
+	if holdsForAll(areaz, " <= ", areay, areax)then Spin(piecename,z_axis,math.rad(degree), speed) return end
+	end
+
+	 -->Helperfunction of recursiveAddTable
+	function returnPieceChildrenTable(piecename,piecetable)
+	if not piecename then return end
+	T=Spring.GetUnitPieceInfo(unitID,piecename)
+	children=T.children
+	if children then
+	for i=1,#children do children[i]=piecetable[children[i]] end
+	end
+	return children, T.max
+	end
+
+	--Hashmap of pieces --> with accumulated Weight in every Node
+	--> Every Node also holds a bendLimits which defaults to ux=-45 x=45, uy=-180 y=180,uz=-45 z=45
+	function recursiveAddTable(T,piecename,parent,piecetable)
+		if not piecename then return T, 0 end
+
+		C, max=returnPieceChildrenTable(piecename,piecetable)
+
+
+	if not T[parent] then T[parent]={} end
+		
+		if C and #C > 0 then
+			for i=1,#C do
+			T,nr=recursiveAddTable(T,C[i],piecename,piecetable)
+			end
+		bendLimits=computateBendLimits(piecename,parent)
+		T[parent].bendLimits=bendLimits
+		T[parent].weight=max[1]*max[2]*max[3]
+		T[parent].nr=#C
+		else
+		
+		if not T[parent][piecename] then T[parent][piecename] ={} end
+		computateBendLimits(piecename,parent)
+		T[parent].bendLimits=bendLimits
+		T[parent][piecename].weight=1
+		end
+	return T
+	end
+
+	--> finds the degree in a triangle where only the lenght of two sides are known
+	function triAngleTwoSided(LowerSide, OpposingSide)
+	norm= math.sqrt(LowerSide*LowerSide +OpposingSide*OpposingSide)
+	return math.atan2(LowerSide/norm,OpposingSide/Norm)
+	end
+	
+	function getCubeSphereRad(x,y,z)
+	xy,xz,yz=x*y,x*z,y*z
+	
+	if xy > xz and xy > yz then return math.sqrt(x*x +y*y) end
+	
+	if xz > xy and xz > yz then return math.sqrt(x*x +z*z) end
+	
+	if yz > xy and yz > xz then return math.sqrt(y*y +z*z) end
+	end
+	
+	function computateBendLimits(piecename,parent)
+	paPosX,paPosY,paPosZ=Spring.GetUnitPiecePosition(unitID,parent)
+	cPosX,cPosY,cPosZ=Spring.GetUnitPiecePosition(unitID,piecename)
+
+	--the offset of the piece in relation to its parentpiece
+	v={}
+	v.x,v.y,v.z=cPosX-paPosX,cPosY-paPosY,cPosZ-paPosZ
+
+	pax,pay,paz=Spring.GetUnitPieceCollisionVolumeData(unitID,parent)
+	radOfParentSphere=getCubeSphereRad(pax,pay,paz)
+	cx,cy,cz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
+	radOfPieceSphere=getCubeSphereRad(cx,cy,cz)
+	-- rotate the vector so that it aligns with x,y,z origin vectors
+	-- computate the orthogonal 
+	-- computate the dead degree cube
+	wsize=triAngleTwoSided(v.x,v.y)
+	-- rotate the computated window inverse to the vector back
+	-- voila
+	
+	--Y-Axis 
+	-->TODO:RAGDOLL      |_\    -- you approximate the motherpiece with a circle and then do a  math.acos( circleradius/distance)
+	--defaulting to a maxturn
+	return {ux=-15 ,x=15, uy=-180, y=180,uz=-15, z=15}
+	end
+
+	function average(...)
+	sum=0
+	it=0
+		for k,v in pairs(arg) do
+		sum=sum+v
+		it=it+1
+		end
+	return sum/it
+	end
+
+	-->Turns a piece towards its broadest side by Collissionvolume
+	function turnPieceToLongestSide(unitID,pic,Speed)
+	cv={}
+	x,y,z=Spring.GetUnitPieceCollisionVolumeData(unitID,centerPiece)
+	xy=x*y;yz=y*z;zx=z*x
+	signum=math.random(-1,1)
+	signum=signum/math.abs(signum)
+	if xy > yz and xy> zx then tP(pic, 90*signum, 0,0, Speed); return z/2 end
+	if yz > xy and yz> zx then tP(pic, 0, 0,90*signum, Speed); return x/2 end
+	if zx > xy and zx> yz then tP(pic, 0, math.random(-360,360),0, Speed);return y/2  end
+	end
+
+	-->forges a hierachical ragdoll for the table of pieces for the given lifetime lets that ragdoll  hit the floor
+	function ragDoll(tableOfPieces,centerPiece,fallSpeed,lifetime)
+	deltaMovement=1
+	cv={}
+	PiecesMap={}
+	FallSpeed=fallSpeed or 9.81
+	cv.x,cv.y,cv.z=Spring.GetUnitPieceCollisionVolumeData(unitID,centerPiece)
+	averageSize=average(cv.x,cv.y,cv.z)
+	boolOnce=false;boolGo=false
+		
+		while lifetime > 0 do
+		--we care for the centerPieceFalling
+		px,py,pz=Spring.GetUnitPiecePosition(unitID,centerPiece)
+		wpx,wpy,wpz=Spring.GetUnitPiecePosDir(unitID,centerPiece)
+		h=Spring.GetGroundHeight(wpx,wpz)
+		Dist= wpy-averageSize-FallSpeed/4;	if Dist < h then Dist =0; if boolGo== true then boolGo=false;boolOnce= true end end
+			if boolOnce==true then averageSize=turnPieceToLongestSide(unitID,centerPiece,9.81/6);boolOnce=false end
+			if py-h-averageSize/2 >0 then Move(centerPiece,y_axis,Dist,FallSpeed)end
+		
+		--and now we handle the other pieces going down
+		subsOfCenterPiece=tableOfPieces[centerPiece]
+			for _,v in pairs(subsOfCenterPiece) do
+				traversePiecesMapToGround(centerPiece,v, PiecesMap, 9.81, 250)
+			end
+			
+		Sleep(250)
+		lifetime=lifetime-250
+		end
+	end
+
+	-->MovesAParentPiece
+	function movePieceAboveGround(parent, subPiece,Speed)
+
+	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+	px,py,pz=spGetUnitPiecePosDir(unitID,subPiece)
+	gh=Spring.GetGetGroundHeight(px,pz)
+	--necessaryData
+	paX,paY,paZ=spGetUnitPiecePosDir(unitID,parent)
+
+		--TargetCoordsToTurnTowards
+		TurnPieTowardsPoint (subPiece, px,gh+3,pz,Speed)
+
+	end
+
+
+	-->Traverses the PiecesMapDown recursively solving 
+	function traversePiecesMapToGround(parentPiece,currentPiece, PiecesMap, Gravity, UpdateCycleLength)
+	-- if the piece is underground it moves its parent to get itself above ground
+	cX,cY,cZ=Spring.GetUnitPiecePosDir(unitID,currentPiece)
+	if cY < Spring.GetGroundHeight(cX,cZ) then 
+
+	-- if this Piece has subsidarys, it tryies to move itself to the ground, before calling for every children
+		
+		tP(currentPiece,tx,ty,tz,Gravity/(1000/UpdateCycleLength))
+
+			for  _,UnitPiece in pairs(PiecesMap[parentPiece]) do
+			end
+		end
+	end
+
+	function stableConditon(legNr,q)
+	return GG.MovementOS_Table~= nil and 
+	GG.MovementOS_Table[unitID].stability >  0.5  and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,q),1)] > 0 or  GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)] and  GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)]>0  
+	end
+
+	--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
+	function feetThread(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction,LegMax)
+	LMax=LegMax or 5
+
+		Sleep(500)
+		
+		lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+				
+		while true do
+			while GG.MovementOS_Table[unitID].boolmoving==true do
+			
+					while GG.MovementOS_Table[unitID].boolmoving==true and  stableConditon(nr,quadrant) do
+					pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+				--feet go over knees if FeetLiftForce > totalWeight of Leg
+					liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+				--fall forward
+				
+				--catch
+					lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+					Sleep(100)
+					end
+				--rebalance
+				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+			Sleep(100)
+			end
+		
+				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)	
+				Sleep(100)
+		--setFeetInStableStance
+		end
+	end
+
+	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force)
+	Spring.Echo("pushBody")
+	Turn(FirstAxisPoint,2,turnDeg)
+		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
+		dif=yp- Spring.GetGroundHeight(xp,zp)
+		degToGo=0
+		while (Spring.UnitScript.IsInTurn(FirstAxisPoint,2)==true) do
+		
+			xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
+			dif=yp- Spring.GetGetGroundHeight(xp,zp)
+					if dif > 5 then degToGo=degToGo-1 else degToGo=degToGo+1 end
+				
+			Turn(FirstAxisPoint,1,math.rad(degToGo),Speed)
+
+			WaitForTurn(FirstAxisPoint,1)
+			Sleep(80)
+		
+		end
+
+	end
+	-->Uses the LiftAnimation Function to Lift the Feed
+	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+	Spring.Echo("liftFeedForward")
+	GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
+	LiftFunction(KneeT,Force/(#KneeT*Weight))
+
+	WaitForTurn(KneeT[nr],2)
+	Sleep(100)
+	if degOffSet > 180 then turnDeg=turnDeg*-1 end
+	Turn(FirstAxisPoint,2,math.rad(degOffSet+turnDeg), Force/(#KneeT*Weight))
+	end
+	-->Uses the Animation Function To Lower the Feet
+	function	lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+
+		LowerFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint)
+		GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]+1
+	end
+	-->Stabilizes the Feet
+	function	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+	Spring.Echo("stabilize")
+		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
+		dif=yp- Spring.GetGroundHeight(xp,zp)
+		degToGo=0
+		counter=0
+		olddif=0
+			while ( GG.MovementOS_Table[unitID].stability <= 0.5 ) do
+				for i=1,#KneeT, 1 do
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,KneeT[i])
+					if y > Spring.GetGroundHeight(x,z) then 
+					deg=math.deg(Spring.UnitScript.GetPieceRotation(KneeT[i]))-1
+					Turn(KneeT[i],x_axis,math.rad(deg), 0.3)
+					else
+					deg=math.deg(Spring.UnitScript.GetPieceRotation(KneeT[i]))+1
+					Turn(KneeT[i],x_axis,math.rad(deg), 0.3)
+					end
+				end	
+			GG.MovementOS_Table[unitID].stability=GG.MovementOS_Table[unitID].stability+0.02
+			Sleep(50)
+			end
+
+	end
+
+
+	--expects a Table containing:
+
+	--unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
+	function adaptiveAnimation(configTable,inPeace)
+	local infoT= configTable
+	pieceMap={}
+	pieceMap[infoT.centerNode]={}
+	pieceMap=recursiveAddTable(pieceMap,infoT.centerNode, infoT.centerNode,inPeace)
+		if not GG.MovementOS_Table then GG.MovementOS_Table={} end
+		if not GG.MovementOS_Table[unitID] then GG.MovementOS_Table[unitID]={} end
+
+	maxDeg=math.random(12,32)
+	turnOffset=360/#infoT.feetTable.Knees
+			
+			for i=1,infoT.nr do
+			
+			StartThread( feetThread,
+						math.floor(math.min(math.max(0,(i*turnOffset)/360),1)*4),
+						(90+(360/5)*i),
+						maxDeg,
+						i,
+						infoT.feetTable.firstAxis[i],
+						infoT.feetTable.Knees[i],
+						infoT.sensorTable[i],
+						infoT.ElementWeight,
+						infoT.FeetLiftForce,
+						infoT.LiftFunction,
+						infoT.LowerFunction
+						)
+			end
+		
+		local spGetUnitPosition=Spring.GetUnitPosition
+		local MotionDetect=	function (ox,oz)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		return math.abs(ox-x) +math.abs(oz-z) < 15,x,z
+		end
+		
+		quadrantMap={[1]=0,[2]=0,[3]=0,[4]=0}
+		tx,ty,tz=spGetUnitPosition(unitID)
+
+		GG.MovementOS_Table[unitID]={quadrantMap=quadrantMap,boolmoving=false, stability=1, tx=tx,ty=ty,tz=tz, ForwardVector={x=0,z=0}}
+		Sleep(100)
+
+		ox,oy,oz= spGetUnitPosition(unitID)
+		boolMoving=false
+		Height=infoT.Height
+			while true do
+			--find out whether we are moving
+			ux,uz=ox,oz
+			boolMoving,ox,oz=MotionDetect(ox,oz)
+			GG.MovementOS_Table[unitID].tx=ox
+			GG.MovementOS_Table[unitID].tz=oz
+			
+			GG.MovementOS_Table[unitID].boolmoving=(math.abs(ox-ux)+math.abs(z-uz))> 5
+			GG.MovementOS_Table[unitID].ForwardVector={x=ox-ux,z=oz-uz}
+			
+			local one, three =GG.MovementOS_Table[unitID].quadrantMap[1],GG.MovementOS_Table[unitID].quadrantMap[3]
+			local two,four   =GG.MovementOS_Table[unitID].quadrantMap[2],GG.MovementOS_Table[unitID].quadrantMap[4]
+			total=one+two+three+four
+			one,two,three,four=one>0,two> 0, three>0, four> 0
+			--		//stabilityfactor
+			BoolStable=((one and two and (three or four) )	)or 
+						((two and four) and ( three or one) )or 
+						((four and three) and ( one or two) )or
+						((three and one ) and ( four or two))
+						
+				if BoolStable==false then
+				GG.MovementOS_Table[unitID].stability=math.min(1,(1/total)*	GG.MovementOS_Table[unitID].stability)
+				else
+				GG.MovementOS_Table[unitID].stability=1			
+				end
+			
+			Move(infoT.centerNode,y_axis,GG.MovementOS_Table[unitID].stability*Height,3)
+			Sleep(400)	
+			end
+	end
+
+	--> Initialises and generates a Square-Table 
+	function prepSquareTable(size,defaultVal)
+	Tab={}
+	for i=1,size do
+		Tab[i]={}
+			for j=1,size do
+				Tab[i][j]=defaultVal
+			end
+		end
+	return Tab
+	end
+
+
+	function getADryWalkAbleSpot()
+	min,max=Spring.GetGroundExtremes()
+	if max <=0 then return end
+	function cond(i,j,chunkSizeX,chunkSizeZ)
+	h=Spring.GetGroundHeight(i*chunkSizeX,chunkSizeZ*j)
+			if h > 0 then 
+			v={}
+			v.x,v.y,v.z=Spring.GetGroundNormal(i*chunkSizeX,chunkSizeZ*j)
+			v=normalizeVector(v)
+				if v.y -math.abs(v.x)-math.abs(v.z) > 0.1 then
+				return  math.ceil(i*chunkSizeX), math.ceil(i*chunkSizeZ) 
+				end
+			end
+	end
+	return getSpot(cond,64)
+	end
+
+	function randSign()
+	val=math.random(-1,1)
+	return val/math.abs(val)
+	end
+	
+	-->finds a spot on the map that is dry, and walkable
+	function getSpot(condition,maxRes,filterTable)
+	local lcondition =condition
+
+	probeResolution=8
+	local spGetGroundHeight=Spring.GetGroundHeight
+
+		while true do
+		
+		chunkSizeX,chunkSizeZ=Game.mapSizeX/probeResolution,Game.mapSizeZ/probeResolution
+		xRand,zRand=math.floor(math.random(1,probeResolution)),math.floor(math.random(1,probeResolution))
+					
+		for i=xRand,probeResolution,1 do
+		for j=zRand,probeResolution,1 do
+			lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
+		end
+		end
+
+		
+		for i=1,xRand,1 do
+		for j=1,zRand,1 do
+			lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
+		end
+		end
+			
+		probeResolution=probeResolution*2
+		if probeResolution > maxRes then Spring.Echo("Aborting Due to High Probe Resolution"); return end
+		end
+	end
+
+	-->CondtionFunction
+	function GetSpot_condDeepSea(x,y,chunksizeX,chunksizeZ,filterTable)
+	h=Spring.GetGroundHeight(x*chunkSizeX,y*chunkSizeZ)
+	if h < filterTable.minBelow and h > filterTable.maxAbove then return x*chunkSizeX,y*chunkSizeZ end 
+
+	end
+
+	-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
+	function createRandomizedBuilding(Blocks, originPiece, cg,RepeaterFunc)
+	--Reset Begin
+	Move(originPiece,x_axis,0,0)
+	Move(originPiece,y_axis,0,0)
+	Move(originPiece,z_axis,0,0)
+
+	
+	
+	for i=1,table.getn(Blocks),1 do
+	Move(Blocks[i],x_axis,0,0)
+	Move(Blocks[i],y_axis,0,0)
+	Move(Blocks[i],z_axis,0,0)
+	end
+	
+	hideT(Blocks)
+	--Reset End
+	--default repetition pattern
+	repFunc=  function (itterator,modulator)
+						return itterator %modulator>3 
+						end 
+						
+	repeatPatternFonc= RepeaterFunc or repFunc
+	--default dirTable
+	dirTable=	{[0]=function(sizeA,sizeB) return 0,sizeB,0,0 end,
+				 [1]=function(sizeA,sizeB) return sizeA,0,0,1 end,
+				 [2]=function(sizeA,sizeB) return 0,0,sizeA,2 end,
+				 [3]=function(sizeA,sizeB) return -1*sizeA,0,0,3 end,
+				 [4]=function(sizeA,sizeB) return 0,0,-1*sizeA,4 end,
+				 [5]=function(sizeA,sizeB) return 0,sizeB,0,5 end,
+				 [6]=function(sizeA,sizeB) return 0,sizeB,0,6 end
+				 }
+	--default growthDirection Function
+	growthDirFunc= function (i,piecename,lastDir,boolInit,itterator, modulator,repeatPatternFonc,dirTable)
+						
+			vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
+				if not vx then return 0,0,0,0 end
+			sizeA=math.min(vx,vz)
+			sizeB=math.sqrt(vy)
+			if boolInit==false then
+				if lastdir and math.random(0,3)== 2 then return dirTable[lastDir](sizeA,sizeB) end 
+			if math.random(0,3) ~= 1 			then return 0,sizeB,0,0 end
+			end
+			
+			if repeatPatternFonc(itterator, modulator)==true then
+			return dirTable[lastDir](sizeA,sizeB)
+			else
+			return dirTable[math.ceil(math.random(1,#dirTable))](sizeA,sizeB)
+			end
+		
+		end
+		
+	--adding the first positions to expand upon	
+	ogPosX,ogPosY,ogPosZ=Spring.GetUnitPiecePosition(unitID,originPiece)
+	cgPosX,cgPosY,cgPosZ=Spring.GetUnitPiecePosition(unitID,cg)
+	cgPosX,cgPosY,cgPosZ=ogPosX-cgPosX,ogPosY-cgPosY,ogPosZ-cgPosZ
+	
+	gDirFunc=growTable or growthDirFunc
+	freeSpots={}
+
+	for i=0,5,1 do
+	x,y,z=gDirFunc(i,originPiece,i,true,3,7,repeatPatternFonc,dirTable)
+	freeSpots[i]={}
+	freeSpots[i][1]={}
+	freeSpots[i][1]=cgPosX+x
+	freeSpots[i][2]={}
+	freeSpots[i][2]=cgPosY+y
+	freeSpots[i][3]={}
+	freeSpots[i][3]=cgPosZ+z
+	end
+	
+	--add Block by Block
+
+
+		for i=1,#Blocks,1 do
+		Sleep(500)
+		if  Blocks[i] then 
+		Show(Blocks[i])
+		getAPod=math.floor(math.random(1,#freeSpots))
+	
+		nrBlok=math.floor(math.random(1,table.getn(Blocks)))
+		nrFreeSpot=math.floor(math.random(1,#freeSpots))
+		Blocks,freeSpots= moveBlockAddPod(	freeSpots[nrFreeSpot][1],
+											freeSpots[nrFreeSpot][2],
+											freeSpots[getAPod][3],	
+											nrFreeSpot,
+											nrBlok,
+											Blocks,
+											freeSpots,
+											gDirFunc,
+											repeatPatternFonc,
+											dirTable,
+											cg
+											)
+		end
+		end
+	end
+
+	function moveBlockAddPod(x,y,z,nrFreeSpot,nrBlok,bloks,freeSpots,gDirFunc,repeatPatternFonc,dirTable,cg)
+	cgPosX,cgPosY,cgPosZ = x,y,z
+
+	Move(cg,x_axis,x,0)
+	Move(cg,y_axis,y,0)
+	Move(cg,z_axis,z,0)
+	WaitForMove(cg,y_axis)
+	ax,ay,az=Spring.GetUnitPiecePosition(unitID,cg)
+	Move(bloks[nrBlok],x_axis,ax,0)
+	Move(bloks[nrBlok],y_axis,ay,0)
+	Move(bloks[nrBlok],z_axis,az,0)
+
+	WaitForMove(bloks[nrBlok],y_axis)
+	d=math.floor(math.random(0,3))*90
+	Turn(bloks[nrBlok],y_axis,math.rad(d),0)
+	--bx,by,bz=Spring.GetUnitBasePosition(unitID)
+	LastPos=0
+		for i=1,5,1 do --add the free spots
+		
+		Show(bloks[nrBlok])
+		d=table.getn(freeSpots)+1
+		x,y,z,LastPos=gDirFunc	(i,bloks[nrBlok],LastPos,false,nrBlok,7,repeatPatternFonc,dirTable)
+		freeSpots[d]={}
+		freeSpots[d][1]={}
+		freeSpots[d][1]=cgPosX+x
+		freeSpots[d][2]={}
+		freeSpots[d][2]=cgPosY+y
+		freeSpots[d][3]={}
+		freeSpots[d][3]=cgPosZ+z
+		end
+
+	table.remove(bloks,nrBlok)
+	table.remove(freeSpots,nrFreeSpot)
+
+	return bloks, freeSpots
+	end
+
+	-->Sanitizes a Variable for a table
+	function sanitizeItterator(Data,Min,Max)
+	return math.max(Min,math.min(Max,Data))
+	end
+	
+	-->Splits a Table into Two Pieces
+	function splitTable(T,breakP)
+	breakPoint=breakP or math.ceil(#T/2)
+	breakPoint=sanitizeItterator(breakPoint,1,#T)
+	T1,T2={},{}
+		for i=1,breakPoint do
+		T1[i]=T[i]
+		end
+		
+		for i=math.min(breakPoint+1,#T),#T do
+		T2[i-breakPoint]=T[i]
+		end
+	
+	return T1,T2
+	end

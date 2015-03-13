@@ -65,10 +65,10 @@ shownanoframe=0,
 Category = [[LAND]],
 
 weapons = {
-[1]={name  = "jResSubMG",
+[1]={name  = "jressubmg",
 	onlyTargetCategory = [[LAND]],
 	},
-[2]={name  = "jResRPG",
+[2]={name  = "jresrpg",
 	onlyTargetCategory = [[LAND AIR]]
 	},
 },

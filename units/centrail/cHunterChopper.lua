@@ -91,7 +91,7 @@ Category = [[AIR]],
 
 	},
 [2]={name  = "cchoperrocket",
-	onlyTargetCategory = [[ AIR]],
+	onlyTargetCategory = [[AIR]],
 	mainDir=[[0 0 1]],
 	maxAngleDif        = 90,
 	},

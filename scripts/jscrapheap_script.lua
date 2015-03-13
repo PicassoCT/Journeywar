@@ -525,7 +525,7 @@ function pillarHandling()
 
 		
 if true then --maRa()==true then
-
+i=1
 --stay upright and fall down
 	for j=i,math.min(i+4,#Pillar),1 do
 					if maRa()==true then

@@ -14,6 +14,21 @@ end
 
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 
+local corpsePrideTable={
+				[FeatureDefNames["bgcorpse"].id]=true,
+				[FeatureDefNames["cinfantrycorpse"].id ]=true,
+				[FeatureDefNames["jinfantrycorpse"].id]=true,
+				[FeatureDefNames["exconroach"].id]=true,
+				[FeatureDefNames["honeypot"].id]=true,
+				[FeatureDefNames["bug"].id]=true,
+				[FeatureDefNames["lavafeature"].id]=true,
+				[FeatureDefNames["lavafeature2"].id]=true,
+				[FeatureDefNames["jbiocorpse"].id]=true,
+
+
+
+				}
+
 if (gadgetHandler:IsSyncedCode()) then
 
 	-- Configuration:
@@ -22,7 +37,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	 function isWreck(FeatureID) 
 	 FeatureDefID=Spring.GetFeatureDefID(FeatureID)
-		if FeatureDefID == FeatureDefNames["bgcorpse"].id or FeatureDefID== FeatureDefNames["cinfantrycorpse"].id or FeatureDefID== FeatureDefNames["jinfantrycorpse"].id then 
+		if corpsePrideTable[FeatureDefID] then 
 		return true
 		end
 		

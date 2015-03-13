@@ -18,7 +18,7 @@ end
 
 
 if (gadgetHandler:IsSyncedCode()) then
-
+	VFS.Include("scripts/toolKit.lua")
 	local  StunnedUnitsTable={}
 	nrOfUnits=0
 	--1 unitid
@@ -34,12 +34,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	local bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
 	local jHiveHoundID= WeaponDefNames["jhivehoundrocket"].id
 	local jSwiftSpearID= WeaponDefNames["swiftprojectile"].id
-	local weapondatID= WeaponDefNames["jgdjump"].id
+	local jghostDancerWeaponDefID= WeaponDefNames["jgdjump"].id
 	local glavaWeaponID= WeaponDefNames["glavaweapon"].id
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
 	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
 	local slicergun = WeaponDefNames["slicergun"].id
+	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
 	local jDrugIncectorID=WeaponDefNames["jdruginjector"].id
@@ -47,6 +48,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	local weapondefID3 = WeaponDefNames["cnukegrenadelvl3"].id
 	local weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
 	local tiglilWeaponDefID= WeaponDefNames["tiglilclosecombat"].id
+	local striderWeaponDefID= WeaponDefNames["warpcannon"].id
+	local highExLineGunDefID= WeaponDefNames["cexplochaingun"].id
+	local jvaryjumpDefID= WeaponDefNames["jvaryjump"].id
+	local crazorgrenadeDefID= WeaponDefNames["crazorgrenade"].id
+	local jgluegunDefID= WeaponDefNames["jgluegun"].id
+	local glueMineWeaponDefID= WeaponDefNames["gluemineweapon"].id
+	
 	local FireWeapons={ [gVolcanoWeaponID]=true,
 						[glavaWeaponID]=true, 	
 						[bunkerPlasmaDefID]=true,  
@@ -54,6 +62,9 @@ if (gadgetHandler:IsSyncedCode()) then
 						[cFlareGun]=true,
 	
 						}
+	Script.SetWatchWeapon(crazorgrenadeDefID , true)
+	Script.SetWatchWeapon(jvaryjumpDefID , true)
+	Script.SetWatchWeapon(striderWeaponDefID , true)
 	Script.SetWatchWeapon(tiglilWeaponDefID , true)
 
 	Script.SetWatchWeapon(slicergun , true)
@@ -66,15 +77,18 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(cmtwgrenade , true)
 	Script.SetWatchWeapon(jHiveHoundID , true)
 	Script.SetWatchWeapon(jSwiftSpearID , true)
-	Script.SetWatchWeapon(weapondatID , true)
+	Script.SetWatchWeapon(jghostDancerWeaponDefID , true)
 	Script.SetWatchWeapon(crabWeaponDefID,true)
 	Script.SetWatchWeapon(bunkerPlasmaDefID,true)
 	Script.SetWatchWeapon(cCssFlameT,true)
 	Script.SetWatchWeapon(glavaWeaponID,true)
 	Script.SetWatchWeapon(gVolcanoWeaponID,true)
 	Script.SetWatchWeapon(weapondefID3 , true)
+	Script.SetWatchWeapon(highExLineGunDefID , true)
+	Script.SetWatchWeapon(jvaryfoospearDefID , true)
+	Script.SetWatchWeapon(jgluegunDefID , true)
 	
-		gaiaTeamID=Spring.GetGaiaTeamID()
+local	gaiaTeamID=Spring.GetGaiaTeamID()
 local	skySraperDefID=UnitDefNames["buibaicity1"].id
 local	cssDefID=UnitDefNames["css"].id
 local	gvolcanoDefID=UnitDefNames["gvolcano"].id
@@ -83,7 +97,40 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 	
 	
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
+		
+		if weaponID == jgluegunDefID then
+		Spring.CreateUnit("ggluemine",	 px, py, pz 1, gaiaTeamID)
+		end
+	
+	
+		if weaponID ==crazorgrenadeDefID then
+		Spring.CreateUnit("crazordrone",px,py,pz,1,gaiaTeamID)			
+		end
 			
+		if weaponID == jvaryjumpDefID then
+		Spring.SetUnitPosition(AttackerID,px,py+80,pz)
+		Spring.MoveCtrl.Enable(AttackerID,true)
+		Spring.SetUnitAlwaysVisible(AttackerID,true)
+		Spring.SetUnitBlocking (AttackerID,true,true,true)
+		end
+		
+		if weaponID== jvaryfoospearDefID then
+		--gluteus maximus- ha that sounds funny
+			if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
+		--wait a second thats my ass
+		GG.ProjectileOrigin[AttackerID]={boolHitGround=true}
+		Spring.SetUnitPosition(AttackerID,px,py,pz)	
+		end
+	
+			
+			
+			if weaponID== striderWeaponDefID then
+			teamid=Spring.GetUnitTeam(AttackerID)
+			Spring.CreateUnit("cstridersfx",px,py,pz,1,teamid)			
+			end
+			
+			
+			--MTW Grenade
 			if weaponID== cmtwgrenade then
 			teamid=Spring.GetUnitTeam(AttackerID)
 			Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
@@ -104,7 +151,7 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 			
 			    end
 		
-			if (weaponID == weapondatID or weaponID== jSwiftSpearID or weaponID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
+			if (weaponID == jghostDancerWeaponDefID or weaponID== jSwiftSpearID or weaponID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
 		--	----Spring.Echo("Mighty BadaBooom!")
 			Spring.SetUnitPosition(AttackerID,px,py,pz)
 			end
@@ -123,9 +170,9 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 	end
 	
 local 	affectedUnits={}
-	--1 unitID
-	--2  counter
-	--3 speed
+	--1 	unitID
+	--2 	counter
+	--3 	speed
 	function switchUnits(aID,bID)
 	ax,ay,az=Spring.GetUnitPosition(aID)
 	bx,by,bz=Spring.GetUnitPosition(bID)
@@ -133,10 +180,40 @@ local 	affectedUnits={}
 	Spring.SetUnitPosition(bID,ax,az)
 	end
 
-
+	blowUpTable={}
+	local timeTillBlowUp=3500
 	
 	local 	jShadowDefID=UnitDefNames["jshadow"].id
+	
+	
 	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	
+
+	
+		--You Sir, have a living spear attached to your gluteus maximus
+		if weaponDefID== jvaryfoospearDefID then
+		--gluteus maximus- ha that sounds funny
+			if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
+		--wait a second thats my ass
+		GG.ProjectileOrigin[attackerID]={boolHitGround=false,id=unitID,lastAttackedPiece=Spring.GetUnitLastAttackedPiece(unitID)}
+		--AaaahaaAaaaaAaaaahahaAAAAaaaaaaah
+		end
+		
+		--perma speed reduction
+		if weaponDefID == glueMineWeaponDefID then
+		--get the maxspeed
+		--multiply it 
+		maxspeed=math.ceil(COB.MAX_SPEED *65533)
+
+		
+		end
+		
+		if weaponDefID ==highExLineGunDefID then
+			if 	blowUpTable[unitID] then blowUpTable[unitID].number= blowUpTable[unitID].number+1 
+			else 	
+			blowUpTable[unitID]={number=1, time=timeTillBlowUp, timeSinceBoom=0}	
+			end	
+		end
 		
 		--poisonedDart
 		if  weaponDefID == tiglilWeaponDefID then
@@ -199,6 +276,7 @@ local 	affectedUnits={}
 			end
 		--jShadow is hit	
 		if unitDefID== jShadowDefID then
+		
 		--unit attacked a jshadow lets store it for this foolishness
 		if attackerID and Spring.ValidUnitID(attackerID)==true then
 		tax=(#affectedUnits)+1
@@ -275,8 +353,19 @@ local 	affectedUnits={}
 						table.remove(GG.Poisoned,k)
 						end
 					end
-										
-				
+				-- handling explosive Ammo
+				--{number=1, time=timeTillBlowUp, timeSinceBoom=0}	
+					for unit, values in pairs(blowUpTable) do
+						values.time=values.time-30
+						values.timeSinceBoom=values.timeSinceBoom+30
+						
+						if values.timeSinceBoom > values.time/values.number then
+						blowItUp(unit)
+						values.number=values.number-1
+						end
+								
+						if values.number==0 then blowUpTable[unit]= nil end
+					end				
 				end
 		
 				--affectedUnits
@@ -310,7 +399,38 @@ local 	affectedUnits={}
 		end
 	end
 	
-
+	function blowItUp(unit,piece,vectordamage)
+	stillAlive= Spring.ValidUnitID(unit)
+	if stillAlive and stillAlive == true then
+	--explosion
+	ux,uy,uz=Spring.GetUnitPosition(unit,true)
+	_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unit,piece)
+	Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
+	Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
+	--directionalShove
+	v={}
+	r={}
+	v.x,v.y,v.z=x-ux,y-uy,z-uz
+	v=normalizeVector(v)
+	v=vMul(v, 900) --power
+	
+	-- crossproduct = (vectordamage x v  ) -> Transfer to local coordsystem hitpiece origin vector 
+	r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
+	Spring.SetUnitRotation(unit,r.x,r.y,r.z)
+	Spring.AddUnitImpulse(unit,v.x,v.y,v.z) 
+	T=grabEveryone(unit,ux,uz,120)
+	--SplashDamage
+	foreach(
+		T, 
+		function (id) if math.random(0,1)==1 then Spring.AddUnitDamage(id,75) end end) 
+	Spring.AddUnitDamage(unit,10)
+	
+	else
+	return false
+	end
+	return true 
+	end
+	
 	
 end
 	

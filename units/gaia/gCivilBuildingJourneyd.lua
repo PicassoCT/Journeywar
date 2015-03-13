@@ -1,4 +1,4 @@
-local unitName = "gcivilbuildingjourneyed"
+local unitName = "gcivbuildjourn"
 
 local unitDef = {
 name = "civilbuilding",

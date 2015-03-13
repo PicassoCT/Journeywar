@@ -34,7 +34,7 @@ local unitDef = {
   trackType ="jBug",
   trackStrength=22,
 
- 
+
 	maneuverleashlength=640,
 	shootme=true,
 	smoothanim=true,
@@ -49,7 +49,7 @@ local unitDef = {
   	mass=550,
 
 	
-corpse="jbiocorpse",
+corpse="honeypot",
   
 
   selfDestructCountdown =0,

@@ -148,6 +148,8 @@ VFS.Include(HEADERS_DIRNAME .. 'figures.lua',nil,VFSMODE)
 VFS.Include(HEADERS_DIRNAME .. 'vectors.lua',nil,VFSMODE)
 VFS.Include(HEADERS_DIRNAME .. 'hsl.lua',nil,VFSMODE)
 VFS.Include(HEADERS_DIRNAME .. 'nanoupdate.lua',nil,VFSMODE)
+--VFS.Include("LuaRules/Utilities/unitrendering.lua", nil, VFSMODE)
+
 
 --// load binary insert library
 VFS.Include(HEADERS_DIRNAME .. 'tablebin.lua')
@@ -188,7 +190,10 @@ function SetUnitLuaDraw(unitID,nodraw)
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) + 1
     if (noDrawUnits[unitID]==1) then
       --if (Game.version=="0.76b1") then
+	if Spring.UnitRendering then  
+		if   Spring.UnitRendering.ActivateMaterial then
         Spring.UnitRendering.ActivateMaterial(unitID,1)
+		end
         --Spring.UnitRendering.SetLODLength(unitID,1,-1000)
         for pieceID in ipairs(Spring.GetUnitPieceList(unitID) or {}) do
           Spring.UnitRendering.SetPieceList(unitID,1,pieceID,nilDispList)
@@ -197,15 +202,18 @@ function SetUnitLuaDraw(unitID,nodraw)
       --  Spring.UnitRendering.SetUnitLuaDraw(unitID,true)
       --end
     end
+    end
   else
     noDrawUnits[unitID] = (noDrawUnits[unitID] or 0) - 1
     if (noDrawUnits[unitID]==0) then
       --if (Game.version=="0.76b1") then
+	  	if Spring.UnitRendering and Spring.UnitRendering.DeactivateMaterial then  
         Spring.UnitRendering.DeactivateMaterial(unitID,1)
       --else
       --  Spring.UnitRendering.SetUnitLuaDraw(unitID,false)
       --end
       noDrawUnits[unitID] = nil
+	  end
     end
   end
 end

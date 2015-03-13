@@ -37,14 +37,14 @@ return {
 				
 				properties={
 				
-				texture=[[flame]],
+				texture=[[Fire6]],
 
 				colormap           = [[1 0.5 0.25 .01   1 0.3 0.05 .01		0 0 0 0.01]],
 			
 
 				 pos                = [[0,0,0]],
 				gravity            = [[0.0, 1, 0.0]],
-				emitvector         = [[0, -1, 0]],
+				emitvector         = [[0r0.1r-0.1, -1, 0r0.1r-0.1]],
 				emitrot		= 45,
 				emitrotspread	= 62.3,
 

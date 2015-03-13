@@ -1,0 +1,629 @@
+function widget:GetInfo()
+	return {
+		name      = "Simple widget list",
+		desc      = "/info replacement in lua",
+		author    = " 3.14159 casso",
+		date      = "e^(-i*pi)",
+		license   = "WTFPL",
+		layer     = 0,
+		enabled   = true,
+		handler   = true
+	}
+end
+
+local options = {
+	ActivateDeactivate=false,
+	fontSize = Spring.GetConfigInt("SmallFontSize", 14),
+	verticalLineSpacing = 1,
+	horizontalColumnSpacing = 2,
+	backgroundColourR = 0,
+	backgroundColourG = 0,
+	backgroundColourB = 128,
+	backgroundColourA = 50,
+	drawBoxOutline = true,
+}
+local max = math.max
+local min = math.min
+local ceil = math.ceil
+local floor = math.floor
+local sqrt = math.sqrt
+local char = string.char
+local bit_and = math.bit_and
+
+
+function GetColour()
+colourindex=colourindex%3+1
+rgb[colourindex]=math.min(0,rgb[colourindex]%1+0.1)
+
+return rgb[1],rgb[2],rgb[3], 0.5
+
+end
+
+function convertColour(colorarray)
+	for index,channel in pairs(colorarray) do
+		channel = ceil(channel*255)
+		channel = max(channel,1)
+		colorarray[index] = min(channel,255)
+	end
+	return char(255,colorarray[1],colorarray[2],colorarray[3])
+end
+
+function getFontStyle(playerColor)
+	local luminance  = (playerColor[1] * 0.299) + (playerColor[2] * 0.587) + (playerColor[3] * 0.114)
+	if luminance > 0.25 then 
+		return "o" -- black outline
+	else
+		return "O" -- white outline
+	end
+end	
+local glTranslate = gl.Translate
+local glScale = gl.Scale
+local glGetTextWidth = gl.GetTextWidth
+local glColor = gl.Color
+local glRect = gl.Rect
+local glGetViewSizes = gl.GetViewSizes
+local glText = gl.Text
+local glBeginEnd = gl.BeginEnd
+local glVertex = gl.Vertex
+local glDeleteList = gl.DeleteList
+local glCreateList = gl.CreateList
+local glPushMatrix = gl.PushMatrix
+local glCallList = gl.CallList
+local glPopMatrix = gl.PopMatrix
+local glPopAttrib = gl.PopAttrib
+local GL_LINE_LOOP = GL.LINE_LOOP
+
+local BACKGROUND_OUTLINE_COLOUR = { 0, 0, 0, 0.6 }
+local HEADING_COLOUR = { 1, 1, 1 }
+local headingcolourcode = convertColour(HEADING_COLOUR)
+local headingstyle = getFontStyle(HEADING_COLOUR)
+local global_alignment_options = "d"
+local maxscreenx, maxscreeny = glGetViewSizes()
+local columnsizes = {}
+local corners = {bottomright={x=1, y=1/maxscreeny},topleft={x=2/maxscreenx, y=2/maxscreeny}}
+local abscorners = {bottomright={x=maxscreenx, y=1},topleft={x=2, y=2}}
+local totalsize = {x=0,y=0}
+local expanddirection = {left=true,top=true}
+local widgetlist
+local moving = false
+local playertable
+local widgetlistchanged = false 
+
+
+
+local IsGUIHidden = Spring.IsGUIHidden
+local GetSpectatingState = Spring.GetSpectatingState
+local GetModKeyState = Spring.GetModKeyState
+local SendCommands = Spring.SendCommands
+local GetUnitPosition = Spring.GetUnitPosition
+local GetSelectedUnitsCount = Spring.GetSelectedUnitsCount
+local MarkerAddPoint = Spring.MarkerAddPoint
+local ShareResources = Spring.ShareResources
+local GetTeamResources = Spring.GetTeamResources
+local GetMouseState = Spring.GetMouseState
+local Echo = Spring.Echo
+local infosorting = Spring.GetConfigInt("WidgetSortByName", 1)
+local sortMode = max(infosorting,1)
+local updateRate = 10/30
+local timeCounter = 0
+colourindex=1
+rgb={math.random(0,1),math.random(0,1),math.random(0,1)}
+local ally_colour = { 0.5, 0.5, 0.5 }
+local enemy_colour = { 0.5, 0.5, 0.5 }
+local amispectator = GetSpectatingState()
+
+
+
+function GetColourScale(value)
+	value = min(1,value)
+	value = max(0,value)
+	return {min(0.5, value)/0.5, 1 - max(0, value-0.5)/0.5, 0, 1}
+end
+
+function RoundNumber(number)
+	return floor(number + 0.5)
+end
+
+
+function widget:ViewResize(viewSizeX, viewSizeY)
+	maxscreenx = viewSizeX
+	maxscreeny = viewSizeY
+	updateAbsSizes()
+end
+
+
+
+function widget:SetConfigData(data)
+	corners = data.corners or corners
+	expanddirection = data.expanddirection or expanddirection
+	if configversion == data.configversion then
+		options = data.options or options
+	end
+	
+	updateAbsSizes()
+end
+
+function widget:GetConfigData()
+	return
+	{
+		corners = corners,
+		expanddirection = expanddirection,
+		options = options,
+		configversion = configversion,
+	
+	}
+end	
+	
+	function widget:Initialize()
+	--widgetHandler:AddAction("shareresources", shareCmd, nil, "t")
+	-- disable default player roster
+	--infosorting = Spring.GetConfigInt("ShowPlayerInfo", 1)
+	--SendCommands({"info 0"})
+end
+
+function widget:Shutdown()
+	glDeleteList(displayList)
+	-- enable default player roster
+	--SendCommands({"info " .. infosorting})
+end
+--TODO WORK down from here
+
+
+
+function calculateColumnSize(index)
+	for i,element in ipairs(widgettable[index]) do
+		columnsizes[i] = max(columnsizes[i] or 0, glGetTextWidth(element[1]) * options.fontSize)
+	end
+end
+
+function updateGlobalSizes()
+	--we intentionally add 1 extra margins on all sides, for aesthetic reasons
+	local sizey = #widgettable * (options.fontSize + options.verticalLineSpacing) + options.verticalLineSpacing
+	local sizex = options.horizontalColumnSpacing
+	for index, size in ipairs(columnsizes) do
+		sizex = sizex + size + options.horizontalColumnSpacing
+	end
+
+	totalsize.x = sizex/maxscreenx
+	totalsize.y = sizey/maxscreeny
+
+	updateAbsSizes()
+end
+
+function refreshOptions()
+	widgetlist = nil -- this to prevent internal states fuckups, esp key presses
+	ignoreLineBreaks = {}
+	widgettable = {}
+	columnsizes = {}
+	local tableIndex = 1
+	local emptyCol = {"", ""}
+	widgettable[tableIndex] = {{"Option", headingstyle}, emptyCol, {"Val", headingstyle}, emptyCol}
+	calculateColumnSize(tableIndex)
+	for optionName, optionValue in pairs(options) do
+		tableIndex = tableIndex +1
+		local isNum = tonumber(optionValue) ~= nil
+		if not isNum then
+			local text = "On"
+			if not optionValue then
+				text = "Off"
+			end
+			widgettable[tableIndex] = {{optionName, headingstyle}, emptyCol, {text,headingstyle}, emptyCol}
+		else
+			widgettable[tableIndex] = {{optionName, headingstyle}, {"-", headingstyle}, {optionValue,headingstyle}, {"+", headingstyle} }
+		end
+		calculateColumnSize(tableIndex)
+	end
+	updateGlobalSizes()
+	widgetlistchanged = true
+end
+
+function fillColumnWithChars(columnIndex,char)
+	local string = ""
+	local textSize = columnsizes[columnIndex]-options.horizontalColumnSpacing
+	local numChars = textSize/(glGetTextWidth(char)*options.fontSize)
+	numChars = floor(numChars)
+	for i=1,numChars do
+		string = string .. char
+	end
+	return string
+end
+
+function barBoolians(bool)
+if bool ==true then return "true" else return false end
+
+end
+
+function Refreshwidgetlist()
+
+	
+	if not widgetlist then
+		return
+	end
+
+	local mouseOver = widget:IsAbove(GetMouseState())
+	
+
+	local autohidewidgetlist = options.autoHidewidgetlist and not mouseOver
+
+
+
+
+	widgettable = {}
+	columnsizes = {}
+	ignoreLineBreaks = {}
+
+	local lineBreakPos = {}
+
+	local tableIndex = 1
+	-- fill plotting table with headers
+	widgettable[tableIndex] = {{headingcolourcode .. "Widgetname", headingstyle}, {headingcolourcode .. "Widget Active", headingstyle}, {headingcolourcode .. "Description", headingstyle}, {headingcolourcode .. "Layer", headingstyle}}
+	-- get max sizes for each column, and fill table to plot
+	calculateColumnSize(tableIndex)
+	
+	for _,wid_get in ipairs(widgetlist) do
+		local name 			= wid_get.whInfo.name
+		local layer 		= wid_get.whInfo.layer
+		local description	=wid_get.whInfo.desc
+		local enabled 		=wid_get.whInfo.enable
+		
+	
+		if wid_get then
+		
+		--TODO
+			tableIndex = tableIndex + 1
+			local colour = {GetColour(team)}
+			local teamcolourcode = convertColour(colour)
+			local teamstyle = getFontStyle (colour)
+			local 	namestring 			=name
+			local 	layerstring 		=""..layer
+			local 	layercolour 		=GetColourScale(layer)
+			local  	descriptionstring	=description
+			local  	enabledstring = barBoolians(enabled)
+			local   enabledcolour= GetColourScale(enabled)
+			
+			if enabled==true then enabledcolour={0.1,1,0.1,0.5} else enabledcolour ={1,0.1,0.1,0.5} end
+		
+			
+	
+
+			widgettable[tableIndex] = {{namestring, teamstyle}, {enabledstring..enabledcolour, teamstyle}, {teamcolourcode .. descriptionstring, teamstyle}, {layercolour .. layerstring, teamstyle}}
+
+			calculateColumnSize(tableIndex)
+		end
+	end
+	if options.lineBreakEnemiesAndSpecs and sortMode == 1 then
+		local shiftPos = 0
+		for index,pos in pairs(lineBreakPos) do
+			local lineEntry = {}
+			pos = pos + shiftPos
+			ignoreLineBreaks[pos] = true
+			for column in ipairs(widgettable[pos]) do
+				lineEntry[column] = {convertColour(enemy_colour) .. fillColumnWithChars(column,line_break_separator_char),headingstyle}
+			end
+			-- +1 because widgettable also has header in
+			table.insert(widgettable,pos+1,lineEntry)
+			table.insert(widgetlist,pos,lineEntry)
+			--account for newly inserted lines
+			shiftPos = shiftPos +1
+		end
+	end
+	updateGlobalSizes()
+	widgetlistchanged = true
+end
+
+function calculateExpandDirections()
+	local mindistance = 3 -- since distances are normalized to 1, they can never exceed 2 even if squared
+	local closestedge
+	local screenedges = {topleft={x=0,y=1},bottomright={x=1,y=0},bottomleft={x=0,y=0},topright={x=1,y=1}}
+	for cornername, cornercoords in pairs(corners) do
+		for edgename, screencoords in pairs(screenedges) do
+			local distsquared = (cornercoords.x-screencoords.x)^2 + (cornercoords.y-screencoords.y)^2
+			if distsquared < mindistance then
+				mindistance = distsquared
+				closestedge = edgename
+			end
+		end
+	end
+	expanddirection = {}
+	if closestedge == "bottomright" then
+		expanddirection.left = true
+		expanddirection.top = true
+	elseif closestedge == "topleft" then
+		expanddirection.top = false
+		expanddirection.left = false
+	elseif closestedge == "topright" then
+		expanddirection.left = true
+		expanddirection.top = false
+	elseif closestedge == "bottomleft" then
+		expanddirection.left = false
+		expanddirection.top = true
+	end
+	if expanddirection.left then
+		corners.topleft.x = corners.bottomright.x - totalsize.x
+	else
+		corners.bottomright.x = corners.topleft.x + totalsize.x
+	end
+	if expanddirection.top then
+		corners.topleft.y = corners.bottomright.y + totalsize.y
+	else
+		corners.bottomright.y = corners.topleft.y - totalsize.y
+	end
+	widgetlistchanged = true
+end
+
+function updateAbsSizes()
+	abscorners = {}
+	if not corners then return end
+	--wtf, if i don't copy this way, when i edit scaledcoords, corners gets edited too
+	for corner,coords in pairs(corners) do
+		abscorners[corner] = abscorners[corner] or {}
+		for direction,value in pairs(coords) do
+			abscorners[corner][direction] = value
+		end
+	end
+	if expanddirection.left then
+		abscorners.topleft.x = corners.bottomright.x - totalsize.x
+	else
+		abscorners.bottomright.x = corners.topleft.x + totalsize.x
+	end
+	if expanddirection.top then
+		abscorners.topleft.y = corners.bottomright.y + totalsize.y
+	else
+		abscorners.bottomright.y = corners.topleft.y - totalsize.y
+	end
+
+	--rescale to abs coordinates
+	for _,corner in pairs(abscorners) do
+		corner.x = corner.x * maxscreenx
+		corner.y = corner.y * maxscreeny
+	end
+
+	widgetlistchanged = true
+end
+
+function Drawwidgetlist()
+	if not widgetlistchanged then
+		return
+	end
+	if not widgettable then
+		return
+	end
+	local alignflags = global_alignment_options
+	if options.alignToCenter then
+		alignflags = alignflags .. "c"
+	end
+	if (displayList) then glDeleteList(displayList) end
+	displayList = glCreateList( function()
+		if options.drawBoxOutline then
+			--draw outline
+			BACKGROUND_OUTLINE_COLOUR[4] = min(options.backgroundColourA/255+0.4,1)
+			glColor(BACKGROUND_OUTLINE_COLOUR)
+			glBeginEnd(GL_LINE_LOOP, function()
+				glVertex(abscorners.topleft.x, abscorners.topleft.y)
+				glVertex(abscorners.topleft.x, abscorners.bottomright.y)
+				glVertex(abscorners.bottomright.x, abscorners.bottomright.y)
+				glVertex(abscorners.bottomright.x, abscorners.topleft.y)
+			end)
+		end
+		if options.backgroundColourA > 0 then
+			-- draw background box
+			glColor(options.backgroundColourR/255,options.backgroundColourG/255,options.backgroundColourB/255,options.backgroundColourA/255)
+			glRect(abscorners.topleft.x, abscorners.topleft.y, abscorners.bottomright.x, abscorners.bottomright.y)
+		end
+		-- draw text table
+		local currentlinex = abscorners.topleft.x
+		local currentliney = abscorners.topleft.y - options.verticalLineSpacing - options.fontSize - options.verticalLineSpacing
+		for _, lineelements in ipairs(widgettable) do
+			currentlinex = abscorners.topleft.x + options.horizontalColumnSpacing
+			local midcolumnspacing = 0
+			for column, cellelement in ipairs(lineelements) do
+				if options.alignToCenter then
+					midcolumnspacing =  columnsizes[column] / 2
+				end
+				glText(cellelement[1], currentlinex + midcolumnspacing, currentliney, options.fontSize, cellelement[2] .. alignflags)
+				currentlinex = currentlinex + columnsizes[column] + options.horizontalColumnSpacing
+			end
+			currentliney = currentliney - options.fontSize - options.verticalLineSpacing
+		end
+	end)
+	widgetlistchanged = false
+end
+
+function widget:Update(deltaTime)
+	timeCounter = timeCounter + deltaTime
+	-- update only x times per second
+	if timeCounter < updateRate then
+		return
+	end
+	timeCounter = 0
+	return
+	-- if not widgetHandler:InTweakMode() then
+		-- Refreshwidgetlist()
+	-- else
+		-- refreshOptions()
+	-- end
+end
+
+function widget:DrawScreen()
+	if IsGUIHidden() then
+		return
+	end
+	Drawwidgetlist()
+	if displayList then
+		glPushMatrix()
+			glCallList(displayList)
+		glPopMatrix()
+	end
+end
+
+function TranslateMouseCoordinatesToTable(mx, my)
+	--remove the text margins
+	local topleftx = abscorners.topleft.x + options.horizontalColumnSpacing
+	local toplefty = abscorners.topleft.y - options.verticalLineSpacing
+	local bottomrightx = abscorners.bottomright.x - options.horizontalColumnSpacing
+	local bottomrighty = abscorners.bottomright.y + options.verticalLineSpacing
+	if mx > topleftx and my < toplefty and mx < bottomrightx and my > bottomrighty then
+		-- find the line
+		mx = mx - topleftx
+		my = my - bottomrighty
+		local line = #widgettable - floor(my/(options.fontSize + options.verticalLineSpacing)) - 1
+		-- find the column
+		local column
+		for index, size in ipairs(columnsizes) do
+			if mx < size then
+				column = index
+				break
+			end
+			mx = mx - size - options.horizontalColumnSpacing
+		end
+		return line,column
+	else
+		return
+	end
+end
+
+function getKeyMultiplier(currentVal)
+	local alt,ctrl,meta,shift =  GetModKeyState()
+	local increment = 1
+	if ctlr and shift then
+		increment = 100
+	elseif ctrl then
+		increment = 20
+	elseif shift then
+		increment = 5
+	end
+	return increment
+end
+
+function widget:TweakMousePress(mx,my,mb)
+	if IsGUIHidden() then
+		return false
+	end
+	if mb ~= 1 then
+		return false
+	end
+	local line, column = TranslateMouseCoordinatesToTable(mx, my)
+	-- is it within the widget area
+	moving = line and column
+	if not moving then
+		return false
+	end
+	if line > 0 then
+		local optionname = widgettable[line+1][1][1]
+		local isNum = tonumber(options[optionname]) ~= nil
+		if column == 4 then -- increment numeric val
+			if isNum then
+				options[optionname] = max(min(options[optionname] + getKeyMultiplier(),255),0)
+			end
+		elseif column == 3 then -- changing a bool option
+			if not isNum then
+				options[optionname] = not options[optionname]
+			end
+		elseif column == 2 then -- decrement numeric val
+			if isNum then
+				options[optionname] = max(min(options[optionname] - getKeyMultiplier(),255),0)
+			end
+		end
+	end
+	return true
+end
+
+function widget:TweakMouseRelease(mx,my,mb)
+	calculateExpandDirections()
+	moving = false
+end
+
+function widget:TweakMouseMove(x,y,dx,dy,mb)
+	if moving then
+		dx = dx/maxscreenx
+		dy = dy/maxscreeny
+		corners.topleft.x = corners.topleft.x + dx
+		corners.topleft.y = corners.topleft.y + dy
+		corners.bottomright.x = corners.bottomright.x + dx
+		corners.bottomright.y = corners.bottomright.y + dy
+		updateAbsSizes()
+	end
+end
+
+function widget:IsAbove(mx, my)
+	return not IsGUIHidden() and mx >= abscorners.topleft.x and mx <= abscorners.bottomright.x and my >= abscorners.bottomright.y and my <= abscorners.topleft.y
+end
+
+function convertSIPrefix(value,thresholdmodifier)
+	thresholdmodifier = thresholdmodifier or 1
+	local returnstring
+	if value >= 10000000000000 * thresholdmodifier then
+		returnstring = RoundNumber(value / 10000000000000) .. "T"
+	elseif value >= 1000000000 * thresholdmodifier then
+		returnstring = RoundNumber(value / 1000000000) .. "G"
+	elseif value >= 1000000 * thresholdmodifier then
+		returnstring = RoundNumber(value / 1000000) .. "M"
+	elseif value >= 1000 * thresholdmodifier then
+		returnstring = RoundNumber(value / 1000) .. "k"
+	else
+		returnstring = RoundNumber(value)
+	end
+	return returnstring
+end
+
+function widget:GetTooltip(mx, my)
+	return 
+end
+
+function widget:MousePress(mx,my,mb)
+	if IsGUIHidden() then
+		return false
+	end
+	--if widgetHandler:InTweakMode() then
+	--	return false -- tweak mouse press are handled in the dedicated function
+	--end
+	local line, column = TranslateMouseCoordinatesToTable(mx, my)
+	-- is it within the widget area
+	if not line or not column then
+		return false
+	end
+	local alt,ctrl,meta,shift =  GetModKeyState()
+	-- ctrl is seemingly broken
+	if options.useAlt ~= alt or options.useMeta ~= meta or options.useShift ~= shift then
+		return false
+	end
+	
+	if not widgetlist then
+		return false
+	end
+
+	if ignoreLineBreaks[line] then
+		return true -- no action on a line break
+	end
+	
+	--hitting the name
+	if line ==1  then
+		local columnremap = { 2, 1, 3, 4, 5 } -- sort by: team, ally, name, cpu, ping
+		sortMode = columnremap[column]
+		return true
+	end
+return true
+end
+
+function replaceSIMultiplier(text)
+	local multiplier = 1
+	local suffixes = {"k","m","g","t"}
+	local suffixpos
+	for count,suffix in ipairs(suffixes) do
+		suffixpos = text:find(suffix)
+		if suffixpos then
+			multiplier = 1000^count
+			text = text:sub(1,suffixpos-1)
+			break
+		end
+	end
+	local num = tonumber(text)
+	if num then
+		num = num * multiplier
+	end
+	return num
+end
+
+
+	
+	

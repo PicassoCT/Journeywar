@@ -7,7 +7,7 @@ aimpoint=piece"aimpoint"
 local SIG_AIM2=1
 local SIG_WALK=2
 local SIG_LEG=4
-
+local SIG_DEFAULT=32
 
 
 
@@ -21,7 +21,7 @@ temp="crableg"..i
 crableg[i]=piece (temp)
 end
 function script.Create()
-
+	StartThread(defaultEnemy)
 end
 
 function frontLeg(nr,inverter)
@@ -226,17 +226,40 @@ function walk()
 	end
 
 	function script.StartMoving()
-
+	Signal(SIG_DEFAULT)
 	StartThread(walk)
 	end
 
 	function script.StopMoving()
 		Signal(SIG_WALK)
+		StartThread(defaultEnemy)
 		StartThread(legs_down)
 		Turn(deathpivot,y_axis,math.rad(0),7)
 		
 
 	end
+		
+	function defaultEnemy()
+	SetSignalMask(SIG_DEFAULT)
+	Sleep(15000)
+	
+		while true do
+		Sleep(10000)
+		ed=Spring.GetUnitNearestEnemey(unitID)
+			if ed then
+			x,y,z=Spring.GetUnitPosition(ed)
+			if x then
+			Spring.SetUnitMoveGoal(unitID,x,y,z)
+			end
+			end
+		end
+	
+	
+	
+	end
+	
+	
+	
 	
 	
 function script.HitByWeapon(x,z,weaponDefID,damage)

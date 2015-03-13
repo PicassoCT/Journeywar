@@ -15,9 +15,9 @@ local SIG_WALK = 1	--signal for the walk animation thread
 local SIG_AIM = 2  --signal for the weapon aiming thread
 local SIG_LEG=4
 local SIG_AIM2 = 8
-
+local SIG_DEFAULT=32
 function script.Create()
-  
+  	StartThread(defaultEnemy)
 end
 
 function legs_down()
@@ -139,14 +139,36 @@ function walk()
 
 	function script.StartMoving()
 	StartThread(walk)
+	Signal(SIG_DEFAULT)
 	end
 
 	function script.StopMoving()
 	Signal(SIG_WALK)
 	StartThread(legs_down)
+	StartThread(defaultEnemy)
 	end
 	
 	
+	
+		
+	function defaultEnemy()
+	SetSignalMask(SIG_DEFAULT)
+	Sleep(25000)
+	
+	while true do
+	Sleep(10000)
+	ed=Spring.GetUnitNearestEnemey(unitID)
+		if ed then
+		x,y,z=Spring.GetUnitPosition(ed)
+		if x then
+		Spring.SetUnitMoveGoal(unitID,x,y,z)
+		end
+		end
+	end
+	
+	
+	
+	end
 	
 	
 	

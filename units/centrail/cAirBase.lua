@@ -12,8 +12,7 @@ script = "cAirBaseScript.lua",
 buildPic = "cairbase.dds",
 
 
-	RadarDistance = 0,
-	SightDistance = 400,	
+
 	Upright = 1,	
 	levelground = 1,
 
@@ -41,9 +40,10 @@ sightDistance = 700,
 isAirbase =true,
 EnergyStorage = 200,
 	EnergyUse = 15,
+	MetalUse = 3,
 	MetalStorage = 200,
 	EnergyMake = 0, 
-	MakesMetal = 5, 
+	MakesMetal = 0, 
 	MetalMake = 0,	
 
 
@@ -58,7 +58,7 @@ Builder = true,
 ShowNanoSpray = true,
 CanBeAssisted = true,
 CanReclaim=true,	
-workerTime = 0.4,
+workerTime = 0.01,
 buildDistance = 200,
 terraformSpeed = 50,
 

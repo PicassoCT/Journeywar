@@ -36,7 +36,7 @@ speed=9.18
 if float~=0 then speed =2.5 end
 Move(WaterPoint,y_axis,y*-1+ rand -2+float,speed)
 WaitForMove(WaterPoint,y_axis)
-
+Sleep(250)
 end
 Move(WaterPoint,y_axis,0,19.81)
 WaitForMove(WaterPoint,y_axis)
@@ -59,6 +59,7 @@ SetSignalMask(SIG_PULSE)
 	Move(pulsUp2,y_axis,0,10)
 	WaitForMove(pulsUp,y_axis)
 	WaitForMove(pulsUp2,y_axis)
+	Sleep(250)
 	end
 end
 

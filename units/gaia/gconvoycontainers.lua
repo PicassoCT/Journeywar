@@ -4,7 +4,7 @@ local unitDef = {
 name = "Container",
 Description = "drop near Farcaster for Reward",
 objectName = "gMission1Container.s3o",
-script = "scapegoat.lua",
+script = "gMission1ContainerScript.lua",
 buildPic = "placeholder.png",
 levelGround =false,
 --cost

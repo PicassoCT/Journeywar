@@ -55,17 +55,18 @@ function script.Activate()
 		end
 
 
- 	function script.HitByWeapon ( x, z, weaponDefID, damage )
-	
-	if damage/maxHealth > 0.75  then
-	hp=Spring.GetUnitHealth(unitID)
-		if hp-damage <= 0 then
-			Spring.SetUnitCrashing(unitID, true)
-			Spring.SetUnitNoSelect(unitID, true)
-			Spring.SetUnitNeutral(unitID,true)
-		end
-	end
-	return damage
+function script.HitByWeapon ( x, z, weaponDefID, damage )
+hp=Spring.GetUnitHealth(unitID)
+if hp and  hp-damage < 0 then
+Explode( center,SFX.FALL+SFX.FIRE +SFX.SMOKE)    
+Explode( aim1,SFX.FALL+SFX.FIRE +SFX.SMOKE)    
+Spring.SetUnitCrashing(unitID,true)
+SetUnitValue(COB.CRASHING, 1)
+Spring.SetUnitNeutral(unitID,true)
+Spring.SetUnitNoSelect(unitID,true)
+return 0
+end
+return damage
 end
 
  

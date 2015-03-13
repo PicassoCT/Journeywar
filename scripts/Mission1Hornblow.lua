@@ -112,19 +112,20 @@ for i=1, 500,1 do
 
 	
 
-	for i=1,25,1 do
+	for i=1,12,1 do
 	time=math.ceil(math.random(1900,29000))
 		Sleep(time)
 		dx=math.ceil(math.random(-120,120))
 		dz=math.ceil(math.random(-120,120))
 		rot=math.floor(math.random(1,3))
-		
+	if i%2==0 then	
 	Spring.CreateFeature( "bgcorpse", x+dx,y,z+dz, rot)		
+	else
 		dx=math.ceil(math.random(-120,120))
 		dz=math.ceil(math.random(-120,120))
 		rot=math.floor(math.random(1,3))
 	Spring.CreateFeature( "cInfantryCorpse", x+dx,y,z+dz, rot)
-		
+	end
 		if i%6== 0 then StartThread(soundEmit) end
 
 	end

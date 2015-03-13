@@ -5,7 +5,7 @@ function gadget:GetInfo()
       desc = "Make mobile units grow and shrink",
       author = "zwzsg",
       date = "21st of March 2013",
-      license = "Free",--Janus License- under Software Patent Nr. 23432-756F-11-2014 held by the FSF for commercial purposes, under GPL for non-commercial usage
+      license = "Free, wishing for a benevolent dicatorship, cause instinctarded. To value freedom, you got to be able to use it.",--Janus License- under Software Patent Nr. 23432-756F-11-2014 held by the FSF for commercial purposes, under GPL for non-commercial usage
       layer = 0,
       enabled = true
    }
@@ -14,7 +14,7 @@ end
 
 if (gadgetHandler:IsSyncedCode()) then
 	
-	local JBUILDANIM="NOTYPE"
+	 JBUILDANIM="NOTYPE"
 
 	--all units that are buildings
 	jBuilding={
@@ -32,13 +32,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	[UnitDefNames["jfireflower"].id]=true,
 	[UnitDefNames["jbeehive"].id]=true,
 	[UnitDefNames["jfungiforrest"].id]=true,
-	[UnitDefNames["jviralfac"].id]=true,
+	[UnitDefNames["jnativevil"].id]=true,
+	[UnitDefNames["jtreel"].id]=true,
 	[UnitDefNames["jabyss"].id]=true	
 				}
 				
 
 
-   local DefTypeTable={
+   DefTypeTable={
    [UnitDefNames["jswiftspear"].id]=true,
    [UnitDefNames["jbeherith"].id]=true,
    [UnitDefNames["jsungodcattle"].id]=true,
@@ -48,10 +49,15 @@ if (gadgetHandler:IsSyncedCode()) then
    [UnitDefNames["jspacebornembryo"].id]=true
    }
    
-   local SyncedDataTable={}-- Table that contains some data about some units
-   local scaleTable={}
-   local jWorkInProgress={}
-    buildList={}
+   jBuildAnimDefID=UnitDefNames["jbuildanim"].id
+   SyncedDataTable={}-- Table that contains some data about some units
+   scaleTable={}
+   LastSetBuildAnim={}
+   jWorkInProgress={}
+   buildList={}
+   
+   local spValidUnitID= Spring.ValidUnitID
+ 
    
     function gadget:UnitCreated(unitID, unitDefID, unitTeam)
 		if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id  or 
@@ -99,16 +105,22 @@ if (gadgetHandler:IsSyncedCode()) then
 		--if journeybuild animation
 	  	 if jBuilding[unitDefID] then
 		 --Spring.Echo("JourneyBuilding Inserted")
-		 index=#buildList+1
-		 buildList[index]={unitID=unitID, unitDefID=unitDefID, unitTeam=unitTeam}		
+	
+		 x,y,z=Spring.GetUnitPosition(unitID)
+		 GG.UnitsToSpawn:PushCreateUnit("jbuildanim",x,y,z+4,0,unitTeam)
+	
+		 
+		LastSetBuildAnim[#LastSetBuildAnim+1]={unitID=unitID, unitDefID=unitDefID, unitTeam=unitTeam,birth=Spring.GetGameFrame()}		
+		 end	
+		 
+		 if unitDefID == jBuildAnimDefID then		 
+		 buildList[unitID]=LastSetBuildAnim[#LastSetBuildAnim]
+		 table.remove(LastSetBuildAnim,#LastSetBuildAnim)
 		 end
 	  
    end
    
-   
-
-
-   function gadget:UnitDestroyed(unitID, unitDefID)
+	function gadget:UnitDestroyed(unitID, unitDefID)
       -- Never forget to delete data about dead units!
       -- Or else your tables will slowly grow during game with huge amount of useless data!
       if SyncedDataTable[unitID] then
@@ -117,6 +129,7 @@ if (gadgetHandler:IsSyncedCode()) then
          SendToUnsynced("UnsetScale",unitID)
       end
    end
+   
    --All units that do a constant scaling up
 	local UnitsScaling={	
 		[UnitDefNames["jswiftspear"].id] 			=true,
@@ -131,34 +144,33 @@ if (gadgetHandler:IsSyncedCode()) then
 	local SUNGODCATTLEDEFID= UnitDefNames["jsungodcattle"].id
 	local EMBRYODEFID= UnitDefNames["jspacebornembryo"].id
 	local spGetUnitHealth=Spring.GetUnitHealth
-   
-  function gadget:GameFrame(frame)
 	
-   
-		 if frame > 0 then
-			 if frame%7 == 0 then
-					if table.getn(buildList) > 0 then 
-						for i=1, #buildList,1  do
-							x,y,z=Spring.GetUnitPosition(buildList[i].unitID)
-							id=Spring.CreateUnit("jbuildanim",x,y,z+4,0,buildList[i].unitTeam)			 
+local  function handleNewEntrys()
+			if table.getn(buildList) > 0 then 
+						for id,v in pairs(buildList)  do
+								x,y,z=Spring.GetUnitPosition(buildList[id].unitID)
+							
 								if id then
-								guid=buildList[i].unitID
-								scaleTable[id]={scale=0.001, utype=JBUILDANIM, uid=id, scaleLimit=1+math.random(0.1,0.3), pulse=true}
+								guid=buildList[id].unitID
+							    scale = 1+0.5*math.sin((frame - v.birth)/50)
+								SendToUnsynced("SetScale", unitID, scale)
+								scaleTable[id]={scale=scale, utype=JBUILDANIM, uid=id, scaleLimit=1+math.random(0.1,0.3), pulse=true}
 								Spring.SetUnitAlwaysVisible(guid,false)
 								Spring.SetUnitNoSelect(id,true)
 								jWorkInProgress[guid] = id
 								
 										
 								SyncedDataTable[guid] = {}
-								SyncedDataTable[guid] = { birth=buildList[i].unitID + frame }	
+								SyncedDataTable[guid] = { birth=buildList[id].unitID + frame }	
 								end
 						end
 					buildList={}
-					end
-					
-		
-		
-					
+			end
+  
+  end
+  
+local  function handleBuildAnims()
+  					
 		------------	--BuildAnims	--------------------------------------------------------------------	
 		if #jWorkInProgress > 0 then
 			for k,v in pairs(jWorkInProgress) do
@@ -188,10 +200,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	----------------------------------------------------------------------------------------------------
 
-			
-					
-			 
-				for unitID,_ in pairs(scaleTable)  do
+  
+  end
+  
+local  function setScaleTable()
+		 local FeedingVaryFooCopy=GG.VaryFooFeeding
+		--PrepCycle 
+			for unitID,_ in pairs(scaleTable)  do
 					 -- Here my scale is a sinusoid of time. So they grow and shrink smoothly and periodically
 					 -- Use your own formula obviously
 
@@ -203,9 +218,8 @@ if (gadgetHandler:IsSyncedCode()) then
 							if scaleTable[unitID].utype == SUNGODCATTLEDEFID and scaleTable[unitID].scale >= math.random(0.87,1) then scaleTable[unitID] = nil end 
 
 						--if it is a varyfoo it grows by how much it has eaten
-							if scaleTable and scaleTable[unitID] and scaleTable[unitID].utype==VARYFOODEFID and GG.VaryFooFeeding and GG.VaryFooFeeding[unitID] then
-								scaleTable[unitID].scale= math.min(scaleTable[unitID].scale+scaleTable[unitID].factor, GG.VaryFooFeeding[unitID])
-							
+							if scaleTable and scaleTable[unitID] and scaleTable[unitID].utype==VARYFOODEFID and FeedingVaryFooCopy and FeedingVaryFooCopy[unitID] then
+								scaleTable[unitID].scale= math.min(scaleTable[unitID].scale+scaleTable[unitID].factor, FeedingVaryFooCopy[unitID])							
 							end
 							
 							if scaleTable[unitID] and scaleTable[unitID].utype==EMBRYODEFID then
@@ -220,7 +234,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							end
 					--end
 				 end
-			end
+
 			
 				for unitID,_ in pairs(scaleTable) do
 					 -- Here my scale is a sinusoid of time. So they grow and shrink smoothly and periodically
@@ -229,12 +243,27 @@ if (gadgetHandler:IsSyncedCode()) then
 					 SendToUnsynced("SetScale",scaleTable[unitID].scale, scaleTable[unitID].uid )
 					 -- Well, I change it constantly, so call it every frame, but that's for a more visual example
 				end
+		
+  
+  end
+  
+			
+   
+  function gadget:GameFrame(frame)
+	
+   
+		 if frame > 0 and  frame%7 == 0 then
 			 
-		 end
+					handleNewEntrys()
+					
+					handleBuildAnims()
+		
+					setScaleTable()
+			
+		end			
+			 
+		 
    end
-
-   local spValidUnitID= Spring.ValidUnitID
- 
    
 
 

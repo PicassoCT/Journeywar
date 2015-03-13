@@ -426,12 +426,13 @@ FixFunctionTabel[2]= function ()
 		randCent=math.ceil(math.random(4,9))
 		x,y,z=Spring.GetUnitPosition(unitID)
 			for k=1,randCent do
+			MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(math.max(1,k),#TreePiece)],ex,ez,0,SIZEOFPIECE/2)
 			ex,ez=x+math.random(-90,90),z+math.random(-90,90)
 			
 			start,End=(k-1)*(NUMBEROFPIECES/randCent)+1,k*(NUMBEROFPIECES/randCent)
 			flowerdeg= math.random(15,85)
-				for i=start,End,1 do
-				MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(math.max(1,i),#TreePiece)],ex,ez,0,SIZEOFPIECE/2)
+				for i=math.max(2,start),math.min(End,NUMBEROFPIECES),1 do
+				MovePieceToPiece(TreePiece[math.min(math.max(1,i),#TreePiece)],EndPiece[math.min(math.max(1,i),#TreePiece)])
 					if i > start then
 					Turn(TreePiece[i],y_axis,math.rad(((i-start+1)*(360/randCent))),0,true)
 					Turn(TreePiece[i],x_axis,flowerdeg,0)

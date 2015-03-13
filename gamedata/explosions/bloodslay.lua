@@ -37,8 +37,8 @@ return {
       ground             = false,
       water              = true,
       properties = {
-        colormap           = [[1 1 1 1   1 1 1 1   0 0 0 0]],
-        dir                = [[dir]],
+        colormap           = [[1 1 1 0.05  1 1 1 0.05   0 0 0 0]],
+        dir                = [[0r0.5r-0.5,0.5r0.5,0r0.5r-0.5]],
         frontoffset        = 0,
         fronttexture       = [[bloodsplat]],
         length             = 2,
@@ -50,7 +50,7 @@ return {
     },
 	
 	
-	blooddrops = {
+	blooddrops2 = {
       air                = true,
       class              = [[CSimpleParticleSystem]],
       count              = 1,

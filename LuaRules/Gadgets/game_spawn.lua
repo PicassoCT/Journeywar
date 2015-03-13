@@ -39,11 +39,24 @@ end
 
 local modOptions = Spring.GetModOptions()
 
+function IsTeamAI(teamID)
+teamID,leader,isDead,isAiTeam=Spring.GetTeamInfo(teamID)
+return isAiTeam
+end
 
 local function GetStartUnit(teamID)
 	-- get the team startup info
 	local side = select(5, Spring.GetTeamInfo(teamID))
 	local startUnit
+	
+	boolIsAI= IsTeamAI(teamID)
+	
+		if boolIsAI==true then
+		local sidedata = Spring.GetSideData()
+		startUnit =sidedata.startunitai
+		return startUnit
+		end
+	
 	if (side == "") then
 		-- startscript didn't specify a side for this team
 		local sidedata = Spring.GetSideData()

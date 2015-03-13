@@ -1,3 +1,4 @@
+include "toolKit.lua"
 rope= {}
 
   rp0 =piece "rp0"  table.insert (rope,rp0)
@@ -464,10 +465,16 @@ unitPosX, unitPosY, unitPosZ=Spring.GetUnitPosition(unitID)
 return addX,addY,addZ	
 end
 
+conairDefID=Spring.GetUnitDefID(unitID)
+lastLoudness=0.5
+valToAdd=0.1
 function ropeThread()
 -- Resets the Trooper
 
- Spring.PlaySoundFile("sounds/conair/cConAir.wav")
+if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
+lastLoudness=lastLoudness+valToAdd
+PlaySoundByUnitType(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+
 
 Turn(swingersClub,x_axis,math.rad(0),150)
 Turn(bgdrop,y_axis,math.rad(0),150)
@@ -475,7 +482,9 @@ Turn(swingersClub,z_axis,math.rad(0),150)
 Move(bgdrop,y_axis,0,260)
 
 buildID=Spring.GetUnitIsBuilding(unitID)
+if buildID and type(buildID)=="number" then
 Spring.SetUnitNoDraw(buildID,true) 
+end
 StartThread(ropeShow)
 Sleep(90)
 Show(bgdrop)
@@ -887,10 +896,9 @@ end
 function script.StartMoving()
 
 	--windGet()
-	if boolOnlyOnce==true then
-	 boolOnlyOnce=false
-	 StartThread(moveStateCheck)
-	 end
+
+	
+	
 	 
    boolMoving=true
    boolShortStop=true
@@ -909,17 +917,16 @@ end
 
 
 
-	function script.HitByWeapon ( x, z, weaponDefID, damage )
-	
-	if damage/maxhealth > 0.75 and boolSelfKill==false then
+function script.HitByWeapon ( x, z, weaponDefID, damage )
 	hp=Spring.GetUnitHealth(unitID)
-		if hp-damage <= 0 then
-			Spring.SetUnitCrashing(unitID, true)
-			Spring.SetUnitNoSelect(unitID, true)
-			Spring.SetUnitNeutral(unitID,true)
-		end
+	if hp and  hp-damage < 0 then
+	Spring.SetUnitCrashing(unitID,true)
+	SetUnitValue(COB.CRASHING, 1)
+	Spring.SetUnitNeutral(unitID,true)
+	Spring.SetUnitNoSelect(unitID,true)
+	return 0
 	end
-	return damage
+return damage
 end
 
 boolIwantToGoHome=false
@@ -989,7 +996,7 @@ function script.Create()
 
 birthX,birthY,birthZ=Spring.GetUnitPosition(unitID)
  --updateDelete
- 
+  StartThread(moveStateCheck)
 Hide (rp0)                                                
 Hide (rp1)                                                 
 Hide (rp2)                                                  
@@ -1016,8 +1023,10 @@ Hide(jetemit1)
 Hide(jetemit4) 
 
 Hide(bgdrop)
-landed()
-Spring.PlaySoundFile("sounds/conair/cConAir.wav")
+StartThread(landed)
+if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
+lastLoudness=lastLoudness+valToAdd
+PlaySoundByUnitType(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 end
 _,maxhealth=Spring.GetUnitHealth(unitID)
 
@@ -1061,7 +1070,11 @@ function script.StopBuilding()
 end
 
 function script.StartBuilding(heading, pitch)
-    Spring.PlaySoundFile("sounds/conair/cConAir.wav")	
+
+if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
+lastLoudness=lastLoudness+valToAdd
+PlaySoundByUnitType(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+
 	boolRopeRelease=false
 	Signal(SIG_HOVER)
 	--Signal(SIG_CHECK)

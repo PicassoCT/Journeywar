@@ -54,10 +54,10 @@ MaxVelocity = 4,
  maneuverleashlength    = [[640]],
   mass                   = 300,
   maxDamage              = 900,
-    minWaterDepth          = 3,
+    minWaterDepth          = 1,
 	movementClass          = [[UBOAT3]],	
 nanocolor=[[0.2 0.9 0.5]],
-Category = [[LAND]],
+
 
 
  customParams = {},
@@ -69,7 +69,7 @@ Category = [[LAND]],
 				},	
 	},	
 	
-	
+Category = [[WATER]],	
 weapons = {
 [1]={name  = "jflyingfish",
 	onlyTargetCategory = [[LAND]],

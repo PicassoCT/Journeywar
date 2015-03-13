@@ -42,7 +42,7 @@ LeaveTracks = false,
 
    
 
-Category = [[NOTARGET]],
+Category = [[NOTARGET TRAITOR]],
 
 
 

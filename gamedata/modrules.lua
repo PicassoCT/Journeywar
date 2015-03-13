@@ -28,22 +28,22 @@ local modrules  = {
 
 
   reclaim = {
-    multiReclaim  = 0;    -- defaults to 0
-    -- reclaimMethod = 0;    -- defaults to 1
-    -- unitMethod    = 0;    -- defaults to 1
+    multiReclaim  = 1;    -- defaults to 0
+    reclaimMethod = 0;    -- defaults to 1
+    unitMethod    = 0;    -- defaults to 1
 
-    -- unitEnergyCostFactor    = 0;  -- defaults to 0
-    -- unitEfficiency          = 0.5;  -- defaults to 1
-    -- featureEnergyCostFactor = 0;  -- defaults to 0
+     unitEnergyCostFactor    = 1;  -- defaults to 0
+     unitEfficiency          = 0.5;  -- defaults to 1
+     featureEnergyCostFactor = 0;  -- defaults to 0
 
     allowEnemies  = true;  -- defaults to true
     allowAllies   = true;  -- defaults to true
   },
 
 
-  -- repair = {
-    -- energyCostFactor = 0.5,  -- defaults to 0
-  -- },
+   repair = {
+   energyCostFactor = 0.5,  -- defaults to 0
+   },
 
 
   -- resurrect = {
@@ -73,12 +73,12 @@ local modrules  = {
   -- },
 
 
-  -- transportability = {
-    -- transportGround = 1;   -- defaults to 1
-    -- transportHover  = 1;   -- defaults to 0
-    -- transportShip   = 1;  -- defaults to 0
-    -- transportAir    = 0;  -- defaults to 0
-  -- },
+  transportability = {
+    transportGround = 1;   -- defaults to 1
+    transportHover  = 0;   -- defaults to 0
+    transportShip   = 1;  -- defaults to 0
+    transportAir    = 0;  -- defaults to 0
+  },
 
 
   -- flankingBonus = {

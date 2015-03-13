@@ -61,6 +61,10 @@ citadell=  {
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,498,0}, size=5, precision=22, strength   = 0.15,  repeatEffect=true}},
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,613,0}, size=100, precision=22, strength   = 0.005,  repeatEffect=true}},
   },
+  
+ cstridersfx=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,613,0}, size=50, precision=22, strength   = 0.005,  repeatEffect=true}},
+  },
 
 jshroudshrike={
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=  300 ,onActive=true, precision=22, strength   = 0.042,  repeatEffect=true}},

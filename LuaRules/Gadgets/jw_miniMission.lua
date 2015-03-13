@@ -8,7 +8,7 @@ function gadget:GetInfo()
     license   = "GNU GPL, v2 or later",
     layer     = 0,
 	version = 1,
-    enabled   = true,
+    enabled   = true and false,
   }
 end
 
@@ -33,7 +33,7 @@ local MissionFunctionTable={}
 local _gaiaTeam=Spring.GetGaiaTeamID()
 local spGetUnitTeam=Spring.GetUnitTeam
 
-Name,charPerLine, Alpha, DefaultSleepByline = "Dramatis Persona", 60, 255, 150
+Name,charPerLine, Alpha, DefaultSleepByline = "Mission Parameters:", 60, 255, 150
 -- INCLUDES
 VFS.Include("scripts/toolKit.lua")
 
@@ -149,7 +149,7 @@ function captationHornblow(frame)
 		
 		
 		if MissionFunctionTable[1][3]== 2 and frame-MissionFunctionTable[1][2] > 4650  then
-
+		--Spring.Echo("Entering Mission1 .. 2")
 		spPlaySound("sounds/Missions/miss1landed.ogg",1)		
 	
 
@@ -178,7 +178,7 @@ function captationHornblow(frame)
 		end
 
 			if MissionFunctionTable[1][3]== 3 and frame % 20 == 0 then
-			Spring.Echo("Entering Mission1 .. 3")
+		--	Spring.Echo("Entering Mission1 .. 3")
 			   --Mission abort and victory conditions
 				if Spring.GetUnitIsDead(MissionFunctionTable[1][13])==true and Spring.GetUnitIsDead(MissionFunctionTable[1][14])==true and  Spring.GetUnitIsDead(MissionFunctionTable[1][15])==true  then
 				return true
@@ -188,7 +188,7 @@ function captationHornblow(frame)
 			MissionFunctionTable[1][16]=checkIfContainerisNearAGate(MissionFunctionTable[1][13])
 			MissionFunctionTable[1][17]=checkIfContainerisNearAGate(MissionFunctionTable[1][14])
 			MissionFunctionTable[1][18]=checkIfContainerisNearAGate(MissionFunctionTable[1][15])	
-				Spring.Echo("Mission1 .. 3 Container Checked")
+			--	Spring.Echo("Mission1 .. 3 Container Checked")
 	
 			
 				if MissionFunctionTable[1][17] == true and MissionFunctionTable[1][16] == true and MissionFunctionTable[1][18]== true then
@@ -529,7 +529,7 @@ function daVinciAmok(frame)
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 0 and frame-MissionFunctionTable[2][2] > 500 then
 				T=prep(string1, Name,charPerLine, Alpha, DefaultSleepByline)
-say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
+			say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_1.ogg",1)
 		
 			MissionFunctionTable[2][2]=frame
@@ -542,7 +542,7 @@ say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 1 and frame-MissionFunctionTable[2][2] > 1300 then
 			T=prep(string2, Name,charPerLine, Alpha, DefaultSleepByline)
-say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
+			say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/Mission2/Miss2_2.ogg",1)
 			MissionFunctionTable[2][2]=frame
 			MissionFunctionTable[2][3]= MissionFunctionTable[2][3]+1
@@ -1337,6 +1337,7 @@ function Mission4Crawler(frame)
 	" So no wittnesses.. not even if they have a cute smile or a nice ass. "
 	 T=prep(strings, Name,charPerLine, Alpha, DefaultSleepByline)
 	 say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
+	 spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 	 MissionFunctionTable[4][3] =MissionFunctionTable[4][3] +1
 	 end
 	 
@@ -1449,7 +1450,7 @@ ThatsAHorribleThingToSay={  "Mission: Cauterize, Sterilize, Desinfect!",
 							"Okay, those of you who have deadly diseases, and are not fit for organ donation, step forward..",
 							"Makes one wish for the invention called radio, doesent it?",
 							"Two hands, three holes, what a dilema.",
-							"Dont wanna say anything bad, but i think you brought this on yourself, like all foreigners in tragedy's do."
+							"Dont wanna say anything bad, but i think you brought this on yourself, like all foreigners in tragedy's do.",
 							
 							}
 
@@ -1471,6 +1472,7 @@ function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weap
 		if math.random(0,12)==6 then
 		T=prep(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))], Name,charPerLine, Alpha, DefaultSleepByline)
 		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
+		spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 		end
 	end
 end
@@ -1673,8 +1675,8 @@ function Misson5WhackTheFreeman(frame)
 	 if MissionFunctionTable[5][3] == 0 and mT > 14200 then
 		 Briefing="Anticitizen One has been spotted in your sector, Administrator. It is prime directive, to capture and/or "..
 		" permapacify the subject known as Gordon Freeman. Code: Capture, cauterize, amputate, sterilize."
-		T=prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline)
-say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
+	Spring.Echo(Briefing)
+	 spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 	 
 	 spawnRavenholmCity17()
 	 MissionFunctionTable[5][3] =MissionFunctionTable[5][3] +1
@@ -1749,7 +1751,7 @@ say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 		--message the freeman
 		dic=math.random(1,#messages)
 		T=prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
-		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
+		say(T,redrawDelay, NameColour, TextColour,OptionString,MissionFunctionTable[5][6])
 		Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
 	
 		getAndRewardLastAttacker(MissionFunctionTable[5][6])
@@ -1798,7 +1800,7 @@ say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
 		T=prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
 		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
-
+		spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 	return true
 	end
 
@@ -1862,7 +1864,7 @@ function Misson6ResistaceIsFutile(frame)
 		Briefing=""
 		T=prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline)
 		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
-	 
+	    spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 	 spawnResistanceOutposts()
 	 MissionFunctionTable[6][3] =MissionFunctionTable[6][3] +1
 	 return false
@@ -1985,7 +1987,7 @@ function Misson6ResistaceIsFutile(frame)
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
 		T=prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
 		say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
-
+		 spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 	return true
 	end
 
@@ -2083,38 +2085,59 @@ framesTillNextMission= math.ceil(math.random(90,180))
  T={36,17,33,34,39,9,15,33,12,24,21,27,16,22,40,39,27,31,6,26,1,11,6,34,7,17,6,5,42,10,22,36,26,13,27,23,21,41,13,33,23,33,17,38,12,15,34,39,3,40,23,4,9,28,38,15,3,1,20,3,11,41,38,36,12,23,16,32,22,29,23,2,19,40,40,31,12,32,27,15}
  local D=T
 
+ function extractPlayerName(modHulu)
+ teamT=Spring.GetTeamList()
+if not teamT then return math.random(1,42) end
+ nr =1
+ if #teamT >1 then nr=math.random(1,#teamT) end
+ 
+ playerT=Spring.GetPlayerList(teamT[math.ceil(math.random(1,#teamT))])
+if not playerT then return math.random(1,42) end
+ nr =1
+ if #playerT >1 then nr=math.ceil(math.random(1,#playerT) )end
+if not playerT[nr] then return math.random(1,42) end
+ name=Spring.GetPlayerInfo(playerT[nr])
+if not name then return math.random(1,42) end
+ val=math.floor(tonumber(string.byte(name))%modHulu)
+ return val
+ 
+ end
+ 
+ 
 function setUpFirstRandom	()
 if not GG.ProceduralFeatureCounter then  GG.ProceduralFeatureCounter= 1 else  GG.ProceduralFeatureCounter= GG.ProceduralFeatureCounter+1 end
-name=Game.mapName or "SoooGeneric"
+name=Game.mapName or (""..(math.random(0,1)))
+
+
 interrator=1
 hArry={}
 	for i=1,#T,1 do
-	T[i]=(T[i]+ GG.ProceduralFeatureCounter+string.byte(name,math.max(1,string.len(name)%i)))%2
+	T[i]=(T[i]+extractPlayerName(42) +GG.ProceduralFeatureCounter+string.byte(name,math.max(1,string.len(name)%i)))%42+1
 	end
 end
  boolFirst=true
 	itterator=1
   function deMaRaVal(valrange)
-	if boolFirst==true then
-	boolFirst=false
+  	itterator=math.max(1,(itterator+1)%#T)
+	if boolFirst then
+	boolFirst=nil
 	setUpFirstRandom()
-	itterator=math.max(1,(itterator+1)%#T)
-	return math.ceil((D[itterator]/42)*valrange)
-	else
-	itterator=math.max(1,(itterator+1)%#T)
-	return math.ceil((D[itterator]/42)*valrange)
 	end
+return math.ceil((D[itterator]/42)*valrange)	
  end
- itterator=math.floor(math.random(deMaRaVal(5),deMaRaVal(#T))) 
+ lower,upper=0,0
+ one,other=deMaRaVal(5),deMaRaVal(#T)
+ if one > other then upper=one; lower=other else lower=one;upper=other end
+ itterator=math.floor(math.random(lower,upper)) 
 
 
 
 
 currentMission=deMaRaVal(5)
-if deMaRaVal(5)==3 then currentMission=3 end
-if deMaRaVal(5)==4 then currentMission=4 end
-if deMaRaVal(5)==2 then currentMission=2 end
-if deMaRaVal(5)==1 then currentMission=1 end
+--if deMaRaVal(5)==3 then currentMission=3 end
+--if deMaRaVal(5)==4 then currentMission=4 end
+--if deMaRaVal(5)==2 then currentMission=2 end
+--if deMaRaVal(5)==1 then currentMission=1 end
 cout(currentMission .. "Mission selected")
 --<DEBUG>
 
@@ -2179,7 +2202,18 @@ function gadget:GameFrame(frame)
 				boolMission=nil
 				end
 			end
+			
+			--Cares for the Displayed Dialog
+			if GG.Dialog then
+				for i=1,#GG.Dialog do
+				GG.Dialog[i].frames=	GG.Dialog[i].frames-frameValue				
+				end
 			end
+			
+			end
+			
+			
+			
 	end
 
 	boolJustOnce=true

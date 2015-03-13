@@ -32,9 +32,9 @@ sightDistance = 700,
 
 
 EnergyStorage = 200,
-	EnergyUse = 15,
+	EnergyUse = 0,
 	MetalStorage = 200,
-	EnergyMake = 75, 
+	EnergyMake = 0, 
 	MakesMetal = 5, 
 	MetalMake = 5,	
 

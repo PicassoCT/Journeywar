@@ -539,28 +539,28 @@ function DrawMbar(pct)
 		
 
 		
-		components[21].alpha=mglow/cooldownglowtime
-		components[18].alpha=mglow/cooldownglowtime
-		components[19].alpha=mglow/cooldownglowtime
-		components[20].alpha=mglow/cooldownglowtime --
-	--	components[16].alpha=mglow/cooldownglowtime --
-		components[17].alpha=norm(math.abs( (now- math_floor(now/60)*60)/30 -1))
+	--components[21].alpha=mglow/cooldownglowtime
+	--components[18].alpha=mglow/cooldownglowtime
+	--components[19].alpha=mglow/cooldownglowtime
+	--components[20].alpha=mglow/cooldownglowtime --
+	--components[16].alpha=mglow/cooldownglowtime --
+	--components[17].alpha=norm(math.abs( (now- math_floor(now/60)*60)/30 -1))
 
-		components[15].top=default+(1-mglow/cooldownglowtime)*5
-		components[16].top=default+(1-mglow/cooldownglowtime)*5
-		components[17].top=default+(1-mglow/cooldownglowtime)*5
+	--components[15].top=default+(1-mglow/cooldownglowtime)*5
+	--components[16].top=default+(1-mglow/cooldownglowtime)*5
+	--components[17].top=default+(1-mglow/cooldownglowtime)*5
 		
 
 --	Spring.Echo(components[17].alpha)
 
-		DrawComponent(16)--fire 
-		DrawComponent(17)--fire glow
-		DrawComponent(15)--firetray
+		--DrawComponent(16)--fire 
+		--DrawComponent(17)--fire glow
+		--DrawComponent(15)--firetray
 		DrawComponent(22)--bASE
-		DrawComponent(18)--exhaust glow
-		DrawComponent(19)--grill glow
+		--DrawComponent(18)--exhaust glow
+		--DrawComponent(19)--grill glow
 		DrawComponent(20)--M on
-		DrawComponent(21)--M on glow
+		--DrawComponent(21)--M on glow
 
 	else 
 		local now=Spring.GetGameFrame()
@@ -572,25 +572,25 @@ function DrawMbar(pct)
 
 		components[21].alpha=norm(mglow/cooldownglowtime - math.abs( (now- math_floor(now/60)*60)/30 -1))
 	
-		components[18].alpha=mglow/cooldownglowtime
-		components[19].alpha=mglow/cooldownglowtime
-		components[20].alpha=mglow/cooldownglowtime
-		components[15].top=default+(1-mglow/cooldownglowtime)*5
-		--Spring.Echo(components[15].top)
-		components[16].top=default+(1-mglow/cooldownglowtime)*5
-		components[17].top=default+(1-mglow/cooldownglowtime)*5
-		
-
---	Spring.Echo(components[21].alpha)
-		DrawComponent(16)--fire 
-		DrawComponent(17)--fire glow
-		DrawComponent(15)--firetray
+		--components[18].alpha=mglow/cooldownglowtime
+		--components[19].alpha=mglow/cooldownglowtime
+		--components[20].alpha=mglow/cooldownglowtime
+		--components[15].top=default+(1-mglow/cooldownglowtime)*5
+		----Spring.Echo(components[15].top)
+		--components[16].top=default+(1-mglow/cooldownglowtime)*5
+		--components[17].top=default+(1-mglow/cooldownglowtime)*5
+		--
+        --
+--	Spri--ng.Echo(components[21].alpha)
+		--DrawComponent(16)--fire 
+		--DrawComponent(17)--fire glow
+		--DrawComponent(15)--firetray
 		--components[15].top =35
 		DrawComponent(22)--bASE
-		DrawComponent(19)--grill glow
+		--DrawComponent(19)--grill glow
 		DrawComponent(20)--M on
-		DrawComponent(18)--exhaust glow
-		DrawComponent(21)--M on glow
+		--DrawComponent(18)--exhaust glow
+		--DrawComponent(21)--M on glow
 
 
 	end	

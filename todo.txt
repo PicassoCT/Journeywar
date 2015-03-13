@@ -1,16 +1,19 @@
 #GET TESTWORTHY
 
 Units needing MiniGame
---> Builders?
---> Pax Centrail :  Magnetic Projectiles
+
+--> Pax Centrail : 
+		-->Weabons: Magnetic Projectiles
+					Explosive Shells with timer
+					Stomp
+					
 
 --> TODO add button-press workerboost
 --> Crab Bejewelled Weapon
 
---> Ghostdancer --> only produces shadows when not spotted					
---> Sempre Sequoi - overshooot
+--> Sempre Sequoi - circle in on target
 
---> beefeater -> poop -> diggested unit travells  through unit and can be saved by killing piece it travells through
+
 
 --> SpeedUp
 
@@ -18,26 +21,35 @@ Units needing MiniGame
 Debug ComEnderWeapons
 Debug Hedgehog
 
-Debug Strider Inversekinematiks
 Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most of them)
 
 Get BulletImpact DeformationShadder running
-Add Guardians At The Gate as BackgroundMusic in a Version with loading Vehicles etc..
+
 
 
 >PHYSICS
  >> Put a bullet into spring
- >> Marching Drums
-
+ -> UML
  
- FIX:
- [f=0002917] [widgets.lua] Error: false
-[f=0002917] [widgets.lua] Error: Error in DrawWorld(): [string "LuaUI/Widgets/unit_waypoint_dragger.lua"]:193: [GetUnitCommands] called too often without a 2nd argument to define maxNumCmds returned in the table, please check your code!
-Especially when you only read the first cmd or want to check if the queue is non-empty, this can be a huge performance leak!
+ -> Bacherlorarbeit: Reboot
+ 
+FIX:
+<> Fix Minimissions
+<> Fix Hohymen Statemachine
+<> Comender fix Weapons:Slicer
+<> VaryFoo Avatara Building
+<> Strider extrapolate Kinematic Turns, Speed, Clamp Movement
 
-[f=0002917] [widgets.lua] Error: Removed widget: BA Waypoint Dragger
 
+Tutorial on using Anarchids 
+exchanged z - y axis
+inverted rotations for y_axis
 
+undo axischange for movement
 
-
+{\['c']='turn',\['p']=([^\s]+), \['a']=y_axis, \['t']=-1\*
+{\['c']='move',\['p']=([^\s]+), \['a']=y_axis, \['t']=-1\*
+{\['c']='move',\['p']=\1, \['a']=y_axis, \['t']=\*
+{\['c']='move',\['p']=([^\s]+), \['a']=([^\s]+), \['t']=([^\n]+), \['s']=([^\n]+)\}\,
+Remove unused moves
 

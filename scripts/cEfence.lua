@@ -1,3 +1,4 @@
+include "toolKit.lua"
 
 local boolImInCharge=false
 
@@ -50,10 +51,24 @@ Sleep(180)
 end
 end
 
-
+prevInCharge=false
+unitdef=Spring.GetUnitDefID(unitID)
 
 function chargeUp(boolischarged)
+prevInCharge=boolImInCharge
 boolImInCharge=boolischarged
+
+	if prevInCharge==false and boolImInCharge==true then
+		if maRa()==true then
+		PlaySoundByUnitType(unitdef, "sounds/cEfence/Activate.ogg",0.9, 5000,1)
+		else
+		PlaySoundByUnitType(unitdef, "sounds/cEfence/chargingUp.wav",0.9, 70000,1)
+		end
+	elseif prevInCharge==true and boolImInCharge==false then
+	PlaySoundByUnitType(unitdef, "sounds/cEfence/DeActivate.ogg",0.9, 5000,1)
+	end
+
+
 ----Spring.Echo("Im shocked,Sir, shoked and appalled! Have you ever thought about energy conservation?!")
 end
 
@@ -196,7 +211,7 @@ Turn(efencegate,x_axis,math.rad(45),2)
 WaitForTurn(efencegat0,x_axis)
 WaitForTurn(efencegate,x_axis)
 
-Spring.PlaySoundFile("sounds/cefence/closegate.wav")
+Spring.PlaySoundFile("sounds/cEfence/closegate.wav")
 Turn(efencegat0,x_axis,math.rad(0),3.5)
 
 WaitForTurn(efencegat0,x_axis)
@@ -245,7 +260,7 @@ end
 
 
 function script.Create()
-StartThread(showALittleLight)
+
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)

@@ -1,4 +1,4 @@
-local unitName = "gJMedBiogWaste"
+local unitName = "gjmedbiogwaste"
 
 local unitDef = {
 name = "gJBigBioWaste",

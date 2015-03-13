@@ -44,7 +44,7 @@ Category = [[LAND]],
 
 weapons = {
 [1]={name  = "advisorPsiRay",
-	onlyTargetCategory = [[LAND]],
+	onlyTargetCategory = [[LAND TRAITOR]],
 	},
 },
 

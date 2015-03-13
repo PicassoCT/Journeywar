@@ -117,7 +117,7 @@ function script.Activate()
  
 
  
-
+	RepEated=2
  function landed()
 SetSignalMask(SIG_LANDED)
 --Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav")  
@@ -127,8 +127,9 @@ local lrand=math.random
 local lceil=math.ceil
 spPlaySound("sounds/cHunterchopper/copterlanding.wav",0.9)
 	Sleep(4000)
-	while true do 
-	
+
+	while RepEated > 0 do 
+	RepEated=RepEated-1
 	w=lrand(0.5,0.65)
 	spPlaySound("sounds/cHunterchopper/copterlanded.wav",w)
 	rest=lceil(lrand(1900,2400))
@@ -222,6 +223,7 @@ function moveStateCheck()
 
 					if boolMoving == false and boolShortStop == false then
 					Sleep(512)
+					RepEated=2
 						if boolShortStop == false then
 						
 							boolLongStop=true
@@ -231,8 +233,9 @@ function moveStateCheck()
 			Signal(SIG_LANDED)
 			boolLongStopStarted=true
 			boolLongFlightStarted=false
-			StartThread(landed)
-		
+				if RepEated > 0 then
+				StartThread(landed)
+				end
 			end
 			
 			
@@ -265,7 +268,28 @@ function script.StopMoving()
  boolShortStop=false
 end
 
+function script.HitByWeapon ( x, z, weaponDefID, damage )
+hp=Spring.GetUnitHealth(unitID)
+if hp and  hp-damage < 0 then
 
+StartThread(emitSmoke)
+EmitSfx(bady,1028)
+Explode(Shield1,SFX.FALL+SFX.FIRE)
+
+EmitSfx(bady,1028)
+Explode(Shield2,SFX.FALL+SFX.FIRE)
+Hide(centrotors)
+Show(centrotor)
+Spin(imgoingdown,y_axis,math.rad(-250),0.01)
+EmitSfx(bady,1028)
+
+SetUnitValue(COB.CRASHING, 1)
+Spring.SetUnitNeutral(unitID,true)
+Spring.SetUnitNoSelect(unitID,true)
+return 0
+end
+return damage
+end
 
 
 boolAir=true
@@ -306,37 +330,10 @@ function emitSmoke()
 	end
 end
 function script.Killed()
-Spring.SetUnitCrashing(unitID, true)
-Spring.SetUnitNeutral(unitID,true)
-Spring.SetUnitCOBValue(unitID, COB.CRASHING, 1)
 
-StartThread(emitSmoke)
-EmitSfx(bady,1028)
-Explode(Shield1,SFX.FALL+SFX.FIRE)
-Sleep(10)
-EmitSfx(bady,1028)
-Explode(Shield2,SFX.FALL+SFX.FIRE)
-Hide(centrotors)
-Show(centrotor)
-Spin(imgoingdown,y_axis,math.rad(-250),0.01)
-EmitSfx(bady,1028)
 
-x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,bady)
--- groundHeight=Spring.GetGroundHeight(x,z)
--- totalHeight=math.abs(y-groundHeight)
--- Move(imgoingdown,y_axis,-totalHeight,3.14)
-	while(y > Spring.GetGroundHeight(x,z))do
-	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,bady)
-	-- groundHeight=Spring.GetGroundHeight(x,z)
-	-- totalHeight=math.abs(y-groundHeight)
-	-- Move(imgoingdown,y_axis,-1*totalHeight,9.14)
-	Sleep(450)
-	end
 
-	Sleep(250)
 EmitSfx(bady,1028)
-StopSpin(imgoingdown,y_axis,0)
-Turn(imgoingdown,y_axis,math.rad(0),80)
 suddenDeathV()
 return 0
 end
@@ -390,34 +387,36 @@ end
 				
 			else
 			twoRockets=twoRockets-1
-				if twoRockets==0 then StartThread(reLoadThread) end
+				if twoRockets<= 0 then StartThread(reLoadThread) end
 			return true 
 			end
 		end
-
-	function script.AimFromWeapon2() 	
-	if twoRockets >0 then	return rocketPoints[twoRockets]
-		else return aim1 end
-	 end
-		rocketPoints={}
+	    rocketPoints={}
 		rocketPoints[1]={}
 		rocketPoints[2]={}
 		rocketPoints[1]=piece "rockPoint1"
 		rocketPoints[2]=piece "rockPoint2"
+	function script.AimFromWeapon2() 	
+	if twoRockets >0 and twoRockets < 3 then	return rocketPoints[twoRockets]
+		else return rocketPoints[1] end
+	 end
+		
 		
 	function script.QueryWeapon2() 
-	return rocketPoints[twoRockets]
+	if twoRockets >0 and twoRockets < 3 then	return rocketPoints[twoRockets]
+		else return rocketPoints[1] end
 	end
 		
 
 	function script.FireWeapon2()
-
+	return true
 	 end
 	--weapon3 
+	boolMinesActive=true
 		function script.AimWeapon3( heading, pitch )
 		 
 
-		   return true
+		   return boolMinesActive
 		end
 		
 	function script.AimFromWeapon3() 	
@@ -431,10 +430,23 @@ end
 	function script.QueryWeapon3() 
 	return aim2
 	end
-		
-
+	
+	function firePeriod()
+	boolMinesActive=true
+	Sleep(2000)
+	boolMinesActive=false
+	Sleep(15000)
+	boolThreadStart=false
+	boolMinesActive=true
+	end
+	
+	boolThreadStart=false
 	function script.FireWeapon3()
-
+	if boolThreadStart==false then 
+	boolThreadStart=true
+	StartThread(firePeriod)
+	end
+	return true
 	 end	
 	--weapon 4
 

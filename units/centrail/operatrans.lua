@@ -3,14 +3,14 @@ local unitDef  =  {
 --Internal settings
     BuildPic = "filename.bmp",
     ObjectName = "operatrans.s3o",
-    name = "Opera Transport Hovercraft",
+    name = "Operahovercraft",
     Side = "CentrAIl",
     TEDClass = "HOVER",
     script = "operatransscript.lua",
     
 --Unit limitations and properties
     BuildTime = 82,
-    Description = "A heavy TransportHovercraft",
+    Description = "citizens who enjoy the war, might donate more into your security-budget",
     MaxDamage = 1240,
     RadarDistance = 0,
     SightDistance = 500,
@@ -51,7 +51,7 @@ nanocolor=[[0 0.9 0.9]],
     CanStop = 1,
     LeaveTracks = 0,
     Reclaimable = 0,
-    category=[[LAND]],
+    category=[[LAND ]],
 	
 	explodeAs="defaultweapon",
 	selfDestructAs="defaultweapon", 

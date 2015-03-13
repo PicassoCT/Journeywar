@@ -10,12 +10,13 @@ local weaponDef = {
       cylinderTargeting      = 100.0,
 
       damage                  = {
-        default = 110,
-        planes  = [[110]],
-        subs    = 7.5,
+        default = 220,
+		planes  = 350,
+        subs    = 22.5
+
       },
 
-      explosionGenerator      = [[custom:330rlexplode]],
+      explosionGenerator      = "custom:missile_explosion",
       fireStarter             = 70,
       flightTime              = 5,
       guidance                = true,

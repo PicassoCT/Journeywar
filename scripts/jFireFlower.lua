@@ -667,15 +667,15 @@ os.exit()
  end
  end
 
-
+aimspot=piece"aimspot"
 ---AIMING & SHOOTING---
 -----------------------------------------WEAPON ONE ----------------------------
 function script.AimFromWeapon1() 
-    	return center
+    	return aimspot
 end
 
 function script.QueryWeapon1() 
-	return center
+	return aimspot
 end
 
 
@@ -724,6 +724,8 @@ end
 
 
 function script.Killed(recentDamage, maxHealth)
-
+x,y,z=Spring.GetUnitPosition(unitID)
+if not GG.AddFire then GG.AddFire={} end
+GG.AddFire[#GG.AddFire+1]={x=x,y=y,z=z}
 		return 1 
 end

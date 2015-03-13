@@ -10115,6 +10115,7 @@ local boolPrevCloaked=false
 		if boolPrevCloaked==false and boolCloaked==true then
 		Spring.Echo("Cloaking")
 		Signal(SIG_AMBUSH)
+		SIGNAL(SIG_IDLE)
 		if boolPeacefull==true then
 		StartThread(AmbushCounterThread)
 		GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {})

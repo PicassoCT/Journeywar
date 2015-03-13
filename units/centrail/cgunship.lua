@@ -2,17 +2,17 @@ local unitName = "cgunship"
 
 local unitDef = {
 name = "Gun Ship",
-Description = "The things we do for Attention",
+Description = "heavy air harassment",
 objectName = "cGunShip.s3o",
 script = "cGunShipScript.lua",
 buildPic = "chunterchopper.dds",
 
 --cost
-buildCostMetal = 560,
-buildCostEnergy = 130,
+buildCostMetal = 1500,
+buildCostEnergy = 800,
 buildTime = 26,
 --Health
-maxDamage =12050,
+maxDamage =3500,
 idleAutoHeal = 0,
 --Movement
 Acceleration = 1.9,
@@ -83,7 +83,7 @@ Category = [[AIR]],
 			},
 			
 			
-			weapons = {
+weapons = {
 [1]={name  = "cgunshipmg",
 	onlyTargetCategory = [[ LAND]],
 	 MainDir            = [[0 0 1]],

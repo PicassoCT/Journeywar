@@ -35,7 +35,7 @@ if enemyID ~= nil then
 	for i=1, howManyHoneyPots,1 do
 	spEmitSfx(jgeohive,1025)
 	spEmitSfx(jgeohive,1025)
-	randoval=math.random(-150,-45)
+	randoval=math.random(-65,-45)
 	bool=math.random(0,1)
 	if bool==1 then
 	randoval=randoval*-1
@@ -71,20 +71,22 @@ end
 end
 end
 
-State="BUILDUP"
+
 BuildUPTime=30000
 PEAKFADETIME=30000
-time=0
-RandVAl=0
 
-function NextState()
-if State=="BUILDUP" and time > BuildUPTime then State="PEAK" time=0 end
-if State=="PEAK" and time > 85000 then State="PEAKFADE" time=0 end
-if State=="PEAKFADE" and time > PEAKFADETIME then State= "RELAX" time=0 end
+RandVAl=math.ceil(math.random(4000,60000))
+
+function NextState(State,time)
+if State=="BUILDUP" and time > BuildUPTime then time=0; return "PEAK" end
+if State=="PEAK" and time > 85000 then time=0; return "PEAKFADE" end
+if State=="PEAKFADE" and time > PEAKFADETIME then time=0; return "RELAX" end
 if State=="RELAX" and time > 60000+RandVAl then 
-State= "BUILDUP" 
-time=0 
-RandVAl= math.ceil(math.random(4000,60000)) end
+time=0 ;
+RandVAl= math.ceil(math.random(4000,60000)) 
+return "BUILDUP" 
+end
+return State
 end
 
 
@@ -92,7 +94,11 @@ end
 --attack relentless
 function PEAK(monsterID, enemyID,Time,mteam)
 eteam=Spring.GetUnitTeam(enemyID)
-ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+ex,ey,ez=Spring.GetUnitPosition(enemyID)
+if math.random(0,1)==1 then
+ad=Spring.GetUnitNearestAlly(enemyID)
+ex,ey,ez=Spring.GetUnitPosition(ad)
+end
 return ex,ey,ez
 end
 PEAKFADEHALF=PEAKFADETIME/4
@@ -119,14 +125,14 @@ Inv=1-coef
 ecx,ecy,ecz=Spring.GetUnitPosition(enemyID)
 eteam=Spring.GetUnitTeam(enemyID)
 ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-rx,ry,rz=(ecx*Inv+ex*coef)*0.5,(ecy+ey)*0.5,(ecz*Inv+ez*coef)*0.5
+rx,ry,rz=(ecx*Inv+ex*coef),(ecy+ey),(ecz*Inv+ez*coef)
 --well away from the mainbase
 if math.abs(ex-rx)> 1000 and math.abs(ez-rz)> 1000 then 
 return rx,ry,rz 
 else --we assmeble at the middistance to our ally
 ally=Spring.GetUnitNearestEnemy(enemyID)
 ax,ay,az=Spring.GetUnitPosition(ally)
-return(ex*Inv+ax*coef)/2,(ey*Inf+ay*coef)/2,(ez*Inv+az*coef)/2
+return(ex*Inv+ax*coef),(ey*Inf+ay*coef),(ez*Inv+az*coef)
 
 end
 
@@ -156,17 +162,20 @@ funcTable={}
 
 
 function TargetOS()
-
-local spValidUnitID=Spring.ValidUnitID
+State="BUILDUP"
+time=0
+local spValidUnitID=Spring.GetUnitIsDead
 local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 local spGetUnitPosition=Spring.GetUnitPosition
 local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
-	
+local lfuncTable=funcTable
+
+
 	while(true) do
 	Sleep(5000)
 	time=time+5000
 		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
-		NextState()
+		State=NextState(State,time)
 			for i=1,table.getn(monsterTable),1 do
 				v=(spValidUnitID(monsterTable[i]))
 				if  v and v == true then 
@@ -179,8 +188,9 @@ local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
 						if enemyID then
 						if not State then State="PEAK" end
 
-						ex,ey,ez = funcTable[State](monsterTable[i],enemyID,time,teamID)
-			
+						ex,ey,ez = lfuncTable[State](monsterTable[i],enemyID,time,teamID)
+						if ex < 20 or ez < 20 then Spring.Echo("Jgeohive state.." ..State .." produces crap") break end
+
 						spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
 						end
 				end

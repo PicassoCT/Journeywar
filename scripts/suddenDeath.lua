@@ -106,7 +106,7 @@ if recentDamage== nil or  recentDamage > 1 then
 	--dirx,diry,dirz=Spring.GetUnitDirection(unitID)
 	dx,dy,dz=Spring.GetUnitDirection(unitID)
 	heading=Spring.GetUnitHeading(unitID)
-	heapID=Spring.CreateUnit("gJMedBioWaste",spx,spy,spz, 1, teamID)
+	heapID=Spring.CreateUnit("gjmedbiogwaste",spx,spy,spz, 1, teamID)
 	
 	Spring.SetUnitDirection(heapID,dx,dy,dz)
 	--Spring.SetUnitDirection(heapID,dirx,diry,dirz)

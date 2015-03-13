@@ -5,27 +5,27 @@ local weaponDef = {
 	      weaponType              = [[Cannon]],
 	      --damage
 		  damage = {
-				default = 15,
-				HeavyArmor = 15,
+				default = 35,
+				HeavyArmor = 35,
 				},	      
 	      areaOfEffect            = 3,
-		  explosionGenerator="custom:electric_explosion",
-		  cegTag="cbonkerplasma",
-		  texture1="",
+		 model="bonkerplasmaproj.s3o",
+		  cegTag="cplasmaproj",
+		  texture1="plasma",
 		
 		  impulseBoost=0.5,
 		  --physics
 		  weaponVelocity          = 850,
-		  reloadtime              = 3.35,
+		  reloadtime              = 1.35,
 		  range                   = 350,
-		  sprayAngle              = 25,
-	      tolerance               = 8000,
+		  sprayAngle              = 0,
+	      tolerance               = 200,
 		  lineOfSight             = true,	      
-	      turret                  = false,
+	      turret                  = true,
 		  craterMult              = 0,	      
-		  burst=2,
-		  burstrate=0.5,
-		--  soundStart         = "bonkers/plasma",
+		  --burst=2,
+		  --burstrate=0.5,
+		 soundHit         = "bonkers/impact.ogg",
 		  
 		  soundtrigger=1,
 		  SweepFire=0,
@@ -33,10 +33,10 @@ local weaponDef = {
 		  rgbColor                = [[0.5 0.95 0.85]],		  	      
           size                    = 1.2,
 			
-		
+				  explosionGenerator="custom:flames",
 		  
-	      stages                  = 3,
-		  separation              = 1.5,
+	     -- stages                  = 1,
+		  --separation              = 1.5,
 		 
 		  }
 		

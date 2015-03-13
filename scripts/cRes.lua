@@ -85,7 +85,7 @@ end
 					--set the MovementSpeed back to the original speed
 					Signal(SIG_THUMB)
 					
-					assert(maxspeed)
+					
 					SetUnitValue(COB.MAX_SPEED,maxspeed)--sets the speed to 5,2 *65533
 						Move(resthumb,y_axis,0,0.5)
 				

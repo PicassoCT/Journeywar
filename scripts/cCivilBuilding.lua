@@ -1,4 +1,5 @@
 include "suddenDeath.lua"
+include "toolKit.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 sky={}
 for i=1,23,1 do
@@ -19,17 +20,19 @@ px,py,pz=Spring.GetUnitPosition(unitID)
 step=0
 teamID=Spring.GetGaiaTeamID()
 
+if not GG.CivBuildingSFX then GG.CivBuildingSFX={} end
+
 	function script.HitByWeapon ( x, z, weaponDefID, damage )
 	step=step+damage
 	
 	if damage > 20 then EmitSfx(emitfire,1029) end
-	if step > hitPoints/10 then
+	if step > hitPoints/10 and  table.getn(GG.CivBuildingSFX) < 5 then
 	step=0
 
 	StartThread(onFire,29000,19000)
 
-		maRa=math.random(-1,1)
-		heapID=Spring.CreateUnit("gCiVillian",px+(150*maRa),py,pz+(150*maRa),1, teamID)
+		aRandomNumber=math.random(-1,1)
+		heapID=Spring.CreateUnit("gCiVillian",px+(150*aRandomNumber),py,pz+(150*aRandomNumber),1, teamID)
 		
 	end
 			return damage
@@ -40,6 +43,7 @@ emitfire=piece"emitfire"
 firemove=piece"firemove"
 
 function onFire(times,endtimes)
+ GG.CivBuildingSFX[unitID]=true
 dist=math.random(0,150)
 Move(firemove,y_axis,dist,0)
 x=math.random(-360,360)
@@ -55,7 +59,7 @@ Turn(firemove,y_axis,math.rad(x),0)
 				end				
 			Sleep(200)
 			end
-
+GG.CivBuildingSFX[unitID]=nil
 end
 
 function ElevatorScript()
@@ -170,7 +174,7 @@ GG.UnitsToSpawn:PushCreateUnit("gdecbuilding",coordx,0,coordz,0,teamID)
 end
 
 function script.Killed(recentDamage,_)
-
+GG.CivBuildingSFX[unitID]=nil
 xrand=math.random(-2,2)
 yrand=math.random(-12,12)
 zrand=math.random(-3,3)
@@ -200,8 +204,12 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.CreateUnit("jresistancewarrior",x+25,y,z-25,0,teamID)
 	end
 end
-if math.random(0,1)==1 then
-GG.UnitsToSpawn:PushCreateUnit("gwood",x,0,z,0,teamID)
+ed=Spring.GetUnitNearestEnemy(unitID)
+if ed  then
+side=getUnitSide(ed)
+	if side and side =="journeyman" then
+	GG.UnitsToSpawn:PushCreateUnit("gwood",x,0,z,0,teamID)
+	end
 end
 suddenDeath(unitID,recentDamage)
 return 0

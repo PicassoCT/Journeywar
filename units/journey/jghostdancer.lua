@@ -57,7 +57,7 @@ Category = [[LAND]],
 
 weapons = {
 [1]={name  = "jGDCloseCombat",
-	onlyTargetCategory = [[LAND]],
+	onlyTargetCategory = [[LAND TRAITOR]],
 	},
 [2]={name  = "jGDJump",
 	onlyTargetCategory = [[JBUILD]],

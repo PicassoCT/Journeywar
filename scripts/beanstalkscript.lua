@@ -143,7 +143,27 @@
 	end
 
 	end
+	
+	function darkEnergyReactor()
+time=0
+PIE=3.14159/60
+med=0
+while true do
+time=(time+PIE)%6.28318530
+val=math.ceil(((math.sin(time)*75)+med)/2)
+med=val
+if val > 0 then 
+Spring.AddUnitResource(unitID,"e",val)
+else
+val=math.abs(val)
+Spring.UseUnitResource(unitID,"e",val)
+end
+Sleep(1010)
 
+end
+end
+
+	
 	function HitByWeapon ( x, z, weaponDefID, damage )
 		if blimelyLookAtTheTime == 0 and damage > 15 then
 		StartThread(spawny)
@@ -609,6 +629,7 @@
 
 	function script.Create()
 	StartThread(soundSleeper)
+	StartThread(darkEnergyReactor)
 
 	Hide(unRooted)
 	Hide(spindl)

@@ -355,6 +355,11 @@ end
 
 
 function Spring.UnitScript.Sleep(milliseconds)
+		if not milliseconds then
+			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
+			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a nil  Sleep")     
+		end
+		
         local n = floor(milliseconds / 33)
         if (n <= 0) then n = 1 end
         n = n + sp_GetGameFrame()

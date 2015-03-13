@@ -9,7 +9,7 @@ local weaponDef = {
 				HeavyArmor = 1,
 				},	      
 	      areaOfEffect            = 8,
-		  explosionGenerator="custom:AR2Impact",
+		  explosionGenerator="custom:chelicopterimpact",
 		  cegTag="AR2Projectile",
 		  texture1="empty",
 		

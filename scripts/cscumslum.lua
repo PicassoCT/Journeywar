@@ -1,6 +1,9 @@
 include "suddenDeath.lua"
+include "toolKit.lua"
 
-local scumslum = piece "scumslum"
+scumslum = piece "scumslum"
+scumslum2 = piece "scumslum2"
+scumslum3 = piece "scumslum3"
 local explodeemit0 = piece "explodeemit0"
 local explodeemit1 = piece "explodeemit1"
 local explodeemit2 = piece "explodeemit2"
@@ -11,6 +14,11 @@ local gangstaturner1 = piece "gangstaturner1"
 local gangstaturner2 = piece "gangstaturner2"
 local gangstaturner3 = piece "gangstaturner3"
 
+slumTable={
+		[1]=scumslum,
+		[2]=scumslum2,
+		[3]=scumslum3
+			}
 
 
 local scgangsta = piece "scgangsta"
@@ -24,8 +32,23 @@ table.insert(gangstArray,scgangsta2)
 table.insert(gangstArray,scgangsta3)
 
 
-
-
+function buildSlum()
+hideT(slumTable)
+	if math.random(0,1)==1 then 
+	Show(scumslum)
+	else
+	boolAtLeastOne=false
+	
+	for i=1,#slumTable do
+		if maRa()==true then 
+		Show(slumTable[i]) 
+		boolAtLeastOne =true
+		if i > 1 and maRa() ==true then Turn(slumTable[i],y_axis,math.rad(math.ceil(math.random(1,8))*45),0)  end
+		end
+	end
+		if boolAtLeastOne==false then Show(scumslum) else Hide(scumslum) end
+	end
+end
 
 
 function showGangsta()
@@ -230,6 +253,7 @@ end
 end
 
 function script.Create()
+buildSlum()
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)

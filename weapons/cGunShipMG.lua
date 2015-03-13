@@ -9,7 +9,8 @@ local weaponDef = {
 				HeavyArmor = 10,
 				},	      
 	      areaOfEffect            = 8,
-		  explosionGenerator="custom:AR2Impact",
+		  
+		  explosionGenerator="custom:GunShipMGImpact",
 		  cegTag="AR2Projectile",
 		  texture1="empty",
 		
@@ -25,7 +26,7 @@ local weaponDef = {
 		  burst=128,
 		  burstrate=0.2,
 		  soundStart         = "sounds/cHunterChopper/firelooper.wav",
-		--  soundHit="cHunterChopper/bulletimpact.wav",
+		  soundHit="sounds/cGunShip/electricbulletsImpact.ogg",
 		  soundtrigger=1,
 		  SweepFire=1,
 		  --apperance

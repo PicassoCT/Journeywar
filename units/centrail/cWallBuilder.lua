@@ -61,7 +61,7 @@ buildDistance = 155,
 SelfDestructAs="electric_explosion",
 buildoptions = 
 	{
-	"efence","bonker","geohive","chopper","combinedfeature","cdefusormine"
+	"efence","bonker","crailgun","geohive","chopper","combinedfeature","cdefusermine"
 	},
 	
 NoWeapon=false,

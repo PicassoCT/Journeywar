@@ -16,7 +16,9 @@ local SIG_AIM = 2  --signal for the weapon aiming thread
 local SIG_LEG=4
 local SIG_IDLE= 8
 local SIG_AIM2=16
+local SIG_DEFAULT=32
 
+DeathTurner=piece"DeathTurner"
 
 function legs_down()
 SetSignalMask(SIG_LEG)
@@ -161,6 +163,7 @@ function walk()
 	end
 
 	function script.StartMoving()
+	 Signal(SIG_DEFAULT)
 	 Signal(SIG_LEG)
 	Signal(SIG_WALK)
 	StartThread(walk)
@@ -205,6 +208,7 @@ function walk()
 	function script.StopMoving()
 	Signal(SIG_WALK)
 	StartThread(legs_down)
+	StartThread(defaultEnemy)
 	dice=math.random(1,4)
 		if dice==4 then
 		StartThread(idle)
@@ -213,7 +217,24 @@ function walk()
 	end
 	
 	
+	function defaultEnemy()
+	SetSignalMask(SIG_DEFAULT)
+	Sleep(25000)
 	
+	while true do
+	Sleep(10000)
+	ed=Spring.GetUnitNearestEnemey(unitID)
+	if ed then
+	x,y,z=Spring.GetUnitPosition(ed)
+	if x then
+	Spring.SetUnitMoveGoal(unitID,x,y,z)
+	end
+	end
+	end
+	
+	
+	
+	end
 	
 	
 	
@@ -290,48 +311,47 @@ end
 
 function script.Killed(recentDamage, _)
 
-
+Signal(SIG_IDLE)
 --legs_down()
-Turn(Turner,x_axis,math.rad(-180),180)
-Move(Turner,y_axis,-3,3)
+Turn(DeathTurner,x_axis,math.rad(-179),120)
 Sleep(400)
 shake=math.random(2,5)
 flopFlip=-1
 	for i=1,shake,1 do
-			Turn(jhoneyleg1,x_axis,math.rad(-104),8)
-			Turn(jhoneyleg1,y_axis,math.rad(162),12)
-			Turn(jhoneyleg1,z_axis,math.rad(0),7)
+			Turn(jhoneyleg1,x_axis,math.rad(104),8)
+			Turn(jhoneyleg1,y_axis,math.rad(-162),12)
+	
 			
 			Turn(jhoneyleg3,x_axis,math.rad(65),5)
 			Turn(jhoneyleg3,y_axis,math.rad(-30),4)
-			Turn(jhoneyleg3,z_axis,math.rad(-90),8)
+	
 			
 			Turn(jhoneyleg2,x_axis,math.rad(71),7)
 			Turn(jhoneyleg2,y_axis,math.rad(-32),4)
-			Turn(jhoneyleg2,z_axis,math.rad(73),7)
+	
 						
 			Turn(jhoneyleg4,x_axis,math.rad(-30),4)
 			Turn(jhoneyleg4,y_axis,math.rad(57),5)
-			Turn(jhoneyleg4,z_axis,math.rad(79),7)
+		
 			WaitForTurn(jhoneyleg1,x_axis)
 			WaitForTurn(jhoneyleg1,y_axis)
-			WaitForTurn(jhoneyleg1,z_axis)
+
 			WaitForTurn(jhoneyleg2,x_axis)
 			WaitForTurn(jhoneyleg2,y_axis)
-			WaitForTurn(jhoneyleg2,z_axis)
+
 			WaitForTurn(jhoneyleg3,x_axis)
 			WaitForTurn(jhoneyleg3,y_axis)
-			WaitForTurn(jhoneyleg3,z_axis)
+
 			WaitForTurn(jhoneyleg4,x_axis)
 			WaitForTurn(jhoneyleg4,y_axis)
-			WaitForTurn(jhoneyleg4,z_axis)
+
 			Sleep(120)
 			if flopFlip== -1 then
-			posItive=math.random(12,20)
-			Turn(Turner,z_axis,math.rad(posItive),3)
+			posItive=math.random(12,20)-179
+			Turn(DeathTurner,z_axis,math.rad(posItive),3)
 			else
-			negAtive=math.random(-20,-12)
-			Turn(Turner,z_axis,math.rad(negAtive),3)		
+			negAtive=math.random(-20,-12)-179
+			Turn(DeathTurner,z_axis,math.rad(negAtive),3)		
 			end
 			flopFlip=flopFlip*-1
 		
@@ -378,7 +398,7 @@ flopFlip=-1
 		Turn(jhoneyleg4,x_axis,math.rad(0),6)
 		Turn(jhoneyleg4,y_axis,math.rad(0),6)
 		Turn(jhoneyleg4,z_axis,math.rad(0),6)
-Turn(Turner,x_axis,math.rad(-206),25)	
+Turn(DeathTurner,x_axis,math.rad(-206),25)	
 
 
 

@@ -1,7 +1,7 @@
 local unitName = "citadell"
 local unitDef = {
 name = "Spearspire",
-Description = "CentrAIl Building, stores ConPlans, creates Units",
+Description = "Center of Operations, plans and coordinates",
 objectName = "citadell.s3o",
 script = "citadellscript.lua",
 buildPic = "citadell.dds",
@@ -32,9 +32,9 @@ sightDistance = 700,
 	collisionVolumeType	    = [[box]],
 
 EnergyStorage = 200,
-	EnergyUse = 15,
+	EnergyUse = 0,
 	MetalStorage = 200,
-	EnergyMake = 75, 
+	EnergyMake = 0, 
 	MakesMetal = 5, 
 	MetalMake = 5,	
 selfDExplosion = "electric_explosion",
@@ -100,6 +100,10 @@ explodeAs = "custom:factory_explosion",
 	   "custom:flames",	  --1033		
 	   "custom:ashflakes",--1034
 	   "custom:redSparks",--1035
+	   "custom:citacloudcore",--1036
+	   "custom:portalenter",--1037
+	   "custom:citlightpillar",--1038
+	   "custom:clightball",--1039
 	   
 						  },
 	

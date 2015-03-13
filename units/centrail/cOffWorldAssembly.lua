@@ -68,7 +68,7 @@ terraformSpeed = 50,
 	FootprintX = 8,
 	FootprintZ = 8,
 	MaxSlope = 10,	
-	YardMap ="oooooooo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo",
+	YardMap ="oooooooo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo oyyyyyyo ooyyyyoo",
 
 -- Building	
 	Builder = true,
@@ -78,7 +78,7 @@ terraformSpeed = 50,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"paxcentrail","strider"
+	"paxcentrail","strider","cgatefortess","ccrabsynth","cnanorecon"
 	},
 	
 	   customParams = {},

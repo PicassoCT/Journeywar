@@ -52,48 +52,7 @@ return {
 		},
   
   
-   -- ghashcloud={	
-				-- air=true,
-				-- class=[[CSimpleParticleSystem]],
-				-- count=1,
-				-- ground=true,
-				-- water=false,
-				
-				-- properties={
-				
-				-- texture=[[new_dirta]],
-				-- colormap           = [[1 0.4 0.25 0.6	0.5 0.5 0.5 0.5		0 0 0 0.01]],
-			
-	
-
-				 -- pos                = [[0, 0, 0]],
-				-- gravity            = [[0, 0.00000000001, 0]],
-				-- emitvector         = [[ DIR]],
-				  -- emitRot		= 12,
-				 -- emitRotSpread	= 12.824,
-
-
-		     -- sizegrowth         = 1.0000000000000000001,
-			 -- sizemod            = 0.95,
-
-		
-				-- airdrag			= 0.55,
-				-- particleLife		=75,
-				-- particleLifeSpread	= 46,
-				-- numParticles		= 1,
-				-- particleSpeed		= 0.5,
-				-- particleSpeedSpread	= 0.4999999,
-				-- particlesize       = 0.3,
-				-- particleSizeSpread	= 0.6,
-
-				-- directional		= 0, 
-				-- useAirLos		= 0,
-				-- },
-
-	
-		
-	
-		-- },
+   
   
    dirtgggg = {
       air                = true,

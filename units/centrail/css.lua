@@ -48,9 +48,9 @@ shownanoframe=0,
   customParams = {},
  sfxtypes = {
     explosiongenerators = {
-	   "custom:AR2Impact",
-	   "custom:AR2Muzzle",
-	   "custom:AR2Projectile"
+
+	   "custom:cssdeathflames",
+	   "custom:fireball"
 	   
 	   
 	   

@@ -12,7 +12,7 @@ buildTime = 9,
 --Health
 maxDamage = 600,
 idleAutoHeal = 0,
-
+reclaimSpeed=3,
 --Movement
 MaxVelocity=0.3,
 Acceleration = 0.1,
@@ -35,7 +35,7 @@ workerTime = 0.2,
 buildDistance = 50,
 terraformSpeed = 350,
 Builder = true,
-
+corpse="exconroach",
 CanGuard = true,
 CanMove = true,
 canassist=true,

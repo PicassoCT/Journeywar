@@ -2,62 +2,33 @@
 
 return {
   ["jvaryfoohit"] = {
-dirtground = {
-      air                = true,
-      class              = [[CSimpleParticleSystem]],
-      count              = 1,
-      ground             = true,
-      properties = {
-        airdrag            = 0.7,
-        alwaysvisible      = true,
-      colormap           = [[0.7 0.7 0.70 0.5 	0.7 0.7 0.70  0.35	 0.7 0.7 0.70  0.25		0 0 0 0.0]],
-        directional        = false,
-        emitrot            = 50,
-        emitrotspread      = 75,
-        emitvector         = [[0, 1, 0]],
-        gravity            = [[0, 0.22 r0.3, 0]],
-        numparticles       = 1,
-        particlelife       = 185,
-        particlelifespread = 260,
-        particlesize       = [[22 r12]],
-        particlesizespread = 6,
-        particlespeed      = 0.2,
-        particlespeedspread = 5,
-        pos                = [[1 r82 , 1 r22,1 r82]],
-        sizegrowth         = 0.99999999999999,
-        sizemod            = 0.99,
-        texture            = [[varyfoostrikeii]],
-        useairlos          = false,
-      },
-    },
-   dirtground = {
-      air                = true,
-      class              = [[CSimpleParticleSystem]],
-      count              = 1,
-      ground             = true,
-      properties = {
-        airdrag            = 0.7,
-        alwaysvisible      = true,
-        colormap           = [[0.7 0.7 0.70 0.5 	0.7 0.7 0.70  0.35	 0.7 0.7 0.70  0.25		0 0 0 0.0]],
-        directional        = false,
-        emitrot            = 50,
-        emitrotspread      = 75,
-        emitvector         = [[0, 1, 0]],
-        gravity            = [[0, 0.22 r0.3, 0]],
-        numparticles       = 1,
-        particlelife       = 185,
-        particlelifespread = 260,
-        particlesize       = [[22 r12]],
-        particlesizespread = 6,
-        particlespeed      = 0.2,
-        particlespeedspread = 5,
-        pos                = [[1 r82 , 1 r22,1 r82]],
-        sizegrowth         = 0.99999999999999,
-        sizemod            = 0.99,
-        texture            = [[varyfoostrike]],
-        useairlos          = false,
-      },
-    },
+  
+  
+      aexpand = {
+          air                = true,
+          class              = [[CBitmapMuzzleFlame]],
+          count              = 1,
+          ground             = true,
+		
+          underwater         = 0,
+          water              = false,
+		    
+          properties = {
+		    alwaysvisible      = true,
+		    useairlos          = false,	
+			colormap           = [[0.7 0.7 0.70 0.03 	0.7 0.7 0.70  0.03	 0.7 0.7 0.70  0.01		0 0 0 0.01	]],
+			dir                = [[dir]],
+            frontoffset        = 0,
+            fronttexture       = [[varyfoostrikeii]],
+            length             = 5,
+            sidetexture        = [[citdronegrad]],
+            size               = 25,
+            sizegrowth         = -0.25,
+            ttl                = 10,
+          },
+        }
+  
+  
    
   },
 

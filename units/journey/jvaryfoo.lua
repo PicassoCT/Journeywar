@@ -10,8 +10,8 @@ buildCostMetal = 350,
 buildCostEnergy = 150,
 buildTime = 15,
 --Health
-maxDamage = 50,
-idleAutoHeal = 2,
+maxDamage = 950,
+idleAutoHeal = 12,
 --Movement
 Acceleration = 3,
 BrakeRate = 0.3,
@@ -38,7 +38,9 @@ LeaveTracks = false,
         [1]={name  = "jvaryfoomark",
 	onlyTargetCategory = [[ LAND ]],
 	},
-	
+	[2]={name  = "jvaryjump",
+	onlyTargetCategory = [[LAND]],
+	},
 },
 
 Category = [[LAND]],
@@ -46,7 +48,8 @@ Category = [[LAND]],
  sfxtypes = {
     explosiongenerators = {
 			"custom:bloodspray",
-			"custom:greenlight"
+			"custom:jvaryfoohit",
+			"custom:jvaryfoohit2"
 	
 						  },
 	

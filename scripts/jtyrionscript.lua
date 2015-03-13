@@ -7,7 +7,7 @@
 		end
 	
 	local tID=GG.Traitors[unitID]
-	local spUnitIsNotDead=Spring.UnitIsNotDead
+	local spUnitIsNotDead=Spring.Spring.GetUnitIsDead
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spMoveCtrlSetPhysics=Spring.MoveCtrl.SetPhysics
 	
@@ -20,7 +20,7 @@
 		Sleep(100)
 		end
 		
-		if boolShowTrueColours==true and Spring.UnitIsNotDead(tID)==true then
+		if boolShowTrueColours==true and spUnitIsNotDead(tID)==true then
 		Spring.TransferUnit(tID,teamID,false)
 		end
 	

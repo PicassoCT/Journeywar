@@ -30,6 +30,7 @@ TurnRate = 50,
 nanocolor=[[0.7 0 0.1]],
 sightDistance = 550,
 activateWhenBuilt=false,
+onoffable=true,
 Builder = false,
 CanAttack = true,
 CanGuard = true,
@@ -47,10 +48,7 @@ shownanoframe=0,
   customParams = {},
  sfxtypes = {
     explosiongenerators = {
-	   "custom:AR2Impact",
-	   "custom:AR2Muzzle",
-	   "custom:AR2Projectile",
-	   "custom:bloodspray"
+	  "custom:cbonkerplasma",
 	   
 	   
 	   
@@ -64,42 +62,63 @@ shownanoframe=0,
 Category = [[LAND]],
 
 weapons = {
-[1]={name  = "cwallbuildw",
+[1]={name  = "cexplochaingun",
+	onlyTargetCategory = [[ LAND ]],
+	mainDir=[[0 0 1]],--nerfed
+	maxAngleDif        = 120,--nerfed
+	},
+
+[2]={name  = "ccitadelltur",
 	onlyTargetCategory = [[ LAND AIR]],
 	mainDir=[[0 0 1]],--nerfed
 	maxAngleDif        = 120,--nerfed
 	},
 
-[2]={name  = "AR2",
+[3]={name  = "cexplochaingun",
+	onlyTargetCategory = [[ LAND ]],
+	mainDir=[[0 0 1]],--nerfed
+	maxAngleDif        = 120,--nerfed
+	},
+
+[4]={name  = "ccitadelltur",
 	onlyTargetCategory = [[ LAND AIR]],
 	mainDir=[[0 0 1]],--nerfed
 	maxAngleDif        = 120,--nerfed
 	},
 
-[3]={name  = "cwallbuildw",
-	onlyTargetCategory = [[ LAND AIR]],
+[5]={name  = "razordroneproj",
+	onlyTargetCategory = [[ LAND ]],
 	mainDir=[[0 0 1]],--nerfed
 	maxAngleDif        = 120,--nerfed
 	},
-
-[4]={name  = "AR2",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
-	},
-
-[5]={name  = "AR2",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
-	},
-[6]={name  = "AR2",
-	onlyTargetCategory = [[ LAND AIR]],
+[6]={name  = "razordroneproj",
+	onlyTargetCategory = [[ LAND ]],
 	mainDir=[[0 0 1]],--nerfed
 	maxAngleDif        = 120,--nerfed
 	},
 [7]={name  = "citadelldrone",
 	onlyTargetCategory = [[ LAND]],
+	mainDir=[[0 0 1]],--nerfed
+	maxAngleDif        = 120,--nerfed
+	},
+
+[8]={name  = "cbonkerfire",
+	onlyTargetCategory = [[ LAND AIR]],
+	mainDir=[[0 0 1]],--nerfed
+	maxAngleDif        = 120,--nerfed
+	},
+[9]={name  = "cbonkerfire",
+	onlyTargetCategory = [[ LAND AIR]],
+	mainDir=[[0 0 1]],--nerfed
+	maxAngleDif        = 120,--nerfed
+	},
+[10]={name  = "crazorgrenade",
+	onlyTargetCategory = [[ LAND ]],
+	mainDir=[[0 0 1]],--nerfed
+	maxAngleDif        = 120,--nerfed
+	},
+[11]={name  = "crazorgrenade",
+	onlyTargetCategory = [[ LAND ]],
 	mainDir=[[0 0 1]],--nerfed
 	maxAngleDif        = 120,--nerfed
 	},

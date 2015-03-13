@@ -30,7 +30,7 @@ smokeTrail=false,
 
 ----TARGETING
 turret=true,
-CylinderTargetting=true,
+cylinderTargeting=100,
 avoidFeature=true,
 avoidFriendly=true,
 

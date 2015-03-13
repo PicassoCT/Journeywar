@@ -31,7 +31,7 @@ local unitDef = {
   turnRate =365,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
-
+  maxwaterdepth=150,
 
 
  

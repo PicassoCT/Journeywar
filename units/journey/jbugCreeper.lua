@@ -50,7 +50,7 @@ local unitDef = {
 
 	
   
-  
+  corpse="bug",
 
   hideDamage =true,
   showNanoFrame =false,

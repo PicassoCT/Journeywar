@@ -74,6 +74,7 @@ nanocolor=[[0 0 0]], --
 				   "custom:bloodslay",--29
 				   "custom:lowrisesparkfire",--30
 				   "custom:scrapallover",--31
+				   "custom:fireball",--32
 				
 						  },
 	

@@ -54,7 +54,9 @@ workerTime = 0.005,
 buildDistance = 12000,
 terraformSpeed = 350,
 buildoptions = 
-	{"jsfactory1","jdrilltree","meggstack","jtree","jtree2","jtree3","jtree2dummy","jtreedummy","jgeohive","jwatergate","jfireflower","jbeehive","jfungiforrest"
+	{	"jmovingfac1",
+		"jdrilltree",
+		"eggstackfac","jtree","jtree2","jtree3","jtree2dummy","jtreedummy","jgeohive","jwatergate","jfireflower","jbeehive","jfungiforrest"
 	
 	
 

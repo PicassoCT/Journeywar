@@ -250,6 +250,9 @@ end
 
 unitdef=Spring.GetUnitDefID(unitID)
 function PlayInjectSoundFiles()
-filename="sounds/jDragonGrass/jdragongrass"..(math.random(1,5))..".ogg"
+filename="sounds/jDragonGrass/drugAddicted.wav"
+	if maRa()==true then
+	filename="sounds/jDragonGrass/jdragongrass"..(math.random(1,5))..".ogg"
+	end
 PlaySoundByUnitType(unitdef, filename,0.9, 5000, 1)
 end

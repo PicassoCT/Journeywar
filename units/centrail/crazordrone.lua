@@ -2,7 +2,7 @@ local unitName = "crazordrone"
 
 local unitDef = {
 name = "Razor Drone",
-Description = "Cuts Enemys",
+Description = "cuts, slice, not be nice and that to everbody twice",
 objectName = "crazorDrone.s3o",
 script = "cRazorScript.lua",
 buildPic = "placeholder.png",

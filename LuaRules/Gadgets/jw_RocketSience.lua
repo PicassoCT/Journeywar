@@ -14,11 +14,13 @@ if (not gadgetHandler:IsSyncedCode()) then return end
 
 local wiggleWeapon = {}
 wiggleWeapon[WeaponDefNames["staburstrocket"].id] = true
+wiggleWeapon[WeaponDefNames["jvaryjump"].id] = true
 
 local redirectProjectiles = {}  -- [frame][projectileID] = table with .targetType .targetX .targetY .targetZ .targetID
 
 function gadget:Initialize()
 	Script.SetWatchWeapon (WeaponDefNames["staburstrocket"].id, true)
+	Script.SetWatchWeapon (WeaponDefNames["jvaryjump"].id, true)
 end
 
  
@@ -29,7 +31,7 @@ end
 		for projectileID,_ in pairs (redirectProjectiles[frame]) do
 			if (Spring.GetProjectileType (projectileID)) then
 				setTargetTable (projectileID, redirectProjectiles[frame][projectileID])
-				Spring.SetProjectileCEG (projectileID, "custom:tpmuzzleflash_jeep")				
+			--	Spring.SetProjectileCEG (projectileID, "custom:tpmuzzleflash_jeep")				
 			end
 		end
 	redirectProjectiles[frame] = nil
@@ -45,33 +47,84 @@ end
 		local tx,ty,tz = getProjectileTargetXYZ (proID)
 		local x,y,z = Spring.GetUnitPosition (proOwnerID)
 		
-		--Spring.SetProjectileCEG (proID, "custom:tpfiretrail")
-		--local randomSpray = makeTargetTable (x+math.random(-200,200), y+100, z+math.random(-200,200))
-		--addProjectileRedirect (proID, randomSpray, 30)
-		--addProjectileRedirect (proID, makeTargetTable(tx,Spring.GetGroundHeight (tx,tz)+100,tz), 10)
-		--addProjectileRedirect (proID, originalTarget, 45)
-		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty,tz+math.random(-500,500)), 30)
+		AddCodeByType[Spring.GetProjectileDefID (proID)](proID,proOwnerID)
+	
+		return true
+	end
+end
+
+
+
+AddCodeByType={}
+
+function AddStaburstRocketCode(proID,proOwnerID)
+		local originalTarget = getTargetTable (proID)
+		local tx,ty,tz = getProjectileTargetXYZ (proID)
+		local x,y,z = Spring.GetUnitPosition (proOwnerID)
 		
-		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty+400,tz+math.random(-500,500)), 10)
-		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty,tz+math.random(-500,500)), 20)
-		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty+400,tz+math.random(-500,500)), 30)
-		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty,tz+math.random(-500,500)), 40)
-		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty+2000,tz+math.random(-500,500)), 50)		
-		--addProjectileRedirect (proID, originalTarget, 80)
+
 		
 		-- fly  away into all directions
 		offsetx,offsety,offsetz=math.random(-150,150),math.random(0,75),math.random(-150,150)
 			addProjectileRedirect (proID, makeTargetTable(x+offsetx,y+offsety,z+offsetz), 0)
 		midx,midy,midz=(x+tx)/2+offsetx*0.25,(y+ty)/2+(offsety*0.5),(z+tz)/2+offsetz*0.25
 			addProjectileRedirect (proID, makeTargetTable(midx,midy,midz),15 )
-		--addProjectileRedirect (proID, makeTargetTable(x,y,z), 60)
-		--addProjectileRedirect (proID, makeTargetTable(x-500,y+500,z),90 )
-		--addProjectileRedirect (proID, makeTargetTable(x+500,y,z), 120)
+	
 		addProjectileRedirect (proID, originalTarget, 25)		
 		return true
-	end
 end
 
+
+AddCodeByType[WeaponDefNames["staburstrocket"].id]= AddStaburstRocketCode
+
+function AddVarFooRocketCode(proID,proOwnerID)
+		local originalTarget = getTargetTable (proID)
+		local tx,ty,tz = getProjectileTargetXYZ (proID)
+		local x,y,z = Spring.GetUnitPosition (proOwnerID)
+		
+		ex,ey,ez=0,0,0
+		if originalTarget.targetX then
+		ex,ey,ez=originalTarget.targetX ,originalTarget.targetY,originalTarget.targetZ
+		
+		else
+		ex,ey,ez=Spring.GetUnitPosition(originalTarget.targetID)
+		end
+		
+		dx,dy,dz=tx-ex,ty-ey,tz-ez
+		
+		
+		percenTage=0.25
+		addProjectileRedirect(proID, {bar=true,foo= function (proID)
+												Spring.SetProjectilePosition(proID,
+						tx+percenTage*dx+math.random(-25,25),
+						ty+math.random(5,10),
+						tz+ percenTage*dz+math.random(-25,25) )end}, 100)
+						addProjectileRedirect (proID, originalTarget, 101)		
+		
+
+		percenTage=0.5
+		addProjectileRedirect(proID, {bar=true,foo=function (proID)
+												Spring.SetProjectilePosition(proID,
+						tx+percenTage*dx+math.random(-25,25),
+						ty+math.random(10,35),
+						tz+ percenTage*dz+math.random(-25,25) )end}, 200)
+								addProjectileRedirect (proID, originalTarget, 201)		
+
+						
+		percenTage=0.75
+		addProjectileRedirect(proID, {bar=true,foo=function (proID)
+												Spring.SetProjectilePosition(proID,
+						tx+percenTage*dx+math.random(-25,25),
+						ty+math.random(10,35),
+						tz+ percenTage*dz+math.random(-25,25) )end}, 300)
+								addProjectileRedirect (proID, originalTarget, 301)		
+		
+		
+		return true
+end
+
+--makes the projectile go ninja style - jumping from place to place 
+AddCodeByType[WeaponDefNames["jvaryjump"].id]= AddVarFooRocketCode
 
 function getProjectileTargetXYZ (proID)
 	local targetTypeInt, target  = Spring.GetProjectileTarget (proID)
@@ -91,8 +144,13 @@ end
 
 function addProjectileRedirect (proID, targetTable, delay)
 	local f = Spring.GetGameFrame() + delay
+	if type(targetTable)=='function' then
+	redirectProjectiles[f][proID] = targetTable	
+	
+	else
 	if not redirectProjectiles[f] then redirectProjectiles[f] = {} end
-	redirectProjectiles[f][proID] = targetTable
+	redirectProjectiles[f][proID] = targetTable	
+	end
 end
 
 function makeTargetTable (x,y,z)
@@ -111,9 +169,35 @@ function getTargetTable (proID)
 end
 
 function setTargetTable (proID, targetTable)	
-	if targetTable.targetType == string.byte('g') then
+	if targetTable.bar and targetTable.bar ==true then
+	targetTable.foo(proID)		
+	elseif targetTable.targetType == string.byte('g') then
 		Spring.SetProjectileTarget (proID, targetTable.targetX, targetTable.targetY, targetTable.targetZ)
 	else
 		Spring.SetProjectileTarget (proID, targetTable.targetID, targetTable.targetType)		
 	end
 end
+
+		--Spring.SetProjectileCEG (proID, "custom:tpfiretrail")
+		--local randomSpray = makeTargetTable (x+math.random(-200,200), y+100, z+math.random(-200,200))
+		--addProjectileRedirect (proID, randomSpray, 30)
+		--addProjectileRedirect (proID, makeTargetTable(tx,Spring.GetGroundHeight (tx,tz)+100,tz), 10)
+		--addProjectileRedirect (proID, originalTarget, 45)
+		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty,tz+math.random(-500,500)), 30)
+		
+		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty+400,tz+math.random(-500,500)), 10)
+		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty,tz+math.random(-500,500)), 20)
+		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty+400,tz+math.random(-500,500)), 30)
+		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty,tz+math.random(-500,500)), 40)
+		--addProjectileRedirect (proID, makeTargetTable(tx+math.random(-500,500),ty+2000,tz+math.random(-500,500)), 50)		
+		--addProjectileRedirect (proID, originalTarget, 80)
+		
+	--	-- fly  away into all directions
+	--	offsetx,offsety,offsetz=math.random(-150,150),math.random(0,75),math.random(-150,150)
+	--		addProjectileRedirect (proID, makeTargetTable(x+offsetx,y+offsety,z+offsetz), 0)
+	--	midx,midy,midz=(x+tx)/2+offsetx*0.25,(y+ty)/2+(offsety*0.5),(z+tz)/2+offsetz*0.25
+	--		addProjectileRedirect (proID, makeTargetTable(midx,midy,midz),15 )
+	--	--addProjectileRedirect (proID, makeTargetTable(x,y,z), 60)
+	--	--addProjectileRedirect (proID, makeTargetTable(x-500,y+500,z),90 )
+	--	--addProjectileRedirect (proID, makeTargetTable(x+500,y,z), 120)
+	--	addProjectileRedirect (proID, originalTarget, 25)	

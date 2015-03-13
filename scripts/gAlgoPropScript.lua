@@ -18,6 +18,7 @@ pod[4]=piece"Pod4"
 pod[5]={}
 pod[5]=piece"Pod5"
 
+
 poleDance={}
 for i=1,6,1 do
 poleDance[i]={}
@@ -101,7 +102,6 @@ nrOfSpots=5
 function addABrick()
 d=math.floor(math.random(1,table.getn(bloks)))
 getAPod=math.floor(math.random(1,nrOfSpots))
-Spring.Echo(freeSpots[getAPod])
 
 moveCGAndAdPods(freeSpots[getAPod][1],freeSpots[getAPod][2],freeSpots[getAPod][3],getAPod,d)
 end

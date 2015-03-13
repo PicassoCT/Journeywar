@@ -14,7 +14,13 @@ boolUpgradeTime=false
 
 function upgraDDe()
 Sleep(upgradetime)
-boolUpgradeTime=true
+
+if not GG.BuiLuxUpgrade then GG.BuiLuxUpgrade={} end
+	while not GG.BuiLuxUpgrade[unitID] do
+	Sleep(500)
+	end
+
+	boolUpgradeTime=true
 while(boolUpgradeReady==false)do
 StartThread(close)
 Sleep(6000)

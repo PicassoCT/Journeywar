@@ -12,7 +12,7 @@
       water              = false,
       properties = {
         airdrag            = 1,
-        colormap           = [[0.8  0.8  0.8  0.3   0.8  0.8  0.8  1 	0.8  0.8  0.8  1   	0 0 0 0.01]],	
+        colormap           = [[0.8  0.8  0.8  0.3   0.8  0.8  0.8  1 	0.8  0.8  0.8  1   	]],	
 		
         directional        = true,
         emitrot            = 25,
@@ -22,8 +22,8 @@
         numparticles       = 3,
         particlelife       = 80,
         particlelifespread = 227,
-        particlesize       = 12.5,
-        particlesizespread = 9,
+        particlesize       = 2.5,
+        particlesizespread = 3,
         particlespeed      = 2,
         particlespeedspread = 3,
         pos                = [[0, 0r26 r-26, 0]],
@@ -51,10 +51,10 @@
         emitrotspread      = 40,
         emitvector         = [[0,1,0]],	
        gravity            = [[0, -0.27, 0]] , 
-        numparticles       = 5,
+        numparticles       = 1,
         particlelife       = 80,
         particlelifespread = 27,
-        particlesize       = 12.5,
+        particlesize       = 3,
         particlesizespread = 9,
         particlespeed      = 2,
         particlespeedspread = 3,
@@ -62,7 +62,7 @@
 		 
         sizegrowth         = [[0.0 ]] ,
         sizemod            = 1.0,
-        texture            = [[cbss]] ,
+        texture            = [[shard]] ,
 		
         useairlos          = false,
       },
@@ -77,7 +77,7 @@
       water              = false,
       properties = {
         airdrag            = 1,
-        colormap           = [[1  1  1  0.7  	1  1  1  0.7  	1  1  1  0.7  	  ]],	
+        colormap           = [[1  1  1  1  	1  1  1  1  	1  1  1  1 	  ]],	
 		
         directional        = true,
         emitrot            = 25,

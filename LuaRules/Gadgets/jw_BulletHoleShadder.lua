@@ -6,7 +6,7 @@ function gadget:GetInfo()
     date      = "Sep. 20014",
     license   = "The Exhibitionistic GPL- meaning if you use this, you have to talk a day and a hour to everyone you meet about journeywar",
     layer     = 0,
-    enabled   = true,
+    enabled   = false,
   }
 end
 
@@ -45,7 +45,9 @@ if (gadgetHandler:IsSyncedCode()) then
 					depth=amountOfDamage/max,
 					diameter=HoleInOneT[WeaponType].diameter,
 					pos={[1]=x,[2]=y,[3]=z}, 
-					dirShot={[1]=dirSX,[2]=dirSY,[3]=dirSZ}
+					dirShot={[1]=dirSX,[2]=dirSY,[3]=dirSZ},
+					teamColourInternal={ [1]=1.0,[2]=0.0,[3]=0.0,[4]=0.0},
+					teamColurExternal={[1]=0.0,[2]=1.0,[3]=0.0,[4]=0.0}
 					}
 					
 			SendToUnsynced("BulletHole", Hole)
@@ -78,7 +80,9 @@ else  --UNSYNCED
 	--shaderCode
 	---[[----------------------------------------------------------------------------
 	local vertexShaderSource=[[
+
 //#define use_shadow
+	#define MaxDepth= 50
     uniform mat4 camera;   //ViewMatrix (gl_ModelViewMatrix is ModelMatrix!)
     uniform vec3 cameraPos;
     uniform vec3 sunPos;
@@ -98,9 +102,10 @@ else  --UNSYNCED
 	
 	float ScalarByDistance(float Distance, float Diameter)
 	{
-	
-	
-	 }
+	float relPos=Distance/Diameter;
+	if (relPos < 0.5) return (1-relPos)*MaxDepth; 
+	if (relPos >= 0.5) return -1*(x*x)*(0.5*MaxDepth)+MaxDepth;
+	}
 
     float DistToPoint(vec3 point,vec3 point2)
 	{
@@ -118,22 +123,51 @@ else  --UNSYNCED
 	//poped from the stack variables
 	uniform float depth;
 	uniform float diameter;
+	
+	uniform float posX    ;
+	uniform float posY    ;
+	uniform float posZ    ;
+	uniform float dirX    ;
+	uniform float dirY    ;
+	uniform float dirZ    ;
+	
+	//Shadder draws bulletholes on unitbodies, looking like this
+	//__.-.   .-.__
+	//     \_/
+	//
+	//_____    ______
+		   \__/
+	
+	
+	//colours of the wound interior rgb
+	uniform float tColInt1;
+    uniform float tColInt2;
+	uniform float tColInt3;
+	//colours of the wound extended rgb
+	uniform float tColExt1;
+	uniform float tColExt2;
+	uniform float tColExt3;
+	
+	
 	varying vec3  pos;
 	varying vec4  dirShot;
 	
     void main(void)
     {
+		int i;
       gl_TexCoord[0].st = gl_MultiTexCoord0.st;
-	    float DistPoint=DistToPoint();
+	    float DistPoint=0;
 		
-		//if your vertex point is near the impact
-		if (!( DistPoint > 2*diameter))
+		for (i=0; i<VertexContainer; i++)
 		{
-		
-		
+		DistPoint=DistToPoint(VertexContainer[i],pos);
+	
+			//if your vertex point is near enough to the impact- and yes this reaches parts on the other side- and deforms them outwards
+			if ( DistPoint < 2*diameter)
+			{
+			transformPointAlongNormal( ScalarByDistance(VertexContainer[i],pos,diameter));
+			}
 		}
-	  //Here be GLSL-Foo later upon when the DODO is decided
-	  
 	  //gl_Vertex=gl_Vertex*4 // You get a big head from getting shot at
 	  
       vec4 worldPos = gl_ModelViewMatrix * v;
@@ -180,7 +214,23 @@ else  --UNSYNCED
 	--Forge values in which to store the Holes Data
 					if gl.CreateShader then
 					Spring.Echo("JW_BULETHOLESHADER::forging Shader")
-					shaderTable.uniform={depth=Hole.depth,diameter=Hole.diameter, posX=Hole.pos[1],posY=Hole.pos[2], posZ=Hole.pos[3], dirX=Hole.dirShot[1],dirY=Hole.dirShot[2],dirZ=Hole.dirShot[3]}
+					shaderTable.uniform={	depth=Hole.depth,
+											diameter=Hole.diameter, 
+											posX=Hole.pos[1],
+											posY=Hole.pos[2], 
+											posZ=Hole.pos[3], 
+											dirX=Hole.dirShot[1],
+											dirY=Hole.dirShot[2],
+											dirZ=Hole.dirShot[3],
+											tColInt1=Hole.teamColourInternal[1],
+											tColInt2=Hole.teamColourInternal[2],
+											tColInt2=Hole.teamColourInternal[3],
+											tColExt1=Hole.teamColurExternal[1],
+											tColExt2=Hole.teamColurExternal[2],
+											tColExt3=Hole.teamColurExternal[3],
+											}
+											
+											
 					shaderProgram=gl.CreateShader(shaderTable)			
 						if shaderProgram then 
 						PenetratedUnits[Hole.unitID]={shader=shaderProgram, piecename=Hole.piecename} 

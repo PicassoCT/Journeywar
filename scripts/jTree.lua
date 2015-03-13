@@ -1,3 +1,5 @@
+include "suddenDeath.lua"
+
 	eyenumber=14
 	local EYES= {}
 	for i=1, 14, 1 do

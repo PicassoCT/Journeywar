@@ -9,20 +9,43 @@
                             enabled = true,
                     }
     end
+  
+local glDepthTest        		= gl.DepthTest
+local glAlphaTest        		= gl.AlphaTest
+local glColor            		= gl.Color
+local glText             		= gl.Text
+local glTranslate        		= gl.Translate
+local glBillboard        		= gl.Billboard
+local glDrawFuncAtUnit   		= gl.DrawFuncAtUnit
+local GL_GREATER     	 		= GL.GREATER
+local GL_SRC_ALPHA				= GL.SRC_ALPHA	
+local GL_ONE_MINUS_SRC_ALPHA	= GL.ONE_MINUS_SRC_ALPHA
+local glBlending          		= gl.Blending 
      
-     
-function widget:DrawScreenEffects()
-	
-	if _G and  _G.Dialog then
+
+function widget:DrawWorld()
+  --if Spring.IsGUIHidden() then return end
+
+  glDepthTest(true)
+  glAlphaTest(GL_GREATER, 0)
+  glBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+   
+  
+  	if _G and  _G.Dialog then
 	local dialog=_G.Dialog
 		for i=1,#dialog do
-			local element=dialog[i]
-			local x,y=Spring.WorldToScreenCoords(element.x,element.y,element.z)
-			gl.Text(element.txt,x,y,16,"od")	
-		end
 		
-	
+		
+			local element=dialog[i]
+			
+			if element.frames > 0 then
+				local x,y=Spring.WorldToScreenCoords(element.x,element.y,element.z)
+				gl.Text(element.txt,x,y,16,"od")		
+			end
+		end
 	end
 
-
+  glAlphaTest(false)
+  glColor(1,1,1,1)
+  glDepthTest(false)
 end

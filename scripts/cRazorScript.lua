@@ -1,5 +1,4 @@
---Eliah
-
+lifeTime=45000
 --Define the wheel pieces
 
 local boolSecondAiming=false
@@ -26,14 +25,21 @@ temp="cNanoWir"..i
 pieces[i]=piece(temp)
 end
 
+function lifeTime()
+Sleep(lifetime)
+Spring.DestroyUnit(unitID,true,true)
+
+end
+
 function script.Create()
 
 Show(cMonoStope)
 Hide(cMonoHead)
-for i=1,27,1 do
-Hide(pieces[i])
-end
+	for i=1,27,1 do
+	Hide(pieces[i])
+	end
 
+StartThread(lifeTime)
 end
 
 oneStep=(4*3.14159)/27

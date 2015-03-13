@@ -25,6 +25,16 @@ function script.Create()
 dice=math.random(-15,15)
 Turn(center,y_axis,math.rad(dice),0)
 StartThread(spawnGrassDecals)
+StartThread(timeDelayedDestroy)
+end
+
+function timeDelayedDestroy()
+time=30000*math.ceil(math.random(0,4))
+Sleep(time)
+Move(center,y_axis,-100,0.01)
+WaitForMove(center,y_axis)
+Spring.DestroyUnit(unitID,false,true)
+
 end
 
 function script.Killed(recentDamage,_)

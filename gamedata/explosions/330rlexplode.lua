@@ -1,18 +1,6 @@
--- 330rlexplode
-
 return {
   ["330rlexplode"] = {
-    dirt = {
-      count              = 4,
-      ground             = true,
-      properties = {
-        alphafalloff       = 2,
-        color              = [[0.2, 0.1, 0.05]],
-        pos                = [[r-10 r10, 0, r-10 r10]],
-        size               = 22,
-        speed              = [[r1.5 r-1.5, 4, r1.5 r-1.5]],
-      },
-    },
+
     dirtw1 = {
       class              = [[CSimpleParticleSystem]],
       count              = 1,
@@ -36,8 +24,8 @@ return {
         pos                = [[r-1 r1, 1, r-1 r1]],
         sizegrowth         = 1.2,
         sizemod            = 1.0,
-        texture            = [[randdots]],
-        useairlos          = false,
+        texture            = [[fireSparks]],
+        useairlos          = true,
       },
     },
     dirtw2 = {
@@ -64,7 +52,7 @@ return {
         sizegrowth         = 1.2,
         sizemod            = 1.0,
         texture            = [[dirt]],
-        useairlos          = false,
+        useairlos          = true,
       },
     },
     flare = {
@@ -144,10 +132,9 @@ return {
         size               = 10,
         sizegrowth         = 25,
         speed              = [[0, 1 0, 0]],
-        texture            = [[laserend]],
+        texture            = [[flare]],
       },
-    },
-  },
+    }
+  }
 
 }
-

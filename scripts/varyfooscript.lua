@@ -12,12 +12,17 @@
 	DoubleMax=16
 	BodyMax=22
 	
+	nr=1
+	function echoNr(nr)
+	Spring.Echo(nr)
+	return nr+1
+	end
 	--Connection pieces for linear Connections only
 	for i=1,BodyMax,1 do
 		
 		bodyPieceName="body"..i.."s2"
 		BodyPieces[i]=piece(bodyPieceName)
-		assert(BodyPieces[i])
+		nr=echoNr(nr);assert(BodyPieces[i])
 		--add the linear connections
 		ConPieces[BodyPieces[i]]={}
 		ConPieces[BodyPieces[i]].Symetric={}
@@ -27,14 +32,15 @@
 			name="lcon"..i..j
 			ConPieces[BodyPieces[i]].Linear[j]={}
 			ConPieces[BodyPieces[i]].Linear[j]=piece(name)
-			assert(ConPieces[BodyPieces[i]].Linear[j])
+			nr=echoNr(nr);assert(ConPieces[BodyPieces[i]].Linear[j])
 			end
 		--add the symetric connections
 			
 			for j=1,2,1 do
-			name="scon"..i..j
+			name="scon"..i
+			name=name..j
 			ConPieces[BodyPieces[i]].Symetric[j]=piece(name)
-			assert(ConPieces[BodyPieces[i]].Symetric[j])
+			nr=echoNr(nr);assert(ConPieces[BodyPieces[i]].Symetric[j])
 			end
 			
 	--	--Spring.Echo("JW:VaryFoo:SymetricConections"..table.getn(ConPieces[BodyPieces[i]].Symetric))
@@ -67,16 +73,16 @@
 		ArmPieces[i][1]=	piece(bodyPieceName1)
 		ArmPieces[i][2]=	piece(bodyPieceName2)
 		ArmPieces[i][3]=	piece(bodyPieceName3)
-		assert(ArmPieces[i][1])
-		assert(ArmPieces[i][2])
-		assert(ArmPieces[i][3])
+		nr=echoNr(nr);assert(ArmPieces[i][1])
+		nr=echoNr(nr);assert(ArmPieces[i][2])
+		nr=echoNr(nr);assert(ArmPieces[i][3])
 		Hide(ArmPieces[i][1])
 		Hide(ArmPieces[i][2])
 	
 		
 		--add the linear connections
 		
-			if i < ArmMax and i %2 ==0 then
+			if i < LinArmMax and i %2 ==0 then
 			DoubleArmPieces[#DoubleArmPieces+1]={k=ArmPieces[i-1],v=ArmPieces[i]			}
 			end
 		
@@ -97,8 +103,8 @@
 		bodyPieceName="HeadCon"..i
 		HeadCon[i]=piece(bodyPieceName)
 		--add the linear connections
-		assert(HeadPieces[i])
-		assert(HeadCon[i])
+		nr=echoNr(nr);assert(HeadPieces[i])
+		nr=echoNr(nr);assert(HeadCon[i])
 		if i < HeadMax and i %2 ==0 then
 		DoubleHeadPieces[#DoubleHeadPieces+1]={k=HeadPieces[i-1],v=HeadPieces[i]			}											
 		end
@@ -117,8 +123,8 @@
 		bodyPieceName="Deco"..i
 		DecoPieces[i]=piece(bodyPieceName)
 		--add the linear connectionsk
-				assert(DecoPieces[i])
-		if i < DecoMax and i %2 ==0 then
+				nr=echoNr(nr);assert(DecoPieces[i])
+		if i < DecoDouble and i %2 ==0 then
 		DoubleDecoPieces[#DoubleDecoPieces+1]={k=DecoPieces[i-1],v=DecoPieces[i]			}							
 		end
 	Hide(DecoPieces[i])
@@ -227,9 +233,9 @@
 	return table.getn(tablename)~= 0
 	end
 	
-	function LinAddPieceSocketsToPool(piece,boolAddSymetrics)
-		LinearCon=ConPieces[piece].Linear
-	SymCon=ConPieces[piece].Symetric
+	function LinAddPieceSocketsToPool(part,boolAddSymetrics)
+		LinearCon=ConPieces[part].Linear
+	SymCon=ConPieces[part].Symetric
 		if LinearCon then
 			for i=1,table.getn(LinearCon), 1 do
 			LinBodyCon[#LinBodyCon+1]=LinearCon[i]	
@@ -245,10 +251,10 @@
 		end	
 	end
 	
-	function SymAddPieceSocketsToPool(piece,sympiece)
-	local LinearCon=ConPieces[piece].Linear
+	function SymAddPieceSocketsToPool(part,sympiece)
+	local LinearCon=ConPieces[part].Linear
 	local LinearConS=ConPieces[sympiece].Linear
-	local SymCon=ConPieces[piece].Symetric
+	local SymCon=ConPieces[part].Symetric
 	local SymConS=ConPieces[sympiece].Symetric
 	
 		if LinearCon then
@@ -347,13 +353,13 @@
 	
 	function SymmetricExpand(pieceA,pieceB,dirVec)
 	--Spring.Echo("JW:VaryFoo:SymetricExpanding_1 >>"..table.getn(SymBodyCon))
-	rEchoTable(SymBodyCon)
+	--rEchoTable(SymBodyCon)
 	--TODO
 		if  SymBodyCon and table.getn(SymBodyCon) > 0 then
 		--Spring.Echo("JW:SymetricExpand_1.5")
 		dice=math.floor(math.random(1,math.max(1,table.getn(SymBodyCon)	)))
 		socketA,socketB=getPairNrSymBodyCon(dice)
-		--assert(socketA)
+		--nr=echoNr(nr);assert(socketA)
 			if socketA then 
 			--Spring.Echo("JW:VaryFoo:SymetricExpanding_2")
 					
@@ -582,6 +588,7 @@ function LinearExpandArm()
 	symConLimit=rollDice(Max/2)
 	--Body
 	while bodyNum < bodydice and existsParts(BodyPieces)==true do
+	Spring.Echo("jvaryfoo::bodybuilding")
 	-- while there exist  BodyParts2 and numberOfBodyPiecesUsed <bodydice
 		--dice usage as a linear connector
 		if  linConLimit < math.random(1,Max) then
@@ -612,6 +619,7 @@ function LinearExpandArm()
 	ArmNum=ArmNum+2
 	
 		while ArmNum < Armdice and existsParts(ArmPieces)==true do
+		Spring.Echo("jvaryfoo::arms")
 		-- while there exist  BodyParts2 and numberOfBodyPiecesUsed <Armdice
 		--Spring.Echo("Exit the Loop2")
 			--dice usage as a linear connector
@@ -655,6 +663,7 @@ function LinearExpandArm()
 	linConLimit,symConLimit=rollDice(Max)
 	
 	while headNum < headdice and existsParts(HeadPieces)==true do
+	Spring.Echo("jvaryfoo::giving head")
 	headNum=headNum+1
 		if  linConLimit < math.random(1,Max) then
 		headNum=headNum+LinearExpandHead(offSetX)
@@ -674,26 +683,35 @@ function LinearExpandArm()
 	if math.random(0,1)==1 then
 	decodice=math.ceil(math.random(1,DecoMax))
 		decoNum=0
+		oldDecoNum=0
+		decoCounter=0
 		Max=HeadMax
 		--Head
 				
 		linConLimit,symConLimit=rollDice(Max)
 		
-		while decoNum < decodice and existsParts(HeadPieces)==true do
+		while decoCounter < DecoMax and decoNum < decodice and existsParts(HeadPieces)==true do
+		
 			if  linConLimit < math.random(1,Max) then
+			Spring.Echo("jvaryfoo::Linear_decoration")
 			decoNum=decoNum+LinearExpandDeco(offSetX)
 			else
 				--Check if on of them is existing twice
 		-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
 				pieceA,pieceB=DoubleCheckPiece(DoubleDecoPieces)		
-				if pieceA and pieceB and symConLimit < math.random(1,Max)  then
+				if pieceA and pieceB and symConLimit < math.random(1,Max) then
 				decoNum=decoNum+SymmetricExpandDeco(pieceA,pieceB,offSetX)	
+				Spring.Echo("jvaryfoo::Sym_decoration")
 				else 			
+				Spring.Echo("jvaryfoo::Linear_decoration")
 				decoNum=decoNum+LinearExpandDeco(offSetX)			
 				end
 			end
+		if decoNum== oldDecoNum then decoCounter=decoCounter+1 end
+		oldDecoNum=decoNum
 		end		
 	end		
+	
 	alignLegsToGround()
 	processAddedArms()	
 end		
@@ -723,7 +741,7 @@ local tx,ty,tz,tdist,theight,index=math.huge,math.huge*-1,math.huge, math.huge, 
 boolFoundSomething=false
 	for i=1,#poinTable do
 		dist=math.sqrt((lx-poinTable[i].x)^2+(ly-poinTable[i].y)^2+(lz-poinTable[i].z)^2)
-		if dist < tdist and poinTable[i].y > theight then
+		if dist < tdist and poinTable[i].y > theight and not AllReadyUsed[LinBodyCon[i]] then
 		 tx,ty,tz,tdist,theight = poinTable[i].x,poinTable[i].y,poinTable[i].z,dist, poinTable[i].y
 		 index=i
 		 --if we found nothing, we need to start again, at another lowest point
@@ -741,16 +759,25 @@ function LinearExpandDeco(offSet)
 
 		Socket=LinFindDecoCon()
 	
+	
+	
+	
+	if AllReadyUsed[Socket]== nil then
+	Spring.Echo("Socket allready used")
+	end		
+		
 		if  AllReadyUsed[Deco] == nil and AllReadyUsed[Socket]== nil then
-		randomVec=makeDirVecFromDeg(90,45,0,0,0,0,offSet)
+	
+	randomVec=makeDirVecFromDeg(90,45,0,0,0,0,offSet)
 		Show(Deco)
 
 		conPieceCon2Socket(Socket,Deco,randomVec)
 		usedPiece(Deco)
 		usedPiece(Socket)
+		Spring.Echo("jvaryfoo::LinearDecoExpansion Success")
 		return 1
 		end
-		
+	Spring.Echo("jvaryfoo::LinearDecoExpansion Phail")
 	return 0
 end
 
@@ -773,10 +800,12 @@ function SymmetricExpandDeco(pieceA, pieceB)
 			usedPiece(socketB)
 			usedPiece(pieceA)
 			usedPiece(pieceB)
+				Spring.Echo("jvaryfoo::SymDecoExpansion Success")
 			return 2
 			end
 		
 		end
+	Spring.Echo("jvaryfoo::SymDecoExpansion Phail")
 	return 0
 end
 		
@@ -1022,6 +1051,11 @@ local spCreateUnit=Spring.CreateUnit
  teamID=Spring.GetUnitTeam(unitID)
  gaiaID=Spring.GetGaiateamID
 
+ boolTeleportCharged=true
+ local maxDist=250
+ unitSize=80
+
+ 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 if boolAttack==false then boolAttack=true end
 	if WeaponDefID and not weaponTable[weaponDefIDj] and math.random(0,damage) < damage/2 then
@@ -1032,11 +1066,18 @@ if boolAttack==false then boolAttack=true end
 		spCreateUnit("jvaryfoo",x,y,z, math.random(1,3), gaiaID)
 		end
 	end
+	
+	if boolTeleportCharged==true and GetDistanceNearestEnemy(unitID) < maxDist then
+	boolTeleportCharged=false
+	StartThread(telePortTimer)
+	end
+	
 return damage
 end 
-	
-	function sound()
+
 	local unitdef=Spring.GetUnitDefID(unitID)
+	function sound()
+
 	loudness=0.52
 	local signum=-1
 	local strings="sounds/VaryFoo/VaryFoo"
@@ -1186,14 +1227,17 @@ end
 		dx,dy,dz=(ox-vx)/8,(oy-vy)/8,(oz-vz)/8	
 		for i=1,8 do
 			midX,midY,midZ=vx+dx*i,vy+dy*i,vz+dz*i
-			spSpawnCEG("gdshadows",midX,midY,midZ,0,1,0,50)
+			dx,dy,dz=Spring.GetUnitPieceDirection( LinArms[math.ceil(math.random(1,#i))][1])
+			max=math.max(math.abs(dx),math.max(math.abs(dy),math.abs(dz)))
+			dx,dy,dz=dx/max,dy/max,dz/max
+			spSpawnCEG("jvaryfoohit",dx,dy,dz,0,1,0,50)
 		end
 		
 		for i=1,8 do
 			if math.random(0,1)==1 then
 				spSpawnCEG("bloodsplat",vx+math.random(-25,25),vy+math.random(0,75),vz+math.random(-25,25),0,1,0,50)
 			else
-				spSpawnCEG("jvaryfoohit",vx+math.random(-25,25),vy+math.random(0,75),vz+math.random(-25,25),0,1,0,50)
+				
 			end
 		end
 		
@@ -1214,8 +1258,63 @@ function script.AimWeapon1( heading ,pitch)
 	return true
 
 end
-
+varyfoodefid=Spring.GetUnitDefID(unitID)
 function script.FireWeapon1()	
+if maRa()==true then
+EmitSfx(LinArms[math.ceil(math.random(1,#i))][1],1025)
+EmitSfx(LinArms[math.ceil(math.random(1,#i))][2],1025)
+else
+EmitSfx(LinArms[math.ceil(math.random(1,#i))][2],1026)
+EmitSfx(LinArms[math.ceil(math.random(1,#i))][1],1026)
+end
+	PlaySoundByUnitType(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
+	return true
+end
+
+
+	function script.AimFromWeapon2() 
+	return center 
+end
+
+function script.QueryWeapon2() 
+	return center 
+end
+
+function script.AimWeapon2( heading ,pitch)	
+
+	return boolTeleportCharged
+
+end
+
+function iAmFlying()
+	justOnce=true
+	while justOnce do
+	Sleep(700)
+	x,y,z=Spring.GetUnitPosition(unitID)
+		if y > Spring.GetGroundHeight(x,z)-25 then
+		Spring.MoveCtrl.Disable(unitID)
+		justOnce=false
+		end
+	end
+	Sleep(1000)
+	Spring.MoveCtrl.Disable(unitID)
+end
+
+boolTeleportCharged=true
+function TeleportCharge()
+boolTeleportCharged=false
+Sleep(22000)
+boolTeleportCharged=true
+
+end
+
+varyfoodefid=Spring.GetUnitDefID(unitID)
+function script.FireWeapon2()	
+Spring.SetUnitAlwaysVisible(unitID,false)
+Spring.SetUnitBlocking (unitID,false,false,false)
+StartThread(iAmFlying)
+StartThread(TeleportCharge)
+	PlaySoundByUnitType(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
 	return true
 end
 

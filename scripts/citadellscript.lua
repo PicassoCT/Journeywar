@@ -2,7 +2,7 @@
  include "toolKit.lua"
  
  boolPressedButtonTwice=false
- 
+  PortalEmit=piece"PortalEmit"
 elCid=piece "elCid"
 spawnPoint =piece "spawnPoint"
 shield=piece"shield"
@@ -12,6 +12,7 @@ shield=piece"shield"
  debris1=piece"debris1"
  debris2=piece"debris2"
  debris3=piece"debris3"
+
  debris4=piece"debris4"
  debris5=piece"debris5"
 sparks={}
@@ -124,10 +125,30 @@ local SIG_PSTORM=8
 boolFireCloud=false
 boolBloodyVirginMary=true
 
+local spGetUnitPiecePosition=Spring.GetUnitPiecePosition
+
+	function darkEnergyReactor()
+time=0
+PIE=3.14159/60
+med=0
+while true do
+time=(time+PIE)%6.28318530
+val=math.ceil(((math.sin(time)*75)+med)/2)
+med=val
+if val > 0 then 
+Spring.AddUnitResource(unitID,"e",val)
+else
+val=math.abs(val)
+Spring.UseUnitResource(unitID,"e",val)
+end
+Sleep(1010)
+
+end
+end
+
 --arrive every 1:30 secs -> to forwards that hollywood action curve, in which every 3 min something is blown up- 
 function reInforCements()
 Sleep(65000)
-teamID=Spring.GetUnitTeam(unitID)
 Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav")  
 Sleep(180000)
 dropPx,dropPy,dropZ=Spring.GetUnitPosition(unitID)
@@ -139,11 +160,19 @@ end
 Spring.PlaySoundFile("sounds/citadell/reinforcements.wav")  
 
 local spCreateUnit=Spring.CreateUnit
+Show(cishadersp)
+Move(PortalEmit,y_axis,1200,0,true)
+
 	for a=1,270,1 do
 		if a > 220 then
+		if a % 25 then
+		EmitSfx(PortalEmit,1039)
+		end
+		EmitSfx(cishadersp,1038)
 		EmitSfx(cishadersp,1026)
 		else
 		EmitSfx(cishadersp,1030)
+
 		end
 	Sleep(100)
 	end
@@ -200,19 +229,19 @@ down=100
 unitX,unitY,unitZ= Spring.GetUnitPosition(unitID)
 local spSpawnCEG=Spring.SpawnCEG
 	while(boolFireCloud==true) do
-			local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud1" )
+			local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud1" )
 				spSpawnCEG("citadellfire",CemitX+unitX,CemitY+unitY-down,CemitZ+unitZ,0,1,0,50,0)
 				sleePhe=math.random(70,160)
 
 
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud2" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud2" )
 				spSpawnCEG("citadellfire",CemitX+unitX,CemitY+unitY-down,CemitZ+unitZ,0,1,0,50,0)
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud3" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud3" )
 				spSpawnCEG("citadellfire",CemitX+unitX,CemitY+unitY-down,CemitZ+unitZ,0,1,0,50,0)
 
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud3" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud3" )
 				spSpawnCEG("citadellfire",CemitX+unitX,CemitY+unitY-down,CemitZ+unitZ,0,1,0,50,0)
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud4" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud4" )
 				spSpawnCEG("citadellfire",CemitX+unitX,CemitY+unitY-down,CemitZ+unitZ,0,1,0,50,0)
 	Sleep(120)
 	end
@@ -230,19 +259,19 @@ local spSpawnCEG=Spring.SpawnCEG
 
 			while(true) do
 				
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud1" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud1" )
 				spSpawnCEG("citadellcloud",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
 				sleePhe=math.random(70,160)
 
 
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud2" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud2" )
 				spSpawnCEG("citadellcloud",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud3" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud3" )
 				spSpawnCEG("citadellcloud",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
 
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud3" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud3" )
 				spSpawnCEG("citadellcloud",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
-				local CemitX,CemitY,CemitZ=Spring.GetUnitPiecePosition(unitID,piece"ciPorCloud4" )
+				local CemitX,CemitY,CemitZ=spGetUnitPiecePosition(unitID,piece"ciPorCloud4" )
 				spSpawnCEG("citadellcloud",CemitX+unitX,CemitY+unitY,CemitZ+unitZ,0,1,0,50,0)
 				
 				for xand=1,8,1 do
@@ -263,15 +292,15 @@ local spSpawnCEG=Spring.SpawnCEG
 								
 					if boolShowFullStorm == true then
 										for i=1,27,1 do
-												local SemitX,SemitY,SemitZ=Spring.GetUnitPiecePosition(unitID,sparks[i])
+												local SemitX,SemitY,SemitZ=spGetUnitPiecePosition(unitID,sparks[i])
 												spSpawnCEG("portalstorm",SemitX+unitX,SemitY+unitY,SemitZ+unitZ,0,1,0,50,0)
 												
 												
 												if i==1 then
-													Street15X,Street15Y,Street15Z=Spring.GetUnitPiecePosition(unitID,sparks[15])	
+													Street15X,Street15Y,Street15Z=spGetUnitPiecePosition(unitID,sparks[15])	
 												 
 														for ti=1,8,1 do
-																 StoneX,StoneY,StoneZ= Spring.GetUnitPiecePosition(unitID,rocks[ti])	
+																 StoneX,StoneY,StoneZ= spGetUnitPiecePosition(unitID,rocks[ti])	
 																
 																	if StoneY < SemitY and StoneY > Street15Y then
 																	Move(rocks[ti],x_axis,SemitX,19)
@@ -285,7 +314,7 @@ local spSpawnCEG=Spring.SpawnCEG
 												
 												if i==15 then 
 														for ti=1,8,1 do
-														 StoneX,StoneY,StoneZ= Spring.GetUnitPiecePosition(unitID,rocks[ti])	
+														 StoneX,StoneY,StoneZ= spGetUnitPiecePosition(unitID,rocks[ti])	
 														
 																if StoneY < SemitY then
 																Move(rocks[ti],x_axis,SemitX,19)
@@ -394,7 +423,15 @@ Sleep(randNum)
 end
 
 end
-
+								
+function sfxThread(time,step,piecename,nr)
+		 
+	while time > 0 do
+	EmitSfx(piecename,nr)
+	Sleep(step)
+	time=time-step
+	end
+end
 
 local function WarpEntry()
 	Move(blade,y_axis,300,0)
@@ -421,18 +458,20 @@ Spin(cisuperpor,y_axis,math.rad(88),11)
 Spin(sparks[1],y_axis,0.5,0.1)
 Spin(sparks[15],y_axis,-0.8,0.2)
 StartThread(SpawnCloud)
+StartThread(sfxThread,15000,	950,PortalEmit,1036)
 
 Spring.PlaySoundFile("sounds/citadell/portalstorm.wav",0.5)
-
+	
 themRocks(9,20,160,220)
  unitX, unitY, unitZ= Spring.GetUnitPosition(unitID)
+	
 local spSpawnCEG=Spring.SpawnCEG
 -- gehe die Liste der sparkknoten ab, erhöhe um eins mit jedem Durchgang
 	for out=1,26,1 do		
 			
 			--injedem Durchang gehe die bisher aufgedeckten Knoten ab, Zeige den CegEffect
 			for i=1,out,1 do
-			local SemitX,SemitY,SemitZ=Spring.GetUnitPiecePosition(unitID,sparks[i])
+			local SemitX,SemitY,SemitZ=spGetUnitPiecePosition(unitID,sparks[i])
 			spSpawnCEG("portalstorm",SemitX+unitX,SemitY+unitY,SemitZ+unitZ,0,1,0,50,0)
 		
 			end
@@ -473,18 +512,27 @@ StartThread(hideAndThrowRocks,63,71)
 
 themRocks(1,5,120,168)
 Spring.PlaySoundFile("sounds/citadell/portal.wav",0.5)		
-SemitX,SemitY,SemitZ=Spring.GetUnitPiecePosition(unitID,sparkcloudemit)
+SemitX,SemitY,SemitZ=spGetUnitPiecePosition(unitID,sparkcloudemit)
 unitX,unitY,unitZ= Spring.GetUnitPosition(unitID)
+
 	for i=1,10,1 do
 	spSpawnCEG("sparkcloud",SemitX+unitX,SemitY+unitY,SemitZ+unitZ,0,1,0,50,0)
+	SemitY=SemitY+31
 	Sleep(100)
 	end
-	
+
 themRocks(2,5,120,165)	
 Show(blade)
 Move(blade,y_axis,0,150)
-Sleep(1024)
+SemitY=SemitY-310
+	for i=1,20,1 do
+	spSpawnCEG("sparkcloud",SemitX+unitX,SemitY+unitY,SemitZ+unitZ,0,1,0,50,0)
+	SemitY=SemitY+31
+	Sleep(50)
+	end
 Show(cicylind)
+Move(sparkcloudemit,y_axis,620,0,true)	
+StartThread(sfxThread,5000,	400,sparkcloudemit,1037)
 
 Sleep(150)
 
@@ -579,6 +627,8 @@ boolTwice=false
 
 
 function script.Create()
+Move(sparkcloudemit,y_axis,0,0)
+Move(PortalEmit,y_axis,0,0,true)
 --StartThread(spawnCommander)
 for i=1,12,1 do
 Hide(shields[i])
@@ -592,6 +642,7 @@ end
 hideT(addArmor)
 Hide(ArmorSpawn)
 Hide(FirstArmor)
+
 
 StartThread(CriticalHitDetector)
 StartThread(delayedSet)
@@ -640,6 +691,7 @@ StartThread(shieldDraw)
 
 StartThread(reInforCements)
 StartThread(armorOS)
+StartThread(darkEnergyReactor)
 
 end
 
@@ -796,6 +848,9 @@ function script.QueryNanoPiece()
 
 return cinanoemit1
 end
+
+
+
 
 
 
@@ -986,7 +1041,7 @@ teamID=Spring.GetUnitTeam(unitID)
 boolShield=false
 function shieldDraw()
 
-local teamid=Spring.GetUnitTeam(unitID)
+
 if boolShield==true then 	Spring.SetUnitShieldState(unitID,5,true) else 	Spring.SetUnitShieldState(unitID,5,false) end
 
 	while true do
@@ -1156,8 +1211,8 @@ boolArmorOut=false
 end
 
 function moveArmorIn(nr)
-px,py,pz=Spring.GetUnitPiecePosition(unitID,addArmor[nr])
-ax,ay,az=Spring.GetUnitPiecePosition(unitID,FirstArmor)
+px,py,pz=spGetUnitPiecePosition(unitID,addArmor[nr])
+ax,ay,az=spGetUnitPiecePosition(unitID,FirstArmor)
 Move(addArmor[nr],y_axis,-1*(py-ay),12)
 WaitForMove(addArmor[nr],y_axis)
 MovePieceToPiece(addArmor[nr], FirstArmor,12)

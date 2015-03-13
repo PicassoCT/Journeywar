@@ -17,11 +17,11 @@ return {
 				--colormap           = [[1 0.4 0.25 .01     .02 .02 .02 0.01 .004 .004 .004 0.01		0 0 0 0.01]],
 			
 
-				 pos                = [[0 r-13 r13, 26, 0 r-13 r13]],
-				gravity            = [[0, 1 r-0.5 r0.75, 0]],
+				 pos                = [[0 r-42 r42, 26r14, 0 r-42 r42]],
+				gravity            = [[0r-0.05r0.05, 1 r-0.5 r0.75, 0r-0.05r0.05]],
 				emitvector         = [[0, -1, 0]],
-				  emitRot		= 42,
-				 emitRotSpread	= 12.824,
+				 emitrot            = 3,
+				emitrotspread      = 25,
 
 
 				sizeGrowth	= 0.45,
@@ -29,16 +29,16 @@ return {
 
 		
 				airdrag			= 0.55,
-				particleLife		=175,
-				particleLifeSpread	= 36,
+				particleLife		=135,
+				particleLifeSpread	= 16,
 				numParticles		= 1,
 				particleSpeed		= 0.09,
 				particleSpeedSpread	= 0.012,
-				particleSize		= 0.008,
-				particleSizeSpread	= 3,
+				particleSize		= 2.008,
+				particleSizeSpread	= 6,
 
 				directional		= true, 
-				useAirLos		= 0,
+				useAirLos		= true,
 				},
 
 	

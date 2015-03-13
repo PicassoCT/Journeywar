@@ -1,4 +1,7 @@
+
+
 include "suddenDeath.lua"
+include "toolKit.lua"
 
 local SIG_FIRE =1 
 local SIG_CRANE =2
@@ -9,10 +12,23 @@ fireemitters[i]={}
 piecename= "fireEmit"..i
 fireemitters[i]=piece(piecename)
 end
+cg=piece"CG"
+CoreGeneratorTable={}
+for i=1,6 do
+name="CG"..i
+CoreGeneratorTable[#CoreGeneratorTable+1]=piece(name)
+end
+
+ArcoStump=piece"stump"
+Blocks={}
+for i=1,99 do
+name="Block"..i
+Blocks[#Blocks+1]=piece(name)
+end
 
 NrOfPoints=0
 
-buibaicity=piece "buibaicity"
+buibaicity=piece"buibaicity"
 center=piece"center"
 
 local healthMax=0
@@ -31,11 +47,34 @@ previouslyAttackingTeam=nil
 boolDamaged=false
 teamID=Spring.GetUnitTeam(unitID)
 
+
+
 function nothingEverHappend(datTeamID)
 if datTeamID ~= teamID then boolDamaged=true end
 previouslyAttackingTeam=lastAttackingTeamID
 lastAttackingTeamID=datTeamID
 if not previouslyAttackingTeam then previouslyAttackingTeam=lastAttackingTeamID end
+end
+
+function SideEffects()
+if not 	GG.BuiLuxUpgrade then 	GG.BuiLuxUpgrade={}end
+
+IdTable={[UnitDefNames["builux"].id]=true}
+	while true do
+	--get builux nearby
+	x,y,z=Spring.GetUnitPosition(unitID)
+	T=grabEveryone(unitID,x,z,512)
+		if #T then 
+		T=filterUnitTableforDefIDTable(T,IdTable)
+			if #T then 
+			
+				for i=1,#T do
+				GG.BuiLuxUpgrade[T[i]]=true
+				end
+			end
+		end
+	Sleep(1000)
+	end
 end
 
 function investMent()
@@ -98,7 +137,7 @@ function script.Killed(recentDamage)
 
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
-Spring.CreateUnit("crewarder",x,y+500,z,0,teamID)
+Spring.CreateUnit("crewarder",math.random(1,x),y+500,math.random(1,z),0,teamID)
 	if lastAttackingTeamID ~= nil then
 	boolGotIt=Spring.UseTeamResource(lastAttackingTeamID,"metal",3900)
 	boolGotIt2=Spring.UseTeamResource(lastAttackingTeamID,"energy",3900)
@@ -136,7 +175,42 @@ suddenDeath(unitID,recentDamage)
 return 1
 end
 
+function buildIt()
+		hideT(Blocks)
+		Hide(ArcoStump)
+
+
+	if maRa()==true then
+	Hide(buibaicity)
+	Show(ArcoStump)	
+	BL={}
+			if  maRa()==true then
+			BL=Blocks
+			createRandomizedBuilding(BL,CoreGeneratorTable[1], cg )
+			else
+				splits=math.ceil(math.random(2,6))
+				tableOfTables={}
+				T1={}
+				T2=Blocks
+				splitStart=math.ceil(#Blocks/splits)
+				for k=1,splits do
+				T1,T2=splitTable(T2,splitStart)
+				tableOfTables[k]=T1
+				end
+				for k=1,splits do
+				createRandomizedBuilding(tableOfTables[k], CoreGeneratorTable[math.min(k,#CoreGeneratorTable)],cg)
+				end		
+			end
+		else 
+		hideT(Blocks)
+		Hide(ArcoStump)
+		Show(buibaicity)
+		end
+	hideT(CoreGeneratorTable)
+end
+
 function script.Create()
+StartThread(buildIt)
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
@@ -148,7 +222,8 @@ GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 --</buildanimationscript>
 	StartThread(peaceLoop)
 	StartThread(investMent)
+	StartThread(SideEffects)
 
- 
+Hide(cg)
 end
 --------BUILDING---------

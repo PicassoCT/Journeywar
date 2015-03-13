@@ -28,7 +28,7 @@ idleAutoHeal = 0,
 FootprintX = 5,
 FootprintZ = 5,
 MaxSlope = 20,
-YardMap ="yyyyy yyyyy yyyyy yyyyy yyyyy",
+YardMap ="yyyyy yyyyy yygyy yyyyy yyyyy",
 MaxWaterDepth = 20,
 MovementClass = "Default2x2",
 
