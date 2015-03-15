@@ -114,7 +114,7 @@ local spGetUnitPosition =	Spring.GetUnitPosition
 
 function boolInWater()
 x,y,z=spGetUnitPosition(unitID)
-if y < 10 return true else return false end
+if y < 10 then return true else return false end
 end
 
 function boolMoving(ox,oz)

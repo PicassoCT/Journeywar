@@ -1,9 +1,9 @@
 local unitName = "jgalatea"
 
 local unitDef = {
-name = "Galatea",
+name = "Galatea Manowar",
 Description = "Beware of the galatea eggs",
-objectName = "galateplaceholder.s3o",
+objectName = "jgalatea.s3o",
 script = "jgalatescript.lua",
 buildPic = "placeholder.png",
 levelGround =false,
