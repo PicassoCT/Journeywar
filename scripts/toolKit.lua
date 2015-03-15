@@ -91,8 +91,67 @@ end
 		Sleep(250)
 		end
 	end
+	
+--> AmphibMovementThread
+function AmphibMoveThread(pieces
+						 ,updateCycle
+						 ,moveRatio
+						 ,nlswimAnimation
+						 ,nlstopSwimAnimation
+						 ,nloutOfWaterAnimation
+						 ,nlbackIntoWaterAnimation
+						 ,nlwalkAnimation
+						 ,nlstopWalkAnimation)
+							
+local swimAnimation          =nlswimAnimation   
+local stopSwimAnimation      =nlstopSwimAnimation
+local outOfWaterAnimation    =nloutOfWaterAnimation
+local backIntoWaterAnimation =nlbackIntoWaterAnimation
+local walkAnimation          =nlwalkAnimation
+local stopWalkAnimation		 =nlstopWalkAnimation			
+							
+local spGetUnitPosition =	Spring.GetUnitPosition
 
---> genericOS
+function boolInWater()
+x,y,z=spGetUnitPosition(unitID)
+if y < 10 return true else return false end
+end
+
+function boolMoving(ox,oz)
+x,y,z=spGetUnitPosition(unitID)
+if math.abs(ox-x)+math.abs(oz-z)+math.abs(oy-y) > moveRatio then return true
+else return false 
+end
+end
+
+
+	while true do
+		while boolInWater()==true do
+			if  boolMoving()==true then
+			swimAnimation()
+			else 
+			stopSwimAnimation()
+			end
+		Sleep(updateCycle)
+		
+		end
+	outOfWaterAnimation()
+		while boolInWater()==false do
+			if  boolMoving()==true then
+			walkAnimation()
+			else 
+			stopWalkAnimation()()
+			end
+				Sleep(updateCycle)
+		end
+	backIntoWaterAnimation()
+	Sleep(updateCycle)
+	end
+
+end	
+	
+
+--> genericOS 
 function genericOS(unitID, dataTable,jobFunctionTable, checkFunctionTable,rest)
 local checkFunctionT	=checkFunctionTable
 local jobFunctionT		=jobFunctionTable
@@ -217,7 +276,7 @@ value=-1*value
 return value
 end
 
--->returns the distance of a vector
+-->returns the 2 norm of a vector
 function distance(x,y, z)
 return math.sqrt(x*x+y*y+z*z)
 end

@@ -3,7 +3,7 @@ local unitDef = {
   objectName="ragtest.s3o",
 
   name               = "Gluemine",
-  Description 		 =" stay a while and listen",
+  Description 		 =" stay a while and stick to it",
 
   script 			 = "glueminescript.lua",
   maxDamage = 250, 
@@ -19,6 +19,9 @@ local unitDef = {
 	canpatrol=true,
 	canstop=true,
 	canmove=false,
+	cancloak=true,
+	cloakCost=0.0,
+	initCloaked=false
 	
   footprintX=2,
   footprintZ =2,
@@ -26,12 +29,9 @@ local unitDef = {
   
   
 
-	shootme=true,
-	
-  
   	sightdistance=120,
 	radardistance=50,
-	radardistancejam=0,
+	radardistancejam=15,
   
   	mass=550,
 
@@ -43,19 +43,18 @@ local unitDef = {
 
 Category = [[BUILDING LAND]],
   
-  selfDestructAs ="glueMineWeapon",
-  explodeAs = "glueMineWeapon",
+  selfDestructAs ="gluemineweapon",
+  explodeAs = "gluemineweapon",
   
 	 customParams = {},
- sfxtypes = {
+ sfxtypes = 	{
 				explosiongenerators = {
-				   "custom:bigbulletimpact",
-				  
+				   "custom:bigbulletimpact",  
 				},
 				},
 				
 weapons = {
-[1]={name  = "glueMineWeapon",
+[1]={name  = "gluemineweapon",
 	onlyTargetCategory = [[LAND]],
 	},
 				
