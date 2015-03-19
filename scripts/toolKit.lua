@@ -94,6 +94,7 @@ end
 	
 --> AmphibMovementThread
 function AmphibMoveThread(pieces
+						 ,PivotPoints	
 						 ,updateCycle
 						 ,moveRatio
 						 ,nlswimAnimation
@@ -112,39 +113,48 @@ local stopWalkAnimation		 =nlstopWalkAnimation
 							
 local spGetUnitPosition =	Spring.GetUnitPosition
 
-function boolInWater()
-x,y,z=spGetUnitPosition(unitID)
-if y < 10 then return true else return false end
-end
+boolInWater= function ()
+				x,y,z=spGetUnitPosition(unitID)
+				h=Spring.GetGroundHeight(x,z)
+				if h < -10 then return true else return false end
+				end
 
-function boolMoving(ox,oz)
-x,y,z=spGetUnitPosition(unitID)
-if math.abs(ox-x)+math.abs(oz-z)+math.abs(oy-y) > moveRatio then return true
-else return false 
-end
-end
+boolMoving= function (ox,oy,oz)
+			x,y,z=spGetUnitPosition(unitID)
+				if math.abs(ox-x)+math.abs(oz-z)+math.abs(oy-y) > moveRatio then 
+				return true
+				else 
+				return false 
+				end
+			end
 
 
 	while true do
 		while boolInWater()==true do
-			if  boolMoving()==true then
-			swimAnimation()
+			ox,oy,oz=spGetUnitPosition(unitID)
+			Sleep(math.floor(updateCycle/2))
+			if  boolMoving(ox,oy,oz)==true then
+			swimAnimation(PivotPoints,pieces)
 			else 
-			stopSwimAnimation()
+			Sleep(math.floor(updateCycle/2))
+			stopSwimAnimation(PivotPoints,pieces)
 			end
-		Sleep(updateCycle)
+		Sleep(math.ceil(updateCycle/2))
 		
 		end
-	outOfWaterAnimation()
+	outOfWaterAnimation(PivotPoints,pieces)
 		while boolInWater()==false do
-			if  boolMoving()==true then
-			walkAnimation()
+			ox,oy,oz=spGetUnitPosition(unitID)
+			Sleep(math.floor(updateCycle/2))
+			if  boolMoving(ox,oy,oz)==true then
+			walkAnimation(PivotPoints,pieces)
 			else 
-			stopWalkAnimation()()
+			Sleep(math.floor(updateCycle/2))
+			stopWalkAnimation(PivotPoints,pieces)
 			end
-				Sleep(updateCycle)
+		Sleep(math.ceil(updateCycle/2))
 		end
-	backIntoWaterAnimation()
+	backIntoWaterAnimation(PivotPoints,pieces)
 	Sleep(updateCycle)
 	end
 
@@ -365,6 +375,13 @@ Move(piecename,y_axis,y_val,speed)
 Move(piecename,z_axis,z_val,speed)
 end
 
+
+function TurnTowardsWind(piecename,speed,offset)
+offSet=offset or 0
+dx,dy,dz=Spring.GetWind()
+headRad=math.atan2(dx,dz)
+Turn(piecename,y_axis,headRad+offSet,speed)
+end
 
 -->Creates basically a table of piecenamed enumerated strings
 function makeTableOfPieceNames(name, nr,startnr)
@@ -934,48 +951,66 @@ if boolWait==true then WaitForTurn(piecename,axis) end
 	if boolWait==true then WaitForTurn(piecename,axis) end
 	end
 end
---[[ 
-function heuristicDefault()
---reset Booleans -- can get quite a overhead
-for i=1,table.getn(intCases),1 do
-intCases[i][2]=false
-end
------------------------------------------
---the cases
-if condition1()==true then
-intCases[1][2]=conditionFullFilled[1] 
-intCases[1][1]=intCases[1][1] +1 
+-->Packs Values into Pairs
+function getPairs(values)
+    xyPairs = {}
+    for i=1,#values,2 do 
+        v = {x=values[i], y=values[i+i] }
+        table.insert(xyPair, v)
+    end
+    return xyPairs
 end
 
 
+-->encapsulates a function, stores arguments given, chooses upon returned nil, 
+--	the most often chosen argument
+function heuristicDefault(fooNction,fname, teamID, ...)
 
+if not  GG[fname] then  GG[fname]={} end
+if not GG[fname][teamID] then GG[fname][teamID] ={} end
 
---heuristic Default 
---Spring.Echo("Heuristic Default Reached")
-temp=false
-intTemp=-1
-selectedCase=nil
-for i=1,table.getn(intCases),1 do
-	if temp== true or intCases[i][2]== nil then
-	temp=true
+local heuraTable= GG[fname][teamID] 
+ArgumentCounter=1
+	for k,v in pairs(arg) do
+	if not heuraTable[ArgumentCounter]then heuraTable[ArgumentCounter]={}end
+	if not heuraTable[ArgumentCounter][v] then heuraTable[ArgumentCounter][v]=1 else heuraTable[v]=heuraTable[ArgumentCounter][v]+1  end
+	ArgumentCounter=ArgumentCounter+1
 	end
-		if intCases[i][1] >= intTemp then
-		intTemp=intCases[i][1]
-		selectedCase=i
+
+results=fooNction(args)
+
+	if not results  then
+	--devalue current Arguments
+		ArgumentCounter=1
+		for k,v in pairs(arg) do
+		heuraTable[ArgumentCounter][v]=heuraTable[ArgumentCounter][v]-1  
+		ArgumentCounter=ArgumentCounter+1
 		end
-	
-			if intCases[i][2]== nil then
-			--Spring.Echo("Condition i was fullfilled, but the Case didnt execute correct")
+
+	--call the function with the most likely arguments
+	newWorkingSet={}
+		ArgumentCounter=1
+		for k,v in pairs (arg) do
+		highestVal,highestCount=0,0
+			for i,j in pairs ( heuraTable[ArgumentCounter]) do
+				if heuraTable[ArgumentCounter][v] > highestCount then
+				highestCount= heuraTable[ArgumentCounter][v] 
+				highestVal= v
+				end 
 			end
-end
-
-if temp==true then
-conditionFullFilled[selectedCase]
-end
-
-	
-
-end ]]
+		table.insert(newWorkingSet,highestVal)
+		ArgumentCounter=ArgumentCounter+1
+		end
+	results=fooNction(newWorkingSet)
+	Spring.Echo("FallBack::Heuristic Default")
+	assert(results, "Heuristic Default has inssuficient working samples.Returns Nil")
+	GG[fname][teamID]=heuraTable
+	return results
+		else
+		GG[fname][teamID]=heuraTable
+		return results
+		end
+end 
 
 -->generates a Pieces List Keyed to the PieceName
 function generateKeyPiecesTable(unitID,piecefunction)
@@ -1003,14 +1038,9 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 --Spring.Echo("local piecesTable={}")
 	if piecesTable ~= nil then
 		for i=1,#piecesTable,1 do
-		workingString=""
-		workingString=workingString..piecesTable[i]
-		drawATempCopy=workingString
-		workingString=workingString.." = piece\""
-		workingString=workingString..piecesTable[i]
 		workingString=workingString.."\""
 		Spring.Echo(workingString)
-		Spring.Echo("piecesTable[#piecesTable+1]= "..drawATempCopy)
+		Spring.Echo("piecesTable[#piecesTable+1]= piece"..piecesTable[i])
 
 		end
 
@@ -3196,7 +3226,9 @@ end
 	--expects a Table containing:
 
 	--unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
+	--> Trys to create a animation using every piece there is as Legs.. 
 	function adaptiveAnimation(configTable,inPeace)
+	Spring.Echo("ToolKit::FixMe::adaptiveAnimation")
 	local infoT= configTable
 	pieceMap={}
 	pieceMap[infoT.centerNode]={}
@@ -3300,6 +3332,7 @@ end
 	return getSpot(cond,64)
 	end
 
+	--> returns a randomized Signum
 	function randSign()
 	val=math.random(-1,1)
 	return val/math.abs(val)
@@ -3415,7 +3448,7 @@ end
 	
 	--add Block by Block
 
-
+	Spring.Echo("ToolKit::createRandomizedBuilding-FixMe")
 		for i=1,#Blocks,1 do
 		Sleep(500)
 		if  Blocks[i] then 

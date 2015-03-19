@@ -65,12 +65,12 @@ terraformSpeed = 350,
 buildoptions = 
 	{
 	"scumslum","mdigg","cwaterextractor",
-	"campole","mestorage","builux",
-	"bbind","ctransithub","coverworldgate",
+	"campole","mestorage","citconair",
+	"builux","bbind","coverworldgate",
 	"condepot","fclvlone","cairbase",
 	"cdistrictnone","buibaicity2","buibaicity1",
 	"crailgun","sentry","bonker", "cdefusermine",
-	"chopper","comendbonker",
+	"chopper","comendbonker","ctransithub"
 	},
 	
 sounds = {

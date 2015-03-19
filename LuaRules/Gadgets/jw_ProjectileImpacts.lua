@@ -99,7 +99,7 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
 		
 		if weaponID == jgluegunDefID then
-		Spring.CreateUnit("ggluemine",	 px, py, pz 1, gaiaTeamID)
+		Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
 		end
 	
 	

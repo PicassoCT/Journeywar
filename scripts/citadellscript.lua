@@ -835,8 +835,7 @@ end
 
 function script.StartBuilding(heading, pitch)	
 SetUnitValue(COB.INBUILDSTANCE, 1)
-
-
+StartThread(hideBuildingOfVehicle)
 	
 end
 function delayedSet()
@@ -1086,6 +1085,34 @@ if boolShield==true then 	Spring.SetUnitShieldState(unitID,5,true) else 	Spring.
 
 	end
 
+citx,city,citz=Spring.GetUnitPosition(unitID)
+function hideBuildingOfVehicle()
+Sleep(300)
+id=Spring.GetUnitIsBuilding(unitID)
+counter=0
+	while not Spring.ValidUnitID(id)==true and counter < 10 do
+	Sleep(100)
+	id=Spring.GetUnitIsBuilding(unitID)
+	counter=counter+1
+	end
+	if counter < 10 then
+		buildDefID=Spring.GetUnitDefID(id)
+		if buildDefID==UnitDefNames["citconair"].id then
+		Spring.SetUnitAlwaysVisible(id,false)
+		Spring.SetUnitPosition(id,citx+320,city+850,citz)
+		Sleep(15000)
+			if Spring.GetUnitIsDead(id)==false then
+			hp,maxhp=Spring.GetUnitHealth(id)
+			Spring.SetUnitHealth(id,{health=maxhp, build =1.0})
+			Spring.SetUnitAlwaysVisible(id,true)
+			end
+		else
+		return 
+		end
+	
+	end
+
+end
 	
 	boolArmorOut=false
 function script.HitByWeapon(damage)
