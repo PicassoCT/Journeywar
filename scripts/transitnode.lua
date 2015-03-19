@@ -152,7 +152,7 @@ x,y,z=Spring.GetUnitPosition(buildID)
 			Spring.SetUnitPosition(tableA[i],px,py,pz)
 		end
 	end
-
+ 
 end
 
 --function removes all units from the table  that are in AllReadyTransported
@@ -192,12 +192,14 @@ end
 
 
 function main()
-	while true do
-	----Spring.Echo(buildID)
 	local lupdate=update
 	local ldiSectTable=diSectTable
 	local lchangePlace=changePlace
 	local lsenseMan=senseMan
+
+	while true do
+	----Spring.Echo(buildID)
+	
 	
 		if buildID~= nil and Spring.ValidUnitID(buildID) == true then
 			----Spring.Echo("We have a exit")
@@ -234,6 +236,7 @@ guildID=Spring.GetUnitIsBuilding(unitID)
 
 
 end
+
 function script.StartBuilding(heading, pitch)	
 SetUnitValue(COB.INBUILDSTANCE, 1)
 StartThread(getBuildID)
