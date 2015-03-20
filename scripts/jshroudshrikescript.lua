@@ -43,7 +43,7 @@ dice = piece"dice"
 piecesTable[#piecesTable+1]= dice
 
 function restartRoots()
-resT(Root)
+reseT(Root)
 for i=1,#Root do
 
 Spin(Root[i],y_axis,math.rad(math.random(10,64)),0.5)
@@ -131,8 +131,8 @@ dice=math.random(1,3)
 Spring.Echo("JW:SHROUDSRIKE:: VAL before rand"..dice)
 	if dice == 1 then
 	Spring.Echo("JW:SHROUDSRIKE:: VAL after rand was 1"..dice)
-				resT(Endpiece,0)
-				resT(TreePiece,0)
+				reseT(Endpiece,0)
+				reseT(TreePiece,0)
 				Sleep(100)
 			
 				for k,v in pairs(tableOfUnits) do
@@ -142,8 +142,8 @@ Spring.Echo("JW:SHROUDSRIKE:: VAL before rand"..dice)
 				end
 				
 				elseif dice==2 then
-				resT(Endpiece,0)
-				resT(TreePiece,0)
+				reseT(Endpiece,0)
+				reseT(TreePiece,0)
 				Sleep(100)
 			
 				for k,v in pairs(tableOfUnits) do
@@ -153,8 +153,8 @@ Spring.Echo("JW:SHROUDSRIKE:: VAL before rand"..dice)
 				end
 				
 				else
-				resT(Endpiece,0)
-				resT(TreePiece,0)
+				reseT(Endpiece,0)
+				reseT(TreePiece,0)
 				Sleep(100)
 			
 					for k,v in pairs(tableOfUnits) do

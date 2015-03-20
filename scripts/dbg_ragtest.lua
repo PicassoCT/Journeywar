@@ -31,7 +31,7 @@ local pTable=recursiveAddTable({},piecesTable[1],center,pieceNameTable)
 	Sleep(5000)
 	ragDoll(pTable,piecesTable[1],9.81, 35000)
 	Sleep(3000)
-	resT(piecesTable)
+	reseT(piecesTable)
 	
 	end
 end

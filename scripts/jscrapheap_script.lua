@@ -679,7 +679,7 @@ live=math.ceil(math.random(20,60)*1000)
 		end
 
 	end
-	resT(Leg,0.1)
+	reseT(Leg,0.1)
 	Hide(Baby)
 	Hide(Navel)
 end
