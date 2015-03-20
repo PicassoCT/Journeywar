@@ -383,6 +383,26 @@ headRad=math.atan2(dx,dz)
 Turn(piecename,y_axis,headRad+offSet,speed)
 end
 
+function spinT(Table, axis,speed,deg, degup)
+if not degup then
+	for i=1,#Table do
+	Spin(Table[i],axis,math.rad(deg),speed)
+	end
+else
+	for i=1,#Table do
+	Spin(Table[i],axis,math.rad(math.random(deg,degup)),speed)
+	end
+end
+
+end
+
+function stopSpinT(Table,axis, speed)
+	for i=1,#Table do
+	StopSpin(Table[i],axis,speed)
+	end
+
+end
+
 -->Creates basically a table of piecenamed enumerated strings
 function makeTableOfPieceNames(name, nr,startnr)
 T={}
@@ -402,7 +422,7 @@ Turn(piecename,z_axis,0,speed)
 end
 
 -->Reset a Table of Pieces at speed
-function resT(tableName,speed)
+function reseT(tableName,speed)
 	for i=1,#tableName do
 	resetPiece(tableName[i],speed)
 	end

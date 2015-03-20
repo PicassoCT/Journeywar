@@ -54,7 +54,7 @@
 	hideT(TreePiece)
 	hideT(EndPiece)
 	--reset Table of Pieces
-			resT(TreePiece)
+			reseT(TreePiece)
 			resetPiece(center,0)
 			StartThread(BuildLtree)
 				StartThread(playSoundByUnitTypOS,unitID,0.5,{
@@ -91,7 +91,7 @@
 		end
 	--FruitBambooColony
 FixFunctionTabel[2]= function ()
-	resT(TreePiece)
+	reseT(TreePiece)
 	Spring.Echo("FixFunctionTabel::Centrallized Colony")
 	
 	x,y,z=Spring.GetUnitPosition(unitID)
