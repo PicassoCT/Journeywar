@@ -12,7 +12,7 @@ buildCostMetal = 15,
 buildCostEnergy = 1,
 buildTime = 1,
 --Health
-maxDamage = 6660,
+maxDamage = 666,
 idleAutoHeal = 15,
 autoheal=10,
 --Movement
@@ -20,26 +20,26 @@ mass=180020,
 upRight=true,
 blocking=false,
 pushResistant=true,
-Acceleration = 0.0000001,
-BrakeRate = 0.0001,
+Acceleration = 0.001,
+BrakeRate = 0.01,
 FootprintX = 1,
 FootprintZ = 1,
 
 
 MaxSlope = 90,
-MaxVelocity = 0.000001,
+MaxVelocity = 0.3,
 MaxWaterDepth = 55,
 MovementClass = "Default2x2",
-TurnRate = 1,
+TurnRate = 900,
 
-sightDistance = 80,
+sightDistance = 420,
 
 reclaimable=false,
 Builder = false,
 CanAttack = true,
-CanGuard = false,
+CanGuard = true,
 CanMove = true,
-CanPatrol = false,
+CanPatrol = true,
 CanStop = true,
 LeaveTracks = false,
 useSmoothMesh = false,
@@ -51,7 +51,7 @@ useSmoothMesh = false,
 	
 			},
  
-Category = [[LAND]],
+Category = [[LAND WATER]],
 
 }
 

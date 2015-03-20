@@ -63,7 +63,7 @@ function dissapearRoots()
 for i=1,#Root do
 Move(Root[i],y_axis,-30,0)
 end
-WaitForMove(Root[3],y_axis)
+WaitForMove(Root[#Root],y_axis)
 hideT(Root)
 for i=1,#SpinT do
 Turn(SpinT[i],z_axis,math.rad(-90),3)
@@ -71,7 +71,7 @@ Turn(SpinT[i],z_axis,math.rad(0),3)
 StopSpin(SpinT[i],y_axis,0.5)
 
 end
-WaitForTurn(SpinT[i],z_axis)
+WaitForTurn(SpinT[#SpinT],z_axis)
 hideT(SpinT)
 end
 
@@ -473,9 +473,13 @@ boolOnce=true
 				Sleep(100)
 				end
 			Sleep(1000)
+			Spring.Echo("dice")
 			Hide(dice)
+			Spring.Echo("GMAN")
 			Hide(GMAN)
+			Spring.Echo("SpinT")
 			showT(SpinT)
+			Spring.Echo("Root")
 			showT(Root)
 		end
 

@@ -67,7 +67,7 @@ citadell=  {
   },
 
 jshroudshrike={
-	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=  300 ,onActive=true, precision=22, strength   = 0.042,  repeatEffect=true}},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,15,0}, size=90, precision=22, strength   = 0.015,  repeatEffect=true}},     
 	 },
   
   
@@ -110,8 +110,8 @@ bbind=  {
   
   mdigg=  {
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,24,-20}, size=30, precision=22, strength   = 0.005,  repeatEffect=true}},     
-  },
-
+  }, 
+  
 jracedart=  {
 {class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=5,  colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}}
   },

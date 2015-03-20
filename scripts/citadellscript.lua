@@ -1099,7 +1099,7 @@ counter=0
 		buildDefID=Spring.GetUnitDefID(id)
 		if buildDefID==UnitDefNames["citconair"].id then
 		Spring.SetUnitAlwaysVisible(id,false)
-		Spring.SetUnitPosition(id,citx+320,city+850,citz)
+		Spring.SetUnitPosition(id,citx+50,city+350,citz)
 		Sleep(15000)
 			if Spring.GetUnitIsDead(id)==false then
 			hp,maxhp=Spring.GetUnitHealth(id)
