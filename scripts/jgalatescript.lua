@@ -2,42 +2,56 @@ include "suddenDeath.lua"
 include "toolKit.lua"
 
 --4 Legs a 2 pieces + 1 centrall Piece + Cannon
-PivotPoints={}
-ActualPieces={}
+
  
- for i=1,10 do
- name="Pivot"..i
-PivotPoints[i]=piece(name) 
-name="Galatea"..i
-ActualPieces[i]=piece(name) 
-Hide(PivotPoints[i])
- end
-fireGalate=piece"fireGalate"
+
+fireGalate=piece"FireGalatea"
 SailGalatea=piece"SailGalatea"
 IndivPoints={}
+pieces=generateKeyPiecesTable(unitID,piece)
+
+PivotPoints={}
+for i=1,9 do 
+PivotPoints[#PivotPoints+1]=pieces["Medusa"..i]
+end
+
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 return damage
 end
 
 center=piece"center"
-pieces=generateKeyPiecesTable(unitID,piece)
+
+function ImSailing()
+	while true do
+	TurnTowardsWind(SailGalatea,0.5,1.57079632679)
+	Sleep(250)
+	end
+end
 
 
-function nlswimAnimation() 
-	x,y,z=Spring.GetWind()
-	heading=Spring.GetHeadingFromVector(x,z)
-	Turn(SailGalatea,y_axis,heading,0.5)
-	
+function nlswimAnimation(PivotPoints,pieces) 
+
 	mul =math.sin(Spring.GetGameFrame()/3000)      
-	for i=1,#PivotPoints do
+	for i=2,#PivotPoints do
 	Turn(PivotPoints[i],x_ais,math.rad(90),0.2)
 	Turn(PivotPoints[i],y_axis,math.rad(27*mul),1.2)
 	end
+	
+	--Pump Animation
+	for i=1, #PumpPieces do
+	if math.abs(mul) < 0.3 then
+	
+	else
+	
+	
+	ende
+	end
+
 Sleep(300) 
 end
 
-function nlstopSwimAnimation() 
+function nlstopSwimAnimation(PivotPoints,pieces) 
 	frame=Spring.GetGameFrame()
 	for i=1,#PivotPoints do
 	mul =math.sin((i*300+frame)/3000)      
@@ -47,12 +61,13 @@ function nlstopSwimAnimation()
 	end
 
 end
-function nloutOfWaterAnimation   ()
+function nloutOfWaterAnimation   (PivotPoints,pieces)
 
 resT(PivotPoints,5)
 
+
 end
-function nlbackIntoWaterAnimation()
+function nlbackIntoWaterAnimation(PivotPoints,pieces)
 	for i=1,#PivotPoints do
 	val=math.random(20,65)* (-1^math.random(1,i))
 	Move(PivotPoints[i],x_axis, val,3)
@@ -62,14 +77,17 @@ function nlbackIntoWaterAnimation()
 	Turn(PivotPoints[i],x_ais,math.rad(90),0.2)
 	end
 end
-function nlwalkAnimation  ()
+function nlwalkAnimation  (PivotPoints)
        
 end
-function nlstopWalkAnimation  ()    
+function nlstopWalkAnimation  (PivotPoints)    
 end
 
 function script.Create()
+
+StartThread(ImSailing)
 StartThread( AmphibMoveThread
+						 ,PivotPoints
 						 ,pieces
 						 ,200
 						 ,32

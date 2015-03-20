@@ -1,9 +1,9 @@
 local unitName = "ggluemine"
 local unitDef = {
-  objectName="ragtest.s3o",
+  objectName="jgluemine.s3o",
 
-  name               = "Gluemine",
-  Description 		 =" stay a while and stick to it",
+  name               = "Glue",
+  Description 		 =" inhale the solvents and stick to them",
 
   script 			 = "glueminescript.lua",
   maxDamage = 250, 
@@ -21,7 +21,7 @@ local unitDef = {
 	canmove=false,
 	cancloak=true,
 	cloakCost=0.0,
-	initCloaked=false
+	initCloaked=false,
 	
   footprintX=2,
   footprintZ =2,
