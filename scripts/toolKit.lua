@@ -83,6 +83,49 @@ outcome=false
 
 end
 
+function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
+
+knallfrosch=function(x,y,z,counter,v)
+			if % 120 < 60 then -- aufwärts
+				if v then
+				return x*v.x,y*v.y,z*v.z, v
+				else
+				return x,y,z, {x=math.random(1,1.4)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+				end
+			elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
+			return x,y,z
+			else --fall down
+				if v and v.y < 0 then
+					return x*v.x,y*v.y,z*v.z, v
+				else
+				return x,y,z, {x=math.random(1,1.1)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+				end
+		
+			end
+			end
+functionbehaviour=behaviour or knallfrosch
+time=0			
+local SpawnCeg=Spring.SpawnCeg
+v= {x=0,y=0,z=0}
+
+	while lifetimefunc(time)==true do
+	x,y,z,v=functionbehaviour(x,y,z,time,v)
+		
+		if boolStrobo==true then
+		dx,dy,dz=randVec()
+		SpawnCeg(cegname,x,y,z,dx,dy,dz,range,damage)
+		else
+		SpawnCeg(cegname,x,y,z,0,1,0,range,damage)
+		end
+	
+	time=time+rate
+	Sleep(rate)
+	end
+
+endofLifeFunc(x,y,z)
+end
+
+
 --PieceDebug loop
 	function PieceLight(unitID, piecename,cegname)
 		while true do
@@ -2401,8 +2444,11 @@ end
 		for i=1,#Table do
 		T[i]=func(Table[i])
 		end
-		
-	return metafunc(T)
+		if metafunc then
+		return metafunc(T)
+		else
+		return T
+		end
 	end
 
 	function getLowest(Table)

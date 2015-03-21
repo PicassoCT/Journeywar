@@ -1051,7 +1051,14 @@ return 0
 end
 
 
+function doAllTheThings()
+ 	--
+	ropeDrop()
+	resetRope()
 
+
+
+end
 
 
 --------BUILDING---------
@@ -1061,10 +1068,7 @@ function script.StopBuilding()
  lastKnownPosX=0
  lastKnownPosY=0
  lastKnownPosZ=0
- 	--
-	ropeDrop()
-	resetRope()
-
+StartThread(doAllTheThings)
 		
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
@@ -1073,7 +1077,7 @@ function script.StartBuilding(heading, pitch)
 
 if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
 lastLoudness=lastLoudness+valToAdd
-PlaySoundByUnitType(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+StartThread(PlaySoundByUnitType,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 
 	boolRopeRelease=false
 	Signal(SIG_HOVER)

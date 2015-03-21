@@ -76,7 +76,8 @@ function nlstopSwimAnimation(PivotPoints,pieces)
 	for i=1,#PivotPoints do
 	mul =math.sin((i*300+frame)/3000)      
 	Turn(PivotPoints[i],x_ais,math.rad(0),0.2)
-	Turn(PivotPoin ts[i],y_axis,math.rad(mul*360),0.2)
+
+	Turn(PivotPoints[i],y_axis,math.rad(mul*360),0.2)
 	Move(PivotPoints[i],y_axis,math.random(-17,3),1.2)
 	end
 	stopSpinT(pieces.tails,y_axis,0.3)
@@ -157,11 +158,48 @@ function nlwalkAnimation  (PivotPoints,pieces)
   end
 end
 function nlstopWalkAnimation  (PivotPoints)    
+
+reseT(PivotPoints)
+end
+local stundamage=700
+local stunRange=60
+local feedingDamage=100
+function InWaterFeedingFrenzy()
+
+stunFunc= function (id) 
+		  Spring.SetUnitHealth(id, {paralyze=700})
+		  return id
+		  end
+	
+	
+	while true do
+	x,y,z=Spring.GetUnitPosition(unitID)
+	
+		while y < 0 do
+		T=grabEveryone(unitID,x,z, stunRange)
+			if T then
+			T=forTableUseFunction(T, stunFunc)
+			theLuckOne=math.floor(math.random(1,#T))
+			hp=Spring.GetUnitHealth(T[theLuckOne])
+				if hp then hp=math.max(0,hp-feedingDamage)
+				Spring.SetUnitHealth(T[theLuckOne],hp)
+				Spring.AddUnitHealth(T[theLuckOne],feedingDamage)
+				end
+			Spring.SpawnCeg("jgalateatendrils",x,y,z0,1,0,70,0)
+			
+			end
+		Sleep(500)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		
+		end
+	Sleep(1000)
+	end
 end
 
 function script.Create()
 
 StartThread(ImSailing)
+StartThread(InWaterFeedingFrenzy)
 StartThread( AmphibMoveThread
 						 ,PivotPoints
 						 ,pieces
