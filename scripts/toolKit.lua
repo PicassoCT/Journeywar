@@ -86,22 +86,22 @@ end
 function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
 
 knallfrosch=function(x,y,z,counter,v)
-			if % 120 < 60 then -- aufwärts
-				if v then
-				return x*v.x,y*v.y,z*v.z, v
-				else
-				return x,y,z, {x=math.random(1,1.4)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
-				end
-			elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
-			return x,y,z
-			else --fall down
-				if v and v.y < 0 then
+				if counter % 120 < 60 then -- aufwärts
+					if v then
 					return x*v.x,y*v.y,z*v.z, v
-				else
-				return x,y,z, {x=math.random(1,1.1)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+					else
+					return x,y,z, {x=math.random(1,1.4)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+					end
+				elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
+				return x,y,z
+				else --fall down
+					if v and v.y < 0 then
+						return x*v.x,y*v.y,z*v.z, v
+					else
+					return x,y,z, {x=math.random(1,1.1)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+					end
+			
 				end
-		
-			end
 			end
 functionbehaviour=behaviour or knallfrosch
 time=0			
@@ -136,8 +136,9 @@ end
 	end
 	
 --> AmphibMovementThread
-function AmphibMoveThread(pieces
-						 ,PivotPoints	
+function AmphibMoveThread(unitid
+						 ,PivotPoints
+						 ,pieces
 						 ,updateCycle
 						 ,moveRatio
 						 ,nlswimAnimation
@@ -146,29 +147,24 @@ function AmphibMoveThread(pieces
 						 ,nlbackIntoWaterAnimation
 						 ,nlwalkAnimation
 						 ,nlstopWalkAnimation)
-							
+vx,vy,vz=Spring.GetUnit							
 local swimAnimation          =nlswimAnimation   
 local stopSwimAnimation      =nlstopSwimAnimation
 local outOfWaterAnimation    =nloutOfWaterAnimation
 local backIntoWaterAnimation =nlbackIntoWaterAnimation
 local walkAnimation          =nlwalkAnimation
-local stopWalkAnimation		 =nlstopWalkAnimation			
-							
+local stopWalkAnimation		 =nlstopWalkAnimation								
 local spGetUnitPosition =	Spring.GetUnitPosition
 
 boolInWater= function ()
 				x,y,z=spGetUnitPosition(unitID)
 				h=Spring.GetGroundHeight(x,z)
-				if h < -10 then return true else return false end
+				if h > 0 then return false else return true end
 				end
 
 boolMoving= function (ox,oy,oz)
 			x,y,z=spGetUnitPosition(unitID)
-				if math.abs(ox-x)+math.abs(oz-z)+math.abs(oy-y) > moveRatio then 
-				return true
-				else 
-				return false 
-				end
+			return math.abs(ox-x)+math.abs(oz-z)+math.abs(oy-y) > 0
 			end
 
 
@@ -177,7 +173,7 @@ boolMoving= function (ox,oy,oz)
 			ox,oy,oz=spGetUnitPosition(unitID)
 			Sleep(math.floor(updateCycle/2))
 			if  boolMoving(ox,oy,oz)==true then
-			swimAnimation(PivotPoints,pieces)
+				swimAnimation(PivotPoints,pieces)
 			else 
 			Sleep(math.floor(updateCycle/2))
 			stopSwimAnimation(PivotPoints,pieces)
@@ -185,6 +181,7 @@ boolMoving= function (ox,oy,oz)
 		Sleep(math.ceil(updateCycle/2))
 		
 		end
+		
 	outOfWaterAnimation(PivotPoints,pieces)
 		while boolInWater()==false do
 			ox,oy,oz=spGetUnitPosition(unitID)
@@ -198,7 +195,7 @@ boolMoving= function (ox,oy,oz)
 		Sleep(math.ceil(updateCycle/2))
 		end
 	backIntoWaterAnimation(PivotPoints,pieces)
-	Sleep(updateCycle)
+	Sleep(50)
 	end
 
 end	
@@ -450,8 +447,11 @@ end
 function makeTableOfPieceNames(name, nr,startnr)
 T={}
 start=startnr or 1
+
 	for i=start,nr do
-	T[i]=name..nr
+	namecopy=name	
+	namecopy=namecopy..i
+	T[i]=namecopy
 	end
 return T
 end
@@ -469,6 +469,16 @@ function reseT(tableName,speed)
 	for i=1,#tableName do
 	resetPiece(tableName[i],speed)
 	end
+end
+
+function recReseT(Table,speed)
+if type(Table)=="table" then 
+for k,v in pairs(Table) do
+recReseT(v,speed)
+end
+elseif type(Table)=="number" then
+resetPiece(Table,speed)
+end
 end
 
 function getUnitSide(unitID)
@@ -3069,7 +3079,7 @@ end
 	--> finds the degree in a triangle where only the lenght of two sides are known
 	function triAngleTwoSided(LowerSide, OpposingSide)
 	norm= math.sqrt(LowerSide*LowerSide +OpposingSide*OpposingSide)
-	return math.atan2(LowerSide/norm,OpposingSide/Norm)
+	return math.atan2(LowerSide/norm,OpposingSide/norm)
 	end
 	
 	function getCubeSphereRad(x,y,z)
@@ -3384,7 +3394,7 @@ end
 	function getADryWalkAbleSpot()
 	min,max=Spring.GetGroundExtremes()
 	if max <=0 then return end
-	function cond(i,j,chunkSizeX,chunkSizeZ)
+	cond=function (i,j,chunkSizeX,chunkSizeZ)
 	h=Spring.GetGroundHeight(i*chunkSizeX,chunkSizeZ*j)
 			if h > 0 then 
 			v={}
@@ -3418,14 +3428,16 @@ end
 					
 		for i=xRand,probeResolution,1 do
 		for j=zRand,probeResolution,1 do
-			lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
+		ax,ay,az=	lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
+			if ax then return ax,ay,az end
 		end
 		end
 
 		
 		for i=1,xRand,1 do
 		for j=1,zRand,1 do
-			lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
+		ax,ay,az=	lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
+		if ax then return ax,ay,az end
 		end
 		end
 			

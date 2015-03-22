@@ -20,18 +20,20 @@ end
 
 function emitSFX()
 	x,y,z=Spring.GetUnitPosition(unitID)
-	y=y+100
+	
 	while true do
 	
 	
 	
-	Sleep(1500)	
+	--Sleep(1500)	
 	
-				Spring.SpawnCEG("jvaryfoohit",x,y,z,0,1,0)
+			--	Spring.SpawnCEG("jvaryfoohit",x,y,z,0,1,0)
+			--Sleep(1500)
+			--	Spring.SpawnCEG("jvaryfoohit2",x,y,z,0,1,0)	
+			--Sleep(1500)
+			--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
 			Sleep(1500)
-				Spring.SpawnCEG("jvaryfoohit2",x,y,z,0,1,0)	
-			Sleep(1500)
-				Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)
+				Spring.SpawnCEG("jgalateatend",x,y,z,0,150,0)
 
 		end
 

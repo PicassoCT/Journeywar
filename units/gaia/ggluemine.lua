@@ -12,7 +12,7 @@ local unitDef = {
   buildCostMetal =30,
   buildCostEnergy =200,
   buildTime=3,
- 
+  levelGround =false,
   	canattack=true,
 	canguard=true,
 	canmove=true,
@@ -29,7 +29,7 @@ local unitDef = {
   
   
 
-  	sightdistance=120,
+  	sightdistance=60,
 	radardistance=50,
 	radardistancejam=15,
   

@@ -37,7 +37,15 @@ local moveDefs =
 		maxSlope = 65,
 		crushStrength = 600,
 	},
-	
+	{
+		name = "amphib",
+		footprintX = 3,
+		footprintY = 3,
+		maxWaterDepth = 1990,
+		maxSlope = 25,
+		crushStrength = 0,
+		Hover =1,
+	},
 	{
 		name = "UBOAT3",
 		footprintx = 3,

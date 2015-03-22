@@ -54,7 +54,7 @@
 	
 	if not other or Spring.GetUnitIsDead(other) == true then return false end 
 	ox,oy,oz=Spring.GetUnitPosition(other)
-	dist=roughDistance(ox-x,oy-y,oz-z)
+	dist=distance(ox-x,oy-y,oz-z)
 		if dist < SIGHTDISTANCESIGHTDISTANCE then
 		AgentTable[unitid].Values["Energy"]= AgentTable[unitid].Values["Energy"]-2
 		vx,vy,vz=x-ox,y-oy,z-oz
@@ -82,7 +82,8 @@
 	function FindValuePos(unitid,valueType)
 
 	x,y,z=Spring.GetUnitPosition(unitid)
-	assert(x);assert(z)
+	assert(x);
+	assert(z)
 	if getMap(x,z)== valueType then return true, true end
 
 
@@ -95,8 +96,8 @@
 					--we found water but it is it visible to the animal 
 					a=(i*Vec[j].x)*48
 					b=(i*Vec[j].z)*48
-					dist=roughDistance(a,0,b)
-					if dist < SIGHTDISTANCE then
+					dist=distance(a,0,b)
+					if dist < 150 then
 					return (x+i*Vec[j].x)*8,(z+i*Vec[j].z)*8 end
 						else
 						return false, false
@@ -109,10 +110,11 @@
 	function GetDistBetweenTwo(idA,idB)
     x,y,z=Spring.GetUnitPosition(idA)	
     bx,by,bz=Spring.GetUnitPosition(idB)	
-	return roughDistance(x-bx,y-by,z-bz)	
+	return distance(x-bx,y-by,z-bz)	
 	end
 	
 	function FindWater(unitid)
+	assert(unitid)
 		if AgentTable[unitid].Type == "Hohymen" then
 			tx,tz= FindValuePos(unitid,0)
 
@@ -129,11 +131,12 @@
 	end 
 
 	function FindFood(unitid, other)
+	assert(unitid)
 		if AgentTable[unitid].Type == "Hohymen" then
 				tx,tz= FindValuePos(unitid,1)
 
 					if tx and tx ~= true and tx ~= false then
-					Spring.SetUnitMoveGoal(unitid,tx,tz)
+					Spring.SetUnitMoveGoal(unitid,tx,0,tz)
 					end
 					
 					if tx == true then --StateSwitch to eating function
@@ -149,7 +152,7 @@
 			x,y,z=Spring.GetUnitPosition(unitid)
 				if id then 
 				px,py,pz=Spring.GetUnitPosition(id)
-				dist= roughDistance(px-x,0,pz-z)
+				dist= distance(px-x,0,pz-z)
 						if dist < SIGHTDISTANCE then
 						Spring.SetUnitMoveGoal(unitid,px-(math.random(1,SOCIALRAD/2)),py,pz-(math.random(1,SOCIALRAD/2)))
 						
@@ -202,7 +205,7 @@
 				x,y,z=Spring.GetUnitPosition(unitid)
 				ex,ey,ez=Spring.GetUnitPosition(T)
 				dx,dz=x-ex,z-ez
-				norm= roughDistance(dx,dz)
+				norm= distance(dx,dz)
 				dx,dz= dx/norm*SIGHTDISTANCE*-1, dz/norm*SIGHTDISTANCE*-1
 				Spring.SetUnitMoveGoal(unitid,x+dx,0,z+dz)
 						
@@ -213,7 +216,7 @@
 	-- INCLUDES
 	VFS.Include("scripts/toolKit.lua")
 	
-	local roughDistance=approxDist
+	local distance=approxDist
 	--Global Variables
 	local SIGHTDISTANCE=242
 	local NSIGHTDISTANCE=-242
@@ -234,7 +237,7 @@
 	function GetStateFromPriority(unitid, Priority)
 	if Priority=="Food" and AgentTable[unitid].Type=="Hohymen" then return "FOOD" end
 	
-	return PriorityStateGG.LandScapeT[Priority] 
+	return PriorityStateMap[Priority] 
 	end
 	
 	RawHohymen={	Type	="Hohymen",
@@ -453,7 +456,8 @@ AT={}
 			Timer=2500
 			x,z=getADryWalkAbleSpot()
 			if x and z then
-			Spring.CreateUnit("ghohymen",x,0,z,1,gaiaTeam)
+			id=Spring.CreateUnit("ghohymen",x,0,z,1,gaiaTeam)
+			Spring.SetUnitAlwaysVisible(id,true)
 			end
 			
 			end

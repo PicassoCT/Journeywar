@@ -1,24 +1,26 @@
 local weaponName="jgluegun"
 local weaponDef={
+
 name="jgluegun",
 weaponType=[[Cannon]],
-description="Grenade",
-highTrajectory =1,
+description="Gluesome Galateaeggs",
+highTrajectory =0,
 
 
 --
 
-weapontimer=12,
+
 --
 --Physic/flight path
 range=320,
-reloadtime=1,
+reloadtime=12,
 weaponVelocity=300,
 startVelocity=250,
 weaponAcceleration=200,
 flightTime=7.5,
 BurnBlow=0,
 FixedLauncher=false,
+
 dance=0,
 wobble=0,
 trajectoryheight=25.8,
@@ -37,7 +39,7 @@ CegTag="redstripe",
 ----TARGETING
 turret=true,
 --CylinderTargetting=true,
-avoidFeature=false,
+avoidFeature=true,
 avoidFriendly=true,
 
 --explosionGenerator=	"custom:330rlexplode",	
@@ -51,7 +53,7 @@ areaOfEffect=3,
 craterMult=0,
 
 --?FIXME***
-lineOfSight=false,
+lineOfSight=true,
 
 
 --sound

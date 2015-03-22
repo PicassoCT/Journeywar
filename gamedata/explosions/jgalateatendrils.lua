@@ -1,7 +1,7 @@
 -- missile_explosion
 
 return {
-  ["jgalateatendrils"] = {
+  ["jgalateatend"] = {
 
   
 		
@@ -13,20 +13,20 @@ return {
           underwater         = true,
           water              = true,
           properties = {
-            colormap           = [[  0.01 0.01 0.01 0.5 0.01 0.01 0.01 0.5  0.01 0.01 0.01 0.5]],
+            colormap           = [[  0.03 0.03 0.03 0.001 	0.05 0.05 0.05 0.002 	0.05 0.05 0.05 0.003 	0.05 0.05 0.05 0.01 0.05 0.05 0.05 0.01  0.05 0.05 0.05 0.01  	0.05 0.05 0.05 0.001]],
             dir                = [[0r0.1,0r1,0r0.1]],
             frontoffset        = 0,
             fronttexture       = [[jgalateatendrils]],--redexplo
             length             = 1,
             sidetexture        = [[]],
-            size               = 10,
-            sizegrowth         = -3.15,
-            ttl                =20,
+            size               = 65,
+            sizegrowth         = -0.45,
+            ttl                =75,
           },
         },
 		
 		
-		   tendrils = {
+		   tendrils2 = {
           air                = false,
           class              = [[CBitmapMuzzleFlame]],
           count              = 2,
@@ -34,15 +34,15 @@ return {
           underwater         = true,
           water              = true,
           properties = {
-            colormap           = [[  0.01 0.01 0.01 0.5 0.01 0.01 0.01 0.5  0.01 0.01 0.01 0.5]],
+                  colormap           = [[  0.03 0.03 0.03 0.004 	0.05 0.05 0.05 0.005  0.05 0.05 0.05 0.01 0.05 0.05 0.05 0.01 	0.05 0.05 0.05 0.01  	0.05 0.05 0.05 0.001]],
             dir                = [[0r0.1,0r1,0r0.1]],
             frontoffset        = 0,
             fronttexture       = [[jgalateatendrils]],--redexplo
             length             = 1,
             sidetexture        = [[]],
-            size               = 5,
-            sizegrowth         = 1.15,
-            ttl                =20,
+            size               = 15,
+            sizegrowth         = 2.15,
+            ttl                =75,
           },
         },
 		
