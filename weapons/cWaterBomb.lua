@@ -14,7 +14,7 @@ craterMult=0,
 		--  explosionGenerator="custom:AR2Impact",
 		--  cegTag="AR2Projectile",
 		--  texture1="empty",
-		  model="cChopperBomb.s3o",
+		  model="cwaterbomb.s3o",
 		  --physics
 
 		  weaponVelocity          = 550,

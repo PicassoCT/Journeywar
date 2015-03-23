@@ -80,10 +80,9 @@
 		
 	--Helperfunction using broadsearch, which is sort of shitty, especially as landscapefeatures are linear distributed, so yeah, spearsearch would be better
 	function FindValuePos(unitid,valueType)
-
+	assert(Spring.GetUnitIsDead(unitid)==false)
 	x,y,z=Spring.GetUnitPosition(unitid)
-	assert(x);
-	assert(z)
+
 	if getMap(x,z)== valueType then return true, true end
 
 
@@ -114,7 +113,7 @@
 	end
 	
 	function FindWater(unitid)
-	assert(unitid)
+
 		if AgentTable[unitid].Type == "Hohymen" then
 			tx,tz= FindValuePos(unitid,0)
 

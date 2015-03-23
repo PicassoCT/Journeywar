@@ -29,6 +29,7 @@ end
 
 
 pieces=generateKeyPiecesTable(unitID,piece)
+pieces["wholeBodyCenter"]=piece("wholeBodyCenter")
 pieces["fireGalate"]=fireGalate
 pieces.pumps=Pumps
 pieces.leg=Legs
@@ -63,21 +64,22 @@ local spGetUnitPiecePosDir		=	Spring.GetUnitPiecePosDir
 local spGetUnitPiecePosition	=	Spring.GetUnitPiecePosition
 
 	--lets keep the unit under water
-	for i=1,#PivotPoints do
-	wx,wy,wz=spGetUnitPiecePosDir(unitID,PivotPoints[i])
-	lx,ly,lz=spGetUnitPiecePosition(unitID,PivotPoints[i])
-		if wy  > -15 then ly=ly-1 else ly=ly+1 end
-	Move(PivotPoints[i],2,ly,0.35)
-	end
+
 	spinT(pieces.tails,2,-42,42)
 	spinT(pieces.pumps,2,-42,42)
+	
+	wx,wy,wz=Spring.GetUnitPiecePosDir(unitID,pieces["wholeBodyCenter"])
+	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,pieces["wholeBodyCenter"])
+	if   wy  > 0 then ly=ly-1 else ly=ly+1 end
+	Move(pieces["wholeBodyCenter"],2,ly,1.35)
 	
 	mul =math.sin(Spring.GetGameFrame()/3000)      
 	for i=2,#PivotPoints do
 	Turn(PivotPoints[i],1,math.rad(90),0.2)
 	Turn(PivotPoints[i],2,math.rad(27*mul),1.2)
 	end
-	
+	showT(pieces.pumps)
+	showT(pieces.tails)
 	--Pump Animation
 	for i=1, #pieces.pumps do
 		if math.abs(mul) < 0.3 then
@@ -101,10 +103,10 @@ end
 nlstopSwimAnimation= function (PivotPoints,pieces) 
 	frame=Spring.GetGameFrame()
 	--lets keept it afloat
-	wx,wy,wz=Spring.GetUnitPiecePosDir(unitID,PivotPoints[1])
-	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,PivotPoints[1])
-	if wy  > -15 then ly=ly-1 else ly=ly+1 end
-	Move(PivotPoints[1],2,ly,0.35)
+	wx,wy,wz=Spring.GetUnitPiecePosDir(unitID,pieces["wholeBodyCenter"])
+	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,pieces["wholeBodyCenter"])
+	if   wy  > 0 then ly=ly-1 else ly=ly+1 end
+	Move(pieces["wholeBodyCenter"],2,ly,1.15)
 	
 	for i=2,#PivotPoints do
 	mul =math.sin((i*300+frame)/3000)      
