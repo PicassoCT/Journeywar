@@ -452,6 +452,26 @@ end
 
 --------BUILDING---------
 
+	function script.AimFromWeapon4() 		
+	return aim2
+	end
+		
+	function script.QueryWeapon4() 
+	return aim2
+	end
+	
+	function script.FireWeapon4()
+	return true
+	end	
+	--weapon 4
+	function script.AimWeapon4( heading, pitch )
+	return true
+	end
+
+--------BUILDING---------
+
+
+
 
 
 

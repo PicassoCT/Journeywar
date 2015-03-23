@@ -98,6 +98,9 @@ Category = [[AIR]],
 [3]={name  = "cchoppermines",
 	onlyTargetCategory = [[ LAND]],
 	},	
+[4]={name  = "cwaterbombs",
+	onlyTargetCategory = [[ WATER]],
+	},	
 
 	
 	

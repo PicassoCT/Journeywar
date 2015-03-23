@@ -38,7 +38,7 @@ LeaveTracks = false,
 Category = [[LAND]],
 
 weapons = {
-[1]={name  = "jgluegun",
+[1]={name  = "vortweapon",
 	onlyTargetCategory = [[LAND]],
 	},
 },

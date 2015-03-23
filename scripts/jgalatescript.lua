@@ -58,7 +58,20 @@ end
 
 
 nlswimAnimation = function (PivotPoints,pieces) 
-spinT(pieces.tails,2,-42,42)
+
+local spGetUnitPiecePosDir		=	Spring.GetUnitPiecePosDir
+local spGetUnitPiecePosition	=	Spring.GetUnitPiecePosition
+
+	--lets keep the unit under water
+	for i=1,#PivotPoints do
+	wx,wy,wz=spGetUnitPiecePosDir(unitID,PivotPoints[i])
+	lx,ly,lz=spGetUnitPiecePosition(unitID,PivotPoints[i])
+		if wy  > -15 then ly=ly-1 else ly=ly+1 end
+	Move(PivotPoints[i],2,ly,0.35)
+	end
+	spinT(pieces.tails,2,-42,42)
+	spinT(pieces.pumps,2,-42,42)
+	
 	mul =math.sin(Spring.GetGameFrame()/3000)      
 	for i=2,#PivotPoints do
 	Turn(PivotPoints[i],1,math.rad(90),0.2)
@@ -73,6 +86,7 @@ spinT(pieces.tails,2,-42,42)
 		Move(pieces.pumps[i],2,0,0.9)	
 		end
 	end
+	
 	mappedMul=math.max(1,math.min(math.abs(mul)/0.25,4))
 	for i=1, #pieces.tails do
 		if i%5 -mappedMul==0 then
@@ -89,8 +103,9 @@ nlstopSwimAnimation= function (PivotPoints,pieces)
 	--lets keept it afloat
 	wx,wy,wz=Spring.GetUnitPiecePosDir(unitID,PivotPoints[1])
 	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,PivotPoints[1])
-	if wy  > 0 then ly=ly-1 else ly=ly+1 end
+	if wy  > -15 then ly=ly-1 else ly=ly+1 end
 	Move(PivotPoints[1],2,ly,0.35)
+	
 	for i=2,#PivotPoints do
 	mul =math.sin((i*300+frame)/3000)      
 	Turn(PivotPoints[i],1,math.rad(0),0.2)
@@ -139,7 +154,7 @@ nlwalkAnimation= function   (PivotPoints,pieces)
   hideT(pieces.tails)
   frame= (Spring.GetGameFrame()%250)
   boolHalfTime=frame > 125
-  boolQuart= frame% 60  < 45
+  boolQuart= frame% 60  > 25
   
   if boolQuart==true then
     WaitForTurn(pieces["Leg3"],2)
