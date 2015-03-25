@@ -31,7 +31,7 @@ Turnrate=16000,
 collideFriendly=true,
 
 ----APPEARANCE
-model="testproj.s3o",
+model="jgluegunproj.s3o",
 smokeTrail=true,
 
 CegTag="redstripe",
