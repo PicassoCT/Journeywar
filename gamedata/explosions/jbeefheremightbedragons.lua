@@ -1,27 +1,42 @@
--- dirt
 
-return {
-  ["jbeefheremightbedragons"] = {
-	bitmapmuzzleflame = {
+
+    return {
+      ["jbeefheremightbedragons"] = {
+		  
+	  ants2 = {
       air                = true,
-      class              = [[CBitmapMuzzleFlame]],
+      class              = [[CSimpleParticleSystem]],
       count              = 1,
       ground             = true,
-      underwater         = 1,
-      water              = true,
+      water              = false,
       properties = {
-        colormap           = [[0.5 0.75 1 0.01	1 1 1 0.010	 1 1 1 0.010	1 1 1 0.01	1 1 1 0.001		1 1 1 0.0001	]],
-        dir                = [[dir]],
-        frontoffset        = -5,
-        fronttexture       = [[]],
-        length             = 80,
-        sidetexture        = [[heremightbedragons]],
-        size               = 12,
-        sizegrowth         = 1,
-        ttl                = 120,
+        airdrag            = 1,
+		colormap           = [[1 1 1 1   1 1 1 1]],
+		directional        = false,
+        emitrot            = 65,
+        emitrotspread      = 55,
+        emitvector         = [[0,1,0]],
+        gravity            = [[0, -0.03, 0]],
+        numparticles       = 1,
+        particlelife       = 15,
+        particlelifespread = 45,
+        particlesize       = [[0.05]],
+        particlesizespread = 0.2,
+        particlespeed      = 3,
+        particlespeedspread = 3,
+        pos                = [[r-0.5 r0.5, 1 r2, r-0.5 r0.5]],
+        sizegrowth         = 1.000000000000001,
+        sizemod            = 0.5,
+        texture            = [[grassh]],
+    useairlos          = false,
       },
-    },    
-  },
-
-}
-
+	      
+    },
+		
+		
+	  
+				 
+				 
+				 
+    },
+    }

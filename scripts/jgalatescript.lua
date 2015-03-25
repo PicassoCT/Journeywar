@@ -68,10 +68,10 @@ local spGetUnitPiecePosition	=	Spring.GetUnitPiecePosition
 	spinT(pieces.tails,2,-42,42)
 	spinT(pieces.pumps,2,-42,42)
 	
-	wx,wy,wz=Spring.GetUnitPiecePosDir(unitID,pieces["wholeBodyCenter"])
+	wx,wy,wz=Spring.GetUnitPosition(unitID)
 	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,pieces["wholeBodyCenter"])
-	if   wy  > 0 then ly=ly-1 else ly=ly+1 end
-	Move(pieces["wholeBodyCenter"],2,ly,1.35)
+	if   wy  > -10 then ly=ly-1 else ly=ly+1 end
+	Move(pieces["wholeBodyCenter"],2,ly,1.15)
 	
 	mul =math.sin(Spring.GetGameFrame()/3000)      
 	for i=2,#PivotPoints do
@@ -91,7 +91,7 @@ local spGetUnitPiecePosition	=	Spring.GetUnitPiecePosition
 	
 	mappedMul=math.max(1,math.min(math.abs(mul)/0.25,4))
 	for i=1, #pieces.tails do
-		if i%5 -mappedMul==0 then
+		if i% mappedMul ==0 then
 		Show(pieces.tails[i])
 		else
 		Hide(pieces.tails[i])
@@ -103,9 +103,9 @@ end
 nlstopSwimAnimation= function (PivotPoints,pieces) 
 	frame=Spring.GetGameFrame()
 	--lets keept it afloat
-	wx,wy,wz=Spring.GetUnitPiecePosDir(unitID,pieces["wholeBodyCenter"])
+	wx,wy,wz=Spring.GetUnitPosition(unitID)
 	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,pieces["wholeBodyCenter"])
-	if   wy  > 0 then ly=ly-1 else ly=ly+1 end
+	if   wy  > -10 then ly=ly-1 else ly=ly+1 end
 	Move(pieces["wholeBodyCenter"],2,ly,1.15)
 	
 	for i=2,#PivotPoints do
@@ -158,63 +158,68 @@ nlwalkAnimation= function   (PivotPoints,pieces)
   boolHalfTime=frame > 125
   boolQuart= frame% 60  > 25
   
-  if boolQuart==true then
-    WaitForTurn(pieces["Leg3"],2)
-    WaitForTurn(pieces["Leg3"],2)
-    WaitForTurn(pieces["Leg1"],2)
-    WaitForTurn(pieces["Leg4"],2)
-  Move(PivotPoints[1],2,0,0.7)
-  reseT(pieces.legl,0,0.7)
-  reseT(pieces.leg,0,0.7)
-  else
-  Move(PivotPoints[1],2,-8,1.7)
-  
-  if boolHalfTime ==true then
-  
-  Turn(pieces["Leg1"],3,math.rad(0),0.4)
-  Turn(pieces["Leg4"],3,math.rad(0),0.4)
-  Turn(pieces["LegL1"],3,math.rad(0),0.3)
-  Turn(pieces["LegL4"],3,math.rad(0),0.3)
-  val=math.random(64,83)
-  Turn(pieces["Leg1"],2,math.rad(val),0.4)
-  Turn(pieces["Leg4"],2,math.rad(-1*val),0.4)
-  
- 
-  Turn(pieces["Leg2"],3,math.rad(44),0.4)
-  Turn(pieces["Leg3"],3,math.rad(-44),0.4)
-  Turn(pieces["LegL2"],3,math.rad(-54),0.3)
-  Turn(pieces["LegL3"],3,math.rad(54),0.3)
-  val=math.random(55,80)+180
-  Turn(pieces["Leg2"],2,math.rad(-1*val),0.4)
-  Turn(pieces["Leg3"],2,math.rad(val),0.4)
- 
-  else
-  
-  Turn(pieces["Leg2"],3,math.rad(0),0.4)
-  Turn(pieces["Leg3"],3,math.rad(0),0.4)
-  Turn(pieces["LegL2"],3,math.rad(0),0.3)
-  Turn(pieces["LegL3"],3,math.rad(0),0.3)
-  val=math.random(64,83)
-  Turn(pieces["Leg2"],2,math.rad(val),0.4)
-  Turn(pieces["Leg3"],2,math.rad(-1*val),0.4)
-  
- 
-  Turn(pieces["Leg1"],3,math.rad(44),0.4)
-  Turn(pieces["Leg4"],3,math.rad(-44),0.4)
-  Turn(pieces["LegL1"],3,math.rad(-54),0.3)
-  Turn(pieces["LegL4"],3,math.rad(54),0.3)
-  val=math.random(55,80)
-  Turn(pieces["Leg1"],2,math.rad(-1*val),0.4)
-  Turn(pieces["Leg4"],2,math.rad(val),0.4)
+	  if boolQuart==true then
+		WaitForTurn(pieces["Leg3"],2)
+		WaitForTurn(pieces["Leg2"],2)
+		WaitForTurn(pieces["Leg1"],2)
+		WaitForTurn(pieces["Leg4"],2)
+		Move(PivotPoints[1],2,0,0.7)
+	  
+	  else
+		Move(PivotPoints[1],2,-8,1.7)
+		reseT(pieces.legl,0,0.7)
+		reseT(pieces.leg,0,0.7)
+		WaitForTurn(pieces["Leg3"],2)
+		WaitForTurn(pieces["Leg2"],2)
+		WaitForTurn(pieces["Leg1"],2)
+		WaitForTurn(pieces["Leg4"],2)
+		
+		  if boolHalfTime ==true then
+		  
+		  Turn(pieces["Leg1"],3,math.rad(0),0.4)
+		  Turn(pieces["Leg4"],3,math.rad(0),0.4)
+		  Turn(pieces["LegL1"],3,math.rad(0),0.3)
+		  Turn(pieces["LegL4"],3,math.rad(0),0.3)
+			val=math.random(64,83)
+		  Turn(pieces["Leg1"],2,math.rad(val),0.4)
+		  Turn(pieces["Leg4"],2,math.rad(-1*val),0.4)
+		  
+		 
+		  Turn(pieces["Leg2"],3,math.rad(44),0.4)
+		  Turn(pieces["Leg3"],3,math.rad(-44),0.4)
+		  Turn(pieces["LegL2"],3,math.rad(-54),0.3)
+		  Turn(pieces["LegL3"],3,math.rad(54),0.3)
+			val=math.random(55,80)+180
+		  Turn(pieces["Leg2"],2,math.rad(-1*val),0.4)
+		  Turn(pieces["Leg3"],2,math.rad(val),0.4)
+		 
+		  else
+		  
+		  Turn(pieces["Leg2"],3,math.rad(0),0.4)
+		  Turn(pieces["Leg3"],3,math.rad(0),0.4)
+		  Turn(pieces["LegL2"],3,math.rad(0),0.3)
+		  Turn(pieces["LegL3"],3,math.rad(0),0.3)
+			val=math.random(64,83)
+		  Turn(pieces["Leg2"],2,math.rad(val),0.4)
+		  Turn(pieces["Leg3"],2,math.rad(-1*val),0.4)
+		  
+		 
+		  Turn(pieces["Leg1"],3,math.rad(44),0.4)
+		  Turn(pieces["Leg4"],3,math.rad(-44),0.4)
+		  Turn(pieces["LegL1"],3,math.rad(-54),0.3)
+		  Turn(pieces["LegL4"],3,math.rad(54),0.3)
+			val=math.random(55,80)
+		  Turn(pieces["Leg1"],2,math.rad(-1*val),0.4)
+		  Turn(pieces["Leg4"],2,math.rad(val),0.4)
 
-  end
-  end
+		  end
+	end
 end
 
 nlstopWalkAnimation= function   (PivotPoints,pieces)    
 Turn(fireGalate,1,math.rad(90),0.3)
     WaitForTurn(pieces["Leg3"],2)
-    WaitForTurn(pieces["Leg3"],2)
+    WaitForTurn(pieces["Leg2"],2)
     WaitForTurn(pieces["Leg1"],2)
     WaitForTurn(pieces["Leg4"],2)
 

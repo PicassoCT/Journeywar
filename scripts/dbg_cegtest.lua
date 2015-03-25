@@ -32,8 +32,10 @@ function emitSFX()
 			--	Spring.SpawnCEG("jvaryfoohit2",x,y,z,0,1,0)	
 			--Sleep(1500)
 			--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
-			Sleep(1500)
-				Spring.SpawnCEG("jgalateatend",x,y,z,0,150,0)
+			--Sleep(1500)
+			--	Spring.SpawnCEG("jgalateatend",x,y,z,0,150,0)	
+			Sleep(150)
+				Spring.SpawnCEG("firefive",x,y+100,z,0,1,0,60)
 
 		end
 
