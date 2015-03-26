@@ -50,7 +50,8 @@ shownanoframe=0,
     explosiongenerators = {
 
 	   "custom:cssdeathflames",
-	   "custom:fireball"
+	   "custom:fireball",
+	   "custom:firefive"		--1026
 	   
 	   
 	   

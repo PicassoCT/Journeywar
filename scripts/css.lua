@@ -147,6 +147,7 @@ end
 function script.Killed()
 Turn(center,x_axis, math.rad(82),math.rad(55))
 EmitSfx(center,1025)	
+EmitSfx(center,1026)	
 for i=1,30 do
 
 EmitSfx(center,1024)	
@@ -156,23 +157,27 @@ EmitSfx(center,1024)
 WaitForTurn(center, z_axis)
 EmitSfx(center,1025)	
 EmitSfx(center,1024)
-if math.random(0,1)==1 then
-x,y,z=Spring.GetUnitPosition(unitID)
-if not GG.AddFire then GG.AddFire={} end
-GG.AddFire[#GG.AddFire+1]={x=x,y=y,z=z}
-end
-Sleep(2400)
+	if math.random(0,1)==1 then
+	x,y,z=Spring.GetUnitPosition(unitID)
+	if not GG.AddFire then GG.AddFire={} end
+	GG.AddFire[#GG.AddFire+1]={x=x,y=y,z=z}
+	end
+
+	for i=1,24 do
+	EmitSfx(center,1026)
+	Sleep(100)
+	end
 Explode (center, SFX.FIRE)
 Explode (cssArmL, SFX.FIRE)
 end
 
 unitDefID=Spring.GetUnitDefID(unitID)
 
-function script.Shot(num)
-
-GG.LUPS.FlameShot(unitID, unitDefID, _, num)
-
-end
+--function script.Shot(num)
+--
+--GG.LUPS.FlameShot(unitID, unitDefID, _, num)
+--
+--end
 
 
 
@@ -197,7 +202,8 @@ flare02 end
 	
 	
 	function script.FireWeapon1()
-	lua_FlameShot(1)
+	EmitSfx(flare01,1026)
+	--lua_FlameShot(1)
 	end
 	
 function script.QueryWeapon2() return 
@@ -233,6 +239,9 @@ flare01 end
 		Sleep(800)
 		StartThread(playSound2)
 		end
-		lua_FlameShot(2)
+		--emits the fire of the flamethrower
+	
+		EmitSfx(flare02,1026)
+		--lua_FlameShot(2)
 	end
 	
