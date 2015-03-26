@@ -134,6 +134,8 @@ end
 
 
 function script.Create()
+Hide(flare01)
+Hide(flare02)
 StartThread(letsWalkAndTalk)
 	Signal(SIG_IDLE)
 	Signal(SIG_LEG)
@@ -203,6 +205,7 @@ flare02 end
 	
 	function script.FireWeapon1()
 	EmitSfx(flare01,1026)
+	EmitSfx(flare02,1026)
 	--lua_FlameShot(1)
 	end
 	
@@ -241,6 +244,7 @@ flare01 end
 		end
 		--emits the fire of the flamethrower
 	
+		EmitSfx(flare01,1026)
 		EmitSfx(flare02,1026)
 		--lua_FlameShot(2)
 	end
