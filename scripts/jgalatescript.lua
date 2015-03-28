@@ -47,13 +47,44 @@ return damage
 end
 
 center=piece"center"
-
+LocalBoolInWater=false
 function ImSailing()
 	while true do
 	Heading=Spring.GetUnitHeading(unitID)
 	Heading=(Heading/32768)*3.14159
 	TurnTowardsWind(SailGalatea,0.5,Heading)
+		if LocalBoolInWater==true then
+			for i=2,#PivotPoints do		
+			Turn(PivotPoints[i],y_axis,Heading+16384,0.2)
+			end
+		end
 	Sleep(250)
+	end
+end
+
+
+
+function swimSimplySwimming()
+
+	ox,oy,oz=Spring.GetUnitPiecePosDir(unitID,center)
+	wx,wy,wz=Spring.GetUnitPosition(unitID)
+offset=5
+
+	while true do
+	wx,wy,wz=Spring.GetUnitPosition(unitID)
+	LocalBoolInWater=false
+	
+		while wy < 0 do
+		LocalBoolInWater=true
+		wx,wy,wz=Spring.GetUnitPosition(unitID)
+		offset=offset*-1
+		KeepPieceAfloat(unitID,pieces["wholeBodyCenter"],1.15,-75+offset)
+				
+		Sleep(300)
+		end
+
+		Move(pieces["wholeBodyCenter"],y_axis,0,1.15)
+		Sleep(400)
 	end
 end
 
@@ -67,16 +98,12 @@ local spGetUnitPiecePosition	=	Spring.GetUnitPiecePosition
 
 	spinT(pieces.tails,2,-42,42)
 	spinT(pieces.pumps,2,-42,42)
-	
-	wx,wy,wz=Spring.GetUnitPosition(unitID)
-	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,pieces["wholeBodyCenter"])
-	if   wy  > -10 then ly=ly-1 else ly=ly+1 end
-	Move(pieces["wholeBodyCenter"],2,ly,1.15)
-	
+		
 	mul =math.sin(Spring.GetGameFrame()/3000)      
 	for i=2,#PivotPoints do
 	Turn(PivotPoints[i],1,math.rad(90),0.2)
-	Turn(PivotPoints[i],2,math.rad(27*mul),1.2)
+	--Turn(PivotPoints[i],2,math.rad(27*mul),1.2)
+	KeepPieceAfloat(unitID,PivotPoints[i],1.15,-15)
 	end
 	showT(pieces.pumps)
 	showT(pieces.tails)
@@ -88,7 +115,7 @@ local spGetUnitPiecePosition	=	Spring.GetUnitPiecePosition
 		Move(pieces.pumps[i],2,0,0.9)	
 		end
 	end
-	
+	mul=mul*4
 	mappedMul=math.max(1,math.min(math.abs(mul)/0.25,4))
 	for i=1, #pieces.tails do
 		if i% mappedMul ==0 then
@@ -102,26 +129,26 @@ end
 
 nlstopSwimAnimation= function (PivotPoints,pieces) 
 	frame=Spring.GetGameFrame()
-	--lets keept it afloat
-	wx,wy,wz=Spring.GetUnitPosition(unitID)
-	lx,ly,lz=Spring.GetUnitPiecePosition(unitID,pieces["wholeBodyCenter"])
-	if   wy  > -10 then ly=ly-1 else ly=ly+1 end
-	Move(pieces["wholeBodyCenter"],2,ly,1.15)
+
 	
 	for i=2,#PivotPoints do
 	mul =math.sin((i*300+frame)/3000)      
 	Turn(PivotPoints[i],1,math.rad(0),0.2)
-
+	val=math.random(20,65)* (-1^math.random(1,i))
+	Move(PivotPoints[i],1, val,3)
+	val=math.random(-20,0)
+	Move(PivotPoints[i],3, val,3)
 	Turn(PivotPoints[i],2,math.rad(mul*360),0.2)
-	Move(PivotPoints[i],2,math.random(-17,3)-32,1.2)
+	KeepPieceAfloat(unitID,PivotPoints[i],1.15,-15)
 	end
 	stopSpinT(pieces.tails,2,0.3)
 end
 
 function nloutOfWaterAnimation   (PivotPoints,pieces)
 recReseT(pieces,0.3)
-reseT(PivotPoints,1.5)
+reseT(PivotPoints,0.5)
 WaitForMove(PivotPoints[1],2)
+WaitForMove(PivotPoints[2],2)
 hideT(PivotPoints)
 Show(PivotPoints[1])
 hideT(pieces.tails)
@@ -143,8 +170,6 @@ showT(PivotPoints)
 	val=math.random(20,65)* (-1^math.random(1,i))
 	Move(PivotPoints[i],1, val,3)
 	val=math.random(-20,0)
-	Move(PivotPoints[i],2, val,3)
-	val=math.random(20,55)* (-1^math.random(1,i))
 	Move(PivotPoints[i],3, val,3)
 	Spin(PivotPoints[i],2,math.rad(math.random(-22,22)),0.01)
 	Turn(PivotPoints[i],1,math.rad(90),0.2)
@@ -277,6 +302,7 @@ function script.Create()
 hideT(Tails)
 hideT(Pumps)
 StartThread(ImSailing)
+StartThread(swimSimplySwimming)
 StartThread(InWaterFeedingFrenzy)
 StartThread( AmphibMoveThread
 						 ,unitID

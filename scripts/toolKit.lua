@@ -633,6 +633,19 @@ x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
 Move(piecename,y_axis,heightdifference+loffset,speed,true)
 end
 
+-->Moves a Piece to WaterLevel on the Ground in UnitSpace
+function KeepPieceAfloat(unitID,piecename,speed,offset)
+if not piecename then return error("No piecename given") end
+loffset=offset or 0
+x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
+
+x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
+	myHeight=0
+	heightdifference=math.abs(globalHeightUnit-myHeight)
+		if myHeight < globalHeightUnit then heightdifference=-heightdifference end
+Move(piecename,y_axis,heightdifference+loffset,speed,true)
+end
+
 -->Paint a Piece Pattern 
 function PaintPatternPieces(ListOfPieces, ListOfCoords,sx,sy,sz)
 prevx,prevy,prevz=sx,sy,sz

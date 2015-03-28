@@ -3,8 +3,9 @@
 		AgentTable={}
 	
 	
-	
+	--State Functions
 		function 	Eat  (unitid, nr, other,x,y,z)
+		Spring.Echo("Eating")
 		if AgentTable[unitid].Type == "Hohymen" then
 	
 			if getMap(x,z).Food > 0  then
@@ -12,18 +13,22 @@
 			AgentTable[unitid].Values["Food"]=	math.min(AgentTable[unitid].Values["Food"]+ GRASSNUTRITION,100)
 			return transferStatechangeToUnitScript(unitid,"Eat", other)
 			end
-		return false
+		
 		end
+		return false
 	end
 		
 	function 	 DrinkWater  (unitid, nr, other,x,y,z)
+	Spring.Echo("Drinking")
 		if Spring.GetGroundHeight(x,z) <= 0 then
 		AgentTable[unitid].Values["Water"]= 100
 		return transferStatechangeToUnitScript(unitid,"DrinkWater")
 		end
+		return false
 	end 	
 	
 	function 	 MoveCloser  (unitid, nr, other,x,y,z)
+	Spring.Echo("Social")
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
 		AgentTable[unitid].Values["Social"]=math.min(AgentTable[unitid].Values["Social"]+1,100)
@@ -33,6 +38,7 @@
 	
 	
 	function 	 Rest  (unitid, nr, other,x,y,z)
+	Spring.Echo("Sleeping")
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
 		AgentTable[unitid].Values["Energy"]= AgentTable[unitid].Values["Energy"]+1
@@ -40,15 +46,11 @@
 	return transferStatechangeToUnitScript(unitid,"Rest",{[1]=other})	
 	end
 	
-    function GetFood(unitid, nr, other,x,y,z)
-	other=Spring.GetUnitNearestEnemy(unitID)
-	return transferStatechangeToUnitScript(unitid,"FindFood",{[1]=other})	
-	
-	end
-	
+
 	
 	--Deer is in the State of Running from a thread
 	function 	 RunningForLive  (unitid, nr, other,x,y,z)
+	Spring.Echo("RunningForLive")
 	-- Is it dead can we eat it?
 	if not unitid or Spring.GetUnitIsDead(unitid) == true then killABeast(unitid) end 
 	
@@ -66,7 +68,6 @@
 	end
 	
 	
-	--Transitionfunction: represent the Transitions from one State into another (if a unit fails a transition it returns to the original state)
 	Vec={
 		[1]={x=1,z=1},
 		[2]={x=0,z=1},
@@ -80,7 +81,7 @@
 		
 	--Helperfunction using broadsearch, which is sort of shitty, especially as landscapefeatures are linear distributed, so yeah, spearsearch would be better
 	function FindValuePos(unitid,valueType)
-	assert(Spring.GetUnitIsDead(unitid)==false)
+
 	x,y,z=Spring.GetUnitPosition(unitid)
 
 	if getMap(x,z)== valueType then return true, true end
@@ -128,8 +129,10 @@
 		end	
 		
 	end 
+	--Transitionfunction: represent the Transitions from one State into another (if a unit fails a transition it returns to the original state)
 
 	function FindFood(unitid, other)
+	Spring.Echo("Searching Food")
 	assert(unitid)
 		if AgentTable[unitid].Type == "Hohymen" then
 				tx,tz= FindValuePos(unitid,1)
@@ -146,6 +149,7 @@
 	end 
 
 	function FindCompany(unitid)
+	Spring.Echo("Searching Social")
 		if AgentTable[unitid].Type == "Hohymen" then
 			id=Spring.GetUnitNearestAlly(unitid)
 			x,y,z=Spring.GetUnitPosition(unitid)
@@ -170,6 +174,7 @@
 	end 
 
 	function FindRest(unitid, other)
+	Spring.Echo("Search Rest")
 		if AgentTable[unitid].Type == "Hohymen" then
 			ed=Spring.GetUnitNearestEnemy(unitid)
 			
@@ -190,7 +195,7 @@
 
 
 	function FindDangers(unitid, other)
-	
+	Spring.Echo("On Watch")
 		if AgentTable[unitid].Type == "Hohymen" then
 			
 		
@@ -414,6 +419,10 @@ AT={}
 			}
 			
 	function Transition(unitid,LongedState)
+	certainlyNot=Spring.GetUnitIsDead(unitid)
+	if not certainlyNot or certainlyNot==true then  return false, "DEAD" end
+	
+	
 	LongedState=LongedStateLongedTransitionTable[LongedState]
 	Spring.Echo("JW_ECOLOGOYGADGET::Transition -> "..unitid.." -> is in State"..AgentTable[unitid].AgentState.."  longing for "..LongedState)
 	--DODO --
@@ -424,11 +433,11 @@ AT={}
 			--Spring.Echo("JW_ECOLOGOYGADGET:TypeOfTransition",type(Transition),type(Transition[LongedState]))
 			if HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState] then
 				Spring.Echo("AgentTransitionTableType"..type(HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState]))
-				for k,v in pairs(HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState]) do
-					Spring.Echo("AgentTransitionTableMemberType"..type(v))
-				end
+			
+			boolTransfer= HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState].StateChangeFunc(unitid)
+			
 			--assert(vallua=HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState].StateChangeFunc,"JW_ECOLOGOYGADGET "..LongedState)
-			return 	HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState].StateChangeFunc(unitid),LongedState
+			return 	boolTransfer ,LongedState
 			end 
 		end
 	end
