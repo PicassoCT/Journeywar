@@ -15,6 +15,7 @@ end
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 
 if (gadgetHandler:IsSyncedCode()) then
+if not GG.GluedForLife then GG.GluedForLife={} end
 
 local OPERAID=UnitDefNames["operatrans"].id
 local AffectedUnitTables={}
@@ -42,7 +43,33 @@ function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 if OperaTable[unitID] then OperaTable[unitID]=nil end
 end
 
+
+OldGlueTable={}
+function setUnitSpeed(unitid, speedInPercent)
+if OldGlueTable[unitid] and OldGlueTable[unitid] == speedInPercent then return end 
+
+	
+	UnitDefID=Spring.GetUnitDefID(unitid)
+	maxSpeed=UnitDefs[UnitDefID].speed
+	Spring.GetCOBUnitVar(unitd,COB.MAX_SPEED,maxSpeed*speedInPercent)
+							
+OldGlueTable[unitid]=speedInPercent
+end
+
 function gadget:Gameframe(n)
+	if n% 100 ==0 then
+	if not GG.GluedForLife then GG.GluedForLife={} end
+	for k,v in pairs(GG.GluedForLife) do
+		if Spring.GetUnitIsDead(k)==false then
+			x,y,z=Spring.GetUnitPosition(unitID)
+			if y and y < 0 then -- The Glue is undone
+			GG.GluedForLife[k]=1	
+			end
+		setUnitSpeed(k,v)				
+		end
+	end
+	end
+	
 	if n % 250 == 0 then 
 		for uid,id in pairs(OperaTable) do
 		alive=Spring.GetUnitIsDead(id)

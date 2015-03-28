@@ -200,12 +200,8 @@ local 	affectedUnits={}
 		end
 		
 		--perma speed reduction
-		if weaponDefID == glueMineWeaponDefID then
-		--get the maxspeed
-		--multiply it 
-		maxspeed=math.ceil(COB.MAX_SPEED *65533)
-
-		
+		if weaponDefID == glueMineWeaponDefID or weaponDefID==jgluegunDefID	then
+		GG.GluedForLife[T[i]]=GG.GluedForLife[T[i]]*0.9
 		end
 		
 		if weaponDefID ==highExLineGunDefID then

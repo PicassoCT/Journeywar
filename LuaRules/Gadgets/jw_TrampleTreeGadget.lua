@@ -56,7 +56,7 @@
 							for i=1,#TrampledTrees do
 							env=		 Spring.UnitScript.GetScriptEnv(TrampledTrees[i])
 							Spring.Echo("Tree Trampled Preparation")
-								if env and env.TreeTrample and spValidUnitID(TrampledTrees[i])== false then
+								if env and env.TreeTrample and spValidUnitID(TrampledTrees[i])== true then
 									Spring.UnitScript.CallAsUnit(TrampledTrees[i], env.TreeTrample, 	true )
 								else
 								Spring.Echo("No Tree Trampled Function")								

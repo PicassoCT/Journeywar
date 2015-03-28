@@ -8,7 +8,7 @@ reloadtime=19,
 
 CameraShake=6,
 accuracy = 10,
-explosionGenerator="custom:bigbulletimpact",
+explosionGenerator="custom:sfxglue",
 avoidFeature=false,
 avoidFriendly=false,
 ImpulseBoost=1.2,

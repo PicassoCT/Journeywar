@@ -14,10 +14,28 @@ pieces[#pieces+1]=piece(name)
 end
 end
 
+function lifetimeDependingOnWater()
+lifetimepercentage=100
+
+	while lifetimepercentage > 0 do
+	x,y,z=Spring.GetUnitPosition(unitID)
+	subValue=1
+		if y < 0 then 
+		subValue = 0.3 
+		else
+		subValue=(1/(y/50))
+		end
+	lifetimepercentage=lifetimepercentage-subValue
+	Sleep(1000)
+	end
+	Spring.DestroyUnit(unitID,false,true)
+end
+
 function script.Create()
 spinT(pieces, y_axis,0.02,12,22)
 spinT(pieces, x_axis,0.02,12,22)
 spinT(pieces, z_axis,0.02,12,22)
+StartThread(lifetimeDependingOnWater)
 end
 
 function script.Killed(recentDamage,_)
@@ -38,7 +56,26 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-
+	
+	endofLifeFunc= 	function (x,y,z)
+					T=grabEveryone(unitID,x,z,30)
+						if T then
+							if not GG.GluedForLife then GG.GluedForLife ={} end
+							for i=1,#T do
+							if not	GG.GluedForLife[T[i]] then GG.GluedForLife[T[i]]=1 end
+							GG.GluedForLife[T[i]]=GG.GluedForLife[T[i]]*0.9
+							end	
+						end	
+					Sleep(500)
+					Spring.DestroyUnit(unitID,true,false)
+					end	
+		for i=1,2 do
+		x,y,z=Spring.GetUnitPosition(unitID)
+		StartThread( cegDevil,"gluesfx", x,y,z,rate, 
+					function(time) return time < 5000 end, 
+					endofLifeFunc, true, 250, 0)
+		end
+	
 	return true
 
 end
