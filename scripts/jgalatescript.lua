@@ -48,7 +48,10 @@ end
 
 center=piece"center"
 LocalBoolInWater=false
+
 function ImSailing()
+
+Heading=Spring.GetUnitHeading(unitID)
 	while true do
 	Heading=Spring.GetUnitHeading(unitID)
 	Heading=(Heading/32768)*3.14159
@@ -58,6 +61,10 @@ function ImSailing()
 			Turn(PivotPoints[i],y_axis,Heading+16384,0.2)
 			end
 		end
+	
+
+
+
 	Sleep(250)
 	end
 end
@@ -67,7 +74,7 @@ end
 function swimSimplySwimming()
 
 	ox,oy,oz=Spring.GetUnitPiecePosDir(unitID,center)
-	wx,wy,wz=Spring.GetUnitPosition(unitID)
+	
 offset=5
 
 	while true do
@@ -172,7 +179,7 @@ showT(PivotPoints)
 	val=math.random(-20,0)
 	Move(PivotPoints[i],3, val,3)
 	Spin(PivotPoints[i],2,math.rad(math.random(-22,22)),0.01)
-	Turn(PivotPoints[i],1,math.rad(90),0.2)
+	Turn(PivotPoints[i],1,math.rad(90),0.02)
 	end
 	
 end
@@ -183,17 +190,19 @@ nlwalkAnimation= function   (PivotPoints,pieces)
   boolHalfTime=frame > 125
   boolQuart= frame% 60  > 25
   
-	  if boolQuart==true then
-		WaitForTurn(pieces["Leg3"],2)
-		WaitForTurn(pieces["Leg2"],2)
-		WaitForTurn(pieces["Leg1"],2)
-		WaitForTurn(pieces["Leg4"],2)
+	  if boolQuart==true then	
 		Move(PivotPoints[1],2,0,0.7)
-	  
+		Turn(PivotPoints[1],1,math.rad(0),0.15)
+		Sleep(300)
+
+		WaitForTurn(pieces["LegL1"],3)
+		WaitForTurn(pieces["LegL2"],3)
+	
 	  else
+		Turn(PivotPoints[1],1,math.rad(-10),0.13)
 		Move(PivotPoints[1],2,-8,1.7)
-		reseT(pieces.legl,0,0.7)
-		reseT(pieces.leg,0,0.7)
+		--reseT(pieces.legl,0,0.7)
+		--reseT(pieces.leg,0,0.7)
 		WaitForTurn(pieces["Leg3"],2)
 		WaitForTurn(pieces["Leg2"],2)
 		WaitForTurn(pieces["Leg1"],2)
@@ -201,56 +210,102 @@ nlwalkAnimation= function   (PivotPoints,pieces)
 		
 		  if boolHalfTime ==true then
 		  
-		  Turn(pieces["Leg1"],3,math.rad(0),0.4)
-		  Turn(pieces["Leg4"],3,math.rad(0),0.4)
-		  Turn(pieces["LegL1"],3,math.rad(0),0.3)
-		  Turn(pieces["LegL4"],3,math.rad(0),0.3)
+		  Turn(pieces["Leg1"],3,math.rad(0),0.4*2)
+		  Turn(pieces["Leg4"],3,math.rad(0),0.4*2)
+		  Turn(pieces["LegL1"],3,math.rad(0),0.3*2)
+		  Turn(pieces["LegL4"],3,math.rad(0),0.3*2)
 			val=math.random(64,83)
-		  Turn(pieces["Leg1"],2,math.rad(val),0.4)
-		  Turn(pieces["Leg4"],2,math.rad(-1*val),0.4)
+		  WaitForTurn(pieces["Leg1"],2)
+		  WaitForTurn(pieces["Leg4"],2)
+		  Turn(pieces["Leg1"],2,math.rad(val),0.4*2)
+		  Turn(pieces["Leg4"],2,math.rad(-1*val),0.4*2)
 		  
-		 
-		  Turn(pieces["Leg2"],3,math.rad(44),0.4)
-		  Turn(pieces["Leg3"],3,math.rad(-44),0.4)
-		  Turn(pieces["LegL2"],3,math.rad(-54),0.3)
-		  Turn(pieces["LegL3"],3,math.rad(54),0.3)
+		  WaitForTurn(pieces["Leg3"],2)
+		  WaitForTurn(pieces["Leg2"],2)	
+		  Turn(pieces["Leg2"],2,math.rad(-97),0.4*2)
+		  Turn(pieces["Leg3"],2,math.rad(97),0.4*2) 
+		  
+		  Turn(pieces["Leg2"],3,math.rad(44),0.4*2)
+		  Turn(pieces["Leg3"],3,math.rad(-44),0.4*2)
+		  Turn(pieces["LegL2"],3,math.rad(-54),0.3*2)
+		  Turn(pieces["LegL3"],3,math.rad(54),0.3*2)
 			val=math.random(55,80)+180
-		  Turn(pieces["Leg2"],2,math.rad(-1*val),0.4)
-		  Turn(pieces["Leg3"],2,math.rad(val),0.4)
+		  WaitForTurn(pieces["Leg3"],2)
+		  WaitForTurn(pieces["Leg2"],2)	
+		  Turn(pieces["Leg2"],2,math.rad(-1*val),0.4*2)
+		  Turn(pieces["Leg3"],2,math.rad(val),0.4*2)
 		 
 		  else
+		  Turn(PivotPoints[1],1,math.rad(15),0.15)
+		  Turn(pieces["Leg2"],3,math.rad(0),0.4*2)
+		  Turn(pieces["Leg3"],3,math.rad(0),0.4*2)
+		  Turn(pieces["LegL2"],3,math.rad(0),0.3*2)
+		  Turn(pieces["LegL3"],3,math.rad(0),0.3*2)
 		  
-		  Turn(pieces["Leg2"],3,math.rad(0),0.4)
-		  Turn(pieces["Leg3"],3,math.rad(0),0.4)
-		  Turn(pieces["LegL2"],3,math.rad(0),0.3)
-		  Turn(pieces["LegL3"],3,math.rad(0),0.3)
-			val=math.random(64,83)
-		  Turn(pieces["Leg2"],2,math.rad(val),0.4)
-		  Turn(pieces["Leg3"],2,math.rad(-1*val),0.4)
+			val=math.random(-64,83)
+           WaitForTurn(pieces["Leg3"],2)
+		  WaitForTurn(pieces["Leg2"],2)				
+		  Turn(pieces["Leg2"],2,math.rad(val),0.4*2)
+		  Turn(pieces["Leg3"],2,math.rad(-1*val),0.4*2)
 		  
 		 
-		  Turn(pieces["Leg1"],3,math.rad(44),0.4)
-		  Turn(pieces["Leg4"],3,math.rad(-44),0.4)
-		  Turn(pieces["LegL1"],3,math.rad(-54),0.3)
-		  Turn(pieces["LegL4"],3,math.rad(54),0.3)
+		  Turn(pieces["Leg1"],3,math.rad(44),0.4*2)
+		  Turn(pieces["Leg4"],3,math.rad(-44),0.4*2)
+		  Turn(pieces["LegL1"],3,math.rad(-54),0.3*2)
+		  Turn(pieces["LegL4"],3,math.rad(54),0.3*2)
 			val=math.random(55,80)
-		  Turn(pieces["Leg1"],2,math.rad(-1*val),0.4)
-		  Turn(pieces["Leg4"],2,math.rad(val),0.4)
+		  WaitForTurn(pieces["Leg1"],2)
+		  WaitForTurn(pieces["Leg4"],2)	
+		  Turn(pieces["Leg1"],2,math.rad(-1*val),0.4*2)
+		  Turn(pieces["Leg4"],2,math.rad(val),0.4*2)
 
 		  end
 	end
 end
 
 nlstopWalkAnimation= function   (PivotPoints,pieces)    
-Turn(fireGalate,1,math.rad(90),0.3)
+Turn(fireGalate,1,math.rad(90),0.6)
     WaitForTurn(pieces["Leg3"],2)
     WaitForTurn(pieces["Leg2"],2)
     WaitForTurn(pieces["Leg1"],2)
     WaitForTurn(pieces["Leg4"],2)
 
-reseT(PivotPoints,0.3)
-reseT(pieces.legl,0.3)
-reseT(pieces.leg,0.3)
+reseT(PivotPoints,0.6)
+reseT(pieces.legl,0.6)
+reseT(pieces.leg,0.6)
+Move(PivotPoints[1],2,0,3.5)
+Turn(pieces["Leg1"],3,math.rad(-11),0.2 )
+Turn(pieces["LegL1"],3,math.rad(44),1 )
+Turn(pieces["Leg2"],3,math.rad(-11),0.2 )
+Turn(pieces["LegL2"],3,math.rad(44),1 )
+Turn(pieces["Leg3"],3,math.rad(11),0.2 )
+Turn(pieces["LegL3"],3,math.rad(-44),1 )
+Turn(pieces["Leg4"],3,math.rad(11),0.2 )
+Turn(pieces["LegL4"],3,math.rad(-44),1 )
+
+WaitForMove(PivotPoints[1],2)
+Move(PivotPoints[1],2,-10,3.5)
+Turn(pieces["Leg1"],3,math.rad( 22),0.4 )
+Turn(pieces["LegL1"],3,math.rad( -55),0.6 )
+Turn(pieces["Leg2"],3,math.rad( 22),0.4 )
+Turn(pieces["LegL2"],3,math.rad( -55),0.6 )
+Turn(pieces["Leg3"],3,math.rad(-22),0.4 )
+Turn(pieces["LegL3"],3,math.rad(55),0.6 )
+Turn(pieces["Leg4"],3,math.rad(-22),0.4 )
+Turn(pieces["LegL4"],3,math.rad(55),0.6 )
+if math.random(1,7)==3 then
+
+		Turn(pieces["Leg1"],3,math.rad(-22),0.4*2)
+		Turn(pieces["LegL1"],3,math.rad(-22),0.4*2)
+		Turn(pieces["Leg3"],3,math.rad(-22),0.4*2)
+		Turn(pieces["LegL3"],3,math.rad(-22),0.4*2)
+		Turn(pieces["Leg2"],3,math.rad(22),0.4*2)
+		Turn(pieces["LegL2"],3,math.rad(22),0.4*2)
+		Turn(pieces["Leg4"],3,math.rad(22),0.4*2)
+		Turn(pieces["LegL4"],3,math.rad(22),0.4*2)
+end
+
+WaitForMove(PivotPoints[1],2)
 end
 
 local stundamage=700
@@ -280,8 +335,8 @@ Cache={}
 				hp=Spring.GetUnitHealth(unitID)
 				Spring.SetUnitHealth(unitID,hp+feedingDamage/2)
 				end
-			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieces["fireGalate"])
-			Spring.SpawnCEG("jgalateatend",ox,oy,oz,0,1,0,70,0)
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,PivotPoints[1])
+			Spring.SpawnCEG("jgalateatend",ox,-5,oz,0,1,0,70,0)
 			
 			end
 		Sleep(500)
@@ -366,7 +421,7 @@ SetSignalMask(SIG_AIM)
 end
  function reset()
 SetSignalMask(SIG_RESET)
-Sleep(1500) 
+Sleep(3000) 
 Turn(fireGalate,x_axis,math.rad(90),1.2)
  
  end

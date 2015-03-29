@@ -201,7 +201,7 @@ local 	affectedUnits={}
 		
 		--perma speed reduction
 		if weaponDefID == glueMineWeaponDefID or weaponDefID==jgluegunDefID	then
-		GG.GluedForLife[T[i]]=GG.GluedForLife[T[i]]*0.9
+		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 		end
 		
 		if weaponDefID ==highExLineGunDefID then

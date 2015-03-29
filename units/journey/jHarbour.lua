@@ -49,14 +49,14 @@ corpse             = "bgcorpse",
 		workerTime = 0.54,
 	buildoptions = 
 	{
-	"jfishswarm",
+	"jfishswarm","jgalatea"
 	},
 
 
  	usebuildinggrounddecal = false,
 
 
-Category = [[LAND BUILDING]],
+Category = [[LAND BUILDING WATER]],
 
 EnergyStorage = 0,
 	EnergyUse = 75,

@@ -37,7 +37,7 @@ sightDistance = 300,
 
    
 
-Category = [[NONTARGET]],
+Category = [[AIR]],
 
 
 

@@ -79,7 +79,7 @@ SetSignalMask(SIG_BLINK)
 end
 function playSound()
 Sleep(750)
-Spring.PlaySoundFile("sounds/csubOrbital/impactor.wav")
+Spring.PlaySoundFile("sounds/csubOrbital/impactor.wav",1.0)
 
 end
 
@@ -144,22 +144,15 @@ x,y,z=Spring.GetUnitPosition(unitID)
 
 temptime=0
 local spSpawnCEG=	Spring.SpawnCEG
-
+	randx=math.random(-150,150)
+	randz=math.random(-150,150)
+	randx=math.random(-150,150)
+	randz=math.random(-150,150)
 	while (temptime < time) do
-	randx=math.random(-150,150)
-	randz=math.random(-150,150)
-	randx=math.random(-150,150)
-	randz=math.random(-150,150)
-		if randx > -60 and randx < 60 or randz > -60 and randz < 60 then
-		ohThrownDiceBeNice=math.random(0,1)
-			if ohThrownDiceBeNice==1 then
-			randx=math.random(60,90)*math.random(-1,1)
-			randz=math.random(60,90)*math.random(-1,1)
-			end
-		end
+
+
 	spSpawnCEG("flames",x+randx,y,z+randz,0,1,0,50,0)
 	spSpawnCEG("glowsmoke",x+randx,y+20,z+randz,0,1,0,80,0)
-	spSpawnCEG("blackerThenSmoke",x+randx,y+26,z+randz,0,1,0,100,0)
 	spSpawnCEG("volcanolightsmall",x+randx,y,z+randz,0,1,0,50,0)
 	Sleep(60)
 	temptime=temptime+60
@@ -168,14 +161,15 @@ local spSpawnCEG=	Spring.SpawnCEG
 end
 
 function randomFires()
-nr=math.random(7,12)
+nr=math.random(2,4)
 for i=1,nr,1 do
-randomnumber=math.random(34000,84000)
+randomnumber=math.random(12000,24000)
 StartThread(randomFire,randomnumber)
 end
-while(true)do
-Sleep(100)
-end
+
+	while(true)do
+	Sleep(100)
+	end
 
 end
 
@@ -228,6 +222,14 @@ EmitSfx(center,1029)
 Sleep(400)
 EmitSfx(center,1025)--sphere
 EmitSfx(center,1029)
+
+ox,y,oz=Spring.GetUnitPosition(unitID)
+if not GG.AddFire then GG.AddFire ={} end
+for i=1,4 do
+
+GG.AddFire[#GG.AddFire+1]={x=ox+math.random(-50,50),z=oz+math.random(-50,50)}
+
+end
 Sleep(2000)
 StartThread(volcaniclavalamp)
 StartThread(randomFires)

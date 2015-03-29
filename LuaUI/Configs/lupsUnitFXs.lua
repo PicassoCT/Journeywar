@@ -93,6 +93,9 @@ jwatergate=  {
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,45,0}, size=20, precision=22, strength   = 0.015,  repeatEffect=true}},
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,15,0}, size=20, precision=28, strength   = 0.007,  repeatEffect=true}},
 	},
+jharbour=  {
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,35,0}, size=60, precision=28, strength   = 0.007,  repeatEffect=true}},
+	},
 	
 cwaterextractor=  {
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,116,0}, size=25, precision=22, strength   = 0.015,  repeatEffect=true}},

@@ -2276,12 +2276,13 @@ end
 	-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
 	function filterOutUnitsOfType(Table, UnitTypeTable,Cache)
 	if Cache then
-		for i=1, #T do
-			if Cache[T[i]] and Cache[T[i]]==true or not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
-			Cache[T[i]]=true
+	returnTable={}
+		for i=1, #Table do
+			if Cache[Table[i]] and Cache[Table[i]]==true or not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
+			Cache[Table[i]]=true
 			returnTable[#returnTable+1]=Table[i]
 			else
-			Cache[T[i]]=false
+			Cache[Table[i]]=false
 			
 			end
 		end
@@ -2289,7 +2290,7 @@ end
 		
 	else
 	returnTable={}
-		for i=1, #T do
+		for i=1, #Table do
 			if not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
 			returnTable[#returnTable+1]=Table[i]
 			end

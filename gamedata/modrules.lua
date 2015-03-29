@@ -120,9 +120,11 @@ local modrules  = {
     -- featureVisibility = 3;
   -- },
  
-  -- system = {
-    -- pathFinderSystem = (Spring.GetModOptions() and (Spring.GetModOptions().pathfinder == "qtpfs") and 1) or 0,
-  -- },
+
+   system = {
+        pathFinderSystem = (Spring.GetModOptions() and (Spring.GetModOptions().pathfinder == "qtpfs") and 1) or 0,
+	  },
+  
 }
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

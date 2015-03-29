@@ -49,9 +49,9 @@ LeaveTracks = false,
       
 		usebuildinggrounddecal = true,
 
-		buildinggrounddecaldecayspeed = 0.002,
-		buildinggrounddecalsizex = 10,
-		buildinggrounddecalsizey = 10,
+		buildinggrounddecaldecayspeed = 0.02,
+		buildinggrounddecalsizex = 15,
+		buildinggrounddecalsizey = 13,
 		buildinggrounddecaltype = "burnedGroundDecal.png",
 
 

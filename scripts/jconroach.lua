@@ -93,7 +93,7 @@ hp=Spring.GetUnitHealth(unitID)
 	T=grabEveryone(unitID,x,z,90,teamid)
 	hp=math.ceil(math.ceil(hp/2)/#T)
 		for i=1,#T do
-		EmitSfx(cdleg[(i%8)+1],1024)
+		EmitSfx(legz [(i%8)+1],1024)
 			p=Spring.GetUnitHealth(T[i])
 			if p then
 			Spring.SetUnitHealth(T[i],p+hp)

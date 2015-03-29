@@ -87,7 +87,7 @@
 	local boolInit=false
 
 	function gadget:GameFrame(frame)
-	
+	if frame > 0 and frame % 10==0 then
 		if boolInit==true then
 		handleHymens(frame,HohymenCounter)
 		else
@@ -98,6 +98,7 @@
 		handleVaryFoos(frame)
 		handleSeaStars(frame,seastarcounter)
 	
+	end	
 	end	
 	
 	end
