@@ -258,7 +258,10 @@ for i=1,table.getn(ast),1 do
 Turn((ast[selector[i]]),y_axis,astTurndeg)
 astTurndeg=diceNewDeg(astTurndeg,51,15)
 end
-
+if math.random(0,7)==2
+			StartThread(playSoundByUnitTypOS,unitID,0.5,{
+												{name="sounds/jtree/djunglefever"..math.floor(math.random(1,3))..".ogg",time=15000}
+												})
 end
 function dusty(x)
 for i=1,x,1 do

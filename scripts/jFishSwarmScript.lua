@@ -142,10 +142,14 @@ local lswim=swim
 			end
 		end
 	Sleep(100)
+		if math.random(0,15)==5 then
+		PlaySoundByUnitType(fishDefID, "sounds/jfishswarm/jFishSwarmMoving.ogg",1, 1200, 1)
+		end
 	end
 
 end
 
+fishDefID=Spring.GetUnitDefID(unitID)
 
 local  boolMovement=false
 function script.StartMoving()
@@ -201,6 +205,9 @@ end
  
 
 function script.FireWeapon1()
+
+Spring.PlaySoundFile("sounds/jfishswarm/jFishSwarmFlyingAttack.wav",1)
+
 Turn(dopefish, x_axis, math.rad(0), 0)
 Hide(dopefish)
 return true
@@ -291,6 +298,9 @@ end
  
 
 function script.FireWeapon2()	
+val=math.random(0.5,0.75)
+Spring.PlaySoundFile("sounds/jfishswarm/jFishSwarmAttack.ogg",val)
+
 	return true
 end
 
