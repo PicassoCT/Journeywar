@@ -11,7 +11,7 @@ name="Spin"..i
 SpinT[#SpinT+1]=piece(name)
 end
 
-hideT(SpinT)
+
 GMAN=piece"GMAN"
 standing=piece"standing"
 face=piece"face"
@@ -20,6 +20,7 @@ for i=1,3 do
 name="Root"..i
 Root[#Root+1]=piece(name)
 end
+hideT(SpinT)
 hideT(Root)
 Hide(GMAN)
 Hide(standing)
@@ -189,9 +190,18 @@ end
 Emitor=piece"emitor"
 emitcenter=piece"emitcenter"
 
-function sfxThread(radiUs)
-if not GG.jShroudShrikes then GG.jShroudShrikes ={} end
- GG.jShroudShrikes[unitID]=radiUs 
+function sfxThread(radiUs, time)
+it=math.random(1,6)
+x,y,z=Spring.GetUnitPosition(unitID)
+
+	for i=1, 360, i=i+it do
+	offx,offz=NDrehMatrix(1,radiUs,it)
+	offx,offz=x+offx,z+offz
+	h=Spring.GetGroundHeight(offx,offz)
+	spSpawnCEG("flames",offx,h+15,offz,0,1,0,50,0)
+	it=math.random(1,6)
+	end
+
 
 end
 boolNonActive=true
@@ -240,6 +250,7 @@ local SoleSurvivorTeam=Spring.GetUnitTeam(SoleSurvivor)
 		UnitsOfOld[T[i]]=hp
 		UnitsByTeam[T[i]]=Spring.GetUnitTeam(T[i])
 		newUnits[#newUnits+1]=T[i]
+		Spring.SetUnitNoSelect(T[i],true)
 		end
 	end
 	
@@ -247,11 +258,15 @@ local SoleSurvivorTeam=Spring.GetUnitTeam(SoleSurvivor)
 		if Spring.GetUnitIsDead(k)==true then
 		table.remove(UnitsOfOld,k)
 		table.remove(UnitsByTeam,k)
+		else
+		x,y,z=Spring.GetUnitPosition(UnitsByTeam[])
+		Spring.SetUnitMoveGoal(k,x+math.random(-radiUs,y,z
 		end
 	end
 	StartThread(BuildTreeOfPain,#UnitsOfOld, UnitsOfOld)
 	
 	if #newUnits > 0 then
+
 	totalhp= forTableUseFunction(newUnits,
 			 function (id) return Spring.GetUnitHealth(id) end, 
 			 function(ResultTable) res=0 for i=1,#ResultTable do res=res+ResultTable[i] end return res end)
@@ -333,14 +348,31 @@ local SoleSurvivorTeam=Spring.GetUnitTeam(SoleSurvivor)
 	
 	end
 	
-	if #UnitsOfOld == 0 then Spring.DestroyUnit(unitID,true,false) end
-			
+	if #UnitsOfOld == 0 then 
+	GoIntoStatueMode()
+	end
+	
 	StartThread(sfxThread,SpRa,300)
 	Sleep(300)
+	
 	end
-
 end
-
+function GoIntoStatueMode()
+teamid=Spring.GetUnitTeam(unitID)
+ GG.jShroudShrikeRegister[teamid]=nil
+hideT(SpinT)
+hideT(Root)
+Hide(GMAN)
+Hide(standing)
+Hide(face)
+	while true do
+	id=Spring.GetUnitLastAttacker(unitID)
+		if id and Spring.ValidUnitID(id)==true and Spring.GetUnitIsDead(id)==false then
+			Spring.DestroyUnit(id,true,true)
+		end
+	Sleep(50)
+	end
+end
 function GetUnitsInRange(x,z,SpRa)
 	T=spGetUnitsInCylinder(x,z,SpRa)
 	table.remove(T,unitID)

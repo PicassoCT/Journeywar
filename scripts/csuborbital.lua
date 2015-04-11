@@ -212,14 +212,10 @@ end
 					   end
 		
 	   return false
-	   elseif (heading < 1.66 and heading >1.46) or (heading <4.8 and heading > 4.6) or pitch < - 1.3 then
-	   return true
-				   else
-				   return false
-				   end
-	   
-	end
-	
+		  else
+		  return true
+		end
+	end 
 
 	
 	

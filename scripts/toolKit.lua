@@ -44,6 +44,56 @@
 -- in Addition every Functions Table contains a MissionMap which consists basically of a statediagramm starting at one
 -- MissionMap={[1]=> {2,5},[2] => {1,5},[3]=>{5},[4]=>{5},[5]=>{1,5}}
 
+
+
+ function setUpFirstRandom	()
+if not GG.RandSeedTable then  GG.RandSeedTable={36,17,33,34,39,9,15,33,12,24,21,27,16,22,40,39,27,31,6,26,1,11,6,34,7,17,6,5,42,10,22,36,26,13,27,23,21,41,13,33,23,33,17,38,12,15,34,39,3,40,23,4,9,28,38,15,3,1,20,3,11,41,38,36,12,23,16,32,22,29,23,2,19,40,40,31,12,32,27,15} end
+GG.RandSeedTable.itterator= math.floor(math.random(1,#GG.RandSeedTable))
+
+if not GG.ProceduralFeatureCounter then  GG.ProceduralFeatureCounter= 1 else  GG.ProceduralFeatureCounter= GG.ProceduralFeatureCounter+1 end
+name=Game.mapName or "SoooGeneric"
+
+hArry={}
+for i=1,#GG.RandSeedTable,1 do
+GG.RandSeedTable[i]=(GG.RandSeedTable[i]+ GG.ProceduralFeatureCounter+string.byte(name,math.max(1,string.len(name)%i)))%2
+end
+end
+
+  function lib_deMaRaVal(valrange)
+  local itterator=GG.RandSeedTable.itterator
+	if not GG.RandSeedTable then
+	setUpFirstRandom()
+	GG.RandSeedTable.itterator=math.max(1,(itterator+1)%#RandSeedTable)
+	return math.ceil((D[GG.RandSeedTable.itterator]/42)*valrange)
+	else
+	GG.RandSeedTable.itterator=math.max(1,(itterator+1)%#RandSeedTable)
+	return math.ceil((D[GG.RandSeedTable.itterator]/42)*valrange)
+	end
+ end
+
+
+
+	--deterministicMathRandom
+ function lib_deMaRa()
+	if not 	GG.RandSeedTable then
+
+	lib_setUpFirstRandom()
+	GG.RandSeedTable.itterator=GG.RandSeedTable.itterator+1
+	GG.RandSeedTable.itterator=math.max(1,(GG.RandSeedTable.itterator)%#GG.RandSeedTable.itterator)
+	return GG.RandSeedTable[GG.RandSeedTable.itterator]==1
+	else
+		GG.RandSeedTable.itterator=GG.RandSeedTable.itterator+1
+	GG.RandSeedTable.itterator=math.max(1,(GG.RandSeedTable.itterator)%#GG.RandSeedTable)
+
+	return 	(GG.RandSeedTable[GG.RandSeedTable.itterator]==1)
+
+	end
+ end
+
+
+
+
+
 	function missionHandler(frame,TABLE,nr)
 	--wethere the mission is continuing to the next nr
 	boolContinue=false
