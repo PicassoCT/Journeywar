@@ -12,11 +12,7 @@ include "toolKit.lua"
 
 ctgoresub={}
 
-for i=1,7,1 do
-ctgoresub[i]={}
-ctgore= "ctgore"..i
-ctgoresub[i]=piece (ctgore)
-end
+
 
 local iWantAHug=piece "iWantAHug"
 local goreSub =piece "ctGoreSub"
@@ -35,221 +31,230 @@ local cRailTurn= piece "cRailTurn"
 local uCanTurnMeOn= piece "uCanTurnMeOn"
 
 railCirc ={}
---the Ring Rail
-  cRailCirc0 = piece "cRailCirc0"
-railCirc[1]=cRailCirc0 
-  cRailCirc1 = piece "cRailCirc1"
-railCirc[2]=cRailCirc1 
-  cRailCirc2= piece "cRailCirc2"
-railCirc[3]=cRailCirc2 
-  cRailCirc3= piece "cRailCirc3"
-railCirc[4]=cRailCirc3 
-  cRailCirc4= piece "cRailCirc4"
-railCirc[5]=cRailCirc4 
-  cRailCirc5= piece "cRailCirc5"
-railCirc[6]=cRailCirc5 
-  cRailCirc6= piece "cRailCirc6"
-railCirc[7]=cRailCirc6 
-  cRailCirc7= piece "cRailCirc7"
- railCirc[8]=cRailCirc7 
-  cRailCirc8= piece "cRailCirc8"
-railCirc[9]=cRailCirc8 
-  cRailCirc9= piece "cRailCirc9"
-railCirc[10]=cRailCirc9 
-  cRailCirc10= piece "cRailCirc10"
- railCirc[11]=cRailCirc10 
-  cRailCirc11= piece "cRailCirc11"
-railCirc[12]=cRailCirc11 
-
------------------------------------------------------------------------------------
---pillars : the pieces on which the train moves. The folding Pillar is not part of this, it is spawned seperate later upon.
-
 pillar1 = {}
-
-cPilar1 =piece"cPilar1"
-pillar1[#pillar1+1]=cPilar1   
-cRstealthC1= 	piece"cRstealthC1"
-pillar1[#pillar1+1]= cRstealthC1   
-cPillarCro1= 	piece"cPillarCro1"
-pillar1[#pillar1+1]=cPillarCro1    
-cPilarMech1=	piece"cPilarMech1"
-pillar1[#pillar1+1]= cPilarMech1   
-cRailWay11 = 	piece"cRailWay11"
-pillar1[#pillar1+1]= cRailWay11   
-cRailFold11 = 	piece"cRailFold11"
-pillar1[#pillar1+1]=cRailFold11    
-cRailR11 =piece"cRailR11"
-pillar1[#pillar1+1]= cRailR11   
-cRailL11 =piece"cRailL11"
-pillar1[#pillar1+1]=cRailL11    
-cRailWay12 = 	piece"cRailWay12"
- pillar1[#pillar1+1]= cRailWay12   
-cRailFold12 =	 piece"cRailFold12"
-pillar1[#pillar1+1]= cRailFold12   
-cRailR12 =piece"cRailR12"
-pillar1[#pillar1+1]= cRailR12   
-cRailL12 =piece"cRailL12"
-pillar1[#pillar1+1]=cRailL12    
-intFeetUnder=0
-pillar1[#pillar1+1]=intFeetUnder 
-
 pillar2 = {}
-
-cPilar2 = 	 	piece"cPilar2"
-pillar2[#pillar2+1]=cPilar2    
-cRstealthC2= 	piece"cRstealthC2"
-pillar2[#pillar2+1]=cRstealthC2   
-cPillarCro2= 	piece"cPillarCro2"
-pillar2[#pillar2+1]=cPillarCro2    
-cPilarMech2= 	piece"cPilarMech2"
-pillar2[#pillar2+1]= cPilarMech2   
-cRailWay21 = 	piece"cRailWay21"
-pillar2[#pillar2+1]= cRailWay21   
-cRailFold21 = 	piece"cRailFold21"
-	pillar2[#pillar2+1]=cRailFold21    
-cRailR21 =piece"cRailR21"
-pillar2[#pillar2+1]= cRailR21   
-cRailL21 =piece"cRailL21"
-pillar2[#pillar2+1]=cRailL21    
-cRailWay22 = 	piece"cRailWay22"
-pillar2[#pillar2+1]= cRailWay22   
-cRailFold22 = 	piece"cRailFold22"
-	pillar2[#pillar2+1]= cRailFold22   
-cRailR22 =piece"cRailR22"
-pillar2[#pillar2+1]= cRailR22   
-cRailL22 =piece"cRailL22"
-pillar2[#pillar2+1]=cRailL22    
-intFeetUnder=0
-pillar2[#pillar2+1]=intFeetUnder 
-
-
 pillar3 = {}
 
-cPilar3 = 	 	piece"cPilar3"
-pillar3[#pillar3+1]=cPilar3    
-cRstealthC3= 	piece"cRstealthC3"
-	pillar3[#pillar3+1]=cRstealthC3   
-cPillarCro3= 	piece"cPillarCro3"
-pillar3[#pillar3+1]=cPillarCro3    
-cPilarMech3= 	piece"cPilarMech3"
-	pillar3[#pillar3+1]= cPilarMech3   
-cRailWay31 = 	piece"cRailWay31"
-pillar3[#pillar3+1]= cRailWay31   
-cRailFold31 = 	piece"cRailFold31"
-	pillar3[#pillar3+1]=cRailFold31    
-cRailR31 =piece"cRailR31"
-pillar3[#pillar3+1]= cRailR31   
-cRailL31 =piece"cRailL31"
-pillar3[#pillar3+1]=cRailL31    
-cRailWay32 = 	piece"cRailWay32"
-pillar3[#pillar3+1]= cRailWay32   
-cRailFold32 = 	piece"cRailFold32"
-pillar3[#pillar3+1]= cRailFold32   
-cRailR32 =piece"cRailR32"
-pillar3[#pillar3+1]= cRailR32   
-cRailL32 =piece"cRailL32"
-pillar3[#pillar3+1]=cRailL32    
-intFeetUnder=0
-pillar3[#pillar3+1]=intFeetUnder 
-
 pillar4 = {}
-
-cPilar4 = 	 	piece"cPilar4"
-pillar4[#pillar4+1]=cPilar4    
-cRstealthC4= 	piece"cRstealthC4"
-	pillar4[#pillar4+1]= cRstealthC4   
-cPillarCro4= 	piece"cPillarCro4"
-pillar4[#pillar4+1]=cPillarCro4    
-cPilarMech4= 	piece"cPilarMech4"
-	pillar4[#pillar4+1]= cPilarMech4   
-cRailWay41 = 	piece"cRailWay41"
-	pillar4[#pillar4+1]= cRailWay41   
-cRailFold41 = 	piece"cRailFold41"
-	pillar4[#pillar4+1]=cRailFold41    
-cRailR41 =piece"cRailR41"
-pillar4[#pillar4+1]= cRailR41   
-cRailL41 =piece"cRailL41"
-pillar4[#pillar4+1]=cRailL41    
-cRailWay42 = 	piece"cRailWay42"
-pillar4[#pillar4+1]= cRailWay42   
-cRailFold42 = 	piece"cRailFold42"
-pillar4[#pillar4+1]= cRailFold42   
-cRailR42 =piece"cRailR42"
-pillar4[#pillar4+1]= cRailR42   
-cRailL42 =piece"cRailL42"
-pillar4[#pillar4+1]=cRailL42    
-intFeetUnder=0
-pillar4[#pillar4+1]=intFeetUnder 
-
 pillar5 = {}
-
-cPilar5 = 	 	piece"cPilar5"
-pillar5[#pillar5+1]=cPilar5    
-cRstealthC5= 	piece"cRstealthC5"
-pillar5[#pillar5+1]= cRstealthC5   
-cPillarCro5= 	piece"cPillarCro5"
-	pillar5[#pillar5+1]=cPillarCro5    
-cPilarMech5= 	piece"cPilarMech5"
-	pillar5[#pillar5+1]= cPilarMech5   
-cRailWay51 = 	piece"cRailWay51"
-	pillar5[#pillar5+1]= cRailWay51   
-cRailFold51 = 	piece"cRailFold51"
-	pillar5[#pillar5+1]=cRailFold51    
-cRailR51 =piece"cRailR51"
-pillar5[#pillar5+1]= cRailR51   
-cRailL51 =piece"cRailL51"
-pillar5[#pillar5+1]=cRailL51    
-cRailWay52 = 	piece"cRailWay52"
-	pillar5[#pillar5+1]= cRailWay52   
-cRailFold52 = 	piece"cRailFold52"
-pillar5[#pillar5+1]= cRailFold52   
-cRailR52 =piece"cRailR52"
-pillar5[#pillar5+1]= cRailR52   
-cRailL52 =piece"cRailL52"
-pillar5[#pillar5+1]=cRailL52    
-intFeetUnder=0
-pillar5[#pillar5+1]=intFeetUnder 
-
-
 pillar6 = {}
 
-cPilar6 = piece"cPilar6"
-pillar6[#pillar6+1]=cPilar6    
-cRstealthC6= piece"cRstealthC6"
-	pillar6[#pillar6+1]= cRstealthC6   
-cPillarCro6= piece"cPillarCro6"
-	pillar6[#pillar6+1]=cPillarCro6    
-cPilarMech6= piece"cPilarMech6"
-	pillar6[#pillar6+1]= cPilarMech6   
-cRailWay61 = 	piece"cRailWay61"
-pillar6[#pillar6+1]= cRailWay61    --5
-cRailFold61 = 	piece"cRailFold61"
-	pillar6[#pillar6+1]=cRailFold61    --6
-cRailR61 =piece"cRailR61"
-pillar6[#pillar6+1]= cRailR61   --7
-cRailL61 =piece"cRailL61"
-pillar6[#pillar6+1]=cRailL61    
-cRailWay62 = 	piece"cRailWay62"
-	pillar6[#pillar6+1]= cRailWay62    --9
-cRailFold62 = 	piece"cRailFold62"
-	pillar6[#pillar6+1]= cRailFold62   --10
-cRailR62 =piece"cRailR62"
-pillar6[#pillar6+1]= cRailR62   --11
-cRailL62 =piece"cRailL62"
-	pillar6[#pillar6+1]=cRailL62 
-intFeetUnder=0
-pillar6[#pillar6+1]=intFeetUnder 
-------------------------------------------------------------------------------------
---train
-
-
 usul={}
+function initPieces()
+	for i=1,7,1 do
+	ctgoresub[i]={}
+	ctgore= "ctgore"..i
+	ctgoresub[i]=piece (ctgore)
+	end
+	--the Ring Rail
+	  cRailCirc0 = piece "cRailCirc0"
+	railCirc[1]=cRailCirc0 
+	  cRailCirc1 = piece "cRailCirc1"
+	railCirc[2]=cRailCirc1 
+	  cRailCirc2= piece "cRailCirc2"
+	railCirc[3]=cRailCirc2 
+	  cRailCirc3= piece "cRailCirc3"
+	railCirc[4]=cRailCirc3 
+	  cRailCirc4= piece "cRailCirc4"
+	railCirc[5]=cRailCirc4 
+	  cRailCirc5= piece "cRailCirc5"
+	railCirc[6]=cRailCirc5 
+	  cRailCirc6= piece "cRailCirc6"
+	railCirc[7]=cRailCirc6 
+	  cRailCirc7= piece "cRailCirc7"
+	 railCirc[8]=cRailCirc7 
+	  cRailCirc8= piece "cRailCirc8"
+	railCirc[9]=cRailCirc8 
+	  cRailCirc9= piece "cRailCirc9"
+	railCirc[10]=cRailCirc9 
+	  cRailCirc10= piece "cRailCirc10"
+	 railCirc[11]=cRailCirc10 
+	  cRailCirc11= piece "cRailCirc11"
+	railCirc[12]=cRailCirc11 
+
+	-----------------------------------------------------------------------------------
+	--pillars : the pieces on which the train moves. The folding Pillar is not part of this, it is spawned seperate later upon.
+
+	cPilar1 =piece"cPilar1"
+	pillar1[#pillar1+1]=cPilar1   
+	cRstealthC1= 	piece"cRstealthC1"
+	pillar1[#pillar1+1]= cRstealthC1   
+	cPillarCro1= 	piece"cPillarCro1"
+	pillar1[#pillar1+1]=cPillarCro1    
+	cPilarMech1=	piece"cPilarMech1"
+	pillar1[#pillar1+1]= cPilarMech1   
+	cRailWay11 = 	piece"cRailWay11"
+	pillar1[#pillar1+1]= cRailWay11   
+	cRailFold11 = 	piece"cRailFold11"
+	pillar1[#pillar1+1]=cRailFold11    
+	cRailR11 =piece"cRailR11"
+	pillar1[#pillar1+1]= cRailR11   
+	cRailL11 =piece"cRailL11"
+	pillar1[#pillar1+1]=cRailL11    
+	cRailWay12 = 	piece"cRailWay12"
+	 pillar1[#pillar1+1]= cRailWay12   
+	cRailFold12 =	 piece"cRailFold12"
+	pillar1[#pillar1+1]= cRailFold12   
+	cRailR12 =piece"cRailR12"
+	pillar1[#pillar1+1]= cRailR12   
+	cRailL12 =piece"cRailL12"
+	pillar1[#pillar1+1]=cRailL12    
+	intFeetUnder=0
+	pillar1[#pillar1+1]=intFeetUnder 
+
+
+
+	cPilar2 = 	 	piece"cPilar2"
+	pillar2[#pillar2+1]=cPilar2    
+	cRstealthC2= 	piece"cRstealthC2"
+	pillar2[#pillar2+1]=cRstealthC2   
+	cPillarCro2= 	piece"cPillarCro2"
+	pillar2[#pillar2+1]=cPillarCro2    
+	cPilarMech2= 	piece"cPilarMech2"
+	pillar2[#pillar2+1]= cPilarMech2   
+	cRailWay21 = 	piece"cRailWay21"
+	pillar2[#pillar2+1]= cRailWay21   
+	cRailFold21 = 	piece"cRailFold21"
+		pillar2[#pillar2+1]=cRailFold21    
+	cRailR21 =piece"cRailR21"
+	pillar2[#pillar2+1]= cRailR21   
+	cRailL21 =piece"cRailL21"
+	pillar2[#pillar2+1]=cRailL21    
+	cRailWay22 = 	piece"cRailWay22"
+	pillar2[#pillar2+1]= cRailWay22   
+	cRailFold22 = 	piece"cRailFold22"
+		pillar2[#pillar2+1]= cRailFold22   
+	cRailR22 =piece"cRailR22"
+	pillar2[#pillar2+1]= cRailR22   
+	cRailL22 =piece"cRailL22"
+	pillar2[#pillar2+1]=cRailL22    
+	intFeetUnder=0
+	pillar2[#pillar2+1]=intFeetUnder 
+
+
+	cPilar3 = 	 	piece"cPilar3"
+	pillar3[#pillar3+1]=cPilar3    
+	cRstealthC3= 	piece"cRstealthC3"
+		pillar3[#pillar3+1]=cRstealthC3   
+	cPillarCro3= 	piece"cPillarCro3"
+	pillar3[#pillar3+1]=cPillarCro3    
+	cPilarMech3= 	piece"cPilarMech3"
+		pillar3[#pillar3+1]= cPilarMech3   
+	cRailWay31 = 	piece"cRailWay31"
+	pillar3[#pillar3+1]= cRailWay31   
+	cRailFold31 = 	piece"cRailFold31"
+		pillar3[#pillar3+1]=cRailFold31    
+	cRailR31 =piece"cRailR31"
+	pillar3[#pillar3+1]= cRailR31   
+	cRailL31 =piece"cRailL31"
+	pillar3[#pillar3+1]=cRailL31    
+	cRailWay32 = 	piece"cRailWay32"
+	pillar3[#pillar3+1]= cRailWay32   
+	cRailFold32 = 	piece"cRailFold32"
+	pillar3[#pillar3+1]= cRailFold32   
+	cRailR32 =piece"cRailR32"
+	pillar3[#pillar3+1]= cRailR32   
+	cRailL32 =piece"cRailL32"
+	pillar3[#pillar3+1]=cRailL32    
+	intFeetUnder=0
+	pillar3[#pillar3+1]=intFeetUnder 
+
+
+	cPilar4 = 	 	piece"cPilar4"
+	pillar4[#pillar4+1]=cPilar4    
+	cRstealthC4= 	piece"cRstealthC4"
+		pillar4[#pillar4+1]= cRstealthC4   
+	cPillarCro4= 	piece"cPillarCro4"
+	pillar4[#pillar4+1]=cPillarCro4    
+	cPilarMech4= 	piece"cPilarMech4"
+		pillar4[#pillar4+1]= cPilarMech4   
+	cRailWay41 = 	piece"cRailWay41"
+		pillar4[#pillar4+1]= cRailWay41   
+	cRailFold41 = 	piece"cRailFold41"
+		pillar4[#pillar4+1]=cRailFold41    
+	cRailR41 =piece"cRailR41"
+	pillar4[#pillar4+1]= cRailR41   
+	cRailL41 =piece"cRailL41"
+	pillar4[#pillar4+1]=cRailL41    
+	cRailWay42 = 	piece"cRailWay42"
+	pillar4[#pillar4+1]= cRailWay42   
+	cRailFold42 = 	piece"cRailFold42"
+	pillar4[#pillar4+1]= cRailFold42   
+	cRailR42 =piece"cRailR42"
+	pillar4[#pillar4+1]= cRailR42   
+	cRailL42 =piece"cRailL42"
+	pillar4[#pillar4+1]=cRailL42    
+	intFeetUnder=0
+	pillar4[#pillar4+1]=intFeetUnder 
+
+
+	cPilar5 = 	 	piece"cPilar5"
+	pillar5[#pillar5+1]=cPilar5    
+	cRstealthC5= 	piece"cRstealthC5"
+	pillar5[#pillar5+1]= cRstealthC5   
+	cPillarCro5= 	piece"cPillarCro5"
+		pillar5[#pillar5+1]=cPillarCro5    
+	cPilarMech5= 	piece"cPilarMech5"
+		pillar5[#pillar5+1]= cPilarMech5   
+	cRailWay51 = 	piece"cRailWay51"
+		pillar5[#pillar5+1]= cRailWay51   
+	cRailFold51 = 	piece"cRailFold51"
+		pillar5[#pillar5+1]=cRailFold51    
+	cRailR51 =piece"cRailR51"
+	pillar5[#pillar5+1]= cRailR51   
+	cRailL51 =piece"cRailL51"
+	pillar5[#pillar5+1]=cRailL51    
+	cRailWay52 = 	piece"cRailWay52"
+		pillar5[#pillar5+1]= cRailWay52   
+	cRailFold52 = 	piece"cRailFold52"
+	pillar5[#pillar5+1]= cRailFold52   
+	cRailR52 =piece"cRailR52"
+	pillar5[#pillar5+1]= cRailR52   
+	cRailL52 =piece"cRailL52"
+	pillar5[#pillar5+1]=cRailL52    
+	intFeetUnder=0
+	pillar5[#pillar5+1]=intFeetUnder 
+
+
+	cPilar6 = piece"cPilar6"
+	pillar6[#pillar6+1]=cPilar6    
+	cRstealthC6= piece"cRstealthC6"
+		pillar6[#pillar6+1]= cRstealthC6   
+	cPillarCro6= piece"cPillarCro6"
+		pillar6[#pillar6+1]=cPillarCro6    
+	cPilarMech6= piece"cPilarMech6"
+		pillar6[#pillar6+1]= cPilarMech6   
+	cRailWay61 = 	piece"cRailWay61"
+	pillar6[#pillar6+1]= cRailWay61    --5
+	cRailFold61 = 	piece"cRailFold61"
+		pillar6[#pillar6+1]=cRailFold61    --6
+	cRailR61 =piece"cRailR61"
+	pillar6[#pillar6+1]= cRailR61   --7
+	cRailL61 =piece"cRailL61"
+	pillar6[#pillar6+1]=cRailL61    
+	cRailWay62 = 	piece"cRailWay62"
+		pillar6[#pillar6+1]= cRailWay62    --9
+	cRailFold62 = 	piece"cRailFold62"
+		pillar6[#pillar6+1]= cRailFold62   --10
+	cRailR62 =piece"cRailR62"
+	pillar6[#pillar6+1]= cRailR62   --11
+	cRailL62 =piece"cRailL62"
+		pillar6[#pillar6+1]=cRailL62 
+	intFeetUnder=0
+	pillar6[#pillar6+1]=intFeetUnder 
+	
 usul[#usul+1]=pillar1
 usul[#usul+1]=pillar2
 usul[#usul+1]=pillar3
 usul[#usul+1]=pillar4
 usul[#usul+1]=pillar5
 usul[#usul+1]=pillar6
+
+end
+------------------------------------------------------------------------------------
+--train
+
+
 
 --booleans
 --MoveDetector
@@ -1548,6 +1553,7 @@ end
 
 --create Script: called when the train is created/ similar to all other vehicels in Spring
 function script.Create()
+initPieces()
 Hide(cRailTurn) --hides the Piece of Railway that turns, when the train goes into turnmode
 for i=1,7,1 do
 Hide(ctgoresub[i])
