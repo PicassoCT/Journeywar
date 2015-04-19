@@ -387,7 +387,7 @@ end
 
 
 -->Reset a Piece at speed
-function resetPiece(piecename,speed)
+function resetPiece(piecename,speed,boolWaitForIT)
 Turn(piecename,x_axis,0,speed)
 Turn(piecename,y_axis,0,speed)
 Turn(piecename,z_axis,0,speed)
@@ -395,12 +395,31 @@ Turn(piecename,z_axis,0,speed)
 Move(piecename,x_axis,0,speed)
 Move(piecename,y_axis,0,speed)
 Move(piecename,z_axis,0,speed,true)
+if boolWaitForIT then 
+WaitForTurn(piecename,1)
+WaitForTurn(piecename,2)
+WaitForTurn(piecename,3)
 end
 
-function tP(piecename,x_val,y_val,z_val,speed)
+
+
+end
+
+function equiTurn(p1,p2,axis,deg,speed)
+Turn(p1,axis,math.rad(deg),speed)
+Turn(p2,axis,math.rad(-1*deg),speed)
+end
+
+function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
+
 Turn(piecename,x_axis,math.rad(x_val),speed)
 Turn(piecename,y_axis,math.rad(y_val),speed)
 Turn(piecename,z_axis,math.rad(z_val),speed)
+if boolWaitForIT then 
+WaitForTurn(piecename,x_axis)
+WaitForTurn(piecename,y_axis)
+WaitForTurn(piecename,z_axis)
+end
 end
 
 function tPrad(piecename,x_val,y_val,z_val,speed)
@@ -466,8 +485,10 @@ end
 
 -->Reset a Table of Pieces at speed
 function reseT(tableName,speed)
+lspeed=speed or 0
+
 	for i=1,#tableName do
-	resetPiece(tableName[i],speed)
+	resetPiece(tableName[i],lspeed)
 	end
 end
 
@@ -1124,9 +1145,8 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 --Spring.Echo("local piecesTable={}")
 	if piecesTable ~= nil then
 		for i=1,#piecesTable,1 do
-		workingString=workingString.."\""
-		Spring.Echo(workingString)
-		Spring.Echo("piecesTable[#piecesTable+1]= piece"..piecesTable[i])
+		workingString=piecesTable[i]
+		Spring.Echo("piecesTable[#piecesTable+1]= piece(\""..piecesTable[i].."\")")
 
 		end
 
@@ -3621,4 +3641,77 @@ end
 		end
 	
 	return T1,T2
+	end
+
+	function objectPieceRenamer()
+	
+
+			  local file = io.open("jltree.src","r+b")
+
+
+
+			if file then
+
+
+				-- Opens a file in append mode
+			lineTable={}
+
+			keycount={}
+			keycount["aa"]={};
+			keycount["bb"]={};
+			keycount["cc"]={};
+			keycount["dd"]={};
+			keycount["ee"]={};
+			keycount["ff"]={};
+			keycount["gg"]={};
+			keycount["aa"].matchcounter=0
+			keycount["bb"].matchcounter=0
+			keycount["cc"].matchcounter=0
+			keycount["dd"].matchcounter=0
+			keycount["ee"].matchcounter=0
+			keycount["ff"].matchcounter=0
+			keycount["gg"].matchcounter=0
+
+			local outputc = io.open("output.c", "wb")
+
+
+				keycount["aa"].nr=1;keycount["bb"].nr=2;keycount["cc"].nr=3;keycount["dd"].nr=4;keycount["ee"].nr=5;keycount["ff"].nr=6;keycount["gg"].nr=7
+
+			 
+				count=0
+				for line in file:lines() do
+				
+					copystring=line
+					for k,v in pairs(keycount) do
+					
+					matchCounter=v.matchcounter    
+						while string.find(copystring,"c"..k) or string.find(copystring,"E"..k)  do
+						if string.find(copystring,"c"..k) then
+						   copystring=string.gsub(copystring,"c"..k,"c".. v.nr,1)
+						   matchCounter=matchCounter+1
+						end
+						 if string.find(copystring,"E"..k) then   
+						   copystring=string.gsub(copystring,"E"..k,"E".. v.nr,1)
+						   matchCounter=matchCounter+1
+						 end  
+						 
+							 if matchCounter==2 then
+							 v.nr=v.nr+7
+							 matchCounter=0
+							 end
+						 end
+					v.matchcounter  =matchCounter 
+					
+					end
+				outputc.write(outputc,copystring.."\n")
+				
+				 end
+			outputc:close()
+
+			else
+			print(" could not open file")
+			end
+
+				
+	
 	end
