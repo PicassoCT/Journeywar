@@ -243,8 +243,8 @@ H="``"
 		F=" "
 		G="\n"
 	for i=1,math.ceil(math.random(5,29)) do
-		if deMaRa()and i%3 then
-		if deMaRa()then conCat=conCat..F else conCat=conCat..G end
+		if deMaRa() ==true and i%3 then
+		if deMaRa() ==true  then conCat=conCat..F else conCat=conCat..G end
 		else
 		conCat=conCat..(comTab[math.random(1,#comTab)])
 		end

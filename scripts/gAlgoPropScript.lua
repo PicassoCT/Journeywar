@@ -4,34 +4,38 @@ include "suddenDeath.lua"
 
 
 bloks={}
-center=piece"center"
-cg=piece"CG"
+center=""
+cg=""
 pod={}
-pod[1]={}
-pod[1]=piece"Pod1"
-pod[2]={}
-pod[2]=piece"Pod2"
-pod[3]={}
-pod[3]=piece"Pod3"
-pod[4]={}
-pod[4]=piece"Pod4"
-pod[5]={}
-pod[5]=piece"Pod5"
-
-
-poleDance={}
-for i=1,6,1 do
-poleDance[i]={}
-temp="Pole"..i
-poleDance[i]=piece(temp)
+function initPieces()
+	pod[1]={}
+	pod[1]=piece"Pod1"
+	pod[2]={}
+	pod[2]=piece"Pod2"
+	pod[3]={}
+	pod[3]=piece"Pod3"
+	pod[4]={}
+	pod[4]=piece"Pod4"
+	pod[5]={}
+	pod[5]=piece"Pod5"
+	center=piece"center"
+	cg=piece"CG"
+	for i=1,6,1 do
+	poleDance[i]={}
+	temp="Pole"..i
+	poleDance[i]=piece(temp)
+	end
+	for i=1,70,1 do
+	bloks[i]={}
+	temp="blok"..i
+	bloks[i]=piece(temp)
+	end
 end
+poleDance={}
+
 freeSpots={}
 
-for i=1,70,1 do
-bloks[i]={}
-temp="blok"..i
-bloks[i]=piece(temp)
-end
+
 dist=16
 disto=28
 cgPosX,cgPosY,cgPosZ=0,0,0
@@ -78,16 +82,17 @@ Turn(bloks[nrBlok],y_axis,math.rad(d),0)
 	for i=1,5,1 do
 	
 	
-	d=table.getn(freeSpots)+1
-	x,y,z=byNr(i)
-	
-	freeSpots[d]={}
-	freeSpots[d][1]={}
-	freeSpots[d][1]=cgPosX+x
-	freeSpots[d][2]={}
-	freeSpots[d][2]=cgPosY+y
-	freeSpots[d][3]={}
-	freeSpots[d][3]=cgPosZ+z
+		x,y,z=byNr(i)
+		if doesSpotAllreadyExist(cgPosX+x,cgPosY+y,cgPosZ+z)==false then
+		d=table.getn(freeSpots)+1
+		freeSpots[d]={}
+		freeSpots[d][1]={}
+		freeSpots[d][1]=cgPosX+x
+		freeSpots[d][2]={}
+		freeSpots[d][2]=cgPosY+y
+		freeSpots[d][3]={}
+		freeSpots[d][3]=cgPosZ+z
+		end
 	end
 nrOfSpots=nrOfSpots+5
 
@@ -97,6 +102,12 @@ nrOfSpots=nrOfSpots-1
 
 end
 
+function doesSpotAllreadyExist(x,y,z)
+for i=1,#freeSpots do
+if freeSpots[i][1]==x and freeSpots[i][2]==y and freeSpots[i][3]==z then return true end
+end
+return false
+end
 nrOfSpots=5
 
 function addABrick()
@@ -114,6 +125,7 @@ function buildthis()
 end
 
 function script.Create()
+initPieces()
 Hide(cg)
 
 	if math.random(0,1)==1 then
@@ -177,10 +189,10 @@ Timer=0
 	teamID=Spring.GetUnitTeam(unitID)
 x,y,z=Spring.GetUnitPosition(unitID)
 	if math.random(0,2)==1 then
-	for i=1, 3,1 do
-	Spring.CreateUnit("jresistancewarrior",x+25,y,z-25,0,teamID)
+		for i=1, 3,1 do
+		Spring.CreateUnit("jresistancewarrior",x+25,y,z-25,0,teamID)
+		end
 	end
-end
 suddenDeath(unitID,recentDamage)
 return 0
 end
