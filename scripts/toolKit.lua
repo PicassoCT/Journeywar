@@ -1,17 +1,17 @@
 
 --[[
-   This program is free software; you can redistribute it and/or modify
+   This library is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
    
-   This program is distributed in the hope that it will be useful,
+   This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
+   along with this library; if not, write to the Free Software
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
    MA 02110-1301, USA.
    
@@ -92,18 +92,42 @@ bucketSortList={}
 	return sortedTable
 end
 
+-->partOfShipPartOfCrew binds a creature to a piece
+function partOfShipPartOfCrew( point, CreatureID,MotherID)
+Spring.SetUnitNeutral(CreatureID,true)
+Spring.MoveCtrl.Enable(CreatureID,true)
+local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+roX,roY,roZ=0,0,0
+
+	while GGboolBuildEnded == false do
+	tx,ty,tz=spGetUnitPiecePosDir(unitID,CreatureID)
+	Spring.MoveCtrl.SetPosition(CreatureID,tx+math.random(-5,5),ty,tz+math.random(-5,5))
+	Spring.MoveCtrl.SetRotation(CreatureID,roX, roY,roZ)
+	roX,roY,roZ=roX+math.random(-0.01,0.01),roY+math.random(-0.01,0.01),roZ+math.random(-0.01,0.01)
+	Sleep(500)
+	end
+
+Spring.SetUnitAlwaysVisible(CreatureID,false)
+Spring.DestroyUnit(CreatureID,true,true)
+end
+
+
 -->Transformer OS: Assembles from SubUnits in Team a bigger Unit
 function assemble(center,unitid,udefSub,CubeLenghtSub, nrNeeded,range, AttachPoints)
 --Move UnderGround
+
+makeCascadingGlobalTables("InfoTable["..unitid"].boolBuildEnded",true)
 
 piecesTable=Spring.GetUnitPieceList(unitid)
 	for i=1,#piecesTable do
 	piecesTable[i]=piece(piecesTable[i])
 	end
 hideT(piecesTable)
-if AttachPoints then AttachPoints=sortPiecesByHeight(AttachPoints) else
-AttachPoints=sortPiecesByHeight(piecesTable)
-end
+	if AttachPoints then
+	AttachPoints=sortPiecesByHeight(AttachPoints) 
+	else
+	AttachPoints=sortPiecesByHeight(piecesTable)
+	end
 indexP=1
 hx,hy,hz=spGetUnitPiecePosDir(untid,AttachPoints[indexP])
 base=Spring.GetGroundHeight(hx,hz)
@@ -143,7 +167,7 @@ newHP=oldHP
 				ux,uy,uz=Spring.GetUnitPosition(allSub[i])
 				if (ux-x) *(uy-y)* (uz-z) < 50 then --integrate it into the Avatara
 					if not GG.BoundToThee[allSub[i]] then
-					StartThread(partOfShipPartOfCrew, attachP, allSub[i])
+					StartThread(partOfShipPartOfCrew, attachP, allSub[i],unitid)
 					end
 				else
 					Spring.SetUnitMoveGoal(allSub[i],x,y,z)	
@@ -155,7 +179,7 @@ newHP=oldHP
 	
 	GG.BoundToThee[unitid]=nil 
 	MoveCtrl.Enable(unitID,false)
-	boolBuildEnded=true
+	GG.InfoTable[unitid].boolBuildEnded=true
 	boolComplete=true
 		Move(center,y_axis,0,12)
 		showT(piecesTable)
@@ -2426,9 +2450,8 @@ end
 				if type(f)=="function" then
 				T=elementWise(T,f,TempArg)				
 				TempArg={}			
-			
 				else				
-				TempArg=f
+				TempArg[#TempArg+1]=f
 				end			   
          end
 	return T
@@ -2635,17 +2658,6 @@ end
 	 return T
 	 end
 
-	 --> Creates by team a Table in the GlobalGame Table
-	 function insertIntoGlobalTable(unitid,name, value)
-	 teamid=Spring.GetUnitTeam(unitid)
-	 execString="GG."..name.."["..teamid.."]"
-	 insertString=execString.."["..unitid.."]"
-	 assignString=insertString.."="..value
-	 if not string.load(execString) then string.load(execString.."= {}") end	
-	 string.load(assignString)
-	 return string.load(insertString.."="..value)
-	 end
-
 
 	 
 	 --> Apply a function on a Table
@@ -2661,6 +2673,31 @@ end
 		return T
 	end
 
+	
+	 --> Apply a function to a unit Table 
+	function forTableUseFunction(T,boolFilterDead,...)
+	TempT={}
+	 for _, f in pairs(arg) do
+	
+			for i=1,#T do
+					 TempT[i]=f(T[i])
+			end
+			T=TempT
+			TempT={}
+			--filter out the Dead
+			if boolFilterDead ==true then
+			for i=1,#T do
+					if Spring.GetUnitIsDead(T[i])==false then
+					TempT[i]=T[i]
+					end
+			end
+			end
+			
+			T=TempT
+	  end
+		return T
+	end
+	
 	function getLowest(Table)
 	lowest=0
 	val=0
@@ -3809,3 +3846,52 @@ end
 	return T1,T2
 	end
 
+	
+function getMidPoint(a,b)
+ax,ay,az=a.x,a.y,a.z
+bx,by,bz=b.x.b.y,b.z
+return (ax-bx)/2+ax,(ay-by)/2+ay,(az-bz)/2+az
+end
+
+function swingPointOutFromCenterByFrame(ax,ay,az,frame,swing,totalFrame)
+extend=swing*math.sin(frame/totalFrame)*randSign()
+return ax+math.random(math.min(extend,extend*-1),math.abs(extend)),
+ay+math.random(math.min(extend,extend*-1),math.abs(extend)),
+az+math.random(math.min(extend,extend*-1),math.abs(extend))
+end
+	
+--> make a CEG CLOUD
+function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing,speedInFrames)
+local spCEG=Spring.SpawnCEG
+quarter=math.ceil(plifetime/4)
+it=1
+pT={}
+for i=1,nr do
+pT[i]={x=math.random(-size,size),y=math.random(-size,size)*0.5,z=math.random(-size,size)}
+end
+
+	while lifetime > 0 do
+	frame=Spring.GetGameFrame()
+	
+		for i=it,nr, it do
+		--between every particle that isnt first and last
+			if i ~= 1 and i ~= nr then
+				if i==1 then
+				fx,fy,fz=getMidPoint(pT[nr],pT[2])
+				else
+				fx,fy,fz=getMidPoint(pT[nr-1],pT[1])	
+				end
+			pT[i].x, pT[i].y, pT[i].z=swingPointOutFromCenterByFrame(fx,fy,fz,frame,swing,speedInFrames)
+			else
+			fx,fy,fz=getMidPoint(pT[i-1],pT[i+1])
+			pT[i].x, pT[i].y, pT[i].z=swingPointOutFromCenterByFrame(fx,fy,fz,frame,swing,speedInFrames)
+			end
+		spCEG(cegname,pT[i].x, pT[i].y, pT[i].z, math.random(0,1),math.random(0,1),math.random(0,1),0,0 )
+		end
+	it=(it%4)+1
+	lifetime=lifetime-quarter
+	Sleep(quarter)
+	end
+
+
+end
