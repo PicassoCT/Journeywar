@@ -1,4 +1,7 @@
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 --Define the wheel pieces
 local tent=piece"tent"
 --Define the pieces of the weapon

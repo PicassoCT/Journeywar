@@ -1,5 +1,8 @@
 include "suddenDeath.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 --4 Legs a 2 pieces + 1 centrall Piece + Cannon
 

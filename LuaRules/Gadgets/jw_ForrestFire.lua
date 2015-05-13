@@ -30,7 +30,11 @@ end
 
 
 if (gadgetHandler:IsSyncedCode()) then
-	VFS.Include("scripts/toolKit.lua")
+
+ VFS.Include("scripts/lib_OS.lua"      )
+ VFS.Include("scripts/lib_TableOp.lua"      )
+  VFS.Include("scripts/lib_Build.lua" 	)
+
 
 	Spring.Echo(Game.groundAmbientColor)
 	

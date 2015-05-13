@@ -1,5 +1,8 @@
 include "suddenDeath.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 local mbuilux = piece "mbuilux"
 local bldoor1  = piece  "bldoor1"

@@ -1,3 +1,9 @@
+
+ include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
+
 local spiralCenter= piece"spiralCenter"
 local fireSpiral1= piece"fireSpiral1"
 local fireSpiral2= piece"fireSpiral2"
@@ -15,6 +21,7 @@ local fireCenter=piece"fireCenter"
 local fireEmitor=piece"fireEmitor"
 pseudoRandom={3,4,4,3,3,1,2,4,2,2,4,2,3,1,1,4,2,4,2,1,1,4,1,3,1,2,1,1,4,3,3,1,3,2,3,4,1,2,2,4,1,1,3,2,4,4,4,2,2,1,2,2,2,2,1,4,4,1,3,4,1,1,4,2,2,2,3,3,2,4,1,2,4,3,3,4,4,1,2,3,4,1,2,3,4,2}
 -----
+piecesTable={}
 internalAffairs={}
 internalAffairs[1]=2
 internalAffairs[2]=3
@@ -33,6 +40,7 @@ for i=1,24,1 do
 petal[i]={}
 temp = "petal0"..i
 petal[i]=piece (temp)
+piecesTable[piecesTable#+1]=petal[i]
 end
 
 Bubbles={}
@@ -45,10 +53,11 @@ Bubbles[i]={}
 	Bubbles[i][a]={}
 	temp = "bub"..i..a
 	Bubbles[i][a]=piece (temp)
-
+	piecesTable[piecesTable#+1]=Bubbles[i][a]
 	Oil[i][a]={}
 	temp = "oil"..i..a
 	Oil[i][a]=piece (temp)
+	piecesTable[piecesTable#+1]=Oil[i][a]
 	end
 
 end
@@ -59,6 +68,7 @@ for i=1,13,1 do
 Hold[i]={}
 temp = "hold0"..i
 Hold[i]=piece (temp)
+	piecesTable[piecesTable#+1]=Hold[i]
 end
 
 -----
@@ -69,16 +79,10 @@ for i=1,9,1 do
 WindP[i]={}
 temp = "windp0"..i
 WindP[i]=piece (temp)
+	piecesTable[piecesTable#+1]=WindP[i]
 end
 
------
-Seed={}
-for i=1,14,1 do
-Seed[i]={}
-temp = "Seed0"..i
-Seed[i]=piece (temp)
-end
-
+Spring.TODO()
 -----
 Leaves={}
 
@@ -86,6 +90,7 @@ for i=1,20,1 do
 Leaves[i]={}
 temp = "Leaves0"..i
 Leaves[i]=piece (temp)
+	piecesTable[piecesTable#+1]=Leaves[i]
 end
 
 -----
@@ -95,6 +100,7 @@ for i=1,10,1 do
 Roots[i]={}
 temp = "Root0"..i
 Roots[i]=piece (temp)
+piecesTable[piecesTable#+1]=Roots[i]
 end
 ----
 Seed={}
@@ -103,6 +109,7 @@ for i=1,17,1 do
 Seed[i]={}
 temp = "Seed0"..i
 Seed[i]=piece (temp)
+piecesTable[piecesTable#+1]=Seed[i]
 end
 ----
 Astrotatoren={}
@@ -111,6 +118,7 @@ for i=1,6,1 do
 Astrotatoren[i]={}
 temp = "sRo0"..i
 Astrotatoren[i]=piece (temp)
+piecesTable[piecesTable#+1]=Astrotatoren[i]
 end
 
 --
@@ -119,6 +127,7 @@ for i=1,6,1 do
 Blueten[i]={}
 temp = "windp0"..i
 Blueten[i]=piece (temp)
+piecesTable[piecesTable#+1]=Blueten[i]
 end
 --
 
@@ -135,14 +144,21 @@ randHeight=math.random(200,500)
 Spin(Seed[nr],y_axis,math.rad(94),0.6)
 randSpeed=math.random(11,22)
 Move(Seed[nr],y_axis,randHeight,randSpeed)
-randoVal=math.random(-120,120)
-Move(Seed[nr],x_axis,randoVal,(randSpeed/10))
-randoVal=math.random(-120,120)
-Move(Seed[nr],z_axis,randoVal,(randSpeed/10))
 
+--Get Winddir
+wx,_,wz=Spring.GetWind()
+norm=normTwo(wx,wz)
+wx,wz=wx/norm,wz/norm
+randoVal=math.random(0,220)
+Move(Seed[nr],x_axis,wx,(randSpeed/10))
+randoVal=math.random(0,220)
+Move(Seed[nr],z_axis,wz,(randSpeed/10))
 WaitForMove(Seed[nr],y_axis)
+
+
 Hide(Seed[nr])
 end
+
 local lEmitSfx=EmitSfx
 function emitOneOfFour(piecename)
 dice=math.random(0,3)
@@ -159,28 +175,28 @@ end
 end
 
 function slowFlameMover()
-while(true) do
-randSpeed=math.random(0.1,0.2)
-Move(fireFx1,x_axis,50,randSpeed)
-Sleep(1000)
-randSpeed=math.random(0.1,0.2)
-Move(fireFx2,x_axis,50,randSpeed)
-Sleep(1000)
-randSpeed=math.random(0.1,0.2)
-Move(fireFx2,x_axis,50,randSpeed)
-WaitForMove(fireFx2,x_axis)
-randSpeed=math.random(0.1,0.2)
-Move(fireFx1,x_axis,0,randSpeed)
-Sleep(1000)
-randSpeed=math.random(0.1,0.2)
-Move(fireFx2,x_axis,0,randSpeed)
-Sleep(1000)
-randSpeed=math.random(0.1,0.2)
-Move(fireFx2,x_axis,0,randSpeed)
-WaitForMove(fireFx2,x_axis)
-
-
-end
+	while(true) do
+	randSpeed=math.random(0.1,0.2)
+	Move(fireFx1,x_axis,50,randSpeed)
+	Sleep(1000)
+	randSpeed=math.random(0.1,0.2)
+	Move(fireFx2,x_axis,50,randSpeed)
+	Sleep(1000)
+	randSpeed=math.random(0.1,0.2)
+	Move(fireFx2,x_axis,50,randSpeed)
+	WaitForMove(fireFx2,x_axis)
+	randSpeed=math.random(0.1,0.2)
+	Move(fireFx1,x_axis,0,randSpeed)
+	Sleep(1000)
+	randSpeed=math.random(0.1,0.2)
+	Move(fireFx2,x_axis,0,randSpeed)
+	Sleep(1000)
+	randSpeed=math.random(0.1,0.2)
+	Move(fireFx2,x_axis,0,randSpeed)
+	WaitForMove(fireFx2,x_axis)
+	
+	
+	end
 end
 
 function unfoldFlowers()
@@ -633,14 +649,55 @@ StartThread(fireLight)
 	goTooKillThemAllPicaMon()
 	Sleep(1000)
 	end
+reSeed()
+end
+end
+
+function reSeed()
+
+	for i=1,9,1 do
+	StartThread(flyP,i)
+	end
+
+
+end
+
+boolFullGrown=false
+Pod=piece"Pod"
+piecesTable[#piecesTable+1]=Pod
+
+function seedToBeFeed()
+boolFullGrown=false
+--Move Pod up
+Move(Pod,y_axis,-50,0)
+Show(Pod)
+Move(Pod,y_axis,0,0.5)
+WaitForMove(Pod,y_axis)
+--unfold Pod
+--Feed Me
+x,y,z=Spring.GetUnitPosition(unitID)
+boolSupperTime=false
+	while boolSupperTime==false do
+	T=grabEveryone(unitID,x,z,50)
+		if T then
+		boolSupperTime=true
+		forTableUseFunction(T,
+							function (id) Spring.DestroyUnit(id,true,false) end
+							)
+		end
+	Sleep(100)
+	end
+
+	--foldFast Animation
+	boolFullGrown=true
 	
-Spring.DestroyUnit(unitID,true,true)	
+--Fold
+Move(Pod,y_axis,-150,0.5)
 
 end
-end
-
 
 function script.Create()
+hideT(piecesTable)
 Move(ffrotator,y_axis,-166,0)
 Move(ffmain01,y_axis,-200,0)
 Turn(ffrotator,y_axis,math.rad(-122),0)
@@ -650,13 +707,13 @@ Hide(fireFx1)
 Hide(fireFx2)
 Hide(fireFx3)
 Hide(shockwaveemit)
-for i=1,table.getn(WindP),1 do
-Hide(WindP[i])
-end
+	for i=1,table.getn(WindP),1 do
+	Hide(WindP[i])
+	end
 
 x360=math.random(0,360)
 Turn(center,y_axis,math.rad(x360),0)
-
+StartThread(seedToBeFeed)
 
  
 end
@@ -680,11 +737,11 @@ end
 
 
 function script.AimWeapon1( heading, pitch )
-	if oneShot == true then
-	
+if boolFullGrown==false then return boolFullGrown end
+
+	if oneShot == true then	
 	return true
 		else 
-		
 		return false
 		end
    

@@ -18,7 +18,10 @@ end
 
 
 if (gadgetHandler:IsSyncedCode()) then
-	VFS.Include("scripts/toolKit.lua")
+	 VFS.Include("scripts/lib_OS.lua"      )
+ VFS.Include("scripts/lib_TableOp.lua"      )
+  VFS.Include("scripts/lib_Build.lua" 	)
+
 	local  StunnedUnitsTable={}
 	nrOfUnits=0
 	--1 unitid
@@ -93,6 +96,31 @@ local	skySraperDefID=UnitDefNames["buibaicity1"].id
 local	cssDefID=UnitDefNames["css"].id
 local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 	
+function impulseAfterDelay(id, x,y,z)
+	if Spring.GetUnitIsDead(id)==false then
+	Spring.AddUnitImpulse(id,x,y,z)
+	end
+end
+
+function ShockWaveRippleOutwards(x,z, force, speed, range)
+-- get all units in range
+if not GG.ShockWaves then GG.ShockWaves ={} end
+local OtherWaves= GG.ShockWaves
+
+T=grabEveryone(x,y,range)
+
+	for i=1,#T do
+	ex,ey,ez=Spring.GetUnitPosition(T[i])
+
+	dist=distance(x,z,ex,ez)
+	const=  force/dist 
+
+	if not OtherWaves[math.ceil(dist/speed)] then OtherWaves[math.ceil(dist/speed)]={} end
+	myT={id=T[i], impulse={x=0, y= const,z=0} }
+	table.insert(OtherWaves[math.ceil(dist/speed)],myT)
+	end
+GG.ShockWaves=OtherWaves
+end
 
 	
 	
@@ -126,7 +154,8 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 			
 			if weaponID== striderWeaponDefID then
 			teamid=Spring.GetUnitTeam(AttackerID)
-			Spring.CreateUnit("cstridersfx",px,py,pz,1,teamid)			
+			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
+		
 			end
 			
 			
@@ -157,6 +186,7 @@ local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 			end
 			--this one creates the headcrabs
 			if (weaponID == crabWeaponDefID) then
+			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
 			  Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID)  
 			end
 			  
@@ -325,6 +355,23 @@ local 	affectedUnits={}
 	local everyNthFrame=30
 	local poisonDamage=15
 	function gadget:GameFrame(frame)
+		
+		if frame % 5 == 0 and GG.ShockWaves then
+		local ShockW= GG.ShockWaves 
+		for i=1,#ShockW do
+			if i-5 < 0 and ShockW[i] then
+				for k,v in pairs(ShockW[i]) do
+				impulseAfterDelay(v.id, v.impulse.x,v.impulse.y,v.impulse.z)
+				end
+				ShockW[i]=nil
+			else
+			ShockW[i-5]=ShockW[i]
+			end
+		
+		GG.ShockWaves=ShockW
+		end
+		end
+	
 	    if frame % 31415 == 0 then
 			for i=1,table.getn(affectedUnits),1 do
 				if affectedUnits[i]== nil then table.remove(affectedUnits,i) end

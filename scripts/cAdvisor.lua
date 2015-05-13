@@ -1,4 +1,7 @@
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 local emitHer=piece "emitHer"
 local center=piece "center"
@@ -412,7 +415,10 @@ end
    
 ]]--
 
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 CurrentlyControlledProjectiles={}
 Counter=0

@@ -17,25 +17,6 @@
    
 ]]--
 
-
---This Section contains standalone functions to be executed as independent systems monitoring and handling lua-stuff
---mini OS Threads
-
---> Unit Statemachine
-	function stateMachine(unitid, sleepTime,State, stateT)
-	local time=0
-	local StateMachine=stateT
-	local stateStorage={}
-		while true do
-		
-		if not stateStorage[State]then stateStorage[State]={} end
-		
-		State, stateStorage =StateMachine[State](unitid,time,stateStorage)
-		Sleep(sleepTime)
-		time=time+sleepTime
-		end
-	end
-
 	-->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 	-->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
 	function makeCascadingGlobalTables(FormatString,assignedValue, ...)
@@ -68,6 +49,7 @@
 		string.load(Appendix.."="..assignedValue)
 	return string.load(Appendix.."==".. asignedValue)
 	end
+
 --> Sorts Pieces By Height in Model
 function sortPiecesByHeight(ableStableTableOfBabelEnable)
 bucketSortList={}
@@ -186,99 +168,7 @@ newHP=oldHP
 return true
 end
 
---> Gadget:missionScript expects frame, the missionTable, which contains per missionstep the following functions
--- e.g. [1]= {situationFunction(frame,TABLE,nr), continuecondtion(frame,TABLE,nr,boolsuccess), continuecondtion(frame,TABLE,nr,boolsuccess)}
--- in Addition every Functions Table contains a MissionMap which consists basically of a statediagramm starting at one
--- MissionMap={[1]=> {2,5},[2] => {1,5},[3]=>{5},[4]=>{5},[5]=>{1,5}}
 
-
-
- function lib_setUpFirstRandom	()
-if not GG.RandSeedTable then  GG.RandSeedTable={36,17,33,34,39,9,15,33,12,24,21,27,16,22,40,39,27,31,6,26,1,11,6,34,7,17,6,5,42,10,22,36,26,13,27,23,21,41,13,33,23,33,17,38,12,15,34,39,3,40,23,4,9,28,38,15,3,1,20,3,11,41,38,36,12,23,16,32,22,29,23,2,19,40,40,31,12,32,27,15} end
-GG.RandSeedTable.itterator= math.floor(math.random(1,#GG.RandSeedTable))
-
-if not GG.ProceduralFeatureCounter then  GG.ProceduralFeatureCounter= 1 else  GG.ProceduralFeatureCounter= GG.ProceduralFeatureCounter+1 end
-name=Game.mapName or "SoooGeneric"
-
-hArry={}
-for i=1,#GG.RandSeedTable,1 do
-GG.RandSeedTable[i]=(GG.RandSeedTable[i]+ GG.ProceduralFeatureCounter+string.byte(name,math.max(1,string.len(name)%i)))%2
-end
-end
-
-  function lib_deMaRaVal(valrange)
-  local itterator=GG.RandSeedTable.itterator
-	if not GG.RandSeedTable then
-	setUpFirstRandom()
-	GG.RandSeedTable.itterator=math.max(1,(itterator+1)%#GG.RandSeedTable)
-	return math.ceil((GG.RandSeedTable[GG.RandSeedTable.itterator]/42)*valrange)
-	else
-	GG.RandSeedTable.itterator=math.max(1,(itterator+1)%#GG.RandSeedTable)
-	return math.ceil((GG.RandSeedTable[GG.RandSeedTable.itterator]/42)*valrange)
-	end
- end
-
-
-
-	--deterministicMathRandom
- function lib_deMaRa()
-	if not 	GG.RandSeedTable then
-
-	lib_setUpFirstRandom()
-	GG.RandSeedTable.itterator=GG.RandSeedTable.itterator+1
-	GG.RandSeedTable.itterator=math.max(1,(GG.RandSeedTable.itterator)%#GG.RandSeedTable)
-	return GG.RandSeedTable[GG.RandSeedTable.itterator]==1
-	else
-		GG.RandSeedTable.itterator=GG.RandSeedTable.itterator+1
-	GG.RandSeedTable.itterator=math.max(1,(GG.RandSeedTable.itterator)%#GG.RandSeedTable)
-
-	return 	(GG.RandSeedTable[GG.RandSeedTable.itterator]==1)
-
-	end
- end
-
-
-
-
-
-	function missionHandler(frame,TABLE,nr)
-	--wethere the mission is continuing to the next nr
-	boolContinue=false
-	--wether the mission has a Outcome at all
-	boolSituationOutcome =TABLE[nr].situationFunction(frame,TABLE,nr)
-	
-	--we return nil if the situation has no defined outcome
-	if not boolSituationOutcome then return end
-	
-		if not TABLE[nr].continuecondtion then
-			boolContinue=true
-		elseif type(TABLE[nr].continuecondtion)=='number'then	
-			if frame > TABLE[nr].continuecondtion then boolsuccess=true end
-		elseif type(TABLE[nr].continuecondtion)=='function'then	
-			boolContinue=TABLE[nr].continuecondtion(frame,TABLE,nr,boolsuccess)
-		end 
-		
-	if boolContinue==true then
-		return TABLE[nr].continuecondtion(frame,TABLE,nr,boolsuccess)
-	else
-	return nr
-	end
-	
-	end
---> jobfunc header jobFunction(unitID,x,y,z, Previousoutcome)  --> checkFuncHeader  checkFunction(unitID,x,y,z,outcome)
-function getJobDone(unitID, dataTable, jobFunction, checkFunction,rest)
-local dataT=dataTable
-local spGetUnitPosition=Spring.GetUnitPosition
-x,y,z=spGetUnitPosition(unitID)
-outcome=false
-
-	while checkFunction(unitID,dataT,x,y,z,outcome) ==false do
-	x,y,z=spGetUnitPosition(unitID)
-	outcome=jobFunction(unitID, dataT, x,y,z, outcome)
-	Sleep(rest)
-	end
-
-end
 
 function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
 
@@ -396,32 +286,6 @@ boolMoving= function (ox,oy,oz)
 	end
 
 end	
-	
-
---> genericOS 
-function genericOS(unitID, dataTable,jobFunctionTable, checkFunctionTable,rest)
-local checkFunctionT	=checkFunctionTable
-local jobFunctionT		=jobFunctionTable
-local dataT				=dataTable
-local spGetUnitPosition=Spring.GetUnitPosition
-
-x,y,z=spGetUnitPosition(unitID)
-outcomeTable=iniT(#jobFunctionT,false)
-boolAtLeastOneNotDone=true
-	while boolAtLeastOneNotDone ==true do
-	x,y,z=spGetUnitPosition(unitID)
-		for i=1,#jobFunctionT do
-		outcomeTable[i]=jobFunctionT[i](unitID,x,y,z, outcomeTable[i],dataT)
-		Sleep(rest)
-		end
-	boolAtLeastOneNotDone=true
-		for i=1,#checkFunctionT do
-		boolAtLeastOneNotDone= checkFunction(unitID,x,y,z,outcomeTable[i]) and boolAtLeastOneNotDone
-		Sleep(rest)
-		end
-	
-	end
-end
 
 -->Turn Piece into various diretions within range
 function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
@@ -584,7 +448,7 @@ end
 
 
 -->Reset a Piece at speed
-function resetPiece(piecename,speed)
+function resetPiece(piecename,speed,boolWaitForIT)
 Turn(piecename,x_axis,0,speed)
 Turn(piecename,y_axis,0,speed)
 Turn(piecename,z_axis,0,speed)
@@ -592,12 +456,31 @@ Turn(piecename,z_axis,0,speed)
 Move(piecename,x_axis,0,speed)
 Move(piecename,y_axis,0,speed)
 Move(piecename,z_axis,0,speed,true)
+if boolWaitForIT then 
+WaitForTurn(piecename,1)
+WaitForTurn(piecename,2)
+WaitForTurn(piecename,3)
 end
 
-function tP(piecename,x_val,y_val,z_val,speed)
+
+
+end
+
+function equiTurn(p1,p2,axis,deg,speed)
+Turn(p1,axis,math.rad(deg),speed)
+Turn(p2,axis,math.rad(-1*deg),speed)
+end
+
+function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
+
 Turn(piecename,x_axis,math.rad(x_val),speed)
 Turn(piecename,y_axis,math.rad(y_val),speed)
 Turn(piecename,z_axis,math.rad(z_val),speed)
+if boolWaitForIT then 
+WaitForTurn(piecename,x_axis)
+WaitForTurn(piecename,y_axis)
+WaitForTurn(piecename,z_axis)
+end
 end
 
 function tPrad(piecename,x_val,y_val,z_val,speed)
@@ -663,8 +546,10 @@ end
 
 -->Reset a Table of Pieces at speed
 function reseT(tableName,speed)
+lspeed=speed or 0
+
 	for i=1,#tableName do
-	resetPiece(tableName[i],speed)
+	resetPiece(tableName[i],lspeed)
 	end
 end
 
@@ -762,7 +647,7 @@ function maRo()
 if math.random(0,1)==1 then return true else return end
 end
 
--->Move with a speed Curve
+--> Move with a speed Curve
 function moveSpeedCurve(piecename, axis, NumberOfArgs, now, timeTotal , distToGo, Offset,...)
 --!TODO calcSpeedUpId from functionkeys,check calculations for repetitons and store that key in to often as result in GG
 --should handle all sort of equations of the type 0.3*x^2+0.1*x^1+offset
@@ -1245,56 +1130,6 @@ function getPairs(values)
 end
 
 
--->encapsulates a function, stores arguments given, chooses upon returned nil, 
---	the most often chosen argument
-function heuristicDefault(fooNction,fname, teamID, ...)
-
-if not  GG[fname] then  GG[fname]={} end
-if not GG[fname][teamID] then GG[fname][teamID] ={} end
-
-local heuraTable= GG[fname][teamID] 
-ArgumentCounter=1
-	for k,v in pairs(arg) do
-	if not heuraTable[ArgumentCounter]then heuraTable[ArgumentCounter]={}end
-	if not heuraTable[ArgumentCounter][v] then heuraTable[ArgumentCounter][v]=1 else heuraTable[v]=heuraTable[ArgumentCounter][v]+1  end
-	ArgumentCounter=ArgumentCounter+1
-	end
-
-results=fooNction(args)
-
-	if not results  then
-	--devalue current Arguments
-		ArgumentCounter=1
-		for k,v in pairs(arg) do
-		heuraTable[ArgumentCounter][v]=heuraTable[ArgumentCounter][v]-1  
-		ArgumentCounter=ArgumentCounter+1
-		end
-
-	--call the function with the most likely arguments
-	newWorkingSet={}
-		ArgumentCounter=1
-		for k,v in pairs (arg) do
-		highestVal,highestCount=0,0
-			for i,j in pairs ( heuraTable[ArgumentCounter]) do
-				if heuraTable[ArgumentCounter][v] > highestCount then
-				highestCount= heuraTable[ArgumentCounter][v] 
-				highestVal= v
-				end 
-			end
-		table.insert(newWorkingSet,highestVal)
-		ArgumentCounter=ArgumentCounter+1
-		end
-	results=fooNction(newWorkingSet)
-	Spring.Echo("FallBack::Heuristic Default")
-	assert(results, "Heuristic Default has inssuficient working samples.Returns Nil")
-	GG[fname][teamID]=heuraTable
-	return results
-		else
-		GG[fname][teamID]=heuraTable
-		return results
-		end
-end 
-
 -->generates a Pieces List Keyed to the PieceName
 function generateKeyPiecesTable(unitID,piecefunction)
 
@@ -1321,9 +1156,8 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 --Spring.Echo("local piecesTable={}")
 	if piecesTable ~= nil then
 		for i=1,#piecesTable,1 do
-		workingString=workingString.."\""
-		Spring.Echo(workingString)
-		Spring.Echo("piecesTable[#piecesTable+1]= piece"..piecesTable[i])
+		workingString=piecesTable[i]
+		Spring.Echo("piecesTable[#piecesTable+1]= piece(\""..piecesTable[i].."\")")
 
 		end
 
@@ -2053,12 +1887,12 @@ mC={
 end
 
 function mirrorMatriceXAxis(x,y,z)
-return 360-x,y,z*-1																																																																																																																																																																																																																																																																																	
+--return 360-x,y,z*-1																																							
 
---x=	((-1*math.cos(z))*math.cos(y))+((-1*math.sin(z)*-1*math.sin(x))*-1*math.sin(y)) 	*x + 	((-1*math.sin(z)*math.cos(x)) )		*y+   	((-1*math.cos(z))*math.sin(y))+((-1*math.sin(z)*-1*math.sin(x))*math.cos(y))   *z
---y= 	((-1*math.sin(z))*math.cos(y))+((math.cos(z)*-1*math.sin(x))*-1*math.sin(y))   *x +	     ((math.cos(z)*math.cos(x)) )	*y+   ((-1*math.sin(z))*math.sin(y))+((math.cos(z)*-1*math.sin(x))*math.cos(y))   *z
---z=	((math.cos(x))*-1*math.sin(y)) 								*x + ((math.sin(x)) )   			*y+    	((*math.cos(x))*math.cos(y))  *z
---return x,y,z
+x=((-1*math.cos(z))*math.cos(y))+((-1*math.sin(z)*-1*math.sin(x))*-1*math.sin(y))*x+((-1*math.sin(z)*math.cos(x)))*y+((-1*math.cos(z))*math.sin(y))+((-1*math.sin(z)*-1*math.sin(x))*math.cos(y))*z
+y=((-1*math.sin(z))*math.cos(y))+((math.cos(z)*-1*math.sin(x))*-1*math.sin(y))*x+((math.cos(z)*math.cos(x)))*y+((-1*math.sin(z))*math.sin(y))+((math.cos(z)*-1*math.sin(x))*math.cos(y))*z
+z=((math.cos(x))*-1*math.sin(y))*x+((math.sin(x)))*y+((*math.cos(x))*math.cos(y))*z
+returnx,y,z
 end
 
 function MatrixBuilder3x3(A, B)
@@ -2167,13 +2001,12 @@ return false
 end
 
 --This Takes any LanguageString and 'translates' it meaning it replaces stringparts  with the Sound
---Please take note that this should not completely replace any selfspoken sound - its a addition
+--This is deterministic, meaning for a person and LanguageTable it always produces the same sound
 --SoundPerson is a Function that allows to convay additional params into the sound-
 --e.g. Out of Breath, Angry, tired, sad, by changing loudness and choosen soundsnippet
 --its call signature is SoundPerson(translatedSoundSnippet, position in sentence, translatedTable)
-function speakItalian(LanguageTable, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
---make a text subtitles
-gl.Text(Text, ScreenPos.x,ScreenPos.y, ScreenPos.z, 12)
+function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
+
 
 --translate the Text via the language Table
 local lplaySoundFile=Spring.PlaySoundFile
@@ -2181,8 +2014,9 @@ local translatedTable={}
 local lSoundPerson=SoundPerson or nil
 
 	for i = 1, #Text do
-	   c = str:sub(i,i)
-	   translatedTable[i]=LanguageTable[c] or " "
+	   c = str:sub(i,math.min(#Text,i+SymbolLenght))
+	   hash=LanguageTable.Hash(c)
+	   translatedTable[i]=LanguageTable[hash] or " "
 	end
 	
 	if lSoundPerson then
@@ -2340,6 +2174,14 @@ function TestLocks(Lock, number)
 		if number ~=i and Lock[i]==true then return false end
 	end
 return true
+end
+
+function normTwo(...)
+sum=0
+for k,v in pairs(args) do
+sum=sum+ v*v
+end
+return math.sqrt(sum)
 end
 
 --> Sets a Lock free
@@ -2657,20 +2499,23 @@ end
 			 end
 	 return T
 	 end
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> d9ed447c1c3e5b049d2c349e07d01ba71ac94562
 	 
 	 --> Apply a function on a Table
-	function forTableUseFunction(T,...)
-	TempT={}
-	 for _, f in pairs(arg) do
-	
-			for i=1,#T do
-					 TempT[i]=f(T[i])
-			end
-			T=TempT
-	  end
+	function forTableUseFunction(Table,func,metafunc)
+	T={}
+		for i=1,#Table do
+		T[i]=func(Table[i])
+		end
+		if metafunc then
+		return metafunc(T)
+		else
 		return T
+		end
 	end
 
 	
@@ -3846,6 +3691,7 @@ end
 	return T1,T2
 	end
 
+<<<<<<< HEAD
 	
 function getMidPoint(a,b)
 ax,ay,az=a.x,a.y,a.z
@@ -3895,3 +3741,77 @@ end
 
 
 end
+=======
+	function objectPieceRenamer()
+	
+
+			  local file = io.open("jltree.src","r+b")
+
+
+
+			if file then
+
+
+				-- Opens a file in append mode
+			lineTable={}
+
+			keycount={}
+			keycount["aa"]={};
+			keycount["bb"]={};
+			keycount["cc"]={};
+			keycount["dd"]={};
+			keycount["ee"]={};
+			keycount["ff"]={};
+			keycount["gg"]={};
+			keycount["aa"].matchcounter=0
+			keycount["bb"].matchcounter=0
+			keycount["cc"].matchcounter=0
+			keycount["dd"].matchcounter=0
+			keycount["ee"].matchcounter=0
+			keycount["ff"].matchcounter=0
+			keycount["gg"].matchcounter=0
+
+			local outputc = io.open("output.c", "wb")
+
+
+				keycount["aa"].nr=1;keycount["bb"].nr=2;keycount["cc"].nr=3;keycount["dd"].nr=4;keycount["ee"].nr=5;keycount["ff"].nr=6;keycount["gg"].nr=7
+
+			 
+				count=0
+				for line in file:lines() do
+				
+					copystring=line
+					for k,v in pairs(keycount) do
+					
+					matchCounter=v.matchcounter    
+						while string.find(copystring,"c"..k) or string.find(copystring,"E"..k)  do
+						if string.find(copystring,"c"..k) then
+						   copystring=string.gsub(copystring,"c"..k,"c".. v.nr,1)
+						   matchCounter=matchCounter+1
+						end
+						 if string.find(copystring,"E"..k) then   
+						   copystring=string.gsub(copystring,"E"..k,"E".. v.nr,1)
+						   matchCounter=matchCounter+1
+						 end  
+						 
+							 if matchCounter==2 then
+							 v.nr=v.nr+7
+							 matchCounter=0
+							 end
+						 end
+					v.matchcounter  =matchCounter 
+					
+					end
+				outputc.write(outputc,copystring.."\n")
+				
+				 end
+			outputc:close()
+
+			else
+			print(" could not open file")
+			end
+
+				
+	
+	end
+>>>>>>> d9ed447c1c3e5b049d2c349e07d01ba71ac94562

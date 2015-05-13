@@ -1,4 +1,7 @@
-	VFS.Include("scripts/toolKit.lua")
+	 VFS.Include("scripts/lib_OS.lua"      )
+ VFS.Include("scripts/lib_TableOp.lua"      )
+  VFS.Include("scripts/lib_Build.lua" 	)
+
 	
 	
 	gaiaTeamID=Spring.GetGaiaTeamID()

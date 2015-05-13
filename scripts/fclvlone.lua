@@ -1,5 +1,8 @@
 include"suddenDeath.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 local buildspot = piece "buildspot"
 local fccore2  = piece  "fccore2"
 local fccore3 = piece "fccore3"

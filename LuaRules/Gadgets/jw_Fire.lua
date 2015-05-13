@@ -20,7 +20,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	local spIsUnitDead=Spring.GetUnitIsDead
 	local spAddUnitDamage=Spring.AddUnitDamage
 	disDance=7
-		VFS.Include('scripts/toolKit.lua', nil, VFSMODE)
+VFS.Include("scripts/lib_OS.lua" , nil, VFSMODE     )
+VFS.Include("scripts/lib_TableOp.lua" , nil, VFSMODE     )
+VFS.Include("scripts/lib_Build.lua", nil, VFSMODE 	)
+
+	
+	
+	
 local	isPanicAble=	getTypeTable(UnitDefNames,{"hc","bg","bg2","gcivillian","skinfantry","jconroach","tiglil","jbugcreeper","jcrabcreeper","jghostdancer","jhivehound"})
 		function gadget:GameFrame(frame)
 			

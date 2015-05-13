@@ -1,5 +1,8 @@
 include "suddenDeath.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 --include "spring_lua_dsl.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 rootspin1=piece"rootspin1"

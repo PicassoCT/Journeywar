@@ -16,7 +16,10 @@ end
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 
 if (gadgetHandler:IsSyncedCode()) then
-VFS.Include("scripts/toolKit.lua")
+ VFS.Include("scripts/lib_OS.lua"      )
+ VFS.Include("scripts/lib_TableOp.lua"      )
+  VFS.Include("scripts/lib_Build.lua" 	)
+
 
 	-- Configuration:
 

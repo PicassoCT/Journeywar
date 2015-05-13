@@ -1,5 +1,8 @@
 	include "suddenDeath.lua"
---	include "toolKit.lua"
+--	include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 	
 	  SIG_AIM=2
 	  SIG_WALK=4

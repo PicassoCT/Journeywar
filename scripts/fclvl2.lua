@@ -1,5 +1,8 @@
 include "suddenDeath.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 local nano = piece "fcgate"
 local fcg = piece"fcg"
 local fcg2 = piece "fcg2"
