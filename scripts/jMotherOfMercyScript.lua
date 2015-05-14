@@ -1,5 +1,8 @@
 
-	include "toolKit.lua"
+	include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 	include "suddenDeath.lua"
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 hp=Spring.GetUnitHealth(unitID)

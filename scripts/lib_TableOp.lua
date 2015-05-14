@@ -1,87 +1,174 @@
 
 --[[
-   This program is free software; you can redistribute it and/or modify
+   This library is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
    
-   This program is distributed in the hope that it will be useful,
+   This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
    
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
+   along with this library; if not, write to the Free Software
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
    MA 02110-1301, USA.
    
 ]]--
 
+	-->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
+	-->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
+	function makeCascadingGlobalTables(FormatString,assignedValue, ...)
+	if string.load(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; string.load(FormatString) return end
+	--SplitByDot
+	SubTables={}
+	--split that string
+	SubT=string.split(FormatString,".")
+		Appendix="GG."
+		boolAvoidFutureChecks=false
+		for i=1,#SubT do
+			if not SubT[i]=="GG" then 
+			SubT=string.gsub(SubT,".")
+			ExtracedIndex=string.match(SubT,"[","]")
+			ExtractedTable=string.gsub(SubT,ExtracedIndex,"")
+			Terminator="."
+			if ExtractedTable then
+				if boolAvoidFutureChecks==true or not string.load(Appendix..ExtractedTable) then 
+				string.load(Appendix..ExtractedTable.."= {}")
+				boolAvoidFutureChecks=true
+				end
+			else ExtractedTable="" ;Terminator=""end
+				if boolAvoidFutureChecks==true or ExtracedIndex and not string.load(Appendix..ExtractedTable..ExtracedIndex)  then
+				string.load(Appendix..ExtractedTable..ExtracedIndex.."={}")
+				end
+			
+			Appendix=Appendix..ExtractedTable..ExtracedIndex..Terminator
+			end
+		end
+		string.load(Appendix.."="..assignedValue)
+	return string.load(Appendix.."==".. asignedValue)
+	end
 
---This Section contains standalone functions to be executed as independent systems monitoring and handling lua-stuff
---mini OS Threads
+--> Sorts Pieces By Height in Model
+function sortPiecesByHeight(ableStableTableOfBabelEnable)
+bucketSortList={}
 
---> Unit Statemachine
-	function stateMachine(unitid, sleepTime,State, stateT)
-	local time=0
-	local StateMachine=stateT
-	local stateStorage={}
-		while true do
-		
-		if not stateStorage[State]then stateStorage[State]={} end
-		
-		State, stateStorage =StateMachine[State](unitid,time,stateStorage)
-		Sleep(sleepTime)
-		time=time+sleepTime
+	for i=1,#ableStableTableOfBabelEnable do
+	px,py,pz=Spring.GetUnitPiecePosDir(unitID,ableStableTableOfBabelEnable[i])
+		if not bucketSortList[math.ceil(py)] then 
+			bucketSortList[math.ceil(py)]={}
 		end
 	end
-
-
-
-
---> Gadget:missionScript expects frame, the missionTable, which contains per missionstep the following functions
--- e.g. [1]= {situationFunction(frame,TABLE,nr), continuecondtion(frame,TABLE,nr,boolsuccess), continuecondtion(frame,TABLE,nr,boolsuccess)}
--- in Addition every Functions Table contains a MissionMap which consists basically of a statediagramm starting at one
--- MissionMap={[1]=> {2,5},[2] => {1,5},[3]=>{5},[4]=>{5},[5]=>{1,5}}
-
-	function missionHandler(frame,TABLE,nr)
-	--wethere the mission is continuing to the next nr
-	boolContinue=false
-	--wether the mission has a Outcome at all
-	boolSituationOutcome =TABLE[nr].situationFunction(frame,TABLE,nr)
-	
-	--we return nil if the situation has no defined outcome
-	if not boolSituationOutcome then return end
-	
-		if not TABLE[nr].continuecondtion then
-			boolContinue=true
-		elseif type(TABLE[nr].continuecondtion)=='number'then	
-			if frame > TABLE[nr].continuecondtion then boolsuccess=true end
-		elseif type(TABLE[nr].continuecondtion)=='function'then	
-			boolContinue=TABLE[nr].continuecondtion(frame,TABLE,nr,boolsuccess)
-		end 
-		
-	if boolContinue==true then
-		return TABLE[nr].continuecondtion(frame,TABLE,nr,boolsuccess)
-	else
-	return nr
+	sortedTable={}
+	index=1
+	for k,v in pairs(bucketSortList) do
+		if type(v)=="number" then
+		sortedTable[index]=ableStableTableOfBabelEnable[v]
+		else
+			for i=1,#v do
+				sortedTable[index]=ableStableTableOfBabelEnable[v[i]]
+			end
+		end
 	end
-	
-	end
---> jobfunc header jobFunction(unitID,x,y,z, Previousoutcome)  --> checkFuncHeader  checkFunction(unitID,x,y,z,outcome)
-function getJobDone(unitID, dataTable, jobFunction, checkFunction,rest)
-local dataT=dataTable
-local spGetUnitPosition=Spring.GetUnitPosition
-x,y,z=spGetUnitPosition(unitID)
-outcome=false
-
-	while checkFunction(unitID,dataT,x,y,z,outcome) ==false do
-	x,y,z=spGetUnitPosition(unitID)
-	outcome=jobFunction(unitID, dataT, x,y,z, outcome)
-	Sleep(rest)
-	end
-
+	return sortedTable
 end
+
+-->partOfShipPartOfCrew binds a creature to a piece
+function partOfShipPartOfCrew( point, CreatureID,MotherID)
+Spring.SetUnitNeutral(CreatureID,true)
+Spring.MoveCtrl.Enable(CreatureID,true)
+local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+roX,roY,roZ=0,0,0
+
+	while GGboolBuildEnded == false do
+	tx,ty,tz=spGetUnitPiecePosDir(unitID,CreatureID)
+	Spring.MoveCtrl.SetPosition(CreatureID,tx+math.random(-5,5),ty,tz+math.random(-5,5))
+	Spring.MoveCtrl.SetRotation(CreatureID,roX, roY,roZ)
+	roX,roY,roZ=roX+math.random(-0.01,0.01),roY+math.random(-0.01,0.01),roZ+math.random(-0.01,0.01)
+	Sleep(500)
+	end
+
+Spring.SetUnitAlwaysVisible(CreatureID,false)
+Spring.DestroyUnit(CreatureID,true,true)
+end
+
+
+-->Transformer OS: Assembles from SubUnits in Team a bigger Unit
+function assemble(center,unitid,udefSub,CubeLenghtSub, nrNeeded,range, AttachPoints)
+--Move UnderGround
+
+makeCascadingGlobalTables("InfoTable["..unitid"].boolBuildEnded",true)
+
+piecesTable=Spring.GetUnitPieceList(unitid)
+	for i=1,#piecesTable do
+	piecesTable[i]=piece(piecesTable[i])
+	end
+hideT(piecesTable)
+	if AttachPoints then
+	AttachPoints=sortPiecesByHeight(AttachPoints) 
+	else
+	AttachPoints=sortPiecesByHeight(piecesTable)
+	end
+indexP=1
+hx,hy,hz=spGetUnitPiecePosDir(untid,AttachPoints[indexP])
+base=Spring.GetGroundHeight(hx,hz)
+DistanceDown=base-hy
+Move(center,y_axis,DistanceDown,0)
+
+makeCascadingGlobalTables("BoundToThee")
+
+oldHP=Spring.GetUnitHealth(unitid)
+newHP=oldHP
+
+	while nrAdded < nrNeeded and Spring.GetUnitIsDead(unitid)==false do
+		Move(center,y_axis,DistanceDown*(nrAdded/nrNeeded),1.5)
+		--check VaryFoos around you
+		allSub={}
+		--check wether we are under Siege and send the Underlings not allready buildin
+		newHP=Spring.GetUnitHealth(unitid)
+		boolUnderAttack=oldHP > newHP
+		oldHP=newHP
+			if GG.InfoTable[unitid].boolUnderAttack==true then
+			--defend moma
+			ax,ay,az=Spring.GetUnitNearestEnemy(untid)
+			for i=1,#allSub do
+			if not GG.BoundToThee[allSub[i]] then
+					Spring.SetUnitMoveGoal(allSub[i],ax,ay,az)		
+			end
+			end
+	
+		else --build on
+		--get nextPiece above ground
+		attachP=AttachPoints[math.min(indexP,#AttachPoints)]
+		indexP=indexP+1
+		
+		x,y,z=Spring.GetUnitPiecePosDir(untid,attachP)
+			for i=1,#allSub do
+			
+				ux,uy,uz=Spring.GetUnitPosition(allSub[i])
+				if (ux-x) *(uy-y)* (uz-z) < 50 then --integrate it into the Avatara
+					if not GG.BoundToThee[allSub[i]] then
+					StartThread(partOfShipPartOfCrew, attachP, allSub[i],unitid)
+					end
+				else
+					Spring.SetUnitMoveGoal(allSub[i],x,y,z)	
+				end
+			end
+		end
+	
+	end
+	
+	GG.BoundToThee[unitid]=nil 
+	MoveCtrl.Enable(unitID,false)
+	GG.InfoTable[unitid].boolBuildEnded=true
+	boolComplete=true
+		Move(center,y_axis,0,12)
+		showT(piecesTable)
+return true
+end
+
+
 
 function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
 
@@ -199,32 +286,6 @@ boolMoving= function (ox,oy,oz)
 	end
 
 end	
-	
-
---> genericOS 
-function genericOS(unitID, dataTable,jobFunctionTable, checkFunctionTable,rest)
-local checkFunctionT	=checkFunctionTable
-local jobFunctionT		=jobFunctionTable
-local dataT				=dataTable
-local spGetUnitPosition=Spring.GetUnitPosition
-
-x,y,z=spGetUnitPosition(unitID)
-outcomeTable=iniT(#jobFunctionT,false)
-boolAtLeastOneNotDone=true
-	while boolAtLeastOneNotDone ==true do
-	x,y,z=spGetUnitPosition(unitID)
-		for i=1,#jobFunctionT do
-		outcomeTable[i]=jobFunctionT[i](unitID,x,y,z, outcomeTable[i],dataT)
-		Sleep(rest)
-		end
-	boolAtLeastOneNotDone=true
-		for i=1,#checkFunctionT do
-		boolAtLeastOneNotDone= checkFunction(unitID,x,y,z,outcomeTable[i]) and boolAtLeastOneNotDone
-		Sleep(rest)
-		end
-	
-	end
-end
 
 -->Turn Piece into various diretions within range
 function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
@@ -586,7 +647,7 @@ function maRo()
 if math.random(0,1)==1 then return true else return end
 end
 
--->Move with a speed Curve
+--> Move with a speed Curve
 function moveSpeedCurve(piecename, axis, NumberOfArgs, now, timeTotal , distToGo, Offset,...)
 --!TODO calcSpeedUpId from functionkeys,check calculations for repetitons and store that key in to often as result in GG
 --should handle all sort of equations of the type 0.3*x^2+0.1*x^1+offset
@@ -1068,56 +1129,6 @@ function getPairs(values)
     return xyPairs
 end
 
-
--->encapsulates a function, stores arguments given, chooses upon returned nil, 
---	the most often chosen argument
-function heuristicDefault(fooNction,fname, teamID, ...)
-
-if not  GG[fname] then  GG[fname]={} end
-if not GG[fname][teamID] then GG[fname][teamID] ={} end
-
-local heuraTable= GG[fname][teamID] 
-ArgumentCounter=1
-	for k,v in pairs(arg) do
-	if not heuraTable[ArgumentCounter]then heuraTable[ArgumentCounter]={}end
-	if not heuraTable[ArgumentCounter][v] then heuraTable[ArgumentCounter][v]=1 else heuraTable[v]=heuraTable[ArgumentCounter][v]+1  end
-	ArgumentCounter=ArgumentCounter+1
-	end
-
-results=fooNction(args)
-
-	if not results  then
-	--devalue current Arguments
-		ArgumentCounter=1
-		for k,v in pairs(arg) do
-		heuraTable[ArgumentCounter][v]=heuraTable[ArgumentCounter][v]-1  
-		ArgumentCounter=ArgumentCounter+1
-		end
-
-	--call the function with the most likely arguments
-	newWorkingSet={}
-		ArgumentCounter=1
-		for k,v in pairs (arg) do
-		highestVal,highestCount=0,0
-			for i,j in pairs ( heuraTable[ArgumentCounter]) do
-				if heuraTable[ArgumentCounter][v] > highestCount then
-				highestCount= heuraTable[ArgumentCounter][v] 
-				highestVal= v
-				end 
-			end
-		table.insert(newWorkingSet,highestVal)
-		ArgumentCounter=ArgumentCounter+1
-		end
-	results=fooNction(newWorkingSet)
-	Spring.Echo("FallBack::Heuristic Default")
-	assert(results, "Heuristic Default has inssuficient working samples.Returns Nil")
-	GG[fname][teamID]=heuraTable
-	return results
-		else
-		GG[fname][teamID]=heuraTable
-		return results
-		end
-end 
 
 -->generates a Pieces List Keyed to the PieceName
 function generateKeyPiecesTable(unitID,piecefunction)
@@ -1876,12 +1887,12 @@ mC={
 end
 
 function mirrorMatriceXAxis(x,y,z)
-return 360-x,y,z*-1																																																																																																																																																																																																																																																																																	
+--return 360-x,y,z*-1																																							
 
---x=	((-1*math.cos(z))*math.cos(y))+((-1*math.sin(z)*-1*math.sin(x))*-1*math.sin(y)) 	*x + 	((-1*math.sin(z)*math.cos(x)) )		*y+   	((-1*math.cos(z))*math.sin(y))+((-1*math.sin(z)*-1*math.sin(x))*math.cos(y))   *z
---y= 	((-1*math.sin(z))*math.cos(y))+((math.cos(z)*-1*math.sin(x))*-1*math.sin(y))   *x +	     ((math.cos(z)*math.cos(x)) )	*y+   ((-1*math.sin(z))*math.sin(y))+((math.cos(z)*-1*math.sin(x))*math.cos(y))   *z
---z=	((math.cos(x))*-1*math.sin(y)) 								*x + ((math.sin(x)) )   			*y+    	((*math.cos(x))*math.cos(y))  *z
---return x,y,z
+x=((-1*math.cos(z))*math.cos(y))+((-1*math.sin(z)*-1*math.sin(x))*-1*math.sin(y))*x+((-1*math.sin(z)*math.cos(x)))*y+((-1*math.cos(z))*math.sin(y))+((-1*math.sin(z)*-1*math.sin(x))*math.cos(y))*z
+y=((-1*math.sin(z))*math.cos(y))+((math.cos(z)*-1*math.sin(x))*-1*math.sin(y))*x+((math.cos(z)*math.cos(x)))*y+((-1*math.sin(z))*math.sin(y))+((math.cos(z)*-1*math.sin(x))*math.cos(y))*z
+z=((math.cos(x))*-1*math.sin(y))*x+((math.sin(x)))*y+((*math.cos(x))*math.cos(y))*z
+returnx,y,z
 end
 
 function MatrixBuilder3x3(A, B)
@@ -1990,13 +2001,12 @@ return false
 end
 
 --This Takes any LanguageString and 'translates' it meaning it replaces stringparts  with the Sound
---Please take note that this should not completely replace any selfspoken sound - its a addition
+--This is deterministic, meaning for a person and LanguageTable it always produces the same sound
 --SoundPerson is a Function that allows to convay additional params into the sound-
 --e.g. Out of Breath, Angry, tired, sad, by changing loudness and choosen soundsnippet
 --its call signature is SoundPerson(translatedSoundSnippet, position in sentence, translatedTable)
-function speakItalian(LanguageTable, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
---make a text subtitles
-gl.Text(Text, ScreenPos.x,ScreenPos.y, ScreenPos.z, 12)
+function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
+
 
 --translate the Text via the language Table
 local lplaySoundFile=Spring.PlaySoundFile
@@ -2004,8 +2014,9 @@ local translatedTable={}
 local lSoundPerson=SoundPerson or nil
 
 	for i = 1, #Text do
-	   c = str:sub(i,i)
-	   translatedTable[i]=LanguageTable[c] or " "
+	   c = str:sub(i,math.min(#Text,i+SymbolLenght))
+	   hash=LanguageTable.Hash(c)
+	   translatedTable[i]=LanguageTable[hash] or " "
 	end
 	
 	if lSoundPerson then
@@ -2165,6 +2176,14 @@ function TestLocks(Lock, number)
 return true
 end
 
+function normTwo(...)
+sum=0
+for k,v in pairs(args) do
+sum=sum+ v*v
+end
+return math.sqrt(sum)
+end
+
 --> Sets a Lock free
 function ReleaseLock(Lock,number)
 Lock[number]=false
@@ -2273,9 +2292,8 @@ end
 				if type(f)=="function" then
 				T=elementWise(T,f,TempArg)				
 				TempArg={}			
-			
 				else				
-				TempArg=f
+				TempArg[#TempArg+1]=f
 				end			   
          end
 	return T
@@ -2481,6 +2499,11 @@ end
 			 end
 	 return T
 	 end
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> d9ed447c1c3e5b049d2c349e07d01ba71ac94562
 	 
 	 --> Apply a function on a Table
 	function forTableUseFunction(Table,func,metafunc)
@@ -2495,6 +2518,31 @@ end
 		end
 	end
 
+	
+	 --> Apply a function to a unit Table 
+	function forTableUseFunction(T,boolFilterDead,...)
+	TempT={}
+	 for _, f in pairs(arg) do
+	
+			for i=1,#T do
+					 TempT[i]=f(T[i])
+			end
+			T=TempT
+			TempT={}
+			--filter out the Dead
+			if boolFilterDead ==true then
+			for i=1,#T do
+					if Spring.GetUnitIsDead(T[i])==false then
+					TempT[i]=T[i]
+					end
+			end
+			end
+			
+			T=TempT
+	  end
+		return T
+	end
+	
 	function getLowest(Table)
 	lowest=0
 	val=0
@@ -3643,6 +3691,57 @@ end
 	return T1,T2
 	end
 
+<<<<<<< HEAD
+	
+function getMidPoint(a,b)
+ax,ay,az=a.x,a.y,a.z
+bx,by,bz=b.x.b.y,b.z
+return (ax-bx)/2+ax,(ay-by)/2+ay,(az-bz)/2+az
+end
+
+function swingPointOutFromCenterByFrame(ax,ay,az,frame,swing,totalFrame)
+extend=swing*math.sin(frame/totalFrame)*randSign()
+return ax+math.random(math.min(extend,extend*-1),math.abs(extend)),
+ay+math.random(math.min(extend,extend*-1),math.abs(extend)),
+az+math.random(math.min(extend,extend*-1),math.abs(extend))
+end
+	
+--> make a CEG CLOUD
+function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing,speedInFrames)
+local spCEG=Spring.SpawnCEG
+quarter=math.ceil(plifetime/4)
+it=1
+pT={}
+for i=1,nr do
+pT[i]={x=math.random(-size,size),y=math.random(-size,size)*0.5,z=math.random(-size,size)}
+end
+
+	while lifetime > 0 do
+	frame=Spring.GetGameFrame()
+	
+		for i=it,nr, it do
+		--between every particle that isnt first and last
+			if i ~= 1 and i ~= nr then
+				if i==1 then
+				fx,fy,fz=getMidPoint(pT[nr],pT[2])
+				else
+				fx,fy,fz=getMidPoint(pT[nr-1],pT[1])	
+				end
+			pT[i].x, pT[i].y, pT[i].z=swingPointOutFromCenterByFrame(fx,fy,fz,frame,swing,speedInFrames)
+			else
+			fx,fy,fz=getMidPoint(pT[i-1],pT[i+1])
+			pT[i].x, pT[i].y, pT[i].z=swingPointOutFromCenterByFrame(fx,fy,fz,frame,swing,speedInFrames)
+			end
+		spCEG(cegname,pT[i].x, pT[i].y, pT[i].z, math.random(0,1),math.random(0,1),math.random(0,1),0,0 )
+		end
+	it=(it%4)+1
+	lifetime=lifetime-quarter
+	Sleep(quarter)
+	end
+
+
+end
+=======
 	function objectPieceRenamer()
 	
 
@@ -3715,3 +3814,4 @@ end
 				
 	
 	end
+>>>>>>> d9ed447c1c3e5b049d2c349e07d01ba71ac94562

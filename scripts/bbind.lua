@@ -1,5 +1,8 @@
 	include "suddenDeath.lua"
-	include "toolKit.lua"
+	include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 	local rotator = piece "rotator"
 	local lightning= piece "bbindyaga0"
 	local crane = piece "bbindcrane"

@@ -16,7 +16,11 @@
     --------------------------------------------------------------------------------
      
     -- synced only
-	VFS.Include('scripts/toolKit.lua', nil, VFSMODE)
+	VFS.Include("scripts/lib_OS.lua" , nil, VFSMODE     )
+	VFS.Include("scripts/lib_TableOp.lua" , nil, VFSMODE     )
+	VFS.Include("scripts/lib_Build.lua" , nil, VFSMODE	)
+	
+
 	
 	trampleDefTable=getTypeTable(UnitDefNames,{"mdigg","jbeherith"})
 	

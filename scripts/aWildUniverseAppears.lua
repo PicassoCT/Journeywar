@@ -1,4 +1,7 @@
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 boolWaitForGLGo=false --is the trigger for the SuperSizeGadget once it brought the unitUpToScale
 boolGotoK=false

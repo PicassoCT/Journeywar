@@ -1,4 +1,7 @@
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 --<CopyPasteTemplate for TerraFormingUnit>
 --include "terraForm.lua"

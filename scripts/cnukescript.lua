@@ -1,4 +1,7 @@
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 local spiralCenter= piece"spiralCenter"
 local fireSpiral1= piece"fireSpiral1"
 local fireSpiral2= piece"fireSpiral2"

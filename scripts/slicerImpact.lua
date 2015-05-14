@@ -1,5 +1,8 @@
 include "suddenDeath.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 
 rotaryCenter=piece"rotaryCenter"
 DropOut=piece"DropOut"

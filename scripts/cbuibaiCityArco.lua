@@ -1,5 +1,8 @@
 --include "AniMatrix3d.lua"
-include "toolKit.lua"
+include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 include "jVitalFunctions.lua"
 include "suddenDeath.lua"
 --Alarm SystemPieces

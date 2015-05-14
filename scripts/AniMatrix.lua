@@ -1039,7 +1039,7 @@ function isWayfree(degreeRand,moveInOut,orgDegree, orgDistance, FaceIng)
 
 	if FaceIng == 1 then -- we want to check the way inside fromt he current 
 	return wayCheckerInsideOutside(orgDistance,moveInOut,orgDegree)
-	end
+	end 
 
 	if FaceIng == 2 then -- we want to check the way inside fromt he current 
 	return wayCheckerInsideOutside(orgDistance,moveInOut,orgDegree)

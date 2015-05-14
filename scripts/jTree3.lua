@@ -58,8 +58,16 @@ Move(center,y_axis,randoVal,0.25)
 deg=math.random(-360,360)
 Turn(center,y_axis,math.rad(deg),0.0023)
 StartThread(waterWays)
+StartThread(delayedReward)
 end
 
+function delayedReward()
+WaitForMove(center,y_axis)
+	while true do
+	Spring.AddUnitRessource(unitID,"e",10)
+	Sleep(1000)
+	end
+end
 
 
 function script.Killed(recentdamage,_)

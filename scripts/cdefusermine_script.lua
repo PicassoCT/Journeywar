@@ -1,5 +1,8 @@
 	include "suddenDeath.lua"
-	include "toolKit.lua"
+	include "lib_OS.lua"
+ include "lib_TableOp.lua"
+ include "lib_Build.lua" 
+
 	--HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 	dart    =piece"dart"
 	unfold  =piece"unfold"
