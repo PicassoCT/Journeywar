@@ -13,7 +13,7 @@ end
 if (gadgetHandler:IsSyncedCode()) then
   
     function gadget:frame(frame)
-    if frame % 5 == then
+    if frame % 5 == 0 then
     if GG.MeshDefAnim then
       local MDeform=MeshDefAnim 
       for i=1,#MDeform,1 do
@@ -105,7 +105,7 @@ else  --UNSYNCED
             
              shaderTable.UniformInt[Max+i]={pieceA=dla,
                                             pieceB=dlb,
-                                            percentage=(frame-piecePairTime.startframe)/piecePairTime.totframe
+                                            percentage=(frame-piecePairTime.startframe)/piecePairTime.totframe,
                                             id=Descriptor.id
                                             }
           end
@@ -119,7 +119,7 @@ else  --UNSYNCED
                                           percentage=math.abs(startframe-frame/frame),
                                           startframe=startframe, 
                                           frame=frame,
-                                          shaderTable=shaderTable
+                                          shaderTable=shaderTable,
                                           shader=shaderProgram} 
 						else
 						Spring.Echo("shader not created")

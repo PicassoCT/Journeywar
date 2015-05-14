@@ -3,7 +3,7 @@
 function gadget:GetInfo()
   return {
     name      = "EventStream",
-    desc      = "This gadget streams eventsfunctions until they get deactivated or end themselves"
+    desc      = "This gadget streams eventsfunctions until they get deactivated or end themselves",
 	--Expected Tableformat:
 	--GG.EventStream[id] which contains Tables in the shape of"..
 	--{id=id,  action(id,frame, persPack), persPack}"..
@@ -45,7 +45,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	GG.EventStream={CreateEvent=CreateEvent}
 	end
-	
+	if not GG.EventStreamDeactivate then GG.EventStreamDeactivate={} end
 	if #GG.EventStreamDeactivate > 0 then
 		for k,v in pairs(GG.EventStreamDeactivate) do
 			StreamUnits[k]=nil
@@ -54,7 +54,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	--handle EventStream	
 		if frame == TableMin then
-		for i=1,#TimeTable[frame] then
+		for i=1,#TimeTable[frame] do
 			local id=TimeTable[frame][i]
 		
 				--execute the function
@@ -68,8 +68,11 @@ if (gadgetHandler:IsSyncedCode()) then
 					StreamUnits[id]=nil
 					end					
 		end
+		end
+	
+		
 	end
-	
-	
+
+
 end
 	

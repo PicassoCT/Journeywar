@@ -5,30 +5,48 @@ include "lib_OS.lua"
 
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+cosFunc= function (val) return math.cos(val) end 
+waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
 end
 center=piece"center"
 fooNction=piece
 piecesTable=generateKeyPiecesTable(unitID,fooNction)
 
 function LiftFunction(KneeT,Speed)
+sinFunc= function (val) return math.sin(val) end 
+cosFunc= function (val) return math.cos(val) end 
+waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
 
-ratio=3.14159/#KneeT
 
-	for i=1,#KneeT, 1 do
-	Turn(KneeT[i],x_axis,math.rad(math.cos(i*ratio)*45), Speed)
-	end
+Move(center,y_axis,50,10)
+waveATable(Knees, x_axis, sinFunc, 1, 0.022, 3.141, 6.5, true, -1.1)
+WaitForTurn(Knees[#Knees][5],x_axis)
+Sleep(350)
+waveATable(Knees, x_axis, sinFunc, 1, 0.032, 6.2, 6.5, true,-3)
+Move(center,y_axis,15,10)
+WaitForTurn(Knees[#Knees][5],x_axis)
+Sleep(350)
+
 end
 
 function deathTimer()
+
+headingofold=Spring.GetUnitHeading(unitID)
 Sleep(20000)
+
+
 local spGetUnitPosition=Spring.GetUnitPosition
+
+newHeading=Spring.GetUnitHeading(unitID)
 x,y,z=spGetUnitPosition(unitID)
 Sleep(1000)
 ox,oy,oz=spGetUnitPosition(unitID)
-	while x-ox ~= 0 or x-ox ~= 0 or x-ox ~= 0 do
+	while x-ox ~= 0 or x-ox ~= 0 or x-ox ~= 0 or headingofold ~= newHeading do
 	ox,oy,oz=x,y,z
+	headingofold=newHeading
 	x,y,z=spGetUnitPosition(unitID)
 	Sleep(1000)
+	newHeading=Spring.GetUnitHeading(unitID)
 	end
 Spring.DestroyUnit(unitID,true,false)
 	end
@@ -48,6 +66,7 @@ while true do
 			Turn(Knees[k][i],y_axis,math.rad(val),sperd)		
 		end
 	end
+	
 WaitForTurn(Knees[#Knees][6],y_axis)
 Sleep(10)
 end
@@ -81,7 +100,7 @@ local lHowHighIsTheTireMama=HowHighIsTheTireMama
 local lAdaptTable=AdaptTable
 
 
-	while true do
+for j=1,3 do
 		for i=1,#KneeT-1,1 do
 		--Meassuring
 		y,h=lHowHighIsTheTireMama(i,lAdaptTable[i+1][2])
@@ -111,8 +130,9 @@ local lAdaptTable=AdaptTable
 		end
 		
 		end
-	Sleep(1050)
-	end
+	WaitForTurn(	lAdaptTable[1][1],x_axis)
+	Sleep(50)
+end
 
 
 -----------------
@@ -121,7 +141,7 @@ Knees={}
 function script.Create()
 
 inPieces=Spring.GetUnitPieceMap(unitID)
-
+reseT(inPieces)
 
 firstAxis={}
 for nr=1,5 do 
@@ -151,7 +171,11 @@ configTable={id=unitID, centerNode=center, nr=5, feetTable={firstAxis=firstAxis,
 StartThread(adaptiveAnimation,configTable,inPieces)
 StartThread(wiggleFeet)
 StartThread(deathTimer)
+
 end
+
+
+
 
 function script.Killed(recentDamage,_)
 
@@ -163,11 +187,11 @@ end
 
 
 function script.StartMoving()
-
+	
 end
 
 function script.StopMoving()
-		
+
 		
 end
 

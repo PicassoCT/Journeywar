@@ -7,7 +7,7 @@
 	
 	
 	--State Functions
-		function 	Eat  (unitid, nr, other,x,y,z)
+		function 	Eat  (unitid,  other,x,y,z)
 		Spring.Echo("Eating")
 		if AgentTable[unitid].Type == "Hohymen" then
 	
@@ -21,7 +21,7 @@
 		return false
 	end
 		
-	function 	 DrinkWater  (unitid, nr, other,x,y,z)
+	function 	 DrinkWater  (unitid,  other,x,y,z)
 	Spring.Echo("Drinking")
 		if Spring.GetGroundHeight(x,z) <= 0 then
 		AgentTable[unitid].Values["Water"]= 100
@@ -30,7 +30,7 @@
 		return false
 	end 	
 	
-	function 	 MoveCloser  (unitid, nr, other,x,y,z)
+	function 	 MoveCloser  (unitid,  other,x,y,z)
 	Spring.Echo("Social")
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
@@ -40,7 +40,7 @@
 	end	
 	
 	
-	function 	 Rest  (unitid, nr, other,x,y,z)
+	function 	 Rest  (unitid,  other,x,y,z)
 	Spring.Echo("Sleeping")
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
@@ -52,7 +52,7 @@
 
 	
 	--Deer is in the State of Running from a thread
-	function 	 RunningForLive  (unitid, nr, other,x,y,z)
+	function 	 RunningForLive  (unitid,  other,x,y,z)
 	Spring.Echo("RunningForLive")
 	-- Is it dead can we eat it?
 	if not unitid or Spring.GetUnitIsDead(unitid) == true then killABeast(unitid) end 
@@ -86,27 +86,32 @@
 	function FindValuePos(unitid,valueType)
 
 	x,y,z=Spring.GetUnitPosition(unitid)
+	LandScapeCell=getMap(x,z)
+	assert(LandScapeCell)
+	Spring.Echo("Searching Food2")
+	if LandScapeCell.Food > 0 then return true, true end
 
-	if getMap(x,z)== valueType then return true, true end
-
-
+	Spring.Echo("Searching Food3")
 	local lMap=getMap
 	
 		for i=1,48, 1 do
 				for j=1,48,1 do
-			
-					if lMap(x+i*Vec[j].x,z+i*Vec[j].z).Food > 0 then 
+				LandScapeCell=lMap(x+i*Vec[j].x,z+i*Vec[j].z)
+					if LandScapeCell.Food > 0 then 
 					--we found water but it is it visible to the animal 
 					a=(i*Vec[j].x)*48
 					b=(i*Vec[j].z)*48
 					dist=distance(a,0,b)
 					if dist < 150 then
+						Spring.Echo("Searching Food4")
 					return (x+i*Vec[j].x)*8,(z+i*Vec[j].z)*8 end
 						else
+							Spring.Echo("Searching Food5")
 						return false, false
 						end
 				end
 		end
+	Spring.Echo("Searching Food6")	
 	return false,false
 	end	
 	
@@ -117,12 +122,12 @@
 	end
 	
 	function FindWater(unitid)
-
+	Spring.Echo("Thirsty")
 		if AgentTable[unitid].Type == "Hohymen" then
 			tx,tz= FindValuePos(unitid,0)
 
 				if tx and tx ~= true and tx ~= false then
-				Spring.SetUnitMoveGoal(unitid,tx,tz)
+				Spring.SetUnitMoveGoal(unitid,tx,0, tz)
 				end
 				
 				if tx == true then --StateSwitch to drinking function
@@ -135,20 +140,20 @@
 	--Transitionfunction: represent the Transitions from one State into another (if a unit fails a transition it returns to the original state)
 
 	function FindFood(unitid, other)
+
 	Spring.Echo("Searching Food")
-	assert(unitid)
-		if AgentTable[unitid].Type == "Hohymen" then
+
 				tx,tz= FindValuePos(unitid,1)
 
 					if tx and tx ~= true and tx ~= false then
+					Spring.Echo("Setting Hohymen movegoal")
 					Spring.SetUnitMoveGoal(unitid,tx,0,tz)
 					end
 					
-					if tx == true then --StateSwitch to eating function
-					return true
-					end
-					return false  	
-		end	
+						if tx == true then --StateSwitch to eating function
+						return true
+						end
+	return false  		
 	end 
 
 	function FindCompany(unitid)
@@ -246,7 +251,7 @@
 	end
 	
 	RawHohymen={	Type	="Hohymen",
-					AgentState= "REST",
+					AgentState= "FOOD",
 					
 					Values	= {	["Water"]		=0, 
 								["Food"]		=0,
@@ -420,8 +425,9 @@ AT={}
 			}
 			
 	function Transition(unitid,LongedState)
+	Spring.Echo("Transition1")
 	certainlyNot=Spring.GetUnitIsDead(unitid)
-	if not certainlyNot or certainlyNot==true then  return false, "DEAD" end
+	if certainlyNot==true then  return false, "DEAD" end
 	
 	
 	LongedState=LongedStateLongedTransitionTable[LongedState]
@@ -477,11 +483,13 @@ AT={}
 				 assert(LongedState,"JW_ECOLOGOYGADGET::LóngedState not found")
 				-- if a Transition exists use it
 					if LongedState then
+					Spring.Echo("Transition")
 						boolSucessfullTransiton, ResultState= Transition(k,LongedState)
 						if boolSucessfullTransiton==true then
 						x,y,z=Spring.GetUnitPosition(k)
-							if AgentTable[k].Type=="Hohymen" then
+							if AgentTable[k].Type=="Hohymen"  and z then
 								other="none"
+								 
 								HohymenStates[LongedState].func(k, other,x,y,z)
 							end
 							

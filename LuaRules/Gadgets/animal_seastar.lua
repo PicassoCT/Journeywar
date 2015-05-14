@@ -15,9 +15,13 @@
 			
 			if x and z and tx and tz then
 			id=Spring.CreateUnit("gseastar",x,-50,z,1,gaiaTeamID)
-				if id then
+				if math.random(0,1)==1 then
 				Spring.SetUnitMoveGoal(id,tx,0,tz)
-				end
+				else
+				x,y,z=Spring.GetUnitPosition(id)
+				tx,ty,tz=mirrorMapCenter(x,y,z)
+				Spring.SetUnitMoveGoal(id,tx,ty,tz)
+				end			
 			end
 		end
 		

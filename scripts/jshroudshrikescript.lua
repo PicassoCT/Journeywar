@@ -197,7 +197,7 @@ function sfxThread(radiUs, time)
 it=math.random(1,6)
 x,y,z=Spring.GetUnitPosition(unitID)
 
-	for i=1, 360, i=i+it do
+	for i=1, 360, i+it do
 	offx,offz=NDrehMatrix(1,radiUs,it)
 	offx,offz=x+offx,z+offz
 	h=Spring.GetGroundHeight(offx,offz)
@@ -262,8 +262,8 @@ local SoleSurvivorTeam=Spring.GetUnitTeam(SoleSurvivor)
 		table.remove(UnitsOfOld,k)
 		table.remove(UnitsByTeam,k)
 		else
-		x,y,z=Spring.GetUnitPosition(UnitsByTeam[])
-		Spring.SetUnitMoveGoal(k,x+math.random(-radiUs,y,z
+		x,y,z=Spring.GetUnitPosition(UnitsByTeam[k])
+		Spring.SetUnitMoveGoal(k,x+math.random(-radiUs,y,z))
 		end
 	end
 	StartThread(BuildTreeOfPain,#UnitsOfOld, UnitsOfOld)

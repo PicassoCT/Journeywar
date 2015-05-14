@@ -1890,9 +1890,11 @@ function mirrorMatriceXAxis(x,y,z)
 --return 360-x,y,z*-1																																							
 
 x=((-1*math.cos(z))*math.cos(y))+((-1*math.sin(z)*-1*math.sin(x))*-1*math.sin(y))*x+((-1*math.sin(z)*math.cos(x)))*y+((-1*math.cos(z))*math.sin(y))+((-1*math.sin(z)*-1*math.sin(x))*math.cos(y))*z
+
 y=((-1*math.sin(z))*math.cos(y))+((math.cos(z)*-1*math.sin(x))*-1*math.sin(y))*x+((math.cos(z)*math.cos(x)))*y+((-1*math.sin(z))*math.sin(y))+((math.cos(z)*-1*math.sin(x))*math.cos(y))*z
-z=((math.cos(x))*-1*math.sin(y))*x+((math.sin(x)))*y+((*math.cos(x))*math.cos(y))*z
-returnx,y,z
+
+z=((math.cos(x))*-1*math.sin(y))*x+((math.sin(x)))*y+((math.cos(x))*math.cos(y))*z
+return x,y,z
 end
 
 function MatrixBuilder3x3(A, B)
@@ -2136,11 +2138,19 @@ total=0
 
 	for i=1,nr do
 	val=scalar*func(offset+i*pscale)
-		if boolCounter == true then
-		Turn(Table[i],axis,math.rad(total+val),speed)
-		total=total+val
-		else
-		Turn(Table[i],axis,math.rad(val),speed)
+	
+		if type(Table[i])=="table" then 
+			waveATable(Table[i], axis, func, signum, speed,funcscale,totalscale, boolContra,offset)
+		else	
+	
+			if boolCounter == true then
+		
+			Turn(Table[i],axis,math.rad(total+val),speed)
+		
+			total=total+val
+			else
+			Turn(Table[i],axis,math.rad(val),speed)
+			end
 		end
 	end
 
@@ -2499,11 +2509,7 @@ end
 			 end
 	 return T
 	 end
-<<<<<<< HEAD
 
-
-=======
->>>>>>> d9ed447c1c3e5b049d2c349e07d01ba71ac94562
 	 
 	 --> Apply a function on a Table
 	function forTableUseFunction(Table,func,metafunc)
@@ -3386,7 +3392,7 @@ end
 	--unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
 	--> Trys to create a animation using every piece there is as Legs.. 
 	function adaptiveAnimation(configTable,inPeace)
-	Spring.Echo("ToolKit::FixMe::adaptiveAnimation")
+
 	local infoT= configTable
 	pieceMap={}
 	pieceMap[infoT.centerNode]={}
@@ -3691,7 +3697,7 @@ end
 	return T1,T2
 	end
 
-<<<<<<< HEAD
+
 	
 function getMidPoint(a,b)
 ax,ay,az=a.x,a.y,a.z
@@ -3741,7 +3747,7 @@ end
 
 
 end
-=======
+
 	function objectPieceRenamer()
 	
 
@@ -3814,4 +3820,4 @@ end
 				
 	
 	end
->>>>>>> d9ed447c1c3e5b049d2c349e07d01ba71ac94562
+

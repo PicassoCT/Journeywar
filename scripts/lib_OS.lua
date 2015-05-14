@@ -19,9 +19,17 @@
 ]]--
 
 
-function startThreadCount(foonction,...)
+-->Print Seperated
+function printV(...)
+conCat=""
+if arg then
+	for k,v in pairs(arg) do
 
+	conCat=conCat.." || "..k .. " <-> "..v.. " ¦ "
 
+	end
+end
+Spring.Echo(conCat)
 
 end
 

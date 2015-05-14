@@ -142,34 +142,25 @@ LegTable[#LegTable+1]=piece"striderle6"
 	end
 
 	local P={}
+	nrofsteps=20
 	--this function filters the handed over turnvalues, so they may not leave the rangelimit
-	function AnitParkinSons(pie,xt,yt,zt,xp,yp,zp)
-		if P[pie]== nil then 
-		--       deltaAverage,        previous Turnvalues, previous Position, previous deltaV
-		P[pie]={deaX=0,deaY=0,deaZ=0, preX=0,preY=0,preZ=0,oxp=xp,oyp=yp,ozp=zp, dvx=xt, dvy=yt, dvz=zt, nr=0} 
-		return xt,yt,zt
+	function smoothVal(val, nr)
+		if not P[nr] then 
+		P[nr]={}
+		P[nr].iterator=1
+		for i=1,nrofsteps do P[nr][i]=val end 
 		end
-	local P= P[Pie]
-	--1/2 currentDelta, 1/4 previous Delta, 1/4 Delta of Oldentimes
-	cdx,cdy,cdz=P.oxp-xp,P.oyp-yp,P.ozp-zp
-	totalTurnX=P.preX+ (0.5*cdx + 0.25*P.dvx+0.25*P.deaX)
-	totalTurnY=P.preY+ (0.5*cdy + 0.25*P.dvy+0.25*P.deaY)
-	totalTurnZ=P.preZ+ (0.5*cdz + 0.25*P.dvz+0.25*P.deaZ)
-
-	--Update the Table --no more calculations beyond this point
-	P.dvx,P.dvy,P.dvz =xp-P.oxp, yp-P.oyp, zp-P.ozp
-	P.oxp,P.oyp,P.ozp = xp,yp,zp
-	P.deaX= (P.nr/P.nr+1)*P.deaX+ preX*(1/P.nr+1)
-	P.deaY= (P.nr/P.nr+1)*P.deaY+ preY*(1/P.nr+1)
-	P.deaZ= (P.nr/P.nr+1)*P.deaZ+ preZ*(1/P.nr+1)
-	P.preX,P.preY,P.preZ= totalTurnX, totalTurnY, totalTurnZ
-
-	P.nr=P.nr+1
-
-	return totalTurnX, totalTurnY, totalTurnZ
+	P[nr][P[nr].iterator]=val
+	P[nr].iterator=(P[nr].iterator%nrofsteps)+1
+	sum=0
+	for i=1, nrofsteps do
+	sum=sum+P[nr][i]/nrofsteps
+	end
+	
+	return 0.3*val+ 0.7* sum
 	end
 
-local	boolDEBUG=true
+
 	--this function turns the legs handed over, to point at the x,y,z coordinates
 	                       --unitPos   --targetPoint  --UpLeg
 				
@@ -200,20 +191,37 @@ local	boolDEBUG=true
 		
 
 		yaw=math.atan2(zvz, zvx)	
-		Turn(StriTable[number].UpLeg,y_axis,math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),5,true)
+		-- - 32767 <--> +32767    +32767         0 - 65533      
+		--sanitizedHeading=math.abs(currentHeading  +32767)/182 
+		
+		--uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),1)
+		uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),1)
+		printV("uplegyaw", uplegyaw,"currentHeading",currentHeading, "Yaw", yaw)
+		Spring.Echo(uplegyaw)
+		Turn(StriTable[number].UpLeg,y_axis,uplegyaw,25,true)
 		
 		--first lets get the rad for the upper leg
 		 beta=math.acos((LEGSQR-UPLEGSQR-BASEDISTSQR)/(-2*UPLEGLENGTH*BASEDISTANCE))
 		 alpha=math.atan2(zvx,zvy)+beta
-		 Turn(StriTable[number].UpLeg,x_axis,3.14159 +alpha,0,true)
-		 
-		-- gama=-3.14159+(1.570796326-beta)+(1.570796326-math.acos((BASELOWLEGDIST*BASELOWLEGDIST+LEGLENGTH*LEGLENGTH-UPLEGLENGTH*UPLEGLENGTH)/(2*LEGLENGTH*BASELOWLEGDIST)))
-		 optgama=-beta -(math.acos((BASELOWLEGDIST*BASELOWLEGDIST+LEGLENGTH*LEGLENGTH-UPLEGLENGTH*UPLEGLENGTH)/(2*LEGLENGTH*BASELOWLEGDIST)))
-		-- Spring.Echo("JW_STRIDER.."..gama.."  ->"..optgama)
+		
+		uplegval=smoothVal(3.14159 +alpha,2)%6.1831853071795
+	--	Spring.Echo("Strider_upval"..uplegval)
+		Turn(StriTable[number].UpLeg,x_axis,uplegval,22,true)
 	
-		 Turn(StriTable[number].Leg,x_axis,optgama,0,true)
-		 
-		 Turn(StriTable[number].LowLeg,x_axis,-1*(3.14159 +alpha)-optgama,0,true)
+		-- gama=-3.14159+(1.570796326-beta)+(1.570796326-math.acos((BASELOWLEGDIST*BASELOWLEGDIST+LEGLENGTH*LEGLENGTH-UPLEGLENGTH*UPLEGLENGTH)/(2*LEGLENGTH*BASELOWLEGDIST)))
+		 optgama=-beta -(math.acos((BASELOWLEGDIST*BASELOWLEGDIST+LEGLENGTH*LEGLENGTH-UPLEGLENGTH*UPLEGLENGTH)/(2*LEGLENGTH*BASELOWLEGDIST))) 
+		-- Spring.Echo("JW_STRIDER.."..gama.."  ->"..optgama)
+		
+		optgama=smoothVal(optgama,3)
+		
+		Turn(StriTable[number].Leg,x_axis,optgama,22,true)
+		
+ 		lowoptgame=smoothVal(-1*(3.14159 +alpha)-optgama,4)
+		
+	
+		--if math.abs(lowoptgame) > 3.14159/2 then return false end
+		
+ 		Turn(StriTable[number].LowLeg,x_axis,lowoptgame,22,true)
 		
 		--Turn Leg
 		return true

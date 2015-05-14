@@ -40,7 +40,7 @@ for i=1,24,1 do
 petal[i]={}
 temp = "petal0"..i
 petal[i]=piece (temp)
-piecesTable[piecesTable#+1]=petal[i]
+piecesTable[#piecesTable+1]=petal[i]
 end
 
 Bubbles={}
@@ -53,11 +53,11 @@ Bubbles[i]={}
 	Bubbles[i][a]={}
 	temp = "bub"..i..a
 	Bubbles[i][a]=piece (temp)
-	piecesTable[piecesTable#+1]=Bubbles[i][a]
+	piecesTable[#piecesTable+1]=Bubbles[i][a]
 	Oil[i][a]={}
 	temp = "oil"..i..a
 	Oil[i][a]=piece (temp)
-	piecesTable[piecesTable#+1]=Oil[i][a]
+	piecesTable[#piecesTable+1]=Oil[i][a]
 	end
 
 end
@@ -68,7 +68,7 @@ for i=1,13,1 do
 Hold[i]={}
 temp = "hold0"..i
 Hold[i]=piece (temp)
-	piecesTable[piecesTable#+1]=Hold[i]
+	piecesTable[#piecesTable+1]=Hold[i]
 end
 
 -----
@@ -79,7 +79,7 @@ for i=1,9,1 do
 WindP[i]={}
 temp = "windp0"..i
 WindP[i]=piece (temp)
-	piecesTable[piecesTable#+1]=WindP[i]
+	piecesTable[#piecesTable+1]=WindP[i]
 end
 
 Spring.TODO()
@@ -90,7 +90,7 @@ for i=1,20,1 do
 Leaves[i]={}
 temp = "Leaves0"..i
 Leaves[i]=piece (temp)
-	piecesTable[piecesTable#+1]=Leaves[i]
+	piecesTable[#piecesTable+1]=Leaves[i]
 end
 
 -----
@@ -100,7 +100,7 @@ for i=1,10,1 do
 Roots[i]={}
 temp = "Root0"..i
 Roots[i]=piece (temp)
-piecesTable[piecesTable#+1]=Roots[i]
+piecesTable[#piecesTable+1]=Roots[i]
 end
 ----
 Seed={}
@@ -109,7 +109,7 @@ for i=1,17,1 do
 Seed[i]={}
 temp = "Seed0"..i
 Seed[i]=piece (temp)
-piecesTable[piecesTable#+1]=Seed[i]
+piecesTable[#piecesTable+1]=Seed[i]
 end
 ----
 Astrotatoren={}
@@ -118,7 +118,7 @@ for i=1,6,1 do
 Astrotatoren[i]={}
 temp = "sRo0"..i
 Astrotatoren[i]=piece (temp)
-piecesTable[piecesTable#+1]=Astrotatoren[i]
+piecesTable[#piecesTable+1]=Astrotatoren[i]
 end
 
 --
@@ -127,7 +127,7 @@ for i=1,6,1 do
 Blueten[i]={}
 temp = "windp0"..i
 Blueten[i]=piece (temp)
-piecesTable[piecesTable#+1]=Blueten[i]
+piecesTable[#piecesTable+1]=Blueten[i]
 end
 --
 

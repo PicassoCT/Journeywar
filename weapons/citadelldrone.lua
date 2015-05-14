@@ -44,10 +44,9 @@ heavyarmor=350,
 },
 areaOfEffect=100,
 craterMult=0,
-noFriendlyCollide =true,
 --?FIXME***
 lineOfSight=true,
-
+ noSelfDamage       = true,
 
 --sound
 soundHit="null",
