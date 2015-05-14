@@ -27,7 +27,7 @@ mass=10,
 
 
 sightDistance = 500,
-upright=true,
+upright=false,
 Builder = false,
 CanMove = true,
 CanPatrol = false,

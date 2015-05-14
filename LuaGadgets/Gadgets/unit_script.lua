@@ -383,13 +383,29 @@ function Spring.UnitScript.Sleep(milliseconds)
         co_yield()
 end
 
+local RunningThreadCounter={}
 
 
 function Spring.UnitScript.StartThread(fun, ...)
         local activeUnit = GetActiveUnit()
 		--DEBUG
 		if (not fun) then 
-		error("Error in UnitScriptLine 374-startthread is not fun ", 2) 		
+		error("Error in UnitScriptLine 374- First Argument of StartThread is not a function ", 2) 		
+		end
+		if not RunningThreadCounter[activeUnit.unitID] then RunningThreadCounter[activeUnit.unitID] ={} end
+		 signal_mask = ((co_running() and activeUnit.threads[co_running()]) and activeUnit.threads[co_running()].signal_mask or 0)
+		if not RunningThreadCounter[activeUnit.unitID][signal_mask] then RunningThreadCounter[activeUnit.unitID][signal_mask] =0 end
+		RunningThreadCounter[activeUnit.unitID][signal_mask] =RunningThreadCounter[activeUnit.unitID][signal_mask] +1
+
+		if RunningThreadCounter[activeUnit.unitID][signal_mask] > 32 then
+		unitdefID=Spring.GetUnitDefID(activeUnit.unitID)
+		
+			for k,v in pairs (UnitDefNames) do
+				if v.id == unitDefID then
+				Spring.Echo("Unit number ".. activeUnit.unitID .." of type ".. k .. " has "..RunningThreadCounter[activeUnit.unitID][signal_mask] .." threads for mask "..signal_mask)
+				end
+	
+			end
 		end
 		
         local co = co_create(fun)
@@ -398,6 +414,8 @@ function Spring.UnitScript.StartThread(fun, ...)
                 -- signal_mask is inherited from current thread, if any
                 signal_mask = ((co_running() and activeUnit.threads[co_running()]) and activeUnit.threads[co_running()].signal_mask or 0),
                 unitID = activeUnit.unitID,
+				
+				
         }
 
         -- add the new thread to activeUnit's registry
@@ -436,6 +454,7 @@ end
 function Spring.UnitScript.Signal(mask)
         local activeUnit = GetActiveUnit()
 
+		 RunningThreadCounter[activeUnit.unitID][signal_mask]=0
         -- beware, unsynced loop order
         -- (doesn't matter here as long as all threads get removed)
         if type(mask) == "number" then

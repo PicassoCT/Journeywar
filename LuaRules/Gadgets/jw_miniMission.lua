@@ -1,5 +1,7 @@
 
 function gadget:GetInfo()
+  local modOptions = Spring.GetModOptions()
+
   return {
     name      = "MiniMissions",
     desc      = "Multiplayermissions",
@@ -8,9 +10,18 @@ function gadget:GetInfo()
     license   = "GNU GPL, v2 or later",
     layer     = 0,
 	version = 1,
-    enabled   = true and false,
+    enabled   = true
   }
 end
+
+local modOptions = Spring.GetModOptions()
+if (modOptions.gamemode ~= "minimission") then
+  return
+end
+
+
+
+
 
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 

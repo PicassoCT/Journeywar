@@ -11,7 +11,7 @@
 		tx,tz=getSpot(GetSpot_condDeepSea,32,{minBelow=0,maxAbove=-24})
 			
 			if x and z and tx and tz then
-			id=Spring.CreateUnit("gseastar",x,0,z,1,gaiaTeamID)
+			id=Spring.CreateUnit("gseastar",x,-50,z,1,gaiaTeamID)
 				if id then
 				Spring.SetUnitMoveGoal(id,tx,0,tz)
 				end
