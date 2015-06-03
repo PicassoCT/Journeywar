@@ -563,10 +563,15 @@ resetPiece(Table,speed)
 end
 end
 
-function getUnitSide(unitID)
-teamid=Spring.GetUnitTeam(unitID)
+function getTeamSide(teamid)
+
 teamID,    leader,      isDead,    isAiTeam, side,  allyTeam,  customTeamKeys,  incomeMultiplier=Spring.GetTeamInfo(teamid)
 return side
+end
+
+function getUnitSide(unitID)
+teamid=Spring.GetUnitTeam(unitID)
+return getTeamSide(teamid)
 end
 
 -->Moves a UnitPiece to Position at speed

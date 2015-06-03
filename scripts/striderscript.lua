@@ -1,6 +1,6 @@
-include "lib_OS.lua"
- include "lib_TableOp.lua"
- include "lib_Build.lua" 
+	include "lib_OS.lua"
+	include "lib_TableOp.lua"
+	include "lib_Build.lua" 
 
 
 --modified stridercode
@@ -180,9 +180,8 @@ LegTable[#LegTable+1]=piece"striderle6"
 	
 	
 	--CinematicExceedsTreshold
-		if  (BASEDISTANCE > 122)  then
+		if  (BASEDISTANCE > 122) and true==false then
 
-		--Spring.Echo("StriderScript::LongLegIsTooLong")
 		--you are in deep deep trouble --> abort animation there early and get feet inwards asap
 		return false
 		else

@@ -396,8 +396,6 @@ FixFunctionTabel[2]= function ()
 	return true
 	end
 	
-
-	
 		
 	-- Turn the whole plant into a Bucky Ball
 	FixFunctionTabel[9]=	function ()
@@ -421,6 +419,7 @@ FixFunctionTabel[2]= function ()
 	return true
 		end
 	
+	--StarPlants
 			FixFunctionTabel[10]=	function ()
 	Spring.Echo("FixFunctionTabel::StarPlants")
 		showT(TreePiece)
@@ -447,8 +446,86 @@ FixFunctionTabel[2]= function ()
 		end
 
 		
-
+	--SpiralTree
+	FixFunctionTabel[11]= function ()
+	Spring.Echo("FixFunctionTabel::Spiraltre")
+		showT(TreePiece)
+		showT(EndPiece)
+	val=15.2
+	tax=0
 	
+		up=math.ceil(math.random(15,25))
+	
+	spirallength=math.floor((#TreePiece-6)/math.random(1,6))
+	deg=math.random(-5,5)
+	if math.random(0,1)==1 then
+		for j=1,5 do
+					Turn(TreePiece[j],x_axis,deg,0,true)
+					ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
+					-- --Spring.Echo(ox,oy,oz)
+					Move(TreePiece[j+1],x_axis,ox,0)
+					Move(TreePiece[j+1],y_axis,oy,0)
+					Move(TreePiece[j+1],z_axis,oz,0,true)
+					
+		end	
+	end	
+		axis=math.floor(math.random(1,3.99))
+		secondaryAxis=math.floor(math.random(1,3.99))
+		val=math.random(-55,55)
+		sval=math.random(-5.5,5.5)
+		for j=6,#TreePiece,spirallength  do
+			for i=j, j+spirallength do
+				Turn(TreePiece[j],axis,math.rad((val*i)),0,true)
+				Turn(TreePiece[j],secondaryAxis,math.rad((sval)),0,true)
+				WaitForTurn(TreePiece[j],axis)
+	
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[j])
+
+				Move(TreePiece[j+1],x_axis,ox,0)
+				Move(TreePiece[j+1],y_axis,oy,0)
+				Move(TreePiece[j+1],z_axis,oz,0,true)
+				
+				
+			end
+		end
+		
+	
+	return true	
+	end
+
+	FixFunctionTabel[12]= function ()
+		showT(TreePiece)
+		showT(EndPiece)
+		
+	
+	
+		up=math.ceil(math.random(15,25))
+	
+
+		val=60
+		const=-9
+		for j=1,#TreePiece,0 do
+		spirallength=math.floor(math.random(4,12))
+	
+			for i=j, j+spirallength do
+			sval=math.random(0,360)
+				Turn(TreePiece[j],x_axis,math.rad((val+const*i)),0,true)
+				Turn(TreePiece[j],y_axis,math.rad((sval)),0,true)
+				WaitForTurn(TreePiece[j],axis)
+	
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[j])
+
+				Move(TreePiece[j+1],x_axis,ox,0)
+				Move(TreePiece[j+1],y_axis,oy,0)
+				Move(TreePiece[j+1],z_axis,oz,0,true)
+				
+				
+			end
+		end
+		
+	
+	return true	
+	end
 	
 	--concatenates some random gramarRules, thus really creating new form of plants
 	function getRandomGramarProcution(ElementTable, NrOfElements, Recursionstart, RecursionEnd)

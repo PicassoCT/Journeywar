@@ -175,3 +175,55 @@ results=fooNction(args)
 		return results
 		end
 end 
+
+function scaleOfChange(a,b, trigger)
+val=math.abs(a-b)
+
+end
+
+--==============================================Eventstream Jobs
+-- action(id,frame, StreamUnits[id].persPack)
+
+-->Expects in the Package {updaterate, Pos, DefID, hitpoints, assignedSubAI, buildid}
+function buildJob(id, frame,Package)
+
+--check if we are there yet
+
+--if we are grab for the building
+
+--else move it
+
+--if the job is completed return yourself to the unitpool
+	-- GG.UnitPool:Return(id,teamid,assignedSubAI,father)
+return nextFrame, Package
+end
+
+
+-->Expects in the Package {updaterate, Pos, DefID, hitpoints, assignedSubAI, guardid}
+function guardJob(id, frame,Package)
+
+--check if we are there yet
+
+--if we are grab for the building
+
+--else move it
+
+--if the job is completed return yourself to the unitpool
+	-- GG.UnitPool:Return(id,teamid,assignedSubAI,father)
+
+return nextFrame, Package
+end
+
+-->Expects in the Package {updaterate, Pos, DefID, hitpoints, assignedSubAI, teamMembers}
+function exploreJob(id, frame,Package)
+
+--check if we are there yet
+
+--if we are grab for the building
+
+--else move it
+
+--if the job is completed return yourself to the unitpool
+	-- GG.UnitPool:Return(id,teamid,assignedSubAI,father)
+return nextFrame, Package
+end

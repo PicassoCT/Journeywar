@@ -4,7 +4,7 @@ function gadget:GetInfo()
 		desc = "Forces Zeppelin-type units to obey their cruisealt and prevents them from pitching",
 		author = "Анархид",
 		date = "2.2.2009",
-		license = "None",
+		license = "GPL2.1",
 		layer = 50,
 		enabled = true
 	}

@@ -145,6 +145,10 @@ if (gadgetHandler:IsSyncedCode()) then
 		local LandScapeT= GG.LandScapeT
 	if not GG.AddFire then GG.AddFire={} end
 	for i=1,#GG.AddFire,1 do
+		if GG.AddFire[i].Food then
+		LandScapeT[math.ceil(GG.AddFire[i].x/48)][math.ceil(GG.AddFire[i].z/48)].Food =GG.AddFire[i].Food
+		end
+	
 		if LandScapeT[math.ceil(GG.AddFire[i].x/48)][math.ceil(GG.AddFire[i].z/48)].Food > 0 then
 			fireT[#fireT+1]={x=GG.AddFire[i].x,y=spGetGroundHeight(GG.AddFire[i].x,GG.AddFire[i].z)+15, z=GG.AddFire[i].z}
 		end

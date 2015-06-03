@@ -3,7 +3,7 @@
 function gadget:GetInfo()
   return {
     name      = "EventStream",
-    desc      = "This gadget streams eventsfunctions until they get deactivated or end themselves",
+    desc      = "This gadget streams eventsfunctions until they get deactivated or remove themselves",
 	--Expected Tableformat:
 	--GG.EventStream[id] which contains Tables in the shape of"..
 	--{id=id,  action(id,frame, persPack), persPack}"..
