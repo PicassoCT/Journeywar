@@ -3368,7 +3368,7 @@ end
 	end
 	-->Stabilizes the Feet
 	function	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-	Spring.Echo("stabilize")
+
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
 		degToGo=0

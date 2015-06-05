@@ -161,8 +161,12 @@ end
 			
 			--MTW Grenade
 			if weaponID== cmtwgrenade then
+			if Spring.UnitIsDead(AttackerID)==false then
 			teamid=Spring.GetUnitTeam(AttackerID)
 			Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
+			else
+			Spring.CreateUnit("cmtwgrenade",px,py,pz,1,gaiaTeamID)	
+			end
 			end
 			
 			if weaponID== cUniverseGun then

@@ -8,7 +8,7 @@
 local depshield= piece "depshield"
 local bgbase= piece "bgbase"
 local bgtorso= piece "bgtorso"
-maxspeed=math.ceil(COB.MAX_SPEED *65533)
+maxspeed=math.ceil(183492) --2.8*65533
 local turn_rate = UnitDefNames["bg"].turnRate
 				
 riotshield= piece "riotshield"
@@ -600,7 +600,7 @@ boolDefStance=false
 	function script.Activate ( )
 	boolDefStance=true
 	--setMoveRateToZero
-	SetUnitValue(COB.MAX_SPEED,0)--sets the speed to 5,2 *65533
+	SetUnitValue(COB.MAX_SPEED,1)--sets the speed to 5,2 *65533
 	
 	showShield()
 	
@@ -609,8 +609,9 @@ boolDefStance=false
 
 	function script.Deactivate ( )
 	boolreVert=false
-	
+	Spring.Echo(COB.MAX_SPEED)
 	SetUnitValue(COB.MAX_SPEED,maxspeed)--sets the speed to 5,2 *65533
+
 	hideShield()	
 	
 		return 0

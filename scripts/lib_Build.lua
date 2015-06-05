@@ -7,7 +7,7 @@ mx,mz= mx/2,mz/2
 return x-1*(x-mx), y, z-1*(z-mz)
 end
 
-function buildVehicle(center,AMax,LMax DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
+function buildVehicle(center,AMax,LMax, DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
 
 
 	AllReadyUsed={}
@@ -404,7 +404,7 @@ function buildVehicle(center,AMax,LMax DMax,HMax, DecoM, DecoD,BMax, symDegFilte
 
 	local PiecePositionCache={}
 	
-	function bd_ accessCache(key)
+	function bd_accessCache(key)
 		if PiecePositionCache[key] then
 		return PiecePositionCache[key].x, PiecePositionCache[key].y, PiecePositionCache[key].z,PiecePositionCache[key].piecename
 		end

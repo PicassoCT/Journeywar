@@ -79,9 +79,7 @@
 		spawnAgent(unitDefID, x,y,z,unitID)
 		end
 		
-		if unitDefID== SEASTARDEF then
-		seastarcounter=	seastarcounter+1	
-		end
+	
 	end
 	
 	local boolInit=false
@@ -96,7 +94,7 @@
 		end
 		
 		handleVaryFoos(frame)
-		handleSeaStars(frame,seastarcounter)
+		seastarcounter=handleSeaStars(frame,seastarcounter)
 	
 	end	
 	end	
