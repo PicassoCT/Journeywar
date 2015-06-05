@@ -12,7 +12,7 @@ function gadget:GetInfo()
   }
 end
 --GG. [Unitid]-- [Casted Buffs Id] -- function(persitance package)
-
+--Buff Descriptor= [BuffName]={AffectedTable[ID]=time, Rate, LiveTime, }
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 
 if (gadgetHandler:IsSyncedCode()) then
@@ -28,7 +28,8 @@ local  operaAddMetall=420
 function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
 if GG.RiotShield and GG.RiotShield[unitID] then 
 	if GG.RiotShield[unitID]==true or GG.RiotShield[unitID]==weaponDefID then GG.RiotShield[unitID]=weaponDefID; return math.ceil(damage*0.1 ) end
- return damage;
+end
+ return damage
 end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
