@@ -11,6 +11,7 @@ function gadget:GetInfo()
     enabled   = true,
   }
 end
+--GG. [Unitid]-- [Casted Buffs Id] -- function(persitance package)
 
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 
@@ -24,6 +25,11 @@ local AffectedUnitTables={}
 	OperaTable={}
 local  operaAddMetall=420
 
+function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+if GG.RiotShield and GG.RiotShield[unitID] then 
+	if GG.RiotShield[unitID]==true or GG.RiotShield[unitID]==weaponDefID then GG.RiotShield[unitID]=weaponDefID; return math.ceil(damage*0.1 ) end
+ return damage;
+end
 
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
 if AffectedUnitTables[unitDefID] then
@@ -36,10 +42,7 @@ if AffectedUnitTables[unitDefID] then
 		end
 	end
 end
-end
 
-
-function gadget:UnitDestroyed(unitID, unitDefID, teamID)
 if OperaTable[unitID] then OperaTable[unitID]=nil end
 end
 

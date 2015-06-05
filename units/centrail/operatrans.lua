@@ -76,6 +76,13 @@ nanocolor=[[0 0.9 0.9]],
 		[2]={name  = "cOperaCannon",
 		onlyTargetCategory = [[ LAND ]],
 			},
+		[3]={name  = "cwaterbombs",
+			onlyTargetCategory = [[ WATER]],
+			},	
+		[4]={name  = "cwaterbombs",
+			onlyTargetCategory = [[ WATER]],
+			},	
+
     },
 }
 return lowerkeys({ [unitName]  =  unitDef })

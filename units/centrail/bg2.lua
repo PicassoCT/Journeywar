@@ -15,6 +15,8 @@ buildTime = 6,
 --Health
 maxDamage = 240,
 idleAutoHeal = 3,
+onoffable=true,
+ActivateWhenBuilt=0,
 --Movement
 mass=120,
 upright=true,

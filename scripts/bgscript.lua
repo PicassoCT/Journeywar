@@ -1,13 +1,16 @@
-include "lib_OS.lua"
+ include "lib_OS.lua"
  include "lib_TableOp.lua"
  include "lib_Build.lua" 
 
 
 --a walking animation using threads
 --smoothly aiming the weapon, also using threads
+local depshield= piece "depshield"
 local bgbase= piece "bgbase"
 local bgtorso= piece "bgtorso"
-
+maxspeed=math.ceil(COB.MAX_SPEED *65533)
+local turn_rate = UnitDefNames["bg"].turnRate
+				
 riotshield= piece "riotshield"
 local riotshield2= piece "riotshield2"
 local bgarm= piece "bgarm"
@@ -135,7 +138,7 @@ end
 
 
 function script.Create()
-
+ Hide(depshield)
  Hide(flare01)
  Hide(flare02)
  Hide(deathpivot)
@@ -310,6 +313,7 @@ function script.StartMoving()
 
 
 	Signal(SIG_IDLE)
+	if boolCanMove ==true then
 	Turn(Head,y_axis,math.rad(0),12)
 	Move(bgbase,y_axis,0,12)
     Turn(bgtorso,y_axis,0,4)
@@ -319,7 +323,7 @@ function script.StartMoving()
 	
 	
 	StartThread(counter)
-	
+	end
 boolMoveOrderd=true
 end
 
@@ -328,12 +332,13 @@ function script.StopMoving()
 boolMoveOrderd=false
 		
 		Signal(SIG_COUNTER)
+		
 		Turn(bgtorso, x_axis, math.rad(0), 14)
 --    --Spring.Echo ("stopped walking!")
 		Signal(SIG_WALK)
-
+		if boolCanMove==true then
 		legs_down()
-		
+		end
 		
 end
 
@@ -563,5 +568,52 @@ Sleep(7000)
 boolOnceInAWhile=true
 
 end
+
+function showShield()
+ Show(depshield)
+  if not GG.RiotShieldTable then GG.RiotShieldTable={} end
+  GG.RiotShieldTable[unitID]=true
+  
+					Move(bgbase,y_axis,-4,12)
+					Turn(bgleg,x_axis,math.rad(-90),18)
+					Turn(bglowleg,x_axis,math.rad(90),28)
+					Turn(bglowlegr,x_axis,math.rad(101),28)
+				
+				
+end
+
+function hideShield()
+ Hide(depshield)
+
+  GG.RiotShieldTable[unitID]=nil
+					Move(bgbase,y_axis,0,12)
+					Turn(bgleg,x_axis,math.rad(0),18)
+					Turn(bglowleg,x_axis,math.rad(0),28)
+					Turn(bglowlegr,x_axis,math.rad(0),28)
+					legs_down()
+					Signal(SIG_WALK)
+					StartThread(walk)
+end
+
+boolDefStance=false
+
+	function script.Activate ( )
+	boolDefStance=true
+	--setMoveRateToZero
+	SetUnitValue(COB.MAX_SPEED,0)--sets the speed to 5,2 *65533
+	
+	showShield()
+	
+		return 1
+	  end
+
+	function script.Deactivate ( )
+	boolreVert=false
+	
+	SetUnitValue(COB.MAX_SPEED,maxspeed)--sets the speed to 5,2 *65533
+	hideShield()	
+	
+		return 0
+	  end
 
 

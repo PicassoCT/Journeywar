@@ -353,3 +353,91 @@ function script.Killed(recentDamage, maxHealth)
 	suddenDeathV(recentDamage)
 	i=1+1
 end
+
+function script.AimWeapon3( heading, pitch)
+	
+    -- each time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same time.
+	Turn(body1, y_axis, heading, 6)
+	Turn(oppod1gun2, x_axis, -pitch,5)
+	Turn(oppod1gun1, x_axis, -pitch,5)
+	overhead=pitch
+	
+	WaitForTurn(body1, y_axis)
+	WaitForTurn(oppod1gun2, x_axis)
+	WaitForTurn(oppod1gun2, x_axis)
+
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.QueryWeapon3() 
+
+		if  (flipflop==true)
+			then  flipflop=false
+			 
+			 return flare1
+								else
+								flipflop=true
+								return flare2 
+								end
+	end
+
+function script.FireWeapon3()
+	EmitSfx(flare1, 1)
+	EmitSfx(flare2, 1)
+	
+	Turn(oppod1gun2, x_axis, overhead-10,8)
+	Turn(oppod1gun1, x_axis, overhead-10,8)
+
+	return true
+end
+
+function script.AimFromWeapon3() 
+return body1 end
+
+
+	
+	-- The piece that the bullet/laser/whatever comes out of.
+
+
+function script.AimWeapon4( heading, pitch)
+	
+    -- each time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same time.
+	Turn(body2, y_axis, heading, 6)
+	Turn(oppod2gun2, x_axis, -pitch,5)
+	Turn(oppod2gun1, x_axis, -pitch,5)
+	overhead=pitch
+	
+	WaitForTurn(body2, y_axis)
+	WaitForTurn(oppod2gun1, x_axis)
+	WaitForTurn(oppod2gun2, x_axis)
+
+	StartThread(RestoreAfterDelay)
+	return true
+end
+
+function script.QueryWeapon4() 
+
+		if  (flipflop2==true)
+			then  flipflop2=false
+			 
+			 return flare3
+								else
+								flipflop2=true
+								return flare4 
+								end
+	end
+
+function script.FireWeapon4()
+	EmitSfx(flare3, 1)
+	EmitSfx(flare4, 1)
+	
+	Turn(oppod2gun2, x_axis, overhead-10,8)
+	Turn(oppod2gun1, x_axis, overhead-10,8)
+
+	return true
+end
+
+function script.AimFromWeapon4() 
+return body2 end
+

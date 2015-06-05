@@ -22,22 +22,22 @@ local tempSpeedStore=5.2
 
 
 function headingWatcher ()
-while(true) do
-heading=Spring.GetUnitHeading(unitID)
-
-local tempHead=heading-headingOfOld
---compares the heading of the unit, if the heading changed massively - or the unit has the thumper activated, the wheels are set into turnmode
-		if tempHead > 0 and tempHead > headingDistancePos and boolConstMove== false or tempHead < 0 and tempHead < headingDistanceNeg and boolConstMove== false or boolThumperActivated==true then
-		Turn(reswheelz,y_axis,math.rad(90),10)
-		Turn(reswheelz1,y_axis,math.rad(37),9)
-		Turn(reswheelz0,y_axis,math.rad(-37),9)
-		Sleep(150)
-		elseif boolThumperActivated == false then 
-		Turn(reswheelz,y_axis,math.rad(0),22)
-		Turn(reswheelz1,y_axis,math.rad(0),22)
-		Turn(reswheelz0,y_axis,math.rad(0),22)
-		Sleep(150)
-		end
+	while(true) do
+		heading=Spring.GetUnitHeading(unitID)
+		
+		local tempHead=heading-headingOfOld
+		--compares the heading of the unit, if the heading changed massively - or the unit has the thumper activated, the wheels are set into turnmode
+			if tempHead > 0 and tempHead > headingDistancePos and boolConstMove== false or tempHead < 0 and tempHead < headingDistanceNeg and boolConstMove== false or boolThumperActivated==true then
+			Turn(reswheelz,y_axis,math.rad(90),10)
+			Turn(reswheelz1,y_axis,math.rad(37),9)
+			Turn(reswheelz0,y_axis,math.rad(-37),9)
+			Sleep(150)
+				elseif boolThumperActivated == false then 
+				Turn(reswheelz,y_axis,math.rad(0),22)
+				Turn(reswheelz1,y_axis,math.rad(0),22)
+				Turn(reswheelz0,y_axis,math.rad(0),22)
+				Sleep(150)
+				end
 		headingOfOld=heading
 
 		end
