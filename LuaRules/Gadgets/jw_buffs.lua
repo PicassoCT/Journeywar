@@ -12,10 +12,9 @@ function gadget:GetInfo()
   }
 end
 --GG. [Unitid]-- [Casted Buffs Id] -- function(persitance package)
---Buff Descriptor= [BuffName]={AffectedTable[ID]=time, Rate, LiveTime, }
---this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 
 if (gadgetHandler:IsSyncedCode()) then
+
 if not GG.GluedForLife then GG.GluedForLife={} end
 
 local OPERAID=UnitDefNames["operatrans"].id
