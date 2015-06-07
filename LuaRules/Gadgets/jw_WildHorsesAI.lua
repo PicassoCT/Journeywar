@@ -91,7 +91,7 @@ return false, {}
 end
 
 //wishlists 
-cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
+cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
 		UnitPool={}, TaskList={},
  Build={
  
@@ -105,7 +105,7 @@ cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
 
  }
  
-cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
+cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
 		 UnitPool={}, TaskList={},
  Build={
 
@@ -116,14 +116,14 @@ cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
 		["cgama"]			={nr=1,cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0}
 		}
 		}
-cAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
+cAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
  UnitPool={}, TaskList={},
  Build={
 		["mtw"]					={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		["restrictor"]			={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		}
 		}
-jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
+jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
  UnitPool={}, TaskList={},
  Build={
 
@@ -135,7 +135,7 @@ jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
 		}
    
 }
-jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
+jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
  UnitPool={}, TaskList={},
  Build={
 
@@ -148,7 +148,7 @@ jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
 		["jtree"]					={nr=3, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		}
 }
-jAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,
+jAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
  UnitPool={}, TaskList={},
  Build={
 
@@ -191,8 +191,8 @@ function gadget:Initialize()
    
 end
 
-function checkFundRoundEnd(Table)
-if T.DefRes.boolFundRound==false and T.Base.boolFundRound==false and T.Aggressor.boolFundRound==false then  
+function checkFundRoundEnd(T)
+if T.DefRes.boolFundRound==true and T.Base.boolFundRound==true and T.Aggressor.boolFundRound==true then  
  T.DefRes.boolFundRound=false 
  T.Base.boolFundRound=false 
  T.Aggressor.boolFundRound=false 
@@ -201,17 +201,17 @@ return T
 end
 
 local function returnUnitToPool(teamid,unitid, assignedSubAI,father)
-	if returnUnitToPool == "Base" then
+	if assignedSubAI == "Base" then
 	AI[teamid].Base.UnitPool[unitid]=father
 	AI[teamid].Base.TaskList[unitid]=nil
 	end	
 	
-	if returnUnitToPool == "DefRes" then
+	if assignedSubAI == "DefRes" then
 	AI[teamid].DefRes.UnitPool[unitid]=father
 	AI[teamid].DefRes.TaskList[unitid]=nil
 	end	
 	
-	if returnUnitToPool == "Aggressor" then
+	if assignedSubAI == "Aggressor" then
 	AI[teamid].Aggressor.UnitPool[unitid]=father
 	AI[teamid].Aggressor.TaskList[unitid]=nil
 	end
@@ -242,9 +242,13 @@ local function returnUnitToPool(teamid,unitid, assignedSubAI,father)
 function Base(AITable)
 	 --if you got the funds build
 	 
-	  NeededEntity=GetNextWish(T.Base)
+	  NeededEntity=GetNextWish(AITable.Base)
 	 -- if you dont have the funds still cut deither defres or Aggressorness
 		--give BuildOrdersBase
+		for unit,_ in pairs(AITable.Base.UnitPool) do
+			
+		
+		end
 		--createTasks
 		--give MoveOrdersBase to not assigned Units
 			--if  Tasks higher Prio then deassign Eventstream and create new Eventstream 
@@ -280,18 +284,31 @@ function gadget:GameFrame(frame)
 			if T.Base.boolFundRound==true then
 			-- Base stage
 				T=Base(T)
+			end
+			if T.DefRes.boolFundRound==true then
 			--Defense stage
 				T=DefRes(T)
+			end	
+			if  T.Aggressor.boolFundRound==true then
 			--Aggressive Stage			
 				T=Aggressor(T)
-				
-			end
+			end				
+		end
 	
 		end
-	end
 end
 
+
 function gadget:UnitCreated(u,ud,team,builder)
+	if AI[team] then
+	
+		if UnitDefs[ud].IsBuilder ==false then
+		AssignedAI="Base"
+		else
+			if math.random(0,1)==1 then AssignedAI="Aggressor" else AssignedAI="DefRes" end
+		end
+		returnUnitToPool(team,u,AssignedAI,builder)
+	end
 end
 
 

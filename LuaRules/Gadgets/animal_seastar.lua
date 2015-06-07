@@ -26,7 +26,7 @@
 			return seastarcounter +1
 			end
 		end
-		
+		return seastarcounter
 	end
 	
 	

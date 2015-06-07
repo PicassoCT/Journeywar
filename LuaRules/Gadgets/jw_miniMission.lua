@@ -15,7 +15,7 @@ function gadget:GetInfo()
 end
 
 local modOptions = Spring.GetModOptions()
-if (modOptions.gamemode ~= "minimission") then
+if (modOptions.modifiers.gamemode ~= "minimission") then
   return
 end
 

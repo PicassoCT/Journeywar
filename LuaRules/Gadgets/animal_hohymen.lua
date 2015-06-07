@@ -4,7 +4,14 @@
 
 	
 		AgentTable={}
-	
+		local distance=approxDist
+	--Global Variables
+	local SIGHTDISTANCE=242
+	local NSIGHTDISTANCE=-242
+	local SOCIALRAD= 64
+	local NURSERAD= 32
+	 GRASSNUTRITION=42
+	local gaiaTeam=Spring.GetGaiaTeamID()
 	
 	--State Functions
 		function 	Eat  (unitid,  other,x,y,z)
@@ -226,14 +233,7 @@
 
 
 	
-	local distance=approxDist
-	--Global Variables
-	local SIGHTDISTANCE=242
-	local NSIGHTDISTANCE=-242
-	local SOCIALRAD= 64
-	local NURSERAD= 32
-	local GRASSNUTRITION=42
-	local gaiaTeam=Spring.GetGaiaTeamID()
+
 	--End Global Variables
 	
 	local PriorityStateMap={

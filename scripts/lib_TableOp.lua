@@ -3338,7 +3338,7 @@ end
 		while (Spring.UnitScript.IsInTurn(FirstAxisPoint,2)==true) do
 		
 			xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
-			dif=yp- Spring.GetGetGroundHeight(xp,zp)
+			dif=yp- Spring.GetGroundHeight(xp,zp)
 					if dif > 5 then degToGo=degToGo-1 else degToGo=degToGo+1 end
 				
 			Turn(FirstAxisPoint,1,math.rad(degToGo),Speed)
@@ -3753,10 +3753,10 @@ end
 
 end
 
-	function objectPieceRenamer()
+	function objectPieceRenamer(filename)
 	
 
-			  local file = io.open("jltree.src","r+b")
+			  local file = io.open(filename,"r+b")
 
 
 

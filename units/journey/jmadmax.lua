@@ -2,7 +2,7 @@ local unitName = "jmadmax"
 local unitDef = {
 name = "Rebells",
 Description = " bad to the bone",
-objectName = "varyFoo.s3o",
+objectName = "jmadMax.s3o",
 script = "jmadmaxscript.lua",
 buildPic = "placeholderj.png",
 --cost

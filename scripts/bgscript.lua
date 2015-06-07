@@ -41,6 +41,7 @@ RArm	=""
 Head	=""
 Gun		=""
 Neck= ""
+bgdefID=UnitDefNames["bg"].id 
 boolCityTrooper=(defID==UnitDefNames["bg"].id )
 if boolCityTrooper ==true then
 
@@ -143,6 +144,7 @@ function script.Create()
  Hide(flare02)
  Hide(deathpivot)
  bodyBuilder()
+ StartThread(soundStart)
 end
 
 function idle()
@@ -569,6 +571,20 @@ boolOnceInAWhile=true
 
 end
 
+function soundStart()
+	while true do
+	
+	
+	Sleep(500)
+		if boolShieldDown==true then
+		boolShieldDown=false
+		StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/shielddrop.ogg",1500,1,1)
+		end
+	end
+
+
+end
+
 function showShield()
  Show(depshield)
   if not GG.RiotShieldTable then GG.RiotShieldTable={} end
@@ -578,13 +594,14 @@ function showShield()
 					Turn(bgleg,x_axis,math.rad(-90),18)
 					Turn(bglowleg,x_axis,math.rad(90),28)
 					Turn(bglowlegr,x_axis,math.rad(101),28)
+					boolShieldDown=true
 				
 				
 end
 
 function hideShield()
  Hide(depshield)
-
+ if not GG.RiotShieldTable then GG.RiotShieldTable={} end
   GG.RiotShieldTable[unitID]=nil
 					Move(bgbase,y_axis,0,12)
 					Turn(bgleg,x_axis,math.rad(0),18)
@@ -592,7 +609,7 @@ function hideShield()
 					Turn(bglowlegr,x_axis,math.rad(0),28)
 					legs_down()
 					Signal(SIG_WALK)
-					StartThread(walk)
+				
 end
 
 boolDefStance=false
@@ -609,7 +626,7 @@ boolDefStance=false
 
 	function script.Deactivate ( )
 	boolreVert=false
-	Spring.Echo(COB.MAX_SPEED)
+
 	SetUnitValue(COB.MAX_SPEED,maxspeed)--sets the speed to 5,2 *65533
 
 	hideShield()	

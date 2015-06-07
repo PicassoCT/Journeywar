@@ -62,6 +62,14 @@ local options =
    
     },
   },
+     {
+	key		= "minimission",
+	name	= "Activate Minimissions",
+	desc	= "Activates In-Game Minimissions",
+	section	= 'modifiers',
+	type	= "bool",
+	def		= false,
+  },
  
   {
     key    = 'StartMetal',

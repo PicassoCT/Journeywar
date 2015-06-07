@@ -37,7 +37,7 @@ CanFly   = true,
 
 Builder = true,
 --canHover=true,
-CanAttack = false,
+CanAttack = true,
 CanGuard = true,
 CanMove = true,
 CanPatrol = true,
