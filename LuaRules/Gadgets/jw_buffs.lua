@@ -31,7 +31,23 @@ end
  return damage
 end
 
+
+local attackerTable={}
+attackerTable[UnitDefNames["jsempresequoia"].id]=true
+
+function destroyedUnitCallback(calle,defID)
+	  env = Spring.UnitScript.GetScriptEnv(calle)
+					if env then
+					  Spring.UnitScript.CallAsUnit(calle,env.destroyedUnit,defID )		
+					end
+end
+
 function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
+
+	if attackerTable[attackerDefID] then
+	destroyedUnitCallback(attackerID, unitDefID)
+	end
+
 if AffectedUnitTables[unitDefID] then
 	if unitDefID==OPERAID then 
 	ed=Spring.GetUnitNearestEnemy(unitID)

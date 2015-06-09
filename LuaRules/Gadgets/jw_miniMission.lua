@@ -15,13 +15,9 @@ function gadget:GetInfo()
 end
 
 local modOptions = Spring.GetModOptions()
-if (modOptions.modifiers.gamemode ~= "minimission") then
+if (modOptions.minimission ==false) then
   return
 end
-
-
-
-
 
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 

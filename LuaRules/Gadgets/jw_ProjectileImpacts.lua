@@ -57,26 +57,25 @@ if (gadgetHandler:IsSyncedCode()) then
 	local crazorgrenadeDefID= WeaponDefNames["crazorgrenade"].id
 	local jgluegunDefID= WeaponDefNames["jgluegun"].id
 	local glueMineWeaponDefID= WeaponDefNames["gluemineweapon"].id
+	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
 	
 	local FireWeapons={ [gVolcanoWeaponID]=true,
 						[glavaWeaponID]=true, 	
 						[bunkerPlasmaDefID]=true,  
 						[cCssFlameT]=true,   
-						[cFlareGun]=true,
-	
+						[cFlareGun]=true
 						}
+						
 	Script.SetWatchWeapon(crazorgrenadeDefID , true)
 	Script.SetWatchWeapon(jvaryjumpDefID , true)
 	Script.SetWatchWeapon(striderWeaponDefID , true)
 	Script.SetWatchWeapon(tiglilWeaponDefID , true)
-
 	Script.SetWatchWeapon(slicergun , true)
 	Script.SetWatchWeapon(weaponDefIDjmotherofmercy , true)
 	Script.SetWatchWeapon(cFlareGun , true)
 	Script.SetWatchWeapon(cUniverseGun , true)
 	Script.SetWatchWeapon(cRestrictorThumperID , true)
 	Script.SetWatchWeapon(jDrugIncectorID , true)
-
 	Script.SetWatchWeapon(cmtwgrenade , true)
 	Script.SetWatchWeapon(jHiveHoundID , true)
 	Script.SetWatchWeapon(jSwiftSpearID , true)
@@ -125,6 +124,7 @@ end
 	
 	
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
+				
 		
 		if weaponID == jgluegunDefID then
 		Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
@@ -185,9 +185,9 @@ end
 			    end
 		
 			if (weaponID == jghostDancerWeaponDefID or weaponID== jSwiftSpearID or weaponID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
-		--	----Spring.Echo("Mighty BadaBooom!")
 			Spring.SetUnitPosition(AttackerID,px,py,pz)
 			end
+			
 			--this one creates the headcrabs
 			if (weaponID == crabWeaponDefID) then
 			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
@@ -215,17 +215,22 @@ local 	affectedUnits={}
 	end
 
 	blowUpTable={}
-	local timeTillBlowUp=3500
-	
+	local timeTillBlowUp=3500	
 	local 	jShadowDefID=UnitDefNames["jshadow"].id
+	local WeaponDefTable={}
 	
-	
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
-	
+ WeaponDefTable[greenSeerWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 
-	
+		hitPoints=Spring.GetUnitHealth(unitID)
+			if damage/hitPoints > 0.3 then 
+			x,y,z=Spring.GetUnitPosition(unitID)
+			Spring.DestroyUnit(unitID)
+			Spring.CreateUnit("jtree",x,y,z,1,attackerTeam)
+			end
+		end
+		
+ WeaponDefTable[jvaryfoospearDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
 		--You Sir, have a living spear attached to your gluteus maximus
-		if weaponDefID== jvaryfoospearDefID then
 		--gluteus maximus- ha that sounds funny
 			if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
 		--wait a second thats my ass
@@ -234,11 +239,14 @@ local 	affectedUnits={}
 		end
 		
 		--perma speed reduction
-		if weaponDefID == glueMineWeaponDefID or weaponDefID==jgluegunDefID	then
+ WeaponDefTable[glueMineWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 		end
-		
-		if weaponDefID ==highExLineGunDefID then
+ WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
+		end
+ WeaponDefTable[highExLineGunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 		
+	
 			if 	blowUpTable[unitID] then blowUpTable[unitID].number= blowUpTable[unitID].number+1 
 			else 	
 			blowUpTable[unitID]={number=1, time=timeTillBlowUp, timeSinceBoom=0}	
@@ -246,13 +254,71 @@ local 	affectedUnits={}
 		end
 		
 		--poisonedDart
-		if  weaponDefID == tiglilWeaponDefID then
+ WeaponDefTable[tiglilWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	
 		if not GG.Poisoned then GG.Poisoned={} end
 		pval=120000 
 		GG.Poisoned[unitID]=pval --time till poison wears off
 		end
 		
-		--cBonkerPlasmaWeapon + FireWeapons
+		
+ WeaponDefTable[slicergun]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+
+		--only if the unit is hitsphere wise big enough 
+		hp,maxhp=Spring.GetUnitHealth(unitID)
+			if hp < 500 then
+			sx,sy,sz=Spring.GetUnitCollisionVolumeData(unitID)
+				if sx > 70 and sy > 70 and sz > 70 then
+				
+
+													  x,y,z=Spring.GetUnitPosition(unitID)
+													  slicerColum=Spring.CreateUnit("cmeatcolumn",	x,y,z, 1, gaiaTeamID)  
+													  env = Spring.UnitScript.GetScriptEnv(slicerColum)
+													  if env then
+													  Spring.UnitScript.CallAsUnit(unitID, env.youAreFuckingDead, unitID )		
+													  end
+
+				
+				end
+			end
+		end
+		
+		
+	
+		--restrictor			
+
+ WeaponDefTable[cRestrictorThumperID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 		
+		if weaponDefID == cRestrictorThumperID and Spring.ValidUnitID(attackerID)==true then
+
+							if     UnitDefs[unitDefID].isBuilding == true     then
+							health=Spring.GetUnitHealth(unitID)
+							Spring.SetUnitHealth(unitID, {paralyze =health*15})
+							elseif  UnitDefNames["jbugcreeper"].id == unitDefID or UnitDefNames["jCrabCreeper"].id==unitDefID or UnitDefNames["jhoneypot"].id== unitDefID  then
+							--Send To Distance
+							ax,ay,az=Spring.GetUnitPosition(attackerID)
+							ux,uy,uz=Spring.GetUnitPosition(unitID)
+							ux,uz=ax-ux,az-uz
+							max=math.max(math.abs(ux),math.abs(uz))
+							ux,uz=ux/max,uz/max
+							ux,uz=((ux+uz)/ux)*HARDCODED_RETREATDISTANCE,((ux+uz)/uz)*HARDCODED_RETREATDISTANCE
+							Spring.SetUnitMoveGoal(unitID,ux+ax,uy,uz+az)							
+							elseif attackerDefID== unitDefID then
+							Spring.SetUnitHealth(unitID, {paralyze =0})
+							end
+		
+		end
+		end
+	
+		
+	
+	
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+		
+	if WeaponDefTable[weaponDefID]	then
+	WeaponDefTable[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	end
+	
+	--cBonkerPlasmaWeapon + FireWeapons
 		if FireWeapons[weaponDefID]  and unitDefID ~= cssDefID then
 					if GG.OnFire == nil then  GG.OnFire={} end
 					----Spring.Echo("jw_projectileimpacts: BonkerFireDetected")
@@ -275,27 +341,7 @@ local 	affectedUnits={}
 						end
 						
 		end
-		
-		if weaponDefID == slicergun then
-		--only if the unit is hitsphere wise big enough 
-		hp,maxhp=Spring.GetUnitHealth(unitID)
-			if hp < 500 then
-			sx,sy,sz=Spring.GetUnitCollisionVolumeData(unitID)
-				if sx > 70 and sy > 70 and sz > 70 then
-				
-
-													  x,y,z=Spring.GetUnitPosition(unitID)
-													  slicerColum=Spring.CreateUnit("cmeatcolumn",	x,y,z, 1, gaiaTeamID)  
-													  env = Spring.UnitScript.GetScriptEnv(slicerColum)
-													  if env then
-													  Spring.UnitScript.CallAsUnit(unitID, env.youAreFuckingDead, unitID )		
-													  end
-
-				
-				end
-			end
-		end
-		
+	
 		--skySraper is damagedCase
 			if skySraperDefID== unitDefID then
 											  env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -332,30 +378,10 @@ local 	affectedUnits={}
 			end
 		end
 		
-		--restrictor				
-		if weaponDefID == cRestrictorThumperID and Spring.ValidUnitID(attackerID)==true then
-
-							if     UnitDefs[unitDefID].isBuilding == true     then
-							health=Spring.GetUnitHealth(unitID)
-							Spring.SetUnitHealth(unitID, {paralyze =health*15})
-							elseif  UnitDefNames["jbugcreeper"].id == unitDefID or UnitDefNames["jCrabCreeper"].id==unitDefID or UnitDefNames["jhoneypot"].id== unitDefID  then
-							--Send To Distance
-							ax,ay,az=Spring.GetUnitPosition(attackerID)
-							ux,uy,uz=Spring.GetUnitPosition(unitID)
-							ux,uz=ax-ux,az-uz
-							max=math.max(math.abs(ux),math.abs(uz))
-							ux,uz=ux/max,uz/max
-							ux,uz=((ux+uz)/ux)*HARDCODED_RETREATDISTANCE,((ux+uz)/uz)*HARDCODED_RETREATDISTANCE
-							Spring.SetUnitMoveGoal(unitID,ux+ax,uy,uz+az)							
-							elseif attackerDefID== unitDefID then
-							Spring.SetUnitHealth(unitID, {paralyze =0})
-							end
-		
-		end
-	
-		
 	
 	end
+	
+	
 	local everyNthFrame=30
 	local poisonDamage=15
 	function gadget:GameFrame(frame)

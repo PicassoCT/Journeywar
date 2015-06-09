@@ -27,7 +27,8 @@ local    tldancedru    =piece "tldancedru"
 
 local AMBUSHLOADTIME=30000
 local AMBUSHTIME=9000
-
+local RELOADTIME=900
+local COOLDOWNTIMER=0
   Sleeper= 6
   tempsleep=0
   randomvalue=-1
@@ -9042,7 +9043,7 @@ StartThread(EGG_LOOP)
 Hide(tlharp)
 Hide(tlflute)
 Hide(tldancedru)
-StartThread(coolDownTimer)
+
 end
 
 function script.Killed(recentDamage,maxHealth)
@@ -9735,29 +9736,12 @@ function script.QueryWeapon1()
 	return aimpivot
 end
 
-boolCoolDownStart=false
-boolCoolDown=true
-
-function coolDownTimer()
-	while true do
-		if boolCoolDownStart==true then
-		boolCoolDownStart=false
-		boolCoolDown=false
-		Sleep(1200)
-	
-
-		boolCoolDown=true
-		end
-	Sleep(150)
-	end
-end
 
 function WeaponAmbushMode()
 if boolAmbushInProgress==true then return true end
-	if boolCoolDown==true  then
-	boolCoolDownStart=true
-	return true
-		else
+	if RELOADTIME == 0 then 
+	return true 
+	else 
 		return false
 		end
 end
@@ -9785,13 +9769,22 @@ function script.AimWeapon1(heading,pitch)
 		Spring.PlaySoundFile("sounds/tiglil/tgAttac2.wav")
 		end
 	end
+
 	return boolCanFire
+end
+
+function ReloadCountDown()
+Sleep(RELOADTIME)
+RELOADTIME=0
 end
 
 -- called after the weapon has fired
 function script.FireWeapon1()
 	Signal(SIG_WHIR)
-
+		if boolAmbushInProgress==false then
+		RELOADTIME=COOLDOWNTIMER
+		StartThread(ReloadCountDown)
+		end
 
 	StartThread  (bladewhirl_thread)
 	sound=math.random(0,1)

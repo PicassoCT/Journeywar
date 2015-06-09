@@ -12,6 +12,8 @@ turret3=piece"turret3"
 turret4=piece"turret4"
 Ground={}
 
+ChargeUp=0
+
 for i=1,6, 1 do
 Ground[i]={}
 name="grd"..i
@@ -56,15 +58,27 @@ boolOnlyOnce=true
 	
 			return 0
 			end
-			
+
+function destroyedUnit(dUIDefID)
+MetallCost=250--TODO getUnitType dependant costs
+EnergyCost=250--TODO getUnitType dependant costs
+Show(energyorb)
+Total=(MetallCost+EnergyCost)^0.5
+ChargeUp=ChargeUp+0.5
+end			
 
 function emitLight()
 Spin(energyorb,y_axis,math.rad(42),12)
 Spin(energyorb,z_axis,math.rad(22),12)
 Spin(energyorb,x_axis,math.rad(-22),12)
 	while(true)do
-	Sleep(25)
-	EmitSfx(energyorb,1026)
+	
+		while chargeUp > 0 do
+		Sleep(25)
+		EmitSfx(energyorb,1026)
+		
+		end			
+	Sleep(1000)
 	end			
 end
 
@@ -186,9 +200,6 @@ function script.AimFromWeapon4()
 	return turret4 
 end
 
-
-
-
 function script.QueryWeapon4() 
 return turret4
 end
@@ -199,5 +210,25 @@ function script.AimWeapon4( heading ,pitch)
 end
 
 function script.FireWeapon4()	
+	return true
+end
+
+
+function script.AimFromWeapon5() 
+	return energyorb 
+end
+
+function script.QueryWeapon5() 
+return energyorb
+end
+
+function script.AimWeapon5( heading ,pitch)	
+
+	return (ChargeUp/ChargeTotal) > 1
+end
+
+function script.FireWeapon5()
+Hide(energyorb)
+chargeUp=0	
 	return true
 end

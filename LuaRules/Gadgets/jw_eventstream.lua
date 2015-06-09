@@ -26,12 +26,16 @@ if (gadgetHandler:IsSyncedCode()) then
 
 	local function CreateEvent(self,...)
             self[#self+1] = {...}
+    end	
+	local function InjectCommand(self,...)
+            self[#self+1] = {...}
     end
 
 	 if not GG.EventStream  then GG.EventStream = { CreateEvent = CreateEvent } end
 	local StreamUnits={}
 	local TimeTable={}
 	local TableMin
+	local boolInstantUpdate=false
 	
 	function gadget:GameFrame(frame)
 	
@@ -45,6 +49,24 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	GG.EventStream={CreateEvent=CreateEvent}
 	end
+	--the exotic word rain, in the ass a pain - i think i got, i think i got: I can talk fluent java-expert gibberish ...PersistancePackageInjection... 
+	--expects a Table containing the Data  to inject, a  boolean InstantUpdate and ID 
+	--
+	 if not GG.PersitanceInject  then GG.PersitanceInject = { InjectCommand = InjectCommand } end
+	 if #GG.PersitanceInject then
+	 local PI=GG.PersitanceInject
+	 frame=Spring.GetGameFrame()
+	 
+	 	for i=1,#PI do
+			if PI[i].InstantUpdate==true then
+			boolInstantUpdate=true
+			TimeTable[frame]=TableInsertUnique(TimeTable[frame],PI[i].ID)
+			end
+			table.insert(StreamUnits[PI[i].ID], PI[i].Data)
+		end
+		GG.PersitanceInject ={}
+	 end
+	
 	if not GG.EventStreamDeactivate then GG.EventStreamDeactivate={} end
 	if #GG.EventStreamDeactivate > 0 then
 		for k,v in pairs(GG.EventStreamDeactivate) do
@@ -53,7 +75,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		GG.EventStreamDeactivate={}
 	end
 	--handle EventStream	
-		if frame == TableMin then
+		if frame == TableMin or InstantUpdate==true then
 		for i=1,#TimeTable[frame] do
 			local id=TimeTable[frame][i]
 		

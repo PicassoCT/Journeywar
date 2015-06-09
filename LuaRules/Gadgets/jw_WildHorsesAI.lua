@@ -6,7 +6,7 @@ function gadget:GetInfo()
                 desc = "Generic Emergent AI using eventstreams",
                 author = "Picasso",
                 date = "around since last tuesday",
-                license = "GPL - by reading this you are basically allready infected.",
+                license = "GPL - by reading this you are basically allready infected. Brainz, brainz - no wait -freedomz, freedomz...",
                 layer = 82,
                 enabled = false
         }
@@ -90,8 +90,8 @@ function loadheuristicWishlists(side)
 return false, {}
 end
 
-//wishlists 
-cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
+--//wishlists 
+cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
 		UnitPool={}, TaskList={},
  Build={
  
@@ -105,7 +105,7 @@ cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fal
 
  }
  
-cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
+cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
 		 UnitPool={}, TaskList={},
  Build={
 
@@ -116,14 +116,14 @@ cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fa
 		["cgama"]			={nr=1,cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0}
 		}
 		}
-cAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
+cAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
  UnitPool={}, TaskList={},
  Build={
 		["mtw"]					={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		["restrictor"]			={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		}
 		}
-jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
+jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
  UnitPool={}, TaskList={},
  Build={
 
@@ -135,7 +135,7 @@ jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fals
 		}
    
 }
-jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
+jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
  UnitPool={}, TaskList={},
  Build={
 
@@ -148,7 +148,7 @@ jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fa
 		["jtree"]					={nr=3, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		}
 }
-jAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false
+jAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
  UnitPool={}, TaskList={},
  Build={
 
@@ -220,7 +220,7 @@ local function returnUnitToPool(teamid,unitid, assignedSubAI,father)
     end
      
     if GG.UnitPool== nil then GG.UnitPool = { Return = returnUnitToPool } end
---filters the next to build unit/building according to need
+	--filters the next to build unit/building according to need
 	function nextBuildFilterFunction(typeTable, AI_Table)
 	return typeTable[1]
 	end
@@ -274,6 +274,8 @@ function Aggressor(AITable)
 return AITable
 end
  
+function traverseTaskStateMachine(AITable)
+end 
  
 function gadget:GameFrame(frame)
 	if frame % 50 == 0 then

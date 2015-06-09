@@ -94,6 +94,9 @@ weapons = {
 	},
 [1]={name  = "jtreelazor",
 	onlyTargetCategory = [[LAND]],
+	},
+[5]={name  = "greenseer",
+	onlyTargetCategory = [[LAND]],
 	},	
 		},
 

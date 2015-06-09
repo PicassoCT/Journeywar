@@ -523,6 +523,11 @@ function stopSpinT(Table,axis, speed)
 
 end
 
+function makePiecePoint(piece)
+x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+return {x=x, y= y, z= z}
+end
+
 -->Creates basically a table of piecenamed enumerated strings
 function makeTableOfPieceNames(name, nr,startnr)
 T={}
@@ -547,7 +552,7 @@ end
 -->Reset a Table of Pieces at speed
 function reseT(tableName,speed)
 lspeed=speed or 0
-
+	
 	for i=1,#tableName do
 	resetPiece(tableName[i],lspeed)
 	end
@@ -3825,4 +3830,14 @@ end
 				
 	
 	end
+	
+	-->Inserts a Value only if it is not found
+	function TableInsertUnique(Table, Value)
+	for i=1,#Table do
+		if Table[i]==Value then return Table end	
+	end
+	table.insert(Table,Value)
+	return Table
+	end
+	
 
