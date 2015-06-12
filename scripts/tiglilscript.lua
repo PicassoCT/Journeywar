@@ -10096,7 +10096,7 @@ boolAmbushCharged=true
 Spring.Echo("AmbushReady")
 end
 
-local boolCloaked=false
+ boolCloaked=false
 function cloakCheckAndAmbushLoad()
 local boolPrevCloaked=false
 

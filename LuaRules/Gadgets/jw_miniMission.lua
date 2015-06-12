@@ -1,5 +1,6 @@
 
 function gadget:GetInfo()
+
   local modOptions = Spring.GetModOptions()
 
   return {
@@ -10,14 +11,11 @@ function gadget:GetInfo()
     license   = "GNU GPL, v2 or later",
     layer     = 0,
 	version = 1,
-    enabled   = true
+    enabled   = modOptions.minimission 
   }
 end
 
-local modOptions = Spring.GetModOptions()
-if (modOptions.minimission ==false) then
-  return
-end
+
 
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 

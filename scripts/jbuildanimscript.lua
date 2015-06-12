@@ -84,7 +84,8 @@ buildID=identifyUnit()
 Sleep(100)
 counter=counter+1
 end
-if counter == 50 or not buildID or not Spring.ValidUnitID(buildID)  then Spring.DestroyUnit(unitID,false,false) end
+validID= Spring.ValidUnitID(buildID) 
+if counter == 50 or not buildID or validID==false  then Spring.DestroyUnit(unitID,false,false) return end
 
 Spring.SetUnitAlwaysVisible(buildID,false)
 

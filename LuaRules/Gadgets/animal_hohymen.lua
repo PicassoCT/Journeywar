@@ -42,7 +42,7 @@
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
 		AgentTable[unitid].Values["Social"]=math.min(AgentTable[unitid].Values["Social"]+1,100)
-		AgentTable[unitid].Values["Mate"]=math.min(100,AgentTable[unitid].Values["Mate"]+1)
+		 
 	return transferStatechangeToUnitScript(unitid,"MoveCloser",{[1]=other})
 	end	
 	
@@ -52,7 +52,7 @@
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
 		AgentTable[unitid].Values["Energy"]= AgentTable[unitid].Values["Energy"]+1
-		AgentTable[unitid].Values["Mate"]=math.min(100,AgentTable[unitid].Values["Mate"]+1)
+		 
 	return transferStatechangeToUnitScript(unitid,"Rest",{[1]=other})	
 	end
 	
@@ -200,7 +200,7 @@
 			--all the conditions for sleeping
 				if 	AgentTable[unitid].Values["Security"] > 75 and AgentTable[unitid].Values["Social"] > 50 and 
 				Spring.GetGroundHeight(x,z) > 0 and AgentTable[unitid].Values["Food"] > 50 and 
-				AgentTable[unitid].Values["Energy"] < 75 and AgentTable[unitid].Values["Mate"]==0 then
+				AgentTable[unitid].Values["Energy"] < 75  then
 				return true
 				end
 			return false		

@@ -182,7 +182,7 @@
 	end
 
 	
-local	StateFunctionTable={
+	StateFunctionTable={
 		 ["Eat"] =	   				Eat,     
 		 ["Meat"] =   			  	Meat,    			
 		 ["DrinkWater"] =   		DrinkWater,    					  
@@ -217,7 +217,7 @@ local	StateFunctionTable={
 	
 	
 	function functionswitch(name, argTable)
-	Spring.Echo("JW::GHohymen::Functionswitch")
+	Spring.Echo("JW::GHohymen::Functionswitch"..name)
 	Signal(SIG_STATE)
 	LegsDown()
 	StateFunctionTable[name](argTable)	
