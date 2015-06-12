@@ -5,7 +5,7 @@ function gadget:GetInfo()
     name      = "EventStream",
     desc      = "This gadget streams eventsfunctions until they get deactivated or remove themselves",
 	--Expected Tableformat:
-	--GG.EventStream[id] which contains Tables in the shape of"..
+	--GG.EventStream[nr] which contains Tables in the shape of"..
 	--{id=id,  action(id,frame, persPack), persPack}"..
 	-- 	Action handles the actual action, for example validation a unit still exists.
 	--	It always returns a frameNr when it wants to be called Next, and the Persistance Package
@@ -20,13 +20,16 @@ function gadget:GetInfo()
   }
 end
 
-
+GG.EventStreamID=0
 
 if (gadgetHandler:IsSyncedCode()) then
 
 	local function CreateEvent(self,...)
-            self[#self+1] = {...}
+		GG.EventStreamID=GG.EventStreamID+1
+            self[GG.EventStreamID-1] = {...}
+			return GG.EventStreamID-1
     end	
+	
 	local function InjectCommand(self,...)
             self[#self+1] = {...}
     end

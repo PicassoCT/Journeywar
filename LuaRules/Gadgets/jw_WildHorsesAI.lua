@@ -112,10 +112,11 @@ cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fa
 		["mdigg"]				={nr=1, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=5},
 		["sentry"]				={nr=1, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		["crailgun"]			={nr=1, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
-		["sentrynell"]			={nr=1,cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0}
+		["sentrynell"]			={nr=1,cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		["cgama"]			={nr=1,cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0}
 		}
 		}
+		
 cAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
  UnitPool={}, TaskList={},
  Build={
@@ -264,8 +265,14 @@ function DefRes(AITable)
 		-- if Aggressored, buy protection via Tasks from Aggressor
 return AITable
 		end
-
+function createStreamEventTask(id, AITable)
+--{id=id,  action(id,frame, persPack), persPack}"..
+return GG.Eventstream::CreateEvent(id =GG.EventStreamID or 0,function (id, frame, persPack) Spring.SetUnitMoveGoal(persPack.unitid,math.random(0,500),0,math.random(0,500)) return frame +90 end, persPack={unitid=id})
+end
 function Aggressor(AITable)
+	for i=1,#AITable.UnitPool do
+	AITable.TaskList[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool.id,AITable)
+	end
 	-- Virtual Enemy
 		--if Virtual Enemy is stronger Harass, Delay and Defend
 	--else
