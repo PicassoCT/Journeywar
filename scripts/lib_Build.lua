@@ -948,3 +948,68 @@ end
 	
 
 end
+
+
+function PlanetNameGenerator(llenght, lNamingSamples,  lBreakers, lLetterTable,lBoolPrecursor, lBoolPostPoner)
+function PreCurse() return math.random(0,1)==1 end
+function PostPone() return math.random(0,1)==1 end
+
+
+length = llenght or 3
+NamingSamples= lNamingSamples or 10
+LetterTable= lLetterTable or {[1]="A",[2]="O",[3]="E",[4]="U",[5]="I",[6]="K",[7]="C",[8]="L",[9]="N",[10]="R",[11]="S",[12]="Y",[13]="G",[14]="H",[15]="T"}
+Breakers=lBreakers or math.floor(math.random(0,2))
+Precursor=""
+PostPoner=""
+
+PrecursorTable={"Prime ", "Sigma ", "Alpha ", "Al' ", "New ", "Colony "}
+
+   if PreCurse() ==true then
+   Precursor=PrecursorTable[math.random(1,#PrecursorTable)]
+   end
+   
+PostPonerTable={" Hope", " Landfell", " Edge", " VIII ", " Paradise", " <HellClass>" }
+
+   if PostPone()==true then
+   PostPoner=PostPonerTable[math.random(1,#PostPonerTable)]
+   end
+
+NameEndingTable={"this","iel","ora","os","cia","ash","esh","ill","illa","esh","dor","ran",
+               "spin","dia","bah","cant","sen","ino","ine","vin","eese","oga",
+               "alla","ico","rah","kel","nis","gam","hell","den","rado","yss","hnoss"}
+previousChar="z"
+BreakerTable={}
+boolBreakerBlow=true
+	dist=2
+  for i=1,Breakers do
+  if dist < length then
+  BreakerTable[math.ceil(math.random(dist,length))]=true
+  end
+  dist=dist+3
+	if dist> length then i=Breakers+1 end
+  end
+
+  BreakCounter=1
+    for i=1,NamingSamples,1 do
+    Name=""..Precursor
+       for j=1,length,1 do
+         boolBreakerBlow=false
+           if (BreakerTable[j]) then Name=Name.." ' ";boolBreakerBlow=true;BreakCounter=1 else BreakCounter=BreakCounter+1 end
+       if BreakCounter % 2 ==0 then
+	   index= math.floor(math.random(1,5)) 
+	   else
+       index=math.random(1,#LetterTable)
+	   end
+           if (LetterTable[index]==previousChar) then index=index+1 end
+            if boolBreakerBlow==false and j ~= 1 then
+            Name=Name..string.lower(LetterTable[index])
+            else
+            Name=Name..LetterTable[index]
+            end
+       end
+       ending=math.random(1,#NameEndingTable)
+       Name=Name..NameEndingTable[ending]..PostPoner
+       Spring.Echo(Name)
+    end
+
+end

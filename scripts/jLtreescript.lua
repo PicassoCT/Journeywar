@@ -1,7 +1,7 @@
 	include "suddenDeath.lua"
 	include "lib_OS.lua"
- include "lib_TableOp.lua"
- include "lib_Build.lua" 
+	include "lib_TableOp.lua"
+	include "lib_Build.lua" 
 
 	--include "spring_lua_dsl.lua"
 
@@ -53,6 +53,7 @@
 	
 
 	function script.Create()
+	
 	--functions to hide Tables
 	hideT(TreePiece)
 	hideT(EndPiece)
@@ -461,7 +462,7 @@ FixFunctionTabel[2]= function ()
 	if math.random(0,1)==1 then
 		for j=1,5 do
 					Turn(TreePiece[j],x_axis,deg,0,true)
-					ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
+						ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[j])
 					-- --Spring.Echo(ox,oy,oz)
 					Move(TreePiece[j+1],x_axis,ox,0)
 					Move(TreePiece[j+1],y_axis,oy,0)
@@ -475,15 +476,15 @@ FixFunctionTabel[2]= function ()
 		sval=math.random(-5.5,5.5)
 		for j=6,#TreePiece,spirallength  do
 			for i=j, j+spirallength do
-				Turn(TreePiece[j],axis,math.rad((val*i)),0,true)
-				Turn(TreePiece[j],secondaryAxis,math.rad((sval)),0,true)
-				WaitForTurn(TreePiece[j],axis)
+				Turn(TreePiece[i],axis,math.rad((val*i)),0,true)
+				Turn(TreePiece[i],secondaryAxis,math.rad((sval)),0,true)
+				WaitForTurn(TreePiece[i],axis)
 	
-				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[j])
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
 
-				Move(TreePiece[j+1],x_axis,ox,0)
-				Move(TreePiece[j+1],y_axis,oy,0)
-				Move(TreePiece[j+1],z_axis,oz,0,true)
+				Move(TreePiece[i+1],x_axis,ox,0)
+				Move(TreePiece[i+1],y_axis,oy,0)
+				Move(TreePiece[i+1],z_axis,oz,0,true)
 				
 				
 			end
@@ -509,15 +510,15 @@ FixFunctionTabel[2]= function ()
 	
 			for i=j, j+spirallength do
 			sval=math.random(0,360)
-				Turn(TreePiece[j],x_axis,math.rad((val+const*i)),0,true)
-				Turn(TreePiece[j],y_axis,math.rad((sval)),0,true)
-				WaitForTurn(TreePiece[j],axis)
+				Turn(TreePiece[i],x_axis,math.rad((val+const*(i-j))),0,true)
+				Turn(TreePiece[i],y_axis,math.rad((sval)),0,true)
+				WaitForTurn(TreePiece[i],axis)
 	
-				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[j])
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
 
-				Move(TreePiece[j+1],x_axis,ox,0)
-				Move(TreePiece[j+1],y_axis,oy,0)
-				Move(TreePiece[j+1],z_axis,oz,0,true)
+				Move(TreePiece[i+1],x_axis,ox,0)
+				Move(TreePiece[i+1],y_axis,oy,0)
+				Move(TreePiece[i+1],z_axis,oz,0,true)
 				
 				
 			end
@@ -526,6 +527,70 @@ FixFunctionTabel[2]= function ()
 	
 	return true	
 	end
+		--free Form Function  function
+	FixFunctionTabel[13]= function ()
+		showT(TreePiece)
+		showT(EndPiece)
+		uposX,uposY,uposZ=Spring.GetUnitPosition(unitID)
+		up=math.ceil(math.random(15,25))
+	
+		val=60
+		const=-9
+		for j=1,#TreePiece,0 do
+		spirallength=math.floor(math.random(4,12))
+	
+			for i=j, j+spirallength do
+				if i==j then
+				MoveUnitPieceToGroundPos(unitID,TreePiece[i],uposX+math.random(-50,50),uposZ+math.random(-50,50),0,5)	
+				end
+			
+			sval=math.random(0,360)
+				whatADeg,butWhy=deterministicTurn(i,spirallength)
+				Turn(TreePiece[i],x_axis,math.rad(whatADeg),0,true)
+				Turn(TreePiece[i],y_axis,math.rad(butWhy),0,true)
+				WaitForTurn(TreePiece[i],axis)
+				if i~= j then	
+					whatAPiece=detMoveStoreTable(i,spirallength)
+					ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[whatAPiece])
+	
+					Move(TreePiece[i+1],x_axis,ox,0)
+					Move(TreePiece[i+1],y_axis,oy,0)
+					Move(TreePiece[i+1],z_axis,oz,0,true)
+				end
+			end
+		end
+		
+	
+	return true	
+	end
+
+	function slightVariation(deg,value)
+	return math.random(deg-value,value+deg)
+	end
+	
+	detTurnStoreTable={}
+	function deterministicTurn(index,maxindex,degree)
+		if index > maxindex then --not first round
+		index=(index%maxindex)+1
+		return detTurnStoreTable[index]+slightVariation(detTurnStoreTable[index], 7) , detTurnStoreTable[index] %(index*270)+math.random(0,10)
+		else
+		detTurnStoreTable[index]= math.random(0,180/maxindex)	
+		return detTurnStoreTable[index], detTurnStoreTable[index] %(index*270)+math.random(0,10)
+		end
+	end
+	
+	detMoveStoreTable={}
+	function deterministicMove(index,maxindex)
+		if index > maxindex then --not first round
+		index=(index%maxindex)+1
+		return detMoveStoreTable[index]
+		else
+		detMoveStoreTable[index]= math.floor(math.random(1,maxindex))	
+		return detMoveStoreTable[index]
+		end
+	end
+	
+	
 	
 	--concatenates some random gramarRules, thus really creating new form of plants
 	function getRandomGramarProcution(ElementTable, NrOfElements, Recursionstart, RecursionEnd)
