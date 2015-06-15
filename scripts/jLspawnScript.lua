@@ -23,10 +23,10 @@ health,  maxHealth,  paralyzeDamage,  captureProgress,  buildProgress=Spring.Get
 
 team=Spring.GetUnitTeam(unitID)
 x,y,z=Spring.GetUnitPosition(unitID)
-id=Spring.CreateUnit("jtree4"..(math.random(1,7)),x,y,z,1,team,fals,false)
+id=Spring.CreateUnit("jtree4"..(math.random(1,8)),x,y,z,1,team,fals,false)
 
 	while not id or Spring.GetUnitIsDead(id)==true do
-	id=Spring.CreateUnit("jtree4"..(math.random(1,7)),x,y,z,1,team,fals,false)
+	id=Spring.CreateUnit("jtree4"..(math.random(1,8)),x,y,z,1,team,fals,false)
 	end
 	
 	

@@ -78,7 +78,7 @@ function doSomething()
 
 buildID=unitID
 counter=0
-Spring.Echo("doSomething1")
+
 while counter < 50 and not buildID or buildID== unitID   do
 buildID=identifyUnit()
 Sleep(100)
@@ -90,7 +90,7 @@ if counter == 50 or not buildID or validID==false  then Spring.DestroyUnit(unitI
 Spring.SetUnitAlwaysVisible(buildID,false)
 
 SetSignalMask(SIG_BUILD)
-Spring.Echo("doSomething2")
+
 
 	Move(center,y_axis,Down,0,true)
 	Sleep(500)
@@ -100,7 +100,7 @@ Show(Base)
 
 signum=-1
 currently=1
-Spring.Echo("doSomething3")
+
 StartThread(randomRotate,Egg,y_axis,0.03,-5,5)
 StartThread(randomRotate,Egg,x_axis,0.03,-15,15)
 StartThread(randomRotate,Egg,z_axis,0.03,-5,5)

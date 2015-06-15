@@ -714,6 +714,7 @@ end
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
 if not piecename then return error("No piecename given") end
+if not X or not Z then return end
 loffset=offset or 0
 x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 Move(piecename,x_axis,X,0)
@@ -3335,7 +3336,7 @@ end
 	end
 
 	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force)
-	Spring.Echo("pushBody")
+
 	Turn(FirstAxisPoint,2,turnDeg)
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
@@ -3356,7 +3357,7 @@ end
 	end
 	-->Uses the LiftAnimation Function to Lift the Feed
 	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-	Spring.Echo("liftFeedForward")
+
 	GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
 	LiftFunction(KneeT,Force/(#KneeT*Weight))
 

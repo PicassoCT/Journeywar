@@ -1588,6 +1588,7 @@ local aVd=acquireVehicleDegree()
 												"jtree45",
 												"jtree46",
 												"jtree47",
+												"jtree48",
 												"campole",
 												"scumslum",
 												"cdistrictnone",

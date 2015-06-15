@@ -429,8 +429,9 @@ FixFunctionTabel[2]= function ()
 		randCent=math.ceil(math.random(4,9))
 		x,y,z=Spring.GetUnitPosition(unitID)
 			for k=1,randCent do
+			ex,ez=x+math.random(0.5,1)*90*randSign(),z+math.random(0.5,1)*90*randSign()
 			MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(math.max(1,k),#TreePiece)],ex,ez,0,SIZEOFPIECE/2)
-			ex,ez=x+math.random(-90,90),z+math.random(-90,90)
+		
 			
 			start,End=(k-1)*(NUMBEROFPIECES/randCent)+1,k*(NUMBEROFPIECES/randCent)
 			flowerdeg= math.random(15,85)
@@ -457,7 +458,7 @@ FixFunctionTabel[2]= function ()
 	
 		up=math.ceil(math.random(15,25))
 	
-	spirallength=math.floor((#TreePiece-6)/math.random(1,6))
+	spirallength=math.floor(math.max(3,(#TreePiece-6)/math.random(1,6)))
 	deg=math.random(-5,5)
 	if math.random(0,1)==1 then
 		for j=1,5 do
@@ -475,12 +476,14 @@ FixFunctionTabel[2]= function ()
 		val=math.random(-55,55)
 		sval=math.random(-5.5,5.5)
 		for j=6,#TreePiece,spirallength  do
-			for i=j, j+spirallength do
+			for i=j, j+spirallength,1 do
+			if TreePiece[i] then
 				Turn(TreePiece[i],axis,math.rad((val*i)),0,true)
 				Turn(TreePiece[i],secondaryAxis,math.rad((sval)),0,true)
 				WaitForTurn(TreePiece[i],axis)
-	
+			
 				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
+			end
 			if TreePiece[i+1] then
 				Move(TreePiece[i+1],x_axis,ox,0)
 				Move(TreePiece[i+1],y_axis,oy,0)
@@ -495,6 +498,7 @@ FixFunctionTabel[2]= function ()
 	end
 
 	FixFunctionTabel[12]= function ()
+	Spring.Echo("FixFunctionTabel::WoundedTree")
 		showT(TreePiece)
 		showT(EndPiece)
 		
@@ -527,11 +531,15 @@ FixFunctionTabel[2]= function ()
 	
 	return true	
 	end
+	
+	ux,uy,uz= Spring.GetUnitPosition(unitID)
 		--free Form Function  function
 	FixFunctionTabel[13]= function ()
+	Spring.Echo("Free Form Function")
 		showT(TreePiece)
 		showT(EndPiece)
-		uposX,uposY,uposZ=Spring.GetUnitPosition(unitID)
+	
+	
 		up=math.ceil(math.random(15,25))
 	
 		val=60
@@ -541,7 +549,7 @@ FixFunctionTabel[2]= function ()
 	
 			for i=j, j+spirallength do
 				if i==j then
-				MoveUnitPieceToGroundPos(unitID,TreePiece[i],uposX+math.random(-150,150),uposZ+math.random(-150,150),0,5)	
+				MoveUnitPieceToGroundPos(unitID,TreePiece[i],ux+math.random(-150,150),uz+math.random(-150,150),0,5)	
 				end
 			
 			sval=math.random(0,360)
@@ -1445,7 +1453,8 @@ end
 	boolTakeATurn=true
 	
 		if math.random(0,3)==1 then 
-		boolTakeATurn=FixFunctionTabel[math.random(1,#FixFunctionTabel)]()
+		max=#FixFunctionTabel+0.4999
+		boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
 			else
 			dice=math.random(1,#gramarTable)
 	
