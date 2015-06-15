@@ -481,11 +481,11 @@ FixFunctionTabel[2]= function ()
 				WaitForTurn(TreePiece[i],axis)
 	
 				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
-
+			if TreePiece[i+1] then
 				Move(TreePiece[i+1],x_axis,ox,0)
 				Move(TreePiece[i+1],y_axis,oy,0)
 				Move(TreePiece[i+1],z_axis,oz,0,true)
-				
+			end	
 				
 			end
 		end
@@ -541,7 +541,7 @@ FixFunctionTabel[2]= function ()
 	
 			for i=j, j+spirallength do
 				if i==j then
-				MoveUnitPieceToGroundPos(unitID,TreePiece[i],uposX+math.random(-50,50),uposZ+math.random(-50,50),0,5)	
+				MoveUnitPieceToGroundPos(unitID,TreePiece[i],uposX+math.random(-150,150),uposZ+math.random(-150,150),0,5)	
 				end
 			
 			sval=math.random(0,360)
