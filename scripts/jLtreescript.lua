@@ -362,7 +362,7 @@ FixFunctionTabel[2]= function ()
 		showT(EndPiece)
 		x,y,z=Spring.GetUnitPosition(unitID)
 		
-			for i=1,NUMBEROFPIECES,9 do
+			for i=3,NUMBEROFPIECES,9 do
 			boolAtLeastOnce=true
 		
 				start=-90
@@ -543,13 +543,13 @@ FixFunctionTabel[2]= function ()
 		up=math.ceil(math.random(15,25))
 	
 		val=60
-		const=-9
+
 		for j=1,#TreePiece,0 do
 		spirallength=math.floor(math.random(4,12))
 	
 			for i=j, j+spirallength do
 				if i==j then
-				MoveUnitPieceToGroundPos(unitID,TreePiece[i],ux+math.random(-150,150),uz+math.random(-150,150),0,5)	
+				MoveUnitPieceToGroundPos(unitID,TreePiece[i],ux+math.random(-150,150),uz+math.random(-150,150),0,15)	
 				end
 			
 			sval=math.random(0,360)
