@@ -7,7 +7,11 @@
 
 	local INFLUENCERADIUS=120
 	NUMBEROFPIECES=56
-
+	
+	udef=Spring.GetUnitDefID(unitID)
+		if udef and udef== UnitDefNames[].id then
+		NUMBEROFPIECES=30
+		end
 -->>PieceDefinitions<<--
 
 	center=piece"center"
