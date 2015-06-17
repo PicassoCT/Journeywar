@@ -4,7 +4,7 @@ local unitDef = {
 name = "Accid Tree ",
 Description = " a Matter  Depot in Times of Crisis.",
 objectName = "jgigtree.s3o",
-script = "jLtree8jLtreescript.lua",
+script = "jLtreescript.lua",
 buildPic = "jtree.png",
 --cost
 buildCostMetal = 100,
@@ -62,7 +62,7 @@ EnergyStorage = 0,
 		buildinggrounddecaldecayspeed = 0.00002,
 		buildinggrounddecalsizex = 6,
 		buildinggrounddecalsizey = 6,
-		buildinggrounddecaltype = "jLTreeRoot6.png",
+		buildinggrounddecaltype = "GiggerDecal.png",
    
  sfxtypes = {
 				explosiongenerators = {

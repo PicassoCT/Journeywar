@@ -9,8 +9,10 @@
 	NUMBEROFPIECES=56
 	
 	udef=Spring.GetUnitDefID(unitID)
-		if udef and udef== UnitDefNames[].id then
+	boolVaryFooTree=false
+		if udef and udef == UnitDefNames["jtree49"].id then
 		NUMBEROFPIECES=30
+		boolVaryFooTree=true
 		end
 -->>PieceDefinitions<<--
 
@@ -206,11 +208,11 @@ FixFunctionTabel[2]= function ()
 	
 	Spring.Echo("FixFunctionTabel::FruitField")
 	x,y,z=Spring.GetUnitPosition(unitID)
-	sizeOfPlant=math.ceil(math.random(1,5))
+	sizeOfPlant=math.ceil(math.random(2,5))
 		degT={}
 		for i=1,sizeOfPlant do
 		degT[i]={}
-		degT[i].x=math.random(-42,42)
+		degT[i].x=math.random(-22,22)
 		degT[i].y=math.random(-22,22)
 		degT[i].z=math.random(-22,22)	
 		end
@@ -308,28 +310,42 @@ FixFunctionTabel[2]= function ()
 	Spring.Echo("FixFunctionTabel::Spiraltree")
 		showT(TreePiece)
 		showT(EndPiece)
-		x,y,z=Spring.GetUnitPosition(unitID)
+		reseT(EndPiece)
+		reseT(TreePiece)
+		Turn(center,y_axis,0,0)
+		Turn(center,x_axis,0,0)
+		Turn(center,z_axis,0,0)
+		
+		
+		
+	PrevPiece=0
 	
 			it=10
-			for i=1,NUMBEROFPIECES,2 do
-	
-			val=(SIZEOFPIECE)*(i/4)
-				it=it+math.random(10,20)
-				Move(TreePiece[i],y_axis,(val),0)
 			
-				Turn(TreePiece[i],y_axis,math.rad(it),0)		
-                               
-				Move(TreePiece[i+1],y_axis,(val),0)
-				Turn(TreePiece[i+1],y_axis,math.rad(180+it),0)
+	
+				v=math.random(53,65)*randSign()
+			for i=1,NUMBEROFPIECES-1,1 do
+	
+			
+				it=it+math.random(10,20)
 				
-					v=math.random(-95,-85)
-					Turn(TreePiece[i+1],x_axis,math.rad(v),0,true)
-					v=math.random(-95,-85)
-					Turn(TreePiece[i],x_axis,math.rad(math.random(-95,-85)),0,true)
-				
+				PrevPiece=EndPiece[i]
+				Turn(TreePiece[i+1],y_axis,math.rad(it),0)
+				v=v+math.random(0,3)
+				Turn(TreePiece[i+1],x_axis,math.rad(v),0,true)
+				ox,oy,oz= Spring.GetUnitPiecePosition(unitID,PrevPiece)
+				Move(TreePiece[i+1],x_axis,ox,0)
+				Move(TreePiece[i+1],y_axis,oy,0)
+				Move(TreePiece[i+1],z_axis,oz ,0,true)
+					
+					WaitForMove(TreePiece[i+1],x_axis)
+					WaitForMove(TreePiece[i+1],y_axis)
+					WaitForMove(TreePiece[i+1],z_axis)
+					--MovePieceoPieceUnitSpace(unitID, TreePiece[i+1],PrevPiece,0,true)					
+				Sleep(1)
 			end
 
-	return true
+	return false
 		end
 	
 	
@@ -338,20 +354,23 @@ FixFunctionTabel[2]= function ()
 	Spring.Echo("FixFunctionTabel::GroundBallWheed")
 		showT(TreePiece)
 		showT(EndPiece)
-		randCent=math.ceil(math.random(1,5))
+		randCent=math.ceil(math.random(2,5))
 		x,y,z=Spring.GetUnitPosition(unitID)
 		
 		for k=1,randCent do
 		ex,ez=x+math.random(-90,90),z+math.random(-90,90)
 		
 		start,End=(k-1)*(NUMBEROFPIECES/randCent)+1,k*(NUMBEROFPIECES/randCent)
+		
+		if start and End then
 			for i=start,End,1 do
 				p= TreePiece[math.min(math.max(1,i),#TreePiece)]
 				if p then
-				MoveUnitPieceToGroundPos(unitID,p,ex,ez,0,SIZEOFPIECE/2)
+				MoveUnitPieceToGroundPos(unitID,p,ex,ez,0,15)
 				turnPieceRandDir(TreePiece[i],0.5)
 				end
 			end
+		end
 
 		end
 		return true
@@ -548,7 +567,7 @@ FixFunctionTabel[2]= function ()
 	
 		val=60
 
-		for j=1,#TreePiece,0 do
+		for j=1,#TreePiece,spirallength do
 		spirallength=math.floor(math.random(4,12))
 	
 			for i=j, j+spirallength do
@@ -576,6 +595,46 @@ FixFunctionTabel[2]= function ()
 	return true	
 	end
 
+		--free Form Function  function
+	FixFunctionTabel[14]= function ()
+	Spring.Echo("Fern Function")
+		showT(TreePiece)
+		showT(EndPiece)
+	
+	GrowPointTable={}
+	val=math.random(3,5)
+
+		for i=2,math.ceil(NUMBEROFPIECES/3) do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i-1])
+			Move(TreePiece[i],x_axis,ox,0)
+			Move(TreePiece[i],y_axis,oy,0)
+			Move(TreePiece[i],z_axis,oz,0)
+		Turn(TreePiece[i],z_axis,i*val,0)
+			
+		GrowPointTable[#GrowPointTable+1]=EndPiece[i-1]
+		end
+	
+	
+	
+		for j=math.ceil(NUMBEROFPIECES/3)+1,#TreePiece-1,2 do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,GrowPointTable[clamp(j-20,1,#GrowPointTable)])
+			Move(TreePiece[j],x_axis,ox,0)
+			Move(TreePiece[j],y_axis,oy,0)
+			Move(TreePiece[j],z_axis,oz,0)
+		Turn(TreePiece[j],X_axis,90+(j-20)*0.1,0)
+			
+			Move(TreePiece[j+1],x_axis,ox,0)
+			Move(TreePiece[j+1],y_axis,oy,0)
+			Move(TreePiece[j+1],z_axis,oz,0)
+		Turn(TreePiece[j+1],X_axis,-90-(j*0.1),0)
+		
+		end
+		
+	
+	return true	
+	end
+		
+	
 	function slightVariation(deg,value)
 	return math.random(deg-value,value+deg)
 	end
@@ -1456,9 +1515,9 @@ end
 							
 	boolTakeATurn=true
 	
-		if math.random(0,3)==1 then 
-		max=#FixFunctionTabel+0.4999
-		boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
+		if true or math.random(0,3)==1 and boolVaryFooTree == false then 
+		max=#FixFunctionTabel+0.4999 --math.floor(math.random(1,max))
+		boolTakeATurn=FixFunctionTabel[14]()
 			else
 			dice=math.random(1,#gramarTable)
 	

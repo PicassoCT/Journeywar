@@ -599,7 +599,28 @@ Move(piecename,y_axis,by-y,speed)
 Move(piecename,z_axis,bz-z,speed,true)	
 
 end
+-->
+function clamp(val,low,up)
+if val > up return up end
+if val < low return low end
+return val
+end
 
+
+-->Moves a UnitPiece to a UnitPiece at speed
+function MovePieceoPieceUnitSpace(unitID,piecename, piecenameB,speed, waitForIt)
+if not piecenameB or not piecename then return end
+bx,by,bz=Spring.GetUnitPiecePosition(unitID,piecenameB)
+
+Move(piecename,x_axis,bx,speed)
+Move(piecename,y_axis,by,speed)
+Move(piecename,z_axis,bz,speed,true)	
+	if waitForIt==true then
+					WaitForMove(piecename,x_axis)
+					WaitForMove(piecename,y_axis)
+					WaitForTurn(piecename,y_axis)
+	end
+end
 
 -->Turns a Piece towards a direction 
 function TurnPieceTowards(piecename,x,y,z,speed)
