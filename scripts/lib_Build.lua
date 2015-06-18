@@ -71,7 +71,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	ArmTable={}
 	--arms must come in symmetric pairs
 		for i=1,ArmMax,1 do
-		mod=(i-1)%2+1)
+		mod=((i-1)%2+1)
 		bodyPieceName1="Leg"..i..mod   --Uper  Arm
 		bodyPieceName2="Leg"..i..mod.."l"   --Lower Arm - Wheels
 		bodyPieceName3=bodyPieceName2  --the lower leg is the body piece on which we use as distance measure to ground 
@@ -229,7 +229,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	
 	function getSocketsAsPoints(part, sympart)
 	getLinPoints= function (piecename)
-					AlignPieceToPiece(ConCenter,piecename,0))
+					AlignPieceToPiece(ConCenter,piecename,0)
 					retTable={}
 					table.insert(retTable,makeVecFromPoint(LinComm[1]))
 					table.insert(retTable,makeVecFromPoint(LinComm[2]))
@@ -237,7 +237,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 				  end
 
 	getSynPoints= function(piecename)
-				AlignPieceToPiece(ConCenter,piecename,0))	
+				AlignPieceToPiece(ConCenter,piecename,0)
 				retTable={}
 						for i=1,4 do
 						point=makeVecFromPoint(SymCon[i])

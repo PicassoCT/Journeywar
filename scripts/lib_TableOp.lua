@@ -608,8 +608,8 @@ function MovePieceToPiece(piecename, piecenameB,speed)
 if not piecenameB or not piecename then return end
 bx,by,bz=Spring.GetUnitPiecePosDir(unitID,piecenameB)
 x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
-
-Move(piecename,x_axis,-1*(bx-x),speed)
+ox=-1*(bx-x)
+Move(piecename,x_axis,ox,speed)
 Move(piecename,y_axis,by-y,speed)
 Move(piecename,z_axis,bz-z,speed,true)	
 

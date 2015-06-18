@@ -520,85 +520,116 @@ FixFunctionTabel[2]= function ()
 	return true	
 	end
 
+	function divcompare(it,val,pos)
+	if math.abs(val-pos)>500 then Spring.Echo("Node behaving badly"..it-1) end
+	
+	end
+	
+	
 	FixFunctionTabel[12]= function ()
 	Spring.Echo("FixFunctionTabel::WoundedTree")
 		showT(TreePiece)
 		showT(EndPiece)
-		
-	
-	
-		up=math.ceil(math.random(15,25))
+		reseT(TreePiece)
 	
 
 		val=60
-		const=-9
-		for j=1,#TreePiece,0 do
-		spirallength=math.floor(math.random(4,12))
+		const=math.random(9,18)*randSign()
+		spirallength=math.floor(math.random(5,12))
+		for j=2,#TreePiece-spirallength, spirallength do
 	
-			for i=j, j+spirallength do
-			sval=math.random(0,360)
-				Turn(TreePiece[i],x_axis,math.rad((val+const*(i-j))),0,true)
-				Turn(TreePiece[i],y_axis,math.rad((sval)),0,true)
-				WaitForTurn(TreePiece[i],axis)
-	
-				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
-
-				Move(TreePiece[i+1],x_axis,ox,0)
-				Move(TreePiece[i+1],y_axis,oy,0)
-				Move(TreePiece[i+1],z_axis,oz,0,true)
+			sval=math.random(25,95)
+		
+			endpointOffset=math.ceil(math.random(1,j))
+			for i=j, j+spirallength,1  do
 				
+		
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[endpointOffset+(i-j)])
+				ox=ox*-1
+						Move(TreePiece[i],x_axis,ox,0)
+						Move(TreePiece[i],y_axis,oy,0)
+						Move(TreePiece[i],z_axis,oz,0,true)
 				
+						WaitForMove(TreePiece[i],x_axis)
+						WaitForMove(TreePiece[i],y_axis)
+						WaitForMove(TreePiece[i],z_axis)
+				degval=const*(i)
+				Turn(TreePiece[i],y_axis,math.rad(degval),0)
+				Turn(TreePiece[i],z_axis,math.rad((sval)),0)
+				WaitForTurn(TreePiece[i],z_axis)
+				Sleep(100)
 			end
+	
 		end
 		
 	
 	return true	
 	end
-	
+
 	ux,uy,uz= Spring.GetUnitPosition(unitID)
+	EndPointReservoir={}
 		--free Form Function  function
 	FixFunctionTabel[13]= function ()
 	Spring.Echo("Free Form Function")
+		reseT(TreePiece)
 		showT(TreePiece)
 		showT(EndPiece)
-	
+
 	
 		up=math.ceil(math.random(15,25))
 	
 		val=60
 	spirallength=math.floor(math.random(4,12))
+
 		for j=1,#TreePiece-spirallength,spirallength do
 	
-	
+		aPos,bPos=math.random(-75,75), math.random(-75,75)
 			for i=j, j+spirallength,1 do
 				if i==j then
-				MoveUnitPieceToGroundPos(unitID,TreePiece[i],ux+math.random(-150,150),uz+math.random(-150,150),0,15)	
-				end
 			
-			sval=math.random(10,120)
+					MoveUnitPieceToGroundPos(unitID,TreePiece[i],aPos,bPos,0,0)	
+				else
+				
+				sval=math.random(10,120)
 				whatADeg,butWhy=deterministicTurn(i,spirallength, sval)
-				if TreePiece[i] then
-				Turn(TreePiece[i],x_axis,math.rad(whatADeg),0)
-				Turn(TreePiece[i],y_axis,math.rad(butWhy),0,true)
-				WaitForTurn(TreePiece[i],y_axis)
-				WaitForTurn(TreePiece[i],x_axis)
-				end
-				if i~= j then	
-					whatAPiece=deterministicMove(i,spirallength)
-					ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[math.min(math.max(1,whatAPiece),#EndPiece)])
-					ox=ox*1
-					if TreePiece[i+1] then
-					Move(TreePiece[i+1],x_axis,ox,0)
-					Move(TreePiece[i+1],y_axis,oy,0)
-					Move(TreePiece[i+1],z_axis,oz,0,true)
-					end
+							
+				Move(TreePiece[1],x_axis,0,0)
+				Move(TreePiece[1],y_axis,0,0)
+				Move(TreePiece[1],z_axis,0,0,true)
+				EndPointReservoir[1]=EndPiece[1]
+							if TreePiece[i] then
+							Turn(TreePiece[i],x_axis,math.rad(whatADeg),0)
+							Turn(TreePiece[i],y_axis,math.rad(butWhy),0,true)
+							WaitForTurn(TreePiece[i],y_axis)
+							WaitForTurn(TreePiece[i],x_axis)
+							end
+
+						
+						pieceSelected= math.ceil(math.random(1,#EndPointReservoir))
+						ox,oy,oz= Spring.GetUnitPiecePosition(unitID,EndPointReservoir[pieceSelected])
+		
+						ox=ox*-1
+						 divcompare(i,ox,0)
+						 divcompare(i,val,0)
+						 divcompare(i,val,0)
+						
+						if TreePiece[i+1] then
+						Move(TreePiece[i+1],x_axis,ox,0)
+						Move(TreePiece[i+1],y_axis,oy,0)
+						Move(TreePiece[i+1],z_axis,oz,0,true)
+						WaitForMove(TreePiece[i+1],x_axis)
+						WaitForMove(TreePiece[i+1],y_axis)
+						WaitForMove(TreePiece[i+1],z_axis)
+						EndPointReservoir[#EndPointReservoir+1]=EndPiece[i]
+						end
+						Sleep(1)
+					
 				end
 			end
-				spirallength=math.floor(math.random(4,12))
 		end
 		
 	
-	return true	
+	return false	
 	end
 
 		--"Fern Function"
@@ -729,12 +760,12 @@ FixFunctionTabel[2]= function ()
 	function deterministicTurn(index,maxindex,degree)
 		if index > maxindex then --not first round
 		index=(index%maxindex)+1
-		if not detTurnStoreTable[index] then detTurnStoreTable[index]=3.141 end
+			if not detTurnStoreTable[index] then detTurnStoreTable[index]=3.141 end
 		
-		return detTurnStoreTable[index]+slightVariation(detTurnStoreTable[index] or 3, 7) , detTurnStoreTable[index] %(index*270)+math.random(0,10)
+		return detTurnStoreTable[index]+slightVariation(detTurnStoreTable[index] or 3, 7) , (detTurnStoreTable[index]*360) %(index*270)
 		else
-		detTurnStoreTable[index]= math.random(0,180/maxindex)	
-		return detTurnStoreTable[index], detTurnStoreTable[index] %(index*270)+math.random(0,10)
+		detTurnStoreTable[index]= math.random(maxindex,180)	/maxindex
+		return detTurnStoreTable[index]*4, (detTurnStoreTable[index]*360) %(index*270)+math.random(0,10)
 		end
 	end
 	
@@ -1606,7 +1637,7 @@ end
 	
 		if true or math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 --math.floor(math.random(1,max))
-		boolTakeATurn=FixFunctionTabel[13]()
+		boolTakeATurn=FixFunctionTabel[12]()
 			else
 			dice=math.random(1,#gramarTable)
 	

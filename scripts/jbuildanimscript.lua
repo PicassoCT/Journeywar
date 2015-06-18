@@ -85,7 +85,7 @@ Sleep(100)
 counter=counter+1
 end
 validID= Spring.ValidUnitID(buildID) 
-if counter == 50 or not buildID or validID==false  then Spring.DestroyUnit(unitID,false,false) return end
+if counter == 50 or not buildID or validID==false  then Move(center,y_axis,-200,30); WaitForMove(center,y_axis);Spring.DestroyUnit(unitID,true,false) return end
 
 Spring.SetUnitAlwaysVisible(buildID,false)
 
