@@ -571,7 +571,7 @@ end
 function getTeamSide(teamid)
 
 teamID,    leader,      isDead,    isAiTeam, side,  allyTeam,  customTeamKeys,  incomeMultiplier=Spring.GetTeamInfo(teamid)
-return side
+return side, teamID,    leader,      isDead,    isAiTeam,  allyTeam,  customTeamKeys,  incomeMultiplier
 end
 
 function getUnitSide(unitID)
@@ -586,6 +586,21 @@ Move(piecename,x_axis,X,speed,true)
 Move(piecename,y_axis,Y,speed,true)
 Move(piecename,z_axis,Z,speed,true)	
 
+end
+
+-->Moves a UnitPiece to a UnitPiece at speed
+function AlignPieceToPiece(piecename, piecenameB,speed)
+if not piecenameB or not piecename then return end
+bx,by,bz=Spring.GetUnitPiecePosDir(unitID,piecenameB)
+x,y,z,vx,vy,vz=Spring.GetUnitPiecePosDir(unitID,piecename)
+
+	
+Move(piecename,x_axis,-1*(bx-x),speed)
+Move(piecename,y_axis,by-y,speed)
+Move(piecename,z_axis,bz-z,speed,true)	
+Turn(piecename,x_axis,vx,speed)
+Turn(piecename,y_axis,vy,speed)
+Turn(piecename,z_axis,vz,speed)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
