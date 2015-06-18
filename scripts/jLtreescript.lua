@@ -566,68 +566,154 @@ FixFunctionTabel[2]= function ()
 		up=math.ceil(math.random(15,25))
 	
 		val=60
-
-		for j=1,#TreePiece,spirallength do
-		spirallength=math.floor(math.random(4,12))
+	spirallength=math.floor(math.random(4,12))
+		for j=1,#TreePiece-spirallength,spirallength do
 	
-			for i=j, j+spirallength do
+	
+			for i=j, j+spirallength,1 do
 				if i==j then
 				MoveUnitPieceToGroundPos(unitID,TreePiece[i],ux+math.random(-150,150),uz+math.random(-150,150),0,15)	
 				end
 			
-			sval=math.random(0,360)
-				whatADeg,butWhy=deterministicTurn(i,spirallength)
-				Turn(TreePiece[i],x_axis,math.rad(whatADeg),0,true)
+			sval=math.random(10,120)
+				whatADeg,butWhy=deterministicTurn(i,spirallength, sval)
+				if TreePiece[i] then
+				Turn(TreePiece[i],x_axis,math.rad(whatADeg),0)
 				Turn(TreePiece[i],y_axis,math.rad(butWhy),0,true)
-				WaitForTurn(TreePiece[i],axis)
+				WaitForTurn(TreePiece[i],y_axis)
+				WaitForTurn(TreePiece[i],x_axis)
+				end
 				if i~= j then	
-					whatAPiece=detMoveStoreTable(i,spirallength)
-					ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[whatAPiece])
-	
+					whatAPiece=deterministicMove(i,spirallength)
+					ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[math.min(math.max(1,whatAPiece),#EndPiece)])
+					ox=ox*1
+					if TreePiece[i+1] then
 					Move(TreePiece[i+1],x_axis,ox,0)
 					Move(TreePiece[i+1],y_axis,oy,0)
 					Move(TreePiece[i+1],z_axis,oz,0,true)
+					end
 				end
 			end
+				spirallength=math.floor(math.random(4,12))
 		end
 		
 	
 	return true	
 	end
 
-		--free Form Function  function
-	FixFunctionTabel[14]= function ()
+		--"Fern Function"
+	FixFunctionTabel[15]= function ()
 	Spring.Echo("Fern Function")
+		reseT(TreePiece)
 		showT(TreePiece)
 		showT(EndPiece)
 	
 	GrowPointTable={}
-	val=math.random(3,5)
+	val=math.random(5,12)
 
-		for i=2,math.ceil(NUMBEROFPIECES/3) do
+		for i=2,math.ceil(#TreePiece/3) do
 			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i-1])
+			ox=ox*-1
 			Move(TreePiece[i],x_axis,ox,0)
 			Move(TreePiece[i],y_axis,oy,0)
-			Move(TreePiece[i],z_axis,oz,0)
-		Turn(TreePiece[i],z_axis,i*val,0)
+			Move(TreePiece[i],z_axis,oz,0,true)
+			
+			WaitForMove(TreePiece[i],x_axis)
+			WaitForMove(TreePiece[i],y_axis)
+			WaitForMove(TreePiece[i],z_axis)
+			
+		Turn(TreePiece[i],z_axis,math.rad(i*val),0,true)
+		WaitForTurn(TreePiece[i],z_axis)
 			
 		GrowPointTable[#GrowPointTable+1]=EndPiece[i-1]
 		end
 	
+
 	
-	
-		for j=math.ceil(NUMBEROFPIECES/3)+1,#TreePiece-1,2 do
-			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,GrowPointTable[clamp(j-20,1,#GrowPointTable)])
+		for j=math.ceil(#TreePiece/3)+1,#TreePiece,2 do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,GrowPointTable[clamp(j-20,1,table.getn(GrowPointTable))])
+			ox=ox*-1
 			Move(TreePiece[j],x_axis,ox,0)
 			Move(TreePiece[j],y_axis,oy,0)
-			Move(TreePiece[j],z_axis,oz,0)
-		Turn(TreePiece[j],X_axis,90+(j-20)*0.1,0)
+			Move(TreePiece[j],z_axis,oz,0,true)
+			
+			WaitForMove(TreePiece[j],x_axis)
+			WaitForMove(TreePiece[j],y_axis)
+			WaitForMove(TreePiece[j],z_axis)
+		Turn(TreePiece[j],y_axis,90+(j-20)*0.1,0)
 			
 			Move(TreePiece[j+1],x_axis,ox,0)
 			Move(TreePiece[j+1],y_axis,oy,0)
 			Move(TreePiece[j+1],z_axis,oz,0)
-		Turn(TreePiece[j+1],X_axis,-90-(j*0.1),0)
+			
+			WaitForMove(TreePiece[j+1],x_axis)
+			WaitForMove(TreePiece[j+1],y_axis)
+			WaitForMove(TreePiece[j+1],z_axis)
+		Turn(TreePiece[j+1],y_axis,-90-(j*0.1),0)
+		GrowPointTable[#GrowPointTable+1]=EndPiece[j+1]
+		GrowPointTable[#GrowPointTable+1]=EndPiece[j]
+		end
 		
+	
+	return false	
+	end
+	
+	--"Bow Fern Function"
+	FixFunctionTabel[14]= function ()
+	Director=maRa()==true
+	Spring.Echo("Fern Function")
+		reseT(TreePiece)
+		showT(TreePiece)
+		showT(EndPiece)
+	
+	GrowPointTable={}
+	val=math.random(5,12)
+
+		for i=2,math.ceil(#TreePiece/3) do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i-1])
+			ox=ox*-1
+			Move(TreePiece[i],x_axis,ox,0)
+			Move(TreePiece[i],y_axis,oy,0)
+			Move(TreePiece[i],z_axis,oz,0,true)
+			
+			WaitForMove(TreePiece[i],x_axis)
+			WaitForMove(TreePiece[i],y_axis)
+			WaitForMove(TreePiece[i],z_axis)
+			
+		Turn(TreePiece[i],z_axis,math.rad(i*val),0,true)
+		WaitForTurn(TreePiece[i],z_axis)
+			
+		GrowPointTable[#GrowPointTable+1]=EndPiece[i-1]
+		end
+	
+
+	
+		for j=math.ceil(#TreePiece/3)+1,#TreePiece-1,2 do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,GrowPointTable[clampMod(j-20,1,table.getn(GrowPointTable))])
+			ox=ox*-1
+			Move(TreePiece[j],x_axis,ox,0)
+			Move(TreePiece[j],y_axis,oy,0)
+			Move(TreePiece[j],z_axis,oz,0,true)
+			
+			WaitForMove(TreePiece[j],x_axis)
+			WaitForMove(TreePiece[j],y_axis)
+			WaitForMove(TreePiece[j],z_axis)
+		Turn(TreePiece[j],x_axis,math.rad(90+(j-20)*0.1),0)
+		if Director==true then
+			Turn(TreePiece[j],z_axis,math.rad(360-(j*0.5)),0)
+		end
+			
+			Move(TreePiece[j+1],x_axis,ox,0)
+			Move(TreePiece[j+1],y_axis,oy,0)
+			Move(TreePiece[j+1],z_axis,oz,0)
+			
+			WaitForMove(TreePiece[j+1],x_axis)
+			WaitForMove(TreePiece[j+1],y_axis)
+			WaitForMove(TreePiece[j+1],z_axis)
+		Turn(TreePiece[j+1],x_axis,math.rad(-90-(j*0.1)),0)
+		if Director==true then
+			Turn(TreePiece[j],z_axis,math.rad((j)*-0.5),0)
+		end
 		end
 		
 	
@@ -643,7 +729,9 @@ FixFunctionTabel[2]= function ()
 	function deterministicTurn(index,maxindex,degree)
 		if index > maxindex then --not first round
 		index=(index%maxindex)+1
-		return detTurnStoreTable[index]+slightVariation(detTurnStoreTable[index], 7) , detTurnStoreTable[index] %(index*270)+math.random(0,10)
+		if not detTurnStoreTable[index] then detTurnStoreTable[index]=3.141 end
+		
+		return detTurnStoreTable[index]+slightVariation(detTurnStoreTable[index] or 3, 7) , detTurnStoreTable[index] %(index*270)+math.random(0,10)
 		else
 		detTurnStoreTable[index]= math.random(0,180/maxindex)	
 		return detTurnStoreTable[index], detTurnStoreTable[index] %(index*270)+math.random(0,10)
@@ -652,13 +740,14 @@ FixFunctionTabel[2]= function ()
 	
 	detMoveStoreTable={}
 	function deterministicMove(index,maxindex)
-		if index > maxindex then --not first round
+		if index > maxindex and detMoveStoreTable[(index%maxindex)+1] then --not first round
 		index=(index%maxindex)+1
 		return detMoveStoreTable[index]
 		else
 		detMoveStoreTable[index]= math.floor(math.random(1,maxindex))	
 		return detMoveStoreTable[index]
 		end
+		return math.floor(math.random(1,maxindex))	
 	end
 	
 	
@@ -1517,7 +1606,7 @@ end
 	
 		if true or math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 --math.floor(math.random(1,max))
-		boolTakeATurn=FixFunctionTabel[14]()
+		boolTakeATurn=FixFunctionTabel[13]()
 			else
 			dice=math.random(1,#gramarTable)
 	
