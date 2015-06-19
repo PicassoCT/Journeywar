@@ -527,45 +527,50 @@ FixFunctionTabel[2]= function ()
 	
 	
 	FixFunctionTabel[12]= function ()
-	Spring.Echo("FixFunctionTabel::WoundedTree")
+	Spring.Echo("FixFunctionTabel::CurlTree")
 		showT(TreePiece)
 		showT(EndPiece)
 		reseT(TreePiece)
-	
-
-		val=60
-		const=math.random(9,18)*randSign()
-		spirallength=math.floor(math.random(5,12))
+			 
+		const=math.random(9,45)*randSign()
+		spirallength=math.floor(math.random(4,8))
+		currEndPoint=EndPiece[1]
 		for j=2,#TreePiece-spirallength, spirallength do
 	
-			sval=math.random(25,95)
-		
-			endpointOffset=math.ceil(math.random(1,j))
+			sval=math.random(25,120)
+	Spring.Echo("ValueA"..sval.." ValueB:"..spirallength.." Value C: "..const)
+			
 			for i=j, j+spirallength,1  do
 				
-		
-				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[endpointOffset+(i-j)])
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,currEndPoint)
 				ox=ox*-1
-						Move(TreePiece[i],x_axis,ox,0)
-						Move(TreePiece[i],y_axis,oy,0)
-						Move(TreePiece[i],z_axis,oz,0,true)
 				
-						WaitForMove(TreePiece[i],x_axis)
-						WaitForMove(TreePiece[i],y_axis)
-						WaitForMove(TreePiece[i],z_axis)
-				degval=const*(i)
-				Turn(TreePiece[i],y_axis,math.rad(degval),0)
-				Turn(TreePiece[i],z_axis,math.rad((sval)),0)
+				Move(TreePiece[i],x_axis,ox,0)
+				Move(TreePiece[i],y_axis,oy,0)
+				Move(TreePiece[i],z_axis,oz,0,true)
+				
+				WaitForMove(TreePiece[i],x_axis)
+				WaitForMove(TreePiece[i],y_axis)
+				WaitForMove(TreePiece[i],z_axis)
+				degval=const*(i-j+1)
+				
+				Turn(TreePiece[i],y_axis,math.rad(degval%360),0)
+				Turn(TreePiece[i],z_axis,math.rad((sval)),0,true)
+				WaitForTurn(TreePiece[i],y_axis)
 				WaitForTurn(TreePiece[i],z_axis)
-				Sleep(100)
+				currEndPoint=EndPiece[i]
+			
 			end
-	
+			
+		currEndPoint=EndPiece[math.ceil(math.random(1,2+spirallength))] or EndPiece[1]
+		
 		end
 		
 	
 	return true	
 	end
 
+	
 	ux,uy,uz= Spring.GetUnitPosition(unitID)
 	EndPointReservoir={}
 		--free Form Function  function
@@ -632,64 +637,7 @@ FixFunctionTabel[2]= function ()
 	return false	
 	end
 
-		--"Fern Function"
-	FixFunctionTabel[15]= function ()
-	Spring.Echo("Fern Function")
-		reseT(TreePiece)
-		showT(TreePiece)
-		showT(EndPiece)
-	
-	GrowPointTable={}
-	val=math.random(5,12)
-
-		for i=2,math.ceil(#TreePiece/3) do
-			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i-1])
-			ox=ox*-1
-			Move(TreePiece[i],x_axis,ox,0)
-			Move(TreePiece[i],y_axis,oy,0)
-			Move(TreePiece[i],z_axis,oz,0,true)
-			
-			WaitForMove(TreePiece[i],x_axis)
-			WaitForMove(TreePiece[i],y_axis)
-			WaitForMove(TreePiece[i],z_axis)
-			
-		Turn(TreePiece[i],z_axis,math.rad(i*val),0,true)
-		WaitForTurn(TreePiece[i],z_axis)
-			
-		GrowPointTable[#GrowPointTable+1]=EndPiece[i-1]
-		end
-	
-
-	
-		for j=math.ceil(#TreePiece/3)+1,#TreePiece,2 do
-			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,GrowPointTable[clamp(j-20,1,table.getn(GrowPointTable))])
-			ox=ox*-1
-			Move(TreePiece[j],x_axis,ox,0)
-			Move(TreePiece[j],y_axis,oy,0)
-			Move(TreePiece[j],z_axis,oz,0,true)
-			
-			WaitForMove(TreePiece[j],x_axis)
-			WaitForMove(TreePiece[j],y_axis)
-			WaitForMove(TreePiece[j],z_axis)
-		Turn(TreePiece[j],y_axis,90+(j-20)*0.1,0)
-			
-			Move(TreePiece[j+1],x_axis,ox,0)
-			Move(TreePiece[j+1],y_axis,oy,0)
-			Move(TreePiece[j+1],z_axis,oz,0)
-			
-			WaitForMove(TreePiece[j+1],x_axis)
-			WaitForMove(TreePiece[j+1],y_axis)
-			WaitForMove(TreePiece[j+1],z_axis)
-		Turn(TreePiece[j+1],y_axis,-90-(j*0.1),0)
-		GrowPointTable[#GrowPointTable+1]=EndPiece[j+1]
-		GrowPointTable[#GrowPointTable+1]=EndPiece[j]
-		end
-		
-	
-	return false	
-	end
-	
-	--"Bow Fern Function"
+		--"Bow Fern Function"
 	FixFunctionTabel[14]= function ()
 	Director=maRa()==true
 	Spring.Echo("Fern Function")
@@ -750,7 +698,288 @@ FixFunctionTabel[2]= function ()
 	
 	return true	
 	end
+			
+		--"Fern Function"
+	FixFunctionTabel[15]= function ()
+	Spring.Echo("Fern Function")
+		reseT(TreePiece)
+		showT(TreePiece)
+		showT(EndPiece)
+	
+	GrowPointTable={}
+	val=math.random(5,12)
+
+		for i=2,math.ceil(#TreePiece/3) do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[i-1])
+			ox=ox*-1
+			Move(TreePiece[i],x_axis,ox,0)
+			Move(TreePiece[i],y_axis,oy,0)
+			Move(TreePiece[i],z_axis,oz,0,true)
+			
+			WaitForMove(TreePiece[i],x_axis)
+			WaitForMove(TreePiece[i],y_axis)
+			WaitForMove(TreePiece[i],z_axis)
+			
+		Turn(TreePiece[i],z_axis,math.rad(i*val),0,true)
+		WaitForTurn(TreePiece[i],z_axis)
+			
+		GrowPointTable[#GrowPointTable+1]=EndPiece[i-1]
+		end
+	
+
+	
+		for j=math.ceil(#TreePiece/3)+1,#TreePiece,2 do
+			ox,oy,oz=Spring.GetUnitPiecePosition(unitID,GrowPointTable[clamp(j-20,1,table.getn(GrowPointTable))])
+			ox=ox*-1
+			Move(TreePiece[j],x_axis,ox,0)
+			Move(TreePiece[j],y_axis,oy,0)
+			Move(TreePiece[j],z_axis,oz,0,true)
+			
+			WaitForMove(TreePiece[j],x_axis)
+			WaitForMove(TreePiece[j],y_axis)
+			WaitForMove(TreePiece[j],z_axis)
+		Turn(TreePiece[j],y_axis,90+(j-20)*0.1,0)
+			
+			Move(TreePiece[j+1],x_axis,ox,0)
+			Move(TreePiece[j+1],y_axis,oy,0)
+			Move(TreePiece[j+1],z_axis,oz,0)
+			
+			WaitForMove(TreePiece[j+1],x_axis)
+			WaitForMove(TreePiece[j+1],y_axis)
+			WaitForMove(TreePiece[j+1],z_axis)
+		Turn(TreePiece[j+1],y_axis,-90-(j*0.1),0)
+		GrowPointTable[#GrowPointTable+1]=EndPiece[j+1]
+		GrowPointTable[#GrowPointTable+1]=EndPiece[j]
+		end
 		
+	
+	return false	
+	end
+
+	
+	FixFunctionTabel[16]= function ()
+	Spring.Echo("FixFunctionTabel::BowTie")
+		showT(TreePiece)
+		showT(EndPiece)
+		reseT(TreePiece)
+	
+
+		 
+		const=math.random(9,18)*randSign()
+		spirallength=math.floor(math.random(5,12))
+		for j=2,#TreePiece-spirallength, spirallength do
+	
+			sval=math.random(25,95)
+		
+			endpointOffset=math.ceil(math.random(1,j))
+			for i=j, j+spirallength,1  do
+				
+		
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[endpointOffset+(i-j)])
+				ox=ox*-1
+						Move(TreePiece[i],x_axis,ox,0)
+						Move(TreePiece[i],y_axis,oy,0)
+						Move(TreePiece[i],z_axis,oz,0,true)
+				
+						WaitForMove(TreePiece[i],x_axis)
+						WaitForMove(TreePiece[i],y_axis)
+						WaitForMove(TreePiece[i],z_axis)
+				degval=const*(i)
+				Turn(TreePiece[i],y_axis,math.rad(degval),0)
+				Turn(TreePiece[i],z_axis,math.rad((sval)),0)
+				WaitForTurn(TreePiece[i],z_axis)
+				Sleep(100)
+			end
+	
+		end
+		
+	
+	return true	
+	end
+
+	
+	FixFunctionTabel[17]= function ()
+	Spring.Echo("FixFunctionTabel::TriTree")
+		showT(TreePiece)
+		showT(EndPiece)
+		reseT(TreePiece)
+		offSet={[1]={x=5,y=-5},[2]={x=5,y=5},[3]={x=-5,y=0}}
+	
+	--Trunk
+	BranchPoints={}
+	
+	for i=1,6 do
+	Move(TreePiece[i],z_axis,offSet[i%3+1].y,0)
+	Move(TreePiece[i],x_axis,offSet[i%3+1].x,0)
+		if i> 3 then
+		Move(TreePiece[i],y_axis,42,0)
+		BranchPoints[#BranchPoints+1]=EndPiece[i]
+		end
+	end
+	
+	Sleep(1)
+	--Branches
+	LeavePoints={}
+	BranchLength=math.ceil(math.random(2,5))
+	CurrEndPoint=BranchPoints[math.floor(math.random(1,#BranchPoints))] or BranchPoints[1]
+		for i=7,25, BranchLength do
+		currDeg=math.random(0,360)
+				for j=i,i+BranchLength,1 do
+				currDeg=currDeg+math.random(-15,15)
+				MovePieceToPiece(TreePiece[j], CurrEndPoint,0)
+				Sleep(1)
+				Turn(TreePiece[j],y_axis,math.rad(currDeg),0)
+				Turn(TreePiece[j],z_axis,math.rad(math.random(80,100)),0,true)
+				Sleep(1)
+				CurrEndPoint=EndPiece[j]
+				LeavePoints[#LeavePoints+1]=EndPiece[j]
+				end
+		CurrEndPoint=BranchPoints[math.random(1,#BranchPoints)]	 or BranchPoints[2]
+		end
+	--[[]
+	--Leaves 
+		CurrEndPoint=LeavePoints[math.random(1,#LeavePoints)]	
+		for i=26,#TreePiece-3, 3 do
+				LeavePoints[#LeavePoints+1]=EndPiece[j]
+				offSet=math.random(0,360)
+			for j=i,i+3,1 do	
+				MovePieceToPiece(TreePiece[j],CurrEndPoint)
+				Turn(TreePiece[j],y_axis,math.rad(offSet+(j-i+1)*120),0)
+				Turn(TreePiece[j],x_axis,math.rad(90),0,true)
+				CurrEndPoint=EndPiece[j]
+			end
+		CurrEndPoint=LeavePoints[math.ceil(math.random(1,#LeavePoints))]	
+		end
+		--]]
+	return true	
+	end
+
+--Function produces a plant that spreads along the ground	
+FixFunctionTabel[18]= function ()
+Spring.Echo("FixFunction:Crawl Plant")
+Threads={}
+reseT(TreePiece)
+boolForkRoot=maRa()==true
+many=math.ceil(math.random(5,12))
+	for i=1,many do Threads[i]={End=EndPiece[1],Deg=math.random(0,360)} end
+
+	for i=2,#TreePiece, 1 do
+	MovePieceToPiece(TreePiece[i],Threads[i%7+1].End,0)
+		if boolForkRoot==false then 
+		Threads[i%7+1].End=EndPiece[i]
+		elseif math.random(0,1)==0 then
+		Threads[i%7+1].End=EndPiece[i]
+		end
+	Turn(TreePiece[i],y_axis,Threads[i%7+1].Deg,0)
+	Threads[i%7+1].Deg=Threads[i%7+1].Deg+math.random(-35,35)
+	gx,gz= Spring.GetUnitPiecePosition(unitID,EndPiece[i])
+	gy=Spring.GetGroundHeight(gx,gz)+5
+	TurnPieceTowardsPoint(TreePiece,gx,gy,gz,0)
+	Sleep(15)
+	end
+return true
+end
+
+--Cacttee
+FixFunctionTabel[19]= function()
+reseT(TreePiece)
+Part=#TreePiece/6
+First, Second,Third=3*Part, 2*Part,Part
+NodePoint={}
+MoveUnitPieceToGroundPos(TreePiece[1],0,0,0,0)
+
+	for i=2,First do
+		--stem
+		if i< 5 then
+		MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
+		NodePoint[#NodePoint+1]=EndPiece[i]
+		else --thorns
+		iterator=math.floor((i-5)/5)
+		MovePieceToPiece(TreePiece[i],NodePoint[iterator],0)
+		TurnPiece(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
+		TurnPiece(TreePiece[i],x_axis,math.rad(90),0,true)
+		end
+	end
+NodePoint={}
+	UnitPieceToGroundPos(TreePiece[First],50,25,0,0)
+
+	for i=First+1,Second+First,1 do
+	--stem
+		if i< 3 then
+		MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
+		NodePoint[#NodePoint+1]=EndPiece[i]
+		else --thorns
+		iterator=math.floor((i-5)/5)
+		MovePieceToPiece(TreePiece[i],NodePoint[iterator],0)
+		TurnPiece(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
+		TurnPiece(TreePiece[i],x_axis,math.rad(90),0,true)
+		end	
+	end
+NodePoint={}	
+
+	UnitPieceToGroundPos(TreePiece[Second+First],50,25,0,0)
+
+	for i=Second+First+1,#TreePiece,1 do
+		--stem
+		if i< 2 then
+		MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
+		NodePoint[#NodePoint+1]=EndPiece[i]
+		else --thorns
+		iterator=math.floor((i-5)/5)
+		MovePieceToPiece(TreePiece[i],NodePoint[iterator],0)
+		TurnPiece(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
+		TurnPiece(TreePiece[i],x_axis,math.rad(90),0,true)
+		end
+	end
+
+return false
+end
+
+--Airroot
+
+	FixFunctionTabel[20]= function ()
+	Spring.Echo("FixFunctionTabel::Airroot")
+		showT(TreePiece)
+		showT(EndPiece)
+		reseT(TreePiece)
+		Move(center,y_axis,25,0)	 
+		const=1.66
+		spirallength=math.floor(math.random(4,8))
+
+		for j=1,#TreePiece-spirallength, spirallength do
+		Deg=math.random(0,360)
+
+		currEndPoint=center
+			
+			for i=j, j+spirallength,1  do
+				
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,currEndPoint)
+				ox=ox*-1
+				
+				Move(TreePiece[i],x_axis,ox,0)
+				Move(TreePiece[i],y_axis,oy,0)
+				Move(TreePiece[i],z_axis,oz,0,true)
+				
+				WaitForMove(TreePiece[i],x_axis)
+				WaitForMove(TreePiece[i],y_axis)
+				WaitForMove(TreePiece[i],z_axis)
+				degval=const*(i-j+1)
+				
+				
+				Turn(TreePiece[i],z_axis,math.rad((const^(i-j+1))*-1),0,true)
+				Turn(TreePiece[i],y_axis,math.rad(Deg+i),0,true)
+				WaitForTurn(TreePiece[i],y_axis)
+			
+				currEndPoint=EndPiece[i]
+			
+			end
+			
+		end
+		
+	
+	return true	
+	end
+
 	
 	function slightVariation(deg,value)
 	return math.random(deg-value,value+deg)
@@ -1637,7 +1866,7 @@ end
 	
 		if true or math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 --math.floor(math.random(1,max))
-		boolTakeATurn=FixFunctionTabel[12]()
+		boolTakeATurn=FixFunctionTabel[17]()
 			else
 			dice=math.random(1,#gramarTable)
 	

@@ -667,7 +667,7 @@ function TurnPieceTowardsPiece(piecename,pieceB,speed)
 end
 
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
-function TurnPieTowardsPoint (piecename, x,y,z,Speed, tpx,tpy,tpz)
+function TurnPieceTowardsPoint (piecename, x,y,z,Speed)
 pvec={x=0,y=0,z=0}
 px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
 pvec=normalizeVector(pvec)
@@ -3322,7 +3322,7 @@ end
 	paX,paY,paZ=spGetUnitPiecePosDir(unitID,parent)
 
 		--TargetCoordsToTurnTowards
-		TurnPieTowardsPoint (subPiece, px,gh+3,pz,Speed)
+		TurnPieceTowardsPoint (subPiece, px,gh+3,pz,Speed)
 
 	end
 
@@ -3554,6 +3554,7 @@ end
 	--> returns a randomized Signum
 	function randSign()
 	val=math.random(-1,1)
+		if val==0 then val =-1 end 
 	return val/math.abs(val)
 	end
 	
