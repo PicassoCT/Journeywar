@@ -604,14 +604,21 @@ Turn(piecename,z_axis,vz,speed)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceToPiece(piecename, piecenameB,speed)
+function MovePieceToPiece(piecename, piecenameB,speed,offset)
 if not piecenameB or not piecename then return end
-bx,by,bz=Spring.GetUnitPiecePosDir(unitID,piecenameB)
-x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
-ox=-1*(bx-x)
-Move(piecename,x_axis,ox,speed)
-Move(piecename,y_axis,by-y,speed)
-Move(piecename,z_axis,bz-z,speed,true)	
+ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecenameB)
+	ox=ox*-1
+if offset then
+ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.y
+end	
+	Move(piecename,x_axis,ox,0)
+	Move(piecename,y_axis,oy,0)
+	Move(piecename,z_axis,oz,0,true)
+
+
+	WaitForMove(piecename,x_axis);  WaitForMove(piecename,z_axis); WaitForMove(piecename,y_axis);
+			
+
 
 end
 -->
@@ -764,6 +771,7 @@ x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 Move(piecename,x_axis,X,0)
 Move(piecename,z_axis,Z,0,true)	
 x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
+if not x then return end
 	myHeight=Spring.GetGroundHeight(x,z)
 	heightdifference=math.abs(globalHeightUnit-myHeight)
 		if myHeight < globalHeightUnit then heightdifference=-heightdifference end

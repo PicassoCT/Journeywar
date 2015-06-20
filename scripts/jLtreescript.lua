@@ -52,8 +52,8 @@
 	Spring.DestroyUnit(unitID,true,false)
 	end
 	
-	
-	SIZEOFPIECE=22
+	RADOFPIECE=15
+	SIZEOFPIECE=math.random(10,22)
 -->>/PieceDefinitions<<--
  
 	
@@ -222,7 +222,7 @@ FixFunctionTabel[2]= function ()
 		for i=1,#TreePiece-sizeOfPlant,sizeOfPlant do
 		Show(TreePiece[i])
 		mx,mz=math.random(-90,90),math.random(-90,90)
-			
+		if not TreePiece[math.min(i,#TreePiece)] then return end
 		MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(i,#TreePiece)],mx,mz,0,5)		
 		end
 		Sleep(100)
@@ -763,8 +763,6 @@ FixFunctionTabel[2]= function ()
 		showT(EndPiece)
 		reseT(TreePiece)
 	
-
-		 
 		const=math.random(9,18)*randSign()
 		spirallength=math.floor(math.random(5,12))
 		for j=2,#TreePiece-spirallength, spirallength do
@@ -774,7 +772,6 @@ FixFunctionTabel[2]= function ()
 			endpointOffset=math.ceil(math.random(1,j))
 			for i=j, j+spirallength,1  do
 				
-		
 				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[endpointOffset+(i-j)])
 				ox=ox*-1
 						Move(TreePiece[i],x_axis,ox,0)
@@ -790,7 +787,7 @@ FixFunctionTabel[2]= function ()
 				WaitForTurn(TreePiece[i],z_axis)
 				Sleep(100)
 			end
-	
+			if j+spirallength > #TreePiece then spirallength= #TreePiece-j end
 		end
 		
 	
@@ -875,66 +872,119 @@ FixFunctionTabel[2]= function ()
 FixFunctionTabel[18]= function ()
 Spring.Echo("FixFunction:Crawl Plant")
 Threads={}
+showT(TreePiece)
 reseT(TreePiece)
 boolForkRoot=maRa()==true
 many=math.ceil(math.random(5,12))
-	for i=1,many do Threads[i]={End=EndPiece[1],Deg=math.random(0,360)} end
 
-	for i=2,#TreePiece, 1 do
-	MovePieceToPiece(TreePiece[i],Threads[i%7+1].End,0)
-		if boolForkRoot==false then 
-		Threads[i%7+1].End=EndPiece[i]
-		elseif math.random(0,1)==0 then
-		Threads[i%7+1].End=EndPiece[i]
-		end
-	Turn(TreePiece[i],y_axis,Threads[i%7+1].Deg,0)
-	Threads[i%7+1].Deg=Threads[i%7+1].Deg+math.random(-35,35)
-	gx,gz= Spring.GetUnitPiecePosition(unitID,EndPiece[i])
-	gy=Spring.GetGroundHeight(gx,gz)+5
-	TurnPieceTowardsPoint(TreePiece,gx,gy,gz,0)
-	Sleep(15)
+function inRangeOfPrevDeg(val,PrevDeg,Range)
+
+	if math.abs(val-PrevDeg) > Range then return false else return true end
+
+end
+
+
+	for i=2,many do Threads[#Threads+1]={End=EndPiece[1],Deg=math.random(0,360), PrevDeg=0} end
+
+	for i=3,#TreePiece, 1 do
+	pieceToCon=Threads[(i%#Threads)+1].End or EndPiece[1]
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceToCon )
+				ox=ox*-1
+				
+				Move(TreePiece[i],x_axis,ox,0)
+				Move(TreePiece[i],y_axis,oy,0)
+				Move(TreePiece[i],z_axis,oz,0,true)
+
+				WaitForMove(TreePiece[i],x_axis);  WaitForMove(TreePiece[i],z_axis); WaitForMove(TreePiece[i],y_axis);
+		
+	
+	
+
+		Turn(TreePiece[i],y_axis,math.rad(Threads[i%#Threads+1].Deg),0)
+		Turn(TreePiece[i],x_axis,math.rad(90+Threads[i%#Threads+1].PrevDeg),0)
+		WaitForTurn(TreePiece[i],y_axis)
+		Sleep(1)
+		
+		x,y,z=Spring.GetUnitPiecePosition(unitID,EndPiece[i])
+		h=Spring.GetGroundHeight(x,z)+10
+		val=0
+	boolBreakReady=false
+	timer=0
+			while val > -90  and val < 90 and math.abs( val) < 36 and timer < 20 do
+			result=90+Threads[i%#Threads+1].PrevDeg+val
+			Turn(TreePiece[i],x_axis,math.rad(result+0.1),0,true)
+			WaitForTurn(TreePiece[i],x_axis) 
+			timer=timer+1
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,EndPiece[i])
+				h=Spring.GetGroundHeight(x,z)
+				if y -h  < 10 then break end
+				
+					if y < 10 then 
+						val=val-5
+					
+					else
+						val=val+5
+					end
+			
+			
+		
+			end
+		
+		
+
+			
+				if math.random(1,#TreePiece) -i < 0 and i > NUMBEROFPIECES* (0.5) then 
+				Threads[#Threads+1]={End=EndPiece[i],Deg=Threads[i%#Threads+1].Deg+math.random(90,90), PrevDeg=val}
+				end
+	Threads[i%#Threads+1].PrevDeg=val
+	Threads[i%#Threads+1].Deg=Threads[i%#Threads+1].Deg+math.random(-25,25)
+	Threads[i%#Threads+1].End=EndPiece[i]
 	end
-return true
+
+return false
 end
 
 --Cacttee
 FixFunctionTabel[19]= function()
 reseT(TreePiece)
-Part=#TreePiece/6
+Part=math.floor(#TreePiece/6)
 First, Second,Third=3*Part, 2*Part,Part
 NodePoint={}
-MoveUnitPieceToGroundPos(TreePiece[1],0,0,0,0)
 
 	for i=2,First do
 		--stem
 		if i< 5 then
 		MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
 		NodePoint[#NodePoint+1]=EndPiece[i]
+	Sleep(1)
 		else --thorns
 		iterator=math.floor((i-5)/5)
 		MovePieceToPiece(TreePiece[i],NodePoint[iterator],0)
-		TurnPiece(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
-		TurnPiece(TreePiece[i],x_axis,math.rad(90),0,true)
+		Turn(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
+		Turn(TreePiece[i],x_axis,math.rad(90),0,true)
+		Sleep(1)
 		end
 	end
 NodePoint={}
-	UnitPieceToGroundPos(TreePiece[First],50,25,0,0)
+	MoveUnitPieceToGroundPos(unitID,TreePiece[First],50,25,0,0)
 
 	for i=First+1,Second+First,1 do
 	--stem
 		if i< 3 then
 		MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
 		NodePoint[#NodePoint+1]=EndPiece[i]
+		Sleep(1)
 		else --thorns
+		Sleep(1)
 		iterator=math.floor((i-5)/5)
 		MovePieceToPiece(TreePiece[i],NodePoint[iterator],0)
-		TurnPiece(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
-		TurnPiece(TreePiece[i],x_axis,math.rad(90),0,true)
+		Turn(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
+		Turn(TreePiece[i],x_axis,math.rad(90),0,true)
 		end	
 	end
 NodePoint={}	
 
-	UnitPieceToGroundPos(TreePiece[Second+First],50,25,0,0)
+	MoveUnitPieceToGroundPos(unitID,TreePiece[Second+First],50,25,0,0)
 
 	for i=Second+First+1,#TreePiece,1 do
 		--stem
@@ -944,8 +994,8 @@ NodePoint={}
 		else --thorns
 		iterator=math.floor((i-5)/5)
 		MovePieceToPiece(TreePiece[i],NodePoint[iterator],0)
-		TurnPiece(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
-		TurnPiece(TreePiece[i],x_axis,math.rad(90),0,true)
+		Turn(TreePiece[i],y_axis,math.rad(iterator*(360/iterator)),0)
+		Turn(TreePiece[i],x_axis,math.rad(90),0,true)
 		end
 	end
 
@@ -953,7 +1003,6 @@ return false
 end
 
 --Airroot
-
 	FixFunctionTabel[20]= function ()
 	Spring.Echo("FixFunctionTabel::Airroot")
 		showT(TreePiece)
@@ -993,6 +1042,126 @@ end
 			
 		end
 		
+	
+	return true	
+	end
+	
+--Cylinderplant
+	FixFunctionTabel[21]= function ()
+	Spring.Echo("FixFunctionTabel::Cylinder")
+		
+		showT(TreePiece)
+		showT(EndPiece)
+		reseT(TreePiece)
+	
+	
+	TotalPieces=#TreePiece
+	DensityDivisor=math.ceil(math.random(1,8))
+	PiecesPerLayer=math.floor(TotalPieces/DensityDivisor)
+	--Circumference / (PieceCircumference*PiecesPerLayer)
+	--Radius= sqrt(x^2 +y ^2)
+	--sqrt(x^2 +y ^2)*2*PI=Circumference
+	
+	--Remainder(0)= Radius *2*PI -  (PieceCircumference*PiecesPerLayer)
+	--Solved for Radius= (PieceCircumference*PiecesPerLayer)/(2*PI)
+	Radius= (RADOFPIECE*PiecesPerLayer)/(2*3.14159)
+	--DegStep= 360 / PiecesPerLayer
+	DegStep= 360/PiecesPerLayer	
+	ContinuosRing={}
+	ContinusDeg={}
+	boolDeformed=maRa()==true
+	ContinusDeg={defDegX=math.random(-15,15),defDegY=math.random(0,360),defDegZ=math.random(-15,15) }
+			for i=1, PiecesPerLayer,1  do
+		
+			x,y= NDrehMatrix (0,Radius, i*DegStep)
+			MoveUnitPieceToGroundPos(unitID,TreePiece[i],x,y,0,0)
+			ContinuosRing[i]=EndPiece[i]
+			Show(TreePiece[i])
+			end
+			
+			for i=PiecesPerLayer+1, #TreePiece,1  do
+						ox,oy,oz=Spring.GetUnitPiecePosition(unitID,ContinuosRing[i%PiecesPerLayer+1])
+				ox=ox*-1
+				
+				Move(TreePiece[i],x_axis,ox,0)
+				Move(TreePiece[i],y_axis,oy,0)
+				Move(TreePiece[i],z_axis,oz,0,true)
+			
+			
+				WaitForMove(TreePiece[i],x_axis);  WaitForMove(TreePiece[i],z_axis); WaitForMove(TreePiece[i],y_axis);
+			
+				if boolDeformed==true then
+				Turn(TreePiece[i],x_axis,math.rad(ContinusDeg.defDegX),0)
+				Turn(TreePiece[i],y_axis,math.rad(ContinusDeg.defDegY),0)
+				Turn(TreePiece[i],z_axis,math.rad(ContinusDeg.defDegZ),0)
+				end
+			ContinuosRing[i%PiecesPerLayer+1]=EndPiece[i]
+			Sleep(1)
+			if i%PiecesPerLayer==0 then
+			ContinusDeg.defDegX=ContinusDeg.defDegX+math.random(-30,30)
+	        ContinusDeg.defDegZ=ContinusDeg.defDegZ+math.random(-30,30)
+			
+			end
+			end
+			
+	return false	
+	end
+
+	--Float
+	FixFunctionTabel[22]= function ()
+	Spring.Echo("FixFunctionTabel::Floater")
+		
+		showT(TreePiece)
+		showT(EndPiece)
+		reseT(TreePiece)
+	
+	Deg={x=0,y=0,z=0}
+	
+	floaterStem=math.ceil(math.random(5,10))
+	for i=2,floaterStem do
+	MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
+	Turn(TreePiece[i],x_axis,math.rad(Deg.x),0)
+	Turn(TreePiece[i],y_axis,math.rad(Deg.y),0)
+	Turn(TreePiece[i],z_axis,math.rad(Deg.z),0,true)
+	Deg.z=Deg.z+math.random(-5,5)
+	end
+	
+	--buildfloater
+	halfWay= ((#TreePiece -1+floaterStem )/2 )+floaterStem
+	half= ((#TreePiece -1+floaterStem )/2 )
+		for i=1+floaterStem,#TreePiece do
+		
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[floaterStem])
+				ox=ox*-1
+				sanitizedI=i-floaterStem
+				if i > halfWay then sanitizedI =sanitizedI-halfWay end
+				
+					if i <= halfWay then
+					oz=oz+( i-floaterStem)*4
+					else
+					oz=oz+( i-floaterStem -half)*-4
+					end
+					
+					if i <= halfWay then
+					ox=ox+ 1.12^( i-floaterStem)
+					oy=oy+sanitizedI*3
+					else
+					ox=ox-(1.17^( i-floaterStem -half))		
+					oy=oy+sanitizedI*-3					
+					end
+				
+				Move(TreePiece[i],x_axis,ox,0)
+				Move(TreePiece[i],y_axis,oy,0)
+				Move(TreePiece[i],z_axis,oz,0,true)
+				
+	val=(i-floaterStem)/(half*2) *(360)
+
+
+	Turn(TreePiece[i],z_axis,(val),0)
+
+	Deg.z=Deg.z+math.random(-5,5)
+	end
+	
 	
 	return true	
 	end
@@ -1883,7 +2052,7 @@ end
 	
 		if true or math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 --math.floor(math.random(1,max))
-		boolTakeATurn=FixFunctionTabel[17]()
+		boolTakeATurn=FixFunctionTabel[19]()
 			else
 			dice=math.random(1,#gramarTable)
 	
