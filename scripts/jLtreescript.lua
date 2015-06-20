@@ -527,7 +527,7 @@ FixFunctionTabel[2]= function ()
 	
 	
 	FixFunctionTabel[12]= function ()
-	Spring.Echo("FixFunctionTabel::CurlTree")
+	Spring.Echo("FixFunctionTabel::CircleTree")
 		showT(TreePiece)
 		showT(EndPiece)
 		reseT(TreePiece)
@@ -811,7 +811,7 @@ FixFunctionTabel[2]= function ()
 	for i=1,6 do
 	Move(TreePiece[i],z_axis,offSet[i%3+1].y,0)
 	Move(TreePiece[i],x_axis,offSet[i%3+1].x,0)
-		if i> 3 then
+		if i > 3 then
 		Move(TreePiece[i],y_axis,42,0)
 		BranchPoints[#BranchPoints+1]=EndPiece[i]
 		end
@@ -826,31 +826,48 @@ FixFunctionTabel[2]= function ()
 		currDeg=math.random(0,360)
 				for j=i,i+BranchLength,1 do
 				currDeg=currDeg+math.random(-15,15)
-				MovePieceToPiece(TreePiece[j], CurrEndPoint,0)
-				Sleep(1)
+					
+				ox,oy,oz=Spring.GetUnitPiecePosition(unitID,CurrEndPoint)
+				ox=ox*-1
+				
+				Move(TreePiece[j],x_axis,ox,0)
+				Move(TreePiece[j],y_axis,oy,0)
+				Move(TreePiece[j],z_axis,oz,0,true)
+				
+				WaitForMove(TreePiece[j],x_axis)
+				WaitForMove(TreePiece[j],y_axis)
+				WaitForMove(TreePiece[j],z_axis)
+				
+				
+
+
 				Turn(TreePiece[j],y_axis,math.rad(currDeg),0)
 				Turn(TreePiece[j],z_axis,math.rad(math.random(80,100)),0,true)
 				Sleep(1)
 				CurrEndPoint=EndPiece[j]
 				LeavePoints[#LeavePoints+1]=EndPiece[j]
 				end
-		CurrEndPoint=BranchPoints[math.random(1,#BranchPoints)]	 or BranchPoints[2]
+		CurrEndPoint=BranchPoints[math.ceil(math.random(1,#BranchPoints))]	 or BranchPoints[2]
 		end
-	--[[]
+		Sleep(1)
 	--Leaves 
-		CurrEndPoint=LeavePoints[math.random(1,#LeavePoints)]	
+		CurrEndPoint=LeavePoints[math.ceil(math.random(1,#LeavePoints))]	
 		for i=26,#TreePiece-3, 3 do
-				LeavePoints[#LeavePoints+1]=EndPiece[j]
+		CurrEndPoint=LeavePoints[math.ceil(math.random(1,#LeavePoints))]	
+			
 				offSet=math.random(0,360)
 			for j=i,i+3,1 do	
-				MovePieceToPiece(TreePiece[j],CurrEndPoint)
-				Turn(TreePiece[j],y_axis,math.rad(offSet+(j-i+1)*120),0)
-				Turn(TreePiece[j],x_axis,math.rad(90),0,true)
+				MovePieceToPiece(TreePiece[j],CurrEndPoint,0)
+				--Turn(TreePiece[j],y_axis,math.rad(offSet+(j-i+1)*120),0)
+				--Turn(TreePiece[j],x_axis,math.rad(90),0,true)
+				--WaitForMove(TreePiece[j],x_axis)
+				--WaitForMove(TreePiece[j],y_axis)
+				--WaitForMove(TreePiece[j],z_axis)
 				CurrEndPoint=EndPiece[j]
 			end
 		CurrEndPoint=LeavePoints[math.ceil(math.random(1,#LeavePoints))]	
 		end
-		--]]
+
 	return true	
 	end
 
