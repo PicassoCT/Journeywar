@@ -51,6 +51,7 @@ useSmoothMesh = false,
   customParams = {},
  sfxtypes = {
     explosiongenerators = {
+				   "custom:jtreedenial",
 				   "custom:chiexploammo",
 				   "custom:foorestfire",
 	   		

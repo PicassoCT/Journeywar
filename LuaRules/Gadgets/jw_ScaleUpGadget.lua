@@ -25,8 +25,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	[UnitDefNames["jtree"].id]=true,
 	[UnitDefNames["jtree2"].id]=true,
 	[UnitDefNames["jtree3"].id]=true,
-	[UnitDefNames["jtree2dummy"].id]=true,
-	[UnitDefNames["jtreedummy"].id]=true,
 	[UnitDefNames["jgeohive"].id]=true,
 	[UnitDefNames["jwatergate"].id]=true,
 	[UnitDefNames["jfireflower"].id]=true,

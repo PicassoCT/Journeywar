@@ -1,3 +1,8 @@
+   	include "lib_OS.lua"
+	include "lib_TableOp.lua"
+	include "lib_Build.lua" 
+
+
     centRot=piece"centRot"
 	center= piece "normTree"
 	rot1= piece "rot1"
@@ -188,7 +193,7 @@ Spring.DestroyUnit(id,true,true)
 end
 
 function fruitLoop()
-while(true) do
+while(true) and boolJustOnceDeny ==true  do
 
 	rest=math.ceil(math.random(4900,62000))
 	Sleep(rest)
@@ -287,4 +292,17 @@ suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 
 end
+
+boolJustOnceDeny=true
+	function script.Activate()
+		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
+		boolJustOnceDeny=false
+		return 1
+	end
+
+	function script.Deactivate()
+		
+
+		return 0
+	end
 

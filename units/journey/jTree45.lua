@@ -59,7 +59,12 @@ EnergyStorage = 0,
   mass                   = 199,
   
   maxSlope               = 255,
-    activateWhenBuilt      = true,
+--tree deny ability
+	activateWhenBuilt      = false,
+    onoffable              = true,
+    canSelfDestruct=false,
+	
+
   noAutoFire             = false,
   
    customParams = {},

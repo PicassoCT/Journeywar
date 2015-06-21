@@ -298,11 +298,8 @@ end
 	function treeTrample()
 	local	treeTypeTable=getTypeTable(UnitDefNames,{
 												"jtree",
-												"jtreedummy",
 												"jtree2",
-												"jtree2dummy",
 												"jtree3",
-												"jtree3dummy",
 												"jtree41",
 												"jtree42",
 												"jtree43",

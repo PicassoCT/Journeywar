@@ -1,3 +1,6 @@
+	include "lib_OS.lua"
+	include "lib_TableOp.lua"
+	include "lib_Build.lua" 
 
 	center= piece "center"
 water=piece"water"
@@ -63,7 +66,7 @@ end
 
 function delayedReward()
 WaitForMove(center,y_axis)
-	while true do
+	while true and boolJustOnceDeny ==true  do
 	Spring.AddUnitRessource(unitID,"e",10)
 	Sleep(1000)
 	end
@@ -93,4 +96,18 @@ WaitForMove(center,y_axis)
 suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 end
+
+
+boolJustOnceDeny=true
+	function script.Activate()
+		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
+		boolJustOnceDeny=false
+		return 1
+	end
+
+	function script.Deactivate()
+		
+
+		return 0
+	end
 

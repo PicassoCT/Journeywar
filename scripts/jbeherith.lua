@@ -1575,12 +1575,9 @@ local aVd=acquireVehicleDegree()
 	function treeTrample()
 	local myTeam=Spring.GetUnitTeam(unitID)
 	local	treeTypeTable=getTypeTable(UnitDefNames,{
-												"jtree",
-												"jtreedummy",
-												"jtree2",
-												"jtree2dummy",
-												"jtree3",
-												"jtree3dummy",
+												"jtree",												
+												"jtree2",												
+												"jtree3",												
 												"jtree41",
 												"jtree42",
 												"jtree43",

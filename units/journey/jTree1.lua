@@ -33,6 +33,11 @@ CanPatrol = false,
 CanStop = false,
 TurnRate = 200,
 LeaveTracks = false,
+--tree deny ability
+	activateWhenBuilt      = false,
+    onoffable              = true,
+    canSelfDestruct=false,
+	
 -- Building	
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",

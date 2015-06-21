@@ -48,7 +48,7 @@ ox,oy,oz=spGetUnitPosition(unitID)
 	Sleep(1000)
 	newHeading=Spring.GetUnitHeading(unitID)
 	end
-Spring.DestroyUnit(unitID,true,false)
+--Spring.DestroyUnit(unitID,true,false)
 	end
 
 function wiggleFeet()
@@ -84,55 +84,53 @@ return     y,h
 end
 
 
-function LowerFunction(KneeT,Speed,SensorNode, FirstAxis)
+function LowerFunction(KneeT,Speed,SensorNode, FirstAxis,degOffSet)
 --The funcy Part keeping the Worm close to the Ground
------------------
-AdaptTable={}
-for i=1,#KneeT do
-AdaptTable[#AdaptTable+1]={}
-AdaptTable[#AdaptTable][1]=  	KneeT[i]
-AdaptTable[#AdaptTable][2]=  	KneeT[i]
-AdaptTable[#AdaptTable][3]=  	0
-end
+
+Threads={}
+
+ Threads[#Threads+1]={End=KneeT[2],Deg=degOffSet, PrevDeg=0} 
+
+	for i=1,#KneeT, 1 do
+	pieceToCon=Threads[(i%#Threads)+1].End or KneeT[i+1] or KneeT[i]
 	
 
-local lHowHighIsTheTireMama=HowHighIsTheTireMama
-local lAdaptTable=AdaptTable
+		
+		Turn(KneeT[i],x_axis,math.rad(Threads[i%#Threads+1].PrevDeg),Speed)
 
+		
+		x,y,z=Spring.GetUnitPiecePosition(unitID,KneeT[i])
+		h=Spring.GetGroundHeight(x,z)+10
+		val=0
+	boolBreakReady=false
+	timer=0
+			while val > -90  and val < 90 and Threads[i%#Threads+1].PrevDeg - math.abs( val) < 36 and timer < 20 do
+			result=Threads[i%#Threads+1].PrevDeg+val
+			Turn(KneeT[i],x_axis,math.rad(result+0.1),Speed,true)
+		
+			timer=timer+1
+			PieceOfMine=KneeT[i+1] or KneeT[i]
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,PieceOfMine)
+				h=Spring.GetGroundHeight(x,z)
+				if y -h  < 20 then break end
+				
+					if y < 10 then 
+						val=val-5
+					
+					else
+						val=val+5
+					end
+			
+			
+		
+			end
+		
+		
+	Threads[i%#Threads+1].PrevDeg=val
+	Threads[i%#Threads+1].Deg=math.random(-25,25)
+	Threads[i%#Threads+1].End=KneeT[i]
+	end
 
-for j=1,3 do
-		for i=1,#KneeT-1,1 do
-		--Meassuring
-		y,h=lHowHighIsTheTireMama(i,lAdaptTable[i+1][2])
-		y=y-5
-		
-		
-		if i%2==0 then
-		
-			if h-y > 5 then --and AdaptTable[i][3] > 25 then 
-			Turn(lAdaptTable[i][1],x_axis,math.rad(lAdaptTable[i][3]-1),0.15)
-			lAdaptTable[i][3]=lAdaptTable[i][3]-1
-				else
-				Turn(lAdaptTable[i][1],x_axis,math.rad(lAdaptTable[i][3]+1),0.15)
-				lAdaptTable[i][3]=lAdaptTable[i][3]+1
-				end
-		
-		else	
-		
-		
-			if h-y < 3 then --and AdaptTable[i][3] > 25 then 
-			Turn(lAdaptTable[i][1],x_axis,math.rad(lAdaptTable[i][3]-1),0.005)
-			lAdaptTable[i][3]=lAdaptTable[i][3]-1
-				else
-				Turn(lAdaptTable[i][1],x_axis,math.rad(lAdaptTable[i][3]+1),0.05)
-				lAdaptTable[i][3]=lAdaptTable[i][3]+1
-				end
-		end
-		
-		end
-	WaitForTurn(	lAdaptTable[1][1],x_axis)
-	Sleep(50)
-end
 
 
 -----------------

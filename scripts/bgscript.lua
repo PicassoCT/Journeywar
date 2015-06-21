@@ -36,21 +36,16 @@ local SIG_ATTACK=128
 local leg_movespeed = 12+math.random(-1,1)
 local leg_movedistance = 10
 defID=Spring.GetUnitDefID(unitID)
-LArm	=""
-RArm	=""
-Head	=""
-Gun		=""
-Neck= ""
+
+
 bgdefID=UnitDefNames["bg"].id 
 boolCityTrooper=(defID==UnitDefNames["bg"].id )
-if boolCityTrooper ==true then
 
 LArm	=piece"LArm"
 RArm	=piece"RArm"
 Head	=piece"Head"
 Gun		=piece"Gun"
 Neck= piece"Neck"
-end
 
 
 function bodyBuilder()

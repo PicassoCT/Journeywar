@@ -1,5 +1,9 @@
-include "suddenDeath.lua"
 
+include "suddenDeath.lua"
+	include "lib_OS.lua"
+	include "lib_TableOp.lua"
+	include "lib_Build.lua" 
+	
 	eyenumber=14
 	local EYES= {}
 	for i=1, 14, 1 do
@@ -367,4 +371,17 @@ suddenDeathjBuildCorpse(unitID, recentDamage)
 return 1
 
 end
+
+boolJustOnceDeny=true
+	function script.Activate()
+		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
+		boolJustOnceDeny=false
+		return 1
+	end
+
+	function script.Deactivate()
+		
+
+		return 0
+	end
 

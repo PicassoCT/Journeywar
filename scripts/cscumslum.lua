@@ -46,10 +46,10 @@ hideT(slumTable)
 		if maRa()==true then 
 		Show(slumTable[i]) 
 		boolAtLeastOne =true
-		if i > 1 and maRa() ==true then Turn(slumTable[i],y_axis,math.rad(math.ceil(math.random(1,8))*45),0)  end
+			if i > 1 and maRa() ==true then Turn(slumTable[i],y_axis,math.rad(math.ceil(math.random(1,8))*90),0)  end
 		end
 	end
-		if boolAtLeastOne==false then Show(scumslum) else Hide(scumslum) end
+		if boolAtLeastOne==false then Show(scumslum)  end
 	end
 end
 

@@ -366,9 +366,7 @@ function getTreeTypeTable(UnitDefNames)
 FactoryTypes={}
 FactoryTypes[UnitDefNames["jtree2"].id]=true
 FactoryTypes[UnitDefNames["jtree2activate"].id]=true
-FactoryTypes[UnitDefNames["jtree2dummy"].id]=true
 FactoryTypes[UnitDefNames["jtree3"].id]=true
-FactoryTypes[UnitDefNames["jtree3dummy"].id]=true
 FactoryTypes[UnitDefNames["jtree41"].id]=true
 FactoryTypes[UnitDefNames["jtree42"].id]=true
 FactoryTypes[UnitDefNames["jtree43"].id]=true
@@ -376,6 +374,7 @@ FactoryTypes[UnitDefNames["jtree44"].id]=true
 FactoryTypes[UnitDefNames["jtree45"].id]=true
 FactoryTypes[UnitDefNames["jtree46"].id]=true
 FactoryTypes[UnitDefNames["jtree47"].id]=true
+FactoryTypes[UnitDefNames["jtree48"].id]=true
 FactoryTypes[UnitDefNames["jtree"].id]=true
 return FactoryTypes
 end
@@ -3381,7 +3380,7 @@ end
 			Sleep(100)
 			end
 		
-				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)	
+				lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 				Sleep(100)
 		--setFeetInStableStance
 		end
@@ -3421,7 +3420,8 @@ end
 	-->Uses the Animation Function To Lower the Feet
 	function	lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 
-		LowerFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint)
+		LowerFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
+		
 		GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]+1
 	end
 	-->Stabilizes the Feet

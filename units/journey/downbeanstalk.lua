@@ -56,7 +56,7 @@ terraformSpeed = 350,
 buildoptions = 
 	{	"jmovingfac1",
 		"jdrilltree",
-		"eggstackfac","jtree","jtree2","jtree3","jtree2dummy","jtreedummy","jgeohive","jwatergate","jfireflower","jbeehive","jfungiforrest"
+		"eggstackfac","jtree","jtree2","jtree3","jgeohive","jwatergate","jfireflower","jbeehive","jfungiforrest"
 	
 	
 
