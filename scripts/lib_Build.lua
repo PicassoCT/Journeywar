@@ -20,15 +20,29 @@ end
 -->In absence of symmetric pieces, the buildpieces are paired with one example of connection sockets on exploration to add the 3d point
 function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction)
     ConCenter=piece("ConCenter")
-	SymCon={}
-	LinCom={}
-	for i=1,4 do
-	dynString="SymCon"..i
-	SymCon[i]=piece(dynString)
-	end
-	LinCom[1]=piece"LinCom1"
-	LinCom[2]=piece"LinCom2"
+	ConLin={}
+	ConSyn={}
 	
+	--Contains enumerated the points of a piece
+	SymCon={}
+	LinCon={}
+	for i=1,4 do
+	dynString="LinCon"..i
+	ConLin[i]=piece(dynString)
+	LinCon[i]=bd_makePointFromPiece(ConLin[i])
+	end
+	function bd_makePointFromPiece(piecename)
+	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecename)
+	return{x=ox*-1,y=oy,z=oz}
+	end
+	
+	ConSyn[1]=piece"SymCon1"
+	ConSyn[2]=piece"SymCon2"
+	
+	SymCon[1]=bd_makePointFromPiece(	ConSyn[1])
+	SymCon[2]=bd_makePointFromPiece(	ConSyn[2])
+	
+	--TODO add SymBodyCon
 
 	AllReadyUsed={}
 	--BODY
@@ -39,10 +53,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	BodyID=1
 	DoubleMax=Body_Double_Max or 16
 	BodyMax=Body_Max or 22
-	ArmMax= Arm_Max or 12
+	ArmMax= Arm_Max or 8
 	LinArmMax=Leg_Max or 4 --arms that can be used for linear expansion
 	
-	HeadMax= Head_Max or 8
+	HeadMax= Head_Max or 4
 	DecoMax=Body_Double_Max or 16
 	DecoDouble= DecoD or 4
 	
@@ -54,7 +68,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		bodyPieceName="body"..i.."s2"
 		BodyPieces[#BodyPieces+1]=piece(bodyPieceNameOrigin)
 		BodyPieces[#BodyPieces+1]=piece(bodyPieceName)
-		nr=echoNr(nr);assert(BodyPieces[i])
+	
 		--Spring.Echo("JW:VaryFoo:SymetricConections"..table.getn(ConPieces[BodyPieces[i]].Symetric))
 			
 		if i < DoubleMax and i %2 ==0 then
@@ -76,6 +90,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		bodyPieceName2="Leg"..i..mod.."l"   --Lower Arm - Wheels
 		bodyPieceName3=bodyPieceName2  --the lower leg is the body piece on which we use as distance measure to ground 
 		ArmPieces[i]={}
+		
 		ArmPieces[i][1]=	piece(bodyPieceName1)
 		ArmPieces[i][2]=	piece(bodyPieceName2)
 		ArmPieces[i][3]=	piece(bodyPieceName3)
@@ -91,7 +106,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 
 	--HEAD
 	HeadPieces={}
+	HeadCon={}
 	DoubleHeadPieces={}
+	
 		for i=1,HeadMax,1 do
 		
 		bodyPieceName="Head"..i
@@ -130,14 +147,16 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	LinBodyCon={}
 
 	
-	function bd_turnPieceInRandDir(pie,dirVec,SymSideVal,symPiece)
+	function bd_turnPieceInRandDir(pie,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
 	minx,maxx,miny,maxy,minz,maxz=dirVec.minx,dirVec.maxx,dirVec.miny,dirVec.maxy,dirVec.minz,dirVec.maxz
 	
 	x=math.random(minx,maxx)
 	z=math.random(minz,maxz)%180
 	y=math.random(miny,maxy)
 	offSetX= dirVec.offSetX or 0
-	_,y,_=linDegFilterFunction(0,y,0)
+	linDegFilterFunction= llinDegFilterFunction or function(a,b,c) return a - (a%45), b- (b%45), c- (c%45) end
+	symDegFilterFunction= lsymDegFilterFunction or function(a,b,c) return a - (a%45), b- (b%45), c- (c%45) end
+	_,y,_=  linDegFilterFunction(0,y,0) 
 	Turn(pie,y_axis,math.rad(y),0,true)
 
 	if  symPiece == nil then
@@ -176,7 +195,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		Move(Pie,y_axis,y,0,true)
 		--Now the piece is at the exact location of the connection piece
 				if dirVec then				
-				bd_turnPieceInRandDir(Pie,dirVec,SymSideVal)
+				bd_turnPieceInRandDir(Pie,dirVec,SymSideVal,linDegFilterFunction,symDegFilterFunction)
 				end
 				
 	end
@@ -195,14 +214,14 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		--Now the piece is at the exact location of the connection piece
 
 				if dirVec then				
-				bd_turnPieceInRandDir(Pie,dirVec,SymSideVal)
+				bd_turnPieceInRandDir(Pie,dirVec,SymSideVal,linDegFilterFunction,symDegFilterFunction)
 				end
 	end
 ---------------------------
 
 	function bd_initVehicleCreation()
 --DEBUG
-	--Move(center,y_axis,90,0,true)
+	Move(center,y_axis,90,0,true)
 --DEBUG
 		for i=1,ArmMax,1 do
 		Hide(ArmPieces[i][1])
@@ -214,7 +233,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	--hideT(DecoPieces)
 
 	bd_init()
-	StartThread(buildRandomizedVehicle)
+	StartThread(bd_buildRandomizedVehicle)
 	
 	end
 	
@@ -222,42 +241,51 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	return table.getn(tablename)~= 0
 	end
 	
-	function makeVecFromPoint(piece)
-	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piece)
-	return{x=ox,y=oy,z=oz}
+	function makeVecFromPoint(piecess)
+	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecess)
+	l=math.sqrt(ox* ox + oy*oy + oz *oz)
+	return {x=ox/l ,y=oy/l,z=oz/l}
+	
 	end
 	
 	function getSocketsAsPoints(part, sympart)
 	getLinPoints= function (piecename)
 					AlignPieceToPiece(ConCenter,piecename,0)
 					retTable={}
-					table.insert(retTable,makeVecFromPoint(LinComm[1]))
-					table.insert(retTable,makeVecFromPoint(LinComm[2]))
+					Spring.Echo("Type Of LinConTable"..type(LinCon[1]))
+					Spring.Echo("Type Of LinConTable"..type(LinCon[2]))
+					Spring.Echo("Type Of LinConTable"..type(LinCon[3]))
+					Spring.Echo("Type Of LinConTable"..type(LinCon[4]))
+	
+					table.insert(retTable,LinCon[1])
+					table.insert(retTable,LinCon[2])
+					table.insert(retTable,LinCon[3])
+					table.insert(retTable,LinCon[4])
 					return retTable
 				  end
 
 	getSynPoints= function(piecename)
 				AlignPieceToPiece(ConCenter,piecename,0)
 				retTable={}
-						for i=1,4 do
-						point=makeVecFromPoint(SymCon[i])
-						table.insert(retTable,point)
-						SymCon[i]=point
-						end
+								
+					Spring.Echo("Type Of SymConTable"..type((SymCon[1])))
+					Spring.Echo("Type Of SymConTable"..type((SymCon[2])))
+				
+						table.insert(retTable,SymCon[1])
+						table.insert(retTable,SymCon[2])
+						
 					return retTable
 				  end
 				  
-		LinCon=	{}
+		RetLinCon=	{}
 		SLinCon=	{}
-		SynCon={}
+		RetSynCon={}
 		SSynCon={}
 		-- we move the ConCenter to the part
-		MovePieceToPiece(ConCenter,part)
-		x,y,z=Spring.GetUnitPieceDirection(unitID,part)
-		TurnPiece(ConCenter,x,y,z,0)
+
 		--get the points Coordinates
-		LinCon=getLinPoints(part)
-		SynCon=getSynPoints(part)
+		RetLinCon=getLinPoints(part)
+		RetSynCon=getSynPoints(part)
 		
 		if sympart then	
 		-- we move the ConCenter to the part
@@ -267,18 +295,28 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		end
 	 
 	 if table.getn(SLinCon) > 0 or table.getn(SSynCon) > 0 then 
-	  return LinCon, SynCon, SLinCon, SSynCon 
+	  return RetLinCon, RetSynCon, SLinCon, SSynCon 
 	  else
-	  return LinCon,SynCon
+	  return RetLinCon,RetSynCon
 	  end
 	end
 	
+	--Continue here TODO
 	function bd_LinAddPieceSocketsToPool(part,boolAddSymetrics)
 	
 	--> we add the Points that this part holds to the pool
+	if not  ConPieces[part]then  ConPieces[part] ={} end
+	if not  ConPieces[part]then  ConPieces[part] ={} end
+	
+	if not  ConPieces[part].Linear then  ConPieces[part].Linear ={} end
+	if not  ConPieces[part].Symetric then  ConPieces[part].Symetric ={} end
 	 ConPieces[part].Linear,ConPieces[part].Symetric=getSocketsAsPoints(part)
-		LinearCon=ConPieces[part].Linear
-		SymCon=ConPieces[part].Symetric
+
+	 	local LinearCon=ConPieces[part].Linear
+	 
+			LinearCon=ConPieces[part].Linear
+		if not SymCon[part] then SymCon[part] ={} end
+			table.insert(SymCon[part].Symetric,ConPieces[part].Symetric)
 		
 		if LinearCon then
 			for i=1,table.getn(LinearCon), 1 do
@@ -339,8 +377,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		Move(BodyPieces[1],y_axis,0,0,true)	
 		Move(BodyPieces[1],z_axis,0,0,true)	
 		Show(BodyPieces[1])
-		bd_LinAddPieceSocketsToPool(BodyPieces[1],true)
-		bd_turnPieceInRandDir(BodyPieces[1],bd_makeDirVecFromDeg(180,180,0,0,0,0),1)
+		if not ConPieces[BodyPieces[1]] then ConPieces[BodyPieces[1]]={}end
+		ConPieces[BodyPieces[1]].Linear,ConPieces[BodyPieces[1]].Symetric={},{}
+		
+		bd_LinAddPieceSocketsToPool(1,true)
+		bd_turnPieceInRandDir(BodyPieces[1],bd_makeDirVecFromDeg(180,180,0,0,0,0),1,linDegFilterFunction,symDegFilterFunction)
 		
 		bd_usedPiece(BodyPieces[1])
 		
@@ -380,7 +421,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 		Show(BodyPiece)
 
 		bd_conPieceCon2Socket(Socket,BodyPiece,randomVec)
-		bd_LinAddPieceSocketsToPool(BodyPiece,true)	
+		bd_LinAddPieceSocketsToPool(BodyDice,true)	
 		
 		Show(BodyPiece)
 		bd_usedPiece(BodyPiece)
@@ -416,7 +457,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 				Show(pieceB)	
 				
 				dirVec=bd_makeDirVecFromDeg(90,45,180,90,90,35)
-					bd_turnPieceInRandDir(pieceA,dirVec,1,pieceB)
+					bd_turnPieceInRandDir(pieceA,dirVec,1,linDegFilterFunction,symDegFilterFunction,pieceB)
 				bd_sconPieceCon2Socket(socketA,pieceA, dirVec, true)
 				bd_sconPieceCon2Socket(socketB,pieceB, dirVec, false)
 				--add symmetric expansion points to the pool
@@ -534,7 +575,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 			bd_sconPieceCon2Socket(socketA,pieceA, dirVec, true)
 			bd_sconPieceCon2Socket(socketB,pieceB, dirVec, false)
 			
-			bd_turnPieceInRandDir(pieceA,dirVec,1,pieceB)
+			bd_turnPieceInRandDir(pieceA,dirVec,1,linDegFilterFunction,symDegFilterFunction,pieceB)
 			bd_usedPiece(socketA)
 			bd_usedPiece(socketB)
 			bd_usedPiece(pieceA)
@@ -592,7 +633,7 @@ function bd_LinearExpandArm()
 					bd_sconPieceCon2Socket(socketA,ArmTableA[1], dirVec, true)
 					bd_sconPieceCon2Socket(socketB,ArmTableB[1], dirVec, false)
 					
-					bd_turnPieceInRandDir(ArmTableA[1],dirVec,1,ArmTableB[1])
+					bd_turnPieceInRandDir(ArmTableA[1],dirVec,1,linDegFilterFunction,symDegFilterFunction,ArmTableB[1])
 					bd_usedPiece(socketA)
 					bd_usedPiece(socketB)
 					bd_usedPiece(ArmTableA[1])
@@ -609,16 +650,16 @@ function bd_LinearExpandArm()
 	function bd_buildRandomizedVehicle()
 	--Nr of Pieces Used to build this VaryFoo
 	bodydice=3
+	teamID=Spring.GetUnitTeam(unitID)
+	if not GG.VehiclePieceMax then GG.VehiclePieceMax={} end
 
-	if not GG.VaryFooPieceMax then GG.VaryFooPieceMax={} end
-
-	if not GG.VaryFooPieceMax[teamID] then 
-	GG.VaryFooPieceMax[teamID]=6 
+	if not GG.VehiclePieceMax[teamID] then 
+	GG.VehiclePieceMax[teamID]=6 
 	end
 	
-	BodyMax=GG.VaryFooPieceMax[teamID]
+	BodyMax=GG.VehiclePieceMax[teamID]
 	hp, maxhp=Spring.GetUnitHealth(unitID)
-	Spring.SetUnitHealth(unitID,hp,maxhp*math.ceil(6/GG.VaryFooPieceMax[teamID]))
+	Spring.SetUnitHealth(unitID,hp,maxhp*math.ceil(6/GG.VehiclePieceMax[teamID]))
 	
 	if math.random(0,1)==1 then
 	bodydice=math.ceil(math.random(3,BodyMax))
@@ -651,7 +692,7 @@ function bd_LinearExpandArm()
 		end
 
 	end
-
+--[[
 	--Arm
 	Armdice=math.ceil(math.random(3,ArmMax))
 	ArmNum=0
@@ -759,6 +800,8 @@ function bd_LinearExpandArm()
 	
 	bd_alignLegsToGround()
 	bd_processAddedArms()	
+	
+	--]]
 end		
 
 function bd_getSymDecoCon()
@@ -837,7 +880,7 @@ function bd_SymmetricExpandDeco(pieceA, pieceB)
 			bd_sconPieceCon2Socket(socketA,pieceA, dirVec, true)
 			bd_sconPieceCon2Socket(socketB,pieceB, dirVec, false)
 			
-			bd_turnPieceInRandDir(pieceA,dirVec,1,pieceB)
+			bd_turnPieceInRandDir(pieceA,dirVec,1,linDegFilterFunction,symDegFilterFunction,pieceB)
 			bd_usedPiece(socketA)
 			bd_usedPiece(socketB)
 			bd_usedPiece(pieceA)

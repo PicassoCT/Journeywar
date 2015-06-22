@@ -228,7 +228,7 @@ function exploreJob(id, frame,Package)
 return nextFrame, Package
 end
 
--->denies a tree
+-->denies a tree - withdraw percentage of helath of the invested ressources
 function deactivateAndReturnCosts(boolJustOnceDeny,UnitDef)
 	if boolJustOnceDeny==true then
 
@@ -244,13 +244,13 @@ function deactivateAndReturnCosts(boolJustOnceDeny,UnitDef)
 	teamID=Spring.GetUnitTeam(unitID)
 	if not teamID then return end
 
-	Spring.AddTeamResource(teamID,"metal",mcosts)
-	Spring.AddTeamResource(teamID,"energy",ecosts)
+	Spring.AddTeamResource(teamID,"m",mcosts)
+	Spring.AddTeamResource(teamID,"e",ecosts)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	
-	Spring.SetUnitResourcing(unitID,"e",0)
-	Spring.SetUnitResourcing(unitID,"m",0)
-	Spring.SetUnitResourcing(unitID,"e",1)
+	Spring.SetUnitResourcing(unitID,"ume",0)
+	Spring.SetUnitResourcing(unitID,"umm",0)
+	Spring.SetUnitResourcing(unitID,"uue",1)
 
 	x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.SpawnCEG("jtreedenial" ,x,y+150,z,0,1,0,50,0)

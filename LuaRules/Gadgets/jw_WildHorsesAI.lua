@@ -266,8 +266,9 @@ function DefRes(AITable)
 return AITable
 		end
 function createStreamEventTask(id, AITable)
+function handOver(id, frame, persPack) Spring.SetUnitMoveGoal(persPack.unitid,math.random(0,500),0,math.random(0,500)); return frame +90 end
 --{id=id,  action(id,frame, persPack), persPack}"..
-return GG.Eventstream::CreateEvent(id =GG.EventStreamID or 0),function (id, frame, persPack) Spring.SetUnitMoveGoal(persPack.unitid,math.random(0,500),0,math.random(0,500)) return frame +90 end, persPack={unitid=id})
+return GG.Eventstream::CreateEvent(id =GG.EventStreamID),handOver, {unitid=id})
 end
 function Aggressor(AITable)
 	for i=1,#AITable.UnitPool do
