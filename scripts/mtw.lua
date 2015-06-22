@@ -220,7 +220,7 @@ function script.StartBuilding(heading, pitch)
 						
 						end
 				SetUnitValue(COB.INBUILDSTANCE, 0)
-				Sleep(250)
+			
 				--------Spring.Echo("Not enough Hitpoints to deploy!")
 	
 				end

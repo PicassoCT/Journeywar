@@ -133,8 +133,6 @@ TutorialInfoTable=
 [UnitDefNames["jtree2"          ].id]={active=false , delay=350 	,text="\a|Wastelandtree \n Collects radiowaves"},
 [UnitDefNames["jtree3"          ].id]={active=false , delay=350 	,text="\a|Watertree \n Collects light -regrows after destruction"},
 [UnitDefNames["jtreel"          ].id]={active=false , delay=350 	,text="\a|Accidtree \n Stores Matter"},
-[UnitDefNames["jtree2dummy"     ].id]={active=false , delay=350 	,text="\a|Tree \n Eats expensive ammunition & time."},
-[UnitDefNames["jtreedummy"      ].id]={active=false , delay=350 	,text="\a|Tree \n Eats expensive ammunition & time."},
 [UnitDefNames["jgeohive"        ].id]={active=false , delay=350 	,text="\a|Creepernest \n Spawns auto harassing Creepers"},
 [UnitDefNames["jwatergate"      ].id]={active=false , delay=350 	,text="\a|Watergate \n Raises the maps waterlevel"},
 [UnitDefNames["jfireflower"     ].id]={active=false , delay=350 	,text="\a|Fireflowers \n In case of fire drop dead were you stand "},

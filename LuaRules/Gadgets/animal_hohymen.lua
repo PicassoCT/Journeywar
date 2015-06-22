@@ -93,6 +93,7 @@
 	function FindValuePos(unitid,valueType)
 
 	x,y,z=Spring.GetUnitPosition(unitid)
+	if not x then Spring.Echo("Coords not find for hohymen"); return false, false end
 	LandScapeCell=getMap(x,z)
 	assert(LandScapeCell)
 	Spring.Echo("Searching Food2")
@@ -103,6 +104,8 @@
 	
 		for i=1,48, 1 do
 				for j=1,48,1 do
+				assert(Vec[j].x)
+				assert(Vec[j].z)
 				LandScapeCell=lMap(x+i*Vec[j].x,z+i*Vec[j].z)
 					if LandScapeCell.Food > 0 then 
 					--we found water but it is it visible to the animal 

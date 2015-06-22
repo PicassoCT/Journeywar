@@ -220,7 +220,11 @@
 	Spring.Echo("JW::GHohymen::Functionswitch"..name)
 	Signal(SIG_STATE)
 	LegsDown()
+	if StateFunctionTable[name] then
 	StateFunctionTable[name](argTable)	
+	else
+	Spring.Echo("Hohymen has no state equivalent to "..name)
+	end
 	return	
 	end
 

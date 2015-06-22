@@ -49,10 +49,11 @@ Neck= piece"Neck"
 
 
 function bodyBuilder()
-if defID== bgID then
 Hide(LArm)
 Hide(RArm)
 Hide(Gun)
+if defID== bgID then
+
 
 decIsion=math.random(1,3)
 	if decIsion==1 then

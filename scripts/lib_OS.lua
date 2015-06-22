@@ -254,6 +254,7 @@ function deactivateAndReturnCosts(boolJustOnceDeny,UnitDef)
 
 	x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.SpawnCEG("jtreedenial" ,x,y+150,z,0,1,0,50,0)
+	Spring.PlaySoundFile("sounds/jtree/denial.ogg",1.0)
 	end
 
 

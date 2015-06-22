@@ -70,13 +70,9 @@ buildoptions =
 	"jdrilltree",
 	"jmeconverter",
 	"jtree",
-	"jtreedummy",
 	"jtree2",
-	"jtree2dummy",
 	"jtree3",
-	"jtree3dummy",
 	"jtreel",
-
 	--defense
 	"jjamforrest",
 	"jwatergate",
