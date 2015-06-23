@@ -31,9 +31,16 @@ local	boolAttack=false
 ------------------------------------------------------------------------------------UNITCODE	
 function script.Create()
 --center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction)
-StartThread(buildVehicle,center,AMax,LMax, DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
+StartThread(testThread)
 end
-	
+
+function testThread()
+while(1) do
+StartThread(buildVehicle,center,AMax,LMax, DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
+Sleep(30000)
+end
+
+end
 	----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return center 

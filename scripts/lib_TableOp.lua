@@ -588,18 +588,31 @@ Move(piecename,z_axis,Z,speed,true)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function AlignPieceToPiece(piecename, piecenameB,speed)
+function AlignPieceToPiece( piecenameB, piecename,speed, boolWaitForIt)
 if not piecenameB or not piecename then return end
 bx,by,bz=Spring.GetUnitPiecePosDir(unitID,piecenameB)
 x,y,z,vx,vy,vz=Spring.GetUnitPiecePosDir(unitID,piecename)
-
+norm=distance(vx,vy,vz)
+vx,vy,vz=vx/norm,vy/norm,vz/norm
 	
 Move(piecename,x_axis,-1*(bx-x),speed)
 Move(piecename,y_axis,by-y,speed)
 Move(piecename,z_axis,bz-z,speed,true)	
-Turn(piecename,x_axis,vx,speed)
-Turn(piecename,y_axis,vy,speed)
-Turn(piecename,z_axis,vz,speed)
+
+
+Turn(piecename,x_axis,math.atan2(vy,vx),speed)
+Turn(piecename,y_axis,math.atan2(vx,vy),speed)
+Turn(piecename,z_axis,math.atan2(vx,vz),speed,true)
+
+if not boolWaitForIt or boolWaitForIt == true then
+
+WaitForMove(piecename,x_axis)
+WaitForMove(piecename,y_axis)
+WaitForMove(piecename,z_axis)	
+WaitForTurn(piecename,x_axis)
+WaitForTurn(piecename,y_axis)
+WaitForTurn(piecename,z_axis)
+end
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed

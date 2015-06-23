@@ -61,7 +61,7 @@
 	end
 	
 		if unitdefid==SEASTARDEF then
-		seastarcounter=seastarcounter-1	
+		seastarcounter=math.max(0,seastarcounter-1)
 		end
 	end
 	
@@ -79,6 +79,9 @@
 		spawnAgent(unitDefID, x,y,z,unitID)
 		end
 		
+		if unitDefID==SEASTARDEF then
+		seastarcounter=seastarcounter+1
+		end
 	
 	end
 	
@@ -94,8 +97,9 @@
 		end
 		
 		handleVaryFoos(frame)
-		seastarcounter=handleSeaStars(frame,seastarcounter)
-	
+		if seastarcounter < 5 then
+		handleSeaStars(frame,seastarcounter)
+		end
 	end	
 	end	
 	
