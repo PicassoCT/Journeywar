@@ -22,7 +22,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
     ConCenter=piece("ConCenter")
 	ConLin={}
 	ConSyn={}
-	
+	--Debug 
+	Move(center,y_axis,90,0)
 	function bd_makePointFromPiece(piecename)
 	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecename)
 		return{x=ox*-1,y=oy,z=oz}
@@ -532,9 +533,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max
 	--find two SymBodyCon who are frontal 
 	end
 	
-	function bd_DeBugPieceLight(piecename)
+	function bd_DeBugPieceLight(vecT)
 		while true do
-		EmitSfx(piecename,1025)
+		for i=1,#vecT do
+		Spring.SpawnCEG("greenlight",vecT[i].x,vecT[i].y,vecT[i].z,0,1,0)
+		end
 		Sleep(250)
 		end
 	end
@@ -692,6 +695,9 @@ function bd_LinearExpandArm()
 		end
 
 	end
+
+	bd_DeBugPieceLight(LinCon)
+	
 --[[
 	--Arm
 	Armdice=math.ceil(math.random(3,ArmMax))
