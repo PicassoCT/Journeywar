@@ -57,7 +57,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		dynString="LinCon"..i
 		ConLin[i]=piece(dynString)
 		LinCon[i]=bd_makePointFromPiece(ConLin[i])
-		AllDynamicSockets[#AllDynamicSockets+1]=ConLin[i]
+		--AllDynamicSockets[#AllDynamicSockets+1]=ConLin[i]
 		end	
 	ConSyn[1]=piece"SymCon1"
 	ConSyn[2]=piece"SymCon2"
@@ -212,7 +212,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 --								Socket,ConectionSocket,BodyPiece
 	function bd_conPieceCon2Socket(Con,Pie,dirVec, boolLeftRight)
-	x,y,z=Con.x,Con.y,Con.z
+	x,y,z=Con.x*-1,Con.y,Con.z
 	
 	SymSideVal=1	
 	
@@ -445,7 +445,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		minz=0 ,
 		maxx=91 ,
 		maxy=0 ,
-		maxz=0 ,
+		maxz=0 
 		}
 		Show(BodyPiece)
 
@@ -712,6 +712,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 	end
 	
+	--DEBUG DODO
 	function bd_buildRandomizedVehicle()
 	--Nr of Pieces Used to build this VaryFoo
 	bodydice=3
