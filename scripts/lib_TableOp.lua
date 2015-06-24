@@ -527,6 +527,19 @@ x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 return {x=x, y= y, z= z}
 end
 
+function generatePieceMap(unitID)
+List=Spring.GetUnitPieceMap(unitID)
+return List or {}
+end
+
+function hideAllPieces(unitID)
+List=generatePieceMap(unitID)
+	for k,v in pairs(List) do
+	Hide(v)
+	end
+
+end
+
 -->Creates basically a table of piecenamed enumerated strings
 function makeTableOfPieceNames(name, nr,startnr)
 T={}
@@ -588,31 +601,34 @@ Move(piecename,z_axis,Z,speed,true)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function AlignPieceToPiece( piecenameB, piecename,speed, boolWaitForIt)
+function AlignPieceToPiece( piecenameB, piecename,speed, boolWaitForIt,boolDebug, GlowPoints)
+
 if not piecenameB or not piecename then return end
-bx,by,bz=Spring.GetUnitPiecePosDir(unitID,piecenameB)
+
+MovePieceToPiece(piecenameB,piecename,0)
+	WaitForMove(piecenameB,x_axis)
+	WaitForMove(piecenameB,y_axis)
+	WaitForMove(piecenameB,z_axis)	
+
 x,y,z,vx,vy,vz=Spring.GetUnitPiecePosDir(unitID,piecename)
 norm=distance(vx,vy,vz)
 vx,vy,vz=vx/norm,vy/norm,vz/norm
 	
-Move(piecename,x_axis,-1*(bx-x),speed)
-Move(piecename,y_axis,by-y,speed)
-Move(piecename,z_axis,bz-z,speed,true)	
+Turn(piecenameB,x_axis,math.atan2(vy,vx),speed)
+Turn(piecenameB,y_axis,math.atan2(vx,vy),speed)
+Turn(piecenameB,z_axis,math.atan2(vy,vz),speed,true)
 
+	if not boolWaitForIt or boolWaitForIt == true then
+	WaitForTurn(piecenameB,x_axis)
+	WaitForTurn(piecenameB,y_axis)
+	WaitForTurn(piecenameB,z_axis)
+	end
 
-Turn(piecename,x_axis,math.atan2(vy,vx),speed)
-Turn(piecename,y_axis,math.atan2(vx,vy),speed)
-Turn(piecename,z_axis,math.atan2(vx,vz),speed,true)
-
-if not boolWaitForIt or boolWaitForIt == true then
-
-WaitForMove(piecename,x_axis)
-WaitForMove(piecename,y_axis)
-WaitForMove(piecename,z_axis)	
-WaitForTurn(piecename,x_axis)
-WaitForTurn(piecename,y_axis)
-WaitForTurn(piecename,z_axis)
-end
+	if boolDebug and boolDebug==true then
+	debugDisplayPieceChain(GlowPoints)
+	Sleep(10)
+	end
+	
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
@@ -1010,6 +1026,31 @@ detSum=det1+det2+det3
                 end
 
 end
+-->Function estimates the relative Position of a Piece to another by comparing ther Coordinates
+function PieceStarCoordPiece(myPos,PiecePos,cubicsize)
+
+--[1]=--front
+--[2]=--rear
+--[3]=--side left
+--[4]=	--side right
+--[5]=	--up
+--[6]=	--low
+
+
+	if withinRange(myPos.y,PiecePos.y, cubicsize) ==true then 
+	
+		if withinRange(myPos.x,PiecPos.x,cubicsize)==true then -- Piece is on the side
+		if myPos.z > piecePos.z then return 3 else return 4 end		
+		else -- Piece is either in front or behind
+			if myPos.x > piecePos.x then return 2 else return 1 end
+		end
+	else -- pos is either above or below the layer 
+		if myPos.y > PiecePos.y then return 6 else return 5 end
+	end
+
+end
+
+
 
 --> checks wether a value with teshold is within range of a second value
 function withinRange(value1,value2, treShold)
@@ -1567,7 +1608,7 @@ end
 
 function debugDisplayPieceChain(Tables)
 	for i=1, #Tables, 1 do
-	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(Tables[i])
+	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,Tables[i])
 	Spring.SpawnCEG("redlight",x,y+10,z,0,1,0,50,0)
 	end
 
@@ -2923,7 +2964,7 @@ end
 		end
 	return T
 	end
-
+	
 	--> finds GenericNames and Creates Tables with them
 	function GeneratePiecesTablebyNames(boolMakePiecesTable)
 
