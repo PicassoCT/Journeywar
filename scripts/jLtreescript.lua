@@ -1174,6 +1174,40 @@ end
 	end
 
 	
+	-- Helix tree
+	FixFunctionTabel[22]=	function ()
+	Spring.Echo("FixFunctionTabel::Helixtree")
+	
+	spiralDensity= math.random(2,4)
+	
+	FullCircle=3.14159*spiralDensity
+	
+	DeltaV=FullCircle/math.ceil(#TreePiece/2)
+		showT(TreePiece)
+		showT(EndPiece)
+		reseT(EndPiece)
+		reseT(TreePiece)
+		Turn(center,y_axis,0,0)
+		Turn(center,x_axis,0,0)
+		Turn(center,z_axis,0,0)
+	left=0
+	right=3.14159
+	for i=1,#TreePiece, 2 do
+	distance=7*i
+	Move(TreePiece[i],y_axis,distance,0)
+	Move(TreePiece[i+1],y_axis,distance,0)
+	
+	Turn(TreePiece[i],x_axis,math.rad(90),0)
+	Turn(TreePiece[i+1],x_axis,math.rad(90),0)
+	Turn(TreePiece[i],y_axis	,left,0)
+	Turn(TreePiece[i+1],y_axis	,right,0)
+	left=left+DeltaV
+	right=right+DeltaV
+	end
+
+	return true
+		end
+	
 	function slightVariation(deg,value)
 	return math.random(deg-value,value+deg)
 	end
@@ -2056,10 +2090,12 @@ end
 	function BuildLtree()
 							
 	boolTakeATurn=true
-	
-		if  math.random(0,3)==1 and boolVaryFooTree == false then 
+--	if not GG.TestNumber then GG.TestNumber= 1 else GG.TestNumber=(GG.TestNumber%#FixFunctionTabel)+1 end
+		if true or math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 
-		boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
+	--	boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
+		boolTakeATurn=FixFunctionTabel[22]()
+	--	boolTakeATurn=FixFunctionTabel[GG.TestNumber]()
 			else
 			
 			dice=math.random(1,#gramarTable)

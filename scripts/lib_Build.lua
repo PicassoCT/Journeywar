@@ -179,15 +179,22 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 	
 	function bd_turnPieceInRandDir(pie,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
-	minx,maxx,miny,maxy,minz,maxz=dirVec.minx,dirVec.maxx,dirVec.miny,dirVec.maxy,dirVec.minz,dirVec.maxz
-	
-	x=math.random(minx,maxx)
-	z=math.random(minz,maxz)%180
-	y=math.random(miny,maxy)
+	x,y,z=0,0,0	
 	offSetX= dirVec.offSetX or 0
-	linDegFilterFunction= llinDegFilterFunction or function(a,b,c) return a - (a%90), b- (b%90), c- (c%90) end
-	symDegFilterFunction= lsymDegFilterFunction or function(a,b,c) return a - (a%45), b- (b%45), c- (c%45) end
-	_,y,_=  linDegFilterFunction(0,y,0) 
+
+		if dirVec.boolFixedDegree and dirVec.boolFixedDegree ==true then
+		x,y,z=dirVec.x,dirVec.y,dirVec.z
+
+		else --randomIntervall
+		minx,maxx,miny,maxy,minz,maxz=dirVec.minx,dirVec.maxx,dirVec.miny,dirVec.maxy,dirVec.minz,dirVec.maxz
+		x=math.random(minx,maxx)
+		z=math.random(minz,maxz)%180
+		y=math.random(miny,maxy)
+		linDegFilterFunction= llinDegFilterFunction or function(a,b,c) return a - (a%90), b- (b%90), c- (c%90) end
+		symDegFilterFunction= lsymDegFilterFunction or function(a,b,c) return a - (a%45), b- (b%45), c- (c%45) end
+		_,y,_=  linDegFilterFunction(0,y,0) 
+		end
+		
 	Turn(pie,y_axis,math.rad(y),0,true)
 
 	if  symPiece == nil then
@@ -440,13 +447,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	Socket 	  	= LinBodyCon[SocketDice]
 	
 		if  not AllReadyUsed[BodyPiece] and not AllReadyUsed[Socket] then
-		randomVec={	minx=90 ,	
-		miny=0 ,
-		minz=0 ,
-		maxx=91 ,
-		maxy=0 ,
-		maxz=0 
-		}
+		
+		randomVec={	boolFixedDegree=true, x=0, y=0, z=0 }
+		
 		Show(BodyPiece)
 
 		bd_conPieceCon2Socket(Socket,BodyPiece,randomVec)

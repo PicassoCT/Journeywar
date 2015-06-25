@@ -1026,6 +1026,13 @@ detSum=det1+det2+det3
                 end
 
 end
+-->Sanitizing RandomIntervall
+function brandoVal(LowLimit,UpLimit)
+upLim=UpLimit or LowLimit+1
+if LowLimit >= upLim then LowLimit=upLim-1 end
+return math.random(LowLimit,UpLimit)
+end
+
 -->Function estimates the relative Position of a Piece to another by comparing ther Coordinates
 function PieceStarCoordPiece(myPos,PiecePos,cubicsize)
 
