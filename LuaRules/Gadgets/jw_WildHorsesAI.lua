@@ -52,9 +52,9 @@ function getProtectionorExpansionGoal()
 --				  
 --				Wishlist, Unitpool->Father, Task-List-Priority[unitid],  
 --			DefRes
---				Wishlist, Unitpool & TaskList, DefMap
+--				Wishlist, Unitpool & TaskPool, DefMap
 --			Aggressor
---				WishList, Unitpool & TaskList, Virtual Enemy
+--				WishList, Unitpool & TaskPool, Virtual Enemy
 --			UnitPools contian a UnitID,UnitDefID,TaskPriority	
 	
 function forgeAI_Table(side,teamid,teaminfo)
@@ -92,7 +92,7 @@ end
 
 --//wishlists 
 cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
-		UnitPool={}, TaskList={},
+		UnitPool={}, TaskPool={},
  Build={
  
 		["citadell"]		={nr=1, cycle=0,cycleInc=7,xpShort=1,xpLong=1,Ereturn=10,Mreturn=10}	,
@@ -106,7 +106,7 @@ cBase={ boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fal
  }
  
 cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
-		 UnitPool={}, TaskList={},
+		 UnitPool={}, TaskPool={},
  Build={
 
 		["mdigg"]				={nr=1, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=5},
@@ -118,14 +118,14 @@ cDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fa
 		}
 		
 cAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
- UnitPool={}, TaskList={},
+ UnitPool={}, TaskPool={},
  Build={
 		["mtw"]					={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		["restrictor"]			={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
 		}
 		}
 jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
- UnitPool={}, TaskList={},
+ UnitPool={}, TaskPool={},
  Build={
 
 		["beanstalk"]		={nr=1, cycle=0,cycleInc=7,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
@@ -137,7 +137,7 @@ jBase={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fals
    
 }
 jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
- UnitPool={}, TaskList={},
+ UnitPool={}, TaskPool={},
  Build={
 
 		["jdrilltree"]				={nr=1, cycle=0,cycleInc=5,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
@@ -150,7 +150,7 @@ jDefRes={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=fa
 		}
 }
 jAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded=false,
- UnitPool={}, TaskList={},
+ UnitPool={}, TaskPool={},
  Build={
 
 		["vort"]					={nr=1, cycle=0,cycleInc=1,xpShort=1,xpLong=1,Ereturn=0,Mreturn=0,DeaDamage=0},
@@ -186,42 +186,41 @@ end
   
 function gadget:Initialize()
     teams=Spring.GetTeamInfo()
+	if GG.UnitPool== nil then GG.UnitPool = { Return = returnUnitToPool } end
+	
 	for k,v in pairs(teams) do 
 	forgeAI_Table(getTeamSide(k),k,v)
 	end	
    
 end
 
-function checkFundRoundEnd(T)
-if T.DefRes.boolFundRound==true and T.Base.boolFundRound==true and T.Aggressor.boolFundRound==true then  
- T.DefRes.boolFundRound=false 
- T.Base.boolFundRound=false 
- T.Aggressor.boolFundRound=false 
-end
-return T
-end
-
-local function returnUnitToPool(teamid,unitid, assignedSubAI,father)
-	if assignedSubAI == "Base" then
-	AI[teamid].Base.UnitPool[unitid]=father
-	AI[teamid].Base.TaskList[unitid]=nil
-	end	
-	
-	if assignedSubAI == "DefRes" then
-	AI[teamid].DefRes.UnitPool[unitid]=father
-	AI[teamid].DefRes.TaskList[unitid]=nil
-	end	
-	
-	if assignedSubAI == "Aggressor" then
-	AI[teamid].Aggressor.UnitPool[unitid]=father
-	AI[teamid].Aggressor.TaskList[unitid]=nil
+	function checkFundRoundEnd(T)
+		if T.DefRes.boolFundRound==true and T.Base.boolFundRound==true and T.Aggressor.boolFundRound==true then  
+		T.DefRes.boolFundRound=false 
+		T.Base.boolFundRound=false 
+		T.Aggressor.boolFundRound=false 
+		end
+	return T
 	end
 
-
-    end
+	local function returnUnitToPool(teamid,unitid, assignedSubAI,father)
+		if assignedSubAI == "Base" then
+		AI[teamid].Base.UnitPool[unitid]=father
+		AI[teamid].Base.TaskPool[unitid]=nil
+		end	
+		
+		if assignedSubAI == "DefRes" then
+		AI[teamid].DefRes.UnitPool[unitid]=father
+		AI[teamid].DefRes.TaskPool[unitid]=nil
+		end	
+		
+		if assignedSubAI == "Aggressor" then
+		AI[teamid].Aggressor.UnitPool[unitid]=father
+		AI[teamid].Aggressor.TaskPool[unitid]=nil
+		end
+	end
      
-    if GG.UnitPool== nil then GG.UnitPool = { Return = returnUnitToPool } end
-	--filters the next to build unit/building according to need
+    --filters the next to build unit/building according to need
 	function nextBuildFilterFunction(typeTable, AI_Table)
 	return typeTable[1]
 	end
@@ -239,24 +238,21 @@ local function returnUnitToPool(teamid,unitid, assignedSubAI,father)
 	Table[nxtKey].cycle=0
 	return UnitDefNames[nxtKey].id
 	end    
-
+	
+--Base and UnitBuilding subAI
 function Base(AITable)
 	 --if you got the funds build
-	 
 	  NeededEntity=GetNextWish(AITable.Base)
-	 -- if you dont have the funds still cut deither defres or Aggressorness
-		--give BuildOrdersBase
-		for unit,_ in pairs(AITable.Base.UnitPool) do
-			
+	 -- if you dont have the funds  cut  defres and/or Aggressor out of funding round
 		
-		end
-		--createTasks
-		--give MoveOrdersBase to not assigned Units
-			--if  Tasks higher Prio then deassign Eventstream and create new Eventstream 
+		--createTaskForWishlist 
+
+		--if  Tasks higher Prio then deassigned Eventstream and create new Eventstream 
 		--if surplus funds, buy tasks from DefRes or Aggressor AI
 return AITable
 end
 
+--DefensiveSubAI -- also responsible for Ressource Gathering
 function DefRes(AITable)
 	--if defRes --check funding
 	--if funding, order building or unit from base (Task)
@@ -265,26 +261,25 @@ function DefRes(AITable)
 		-- if Aggressored, buy protection via Tasks from Aggressor
 return AITable
 		end
-function createStreamEventTask(id, AITable)
-function handOver(id, frame, persPack) Spring.SetUnitMoveGoal(persPack.unitid,math.random(0,500),0,math.random(0,500)); return frame +90 end
---{id=id,  action(id,frame, persPack), persPack}"..
-return GG.Eventstream:CreateEvent(id =GG.EventStreamID),handOver, {unitid=id})
+
+function createStreamEventTask(id, AITable, functionToComply)
+	function temp_O_Rary(id, frame, persPack) Spring.SetUnitMoveGoal(persPack.unitid,math.random(0,500),0,math.random(0,500)); Spring.Echo("Event "..id .." has temporary EventStream Function" ); return frame +90 end
+	return GG.Eventstream:CreateEvent(GG.EventStreamID ,temp_O_Rary, {unitid=id})
 end
+
+--Aggressor SubAI responsible for Attacking or Low Cost Harrassment of the enemy
 function Aggressor(AITable)
+	--Run Virtual Enemy Simulation
+	
+	-- Virtual Enemy - calculate outcome -- attack or harass-retreat
 	for i=1,#AITable.UnitPool do
-	AITable.TaskList[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool.id,AITable)
+	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable)
 	end
-	-- Virtual Enemy
-		--if Virtual Enemy is stronger Harass, Delay and Defend
-	--else
-		--find Weakspot  
 	
 return AITable
 end
- 
-function traverseTaskStateMachine(AITable)
-end 
- 
+
+
 function gadget:GameFrame(frame)
 	if frame % 50 == 0 then
 	Spring.Echo("AI Evaluation cycle")
@@ -308,14 +303,20 @@ function gadget:GameFrame(frame)
 		end
 end
 
-
+--Created Units are assigned depending on there Type by there Type
 function gadget:UnitCreated(u,ud,team,builder)
 	if AI[team] then
+	AssignedAI="Undefined"
 	
-		if UnitDefs[ud].IsBuilder ==false then
+		if UnitDefs[ud].IsBuilder ==true or (UnitDefs[ud].IsBuilding ==true and UnitDefs[ud].HasWeapon == false)  then
 		AssignedAI="Base"
 		else
-			if math.random(0,1)==1 then AssignedAI="Aggressor" else AssignedAI="DefRes" end
+			--TODO Find better filter and assignment function
+			if math.random(0,1)==1 then 
+				AssignedAI="Aggressor" 
+			else 
+				AssignedAI="DefRes" 
+			end
 		end
 		returnUnitToPool(team,u,AssignedAI,builder)
 	end

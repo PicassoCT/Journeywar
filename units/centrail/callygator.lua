@@ -1,8 +1,8 @@
-local unitName = "cichneumonidae"
+local unitName = "callygator"
 
 local unitDef = {
-name = "Ichneumonidae",
-Description = "Repairs and hijacks Units",
+name = "callygator",
+Description = "eats units alive",
 objectName = "placeholder.s3o",
 script = "Ichneumonidaescript.lua",
 buildPic = "conair.dds",

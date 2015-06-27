@@ -49,7 +49,7 @@ corpse             = "bgcorpse",
 		workerTime = 0.54,
 	buildoptions = 
 	{
-	"jfishswarm","jgalatea"
+	"jfishswarm","jgalatea","jatlantai","jplanktoner" 
 	},
 
 

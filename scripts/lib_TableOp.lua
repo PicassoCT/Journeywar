@@ -387,6 +387,10 @@ return value
 end
 
 -->returns the 2 norm of a vector
+function dist2Vec(x,y, z,xa,ya,za)
+return math.sqrt(x*xa+y*ya+z*za)
+end
+-->returns the 2 norm of a vector
 function distance(x,y, z)
 return math.sqrt(x*x+y*y+z*z)
 end

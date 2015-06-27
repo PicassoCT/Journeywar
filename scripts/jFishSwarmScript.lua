@@ -218,22 +218,22 @@ end
 
 function swim()
 
-for i= 1, #fish do
+	for i= 1, #fish do
 
-	if Spring.UnitScript.IsInTurn(fish[i],y_axis)==false then
-	dir= math.random(-25,-5)
-	Turn(fish[i],y_axis,math. rad(dir*(-1^i)),0.25)
-	if math.random(0,1)==1 then 	Move(fish[i],z_axis,42,3) end
+		if Spring.UnitScript.IsInTurn(fish[i],y_axis)==false then
+		dir= math.random(-25,-5)
+		Turn(fish[i],y_axis,math. rad(dir*(-1^i)),0.25)
+		if math.random(0,1)==1 then 	Move(fish[i],z_axis,42,3) end
+		end
 	end
-end
 Sleep(150)
-for i= 1, #fish do
-	if Spring.UnitScript.IsInTurn(fish[i],y_axis)==false then
-	dir= math.random(-25,-5)
-	Turn(fish[i],y_axis,math. rad(dir*(-1^(i+1))),0.25)
-	if math.random(0,1)==1 then  Move(fish[i],z_axis,-10,3) end
+	for i= 1, #fish do
+		if Spring.UnitScript.IsInTurn(fish[i],y_axis)==false then
+		dir= math.random(-25,-5)
+		Turn(fish[i],y_axis,math. rad(dir*(-1^(i+1))),0.25)
+		if math.random(0,1)==1 then  Move(fish[i],z_axis,-10,3) end
+		end
 	end
-end
 Sleep(150)
 
 
@@ -242,8 +242,10 @@ end
 function idle ()
 local direction=-1
 going={}
+one=0
 for i=1,9, 1 do
 going[i]=math.random(0,1)
+	if going[i]== 1 then one =i end
 end
 
 	for i=1,9 do
@@ -254,6 +256,10 @@ end
 	Turn(subcenters[i],y_axis,math.rad(179*direction),speed)
 	end
 	end
+	
+	if one ~=0 then 
+	WaitForTurn(subcenters[one],y_axis)
+	end
 	val=math.ceil(math.random(1000,1500))
 Sleep(val)
 
@@ -262,7 +268,7 @@ Sleep(val)
 	speed=math.random(2,8)
 	if i%2==0 then direction=1 else direction=-1 end
 	
-	Turn(subcenters[i],y_axis,math.rad(358*direction),speed)
+	Turn(subcenters[i],y_axis,math.rad(357*direction),speed)
 	end
 	end
 	val=math.ceil(math.random(1200,1500))
@@ -277,11 +283,20 @@ end
  
 
 function rotatefish()
+local spGetGroundHeight=Spring.GetGroundHeight
+local spGetUnitPosition=Spring.GetUnitPosition
+
 	while true do
-	for i= 1, #centers do
-	mara =math.random(-89,89)
-	Turn(centers[i],z_axis,math.rad(mara), 0.4)
-	end
+	x,y,z=spGetUnitPosition(unitID)
+	GroundHeight=spGetGroundHeight(x,z)
+	boolShallowWaters=false
+	if GroundHeight > - 55 then boolShallowWaters=true end 
+	
+		for i= 1, #centers do
+		mara=85 *randSign()
+			if boolShallowWaters==false then mara =math.random(-89,89) end
+		Turn(centers[i],z_axis,math.rad(mara), 0.4)
+		end
 	WaitForTurn(centers[2],z_axis)
 	end
 end
