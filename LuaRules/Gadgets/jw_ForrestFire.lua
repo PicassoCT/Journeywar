@@ -145,11 +145,16 @@ if (gadgetHandler:IsSyncedCode()) then
 		local LandScapeT= GG.LandScapeT
 	if not GG.AddFire then GG.AddFire={} end
 	for i=1,#GG.AddFire,1 do
-		if GG.AddFire[i].Food then
-		LandScapeT[math.ceil(GG.AddFire[i].x/48)][math.ceil(GG.AddFire[i].z/48)].Food =GG.AddFire[i].Food
+	
+		xClamped=clamp(math.ceil(GG.AddFire[i].x/48),1,48)
+		zClamped=clamp(math.ceil(GG.AddFire[i].z/48),1,48)
+		
+		if GG.AddFire[i].Food and LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] then
+		if not LandScapeT[xClamped][zClamped].Food then LandScapeT[xClamped][zClamped].Food = GG.AddFire[i].Food end
+		LandScapeT[xClamped][zClamped].Food =GG.AddFire[i].Food
 		end
 	
-		if LandScapeT[math.ceil(GG.AddFire[i].x/48)][math.ceil(GG.AddFire[i].z/48)].Food > 0 then
+		if LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] and LandScapeT[xClamped][zClamped].Food > 0 then
 			fireT[#fireT+1]={x=GG.AddFire[i].x,y=spGetGroundHeight(GG.AddFire[i].x,GG.AddFire[i].z)+15, z=GG.AddFire[i].z}
 		end
 	end

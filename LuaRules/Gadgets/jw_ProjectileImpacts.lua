@@ -46,7 +46,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
-	local jDrugIncectorID=WeaponDefNames["jdruginjector"].id
+
 	local cUniverseGun=WeaponDefNames["cuniversegun"].id
 	local weapondefID3 = WeaponDefNames["cnukegrenadelvl3"].id
 	local weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
@@ -75,7 +75,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(cFlareGun , true)
 	Script.SetWatchWeapon(cUniverseGun , true)
 	Script.SetWatchWeapon(cRestrictorThumperID , true)
-	Script.SetWatchWeapon(jDrugIncectorID , true)
 	Script.SetWatchWeapon(cmtwgrenade , true)
 	Script.SetWatchWeapon(jHiveHoundID , true)
 	Script.SetWatchWeapon(jSwiftSpearID , true)

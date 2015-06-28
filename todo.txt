@@ -14,7 +14,9 @@ FIX:
 <> Fix Hohymen Statemachine
 <> Comender fix Weapons:Slicer
 <> Strider extrapolate Kinematic Turns, Speed, Clamp Movement
-
+<> Fix WildhorsesAI
+<> Fix Suborbital
+<> Placeholder Units
 
 >-> Spring Modifications
 >> Finnish BesiegeCommit

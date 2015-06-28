@@ -25,6 +25,7 @@ impactorcounter=8
 --unitPieces
 SIG_EXAUST=1
 SIG_COUNT=2
+local upgoer5=piece"upgoer5"
 local subOrbital=piece"SubOrbital"
 local Drive1 =piece"Drive1"
 local Drive2 =piece"Drive2"
@@ -96,19 +97,48 @@ StartThread(counter)
 
 end
 
+boolSwitchedState=0
 
+boolMoving=false
+boolCountDownRunning=false
+function readyNessIndicator()
+	while true do
+	Sleep(500)
+		if boolCountDownRunning==true and boolMoving==false and boolLaunched==false  then
+		Show(upgoer5)
+		Move(upgoer5,y_axis,35, 40)
+		WaitForMove(upgoer5,y_axis)
+		Move(upgoer5,y_axis,55, 60)
+		WaitForMove(upgoer5,y_axis)
+		Move(upgoer5,y_axis,85, 80)
+		WaitForMove(upgoer5,y_axis)
+		Hide(upgoer5)
+		Move(upgoer5,y_axis,0, 0)
+		Sleep(200)
+		end
+	end
+end
 
 function script.Activate()
 				       --activates the secondary weapon 
-					  
 					
-
+					
+					if boolSwitchedState > 0 and boolLaunched == false and boolReady==false and boolMoving==false then
+					boolCountDownRunning=true
+					Signal(SIG_COUNT)
+					Spring.Echo("Starting Countdown")
+					StartThread(countdown)
+					
+		else
+		boolCountDownRunning=false		
+		end
+  boolSwitchedState=boolSwitchedState+1
 						return 1
 end
 
 		function script.Deactivate()
 		  --deactivates the secondary weapon 
-
+			boolSwitchedState=boolSwitchedState+1
 			
 				return 0
 		end
@@ -132,18 +162,15 @@ SetSignalMask(SIG_EXAUST)
 function script.StartMoving()
 Signal(SIG_COUNT)
  
-    
+boolMoving=true
 end
 
 
 function countdown()
 SetSignalMask(SIG_COUNT)
 --Spring.Echo("T-60 secs to launch")
-Sleep(50000)
-for i=10,1,-1 do
---Spring.Echo(".."..i)
-Sleep(1000)
-end
+Sleep(15000)
+   SetUnitValue(COB.MAX_SPEED,1)
 
 					   if boolOnlyOnce == true then
 					   boolOnlyOnce=false
@@ -157,7 +184,7 @@ end
 
 
 function script.StopMoving()
-StartThread(countdown)
+boolMoving=false
 end
 
 
@@ -165,6 +192,7 @@ end
 
 
 function script.Create()
+
 	for i=1,40,1 do
 	Hide(climb[i])
 	end
@@ -174,7 +202,9 @@ function script.Create()
 	Hide(impact[i])
 	end
 
+StartThread(readyNessIndicator)
 StartThread(exaust)
+Hide(upgoer5)
 
 end
 
@@ -197,25 +227,18 @@ end
 	
 
 
-	function script.AimWeapon1( heading, pitch )
+function script.AimWeapon1( heading, pitch )
 
-		if 	boolLaunched == false or boolReady == false or impactorcounter <= 0  then
-			   --Spring.Echo("Activated")
-					   SetUnitValue(COB.MAX_SPEED,1)
-					   if boolOnlyOnce == true then
-					   boolOnlyOnce=false
-					   StartThread(launched)
-					   boolLaunched=true
-					   end
-					   if impactorcounter == 0 then
-					   Spring.DestroyUnit(unitID,false,false)
-					   end
-		
-	   return false
-		  else
-		  return true
+		if 	boolReady ==  true and impactorcounter > 0  then
+		return true 
+		elseif   impactorcounter == 0 then
+		Spring.DestroyUnit(unitID,false,false)
+		return false
+		else
+		return false 
 		end
-	end 
+		
+end 
 
 	
 	

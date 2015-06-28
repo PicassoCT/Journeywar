@@ -2093,8 +2093,8 @@ end
 --	if not GG.TestNumber then GG.TestNumber= 1 else GG.TestNumber=(GG.TestNumber%#FixFunctionTabel)+1 end
 		if  math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 
-	--	boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
-		boolTakeATurn=FixFunctionTabel[22]()
+		boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
+		--boolTakeATurn=FixFunctionTabel[22]()
 	--	boolTakeATurn=FixFunctionTabel[GG.TestNumber]()
 			else
 			
