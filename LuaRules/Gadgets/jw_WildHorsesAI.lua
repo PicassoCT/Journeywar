@@ -12,6 +12,9 @@ function gadget:GetInfo()
         }
 end
 
+
+if (gadgetHandler:IsSyncedCode()) then
+
 	VFS.Include("scripts/lib_OS.lua"      )
 	VFS.Include("scripts/lib_TableOp.lua"      )
 	VFS.Include("scripts/lib_Build.lua" 	)
@@ -242,11 +245,17 @@ end
 --Base and UnitBuilding subAI
 function Base(AITable)
 	 --if you got the funds build
-	  NeededEntity=GetNextWish(AITable.Base)
+	  NeededEntity=GetNextWish(AITable)
 	 -- if you dont have the funds  cut  defres and/or Aggressor out of funding round
 		
 		--createTaskForWishlist 
-
+	for i=1,#AITable.UnitPool do
+	--TODO Get Generic HeatMap
+	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
+	
+	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, 
+																{unitid=AITable.UnitPool[i].id,target={x=tx,y=ty,z=tz}action= controlledAgression, Final=GenericFinalize})
+	end
 		--if  Tasks higher Prio then deassigned Eventstream and create new Eventstream 
 		--if surplus funds, buy tasks from DefRes or Aggressor AI
 return AITable
@@ -262,22 +271,26 @@ function DefRes(AITable)
 return AITable
 		end
 
-function createStreamEventTask(id, AITable, functionToComply)
+function createStreamEventTask(id, AITable, functionToComply, PersPackage)
 	function temp_O_Rary(id, frame, persPack) Spring.SetUnitMoveGoal(persPack.unitid,math.random(0,500),0,math.random(0,500)); Spring.Echo("Event "..id .." has temporary EventStream Function" ); return frame +90 end
-	return GG.Eventstream:CreateEvent(GG.EventStreamID ,temp_O_Rary, {unitid=id})
+	return GG.Eventstream:CreateEvent(GG.EventStreamID ,functionToComply or temp_O_Rary, PersPackage)
 end
 
 --Aggressor SubAI responsible for Attacking or Low Cost Harrassment of the enemy
 function Aggressor(AITable)
-	--Run Virtual Enemy Simulation
-	
 	-- Virtual Enemy - calculate outcome -- attack or harass-retreat
+	heatMap=runVirtualEnemy(AITable)
 	for i=1,#AITable.UnitPool do
-	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable)
+	--TODO Get Generic HeatMap
+	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
+	
+	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, 
+																{unitid=AITable.UnitPool[i].id,target={x=tx,y=ty,z=tz}action= controlledAgression, Final=GenericFinalize})
 	end
 	
 return AITable
 end
+
 
 
 function gadget:GameFrame(frame)
@@ -331,18 +344,18 @@ end
  
 function gadget:UnitFinished(u, ud, team, builder)
 end
+	 
+	function gadget:UnitDestroyed(u,ud,team)
+	end
+	 
+	function gadget:UnitTaken(u,ud,team,newteam)
+			
+	end
  
-function gadget:UnitDestroyed(u,ud,team)
-end
- 
-function gadget:UnitTaken(u,ud,team,newteam)
-        
-end
- 
-function gadget:UnitGiven(u,ud,team,oldteam)
-        
-end
- 
+	function gadget:UnitGiven(u,ud,team,oldteam)
+			
+	end
+	 
 
  
  

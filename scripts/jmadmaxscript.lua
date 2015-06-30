@@ -1,7 +1,7 @@
 	include "suddenDeath.lua"
 	include "lib_OS.lua"
- include "lib_TableOp.lua"
- include "lib_Build.lua" 
+	include "lib_TableOp.lua"
+	include "lib_Build.lua" 
 
 	center = piece"center"
 
@@ -30,6 +30,15 @@ local 	boolWalk= false
 local	boolAttack=false
 ------------------------------------------------------------------------------------UNITCODE	
 function script.Create()
+
+
+--DEBUG
+	 ux,uy,uz=Spring.GetUnitPosition(unitID)
+	Spring.MoveCtrl.Enable(unitID)
+	Spring.MoveCtrl.SetPosition(unitID,ux,uy+90,uz)
+--DEBUG
+
+
 --center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction)
 StartThread(testThread)
 end

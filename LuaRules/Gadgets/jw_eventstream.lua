@@ -24,7 +24,7 @@ So for every event there is only a basic package needed - a function, a persista
 	--{id=id, Action = function(id,frame, persPack), persPack}"..
 	-- 	Action handles the actual action, for example validation a unit still exists.
 	--	It always returns a frameNr when it wants to be called Next, and the Persistance Package
-	--  If it does not, the Action is considered done and is deleted 
+	--  If it does not, the Action is considered done and is deleted after calling Final if that is defined -> Final(id, frame, PersPackage)
 	--adding the id of the action to GG.EventStreamDeactivate deletes the Action
 
 Once the function does not return a frame - the gadget recognizes the event as complete and delete the event. EventStreams are selfcontained and responsible for what they alter in the game world.
@@ -47,7 +47,7 @@ self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg
     end
 
 	 if not GG.EventStream  then GG.EventStream = { CreateEvent = CreateEvent } end
-	local StreamUnits={}
+	local Events={}
 	local TimeTable={}
 	local TableMin
 	local boolInstantUpdate=false
@@ -57,7 +57,7 @@ self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg
 	if #GG.EventStream > 0 then
 	local streamLine=GG.EventStream
 		for i=1,#streamLine do
-			StreamUnits[streamLine[i].id]=streamLine[i]
+			Events[streamLine[i].id]=streamLine[i]
 
 		if not	TimeTable[frame] then TimeTable[frame] ={}end 
 		table.insert(TimeTable[frame],streamLine[i].id)
@@ -77,7 +77,7 @@ self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg
 			boolInstantUpdate=true
 			TimeTable[frame]=TableInsertUnique(TimeTable[frame],PI[i].ID)
 			end
-			table.insert(StreamUnits[PI[i].ID], PI[i].Data)
+			table.insert(Events[PI[i].ID], PI[i].Data)
 		end
 		GG.PersitanceInject ={}
 	 end
@@ -85,7 +85,7 @@ self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg
 	if not GG.EventStreamDeactivate then GG.EventStreamDeactivate={} end
 	if #GG.EventStreamDeactivate > 0 then
 		for k,v in pairs(GG.EventStreamDeactivate) do
-			StreamUnits[k]=nil
+			Events[k]=nil
 		end
 		GG.EventStreamDeactivate={}
 	end
@@ -95,14 +95,18 @@ self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg
 			local id=TimeTable[frame][i]
 		
 				--execute the function
-				nextframe,StreamUnits[id].persPack=StreamUnits[id].action(id,frame, StreamUnits[id].persPack)
+				nextframe,Events[id].persPack=Events[id].action(id,frame, Events[id].persPack)
 				
 					if nextframe then
 						if not	TimeTable[nextframe] then TimeTable[nextframe] ={}end 
 					table.insert(TimeTable[nextframe],v.id)
 					TableMin=math.min(TableMin,nextframe)
 					else
-					StreamUnits[id]=nil
+					if Events[id].Final then 
+					--Call Finalize Function
+					Events[id].Final(id, frame, Events[id].persPack) 
+					--Delete the 
+					Events[id]=nil
 					end					
 		end
 		end
@@ -111,5 +115,6 @@ self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg
 	end
 
 
+end
 end
 	

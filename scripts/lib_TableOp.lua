@@ -3959,4 +3959,33 @@ end
 	return Table
 	end
 	
+-->Generic Simple Commands
+function Command(id, command, target)
+	--abort previous command
 
+	if command == "build" then 
+	x,y,z=Spring.GetUnitPosition(unitID)
+	x,y,z=x+50,y,z+50	
+	Spring.SetUnitMoveGoal(unitID,x,y,z)
+	Spring.GiveOrderToUnit(unitID, -1*target, {}, {})
+
+	end	
+	
+	if command == "attack" then 
+	coords={target.x,target.y,target.z}
+	Spring.SelectUnitArray({[1]=id})
+	Spring.GiveOrder(CMD.FIGHT,coords, CMD.OPT_RIGHT +  CMD.OPT_SHIFT)	
+	end
+
+	if  command == "repair"  or command == "assist" then 
+	spGiveOrderToUnit(unitID, CMD_GUARD, { target }, { "" })
+	end
+
+	if command == "go" 	   then
+	 Spring.SetUnitMoveGoal(id,target.x,target.y,target.z); return	 	
+	 end
+	 
+	 if command == "setactive" 	   then
+	 Spring.SetUnitMoveGoal(id,target.x,target.y,target.z); return	 	
+	 end
+end

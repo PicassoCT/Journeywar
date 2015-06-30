@@ -220,7 +220,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 --								Socket,ConectionSocket,BodyPiece
 	function bd_conPieceCon2Socket(Con,Pie,dirVec, boolLeftRight)
 	x,y,z=Con.x*-1,Con.y,Con.z
-	
+	Spring.Echo("Socket Coordinates Relative (X):"..Con.x .."  (Y):"..Con.y.."  (Z):"..Con.z)
 	SymSideVal=1	
 	
 		if boolLeftRight and boolLeftRight==true then
@@ -258,11 +258,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 ---------------------------
 
 	function bd_initVehicleCreation()
---DEBUG
-	 ux,uy,uz=Spring.GetUnitPosition(unitID)
-	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetPosition(unitID,ux,uy+90,uz)
---DEBUG
+
 		for i=1,ArmMax,1 do
 		Hide(ArmPieces[i][1])
 		Hide(ArmPieces[i][2])
