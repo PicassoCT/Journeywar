@@ -150,16 +150,22 @@ PersPackage.armrange=PersPackage.armrange or GetMaxArmRange(Spring.GetUnitDefID(
 x,y,z=Spring.GetUnitPosition(unitid)
 	if dist2Vec (x,y,z,Pos.x,Pos.y,Pos.z) < PersPackage.armrange  then
 	--We are nearby
-
-	
-	else
-	--was unit attacked or is in danger (abort).y,Pos.z)
+	Command(unitid,"attack",{x=Pos.x,y=Pos.y,z=Pos.z}
+	return fram+10,PersPackage
+		else
+		--GetNearestEnemy
+		eid=Spring.GetUnitNearestEnemy(unitid)
+			if eid then
+			ex,ey,ez=Spring.GetUnitPosition(eid)
+			--try to circle around the enemy
+			
+			tx,tz=drehMatrix(ex,ez,x,z,6.28-math.atan2(ex-x,ez-z))
+			Spring.SetUnitMoveGoal(unitid,tx,0,tz)
+			return frame+5,PersPackage
+			--was unit attacked or is in danger (abort).y,Pos.z)
+			end	
 		return frame+50,PersPackage
 		end
-	
-
-
-
 end
 
 --[[Eventstream Function]]

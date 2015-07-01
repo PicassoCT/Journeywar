@@ -987,11 +987,11 @@ return ReT
 end
 
 -->Rotates a point around another Point
-function drehMatrix (x, y, zx, zy, degree)
+function drehMatrix (x, y, zx, zy, degInRad)
 x= x-zx
 y=y-zy
-x=(math.cos(degree)+ (-1*math.sin(degree)))*x
-y=(math.cos(degree)+ (math.sin(degree)))*y
+x=(math.cos(degInRad)+ (-1*math.sin(degInRad)))*x
+y=(math.cos(degInRad)+ (math.sin(degInRad)))*y
 
 	IntCastX=x%1
 	x=x-IntCastX
