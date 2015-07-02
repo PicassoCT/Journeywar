@@ -52,24 +52,24 @@ ox,oy,oz=spGetUnitPosition(unitID)
 	end
 
 function wiggleFeet()
-while true do
-	speed=math.random(5,15)/100
-	for k=1,5 do
-			frame=Spring.GetGameFrame()
-			frame=frame/30
-			piEight=3.1415/math.floor(math.random(4,12))
-			dice=math.random(-25,25)
-		for i=1,6 do	
-			sperd= math.random(0,5)/100
-			if sperd == 0 then sperd= 0.1 end
-			val=math.sin(frame+piEight*i)*dice
-			Turn(Knees[k][i],y_axis,math.rad(val),sperd)		
+	while true do
+		speed=math.random(5,15)/100
+		for k=1,5 do
+				frame=Spring.GetGameFrame()
+				frame=frame/30
+				piEight=3.1415/math.floor(math.random(4,12))
+				dice=math.random(-25,25)
+			for i=1,6 do	
+				sperd= math.random(0,5)/100
+				if sperd == 0 then sperd= 0.1 end
+				val=math.sin(frame+piEight*i)*dice
+				Turn(Knees[k][i],y_axis,math.rad(val),sperd)		
+			end
 		end
+		
+	WaitForTurn(Knees[#Knees][6],y_axis)
+	Sleep(10)
 	end
-	
-WaitForTurn(Knees[#Knees][6],y_axis)
-Sleep(10)
-end
 
 
 end
@@ -86,55 +86,46 @@ end
 
 function LowerFunction(KneeT,Speed,SensorNode, FirstAxis,degOffSet)
 --The funcy Part keeping the Worm close to the Ground
-
+Spring.Echo("Seastar-GettingLow")
 Threads={}
 
- Threads[#Threads+1]={End=KneeT[2],Deg=degOffSet, PrevDeg=0} 
 
+
+rotTotal=0
 	for i=1,#KneeT, 1 do
-	pieceToCon=Threads[(i%#Threads)+1].End or KneeT[i+1] or KneeT[i]
 	
-
-		
-		Turn(KneeT[i],x_axis,math.rad(Threads[i%#Threads+1].PrevDeg),Speed)
-
-		
-		x,y,z=Spring.GetUnitPiecePosition(unitID,KneeT[i])
-		h=Spring.GetGroundHeight(x,z)+10
 		val=0
-	boolBreakReady=false
-	timer=0
-			while val > -90  and val < 90 and Threads[i%#Threads+1].PrevDeg - math.abs( val) < 36 and timer < 20 do
-			result=Threads[i%#Threads+1].PrevDeg+val
-			Turn(KneeT[i],x_axis,math.rad(result+0.1),Speed,true)
-		
-			timer=timer+1
-			PieceOfMine=KneeT[i+1] or KneeT[i]
+
+			_,result,_=Spring.UnitScript.GetPieceRotation(KneeT[i])
+			PieceOfMine=KneeT[math.max((i%#KneeT)+1,1)] or KneeT[math.max(i%#KneeT,1)]
 				x,y,z=Spring.GetUnitPiecePosDir(unitID,PieceOfMine)
-				h=Spring.GetGroundHeight(x,z)
-				if y -h  < 20 then break end
+				h=Spring.GetGroundHeight(x,z)			
 				
-					if y < 10 then 
-						val=val-5
-					
+					if y < h-15 then 
+						val=-5					
 					else
-						val=val+5
+						val=5
 					end
-			
-			
-		
-			end
-		
-		
-	Threads[i%#Threads+1].PrevDeg=val
-	Threads[i%#Threads+1].Deg=math.random(-25,25)
-	Threads[i%#Threads+1].End=KneeT[i]
+			result=result+ math.rad(val)
+			rotTotal=rotTotal+result
+			Turn(KneeT[i],x_axis,result,Speed/10,true)
+
+
+	
 	end
+if math.abs(rotTotal) > 270 then
+	for i=1,#KneeT, 1 do
+	Turn(KneeT[i],x_axis,math.rad(0),Speed)
+	end
+end
+	
+WaitForTurn(KneeT[1],x_axis)
+WaitForTurn(KneeT[#KneeT],x_axis)
 
-
-
+Sleep(500)
 -----------------
 end
+
 Knees={}
 function script.Create()
 
