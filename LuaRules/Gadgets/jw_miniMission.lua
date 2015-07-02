@@ -2142,10 +2142,11 @@ return math.ceil((D[itterator]/42)*valrange)
 
 
 currentMission=deMaRaVal(5)
---if deMaRaVal(5)==3 then currentMission=3 end
---if deMaRaVal(5)==4 then currentMission=4 end
---if deMaRaVal(5)==2 then currentMission=2 end
---if deMaRaVal(5)==1 then currentMission=1 end
+if deMaRaVal(5)==1 then currentMission=1 end
+if deMaRaVal(5)==3 then currentMission=3 end
+if deMaRaVal(5)==4 then currentMission=4 end
+if deMaRaVal(5)==2 then currentMission=2 end
+
 cout(currentMission .. "Mission selected")
 --<DEBUG>
 

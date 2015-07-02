@@ -1,5 +1,5 @@
-include "suddenDeath.lua"
-include "lib_OS.lua"
+ include "suddenDeath.lua"
+ include "lib_OS.lua"
  include "lib_TableOp.lua"
  include "lib_Build.lua" 
 
@@ -18,12 +18,12 @@ cosFunc= function (val) return math.cos(val) end
 waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
 
 
-Move(center,y_axis,50,10)
+
 waveATable(Knees, x_axis, sinFunc, 1, 0.022, 3.141, 6.5, true, -1.1)
 WaitForTurn(Knees[#Knees][5],x_axis)
 Sleep(350)
 waveATable(Knees, x_axis, sinFunc, 1, 0.032, 6.2, 6.5, true,-3)
-Move(center,y_axis,15,10)
+
 WaitForTurn(Knees[#Knees][5],x_axis)
 Sleep(350)
 
@@ -53,6 +53,7 @@ ox,oy,oz=spGetUnitPosition(unitID)
 
 function wiggleFeet()
 	while true do
+
 		speed=math.random(5,15)/100
 		for k=1,5 do
 				frame=Spring.GetGameFrame()
@@ -101,28 +102,25 @@ rotTotal=0
 				x,y,z=Spring.GetUnitPiecePosDir(unitID,PieceOfMine)
 				h=Spring.GetGroundHeight(x,z)			
 				
-					if y < h-15 then 
-						val=-5					
+					if y < h  then 
+						val=-3					
 					else
-						val=5
+						val=3
 					end
 			result=result+ math.rad(val)
 			rotTotal=rotTotal+result
-			Turn(KneeT[i],x_axis,result,Speed/10,true)
+			
+			Turn(KneeT[i],x_axis,result,Speed)
 
 
 	
 	end
-if math.abs(rotTotal) > 270 then
-	for i=1,#KneeT, 1 do
-	Turn(KneeT[i],x_axis,math.rad(0),Speed)
-	end
-end
+
 	
 WaitForTurn(KneeT[1],x_axis)
 WaitForTurn(KneeT[#KneeT],x_axis)
 
-Sleep(500)
+
 -----------------
 end
 

@@ -3431,18 +3431,23 @@ end
 			while GG.MovementOS_Table[unitID].boolmoving==true do
 			
 					while GG.MovementOS_Table[unitID].boolmoving==true and  stableConditon(nr,quadrant) do
-					pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+					
 				--feet go over knees if FeetLiftForce > totalWeight of Leg
+					Spring.Echo("Lift Feet Forward Feet")
 					liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+					Sleep(100)
 				--fall forward
+				pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LowerFunction,nr)
 				
 				--catch
+					Spring.Echo("Lowering Feet")
 					lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-					Sleep(100)
+						Sleep(100)
 					end
 				--rebalance
-				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-			Sleep(100)
+				Spring.Echo("stabilizing")
+			--	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+			Sleep(10000)
 			end
 		
 				lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
@@ -3451,37 +3456,34 @@ end
 		end
 	end
 
-	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force)
+	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,lowerFeetFuntion,nr)
 
-	Turn(FirstAxisPoint,2,turnDeg)
+		Turn(FirstAxisPoint,y_axis,math.rad(90+(360/5)*nr),0)
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
 		degToGo=0
-		while (Spring.UnitScript.IsInTurn(FirstAxisPoint,2)==true) do
+		while (Spring.UnitScript.IsInTurn(FirstAxisPoint,y_axis)==true) do
 		
-			xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
-			dif=yp- Spring.GetGroundHeight(xp,zp)
-					if dif > 5 then degToGo=degToGo-1 else degToGo=degToGo+1 end
-				
-			Turn(FirstAxisPoint,1,math.rad(degToGo),Speed)
-
-			WaitForTurn(FirstAxisPoint,1)
+			lowerFeetFuntion(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
 			Sleep(80)
-		
 		end
-
 	end
+	
 	-->Uses the LiftAnimation Function to Lift the Feed
 	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 
 	GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
 	LiftFunction(KneeT,Force/(#KneeT*Weight))
 
-	WaitForTurn(KneeT[nr],2)
+	WaitForTurn(KneeT[nr],y_axis)
 	Sleep(100)
 	if degOffSet > 180 then turnDeg=turnDeg*-1 end
-	Turn(FirstAxisPoint,2,math.rad(degOffSet+turnDeg), Force/(#KneeT*Weight))
+	combinedRotateTowardsFeet=degOffSet-turnDeg
+	Turn(FirstAxisPoint,y_axis,math.rad(combinedRotateTowardsFeet), Force/(#KneeT*Weight))
+	WaitForTurn(FirstAxisPoint,y_axis)
+		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet	), Force/(#KneeT*Weight))
 	end
+	
 	-->Uses the Animation Function To Lower the Feet
 	function	lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 
@@ -3541,8 +3543,8 @@ end
 						infoT.feetTable.firstAxis[i],
 						infoT.feetTable.Knees[i],
 						infoT.sensorTable[i],
-						infoT.ElementWeight,
-						infoT.FeetLiftForce,
+						infoT.ElementWeight or 10,
+						infoT.FeetLiftForce or 2,
 						infoT.LiftFunction,
 						infoT.LowerFunction
 						)
