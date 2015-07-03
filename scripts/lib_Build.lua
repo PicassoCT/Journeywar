@@ -436,11 +436,12 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	--DEBUG DELME
 	function bd_LinearExpandPieceCopy(bodyNumber)
-	boolFirstOfPair=bodyNumber%2==1
-	BodyDice	= math.ceil(math.random(bodyNumber,table.getn(BodyPieces)))
-	BodyPiece	= BodyPieces[BodyDice]
-	SocketDice	= math.random(1,table.getn(LinBodyCon))
-	Socket 	  	= LinBodyCon[SocketDice]
+	boolFirstOfPair	=	bodyNumber%2==1
+	BodyDice	=		 math.ceil(math.random(bodyNumber,table.getn(BodyPieces)))
+	BodyPiece	=		BodyPieces[BodyDice]
+	SocketDice	=		1 or math.random(1,table.getn(LinBodyCon))
+	SocketDice	=		1 or math.random(1,table.getn(LinBodyCon))
+	Socket 	  	=		LinBodyCon[SocketDice]
 	
 		if  not AllReadyUsed[BodyPiece] and not AllReadyUsed[Socket] then
 		
@@ -743,13 +744,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	--DEBUG DELME
 
 
-	while true do
 	
-		AlignPieceToPiece(ConCenter,BodyPieces[1],0,true,true,AllDynamicSockets)
-		Sleep(1000)	
-		
-
-	end
 	
 	-- DEBUG DELME 
 	while bodyNum < bodydice and bd_existsParts(BodyPieces)==true do

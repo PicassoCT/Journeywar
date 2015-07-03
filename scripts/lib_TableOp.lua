@@ -603,34 +603,60 @@ Move(piecename,y_axis,Y,speed,true)
 Move(piecename,z_axis,Z,speed,true)	
 
 end
+function VDotProduct(V1,V2)
+return  DotProduct(V1.x,V1.y,V1.z,V2.x,V2.y,V2.z)
+end
+
+function Vabs(Vectors)
+return distance(Vectors.x,Vectors.y,Vectors.z)
+end
+function Vcross(V1,V2)
+return (V1.y*V2.z-V1.z*V2.y)-(V1.x*V2.z-V1.z*V2.x)-(V1.x*V2.y-V1.y*V2.x)
+end
+
+function DotProduct(x,y,z,ax,ay,az)
+return x*ax +y*ay + az*z
+end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function AlignPieceToPiece( piecenameB, piecename,speed, boolWaitForIt,boolDebug, GlowPoints)
+function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,boolDebug, GlowPoints)
 
-if not piecenameB or not piecename then return end
+if not pieceToAlign or not PieceToAlignTo then return end
 
-MovePieceToPiece(piecenameB,piecename,0)
-	WaitForMove(piecenameB,x_axis)
-	WaitForMove(piecenameB,y_axis)
-	WaitForMove(piecenameB,z_axis)	
+--We use existing function to move the piece to the other pieces center
+MovePieceToPiece(pieceToAlign,PieceToAlignTo,0)
 
-x,y,z,vx,vy,vz=Spring.GetUnitPiecePosDir(unitID,piecename)
+	WaitForMove(pieceToAlign,x_axis)
+	WaitForMove(pieceToAlign,y_axis)
+	WaitForMove(pieceToAlign,z_axis)	
+	
+--Get the Data of the Piece we want to align to
+_,_,_,vx,vy,vz=Spring.GetUnitPiecePosDir(unitID,PieceToAlignTo)
 norm=distance(vx,vy,vz)
 vx,vy,vz=vx/norm,vy/norm,vz/norm
-	
-Turn(piecenameB,x_axis,math.atan2(vy,vx),speed)
-Turn(piecenameB,y_axis,math.atan2(vx,vy),speed)
-Turn(piecenameB,z_axis,math.atan2(vy,vz),speed,true)
+-----------------------------------------------------------------
+
+W0={x=vy*-1,y=vx,z=0}
+DirectionV={x=vx,y=vy,z=vz}
+U0=vMul(W0,DirectionV)
+U = {x=0,y=1,z=0}
+
+
+angleX= math.atan2(VDotProduct(W0,U), VDotProduct(U0,U)/ Vabs(W0) * Vabs(U0))
+
+--Turn the Piece to the Vector of the PieceToAlignTo
+Turn(pieceToAlign,x_axis,angleX,speed)
+Turn(pieceToAlign,y_axis,math.atan2(vy,vx),speed)
+Turn(pieceToAlign,z_axis,math.asin(vz),speed,true)
 
 	if not boolWaitForIt or boolWaitForIt == true then
-	WaitForTurn(piecenameB,x_axis)
-	WaitForTurn(piecenameB,y_axis)
-	WaitForTurn(piecenameB,z_axis)
+	WaitForTurn(pieceToAlign,x_axis)
+	WaitForTurn(pieceToAlign,y_axis)
+	WaitForTurn(pieceToAlign,z_axis)
 	end
 
 	if boolDebug and boolDebug==true then
 	debugDisplayPieceChain(GlowPoints)
-	Sleep(10)
 	end
 	
 end
@@ -709,13 +735,13 @@ end
 function TurnPieceTowardsPoint (piecename, x,y,z,Speed)
 pvec={x=0,y=0,z=0}
 px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
-pvec=normalizeVector(pvec)
+pvec=Vnorm(pvec)
 
 vec={}
 vec.x,vec.y,vec.z=x-px,y-py,z-pz
-v=normalizeVector(v)
+v=Vnorm(v)
 v=VsubV(v,pvec)
-v=normalizeVector(v)
+v=Vnorm(v)
 tPrad(math.atan2(vec.y,vec.z),math.atan2(vec.x,vec.z),math.atan2(vec.x,vec.y),Speed)
 end
 
@@ -1633,7 +1659,7 @@ T={}
 return T
 end
 
-function vectorMinus(v1,v2)
+function VMinus(v1,v2)
 return{x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
 end
 
@@ -1652,8 +1678,8 @@ countConstAnt=countConstAnt+1
 		end
 end
 
-function vectorLenght(v1,v2)
-v=vectorMinus(v1,v2)
+function VLength(v1,v2)
+v=VMinus(v1,v2)
 return math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
 end
 
@@ -1681,15 +1707,15 @@ function applyForce(force,force2)
 return VaddV(force,force2)
 end
 
-function normalizeVector(v)
+function Vnorm(v)
 l=math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
 return {x=v.x/l ,y=v.y/l,z=v.z/l}
 end
 
 function solveSpring(s, sucessor, frictionConstant)
-  springVector =vectorMinus(s.mass1.pos,sucessor.mass1.pos)      -- Vector Between The Two Masses
+  springVector =VMinus(s.mass1.pos,sucessor.mass1.pos)      -- Vector Between The Two Masses
          
-         r = vectorLenght(springVector)                -- Distance Between The Two Masses
+         r = VLength(springVector)                -- Distance Between The Two Masses
  
         force={x=0,y=0,z=0}                         -- Force Initially Has A Zero Value
          
@@ -3433,20 +3459,20 @@ end
 					while GG.MovementOS_Table[unitID].boolmoving==true and  stableConditon(nr,quadrant) do
 					
 				--feet go over knees if FeetLiftForce > totalWeight of Leg
-					Spring.Echo("Lift Feet Forward Feet")
+			
 					liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 					Sleep(100)
 				--fall forward
 				pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LowerFunction,nr)
 				
 				--catch
-					Spring.Echo("Lowering Feet")
+				
 					lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 						Sleep(100)
 					end
 				--rebalance
-				Spring.Echo("stabilizing")
-			--	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+			
+				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 			Sleep(10000)
 			end
 		
@@ -3617,7 +3643,7 @@ end
 			if h > 0 then 
 			v={}
 			v.x,v.y,v.z=Spring.GetGroundNormal(i*chunkSizeX,chunkSizeZ*j)
-			v=normalizeVector(v)
+			v=Vnorm(v)
 				if v.y -math.abs(v.x)-math.abs(v.z) > 0.1 then
 				return  math.ceil(i*chunkSizeX), math.ceil(i*chunkSizeZ) 
 				end

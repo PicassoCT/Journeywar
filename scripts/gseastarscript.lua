@@ -87,7 +87,7 @@ end
 
 function LowerFunction(KneeT,Speed,SensorNode, FirstAxis,degOffSet)
 --The funcy Part keeping the Worm close to the Ground
-Spring.Echo("Seastar-GettingLow")
+
 Threads={}
 
 

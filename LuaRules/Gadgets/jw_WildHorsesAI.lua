@@ -285,7 +285,9 @@ function Aggressor(AITable)
 	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
 	
 	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, 
-																{unitid=AITable.UnitPool[i].id,target={x=tx,y=ty,z=tz}action= controlledAgression, Final=GenericFinalize})
+																{unitid=AITable.UnitPool[i].id,
+																target={x=tx,y=ty,z=tz}action= controlledAgression,
+																Final=GenericFinalize})
 	end
 	
 return AITable
@@ -324,7 +326,7 @@ function gadget:UnitCreated(u,ud,team,builder)
 		if UnitDefs[ud].IsBuilder ==true or (UnitDefs[ud].IsBuilding ==true and UnitDefs[ud].HasWeapon == false)  then
 		AssignedAI="Base"
 		else
-			--TODO Find better filter and assignment function
+			-- Find better filter and assignment function
 			if math.random(0,1)==1 then 
 				AssignedAI="Aggressor" 
 			else 
@@ -342,8 +344,8 @@ function gadget:UnitDamaged(u,ud,team, damage, para, weapon,Aggressorer,aud,atea
 
 end
  
-function gadget:UnitFinished(u, ud, team, builder)
-end
+	--function gadget:UnitFinished(u, ud, team, builder)
+	--end
 	 
 	function gadget:UnitDestroyed(u,ud,team)
 	end

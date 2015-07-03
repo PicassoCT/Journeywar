@@ -30,7 +30,7 @@
 --]]
 --BaseBuildingAutomaton
 --FinancedBuildTasks -> {DefID, BuilderDefID, Pos, Priority, boolMonoTask}
-function BaseBuildAutomaton(State, AITabel)
+function BaseAutomaton(State, AITabel)
 
 --One Unit is 0.1	
 	
@@ -129,9 +129,24 @@ end
 --targetid
 function ProtectGoal(id, frame, PersPackage)
 local targetid=PersPackage.targetid
+local unitid=PersPackage.unitid
 boolDoesUnitExist=Spring.GetUnitIsDead(targetid)
 	if not  boolDoesUnitExist or boolDoesUnitExist ==false then
 	return
+	else
+	ed=Spring.GetUnitNearestEnemy(unitid)
+	ted=Spring.GetUnitNearestEnemy(targetid)
+	
+	if not ed then return end --GameOver
+	ux,uy,uz=Spring.GetUnitPositioN(unitid)
+	x,y,z=Spring.GetUnitPositioN(targetid)
+	ex,ey,ez=Spring.GetUnitPosition(ed)
+	edist=distance(x-ex,0,z-ez)
+	udist=distance(x-ux,0,z-uz)
+	
+	--try to circumvent your own  advesaries while racing towards a position between ted and targetid if ted is out of line of sight, move in movevector of targetid into a random circle formation  in that vector
+	
+	
 	end
 end
 

@@ -483,7 +483,7 @@ local 	affectedUnits={}
 	v={}
 	r={}
 	v.x,v.y,v.z=x-ux,y-uy,z-uz
-	v=normalizeVector(v)
+	v=Vnorm(v)
 	v=vMul(v, 900) --power
 	
 	-- crossproduct = (vectordamage x v  ) -> Transfer to local coordsystem hitpiece origin vector 

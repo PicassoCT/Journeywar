@@ -80,7 +80,7 @@ TutorialInfoTable=
 [UnitDefNames["mdigg"].id]={active=false, delay=350, text="\a|Metalldiggester\nStripmines Material on Metallspots"},
 [UnitDefNames["restrictor"].id]={active=false,  delay=350, text="\a|Restrictor Tank\nScout Tank with stationary Stunability"},
 [UnitDefNames["css"].id]={active=false,  delay=350, text="\a|Combine Synth Soldiers\nFlamethrower Synth"},
-[UnitDefNames["citadell"].id]={active=false,  delay=350,text="\a|Citadell\n Provides Construction blueprints"},
+[UnitDefNames["citadell"].id]={active=false,  delay=350,text="\a|Citadell \n Start by building a Construction Depot"},
 [UnitDefNames["csniper"].id]={active=false, delay=350,text="\a|Sniper\n Longrange Hunter - Can drag Trophys."},
 [UnitDefNames["contrain"].id]={active=false, delay=350,text="\a|Construction Train\nBuilds blueprints "},
 [UnitDefNames["ccomender"].id]={active=false, delay=350,text="\a|Comender\n You in a armed & armoured Suit. Memento Mori."},
