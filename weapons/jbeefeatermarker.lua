@@ -7,7 +7,7 @@ local weaponDef = {
 
  weaponType              = [[Cannon]],
 
-		 soundHit           = "null",
+		-- soundHit           = "null",
 		 --soundStart         = "null",
 
 

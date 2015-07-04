@@ -116,8 +116,9 @@ nrOfSpots=5
 function addABrick()
 d=math.floor(math.random(1,table.getn(bloks)))
 getAPod=math.floor(math.random(1,nrOfSpots))
-
-moveCGAndAdPods(freeSpots[getAPod][1],freeSpots[getAPod][2],freeSpots[getAPod][3],getAPod,d)
+	if freeSpots[getAPod] and freeSpots[getAPod][1] and freeSpots[getAPod][2] and freeSpots[getAPod][3] then
+	moveCGAndAdPods(freeSpots[getAPod][1],freeSpots[getAPod][2],freeSpots[getAPod][3],getAPod,d)
+	end
 end
 function buildthis()
 

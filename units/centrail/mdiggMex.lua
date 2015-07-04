@@ -35,8 +35,8 @@ CanStop = false,
 LeaveTracks = false,
 
 	NoWeapon=true,
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon",
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]],
 
 	YardMap ="yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy",
 

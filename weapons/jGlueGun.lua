@@ -57,8 +57,8 @@ lineOfSight=true,
 
 
 --sound
-soundHit="null",
-soundStart="null",
+--soundHit="null",
+--soundStart="null",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

@@ -53,8 +53,8 @@ nanocolor=[[0 0.9 0.9]],
     Reclaimable = 0,
     category=[[LAND ]],
 	
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
   
 --Hitbox
     collisionVolumeOffsets    =  "0 0 0",

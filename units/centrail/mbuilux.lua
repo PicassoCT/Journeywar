@@ -19,12 +19,15 @@ maxdamage=1200,
 	MakesMetal = 0, 
 	MetalMake = 0,	
 	activateWhenBuilt= true,
-	selfDestructAs="defaultweapon",
+	 explodeAs = [[NOWEAPON]],
+	 selfDestructAs = [[NOWEAPON]],
 	onoffable= true,
 	FootprintX = 6,
 	FootprintZ = 6,
 	MaxSlope = 10,	
 	 corpse             = "bgcorpse",
+	 
+	 
 nanocolor=[[0 0.9 0.9]],
 
 Category=[[LAND BUILDING]],	

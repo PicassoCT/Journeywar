@@ -23,8 +23,8 @@ Acceleration = 0.0000001,
 BrakeRate = 0.0001,
 FootprintX = 12,
 FootprintZ = 12,
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
   
 
 

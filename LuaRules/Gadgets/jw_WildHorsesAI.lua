@@ -15,9 +15,11 @@ end
 
 if (gadgetHandler:IsSyncedCode()) then
 
+--Includes in order of depending
 	VFS.Include("scripts/lib_OS.lua"      )
 	VFS.Include("scripts/lib_TableOp.lua"      )
 	VFS.Include("scripts/lib_Build.lua" 	)
+	VFS.Include("Gadgets/jw_eventstreamaifunctions.lua" 	)
 
 	
 
@@ -254,7 +256,7 @@ function Base(AITable)
 	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
 	
 	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, 
-																{unitid=AITable.UnitPool[i].id,target={x=tx,y=ty,z=tz}action= controlledAgression, Final=GenericFinalize})
+																{unitid=AITable.UnitPool[i].id,target={x=tx,y=ty,z=tz}, action= controlledAgression, Final=GenericFinalize})
 	end
 		--if  Tasks higher Prio then deassigned Eventstream and create new Eventstream 
 		--if surplus funds, buy tasks from DefRes or Aggressor AI
@@ -284,10 +286,13 @@ function Aggressor(AITable)
 	--TODO Get Generic HeatMap
 	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
 	
-	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, 
-																{unitid=AITable.UnitPool[i].id,
-																target={x=tx,y=ty,z=tz}action= controlledAgression,
-																Final=GenericFinalize})
+	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, tables=
+																{
+																unitid=AITable.UnitPool[i].id,
+																target={x=tx,y=ty,z=tz},
+																action= controlledAgression,
+																Final=GenericFinalize
+																})
 	end
 	
 return AITable

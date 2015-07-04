@@ -30,7 +30,7 @@ local unitDef = {
 	MetalMake = 0,	
 	
 	explodeAs = "defaultweapon",
-	selfDestructAs="defaultweapon",
+	selfDestructAs= [[NOWEAPON]],
 	weapons = {
 [1]={name  = "NOWEAPON",
 	},

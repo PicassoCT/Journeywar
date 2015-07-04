@@ -41,12 +41,12 @@ LeaveTracks = false,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"gLava",
+	"glava",
 	},
 
 	
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
 	NoWeapon=true,
 
       

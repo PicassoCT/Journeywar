@@ -100,14 +100,14 @@ local zDistanceOfOld=0
 function script.Activate()
 				       --activates the secondary weapon 
 			
-					--	return 1
+						return 1
 					end
 
 		function script.Deactivate()
 		  --deactivates the secondary weapon 
 	
 			
-				--return 0
+				return 0
 		end
 
 
@@ -853,14 +853,11 @@ Hide(condepot)
 Hide(bgdrop)
 ropeDrop()
 Move(conaircenter,y_axis,425,82)
-Sleep(1200)
+WaitForMove(conaircenter,y_axis)
 Move(conaircenter,y_axis,625,150)
-Sleep(2000)
+WaitForMove(conaircenter,y_axis)
 Move(conaircenter,y_axis,825,200)
---Move(conaircenter,x_axis,moveX,9)
---Move(conaircenter,z_axis,moveZ,9)
---WaitForMove(conaircenter,x_axis)
---WaitForMove(conaircenter,z_axis)
+WaitForMove(conaircenter,y_axis)
 
 end
 
@@ -1029,7 +1026,7 @@ Hide(bgdrop)
 StartThread(landed)
 if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
 lastLoudness=lastLoudness+valToAdd
-PlaySoundByUnitType(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+StarThread(PlaySoundByUnitType,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 end
 _,maxhealth=Spring.GetUnitHealth(unitID)
 

@@ -28,7 +28,7 @@ local unitDef = {
 
 
 	explodeAs="cArtDM",
-	selfDestructAs="defaultweapon",
+	selfDestructAs= [[NOWEAPON]],
 
 -- Internal settings	
 

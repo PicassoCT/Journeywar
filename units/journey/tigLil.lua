@@ -34,8 +34,8 @@ cloakCostMoving =999,
 minCloakDistance =15,
 onoffable=true,
 
-selfDestructAs="defaultweapon",
-explodeAs="defaultweapon",
+selfDestructAs= [[NOWEAPON]],
+explodeAs = [[NOWEAPON]],
   customParams = {},
  sfxtypes = {
     explosiongenerators = {

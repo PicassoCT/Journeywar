@@ -42,8 +42,8 @@ strafeToAttack=true,
 shownanoframe=0,
  corpse             = "bgcorpse",
  
- explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+ explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
  
   customParams = {},
  sfxtypes = {

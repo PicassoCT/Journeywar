@@ -44,8 +44,8 @@ LeaveTracks = false,
 	"glava",
 	},
 
-		explodeAs="defaultweapon",
-		selfDestructAs="defaultweapon", 
+		explodeAs = [[NOWEAPON]],
+		selfDestructAs= [[NOWEAPON]], 
 		NoWeapon=true,
       
 		usebuildinggrounddecal = true,

@@ -49,7 +49,7 @@ lineOfSight=true,
  noSelfDamage       = true,
 
 --sound
-soundHit="null",
+--soundHit="null",
 soundStart="citadell/dronelaunch",
 }
 

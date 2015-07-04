@@ -43,8 +43,8 @@ CanStop = true,
 LeaveTracks = false,
 useSmoothMesh = false,
 
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
   
 
  

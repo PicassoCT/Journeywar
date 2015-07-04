@@ -129,8 +129,9 @@ function aTransferToTheTop   ( ed)
  if deMaRa() then -- to the top
  local spGetGroundHeight=Spring.GetGroundHeight
  oldh,maxX,maxZ=min,0,0
- for x=1,Game.MapSizeX,32 do
- for z=1,Game.MapSizeZ,32 do
+ mapX,mapZ=Spring.GetMetalMapSize
+ for x=1,Game.mapX,32 do
+ for z=1,Game.mapZ,32 do
 h=spGetGroundHeight(x,z) 
 if h > oldh then oldh,maxX,maxZ=h,x,z end
  end
@@ -139,8 +140,8 @@ if h > oldh then oldh,maxX,maxZ=h,x,z end
  else --to the depths
  local spGetGroundHeight=Spring.GetGroundHeight
  oldh,maxX,maxZ=max,0,0
- for x=1,Game.MapSizeX,32 do
- for z=1,Game.MapSizeZ,32 do
+ for x=1,Game.mapX,32 do
+ for z=1,Game.mapZ,32 do
 h=spGetGroundHeight(x,z) 
 if h < oldh then oldh,maxX,maxZ=h,x,z end
  end
@@ -185,8 +186,8 @@ Spring.SetUnitHealth(d,hp)
  team=Spring.GetUnitTeam(unitID)
  x,y,z=Spring.GetUnitPosition(unitID)
  
- x,z=Game.MapSizeX/x,Game.MapSizeZ/z --proportional coords
- x,z=math.floor(Game.MapSizeX*(1-x)),math.floor(Game.MapSizeZ*(1-z))
+ x,z=Game.mapX/x,Game.mapZ/z --proportional coords
+ x,z=math.floor(Game.mapX*(1-x)),math.floor(Game.mapZ*(1-z))
  did=Spring.CreateUnit(defid,x,y,z,math.floor(math.random(1,3)),team)
  hp=Spring.GetUnitHealth(unitID)
  Spring.SetUnitHealth(did,hp)
@@ -281,7 +282,7 @@ ex,ey,ez=Spring.GetUnitPosition(ed)
 T=Spring.GetUnitsInCylinder(ex,ez,Range)
 	if T and #T>1 then
 	table.remove(T,unitID)
-	xMax,zMax=Game.MapSizeX or 150, Game.MapSizeZ or 150
+	xMax,zMax=Game.mapX or 150, Game.mapZ or 150
 		for i=1,#T do
 		Spring.SetUnitMoveGoal(T[i],math.ceil(math.random(1,xMax)),0,math.ceil(math.random(1,zMax)))
 		StartThread(aSetUnitSelector,T[i],3145)
@@ -290,8 +291,8 @@ T=Spring.GetUnitsInCylinder(ex,ez,Range)
 end
 
 function aExplanation()
-	for i=Game.MapSizeX/16,Game.MapSizeX,Game.MapSizeX/4 do
-		for j=Game.MapSizeZ/16,Game.MapSizeZ,Game.MapSizeZ/4 do
+	for i=Game.mapX/16,Game.mapX,Game.mapX/4 do
+		for j=Game.mapZ/16,Game.mapZ,Game.mapZ/4 do
 			if Spring.GetGroundHeight(i,j)> 10 and math.random(0,2)==1 then
 				text=genMessageString()
 				Spring.MarkerAddPoint(  i,  0,  j, text, true)

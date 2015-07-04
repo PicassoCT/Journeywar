@@ -25,7 +25,7 @@ TurnRate = 5,
 mass=90,
 nanocolor=[[0 0.9 0.9]],
 sightDistance = 450,
-selfDestructAs="defaultweapon",
+selfDestructAs= [[NOWEAPON]],
 Builder = false,
 CanAttack = true,
 CanGuard = false,
@@ -44,8 +44,8 @@ Category = [[LAND]],
 				},
 				},
  
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
  
 
 }

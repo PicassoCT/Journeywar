@@ -34,8 +34,8 @@ CanStop = false,
 LeaveTracks = false,
 
 
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
  
  
  

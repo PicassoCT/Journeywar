@@ -21,8 +21,8 @@ MaxSlope = 5,
 --MaxVelocity = 0.5,
 MaxWaterDepth =0,
 --MovementClass = "Default2x2",--
-explodeAs="defaultweapon",
-selfDestructAs="defaultweapon", 
+explodeAs = [[NOWEAPON]],
+selfDestructAs= [[NOWEAPON]], 
 NoWeapon=true,
 
 sightDistance = 300,

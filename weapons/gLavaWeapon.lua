@@ -27,7 +27,7 @@ local weaponDef = {
 		  --apperance
 		  rgbColor                = [[0 0 0]],		  	      
           size                    = 0.1,
-	     soundHit="sounds/impact.wav",
+	   --  soundHit="sounds/impact.wav",
 
 		  }
 		

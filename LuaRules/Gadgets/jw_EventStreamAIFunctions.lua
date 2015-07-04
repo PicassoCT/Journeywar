@@ -50,7 +50,7 @@ function BaseAutomaton(State, AITabel)
 		
 			--StartEventStream
 		--eventstreamID= 	GG.EventStream:CreateEvent({action=BuildUnitBuilding, 
-												persPack={unitid=BuilderID,targetDefid=Task.DefID, Pos=Position})
+												persPack={unitid=BuilderID,targetDefid=Task.DefID, Pos=Position}
 			
 		else --asign capable Units to the Task
 			Prio=0
@@ -58,7 +58,7 @@ function BaseAutomaton(State, AITabel)
 					if Prio < Task.Priority then
 					--StartEventStream	
 				--	eventstreamID= 	GG.EventStream:CreateEvent({action=BuildUnitBuilding, 
-													persPack={unitid=BuilderID,targetDefid=Task.DefID, Pos=Position})
+													persPack={unitid=BuilderID,targetDefid=Task.DefID, Pos=Position}
 					--Store ID and Prio in TaskPool
 					Prio=Prio+0.1
 					end 
@@ -106,14 +106,15 @@ x,y,z=Spring.GetUnitPosition(unitid)
 		end
 	else -- the building is not yet existant
 		Command(unitid,"build",BuildTargetDefID)
-		frame+90 ,PersPackage
+		return frame+90 ,PersPackage
 	end
 
 
 	else
 	--was unit attacked or is in danger (abort)
 		if Spring.GetUnitHealth(unitid)* (2/3) < hp then
-		return RetreatHarasss(id, frame, PersPackage)
+		frames,Package=RetreatHarasss(id, frame, PersPackage)
+		return frames+10,Package
 		else
 		--how long did we spend timewise to accomplish the mission
 			--if too long abort (mapsize/velocity 

@@ -41,7 +41,7 @@ CanStop = true,
 
 
 Category = [[LAND]],
-selfDestructAs="defaultweapon",
+selfDestructAs= [[NOWEAPON]],
 
   explodeAs = "330RLexplode",
 	 customParams = {},

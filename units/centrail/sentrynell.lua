@@ -23,8 +23,8 @@ MaxVelocity =0.5,
 MaxWaterDepth = 20,
 MovementClass = "Default2x2",
 TurnRate = 100,
-selfDestructAs="defaultweapon",
-explodeAs="defaultweapon",
+selfDestructAs= [[NOWEAPON]],
+explodeAs = [[NOWEAPON]],
 sightDistance = 800,
 
 

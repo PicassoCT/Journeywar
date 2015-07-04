@@ -38,7 +38,7 @@ local weaponDef = {
 	  
 	  
 	turret      	   =true,
-	soundHit           = "null",
+	--	soundHit           = "null",
 	--soundStart         = "null",
 	startsmoke         = 0,
 	coreThickness=0.1,

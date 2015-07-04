@@ -40,8 +40,8 @@ ShowNanoSpray = true,
 CanBeAssisted = false,
 CanReclaim=false,	
 
-	explodeAs="defaultweapon",
-	selfDestructAs="defaultweapon", 
+	explodeAs = [[NOWEAPON]],
+	selfDestructAs= [[NOWEAPON]], 
  
  
 Category = [[LAND]],
