@@ -642,7 +642,7 @@ U0=vMul(W0,DirectionV)
 U = {x=0,y=1,z=0}
 
 
-angleX= math.atan2(VDotProduct(W0,U), VDotProduct(U0,U)/ Vabs(W0) * Vabs(U0))
+angleX= math.atan2(VDotProduct(W0,U), 	VDotProduct(U0,U)/ Vabs(W0) * Vabs(U0))
 
 --Turn the Piece to the Vector of the PieceToAlignTo
 Turn(pieceToAlign,x_axis,angleX,speed)
@@ -1786,6 +1786,46 @@ end
 
 
 Spring.Echo("================================================================================")
+
+end
+
+function objectFalling(objectname,weight,step, OVect,term)
+Terminal=term or -9.81
+weight=1/weight
+dx,dy,dz=Spring.GetUnitDirection(unitID)
+ObjectVector=OVec or {x=0,y=0,z=0}
+sizeX,sizeY,sizeZ=Spring.GetUnitPieceCollisionVolumeData(unitID,objectname)
+size=math.sqrt(sizeX*sizeX+sizeY*sizeY+sizeZ*sizeZ)
+
+--Here be pseudo physics :)
+	while true do
+	oPosX,oPosY,oPosZ=Spring.GetUnitPiecePosDir(unitID,objectname)
+	
+	--ApplyGravity
+	OVec.y= math.max(math.max(OVec.y^2,1.7)*-1,term)
+	
+	--CheckCollission
+		if OPosY-size < Spring.GetGroundHeight(oPosX,oPosZ) then
+		groundX,groundY,groundZ=Spring.GetGroundNormal(oPosX,oPosY)
+		OVec.x,OVec.y,Ovec.z=groundX+OVec.x,(OVec.y*-1)*weight+groundY,OVec.z+groundZ	
+		end
+	
+	--MoveObject
+	MaxVal=math.abs(Ovec.y)/(1000/step)
+	
+	--Normalisieren des ObjectVectors
+	normV=Vnorm(OVec)
+	normV=Vmul(normV,TotalEnergy)
+	
+	speed=3.141
+	stepTimesVec=1
+	
+	Move(objectname,x_axis,Ovec.x*stepTimesVec,speed)
+	Move(objectname,y_axis,Ovec.y*stepTimesVec,speed)
+	Move(objectname,z_axis,Ovec.z*stepTimesVec,speed)
+	
+	Sleep(step)
+	end
 
 end
 
