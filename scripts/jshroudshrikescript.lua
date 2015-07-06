@@ -108,10 +108,10 @@ end
 
 
 function script.Create()
-StartThread(expandingSphere)
-
-StartThread(treeLoop)
-StartThread(JustOnce)
+--StartThread(expandingSphere)
+--StartThread(treeLoop)
+--StartThread(JustOnce)
+StartThread(upYourGame)
 end
 
 function JustOnce()
@@ -120,10 +120,10 @@ Sleep(100)
 if not GG.jShroudShrikeRegister then GG.jShroudShrikeRegister={} end
 if not GG.jShroudShrikeRegister[teamid] then GG.jShroudShrikeRegister[teamid]=unitID end
 
-if Spring.ValidUnitID(GG.jShroudShrikeRegister[teamid]) and Spring.GetUnitIsDead(GG.jShroudShrikeRegister[teamid])==false and GG.jShroudShrikeRegister[teamid]~=unitID then
-Spring.Echo("Only one ShroudShrike allowed per team!")
-Spring.DestroyUnit(unitID,true,true)
-end
+	if Spring.ValidUnitID(GG.jShroudShrikeRegister[teamid]) and Spring.GetUnitIsDead(GG.jShroudShrikeRegister[teamid])==false and GG.jShroudShrikeRegister[teamid]~=unitID then
+	Spring.Echo("Only one ShroudShrike allowed per team!")
+	Spring.DestroyUnit(unitID,true,true)
+	end
 
 end
 
@@ -207,10 +207,10 @@ x,y,z=Spring.GetUnitPosition(unitID)
 
 
 end
-boolNonActive=true
+boolActive=true
 
 function expandingSphere()
-	while boolNonActive==true do
+	while boolActive==true do
 	Sleep(400)
 	end
 	Signal(SIG_TREE)
@@ -360,6 +360,7 @@ local SoleSurvivorTeam=Spring.GetUnitTeam(SoleSurvivor)
 	
 	end
 end
+
 function GoIntoStatueMode()
 teamid=Spring.GetUnitTeam(unitID)
  GG.jShroudShrikeRegister[teamid]=nil
@@ -381,14 +382,51 @@ function GetUnitsInRange(x,z,SpRa)
 	table.remove(T,unitID)
 	if T and #T > 0 then return T end
 end
+boolInGame=false
+function PokerTime()
+SetSignalMask(SIG_POKER)
+boolInGame=true
+--SpawnAUnit
+x,y,z=Spring.GetUnitPosition(unitID)
+teamid=Spring.GetUnitTeam(unitID)
+HitPoints=Spring.GetUnitHealth(unitID)
+Spring.SetUnitAlwaysVisible(unitID,false)
+TableOfUnitDefs={}
+ChoosenDefID=TableOfUnitDefs[math.floor(1,#TableOfUnitDefs)]
 
+while --unit not dead and player does not retreat from combat once entered
+
+
+
+--handle outcome
+
+end
+
+
+SIG_POKER=128
+function upYourGame()
+	while true do
+
+	if boolActive==true and boolInGame== false then
+	boolActive=false
+	Signal(SIG_POKER)
+	StartThread(PokerTime)
+	end
+
+
+	Sleep(500)
+	end
+
+end
+
+boolActive=false
 function script.Activate()
-boolNonActive=false
+boolActive=true
 return 1
 end
 
 function script.Deactivate()
-
+boolActive=false
 return 0
 end
 
