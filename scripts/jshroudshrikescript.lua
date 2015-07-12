@@ -382,37 +382,137 @@ function GetUnitsInRange(x,z,SpRa)
 	table.remove(T,unitID)
 	if T and #T > 0 then return T end
 end
-boolInGame=false
-function PokerTime()
-SetSignalMask(SIG_POKER)
-boolInGame=true
---SpawnAUnit
-x,y,z=Spring.GetUnitPosition(unitID)
-teamid=Spring.GetUnitTeam(unitID)
-HitPoints=Spring.GetUnitHealth(unitID)
-Spring.SetUnitAlwaysVisible(unitID,false)
-TableOfUnitDefs={}
-ChoosenDefID=TableOfUnitDefs[math.floor(1,#TableOfUnitDefs)]
-
-while --unit not dead and player does not retreat from combat once entered
 
 
+State="NOGAME"
 
---handle outcome
+function PokerTimeStateMachine()
+
+
+Package={}
+
+
+	while true do 
+
+	State,Package=StateTable[State](State,Package)
+
+	Sleep(250)
+	end
 
 end
 
+team=Spring.GetUnitTeam(unitID)
+												
+StateTable={
+--------------------------------------------------------------------------------------------------
+			["NOGAME"]= function (state,Package)
+			
+			Spring.SetUnitAlwaysVisible(unitID,true)
+			Package.hp=Spring.GetUnitHealth(unitID)
+			exp=Spring.GetUnitExperience(unitID) +0.1
+												if boolActive==true then 
+												boolHandEnoughM=Spring.UseTeamResource(team, "metal", GAMBLE_SUM*exp )
+												boolHandEnoughE=Spring.UseTeamResource(team, "energy", GAMBLE_SUM*exp)
+												
+													if boolHandEnoughE and boolHandEnoughM and
+													boolHandEnoughE ==true and boolHandEnoughM ==true then
+									
+													--Check wether we have the funds for a little gamble
+													boolActive=false
+											
+													-- use Investment * UnitExp
+													removeFromWorld(unnitID)
+												
+													TableOfUnitDefs=getPokerTypeTable(UnitDefNames)
+													ChoosenDefID=TableOfUnitDefs[math.floor(1,table.getn(TableOfUnitDefs))]
+													
+													--GetAUnitDefID, spawn it and put it in the Package
+													Package.id=Spring.CreateUnit(ChoosenDefID,x,y,z,0,team)
+													Spring.Echo("Hold")
+													return "HOLD", Package 
+													end
+												else --refund
+												if boolHandEnoughM == true then Spring.AddTeamResource(team, "metal", GAMBLE_SUM*exp) end
+												if boolHandEnoughE== true then Spring.AddTeamResource(team, "energy", GAMBLE_SUM*exp) end
+												end
+												return "NOGAME",Package
+												end,
 
-SIG_POKER=128
+--------------------------------------------------------------------------------------------------												
+			["HOLD"]= function (state,Package)
+			
+			
+				if boolActive==true then
+				boolActive=false
+				--Return Investment/2
+					Spring.Echo("Fold")
+				return "FOLD", Package
+				end
+			
+			--Check wether the packageID Unit still exists and how many HitPoints it lost
+			unitStatus=Spring.GetUnitIsDead(Package.id)
+			--Get Unit Last Attacker or PackageAttacker
+				if not Package.AttackerID then  Package.AttackerID = Spring.GetUnitLastAttacker(unitID) or Spring.GetUnitLastTarget(unitID) end 
+			boolHeIsDeadJim =Spring.GetUnitIsDead(Package.AttackerID)
+			enemyHP,enemyMaxHP=Spring.GetUnitHealth(Package.AttackerID)
+			
+				if unitStatus and unitStatus == false then
+					--if the enem is no more and im still very much alive - you win
+					if boolHeIsDeadJim == true then
+					Spring.Echo("WIN")
+					return "WIN",Package
+					end
+					
+					
+					
+					return "HOLD", Package
+				else 
+				--Reduce by Hitpoints of subunit 
+				Package.hp=Package.hp - enemyMaxHP
+				Spring.SetUnitHealth(unitID,Package.hp)
+				
+					Spring.Echo("Lose")
+					return "LOSE", Package
+				end
+					
+				
+			return "HOLD",Package
+			end,
+
+--------------------------------------------------------------------------------------------------
+			["FOLD"]= function (state,Package)
+			Spring.AddTeamResource(team, "metal",  math.ceil(0.5*GAMBLE_SUM*exp ))
+			Spring.AddTeamResource(team, "energy", math.ceil(0.5*GAMBLE_SUM*exp ))	
+			return "NOGAME", Package
+			end,
+			
+--------------------------------------------------------------------------------------------------
+		
+			["WIN"]= function  (state,Package)
+			Spring.AddTeamResource(team, "metal",  math.ceil(2*GAMBLE_SUM*exp ))
+			Spring.AddTeamResource(team, "energy", math.ceil(2*GAMBLE_SUM*exp ))	
+			x,y,z=Spring.GetUnitPosition(Package.id)
+			returnToWorld(unnitID,x,y,z)
+			ed=Spring.GetUnitNearestEnemy(Package.id)
+			Spring.DestroyUnit(Package.id,true, true)
+			exp=Spring.GetUnitExperience(unitID) +0.1
+			recursiveDoDamage(ed, math.ceil(math.random(2,9),exp*900), function(damage) return damage *0.75 end,function (id, prev) Spring.GetUnitNearestAlly(id) return id end,{})
+			
+			end,
+			
+--------------------------------------------------------------------------------------------------
+			["LOSE"]= function (state,Package) end
+			recursiveDoDamage(Package.id, math.ceil(math.random(2,9),exp*900), function(damage) return damage *0.75 end,function (id, prev) Spring.GetUnitNearestAlly(id) return id end,{})
+			Spring.DestroyUnit(Package.id,true,true)
+				
+			return "NOGAME", Package
+			}
+
 function upYourGame()
-	while true do
-
-	if boolActive==true and boolInGame== false then
-	boolActive=false
-	Signal(SIG_POKER)
 	StartThread(PokerTime)
-	end
-
+	while true do
+	
+	
 
 	Sleep(500)
 	end

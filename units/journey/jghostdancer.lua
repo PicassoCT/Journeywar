@@ -1,4 +1,4 @@
-local unitName = "jGhostDancer"
+local unitName = "jghostdancer"
 
 local unitDef = {
 name = "Ghost Dancer",
