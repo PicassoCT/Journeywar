@@ -21,7 +21,7 @@ local SIG_IDLE=4
 local boolHasFired=false
 function script.Create()
  Hide(vDisChar1)
-
+StartThread(TelePortationLoop)
   
 end
 
@@ -305,7 +305,7 @@ end
 boolCharged=false
 TIMETOCHARGE=42000
 Timer=TIMETOCHARGE
-function TelePortation()
+function TelePortationLoop()
 	while true do
 		if Timer > 0 then 
 		Timer =Timer- 300
