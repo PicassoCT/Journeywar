@@ -501,11 +501,12 @@ StateTable={
 			end,
 			
 --------------------------------------------------------------------------------------------------
-			["LOSE"]= function (state,Package) end
+			["LOSE"]= function (state,Package) 
 			recursiveDoDamage(Package.id, math.ceil(math.random(2,9),exp*900), function(damage) return damage *0.75 end,function (id, prev) Spring.GetUnitNearestAlly(id) return id end,{})
 			Spring.DestroyUnit(Package.id,true,true)
 				
 			return "NOGAME", Package
+			end
 			}
 
 function upYourGame()
