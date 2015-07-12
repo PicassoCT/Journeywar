@@ -166,8 +166,8 @@ PersPackage.armrange=PersPackage.armrange or GetMaxArmRange(Spring.GetUnitDefID(
 x,y,z=Spring.GetUnitPosition(unitid)
 	if dist2Vec (x,y,z,Pos.x,Pos.y,Pos.z) < PersPackage.armrange  then
 	--We are nearby
-	Command(unitid,"attack",{x=Pos.x,y=Pos.y,z=Pos.z}
-	return fram+10,PersPackage
+	Command(unitid,"attack",{x=Pos.x,y=Pos.y,z=Pos.z})
+	return frame+10,PersPackage
 		else
 		--GetNearestEnemy
 		eid=Spring.GetUnitNearestEnemy(unitid)

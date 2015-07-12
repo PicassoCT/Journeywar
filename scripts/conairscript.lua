@@ -1026,7 +1026,7 @@ Hide(bgdrop)
 StartThread(landed)
 if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
 lastLoudness=lastLoudness+valToAdd
-StarThread(PlaySoundByUnitType,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+StartThread(PlaySoundByUnitType,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 end
 _,maxhealth=Spring.GetUnitHealth(unitID)
 
