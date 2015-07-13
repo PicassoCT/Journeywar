@@ -305,9 +305,9 @@ function Aggressor(AITable)
 	--TODO Get Generic HeatMap
 	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
 	
-	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(
-																AITable.UnitPool[i].id,AITable, 
-																tables=
+
+	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, 
+
 																{
 																unitid=AITable.UnitPool[i].id,
 																target={x=tx,y=ty,z=tz},
