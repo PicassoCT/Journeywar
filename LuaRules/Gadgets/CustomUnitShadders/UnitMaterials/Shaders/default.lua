@@ -174,6 +174,8 @@ gl_FragColor = texture2D(textureS3o1, gl_TexCoord[0].st);
 #ifdef use_featureHueShift
    //TODO: Apply the default shader to features too (might get expensive)
    // TODO: Smuggle the HueShift as a vec3 value per featuredef up
+   //TODO: If no default hueshift Texture, then use the hueshift the whole texture
+   
   
     vec4 textureColor = texture2D(sTexture, vTextureCoord);
     vec3 fragRGB = gl_FragColor.rgb;

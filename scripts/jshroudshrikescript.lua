@@ -5,8 +5,8 @@ include "lib_OS.lua"
 
 --include "spring_lua_dsl.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-rootspin1=piece"rootspin1"
-rootspin2=piece"rootspin2"
+rootspin1=piece("rootspin1")
+rootspin2=piece("rootspin2")
 
 SpinT={}
 for i=1,23 do
@@ -15,9 +15,9 @@ SpinT[#SpinT+1]=piece(name)
 end
 
 
-GMAN=piece"GMAN"
-standing=piece"standing"
-face=piece"face"
+GMAN=piece("GMAN")
+standing=piece("standing")
+face=piece("face"        )
 Root={}
 for i=1,3 do
 name="Root"..i
@@ -33,16 +33,16 @@ Hide(face)
 local INFLUENCERADIUS=120
 local NUMBEROFPIECES=56
 piecesTable={}
-center = piece"center"
+center = piece("center")
 piecesTable[#piecesTable+1]= center
-emitcenter = piece"emitcenter"
+emitcenter = piece("emitcenter")
 
 piecesTable[#piecesTable+1]= emitcenter
-emitor = piece"emitor"
+emitor = piece("emitor")
 
 piecesTable[#piecesTable+1]= emitor
 
-dice = piece"dice"
+dice = piece("dice")
 
 piecesTable[#piecesTable+1]= dice
 
@@ -190,8 +190,8 @@ boolMoving=false
 		
 end
 
-Emitor=piece"emitor"
-emitcenter=piece"emitcenter"
+Emitor=piece("emitor"
+emitcenter=piece("emitcenter"
 
 function sfxThread(radiUs, time)
 it=math.random(1,6)
@@ -511,13 +511,8 @@ StateTable={
 			}
 
 function upYourGame()
-	StartThread(PokerTime)
-	while true do
-	
-	
+	StartThread(PokerTimeStateMachine)
 
-	Sleep(500)
-	end
 
 end
 

@@ -171,7 +171,7 @@ jAggressor={boolFundRound=false, Tasks={},energyTraded=0, metaltraded=0,orderded
 --================================================================================================
  
  
-if (gadgetHandler:IsSyncedCode()) then
+
  
 --SYNCED
 local AI={}
