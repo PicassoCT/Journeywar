@@ -51,6 +51,6 @@ lineOfSight=true,
 
 --sound
 soundHit="gvolcano/impact.wav",
-soundStart="gVolcano/volErupt.wav",
-
-return lowerkeys ({[weaponName]=weaponDef})
+soundStart="gVolcano/volErupt.wav"
+}
+return lowerkeys({[weaponName]=weaponDef})

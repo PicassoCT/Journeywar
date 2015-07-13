@@ -578,6 +578,27 @@ List=generatePieceMap(unitID)
 
 end
 
+function makeTable(XDimension, yDimension,zDimension)
+RetTable={}
+
+for x=1, XDimension, 1 do
+RetTable[x]={}
+	if yDimension then
+		for y=1, yDimension, 1 do
+		RetTable[x][y]={}
+			if zDimension then
+			for z=1, zDimension, 1 do
+			RetTable[x][y][z]={}	
+			
+			
+			end
+			end
+		end
+	end
+end
+
+end
+
 -->Creates basically a table of piecenamed enumerated strings
 function makeTableOfPieceNames(name, nr,startnr)
 T={}
@@ -1792,6 +1813,44 @@ l=layer or 0
 		end
 	
 	end
+end
+
+
+function vardump(value, depth, key)
+  local linePrefix = ""
+  local spaces = ""
+  
+  if key ~= nil then
+    linePrefix = "["..key.."] = "
+  end
+  
+  if depth == nil then
+    depth = 0
+  else
+    depth = depth + 1
+    for i=1, depth do spaces = spaces .. "  " end
+  end
+  
+  if type(value) == 'table' then
+    mTable = getmetatable(value)
+    if mTable == nil then
+      Spring.Echo(spaces ..linePrefix.."(table) ")
+    else
+      Spring.Echo(spaces .."(metatable) ")
+        value = mTable
+    end		
+    for tableKey, tableValue in pairs(value) do
+      vardump(tableValue, depth, tableKey)
+    end
+  elseif type(value)	== 'function' or 
+      type(value)	== 'thread' or 
+      type(value)	== 'userdata' or
+      value		== nil
+  then
+    Spring.Echo(spaces..tostring(value))
+  else
+    Spring.Echo(spaces..linePrefix.."("..type(value)..") "..tostring(value))
+  end
 end
 
 function echoTable(T,boolAssertTable)
@@ -4055,7 +4114,7 @@ end
 			outputc:close()
 
 			else
-			print(" could not open file")
+			Spring.Echo(" could not open file")
 			end
 
 				

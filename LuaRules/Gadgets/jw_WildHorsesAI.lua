@@ -278,6 +278,25 @@ function createStreamEventTask(id, AITable, functionToComply, PersPackage)
 	return GG.Eventstream:CreateEvent(GG.EventStreamID ,functionToComply or temp_O_Rary, PersPackage)
 end
 
+heatMapDimX,heatMapDimZ=math.ceil(Game.mapX/42), math.ceil(Game.mapZ/42)
+
+function initHeatMap()
+heatMap= makeTable(heatMapDimX,heatMapDimZ)
+for k,v in pairs (AI) do
+
+end
+
+return heatMap
+end
+
+function runVirtualEnemy(AITable)
+	local HeatMap= AITable.HeatMap or initHeatMap()
+
+
+AITable.HeatMap=HeatMap
+return AITable
+end
+
 --Aggressor SubAI responsible for Attacking or Low Cost Harrassment of the enemy
 function Aggressor(AITable)
 	-- Virtual Enemy - calculate outcome -- attack or harass-retreat
@@ -286,7 +305,9 @@ function Aggressor(AITable)
 	--TODO Get Generic HeatMap
 	tx,ty,tz=Spring.GetUnitNearestEnemy(AITable.UnitPool.id)
 	
-	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(AITable.UnitPool[i].id,AITable, tables=
+	AITable.TaskPool[AITable.UnitPool.id]=createStreamEventTask(
+																AITable.UnitPool[i].id,AITable, 
+																tables=
 																{
 																unitid=AITable.UnitPool[i].id,
 																target={x=tx,y=ty,z=tz},
