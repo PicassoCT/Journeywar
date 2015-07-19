@@ -16,7 +16,7 @@ local featureDef  =  {
    object            = "features/featureObj/cInfantryCorpse.s3o",
    reclaimable       = false,
    resurrectable  =1,
-   nodrawundergray  = true,
+   nodrawundergray  = false,
    autoreclaimable      = false,  
 
 }

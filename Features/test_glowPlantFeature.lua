@@ -1,10 +1,10 @@
 
 local featureDef  =  {
-   name           = "bgcorpse",
+   name           = "test_glowplantfeature",
    blocking       = false,
    category       = "cCorpse",
    damage            = 3000,
-   description       = "M.I.A.",
+   description       = "Shader Test Plants",
    energy            = 12,
    flammable         = true,
    footprintX        = 1,
@@ -13,10 +13,10 @@ local featureDef  =  {
    height            = "6",
    hitdensity        = "5",
 	smokeTime =0,
-   object            = "features/featureObj/bgcorpse.s3o",
+   object            = "features/featureObj/glowPlants.s3o",
    reclaimable       = false,
-   resurrectable  =1,
-   nodrawundergray  = false,
+   resurrectable  =0,
+   nodrawundergray  = true,
    autoreclaimable      = false,  
 
 }
