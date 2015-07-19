@@ -520,6 +520,16 @@ WaitForTurn(piecename,z_axis)
 end
 end
 
+function syncTurn(piecename,x_val,y_val,z_val,speed)
+max=math.max(x_val,math.max(z_val,y_val))
+time=math.abs(max/speed)
+	
+Turn(piecename,x_axis,math.rad(x_val),(time/x_val)*speed)
+Turn(piecename,y_axis,math.rad(y_val),(time/y_val)*speed)
+Turn(piecename,z_axis,math.rad(z_val),(time/z_val)*speed)
+
+end
+
 function tPrad(piecename,x_val,y_val,z_val,speed)
 Turn(piecename,x_axis,x_val,speed)
 Turn(piecename,y_axis,y_val,speed)

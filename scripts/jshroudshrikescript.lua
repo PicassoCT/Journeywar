@@ -190,8 +190,8 @@ boolMoving=false
 		
 end
 
-Emitor=piece("emitor"
-emitcenter=piece("emitcenter"
+Emitor=piece("emitor")
+emitcenter=piece("emitcenter")
 
 function sfxThread(radiUs, time)
 it=math.random(1,6)

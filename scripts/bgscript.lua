@@ -486,17 +486,19 @@ Signal(SIG_COUNTER)
 Signal(SIG_KNEE)
 Signal(SIG_FIRE)
 spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
-if defID== bgID then
-if math.random(0,1) then
-StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 3, true, 0.15)
-Show(Gun)
-else
-Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)
-end
+dice=math.random(1,3)
+if dice==1 then
+	if math.random(0,1)==1 then
+	StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 3, true, 0.15)
+	Show(Gun)
+	else
+	Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)
+	end
 Move(Gun,x_axis,math.random(-15,15), 7) 
 Move(Gun,z_axis,math.random(-15,15), 7) 
 
 if recentDamage/maxHealth > 0.3 and math.random(0,1)==1 then return offOverHead() end
+
 Hide(bgarm)
 Show(LArm)
 Show(RArm)
@@ -527,7 +529,7 @@ Show(RArm)
 	WaitForTurn(deathpivot,x_axis)
 	Sleep (150)
 	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
-else
+elseif dice==2 then
     Turn(bgarm,x_axis,math.rad(-29),90)
 	Turn(bglegr,x_axis,math.rad(-30), 45)
 	Turn(bglowlegr,x_axis,math.rad(54),32)
@@ -554,6 +556,45 @@ else
 	WaitForTurn(deathpivot,x_axis)
 	Sleep (150)
 	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
+
+else
+Turn(bglegr,x_axis,math.rad(25),22)
+Turn(bgleg,x_axis,math.rad(-10),12)
+Turn(bglowleg,x_axis,math.rad(0),12)
+Turn(bglowlegr,x_axis,math.rad(-10),12)
+spawnCegAtPiece(unitID,Head,"bghdexplode",0)
+Sleep(250)
+Turn(bgbase,x_axis,math.rad(-10),12)
+Turn(bglegr,x_axis,math.rad(10),12)
+Turn(bgleg,x_axis,math.rad(10),12)
+Turn(bglowleg,x_axis,math.rad(0),12)
+Turn(bglowlegr,x_axis,math.rad(0),12)
+spawnCegAtPiece(unitID,Head,"bghdexplode",0)
+syncTurn(LArm,0,80,74,122)
+syncTurn(RArm,0,-80,-34,122)
+Sleep(350)
+spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
+Turn(bgbase,x_axis,math.rad(35),12)
+Turn(bglegr,x_axis,math.rad(-43),12)
+Turn(bgleg,x_axis,math.rad(-62),12)
+Turn(bglowleg,x_axis,math.rad(39),12)
+Turn(bglowlegr,x_axis,math.rad(78),12)
+syncTurn(LArm,0,135,74,122)
+syncTurn(RArm,0,-146,-34,122)
+Sleep(350)
+val=math.random(-15,15)
+Turn(deathpivot,y_axis,math.rad(val),35)
+Turn(deathpivot,x_axis,math.rad(69),35)
+Turn(bgbase,x_axis,math.rad(35),12)
+syncTurn(LArm,0,84,74,84)
+syncTurn(RArm,-28,-119,-12,100)
+Sleep(320)
+Turn(bglegr,z_axis,math.rad(-15),12)
+Turn(bglegr,x_axis,math.rad(-15),12)
+Turn(bgleg,x_axis,math.rad(-12),12)
+Turn(bglowleg,x_axis,math.rad(0),12)
+Turn(bglowlegr,x_axis,math.rad(0),12)
+Sleep(420)
 
 end
 		return 1 

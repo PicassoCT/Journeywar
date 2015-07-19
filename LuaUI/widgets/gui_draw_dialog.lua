@@ -75,7 +75,7 @@ end
 lastTime=0
 
 function widget:DrawWorld()
-  local theTime = GetGameSeconds()
+  local theTime = Spring.GetGameSeconds()
   
 	  if (theTime ~= lastTime) then
 	  
@@ -84,14 +84,15 @@ function widget:DrawWorld()
 	  lastTime = theTime
 	 
 		
-	  _,_,paused = GetGameSpeed()
+	  _,_,paused = Spring.GetGameSpeed()
 	  
 	  glDepthMask(true)
 	  glDepthTest(true)
 	  glAlphaTest(GL_GREATER, 0)
 	  glBlending(GL_SRC_ALPHA, GL_ONE)
 		gl.Texture(1, LUAUI_DIRNAME .. "images/gradient_alpha_2.png")
-	 local dialog=_G.Dialog
+	if _G and _G.Dialog then
+	 local dialog= _G.Dialog
 
 
 	  for i, tables in pairs(dialog) do
@@ -100,7 +101,7 @@ function widget:DrawWorld()
 		  drawText(element.txt, element.x, element.y, element.z,16,"od")
 		  
 	  end
-		
+	end
 	  gl.Texture(1, false)
 	  glBlending(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 	  glAlphaTest(false)
