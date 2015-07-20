@@ -632,6 +632,7 @@ end
 
 -->Reset a Table of Pieces at speed
 function reseT(tableName,speed, ShowAll)
+
 lspeed=speed or 0
 	
 	for i=1,#tableName do
@@ -3208,7 +3209,7 @@ end
 		
 	end
 
-	function clampMaxSig(value,Max)
+	function clampMaxSign(value,Max)
 	if math.abs(value) > Max then 
 	signum=math.abs(value)/value
 	return Max*signum
@@ -3229,32 +3230,32 @@ end
 	if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
 	SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)
 	end
-	
-	vec={vx=math.random(-0.1,0.1),vy=-0.1,vz=math.random(-0.1,0.1),x=0,y=0,z=0,}
+	dirx,diry,dirz=Spring.GetUnitVectors(unitID)
+	vec={vx=dirx,vy=-0.1,vz=dirz,x=0,y=0,z=0,}
 			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 			vec.x,vec.y,vec.z=x,y,z
-
+	
 
 		vec.x,vec.y,vec.z=Spring.GetUnitPiecePosDir(unitID,piece)
 		gh=Spring.GetGroundHeight(x,z)
 		bump=0
-		
+		sum=32
 			while bump < bounceNr do 
 			--accelerate by vector 
-			vec.y=clampMaxSig(vec.y + vec.vy* speed,speedMax)  
-			vec.x=clampMaxSig(vec.x + vec.vx*speed, speedMax)
-			vec.z=clampMaxSig(vec.z + vec.vz*speed, speedMax)
+			vec.y=clampMaxSign(vec.y + vec.vy* speed,speedMax)  
+			vec.x=clampMaxSign(vec.x + vec.vx*speed, speedMax)
+			vec.z=clampMaxSign(vec.z + vec.vz*speed, speedMax)
 			
 			
-			Move(piece,y_axis, gh+ vec.y   ,speed)
-			Move(piece,x_axis, vec.x ,		speed)
-			Move(piece,z_axis, vec.z 		,speed)
+			Move(piece,y_axis, -1*vec.y   ,speed)
+			Move(piece,x_axis, -1*vec.x ,		speed)
+			Move(piece,z_axis, -1*vec.z 		,speed)
 			
 
 			--shrink vec with sqrt
 			vec.vx=math.sqrt(math.abs(vec.vx+vec.vx))*(vec.vx/math.abs(vec.vx))
 			vec.vz=math.sqrt(math.abs(vec.vz+vec.vz))*(vec.vz/math.abs(vec.vz))
-			vec.vy=clamMaxSign(vec.vy -0.1, 1  )
+			vec.vy=clampMaxSign(vec.vy -0.1, 1  )
 			
 			Sleep(1000)   
 			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
@@ -3262,16 +3263,19 @@ end
 			
 			gh=Spring.GetGroundHeight(x,z)
 			
-				if y-3 < gh then
+				if y-6 < gh then
 				bump=bump+1
 				--reset Position
-				vec.x, vec.y,vec.z=x, gh+2,z
+				vec.x, vec.y,vec.z=x, gh+6,z
 				
 				--not realistic but a start we take the ground normal as new vector 
 				dx,dy,dz =Spring.GetGroundNormal(x,z)
-				
-				vec.vx,vec.vy,vec.vz=clamMaxSign(vec.vx+dx)2,1),clamMaxSign(vec.vy+dy,1),clamMaxSign(vec.vz+dz,1)
-				
+				sum=math.sqrt(sum)
+				vec.vx,vec.vy,vec.vz=(clampMaxSign(vec.vx+dx,1)/2)*sum,(clampMaxSign(vec.vy+dy,1)/2)*sum,(clampMaxSign(vec.vz+dz,1)/2)*sum
+				if sum < 2 then
+				MoveUnitPieceToGroundPos(unitID,piece,x,z,0,3)
+				return
+				end
 				end
 		
 			end

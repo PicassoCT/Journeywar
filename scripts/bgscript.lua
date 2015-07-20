@@ -102,10 +102,6 @@ local function legs_down()
 	return
 end
 
-
-
-
-
 boolCanMove=true
 function kneeDown(time)
 					boolCanMove=false
@@ -135,8 +131,6 @@ function kneeDown(time)
 					end
 end
 
-
-
 function script.Create()
  Hide(depshield)
  Hide(flare01)
@@ -144,9 +138,21 @@ function script.Create()
  Hide(deathpivot)
  bodyBuilder()
  StartThread(soundStart)
-
+StartThread(dropYourGun)
 end
 
+function dropYourGun()
+	while true do
+		Show(Gun)
+		PieceDropTillStop(unitID,Gun,9.81, 32, 5, true)
+			
+	Sleep(5000)
+	resetPiece(Gun)
+
+	end
+
+	end
+	
 function idle()
 Signal(SIG_IDLE)
 sleeper=math.random(1024,8192)
@@ -218,7 +224,6 @@ function reduceTimeSinceLastChatter()
 Sleep(timeSinceLastChatter)
 timeSinceLastChatter=0
 end
-
 
 ---WALKING---
 function walk()
@@ -488,7 +493,7 @@ function killinTime(recentDamage,maxHealth)
 	dice=math.random(1,3)
 	if dice==1 then
 		if math.random(0,1)==1 then
-		StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 3, true, 0.15)
+		StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 5, true)
 		Show(Gun)
 		else
 		Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)
@@ -533,7 +538,7 @@ function killinTime(recentDamage,maxHealth)
 		Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
 	elseif dice==2 then
 		Turn(bgarm,x_axis,math.rad(-29),2*0.90)
-		Turn(bglegr,x_axis,math.rad(-30),2*0. 45)
+		Turn(bglegr,x_axis,math.rad(-30),2*0.45)
 		Turn(bglowlegr,x_axis,math.rad(54),2*0.32)
 		Turn(bgleg,x_axis,math.rad(-28),2*0.32)
 		Turn(bgleg,y_axis,math.rad(-29),2*0.42)
