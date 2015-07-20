@@ -27,7 +27,7 @@ local boolUnderFire=false
 local boolOnceInAWhile=true
 local SIG_WALK = 1	--signal for the walk animation thread
 local SIG_AIM = 2  --signal for the weapon aiming thread
-local SIG_IDLE=4
+ SIG_IDLE=4
 local SIG_COUNTER=8
 local SIG_FIRE=16
 local SIG_ROB=32
@@ -36,7 +36,7 @@ local SIG_ATTACK=128
 local leg_movespeed = 12+math.random(-1,1)
 local leg_movedistance = 10
 defID=Spring.GetUnitDefID(unitID)
-
+PiecesTable=generatePieceTable(unitID)
 
 bgdefID=UnitDefNames["bg"].id 
 boolCityTrooper=(defID==UnitDefNames["bg"].id )
@@ -82,6 +82,9 @@ local function legs_down()
 	Turn(bglowlegr,x_axis,math.rad(0),9)
 	Turn(bglowlegr,y_axis,math.rad(0),13)
 	Turn(bglowlegr,z_axis,math.rad(0),9)
+	Turn(deathpivot,x_axis,math.rad(0),9)
+	Turn(deathpivot,y_axis,math.rad(0),13)
+	Turn(deathpivot,z_axis,math.rad(0),9)
 
 	Turn(bgleg,x_axis,math.rad(0),9)
 	Turn(bgleg,y_axis,math.rad(0),15)
@@ -141,6 +144,7 @@ function script.Create()
  Hide(deathpivot)
  bodyBuilder()
  StartThread(soundStart)
+
 end
 
 function idle()
@@ -432,7 +436,7 @@ Sleep(intervall)
 end
 
 end
-
+bloodtable={[1]=bgbase,[2]=Head,[3]=bgtorso}
 function offOverHead()
 Move(bgbase,y_axis,-4.6,10)
 Turn(bglowlegr,x_axis,math.rad(107),45)
@@ -453,7 +457,7 @@ StartThread(headexplode,wavetime,18)
 	while wavetime > 0 do
 		for i=1,10 do 
 		
-	spawnCegAtPiece(unitID,bgbase,"bgbloodslay",false)
+	spawnCegAtPiece(unitID,bloodtable[math.random(1,#bloodtable)],"bgbloodslay",false)
 		Sleep(120)
 		end
 	itterator=itterator*0.9	
@@ -476,6 +480,148 @@ Sleep(2500)
 
 return 1
 end
+
+
+function killinTime(recentDamage,maxHealth)
+	Turn(deathpivot,y_axis,math.rad(0),1.40)
+	spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
+	dice=math.random(1,3)
+	if dice==1 then
+		if math.random(0,1)==1 then
+		StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 3, true, 0.15)
+		Show(Gun)
+		else
+		Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)
+		end
+
+
+	if recentDamage/maxHealth > 0.3 and recentDamage > TIGLILDAMAGE  then return offOverHead() end
+
+	Hide(bgarm)
+	Show(LArm)
+	Show(RArm)
+	  Turn(LArm,x_axis,math.rad(-29),2*0.90)
+	  Turn(RArm,x_axis,math.rad(math.random(-29,12)),2*0.90)
+		Turn(bglegr,x_axis,math.rad(-30),3*0.45)
+		Turn(bglowlegr,x_axis,math.rad(54),3*0.32)
+		Turn(bgleg,x_axis,math.rad(-28),3*0.32)
+		Turn(bgleg,y_axis,math.rad(-29),3*0.42)
+		Turn(bglowleg,x_axis,math.rad(0),3*0.32)
+		diff=math.random(-15,15)
+		Turn(deathpivot,y_axis,math.rad(diff),0.40)
+		Turn(deathpivot,x_axis,math.rad(-38),0.40)
+		EmitSfx(bgtorso, 1027)
+	
+						
+							Turn(bgtorso,x_axis,math.rad(-14),3*0.84)
+								Sleep(320)
+							WaitForTurn(bgtorso,x_axis)
+		Turn(bgleg,x_axis,math.rad(0),2*0.15)
+		Turn(bglegr,x_axis,math.rad(0),2*0.15)
+	
+		Turn(LArm, x_axis, math.rad(-90),2*0.85)
+		
+		Turn(bgtorso,x_axis,math.rad(0),3*0.84)
+		Turn(deathpivot,x_axis,math.rad(-89),2*0.75)
+
+
+		synVal=math.random(40,84)
+		synValz=math.random(75,95)
+		syncTurn(LArm,0,synVal,synValz,284)
+		syncTurn(RArm,0,-90,synValz,300)
+		Sleep(550)
+		Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
+	elseif dice==2 then
+		Turn(bgarm,x_axis,math.rad(-29),2*0.90)
+		Turn(bglegr,x_axis,math.rad(-30),2*0. 45)
+		Turn(bglowlegr,x_axis,math.rad(54),2*0.32)
+		Turn(bgleg,x_axis,math.rad(-28),2*0.32)
+		Turn(bgleg,y_axis,math.rad(-29),2*0.42)
+		Turn(bglowleg,x_axis,math.rad(0),2*0.32)
+		Turn(deathpivot,x_axis,math.rad(-38),2*0.45)
+		EmitSfx(bgtorso, 1027)
+	
+							
+							Turn(bgtorso,x_axis,math.rad(-14),2*0.84)
+									Sleep(320)
+							WaitForTurn(bgtorso,x_axis)
+		Turn(bgleg,x_axis,math.rad(0),2*0.15)
+		Turn(bglegr,x_axis,math.rad(0),2*0.15)
+		WaitForTurn(bgleg,x_axis)
+		WaitForTurn(bglegr,x_axis)
+		Turn(bgarm, x_axis, math.rad(-90),2*0.85)
+				Turn(bgtorso,x_axis,math.rad(0),3*0.84)
+		Turn(deathpivot,x_axis,math.rad(-89),2*0.75)
+
+		WaitForTurn(deathpivot,x_axis)
+		Sleep (150)
+		Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
+
+	else
+	Turn(deathpivot,y_axis,math.rad(0),2*0.12)
+	Turn(bglegr,x_axis,math.rad(25),0.42)
+	Turn(bgleg,x_axis,math.rad(-10),0.42)
+	Turn(bglowleg,x_axis,math.rad(0),0.32)
+	Turn(bglowlegr,x_axis,math.rad(-10),0.32)
+	spawnCegAtPiece(unitID,Head,"bghdexplode",0)
+
+	Sleep(650)
+	Turn(bgbase,x_axis,math.rad(-20),2*0.12)
+	Turn(deathpivot,x_axis,math.rad(-10),2*0.12)
+	Turn(bglegr,x_axis,math.rad(10),2*0.12)
+	Turn(bgleg,x_axis,math.rad(10),2*0.12)
+	Turn(bglowleg,x_axis,math.rad(0),2*0.12)
+	Turn(bglowlegr,x_axis,math.rad(0),2*0.12)
+	spawnCegAtPiece(unitID,Head,"bghdexplode",0)
+	Hide(bgarm)
+
+	syncTurn(LArm,0,80,74,200)
+	syncTurn(RArm,0,-90, 74,200)
+	Sleep(450)
+
+	spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
+	Turn(bgbase,x_axis,math.rad(35),5*0.12)
+	Turn(bglegr,x_axis,math.rad(-43),2*0.12)
+	Turn(bgleg,x_axis,math.rad(-62),2*0.12)
+	Turn(bglowleg,x_axis,math.rad(39),2*0.12)
+	Turn(bglowlegr,x_axis,math.rad(78),2*0.12)
+	syncTurn(LArm,0,135,74,222)
+	syncTurn(RArm,0,-146,74,222)
+	Sleep(550)
+		
+	
+	val=math.random(-15,15)
+
+	Turn(deathpivot,x_axis,math.rad(69),8.65*0.10)
+	Turn(bgbase,x_axis,math.rad(35),2*0.12)
+	synVal=math.random(40,84)
+	synValz=math.random(75,95)
+	syncTurn(LArm,0,synVal,synValz,284)
+	syncTurn(RArm,0,-90,synValz,300)
+	Sleep(420)
+	Signal(SIG_IDLE)
+	valr=math.random(0,45)
+	vall=math.random(-45,0)
+	
+	Turn(bglegr,z_axis,math.rad(val),3*0.12)
+	Turn(bglegr,x_axis,math.rad(-15),2*0.12)
+	Turn(bgleg,z_axis,math.rad(vall),4*0.12)
+	Turn(bgleg,x_axis,math.rad(-12),2*0.12)
+	Turn(bglowleg,x_axis,math.rad(0),2*0.12)
+	
+	if maRa()==true then
+	KneeRand=math.random(0,65)
+	Turn(bglowlegr,x_axis,math.rad(KneeRand),5*0.12)
+	Turn(bglegr,y_axis,math.rad(90),8*0.12)
+	else
+		Turn(bglowlegr,x_axis,math.rad(0),2*0.12)
+	end
+	
+	Sleep(420)
+	Signal(SIG_IDLE)
+	end
+end
+
 ----death animation: fall over & explode
 TIGLILDAMAGE=325
 bgID=UnitDefNames["bg"].id 
@@ -485,119 +631,8 @@ Signal(SIG_IDLE)
 Signal(SIG_COUNTER)
 Signal(SIG_KNEE)
 Signal(SIG_FIRE)
-spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
-dice=math.random(1,3)
-if dice==1 then
-	if math.random(0,1)==1 then
-	StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 3, true, 0.15)
-	Show(Gun)
-	else
-	Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)
-	end
-Move(Gun,x_axis,math.random(-15,15), 7) 
-Move(Gun,z_axis,math.random(-15,15), 7) 
-
-if recentDamage/maxHealth > 0.3 and math.random(0,1)==1 then return offOverHead() end
-
-Hide(bgarm)
-Show(LArm)
-Show(RArm)
-  Turn(LArm,x_axis,math.rad(-29),90)
-  Turn(RArm,x_axis,math.rad(math.random(-29,12)),90)
-	Turn(bglegr,x_axis,math.rad(-30), 45)
-	Turn(bglowlegr,x_axis,math.rad(54),32)
-	Turn(bgleg,x_axis,math.rad(-28),32)
-	Turn(bgleg,y_axis,math.rad(-29),42)
-	Turn(bglowleg,x_axis,math.rad(0),32)
-	Turn(deathpivot,x_axis,math.rad(-38),45)
-	EmitSfx(bgtorso, 1027)
-	WaitForTurn(RArm,x_axis)
-		WaitForTurn(bglegr,x_axis)
-			WaitForTurn(bglowlegr,x_axis)
-				WaitForTurn(bgleg,x_axis)
-					WaitForTurn(bgleg,y_axis)
-						WaitForTurn(bglowleg,x_axis)
-						Sleep(120)
-						Turn(bgtorso,x_axis,math.rad(-14),84)
-						WaitForTurn(bgtorso,x_axis)
-	Turn(bgleg,x_axis,math.rad(0),15)
-	Turn(bglegr,x_axis,math.rad(0),15)
-	WaitForTurn(bgleg,x_axis)
-	WaitForTurn(bglegr,x_axis)
-	Turn(LArm, x_axis, math.rad(-90),85)
-	Turn(deathpivot,x_axis,math.rad(-90),75)
-	WaitForTurn(deathpivot,x_axis)
-	Sleep (150)
-	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
-elseif dice==2 then
-    Turn(bgarm,x_axis,math.rad(-29),90)
-	Turn(bglegr,x_axis,math.rad(-30), 45)
-	Turn(bglowlegr,x_axis,math.rad(54),32)
-	Turn(bgleg,x_axis,math.rad(-28),32)
-	Turn(bgleg,y_axis,math.rad(-29),42)
-	Turn(bglowleg,x_axis,math.rad(0),32)
-	Turn(deathpivot,x_axis,math.rad(-38),45)
-	EmitSfx(bgtorso, 1027)
-	WaitForTurn(bgarm,x_axis)
-		WaitForTurn(bglegr,x_axis)
-			WaitForTurn(bglowlegr,x_axis)
-				WaitForTurn(bgleg,x_axis)
-					WaitForTurn(bgleg,y_axis)
-						WaitForTurn(bglowleg,x_axis)
-						Sleep(120)
-						Turn(bgtorso,x_axis,math.rad(-14),84)
-						WaitForTurn(bgtorso,x_axis)
-	Turn(bgleg,x_axis,math.rad(0),15)
-	Turn(bglegr,x_axis,math.rad(0),15)
-	WaitForTurn(bgleg,x_axis)
-	WaitForTurn(bglegr,x_axis)
-	Turn(bgarm, x_axis, math.rad(-90),85)
-	Turn(deathpivot,x_axis,math.rad(-90),75)
-	WaitForTurn(deathpivot,x_axis)
-	Sleep (150)
-	Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav") 
-
-else
-Turn(bglegr,x_axis,math.rad(25),22)
-Turn(bgleg,x_axis,math.rad(-10),12)
-Turn(bglowleg,x_axis,math.rad(0),12)
-Turn(bglowlegr,x_axis,math.rad(-10),12)
-spawnCegAtPiece(unitID,Head,"bghdexplode",0)
-Sleep(250)
-Turn(bgbase,x_axis,math.rad(-10),12)
-Turn(bglegr,x_axis,math.rad(10),12)
-Turn(bgleg,x_axis,math.rad(10),12)
-Turn(bglowleg,x_axis,math.rad(0),12)
-Turn(bglowlegr,x_axis,math.rad(0),12)
-spawnCegAtPiece(unitID,Head,"bghdexplode",0)
-syncTurn(LArm,0,80,74,122)
-syncTurn(RArm,0,-80,-34,122)
-Sleep(350)
-spawnCegAtPiece(unitID,bgtorso,"bghdexplode",0)
-Turn(bgbase,x_axis,math.rad(35),12)
-Turn(bglegr,x_axis,math.rad(-43),12)
-Turn(bgleg,x_axis,math.rad(-62),12)
-Turn(bglowleg,x_axis,math.rad(39),12)
-Turn(bglowlegr,x_axis,math.rad(78),12)
-syncTurn(LArm,0,135,74,122)
-syncTurn(RArm,0,-146,-34,122)
-Sleep(350)
-val=math.random(-15,15)
-Turn(deathpivot,y_axis,math.rad(val),35)
-Turn(deathpivot,x_axis,math.rad(69),35)
-Turn(bgbase,x_axis,math.rad(35),12)
-syncTurn(LArm,0,84,74,84)
-syncTurn(RArm,-28,-119,-12,100)
-Sleep(320)
-Turn(bglegr,z_axis,math.rad(-15),12)
-Turn(bglegr,x_axis,math.rad(-15),12)
-Turn(bgleg,x_axis,math.rad(-12),12)
-Turn(bglowleg,x_axis,math.rad(0),12)
-Turn(bglowlegr,x_axis,math.rad(0),12)
-Sleep(420)
-
-end
-		return 1 
+killinTime(recentDamage,maxHealth)
+return 1 
 end
 --]]
 

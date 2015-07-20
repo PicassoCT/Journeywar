@@ -631,11 +631,14 @@ Turn(piecename,z_axis,0,speed)
 end
 
 -->Reset a Table of Pieces at speed
-function reseT(tableName,speed)
+function reseT(tableName,speed, ShowAll)
 lspeed=speed or 0
 	
 	for i=1,#tableName do
 	resetPiece(tableName[i],lspeed)
+		if ShowAll then
+		Show(tableName[i])
+		end
 	end
 end
 
@@ -1362,6 +1365,16 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 
 	end
 return returnTable
+end
+
+
+function generatePieceTable(unitID)
+RetT={}
+piecesTable=Spring.GetUnitPieceMap(unitID)
+for k,v in pairs(piecesTable) do
+RetT[#RetT+1]=v
+end
+return RetT
 end
 
 -->generates a Pieces List 
@@ -3195,92 +3208,79 @@ end
 		
 	end
 
+	function clampMaxSig(value,Max)
+	if math.abs(value) > Max then 
+	signum=math.abs(value)/value
+	return Max*signum
+	else
+	return value
+	end	
+	end
+	
+	
 	-->Drops a unitpiece towards the ground
-	function PieceDropTillStop(unitID,piece,speedPerSecond, speedMax, bounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
-	if not unitID or not piece or not speedPerSecond or not speedMax then return end
-	bConstant= bounceConstant or 0.25
-	speed=speedPerSecond or 0.5
-	Drift= driftFunc or function (unitID,piece,x,y,z,time,speed) 
-								dx,dy,dz =Spring.GetGroundNormal(x,z) 
-								Move(piece,x_axis,dx*y* (1/time), speed)
-								Move(piece,z_axis,dz*y* (1/time), speed)
-								end
+	function PieceDropTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
+	if not unitID or not piece or not speedPerSecond or not VspeedMax then return end
+	
+	speed=speedPerSecond or  9.81
+	speedMax=VspeedMax or 9.81
+	bounceNr = lbounceNr or 12
 
 	if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
-	SpinAlongSmallestAxis(unitID,piece, math.random(-5,5),0.2)
+	SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)
 	end
-	if bounceNr then
-	while bounceNr > 1 do
+	
+	vec={vx=math.random(-0.1,0.1),vy=-0.1,vz=math.random(-0.1,0.1),x=0,y=0,z=0,}
+			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+			vec.x,vec.y,vec.z=x,y,z
 
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		time=0
+
+		vec.x,vec.y,vec.z=Spring.GetUnitPiecePosDir(unitID,piece)
 		gh=Spring.GetGroundHeight(x,z)
-		while speed < speedMax or y > gh do 
-		Move(piece,y_axis, -y+gh,speed)
-		time=time+1
-		Sleep(1000)   
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		Drift(unitID,piece,x,y,z,time,speed)
-		gh=Spring.GetGroundHeight(x,z)
-		speed=math.min(math.log(time+1)*4.905,speedMax)
-		end
+		bump=0
 		
-		upperLimit= y*bConstant
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		y=y-gh
-		time=0
-		while speed > 1 and y < upperLimit do 
-		Move(piece,y_axis,y+speed,speed)
-		y=y+speed
-		speed=speed/2
-		Sleep(1000)
-		time=time+1   
-		x,_,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		Drift(unitID,piece,x,y,z,time,speed)
-		end
-
-
-
-
-	bounceNr=bounceNr-1
-	end
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		gh=Spring.GetGroundHeight(x,z)
-		time=0
-		speedMax=9.81
-		
-		while speed < speedMax or y > gh do 
-		Move(piece,y_axis, -y+gh,speed)
-		Sleep(1000)
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		gh=Spring.GetGroundHeight(x,z)
-		time=time+1   
-		Drift(unitID,piece,x,y,z,time,speed)
-		speed=math.min(math.log(time+1)*4.905,speedMax)
-		end
-
-	else 
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	gh=Spring.GetGroundHeight(x,z)
-	time=0
-	speedMax=9.81
+			while bump < bounceNr do 
+			--accelerate by vector 
+			vec.y=clampMaxSig(vec.y + vec.vy* speed,speedMax)  
+			vec.x=clampMaxSig(vec.x + vec.vx*speed, speedMax)
+			vec.z=clampMaxSig(vec.z + vec.vz*speed, speedMax)
 			
+			
+			Move(piece,y_axis, gh+ vec.y   ,speed)
+			Move(piece,x_axis, vec.x ,		speed)
+			Move(piece,z_axis, vec.z 		,speed)
+			
+
+			--shrink vec with sqrt
+			vec.vx=math.sqrt(math.abs(vec.vx+vec.vx))*(vec.vx/math.abs(vec.vx))
+			vec.vz=math.sqrt(math.abs(vec.vz+vec.vz))*(vec.vz/math.abs(vec.vz))
+			vec.vy=clamMaxSign(vec.vy -0.1, 1  )
+			
+			Sleep(1000)   
+			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+			vec.x,vec.y,vec.z=x,y,z
+			
+			gh=Spring.GetGroundHeight(x,z)
+			
+				if y-3 < gh then
+				bump=bump+1
+				--reset Position
+				vec.x, vec.y,vec.z=x, gh+2,z
+				
+				--not realistic but a start we take the ground normal as new vector 
+				dx,dy,dz =Spring.GetGroundNormal(x,z)
+				
+				vec.vx,vec.vy,vec.vz=clamMaxSign(vec.vx+dx)2,1),clamMaxSign(vec.vy+dy,1),clamMaxSign(vec.vz+dz,1)
+				
+				end
 		
-		while speed < speedMax or y > gh do 
-		Move(piece,y_axis, -y+gh,speed)
-		Sleep(1000)
-		time=time+1
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-		gh=Spring.GetGroundHeight(x,z)   
-		Drift(unitID,piece,x,y,z,time,speed)
-		speed=math.min(math.log(time+1)*4.905,speedMax)
-		end
-	end
-		if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
-		StopSpin(piece,x_axis,0)
-		StopSpin(piece,y_axis,0)
-		StopSpin(piece,z_axis,0)
-		end
+			end
+	
+	
+		StopSpin(piece,x_axis,0.5)
+		StopSpin(piece,y_axis,0.5)
+		StopSpin(piece,z_axis,0.5)
+	
 	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 	MoveUnitPieceToGroundPos(unitID,piece,x,z,22, 5)
 		

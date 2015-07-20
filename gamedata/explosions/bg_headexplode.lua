@@ -12,7 +12,7 @@ return {
 			  water              = false,
 			  properties = {
 				airdrag            = 1,
-				colormap           = [[0.8 0.6 0.1 1.0	0 0 0 0.0]],
+				colormap           = [[0.8 0.6 0.1 1.0	 0.8 0.6 0.1 1.0	0.8 0.6 0.1 1.0	 0 0 0 0.0  0 0 0 0.0  0 0 0 0.0]],
 				directional        = true,
 				emitrot            = 5,
 				emitrotspread      = 90,
@@ -28,7 +28,7 @@ return {
 				pos                = [[0, -50, 0]],
 				sizegrowth         = [[0.0 0.0000000000000000001]],
 				sizemod            = 0.99999999,
-				texture            = [[bloodsplat]],
+				texture            = [[fireSparks]],
 				useairlos          = false,
 			  },
 			},
