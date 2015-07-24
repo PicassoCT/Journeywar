@@ -4,40 +4,28 @@
 --------------------------------------------------------------------------------
 
 local materials = {
-	hueShadedFeature = {
+	groundTexShadedFeature = {
 	  shaderDefinitions = {
          "#define use_perspective_correct_shadows",
 
        },
 		shaderPlugins = {
         VERTEX_PRE_TRANSFORM = [[
-		
-		]],
-        FRAGMENT_PRE_SHADING = [[	//Hue Shift Shader
-	
-		
-		
-		//How to get it to sample the units texture?
-		
-		const mat3 rgb2yiq = mat3(0.299, 0.587, 0.114, 0.595716, -0.274453, -0.321263, 0.211456, -0.522591, 0.311135);
-		const mat3 yiq2rgb = mat3(1.0, 0.9563, 0.6210, 1.0, -0.2721, -0.6474, 1.0, -1.1070, 1.7046);
-		uniform float hue;
-	
-	
-		vec3 yColor = rgb2yiq * texture2DRect(textureS3o2, gl_TexCoord[1].st).rgb; 
-	
-		float originalHue = atan(yColor.b, yColor.g);
-		float finalHue = originalHue + hue;
-	
-		float chroma = sqrt(yColor.b*yColor.b+yColor.g*yColor.g);
-	
-		vec3 yFinalColor = vec3(yColor.r, chroma * cos(finalHue), chroma * sin(finalHue));
-		gl_FragColor    = vec4(yiq2rgb*yFinalColor, 1.0);
+				In Lua GL:
+			1) Bind mapDiffuse texture to the shader.
+			2) Pass the rendered feature's world position in an uniform.
 
-		
-		
-		
-        ]],
+			//In vertex shader:
+			//3) calculate vertex world position based on vertex local position and feature world-position uniform
+			//4) adjust texture coordinates of the vertex on the mapDiffuse texture to match vertex's world position
+
+	
+		]],
+		 FRAGMENT_PRE_SHADING = [[
+		 	//In fragment shader (or somewhere else?)
+			//5) Blend between mapDiffuse and unitDiffuse based on the loaded blend texture .
+		 ]]
+
       },
 		
 		
@@ -54,10 +42,11 @@ local materials = {
 			[2] = '$shadow',
 			[3] = '$specular',
 			[4] = '$reflection',
+			[5] = '$blend_channel',
 		},
 	},
 	
-	hueShadedFeatureFlipped = {
+	groundTexShadedFeatureFlipped = {
 		shaderDefinitions = {
 			"#define use_perspective_correct_shadows",
 		},
@@ -72,6 +61,7 @@ local materials = {
 			[2] = '$shadow',
 			[3] = '$specular',
 			[4] = '$reflection',
+			[5] = '$blend_channel'
 		},
 	},
 }

@@ -356,7 +356,7 @@ end
 -- Not inspired or entired by the Foorunners
 NamePerk={ --Generic SciFi Name   --generic dramatic description    --generic SciFi Stuff happening
 [1]={name="The Tower", description= "We raised these stones, to be rememberd", perk=aShortGloballos   },
-[2]={name="The Nexus", description= "Fast as Light", perk=aExplanation   },
+[2]={name="The Nexus", description= " a Flame in the Night for those Fast as Light", perk=aExplanation   },
 [3]={name="The Library", description= "Holding lost Secrets  ", perk=aTransferToTheTop   },
 [4]={name="The Halls of Time", description= "Awaiting the dawn", perk= aStunOfEveryone  },
 [5]={name="The Shield", description= "Awaiting the dawn", perk= aWildHealer  },
@@ -371,7 +371,7 @@ NamePerk={ --Generic SciFi Name   --generic dramatic description    --generic Sc
 [14]={name="Oblivion", description= "Plans to dust", perk= aDistributor  },
 [15]={name="The Shipyard", description= "Forever under Construction", perk= aAntiGravity  },
 [16]={name="The Dominiondepot", description= "Fuel for the Fools", perk= aRefuel  },
-[17]={name="The Healiinghouses", description= "Mendo Mori", perk= aCure  },
+[17]={name="The Healinghouses", description= "Mendo Mori", perk= aCure  },
 [18]={name="The Arsenal", description= "Memento Mori, deploy Devouri", perk= aChainExplosion  },
 
 
@@ -635,11 +635,13 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	return 1
 	end
 end
-
+emitFloater=piece"emitFloater"
 function glowingReactor()
+accum=0
 	while true do
 	EmitSfx(P[35],1026)
-		
+	accum=accum+0.01	
+	Move(emitFloater,y_axis,30+math.cos(accum/10000)+math.sin(accum)*42,17)
 	EmitSfx(P[35],1027)
 	EmitSfx(P[36],1027)
 	Sleep(25)

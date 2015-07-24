@@ -530,6 +530,16 @@ Turn(piecename,z_axis,math.rad(z_val),(time/z_val)*speed)
 
 end
 
+function syncMove(piecename,x_val,y_val,z_val,speed)
+max=math.max(math.abs(x_val),math.max(math.abs(z_val),math.abs(y_val)))
+time=math.abs(max/speed)
+	
+Move(piecename,x_axis,(x_val),(time/x_val)*speed)
+Move(piecename,y_axis,(y_val),(time/y_val)*speed)
+Move(piecename,z_axis,(z_val),(time/z_val)*speed)
+
+end
+
 function tPrad(piecename,x_val,y_val,z_val,speed)
 Turn(piecename,x_axis,x_val,speed)
 Turn(piecename,y_axis,y_val,speed)
@@ -3210,10 +3220,10 @@ end
 	end
 
 	function clampMaxSign(value,Max)
-	if math.abs(value) > Max then 
-	signum=math.abs(value)/value
-	return Max*signum
-	else
+		if math.abs(value) > Max then 
+		signum=math.abs(value)/value
+		return Max*signum
+		else
 	return value
 	end	
 	end
@@ -3222,71 +3232,103 @@ end
 	-->Drops a unitpiece towards the ground
 	function PieceDropTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
 	if not unitID or not piece or not speedPerSecond or not VspeedMax then return end
+	x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 	
 	speed=speedPerSecond or  9.81
 	speedMax=VspeedMax or 9.81
 	bounceNr = lbounceNr or 12
-
+	time=1000
+	factorT=time/1000
+	
 	if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
 	SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)
 	end
-	dirx,diry,dirz=Spring.GetUnitVectors(unitID)
-	vec={vx=dirx,vy=-0.1,vz=dirz,x=0,y=0,z=0,}
-			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-			vec.x,vec.y,vec.z=x,y,z
-	
 
-		vec.x,vec.y,vec.z=Spring.GetUnitPiecePosDir(unitID,piece)
+	dirX,dirY,dirZ= Spring.GetUnitPiecePosition(unitID,Head)
+	bdirX,bdirY,bdirZ= Spring.GetUnitPiecePosition(unitID,Gun)
+	dirX,dirZ=bdirX-dirX,bdirZ-dirZ
+	
+	Spring.Echo("Spring.GetUnitWeaponVectors(unitID,1)"..dirX.. "   z:"..dirZ)
+	norm=math.sqrt(dirX*dirX + dirZ*dirZ)
+	dirX,dirZ=(dirX/norm),(dirZ/norm)
+	dirX,dirZ= -0.5*randSign(),-0.5*randSign()
+	vec={vx=dirX  ,vy= 0.4, vz=dirZ  ,x=0,y=17,z=0,}
+
+
+
+
 		gh=Spring.GetGroundHeight(x,z)
 		bump=0
-		sum=32
+		force=16
+		
 			while bump < bounceNr do 
-			--accelerate by vector 
-			vec.y=clampMaxSign(vec.y + vec.vy* speed,speedMax)  
-			vec.x=clampMaxSign(vec.x + vec.vx*speed, speedMax)
-			vec.z=clampMaxSign(vec.z + vec.vz*speed, speedMax)
+			--accelerate by vector +gravity 
+			vec.y=vec.y + clampMaxSign(vec.vy* force	%(speed*factorT) - 1*speed, factorT*speedMax)  
+			vec.x=vec.x + clampMaxSign(vec.vx* force	%(speed*factorT)			, factorT*speedMax)
+			vec.z=vec.z + clampMaxSign(vec.vz* force	%(speed*factorT)			, factorT*speedMax)
 			
-			
-			Move(piece,y_axis, -1*vec.y   ,speed)
-			Move(piece,x_axis, -1*vec.x ,		speed)
-			Move(piece,z_axis, -1*vec.z 		,speed)
-			
+		
+			mP(piece,vec.x,vec.y,vec.z, factorT*speed)
 
-			--shrink vec with sqrt
-			vec.vx=math.sqrt(math.abs(vec.vx+vec.vx))*(vec.vx/math.abs(vec.vx))
-			vec.vz=math.sqrt(math.abs(vec.vz+vec.vz))*(vec.vz/math.abs(vec.vz))
-			vec.vy=clampMaxSign(vec.vy -0.1, 1  )
+			--shrink vec with sqrt as a approximation for air resistance
+			vec.vx=clampMaxSign(math.sqrt((math.abs(vec.vx)^1.414))*sigNum(vec.vx),1)
+			vec.vz=clampMaxSign(math.sqrt((math.abs(vec.vz)^1.414))*sigNum(vec.vz),1)
 			
-			Sleep(1000)   
+			--apply a approximation for the decay of movement
+			vec.vy=clampMaxSign(1-(1/(force+0.0001))* (vec.vy ) , 1  )
+			WaitForMove(piece,y_axis)
+			Sleep(10)
+			--Spring.Echo("Looping Physics")
 			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-			vec.x,vec.y,vec.z=x,y,z
-			
 			gh=Spring.GetGroundHeight(x,z)
 			
-				if y-6 < gh then
-				bump=bump+1
-				--reset Position
-				vec.x, vec.y,vec.z=x, gh+6,z
+
 				
+				if gh - y >  5    then
+				Spring.Echo("X>"..vec.x .. "  Y> ".. vec.y .. " Z>" .. vec.z) 
+				Spring.Echo("VX>"..vec.vx .. "  VY> ".. vec.vy .. " VZ>" .. vec.vz) 
+				Spring.Echo("DX>"..dx .. "  DY> ".. dy .. " DZ>" .. dz) 
+				
+					
+				bump=bump+1
+				force=math.sqrt(force)
 				--not realistic but a start we take the ground normal as new vector 
-				dx,dy,dz =Spring.GetGroundNormal(x,z)
-				sum=math.sqrt(sum)
-				vec.vx,vec.vy,vec.vz=(clampMaxSign(vec.vx+dx,1)/2)*sum,(clampMaxSign(vec.vy+dy,1)/2)*sum,(clampMaxSign(vec.vz+dz,1)/2)*sum
-				if sum < 2 then
-				MoveUnitPieceToGroundPos(unitID,piece,x,z,0,3)
-				return
-				end
+				--reset Position
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+				
+				MoveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
+				dx,dy,dz, slope =Spring.GetGroundNormal(x,z)
+				
+				Spring.Echo("X>"..vec.x .. "  Y> ".. vec.y .. " Z>" .. vec.z) 
+				Spring.Echo("VX>"..vec.vx .. "  VY> ".. vec.vy .. " VZ>" .. vec.vz) 
+				Spring.Echo("DX>"..dx .. "   DZ>" .. dz) 
+				if math.abs(dy) > 0.5 and force < 1 then 
+							StopSpin(piece,x_axis,0.5)
+							StopSpin(piece,y_axis,0.5)
+							StopSpin(piece,z_axis,0.5)
+						LayFlatOnGround(piece)
+						x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+						MoveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
+					
+					return
+					else
+						force=force *2 
+					end
+				px,py,pz=Spring.GetUnitPiecePosition(unitID,piece)
+				vec.vx,vec.vy,vec.vz=(clampMaxSign(dx*0.5,1)),vec.vy*-0.75,(clampMaxSign(dz*0.5,1))
+				
+				vec.y= vec.y + clampMaxSign(vec.vy* force^2	 , factorT*speedMax)  
+				vec.x= vec.x  + clampMaxSign(vec.vx* force^2				, factorT*speedMax)
+				vec.z= vec.z  + clampMaxSign(vec.vz* force^2				, factorT*speedMax)
+				mP(piece,vec.x,vec.y,vec.z, factorT*speed)
+				WaitForMove(piece,y_axis)
+				Sleep(10)
+				
+				
 				end
 		
 			end
 	
-	
-		StopSpin(piece,x_axis,0.5)
-		StopSpin(piece,y_axis,0.5)
-		StopSpin(piece,z_axis,0.5)
-	
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	MoveUnitPieceToGroundPos(unitID,piece,x,z,22, 5)
 		
 	end
 
@@ -3433,6 +3475,19 @@ end
 	if holdsForAll(areax, " <= ", areay, areaz)then Spin(piecename,x_axis,math.rad(degree), speed) return end
 	if holdsForAll(areay, " <= ", areaz, areax)then Spin(piecename,y_axis,math.rad(degree), speed) return end
 	if holdsForAll(areaz, " <= ", areay, areax)then Spin(piecename,z_axis,math.rad(degree), speed) return end
+	end
+
+	function LayFlatOnGround(unitID,piecename,speeds )
+	speed=speeds or 0
+	if not piecename then return end
+	vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
+	if vx and vy and vz then
+	areax,areay,areaz=vy*vz,vx*vz,vy*vx
+	end
+
+	if holdsForAll(areax, " >= ", areay, areaz)then tP(piecename,0,90,90,speed ) return end
+	if holdsForAll(areay, " >= ", areaz, areax)then tP(piecename,90,0,90,speed ) return end
+	if holdsForAll(areaz, " >= ", areay, areax)then tP(piecename,0,0,0,speed ) return end
 	end
 
 	 -->Helperfunction of recursiveAddTable
@@ -3808,7 +3863,10 @@ end
 	end
 	return getSpot(cond,64)
 	end
-
+	function sigNum(val)
+	return math.abs(val)/val
+	end
+	
 	--> returns a randomized Signum
 	function randSign()
 	val=math.random(-1,1)
@@ -3952,6 +4010,83 @@ end
 		end
 		end
 	end
+	
+	function binaryInsertTable(Table,Value,ToInsert,key)
+	i=math.floor(table.getn(Table)/2)
+	upLim,loLim=table.getn(Table),1
+	previousi=1
+	if key then ToInsert={value=ToInsert,key=key}
+	
+			while true do
+			if Value > Table[i] and Table[i+1] and Value > Table[i+1] then
+			previousi=i
+			i=i+ math.floor((upLim-loLim)/2)
+			loLim=previousi
+			elseif Value < Table[i] and Table[i-1] and Value <  Table[i-1] then
+			previousi=i
+			i=i- math.floor((upLim-loLim)/2)
+			uplim=previousi
+			else  then
+			table.insert(Table,ToInsert,i)
+			return Table,i
+			end
+		end
+	end
+	
+	function MoveMaschineIntoPosition()
+	
+	
+	end
+
+	function unfoldAnimation(ListOfPieces,specialeffectsfunction,unitID,maxSpeed)
+	--sort them BySize --samesizes by closeness to ground
+		
+	PieceIDSizeTable={}
+	PieceIDHeightTable={}
+	AllreadyVisiblePieces={}
+	HideT(ListOfPieces)
+		for k,v in pairs(ListOfPieces) do
+		x,y,z=Spring.GetUnitPieceCollisionVolumeData(unitID,v)
+		min=math.floor(math.min(x,math.min(y,z)))
+		PieceIDSizeTable[v]=min
+		_,y_=Spring.GetUnitPiecePosDir(unitID,v)
+		PieceIDHeightTable[v]=y
+		end
+	--sortBySize
+	SizeSortedTable={}
+	HeightSortedTable={}
+	
+	for k,v in pairs(ListOfPieces) do
+		SizeSortedTable= binaryInsertTable(SizeSortedTable,PieceIDSizeTable[v],v,k) 	
+		HeightSortedTable=binaryInsertTable(HeightSortedTable,PieceIDHeightTable[v],v,k) 	
+	end
+	
+	ClosedTable={}
+	AllreadyVisiblePieces[1]= SizeSortedTable[#SizeSortedTable].key
+	MovePieceoPieceUnitSpace(AllreadyVisiblePieces[1],0,0,0,0)
+	Show(AllreadyVisiblePieces[1])
+	ClosedTable[AllreadyVisiblePieces[1]]=true
+	SizeSortedTable[#SizeSortedTable]=nil
+	
+	--we now have Table of Pieces Sorted by size and height in the  building
+	-- we itterate over the lower table - and pick by size 
+	
+		for i=1,#HeightSortedTable, 1 do	
+		
+		
+		--get Element Bigger in Table 
+		Move(HeightSortedTable[i].value,0,x_axis,speed)
+		Move(HeightSortedTable[i].value,0,z_axis,speed)
+		WaitForMove(HeightSortedTable[i].value,z_axis)
+		WaitForMove(HeightSortedTable[i].value,x_axis)
+		Move(HeightSortedTable[i].value,0,y_axis,speed)
+		WaitForMove(HeightSortedTable[i].value,y_axis)
+		--ShowTheBiggest
+		
+		-- Move through the showedList, from a randomPoint find a piece that has a fitting size
+		end	
+	end
+	
 
 	function moveBlockAddPod(x,y,z,nrFreeSpot,nrBlok,bloks,freeSpots,gDirFunc,repeatPatternFonc,dirTable,cg)
 	cgPosX,cgPosY,cgPosZ = x,y,z

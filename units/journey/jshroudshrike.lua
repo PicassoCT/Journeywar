@@ -79,8 +79,7 @@ EnergyStorage = 250,
    customParams = {},
  sfxtypes = {
 				explosiongenerators = {
-				"custom:jshshrikptree",             
-				"custom:jshshrikptreet",             
+            
 					
 				},
 
