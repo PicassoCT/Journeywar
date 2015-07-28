@@ -423,7 +423,7 @@ function playThatFunkyHorn()
 SetSignalMask(SIG_RAZOR)
 Sleep(500)
 boolRazorSoundInUse=true
-Spring.PlaySoundFile("sounds/conTrain/razortrain_horn1.wav",0.9)
+ PlaySoundByUnitType(contrainDef, "sounds/conTrain/razortrain_horn1.wav",0.9,10000,1,0)
 Sleep(5000)
 boolRazorSoundInUse=false
 
@@ -499,7 +499,7 @@ proLife=table.getn(proChoice)
 										Spring.SetUnitNoDraw(trainFullDeathID,true)
 										Spring.UnitScript.DropUnit(trainFullDeathID)
 										--Explode the GorePieces with no effects
-											Spring.PlaySoundFile("sounds/conTrain/conbump.wav")
+											 PlaySoundByUnitType(contrainDef, "sounds/conTrain/conbump.wav",0.5,10000,1,0)
 												for i=1,7,1 do
 												Show(ctgoresub[i])
 												Explode(ctgoresub[i], SFX.FALL )
@@ -1429,27 +1429,28 @@ local currySpeed=0
 
 		end
 end
-
+contrainDef=Spring.GetUnitDefID(unitID)
 function soundOSLoop()
 
 	while true do
 
 		 if getConstantMove()==true then
-		Spring.PlaySoundFile("sounds/conTrain/razor_train_wheels_loop2.wav",0.7)
+		 PlaySoundByUnitType(contrainDef, "sounds/conTrain/razor_train_wheels_loop2.wav",0.35,10000,1,0)
 		Sleep(4000)
 		z=math.random(0,12)
 			if z==9 then
-			Spring.PlaySoundFile("sounds/conTrain/train_freight_loop2.wav",0.5)
+			 PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_freight_loop2.wav",0.35,10000,1,0)
 			Sleep(5000)
 			end
 				if z==4 then
-				Spring.PlaySoundFile("sounds/conTrain/train_freight_loop1.wav",0.5)
+		
+				 PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_freight_loop1.wav",0.35,10000,1,0)
 				Sleep(19000)
 				end
 		else
-		zZzZzZ=math.random(2000,7000)
+		zZzZzZ=math.random(2000,17000)
 		Sleep(zZzZzZ)--he is snorring, but it could be sleep(apnoe) he should see the thread-doctor
-		Spring.PlaySoundFile("sounds/conTrain/train_idle.wav",0.1)
+		 PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_idle.wav",0.1,10000,1,0)
 		Sleep(zZzZzZ)
 
 

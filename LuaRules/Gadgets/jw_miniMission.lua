@@ -40,10 +40,12 @@ local spGetUnitTeam=Spring.GetUnitTeam
 
 Name,charPerLine, Alpha, DefaultSleepByline = "Mission Parameters:", 60, 255, 150
 -- INCLUDES
- VFS.Include("scripts/lib_OS.lua"      )
- VFS.Include("scripts/lib_TableOp.lua"      )
-  VFS.Include("scripts/lib_Build.lua" 	)
+VFS.Include("scripts/lib_OS.lua"      )
+VFS.Include("scripts/lib_TableOp.lua"      )
+VFS.Include("scripts/lib_Build.lua" 	)
 
+
+   boolFeatureType=deMaRaVal(2)
 
 --Mission1-----------------------------------------------------------------------------------------
 
@@ -2240,8 +2242,13 @@ function gadget:GameFrame(frame)
 	gaiateamid=Spring.GetGaiaTeamID()
 	
 		for i=1,#spawnPoints do
+		if boolFeatureType==1 then
 		id=Spring.CreateUnit("gproceduralfeature",spawnPoints[i].x,0,spawnPoints[i].z, 1, gaiateamid)
 		Spring.SetUnitAlwaysVisible(id,true)
+		elseif boolFeatureType==2 then
+		id=Spring.CreateUnit("gpillar",spawnPoints[i].x,0,spawnPoints[i].z, 1, gaiateamid)
+		Spring.SetUnitAlwaysVisible(id,true)
+		end
 		end	
 	end
 	

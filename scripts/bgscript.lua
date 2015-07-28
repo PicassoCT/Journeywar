@@ -138,7 +138,7 @@ function script.Create()
  Hide(deathpivot)
  bodyBuilder()
  StartThread(soundStart)
-StartThread(dropYourGun)
+--StartThread(dropYourGun)
 end
 
 function dropYourGun()

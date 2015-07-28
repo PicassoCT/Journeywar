@@ -1145,3 +1145,15 @@ boolBreakerBlow=true
     end
 
 end
+
+function jw_AddTerrainDeformation(x,z, size, shapeFunction, ldepth, lblendType,lfilterType)
+	blendType=lblendType or "melt"
+	filterType=lfilterType or "borderblur"
+	depth=ldepth or 4
+	
+	if GG.DynDefMap == nil then GG.DynDefMap={} end
+		if GG.DynRefMap == nil then GG.DynRefMap={} end
+		GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType= blendType, filterType=filterType}
+		GG.DynRefMap[#GG.DynRefMap+1]=	shapeFunction(size,depth)
+		
+end

@@ -4015,21 +4015,22 @@ end
 	i=math.floor(table.getn(Table)/2)
 	upLim,loLim=table.getn(Table),1
 	previousi=1
-	if key then ToInsert={value=ToInsert,key=key}
-	
-			while true do
-			if Value > Table[i] and Table[i+1] and Value > Table[i+1] then
-			previousi=i
-			i=i+ math.floor((upLim-loLim)/2)
-			loLim=previousi
-			elseif Value < Table[i] and Table[i-1] and Value <  Table[i-1] then
-			previousi=i
-			i=i- math.floor((upLim-loLim)/2)
-			uplim=previousi
-			else  then
-			table.insert(Table,ToInsert,i)
-			return Table,i
-			end
+		if key then ToInsert={value=ToInsert,key=key}
+		
+				while true do
+					if Value > Table[i] and Table[i+1] and Value > Table[i+1] then
+					previousi=i
+					i=i+ math.floor((upLim-loLim)/2)
+					loLim=previousi
+					elseif Value < Table[i] and Table[i-1] and Value <  Table[i-1] then
+					previousi=i
+					i=i- math.floor((upLim-loLim)/2)
+					uplim=previousi
+					else  
+					table.insert(Table,ToInsert,i)
+					return Table,i
+					end
+				end
 		end
 	end
 	
@@ -4062,30 +4063,43 @@ end
 	end
 	
 	ClosedTable={}
-	AllreadyVisiblePieces[1]= SizeSortedTable[#SizeSortedTable].key
+	AllreadyVisiblePieces[ SizeSortedTable[#SizeSortedTable].key]=PieceIDSizeTable[SizeSortedTable[#SizeSortedTable].key]
 	MovePieceoPieceUnitSpace(AllreadyVisiblePieces[1],0,0,0,0)
 	Show(AllreadyVisiblePieces[1])
 	ClosedTable[AllreadyVisiblePieces[1]]=true
-	SizeSortedTable[#SizeSortedTable]=nil
+	local StartPiece=AllreadyVisiblePieces[1]
 	
 	--we now have Table of Pieces Sorted by size and height in the  building
 	-- we itterate over the lower table - and pick by size 
 	
 		for i=1,#HeightSortedTable, 1 do	
-		
-		
-		--get Element Bigger in Table 
-		Move(HeightSortedTable[i].value,0,x_axis,speed)
-		Move(HeightSortedTable[i].value,0,z_axis,speed)
-		WaitForMove(HeightSortedTable[i].value,z_axis)
-		WaitForMove(HeightSortedTable[i].value,x_axis)
-		Move(HeightSortedTable[i].value,0,y_axis,speed)
-		WaitForMove(HeightSortedTable[i].value,y_axis)
-		--ShowTheBiggest
-		
+			if HeightSortedTable[i].value ~= StartPiece then
+			--find a StartPiece
+			local mySize=PieceIDSizeTable[HeightSortedTable[i].value]
+			PieceBiggerThenMe=StartPiece
+				for k,v in pairs(AllreadyVisiblePieces) do
+				if v > mySize then
+				PieceBiggerThenMe=k
+					if math.random(0,2)==1 then break end
+				end
+			end
+			
+			MovePieceToPiece( HeightSortedTable[i].value, PieceBiggerThenMe,0)
+			Show(HeightSortedTable[i].value)
+			--get Element Bigger in Table 
+			Move(HeightSortedTable[i].value,0,x_axis,speed)
+			Move(HeightSortedTable[i].value,0,z_axis,speed)
+			WaitForMove(HeightSortedTable[i].value,z_axis)
+			WaitForMove(HeightSortedTable[i].value,x_axis)
+			Move(HeightSortedTable[i].value,0,y_axis,speed)
+			WaitForMove(HeightSortedTable[i].value,y_axis)
+			AllreadyVisiblePieces[HeightSortedTable[i].value]=PieceIDSizeTable[HeightSortedTable[i].value]
+			--ShowTheBiggest
+			end
+		end
 		-- Move through the showedList, from a randomPoint find a piece that has a fitting size
-		end	
-	end
+end	
+	
 	
 
 	function moveBlockAddPod(x,y,z,nrFreeSpot,nrBlok,bloks,freeSpots,gDirFunc,repeatPatternFonc,dirTable,cg)
