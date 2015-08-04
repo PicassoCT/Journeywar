@@ -36,7 +36,7 @@ local SIG_ATTACK=128
 local leg_movespeed = 12+math.random(-1,1)
 local leg_movedistance = 10
 defID=Spring.GetUnitDefID(unitID)
-PiecesTable=generatePieceTable(unitID)
+PiecesTable=makePieceTable(unitID)
 
 bgdefID=UnitDefNames["bg"].id 
 boolCityTrooper=(defID==UnitDefNames["bg"].id )

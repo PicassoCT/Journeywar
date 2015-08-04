@@ -4,7 +4,7 @@ function gadget:GetInfo()
         return {
                 name = "Wild Horses AI",
                 desc = "Generic Emergent AI using eventstreams",
-                author = "Picasso",
+                author = "Your Moma",
                 date = "around since last tuesday",
                 license = "GPL - by reading this you are basically allready infected. Brainz, brainz - no wait -freedomz, freedomz...",
                 layer = 82,
@@ -19,7 +19,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua"      )
 	VFS.Include("scripts/lib_TableOp.lua"      )
 	VFS.Include("scripts/lib_Build.lua" 	)
-	VFS.Include("Gadgets/jw_EventStreamAIFunctions.lua" 	)
+	VFS.Include("LuaRules/Gadgets/jw_EventStreamAIFunctions.lua" 	)
 
 	
 
@@ -278,10 +278,10 @@ function createStreamEventTask(id, AITable, functionToComply, PersPackage)
 	return GG.Eventstream:CreateEvent(GG.EventStreamID ,functionToComply or temp_O_Rary, PersPackage)
 end
 
-heatMapDimX,heatMapDimZ=math.ceil(Game.mapX/42), math.ceil(Game.mapZ/42)
+heatMapDimX,heatMapDimZ=math.ceil(Game.mapSizeX/36), math.ceil(Game.mapSizeZ/36)
 
 function initHeatMap()
-heatMap= makeTable(heatMapDimX,heatMapDimZ)
+heatMap= makeTable({},heatMapDimX,heatMapDimZ)
 for k,v in pairs (AI) do
 
 end

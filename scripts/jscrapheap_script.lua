@@ -763,7 +763,7 @@ end
 
 
 function script.Create()
---GeneratePiecesTablebyNames(true)
+--makePiecesTablesByNameGroups(true)
 init()
 if boolWeeImATree==false then
 x,y,z=Spring.GetUnitPosition(unitID)

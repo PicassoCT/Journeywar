@@ -585,38 +585,46 @@ x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 return {x=x, y= y, z= z}
 end
 
-function generatePieceMap(unitID)
+function makePieceMap(unitID)
 List=Spring.GetUnitPieceMap(unitID)
 return List or {}
 end
 
 function hideAllPieces(unitID)
-List=generatePieceMap(unitID)
+List=makePieceMap(unitID)
 	for k,v in pairs(List) do
 	Hide(v)
 	end
 
 end
 
-function makeTable(XDimension, yDimension,zDimension)
+function makeTable(default, XDimension, yDimension,zDimension)
 RetTable={}
 
 for x=1, XDimension, 1 do
-RetTable[x]={}
+	if XDimension then
+	RetTable[x]={}
+	else
+	return default
+	end
+	
 	if yDimension then
 		for y=1, yDimension, 1 do
+		if zDimension then
 		RetTable[x][y]={}
+		else
+		RetTable[x][y]=default
+		end	
+		
 			if zDimension then
-			for z=1, zDimension, 1 do
-			RetTable[x][y][z]={}	
-			
-			
-			end
+				for z=1, zDimension, 1 do
+				RetTable[x][y][z]=default
+				end
 			end
 		end
 	end
 end
-
+return RetTable
 end
 
 -->Creates basically a table of piecenamed enumerated strings
@@ -1363,7 +1371,7 @@ end
 
 
 -->generates a Pieces List Keyed to the PieceName
-function generateKeyPiecesTable(unitID,piecefunction)
+function makeKeyPiecesTable(unitID,piecefunction)
 
 returnTable={}
 piecesTable=Spring.GetUnitPieceList(unitID)
@@ -1379,7 +1387,7 @@ return returnTable
 end
 
 
-function generatePieceTable(unitID)
+function makePieceTable(unitID)
 RetT={}
 piecesTable=Spring.GetUnitPieceMap(unitID)
 for k,v in pairs(piecesTable) do
@@ -3170,7 +3178,7 @@ end
 	end
 	
 	--> finds GenericNames and Creates Tables with them
-	function GeneratePiecesTablebyNames(boolMakePiecesTable)
+	function makePiecesTablesByNameGroups(boolMakePiecesTable)
 
 	piecesTable=Spring.GetUnitPieceList(unitID)
 	TableByName={}
@@ -3832,18 +3840,6 @@ end
 			Move(infoT.centerNode,y_axis,GG.MovementOS_Table[unitID].stability*Height,3)
 			Sleep(400)	
 			end
-	end
-
-	--> Initialises and generates a Square-Table 
-	function prepSquareTable(size,defaultVal)
-	Tab={}
-	for i=1,size do
-		Tab[i]={}
-			for j=1,size do
-				Tab[i][j]=defaultVal
-			end
-		end
-	return Tab
 	end
 
 

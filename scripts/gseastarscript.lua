@@ -10,7 +10,7 @@ waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
 end
 center=piece"center"
 fooNction=piece
-piecesTable=generateKeyPiecesTable(unitID,fooNction)
+piecesTable=makeKeyPiecesTable(unitID,fooNction)
 
 function LiftFunction(KneeT,Speed)
 sinFunc= function (val) return math.sin(val) end 

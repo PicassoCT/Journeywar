@@ -26,6 +26,7 @@ end
 damageCounter=0
 damageRadius=55
 damageTreshold=1800
+GrowthRate=0.5
 PieceAtRisk=1
 currentMove=0
 GrowPieces={}
@@ -175,7 +176,7 @@ WaitForMove(BasePiece,y_axis)
 	end
 
 	for i=1,CrystallLength do
-	Move(BasePiece,y_axis,MaxHeight + (PieceHeight*i),0.5)
+	Move(BasePiece,y_axis,MaxHeight + (PieceHeight*i),GrowthRate)
 	WaitForMove(BasePiece,y_axis)
 	currentMove=MaxHeight + (PieceHeight*i)
 	PieceAtRisk=i+1

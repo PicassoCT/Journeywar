@@ -31,7 +31,7 @@ LegLs[i]=piece(LegLs[i])
 end
 
 
-pieces=generateKeyPiecesTable(unitID,piece)
+pieces=makeKeyPiecesTable(unitID,piece)
 pieces["wholeBodyCenter"]=piece("wholeBodyCenter")
 pieces["fireGalate"]=fireGalate
 pieces.pumps=Pumps

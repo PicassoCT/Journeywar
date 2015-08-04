@@ -44,8 +44,10 @@ VFS.Include("scripts/lib_OS.lua"      )
 VFS.Include("scripts/lib_TableOp.lua"      )
 VFS.Include("scripts/lib_Build.lua" 	)
 
-
-   boolFeatureType=deMaRaVal(2)
+--Non Deterministic Randomness
+FeatureTypeTable={"gproceduralfeature","gpillar"}
+FeatureTypeMax=#FeatureTypeTable  	
+boolFeatureType=math.ceil(math.random(1,FeatureTypeMax))
 
 --Mission1-----------------------------------------------------------------------------------------
 
@@ -2242,13 +2244,15 @@ function gadget:GameFrame(frame)
 	gaiateamid=Spring.GetGaiaTeamID()
 	
 		for i=1,#spawnPoints do
-		if boolFeatureType==1 then
-		id=Spring.CreateUnit("gproceduralfeature",spawnPoints[i].x,0,spawnPoints[i].z, 1, gaiateamid)
-		Spring.SetUnitAlwaysVisible(id,true)
-		elseif boolFeatureType==2 then
-		id=Spring.CreateUnit("gpillar",spawnPoints[i].x,0,spawnPoints[i].z, 1, gaiateamid)
-		Spring.SetUnitAlwaysVisible(id,true)
-		end
+			if boolFeatureType==1 then
+			id=Spring.CreateUnit(FeatureTypeTable[boolFeatureType],spawnPoints[i].x,0,spawnPoints[i].z, 1, gaiateamid)
+			Spring.SetUnitAlwaysVisible(id,true)
+			elseif boolFeatureType==2 then
+			id=Spring.CreateUnit(FeatureTypeTable[boolFeatureType],spawnPoints[i].x,0,spawnPoints[i].z, 1, gaiateamid)
+			Spring.SetUnitAlwaysVisible(id,true)
+			else 
+			
+			end 
 		end	
 	end
 	
