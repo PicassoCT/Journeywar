@@ -19,7 +19,7 @@ local weaponDef = {
 	      turret                  =true,
 		  craterMult              = 3.2,	      
 		
-		  soundStart         = "sounds/jbeherith/crunchy.wav",
+		  soundStart         = "sounds/jBeherith/crunchy.ogg",
 		  soundtrigger=1,
 		
 		  --apperance
