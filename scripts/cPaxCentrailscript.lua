@@ -126,7 +126,7 @@ local Animations = {};
 
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_TableOp.lua"
+ include "lib_UnitScript.lua"
  include "lib_Build.lua" 
 
 function HitByWeapon ( x, z, weaponDefID, damage ) 

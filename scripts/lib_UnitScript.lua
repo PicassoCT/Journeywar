@@ -1070,10 +1070,11 @@ end
 -->Get the Ground Normal, uses a handed over function and returns a corresponding Table
 function getGroundMapTable(Resolution, HandedInFunction)
 ReT={}
+local spGetGroundNormal=Spring.GetGroundNormal
 	for x=1, Game.mapSizeX, Resolution do
 	ReT[x]={}
 		for y=1, Game.mapSizeY, Resolution do
-		dx,dy,dz=Spring.GetGroundNormal(x,y)
+		dx,dy,dz=spGetGroundNormal(x,y)
 		ReT[x][y]=Helperfunction(dx,dy,dz)
 		end
 	end
@@ -1143,7 +1144,7 @@ detSum=det1+det2+det3
                 end
 
 end
--->Sanitizing RandomIntervall
+-->Sanitizing RandomIntervall -cause brando has electrolytes
 function brandoVal(LowLimit,UpLimit)
 upLim=UpLimit or LowLimit+1
 if LowLimit >= upLim then LowLimit=upLim-1 end
