@@ -17,7 +17,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 --Includes in order of depending
 	VFS.Include("scripts/lib_OS.lua"      )
-	VFS.Include("scripts/lib_TableOp.lua"      )
+	VFS.Include("scripts/lib_UnitScript.lua"      )
 	VFS.Include("scripts/lib_Build.lua" 	)
 	VFS.Include("LuaRules/Gadgets/jw_EventStreamAIFunctions.lua" 	)
 

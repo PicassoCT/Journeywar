@@ -1,5 +1,5 @@
 	 VFS.Include("scripts/lib_OS.lua"      )
- VFS.Include("scripts/lib_TableOp.lua"      )
+ VFS.Include("scripts/lib_UnitScript.lua"      )
   VFS.Include("scripts/lib_Build.lua" 	)
 
 	
