@@ -520,6 +520,8 @@ WaitForTurn(piecename,z_axis)
 end
 end
 
+
+
 function syncTurn(piecename,x_val,y_val,z_val,speed)
 max=math.max(x_val,math.max(z_val,y_val))
 time=math.abs(max/speed)
@@ -1343,10 +1345,20 @@ intCases[i][2]=false
 intCases[i][3]=false
 end
 -----------------------------------------
+function turnSyncInTimeTable(Table, time)
+if time== 0 then time=1 end
+
+	for piece,v in pairs(Table) do
+	turnInTime(piece, v.axis,math.rad(v.deg), time, false)
+	end
+end
+
+
+
 -->Turns a piece in the speed necessary to arrive after x Milliseconds
-function turn(piecename,axis,degree,timeInMs,boolWait)
+function turnInTime(piecename,axis,degree,timeInMs,boolWait)
 timeInMs=timeInMs/1000
-Speed=Degree/timeInMs
+Speed=math.abs(Degree)/timeInMs
 if degree < 180 or degree < -180 then
 Turn(piecename,axis,math.rad(degree),Speed)
 if boolWait==true then WaitForTurn(piecename,axis) end

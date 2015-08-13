@@ -502,7 +502,7 @@ end
 		aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
 	return true end
 	},
 [3]={
