@@ -143,16 +143,16 @@ end
 
 function dropYourGun()
 	resetPiece(Gun)
-	while true do
-		Show(Gun)
-		PieceDropTillStop(unitID,Gun,9.81, 32, 5, true)
-			
-	Sleep(5000)
-	resetPiece(Gun)
+		while true do
+				Show(Gun)
+				PieceDropTillStop(unitID,Gun,9.81, 32, 5, true)
+					
+			Sleep(5000)
+			resetPiece(Gun)
 
-	end
+		end
 
-	end
+end
 	
 function idle()
 Signal(SIG_IDLE)
