@@ -419,7 +419,7 @@ end
 
 
 function gadget:DrawUnit(unitID)
-  local mat = drawUnitList[unitID]
+  local mat = drawUnitList[unitID] 
   if (mat) then
     return mat.DrawUnit(unitID, mat)
   end
@@ -430,7 +430,7 @@ end
 
 function gadget:DrawFeature(FeatureID)
   local mat = FeatureMaterialList[drawFeatureList[FeatureID]]
-  Spring.Echo("Feature generated")
+  Spring.Echo("GlowMapFeature  generated")
   if (mat) then
   Spring.Echo("Feature generated Material found")
     return mat.DrawFeature(FeatureID, mat)
