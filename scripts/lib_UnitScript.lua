@@ -16,6 +16,13 @@
    MA 02110-1301, USA.
    
 ]]--
+--------------DEBUG HEADER
+lib_boolDebug=false
+
+
+--------------DEBUG HEADER
+
+
 
 	-->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 	-->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
@@ -532,6 +539,78 @@ Turn(piecename,z_axis,math.rad(z_val),(time/z_val)*speed)
 
 end
 
+-->Waits for anyTurnToComplete
+function WaitForTurns(...)
+	if arg == nil  then
+		return 
+	
+	elseif type(arg) == "table" then
+
+			for k,v in pairs(arg) do
+				WaitForTurn(v,x_axis)
+				WaitForTurn(v,y_axis)
+				WaitForTurn(v,z_axis)
+			end
+			return 
+	elseif type(arg) == "number" then
+			WaitForTurn(arg,x_axis)
+			WaitForTurn(arg,y_axis)
+			WaitForTurn(arg,z_axis)
+	end
+end
+
+function absoluteRotation(piece, axis, finalRotation)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(piece)
+x_deg,y_deg,z_deg= math.deg(x_deg)+360,math.deg(y_deg)+360,math.deg(z_deg)+360
+finalRotation=finalRotation+360
+
+if axis==x_axis then
+return math.abs( x_deg -finalRotation)
+elseif axis==y_axis then
+return math.abs( y_deg -finalRotation)
+else
+return math.abs( z_deg -finalRotation)
+end
+end
+
+
+-->Turns a piece in the speed necessary to arrive after x Milliseconds
+function turnInTime(piecename,axis,degree,timeInMs,boolWait)
+
+
+absoluteDeg=absoluteRotation(piecename,axis,degree)
+
+timeInMs=timeInMs/1000
+Speed=math.abs(absoluteDeg)/timeInMs
+	if lib_boolDebug==true then
+	Spring.Echo("Degree:"..degree.." TurnInTime Speed:"..Speed)
+	end
+if degree < 180 or degree < -180 then
+		Turn(piecename,axis,math.rad(degree),Speed)
+		if boolWait and  boolWait==true then WaitForTurn(piecename,axis) end
+
+	else
+	deg=degree%180
+	m=1
+	if degree < 0 then m=-1 end
+		Turn(piecename,axis,math.rad(179*m),Speed)
+			if boolWait and boolWait==true then WaitForTurn(piecename,axis) end
+		Turn(piecename,axis,math.rad(degree),Speed)
+			if boolWait and boolWait==true then WaitForTurn(piecename,axis) end
+	end	
+end
+
+function syncTurnInTime(piecename,x_val,y_val,z_val,time)
+assert(time)
+Spring.Echo("Time for syncTurnInTime:"..time)
+turnInTime(piecename,x_axis, (x_val),time)
+turnInTime(piecename,y_axis, (y_val),time)
+turnInTime(piecename,z_axis, (z_val),time)
+
+end
+
+
+
 function syncMove(piecename,x_val,y_val,z_val,speed)
 max=math.max(math.abs(x_val),math.max(math.abs(z_val),math.abs(y_val)))
 time=math.abs(max/speed)
@@ -651,12 +730,12 @@ Turn(piecename,z_axis,0,speed)
 end
 
 -->Reset a Table of Pieces at speed
-function reseT(tableName,speed, ShowAll)
-
+function reseT(tableName,speed, ShowAll, boolWait)
+lboolWait=boolWait or false
 lspeed=speed or 0
 	
 	for i=1,#tableName do
-	resetPiece(tableName[i],lspeed)
+	resetPiece(tableName[i],lspeed,lboolWait)
 		if ShowAll then
 		Show(tableName[i])
 		end
@@ -1346,32 +1425,14 @@ intCases[i][3]=false
 end
 -----------------------------------------
 function turnSyncInTimeTable(Table, time)
-if time== 0 then time=1 end
-
 	for piece,v in pairs(Table) do
-	turnInTime(piece, v.axis,math.rad(v.deg), time, false)
+	turnInTime(v.piecenr, v.axis,math.rad(v.deg), time, false)
 	end
+
 end
 
 
 
--->Turns a piece in the speed necessary to arrive after x Milliseconds
-function turnInTime(piecename,axis,degree,timeInMs,boolWait)
-timeInMs=timeInMs/1000
-Speed=math.abs(Degree)/timeInMs
-if degree < 180 or degree < -180 then
-Turn(piecename,axis,math.rad(degree),Speed)
-if boolWait==true then WaitForTurn(piecename,axis) end
-	else
-	deg=degree%180
-	m=1
-	if degree < 0 then m=-1 end
-	Turn(piecename,axis,math.rad(179*m),Speed)
-	if boolWait==true then WaitForTurn(piecename,axis) end
-	Turn(piecename,axis,math.rad(degree),Speed)
-	if boolWait==true then WaitForTurn(piecename,axis) end
-	end
-end
 -->Packs Values into Pairs
 function getPairs(values)
     xyPairs = {}
@@ -1411,6 +1472,7 @@ end
 
 -->generates a Pieces List 
 function generatepiecesTableAndArrayCode(unitID)
+Spring.Echo("")
 Spring.Echo("--PIECESLIST::BEGIN  |>----------------------------")
 Spring.Echo("--PIECES")
 Spring.Echo("piecesTable={}")
@@ -1420,7 +1482,7 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 	if piecesTable ~= nil then
 		for i=1,#piecesTable,1 do
 		workingString=piecesTable[i]
-		Spring.Echo("piecesTable[#piecesTable+1]= piece(\""..piecesTable[i].."\")")
+		Spring.Echo("piecesTable[#piecesTable+1]= piece(\""..piecesTable[i].."\");"..piecesTable[i].."= piece("..piecesTable[i].."\")")
 
 		end
 
@@ -2529,7 +2591,7 @@ end
 
 function normTwo(...)
 sum=0
-for k,v in pairs(args) do
+for k,v in pairs(arg) do
 sum=sum+ v*v
 end
 return math.sqrt(sum)
@@ -3305,12 +3367,9 @@ end
 			
 
 				
-				if gh - y >  5    then
-				Spring.Echo("X>"..vec.x .. "  Y> ".. vec.y .. " Z>" .. vec.z) 
-				Spring.Echo("VX>"..vec.vx .. "  VY> ".. vec.vy .. " VZ>" .. vec.vz) 
-				Spring.Echo("DX>"..dx .. "  DY> ".. dy .. " DZ>" .. dz) 
-				
-					
+				if gh - y >  5   then
+
+		
 				bump=bump+1
 				force=math.sqrt(force)
 				--not realistic but a start we take the ground normal as new vector 

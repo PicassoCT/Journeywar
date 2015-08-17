@@ -982,7 +982,7 @@ function TerraInFormTable()
 							--Spring.Echo("JWL_orgTerrainMapUndefied at x",cceil(x/8).." and  z: ",cceil(z/8))
 							end
 							
-							if orgTerrainMap[cceil(x/8)][cceil(z/8)]~= nil then 
+							if  orgTerrainMap[cceil(x/8)] and  orgTerrainMap[cceil(x/8)][cceil(z/8)]  then 
 							spSetHeightMap( x, z, orgTerrainMap[cceil(x/8)][cceil(z/8)] + wOffset)
 							boolPulledOff=true
 							end
@@ -1009,7 +1009,7 @@ function TerraInFormTable()
 		end
 		
 
-			   if f%UPDATE_FREQUNECY == 0 or boolForceUpdateFlag==true then
+			   if f%UPDATE_FREQUNECY == 0 or boolForceUpdateFlag==true or boolOneAndOnly==true then
 			   boolForceUpdateFlag=false
 			   --update the MapExtremas
 			   updateMaxima()

@@ -1,10 +1,113 @@
+
+ center=piece"center"
+
+
  include "suddenDeath.lua"
  include "lib_OS.lua"
  include "lib_UnitScript.lua"
  include "lib_Build.lua" 
 
- center=piece"center"
- piecesTable=makeKeyPiecesTable(unitID,piece)
+ KpiecesTable=makeKeyPiecesTable(unitID,piece)
+ piecesTable={}
+ piecesTable[#piecesTable+1]= piece("center")
+ piecesTable[#piecesTable+1]= piece("Body")
+ -- piecesTable[#piecesTable+1]= piece("GunRoot")
+ -- piecesTable[#piecesTable+1]= piece("GunRail")
+ -- piecesTable[#piecesTable+1]= piece("GunSled")
+ -- piecesTable[#piecesTable+1]= piece("TwinCannon")
+ piecesTable[#piecesTable+1]= piece("Leg11")
+ piecesTable[#piecesTable+1]= piece("Leg12")
+ piecesTable[#piecesTable+1]= piece("Leg13")
+ piecesTable[#piecesTable+1]= piece("Leg21")
+ piecesTable[#piecesTable+1]= piece("Leg22")
+ piecesTable[#piecesTable+1]= piece("Leg23")
+ piecesTable[#piecesTable+1]= piece("Leg41")
+ piecesTable[#piecesTable+1]= piece("Leg42")
+ piecesTable[#piecesTable+1]= piece("Leg31")
+ piecesTable[#piecesTable+1]= piece("Leg32")
+  piecesTable[#piecesTable+1]= piece("Leg51")
+ piecesTable[#piecesTable+1]= piece("Leg52")
+ piecesTable[#piecesTable+1]= piece("Leg53")
+  piecesTable[#piecesTable+1]= piece("Leg61")
+ piecesTable[#piecesTable+1]= piece("Leg62")
+ piecesTable[#piecesTable+1]= piece("Leg63")
+ piecesTable[#piecesTable+1]= piece("Head")
+ piecesTable[#piecesTable+1]= piece("LightOff")
+ piecesTable[#piecesTable+1]= piece("LightOn")
+
+ 
+ Plate={}
+ Plate[#Plate+1]= piece("Plate2")
+ Plate[#Plate+1]= piece("Plate3")
+ Plate[#Plate+1]= piece("Plate4")
+ Plate[#Plate+1]= piece("Plate5")
+ Plate[#Plate+1]= piece("Plate6")
+ Plate[#Plate+1]= piece("Plate7")
+ Plate[#Plate+1]= piece("Plate8")
+ Plate[#Plate+1]= piece("Plate9")
+ Plate[#Plate+1]= piece("Plate10")
+ Plate[#Plate+1]= piece("Plate11")
+ Plate[#Plate+1]= piece("Plate12")
+ Plate[#Plate+1]= piece("Plate13")
+ Plate[#Plate+1]= piece("Plate14")
+ Plate[#Plate+1]= piece("Plate1")
+ Plate[#Plate+1]= piece("Plate2")
+ Plate[#Plate+1]= piece("Plate3")
+ Plate[#Plate+1]= piece("Plate4")
+ Plate[#Plate+1]= piece("Plate5")
+ Plate[#Plate+1]= piece("Plate6")
+ Plate[#Plate+1]= piece("Plate7")
+ Plate[#Plate+1]= piece("Leg61")
+ Plate[#Plate+1]= piece("Leg62")
+ Plate[#Plate+1]= piece("Leg63")
+ Plate[#Plate+1]= piece("Plate8")
+ Plate[#Plate+1]= piece("Plate9")
+ Plate[#Plate+1]= piece("Plate10")
+ Plate[#Plate+1]= piece("Plate11")
+ Plate[#Plate+1]= piece("Plate12")
+ Plate[#Plate+1]= piece("Plate13")
+ Plate[#Plate+1]= piece("Plate14")
+ 
+center= piece("center")
+Body= piece("Body")
+GunRoot= piece("GunRoot")
+GunRail= piece("GunRail")
+GunSled=piece("GunSled")
+TwinCannon= piece("TwinCannon")
+Leg11 = piece("Leg11")
+Leg12 = piece("Leg12")
+Leg13 = piece("Leg13")
+Leg21 = piece("Leg21")
+
+ Leg22=piece("Leg22")
+ Leg23=piece("Leg23")
+ Leg41=piece("Leg41")
+ Leg42=piece("Leg42")
+ Leg31=piece("Leg31")
+ Leg32=piece("Leg32")
+ Head=piece("Head")
+ LightOff =piece("LightOff")
+ LightOn=piece("LightOn")
+ Leg51=piece("Leg51")
+ Leg52=piece("Leg52")
+ Leg53=piece("Leg53")
+ Plate1=piece("Plate1")
+ Plate2=piece("Plate2")
+ Plate3=piece("Plate3")
+ Plate4=piece("Plate4")
+ Plate5=piece("Plate5")
+ Plate6=piece("Plate6")
+ Plate7=piece("Plate7")
+ Leg61=piece("Leg61")
+ Leg62=piece("Leg62")
+ Leg63=piece("Leg63")
+ Plate8=piece("Plate8")
+ Plate9=piece("Plate9")
+ Plate10=piece("Plate10")
+ Plate11=piece("Plate11")
+ Plate12=piece("Plate12")
+ Plate13=piece("Plate13")
+ Plate14=piece("Plate14")
  RELOAD_TIME=5500
 
  function script.HitByWeapon ( x, z, weaponDefID, damage ) 
@@ -13,57 +116,64 @@
  return damage
 end
 
-gunTable={piecesTable["GunRoot"],piecesTable["GunRail"],piecesTable["GunSled"],piecesTable["TwinCannon"]}
+gunTable={KpiecesTable["GunRoot"],KpiecesTable["GunRail"],KpiecesTable["GunSled"],KpiecesTable["TwinCannon"]}
+
+
 center=piece"center"
-boolStopped=false
+boolMoving=false
 boolDeployWanted=false
 
 function deployedDetector()
 	while true do
 	--if deploy wanted and stop deploy
-		if boolDeployWanted ==true and boolStopped==true then
-			DeployAnimation()
+		if boolDeployWanted ==true and boolMoving==false and  boolDeployed ~=true then
+			DeployAnimation(12000)
 		end
 
-		if boolDeployWanted == false or boolStopped==false then
-			UnDeployAnimation()
-		-- if button pressed or moved undeploy
+		if ( boolDeployWanted == false or boolMoving==true) and boolDeployed ==true then
+			UnDeployAnimation(6000)
+		-- if button pressed or moved  and allready deployed undeploy
 		end
 	
 		Sleep(500)
 	end
 end
 
+
+
 function MoveAnimation()
 	while true do
-		if boolDeployWanted==true and boolStopped ==true  or boolDeployed==true then
-			walkAnim()
+		if 	( boolMoving ==true  ) and boolDeployed==false then
+			while (boolMoving ==true ) and boolDeployed==false  do
+				walkAnim()
+				Sleep(300)
+			end
 		
-		elseif math.random(0,1)==1 then
-			idleAnim()
-		else
-			reseT(piecesTable)
-		end 
+		elseif (boolDeployWanted==true and boolMoving==false) or  boolDeployed == true then
+		
+		while (boolDeployWanted==true and boolMoving==false) or  boolDeployed == true  do 
+		Sleep(100)
+		end
+		
+			
+		elseif 	( boolTurning ==true  ) and boolDeployed==false then
+			while (boolTurning ==true ) and boolDeployed==false  do
+				turnAnim()
+				Sleep(300)
+			end
 	
+		elseif boolMoving ==false then
+			if math.random(0,4) < 3  then
+				idleAnim()
+			else
+				reseT(piecesTable,5.25,true)
+			end 
+		end
 		Sleep(100)
 	end
 
 end
 
-
-function DeployAnimation (time)
-syncTurnInTime(Leg61,-48,-84,108,time)
-syncTurnInTime(Leg62,35,90,42,time)
-syncTurnInTime(Leg63,-63,30,-8,time)
-
-syncTurnInTime(Leg51,-55,111,-46,time)
-syncTurnInTime(Leg52,26,-880,89,time)
-syncTurnInTime(Leg53,56,19,-121,time)
-Sleep(time)
-unfoldPlate()
-
-boolDeployed=true			
-end
 
 function unfoldPlate()
 even=0
@@ -71,10 +181,10 @@ uneven=0
 	for i=1,7 do
 		if i%2 ==0 then
 		even= even+12
-		Turn(Plate[i],z_axis,math.rad(even),9)
+		Turn(Plate[i],z_axis,math.rad(even),0.25)
 		else
 		uneven= uneven-12
-		Turn(Plate[i],z_axis,math.rad(uneven),9)
+		Turn(Plate[i],z_axis,math.rad(uneven),0.25)
 		end
 	end
 even=0
@@ -83,42 +193,107 @@ uneven=0
 		for i=7,15 do
 		if i%2 ==0 then
 		even= even+12
-		Turn(Plate[i],z_axis,math.rad(even),9)
+		Turn(Plate[i],z_axis,math.rad(even),0.25)
 		else
 		uneven= uneven-12
-		Turn(Plate[i],z_axis,math.rad(uneven),9)
+		Turn(Plate[i],z_axis,math.rad(uneven),0.25)
 		end
 	end
+WaitForTurn(Plate14,z_axis)
+end
 
+function UnDeployAnimation(time)
+	for i=1,#Plate do
+	Turn(Plate[i],z_axis,math.rad(0),0.25)
+	Turn(Plate[i],x_axis,math.rad(0),0.25)
+
+	end
+WaitForTurn(Plate14,z_axis)
+WaitForTurn(Plate14,x_axis)
+WaitForTurn(Plate7,z_axis)
+WaitForTurn(Plate7,x_axis)
+
+syncTurnInTime(Leg61,-65,0, 0,3000)
+syncTurnInTime(Leg51,-65,0,0,3000)
+WaitForTurns(Leg61,Leg51)
+
+syncTurnInTime(Leg61,0,0,0,time)
+syncTurnInTime(Leg51,0,0,0,time)
+WaitForTurns(Leg61,Leg51)
+
+syncTurnInTime(Leg62,0,0,0,time)
+syncTurnInTime(Leg52,0,0,0,time)
+syncTurnInTime(Leg63, 0,0, 0	,time)
+syncTurnInTime(Leg53, 0,0, 0	,time)
+WaitForTurns(Leg62,Leg52,Leg63,Leg53)
+
+
+ 
+foldWeapon(1.5) 
+
+ boolDeployed=false
 end
-function UnDeployAnimation()
-for i=1,15 do
-Turn(Plate[i],z_axis,math.rad(0),9)
+
+
+function DeployAnimation (time)
+equiTurn(Leg11,Leg12,x_axis,-55,1)
+equiTurn(Leg21,Leg22,x_axis,-53,1)
+
+equiTurn(Leg41,Leg42,x_axis, 15,1)
+equiTurn(Leg31,Leg32,x_axis, 15,1)
+
+syncTurnInTime(Leg61,-65,-89, 0,time)
+syncTurnInTime(Leg51,-65,89,0,time)
+WaitForTurns(Leg61,Leg51)
+syncTurnInTime(Leg62,89,0,0,time)
+syncTurnInTime(Leg52,89,0,0,time)
+syncTurnInTime(Leg63, 65,0, -89	,time)
+syncTurnInTime(Leg53, 65,0, 89	,time)
+WaitForTurns(Leg62,Leg52,Leg63,Leg53)
+unfoldPlate()
+unfoldWeapon(0.15)
+Sleep(time)
+
+boolDeployed=true			
 end
-WaitForTurn(Plate[15],z_axis)
-boolDeployed=false
+
+function 	foldWeapon(speed) 		
+
+Turn(GunRoot,x_axis,math.rad(-12),speed)
+WaitForTurn(GunRoot,y_axis)
+Turn(GunRail,y_axis,math.rad(0),speed)
+WaitForTurn(GunRail,y_axis) 
+Turn(TwinCannon,x_axis,math.rad(0),speed)
+WaitForTurn(TwinCannon,x_axis) 
+Move(GunSled,z_axis,0,speed*5)
+WaitForMove(GunSled,z_axis)
+Turn(TwinCannon,x_axis,math.rad(-44),speed)
+WaitForTurn(TwinCannon,x_axis) 
+
 end
 
 function 	unfoldWeapon()
-	Turn(TwinCannon,x_axis,math.rad(0),12)
+	Turn(TwinCannon,x_axis,math.rad(0),1)
 	WaitForTurn(TwinCannon,x_axis) 
 	Move(GunSled,z_axis, 0,12)
-	Turn(GunRoot,y_axis,math.rad(0),12)
-	WaitForTun(GunRoot,y_axis)
-	Turn(GunRail,y_axis,math.rad(0),12)
+	Turn(GunRoot,y_axis,math.rad(0),1)
+	Turn(GunRoot,x_axis,math.rad(0),1)
+	WaitForTurn(GunRoot,y_axis)
+	WaitForTurn(GunRoot,x_axis)
+	Turn(GunRail,y_axis,math.rad(0),1)
 	WaitForTurn(GunRail,y_axis) 
-	reseT(gunTable,7,true)
+	
 
  end
  function fireAnimation() 
-	 Turn(TwinCannon,x_axis,math.rad(-42),60)
+	 Turn(TwinCannon,x_axis,math.rad(-42),1)
 	 for i=1,20,4 do
-	  Move(GunSled,z_axis,-1*i,180/i)
+	  Move(GunSled,z_axis,i,1600/i)
 	  WaitForMove(GunSled,z_axis)
 	 end
-	 Turn(TwinCannon,x_axis,math.rad(-42),30) 
-	for i=21,40,4 do
-	  Move(GunSled,z_axis,-1*i,180/i)
+	 Turn(TwinCannon,x_axis,math.rad(-82),1) 
+	for i=21,60,4 do
+	  Move(GunSled,z_axis,i,1600/i)
 	  WaitForMove(GunSled,z_axis)
 	 end
 
@@ -131,102 +306,412 @@ function 	unfoldWeapon()
 	resetPiece(GunSled,12)
  end 
 
-function 	foldAnim() 		
-reseT(gunTable,7,true)
-Turn(GunRoot,y_axis,math.rad(-12),12)
-WaitForTun(GunRoot,y_axis)
-Turn(GunRail,y_axis,math.rad(180),12)
-WaitForTurn(GunRail,y_axis) 
-Move(GunSled,z_axis,-40,12)
-Turn(TwinCannon,x_axis,math.rad(44),12)
-WaitForTurn(TwinCannon,x_axis) 
+function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3,offset,time,signum)
 
+
+
+pushTime=math.ceil(time*0.75)
+time=time*0.25
+speed=2
+
+syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time)
+syncTurnInTime(fwLeg2,0+math.random(-offset,offset),0,0,time)
+
+syncTurnInTime(opBLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time)
+syncTurnInTime(opBLeg2,0+math.random(-offset,offset),0,0,time)
+syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,time)
+Turn(Head,x_axis,math.rad(-2),5)
+
+
+--Shear
+val=math.random(10,20)
+			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 0),speed)
+	
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)	
+			Turn(fShear3,y_axis,math.rad(2*val*signum*-1) ,speed)
+		
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
+--pushback
+syncTurnInTime(fwLeg1,8+(-1*centerTurnX)+math.random(-offset,offset),65*signum,-5,pushTime)
+syncTurnInTime(fwLeg2,-2+math.random(-offset,offset),0,0,pushTime)
+
+syncTurnInTime(opBLeg1,-57+(-1*centerTurnX)+math.random(-offset,offset),0,0,pushTime)
+syncTurnInTime(opBLeg2,77+math.random(-offset,offset),0,0,pushTime)
+syncTurnInTime(opBLeg3,-19+math.random(-offset,offset),0,0,pushTime)
+--Shear
+val=math.random(30,60)
+			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 10),speed)
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+boolPushDone=true
 end
 
-function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
+function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum) 
 
+quadTime=math.ceil(time*0.35)
+halfTime=math.ceil(time*0.65)
+--MidPos
+syncTurnInTime(fwLeg1,-54+(-1*centerTurnX),0,0,quadTime)
+syncTurnInTime(fwLeg2,41,0,0,quadTime)
 
+syncTurnInTime(opBLeg1,31+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,-12+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg3,-42+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(Head,1,0,0,quadTime)
+--Shear
+val=math.random(20,70)
+speed= (val/halfTime)*1000
+			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 25),speed)
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
 
-end
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+--SetDown
+syncTurnInTime(fwLeg1,15+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(fwLeg2,-38+math.random(-offset,offset),0,0,halfTime)
 
-function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
-syncTurnInTime(Leg61,-48,-84,108,time)
+syncTurnInTime(opBLeg1,29+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(opBLeg2,-33+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(opBLeg3,-25+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(Head,-1,0,0,halfTime)
 
+--Shear
+val=math.random(2,7)
+speed= (val/halfTime)*1000
+			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 15),speed)
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
+boolMoveDone=true
 
 end
 
 
 
 centerTurnX=0
-function 	walkAnim() 	
-forwardTurn=(math.abs(centerTurnX) + math.random(3,10))/2
-Turn(Body,x_axis,math.rad(forwardTurn),11)
-centerTurnX=forwardTurn
-MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
-pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
+boolMoveDone=false
+boolPushDone=false
+function 	walkAnim() 
+boolMoveDone=false
+boolPushDone=false	
+time=8000
 
-Turn(Body,x_axis,math.rad(forwardTurn*-1),11)
-centerTurnX=forwardTurn*-1
-MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
-pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
+centerTurnX= math.random(1,2)
+Turn(Body,x_axis,math.rad(centerTurnX),0.25)
+Turn(Body,z_axis,math.rad(2),0.25)
+
+StartThread(MoveLegToFront,Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63 ,5,time,-1)
+StartThread(pushForth,     Leg31,Leg32, Leg21,Leg22,Leg23, Leg51,Leg52,Leg53,5,time,1)
+WaitForTurn(Body,x_axis)
+while boolMoveDone==false or boolPushDone==false do 
+Sleep(100) end
+boolMoveDone=false
+boolPushDone=false	
+
+
+	
+Turn(Body,x_axis,math.rad(centerTurnX*-1),0.25)
+Turn(Body,z_axis,math.rad(-2),0.25)
+centerTurnX=centerTurnX*-1
+
+StartThread(MoveLegToFront,Leg31,Leg32, Leg21,Leg22,Leg23  ,Leg51,Leg52,Leg53,5,time,1)
+StartThread(pushForth,     Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,time,-1)
+WaitForTurn(Body,x_axis)
+while boolMoveDone==false or boolPushDone==false do Sleep(100) end
+boolMoveDone=false
+boolPushDone=false	
+
 
 end
 
 
 cos=0
+boolFlipFlop=0
 function 	idleAnim () 
 	cos=cos+0.01
-	time=800+math.abs(math.cos(cos)*1000)
+	time=5000--+math.abs(math.cos(cos)*1000)
+	mod=0.05115*7
+	movemod=12
 	
-	Move(center,y_axis,-5,7)
-	WaitForMove(center,y_axis)
-	val=math.random(15,32)
-	speed=(val/time)*1000
-	offSet=math.random(-1,1)
-	equiTurn(Leg11,Leg12,x_axis,val+offset,speed)
-	offSet=math.random(-1,1)               
-	equiTurn(Leg21,Leg22,x_axis,val+offset,speed)
-	offSet=math.random(-1,1)               
-	equiTurn(Leg31,Leg32,x_axis,val+offset,speed)
-	offSet=math.random(-1,1)               
-	equiTurn(Leg41,Leg42,x_axis,val+offset,speed)
+	Move(center,y_axis,-2.25,movemod)
 	
-	val=math.random(20,33)
-	speed=(val/time)*1000
-	equiTurn(Leg51,Leg52,y_axis,val+offset,speed)
-	equiTurn(Leg61,Leg62,y_axis,-1*val+offset,speed)	
-	val=math.random(20,33)
-	equiTurn(Leg51,Leg52,x_axis,val+offset,speed)
-	equiTurn(Leg61,Leg62,x_axis,val+offset,speed)
-	Sleep(time)
+	val=math.random(12,22)*-1
+	speed=(math.abs(val)/time)*1000*mod
+
+	equiTurn(Leg11,Leg12,x_axis,val ,speed)
+        
+	equiTurn(Leg21,Leg22,x_axis,val ,speed)
+	    
+	equiTurn(Leg31,Leg32,x_axis,val*-0.5 ,speed)  
+	equiTurn(Leg41,Leg42,x_axis,val*-0.5 ,speed)
+	
+	
+	val=math.random(20,33)*-1
+		if math.random(0,1)==1 then 
+			val=math.random(10,55)*-1 
+			Turn(Leg53,y_axis,math.rad(2*val) ,speed)
+			Turn(Leg63,y_axis,math.rad(-2*val) ,speed)
+			end
+	speed=(math.abs(val)/time)*1000*mod
+	equiTurn(Leg51,Leg52,y_axis,val*-1 ,speed)
+	equiTurn(Leg61,Leg62,y_axis,val ,speed)	
+	boolFlipFlop= (boolFlipFlop%6+1)	
+	if boolFlipFlop > 3 then
+		val=math.random(10,55)*-1
+		equiTurn(Leg51,Leg52,x_axis,val ,speed)	
+		equiTurn(Leg61,Leg62,x_axis,0 ,speed)	
+	else
+		val=math.random(10,55)*-1
+		equiTurn(Leg61,Leg62,x_axis,val ,speed)	
+		equiTurn(Leg51,Leg52,x_axis,0 ,speed)	
+	
+	end
+
+	Turn(Leg53,y_axis,math.rad(2*val) ,speed)
+	Turn(Leg63,y_axis,math.rad(-2*val) ,speed)
+
+		if boolMoving==true or boolTurning ==true then return end
 	WaitForMove(center,y_axis)
-	reseT(piecesTable,speed)
-	Move(center,y_axis,0,7)
+		if boolMoving==true or boolTurning ==true then return end
+
+	
+	
+	equiTurn(Leg11,Leg12,x_axis,0 ,speed)
+        
+	equiTurn(Leg21,Leg22,x_axis,0 ,speed)
+	    
+	equiTurn(Leg31,Leg32,x_axis,0 ,speed)  
+	equiTurn(Leg41,Leg42,x_axis,0 ,speed)
+	
+
+	Move(center,y_axis,0,movemod)
+		if boolMoving==true or boolTurning ==true then return end
 	WaitForMove(center,y_axis)
+		if boolMoving==true or boolTurning ==true then return end
 end 
 
 function script.Create()
- generatepiecesTableAndArrayCode(unitID)
-StartThread(deployedDetector)
-StartThread(MoveAnimation)
+	 --generatepiecesTableAndArrayCode(unitID)
+	StartThread(foldWeapon,0)
+
+	StartThread(blinkLight)
+--	StartThread(idleTest)
+	
+
+	StartThread(deployedDetector)
+	StartThread(headingChangeDetector)
+	StartThread(MoveAnimation)
 end
 
 function script.Killed(recentDamage,_)
 
-suddenDeathV(recentDamage)
-return 1
+	suddenDeathV(recentDamage)
+	return 1
 end
 
 
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
-	return center 
+	return TwinCannon 
+end
+
+function turn_BackWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
+
+quadTime=math.ceil(time*0.35)
+halfTime=math.ceil(time*0.65)
+--MidPos
+syncTurnInTime(fwLeg1,-51+(-1*centerTurnX),0,0,quadTime)
+syncTurnInTime(fwLeg2,12,0,0,quadTime)
+
+syncTurnInTime(opBLeg1,-21 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,22+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg3,-41+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(Head,1,0,0,quadTime)
+--Shear
+val=math.random(20,70)
+speed= (val/halfTime)*1000
+			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 25),speed)
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
+--SetDown
+syncTurnInTime(fwLeg1,-5+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(fwLeg2,50+math.random(-offset,offset),0,0,halfTime)
+
+syncTurnInTime(opBLeg1,-62+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(opBLeg2,22+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(opBLeg3,-21+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(Head,-1,0,0,halfTime)
+
+--Shear
+val=math.random(2,7)
+speed= (val/halfTime)*1000
+			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 15),speed)
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
+
+			
+			
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+--Push Backwards
+syncTurnInTime(fwLeg1,25+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(fwLeg2,-44+math.random(-offset,offset),0,0,halfTime)
+
+syncTurnInTime(opBLeg1,-90+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(opBLeg2,-24+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(opBLeg3,85+math.random(-offset,offset),0,0,halfTime)
+syncTurnInTime(Head,1,0,0,halfTime)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
+bool_TurnBackwardDone=true
+end
+
+function turn_ForWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
+
+quadTime=math.ceil(time*0.25)
+halfTime=math.ceil(time*0.55)
+--MidPos
+syncTurnInTime(fwLeg1,12+(-1*centerTurnX),0,0,quadTime)
+syncTurnInTime(fwLeg2,-36,0,0,quadTime)
+
+syncTurnInTime(opBLeg1,0 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,-28+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,quadTime)
+
+--Shear
+val=math.random(20,70)
+speed= (val/quadTime)*1000
+		
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			equiTurn(fShear1,fShear2,x_axis,-25+(-1*centerTurnX) ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
+--SetDown
+syncTurnInTime(fwLeg1,42 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(fwLeg2,19 +math.random(-offset,offset),0,0,quadTime)
+
+syncTurnInTime(opBLeg1,-38+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,15+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(Head,-1,0,0,quadTime)
+
+
+			
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+--Push Backwards
+syncTurnInTime(fwLeg1,60+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(fwLeg2,20+math.random(-offset,offset),0,0,quadTime)
+
+syncTurnInTime(opBLeg1,-79+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,230+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
+--Shear
+val=math.random(2,7)
+speed= (val/quadTime)*1000
+			
+			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
+			equiTurn(fShear1,fShear2,x_axis,5 ,speed)
+			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
+
+			
+--Push Backwards
+syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(fwLeg2,-5+math.random(-offset,offset),0,0,quadTime)
+
+syncTurnInTime(opBLeg1,-32+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,-6+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg3,-90+math.random(-offset,offset),0,0,quadTime)
+
+WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+bool_TurnForwardDone=true
+
+end
+
+bool_TurnForwardDone=false
+bool_TurnBackwardDone=false
+function turnAnim()
+
+bool_TurnForwardDone=false
+bool_TurnBackwardDone=false
+
+time=8000
+
+centerTurnX= math.random(1,2)
+Turn(Body,x_axis,math.rad(centerTurnX),0.25)
+Turn(Body,z_axis,math.rad(2),0.25)
+
+StartThread(turn_BackWards,Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63 ,5,time,-1)
+StartThread(turn_ForWards,     Leg31,Leg32, Leg21,Leg22,Leg23, Leg51,Leg52,Leg53,5,time,1)
+WaitForTurn(Body,x_axis)
+	while bool_TurnForwardDone==false or bool_TurnBackwardDone==false do 
+		Sleep(100) 
+	end
+bool_TurnForwardDone=false
+bool_TurnBackwardDone=false	
+
+
+	
+Turn(Body,x_axis,math.rad(centerTurnX*-1),0.25)
+Turn(Body,z_axis,math.rad(-2),0.25)
+centerTurnX=centerTurnX*-1
+
+StartThread(turn_BackWards,Leg31,Leg32, Leg21,Leg22,Leg23  ,Leg51,Leg52,Leg53,5,time,1)
+StartThread(turn_ForWards,     Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,time,-1)
+WaitForTurn(Body,x_axis)
+	while bool_TurnForwardDone==false or bool_TurnBackwardDone==false do 
+		Sleep(100) 
+	end
+bool_TurnForwardDone=false
+bool_TurnBackwardDone=false	
+
+end
+
+boolTurnLeft=false
+boolTurning=false
+function headingChangeDetector()
+
+headingOfOld=Spring.GetUnitHeading(unitID)
+oldx,_,oldz=Spring.GetUnitPosition(unitID)
+	while true do
+		Sleep(500)
+		newX,_,newZ=Spring.GetUnitPosition(unitID)
+		if math.abs(oldx -newX) > 3 or math.abs(oldz -newZ) > 3 then
+			boolMoving=true
+		else
+			boolMoving=false
+		end
+		oldx,oldz=newX,newZ
+		
+		tempHead=Spring.GetUnitHeading(unitID)
+			if tempHead~=headingOfOld then
+				boolTurning=true 
+			else 
+				boolTurning=false 
+			end  
+		boolTurnLeft = headingOfOld > tempHead	
+		
+		headingOfOld=tempHead
+
+	end
+
 end
 
 
-
 function script.QueryWeapon1() 
-	return center
+	return TwinCannon
 end
 boolDeployed=false
 boolReloaded=true
@@ -236,18 +721,40 @@ function script.AimWeapon1( Heading ,pitch)
 Signal(SIG_AIM)
 SetSignalMask(SIG_AIM)
 	--aiming animation: instantly turn the gun towards the enemy
-	unfoldWeapon()
-	Turn(GunSled,y_axis,-Heading,3.151)
-	WaitForTun(Cannon,y_axis)
-	return (boolDeployed and boolReloaded)
+	if boolDeployed ==true and boolReloaded == true then
+	
+		Turn(GunRail,y_axis,-Heading+math.rad(90),1)
+		WaitForTurn(GunRail,y_axis)
+		return (boolDeployed and boolReloaded)
+	else
+		return false 
+	end
+end
+function blinkLight()
 
+time=0
+	while true do
+
+	episode= math.abs(math.cos(time/10000))*1000
+	Show(LightOff)
+	Hide(LightOn)
+	Sleep(episode+150)
+	time=time+episode
+	
+	episode= math.abs(math.sin(time/10000))*1000
+	Hide(LightOff)
+	Show(LightOn)
+
+	Sleep(episode+150)
+	time=time+episode
+	end
 end
 
 function Reload(Time)
 	if boolDeployed==true then
 		reloadAnim()
 	else 
-		foldAnim()
+		foldWeapon(1)
 	end
 	
 Sleep(Time)
@@ -264,19 +771,12 @@ end
 
 
 function script.StartMoving()
-boolStopped=false
+
 end
 
-local SIG_STOP = 4
-function StopAndGo()
-Signal(SIG_STOP)
-SetSignalMask(SIG_STOP)
-Sleep(500)
-boolStopped=true
-end
 
 function script.StopMoving()
-	StartThread(StopAndGo)	
+
 end
 
 
@@ -305,59 +805,3 @@ end
 function script.QueryNanoPiece()
      return center
 end
-
-
-local Animations = {};
-
-    local map = Spring.GetUnitPieceMap(unitID)
-    local offsets = constructSkeleton(unitID,center, {0,0,0})
-	
-	
-	
-function PlayAnimation(animname)
-
-	if not Animations[animname] then Spring.Echo(animname) end
-
-    local anim = Animations[animname];
-	assert(anim, animname)
-    for i = 1, #anim do
-        local commands = anim[i].commands;
-        for j = 1,#commands do
-            local cmd = commands[j];
-            animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
-        end
-        if(i < #anim) then
-            local t = anim[i+1]['time'] - anim[i]['time'];
-            Sleep(t*33); -- sleep works on milliseconds
-        end
-    end
-end
-
-function constructSkeleton(unit, piece, offset)
-    if (offset == nil) then
-        offset = {0,0,0};
-    end
-
-    local bones = {};
-    local info = Spring.GetUnitPieceInfo(unit,piece);
-
-    for i=1,3 do
-        info.offset[i] = offset[i]+info.offset[i];
-    end 
-
-    bones[piece] = info.offset;
-    local map = Spring.GetUnitPieceMap(unit);
-    local children = info.children;
-
-    if (children) then
-        for i, childName in pairs(children) do
-            local childId = map[childName];
-            local childBones = constructSkeleton(unit, childId, info.offset);
-            for cid, cinfo in pairs(childBones) do
-                bones[cid] = cinfo;
-            end
-        end
-    end        
-    return bones;
-end
-

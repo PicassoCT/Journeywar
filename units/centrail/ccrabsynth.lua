@@ -3,7 +3,7 @@ local unitName = "ccrabsynth"
 local unitDef = {
 name = "Crab Synth",
 Description = "Combined Crab Synth",
-objectName = "placeholder.s3o",
+objectName = "ccrabsynth.s3o",
 script = "cCrabSynthScript.lua",
 buildPic = "cbg.png",
 moveState =3,
@@ -20,15 +20,15 @@ ActivateWhenBuilt=0,
 --Movement
 mass=120,
 upright=true,
-Acceleration = 8,
-BrakeRate = 2,
+Acceleration = 0.15,
+BrakeRate = 0.8,
 FootprintX = 1,
 FootprintZ = 1,
 MaxSlope = 62,
-MaxVelocity = 	1.4,
+MaxVelocity = 	0.42,
 MaxWaterDepth = 120,
 MovementClass = "Default2x2",
-TurnRate = 850,
+TurnRate = 50,
 nanocolor=[[0.7 0 0.1]],
 sightDistance = 550,
 
@@ -41,7 +41,7 @@ CanStop = true,
 LeaveTracks = false, 
 strafeToAttack=false,
 shownanoframe=0,
-
+turnInPlace =true,
  
 	explodeAs = [[NOWEAPON]],
 	selfDestructAs= [[NOWEAPON]], 
@@ -60,11 +60,8 @@ shownanoframe=0,
 Category = [[LAND]],
 
 weapons = {
-[1]={name  = "AR2",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
-	
+[1]={name  = "celetrochain",
+	onlyTargetCategory = [[ LAND ]],	
 	},
 },
 
