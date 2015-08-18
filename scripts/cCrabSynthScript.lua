@@ -522,8 +522,8 @@ end
 
 function turn_BackWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
 
-quadTime=math.ceil(time*0.35)
-halfTime=math.ceil(time*0.65)
+quadTime=math.ceil(time*1)
+halfTime=math.ceil(time*1.65)
 --MidPos
 syncTurnInTime(fwLeg1,-51+(-1*centerTurnX),0,0,quadTime)
 syncTurnInTime(fwLeg2,12,0,0,quadTime)
@@ -659,10 +659,10 @@ WaitForTurn(Body,x_axis)
 	while bool_TurnForwardDone==false or bool_TurnBackwardDone==false do 
 		Sleep(100) 
 	end
+
+
 bool_TurnForwardDone=false
-bool_TurnBackwardDone=false	
-
-
+bool_TurnBackwardDone=false
 	
 Turn(Body,x_axis,math.rad(centerTurnX*-1),0.25)
 Turn(Body,z_axis,math.rad(-2),0.25)
@@ -674,8 +674,7 @@ WaitForTurn(Body,x_axis)
 	while bool_TurnForwardDone==false or bool_TurnBackwardDone==false do 
 		Sleep(100) 
 	end
-bool_TurnForwardDone=false
-bool_TurnBackwardDone=false	
+
 
 end
 

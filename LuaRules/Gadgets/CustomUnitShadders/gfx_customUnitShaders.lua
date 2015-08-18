@@ -419,7 +419,7 @@ end
 
 
 function gadget:DrawUnit(unitID)
-  local mat = drawUnitList[unitID]
+  local mat = drawUnitList[unitID] 
   if (mat) then
     return mat.DrawUnit(unitID, mat)
   end
@@ -430,7 +430,9 @@ end
 
 function gadget:DrawFeature(FeatureID)
   local mat = FeatureMaterialList[drawFeatureList[FeatureID]]
+  Spring.Echo("GlowMapFeature  generated")
   if (mat) then
+  Spring.Echo("Feature generated Material found")
     return mat.DrawFeature(FeatureID, mat)
   end
 end
@@ -449,13 +451,16 @@ end
 	--[FeatureID]=DefID
 	drawFeatureList={}
 	FeatureMaterialList={}
-	
-  function FeatureCreated	(FeatureID,allyTeam)
-  drawFeatureList[FeatureID]=Spring.GetFeatureDefID(FeatureID)
-  
+	HueShiftTable={[FeatureDefNames["test_glowplantfeature"].id]=128}
+
+  function FeatureCreated	(_,FeatureID,allyTeam)
+  defID=Spring.GetFeatureDefID(FeatureID)
+	if HueShiftTable[defID] then
+		drawFeatureList[FeatureID]
+	end
   end
   
-  function  FeatureDestroyed(FeatureID,allyTeam)
+  function  FeatureDestroyed(_,FeatureID,allyTeam)
   drawFeatureList[FeatureID]=nil
   end
 
@@ -483,7 +488,6 @@ Shutdown.func = function()
 end
 
 --HueShiftInfo for Features
-    HueShiftTable={[FeatureDefNames["test_glowplantfeature"].id]=128}
 
 
 function gadget:Initialize()

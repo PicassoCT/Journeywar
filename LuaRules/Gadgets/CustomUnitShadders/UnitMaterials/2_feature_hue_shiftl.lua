@@ -39,6 +39,8 @@ local materials = {
 			[3] = '$specular',
 			[4] = '$reflection',
 		},
+		DrawFeature=DrawFeature,
+		FeatureCreated=FeatureCreated
 	},
 }
 
