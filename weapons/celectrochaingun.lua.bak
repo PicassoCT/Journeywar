@@ -36,6 +36,8 @@ turret=true,
 avoidFeature=true,
 avoidFriendly=true,
 
+--explosionGenerator=	"custom:330rlexplode",	
+--commandfire=true,
 
 ----DAMAGE
 damage={

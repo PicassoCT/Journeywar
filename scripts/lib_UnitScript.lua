@@ -559,20 +559,20 @@ function WaitForTurns(...)
 	end
 end
 
-function absoluteRotation(piece, axis, finalRotation)
-x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(piece)
-x_deg,y_deg,z_deg= math.deg(x_deg)+360,math.deg(y_deg)+360,math.deg(z_deg)+360
-finalRotation=finalRotation+360
+function absoluteRotation(piecename, axis, finalRotation)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(piecename)
+x_deg,y_deg,z_deg= math.deg(x_deg),math.deg(y_deg),math.deg(z_deg)
+finalRotation=finalRotation
 
 
 
 
 if axis==x_axis then
-return math.abs( x_deg -finalRotation)%360
+return math.abs( x_deg -finalRotation)%180
 elseif axis==y_axis then
-return math.abs( y_deg -finalRotation)%360
+return math.abs( y_deg -finalRotation)%180
 else
-return math.abs( z_deg -finalRotation)%360
+return math.abs( z_deg -finalRotation)%180
 end
 end
 
@@ -584,7 +584,7 @@ function turnInTime(piecename,axis,degree,timeInMs,boolWait)
 absoluteDeg=absoluteRotation(piecename,axis,degree)
 
 timeInMs=timeInMs/1000
-Speed=math.abs(absoluteDeg)/timeInMs
+Speed=math.abs(absoluteDeg)/timeInMs --9.3
 
 	if lib_boolDebug==true then
 	Spring.Echo(" TurnInTime Speed:"..Speed.." to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in time "..timeInMs.. " seconds"	)
@@ -595,35 +595,34 @@ Speed=math.abs(absoluteDeg)/timeInMs
 		if boolWait and  boolWait==true then WaitForTurn(piecename,axis) end
 
 	else
-		deg=degree%180
-		m=1
-		if degree < 0 then m=-1 end
-		
-	
+	StartThread(OverTurnDirection,piecename,axis,degree,Speed)
+		if boolWait and  boolWait==true then Sleep(10); WaitForTurn(piecename,axis) end
 	end	
 end
+
 -->Turns along a direction, ignoring the spring shortest way implementation
-function OverTurnDirection(piecename,axis,deg, degree,speed)
-x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(piece)
+function OverTurnDirection(piecename,axis, degree,speed)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(piecename)
 
 curdeg=0; if axis==x_axis then curdeg=x_deg elseif axis== y_axis then curdeg=y_deg else curdeg= z_deg end
 curdeg=math.rad(curdeg)
 
 dir =1
 
-if curdeg+360 < deg+360 then dir =-1 end
+if curdeg+360 < degree+360 then dir =-1 end
 
 	Turn(piecename,axis,math.rad(curdeg +179*dir),speed)
 			WaitForTurn(piecename,axis) 
 		Turn(piecename,axis,math.rad(degree),Speed)
-			if boolWait and boolWait==true then WaitForTurn(piecename,axis) end
+			WaitForTurn(piecename,axis) 
 
 
 end
+
 function syncTurnInTime(piecename,x_val,y_val,z_val,time)
 assert(time)
 Spring.Echo("Time for syncTurnInTime:"..time)
-turnInTime(piecename,x_axis, (x_val),time)
+turnInTime(piecename,x_axis, (x_val),time) -- -28   3000
 turnInTime(piecename,y_axis, (y_val),time)
 turnInTime(piecename,z_axis, (z_val),time)
 

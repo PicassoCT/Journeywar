@@ -64,63 +64,63 @@ Category = [[LAND]],
 weapons = {
 [1]={name  = "cexplochaingun",
 	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 
 [2]={name  = "ccitadelltur",
 	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 
 [3]={name  = "cexplochaingun",
 	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 
 [4]={name  = "ccitadelltur",
 	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 
-[5]={name  = "razordroneproj",
+[5]={name  = "crazorgrenade",
 	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
-[6]={name  = "razordroneproj",
+[6]={name  = "crazorgrenade",
 	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 [7]={name  = "citadelldrone",
 	onlyTargetCategory = [[ LAND]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 
 [8]={name  = "cbonkerfire",
 	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 [9]={name  = "cbonkerfire",
 	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
-[10]={name  = "crazorgrenade",
+[10]={name  = "cexpgun",
 	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
-[11]={name  = "crazorgrenade",
+[11]={name  = "cexpgun",
 	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
+	mainDir=[[0 0 1]], 
+	maxAngleDif        = 120, 
 	},
 
 	

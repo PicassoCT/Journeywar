@@ -38,7 +38,7 @@ EnergyStorage = 200,
 	MakesMetal = 5, 
 	MetalMake = 5,	
 
-	collisionVolumeScales		= [[48 1024 48]],
+	collisionVolumeScales	= [[48 1024 48]],
 	collisionVolumeOffsets	= [[0 -8 3]],
 	collisionVolumeTest	    = 1,
 	collisionVolumeType	    = [[CylY]],

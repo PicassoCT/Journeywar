@@ -58,6 +58,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local jgluegunDefID= WeaponDefNames["jgluegun"].id
 	local glueMineWeaponDefID= WeaponDefNames["gluemineweapon"].id
 	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
+	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
+	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
 	
 	local FireWeapons={ [gVolcanoWeaponID]=true,
 						[glavaWeaponID]=true, 	
@@ -66,6 +68,8 @@ if (gadgetHandler:IsSyncedCode()) then
 						[cFlareGun]=true
 						}
 						
+	Script.SetWatchWeapon(cchainlightning , true)
+	Script.SetWatchWeapon(celetrochainWeaponDefID , true)
 	Script.SetWatchWeapon(crazorgrenadeDefID , true)
 	Script.SetWatchWeapon(jvaryjumpDefID , true)
 	Script.SetWatchWeapon(striderWeaponDefID , true)
@@ -120,68 +124,98 @@ T=grabEveryone(x,y,range)
 GG.ShockWaves=OtherWaves
 end
 
-	
+	ChainLightningTable={}
 	
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
-				
+		
+			
+		--we got to spawn some chain lightning
+		if weaponID == celetrochainWeaponDefID then
+		teamid=Spring.GetUnitTeam(AttackerID)
+		T=Spring.GetUnitsInCylinder(px,pz,150)
+		ChainLightningTable[AttackerID]= 30
+		
+			if T then
+		
+				for i=1, #T do
+					pid= Spring.SpawnProjectile( ChainLightningDefID ,{
+					pos = { x=px, y=py,  z=pz},  
+					speed = {0,0,0},
+					spread = {5,5,5},
+					error = {number x, number y, number z},
+					owner = AttackerID,
+					team = teamid,
+					ttl = 42,
+					gravity = 130,
+					tracking = 1,
+					maxRange = 1220,
+					startAlpha = 0.01,
+					endAlpha = 0.01,
+					model = "emptyObjectIsEmpty.s3o",
+					cegTag = "cchainlightning"})
+					
+					Spring.SetProjectileTarget(pid, T[i] ,"u")
+			   	end
+			end
+		
+		end
 		
 		if weaponID == jgluegunDefID then
-		Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
+			Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
 		end
 	
 	
 		if weaponID ==crazorgrenadeDefID then
-		Spring.CreateUnit("crazordrone",px,py,pz,1,gaiaTeamID)			
+			Spring.CreateUnit("crazordrone",px,py,pz,1,gaiaTeamID)			
 		end
 			
 		if weaponID == jvaryjumpDefID then
-		Spring.SetUnitPosition(AttackerID,px,py+80,pz)
-		Spring.MoveCtrl.Enable(AttackerID,true)
-		Spring.SetUnitAlwaysVisible(AttackerID,true)
-		Spring.SetUnitBlocking (AttackerID,true,true,true)
+			Spring.SetUnitPosition(AttackerID,px,py+80,pz)
+			Spring.MoveCtrl.Enable(AttackerID,true)
+			Spring.SetUnitAlwaysVisible(AttackerID,true)
+			Spring.SetUnitBlocking (AttackerID,true,true,true)
 		end
 		
 		if weaponID== jvaryfoospearDefID then
-		--gluteus maximus- ha that sounds funny
-			if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
-		--wait a second thats my ass
-		GG.ProjectileOrigin[AttackerID]={boolHitGround=true}
-		Spring.SetUnitPosition(AttackerID,px,py,pz)	
+			--gluteus maximus- ha that sounds funny
+				if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
+			--wait a second thats my ass
+			GG.ProjectileOrigin[AttackerID]={boolHitGround=true}
+			Spring.SetUnitPosition(AttackerID,px,py,pz)	
 		end
 	
 			
 			
-			if weaponID== striderWeaponDefID then
+		if weaponID== striderWeaponDefID then
 			teamid=Spring.GetUnitTeam(AttackerID)
 			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
-		
-			end
+		end
 			
 			
 			--MTW Grenade
-			if weaponID== cmtwgrenade then
+		if weaponID== cmtwgrenade then
 			if Spring.GetUnitIsDead(AttackerID)==false then
-			teamid=Spring.GetUnitTeam(AttackerID)
-			Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
+				teamid=Spring.GetUnitTeam(AttackerID)
+				Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
 			else
-			Spring.CreateUnit("cmtwgrenade",px,py,pz,1,gaiaTeamID)	
+				Spring.CreateUnit("cmtwgrenade",px,py,pz,1,gaiaTeamID)	
 			end
-			end
+		end
 			
-			if weaponID== cUniverseGun then
+		if weaponID== cUniverseGun then
 			tid=Spring.CreateUnit("cawilduniverseappears",px,py,pz, 1, gaiaTeamID)
 			Spring.SetUnitAlwaysVisible(tid,true)
-			end
+		end
 		
 				--jMotherofMercy
-				if weaponID == weaponDefIDjmotherofmercy then
+		if weaponID == weaponDefIDjmotherofmercy then
 			
-											  env = Spring.UnitScript.GetScriptEnv(AttackerID)
-											  if env then
-											  Spring.UnitScript.CallAsUnit(AttackerID, env.ripARock, px,py,pz )		
-											  end
+			env = Spring.UnitScript.GetScriptEnv(AttackerID)
+			if env then
+				Spring.UnitScript.CallAsUnit(AttackerID, env.ripARock, px,py,pz )		
+			end
 			
-			    end
+		end
 		
 			if (weaponID == jghostDancerWeaponDefID or weaponID== jSwiftSpearID or weaponID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
 			Spring.SetUnitPosition(AttackerID,px,py,pz)
@@ -189,14 +223,14 @@ end
 			
 			--this one creates the headcrabs
 			if (weaponID == crabWeaponDefID) then
-			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
+				ShockWaveRippleOutwards(px,pz, 150, 180, 90)
 			  Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID)  
 			end
 			  
 			  if weaponID== weapondefID3 then
-			  Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
-			  grenadeID=Spring.CreateUnit("ccomendernuke",px,py,pz,0,gaiaTeamID)
-			  Spring.SetUnitNoSelect(grenadeID,true)
+				Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
+				grenadeID=Spring.CreateUnit("ccomendernuke",px,py,pz,0,gaiaTeamID)
+				Spring.SetUnitNoSelect(grenadeID,true)
 			  end
 			
 		return true
@@ -207,10 +241,10 @@ local 	affectedUnits={}
 	--2 	counter
 	--3 	speed
 	function switchUnits(aID,bID)
-	ax,ay,az=Spring.GetUnitPosition(aID)
-	bx,by,bz=Spring.GetUnitPosition(bID)
-	Spring.SetUnitPosition(aID,bx,bz)
-	Spring.SetUnitPosition(bID,ax,az)
+		ax,ay,az=Spring.GetUnitPosition(aID)
+		bx,by,bz=Spring.GetUnitPosition(bID)
+		Spring.SetUnitPosition(aID,bx,bz)
+		Spring.SetUnitPosition(bID,ax,az)
 	end
 
 	blowUpTable={}
@@ -222,9 +256,9 @@ local 	affectedUnits={}
 
 		hitPoints=Spring.GetUnitHealth(unitID)
 			if damage/hitPoints > 0.3 then 
-			x,y,z=Spring.GetUnitPosition(unitID)
-			Spring.DestroyUnit(unitID)
-			Spring.CreateUnit("jtree",x,y,z,1,attackerTeam)
+				x,y,z=Spring.GetUnitPosition(unitID)
+				Spring.DestroyUnit(unitID)
+				Spring.CreateUnit("jtree",x,y,z,1,attackerTeam)
 			end
 		end
 		
@@ -308,13 +342,58 @@ local 	affectedUnits={}
 		end
 		end
 	
-		
+function distanceOfUnitTo(ud,x,y,z)
+	if not ud then return math.huge end
+
+ux,uy,uz=Spring.GetUnitPosition(ud)
+ux,uy,uz=ux-x,uy-y,uz-z
+return math.sqrt(ux^2+uy^2 +uz^2)
+end
 	
 	
 	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	
+	--chain Lightning 
+	if weaponID == ChainLightningDefID and ChainLightningTable[attackerID] > 0 then
+		ChainLightningTable[attackerID]=ChainLightningTable[attackerID]-1
+		x,y,z=Spring.GetUnitPosition(unitID)
+		ed,ad=Spring.GetUnitNearestEnemy(unitID),Spring.GetUnitNearestAlly(unitID)
 		
+		distEnemy=distanceOfUnitTo(ed,x,y,z)
+		distAlly=distanceOfUnitTo(ad,x,y,z)
+		
+		targetID=0
+		if distEnemy > distAlly then 
+			targetID=ad 
+		else 
+			targetID=ed 
+		end
+		
+		Spring.SpawnProjectile( ChainLightningDefID ,{
+					pos = { x=px, y=py,  z=pz},  
+					speed = {0,0,0},
+					spread = {5,5,5},
+					error = {number x, number y, number z},
+					owner = AttackerID,
+					team = teamid,
+					ttl = 42,
+					gravity = 130,
+					tracking = 1,
+					maxRange = 1220,
+					startAlpha = 0.01,
+					endAlpha = 0.01,
+					model = "emptyObjectIsEmpty.s3o",
+					cegTag = "cchainlightning"})
+					
+					Spring.SetProjectileTarget(pid, targetID ,"u")
+		
+	elseif ChainLightningTable[attackerID] <= 0 then 
+		ChainLightningTable[attackerID] = nil
+	end
+
+	
 	if WeaponDefTable[weaponDefID]	then
-	WeaponDefTable[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+		WeaponDefTable[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
 	end
 	
 	--cBonkerPlasmaWeapon + FireWeapons
@@ -354,13 +433,13 @@ local 	affectedUnits={}
 		
 		--unit attacked a jshadow lets store it for this foolishness
 		if attackerID and Spring.ValidUnitID(attackerID)==true then
-		tax=(#affectedUnits)+1
-		affectedUnits[tax]={}
-		affectedUnits[tax][1]=attackerID
-		affectedUnits[tax][2]=100
-		affectedUnits[tax][3]=Spring.GetUnitVelocity(attackerID)  
-		--now we displace it and set its speed to zero
-		Spring.SetUnitSensorRadius(attackerID,"los",5)
+			tax=(#affectedUnits)+1
+			affectedUnits[tax]={}
+			affectedUnits[tax][1]=attackerID
+			affectedUnits[tax][2]=100
+			affectedUnits[tax][3]=Spring.GetUnitVelocity(attackerID)  
+			--now we displace it and set its speed to zero
+			Spring.SetUnitSensorRadius(attackerID,"los",5)
 		end
 
 		local lswitchUnits=switchUnits
@@ -390,7 +469,7 @@ local 	affectedUnits={}
 		for i=1,#ShockW do
 			if i-5 < 0 and ShockW[i] then
 				for k,v in pairs(ShockW[i]) do
-				impulseAfterDelay(v.id, v.impulse.x,v.impulse.y,v.impulse.z)
+					impulseAfterDelay(v.id, v.impulse.x,v.impulse.y,v.impulse.z)
 				end
 				ShockW[i]=nil
 			else
@@ -463,44 +542,44 @@ local 	affectedUnits={}
 	local TableOfAllreadySearchedComender={}
 	function GetWeaponDirection(attackerID)
 		if TableOfAllreadySearchedComender[attackerID] then
-		return 	Spring.GetUnitPieceDirection (attackerID,TableOfAllreadySearchedComender[attackerID])
+			return 	Spring.GetUnitPieceDirection (attackerID,TableOfAllreadySearchedComender[attackerID])
 		else
-		PieceMap=Spring.GetUnitPieceList(attackerID)
-		TableOfAllreadySearchedComender[attackerID]=PieceMap["sniper"]
-		return getWeaponDirection(attackerID)
+			PieceMap=Spring.GetUnitPieceList(attackerID)
+			TableOfAllreadySearchedComender[attackerID]=PieceMap["sniper"]
+			return getWeaponDirection(attackerID)
 		end
 	end
 	
 	function blowItUp(unit,piece,vectordamage)
-	stillAlive= Spring.ValidUnitID(unit)
-	if stillAlive and stillAlive == true then
-	--explosion
-	ux,uy,uz=Spring.GetUnitPosition(unit,true)
-	_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unit,piece)
-	Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
-	Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
-	--directionalShove
-	v={}
-	r={}
-	v.x,v.y,v.z=x-ux,y-uy,z-uz
-	v=Vnorm(v)
-	v=vMul(v, 900) --power
-	
-	-- crossproduct = (vectordamage x v  ) -> Transfer to local coordsystem hitpiece origin vector 
-	r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
-	Spring.SetUnitRotation(unit,r.x,r.y,r.z)
-	Spring.AddUnitImpulse(unit,v.x,v.y,v.z) 
-	T=grabEveryone(unit,ux,uz,120)
-	--SplashDamage
-	foreach(
-		T, 
-		function (id) if math.random(0,1)==1 then Spring.AddUnitDamage(id,75) end end) 
-	Spring.AddUnitDamage(unit,10)
-	
-	else
-	return false
-	end
-	return true 
+		stillAlive= Spring.ValidUnitID(unit)
+		if stillAlive and stillAlive == true then
+			--explosion
+			ux,uy,uz=Spring.GetUnitPosition(unit,true)
+			_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unit,piece)
+			Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
+			Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
+			--directionalShove
+			v={}
+			r={}
+			v.x,v.y,v.z=x-ux,y-uy,z-uz
+			v=Vnorm(v)
+			v=vMul(v, 900) --power
+			
+			-- crossproduct = (vectordamage x v  ) -> Transfer to local coordsystem hitpiece origin vector 
+			r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
+			Spring.SetUnitRotation(unit,r.x,r.y,r.z)
+			Spring.AddUnitImpulse(unit,v.x,v.y,v.z) 
+			T=grabEveryone(unit,ux,uz,120)
+			--SplashDamage
+			foreach(
+				T, 
+				function (id) if math.random(0,1)==1 then Spring.AddUnitDamage(id,75) end end) 
+			Spring.AddUnitDamage(unit,10)
+			
+		else
+			return false
+		end
+			return true 
 	end
 	
 	

@@ -37,6 +37,7 @@
 
  
  Plate={}
+  Plate[#Plate+1]= piece("Plate1")
  Plate[#Plate+1]= piece("Plate2")
  Plate[#Plate+1]= piece("Plate3")
  Plate[#Plate+1]= piece("Plate4")
@@ -50,23 +51,7 @@
  Plate[#Plate+1]= piece("Plate12")
  Plate[#Plate+1]= piece("Plate13")
  Plate[#Plate+1]= piece("Plate14")
- Plate[#Plate+1]= piece("Plate1")
- Plate[#Plate+1]= piece("Plate2")
- Plate[#Plate+1]= piece("Plate3")
- Plate[#Plate+1]= piece("Plate4")
- Plate[#Plate+1]= piece("Plate5")
- Plate[#Plate+1]= piece("Plate6")
- Plate[#Plate+1]= piece("Plate7")
- Plate[#Plate+1]= piece("Leg61")
- Plate[#Plate+1]= piece("Leg62")
- Plate[#Plate+1]= piece("Leg63")
- Plate[#Plate+1]= piece("Plate8")
- Plate[#Plate+1]= piece("Plate9")
- Plate[#Plate+1]= piece("Plate10")
- Plate[#Plate+1]= piece("Plate11")
- Plate[#Plate+1]= piece("Plate12")
- Plate[#Plate+1]= piece("Plate13")
- Plate[#Plate+1]= piece("Plate14")
+
  
 center= piece("center")
 Body= piece("Body")
@@ -111,7 +96,7 @@ Leg21 = piece("Leg21")
  RELOAD_TIME=5500
 
  function script.HitByWeapon ( x, z, weaponDefID, damage ) 
- if boolDeployed==true then return math.floor(math.sqrt(damage))end
+ if boolDeployed==true then return math.floor((damage/2))end
 
  return damage
 end
@@ -140,7 +125,6 @@ function deployedDetector()
 end
 
 
-
 function MoveAnimation()
 	while true do
 		if 	( boolMoving ==true  ) and boolDeployed==false then
@@ -162,11 +146,12 @@ function MoveAnimation()
 				Sleep(300)
 			end
 	
-		elseif boolMoving ==false then
+		elseif boolMoving ==false and boolDeployed== false then
 			if math.random(0,4) < 3  then
+				foldWeapon(0)
 				idleAnim()
 			else
-				reseT(piecesTable,5.25,true)
+				reseT(piecesTable,1.25,true)
 			end 
 		end
 		Sleep(100)
@@ -178,7 +163,7 @@ end
 function unfoldPlate()
 even=0
 uneven=0
-	for i=1,7 do
+	for i=1,7,1 do
 		if i%2 ==0 then
 		even= even+12
 		Turn(Plate[i],z_axis,math.rad(even),0.25)
@@ -190,10 +175,11 @@ uneven=0
 even=0
 uneven=0	
 	
-		for i=7,15 do
+		for i=8,15,1 do
 		if i%2 ==0 then
 		even= even+12
 		Turn(Plate[i],z_axis,math.rad(even),0.25)
+		
 		else
 		uneven= uneven-12
 		Turn(Plate[i],z_axis,math.rad(uneven),0.25)
@@ -230,7 +216,7 @@ WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 
  
 foldWeapon(1.5) 
-
+ SetUnitValue(COB.MAX_SPEED,maxspeed)
  boolDeployed=false
 end
 
@@ -253,16 +239,18 @@ WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 unfoldPlate()
 unfoldWeapon(0.15)
 Sleep(time)
-
+SetUnitValue(COB.MAX_SPEED,1)
 boolDeployed=true			
 end
 
 function 	foldWeapon(speed) 		
-
+Signal(SIG_AIM)
 Turn(GunRoot,x_axis,math.rad(-12),speed)
 WaitForTurn(GunRoot,y_axis)
+Signal(SIG_AIM)
 Turn(GunRail,y_axis,math.rad(0),speed)
 WaitForTurn(GunRail,y_axis) 
+Signal(SIG_AIM)
 Turn(TwinCannon,x_axis,math.rad(0),speed)
 WaitForTurn(TwinCannon,x_axis) 
 Move(GunSled,z_axis,0,speed*5)
@@ -286,12 +274,12 @@ function 	unfoldWeapon()
 
  end
  function fireAnimation() 
-	 Turn(TwinCannon,x_axis,math.rad(-42),1)
+	 Turn(TwinCannon,x_axis,math.rad(42),1)
 	 for i=1,20,4 do
 	  Move(GunSled,z_axis,i,1600/i)
 	  WaitForMove(GunSled,z_axis)
 	 end
-	 Turn(TwinCannon,x_axis,math.rad(-82),1) 
+	 Turn(TwinCannon,x_axis,math.rad(82),1) 
 	for i=21,60,4 do
 	  Move(GunSled,z_axis,i,1600/i)
 	  WaitForMove(GunSled,z_axis)
@@ -329,7 +317,7 @@ val=math.random(10,20)
 	
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)	
 			Turn(fShear3,y_axis,math.rad(2*val*signum*-1) ,speed)
-		
+Sleep(time)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --pushback
@@ -344,7 +332,7 @@ val=math.random(30,60)
 			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 10),speed)
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
-
+Sleep(pushTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 boolPushDone=true
 end
@@ -367,7 +355,7 @@ speed= (val/halfTime)*1000
 			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 25),speed)
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
-
+Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 --SetDown
 syncTurnInTime(fwLeg1,15+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
@@ -384,7 +372,7 @@ speed= (val/halfTime)*1000
 			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 15),speed)
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
-
+Sleep(halfTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 boolMoveDone=true
@@ -434,14 +422,14 @@ cos=0
 boolFlipFlop=0
 function 	idleAnim () 
 	cos=cos+0.01
-	time=5000--+math.abs(math.cos(cos)*1000)
-	mod=0.05115*7
-	movemod=12
+	time=12000--+math.abs(math.cos(cos)*1000)
+	mod=0.05115 
+	movemod=2
 	
 	Move(center,y_axis,-2.25,movemod)
 	
 	val=math.random(12,22)*-1
-	speed=(math.abs(val)/time)*1000*mod
+	speed=(math.abs(val)/(time/1000))*mod
 
 	equiTurn(Leg11,Leg12,x_axis,val ,speed)
         
@@ -457,7 +445,7 @@ function 	idleAnim ()
 			Turn(Leg53,y_axis,math.rad(2*val) ,speed)
 			Turn(Leg63,y_axis,math.rad(-2*val) ,speed)
 			end
-	speed=(math.abs(val)/time)*1000*mod
+	speed=(math.abs(val)/(time/1000))*mod
 	equiTurn(Leg51,Leg52,y_axis,val*-1 ,speed)
 	equiTurn(Leg61,Leg62,y_axis,val ,speed)	
 	boolFlipFlop= (boolFlipFlop%6+1)	
@@ -477,6 +465,7 @@ function 	idleAnim ()
 
 		if boolMoving==true or boolTurning ==true then return end
 	WaitForMove(center,y_axis)
+	WaitForTurns(Leg41,Leg42,Leg31,Leg32,Leg53,Leg63,Leg51,Leg52,Leg61,Leg62)
 		if boolMoving==true or boolTurning ==true then return end
 
 	
@@ -487,15 +476,18 @@ function 	idleAnim ()
 	    
 	equiTurn(Leg31,Leg32,x_axis,0 ,speed)  
 	equiTurn(Leg41,Leg42,x_axis,0 ,speed)
-	
+
 
 	Move(center,y_axis,0,movemod)
 		if boolMoving==true or boolTurning ==true then return end
 	WaitForMove(center,y_axis)
+	WaitForTurns(Leg41,Leg42,Leg31,Leg32,Leg53,Leg63,Leg51,Leg52,Leg61,Leg62)
 		if boolMoving==true or boolTurning ==true then return end
 end 
 
 function script.Create()
+	reseT(piecesTable,0)
+	reseT(Plate,0)
 	 --generatepiecesTableAndArrayCode(unitID)
 	StartThread(foldWeapon,0)
 
@@ -521,9 +513,10 @@ function script.AimFromWeapon1()
 end
 
 function turn_BackWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
+mod=0.075115
+quadTime=math.ceil(time*0.2)
+halfTime=math.ceil(time*0.4)
 
-quadTime=math.ceil(time*1)
-halfTime=math.ceil(time*1.65)
 --MidPos
 syncTurnInTime(fwLeg1,-51+(-1*centerTurnX),0,0,quadTime)
 syncTurnInTime(fwLeg2,12,0,0,quadTime)
@@ -534,11 +527,11 @@ syncTurnInTime(opBLeg3,-41+math.random(-offset,offset),0,0,quadTime)
 syncTurnInTime(Head,1,0,0,quadTime)
 --Shear
 val=math.random(20,70)
-speed= (val/halfTime)*1000
+speed= (val/(halfTime/1000))*mod
 			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 25),speed)
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
-
+Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --SetDown
@@ -552,14 +545,15 @@ syncTurnInTime(Head,-1,0,0,halfTime)
 
 --Shear
 val=math.random(2,7)
-speed= (val/halfTime)*1000
+speed= (val/(halfTime/1000))*mod
 			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 15),speed)
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
 
 			
-			
+	Sleep(quadTime)		
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
+
 --Push Backwards
 syncTurnInTime(fwLeg1,25+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
 syncTurnInTime(fwLeg2,-44+math.random(-offset,offset),0,0,halfTime)
@@ -568,14 +562,14 @@ syncTurnInTime(opBLeg1,-90+(-1*centerTurnX)+math.random(-offset,offset),0,0,half
 syncTurnInTime(opBLeg2,-24+math.random(-offset,offset),0,0,halfTime)
 syncTurnInTime(opBLeg3,85+math.random(-offset,offset),0,0,halfTime)
 syncTurnInTime(Head,1,0,0,halfTime)
-
+Sleep(halfTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 bool_TurnBackwardDone=true
 end
 
 function turn_ForWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
-
+mod=0.15115
 quadTime=math.ceil(time*0.25)
 halfTime=math.ceil(time*0.55)
 --MidPos
@@ -588,12 +582,12 @@ syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,quadTime)
 
 --Shear
 val=math.random(20,70)
-speed= (val/quadTime)*1000
+speed= (val/(quadTime/1000))*mod
 		
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			equiTurn(fShear1,fShear2,x_axis,-25+(-1*centerTurnX) ,speed)
 			Turn(fShear3,y_axis,math.rad(val*signum*-1) ,speed)
-
+Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --SetDown
@@ -606,21 +600,21 @@ syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime)
 syncTurnInTime(Head,-1,0,0,quadTime)
 
 
-			
+Sleep(quadTime)		
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 --Push Backwards
 syncTurnInTime(fwLeg1,60+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
 syncTurnInTime(fwLeg2,20+math.random(-offset,offset),0,0,quadTime)
 
 syncTurnInTime(opBLeg1,-79+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,230+math.random(-offset,offset),0,0,quadTime)
+syncTurnInTime(opBLeg2,70+math.random(-offset,offset),0,0,quadTime)
 syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime)
-
+Sleep(quadTime)	
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --Shear
 val=math.random(2,7)
-speed= (val/quadTime)*1000
+speed= (val/(quadTime/1000))*mod
 			
 			equiTurn(fShear1,fShear2,y_axis,val*signum ,speed)
 			equiTurn(fShear1,fShear2,x_axis,5 ,speed)
@@ -633,8 +627,8 @@ syncTurnInTime(fwLeg2,-5+math.random(-offset,offset),0,0,quadTime)
 
 syncTurnInTime(opBLeg1,-32+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
 syncTurnInTime(opBLeg2,-6+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,-90+math.random(-offset,offset),0,0,quadTime)
-
+syncTurnInTime(opBLeg3,-89+math.random(-offset,offset),0,0,quadTime)
+Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 bool_TurnForwardDone=true
 
@@ -647,7 +641,7 @@ function turnAnim()
 bool_TurnForwardDone=false
 bool_TurnBackwardDone=false
 
-time=8000
+time=22000
 
 centerTurnX= math.random(1,2)
 Turn(Body,x_axis,math.rad(centerTurnX),0.25)
@@ -656,6 +650,7 @@ Turn(Body,z_axis,math.rad(2),0.25)
 StartThread(turn_BackWards,Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63 ,5,time,-1)
 StartThread(turn_ForWards,     Leg31,Leg32, Leg21,Leg22,Leg23, Leg51,Leg52,Leg53,5,time,1)
 WaitForTurn(Body,x_axis)
+
 	while bool_TurnForwardDone==false or bool_TurnBackwardDone==false do 
 		Sleep(100) 
 	end
@@ -667,8 +662,8 @@ bool_TurnBackwardDone=false
 Turn(Body,x_axis,math.rad(centerTurnX*-1),0.25)
 Turn(Body,z_axis,math.rad(-2),0.25)
 centerTurnX=centerTurnX*-1
-
-StartThread(turn_BackWards,Leg31,Leg32, Leg21,Leg22,Leg23  ,Leg51,Leg52,Leg53,5,time,1)
+					--	   fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
+StartThread(turn_BackWards,Leg31, Leg32,   Leg21, Leg22,  Leg23  ,Leg51,  Leg52,  Leg53,   5,   time,1)
 StartThread(turn_ForWards,     Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,time,-1)
 WaitForTurn(Body,x_axis)
 	while bool_TurnForwardDone==false or bool_TurnBackwardDone==false do 
@@ -714,15 +709,15 @@ function script.QueryWeapon1()
 end
 boolDeployed=false
 boolReloaded=true
-
+ NinetyDegrees=math.ceil(3.14158/4)
 local SIG_AIM=2
 function script.AimWeapon1( Heading ,pitch)	
 Signal(SIG_AIM)
 SetSignalMask(SIG_AIM)
 	--aiming animation: instantly turn the gun towards the enemy
 	if boolDeployed ==true and boolReloaded == true then
-	
-		Turn(GunRail,y_axis,-Heading+math.rad(90),1)
+	Spring.Echo(Heading)
+		Turn(GunRail,y_axis, Heading - 3.14159,1)
 		WaitForTurn(GunRail,y_axis)
 		return (boolDeployed and boolReloaded)
 	else
@@ -781,8 +776,8 @@ end
 
 					maxspeed=math.ceil(COB.MAX_SPEED *65533)
 					function script.Activate()
-				 
-					SetUnitValue(COB.MAX_SPEED,maxspeed)--sets the speed to 5,2 *65533
+				 	
+					--sets the speed to 5,2 *65533
 						
 					boolDeployWanted=true
 					return 1
@@ -790,17 +785,9 @@ end
 
 		function script.Deactivate()
 					boolDeployWanted=false
-					SetUnitValue(COB.MAX_SPEED,1)
+				
 
 					--set the MovementSpeed to zero
 		return 0
 		end
 
-
-function script.QueryBuildInfo() 
-  return center 
-end
-
-function script.QueryNanoPiece()
-     return center
-end

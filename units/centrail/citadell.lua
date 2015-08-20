@@ -54,7 +54,7 @@ CanBeAssisted = true,
 
 nanocolor=[[0 0 0]], --
 CanReclaim=true,	
-workerTime = 0.002,
+workerTime = 0.005,
 buildDistance = 1200,
 terraformSpeed = 350,
 

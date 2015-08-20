@@ -557,9 +557,88 @@ end
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
  WaitForTurn(WeaponTable[nr].piece,x_axis)
 	return true end
-	}
+	},
+[8]={
+	aimfromPiece=Head,
+	piece=Head,
+	fireweapon= function() return true end,
+	aimweapon=function(Heading,pitch,nr) 
+	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	return true end
+	},
+	[9]={
+	aimfromPiece=Head,
+	piece=Head,
+	fireweapon= function() return true end,
+	aimweapon=function(Heading,pitch,nr) 
+	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	return true end
+	},
+	[10]={ 
+	aimfromPiece	=podturret0,
+	piece=podturret0,
+	fireweapon= function() return true end,
+	aimweapon=function(Heading,pitch,nr) 
+	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].piece,x_axis,pitch - 3.14159, 8)
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+		if boolExponentialGunReloaded== true then
+			boolExponentialGunReloaded=false
+			return true 
+		else
+			return false
+		end
+	end
+	},
+	[11]={
+	aimfromPiece=podturret1,
+	piece=podturret1,
+	fireweapon= function() return true end,
+		aimweapon=function(Heading,pitch,nr) 
+	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].piece,x_axis,pitch  - 3.14159 , 8)
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+		if boolExponentialGunReloaded== true then
+			boolExponentialGunReloaded=false
+			return true 
+		else
+			return false
+		end
+	end
+	},
 }
 --Weapon1
+
+local boolExponentialGunReloaded=false
+local boolExponentialGunFired=false
+local CoolDownTime=3000
+local Exponent=0
+
+function cExpReloader()
+coolDownTimer=CoolDownTime
+	while true do 
+		ReloadTime=math.max(1,2049- (2^Exponent))
+		--if not reloaded 
+			if boolExponentialGunReloaded==false then
+				Sleep(ReloadTime)
+				Exponent=Exponent+1
+				coolDownTimer=CoolDownTime-ReloadTime
+				boolExponentialGunReloaded=true
+			end
+		Sleep(5)
+		coolDownTimer=coolDownTimer-5
+			if coolDownTimer <= 0 then 
+				Exponent=0
+			end
+	end
+end
+
+
+
 
 function script.AimFromWeapon1() 
 	return WeaponTable[1].aimfromPiece 
