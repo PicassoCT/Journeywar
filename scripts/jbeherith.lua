@@ -1155,6 +1155,8 @@ local 	checkRange=60
 	end
 
 	function script.Killed(recentDamage,maxhealth)
+	mydef=Spring.GetUnitDefID(unitID)
+	StartThread(PlaySoundByUnitType,mydef,"sounds/jbeherith/death.ogg",1,6000,5,0)
 	--Turn Behe downward
 	StartThread(bloodEmit,3000)
 	--Keep Doves over Cadaver for a while
