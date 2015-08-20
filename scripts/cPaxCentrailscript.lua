@@ -617,7 +617,7 @@ local boolExponentialGunReloaded=false
 local boolExponentialGunFired=false
 local CoolDownTime=3000
 local Exponent=0
-
+local ReloadTime=2049
 function cExpReloader()
 coolDownTimer=CoolDownTime
 	while true do 
@@ -772,6 +772,78 @@ end
 
 function script.FireWeapon7()	
 	return WeaponTable[7].fireweapon()
+end
+
+function script.AimFromWeapon8() 
+	return WeaponTable[8].aimfromPiece 
+end
+
+function script.QueryWeapon8() 
+	return WeaponTable[8].piece
+end
+
+function script.AimWeapon8( Heading ,pitch)	
+	return WeaponTable[8].aimweapon(Heading,pitch,8)and boolUnderPressure==true
+end
+ 
+
+function script.FireWeapon8()	
+	return WeaponTable[8].fireweapon()
+end
+
+function script.AimFromWeapon9() 
+	return WeaponTable[9].aimfromPiece 
+end
+
+function script.QueryWeapon9() 
+	return WeaponTable[9].piece
+end
+
+function script.AimWeapon9( Heading ,pitch)	
+	return WeaponTable[9].aimweapon(Heading,pitch,9)and boolUnderPressure==true
+end
+ 
+
+function script.FireWeapon9()	
+	return WeaponTable[9].fireweapon()
+end
+
+function script.AimFromWeapon10() 
+	return WeaponTable[10].aimfromPiece 
+end
+
+function script.QueryWeapon10() 
+	return WeaponTable[10].piece
+end
+
+function script.AimWeapon10( Heading ,pitch)	
+	return WeaponTable[10].aimweapon(Heading,pitch,10)and boolUnderPressure==true
+end
+ 
+
+function script.FireWeapon10()	
+	return WeaponTable[10].fireweapon()
+end
+
+function script.FireWeapon9()	
+	return WeaponTable[9].fireweapon()
+end
+
+function script.AimFromWeapon11() 
+	return WeaponTable[11].aimfromPiece 
+end
+
+function script.QueryWeapon11() 
+	return WeaponTable[11].piece
+end
+
+function script.AimWeapon11( Heading ,pitch)	
+	return WeaponTable[11].aimweapon(Heading,pitch,11)and boolUnderPressure==true
+end
+ 
+
+function script.FireWeapon10()	
+	return WeaponTable[10].fireweapon()
 end
 
 Animations['pax_death'] = {
