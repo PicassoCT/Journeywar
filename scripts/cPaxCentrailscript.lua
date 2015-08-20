@@ -160,6 +160,7 @@ Spring.PlaySoundFile("sounds/cPaxCentrail/PaxCentrailSound.wav",1.0)
         end
     end
 
+StartThread(cExpReloader)
 StartThread(moveStarter)
 StartThread(underPressure)
 
@@ -433,18 +434,19 @@ x,y,z=Spring.GetUnitPosition(unitID)
 
 
 	while  math.abs(x-ex)+ math.abs(y-ey)+math.abs(z-ez) < 250 do
-	x,y,z=Spring.GetUnitPosition(unitID)
-	Sleep(500)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		Sleep(500)
 	end
 	
 	teamid=Spring.GetUnitTeam(unitID)
 	hostageid=Spring.CreateUnit("choblock",ex,ey,ez, 0, teamid) 
+	
 	x,y,z=Spring.GetUnitPosition(hostageid)
-	Spring.SetUnitBlocking (id,false,false)
+	Spring.SetUnitBlocking (hostageid,false,false)
 	while table.getn(grabEveryone(hostageid,x,z,75)) > 0 do
 	Sleep(500)
 	end
-Spring.SetUnitBlocking (id,true,true)
+Spring.SetUnitBlocking (hostageid,true,true)
 end
 
 boolUnderPressure=false
@@ -488,100 +490,119 @@ end
 [1]={ 
 	aimfromPiece	=podturret0,
 	piece=podturret0,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	return true 
+ end
 	},
 [2]={
 	aimfromPiece=podturret1,
 	piece=podturret1,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 		aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
 	WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	return true 
+ end
 	},
 [3]={
 	aimfromPiece=podturret2,
 	piece=podturret2,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	globalHeading=Heading
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
  WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	return true 
+ end
 	},
 [4]={
 	aimfromPiece=podturret3,
 	piece=podturret3,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
  WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	return true 
+ end
 	},
 [5]={
 	aimfromPiece=podturret4,
 	piece=podturret4,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 		aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
  WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	return true 
+ end
 	},
 [6]={
 	aimfromPiece=podturret5,
 	piece=podturret5,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	
 	aimweapon=function(Heading,pitch,nr) 
 	globalHeading=Heading
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	return true 
+ end
 	},
 [7]={
 	aimfromPiece=Head,
 	piece=Head,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	return true 
+ end
 	},
 [8]={
 	aimfromPiece=Head,
 	piece=Head,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
 	WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	return true 
+ end
 	},
 	[9]={
 	aimfromPiece=Head,
 	piece=Head,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
 	WaitForTurn(WeaponTable[nr].piece,x_axis)
-	return true end
+	return true 
+ end
 	},
 	[10]={ 
 	aimfromPiece	=podturret0,
 	piece=podturret0,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 	aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch - 3.14159, 8)
@@ -597,7 +618,8 @@ end
 	[11]={
 	aimfromPiece=podturret1,
 	piece=podturret1,
-	fireweapon= function() return true end,
+	fireweapon= function() return true 
+ end,
 		aimweapon=function(Heading,pitch,nr) 
 	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
 	Turn(WeaponTable[nr].piece,x_axis,pitch  - 3.14159 , 8)
@@ -618,12 +640,23 @@ local boolExponentialGunFired=false
 local CoolDownTime=3000
 local Exponent=0
 local ReloadTime=2049
+
 function cExpReloader()
 coolDownTimer=CoolDownTime
 	while true do 
 		ReloadTime=math.max(1,2049- (2^Exponent))
 		--if not reloaded 
 			if boolExponentialGunReloaded==false then
+				
+			if ReloadTime > 1128  then
+				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/singleShotExponential.ogg",1,500,2,0)
+			elseif ReloadTime <= 1128 and ReloadTime > 978 then
+				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/TenShotsPerSecond.ogg",1,1100,2,0)
+			elseif ReloadTime <= 978 and ReloadTime > 512 then
+				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/TwenShotsPerSecond.ogg",1,2400,2,0)
+			elseif ReloadTime <= 512 and ReloadTime > 0 then
+				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/MaxShotsPerSecond.ogg",1,2400,2,0)
+			end
 				Sleep(ReloadTime)
 				Exponent=Exponent+1
 				coolDownTimer=CoolDownTime-ReloadTime
@@ -655,7 +688,7 @@ end
  
 
 function script.FireWeapon1()
-	StartThread(PlaySoundByUnitType,PaxDefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)	
+	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)	
 	return WeaponTable[1].fireweapon()
 end
 
@@ -683,9 +716,9 @@ function script.AimFromWeapon3()
 	return WeaponTable[3].aimfromPiece 
 end
 
-PaxDefID=Spring.GetUnitDefID
+
 function script.QueryWeapon3() 
-	PlaySoundByUnitType(PaxDefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
+	PlaySoundByUnitType(unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
 	return WeaponTable[3].piece
 end
 

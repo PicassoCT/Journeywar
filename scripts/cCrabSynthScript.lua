@@ -175,7 +175,7 @@ uneven=0
 even=0
 uneven=0	
 	
-		for i=8,15,1 do
+		for i=8,#Plate,1 do
 		if i%2 ==0 then
 		even= even+12
 		Turn(Plate[i],z_axis,math.rad(even),0.25)

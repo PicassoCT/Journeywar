@@ -68,7 +68,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						[cFlareGun]=true
 						}
 						
-	Script.SetWatchWeapon(cchainlightning , true)
+	Script.SetWatchWeapon(ChainLightningDefID , true)
 	Script.SetWatchWeapon(celetrochainWeaponDefID , true)
 	Script.SetWatchWeapon(crazorgrenadeDefID , true)
 	Script.SetWatchWeapon(jvaryjumpDefID , true)
@@ -138,11 +138,11 @@ end
 			if T then
 		
 				for i=1, #T do
-					pid= Spring.SpawnProjectile( ChainLightningDefID ,{
+				local projID = Spring.SpawnProjectile( ChainLightningDefID ,{
 					pos = { x=px, y=py,  z=pz},  
 					speed = {0,0,0},
 					spread = {5,5,5},
-					error = {number x, number y, number z},
+					error = {x=5,  y=5,  z=5},
 					owner = AttackerID,
 					team = teamid,
 					ttl = 42,
@@ -153,8 +153,10 @@ end
 					endAlpha = 0.01,
 					model = "emptyObjectIsEmpty.s3o",
 					cegTag = "cchainlightning"})
-					
-					Spring.SetProjectileTarget(pid, T[i] ,"u")
+					gx,gy,gz=Spring.GetUnitPosition(T[i])
+					if gx then
+						Spring.SetProjectileTarget(projID,  gx,gy,gz)
+					end
 			   	end
 			end
 		
@@ -371,9 +373,8 @@ end
 		
 		Spring.SpawnProjectile( ChainLightningDefID ,{
 					pos = { x=px, y=py,  z=pz},  
-					speed = {0,0,0},
+					speed = {1,1,1},
 					spread = {5,5,5},
-					error = {number x, number y, number z},
 					owner = AttackerID,
 					team = teamid,
 					ttl = 42,
@@ -384,8 +385,10 @@ end
 					endAlpha = 0.01,
 					model = "emptyObjectIsEmpty.s3o",
 					cegTag = "cchainlightning"})
-					
-					Spring.SetProjectileTarget(pid, targetID ,"u")
+					gx,gy,gz=Spring.GetUnitPosition(targetID)
+					if gx then
+						Spring.SetProjectileTarget(projID,  gx,gy,gz)
+					end
 		
 	elseif ChainLightningTable[attackerID] <= 0 then 
 		ChainLightningTable[attackerID] = nil
