@@ -48,7 +48,7 @@ Spin(spinUp,z_axis,math.rad(242),0.5)
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
-Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
+GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 
 StartThread(delayedUpgrade)
 --</buildanimationscript>

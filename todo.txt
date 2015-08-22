@@ -36,3 +36,11 @@ undo axischange for movement
 {\['c']='move',\['p']=([^\s]+), \['a']=([^\s]+), \['t']=([^\n]+), \['s']=([^\n]+)\}\,
 Remove unused moves
 
+
+Okay, you are allready had a battlecommand, we can skip the idealistic boolshit.
+This is the end of the worlds, nothing ever happens here.
+Which is good.
+If you know how to run this game, you can retire afterwards. There are some primitive villages. Primitive as in medieval, but not poor.
+You can run and raid them from time to time. Just dont get caught by the only faction with offworld-access.
+Crazy church on wheels planting glass-trees.
+

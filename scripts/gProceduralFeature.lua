@@ -125,42 +125,42 @@ end
  
  
 function aTransferToTheTop   ( ed) 
- min,max=Spring.GetGroundExtremes()
- if deMaRa() then -- to the top
- local spGetGroundHeight=Spring.GetGroundHeight
- oldh,maxX,maxZ=min,0,0
- mapX,mapZ=Spring.GetMetalMapSize
- for x=1,Game.mapX,32 do
- for z=1,Game.mapZ,32 do
-h=spGetGroundHeight(x,z) 
-if h > oldh then oldh,maxX,maxZ=h,x,z end
- end
- end
- Spring.SetUnitPosition(ed,maxX,oldh,maxZ)
- else --to the depths
- local spGetGroundHeight=Spring.GetGroundHeight
- oldh,maxX,maxZ=max,0,0
- for x=1,Game.mapX,32 do
- for z=1,Game.mapZ,32 do
-h=spGetGroundHeight(x,z) 
-if h < oldh then oldh,maxX,maxZ=h,x,z end
- end
- end
- Spring.SetUnitPosition(ed,maxX,oldh,maxZ)
- 
- end 
+	 min,max=Spring.GetGroundExtremes()
+	 if deMaRa() then -- to the top
+		 local spGetGroundHeight=Spring.GetGroundHeight
+		 oldh,maxX,maxZ=min,0,0
+		 mapX,mapZ=Spring.GetMetalMapSize
+			 for x=1,Game.mapX,32 do
+				 for z=1,Game.mapZ,32 do
+					h=spGetGroundHeight(x,z) 
+					if h > oldh then oldh,maxX,maxZ=h,x,z end
+				 end
+			 end
+		 Spring.SetUnitPosition(ed,maxX,oldh,maxZ)
+		 else --to the depths
+		 local spGetGroundHeight=Spring.GetGroundHeight
+		 oldh,maxX,maxZ=max,0,0
+			 for x=1,Game.mapX,32 do
+				 for z=1,Game.mapZ,32 do
+					h=spGetGroundHeight(x,z) 
+					if h < oldh then oldh,maxX,maxZ=h,x,z end
+				 end
+			 end
+		 Spring.SetUnitPosition(ed,maxX,oldh,maxZ)
+		 
+	 end 
  end 
  
 function  aStunOfEveryone  ( ed) 
-x,y,z=Spring.GetUnitPosition(unitID)
- T=Spring.GetUnitsInCylinder(x,z,250)
- table.remove(T,unitID)
- if #T> 0 then
-   for T=1,#T do
-		health=Spring.GetUnitHealth(T[i])
-		Spring.SetUnitHealth(T[i], {paralyze =health*15})
+	x,y,z=Spring.GetUnitPosition(unitID)
+	 T=Spring.GetUnitsInCylinder(x,z,250)
+	 table.remove(T,unitID)
+	 if #T> 0 then
+	   for T=1,#T do
+			health=Spring.GetUnitHealth(T[i])
+			Spring.SetUnitHealth(T[i], {paralyze =health*15})
+		 end
 	 end
- end
  end 
  
 function  aWildHealer  (ed ) 

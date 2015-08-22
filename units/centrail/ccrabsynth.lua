@@ -13,7 +13,7 @@ buildCostMetal = 105,
 buildCostEnergy = 200,
 buildTime = 6,
 --Health
-maxDamage = 240,
+maxDamage = 18000,
 idleAutoHeal = 3,
 onoffable=true,
 ActivateWhenBuilt=0,

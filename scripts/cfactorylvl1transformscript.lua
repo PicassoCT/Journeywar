@@ -12,36 +12,36 @@ outerCubes={}
 totalCubes=588
 
 for i=1,totalCubes,1 do
-cubes[i]={}
-outerCubes[i]={}
-piecenameOne="Cube"..i
-piecenameTwo="ShellC"..i
-outerCubes[i]=piece(piecenameTwo)
-cubes[i]=piece(piecenameOne)
+	cubes[i]={}
+	outerCubes[i]={}
+	piecenameOne="Cube"..i
+	piecenameTwo="ShellC"..i
+	outerCubes[i]=piece(piecenameTwo)
+	cubes[i]=piece(piecenameOne)
 end
 slowStart=80
 tentacleCounter=0
 function upGradde()
 
-	while timeTillDone > 0  do
-	Sleep(1000)
-	if tentacleCounter < 3 then
-	tentacleCounter=tentacleCounter+1
-	StartThread(buildingTentacles)
-	end
-	timeTillDone=timeTillDone-1000
-	if timeTillDone < timeTillDoneQuart then slowStart=0 end
-	hp=Spring.GetUnitHealth(unitID)
-	Spring.SetUnitHealth(unitID,hp-105+slowStart)
-	end
---Congrats you survived growing up
-if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
-x,y,z=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
-GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)	
-GG.UnitsToSpawn:PushCreateUnit("fclvl2",x,y,z,0,teamID)	
-Sleep(4000)
-Spring.DestroyUnit(unitID,false,true)
+		while timeTillDone > 0  do
+		Sleep(1000)
+			if tentacleCounter < 3 then
+				tentacleCounter=tentacleCounter+1
+				StartThread(buildingTentacles)
+			end
+		timeTillDone=timeTillDone-1000
+			if timeTillDone < timeTillDoneQuart then slowStart=0 end
+				hp=Spring.GetUnitHealth(unitID)
+				Spring.SetUnitHealth(unitID,hp-105+slowStart)
+		end
+	--Congrats you survived growing up
+		if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+	x,y,z=Spring.GetUnitPosition(unitID)
+	teamID=Spring.GetUnitTeam(unitID)
+	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)	
+	GG.UnitsToSpawn:PushCreateUnit("fclvl2",x,y,z,0,teamID)	
+	Sleep(4000)
+	Spring.DestroyUnit(unitID,false,true)
 end
 
 
@@ -220,7 +220,7 @@ val= math.ceil(math.random(1,9))
 		return nil 
 		end
 	else
-	return it+cekMat[val].z+cekMat[val].y+cekMat[val].x
+		return it+cekMat[val].z+cekMat[val].y+cekMat[val].x
 	end
 
 
@@ -243,17 +243,18 @@ dice=math.floor(math.random(1,49))
 			WaitForMove(cubes[it],x_axis)
 			WaitForMove(cubes[it],z_axis)
 			WaitForMove(cubes[it],y_axis)					
-				
-				x,y,z=Spring.GetUnitPiecePosition(unitID,cubes[it])
-				
-				it=nextIt(it)
-				if cubes[it] then
-				Move(cubes[it],y_axis,0,0,true)
-				px,py,pz=Spring.GetUnitPiecePosition(unitID,cubes[it])
-				x,y,z=px-x,py-y,pz-z
-				Move(cubes[it],y_axis,y,0,true)
-				Move(cubes[it],x_axis,x,0,true)
-				Move(cubes[it],z_axis,z,0,true)
+				if cubes[it] then	
+					x,y,z=Spring.GetUnitPiecePosition(unitID,cubes[it])
+					
+					it=nextIt(it)
+					if cubes[it] then
+					Move(cubes[it],y_axis,0,0,true)
+					px,py,pz=Spring.GetUnitPiecePosition(unitID,cubes[it])
+					x,y,z=px-x,py-y,pz-z
+					Move(cubes[it],y_axis,y,0,true)
+					Move(cubes[it],x_axis,x,0,true)
+					Move(cubes[it],z_axis,z,0,true)
+					end
 				end
 			end
 		end

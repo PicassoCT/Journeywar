@@ -2,7 +2,7 @@ local unitName = "cfactorylvl1transform"
 local unitDef = {
 	name = "Nanoforge",
 	Description = "transforms if supplied in time into a Lvl2 Factory",
-	objectName = "cbuiBlox.s3o",
+	objectName = "cUpgrBlox.s3o",
 	script = "cfactorylvl1transformscript.lua",
 	buildPic = "placeholder.png",
 	--cost

@@ -113,7 +113,7 @@ speed=2
 	end
 Move(CrystallPieces[math.max(PieceAtRisk+1,CrystallLength)],y_axis,currentMove-34.54,27)
 	
-WaitForTurn(TakingTheFall,x_axis)
+Sleep(600)
 --Shatter the Crystall
 	
 	

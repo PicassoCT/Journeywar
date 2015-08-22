@@ -67,7 +67,8 @@ if (gadgetHandler:IsSyncedCode()) then
 						[cCssFlameT]=true,   
 						[cFlareGun]=true
 						}
-						
+	RazorGrenadeTable={}
+	
 	Script.SetWatchWeapon(ChainLightningDefID , true)
 	Script.SetWatchWeapon(celetrochainWeaponDefID , true)
 	Script.SetWatchWeapon(crazorgrenadeDefID , true)
@@ -168,7 +169,18 @@ end
 	
 	
 		if weaponID ==crazorgrenadeDefID then
-			ad=Spring.CreateUnit("crazordrone",px,py,pz,1,gaiaTeamID)		
+		RazorDroneMax= 5
+			if not RazorGrenadeTable[AttackerID] then RazorGrenadeTable[AttackerID] ={itterator=1} end
+		
+			RazorGrenadeTable[AttackerID]=validateUnitTable(RazorGrenadeTable[AttackerID])
+				RazorGrenadeTable[AttackerID].itterator=(	RazorGrenadeTable[AttackerID].itterator% #RazorGrenadeTable[AttackerID])+1
+			
+			if #RazorGrenadeTable[AttackerID] > RazorDroneMax then
+			Spring.DestroyUnit(	RazorGrenadeTable[AttackerID][RazorGrenadeTable[AttackerID].itterator],true,true)
+			end
+			
+			teamID=Spring.GetUnitTeam(AttackerID)
+			RazorGrenadeTable[AttackerID][RazorGrenadeTable[AttackerID].itterator]=Spring.CreateUnit("crazordrone",px,py,pz,1,teamID)		
 			ed= Spring.GetUnitNearestEnemy(ad)
 			if ed then 
 				x,y,z=Spring.GetUnitPosition(ed)

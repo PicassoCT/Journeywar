@@ -251,8 +251,15 @@ end
 
 end
 
+modULater=0
 function script.HitByWeapon ( x, z, weaponDefID, damage )
-EmitSfx(ztorso,1024)
+	if damage > 10 then
+	modULater=modULater%10+1
+		if modULater > 5 and math.random(0,1)==1 then
+		EmitSfx(ztorso,1024)
+		end
+	end
+	
 return damage
 end
 

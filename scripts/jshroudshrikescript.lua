@@ -2,6 +2,7 @@ include "suddenDeath.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua"
  include "lib_Build.lua" 
+ include "lib_jw.lua" 
 
 --include "spring_lua_dsl.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
