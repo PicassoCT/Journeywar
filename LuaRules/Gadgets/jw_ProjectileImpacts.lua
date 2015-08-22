@@ -168,7 +168,12 @@ end
 	
 	
 		if weaponID ==crazorgrenadeDefID then
-			Spring.CreateUnit("crazordrone",px,py,pz,1,gaiaTeamID)			
+			ad=Spring.CreateUnit("crazordrone",px,py,pz,1,gaiaTeamID)		
+			ed= Spring.GetUnitNearestEnemy(ad)
+			if ed then 
+				x,y,z=Spring.GetUnitPosition(ed)
+				Spring.SetUnitMoveGoal(ad,x,y,z)
+			end
 		end
 			
 		if weaponID == jvaryjumpDefID then
@@ -326,19 +331,19 @@ local 	affectedUnits={}
 		if weaponDefID == cRestrictorThumperID and Spring.ValidUnitID(attackerID)==true then
 
 							if     UnitDefs[unitDefID].isBuilding == true     then
-							health=Spring.GetUnitHealth(unitID)
-							Spring.SetUnitHealth(unitID, {paralyze =health*15})
+								health=Spring.GetUnitHealth(unitID)
+								Spring.SetUnitHealth(unitID, {paralyze =health*15})
 							elseif  UnitDefNames["jbugcreeper"].id == unitDefID or UnitDefNames["jCrabCreeper"].id==unitDefID or UnitDefNames["jhoneypot"].id== unitDefID  then
-							--Send To Distance
-							ax,ay,az=Spring.GetUnitPosition(attackerID)
-							ux,uy,uz=Spring.GetUnitPosition(unitID)
-							ux,uz=ax-ux,az-uz
-							max=math.max(math.abs(ux),math.abs(uz))
-							ux,uz=ux/max,uz/max
-							ux,uz=((ux+uz)/ux)*HARDCODED_RETREATDISTANCE,((ux+uz)/uz)*HARDCODED_RETREATDISTANCE
-							Spring.SetUnitMoveGoal(unitID,ux+ax,uy,uz+az)							
+								--Send To Distance
+								ax,ay,az=Spring.GetUnitPosition(attackerID)
+								ux,uy,uz=Spring.GetUnitPosition(unitID)
+								ux,uz=ax-ux,az-uz
+								max=math.max(math.abs(ux),math.abs(uz))
+								ux,uz=ux/max,uz/max
+								ux,uz=((ux+uz)/ux)*HARDCODED_RETREATDISTANCE,((ux+uz)/uz)*HARDCODED_RETREATDISTANCE
+								Spring.SetUnitMoveGoal(unitID,ux+ax,uy,uz+az)							
 							elseif attackerDefID== unitDefID then
-							Spring.SetUnitHealth(unitID, {paralyze =0})
+								Spring.SetUnitHealth(unitID, {paralyze =0})
 							end
 		
 		end
@@ -390,7 +395,7 @@ end
 						Spring.SetProjectileTarget(projID,  gx,gy,gz)
 					end
 		
-	elseif ChainLightningTable[attackerID] <= 0 then 
+	elseif ChainLightningTable[attackerID] and  ChainLightningTable[attackerID] <= 0 then 
 		ChainLightningTable[attackerID] = nil
 	end
 

@@ -122,7 +122,7 @@ Shield7	 = piece"Shield7"
 piecesTable[#piecesTable+1]= Shield7	
 
 local Animations = {};
-
+WeaponTable ={}
 
 include "suddenDeath.lua"
 include "lib_OS.lua"
@@ -469,10 +469,10 @@ end
 
 aimWeapFunc= function (Heading, pitch,nr)
 if nr ~=7 then
-					Turn(WeaponTable[nr].piece,y_axis,-Heading,1.8)
-					Turn(WeaponTable[nr].piece,x_axis,pitch,1.8)
-					WaitForTurn(WeaponTable[nr].piece,y_axis)
-					WaitForTurn(WeaponTable[nr].piece,x_axis)
+					Turn(WeaponTable[nr].qpiece,y_axis,-Heading,1.8)
+					Turn(WeaponTable[nr].qpiece,x_axis,pitch,1.8)
+					WaitForTurn(WeaponTable[nr].qpiece,y_axis)
+					WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 					return true
 				else
 				piecename=""
@@ -488,125 +488,125 @@ end
 
  WeaponTable={
 [1]={ 
-	aimfromPiece	=podturret0,
-	piece=podturret0,
+	AimFromPiece	=podturret0,
+	qpiece=podturret0,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [2]={
-	aimfromPiece=podturret1,
-	piece=podturret1,
+	AimFromqpiece=podturret1,
+	qpiece=podturret1,
 	fireweapon= function() return true 
  end,
 		aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [3]={
-	aimfromPiece=podturret2,
-	piece=podturret2,
+	AimFromqpiece=podturret2,
+	qpiece=podturret2,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
 	globalHeading=Heading
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+ WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [4]={
-	aimfromPiece=podturret3,
-	piece=podturret3,
+	AimFromqpiece=podturret3,
+	qpiece=podturret3,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+ WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [5]={
-	aimfromPiece=podturret4,
-	piece=podturret4,
+	AimFromqpiece=podturret4,
+	qpiece=podturret4,
 	fireweapon= function() return true 
  end,
 		aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
- WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+ WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [6]={
-	aimfromPiece=podturret5,
-	piece=podturret5,
+	AimFromqpiece=podturret5,
+	qpiece=podturret5,
 	fireweapon= function() return true 
  end,
 	
 	aimweapon=function(Heading,pitch,nr) 
 	globalHeading=Heading
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [7]={
-	aimfromPiece=Head,
-	piece=Head,
+	AimFromqpiece=Core,
+	qpiece=Head,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 [8]={
-	aimfromPiece=Head,
-	piece=Head,
+	AimFromqpiece=Head,
+	qpiece=Head,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 	[9]={
-	aimfromPiece=Head,
-	piece=Head,
+	AimFromqpiece=Head,
+	qpiece=Head,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 	return true 
  end
 	},
 	[10]={ 
-	aimfromPiece	=podturret0,
-	piece=podturret0,
+	AimFromPiece	=podturret0,
+	qpiece=podturret0,
 	fireweapon= function() return true 
  end,
 	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch - 3.14159, 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch - 3.14159, 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 		if boolExponentialGunReloaded== true then
 			boolExponentialGunReloaded=false
 			return true 
@@ -616,14 +616,14 @@ end
 	end
 	},
 	[11]={
-	aimfromPiece=podturret1,
-	piece=podturret1,
+	AimFromqpiece=podturret1,
+	qpiece=podturret1,
 	fireweapon= function() return true 
  end,
 		aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].piece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].piece,x_axis,pitch  - 3.14159 , 8)
-	WaitForTurn(WeaponTable[nr].piece,x_axis)
+	Turn(WeaponTable[nr].qpiece,y_axis,-Heading, 8)
+	Turn(WeaponTable[nr].qpiece,x_axis,pitch  - 3.14159 , 8)
+	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
 		if boolExponentialGunReloaded== true then
 			boolExponentialGunReloaded=false
 			return true 
@@ -672,38 +672,42 @@ end
 
 
 
-
+local aimpiece1 = WeaponTable[1].AimFromPiece
 function script.AimFromWeapon1() 
-	return WeaponTable[1].aimfromPiece 
+	return aimpiece1
 end
 
+local weaponpiece1 = WeaponTable[1].qpiece
 function script.QueryWeapon1() 
-	return WeaponTable[1].piece
+	return weaponpiece1
 end
+
 
 function script.AimWeapon1( Heading ,pitch)	
-gheading,gpitch=Heading,pitch
-	return WeaponTable[1].aimweapon(Heading,pitch,1)
+	return WeaponTable[1].aimweapon(Heading,pitch,1)and boolUnderPressure==true
 end
  
 
-function script.FireWeapon1()
-	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)	
+function script.FireWeapon1()	
+	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
 	return WeaponTable[1].fireweapon()
 end
 
 
+
+local aimpiece2 = WeaponTable[2].AimFromPiece
 function script.AimFromWeapon2() 
-var= WeaponTable[2].aimfromPiece 
-	return var
+	return aimpiece2
 end
 
+local weaponpiece2 = WeaponTable[2].qpiece
 function script.QueryWeapon2() 
-	return WeaponTable[2].piece
+	return weaponpiece2
 end
+
 
 function script.AimWeapon2( Heading ,pitch)	
-	return WeaponTable[2].aimweapon(Heading,pitch,2) and boolUnderPressure==true
+	return WeaponTable[2].aimweapon(Heading,pitch,2)and boolUnderPressure==true
 end
  
 
@@ -711,16 +715,18 @@ function script.FireWeapon2()
 	return WeaponTable[2].fireweapon()
 end
 
+--------------------------------------------------------------
 
+local aimpiece3 = WeaponTable[3].AimFromPiece
 function script.AimFromWeapon3() 
-	return WeaponTable[3].aimfromPiece 
+	return aimpiece3
 end
 
-
+local weaponpiece3 = WeaponTable[3].qpiece
 function script.QueryWeapon3() 
-	PlaySoundByUnitType(unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
-	return WeaponTable[3].piece
+	return weaponpiece3
 end
+
 
 function script.AimWeapon3( Heading ,pitch)	
 	return WeaponTable[3].aimweapon(Heading,pitch,3)and boolUnderPressure==true
@@ -728,20 +734,22 @@ end
  
 
 function script.FireWeapon3()	
+	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
 	return WeaponTable[3].fireweapon()
 end
 
+--------------------------------------------------------------
 
-
+local aimpiece4 = WeaponTable[4].AimFromPiece
 function script.AimFromWeapon4() 
-	var= WeaponTable[4].aimfromPiece 
-	return var
+	return aimpiece4
 end
 
+local weaponpiece4 = WeaponTable[4].qpiece
 function script.QueryWeapon4() 
-	var= WeaponTable[4].aimfromPiece 
-	return var
+	return weaponpiece4
 end
+
 
 function script.AimWeapon4( Heading ,pitch)	
 	return WeaponTable[4].aimweapon(Heading,pitch,4)and boolUnderPressure==true
@@ -752,14 +760,16 @@ function script.FireWeapon4()
 	return WeaponTable[4].fireweapon()
 end
 
-
+local aimpiece5 = WeaponTable[5].AimFromPiece
 function script.AimFromWeapon5() 
-	return WeaponTable[5].aimfromPiece 
+	return aimpiece5
 end
 
+local weaponpiece5 = WeaponTable[5].qpiece
 function script.QueryWeapon5() 
-	return WeaponTable[5].piece
+	return weaponpiece5
 end
+
 
 function script.AimWeapon5( Heading ,pitch)	
 	return WeaponTable[5].aimweapon(Heading,pitch,5)and boolUnderPressure==true
@@ -771,14 +781,16 @@ function script.FireWeapon5()
 end
 
 
-
+local aimpiece6 = WeaponTable[6].AimFromPiece
 function script.AimFromWeapon6() 
-	return WeaponTable[6].aimfromPiece 
+	return aimpiece6
 end
 
+local weaponpiece6 = WeaponTable[6].qpiece
 function script.QueryWeapon6() 
-	return WeaponTable[6].piece
+	return weaponpiece6
 end
+
 
 function script.AimWeapon6( Heading ,pitch)	
 	return WeaponTable[6].aimweapon(Heading,pitch,6)and boolUnderPressure==true
@@ -789,14 +801,16 @@ function script.FireWeapon6()
 	return WeaponTable[6].fireweapon()
 end
 
-
+local aimpiece7 = WeaponTable[7].AimFromPiece
 function script.AimFromWeapon7() 
-	return WeaponTable[7].aimfromPiece 
+	return aimpiece7
 end
 
+local weaponpiece7 = WeaponTable[7].qpiece
 function script.QueryWeapon7() 
-	return WeaponTable[7].piece
+	return weaponpiece7
 end
+
 
 function script.AimWeapon7( Heading ,pitch)	
 	return WeaponTable[7].aimweapon(Heading,pitch,7)and boolUnderPressure==true
@@ -806,14 +820,16 @@ end
 function script.FireWeapon7()	
 	return WeaponTable[7].fireweapon()
 end
-
+local aimpiece8 = WeaponTable[8].AimFromPiece
 function script.AimFromWeapon8() 
-	return WeaponTable[8].aimfromPiece 
+	return aimpiece8
 end
 
+local weaponpiece8 = WeaponTable[8].qpiece
 function script.QueryWeapon8() 
-	return WeaponTable[8].piece
+	return weaponpiece8
 end
+
 
 function script.AimWeapon8( Heading ,pitch)	
 	return WeaponTable[8].aimweapon(Heading,pitch,8)and boolUnderPressure==true
@@ -824,13 +840,16 @@ function script.FireWeapon8()
 	return WeaponTable[8].fireweapon()
 end
 
+local aimpiece9 = WeaponTable[9].AimFromPiece
 function script.AimFromWeapon9() 
-	return WeaponTable[9].aimfromPiece 
+	return aimpiece9
 end
 
+local weaponpiece9 = WeaponTable[9].qpiece
 function script.QueryWeapon9() 
-	return WeaponTable[9].piece
+	return weaponpiece9
 end
+
 
 function script.AimWeapon9( Heading ,pitch)	
 	return WeaponTable[9].aimweapon(Heading,pitch,9)and boolUnderPressure==true
@@ -841,13 +860,16 @@ function script.FireWeapon9()
 	return WeaponTable[9].fireweapon()
 end
 
+local aimpiece10 = WeaponTable[10].AimFromPiece
 function script.AimFromWeapon10() 
-	return WeaponTable[10].aimfromPiece 
+	return aimpiece10
 end
 
+local weaponpiece10 = WeaponTable[10].qpiece
 function script.QueryWeapon10() 
-	return WeaponTable[10].piece
+	return weaponpiece10
 end
+
 
 function script.AimWeapon10( Heading ,pitch)	
 	return WeaponTable[10].aimweapon(Heading,pitch,10)and boolUnderPressure==true
@@ -858,25 +880,24 @@ function script.FireWeapon10()
 	return WeaponTable[10].fireweapon()
 end
 
-function script.FireWeapon9()	
-	return WeaponTable[9].fireweapon()
-end
-
+local aimpiece11 = WeaponTable[11].AimFromPiece
 function script.AimFromWeapon11() 
-	return WeaponTable[11].aimfromPiece 
+	return aimpiece11
 end
 
+local weaponpiece11 = WeaponTable[11].qpiece
 function script.QueryWeapon11() 
-	return WeaponTable[11].piece
+	return weaponpiece11
 end
+
 
 function script.AimWeapon11( Heading ,pitch)	
 	return WeaponTable[11].aimweapon(Heading,pitch,11)and boolUnderPressure==true
 end
  
 
-function script.FireWeapon10()	
-	return WeaponTable[10].fireweapon()
+function script.FireWeapon11()	
+	return WeaponTable[11].fireweapon()
 end
 
 Animations['pax_death'] = {

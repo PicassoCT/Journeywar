@@ -25,10 +25,10 @@ tolerance=16000,
 collideFriendly=true,
 
 ----APPEARANCE
-model="jgluegunproj.s3o",
+model="cChaingLightningGunProj.s3o",
 smokeTrail=true,
 
-CegTag="redstripe",
+CegTag="citadelldrone",
 
 ----TARGETING
 turret=true,

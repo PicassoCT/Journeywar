@@ -11,7 +11,7 @@ turret2=piece"turret2"
 turret3=piece"turret3"
 turret4=piece"turret4"
 Ground={}
-
+CHARGE_TOTAL=4200
 ChargeUp=0
 
 for i=1,6, 1 do
@@ -73,7 +73,7 @@ Spin(energyorb,z_axis,math.rad(22),12)
 Spin(energyorb,x_axis,math.rad(-22),12)
 	while(true)do
 	
-		while chargeUp > 0 do
+		while ChargeUp > 0 do
 		Sleep(25)
 		EmitSfx(energyorb,1026)
 		
@@ -224,11 +224,11 @@ end
 
 function script.AimWeapon5( heading ,pitch)	
 
-	return (ChargeUp/ChargeTotal) > 1
+	return (ChargeUp/CHARGE_TOTAL) > 1
 end
 
 function script.FireWeapon5()
 Hide(energyorb)
-chargeUp=0	
+ChargeUp=0	
 	return true
 end

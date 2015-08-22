@@ -23,10 +23,11 @@ end
 
 function emitSFX()
 	x,y,z=Spring.GetUnitPosition(unitID)
-	
+	modHeight=0
+	i=0
 	while true do
-	
-	
+		modHeight=(modHeight%250)+10
+
 	
 	--Sleep(1500)	
 	
@@ -37,8 +38,9 @@ function emitSFX()
 			--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
 			--Sleep(1500)
 			--	Spring.SpawnCEG("jgalateatend",x,y,z,0,150,0)	
-			Sleep(3000)
-				Spring.SpawnCEG("csuborbimpact",x,y+100,z,0,1,0,60)
+			Sleep(300)
+			randoX,randoZ=math.random(-50,50),math.random(-50,50)
+				Spring.SpawnCEG("cexpprojectile",x+randoX,y+400,z+randoZ,0,1,0,60)
 
 		end
 

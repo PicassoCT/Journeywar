@@ -24,8 +24,11 @@ pieces[i]={}
 temp="cNanoWir"..i
 pieces[i]=piece(temp)
 end
+boolArmed=false
 
 function lifeTime()
+Sleep(2000)
+boolArmed=true
 Sleep(lifetime)
 Spring.DestroyUnit(unitID,true,true)
 
@@ -206,7 +209,7 @@ function script.QueryWeapon1()
 end
 
 function script.AimWeapon1( heading ,pitch)
-return true
+return boolArmed
 end
 
 

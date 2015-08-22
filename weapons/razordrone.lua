@@ -27,7 +27,7 @@ model="cRazorDroneProj.s3o",
 smokeTrail=false,
 explosionGenerator="custom:bloodslay",
 --CegTag="smoketrail",
-
+CegTag="razorstripe",
 ----TARGETING
 turret=true,
 cylinderTargeting=100,

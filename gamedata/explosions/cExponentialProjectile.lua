@@ -17,37 +17,50 @@ return {
         ttl                = [[9 r4 r-4]],
       },
     },
-  
-             
-       
-            Flash2 = {
+	
+	backbolt = {
+    
+
       air                = true,
-      class              = [[CSimpleParticleSystem]],
+      class              = [[CBitmapMuzzleFlame]],
       count              = 1,
       ground             = true,
-      water              = false,
+      underwater         = true,
+      water              = true,
       properties = {
-        airdrag            = 1,
-        colormap           = [[1 0.8 0.3 0.0025    0.52 0.55 0.78 0.025   1 0.8 0.3 0.0025   0.52 0.55 0.78 0.025  1 0.8 0.3 0.0025   0 0 0 0.01]],
-        directional        = true,
-        emitrot            = 0,
-        emitrotspread      = 0,
-        emitvector         = [[dir]],
-        gravity            = [[0, 0, 0]],
-        numparticles       = 1,
-        particlelife       = 6,
-        particlelifespread = 0,
-        particlesize       = 0.5,
-        particlesizespread = 1,
-        particlespeed      = 0.1,
-        particlespeedspread = 0,
-        pos                = [[0r1r-1, 0r1r-1, 0r1r-1]],
-        sizegrowth         = [[0.6 r.35]],
-        sizemod            = 1.0,
-        texture            = [[megaparticle]],
-        useairlos          = false,
-      },
+       colormap           = [[0.05 0.35 0.95  0.01	0.05 0.35 0.95  0.01 	0.05 0.35 0.95  0.01	0.05 0.35 0.95  0.001		  ]],
+        dir                = [[dir]],
+        frontoffset        = 0,
+        fronttexture       = [[]],
+        length             = 256,
+        sidetexture        = [[glow]],
+        size               = 44,
+        sizegrowth         = 1.18,
+        ttl                = 32,
+      }
     },
+  	oldbolt = {
+    
+
+      air                = true,
+      class              = [[CBitmapMuzzleFlame]],
+      count              = 1,
+      ground             = true,
+      underwater         = true,
+      water              = true,
+      properties = {
+       colormap           = [[0.05 0.35 0.95  0.01	0.05 0.35 0.95  0.01 	0.05 0.35 0.95  0.01	0.05 0.35 0.95  0.001		  ]],
+        dir                = [[dir]],
+        frontoffset        = 0,
+        fronttexture       = [[flash3]],--glow
+        length             = 25,
+        sidetexture        = [[megaparticle]],
+        size               = 9,
+        sizegrowth         = 7.18,
+        ttl                = 32,
+      }
+    }
+  
  
        
  
