@@ -17,7 +17,7 @@ buildTime = 6,
 maxDamage = 540,
 idleAutoHeal = 3,
 --Movement
-mass=120,
+mass=1200,
 upright=true,
 Acceleration = 8,
 BrakeRate = 2,

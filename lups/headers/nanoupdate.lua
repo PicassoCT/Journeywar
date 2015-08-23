@@ -130,7 +130,7 @@ function UpdateNanoParticles(self)
       elseif (startLos and endLos) then
         self.visibility = 1
       elseif (startLos) then
-        local dir = Vsub(endPos, startPos)
+        local dir = subVector(endPos, startPos)
         local losRayTile = math.ceil(Vlength(dir)/Game.squareSize)
         for i=losRayTile,0,-1 do
           local losPos = Vadd(self.pos,Vmul(dir,i/losRayTile))
@@ -140,7 +140,7 @@ function UpdateNanoParticles(self)
         endPos = Vadd(endPos,Vmul(dir,self.visibility-1))
         self.targetpos = endPos
       else --//if (endLos) then
-        local dir = Vsub(endPos, startPos)
+        local dir = subVector(endPos, startPos)
         local losRayTile = math.ceil(Vlength(dir)/Game.squareSize)
         for i=0,losRayTile do
           local losPos = Vadd(self.pos,Vmul(dir,i/losRayTile))
@@ -153,7 +153,7 @@ function UpdateNanoParticles(self)
     end
 
 	
-    local dir      = Vsub(endPos, startPos)
+    local dir      = subVector(endPos, startPos)
     local half_dir = Vmul(dir, 0.5)
     local length   = Vlength(dir)
     self.dir       = dir

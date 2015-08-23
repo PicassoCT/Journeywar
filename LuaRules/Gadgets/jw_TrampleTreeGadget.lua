@@ -19,6 +19,7 @@
 	VFS.Include("scripts/lib_OS.lua" , nil, VFSMODE     )
 	VFS.Include("scripts/lib_UnitScript.lua" , nil, VFSMODE     )
 	VFS.Include("scripts/lib_Build.lua" , nil, VFSMODE	)
+	VFS.Include("scripts/lib_jw.lua" , nil, VFSMODE	)
 	
 
 	

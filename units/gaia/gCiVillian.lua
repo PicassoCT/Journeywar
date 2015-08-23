@@ -23,7 +23,7 @@ MaxVelocity = 1.4,
 MaxWaterDepth = 2000,
 MovementClass = "Default2x2",
 TurnRate = 450,
-mass=150,
+mass=550,
 
 
 sightDistance = 500,

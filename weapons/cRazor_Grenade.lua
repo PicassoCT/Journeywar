@@ -12,7 +12,7 @@ weapontimer=12,
 --
 --Physic/flight path
 range=320,
-reloadtime=1,
+reloadtime=12,
 weaponVelocity=300,
 startVelocity=250,
 weaponAcceleration=200,

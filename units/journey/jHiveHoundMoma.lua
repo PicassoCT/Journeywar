@@ -34,7 +34,7 @@ local unitDef = {
   brakeRate=3.2,
   turnRate =965,
   
-  mass=1200,
+
  
 	maneuverleashlength=640,
 	shootme=true,

@@ -25,7 +25,7 @@ MaxVelocity = 2.5,
 MaxWaterDepth = 20,
 MovementClass = "Default2x2",
 TurnRate = 450,
-mass=380,
+mass=420,
 
 --cloaking
 canCloak =true,

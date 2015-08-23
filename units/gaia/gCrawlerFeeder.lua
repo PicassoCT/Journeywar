@@ -22,7 +22,7 @@ collisionVolumeType="box",
 collisionVolumeScales = [[20 20 40]],
 
 pushResistant=true,
-MaxSlope = 15,
+MaxSlope = 62,
 MaxVelocity = 0.15,
 MaxWaterDepth = 14,
 MovementClass = "truck",

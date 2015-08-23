@@ -35,6 +35,7 @@ SIG_FALL=2
 boolCollapsInProgress=false
 BasePiece=CrystallPieces[CrystallLength]
 
+
 function terraformingFunction(x,z)
 
 --Replace with a Terraforming GadgetCall of your choice
@@ -159,6 +160,7 @@ SetSignalMask(SIG_FALL)
 
 hideT(CrystallPieces)
 reseT(CrystallPieces)
+
 boolCollapsInProgress=false
 
 	if boolFixedDirection==true then
@@ -169,12 +171,10 @@ boolCollapsInProgress=false
 Move(BasePiece,y_axis,MaxHeight,0)
 WaitForMove(BasePiece,y_axis)
 
-	for i=1,TotalPieces do
-		if i <= CrystallLength then
-		Show(CrystallPieces[i])
-		end
+	showT(CrystallPieces)
+	for i=math.min(#CrystallPieces,CrystallLength+1),#CrystallPieces do
+	Hide(CrystallPieces[i])
 	end
-
 	for i=1,CrystallLength do
 	Move(BasePiece,y_axis,MaxHeight + (PieceHeight*i),GrowthRate)
 	WaitForMove(BasePiece,y_axis)

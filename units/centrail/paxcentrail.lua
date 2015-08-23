@@ -16,7 +16,7 @@ buildTime = 6,
 maxDamage = 12000,
 idleAutoHeal = 3,
 --Movement
-mass=12000,
+mass=52000,
 upright=true,
 Acceleration = 0.1,
 BrakeRate = 2,
@@ -26,7 +26,7 @@ MaxSlope = 62,
 MaxVelocity = 2.514,
 MaxWaterDepth = 90,
 MovementClass = "Default2x2",
-TurnRate = 50,
+TurnRate = 250,
 nanocolor=[[0.7 0 0.1]],
 sightDistance = 550,
 activateWhenBuilt=false,
@@ -63,64 +63,43 @@ Category = [[LAND]],
 
 weapons = {
 [1]={name  = "cexplochaingun",
-	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+	onlyTargetCategory = [[LAND]],
+
 	},
 
-[2]={name  = "ccitadelltur",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+[2]={name  = "cexpgun",
+	onlyTargetCategory = [[LAND AIR]],
+	
+	
 	},
 
 [3]={name  = "cexplochaingun",
-	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+	onlyTargetCategory = [[LAND]],
+	
+
 	},
 
-[4]={name  = "ccitadelltur",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+[4]={name  = "cexpgun",
+	onlyTargetCategory = [[LAND AIR]],
+
 	},
 
 [5]={name  = "crazorgrenade",
-	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+	onlyTargetCategory = [[LAND]],
+
 	},
 [6]={name  = "crazorgrenade",
-	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+	onlyTargetCategory = [[LAND]],
+
 	},
 [7]={name  = "citadelldrone",
-	onlyTargetCategory = [[ LAND]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+	onlyTargetCategory = [[LAND]],
+
 	},
 
-[8]={name  = "cbonkerfire",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
-	},
-[9]={name  = "cbonkerfire",
-	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
-	},
-[10]={name  = "cexpgun",
-	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
-	},
-[11]={name  = "cexpgun",
-	onlyTargetCategory = [[ LAND ]],
-	mainDir=[[0 0 1]], 
-	maxAngleDif        = 120, 
+[8]={name  = "ccitadelltur",
+	onlyTargetCategory = [[LAND AIR]],
+
 	},
 
 	

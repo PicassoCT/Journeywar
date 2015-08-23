@@ -140,37 +140,40 @@ StartThread(letsWalkAndTalk)
 	Signal(SIG_IDLE)
 	Signal(SIG_LEG)
 	Signal(SIG_AIM)
-	StartThread(walk)
+
   ----Spring.Echo "This was a Triumph! Im making a note here huge Success!"
   --Spring.UnitScript.Play("centerdeploy")
 
 end
 
 function script.Killed()
-Turn(center,x_axis, math.rad(82),math.rad(55))
-EmitSfx(center,1025)	
-EmitSfx(center,1026)	
-for i=1,30 do
+	Turn(center,x_axis, math.rad(82),math.rad(55))
+	EmitSfx(center,1025)	
+	EmitSfx(center,1026)	
+		for i=1,30 do
 
-EmitSfx(center,1024)	
-Sleep(50)
-end
-EmitSfx(center,1024)	
-WaitForTurn(center, z_axis)
-EmitSfx(center,1025)	
-EmitSfx(center,1024)
-	if math.random(0,1)==1 then
-	x,y,z=Spring.GetUnitPosition(unitID)
-	if not GG.AddFire then GG.AddFire={} end
-	GG.AddFire[#GG.AddFire+1]={x=x,y=y,z=z}
-	end
+			EmitSfx(center,1024)	
+			Sleep(50)
+		end
+	EmitSfx(center,1024)	
+	WaitForTurn(center, z_axis)
+	EmitSfx(center,1025)	
+	EmitSfx(center,1024)
+		if math.random(0,1)==1 then
+			x,y,z=Spring.GetUnitPosition(unitID)
+			if not GG.AddFire then 
+				GG.AddFire={} 
+			end
+			
+		GG.AddFire[#GG.AddFire+1]={x=x,y=y,z=z}
+		end
 
-	for i=1,24 do
-	EmitSfx(center,1026)
-	Sleep(100)
-	end
-Explode (center, SFX.FIRE)
-Explode (cssArmL, SFX.FIRE)
+		for i=1,24 do
+			EmitSfx(center,1026)
+			Sleep(100)
+		end
+	Explode (center, SFX.FIRE)
+	Explode (cssArmL, SFX.FIRE)
 end
 
 unitDefID=Spring.GetUnitDefID(unitID)

@@ -12,7 +12,7 @@ buildCostEnergy = 750,
 buildTime = 35,
 --Health
 maxDamage = 1650,
-mass=1024,
+mass=10024,
 idleAutoHeal = 25,
 idletime=3000,
 --Movement

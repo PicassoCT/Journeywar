@@ -18,10 +18,10 @@ end
 
 
 if (gadgetHandler:IsSyncedCode()) then
-	 VFS.Include("scripts/lib_OS.lua"      )
- VFS.Include("scripts/lib_UnitScript.lua"      )
-  VFS.Include("scripts/lib_Build.lua" 	)
-
+	VFS.Include("scripts/lib_OS.lua"      )
+	VFS.Include("scripts/lib_UnitScript.lua"      )
+	VFS.Include("scripts/lib_Build.lua" 	)
+	local WeaponDefTable={}
 	local  StunnedUnitsTable={}
 	nrOfUnits=0
 	--1 unitid
@@ -60,7 +60,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
 	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
-	
+	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
 						[glavaWeaponID]=true, 	
 						[bunkerPlasmaDefID]=true,  
@@ -125,62 +125,107 @@ T=grabEveryone(x,y,range)
 GG.ShockWaves=OtherWaves
 end
 
-	ChainLightningTable={}
 	
-	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
+	
+	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
 		
 			
 		--we got to spawn some chain lightning
-		if weaponID == celetrochainWeaponDefID then
+		if weaponDefID == celetrochainWeaponDefID then
+		Spring.Echo("celetrochainWeaponDefID Explosion::jw_projectileimpacts"..AttackerID)
 		teamid=Spring.GetUnitTeam(AttackerID)
-		T=Spring.GetUnitsInCylinder(px,pz,150)
+		T=Spring.GetUnitsInCylinder(px,pz,350)
 		ChainLightningTable[AttackerID]= 30
 		
-			if T then
+			for i= 1,5 do
+				Spring.SpawnCEG("cchainlightning",px,py+25,pz,math.random(-1,1),math.random(0.1,1),math.random(-1,1),40)
+			end
 		
+			if T then
+			
 				for i=1, #T do
-				local projID = Spring.SpawnProjectile( ChainLightningDefID ,{
-					pos = { x=px, y=py,  z=pz},  
-					speed = {0,0,0},
-					spread = {5,5,5},
-					error = {x=5,  y=5,  z=5},
-					owner = AttackerID,
-					team = teamid,
-					ttl = 42,
-					gravity = 130,
-					tracking = 1,
-					maxRange = 1220,
-					startAlpha = 0.01,
-					endAlpha = 0.01,
-					model = "emptyObjectIsEmpty.s3o",
-					cegTag = "cchainlightning"})
-					gx,gy,gz=Spring.GetUnitPosition(T[i])
-					if gx then
-						Spring.SetProjectileTarget(projID,  gx,gy,gz)
+					if Spring.ValidUnitID(T[i])==true then
+						gx,gy,gz=Spring.GetUnitPosition(T[i])
+						v=makeVector(px-gx,py-gy,pz-gz)
+						v=normVector(v)
+						v=mulVector(v,-19)
+					
+					
+					
+						local	 ChaingProjParams={
+						pos = { px, py+20, pz},  
+						speed={v.x,v.y,v.z},
+						owner = AttackerID,
+						team = teamid,	
+						spread = {0,0,0},
+						error = {0,0,0},
+						maxRange = 600,
+						gravity = Game.gravity,
+						 startAlpha = 1,
+						endAlpha = 1,						
+						model = "emptyObjectIsEmpty.s3o",
+						cegTag = "cchainlightning"
+						}					
+							
+						projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
+						
+						if gx then
+							Spring.SetProjectileTarget(projID,  gx,gy,gz)
+						end
 					end
 			   	end
+			else
+			 for i=1, 3 do
+
+						local	 ChaingProjParams={
+						pos = { px, py+20, pz},  
+						speed={math.random(-1,1),1,math.random(-1,1)},
+						owner = AttackerID,
+						team = teamid,	
+						spread = {0,0,0},
+						error = {0,0,0},
+						maxRange = 600,
+						gravity = Game.gravity,
+						 startAlpha = 1,
+						endAlpha = 1,						
+						model = "emptyObjectIsEmpty.s3o",
+						cegTag = "cchainlightning"
+						}
+							
+						projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
+						Spring.SetProjectileTarget(projID,  px+math.random(-40,40), py, pz+math.random(-40,40))
+						
+			 end
 			end
 		
 		end
 		
-		if weaponID == jgluegunDefID then
-			Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
+		if weaponDefID == jgluegunDefID then
+			id=Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
+			Spring.SetUnitBlocking(id,false)
 		end
 	
 	
-		if weaponID ==crazorgrenadeDefID then
-		RazorDroneMax= 5
-			if not RazorGrenadeTable[AttackerID] then RazorGrenadeTable[AttackerID] ={itterator=1} end
+		if weaponDefID ==crazorgrenadeDefID then
+	
+			if not RazorGrenadeTable[AttackerID] then RazorGrenadeTable[AttackerID] ={} end
 		
 			RazorGrenadeTable[AttackerID]=validateUnitTable(RazorGrenadeTable[AttackerID])
-				RazorGrenadeTable[AttackerID].itterator=(	RazorGrenadeTable[AttackerID].itterator% #RazorGrenadeTable[AttackerID])+1
 			
-			if #RazorGrenadeTable[AttackerID] > RazorDroneMax then
-			Spring.DestroyUnit(	RazorGrenadeTable[AttackerID][RazorGrenadeTable[AttackerID].itterator],true,true)
-			end
 			
 			teamID=Spring.GetUnitTeam(AttackerID)
-			RazorGrenadeTable[AttackerID][RazorGrenadeTable[AttackerID].itterator]=Spring.CreateUnit("crazordrone",px,py,pz,1,teamID)		
+			ad=0
+			if #RazorGrenadeTable[AttackerID] > 5 then
+			it=math.floor(math.random(1,5))
+				Spring.DestroyUnit(	RazorGrenadeTable[AttackerID][it],true,true)
+				RazorGrenadeTable[AttackerID][it]=Spring.CreateUnit("crazordrone",px,py,pz,1,teamID)	
+				ad=RazorGrenadeTable[AttackerID][it] 
+			else
+				RazorGrenadeTable[AttackerID][#RazorGrenadeTable[AttackerID]+1]=Spring.CreateUnit("crazordrone",px,py,pz,1,teamID)	
+				ad=RazorGrenadeTable[AttackerID][#RazorGrenadeTable[AttackerID]] 
+			end	
+			
+			
 			ed= Spring.GetUnitNearestEnemy(ad)
 			if ed then 
 				x,y,z=Spring.GetUnitPosition(ed)
@@ -188,14 +233,14 @@ end
 			end
 		end
 			
-		if weaponID == jvaryjumpDefID then
+		if weaponDefID == jvaryjumpDefID then
 			Spring.SetUnitPosition(AttackerID,px,py+80,pz)
 			Spring.MoveCtrl.Enable(AttackerID,true)
 			Spring.SetUnitAlwaysVisible(AttackerID,true)
 			Spring.SetUnitBlocking (AttackerID,true,true,true)
 		end
 		
-		if weaponID== jvaryfoospearDefID then
+		if weaponDefID== jvaryfoospearDefID then
 			--gluteus maximus- ha that sounds funny
 				if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
 			--wait a second thats my ass
@@ -203,16 +248,13 @@ end
 			Spring.SetUnitPosition(AttackerID,px,py,pz)	
 		end
 	
-			
-			
-		if weaponID== striderWeaponDefID then
+		if weaponDefID== striderWeaponDefID then
 			teamid=Spring.GetUnitTeam(AttackerID)
 			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
 		end
-			
-			
+					
 			--MTW Grenade
-		if weaponID== cmtwgrenade then
+		if weaponDefID== cmtwgrenade and Spring.ValidUnitID(AttackerID) ==true then
 			if Spring.GetUnitIsDead(AttackerID)==false then
 				teamid=Spring.GetUnitTeam(AttackerID)
 				Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
@@ -221,13 +263,13 @@ end
 			end
 		end
 			
-		if weaponID== cUniverseGun then
+		if weaponDefID== cUniverseGun then
 			tid=Spring.CreateUnit("cawilduniverseappears",px,py,pz, 1, gaiaTeamID)
 			Spring.SetUnitAlwaysVisible(tid,true)
 		end
 		
 				--jMotherofMercy
-		if weaponID == weaponDefIDjmotherofmercy then
+		if weaponDefID == weaponDefIDjmotherofmercy then
 			
 			env = Spring.UnitScript.GetScriptEnv(AttackerID)
 			if env then
@@ -236,17 +278,17 @@ end
 			
 		end
 		
-			if (weaponID == jghostDancerWeaponDefID or weaponID== jSwiftSpearID or weaponID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
+			if (weaponDefID == jghostDancerWeaponDefID or weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
 			Spring.SetUnitPosition(AttackerID,px,py,pz)
 			end
 			
 			--this one creates the headcrabs
-			if (weaponID == crabWeaponDefID) then
+			if (weaponDefID == crabWeaponDefID) then
 				ShockWaveRippleOutwards(px,pz, 150, 180, 90)
 			  Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID)  
 			end
 			  
-			  if weaponID== weapondefID3 then
+			  if weaponDefID== weapondefID3 then
 				Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
 				grenadeID=Spring.CreateUnit("ccomendernuke",px,py,pz,0,gaiaTeamID)
 				Spring.SetUnitNoSelect(grenadeID,true)
@@ -269,7 +311,7 @@ local 	affectedUnits={}
 	blowUpTable={}
 	local timeTillBlowUp=3500	
 	local 	jShadowDefID=UnitDefNames["jshadow"].id
-	local WeaponDefTable={}
+
 	
  WeaponDefTable[greenSeerWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 
@@ -297,6 +339,7 @@ local 	affectedUnits={}
  WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 		end
+		
  WeaponDefTable[highExLineGunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 		
 	
 			if 	blowUpTable[unitID] then blowUpTable[unitID].number= blowUpTable[unitID].number+1 
@@ -369,11 +412,15 @@ ux,uy,uz=ux-x,uy-y,uz-z
 return math.sqrt(ux^2+uy^2 +uz^2)
 end
 	
-	
+
 	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+
 	
 	--chain Lightning 
-	if weaponID == ChainLightningDefID and ChainLightningTable[attackerID] > 0 then
+	if weaponDefID == ChainLightningDefID and attackerID then
+		if not  ChainLightningTable[attackerID] then  ChainLightningTable[attackerID]=30 end
+	
+		
 		ChainLightningTable[attackerID]=ChainLightningTable[attackerID]-1
 		x,y,z=Spring.GetUnitPosition(unitID)
 		ed,ad=Spring.GetUnitNearestEnemy(unitID),Spring.GetUnitNearestAlly(unitID)
@@ -387,25 +434,27 @@ end
 		else 
 			targetID=ed 
 		end
+		gx,gy,gz=Spring.GetUnitPosition(targetID)
+		teamid=Spring.GetUnitTeam(attackerID)
+	local	 ChaingProjParams={
+						pos = { x, y+20, z},  
+						speed={0,1,0},
+						["end"] = {gx,gy,gz},
+						owner = attackerID,
+						team = teamid,	
+						ttl=420,
+						maxRange = 600,
+						gravity = Game.gravity,
+						startAlpha = 1,
+						tracking =true,
+						endAlpha = 1,						
+						model = "emptyObjectIsEmpty.s3o",
+						cegTag = "cchainlightning"
+						}
 		
-		Spring.SpawnProjectile( ChainLightningDefID ,{
-					pos = { x=px, y=py,  z=pz},  
-					speed = {1,1,1},
-					spread = {5,5,5},
-					owner = AttackerID,
-					team = teamid,
-					ttl = 42,
-					gravity = 130,
-					tracking = 1,
-					maxRange = 1220,
-					startAlpha = 0.01,
-					endAlpha = 0.01,
-					model = "emptyObjectIsEmpty.s3o",
-					cegTag = "cchainlightning"})
-					gx,gy,gz=Spring.GetUnitPosition(targetID)
-					if gx then
-						Spring.SetProjectileTarget(projID,  gx,gy,gz)
-					end
+	projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams) 
+					
+				
 		
 	elseif ChainLightningTable[attackerID] and  ChainLightningTable[attackerID] <= 0 then 
 		ChainLightningTable[attackerID] = nil
@@ -582,7 +631,7 @@ end
 			v={}
 			r={}
 			v.x,v.y,v.z=x-ux,y-uy,z-uz
-			v=Vnorm(v)
+			v=normVector(v)
 			v=vMul(v, 900) --power
 			
 			-- crossproduct = (vectordamage x v  ) -> Transfer to local coordsystem hitpiece origin vector 

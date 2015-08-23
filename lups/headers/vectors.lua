@@ -81,7 +81,7 @@ function Vadd(a,b)
   return v
 end
 
-function Vsub(a,b)
+function subVector(a,b)
   local v = {}
   local n = min(#a or 0,#b or 0)
   for i=1,n do v[i] = a[i]-b[i] end

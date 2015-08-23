@@ -16,7 +16,7 @@ buildPic = "placeholder.png",
   canPatrol              = true,
   canstop                = true,
 --Health
-maxDamage = 350,
+
 idleAutoHeal = 3,
 --Movement
 mass=220,
@@ -52,7 +52,7 @@ MaxVelocity = 4,
 
 
  maneuverleashlength    = [[640]],
-  mass                   = 300,
+
   maxDamage              = 900,
     minWaterDepth          = 1,
 	movementClass          = [[UBOAT3]],	

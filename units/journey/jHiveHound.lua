@@ -45,8 +45,7 @@ local unitDef = {
   	sightdistance=	50,
 	radardistance=50,
 	radardistancejam=0,
-  
-  	mass=450,
+
 
 	
   

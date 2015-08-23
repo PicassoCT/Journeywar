@@ -32,7 +32,7 @@ local unitDef  =  {
     floater=true,
     MovementClass = "HOVER2x2",
     TurnRate = 50,
-    mass                = 3750,
+    mass                = 9750,
 	
 	
 nanocolor=[[0 0.9 0.9]],

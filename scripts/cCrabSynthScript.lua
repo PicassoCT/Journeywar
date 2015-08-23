@@ -141,7 +141,7 @@ function MoveAnimation()
 		
 			
 		elseif 	( boolTurning ==true  ) and boolDeployed==false then
-			while (boolTurning ==true ) and boolDeployed==false  do
+			while (boolTurning ==true ) and boolDeployed==false and boolMoving==false  do
 				turnAnim()
 				Sleep(300)
 			end
@@ -675,6 +675,7 @@ end
 
 boolTurnLeft=false
 boolTurning=false
+TurnCount=0
 function headingChangeDetector()
 
 headingOfOld=Spring.GetUnitHeading(unitID)
@@ -691,8 +692,12 @@ oldx,_,oldz=Spring.GetUnitPosition(unitID)
 		
 		tempHead=Spring.GetUnitHeading(unitID)
 			if tempHead~=headingOfOld then
-				boolTurning=true 
+			TurnCount=TurnCount+1
+				if TurnCount > 3 then
+					boolTurning=true 
+				end
 			else 
+				TurnCount=0
 				boolTurning=false 
 			end  
 		boolTurnLeft = headingOfOld > tempHead	
@@ -712,11 +717,12 @@ boolReloaded=true
  NinetyDegrees=math.ceil(3.14158/4)
 local SIG_AIM=2
 function script.AimWeapon1( Heading ,pitch)	
+if boolDeployed==false then return false end
 Signal(SIG_AIM)
 SetSignalMask(SIG_AIM)
 	--aiming animation: instantly turn the gun towards the enemy
 	if boolDeployed ==true and boolReloaded == true then
-	Spring.Echo(Heading)
+	
 		Turn(GunRail,y_axis, Heading - 3.14159,1)
 		WaitForTurn(GunRail,y_axis)
 		return (boolDeployed and boolReloaded)

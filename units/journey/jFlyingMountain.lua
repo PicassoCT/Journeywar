@@ -11,7 +11,7 @@ buildPic = "placeholderj.png",
 buildCostMetal = 15,
 buildCostEnergy = 250,
 buildTime = 190,
-mass=1500,
+mass=150000,
 --Health
 maxDamage =3200,
 idleAutoHeal = 0,

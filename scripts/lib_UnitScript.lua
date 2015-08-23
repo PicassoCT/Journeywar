@@ -17,7 +17,7 @@
    
 ]]--
 --------------DEBUG HEADER
-lib_boolDebug=true
+lib_boolDebug=false
 
 
 --------------DEBUG HEADER
@@ -294,15 +294,7 @@ boolMoving= function (ox,oy,oz)
 
 end	
 
--->Turn Piece into various diretions within range
-function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
-	while true do
-	Turn(Piecename,axis,math.rad(math.random(rangeStart,rangeEnd)),speed)
-	WaitForTurn(Piecename,axis)
-	Sleep(1000)
-	end
 
-end
 
 -->plays the sounds handed over in a table 
 function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeT)
@@ -490,7 +482,7 @@ end
 function turnInTime(piecename,axis,degree,timeInMs,boolWait)
 
 
-absoluteDeg=absoluteRotation(piecename,axis,degree)
+absoluteDeg=absoluteRotation(piecename,axis,degree)+0.01
 
 timeInMs=timeInMs/1000
 Speed=math.abs(absoluteDeg)/timeInMs --9.3
@@ -529,8 +521,9 @@ if curdeg+360 < degree+360 then dir =-1 end
 end
 
 function syncTurnInTime(piecename,x_val,y_val,z_val,time)
-assert(time)
-Spring.Echo("Time for syncTurnInTime:"..time)
+	if lib_boolDebug==true then
+	Spring.Echo("Time for syncTurnInTime:"..time)
+	end
 turnInTime(piecename,x_axis, (x_val),time) -- -28   3000
 turnInTime(piecename,y_axis, (y_val),time)
 turnInTime(piecename,z_axis, (z_val),time)
@@ -587,6 +580,10 @@ function stopSpinT(Table,axis, speed)
 	StopSpin(Table[i],axis,speed)
 	end
 
+end
+
+function makeVector(x,y,z)
+return {x=x,y=y,z=z}
 end
 
 function makePiecePoint(piece)
@@ -734,7 +731,7 @@ vx,vy,vz=vx/norm,vy/norm,vz/norm
 
 W0={x=vy*-1,y=vx,z=0}
 DirectionV={x=vx,y=vy,z=vz}
-U0=vMul(W0,DirectionV)
+U0=mulVector(W0,DirectionV)
 U = {x=0,y=1,z=0}
 
 
@@ -831,13 +828,13 @@ end
 function TurnPieceTowardsPoint (piecename, x,y,z,Speed)
 pvec={x=0,y=0,z=0}
 px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
-pvec=Vnorm(pvec)
+pvec=normVector(pvec)
 
 vec={}
 vec.x,vec.y,vec.z=x-px,y-py,z-pz
-v=Vnorm(v)
-v=VsubV(v,pvec)
-v=Vnorm(v)
+v=normVector(v)
+v=subVector(v,pvec)
+v=normVector(v)
 tPrad(math.atan2(vec.y,vec.z),math.atan2(vec.x,vec.z),math.atan2(vec.x,vec.y),Speed)
 end
 
@@ -1392,9 +1389,9 @@ end
 function makePieceTable(unitID)
 RetT={}
 piecesTable=Spring.GetUnitPieceMap(unitID)
-for k,v in pairs(piecesTable) do
-RetT[#RetT+1]=v
-end
+	for k,v in pairs(piecesTable) do
+		RetT[#RetT+1]=v
+	end
 return RetT
 end
 
@@ -1418,6 +1415,7 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 	end
 
 Spring.Echo("PIECESLIST::END   |>-----------------------------")
+return makePieceTable(unitID)
 end
 
 
@@ -1444,17 +1442,17 @@ if not rate then r=50 end
 end
 --> Hides a PiecesTable, 
 function hideT(tablename,lowLimit,upLimit,delay)
-if lowLimit and upLimit then
-	for i=upLimit,lowLimit, -1 do
-	Hide(tablename[i])
-	if delay then Sleep(delay) end
-	end
+	if lowLimit and upLimit then
+		for i=upLimit,lowLimit, -1 do
+		Hide(tablename[i])
+		if delay then Sleep(delay) end
+		end
 
-else
-	for i=1,table.getn(tablename), 1 do
-	Hide(tablename[i])
+	else
+		for i=1,table.getn(tablename), 1 do
+		Hide(tablename[i])
+		end
 	end
-end
 end
 
 -->Shows a Pieces Table
@@ -1738,9 +1736,8 @@ function PseudoPhysix(piecename,pearthTablePiece, nrOfCollissions, forceFunction
 	
 end
 
-function createMass(mass,px,py,pz,vx,vy,vz,fx,fy,fz)
-mass={m=mass,pos={x=px,y=py,z=pz},vel={x=vx,y=vy,z=vz},force={x=fx,y=fy,z=fz}}
-return mass
+function createMass(mass,PosX,PosY,PosZ,velX,velY,velZ,fx,fy,fz)
+return {m=mass,pos={x=PosX,y=PosY,z=PosZ},vel={x=velX,y=velY,z=velZ},force={x=fx,y=fy,z=fz}}
 end
 
 function debugDisplayPieceChain(Tables)
@@ -1759,12 +1756,9 @@ T={}
 return T
 end
 
-function VMinus(v1,v2)
-return{x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
-end
 
 local countConstAnt=0
-function vMul(v1,value)
+function mulVector(v1,value)
 countConstAnt=countConstAnt+1
 --if not value or type(value)~='number' and #value == 0  then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
 
@@ -1773,17 +1767,17 @@ countConstAnt=countConstAnt+1
 			y=v1.y*value,
 			z=v1.z*value}
 		else		--return vector
-		Spring.Echo("JW:ToolKit:Vmul"..countConstAnt)
+		Spring.Echo("JW:ToolKit:mulVector"..countConstAnt)
 		return {x = v1.x*value.x,y=	v1.y*value.y, z=	v1.z*value.z}
 		end
 end
 
-function VLength(v1,v2)
-v=VMinus(v1,v2)
+function norm2Vector(v1,v2)
+v=subVector(v1,v2)
 return math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
 end
 
-function VdivV(v1, val)
+function divVector(v1, val)
 if not val.x then
 return {x=v1.x/val,y=v1.y/val,z=v1.z/val}
 else
@@ -1791,41 +1785,46 @@ return {x=v1.x/val.x,y=v1.y/val.y,z=v1.z/val.y}
 end
 end
 
-function VaddV(v1,val)
+function addVector(v1,val)
 return {x= v1.x+val.x, y= v1.y+val.y,z=v1.z+val.z}
 end
 
-function Vsub(v1,val)
-return {x=v1.x-val,y=v1.y-val,z=v1.z-val}
-end
-
-function VsubV(v1,v2)
-return {x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
+function subVector(v1,v2)
+	if type(v1)=="number" then
+		Spring.Echo("lib_UnitScript::Error:: Cant substract a Vector from a value!")
+		return
+	end
+	
+	if type(v2)=="number" then
+		return {x=v1.x-v2,y=v1.y-v2,z=v1.z-v2}
+	else
+		return {x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
+	end
 end
 
 function applyForce(force,force2)
-return VaddV(force,force2)
+return addVector(force,force2)
 end
 
-function Vnorm(v)
+function normVector(v)
 l=math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
 return {x=v.x/l ,y=v.y/l,z=v.z/l}
 end
 
 function solveSpring(s, sucessor, frictionConstant)
-  springVector =VMinus(s.mass1.pos,sucessor.mass1.pos)      -- Vector Between The Two Masses
+  springVector =subVector(s.mass1.pos,sucessor.mass1.pos)      -- Vector Between The Two Masses
          
-         r = VLength(springVector)                -- Distance Between The Two Masses
+         r = norm2Vector(springVector)                -- Distance Between The Two Masses
  
         force={x=0,y=0,z=0}                         -- Force Initially Has A Zero Value
          
         if r ~= 0 then                         -- To Avoid A Division By Zero... Check If r Is Zero  
-            force = VaddV(vMul(vMul(VdivV(springVector, r),-1),((r - s.length) * s.springConstant)),force)
+            force = addVector(mulVector(mulVector(divVector(springVector, r),-1),((r - s.length) * s.springConstant)),force)
 		end
-		    force = VaddV(force, vMul(VsubV(s.mass1.vel, sucessor.mass1.vel),-1*frictionConstant))     -- The Friction Force Is Added To The force
+		    force = addVector(force, mulVector(subVector(s.mass1.vel, sucessor.mass1.vel),-1*frictionConstant))     -- The Friction Force Is Added To The force
                                     -- With This Addition We Obtain The Net Force Of The Spring
-	s.mass1=VaddV(s.mass1,force)			-- Force Is Applied To mass1
-	sucessor.mass1=VaddV(sucessor.mass1,vMul(force,-1))	-- The Opposite Of Force Is Applied To mass2	
+	s.mass1=addVector(s.mass1,force)			-- Force Is Applied To mass1
+	sucessor.mass1=addVector(sucessor.mass1,mulVector(force,-1))	-- The Opposite Of Force Is Applied To mass2	
 return s,sucessor	
 end
 
@@ -1952,8 +1951,8 @@ size=math.sqrt(sizeX*sizeX+sizeY*sizeY+sizeZ*sizeZ)
 	MaxVal=math.abs(Ovec.y)/(1000/step)
 	
 	--Normalisieren des ObjectVectors
-	normV=Vnorm(OVec)
-	normV=Vmul(normV,TotalEnergy)
+	normV=normVector(OVec)
+	normV=mulVector(normV,TotalEnergy)
 	
 	speed=3.141
 	stepTimesVec=1
@@ -2075,12 +2074,12 @@ local ObjT={}
 		if ffT.pieceList then
 			for k in ipairs(fft.piecelist) do
 				if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x,ObjT[k].posdir.y,ObjT[k].posdir.z) == true then
-				ObjT[k].mass1.force=VaddV(ObjT[k].mass1.force, vMul(ffT[j].acceleration,ObjT[k].mass1.mass))		  
+				ObjT[k].mass1.force=addVector(ObjT[k].mass1.force, mulVector(ffT[j].acceleration,ObjT[k].mass1.mass))		  
 				end
 			end
 		else
 			for i=1,#ObjT, 1 do
-			ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force, vMul(ffT[j].acceleration,ObjT[i].mass1.mass))		
+			ObjT[i].mass1.force=addVector(ObjT[i].mass1.force, mulVector(ffT[j].acceleration,ObjT[i].mass1.mass))		
 			end
 		end
 		end	
@@ -2095,11 +2094,11 @@ local ObjT={}
 	for i=1,#ObjT, 2 do              -- Start A Loop To Apply Forces Which Are Common For All Masses
 		local Succesor=Limit(i,1,ObjT)
 		
-		ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force,vMul(gravitation,ObjT[i].mass1.mass))
+		ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,mulVector(gravitation,ObjT[i].mass1.mass))
 	
 		--    masses[a]->applyForce(gravitation * masses[a]->m);    -- The Gravitational Force
         -- The air friction
-		ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force, vMul(ObjT[i].vel, airFrictionConstant*-1))
+		ObjT[i].mass1.force=addVector(ObjT[i].mass1.force, mulVector(ObjT[i].vel, airFrictionConstant*-1))
 		
     --    masses[a]->applyForce(-masses[a]->vel * airFrictionConstant);
  
@@ -2122,8 +2121,8 @@ local ObjT={}
             -- In The Absorption Effect.
  
             -- Ground Friction Force Is Applied   
-			ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force,vMul(vMul(v1,-1),groundFrictionConstant))
-			ObjT[Succesor].mass1.force=VaddV(ObjT[Succesor].mass1.force,vMul(vMul(v2,-1),groundFrictionConstant))			
+			ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,mulVector(mulVector(v1,-1),groundFrictionConstant))
+			ObjT[Succesor].mass1.force=addVector(ObjT[Succesor].mass1.force,mulVector(mulVector(v2,-1),groundFrictionConstant))			
          
  
             v1 =ObjT[i].mass1.vel              -- Get The Velocity
@@ -2136,11 +2135,11 @@ local ObjT={}
             -- The Absorption Force
  
             if (v1.y < 0) then              
-            	ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force, vMul(vMul(vMul(v1,-1),groundAbsorptionConstant)))  
+            	ObjT[i].mass1.force=addVector(ObjT[i].mass1.force, mulVector(mulVector(mulVector(v1,-1),groundAbsorptionConstant)))  
 			end
 			
 			if ( v2.y < 0) then
-			 	ObjT[Succesor].mass1.force=VaddV(ObjT[Succesor].mass1.force, vMul(vMul(vMul(v2,-1),groundAbsorptionConstant)))
+			 	ObjT[Succesor].mass1.force=addVector(ObjT[Succesor].mass1.force, mulVector(mulVector(mulVector(v2,-1),groundAbsorptionConstant)))
 			end
             
 			x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,ObjT[i].piecename)
@@ -2151,20 +2150,20 @@ local ObjT={}
 				-- With A Magnitude Of groundRepulsionConstant.
 				-- By (groundHeight - masses[a]->pos.y) We Repel A Mass As Much As It Crashes Into The Ground.
 				gh=groundHeight(	ObjT[i].piecename)
-				f1=vMul(vMul({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[i].mass1.pos.y)
-				f2=vMul(vMul({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[Succesor].mass1.pos.y)
+				f1=mulVector(mulVector({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[i].mass1.pos.y)
+				f2=mulVector(mulVector({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[Succesor].mass1.pos.y)
 				
-				ObjT[Succesor].mass1.force=VaddV(ObjT[Succesor].mass1.force,f2)		
-				ObjT[i].mass1.force=VaddV(ObjT[i].mass1.force,f1)		      -- The Ground Repulsion Force Is Applied
+				ObjT[Succesor].mass1.force=addVector(ObjT[Succesor].mass1.force,f2)		
+				ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,f1)		      -- The Ground Repulsion Force Is Applied
 			end
 	end	   
 		  --simulate 
 			for i=1, #ObjT, 1 do
 			--vel += (force/mass)* dt
-			ObjT[i].mass1.vel= VaddV(ObjT[i].mass1.vel,vMul( VdivV(ObjT[i].mass1.force,ObjT[i].mass1.m),timeInMS))
-			ObjT[Succesor].mass1.vel= VaddV(ObjT[Succesor].mass1.vel,vMul( VdivV(ObjT[Succesor].mass1.force,ObjT[Succesor].mass1.m),timeInMS))
-			ObjT[i].mass1.pos=VaddV(ObjT[i].mass1.pos, Vsub(ObjT[i].mass1.vel,timeInMS))
-			ObjT[Succesor].mass1.pos=VaddV(ObjT[Succesor].mass1.pos, Vsub(ObjT[Succesor].mass1.vel,timeInMS))
+			ObjT[i].mass1.vel= addVector(ObjT[i].mass1.vel,mulVector( divVector(ObjT[i].mass1.force,ObjT[i].mass1.m),timeInMS))
+			ObjT[Succesor].mass1.vel= addVector(ObjT[Succesor].mass1.vel,mulVector( divVector(ObjT[Succesor].mass1.force,ObjT[Succesor].mass1.m),timeInMS))
+			ObjT[i].mass1.pos=addVector(ObjT[i].mass1.pos, subVector(ObjT[i].mass1.vel,timeInMS))
+			ObjT[Succesor].mass1.pos=addVector(ObjT[Succesor].mass1.pos, subVector(ObjT[Succesor].mass1.vel,timeInMS))
 			end
 		--TranslatePieces to new Positions
 		
@@ -2325,8 +2324,9 @@ if GG.UnitDefSoundLock[unitdef] == nil then  GG.UnitDefSoundLock[unitdef]=0 end
 	if  GG.UnitDefSoundLock[unitdef] < nrOfUnitsParallel then
 	GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]+1
 	Spring.PlaySoundFile(soundfile,loud)
-		if time <= 0 then time =2500 end
+	if time > 0 then  
 	Sleep(time)
+	end
 	GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]-1
 	return true
 	end
@@ -3851,7 +3851,7 @@ end
 			if h > 0 then 
 			v={}
 			v.x,v.y,v.z=Spring.GetGroundNormal(i*chunkSizeX,chunkSizeZ*j)
-			v=Vnorm(v)
+			v=normVector(v)
 				if v.y -math.abs(v.x)-math.abs(v.z) > 0.1 then
 				return  math.ceil(i*chunkSizeX), math.ceil(i*chunkSizeZ) 
 				end

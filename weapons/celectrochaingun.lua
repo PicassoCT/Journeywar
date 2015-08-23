@@ -8,16 +8,14 @@ highTrajectory =0,
 
 --Physic/flight path
 range=1220,
-reloadtime=12,
+reloadtime=8,
 weaponVelocity=600,
 startVelocity=450,
-weaponAcceleration=200,
+weaponAcceleration=400,
 flightTime=12.5,
-BurnBlow=0,
+
 FixedLauncher=false,
 
-dance=0,
-wobble=0,
 trajectoryheight=25.8,
 accuracy = 4200,
 tolerance=16000,
@@ -26,7 +24,7 @@ collideFriendly=true,
 
 ----APPEARANCE
 model="cChaingLightningGunProj.s3o",
-smokeTrail=true,
+smokeTrail=false,
 
 CegTag="citadelldrone",
 
@@ -39,13 +37,13 @@ avoidFriendly=true,
 
 ----DAMAGE
 damage={
-default=1,
+default=10,
 },
 areaOfEffect=3,
 craterMult=0,
 
 --?FIXME***
-lineOfSight=true,
+lineOfSight=false,
 
 
 --sound

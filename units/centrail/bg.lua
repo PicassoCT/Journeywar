@@ -18,7 +18,7 @@ idleAutoHeal = 3,
 onoffable=true,
 ActivateWhenBuilt=0,
 --Movement
-mass=120,
+mass=300,
 upright=true,
 Acceleration = 8,
 BrakeRate = 2,

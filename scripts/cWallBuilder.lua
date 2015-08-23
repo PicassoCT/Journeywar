@@ -404,8 +404,8 @@ end
 
 function script.AimWeapon1( heading ,pitch)	
 	
-	Turn(podturret0,y_axis, -heading, 3)
-    Turn(podturret0,x_axis, pitch, 3)
+	Turn(podturret0,y_axis, heading, 3)
+    Turn(podturret0,x_axis, -pitch, 3)
 	WaitForTurn(podturret0,y_axis)
 	WaitForTurn(podturret0,x_axis)
 	return true
@@ -439,8 +439,8 @@ end
 
 function script.AimWeapon2( heading ,pitch)	
 	
-	Turn(podturret3,y_axis, -heading, 3)
-    Turn(podturret3,x_axis, pitch, 3)
+	Turn(podturret3,y_axis, heading, 3)
+    Turn(podturret3,x_axis, -pitch, 3)
 	WaitForTurn(podturret3,y_axis)
 	WaitForTurn(podturret3,x_axis)
 	return true
@@ -460,10 +460,6 @@ end
 
 
 
-function chargeUp(boolischarged)
-
-----Spring.Echo("Short Circuit is short")
-end
 
 
 
@@ -481,8 +477,8 @@ end
 
 function script.AimWeapon3( heading ,pitch)	
 	
-	Turn(podturret1,y_axis, -heading, 3)
-    Turn(podturret1,x_axis, pitch, 3)
+	Turn(podturret1,y_axis, heading, 3)
+    Turn(podturret1,x_axis, -pitch, 3)
 	WaitForTurn(podturret1,y_axis)
 	WaitForTurn(podturret1,x_axis)
 	return true
@@ -545,7 +541,7 @@ end
 
 function script.AimWeapon4( heading ,pitch)	
 	
-	return true
+	return false
 end
 
 function script.FireWeapon4()	
@@ -565,7 +561,7 @@ end
 
 function script.AimWeapon5( heading ,pitch)	
 	
-	return true
+	return false
 end
 
 function script.FireWeapon5()	

@@ -259,3 +259,14 @@ function deactivateAndReturnCosts(boolJustOnceDeny,UnitDef)
 
 
 end
+
+
+-->Turn Piece into various diretions within range
+function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
+	while true do
+	Turn(Piecename,axis,math.rad(math.random(rangeStart,rangeEnd)),speed)
+	WaitForTurn(Piecename,axis)
+	Sleep(1000)
+	end
+
+end

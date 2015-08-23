@@ -23,7 +23,7 @@ MaxVelocity = 0.7,
 MaxWaterDepth = 2000,
 MovementClass = "Default2x2",
 TurnRate = 450,
-mass=150,
+mass=1500,
 	selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
   
