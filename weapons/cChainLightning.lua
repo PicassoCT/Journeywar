@@ -14,9 +14,9 @@ weaponAcceleration=50,
 flightTime=18.5,
 BurnBlow=0,
 FixedLauncher=false,
-dance=16,
-wobble=25,
-turnrate=9500,
+dance=160,
+wobble=225,
+turnrate=25500,
 tolerance=6000,
 tracks=true,
 collideFriendly=false,
@@ -48,8 +48,8 @@ lineOfSight=false,
  noSelfDamage       = true,
 
 --sound
---soundHit="null",
---soundStart="citadell/dronelaunch",
+soundHit="sounds/ccrabsynth/clightning1.ogg",
+soundStart="sounds/ccrabsynth/clightning2.ogg",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

@@ -148,7 +148,7 @@ end
 						gx,gy,gz=Spring.GetUnitPosition(T[i])
 						v=makeVector(px-gx,py-gy,pz-gz)
 						v=normVector(v)
-						v=mulVector(v,-19)
+						v=mulVector(v,-1)
 					
 					
 					
@@ -196,7 +196,7 @@ end
 						}
 							
 						projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
-					)
+					
 						
 			 end
 			end
@@ -448,7 +448,7 @@ end
 		teamid=Spring.GetUnitTeam(attackerID)
 	local	 ChaingProjParams={
 						pos = { x, y+max+10, z},  
-						speed={0,math.random(2,7),0},
+						speed={0,math.random(1,3),0},
 						["end"] = {gx,gy,gz},
 						owner = attackerID,
 						team = teamid,	

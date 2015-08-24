@@ -790,26 +790,9 @@ end
 function script.FireWeapon7()	
 	return WeaponTable[7].fireweapon()
 end
- aimpiece8 = WeaponTable[8].AimFromqpiece
-function script.AimFromWeapon8() 
-	return aimpiece8
-end
-
- weaponpiece8 = WeaponTable[8].qpiece
-function script.QueryWeapon8() 
-	return weaponpiece8
-end
 
 
-function script.AimWeapon8( Heading ,pitch)	
- 
-	return WeaponTable[8].aimweapon(Heading,pitch,8)and boolUnderPressure==true 
-end
- 
 
-function script.FireWeapon8()	
-	return WeaponTable[8].fireweapon()
-end
 
 
 

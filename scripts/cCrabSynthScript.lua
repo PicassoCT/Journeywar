@@ -238,7 +238,7 @@ syncTurnInTime(Leg53, 65,0, 89	,time)
 WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 unfoldPlate()
 unfoldWeapon(0.15)
-Sleep(time)
+Sleep(3000)
 SetUnitValue(COB.MAX_SPEED,1)
 boolDeployed=true			
 end

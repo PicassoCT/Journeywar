@@ -113,8 +113,8 @@ local COLLISION_IMPULSEFACTOR = 0.75 --How much affects unit impulse to damage c
 local COLLISION_MASSFACTOR = 0.50 --How much affects unit mass to damage (same as above)
 
 local TRACTOR_IGNORELIST = { --Units ignored from being tractored
-	cComEnder = true,
-	jComEnder = true,
+	ccomender = true,
+	jvarytara = true,
 }
 
 local CMD_WAIT = CMD.WAIT
@@ -138,6 +138,7 @@ end
 
 local function GetUnitWeaponPiece(unitID, weaponNum)
 	local env = Spring.UnitScript.GetScriptEnv(unitID)
+		if not env then  return nil end
 	local weaponFunc = env.script["QueryWeapon" .. weaponNum] --Get the corresponding weapon num query function example: 2 -> "QueryWeapon2"
 	if weaponFunc == nil then
 		return nil --Func is not present in unitscript

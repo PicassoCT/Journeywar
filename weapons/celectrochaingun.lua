@@ -8,7 +8,7 @@ highTrajectory =0,
 
 --Physic/flight path
 range=1220,
-reloadtime=8,
+reloadtime=18,
 weaponVelocity=600,
 startVelocity=450,
 weaponAcceleration=400,
@@ -47,8 +47,8 @@ lineOfSight=false,
 
 
 --sound
---soundHit="null",
---soundStart="null",
+soundHit="sounds/ccrabsynth/clightning1.ogg",
+soundStart="sounds/ccrabsynth/magnetGun.ogg",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

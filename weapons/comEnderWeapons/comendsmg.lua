@@ -22,7 +22,7 @@ local weaponDef={
 				impulsefactor = 0.12300000339746,
 		  burst=2,
 		  burstrate=0.2,
-		  soundStart         = "maschinegun",
+		  soundStart         = "sounds/cComEnder/submg.ogg",
 		  soundtrigger=1,
 		  SweepFire=1,
 		  --apperance

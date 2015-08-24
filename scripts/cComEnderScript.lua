@@ -1025,13 +1025,11 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	
 	guidedMissile=makeTableOfPieceNames("guided",3,1)
 	unguidedMissile=makeTableOfPieceNames("unguided",3,1)
-	hideT(guidedMissile)
-	hideT(unguidedMissile)
-	TangleGun=piece"tangleGun"
+	
+	TangleGun=piece"TangleGun"
 	tangleGun={}
 	tangleGun[#tangleGun+1]=TangleGun
-	hideT(tangleGun)
-	
+
 	cSniper={}
 	cSniper[#cSniper+1]={}
 	cSniper[#cSniper]=sniper
@@ -1218,9 +1216,9 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	
 	shieldsToShow={}
 	for i=16, 28, 1 do
-	shieldsToShow[#shieldsToShow+1]={}
-	piecename="shield"..i
-	shieldsToShow[#shieldsToShow]=piece(piecename)
+		shieldsToShow[#shieldsToShow+1]={}
+		piecename="shield"..i
+		shieldsToShow[#shieldsToShow]=piece(piecename)
 	end
 
 
@@ -1241,13 +1239,13 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	end
 	
 	function showSunburst()
-	if 	Weapons[8][1]== 1 then Show(SunBurst1) end
-	if 	Weapons[8][1]== 2 then Show(SunBurst2) end
-	if 	Weapons[8][1]== 3 then Show(SunBurst3) end
+		if 	Weapons[8][1]== 1 then Show(SunBurst1) end
+		if 	Weapons[8][1]== 2 then Show(SunBurst2) end
+		if 	Weapons[8][1]== 3 then Show(SunBurst3) end
 	end
 	function showGLauncher()
 		 for i=1,#gLauncher,1 do 
-		 Show(gLauncher[i])
+			Show(gLauncher[i])
 		 end 
 	 end  
 	function showStarBurst()
@@ -1692,6 +1690,9 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
 	--generatepiecesTableAndArrayCode(unitID)
+	hideT(guidedMissile)
+	hideT(unguidedMissile)
+	hideT(tangleGun)
 	
 		reseT(piecesTable)
 		hideT(piecesTable)
