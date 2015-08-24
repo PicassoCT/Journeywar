@@ -97,10 +97,6 @@ weapons = {
 
 	},
 
-[8]={name  = "ccitadelltur",
-	onlyTargetCategory = [[LAND AIR]],
-
-	},
 
 	
 	},

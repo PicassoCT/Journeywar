@@ -42,7 +42,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
 	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
-	local slicergun = WeaponDefNames["slicergun"].id
+	local slicergunDefID = WeaponDefNames["slicergun"].id
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
@@ -75,7 +75,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jvaryjumpDefID , true)
 	Script.SetWatchWeapon(striderWeaponDefID , true)
 	Script.SetWatchWeapon(tiglilWeaponDefID , true)
-	Script.SetWatchWeapon(slicergun , true)
+	Script.SetWatchWeapon(slicergunDefID , true)
 	Script.SetWatchWeapon(weaponDefIDjmotherofmercy , true)
 	Script.SetWatchWeapon(cFlareGun , true)
 	Script.SetWatchWeapon(cUniverseGun , true)
@@ -154,10 +154,12 @@ end
 					
 						local	 ChaingProjParams={
 						pos = { px, py+20, pz},  
+						["end"] = {gx,gy,gz},
 						speed={v.x,v.y,v.z},
 						owner = AttackerID,
 						team = teamid,	
-						spread = {0,0,0},
+						spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
+						ttl=420,
 						error = {0,0,0},
 						maxRange = 600,
 						gravity = Game.gravity,
@@ -166,23 +168,24 @@ end
 						model = "emptyObjectIsEmpty.s3o",
 						cegTag = "cchainlightning"
 						}					
-							
+						
 						projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
 						
-						if gx then
-							Spring.SetProjectileTarget(projID,  gx,gy,gz)
-						end
+					
 					end
 			   	end
 			else
-			 for i=1, 3 do
+			 for i=1, 3 ,1  do
 
-						local	 ChaingProjParams={
+								local	 ChaingProjParams={
 						pos = { px, py+20, pz},  
-						speed={math.random(-1,1),1,math.random(-1,1)},
+						["end"] = {math.random(-150,150),math.random( 0,150),math.random(-150,150)},
+						speed={v.x,v.y,v.z},
 						owner = AttackerID,
 						team = teamid,	
-						spread = {0,0,0},
+						spread={math.random(-50,50),math.random(-50,50),math.random(-50,50)},
+						ttl=420,
+						tracking=true,
 						error = {0,0,0},
 						maxRange = 600,
 						gravity = Game.gravity,
@@ -193,7 +196,7 @@ end
 						}
 							
 						projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
-						Spring.SetProjectileTarget(projID,  px+math.random(-40,40), py, pz+math.random(-40,40))
+					)
 						
 			 end
 			end
@@ -357,20 +360,21 @@ local 	affectedUnits={}
 		end
 		
 		
- WeaponDefTable[slicergun]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-
+ WeaponDefTable[slicergunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")
 		--only if the unit is hitsphere wise big enough 
 		hp,maxhp=Spring.GetUnitHealth(unitID)
-			if hp < 500 then
+			if hp/maxhp < 0.5 and hp < 300 then
 			sx,sy,sz=Spring.GetUnitCollisionVolumeData(unitID)
-				if sx > 70 and sy > 70 and sz > 70 then
+				if math.sqrt(sx ^2 +sy ^2 + sz^2) >35 then
 				
 
 													  x,y,z=Spring.GetUnitPosition(unitID)
-													  slicerColum=Spring.CreateUnit("cmeatcolumn",	x,y,z, 1, gaiaTeamID)  
+													  slicerColum=Spring.CreateUnit("cmeatcolumn",	x,y,z, 1, unitTeam)  
+													  Spring.SetUnitNoSelect(slicerColum,true)
 													  env = Spring.UnitScript.GetScriptEnv(slicerColum)
 													  if env then
-													  Spring.UnitScript.CallAsUnit(unitID, env.youAreFuckingDead, unitID )		
+														Spring.UnitScript.CallAsUnit(unitID, env.youAreFuckingDead, unitID )		
 													  end
 
 				
@@ -407,9 +411,9 @@ local 	affectedUnits={}
 function distanceOfUnitTo(ud,x,y,z)
 	if not ud then return math.huge end
 
-ux,uy,uz=Spring.GetUnitPosition(ud)
-ux,uy,uz=ux-x,uy-y,uz-z
-return math.sqrt(ux^2+uy^2 +uz^2)
+px,py,pz=Spring.GetUnitPosition(ud)
+ux,uy,uz=px-x,py-y,pz-z
+return math.sqrt(ux^2+uy^2 +uz^2),px,py,pz
 end
 	
 
@@ -425,23 +429,30 @@ end
 		x,y,z=Spring.GetUnitPosition(unitID)
 		ed,ad=Spring.GetUnitNearestEnemy(unitID),Spring.GetUnitNearestAlly(unitID)
 		
-		distEnemy=distanceOfUnitTo(ed,x,y,z)
-		distAlly=distanceOfUnitTo(ad,x,y,z)
+		distEnemy,ex,ey,ez=distanceOfUnitTo(ed,x,y,z)
+		distAlly,ax,ay,az=distanceOfUnitTo(ad,x,y,z)
 		
 		targetID=0
 		if distEnemy > distAlly then 
 			targetID=ad 
+			gx,gy,gz=ax,ay,az
 		else 
 			targetID=ed 
+			gx,gy,gz=ex,ey,ez
 		end
-		gx,gy,gz=Spring.GetUnitPosition(targetID)
+		
+		vx,vy,vz=Spring.GetUnitCollisionVolumeData(unitID)
+		max=math.max(vx,math.max(vy,vz))
+		
+		
 		teamid=Spring.GetUnitTeam(attackerID)
 	local	 ChaingProjParams={
-						pos = { x, y+20, z},  
-						speed={0,1,0},
+						pos = { x, y+max+10, z},  
+						speed={0,math.random(2,7),0},
 						["end"] = {gx,gy,gz},
 						owner = attackerID,
 						team = teamid,	
+						spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
 						ttl=420,
 						maxRange = 600,
 						gravity = Game.gravity,
@@ -453,7 +464,7 @@ end
 						}
 		
 	projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams) 
-					
+		
 				
 		
 	elseif ChainLightningTable[attackerID] and  ChainLightningTable[attackerID] <= 0 then 

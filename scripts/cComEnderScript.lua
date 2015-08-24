@@ -15,7 +15,7 @@
 	-- TangleGun
 	-- StarburstRockets
 	-- AA-Rockets
-	-- Slicer
+	-- 10 Slicer
 	-- Flaregun
 	-- Eaters
 	
@@ -1023,6 +1023,15 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	
 
 	
+	guidedMissile=makeTableOfPieceNames("guided",3,1)
+	unguidedMissile=makeTableOfPieceNames("unguided",3,1)
+	hideT(guidedMissile)
+	hideT(unguidedMissile)
+	TangleGun=piece"tangleGun"
+	tangleGun={}
+	tangleGun[#tangleGun+1]=TangleGun
+	hideT(tangleGun)
+	
 	cSniper={}
 	cSniper[#cSniper+1]={}
 	cSniper[#cSniper]=sniper
@@ -1052,6 +1061,12 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	
 	cFieldScooper={} 
 	cFieldScooper[#cFieldScooper+1]=fieldscooper
+	projector1=piece"projector1"
+	projector2=piece"projector2"
+	projector3=piece"projector3"
+	cFieldScooper[#cFieldScooper+1]=projector1
+	cFieldScooper[#cFieldScooper+1]=projector2
+	cFieldScooper[#cFieldScooper+1]=projector3
 	
 	LegsTable={}
 	for i=8,12, 1 do
@@ -1238,11 +1253,11 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	function showStarBurst()
 	Show(starburst[1])
 	end
-	
+	function showTangleGun()
+	showT(tangleGun)
+	end
 	function showSliceGun()
-		for i=1,#cFieldScooper do
-		Show(cFieldScooper[i])
-		end
+		showT(cFieldScooper) 
 	end
 	
 	function showSniper()
@@ -1451,7 +1466,7 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	Weapons[6][6]= 3					--  CurrentMaxAmmo    
 	Weapons[6][7]= 5					--  Priority
 	
-	--TangleGun
+
 	--ShotGun
 	Weapons[7]={}
 	Weapons[7][1]=0   				     --WeaponLevel   
@@ -1478,7 +1493,20 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	Weapons[8][8]=  2000        		  --Downtime
 	Weapons[8][9]=  0.2        		  	  --RecoilMax	
 	--</ShotTractorGun>
-
+	
+	--TangleGun
+	Weapons[9]={}
+	Weapons[9][1]=1   				     --WeaponLevel   
+	Weapons[9][2]=3        				 --WeaponMax    
+	Weapons[9][3]=tangleGun       
+	Weapons[9][4]=showTangleGun                    		       
+	Weapons[9][5]=  0.1                	  --AmmoCost           
+	Weapons[9][6]=  0.05        		  --StabilityCost	 
+	Weapons[9][7]=  3        		  	  --PriorityLevel the bigger the more Priority it Got
+	Weapons[9][8]=  500        		  --Downtime
+	Weapons[9][9]=  0       		  	  --RecoilMax	
+	
+	
 	--Aimed Rockets Land
 	--Aimed Rockets AIR
 	--</WEAPONS>
@@ -1664,13 +1692,13 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
 	--generatepiecesTableAndArrayCode(unitID)
-		for i=1,#piecesTable,1 do
-		Hide(piecesTable[i])
-		end
+	
+		reseT(piecesTable)
+		hideT(piecesTable)
+		hideT(cFieldScooper)
 
-		for i=1,#basics,1 do
-		Show(basics[i])
-		end
+		showT(basics)
+
 	
 	
 
@@ -3019,6 +3047,7 @@ boolSniperOnce=false
 
 	--</FlareGun>
 	
+
 	--<SliceGun>
 	
 	function script.AimFromWeapon10() 
@@ -3051,16 +3080,7 @@ boolSniperOnce=false
 	function script.AimWeapon10( heading ,pitch)	
 	return true 
 	end
-		-- if Weapons[5][1] > 0  and gotPriority(Weapons[5][7])==true  then 
-			-- if Weapons[5][5] ==true then 
-			-- Weapons[5][5] = false
-			-- return true
-			-- end
-		-- return false 
-		-- end
-		
-	-- return false
-	-- end
+
 
 	function sliceGunSFX()
 				EmitSfx( Weapons[5][3],1028)
@@ -3079,6 +3099,54 @@ boolSniperOnce=false
 
 	--</SliceGun>
 	
+	--<TangleGun>
+	
+	function script.AimFromWeapon11() 
+		return You 
+	end
+
+
+
+	function script.QueryWeapon11() 
+	return Weapons[9][3]
+	end
+
+
+	function reloadTangleGun()
+
+		Sleep(Weapons[9][6]/Weapons[9][1]) 
+		boolTangleGunLoaded=true
+	end
+	
+	function script.AimWeapon11( heading ,pitch)	
+	return boolTangleGunLoaded 
+	end
+
+
+	function sliceGunSFX()
+				EmitSfx( Weapons[9][3],1128)
+				Sleep(1300)
+				EmitSfx(Weapons[9][3],1129 )
+	end
+	
+	TangleCounter=0
+	function script.FireWeapon11()	
+	TangleCounter= 	TangleCounter+1
+		ammonition=ammonition-Weapons[9][8]  
+		if TangleCounter > 3* Weapons[9][1]  then --tangling ended
+			boolTangleGunLoaded=false
+			StartThread(reloadTangleGun)
+			TangleCounter=0
+		end
+	
+		
+			
+	return true
+	end
+
+	
+	
+	--</TangleGun>
 	
 	
 	--</WEAPON>

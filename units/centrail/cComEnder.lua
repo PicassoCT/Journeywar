@@ -119,6 +119,9 @@ weapons = {
 	},	
 [11]={name  = "crazorgrenade",
 	onlyTargetCategory = [[LAND]],
+	},
+[12]={name  = "ctanglegun",
+	onlyTargetCategory = [[LAND]],
 	},	
 	
 -- [7]={name  = "aarocket",

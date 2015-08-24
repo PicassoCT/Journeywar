@@ -593,20 +593,13 @@ end
 		return true 
 	end,
 	aimweapon=function(Heading,pitch,nr) 
+		if math.abs(Heading) < 3.141/2 then
+			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+		end
 	return true 
  end
-	},
-[8]={
-	AimFromqpiece=Core,
-	qpiece=Core,
-	fireweapon= function() 
-		return true 
-	end,
-	aimweapon=function(Heading,pitch,nr) 
-	
-	return true 
- end
-	},
+	}
 
 }
 --Weapon1
