@@ -122,6 +122,12 @@ weapons = {
 	},
 [12]={name  = "ctanglegun",
 	onlyTargetCategory = [[LAND]],
+	},
+[13]={name  = "aarocket",
+	onlyTargetCategory = [[AIR]],
+	},	
+[14]={name  = "grocket",
+	onlyTargetCategory = [[LAND]],
 	},	
 	
 -- [7]={name  = "aarocket",

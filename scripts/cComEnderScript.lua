@@ -1215,10 +1215,12 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	
 	
 	shieldsToShow={}
+
 	for i=16, 28, 1 do
 		shieldsToShow[#shieldsToShow+1]={}
 		piecename="shield"..i
 		shieldsToShow[#shieldsToShow]=piece(piecename)
+
 	end
 
 
@@ -1504,9 +1506,41 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	Weapons[9][8]=  500        		  --Downtime
 	Weapons[9][9]=  0       		  	  --RecoilMax	
 	
+	function showARocket()
+		for i=1,Weapons[13][1], 1 do
+		Show(guidedMissile[i])
+		end
+	end
+	--Anti Air Rockets
+	Weapons[13]={}
+	Weapons[13][1]=1   				     --WeaponLevel   
+	Weapons[13][2]=3        				 --WeaponMax    
+	Weapons[13][3]=guidedMissile       
+	Weapons[13][4]=showARocket                    		       
+	Weapons[13][5]=  0.1                	  --AmmoCost           
+	Weapons[13][6]=  0.05        		  --StabilityCost	 
+	Weapons[13][7]=  3        		  	  --PriorityLevel the bigger the more Priority it Got
+	Weapons[13][8]=  700        		  --Downtime
+	Weapons[13][9]=  0       		  	  --RecoilMax	
 	
-	--Aimed Rockets Land
-	--Aimed Rockets AIR
+	
+	function showGroundRocket()
+		for i=1,Weapons[14][1], 1 do
+			Show(unguidedMissile[i])
+		end
+	end
+	-- Ground Rocket 
+	Weapons[14]={}
+	Weapons[14][1]=1   				     --WeaponLevel   
+	Weapons[14][2]=3        				 --WeaponMax    
+	Weapons[14][3]=unguidedMissile     
+	Weapons[14][4]=showGroundRocket                   		       
+	Weapons[14][5]=  0.1                	  --AmmoCost           
+	Weapons[14][6]=  0.05        		  --StabilityCost	 
+	Weapons[14][7]=  3        		  	  --PriorityLevel the bigger the more Priority it Got
+	Weapons[14][8]=  700        		  --Downtime
+	Weapons[14][9]=  0       		  	  --RecoilMax	
+	
 	--</WEAPONS>
 	--<TOOLS>
 	--EscapePod
@@ -1605,7 +1639,41 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 			end
 
 	end
-
+local	x_Turn_Shields={
+	[22]=true,
+	[17]=true,
+	[26]=true,
+	[23]=true,
+	[20]=true,
+	[27]=true,
+	[24]=false,
+	[19]=false,
+	[28]=false,
+	[21]=false,
+	[16]=false,
+	[25]=false
+	}
+	
+	function animateShieldTexture(j,start,showThemAll)
+			for h=1,4 do
+					for j=start,j < NumberOfLegs, 1+showThemAll do
+						if x_Turn_Shields[j+15] then
+							if x_Turn_Shields[j+15]==true 
+								Turn((shieldsToShow[j],x_axis,math.rad(180),0)
+							else
+								Turn((shieldsToShow[j],z_axis,math.rad(180),0)	
+							end
+						end
+					end
+				 
+				
+						rest=math.ceil((damage/i)*0.25)
+						Sleep(rest)
+						
+				end	
+	
+	end
+	
 	--Function shows Shields if the ComEnder is hit
 	function shieldFlicker(degreeInRads,damage)
 	showThemAll=0
@@ -1620,14 +1688,16 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 			
 			start=addx+1
 				for j=start,j < NumberOfLegs, 1+showThemAll do
-				Show(shieldsToShow[j])
+					Show(shieldsToShow[j])
 				end
-						rest=math.ceil(damage/i)
-						Sleep(rest)
+				
+					--gif Animation of Texture
+					animateShieldTexture(j,start,showThemAll)
+						
 				for j=1+addx,j < NumberOfLegs, 1+showThemAll do
 				Hide(shieldsToShow[j])
 				end
-						rest=math.ceil(damage/i)
+						rest=math.ceil(damage/i*2)
 						Sleep(rest)
 
 			end
@@ -1813,16 +1883,33 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		Weapons[5][1]=math.min(Weapons[5][1]+1,Weapons[5][2])
 		Weapons[5][4]()	
 		spSetUnitExperience(unitID,XP -1)
+		end	
+		
+		if upgradeType == "TANGLE" and Weapons[9][1] ~= Weapons[9][2] then
+		Weapons[9][1]=math.min(Weapons[9][1]+1,Weapons[9][2])
+		Weapons[9][4]()	
+		spSetUnitExperience(unitID,XP -1)
 		end
+		
+		if upgradeType == "AROCKET" and Weapons[9][1] ~= Weapons[9][2] then
+		Weapons[9][1]=math.min(Weapons[9][1]+1,Weapons[9][2])
+		Weapons[9][4]()	
+		spSetUnitExperience(unitID,XP -1)
+		end
+		
+		if upgradeType == "GROCKET" and Weapons[9][1] ~= Weapons[9][2] then
+		Weapons[9][1]=math.min(Weapons[9][1]+1,Weapons[9][2])
+		Weapons[9][4]()	
+		spSetUnitExperience(unitID,XP -1)
+		end
+		
+		
 		--identify Upgrade Possible
 			
 		
 		--[[
 	
-		 
-		
-		 "SUNBURST"
-		 "TANGLE"
+
 		 "AROCKET"
 		 "GROCKET"
 
@@ -1831,8 +1918,7 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		 "AMMOFAC"
 		 "STEALTH"
 		 "RADAR"
-		
-		
+
 		
 		--upgrade
 		]]
@@ -3100,15 +3186,43 @@ boolSniperOnce=false
 
 	--</SliceGun>
 	
-	--<TangleGun>
-	
+	--<RazorGrenade>
+
 	function script.AimFromWeapon11() 
 		return You 
 	end
 
 
-
 	function script.QueryWeapon11() 
+	return Weapons[5][3]
+	end
+
+
+
+	function script.AimWeapon11( heading ,pitch)	
+	return true 
+	end
+
+
+
+	function script.FireWeapon11()	
+		ammonition=ammonition-Weapons[5][8]  		
+	return true
+	end
+
+	
+	
+	
+	--</RazorGrenade>
+	--<TangleGun>
+	
+	function script.AimFromWeapon12() 
+		return You 
+	end
+
+
+
+	function script.QueryWeapon12() 
 	return Weapons[9][3]
 	end
 
@@ -3119,19 +3233,12 @@ boolSniperOnce=false
 		boolTangleGunLoaded=true
 	end
 	
-	function script.AimWeapon11( heading ,pitch)	
+	function script.AimWeapon12( heading ,pitch)	
 	return boolTangleGunLoaded 
 	end
 
-
-	function sliceGunSFX()
-				EmitSfx( Weapons[9][3],1128)
-				Sleep(1300)
-				EmitSfx(Weapons[9][3],1129 )
-	end
-	
 	TangleCounter=0
-	function script.FireWeapon11()	
+	function script.FireWeapon12()	
 	TangleCounter= 	TangleCounter+1
 		ammonition=ammonition-Weapons[9][8]  
 		if TangleCounter > 3* Weapons[9][1]  then --tangling ended
@@ -3148,6 +3255,85 @@ boolSniperOnce=false
 	
 	
 	--</TangleGun>
+	--<AAROCKET>
+		
+	function script.AimFromWeapon13() 
+		return You 
+	end
+
+
+
+	function script.QueryWeapon13() 
+	return Weapons[13][3]
+	end
+
+	boolAARocketLoaded=true
+	function reloadAARockets()
+
+		Sleep(Weapons[13][6]/Weapons[13][1]) 
+		boolAARocketLoaded=true
+	end
+	
+	function script.AimWeapon13( heading ,pitch)	
+	return boolTangleGunLoaded 
+	end
+
+
+	function script.FireWeapon13()	
+
+		ammonition=ammonition-Weapons[13][8]  
+			StartThread(reloadAARockets)
+	
+		
+			
+	return true
+	end
+
+	
+	
+	
+	--</AAROCKET>
+	--<GROCKET>
+		
+	function script.AimFromWeapon14() 
+		return You 
+	end
+
+
+
+	function script.QueryWeapon14() 
+	return Weapons[14][3]
+	end
+
+
+	function reloadTangleGun()
+
+		Sleep(Weapons[14][6]/Weapons[14][1]) 
+		boolTangleGunLoaded=true
+	end
+	
+	function script.AimWeapon14( heading ,pitch)	
+	return boolTangleGunLoaded 
+	end
+
+	TangleCounter=0
+	function script.FireWeapon14()	
+	TangleCounter= 	TangleCounter+1
+		ammonition=ammonition-Weapons[14][8]  
+		if TangleCounter > 3* Weapons[14][1]  then --tangling ended
+			boolTangleGunLoaded=false
+			StartThread(reloadTangleGun)
+			TangleCounter=0
+		end
+	
+		
+			
+	return true
+	end
+
+	
+	
+	--</GROCKET>
 	
 	
 	--</WEAPON>
