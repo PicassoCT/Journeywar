@@ -893,6 +893,7 @@ end
 
 --function: initialises train
 function initScript()
+Spring.SetUnitBlocking(unitID,false)
 --sets the PillarSpeed at which parts of the Pillar Move
 comonPillarSpeed=speedTransForm(true,3,1)
 --hide unit completely, during the intialisation

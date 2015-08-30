@@ -358,6 +358,7 @@ function Spring.UnitScript.Sleep(milliseconds)
 		if not milliseconds then
 			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
 			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a nil  Sleep")     
+			assert(milliseconds)
 		end
 		
         local n = floor(milliseconds / 33)
@@ -474,6 +475,7 @@ function Spring.UnitScript.Signal(mask)
 end
 
 function Spring.UnitScript.Hide(piece)
+		
         return sp_SetPieceVisibility(piece, false)
 end
 
