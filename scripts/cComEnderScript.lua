@@ -1658,10 +1658,10 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 			for h=1,4 do
 					for j=start,j < NumberOfLegs, 1+showThemAll do
 						if x_Turn_Shields[j+15] then
-							if x_Turn_Shields[j+15]==true 
-								Turn((shieldsToShow[j],x_axis,math.rad(180),0)
+							if x_Turn_Shields[j+15]==true then
+								Turn(shieldsToShow[j],x_axis,math.rad(180),0)
 							else
-								Turn((shieldsToShow[j],z_axis,math.rad(180),0)	
+								Turn(shieldsToShow[j],z_axis,math.rad(180),0)	
 							end
 						end
 					end
@@ -1901,6 +1901,8 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		
 		if upgradeType == "GROCKET" and Weapons[9][1] ~= Weapons[9][2] then
 		
+		end
+		
 		if upgradeType == "EJECTPOD" and LazarusDevice ~= LazarusDeviceMax then
 		LazarusDevice=math.min(LazarusDevice+1,LazarusDeviceMax)
 		spSetUnitExperience(unitID,XP -1)
@@ -1925,14 +1927,13 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 
 		 "STEALTH"
 
-
-		
 		--upgrade
 		]]
 		 
 	end
 		
 end
+
 	--UPGRADECONST
 	LazarusDevice=0
 	LazarusDeviceMax=3
@@ -2020,22 +2021,22 @@ end
 	boolCanFallOnce=true
 	function StabiliZer()
 		while true do
-		--stable
-		if Stats[1][5] >= 1 then boolCanFire=true end
-		
-		--unstable	
-		if boolCanFallOnce ==true and Stats[1][5] < 1 and Stats[1][5] > 0 then  
-		boolCanFallOnce=false
-		StartThread(topplingOver,1-Stats[1][5],false,spGetUnitHeading(UnitID))	
-		end
-		
-		if boolCanFallOnce ==true and Stats[1][5] <= 0 then
-		boolCanFallOnce=false
-		StartThread(topplingOver,1-Stats[1][5],true,spGetUnitHeading(UnitID))	
-		end
-		
-		Stats[1][5]=math.min(Stats[1][5]+Stats[1][6],Stats[1][7])
-		Sleep(150)
+			--stable
+			if Stats[1][5] >= 1 then boolCanFire=true end
+			
+			--unstable	
+			if boolCanFallOnce ==true and Stats[1][5] < 1 and Stats[1][5] > 0 then  
+				boolCanFallOnce=false
+				StartThread(topplingOver,1-Stats[1][5],false,spGetUnitHeading(UnitID))	
+			end
+			
+			if boolCanFallOnce ==true and Stats[1][5] <= 0 then
+				boolCanFallOnce=false
+				StartThread(topplingOver,1-Stats[1][5],true,spGetUnitHeading(UnitID))	
+			end
+			
+			Stats[1][5]=math.min(Stats[1][5]+Stats[1][6],Stats[1][7])
+			Sleep(150)
 		end
 
 	end
@@ -2367,35 +2368,35 @@ end
 
 	function script.Killed(recentDamage, maxHealth)
 
-	if LazarusDevice > 0 then
-		if not 	GG.LazarusDeviceActive then 	GG.LazarusDeviceActive= {} end
-		
-		GG.LazarusDeviceActive[unitID]=LazarusDevice-1
-		x,y,z=Spring.GetUnitPosition(unitID)
-		teamid=Spring.GetUnitTeam(attackerID)
-		gx,gy,gz=Spring.GetTeamStartPosition(teamid)
+		if LazarusDevice > 0 then
+			if not 	GG.LazarusDeviceActive then 	GG.LazarusDeviceActive= {} end
 			
-				local	 EjectProject={
-						pos = { x, y+max+10, z},  
-						speed={0,math.random(1,3),0},
-						["end"] = {gx,gy,gz},
-						owner = unitID,
-						team = teamid,	
-						spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
-						ttl=1520,
-						maxRange = 3600,
-						gravity = Game.gravity,
-						startAlpha = 1,
-						tracking =true,
-						endAlpha = 1,						
-						model = "lazarusrocket.s3o",
-						cegTag = "cchainlightning"
-						}
-		
-	projID = Spring.SpawnProjectile( WeaponDefNames["lazarusrocket"].id ,EjectProject) 
-		
-		
-	end
+			GG.LazarusDeviceActive[unitID]=LazarusDevice-1
+			x,y,z=Spring.GetUnitPosition(unitID)
+			teamid=Spring.GetUnitTeam(attackerID)
+			gx,gy,gz=Spring.GetTeamStartPosition(teamid)
+				
+					local	 EjectProject={
+							pos = { x, y+max+10, z},  
+							speed={0,math.random(1,3),0},
+							["end"] = {gx,gy,gz},
+							owner = unitID,
+							team = teamid,	
+							spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
+							ttl=1520,
+							maxRange = 3600,
+							gravity = Game.gravity,
+							startAlpha = 1,
+							tracking =true,
+							endAlpha = 1,						
+							model = "lazarusrocket.s3o",
+							cegTag = "cchainlightning"
+							}
+			
+		projID = Spring.SpawnProjectile( WeaponDefNames["lazarusrocket"].id ,EjectProject) 
+			
+			
+		end
 	
 	explodeT(piecesTable,SFX.FALL+SFX.FIRE,math.ceil(math.random(1,3)))
 	

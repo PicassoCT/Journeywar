@@ -42,6 +42,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
 	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
+		  lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
 	local slicergunDefID = WeaponDefNames["slicergun"].id
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 
@@ -69,6 +70,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						}
 	RazorGrenadeTable={}
 	
+	Script.SetWatchWeapon(lazarusDeviceDefID , true)
 	Script.SetWatchWeapon(ChainLightningDefID , true)
 	Script.SetWatchWeapon(celetrochainWeaponDefID , true)
 	Script.SetWatchWeapon(crazorgrenadeDefID , true)

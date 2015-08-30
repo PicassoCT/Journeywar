@@ -13,13 +13,13 @@ end
 if (not gadgetHandler:IsSyncedCode()) then return end
 
 local wiggleWeapon = {}
-wiggleWeapon[WeaponDefNames["staburstrocket"].id] = true
+wiggleWeapon[WeaponDefNames["sunburstrocket"].id] = true
 wiggleWeapon[WeaponDefNames["jvaryjump"].id] = true
 
 local redirectProjectiles = {}  -- [frame][projectileID] = table with .targetType .targetX .targetY .targetZ .targetID
 
 function gadget:Initialize()
-	Script.SetWatchWeapon (WeaponDefNames["staburstrocket"].id, true)
+	Script.SetWatchWeapon (WeaponDefNames["sunburstrocket"].id, true)
 	Script.SetWatchWeapon (WeaponDefNames["jvaryjump"].id, true)
 end
 
@@ -57,7 +57,7 @@ end
 
 AddCodeByType={}
 
-function AddStaburstRocketCode(proID,proOwnerID)
+function AddsunburstrocketCode(proID,proOwnerID)
 		local originalTarget = getTargetTable (proID)
 		local tx,ty,tz = getProjectileTargetXYZ (proID)
 		local x,y,z = Spring.GetUnitPosition (proOwnerID)
@@ -75,7 +75,7 @@ function AddStaburstRocketCode(proID,proOwnerID)
 end
 
 
-AddCodeByType[WeaponDefNames["staburstrocket"].id]= AddStaburstRocketCode
+AddCodeByType[WeaponDefNames["sunburstrocket"].id]= AddsunburstrocketCode
 
 function AddVarFooRocketCode(proID,proOwnerID)
 		local originalTarget = getTargetTable (proID)

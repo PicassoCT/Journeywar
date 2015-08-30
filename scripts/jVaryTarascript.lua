@@ -7,7 +7,53 @@ include "lib_OS.lua"
 SIG_ATTACKED=2
 SIG_DELAYEDSTOP=4
 
-piecesTable={}
+
+  piecesTable={}
+  piecesTable[#piecesTable+1]= piece("center");center= piece("center")
+  piecesTable[#piecesTable+1]= piece("varytara.3DS");varytara3DS= piece("varytara.3DS")
+  piecesTable[#piecesTable+1]= piece("AimArm002");AimArm002= piece("AimArm002")
+  piecesTable[#piecesTable+1]= piece("AimArm1");AimArm1= piece("AimArm1")
+  piecesTable[#piecesTable+1]= piece("AimArmF003");AimArmF003= piece("AimArmF003")
+  piecesTable[#piecesTable+1]= piece("AimArmF2");AimArmF2= piece("AimArmF2")
+  piecesTable[#piecesTable+1]= piece("Body2");Body2= piece("Body2")
+  piecesTable[#piecesTable+1]= piece("Body3");Body3= piece("Body3")
+  piecesTable[#piecesTable+1]= piece("Body4");Body4= piece("Body4")
+  piecesTable[#piecesTable+1]= piece("Body5");Body5= piece("Body5")
+  piecesTable[#piecesTable+1]= piece("Body6");Body6= piece("Body6")
+  piecesTable[#piecesTable+1]= piece("FootF003");FootF003= piece("FootF003")
+  piecesTable[#piecesTable+1]= piece("FootF004");FootF004= piece("FootF004")
+  piecesTable[#piecesTable+1]= piece("FootF005");FootF005= piece("FootF005")
+  piecesTable[#piecesTable+1]= piece("FootF006");FootF006= piece("FootF006")
+  piecesTable[#piecesTable+1]= piece("FootF1");FootF1= piece("FootF1")
+  piecesTable[#piecesTable+1]= piece("FootF2");FootF2= piece("FootF2")
+  piecesTable[#piecesTable+1]= piece("FrontF003");FrontF003= piece("FrontF003")
+  piecesTable[#piecesTable+1]= piece("FrontF004");FrontF004= piece("FrontF004")
+  piecesTable[#piecesTable+1]= piece("FrontF1");FrontF1= piece("FrontF1")
+  piecesTable[#piecesTable+1]= piece("FrontF2");FrontF2= piece("FrontF2")
+  piecesTable[#piecesTable+1]= piece("Kugel01");Kugel01= piece("Kugel01")
+  piecesTable[#piecesTable+1]= piece("Kugel011");Kugel011= piece("Kugel011")
+  piecesTable[#piecesTable+1]= piece("Kugel02");Kugel02= piece("Kugel02")
+  piecesTable[#piecesTable+1]= piece("Kugel03");Kugel03= piece("Kugel03")
+  piecesTable[#piecesTable+1]= piece("Kugel04");Kugel04= piece("Kugel04")
+  piecesTable[#piecesTable+1]= piece("Kugel05");Kugel05= piece("Kugel05")
+  piecesTable[#piecesTable+1]= piece("Kugel06");Kugel06= piece("Kugel06")
+  piecesTable[#piecesTable+1]= piece("Kugel07");Kugel07= piece("Kugel07")
+  piecesTable[#piecesTable+1]= piece("Kugel08");Kugel08= piece("Kugel08")
+  piecesTable[#piecesTable+1]= piece("Kugel09");Kugel09= piece("Kugel09")
+  piecesTable[#piecesTable+1]= piece("Kugel10");Kugel10= piece("Kugel10")
+  piecesTable[#piecesTable+1]= piece("Line003");Line003= piece("Line003")
+  piecesTable[#piecesTable+1]= piece("Line004");Line004= piece("Line004")
+  piecesTable[#piecesTable+1]= piece("Line005");Line005= piece("Line005")
+  piecesTable[#piecesTable+1]= piece("Line006");Line006= piece("Line006")
+  piecesTable[#piecesTable+1]= piece("Line007");Line007= piece("Line007")
+  piecesTable[#piecesTable+1]= piece("Line08");Line08= piece("Line08")
+  piecesTable[#piecesTable+1]= piece("Line09");Line09= piece("Line09")
+  piecesTable[#piecesTable+1]= piece("Linie01");Linie01= piece("Linie01")
+  piecesTable[#piecesTable+1]= piece("Linie028");Linie028= piece("Linie028")
+  piecesTable[#piecesTable+1]= piece("Objekt003");Objekt003= piece("Objekt003")
+  piecesTable[#piecesTable+1]= piece("Objekt02");Objekt02= piece("Objekt02")
+  piecesTable[#piecesTable+1]= piece("Sphere017");Sphere017= piece("Sphere017")
+
 currentPiece=1
 -- piece -->AttachPoints
 AttachPoints={}
@@ -25,11 +71,11 @@ StartThread(resetAttack)
 end
 
 boolBuildEnded=false
-
+local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 function partOfShipPartOfCrew( point, VaryFooID)
 Spring.SetUnitNeutral(VaryFooID,true)
 Spring.MoveCtrl.Enable(VaryFooID,true)
-local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+
 roX,roY,roZ=0,0,0
 
 	while boolBuildEnded == false do
@@ -145,7 +191,7 @@ boolUnderAttack=false
 end
 
 function script.Create()
-generatepiecesTableAndArrayCode(unitID)
+--generatepiecesTableAndArrayCode(unitID)
 StartThread(raiseAvatara)
 end
 

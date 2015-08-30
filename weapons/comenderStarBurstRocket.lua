@@ -1,4 +1,4 @@
-local weaponName="staburstrocket"
+local weaponName="sunburstrocket"
 local weaponDef={
 name="Ground Ground Rocket",
 weaponType=[[MissileLauncher]],
