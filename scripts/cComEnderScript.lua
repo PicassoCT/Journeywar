@@ -1639,7 +1639,7 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 			end
 
 	end
-local	x_Turn_Shields={
+	local	x_Turn_Shields={
 	[22]=true,
 	[17]=true,
 	[26]=true,
@@ -1725,7 +1725,8 @@ local	x_Turn_Shields={
 	end
 		
 	function script.HitByWeapon ( x, z, weaponDefID, damage )
-			
+	
+		
 			if damage > 40 and math.random(0,6)== 1 then
 			loud=math.random(0.8,1)
 				if math.random(0,1)==1 then
@@ -1783,6 +1784,7 @@ local	x_Turn_Shields={
 	StartThread(sniperKneeDown)
 	StartThread(threadStarter)
 	StartThread(showTime)
+	StartThread(ammoFacLoop)
 
 	end
 
@@ -1898,26 +1900,31 @@ local	x_Turn_Shields={
 		end
 		
 		if upgradeType == "GROCKET" and Weapons[9][1] ~= Weapons[9][2] then
-		Weapons[9][1]=math.min(Weapons[9][1]+1,Weapons[9][2])
-		Weapons[9][4]()	
+		
+		if upgradeType == "EJECTPOD" and LazarusDevice ~= LazarusDeviceMax then
+		LazarusDevice=math.min(LazarusDevice+1,LazarusDeviceMax)
 		spSetUnitExperience(unitID,XP -1)
 		end
 		
+		if upgradeType == "AMMOFAC"  and AmmoFacEffectiveness ~= AmmoFacEffectivenessMax then
+			AmmoFacEffectiveness=math.min(AmmoFacEffectiveness+1,AmmoFacEffectivenessMax)
+			spSetUnitExperience(unitID,XP -1)
+		end
 		
+		if upgradeType == "RADAR"  and RadarEffectiveness ~= RadarEffectivenessMax then
+			RadarEffectiveness=math.min(RadarEffectiveness+1,RadarEffectivenessMax)
+			Spring.SetUnitSensorRadius(unitID,"radar",RadarRadius*RadarEffectiveness)
+			spSetUnitExperience(unitID,XP -1)
+		end
 		--identify Upgrade Possible
 			
 		
 		--[[
 	
 
-		 "AROCKET"
-		 "GROCKET"
 
-	
-		 "EJECTPOD"
-		 "AMMOFAC"
 		 "STEALTH"
-		 "RADAR"
+
 
 		
 		--upgrade
@@ -1926,6 +1933,35 @@ local	x_Turn_Shields={
 	end
 		
 end
+	--UPGRADECONST
+	LazarusDevice=0
+	LazarusDeviceMax=3
+	
+	RadarRadius= 250
+	RadarEffectivenessMax=5
+	RadarEffectiveness=0
+
+
+	AmmoFacEffectivenessMax=5
+	AmmoFacEffectiveness=0
+	AmmoFac=piece"AmmoFac"
+	piecesTable[#piecesTable+1]=AmmoFac
+	function ammoFacLoop()
+	
+		while AmmoFacEffectiveness <=0 do
+			
+			Sleep(5000)
+		end
+	
+		Show(AmmoFac)
+		
+		while true do
+			
+			ammonition=math.min(ammonition+AmmoFacEffectivenessMax,ammonitionMax)
+			Sleep(1000)
+		end
+	
+	end
 	
 	function topplingOver(stability, boolImpulse,heading)
 	boolCanFire=false
@@ -2330,14 +2366,39 @@ end
 	end
 
 	function script.Killed(recentDamage, maxHealth)
-	--legs_down()
 
-
-	-- for i=1,63,1 do
-
-		-- Explode(i,SFX.FALL+SFX.SHATTER)
-	-- end
-
+	if LazarusDevice > 0 then
+		if not 	GG.LazarusDeviceActive then 	GG.LazarusDeviceActive= {} end
+		
+		GG.LazarusDeviceActive[unitID]=LazarusDevice-1
+		x,y,z=Spring.GetUnitPosition(unitID)
+		teamid=Spring.GetUnitTeam(attackerID)
+		gx,gy,gz=Spring.GetTeamStartPosition(teamid)
+			
+				local	 EjectProject={
+						pos = { x, y+max+10, z},  
+						speed={0,math.random(1,3),0},
+						["end"] = {gx,gy,gz},
+						owner = unitID,
+						team = teamid,	
+						spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
+						ttl=1520,
+						maxRange = 3600,
+						gravity = Game.gravity,
+						startAlpha = 1,
+						tracking =true,
+						endAlpha = 1,						
+						model = "lazarusrocket.s3o",
+						cegTag = "cchainlightning"
+						}
+		
+	projID = Spring.SpawnProjectile( WeaponDefNames["lazarusrocket"].id ,EjectProject) 
+		
+		
+	end
+	
+	explodeT(piecesTable,SFX.FALL+SFX.FIRE,math.ceil(math.random(1,3)))
+	
 	suddenDeathV(recentDamage)
 
 	return 1

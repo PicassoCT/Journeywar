@@ -903,16 +903,21 @@ end
 
 --> Destroys A Table of Units
 function DestroyTable(T, boolSelfd, boolReclaimed, condFunction,unitID)
-if T then 
-	for i=1,#T, 1 do
-		if condFunction(T[i])==true then
-		Spring.DestroyUnit(T[i],boolSelfd,boolReclaimed, unitID)
+	if T then 
+		for i=1,#T, 1 do
+			if condFunction(T[i])==true then
+			Spring.DestroyUnit(T[i],boolSelfd,boolReclaimed, unitID)
+			end
 		end
 	end
 end
+
+function explodeT(TableOfPieces, Conditions, StepSize)
+lStepSize=StepSize or 1
+	for i=1,#TableOfPieces, lStepSize do
+	Explode(TableOfPieces[i],Conditions)
+	end
 end
-
-
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
 if not piecename then return error("No piecename given") end

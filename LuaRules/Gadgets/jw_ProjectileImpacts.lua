@@ -129,6 +129,10 @@ end
 	
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
 		
+		if weaponDefID == lazarusDeviceDefID then
+		teamid=Spring.GetUnitTeam(AttackerID)
+		 GG.ComEnders[teamID]=Spring.CreateUnit(UnitDefNames["ccomender"].id,	px,py,pz, 1, teamid)
+		end
 			
 		--we got to spawn some chain lightning
 		if weaponDefID == celetrochainWeaponDefID then

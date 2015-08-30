@@ -513,8 +513,8 @@ end
 function script.Create()
 
 
-Move(center,y_axis,-300,0)
-StartThread(inYourOwnTime)
+	Move(center,y_axis,-300,0)
+	StartThread(inYourOwnTime)
 end
 boolSpawn=false
 function spawnCommander()
@@ -528,7 +528,7 @@ function spawnCommander()
 		Sleep(20000)
 		boolPressedButtonTwice=false
 		while boolPressedButtonTwice==false do
-		Sleep(350)
+			Sleep(350)
 		end
 		-- Screen goes Black and then comes back
 	   --play Warning Message: "Binding Agreement is processed. Comander teleported. Comander Capsule inserted. Lock Sealed. Atmospheric Preasure in HangarBay. Please keep limbs inside the capsule at all times. Outside Temperature is 42 ° Degrees. Good Luck, Comander."
@@ -543,22 +543,23 @@ function spawnCommander()
 	
 				if GG.ComEnders== nil then GG.ComEnders={} end
 					if GG.ComEnders[teamID]== nil then
-					idEal=enterTheCommEnder(lteamID)	
-					GG.ComEnders[teamID]={}
-					GG.ComEnders[teamID]=idEal
-					Sleep(5000)
-					for i=1,#inAxTable,1 do
-					Turn(inAxTable[i],x_axis,math.rad(0),1.2/i)
-					end
+						idEal=enterTheCommEnder(lteamID)	
+						GG.ComEnders[teamID]={}
+						GG.ComEnders[teamID]=idEal
+						Sleep(5000)
+						for i=1,#inAxTable,1 do
+							Turn(inAxTable[i],x_axis,math.rad(0),1.2/i)
+						end
 
-					for i=1,#outAxTable,1 do
-					Turn(outAxTable[i],x_axis,math.rad(0),1.2/i)
-					end
+						for i=1,#outAxTable,1 do
+							Turn(outAxTable[i],x_axis,math.rad(0),1.2/i)
+						end
 
-					for i=1,#shieldTable,1 do
-					Turn(shieldTable[i],x_axis,math.rad(0),1.2/i)
-					end
-					Move(center,y_axis,-300,5)
+						for i=1,#shieldTable,1 do
+							Turn(shieldTable[i],x_axis,math.rad(0),1.2/i)
+						end
+						
+						Move(center,y_axis,-300,5)
 					end
 				end
 			
