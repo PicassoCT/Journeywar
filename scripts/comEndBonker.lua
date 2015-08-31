@@ -1,4 +1,4 @@
-include "lib_OS.lua"
+ include "lib_OS.lua"
  include "lib_UnitScript.lua"
  include "lib_Build.lua" 
 
@@ -413,101 +413,101 @@ boolFirstActivation=false
 	  HisID=	Spring.CreateUnit("ccomender",x,y,z, 0, teamID)  
 	  Spring.SetUnitBlocking(unitID,false)
 	  Spring.SetUnitMoveGoal(HisID,x+250,y,z)
-	  Hide(MEcha)
+	  HideWrap(MEcha)
 return HisID
 end
 
 
-function showUP()
-Turn(bridges2,y_axis,math.rad(103),0)
-Turn(bridges3,y_axis,math.rad(-100),0)
-Turn(bridges4,y_axis,math.rad(60),0)
-Turn(bridges5,y_axis,math.rad(-145),0)
-Turn(bridges6,y_axis,math.rad(146),0)
-	t=-47
-	for i=1,#inAxTable,1 do
-		if i < math.ceil(0.5*#inAxTable) then
-		Turn(inAxTable[i],y_axis,math.rad(t -((i-1)*11),0))	
-			else
-			Turn(inAxTable[i],y_axis,math.rad(47 +((i-math.ceil(0.5*#inAxTable))*10),0))	
-			end
-	end
-	
-WaitForMove(center,y_axis)
-
-Move(Earth002,y_axis,-104.939,24)--24
-Move(Earth002,z_axis,247.025,56)--56
-WaitForMove(Earth002,y_axis)
-WaitForMove(Earth002,z_axis)
-Hide(Earth002)
-Move(ArmShell1,y_axis,-50,0)
-
-
-
-	for i=1, 29, 1 do
-	
-		Sleep(20)
-	
+	function showUP()
+	Turn(bridges2,y_axis,math.rad(103),0)
+	Turn(bridges3,y_axis,math.rad(-100),0)
+	Turn(bridges4,y_axis,math.rad(60),0)
+	Turn(bridges5,y_axis,math.rad(-145),0)
+	Turn(bridges6,y_axis,math.rad(146),0)
+		t=-47
+		for i=1,#inAxTable,1 do
+			if i < math.ceil(0.5*#inAxTable) then
+			Turn(inAxTable[i],y_axis,math.rad(t -((i-1)*11),0))	
+				else
+				Turn(inAxTable[i],y_axis,math.rad(47 +((i-math.ceil(0.5*#inAxTable))*10),0))	
+				end
+		end
 		
-		StartThread(PseudoPhysix,EarthTable[i],PEarthTable[i],math.random(50,90))
-		
-		
-	end
+	WaitForMove(center,y_axis)
 
-boolPieceArrived=true
-	Move(ArmShell1,y_axis,0,150)
+	Move(Earth002,y_axis,-104.939,24)--24
+	Move(Earth002,z_axis,247.025,56)--56
+	WaitForMove(Earth002,y_axis)
+	WaitForMove(Earth002,z_axis)
+	HideWrap(Earth002)
+	Move(ArmShell1,y_axis,-50,0)
 
-	while (boolSpawn==false) do
-	
-	Sleep(150)
-	end
-	Sleep(3000)
-	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-	budget=20000
-	budget=math.floor(budget/6)/1000
-	Move(ArmShell3,y_axis,-133,math.abs(-133/budget))
-	WaitForMove(ArmShell3,y_axis)
-	Move(ArmShell2,y_axis,-133,math.abs(-133/budget))
-	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-	WaitForMove(ArmShell2,y_axis)
-	Move(ArmShell1,y_axis,-213,math.abs(-233/budget))
-	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-	WaitForMove(ArmShell1,y_axis)
-	Move(ArmShell3,y_axis,-133-60,math.abs(-193/budget))
-	Move(ArmShell2,y_axis,-133-60,math.abs(-193/budget))
+
+
+		for i=1, 29, 1 do
+		
+			Sleep(20)
+		
+			
+			StartThread(PseudoPhysix,EarthTable[i],PEarthTable[i],math.random(50,90))
+			
+			
+		end
+
+	boolPieceArrived=true
+		Move(ArmShell1,y_axis,0,150)
+
+		while (boolSpawn==false) do
+		
+		Sleep(150)
+		end
+		Sleep(3000)
 		Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+		budget=20000
+		budget=math.floor(budget/6)/1000
+		Move(ArmShell3,y_axis,-133,math.abs(-133/budget))
 		WaitForMove(ArmShell3,y_axis)
+		Move(ArmShell2,y_axis,-133,math.abs(-133/budget))
 		Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
 		WaitForMove(ArmShell2,y_axis)
-	for i=1,#inAxTable,1 do
-	Turn(inAxTable[i],x_axis,math.rad(77),12/(budget*i))
-	end
+		Move(ArmShell1,y_axis,-213,math.abs(-233/budget))
+		Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+		WaitForMove(ArmShell1,y_axis)
+		Move(ArmShell3,y_axis,-133-60,math.abs(-193/budget))
+		Move(ArmShell2,y_axis,-133-60,math.abs(-193/budget))
+			Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+			WaitForMove(ArmShell3,y_axis)
+			Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+			WaitForMove(ArmShell2,y_axis)
+		for i=1,#inAxTable,1 do
+		Turn(inAxTable[i],x_axis,math.rad(77),12/(budget*i))
+		end
 
-	for i=1,#outAxTable,1 do
-	Turn(outAxTable[i],x_axis,math.rad(-99),math.abs(-20/(budget*i)))
-	end
+		for i=1,#outAxTable,1 do
+		Turn(outAxTable[i],x_axis,math.rad(-99),math.abs(-20/(budget*i)))
+		end
 
-	for i=1,#shieldTable,1 do
-	Turn(shieldTable[i],x_axis,math.rad(120),math.abs(20/(budget*i)))
-	end
-Turn(bridges2,y_axis,math.rad(0),2.6)
-Turn(bridges3,y_axis,math.rad(0),2.6)
-Turn(bridges4,y_axis,math.rad(0),2.6)
-Turn(bridges5,y_axis,math.rad(0),2.6)
-Turn(bridges6,y_axis,math.rad(0),2.6)
-	
-	Turn(crane,y_axis,0,1.2)
-Move(Kreis02,y_axis,-72,15)	
+		for i=1,#shieldTable,1 do
+		Turn(shieldTable[i],x_axis,math.rad(120),math.abs(20/(budget*i)))
+		end
+	Turn(bridges2,y_axis,math.rad(0),2.6)
+	Turn(bridges3,y_axis,math.rad(0),2.6)
+	Turn(bridges4,y_axis,math.rad(0),2.6)
+	Turn(bridges5,y_axis,math.rad(0),2.6)
+	Turn(bridges6,y_axis,math.rad(0),2.6)
+		
+		Turn(crane,y_axis,0,1.2)
+	Move(Kreis02,y_axis,-72,15)	
 
 end
 
 function inYourOwnTime()
-while(boolFirstActivation== false) do
-Sleep(50)
-end
-StartThread(spawnCommander)
-Move(center,y_axis,0,60)
-StartThread(showUP)
+		while(boolFirstActivation== false) do
+			Sleep(50)
+		end
+	StartThread(spawnCommander)
+	Move(center,y_axis,0,60)
+	StartThread(showUP)
 end
 
 function script.Create()

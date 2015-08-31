@@ -974,11 +974,15 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 
 	cMagneto[#cMagneto+1]= shotgunEmit3
 
-	cMagneto[#cMagneto+1]= bullets
+	SunBurstTable={}
 	
 	
 	SunBurst1 = piece"SunBurst1"
 	piecesTable[#piecesTable+1]= SunBurst1
+	table.insert(SunBurstTable,SunBurst1)
+	table.insert(SunBurstTable,SunBurst2)
+	table.insert(SunBurstTable,SunBurst3)
+	
 	A26 = piece"A26"
 	piecesTable[#piecesTable+1]= A26
 	A27 = piece"A27"
@@ -1024,12 +1028,22 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 
 	
 	guidedMissile=makeTableOfPieceNames("guided",3,1)
+	for i=1,#guidedMissile do guidedMissile[i]=piece(guidedMissile[i])end
+	
 	unguidedMissile=makeTableOfPieceNames("unguided",3,1)
+	for i=1,#unguidedMissile do unguidedMissile[i]=piece(unguidedMissile[i])end
 	
 	TangleGun=piece"TangleGun"
+	TangleRota=piece"TangleRota"
+	TangleBase=piece"TangleBase"
 	tangleGun={}
-	tangleGun[#tangleGun+1]=TangleGun
 
+	tangleGun[#tangleGun+1]=TangleGun
+	tangleGun[#tangleGun+1]=TangleBase
+	tangleGun[#tangleGun+1]=TangleRota
+
+
+	
 	cSniper={}
 	cSniper[#cSniper+1]={}
 	cSniper[#cSniper]=sniper
@@ -1041,6 +1055,7 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	cSniper[#cSniper]=pin
 	cSniper[#cSniper+1]={}
 	cSniper[#cSniper]=Case
+	
 	
 	sniperAmmoTable={}
 	sniperAmmoIterator=1
@@ -1214,12 +1229,12 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 
 	
 	
-	shieldsToShow={}
+	shieldsToShowWrap={}
 
 	for i=16, 28, 1 do
-		shieldsToShow[#shieldsToShow+1]={}
+		shieldsToShowWrap[#shieldsToShowWrap+1]={}
 		piecename="shield"..i
-		shieldsToShow[#shieldsToShow]=piece(piecename)
+		shieldsToShowWrap[#shieldsToShowWrap]=piece(piecename)
 
 	end
 
@@ -1255,6 +1270,8 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	end
 	function showTangleGun()
 	showT(tangleGun)
+	Spin(TangleRota,y_axis,math.rad(-512),0.5)
+	Spin(TangleRota,x_axis,math.rad(-12),0.5)
 	end
 	function showSliceGun()
 		showT(cFieldScooper) 
@@ -1280,10 +1297,7 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	previous=nil
 	function showT(able)
 		for i=1, table.getn(able), 1 do
-		--delMe
-			if able[i]==nil then echo(able,i) end
-		
-		--delMe
+	
 	
 		Show(able[i])
 		end
@@ -1659,9 +1673,9 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 					for j=start,j < NumberOfLegs, 1+showThemAll do
 						if x_Turn_Shields[j+15] then
 							if x_Turn_Shields[j+15]==true then
-								Turn(shieldsToShow[j],x_axis,math.rad(180),0)
+								Turn(shieldsToShowWrap[j],x_axis,math.rad(180),0)
 							else
-								Turn(shieldsToShow[j],z_axis,math.rad(180),0)	
+								Turn(shieldsToShowWrap[j],z_axis,math.rad(180),0)	
 							end
 						end
 					end
@@ -1688,14 +1702,14 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 			
 			start=addx+1
 				for j=start,j < NumberOfLegs, 1+showThemAll do
-					Show(shieldsToShow[j])
+					Show(shieldsToShowWrap[j])
 				end
 				
 					--gif Animation of Texture
 					animateShieldTexture(j,start,showThemAll)
 						
 				for j=1+addx,j < NumberOfLegs, 1+showThemAll do
-				Hide(shieldsToShow[j])
+				Hide(shieldsToShowWrap[j])
 				end
 						rest=math.ceil(damage/i*2)
 						Sleep(rest)
@@ -1754,8 +1768,10 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	end
 	
 	function script.Create()
-	--delME
+	--delMe
+	if GG.BoolDebug==true then
 		spSetUnitExperience(unitID,12)		
+	end
 	--delMe
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
@@ -1763,14 +1779,15 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	--generatepiecesTableAndArrayCode(unitID)
 	hideT(guidedMissile)
 	hideT(unguidedMissile)
-	hideT(tangleGun)
 	
+		
 		reseT(piecesTable)
 		hideT(piecesTable)
 		hideT(cFieldScooper)
-
+	
 		showT(basics)
-
+		hideT(cMagneto)
+		hideT(tangleGun)
 	
 	
 
@@ -1893,9 +1910,9 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		spSetUnitExperience(unitID,XP -1)
 		end
 		
-		if upgradeType == "AROCKET" and Weapons[9][1] ~= Weapons[9][2] then
-		Weapons[9][1]=math.min(Weapons[9][1]+1,Weapons[9][2])
-		Weapons[9][4]()	
+		if upgradeType == "AROCKET" and Weapons[10][1] ~= Weapons[10][2] then
+		Weapons[10][1]=math.min(Weapons[10][1]+1,Weapons[10][2])
+		Weapons[10][4]()	
 		spSetUnitExperience(unitID,XP -1)
 		end
 		
@@ -3290,7 +3307,8 @@ boolSniperOnce=false
 
 
 	function reloadTangleGun()
-
+	Spin(TangleRota,y_axis,math.rad(-512),0.5)
+	Spin(TangleRota,x_axis,math.rad(-12),0.5)
 		Sleep(Weapons[9][6]/Weapons[9][1]) 
 		boolTangleGunLoaded=true
 	end
@@ -3301,6 +3319,9 @@ boolSniperOnce=false
 
 	TangleCounter=0
 	function script.FireWeapon12()	
+	StopSpin(TangleRota,y_axis,0.5)
+	StopSpin(TangleRota,x_axis,0.5)
+	
 	TangleCounter= 	TangleCounter+1
 		ammonition=ammonition-Weapons[9][8]  
 		if TangleCounter > 3* Weapons[9][1]  then --tangling ended

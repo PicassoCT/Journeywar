@@ -136,6 +136,8 @@ if (Spring.IsDevLuaEnabled()) then
 end
 
 -- needed here too, and gadget handler doesn't expose it
+
+VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 VFS.Include('LuaGadgets/system.lua', nil, VFSMODE)
 VFS.Include('gamedata/VFSUtils.lua', nil, VFSMODE)
 
@@ -216,7 +218,7 @@ local function RemoveTableElement(tab, item)
         local n = #tab
         for i = 1,n do
                 if (tab[i] == item) then
-                        table_remove(tab, i)
+							table_remove(tab, i)
                         return
                 end
         end
@@ -391,7 +393,7 @@ function Spring.UnitScript.StartThread(fun, ...)
         local activeUnit = GetActiveUnit()
 		--DEBUG
 		if (not fun) then 
-		error("Error in UnitScriptLine 374- First Argument of StartThread is not a function ", 2) 		
+			error("Error in UnitScript::Spring.UnitScript.StartThread - First Argument of StartThread is not a function ", 2) 		
 		end
 		if not RunningThreadCounter[activeUnit.unitID] then RunningThreadCounter[activeUnit.unitID] ={} end
 		 signal_mask = ((co_running() and activeUnit.threads[co_running()]) and activeUnit.threads[co_running()].signal_mask or 0)
@@ -475,15 +477,21 @@ function Spring.UnitScript.Signal(mask)
 end
 
 function Spring.UnitScript.Hide(piece)
-		
+		if type(piece) ~= "number" then
+			Spring.Echo("PieceNumber not a number " .. piece)
+		end
         return sp_SetPieceVisibility(piece, false)
 end
 
 function Spring.UnitScript.Show(piece)
-		--DEBUG
-		if (not piece) then 
-		error("Error in UnitScriptLine 442, Show(piece) expects a piece", 2) 		
+
+		if type(piece) ~= "number" then
+			Spring.Echo("PieceNumber not a number " .. piece)
 		end
+		if (not piece) then 
+		error("Error: Piece  not handed as argument", 2) 		
+		end
+		
         return sp_SetPieceVisibility(piece, true)
 end
 
@@ -745,8 +753,11 @@ function gadget:UnitCreated(unitID, unitDefID)
         end
 
         env.piece = function(...)
+
+		
                 local p = {}
                 for _,name in ipairs{...} do
+						if not pieces[name] then Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(UnitDefNames,unitDefID))end
                         p[#p+1] = pieces[name] or error("piece not found: " .. tostring(name), 2)
                 end
                 return unpack(p)

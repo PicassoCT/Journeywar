@@ -17,7 +17,8 @@
    
 ]]--
 --------------DEBUG HEADER
-lib_boolDebug=false
+--Central Debug Header Controlled in UnitScript
+lib_boolDebug= GG.BoolDebug or false
 
 
 --------------DEBUG HEADER
@@ -918,6 +919,78 @@ lStepSize=StepSize or 1
 	Explode(TableOfPieces[i],Conditions)
 	end
 end
+
+function hideTWrap(piecenr)
+	for k,v in pairs(piecenr) do
+		HideWrap(k)
+	end
+		
+end
+
+function showTWrap(piecenr)
+	for k,v in pairs(piecenr) do
+		ShowWrap(k)
+	end
+		
+end
+
+function HideWrap(piecenr)
+	if lib_boolDebug==true then
+		if type(piecenr)=="string" then 
+			Spring.Echo("Hide did get a string.."..piecenr);assert(true==false); 
+		end
+		if type(piecenr)=="table" then 
+			Spring.Echo("PieceNr in hide is a table");
+			echoTable(piecenr)
+			assert(true==false);
+		end
+		
+		if type(piecenr)=="number" then
+		PieceMap=Spring.GetUnitPieceList(unitID)
+			if not PieceMap[piecenr] then
+			Spring.Echo("Piece not a valid Nr"..piecenr)
+			return
+			end
+		Hide(piecenr)
+		end
+	else
+	Hide(piecenr)
+	end
+end
+
+function getUnitName(UnitDef, UnitDefID)
+for name,def in pairs(UnitDefID) do
+	if def.id==UnitDefID then
+	return name
+	end
+end
+return "UnitName not found in UnitDefID:: UnitParsing Errors"
+end
+
+function ShowWrap(piecenr)
+	if lib_boolDebug==true then
+		if type(piecenr)=="string" then 
+			Spring.Echo("Hide did get a string.."..piecenr);assert(true==false); 
+		end
+		if type(piecenr)=="table" then 
+			Spring.Echo("PieceNr in hide is a table");
+			echoTable(piecenr)
+			assert(true==false);
+		end
+		
+		if type(piecenr)=="number" then
+		PieceMap=Spring.GetUnitPieceList(unitID)
+			if not PieceMap[piecenr] then
+			Spring.Echo("Piece not a valid Nr"..piecenr)
+			return
+			end
+		Hide(piecenr)
+		end
+	else
+	Hide(piecenr)
+	end
+end
+
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
 if not piecename then return error("No piecename given") end

@@ -1,4 +1,4 @@
-lifeTime=45000
+LIFETIME=45000
 --Define the wheel pieces
 
 local boolSecondAiming=false
@@ -29,7 +29,7 @@ boolArmed=false
 function lifeTime()
 Sleep(2000)
 boolArmed=true
-Sleep(lifetime)
+Sleep(LIFETIME)
 Spring.DestroyUnit(unitID,true,true)
 
 end

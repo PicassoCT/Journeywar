@@ -14,9 +14,9 @@ local vortlfootl = piece "vortlfootl"
 local vortlegupr = piece "vortlegupr"
 local vortlfootr = piece "vortlfootr"
 local boolFlipFlop=1
-local SIG_WALK = 1	--signal for the walk animation thread
-local SIG_AIM = 2  --signal for the weapon aiming thread
-local SIG_IDLE=4
+ SIG_WALK = 1	--signal for the walk animation thread
+ SIG_AIM = 2  --signal for the weapon aiming thread
+ SIG_IDLE=4
 
 local boolHasFired=false
 function script.Create()
@@ -266,7 +266,7 @@ end
 	StartThread (walk)
 end
 
-local boolMove=false
+
 function script.StopMoving()
 		
 
@@ -277,46 +277,52 @@ function script.StopMoving()
 		
 		
 end
-TELEPORTRANGE=200
+TELEPORTRANGE=850
 
 function TelePortation()
 x,y,z=Spring.GetUnitPosition(unitID)
 cmds=Spring.GetCommandQueue(unitID,4)
-	for i=1,#cmds do
+	for i=#cmds,1, -1 do
 		if cmds[i].id and cmds[i].id == CMD.MOVE and cmds[i].params then
 		tx,ty,tz=cmds[i].params[1],cmds[i].params[2],cmds[i].params[3]
-		tx,ty,tz=tx-x,ty-y,tz-z
-		dist=math.sqrt(tx*tx+ty*ty+tz*tz)
+		px,py,pz=tx-x,ty-y,tz-z
+		dist=math.sqrt(px*px+py*py+pz*pz)
 			if dist < TELEPORTRANGE then
 			EmitSfx(vort,1024)
-			for i=1,3 do
-			for j=-1,1,1 do
-			Spring.SpawnCeg("vortport",tx+(10*(i-5))+j*10,ty+15,tz+(10*(i-10)))
+			for h=1,3 do
+				Spring.SpawnCEG("vortport",tx ,ty+15,tz ,math.random(-1,1),1,math.random(-1,1))
 			end
-			end
+			Spring.SpawnCEG("vortport",x,y+15,z,0,1,0)
 			Spring.SetUnitPosition(unitID,tx,ty,tz)
-			return false
+				
+			boolCharged=false
+			return 
 			end
 		end
 	end
-return true
+
+boolCharged=true
+return
 end
 
 boolCharged=false
 TIMETOCHARGE=42000
 Timer=TIMETOCHARGE
+Experience=1
+
 function TelePortationLoop()
 	while true do
 		if Timer > 0 then 
-		Timer =Timer- 300
+		Timer =Timer- 300 * math.max(1,Experience)
 		else
 		Timer=TIMETOCHARGE
+		Experience=Spring.GetUnitExperience(unitID)
 		boolCharged=true
 		end
 	
-	if boolCharged==true and boolMove==true then
-	boolCharged=TelePortation()
-	end
+		if boolCharged==true and boolMove==true then
+		StartThread(TelePortation)
+		end
 	Sleep(300)
 	end
 

@@ -6,13 +6,14 @@ Description = "Combine Soldier",
 objectName = "bg2.s3o",
 script = "bgscript.lua",
 buildPic = "cbg.png",
-moveState =2,
- fireState=2,
+
 --cost
 buildCostMetal = 105,
 buildCostEnergy = 200,
 buildTime = 6,
 --Health
+moveState =1,
+fireState =2,
 maxDamage = 240,
 idleAutoHeal = 3,
 onoffable=true,
