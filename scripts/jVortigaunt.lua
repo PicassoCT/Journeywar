@@ -312,7 +312,7 @@ Experience=1
 
 function TelePortationLoop()
 	while true do
-		if Timer > 0 then 
+		if Timer > 0 	then 
 		Timer =Timer- 300 * math.max(1,Experience)
 		else
 		Timer=TIMETOCHARGE

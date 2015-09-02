@@ -124,17 +124,21 @@ function deployedDetector()
 	end
 end
 
+movsoundfile="sounds/ccrabsynth/Moving.wav"
+deploysoundfile="sounds/ccrabsynth/Deploy.ogg"
 
+crabunitdef=Spring.GetUnitDefID(unitID)
 function MoveAnimation()
 	while true do
 		if 	( boolMoving ==true  ) and boolDeployed==false then
+		StartThread(PlaySoundByUnitType,crabunitdef, movsoundfile, 1, 2500,1)
 			while (boolMoving ==true ) and boolDeployed==false  do
 				walkAnim()
 				Sleep(300)
 			end
 		
 		elseif (boolDeployWanted==true and boolMoving==false) or  boolDeployed == true then
-		
+		StartThread(PlaySoundByUnitType,crabunitdef, deploysoundfile, 1, 5000,1)
 		while (boolDeployWanted==true and boolMoving==false) or  boolDeployed == true  do 
 		Sleep(100)
 		end

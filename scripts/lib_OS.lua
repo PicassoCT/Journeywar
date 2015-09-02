@@ -98,7 +98,68 @@ outcome=false
 
 end
 
+-->pumpOS shows a circularMovingObject
+function circulOS(TableOfPieces,CircleCenter,axis, PieceLength, AnimSpeed, arcStart, arcEnd, arcMoving)
+start,ending= arcStart,arcEnd
+boolArcMoving= arcMoving ~= nil
+hideT(TableOfPieces)
+speed=arcMoving or AnimSpeed
+speed=speed/100
+
+accumulatedTurn=0
+modulatedTurn=0
+
+Spin(CircleCenter,axis,math.rad(speed),0)
+	while true do
+	if start < ending then
+		for i=1,#TableOfPieces, 1 do
+			if i <start or i> ending then
+				Hide(TableOfPieces[i])
+			else
+				Show(TableOfPieces[i])
+			end
+		end
 	
+	else
+		for i=1,#TableOfPieces, 1 do
+			if i ^< start and  i > ending then
+				Hide(TableOfPieces[i])
+			else
+				Show(TableOfPieces[i])
+			end
+		end
+		
+		if math.abs(modulatedTurn-accumulatedTurn) > PieceLength then
+			start=start+1
+				if start > #TableOfPieces then start=1 end
+			ending=ending+1
+				if ending > #TableOfPieces then ending=1 end
+			modulatedTurn=accumulatedTurn
+		end
+		
+	end
+		
+		accumulatedTurn=accumulatedTurn+speed
+ 		Sleep(100)
+	end
+
+
+end
+	
+function portalOS(piecesTable, center, pieceLength, axis, moveDistance, speed,prePostShow,SleepTime)
+while true do
+hideT(piecesTable)
+Move(center,axis,0,0)
+	for i=1,#piecesTable, 1 do
+		Move(center,axis, pieceLength*i,speed)
+			if prePostShow ==true then Show(piecesTable[i]) end
+		WaitForMove(center,axis)
+			if prePostShow ==false then Show(piecesTable[i]) end
+	end
+Sleep(SleepTime)
+end
+
+end
 
 --> genericOS 
 function genericOS(unitID, dataTable,jobFunctionTable, checkFunctionTable,rest)
