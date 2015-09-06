@@ -122,7 +122,7 @@ Spin(CircleCenter,axis,math.rad(speed),0)
 	
 	else
 		for i=1,#TableOfPieces, 1 do
-			if i ^< start and  i > ending then
+			if i < start and  i > ending then
 				Hide(TableOfPieces[i])
 			else
 				Show(TableOfPieces[i])
