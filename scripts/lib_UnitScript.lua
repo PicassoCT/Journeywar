@@ -57,6 +57,20 @@ lib_boolDebug= GG.BoolDebug or false
 		string.load(Appendix.."="..assignedValue)
 	return string.load(Appendix.."==".. asignedValue)
 	end
+-->moves Piece by a exponential Decreasing or Increasing Speed to target
+function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, endspeed, speedUpSlowDown)
+speed=startspeed
+for i=startPos, targetPos, 1 do
+	if speedUpSlowDown==true then
+		speed=math.min(endspeed,speed+increaseval^2)
+	else
+		speed=math.max(endspeed,speed-increaseval^2)
+	end
+Move(piece,axis,i,speed)
+
+end
+
+end
 
 --> Sorts Pieces By Height in Model
 function sortPiecesByHeight(ableStableTableOfBabelEnable)
@@ -3259,11 +3273,12 @@ end
 	end
 	
 	--> finds GenericNames and Creates Tables with them
-	function makePiecesTablesByNameGroups(boolMakePiecesTable)
-
+	function makePiecesTablesByNameGroups(boolMakePiecesTable,boolSilent)
+	boolSilentRun=boolSilent or false
 	piecesTable=Spring.GetUnitPieceList(unitID)
 	TableByName={}
 	NameAndNumber={}
+	ReturnTable={}
 		
 			for i=1,#piecesTable,1 do
 				s=string.reverse(piecesTable[i])
@@ -3284,10 +3299,10 @@ end
 			
 			
 			end
-		
+	if boolSilentRun== true then
 		for k,v in pairs(TableByName) do
 			if v > 1 then
-			Spring.Echo(k.. " = {}")
+				Spring.Echo(k.. " = {}")
 			end
 		end
 		
@@ -3295,17 +3310,35 @@ end
 		for k,v in pairs(NameAndNumber) do
 		
 			if v and v.number then
-			Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
-			Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
+				Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
+				Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
 			else
-			Spring.Echo(v.name.." = piece("..v.name..")")
+				Spring.Echo(v.name.." = piece("..v.name..")")
 			end
 		end
 		
-		if boolMakePiecesTable and boolMakePiecesTable ==true then
-		generatepiecesTableAndArrayCode(unitID)
-		end
-		
+			if boolMakePiecesTable and boolMakePiecesTable ==true then
+				generatepiecesTableAndArrayCode(unitID)
+			end
+		else
+			PackedAllNames={}
+			--pack the piecesTables in a UeberTable by Name
+				for tableName,v in pairs (TableByName) do
+					--Add the Pieces to the Table
+					for k,v in pairs(NameAndNumber) do
+				
+					if v and v.number and v.name== tableName then
+						pieceNumber= string.load("piece("..v.name..v.number..")")
+						PackedAllNames[v.number] = pieceNumber
+					end
+				end
+			
+					ExecutableString= "ReturnTable["..tableName.."] = ".. PackedAllNames 
+					string.load(ExecutableString)
+				end
+			
+				return ReturnTable
+		end	
 	end
 
 	function clampMaxSign(value,Max)
