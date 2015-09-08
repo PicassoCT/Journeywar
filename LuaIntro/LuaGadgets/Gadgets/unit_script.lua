@@ -33,7 +33,7 @@ function gadget:GetInfo()
                 date      = "2 September 2009",
                 license   = "GPL v2",
                 layer     = 0,
-                enabled   = true --  loaded by default?
+                enabled   = false --  loaded by default?
         }
 end
 
@@ -478,15 +478,16 @@ end
 
 function Spring.UnitScript.Hide(piece)
 		if type(piece) ~= "number" then
-			Spring.Echo("PieceNumber not a number " .. piece)
+			Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).."instead")
 		end
+		
         return sp_SetPieceVisibility(piece, false)
 end
 
 function Spring.UnitScript.Show(piece)
 
 		if type(piece) ~= "number" then
-			Spring.Echo("PieceNumber not a number " .. piece)
+			Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).."instead")
 		end
 		if (not piece) then 
 		error("Error: Piece  not handed as argument", 2) 		
@@ -757,7 +758,7 @@ function gadget:UnitCreated(unitID, unitDefID)
 		
                 local p = {}
                 for _,name in ipairs{...} do
-						if not pieces[name] then Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(UnitDefNames,unitDefID))end
+					--	if not pieces[name] then Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(UnitDefNames,unitDefID))end
                         p[#p+1] = pieces[name] or error("piece not found: " .. tostring(name), 2)
                 end
                 return unpack(p)

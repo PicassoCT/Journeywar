@@ -117,7 +117,7 @@ end
 
 -- needed here too, and gadget handler doesn't expose it
 
-VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
+--VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 VFS.Include('LuaGadgets/system.lua', nil, VFSMODE)
 VFS.Include('gamedata/VFSUtils.lua', nil, VFSMODE)
 
@@ -224,7 +224,7 @@ local function RunOnError(thread)
         if fun then
                 local good, err = pcall(fun, err)
                 if (not good) then
-                        Spring.Echo("error in error handler: " .. err)
+                        Spring.Echo("unitscript.lua :: error in error handler: " .. err)
                 end
         end
 end
@@ -238,7 +238,7 @@ local function WakeUp(thread, ...)
         if (not good) then
                 Spring.Log(gadget:GetInfo().name, LOG.ERROR, err)
 				Spring.Echo(err)
-             --   Spring.Log(gadget:GetInfo().name, LOG.ERROR, debug.traceback(co))
+				--  Spring.Log(gadget:GetInfo().name, LOG.ERROR, debug.traceback(co))
                 RunOnError(thread)
         end
 end
@@ -459,7 +459,7 @@ end
 
 function Spring.UnitScript.Hide(piece)
 		if bool_GadgetDebug==true and type(piece) ~= "number" then
-			Spring.Echo("PieceNumber not a number " .. piece)
+				Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).." with value ".. piece.." instead")
 		end
         return sp_SetPieceVisibility(piece, false)
 end
@@ -467,7 +467,7 @@ end
 function Spring.UnitScript.Show(piece)
 
 		if bool_GadgetDebug==true and type(piece) ~= "number" then
-			Spring.Echo("PieceNumber not a number " .. piece)
+			Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).." with value ".. piece.." instead")
 		end
 		if bool_GadgetDebug==true and (not piece) then 
 		error("Error: Piece  not handed as argument", 2) 		
@@ -706,6 +706,7 @@ end
 
 --------------------------------------------------------------------------------
 
+
 function gadget:UnitCreated(unitID, unitDefID)
         local ud = UnitDefs[unitDefID]
         local chunk = scripts[ud.scriptName]
@@ -738,11 +739,18 @@ function gadget:UnitCreated(unitID, unitDefID)
 		
                 local p = {}
                 for _,name in ipairs{...} do
-						if not pieces[name] then Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(UnitDefNames,unitDefID))end
+			
+						if pieces[name] == nil  then 
+						--	Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(UnitDefNames,unitDefID))
+							error("piece not found: " .. tostring(name), 2)
+						else
                         p[#p+1] = pieces[name] or error("piece not found: " .. tostring(name), 2)
+						end
                 end
                 return unpack(p)
         end
+		
+		
 
         setmetatable(env, { __index = prototypeEnv })
         setfenv(chunk, env)

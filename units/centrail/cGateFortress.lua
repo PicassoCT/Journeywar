@@ -1,63 +1,77 @@
-local unitName = "cgatefortess"
-
+local unitName = "cgatefort"
 local unitDef = {
 name = "Gatefotress",
 Description = "Trainfortress travelling between Worlds",
 objectName = "cGateFotress.s3o",
-script = "placeholder.lua",
-buildPic = "placeholder.png",
---cost
-buildCostMetal = 2500,
-buildCostEnergy = 1200,
-buildTime = 50,
---Health
-maxDamage = 10500,
-idleAutoHeal = 2,
---Movement
-Acceleration = 0.25,
-BrakeRate = 0.3,
-FootprintX = 5,
-FootprintZ = 5,
-MaxSlope = 80,
-MaxVelocity = 1.4,
-MaxWaterDepth = 65,
-MovementClass = "Default2x2",
-TurnRate = 250,
-
-sightDistance = 900,
-upright=true,
-onoffable=true,
-activateWhenBuilt =false,
-CanAttack = true,
-CanGuard = true,
-CanMove = true,
-CanPatrol = true,
-CanStop = true,
-LeaveTracks = true, 
-
-Builder = false,
-ShowNanoSpray = true,
+script = "cgatefotressscript.lua",
+  buildPic = "crailgun.dds",
+  	RadarDistance = 25,
+	SightDistance = 200,
+  
+	buildCostMetal = 980,
+	buildCostEnergy = 1250,
+	buildTime = 54,
+	
+	maxDamage = 1900,
+	idleAutoHeal = 1,
+	
+	EnergyStorage = 0,
+	EnergyUse = 0,
+	MetalStorage = 0,
+	EnergyMake = 0, 
+	MakesMetal = 0, 
+	MetalMake = 0,	
+------------------------------
+	canPatrol = false,
+nanocolor=[[0 0.9 0.9]],
+ShowNanoSpray = false,
 CanBeAssisted = false,
 CanReclaim=false,	
+	explodeAs="cArtDM",
+	selfDestructAs="cArtDM", 
 
-	explodeAs = [[NOWEAPON]],
-	selfDestructAs= [[NOWEAPON]], 
- 
- 
+
+
+Reclaimable = true,
+	
+
+
+-- Pathfinding and related
+
+   FootprintX = 2,
+	FootprintZ = 2,
+	MaxSlope = 500,	
+	
+
+-- Building	
+	Builder = false,
+
+
+
+--custom UnitDefParameter
+
+  customParams = {},
+ sfxtypes = {
+    explosiongenerators = {
+	   "custom:dirt",
+	   "custom:railGunCeg",
+	   "custom:cRailSparks",
+	   "custom:snipercooloff",
+	
+	   
+						  },
+	
+				},
+
+
+
+-- weapons = {
+-- [1]={name  = "cRailGun",
+	-- onlyTargetCategory = [[ LAND]],
+	-- },
+	-- },
 Category = [[LAND]],
 
-weapons = {
-[1]={name  = "stridergun",
-	onlyTargetCategory = [[LAND]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 90,--nerfed
-	},
-[2]={name  = "warpcannon",
-onlyTargetCategory = [[LAND]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
-},
-},
 }
-
 return lowerkeys({ [unitName] = unitDef })
+

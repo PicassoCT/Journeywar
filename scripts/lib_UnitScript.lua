@@ -27,7 +27,7 @@ lib_boolDebug= GG.BoolDebug or false
 
 	-->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 	-->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
-	function makeCascadingGlobalTables(FormatString,assignedValue, ...)
+function makeCascadingGlobalTables(FormatString,assignedValue, ...)
 	if string.load(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; string.load(FormatString) return end
 	--SplitByDot
 	SubTables={}
@@ -56,7 +56,8 @@ lib_boolDebug= GG.BoolDebug or false
 		end
 		string.load(Appendix.."="..assignedValue)
 	return string.load(Appendix.."==".. asignedValue)
-	end
+end
+	
 -->moves Piece by a exponential Decreasing or Increasing Speed to target
 function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, endspeed, speedUpSlowDown)
 speed=startspeed
@@ -67,6 +68,7 @@ for i=startPos, targetPos, 1 do
 		speed=math.max(endspeed,speed-increaseval^2)
 	end
 Move(piece,axis,i,speed)
+WaitForMove(piece,axis)
 
 end
 
@@ -871,7 +873,7 @@ end
 
 -->Returns not nil if random
 function maRo()
-if math.random(0,1)==1 then return true else return end
+if math.random(0,1)==1 then return maRa() else return end
 end
 
 --> Move with a speed Curve
@@ -973,7 +975,7 @@ function HideWrap(piecenr)
 end
 
 function getUnitName(UnitDef, UnitDefID)
-for name,def in pairs(UnitDefID) do
+for name,def in pairs(UnitDef) do
 	if def.id==UnitDefID then
 	return name
 	end
@@ -1295,6 +1297,7 @@ return true
 	return false
 	end
 end
+
 --> Checks wether a Point is within a six sided polygon
 function sixPointInsideDetAlgo (x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,xPoint,yPoint)
 boolInside=true
@@ -1499,7 +1502,7 @@ piecesTable=Spring.GetUnitPieceList(unitID)
 	if piecesTable ~= nil then
 		for i=1,#piecesTable,1 do
 		workingString=piecesTable[i]
-		Spring.Echo("piecesTable[#piecesTable+1]= piece(\""..piecesTable[i].."\");"..piecesTable[i].."= piece("..piecesTable[i].."\")")
+		Spring.Echo(""..piecesTable[i].." = piece(\""..piecesTable[i].."\")\n piecesTable[#piecesTable+1]= "..piecesTable[i])
 
 		end
 
@@ -3274,8 +3277,11 @@ end
 	
 	--> finds GenericNames and Creates Tables with them
 	function makePiecesTablesByNameGroups(boolMakePiecesTable,boolSilent)
+		
 	boolSilentRun=boolSilent or false
+	pieceMap=Spring.GetUnitPieceMap(unitID)
 	piecesTable=Spring.GetUnitPieceList(unitID)
+	
 	TableByName={}
 	NameAndNumber={}
 	ReturnTable={}
@@ -3295,11 +3301,11 @@ end
 								
 				end
 				end
-			if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end
-			
-			
+			if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end			
 			end
-	if boolSilentRun== true then
+			
+			
+	if boolSilentRun== false then
 		for k,v in pairs(TableByName) do
 			if v > 1 then
 				Spring.Echo(k.. " = {}")
@@ -3320,25 +3326,29 @@ end
 			if boolMakePiecesTable and boolMakePiecesTable ==true then
 				generatepiecesTableAndArrayCode(unitID)
 			end
-		else
-			PackedAllNames={}
+			
+	else
+			
 			--pack the piecesTables in a UeberTable by Name
-				for tableName,v in pairs (TableByName) do
+				for tableName,_ in pairs (TableByName) do
+				local PackedAllNames={}
 					--Add the Pieces to the Table
 					for k,v in pairs(NameAndNumber) do
 				
-					if v and v.number and v.name== tableName then
-						pieceNumber= string.load("piece("..v.name..v.number..")")
-						PackedAllNames[v.number] = pieceNumber
+					if v and v.number and v.name == tableName then
+						piecename=v.name..v.number
+						if lib_boolDebug==true then
+						Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
+						end
+						PackedAllNames[v.number]= pieceMap[piecename]					
+					end								
 					end
-				end
-			
-					ExecutableString= "ReturnTable["..tableName.."] = ".. PackedAllNames 
-					string.load(ExecutableString)
+				ReturnTable[tableName]=PackedAllNames 				
 				end
 			
 				return ReturnTable
-		end	
+	end	
+	
 	end
 
 	function clampMaxSign(value,Max)
