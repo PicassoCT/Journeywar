@@ -360,7 +360,8 @@ function AnimTest()
 	end
 
 end
- 
+  
+ local PI=3.1415926535897932384626433832795
  local SignalTable={}
 function unfoldAnimation()
 reseT(TableOfPieces)
@@ -378,9 +379,13 @@ n=	InnerCircleDeploy(n,true)
 	StartThread(InnerCircleLoop,n,true)
 
 n=	OuterCircleDeploy(n,true)	
+
+	StartThread(GoUp,n,true,2*PI*0.08333333333333333333 *(1/1.1666 ))
 	StartThread(OuterCircleLoop,n,true)
-stopScript("cgatefotressscript")
+
 n=	UpperCircleDeploy(n,true)
+	StartThread(UpperCircleLoop,n,true)
+stopScript("cgatefotressscript")
 n=	TowerDeploy(n,true)
 n=	OutPostDeploy(n,true)
 n=	InnerCityDeploy(n,true)
@@ -565,8 +570,7 @@ function FirstTrainDeploy (SignalNumber,boolReverse)
 	end
  return SignalNumber+1 
  end
- 
- local PI=3.1415926535897932384626433832795
+
 
  
 function InnerCircleDeploy (SignalNumber,boolReverse) 
@@ -588,9 +592,11 @@ function InnerCircleDeploy (SignalNumber,boolReverse)
 				if InnerLoop[inner-3] then
 					Hide(InnerLoop[inner-3])
 				end
-			end
-				
-		
+				if i==4 then
+				return SignalNumber+1 
+				end
+				end
+			
 		else
 		end 
 
@@ -616,7 +622,7 @@ function InnerCircleLoop (SignalNumber,boolReverse)
 				Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
 				
 				WaitForTurn(InLoopCenter,y_axis)
-				offSet= ((inner+5)%10) +1
+				offSet= ((inner+6)%10) +1
 				
 				
 					Hide(InnerLoop[offSet] )
@@ -639,19 +645,24 @@ function OuterCircleDeploy (SignalNumber,boolReverse)
 	--if the animation should be aborted, we revert it 
 	if SignalTable[SignalNumber]==false then boolDirection=true end
 	--12
-	out_radialSpeed= 2*PI*0.083 *(1/1.1666 )
+	out_radialSpeed= 2*PI*0.08333333333333333333 *(1/1.1666 )
 	
 	hideT(OuterLoopTable)
 	
 		if boolDirection==true then
-
+	Turn(BigLCenter,y_axis,math.rad(-5),0)
+	WaitForTurn(BigLCenter,y_axis)
 			for out=1,12,1 do
-				Show(OuterLoopTable[out])
-				Turn(BigLCenter,y_axis,math.rad(out*-30 ),out_radialSpeed)
+			
+				temp=((out+1)%12)+1			
+				Show(OuterLoopTable[temp])
+				Turn(BigLCenter,y_axis,math.rad(out*-30 +25),out_radialSpeed)
 				WaitForTurn(BigLCenter,y_axis)
-				-- if InnerLoop[i-3] then
-					-- Hide(InnerLoop[out-3])
-				-- end
+				
+				if OuterLoopTable[out-7] then
+					Hide(OuterLoopTable[out-7])
+				 return SignalNumber+1 
+				end
 			end
 				
 		
@@ -662,44 +673,187 @@ function OuterCircleDeploy (SignalNumber,boolReverse)
 
  end
 
+UpGoTurn1=piece"UpGoTurn1"
+UpGoTurn2=piece"UpGoTurn2"
+
+
+ 
  function OuterCircleLoop (SignalNumber,boolReverse) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
 		SignalTable[SignalNumber]=true
 	
 	
+	Show(UpGo1)
+	Show(UpGo2)
 	
-	out_radialSpeed= 2*PI*0.083 *(1/1.1666 )
+	
+	out_radialSpeed= 2*PI*0.08333333333333333333 *(1/1.1666 )
 
-	out=1
+	out=8
+	Show(OuterLoopTable[6])
+	Show(OuterLoopTable[7])
+	Show(OuterLoopTable[8])
+	Show(OuterLoopTable[9])
+	Show(OuterLoopTable[10])
+	Turn(BigLCenter,y_axis,math.rad(-215),0,true)
+	WaitForTurn(BigLCenter,y_axis)
+
  	while SignalTable[SignalNumber]==true do
 	
 		if boolDirection==true then
 	
-
+				
+			temp=((out+1)%12)+1
 			
-				Show(OuterLoopTable[out])
-				Turn(BigLCenter,y_axis,math.rad(out*-30 ),radialSpeed)
+			
+				Show(OuterLoopTable[temp])
+				Turn(BigLCenter,y_axis,math.rad(out*-30 +25),radialSpeed)
 				
 				WaitForTurn(BigLCenter,y_axis)
-				offSet= ((out+8)%12) +1
+				offSet= ((out+5)%12) +1
 				
 				
 					Hide(OuterLoopTable[offSet] )
-			
-				out=out%12+1
-		
+				if out== 4 then-- activate the upgoer
+				SignalTable[SignalNumber-1]=true
+				end
 				
+				out=out%12+1
+			
+			
 		
 		else
 		end 
 	end
 
- return SignalNumber+1 
+ return SignalNumber+2 
  end
-function 	UpperCircleDeploy(SignalNumber,boolReverse) 
  
+ function GoUp(SignalNumber,boolReverse,radialSpeed)
+		boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+		SignalTable[SignalNumber]=false
+		
+	while SignalTable[SignalNumber]==false do
+	Sleep(5)
+	end	
+		
+ 
+		if boolDirection==true then
+	
+			while SignalTable[SignalNumber]==true do
+			Hide(UpGo1)
+			Hide(UpGo2)	
+			Turn(UpGoTurn2,y_axis,math.rad(30),0)
+			Turn(UpGoTurn1,y_axis,math.rad(60),0)	
+			
+			Turn(UpGo2,x_axis,math.rad(0),0,true)	
+			Turn(UpGo1,x_axis,math.rad(-20),0,true)
+			
+			WaitForTurn(UpGoTurn1,y_axis)
+			WaitForTurn(UpGoTurn2,y_axis)
+			WaitForTurn(UpGo2,x_axis)
+			WaitForTurn(UpGo1,x_axis)
+			Show(UpGo1)
+			Show(UpGo2)	
+			Turn(UpGoTurn2,y_axis,math.rad(0),radialSpeed)
+			Turn(UpGoTurn1,y_axis,math.rad(30),radialSpeed)
+			
+			Turn(UpGo2,x_axis,math.rad(-20),0.35)	
+			Turn(UpGo1,x_axis,math.rad(0),0.35)	
+			WaitForTurn(UpGoTurn1,y_axis)
+			WaitForTurn(UpGoTurn2,y_axis)
+			end
+		
+		else
+		end 
+		
+	end
+	
+
+ 
+function UpperCircleDeploy (SignalNumber,boolReverse) 
+  	boolDirection= false 
+	if boolReverse then boolDirection =boolReverse end
+	--if the animation should be aborted, we revert it 
+	if SignalTable[SignalNumber]==false then boolDirection=true end
+	--12
+	out_radialSpeed= 2*PI*0.08333333333333333333 *(1/1.1666 )
+	
+
+		if boolDirection==true then
+	Turn(BigLUpCenter,y_axis,math.rad(-5),0)
+	WaitForTurn(BigLUpCenter,y_axis)
+			for out=12,24,1 do
+			
+				temp=((out+1)%24)+12			
+				Show(OuterLoopTable[temp])
+				Turn(BigLUpCenter,y_axis,math.rad(out*-30 +25),out_radialSpeed)
+				WaitForTurn(BigLUpCenter,y_axis)
+				
+				if OuterLoopTable[out+12-7] then
+					Hide(OuterLoopTable[out+12-7])
+				 return SignalNumber+1 
+				end
+			end
+				
+		
+		else
+		end 
+
  return SignalNumber+1 
+
  end
+
+UpGoTurn1=piece"UpGoTurn1"
+UpGoTurn2=piece"UpGoTurn2"
+
+
+ 
+ function UpperCircleLoop (SignalNumber,boolReverse) 
+  	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+		SignalTable[SignalNumber]=true
+	
+
+	
+	
+	out_radialSpeed= 2*PI*0.08333333333333333333 *(1/1.1666 )
+
+	out=20
+
+	Turn(BigLUpCenter,y_axis,math.rad(-215),0,true)
+	WaitForTurn(BigLUpCenter,y_axis)
+
+ 	while SignalTable[SignalNumber]==true do
+	
+		if boolDirection==true then
+	
+				
+			temp=((out+1)%24)+12
+			
+			
+				Show(OuterLoopTable[temp])
+				Turn(BigLUpCenter,y_axis,math.rad(out*-30 +25),radialSpeed)
+				
+				WaitForTurn(BigLUpCenter,y_axis)
+				offSet= ((out+5)%24) +12
+				
+				
+					Hide(OuterLoopTable[offSet] )
+			
+				out=out%24+12
+			
+			
+		
+		else
+		end 
+	end
+
+ return SignalNumber+2 
+ end
+	
+	
+ 
+
 function 	TowerDeploy(SignalNumber,boolReverse) 
  
  return SignalNumber+1 
