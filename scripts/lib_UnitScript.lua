@@ -73,6 +73,11 @@ WaitForMove(piece,axis)
 end
 
 end
+-->CombinedWaitForMove
+function WMove(lib_piece,lib_axis,lib_distance,lib_speed)
+Move(lib_piece,lib_axis,lib_distance,lib_speed)
+WaitForMove(lib_piece,lib_axis)
+end
 
 --> Sorts Pieces By Height in Model
 function sortPiecesByHeight(ableStableTableOfBabelEnable)
@@ -1535,6 +1540,18 @@ if not rate then r=50 end
 
 
 end
+
+function stopScript(name)
+lib_boolOnce=false
+	while true do
+	Sleep(3000)
+		if lib_boolOnce == false then
+		lib_boolOnce=true
+		Spring.Echo("Script "..name.." has stopped")
+		end
+	end
+end
+
 --> Hides a PiecesTable, 
 function hideT(tablename,lowLimit,upLimit,delay)
 	if lowLimit and upLimit then
@@ -3340,7 +3357,8 @@ end
 						if lib_boolDebug==true then
 						Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
 						end
-						PackedAllNames[v.number]= pieceMap[piecename]					
+						convertToNumber=tonumber(v.number)
+						PackedAllNames[convertToNumber]= pieceMap[piecename]					
 					end								
 					end
 				ReturnTable[tableName]=PackedAllNames 				

@@ -466,7 +466,7 @@ end
 
 function Spring.UnitScript.Show(piece)
 
-		if bool_GadgetDebug==true and type(piece) ~= "number" then
+		if bool_GadgetDebug==true and piece and type(piece) ~= "number" and type(piece)~= "function" then
 			Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).." with value ".. piece.." instead")
 		end
 		if bool_GadgetDebug==true and (not piece) then 

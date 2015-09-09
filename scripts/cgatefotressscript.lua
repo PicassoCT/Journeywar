@@ -9,8 +9,8 @@ include "lib_Build.lua"
  TableOfPieces[#TableOfPieces+1]= center
   Erker4 = piece("Erker4")
  TableOfPieces[#TableOfPieces+1]= Erker4
-  InnerLoop0 = piece("InnerLoop0")
- TableOfPieces[#TableOfPieces+1]= InnerLoop0
+  InnerLoop10 = piece("InnerLoop10")
+ TableOfPieces[#TableOfPieces+1]= InnerLoop10
   InnerLoop1 = piece("InnerLoop1")
  TableOfPieces[#TableOfPieces+1]= InnerLoop1
   InnerLoop2 = piece("InnerLoop2")
@@ -55,56 +55,56 @@ include "lib_Build.lua"
  TableOfPieces[#TableOfPieces+1]= NGon087
   InnerOrigin = piece("InnerOrigin")
  TableOfPieces[#TableOfPieces+1]= InnerOrigin
-  OuterLoo12 = piece("OuterLoo12")
- TableOfPieces[#TableOfPieces+1]= OuterLoo12
-  OuterLoo24 = piece("OuterLoo24")
- TableOfPieces[#TableOfPieces+1]= OuterLoo24
-  OuterLoo27 = piece("OuterLoo27")
- TableOfPieces[#TableOfPieces+1]= OuterLoo27
+  OuterLoop12 = piece("OuterLoop12")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop12
+  OuterLoop24 = piece("OuterLoop24")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop24
+  OuterLoop27 = piece("OuterLoop27")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop27
   Gun1 = piece("Gun1")
  TableOfPieces[#TableOfPieces+1]= Gun1
   Mag1 = piece("Mag1")
  TableOfPieces[#TableOfPieces+1]= Mag1
   Mag2 = piece("Mag2")
  TableOfPieces[#TableOfPieces+1]= Mag2
-  OuterLoo25 = piece("OuterLoo25")
- TableOfPieces[#TableOfPieces+1]= OuterLoo25
-  OuterLoo29 = piece("OuterLoo29")
- TableOfPieces[#TableOfPieces+1]= OuterLoo29
+  OuterLoop25 = piece("OuterLoop25")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop25
+  OuterLoop29 = piece("OuterLoop29")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop29
   Gun4 = piece("Gun4")
  TableOfPieces[#TableOfPieces+1]= Gun4
   Mag7 = piece("Mag7")
  TableOfPieces[#TableOfPieces+1]= Mag7
   Mag8 = piece("Mag8")
  TableOfPieces[#TableOfPieces+1]= Mag8
-  OuterLoo30 = piece("OuterLoo30")
- TableOfPieces[#TableOfPieces+1]= OuterLoo30
-  OuterLoo31 = piece("OuterLoo31")
- TableOfPieces[#TableOfPieces+1]= OuterLoo31
-  OuterLoo32 = piece("OuterLoo32")
- TableOfPieces[#TableOfPieces+1]= OuterLoo32
-  OuterLoo35 = piece("OuterLoo35")
- TableOfPieces[#TableOfPieces+1]= OuterLoo35
-  OuterLoo36 = piece("OuterLoo36")
- TableOfPieces[#TableOfPieces+1]= OuterLoo36
-  OuterLoo37 = piece("OuterLoo37")
- TableOfPieces[#TableOfPieces+1]= OuterLoo37
-  OuterLoo38 = piece("OuterLoo38")
- TableOfPieces[#TableOfPieces+1]= OuterLoo38
-  OuterLoo39 = piece("OuterLoo39")
- TableOfPieces[#TableOfPieces+1]= OuterLoo39
+  OuterLoop30 = piece("OuterLoop30")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop30
+  OuterLoop31 = piece("OuterLoop31")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop31
+  OuterLoop32 = piece("OuterLoop32")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop32
+  OuterLoop35 = piece("OuterLoop35")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop35
+  OuterLoop36 = piece("OuterLoop36")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop36
+  OuterLoop37 = piece("OuterLoop37")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop37
+  OuterLoop38 = piece("OuterLoop38")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop38
+  OuterLoop39 = piece("OuterLoop39")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop39
   Erker5 = piece("Erker5")
  TableOfPieces[#TableOfPieces+1]= Erker5
   Erker6 = piece("Erker6")
  TableOfPieces[#TableOfPieces+1]= Erker6
-  OuterLoo34 = piece("OuterLoo34")
- TableOfPieces[#TableOfPieces+1]= OuterLoo34
-  OuterLoo40 = piece("OuterLoo40")
- TableOfPieces[#TableOfPieces+1]= OuterLoo40
-  OuterLoo41 = piece("OuterLoo41")
- TableOfPieces[#TableOfPieces+1]= OuterLoo41
-  OuterLoo43 = piece("OuterLoo43")
- TableOfPieces[#TableOfPieces+1]= OuterLoo43
+  OuterLoop34 = piece("OuterLoop34")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop34
+  OuterLoop40 = piece("OuterLoop40")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop40
+  OuterLoop41 = piece("OuterLoop41")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop41
+  OuterLoop43 = piece("OuterLoop43")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop43
   RailGun = piece("RailGun")
  TableOfPieces[#TableOfPieces+1]= RailGun
   Projectile = piece("Projectile")
@@ -113,48 +113,48 @@ include "lib_Build.lua"
  TableOfPieces[#TableOfPieces+1]= DronePod1
   DronePod2 = piece("DronePod2")
  TableOfPieces[#TableOfPieces+1]= DronePod2
-  OuterLoo33 = piece("OuterLoo33")
- TableOfPieces[#TableOfPieces+1]= OuterLoo33
-  OuterLoo42 = piece("OuterLoo42")
- TableOfPieces[#TableOfPieces+1]= OuterLoo42
-  OuterLoo44 = piece("OuterLoo44")
- TableOfPieces[#TableOfPieces+1]= OuterLoo44
-  OuterLoo47 = piece("OuterLoo47")
- TableOfPieces[#TableOfPieces+1]= OuterLoo47
-  OuterLoo55 = piece("OuterLoo55")
- TableOfPieces[#TableOfPieces+1]= OuterLoo55
+  OuterLoop33 = piece("OuterLoop33")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop33
+  OuterLoop42 = piece("OuterLoop42")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop42
+  OuterLoop44 = piece("OuterLoop44")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop44
+  OuterLoop47 = piece("OuterLoop47")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop47
+  OuterLoop55 = piece("OuterLoop55")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop55
   Erker9 = piece("Erker9")
  TableOfPieces[#TableOfPieces+1]= Erker9
   Erker10 = piece("Erker10")
  TableOfPieces[#TableOfPieces+1]= Erker10
-  OuterLoo54 = piece("OuterLoo54")
- TableOfPieces[#TableOfPieces+1]= OuterLoo54
+  OuterLoop54 = piece("OuterLoop54")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop54
   DronePod3 = piece("DronePod3")
  TableOfPieces[#TableOfPieces+1]= DronePod3
   Erker11 = piece("Erker11")
  TableOfPieces[#TableOfPieces+1]= Erker11
-  OuterLoo50 = piece("OuterLoo50")
- TableOfPieces[#TableOfPieces+1]= OuterLoo50
-  OuterLoo51 = piece("OuterLoo51")
- TableOfPieces[#TableOfPieces+1]= OuterLoo51
+  OuterLoop50 = piece("OuterLoop50")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop50
+  OuterLoop51 = piece("OuterLoop51")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop51
   DronePod4 = piece("DronePod4")
  TableOfPieces[#TableOfPieces+1]= DronePod4
-  OuterLoo45 = piece("OuterLoo45")
- TableOfPieces[#TableOfPieces+1]= OuterLoo45
-  OuterLoo46 = piece("OuterLoo46")
- TableOfPieces[#TableOfPieces+1]= OuterLoo46
-  OuterLoo53 = piece("OuterLoo53")
- TableOfPieces[#TableOfPieces+1]= OuterLoo53
-  OuterLoo52 = piece("OuterLoo52")
- TableOfPieces[#TableOfPieces+1]= OuterLoo52
+  OuterLoop45 = piece("OuterLoop45")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop45
+  OuterLoop46 = piece("OuterLoop46")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop46
+  OuterLoop53 = piece("OuterLoop53")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop53
+  OuterLoop52 = piece("OuterLoop52")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop52
   Erker1 = piece("Erker1")
  TableOfPieces[#TableOfPieces+1]= Erker1
   Erker8 = piece("Erker8")
  TableOfPieces[#TableOfPieces+1]= Erker8
-  OuterLoo48 = piece("OuterLoo48")
- TableOfPieces[#TableOfPieces+1]= OuterLoo48
-  OuterLoo49 = piece("OuterLoo49")
- TableOfPieces[#TableOfPieces+1]= OuterLoo49
+  OuterLoop48 = piece("OuterLoop48")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop48
+  OuterLoop49 = piece("OuterLoop49")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop49
   Erker7 = piece("Erker7")
  TableOfPieces[#TableOfPieces+1]= Erker7
   DronePod5 = piece("DronePod5")
@@ -173,10 +173,10 @@ include "lib_Build.lua"
  TableOfPieces[#TableOfPieces+1]= GateWave
   WaveA = piece("WaveA")
  TableOfPieces[#TableOfPieces+1]= WaveA
-  Feed11 = piece("Feed11")
- TableOfPieces[#TableOfPieces+1]= Feed11
   Feed10 = piece("Feed10")
  TableOfPieces[#TableOfPieces+1]= Feed10
+  Feed9 = piece("Feed9")
+ TableOfPieces[#TableOfPieces+1]= Feed9
   Feed8 = piece("Feed8")
  TableOfPieces[#TableOfPieces+1]= Feed8
   Feed7 = piece("Feed7")
@@ -201,44 +201,50 @@ include "lib_Build.lua"
  TableOfPieces[#TableOfPieces+1]= Ring1
   BigLUpCenter = piece("BigLUpCenter")
  TableOfPieces[#TableOfPieces+1]= BigLUpCenter
-  OuterLoo13 = piece("OuterLoo13")
- TableOfPieces[#TableOfPieces+1]= OuterLoo13
-  OuterLoo14 = piece("OuterLoo14")
- TableOfPieces[#TableOfPieces+1]= OuterLoo14
-  OuterLoo15 = piece("OuterLoo15")
- TableOfPieces[#TableOfPieces+1]= OuterLoo15
-  OuterLoo16 = piece("OuterLoo16")
- TableOfPieces[#TableOfPieces+1]= OuterLoo16
-  OuterLoo17 = piece("OuterLoo17")
- TableOfPieces[#TableOfPieces+1]= OuterLoo17
-  OuterLoo18 = piece("OuterLoo18")
- TableOfPieces[#TableOfPieces+1]= OuterLoo18
-  OuterLoo19 = piece("OuterLoo19")
- TableOfPieces[#TableOfPieces+1]= OuterLoo19
-  OuterLoo20 = piece("OuterLoo20")
- TableOfPieces[#TableOfPieces+1]= OuterLoo20
-  OuterLoo21 = piece("OuterLoo21")
- TableOfPieces[#TableOfPieces+1]= OuterLoo21
-  OuterLoo22 = piece("OuterLoo22")
- TableOfPieces[#TableOfPieces+1]= OuterLoo22
-  OuterLoo23 = piece("OuterLoo23")
- TableOfPieces[#TableOfPieces+1]= OuterLoo23
-  OuterLoo56 = piece("OuterLoo56")
- TableOfPieces[#TableOfPieces+1]= OuterLoo56
+  OuterLoop13 = piece("OuterLoop13")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop13
+  OuterLoop14 = piece("OuterLoop14")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop14
+  OuterLoop15 = piece("OuterLoop15")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop15
+  OuterLoop16 = piece("OuterLoop16")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop16
+  OuterLoop17 = piece("OuterLoop17")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop17
+  OuterLoop18 = piece("OuterLoop18")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop18
+  OuterLoop19 = piece("OuterLoop19")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop19
+  OuterLoop20 = piece("OuterLoop20")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop20
+  OuterLoop21 = piece("OuterLoop21")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop21
+  OuterLoop22 = piece("OuterLoop22")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop22
+  OuterLoop23 = piece("OuterLoop23")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop23
+
   BigLCenter = piece("BigLCenter")
  TableOfPieces[#TableOfPieces+1]= BigLCenter
-  OuterLoo10 = piece("OuterLoo10")
- TableOfPieces[#TableOfPieces+1]= OuterLoo10
-  OuterLoo11 = piece("OuterLoo11")
- TableOfPieces[#TableOfPieces+1]= OuterLoo11
-  OuterLoop0 = piece("OuterLoop0")
- TableOfPieces[#TableOfPieces+1]= OuterLoop0
-  OuterLoop1 = piece("OuterLoop1")
- TableOfPieces[#TableOfPieces+1]= OuterLoop1
-  OuterLoo26 = piece("OuterLoo26")
- TableOfPieces[#TableOfPieces+1]= OuterLoo26
-  OuterLoo28 = piece("OuterLoo28")
- TableOfPieces[#TableOfPieces+1]= OuterLoo28
+  OuterLoop10 = piece("OuterLoop10")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop10
+  OuterLoop11 = piece("OuterLoop11")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop11
+
+  UpGo1 = piece("UpGo1")
+ TableOfPieces[#TableOfPieces+1]= UpGo1    
+ UpGo2 = piece("UpGo2")
+ TableOfPieces[#TableOfPieces+1]= UpGo2  
+ 
+ OuterLoop1 = piece("OuterLoop1")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop1 
+ 
+ OuterLoop56 = piece("OuterLoop56")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop56
+  OuterLoop26 = piece("OuterLoop26")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop26
+  OuterLoop28 = piece("OuterLoop28")
+ TableOfPieces[#TableOfPieces+1]= OuterLoop28
   Gun2 = piece("Gun2")
  TableOfPieces[#TableOfPieces+1]= Gun2
   Mag3 = piece("Mag3")
@@ -277,15 +283,25 @@ include "lib_Build.lua"
  TableOfPieces[#TableOfPieces+1]= CataUp2
   CataHead2 = piece("CataHead2")
  TableOfPieces[#TableOfPieces+1]= CataHead2
+  InLoopCenter = piece("InnerLoopC")
+ TableOfPieces[#TableOfPieces+1]= InLoopCenter
 
 
 TablesOfPiecesGroups={}--=makePiecesTablesByNameGroups(false,true)
 
-FeedTable={}
+Feed={}
 OuterLoopTable={}
-OuterLooTable={}
+OuterLoopTable={}
 Mag={}
 Ring={}
+InnerLoop={}
+
+--Constants
+feed_speed=53
+GateDeg=-15
+LengthFeed=53
+FeedTime=1.1666666666666
+InnerLoopRadius=82
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
@@ -293,11 +309,12 @@ end
 
 function script.Create()
 TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
-FeedTable=TablesOfPiecesGroups["Feed"]
+Feed=TablesOfPiecesGroups["Feed"]
+
 OuterLoopTable=TablesOfPiecesGroups["OuterLoop"]
-OuterLooTable=TablesOfPiecesGroups["OuterLoo"]
 Mag=TablesOfPiecesGroups["Mag"]
 Ring=TablesOfPiecesGroups["Ring"]
+InnerLoop=TablesOfPiecesGroups["InnerLoop"]
 
 
 	for i=1,#Mag do
@@ -346,14 +363,14 @@ end
  
  local SignalTable={}
 function unfoldAnimation()
+reseT(TableOfPieces)
+hideT(TableOfPieces)
 Sleep(10)
 Spring.Echo("UnfoldAnimation")
 n=1
 n=	GateDeploy(n,true)	
 	StartThread(GateLoop,n,true)
-while true do
-Sleep(100)
-end
+
 n=	FirstTrainDeploy(n,true)	
 	StartThread(TrainLoop,n,true)
 
@@ -362,7 +379,7 @@ n=	InnerCircleDeploy(n,true)
 
 n=	OuterCircleDeploy(n,true)	
 	StartThread(OuterCircleLoop,n,true)
-
+stopScript("cgatefotressscript")
 n=	UpperCircleDeploy(n,true)
 n=	TowerDeploy(n,true)
 n=	OutPostDeploy(n,true)
@@ -405,10 +422,12 @@ teamid=Spring.GetUnitTeam(unitID)
 
 function script.FireWeapon1()	
 boolOneShot=false
-makeCascadingTables("GG.FiringGateFotressTable["..teamid.."["..unitID.."",true)
+makeCascadingTables("GG.FiringGateFotressTable["..teamid.."["..unitID.."]]",true)
 StartThread(watchForImpact)
 	return true
 end
+
+
 
 function GateDeploy (SignalNumber,boolReverse) 
 	boolDirection= false 
@@ -416,6 +435,7 @@ function GateDeploy (SignalNumber,boolReverse)
 	--if the animation should be aborted, we revert it 
 	if SignalTable[SignalNumber]==false then boolDirection=true end
 		if boolDirection==true then
+		Turn(GatePoint,y_axis,math.rad(GateDeg),9)
 		--Preparation
 		Move(center,y_axis,2.5,0)
 		Move(Ring0,y_axis,-15,0)
@@ -423,8 +443,7 @@ function GateDeploy (SignalNumber,boolReverse)
 		Show(Ring0)
 		Show(RingB)
 		Turn(Ring0,y_axis,math.rad(0),1.2)
-		moveExpPiece(Ring0,y_axis,15,-15,
-					5,750,15,false)
+			moveExpPiece(Ring0,y_axis,15,-15,5,750,15,false)
 		Move(Ring0,y_axis,0,35)
 		WaitForMove(Ring0,y_axis)
 		Turn(Ring3,x_axis,math.rad(180+46),0)
@@ -434,19 +453,17 @@ function GateDeploy (SignalNumber,boolReverse)
 		WaitForTurn(Ring2,x_axis)
 		WaitForTurn(Ring1,x_axis)
 		Turn(Ring1,x_axis,math.rad(0),10)				
-		Show(Ring1)
+			Show(Ring1)
 		WaitForTurn(Ring1,x_axis)
 		Turn(Ring2,x_axis,math.rad(0),10)
-		Show(Ring2)
+			Show(Ring2)
 		WaitForTurn(Ring2,x_axis)
 		Turn(Ring3,x_axis,math.rad(0),10)
-		Show(Ring3)
+			Show(Ring3)
 		WaitForTurn(Ring3,x_axis)
-		Show(GatePortal)
+			Show(GatePortal)
 		Spin(GatePortal,x_axis,math.rad(42),0)
-		
-		
-		
+
 		else
 
 
@@ -498,7 +515,19 @@ function FirstTrainDeploy (SignalNumber,boolReverse)
 	if SignalTable[SignalNumber]==false then boolDirection=true end
 
 		if boolDirection==true then
-
+		
+		WMove(Feed10,x_axis,0,0)
+		count_up=0
+			
+			for i=0,-LengthFeed,-4.8 do
+			WMove(Feed10,x_axis,i,feed_speed)
+			if 	 Feed[count_up] then			
+					Show(Feed[count_up])
+			end
+			count_up=math.min(count_up+1,9)
+			end
+			Show(Feed10)
+			hideT(Feed)
 		else
 
 
@@ -507,23 +536,164 @@ function FirstTrainDeploy (SignalNumber,boolReverse)
  return SignalNumber+1 
  end
 	function TrainLoop (SignalNumber,boolReverse) 
- 
+	 	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+		SignalTable[SignalNumber]=true
+		
+ 	while SignalTable[SignalNumber]==true do
+		if boolDirection==true then
+		
+		WMove(Feed10,x_axis,0,0)
+		count_up=0
+		starttime=Spring.GetGameFrame()
+			for i=0,-LengthFeed,-4.8 do
+			WMove(Feed10,x_axis,i,feed_speed)
+			if 	 Feed[count_up] then			
+					Show(Feed[count_up])
+			end
+			count_up=math.min(count_up+1,9)
+			end
+			Show(Feed10)
+			WMove(Feed10,x_axis,-LengthFeed,feed_speed)
+		endtime=Spring.GetGameFrame()
+
+			hideT(Feed)
+		else
+
+
+		 
+		end 
+	end
  return SignalNumber+1 
  end
+ 
+ local PI=3.1415926535897932384626433832795
+
+ 
 function InnerCircleDeploy (SignalNumber,boolReverse) 
- 
+  	boolDirection= false 
+	if boolReverse then boolDirection =boolReverse end
+	--if the animation should be aborted, we revert it 
+	if SignalTable[SignalNumber]==false then boolDirection=true end
+
+	radialSpeed= 2*PI*0.1 *(1/1.1666 )
+	
+	hideT(InnerLoop)
+	
+		if boolDirection==true then
+
+			for inner=1,10,1 do
+				Show(InnerLoop[inner])
+				Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
+				WaitForTurn(InLoopCenter,y_axis)
+				if InnerLoop[inner-3] then
+					Hide(InnerLoop[inner-3])
+				end
+			end
+				
+		
+		else
+		end 
+
  return SignalNumber+1 
  end
-	function InnerCircleLoop (SignalNumber,boolReverse) 
  
+function InnerCircleLoop (SignalNumber,boolReverse) 
+  	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+		SignalTable[SignalNumber]=true
+	
+	
+	anteil_feed= 10
+	radialSpeed=2*PI*0.10 *(1/1.1666 )
+
+	inner=1
+ 	while SignalTable[SignalNumber]==true do
+	
+		if boolDirection==true then
+	
+
+			
+				Show(InnerLoop[inner])
+				Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
+				
+				WaitForTurn(InLoopCenter,y_axis)
+				offSet= ((inner+5)%10) +1
+				
+				
+					Hide(InnerLoop[offSet] )
+			
+				inner=inner%10+1
+		
+				
+		
+		else
+		end 
+	end
  return SignalNumber+1 
  end
+ 
+
+ 
 function OuterCircleDeploy (SignalNumber,boolReverse) 
- 
+  	boolDirection= false 
+	if boolReverse then boolDirection =boolReverse end
+	--if the animation should be aborted, we revert it 
+	if SignalTable[SignalNumber]==false then boolDirection=true end
+	--12
+	out_radialSpeed= 2*PI*0.083 *(1/1.1666 )
+	
+	hideT(OuterLoopTable)
+	
+		if boolDirection==true then
+
+			for out=1,12,1 do
+				Show(OuterLoopTable[out])
+				Turn(BigLCenter,y_axis,math.rad(out*-30 ),out_radialSpeed)
+				WaitForTurn(BigLCenter,y_axis)
+				-- if InnerLoop[i-3] then
+					-- Hide(InnerLoop[out-3])
+				-- end
+			end
+				
+		
+		else
+		end 
+
  return SignalNumber+1 
+
  end
-	function OuterCircleLoop (SignalNumber,boolReverse) 
- 
+
+ function OuterCircleLoop (SignalNumber,boolReverse) 
+  	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+		SignalTable[SignalNumber]=true
+	
+	
+	
+	out_radialSpeed= 2*PI*0.083 *(1/1.1666 )
+
+	out=1
+ 	while SignalTable[SignalNumber]==true do
+	
+		if boolDirection==true then
+	
+
+			
+				Show(OuterLoopTable[out])
+				Turn(BigLCenter,y_axis,math.rad(out*-30 ),radialSpeed)
+				
+				WaitForTurn(BigLCenter,y_axis)
+				offSet= ((out+8)%12) +1
+				
+				
+					Hide(OuterLoopTable[offSet] )
+			
+				out=out%12+1
+		
+				
+		
+		else
+		end 
+	end
+
  return SignalNumber+1 
  end
 function 	UpperCircleDeploy(SignalNumber,boolReverse) 
