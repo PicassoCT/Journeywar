@@ -101,8 +101,7 @@ function script.StartBuilding(heading, pitch)
 end
 
 
-Spring.SetUnitNanoPieces(unitID,{ nanopiece
-end
+Spring.SetUnitNanoPieces(unitID,{ nanopiece})
 
 
 --------BUILDING---------

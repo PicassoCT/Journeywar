@@ -1569,6 +1569,8 @@ end
 
 -->Shows a Pieces Table
 function showT(tablename,lowLimit,upLimit,delay)
+	if not tablename then Spring.Echo("No table given as argument for showT") return end
+	
 	if lowLimit and upLimit then
 		for i=lowLimit,upLimit, 1 do
 		Show(tablename[i])

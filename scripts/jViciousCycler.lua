@@ -32,5 +32,4 @@ function script.StartBuilding(heading, pitch)
 
 
 end
-Spring.SetUnitNanoPieces(unitID,{ center
-end
+Spring.SetUnitNanoPieces(unitID,{ center}) 

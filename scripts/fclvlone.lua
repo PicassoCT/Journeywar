@@ -162,8 +162,7 @@ end
 
 
 
-Spring.SetUnitNanoPieces(unitID,{ buildspot
-end
+Spring.SetUnitNanoPieces(unitID,{ buildspot}) 
 
 
 
