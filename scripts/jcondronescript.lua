@@ -266,9 +266,7 @@ function script.StartBuilding(heading, pitch)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
-function script.QueryNanoPiece()
-     return nanoemit
-end
+Spring.SetUnitNanoPieces(unitID,{ nanoemit})
 
 
 

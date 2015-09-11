@@ -205,7 +205,5 @@ function script.QueryBuildInfo()
   return buildspot 
 end
 
-function script.QueryNanoPiece()
-     return buildspot
-end
+Spring.SetUnitNanoPieces(unitID,{ buildspot})
 

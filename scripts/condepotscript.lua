@@ -87,9 +87,7 @@ function script.QueryBuildInfo()
 end
 
 
-function script.QueryNanoPiece()
-     return cdcrane
-end
+Spring.SetUnitNanoPieces(unitID,{ cdcrane})
 
 function building()
 boolIsBuilding=true

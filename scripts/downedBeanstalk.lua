@@ -413,9 +413,7 @@ StartThread(moveUpAndDown)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
-function script.QueryNanoPiece()
-     return currentpiece
-end
+Spring.SetUnitNanoPieces(unitID,{ currentpiece})
 
 
 

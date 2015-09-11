@@ -92,10 +92,7 @@ end
 
 
 
-function script.QueryNanoPiece()
-
-     return fistenpist
-end
+Spring.SetUnitNanoPieces(unitID,{ fistenpist})
 
 
 

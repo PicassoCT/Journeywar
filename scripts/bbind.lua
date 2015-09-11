@@ -6,7 +6,7 @@
 	local rotator = piece "rotator"
 	local lightning= piece "bbindyaga0"
 	local crane = piece "bbindcrane"
-	local flare= piece "flare02"
+	 flare= piece "flare02"
 
 	local raft1 =piece"raft1"
 	local drum =piece"drum"
@@ -250,13 +250,10 @@
 	suddenDeath(unitID,recentDamage)
 	return 1
 	end
+	
+Spring.SetUnitNanoPieces(unitID,{flare})
 
 
-	function script.QueryNanoPiece()
-		--create a new nano particle at one of the two "nano towers"
-		
-		return flare
-	end
 
 	function idle()
 	counter=1

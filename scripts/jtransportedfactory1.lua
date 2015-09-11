@@ -70,9 +70,7 @@ function script.QueryBuildInfo()
   return Kugel02 
 end
 
-function script.QueryNanoPiece()
-     return Kugel01
-end
+Spring.SetUnitNanoPieces(unitID,{ Kugel01})
 
 local defID=Spring.GetUnitDefID(unitID)
 local firstbornDefID=UnitDefNames["jtrafactory"].id

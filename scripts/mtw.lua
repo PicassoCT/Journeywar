@@ -96,9 +96,7 @@ end
 function script.QueryWeapon1() 
 	return flare 
 end
-function script.QueryNanoPiece()
-     return mtwteletur
-end
+Spring.SetUnitNanoPieces(unitID,{ mtwteletur})
 boolTurretAimed=true
 function script.AimWeapon1( heading ,pitch)	
 

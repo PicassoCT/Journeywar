@@ -82,10 +82,7 @@ end
 
 
 
-function script.QueryNanoPiece()
-
-     return buildspot
-end
+Spring.SetUnitNanoPieces(unitID,{ buildspot})
 
 
 

@@ -162,8 +162,7 @@ end
 
 
 
-function script.QueryNanoPiece()
-     return buildspot
+Spring.SetUnitNanoPieces(unitID,{ buildspot
 end
 
 

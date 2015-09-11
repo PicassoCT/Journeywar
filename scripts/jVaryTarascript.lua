@@ -222,7 +222,6 @@ end
  
 
 function script.FireWeapon1()	
-
 	return true
 end
 
@@ -258,7 +257,5 @@ function script.QueryBuildInfo()
   return center 
 end
 
-function script.QueryNanoPiece()
-     return center
-end
+Spring.SetUnitNanoPieces(unitID,{ center})
 

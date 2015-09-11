@@ -111,7 +111,5 @@
 	  return center 
 	end
 
-	function script.QueryNanoPiece()
-		 return center
-	end
+	Spring.SetUnitNanoPieces(unitID,{ center})
 

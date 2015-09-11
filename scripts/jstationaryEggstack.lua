@@ -146,9 +146,7 @@ tempDeci=math.max((deCidere+2)%5,1)
 end
 
 
-function script.QueryNanoPiece()
-     return eggs
-end
+Spring.SetUnitNanoPieces(unitID,{ eggs})
 
 function bobbingEggs()
 	for i=1,table.getn(Eggtable),1 do

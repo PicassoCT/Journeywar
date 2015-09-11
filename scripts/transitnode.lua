@@ -243,10 +243,7 @@ StartThread(getBuildID)
 	
 end
 
-function script.QueryNanoPiece()
-
-return Wheel1
-end
+Spring.SetUnitNanoPieces(unitID,{ Wheel1})
 
 function sound()
 	while(true) do

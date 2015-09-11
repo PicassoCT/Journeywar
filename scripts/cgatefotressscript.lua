@@ -288,7 +288,19 @@ include "lib_Build.lua"
 
 
 TablesOfPiecesGroups={}--=makePiecesTablesByNameGroups(false,true)
+UpTable={}
+SeedTable={}
 
+for i=1,12,1 do
+name="OuterLoop"..(i+12)
+piecenumber=piece(name)
+UpTable[i]=piecenumber
+end
+for i=1,10 do
+name="Seed"..(i)
+piecenumber=piece(name)
+SeedTable[i]=piecenumber
+end
 Feed={}
 OuterLoopTable={}
 OuterLoopTable={}
@@ -310,7 +322,7 @@ end
 function script.Create()
 TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 Feed=TablesOfPiecesGroups["Feed"]
-
+hideT(SeedTable)
 OuterLoopTable=TablesOfPiecesGroups["OuterLoop"]
 Mag=TablesOfPiecesGroups["Mag"]
 Ring=TablesOfPiecesGroups["Ring"]
@@ -374,13 +386,13 @@ n=	GateDeploy(n,true)
 
 n=	FirstTrainDeploy(n,true)	
 	StartThread(TrainLoop,n,true)
-
+	
 n=	InnerCircleDeploy(n,true)	
 	StartThread(InnerCircleLoop,n,true)
-
+	
 n=	OuterCircleDeploy(n,true)	
 
-	StartThread(GoUp,n,true,2*PI*0.08333333333333333333 *(1/1.1666 ))
+	StartThread(GoUp,n,true,2*PI*0.1 *(1/1.1666 ))
 	StartThread(OuterCircleLoop,n,true)
 
 n=	UpperCircleDeploy(n,true)
@@ -593,6 +605,7 @@ function InnerCircleDeploy (SignalNumber,boolReverse)
 					Hide(InnerLoop[inner-3])
 				end
 				if i==4 then
+				StartThread(deployInnerCrossSection)
 				return SignalNumber+1 
 				end
 				end
@@ -602,6 +615,58 @@ function InnerCircleDeploy (SignalNumber,boolReverse)
 
  return SignalNumber+1 
  end
+ 
+
+ function SeedLoop(nrOfPumps,feed_speed,boolDirection)
+ 	
+	for k=nrOfPumps,0,-1 do
+	
+		WMove(SeedTable[10],x_axis,0,0)
+		count_up=0
+		if boolDirection==true then		
+			hideT(SeedTable)
+			for i=0,-LengthFeed,-4.8 do
+			WMove(SeedTable[10],x_axis,i,feed_speed)
+			if 	SeedTable[count_up] then			
+				Show(SeedTable[count_up])
+			end
+				count_up=math.min(count_up+1,9)
+			end
+			hideT(SeedTable)
+	
+		else
+		WMove(SeedTable[10],x_axis,LengthFeed,0)
+		showT(SeedTable)
+			for i=LengthFeed,0,-4.8 do
+			WMove(SeedTable[10],x_axis,i,feed_speed)
+			if 	SeedTable[count_up] then			
+				Hide(SeedTable[count_up])
+			end
+				count_up=math.max(count_up+-,1)
+			end
+			hideT(SeedTable)
+		end
+	end
+ end
+ SeedCenter=piece"SeedCenter"
+ 
+ function deployInnerCrossSection(ICfeed_speed,boolDirection)
+ offSet={}
+StartThread(SeedLoop,5,ICfeed_speed,boolDirection)
+	if boolDirection==true --unfold
+		offSet.x,offSet.y,offSet.z=0,0,0
+		MovePieceToPiece(SeedCenter,InnerOrigin,0,offSet)
+		Move(InnerOrigin,x_axis,3*LengthFeed,0)
+		for i=3,1,-1 do
+			Move(InnerOrigin,x_axis,(i-1)*LengthFeed,ICfeed_speed)
+			WaitForMove(InnerOrigin,x_axis)
+			Show(InnerOrigin[])
+		end
+	else
+	
+	end
+end
+ 
  
 function InnerCircleLoop (SignalNumber,boolReverse) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
@@ -736,15 +801,15 @@ UpGoTurn2=piece"UpGoTurn2"
 	while SignalTable[SignalNumber]==false do
 	Sleep(5)
 	end	
-		
+	offset=30	
  
 		if boolDirection==true then
 	
 			while SignalTable[SignalNumber]==true do
 			Hide(UpGo1)
 			Hide(UpGo2)	
-			Turn(UpGoTurn2,y_axis,math.rad(30),0)
-			Turn(UpGoTurn1,y_axis,math.rad(60),0)	
+			Turn(UpGoTurn2,y_axis,math.rad(0+offset),0)
+			Turn(UpGoTurn1,y_axis,math.rad(30+offset),0)	
 			
 			Turn(UpGo2,x_axis,math.rad(0),0,true)	
 			Turn(UpGo1,x_axis,math.rad(-20),0,true)
@@ -783,15 +848,16 @@ function UpperCircleDeploy (SignalNumber,boolReverse)
 		if boolDirection==true then
 	Turn(BigLUpCenter,y_axis,math.rad(-5),0)
 	WaitForTurn(BigLUpCenter,y_axis)
-			for out=12,24,1 do
+			for out=1,12,1 do
 			
-				temp=((out+1)%24)+12			
-				Show(OuterLoopTable[temp])
+				temp=((out+1)%12)+1
+				
+				Show(UpTable[out])
 				Turn(BigLUpCenter,y_axis,math.rad(out*-30 +25),out_radialSpeed)
 				WaitForTurn(BigLUpCenter,y_axis)
 				
-				if OuterLoopTable[out+12-7] then
-					Hide(OuterLoopTable[out+12-7])
+				if UpTable[out-7] then
+					Hide(UpTable[out-7])
 				 return SignalNumber+1 
 				end
 			end
@@ -828,19 +894,19 @@ UpGoTurn2=piece"UpGoTurn2"
 		if boolDirection==true then
 	
 				
-			temp=((out+1)%24)+12
+			temp=((out+1)%12)+1
 			
 			
-				Show(OuterLoopTable[temp])
+				Show(UpTable[temp])
 				Turn(BigLUpCenter,y_axis,math.rad(out*-30 +25),radialSpeed)
 				
 				WaitForTurn(BigLUpCenter,y_axis)
-				offSet= ((out+5)%24) +12
+				offSet= ((out+6)%12) +1
 				
 				
-					Hide(OuterLoopTable[offSet] )
+					Hide(UpTable[offSet] )
 			
-				out=out%24+12
+				out=out%12+1
 			
 			
 		

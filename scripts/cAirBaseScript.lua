@@ -185,10 +185,7 @@ SetSignalMask(SIG_WELD)
 	end
 end
 
-function script.QueryNanoPiece()
-
-     return buildspot
-end
+Spring.SetUnitNanoPieces(unitID,{buildspot})
 
 
 

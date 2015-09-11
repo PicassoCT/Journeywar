@@ -2064,9 +2064,7 @@ end
 			SetUnitValue(COB.INBUILDSTANCE, 1)
 	end
 
-	function script.QueryNanoPiece()
-		 return center
-	end
+	Spring.SetUnitNanoPieces(unitID,{ center})
 
 	function T(piecename,radx,spx,rady,spy,radz,spz)
 

@@ -256,9 +256,7 @@ function script.QueryBuildInfo()
   return center 
 end
 
-function script.QueryNanoPiece()
-     return center
-end
+Spring.SetUnitNanoPieces(unitID,{ center})
 
 boolLaunch=false
 dtime=10000

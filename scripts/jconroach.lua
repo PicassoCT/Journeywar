@@ -164,9 +164,7 @@ function script.StartBuilding(heading, pitch)
 end
 
 
-function script.QueryNanoPiece()
-     return nanopiece
-end
+Spring.SetUnitNanoPieces(unitID,{ nanopiece})
 
 
 --------BUILDING---------

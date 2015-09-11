@@ -846,10 +846,7 @@ Sleep(1500)
 Spring.SetUnitNanoPieces(unitID,{[1]=cinanoemit1,[2]= cinanoemit2,[3]=cinanoemit3})
 end
 
-function script.QueryNanoPiece()
-
-return cinanoemit1
-end
+Spring.SetUnitNanoPieces(unitID,{ cinanoemit1})
 
 
 

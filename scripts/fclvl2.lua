@@ -137,10 +137,7 @@ end
 
 --------BUILDING---------
 
-function script.QueryNanoPiece()
-
-     return nanu
-end
+Spring.SetUnitNanoPieces(unitID,{ nanu})
 
 
 UPGRADEDEFID=UnitDefNames["upgradefactory"].id
