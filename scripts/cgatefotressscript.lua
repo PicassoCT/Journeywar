@@ -292,21 +292,23 @@ UpTable={}
 SeedTable={}
 
 for i=1,12,1 do
-name="OuterLoop"..(i+12)
-piecenumber=piece(name)
-UpTable[i]=piecenumber
-end
+	val=i+12
+	name="OuterLoop"..(val)
+	piecenumber=piece(name)
+	UpTable[#UpTable+1]=piecenumber
+	end
 for i=1,10 do
-name="Seed"..(i)
-piecenumber=piece(name)
-SeedTable[i]=piecenumber
+	name="Seed"..(i)
+	piecenumber=piece(name)
+	SeedTable[i]=piecenumber
 end
 Feed={}
 OuterLoopTable={}
-OuterLoopTable={}
+
 Mag={}
 Ring={}
 InnerLoop={}
+GunTable={}
 
 --Constants
 feed_speed=53
@@ -327,12 +329,13 @@ OuterLoopTable=TablesOfPiecesGroups["OuterLoop"]
 Mag=TablesOfPiecesGroups["Mag"]
 Ring=TablesOfPiecesGroups["Ring"]
 InnerLoop=TablesOfPiecesGroups["InnerLoop"]
+GunTable=TablesOfPiecesGroups["Gun"]
 
 
 	for i=1,#Mag do
-	Sign=i%2
-	if Sign==0 then Sign=-1 end
-		Spin(Mag[i],x_axis,math.rad(42*Sign),0)
+		Sign=i%2
+			if Sign==0 then Sign=-1 end
+		Spin(Mag[i],z_axis,math.rad(42*Sign),0)
 	end
 x,y,z=Spring.GetUnitPiecePosDir(unitID,RingB)
 
@@ -374,65 +377,73 @@ function AnimTest()
 end
   
  local PI=3.1415926535897932384626433832795
- local SignalTable={}
-function unfoldAnimation()
-reseT(TableOfPieces)
-hideT(TableOfPieces)
-Sleep(10)
-Spring.Echo("UnfoldAnimation")
-n=1
-n=	GateDeploy(n,true)	
-	StartThread(GateLoop,n,true)
-
-n=	FirstTrainDeploy(n,true)	
-	StartThread(TrainLoop,n,true)
+  SignalTable={}
+  
+	function unfoldAnimation()
 	
-n=	InnerCircleDeploy(n,true)	
-	StartThread(InnerCircleLoop,n,true)
+	reseT(TableOfPieces)
+	hideT(TableOfPieces)
+	Sleep(10)
+	Spring.Echo("UnfoldAnimation")
+
+				
+	 	GateDeploy( true)	
+			StartThread(GateLoop ,true)
+
+	 	FirstTrainDeploy(true)	
+			StartThread(TrainLoop ,true)
+		
+	 	InnerCircleDeploy(true)	
 	
-n=	OuterCircleDeploy(n,true)	
+			StartThread(InnerCircleLoop ,true)
+		
+	 	OuterCircleDeploy( true)		
 
-	StartThread(GoUp,n,true,2*PI*0.1 *(1/1.1666 ))
-	StartThread(OuterCircleLoop,n,true)
+			StartThread(GoUp ,true,2*PI*0.1 *(1/1.1666 ))
 
 
-n=	UpperCircleDeploy(n,true)
-stopScript("cgatefotressscript")
-	StartThread(UpperCircleLoop,n,true)
+			StartThread(OuterCircleLoop ,true)
 
-n=	TowerDeploy(n,true)
-n=	OutPostDeploy(n,true)
-n=	InnerCityDeploy(n,true)
-n=	RailGunUnfold(n,true)
-n=	CityBlocksDeploy(n,true)	
+
+	 	UpperCircleDeploy( true)
+
+			StartThread(UpperCircleLoop ,true,4)
+
+	 	TowerDeploy(true)
+
+	 	DeployInOrder(true)
+				
+	 	InnerCityDeploy(true)
+	 	RailGunUnfold(true)
+	stopScript("cgatefotressscript")
 
 
 
 end
 
 function foldAnimation()
-Sleep(10)
-Spring.Echo("Fold Animation")
-testPiece=piece("center")
-Spring.Echo(testPiece)
---	CityBlocksDeploy	
---	RailGunUnfold
---	InnerCityDeploy
---	OutPostDeploy
---	TowerDeploy
---	UpperCircleDeploy
-
---OuterCircleLoop
-	--OuterCircleDeploy
---InnerCircleLoop
-	--InnerCircleDeploy
---GateLoop
-	--GateDeploy
---TrainLoop
-	--FirstTrainDeploy
+	Sleep(10)
+	Spring.Echo("Fold Animation")
+	testPiece=piece("center")
+	Spring.Echo(testPiece)
 	
+	--	RailGunUnfold
+	--	InnerCityDeploy
+	--	OutPostDeploy
+	--	TowerDeploy
+	--	UpperCircleDeploy
 
-hideT(TableOfPieces)
+	--OuterCircleLoop
+		--OuterCircleDeploy
+	--InnerCircleLoop
+		--InnerCircleDeploy
+	--GateLoop
+		--GateDeploy
+	--TrainLoop
+		--FirstTrainDeploy
+		
+
+	hideT(TableOfPieces)
 end
 
 boolOnTheMove=false 
@@ -448,12 +459,12 @@ end
 
 
 
-function GateDeploy (SignalNumber,boolReverse) 
+function GateDeploy (boolReverse) 
 	boolDirection= false 
-	if boolReverse then boolDirection =boolReverse end
+		if boolReverse then boolDirection =boolReverse end
 	--if the animation should be aborted, we revert it 
-	if SignalTable[SignalNumber]==false then boolDirection=true end
-		if boolDirection==true then
+
+	if boolDirection==true then
 		Turn(GatePoint,y_axis,math.rad(GateDeg),9)
 		--Preparation
 		Move(center,y_axis,2.5,0)
@@ -483,68 +494,68 @@ function GateDeploy (SignalNumber,boolReverse)
 			Show(GatePortal)
 		Spin(GatePortal,x_axis,math.rad(42),0)
 
-		else
+	else
 
 
 		 
-		end 
-	return SignalNumber+1 
+	end 
+	
+	  
  end
  
-function GateLoop (SignalNumber,boolReverse) 
-AlterRate=0
-SignalTable[SignalNumber]=true
-	while SignalTable[SignalNumber]==true do
-AlterRate=AlterRate+1
-				Spin(GateWave,x_axis,math.rad(42),0)
-				Spin(WaveA,x_axis,math.rad(42),0)
-				Show(GateWave)
-				Show(WaveA)
-				speed=math.random(1.5,4)
-				if maRo() then
+function GateLoop (boolReverse) 
+	AlterRate=0
+	SignalTable["GateLoop"]=true
+		while SignalTable["GateLoop"]==true do
+		AlterRate=AlterRate+1
+					Spin(GateWave,x_axis,math.rad(42),0)
+					Spin(WaveA,x_axis,math.rad(42),0)
+					Show(GateWave)
+					Show(WaveA)
+					speed=math.random(1.5,4)
+					if maRo() then
+						if AlterRate % 2==1 then
+							Move(GateWave,x_axis,-5.5,speed)
+						end
+						
+						if AlterRate % 2==0 then
+							Move(WaveA,x_axis,-3.14,speed)
+						end
+					end					
 					
-					if AlterRate % 2==1 then
-						Move(GateWave,x_axis,-5.5,speed)
-					end
+					WaitForMove(WaveA,x_axis)
+					WaitForMove(GateWave,x_axis)
+					Move(WaveA,x_axis,0,speed)
+					Move(GateWave,x_axis,0,speed)
+					WaitForMove(WaveA,x_axis)
+					WaitForMove(GateWave,x_axis)
 					
-					if AlterRate % 2==0 then
-						Move(WaveA,x_axis,-3.14,speed)
-					end
-				end
-				
-				
-				WaitForMove(WaveA,x_axis)
-				WaitForMove(GateWave,x_axis)
-				Move(WaveA,x_axis,0,speed)
-				Move(GateWave,x_axis,0,speed)
-				WaitForMove(WaveA,x_axis)
-				WaitForMove(GateWave,x_axis)
-				
-		
-	Sleep(10)
-	end
+			
+		Sleep(10)
+		end
 --HoldPosition
-return SignalNumber+1 
+  
  end
  
-function FirstTrainDeploy (SignalNumber,boolReverse) 
+function FirstTrainDeploy (boolReverse) 
  	boolDirection= false 
 	if boolReverse then boolDirection =boolReverse end
 	--if the animation should be aborted, we revert it 
-	if SignalTable[SignalNumber]==false then boolDirection=true end
+	
 
 		if boolDirection==true then
 		
-		WMove(Feed10,x_axis,0,0)
-		count_up=0
+			WMove(Feed10,x_axis,0,0)
+			count_up=0
 			
 			for i=0,-LengthFeed,-4.8 do
-			WMove(Feed10,x_axis,i,feed_speed)
+				WMove(Feed10,x_axis,i,feed_speed)
 			if 	 Feed[count_up] then			
-					Show(Feed[count_up])
+				Show(Feed[count_up])
 			end
-			count_up=math.min(count_up+1,9)
+				count_up=math.min(count_up+1,9)
 			end
+			
 			Show(Feed10)
 			hideT(Feed)
 		else
@@ -552,29 +563,26 @@ function FirstTrainDeploy (SignalNumber,boolReverse)
 
 		 
 		end 
- return SignalNumber+1 
+   
  end
-	function TrainLoop (SignalNumber,boolReverse) 
+	function TrainLoop (boolReverse) 
 	 	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
-		SignalTable[SignalNumber]=true
+		SignalTable["TrainLoop"]=true
 		
- 	while SignalTable[SignalNumber]==true do
-		if boolDirection==true then
+ 	while SignalTable["TrainLoop"]==true do
+		if boolDirection==true then		
+			WMove(Feed10,x_axis,0,0)
+			count_up=0
 		
-		WMove(Feed10,x_axis,0,0)
-		count_up=0
-		starttime=Spring.GetGameFrame()
-			for i=0,-LengthFeed,-4.8 do
-			WMove(Feed10,x_axis,i,feed_speed)
-			if 	 Feed[count_up] then			
-					Show(Feed[count_up])
-			end
-			count_up=math.min(count_up+1,9)
-			end
+				for i=0,-LengthFeed,-4.8 do
+					WMove(Feed10,x_axis,i,feed_speed)
+						if 	 Feed[count_up] then			
+								Show(Feed[count_up])
+						end
+					count_up=math.min(count_up+1,9)
+				end
 			Show(Feed10)
 			WMove(Feed10,x_axis,-LengthFeed,feed_speed)
-		endtime=Spring.GetGameFrame()
-
 			hideT(Feed)
 		else
 
@@ -582,16 +590,16 @@ function FirstTrainDeploy (SignalNumber,boolReverse)
 		 
 		end 
 	end
- return SignalNumber+1 
+   
  end
 
 
  innerCircleIterator=0
-function InnerCircleDeploy (SignalNumber,boolReverse) 
+function InnerCircleDeploy (boolReverse) 
   	boolDirection= false 
 	if boolReverse then boolDirection =boolReverse end
 	--if the animation should be aborted, we revert it 
-	if SignalTable[SignalNumber]==false then boolDirection=true end
+
 
 	radialSpeed= 2*PI*0.1 *(1/1.1666 )
 	
@@ -607,27 +615,25 @@ function InnerCircleDeploy (SignalNumber,boolReverse)
 					Hide(InnerLoop[inner-3])
 				end
 				if inner ==4 then					
-					StartThread(SeedLoop,5,feed_speed,true,radialSpeed)
-				return SignalNumber+1 
+					
+				return 
 				end
 				end
 			
 		else
 		end 
 
- return SignalNumber+1 
+   
  end
  
  SeedCenter=piece"SeedCenter"
  function SeedLoop(nrOfPumps,feed_speed,boolDirection,radialSpeed)
 
-	for k=nrOfPumps,0,-1 do
+	for k=1,nrOfPumps,1 do
 
 		
 		offSet={}
 		offSet.x,offSet.y,offSet.z=0,0,0
-		WMove(InnerOrigin,x_axis,3*LengthFeed,0)
-		MovePieceToPiece(SeedCenter,InnerOrigin,0,offSet)
 		WMove(SeedTable[10],x_axis,0,0)
 		if boolDirection==true then	
 		seed_count_up=0		
@@ -655,40 +661,21 @@ function InnerCircleDeploy (SignalNumber,boolReverse)
 			hideT(SeedTable)
 		end
 	end
-		if k== nrOfPumps-1 then
-			StartThread(deployInnerCrossSection,radialSpeed,true)
-		end
+	
 	
  end
  
- InnerCrossTable={[1]={OuterLoop42},[2]={OuterLoop32},[3]={OuterLoop33,InnerOrigin},[4]={OuterLoop35},[5]={OuterLoop34}}
- 
- function deployInnerCrossSection(ICfeed_speed,boolDirection)
 
-	if boolDirection==true then --unfold
-	
-	
-		for i=3,1,-1 do
-			Move(InnerOrigin,x_axis,(i-1)*LengthFeed,ICfeed_speed)
-			WaitForMove(InnerOrigin,x_axis)
-			showT(InnerCrossTable[i])
-		end
-	else
-	
-	end
-end
  
  
-function InnerCircleLoop (SignalNumber,boolReverse) 
+function InnerCircleLoop (boolReverse) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
-		SignalTable[SignalNumber]=true
-	
-	
-	anteil_feed= 10
+	SignalTable["InnerCircleLoop"]=true	
+
 	radialSpeed=2*PI*0.10 *(1/1.1666 )
 
 	inner=4
- 	while SignalTable[SignalNumber]==true do
+ 	while SignalTable["InnerCircleLoop"]==true do
 	
 		if boolDirection==true then
 	
@@ -700,9 +687,9 @@ function InnerCircleLoop (SignalNumber,boolReverse)
 				WaitForTurn(InLoopCenter,y_axis)
 				offSet= ((inner+6)%10) +1
 				
-				
+				if InnerLoop[offSet]  then
 					Hide(InnerLoop[offSet] )
-			
+				end
 				inner=inner%10+1
 		
 				
@@ -710,17 +697,16 @@ function InnerCircleLoop (SignalNumber,boolReverse)
 		else
 		end 
 	end
- return SignalNumber+1 
+	Hide(InnerLoop[inner])
+
+   
  end
  
 
  
-function OuterCircleDeploy (SignalNumber,boolReverse) 
-  	boolDirection= false 
-	if boolReverse then boolDirection =boolReverse end
-	--if the animation should be aborted, we revert it 
-	if SignalTable[SignalNumber]==false then boolDirection=true end
-	--12
+function OuterCircleDeploy (boolReverse) 
+  	boolDirection= boolReverse 
+	
 	out_radialSpeed= 2*PI*0.08333333333333333333 *(1/1.1666 )
 	
 	hideT(OuterLoopTable)
@@ -737,7 +723,7 @@ function OuterCircleDeploy (SignalNumber,boolReverse)
 				
 				if OuterLoopTable[out-7] then
 					Hide(OuterLoopTable[out-7])
-				 return SignalNumber+1 
+					 return
 				end
 			end
 				
@@ -745,7 +731,7 @@ function OuterCircleDeploy (SignalNumber,boolReverse)
 		else
 		end 
 
- return SignalNumber+1 
+   
 
  end
 
@@ -754,9 +740,9 @@ UpGoTurn2=piece"UpGoTurn2"
 
 
  
- function OuterCircleLoop (SignalNumber,boolReverse) 
+ function OuterCircleLoop (boolReverse) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
-		SignalTable[SignalNumber]=true
+		SignalTable["OuterCircleLoop"]=true
 	
 	
 	Show(UpGo1)
@@ -774,7 +760,7 @@ UpGoTurn2=piece"UpGoTurn2"
 	Turn(BigLCenter,y_axis,math.rad(-215),0,true)
 	WaitForTurn(BigLCenter,y_axis)
 
- 	while SignalTable[SignalNumber]==true do
+ 	while SignalTable["OuterCircleLoop"]==true do
 	
 		if boolDirection==true then
 	
@@ -788,11 +774,11 @@ UpGoTurn2=piece"UpGoTurn2"
 				WaitForTurn(BigLCenter,y_axis)
 				offSet= ((out+5)%12) +1
 				
-				
+				if  SignalTable["OuterCircleLoop"]==false then 
+			
+				return end
 					Hide(OuterLoopTable[offSet] )
-				if out== 6 then-- activate the upgoer
-				SignalTable[SignalNumber-1]=true
-				end
+			
 				
 				out=out%12+1
 			
@@ -802,21 +788,20 @@ UpGoTurn2=piece"UpGoTurn2"
 		end 
 	end
 
- return SignalNumber+2 
+
  end
  
- function GoUp(SignalNumber,boolReverse,radialSpeed)
+ function GoUp(boolReverse,radialSpeed)
 		boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
-		SignalTable[SignalNumber]=false
 		
-	while SignalTable[SignalNumber]==false do
-	Sleep(5)
-	end	
+		SignalTable["GoUp"]=true
+		
+	
 	offset=30	
  
 		if boolDirection==true then
 	
-			while SignalTable[SignalNumber]==true do
+			while SignalTable["GoUp"]==true do
 			Hide(UpGo1)
 			Hide(UpGo2)	
 			Turn(UpGoTurn2,y_axis,math.rad(0+offset),0)
@@ -841,16 +826,16 @@ UpGoTurn2=piece"UpGoTurn2"
 		
 		else
 		end 
-		
+	
 	end
 	
 
  
-function UpperCircleDeploy (SignalNumber,boolReverse) 
+function UpperCircleDeploy (boolReverse) 
   	boolDirection= false 
-	if boolReverse then boolDirection =boolReverse end
+		if boolReverse then boolDirection =boolReverse end
 	--if the animation should be aborted, we revert it 
-	if SignalTable[SignalNumber]==false then boolDirection=true end
+	
 	--12
 	out_radialSpeed= 2*PI*0.08333333333333333333 *(1/1.1666 )
 	
@@ -860,15 +845,16 @@ function UpperCircleDeploy (SignalNumber,boolReverse)
 	WaitForTurn(BigLUpCenter,y_axis)
 			for upcircdepindex=0,12,1 do
 			
-				temp=((upcircdepindex+1)%12)+1
-				
-				Show(UpTable[upcircdepindex+1])
+				temp=((upcircdepindex)%12)+1
+			
+				if UpTable[upcircdepindex] then Show(UpTable[upcircdepindex]) end
+			
 				Turn(BigLUpCenter,y_axis,math.rad(upcircdepindex*-30+30 ),out_radialSpeed)
 				WaitForTurn(BigLUpCenter,y_axis)
 				
 				if UpTable[upcircdepindex-9] then
 					Hide(UpTable[upcircdepindex-9])
-				 return SignalNumber+1 
+				   
 				end
 			end
 				
@@ -876,8 +862,7 @@ function UpperCircleDeploy (SignalNumber,boolReverse)
 		else
 		end 
 
- return SignalNumber+1 
-
+   
  end
 
 UpGoTurn1=piece"UpGoTurn1"
@@ -885,72 +870,247 @@ UpGoTurn2=piece"UpGoTurn2"
 
 
  
- function UpperCircleLoop (SignalNumber,boolReverse) 
+ function UpperCircleLoop (boolReverse,totalLength) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
-		SignalTable[SignalNumber]=true
+	SignalTable["UpperCircleLoop"]=true
 	
-
-	
-	
-
-
-	out=11
-
-	Turn(BigLUpCenter,y_axis,math.rad(-215),0,true)
+	upperCircOutIndex=10
+	Counter=0
+	Turn(BigLUpCenter,y_axis,math.rad(-270),0,true)
 	WaitForTurn(BigLUpCenter,y_axis)
 
- 	while SignalTable[SignalNumber]==true do
+ 	while SignalTable["UpperCircleLoop"]==true do
 	
 		if boolDirection==true then
-	
-				
-				temp=((out+1)%12)+1
+			temp=((upperCircOutIndex)%12)+1
 			
-			
-				Show(UpTable[temp])
-				Turn(BigLUpCenter,y_axis,math.rad(out*-30 -215),radialSpeed)
-				WaitForTurn(BigLUpCenter,y_axis)
 				
-				upperloopoffSet= out-2
+			Turn(BigLUpCenter,y_axis,math.rad(upperCircOutIndex*-30 ),radialSpeed)
+			WaitForTurn(BigLUpCenter,y_axis)
+			if UpTable[temp] then	Show(UpTable[temp])	end	
+			upperloopoffSet= upperCircOutIndex-6
 				if upperloopoffSet < 1 then upperloopoffSet =upperloopoffSet+12 end
 				
+				if UpTable[upperloopoffSet] then Hide(UpTable[upperloopoffSet] )	end
 				
-					Hide(UpTable[upperloopoffSet] )
-			
-				out=out%12+1
-			
-			
-		
+			upperCircOutIndex=upperCircOutIndex%12+1
 		else
 		end 
+		Counter=Counter+1
+			if Counter== totalLength then 
+			Turn(BigLUpCenter,y_axis,math.rad(0),0)
+			reseT(UpTable)
+			showT(UpTable)
+			Hide(OuterLoop14)
+			Move(Wall,y_axis,-7,0);Show(Wall);Move(Wall,y_axis,0,3.1415)
+			return end
 	end
 
- return SignalNumber+2 
+	--clean up
+	if boolDirection ==true then
+	Turn(BigLUpCenter,y_axis,math.rad(0),0)
+	reseT(UpTable)
+	showT(UpTable)
+	Hide(OuterLoop14)
+	Move(Wall,y_axis,-7,0);Show(Wall);Move(Wall,y_axis,0,3.1415)
+	else
+	
+	
+	end
+	
+
+  
  end
 	
 	
+ SecondTowerCenter=OuterLoop30
+ TowerCenter=NGon085
+ STowerTable={}
+ TowerTable={}
+ TowerTable[1]={NGon090,NGon089,NGon086,Gun3,Mag5,Mag6}
+ TowerTable[2]={NGon085,NGon086,NGon087}
+ STowerTable[1]={OuterLoop31}
+ STowerTable[2]={OuterLoop30}
+
+function 	TowerDeploy(boolReverse) 
+	if boolReverse==true then-- up
+	for i=1,#GunTable,1 do
+	Turn(GunTable[i],x_axis,math.rad(-90),0)
+	end
+	DeployInOrderTower(boolReverse)
+	SignalTable["UpperCircleLoop"]=false
+	SignalTable["GoUp"]=false
+	SignalTable["OuterCircleLoop"]=false
+	else
+	
+	end
+   
+ end
  
 
-function 	TowerDeploy(SignalNumber,boolReverse) 
  
- return SignalNumber+1 
- end
-function 	OutPostDeploy(SignalNumber,boolReverse) 
+ Seed10=piece"Seed10"
+ towerDeployTable={
+	[1]={pieceA=NGon085,offA={x=0,y=-LengthFeed-23,z=0},pieceList={NGon086,NGon087},	SeedDir={x=0,	y=180,	z=-90}},
+	[2]={pieceA=NGon090,offA={x=0,y=-LengthFeed-23,z=0},pieceList={NGon088,NGon089,Gun3,Mag5,Mag6},	SeedDir={x=0,	y=180,	z=-90}},
+	[3]={pieceA=OuterLoop30,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+	[4]={pieceA=OuterLoop31,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}}
+			
+ }
  
- return SignalNumber+1 
- end
-function 	InnerCityDeploy(SignalNumber,boolReverse) 
+ piecesDeployTable={
+			[1]={pieceA=OuterLoop25,offA={x=0,y=0,z=LengthFeed+17.5},pieceList={},				SeedDir={x=90,	y=-90,	z=0}},
+			[2]={pieceA=OuterLoop29,offA={x=0,y=-LengthFeed-23,z=0},pieceList={Gun4,Mag8,Mag7},	SeedDir={x=0,	y=180,	z=-90}},
+			
+			[3]={pieceA=OuterLoop26,offA={x=-LengthFeed-17.5,y=0,z=0},pieceList={},				SeedDir={x=90,	y=180,	z=0}},
+			[4]={pieceA=OuterLoop28,offA={x=-2,y=-LengthFeed-20,z=0},pieceList={Gun2,Mag4,Mag3},SeedDir={x=0,	y=180,	z=-90}},
+			
+			[5]={pieceA=OuterLoop56,offA={x=0,y=-23,z=-1*(LengthFeed+17.5)},pieceList={},			SeedDir={x=-180,	y=90,	z=0}},
+			[6]={pieceA=OuterLoop27,offA={x=0,y=-LengthFeed-23,z=0},pieceList={Gun1,Mag1,Mag2},	SeedDir={x=0,	y=270,	z=-90}},
+			[7]={pieceA=OuterLoop33,offA={x=-LengthFeed-20.5,y=0,z=0},pieceList={InnerOrigin},	SeedDir={x=180,	y=180,	z=0}},
+			[8]={pieceA=OuterLoop32,offA={x=-LengthFeed-20.5,y=0,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=0}},
+			[9]={pieceA=OuterLoop42,offA={x=-LengthFeed-20.5,y=0,z=0},pieceList={},	SeedDir={x=180,	y=180,	z=0}},
+			[10]={pieceA=OuterLoop35,offA={x=-7,y=10,z=LengthFeed/2+5},pieceList={},	SeedDir={x=90,	y=-90,	z=0}},
+			[11]={pieceA=OuterLoop34,offA={x=-7,y=10,z=-LengthFeed-5},pieceList={},	SeedDir={x=90,	y=90,	z=0}},
+			[12]={pieceA=OuterLoop40,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			[13]={pieceA=OuterLoop41,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			[14]={pieceA=OuterLoop43,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [15]={pieceA=OuterLoop44,offA={x=0,y=-52,z=-52},pieceList={},	SeedDir={x=0,	y=90,	z=-45}},
+			 [16]={pieceA=OuterLoop47,offA={x=0,y=-52,z=-52},pieceList={},	SeedDir={x=0,	y=90,	z=-45}},
+			 [17]={pieceA=OuterLoop55,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [18]={pieceA=OuterLoop54,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [19]={pieceA=OuterLoop50,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [20]={pieceA=OuterLoop51,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},		
+			 [21]={pieceA=OuterLoop45,offA={x=0,y=-52,z=-52},pieceList={},	SeedDir={x=0,	y=90,	z=-45}},
+			 [22]={pieceA=OuterLoop46,offA={x=0,y=-52,z=-52},pieceList={},	SeedDir={x=0,	y=90,	z=-45}},
+			 [23]={pieceA=OuterLoop48,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [24]={pieceA=OuterLoop49,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [25]={pieceA=OuterLoop53,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			 [26]={pieceA=OuterLoop52,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			
+			
+			--[1]={pieceA,offA,pieceList,seedDir},
+				}
+				
+function 	DeployInOrderTower(boolReverse) 
+	for i=1,#GunTable,1 do
+	Turn(GunTable[i],x_axis,math.rad(-90),0)
+	end
+
+
+	resetPiece(SeedCenter,0)
+	pieceToGo=0
+	for i=1,#towerDeployTable, 1 do
+	
+		pieceToGo=towerDeployTable[i].pieceA
+			
+		offSet=towerDeployTable[i].offA
+		DirVec=towerDeployTable[i].SeedDir
+		MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
+
+		Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
+		Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
+		Turn(SeedCenter,z_axis,math.rad(DirVec.z),0)
+		SeedLoop(1,feed_speed,boolReverse,radialSpeed)
+		
+		if boolReverse ==true then
+			Show(pieceToGo)
+			if towerDeployTable[i].pieceList then showT(towerDeployTable[i].pieceList) end
+		else
+			Hide(pieceToGo)
+			if towerDeployTable[i].pieceList then hideT(towerDeployTable[i].pieceList) end
+		end
+		
+	end
+	Sleep(100)
+
+ end	
  
- return SignalNumber+1 
+function 	DeployInOrder(boolReverse) 
+	for i=1,#GunTable,1 do
+	Turn(GunTable[i],x_axis,math.rad(-90),0)
+	end
+
+
+	resetPiece(SeedCenter,0)
+	pieceToGo=0
+	for i=1,#piecesDeployTable, 1 do
+	
+		pieceToGo=piecesDeployTable[i].pieceA
+			
+		offSet=piecesDeployTable[i].offA
+		DirVec=piecesDeployTable[i].SeedDir
+		MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
+
+		Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
+		Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
+		Turn(SeedCenter,z_axis,math.rad(DirVec.z),0)
+		SeedLoop(1,feed_speed,boolReverse,radialSpeed)
+		
+		if boolReverse ==true then
+			Show(pieceToGo)
+			if piecesDeployTable[i].pieceList then showT(piecesDeployTable[i].pieceList) end
+		else
+			Hide(pieceToGo)
+			if piecesDeployTable[i].pieceList then hideT(piecesDeployTable[i].pieceList) end
+		end
+		
+	end
+	Sleep(100)
+
  end
-function 	RailGunUnfold(SignalNumber,boolReverse) 
+ 	CataRoto=TablesOfPiecesGroups["CatapultRoto"]
+	CataLow=TablesOfPiecesGroups["CataLow"]
+	CataUp=TablesOfPiecesGroups["CataUp"]
+	CataHead=TablesOfPiecesGroups["CataHead"]
+function reloadCataPult()
+hideT(CataRoto	)
+hideT(CataLow	)
+hideT(CataUp	)
+hideT(CataHead	)
+reseT(CataRoto	)
+reseT(CataLow	)
+reseT(CataUp	)
+reseT(CataHead	)
+Turn(CatapultRoto1,y_axis,math.rad(30),0)
+turnT(CataHead,x_axis,0,0,true)
+moveT(CataLow,y_axis,-20,0)
+moveT(CataLow,z_axis,-20,0)
+showT(CataHead)
+showT(CataUp)
+moveT(CataLow,y_axis,-12,3)
+moveT(CataLow,z_axis,3,3)
+turnT(CataHead,x_axis,-235,12,true)
+Sleep(2000)
+showT(CataLow)
+moveT(CataLow,y_axis,0,3)
+moveT(CataLow,x_axis,0,3)
+moveT(CataLow,z_axis,0,3)
+turnT(CataHead,x_axis,0,12,true)
+end
+
+function 	InnerCityDeploy(boolReverse) 
+	for k,v in pairs(SignalTable) do
+		if k ~= "GateLoop" then
+			SignalTable[k]=false
+		end
+	end
+
+reloadCataPult()
+	
+
+   
+ end
  
- return SignalNumber+1 
+function 	RailGunUnfold(boolReverse) 
+ WMove(RailGun,y_axis,-110-18,0)
+ Show(RailGun)
+ WMove(RailGun,y_axis,0,feed_speed)
+ Show(Projectile)
+   
  end
-function 	CityBlocksDeploy	(SignalNumber,boolReverse) 
  
- return SignalNumber+1 
- end
+
 
 function watchForImpact()
 	while GG.FiringGateFotressTable[teamid][unitID]==true do

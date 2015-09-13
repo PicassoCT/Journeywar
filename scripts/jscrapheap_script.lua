@@ -655,7 +655,7 @@ live=math.ceil(math.random(20,60)*1000)
 		resetPiece(Leg[i],0.001)
 		else
 		for i=1,#Leg do turnPieceRandDir(Leg[i],speed,signum*120,120,signum*180,180,0,5) end
-		turnTable(apend,y_axis,signum*math.rad(speed),speed^2,false)
+		turnT(apend,y_axis,signum*math.rad(speed),speed^2,false)
 		end
 	--Move Baby
 	BabyDir=BabyDir+math.random(-3,3)

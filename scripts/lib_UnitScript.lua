@@ -710,7 +710,11 @@ teamid=Spring.GetUnitTeam(unitID)
 return getTeamSide(teamid)
 end
 
--->Moves a UnitPiece to Position at speed
+function echo(stringToEcho)
+Spring.Echo(stringToEcho)
+end
+
+-->Moves a UnitPiece to Position in Unitspace at speed
 function MovePieceToPos(piecename, X,Y,Z,speed)
 
 Move(piecename,x_axis,X,speed,true)
@@ -718,6 +722,7 @@ Move(piecename,y_axis,Y,speed,true)
 Move(piecename,z_axis,Z,speed,true)	
 
 end
+
 function VDotProduct(V1,V2)
 return  DotProduct(V1.x,V1.y,V1.z,V2.x,V2.y,V2.z)
 end
@@ -777,16 +782,19 @@ Turn(pieceToAlign,z_axis,math.asin(vz),speed,true)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceToPiece(piecename, piecenameB,speed,offset)
+function MovePieceToPiece(piecename, piecenameB,speed,offset,forceUpdate)
 if not piecenameB or not piecename then return end
 ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecenameB)
+if lib_boolDebug ==true then
+echo("x:"..ox.. "\n y:"..oy.."\n z:"..oz)
+end
 	ox=ox*-1
 if offset then
-ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.y
+ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.z
 end	
 	Move(piecename,x_axis,ox,0)
 	Move(piecename,y_axis,oy,0)
-	Move(piecename,z_axis,oz,0,true)
+	Move(piecename,z_axis,oz,0,forceUpdate or true)
 
 
 	WaitForMove(piecename,x_axis);  WaitForMove(piecename,z_axis); WaitForMove(piecename,y_axis);
@@ -2365,7 +2373,7 @@ end
 end
 
 --> Turn a Table towards local T
-function turnTable(t, axis, deg,speed,boolInstantUpdate)
+function turnT(t, axis, deg,speed,boolInstantUpdate)
 	if boolInstantUpdate then
 		for i=1,#t,1 do
 		Turn(t[i],axis,math.rad(deg),0,true)
@@ -2380,6 +2388,27 @@ function turnTable(t, axis, deg,speed,boolInstantUpdate)
 	else
 		for i=1,#t,1 do
 		Turn(t[i],axis,math.rad(deg),speed)
+		end
+	end
+return
+end
+
+--> Turn a Table towards local T
+function moveT(t, axis, dist,speed,boolInstantUpdate)
+	if boolInstantUpdate then
+		for i=1,#t,1 do
+		Move(t[i],axis,dist,0,true)
+		end
+		return
+	end
+
+	if not speed or speed==0 then
+		for i=1,#t,1 do
+		Move(t[i],axis,dist,0)
+		end
+	else
+		for i=1,#t,1 do
+		Move(t[i],axis,dist,speed)
 		end
 	end
 return
