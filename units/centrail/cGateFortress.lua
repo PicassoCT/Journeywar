@@ -87,6 +87,18 @@ weapons = {
 [7]={name  = "cimpulstower",
 	onlyTargetCategory = [[ LAND AIR]],
 	},
+[8]={name  = "ceater",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+[9]={name  = "ceater",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+[10]={name  = "ceater",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+[11]={name  = "ceater",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
 
 
 	},

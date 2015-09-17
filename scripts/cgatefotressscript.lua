@@ -309,6 +309,7 @@ Mag={}
 Ring={}
 InnerLoop={}
 GunTable={}
+DronePodTable={}
 
 --Constants
 feed_speed=53
@@ -334,6 +335,7 @@ GunTable=TablesOfPiecesGroups["Gun"]
 	CataLow=TablesOfPiecesGroups["CataLow"]
 	CataUp=TablesOfPiecesGroups["CataUp"]
 	CataHead=TablesOfPiecesGroups["CataHead"]
+DronePodTable=TablesOfPiecesGroups["DronePod"]
 
 	for i=1,#Mag do
 		Sign=i%2
@@ -394,30 +396,6 @@ function unfoldDepots(boolDirection)
 	end
 end
 
-----aimining & fire weapon
-function script.AimFromWeapon1() 
-	return center 
-end
-
-function script.QueryWeapon1() 
-	return center
-end
-
-boolUnfoldComplete=false
-
-function script.AimWeapon1( Heading ,pitch)	
-	--aiming animation: instantly turn the gun towards the enemy
-gunKey,isUserTarget, val= Spring.GetUnitWeaponTarget(unitID,1)	
-px,py,p=0,0,0
-	if gunKey== 1 and isUserTarget==true then px,py,pz=Spring.GetUnitPosition(val)
-		return boolOneShot 
-	end
-
-	if gunKey== 2 and isUserTarget==true then 
-		px,py,pz =val[1],val[2],val[3]
-		return boolOneShot
-	end
-end
 function AnimTest()
 	while true do 
 		unfoldAnimation()
@@ -502,12 +480,7 @@ boolOnTheMove=false
 boolOneShot=true 
 teamid=Spring.GetUnitTeam(unitID)
 
-function script.FireWeapon1()	
-boolOneShot=false
-makeCascadingTables("GG.FiringGateFotressTable["..teamid.."["..unitID.."]]",true)
-StartThread(watchForImpact)
-	return true
-end
+
 
 
 
@@ -791,7 +764,7 @@ function OuterCircleDeploy (boolReverse)
 UpGoTurn1=piece"UpGoTurn1"
 UpGoTurn2=piece"UpGoTurn2"
 
-function showKill(piecename)
+function ShowKill(piecename)
 killAtPiece(unitID,piecename)
 Show(piecename)
 end
@@ -1124,7 +1097,7 @@ function 	DeployInOrder(boolReverse)
 	CataHead={}
 	
 function reloadCataPult()
-while true do
+
 hideT(CataRoto	)
 hideT(CataLow	)
 hideT(CataUp	)
@@ -1133,24 +1106,28 @@ reseT(CataRoto	)
 reseT(CataLow	)
 reseT(CataUp	)
 reseT(CataHead	)
-Turn(CatapultRoto1,y_axis,math.rad(30),0)
-turnT(CataHead,x_axis,45,0,true)
+
+turnT(CataHead,x_axis,31,0,true)
 moveT(CataLow,y_axis,-20,0)
-moveT(CataLow,z_axis,20,0)
-Sleep(10)
+moveT(CataLow,z_axis,16,0)
+Sleep(1000)
 showT(CataHead)
 showT(CataUp)
+turnT(CataHead,x_axis,-150,0,true)
+moveT(CataLow,y_axis,-33,12)
 moveT(CataLow,y_axis,-12,12)
-moveT(CataLow,z_axis,-3,12)
+moveT(CataLow,z_axis,0,12)
+Sleep(1000)
 turnT(CataHead,x_axis,-235,12,true)
-Sleep(2000)
+Sleep(1000)
+
 showT(CataLow)
 moveT(CataLow,y_axis,0,13)
 moveT(CataLow,x_axis,0,13)
 moveT(CataLow,z_axis,0,13)
 turnT(CataHead,x_axis,0,12,true)
 Sleep(3000)
-end
+
 end
 
 function 	InnerCityDeploy(boolReverse) 
@@ -1160,7 +1137,7 @@ function 	InnerCityDeploy(boolReverse)
 		end
 	end
 
-reloadCataPult()
+StartThread(reloadCataPult)
 	
 
    
@@ -1195,6 +1172,113 @@ end
 function script.Deactivate()
 
 return 0
+end
+
+turretSpeed=3.141
+
+function Weapon1fire()	
+boolOneShot=false
+makeCascadingGlobalTables("FiringGateFotressTable["..teamid.."["..unitID.."]]",true)
+StartThread(watchForImpact)
+	return true
+end
+
+boolUnfoldComplete=false
+
+function Weapon1( Heading ,pitch)	
+	--aiming animation: instantly turn the gun towards the enemy
+gunKey,isUserTarget, val= Spring.GetUnitWeaponTarget(unitID,1)	
+px,py,p=0,0,0
+	if gunKey== 1 and isUserTarget==true then px,py,pz=Spring.GetUnitPosition(val)
+		return boolOneShot 
+	end
+
+	if gunKey== 2 and isUserTarget==true then 
+		px,py,pz =val[1],val[2],val[3]
+		
+		return boolOneShot
+	end
+end
+
+
+genSignal=2
+function SigGen()
+genSignal=2*genSignal
+return genSignal
+end
+
+function script.FireWeapon(weaponID)
+	--Spring.Echo("FireWeapon")
+	if WeaponsTable[weaponID] and WeaponsTable[weaponID].firefunc  then
+		WeaponsTable[weaponID].firefunc()
+	end	
+end
+
+function script.AimFromWeapon(weaponID)
+return WeaponsTable[weaponID].aimpiece 
+end
+
+function script.QueryWeapon(weaponID)
+return WeaponsTable[weaponID].aimpiece 
+
+end
+
+function genAim(weaponID,heading, pitch)
+	Signal(WeaponsTable[weaponID].signal)
+	SetSignalMask(WeaponsTable[weaponID].signal)
+WTurn(WeaponsTable[weaponID].aimpiece,y_axis,heading,turretSpeed)
+WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
+return true
+end
+
+function CataAim1(weaponID,heading, pitch)
+	Signal(WeaponsTable[weaponID].signal)
+	SetSignalMask(WeaponsTable[weaponID].signal)
+WTurn(CataRoto[1],y_axis,heading,turretSpeed)
+WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
+return true
+end
+
+function CataAim2(weaponID,heading, pitch)
+	Signal(WeaponsTable[weaponID].signal)
+	SetSignalMask(WeaponsTable[weaponID].signal)
+WTurn(CataRoto[2],y_axis,heading,turretSpeed)
+WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
+return true
+end
+
+function genFire()
+
+
+end
+
+WeaponsTable={}
+WeaponsTable[1]={aimpiece=Projectile,emitpiece=Projectile,aimfunc=Weapon1,firefunc=Weapon1fire, signal=SigGen()}
+WeaponsTable[2]={aimpiece=CataHead1,emitpiece=CataHead1,aimfunc=CataAim1,firefunc=genFire, signal=SigGen()}
+WeaponsTable[3]={aimpiece=CataHead2,emitpiece=CataHead2,aimfunc=CataAim2,firefunc=genFire, signal=SigGen()}
+WeaponsTable[4]={aimpiece=Gun1,emitpiece=Gun1,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
+WeaponsTable[5]={aimpiece=Gun2,emitpiece=Gun2,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
+WeaponsTable[6]={aimpiece=Gun3,emitpiece=Gun3,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
+WeaponsTable[7]={aimpiece=Gun4,emitpiece=Gun4,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
+for i=8,13, 1 do
+WeaponsTable[i]={aimpiece=DronePodTable[i-7],emitpiece=DronePodTable[i-7],aimfunc= function() return true end,firefunc=genFire, signal=SigGen()}
+end 
+
+
+function script.AimWeapon(weaponID, heading, pitch)
+	if WeaponsTable[weaponID] then
+		Signal(WeaponsTable[weaponID].signal)
+		SetSignalMask(WeaponsTable[weaponID].signal)
+		if WeaponsTable[weaponID].aimfunc then
+			return WeaponsTable[weaponID].aimfunc(weaponID,heading,pitch)
+		else
+			WTurn(WeaponsTable[weaponID].aimpiece,y_axis,heading,turretSpeed)
+			WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
+			return true
+		end
+	else
+		return false 
+	end
 end
 
 
