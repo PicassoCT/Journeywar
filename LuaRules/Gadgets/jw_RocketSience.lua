@@ -13,13 +13,11 @@ end
 if (not gadgetHandler:IsSyncedCode()) then return end
 
 local wiggleWeapon = {}
-wiggleWeapon[WeaponDefNames["sunburstrocket"].id] = true
 wiggleWeapon[WeaponDefNames["jvaryjump"].id] = true
 
 local redirectProjectiles = {}  -- [frame][projectileID] = table with .targetType .targetX .targetY .targetZ .targetID
 
 function gadget:Initialize()
-	Script.SetWatchWeapon (WeaponDefNames["sunburstrocket"].id, true)
 	Script.SetWatchWeapon (WeaponDefNames["jvaryjump"].id, true)
 end
 
@@ -39,8 +37,6 @@ end
 end
  
 
-
-
  function gadget:ProjectileCreated(proID, proOwnerID)
 	if (wiggleWeapon [Spring.GetProjectileDefID (proID)]) then
 		local originalTarget = getTargetTable (proID)
@@ -53,29 +49,7 @@ end
 	end
 end
 
-
-
 AddCodeByType={}
-
-function AddsunburstrocketCode(proID,proOwnerID)
-		local originalTarget = getTargetTable (proID)
-		local tx,ty,tz = getProjectileTargetXYZ (proID)
-		local x,y,z = Spring.GetUnitPosition (proOwnerID)
-		
-
-		
-		-- fly  away into all directions
-		offsetx,offsety,offsetz=math.random(-150,150),math.random(0,75),math.random(-150,150)
-			addProjectileRedirect (proID, makeTargetTable(x+offsetx,y+offsety,z+offsetz), 0)
-		midx,midy,midz=(x+tx)/2+offsetx*0.25,(y+ty)/2+(offsety*0.5),(z+tz)/2+offsetz*0.25
-			addProjectileRedirect (proID, makeTargetTable(midx,midy,midz),15 )
-	
-		addProjectileRedirect (proID, originalTarget, 25)		
-		return true
-end
-
-
-AddCodeByType[WeaponDefNames["sunburstrocket"].id]= AddsunburstrocketCode
 
 function AddVarFooRocketCode(proID,proOwnerID)
 		local originalTarget = getTargetTable (proID)

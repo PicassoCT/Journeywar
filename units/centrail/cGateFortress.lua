@@ -37,7 +37,7 @@ Reclaimable = true,
 
 
 -- Pathfinding and related
-
+	MaxWaterDepth=70,
    FootprintX = 2,
 	FootprintZ = 2,
 	MaxSlope = 500,	
@@ -65,11 +65,31 @@ Reclaimable = true,
 
 
 
--- weapons = {
--- [1]={name  = "cRailGun",
-	-- onlyTargetCategory = [[ LAND]],
-	-- },
-	-- },
+weapons = {
+[1]={name  = "cgaterailgun",
+	onlyTargetCategory = [[ LAND]],
+[2]={name  = "catapult",
+	},
+	onlyTargetCategory = [[ LAND]],
+	},
+[3]={name  = "catapult",
+	onlyTargetCategory = [[ LAND]],
+	},
+[4]={name  = "cimpulstower",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+[5]={name  = "cimpulstower",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+[6]={name  = "cimpulstower",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+[7]={name  = "cimpulstower",
+	onlyTargetCategory = [[ LAND AIR]],
+	},
+
+
+	},
 Category = [[LAND]],
 
 }

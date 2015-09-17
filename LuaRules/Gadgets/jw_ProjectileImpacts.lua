@@ -45,9 +45,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		  lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
 	local slicergunDefID = WeaponDefNames["slicergun"].id
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
-
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
-
 	local cUniverseGun=WeaponDefNames["cuniversegun"].id
 	local weapondefID3 = WeaponDefNames["cnukegrenadelvl3"].id
 	local weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
@@ -61,6 +59,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
 	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
+	local CEaterRocketDefID=WeaponDefNames["ceater"].id
+	local cHarvestRocketDefID=WeaponDefNames["charvest"].id
+	local catapultDefID=WeaponDefNames["ccatapult"].id
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
 						[glavaWeaponID]=true, 	
@@ -70,6 +71,9 @@ if (gadgetHandler:IsSyncedCode()) then
 						}
 	RazorGrenadeTable={}
 	
+	Script.SetWatchWeapon(catapultDefID , true)
+	Script.SetWatchWeapon(cHarvestRocketDefID , true)
+	Script.SetWatchWeapon(CEaterRocketDefID , true)
 	Script.SetWatchWeapon(lazarusDeviceDefID , true)
 	Script.SetWatchWeapon(ChainLightningDefID , true)
 	Script.SetWatchWeapon(celetrochainWeaponDefID , true)
@@ -95,6 +99,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(highExLineGunDefID , true)
 	Script.SetWatchWeapon(jvaryfoospearDefID , true)
 	Script.SetWatchWeapon(jgluegunDefID , true)
+	
+	
 	
 local	gaiaTeamID=Spring.GetGaiaTeamID()
 local	skySraperDefID=UnitDefNames["buibaicity1"].id
@@ -321,8 +327,70 @@ local 	affectedUnits={}
 	local timeTillBlowUp=3500	
 	local 	jShadowDefID=UnitDefNames["jshadow"].id
 
+	HarvestRocketLoadTable={}
+
 	
- WeaponDefTable[greenSeerWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+ WeaponDefTable[catapultDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+
+				health=Spring.GetUnitHealth(unitID)
+				Spring.SetUnitHealth(unitID, {paralyze =health*15})
+				Spring.SetUnitArmored(unitID,3)
+				x,y,z=Spring.GetUnitPosition(unitID)
+				Spring.SetUnitPosition(unitID,x,y+35,z)
+				Spring.AddUnitImpuls(unitID,math.random(-1,1),math.random(150,300),math.random(-1,1))
+			
+ 
+end 
+
+ WeaponDefTable[cHarvestRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+
+	 if HarvestRocketLoadTable[unitID] and HarvestRocketLoadTable[unitID][attackerID] then
+
+			Spring.SetUnitResourcing(unitID, "umm",	 HarvestRocketLoadTable[unitID][attackerID].metal)
+			Spring.SetUnitResourcing(unitID, "ume",	 HarvestRocketLoadTable[unitID][attackerID].energy)
+		HarvestRocketLoadTable[unitID][attackerID]=nil
+		
+	 return 0
+	 end
+ 
+end 
+ WeaponDefTable[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+
+ metalRes,energyRes= UnitDefs[unitDefID].metalCost,UnitDefs[unitDefID].energyCost
+ 
+ 	gx,gy,gz=Spring.GetUnitPosition(unitID)
+	tx,ty,tz=Spring.GetUnitPosition(attackerID)
+	ateamid=Spring.GetUnitTeam(attackerID)
+						v=makeVector(tx-gx,ty-gy,tz-gz)
+						v=normVector(v)
+						v=mulVector(v,-1)
+					
+						local	 HarvestRocketParams={
+						pos = { gx, gy+5,gz},  
+						["end"] = {tx,ty,tz},
+						speed={v.x,v.y,v.z},
+						owner = unitID,
+						team = ateamid,	
+						spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
+						ttl=420,
+						error = {0,0,0},
+						maxRange = 1200,
+						gravity = Game.gravity,
+						 startAlpha = 1,
+						endAlpha = 1,						
+						model = "placeholder.s3o",
+						}					
+						
+						projID = Spring.SpawnProjectile( cHarvestRocketDefID ,HarvestRocketParams)
+		
+		if projID then
+				if not HarvestRocketLoadTable[attackerID] then HarvestRocketLoadTable[attackerID]={} end
+			HarvestRocketLoadTable[attackerID][unitID]={metal=metalRes, energy=energyRes, vicID = projID }
+		end
+
+	end
+				
+WeaponDefTable[greenSeerWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 
 		hitPoints=Spring.GetUnitHealth(unitID)
 			if damage/hitPoints > 0.3 then 

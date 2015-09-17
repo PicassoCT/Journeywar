@@ -557,10 +557,10 @@ end
 function syncMove(piecename,x_val,y_val,z_val,speed)
 max=math.max(math.abs(x_val),math.max(math.abs(z_val),math.abs(y_val)))
 time=math.abs(max/speed)
-	
-Move(piecename,x_axis,(x_val),(time/x_val)*speed)
-Move(piecename,y_axis,(y_val),(time/y_val)*speed)
-Move(piecename,z_axis,(z_val),(time/z_val)*speed)
+--ratio = 1/(val/max)*time => max*time / val
+Move(piecename,x_axis,(x_val),(max*time/x_val)*speed)
+Move(piecename,y_axis,(y_val),(max*time/y_val)*speed)
+Move(piecename,z_axis,(z_val),(max*time/z_val)*speed)
 
 end
 
@@ -570,10 +570,19 @@ Turn(piecename,y_axis,y_val,speed)
 Turn(piecename,z_axis,z_val,speed)
 end
 
-function mP(piecename,x_val,y_val,z_val,speed)
+function mP(piecename,x_val,y_val,z_val,speed,boolWait)
+if boolWait then
 Move(piecename,x_axis,x_val,speed)
 Move(piecename,y_axis,y_val,speed)
 Move(piecename,z_axis,z_val,speed)
+WaitForMove(piecename,x_axis)
+WaitForMove(piecename,y_axis)
+WaitForMove(piecename,z_axis)
+else
+Move(piecename,x_axis,x_val,speed)
+Move(piecename,y_axis,y_val,speed)
+Move(piecename,z_axis,z_val,speed)
+end
 end
 
 
@@ -1562,6 +1571,8 @@ end
 
 --> Hides a PiecesTable, 
 function hideT(tablename,lowLimit,upLimit,delay)
+if not tablename then return end
+
 	if lowLimit and upLimit then
 		for i=upLimit,lowLimit, -1 do
 		Hide(tablename[i])
@@ -3626,10 +3637,30 @@ end
 	Spring.SetUnitBlocking(unit,true,true,true)
 	Spring.SetUnitNoSelect(unit,false)
 	end
-
-	function MultiplyAffirmativeMatrice(self, other)
-		
-
+	
+	function killAtPiece(unitID,piecename,selfd,reclaimed, sfxfunction)
+		px,py,pz=GetUnitPieceCollisionVolumeData(unitID,piecename)
+		tpx,tpy,tpz=Spring.GetUnitPiecePosDir(unitID,piecename)
+			if px and tpx then
+				size=square(px,py,pz)	
+				T=grabEveryone(tpx,tpz,size/2)
+			
+				if T and #T > 0 then
+					
+					if sfxfunction then
+						for i=1,#T do
+							ux,uy,uz=Spring.GetUnitPosition(T[i])
+							sfxfunction(ux,uz,uz)
+							Spring.DestroyUnit(T[i],selfd,reclaimed)
+						end	
+	
+					else
+						for i=1,#T do
+							Spring.DestroyUnit(T[i],selfd,reclaimed)
+						end	
+					end
+				end
+			end
 	end
 	
 	function recursiveDoDamage(id,nrOfSteps,damage, damagefunction, nextFunction, preventTable)
@@ -3746,6 +3777,14 @@ end
 	-->TODO:RAGDOLL      |_\    -- you approximate the motherpiece with a circle and then do a  math.acos( circleradius/distance)
 	--defaulting to a maxturn
 	return {ux=-15 ,x=15, uy=-180, y=180,uz=-15, z=15}
+	end
+
+	function square(...)
+	sum=0
+		for k,v in pairs(arg) do
+		sum=sum+v^2
+		end
+	return math.sqrt(sum) 
 	end
 
 	function average(...)

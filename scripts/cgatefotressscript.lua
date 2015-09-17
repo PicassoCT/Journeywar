@@ -330,7 +330,10 @@ Mag=TablesOfPiecesGroups["Mag"]
 Ring=TablesOfPiecesGroups["Ring"]
 InnerLoop=TablesOfPiecesGroups["InnerLoop"]
 GunTable=TablesOfPiecesGroups["Gun"]
-
+ 	CataRoto=TablesOfPiecesGroups["CatapultRoto"]
+	CataLow=TablesOfPiecesGroups["CataLow"]
+	CataUp=TablesOfPiecesGroups["CataUp"]
+	CataHead=TablesOfPiecesGroups["CataHead"]
 
 	for i=1,#Mag do
 		Sign=i%2
@@ -348,25 +351,73 @@ function script.Killed(recentDamage,_)
 	return 1
 end
 
+DeTa={}
+DeTa[DronePod1]={x=  0,y=0,	z=-3.4}
+DeTa[DronePod2]={x= 0,y=0,	z=3.4}
+DeTa[DronePod3]={x= 0,y=0,z=-3.4}
+DeTa[DronePod4]={x= -4.3,y=0,z=0}
+DeTa[DronePod5]={x= 4.3,y=0,z=0}
+
+DeTa[Erker1]={x= 0 ,y=0,z=-5.3}
+DeTa[Erker2]={x= -5.3,y=0,z=0}
+DeTa[Erker3]={x= -5.3,y=0,z=0}
+DeTa[Erker4]={x= 0,y=0,z=-5.3}
+DeTa[Erker5]={x= -5.3,y=0,z=-5.3}
+DeTa[Erker6]={x=  5.3,y=0,z=-5.3}
+DeTa[Erker7]={x= 5.3,y=0,z=0}
+DeTa[Erker8]={x= -5.3,y=0,z=0}
+DeTa[Erker9]={x= -5.3,y=0,z=0}
+DeTa[Erker10]={x= 5.3,y=0,z=0}
+DeTa[Erker11]={x= 5.3,y=0,z=0}
+
+unfoldDepotSpeed=4.25
+function unfoldDepots(boolDirection)
+	if boolDirection==true then
+		for piecename, tab in pairs(DeTa) do
+			mP(piecename,tab.x*-1,tab.y,tab.z,0)
+			Show(piecename)
+			mP(piecename,0,0,0,unfoldDepotSpeed)
+		end
+	else
+	
+	lastPieceName=""
+		for piecename, tab in pairs(DeTa) do
+			mP(piecename,tab.x*-1,tab.y,tab.z,unfoldDepotSpeed)
+			lastPieceName=piecename
+		end
+		WaitForMove(lastPieceName,x_axis)
+		WaitForMove(lastPieceName,y_axis)
+		WaitForMove(lastPieceName,z_axis)
+			for piecename, tab in pairs(DeTa) do
+				Hide(piecename)
+			end
+	end
+end
 
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return center 
 end
 
-
-
 function script.QueryWeapon1() 
 	return center
 end
 
+boolUnfoldComplete=false
+
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
+gunKey,isUserTarget, val= Spring.GetUnitWeaponTarget(unitID,1)	
+px,py,p=0,0,0
+	if gunKey== 1 and isUserTarget==true then px,py,pz=Spring.GetUnitPosition(val)
+		return boolOneShot 
+	end
 
-	return boolOneShot
-
+	if gunKey== 2 and isUserTarget==true then 
+		px,py,pz =val[1],val[2],val[3]
+		return boolOneShot
+	end
 end
-
 function AnimTest()
 	while true do 
 		unfoldAnimation()
@@ -415,6 +466,7 @@ end
 				
 	 	InnerCityDeploy(true)
 	 	RailGunUnfold(true)
+		unfoldDepots(true)
 	stopScript("cgatefotressscript")
 
 
@@ -465,12 +517,13 @@ function GateDeploy (boolReverse)
 	--if the animation should be aborted, we revert it 
 
 	if boolDirection==true then
+		Sleep(3000)
 		Turn(GatePoint,y_axis,math.rad(GateDeg),9)
 		--Preparation
 		Move(center,y_axis,2.5,0)
 		Move(Ring0,y_axis,-15,0)
 		Turn(Ring0,y_axis,math.rad(-90),0)
-		Show(Ring0)
+		ShowKill(Ring0)
 		Show(RingB)
 		Turn(Ring0,y_axis,math.rad(0),1.2)
 			moveExpPiece(Ring0,y_axis,15,-15,5,750,15,false)
@@ -551,7 +604,7 @@ function FirstTrainDeploy (boolReverse)
 			for i=0,-LengthFeed,-4.8 do
 				WMove(Feed10,x_axis,i,feed_speed)
 			if 	 Feed[count_up] then			
-				Show(Feed[count_up])
+				ShowKill(Feed[count_up])
 			end
 				count_up=math.min(count_up+1,9)
 			end
@@ -608,7 +661,7 @@ function InnerCircleDeploy (boolReverse)
 		if boolDirection==true then
 
 			for inner=1,10,1 do
-				Show(InnerLoop[inner])
+				ShowKill(InnerLoop[inner])
 				Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
 				WaitForTurn(InLoopCenter,y_axis)
 				if InnerLoop[inner-3] then
@@ -717,7 +770,7 @@ function OuterCircleDeploy (boolReverse)
 			for out=1,12,1 do
 			
 				temp=((out+1)%12)+1			
-				Show(OuterLoopTable[temp])
+				ShowKill(OuterLoopTable[temp])
 				Turn(BigLCenter,y_axis,math.rad(out*-30 +25),out_radialSpeed)
 				WaitForTurn(BigLCenter,y_axis)
 				
@@ -738,7 +791,10 @@ function OuterCircleDeploy (boolReverse)
 UpGoTurn1=piece"UpGoTurn1"
 UpGoTurn2=piece"UpGoTurn2"
 
-
+function showKill(piecename)
+killAtPiece(unitID,piecename)
+Show(piecename)
+end
  
  function OuterCircleLoop (boolReverse) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
@@ -987,7 +1043,10 @@ function 	TowerDeploy(boolReverse)
 			 [24]={pieceA=OuterLoop49,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
 			 [25]={pieceA=OuterLoop53,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
 			 [26]={pieceA=OuterLoop52,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
-			
+			[27]={pieceA=OuterLoop36,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},		
+			[28]={pieceA=OuterLoop37,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
+			[29]={pieceA=OuterLoop38,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},		
+			[30]={pieceA=OuterLoop39,offA={x=0,y=-LengthFeed-23,z=0},pieceList={},	SeedDir={x=0,	y=180,	z=-90}},
 			
 			--[1]={pieceA,offA,pieceList,seedDir},
 				}
@@ -1059,11 +1118,13 @@ function 	DeployInOrder(boolReverse)
 	Sleep(100)
 
  end
- 	CataRoto=TablesOfPiecesGroups["CatapultRoto"]
-	CataLow=TablesOfPiecesGroups["CataLow"]
-	CataUp=TablesOfPiecesGroups["CataUp"]
-	CataHead=TablesOfPiecesGroups["CataHead"]
+ 	CataRoto={}
+	CataLow	={}
+	CataUp	={}
+	CataHead={}
+	
 function reloadCataPult()
+while true do
 hideT(CataRoto	)
 hideT(CataLow	)
 hideT(CataUp	)
@@ -1073,20 +1134,23 @@ reseT(CataLow	)
 reseT(CataUp	)
 reseT(CataHead	)
 Turn(CatapultRoto1,y_axis,math.rad(30),0)
-turnT(CataHead,x_axis,0,0,true)
+turnT(CataHead,x_axis,45,0,true)
 moveT(CataLow,y_axis,-20,0)
-moveT(CataLow,z_axis,-20,0)
+moveT(CataLow,z_axis,20,0)
+Sleep(10)
 showT(CataHead)
 showT(CataUp)
-moveT(CataLow,y_axis,-12,3)
-moveT(CataLow,z_axis,3,3)
+moveT(CataLow,y_axis,-12,12)
+moveT(CataLow,z_axis,-3,12)
 turnT(CataHead,x_axis,-235,12,true)
 Sleep(2000)
 showT(CataLow)
-moveT(CataLow,y_axis,0,3)
-moveT(CataLow,x_axis,0,3)
-moveT(CataLow,z_axis,0,3)
+moveT(CataLow,y_axis,0,13)
+moveT(CataLow,x_axis,0,13)
+moveT(CataLow,z_axis,0,13)
 turnT(CataHead,x_axis,0,12,true)
+Sleep(3000)
+end
 end
 
 function 	InnerCityDeploy(boolReverse) 

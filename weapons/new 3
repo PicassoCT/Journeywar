@@ -1,0 +1,13 @@
+
+Updated CPU Context Model
+	-> broadphase on cpu
+	
+	-> narrowphase on gpu
+	-> collissions on gpu
+	-> applyForces on gpu
+	
+Information needed pro Kernel (ObjectKernels)
+		narrowphase: NearbyNeighbours
+		forcesList
+	-> writeBack to CPU Context Model
+-> 

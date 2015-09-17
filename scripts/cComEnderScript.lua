@@ -13,7 +13,7 @@
 	-- Jammer
 	-- Shotgun
 	-- TangleGun
-	-- StarburstRockets
+	-- EaterRockets
 	-- AA-Rockets
 	-- 10 Slicer
 	-- Flaregun
@@ -1188,10 +1188,10 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	smg[#smg+1]=SMG1B03
 	smg[#smg+1]=SMG1B04
 
-	starburst={}
-	starburst[#starburst+1]=SunBurst1
-	starburst[#starburst+1]=SunBurst2
-	starburst[#starburst+1]=SunBurst3
+	Eater={}
+	Eater[#Eater+1]=SunBurst1
+	Eater[#Eater+1]=SunBurst2
+	Eater[#Eater+1]=SunBurst3
 
 	--/changed
 
@@ -1265,8 +1265,8 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 			Show(gLauncher[i])
 		 end 
 	 end  
-	function showStarBurst()
-	Show(starburst[1])
+	function showEater()
+	Show(Eater[1])
 	end
 	function showTangleGun()
 	showT(tangleGun)
@@ -1446,12 +1446,12 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 	Weapons[3][7]=  3        		  	--PriorityLevel the bigger the more Priority it Got
 	Weapons[3][8]=  1000        		--Downtime
 	Weapons[3][9]=  0.35  				--RecoilMax         
-	--StarburstRocket
+	--EaterRocket
 	Weapons[4]={}
 	Weapons[4][1]=0   				     --WeaponLevel   
 	Weapons[4][2]=3        				 --WeaponMax    
-	Weapons[4][3]=starburst       
-	Weapons[4][4]=showStarBurst                    		       
+	Weapons[4][3]=Eater       
+	Weapons[4][4]=showEater                    		       
 	Weapons[4][5]=1                  	  --AmmoCost           
 	Weapons[4][6]=  0.25        		  --StabilityCost	 
 	Weapons[4][7]=  9        		  	  --PriorityLevel the bigger the more Priority it Got
@@ -1882,11 +1882,11 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		spSetUnitExperience(unitID,XP -1)
 		end
 		
-		--"STARBURST"
-		if upgradeType =="SUNBURST" and Weapons[4][1] ~= Weapons[4][2] then
+		--"Eater"
+		if upgradeType =="EATER" and Weapons[4][1] ~= Weapons[4][2] then
 		Weapons[4][1]=math.min(Weapons[4][1]+1,Weapons[4][2])
 		for i=1,Weapons[4][1],1 do
-		Show(starburst[i])
+		Show(Eater[i])
 		end		
 		spSetUnitExperience(unitID,XP -1)
 		end
@@ -3046,9 +3046,9 @@ boolSniperOnce=false
 		return true
 	end
 	--</SMG>
-	--<STARBURST>
-	boolStarBurstLoaded=true
-	StarburstflipFlop=0
+	--<Eater>
+	boolEaterLoaded=true
+	EaterflipFlop=0
 	SalvoMax=Weapons[4][1]
 	FiredSalvos=0
 	function script.AimFromWeapon6() 
@@ -3058,19 +3058,19 @@ boolSniperOnce=false
 	
 
 	function script.QueryWeapon6() 
-	StarburstflipFlop=(StarburstflipFlop+1)%(math.max(1,Weapons[4][1]))
-	if StarburstflipFlop==0 then return starburst[1] end
-	if StarburstflipFlop==1 then return starburst[2] end
-	if StarburstflipFlop==2 then return starburst[3] end
+	EaterflipFlop=(EaterflipFlop+1)%(math.max(1,Weapons[4][1]))
+	if EaterflipFlop==0 then return Eater[1] end
+	if EaterflipFlop==1 then return Eater[2] end
+	if EaterflipFlop==2 then return Eater[3] end
 	end
 
 	function script.AimWeapon6( heading ,pitch)	
 	
-			if Weapons[4][1] > 0 and boolStarBurstLoaded== true and gotPriority(Weapons[4][7])==true  then 
+			if Weapons[4][1] > 0 and boolEaterLoaded== true and gotPriority(Weapons[4][7])==true  then 
 			Spring.Echo("JW_COMENDERSCRIPT::Weapon6 got priority")
 			SalvoMax=Weapons[4][1]
-			Turn(starburst[1],x_axis,math.rad(-59),24)
-			WaitForTurn(starburst[1],x_axis)
+			Turn(Eater[1],x_axis,math.rad(-59),24)
+			WaitForTurn(Eater[1],x_axis)
 			return true and not boolOutOfAmmo
 			end
 
@@ -3079,11 +3079,11 @@ boolSniperOnce=false
 	end
 
 	function reloadWeapon6()
-	Turn(starburst[1],x_axis,math.rad(0),7)
+	Turn(Eater[1],x_axis,math.rad(0),7)
 	Sleep(Weapons[4][8])
 	FiredSalvos=0
 	SalvoMax=Weapons[4][1]
-	boolStarBurstLoaded=true
+	boolEaterLoaded=true
 	end
 
 	function script.FireWeapon6()	
@@ -3092,13 +3092,13 @@ boolSniperOnce=false
 	ammonition=ammonition-Weapons[4][5]   
 		if FiredSalvos==SalvoMax then
 		releasePriority(Weapons[4][7])     
-		boolStarBurstLoaded=false
+		boolEaterLoaded=false
 		end
 	
 	return true
 	end
 
-	--</STARBURST>
+	--</Eater>
 	--<SHOTGUN>
 	--DODO
 	function script.AimFromWeapon7() 
