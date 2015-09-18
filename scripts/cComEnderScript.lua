@@ -1525,6 +1525,7 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		Show(guidedMissile[i])
 		end
 	end
+	
 	--Anti Air Rockets
 	Weapons[13]={}
 	Weapons[13][1]=1   				     --WeaponLevel   
@@ -1910,14 +1911,16 @@ overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6
 		spSetUnitExperience(unitID,XP -1)
 		end
 		
-		if upgradeType == "AROCKET" and Weapons[10][1] ~= Weapons[10][2] then
-		Weapons[10][1]=math.min(Weapons[10][1]+1,Weapons[10][2])
-		Weapons[10][4]()	
+		if upgradeType == "AROCKET" and Weapons[13][1] ~= Weapons[13][2] then
+		Weapons[13][1]=math.min(Weapons[13][1]+1,Weapons[13][2])
+		Weapons[13][4]()	
 		spSetUnitExperience(unitID,XP -1)
 		end
 		
-		if upgradeType == "GROCKET" and Weapons[9][1] ~= Weapons[9][2] then
-		
+		if upgradeType == "GROCKET" and Weapons[14][1] ~= Weapons[14][2] then
+			Weapons[14][1]=math.min(Weapons[14][1]+1,Weapons[14][2])
+			Weapons[14][4]()	
+			spSetUnitExperience(unitID,XP -1)
 		end
 		
 		if upgradeType == "EJECTPOD" and LazarusDevice ~= LazarusDeviceMax then
@@ -2456,17 +2459,12 @@ end
 
 	function script.StartMoving()
 	boolWalking=true
-
 	end
 
 
 
 	function script.StopMoving()
-	boolWalking=false
-			
-		
-			
-			
+	boolWalking=false		
 	end
 
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -2555,7 +2553,7 @@ end
 						--return canFire
 						
 				releasePriority(Weapons[3][7])
-				return true and not boolOutOfAmmo
+				return true and boolOutOfAmmo ==false
 				end
 		end
 	return false 
@@ -2617,7 +2615,7 @@ end
 					
 					--return canFire
 					releasePriority(Weapons[3][7])	
-					return true and not boolOutOfAmmo
+					return true and boolOutOfAmmo ==false
 		else 
 		releasePriority(Weapons[3][7])			
 		return false 
@@ -2677,7 +2675,7 @@ end
 			
 				--return canFire
 				releasePriority(Weapons[3][7])	
-				return true and not boolOutOfAmmo
+				return true and boolOutOfAmmo ==false
 		else 
 		releasePriority(Weapons[3][7])	
 		return false 
@@ -2886,7 +2884,7 @@ end
 					boolSniperOnce=true
 					end
 			releasePriority(Weapons[2][7])	
-			return 	boolSniperPermit and not boolOutOfAmmo
+			return 	boolSniperPermit and boolOutOfAmmo ==false
 			end
 		end 
 	
@@ -3071,7 +3069,7 @@ boolSniperOnce=false
 			SalvoMax=Weapons[4][1]
 			Turn(Eater[1],x_axis,math.rad(-59),24)
 			WaitForTurn(Eater[1],x_axis)
-			return true and not boolOutOfAmmo
+			return true and boolOutOfAmmo ==false
 			end
 
 			--/spinlock
@@ -3193,7 +3191,7 @@ boolSniperOnce=false
 			if Weapons[6][5] <= 0 then 
 			return false
 			end
-		return true and not boolOutOfAmmo
+		return true and boolOutOfAmmo ==false
 		end
 		
 	return false

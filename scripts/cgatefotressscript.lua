@@ -410,9 +410,9 @@
 	 
 
 	soundInOrderTableUnfold={}
-	soundInOrderTableUnfold[1]={boolOnce=true,postdelay=0,predelay=3000,sound="sounds/cgatefotress/GateOPen.ogg"}
-	soundInOrderTableUnfold[2]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefotress/GateLoop1.ogg",[2]="sounds/cgatefotress/GateLoop.ogg",[3]="sounds/cgatefotress/GateLoop2.ogg"}}
-	soundInOrderTableUnfold[3]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefotress/GateOnly1.ogg",[2]="sounds/cgatefotress/GateOnly2.ogg"}}
+	soundInOrderTableUnfold[1]={boolOnce=true,postdelay=0,predelay=3000,sound="sounds/cgatefortress/GateOPen.ogg"}
+	soundInOrderTableUnfold[2]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefortress/GateLoop1.ogg",[2]="sounds/cgatefortress/GateLoop.ogg",[3]="sounds/cgatefortress/GateLoop2.ogg"}}
+	soundInOrderTableUnfold[3]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefortress/GateOnly1.ogg",[2]="sounds/cgatefortress/GateOnly2.ogg"}}
 
 	 
 		function unfoldAnimation()
@@ -452,14 +452,15 @@
 			InnerCityDeploy(true)
 			RailGunUnfold(true)
 			unfoldDepots(true)
+
+			boolDeployed=true
 		stopScript("cgatefotressscript")
-
-
 
 	end
 
 	function foldAnimation()
 		Sleep(10)
+		boolDeployed=false
 		Spring.Echo("Fold Animation")
 		testPiece=piece("center")
 		Spring.Echo(testPiece)
@@ -479,10 +480,10 @@
 		--TrainLoop
 			--FirstTrainDeploy
 			
-
+	boolOnTheMove=true
 		hideT(TableOfPieces)
 	end
-
+	boolDeployed=false
 	boolOnTheMove=false 
 	boolOneShot=true 
 	teamid=Spring.GetUnitTeam(unitID)
@@ -1192,13 +1193,13 @@
 	gunKey,isUserTarget, val= Spring.GetUnitWeaponTarget(unitID,1)	
 	px,py,p=0,0,0
 		if gunKey== 1 and isUserTarget==true then px,py,pz=Spring.GetUnitPosition(val)
-			return boolOneShot 
+			return boolOneShot == true and boolDeployed == true
 		end
 
 		if gunKey== 2 and isUserTarget==true then 
 			px,py,pz =val[1],val[2],val[3]
 			
-			return boolOneShot
+			return boolOneShot == true and boolDeployed == true
 		end
 	end
 
@@ -1221,7 +1222,7 @@
 		SetSignalMask(WeaponsTable[weaponID].signal)
 		WTurn(WeaponsTable[weaponID].aimpiece,y_axis,heading,turretSpeed)
 		WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
-	return true
+	return boolDeployed == true
 	end
 
 	function CataAim1(weaponID,heading, pitch)
@@ -1229,7 +1230,7 @@
 		SetSignalMask(WeaponsTable[weaponID].signal)
 		WTurn(CataRoto[1],y_axis,heading,turretSpeed)
 		WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
-	return true
+	return boolDeployed == true
 	end
 
 	function CataAim2(weaponID,heading, pitch)
@@ -1237,7 +1238,7 @@
 		SetSignalMask(WeaponsTable[weaponID].signal)
 		WTurn(CataRoto[2],y_axis,heading,turretSpeed)
 		WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
-	return true
+	return boolDeployed == true
 	end
 
 	function genFire(WeaponID)

@@ -319,7 +319,6 @@ SIG_UNFPIL3=4096
 SIG_UNFPIL4=8192
 SIG_UNFPIL5=16384
 SIG_UNFPIL6=32768
-SIG_HEAL=65536
 SIG_RAZOR	=262144
 
 
@@ -941,32 +940,40 @@ SetSignalMask(SIG_HEAL)
 teamid=Spring.GetUnitTeam(unitID)
 conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair"})
 local ud=UnitDefs
-while true do
-	boolHealedOne=false
-	x,y,z=Spring.GetUnitPosition(unitID)
-	hp=Spring.GetUnitHealth(unitID)
-	if hp then
-	T=grabEveryone(unitID,x,z,300,teamid)
-	hp=math.ceil(math.ceil(hp*0.5)/#T)
-	hpcopy=hp
-		for i=1,#T do
-		defID=Spring.GetUnitDefID(T[i])
-		if ud[defID].isBuilding ==false and not conTypeTable[defID]  then
-			p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
-			 
-			if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
-			boolHealedOne=true
-			Spring.SetUnitHealth(T[i],p+hp)
-			if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
-			Spring.AddUnitDamage(unitID,hp)
-			
+
+	while true do
+		while boolHealingActive==true do
+			boolHealedOne=false
+			x,y,z=Spring.GetUnitPosition(unitID)
+			hp=Spring.GetUnitHealth(unitID)
+			if hp then
+			T=grabEveryone(unitID,x,z,300,teamid)
+			hp=math.ceil(math.ceil(hp*0.5)/#T)
+			hpcopy=hp
+				for i=1,#T do
+				defID=Spring.GetUnitDefID(T[i])
+				if ud[defID].isBuilding ==false and not conTypeTable[defID]  then
+					p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
+					 
+					if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
+					boolHealedOne=true
+					Spring.SetUnitHealth(T[i],p+hp)
+					if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
+					Spring.AddUnitDamage(unitID,hp)
+					
+					end
+				end
+				end
 			end
+		if boolHealedOne==true then 
+			sx,sy,sz=Spring.GetUnitPosition(unitID)
+			Spring.SpawnCEG("healtrain",sx,sy+70,sz,0,1,0,0)
+			--for i=1,3 do EmitSfx(center,1026) Sleep(50) end
 		end
+		Sleep(750)
 		end
+	Sleep(100)
 	end
-if boolHealedOne==true then for i=1,3 do EmitSfx(center,1026) Sleep(50) end end
-Sleep(750)
-end
 end
 
 --Set PillarHeight Block
@@ -1496,15 +1503,16 @@ end
 
 
 
-
+boolHealingActive=false
 function script.StartMoving()
+boolHealingActive=false
 
-Signal(SIG_HEAL)
 end
 
 function script.StopMoving()
-Signal(SIG_HEAL)
-StartThread(healWhileStandingStill)
+boolHealingActive=true
+
+
 end
 
 
@@ -1559,6 +1567,7 @@ end
 --create Script: called when the train is created/ similar to all other vehicels in Spring
 function script.Create()
 initPieces()
+StartThread(healWhileStandingStill)
 Hide(cRailTurn) --hides the Piece of Railway that turns, when the train goes into turnmode
 for i=1,7,1 do
 Hide(ctgoresub[i])
