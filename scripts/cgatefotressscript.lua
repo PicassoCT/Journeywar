@@ -429,14 +429,21 @@ end
   
  local PI=3.1415926535897932384626433832795
   SignalTable={}
-  
+ 
+
+soundInOrderTableUnfold={}
+soundInOrderTableUnfold[1]={boolOnce=true,postdelay=0,predelay=3000,sound="sounds/cgatefotress/GateOPen.ogg"}
+soundInOrderTableUnfold[2]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefotress/GateLoop1.ogg",[2]="sounds/cgatefotress/GateLoop.ogg",[3]="sounds/cgatefotress/GateLoop2.ogg"}}
+soundInOrderTableUnfold[3]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefotress/GateOnly1.ogg",[2]="sounds/cgatefotress/GateOnly2.ogg"}}
+
+ 
 	function unfoldAnimation()
 	
 	reseT(TableOfPieces)
 	hideT(TableOfPieces)
 	Sleep(10)
 	Spring.Echo("UnfoldAnimation")
-
+		StartThread(playSoundInOrder,soundInOrderTableUnfold)
 				
 	 	GateDeploy( true)	
 			StartThread(GateLoop ,true)
@@ -718,9 +725,6 @@ function InnerCircleDeploy (boolReverse)
 	
  end
  
-
- 
- 
 function InnerCircleLoop (boolReverse) 
   	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
 	SignalTable["InnerCircleLoop"]=true	
@@ -754,8 +758,6 @@ function InnerCircleLoop (boolReverse)
 
    
  end
- 
-
  
 function OuterCircleDeploy (boolReverse) 
   	boolDirection= boolReverse 

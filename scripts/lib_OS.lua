@@ -34,6 +34,30 @@ Spring.Echo(conCat)
 end
 
 
+--> Plays a DescriptorTable in Order reciving Signals for a global soundOrderTable	
+function playSoundInOrder(soundInOrderTable)
+
+	for i=1,#soundInOrderTable,1 do
+		if soundInOrderTable[i].boolOnce then
+			if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
+			Spring.PlaySoundFile(soundInOrderTable[i].sound,1.0)
+			if soundInOrderTable[i].postdelay then 	Sleep(soundInOrderTable[i].postdelay) end
+			
+		else
+			while soundInOrderTable[i].signal==true do
+				if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
+					if type(soundInOrderTable[i].sound)=="table" then
+						dice=math.floor(math.random(1,#soundInOrderTable[i].sound))
+						Spring.PlaySoundFile(soundInOrderTable[i].sound[dice],1.0)
+					else
+						Spring.PlaySoundFile(soundInOrderTable[i].sound,1.0)
+					end
+				if soundInOrderTable[i].postdelay then 	Sleep(soundInOrderTable[i].postdelay) end
+			end
+		end
+	end
+end
+	
 
 --This Section contains standalone functions to be executed as independent systems monitoring and handling lua-stuff
 --mini OS Threads
