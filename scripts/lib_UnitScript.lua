@@ -3643,24 +3643,7 @@ end
 	Spring.SetUnitNoSelect(unit,false)
 	end
 	
---> Plays a DescriptorTable in Order reciving Signals for a global soundOrderTable	
-function playSoundInOrder()
-	for i=1,#soundInOrderTable,1 do
-		if soundInOrderTable[i].boolOnce==true then
-			if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
-			Spring.PlaySoundFile(soundInOrderTable[i].sound,1.0)
-			if soundInOrderTable[i].postdelay then 	Sleep(soundInOrderTable[i].postdelay) end
-			
-		else
-			while soundInOrderTable[i].signal==true do
-				if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
-			
-				Spring.PlaySoundFile(soundInOrderTable[i].sound,1.0)
-				if soundInOrderTable[i].postdelay then 	Sleep(soundInOrderTable[i].postdelay) end
-			end
-		end
-	end
-end
+
 	
 	function killAtPiece(unitID,piecename,selfd,reclaimed, sfxfunction)
 		px,py,pz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
