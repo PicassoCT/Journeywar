@@ -79,6 +79,11 @@ Move(lib_piece,lib_axis,lib_distance,lib_speed)
 WaitForMove(lib_piece,lib_axis)
 end
 
+function WTurn(lib_piece,lib_axis,lib_distance,lib_speed)
+Turn(lib_piece,lib_axis,lib_distance,lib_speed)
+WaitForTurn(lib_piece,lib_axis)
+end
+
 --> Sorts Pieces By Height in Model
 function sortPiecesByHeight(ableStableTableOfBabelEnable)
 bucketSortList={}
@@ -3658,25 +3663,27 @@ function playSoundInOrder()
 end
 	
 	function killAtPiece(unitID,piecename,selfd,reclaimed, sfxfunction)
-		px,py,pz=GetUnitPieceCollisionVolumeData(unitID,piecename)
+		px,py,pz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
 		tpx,tpy,tpz=Spring.GetUnitPiecePosDir(unitID,piecename)
 			if px and tpx then
 				size=square(px,py,pz)	
-				T=grabEveryone(tpx,tpz,size/2)
-			
-				if T and #T > 0 then
-					
-					if sfxfunction then
-						for i=1,#T do
-							ux,uy,uz=Spring.GetUnitPosition(T[i])
-							sfxfunction(ux,uz,uz)
-							Spring.DestroyUnit(T[i],selfd,reclaimed)
-						end	
-	
-					else
-						for i=1,#T do
-							Spring.DestroyUnit(T[i],selfd,reclaimed)
-						end	
+					if size then
+					T=grabEveryone(unitID, tpx,tpz,size/2)
+				
+					if T and #T > 0 then
+						
+						if sfxfunction then
+							for i=1,#T do
+								ux,uy,uz=Spring.GetUnitPosition(T[i])
+								sfxfunction(ux,uz,uz)
+								Spring.DestroyUnit(T[i],selfd,reclaimed)
+							end	
+		
+						else
+							for i=1,#T do
+								Spring.DestroyUnit(T[i],selfd,reclaimed)
+							end	
+						end
 					end
 				end
 			end
@@ -3799,9 +3806,12 @@ end
 	end
 
 	function square(...)
+	if not arg then return 0 end
 	sum=0
 		for k,v in pairs(arg) do
-		sum=sum+v^2
+			if v then
+				sum=sum+v^2
+			end
 		end
 	return math.sqrt(sum) 
 	end
