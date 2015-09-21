@@ -15,7 +15,7 @@ maxDamage = 50,
 idleAutoHeal = 2,
 --Movement
 Acceleration = 3,
-BrakeRate = 0.3,
+BrakeRate = 1,
 FootprintX = 1,
 FootprintZ = 1,
 MaxSlope = 15,

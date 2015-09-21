@@ -428,6 +428,14 @@ boolRazorSoundInUse=false
 
 end
 
+sparedTable={}
+sparedTable[UnitDefNames["contrain"].id]=true
+sparedTable[UnitDefNames["mdigg"].id]=true
+sparedTable[UnitDefNames["mdiggmex"].id]=true
+sparedTable[UnitDefNames["contruck"].id]=true
+sparedTable[UnitDefNames["citadell"].id]=true
+sparedTable[UnitDefNames["beanstalk"].id]=true
+
 --this function kills Units who get in the way of the driving train..
 function goTooKillThemAllPicaMon()
 ----Spring.Echo("Enter:The Murderer")
@@ -461,6 +469,9 @@ proLife=table.getn(proChoice)
 		end
 
 		trainFullDeathID=proChoice[youAreTheOneAndOnly]
+		
+		defID=Spring.GetUnitDefID(trainFullDeathID)
+		if not defID or sparedTable[defID]==true then return end
 
             --getting the Units health- waiting for the green Pile
 			likeAFreakTrainGoingNoWhere,  maxHealth,  paralyzeDamage, captureProgress,  buildProgress=Spring.GetUnitHealth(trainFullDeathID)

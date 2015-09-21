@@ -157,7 +157,7 @@ function walk()
 	
 	while true do
 	Sleep(10000)
-	ed=Spring.GetUnitNearestEnemey(unitID)
+	ed=Spring.GetUnitNearestEnemy(unitID)
 		if ed then
 		x,y,z=Spring.GetUnitPosition(ed)
 		if x then

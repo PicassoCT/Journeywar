@@ -355,7 +355,7 @@ end
  
 end 
  WeaponDefTable[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-
+	if not attackerID then return end
  metalRes,energyRes= UnitDefs[unitDefID].metalCost,UnitDefs[unitDefID].energyCost
  
  	gx,gy,gz=Spring.GetUnitPosition(unitID)
@@ -546,7 +546,7 @@ end
 	end
 
 	
-	if WeaponDefTable[weaponDefID]	then
+	if WeaponDefTable[weaponDefID]	then	
 		WeaponDefTable[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
 	end
 	

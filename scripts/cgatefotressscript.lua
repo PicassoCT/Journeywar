@@ -411,8 +411,8 @@
 
 	soundInOrderTableUnfold={}
 	soundInOrderTableUnfold[1]={boolOnce=true,postdelay=0,predelay=3000,sound="sounds/cgatefortress/GateOPen.ogg"}
-	soundInOrderTableUnfold[2]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefortress/GateLoop1.ogg",[2]="sounds/cgatefortress/GateLoop.ogg",[3]="sounds/cgatefortress/GateLoop2.ogg"}}
-	soundInOrderTableUnfold[3]={signal=true,postdelay=5000,sound={[1]="sounds/cgatefortress/GateOnly1.ogg",[2]="sounds/cgatefortress/GateOnly2.ogg"}}
+	soundInOrderTableUnfold[2]={signal=true,postdelay=3500,sound={[1]="sounds/cgatefortress/GateLoop1.ogg",[2]="sounds/cgatefortress/GateLoop.ogg",[3]="sounds/cgatefortress/GateLoop2.ogg"}}
+	soundInOrderTableUnfold[3]={signal=true,postdelay=3500,sound={[1]="sounds/cgatefortress/GateOnly1.ogg",[2]="sounds/cgatefortress/GateOnly2.ogg"}}
 
 	 
 		function unfoldAnimation()
@@ -452,7 +452,7 @@
 			InnerCityDeploy(true)
 			RailGunUnfold(true)
 			unfoldDepots(true)
-
+			soundInOrderTableUnfold[2].signal=false
 			boolDeployed=true
 		stopScript("cgatefotressscript")
 
@@ -1254,17 +1254,19 @@
 	WeaponsTable[5]={aimpiece=Gun2,emitpiece=Gun2,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
 	WeaponsTable[6]={aimpiece=Gun3,emitpiece=Gun3,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
 	WeaponsTable[7]={aimpiece=Gun4,emitpiece=Gun4,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
-	for i=8, 13, 1 do
+	for i=8, 12, 1 do
 	WeaponsTable[i]= {aimpiece=DronePodTable[i-7],emitpiece=DronePodTable[i-7],aimfunc= function() return true end,firefunc=genFire, signal=SigGen()}
 	end 
 
 
 	function script.AimFromWeapon(weaponID)
-	return WeaponsTable[weaponID].aimpiece 
+	temp=WeaponsTable[weaponID].aimpiece or DronePodTable[1]	
+	return temp
 	end
 
 	function script.QueryWeapon(weaponID)
-	return WeaponsTable[weaponID].aimpiece 
+	temp=WeaponsTable[weaponID].emitpiece or DronePodTable[1]
+	return temp
 
 	end
 

@@ -139,242 +139,17 @@
 	local SIG_DELAY=1
 	local SIG_STATE=2
 	 
-	function script.Create()
-	Spring.Echo("JW::GHohymen::EnteringCreate")
-	Age(AgeStage)
-	StartThread(TheyGrowUpSoFast)
-	Spring.Echo("JW::GHohymen::EnteringDebugLoop")
-	StartThread(debugLoop)
-	Spring.Echo("JW::GHohymen::StartingWalkThread")
-	StartThread(walk)
-	StartThread(reProduce)
-	end
-			
-	function script.Killed(recentDamage,_)
-
-	suddenDeathjMedCorpse(recentDamage)
-	return 1
-	end
-
-	function Age(number)
-	if AniT[number]["Body"] then
-		for i=1, # piecesTable, 1 do
-		Hide(piecesTable[i])
-		end
-		
-		Show(AniT[number]["Body"])
-		Show(AniT[number]["Head"])
-		for i=1,5, 1 do	
-		Show(AniT[number][i][1])
-		Show(AniT[number][i][2])
-		end
-	end
-	end
-	
-	
-	function TheyGrowUpSoFast()
-	while AgeStage ~= 4 do
-	time=math.ceil(math.random(60000,190000))
-	Sleep(time)
-	Age(AgeStage)
-	AgeStage=math.min(3,AgeStage+1)
-	end
-	end
-
-	
-	StateFunctionTable={
-		 ["Eat"] =	   				Eat,     
-		 ["Meat"] =   			  	Meat,    			
-		 ["DrinkWater"] =   		DrinkWater,    					  
-		 ["MoveCloser"] =   		MoveCloser,    		
-		 ["HideInHerd"] =   		HideInHerd,    		
-		 ["Rest"] =   				Rest,    			
-		 ["RecoveringLonely"] =    	RecoveringLonely,     	     	
-		 ["FuckingInTheBushes"] =   FuckingInTheBushes,  
-		 ["RunningForLive"] =   	RunningForLive,    	
-		 ["NurseYoung"] =   		NurseYoung,    		 	
-						}
-	
-	function debugLoop()
-	enemyID=Spring.GetUnitNearestEnemy(unitID)
-	argTable={}
-	
-	if enemyID then
-	argTable={[1]=enemyID}
-	else
-	argTable={[1]=unitID}
-	end
-	
-	while true do
-			for k,v in ipairs(StateFunctionTable) do	
-			Spring.Echo("JW::DebugLoop::"..k)
-			functionswitch(k, argTable)
-			Sleep(15000)
-			end
-		Sleep(500)
-		end
-	end
-	
-	
-	function functionswitch(name, argTable)
-	Spring.Echo("JW::GHohymen::Functionswitch"..name)
-	Signal(SIG_STATE)
-	LegsDown()
-	if StateFunctionTable[name] then
-	StateFunctionTable[name](argTable)	
-	else
-	Spring.Echo("Hohymen has no state equivalent to "..name)
-	end
-	return	
-	end
-
-	boolRun=false
-	boolMoveOrderd=false
-	boolMoving=false
-
-	function walk()
-	local lincAndMod=incAndMod
-	local it=0
-			Spring.Echo("JW:Ghohymen:Walk")
-		while true do 
-
-		--Walks only if told too
-		SetUnitValue(COB.MAX_SPEED,163832)--sets the speed to 5,2 *65533
-			while boolMoving==true do --or boolMoveOrderd==true do
-			it=lincAndMod(it)
-			WalkAnimationCycle()
-				while boolRun==true do
-				Spring.Echo("JW:Ghohymen:Run")
-				SetUnitValue(COB.MAX_SPEED,327665)
-				it=lincAndMod(it)
-				RunAnimationCycle(20,it,150)
-				Sleep(300)
-				end
-
-			Sleep(300)
-			end
-		Sleep(50)
-		if boolMoving== false then LegsDown() end
-		end
-	end
-
-	function incAndMod(it)
-	return (it+1)%2
-	end
-
-	function delayedMove()
-	SetSignalMask(SIG_DELAY)
-	Sleep(50)
-	boolMoving=true
-	end
-
-	function script.StartMoving()
-	if boolMoving==false then StartThread(delayedMove) end
-	end
-
-	function script.StopMoving()
-	Signal(SIG_DELAY)
-	boolMoving=false		
-	end
-
-	function RunAnimationCycle(speed, it,time)
-	time=math.ceil(time/2)
-	
-	Turn(AniT[AgeStage]["Body"],x_axis,math.rad(5), speed)
-	Turn(AniT[AgeStage]["Head"],x_axis,math.rad(11), speed)
-	Sleep(time)
-		itterator=math.max(1,(itterator+1)%8)	
-		for i=1,5, 1 do
-		runTable[math.max(1,itterator+i%3)](AniT[AgeStage][i][1],AniT[AgeStage][i][2],68)
-		end
-	Turn(AniT[AgeStage]["Body"],x_axis,math.rad(-3), speed)
-	Turn(AniT[AgeStage]["Head"],x_axis,math.rad(8), speed)
-	Sleep(time)
-	
-	end
-	
-	
-	
-	function ThrustForwardUpLeg(pnup,pndown,speed)
-	val=math.random(-72,-60)
-	Turn(pnup,x_axis,math.rad(val),speed)
-	Turn(pndown,x_axis,math.rad(120),speed)
-	end
-	
-	function ForwardUpLeg(pnup,pndown,speed)
-	val=math.random(-42,-36)
-	Turn(pnup,x_axis,math.rad(val),speed)
-	Turn(pndown,x_axis,math.rad(6),speed)
-	end
-	
-	function DownMidLeg(pnup,pndown,speed)
-	Turn(pnup,x_axis,math.rad(0),speed)
-	Turn(pndown,x_axis,math.rad(0),speed)
-	end
-	
-	
-	function BackDownUpLeg(pnup,pndown,speed)
-	Turn(pnup,x_axis,math.rad(26),speed)
-	Turn(pndown,x_axis,math.rad(33),speed)
-	end
-	
-	function ThrustBackUpLeg(pnup,pndown,speed)
-	Turn(pnup,x_axis,math.rad(26),speed)
-		Turn(pndown,x_axis,math.rad(70),speed)
-	end
-	
-	walkTable=
-	{
-	[1]=ForwardUpLeg,
-	[2]=DownMidLeg,
-	[3]=BackDownUpLeg
-	}
-	
-	runTable=
-	{
-	[1]=ThrustForwardUpLeg,
-	[2]=DownMidLeg,
-	[3]=ThrustBackUpLeg
-	}
-
-	
-	itterator=1
-	function WalkAnimationCycle()
-	itterator=math.max(1,(itterator+1)%8)
-	
-		for i=1,5, 1 do
-		walkTable[math.max(1,(itterator+i%3)%4)](AniT[AgeStage][i][1],AniT[AgeStage][i][2],7)
-		end
-
-	end
-
-
-	function LegsDown()
-	Move(AniT[AgeStage]["Body"],z_axis,0,52)
-	Move(AniT[AgeStage]["Body"],y_axis,0,52)
-	Move(AniT[AgeStage]["Body"],x_axis,0,52)
-	
-	Turn(AniT[AgeStage]["Head"],z_axis,math.rad(0), 16)
-	Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 16)				
-
-		for i=1,5, 1 do	
-		Turn(AniT[AgeStage][i][1],y_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][1],z_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][1],x_axis,math.rad(0),42)
-		
-		Turn(AniT[AgeStage][i][2],y_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][2],z_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][2],x_axis,math.rad(0),42)	
-		end
-
-	end
-
+	SignalTable={}
+	SignalTable["STATE"]=true
+	SignalTable["SIG_DELAY"]=true
+	 
 	--StateChangeAnimations
 		function Eat(argTable)
-		SetSignalMask(SIG_STATE) 
-		
+		SignalTable["STATE"]=false
+		Sleep(500)
+		SignalTable["STATE"]=true
 			
-			while true do 
+			while 	SignalTable["STATE"] == true do 
 			--change Position
 			if AgeStage~=1 then
 				if math.random(0,5)==2 then
@@ -423,8 +198,12 @@
 		end
 
 		function Meat(argTable)
-		SetSignalMask(SIG_STATE) --x=x,y=y,z=z)
-			while true do 
+			SignalTable["STATE"]=false
+		Sleep(500)
+		SignalTable["STATE"]=true
+			
+			while 	SignalTable["STATE"] == true do 
+		
 			
 			
 			Sleep(150) 
@@ -432,8 +211,11 @@
 		end
 		
 		function DrinkWater(argTable)
-		SetSignalMask(SIG_STATE) 
-			while true do 
+		SignalTable["STATE"]=false
+		Sleep(500)
+		SignalTable["STATE"]=true
+			
+			while 	SignalTable["STATE"] == true do 
 			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(91), 9)
 			WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 			gulp=math.random(2,22)
@@ -483,9 +265,12 @@
 		end
 
 		function Rest(argTable)
-		SetSignalMask(SIG_STATE) 
-						
-			while true do 
+		SignalTable["STATE"]=false
+		Sleep(500)
+		SignalTable["STATE"]=true
+			
+			while 	SignalTable["STATE"] == true do 
+		
 			SleepAnimation()
 				if math.random(0,1)== 1 then alarmed() end
 			Sleep(150)
@@ -493,18 +278,24 @@
 		end
 		
 			function RecoveringLonely(argTable)
-		SetSignalMask(SIG_STATE) 
+			SignalTable["STATE"]=false
+			Sleep(500)
+			SignalTable["STATE"]=true
 			
-			while true do 
+			while 	SignalTable["STATE"] == true do 
+		
 			SickAnimation()
 			Sleep(150) 
 			end 
 		end
 
 		function FuckingInTheBushes(argTable)
-		SetSignalMask(SIG_STATE) 
-			-- [1]=other )	
-			while true do 
+		SignalTable["STATE"]=false
+		Sleep(500)
+		SignalTable["STATE"]=true
+			
+			while 	SignalTable["STATE"] == true do 
+		
 			Sleep(150) 
 			end 
 		end
@@ -631,3 +422,238 @@
 					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(8), 26)				
 					Sleep(150) 
 		end				
+	 
+	 
+	function script.Create()
+	Spring.Echo("JW::GHohymen::EnteringCreate")
+	Age(AgeStage)
+	StartThread(TheyGrowUpSoFast)
+	Spring.Echo("JW::GHohymen::EnteringDebugLoop")
+	StartThread(debugLoop)
+	Spring.Echo("JW::GHohymen::StartingWalkThread")
+	StartThread(walk)
+	StartThread(reProduce)
+	end
+			
+	function script.Killed(recentDamage,_)
+
+	suddenDeathjMedCorpse(recentDamage)
+	return 1
+	end
+
+	function Age(number)
+	if AniT[number]["Body"] then
+		for i=1, # piecesTable, 1 do
+		Hide(piecesTable[i])
+		end
+		
+		Show(AniT[number]["Body"])
+		Show(AniT[number]["Head"])
+		for i=1,5, 1 do	
+			if i %2 ~=0 then
+			Show(AniT[number][i][1])
+			Show(AniT[number][i][2])
+			end
+		end
+	end
+	end
+	
+	
+	function TheyGrowUpSoFast()
+	while AgeStage ~= 4 do
+	time=math.ceil(math.random(60000,190000))
+	Sleep(time)
+	Age(AgeStage)
+	AgeStage=math.min(3,AgeStage+1)
+	end
+	end
+
+	
+	StateFunctionTable={
+		 ["Eat"] =	   				Eat,     
+		 ["Meat"] =   			  	Meat,    			
+		 ["DrinkWater"] =   		DrinkWater,    					  
+		 ["MoveCloser"] =   		MoveCloser,    		
+		 ["HideInHerd"] =   		HideInHerd,    		
+		 ["Rest"] =   				Rest,    			
+		 ["RecoveringLonely"] =    	RecoveringLonely,     	     	
+		 ["FuckingInTheBushes"] =   FuckingInTheBushes,  
+		 ["RunningForLive"] =   	RunningForLive,    	
+		 ["NurseYoung"] =   		NurseYoung,    		 	
+						}
+	
+	function debugLoop()
+	enemyID=Spring.GetUnitNearestEnemy(unitID)
+	argTable={}
+	
+	if enemyID then
+	argTable={[1]=enemyID}
+	else
+	argTable={[1]=unitID}
+	end
+	
+	while true do
+			for k,v in ipairs(StateFunctionTable) do	
+			Spring.Echo("JW::DebugLoop::"..k)
+			functionswitch(k, argTable)
+			Sleep(15000)
+			end
+		Sleep(500)
+		end
+	end
+	
+	
+	function functionswitch(name, argTable)
+	Spring.Echo("JW::GHohymen::Functionswitch "..name)
+
+	LegsDown()
+	if StateFunctionTable[name] then
+	StartThread(StateFunctionTable[name], argTable)	
+	else
+	Spring.Echo("Hohymen has no state equivalent to "..name)
+	end
+	return	
+	end
+
+	boolRun=false
+	boolMoveOrderd=false
+	boolMoving=false
+
+	function walk()
+	local lincAndMod=incAndMod
+	local it=0
+			Spring.Echo("JW:Ghohymen:Walk")
+		while true do 
+
+		--Walks only if told too
+		SetUnitValue(COB.MAX_SPEED,163832)--sets the speed to 5,2 *65533
+			while boolMoving==true do --or boolMoveOrderd==true do
+			it=lincAndMod(it)
+			WalkAnimationCycle()
+				while boolRun==true do
+				Spring.Echo("JW:Ghohymen:Run")
+				SetUnitValue(COB.MAX_SPEED,327665)
+				it=lincAndMod(it)
+				RunAnimationCycle(20,it,150)
+				Sleep(300)
+				end
+
+			Sleep(300)
+			end
+		Sleep(50)
+		if boolMoving== false then LegsDown() end
+		end
+	end
+
+	function incAndMod(it)
+	return (it+1)%2
+	end
+
+	function delayedMove()
+	SetSignalMask(SIG_DELAY)
+	Sleep(50)
+	boolMoving=true
+	end
+
+	function script.StartMoving()
+	if boolMoving==false then StartThread(delayedMove) end
+	end
+
+	function script.StopMoving()
+	Signal(SIG_DELAY)
+	boolMoving=false		
+	end
+
+	function RunAnimationCycle(speed, it,time)
+	time=math.ceil(time/2)
+	
+	Turn(AniT[AgeStage]["Body"],x_axis,math.rad(5), speed)
+	Turn(AniT[AgeStage]["Head"],x_axis,math.rad(11), speed)
+	Sleep(time)
+		itterator=math.max(1,(itterator+1)%8)	
+		for i=1,5, 1 do
+		runTable[math.max(1,itterator+i%3)](AniT[AgeStage][i][1],AniT[AgeStage][i][2],68)
+		end
+	Turn(AniT[AgeStage]["Body"],x_axis,math.rad(-3), speed)
+	Turn(AniT[AgeStage]["Head"],x_axis,math.rad(8), speed)
+	Sleep(time)
+	
+	end
+	
+	
+	
+	function ThrustForwardUpLeg(pnup,pndown,speed)
+	val=math.random(-72,-60)
+	Turn(pnup,x_axis,math.rad(val),speed)
+	Turn(pndown,x_axis,math.rad(120),speed)
+	end
+	
+	function ForwardUpLeg(pnup,pndown,speed)
+	val=math.random(-42,-36)
+	Turn(pnup,x_axis,math.rad(val),speed)
+	Turn(pndown,x_axis,math.rad(6),speed)
+	end
+	
+	function DownMidLeg(pnup,pndown,speed)
+	Turn(pnup,x_axis,math.rad(0),speed)
+	Turn(pndown,x_axis,math.rad(0),speed)
+	end
+	
+	
+	function BackDownUpLeg(pnup,pndown,speed)
+	Turn(pnup,x_axis,math.rad(26),speed)
+	Turn(pndown,x_axis,math.rad(33),speed)
+	end
+	
+	function ThrustBackUpLeg(pnup,pndown,speed)
+		Turn(pnup,x_axis,math.rad(26),speed)
+		Turn(pndown,x_axis,math.rad(70),speed)
+	end
+	
+	walkTable=
+	{
+	[1]=ForwardUpLeg,
+	[2]=DownMidLeg,
+	[3]=BackDownUpLeg
+	}
+	
+	runTable=
+	{
+	[1]=ThrustForwardUpLeg,
+	[2]=DownMidLeg,
+	[3]=ThrustBackUpLeg
+	}
+
+	
+	itterator=1
+	function WalkAnimationCycle()
+	itterator=math.max(1,(itterator+1)%8)
+	
+		for i=1,5, 1 do
+			if i%2 ~=0 then
+			walkTable[math.max(1,(itterator+i%3)%4)](AniT[AgeStage][i][1],AniT[AgeStage][i][2],7)
+			end
+		end
+
+	end
+
+
+	function LegsDown()
+	Move(AniT[AgeStage]["Body"],z_axis,0,52)
+	Move(AniT[AgeStage]["Body"],y_axis,0,52)
+	Move(AniT[AgeStage]["Body"],x_axis,0,52)
+	
+	Turn(AniT[AgeStage]["Head"],z_axis,math.rad(0), 16)
+	Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 16)				
+
+		for i=1,5, 1 do	
+		Turn(AniT[AgeStage][i][1],y_axis,math.rad(0),42)
+		Turn(AniT[AgeStage][i][1],z_axis,math.rad(0),42)
+		Turn(AniT[AgeStage][i][1],x_axis,math.rad(0),42)
+		
+		Turn(AniT[AgeStage][i][2],y_axis,math.rad(0),42)
+		Turn(AniT[AgeStage][i][2],z_axis,math.rad(0),42)
+		Turn(AniT[AgeStage][i][2],x_axis,math.rad(0),42)	
+		end
+
+	end

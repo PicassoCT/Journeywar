@@ -274,7 +274,7 @@ function widget:DrawWorldPreUnit()
   for _,unitID in ipairs(spGetAllUnits()) do
     if (spIsUnitVisible(unitID)) then
       local teamID = spGetUnitTeam(unitID)
-      if (teamID and teamID ~= gaiaTeamID then	
+      if (teamID and teamID ~= gaiaTeamID) then	
 		
         local udid = 0
 		if unitCache[unitID] then

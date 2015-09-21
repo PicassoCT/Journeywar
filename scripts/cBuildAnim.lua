@@ -1298,12 +1298,12 @@ atLeastThreeCircles=0
 	Sleep(300)
 	end
 Sleep(12000)
-foollHouse=0
-tit_O_Rator=1
+foollHouse= (masterTable[masterTableKey][6])-1
+tit_O_Rator= #masterTable[masterTableKey][2]
 local lEmitSfx= EmitSfx
 local lExplode=Explode
 
-while(foollHouse < (masterTable[masterTableKey][6])-1) do 
+while(foollHouse > 0) do 
 	if masterTable[masterTableKey][2][tit_O_Rator] == true  then
 		oneInThree=math.random(0,6)
 		if oneInThree~= 1 then
@@ -1317,10 +1317,10 @@ while(foollHouse < (masterTable[masterTableKey][6])-1) do
 			end
 	Hide(cubes[tit_O_Rator])
 	Hide(outerCubes[tit_O_Rator])
-	foollHouse=foollHouse+1
-	tit_O_Rator=tit_O_Rator+1
+	foollHouse=foollHouse-1
+	tit_O_Rator=tit_O_Rator-1
 		else
-		tit_O_Rator=tit_O_Rator+1
+		tit_O_Rator=tit_O_Rator-1
 		end
 		Sleep(50)
 end
@@ -1475,9 +1475,9 @@ local spGetUnitPosition=Spring.GetUnitPosition
 		lupdateBuildProgress(buildID)
 		lupdateComonBuildSpeed(buildID)
 		everyThird=(everyThird+1)%3
-		if everyThird== 2 then
-		isUnitValid()
-		end
+			if everyThird== 2 then
+				isUnitValid()
+			end
 		end	
 	Sleep(600)
 	end

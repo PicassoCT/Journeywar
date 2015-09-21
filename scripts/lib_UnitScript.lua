@@ -3445,7 +3445,7 @@ end
 	bdirX,bdirY,bdirZ= Spring.GetUnitPiecePosition(unitID,Gun)
 	dirX,dirZ=bdirX-dirX,bdirZ-dirZ
 	
-	Spring.Echo("Spring.GetUnitWeaponVectors(unitID,1)"..dirX.. "   z:"..dirZ)
+	--Spring.Echo("Spring.GetUnitWeaponVectors(unitID,1)"..dirX.. "   z:"..dirZ)
 	norm=math.sqrt(dirX*dirX + dirZ*dirZ)
 	dirX,dirZ=(dirX/norm),(dirZ/norm)
 	dirX,dirZ= -0.5*randSign(),-0.5*randSign()
@@ -4539,4 +4539,28 @@ function Command(id, command, target)
 	 if command == "setactive" 	   then
 	 Spring.SetUnitMoveGoal(id,target.x,target.y,target.z); return	 	
 	 end
+end
+
+
+--> testUnit for existance
+function testUnit(unitid)
+	if not unitid then echo("TestUnit no unitid given to testUnit()"); return end
+echo("UnitTested")
+	if type(unitid) ~= "number" then echo("unitid is not a number-type is "..type(unitid).." with value: "..unitid); return end
+
+validUnit=Spring.ValidUnitID(unitid)
+	if validUnit and validUnit==true then
+		echo("U"..unitid.." :unitid is valid")
+	else
+		echo("U"..unitid.." :unitid is invalid")
+		return 
+	end
+isAlive= Spring.GetUnitIsDead(unitid)
+	if isAlive and isAlive==true then
+		echo("U"..unitid..":unitid is alive")
+	else
+		echo("U"..unitid..":unitid is dead")
+		return 
+	end
+
 end

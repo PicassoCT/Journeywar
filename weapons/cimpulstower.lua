@@ -5,7 +5,7 @@ name="Impulse Amplifier",
         accuracy                = 512,
         areaOfEffect            = 5,
    
-        coreThickness           = 0.125,
+        coreThickness           = 0.25,
         craterBoost             = 0,
         craterMult              = 0,
 
@@ -36,7 +36,7 @@ name="Impulse Amplifier",
         rgbColor2               = [[0.1 1 1]],
     
         targetMoveError         = 0.25,
-        thickness               = 0.3,
+        thickness               = 0.9,
         tolerance               = 5000,
         turret                  = true,
         weaponType              = [[LaserCannon]],

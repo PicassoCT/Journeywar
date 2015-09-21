@@ -88,40 +88,84 @@
 		[7]={x=0,z=-1},
 		[8]={x=1,z=-1},
 		}
-		
+	
+	function locClamp(x)
+	if x < 1 then return 1 end
+	if x > 48 then return 48 end
+	return x
+	end
 	--Helperfunction using broadsearch, which is sort of shitty, especially as landscapefeatures are linear distributed, so yeah, spearsearch would be better
 	function FindValuePos(unitid,valueType)
 
-	x,y,z=Spring.GetUnitPosition(unitid)
-	if not x then Spring.Echo("Coords not find for hohymen"); return false, false end
-	LandScapeCell=getMap(x,z)
-	assert(LandScapeCell)
-	Spring.Echo("Searching Food2")
-	if LandScapeCell.Food > 0 then return true, true end
+	ux,uy,uz=Spring.GetUnitPosition(unitid)
+		if not ux then Spring.Echo("Coords not find for hohymen"); return false, false end
+	LandScapeCell=getMap(ux,uz)
 
-	Spring.Echo("Searching Food3")
-	local lMap=getMap
-	
-		for i=1,48, 1 do
-				for j=1,48,1 do
-				assert(Vec[j].x)
-				assert(Vec[j].z)
-				LandScapeCell=lMap(x+i*Vec[j].x,z+i*Vec[j].z)
-					if LandScapeCell.Food > 0 then 
-					--we found water but it is it visible to the animal 
-					a=(i*Vec[j].x)*48
-					b=(i*Vec[j].z)*48
-					dist=distance(a,0,b)
-					if dist < 150 then
-						Spring.Echo("Searching Food4")
-					return (x+i*Vec[j].x)*8,(z+i*Vec[j].z)*8 end
-						else
-							Spring.Echo("Searching Food5")
-						return false, false
-						end
-				end
+
+		if LandScapeCell.Food > 0 then
+		Spring.Echo("Foodplace Reached")
+		return true, true 
 		end
-	Spring.Echo("Searching Food6")	
+		tileSizeX, tileSizeZ=math.ceil((Game.mapSizeX)/48),math.ceil((Game.mapSizeZ)/48)	
+		
+	ux,uz= math.ceil(ux/tileSizeX),math.ceil(uz/tileSizeZ)
+
+
+	local lMap=getMap
+	nodeTable={}
+	unexploredNodes=48*48
+	mx,mz= Spring.GetMetalMapSize()
+	
+
+	openTable={}
+	openTable[1]={x=ux,z=uz}
+	closedTable={}
+	boolFoodFound=false
+	--roundhouse explore
+	
+	while unexploredNodes > 0 and table.getn(openTable) > 0 do
+	--explore openTable
+		for o=#openTable, 1, -1 do	
+		local	v=openTable[o]
+		start,endv,inc=1,8,1
+		if math.random(0,1)==1 then start,endv,inc=8,1,-1 end
+				for i=start,endv,inc do
+					ex,ez=locClamp(v.x+Vec[i].x),	locClamp(v.z+Vec[i].z)
+					echo("				ex,ez=locClamp(v.x+Vec[i].x),	locClamp(v.z+Vec[i].z)"..ex)
+					if closedTable[ex] and closedTable[ex][ez] and closedTable[ex][ez]==true then -- we allread explored this
+					else		
+						openTable[#openTable+1]={x=ex,z=ez}
+						
+						if not closedTable[ex] then 
+							closedTable[ex]={} 
+						end
+						
+						closedTable[ex][ez] =true 					
+						unexploredNodes=unexploredNodes-1		
+					end
+					
+						LandScapeCell=lMap(v.x,v.z)
+						if LandScapeCell and LandScapeCell.Food > 0 then 
+						echo("Found Goal:"..(tileSizeX) .."  |  "..( v.x))
+						echo("Found Goal:"..(v.x*tileSizeX) .."  |  "..( v.z*tileSizeZ))
+						return v.x*tileSizeX, v.z*tileSizeZ
+						end
+						
+						table.remove(o)
+				
+				end
+		
+		
+		
+		
+		
+		end
+	
+	--add new Nodes to open Table 
+	end
+	
+
+	Spring.Echo("Searching Food failed")	
 	return false,false
 	end	
 	
@@ -153,16 +197,19 @@
 
 	Spring.Echo("Searching Food")
 
+
 				tx,tz= FindValuePos(unitid,1)
 
-					if tx and tx ~= true and tx ~= false then
-					Spring.Echo("Setting Hohymen movegoal")
-					Spring.SetUnitMoveGoal(unitid,tx,0,tz)
-					end
-					
-						if tx == true then --StateSwitch to eating function
-						return true
+					if type(tx) ~= "boolean" then
+						if tx then
+							Spring.Echo("Setting Hohymen movegoal")
+							Spring.SetUnitMoveGoal(unitid,tx,0,tz)
 						end
+					else					
+						if tx == true then --StateSwitch to eating function
+							return true
+						end
+					end
 	return false  		
 	end 
 
@@ -429,8 +476,8 @@ AT={}
 			
 	function Transition(unitid,LongedState)
 	Spring.Echo("Transition1")
-	certainlyNot=Spring.GetUnitIsDead(unitid)
-	if certainlyNot==true then  return false, "DEAD" end
+	isDead=Spring.GetUnitIsDead(unitid)
+	if isDead == true then  return false, "DEAD" end
 	
 	
 	LongedState=LongedStateLongedTransitionTable[LongedState]
@@ -443,6 +490,9 @@ AT={}
 			--Spring.Echo("JW_ECOLOGOYGADGET:TypeOfTransition",type(Transition),type(Transition[LongedState]))
 			if HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState] then
 				Spring.Echo("AgentTransitionTableType"..type(HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState]))
+			
+			isDead=Spring.GetUnitIsDead(unitid)
+			if isDead == true then  return false, "DEAD" end
 			
 			boolTransfer= HohymenStates[AgentTable[unitid].AgentState].AgentTransition[LongedState].StateChangeFunc(unitid)
 			
