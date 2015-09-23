@@ -77,6 +77,7 @@ Hide(flare3)
 Hide(flare4)
 StartThread(PartyManager)
 StartThread(CriticalHitDetector)
+StartThread(costlyUnderAttack)
 
 end
 
@@ -316,6 +317,28 @@ function script.TransportDrop(passengerID, x, y, z)
 	SetUnitValue(COB.BUSY, 0)
 end
 
+
+LastDamage=0
+
+	function script.HitByWeapon ( x, z, weaponDefID, damage )
+	LastDamage=damage
+	return damage
+	end
+
+
+function costlyUnderAttack()
+
+	while true do
+
+		if LastDamage> 0  then
+			LastDamage=0
+			Spring.UseUnitResource(unitID,"e",50)
+			Spring.UseUnitResource(unitID,"m",5)
+		
+		end
+	Sleep(500)
+	end
+end
 
 
 

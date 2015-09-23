@@ -8,7 +8,7 @@ function widget:GetInfo()
 		date      = "Jul 18, 2009",
 		license   = "GNU GPL, v2 or later",
 		layer     = 3,
-		enabled   = Spring.GetConfigInt("jwfirststartup",1)	>1  --  loaded by default?
+		enabled   = (Spring.GetConfigInt("jwfirststartup",1)	< 3)  --  loaded by default?
 	}
 end
 
@@ -19,14 +19,14 @@ Text1= "If i ran a zoo, i would gladly take the best your dimension has to offer
 	"Every half-sane creature would crawl, stumble and fall away from this, but you wont, like a moth loving fire."..
 	"you delude yourself, you are the exception, the choosen animal in shitted trousers to overcome all of cruel natures limits"..
 	"Boy have i got news for you. You wont - not with implants, not through introspection, and you are painting over realitys pain this very moment."..
-	"You are patriotic- not just unable to question authority as base-instinct fears your offsprings future in a infight"..
+	"You are patriotic- not just unable to question authority as base-instinct fears your offsprings future in a group-infight"..
 	"You are faithfull- not just gluing your mental cardhouse with yesterdays propabilitys"..
 	"You are progressive and running away with technology from the inability to discipline yourself"..
 	"This Force has a zero-Shit-policy. You mess up once, we kill you! And messing up you will"..
 	"Your body is assymetric, your hive queen inbreeds only with the weakest males!"..
 	"Generic Insult Generator Exception! OH SHIT!" .."(FiringSquadSound)"..
 	"No need tobe shocked, recruits! In the City they line up for every post from the roast"..
-	"So lets roll. You got your citadell.. Get a construction depot up. Move it! I´ll explain things as we move.."
+	"So lets roll! I´ll explain things as we move.."
 
 
 ---------------------------------------------------------------------------
@@ -66,6 +66,8 @@ tsentrynell = "Guards the city, sight aint pretty, sentrys assure, no foe close 
 twallbuilder= "Draw a line, giving every enemy who sniffs 32 vortigaunts of electricity, a headache."
 theadlauncher= "Off with there overhead, revive them, and in constant agony, shoot there kinshead back at thee."
 
+tutorialSpeachInOrder={}
+silentPlaceHolder=""
 
 TutorialInfoTable=
 {
@@ -73,77 +75,77 @@ TutorialInfoTable=
 
 ----Units
 
-[UnitDefNames["bg"].id]={ active=false, delay=350,		text="\a|Black Guard\n Elite Overwatch Infantry."},
-[UnitDefNames["mtw"].id]={active=false,  delay=350, text= "\a|Manned Transport Synth\nBuilds and deploys Infantry"},
-[UnitDefNames["contruck"].id]={active=false,   delay=2350,text= "\a|Construction Truck\n Builds blueprints and repairs"},
-[UnitDefNames["condepot"].id]={active=false,  delay=350,text= "\a|Construction Depot\nCreates Construction Units"},
-[UnitDefNames["mdigg"].id]={active=false, delay=350, text="\a|Metalldiggester\nStripmines Material on Metallspots"},
-[UnitDefNames["restrictor"].id]={active=false,  delay=350, text="\a|Restrictor Tank\nScout Tank with stationary Stunability"},
-[UnitDefNames["css"].id]={active=false,  delay=350, text="\a|Combine Synth Soldiers\nFlamethrower Synth"},
-[UnitDefNames["citadell"].id]={active=false,  delay=350,text="\a|Citadell \n Start by building a Construction Depot"},
-[UnitDefNames["csniper"].id]={active=false, delay=350,text="\a|Sniper\n Longrange Hunter - Can drag Trophys."},
-[UnitDefNames["contrain"].id]={active=false, delay=350,text="\a|Construction Train\nBuilds blueprints "},
-[UnitDefNames["ccomender"].id]={active=false, delay=350,text="\a|Comender\n You in a armed & armoured Suit. Memento Mori."},
+[UnitDefNames["bg"].id]={ active=false, time=100,delay=350,		speach=silentPlaceHolder,text="\a|Black Guard\n Elite Overwatch Infantry."},
+[UnitDefNames["mtw"].id]={active=false,  time=100,delay=350, speach=silentPlaceHolder,text= "\a|Manned Transport Synth\nBuilds and deploys Infantry"},
+[UnitDefNames["contruck"].id]={active=false,   time=100,delay=2350,speach=silentPlaceHolder,text= "\a|Construction Truck\n Builds blueprints and repairs"},
+[UnitDefNames["condepot"].id]={active=false,  time=100,delay=350,speach=silentPlaceHolder,text= "\a|Construction Depot\nCreates Construction Units"},
+[UnitDefNames["mdigg"].id]={active=false, time=100,delay=350, speach=silentPlaceHolder,text="\a|Metalldiggester\nStripmines Material on Metallspots"},
+[UnitDefNames["restrictor"].id]={active=false,  time=100,delay=350, speach=silentPlaceHolder,text="\a|Restrictor Tank\nScout Tank with stationary Stunability"},
+[UnitDefNames["css"].id]={active=false,  time=100,delay=350, speach=silentPlaceHolder,text="\a|Combine Synth Soldiers\nFlamethrower Synth"},
+[UnitDefNames["citadell"].id]={active=false,  time=100,delay=350,speach=silentPlaceHolder,text="\a|Citadell \n Start by building a Construction Depot"},
+[UnitDefNames["csniper"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Sniper\n Longrange Hunter - Can drag Trophys to Refinery."},
+[UnitDefNames["contrain"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Construction Train\nBuilds blueprints "},
+[UnitDefNames["ccomender"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Comender\n You in a armed & armoured Suit. Memento Mori."},
 ----Buildings
 
-[UnitDefNames["triggerzone"].id]={active=false,  delay=350,text="\a|Triggerzone\nTriggers the Actionzone it guards"},
-[UnitDefNames["actionzone"].id]={active=false,  delay=350,text="\a|Actionzone\nStores commands for a guarding Reservoirezone"},
-[UnitDefNames["reservoirzone"].id]={active=false, delay=350,text="\a|Reservoirezone\nTransfers commands to guarding Units"},
-[UnitDefNames["scumslum"].id]={active=false,  delay=350,text="\a|Scumslum\nProduces Security budget"},
-[UnitDefNames["campole"].id]={active=false, delay=350,text="\a|Propaganda pole\nConverts Materials to Security"},
-[UnitDefNames["bbind"].id]={active=false, delay=350,text="\a|Industry\nRecycles Battlefield Remains"},
-[UnitDefNames["cwaterextractor"].id]={active=false, delay=350,text="\a|Waterextractor\n Pumps water Off world increasing Security "},
-[UnitDefNames["mestorage"].id]={active=false, delay=350,text="\a|Ressourcedepot\n Stores Material and Security assets"},
-[UnitDefNames["builux"].id]={active=false, delay=350,text="\a|Luxery Appartment\n Attracts Fullcitizens increasing Material"},
-[UnitDefNames["ctransithub"].id]={active=false, delay=350,text="\a|Transitnode\n Fast transfers Units between Citys"},
-[UnitDefNames["fclvlone"].id]={active=false, delay=350,text="\a|Worldgate\n Orders Units Offworld"},
-[UnitDefNames["fclvl2"].id]={active=false, delay=350,text="\a|Worldgate\n Orders Advanced Units Offworld"},
-[UnitDefNames["cairbase"].id]={active=false, delay=350,text="\a|Airbase\n Builds& Maintains Airforce"},
-[UnitDefNames["cdistrictnone"].id]={active=false, delay=350,text="\a|Slum\n  Investment return upon enemy destroying it"},
-[UnitDefNames["buibaicity2"].id]={active=false, delay=350,text="\a|Arcology\n Returns funds upon burning down in public"},
-[UnitDefNames["buibaicity1"].id]={active=false, delay=350,text="\a|Skyscraper\n Returns Insurance paid by the second last attacker"},
-[UnitDefNames["crailgun"].id]={active=false, delay=350,text="\a|Railgun\n Long range base defence"},
-[UnitDefNames["sentry"].id]={active=false, delay=350,text="\a|Sentry\n Short range defence"},
-[UnitDefNames["bonker"].id]={active=false, delay=350,text="\a|Bunker\n Heavy Medium Range fortification"},
-[UnitDefNames["chopper"].id]={active=false, delay=350,text="\a|Hoppermines\n Jumpy Mines"},
-[UnitDefNames["coverworldgate"].id]={active=false, delay=350,text="\a|Overworldgate\n Autospawns expensive troops\n who attack the closest enemy"},
-[UnitDefNames["comendbonker"].id]={active=false, delay=350,text="\a|Comenderdock\n Spawns the Comender"},
-[UnitDefNames["paxcentrail"].id]={active=false, delay=350,text="\a|PaxCentrail\n Prisoner Chaingang fighting for their familys"},
-[UnitDefNames["choblock"].id]={active=false, delay=350,text="\a|Hostage Blocks\n Familys forcing prisoners to fight"},
+[UnitDefNames["triggerzone"].id]={active=false,  time=100,delay=350,speach=silentPlaceHolder,text="\a|Triggerzone\nTriggers the Actionzone it guards"},
+[UnitDefNames["actionzone"].id]={active=false,  time=100,delay=350,speach=silentPlaceHolder,text="\a|Actionzone\nStores commands for a guarding Reservoirezone"},
+[UnitDefNames["reservoirzone"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Reservoirezone\nTransfers commands to guarding Units"},
+[UnitDefNames["scumslum"].id]={active=false,  time=100,delay=350,speach=silentPlaceHolder,text="\a|Scumslum\nProduces Security budget"},
+[UnitDefNames["campole"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Propaganda pole\nConverts Materials to Security"},
+[UnitDefNames["bbind"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Industry\nRecycles Battlefield Remains"},
+[UnitDefNames["cwaterextractor"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Waterextractor\n Pumps water Off world increasing Security "},
+[UnitDefNames["mestorage"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Ressourcedepot\n Stores Material and Security assets"},
+[UnitDefNames["builux"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Luxery Appartment\n Attracts Fullcitizens increasing Material"},
+[UnitDefNames["ctransithub"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Transitnode\n Fast transfers Units between Citys"},
+[UnitDefNames["fclvlone"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Worldgate\n Orders Units Offworld"},
+[UnitDefNames["fclvl2"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Worldgate\n Orders Advanced Units Offworld"},
+[UnitDefNames["cairbase"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Airbase\n Builds& Maintains Airforce"},
+[UnitDefNames["cdistrictnone"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Slum\n  Investment return upon enemy destroying it"},
+[UnitDefNames["buibaicity2"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Arcology\n Returns funds upon burning down in public"},
+[UnitDefNames["buibaicity1"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Skyscraper\n Returns Insurance paid by the second last attacker"},
+[UnitDefNames["crailgun"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Railgun\n Long range base defence"},
+[UnitDefNames["sentry"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Sentry\n Short range defence"},
+[UnitDefNames["bonker"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Bunker\n Heavy Medium Range fortification"},
+[UnitDefNames["chopper"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Hoppermines\n Jumpy Mines"},
+[UnitDefNames["coverworldgate"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Overworldgate\n Autospawns expensive troops\n who attack the closest enemy"},
+[UnitDefNames["comendbonker"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Comenderdock\n Spawns the Comender"},
+[UnitDefNames["paxcentrail"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|PaxCentrail\n Prisoner Chaingang fighting for their familys"},
+[UnitDefNames["choblock"].id]={active=false, time=100,delay=350,speach=silentPlaceHolder,text="\a|Hostage Blocks\n Familys forcing prisoners to fight"},
 
 --Journeyman
 ----Unit
-[UnitDefNames["hc"].id]				 ={active=false, delay=350,		 text="\a|Headcrab\n Turn Infantry into zombies"},
-[UnitDefNames["zombie"].id]			 ={active=false, delay=350,		 text="\a|Zombie\n Follows the Food"},
-[UnitDefNames["skinfantry"].id]	 	 ={active=false, delay=350,		 text="\a|Skinsuited Infantry\n Able to Ambush.\n Lays Eggs for Exp"},
-[UnitDefNames["jskineggnogg"].id]	 ={active=false, delay=350,		 text="\a|Skinfantry Egg\n Grows into Skinfantry"},
-[UnitDefNames["tiglil"].id]			 ={active=false,  delay=350, 	 text= "\a|Tigerlily \n Close Combatress with poisoned Blades"},
-[UnitDefNames["jtigeggnogg"].id]	 ={active=false,  delay=350, 	 text= "\a|Tigerlily Egg\n Grows into a Tigerlily"},
-[UnitDefNames["jmovingfac1"     ].id]={active=false , delay=350 	,text="\a|Firstborn DNA-Weaver \n Gives birth to basic Units"},
-[UnitDefNames["jbeherith"		].id]={active=false , delay=350 	,text="\a|Beherith \n Amphibious Island stomping the small"},
-[UnitDefNames["jeliah"			].id]={active=false  ,delay=350 	,text="\a|Eliah \n Born again Butterfly"},
-[UnitDefNames["jtyrion"			].id]={active=false  ,delay=350 	,text="\a|Corrupted Unit \n Use Ability to change loyalty"},
-[UnitDefNames["jinfector"		].id]={active=false  ,delay=350 	,text="\a|Infector \n Infiltrates nearby Factorys"},
-[UnitDefNames["jresistancecell"	].id]={active=false  ,delay=350 	,text="\a|Resistance Cell \n Invulnerable if nearby slum"},
+[UnitDefNames["hc"].id]				 ={active=false, time=100,delay=350,		 speach=silentPlaceHolder,text="\a|Headcrab\n Turn Infantry into zombies"},
+[UnitDefNames["zombie"].id]			 ={active=false, time=100,delay=350,		 speach=silentPlaceHolder,text="\a|Zombie\n Follows the Food"},
+[UnitDefNames["skinfantry"].id]	 	 ={active=false, time=100,delay=350,		 speach=silentPlaceHolder,text="\a|Skinsuited Infantry\n Able to Ambush.\n Lays Eggs for Exp"},
+[UnitDefNames["jskineggnogg"].id]	 ={active=false, time=100,delay=350,		 speach=silentPlaceHolder,text="\a|Skinfantry Egg\n Grows into Skinfantry"},
+[UnitDefNames["tiglil"].id]			 ={active=false,  time=100,delay=350, 	 speach=silentPlaceHolder,text= "\a|Tigerlily \n Close Combatress with poisoned Blades"},
+[UnitDefNames["jtigeggnogg"].id]	 ={active=false,  time=100,delay=350, 	 speach=silentPlaceHolder,text= "\a|Tigerlily Egg\n Grows into a Tigerlily"},
+[UnitDefNames["jmovingfac1"     ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Firstborn DNA-Weaver \n Gives birth to basic Units"},
+[UnitDefNames["jbeherith"		].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Beherith \n Amphibious Island stomping the small"},
+[UnitDefNames["jeliah"			].id]={active=false  ,time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Eliah \n Born again Butterfly"},
+[UnitDefNames["jtyrion"			].id]={active=false  ,time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Corrupted Unit \n Use Ability to change loyalty"},
+[UnitDefNames["jinfector"		].id]={active=false  ,time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Infector \n Infiltrates nearby Factorys"},
+[UnitDefNames["jresistancecell"	].id]={active=false  ,time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Resistance Cell \n Invulnerable if nearby slum"},
 ----Buildings
-[UnitDefNames["jnativevil"      ].id]={active=false , delay=350 	,text="\a|Native Village \n Converts damage done by the enemy to light and matter"},
-[UnitDefNames["jdrilltree"      ].id]={active=false , delay=350 	,text="\a|Drilltree \n Digs deep to provide matter"},
-[UnitDefNames["eggstackfac"     ].id]={active=false , delay=350 	,text="\a|Eggstack \n Gives birth to construction units"},
-[UnitDefNames["jtree"           ].id]={active=false , delay=350 	,text="\a|Tree \n Collects light"},
-[UnitDefNames["jtree2"          ].id]={active=false , delay=350 	,text="\a|Wastelandtree \n Collects radiowaves"},
-[UnitDefNames["jtree3"          ].id]={active=false , delay=350 	,text="\a|Watertree \n Collects light -regrows after destruction"},
-[UnitDefNames["jtreel"          ].id]={active=false , delay=350 	,text="\a|Accidtree \n Stores Matter"},
-[UnitDefNames["jgeohive"        ].id]={active=false , delay=350 	,text="\a|Creepernest \n Spawns auto harassing Creepers"},
-[UnitDefNames["jwatergate"      ].id]={active=false , delay=350 	,text="\a|Watergate \n Raises the maps waterlevel"},
-[UnitDefNames["jfireflower"     ].id]={active=false , delay=350 	,text="\a|Fireflowers \n In case of fire drop dead were you stand "},
-[UnitDefNames["jdragongrass"    ].id]={active=false , delay=350 	,text="\a|Dragongrass \n Trap gets Unit addicted"},
-[UnitDefNames["jharbour"        ].id]={active=false , delay=350 	,text="\a|Harbour \n Raises the water level\n Produces Waterunits"},
-[UnitDefNames["jbeehive"        ].id]={active=false , delay=350 	,text="\a|Beehive \n Defence using giant hornets"},
-[UnitDefNames["jfungiforrest"   ].id]={active=false , delay=350 	,text="\a|Fungiforrest \n Deadly Fungi infect by Unittype"},
-[UnitDefNames["jviralfac"       ].id]={active=false , delay=350 	,text="\a|Viralfactory \n Spawns Units from afar"},
-[UnitDefNames["jvaryfoo"			].id]={active=false , delay=350 ,text="\a|Varyfoos \n One Feeding, many Breeding, \n ever needing, all debleeding"},
-[UnitDefNames["jabyss"			].id]={active=false , delay=350 	,text="\a|Abyss \n The End of this world"},
-[UnitDefNames["jjamforrest"			].id]={active=false  ,delay=350 	,text="\a|Dense Djungle \n Blocking Radar"}
+[UnitDefNames["jnativevil"      ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Native Village \n Converts damage done by the enemy to light and matter"},
+[UnitDefNames["jdrilltree"      ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Drilltree \n Digs deep to provide matter"},
+[UnitDefNames["eggstackfac"     ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Eggstack \n Gives birth to construction units"},
+[UnitDefNames["jtree"           ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Tree \n Collects light"},
+[UnitDefNames["jtree2"          ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Wastelandtree \n Collects radiowaves"},
+[UnitDefNames["jtree3"          ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Watertree \n Collects light -regrows with delay after fire"},
+[UnitDefNames["jtreel"          ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Accidtree \n Stores Matter"},
+[UnitDefNames["jgeohive"        ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Creepernest \n Spawns auto harassing Creepers"},
+[UnitDefNames["jwatergate"      ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Watergate \n Raises the maps waterlevel"},
+[UnitDefNames["jfireflower"     ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Fireflowers \n In case of fire drop dead were you stand "},
+[UnitDefNames["jdragongrass"    ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Dragongrass \n Trap gets Unit addicted"},
+[UnitDefNames["jharbour"        ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Harbour \n Raises the water level\n Produces Waterunits"},
+[UnitDefNames["jbeehive"        ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Beehive \n Defence using giant hornets"},
+[UnitDefNames["jfungiforrest"   ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Fungiforrest \n Deadly Fungi infect by Unittype"},
+[UnitDefNames["jviralfac"       ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Viralfactory \n Spawns Units from afar"},
+[UnitDefNames["jvaryfoo"			].id]={active=false , time=100,delay=350 ,speach=silentPlaceHolder,text="\a|Varyfoos \n One Feeding, many Breeding, \n ever needing, all debleeding"},
+[UnitDefNames["jabyss"			].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Abyss \n The End of this world"},
+[UnitDefNames["jjamforrest"			].id]={active=false  ,time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Dense Djungle \n Blocking Radar"}
 
 }
 
@@ -151,12 +153,14 @@ boolAllreadyDeacitvatedOnce=false
 
 
 function widget:Initialize()	
-	if Spring.GetSpectatingState() or Spring.IsReplay() then
-	widgetHandler:RemoveWidget()
-	end
 	val=Spring.GetConfigInt("jwfirststartup",1)	
 	Spring.SetConfigInt("jwfirststartup",val+1 )
-		
+	
+	if Spring.GetSpectatingState() or Spring.IsReplay() or val > 3 then
+	widgetHandler:RemoveWidget()
+	end
+	
+
 
 	--if EnviromentVariable is allready set
 		--
@@ -185,7 +189,8 @@ if boolTutorial==true and t%100== 0 then
 	for k,v in pairs(TutorialInfoTable) do
 
 	if v.active == true then
-	v.delay=v.delay-100
+	v.time=100
+	delay=v.delay-100
 		if v.delay < 0 then
 		PlaySoundAndMarkUnit(v.uDId,v.unitid)
 		end
@@ -206,8 +211,8 @@ function PlaySoundAndMarkUnit(defID, exampleUnit)
 x,y,z=spGetUnitPos(exampleUnit)
 	if x then
 	Spring.MarkerAddPoint(  x,  y,  z, TutorialInfoTable[defID].text, true)
-	if TutorialInfoTable[defID].sound then
-	Spring.PlaySoundFile(TutorialInfoTable[defID].sound,1)
+	if TutorialInfoTable[defID].speach then
+	Spring.PlaySoundFile(TutorialInfoTable[defID].speach,1)
 	end
 	end
 TutorialInfoTable[defID]=nil

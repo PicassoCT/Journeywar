@@ -17,8 +17,9 @@ local unitDef  =  {
     Upright = 1,
 	--floater             = true,    
 --Energy and metal related
-    BuildCostEnergy = 400,
-    BuildCostMetal = 1000,
+    buildCostMetal =  1200,
+	buildCostEnergy = 900,
+
 
 --Pathfinding and related
 	holdSteady          = true,
@@ -40,7 +41,15 @@ nanocolor=[[0 0.9 0.9]],
   transportByEnemy    = false,
   transportCapacity   = 5,
   transportSize       = 30000,
-  
+--Ressources
+
+	EnergyStorage = 800,
+	EnergyUse = 0,
+	MetalStorage = 0,
+	EnergyMake = 150, 
+	MetalUse = 3,
+	MakesMetal = 0, 
+	MetalMake = 0,	 
 	
 --Abilities
     Builder = 0,

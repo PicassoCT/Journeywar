@@ -185,8 +185,27 @@ local lwindstoss=windStoss
 end
   -- globalCityWideAlarm=0
 --local boolAllreadyAlarmed=false 
+LastDamage=0
+
+	function script.HitByWeapon ( x, z, weaponDefID, damage )
+	LastDamage=damage
+	return damage
+	end
 
 
+function costlyUnderAttack(
+
+	while true do
+
+		if LastDamage> 0  then
+			LastDamage=0
+			Spring.UseUnitResource(unitID,"e",50)
+			Spring.UseUnitResource(unitID,"m",5)
+		
+		end
+	Sleep(500)
+	end
+end
 
 
 function open()
@@ -317,6 +336,7 @@ end
 
 		function script.Create()
 		--<buildanimationscript>
+		StartThread(costlyUnderAttack)
 		x,y,z=Spring.GetUnitPosition(unitID)
 		teamID=Spring.GetUnitTeam(unitID)
 		 GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)

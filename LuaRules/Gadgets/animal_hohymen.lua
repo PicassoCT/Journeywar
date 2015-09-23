@@ -6,6 +6,10 @@
 		AgentTable={}
 		local distance=approxDist
 	--Global Variables
+	local WATER=0
+    local GRASS=1
+    local BARELAND=2
+	
 	local SIGHTDISTANCE=242
 	local NSIGHTDISTANCE=-242
 	local SOCIALRAD= 64
@@ -94,6 +98,8 @@
 	if x > 48 then return 48 end
 	return x
 	end
+	
+	
 	--Helperfunction using broadsearch, which is sort of shitty, especially as landscapefeatures are linear distributed, so yeah, spearsearch would be better
 	function FindValuePos(unitid,valueType)
 
@@ -102,10 +108,17 @@
 	LandScapeCell=getMap(ux,uz)
 
 
-		if LandScapeCell.Food > 0 then
+		if valueType == GRASS and LandScapeCell.Food > 0 then
 		Spring.Echo("Foodplace Reached")
 		return true, true 
 		end
+		
+		if valueType == WATER and LandScapeCell.y < 0 then
+		Spring.Echo("Drink place Reached")
+		return true, true 
+		end
+		
+		
 		tileSizeX, tileSizeZ=math.ceil((Game.mapSizeX)/48),math.ceil((Game.mapSizeZ)/48)	
 		
 	ux,uz= math.ceil(ux/tileSizeX),math.ceil(uz/tileSizeZ)
@@ -145,7 +158,13 @@
 					end
 					
 						LandScapeCell=lMap(v.x,v.z)
-						if LandScapeCell and LandScapeCell.Food > 0 then 
+						if valueType == GRASS and LandScapeCell and LandScapeCell.Food > 0 then 
+						echo("Found Goal:"..(tileSizeX) .."  |  "..( v.x))
+						echo("Found Goal:"..(v.x*tileSizeX) .."  |  "..( v.z*tileSizeZ))
+						return v.x*tileSizeX, v.z*tileSizeZ
+						end
+						
+						if valueType == WATER and LandScapeCell and LandScapeCell.y < 0 then 
 						echo("Found Goal:"..(tileSizeX) .."  |  "..( v.x))
 						echo("Found Goal:"..(v.x*tileSizeX) .."  |  "..( v.z*tileSizeZ))
 						return v.x*tileSizeX, v.z*tileSizeZ
@@ -165,7 +184,7 @@
 	end
 	
 
-	Spring.Echo("Searching Food failed")	
+	Spring.Echo("Searching Food/Water failed")	
 	return false,false
 	end	
 	
@@ -358,9 +377,7 @@ AT={}
 	AgentTable[unitid]= nil
 	end
 	
-    local WATER=0
-    local GRASS=1
-    local BARELAND=2
+
 	
 	--Map encoding
 	-- 0 Water --1 Grass --2  Grass Goone -- 3 Meat
