@@ -4541,6 +4541,15 @@ function Command(id, command, target)
 	 end
 end
 
+-->Unit Verfication
+function exists(unitid)
+validUnit=Spring.GetUnitIsDead(unitid)
+if validUnit and validUnit==true then return true end
+
+return false
+
+end
+
 
 --> testUnit for existance
 function testUnit(unitid)

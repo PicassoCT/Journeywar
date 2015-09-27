@@ -325,9 +325,10 @@ LastDamage=0
 	return damage
 	end
 
+SIGHT_DISTANCE=420
 
 function costlyUnderAttack()
-
+	id,olhp, hp = 0,0,0
 	while true do
 
 		if LastDamage> 0  then
@@ -335,6 +336,21 @@ function costlyUnderAttack()
 			Spring.UseUnitResource(unitID,"e",50)
 			Spring.UseUnitResource(unitID,"m",5)
 		
+		end
+		
+		--Add Reward with Battles in Sight
+		if id and oldhp > hp then
+			if exists(id) == true and GetUnitDistance(id,uniID) < SIGHT_DISTANCE then
+				Spring.AddUnitResource(unitID,"m",10)
+				oldhp=hp
+			end
+		
+		end
+		
+		
+		id =Spring.GetUnitNearestEnemy(unitID)
+		if id then
+			hp=Spring.GetUnitHealth(id)	
 		end
 	Sleep(500)
 	end

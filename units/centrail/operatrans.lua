@@ -5,7 +5,12 @@ local unitDef  =  {
     ObjectName = "operatrans.s3o",
     name = "Operahovercraft",
     Side = "CentrAIl",
-    TEDClass = "HOVER",
+TEDClass            = [[VTOL]],
+steeringmode        = [[1]],
+maneuverleashlength = 1380,
+turnRadius		  	= 80,
+dontLand		 	= true,
+
     script = "operatransscript.lua",
     
 --Unit limitations and properties
@@ -27,12 +32,11 @@ local unitDef  =  {
     BrakeRate = 0.1,
     FootprintX = 4,
     FootprintZ = 4,
-    MaxSlope = 7,
-    MaxVelocity = 2.0,
-    MaxWaterDepth = 20,
+    -- MaxSlope = 7,
+    -- MaxVelocity = 2.0,
+    -- MaxWaterDepth = 20,
     floater=true,
-    MovementClass = "HOVER2x2",
-    TurnRate = 50,
+    MovementClass = "Default2x2",
     mass                = 9750,
 	
 	
@@ -60,7 +64,7 @@ nanocolor=[[0 0.9 0.9]],
     CanStop = 1,
     LeaveTracks = 0,
     Reclaimable = 0,
-    category=[[LAND ]],
+	Category = [[LAND]],
 	
 	explodeAs = [[NOWEAPON]],
 	selfDestructAs= [[NOWEAPON]], 
