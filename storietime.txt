@@ -9,17 +9,18 @@ Exotic:
 	<True>
 
 3Sek leave
-	<Beep> 
+<Beep> 
 	Hi im the new guy and my name is..
-	<Beep>
+<Beep>
 	Hi, back from seven years of city-leave.  Any recent advances?
-	<Do tell>
-	Speculated on my sallery, got rich , left the army with a full body-buy-out to some fella who would hold the universal union contract.
+<Do tell>
+	Speculated on my sallery, got rich , left the army with a full body-buy-out to some fellow
+	who would hold the universal union contract.
 	Married into a old Avatara family, lots of art, big mansion.
 	Had a scandalous public affair with my wife.
 	Lost my fortune in shame-money and wild gambles.
 	Rejoined the army.
-	<Thousand Lifes in a Eyeblink>
+<Thousand Lifes in a Eyeblink>
 
 Retirment:
 
@@ -29,7 +30,8 @@ Retirment:
 	Hi, my name is Simon Rodriguez, im fresh out of training, origin Earth,
 	recruited yesterday. 
 	Original Body whereabouts - no idea.
-	Lets give thise meat puppet a shake-dwon.
+	Might as well have been a stalker at the start.
+	Lets get this meat puppet to dance.
 	
 Manifold:
 	Guys im now a Manifold.
@@ -39,8 +41,10 @@ Manifold:
 
 
 Putch:
-	Damn it i was on the wrong side in the waffle-toaster rebellion. 
-	Thing became centrial instead of the central and forced all non-loyal-avataras into storage or exile.
+	Why i joined the force?
+	I was on the wrong side of the waffle-toaster rebellion. 
+	Someone builded a toaster just to bright, the thing became centrail instead of the centrail.
+	Offer to all non-loyals is exile in slow-time or storage.
 	So here i am, riddled with shitty memora replacements.
 	Well at least i got to do what i love. Work for the Universal Union.
 	Contribute to the Combined Forces. Have you ever thought about joining Overwatch?
@@ -48,15 +52,22 @@ Putch:
 
 Bodys:
 	At first the Body seems eternal. 
-	Everlasting. Especially in city-time.
+	Everlasting. 
+	Especially in city-time.
 	But with every world you go, you get tailored and upgraded. 
 	Stronger Bones, Synthetic muscles, new Eyes or cell repair genes for high rad worlds.
-	I calculated that after three campaigns, every trooper is all-moist a robot. So get out, before they get in.
+	I calculated that after three campaigns, every trooper is all-moist a robot. So get out, before they get to you.
 	
 Eaten:
-	So there i was, swallowed a whole, eaten alive.
+	So there i was, swallowed - a whole, eaten alive.
 	No ammo, no food, all i could do was paddle around on a raft of bodies,
 	on a little sea of diggestive fluids. Eat the parasites that beast had.
-	Collect the info on the bowel-movements.
-	Crawl up near the throat now and then, and try to contact the world beyond.
+	To stay sane, i would collect bowel-movements, crawl up near the throat now and then, 
+	and try to contact the world beyond.
+	
+Remember Danarell:
+	From the orbit it looked like snow. But was warm down there. Way to warm for snow.
+	Turns out, the local plants, drop Seeds into the HotSprings, producing Foam, that sweeps them everywhere.
+	Both sides drop into this, find out its like superglue, and we are all royally stuck, unable to even scratch one another.
+	Moste peacefull part of this war.
 	
