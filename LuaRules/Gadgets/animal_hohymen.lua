@@ -105,17 +105,20 @@
 
 	ux,uy,uz=Spring.GetUnitPosition(unitid)
 		if not ux then Spring.Echo("Coords not find for hohymen"); return false, false end
-	LandScapeCell=getMap(ux,uz)
+		
+	local lMap=getMap	
+		if not lMap then Spring.Echo("No global RessourceMapTable found") end
+	LandScapeCell=lMap(ux,uz)
 
 
 		if valueType == GRASS and LandScapeCell.Food > 0 then
-		Spring.Echo("Foodplace Reached")
-		return true, true 
+			Spring.Echo("Foodplace Reached")
+			return true, true 
 		end
 		
 		if valueType == WATER and LandScapeCell.y < 0 then
-		Spring.Echo("Drink place Reached")
-		return true, true 
+			Spring.Echo("Drink place Reached")
+			return true, true 
 		end
 		
 		
