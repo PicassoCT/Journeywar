@@ -7,7 +7,7 @@ TEDClass = "PLANT",
 
 
 
-objectName = "placeholder.s3o",
+objectName = "coffworldAssembly.s3o",
 script = "not_implemented_yet.lua",
 buildPic = "cfc2.dds",
 	explodeAs="cArtDM",
