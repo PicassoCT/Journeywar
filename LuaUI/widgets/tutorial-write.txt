@@ -31,7 +31,7 @@ You can also convert Securitybudget into Materialbudget with a CameraPole.
 All Centrail-Ammonitions are crafted from Material budget.
 
 BaitBuildings:
-	Baitbuildings are a class of buildings which represent a political exploit.
+	Baitbuildings represent  political exploits of situations.
 	You errect them. They are expensive.
 	The enemy attacks them.
 	During the attack, currency is transfered to you by the universal union. 
