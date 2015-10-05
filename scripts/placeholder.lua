@@ -3,6 +3,7 @@ include "lib_OS.lua"
  include "lib_UnitScript.lua"
  include "lib_Build.lua" 
 
+TablesOfPiecesGroups={}
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 end
@@ -10,7 +11,7 @@ center=piece"center"
 
 function script.Create()
 generatepiecesTableAndArrayCode(unitID)
-
+	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 end
 
 function script.Killed(recentDamage,_)
