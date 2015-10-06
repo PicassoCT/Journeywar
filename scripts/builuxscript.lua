@@ -193,7 +193,7 @@ LastDamage=0
 	end
 
 
-function costlyUnderAttack(
+function costlyUnderAttack()
 
 	while true do
 

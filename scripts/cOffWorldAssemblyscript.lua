@@ -6,33 +6,61 @@ piecesTable={}
 piecesTable=makePieceTable(unitID)
 
 TablesOfPiecesGroups={}
+StompTable={}
+StompBaseTable={}
 WindowTable={}
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
 center=piece"center"
 
+end
+
+function stompBases()
+	while true do 
+			for i=1,#StompBaseTable do
+			Move(StompBaseTable[i],y_axis,-5,5)
+			Move(StompTable[i],y_axis,20,5)
+			end
+		WaitForMove(StompBaseTable[1],y_axis)
+			for i=1,#StompBaseTable do
+			Move(StompBaseTable[i],y_axis,0,5)
+			Move(StompTable[i],y_axis,0,5)
+			end
+		WaitForMove(StompBaseTable[1],y_axis)
+
+		Sleep(250)
+	end
+
+end
+
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	WindowTable=TablesOfPiecesGroups["Window0"]
+	StompBaseTable=TablesOfPiecesGroups["StompBase"]
+	StompTable=TablesOfPiecesGroups["Stomp"]
 	StartThread(randomBlink)
 	StartThread(buildOS)
+	StartThread(stompBases)
 end
 
 function unfold	(buildProgress)			  
 speed= 50 *buildProgress/15
-	if boolDirection==true then --unfold
+	if boolDirection== true then --unfold
 
 		return CurrentStat,Instate, boolLoop 
 	 else 
 	 
 	  return CurrentStat,Instate, boolLoop 
+	  end
 end	 
  
  
 function eggDeploy(buildProgress)			 
  return CurrentStat,Instate, boolLoop 
 end 
+
+
 function pumpUp		(buildProgress)		  
  return CurrentStat,Instate, boolLoop 
  end
@@ -59,7 +87,7 @@ function LoopimplantInsertion	 (buildProgress)
  end
 function LoopSewUp				 (buildProgress)
  end
-function LoopPumpedDown			 (buildProgress)
+function LoopPumpedDown			 (buildProgress)	
  end
 function LoopRelease			 (buildProgress)
  end
@@ -93,24 +121,35 @@ progress=0
 
 
 function BuildingAnimation(buildID,boolDirection)
-Spring.SetUnitAlwaysVisible(buildID,false)
+	if buildID then
+		Spring.SetUnitAlwaysVisible(buildID,false)
+	end
+	
 CurrentStat=1
 Instate=1
 	while boolBuilding==true do
 	roGress=math.ceil(100*progress)
 	
 	CurrentStat,Instate, boolLoop=UnfoldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
-		if boolLoop then 
+		if boolLoop and boolDirection == true then 
 			StableLoopTable[CurrentStat](roGress)
 		
+		end
+		
+	if buildID then
+		Spring.SetUnitAlwaysVisible(buildID,true)
+	end
 	
-Spring.SetUnitAlwaysVisible(buildID,true)
-
+	Sleep(10)
+	end
 
 
  end 
+ 
+ 
  function buildOS()
 --TestLoop
+	StartThrad(BuildingAnimation, buildID,false)
 	while true do 
 	progress=0
 	StartThrad(BuildingAnimation, buildID,true)
@@ -118,140 +157,129 @@ Spring.SetUnitAlwaysVisible(buildID,true)
 		for i=1,100 do
 		progress=i/100
 		Sleep(2000)
-		
+		end
 	Sleep(5000)
 		StartThrad(BuildingAnimation, buildID,false)
-	
+	end
 
-	while true do
-	buildID=Spring.GetUnitIsBuilding(unitID)
-		if buildID  then 
-		boolBuilding=true
-		progress=0
-		StartThrad(BuildingAnimation, buildID,false)
-		
-		--building something
-			while  Spring.ValidUnitID(buildID)==true and progress < 1 do
-				hp,progress=Spring.GetUnitHealth(buildID)
+			while true do
+			buildID=Spring.GetUnitIsBuilding(unitID)
+				if buildID  then 
+				boolBuilding=true
+				progress=0
+				StartThrad(BuildingAnimation, buildID,false)
 				
-			Sleep(100)
+				--building something
+					while  Spring.ValidUnitID(buildID)==true and progress < 1 do
+						hp,progress=Spring.GetUnitHealth(buildID)
+						
+					Sleep(100)
+					end
+				boolBuilding=false
+				end
+			Sleep(500)
+			end
 			
-		boolBuilding=false
-		
-	Sleep(500)
-		
-	
 
 
 
  end 
+ 
  function randomBlink()
-hideT(WindowTable)
-for i=1,#WindowTable do
-	if i%2==0 then Show(WindowTable[i]) 
+	hideT(WindowTable)
+		for i=1,#WindowTable do
+			if i%2==0 then Show(WindowTable[i]) end
+		end
+		itterate=0.1
 
-itterate=0.1
-
-	while true do
-	itterate=itterate+0.1
-	changeVal=math.ceil(math.random(1,42))
-	ignoreVal=math.ceil(math.random(1,6))
-	
-	time=math.ceil(300+math.sin(itterate)*100)
-	Sleep(time)
-		for i=1,#WindowTable-1,1 do
-		if i% ignoreVal==0 and i% ignoreVal ~= 0 then
-			Show(WindowTable[i]) 
-			Hide(WindowTable[i]+1) 
-		elseif i% ignoreVal ~= 0 
-			Hide(WindowTable[i]) 
-			ShowWindowTable[i]+1) 
-		
-			if maRa()==true then
-				SleepValue=math.ceil(math.random(1,10))
-				Sleep(SleepVal) 
+			while true do
+			itterate=itterate+0.1
+			changeVal=math.ceil(math.random(1,42))
+			ignoreVal=math.ceil(math.random(1,6))
 			
-		
-	
-
-
-
+			time=math.ceil(300+math.sin(itterate)*100)
+			Sleep(time)
+				for i=1,#WindowTable-1,1 do
+					if i% ignoreVal==0 and i% ignoreVal ~= 0 then
+						Show(WindowTable[i]) 
+						Hide(WindowTable[i+1]) 
+					elseif i% ignoreVal ~= 0 then
+						Hide(WindowTable[i]) 
+						Show(WindowTable[i+1]) 
+					
+						if maRa()==true then
+							SleepValue=math.ceil(math.random(1,10))
+							Sleep(SleepVal) 
+						end
+					end
+				end
+			end
 
  end 
+ 
  function script.Killed(recentDamage,_)
 
 suddenDeathV(recentDamage)
 return 1
-
+end
 
 
 ----aimining & fire weapon
 
- end 
+ 
  function script.AimFromWeapon1() 
 	return center 
+end
 
 
 
 
-
- end 
+ 
  function script.QueryWeapon1() 
 	return center
+end
 
 
-
- end 
+ 
  function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 
 	return true
+end
+
+ 
+
+
+ 
+ function script.FireWeapon1()	
+
+	return true
+end
+
+
 
 
  
 
 
- end 
- function script.FireWeapon1()	
-
-	return true
 
 
-
-
-
- end 
- function script.StartMoving()
-
-
-
-
- end 
- function script.StopMoving()
-		
-		
-
-
-
- end 
  function script.Activate()
 
 return 1
+end
 
 
-
- end 
+ 
  function script.Deactivate()
 
 return 0
+end
 
 
-
- end 
+ 
  function script.QueryBuildInfo() 
   return center 
-
+end
 
 Spring.SetUnitNanoPieces(unitID,{ center})
-
-end
