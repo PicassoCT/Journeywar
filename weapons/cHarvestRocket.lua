@@ -39,8 +39,8 @@ avoidFriendly=true,
 
 ----DAMAGE
 damage={
-default=325,
-heavyarmor=150,
+default=0,
+heavyarmor=0,
 },
 areaOfEffect=100,
 craterMult=0,

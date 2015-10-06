@@ -1581,7 +1581,7 @@ if not tablename then return end
 	if lowLimit and upLimit then
 		for i=upLimit,lowLimit, -1 do
 		Hide(tablename[i])
-		if delay then Sleep(delay) end
+			if delay and delay > 0  then Sleep(delay) end
 		end
 
 	else
@@ -1598,7 +1598,7 @@ function showT(tablename,lowLimit,upLimit,delay)
 	if lowLimit and upLimit then
 		for i=lowLimit,upLimit, 1 do
 		Show(tablename[i])
-		if delay then Sleep(delay) end
+		if delay and delay > 0 then Sleep(delay) end
 		end
 
 	else
@@ -2472,7 +2472,7 @@ end
 
 --> Play a soundfile only by unittype
 function PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
-if predelay then Sleep(predelay) end
+if predelay and predelay > 0 then Sleep(predelay) end
 
 loud=loudness or 1
 if loud==0 then loud= 1 end
@@ -3402,7 +3402,11 @@ end
 					if v and v.number and v.name == tableName then
 						piecename=v.name..v.number
 						if lib_boolDebug==true then
-						Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
+							if pieceMap[piecename] then 
+								Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
+							else
+								Spring.Echo("pieceMap contains no piece named "..piecename)
+							end
 						end
 						convertToNumber=tonumber(v.number)
 						PackedAllNames[convertToNumber]= pieceMap[piecename]					
@@ -3438,7 +3442,7 @@ end
 	factorT=time/1000
 	
 	if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
-	SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)
+		SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)
 	end
 
 	dirX,dirY,dirZ= Spring.GetUnitPiecePosition(unitID,Head)

@@ -7,15 +7,15 @@ Accuracy=2000,
 
 --Physic/flight path
 range=1800,
-reloadtime=25,
+reloadtime=15,
 weaponVelocity=250,
 startVelocity=150,
 weaponAcceleration=250,
 flightTime=12.5,
 BurnBlow=0,
 FixedLauncher=false,
-dance=12,
-wobble=42,
+dance=42,
+wobble=12,
 
 tolerance=16000,
 tracks=true,
@@ -24,10 +24,10 @@ collideFriendly=true,
 
 ----APPEARANCE
 model="cEaterProj.s3o",
-smokeTrail=true,
+smokeTrail=false,
 explosionGenerator="custom:bloodslay",
 --CegTag="smoketrail",
-CegTag="razorstripe",
+CegTag="eaterstrip",
 ----TARGETING
 turret=true,
 cylinderTargeting=100,

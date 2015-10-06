@@ -350,23 +350,31 @@ end
 			Spring.SetUnitResourcing(unitID, "ume",	 HarvestRocketLoadTable[unitID][attackerID].energy)
 		HarvestRocketLoadTable[unitID][attackerID]=nil
 		
-	 return 0
+	
 	 end
- 
+	return 0
 end 
- WeaponDefTable[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-	if not attackerID then return end
- metalRes,energyRes= UnitDefs[unitDefID].metalCost,UnitDefs[unitDefID].energyCost
- 
+ WeaponDefTable[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackID, attackerDefID, attackerTeam) 			
+	
+	attackerID= attackID 
+	valid=Spring.ValidUnitID(attackerID)
+	if not attackerID or (not valid) or valid==false then
+		attackID=	Spring.GetUnitLastAttacker(unitID)
+	end
+	metalRes,energyRes= UnitDefs[unitDefID].metalCost,UnitDefs[unitDefID].energyCost
+	
  	gx,gy,gz=Spring.GetUnitPosition(unitID)
 	tx,ty,tz=Spring.GetUnitPosition(attackerID)
 	ateamid=Spring.GetUnitTeam(attackerID)
+	vx,vy,vz=Spring.GetUnitCollisionVolumeData(unitID)
+	max=math.max(vx,math.max(vy,vz))
+		
 						v=makeVector(tx-gx,ty-gy,tz-gz)
 						v=normVector(v)
-						v=mulVector(v,-1)
+						--v=mulVector(v,-1)
 					
 						local	 HarvestRocketParams={
-						pos = { gx, gy+5,gz},  
+						pos = { gx, gy+max,gz},  
 						["end"] = {tx,ty,tz},
 						speed={v.x,v.y,v.z},
 						owner = unitID,
@@ -378,7 +386,7 @@ end
 						gravity = Game.gravity,
 						 startAlpha = 1,
 						endAlpha = 1,						
-						model = "placeholder.s3o",
+						model = "cHarvestProj.s3o",
 						}					
 						
 						projID = Spring.SpawnProjectile( cHarvestRocketDefID ,HarvestRocketParams)
@@ -490,8 +498,8 @@ ux,uy,uz=px-x,py-y,pz-z
 return math.sqrt(ux^2+uy^2 +uz^2),px,py,pz
 end
 	
-
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+			
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,projID, attackerID, attackerDefID, attackerTeam) 
 
 	
 	--chain Lightning 

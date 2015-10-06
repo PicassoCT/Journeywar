@@ -411,8 +411,8 @@
 
 	soundInOrderTableUnfold={}
 	soundInOrderTableUnfold[1]={boolOnce=true,postdelay=0,predelay=3000,sound="sounds/cgatefortress/GateOPen.ogg"}
-	soundInOrderTableUnfold[2]={signal=true,postdelay=3500,sound={[1]="sounds/cgatefortress/GateLoop1.ogg",[2]="sounds/cgatefortress/GateLoop.ogg",[3]="sounds/cgatefortress/GateLoop2.ogg"}}
-	soundInOrderTableUnfold[3]={signal=true,postdelay=3500,sound={[1]="sounds/cgatefortress/GateOnly1.ogg",[2]="sounds/cgatefortress/GateOnly2.ogg"}}
+	soundInOrderTableUnfold[2]={signal=true,postdelay=2500,sound={[1]="sounds/cgatefortress/GateLoop1.ogg",[2]="sounds/cgatefortress/GateLoop.ogg",[3]="sounds/cgatefortress/GateLoop2.ogg"}}
+	soundInOrderTableUnfold[3]={signal=true,postdelay=2500,sound={[1]="sounds/cgatefortress/GateOnly1.ogg",[2]="sounds/cgatefortress/GateOnly2.ogg"}}
 
 	 
 		function unfoldAnimation()

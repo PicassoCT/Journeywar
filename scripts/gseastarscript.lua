@@ -61,8 +61,7 @@ function wiggleFeet()
 				piEight=3.1415/math.floor(math.random(4,12))
 				dice=math.random(-25,25)
 			for i=1,6 do	
-				sperd= math.random(0,5)/100
-				if sperd == 0 then sperd= 0.1 end
+				sperd= math.random(1,5)/100				
 				val=math.sin(frame+piEight*i)*dice
 				Turn(Knees[k][i],y_axis,math.rad(val),sperd)		
 			end
