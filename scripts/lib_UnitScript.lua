@@ -3126,8 +3126,12 @@ end
 		
 	function mergeTables(...)
 		Table={}
+			if not arg then return {} end
+
 		for k,v in pairs(arg) do
+			
 			Table=TableMergeTable(Table,v)
+			
 		end
 
 	return Table
