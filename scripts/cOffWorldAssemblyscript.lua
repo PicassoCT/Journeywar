@@ -427,8 +427,8 @@ piecesTable=makePieceTable(unitID)
  piecesTable[#piecesTable+1]= Op016
  Sack = piece("Sack")
  piecesTable[#piecesTable+1]= Sack
- Sack01 = piece("Sack01")
- piecesTable[#piecesTable+1]= Sack01
+ SackWIP = piece("SackWIP")
+ piecesTable[#piecesTable+1]= SackWIP
  Stack01 = piece("Stack01")
  piecesTable[#piecesTable+1]= Stack01
  Window001 = piece("Window001")
@@ -574,6 +574,7 @@ TablesOfPiecesGroups={}
 StompTable={}
 StompBaseTable={}
 WindowTable={}
+
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
 center=piece"center"
@@ -583,14 +584,14 @@ end
 function stompBases()
 	while true do 
 			for i=1,#StompBaseTable do
-			Move(StompBaseTable[i],y_axis,-5,5)
-			Move(StompTable[i],y_axis,20,5)
+				Move(StompBaseTable[i],y_axis,-5,5)
+				Move(StompTable[i],y_axis,20,5)
 			end
 		WaitForMove(StompBaseTable[1],y_axis)
 		WaitForMove(StompTable[1],y_axis)
 			for i=1,#StompBaseTable do
-			Move(StompBaseTable[i],y_axis,9,5)
-			Move(StompTable[i],y_axis,0,5)
+				Move(StompBaseTable[i],y_axis,9,5)
+				Move(StompTable[i],y_axis,0,5)
 			end
 		WaitForMove(StompBaseTable[1],y_axis)
 
@@ -598,34 +599,135 @@ function stompBases()
 	end
 
 end
-
+	OperationSet= {}
+	
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	WindowTable=TablesOfPiecesGroups["Window"]
 	StompBaseTable=TablesOfPiecesGroups["StompBase"]
 	StompTable=TablesOfPiecesGroups["Stomp"]
+
+	OP_T=TablesOfPiecesGroups["Op"]
+	OPTA_T=TablesOfPiecesGroups["OPTA"]
+	OPFA_T=TablesOfPiecesGroups["OPFA"]
+	OPSA_T=TablesOfPiecesGroups["OPSA"]
+	OperationSet=mergeTables(OP_T,OPTA_T,OPFA_T,OPSA_T)
+	hideT(OperationSet)
+	
+	ToolLowT=TablesOfPiecesGroups["ToolLow"]
+	ToolUpT=TablesOfPiecesGroups["ToolUp"]
+	ToolMidT=TablesOfPiecesGroups["ToolMid"]
 	StartThread(randomBlink)
+	StartThread(setUp)
 	--StartThread(buildOS)
 	StartThread(stompBases)
 end
 
-function unfold	(buildProgress)			  
-speed= 50 *buildProgress/15
-	if boolDirection== true then --unfold
+function setUp()
+	Hide(Sack)
+	Hide(GrowCapsule)
+	Hide(BloodCapsule)
+	Hide(SackWIP)
+	Hide(EggPod)
+	--Hide Support Ader
+	--Hide EggPods
 
-		return CurrentStat,Instate, boolLoop 
+	fold(0,false,1)
+
+
+end
+
+function fold	(buildProgress,boolDirection, state)			  
+speed= 50 *buildProgress/15
+
+	if boolDirection== true then --unfold
+		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
+		WTurn(ToolUpT[1],x_axis,math.rad(37),speed)
+		WTurn(ToolUpT[2],z_axis,math.rad(-37),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(-37-115),speed)
+		WTurn(ToolUpT[4],z_axis,math.rad(37),speed)
+		
+		WTurn(ToolMidT[1],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[2],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[3],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[4],x_axis,math.rad(0),speed)
+		--resetHead
+	
+		WTurn(ToolUpT[1],x_axis,math.rad(0),speed)
+		WTurn(ToolUpT[2],z_axis,math.rad(0),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(0),speed)
+		WTurn(ToolUpT[4],z_axis,math.rad(0),speed)
+		showT(OperationSet)	
+		
+		return state,Instate, boolLoop 
 	 else 
+		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
+		reseT(OperationSet,speed,true,true)
+		hideT(OperationSet)
+	
+		WTurn(ToolMidT[1],x_axis,math.rad( 180),speed)
+		WTurn(ToolMidT[2],z_axis,math.rad(180),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(-115),speed)
+		WTurn(ToolMidT[3],x_axis,math.rad(-115),speed)
+		WTurn(ToolLowT[3],x_axis,math.rad(-90),speed)
+
+
+	
+	Turn(ToolMidT[4],z_axis,math.rad(180),speed)
 	 
 	  return CurrentStat,Instate, boolLoop 
 	  end
 end	 
- 
- 
-function eggDeploy(buildProgress)			 
+ ArmsTable={}
+function eggDeploy(buildProgress)	
+Arm=ArmsTable[18]
+TurnPieceList({	Arm[1],90,0,0,speed,
+				Arm[2],0,0,127,speed,
+				Arm[3],88,0,0,speed,
+				Arm[4],-30,0,0,speed,
+				Arm[5],117,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+WaitForTurns(Arm)
+Move(Stack01,y_axis,12,4)
+Turn(Stack01,y_axis,math.rad(-22),4)
+WaitForTurns(Stack01)
+WaitForMove(Stack01,y_axis)
+Show(Op18)
+resetPiece(Stack01)
+TurnPieceList({	Arm[1],98,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  true, --TurnInOrder
+			  false, -- WaitForTurn
+			  true --synced
+			  )
+
+TurnPieceList({	Arm[1],90,0,0,speed,
+				Arm[2],0,0,127,speed,
+				Arm[3],88,0,0,speed,
+				Arm[4],-30,0,0,speed,
+				Arm[5],117,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  true, --TurnInOrder
+			  false, -- WaitForTurn
+			  true --synced
+			  )
+			  
+
+		 
  return CurrentStat,Instate, boolLoop 
 end 
-
 
 function pumpUp		(buildProgress)		  
  return CurrentStat,Instate, boolLoop 
@@ -643,7 +745,7 @@ function Release		(buildProgress)
  return CurrentStat,Instate, boolLoop 
  end
 
-function Loopunfold(buildProgress)				 
+function Loopfold(buildProgress)				 
  end
 function LoopeggDeploy			 (buildProgress)
  end
@@ -659,7 +761,7 @@ function LoopRelease			 (buildProgress)
  end
 
 StableLoopTable={
-[1]=  Loopunfold				 ,
+[1]=  Loopfold				 ,
 [2]=  LoopeggDeploy			 ,
 [3]=  LooppumpUp				 ,
 [4]=  LoopimplantInsertion	 ,
@@ -670,8 +772,8 @@ StableLoopTable={
 
 }
 
-UnfoldAnimationTable={
-[1]=  unfold				  ,
+foldAnimationTable={
+[1]=  fold				  ,
 [2]=  eggDeploy			 ,
 [3]=  pumpUp				  ,
 [4]=  implantInsertion	  ,
@@ -696,7 +798,7 @@ Instate=1
 	while boolBuilding==true do
 	roGress=math.ceil(100*progress)
 	
-	CurrentStat,Instate, boolLoop=UnfoldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
+	CurrentStat,Instate, boolLoop=foldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
 		if boolLoop and boolDirection == true then 
 			StableLoopTable[CurrentStat](roGress)
 		
@@ -786,24 +888,16 @@ suddenDeathV(recentDamage)
 return 1
 end
 
-
 ----aimining & fire weapon
-
- 
  function script.AimFromWeapon1() 
 	return center 
 end
 
 
-
-
- 
  function script.QueryWeapon1() 
 	return center
 end
 
-
- 
  function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 
@@ -811,20 +905,10 @@ end
 end
 
  
-
-
- 
  function script.FireWeapon1()	
 
 	return true
 end
-
-
-
-
- 
-
-
 
 
  function script.Activate()

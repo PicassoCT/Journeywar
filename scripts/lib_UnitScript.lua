@@ -61,27 +61,26 @@ end
 -->moves Piece by a exponential Decreasing or Increasing Speed to target
 function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, endspeed, speedUpSlowDown)
 speed=startspeed
-for i=startPos, targetPos, 1 do
-	if speedUpSlowDown==true then
-		speed=math.min(endspeed,speed+increaseval^2)
-	else
-		speed=math.max(endspeed,speed-increaseval^2)
+	for i=startPos, targetPos, 1 do
+			if speedUpSlowDown==true then
+				speed=math.min(endspeed,speed+increaseval^2)
+			else
+				speed=math.max(endspeed,speed-increaseval^2)
+			end
+		Move(piece,axis,i,speed)
+		WaitForMove(piece,axis)
 	end
-Move(piece,axis,i,speed)
-WaitForMove(piece,axis)
-
-end
 
 end
 -->CombinedWaitForMove
 function WMove(lib_piece,lib_axis,lib_distance,lib_speed)
-Move(lib_piece,lib_axis,lib_distance,lib_speed)
-WaitForMove(lib_piece,lib_axis)
+	Move(lib_piece,lib_axis,lib_distance,lib_speed)
+	WaitForMove(lib_piece,lib_axis)
 end
 
 function WTurn(lib_piece,lib_axis,lib_distance,lib_speed)
-Turn(lib_piece,lib_axis,lib_distance,lib_speed)
-WaitForTurn(lib_piece,lib_axis)
+	Turn(lib_piece,lib_axis,lib_distance,lib_speed)
+	WaitForTurn(lib_piece,lib_axis)
 end
 
 --> Sorts Pieces By Height in Model
@@ -704,13 +703,13 @@ lspeed=speed or 0
 end
 
 function recReseT(Table,speed)
-if type(Table)=="table" then 
-for k,v in pairs(Table) do
-recReseT(v,speed)
-end
-elseif type(Table)=="number" then
-resetPiece(Table,speed)
-end
+	if type(Table)=="table" then 
+		for k,v in pairs(Table) do
+		recReseT(v,speed)
+		end
+	elseif type(Table)=="number" then
+		resetPiece(Table,speed)
+	end
 end
 
 function getTeamSide(teamid)
@@ -1478,8 +1477,22 @@ function turnSyncInTimeTable(Table, time)
 
 end
 
+function turnSyncInSpeed(piecename,x,y,z,speed)
+	if speed ==0 then
+		tP(piecename,x,y,z,speed)
+		return
+	end
 
+xtime=math.abs(x)/speed
+ytime=math.abs(y)/speed
+ztime=math.abs(z)/speed
+maxtime=math.max(xtime,math.max(ytime,ztime))
 
+Turn(piecename,x_axis,math.rad(x),(xtime/maxtime)*speed)
+Turn(piecename,y_axis,math.rad(y),(ytime/maxtime)*speed)
+Turn(piecename,z_axis,math.rad(z),(ztime/maxtime)*speed)
+
+end
 -->Packs Values into Pairs
 function getPairs(values)
     xyPairs = {}
@@ -2409,6 +2422,35 @@ function turnT(t, axis, deg,speed,boolInstantUpdate)
 return
 end
 
+-->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
+function snakeOnAPlane(PieceList,SnakePoints,speed)
+
+
+end
+
+function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
+	for i=1,#PieceList-5,5 do
+	
+		if boolSync==false then
+		  tP(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
+		else
+		  turnSyncInSpeed(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
+		end
+		
+	  if boolTurnInOrder == true then 
+		WaitForTurns(PieceList[i])
+	  end		
+	end
+	
+	if boolTurnInOrder==false and boolWaitForTurn==true then
+		for i=1,#PieceList-5,5 do
+			WaitForTurns(PieceList[i])
+		end
+	end
+	
+
+end
+
 --> Turn a Table towards local T
 function moveT(t, axis, dist,speed,boolInstantUpdate)
 	if boolInstantUpdate then
@@ -3082,6 +3124,15 @@ end
 	return reT
 	end
 		
+	function mergeTables(...)
+		Table={}
+		for k,v in pairs(arg) do
+			Table=TableMergeTable(Table,v)
+		end
+
+	return Table
+	end
+	
 	function TableMergeTable(TA,TB)
 	T={}
 		if #TA >= #TB then
@@ -3240,10 +3291,10 @@ end
 	function assertAllArgs(...)
 	if not arg then error("No arguments were given") return end
 	nr=1
-	for k,v in pairs(arg) do
-	if not v then error("Argument Nr"..nr.." is nil "); return false end
-	nr=1+nr
-	end
+		for k,v in pairs(arg) do
+			if not v then error("Argument Nr"..nr.." is nil "); return false end
+			nr=1+nr
+		end
 	return true 
 	end
 		
