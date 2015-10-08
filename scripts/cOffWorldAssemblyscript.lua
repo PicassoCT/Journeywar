@@ -664,7 +664,7 @@ speed= 50 *buildProgress/15
 		WTurn(ToolUpT[4],z_axis,math.rad(0),speed)
 		showT(OperationSet)	
 		
-		return state,Instate, boolLoop 
+		return state,Instate  
 	 else 
 		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
 		reseT(OperationSet,speed,true,true)
@@ -680,7 +680,7 @@ speed= 50 *buildProgress/15
 	
 	Turn(ToolMidT[4],z_axis,math.rad(180),speed)
 	 
-	  return CurrentStat,Instate, boolLoop 
+	  return CurrentStat,Instate  
 	  end
 end	 
 
@@ -730,41 +730,79 @@ TurnPieceList({	Arm[1],-120,0,0,speed,
 			  )
 Hide(Op18)
 Hide(Op19)
-
+Move(PumpPillar1,y_axis,-60,0)
+Move(PumpPillar2,y_axis,-60,0)
+Move(GrowCapsule,y_axis,-60,0)
 Show(GrowCapsule)
 reseT(Arm,speed)
-			  
+  
 
 		 
- return CurrentStat,Instate, boolLoop 
+return CurrentStat,Instate  
 end 
 
-function pumpUp		(buildProgress)		  
- return CurrentStat,Instate, boolLoop 
- end
-function implantInsertion(buildProgress)	  
- return CurrentStat,Instate, boolLoop 
+function pumpUp		(buildProgress)	
+speed=0.1*(buildProgress/20)
+ 
+	Move(PumpPillar1,y_axis,0,speed)
+	Move(PumpPillar2,y_axis,0,speed)
+	Move(GrowCapsule,y_axis,0,speed)
+
+ return CurrentStat,Instate 
+end
+
+ function implantInsertion(buildProgress)	  
+ return CurrentStat,Instate  
  end
 function SewUp			(buildProgress)	 
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate  
  end
 function PumpedDown			(buildProgress)  
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate  
  end
 function Release		(buildProgress)	  
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate  
  end
 
 function Loopfold(buildProgress)				 
- end
+end
+ 
 function LoopeggDeploy			 (buildProgress)
+	while true do
+		Hide(Egg)
+		Turn(Carusell,y_axis,math.rad(0),0.5)
+		WaitForTurn( Carusell,y_axis)
+		Move(Egg,y_axis,15,0)
+		Show(Egg)
+		Move(Egg,y_axis,0,9.81)
+		WaitForMove(Egg,y_axis)
+		Turn(Carusell,y_axis,math.rad(175),0.5)
+		WaitForTurn( Carusell,y_axis)
+		Turn(Carusell,y_axis,math.rad(230),0.5)
+		WaitForTurn( Carusell,y_axis)
+		
+	end
  end
+ 
+ function sackTurn(nr)
+ecks=0
+sign=-1
+	 while StableLoopSignalTable[nr]==true do
+		ecks=ecks+1
+		Turn(Sack,y_axis,math.rad(ecks*90*sign),0)
+		Turn(Sack,y_axis,math.rad(ecks*90*sign),0)
+		if ecks % 16==0 then sign=sign*-1 end
+		Sleep(200)
+	end 
+ 
+ end
+ 
 function LooppumpUp				 (nr)
 
 Move(pump1,y_axis,-30,7)
 
 WMove(pump2,y_axis,-30,7)
-
+StartThread(sackTurn, nr+1)
 	while StableLoopSignalTable[nr]==true do
 		Turn(PumpPillar1,y_axis,math.rad(3),0.5)
 		Turn(pump1,y_axis,math.rad(3),0.5)
@@ -773,13 +811,13 @@ WMove(pump2,y_axis,-30,7)
 		Turn(pump2,y_axis,math.rad(-7),0.5)
 		Turn(GrowCapsule,y_axis,math.rad(5),2)
 		
-		Move(pump1,y_axis,-30,7)#
+		Move(pump1,y_axis,-30,7)
 		Spin(spinp1,y_axis,math.rad(42 ),4.5)
 		Spin(spinp2,y_axis,math.rad(-42),4.5)
 		WMove(pump2,y_axis,0,7)
 		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
 		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
-		Sleep(900)
+		Sleep(450)
 		Turn(PumpPillar2,y_axis,math.rad(-3),0.5)
 		Turn(pump1,y_axis,math.rad(3),0.5)
 		
@@ -803,14 +841,18 @@ WMove(pump2,y_axis,-30,7)
 	Turn(pump2,y_axis,math.rad(0),0.5)
 	Turn(GrowCapsule,y_axis,math.rad(0),1)
  end
+
+
  
-function LoopimplantInsertion	 (buildProgress)
+function LoopimplantInsertion	 (nr)
+	
+end
+
+function LoopSewUp				 (nr)
  end
-function LoopSewUp				 (buildProgress)
+function LoopPumpedDown			 (nr)	
  end
-function LoopPumpedDown			 (buildProgress)	
- end
-function LoopRelease			 (buildProgress)
+function LoopRelease			 (nr)
  end
 StableLoopSignalTable={
 [1]=  true ,
@@ -861,7 +903,7 @@ Instate=1
 	while boolBuilding==true do
 	roGress=math.ceil(100*progress)
 	
-	CurrentStat,Instate, boolLoop=foldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
+	CurrentStat,Instate =foldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
 		if boolLoop and boolDirection == true then 
 			StableLoopTable[CurrentStat](roGress)
 		
