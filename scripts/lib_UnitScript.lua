@@ -2223,7 +2223,7 @@ local ObjT={}
 		
 		for j=1,#ffT,1 do 
 		if ffT.pieceList then
-			for k in ipairs(fft.piecelist) do
+			for k in pairs(fft.piecelist) do
 				if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x,ObjT[k].posdir.y,ObjT[k].posdir.z) == true then
 				ObjT[k].mass1.force=addVector(ObjT[k].mass1.force, mulVector(ffT[j].acceleration,ObjT[k].mass1.mass))		  
 				end

@@ -600,7 +600,8 @@ function stompBases()
 
 end
 	OperationSet= {}
-	
+	 ArmsTable={}
+
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
@@ -614,6 +615,9 @@ function script.Create()
 	OPSA_T=TablesOfPiecesGroups["OPSA"]
 	OperationSet=mergeTables(OP_T,OPTA_T,OPFA_T,OPSA_T)
 	hideT(OperationSet)
+	for i=1,#OP_T, 1 do
+	ArmsTable[i]={}
+	end
 	
 	ToolLowT=TablesOfPiecesGroups["ToolLow"]
 	ToolUpT=TablesOfPiecesGroups["ToolUp"]
@@ -679,7 +683,8 @@ speed= 50 *buildProgress/15
 	  return CurrentStat,Instate, boolLoop 
 	  end
 end	 
- ArmsTable={}
+
+
 function eggDeploy(buildProgress)	
 Arm=ArmsTable[18]
 TurnPieceList({	Arm[1],90,0,0,speed,
@@ -708,21 +713,26 @@ TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[6],0,0,0,speed,
 			  },
 			  true, --TurnInOrder
-			  false, -- WaitForTurn
+			  true, -- WaitForTurn
 			  true --synced
 			  )
 
-TurnPieceList({	Arm[1],90,0,0,speed,
-				Arm[2],0,0,127,speed,
-				Arm[3],88,0,0,speed,
-				Arm[4],-30,0,0,speed,
-				Arm[5],117,0,0,speed,
-				Arm[6],0,0,0,speed,
+TurnPieceList({	Arm[1],-120,0,0,speed,
+				Arm[2],0,0,-25,	speed,
+				Arm[3],26,0,0,	speed,
+				Arm[4], -72,0,0,speed,
+				Arm[5],66,0,0,	speed,
+				Arm[6],31,-22,31,speed,
 			  },
 			  true, --TurnInOrder
-			  false, -- WaitForTurn
+			  true, -- WaitForTurn
 			  true --synced
 			  )
+Hide(Op18)
+Hide(Op19)
+
+Show(GrowCapsule)
+reseT(Arm,speed)
 			  
 
 		 
@@ -749,8 +759,51 @@ function Loopfold(buildProgress)
  end
 function LoopeggDeploy			 (buildProgress)
  end
-function LooppumpUp				 (buildProgress)
+function LooppumpUp				 (nr)
+
+Move(pump1,y_axis,-30,7)
+
+WMove(pump2,y_axis,-30,7)
+
+	while StableLoopSignalTable[nr]==true do
+		Turn(PumpPillar1,y_axis,math.rad(3),0.5)
+		Turn(pump1,y_axis,math.rad(3),0.5)
+		
+		Turn(PumpPillar2,y_axis,math.rad(3),0.5)
+		Turn(pump2,y_axis,math.rad(-7),0.5)
+		Turn(GrowCapsule,y_axis,math.rad(5),2)
+		
+		Move(pump1,y_axis,-30,7)#
+		Spin(spinp1,y_axis,math.rad(42 ),4.5)
+		Spin(spinp2,y_axis,math.rad(-42),4.5)
+		WMove(pump2,y_axis,0,7)
+		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
+		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
+		Sleep(900)
+		Turn(PumpPillar2,y_axis,math.rad(-3),0.5)
+		Turn(pump1,y_axis,math.rad(3),0.5)
+		
+		Turn(PumpPillar1,y_axis,math.rad(-3),0.5)
+		Turn(pump2,y_axis,math.rad(2),0.5)
+		Turn(GrowCapsule,y_axis,math.rad(-5),2)
+		
+		Move(pump2,y_axis,-30,7)
+		Spin(spinp1,y_axis,math.rad(42 ),4.5)
+		Spin(spinp2,y_axis,math.rad(-42),4.5)
+		WMove(pump1,y_axis,0,7)
+		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
+		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
+		Sleep(900)
+	end
+	
+	Turn(PumpPillar1,y_axis,math.rad(0),0.5)
+	Turn(pump1,y_axis,math.rad(0),0.5)
+	
+	Turn(PumpPillar2,y_axis,math.rad(0),0.5)
+	Turn(pump2,y_axis,math.rad(0),0.5)
+	Turn(GrowCapsule,y_axis,math.rad(0),1)
  end
+ 
 function LoopimplantInsertion	 (buildProgress)
  end
 function LoopSewUp				 (buildProgress)
@@ -759,7 +812,17 @@ function LoopPumpedDown			 (buildProgress)
  end
 function LoopRelease			 (buildProgress)
  end
+StableLoopSignalTable={
+[1]=  true ,
+[2]=  true ,
+[3]=  true	 ,
+[4]=  true ,
+[5]=  true ,
+[6]=  true	 ,
+[7]=  true ,
 
+
+}
 StableLoopTable={
 [1]=  Loopfold				 ,
 [2]=  LoopeggDeploy			 ,
@@ -868,10 +931,10 @@ Instate=1
 			time=math.ceil(math.abs(1+math.ceil(1100+math.sin(itterate)*100)))
 			Sleep(time)
 				for i=1,#WindowTable-1,1 do
-					if i% ignoreVal==0 or  i% changeVal ~= 0 then
+					if i % ignoreVal == 0 or  i % changeVal ~= 0 then
 						Show(WindowTable[i]) 
 						Hide(WindowTable[i+1]) 
-					elseif i% changeVal == 0 then
+					elseif i % changeVal == 0 then
 						Hide(WindowTable[i]) 
 						Show(WindowTable[i+1]) 
 					else
