@@ -427,8 +427,8 @@ piecesTable=makePieceTable(unitID)
  piecesTable[#piecesTable+1]= Op016
  Sack = piece("Sack")
  piecesTable[#piecesTable+1]= Sack
- Sack01 = piece("Sack01")
- piecesTable[#piecesTable+1]= Sack01
+ SackWIP = piece("SackWIP")
+ piecesTable[#piecesTable+1]= SackWIP
  Stack01 = piece("Stack01")
  piecesTable[#piecesTable+1]= Stack01
  Window001 = piece("Window001")
@@ -574,6 +574,7 @@ TablesOfPiecesGroups={}
 StompTable={}
 StompBaseTable={}
 WindowTable={}
+
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
 center=piece"center"
@@ -583,14 +584,14 @@ end
 function stompBases()
 	while true do 
 			for i=1,#StompBaseTable do
-			Move(StompBaseTable[i],y_axis,-5,5)
-			Move(StompTable[i],y_axis,20,5)
+				Move(StompBaseTable[i],y_axis,-5,5)
+				Move(StompTable[i],y_axis,20,5)
 			end
 		WaitForMove(StompBaseTable[1],y_axis)
 		WaitForMove(StompTable[1],y_axis)
 			for i=1,#StompBaseTable do
-			Move(StompBaseTable[i],y_axis,9,5)
-			Move(StompTable[i],y_axis,0,5)
+				Move(StompBaseTable[i],y_axis,9,5)
+				Move(StompTable[i],y_axis,0,5)
 			end
 		WaitForMove(StompBaseTable[1],y_axis)
 
@@ -598,6 +599,8 @@ function stompBases()
 	end
 
 end
+	OperationSet= {}
+	 ArmsTable={}
 
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
@@ -605,61 +608,265 @@ function script.Create()
 	WindowTable=TablesOfPiecesGroups["Window"]
 	StompBaseTable=TablesOfPiecesGroups["StompBase"]
 	StompTable=TablesOfPiecesGroups["Stomp"]
+
+	OP_T=TablesOfPiecesGroups["Op"]
+	OPTA_T=TablesOfPiecesGroups["OPTA"]
+	OPFA_T=TablesOfPiecesGroups["OPFA"]
+	OPSA_T=TablesOfPiecesGroups["OPSA"]
+	OperationSet=mergeTables(OP_T,OPTA_T,OPFA_T,OPSA_T)
+	hideT(OperationSet)
+	for i=1,#OP_T, 1 do
+	ArmsTable[i]={}
+	end
+	
+	ToolLowT=TablesOfPiecesGroups["ToolLow"]
+	ToolUpT=TablesOfPiecesGroups["ToolUp"]
+	ToolMidT=TablesOfPiecesGroups["ToolMid"]
 	StartThread(randomBlink)
+	StartThread(setUp)
 	--StartThread(buildOS)
 	StartThread(stompBases)
 end
 
-function unfold	(buildProgress)			  
-speed= 50 *buildProgress/15
-	if boolDirection== true then --unfold
+function setUp()
+	Hide(Sack)
+	Hide(GrowCapsule)
+	Hide(BloodCapsule)
+	Hide(SackWIP)
+	Hide(EggPod)
+	--Hide Support Ader
+	--Hide EggPods
 
-		return CurrentStat,Instate, boolLoop 
+	fold(0,false,1)
+
+
+end
+
+function fold	(buildProgress,boolDirection, state)			  
+speed= 50 *buildProgress/15
+
+	if boolDirection== true then --unfold
+		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
+		WTurn(ToolUpT[1],x_axis,math.rad(37),speed)
+		WTurn(ToolUpT[2],z_axis,math.rad(-37),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(-37-115),speed)
+		WTurn(ToolUpT[4],z_axis,math.rad(37),speed)
+		
+		WTurn(ToolMidT[1],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[2],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[3],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[4],x_axis,math.rad(0),speed)
+		--resetHead
+	
+		WTurn(ToolUpT[1],x_axis,math.rad(0),speed)
+		WTurn(ToolUpT[2],z_axis,math.rad(0),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(0),speed)
+		WTurn(ToolUpT[4],z_axis,math.rad(0),speed)
+		showT(OperationSet)	
+		
+		return state,Instate  
 	 else 
+		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
+		reseT(OperationSet,speed,true,true)
+		hideT(OperationSet)
+	
+		WTurn(ToolMidT[1],x_axis,math.rad( 180),speed)
+		WTurn(ToolMidT[2],z_axis,math.rad(180),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(-115),speed)
+		WTurn(ToolMidT[3],x_axis,math.rad(-115),speed)
+		WTurn(ToolLowT[3],x_axis,math.rad(-90),speed)
+
+
+	
+	Turn(ToolMidT[4],z_axis,math.rad(180),speed)
 	 
-	  return CurrentStat,Instate, boolLoop 
+	  return CurrentStat,Instate  
 	  end
 end	 
- 
- 
-function eggDeploy(buildProgress)			 
- return CurrentStat,Instate, boolLoop 
+
+
+function eggDeploy(buildProgress)	
+Arm=ArmsTable[18]
+TurnPieceList({	Arm[1],90,0,0,speed,
+				Arm[2],0,0,127,speed,
+				Arm[3],88,0,0,speed,
+				Arm[4],-30,0,0,speed,
+				Arm[5],117,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+WaitForTurns(Arm)
+Move(Stack01,y_axis,12,4)
+Turn(Stack01,y_axis,math.rad(-22),4)
+WaitForTurns(Stack01)
+WaitForMove(Stack01,y_axis)
+Show(Op18)
+resetPiece(Stack01)
+TurnPieceList({	Arm[1],98,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+
+TurnPieceList({	Arm[1],-120,0,0,speed,
+				Arm[2],0,0,-25,	speed,
+				Arm[3],26,0,0,	speed,
+				Arm[4], -72,0,0,speed,
+				Arm[5],66,0,0,	speed,
+				Arm[6],31,-22,31,speed,
+			  },
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+Hide(Op18)
+Hide(Op19)
+Move(PumpPillar1,y_axis,-60,0)
+Move(PumpPillar2,y_axis,-60,0)
+Move(GrowCapsule,y_axis,-60,0)
+Show(GrowCapsule)
+reseT(Arm,speed)
+  
+
+		 
+return CurrentStat,Instate  
 end 
 
+function pumpUp		(buildProgress)	
+speed=0.1*(buildProgress/20)
+ 
+	Move(PumpPillar1,y_axis,0,speed)
+	Move(PumpPillar2,y_axis,0,speed)
+	Move(GrowCapsule,y_axis,0,speed)
 
-function pumpUp		(buildProgress)		  
- return CurrentStat,Instate, boolLoop 
- end
-function implantInsertion(buildProgress)	  
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate 
+end
+
+ function implantInsertion(buildProgress)	  
+ return CurrentStat,Instate  
  end
 function SewUp			(buildProgress)	 
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate  
  end
 function PumpedDown			(buildProgress)  
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate  
  end
 function Release		(buildProgress)	  
- return CurrentStat,Instate, boolLoop 
+ return CurrentStat,Instate  
  end
 
-function Loopunfold(buildProgress)				 
- end
+function Loopfold(buildProgress)				 
+end
+ 
 function LoopeggDeploy			 (buildProgress)
+	while true do
+		Hide(Egg)
+		Turn(Carusell,y_axis,math.rad(0),0.5)
+		WaitForTurn( Carusell,y_axis)
+		Move(Egg,y_axis,15,0)
+		Show(Egg)
+		Move(Egg,y_axis,0,9.81)
+		WaitForMove(Egg,y_axis)
+		Turn(Carusell,y_axis,math.rad(175),0.5)
+		WaitForTurn( Carusell,y_axis)
+		Turn(Carusell,y_axis,math.rad(230),0.5)
+		WaitForTurn( Carusell,y_axis)
+		
+	end
  end
-function LooppumpUp				 (buildProgress)
+ 
+ function sackTurn(nr)
+ecks=0
+sign=-1
+	 while StableLoopSignalTable[nr]==true do
+		ecks=ecks+1
+		Turn(Sack,y_axis,math.rad(ecks*90*sign),0)
+		Turn(Sack,y_axis,math.rad(ecks*90*sign),0)
+		if ecks % 16==0 then sign=sign*-1 end
+		Sleep(200)
+	end 
+ 
  end
-function LoopimplantInsertion	 (buildProgress)
- end
-function LoopSewUp				 (buildProgress)
- end
-function LoopPumpedDown			 (buildProgress)	
- end
-function LoopRelease			 (buildProgress)
+ 
+function LooppumpUp				 (nr)
+
+Move(pump1,y_axis,-30,7)
+
+WMove(pump2,y_axis,-30,7)
+StartThread(sackTurn, nr+1)
+	while StableLoopSignalTable[nr]==true do
+		Turn(PumpPillar1,y_axis,math.rad(3),0.5)
+		Turn(pump1,y_axis,math.rad(3),0.5)
+		
+		Turn(PumpPillar2,y_axis,math.rad(3),0.5)
+		Turn(pump2,y_axis,math.rad(-7),0.5)
+		Turn(GrowCapsule,y_axis,math.rad(5),2)
+		
+		Move(pump1,y_axis,-30,7)
+		Spin(spinp1,y_axis,math.rad(42 ),4.5)
+		Spin(spinp2,y_axis,math.rad(-42),4.5)
+		WMove(pump2,y_axis,0,7)
+		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
+		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
+		Sleep(450)
+		Turn(PumpPillar2,y_axis,math.rad(-3),0.5)
+		Turn(pump1,y_axis,math.rad(3),0.5)
+		
+		Turn(PumpPillar1,y_axis,math.rad(-3),0.5)
+		Turn(pump2,y_axis,math.rad(2),0.5)
+		Turn(GrowCapsule,y_axis,math.rad(-5),2)
+		
+		Move(pump2,y_axis,-30,7)
+		Spin(spinp1,y_axis,math.rad(42 ),4.5)
+		Spin(spinp2,y_axis,math.rad(-42),4.5)
+		WMove(pump1,y_axis,0,7)
+		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
+		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
+		Sleep(900)
+	end
+	
+	Turn(PumpPillar1,y_axis,math.rad(0),0.5)
+	Turn(pump1,y_axis,math.rad(0),0.5)
+	
+	Turn(PumpPillar2,y_axis,math.rad(0),0.5)
+	Turn(pump2,y_axis,math.rad(0),0.5)
+	Turn(GrowCapsule,y_axis,math.rad(0),1)
  end
 
+
+ 
+function LoopimplantInsertion	 (nr)
+	
+end
+
+function LoopSewUp				 (nr)
+ end
+function LoopPumpedDown			 (nr)	
+ end
+function LoopRelease			 (nr)
+ end
+StableLoopSignalTable={
+[1]=  true ,
+[2]=  true ,
+[3]=  true	 ,
+[4]=  true ,
+[5]=  true ,
+[6]=  true	 ,
+[7]=  true ,
+
+
+}
 StableLoopTable={
-[1]=  Loopunfold				 ,
+[1]=  Loopfold				 ,
 [2]=  LoopeggDeploy			 ,
 [3]=  LooppumpUp				 ,
 [4]=  LoopimplantInsertion	 ,
@@ -670,8 +877,8 @@ StableLoopTable={
 
 }
 
-UnfoldAnimationTable={
-[1]=  unfold				  ,
+foldAnimationTable={
+[1]=  fold				  ,
 [2]=  eggDeploy			 ,
 [3]=  pumpUp				  ,
 [4]=  implantInsertion	  ,
@@ -696,7 +903,7 @@ Instate=1
 	while boolBuilding==true do
 	roGress=math.ceil(100*progress)
 	
-	CurrentStat,Instate, boolLoop=UnfoldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
+	CurrentStat,Instate =foldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
 		if boolLoop and boolDirection == true then 
 			StableLoopTable[CurrentStat](roGress)
 		
@@ -766,10 +973,10 @@ Instate=1
 			time=math.ceil(math.abs(1+math.ceil(1100+math.sin(itterate)*100)))
 			Sleep(time)
 				for i=1,#WindowTable-1,1 do
-					if i% ignoreVal==0 or  i% changeVal ~= 0 then
+					if i % ignoreVal == 0 or  i % changeVal ~= 0 then
 						Show(WindowTable[i]) 
 						Hide(WindowTable[i+1]) 
-					elseif i% changeVal == 0 then
+					elseif i % changeVal == 0 then
 						Hide(WindowTable[i]) 
 						Show(WindowTable[i+1]) 
 					else
@@ -786,24 +993,16 @@ suddenDeathV(recentDamage)
 return 1
 end
 
-
 ----aimining & fire weapon
-
- 
  function script.AimFromWeapon1() 
 	return center 
 end
 
 
-
-
- 
  function script.QueryWeapon1() 
 	return center
 end
 
-
- 
  function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 
@@ -811,20 +1010,10 @@ end
 end
 
  
-
-
- 
  function script.FireWeapon1()	
 
 	return true
 end
-
-
-
-
- 
-
-
 
 
  function script.Activate()

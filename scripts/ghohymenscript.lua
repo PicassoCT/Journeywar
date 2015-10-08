@@ -493,7 +493,7 @@
 	end
 	
 	while true do
-			for k,v in ipairs(StateFunctionTable) do	
+			for k,v in pairs(StateFunctionTable) do	
 			Spring.Echo("JW::DebugLoop::"..k)
 			functionswitch(k, argTable)
 			Sleep(15000)

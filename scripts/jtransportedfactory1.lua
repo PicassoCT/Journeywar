@@ -28,7 +28,7 @@ function transferCommands()
 					
 					first=false
 					
-						for _,cmd in ipairs(CommandTable) do			
+						for _,cmd in pairs(CommandTable) do			
 							if #CommandTable ~= 0 then
 									if first==false then
 									first=true
