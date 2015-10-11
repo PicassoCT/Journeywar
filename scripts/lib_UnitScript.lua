@@ -2470,7 +2470,9 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 		if boolSync==false then
 		  tP(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
 		else
-		  turnSyncInSpeed(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
+			if not PieceList[i] then echo("TurnPieceList piece "..i.." missing") end
+			
+			turnSyncInSpeed(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
 		end
 		
 	  if boolTurnInOrder == true then 

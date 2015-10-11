@@ -257,24 +257,23 @@ piecesTable={}
  piecesTable[#piecesTable+1]= Dest1
   Dest3 = piece("Dest3")
  piecesTable[#piecesTable+1]= Dest3
-  Rectangle3 = piece("Rectangle3")
- piecesTable[#piecesTable+1]= Rectangle3
+
   Crationism2 = piece("Crationism2")
  piecesTable[#piecesTable+1]= Crationism2
   Crationism3 = piece("Crationism3")
  piecesTable[#piecesTable+1]= Crationism3
   Crationism4 = piece("Crationism4")
  piecesTable[#piecesTable+1]= Crationism4
-  OPFA04 = piece("OPFA04")
- piecesTable[#piecesTable+1]= OPFA04
-  OPSA04 = piece("OPSA04")
- piecesTable[#piecesTable+1]= OPSA04
-  OPTA04 = piece("OPTA04")
- piecesTable[#piecesTable+1]= OPTA04
-  OPTU04 = piece("OPTU04")
+  OPFA004 = piece("OPFA004")
+ piecesTable[#piecesTable+1]= OPFA004
+  OPSA004 = piece("OPSA004")
+ piecesTable[#piecesTable+1]= OPSA004
+  OPTA004 = piece("OPTA004")
+ piecesTable[#piecesTable+1]= OPTA004
+  OPTU04 = piece("OPTU004")
  piecesTable[#piecesTable+1]= OPTU04
-  OPVA04 = piece("OPVA04")
- piecesTable[#piecesTable+1]= OPVA04
+  OPVA004 = piece("OPVA004")
+ piecesTable[#piecesTable+1]= OPVA004
   Op4 = piece("Op4")
  piecesTable[#piecesTable+1]= Op4
   OPFA018 = piece("OPFA018")
@@ -313,18 +312,18 @@ piecesTable={}
  piecesTable[#piecesTable+1]= ToolMid2
   ToolUp2 = piece("ToolUp2")
  piecesTable[#piecesTable+1]= ToolUp2
-  OPFA020 = piece("OPFA020")
- piecesTable[#piecesTable+1]= OPFA020
-  OPSA020 = piece("OPSA020")
- piecesTable[#piecesTable+1]= OPSA020
-  OPTA020 = piece("OPTA020")
- piecesTable[#piecesTable+1]= OPTA020
-  OPTU020 = piece("OPTU020")
- piecesTable[#piecesTable+1]= OPTU020
-  OPVA020 = piece("OPVA020")
- piecesTable[#piecesTable+1]= OPVA020
-  Op20 = piece("Op20")
- piecesTable[#piecesTable+1]= Op20
+  OPFA019 = piece("OPFA019")
+ piecesTable[#piecesTable+1]= OPFA019
+  OPSA019 = piece("OPSA019")
+ piecesTable[#piecesTable+1]= OPSA019
+  OPTA019 = piece("OPTA019")
+ piecesTable[#piecesTable+1]= OPTA019
+  OPTU019 = piece("OPTU019")
+ piecesTable[#piecesTable+1]= OPTU019
+  OPVA019 = piece("OPVA019")
+ piecesTable[#piecesTable+1]= OPVA019
+  Op19 = piece("Op19")
+ piecesTable[#piecesTable+1]= Op19
   OPFA010 = piece("OPFA010")
  piecesTable[#piecesTable+1]= OPFA010
   OPSA010 = piece("OPSA010")
@@ -335,8 +334,8 @@ piecesTable={}
  piecesTable[#piecesTable+1]= OPTA018
   OPVA010 = piece("OPVA010")
  piecesTable[#piecesTable+1]= OPVA010
-  Op010 = piece("Op010")
- piecesTable[#piecesTable+1]= Op010
+  Op10 = piece("Op10")
+ piecesTable[#piecesTable+1]= Op10
   OPFA011 = piece("OPFA011")
  piecesTable[#piecesTable+1]= OPFA011
   OPSA011 = piece("OPSA011")
@@ -419,8 +418,8 @@ piecesTable={}
  piecesTable[#piecesTable+1]= OPTU017
   OPVA017 = piece("OPVA017")
  piecesTable[#piecesTable+1]= OPVA017
-  Op017 = piece("Op017")
- piecesTable[#piecesTable+1]= Op017
+  Op17 = piece("Op17")
+ piecesTable[#piecesTable+1]= Op17
   Sack = piece("Sack")
  piecesTable[#piecesTable+1]= Sack
   SackWIP = piece("SackWIP")
@@ -602,19 +601,47 @@ function script.Create()
 	StompTable=TablesOfPiecesGroups["Stomp"]
 
 	OP_T  =TablesOfPiecesGroups["Op"]
+	table.remove(OP_T,Op18)
+	table.remove(OP_T,Op4)
 	OPTA_T=TablesOfPiecesGroups["OPTA"]
 	
 		
 	OPFA_T=TablesOfPiecesGroups["OPFA"]
-		
+	OPVA_T=TablesOfPiecesGroups["OPVA"]
+	
 	OPSA_T=TablesOfPiecesGroups["OPSA"]
 		
 	OPTU_T=TablesOfPiecesGroups["OPTU"]
+	
+	zeropad="00"	
+	for i=1,19,1 do
+
+		if i >9 then zeropad="0" end
+	ArmsTable[i]={}
+	name="OPFA"..zeropad..i
+	ArmsTable[i][1]=piece(name)
+	name="OPSA"..zeropad..i	
+	ArmsTable[i][2]=piece(name)
+	name="OPTA"..zeropad..i
+	ArmsTable[i][3]=piece(name)
+	name="OPTU"..zeropad..i
+	ArmsTable[i][4]=piece(name)
+	name="OPVA"..zeropad..i
+	ArmsTable[i][5]=piece(name)
+	name="Op"..i
+	ArmsTable[i][6]=piece(name)
+	
+		for k=1,6,1 do
+			assert(ArmsTable[i][k])
+			echo(k)
+		end
+	end	
 		
 	OperationSet=TableMergeTable(OP_T,OPTA_T)	
 	OperationSet=TableMergeTable(OperationSet,OPFA_T)	
 	OperationSet=TableMergeTable(OperationSet,OPSA_T)	
 	OperationSet=TableMergeTable(OperationSet,OPTU_T)	
+	OperationSet=TableMergeTable(OperationSet,OPVA_T)	
 		
 	crateT =	TablesOfPiecesGroups["Crate"]
 	CrationismT =	TablesOfPiecesGroups["Crationism"]
@@ -644,6 +671,7 @@ Hide (pece)
 end
 
 function setUp()
+	Hide(centerpipes)
 	StartThread(stompBases)
 		StartThread(randomBlink)
 		StartThread(LoopeggDeploy)
@@ -666,10 +694,12 @@ function setUp()
 	
 	while true do
 		fold(10,false,1)
-		Sleep(500)
+		Sleep(5000)
 	
 		fold(10,true,1)
 		Sleep(10000)
+		eggDeploy(10,1)
+		Sleep(5000)
 	end
 
 
@@ -682,17 +712,18 @@ AttrapT={}
 
 function foldAttrapp(boolDirection,speed)
 
-	if boolDirection==true then
+	if boolDirection==true then --unfold
 		
-		WTurn(Attrap1,x_axis,math.rad(92),speed)	
+		
 		Turn(AU2,x_axis,math.rad(90),speed)
 		Turn(AU1,x_axis,math.rad(179),speed)
-			
-		Turn(Attrap2,x_axis,math.rad(113),speed)	
-		WTurn(Attrap3,x_axis,math.rad(178),speed)	
+		WTurn(Attrap1,x_axis,math.rad(92),speed/2)	
+		
+	
 		Turn(AU4,z_axis,math.rad(42),speed)
 		Turn(AU5,z_axis,math.rad(-222),speed)
-		
+		Turn(Attrap2,x_axis,math.rad(113),speed)	
+		WTurn(Attrap3,x_axis,math.rad(178),speed)	
 			
 		Turn(AU6,x_axis,math.rad(44),speed)
 		Turn(AU7,x_axis,math.rad(-103),speed)
@@ -713,8 +744,8 @@ function foldAttrapp(boolDirection,speed)
 		Turn(AU1,x_axis,math.rad(0),speed)	
 		WTurn(Attrap1,x_axis,math.rad(0),speed)	
 		
-		Turn(AU4,z_axis,math.rad(0),speed)
-		Turn(AU5,z_axis,math.rad(0),speed)
+		WTurn(AU4,z_axis,math.rad(0),speed)
+		WTurn(AU5,z_axis,math.rad(0),speed)
 		Turn(Attrap2,x_axis,math.rad(0),speed)	
 		Turn(Attrap3,x_axis,math.rad(0),speed)	
 	
@@ -775,9 +806,9 @@ speed= buildProgress/15
 		hideT(OperationSet)
 
 		
-		Turn(ToolMidT[4],z_axis,math.rad(180),speed)
+		Turn(ToolMidT[4],z_axis,math.rad(-175),speed)
 		WTurn(ToolMidT[2],z_axis,math.rad(180),speed)
-		
+		WTurn(ToolMidT[4],z_axis,math.rad(-180),speed)
 		WTurn(ToolMidT[1],x_axis,math.rad( 180),speed)
 		WTurn(ToolUpT[3],x_axis,math.rad(-65),speed)
 		WTurn(ToolMidT[3],x_axis,math.rad(-115),speed)
@@ -792,8 +823,11 @@ speed= buildProgress/15
 end	 
 
 
-function eggDeploy(buildProgress)	
+
+function eggDeploy(buildProgress,speed)	
 Arm=ArmsTable[18]
+hide("Op18",Op18)
+hide("Op4",Op4)
 TurnPieceList({	Arm[1],90,0,0,speed,
 				Arm[2],0,0,127,speed,
 				Arm[3],88,0,0,speed,
@@ -812,6 +846,7 @@ WaitForTurns(Stack01)
 WaitForMove(Stack01,y_axis)
 Show(Op18)
 resetPiece(Stack01)
+
 TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
@@ -835,13 +870,14 @@ TurnPieceList({	Arm[1],-120,0,0,speed,
 			  true, -- WaitForTurn
 			  true --synced
 			  )
+			  
 hide("Op18",Op18)
-hide("Op19",Op19)
+hide("Op4",Op4)
 Move(PumpPillar1,y_axis,-60,0)
 Move(PumpPillar2,y_axis,-60,0)
 Move(GrowCapsule,y_axis,-60,0)
 Show(GrowCapsule)
-echo()
+
 reseT(Arm,speed)
   
 
@@ -890,6 +926,7 @@ index=0
 		offx,offy=RotationMatrice(0,-8,math.rad(degToTurn))
 		Move(EggT[index],x_axis,offx,0)
 		Move(EggT[index],z_axis,offy,0)
+		Sleep(10)
 		Show(EggT[index])
 		Move(EggT[index],x_axis,0,9)
 		Move(EggT[index],z_axis,0,9)

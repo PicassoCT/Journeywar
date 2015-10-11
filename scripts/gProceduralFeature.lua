@@ -370,7 +370,7 @@ NamePerk={ --Generic SciFi Name   --generic dramatic description    --generic Sc
 [13]={name="The Garden", description= "Meditions off green", perk= aTerraFormation  },
 [14]={name="Oblivion", description= "Plans to dust", perk= aDistributor  },
 [15]={name="The Shipyard", description= "Forever under Construction", perk= aAntiGravity  },
-[16]={name="The Dominiondepot", description= "Fuel for the Fools", perk= aRefuel  },
+[16]={name="The generic Alien Shoebox", description= "Fuel for the Fools", perk= aRefuel  },
 [17]={name="The Healinghouses", description= "Mendo Mori", perk= aCure  },
 [18]={name="The Arsenal", description= "Memento Mori, deploy Devouri", perk= aChainExplosion  },
 

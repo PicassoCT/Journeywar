@@ -145,6 +145,9 @@
 	 
 	--StateChangeAnimations
 		function Eat(argTable)
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		
 		SignalTable["STATE"]=false
 		Sleep(500)
 		SignalTable["STATE"]=true
@@ -211,6 +214,9 @@
 		end
 		
 		function DrinkWater(argTable)
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		
 		SignalTable["STATE"]=false
 		Sleep(500)
 		SignalTable["STATE"]=true
@@ -241,6 +247,9 @@
 		end
 
 		function HideInHerd(argTable)
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		
 		SetSignalMask(SIG_STATE) 
 					-- [1]=other )	
 			while true do 
@@ -275,6 +284,8 @@
 				if math.random(0,1)== 1 then alarmed() end
 			Sleep(150)
 			end 
+			Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+			Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
 		end
 		
 			function RecoveringLonely(argTable)
@@ -301,6 +312,9 @@
 		end
 
 		function RunningForLive(argTable)
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		
 		SetSignalMask(SIG_STATE) 
 		SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
 			while true do 
@@ -317,6 +331,9 @@
 		end
 		
 		function eatingGrass()
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		
 		for j=1,math.ceil(math.random(5,11)), 1 do
 					for i=1,3, 1 do
 					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(81),42)
@@ -344,6 +361,9 @@
 		end
 		
 		function alarmed()
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		
 		Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-22), 39)
 		WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 		leftRight=-1 
@@ -399,6 +419,8 @@
 
 		end		
 				
+				
+			
 		function SleepAnimation()
 				Move(AniT[AgeStage]["Body"],y_axis, -8, 12)
 
@@ -425,14 +447,14 @@
 	 
 	 
 	function script.Create()
-	Spring.Echo("JW::GHohymen::EnteringCreate")
+
 	Age(AgeStage)
 	StartThread(TheyGrowUpSoFast)
-	Spring.Echo("JW::GHohymen::EnteringDebugLoop")
-	StartThread(debugLoop)
+	--StartThread(debugLoop)
 	Spring.Echo("JW::GHohymen::StartingWalkThread")
 	StartThread(walk)
 	StartThread(reProduce)
+	reseT(piecesTable)
 	end
 			
 	function script.Killed(recentDamage,_)
