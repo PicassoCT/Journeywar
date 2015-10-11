@@ -128,8 +128,7 @@ piecesTable={}
  piecesTable[#piecesTable+1]= ader7
   Carusell = piece("Carusell")
  piecesTable[#piecesTable+1]= Carusell
-  Egg = piece("Egg")
- piecesTable[#piecesTable+1]= Egg
+
   OPFA001 = piece("OPFA001")
  piecesTable[#piecesTable+1]= OPFA001
   OPSA001 = piece("OPSA001")
@@ -424,8 +423,8 @@ piecesTable={}
  piecesTable[#piecesTable+1]= Op017
   Sack = piece("Sack")
  piecesTable[#piecesTable+1]= Sack
-  Sack01 = piece("Sack01")
- piecesTable[#piecesTable+1]= Sack01
+  SackWIP = piece("SackWIP")
+ piecesTable[#piecesTable+1]= SackWIP
   Stack01 = piece("Stack01")
  piecesTable[#piecesTable+1]= Stack01
   Window001 = piece("Window001")
@@ -602,81 +601,191 @@ function script.Create()
 	StompBaseTable=TablesOfPiecesGroups["StompBase"]
 	StompTable=TablesOfPiecesGroups["Stomp"]
 
-	OP_T=TablesOfPiecesGroups["Op"]
-	OPTA_T=TablesOfPiecesGroups["OPTA0"]
-	OPFA_T=TablesOfPiecesGroups["OPFA0"]
-	OPSA_T=TablesOfPiecesGroups["OPSA0"]
-	OPTU_T=TablesOfPiecesGroups["OPTU0"]
+	OP_T  =TablesOfPiecesGroups["Op"]
+	OPTA_T=TablesOfPiecesGroups["OPTA"]
 	
+		
+	OPFA_T=TablesOfPiecesGroups["OPFA"]
+		
+	OPSA_T=TablesOfPiecesGroups["OPSA"]
+		
+	OPTU_T=TablesOfPiecesGroups["OPTU"]
+		
+	OperationSet=TableMergeTable(OP_T,OPTA_T)	
+	OperationSet=TableMergeTable(OperationSet,OPFA_T)	
+	OperationSet=TableMergeTable(OperationSet,OPSA_T)	
+	OperationSet=TableMergeTable(OperationSet,OPTU_T)	
+		
+	crateT =	TablesOfPiecesGroups["Crate"]
+	CrationismT =	TablesOfPiecesGroups["Crationism"]
+	AttrapT =	TablesOfPiecesGroups["Attrap"]
+	AUT =	TablesOfPiecesGroups["AU"]
 
-	
-	
-	OperationSet=mergeTables(OP_T,OPTA_T,OPFA_T,OPSA_T,OPTU_T)
+
 	hideT(OperationSet)
 	for i=1,#OP_T, 1 do
-	ArmsTable[i]={}
+		ArmsTable[i]={}
 	end
 	
 	ToolLowT=TablesOfPiecesGroups["ToolLow"]
 	ToolUpT=TablesOfPiecesGroups["ToolUp"]
 	ToolMidT=TablesOfPiecesGroups["ToolMid"]
-	StartThread(randomBlink)
+	ImplanT=TablesOfPiecesGroups["Implant"]
+	DesT=TablesOfPiecesGroups["Dest"]
+
 	StartThread(setUp)
 	--StartThread(buildOS)
-	StartThread(stompBases)
+
+end
+
+function hide(name,pece)
+if not pece then Spring.Echo(name.." is not defined") end
+Hide (pece)
 end
 
 function setUp()
-	Hide(Sack)
-	Hide(GrowCapsule)
-	Hide(BloodCapsule)
-	Hide(SackWIP)
-	Hide(EggPod)
-	--Hide Support Ader
-	--Hide EggPods
+	StartThread(stompBases)
+		StartThread(randomBlink)
+		StartThread(LoopeggDeploy)
+	hide("Sack",Sack)
+	hide("GrowCapsule",GrowCapsule)
+	hide("BloodCapsule",BloodCapsule)
+	hide("SackWIP",SackWIP)
+	hide("EggPod",Op18)
+	hide("EggPod",Op19)
+	--hide Support Ader
+	--hide EggPods
+	hideT(OperationSet,"OperationSet")
+	Hide(Op18)
+	Hide(Op4)
+	hideT(crateT,"crateT")
+	hideT(CrationismT,"CrationismT")
+	hideT(DesT,"DesT")
+	hideT(ImplanT,"ImplanT")
+	
+	
+	while true do
+		fold(10,false,1)
+		Sleep(500)
+	
+		fold(10,true,1)
+		Sleep(10000)
+	end
 
-	fold(0,false,1)
 
+end
+CrationismT={}
+crateT={}
+ImplanT={}
+DesT={}
+AttrapT={}
+
+function foldAttrapp(boolDirection,speed)
+
+	if boolDirection==true then
+		
+		WTurn(Attrap1,x_axis,math.rad(92),speed)	
+		Turn(AU2,x_axis,math.rad(90),speed)
+		Turn(AU1,x_axis,math.rad(179),speed)
+			
+		Turn(Attrap2,x_axis,math.rad(113),speed)	
+		WTurn(Attrap3,x_axis,math.rad(178),speed)	
+		Turn(AU4,z_axis,math.rad(42),speed)
+		Turn(AU5,z_axis,math.rad(-222),speed)
+		
+			
+		Turn(AU6,x_axis,math.rad(44),speed)
+		Turn(AU7,x_axis,math.rad(-103),speed)
+		Turn(Attrap4,x_axis,math.rad(85),speed)	
+		
+		Turn(AU10,z_axis,math.rad(47),speed)
+		Turn(AU11,z_axis,math.rad(-98),speed)
+		Turn(Attrap6,z_axis,math.rad(51),speed)
+	
+		Turn(AU8,z_axis,math.rad(-32),speed)
+		Turn(AU9,z_axis,math.rad(97),speed)
+		Turn(Attrap5,z_axis,math.rad(-67),speed)
+	
+		Sleep(3000)
+	else
+	
+		Turn(AU2,x_axis,math.rad(0),speed)
+		Turn(AU1,x_axis,math.rad(0),speed)	
+		WTurn(Attrap1,x_axis,math.rad(0),speed)	
+		
+		Turn(AU4,z_axis,math.rad(0),speed)
+		Turn(AU5,z_axis,math.rad(0),speed)
+		Turn(Attrap2,x_axis,math.rad(0),speed)	
+		Turn(Attrap3,x_axis,math.rad(0),speed)	
+	
+		Turn(AU6,x_axis,math.rad(0),speed)
+		Turn(AU7,x_axis,math.rad(0),speed)
+		Turn(Attrap4,x_axis,math.rad(0),speed)	
+	
+		Turn(AU10,z_axis,math.rad(0),speed)
+		Turn(AU11,z_axis,math.rad(0),speed)
+		Turn(Attrap6,z_axis,math.rad(0),speed)
+		
+		Turn(AU8,z_axis,math.rad(0),speed)
+		Turn(AU9,z_axis,math.rad(0),speed)
+		WTurn(Attrap5,z_axis,math.rad(0),speed)
+		
+	end
 
 end
 
 function fold	(buildProgress,boolDirection, state)			  
-speed= 50 *buildProgress/15
+speed= buildProgress/15
+
 
 	if boolDirection== true then --unfold
+		foldAttrapp(boolDirection,speed)
 		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
-		WTurn(ToolUpT[1],x_axis,math.rad(37),speed)
-		WTurn(ToolUpT[2],z_axis,math.rad(-37),speed)
-		WTurn(ToolUpT[3],x_axis,math.rad(-37-115),speed)
-		WTurn(ToolUpT[4],z_axis,math.rad(37),speed)
+		Turn(ToolUpT[1],x_axis,math.rad(-37),speed)
+		Turn(ToolUpT[3],x_axis,math.rad(37-115),speed)
+		WTurn(ToolLowT[3],x_axis,math.rad(0),speed)
+		Turn(ToolUpT[1],x_axis,math.rad(0),speed)
+		Turn(ToolUpT[3],x_axis,math.rad(0),speed)	
 		
-		WTurn(ToolMidT[1],x_axis,math.rad(0),speed)
-		WTurn(ToolMidT[2],x_axis,math.rad(0),speed)
+		WTurn(ToolMidT[1],x_axis,math.rad(175),speed)		
+		Turn(ToolMidT[1],x_axis,math.rad(0),speed)		
 		WTurn(ToolMidT[3],x_axis,math.rad(0),speed)
-		WTurn(ToolMidT[4],x_axis,math.rad(0),speed)
+
+	
+		WTurn(ToolUpT[2],z_axis,math.rad(37),speed)		
+		WTurn(ToolUpT[4],z_axis,math.rad(-37),speed)
+		
+		
+		WTurn(ToolMidT[2],z_axis,math.rad(175),speed)		
+		WTurn(ToolMidT[4],z_axis,math.rad(-175),speed)		
+		Turn(ToolMidT[2],z_axis,math.rad(0),speed)		
+		Turn(ToolMidT[4],z_axis,math.rad(0),speed)
 		--resetHead
 	
-		WTurn(ToolUpT[1],x_axis,math.rad(0),speed)
-		WTurn(ToolUpT[2],z_axis,math.rad(0),speed)
-		WTurn(ToolUpT[3],x_axis,math.rad(0),speed)
+		
+		WTurn(ToolUpT[2],z_axis,math.rad(0),speed)		
 		WTurn(ToolUpT[4],z_axis,math.rad(0),speed)
 		showT(OperationSet)	
+		
 		
 		return state,Instate  
 	 else 
 		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
 		reseT(OperationSet,speed,true,true)
 		hideT(OperationSet)
-	
-		WTurn(ToolMidT[1],x_axis,math.rad( 180),speed)
+
+		
+		Turn(ToolMidT[4],z_axis,math.rad(180),speed)
 		WTurn(ToolMidT[2],z_axis,math.rad(180),speed)
-		WTurn(ToolUpT[3],x_axis,math.rad(-115),speed)
+		
+		WTurn(ToolMidT[1],x_axis,math.rad( 180),speed)
+		WTurn(ToolUpT[3],x_axis,math.rad(-65),speed)
 		WTurn(ToolMidT[3],x_axis,math.rad(-115),speed)
 		WTurn(ToolLowT[3],x_axis,math.rad(-90),speed)
-
+		foldAttrapp(boolDirection,speed)
 
 	
-	Turn(ToolMidT[4],z_axis,math.rad(180),speed)
+	
 	 
 	  return CurrentStat,Instate  
 	  end
@@ -726,12 +835,13 @@ TurnPieceList({	Arm[1],-120,0,0,speed,
 			  true, -- WaitForTurn
 			  true --synced
 			  )
-Hide(Op18)
-Hide(Op19)
+hide("Op18",Op18)
+hide("Op19",Op19)
 Move(PumpPillar1,y_axis,-60,0)
 Move(PumpPillar2,y_axis,-60,0)
 Move(GrowCapsule,y_axis,-60,0)
 Show(GrowCapsule)
+echo()
 reseT(Arm,speed)
   
 
@@ -764,20 +874,32 @@ function Release		(buildProgress)
 
 function Loopfold(buildProgress)				 
 end
- 
+
+
 function LoopeggDeploy			 (buildProgress)
+EggT=TablesOfPiecesGroups["Egg"]
+degToTurn=-45
+hideT(EggT)
+index=0
 	while true do
-		Hide(Egg)
-		Turn(Carusell,y_axis,math.rad(0),0.5)
-		WaitForTurn( Carusell,y_axis)
-		Move(Egg,y_axis,15,0)
-		Show(Egg)
-		Move(Egg,y_axis,0,9.81)
-		WaitForMove(Egg,y_axis)
-		Turn(Carusell,y_axis,math.rad(175),0.5)
-		WaitForTurn( Carusell,y_axis)
-		Turn(Carusell,y_axis,math.rad(230),0.5)
-		WaitForTurn( Carusell,y_axis)
+		degToTurn=degToTurn+45
+		WTurn(Carusell,y_axis,math.rad(degToTurn),0.5)
+		index=index%8+1
+		
+		Move(EggT[index],y_axis,15,0)
+		offx,offy=RotationMatrice(0,-8,math.rad(degToTurn))
+		Move(EggT[index],x_axis,offx,0)
+		Move(EggT[index],z_axis,offy,0)
+		Show(EggT[index])
+		Move(EggT[index],x_axis,0,9)
+		Move(EggT[index],z_axis,0,9)
+		
+		
+		WMove(EggT[index],y_axis,0,18.81)
+		WaitForMove(EggT[index],y_axis)
+		hideIndex=math.max(1,(index-5)+8)
+		if hideIndex < 1 then hideIndex = 1 end
+		Hide(EggT[hideIndex])
 		
 	end
  end
@@ -973,9 +1095,9 @@ Instate=1
 				for i=1,#WindowTable-1,2 do
 					if i % ignoreVal == 0 or  i % changeVal ~= 0 then
 						Show(WindowTable[i]) 
-						Hide(WindowTable[i+1]) 
+						hide("WindowTable[i+1]",WindowTable[i+1]) 
 					elseif i % changeVal == 0 then
-						Hide(WindowTable[i]) 
+						hide("WindowTable[i]",WindowTable[i]) 
 						Show(WindowTable[i+1]) 
 					end
 				end

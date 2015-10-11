@@ -199,7 +199,7 @@ it=math.random(1,6)
 x,y,z=Spring.GetUnitPosition(unitID)
 
 	for i=1, 360, i+it do
-	offx,offz=NDrehMatrix(1,radiUs,it)
+	offx,offz=RotationMatrice(1,radiUs,it)
 	offx,offz=x+offx,z+offz
 	h=Spring.GetGroundHeight(offx,offz)
 	spSpawnCEG("flames",offx,h+15,offz,0,1,0,50,0)

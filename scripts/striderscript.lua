@@ -274,7 +274,7 @@ LegTable[#LegTable+1]=piece"striderle6"
 			deg=(orgHeading-currentHeading)	
 				
 			-- we turn the MoveVector by 
-			tx,tz=NDrehMatrix(tx,tz,math.rad(currentHeading+deg)) --rad
+			tx,tz=RotationMatrice(tx,tz,math.rad(currentHeading+deg)) --rad
 			
 			
 			--Velocity comes as elmos per frame	

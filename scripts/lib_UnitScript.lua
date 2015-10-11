@@ -420,6 +420,7 @@ end
 
 -->Reset a Piece at speed
 function resetPiece(piecename,speed,boolWaitForIT)
+	if not piecename then return end
 Turn(piecename,x_axis,0,speed)
 Turn(piecename,y_axis,0,speed)
 Turn(piecename,z_axis,0,speed)
@@ -696,7 +697,7 @@ lspeed=speed or 0
 	
 	for i=1,#tableName do
 	resetPiece(tableName[i],lspeed,lboolWait)
-		if ShowAll then
+		if ShowAll and tableName[i] then
 		Show(tableName[i])
 		end
 	end
@@ -1589,17 +1590,27 @@ end
 
 --> Hides a PiecesTable, 
 function hideT(tablename,lowLimit,upLimit,delay)
-if not tablename then return end
+	if not tablename then return end
+	boolDebugActive= (lib_boolDebug==true and lowLimit and type(lowLimit) ~= "string")
 
 	if lowLimit and upLimit then
 		for i=upLimit,lowLimit, -1 do
-		Hide(tablename[i])
+			if tablename[i] then
+				Hide(tablename[i])
+			elseif boolDebugActive == true then
+				echo("In HideT, table ".. lowLimit .." contains a empty entry")
+			end
+			
 			if delay and delay > 0  then Sleep(delay) end
 		end
 
 	else
 		for i=1,table.getn(tablename), 1 do
-		Hide(tablename[i])
+			if tablename[i] then
+				Hide(tablename[i])
+			elseif boolDebugActive == true then
+				echo("In HideT, table ".. lowLimit .." contains a empty entry")
+			end
 		end
 	end
 end
@@ -1610,13 +1621,17 @@ function showT(tablename,lowLimit,upLimit,delay)
 	
 	if lowLimit and upLimit then
 		for i=lowLimit,upLimit, 1 do
-		Show(tablename[i])
+			if tablename[i] then
+				Show(tablename[i])
+			end
 		if delay and delay > 0 then Sleep(delay) end
 		end
 
 	else
 		for i=1,table.getn(tablename), 1 do
-		Show(tablename[i])
+			if tablename[i] then
+				Show(tablename[i])
+			end
 		end
 	end
 end
@@ -1689,7 +1704,7 @@ return dirX,dirY,dirZ
 end
 
 -->RotationMatrice for allready Normalized Values
-function NDrehMatrix(x,z,rad)
+function RotationMatrice(x,z,rad)
 
 	   sinus=math.sin(rad)
 	   cosinus= math.cos(rad)
@@ -2423,8 +2438,29 @@ return
 end
 
 -->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
-function snakeOnAPlane(PieceList,SnakePoints,speed)
+-- ListPiece={[1]={ cx=0,y=0,z=0, 		--current setting allowed
+				-- lx = 25,ly = 25,lz = 25,-- length of piece 
+				--orgx, orgy, orgz
+				-- sx=false, sy=true,sz=true, --active axis
+				--lastPointIndex
+				--length
+				
+			-- } --Active Axis for this piece
 
+			-- }
+
+-- SnakePoint={ x,y,z     -- Worldspace Coordinates
+			 -- vx,vy,vz  --VoluminaCube
+				
+			-- }
+			
+
+function snakeOnAPlane(PieceList,SnakePoints,speed, startpoint)
+--get StartPosition and Move First Piece Into the Cube
+
+--for every piece from the list get the future targetpoint and turntowards , 
+	--solve arm 
+	
 
 end
 
@@ -3118,19 +3154,24 @@ end
 	
 	function numTabletokeyTable(T)
 	reT={}
-	for i=1,#T do
-	reT[T[i]]=T[i]
-	end
+		if not T then return reT end
+	
+		for i=1,#T do
+			if T[i] then 
+			reT[T[i]]=T[i]
+			end
+		end
 	return reT
 	end
 		
 	function mergeTables(...)
 		Table={}
-			if not arg then return {} end
-
-		for k,v in pairs(arg) do
+			if not arg then return end
 			
-			Table=TableMergeTable(Table,v)
+		for _,v in pairs(arg) do
+			if v and type(v)=="table" then
+				Table=TableMergeTable(Table,v)
+			end
 			
 		end
 

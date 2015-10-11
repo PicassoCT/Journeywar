@@ -458,9 +458,14 @@ function Spring.UnitScript.Signal(mask)
 end
 
 function Spring.UnitScript.Hide(piece)
-		if bool_GadgetDebug==true and type(piece) ~= "number" then
-				Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).." with value ".. piece.." instead")
+
+		if not piece then 
+			Spring.Echo("No piecenumber in Hide() function") 
+			return
+		elseif bool_GadgetDebug==true and type(piece) ~= "number" then
+			Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).." with value ".. piece.." instead")
 		end
+		
         return sp_SetPieceVisibility(piece, false)
 end
 

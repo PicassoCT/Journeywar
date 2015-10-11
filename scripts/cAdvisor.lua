@@ -462,7 +462,7 @@ function whirlAndDropProjectiles(timeSinceLastCall,ux,uy,uz)
 	px,py,pz=Spring.GetProjectilePosition(k)
 		if px and ux then
 		SpeedAtStart=(v*2)/TimeTillDestroy
-		x,z=NDrehMatrix(px-ux,pz-uz,math.rad(v*0.001999198*(SpeedAtStart)))
+		x,z=RotationMatrice(px-ux,pz-uz,math.rad(v*0.001999198*(SpeedAtStart)))
 		Spring.SetProjectilePosition(k,x+ux,py,z+uz)
 		CurrentlyControlledProjectiles[k]=v-timeSinceLastCall
 		
