@@ -421,6 +421,9 @@ end
 -->Reset a Piece at speed
 function resetPiece(piecename,speed,boolWaitForIT)
 	if not piecename then return end
+	
+	
+	
 Turn(piecename,x_axis,0,speed)
 Turn(piecename,y_axis,0,speed)
 Turn(piecename,z_axis,0,speed)
@@ -694,12 +697,16 @@ end
 function reseT(tableName,speed, ShowAll, boolWait)
 lboolWait=boolWait or false
 lspeed=speed or 0
+
 	
+
 	for i=1,#tableName do
-	resetPiece(tableName[i],lspeed,lboolWait)
-		if ShowAll and tableName[i] then
-		Show(tableName[i])
-		end
+	
+			resetPiece(tableName[i],lspeed,lboolWait)
+				if ShowAll and tableName[i] then
+				Show(tableName[i])
+				end
+		
 	end
 end
 
@@ -1479,6 +1486,7 @@ function turnSyncInTimeTable(Table, time)
 end
 
 function turnSyncInSpeed(piecename,x,y,z,speed)
+if not piecename then return end
 	if speed ==0 then
 		tP(piecename,x,y,z,speed)
 		return
@@ -2465,23 +2473,31 @@ function snakeOnAPlane(PieceList,SnakePoints,speed, startpoint)
 end
 
 function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
-	for i=1,#PieceList-5,5 do
+
+
+
+
+	for i=1,table.getn(PieceList)-5,5 do
 	
 		if boolSync==false then
-		  tP(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
+		  tP(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4])
 		else
-			if not PieceList[i] then echo("TurnPieceList piece "..i.." missing") end
-			
-			turnSyncInSpeed(PieceList[i],math.rad(PieceList[i+1]),math.rad(PieceList[i+2]), math.rad(PieceList[i+3]),PieceList[i+4])
+			if not PieceList[i] then 
+			echo("TurnPieceList piece "..i.." missing") 
+			else	
+			turnSyncInSpeed(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4])
+			end
 		end
 		
 	  if boolTurnInOrder == true then 
+	
 		WaitForTurns(PieceList[i])
+	
 	  end		
 	end
 	
 	if boolTurnInOrder==false and boolWaitForTurn==true then
-		for i=1,#PieceList-5,5 do
+		for i=1,table.getn(PieceList)-5,5 do
 			WaitForTurns(PieceList[i])
 		end
 	end

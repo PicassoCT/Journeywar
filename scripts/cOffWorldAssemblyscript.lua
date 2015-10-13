@@ -594,7 +594,7 @@ end
 	 ArmsTable={}
 
 function script.Create()
-	generatepiecesTableAndArrayCode(unitID)
+	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	WindowTable=TablesOfPiecesGroups["Window"]
 	StompBaseTable=TablesOfPiecesGroups["StompBase"]
@@ -616,7 +616,7 @@ function script.Create()
 	zeropad="00"	
 	for i=1,19,1 do
 
-		if i >9 then zeropad="0" end
+		if i == 10 then zeropad="0" end
 	ArmsTable[i]={}
 	name="OPFA"..zeropad..i
 	ArmsTable[i][1]=piece(name)
@@ -632,8 +632,9 @@ function script.Create()
 	ArmsTable[i][6]=piece(name)
 	
 		for k=1,6,1 do
-			assert(ArmsTable[i][k])
-			echo(k)
+			if ArmsTable[i][k] == nil then			
+			echo("coffworldAssembly::piece missing Arm"..i.." / ".. k)
+			end
 		end
 	end	
 		
@@ -650,9 +651,7 @@ function script.Create()
 
 
 	hideT(OperationSet)
-	for i=1,#OP_T, 1 do
-		ArmsTable[i]={}
-	end
+
 	
 	ToolLowT=TablesOfPiecesGroups["ToolLow"]
 	ToolUpT=TablesOfPiecesGroups["ToolUp"]
@@ -661,7 +660,7 @@ function script.Create()
 	DesT=TablesOfPiecesGroups["Dest"]
 
 	StartThread(setUp)
-	--StartThread(buildOS)
+	StartThread(buildOS)
 
 end
 
@@ -671,7 +670,7 @@ Hide (pece)
 end
 
 function setUp()
-	Hide(centerpipes)
+	hide("centerpipes",centerpipes)
 	StartThread(stompBases)
 		StartThread(randomBlink)
 		StartThread(LoopeggDeploy)
@@ -684,22 +683,28 @@ function setUp()
 	--hide Support Ader
 	--hide EggPods
 	hideT(OperationSet,"OperationSet")
-	Hide(Op18)
-	Hide(Op4)
+	hide("Op18",Op18)
+	hide("Op4",Op4)
 	hideT(crateT,"crateT")
 	hideT(CrationismT,"CrationismT")
 	hideT(DesT,"DesT")
 	hideT(ImplanT,"ImplanT")
 	
+	echo("coffworldAssembly:Never Reached me!")
 	
 	while true do
-		fold(10,false,1)
-		Sleep(5000)
+	--	fold(false,1)
+	--	Sleep(5000)
 	
-		fold(10,true,1)
+		fold(true,1)
 		Sleep(10000)
-		eggDeploy(10,1)
-		Sleep(5000)
+		recReseT(OperationSet)
+		while true do
+			StartThread(eggDeploy,1)
+			Sleep(5000)
+		
+	
+		end
 	end
 
 
@@ -765,8 +770,9 @@ function foldAttrapp(boolDirection,speed)
 
 end
 
-function fold	(buildProgress,boolDirection, state)			  
-speed= buildProgress/15
+function fold	(boolDirection, state)			  
+Sleep(100)
+speed= math.max(1,buildProgress/15)
 
 
 	if boolDirection== true then --unfold
@@ -797,6 +803,8 @@ speed= buildProgress/15
 		WTurn(ToolUpT[2],z_axis,math.rad(0),speed)		
 		WTurn(ToolUpT[4],z_axis,math.rad(0),speed)
 		showT(OperationSet)	
+		Hide(Op18)
+		Hide(Op4)
 		
 		
 		return state,Instate  
@@ -824,68 +832,78 @@ end
 
 
 
-function eggDeploy(buildProgress,speed)	
-Arm=ArmsTable[18]
+function eggDeploy(speed)	
+
+ Arm=ArmsTable[18]
 hide("Op18",Op18)
 hide("Op4",Op4)
-TurnPieceList({	Arm[1],90,0,0,speed,
-				Arm[2],0,0,127,speed,
-				Arm[3],88,0,0,speed,
-				Arm[4],-30,0,0,speed,
-				Arm[5],117,0,0,speed,
-				Arm[6],0,0,0,speed,
-			  },
+
+
+
+local go={		Arm[1], 90,0,0,speed,
+				Arm[2], 0,0,-127,speed,
+				Arm[3], 88,0,0,speed,
+				Arm[4], -30,0,0,speed,
+				Arm[5], 117,0,0,speed,
+				Arm[6], 0,0,0,speed,
+			  }
+	echoTable(go)		  
+TurnPieceList(go,
 			  false, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
 WaitForTurns(Arm)
 Move(Stack01,y_axis,12,4)
-Turn(Stack01,y_axis,math.rad(-22),4)
-WaitForTurns(Stack01)
+WTurn(Stack01,y_axis,math.rad(-22),4)
 WaitForMove(Stack01,y_axis)
 Show(Op18)
 resetPiece(Stack01)
-
-TurnPieceList({	Arm[1],98,0,0,speed,
+local go={		Arm[1],98,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
 				Arm[5],0,0,0,speed,
 				Arm[6],0,0,0,speed,
-			  },
+			  }
+			  
+TurnPieceList(go,
 			  true, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
-
-TurnPieceList({	Arm[1],-120,0,0,speed,
+WaitForTurns(Arm)			 
+			  
+local go={		Arm[1],-120,0,0,speed,
 				Arm[2],0,0,-25,	speed,
 				Arm[3],26,0,0,	speed,
 				Arm[4], -72,0,0,speed,
 				Arm[5],66,0,0,	speed,
 				Arm[6],31,-22,31,speed,
-			  },
+			  }
+
+TurnPieceList(go,
 			  true, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
 			  
-hide("Op18",Op18)
+WaitForTurns(Arm)
 hide("Op4",Op4)
 Move(PumpPillar1,y_axis,-60,0)
 Move(PumpPillar2,y_axis,-60,0)
 Move(GrowCapsule,y_axis,-60,0)
 Show(GrowCapsule)
-
-reseT(Arm,speed)
+Show(centerpipes)
+hide("Op18",Op18)
+recReseT(Arm,speed)
   
 
 		 
-return CurrentStat,Instate  
+return 1
 end 
 
-function pumpUp		(buildProgress)	
+function pumpUp		()	
 speed=0.1*(buildProgress/20)
  
 	Move(PumpPillar1,y_axis,0,speed)
@@ -895,24 +913,24 @@ speed=0.1*(buildProgress/20)
  return CurrentStat,Instate 
 end
 
- function implantInsertion(buildProgress)	  
+ function implantInsertion()	  
  return CurrentStat,Instate  
  end
-function SewUp			(buildProgress)	 
+function SewUp			()	 
  return CurrentStat,Instate  
  end
-function PumpedDown			(buildProgress)  
+function PumpedDown			()  
  return CurrentStat,Instate  
  end
-function Release		(buildProgress)	  
+function Release		()	  
  return CurrentStat,Instate  
  end
 
-function Loopfold(buildProgress)				 
+function Loopfold()				 
 end
 
 
-function LoopeggDeploy			 (buildProgress)
+function LoopeggDeploy			 ()
 EggT=TablesOfPiecesGroups["Egg"]
 degToTurn=-45
 hideT(EggT)
@@ -934,9 +952,9 @@ index=0
 		
 		WMove(EggT[index],y_axis,0,18.81)
 		WaitForMove(EggT[index],y_axis)
-		hideIndex=math.max(1,(index-5)+8)
-		if hideIndex < 1 then hideIndex = 1 end
-		Hide(EggT[hideIndex])
+		hideIndex=math.max(math.min(#EggT,(index-5)+8),1)
+		
+		hide("EggT[hideIndex]"..hideIndex,EggT[hideIndex])
 		
 	end
  end
@@ -955,7 +973,7 @@ sign=-1
  end
  
 function LooppumpUp				 (nr)
-
+StableLoopSignalTable[nr]=true
 Move(pump1,y_axis,-30,7)
 
 WMove(pump2,y_axis,-30,7)
@@ -1046,50 +1064,21 @@ foldAnimationTable={
 
 
 boolBuilding=false
-progress=0
 
-
-
-function BuildingAnimation(buildID,boolDirection)
-	if buildID then
-		Spring.SetUnitAlwaysVisible(buildID,false)
-	end
-	
-CurrentStat=1
-Instate=1
-	while boolBuilding==true do
-	roGress=math.ceil(100*progress)
-	
-	CurrentStat,Instate =foldAnimationTable[CurrentStat](roGress,boolDirection,Instate)
-		if boolLoop and boolDirection == true then 
-			StableLoopTable[CurrentStat](roGress)
-		
-		end
-		
-	if buildID then
-		Spring.SetUnitAlwaysVisible(buildID,true)
-	end
-	
-	Sleep(10)
-	end
-
-
- end 
- 
+ buildProgress=0
  
  function buildOS()
 --TestLoop
-	StartThrad(BuildingAnimation, buildID,false)
+
 	while true do 
-	progress=0
-	StartThrad(BuildingAnimation, buildID,true)
+
 	
 		for i=1,100 do
-		progress=i/100
+		buildProgress=i/100
 		Sleep(2000)
 		end
 	Sleep(5000)
-		StartThrad(BuildingAnimation, buildID,false)
+		--StartThread(BuildingAnimation, buildID,false)
 	end
 
 			while true do
@@ -1097,17 +1086,22 @@ Instate=1
 				if buildID  then 
 				boolBuilding=true
 				progress=0
-				StartThrad(BuildingAnimation, buildID,false)
+				buildProgress=0
+				--StartThread(BuildingAnimation, buildID,false)
 				
 				--building something
+					Spring.SetUnitAlwaysVisible(buildID,false)
 					while  Spring.ValidUnitID(buildID)==true and progress < 1 do
 						hp,progress=Spring.GetUnitHealth(buildID)
-						
+						buildProgress=math.ceil(progress*100)
 					Sleep(100)
 					end
+				Spring.SetUnitAlwaysVisible(buildID,true)
 				boolBuilding=false
 				end
 			Sleep(500)
+			--Debug DelMe
+			buildProgress=math.random(1,100)
 			end
 			
 
