@@ -472,18 +472,23 @@ end
 
 -->Waits for anyTurnToComplete
 function WaitForTurns(...)
-	if arg == nil  then
+	if not arg  then
 		return 
+	end
 	
-	elseif type(arg) == "table" then
+	typeArg=type(arg)
+	
+	if typeArg == "table" then
 
 			for k,v in pairs(arg) do
+				if type(v)=="number" then
 				WaitForTurn(v,x_axis)
 				WaitForTurn(v,y_axis)
 				WaitForTurn(v,z_axis)
+				end
 			end
 			return 
-	elseif type(arg) == "number" then
+	elseif typeArg == "number" then
 			WaitForTurn(arg,x_axis)
 			WaitForTurn(arg,y_axis)
 			WaitForTurn(arg,z_axis)
@@ -1485,6 +1490,8 @@ function turnSyncInTimeTable(Table, time)
 
 end
 
+
+
 function turnSyncInSpeed(piecename,x,y,z,speed)
 if not piecename then return end
 	if speed ==0 then
@@ -1492,10 +1499,15 @@ if not piecename then return end
 		return
 	end
 
-xtime=math.abs(x)/speed
-ytime=math.abs(y)/speed
-ztime=math.abs(z)/speed
+tx=	absoluteRotation(piecename,x_axis,x)+0.01
+ty=	absoluteRotation(piecename,y_axis,y)+0.01
+tz=	absoluteRotation(piecename,z_axis,z)+0.01
+	
+xtime=math.abs(tx)/speed
+ytime=math.abs(ty)/speed
+ztime=math.abs(tz)/speed
 maxtime=math.max(xtime,math.max(ytime,ztime))
+if maxtime== 0 then maxtime=0.1 end
 
 Turn(piecename,x_axis,math.rad(x),(xtime/maxtime)*speed)
 Turn(piecename,y_axis,math.rad(y),(ytime/maxtime)*speed)
@@ -3516,7 +3528,7 @@ end
 					if v and v.number and v.name == tableName then
 						piecename=v.name..v.number
 						if lib_boolDebug==true then
-							if pieceMap[piecename] then 
+							if lib_boolDebug==true and  pieceMap[piecename] then 
 								Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
 							else
 								Spring.Echo("pieceMap contains no piece named "..piecename)

@@ -690,21 +690,24 @@ function setUp()
 	hideT(DesT,"DesT")
 	hideT(ImplanT,"ImplanT")
 	
-	echo("coffworldAssembly:Never Reached me!")
-	
-	while true do
 	--	fold(false,1)
+	
+	echo("coffworldAssembly:Never Reached me!")
+		fold(true,1)
+	while true do
+
 	--	Sleep(5000)
 	
-		fold(true,1)
-		Sleep(10000)
-		recReseT(OperationSet)
-		while true do
-			StartThread(eggDeploy,1)
-			Sleep(5000)
-		
 	
-		end
+		Sleep(10000)
+	
+	
+		eggDeploy(0.5)
+	
+			Sleep(15000)
+		
+	    
+
 	end
 
 
@@ -718,18 +721,6 @@ AttrapT={}
 function foldAttrapp(boolDirection,speed)
 
 	if boolDirection==true then --unfold
-		
-		
-		Turn(AU2,x_axis,math.rad(90),speed)
-		Turn(AU1,x_axis,math.rad(179),speed)
-		WTurn(Attrap1,x_axis,math.rad(92),speed/2)	
-		
-	
-		Turn(AU4,z_axis,math.rad(42),speed)
-		Turn(AU5,z_axis,math.rad(-222),speed)
-		Turn(Attrap2,x_axis,math.rad(113),speed)	
-		WTurn(Attrap3,x_axis,math.rad(178),speed)	
-			
 		Turn(AU6,x_axis,math.rad(44),speed)
 		Turn(AU7,x_axis,math.rad(-103),speed)
 		Turn(Attrap4,x_axis,math.rad(85),speed)	
@@ -741,6 +732,18 @@ function foldAttrapp(boolDirection,speed)
 		Turn(AU8,z_axis,math.rad(-32),speed)
 		Turn(AU9,z_axis,math.rad(97),speed)
 		Turn(Attrap5,z_axis,math.rad(-67),speed)
+		
+		Turn(AU2,x_axis,math.rad(90),speed)
+		Turn(AU1,x_axis,math.rad(179),speed)
+		WTurn(Attrap1,x_axis,math.rad(92),speed/2)	
+		
+	
+		Turn(AU4,z_axis,math.rad(42),speed)
+		Turn(AU5,z_axis,math.rad(-222),speed)
+		Turn(Attrap2,x_axis,math.rad(113),speed)	
+		WTurn(Attrap3,x_axis,math.rad(178),speed)	
+			
+		
 	
 		Sleep(3000)
 	else
@@ -835,12 +838,15 @@ end
 function eggDeploy(speed)	
 
  Arm=ArmsTable[18]
+ reseT(Arm,speed,false,true)
+ showT(Arm)
 hide("Op18",Op18)
-hide("Op4",Op4)
 
 
 
-local go={		Arm[1], 90,0,0,speed,
+
+
+ go={		Arm[1], 90,0,0,speed,
 				Arm[2], 0,0,-127,speed,
 				Arm[3], 88,0,0,speed,
 				Arm[4], -30,0,0,speed,
@@ -853,28 +859,34 @@ TurnPieceList(go,
 			  true, -- WaitForTurn
 			  true --synced
 			  )
+			  
 WaitForTurns(Arm)
-Move(Stack01,y_axis,12,4)
-WTurn(Stack01,y_axis,math.rad(-22),4)
-WaitForMove(Stack01,y_axis)
-Show(Op18)
-resetPiece(Stack01)
-local go={		Arm[1],98,0,0,speed,
+--echo("Station1")
+--Move(Stack01,y_axis,12,4)
+--WTurn(Stack01,y_axis,math.rad(-22),4)
+--WaitForMove(Stack01,y_axis)
+--Show(Op18)
+--Move(Stack01,y_axis,0,0)
+
+
+			  
+TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
 				Arm[5],0,0,0,speed,
 				Arm[6],0,0,0,speed,
-			  }
-			  
-TurnPieceList(go,
-			  true, --TurnInOrder
+			  },
+			  false, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
+Sleep(5000)
 WaitForTurns(Arm)			 
-			  
-local go={		Arm[1],-120,0,0,speed,
+echo("Station2")	
+
+		  
+ go={		Arm[1],-120,0,0,speed,
 				Arm[2],0,0,-25,	speed,
 				Arm[3],26,0,0,	speed,
 				Arm[4], -72,0,0,speed,
@@ -883,21 +895,23 @@ local go={		Arm[1],-120,0,0,speed,
 			  }
 
 TurnPieceList(go,
-			  true, --TurnInOrder
+			  false, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
 			  
+Sleep(5000)			  
 WaitForTurns(Arm)
-hide("Op4",Op4)
+echo("Station3")
+
 Move(PumpPillar1,y_axis,-60,0)
 Move(PumpPillar2,y_axis,-60,0)
 Move(GrowCapsule,y_axis,-60,0)
 Show(GrowCapsule)
 Show(centerpipes)
-hide("Op18",Op18)
-recReseT(Arm,speed)
-  
+--hide("Op18",Op18)
+reseT(Arm,speed,false,true)
+
 
 		 
 return 1

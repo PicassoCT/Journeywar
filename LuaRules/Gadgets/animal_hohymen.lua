@@ -173,7 +173,7 @@
 						return v.x*tileSizeX, v.z*tileSizeZ
 						end
 						
-						table.remove(o)
+						table.remove(openTable,o)
 				
 				end
 		
