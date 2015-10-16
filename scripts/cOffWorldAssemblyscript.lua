@@ -568,6 +568,7 @@ StompTable={}
 StompBaseTable={}
 WindowTable={}
 
+TotalDistanceDown
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
 end
@@ -904,9 +905,9 @@ Sleep(5000)
 WaitForTurns(Arm)
 echo("Station3")
 
-Move(PumpPillar1,y_axis,-60,0)
-Move(PumpPillar2,y_axis,-60,0)
-Move(GrowCapsule,y_axis,-60,0)
+Move(PumpPillar1,y_axis,totalDistanceDown,0)
+Move(PumpPillar2,y_axis,totalDistanceDown,0)
+Move(Sack,y_axis,totalDistanceDown,0)
 Show(GrowCapsule)
 Show(centerpipes)
 --hide("Op18",Op18)
@@ -916,6 +917,8 @@ reseT(Arm,speed,false,true)
 		 
 return 1
 end 
+
+totalDistanceDown= -60
 
 function pumpUp		()	
 speed=0.1*(buildProgress/20)
@@ -992,12 +995,19 @@ Move(pump1,y_axis,-30,7)
 
 WMove(pump2,y_axis,-30,7)
 StartThread(sackTurn, nr+1)
+
 	while StableLoopSignalTable[nr]==true do
-		Turn(PumpPillar1,y_axis,math.rad(3),0.5)
-		Turn(pump1,y_axis,math.rad(3),0.5)
+		speed=buildProgress*4
+		WayToGo=(1-buildProgress)
+			if WayToGo < 0.75 then WayToGo = 0 end
+		percentage=totalDistanceDown* WayToGo
 		
-		Turn(PumpPillar2,y_axis,math.rad(3),0.5)
-		Turn(pump2,y_axis,math.rad(-7),0.5)
+		Move(Sack,y_axis,percentage, speed)
+		Turn(PumpPillar1,y_axis,math.rad(3),0.5)
+		Turn(pump1,y_axis,math.rad(-3),0.5)
+		
+		Turn(PumpPillar2,y_axis,math.rad(-3),0.5)
+		Turn(pump2,y_axis,math.rad(3),0.5)
 		Turn(GrowCapsule,y_axis,math.rad(5),2)
 		
 		Move(pump1,y_axis,-30,7)
@@ -1031,6 +1041,23 @@ StartThread(sackTurn, nr+1)
 	Turn(GrowCapsule,y_axis,math.rad(0),1)
  end
 
+		
+	lowMin, lowMax = 33, -33
+
+function calcArmSpecificSecY(nr)
+	if nr > 1 and nr < 9 then
+		return lowMin + LowMax*(nr/9)
+	else
+		return (lowMin + LowMax*((nr-9)/9))*-1
+	end 
+	--TODO
+end
+
+
+function calcArmSpecificFirstX(nr)
+
+
+end  
 
  
 function LoopimplantInsertion	 (nr)
@@ -1043,7 +1070,8 @@ function LoopPumpedDown			 (nr)
  end
 function LoopRelease			 (nr)
  end
-StableLoopSignalTable={
+
+ StableLoopSignalTable={
 [1]=  true ,
 [2]=  true ,
 [3]=  true	 ,
@@ -1054,6 +1082,7 @@ StableLoopSignalTable={
 
 
 }
+
 StableLoopTable={
 [1]=  Loopfold				 ,
 [2]=  LoopeggDeploy			 ,
@@ -1067,7 +1096,7 @@ StableLoopTable={
 }
 
 foldAnimationTable={
-[1]=  fold				  ,
+[1]=  setUp				  ,
 [2]=  eggDeploy			 ,
 [3]=  pumpUp				  ,
 [4]=  implantInsertion	  ,
