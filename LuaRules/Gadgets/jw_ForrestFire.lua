@@ -262,11 +262,12 @@ if (gadgetHandler:IsSyncedCode()) then
 			--Spring.Echo("Jw:Foorestfire3")
 	for i= table.getn(fireT),1,-1 do
 	x,z= math.ceil(fireT[i].x/48), math.ceil(fireT[i].z/48)
-	
+			if not LandScapeT[ x][ z].Food then LandScapeT[ x][ z].Food = 0 end
 		LandScapeT[ x][ z].Food=		LandScapeT[ x][ z].Food-costPerFrame
+			if not LandScapeT[ x][ z].AccumulatedHeat then LandScapeT[ x][ z].Food = InHeat end
 		LandScapeT[ x][ z].AccumulatedHeat=		LandScapeT[ x][ z].AccumulatedHeat+InHeat
 		addHeatToSurroundingArea(i,LandScapeT[ x][ z].AccumulatedHeat)
-		if LandScapeT[ x][ z].Food <0 then 
+		if LandScapeT[ x][ z].Food < 0 then 
 		
 		LandScapeT[ x][ z].boolBurning=false
 		table.remove(fireT,i);

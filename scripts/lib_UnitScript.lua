@@ -808,9 +808,9 @@ Turn(pieceToAlign,z_axis,math.asin(vz),speed,true)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceToPiece(piecename, piecenameB,speed,offset,forceUpdate)
-if not piecenameB or not piecename then return end
-ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecenameB)
+function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
+if not pieceDest or not piecename then return end
+ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceDest)
 if lib_boolDebug ==true then
 echo("x:"..ox.. "\n y:"..oy.."\n z:"..oz)
 end
@@ -1514,6 +1514,8 @@ Turn(piecename,y_axis,math.rad(y),(ytime/maxtime)*speed)
 Turn(piecename,z_axis,math.rad(z),(ztime/maxtime)*speed)
 
 end
+
+
 -->Packs Values into Pairs
 function getPairs(values)
     xyPairs = {}
@@ -2473,7 +2475,10 @@ end
 			 -- vx,vy,vz  --VoluminaCube
 				
 			-- }
-			
+
+function iRand(start, fin)
+return math.ceil(math.random(start,fin))
+end
 
 function snakeOnAPlane(PieceList,SnakePoints,speed, startpoint)
 --get StartPosition and Move First Piece Into the Cube
@@ -2508,7 +2513,7 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 	  end		
 	end
 	
-	if boolTurnInOrder==false and boolWaitForTurn==true then
+	if  boolWaitForTurn==true then
 		for i=1,table.getn(PieceList)-5,5 do
 			WaitForTurns(PieceList[i])
 		end

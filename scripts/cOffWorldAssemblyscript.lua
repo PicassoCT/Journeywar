@@ -563,12 +563,16 @@ piecesTable={}
   Window086 = piece("Window086")
  piecesTable[#piecesTable+1]= Window086
 
+GrowSpot= piece"GrowSpot"
+ piecesTable[#piecesTable+1]= GrowSpot
+
 TablesOfPiecesGroups={}
 StompTable={}
 StompBaseTable={}
 WindowTable={}
 
-TotalDistanceDown
+TotalDistanceDown=-60
+
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
 end
@@ -595,6 +599,9 @@ end
 	 ArmsTable={}
 
 function script.Create()
+
+
+	reseT(piecesTable)
 	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	WindowTable=TablesOfPiecesGroups["Window"]
@@ -618,6 +625,7 @@ function script.Create()
 	for i=1,19,1 do
 
 		if i == 10 then zeropad="0" end
+		
 	ArmsTable[i]={}
 	name="OPFA"..zeropad..i
 	ArmsTable[i][1]=piece(name)
@@ -637,6 +645,8 @@ function script.Create()
 			echo("coffworldAssembly::piece missing Arm"..i.." / ".. k)
 			end
 		end
+	
+	
 	end	
 		
 	OperationSet=TableMergeTable(OP_T,OPTA_T)	
@@ -660,7 +670,7 @@ function script.Create()
 	ImplanT=TablesOfPiecesGroups["Implant"]
 	DesT=TablesOfPiecesGroups["Dest"]
 
-	StartThread(setUp)
+	setUp()
 	StartThread(buildOS)
 
 end
@@ -671,6 +681,7 @@ Hide (pece)
 end
 
 function setUp()
+	Move(GrowSpot,y_axis,totalDistanceDown,0)
 	hide("centerpipes",centerpipes)
 	StartThread(stompBases)
 		StartThread(randomBlink)
@@ -690,29 +701,52 @@ function setUp()
 	hideT(CrationismT,"CrationismT")
 	hideT(DesT,"DesT")
 	hideT(ImplanT,"ImplanT")
+	StartThread(fold,false,0)
+	for i=1,19,1 do
+			sign=-90 
+			
+			if ArmsTable[i] and i ~= 18 and i~= 4 then
+			
+			if i > 9 then sign=90 end
+			go={	ArmsTable[i][1],0 ,0,0,0,
+							ArmsTable[i][2],0,0,0,0,
+							ArmsTable[i][3],0,0,0,0,
+							ArmsTable[i][4], 0,0,sign,0,
+							ArmsTable[i][5],0,0,0,0,
+							ArmsTable[i][6],0,0,0,0,
+						  }
+			
+			
+			
+			TurnPieceList(go,
+						  false, --TurnInOrder
+						  false, -- WaitForTurn
+						  false --synced
+						  )
+			end
+
+
+		end
 	
-	--	fold(false,1)
+end
+
+function BuildingAnimation(buildID)
+
+
 	
-	echo("coffworldAssembly:Never Reached me!")
-		fold(true,1)
+	--unfold
+	fold(true,1)
+	
+	eggDeploy(0.5)
+	LooppumpUp(1)
+	importImplant(0.3)
+	operate()
 	while true do
-
-	--	Sleep(5000)
-	
-	
-		Sleep(10000)
-	
-	
-		eggDeploy(0.5)
-	
-			Sleep(15000)
-		
-	    
-
+		Sleep(10000)   
 	end
 
-
 end
+
 CrationismT={}
 crateT={}
 ImplanT={}
@@ -773,15 +807,13 @@ function foldAttrapp(boolDirection,speed)
 	end
 
 end
-
-function fold	(boolDirection, state)			  
-Sleep(100)
-speed= math.max(1,buildProgress/15)
+function fold	(boolDirection, lspeed)			  
+speed=lspeed or math.max(1,buildProgress/15)
 
 
 	if boolDirection== true then --unfold
 		foldAttrapp(boolDirection,speed)
-		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
+	
 		Turn(ToolUpT[1],x_axis,math.rad(-37),speed)
 		Turn(ToolUpT[3],x_axis,math.rad(37-115),speed)
 		WTurn(ToolLowT[3],x_axis,math.rad(0),speed)
@@ -813,7 +845,7 @@ speed= math.max(1,buildProgress/15)
 		
 		return state,Instate  
 	 else 
-		moveT(TablesOfPiecesGroups["PumpPillar"],y_axis,-60,speed)
+
 		reseT(OperationSet,speed,true,true)
 		hideT(OperationSet)
 
@@ -834,19 +866,13 @@ speed= math.max(1,buildProgress/15)
 	  end
 end	 
 
-
-
 function eggDeploy(speed)	
 
  Arm=ArmsTable[18]
  reseT(Arm,speed,false,true)
  showT(Arm)
-hide("Op18",Op18)
-
-
-
-
-
+ Hide(Op18)
+ 
  go={		Arm[1], 90,0,0,speed,
 				Arm[2], 0,0,-127,speed,
 				Arm[3], 88,0,0,speed,
@@ -863,11 +889,11 @@ TurnPieceList(go,
 			  
 WaitForTurns(Arm)
 --echo("Station1")
---Move(Stack01,y_axis,12,4)
---WTurn(Stack01,y_axis,math.rad(-22),4)
---WaitForMove(Stack01,y_axis)
---Show(Op18)
---Move(Stack01,y_axis,0,0)
+Move(Stack01,y_axis,12,4)
+WTurn(Stack01,y_axis,math.rad(-22),4)
+WaitForMove(Stack01,y_axis)
+Show(Op18)
+Move(Stack01,y_axis,0,0)
 
 
 			  
@@ -878,40 +904,50 @@ TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[5],0,0,0,speed,
 				Arm[6],0,0,0,speed,
 			  },
-			  false, --TurnInOrder
+			  true, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
-Sleep(5000)
 WaitForTurns(Arm)			 
 echo("Station2")	
-
+Sleep(5000)
 		  
  go={		Arm[1],-120,0,0,speed,
-				Arm[2],0,0,-25,	speed,
+				Arm[2],0,0,25,	speed,
 				Arm[3],26,0,0,	speed,
 				Arm[4], -72,0,0,speed,
-				Arm[5],66,0,0,	speed,
-				Arm[6],31,-22,31,speed,
+				Arm[5],-66,0,0,	speed,
+				Arm[6],-31,-22,31,speed,
 			  }
 
 TurnPieceList(go,
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+Sleep(5000)			   
+WaitForTurns(Arm)
+echo("Station3")
+Show(GrowCapsule)
+Hide(Op18)
+Move(GrowSpot,y_axis,totalDistanceDown,0)
+
+TurnPieceList({	Arm[1],90,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
 			  false, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
 			  )
-			  
-Sleep(5000)			  
-WaitForTurns(Arm)
-echo("Station3")
 
-Move(PumpPillar1,y_axis,totalDistanceDown,0)
-Move(PumpPillar2,y_axis,totalDistanceDown,0)
-Move(Sack,y_axis,totalDistanceDown,0)
-Show(GrowCapsule)
-Show(centerpipes)
---hide("Op18",Op18)
-reseT(Arm,speed,false,true)
+Sleep(5000)
+
+
+reseT(Arm,5,false,true)
 
 
 		 
@@ -920,31 +956,6 @@ end
 
 totalDistanceDown= -60
 
-function pumpUp		()	
-speed=0.1*(buildProgress/20)
- 
-	Move(PumpPillar1,y_axis,0,speed)
-	Move(PumpPillar2,y_axis,0,speed)
-	Move(GrowCapsule,y_axis,0,speed)
-
- return CurrentStat,Instate 
-end
-
- function implantInsertion()	  
- return CurrentStat,Instate  
- end
-function SewUp			()	 
- return CurrentStat,Instate  
- end
-function PumpedDown			()  
- return CurrentStat,Instate  
- end
-function Release		()	  
- return CurrentStat,Instate  
- end
-
-function Loopfold()				 
-end
 
 
 function LoopeggDeploy			 ()
@@ -989,76 +1000,267 @@ sign=-1
  
  end
  
+function pumpBeat(speed) 
+		
+
+		StopSpin(spinp1,y_axis,5.5)
+		StopSpin(spinp2,y_axis,5.5)
+		Sleep(550)	
+		Spin(spinp1,y_axis,math.rad(42 ),4.5)
+		Spin(spinp2,y_axis,math.rad(-42),4.5)
+		Move(Pump1,y_axis, 0,32)
+		Move(Pump2,y_axis,-48,32)
+	
+		Turn(ader4,y_axis,math.rad(5),0.125)
+		Turn(ader1,y_axis,math.rad(5),0.125)
+		Turn(pump1,y_axis,math.rad(-5),0.125)
+		Turn(pump2,y_axis,math.rad(-5),0.125)	
+		Move(ader3,x_axis,7,3)	
+		Move(ader7,x_axis,-7,3)	
+	
+		WTurn(GrowCapsule,y_axis,math.rad(5),0.125)
+		
+	
+	
+		
+		--CounterTurn
+		Turn(ader4,y_axis,math.rad(-5),0.125)
+		Turn(ader1,y_axis,math.rad(-5),0.125)
+		Turn(pump1,y_axis,math.rad(5),0.125)
+		Turn(pump2,y_axis,math.rad(5),0.125)	
+		Move(ader3,x_axis,5,3)	
+		Move(ader7,x_axis,-5,3)			
+	
+	
+		Move(Pump1,y_axis,-32,32)
+		Move(Pump2,y_axis,0,32)	
+		WTurn(GrowCapsule,y_axis,math.rad(-5),0.125)	
+end
+ 
+ function importImplant(speed)
+
+ for i=1,4 do
+  MovePieceToPiece(CrationismT[i],DesT[select],0)
+ end
+ 
+ for i=1,4 do
+ select=math.ceil(math.random(2,4))
+ Show(DesT[select]) 
+ resetPiece(CrationismT[i],0.5,true)
+ end
+ Show(Crate4)
+ for i=1,4 do
+ Hide(CrationismT[i])
+ end
+ hideT(DesT)
+ Arm=ArmsTable[4]
+
+ TurnPieceList({Arm[1],110,0,0,speed,
+				Arm[2],0,0,-130,speed,
+				Arm[3],5,0,0,speed,
+				Arm[4], 25,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],-16*-1,-16,43,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  false --synced
+			  )
+Sleep(12000)
+Hide(Crate4)
+Show(Op4)
+TurnPieceList({	Arm[1],0,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],90,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  false, --synced
+			   true  --reverse TurnInOrder
+			  )
+Sleep(12000)
+TurnPieceList({	Arm[1],90,0,0,speed,
+				Arm[2],0,0,-225,speed,
+				Arm[3],100,0,0,speed,
+				Arm[4], -15,0,0,speed,
+				Arm[5],5,0,0,speed,
+				Arm[6],0,45,0,speed,
+			  },
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
+			  false --synced
+			  )
+Sleep(12000)
+Hide(Op4)
+Show(Crate1)
+TurnPieceList({	Arm[1],0,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
+			  false, --synced
+			  true  --reverse TurnInOrder
+			  )
+
+ end
+ 
+ 
 function LooppumpUp				 (nr)
 StableLoopSignalTable[nr]=true
-Move(pump1,y_axis,-30,7)
-
-WMove(pump2,y_axis,-30,7)
 StartThread(sackTurn, nr+1)
+StartThread(importImplant, 1)
+Show(Sack)
+Show(centerpipes)
 
-	while StableLoopSignalTable[nr]==true do
+	while buildProgress < 0.25 and boolBuilding==true do
 		speed=buildProgress*4
 		WayToGo=(1-buildProgress)
 			if WayToGo < 0.75 then WayToGo = 0 end
-		percentage=totalDistanceDown* WayToGo
+		percentage=totalDistanceDown* WayToGo		
+		Move(GrowSpot,y_axis,percentage, speed)
+		Sleep(60)
+		pumpBeat(5)
 		
-		Move(Sack,y_axis,percentage, speed)
-		Turn(PumpPillar1,y_axis,math.rad(3),0.5)
-		Turn(pump1,y_axis,math.rad(-3),0.5)
-		
-		Turn(PumpPillar2,y_axis,math.rad(-3),0.5)
-		Turn(pump2,y_axis,math.rad(3),0.5)
-		Turn(GrowCapsule,y_axis,math.rad(5),2)
-		
-		Move(pump1,y_axis,-30,7)
-		Spin(spinp1,y_axis,math.rad(42 ),4.5)
-		Spin(spinp2,y_axis,math.rad(-42),4.5)
-		WMove(pump2,y_axis,0,7)
-		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
-		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
-		Sleep(450)
-		Turn(PumpPillar2,y_axis,math.rad(-3),0.5)
-		Turn(pump1,y_axis,math.rad(3),0.5)
-		
-		Turn(PumpPillar1,y_axis,math.rad(-3),0.5)
-		Turn(pump2,y_axis,math.rad(2),0.5)
-		Turn(GrowCapsule,y_axis,math.rad(-5),2)
-		
-		Move(pump2,y_axis,-30,7)
-		Spin(spinp1,y_axis,math.rad(42 ),4.5)
-		Spin(spinp2,y_axis,math.rad(-42),4.5)
-		WMove(pump1,y_axis,0,7)
-		StopSpin(spinp1,y_axis,math.rad(42 ),0.5)
-		StopSpin(spinp2,y_axis,math.rad(-42),0.5)
-		Sleep(900)
+
 	end
 	
-	Turn(PumpPillar1,y_axis,math.rad(0),0.5)
-	Turn(pump1,y_axis,math.rad(0),0.5)
+		Move(GrowSpot,y_axis,0, 5)
+		Turn(GrowCapsule,y_axis,math.rad(0),0.125)
+		Turn(ader4,y_axis,math.rad(0),0.125)
+		Turn(ader1,y_axis,math.rad(0),0.125)
+		Turn(pump1,y_axis,math.rad(0),0.125)
+		Turn(pump2,y_axis,math.rad(0),0.125)	
+			
 	
-	Turn(PumpPillar2,y_axis,math.rad(0),0.5)
-	Turn(pump2,y_axis,math.rad(0),0.5)
-	Turn(GrowCapsule,y_axis,math.rad(0),1)
  end
 
 		
-	lowMin, lowMax = 33, -33
+	lowMin, lowMax = 33, -66
 
 function calcArmSpecificSecY(nr)
-	if nr > 1 and nr < 9 then
-		return lowMin + LowMax*(nr/9)
-	else
-		return (lowMin + LowMax*((nr-9)/9))*-1
-	end 
-	--TODO
+	sign=1
+	if nr > 9  then 
+	nr= nr - 9
+	return lowMin + lowMax*(nr/9)
+	
+	end
+	
+	
+		return lowMin + lowMax*(nr/9)*sign
+
 end
 
 
-function calcArmSpecificFirstX(nr)
-
+function calcArmSpecificFirstZ(nr)
+	if nr < 10 then
+		return -90
+	else
+		return 90
+	end 
 
 end  
 
+function testArm(sideSign, nr,speed,predelay,postDelay)
+
+Sleep(predelay)
+TurnPieceList({	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
+				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
+				ArmsTable[nr][3],0,0,0,speed,
+				ArmsTable[nr][4], 0,0,0,speed,
+				ArmsTable[nr][5],0,0,0,speed,
+				ArmsTable[nr][6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+fVal=0
+if sideSign== 1 then	 
+fVal=math.random(30,110)*sideSign
+else
+fVal=math.random(30,110)*sideSign*-1
+end
+Sleep(5000)
+TurnPieceList({	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
+				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
+				ArmsTable[nr][3],0,0,fVal*-1*sideSign,speed,
+				ArmsTable[nr][4], 0,0,fVal*sideSign,speed,
+				ArmsTable[nr][5],0,0,fVal*sideSign,speed,
+				ArmsTable[nr][6],0,0,fVal*-1*sideSign,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )
+Sleep(3000)		
+TurnPieceList({	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
+				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
+				ArmsTable[nr][3],0,0,0,speed,
+				ArmsTable[nr][4], 0,0,0,speed,
+				ArmsTable[nr][5],0,0,0,speed,
+				ArmsTable[nr][6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  true --synced
+			  )	 
+Sleep(postDelay)		 
+
+end
+
+
+function operate()
+
+while true do 
+--test tools
+sideSign=-1
+
+
+	for i=1,#ArmsTable, 1 do
+	
+	startval=math.random(0.25,1)
+	range=math.random(0.5,1.5)
+	
+	
+	if i > 9 then sideSign=1 end
+		if ArmsTable[i] and i ~=4 and i ~=18 then
+		StartThread(testArm,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
+		end
+	end
+Sleep(12000)
+--fixate
+
+--open
+Hide(Sack)
+Show(SackWIP)
+Hide(GrowCapsule)
+Show(BloodCapsule)
+
+
+--remove tissue
+
+--insert implant
+
+--close up
+
+
+
+end
+	--special case --loose instrument
+	
+
+end
+function insertArm(sideSign,nr)
+
+
+end
  
 function LoopimplantInsertion	 (nr)
 	
@@ -1083,27 +1285,27 @@ function LoopRelease			 (nr)
 
 }
 
-StableLoopTable={
-[1]=  Loopfold				 ,
-[2]=  LoopeggDeploy			 ,
-[3]=  LooppumpUp				 ,
-[4]=  LoopimplantInsertion	 ,
-[5]=  LoopSewUp				 ,
-[6]=  LoopPumpedDown			 ,
-[7]=  LoopRelease			 ,
+-- StableLoopTable={
+-- [1]=  Loopfold				 ,
+-- [2]=  LoopeggDeploy			 ,
+-- [3]=  LooppumpUp				 ,
+-- [4]=  LoopimplantInsertion	 ,
+-- [5]=  LoopSewUp				 ,
+-- [6]=  LoopPumpedDown			 ,
+-- [7]=  LoopRelease			 ,
 
 
-}
+-- }
 
-foldAnimationTable={
-[1]=  setUp				  ,
-[2]=  eggDeploy			 ,
-[3]=  pumpUp				  ,
-[4]=  implantInsertion	  ,
-[5]=  SewUp				 ,
-[6]=  PumpedDown			  ,
-[7]=  Release			   
-}
+-- foldAnimationTable={
+-- [1]=  setUp				  ,
+-- [2]=  eggDeploy			 ,
+-- [3]=  pumpUp				  ,
+-- [4]=  implantInsertion	  ,
+-- [5]=  SewUp				 ,
+-- [6]=  PumpedDown			  ,
+-- [7]=  Release			   
+-- }
 
 
 boolBuilding=false
@@ -1112,17 +1314,22 @@ boolBuilding=false
  
  function buildOS()
 --TestLoop
-
+boolBuilding=true
+	Sleep(3000)
+	StartThread(BuildingAnimation, buildID,false)
+	Sleep(3000)
 	while true do 
 
 	
 		for i=1,100 do
 		buildProgress=i/100
-		Sleep(2000)
+		Sleep(10000)
 		end
 	Sleep(5000)
-		--StartThread(BuildingAnimation, buildID,false)
+		
 	end
+--/TestLoop	
+	
 
 			while true do
 			buildID=Spring.GetUnitIsBuilding(unitID)
@@ -1130,7 +1337,7 @@ boolBuilding=false
 				boolBuilding=true
 				progress=0
 				buildProgress=0
-				--StartThread(BuildingAnimation, buildID,false)
+				StartThread(BuildingAnimation, buildID,false)
 				
 				--building something
 					Spring.SetUnitAlwaysVisible(buildID,false)
@@ -1142,6 +1349,7 @@ boolBuilding=false
 				Spring.SetUnitAlwaysVisible(buildID,true)
 				boolBuilding=false
 				end
+				buildProgress=-1
 			Sleep(500)
 			--Debug DelMe
 			buildProgress=math.random(1,100)
