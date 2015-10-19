@@ -2480,14 +2480,48 @@ function iRand(start, fin)
 return math.ceil(math.random(start,fin))
 end
 
-function snakeOnAPlane(Piece_Lenght_List,SnakePoints,axis,speed,vOrigin)
+function snakeOnAPlane(Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed,vOrigin, FirstSensor,tolerance)
+local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
 --get StartPosition and Move First Piece Into the Cube
 boolResolved=false
 LastInsertedPoint=SnakePoints[1]
-while boolResolved==false and normVector(subVector(SnakePoints[1],vOrigin)) <=  accArrayArg(do
- 
-end
-
+Sensor=FirstSensor
+--[[
+	while boolResolved==false and normVector(subVector(SnakePoints[1],vOrigin)) <=   normVector(subVector(LastInsertedPoint,vOrigin)) do
+	 
+	 boolAlgoRun=false
+	 while boolAlgoRun ==false do
+	 hypoModel=PPDLL
+	 GlobalIndex= #PPDLL
+		for Index= #PPDLL, 1, -1 do
+			--CheckCenterPastPoint_PointIndex 
+				-->True && boolGateCrossed =false
+					--TurnPieceTowardstPoint(PrevPieceIndex) hypoModel
+					--CounterTurnPrevPiece hypoModel
+					--boolGateCrossed=True 
+					--IncPointIndex
+					--CheckCenterPastPoint_PrevPiece() && boolGateCrossed != true
+						--> True
+							--Index =PrevPointIndex
+							
+					--SubIndex
+				-->True && boolGateCrossed =true
+					--SubIndex
+					
+					
+				-->False
+					--TurnPieceTowardstPoint(PieceIndex) hypoModel
+					--CounterTurnPrevPiece hypoModel
+					
+		
+		
+			if Index== 1 then boolAlgoRun=true; break end
+		end
+	end
+	 applyChangesAsTurns(PPDLL)
+	 boolResolved=isSnakeAtMax()
+	end
+--]]
 end
 
 function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
