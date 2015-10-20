@@ -897,6 +897,19 @@ Move(Stack01,y_axis,0,0)
 
 
 			  
+TurnPieceList({	Arm[1],0,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  false, -- WaitForTurn
+			  true --synced
+			  )
+WaitForTurns(Arm)	
+			  
 TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
@@ -904,20 +917,20 @@ TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[5],0,0,0,speed,
 				Arm[6],0,0,0,speed,
 			  },
-			  true, --TurnInOrder
-			  true, -- WaitForTurn
+			  false, --TurnInOrder
+			  false, -- WaitForTurn
 			  true --synced
 			  )
 WaitForTurns(Arm)			 
 echo("Station2")	
 Sleep(5000)
 		  
- go={		Arm[1],-120,0,0,speed,
-				Arm[2],0,0,25,	speed,
-				Arm[3],26,0,0,	speed,
-				Arm[4], -72,0,0,speed,
-				Arm[5],-66,0,0,	speed,
-				Arm[6],-31,-22,31,speed,
+ go={		Arm[1],148,0,0,speed,
+				Arm[2],0,0,27,	speed,
+				Arm[3],90,0,0,	speed,
+				Arm[4], -56,0,4,speed,
+				Arm[5], -12,0,0,	speed,
+				Arm[6],-115,-115,-18,speed,
 			  }
 
 TurnPieceList(go,

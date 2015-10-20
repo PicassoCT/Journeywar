@@ -2480,14 +2480,18 @@ function iRand(start, fin)
 return math.ceil(math.random(start,fin))
 end
 
-function snakeOnAPlane(Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed,vOrigin, FirstSensor,tolerance)
+function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed, FirstSensor,tolerance, degAroundAxis, boolPartStepExecution, boolWait)
 local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
 --get StartPosition and Move First Piece Into the Cube
 boolResolved=false
 LastInsertedPoint=SnakePoints[1]
 Sensor=FirstSensor
+
+vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPDLL[#PPDLL].Piece)
+--func
+--getPointPlane(point, -degAroundAxis)
 --[[
-	while boolResolved==false and normVector(subVector(SnakePoints[1],vOrigin)) <=   normVector(subVector(LastInsertedPoint,vOrigin)) do
+	while boolResolved==false and math.abs(normVector(subVector(SnakePoints[1],vOrigin)))-tolerance <=   math.abs(normVector(subVector(LastInsertedPoint,vOrigin))) do
 	 
 	 boolAlgoRun=false
 	 while boolAlgoRun ==false do
@@ -2506,6 +2510,9 @@ Sensor=FirstSensor
 							
 					--SubIndex
 				-->True && boolGateCrossed =true
+						if boolPartStepExecution == true
+							Execute from top down to index, moves in order
+							+-boolWait
 					--SubIndex
 					
 					
