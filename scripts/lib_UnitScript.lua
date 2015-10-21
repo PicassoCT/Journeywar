@@ -2459,6 +2459,34 @@ function turnT(t, axis, deg,speed,boolInstantUpdate)
 return
 end
 
+
+
+function iRand(start, fin)
+return math.ceil(math.random(start,fin))
+end
+
+function midVector(PointA,PointB)
+PointA.x,PointA.y,PointA.z=PointA.x+PointB.x,PointA.y+PointB.y,PointA.z+PointB.z
+return divVector(PointA,2)
+end
+
+
+function checkCenterPastPoint(PieceStartPoint,PieceEndPoint,GatePoint,LastPoint)
+MidPoint= midVector(PieceStartPoint,PieceEndPoint)
+
+OrgPoint=subVector(GatePoint,LastPoint)
+MirrorPointV=mulVector(OrgPoint,-1)
+
+	-- if distance to LastPoint < then distance to mirrored Point
+if norm2Vector(subVector(MirrorPointV,MidPoint)) >= norm2Vector(subVector(OrgPoint,MidPoint)) then
+		return true
+		else 
+		return false 
+		end
+
+
+end
+
 -->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
 -- ListPiece={[1]={ cx=0,y=0,z=0, 		--current setting allowed
 				-- lx = 25,ly = 25,lz = 25,-- length of piece 
@@ -2475,12 +2503,7 @@ end
 			 -- vx,vy,vz  --VoluminaCube
 				
 			-- }
-
-function iRand(start, fin)
-return math.ceil(math.random(start,fin))
-end
-
-function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed, FirstSensor,tolerance, degAroundAxis, boolPartStepExecution, boolWait)
+function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed, FirstSensor,tolerance,  boolPartStepExecution, boolWait)
 local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
 --get StartPosition and Move First Piece Into the Cube
 boolResolved=false
@@ -2490,7 +2513,7 @@ Sensor=FirstSensor
 vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPDLL[#PPDLL].Piece)
 --func
 --getPointPlane(point, -degAroundAxis)
---[[
+
 	while boolResolved==false and math.abs(normVector(subVector(SnakePoints[1],vOrigin)))-tolerance <=   math.abs(normVector(subVector(LastInsertedPoint,vOrigin))) do
 	 
 	 boolAlgoRun=false
@@ -2498,6 +2521,7 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 	 hypoModel=PPDLL
 	 GlobalIndex= #PPDLL
 		for Index= #PPDLL, 1, -1 do
+			checkCenterPastPoint()
 			--CheckCenterPastPoint_PointIndex 
 				-->True && boolGateCrossed =false
 					--TurnPieceTowardstPoint(PrevPieceIndex) hypoModel
@@ -2529,6 +2553,8 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 	 boolResolved=isSnakeAtMax()
 	end
 --]]
+end
+
 end
 
 function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
