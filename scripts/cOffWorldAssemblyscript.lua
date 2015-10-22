@@ -895,26 +895,29 @@ WaitForMove(Stack01,y_axis)
 Show(Op18)
 Move(Stack01,y_axis,0,0)
 
-
-			  
-TurnPieceList({	Arm[1],0,0,0,speed,
-				Arm[2],0,0,0,speed,
+		  
+TurnPieceList({	Arm[1],98,0,0,speed,
+				Arm[2], 0,0,-127,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
-				Arm[5],0,0,0,speed,
+				Arm[5],-75,0,0,speed,
 				Arm[6],0,0,0,speed,
 			  },
-			  false, --TurnInOrder
-			  false, -- WaitForTurn
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
 			  true --synced
 			  )
-WaitForTurns(Arm)	
+			  
+WaitForTurns(Arm)
+Sleep(3000)
+			  
+
 			  
 TurnPieceList({	Arm[1],98,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
-				Arm[5],0,0,0,speed,
+				Arm[5],-75,0,0,speed,
 				Arm[6],0,0,0,speed,
 			  },
 			  false, --TurnInOrder
@@ -1051,15 +1054,15 @@ function pumpBeat(speed)
 end
  
  function importImplant(speed)
-
+ distanceGate=-48*4
  for i=1,4 do
-  MovePieceToPiece(CrationismT[i],DesT[select],0)
+  Move(CrationismT[i],x_axis,distanceGate+i*(distanceGate/-4),0,true)
  end
  
  for i=1,4 do
  select=math.ceil(math.random(2,4))
  Show(DesT[select]) 
- resetPiece(CrationismT[i],0.5,true)
+ Move(CrationismT[i],x_axis,0,0.015,true)
  end
  Show(Crate4)
  for i=1,4 do
@@ -1297,29 +1300,6 @@ function LoopRelease			 (nr)
 
 
 }
-
--- StableLoopTable={
--- [1]=  Loopfold				 ,
--- [2]=  LoopeggDeploy			 ,
--- [3]=  LooppumpUp				 ,
--- [4]=  LoopimplantInsertion	 ,
--- [5]=  LoopSewUp				 ,
--- [6]=  LoopPumpedDown			 ,
--- [7]=  LoopRelease			 ,
-
-
--- }
-
--- foldAnimationTable={
--- [1]=  setUp				  ,
--- [2]=  eggDeploy			 ,
--- [3]=  pumpUp				  ,
--- [4]=  implantInsertion	  ,
--- [5]=  SewUp				 ,
--- [6]=  PumpedDown			  ,
--- [7]=  Release			   
--- }
-
 
 boolBuilding=false
 

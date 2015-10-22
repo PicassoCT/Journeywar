@@ -2471,8 +2471,7 @@ return divVector(PointA,2)
 end
 
 
-function checkCenterPastPoint(PieceStartPoint,PieceEndPoint,GatePoint,LastPoint)
-MidPoint= midVector(PieceStartPoint,PieceEndPoint)
+function checkCenterPastPoint(MidPoint,GatePoint,LastPoint)
 
 OrgPoint=subVector(GatePoint,LastPoint)
 MirrorPointV=mulVector(OrgPoint,-1)
@@ -2483,8 +2482,6 @@ if norm2Vector(subVector(MirrorPointV,MidPoint)) >= norm2Vector(subVector(OrgPoi
 		else 
 		return false 
 		end
-
-
 end
 
 -->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
@@ -2521,7 +2518,7 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 	 hypoModel=PPDLL
 	 GlobalIndex= #PPDLL
 		for Index= #PPDLL, 1, -1 do
-			checkCenterPastPoint()
+			checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[PPDLL[Index].PointIndex],LastPoint)
 			--CheckCenterPastPoint_PointIndex 
 				-->True && boolGateCrossed =false
 					--TurnPieceTowardstPoint(PrevPieceIndex) hypoModel
@@ -2534,9 +2531,12 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 							
 					--SubIndex
 				-->True && boolGateCrossed =true
-						if boolPartStepExecution == true
-							Execute from top down to index, moves in order
-							+-boolWait
+						if boolPartStepExecution == true then 
+							--Execute from top down to index, moves in order
+							--+-boolWait
+						else
+						
+						end
 					--SubIndex
 					
 					
@@ -2555,7 +2555,7 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 --]]
 end
 
-end
+
 
 function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 

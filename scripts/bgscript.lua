@@ -228,11 +228,11 @@ function walk()
 				if timeSinceLastChatter== 0 and math.random(0,800) ==100  then
 			
 						if math.random(0,1)== 0 then
-						Spring.PlaySoundFile("sounds/bgmtw/bgAff.wav")
+						StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
 						timeSinceLastChatter=19000
 						StartThread(reduceTimeSinceLastChatter)
 						else
-						Spring.PlaySoundFile("sounds/bgmtw/bgAff2.wav")
+						StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
 						timeSinceLastChatter=19000
 						StartThread(reduceTimeSinceLastChatter)
 						end
@@ -290,14 +290,14 @@ end
 
 function counter()
 SetSignalMask(SIG_COUNTER)
-napTime=math.ceil(math.random(900,2800))
+napTime=math.ceil(math.random(900,12800))
 Sleep(napTime)
 oneInThreeHundred=math.random(0,35)
 if oneInThreeHundred == 5 then
-Spring.PlaySoundFile("sounds/bgmtw/bgAff.wav")
+	StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
 end
 if oneInThreeHundred == 7 then
-Spring.PlaySoundFile("sounds/bgmtw/bgAff2.wav")
+	StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
 end
 
 
