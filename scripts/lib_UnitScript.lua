@@ -2562,10 +2562,10 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 
 
 
-	for i=1,table.getn(PieceList)-5,5 do
+	for i=1,table.getn(PieceList),5 do
 	
 		if boolSync==false then
-		  tP(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4])
+		  tP(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4],boolTurnInOrder)
 		else
 			if not PieceList[i] then 
 			echo("TurnPieceList piece "..i.." missing") 
@@ -2574,15 +2574,10 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 			end
 		end
 		
-	  if boolTurnInOrder == true then 
-	
-		WaitForTurns(PieceList[i])
-	
-	  end		
 	end
 	
 	if  boolWaitForTurn==true then
-		for i=1,table.getn(PieceList)-5,5 do
+		for i=1,table.getn(PieceList),5 do
 			WaitForTurns(PieceList[i])
 		end
 	end

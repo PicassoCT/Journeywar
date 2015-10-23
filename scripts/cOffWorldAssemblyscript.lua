@@ -572,9 +572,14 @@ StompBaseTable={}
 WindowTable={}
 
 TotalDistanceDown=-60
-
+OrgSignal=0
+function getUniqueSignal()
+OrgSignal=OrgSignal+1
+return OrgSignal
+end
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 
+return damage
 end
 
 function stompBases()
@@ -738,8 +743,8 @@ function BuildingAnimation(buildID)
 	fold(true,1)
 	
 	eggDeploy(0.5)
-	LooppumpUp(1)
-	importImplant(0.3)
+	StartThread(LooppumpUp,getUniqueSignal())
+	StartThread(importImplant,getUniqueSignal(),0.3)
 	operate()
 	while true do
 		Sleep(10000)   
@@ -1053,21 +1058,25 @@ function pumpBeat(speed)
 		WTurn(GrowCapsule,y_axis,math.rad(-5),0.125)	
 end
  
- function importImplant(speed)
- distanceGate=-48*4
+ function importImplant(nr,speed)
+ StableLoopSignalTable[nr]=true
+ 
+ while  StableLoopSignalTable[nr]==true do
+ 
+ distanceGate=12*4
  for i=1,4 do
-  Move(CrationismT[i],x_axis,distanceGate+i*(distanceGate/-4),0,true)
+  Move(CrationismT[i],z_axis,(distanceGate - i*(distanceGate/4))*-1,0,true)
+  Hide(CrationismT[i])
  end
  
  for i=1,4 do
- select=math.ceil(math.random(2,4))
- Show(DesT[select]) 
- Move(CrationismT[i],x_axis,0,0.015,true)
+ tag=math.ceil(math.random(2,4))
+ Show(DesT[tag]) 
+ Move(CrationismT[i],z_axis,0,3.5)
+ Show(CrationismT[i])
+ WaitForMove(CrationismT[i],z_axis)
  end
- Show(Crate4)
- for i=1,4 do
- Hide(CrationismT[i])
- end
+
  hideT(DesT)
  Arm=ArmsTable[4]
 
@@ -1078,8 +1087,8 @@ end
 				Arm[5],0,0,0,speed,
 				Arm[6],-16*-1,-16,43,speed,
 			  },
-			  false, --TurnInOrder
-			  true, -- WaitForTurn
+			  true, --TurnInOrder
+			  false, -- WaitForTurn
 			  false --synced
 			  )
 Sleep(12000)
@@ -1094,8 +1103,22 @@ TurnPieceList({	Arm[1],0,0,0,speed,
 			  },
 			  false, --TurnInOrder
 			  true, -- WaitForTurn
-			  false, --synced
-			   true  --reverse TurnInOrder
+			  false --synced
+			 
+			  )
+Sleep(12000)
+
+TurnPieceList({	Arm[1],0,0,0,speed,
+				Arm[2],0,0,-225,speed,
+				Arm[3],0,0,0,speed,
+				Arm[4], 0,0,0,speed,
+				Arm[5],55,0,0,speed,
+				Arm[6],0,0,0,speed,
+			  },
+			  false, --TurnInOrder
+			  true, -- WaitForTurn
+			  false --synced
+			  
 			  )
 Sleep(12000)
 TurnPieceList({	Arm[1],90,0,0,speed,
@@ -1103,9 +1126,9 @@ TurnPieceList({	Arm[1],90,0,0,speed,
 				Arm[3],100,0,0,speed,
 				Arm[4], -15,0,0,speed,
 				Arm[5],5,0,0,speed,
-				Arm[6],0,45,0,speed,
+				Arm[6],0,-45,0,speed,
 			  },
-			  true, --TurnInOrder
+			  false, --TurnInOrder
 			  true, -- WaitForTurn
 			  false --synced
 			  )
@@ -1121,21 +1144,23 @@ TurnPieceList({	Arm[1],0,0,0,speed,
 			  },
 			  true, --TurnInOrder
 			  true, -- WaitForTurn
-			  false, --synced
-			  true  --reverse TurnInOrder
+			  false --synced
+			
 			  )
 
+Sleep(10000)			  
+end
  end
  
  
 function LooppumpUp				 (nr)
 StableLoopSignalTable[nr]=true
 StartThread(sackTurn, nr+1)
-StartThread(importImplant, 1)
+StartThread(importImplant, 0.1)
 Show(Sack)
 Show(centerpipes)
 
-	while buildProgress < 0.25 and boolBuilding==true do
+	while buildProgress < 0.25 and boolBuilding==true or StableLoopSignalTable[nr]do
 		speed=buildProgress*4
 		WayToGo=(1-buildProgress)
 			if WayToGo < 0.75 then WayToGo = 0 end
