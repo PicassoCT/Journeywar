@@ -744,7 +744,7 @@ function BuildingAnimation(buildID)
 	
 	eggDeploy(0.5)
 	StartThread(LooppumpUp,getUniqueSignal())
-	StartThread(importImplant,getUniqueSignal(),0.3)
+
 	operate()
 	while true do
 		Sleep(10000)   
@@ -1063,12 +1063,24 @@ end
  
  while  StableLoopSignalTable[nr]==true do
  
+
+
  distanceGate=12*4
  for i=1,4 do
   Move(CrationismT[i],z_axis,(distanceGate - i*(distanceGate/4))*-1,0,true)
   Hide(CrationismT[i])
  end
- 
+  TurnPieceList({Arm[1],110,0,0,speed,
+				Arm[2],0,0,-130,speed,
+				Arm[3],5,0,0,speed,
+				Arm[4], 25,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],-16*-1,-16,43,speed,
+			  },
+			  true, --TurnInOrder
+			  true, -- WaitForTurn
+			  false --synced
+			  )
  for i=1,4 do
  tag=math.ceil(math.random(2,4))
  Show(DesT[tag]) 
@@ -1080,17 +1092,6 @@ end
  hideT(DesT)
  Arm=ArmsTable[4]
 
- TurnPieceList({Arm[1],110,0,0,speed,
-				Arm[2],0,0,-130,speed,
-				Arm[3],5,0,0,speed,
-				Arm[4], 25,0,0,speed,
-				Arm[5],0,0,0,speed,
-				Arm[6],-16*-1,-16,43,speed,
-			  },
-			  true, --TurnInOrder
-			  false, -- WaitForTurn
-			  false --synced
-			  )
 Sleep(12000)
 Hide(Crate4)
 Show(Op4)
@@ -1156,7 +1157,7 @@ end
 function LooppumpUp				 (nr)
 StableLoopSignalTable[nr]=true
 StartThread(sackTurn, nr+1)
-StartThread(importImplant, 0.1)
+StartThread(importImplant,getUniqueSignal(),0.1)
 Show(Sack)
 Show(centerpipes)
 
@@ -1277,8 +1278,24 @@ sideSign=-1
 	end
 Sleep(12000)
 --fixate
-
+setOfTools={}
+nrOfIntstruments=math.random(2,7)
+for i=1,nrOfIntstruments do setOfTools[math.ceil(math.random(1,#ArmsTable))]= true end
 --open
+for k,v in pairs(nrOfIntstruments) do
+	-- snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
+					-- SnakePoints,
+					-- axis,
+					-- speed, 
+					-- FirstSensor,
+					-- tolerance,  
+					-- boolPartStepExecution, 
+					-- boolWait
+					-- )
+end
+
+setOfTools[#setOfTools+1]=math.ceil(math.random(1,#ArmsTable)) end
+
 Hide(Sack)
 Show(SackWIP)
 Hide(GrowCapsule)
@@ -1289,12 +1306,14 @@ Show(BloodCapsule)
 
 --insert implant
 
+--special case --loose instrument
+
+end
+
 --close up
 
 
 
-end
-	--special case --loose instrument
 	
 
 end

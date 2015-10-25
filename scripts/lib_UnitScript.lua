@@ -451,11 +451,11 @@ function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
 Turn(piecename,x_axis,math.rad(x_val),speed)
 Turn(piecename,y_axis,math.rad(y_val),speed)
 Turn(piecename,z_axis,math.rad(z_val),speed)
-if boolWaitForIT then 
-WaitForTurn(piecename,x_axis)
-WaitForTurn(piecename,y_axis)
-WaitForTurn(piecename,z_axis)
-end
+	if boolWaitForIT then 
+	WaitForTurn(piecename,x_axis)
+	WaitForTurn(piecename,y_axis)
+	WaitForTurn(piecename,z_axis)
+	end
 end
 
 
@@ -2518,9 +2518,14 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 	 hypoModel=PPDLL
 	 GlobalIndex= #PPDLL
 		for Index= #PPDLL, 1, -1 do
-			checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[PPDLL[Index].PointIndex],LastPoint)
 			--CheckCenterPastPoint_PointIndex 
-				-->True && boolGateCrossed =false
+			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[PPDLL[Index].PointIndex],LastPoint)
+			
+			-->True && boolGateCrossed =false
+			if boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==false then
+
+			
+			
 					--TurnPieceTowardstPoint(PrevPieceIndex) hypoModel
 					--CounterTurnPrevPiece hypoModel
 					--boolGateCrossed=True 
@@ -2530,7 +2535,10 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 							--Index =PrevPointIndex
 							
 					--SubIndex
-				-->True && boolGateCrossed =true
+					
+			-->True && boolGateCrossed =true
+			elseif boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==true then
+
 						if boolPartStepExecution == true then 
 							--Execute from top down to index, moves in order
 							--+-boolWait
@@ -2564,7 +2572,7 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 
 	for i=1,table.getn(PieceList),5 do
 	
-		if boolSync==false then
+		if not boolSync or boolSync == false then
 		  tP(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4],boolTurnInOrder)
 		else
 			if not PieceList[i] then 
@@ -2576,7 +2584,7 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 		
 	end
 	
-	if  boolWaitForTurn==true then
+	if  boolWaitForTurn==true and boolTurnInOrder== false then
 		for i=1,table.getn(PieceList),5 do
 			WaitForTurns(PieceList[i])
 		end
