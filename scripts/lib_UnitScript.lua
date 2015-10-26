@@ -2547,11 +2547,11 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 						end
 					--SubIndex
 					
-					
+			elseif	boolPastCenterPoint == false	then
 				-->False
 					--TurnPieceTowardstPoint(PieceIndex) hypoModel
 					--CounterTurnPrevPiece hypoModel
-					
+			end
 		
 		
 			if Index== 1 then boolAlgoRun=true; break end
@@ -3066,11 +3066,13 @@ end
 	end
 
 --> filters Out Mobile Builders
-    function filterOutMobileBuilder  (T)
+    function filterOutMobileBuilder  (T,boolCondi)
+	boolCond=boolCondi or false
+	
    returnTable={}  
 		for i=1,#T do    
 		def=Spring.GetUnitDefID(T[i])    
-		if false== UnitDefs[def].isMobileBuilder    then 
+		if boolCond== UnitDefs[def].isMobileBuilder    then 
 		returnTable[#returnTable+1]=T[i] end  
 		end  
 	return returnTable  
@@ -4210,7 +4212,7 @@ end
 			
 			StartThread( feetThread,
 						math.floor(math.min(math.max(0,(i*turnOffset)/360),1)*4),
-						(90+(360/5)*i),
+						(-190+(85)*i),
 						maxDeg,
 						i,
 						infoT.feetTable.firstAxis[i],

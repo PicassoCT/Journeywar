@@ -5,8 +5,11 @@
 
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
-cosFunc= function (val) return math.cos(val) end 
-waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
+	if math.random(0,512)== 256 then
+	cosFunc= function (val) return math.cos(val) end 
+	StartThread(waveATable,Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
+	end
+return damage
 end
 center=piece"center"
 fooNction=piece
@@ -51,7 +54,8 @@ ox,oy,oz=spGetUnitPosition(unitID)
 --Spring.DestroyUnit(unitID,true,false)
 	end
 
-function wiggleFeet()
+function wiggleFeet(Sig)
+SetSignalMask(Sig)
 	while true do
 
 		speed=math.random(5,15)/100
@@ -124,15 +128,11 @@ WaitForTurn(KneeT[#KneeT],x_axis)
 end
 
 Knees={}
-function script.Create()
-
-inPieces=Spring.GetUnitPieceMap(unitID)
-reseT(inPieces)
 
 firstAxis={}
 for nr=1,5 do 
 firstAxis[#firstAxis+1]=piecesTable["ConTurn"..nr];nr=nr+1
-Turn(firstAxis[#firstAxis],y_axis,math.rad(90+(360/5)*nr),0)
+Turn(firstAxis[#firstAxis],y_axis,math.rad(-190+(65)*nr),0)
 end
 nr=1
 
@@ -153,15 +153,81 @@ sensorT[#sensorT+1]=piecesTable["Feet19"]
 sensorT[#sensorT+1]=piecesTable["Feet25"]
 LiftF=LiftFunction
 LowerF=LowerFunction
-configTable={id=unitID, centerNode=center, nr=5, feetTable={firstAxis=firstAxis,Knees=Knees}, sensorTable=sensorT ,ElementWeight=5,FeetLiftForce=3,LiftFunction=LiftF,LowerFunction=LowerF, Height=32}
-StartThread(adaptiveAnimation,configTable,inPieces)
-StartThread(wiggleFeet)
-StartThread(deathTimer)
 
+
+
+function script.Create()
+
+inPieces=Spring.GetUnitPieceMap(unitID)
+reseT(inPieces)
+
+
+configTable={id=unitID, centerNode=center, nr=5, feetTable={firstAxis=firstAxis,Knees=Knees}, sensorTable=sensorT ,ElementWeight=5,FeetLiftForce=3,LiftFunction=LiftF,LowerFunction=LowerF, Height=32}
+StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4)
+StartThread(wiggleFeet,8)
+StartThread(deathTimer)
+StartThread(FeedMe)
 end
 
+function adaptiveAnimationThreadStarter(configTable,inPieces,Sig)
+SetSignalMask(Sig)
+StartThread(adaptiveAnimation,configTable,inPieces)
+end
+seastardefID=Spring.GetUnitDefID(unitID)
+Seastars={}
+table.insert(Seastars,seastardefID)
 
+function FeedMe()
+Sleep(13000)
+	while true do
+	--Something nearby
+	boolfoundSomething=false
+	Sensor=1
+	
+	for i=1, #sensorT, 1 do
+	x,y,z=Spring.GetUnitPiecePosDir(unitID,sensorT[i])
+	T=grabEveryone(unitID,x,z,10)
+	if T then 	T= filterOutMobileBuilder  (T,true) end
+	if T then filterOutUnitsOfType(T,Seastars)end
+	if T then boolfoundSomething=true; Sensor=i;break end
+	
+	end
+	
+		if boolfoundSomething==true then
+		Signal(4)
+		Signal(8)
+		--Attach victim
+		
+		--roll in Corresponding Feed Thread
+		index=1
+			if #T > 1 then index=math.ceil(math.random(1,#T)) end
+		
+			if Spring.ValidUnitID(T[index])==true then
+			Spring.UnitScript.AttachUnit ( sensorT[Sensor], T[index] ) 
+			Turn(sensorT[Sensor],y_axis,math.rad(90),2)
+				for i=1,6 do
+				Turn(Knees[Sensor][i],x_axis,math.rad(-15),9.33)			
+				WaitForTurn(Knees[Sensor][i],x_axis)
+				end	
+				
+				for i=1,6 do
+				Turn(Knees[Sensor][i],y_axis,math.rad(75),19.33)
+				Turn(Knees[Sensor][i],x_axis,math.rad(3),9.33)	
+				WaitForTurn(Knees[Sensor][i],y_axis)
+				end
+			WaitForTurn(sensorT[Sensor],y_axis)
+			Spring.UnitScript.DropUnit  ( T[index] ) 	
+			Spring.DestroyUnit(T[index],true,true)
+			end
+		StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4)
+		StartThread(wiggleFeet,8)
+		
+		end
 
+	Sleep(500)
+	end
+
+end
 
 function script.Killed(recentDamage,_)
 
