@@ -3,14 +3,13 @@
  include "lib_UnitScript.lua"
  include "lib_Build.lua" 
 
+SIG_WALK=2
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
-	if math.random(0,512)== 256 then
-	cosFunc= function (val) return math.cos(val) end 
-	StartThread(waveATable,Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
-	end
+
 return damage
 end
+
 center=piece"center"
 fooNction=piece
 piecesTable=makeKeyPiecesTable(unitID,fooNction)
@@ -29,13 +28,14 @@ waveATable(Knees, x_axis, sinFunc, 1, 0.032, 6.2, 6.5, true,-3)
 
 WaitForTurn(Knees[#Knees][5],x_axis)
 Sleep(350)
-
+return 700
 end
 
 function deathTimer()
 
 headingofold=Spring.GetUnitHeading(unitID)
-Sleep(20000)
+lifetime=60*1000*8
+Sleep(lifetime)
 
 
 local spGetUnitPosition=Spring.GetUnitPosition
@@ -51,12 +51,16 @@ ox,oy,oz=spGetUnitPosition(unitID)
 	Sleep(1000)
 	newHeading=Spring.GetUnitHeading(unitID)
 	end
---Spring.DestroyUnit(unitID,true,false)
+
+	cosFunc= function (val) return math.cos(val) end 
+	waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
+	
+	
+Spring.DestroyUnit(unitID,true,false)
 	end
 
-function wiggleFeet(Sig)
-SetSignalMask(Sig)
-	while true do
+function wiggleFeet()
+
 
 		speed=math.random(5,15)/100
 		for k=1,5 do
@@ -66,17 +70,17 @@ SetSignalMask(Sig)
 				dice=math.random(-25,25)
 			for i=1,6 do	
 				sperd= math.random(1,5)/100				
-				val=math.sin(frame+piEight*i)*dice
+				val=math.sin(frame+piEight*i)*dice 
 				Turn(Knees[k][i],y_axis,math.rad(val),sperd)		
 			end
 		end
 		
 	WaitForTurn(Knees[#Knees][6],y_axis)
-	Sleep(10)
+	Sleep(3000)
 	end
 
 
-end
+
 
 local spGetGroundHeight=Spring.GetGroundHeight
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
@@ -91,7 +95,7 @@ end
 function LowerFunction(KneeT,Speed,SensorNode, FirstAxis,degOffSet)
 --The funcy Part keeping the Worm close to the Ground
 
-Threads={}
+
 
 
 
@@ -99,7 +103,7 @@ rotTotal=0
 	for i=1,#KneeT, 1 do
 	
 		val=0
-
+	
 			_,result,_=Spring.UnitScript.GetPieceRotation(KneeT[i])
 			PieceOfMine=KneeT[math.max((i%#KneeT)+1,1)] or KneeT[math.max(i%#KneeT,1)]
 				x,y,z=Spring.GetUnitPiecePosDir(unitID,PieceOfMine)
@@ -123,7 +127,7 @@ rotTotal=0
 WaitForTurn(KneeT[1],x_axis)
 WaitForTurn(KneeT[#KneeT],x_axis)
 
-
+return 500
 -----------------
 end
 
@@ -158,20 +162,22 @@ LowerF=LowerFunction
 
 function script.Create()
 
+
+
 inPieces=Spring.GetUnitPieceMap(unitID)
 reseT(inPieces)
 
 
-configTable={id=unitID, centerNode=center, nr=5, feetTable={firstAxis=firstAxis,Knees=Knees}, sensorTable=sensorT ,ElementWeight=5,FeetLiftForce=3,LiftFunction=LiftF,LowerFunction=LowerF, Height=32}
-StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4)
-StartThread(wiggleFeet,8)
+configTable={id=unitID, centerNode=center, nr=5, feetTable={firstAxis=firstAxis,Knees=Knees}, sensorTable=sensorT ,ElementWeight=5,FeetLiftForce=3,LiftFunction=LiftF,LowerFunction=LowerF, Height=32, WiggleFunc=wiggleFeet}
+StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4, unitID)
+StartThread(wiggleFeet)
 StartThread(deathTimer)
 StartThread(FeedMe)
 end
 
-function adaptiveAnimationThreadStarter(configTable,inPieces,Sig)
+function adaptiveAnimationThreadStarter(configTable,inPieces,Sig,id)
 SetSignalMask(Sig)
-StartThread(adaptiveAnimation,configTable,inPieces)
+StartThread(adaptiveAnimation,configTable,inPieces,id)
 end
 seastardefID=Spring.GetUnitDefID(unitID)
 Seastars={}
@@ -219,8 +225,8 @@ Sleep(13000)
 			Spring.UnitScript.DropUnit  ( T[index] ) 	
 			Spring.DestroyUnit(T[index],true,true)
 			end
-		StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4)
-		StartThread(wiggleFeet,8)
+		StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4,unitID)
+
 		
 		end
 
@@ -237,13 +243,16 @@ end
 
 
 
-
 function script.StartMoving()
-	
+
+end
+
+function delayedSetStop()
+
 end
 
 function script.StopMoving()
-
+StartThread(delayedSetStop)
 		
 end
 
