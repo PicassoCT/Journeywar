@@ -2480,12 +2480,13 @@ function iRand(start, fin)
 return math.ceil(math.random(start,fin))
 end
 
-function snakeOnAPlane(PieceList,SnakePoints,speed, startpoint)
+function snakeOnAPlane(Piece_Lenght_List,SnakePoints,axis,speed,vOrigin)
 --get StartPosition and Move First Piece Into the Cube
-
---for every piece from the list get the future targetpoint and turntowards , 
-	--solve arm 
-	
+boolResolved=false
+LastInsertedPoint=SnakePoints[1]
+while boolResolved==false and normVector(subVector(SnakePoints[1],vOrigin)) <=  accArrayArg(do
+ 
+end
 
 end
 
