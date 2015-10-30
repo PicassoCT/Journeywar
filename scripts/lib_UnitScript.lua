@@ -451,11 +451,11 @@ function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
 Turn(piecename,x_axis,math.rad(x_val),speed)
 Turn(piecename,y_axis,math.rad(y_val),speed)
 Turn(piecename,z_axis,math.rad(z_val),speed)
-if boolWaitForIT then 
-WaitForTurn(piecename,x_axis)
-WaitForTurn(piecename,y_axis)
-WaitForTurn(piecename,z_axis)
-end
+	if boolWaitForIT then 
+	WaitForTurn(piecename,x_axis)
+	WaitForTurn(piecename,y_axis)
+	WaitForTurn(piecename,z_axis)
+	end
 end
 
 
@@ -2459,6 +2459,31 @@ function turnT(t, axis, deg,speed,boolInstantUpdate)
 return
 end
 
+
+
+function iRand(start, fin)
+return math.ceil(math.random(start,fin))
+end
+
+function midVector(PointA,PointB)
+PointA.x,PointA.y,PointA.z=PointA.x+PointB.x,PointA.y+PointB.y,PointA.z+PointB.z
+return divVector(PointA,2)
+end
+
+
+function checkCenterPastPoint(MidPoint,GatePoint,LastPoint)
+
+OrgPoint=subVector(GatePoint,LastPoint)
+MirrorPointV=mulVector(OrgPoint,-1)
+
+	-- if distance to LastPoint < then distance to mirrored Point
+if norm2Vector(subVector(MirrorPointV,MidPoint)) >= norm2Vector(subVector(OrgPoint,MidPoint)) then
+		return true
+		else 
+		return false 
+		end
+end
+
 -->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
 -- ListPiece={[1]={ cx=0,y=0,z=0, 		--current setting allowed
 				-- lx = 25,ly = 25,lz = 25,-- length of piece 
@@ -2475,30 +2500,80 @@ end
 			 -- vx,vy,vz  --VoluminaCube
 				
 			-- }
-
-function iRand(start, fin)
-return math.ceil(math.random(start,fin))
-end
-
-function snakeOnAPlane(Piece_Lenght_List,SnakePoints,axis,speed,vOrigin)
+function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed, FirstSensor,tolerance,  boolPartStepExecution, boolWait)
+local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
 --get StartPosition and Move First Piece Into the Cube
 boolResolved=false
 LastInsertedPoint=SnakePoints[1]
-while boolResolved==false and normVector(subVector(SnakePoints[1],vOrigin)) <=  accArrayArg(do
- 
+Sensor=FirstSensor
+
+vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPDLL[#PPDLL].Piece)
+--func
+--getPointPlane(point, -degAroundAxis)
+
+	while boolResolved==false and math.abs(normVector(subVector(SnakePoints[1],vOrigin)))-tolerance <=   math.abs(normVector(subVector(LastInsertedPoint,vOrigin))) do
+	 
+	 boolAlgoRun=false
+	 while boolAlgoRun ==false do
+	 hypoModel=PPDLL
+	 GlobalIndex= #PPDLL
+		for Index= #PPDLL, 1, -1 do
+			--CheckCenterPastPoint_PointIndex 
+			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[PPDLL[Index].PointIndex],LastPoint)
+			
+			-->True && boolGateCrossed =false
+			if boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==false then
+
+			
+			
+					--TurnPieceTowardstPoint(PrevPieceIndex) hypoModel
+					--CounterTurnPrevPiece hypoModel
+					--boolGateCrossed=True 
+					--IncPointIndex
+					--CheckCenterPastPoint_PrevPiece() && boolGateCrossed != true
+						--> True
+							--Index =PrevPointIndex
+							
+					--SubIndex
+					
+			-->True && boolGateCrossed =true
+			elseif boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==true then
+
+						if boolPartStepExecution == true then 
+							--Execute from top down to index, moves in order
+							--+-boolWait
+						else
+						
+						end
+					--SubIndex
+					
+			elseif	boolPastCenterPoint == false	then
+				-->False
+					--TurnPieceTowardstPoint(PieceIndex) hypoModel
+					--CounterTurnPrevPiece hypoModel
+			end
+		
+		
+			if Index== 1 then boolAlgoRun=true; break end
+		end
+	end
+	 applyChangesAsTurns(PPDLL)
+	 boolResolved=isSnakeAtMax()
+	end
+--]]
 end
 
-end
+
 
 function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 
 
 
 
-	for i=1,table.getn(PieceList)-5,5 do
+	for i=1,table.getn(PieceList),5 do
 	
-		if boolSync==false then
-		  tP(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4])
+		if not boolSync or boolSync == false then
+		  tP(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4],boolTurnInOrder)
 		else
 			if not PieceList[i] then 
 			echo("TurnPieceList piece "..i.." missing") 
@@ -2507,15 +2582,10 @@ function TurnPieceList(PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 			end
 		end
 		
-	  if boolTurnInOrder == true then 
-	
-		WaitForTurns(PieceList[i])
-	
-	  end		
 	end
 	
-	if  boolWaitForTurn==true then
-		for i=1,table.getn(PieceList)-5,5 do
+	if  boolWaitForTurn==true and boolTurnInOrder== false then
+		for i=1,table.getn(PieceList),5 do
 			WaitForTurns(PieceList[i])
 		end
 	end
@@ -2996,11 +3066,13 @@ end
 	end
 
 --> filters Out Mobile Builders
-    function filterOutMobileBuilder  (T)
+    function filterOutMobileBuilder  (T,boolCondi)
+	boolCond=boolCondi or false
+	
    returnTable={}  
 		for i=1,#T do    
 		def=Spring.GetUnitDefID(T[i])    
-		if false== UnitDefs[def].isMobileBuilder    then 
+		if boolCond== UnitDefs[def].isMobileBuilder    then 
 		returnTable[#returnTable+1]=T[i] end  
 		end  
 	return returnTable  
@@ -4022,10 +4094,15 @@ end
 	GG.MovementOS_Table[unitID].stability >  0.5  and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,q),1)] > 0 or  GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)] and  GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)]>0  
 	end
 
+		
+	
+	
 	--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
-	function feetThread(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction,LegMax)
+	function feetThread(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction,LegMax, WiggleFunc)
 	LMax=LegMax or 5
-
+	while not  GG.MovementOS_Table[unitID].boolmoving  do
+		Sleep(100)
+	end
 		Sleep(500)
 		
 		lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
@@ -4033,7 +4110,7 @@ end
 		while true do
 			while GG.MovementOS_Table[unitID].boolmoving==true do
 			
-					while GG.MovementOS_Table[unitID].boolmoving==true and  stableConditon(nr,quadrant) do
+					--while GG.MovementOS_Table[unitID].boolmoving==true and  stableConditon(nr,quadrant) do
 					
 				--feet go over knees if FeetLiftForce > totalWeight of Leg
 			
@@ -4046,7 +4123,7 @@ end
 				
 					lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
 						Sleep(100)
-					end
+				--	end
 				--rebalance
 			
 				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
@@ -4054,55 +4131,61 @@ end
 			end
 		
 				lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-				Sleep(100)
+				Sleep(1000)
+				pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LowerFunction,nr)
+				WiggleFunc()
 		--setFeetInStableStance
 		end
 	end
 
-	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,lowerFeetFuntion,nr)
-
-		Turn(FirstAxisPoint,y_axis,math.rad(90+(360/5)*nr),0)
+	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,lowerFeetFunction,nr)
+	Spring.Echo("lib_UnitScript::pushBody")
+		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet),1.5)
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
-		degToGo=0
-		while (Spring.UnitScript.IsInTurn(FirstAxisPoint,y_axis)==true) do
+	
+		time=0 
+		while (Spring.UnitScript.IsInTurn(FirstAxisPoint,y_axis)==true and time < 5000) do
 		
-			lowerFeetFuntion(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
+			time=time + lowerFeetFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
 			Sleep(80)
+			time=time+80
 		end
 	end
 	
 	-->Uses the LiftAnimation Function to Lift the Feed
 	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-
+	Spring.Echo("lib_UnitScript::liftFeedForward")
 	GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
 	LiftFunction(KneeT,Force/(#KneeT*Weight))
 
-	WaitForTurn(KneeT[nr],y_axis)
+	WaitForTurn(FirstAxisPoint,y_axis)
 	Sleep(100)
 	if degOffSet > 180 then turnDeg=turnDeg*-1 end
-	combinedRotateTowardsFeet=degOffSet-turnDeg
-	Turn(FirstAxisPoint,y_axis,math.rad(combinedRotateTowardsFeet), Force/(#KneeT*Weight))
+
+	Turn(FirstAxisPoint,y_axis,math.rad(-turnDeg), Force/(#KneeT*Weight))
 	WaitForTurn(FirstAxisPoint,y_axis)
 		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet	), Force/(#KneeT*Weight))
 	end
 	
 	-->Uses the Animation Function To Lower the Feet
 	function	lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-
+	Spring.Echo("lib_UnitScript::lowerFeet")
 		LowerFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
 		
 		GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]+1
 	end
+	
 	-->Stabilizes the Feet
 	function	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-
+	Spring.Echo("lib_UnitScript::stabilize")
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
 		degToGo=0
 		counter=0
 		olddif=0
-			while ( GG.MovementOS_Table[unitID].stability <= 0.5 ) do
+		time=0
+			while ( GG.MovementOS_Table[unitID].stability <= 0.5  and time < 15000) do
 				for i=1,#KneeT, 1 do
 				x,y,z=Spring.GetUnitPiecePosDir(unitID,KneeT[i])
 					if y > Spring.GetGroundHeight(x,z) then 
@@ -4115,6 +4198,7 @@ end
 				end	
 			GG.MovementOS_Table[unitID].stability=GG.MovementOS_Table[unitID].stability+0.02
 			Sleep(50)
+			time=time+50
 			end
 
 	end
@@ -4124,15 +4208,20 @@ end
 
 	--unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
 	--> Trys to create a animation using every piece there is as Legs.. 
-	function adaptiveAnimation(configTable,inPeace)
-
+	function adaptiveAnimation(configTable,inPeace,id)
+	local spGetUnitPosition=Spring.GetUnitPosition
 	local infoT= configTable
 	pieceMap={}
 	pieceMap[infoT.centerNode]={}
 	pieceMap=recursiveAddTable(pieceMap,infoT.centerNode, infoT.centerNode,inPeace)
+	
 		if not GG.MovementOS_Table then GG.MovementOS_Table={} end
-		if not GG.MovementOS_Table[unitID] then GG.MovementOS_Table[unitID]={} end
-
+		if not GG.MovementOS_Table[id] then GG.MovementOS_Table[id]={} end
+		quadrantMap={[1]=0,[2]=0,[3]=0,[4]=0}
+		tx,ty,tz=spGetUnitPosition(unitID)
+		GG.MovementOS_Table[unitID]={quadrantMap=quadrantMap,boolmoving=false, stability=1, tx=tx,ty=ty,tz=tz, ForwardVector={x=0,z=0}}
+		
+		
 	maxDeg=math.random(12,32)
 	turnOffset=360/#infoT.feetTable.Knees
 			
@@ -4140,7 +4229,7 @@ end
 			
 			StartThread( feetThread,
 						math.floor(math.min(math.max(0,(i*turnOffset)/360),1)*4),
-						(90+(360/5)*i),
+						(-190+(85)*i),
 						maxDeg,
 						i,
 						infoT.feetTable.firstAxis[i],
@@ -4149,20 +4238,19 @@ end
 						infoT.ElementWeight or 10,
 						infoT.FeetLiftForce or 2,
 						infoT.LiftFunction,
-						infoT.LowerFunction
+						infoT.LowerFunction,
+						infoT.Height,
+						infoT.WiggleFunc
 						)
 			end
 		
-		local spGetUnitPosition=Spring.GetUnitPosition
+		
 		local MotionDetect=	function (ox,oz)
 		x,y,z=Spring.GetUnitPosition(unitID)
 		return math.abs(ox-x) +math.abs(oz-z) < 15,x,z
 		end
 		
-		quadrantMap={[1]=0,[2]=0,[3]=0,[4]=0}
-		tx,ty,tz=spGetUnitPosition(unitID)
 
-		GG.MovementOS_Table[unitID]={quadrantMap=quadrantMap,boolmoving=false, stability=1, tx=tx,ty=ty,tz=tz, ForwardVector={x=0,z=0}}
 		Sleep(100)
 
 		ox,oy,oz= spGetUnitPosition(unitID)

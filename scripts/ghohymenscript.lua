@@ -214,7 +214,7 @@
 		end
 		
 		function DrinkWater(argTable)
-		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 0.5)
 		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
 		
 		SignalTable["STATE"]=false
@@ -222,14 +222,14 @@
 		SignalTable["STATE"]=true
 			
 			while 	SignalTable["STATE"] == true do 
-			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(91), 9)
+			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(91), 1.9)
 			WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 			gulp=math.random(2,22)
 				for i=1,gulp do
-				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90+math.random(2,4)), 9)
+				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90+math.random(2,4)), 0.9)
 				WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 				Sleep(300)
-				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90-math.random(2,4)), 9)
+				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90-math.random(2,4)), 0.9)
 				WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 				end
 			Sleep(150) 
