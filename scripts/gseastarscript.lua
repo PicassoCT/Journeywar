@@ -15,20 +15,12 @@ fooNction=piece
 piecesTable=makeKeyPiecesTable(unitID,fooNction)
 
 function LiftFunction(KneeT,Speed)
-sinFunc= function (val) return math.sin(val) end 
-cosFunc= function (val) return math.cos(val) end 
-waveATable(Knees, x_axis, cosFunc, -1, 0.32, math.random(0.77,1.4),4.5, true)
+	for i=1,#KneeT,1 do 
+		Turn(KneeT[i],x_axis,math.rad(7), Speed)
+	end
+	WaitForTurn(KneeT[1],x_axis)
 
 
-
-waveATable(Knees, x_axis, sinFunc, 1, 0.022, 3.141, 6.5, true, -1.1)
-WaitForTurn(Knees[#Knees][5],x_axis)
-Sleep(350)
-waveATable(Knees, x_axis, sinFunc, 1, 0.032, 6.2, 6.5, true,-3)
-
-WaitForTurn(Knees[#Knees][5],x_axis)
-Sleep(350)
-return 700
 end
 
 function deathTimer()
@@ -58,11 +50,11 @@ ox,oy,oz=spGetUnitPosition(unitID)
 	
 Spring.DestroyUnit(unitID,true,false)
 	end
+--wiggles the feet, and applies motion if turning
+function wiggleFeet(FirstPoint,NaturalDeg)
+Spring.Echo("gseastar::wiggle")
 
-function wiggleFeet()
-
-
-		speed=math.random(5,15)/100
+		
 		for k=1,5 do
 				frame=Spring.GetGameFrame()
 				frame=frame/30
@@ -96,7 +88,7 @@ function LowerFunction(KneeT,Speed,SensorNode, FirstAxis,degOffSet)
 --The funcy Part keeping the Worm close to the Ground
 
 
-
+echo("gseastar::LowerFunction")
 
 
 rotTotal=0
@@ -136,7 +128,6 @@ Knees={}
 firstAxis={}
 for nr=1,5 do 
 firstAxis[#firstAxis+1]=piecesTable["ConTurn"..nr];nr=nr+1
-Turn(firstAxis[#firstAxis],y_axis,math.rad(-190+(65)*nr),0)
 end
 nr=1
 
@@ -166,18 +157,20 @@ function script.Create()
 
 inPieces=Spring.GetUnitPieceMap(unitID)
 reseT(inPieces)
-
+for nr=1,5 do 
+Turn(firstAxis[nr],y_axis,math.rad(-190+(65)*nr),0)
+end
 
 configTable={id=unitID, centerNode=center, nr=5, feetTable={firstAxis=firstAxis,Knees=Knees}, sensorTable=sensorT ,ElementWeight=5,FeetLiftForce=3,LiftFunction=LiftF,LowerFunction=LowerF, Height=32, WiggleFunc=wiggleFeet}
 StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4, unitID)
-StartThread(wiggleFeet)
 StartThread(deathTimer)
 StartThread(FeedMe)
 end
 
 function adaptiveAnimationThreadStarter(configTable,inPieces,Sig,id)
+Signal(Sig)
 SetSignalMask(Sig)
-StartThread(adaptiveAnimation,configTable,inPieces,id)
+StartThread(adaptiveAnimation,configTable,inPieces,id,Spring.UnitScript)
 end
 seastardefID=Spring.GetUnitDefID(unitID)
 Seastars={}
@@ -195,11 +188,13 @@ Sleep(13000)
 	T=grabEveryone(unitID,x,z,10)
 	if T then 	T= filterOutMobileBuilder  (T,true) end
 	if T then filterOutUnitsOfType(T,Seastars)end
-	if T then boolfoundSomething=true; Sensor=i;break end
-	
+	table.remove(T,unitID)
+	if T and #T > 0 then boolfoundSomething=true; Sensor=i;break end
+
 	end
 	
 		if boolfoundSomething==true then
+		echo("gseastar::FeedMe")
 		Signal(4)
 		Signal(8)
 		--Attach victim
@@ -225,6 +220,7 @@ Sleep(13000)
 			Spring.UnitScript.DropUnit  ( T[index] ) 	
 			Spring.DestroyUnit(T[index],true,true)
 			end
+			
 		StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4,unitID)
 
 		
@@ -244,16 +240,22 @@ end
 
 
 function script.StartMoving()
-
+	if  GG.MovementOS_Table and  GG.MovementOS_Table[unitID] and GG.MovementOS_Table[unitID].boolmoving then
+	GG.MovementOS_Table[unitID].boolmoving=true
+	end
 end
 
 function delayedSetStop()
-
+	Signal(SIG_WALK)
+	SetSignalMask(SIG_WALK)
+	Sleep(500)
+	GG.MovementOS_Table[unitID].boolmoving=false
 end
 
 function script.StopMoving()
-StartThread(delayedSetStop)
-		
+	if  GG.MovementOS_Table and  GG.MovementOS_Table[unitID] and GG.MovementOS_Table[unitID].boolmoving then
+	StartThread(delayedSetStop)
+	end
 end
 
 function script.Activate()

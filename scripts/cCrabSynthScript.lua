@@ -203,23 +203,24 @@ WaitForTurn(Plate14,x_axis)
 WaitForTurn(Plate7,z_axis)
 WaitForTurn(Plate7,x_axis)
 
-syncTurnInTime(Leg61,-65,0, 0,3000)
-syncTurnInTime(Leg51,-65,0,0,3000)
-WaitForTurns(Leg61,Leg51)
-
-syncTurnInTime(Leg61,0,0,0,time)
-syncTurnInTime(Leg51,0,0,0,time)
-WaitForTurns(Leg61,Leg51)
-
-syncTurnInTime(Leg62,0,0,0,time)
-syncTurnInTime(Leg52,0,0,0,time)
-syncTurnInTime(Leg63, 0,0, 0	,time)
-syncTurnInTime(Leg53, 0,0, 0	,time)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg61);syncTurnInTime(Leg61,-65,0, 0,3000,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,-65,0,0,3000,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+WaitForTurns(Leg61,Leg51)                            
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg61);syncTurnInTime(Leg61,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+WaitForTurns(Leg61,Leg51)                            
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg62);syncTurnInTime(Leg62,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg52);syncTurnInTime(Leg52,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg63);syncTurnInTime(Leg63, 0,0, 0	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg53);syncTurnInTime(Leg53, 0,0, 0	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 
 
  
 foldWeapon(1.5) 
+  echo ("ccrabsynth/unDeploy")
  SetUnitValue(COB.MAX_SPEED,maxspeed)
  boolDeployed=false
 end
@@ -232,17 +233,21 @@ equiTurn(Leg21,Leg22,x_axis,-53,1)
 equiTurn(Leg41,Leg42,x_axis, 15,1)
 equiTurn(Leg31,Leg32,x_axis, 15,1)
 
-syncTurnInTime(Leg61,-65,-89, 0,time)
-syncTurnInTime(Leg51,-65,89,0,time)
-WaitForTurns(Leg61,Leg51)
-syncTurnInTime(Leg62,89,0,0,time)
-syncTurnInTime(Leg52,89,0,0,time)
-syncTurnInTime(Leg63, 65,0, -89	,time)
-syncTurnInTime(Leg53, 65,0, 89	,time)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg61);
+assert(x_deg)
+
+syncTurnInTime(Leg61,-65,-89, 0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,-65,89,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+WaitForTurns(Leg61,Leg51)                            
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg62);syncTurnInTime(Leg62,89,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg52);syncTurnInTime(Leg52,89,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg63);syncTurnInTime(Leg63, 65,0, -89	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg53);syncTurnInTime(Leg53, 65,0, 89	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 unfoldPlate()
 unfoldWeapon(0.15)
 Sleep(3000)
+echo ("ccrabsynth/Deploy")
 SetUnitValue(COB.MAX_SPEED,1)
 boolDeployed=true			
 end
@@ -306,12 +311,12 @@ pushTime=math.ceil(time*0.75)
 time=time*0.25
 speed=2
 
-syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time)
-syncTurnInTime(fwLeg2,0+math.random(-offset,offset),0,0,time)
-
-syncTurnInTime(opBLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time)
-syncTurnInTime(opBLeg2,0+math.random(-offset,offset),0,0,time)
-syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,time)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,0+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,0+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 Turn(Head,x_axis,math.rad(-2),5)
 
 
@@ -325,12 +330,12 @@ Sleep(time)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --pushback
-syncTurnInTime(fwLeg1,8+(-1*centerTurnX)+math.random(-offset,offset),65*signum,-5,pushTime)
-syncTurnInTime(fwLeg2,-2+math.random(-offset,offset),0,0,pushTime)
-
-syncTurnInTime(opBLeg1,-57+(-1*centerTurnX)+math.random(-offset,offset),0,0,pushTime)
-syncTurnInTime(opBLeg2,77+math.random(-offset,offset),0,0,pushTime)
-syncTurnInTime(opBLeg3,-19+math.random(-offset,offset),0,0,pushTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,8+(-1*centerTurnX)+math.random(-offset,offset),65*signum,-5,pushTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,-2+math.random(-offset,offset),0,0,pushTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,-57+(-1*centerTurnX)+math.random(-offset,offset),0,0,pushTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,77+math.random(-offset,offset),0,0,pushTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-19+math.random(-offset,offset),0,0,pushTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 --Shear
 val=math.random(30,60)
 			Turn(fShear1,x_axis,math.rad((-1*centerTurnX)- 10),speed)
@@ -346,13 +351,13 @@ function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,f
 quadTime=math.ceil(time*0.35)
 halfTime=math.ceil(time*0.65)
 --MidPos
-syncTurnInTime(fwLeg1,-54+(-1*centerTurnX),0,0,quadTime)
-syncTurnInTime(fwLeg2,41,0,0,quadTime)
-
-syncTurnInTime(opBLeg1,31+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,-12+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,-42+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(Head,1,0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,-54+(-1*centerTurnX),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,41,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,31+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,-12+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-42+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head);syncTurnInTime(Head,1,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 --Shear
 val=math.random(20,70)
 speed= (val/halfTime)*1000
@@ -362,13 +367,13 @@ speed= (val/halfTime)*1000
 Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 --SetDown
-syncTurnInTime(fwLeg1,15+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(fwLeg2,-38+math.random(-offset,offset),0,0,halfTime)
-
-syncTurnInTime(opBLeg1,29+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(opBLeg2,-33+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(opBLeg3,-25+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(Head,-1,0,0,halfTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,15+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,	-38+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1	,29+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2	,-33+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3	,-25+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head	);syncTurnInTime(Head		,-1,0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 
 --Shear
 val=math.random(2,7)
@@ -522,13 +527,13 @@ quadTime=math.ceil(time*0.2)
 halfTime=math.ceil(time*0.4)
 
 --MidPos
-syncTurnInTime(fwLeg1,-51+(-1*centerTurnX),0,0,quadTime)
-syncTurnInTime(fwLeg2,12,0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,-51+(-1*centerTurnX),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,12,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 
-syncTurnInTime(opBLeg1,-21 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,22+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,-41+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(Head,1,0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,-21 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,22+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-41+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head);syncTurnInTime(Head,1,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 --Shear
 val=math.random(20,70)
 speed= (val/(halfTime/1000))*mod
@@ -539,13 +544,13 @@ Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --SetDown
-syncTurnInTime(fwLeg1,-5+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(fwLeg2,50+math.random(-offset,offset),0,0,halfTime)
-
-syncTurnInTime(opBLeg1,-62+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(opBLeg2,22+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(opBLeg3,-21+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(Head,-1,0,0,halfTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,-5+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,50+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,-62+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,22+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-21+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head);syncTurnInTime(Head,-1,0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 
 --Shear
 val=math.random(2,7)
@@ -559,13 +564,13 @@ speed= (val/(halfTime/1000))*mod
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --Push Backwards
-syncTurnInTime(fwLeg1,25+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(fwLeg2,-44+math.random(-offset,offset),0,0,halfTime)
-
-syncTurnInTime(opBLeg1,-90+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(opBLeg2,-24+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(opBLeg3,85+math.random(-offset,offset),0,0,halfTime)
-syncTurnInTime(Head,1,0,0,halfTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(25+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(-44+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(-90+(-1*centerTurnX)+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(-24+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(85+math.random(-offset,offset),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head	);syncTurnInTime(1,0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 Sleep(halfTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
@@ -577,12 +582,12 @@ mod=0.15115
 quadTime=math.ceil(time*0.25)
 halfTime=math.ceil(time*0.55)
 --MidPos
-syncTurnInTime(fwLeg1,12+(-1*centerTurnX),0,0,quadTime)
-syncTurnInTime(fwLeg2,-36,0,0,quadTime)
-
-syncTurnInTime(opBLeg1,0 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,-28+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,12+(-1*centerTurnX),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,-36,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,0 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,-28+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 
 --Shear
 val=math.random(20,70)
@@ -595,24 +600,24 @@ Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
 --SetDown
-syncTurnInTime(fwLeg1,42 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(fwLeg2,19 +math.random(-offset,offset),0,0,quadTime)
-
-syncTurnInTime(opBLeg1,-38+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,15+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(Head,-1,0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,42 +(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,19 +math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,-38+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,15+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head);syncTurnInTime(Head,-1,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 
 
 Sleep(quadTime)		
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 --Push Backwards
-syncTurnInTime(fwLeg1,60+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(fwLeg2,20+math.random(-offset,offset),0,0,quadTime)
-
-syncTurnInTime(opBLeg1,-79+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,70+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,60+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,20+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,-79+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,70+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-23+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 Sleep(quadTime)	
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 
@@ -626,12 +631,12 @@ speed= (val/(quadTime/1000))*mod
 
 			
 --Push Backwards
-syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(fwLeg2,-5+math.random(-offset,offset),0,0,quadTime)
-
-syncTurnInTime(opBLeg1,-32+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg2,-6+math.random(-offset,offset),0,0,quadTime)
-syncTurnInTime(opBLeg3,-89+math.random(-offset,offset),0,0,quadTime)
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,-5+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+                                                     
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,-32+(-1*centerTurnX)+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,-6+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,-89+math.random(-offset,offset),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 Sleep(quadTime)
 WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3)
 bool_TurnForwardDone=true

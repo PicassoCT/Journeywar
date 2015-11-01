@@ -571,6 +571,8 @@ StompTable={}
 StompBaseTable={}
 WindowTable={}
 
+refUnitScript=Spring.UnitScript
+
 TotalDistanceDown=-60
 OrgSignal=0
 function getUniqueSignal()
@@ -723,7 +725,8 @@ function setUp()
 			
 			
 			
-			TurnPieceList(go,
+			TurnPieceList(refUnitScript,
+							go,
 						  false, --TurnInOrder
 						  false, -- WaitForTurn
 						  false --synced
@@ -886,7 +889,8 @@ function eggDeploy(speed)
 				Arm[6], 0,0,0,speed,
 			  }
 	echoTable(go)		  
-TurnPieceList(go,
+TurnPieceList(refUnitScript,
+							go,
 			  false, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
@@ -901,7 +905,8 @@ Show(Op18)
 Move(Stack01,y_axis,0,0)
 
 		  
-TurnPieceList({	Arm[1],98,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],98,0,0,speed,
 				Arm[2], 0,0,-127,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
@@ -918,7 +923,8 @@ Sleep(3000)
 			  
 
 			  
-TurnPieceList({	Arm[1],98,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],98,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
@@ -941,7 +947,8 @@ Sleep(5000)
 				Arm[6],-115,-115,-18,speed,
 			  }
 
-TurnPieceList(go,
+TurnPieceList(refUnitScript,
+							go,
 			  true, --TurnInOrder
 			  true, -- WaitForTurn
 			  true --synced
@@ -953,7 +960,8 @@ Show(GrowCapsule)
 Hide(Op18)
 Move(GrowSpot,y_axis,totalDistanceDown,0)
 
-TurnPieceList({	Arm[1],90,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],90,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
@@ -1070,7 +1078,8 @@ end
   Move(CrationismT[i],z_axis,(distanceGate - i*(distanceGate/4))*-1,0,true)
   Hide(CrationismT[i])
  end
-  TurnPieceList({Arm[1],110,0,0,speed,
+  TurnPieceList(refUnitScript,
+							{Arm[1],110,0,0,speed,
 				Arm[2],0,0,-130,speed,
 				Arm[3],5,0,0,speed,
 				Arm[4], 25,0,0,speed,
@@ -1095,7 +1104,8 @@ end
 Sleep(12000)
 Hide(Crate4)
 Show(Op4)
-TurnPieceList({	Arm[1],0,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],0,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
@@ -1109,7 +1119,8 @@ TurnPieceList({	Arm[1],0,0,0,speed,
 			  )
 Sleep(12000)
 
-TurnPieceList({	Arm[1],0,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],0,0,0,speed,
 				Arm[2],0,0,-225,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
@@ -1122,7 +1133,8 @@ TurnPieceList({	Arm[1],0,0,0,speed,
 			  
 			  )
 Sleep(12000)
-TurnPieceList({	Arm[1],90,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],90,0,0,speed,
 				Arm[2],0,0,-225,speed,
 				Arm[3],100,0,0,speed,
 				Arm[4], -15,0,0,speed,
@@ -1136,7 +1148,8 @@ TurnPieceList({	Arm[1],90,0,0,speed,
 Sleep(12000)
 Hide(Op4)
 Show(Crate1)
-TurnPieceList({	Arm[1],0,0,0,speed,
+TurnPieceList(refUnitScript,
+							{	Arm[1],0,0,0,speed,
 				Arm[2],0,0,0,speed,
 				Arm[3],0,0,0,speed,
 				Arm[4], 0,0,0,speed,
@@ -1212,7 +1225,8 @@ end
 function testArm(sideSign, nr,speed,predelay,postDelay)
 
 Sleep(predelay)
-TurnPieceList({	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
+TurnPieceList(refUnitScript,
+							{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
 				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
 				ArmsTable[nr][3],0,0,0,speed,
 				ArmsTable[nr][4], 0,0,0,speed,
@@ -1230,7 +1244,8 @@ else
 fVal=math.random(30,110)*sideSign*-1
 end
 Sleep(5000)
-TurnPieceList({	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
+TurnPieceList(refUnitScript,
+							{	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
 				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
 				ArmsTable[nr][3],0,0,fVal*-1*sideSign,speed,
 				ArmsTable[nr][4], 0,0,fVal*sideSign,speed,
@@ -1242,7 +1257,8 @@ TurnPieceList({	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
 			  true --synced
 			  )
 Sleep(3000)		
-TurnPieceList({	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
+TurnPieceList(refUnitScript,
+							{	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr),speed,
 				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
 				ArmsTable[nr][3],0,0,0,speed,
 				ArmsTable[nr][4], 0,0,0,speed,
@@ -1260,63 +1276,71 @@ end
 
 function operate()
 
-while true do 
---test tools
-sideSign=-1
+	while true do 
+	--test tools
+	sideSign=-1
 
 
-	for i=1,#ArmsTable, 1 do
-	
-	startval=math.random(0.25,1)
-	range=math.random(0.5,1.5)
-	
-	
-	if i > 9 then sideSign=1 end
-		if ArmsTable[i] and i ~=4 and i ~=18 then
-		StartThread(testArm,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
+		for i=1,#ArmsTable, 1 do
+		
+		startval=math.random(0.25,1)
+		range=math.random(0.5,1.5)
+		
+		
+			if i > 9 then sideSign=1 end
+			
+				if ArmsTable[i] and i ~=4 and i ~=18 then
+				StartThread(testArm,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
+				end
 		end
+
+		
+		Sleep(12000)
+	--fixate
+	setOfTools={}
+	nrOfIntstruments=math.random(2,7)
+		for i=1,nrOfIntstruments do 
+			setOfTools[math.ceil(math.random(1,#ArmsTable))]= true 
+		end
+	--open
+		
+		for k,v in pairs(setOfTools) do
+			-- snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
+							-- SnakePoints,
+							-- axis,
+							-- speed, 
+							-- FirstSensor,
+							-- tolerance,  
+							-- boolPartStepExecution, 
+							-- boolWait
+							-- )
+		end
+
+	
+		
+
+	Hide(Sack)
+	Show(SackWIP)
+	Hide(GrowCapsule)
+	Show(BloodCapsule)
+
+
+	--remove tissue
+
+	--insert implant
+
+	--special case --loose instrument
+	--close up
 	end
-Sleep(12000)
---fixate
-setOfTools={}
-nrOfIntstruments=math.random(2,7)
-for i=1,nrOfIntstruments do setOfTools[math.ceil(math.random(1,#ArmsTable))]= true end
---open
-for k,v in pairs(nrOfIntstruments) do
-	-- snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
-					-- SnakePoints,
-					-- axis,
-					-- speed, 
-					-- FirstSensor,
-					-- tolerance,  
-					-- boolPartStepExecution, 
-					-- boolWait
-					-- )
-end
-
-setOfTools[#setOfTools+1]=math.ceil(math.random(1,#ArmsTable)) end
-
-Hide(Sack)
-Show(SackWIP)
-Hide(GrowCapsule)
-Show(BloodCapsule)
-
-
---remove tissue
-
---insert implant
-
---special case --loose instrument
 
 end
 
---close up
 
 
 
 	
 
-end
+
 function insertArm(sideSign,nr)
 
 

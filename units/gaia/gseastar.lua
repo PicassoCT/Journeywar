@@ -38,7 +38,8 @@ CanMove = true,
 CanPatrol = true,
 CanStop = true,
 
-
+ transportCapacity   = 1,
+  transportSize       = 30000,
 
 Category = [[LAND]],
 selfDestructAs= [[NOWEAPON]],

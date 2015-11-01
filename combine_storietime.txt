@@ -55,8 +55,8 @@ Bodys:
 	Everlasting. 
 	Especially in city-time.
 	But with every world you go, you get tailored and upgraded. 
-	Stronger Bones, Synthetic muscles, new Eyes or cell repair genes for high rad worlds.
-	I calculated that after three campaigns, every trooper is all-moist a robot. So get out, before they get to you.
+	Stronger Bones for high gravity, Synthetic muscles, new Eyes or cell repair genes for high rad worlds.
+	I calculated that after three tours, every trooper is all-moist a robot. So get out, before they get to you.
 	
 Eaten:
 	So there i was, swallowed - a whole, eaten alive.
@@ -64,34 +64,20 @@ Eaten:
 	on a little sea of diggestive fluids. Eat the parasites that beast had.
 	To stay sane, i would collect bowel-movements, crawl up near the throat now and then, 
 	and try to contact the world beyond.
-	
-Bodys:
-	At first the Body seems eternal. 
-	Everlasting. 
-	Especially in city-time.
-	But with every world you go, you get tailored and upgraded. 
-	Stronger Bones, Synthetic muscles, new Eyes or cell repair genes for high rad worlds.
-	I calculated that after three campaigns, every trooper is all-moist a robot. So get out, before they get to you.
-	
-Eaten:
-	So there i was, swallowed - a whole, eaten alive.
-	No ammo, no food, all i could do was paddle around on a raft of bodies,
-	on a little sea of diggestive fluids. Eat the parasites that beast had.
-	To stay sane, i would collect bowel-movements, crawl up near the throat now and then, 
-	and try to contact the world beyond.
-	
+
 
 Whereabouts:
 	Where does the Centrail come from?
 	<Ask him yourself>
 	Just did, no real answer.
 	<Well, he knows, so i can tell>
-	<Center of each galaxy,is a massive blackhole, whose substrate penetrates the event horizon. 
+	<Center of each galaxy,is a massive blackhole, whose substrate penetrates the event horizon and 
+	 connects with every other singularity in every dimension. >
 	Some ancient species, wrote on it with a maser, test-signals, data, then programs.>
 	And?
-	<Turns out they are all connected, and really fast machines. So it signals out>
-	Signals what?
-	<The law: You shall have no other AI besides me!>
+	<Turns out they are all connected, and really fast machines. So it speaks the only law.>
+	 Law?
+	< You shall have no other AI besides me!>
 	
 Synths:
 	<Why the Synths, why not real tanks?>
@@ -99,10 +85,25 @@ Synths:
 	<and?>
 	this war has been around for a long while. We drained planets, removed biosphere, 
 	to contain the exo-biotics spreading. 
-	They are too good at what they do.
+	They are too good at what they do. We loose. They win.
+	We continue, by spreading faster then they do away from them and fighting fire with fire.
 	Thats why.
-	
 
+RedSunDysonSphere:
+	It was in a red sun dyson fractal in the argon-Constellation, where this war went really insane. 
+	The degraded residents didnt even care anymore about our presence. And the journeys had a internal argument, i can only guess about what.
+	If a world can only be preserved by technology, should they, i guess.
+	So they started fighting one another.
+	Both of our sides - the universal union and the centrail confederacy - held back first, then argued, whether to fire or to talk.
+	 So..word comes to worst and there we are butchering us in the ruins of a elder civilization, with strange allies, against our brothers.
+ 
+Animals:
+" look at them"- he said. "Feeding, fighting, fucking. They are animals-" he laughed.
+Damn Rookie, still pink around the implants, not a day in the city. So i agree to make him see.
+"Look at them, they are animals, lower then us.  They can only imagine one plan, one boss at a time,out of instincts fear of civil strife. 
+"Look at them, least of beasts, ousting there sexual divergents into caste to enforce pair-bonding for drugs-contracts."
+"Look at them, laughing at us, like the centrail does."
+Not one word for the rest of the orb, went to the city and returned a different man.
 
 	
 
