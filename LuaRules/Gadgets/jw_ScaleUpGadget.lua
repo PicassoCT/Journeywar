@@ -44,7 +44,8 @@ if (gadgetHandler:IsSyncedCode()) then
    [UnitDefNames["cawilduniverseappears"].id]=true,
    [UnitDefNames["ghohymen"].id]=true,
    [UnitDefNames["jvaryfoo"].id]=true,
-   [UnitDefNames["jspacebornembryo"].id]=true
+   [UnitDefNames["jspacebornembryo"].id]=true,
+   [UnitDefNames["gseastar"].id]=true
    }
    
    jBuildAnimDefID=UnitDefNames["jbuildanim"].id
@@ -66,6 +67,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			ScaleFactorProFrame=0.001
 	
 			ScaleUpLimit=1
+			if unitDefID== UnitDefNames["gseastar"].id then ScaleFactorProFrame= 0.003 		end --or unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id 	
 			if unitDefID== UnitDefNames["jswiftspear"].id then ScaleFactorProFrame=0.001 		end --or unitDefID== UnitDefNames["tiglil"].id  or unitDefID== UnitDefNames["skinfantry"].id 	
 			if unitDefID== UnitDefNames["jbeherith"].id 	then ScaleFactorProFrame=0.0005 	end
 			if unitDefID== UnitDefNames["jsungodcattle"].id then ScaleFactorProFrame=0.0006 	end

@@ -1305,15 +1305,15 @@ function operate()
 	--open
 		
 		for k,v in pairs(setOfTools) do
-			-- snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
-							-- SnakePoints,
-							-- axis,
-							-- speed, 
-							-- FirstSensor,
-							-- tolerance,  
-							-- boolPartStepExecution, 
-							-- boolWait
-							-- )
+			 snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
+							SnakePoints,
+							axis,
+							speed, 
+							FirstSensor,
+							tolerance,  
+							boolPartStepExecution, 
+							boolWait
+							)
 		end
 
 	

@@ -295,8 +295,8 @@ boolMoving= function (ox,oy,oz)
 			if  boolMoving(ox,oy,oz)==true then
 				swimAnimation(PivotPoints,pieces)
 			else 
-			Sleep(math.floor(updateCycle/2))
-			stopSwimAnimation(PivotPoints,pieces)
+				Sleep(math.floor(updateCycle/2))
+				stopSwimAnimation(PivotPoints,pieces)
 			end
 		Sleep(math.ceil(updateCycle/2))
 		
@@ -501,24 +501,20 @@ end
 
 function absoluteRotation(piecename, axis, finalRotation,x_deg,y_deg,z_deg)
 
-finalRotation=finalRotation
 
-
-
-
-if axis==x_axis then
-return math.abs( x_deg -finalRotation)%180
-elseif axis==y_axis then
-return math.abs( y_deg -finalRotation)%180
-else
-return math.abs( z_deg -finalRotation)%180
-end
+	if axis==x_axis then
+		return math.abs( x_deg -finalRotation)%180
+	elseif axis==y_axis then
+		return math.abs( y_deg -finalRotation)%180
+	else
+		return math.abs( z_deg -finalRotation)%180
+	end
 end
 
 
 -->Turns a piece in the speed necessary to arrive after x Milliseconds
 function turnInTime(piecename,axis,degree,timeInMs,boolWait,x_deg,y_deg,z_deg )
-
+ 
 
 absoluteDeg=absoluteRotation(piecename,axis,degree,x_deg,y_deg,z_deg)+0.01
 
@@ -562,9 +558,10 @@ function syncTurnInTime(piecename,x_val,y_val,z_val,time,x_deg,y_deg,z_deg)
 	if lib_boolDebug==true then
 	Spring.Echo("Time for syncTurnInTime:"..time)
 	end
-turnInTime(piecename,x_axis, (x_val),time,x_deg,y_deg,z_deg) -- -28   3000
-turnInTime(piecename,y_axis, (y_val),time,x_deg,y_deg,z_deg)
-turnInTime(piecename,z_axis, (z_val),time,x_deg,y_deg,z_deg)
+ 
+turnInTime(piecename,x_axis, (x_val),time,false,x_deg,y_deg,z_deg) -- -28   3000
+turnInTime(piecename,y_axis, (y_val),time,false,x_deg,y_deg,z_deg)
+turnInTime(piecename,z_axis, (z_val),time,false,x_deg,y_deg,z_deg)
 
 end
 
@@ -1487,6 +1484,7 @@ intCases[i][3]=false
 end
 -----------------------------------------
 function turnSyncInTimeTable(Table, time,x_deg,y_deg,z_deg)
+ 
 	for piece,v in pairs(Table) do
 		turnInTime(v.piecenr, v.axis,math.rad(v.deg), time, false,x_deg,y_deg,z_deg)
 	end
@@ -1501,6 +1499,7 @@ if not piecename then return end
 		tP(piecename,x,y,z,speed)
 		return
 	end
+	 
 
 tx=	absoluteRotation(piecename,x_axis,x,x_deg,y_deg,z_deg)+0.01
 ty=	absoluteRotation(piecename,y_axis,y,x_deg,y_deg,z_deg)+0.01
@@ -2583,8 +2582,8 @@ function TurnPieceList( ScriptEnviroment,PieceList, boolTurnInOrder, boolWaitFor
 			echo("TurnPieceList piece "..i.." missing") 
 			else	
 			x_deg,y_deg,z_deg= ScriptEnviroment.GetPieceRotation(PieceList[i])
-			assert(z_deg)
-			turnSyncInSpeed(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4],math.deg(x_deg),math.deg(y_deg),zmath.deg(z_deg))
+		
+			turnSyncInSpeed(PieceList[i],PieceList[i+1],PieceList[i+2], PieceList[i+3],PieceList[i+4],math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 			end
 		end
 		
@@ -4086,12 +4085,24 @@ end
 	
 	
 	--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
-	function feetThread(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction,LegMax, WiggleFunc,ScriptEnviroment)
+	function feetThread(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LegMax, WiggleFunc,ScriptEnviroment,SensorT)
 	LMax=LegMax or 5
     oldHeading=0
 		Sleep(500)
 		
-		lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+			stabilize(quadrant,
+							 degOffSet,
+							 turnDeg,
+							 nr,
+							 FirstAxisPoint,
+							 KneeT,
+							 SensorPoint,
+							 Weight,
+							 Force,
+							LiftFunction,
+							ScriptEnviroment,
+							SensorT
+							)
 		
 		while true do
 			while GG.MovementOS_Table[unitID].boolmoving == true do
@@ -4110,10 +4121,11 @@ end
 							 Weight,
 							 Force,
 							LiftFunction,
-							LowerFunction)
+							ScriptEnviroment
+							)
 					Sleep(100)
-					lowerFeet(quadrant,
-							degOffSet,
+						stabilize(quadrant,
+							 degOffSet,
 							 turnDeg,
 							 nr,
 							 FirstAxisPoint,
@@ -4122,7 +4134,8 @@ end
 							 Weight,
 							 Force,
 							LiftFunction,
-							LowerFunction)
+							SensorT
+							)
 					Sleep(100)
 					pushBody(quadrant,
 							degOffSet,
@@ -4132,8 +4145,7 @@ end
 							 KneeT,
 							 SensorPoint,
 							 Weight,
-							 Force,
-							LowerFunction,
+							 Force,						
 							nr,
 							ScriptEnviroment)
 							
@@ -4148,28 +4160,31 @@ end
 							 Weight,
 							 Force,
 							LiftFunction,
-							LowerFunction)
+							ScriptEnviroment,
+							SensorT
+							)
 					Sleep(100)
 			end
-			while true do
-				stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction,ScriptEnviroment)
+		
+		stabilize(quadrant,
+								 degOffSet,
+								 turnDeg,
+								 nr,
+								 FirstAxisPoint,
+								 KneeT,
+								 SensorPoint,
+								 Weight,
+								 Force,
+								LiftFunction,
+								ScriptEnviroment,
+								SensorT
+								)		
 			Sleep(100)
-			end
+			
 				
 		
-				Heading=(Spring.GetUnitHeading(unitID)/32768)*3.14159
-				boolTurning= math.abs(Heading - oldHeading) > 1
-			if boolTurning== true then 				
-			speed=math.random(5,15)/100
-			RelHeading=(((degOffSet+360 )-(Heading+360))-360)%360
-				if (RelHeading < 0) then RelHeading = (RelHeading+360)*-1 end
-				
-			Turn(FirstAxisPoint,y_axis,math.rad(degOffSet+clamp(RelHeading,-25,25)*-1),speed)
-			turnT(KneeT,y_axis,clamp(RelHeading,-10,10)*-1,speed,false,true)			
-			else
-				WiggleFunc(FirstAxisPoint,degOffSet)
-			end
-			Sleep(1000)
+		
+		
 		end
 				
 				
@@ -4177,24 +4192,19 @@ end
 		end
 
 	--return Feet into origin position and push body above ground
-	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,lowerFeetFunction,nr, ScriptEnviroment)
+	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,nr, ScriptEnviroment)
 	if lib_boolDebug == true then	 Spring.Echo("lib_UnitScript::pushBody") end
 		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet),0.3)
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
 	
 		time=0 
-		while  time < 1000 do
 		
-			time=time + lowerFeetFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
-			Sleep(80)
-			time=time+80
-		end
 		WaitForTurn(FirstAxisPoint,y_axis)
 	end
 	
 	-->Uses the LiftAnimation Function to Lift the Feed
-	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
+	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction)
 	if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::liftFeedForward") end
 	GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
 	speed= clamp(Force/(#KneeT*Weight),0.15,0.25)
@@ -4215,16 +4225,9 @@ end
 	
 	end
 	
-	-->Uses the Animation Function To Lower the Feet
-	function	lowerFeet(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction)
-	if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::lowerFeet") end
-		LowerFunction(KneeT,Force/(5*Weight),SensorPoint,FirstAxisPoint,degOffSet)
-		
-		GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]+1
-	end
-	
+
 	-->Stabilizes the Feet above ground and rest
-	function	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LowerFunction,ScriptEnviroment)
+	function	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,ScriptEnviroment,SensorT)
 
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
@@ -4234,38 +4237,46 @@ end
 		WaitForTurn(FirstAxisPoint,y_axis)
 		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet), 0.15)
 		assert(ScriptEnviroment.GetPieceRotation)
+		assert(SensorT)
+		
 		unitHeigth=GG.MovementOS_Table[unitID].stability*Height 
 		propagatedCounterChange=0
+			
 				for i=#KneeT,1, -1 do
-				measureIndex=clamp(i-2,1,6)
+				measureIndex=clamp(i,1,#KneeT)
+				boolUnderground=true
 				
-				x,y,z=Spring.GetUnitPiecePosDir(unitID,KneeT[measureIndex])
+				
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,SensorT[measureIndex])
 				xdeg,y_deg,z_deg=ScriptEnviroment.GetPieceRotation(KneeT[i])
 				tDeg= math.deg(xdeg)
 			
 					GroundHeight=Spring.GetGroundHeight(x,z) 
-		--			if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::stabilize::PieceHeigth".. ( y -35 -unitHeigth ).." < "..GroundHeight.." ::GroundHeight") end
+				--	if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::stabilize::PieceHeigth".. ( y -35 -unitHeigth ).." < "..GroundHeight.." ::GroundHeight") end
 					
 				
-						
-					if  y  > GroundHeight +20 then --Go down				
-						
-						tDeg=clamp( tDeg	+  	(1/i)*0.15	+propagatedCounterChange	,-55,35)	
+					
+					
+					if y - GroundHeight > 20 then --Go down		
+					if y - GroundHeight < 5 then break end				
+					
+						tDeg=clamp( tDeg	+  	0.25	+propagatedCounterChange	,-75, math.max((1/i)*75,25))	
 						tDeg= convertToNeg(tDeg)
-						propagatedCounterChange=propagatedCounterChange	-	(1/i)*0.15
+						propagatedCounterChange=propagatedCounterChange	-	0.25
 						Turn(KneeT[i],x_axis,math.rad(tDeg),0.0175)
 					else--Go up	faster					
+					boolUnderground=true
 				
-						tDeg=clamp(tDeg		- 	(2/i)*1.125   +propagatedCounterChange		,-55,35)
+						tDeg=clamp(tDeg		- 	1.15   +propagatedCounterChange		,-75,  math.max((1/i)*75,25))
 						tDeg= convertToNeg(tDeg)
-						propagatedCounterChange=propagatedCounterChange	+	(2/i)*1.125   
-						Turn(KneeT[i],x_axis,math.rad(tDeg),0.35)	
-					end		
-				WaitForTurn(KneeT[i],x_axis)					
+						propagatedCounterChange=propagatedCounterChange	+	1.15
+						Turn(KneeT[i],x_axis,math.rad(tDeg),0.135)	
+						
+					end					
+									
 				end		
+				WaitForTurns(KneeT)
 				
-				
-		
 		
 		
 		
@@ -4284,6 +4295,7 @@ end
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local infoT= configTable
 	pieceMap={}
+	oldHeading=(Spring.GetUnitHeading(unitID)/32768)*3.14159
 	pieceMap[infoT.centerNode]={}
 	pieceMap=recursiveAddTable(pieceMap,infoT.centerNode, infoT.centerNode,inPeace)
 	
@@ -4312,10 +4324,10 @@ end
 						infoT.ElementWeight or 10,
 						infoT.FeetLiftForce or 2,
 						infoT.LiftFunction,
-						infoT.LowerFunction,
 						infoT.Height,
 						infoT.WiggleFunc,
-						ScriptEnviroment
+						ScriptEnviroment,
+						infoT.tipTable[i]
 						)
 			end
 		
@@ -4358,6 +4370,24 @@ end
 				end
 			
 			Move(infoT.centerNode,y_axis,GG.MovementOS_Table[unitID].stability*Height,3)
+			
+			Heading=(Spring.GetUnitHeading(unitID)/32768)*3.14159
+			boolTurning= math.abs(Heading - oldHeading) > 1
+			
+			
+			for i=1,infoT.nr,1 do			
+			degOffSet=(-190+(85)*i)
+				RelHeading=(((degOffSet+360 )-(Heading+360))-360)%360
+				if (RelHeading < 0) then RelHeading = (RelHeading+360)*-1 end		
+
+				if boolTurning== true then 				
+					speed=math.random(5,15)/100
+					Turn(	infoT.feetTable.firstAxis[i],y_axis,math.rad(degOffSet+clamp(RelHeading,-25,25)*-1),speed)
+					turnT(infoT.feetTable.Knees[i],y_axis,clamp(RelHeading,-10,10)*-1,speed,false,true)			
+				else
+					infoT.WiggleFunc(	infoT.feetTable.firstAxis[i],degOffSet)
+				end
+			end
 			Sleep(400)	
 			end
 	end
