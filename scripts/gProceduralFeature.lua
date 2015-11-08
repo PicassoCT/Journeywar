@@ -652,8 +652,10 @@ end
 function showEmitor()
 --show Emitor
 StartThread(glowingReactor)
+
 if maRa()==true then Spin(Emitor,y_axis,math.rad(3),0.1) end
   while true do
+  uniqueTimeOffset=math.ceil(math.random(-150,200))
   --charge Up
   Turn(EmitorLimbs[1],x_axis,math.rad(0),0.2*(33/20))
   Turn(EmitorLimbs[2],x_axis,math.rad(0),0.2*(33/20))
@@ -672,7 +674,8 @@ if maRa()==true then Spin(Emitor,y_axis,math.rad(3),0.1) end
   Turn(EmitorLimbs[3],z_axis,math.rad(23),22)
   Turn(EmitorLimbs[4],z_axis,math.rad(-49),22)
    WaitForTurn(EmitorLimbs[4],z_axis)
-   Sleep(9000)
+   
+   Sleep(9000+uniqueTimeOffset)
   end
 end
 

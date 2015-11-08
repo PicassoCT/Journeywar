@@ -47,31 +47,47 @@ end
 local function GetStartUnit(teamID)
 	-- get the team startup info
 	local side = select(5, Spring.GetTeamInfo(teamID))
-	local startUnit
+	local startUnit=""
 	
 	boolIsAI= IsTeamAI(teamID)
-	
+		
 		if boolIsAI==true then
+	
 		local sidedata = Spring.GetSideData()
-		startUnit =sidedata.startunitai
-		return startUnit
+
+		startUnit = sidedata.startunitai
+		if not startUnit then startUnit= sidedata.startunit end
+			if not startUnit then 
+				if math.random(0,1)==1 then
+					startUnit= "citadell" 
+				else
+					startUnit= "beanstalk" 
+				end
+			end
+			
+		return startUnit 
 		end
 	
 	if (side == "") then
+			Spring.Echo("GameStart:: Unknown side for team .."..teamID)
 		-- startscript didn't specify a side for this team
 		local sidedata = Spring.GetSideData()
+		
 		if (sidedata and #sidedata > 0) then
 			startUnit = sidedata[1 + teamID % #sidedata].startUnit
 		end
 	else
 		startUnit = Spring.GetSideData(side)
+		
+		return sidedata.startunit
 	end
-	return startUnit
+	return "citadell"
 end
 
 local function SpawnStartUnit(teamID)
 	local startUnit = GetStartUnit(teamID)
 	if (startUnit and startUnit ~= "") then
+	Spring.Echo("GameStart::Called for 3 team .."..teamID)
 		-- spawn the specified start unit
 		local x,y,z = Spring.GetTeamStartPosition(teamID)
 		-- snap to 16x16 grid
@@ -84,9 +100,9 @@ local function SpawnStartUnit(teamID)
 		local unitID = Spring.CreateUnit(startUnit, x, y, z, facing, teamID)
 		 if startUnit=="citadell" then
 		 
-		 id1=Spring.CreateUnit("contruck", x+100, y+200, z, facing, teamID)
-		 id2=Spring.CreateUnit("contruck", x+100, y+200, z+50, facing, teamID)
-		 id3=Spring.CreateUnit("contruck", x+100, y+200, z-50, facing, teamID)
+		 id1=Spring.CreateUnit("contrain", x+100, y+200, z, facing, teamID)
+		 id2=Spring.CreateUnit("contrain", x+100, y+200, z+50, facing, teamID)
+		 id3=Spring.CreateUnit("contrain", x+100, y+200, z-50, facing, teamID)
 		 Spring.CreateUnit("ccittadeldecal", x, y, z, 0, teamID)
 		 Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
 		 
@@ -145,6 +161,7 @@ function gadget:GameStart()
 	local teams = Spring.GetTeamList()
 	for i = 1,#teams do
 		local teamID = teams[i]
+		Spring.Echo("GameStart::Called for team .."..teamID)
 		-- don't spawn a start unit for the Gaia team
 		if (teamID ~= gaiaTeamID) then
 			SpawnStartUnit(teamID)
