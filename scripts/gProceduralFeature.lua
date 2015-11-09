@@ -340,17 +340,17 @@ end
 
 function aChainExplosion(ed)
 distance =0 
-posx,posy,posz=Spring.GetUnitDistance(ed)
+posx,posy,posz=GetUnitDistance(ed)
 
-while distance <32 do
-wed=Spring.GetUnitNearesAlly(ed)
-osx,osy,osz=Spring.GetUnitDistance(wed)
-a,b,c=posx-osx,posy-osy,posz-osz
-distance=math.sqrt(a*a+b*b+c*c)
-Spring.DestroyUnit(ed)
-posx,posy,posz=osx,osy,osz
-ed=wed
-end
+	while distance <32 do
+	wed=Spring.GetUnitNearesAlly(ed)
+	osx,osy,osz=GetUnitDistance(wed)
+	a,b,c=posx-osx,posy-osy,posz-osz
+	distance=math.sqrt(a*a+b*b+c*c)
+	Spring.DestroyUnit(ed)
+	posx,posy,posz=osx,osy,osz
+	ed=wed
+	end
 
 end
 -- Not inspired or entired by the Foorunners
@@ -378,35 +378,12 @@ NamePerk={ --Generic SciFi Name   --generic dramatic description    --generic Sc
 }
 
 chosenPerk=math.floor(math.random(1,#NamePerk))
-
-floatcenter=piece"floatcenter"
-CenterUP=70
-function script.Create()
+function delayedSetup()
+Sleep(5)
 Move(center,y_axis,CenterUP,0,true)
 
 Spin(floatcenter,y_axis,math.rad(2),0)
-Hide(Emitor)
-	for i=1,4 do
-	Hide(EmitorLimbs[i])
-	end
-	for i=1,OUT,1 do
-	Hide(OutPostPieces[i].piece)
-	end
-	--base
-hideT(base)
-boolSuccess=false
-for i=1,4 do
-if deMaRa()==true then
- Show(base[i])
- boolSuccess=true
- break 
- end
-end
 
-if boolSuccess==false then Show(base[4]) end
-hideT(Scrap)
-hideT(FloatPieces)
-hideT(P)
 Spring.SetUnitTooltip (unitID,NamePerk[chosenPerk].name.." - ".. (NamePerk[chosenPerk].description))
 Spring.SetUnitNeutral(unitID,true )
 val=deMaRaVal(360)
@@ -416,6 +393,34 @@ buildFeature()
 Show(center)
 StartThread(threadLoop)
 StartThread(selfRepairLoop)
+end
+
+floatcenter=piece"floatcenter"
+CenterUP=70
+function script.Create()
+Hide(Emitor)
+	for i=1,4 do
+		Hide(EmitorLimbs[i])
+	end
+	for i=1,OUT,1 do
+		Hide(OutPostPieces[i].piece)
+	end
+	--base
+hideT(base)
+boolSuccess=false
+for i=1,4 do
+	if deMaRa()==true then
+	 Show(base[i])
+	 boolSuccess=true
+	 break 
+	 end
+end
+
+if boolSuccess==false then Show(base[4]) end
+hideT(Scrap)
+hideT(FloatPieces)
+hideT(P)
+StartThread(delayedSetup)
 end
 
 function script.Killed(recentDamage,_)
@@ -476,7 +481,7 @@ function buildFeature()
 		end
 	end
 --	if math.random(0,2)==1 then StartThread(showEmitor) end
-	if deMaRa()==true then showOutPosts() end
+	if deMaRa()==true then StartThread(showOutPosts) end
 	if deMaRa()==true  then showFloaters() end
 	andIllBeHardCore()
 end
@@ -522,6 +527,15 @@ StartThread(showEmitor)
 	end
 end
 function showOutPosts() 
+x,y,z=Spring.GetUnitPosition(unitID)
+yOld=y+10
+	while yOld ~= y do
+	x,y,z=Spring.GetUnitPosition(unitID)
+	yOld=y
+	Sleep(100)
+	end
+
+
 start=math.random(10,170)
 	for i=1,#OutPostPieces-2, 2 do
 		if deMaRa() then

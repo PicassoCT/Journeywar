@@ -50,38 +50,28 @@ local function GetStartUnit(teamID)
 	local startUnit=""
 	
 	boolIsAI= IsTeamAI(teamID)
-		
+	local sidedata = Spring.GetSideData(side)	
+	
 		if boolIsAI==true then
 	
-		local sidedata = Spring.GetSideData()
-
-		startUnit = sidedata.startunitai
-		if not startUnit then startUnit= sidedata.startunit end
-			if not startUnit then 
-				if math.random(0,1)==1 then
-					startUnit= "citadell" 
-				else
-					startUnit= "beanstalk" 
-				end
-			end
-			
-		return startUnit 
-		end
+		if sidedata and  sidedata.startunitai then return  sidedata.startunitai end
+		
+		else
 	
-	if (side == "") then
-			Spring.Echo("GameStart:: Unknown side for team .."..teamID)
-		-- startscript didn't specify a side for this team
-		local sidedata = Spring.GetSideData()
-		
-		if (sidedata and #sidedata > 0) then
-			startUnit = sidedata[1 + teamID % #sidedata].startUnit
+		if sidedata and sidedata.startunit then return sidedata.startunit end
+			
 		end
-	else
-		startUnit = Spring.GetSideData(side)
 		
-		return sidedata.startunit
-	end
-	return "citadell"
+		if  sidedata and sidedata[1 + teamID % #sidedata] and sidedata[1 + teamID % #sidedata].startUnit  then 
+		return sidedata[1 + teamID % #sidedata].startUnit 
+		end	
+	
+				if teamID% 2 ==1 then
+				return"citadell" 
+				else
+				return"beanstalk" 
+				end
+	
 end
 
 local function SpawnStartUnit(teamID)

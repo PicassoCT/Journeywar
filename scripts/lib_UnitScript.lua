@@ -905,6 +905,8 @@ Move(piecename,z_axis,z,speed,true)
 
 end
 
+
+
 -->Returns randomized Boolean
 function maRa()
 return math.random(0,1)==1 
