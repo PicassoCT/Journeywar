@@ -2517,15 +2517,17 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 --func
 --getPointPlane(point, -degAroundAxis)
 
-	while boolResolved==false and math.abs(normVector(subVector(SnakePoints[1],vOrigin)))-tolerance <=   math.abs(normVector(subVector(LastInsertedPoint,vOrigin))) do
+	while boolResolved==false do
 	 
 	 boolAlgoRun=false
 	 while boolAlgoRun ==false do
 	 hypoModel=PPDLL
 	 GlobalIndex= #PPDLL
+	local nextGoal=PPDLL[Index].PointIndex
+	
 		for Index= #PPDLL, 1, -1 do
 			--CheckCenterPastPoint_PointIndex 
-			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[PPDLL[Index].PointIndex],LastPoint)
+			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[nextGoal],LastPoint)
 			
 			-->True && boolGateCrossed =false
 			if boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==false then
@@ -2564,11 +2566,35 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 		end
 	end
 	 applyChangesAsTurns(PPDLL)
-	 boolResolved=isSnakeAtMax()
+	 boolResolved=isSnakeAtMax(PPDLL)
 	end
 --]]
 end
 
+function absVec(vec)
+vec.x=math.abs(vec.x)
+vec.y=math.abs(vec.y)
+vec.z=math.abs(vec.z)
+return vec
+end
+
+function eqVec(vecA,vecB)
+
+
+end
+
+function isSnakeAtMax(PPDLL,SnakePoints)
+--if every point from the base point out is aligned towards its next goal
+	for i=1, #PPDLL do
+	px,py,pz,dx,dy,dz=Spring.GetUnitPiecePosDir(unitID,PPDLL[i].Piece)
+	pgx,pgy,pgz,dgx,dgy,dgz=Spring.GetUnitPiecePosDir(unitID,SnakePoints[PPDLL[Index].PointIndex])
+	vec=	norm2Vector(makeVector(px-pgx,py-pgy,pz-pgz))
+		if eqVec(makeVector(dx,dy,dz),vec)==false then return false end
+		
+	end
+
+return true
+end
 
 function TurnPieceList( ScriptEnviroment,PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 
