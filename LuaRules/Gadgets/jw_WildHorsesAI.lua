@@ -1,6 +1,7 @@
 -- In-game, type /luarules kpai in the console to toggle the ai debug messages
  
 function gadget:GetInfo()
+local modOptions = Spring.GetModOptions()
         return {
                 name = "Wild Horses AI",
                 desc = "Generic Emergent AI using eventstreams",
@@ -8,7 +9,7 @@ function gadget:GetInfo()
                 date = "around since last tuesday",
                 license = "GPL - by reading this you are basically allready infected. Brainz, brainz - no wait -freedomz, freedomz...",
                 layer = 82,
-                enabled = false
+                enabled = (modOptions.WildHorsesAI and modOptions.WildHorsesAI== true) or false
         }
 end
 

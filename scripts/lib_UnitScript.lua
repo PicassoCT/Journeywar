@@ -2477,12 +2477,12 @@ return divVector(PointA,2)
 end
 
 
-function checkCenterPastPoint(MidPoint,GatePoint,LastPoint)
+function checkCenterPastPoint(MidPoint,GatePoint,PrevGatePoint)
 
-OrgPoint=subVector(GatePoint,LastPoint)
+OrgPoint=subVector(GatePoint,PrevGatePoint)
 MirrorPointV=mulVector(OrgPoint,-1)
 
-	-- if distance to LastPoint < then distance to mirrored Point
+	-- if distance to PrevGatePoint < then distance to mirrored Point
 if norm2Vector(subVector(MirrorPointV,MidPoint)) >= norm2Vector(subVector(OrgPoint,MidPoint)) then
 		return true
 		else 
@@ -2523,13 +2523,26 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 	 while boolAlgoRun ==false do
 	 hypoModel=PPDLL
 	 GlobalIndex= #PPDLL
-	local nextGoal=PPDLL[Index].PointIndex
+
+
 	
 		for Index= #PPDLL, 1, -1 do
+		
+		local nextGoal=PPDLL[Index].PointIndex
+		x,y,z,dx,dy,dz=Spring.GetUnitPiecePosDir(unitID,PPDLL[Index].Piece)
+		
+		local PieceStartPoint =makeVector(x,y,z)
+		px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,PPDLL[math.min(Index+1,#PPDLL)].Piece)
+		local PieceEndPoint		  =makeVector(px,py,pz)
+		
+		ppx,ppy,ppz,ppdx,ppdy,ppdz=Spring.GetUnitPiecePosDir(unitID,PPDLL[math.min(Index+1,#PPDLL)].Piece)
+		local PrevGatePoint		  =makeVector(ppx,ppy,ppz)
+		
+		
 			--CheckCenterPastPoint_PointIndex 
-			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoi													PieceEndPoint),
+			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),
 													SnakePoints[nextGoal],
-													LastPoint)
+													PrevGatePoint)
 			-->if pointIndex is beyond Last Point this piece is far beyond 
 			if nextGoal > #SnakePoint then 
 			-- align yourself  counterVectorwise from the last Point you crossed
@@ -2545,10 +2558,9 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 					--ReAlign Piece Goal
 					end
 					--
-					PPDLL[Index].boolGateCrossed =checkCenterPastPoint( midVector(PieceStartPoint,
-																		PieceEndPoint),
+					PPDLL[Index].boolGateCrossed =checkCenterPastPoint( midVector(PieceStartPoint,	PieceEndPoint),
 																		SnakePoints[nextGoal],
-																		LastPoint)
+																		PrevGatePoint)
 			
 					if PPDLL[Index].boolGateCrossed == true then
 					PPDLL[Index].PointIndex= PPDLL[Index].PointIndex +1 
