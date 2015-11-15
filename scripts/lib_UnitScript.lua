@@ -2527,15 +2527,32 @@ vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPD
 	
 		for Index= #PPDLL, 1, -1 do
 			--CheckCenterPastPoint_PointIndex 
-			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),SnakePoints[nextGoal],LastPoint)
+			boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoi													PieceEndPoint),
+													SnakePoints[nextGoal],
+													LastPoint)
+			-->if pointIndex is beyond Last Point this piece is far beyond 
+			if nextGoal > #SnakePoint then 
+			-- align yourself  counterVectorwise from the last Point you crossed
+			
+			end
 			
 			-->True && boolGateCrossed =false
 			if boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==false then
 
+					--TurnPieceTowardstNextPoint(PrevPieceIndex) hypoModel
+					counterTurnDeg=0
+					for BackTrackIndex= Index, #PPDLL, 1 do
+					--ReAlign Piece Goal
+					end
+					--
+					PPDLL[Index].boolGateCrossed =checkCenterPastPoint( midVector(PieceStartPoint,
+																		PieceEndPoint),
+																		SnakePoints[nextGoal],
+																		LastPoint)
 			
-			
-					--TurnPieceTowardstPoint(PrevPieceIndex) hypoModel
-					--CounterTurnPrevPiece hypoModel
+					if PPDLL[Index].boolGateCrossed == true then
+					PPDLL[Index].PointIndex= PPDLL[Index].PointIndex +1 
+					end
 					--boolGateCrossed=True 
 					--IncPointIndex
 					--CheckCenterPastPoint_PrevPiece() && boolGateCrossed != true
