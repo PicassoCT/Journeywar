@@ -15,6 +15,68 @@ include "lib_OS.lua"
 
 ctgoresub={}
 
+cargo=0
+passengertable={}
+
+function script.TransportDrop(passengerID, x, y, z)
+	if loaded == false then return end
+	--if unit not loaded
+	loaded=false
+	for i=1,cargo,1 do
+			if passengertable[i] == passengerID then
+			loaded=true
+			end
+	end
+	
+	if loaded == false then return end
+	
+	SetUnitValue(COB.BUSY, 1)
+
+	Spring.SetUnitNoDraw(passengerID,false) 	
+
+
+	DropUnit(passengerID)
+	cargo=cargo-1
+
+	if cargo<= 0 then
+	loaded = false
+	end
+
+	SetUnitValue(COB.BUSY, 0)
+end
+
+eatItAlive={
+	[UnitDefNames["gcivillian"].id]=true,
+	[UnitDefNames["gseastar"].id]=true,
+	[UnitDefNames["ghohymen"].id]=true	
+	}
+	
+
+function script.TransportPickup(passengerID)
+	--onlycivilians
+	local defIDPassenger = Spring.GetUnitTeam(passengerID)
+	
+	if not eatItAlive[defIDPassenger] then return end
+	
+	--if opera has full house
+	if cargo >= cargoMax then return end
+	SetUnitValue(COB.BUSY, 1)
+	
+--openBayDoors
+
+    if dist >128 then return end
+   
+	AttachUnit(center, passengerID)
+	
+	table.insert(passengertable,passengerID)
+	
+	cargo=cargo+1
+	
+	
+	Spring.SetUnitNoDraw(passengerID,true) 
+	loaded=true
+	SetUnitValue(COB.BUSY, 0)
+end
 
 
 local iWantAHug=piece "iWantAHug"

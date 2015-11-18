@@ -5,7 +5,7 @@ function gadget:GetInfo()
 	
 	
         return {
-                name = "Spawner AI",
+                name = "spawner",
                 desc = "Spawns Units",
                 author = "Your Moma",
                 date = "around since last tuesday",
@@ -21,7 +21,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	gaiaTeam=Spring.GetGaiaTeamID()
 	teamTable={}
 	meridianTable={}
-	spawnUnits={bio={"jgeohive", "jbeehive"}
+	spawnUnits={ bio={"jgeohive", "jbeehive"}
 				,tec={"bonker","sentry","coverworldgate","combinedfeature"}
 				}
 	function spawnSpawners(frame)
@@ -52,7 +52,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	for _, t in ipairs (Spring.GetTeamList ()) do
 	
         local teamID, leader, isDead, isAI, side = Spring.GetTeamInfo (t)
-        if isAI and Spring.GetTeamLuaAI (teamID) == "Spawner AI" then
+        if isAI and Spring.GetTeamLuaAI (teamID) == "spawner" then
             spawnerAI[teamID] = true
         
 			boolAtLeastOneSPawner=true
@@ -68,15 +68,29 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 		for team, tab in ipairs (teamTable) do
 			for ateam, atab in ipairs (teamTable) do
+			
 				if team ~=ateam then
-					meridianTable[#meridianTable]={start=tab,lend=atab}
+				medianPoint={x=0,z=0}
+				medianPoint.x,medianPoint.z=(tab.x+atab.x)/2,(tab.z+atab.z)/2
+					meridianTable[#meridianTable+1]=medianPoint
 				end
+				
+				
 			end
 		end
+		tempTable={}
+		for i=1,#meridianTable do
+		for j=1,#meridianTable do
+			if i~=j then
+			tempTable={tab=meridianTable[i],atab=meridianTable[j]}		
+			end
+		end
+		end
+		meridianTable=tempTable
 	
 	end
 
-	end
+
 	
 	incRate=0
 	total=9000-incRate

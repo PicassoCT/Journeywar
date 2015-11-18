@@ -7,8 +7,8 @@ objectName = "gCivVillian.s3o",
 script = "gCiVillian.lua",
 buildPic = "placeholder.png",
 --cost
-buildCostMetal = 350,
-buildCostEnergy = 150,
+buildCostMetal = 45,
+buildCostEnergy = 180,
 buildTime = 15,
 --Health
 maxDamage = 50,

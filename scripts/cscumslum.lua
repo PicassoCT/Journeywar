@@ -16,7 +16,7 @@ local explodeemit5 = piece "explodeemit5"
 local gangstaturner1 = piece "gangstaturner1"
 local gangstaturner2 = piece "gangstaturner2"
 local gangstaturner3 = piece "gangstaturner3"
-
+teamID=Spring.GetUnitTeam(unitID)
 slumTable={
 		[1]=scumslum,
 		[2]=scumslum2,
@@ -34,6 +34,39 @@ table.insert(gangstArray,scgangsta2)
 
 table.insert(gangstArray,scgangsta3)
 
+
+local damageAccumulated=0
+ratio=4
+mratio=1/((UnitDefNames["cscumslum"].buildcostmetal /ratio )/(UnitDefNames["gcivillian"].buildcostmetal /2))
+eratio=1/((UnitDefNames["cscumslum"].buildcostenergy /ratio )/(UnitDefNames["gcivillian"].buildcostenergy /2))
+
+
+hp,maxhp=Spring.GetUnitHealth(unitID)
+ratioDamage=math.abs(maxhp*((mratio+eratio)/2))
+--gcivilian
+--buildCostMetal = 250,
+--buildCostEnergy = 750,
+
+function script.HitByWeapon ( x, z, weaponDefID, damage )
+damageAccumulated=damageAccumulated+damage
+	if damageAccumulated > ratioDamage then
+	laID=Spring.GetUnitLastAttacker(unitID)
+	valID=Spring.GetUnitIsDead(laID)
+	px,pz=0,0
+		if valID and valID==true then
+			px,_,pz=Spring.GetUnitPosition(laID)
+		else
+			px,_,pz=Spring.GetUnitPosition(unitID)
+			px,pz=px+ (x*-35),pz+(z*-35)	
+		end
+	id=Spring.CreateUnit("gcivilian",px,0,pz,0,teamID)
+		if id then
+			Spring.SetUnitNoSelect(id,true)
+		end
+	end
+
+return damage
+end
 
 function buildSlum()
 hideT(slumTable)
@@ -259,7 +292,7 @@ function script.Create()
 buildSlum()
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
+
 
 if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
 	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)

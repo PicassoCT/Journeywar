@@ -4,7 +4,7 @@ local foo = {
 		desc="Real AI is just no fun.. ",
 	},
 		{
-		name="Spawner AI",
+		name="spawner",
 		desc="Spawns Opposing Forces that besiege you",
 	},
 }

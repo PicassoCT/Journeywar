@@ -4,14 +4,16 @@ local sidedata = {
     name      = 'centrail',
 
     startunit = 'citadell',
-	startunitai ='citadell'
+	startunitai ='citadell',
+	startunitspawner="coverworldgate"
   },
 	[2] = {
 
     name      = 'journeyman',
 
     startunit = 'beanstalk',
-	startunitai ='beanstalk'
+	startunitai ='beanstalk',
+	startunitspawner="jgeohive"
   },
 }
 return sidedata

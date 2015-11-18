@@ -12,7 +12,8 @@ local civLeg12 = piece"civLeg12"
 local civLeg21 = piece"civLeg21"
 local civLeg22 = piece"civLeg22"
 runDist=500
-local lifeTime=3
+--second
+local lifeTime=45
 --define other pieces
 
 local SIG_WALK = 1	--signal for the walk animation thread
@@ -253,10 +254,10 @@ function script.StopMoving()
 end
 
 function killMeSoftly()
-for i=1,lifeTime,1 do
-Sleep(60000)
-end
-Spring.DestroyUnit(unitID)
+
+Sleep(1000*lifeTime)
+
+Spring.DestroyUnit(unitID,false,true)
 
 end
 

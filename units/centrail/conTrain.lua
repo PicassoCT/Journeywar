@@ -38,7 +38,10 @@ CanStop = true,
 	selfDestructAs="cArtDM", 
 
 upright=true,
-
+ transportCapacity   = 3,
+  transportSize       = 3000,
+  
+  
 Category = [[LAND]],
   leaveTracks =true,
   trackType ="cTrain",

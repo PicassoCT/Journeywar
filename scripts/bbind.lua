@@ -364,12 +364,20 @@ Spring.SetUnitNanoPieces(unitID,{flare})
 	function isInfantry(passengerDefID)
 	if Infantry[passengerDefID] then return true else return false end
 	end
+	
+	eatItAlive={
+	[ UnitDefNames["gjbigbiowaste"].id]=true,
+	[UnitDefNames["gjmedbiogwaste"].id]=true,
+	[UnitDefNames["gcivillian"].id]=true,
+	[UnitDefNames["gseastar"].id]=true,
+	[UnitDefNames["ghohymen"].id]=true	
+	}
 
 	function isBio(ids)
 	passengerDefID=Spring.GetUnitDefID(ids)
-	if isInfantry(passengerDefID)==true or  passengerDefID == UnitDefNames["gjbigbiowaste"].id or passengerDefID == UnitDefNames["gjmedbiogwaste"].id then
-	return true
-	end
+		if isInfantry(passengerDefID)==true or  eatItAlive[passengerDefID] then
+		return true
+		end
 	
 	return false
 	end

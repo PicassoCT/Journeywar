@@ -53,8 +53,14 @@ local function GetStartUnit(teamID)
 	local sidedata = Spring.GetSideData(side)	
 	
 		if boolIsAI==true then
-	
-		if sidedata and  sidedata.startunitai then return  sidedata.startunitai end
+		
+			if sidedata and  Spring.GetTeamLuaAI (teamID) == "spawner" and sidedata.startunitspawner then 
+				return sidedata.startunitspawner 		
+			elseif 	sidedata.startunitai then 
+				return  sidedata.startunitai 
+			end
+			
+		
 		
 		else
 	
