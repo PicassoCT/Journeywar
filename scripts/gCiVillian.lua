@@ -26,29 +26,27 @@ function reduceTimeSinceLastChatter()
 Sleep(timeSinceLastChatter)
 timeSinceLastChatter=0
 end
+unitdef=Spring.GetUnitDefID(unitID)
 
 function throwYourHandsUpInTheAir()
 health=Spring.GetUnitHealth(unitID)
 healthOfOld=health
 	while(true) do
 	health=Spring.GetUnitHealth(unitID)
-	if health==healthOfOld then
+	if health >=healthOfOld then
 	Sleep(500)
 		else
+		if timeSinceLastChatter < 5 then 
 		AleaActaEst=math.random(0,14)
-		if timeSinceLastChatter ==5 then 
+		
 			if AleaActaEst==0 then
-			Spring.PlaySoundFile("sounds/gCiv/screamWaah.wav",0.3)
-			Sleep(700)
-			StartThread(reduceTimeSinceLastChatter)
+			StartThread(PlaySoundByUnitType,unitdef, "sounds/gCiv/screamWaah.wav",0.3,700, 1,50)	
+			
 			elseif AleaActaEst==2 then
-			Spring.PlaySoundFile("sounds/gCiv/woah.wav",0.3)
-			Sleep(700)
-			StartThread(reduceTimeSinceLastChatter)
+				StartThread(PlaySoundByUnitType,unitdef, "sounds/gCiv/woah.wav",0.3,700, 1,50)				
 			elseif AleaActaEst==3 then
-			Spring.PlaySoundFile("sounds/gCiv/woohw.wav",0.3)
-			Sleep(700)
-			StartThread(reduceTimeSinceLastChatter)
+			StartThread(PlaySoundByUnitType,unitdef,"sounds/gCiv/woohw.wav",0.3,700, 1,50)			
+			
 			end
 		end
 		EmitSfx(emit1,1024)
@@ -264,7 +262,8 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	if math.random(0,2)==1 then
-		Spring.PlaySoundFile("sounds/gCiv/screamWaah.wav",0.3)
+
+		StartThread(PlaySoundByUnitType,unitdef, "sounds/gCiv/screamWaah.wav",0.3,700, 1,50)	
 	end
 			EmitSfx(emit1,1024)
 			EmitSfx(emit2,1024)

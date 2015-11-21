@@ -37,8 +37,8 @@ table.insert(gangstArray,scgangsta3)
 
 local damageAccumulated=0
 ratio=4
-mratio=1/((UnitDefNames["cscumslum"].buildcostmetal /ratio )/(UnitDefNames["gcivillian"].buildcostmetal /2))
-eratio=1/((UnitDefNames["cscumslum"].buildcostenergy /ratio )/(UnitDefNames["gcivillian"].buildcostenergy /2))
+mratio=1/((UnitDefNames["scumslum"].buildcostmetal /ratio )/(UnitDefNames["gcivillian"].buildcostmetal /2))
+eratio=1/((UnitDefNames["scumslum"].buildcostenergy /ratio )/(UnitDefNames["gcivillian"].buildcostenergy /2))
 
 
 hp,maxhp=Spring.GetUnitHealth(unitID)

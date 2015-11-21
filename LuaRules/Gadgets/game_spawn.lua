@@ -58,21 +58,18 @@ local function GetStartUnit(teamID)
 				return sidedata.startunitspawner 		
 			elseif 	sidedata.startunitai then 
 				return  sidedata.startunitai 
-			end
-			
+			end	
 		
-		
-		else
-	
-		if sidedata and sidedata.startunit then return sidedata.startunit end
-			
+		else	
+			if sidedata and sidedata.startunit then return sidedata.startunit end
 		end
 		
 		if  sidedata and sidedata[1 + teamID % #sidedata] and sidedata[1 + teamID % #sidedata].startUnit  then 
 		return sidedata[1 + teamID % #sidedata].startUnit 
 		end	
 	
-				if teamID% 2 ==1 then
+	Spring.Echo("TeamSpawnUnits Not Definend: Randomzing ")
+				if teamID% 2 ==0 then
 				return"citadell" 
 				else
 				return"beanstalk" 

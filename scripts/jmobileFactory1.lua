@@ -138,7 +138,7 @@ end
 
 
 function ThreadLauncher()
-local time=math.ceil(math.random(1500,8000))
+time=math.ceil(math.random(1500,8000))
 	while true do
 		while not GG.jJourneyWon or GG.jJourneyWon == false do
 		Sleep(time)
@@ -229,7 +229,7 @@ local LUpdateUnitPosition=UpdateUnitPosition
       if (not spValidUnitID (factoryID)) then newFactory () end
       local x,y,z = spGetUnitPosition (unitID)	 
 	 spMovCtrlSetPos(factoryID,x,y+50,z+2)
-      Sleep (5)
+      Sleep (50)
    end
 end
 

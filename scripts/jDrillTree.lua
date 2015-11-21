@@ -171,6 +171,13 @@ local lsteam= Steam
 	end
 end
 
+function createExtrema()
+	GG.Extrema= {}
+	min,max=Spring.GetGroundExtremes()
+	GG.Extrema= max+math.abs(min)+100 or 250
+end
+
+
 function thisIsTheEnd()
 x=-9999
 y=-9999
@@ -190,10 +197,8 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	----Spring.Echo("x:",x)
 	end
 	
-	if GG.Extrema == nil then 
-	GG.Extrema= {}
-	min,max=Spring.GetGroundExtremes()
-	GG.Extrema= max+math.abs(min)+100
+	if not GG.Extrema  then 
+	createExtrema()
 	end
 	
 	while( y < GG.Extrema) do
@@ -203,6 +208,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 			x,y,z=spGetUnitPosition(unitID)
 			end
 	Sleep(3000)
+		 if not GG.Extrema then createExtrema() end
 	end
 endOfTimes()	
 overTime=math.random(1000,50000)
