@@ -1151,12 +1151,12 @@ function widgetHandler:DrawScreen()
   end
 
   if (self.tweakMode) then
-    gl.Color(0, 0, 0, 0.5)
+    gl.Color(0.2, 0.4, 0.6, 0.5)
     local sx, sy, px, py = Spring.GetViewGeometry()
     gl.Shape(GL.QUADS, {
       {v = { px,  py }}, {v = { px+sx, py }}, {v = { px+sx, py+sy }}, {v = { px, py+sy }}
     })
-    gl.Color(1, 1, 1)
+    gl.Color(0.4, 0.8, 0.9, 0.75)
   end
 
   for _,w in ripairs(self.DrawScreenList) do
