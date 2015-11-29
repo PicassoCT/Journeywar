@@ -123,13 +123,8 @@ beanstalk=  {
 	{class='ShieldSphere', options={life=math.huge, pos={0,400,0}, size=140,   colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
 	{class='ShieldSphere', options={life=math.huge, pos={0,500,0}, size=130,   colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
 
-	{class='ShieldSphere', options={life=math.huge, pos={0,650,0}, size=120,   colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
-	{class='ShieldSphere', options={life=math.huge, pos={0,700,0}, size=110,   colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
-	{class='ShieldSphere', options={life=math.huge, pos={0,750,0}, size=100,   colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
-	{class='ShieldSphere', options={life=math.huge, pos={0,800,0}, size=90,   colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
-	{class='ShieldSphere', options={life=math.huge, pos={0,850,0}, size=90,   colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},
 
-	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength   = 0.005,  repeatEffect=true}},     
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength   = 0.005,  repeatEffect=true}}    
   },
   
  jestorage=  {

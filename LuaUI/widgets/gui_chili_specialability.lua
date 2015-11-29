@@ -38,7 +38,7 @@ local screen0
 
 
 
-local imageDir = 'LuaUI/images/'
+local imageDir = 'luaui/images/'
 local AZTex = {imageDir .. 'taczone/action.png'}
 local rzTex = {imageDir .. 'taczone/reservoire.png'}
 local tzTex = {imageDir .. 'taczone/trigger.png'}
@@ -64,7 +64,7 @@ local comenderButton
 local upgradeGrid
 local AmmoBar
 local ExpBar
-local imageDir = 'LuaUI/images/commands/'
+local imageDir = 'luaui/images/commands/'
 local onoffTexture = {imageDir .. 'states/off.png', imageDir .. 'states/on.png'}
 
 

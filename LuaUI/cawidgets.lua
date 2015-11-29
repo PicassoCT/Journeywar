@@ -306,7 +306,7 @@ function widgetHandler:Initialize()
   local autoModWidgets = Spring.GetConfigInt('LuaAutoModWidgets', 1)
   self.autoModWidgets = (autoModWidgets ~= 0)
 
-  -- create the "LuaUI/Config" directory
+  -- create the "luaui/Config" directory
   Spring.CreateDir(LUAUI_DIRNAME .. 'Config')
 
   local unsortedWidgets = {}

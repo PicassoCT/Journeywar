@@ -36,7 +36,8 @@ local function GetDirectory(filepath)
 end 
 
 local source = debug and debug.getinfo(1).source
-local DIR = GetDirectory(source) or (LUAUI_DIRNAME.."Widgets/")
+local DIR = GetDirectory(source) or (LUAUI_DIRNAME.."widgets/")
+DIR = "luaui/"
 CHILI_DIRNAME = DIR .. "chili/"
 
 --------------------------------------------------------------------------------

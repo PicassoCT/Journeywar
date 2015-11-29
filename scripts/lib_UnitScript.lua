@@ -2716,6 +2716,15 @@ if y then
 end
 end
 
+function getFrameDependentUniqueOffset(limit)
+if not GG.FrameDependentOffset then GG.FrameDependentOffset={val=0, frame=Spring.GetGameFrame() } end
+if GG.FrameDependentOffset.frame ~=Spring.GetGameFrame() then GG.FrameDependentOffset.val =0; GG.FrameDependentOffset.frame =Spring.GetGameFrame() end
+
+GG.FrameDependentOffset.val=GG.FrameDependentOffset.val+1
+sign=randSign()
+return sign*math.random (0, (GG.FrameDependentOffset.frame * GG.FrameDependentOffset.val)% limit +1)
+end
+
 --> Play a soundfile only by unittype
 function PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
 if predelay and predelay > 0 then Sleep(predelay) end

@@ -1,0 +1,67 @@
+return {
+  ["citadelldrone"] = {
+pooftuff = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 2,
+      ground             = true,
+      water              = true,
+      properties = {
+        airdrag            = 0.95,
+        alwaysvisible      = true,
+        colormap           = [[0.1 0.2 0.6 1.0	0.1 0.1 0.3 1.0		0 0 0 0.0]],
+        directional        = true,
+        emitrot            = 45,
+        emitrotspread      = 12,
+        emitvector         = [[0, 0, 1]],
+        gravity            = [[0, 0, 0]],
+        numparticles       = 18,
+        particlelife       = 32,
+        particlelifespread = 5,
+        particlesize       = 5,
+        particlesizespread = 2,
+        particlespeed      = 1,
+        particlespeedspread = 3,
+        pos                = [[r-1 r1, 1, r-1 r1]],
+        sizegrowth         = 1.0001,
+        sizemod            = 1.0,
+        texture            = [[citadellcloud2]],
+        useairlos          = true,
+				},
+    },
+	
+    pooftufftwo = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 2,
+      ground             = true,
+      water              = true,
+      properties = {
+        airdrag            = 0.95,
+        alwaysvisible      = true,
+        colormap           = [[0.0 0.5 0.6 1.0	0.2 0.8 0.9 1.0		0 0 0 0.0]],
+        directional        = true,
+        emitrot            = 75,
+        emitrotspread      = 9,
+        emitvector         = [[0, 1, 0]],
+        gravity            = [[0, 0, 0]],
+        numparticles       = 14,
+        particlelife       = 36,
+        particlelifespread = 5,
+        particlesize       = 9,
+        particlesizespread = 4,
+        particlespeed      = 1,
+        particlespeedspread = 4,
+        pos                = [[r-1 r1, 1, r-1 r1]],
+        sizegrowth         = 1.00015,
+        sizemod            = 1.0,
+        texture            = [[citadellcloud]],
+        useairlos          = true,
+				},
+    },
+	
+	
+},
+
+}
+

@@ -35,13 +35,13 @@ if LUA_NAME == "LuaUI" then
 
 	ADDON_DIRS     = {
 		LUA_DIRNAME .. 'Addons/';
-		LUA_DIRNAME .. 'Widgets/';
+		LUA_DIRNAME .. 'widgets/';
 		LUA_DIRNAME .. 'SystemAddons/';
 		LUA_DIRNAME .. 'SystemWidgets/';
 		LUA_DIRNAME .. 'chili/';
 	}
 
-	--// Create the "LuaUI/Config" directory
+	--// Create the "luaui/Config" directory
 	Spring.CreateDir(LUAUI_DIRNAME .. 'Config')
 
 	handler:Load(LUAUI_DIRNAME .. "SystemWidgets/BlockUserWidgets.lua" --[[, VFS.ZIP]])

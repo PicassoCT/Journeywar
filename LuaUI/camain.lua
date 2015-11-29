@@ -168,7 +168,7 @@ end
 
 --
 -- The unit (and some of the Draw) call-ins are handled
--- differently (see LuaUI/widgets.lua / UpdateCallIns())
+-- differently (see luaui/widgets.lua / UpdateCallIns())
 --
 
 

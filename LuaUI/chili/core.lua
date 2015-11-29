@@ -46,11 +46,13 @@ local includes = {
 
 local Chili = widget
 
-Chili.CHILI_DIRNAME = CHILI_DIRNAME or (LUAUI_DIRNAME .. "Widgets/chili/")
+Chili.CHILI_DIRNAME = CHILI_DIRNAME or (LUAUI_DIRNAME .. "widgets/chili/")
 Chili.SKIN_DIRNAME  =  SKIN_DIRNAME or (CHILI_DIRNAME .. "skins/")
 
 if (-1>0) then
   Chili = {}
+  
+
   -- make the table strict
   VFS.Include(Chili.CHILI_DIRNAME .. "headers/strict.lua")(Chili, widget)
 end

@@ -180,37 +180,37 @@ Move(PortalEmit,y_axis,1200,0,true)
 	Sleep(100)
 	end
 				if i==1 then
+			
+			spCreateUnit("contruck",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+125, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+90+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+75+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+55+i, 0, teamID)  
 
-			spCreateUnit("contruck",dropPx,dropPy,dropZ+125, 0, teamID)  
-			spCreateUnit("bg",dropPx+20,dropPy,dropZ+90+i, 0, teamID)  
-			spCreateUnit("bg",dropPx-20,dropPy,dropZ+75+i, 0, teamID)  
-			spCreateUnit("bg",dropPx+20,dropPy,dropZ+55+i, 0, teamID)  
+			spCreateUnit("contruck",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160+i, 0, teamID)
 
-			spCreateUnit("contruck",dropPx,dropPy,dropZ+250+i, 0, teamID)  
-			spCreateUnit("bg",dropPx+20,dropPy,dropZ+200+i, 0, teamID)  
-			spCreateUnit("bg",dropPx-20,dropPy,dropZ+180+i, 0, teamID)  
-			spCreateUnit("bg",dropPx+20,dropPy,dropZ+160+i, 0, teamID)
-
-			spCreateUnit("contruck",dropPx,dropPy,dropZ+340+i, 0, teamID)  
-			spCreateUnit("bg",dropPx+20,dropPy,dropZ+300+i, 0, teamID)  
-			spCreateUnit("bg",dropPx-20,dropPy,dropZ+280+i, 0, teamID)  
-			spCreateUnit("bg",dropPx+20,dropPy,dropZ+260+i, 0, teamID)
+			spCreateUnit("contruck",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280+i, 0, teamID)  
+			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260+i, 0, teamID)
 
 
 										else
 										
-									spCreateUnit("contrain",dropPx,dropPy,dropZ+340+i, 0, teamID)  
+									spCreateUnit("contrain",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340+i, 0, teamID)  
 										
 
-									spCreateUnit("conair",dropPx,dropPy,dropZ+250, 0+i, teamID)  
-									spCreateUnit("bg",dropPx+20,dropPy,dropZ+200+i, 0, teamID)  
-									spCreateUnit("bg",dropPx-20,dropPy,dropZ+180+i, 0, teamID)  
-									spCreateUnit("bg",dropPx+20,dropPy,dropZ+160+i, 0, teamID)
+									spCreateUnit("conair",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250, 0+i, teamID)  
+									spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200+i, 0, teamID)  
+									spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180+i, 0, teamID)  
+									spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160+i, 0, teamID)
 
-									spCreateUnit("conair",dropPx,dropPy,dropZ+340+i, 0, teamID)  
-									spCreateUnit("bg",dropPx+20,dropPy,dropZ+300+i, 0, teamID)  
-									spCreateUnit("bg",dropPx-20,dropPy,dropZ+280+i, 0, teamID)  
-									spCreateUnit("bg",dropPx+20,dropPy,dropZ+260+i, 0, teamID)
+									spCreateUnit("conair",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340+i, 0, teamID)  
+									spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300+i, 0, teamID)  
+									spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280+i, 0, teamID)  
+									spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260+i, 0, teamID)
 
 										end
 

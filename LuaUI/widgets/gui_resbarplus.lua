@@ -59,10 +59,10 @@ else
 metall="Matter"
 end
 
-pathEnergy="LuaUI/images/cres_energy.png"
-pathMetall="LuaUI/images/cres_metal.png"
-if sideCombine==false then pathEnergy= 'LuaUI/images/jres_energy.png' end
-if sideCombine==false then pathMetall= 'LuaUI/images/jres_metal.png' end
+pathEnergy="luaui/images/cres_energy.png"
+pathMetall="luaui/images/cres_metal.png"
+if sideCombine==false then pathEnergy= 'luaui/images/jres_energy.png' end
+if sideCombine==false then pathMetall= 'luaui/images/jres_metal.png' end
 
 components[1] = { --"Energy bar, yellow"--
 name=energy ,

@@ -90,15 +90,15 @@ local pointbPic       = ":n:"..LUAUI_DIRNAME.."images/advplayerslist/pointb.png"
 local takebPic        = ":n:"..LUAUI_DIRNAME.."images/advplayerslist/takeb.png"
 local seespecPic      = ":n:"..LUAUI_DIRNAME.."images/advplayerslist/seespec.png"
 
-local rank0      = "LuaUI/images/advplayerslist/Ranks/rank0.png"
-local rank1      = "LuaUI/images/advplayerslist/Ranks/rank1.png"
-local rank2      = "LuaUI/images/advplayerslist/Ranks/rank2.png"
-local rank3      = "LuaUI/images/advplayerslist/Ranks/rank3.png"
-local rank4      = "LuaUI/images/advplayerslist/Ranks/rank4.png"
-local rank5      = "LuaUI/images/advplayerslist/Ranks/rank5.png"
-local rank6      = "LuaUI/images/advplayerslist/Ranks/rank6.png"
-local rank7      = "LuaUI/images/advplayerslist/Ranks/rank7.png"
-local rank8      = "LuaUI/images/advplayerslist/Ranks/rank_unknown.png"
+local rank0      = "luaui/images/advplayerslist/Ranks/rank0.png"
+local rank1      = "luaui/images/advplayerslist/Ranks/rank1.png"
+local rank2      = "luaui/images/advplayerslist/Ranks/rank2.png"
+local rank3      = "luaui/images/advplayerslist/Ranks/rank3.png"
+local rank4      = "luaui/images/advplayerslist/Ranks/rank4.png"
+local rank5      = "luaui/images/advplayerslist/Ranks/rank5.png"
+local rank6      = "luaui/images/advplayerslist/Ranks/rank6.png"
+local rank7      = "luaui/images/advplayerslist/Ranks/rank7.png"
+local rank8      = "luaui/images/advplayerslist/Ranks/rank_unknown.png"
 
 local sidePics        = {}  -- loaded in Sem_sidePics function
 local sidePicsWO      = {}  -- loaded in Sem_sidePics function
@@ -107,8 +107,8 @@ local sidePicsWO      = {}  -- loaded in Sem_sidePics function
 -- Fonts
 --------------------------------------------------------------------------------
 
-local font            = "LuaUI/Fonts/FreeSansBold_14"
-local fontWOutline    = "LuaUI/Fonts/FreeSansBoldWOutline_14"     -- White outline for font (special font set)
+local font            = "luaui/Fonts/FreeSansBold_14"
+local fontWOutline    = "luaui/Fonts/FreeSansBoldWOutline_14"     -- White outline for font (special font set)
 
 
 --------------------------------------------------------------------------------
@@ -1424,19 +1424,19 @@ function SetSidePics()
 	for _, team in ipairs(teamList) do
 		_,_,_,_,teamside = Spring_GetTeamInfo(team)
 		if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside..".png") then
-			sidePics[team] = ":n:LuaUI/images/Advplayerslist/"..teamside..".png"
+			sidePics[team] = ":n:luaui/images/Advplayerslist/"..teamside..".png"
 			if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside.."WO.png") then
-				sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/"..teamside.."WO.png"
+				sidePicsWO[team] = ":n:luaui/images/Advplayerslist/"..teamside.."WO.png"
 			else
-				sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/noWO.png"
+				sidePicsWO[team] = ":n:luaui/images/Advplayerslist/noWO.png"
 			end
 		else
 			if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside.."_default.png") then
-				sidePics[team] = ":n:LuaUI/images/Advplayerslist/"..teamside.."_default.png"
+				sidePics[team] = ":n:luaui/images/Advplayerslist/"..teamside.."_default.png"
 				if VFS.FileExists(LUAUI_DIRNAME.."images/Advplayerslist/"..teamside.."WO_default.png") then
-					sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/"..teamside.."WO_default.png"
+					sidePicsWO[team] = ":n:luaui/images/Advplayerslist/"..teamside.."WO_default.png"
 				else
-					sidePicsWO[team] = ":n:LuaUI/images/Advplayerslist/noWO.png"
+					sidePicsWO[team] = ":n:luaui/images/Advplayerslist/noWO.png"
 				end
 			else
 				if teamside ~= "" then

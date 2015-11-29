@@ -57,7 +57,7 @@ local math_abs  = math.abs
 ----------------------------------------------------------------------------------------------------
 --                                        Local constants                                         --
 ----------------------------------------------------------------------------------------------------
-local textureBegin = ":n:LuaUI/images/TacticalGrid/"
+local textureBegin = ":n:luaui/images/TacticalGrid/"
 
 local texTopLeft                = textureBegin .. "top_left.png"
 local texTopRight               = textureBegin .. "top_right.png"

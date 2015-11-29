@@ -1,3 +1,6 @@
+	
+	include "lib_UnitScript.lua"
+ 
 	center=piece"center"
 	beans= piece"beans"
 	beanstalk=piece"beanstalk"
@@ -61,7 +64,7 @@
 
 	wurzelballen={}
 
-	for i=1,4,1 do
+	for i=1,10,1 do
 	wurzelballen[i]={}
 	stone= "Wurzelbal"..i
 	wurzelballen[i]=piece (stone)
@@ -472,15 +475,11 @@ end
 	Spin(rootgrow,y_axis,math.rad(-9),0.4)
 
 
-
-
-	Spin(wurzelballen[4],z_axis,math.rad(20),0.7)
-	Spin(wurzelballen[3],x_axis,math.rad(20),0.7)
-	Spin(wurzelballen[2],x_axis,math.rad(-20),0.7)
-	Spin(wurzelballen[1],z_axis,math.rad(-20),0.7)
-
-
-
+	for i=1, #wurzelballen do
+	val=math.random(10,30) 
+	tspeed=math.random(0.7,2)
+		Spin(wurzelballen[i],y_axis,math.rad(val),tspeed)
+	end
 
 
 	Spin(bsfetas,y_axis,math.rad(3.2),0.2)
@@ -591,36 +590,36 @@ end
 			
 						if i==1 then
 
-						GG.UnitsToSpawn:PushCreateUnit("jconroach",dropPx,dropPy,dropZ+125, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+90, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("tiglil",dropPx-20,dropPy,dropZ+75, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+55, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+125, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+90, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+75, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+55, 0, teamID)  
 
-						GG.UnitsToSpawn:PushCreateUnit("jconroach",dropPx,dropPy,dropZ+250, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+200, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx-20,dropPy,dropZ+180, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+160, 0, teamID)
+						GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160, 0, teamID)
 
-						GG.UnitsToSpawn:PushCreateUnit("jconroach",dropPx,dropPy,dropZ+340, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+300, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx-20,dropPy,dropZ+280, 0, teamID)  
-						GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+260, 0, teamID)
+						GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280, 0, teamID)  
+						GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260, 0, teamID)
 
 
 												else
 												
-												GG.UnitsToSpawn:PushCreateUnit("jconroach",dropPx,dropPy,dropZ+340, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340, 0, teamID)  
 												
 
-												GG.UnitsToSpawn:PushCreateUnit("jconroach",dropPx,dropPy,dropZ+250, 0, teamID)  
-												GG.UnitsToSpawn:PushCreateUnit("tiglil",dropPx+20,dropPy,dropZ+200, 0, teamID)  
-												GG.UnitsToSpawn:PushCreateUnit("tiglil",dropPx-20,dropPy,dropZ+180, 0, teamID)  
-												GG.UnitsToSpawn:PushCreateUnit("tiglil",dropPx+20,dropPy,dropZ+160, 0, teamID)
+												GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160, 0, teamID)
 
-												GG.UnitsToSpawn:PushCreateUnit("jconroach",dropPx,dropPy,dropZ+340, 0, teamID)  
-												GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+300, 0, teamID)  
-												GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx-20,dropPy,dropZ+280, 0, teamID)  
-												GG.UnitsToSpawn:PushCreateUnit("skinfantry",dropPx+20,dropPy,dropZ+260, 0, teamID)
+												GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280, 0, teamID)  
+												GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260, 0, teamID)
 
 												end
 
