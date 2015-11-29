@@ -514,7 +514,7 @@ end
 
 -->Turns a piece in the speed necessary to arrive after x Milliseconds
 function turnInTime(piecename,axis,degree,timeInMs,boolWait,x_deg,y_deg,z_deg )
- 
+ assert(z_deg)
 
 absoluteDeg=absoluteRotation(piecename,axis,degree,x_deg,y_deg,z_deg)+0.01
 
@@ -1501,7 +1501,7 @@ if not piecename then return end
 		tP(piecename,x,y,z,speed)
 		return
 	end
-	 
+assert(z_deg)
 
 tx=	absoluteRotation(piecename,x_axis,x,x_deg,y_deg,z_deg)+0.01
 ty=	absoluteRotation(piecename,y_axis,y,x_deg,y_deg,z_deg)+0.01
@@ -2510,6 +2510,8 @@ function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoi
 local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
 --get StartPosition and Move First Piece Into the Cube
 boolResolved=false
+	if not SnakePoints then echo("snakeOnAPlane:: Not SnakePoints delivered"); return end
+	
 LastInsertedPoint=SnakePoints[1]
 Sensor=FirstSensor
 

@@ -26,7 +26,7 @@ collideFriendly=true,
 model="cChaingLightningGunProj.s3o",
 smokeTrail=false,
 
-CegTag="citadelldrone",
+CegTag="ccitdronetail",
 
 ----TARGETING
 turret=true,
