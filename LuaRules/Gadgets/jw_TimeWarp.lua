@@ -11,7 +11,7 @@ function gadget:GetInfo()
   }
 end
  
---include("LuaRules/Configs/tp_CMDID.lua")
+--include("luarules/Configs/tp_CMDID.lua")
  
 if (not gadgetHandler:IsSyncedCode()) then return end
  

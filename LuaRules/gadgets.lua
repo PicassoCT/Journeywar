@@ -23,9 +23,9 @@ local SAFEWRAP = 0
 -- 2: always enabled
 
 
-local HANDLER_DIR = 'LuaGadgets/'
+local HANDLER_DIR = 'luagadgets/'
 local GADGETS_DIR = Script.GetName():gsub('US$', '') .. '/Gadgets/'
-local LOG_SECTION = "" -- FIXME: "LuaRules" section is not registered anywhere
+local LOG_SECTION = "" -- FIXME: "luarules" section is not registered anywhere
 
 
 local VFSMODE = VFS.ZIP_ONLY -- FIXME: ZIP_FIRST ?
@@ -983,7 +983,7 @@ end
 
 --------------------------------------------------------------------------------
 --
---  LuaRules Game call-ins
+--  luarules Game call-ins
 --
 
 function gadgetHandler:DrawUnit(unitID, drawMode)

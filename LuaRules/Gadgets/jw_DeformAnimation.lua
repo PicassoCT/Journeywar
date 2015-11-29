@@ -4,7 +4,7 @@ function gadget:GetInfo()
     desc      = "Linear Deforms two equalpieces per animation into another",
     author    = "Everyone and the dog ",
     date      = "Sep. 20014",
-    license   = "ARGLWARGL - you just made that, up did you. Yes, and it will cost you 2500 $ with your lawyer to check on              that. Unless you GPL your own stuff  - then its free.",
+    license   = "ARGLWARGL - you just made that, up did you. Yes, and it will cost you 2500 $ with your lawyer to check on              that. Unless you GPL your own stuff  - then its luarules.",
     layer     = 0,
     enabled   = false,
 	--Currently Defunct due to lack of glsl foo

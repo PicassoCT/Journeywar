@@ -13,7 +13,7 @@ function gadget:GetInfo()
 end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-local weapons = include("LuaRules/Configs/lups_projectile_fxs.lua")	--{}
+local weapons = include("luarules/Configs/lups_projectile_fxs.lua")	--{}
 --[[
 for i=1,#WeaponDefs do
 	local wd = WeaponDefs[i]

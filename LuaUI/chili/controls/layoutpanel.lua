@@ -3,7 +3,7 @@
 --//   grid, stackpanel, tables, itemlistview, listbox, radiogroups, ...
 --//
 --// Internal all childrens/items are handled via cells, which can be
---// freely aligned (table-grid, free movable like in imagelistviews, ...).
+--// luarulesly aligned (table-grid, luarules movable like in imagelistviews, ...).
 --//
 --// Also most subclasses should use an items table to create their child
 --// objects, so the user just define the captions, filenames, ... instead
@@ -104,9 +104,9 @@ local function compareSizes(a,b)
   return a[2] < b[2]
 end
 
-function LayoutPanel:_JustCenterItemsH(startCell,endCell,freeSpace)
+function LayoutPanel:_JustCenterItemsH(startCell,endCell,luarulesSpace)
   local _cells = self._cells
-  local perItemAlloc = freeSpace / ((endCell - startCell) + 1)
+  local perItemAlloc = luarulesSpace / ((endCell - startCell) + 1)
   local n=0
 
   for i=startCell,endCell do
@@ -122,9 +122,9 @@ function LayoutPanel:_JustCenterItemsH(startCell,endCell,freeSpace)
   end
 end
 
-function LayoutPanel:_JustCenterItemsV(startCell,endCell,freeSpace)
+function LayoutPanel:_JustCenterItemsV(startCell,endCell,luarulesSpace)
   local _cells = self._cells
-  local perItemAlloc = freeSpace / ((endCell - startCell) + 1)
+  local perItemAlloc = luarulesSpace / ((endCell - startCell) + 1)
   local n=0
 
   for i=startCell,endCell do
@@ -157,14 +157,14 @@ function LayoutPanel:_EnlargeToLineHeight(startCell, endCell, lineHeight)
 end
 
 
-function LayoutPanel:_AutoArrangeAbscissa(startCell,endCell,freeSpace)
+function LayoutPanel:_AutoArrangeAbscissa(startCell,endCell,luarulesSpace)
   if (startCell > endCell) then
     return
   end
 
   if (not self.autoArrangeH) then
     if (self.centerItems) then
-      self:_JustCenterItemsH(startCell,endCell,freeSpace)
+      self:_JustCenterItemsH(startCell,endCell,luarulesSpace)
     end
     return
   end
@@ -174,9 +174,9 @@ function LayoutPanel:_AutoArrangeAbscissa(startCell,endCell,freeSpace)
   if (startCell == endCell) then
     local cell = self._cells[startCell]
     if (self.orientation == "horizontal") then
-      cell[1] = cell[1] + freeSpace/2
+      cell[1] = cell[1] + luarulesSpace/2
     else
-      cell[2] = cell[2] + freeSpace/2
+      cell[2] = cell[2] + luarulesSpace/2
     end
     return
   end
@@ -198,7 +198,7 @@ function LayoutPanel:_AutoArrangeAbscissa(startCell,endCell,freeSpace)
   local sameSizeIdx = 1
   local shortestCellSize = cellSizes[1][2]
 
-  while (freeSpace>0)and(sameSizeIdx<cellSizesCount) do
+  while (luarulesSpace>0)and(sameSizeIdx<cellSizesCount) do
 
     --// detect the cells, which have the same size
     for i=sameSizeIdx+1,cellSizesCount do
@@ -218,18 +218,18 @@ function LayoutPanel:_AutoArrangeAbscissa(startCell,endCell,freeSpace)
 
 
     --// try to fillup the shorest cells to the 2. shortest cellsize (so we can repeat the process on n+1 cells)
-    --// (if all/multiple cells have the same size share the freespace between them)
+    --// (if all/multiple cells have the same size share the luarulesspace between them)
     local spaceToAlloc = shortestCellSize - nextCellSize
-    if (spaceToAlloc > freeSpace) then
-      spaceToAlloc = freeSpace
-      freeSpace    = 0
+    if (spaceToAlloc > luarulesSpace) then
+      spaceToAlloc = luarulesSpace
+      luarulesSpace    = 0
     else
-      freeSpace    = freeSpace - spaceToAlloc
+      luarulesSpace    = luarulesSpace - spaceToAlloc
     end
     local perItemAlloc = (spaceToAlloc / sameSizeIdx)
 
 
-    --// set the cellsizes/share the free space between cells
+    --// set the cellsizes/share the luarules space between cells
     for i=1,sameSizeIdx do
       local celli = cellSizes[i]
       celli[2] = celli[2] + perItemAlloc --FIXME orientation
@@ -249,14 +249,14 @@ function LayoutPanel:_AutoArrangeAbscissa(startCell,endCell,freeSpace)
 end
 
 
-function LayoutPanel:_AutoArrangeOrdinate(freeSpace)
+function LayoutPanel:_AutoArrangeOrdinate(luarulesSpace)
   if (not self.autoArrangeV) then
     if (self.centerItems) then
       local startCell = 1
       local endCell = 1
       for i=2,#self._lines do
         endCell = self._lines[i] - 1
-        self:_JustCenterItemsV(startCell,endCell,freeSpace)
+        self:_JustCenterItemsV(startCell,endCell,luarulesSpace)
         startCell = endCell + 1
       end
     end
@@ -283,7 +283,7 @@ function LayoutPanel:_AutoArrangeOrdinate(freeSpace)
   local sameSizeIdx = 1
   local shortestLineSize = lineSizes[1][2]
 
-  while (freeSpace>0)and(sameSizeIdx<lineSizesCount) do
+  while (luarulesSpace>0)and(sameSizeIdx<lineSizesCount) do
 
     --// detect the lines, which have the same size
     for i=sameSizeIdx+1,lineSizesCount do
@@ -303,13 +303,13 @@ function LayoutPanel:_AutoArrangeOrdinate(freeSpace)
 
 
     --// try to fillup the shorest lines to the 2. shortest linesize (so we can repeat the process on n+1 lines)
-    --// (if all/multiple have the same size share the freespace between them)
+    --// (if all/multiple have the same size share the luarulesspace between them)
     local spaceToAlloc = shortestLineSize - nextLineSize
-    if (spaceToAlloc > freeSpace) then
-      spaceToAlloc = freeSpace
-      freeSpace    = 0
+    if (spaceToAlloc > luarulesSpace) then
+      spaceToAlloc = luarulesSpace
+      luarulesSpace    = 0
     else
-      freeSpace    = freeSpace - spaceToAlloc
+      luarulesSpace    = luarulesSpace - spaceToAlloc
     end
     local perItemAlloc = (spaceToAlloc / sameSizeIdx)
 
@@ -642,13 +642,13 @@ function LayoutPanel:_LayoutChildren()
   --// Move cur_y to the bottom of the new ClientArea/ContentArea
   cur_y = cur_y + curLineSize
 
-  --// Share remaining free space between items
+  --// Share remaining luarules space between items
   if (self.centerItems or self.autoArrangeH or self.autoArrangeV) then
     for i=1,#lineWidths do
       local startcell = _lines[i]
       local endcell   = (_lines[i+1] or (#cn+1)) - 1
-      local freespace = clientAreaWidth - lineWidths[i]
-      self:_AutoArrangeAbscissa(startcell, endcell, freespace)
+      local luarulesspace = clientAreaWidth - lineWidths[i]
+      self:_AutoArrangeAbscissa(startcell, endcell, luarulesspace)
     end
 
     for i=1,#lineHeights do

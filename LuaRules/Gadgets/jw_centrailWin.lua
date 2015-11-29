@@ -29,7 +29,7 @@ local Phase = 0 -- 0,1,2,3,4
 local ActiveBlocks = {}
 local BlockCountPerTeam = {}
 local FullBlocks = {}
-local BlockTable={} -- 0 if free, {..} if seeded with a block that will spawn later, or with a fully bloomed block, or with a block that couldn't bloom due to unbuildable terrain
+local BlockTable={} -- 0 if luarules, {..} if seeded with a block that will spawn later, or with a fully bloomed block, or with a block that couldn't bloom due to unbuildable terrain
 local MaxBlockCount = nil
 
 local function isUnitComplete(UnitID)
@@ -304,7 +304,7 @@ end
 else
 --UNSYNCED
 
-VFS.Include("LuaRules/Gadgets/libs/ColorConversion.lua",nil)
+VFS.Include("luarules/Gadgets/libs/ColorConversion.lua",nil)
 
 local BlockDisplayLists = {}
 local LastBlockNbr = 0

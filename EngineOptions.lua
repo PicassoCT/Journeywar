@@ -186,7 +186,7 @@ local options =
   {
     key    = 'LuaRules',
     name   = 'Enable LuaRules',
-    desc   = 'Enable mod usage of LuaRules',
+    desc   = 'Enable mod usage of luarules',
     type   = 'bool',
     def    = true,
   }, ]]

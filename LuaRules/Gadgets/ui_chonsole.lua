@@ -15,6 +15,7 @@ end
 
 -- shared (synced and unsynced)
 local cmdConfig = {}
+CHONSOLE_FOLDER= "luaui/chonsole"
 
 -- add optional support for i18n (we won't be using it, but extensions contain translations)
 i18n = function(key, data)

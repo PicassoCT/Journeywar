@@ -1,2 +1,2 @@
 --AllowUnsafeChanges("blahblah")
-VFS.Include("LuaGadgets/gadgets.lua",nil, VFS.BASE)
+VFS.Include("luagadgets/gadgets.lua",nil, VFS.BASE)

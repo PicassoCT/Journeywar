@@ -478,7 +478,7 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
---// Workaround: unsynced LuaRules doesn't receive Shutdown events
+--// Workaround: unsynced luarules doesn't receive Shutdown events
 Shutdown = Script.CreateScream()
 Shutdown.func = function()
   --// unload textures, so the user can do a `/luarules reload` to reload the normalmaps

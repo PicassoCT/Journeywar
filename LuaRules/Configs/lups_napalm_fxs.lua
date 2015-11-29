@@ -1,5 +1,5 @@
 
-VFS.Include("LuaRules/Utilities/tablefunctions.lua", nil, VFS.DEF_MODE)
+VFS.Include("luarules/Utilities/tablefunctions.lua", nil, VFS.DEF_MODE)
 
 local napalm = {
   default = {

@@ -118,7 +118,7 @@ end
 -- needed here too, and gadget handler doesn't expose it
 
 --VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
-VFS.Include('LuaGadgets/system.lua', nil, VFSMODE)
+VFS.Include('luagadgets/system.lua', nil, VFSMODE)
 VFS.Include('gamedata/VFSUtils.lua', nil, VFSMODE)
 
 --------------------------------------------------------------------------------
@@ -875,5 +875,5 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
--- return include("LuaGadgets/Gadgets/unit_script.lua")
+-- return include("luagadgets/Gadgets/unit_script.lua")
 

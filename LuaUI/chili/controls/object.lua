@@ -127,7 +127,7 @@ function Object:New(obj)
   end
   setmetatable(obj,{__index = self})
 
-  --// auto dispose remaining Dlists etc. when garbage collector frees this object
+  --// auto dispose remaining Dlists etc. when garbage collector luaruless this object
   local hobj = MakeHardLink(obj)
 
   --// handle children & parent

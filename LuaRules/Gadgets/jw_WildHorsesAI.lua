@@ -7,7 +7,7 @@ local modOptions = Spring.GetModOptions()
                 desc = "Generic Emergent AI using eventstreams",
                 author = "Your Moma",
                 date = "around since last tuesday",
-                license = "GPL - by reading this you are basically allready infected. Brainz, brainz - no wait -freedomz, freedomz...",
+                license = "GPL - by reading this you are basically allready infected. Brainz, brainz - no wait -luarulesdomz, freedomz...",
                 layer = 82,
                 enabled = (modOptions.WildHorsesAI and modOptions.WildHorsesAI== true) or false
         }
@@ -20,7 +20,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua"      )
 	VFS.Include("scripts/lib_UnitScript.lua"      )
 	VFS.Include("scripts/lib_Build.lua" 	)
-	VFS.Include("LuaRules/Gadgets/jw_EventStreamAIFunctions.lua" 	)
+	VFS.Include("luarules/Gadgets/jw_EventStreamAIFunctions.lua" 	)
 
 	
 

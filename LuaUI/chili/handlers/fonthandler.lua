@@ -38,7 +38,7 @@ function FontHandler.Update()
 	local last_idx = #loadedFonts
 	for i=last_idx, 1, -1 do
 		if (refCounts[i] <= 0) then
-			--// the font isn't in use anymore, free it
+			--// the font isn't in use anymore, luarules it
 			gl.DeleteFont(loadedFonts[i])
 			loadedFonts[i] = loadedFonts[last_idx]
 			loadedFonts[last_idx] = nil
