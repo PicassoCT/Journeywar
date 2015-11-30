@@ -49,16 +49,27 @@ local function GetStartUnit(teamID)
 	local side = select(5, Spring.GetTeamInfo(teamID))
 	local startUnit=""
 	
+	if side == "" then
+	
+	
+	
+	end
+	
+	
 	boolIsAI= IsTeamAI(teamID)
 	local sidedata = Spring.GetSideData(side)	
 	
 		if boolIsAI==true then
 		
-			if sidedata and  Spring.GetTeamLuaAI (teamID) == "spawner" and sidedata.startunitspawner then 
+			if Spring.GetTeamLuaAI (teamID) == "spawner" then 
+			
+			if  sidedata.startunitspawner then
 				return sidedata.startunitspawner 		
 			elseif 	sidedata.startunitai then 
 				return  sidedata.startunitai 
-			end	
+			else
+			 return "jgeohive"
+			end
 		
 		else	
 			if sidedata and sidedata.startunit then return sidedata.startunit end
@@ -68,7 +79,7 @@ local function GetStartUnit(teamID)
 		return sidedata[1 + teamID % #sidedata].startUnit 
 		end	
 	
-	Spring.Echo("TeamSpawnUnits Not Definend: Randomzing ")
+	
 				if teamID% 2 ==0 then
 				return"citadell" 
 				else

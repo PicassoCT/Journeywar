@@ -49,9 +49,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	spawnerAI={}
 	function gadget:Initialize()
 		boolAtLeastOneSPawner=false
+		Spring.Echo("(Initializing SpawnerAI")
 	for _, t in ipairs (Spring.GetTeamList ()) do
 	
         local teamID, leader, isDead, isAI, side = Spring.GetTeamInfo (t)
+		Spring.Echo("SpawnerAI::TeamInfo::".. teamID, leader, isDead, isAI, side)
+		
         if isAI and Spring.GetTeamLuaAI (teamID) == "spawner" then
             spawnerAI[teamID] = true
         
