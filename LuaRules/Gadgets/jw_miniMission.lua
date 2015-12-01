@@ -982,7 +982,7 @@ end
 
 Mission3Message=0
 Mission3CoolDownTime=3000
-Mission3Max=7
+Mission3Max=9
 
 function Mission3MessageFunc(frames)
 Mission3CoolDownTime=Mission3CoolDownTime-frames

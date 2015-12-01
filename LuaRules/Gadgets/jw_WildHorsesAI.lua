@@ -15,15 +15,18 @@ end
 
 
 if (gadgetHandler:IsSyncedCode()) then
+VFS.Include("scripts/lib_UnitScript.lua", nil, VFS.DEF_MODE)
 ------SYNCED--------
+
+
 -----STAGE SYSTEM--------
 local unitOnMission = {} --[unitID] = wieviele frames in ruhe gelassen werden
-stages = {}
+combine_stages = {}
 --skipMetal: if we have that much metal, then this stage is autocomplete/skipped
 
 --kdronewarrior kdronestructure kdroneengineer kairdronefactory kdroneminer
 
-stages[1]= {
+combine_stages[1]= {
 	["unitNumbers"]={
 		["citadell"]=1,
 		["condepot"]=1,
@@ -34,7 +37,7 @@ stages[1]= {
 	skipMetal = math.huge,
 	}
 
-stages[2]= {
+combine_stages[2]= {
 	["unitNumbers"]={
 		["mdigg"]=2,
 		["fclvlone"]=1,
@@ -46,12 +49,11 @@ stages[2]= {
 	skipMetal = 500,
 	}
 
-stages[3]= {
+combine_stages[3]= {
 	["unitNumbers"]={
 		["restrictor"]=3,
 		["campro"]=2,
 		["contruck"]=4,
-		["fclvl2"]=1,
 		["mtw"]=3,
 		["art"]=1,
 		["builux"]=1,
@@ -61,12 +63,14 @@ stages[3]= {
 	skipMetal = 1000,
 	}
 	
-stages[4]= {
-	["unitNumbers"]={
+combine_stages[4]= {
+	["unitNumbers"]={		
+		["fclvl2"]=1,
 		["sentrynell"]=2,
 		["csniper"]=2,
 		["cairbase"]=1,
 		["cgunship"]=1,
+		["chunterchopper"]=2,
 		["contruck"]=2,
 		["kdroneminingtower"]=4,
 		["crailgun"]=2,
@@ -77,7 +81,7 @@ stages[4]= {
 	skipMetal = 1000,
 	}
 	
-stages[5]= { --mining boom phase
+combine_stages[5]= { --mining boom phase
 	["unitNumbers"]={
 		["conair"]=2,
 		["fclvl2"]=1,
@@ -88,7 +92,7 @@ stages[5]= { --mining boom phase
 	skipMetal = 2770,
 	}
 	
-stages[6]= {
+combine_stages[6]= {
 	["unitNumbers"]={
 		["scumslum"] = 3,
 		["conair"]=2,
@@ -99,7 +103,7 @@ stages[6]= {
 	skipMetal = math.huge,
 	}
 	
-stages[7]= {
+combine_stages[7]= {
 	["unitNumbers"]={
 		["mtw"] = 4,
 		["conair"]=2,
@@ -109,35 +113,47 @@ stages[7]= {
 	skipMetal = math.huge,
 	}
 	
-stages[8]= {
+combine_stages[8]= {
 	["unitNumbers"]={
 		["bonker"] =2,
 		["restrictor"] = 5,
 		["mtw"] = 5,
+		["coffworldassembly"] = 1,
 		},
 	skipMetal = math.huge,
 	}
 		
-stages[9]= {
+combine_stages[9]= {
 	["unitNumbers"]={
 		["bonker"] =2,
 		["restrictor"] = 5,
 		["mtw"] = 5,
+		["coffworldassemblyseed"] = 1,
+		},
+	skipMetal = math.huge,
+	}
+combine_stages[10]= {
+	["unitNumbers"]={
+		["strider"] =2,
+		["paxcentrail"] =1,
+		["cgatefort"] = 1,
+		["ccrabsynth"] = 1,
+		["cnanorecon"] = 1,
 		},
 	skipMetal = math.huge,
 	}
 	
 --funzt!
-function printStages ()
-	Spring.Echo ("--printing stages table *START*--")
-	for i=1, #stages do
-		Spring.Echo ("stages [" .. i  .. "]")
-		Spring.Echo ("skipMetal=" .. stages[i].skipMetal)
-		for name, amount in pairs (stages[i]["unitNumbers"]) do
-			Spring.Echo ("unitNumbers:" .. name .. " - " .. stages[i]["unitNumbers"][name])
+function print_stages ()
+	Spring.Echo ("--printing combine_stages table *START*--")
+	for i=1, #combine_stages do
+		Spring.Echo ("combine_stages [" .. i  .. "]")
+		Spring.Echo ("skipMetal=" .. combine_stages[i].skipMetal)
+		for name, amount in pairs (combine_stages[i]["unitNumbers"]) do
+			Spring.Echo ("unitNumbers:" .. name .. " - " .. combine_stages[i]["unitNumbers"][name])
 		end
 	end
-	Spring.Echo ("--printing stages table *DONE*--")
+	Spring.Echo ("--printing combine_stages table *DONE*--")
 end
 
 --funzt!
@@ -161,11 +177,11 @@ end
 
 --return: stagei, missing table
 function getHighestCompleteStage (teamID)	
-	for i=1, #stages do
-		local complete, missing = stageComplete (teamID, stages[i])
+	for i=1, #combine_stages do
+		local complete, missing = stageComplete (teamID, combine_stages[i])
 		if (complete == false) then return i-1,missing end
 	end
-	return #stages, nil
+	return #combine_stages, nil
 end
 
 --job: ["unitname"] = amount
@@ -199,32 +215,20 @@ if (all_units == nil) then return end
 	end
 end
 
+cBuildTable={}
+jBuildTable={}
+cBuildTable=getFactionTable("citadell",false)
+jBuildTable=getFactionTable("beanstalk",false)
+
 --naja
-function canUnitBuildThis (parentName, childName)
-  
-	----NOTICE: ON THE FOLLOWING LINE, I (YANOM) CHANGED THE RETURN FROM true TO false, TO DISABLE CLONING
-	if (parentName == childName and not (parentName == "kdronestructure" or parentName == "kairdronefactory")) then return false end--everything can clone itself, except the structure
-	if (parentName == "kdroneengineer" and childName == "kdronestructure") then return true end
-	if (parentName == "kdroneengineer" and childName == "kdroneminingtower") then return true end
-	if (parentName == "kdroneengineer" and childName == "kairdronefactory") then return true end
-	----land factory----
-	if (parentName == "kdronestructure") then
-		if (childName == "kdroneengineer") then return true end
-		if (childName == "kdronewarrior") then return true end
-		if (childName == "kdroneroller") then return true end
-		if (childName == "ktridroneroller") then return true end		
-		if (childName == "kdroneminer") then return true end
-	end
-	----air factory----
-	if (parentName == "kairdronefactory") then
-		if (childName == "kairdrone") then return true end
-		if (childName == "kdiairdrone") then return true end
-		if (childName == "ktriairdrone") then return true end		
-	end	
-	--falls sich gar niemand findet, kann sich auch ein mining tower zum engineer zurück morphen:
-	if (parentName == "kdroneminingtower" and childName == "kdroneengineer") then return true end
-	return false
-end
+function canUnitBuildThis (parentName, childName,side)
+if side == "centrail" then
+ return  cBuildTable[parentName] and cBuildTable[parentName] [childName]
+  else
+  return  jBuildTable[parentName] and jBuildTable[parentName] [childName]
+  end
+ end
+
 
 function doesUnitWantBuildJob (unitID, childname)
 	local _, _, _, _, buildProg = Spring.GetUnitHealth(unitID)
@@ -317,7 +321,7 @@ function gadget:Initialize()
 		Spring.Echo ("Schwarm AI: not used, byebye.")
 		gadgetHandler:RemoveGadget()
 	end
-	printStages ()
+	print_stages ()
 end
 
 

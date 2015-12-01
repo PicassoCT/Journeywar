@@ -4970,3 +4970,48 @@ isAlive= Spring.GetUnitIsDead(unitid)
 	end
 
 end
+
+function GetUnitCanBuild(unitName)
+unitDef=UnitDefNames[unitName]
+T={}
+if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
+	for index, unitname  in ipairs(buildOptions) do
+	T[unitname]=unitname
+	end
+end
+return T
+end
+
+
+--> getUnitBuildAbleMap
+function getFactionTable(unitName, boolID)
+Result={}
+Result[unitName]={}
+
+openTable={}
+closedTable={}
+
+	while table.getn(openTable) > 0 do
+		CanBuildList=GetUnitCanBuild(unitName)
+		openTable= mergeTables(CanBuildList,openTable)
+		
+		subFunction= function(T_i_,ArghT)if ArghT[T_i_] then 
+			return 
+		else 
+			return T_i_ 
+		end
+	end
+	
+	openTable= process(openTable,closedTable,subFunction)
+	--for CanBuildList insert into
+		for k,v in ipairs(CanBuildList) do
+			Result[unitName]=TableInsertUnique(Result[unitName],k)
+		end
+	closedTable[unitName]=true
+	openTable[unitName]=nil
+
+	unitName=openTable[#openTable]
+
+	end
+return Result
+end
