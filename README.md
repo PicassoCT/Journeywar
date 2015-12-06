@@ -2,8 +2,10 @@
 
 ##Centrail Confederacy vs Journeyman##
 
-Remember how geared up the Combine of the Half-Life Universe were? 
+Remember how geared up the Combine of the Half-Life Universe where? 
+
 You are about to find out what they were fighting and what was pushing them onwards. 
+
 Pick your side citizen -become either a Planetary Administrator - or go wild 
 and join the Journeyman, a transdimensional, biotech glider-gunsociety.
 
