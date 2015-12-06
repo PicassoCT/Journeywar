@@ -1,12 +1,18 @@
 # README #
 ###SETUP ###
-1.You need the Spring-Engine. Get and install it at 
+1. Engine Installing
+You need the Spring-Engine. Get and install it at 
 http://springrts.com/Downloads
 
-2. Pack the GameName.7zip you found this textfile in, into the Spring/Games folder.
+2. Clone the Repository into a folder called journeywar.sdd in your Spring_Engine_Path/games/ folder.
 
-3. Release the Meteor, pardon, Launch the Lobby. Enter the Battleroom. Enjoy your stay.
+3. Release the Meteor, pardon, Launch the Lobby. Enter the Battleroom. 
 
+4. Configure your game.
+
+5. Enjoy your stay.
+
+If you have questions the author and other gamedevs can answer, contact us via IRC in #moddev.
 ======================================================================================
 
 ###Repository Content###
@@ -43,6 +49,3 @@ Which is work, which can be frustrating and boring.
 Which is why you are here, and with me so far.
 
 http://springrts.com/wiki/Main_Page
-
-Which is why you will do awesome stuff, and have more fun then any player ever could have.
-Cause thats what you are.
