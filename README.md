@@ -1,4 +1,15 @@
-# README #
+# JOURNEYWAR#
+
+##Centrail Confederacy vs Journeyman##
+
+Remember how geared up the Combine of the Half-Life Universe were? 
+You are about to find out what they were fighting and what was pushing them onwards. 
+Pick your side citizen -become either a Planetary Administrator - or go wild 
+and join the Journeyman, a transdimensional, biotech glider-gunsociety.
+
+
+
+
 ###SETUP ###
 1. Engine Installing
 You need the Spring-Engine. Get and install it at 
