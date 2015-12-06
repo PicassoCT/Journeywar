@@ -37,6 +37,8 @@ table.insert(gangstArray,scgangsta3)
 
 local damageAccumulated=0
 ratio=4
+echoTable(UnitDefNames["scumslum"],false,"UnitDefNames[scumslum]")
+
 mratio=1/((UnitDefNames["scumslum"].buildcostmetal /ratio )/(UnitDefNames["gcivillian"].buildcostmetal /2))
 eratio=1/((UnitDefNames["scumslum"].buildcostenergy /ratio )/(UnitDefNames["gcivillian"].buildcostenergy /2))
 

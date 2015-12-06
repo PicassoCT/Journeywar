@@ -736,8 +736,18 @@ function getUnitSide(unitID)
 	return getTeamSide(teamid)
 end
 
-function echo(stringToEcho)
+function echo(stringToEcho,...)
 	Spring.Echo(stringToEcho)
+if arg then
+	counter=0
+	for k,v in ipairs(arg) do
+	if k and v then
+	Spring.Echo(k.." "..v)
+	else
+	Spring.Echo(k)
+	end
+	end
+end
 end
 
 -->Moves a UnitPiece to Position in Unitspace at speed
@@ -2089,21 +2099,24 @@ function vardump(value, depth, key)
 		end
 	end
 	
-	function echoTable(T,boolAssertTable)
+	function echoTable(T,boolAssertTable, name)
 		lboolAssertTable=boolAssertTable or false
-		
-		if T.name then 
-			Spring.Echo("============================= "..T.name.." ======================================")
+		lname= T.name or name or ""
+		if lname then 
+			Spring.Echo("============================= "..lname .." ======================================")
+			Spring.Echo("||                                                                             ||")
 		else
-			Spring.Echo("============================= EchoTable =========================================")
+			Spring.Echo("============================= KeyValue Table=====================================")
+			Spring.Echo("||                                                                             ||")
 		end
+		
 		for k,v in pairs(T) do
 			typek=type(k)
 			typev=type(v)
 			typek=typek~="table" and typek ~="function"
 			typev=typev~="table" and typev ~="function"
 			if typek and typev then
-				Spring.Echo(" "..k.." 	---> 	"..v .." -> 	[ "..(assert(v)).." ] ")
+				Spring.Echo(" "..k.." 	---> 	"..v .." -> 	[ "..((assert(v)) or "nil").." ] ")
 			end
 		end
 		

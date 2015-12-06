@@ -36,7 +36,7 @@ end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-
+VFS.Include("scripts/lib_UnitScript.lua" )
 local modOptions = Spring.GetModOptions()
 
 function IsTeamAI(teamID)
@@ -48,43 +48,50 @@ local function GetStartUnit(teamID)
 	-- get the team startup info
 	local side = select(5, Spring.GetTeamInfo(teamID))
 	local startUnit=""
+	local AI_Type= "Spawner"
+
+
 	
-	if side == "" then
-	
-	
-	
-	end
-	
-	
-	boolIsAI= IsTeamAI(teamID)
+	--if side is a AI	
+	local boolIsAI= IsTeamAI(teamID)
 	local sidedata = Spring.GetSideData(side)	
-	
-		if boolIsAI==true then
+
+	local playerInfo=Spring.GetPlayerList(teamID)
+	local foundAtHorses=false
+	local foundAtSpawner=false
 		
-			if Spring.GetTeamLuaAI (teamID) == "spawner" then 
+				if playerInfo and playerInfo[1] and playerInfo[1].name then
+					name=playerInfo[1].name 
+					foundAtHorses= 	(string.find(name,"Horses AI") ~= nil)
+					foundAtSpawner=	(string.find(name,"spawner") ~= nil  )
+						echo("game_spawn::",name, foundAtHorses,foundAtSpawner)
+				end		
+
+	
+		if boolIsAI==true or foundAtHorses or (foundAtSpawner and Spring.GetTeamLuaAI (teamID) == "spawner") then
 			
-			if  sidedata.startunitspawner then
-				return sidedata.startunitspawner 		
-			elseif 	sidedata.startunitai then 
-				return  sidedata.startunitai 
-			else
-			 return "jgeohive"
-			end
 		
-		else	
-			if sidedata and sidedata.startunit then return sidedata.startunit end
-		end
-		
-		if  sidedata and sidedata[1 + teamID % #sidedata] and sidedata[1 + teamID % #sidedata].startUnit  then 
-		return sidedata[1 + teamID % #sidedata].startUnit 
-		end	
-	
-	
-				if teamID% 2 ==0 then
-				return"citadell" 
-				else
-				return"beanstalk" 
+				if sidedata and  sidedata.startunitspawner then
+					return sidedata.startunitspawner 		
+				elseif 	sidedata and sidedata.startunitai then 
+					return  sidedata.startunitai 
 				end
+			
+					
+			if foundAtHorses == true then   return "citadell"	end				
+			if foundAtSpawner ==true then	return "jgeohive" end
+		
+		end
+		-- we are human	
+		
+		if sidedata and sidedata.startunit and sidedata.startunit ~= "" then return sidedata.startunit end
+		
+	
+	--shitty defaults
+	echo("game_spawn::Found no startunit for team "..teamID.." - defaulting to citadell") 
+
+					return"citadell" 
+				
 	
 end
 
@@ -172,3 +179,4 @@ function gadget:GameStart()
 		end
 	end
 end
+

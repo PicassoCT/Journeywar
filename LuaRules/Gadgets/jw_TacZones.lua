@@ -163,23 +163,16 @@ end
 		return unitList
 		end
 			
+	local		TacZoneFunctionTable={
+								[RZ]=addReservoireZone,
+								[AZ]=addActionZone,
+								[TZ]=addTriggerZone
+								}
+			
 	function gadget:UnitCreated(unitID, unitDefID, teamID)
-			if unitDefID==AZ or unitDefID== RZ or unitDefID== TZ then
-			teamID=teamIDToNumber[teamID]
-			Spring.Echo("JW_TriggerZone::UnitRegistrated")
-				--Registrate Unit	
-				if unitDefID==AZ then
-				addActionZone(unitID,unitDefID,teamID)
-				end	
-				if unitDefID==RZ then
-				addReservoireZone(unitID,unitDefID,teamID)
-				end	
-				if unitDefID==TZ then
-				addTriggerZone(unitID,unitDefID,teamID)
-				end
 	
-			end
-		end
+	if TacZoneFunctionTable[unitDefID] then TacZoneFunctionTable[unitDefID](unitID,unitDefID,teamID) end
+	end
 
 		
 		boolChanges=false
