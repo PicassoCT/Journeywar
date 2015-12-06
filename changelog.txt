@@ -1,6 +1,0 @@
-Journeywar changelog:
-
-Version 46.3 Release:
-
-- Added sound to units PaxCentrail
-- Added ExponentialGun to PaxCentrail
