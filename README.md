@@ -25,7 +25,7 @@ http://springrts.com/Downloads
 
 5. Enjoy your stay.
 
-If you have questions the author and other gamedevs can answer, contact us via IRC in \#moddev.
+If you have questions the author and other gamedevs can answer, contact us via IRC in moddev.
 ======================================================================================
 
 ###Repository Content###
