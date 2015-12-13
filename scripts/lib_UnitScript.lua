@@ -698,6 +698,12 @@ function resetPieceDir(piecename,speed)
 	
 end
 
+--> calcSpeedThroughDegByTime
+function GetSpeed(timeInSeconds, degree)
+degRad=math.rad(degree)
+return (degRad/timeInSeconds)
+end
+
 -->Reset a Table of Pieces at speed
 function reseT(tableName,speed, ShowAll, boolWait)
 	lboolWait=boolWait or false

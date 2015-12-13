@@ -143,10 +143,12 @@
 	SignalTable["STATE"]=true
 	SignalTable["SIG_DELAY"]=true
 	 
+	 
+	 
 	--StateChangeAnimations
 		function Eat(argTable)
 		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
-		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		
 		SignalTable["STATE"]=false
 		Sleep(500)
@@ -170,28 +172,28 @@
 			x,y,z=Spring.GetUnitPosition(unitID)
 			x,y,z=x-px,y-py,z-pz
 			x=x*x+z*z+y*y
-				if math.sqrt(x) < 35 then
+				if math.sqrt(x) < 35 then 
 				--MilkTime
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-42), 9)
-					Turn(AniT[AgeStage]["Body"],x_axis,math.rad(13), 9)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-42), 1.9)
+					Turn(AniT[AgeStage]["Body"],x_axis,math.rad(13), 1.9)
 					for i=1,5, 1 do
 						if i%2== 1 then
-						Turn(AniT[AgeStage][i][1],x_axis,math.rad(-48), 155)
+						Turn(AniT[AgeStage][i][1],x_axis,math.rad(-48), 1.55)
 							if i== 3 then
-							Turn(AniT[AgeStage][i][1],z_axis,math.rad(-14), 14)
+							Turn(AniT[AgeStage][i][1],z_axis,math.rad(-14), 1.14)
 							elseif i==5 then
-							Turn(AniT[AgeStage][i][1],z_axis,math.rad(math.random(-14,14)), 14)
+							Turn(AniT[AgeStage][i][1],z_axis,math.rad(math.random(-14,14)), 1.14)
 							else
-							Turn(AniT[AgeStage][i][1],z_axis,math.rad(14), 12)
+							Turn(AniT[AgeStage][i][1],z_axis,math.rad(14), 1.12)
 							end
 						else
-						Turn(AniT[AgeStage][i][1],x_axis,math.rad(0), 59)
+						Turn(AniT[AgeStage][i][1],x_axis,math.rad(0), 1.59)
 						end
 					end
 						for i=1,22, 1 do
-						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-30), 15)
+						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-30), 1.15)
 						WaitForTurn(AniT[AgeStage]["Head"],x_axis)
-						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-45), 15)
+						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-45), 1.15)
 						WaitForTurn(AniT[AgeStage]["Head"],x_axis)		
 						end
 				end
@@ -214,8 +216,8 @@
 		end
 		
 		function DrinkWater(argTable)
-		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 0.5)
-		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 1.5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		
 		SignalTable["STATE"]=false
 		Sleep(500)
@@ -226,10 +228,10 @@
 			WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 			gulp=math.random(2,22)
 				for i=1,gulp do
-				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90+math.random(2,4)), 0.9)
+				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90+math.random(2,4)), 1.9)
 				WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 				Sleep(300)
-				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90-math.random(2,4)), 0.9)
+				Turn(AniT[AgeStage]["Head"],x_axis,math.rad(90-math.random(2,4)), 1.9)
 				WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 				end
 			Sleep(150) 
@@ -248,12 +250,12 @@
 
 		function HideInHerd(argTable)
 		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
-		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		
 		SetSignalMask(SIG_STATE) 
 					-- [1]=other )	
 			while true do 
-			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(57),107)
+			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(57),1.07)
 			WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 				if argTable and argTable[1]then
 				x,y,z=Spring.GetUnitPosition(argTable[1])
@@ -262,7 +264,7 @@
 				dist=math.sqrt(x*x+y*y+z*z)
 				x,z=x/dist,z/dist
 				head=Spring.GetHeadingFromVector(x,z)
-				Turn(center,y_axis,head,15)
+				Turn(center,y_axis,head,1.5)
 				boolWasAllreadyMoving=(boolMoving==true)
 				boolMoving=true
 				WaitForTurn(center,y_axis)
@@ -284,8 +286,8 @@
 				if math.random(0,1)== 1 then alarmed() end
 			Sleep(150)
 			end 
-			Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
-			Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+			Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 1.5)
+			Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		end
 		
 			function RecoveringLonely(argTable)
@@ -312,8 +314,8 @@
 		end
 
 		function RunningForLive(argTable)
-		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
-		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 1.5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		
 		SetSignalMask(SIG_STATE) 
 		SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
@@ -332,27 +334,27 @@
 		
 		function eatingGrass()
 		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
-		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		
 		for j=1,math.ceil(math.random(5,11)), 1 do
 					for i=1,3, 1 do
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(81),42)
-					Turn(AniT[AgeStage]["Head"],y_axis,math.rad(8*math.random(-1,1)),42)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(81),4.2)
+					Turn(AniT[AgeStage]["Head"],y_axis,math.rad(8*math.random(-1,1)),4.2)
 					WaitForTurn(AniT[AgeStage]["Head"],x_axis)
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(73),142)
-					Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0),142)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(73),14.2)
+					Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0),14.2)
 					WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 					end
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(23),142)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(23),14.2)
 					WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 				--Chewy
 					for i=1,9,1 do
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(20),22)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(20),2.2)
 					WaitForTurn(AniT[AgeStage]["Head"],x_axis)
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(23),12)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(23),1.2)
 					WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 					end
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(7),32)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(7),3.2)
 					WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 					Sleep(500)
 						
@@ -361,21 +363,21 @@
 		end
 		
 		function alarmed()
-		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 5)
-		Move(AniT[AgeStage]["Body"],y_axis, 0, 0.25)	
+		Turn(AniT[AgeStage]["Body"],x_axis,math.rad(0), 1.5)
+		Move(AniT[AgeStage]["Body"],y_axis, 0, 1.25)	
 		
-		Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-22), 39)
+		Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-22), 3.9)
 		WaitForTurn(AniT[AgeStage]["Head"],x_axis)
 		leftRight=-1 
 			if math.random(0,1)==1 then leftRight=leftRight^2 
 			leftRight=leftRight*(math.max(12,math.random(10,27)))
-			Turn(AniT[AgeStage]["Head"],y_axis,math.rad(leftRight), 12)
+			Turn(AniT[AgeStage]["Head"],y_axis,math.rad(leftRight), 1.2)
 			WaitForTurn(AniT[AgeStage]["Head"],y_axis)
 			end
 		waitTime=math.ceil(math.random(250,2500))
 		Sleep(waitTime)
-			Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 12)
-			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(0), 12)
+			Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 1.2)
+			Turn(AniT[AgeStage]["Head"],x_axis,math.rad(0), 1.2)
 		end
 
 		function SickAnimation()
@@ -383,28 +385,28 @@
 
 						for i=1,5, 1 do
 							if i%2== 1 then
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(155), 155)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(-76), 76)
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(155), 15.5)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(-76), 1.76)
 							else
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(-59), 59)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(146), 146)				
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(-59), 1.59)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(146), 14.6)				
 							end
 						end		
 		Turn(AniT[AgeStage]["Body"],z_axis,math.rad(82),8)
 		for k=1,22, 1 do
 			for i=1,5, 1 do
 							if i%2== 1 then
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(155), 155)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(-76), 76)
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(155), 15.5)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(-76), 1.76)
 							else
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(-59), 59)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(146), 146)				
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(-59), 1.59)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(146), 14.6)				
 							end
 			end
 		Sleep(900)
 				for i=1,5, 1 do
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(0), 15)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(0), 16)
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(0), 1.5)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(0), 1.6)
 				end
 		Sleep(1900)
 		end
@@ -426,22 +428,22 @@
 
 						for i=1,5, 1 do
 							if i%2== 1 then
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(155), 155)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(-76), 76)
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(155), 15.5)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(-76), 1.76)
 							else
-							Turn(AniT[AgeStage][i][1],x_axis,math.rad(-59), 59)
-							Turn(AniT[AgeStage][i][2],x_axis,math.rad(146), 146)				
+							Turn(AniT[AgeStage][i][1],x_axis,math.rad(-59), 1.59)
+							Turn(AniT[AgeStage][i][2],x_axis,math.rad(146), 14.6)				
 							end
 						end
 					for i=1,128,1 do
-					Move(AniT[AgeStage]["Body"],y_axis, -8.25, 0.25)
+					Move(AniT[AgeStage]["Body"],y_axis, -8.25, 1.25)
 					WaitForMove(AniT[AgeStage]["Body"],y_axis)					
-					Move(AniT[AgeStage]["Body"],y_axis, -8, 0.25)
+					Move(AniT[AgeStage]["Body"],y_axis, -8, 1.25)
 					WaitForMove(AniT[AgeStage]["Body"],y_axis)					
 					end
-					Turn(AniT[AgeStage]["Head"],z_axis,math.rad(32), 61)
-					Turn(AniT[AgeStage]["Head"],y_axis,math.rad(7), 2)				
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(8), 26)				
+					Turn(AniT[AgeStage]["Head"],z_axis,math.rad(32), 6.1)
+					Turn(AniT[AgeStage]["Head"],y_axis,math.rad(7), 1.2)				
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(8), 2.6)				
 					Sleep(150) 
 		end				
 	 
@@ -661,21 +663,21 @@
 
 
 	function LegsDown()
-	Move(AniT[AgeStage]["Body"],z_axis,0,52)
-	Move(AniT[AgeStage]["Body"],y_axis,0,52)
-	Move(AniT[AgeStage]["Body"],x_axis,0,52)
+	Move(AniT[AgeStage]["Body"],z_axis,0,5.2)
+	Move(AniT[AgeStage]["Body"],y_axis,0,5.2)
+	Move(AniT[AgeStage]["Body"],x_axis,0,5.2)
 	
-	Turn(AniT[AgeStage]["Head"],z_axis,math.rad(0), 16)
-	Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 16)				
+	Turn(AniT[AgeStage]["Head"],z_axis,math.rad(0), 1.6)
+	Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 1.6)				
 
 		for i=1,5, 1 do	
-		Turn(AniT[AgeStage][i][1],y_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][1],z_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][1],x_axis,math.rad(0),42)
+		Turn(AniT[AgeStage][i][1],y_axis,math.rad(0),4.2)
+		Turn(AniT[AgeStage][i][1],z_axis,math.rad(0),4.2)
+		Turn(AniT[AgeStage][i][1],x_axis,math.rad(0),4.2)
 		
-		Turn(AniT[AgeStage][i][2],y_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][2],z_axis,math.rad(0),42)
-		Turn(AniT[AgeStage][i][2],x_axis,math.rad(0),42)	
+		Turn(AniT[AgeStage][i][2],y_axis,math.rad(0),4.2)
+		Turn(AniT[AgeStage][i][2],z_axis,math.rad(0),4.2)
+		Turn(AniT[AgeStage][i][2],x_axis,math.rad(0),4.2)	
 		end
 
 	end

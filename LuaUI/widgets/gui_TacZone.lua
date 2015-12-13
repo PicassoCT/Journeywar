@@ -20,8 +20,8 @@ local azTex = {imageDir .. 'taczone/action.png'}
 local rzTex = {imageDir .. 'taczone/reservoire.png'}
 local tzTex = {imageDir .. 'taczone/trigger.png'}
 
---Instanciate 
-function TacZone()
+--Create 
+function Create_TacZones()
 
 	Chili = WG.Chili
 	Button = Chili.Button

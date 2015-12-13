@@ -60,7 +60,7 @@ local function GetStartUnit(teamID)
 	local foundAtHorses=false
 	local foundAtSpawner=false
 		
-				if playerInfo and playerInfo[1] and playerInfo[1].name then
+				if playerInfo and playerInfo[1] and type(playerInfo[1])=='table' and playerInfo[1].name then
 					name=playerInfo[1].name 
 					foundAtHorses= 	(string.find(name,"Horses AI") ~= nil)
 					foundAtSpawner=	(string.find(name,"spawner") ~= nil  )

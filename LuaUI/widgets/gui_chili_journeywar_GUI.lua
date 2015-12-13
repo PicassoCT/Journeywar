@@ -55,19 +55,6 @@ local spGetSelectedUnits  = Spring.GetSelectedUnits
 
 local selectedUnits = {}
 
-
-
-
-
-
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
---functions
-
-
-
-	
-
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 -- callins
@@ -76,18 +63,11 @@ function widget:MousePress(x,y,button)
 	_,World=Spring.TraceScreenRay(x,y,true)
 	if World then
 	pop(World[1],World[3])
-	end
+	end 
 	end	
 end	
 	
 	
-
-
-
-
-
-
-
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 -- callins
@@ -99,7 +79,7 @@ function widget:CommandsChanged()
 end
 
 
-
+--update functions
 function widget:GameFrame(f)
 	if updateCommandsSoon and (f % 16 == 0) then
 		selectedUnits = spGetSelectedUnits()
@@ -115,12 +95,15 @@ function widget:Initialize()
 		return
 	end
 	
-	--TacZone GuiElement
-	TacZone()
-	Instanciate_OnOffButton()
-	Instanciate_SpecialAbilityButton()	
-	Instanciate_ExpBar()
-	Instanciate_AmmoBar()
-	Instanciate_UpgradeGrid()
+	--Element Constructors 
+	Create_TacZones()
+	Create_OnOffButton()
+	Create_SpecialAbilityButton()	
+	Create_ExpBar()
+	Create_AmmoBar()
+	Create_UpgradeGrid()
+	--Todo
+	Create_MoveComandos()
+	Create_ContextComandos()
 	
 end

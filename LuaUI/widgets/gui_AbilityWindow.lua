@@ -33,7 +33,7 @@ function updateExp()
 
 end
 
-local function Instanciate_ExpBar()
+local function Create_ExpBar()
 	
 	ExpBar=			Chili.Progressbar:New
 							{
@@ -52,7 +52,7 @@ end
 
 
 
-local function Instanciate_AmmoBar()
+local function Create_AmmoBar()
 	AmmoBar=Chili.Progressbar:New
 							{
 					x     = 10,
@@ -151,7 +151,7 @@ local function UpdateAbilitiesWindow()
 end
 
 
-local function Instanciate_UpgradeGrid()
+local function Create_UpgradeGrid()
 
 upgradeGrid =	Chili.Window:New{
 		
@@ -175,7 +175,7 @@ upgradeGrid =	Chili.Window:New{
 
 end
 
-local function Instanciate_SpecialAbilityButton()
+local function Create_SpecialAbilityButton()
 	SpecialAbilityButton = Button:New{
 		name = unitDefID,
 		x=5,
@@ -193,7 +193,7 @@ end
 
 
 
-local function Instanciate_OnOffButton()
+local function Create_OnOffButton()
 	local buttonsize = 80
 	
 	local onOffFunction = function()
@@ -227,7 +227,7 @@ local function Instanciate_OnOffButton()
 		parent = onOffButton;
 	}
 end
-function Instanciate_AbilityButton()
+function Create_AbilityButton()
 	-- setup Chili
 	Chili = WG.Chili
 	Button = Chili.Button

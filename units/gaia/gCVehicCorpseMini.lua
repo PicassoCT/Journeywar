@@ -1,4 +1,4 @@
-local unitName = "gCVehicCorpseMini"
+local unitName = "gcvehiccorpsemini"
 
 local unitDef = {
 name = "burned out Vehicle",
