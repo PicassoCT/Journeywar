@@ -14,7 +14,7 @@ function widget:GetInfo()
 end
 
 function widget:Initialize()
-  RegisterGlobal("LayoutButtons", DummyLayoutHandler)
+  gadgetHandler:RegisterGlobal("LayoutButtons", DummyLayoutHandler)
 
   Spring.SendCommands("Console 0")
   Spring.SendCommands("ToolTip 0")

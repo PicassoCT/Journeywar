@@ -11,16 +11,16 @@ Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most
 
 FIX:
 <> Fix Minimissions
-<> Fix Hohymen Statemachine
 <> Comender fix Weapons:Slicer
 <> Strider extrapolate Kinematic Turns, Speed, Clamp Movement
-<> Fix WildhorsesAI
-<> Fix Suborbital
-<> Placeholder Units
+<> GlowShader
+<> GUI
+<> CLvl3UnitFactory
 
 >-> Spring Modifications
+
 >>Test Feature Shader
->> Put a bullet into spring
+
 
 
 

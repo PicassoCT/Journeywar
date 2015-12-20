@@ -93,105 +93,151 @@ else  --UNSYNCED
     uniform vec4 shadowParams;
   #endif
 
-	vec4 transformPointAlongNormal(vec4 point, vec3 impactNormal, float scalar)
-	{
-	impactNormal=impactNormal * scalar
-	point=point + impactNormal	
-	return point
-	}
-	
-	float ScalarByDistance(float Distance, float Diameter)
-	{
-	float relPos=Distance/Diameter;
-	if (relPos < 0.5) return (1-relPos)*MaxDepth; 
-	if (relPos >= 0.5) return -1*(x*x)*(0.5*MaxDepth)+MaxDepth;
-	}
+	attribute vec3 position;
+attribute vec3 normal;
+uniform mat3 normalMatrix;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+varying vec3 fNormal;
+varying vec3 fPosition;
+uniform float time;
+varying float depthHole;
+varying float holeMax;
+float PI= 3.14159;
+float PI_2= 3.14159/2.0;
+struct hole
+{
+  vec3 dir;
+  vec3 modPos;
+  float diameter;
+  };
 
-    float DistToPoint(vec3 point,vec3 point2)
-	{
-	point.x -= point2.x;
-	point.y -= point2.y;
-	point.z -= point2.z;
-	return Sqrt(point.x* point.x + point.y*point.y+ point.z*point.z);
-	}
-	
-    varying vec3 normal;
-    varying vec3 cameraDir;
-    varying vec3 teamColor;
-    varying vec3 light;
-	
-	//poped from the stack variables
-	uniform float depth;
-	uniform float diameter;
-	
-	uniform float posX    ;
-	uniform float posY    ;
-	uniform float posZ    ;
-	uniform float dirX    ;
-	uniform float dirY    ;
-	uniform float dirZ    ;
-	
-	//Shadder draws bulletholes on unitbodies, looking like this
-	//__.-.   .-.__
-	//     \_/
-	//
-	//_____    ______
-		   \__/
-	
-	
-	//colours of the wound interior rgb
-	uniform float tColInt1;
-    uniform float tColInt2;
-	uniform float tColInt3;
-	//colours of the wound extended rgb
-	uniform float tColExt1;
-	uniform float tColExt2;
-	uniform float tColExt3;
-	
-	
-	varying vec3  pos;
-	varying vec4  dirShot;
-	
-    void main(void)
-    {
-		int i;
-      gl_TexCoord[0].st = gl_MultiTexCoord0.st;
-	    float DistPoint=0;
-		
-		for (i=0; i<VertexContainer; i++)
-		{
-		DistPoint=DistToPoint(VertexContainer[i],pos);
-	
-			//if your vertex point is near enough to the impact- and yes this reaches parts on the other side- and deforms them outwards
-			if ( DistPoint < 2*diameter)
-			{
-			transformPointAlongNormal( ScalarByDistance(VertexContainer[i],pos,diameter));
-			}
-		}
-	  //gl_Vertex=gl_Vertex*4 // You get a big head from getting shot at
-	  
-      vec4 worldPos = gl_ModelViewMatrix * v;
-	  
-	  //GL Magic here the unit is setup to release back into the world
-      normal    = normalize(gl_NormalMatrix * gl_Normal);
-      cameraDir = worldPos.xyz - cameraPos;
-	  teamColor = gl_TextureEnvColor[0].rgb;
+#define randO( co)  fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453)
+#define signEqual(  X, Y) (sign(X) == sign(Y))
 
-      float a = max( dot(normal, sunPos), 0.0);
-      light   = a * sunDiffuse + sunAmbient;
+ hole watHitIt;
+//TODO: Converter for world to modelholes -
 
-     #ifdef use_shadow
-      gl_TexCoord[1] = shadowMatrix * worldPos;
-      gl_TexCoord[1].st = gl_TexCoord[1].st * (inversesqrt( abs(gl_TexCoord[1].st) + shadowParams.z) + shadowParams.w) + shadowParams.xy;
-     #endif
+// dist_Point_to_Segment(): get the distance of a point to a segment
+//     Input:  a Point P and a Segment S (in any dimension)
+//     Return: the shortest distance from P to S
+float dist_Point_to_Segment( vec3 P, vec3 SP0, vec3 SP1)
+{
+     vec3 v = SP1 - SP0;
+     vec3 w = P - SP0;
 
-      gl_Position = gl_ProjectionMatrix * camera * worldPos;
+     float c1 = dot(w,v);
+     if ( c1 <= 0.0 )
+          return distance(P, SP0);
+
+     float c2 = dot(v,v);
+     if ( c2 <= c1 )
+          return distance(P, SP1);
+
+     float b = c1 / c2;
+     vec3 Pb = SP0 + b * v;
+     return distance(P, Pb);
+}
+
+//calculate wether we are on the entry or exit point of the bullet
+bool vecDirEqNorm(vec3 Normal, vec3 dir )
+{
+  if( signEqual(Normal.x,dir.x) && signEqual(Normal.y, dir.y) && signEqual(Normal.z, dir.z)) return true;
+  
+  return false;
+}
+
+
+/*                        zzzzz                                               */
+/*                       zz   z                                               */
+/*                       z    zzzzzzzz                                        */
+/*                       z                                                    */
+/*                       z                                                    */
+/*                      zz                                                    */
+/*                      z                                                     */
+/*                     zz                                                     */
+/*                 zzzzz                                                      */
+/*                                                                            */
+/*    The Deformation as  Cosin and sin                                        */
+
+float effectByDistance(float distP)
+{
+  if (distP <= 0.4) return (-1.0 + (1.0-cos(distP*PI_2)))*2.125 ;
+  
+   if (distP <= 0.9) return (1.0 - cos( ((distP-0.40)/0.5)*PI_2)  )*2.0;
+ 
+  return max( abs (1.0-cos(((distP-0.8)/0.2)*PI_2)),0.0) ;
+ 
+}
+
+void main()
+{
+  fNormal = normalize(normalMatrix * normal);
+  fNormal= normal;
+  //vec4 pos = modelViewMatrix * vec4(position, 1.0);
+  float dist;
+
+  watHitIt.modPos=vec3(0.0,0.4,0.0);
+  watHitIt.dir= vec3(0.0,1.0,0.0);
+  watHitIt.diameter=0.5;
+  holeMax=watHitIt.diameter;
+
+  //computate the distance of vertext to bullethole
+  dist=dist_Point_to_Segment(position, watHitIt.modPos+watHitIt.dir*2.0,watHitIt.modPos+watHitIt.dir*-2.0); 
+  //&& (vecDirEqNorm(fNormal,watHitIt.dir*-1.0))
+  depthHole=dist;
+  float factor= dist <   watHitIt.diameter ?   effectByDistance(dist/watHitIt.diameter): 0.0;
+
+    vec3 newPosition = position + fNormal * factor/15.0;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0  );
+
+
+}
     ]]
 	
-	
+	local  fragmentShaderSource =[[
+	precision highp float;
+uniform float time;
+uniform vec2 resolution;
+varying vec3 fPosition;
+varying vec3 fNormal;
+varying float depthHole;
+vec3 black=vec3(0.0,0.0,0.0);
+vec3 white=vec3(0.8,0.95,1.0);
+varying float holeMax;
+
+vec3 bulletColours(float depth, vec3 orgcol)
+{
+  
+  if (depth < 0.2) return black;
+  
+  if (depth < 0.4)
+  { 
+    
+    float relDeth=( (depth- 0.2)/ 0.2);
+    
+    return ((1.0 -relDeth)*black+ (relDeth)*white);
+    }
+  
+  float relDeth=( (depth- 0.4)/ 0.2);
+  return (1.0 - relDeth)*sqrt(black)+ (relDeth)*orgcol;
+  }
+
+
+void main()
+{vec3 col;
+
+    col=normalize(fNormal);
+    
+  if (depthHole!= 0.0 && depthHole < holeMax+0.1)
+    col= bulletColours(depthHole,col);
+  gl_FragColor = vec4(col, 1.001);
+  
+}
+	]]
 	local shaderTable = {
 	vertex= vertexShaderSource,
-	-- fragment = fragmentShaderSource,
+	fragment = fragmentShaderSource,
 	-- uniformInt = uniformInt,
 	}
 	--]]--------------------------------------------------------------------------	
