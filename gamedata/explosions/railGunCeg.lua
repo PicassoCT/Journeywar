@@ -13,7 +13,7 @@
 -- gauss_hit_m_purple
 
 return {
-  ["railGunCEG"] = {
+  ["railgunceg"] = {
      tealflash = {
       air                = true,
       class              = [[CSimpleGroundFlash]],
