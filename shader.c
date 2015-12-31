@@ -1,6 +1,7 @@
 varying vec2 uv;
 varying float fTime0_1;
 varying float fTime0_2PI;
+varying vec3 Position;
 
  vec4 Black =vec4(0.0,0.0,0.0,1.0);
  vec3 X_Axis = vec3(1.0,0,0);
@@ -138,6 +139,15 @@ Center.PulseStrenghtTimeRatio=0.0;
 Center.sinusFactor=0.0;
 }
 
+
+//Is the Pixel in Question in the physic sim
+bool isPixelInSim(int steps, vec2 Pos)
+{
+if (distance(CenterPath[steps],Pos) < Center.maxDistanceParticles)
+	{ return true;}
+
+return false;
+}
 
 
 
@@ -299,7 +309,7 @@ vec2 newAttractorPosition(vec2 interValStart, vec2 interValEnd, float percentage
 
 float InterPolationSteps = 5.0;
 
-vec4 doPhySim(float percent, float time, vec2 Position)
+vec4 doPhySim(float percent, float time, vec2 Pos)
 {
    vec4 accumulatedColour= Black;
    
@@ -316,7 +326,7 @@ vec4 doPhySim(float percent, float time, vec2 Position)
        for (int attrPath=0; attrPath< CenterPathSize-1;attrPath++)
       {
       //if this pixel is within range of a pathPoint+ maxRange
-      if (!isPixelInSim(attrPath,Position))continue;
+      if (!isPixelInSim(attrPath,Pos))continue;
       //StartColour of this Part of PathIntervall
       float startPercentage= min(float(attrPath),float(CenterPathSize))/float(CenterPathSize);
       //EndColour of this Part of PathIntervall
@@ -369,15 +379,6 @@ float totalTime=90.0;
 float colDecayTime=30.0;
 
 
-//Is the Pixel in Question in the physic sim
-bool isPixelInSim(int step, vec2 Pos)
-{
-if (distance(CenterPath[step],Pos) < Center.maxDistanceParticles)
-	{ return true;}
-
-return false;
-}
-
 
 
 void main(void)
@@ -392,13 +393,13 @@ void main(void)
    bool  Temp;
     for (int i=0; i< CenterPathSize;i++)
    {
-	    Temp= isPixelInSim(i,Position);
+	    Temp= isPixelInSim(i,Position.xy);
 		InPhySim = ( InPhySim && Temp);
    }
    gl_FragColor=Black;
    
    if (InPhySim==true) 
-	   gl_FragColor=doPhySim(mod(fTime0_1/totalTime,1.0), fTime0_1, Position);
+	   gl_FragColor=doPhySim(mod(fTime0_1/totalTime,1.0), fTime0_1, Position.xy);
 }
 
 
