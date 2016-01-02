@@ -1,7 +1,7 @@
 local unitName = "jshroudshrike"
 local unitDef = {
 name = "Shroudshrike",
-Description = "does infinite coindrops on head",
+Description = "Inpenetrateable Shield Unit", -- can only be destroyed if no unit of team is in shield
 
 
 objectName = "jshroudshrike.s3o",
@@ -74,6 +74,8 @@ EnergyStorage = 250,
   noAutoFire             = false,
 
   smoothAnim             = true,
+
+
 
   
    customParams = {},

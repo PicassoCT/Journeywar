@@ -65,6 +65,10 @@ weapons = {
 	onlyTargetCategory = [[ LAND]],
 	
 	},	
+[7]={name  = "jeliahshield",
+	onlyTargetCategory = [[LAND AIR]],
+	},	
+		},
 		
 	
 	

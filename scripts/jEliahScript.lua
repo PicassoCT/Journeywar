@@ -57,6 +57,22 @@ temp="laserpointer"..i
 weaponPoints[i]=piece(temp)
 end
 
+SHIELDRANGE= 240
+
+	function script.HitByWeapon ( x, z, weaponDefID, damage )
+	NearestAlly=Spring.GetUnitNearestAlly(unitID)
+		if NearestAlly then
+		x,y,z=Spring.GetUnitPosition(NearestAlly) 
+			if x then
+			distance=math.sqrt(x*x+ z*z)
+				if distance < SHIELDRANGE then 
+					return	return 0
+				end
+			end
+		end
+	return damage
+	end
+	
 function script.Create()
 --Spring.Echo(math.tan(0.85))
 --Spring.Echo(math.tan(0.65))
