@@ -213,7 +213,7 @@ end
 		glUseShader(shaderProgram)			
 		end	
 		
-		gui_AbilityWindow
+
 		end
 
 	
