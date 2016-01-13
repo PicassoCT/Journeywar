@@ -2775,7 +2775,6 @@ function vardump(value, depth, key)
 	--its call signature is SoundPerson(translatedSoundSnippet, position in sentence, translatedTable)
 	function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
 		
-		
 		--translate the Text via the language Table
 		local lplaySoundFile=Spring.PlaySoundFile
 		local translatedTable={}
@@ -2975,8 +2974,24 @@ function vardump(value, depth, key)
 	end
 	
 	--> Grabs every Unit in a circle, filters out the unitid
-	function grabEveryone(unitID,x,z,Range,teamid)
+	function getAllInCircle(unitID,x,z,Range,teamid)
 		T={}
+		if teamid then
+			T=Spring.GetUnitsInCylinder(x,z,Range,teamid)
+		else
+			T=Spring.GetUnitsInCylinder(x,z,Range)
+		end
+		
+		if T and #T>1 and type(unitID)=='number' then
+			table.remove(T,unitID)
+		end
+		return T
+	end 
+	
+	--> Grabs every Unit in a circle, filters out the unitid
+	function getInCircle(unitID,Range,teamid)
+		T={}
+		x,_,z=Spring.GetUnitBasePosition(unitID)
 		if teamid then
 			T=Spring.GetUnitsInCylinder(x,z,Range,teamid)
 		else
@@ -3934,7 +3949,7 @@ function vardump(value, depth, key)
 		if px and tpx then
 			size=square(px,py,pz)	
 			if size then
-				T=grabEveryone(unitID, tpx,tpz,size/2)
+				T=getAllInCircle(unitID, tpx,tpz,size/2)
 				
 				if T and #T > 0 then
 					

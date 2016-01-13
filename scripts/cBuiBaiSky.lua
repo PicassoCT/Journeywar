@@ -66,7 +66,7 @@ IdTable={[UnitDefNames["builux"].id]=true}
 	while true do
 	--get builux nearby
 	x,y,z=Spring.GetUnitPosition(unitID)
-	T=grabEveryone(unitID,x,z,512)
+	T=getAllInCircle(unitID,x,z,512)
 		if #T then 
 		T=filterUnitTableforDefIDTable(T,IdTable)
 			if #T then 

@@ -61,7 +61,7 @@ function script.AimWeapon1( Heading ,pitch)
 	--aiming animation: instantly turn the gun towards the enemy
 	
 	endofLifeFunc= 	function (x,y,z)
-					T=grabEveryone(unitID,x,z,30)
+					T=getAllInCircle(unitID,x,z,30)
 						if T then
 							if not GG.GluedForLife then GG.GluedForLife ={} end
 							for i=1,#T do

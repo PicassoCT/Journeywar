@@ -191,7 +191,7 @@ function script.Killed(recentDamage, maxHealth)
 	x,_,z=Spring.GetUnitPosition(unitID)
 	defID=UnitDefNames["campro"].id
 
-	process(filterTableByTable( grabEveryone(unitID,x,z,90,teamID),
+	process(filterTableByTable( getAllInCircle(unitID,x,z,90,teamID),
 								defID,
 								function(id, defID)
 								def=Spring.GetUnitDefID(id) 

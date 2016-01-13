@@ -783,7 +783,7 @@ StartThread(FireCloud)
 	Sleep(math.ceil(500/i))	
 	end
 	T={}
-	T=grabEveryone(unitID,cx,cz,256,teamID)
+	T=getAllInCircle(unitID,cx,cz,256,teamID)
 	DestroyTable(T, 
 				false,
 				true, 

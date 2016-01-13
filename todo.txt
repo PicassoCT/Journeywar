@@ -16,6 +16,8 @@ FIX:
 <> GlowShader
 <> GUI
 <> CLvl3UnitFactory
+<> Fix Deny
+<> Add Rotting Tree - Decaying all Sides slightly entering the forrest
 
 >-> Spring Modifications
 

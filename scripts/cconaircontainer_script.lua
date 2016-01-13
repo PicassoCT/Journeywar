@@ -18,7 +18,7 @@ local teamid=Spring.GetUnitTeam(unitID)
 timer=42000
 	while timer > 0 do
 	x,y,z=Spring.GetUnitPosition(unitID)
-	T=grabEveryone(unitID,x,z,60,teamid)
+	T=getAllInCircle(unitID,x,z,60,teamid)
 		if T and #T > 0 then
 		finderT=Spring.GetUnitTeam(T[1])
 		Spring.AddTeamResource(finderT,"metall",reward)
@@ -31,7 +31,7 @@ timer=42000
 Move(center,y_axis,-50,2.5)
 WaitForMove(center,y_axis)
 	x,y,z=Spring.GetUnitPosition(unitID)
-	T=grabEveryone(unitID,x,z,60,teamid)
+	T=getAllInCircle(unitID,x,z,60,teamid)
 		if T and #T > 0 then
 		finderT=Spring.GetUnitTeam(T[1])
 		Spring.AddTeamResource(finderT,"metall",reward)

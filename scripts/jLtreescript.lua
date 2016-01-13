@@ -7,7 +7,8 @@
 
 	local INFLUENCERADIUS=120
 	NUMBEROFPIECES=56
-	
+	damagePerSecond=8
+
 	udef=Spring.GetUnitDefID(unitID)
 	boolVaryFooTree=false
 		if udef and udef == UnitDefNames["jtree49"].id then
@@ -67,6 +68,7 @@
 			reseT(TreePiece)
 			resetPiece(center,0)
 			StartThread(BuildLtree)
+			StartThread(foulTheSurroundings)
 				StartThread(playSoundByUnitTypOS,unitID,0.5,{
 												{name="sounds/jtree/accidtrees.ogg",time=15000}
 												})
@@ -1851,9 +1853,9 @@ end
 	--this table works as a lock - [recursionstep] = number of threads in it
 	GlobalInCurrentStep={}
 
-	--RefCount for Debugging
-	 DebugStoreInfo={}
+
 	
+
 	--	this function needs a global Itterator and but is threadsafe, as in only one per unit
 	--	it calls itself, waits for all other threads running parallel to reach the same recursion Depth
 	-- 	once hitting the UpperLimit it ends
@@ -2146,9 +2148,7 @@ end
 					end
 			end
 		
-	for i=1,#DebugStoreInfo do
-	--Spring.Echo(DebugStoreInfo[i])
-	end
+
 	
 	for i=1,#GlobalInCurrentStep, 1 do
 		if GlobalInCurrentStep[i] and GlobalInCurrentStep[i] ~= 0 then
@@ -2167,6 +2167,31 @@ end
 	
 	StartThread(materialShowHide)
 end
+
+    accidTreeDefID=Spring.GetUnitDefID(unitID)
+	fungiforrestid=UnitDefNames["jfungiforrest"].id
+	
+	decreasHP= function(unit)
+	defID=Spring.GetUnitDefID(unit)
+		if defID and defID ~= fungiforrestid and defID ~= accidTreeDefID then
+		hp=Spring.GetUnitHealth(unit)
+		Spring.SetUnitHealth(unit,hp-(damagePerSecond/4))
+		end
+	end
+	
+	
+	function foulTheSurroundings ()
+	
+		while true do
+			T= getInCircle(unitID,255)
+			
+			process(T,decreasHP)	
+			
+		Sleep(250)
+		end
+	
+	
+	end
 
 boolJustOnceDeny=true
 	function script.Activate()

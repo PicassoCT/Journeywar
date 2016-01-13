@@ -41,7 +41,7 @@ GoingBoom=false
 function CountPassingByEnemys()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	while true do
-	T=grabEveryone(unitID,x,z, TRAPRANGE)
+	T=getAllInCircle(unitID,x,z, TRAPRANGE)
 	T=filterTableByTable(T,AllreadyPassingUnits,function (element,T2) return T2[element]== nil end )
 	AllreadyPassingUnits=insertKeysIntoTable(T,AllreadyPassingUnits)
 	Sleep(300)

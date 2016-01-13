@@ -184,7 +184,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						Spring.DestroyFeature(FT[k])
 						end
 					end
-			T=grabEveryone("placeholder", fireT[i].x, fireT[i].z,48)
+			T=getAllInCircle("placeholder", fireT[i].x, fireT[i].z,48)
 			T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes, ShitWasSoCache)
 				if T and #T> 0 then
 				
@@ -206,7 +206,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				if dMap[i] and dMap[i] % frame ==0 then
 				spSpawnCEG("bigfoorestfire", bigFireTable[i].x+math.random(-16,16), bigFireTable[i].y+math.random(1,15), bigFireTable[i].z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1))
 	
-				T=grabEveryone("placeholder", bigFireTable[i].x, bigFireTable[i].z,52)
+				T=getAllInCircle("placeholder", bigFireTable[i].x, bigFireTable[i].z,52)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes,ShitWasSoCache)
 			
 					if T and #T > 0 then

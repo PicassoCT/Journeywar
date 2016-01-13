@@ -326,7 +326,7 @@ Cache={}
 	x,y,z=Spring.GetUnitPosition(unitID)
 	
 		while y < 0 do
-		T=grabEveryone(unitID,x,z, stunRange)
+		T=getAllInCircle(unitID,x,z, stunRange)
 		T,Cache=filterOutUnitsOfType(T, {[UnitDefNames["jgalatea"].id]=true},Cache)
 			if T and #T > 0 then
 			

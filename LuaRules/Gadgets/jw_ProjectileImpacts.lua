@@ -118,7 +118,7 @@ function ShockWaveRippleOutwards(x,z, force, speed, range)
 if not GG.ShockWaves then GG.ShockWaves ={} end
 local OtherWaves= GG.ShockWaves
 
-T=grabEveryone(x,y,range)
+T=getAllInCircle(x,y,range)
 
 	for i=1,#T do
 	ex,ey,ez=Spring.GetUnitPosition(T[i])
@@ -731,7 +731,7 @@ end
 			r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
 			Spring.SetUnitRotation(unit,r.x,r.y,r.z)
 			Spring.AddUnitImpulse(unit,v.x,v.y,v.z) 
-			T=grabEveryone(unit,ux,uz,120)
+			T=getAllInCircle(unit,ux,uz,120)
 			--SplashDamage
 			foreach(
 				T, 

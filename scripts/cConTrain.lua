@@ -1020,7 +1020,7 @@ local ud=UnitDefs
 			x,y,z=Spring.GetUnitPosition(unitID)
 			hp=Spring.GetUnitHealth(unitID)
 			if hp then
-			T=grabEveryone(unitID,x,z,300,teamid)
+			T=getAllInCircle(unitID,x,z,300,teamid)
 			hp=math.ceil(math.ceil(hp*0.5)/#T)
 			hpcopy=hp
 				for i=1,#T do

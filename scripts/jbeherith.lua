@@ -1597,7 +1597,7 @@ local aVd=acquireVehicleDegree()
 		
 			while boolMoving==true do
 			x,_,z=Spring.GetUnitPiecePosDir(unitID,treeSpot)
-			T=grabEveryone(unitID,x,z,50,myTeam)
+			T=getAllInCircle(unitID,x,z,50,myTeam)
 				if T then
 				T=filterUnitTableforDefIDTable(T,treeTypeTable)
 					if T then

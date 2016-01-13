@@ -450,7 +450,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	
 	x,y,z=Spring.GetUnitPosition(hostageid)
 	Spring.SetUnitBlocking (hostageid,false,false)
-	while table.getn(grabEveryone(hostageid,x,z,75)) > 0 do
+	while table.getn(getAllInCircle(hostageid,x,z,75)) > 0 do
 	Sleep(500)
 	end
 Spring.SetUnitBlocking (hostageid,true,true)

@@ -64,7 +64,7 @@ end
 
 function takeVictimsToAnotherDimension(x,z,DamageRadius)
 
-T=grabEveryone(unitID,x,z,DamageRadius)
+T=getAllInCircle(unitID,x,z,DamageRadius)
 
 	if T and #T > 0 then
 		for i=1,#T,1 do
