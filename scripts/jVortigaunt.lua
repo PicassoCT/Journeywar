@@ -30,71 +30,71 @@ SetSignalMask(SIG_IDLE)
 Sleep(500)
 boolMove=false
 moduLater=1
-while(true) do
-moduLater=moduLater+1
-if moduLater%4==0 then
-sleepRAnd=math.random(5000,22000)
-Sleep(sleepRAnd)
-moduLater=math.random(-1,3)
-else
-Sleep(500)
-end
-xRand=math.random(-67,6)
-zRand=math.random(7,43)
-zRandR=math.random(-43,7)
-yRand=math.random(0,12)
-randSpeed=math.random(2,5)
-Turn(vortarmr,x_axis,math.rad(xRand),randSpeed)
-Turn(vortarmr,z_axis,math.rad(zRandR),randSpeed)
-Turn(vortarmr,y_axis,math.rad(yRand),randSpeed)
-xRand=math.random(-67,6)
-zRand=math.random(7,43)
-yRand=math.random(5,22)
-randSpeed=math.random(2,5)
-Turn(vortarml,x_axis,math.rad(xRand),randSpeed)
-Turn(vortarml,z_axis,math.rad(zRand),randSpeed)
-Turn(vortarml,y_axis,math.rad(yRand),randSpeed)
-Sleep(450)
-headTurnX=math.random(-5,34)
-Turn(vorthead,x_axis,math.rad(headTurnX),1.5)
-headTurnZ=math.random(-5,5)
-Turn(vorthead,z_axis,math.rad(headTurnZ),1.5)
-headTurnY=math.random(-12,12)
-Turn(vorthead,y_axis,math.rad(headTurnY),1.5)
-Sleep(150)
-y=math.random(0,18)
-	if y == 9 then
-		Spring.PlaySoundFile("sounds/vort/vortIdle2.wav")
+	while(true) do
+	moduLater=moduLater+1
+		if moduLater%4==0 then
+		sleepRAnd=math.random(5000,22000)
+		Sleep(sleepRAnd)
+		moduLater=math.random(-1,3)
+		else
+		Sleep(500)
+		end
+	xRand=math.random(-67,6)
+	zRand=math.random(7,43)
+	zRandR=math.random(-43,7)
+	yRand=math.random(0,12)
+	randSpeed=math.random(2,5)
+	Turn(vortarmr,x_axis,math.rad(xRand),randSpeed)
+	Turn(vortarmr,z_axis,math.rad(zRandR),randSpeed)
+	Turn(vortarmr,y_axis,math.rad(yRand),randSpeed)
+	xRand=math.random(-67,6)
+	zRand=math.random(7,43)
+	yRand=math.random(5,22)
+	randSpeed=math.random(2,5)
+	Turn(vortarml,x_axis,math.rad(xRand),randSpeed)
+	Turn(vortarml,z_axis,math.rad(zRand),randSpeed)
+	Turn(vortarml,y_axis,math.rad(yRand),randSpeed)
+	Sleep(450)
+	headTurnX=math.random(-5,34)
+	Turn(vorthead,x_axis,math.rad(headTurnX),1.5)
+	headTurnZ=math.random(-5,5)
+	Turn(vorthead,z_axis,math.rad(headTurnZ),1.5)
+	headTurnY=math.random(-12,12)
+	Turn(vorthead,y_axis,math.rad(headTurnY),1.5)
+	Sleep(150)
+	y=math.random(0,18)
+		if y == 9 then
+			Spring.PlaySoundFile("sounds/vort/vortIdle2.wav")
+		end
+
+				if y== 15 then
+					Spring.PlaySoundFile("sounds/vort/vortIdle.wav")
+				end
+				throwDice=math.random(0,150)
+				if throwDice== 45 then
+			   local x,y,z=Spring.GetUnitPosition (unitID)
+			   local teamID = Spring.GetUnitTeam (unitID)
+			   Spring.CreateUnit("gFirePlace", x+15, y, z+15, 0, teamID)  
+				end
+
+	xRand=math.random(-67,6)
+	zRand=math.random(7,43)
+	zRandR=math.random(-43,7)
+	yRand=math.random(0,12)
+	randSpeed=math.random(2,5)
+	Turn(vortarmr,x_axis,math.rad(xRand),randSpeed)
+	Turn(vortarmr,z_axis,math.rad(zRandR),randSpeed)
+	Turn(vortarmr,y_axis,math.rad(yRand),randSpeed)
+	xRand=math.random(-67,6)
+	zRand=math.random(7,43)
+	yRand=math.random(5,22)
+	randSpeed=math.random(2,5)
+	Turn(vortarml,x_axis,math.rad(xRand),randSpeed)
+	Turn(vortarml,z_axis,math.rad(zRand),randSpeed)
+	Turn(vortarml,y_axis,math.rad(yRand),randSpeed)
+	Sleep(600)
+		
 	end
-
-			if y== 15 then
-				Spring.PlaySoundFile("sounds/vort/vortIdle.wav")
-			end
-			throwDice=math.random(0,150)
-			if throwDice== 45 then
-		   local x,y,z=Spring.GetUnitPosition (unitID)
-		   local teamID = Spring.GetUnitTeam (unitID)
-		   Spring.CreateUnit("gFirePlace", x+15, y, z+15, 0, teamID)  
-			end
-
-xRand=math.random(-67,6)
-zRand=math.random(7,43)
-zRandR=math.random(-43,7)
-yRand=math.random(0,12)
-randSpeed=math.random(2,5)
-Turn(vortarmr,x_axis,math.rad(xRand),randSpeed)
-Turn(vortarmr,z_axis,math.rad(zRandR),randSpeed)
-Turn(vortarmr,y_axis,math.rad(yRand),randSpeed)
-xRand=math.random(-67,6)
-zRand=math.random(7,43)
-yRand=math.random(5,22)
-randSpeed=math.random(2,5)
-Turn(vortarml,x_axis,math.rad(xRand),randSpeed)
-Turn(vortarml,z_axis,math.rad(zRand),randSpeed)
-Turn(vortarml,y_axis,math.rad(yRand),randSpeed)
-Sleep(600)
-	
-end
 end
 
 local function walk()

@@ -69,6 +69,9 @@ decIsion=math.random(1,3)
 end
 end
 
+
+
+
 local function legs_down()
 
 	Turn (bgleg, x_axis, 0, leg_movespeed)
@@ -122,9 +125,15 @@ function kneeDown(time)
 					Turn(bglowleg,x_axis,math.rad(0),28)
 					Turn(bglowlegr,x_axis,math.rad(0),28)
 				
-					SetUnitValue(COB.MAX_SPEED,math.floor(65533*8))
-			
-					boolCanMove=true
+					if throwDice== 45 then
+			   local x,y,z=Spring.GetUnitPosition (unitID)
+			   local teamID = Spring.GetUnitTeam (unitID)
+			   Spring.CreateUnit("cFirePlace", x+15, y, z+15, 0, teamID)  
+				end
+				
+				
+					SetUnitValue(COB.MAX_SPEED,math.floor(65533*8))			
+					boolCanMove=true					
 					if boolMoveOrderd==true then
 						Signal(SIG_WALK)
 						StartThread(walk)

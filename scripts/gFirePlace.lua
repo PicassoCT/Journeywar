@@ -28,6 +28,7 @@ end
 return false
 
 end
+
 function storyTime()
 	Sleep(12000)
 	if math.random(1,12)==6 and anybodyNearby()==true then
@@ -100,11 +101,13 @@ Sleep(time)
 				-- Everything living there, has evolved to survive this one season. The only way for sentient live to stay, if that still can be called sentient,
 				-- is in a pool of patter amobeas. They will absorb you, when you get torn to shreds, and put you back together, when everything quiets down.
 				-- But sometimes the amobeas make mistakes.
+				
 -- Story Eight "- the whole scoutparty was huddled in one of the gardens of there secreted buildings. And suddenly this huge boulder of them was direclty above hanging in the sky. 
 				-- "-Big Announcment, Admiral Hornblow, we all are going to die, yadda, yadda, bla. Two of us, new ones, freak, and run. Wrong thing to do. Those scanners are trained on rash movements.
 				-- "- Torch from the sky and we the others wait. "Look what sophisticated evasive patterns it makes" says Yazahin, cause it makes quite a dance in place."
-				-- "- I look, look again, and turn to her. "No, no, whoever controlls it, is high as a Kohain, eating rotten Dalibs. And that the case. 
+				-- "- I look, look again, and turn to her. "No, no, whoever controlls it, is high as a Kohain, eating rotten Dalibs. And that was it. 
 				-- "- After another swerve, the whole cathedral in the sky, goes banking, crashing into there hive. People running, fires, soldier antitys rolling by towards the crashsite.
+
 -- Story Nine  "-- how a forcefield works? Its actually easy- you basically have 2 microwavelasers, and a additional laser plus some high voltage. 
 				-- Now the masers print something, for example a coil into midair, you connect the whole thing via the additonal laser to the power source. 
 				--Voila, magnetic field in midair out of nowhere. Its easy.
