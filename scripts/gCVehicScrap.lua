@@ -1,6 +1,7 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Build.lua" 
+include "lib_jw.lua" 
 
 
 center= piece"center"
@@ -305,7 +306,8 @@ end
 				  
 
 function onFire(times,endtimes)
-
+time=math.ceil(math.random(100,160))
+StartThread(dustCloudPostExplosion,unitID,1,time,50,0,1,0)
 	Schlackung()
 	--turnEmitorToTheWind()
 	Hide(base02)

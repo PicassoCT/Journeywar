@@ -1,6 +1,6 @@
 local foo = {
 	{
-		name="Wild Horses AI",
+		name="wildhorses",
 		desc="Real AI is just no fun.. ",
 	},
 		{

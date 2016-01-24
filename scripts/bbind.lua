@@ -375,7 +375,7 @@ eatItAlive={
 
 function isBio(ids)
 	passengerDefID=Spring.GetUnitDefID(ids)
-	if isInfantry(passengerDefID)==true or eatItAlive[passengerDefID] then
+	if isInfantry(passengerDefID)==true or eatItAlive[passengerDefID] or Rewards[passengerDefID] then
 		return true
 	end
 	
@@ -542,46 +542,50 @@ end
 
 local MstoredReward=0
 local EstoredReward=0
+Rewards ={
+	[UnitDefNames["gjmedbiogwaste"].id ] = {	ereward=1000
+	,mreward=500},
+	[UnitDefNames["tiglil"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["skinfantry"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["gjbigbiowaste"].id ] = {	ereward=2000
+	,mreward=1000},
+	[UnitDefNames["vort"].id ] = {},
+	[UnitDefNames["gtreetrunk"].id] = {},
+	[UnitDefNames["gcvehiccorpsemini"].id ] = {	mreward=1000
+	,ereward=500},
+	[UnitDefNames["gcvehiccorpse"].id] = {	mreward=2000,
+	ereward=1000},
+	[UnitDefNames["gzombiehorse"].id] = {	mreward=2000,
+	ereward=1000},
+	[UnitDefNames["ghohymen"].id] = {	mreward=2000,
+	ereward=1000},
+	[UnitDefNames["bg"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["bg2"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["css"].id] = {ereward=100
+	,mreward=100}
+	
+}
+
 
 function rewarder(id, boolIsBio)
 	ereward=0
 	mreward=0
 	local deafID=Spring.GetUnitDefID(id)
-	if deafID~=nil then
-		if boolIsBio == true then
-			if deafID == UnitDefNames["gjmedbiogwaste"].id then
-				ereward=1000
-				mreward=500
-			elseif deafID == UnitDefNames["bg"].id or deafID== UnitDefNames["tiglil"].id or deafID== UnitDefNames["skinfantry"].id or deafID== UnitDefNames["vort"].id then
-				ereward=100
-				mreward=100
-			elseif deafID == UnitDefNames["gjbigbiowaste"].id then
-				ereward=2000
-				mreward=1000
-			elseif deafID == UnitDefNames["gtreetrunk"].id then
-				ereward=500
-			end
-			
-		else
-			if deafID == UnitDefNames["gcvehiccorpsemini"] then
-				mreward=1000
-				ereward=500
-			elseif deafID == UnitDefNames["bg"].id or deafID== UnitDefNames["tiglil"].id or deafID== UnitDefNames["skinfantry"].id or deafID== UnitDefNames["vort"].id then
-				ereward=100
-				mreward=100
-			elseif deafID == UnitDefNames["gcvehiccorpse"] then
-				mreward=2000
-				ereward=1000
-			end
-		end
+	if deafID~=nil and Rewards[deafID] then
+		ereward=Rewards[deafID].ereward
+		mreward=Rewards[deafID].mreward
+		
+		
+		MstoredReward=MstoredReward+math.floor(mreward/2)
+		EstoredReward=EstoredReward+math.floor(ereward/2)
+		teamID=Spring.GetUnitTeam(unitID)
+		Spring.AddTeamResource(teamID,"metal", math.ceil(mreward/2))
+		Spring.AddTeamResource(teamID,"energy", math.ceil(ereward/2))
 	end
-	
-	MstoredReward=MstoredReward+math.floor(mreward/2)
-	EstoredReward=EstoredReward+math.floor(ereward/2)
-	teamID=Spring.GetUnitTeam(unitID)
-	Spring.AddTeamResource(teamID,"metal", math.ceil(mreward/2))
-	Spring.AddTeamResource(teamID,"energy", math.ceil(ereward/2))
-	
 	
 	
 end

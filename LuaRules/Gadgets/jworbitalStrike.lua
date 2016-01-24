@@ -12,12 +12,6 @@ function gadget:GetInfo()
   }
 end
 
---this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
-
-
-
-
-
 if (gadgetHandler:IsSyncedCode()) then
 
 	Range=3000

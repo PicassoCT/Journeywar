@@ -1,5 +1,5 @@
 --===================================================================================================================
---Game specific functions
+--Journeywar specific functions 
 --> creates a table from names to check unittypes against
 function getTypeTable(UnitDefNames,StringTable)
 local Stringtable=StringTable
@@ -105,7 +105,7 @@ if not GG.jw_denyCommunication then GG.jw_denyCommunication = {} end
 if not GG.jw_denyCommunication[key] then GG.jw_denyCommunication[key]=true end
 end
 
--->denies a tree - withdraw percentage of helath of the invested ressources
+-->denies a tree - withdraw percentage of health of the invested resources
 function deactivateAndReturnCosts(key,UnitDef,ratio,delay)
 local lratio= ratior or 1
 ldelay = delay or 2000
@@ -147,6 +147,27 @@ while boolThreadEnded == false do
 Sleep(250)
 end
 
+end
+--
+-->StartThread(dustCloudPostExplosion,unitID,1,600,50,0,1,0)
+--Draws a long lasting DustCloud
+function dustCloudPostExplosion(unitID,Density,totalTime,SpawnDelay, dirx,diry,dirz)
+x,y,z=Spring.GetUnitPosition(unitID)
+y=y+15
+firstTime=true
+	for j=1,totalTime,SpawnDelay do
+		for i=1, Density do		
+			Spring.SpawnCEG("lightuponsmoke",x,y,z,dirx,diry,dirz)	
+		end
+	
+		
+		Sleep(SpawnDelay)		
+	end
+	Sleep(550-totalTime)
+	
+	if math.random(0,1)==1 then
+		Spring.SpawnCEG("earcexplosion",x,y+30,z,0,-1,0)		
+	end
 end
 
 --===================================================================================================================

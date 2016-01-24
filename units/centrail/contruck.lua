@@ -20,7 +20,7 @@ FootprintX = 3,
 FootprintZ = 3,
 MaxSlope = 5,
 MaxVelocity = 4.2,
-MaxWaterDepth = 30,
+MaxWaterDepth = 10,
 MovementClass = "truck",
 reclaimSpeed=3,
 TurnRate = 224,--6 42 -- 12 84  --18 126  --24 168
@@ -34,7 +34,7 @@ CanGuard = true,
 CanMove = true,
 CanPatrol = true,
 CanStop = true,
-canreclaim=true,
+
 	explodeAs="citadelldrone",
 	selfDestructAs="cArtDM", 
 

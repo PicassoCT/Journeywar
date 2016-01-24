@@ -2121,8 +2121,10 @@ function vardump(value, depth, key)
 			typev=type(v)
 			typek=typek~="table" and typek ~="function"
 			typev=typev~="table" and typev ~="function"
-			if typek and typev then
+			if typek and typev and v then
 				Spring.Echo(" "..k.." 	---> 	"..v .." -> 	[ "..((assert(v)) or "nil").." ] ")
+			else
+				Spring.Echo("Key "..k .." -> ".. " holds no value")
 			end
 		end
 		

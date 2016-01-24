@@ -27,6 +27,9 @@ local ZOMBO = "anything at all"
 --config for killer,victim,zombie relation
 local zomba = {
 --when a scorpion kill a dude, the dude dies so hard he turns into a helicopter and converts to your team:
+[UnitDefNames["hc"].id] = {[UnitDefNames["gjmedbiogwaste"].id] = {unit=UnitDefNames["gzombiehorse"].id, killerTeam=true,}, } ,
+[UnitDefNames["hc"].id] = {[UnitDefNames["gjbigbiowaste"].id] = {unit=UnitDefNames["gzombiehorse"].id, killerTeam=true,}, } ,
+[UnitDefNames["hc"].id] = {[UnitDefNames["ghohymen"].id] = {unit=UnitDefNames["gzombiehorse"].id, killerTeam=true,}, } ,
 [UnitDefNames["hc"].id] = {[UnitDefNames["bg"].id] = {unit=UnitDefNames["zombie"].id, killerTeam=true,}, } ,
 [UnitDefNames["hc"].id] = {[UnitDefNames["tiglil"].id] = {unit=UnitDefNames["zombie"].id, killerTeam=true,}, } ,
 [UnitDefNames["hc"].id] = {[UnitDefNames["css"].id] = {unit=UnitDefNames["zombie"].id, killerTeam=true,}, } ,

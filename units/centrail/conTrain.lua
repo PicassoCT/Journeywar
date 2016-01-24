@@ -21,7 +21,7 @@ FootprintX = 5,
 FootprintZ = 5,
 MaxSlope = 20,
 MaxVelocity = 7.2,
-MaxWaterDepth = 30,
+MaxWaterDepth = 60,
 MovementClass = "Train",
 TurnRate = 24,--6 42 -- 12 84  --18 126  --24 168
 mass=9000,
@@ -34,23 +34,27 @@ CanGuard = true,
 CanMove = true,
 CanPatrol = true,
 CanStop = true,
+
+ShowNanoSpray = false,
+CanBeAssisted = true,
+CanReclaim=true,	
+workerTime = 0.6,
+buildDistance = 110,
+terraformSpeed = 0.2,
+  isMobileBuilder = true,
+
 	explodeAs="citadelldrone",
 	selfDestructAs="cArtDM", 
 
 upright=true,
- transportCapacity   = 3,
-  transportSize       = 3000,
+ --transportCapacity   = 3,
+--  transportSize       = 3000,
   
   
 Category = [[LAND]],
   leaveTracks =true,
   trackType ="cTrain",
-ShowNanoSpray = false,
-CanBeAssisted = true,
-CanReclaim=false,	
-workerTime = 0.6,
-buildDistance = 110,
-terraformSpeed = 0.2,
+
 
 	 customParams = {},
  sfxtypes = {

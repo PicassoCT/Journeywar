@@ -4,25 +4,25 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 --
---  file:    game_spawn.lua
---  brief:   spawns start unit and sets storage levels
---  author:  Tobi Vollebregt
+-- file: game_spawn.lua
+-- brief: spawns start unit and sets storage levels
+-- author: Tobi Vollebregt
 --
---  Copyright (C) 2010.
---  Licensed under the terms of the GNU GPL, v2 or later.
+-- Copyright (C) 2010.
+-- Licensed under the terms of the GNU GPL, v2 or later.
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
 function gadget:GetInfo()
 	return {
-		name      = "Spawn",
-		desc      = "spawns start unit and sets storage levels",
-		author    = "Tobi Vollebregt",
-		date      = "January, 2010",
-		license   = "GNU GPL, v2 or later",
-		layer     = 0,
-		enabled   = true  --  loaded by default?
+		name = "Spawn",
+		desc = "spawns start unit and sets storage levels",
+		author = "Tobi Vollebregt",
+		date = "January, 2010",
+		license = "GNU GPL, v2 or later",
+		layer = 0,
+		enabled = true -- loaded by default?
 	}
 end
 
@@ -39,66 +39,75 @@ end
 VFS.Include("scripts/lib_UnitScript.lua" )
 local modOptions = Spring.GetModOptions()
 
-function IsTeamAI(teamID)
-teamID,leader,isDead,isAiTeam=Spring.GetTeamInfo(teamID)
-return isAiTeam
+function GetAIStartUnit(teamID, leader, isDead, boolIsAI, side,playerInfo)
+	
+	aiName=Spring.GetTeamLuaAI (teamID) 
+	
+	if aiName and aiName== "spawner" then
+		return "jgeohive" 
+	end
+	
+	if aiName and aiName== "wildhorses" 	and playerInfo and playerInfo[1] and type(playerInfo[1])=='table' and playerInfo[1].name then
+		return playerInfo[1].name 
+	end
+	
+	if aiName and aiName== "" then
+		if side == "journeyman" then
+			return "beanstalk"
+		else
+			return "citadell"
+		end
+		
+	end
 end
 
 local function GetStartUnit(teamID)
 	-- get the team startup info
-	local side = select(5, Spring.GetTeamInfo(teamID))
+	
 	local startUnit=""
 	local AI_Type= "Spawner"
-
-
+	
+	
 	
 	--if side is a AI	
-	local boolIsAI= IsTeamAI(teamID)
-	local sidedata = Spring.GetSideData(side)	
-
+	
+	
+	
 	local playerInfo=Spring.GetPlayerList(teamID)
 	local foundAtHorses=false
 	local foundAtSpawner=false
-		
-				if playerInfo and playerInfo[1] and type(playerInfo[1])=='table' and playerInfo[1].name then
-					name=playerInfo[1].name 
-					foundAtHorses= 	(string.find(name,"Horses AI") ~= nil)
-					foundAtSpawner=	(string.find(name,"spawner") ~= nil  )
-						echo("game_spawn::",name, foundAtHorses,foundAtSpawner)
-				end		
-
+	local teamID, leader, isDead, boolIsAI, side = Spring.GetTeamInfo (teamID)
+	local sidedata = Spring.GetSideData(side)		
 	
-		if boolIsAI==true or foundAtHorses or (foundAtSpawner and Spring.GetTeamLuaAI (teamID) == "spawner") then
-			
-		
-				if sidedata and  sidedata.startunitspawner then
-					return sidedata.startunitspawner 		
-				elseif 	sidedata and sidedata.startunitai then 
-					return  sidedata.startunitai 
-				end
-			
-					
-			if foundAtHorses == true then   return "citadell"	end				
-			if foundAtSpawner ==true then	return "jgeohive" end
-		
-		end
-		-- we are human	
-		
-		if sidedata and sidedata.startunit and sidedata.startunit ~= "" then return sidedata.startunit end
-		
+	if boolIsAI==true then
+		return GetAIStartUnit(teamID, leader, isDead, boolIsAI, side, playerInfo)
+	end
+	
+	if sidedata and sidedata.startunitspawner then
+		return sidedata.startunitspawner 		
+	elseif 	sidedata and sidedata.startunitai then 
+		return sidedata.startunitai 
+	end
+	
+	
+	
+	-- we are human	
+	
+	if sidedata and sidedata.startunit and sidedata.startunit ~= "" then return sidedata.startunit end
+	
 	
 	--shitty defaults
 	echo("game_spawn::Found no startunit for team "..teamID.." - defaulting to citadell") 
-
-					return"citadell" 
-				
+	
+	return"citadell" 
+	
 	
 end
 
 local function SpawnStartUnit(teamID)
 	local startUnit = GetStartUnit(teamID)
 	if (startUnit and startUnit ~= "") then
-	Spring.Echo("GameStart::Called for 3 team .."..teamID)
+		Spring.Echo("GameStart::Called for 3 team .."..teamID)
 		-- spawn the specified start unit
 		local x,y,z = Spring.GetTeamStartPosition(teamID)
 		-- snap to 16x16 grid
@@ -106,54 +115,54 @@ local function SpawnStartUnit(teamID)
 		y = Spring.GetGroundHeight(x, z)
 		-- facing toward map center
 		local facing=math.abs(Game.mapSizeX/2 - x) > math.abs(Game.mapSizeZ/2 - z)
-			and ((x>Game.mapSizeX/2) and "west" or "east")
-			or ((z>Game.mapSizeZ/2) and "north" or "south")
+		and ((x>Game.mapSizeX/2) and "west" or "east")
+		or ((z>Game.mapSizeZ/2) and "north" or "south")
 		local unitID = Spring.CreateUnit(startUnit, x, y, z, facing, teamID)
-		 if startUnit=="citadell" then
-		 
-		 id1=Spring.CreateUnit("contrain", x+100, y+200, z, facing, teamID)
-		 id2=Spring.CreateUnit("contrain", x+100, y+200, z+50, facing, teamID)
-		 id3=Spring.CreateUnit("contrain", x+100, y+200, z-50, facing, teamID)
-		 Spring.CreateUnit("ccittadeldecal", x, y, z, 0, teamID)
-		 Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
-		 
-		 Spring.GiveOrderToUnit(id1,CMD.GUARD,{unitID}, {"shift"})
-		 Spring.GiveOrderToUnit(id2,CMD.GUARD,{unitID}, {"shift"})
-		 Spring.GiveOrderToUnit(id3,CMD.GUARD,{unitID}, {"shift"})
-		 
-	
-		 else
-
-		 id1=Spring.CreateUnit("conbigfoot", x+100, y, z+50, facing, teamID)
-		 id2=Spring.CreateUnit("conbigfoot", x+100, y, z, facing, teamID)
-		 id3=Spring.CreateUnit("conbigfoot", x+100, y, z-50, facing, teamID)
-		 
-		 Spring.GiveOrderToUnit(id1,CMD.GUARD,{unitID}, {"shift"})
-		 Spring.GiveOrderToUnit(id2,CMD.GUARD,{unitID}, {"shift"})
-		 Spring.GiveOrderToUnit(id3,CMD.GUARD,{unitID}, {"shift"})
-		 
-		 end
+		if startUnit=="citadell" then
+			
+			id1=Spring.CreateUnit("contrain", x+100, y+200, z, facing, teamID)
+			id2=Spring.CreateUnit("contrain", x+100, y+200, z+50, facing, teamID)
+			id3=Spring.CreateUnit("contrain", x+100, y+200, z-50, facing, teamID)
+			Spring.CreateUnit("ccittadeldecal", x, y, z, 0, teamID)
+			Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
+			
+			Spring.GiveOrderToUnit(id1,CMD.GUARD,{unitID}, {"shift"})
+			Spring.GiveOrderToUnit(id2,CMD.GUARD,{unitID}, {"shift"})
+			Spring.GiveOrderToUnit(id3,CMD.GUARD,{unitID}, {"shift"})
+			
+			
+		else
+			
+			id1=Spring.CreateUnit("conbigfoot", x+100, y, z+50, facing, teamID)
+			id2=Spring.CreateUnit("conbigfoot", x+100, y, z, facing, teamID)
+			id3=Spring.CreateUnit("conbigfoot", x+100, y, z-50, facing, teamID)
+			
+			Spring.GiveOrderToUnit(id1,CMD.GUARD,{unitID}, {"shift"})
+			Spring.GiveOrderToUnit(id2,CMD.GUARD,{unitID}, {"shift"})
+			Spring.GiveOrderToUnit(id3,CMD.GUARD,{unitID}, {"shift"})
+			
+		end
 	end
-
+	
 	-- set start resources, either from mod options or custom team keys
 	local teamOptions = select(7, Spring.GetTeamInfo(teamID))
-	local m = teamOptions.startmetal  or modOptions.startmetal  or 1500
+	local m = teamOptions.startmetal or modOptions.startmetal or 1500
 	local e = teamOptions.startenergy or modOptions.startenergy or 1500
-
+	
 	-- using SetTeamResource to get rid of any existing resource without affecting stats
 	-- using AddTeamResource to add starting resource and counting it as income
 	if (m and tonumber(m) ~= 0) then
 		-- remove the pre-existing storage
-		--   must be done after the start unit is spawned,
-		--   otherwise the starting resources are lost!
+		-- must be done after the start unit is spawned,
+		-- otherwise the starting resources are lost!
 		Spring.SetTeamResource(teamID, "ms", tonumber(m))
 		Spring.SetTeamResource(teamID, "m", 0)
 		Spring.AddTeamResource(teamID, "m", tonumber(m))
 	end
 	if (e and tonumber(e) ~= 0) then
 		-- remove the pre-existing storage
-		--   must be done after the start unit is spawned,
-		--   otherwise the starting resources are lost!
+		-- must be done after the start unit is spawned,
+		-- otherwise the starting resources are lost!
 		Spring.SetTeamResource(teamID, "es", tonumber(e))
 		Spring.SetTeamResource(teamID, "e", 0)
 		Spring.AddTeamResource(teamID, "e", tonumber(e))
@@ -166,7 +175,7 @@ function gadget:GameStart()
 	if (#Spring.GetAllUnits() > 0) then
 		return
 	end
-
+	
 	-- spawn start units
 	local gaiaTeamID = Spring.GetGaiaTeamID()
 	local teams = Spring.GetTeamList()
@@ -179,4 +188,3 @@ function gadget:GameStart()
 		end
 	end
 end
-

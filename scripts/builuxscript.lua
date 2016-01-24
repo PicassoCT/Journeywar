@@ -359,7 +359,7 @@ end
 		StartThread(upgraDDe)
 		StartThread(alarmCheck)--
 		StartThread(windyS)
-		StartThread(playSoundByUnitTypOS,unitID,0.7,{
+		StartThread(playSoundByUnitTypOS,unitID,0.3,{
 												{name="sounds/cbuilux/neverendingparty.ogg",time=15000},
 												{name="sounds/cbuilux/neverendingpartyup.ogg",time=15000},
 												{name="sounds/cbuilux/neverendingpartyup2.ogg",time=15000},
