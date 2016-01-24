@@ -313,37 +313,6 @@ function exploreJob(id, frame,Package)
 return nextFrame, Package
 end
 
--->denies a tree - withdraw percentage of helath of the invested ressources
-function deactivateAndReturnCosts(boolJustOnceDeny,UnitDef)
-	if boolJustOnceDeny==true then
-
-	 -- metalMake,   metalUse,  energyMake,   energyUse=Spring.GetUnitResources(unitID)
-	
-	defID=Spring.GetUnitDefID(unitID)
-	if not defID then return end
-	health,maxhealth=Spring.GetUnitHealth(unitID)
-	if not health then return end
-	ecosts=UnitDef[defID].energyMake*(health/maxhealth)
-	mcosts =UnitDef[defID].metalMake*(health/maxhealth)
-	
-	teamID=Spring.GetUnitTeam(unitID)
-	if not teamID then return end
-
-	Spring.AddTeamResource(teamID,"m",mcosts)
-	Spring.AddTeamResource(teamID,"e",ecosts)
-	x,y,z=Spring.GetUnitPosition(unitID)
-	
-	Spring.SetUnitResourcing(unitID,"ume",0)
-	Spring.SetUnitResourcing(unitID,"umm",0)
-	Spring.SetUnitResourcing(unitID,"uue",1)
-
-	x,y,z=Spring.GetUnitPosition(unitID)
-	Spring.SpawnCEG("jtreedenial" ,x,y+150,z,0,1,0,50,0)
-	Spring.PlaySoundFile("sounds/jtree/denial.ogg",1.0)
-	end
-
-
-end
 
 
 -->Turn Piece into various diretions within range

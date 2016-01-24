@@ -33,7 +33,6 @@ local spGetUnitDef=Spring.GetUnitDefID
 local spSetAlwaysVisible=Spring.SetUnitAlwaysVisible
 local spGetUnitInCylinder=Spring.GetUnitsInCylinder
 local spSetUnitNeutral=Spring.SetUnitNeutral
-local UnitTypeSelected=""
 local MissionFunctionTable={}
 local _gaiaTeam=Spring.GetGaiaTeamID()
 local spGetUnitTeam=Spring.GetUnitTeam
@@ -327,7 +326,7 @@ function spawnAGaiaVillage()
 												GG.UnitsToSpawn:PushCreateUnit("spectrator",x+i*3,0,z-i*3, 0,teamList[i] )
 												end
 										
-										for i=1,5, 1 do
+										for _=1,5, 1 do
 										
 										test={}
 										xrand,yrand=0,0
@@ -782,12 +781,12 @@ say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				
 					if teamID then
 						Spring.TransferUnit(MissionFunctionTable[2][10],teamID)
-							for i=1,table.getn(MissionFunctionTable[2][11]),1 do								
+							for _=1,table.getn(MissionFunctionTable[2][11]),1 do								
 							Spring.TransferUnit(MissionFunctionTable[2][11],teamID)
 							end
 						x,y,z=spGetUnitPos
 						
-						for i=1,4, 1 do
+						for _=1,4, 1 do
 						rx,ry,rz=math.random(-100,100),0,math.random(-100,100)
 						GG.UnitsToSpawn:PushCreateUnit("jgeohive",x+rx,y+ry,z+rz,1,teamID)
 						rx,ry,rz=math.random(-100,100),0,math.random(-100,100)
@@ -1276,8 +1275,8 @@ pos={}
 max=0
 teamA,teamB=0,0
 
-	for k,v in pairs(pos) do
-		for ki,vi in pairs(pos) do
+	for k,_ in pairs(pos) do
+		for ki,_ in pairs(pos) do
 		dist=math.sqrt((pos[k].x-pos[ki].x)^2+(pos[k].y-pos[ki].y)^2+(pos[k].z-pos[ki].z)^2)
 			if max < dist then 
 			teamA= k
@@ -1431,7 +1430,7 @@ ThatsAHorribleThingToSay={  "Mission: Cauterize, Sterilize, Desinfect!",
 							"You an run, but you can not hide. Bangarang, motherfucker!",
 							"Democracy and atrocities dont exlude each other. Anyone of a diffrent opinion and still having a hand please raise it..",	
 							"Nothing against stress like the sacking of a city - though the sight aint pretty-",
-							"Article 4, §5 of the Centrail War Convention explicitly forbids.. law from having the last word!",
+							"Article 4, 5 of the Centrail War Convention explicitly forbids.. law from having the last word!",
 							"Chug! Chug! Chug! Drink till you dont give a fuck, where the platin is that you stuck? Up the pooper, tell the trooper!",
 							"Raise arms, take aim! FIRE! Now, next on the list.. question the prisoners.. shiit!",
 							"I know newbie, they dont look like rebells. But then why run and hide, if they were not?",

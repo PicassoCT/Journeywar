@@ -6,7 +6,7 @@ return {
   ashcloud={	
 				air=true,
 				class=[[CSimpleParticleSystem]],
-				count=2,
+				count=1,
 				ground=true,
 				water=false,
 				
@@ -18,8 +18,8 @@ return {
 			
 
 				 pos                = [[0 r-42 r42, 26r14, 0 r-42 r42]],
-				gravity            = [[0r-0.05r0.05, 1 r-0.5 r0.75, 0r-0.05r0.05]],
-				emitvector         = [[0, -1, 0]],
+				gravity            = [[0r-0.05r0.05, 0.9 r-0.075 r0.075, 0r-0.05r0.05]],
+				emitvector         = [[0, s-1, 0]],
 				 emitrot            = 3,
 				emitrotspread      = 25,
 
@@ -29,13 +29,13 @@ return {
 
 		
 				airdrag			= 0.55,
-				particleLife		=135,
-				particleLifeSpread	= 16,
-				numParticles		= 1,
+				particleLife		=65,
+				particleLifeSpread	= 56,
+				numParticles		= 2,
 				particleSpeed		= 0.09,
 				particleSpeedSpread	= 0.012,
-				particleSize		= 2.008,
-				particleSizeSpread	= 6,
+				particleSize		= 4.008,
+				particleSizeSpread	= 3,
 
 				directional		= true, 
 				useAirLos		= true,

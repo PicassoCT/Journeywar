@@ -66,7 +66,7 @@ SHIELDRANGE= 240
 			if x then
 			distance=math.sqrt(x*x+ z*z)
 				if distance < SHIELDRANGE then 
-					return	return 0
+						return 0
 				end
 			end
 		end
@@ -87,64 +87,62 @@ end
 local function idle()
 	SetSignalMask(SIG_IDLE)
 	if boolNonCombatant== true then
-dicebenice=math.random(1,5)
-	if dicebenice==5 then
-	sleeper=math.random(1024,8192)
-	Turn(body,x_axis,math.rad(-90),12)
-	goDown=math.random(0,1)
-	boolMrTurner=false
-	if goDown==1 then
-	Move(body,y_axis,-24,2.14)
-		else
-		boolMrTurner=true
+	dicebenice=math.random(1,5)
+		if dicebenice==5 then
+		sleeper=math.random(1024,8192)
+		Turn(body,x_axis,math.rad(-90),12)
+		goDown=math.random(0,1)
+		boolMrTurner=false
+		if goDown==1 then
+		Move(body,y_axis,-24,2.14)
+			else
+			boolMrTurner=true
+			end
+
+
+			while(true)do
+				if boolMrTurner==true then
+				Move(body,y_axis,-5,7)
+				end
+			Turn(leftside,y_axis,math.rad(-32),3)
+			Turn(rightside,y_axis,math.rad(30),3)
+			WaitForTurn(rightside,y_axis)
+			Turn(leftside,y_axis,math.rad(25),1)
+			Turn(rightside,y_axis,math.rad(-25),1)
+				if boolMrTurner==true then
+				up=math.random(2,6)
+				Move(body,y_axis,up,7)
+				diceTurn=math.random(-360,360)
+				Turn(deathpivot,y_axis,diceTurn,0.5)
+				end
+			WaitForTurn(rightside,y_axis)
+			rand=math.ceil(math.random(50,250))
+			Sleep(rand)
+			end
+	else
+		while(true) do
+			Turn(leftside,y_axis,math.rad(-7),1.2)
+			Turn(LArm,y_axis,math.rad(13),2.1)
+			Turn(rightside,y_axis,math.rad(7),1.2)
+			Turn(RArm,y_axis,math.rad(-13),2.1)
+			Turn(LLeg,x_axis,math.rad(12),2.1)
+			Turn(LLeg,x_axis,math.rad(12),2.1)
+			Turn(RLLeg,z_axis,math.rad(-14),2.1)
+			Move(body,z_axis,1,1.1)
+			Turn(deathpivot,x_axis,math.rad(-1),0.07)
+			WaitForTurn(rightside,y_axis)
+			
+			Turn(leftside,y_axis,math.rad(3),0.4)
+				Turn(LArm,y_axis,math.rad(0),1)
+			Turn(rightside,y_axis,math.rad(-3),0.4)
+				Turn(RArm,y_axis,math.rad(0),1)
+				Turn(LLeg,x_axis,math.rad(0),0.4)
+			Turn(RLLeg,z_axis,math.rad(0),0.4)
+			Move(body,z_axis,0,1)
+			Turn(deathpivot,x_axis,math.rad(2),0.15)
+			WaitForTurn(rightside,y_axis)
 		end
-
-
-	while(true)do
-	if boolMrTurner==true then
-	Move(body,y_axis,-5,7)
 	end
-	Turn(leftside,y_axis,math.rad(-32),3)
-	Turn(rightside,y_axis,math.rad(30),3)
-	WaitForTurn(rightside,y_axis)
-	Turn(leftside,y_axis,math.rad(25),1)
-	Turn(rightside,y_axis,math.rad(-25),1)
-	if boolMrTurner==true then
-	up=math.random(2,6)
-	Move(body,y_axis,up,7)
-	diceTurn=math.random(-360,360)
-	Turn(deathpivot,y_axis,diceTurn,0.5)
-	end
-	WaitForTurn(rightside,y_axis)
-    rand=math.ceil(math.random(50,250))
-	Sleep(rand)
-	end
-else
-while(true) do
-	Turn(leftside,y_axis,math.rad(-7),1.2)
-	Turn(LArm,y_axis,math.rad(13),2.1)
-	Turn(rightside,y_axis,math.rad(7),1.2)
-	Turn(RArm,y_axis,math.rad(-13),2.1)
-	Turn(LLeg,x_axis,math.rad(12),2.1)
-	Turn(LLeg,x_axis,math.rad(12),2.1)
-	Turn(RLLeg,z_axis,math.rad(-14),2.1)
-	Move(body,z_axis,1,1.1)
-	Turn(deathpivot,x_axis,math.rad(-1),0.07)
-	WaitForTurn(rightside,y_axis)
-	
-	Turn(leftside,y_axis,math.rad(3),0.4)
-		Turn(LArm,y_axis,math.rad(0),1)
-	Turn(rightside,y_axis,math.rad(-3),0.4)
-		Turn(RArm,y_axis,math.rad(0),1)
-		Turn(LLeg,x_axis,math.rad(0),0.4)
-	Turn(RLLeg,z_axis,math.rad(0),0.4)
-	Move(body,z_axis,0,1)
-	Turn(deathpivot,x_axis,math.rad(2),0.15)
-	WaitForTurn(rightside,y_axis)
-end
-end
-else
-
 end
 end
 

@@ -1,5 +1,6 @@
    	include "lib_OS.lua"
 	include "lib_UnitScript.lua"
+	include "lib_jw.lua" 
 	include "lib_Build.lua" 
 
 
@@ -264,6 +265,8 @@ tempDEFID=Spring.GetUnitDefID(unitID)
 
 	StartThread(fruitLoop)
 	end
+	
+StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.45)
 end
 
 
@@ -293,10 +296,9 @@ return 1
 
 end
 
-boolJustOnceDeny=true
+
 	function script.Activate()
-		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
-		boolJustOnceDeny=false
+	setDenial(unitID)
 		return 1
 	end
 

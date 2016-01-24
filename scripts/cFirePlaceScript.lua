@@ -6,7 +6,8 @@ STORYMAX=4
 	
 
 function script.Killed()
-return 1
+
+return 0
 end
 
 function anybodyNearby()
@@ -31,7 +32,7 @@ end
 
 function storyTime()
 	Sleep(12000)
-	if math.random(1,12)==6 and anybodyNearby()==true then
+	if false == true and math.random(1,12)==6 and anybodyNearby()==true then
 	diceBeNice=math.ceil(math.random(1,STORYMAX))
 	SoundName="sounds/cFirePlace/Story"..diceBeNice..".ogg"
 	Spring.PlaySoundFile(SoundName,0.9)

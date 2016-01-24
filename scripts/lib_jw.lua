@@ -100,4 +100,53 @@ BattleTypes[UnitDefNames["vort"].id]=true
 return BattleTypes
 end
 
+function setDenial(key)
+if not GG.jw_denyCommunication then GG.jw_denyCommunication = {} end
+if not GG.jw_denyCommunication[key] then GG.jw_denyCommunication[key]=true end
+end
+
+-->denies a tree - withdraw percentage of helath of the invested ressources
+function deactivateAndReturnCosts(key,UnitDef,ratio,delay)
+local lratio= ratior or 1
+ldelay = delay or 2000
+
+Sleep(ldelay)
+if not GG.jw_denyCommunication then GG.jw_denyCommunication = {} end
+ GG.jw_denyCommunication[key]=false
+local boolThreadEnded=false
+
+while boolThreadEnded == false do
+
+	if GG.jw_denyCommunication[key]==true then
+
+	 -- metalMake,   metalUse,  energyMake,   energyUse=Spring.GetUnitResources(unitID)
+	
+	defID=Spring.GetUnitDefID(unitID)
+	if not defID then return end
+	health,maxhealth=Spring.GetUnitHealth(unitID)
+	if not health then return end
+	ecosts=UnitDef[defID].energyMake*(health/maxhealth)
+	mcosts =UnitDef[defID].metalMake*(health/maxhealth)
+	
+	teamID=Spring.GetUnitTeam(key)
+	if not teamID then return end
+
+	Spring.AddTeamResource(teamID,"m",math.abs(mcosts*lratio))
+	Spring.AddTeamResource(teamID,"e",math.abs(ecosts*lratio))
+	x,y,z=Spring.GetUnitPosition(unitID)
+	
+	Spring.SetUnitResourcing(key,"ume",0)
+	Spring.SetUnitResourcing(key,"umm",0)
+	Spring.SetUnitResourcing(key,"uue",1)
+
+	x,y,z=Spring.GetUnitPosition(key)
+	Spring.SpawnCEG("jtreedenial" ,x,y+150,z,0,1,0,50,0)
+	Spring.PlaySoundFile("sounds/jtree/denial.ogg",1.0)
+	boolThreadEnded=true
+	end
+Sleep(250)
+end
+
+end
+
 --===================================================================================================================

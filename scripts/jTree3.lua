@@ -1,11 +1,48 @@
 	include "lib_OS.lua"
+	include "lib_jw.lua"
 	include "lib_UnitScript.lua"
 	include "lib_Build.lua" 
 
 	center= piece "center"
-water=piece"water"
+	water=piece"water"
+	branches={}
+	branchesDeg={}
+	for i=1,8 do
+	name="branch"..i
+	branches[i]=piece(name)
+	end
 
+	function sway(swayDeg)
+	SetSignalMask(SIG_SWAY)
+		while(math.abs(swayDeg) > 0.5) do
+		offSet=math.random(-0.0003,0.0003)
+			for i=1, 8 do
+				Turn(branches[i] ,y_axis,math.rad(branchesDeg[i]+swayDeg),0.0023+offSet)
+			end
+			
+			for i=1, 8 do if math.random(0,1)==1 then WaitForTurn(branches[i] ,y_axis) end end
+			
+			swayDeg=swayDeg/-2	
 
+		end
+	
+	end
+	maxStrength=5
+	
+	function Windy()
+		Sleep(8000)
+		while true do
+		dirX, dirY, dirZ, strength,  normDirX, normDirY, normDirZ=Spring.GetWind()
+		if strength and strength > maxStrength then maxStrength=math.max(strength,20.0) end
+		
+			if strength/maxStrength > 0.25 then
+			Signal(SIG_SWAY)
+			StartThread(sway,(strength/20.0)*7)
+			end
+		Sleep(8000)
+		end
+	
+	end
 	
 --function: Is called by a Gamagardener, replaces the Object with the activated Version - Obj selfdestructor
 distDance=306.52-305.47
@@ -45,8 +82,42 @@ end
 	Turn(center,z_axis,math.rad(89),6)
 	Spring.DestroyUnit(unitID,false)
 	end
+_,maxhp=Spring.GetUnitHealth(unitID)
+
+function HitByWeapon ( x, z, weaponDefID, damage )
+
+	if damage > 30 then
+	Signal(SIG_SWAY)
+	StartThread(sway,(damage/maxhp)*10)
+	end
+return damage
+end
 
 function script.Create()
+	for i=1,8 do
+	Hide(branches[i])
+	end
+boolBranch1Done=false	
+boolBranch2Done=false	
+for i=1,4 do
+branchesDeg[i],branchesDeg[i+4]=0,0
+	if boolBranch1Done==false then
+		randDeg=math.random(0,360)
+		branchesDeg[i]=randDeg
+		Turn(branches[i],y_axis,math.rad(randDeg),0)
+		Show(branches[i])
+			if math.random(0,2)==1 then boolBranch1Done=true end
+	end
+	if boolBranch2Done==false then
+		randDeg=math.random(0,360)
+		branchesDeg[i+4]=randDeg
+		Turn(branches[i+4],y_axis,math.rad(randDeg),0)
+		Show(branches[i+4])
+		if math.random(0,2)==1 then boolBranch2Done=true end
+	end
+end
+
+
 Move(center,y_axis,-348,0)
 deg=math.random(-360,360)
 Turn(center,y_axis,math.rad(deg),0)
@@ -54,14 +125,16 @@ Turn(center,y_axis,math.rad(deg),0)
 
 if math.random(0,1)==1 then
 randoVal=math.random(-140,0)
-Move(center,y_axis,randoVal,0.25)
+Move(center,y_axis,randoVal,4.25)
 	else
-	Move(center,y_axis,0,0.25)
+	Move(center,y_axis,0,4.25)
 	end
 deg=math.random(-360,360)
 Turn(center,y_axis,math.rad(deg),0.0023)
 StartThread(waterWays)
 StartThread(delayedReward)
+StartThread(Windy)
+StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.65)
 end
 
 function delayedReward()
@@ -98,10 +171,9 @@ return 1
 end
 
 
-boolJustOnceDeny=true
+
 	function script.Activate()
-		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
-		boolJustOnceDeny=false
+		setDenial(unitID)
 		return 1
 	end
 

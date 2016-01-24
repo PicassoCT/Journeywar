@@ -16,9 +16,11 @@
 	LastCommandStack[#LastCommandStack+1]=Command	
 	end
 
-local azTex = {imageDir .. 'taczone/action.png'}
-local rzTex = {imageDir .. 'taczone/reservoire.png'}
-local tzTex = {imageDir .. 'taczone/trigger.png'}
+if not _G.imageDir  then _G.imageDir = 'luaui/images/' end
+
+local azTex = {_G.imageDir .. 'taczone/action.png'}
+local rzTex = {_G.imageDir .. 'taczone/reservoire.png'}
+local tzTex = {_G.imageDir .. 'taczone/trigger.png'}
 
 --Create 
 function Create_TacZones()

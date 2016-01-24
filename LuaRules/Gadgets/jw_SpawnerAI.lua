@@ -31,7 +31,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		boolBio= volume < 0
 		volume=math.abs(volume)
 		
-		for i=1, volume do
+		for _=1, volume do
 			meridian=meridianTable[math.random(1,#meridianTable)]
 			percent=math.random(0,1)
 			px=math.abs(percent*(meridian.start.x)- (1-percent)*(meridian.lend.x))

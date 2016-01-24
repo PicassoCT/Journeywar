@@ -1,6 +1,7 @@
 	include "suddenDeath.lua"
 	include "lib_OS.lua"
 	include "lib_UnitScript.lua"
+	include "lib_jw.lua" 
 	include "lib_Build.lua" 
 
 	--include "spring_lua_dsl.lua"
@@ -72,6 +73,8 @@
 				StartThread(playSoundByUnitTypOS,unitID,0.5,{
 												{name="sounds/jtree/accidtrees.ogg",time=15000}
 												})
+	
+	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.25+0.125)
 	end
 
 	--Contains Fixed Production Rules
@@ -2171,32 +2174,30 @@ end
     accidTreeDefID=Spring.GetUnitDefID(unitID)
 	fungiforrestid=UnitDefNames["jfungiforrest"].id
 	
-	decreasHP= function(unit)
-	defID=Spring.GetUnitDefID(unit)
-		if defID and defID ~= fungiforrestid and defID ~= accidTreeDefID then
-		hp=Spring.GetUnitHealth(unit)
-		Spring.SetUnitHealth(unit,hp-(damagePerSecond/4))
-		end
-	end
-	
+
 	
 	function foulTheSurroundings ()
 	
 		while true do
 			T= getInCircle(unitID,255)
-			
-			process(T,decreasHP)	
-			
+			if T and table.getn(T) > 0 then
+			process(T, function (unit)
+						defID=Spring.GetUnitDefID(unit)
+						if defID and defID ~= fungiforrestid and defID ~= accidTreeDefID then
+						hp=Spring.GetUnitHealth(unit)
+						Spring.SetUnitHealth(unit,hp-math.abs(damagePerSecond/4))
+						end
+						end)	
+			end
 		Sleep(250)
 		end
 	
 	
 	end
 
-boolJustOnceDeny=true
+
 	function script.Activate()
-		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
-		boolJustOnceDeny=false
+	setDenial(unitID)
 		return 1
 	end
 

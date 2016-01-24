@@ -86,7 +86,7 @@ EnergyStorage = 0,
 	   		       "custom:flames",
 				   "custom:glowsmoke",
 				   "custom:blackerThenSmoke",
-				   "custom:LightUponSmoke",
+				   "custom:vehsmokepillar",
 				   "custom:vortflames",--1029
 				   "custom:volcanolightsmall",--1030
 				    "custom:cburningwreckage",--1031

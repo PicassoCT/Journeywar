@@ -1,6 +1,7 @@
 	include "suddenDeath.lua"
 	include "lib_OS.lua"
 	include "lib_UnitScript.lua"
+	include "lib_jw.lua" 
 	include "lib_Build.lua" 
 
 	--include "spring_lua_dsl.lua"
@@ -49,7 +50,7 @@
 		Move(flats[i],x_axis,math.random(-15,15),0)
 		end	
 	end
-	
+	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.25)
 	end
 	
 	
@@ -58,10 +59,9 @@
 	return 1
 	end
 
-	boolJustOnceDeny=true
+
 	function script.Activate()
-		StartThread(deactivateAndReturnCosts,boolJustOnceDeny,UnitDefs)
-		boolJustOnceDeny=false
+		setDenial(unitID)
 		return 1
 	end
 

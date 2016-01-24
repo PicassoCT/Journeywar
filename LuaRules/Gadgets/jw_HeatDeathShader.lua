@@ -193,7 +193,7 @@ void main()
 					end
 	end
 
-end
+
 	function gadget:Initialize()   
 		Spring.Echo("HeatDeath Initialised")
       -- This associate the messages with the functions
@@ -216,5 +216,5 @@ end
 
 		end
 
-	
+	end
 

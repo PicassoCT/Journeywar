@@ -38,13 +38,15 @@ local screen0
 
 
 local guiPath='luaui/wdigets/'
-local imageDir = 'luaui/images/'
+_G.imageDir = 'luaui/images/'
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 boolStackNotEmpty=false
-VFS.Include(guiPath.."gui_TacZone.lua", VFS.RAW_FIRST)
-VFS.Include(guiPath.."gui_AbilityWindow.lua", VFS.RAW_FIRST)
+fileName=guiPath.."gui_TacZone.lua"
+VFS.Include(fileName, VFS.RAW_FIRST)
+fileName=guiPath.."gui_AbilityWindow.lua"
+VFS.Include(fileName, VFS.RAW_FIRST)
 
 local boolShowUpgrade=false
 local stack_main
