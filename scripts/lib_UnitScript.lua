@@ -1969,6 +1969,9 @@ local countConstAnt=0
 function mulVector(v1,value)
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
+	if not vl.x and type(vl)== 'number' then
+	return vl * value
+	end
 	
 	if value and type(value)=='number' then --Skalar
 		return {x = v1.x*value,
@@ -1976,7 +1979,7 @@ function mulVector(v1,value)
 		z=v1.z*value}
 	else		--return vector
 		Spring.Echo("JW:ToolKit:mulVector"..countConstAnt)
-		return {x = v1.x*value.x,y=	v1.y*value.y, z=	v1.z*value.z}
+		return {x = v1.x*value.x, y=	v1.y*value.y, z=	v1.z*value.z}
 	end
 end
 

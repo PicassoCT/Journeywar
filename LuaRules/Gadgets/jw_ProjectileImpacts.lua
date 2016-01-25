@@ -474,7 +474,7 @@ Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")
 							if     UnitDefs[unitDefID].isBuilding == true     then
 								health=Spring.GetUnitHealth(unitID)
 								Spring.SetUnitHealth(unitID, {paralyze =health*15})
-							elseif  UnitDefNames["jbugcreeper"].id == unitDefID or UnitDefNames["jCrabCreeper"].id==unitDefID or UnitDefNames["jhoneypot"].id== unitDefID  then
+							elseif  UnitDefNames["jbugcreeper"].id == unitDefID or UnitDefNames["jcrabcreeper"].id==unitDefID or UnitDefNames["jhoneypot"].id== unitDefID  then
 								--Send To Distance
 								ax,ay,az=Spring.GetUnitPosition(attackerID)
 								ux,uy,uz=Spring.GetUnitPosition(unitID)
