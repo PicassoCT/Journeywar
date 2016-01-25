@@ -365,8 +365,13 @@ end
 
 -->returns the Distance between two units
 function GetUnitDistance(idA, idB)
+
+
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
+	
+	if not x or not xb then return math.huge end
+	
 	return GetTwoPointDistance(x,y,z,xb,yb,zb)
 end
 

@@ -281,7 +281,7 @@ end
 end
 
 function resetUpgradeCmd(factoryID)
-
+if GENUPGRADEDEFID and UPGRADEDEFID then
       local upgrades = {[GENUPGRADEDEFID]=true,[UPGRADEDEFID]=true}
       local facCmds = Spring.GetFactoryCommands(factoryID)
  
@@ -291,6 +291,7 @@ function resetUpgradeCmd(factoryID)
 
       end
    end
+ end
 
 
 function fold()
