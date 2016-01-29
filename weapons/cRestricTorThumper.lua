@@ -43,7 +43,7 @@ local weaponDef = {
 				default = 3000,
 				HeavyArmor = 70,
 				},	      
-				
+				explosionScar =false,
 		  ImpulseBoost=0.01,
 		  ImpulseFactor=0.1,
 	      areaOfEffect            = 450,

@@ -190,7 +190,7 @@ local function GetWayPointsNearCursor(wpTbl, mx, my)
 
 	for i = 1, #selUnitsTbl do
 		local unitID = selUnitsTbl[i]
-		local commands = sprGetCommandQueue(unitID)
+		local commands = sprGetCommandQueue(unitID,7)
 
 		for cmdNum = 1, #commands do
 			local curCmd      = commands[cmdNum    ]

@@ -246,11 +246,11 @@ function walk()
 		while true do
 		Sleep(10000)
 		ed=Spring.GetUnitNearestEnemy(unitID)
-			if ed then
-			x,y,z=Spring.GetUnitPosition(ed)
-			if x then
-			Spring.SetUnitMoveGoal(unitID,x,y,z)
-			end
+				if ed then
+				x,y,z=Spring.GetUnitPosition(ed)
+				if x then
+				Spring.SetUnitMoveGoal(unitID,x,y,z)
+				end
 			end
 		end
 	

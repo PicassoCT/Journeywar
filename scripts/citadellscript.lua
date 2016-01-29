@@ -1101,7 +1101,7 @@ counter=0
 		Spring.SetUnitAlwaysVisible(id,false)
 		Spring.SetUnitPosition(id,citx+50,city+350,citz)
 		Sleep(15000)
-			if Spring.GetUnitIsDead(id)==false then
+			if Spring.ValidUnitID(id)==true and Spring.GetUnitIsDead(id)==false then
 			hp,maxhp=Spring.GetUnitHealth(id)
 			Spring.SetUnitHealth(id,{health=maxhp, build =1.0})
 			Spring.SetUnitAlwaysVisible(id,true)

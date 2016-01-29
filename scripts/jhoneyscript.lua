@@ -1,21 +1,21 @@
 
 
 
-local jhoney = piece "jhoney"
-local jhoneyleg1 = piece "jhoneyleg1"
-local jhoneyleg2 = piece "jhoneyleg2"
-local jhoneyleg3 = piece "jhoneyleg3"
-local jhoneyleg4 = piece "jhoneyleg4"
-local Turner = piece "Turner"
+ jhoney = piece "jhoney"
+ jhoneyleg1 = piece "jhoneyleg1"
+ jhoneyleg2 = piece "jhoneyleg2"
+ jhoneyleg3 = piece "jhoneyleg3"
+ jhoneyleg4 = piece "jhoneyleg4"
+ Turner = piece "Turner"
 
 
 --define other pieces
 
-local SIG_WALK = 1	--signal for the walk animation thread
-local SIG_AIM = 2  --signal for the weapon aiming thread
-local SIG_LEG=4
-local SIG_AIM2 = 8
-local SIG_DEFAULT=32
+ SIG_WALK = 1	--signal for the walk animation thread
+ SIG_AIM = 2  --signal for the weapon aiming thread
+ SIG_LEG=4
+ SIG_AIM2 = 8
+ SIG_DEFAULT=32
 function script.Create()
   	StartThread(defaultEnemy)
 end
@@ -194,6 +194,7 @@ function script.AimWeapon1( heading ,pitch)
 	return true
 end
 boolOnlyOnce=true
+
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if weaponDefID ~= WeaponDefNames["jhoneypotw"].id then return damage
 	

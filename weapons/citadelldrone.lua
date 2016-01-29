@@ -20,7 +20,7 @@ turnrate=12200,
 tolerance=16000,
 tracks=true,
 Turnrate=32000,
-collideFriendly=false,
+
 
 ----APPEARANCE
 model="cdDrone.s3o",
@@ -32,9 +32,10 @@ CegTag="ccitdronetail",
 turret=true,
 CylinderTargeting=222.0,
 avoidFeature=true,
-avoidFriendly=false,
-
-
+avoidFriendly=true,
+collideFriendly=false,
+heightMod =0.5,
+ 
 --commandfire=true,
 
 ----DAMAGE
@@ -45,7 +46,7 @@ heavyarmor=350,
 areaOfEffect=100,
 craterMult=0,
 --?FIXME***
-lineOfSight=true,
+
  noSelfDamage       = true,
 
 --sound

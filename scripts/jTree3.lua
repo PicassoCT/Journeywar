@@ -2,6 +2,7 @@
 	include "lib_jw.lua"
 	include "lib_UnitScript.lua"
 	include "lib_Build.lua" 
+	include "suddenDeath.lua"
 
 	center= piece "center"
 	water=piece"water"

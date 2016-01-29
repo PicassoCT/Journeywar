@@ -87,15 +87,14 @@ local function GetStartUnit(teamID)
 		return sidedata.startunitspawner 		
 	elseif 	sidedata and sidedata.startunitai then 
 		return sidedata.startunitai 
-	end
-	
-	
+	end	
 	
 	-- we are human	
 	
 	if sidedata and sidedata.startunit and sidedata.startunit ~= "" then return sidedata.startunit end
 	
-	
+	if side== "journeyman" then return "beanstalk" end
+	if side== "centrail" then return "citadell" end
 	--shitty defaults
 	echo("game_spawn::Found no startunit for team "..teamID.." - defaulting to citadell") 
 	

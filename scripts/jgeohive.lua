@@ -86,6 +86,9 @@ function NextState(State,time)
 		RandVAl= math.ceil(math.random(4000,60000)) 
 		return "BUILDUP" 
 	end
+	
+	if not State then State="PEAK" end
+	
 	return State
 end
 
@@ -106,6 +109,7 @@ PEAKFADEHALF=PEAKFADETIME/4
 function PEAKFADE(monsterID, enemyID,Time,mteam)
 	if Time/PEAKFADETIME < 0.5 or math.random(1,Time)/PEAKFADEHALF > 1 then
 		ex,ey,ez=Spring.GetUnitPosition(enemyID)
+
 		return ex,ey,ez
 	else
 		eteam=Spring.GetUnitTeam(enemyID)
@@ -113,7 +117,7 @@ function PEAKFADE(monsterID, enemyID,Time,mteam)
 		ax,ay,az=Spring.GetTeamStartPosition(mteam)
 		cof=Time/PEAKFADETIME
 		cof= math.max(cof,0.5)
-		return (1-cof)*ex+ax*cof,ay,(1-cof)*ez+az*cof
+		return (1-cof)*ex+ ax*cof, ay, (1-cof)*ez+ az*cof
 	end
 	
 end
@@ -176,6 +180,8 @@ function TargetOS()
 		time=time+5000
 		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
 			State=NextState(State,time)
+	
+			
 			for i=1,table.getn(monsterTable),1 do
 				v=(spValidUnitID(monsterTable[i]))
 				if v and v == true then 
@@ -186,12 +192,13 @@ function TargetOS()
 					
 					enemyID= spGetUnitNearestEnemy(monsterTable[i])
 					if enemyID then
-						if not State then State="PEAK" end
+
+						
 						
 						ex,ey,ez = lfuncTable[State](monsterTable[i],enemyID,time,teamID)
-						if ex < 20 or ez < 20 then Spring.Echo("Jgeohive state.." ..State .." produces crap") break end
-						
+						if ex > 10 and ez > 10 then 						
 						spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
+						end
 					end
 				end
 				
