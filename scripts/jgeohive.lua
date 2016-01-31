@@ -4,6 +4,17 @@ naptime=80000
 howManyHoneyPots=5
 
 monsterTable={}
+function sanitizeCoords(monsterID,x,y,z)
+	if (not x or not z ) or x== 0 and z == 0 then
+	dx,dy,dz=Spring.GetUnitDirection(monsterID)
+	x,y,z=Spring.GetUnitPosition(unitID)
+		if dx then 
+		x,z= x + dx * 7,z+ dz*7
+		end
+	end
+
+return x,y,z
+end
 
 function spawner()
 	
@@ -92,15 +103,16 @@ function NextState(State,time)
 	return State
 end
 
-
-
+ax,ay,az=Spring.GetUnitPosition(unitID)
 --attack relentless
 function PEAK(monsterID, enemyID,Time,mteam)
 	eteam=Spring.GetUnitTeam(enemyID)
 	ex,ey,ez=Spring.GetUnitPosition(enemyID)
+	ex,ey,ez=sanitizeCoords(monsterID,ex,ey,ez)
 	if math.random(0,1)==1 then
 		ad=Spring.GetUnitNearestAlly(enemyID)
 		ex,ey,ez=Spring.GetUnitPosition(ad)
+		ex,ey,ez=sanitizeCoords(monsterID,ex,ey,ez)
 	end
 	return ex,ey,ez
 end
@@ -114,10 +126,11 @@ function PEAKFADE(monsterID, enemyID,Time,mteam)
 	else
 		eteam=Spring.GetUnitTeam(enemyID)
 		ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-		ax,ay,az=Spring.GetTeamStartPosition(mteam)
+		
 		cof=Time/PEAKFADETIME
 		cof= math.max(cof,0.5)
-		return (1-cof)*ex+ ax*cof, ay, (1-cof)*ez+ az*cof
+		x,y,z = sanitizeCoords(monsterID,(1-cof)*ex+ ax*cof, ay, (1-cof)*ez+ az*cof)
+		return x,y,z
 	end
 	
 end
@@ -129,14 +142,16 @@ function BUILDUP(monsterID, enemyID,Time,mteam)
 	ecx,ecy,ecz=Spring.GetUnitPosition(enemyID)
 	eteam=Spring.GetUnitTeam(enemyID)
 	ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-	rx,ry,rz=(ecx*Inv+ex*coef),(ecy+ey),(ecz*Inv+ez*coef)
+	
+	rx,ry,rz=sanitizeCoords(monsterID,(ecx*Inv+ex*coef),(ecy+ey),(ecz*Inv+ez*coef))
 	--well away from the mainbase
 	if math.abs(ex-rx)> 1000 and math.abs(ez-rz)> 1000 then 
 		return rx,ry,rz 
 	else --we assmeble at the middistance to our ally
 		ally=Spring.GetUnitNearestEnemy(enemyID)
-		ax,ay,az=Spring.GetUnitPosition(ally)
-		return(ex*Inv+ax*coef),(ey*Inv+ay*coef),(ez*Inv+az*coef)
+		dax,day,daz=Spring.GetUnitPosition(ally)
+		dax,day,daz=sanitizeCoords(monsterID,(ex*Inv+dax*coef),(ey*Inv+day*coef),(ez*Inv+daz*coef))
+		return dax,day,daz
 		
 	end
 	
@@ -146,12 +161,13 @@ function RELAX(monsterID, enemyID,Time,mteam)
 	ally=Spring.GetUnitNearestEnemy(enemyID)
 	eteam=Spring.GetUnitTeam(enemyID)
 	if ally then
-		ax,ay,az=Spring.GetUnitPosition(ally)
-		return ax+math.random(-100,100),ay,az+math.random(-100,100)
+		dax,day,daz=Spring.GetUnitPosition(ally)
+		dax,day,daz=sanitizeCoords(monsterID, dax+math.random(-100,100),day,daz+math.random(-100,100))		
+		return dax,day,daz
 	else
-		ax,ay,azz=Spring.GetTeamStartPosition(mteam)
+
 		ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-		mx,my,mz=(ax+ex)*0.5+math.random(-100,100),(ay+ey)*0.5,(az+ez)*0.5+math.random(-100,100)
+		mx,my,mz=sanitizeCoords(monsterID,(ax+ex)*0.5+math.random(-100,100),(ay+ey)*0.5,(az+ez)*0.5+math.random(-100,100))
 		return mx,my,mz
 		
 	end
