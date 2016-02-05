@@ -30,7 +30,7 @@ CegTag="ccitdronetail",
 
 ----TARGETING
 turret=true,
-CylinderTargeting=222.0,
+CylinderTargeting=1222.0,
 avoidFeature=true,
 avoidFriendly=true,
 collideFriendly=false,

@@ -64,12 +64,6 @@ for i=1,FLOAT,1 do
 	FloatPieces[i]=piece(name)
 end
 
-function aShortGloballos (ed ) 
-	boolWereCheatsEnabled= Spring.IsCheatingEnabled()
-	Spring.SetCheatingEnabled(true)
-	Spring.Cheat("globallos")
-	Spring.SetCheatingEnabled(false)
-end 
 
 function aSuddenTransportToMapEdge ( ed) 
 	x,z=math.random(0,1)*Game.mapSizeX,math.random(0,1)*Game.mapSizeZ
@@ -355,7 +349,7 @@ function aChainExplosion(ed)
 end
 -- Not inspired or entired by the Foorunners
 NamePerk={ --Generic SciFi Name --generic dramatic description --generic SciFi Stuff happening
-	[1]={name="The Tower", description= "We raised these stones, to be rememberd", perk=aShortGloballos },
+	[1]={name="The Tower", description= "We raised these stones, to be rememberd", perk=aWildHealer },
 	[2]={name="The Nexus", description= " a Flame in the Night for those Fast as Light", perk=aExplanation },
 	[3]={name="The Library", description= "Holding lost Secrets ", perk=aTransferToTheTop },
 	[4]={name="The Halls of Time", description= "Awaiting the dawn", perk= aStunOfEveryone },

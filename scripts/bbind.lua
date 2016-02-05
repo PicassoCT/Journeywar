@@ -382,6 +382,22 @@ function isBio(ids)
 	return false
 end
 
+function getScrap()
+	x,y,z=Spring.GetUnitPosition(unitID)
+	while true do
+		Sleep(512)
+		fTable=Spring.GetFeaturesInCylinder(x,z,255)
+		if fTable and #fTable >0 then
+			for i=1,#fTable do
+				RemainingMetal,maxMetal,RemainingEnergy,maxEnergy,reclaimLeft= Spring.GetFeatureResources(fTable[i])
+				Spring.AddTeamResource(teamID,"metal",maxMetal*0.005)
+				Spring.AddTeamResource(teamID,"energy",maxEnergy*0.005)
+				Spring.SetFeatureReclaim(fTable[i],reclaimLeft-0.05)
+			end
+		end
+	end
+	
+end
 
 
 function haulers()
@@ -835,6 +851,7 @@ function likeCattle()
 		end
 	end
 end
+
 function distance(x,x2)
 	return math.sqrt((x-x2)^2)
 end
@@ -883,7 +900,7 @@ function bringThemIn()
 	
 	while(true) do
 		unitTable={}
-		unitTable= Spring.GetUnitsInCylinder(x,z,280)
+		unitTable= Spring.GetUnitsInCylinder(x,z,420)
 		table.remove(unitTable,unitID)
 		if unitTable~=nil and table.getn(unitTable)~=0 then
 			--check Units in Circle- if scrap, StartThreads moving them Towards the loadpoint
@@ -1077,6 +1094,7 @@ function script.Create()
 	StartThread(bringThemIn)
 	StartThread(moveCadaversToRalleyPoint)
 	StartThread(likeCattle)
+	--StartThread(getScrap)
 	Spring.UnitScript.Hide(flare)
 	Spring.UnitScript.Hide(lightning)
 	StartThread(idle)

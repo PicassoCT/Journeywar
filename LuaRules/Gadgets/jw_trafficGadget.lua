@@ -27,10 +27,11 @@ if (gadgetHandler:IsSyncedCode()) then
 	RouteTabel={}--Every Subtable consists of a finite series of coordpairs[i][1] [i][2]
 	
 	gaiaTeamID=Spring.GetGaiaTeamID()
-	droneTable={}
+	GG.NewsDroneTable={}
 	transitHubTable={}
+	transitHubDefID=UnitDefNames["ctransithub"].id 
 		function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-			if unitDefID== UnitDefNames["ctransithub"].id then 
+			if unitDefID== transitHubDefID then 
 			transitHubTable[table.getn(sPTable)+1]={}
 			transitHubTable[table.getn(sPTable)]=unitID			
 			end
@@ -219,25 +220,25 @@ end	 ]]
 	
 	
 	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
-	if UnitDefID== UnitDefNames["gcivilbuilding"].id or UnitDefID== UnitDefNames["gcivillian"].id or UnitDefID== UnitDefNames["scumslum"].id or UnitDefID== UnitDefNames["mtw"].id or attackerDefID== UnitDefNames["mtw"].id or attackerDefID== UnitDefNames["css"].id or attackerDefID== UnitDefNames["bg"].id and table.getn(droneTable)>0 then
+	if UnitDefID== UnitDefNames["gcivilbuilding"].id or UnitDefID== UnitDefNames["gcivillian"].id or UnitDefID== UnitDefNames["scumslum"].id or UnitDefID== UnitDefNames["mtw"].id or attackerDefID== UnitDefNames["mtw"].id or attackerDefID== UnitDefNames["css"].id or attackerDefID== UnitDefNames["bg"].id and table.getn(GG.NewsDroneTable)>0 then
 	x,k,c=spGetPosition(unitID)
 		for i=1,3,1 do
-		if #droneTable > 0 then
-		dice=math.ceil(math.random(1,table.getn(droneTable)))
-		Spring.GiveOrderToUnit(droneTable[i], CMD.PATROL , {x, k, c  }, {"shift"})
+		if #GG.NewsDroneTable > 0 then
+		dice=math.ceil(math.random(1,table.getn(GG.NewsDroneTable)))
+		Spring.GiveOrderToUnit(GG.NewsDroneTable[i], CMD.PATROL , {x, k, c  }, {"shift"})
 		end
 		end
 	end
 	
-	if UnitDefID== UnitDefNames["gcivilbuilding"].id  and table.getn(droneTable) < 3 then
+	if UnitDefID== UnitDefNames["gcivilbuilding"].id  and table.getn(GG.NewsDroneTable) < 3 then
 		for i=1,3,1 do
 			
 			x=math.floor(Game.mapSizeX/2+0.25*Game.mapSizeX*math.random(-1,1))
 			z=math.floor(Game.mapSizeZ/2+0.25*Game.mapSizeZ*math.random(-1,1))
-			droneTable[#droneTable+1]=Spring.CreateUnit("gnewsdrone",x,0,z,0,gaiaTeamID)
+			GG.NewsDroneTable[#GG.NewsDroneTable+1]=Spring.CreateUnit("gnewsdrone",x,0,z,0,gaiaTeamID)
 			x,y,z=spGetPosition(unitID)
 				if x then
-				Spring.GiveOrderToUnit(droneTable[i], CMD.PATROL , {x, k, z  }, {"shift"})
+				Spring.GiveOrderToUnit(GG.NewsDroneTable[i], CMD.PATROL , {x, k, z  }, {"shift"})
 				
 				end
 		end
@@ -246,32 +247,23 @@ end	 ]]
 
 	end
 	
+	gnewsDroneDefID=UnitDefNames["gnewsdrone"].id 
+	gcarDefID=UnitDefNames["gcar"].id 
+	
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
 
-	--if (un == "whitevan" or un == "redvan" or un == "yellowvan" or un == "yellowbus") then
-			if unitDefID == UnitDefNames["gcivilbuilding"].id and math.random(0,1)== 1 then  
-			
-			x=math.floor(math.random(0,1)*Game.mapSizeX)
-			z=math.floor(math.random(0,1)*Game.mapSizeZ)
-			droneTable[#droneTable+1]=Spring.CreateUnit("gnewsdrone",x,0,z,0,gaiaTeamID)
-			x,y,z=spGetPosition(unitID)
-				if x then
-								Spring.GiveOrderToUnit(droneTable[#droneTable], CMD.PATROL , {x, y, z  }, {"shift"})
-			
-				end
-			end
 		
-		if unitDefID == UnitDefNames["gnewsdrone"].id then
-		for i=1,table.getn(droneTable),1 do
-			if unitID== droneTable[i] then 
-			table.remove(droneTable,i)
+		if unitDefID == gnewsDroneDefID then
+		for i=1,table.getn(GG.NewsDroneTable),1 do
+			if unitID== GG.NewsDroneTable[i] then 
+			table.remove(GG.NewsDroneTable,i)
 			break
 			end
 		end
 		
 		end
 		
-		if unitDefID == UnitDefNames["gcar"].id then
+		if unitDefID == gcarDefID then
 		for i=1,table.getn(CarTable), 1 do
 		if CarTable[i].unitid== unitID then
 		table.remove(CarTable,i)
@@ -325,32 +317,10 @@ end
 			
 		end
 	
-		--[[
-		for i=1,#sPTable,1 do
-		RouteTabel[#RouteTabel+1]={}
-		ender=nil
-				if math.random(0,1)==1 then ender=math.floor(math.random(1,#sPTable)) end
-				--assert(sPTable[i].unitid,"not Existing sPTable[i].id="..i)
-				if ender then
-				RouteTabel[#RouteTabel]=transferNodeTableToRoute(sPTable[i].unitid,sPTable[i].CoordI,sPTable[i].CoordJ,sPTable[ender].id,sPTable[ender].CoordI,sPTable[ender].CoordJ,35)
-					else
-					RouteTabel[#RouteTabel]=transferNodeTableToRoute(sPTable[i].unitid,sPTable[i].CoordI,sPTable[i].CoordJ,nil,nil,25)
-					end
-		end
-	
-	if GG.Valerie then val=GG.Valerie end
-	--]]
+
 	if RouteTabel== nil or  #RouteTabel== 0 then return false end
 	
-		--if  #sPTable>0 then
-		
-		
-		--else 
-		----Spring.Echo("JW_TrafficGadget InitFailed")
-		--return false 
-		--end
-		--Spring.Echo("JW_TrafficGadget InitSuccess")
-		return true 
+			return true 
 	end
 	
 		--starts at nine o Clock with 1 going clockwise
