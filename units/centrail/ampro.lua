@@ -62,6 +62,9 @@ weapons = {
 [1]={name  = "cantimatter",
 	onlyTargetCategory = [[LAND]],
 	},
+[2]={name  = "cantimatter",
+	onlyTargetCategory = [[LAND]],
+	},
 
 	
 },

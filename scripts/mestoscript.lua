@@ -83,7 +83,7 @@
 
 	end
 
-
+boolMeElevator=true
 	function script.Create()
 	randoval=math.random(0,12)
 	randoval=randoval*90
@@ -99,32 +99,33 @@
 	Hide(alt2)	
 	Hide(mestorage)	
 		
-	if math.random(0,1)==1 then
-	Show(mestorage)
-	x=math.random(0,4)
-		if x== 1 then
-		StartThread(inStore)
-		end
-	--boolAllreadyAlarmed=false 
-	--StartThread(alarmCheck)
 		if math.random(0,1)==1 then
+		Show(mestorage)
+		x=math.random(0,4)
+			if x== 1 then
+			StartThread(inStore)
+			end
+		--boolAllreadyAlarmed=false 
+		--StartThread(alarmCheck)
+			if math.random(0,6)~=1 then
+			Hide(meelevator)
+			boolMeElevator=false
+			end
+		else
 		Hide(meelevator)
+		boolMeElevator=false
+			if math.random(0,1)==1 then 
+			Show(alt1) 
+			else 
+			Show(alt2) 
+			end
 		end
-	else
-	Hide(meelevator)
-	
-		if math.random(0,1)==1 then 
-		Show(alt1) 
-		else 
-		Show(alt2) 
-		end
-	end
 	end
 
 	local function iliketoMoveIt()
 	Signal(SIG_ACTIVE)
 	SetSignalMask(SIG_ACTIVE)
-		while(true)do
+		while(boolMeElevator==true)do
 		Move(meelevator,y_axis,-70,0.5)
 		WaitForMove(meelevator,y_axis)
 

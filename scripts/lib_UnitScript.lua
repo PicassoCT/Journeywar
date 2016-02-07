@@ -411,7 +411,7 @@ end
 
 -->Turn a piece towards a random direction
 function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,LIMLOWZ)
-	if not limUpX then
+	if not LIMUPX then
 		Turn(piecename,x_axis,math.rad(math.random(-360,360)),speed)
 		Turn(piecename,y_axis,math.rad(math.random(-360,360)),speed)
 		Turn(piecename,z_axis,math.rad(math.random(-360,360)),speed)
@@ -683,7 +683,7 @@ function makeTable(default, XDimension, yDimension,zDimension)
 end
 
 -->Creates basically a table of piecenamed enumerated strings
-function makeTableOfPieceNames(name, nr,startnr)
+function makeTableOfPieceNames(name, nr,startnr, piecefoonction)
 	T={}
 	start=startnr or 1
 	
@@ -692,6 +692,13 @@ function makeTableOfPieceNames(name, nr,startnr)
 		namecopy=namecopy..i
 		T[i]=namecopy
 	end
+if piecefoonction then
+	for i=start,nr do
+		T[i]=piecefoonction(T[i])
+	end
+end
+	
+	
 	return T
 end
 
