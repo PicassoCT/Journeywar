@@ -50,7 +50,7 @@ function frontLeg(nr,inverter)
 		WaitForTurn(crableg[nr],x_axis)
 		WaitForTurn(crableg[nr],z_axis)
 		legSound(0.1)
-		Turn(crableg[nr],y_axis,math.rad(79*inverter),6) --front
+		Turn(crableg[nr],y_axis,math.rad(45*inverter),6) --front
 		WaitForTurn(crableg[nr],y_axis)		
 		Turn(crableg[nr],x_axis,math.rad(-41),6) --backup
 		Turn(crableg[nr],z_axis,math.rad(5),6) 		
@@ -144,15 +144,7 @@ function legs_down()
 	Turn(Crabbase,x_axis,math.rad(0),12)
 	Turn(Crabbase,y_axis,math.rad(0),12)
 	Turn(Crabbase,z_axis,math.rad(0),12)
-	
-	Turn(crabattack1,x_axis,math.rad(0),12)
-	Turn(crabattack1,y_axis,math.rad(0),12)
-	Turn(crabattack1,z_axis,math.rad(0),12)
-	
-	
-	Turn(crabattack2,x_axis,math.rad(0),12)
-	Turn(crabattack2,y_axis,math.rad(0),12)
-	Turn(crabattack2,z_axis,math.rad(0),12)
+
 	
 end
 
@@ -226,6 +218,13 @@ function walk()
 end
 
 function script.StartMoving()
+	Turn(crabattack1,x_axis,math.rad(0),12)
+	Turn(crabattack1,y_axis,math.rad(0),12)
+	Turn(crabattack1,z_axis,math.rad(0),12)	
+	Turn(crabattack2,x_axis,math.rad(0),12)
+	Turn(crabattack2,y_axis,math.rad(0),12)
+	Turn(crabattack2,z_axis,math.rad(0),12)
+	
 	Signal(SIG_DEFAULT)
 	StartThread(walk)
 end
@@ -291,7 +290,7 @@ function script.AimWeapon1( heading ,pitch)
 	--Turn(turret, y_axis, heading)
 	
 	Signal(SIG_AIM2)
-	Signal(SIG_LEG)
+
 	
 	
 	SetSignalMask(SIG_AIM2)
@@ -306,10 +305,12 @@ function script.AimWeapon1( heading ,pitch)
 end
 
 function Clawanimation()
+	StartThread(legs_down)
 	Turn(crabattack1,y_axis,math.rad(0),64)
 	Turn(crabattack2,y_axis,math.rad(0),64)			
 	WaitForTurn(crabattack1,y_axis)
 	WaitForTurn(crabattack2,y_axis)
+	Turn(deathpivot,y_axis,0,7)	
 end
 
 function script.FireWeapon1()	

@@ -102,7 +102,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jvaryfoospearDefID , true)
 	Script.SetWatchWeapon(jgluegunDefID , true)
 	
-	
+	--units To be exempted from instantly lethal force
+	local fuckingSpecial ={
+	[UnitDefNames["ccomender"].id]=true,
+	[UnitDefNames["beanstalk"].id]=true,
+	[UnitDefNames["citadell"].id]=true,
+	[UnitDefNames["gvolcano"].id]=true,
+	[UnitDefNames["gproceduralfeature"].id]=true,
+	}
 	
 	local	gaiaTeamID=Spring.GetGaiaTeamID()
 	local	skySraperDefID=UnitDefNames["buibaicity1"].id
@@ -403,7 +410,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	WeaponDefTable[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		unitVannishAntimatterSFX(unitID) 
+		if not fuckingSpecial[unitDefID] then
+			unitVannishAntimatterSFX(unitID) 
+		end
 	end
 	
 	WeaponDefTable[catapultDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)

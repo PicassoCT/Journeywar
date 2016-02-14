@@ -11,8 +11,8 @@ buildCostMetal = 550,
 buildCostEnergy = 250,
 buildTime = 5,
 --Health
-maxDamage = 3950,
-mass=4020,
+maxDamage = 1800,
+mass=1800,
 idleAutoHeal =1,
 --Movement
 Acceleration = 0.4,

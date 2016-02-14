@@ -33,7 +33,7 @@ CanPatrol = false,
 CanStop = false,
 LeaveTracks = false,
 
-	YardMap ="cccccc cccccc cccccc cccccc cccccc cccccc",
+	YardMap ="c",
 
 -- Building	
 

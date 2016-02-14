@@ -28,6 +28,7 @@ lib_boolDebug= GG.BoolDebug or false
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
 function makeCascadingGlobalTables(FormatString,assignedValue, ...)
+	--local arg = table.pack(...)
 	if string.load(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; string.load(FormatString) return end
 	--SplitByDot
 	SubTables={}
@@ -267,7 +268,7 @@ function AmphibMoveThread(unitid
 	,nlbackIntoWaterAnimation
 	,nlwalkAnimation
 	,nlstopWalkAnimation)
-				
+	
 	local swimAnimation =nlswimAnimation 
 	local stopSwimAnimation =nlstopSwimAnimation
 	local outOfWaterAnimation =nloutOfWaterAnimation
@@ -365,8 +366,8 @@ end
 
 -->returns the Distance between two units
 function GetUnitDistance(idA, idB)
-
-
+	
+	
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
@@ -477,6 +478,7 @@ end
 
 -->Waits for anyTurnToComplete
 function WaitForTurns(...)
+	--local arg = table.pack(...)
 	if not arg then
 		return 
 	end
@@ -544,19 +546,27 @@ end
 function OverTurnDirection(piecename,axis, degree,speed, sUnitScriptEnviro)
 	x_deg,y_deg,z_deg= sUnitScriptEnviro.GetPieceRotation(piecename)
 	
-curdeg=0; if axis==x_axis then curdeg=x_deg elseif axis== y_axis then curdeg=y_deg else curdeg= z_deg end
-curdeg=math.rad(curdeg)
-
-dir =1
-
-if curdeg+360 < degree+360 then dir =-1 end
-
-Turn(piecename,axis,math.rad(curdeg +179*dir),speed)
-WaitForTurn(piecename,axis) 
-Turn(piecename,axis,math.rad(degree),Speed)
-WaitForTurn(piecename,axis) 
-
-
+	curdeg=0;
+	if axis==x_axis then
+		curdeg=x_deg 
+	elseif axis== y_axis then 
+		curdeg=y_deg 
+	else curdeg= z_deg 
+	end
+	curdeg=math.rad(curdeg)
+	
+	dir =1
+	
+	if curdeg+360 < degree+360 then 
+		dir =-1 
+	end
+	
+	Turn(piecename,axis,math.rad(curdeg +179*dir),speed)
+	WaitForTurn(piecename,axis) 
+	Turn(piecename,axis,math.rad(degree),Speed)
+	WaitForTurn(piecename,axis) 
+	
+	
 end
 
 function syncTurnInTime(piecename,x_val,y_val,z_val,time,x_deg,y_deg,z_deg)
@@ -646,11 +656,28 @@ function makePieceMap(unitID)
 end
 
 function hideAllPieces(unitID)
-	List=makePieceMap(unitID)
 	for k,v in pairs(List) do
 		Hide(v)
 	end
 	
+end
+
+--> adds to the table arguments
+function addTable(T,TableName,...)
+	--local arg = table.pack(...)
+	String=TableName
+	boolOneTimeNil=false
+	for k,v in ipairs(arg) do
+		String= String.."["..k.."]"
+		if boolOneTimeNil == false then	
+			if	string.load("assert("..String.." ~= nil)") == true then
+			else
+				boolOneTimeNil=true
+			end		
+		else
+			string.load(String.."={}")
+		end
+	end
 end
 
 function makeTable(default, XDimension, yDimension,zDimension)
@@ -692,11 +719,11 @@ function makeTableOfPieceNames(name, nr,startnr, piecefoonction)
 		namecopy=namecopy..i
 		T[i]=namecopy
 	end
-if piecefoonction then
-	for i=start,nr do
-		T[i]=piecefoonction(T[i])
+	if piecefoonction then
+		for i=start,nr do
+			T[i]=piecefoonction(T[i])
+		end
 	end
-end
 	
 	
 	return T
@@ -712,8 +739,8 @@ end
 
 --> calcSpeedThroughDegByTime
 function GetSpeed(timeInSeconds, degree)
-degRad=math.rad(degree)
-return (degRad/timeInSeconds)
+	degRad=math.rad(degree)
+	return (degRad/timeInSeconds)
 end
 
 -->Reset a Table of Pieces at speed
@@ -755,17 +782,19 @@ function getUnitSide(unitID)
 end
 
 function echo(stringToEcho,...)
+	--local arg = table.pack(...)
+	
 	Spring.Echo(stringToEcho)
-if arg then
-	counter=0
-	for k,v in ipairs(arg) do
-	if k and v then
-	Spring.Echo(k.." "..v)
-	else
-	Spring.Echo(k)
+	if arg then
+		counter=0
+		for k,v in ipairs(arg) do
+			if k and v then
+				Spring.Echo(k.." "..v)
+			else
+				Spring.Echo(k)
+			end
+		end
 	end
-	end
-end
 end
 
 -->Moves a UnitPiece to Position in Unitspace at speed
@@ -947,6 +976,7 @@ end
 
 --> Move with a speed Curve
 function moveSpeedCurve(piecename, axis, NumberOfArgs, now, timeTotal , distToGo, Offset,...)
+	--local arg = table.pack(...)
 	--!TODO calcSpeedUpId from functionkeys,check calculations for repetitons and store that key in to often as result in GG
 	--should handle all sort of equations of the type 0.3*x^2+0.1*x^1+offset
 	-- in our case that would be [2]=0.3 ,[1]=0.1 and so forth
@@ -1253,6 +1283,8 @@ end
 -->Generalized map processing Function
 -->Get the Ground Normal, uses all handed over functions for processing and returns a corresponding Table
 function doForMapPos(Resolution,...)
+	--local arg = table.pack(...)
+	
 	for k,v in pairs(arg) do if type(v)~="function" then return Spring.Echo(" Argument is not a processing function") end end
 	
 	ReT={}
@@ -1982,7 +2014,7 @@ function mulVector(v1,value)
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
 	if not vl.x and type(vl)== 'number' then
-	return vl * value
+		return vl * value
 	end
 	
 	if value and type(value)=='number' then --Skalar
@@ -2125,10 +2157,10 @@ function vardump(value, depth, key)
 		lname= T.name or name or ""
 		if lname then 
 			Spring.Echo("============================= "..lname .." ======================================")
-			Spring.Echo("||                                                                             ||")
+			Spring.Echo("|| ||")
 		else
 			Spring.Echo("============================= KeyValue Table=====================================")
-			Spring.Echo("||                                                                             ||")
+			Spring.Echo("|| ||")
 		end
 		
 		for k,v in pairs(T) do
@@ -2969,6 +3001,7 @@ function vardump(value, depth, key)
 	end
 	
 	function normTwo(...)
+		--local arg = table.pack(...)
 		sum=0
 		for k,v in pairs(arg) do
 			sum=sum+ v*v
@@ -3086,6 +3119,7 @@ function vardump(value, depth, key)
 	
 	--> takes a Table, and executes ArgTable/Function,Functions on it
 	function process(Table,...)
+		--local arg = table.pack(...)
 		T={}
 		if Table then T=Table else Spring.Echo("Lua:Toolkit:Process: No Table handed over") return end
 		if not arg then Spring.Echo("process has not functions to work on table") return end
@@ -3108,6 +3142,7 @@ function vardump(value, depth, key)
 	end
 	
 	function accessInOrder(T,...)
+		--local arg = table.pack(...)
 		local TC=T
 		for _, f in pairs(arg) do
 			executableString="function(TC) if TC["..f.."] then TC=TC[f] return true,TC else return false,TC end end"
@@ -3304,6 +3339,7 @@ function vardump(value, depth, key)
 	end
 	
 	function funcyMeta (T, ...)
+		--local arg = table.pack(...)
 		for _, f in pairs(arg) do
 			T=f(T)
 		end
@@ -3327,6 +3363,7 @@ function vardump(value, depth, key)
 	
 	--> Apply a function to a unit Table 
 	function forTableUseFunction(T,boolFilterDead,...)
+		--local arg = table.pack(...)
 		TempT={}
 		for _, f in pairs(arg) do
 			
@@ -3397,6 +3434,7 @@ function vardump(value, depth, key)
 	end
 	
 	function mergeTables(...)
+		--local arg = table.pack(...)
 		Table={}
 		if not arg then return end
 		
@@ -3566,6 +3604,7 @@ function vardump(value, depth, key)
 	end
 	
 	function assertAllArgs(...)
+		--local arg = table.pack(...)
 		if not arg then error("No arguments were given") return end
 		nr=1
 		for k,v in pairs(arg) do
@@ -3865,6 +3904,7 @@ function vardump(value, depth, key)
 	end
 	
 	function holdsForAll(Var,fillterConditionString,...)
+		--local arg = table.pack(...)
 		if arg then
 			for k,Val in pairs(arg) do
 				if string.load("Var"..fillterConditionString.."Val")==false then return end
@@ -3876,6 +3916,7 @@ function vardump(value, depth, key)
 	end
 	
 	function is(Var,fillterConditionString,...)
+		--local arg = table.pack(...)
 		f=string.load(fillterConditionString)
 		if type(f)=="function" then
 			for k,Val in pairs(arg) do
@@ -4104,6 +4145,7 @@ function vardump(value, depth, key)
 	end
 	
 	function square(...)
+		--local arg = table.pack(...)
 		if not arg then return 0 end
 		sum=0
 		for k,v in pairs(arg) do
@@ -4115,6 +4157,7 @@ function vardump(value, depth, key)
 	end
 	
 	function average(...)
+		--local arg = table.pack(...)
 		sum=0
 		it=0
 		for k,v in pairs(arg) do
@@ -4578,100 +4621,66 @@ function vardump(value, depth, key)
 		
 	end
 	
+	function addFreeSpots(freeSpotList, gridTable,x,y,z)
+		dirTable=	{
+			[1]=function() return 1,			0,			0 end,
+			[0]=function() return 0,			1,			0 end,
+			[2]=function() return 0,			0,			1 end,
+			[3]=function() return -1,			0,			0 end,
+			[4]=function() return 0,			0,			-1 end,
+			[5]=function() return 0,			1,			0 end
+		}
+		--TODO 
+		for i=0,5,1 do
+			ox,oy,oz=dirTable[i]()
+			cx,cy,cz= x+ox,y+oy,z+oz
+			
+			if not gridTable[cx] or not gridTable[cx][cy] or not gridTable[cx][cy][cz] then
+				addTable(gridTable,cx,cy,cz)
+				gridTable[cx][cy][cz] =true
+			end
+		end
+		
+	end
+	
 	-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
-	function createRandomizedBuilding(Blocks, originPiece, cg,RepeaterFunc)
-		--Reset Begin
-		Move(originPiece,x_axis,0,0)
-		Move(originPiece,y_axis,0,0)
-		Move(originPiece,z_axis,0,0)
-		
-		
+	function createRandomizedBuilding(lBlocks, originPiece, gridOffset,gridTable,freeSpotList)
+		local Blocks = lBlocks	
 		
 		for i=1,table.getn(Blocks),1 do
 			Move(Blocks[i],x_axis,0,0)
 			Move(Blocks[i],y_axis,0,0)
-			Move(Blocks[i],z_axis,0,0)
+			Move(Blocks[i],z_axis,0,0,true)
 		end
 		
 		hideT(Blocks)
-		--Reset End
-		--default repetition pattern
-		repFunc= function (itterator,modulator)
-			return itterator %modulator>3 
-		end 
-		
-		repeatPatternFonc= RepeaterFunc or repFunc
 		--default dirTable
-		dirTable=	{[0]=function(sizeA,sizeB) return 0,sizeB,0,0 end,
-			[1]=function(sizeA,sizeB) return sizeA,0,0,1 end,
-			[2]=function(sizeA,sizeB) return 0,0,sizeA,2 end,
-			[3]=function(sizeA,sizeB) return -1*sizeA,0,0,3 end,
-			[4]=function(sizeA,sizeB) return 0,0,-1*sizeA,4 end,
-			[5]=function(sizeA,sizeB) return 0,sizeB,0,5 end,
-			[6]=function(sizeA,sizeB) return 0,sizeB,0,6 end
-		}
-		--default growthDirection Function
-		growthDirFunc= function (i,piecename,lastDir,boolInit,itterator, modulator,repeatPatternFonc,dirTable)
-			
-			vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
-			if not vx then return 0,0,0,0 end
-			sizeA=math.min(vx,vz)
-			sizeB=math.sqrt(vy)
-			if boolInit==false then
-				if lastdir and math.random(0,3)== 2 then return dirTable[lastDir](sizeA,sizeB) end 
-				if math.random(0,3) ~= 1 			then return 0,sizeB,0,0 end
-			end
-			
-			if repeatPatternFonc(itterator, modulator)==true then
-				return dirTable[lastDir](sizeA,sizeB)
-			else
-				return dirTable[math.ceil(math.random(1,#dirTable))](sizeA,sizeB)
-			end
-			
-		end
 		
-		--adding the first positions to expand upon	
-		ogPosX,ogPosY,ogPosZ=Spring.GetUnitPiecePosition(unitID,originPiece)
-		cgPosX,cgPosY,cgPosZ=Spring.GetUnitPiecePosition(unitID,cg)
-		cgPosX,cgPosY,cgPosZ=ogPosX-cgPosX,ogPosY-cgPosY,ogPosZ-cgPosZ
 		
-		gDirFunc=growTable or growthDirFunc
-		freeSpots={}
-		
-		for i=0,5,1 do
-			x,y,z=gDirFunc(i,originPiece,i,true,3,7,repeatPatternFonc,dirTable)
-			freeSpots[i]={}
-			freeSpots[i][1]={}
-			freeSpots[i][1]=cgPosX+x
-			freeSpots[i][2]={}
-			freeSpots[i][2]=cgPosY+y
-			freeSpots[i][3]={}
-			freeSpots[i][3]=cgPosZ+z
-		end
-		
-		--add Block by Block
-		
-		Spring.Echo("ToolKit::createRandomizedBuilding-FixMe")
-		for i=1,#Blocks,1 do
-			Sleep(500)
+		blocksize=25
+		for i=table.getn(Blocks),1,-1 do
 			if Blocks[i] then 
-				Show(Blocks[i])
-				getAPod=math.floor(math.random(1,#freeSpots))
-				
-				nrBlok=math.floor(math.random(1,table.getn(Blocks)))
-				nrFreeSpot=math.floor(math.random(1,#freeSpots))
-				Blocks,freeSpots= moveBlockAddPod(	freeSpots[nrFreeSpot][1],
-				freeSpots[nrFreeSpot][2],
-				freeSpots[getAPod][3],	
-				nrFreeSpot,
-				nrBlok,
-				Blocks,
-				freeSpots,
-				gDirFunc,
-				repeatPatternFonc,
-				dirTable,
-				cg
+				Show(Blocks[i])			
+				echo("createRandomizedBuilding::Adding Block Nr.".. i)
+				randIndex=math.ceil(math.random(1,#freeSpotList))
+				moveBlockAddPod(	freeSpots[randIndex].x*blocksize,
+				freeSpots[randIndex].y*blocksize+ orgOffSet,
+				freeSpots[randIndex].z*blocksize											
 				)
+				
+				table.remove(Blocks,i)
+				table.remove(freeSpots,randIndex)
+				
+				for k=1, #dirTable do
+					rx,ry,rz,number=dirTable[k](blocksize)
+					freeSpots[#freeSpots+1]={}
+					freeSpots[#freeSpots][1]=rx
+					freeSpots[#freeSpots][2]=ry
+					freeSpots[#freeSpots][3]=rz	
+				end
+				
+				
+				
 			end
 		end
 	end
@@ -4767,59 +4776,39 @@ function vardump(value, depth, key)
 	
 	
 	
-	function moveBlockAddPod(x,y,z,nrFreeSpot,nrBlok,bloks,freeSpots,gDirFunc,repeatPatternFonc,dirTable,cg)
-		cgPosX,cgPosY,cgPosZ = x,y,z
+	function moveBlockAddPod(x,y,z,nrFreeSpot,nrBlok,bloks)
 		
-		Move(cg,x_axis,x,0)
-		Move(cg,y_axis,y,0)
-		Move(cg,z_axis,z,0)
-		WaitForMove(cg,y_axis)
-		ax,ay,az=Spring.GetUnitPiecePosition(unitID,cg)
-		Move(bloks[nrBlok],x_axis,ax,0)
-		Move(bloks[nrBlok],y_axis,ay,0)
-		Move(bloks[nrBlok],z_axis,az,0)
 		
-		WaitForMove(bloks[nrBlok],y_axis)
+		MovePieceToPos(bloks[nrBlok],x,y,z,0)
 		d=math.floor(math.random(0,3))*90
 		Turn(bloks[nrBlok],y_axis,math.rad(d),0)
+		Show(bloks[nrBlok])
 		--bx,by,bz=Spring.GetUnitBasePosition(unitID)
-		LastPos=0
-		for i=1,5,1 do --add the free spots
-			
-			Show(bloks[nrBlok])
-			d=table.getn(freeSpots)+1
-			x,y,z,LastPos=gDirFunc	(i,bloks[nrBlok],LastPos,false,nrBlok,7,repeatPatternFonc,dirTable)
-			freeSpots[d]={}
-			freeSpots[d][1]={}
-			freeSpots[d][1]=cgPosX+x
-			freeSpots[d][2]={}
-			freeSpots[d][2]=cgPosY+y
-			freeSpots[d][3]={}
-			freeSpots[d][3]=cgPosZ+z
-		end
+		x,y,z=Spring.GetUnitPiecePosition(unitID,bloks[nrBlok])
+		x=x*-1
 		
-		table.remove(bloks,nrBlok)
-		table.remove(freeSpots,nrFreeSpot)
 		
-		return bloks, freeSpots
+		
 	end
 	
 	-->Sanitizes a Variable for a table
 	function sanitizeItterator(Data,Min,Max)
-		return math.max(Min,math.min(Max,Data))
+		return math.max(Min,math.min(Max,math.floor(Data)))
 	end
 	
 	-->Splits a Table into Two Pieces
 	function splitTable(T,breakP)
 		breakPoint=breakP or math.ceil(#T/2)
 		breakPoint=sanitizeItterator(breakPoint,1,#T)
-		T1,T2={},{}
+		local	T1={}
+		local	T2={}
+		
 		for i=1,breakPoint do
 			T1[i]=T[i]
 		end
 		
-		for i=math.min(breakPoint+1,#T),#T do
-			T2[i-breakPoint]=T[i]
+		for i=math.min(breakPoint+1,#T),table.getn(T) do
+			T2[#T2+1]=T[i]
 		end
 		
 		return T1,T2
@@ -5036,7 +5025,7 @@ function vardump(value, depth, key)
 	
 	--> getUnitBuildAbleMap
 	--computates a map of all unittypes buildable by a unit
-function getFactionTable(unitName, boolID)
+	function getFactionTable(unitName, boolID)
 		Result={}
 		Result[unitName]={}
 		
@@ -5066,4 +5055,5 @@ function getFactionTable(unitName, boolID)
 		
 	end
 	return Result
+end
 end

@@ -2,8 +2,8 @@
 
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua"
- include "lib_Build.lua" 
+include "lib_UnitScript.lua"
+include "lib_Build.lua" 
 
 
 local SIG_FIRE =1 
@@ -11,22 +11,22 @@ local SIG_CRANE =2
 nrOfFires=13
 fireemitters={}
 for i=1,nrOfFires,1 do
-fireemitters[i]={}
-piecename= "fireEmit"..i
-fireemitters[i]=piece(piecename)
+	fireemitters[i]={}
+	piecename= "fireEmit"..i
+	fireemitters[i]=piece(piecename)
 end
 cg=piece"CG"
 CoreGeneratorTable={}
 for i=1,6 do
-name="CG"..i
-CoreGeneratorTable[#CoreGeneratorTable+1]=piece(name)
+	name="CG"..i
+	CoreGeneratorTable[#CoreGeneratorTable+1]=piece(name)
 end
 
 ArcoStump=piece"stump"
 Blocks={}
 for i=1,99 do
-name="Block"..i
-Blocks[#Blocks+1]=piece(name)
+	name="Block"..i
+	Blocks[#Blocks+1]=piece(name)
 end
 
 NrOfPoints=0
@@ -53,180 +53,194 @@ teamID=Spring.GetUnitTeam(unitID)
 
 
 function nothingEverHappend(datTeamID)
-if datTeamID ~= teamID then boolDamaged=true end
-previouslyAttackingTeam=lastAttackingTeamID
-lastAttackingTeamID=datTeamID
-if not previouslyAttackingTeam then previouslyAttackingTeam=lastAttackingTeamID end
+	if datTeamID ~= teamID then boolDamaged=true end
+	previouslyAttackingTeam=lastAttackingTeamID
+	lastAttackingTeamID=datTeamID
+	if not previouslyAttackingTeam then previouslyAttackingTeam=lastAttackingTeamID end
 end
 
 function SideEffects()
-if not 	GG.BuiLuxUpgrade then 	GG.BuiLuxUpgrade={}end
-
-IdTable={[UnitDefNames["builux"].id]=true}
+	if not 	GG.BuiLuxUpgrade then 	GG.BuiLuxUpgrade={}end
+	
+	IdTable={[UnitDefNames["builux"].id]=true}
 	while true do
-	--get builux nearby
-	x,y,z=Spring.GetUnitPosition(unitID)
-	T=getAllInCircle(unitID,x,z,512)
+		--get builux nearby
+		x,y,z=Spring.GetUnitPosition(unitID)
+		T=getAllInCircle(unitID,x,z,512)
 		if #T then 
-		T=filterUnitTableforDefIDTable(T,IdTable)
+			T=filterUnitTableforDefIDTable(T,IdTable)
 			if #T then 
-			
+				
 				for i=1,#T do
-				GG.BuiLuxUpgrade[T[i]]=true
+					GG.BuiLuxUpgrade[T[i]]=true
 				end
 			end
 		end
-	Sleep(1000)
+		Sleep(1000)
 	end
 end
 
 function investMent()
 	while true do
 		if boolDamaged== true then
-		StartThread(fireEmit)
-		if previouslyAttackingTeam then
-			for i=1, 25, 1 do
-			Spring.AddTeamResource(teamID, "metal",math.ceil(basicMetallStorage/15))
-			Spring.AddTeamResource(teamID, "energy",math.ceil(basicEnergyStorage/15))
-			Spring.UseTeamResource(previouslyAttackingTeam,"metal",math.ceil(basicMetallStorage*2/15))
-			Spring.UseTeamResource(previouslyAttackingTeam,"energy",math.ceil(basicEnergyStorage*2/15))		
-			Sleep(8000)
+			StartThread(fireEmit)
+			if previouslyAttackingTeam then
+				for i=1, 25, 1 do
+					Spring.AddTeamResource(teamID, "metal",math.ceil(basicMetallStorage/15))
+					Spring.AddTeamResource(teamID, "energy",math.ceil(basicEnergyStorage/15))
+					Spring.UseTeamResource(previouslyAttackingTeam,"metal",math.ceil(basicMetallStorage*2/15))
+					Spring.UseTeamResource(previouslyAttackingTeam,"energy",math.ceil(basicEnergyStorage*2/15))		
+					Sleep(8000)
+				end
 			end
+			boolDamaged=false	
 		end
-		boolDamaged=false	
-		end
-	Sleep(500)
+		Sleep(500)
 	end
-
+	
 end
 
 function fireEmit()
 	while(boolDamaged==true) do 
 		for i=1, NrOfPoints,1 do
-		EmitSfx(fireemitters[i],1025)
-		EmitSfx(fireemitters[i],1026)
-		if math.random(0,1)== 1 then EmitSfx(fireemitters[i],1027) end
-		if math.random(0,1)== 1 then EmitSfx(fireemitters[i],1028) end
+			EmitSfx(fireemitters[i],1025)
+			EmitSfx(fireemitters[i],1026)
+			if math.random(0,1)== 1 then EmitSfx(fireemitters[i],1027) end
+			if math.random(0,1)== 1 then EmitSfx(fireemitters[i],1028) end
 		end
-	Sleep(60)
+		Sleep(60)
 	end
 end
 
 
 function peaceLoop()
-SetSignalMask(SIG_PEACE)
+	SetSignalMask(SIG_PEACE)
 	while(true) do
-	energyRandom=math.ceil(math.random(0,5))
-	metallRandom=math.ceil(math.random(0,5))
-
-	
+		energyRandom=math.ceil(math.random(0,5))
+		metallRandom=math.ceil(math.random(0,5))
+		
+		
 		boolMSuccess=	Spring.UseTeamResource(teamID,"metal",metallRandom)
 		boolESuccess=	Spring.UseTeamResource(teamID,"energy",energyRandom)
-	--boolESuccess-->TODO: Cost player basisCostEnergy + energyRandom
-	--boolMSuccess<-->TODO: Cost player basisCostMetall + metallRandom
-		if  boolESuccess ~= nil and boolESuccess == true then
-		basicEnergyStorage=basicEnergyStorage +basisCostEnergy+ energyRandom
+		--boolESuccess-->TODO: Cost player basisCostEnergy + energyRandom
+		--boolMSuccess<-->TODO: Cost player basisCostMetall + metallRandom
+		if boolESuccess ~= nil and boolESuccess == true then
+			basicEnergyStorage=basicEnergyStorage +basisCostEnergy+ energyRandom
 		end
 		if boolMSuccess ~= nil and boolMSuccess == true then
-		basicMetallStorage=basicMetallStorage+basisCostMetall+metallRandom
+			basicMetallStorage=basicMetallStorage+basisCostMetall+metallRandom
 		end
-	Sleep(1000)
+		Sleep(1000)
 	end
 end
 
 
 
 function script.Killed(recentDamage)
-
-x,y,z=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
-Spring.CreateUnit("crewarder",math.random(1,x),y+500,math.random(1,z),0,teamID)
+	
+	x,y,z=Spring.GetUnitPosition(unitID)
+	teamID=Spring.GetUnitTeam(unitID)
+	Spring.CreateUnit("crewarder",math.random(1,x),y+500,math.random(1,z),0,teamID)
 	if lastAttackingTeamID ~= nil then
-	boolGotIt=Spring.UseTeamResource(lastAttackingTeamID,"metal",3900)
-	boolGotIt2=Spring.UseTeamResource(lastAttackingTeamID,"energy",3900)
+		boolGotIt=Spring.UseTeamResource(lastAttackingTeamID,"metal",3900)
+		boolGotIt2=Spring.UseTeamResource(lastAttackingTeamID,"energy",3900)
 		if boolGotIt == false or boolGotIt2 == false then
-		   
-		Spring.CreateUnit("crewarder",x,y+500,z,0,teamID)
-		   
+			
+			Spring.CreateUnit("crewarder",x,y+500,z,0,teamID)
+			
 		end
-
+		
 	end
-
-xrand=math.random(-2,2)
-yrand=math.random(-12,12)
-zrand=math.random(-3,3)
-Turn(buibaicity,x_axis,math.rad(xrand),0.02)
-Turn(buibaicity,y_axis,math.rad(yrand),0.2)
-Turn(buibaicity,z_axis,math.rad(zrand),0.02)
-Move(buibaicity,y_axis,-180,11)
-Timer=0
+	
+	xrand=math.random(-2,2)
+	yrand=math.random(-12,12)
+	zrand=math.random(-3,3)
+	Turn(buibaicity,x_axis,math.rad(xrand),0.02)
+	Turn(buibaicity,y_axis,math.rad(yrand),0.2)
+	Turn(buibaicity,z_axis,math.rad(zrand),0.02)
+	Move(buibaicity,y_axis,-180,11)
+	Timer=0
 	while(true==Spring.UnitScript.IsInMove (buibaicity, y_axis)) do
-	EmitSfx(center,1024)
-	Sleep(120)
-	Timer=Timer+1
-			if Timer== 20 then
+		EmitSfx(center,1024)
+		Sleep(120)
+		Timer=Timer+1
+		if Timer== 20 then
 			Move(buibaicity,y_axis,-180,22)
-			end
-		if Timer== 28 then
-
-		Move(buibaicity,y_axis,-180,44)
 		end
-
-
+		if Timer== 28 then
+			
+			Move(buibaicity,y_axis,-180,44)
+		end
+		
+		
 	end
-suddenDeath(unitID,recentDamage)
-return 1
+	suddenDeath(unitID,recentDamage)
+	return 1
 end
 
 function buildIt()
-		hideT(Blocks)
-		Hide(ArcoStump)
-
-
+	hideT(Blocks)
+	Hide(ArcoStump)
+	
+	
 	if maRa()==true then
-	Hide(buibaicity)
-	Show(ArcoStump)	
-	BL={}
-			if  maRa()==true then
-			BL=Blocks
-			createRandomizedBuilding(BL,CoreGeneratorTable[1], cg )
-			else
-				splits=math.ceil(math.random(2,6))
-				tableOfTables={}
-				T1={}
-				T2=Blocks
-				splitStart=math.ceil(#Blocks/splits)
-				for k=1,splits do
-				T1,T2=splitTable(T2,splitStart)
-				tableOfTables[k]=T1
+		Hide(buibaicity)
+		Show(ArcoStump)	
+		
+		splits=math.ceil(math.random(2,6))
+		tableOfTables={}
+		
+		T2=Blocks
+		splitStart=math.ceil(#Blocks/splits)
+		for k=1,splits,1 do
+			local T1={}
+			T1,T2=splitTable(T2,splitStart)
+			
+			gridTable={}
+			freeSpotList={}
+			for i= -3,3,1 do
+				gridTable[i]={}
+				for j=-3,3,1 do
+					gridTable[i][j]={}
+					
+					
+					if ((i+4)%2==0 and (j+4)%2 ==0 ) then
+						gridTable[i][j][0]= false
+						gridTable[i][j][1]= true
+						freeSpotList[#freeSpotList+1]={x=i,z=j,y=1}
+					else
+						gridTable[i][j][0]= true
+						freeSpotList[#freeSpotList+1]={x=i,z=j,y=0}
+					end				
 				end
-				for k=1,splits do
-				createRandomizedBuilding(tableOfTables[k], CoreGeneratorTable[math.min(k,#CoreGeneratorTable)],cg)
-				end		
 			end
-		else 
+			offSet=290
+			createRandomizedBuilding(T1, CoreGeneratorTable[math.ceil(math.min(k,#CoreGeneratorTable))],offSet,gridTable,freeSpotList)
+		end		
+		
+	else 
 		hideT(Blocks)
 		Hide(ArcoStump)
 		Show(buibaicity)
-		end
+	end
 	hideT(CoreGeneratorTable)
 end
 
 function script.Create()
-StartThread(buildIt)
---<buildanimationscript>
-x,y,z=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
-
-if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
-GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
---Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
-
---</buildanimationscript>
+	StartThread(buildIt)
+	--<buildanimationscript>
+	x,y,z=Spring.GetUnitPosition(unitID)
+	teamID=Spring.GetUnitTeam(unitID)
+	
+	if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+	--Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
+	
+	--</buildanimationscript>
 	StartThread(peaceLoop)
 	StartThread(investMent)
 	StartThread(SideEffects)
-
-Hide(cg)
+	
+	Hide(cg)
 end
 --------BUILDING---------

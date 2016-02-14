@@ -7,67 +7,67 @@ local SIG_UPGRADE=4
 teamID=Spring.GetUnitTeam(unitID)
 Quad={}
 for i=1,8, 1 do
-temp="Quader0"..i
-Quad[i]={}
-Quad[i]=piece(temp)
+	temp="Quader0"..i
+	Quad[i]={}
+	Quad[i]=piece(temp)
 end
 Kugel01=piece"Kugel01"
 Kugel02=piece"Kugel02"
 
 function getDistance(cmd,x,z)
-val=((cmd.params[1]-x)^2 + (cmd.params[3]-z)^2)^0.5
-
-return val
+	val=((cmd.params[1]-x)^2 + (cmd.params[3]-z)^2)^0.5
+	
+	return val
 end
 
 function transferCommands()
-
-		while true do
-				if GG.JFactorys and GG.JFactorys[unitID] and GG.JFactorys[unitID][1] then
-					CommandTable=Spring.GetUnitCommands(unitID)		
-					
-					first=false
-					
-						for _,cmd in pairs(CommandTable) do			
-							if #CommandTable ~= 0 then
-									if first==false then
-									first=true
-									x,y,z=Spring.GetUnitPosition(unitID)
-										if cmd.id== CMD.MOVE and getDistance(cmd,x,z) > 165 then					
-										Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})
-										end
-									else
-										Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{"shift"})
-									end
-							else
-							Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],CMD.STOP,{},{})
-							end			
-						end			
+	
+	while true do
+		if GG.JFactorys and GG.JFactorys[unitID] and GG.JFactorys[unitID][1] then
+			CommandTable=Spring.GetUnitCommands(unitID)		
 			
-		
-				end
-		Sleep(250)
+			first=false
+			
+			for _,cmd in pairs(CommandTable) do			
+				if #CommandTable ~= 0 then
+					if first==false then
+						first=true
+						x,y,z=Spring.GetUnitPosition(unitID)
+						if cmd.id== CMD.MOVE and getDistance(cmd,x,z) > 165 then					
+							Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})
+						end
+					else
+						Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{"shift"})
+					end
+				else
+					Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],CMD.STOP,{},{})
+				end			
+			end			
+			
+			
 		end
-
+		Sleep(250)
+	end
+	
 end
 
 function script.Create()
-
-for i=1,8, 1 do
-Hide(Quad[i])
-end
-Hide(Kugel01)
-Hide(Kugel02)
-StartThread(transferCommands)
-StartThread(whileMyThreadGentlyWeeps)
-
-if GG.JFactorys== nil then GG.JFactorys={} end
-GG.JFactorys[unitID]={}
+	
+	for i=1,8, 1 do
+		Hide(Quad[i])
+	end
+	Hide(Kugel01)
+	Hide(Kugel02)
+	StartThread(transferCommands)
+	StartThread(whileMyThreadGentlyWeeps)
+	
+	if GG.JFactorys== nil then GG.JFactorys={} end
+	GG.JFactorys[unitID]={}
 end
 
 
 function script.QueryBuildInfo() 
-  return Kugel02 
+	return Kugel02 
 end
 
 Spring.SetUnitNanoPieces(unitID,{ Kugel01})
@@ -76,12 +76,12 @@ local defID=Spring.GetUnitDefID(unitID)
 
 local first=true
 function delayedUpgrade()
-if first==true then first=false return end
-SetSignalMask(SIG_UPGRADE)
-Sleep(5000)
-id=Spring.GetUnitIsBuilding(unitID)
-x,y,z=Spring.GetUnitPosition(unitID)
-	if (id and Spring.ValidUnitID(id)==false) or id== nil and y < 0   then	
+	if first==true then first=false return end
+	SetSignalMask(SIG_UPGRADE)
+	Sleep(5000)
+	id=Spring.GetUnitIsBuilding(unitID)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	if (id and Spring.ValidUnitID(id)==false) or id== nil and y < 0 then	
 		if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
 		x,y,z=Spring.GetUnitPosition(unitID)
 		teamID=Spring.GetUnitTeam(unitID)
@@ -90,7 +90,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 		Spring.DestroyUnit(	GG.JFactorys[unitID][1],false,true)
 		Spring.DestroyUnit(unitID,false,true)
 	end
-
+	
 end
 
 
@@ -114,20 +114,20 @@ end
 
 
 function delayedBuildEnd()
-SetSignalMask(SIG_RESET)
-Sleep(1500)
+	SetSignalMask(SIG_RESET)
+	Sleep(1500)
 	if GG.JFactorys[unitID] then
-	GG.JFactorys[unitID][2]=false
+		GG.JFactorys[unitID][2]=false
 	end
 end
 
 
 function script.StartBuilding()
-Spring.Echo("JW:TransportedFactory starting to build")
+	Spring.Echo("JW:TransportedFactory starting to build")
 	--animation
 	Signal(SIG_RESET)
 	if GG.JFactorys[unitID] then
-	GG.JFactorys[unitID][2]=true
+		GG.JFactorys[unitID][2]=true
 	end
 end
 
@@ -135,18 +135,18 @@ boolDoIt=false
 function whileMyThreadGentlyWeeps()
 	while true do
 		if boolDoIt==true then
-		boolDoIt=false
-		StartThread(delayedBuildEnd)
+			boolDoIt=false
+			StartThread(delayedBuildEnd)
 		end
-	Sleep(150)
+		Sleep(150)
 	end
 end
 
 function script.StopBuilding()
-boolDoIt=true
+	boolDoIt=true
 end
 
 function script.Killed(endh,_)
-GG.JFactorys[unitID]=nil -- check for correct syntax
-return 1
+	GG.JFactorys[unitID]=nil -- check for correct syntax
+	return 1
 end

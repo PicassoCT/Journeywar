@@ -93,18 +93,19 @@ function spawner()
 end
 
 
-BuildUPTime=30000
-PEAKFADETIME=30000
+BuildUPTime=90000
+PEAKFADETIME=90000
 
 RandVAl=math.ceil(math.random(4000,60000))
 RELAXTIME=60000+RandVAl
 function NextState(State,time)
-	if State=="BUILDUP" and time > BuildUPTime then time=0; return "PEAK" end
-	if State=="PEAK" and time > 85000 then time=0; return "PEAKFADE" end
-	if State=="PEAKFADE" and time > PEAKFADETIME then time=0; return "RELAX" end
+	if State=="BUILDUP" and time > BuildUPTime then time=0;Spring.Echo("jgeohive::Peak") ;return "PEAK" end
+	if State=="PEAK" and time > 85000 then time=0; Spring.Echo("jgeohive::PEAKFADE") ;return "PEAKFADE" end
+	if State=="PEAKFADE" and time > PEAKFADETIME then time=0; Spring.Echo("jgeohive::RELAX") ; return "RELAX" end
 	if State=="RELAX" and time > RELAXTIME then 
 		time=0 ;
 		RELAXTIME= 60000+ math.ceil(math.random(4000,60000)) 
+		Spring.Echo("jgeohive::BUILDUP") ;
 		return "BUILDUP" 
 	end
 	
@@ -220,6 +221,7 @@ function TargetOS()
 						
 						
 						ex,ey,ez = lfuncTable[State](monsterTable[i],enemyID,time,teamID)
+						StartThread(markPosOnMap,ex,ey,ez,"greenlight")
 						if ex > 10 and ez > 10 then 						
 							spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
 						end
