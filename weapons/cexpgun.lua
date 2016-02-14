@@ -10,7 +10,7 @@ local weaponDef = {
 				},	      
 	      areaOfEffect            = 8,
 		  explosionGenerator="custom:AR2Impact",
-		  cegTag="AR2Projectile",
+		  cegTag="cexpprojectile",
 		  texture1="empty",
 		
 		  --physics

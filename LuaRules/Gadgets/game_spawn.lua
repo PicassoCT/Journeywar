@@ -84,6 +84,8 @@ local function GetStartUnit(teamID)
 	end
 	
 	if sidedata and sidedata.startunitspawner then
+		if not GG.AtLeastOneSpawner then GG.AtLeastOneSpawner = true end
+	
 		return sidedata.startunitspawner 		
 	elseif 	sidedata and sidedata.startunitai then 
 		return sidedata.startunitai 

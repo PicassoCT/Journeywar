@@ -2165,10 +2165,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function gadget:GameFrame(frame)
 		if frame%frameValue == 0 then
+			--abort missions if you have a spawner AI active
+			if GG.AtLeastOneSpawner and GG.AtLeastOneSpawner == true then
+			return
+			end
+		
+			--if not yet a mission - organize one
 			if boolMission and boolMission==true then
-				if MissionFunctionTable~= nil then
-					
-					
+				if MissionFunctionTable~= nil then					
 					
 					if boolMissionInProgress== false then framesTillNextMission=framesTillNextMission-frameValue end
 					

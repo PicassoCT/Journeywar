@@ -1,4 +1,6 @@
 
+include "lib_UnitScript.lua"
+
 jgeohive=piece"jgeohive"
 naptime=80000
 howManyHoneyPots=5
@@ -53,39 +55,39 @@ function spawner()
 				ex,ey,ez=Spring.GetTeamStartPosition(eteam)
 			end
 			Spring.SetUnitBlocking(unitID,false)
-			for i=1, howManyHoneyPots,1 do
-				spEmitSfx(jgeohive,1025)
-				spEmitSfx(jgeohive,1025)
-				randoval=math.random(-65,-45)
-				bool=math.random(0,1)
-				if bool==1 then
-					randoval=randoval*-1
+				for i=1, howManyHoneyPots,1 do
+					spEmitSfx(jgeohive,1025)
+					spEmitSfx(jgeohive,1025)
+					randoval=math.random(-65,-45)
+					bool=math.random(0,1)
+					if bool==1 then
+						randoval=randoval*-1
+					end
+					booltoo=-1
+					if (math.random(0,1)) == 1 then
+						booltoo=1
+					end
+					
+					spSpawnCEG("dirt",x+randoval,y,z+randoval,0,1,0,50,0)
+					dice=math.random(1,3)
+					spawnedUnit=0
+					if dice==1 then	
+						spawnedUnit=spCreateUnit("jhoneypot",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
+					elseif dice==2 then
+						spawnedUnit=spCreateUnit("jbugcreeper",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
+					else --we addd the crab here
+						spawnedUnit=spCreateUnit("jcrabcreeper",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
+					end
+					
+					
+					spSetUnitNoSelect(spawnedUnit,true)
+					
+					Sleep(350)
+					spEmitSfx(jgeohive,1025)
+					spEmitSfx(jgeohive,1025)
+					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
+					table.insert(monsterTable,spawnedUnit)
 				end
-				booltoo=-1
-				if (math.random(0,1)) == 1 then
-					booltoo=1
-				end
-				
-				spSpawnCEG("dirt",x+randoval,y,z+randoval,0,1,0,50,0)
-				dice=math.random(1,3)
-				spawnedUnit=0
-				if dice==1 then	
-					spawnedUnit=spCreateUnit("jhoneypot",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
-				elseif dice==2 then
-					spawnedUnit=spCreateUnit("jbugcreeper",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
-				else --we addd the crab here
-					spawnedUnit=spCreateUnit("jcrabcreeper",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
-				end
-				
-				
-				spSetUnitNoSelect(spawnedUnit,true)
-				
-				Sleep(350)
-				spEmitSfx(jgeohive,1025)
-				spEmitSfx(jgeohive,1025)
-				spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
-				table.insert(monsterTable,spawnedUnit)
-			end
 			Sleep(10000)
 			Spring.SetUnitBlocking(unitID,true)
 		end
@@ -99,19 +101,20 @@ PEAKFADETIME=90000
 RandVAl=math.ceil(math.random(4000,60000))
 RELAXTIME=60000+RandVAl
 function NextState(State,time)
-	if State=="BUILDUP" and time > BuildUPTime then time=0;Spring.Echo("jgeohive::Peak") ;return "PEAK" end
-	if State=="PEAK" and time > 85000 then time=0; Spring.Echo("jgeohive::PEAKFADE") ;return "PEAKFADE" end
-	if State=="PEAKFADE" and time > PEAKFADETIME then time=0; Spring.Echo("jgeohive::RELAX") ; return "RELAX" end
+	if State=="BUILDUP" and time > BuildUPTime then 
+	time=0;Spring.Echo("jgeohive::Peak") ;return "PEAK" , time end
+	if State=="PEAK" and time > 85000 then time=0; Spring.Echo("jgeohive::PEAKFADE") ;return "PEAKFADE", time end
+	if State=="PEAKFADE" and time > PEAKFADETIME then time=0; Spring.Echo("jgeohive::RELAX") ; return "RELAX", time end
 	if State=="RELAX" and time > RELAXTIME then 
 		time=0 ;
 		RELAXTIME= 60000+ math.ceil(math.random(4000,60000)) 
 		Spring.Echo("jgeohive::BUILDUP") ;
-		return "BUILDUP" 
+		return "BUILDUP", time
 	end
 	
-	if not State then State="PEAK" end
+	if not State then State="PEAK", time end
 	
-	return State
+	return State, time
 end
 
 ax,ay,az=Spring.GetUnitPosition(unitID)
@@ -204,7 +207,7 @@ function TargetOS()
 		Sleep(5000)
 		time=time+5000
 		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
-			State=NextState(State,time)
+			State, time =NextState(State,math.ceil(time/30))
 			
 			
 			for i=1,table.getn(monsterTable),1 do

@@ -162,10 +162,9 @@ function legz()
 end
 
 function walk()
-	Sleep(5)
+	Sleep(50)
 	Signal(SIG_LEG)
 	SetSignalMask(SIG_WALK)
-	Turn(deathpivot,y_axis,math.rad(45),7)
 	
 	while (true) do
 		legz()
@@ -213,7 +212,7 @@ function walk()
 			legz()
 		end
 		--left forwards back left down
-		
+	Turn(deathpivot,y_axis,math.rad(45),7)
 	end
 end
 
@@ -262,11 +261,14 @@ end
 
 
 function script.HitByWeapon(x,z,weaponDefID,damage)
-	h=Spring.GetHeadingFromVector(x,z)
-	h=h-32768
-	Turn(crabTakingCrapPoint,y_axis,h,0)
-	for i=1, 4,1 do 
-		EmitSfx(crabTakingCrapPoint,1024)
+
+	if damage > 25 then
+		h=Spring.GetHeadingFromVector(x,z)
+		h=h-32768
+		Turn(crabTakingCrapPoint,y_axis,h,0)
+		for i=1, 4,1 do 
+			EmitSfx(crabTakingCrapPoint,1024)
+		end
 	end
 	
 	

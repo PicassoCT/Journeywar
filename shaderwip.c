@@ -1,4 +1,4 @@
-   // KELEK 010
+   // KELEK 010 V
 
 
    uniform float time0_1;
@@ -43,8 +43,8 @@
    #define max(A,B)  = (A > B)? A: B;
    //Describes a linear Colour Gradient 
    struct colSampler{
-   vec4 colStart;
-   vec4 colEnd;   
+   vec4 colIn;
+   vec4 colOut;   
    };
 
    //Works as a mask, allowing to precomp, wether a rotation is needed
@@ -92,23 +92,23 @@
       vec2  lastDir;
       float MaxDistToPredecessor;
    };
-
-   #define ADD_PATHPOINT(NR,PX,PY) CenterPath[NR]= vec2(PX,PY);
+   
+   #define ADD_PATHPOINT(NR,PX,PY) CenterPath[NR]= vec2(PX,PY); 
 
    //Configuration
-   #define CenterPathSize 4
+   #define CenterPathSize 2
    vec2 CenterPath[CenterPathSize];
 
 
    #define ParticlesSize 5
    Particle Particles[ParticlesSize];
-
+   #define GRADIENT_SIZE 9   
+   float Gradient[GRADIENT_SIZE];
+	 
    #define ParticleConstructor(NR, DEG, POSX, POSY, DIRX, DIRY, MAXDIST)    Particles[NR].rotationInAngleStep= DEG;Particles[NR].Pos= vec2(POSX,POSY);Particles[NR].dir= vec2(DIRX,DIRY);Particles[NR].lastPos= vec2(POSX,POSY); Particles[NR].lastDir= vec2(DIRX,DIRY);Particles[NR].MaxDistToPredecessor= -1.0;
       //Defining the Colours the Gradient traverses from Start to End - Outermost color Gradient
-      colSampler OuterCol   ;
-      colSampler InnerCol ;
-   #define GRADIENT_SIZE 9   
-     float Gradient[GRADIENT_SIZE];
+      colSampler GradStartCol;
+      colSampler GradEndCol;
      
    void init()
    {
@@ -116,8 +116,8 @@
    //PathPoints
    ADD_PATHPOINT( 0, 1.0,0.0)        
    ADD_PATHPOINT( 1, -10.0,-5.0)            
-   ADD_PATHPOINT( 2, -10.0,-10.0)            
-   ADD_PATHPOINT( 3, 0,-20.0)                
+   //ADD_PATHPOINT( 2, -10.0,-10.0)            
+   //ADD_PATHPOINT( 3, 0,-20.0)                
    //ADD_PATHPOINT( 4,-5.0,4.0)         
    //ADD_PATHPOINT( 5,-4.0,5.0)         
    //ADD_PATHPOINT( 6,-3.0,6.0)         
@@ -155,6 +155,7 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
       Gradient[7]=0.3*sinUs;
       Gradient[8]=0.0; 
   
+
    }
 
    //Is the Pixel in Question in the physic sim
@@ -252,14 +253,18 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
 
    
    #define COMPOSE(COL,COLB, FACTOR) ((COL* FACTOR) +(COLB *(1.0- FACTOR)))
+   #define BLEND(COL_A,COL_B, START, END, RESULT_VARA, RESULT_VARB) RESULT_VARA= COL_A*START + COL_B *(1.0-START); RESULT_VARB= COL_A* END + COL_B(1.0- END);
+   #define BLENDSAMPLER(COL_A,COL_B,COL_C,COL_D, PERCENT,   RESULT_VAR) RESULT_VAR.colIn= COL_A*PERCENT + COL_B *(1.0-PERCENT);RESULT_VAR.colOut= COL_C*PERCENT + COL_D *(1.0-PERCENT);
    
    //Draws Additive the polygons into the texture  
    //Particle Speed is factored in via the colSamplers
-   vec4 AddDraw(colSampler OuterCol, colSampler InnerCol, float outFac, float inFac, vec2 newPOut, vec2 newPIn, vec2 oldPOut, vec2 oldPIn, vec2 PixelPos, int gradIndex)
+   vec4 AddDraw(colSampler qFrontCol,colSampler qRearCol,  float outFac, float inFac, vec2 newPOut, vec2 newPIn, vec2 oldPOut, vec2 oldPIn, vec2 PixelPos, int gradIndex)
    { 
-    float tempAlpha;
-      
-      if  (PointOnBorder( oldPOut,  newPOut,  newPIn,  oldPOut,  oldPIn,  PixelPos,0.03)==true ) return Red;
+
+
+   
+
+      if  (PointOnBorder( Center.Pos.xy,   newPOut,  newPIn,  oldPOut,  oldPIn,  PixelPos,0.03)==true ) return Red;
       
    
       vec2 PixelPosRotCoords;
@@ -269,15 +274,6 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
       //check wether the Point is actually in the quad to prevent unnecessary work workload
      if (PointInTriangle(newPOut, newPIn, oldPOut, PixelPos)==false && PointInTriangle(newPIn,  oldPOut,oldPIn, PixelPos)== false  ) return Black;
       
-      PointPair PointPairFront;
-      PointPair PointPairRear;
-      
-      //The points are still in the center
-      PointPairFront.Up=newPOut; 
-      PointPairFront.Low=newPIn;
-    
-      PointPairRear.Up= oldPOut; 
-      PointPairRear.Low=oldPIn;
    
       //Move the Point into the Coordinate System around the Last Outer Particle Point
       PixelPosRotCoords=PixelPos.xy- oldPOut.xy;
@@ -322,38 +318,35 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
       frontDownNormResult= 1.0 - frontUpNormResult;
       //midPos
       midPosFront= COMPOSE(newPIn,newPOut,frontUpNormResult);
-   //Distance Front Rear
+//Distance Front Rear
     distFrontRear= distance(newPIn,oldPIn);
-   distancePosRear = distance(PixelPos,oldPIn);
+	distancePosRear = distance(PixelPos,oldPIn);
     distNormFrontRear=0;
-   POSPROPORTION(distancePosRear,distancePosFrontIn,distFrontRear,distNormFrontRear);
+	POSPROPORTION(distancePosRear,distancePosFrontIn,distFrontRear,distNormFrontRear);
    
-   //Front Alpha Gradient
+//Front Alpha Gradient
    float FrontAlphaGradient=alphaGradient(gradIndex,frontDownNormResult);
-   //Rear Alpha Gradient
+//Rear Alpha Gradient
    float RearAlphaGradient=alphaGradient(gradIndex,rearDownNormResult);
    
    //Lower one wins
-   FrontAlphaGradient= min(FrontAlphaGradient,InnerCol.colStart.a);
-   RearAlphaGradient=min (RearAlphaGradient,InnerCol.colEnd.a);
+   FrontAlphaGradient= min(FrontAlphaGradient,qFrontCol.colIn.a);
+   RearAlphaGradient=min (RearAlphaGradient,qRearCol.colIn.a);
    
    //Get a global Percentage
    float absoluteAlphaGradient=    COMPOSE(FrontAlphaGradient,RearAlphaGradient,distNormFrontRear);
-      
-
-
-   
-   vec4 tInCol=    InnerCol.colStart*(distNormFrontRear) +   InnerCol.colEnd*(1.0-distNormFrontRear);
-   vec4 tOutCol=    OuterCol.colStart*(distNormFrontRear) +   OuterCol.colEnd*(1.0-distNormFrontRear);  
-     
-      
-     float relativeInnerOut=mix(frontUpNormResult,rearUpNormResult,0.5);
     
-       vec4 resultCol= tOutCol* (1.0-relativeInnerOut) + tInCol *(relativeInnerOut);
-      resultCol*=absoluteAlphaGradient;
-       return resultCol;
-        
-      
+   vec4 tFrontCol=   mix(qFrontCol.colIn, qFrontCol.colOut,frontDownNormResult);
+   vec4 tRearCol=    mix(qRearCol.colIn, qRearCol.colOut,rearDownNormResult);
+
+   float distanceFrontMidPos_Pos= distance(midPosFront,PixelPos);
+   
+   
+   float relativeInnerOut=mix(frontUpNormResult,rearUpNormResult,distanceFrontMidPos_Pos);
+    
+   vec4 resultCol= mix(tFrontCol, tRearCol,relativeInnerOut);
+    //  resultCol*=absoluteAlphaGradient;
+   return resultCol;
    }
 
    //calculate a new attractor position
@@ -409,7 +402,7 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
       float outerFactorDistance, innerFactorDistance;
       
       //DebugDelMe
-        //if (atParticleStartPos(Pos,0.1)== true) return Red;
+        if (atParticleStartPos(Pos,0.1)== true) return Red;
       //DebugDelMe 
       
      //Move along the CenterPath in SimSteps   -> Steps of the same colourgradient can be parallized  
@@ -422,28 +415,42 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
         float startPercentage= min(float(attrPath),float(CenterPathSize))/float(CenterPathSize);
         //EndColour of this Part of PathIntervall
         float endPercentage= min(float(attrPath+1),float(CenterPathSize))/float(CenterPathSize);   
-         //Set the Start End Colour
-          InnerCol.colStart=    vertexStartCol*startPercentage + vertexEndCol*(1.0 - startPercentage) ;      OuterCol.colStart= InnerCol.colStart;
-          InnerCol.colEnd  =   vertexStartCol*endPercentage   + vertexEndCol*(1.0 - endPercentage)  ;      OuterCol.colEnd = InnerCol.colEnd;
+         //Set the Start End Colour of this PartPath
+          GradEndCol.colOut=    vertexStartCol*startPercentage + vertexEndCol*(1.0 - startPercentage) ;      GradEndCol.colIn=   GradEndCol.colOut;
+          GradStartCol.colOut  =   vertexStartCol*endPercentage   + vertexEndCol*(1.0 - endPercentage)  ;      GradStartCol.colIn =  GradStartCol.colOut ;
         
          for (int steps=0; steps < INTERPOLATION_STEPS ;steps++)
          {          
             
-           //calculate the new AttractorPosition
-           Center.Pos= newAttractorPosition(CenterPath[attrPath],CenterPath[attrPath+1],(0.1+float(steps))/InterPolationSteps,time);
-         
-     
-         //debugInfo
-        // if ( sum(vec3(abs(Pos- Center.Pos),0.0))< 0.125) return Green;
-          
-           //update Physic Sim    
-           
+        //calculate the new AttractorPosition
+        Center.Pos= newAttractorPosition(CenterPath[attrPath],CenterPath[attrPath+1],(0.1+float(steps))/InterPolationSteps,time);
+         //Colorsampler containing the strips Front and Rear Color
+		 float StripFrontPercentage, StripRearPercentage,stripPercent;
+		 stripPercent= 1/INTERPOLATION_STEPS;
+		 
+		 StripFrontPercentage = min( stripPercent*(steps+1),1.0);
+		 StripRearPercentage =min( stripPercent*(steps),1.0);
+	 
+	 	colSampler StripFront;
+		colSampler StripRear;
+        //mix this color for this interpolation step
+		//#define BLENDSAMPLER(COL_A,COL_B,COL_C,COL_D, PERCENT,   RESULT_VAR) RESULT_VAR.colIn= COL_A*PERCENT + COL_B *(1.0-PERCENT);RESULT_VAR.colOut= COL_C*PERCENT + COL_D *(1.0-PERCENT);
+   
+		//BLENDSAMPLER(GradStartCol.colIn, GradEndCol.colIn, StripFrontPercentage,StripRearPercentage, StripFront)
+		//BLENDSAMPLER(GradStartCol.colIn, GradEndCol.colIn, StripFrontPercentage,StripRearPercentage, StripRear)
+
+		   //TODO
+		   
              //SetNewPosition
             for (int p=0;p < ParticlesSize; p++)
             {  
+	
+		
                //calculate a new Position
                updateParticlePosition( p);
-               
+        
+			
+				
                //factor in the traversed Distance into the colour (this disregards the curve taken)   
                float OutTraversedDistance = distance(Particles[p].Pos,Particles[p].lastPos);
                float InnerTraversedDistance= distance(Particles[p-1].Pos,Particles[p-1].lastPos);
@@ -453,6 +460,11 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
                outerFactorDistance=1.0-(OutTraversedDistance/sumDistance);
                innerFactorDistance=1.0-(InnerTraversedDistance/sumDistance);
         
+              //Get the  Inner Percentage of the ColourStrip
+              
+              
+              
+              //Get the outer Percentage of the colorstrip
       
          
              if (p > 0)

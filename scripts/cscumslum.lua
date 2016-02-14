@@ -37,8 +37,6 @@ table.insert(gangstArray,scgangsta3)
 
 local damageAccumulated=0
 ratio=4
-echoTable(UnitDefNames["scumslum"],false,"UnitDefNames[scumslum]")
-
 
 
 

@@ -5056,4 +5056,3 @@ function vardump(value, depth, key)
 	end
 	return Result
 end
-end
