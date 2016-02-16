@@ -60,9 +60,9 @@ function nothingEverHappend(datTeamID)
 end
 
 function SideEffects()
-	if not 	GG.BuiLuxUpgrade then 	GG.BuiLuxUpgrade={}end
+	if not 	GG.ScumSlumUpgrade then 	GG.ScumSlumUpgrade={}end
 	
-	IdTable={[UnitDefNames["builux"].id]=true}
+	IdTable={[UnitDefNames["scumslum"].id]=true}
 	while true do
 		--get builux nearby
 		x,y,z=Spring.GetUnitPosition(unitID)
@@ -72,7 +72,7 @@ function SideEffects()
 			if #T then 
 				
 				for i=1,#T do
-					GG.BuiLuxUpgrade[T[i]]=true
+					GG.ScumSlumUpgrade[T[i]]=true
 				end
 			end
 		end

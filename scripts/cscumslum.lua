@@ -291,6 +291,19 @@ function gangstaIdling()
 	end
 end
 
+upgradetime= 6 * 60 *1000
+function upgraDDe()
+	Sleep(upgradetime)
+	
+	if not GG.ScumSlumUpgrade then GG.ScumSlumUpgrade={} end
+	while not GG.ScumSlumUpgrade[unitID] do
+		Sleep(500)
+	end
+	
+	boolUpgradeTime=true
+	
+end
+
 function script.Create()
 	buildSlum()
 	--<buildanimationscript>
@@ -304,6 +317,7 @@ function script.Create()
 	
 	showGangsta()
 	StartThread(gangstaIdling)
+	StartThread(upgraDDe)
 end
 
 function script.Killed(recentDamage, maxHealth)

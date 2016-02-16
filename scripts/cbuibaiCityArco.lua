@@ -1528,6 +1528,26 @@ function healthCheck()
 	end
 end
 
+function SideEffects()
+	if not 	GG.BuiLuxUpgrade then 	GG.BuiLuxUpgrade={}end
+	
+	IdTable={[UnitDefNames["builux"].id]=true}
+	while true do
+		--get builux nearby
+		x,y,z=Spring.GetUnitPosition(unitID)
+		T=getAllInCircle(unitID,x,z,512)
+		if #T then 
+			T=filterUnitTableforDefIDTable(T,IdTable)
+			if #T then 
+				
+				for i=1,#T do
+					GG.BuiLuxUpgrade[T[i]]=true
+				end
+			end
+		end
+		Sleep(1000)
+	end
+end
 
 
 
@@ -1566,7 +1586,7 @@ function script.Create()
 		Hide(AlarmThree[i])
 	end
 	
-	
+		StartThread(SideEffects)
 end
 
 
