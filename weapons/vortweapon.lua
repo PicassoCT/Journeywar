@@ -30,7 +30,7 @@ local weaponDef = {
 	
 	soundHit="vort/zap4.wav",
 	explosionGenerator="custom:burnteal",
-	startsmoke              = [[1]],
+	FireStarter   = 75,
 	targetMoveError         = 0.3,
 	texture1                = [[vortw]],
 	thickness               = 10,

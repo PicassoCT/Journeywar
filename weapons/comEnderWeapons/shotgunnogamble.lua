@@ -25,7 +25,8 @@ local weaponDef = {
   soundStart         = "cComEnder/shotgun.ogg",
   soundTrigger       = true,
   sprayAngle         = 2024,
-  startsmoke         = "1",
+
+  firestarter = 10,
   texture1           = "shot",
   texture2           = "empty",
   texture3           = "empty",

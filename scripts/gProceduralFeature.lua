@@ -125,7 +125,7 @@ function aTransferToTheTop ( ed)
 		oldh,maxX,maxZ=min,0,0
 		mapX,mapZ=Spring.GetMetalMapSize
 		for x=1,Game.mapX,32 do
-			for z=1,Game.mapZ,32 do
+			for z=1,Game.mapY,32 do
 				h=spGetGroundHeight(x,z) 
 				if h > oldh then oldh,maxX,maxZ=h,x,z end
 			end
@@ -135,7 +135,7 @@ function aTransferToTheTop ( ed)
 		local spGetGroundHeight=Spring.GetGroundHeight
 		oldh,maxX,maxZ=max,0,0
 		for x=1,Game.mapX,32 do
-			for z=1,Game.mapZ,32 do
+			for z=1,Game.mapY,32 do
 				h=spGetGroundHeight(x,z) 
 				if h < oldh then oldh,maxX,maxZ=h,x,z end
 			end
@@ -180,8 +180,8 @@ function aNothing ( ed)
 	team=Spring.GetUnitTeam(unitID)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	
-	x,z=Game.mapX/x,Game.mapZ/z --proportional coords
-	x,z=math.floor(Game.mapX*(1-x)),math.floor(Game.mapZ*(1-z))
+	x,z=Game.mapX/x,Game.mapY/z --proportional coords
+	x,z=math.floor(Game.mapX*(1-x)),math.floor(Game.mapY*(1-z))
 	did=Spring.CreateUnit(defid,x,y,z,math.floor(math.random(1,3)),team)
 	hp=Spring.GetUnitHealth(unitID)
 	Spring.SetUnitHealth(did,hp)
@@ -276,7 +276,7 @@ function aDistributor(ed)
 	T=Spring.GetUnitsInCylinder(ex,ez,Range)
 	if T and #T>1 then
 		table.remove(T,unitID)
-		xMax,zMax=Game.mapX or 150, Game.mapZ or 150
+		xMax,zMax=Game.mapX or 150, Game.mapY or 150
 		for i=1,#T do
 			Spring.SetUnitMoveGoal(T[i],math.ceil(math.random(1,xMax)),0,math.ceil(math.random(1,zMax)))
 			StartThread(aSetUnitSelector,T[i],3145)
@@ -286,7 +286,7 @@ end
 
 function aExplanation()
 	for i=Game.mapX/16,Game.mapX,Game.mapX/4 do
-		for j=Game.mapZ/16,Game.mapZ,Game.mapZ/4 do
+		for j=Game.mapY/16,Game.mapY,Game.mapY/4 do
 			if Spring.GetGroundHeight(i,j)> 10 and math.random(0,2)==1 then
 				text=genMessageString()
 				Spring.MarkerAddPoint( i, 0, j, text, true)

@@ -1,3 +1,6 @@
+
+include "lib_UnitScript.lua"
+
 deathpivot = piece "deathpivot"
 Crabbase = piece "Crabbase"
 crabattack1=piece"crabattack1"
@@ -9,7 +12,9 @@ local SIG_WALK=2
 local SIG_LEG=4
 local SIG_DEFAULT=32
 
-
+pieceTable={
+[1] = Crabbase 
+}
 
 crableg={}
 legBoolean={}
@@ -19,7 +24,18 @@ for i=1, 4,1 do
 	crableg[i]={}
 	temp="crableg"..i
 	crableg[i]=piece (temp)
+	pieceTable[#pieceTable+1]=	crableg[i]
 end
+
+FrontLeg ={
+[1] = {Up =crableg[2] },
+[2] = {Up =crableg[3] }
+}
+RearLeg={
+[1] = {Up =crableg[1] },
+[2] = {Up =crableg[4] }
+}
+
 function script.Create()
 	StartThread(defaultEnemy)
 end
@@ -146,6 +162,34 @@ function legs_down()
 	Turn(Crabbase,z_axis,math.rad(0),12)
 
 	
+	Sleep(600)
+	time = 0.1
+	while true do
+			factor= math.abs(math.cos(time))
+			value= factor *23
+			time = time +0.2
+			dice= math.ceil(math.random(0,3))
+				if dice == 1 then
+					idleLoop(Crabbase,x_axis, FrontLeg, RearLeg, value *-1, value * 0.5,  value/16, 500, true)		
+				end
+				if dice == 2 then
+					idleLoop(Crabbase, x_axis,FrontLeg, RearLeg, math.random(-23,23), math.random(-13,13),  value/16 , 700, true)				
+				end
+			if dice == 3 then
+			randsign = math.random(-1,1)
+			randsign= randsign/math.abs(randsign) * value
+				if math.abs(randsign) < 47 and math.abs(randsign) > 3.14159 then
+					idleLoop(Crabbase, y_axis,FrontLeg, RearLeg, randsign, 1  ,  value/16 , 700, true)				
+				end
+			end
+	
+		reseT(pieceTable,1 , true, true)
+		
+		if math.random(0,7)== 3 then
+		Sleep(7000)
+		end
+	end
+	
 end
 
 function legz()
@@ -229,7 +273,6 @@ function script.StartMoving()
 end
 
 function script.StopMoving()
-	Signal(SIG_WALK)
 	StartThread(defaultEnemy)
 	StartThread(legs_down)
 	Turn(deathpivot,y_axis,math.rad(0),7)
@@ -307,7 +350,7 @@ function script.AimWeapon1( heading ,pitch)
 end
 
 function Clawanimation()
-	StartThread(legs_down)
+
 	Turn(crabattack1,y_axis,math.rad(0),64)
 	Turn(crabattack2,y_axis,math.rad(0),64)			
 	WaitForTurn(crabattack1,y_axis)
@@ -318,7 +361,7 @@ end
 function script.FireWeapon1()	
 	
 	Spring.PlaySoundFile("sounds/jcrabcreep/crabattack.wav",1)
-	Clawanimation()
+	StartThread(Clawanimation)
 	return true
 end
 

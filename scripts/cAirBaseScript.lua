@@ -4,7 +4,7 @@ include "lib_UnitScript.lua"
 include "lib_Build.lua" 
 
 
-local buildspot = piece "buildspot"
+buildspot = piece "buildspot"
 winke=piece"winke"
 larm=piece"larm"
 rarm=piece"rarm"

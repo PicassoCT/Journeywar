@@ -77,12 +77,12 @@ end
 
 
 function script.QueryBuildInfo() 
-	return buildspot	--the unit will be constructed at the position of this piece
+	return efencegate	--the unit will be constructed at the position of this piece
 end
 
 
 
-Spring.SetUnitNanoPieces(unitID,{ buildspot})
+Spring.SetUnitNanoPieces(unitID,{ efencegate})
 
 
 

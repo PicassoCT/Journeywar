@@ -299,8 +299,9 @@ function upgraDDe()
 	while not GG.ScumSlumUpgrade[unitID] do
 		Sleep(500)
 	end
-	
-	boolUpgradeTime=true
+	Spring.SetUnitResourcing(unitID, "ume", 68)
+
+
 	
 end
 

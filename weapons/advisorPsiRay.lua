@@ -30,7 +30,7 @@ local weaponDef = {
 	
 	soundHit="cadvisor/psi.wav",
 	explosionGenerator="custom:burnteal",
-	startsmoke              = [[1]],
+	FireStarter   = 75,
 	targetMoveError         = 0.3,
 	texture1                = [[strips]],
 	thickness               = 10,

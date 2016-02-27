@@ -29,7 +29,7 @@ local weaponDef = {
 	rgbColor                = [[0.0 0.95 0.2]],
 	
 
-	startsmoke              = [[1]],
+	FireStarter   = 75,
 	targetMoveError         = 0.3,
 
 	thickness               = 10,

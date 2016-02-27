@@ -752,12 +752,17 @@ function reseT(tableName,speed, ShowAll, boolWait)
 	
 	for i=1,#tableName do
 		
-		resetPiece(tableName[i],lspeed,lboolWait)
+		resetPiece(tableName[i],lspeed,false)
 		if ShowAll and tableName[i] then
 			Show(tableName[i])
 		end
 		
 	end
+	
+	if lboolWait == true then
+	WaitForTurns(tableName)
+	end
+	
 end
 
 function recReseT(Table,speed)
@@ -768,6 +773,8 @@ function recReseT(Table,speed)
 	elseif type(Table)=="number" then
 		resetPiece(Table,speed)
 	end
+	
+	
 end
 
 function getTeamSide(teamid)
@@ -1047,6 +1054,71 @@ function showTWrap(piecenr)
 		ShowWrap(k)
 	end
 	
+end
+
+-->idle Animation Loop
+function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, time, boolNoDown)
+
+Turn(Body,axis, math.rad(degree),speed)
+	for i=1, #FrontLeg, 1 do
+	Turn(FrontLeg[i].Up,axis, math.rad(-degree ), speed)
+	if boolNoDown == false then
+	Turn(FrontLeg[i].Down,axis, math.rad(0 ), speed)
+	end
+	end
+	
+	for i=1, #RearLeg, 1 do
+	Turn(RearLeg[i].Up,axis, math.rad(-degree ), speed)
+		if boolNoDown == false then
+		Turn(RearLeg[i].Down,axis, math.rad(0), speed)
+		end
+	end
+	
+		for i=1, #FrontLeg, 1 do
+		WaitForTurns(FrontLeg[i].Up)
+			if boolNoDown == false then
+			WaitForTurns(FrontLeg[i].Down)
+			end
+		end
+		
+		for i=1, #RearLeg, 1 do
+		WaitForTurns(RearLeg[i].Up)
+			if boolNoDown == false then
+			WaitForTurns(RearLeg[i].Down)
+			end
+		end
+WaitForTurn(Body,axis)
+Sleep(time)
+
+Turn(Body,axis, math.rad(BodyBackDeg),speed)
+	for i=1, #FrontLeg, 1 do
+	Turn(FrontLeg[i].Up,axis, math.rad( -BodyBackDeg), speed)
+		if boolNoDown == false then
+		Turn(FrontLeg[i].Down,axis, math.rad( 0 ), speed)
+		end
+	end
+	
+	for i=1, #RearLeg, 1 do
+	Turn(RearLeg[i].Up,axis, math.rad(-BodyBackDeg), speed)
+		if boolNoDown == false then
+		Turn(RearLeg[i].Down,axis, math.rad(0), speed)
+		end
+	end
+		for i=1, #FrontLeg, 1 do
+		WaitForTurns(FrontLeg[i].Up)
+			if boolNoDown == false then
+			WaitForTurns(FrontLeg[i].Down)
+			end
+		end
+		
+		for i=1, #RearLeg, 1 do
+		WaitForTurns(RearLeg[i].Up)
+			if boolNoDown == false then
+			WaitForTurns(RearLeg[i].Down)
+			end		
+		end		
+WaitForTurn(Body,axis)
+Sleep(time)
 end
 
 function HideWrap(piecenr)

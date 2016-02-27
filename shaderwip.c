@@ -12,6 +12,7 @@
     vec4 Black =vec4(0.0,0.0,0.0,0.0);
     vec4 Green =vec4(0.0,1.0,0.0,1.0);
     vec4 Blue =vec4(0.0,0.0,1.0,1.0);
+   vec4 Yellow =vec4(0.0,0.1,1.0,1.0);
     vec4 Red =vec4(1.0,0.0,0.0,1.0);
     vec4 White =vec4(1.0,1.0,1.0,1.0);
     vec4 Grey =vec4(0.5,0.5,0.5,1.0);
@@ -33,14 +34,38 @@
    
 
    //hc = 2·sqrt(s·(s - a)·(s - b)·(s - c))/c
-   #define POSPROPORTION(DISTPOSUP,DISTPOSDOWN,DISTUPDOWN,RESULT) RESULT=(((DISTPOSUP)+(DISTPOSDOWN)+(DISTUPDOWN))*0.5);RESULT=((2.0*sqrt((RESULT)*((RESULT)-(DISTPOSUP))*((RESULT)-(DISTPOSDOWN))*((RESULT)-(DISTUPDOWN))))/(DISTUPDOWN));RESULT=((RESULT)*(RESULT)+(DISTPOSUP)*(DISTPOSUP));RESULT=(sqrt((RESULT))/(DISTUPDOWN));
+	// #define POSPROPORTION(DISTPOSUP,DISTPOSDOWN,DISTUPDOWN,RESULT) RESULT=(((DISTPOSUP)+(DISTPOSDOWN)+(DISTUPDOWN))*0.5);RESULT=((2.0*sqrt((RESULT)*((RESULT)-(DISTPOSUP))*((RESULT)-(DISTPOSDOWN))*((RESULT)-(DISTUPDOWN))))/(DISTUPDOWN));RESULT=((RESULT)*(RESULT)+(DISTPOSUP)*(DISTPOSUP));RESULT=(sqrt((RESULT))/(DISTUPDOWN));
+	float posProportion( vec2 pixelPos, vec2 pointA, vec2 pointB) {
+
+	vec2 posIntersect;
+
+	float m_X =	 	pointA.x -pointB.x;
+	float m_Y = 	pointA.y -pointB.y;
+	float m_AB =	m_X/m_Y;
+	float m_Intercept =  -1.0 * (m_Y/m_X);
+
+	//computatet the steigung of the intercept
+	//yi = m_Intercept * xi +t_intercept;
+	//t_intercept = yi - m_Intercept *xi;
+	float t_intercept = pixelPos.y - m_Intercept *pixelPos.x;
+	float t_ab = pointA.y - (-1* m_Intercept) * pointA.x;
+
+	//yi = m_Intercept * xi +t_intercept;
+	//yab = m_ab * xab +t_ab;
+
+	//we need the intersectionpoint
+	 posIntersect.x   	= ( t_intercept - t_ab) /( m_AB -  m_Intercept);
+	 posIntersect.y 	= m_Intercept *   (posIntersect.x + t_intercept);
+
+	return distance(pointA, posIntersect)/distance(pointA,pointB);
+	}
 
    
    //debugInfo
    #define isParticleNearPosition(PARTICLE,POSITION,TOLERANCE)  (distance(PARTICLE + Center.Pos,POSITION) < TOLERANCE) 
    //Helper functions
    #define RAND(X,Y)  (fract(sin(dot(X + Y ,vec2(12.9898,78.233)))*43758.5453))
-   #define max(A,B)  = (A > B)? A: B;
+   #define MATH_MAX(A,B)  = (A > B)? A: B;
    //Describes a linear Colour Gradient 
    struct colSampler{
    vec4 colIn;
@@ -100,11 +125,14 @@
    vec2 CenterPath[CenterPathSize];
 
 
-   #define ParticlesSize 5
-   Particle Particles[ParticlesSize];
+   #define PARTICLESSIZE 5
+   Particle Particles[PARTICLESSIZE];
+   
+   #define PERCENTAGE (1.0/ float(PARTICLESSIZE))
+   
    #define GRADIENT_SIZE 9   
    float Gradient[GRADIENT_SIZE];
-	 
+    
    #define ParticleConstructor(NR, DEG, POSX, POSY, DIRX, DIRY, MAXDIST)    Particles[NR].rotationInAngleStep= DEG;Particles[NR].Pos= vec2(POSX,POSY);Particles[NR].dir= vec2(DIRX,DIRY);Particles[NR].lastPos= vec2(POSX,POSY); Particles[NR].lastDir= vec2(DIRX,DIRY);Particles[NR].MaxDistToPredecessor= -1.0;
       //Defining the Colours the Gradient traverses from Start to End - Outermost color Gradient
       colSampler GradStartCol;
@@ -251,102 +279,154 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
    return false;
    }
 
-   
-   #define COMPOSE(COL,COLB, FACTOR) ((COL* FACTOR) +(COLB *(1.0- FACTOR)))
+   #define NORM(VAL_A,VAL_B) VAL_A = VAL_A/sqrt((VAL_A *VAL_A)+ (VAL_B*VAL_B)); VAL_B = 3* VAL_B/sqrt((VAL_A *VAL_A)+ (VAL_B*VAL_B));
+   #define COMPOSE(COL,COLB, FACTOR) ((COL* FACTOR) +(COLB *(1.0 - FACTOR)))
    #define BLEND(COL_A,COL_B, START, END, RESULT_VARA, RESULT_VARB) RESULT_VARA= COL_A*START + COL_B *(1.0-START); RESULT_VARB= COL_A* END + COL_B(1.0- END);
    #define BLENDSAMPLER(COL_A,COL_B,COL_C,COL_D, PERCENT,   RESULT_VAR) RESULT_VAR.colIn= COL_A*PERCENT + COL_B *(1.0-PERCENT);RESULT_VAR.colOut= COL_C*PERCENT + COL_D *(1.0-PERCENT);
    
    //Draws Additive the polygons into the texture  
    //Particle Speed is factored in via the colSamplers
-   vec4 AddDraw(colSampler qFrontCol,colSampler qRearCol,  float outFac, float inFac, vec2 newPOut, vec2 newPIn, vec2 oldPOut, vec2 oldPIn, vec2 PixelPos, int gradIndex)
+  vec4 AddDraw(colSampler qFrontCol,colSampler qRearCol, vec2 newPOut, vec2 newPIn, vec2 oldPOut, vec2 oldPIn, vec2 PixelPos, int gradIndex)
    { 
-
-
    
-
-      if  (PointOnBorder( Center.Pos.xy,   newPOut,  newPIn,  oldPOut,  oldPIn,  PixelPos,0.03)==true ) return Red;
+    //check wether the Point is actually in the quad to prevent unnecessary work workload
+	if (PointInTriangle(newPOut, newPIn, oldPOut, PixelPos)==false && PointInTriangle(newPIn,  oldPOut,oldPIn, PixelPos)== false  ) return Black; 
       
-   
-      vec2 PixelPosRotCoords;
-      //Get PixelPosition into Center Coordinate System Coords
-      PixelPos= PixelPos -Center.Pos.xy; 
-
-      //check wether the Point is actually in the quad to prevent unnecessary work workload
-     if (PointInTriangle(newPOut, newPIn, oldPOut, PixelPos)==false && PointInTriangle(newPIn,  oldPOut,oldPIn, PixelPos)== false  ) return Black;
-      
-   
-      //Move the Point into the Coordinate System around the Last Outer Particle Point
-      PixelPosRotCoords=PixelPos.xy- oldPOut.xy;
-      //Rotate it with the computated Matrice
-      float _x = PixelPosRotCoords.x;
-      float _y = PixelPosRotCoords.y;
-      //determinates the 
-      //CalcExtrema(newPOut,oldPOut,oldPIn,newPIn,rotMat);
-      
+	//TODO remove Debug
+    if  (PointOnBorder( Center.Pos.xy,   newPOut,  newPIn,  oldPOut,  oldPIn,  PixelPos,0.03)==true ) return Red;
        
-     float DistanceMidFrontRear, DistanceFrontPos;
-     float totalDistanceRear, distancePosRearOut,distancePosRearIn, rearUpNormResult,rearDownNormResult;
-     float totalDistanceFront, distancePosFrontOut,distancePosFrontIn, frontUpNormResult,frontDownNormResult;
-     float  distFrontRear,distancePosRear;
-     float distNormFrontRear;
-     vec2  midPosFront, midPosRear;
+        //Get PixelPosition into Center Coordinate System Coords
+     //   PixelPos= PixelPos - Center.Pos.xy; 
+
+
+        
+       float DistanceMidFrontRear, DistanceFrontPos;
+       float totalDistanceRear, distancePosRearOut,distancePosRearIn, rearUpNormResult,rearDownNormResult;
+       float totalDistanceFront, distancePosFrontOut,distancePosFrontIn, frontUpNormResult,frontDownNormResult;
+       float distNormFrontRear;
+       vec2  midPosFront, midPosRear;
+       vec2  midPosInner, midPosOuter;
+    
+   //Rear    Side
+        //total distance of the quads Rear In and Out Point
+        totalDistanceRear= distance(oldPOut,oldPIn);
+        
+      //distance of the Pixel Position to the rear Outward Point
+        distancePosRearOut=distance(PixelPos,oldPOut);
+        
+      //distance of the Position to the rear Inward Point
+        distancePosRearIn=distance(PixelPos,oldPIn);
+        
+        //computes the distance in percent up
+		rearUpNormResult = posProportion( PixelPos, oldPOut,  oldPIn);
+
+      //POSPROPORTION(distancePosRearOut,distancePosRearIn,totalDistanceRear,rearUpNormResult);
+        
+      //computes the distance in percent down
+        rearDownNormResult= 1.0 - rearUpNormResult;
+        
+      //estimate the midPos with the given percentage
+       // midPosRear= COMPOSE(oldPIn,oldPOut,rearDownNormResult);
  
-//Rear   
-      //distance of the quads Rear In and Out
-       totalDistanceRear= distance(oldPOut,oldPIn);
-      //distance of the Position to the rear Outward Vertex
-      distancePosRearOut=distance(PixelPos,oldPOut);
-       //distance of the Position to the rear Inward Vertex
-      distancePosRearIn=distance(PixelPos,oldPIn);
+   //Front  Side
+        //distance of the quads Front In and Out
+         totalDistanceFront= distance(newPOut,newPIn);
+        //distance of the Position to the front Outward Vertex
+        distancePosFrontOut=distance(PixelPos, newPOut);
+         //distance of the Position to the front Inward Vertex
+        distancePosFrontIn=distance(PixelPos,newPIn);
+        
+        //computes the distance in percent down
+		frontUpNormResult = posProportion( PixelPos, newPOut,  newPIn);
       
-      //computes the distance in percent down
-   POSPROPORTION(distancePosRearOut,distancePosRearIn,totalDistanceRear,rearUpNormResult);
-      //computes the distance in percent up
-      rearDownNormResult= 1.0 - rearUpNormResult;
-
-//Front
-      //distance of the quads Front In and Out
-       totalDistanceFront= distance(oldPOut,oldPIn);
-      //distance of the Position to the front Outward Vertex
-      distancePosFrontOut=distance(PixelPos,oldPOut);
-       //distance of the Position to the front Inward Vertex
-      distancePosFrontIn=distance(PixelPos,oldPIn);
-      
-      //computes the distance in percent down
-    POSPROPORTION(distancePosFrontOut,distancePosFrontIn,totalDistanceFront,frontUpNormResult);
-      //computes the distance in percent up
-      frontDownNormResult= 1.0 - frontUpNormResult;
+		//computes the distance in percent up
+        frontDownNormResult= 1.0 - frontUpNormResult;
+        //midPos
+        //midPosFront= COMPOSE(newPIn,newPOut,frontUpNormResult);
+   
+   
+    float    totalDistance_Inner, distancePosFrontIn_Inner, distancePosRearIn_Inner, FrontNormResult_Inner, RearNormResult_Inner  ;
+    float    totalDistance_Outer, distancePosFrontOut_Outer, distancePosRearOut_Outer, Rear_NormResult_Outer, Front_NormResult_Outer  ;
+   
+   //Inner Side
+        //distance of the quads Front In and Out
+        totalDistance_Inner = distance(newPIn,oldPIn);
+        //distance of the Position to the front Outward Vertex
+        distancePosFrontIn_Inner  =distance(PixelPos, newPIn);
+         //distance of the Position to the front Inward Vertex
+        distancePosRearIn_Inner =distance(PixelPos,oldPIn);
+        
+        //computes the distance in percent down
+			FrontNormResult_Inner = posProportion( PixelPos, newPIn,  oldPIn);
+       
+	   //computes the distance in percent up
+        RearNormResult_Inner = 1.0 - FrontNormResult_Inner;
       //midPos
-      midPosFront= COMPOSE(newPIn,newPOut,frontUpNormResult);
-//Distance Front Rear
-    distFrontRear= distance(newPIn,oldPIn);
-	distancePosRear = distance(PixelPos,oldPIn);
-    distNormFrontRear=0;
-	POSPROPORTION(distancePosRear,distancePosFrontIn,distFrontRear,distNormFrontRear);
+        midPosInner= COMPOSE(newPIn,oldPIn,FrontNormResult_Inner);
    
-//Front Alpha Gradient
-   float FrontAlphaGradient=alphaGradient(gradIndex,frontDownNormResult);
-//Rear Alpha Gradient
-   float RearAlphaGradient=alphaGradient(gradIndex,rearDownNormResult);
+   if (distance(PixelPos,midPosInner) < 0.3 ) return Green;
    
-   //Lower one wins
-   FrontAlphaGradient= min(FrontAlphaGradient,qFrontCol.colIn.a);
-   RearAlphaGradient=min (RearAlphaGradient,qRearCol.colIn.a);
+   //Outer Side
+      //distance of the quads Front Out and Rear Out
+        totalDistance_Outer = distance(newPOut,oldPOut);
+        //distance of the Position to the front Outward Vertex
+        distancePosFrontOut_Outer  = distance(PixelPos, newPOut);
+         //distance of the Position to the front Inward Vertex
+        distancePosRearOut_Outer =distance(PixelPos,oldPOut);
+        
+        //computes the distance in percent down
+    	Rear_NormResult_Outer = posProportion( PixelPos, newPOut,  oldPOut);
+           //computes the distance in percent up
+        Front_NormResult_Outer = 1.0 - Rear_NormResult_Outer;
+      //midPos
+        midPosOuter= COMPOSE(newPOut,oldPOut,Rear_NormResult_Outer);
+      
+      if (distance(PixelPos,midPosOuter) < 0.3 ) return Green;
+      
+   float percentage_distDown    = distance(midPosOuter, PixelPos)   ;
+   float percentage_distUp    = distance(midPosInner, PixelPos)   ;
+   float dist_norm            = sqrt( percentage_distDown*percentage_distDown + percentage_distUp* percentage_distUp);
    
-   //Get a global Percentage
-   float absoluteAlphaGradient=    COMPOSE(FrontAlphaGradient,RearAlphaGradient,distNormFrontRear);
-    
-   vec4 tFrontCol=   mix(qFrontCol.colIn, qFrontCol.colOut,frontDownNormResult);
-   vec4 tRearCol=    mix(qRearCol.colIn, qRearCol.colOut,rearDownNormResult);
+   //recombine the percentages of frontheight and rearheight
+      percentage_distDown    =    abs(percentage_distDown /dist_norm);
+      percentage_distUp      =    abs(percentage_distUp /dist_norm);
+      
+   //Lets compose the Color - Distortion Free
+         
+   //mix the lower color
+   vec4 lowerCol = (qFrontCol.colIn * RearNormResult_Inner) + (qRearCol.colIn * (FrontNormResult_Inner));
+   
+   //mix the upper color
+   vec4 upperCol = (qFrontCol.colOut * Front_NormResult_Outer) + (qRearCol.colOut * (Rear_NormResult_Outer) );
+   
 
-   float distanceFrontMidPos_Pos= distance(midPosFront,PixelPos);
    
    
-   float relativeInnerOut=mix(frontUpNormResult,rearUpNormResult,distanceFrontMidPos_Pos);
-    
-   vec4 resultCol= mix(tFrontCol, tRearCol,relativeInnerOut);
-    //  resultCol*=absoluteAlphaGradient;
-   return resultCol;
+   //mix the lower and upper color
+    vec4 resultCol= mix(lowerCol, upperCol, percentage_distDown);
+   return resultCol; 
+     
+   //Front Alpha Gradient
+      float FrontAlphaGradient=alphaGradient(gradIndex,frontDownNormResult);
+   //Rear Alpha Gradient
+      float RearAlphaGradient=alphaGradient(gradIndex,rearDownNormResult);
+      
+      //Lower one wins
+      FrontAlphaGradient= min(FrontAlphaGradient,qFrontCol.colIn.a);
+      RearAlphaGradient=  min (RearAlphaGradient,qRearCol.colIn.a);
+      
+      //Get a global Percentage
+      float absoluteAlphaGradient=    COMPOSE(FrontAlphaGradient,RearAlphaGradient,distNormFrontRear);
+      
+     
+      float distanceFrontMidPos_Pos= distance(midPosFront,PixelPos);
+      
+      
+ 
+
+      //  resultCol*=absoluteAlphaGradient;
+      return resultCol;
+     
    }
 
    //calculate a new attractor position
@@ -378,7 +458,7 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
    bool atParticleStartPos(vec2 localPos, float tol)
    {
       bool match= false;
-      for (int i= 0; i< ParticlesSize;i++)
+      for (int i= 0; i< PARTICLESSIZE;i++)
       {   
         if (distance(Particles[i].Pos.x,localPos.x) < tol && distance(Particles[i].Pos.y,localPos.y) < tol )
         {
@@ -425,32 +505,28 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
         //calculate the new AttractorPosition
         Center.Pos= newAttractorPosition(CenterPath[attrPath],CenterPath[attrPath+1],(0.1+float(steps))/InterPolationSteps,time);
          //Colorsampler containing the strips Front and Rear Color
-		 float StripFrontPercentage, StripRearPercentage,stripPercent;
-		 stripPercent= 1/INTERPOLATION_STEPS;
-		 
-		 StripFrontPercentage = min( stripPercent*(steps+1),1.0);
-		 StripRearPercentage =min( stripPercent*(steps),1.0);
-	 
-	 	colSampler StripFront;
-		colSampler StripRear;
+       float StripFrontPercentage, StripRearPercentage,stripPercent;
+       stripPercent= 1/INTERPOLATION_STEPS;
+       
+       StripFrontPercentage = min( stripPercent*(steps+1),1.0);
+       StripRearPercentage =min( stripPercent*(steps),1.0);
+    
+       colSampler StripFront;
+       colSampler StripRear;
+          
         //mix this color for this interpolation step
-		//#define BLENDSAMPLER(COL_A,COL_B,COL_C,COL_D, PERCENT,   RESULT_VAR) RESULT_VAR.colIn= COL_A*PERCENT + COL_B *(1.0-PERCENT);RESULT_VAR.colOut= COL_C*PERCENT + COL_D *(1.0-PERCENT);
-   
-		//BLENDSAMPLER(GradStartCol.colIn, GradEndCol.colIn, StripFrontPercentage,StripRearPercentage, StripFront)
-		//BLENDSAMPLER(GradStartCol.colIn, GradEndCol.colIn, StripFrontPercentage,StripRearPercentage, StripRear)
+    
+      BLENDSAMPLER(GradStartCol.colIn, GradEndCol.colIn, GradEndCol.colOut, GradEndCol.colOut,StripFrontPercentage, StripFront)
+      BLENDSAMPLER(GradStartCol.colIn, GradEndCol.colIn, GradEndCol.colOut, GradEndCol.colOut, StripRearPercentage, StripRear)
 
-		   //TODO
-		   
              //SetNewPosition
-            for (int p=0;p < ParticlesSize; p++)
+            for (int p=0;p < PARTICLESSIZE; p++)
             {  
-	
-		
+   
+      
                //calculate a new Position
                updateParticlePosition( p);
-        
-			
-				
+               
                //factor in the traversed Distance into the colour (this disregards the curve taken)   
                float OutTraversedDistance = distance(Particles[p].Pos,Particles[p].lastPos);
                float InnerTraversedDistance= distance(Particles[p-1].Pos,Particles[p-1].lastPos);
@@ -460,17 +536,33 @@ ParticleConstructor(4, PI* 0.3,12.0 ,1.1,0.3,0.1,20.0);
                outerFactorDistance=1.0-(OutTraversedDistance/sumDistance);
                innerFactorDistance=1.0-(InnerTraversedDistance/sumDistance);
         
-              //Get the  Inner Percentage of the ColourStrip
-              
-              
-              
+  
               //Get the outer Percentage of the colorstrip
       
+            colSampler RearCol;
+         colSampler FrontCol;
          
              if (p > 0)
              {
-    
-             accumulatedColour = accumulatedColour +  AddDraw(OuterCol, InnerCol,outerFactorDistance,innerFactorDistance, Particles[p].Pos, Particles[p-1].Pos, Particles[p].lastPos, Particles[p-1].lastPos,Pos,int( float(float(p)/float(ParticlesSize)* GRADIENT_SIZE)));  
+         float index = float(p-1);
+         if (index == 0) index = 1;
+
+         
+         RearCol.colIn =      (index * PERCENTAGE *StripRear.colIn )+  ((PARTICLESSIZE- index)*PERCENTAGE *StripRear.colOut); 
+         RearCol.colOut =     ((p)*PERCENTAGE *StripRear.colIn)  +  ((PARTICLESSIZE-p)*PERCENTAGE *StripRear.colOut); 
+         FrontCol.colIn =   ((index)*PERCENTAGE *StripFront.colIn)  +  ((PARTICLESSIZE- index)*PERCENTAGE *StripFront.colOut); 
+         FrontCol.colOut =   ((p)*PERCENTAGE *StripFront.colIn)  +  ((PARTICLESSIZE-p)*PERCENTAGE *StripFront.colOut); 
+         
+      //TODO Delete Me
+       RearCol.colIn  = Red;
+       RearCol.colOut = Blue;
+       
+         FrontCol.colIn= Red;
+         FrontCol.colOut = Blue;
+      //TODO Delete Me 
+
+       
+             accumulatedColour = accumulatedColour +  AddDraw(FrontCol, RearCol, Particles[p].Pos, Particles[p-1].Pos, Particles[p].lastPos, Particles[p-1].lastPos, Pos, int( float(float(p)/float(PARTICLESSIZE)* GRADIENT_SIZE)));  
           
              } 
             }
