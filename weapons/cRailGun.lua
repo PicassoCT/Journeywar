@@ -26,7 +26,7 @@ local weaponDef={
 	impulseBoost = 0,
 	impulseFactor = 0,
 	interceptedByShieldType = 0,
-	minbarrelangle = [[-15]],
+	tolerance  = 3000,
 	noExplode = true,
 	numbounce = 40,
 	range = 650,
@@ -39,7 +39,7 @@ local weaponDef={
 	
 	sprayangle = 800,
 	stages = 32,
-	startsmoke = [[1]],
+	fireStarter  = 35,
 	turret = true,
 	waterbounce = 1,
 	weaponType = [[Cannon]],

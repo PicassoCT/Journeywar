@@ -8,7 +8,7 @@ name="Green Sleaves",
   -- beamlaser=1,
  -- WeaponAcceleration=0,
    accuracy           = 0,
-   guidance=1,
+   --guidance=1,
    laserflaresize = 3,--0.3
 	beamTtl=   0.15,--0.01
 	movingaccuracy=1000,
@@ -47,7 +47,7 @@ name="Green Sleaves",
     rgbColor2               = [[0.3 0.7 0.1]],
 	HardStop=1,--test It
 	Intensity=1.4,--test It
-	ScrollSeed=0.3,
+	scrollspeed=0.3,
 
 		  explosionGenerator="custom:green_electric_explosion",
 	tolerance          = 1000,

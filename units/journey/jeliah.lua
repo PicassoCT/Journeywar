@@ -50,20 +50,20 @@ weapons = {
 	},
 [3]={name  = "jeliahbeamslave",
 	onlyTargetCategory = [[ LAND ]],
-	
+	slaveto= 1,
 	},
 [4]={name  = "jeliahbeamslave",
 	onlyTargetCategory = [[ LAND]],
-	
+	slaveto= 2,
 	},
 
 [5]={name  = "jeliahbeamslave",
 	onlyTargetCategory = [[ LAND ]],
-	
+	slaveto= 1,
 	},
 [6]={name  = "jeliahbeamslave",
 	onlyTargetCategory = [[ LAND]],
-	
+	slaveto= 2,
 	},	
 [7]={name  = "jeliahshield",
 	onlyTargetCategory = [[LAND AIR]],

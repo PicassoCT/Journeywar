@@ -1,8 +1,8 @@
 local weaponName="cmtwgrenade"
 local weaponDef={
-name="cmtwgrenade",
+
 weaponType=[[Cannon]],
-description="Grenade",
+name="Grenade",
 highTrajectory =1,
 
 

@@ -36,6 +36,8 @@ local weaponDef = {
     tolerance          = 1000,
     turret             = true,
     weaponVelocity     = 400,
+
+
 	sweepfire=true,--
     damage = {
       default           = 5,

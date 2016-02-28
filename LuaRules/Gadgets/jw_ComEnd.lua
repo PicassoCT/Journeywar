@@ -5,20 +5,19 @@
 
 
 if (gadgetHandler:IsSyncedCode()) then
+	
+	local C_COMMANDER_DEF_ID = UnitDefNames["ccomender"].id
+	local J_COMMANDER_DEF_ID = UnitDefNames["jabyss"].id
 
-local C_COMMANDER_DEF_ID = UnitDefNames["ccomender"].id
-local J_COMMANDER_DEF_ID = UnitDefNames["jabyss"].id
-
---NOTE: PUT THIS AT YOUR FUNCTIONS AREA IN THE FILE
-function gadget:UnitDestroyed(Unit, UnitDef, Team)
-	if (UnitDef == C_COMMANDER_DEF_ID and (  GG.LazarusDeviceActive[Unit] == nil or GG.LazarusDeviceActive[Unit] <= 0 )) 
-	or UnitDef == J_COMMANDER_DEF_ID then
-		--any code to be executed when commander dies
-		Spring.KillTeam(Team)
+	function gadget:UnitDestroyed(Unit, UnitDef, Team)
+		if (UnitDef == C_COMMANDER_DEF_ID and ( GG.LazarusDeviceActive[Unit] == nil or GG.LazarusDeviceActive[Unit] <= 0 )) 
+		or UnitDef == J_COMMANDER_DEF_ID then
+			--any code to be executed when commander dies
+			Spring.KillTeam(Team)
+		end
+		
+		
 	end
+	--NOTE: EOF
 	
-	
-end
---NOTE: EOF
-
 end

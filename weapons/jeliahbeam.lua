@@ -4,12 +4,12 @@ local weaponDef = {
 
    name                    = "eliah",
    weaponType              = [[BeamLaser]],
-   slaveTo=0,
+
    beamweapon=1,
   -- beamlaser=1,
  -- WeaponAcceleration=0,
    accuracy           = 0,
-   guidance=1,
+
    laserflaresize = 1,--0.3
 	beamTtl=   0.05,--0.01
 	movingaccuracy=5000,
@@ -48,7 +48,7 @@ local weaponDef = {
 	rgbColor2 =[[0.4 1 1]],
 	HardStop=1,--test It
 	Intensity=1.4,--test It
-	ScrollSeed=0.3,
+	scrollspeed=0.3,
 	SweepFire=1,
 		  explosionGenerator="custom:smallblueburn",
 	tolerance          = 1000,

@@ -1,9 +1,9 @@
 local weaponName="jgluegun"
 local weaponDef={
 
-name="jgluegun",
+
 weaponType=[[Cannon]],
-description="Gluesome Galateaeggs",
+name="Gluesome Galateaeggs",
 highTrajectory =0,
 
 

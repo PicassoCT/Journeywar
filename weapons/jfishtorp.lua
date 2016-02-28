@@ -14,7 +14,7 @@ name="Torpedous Deadlionis",
       },
 
     --explosionGenerator      = [[custom:TORPEDO_HIT]],
-      guidance                = true,
+
       impactOnly              = true,
       impulseBoost            = 0,
       impulseFactor           = 0.4,
@@ -26,7 +26,7 @@ name="Torpedous Deadlionis",
       range                   = 500,
       reloadtime              = 3,
       renderType              = 1,
-      selfprop                = true,
+
      -- soundHit                = [[OTAunit/XPLODEP1]],
      -- soundStart              = [[OTAunit/TORPEDO1]],
       startVelocity           = 140,

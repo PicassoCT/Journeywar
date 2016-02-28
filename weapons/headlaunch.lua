@@ -17,7 +17,7 @@ local weaponDef = {
       explosionGenerator      = [[custom:330rlexplode]],
       fireStarter             = 0,
       flightTime              = 5,
-      guidance                = false,
+      ----guidance                = false,
       impactOnly              = true,
       impulseBoost            = 0,
       impulseFactor           = 0.4,
@@ -29,8 +29,8 @@ local weaponDef = {
       range                   = 850,
       reloadtime              = 1.2,
       renderType              = 1,
-      selfprop                = true,
-      --smokedelay              = [[0.1]],
+
+
       smokeTrail              = true,
       soundHit                = [[cheadlauncher/hlimpact]],
       soundStart              = [[cheadlauncher/hlfired]],

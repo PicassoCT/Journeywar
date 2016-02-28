@@ -19,7 +19,7 @@ local weaponDef = {
       explosionGenerator      = "custom:missile_explosion",
       fireStarter             = 70,
       flightTime              = 25,
-      guidance                = true,
+      --guidance                = true,
       impactOnly              = true,
       impulseBoost            = 0,
       impulseFactor           = 0.4,
@@ -31,8 +31,8 @@ local weaponDef = {
       range                   = 850,
       reloadtime              = 1.2,
       renderType              = 1,
-      selfprop                = true,
-      smokedelay              = [[0.1]],
+
+
       smokeTrail              = true,
       --soundHit                = [[jresistance/rocketfire1]],
       --soundStart              = [[jresistance/rockimpact]],

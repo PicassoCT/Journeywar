@@ -8,7 +8,7 @@ local weaponDef = {
   -- beamlaser=1,
  -- WeaponAcceleration=0,
    accuracy           = 1000,
-   guidance=1,
+
    laserflaresize = 1,--0.3
 	beamTtl=   0.05,--0.01
 	movingaccuracy=5000,
@@ -47,7 +47,7 @@ local weaponDef = {
 	rgbColor2 =[[0.4 1 1]],
 	HardStop=1,--test It
 	Intensity=1.4,--test It
-	ScrollSeed=0.3,
+	scrollspeed=0.3,
 	SweepFire=0,
 	explosionGenerator="custom:smallblueburn",
 	tolerance          = 1000,

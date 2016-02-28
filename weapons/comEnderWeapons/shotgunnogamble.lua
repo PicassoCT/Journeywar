@@ -21,7 +21,7 @@ local weaponDef = {
   range              = 700,
   reloadtime         = 0.9,
   renderType         = 0,
-  smokedelay         = "1",
+
   soundStart         = "cComEnder/shotgun.ogg",
   soundTrigger       = true,
   sprayAngle         = 2024,

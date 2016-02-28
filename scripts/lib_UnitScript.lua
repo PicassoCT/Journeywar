@@ -875,9 +875,11 @@ end
 function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 	if not pieceDest or not piecename then return end
 	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceDest)
-	if lib_boolDebug ==true then
-		echo("x:"..ox.. "\n y:"..oy.."\n z:"..oz)
-	end
+	orx,ory,orz=Spring.GetUnitPiecePosition(unitID,piecename)
+	
+	ox,oy,oz = ox -	orx,oy - ory,oz - orz
+	
+
 	ox=ox*-1
 	if offset then
 		ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.z
@@ -3266,10 +3268,10 @@ function vardump(value, depth, key)
 	-->filters Out Immobile Units
 	function filterOutImmobile (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+			for k,v in pairs(T) do 
+			def=Spring.GetUnitDefID(k) 
 			if false== UnitDefs[def].isImmobile then 
-				returnTable[#returnTable+1]=T[i]
+				returnTable[k]=v 
 			end 
 		end 
 		return returnTable 
@@ -3277,10 +3279,10 @@ function vardump(value, depth, key)
 	--> filters Out Buildings
 	function filterOutBuilding (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for k,v in pairs(T) do 
+			def=Spring.GetUnitDefID(k) 
 			if false== UnitDefs[def].isBuilding then 
-			returnTable[#returnTable+1]=T[i] end 
+			returnTable[k]=v end 
 		end 
 		return returnTable 
 	end
@@ -4693,26 +4695,27 @@ function vardump(value, depth, key)
 		
 	end
 	
-	function addFreeSpots(freeSpotList, gridTable,x,y,z)
-		dirTable=	{
+	function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize)
+	freeSpotList[#freeSpotList+1] ={x = ind_x, y= ind_y, z= ind_z }
+	
+				dirTable=	{
 			[1]=function() return 1,			0,			0 end,
 			[0]=function() return 0,			1,			0 end,
 			[2]=function() return 0,			0,			1 end,
 			[3]=function() return -1,			0,			0 end,
 			[4]=function() return 0,			0,			-1 end,
 			[5]=function() return 0,			1,			0 end
-		}
-		--TODO 
-		for i=0,5,1 do
-			ox,oy,oz=dirTable[i]()
-			cx,cy,cz= x+ox,y+oy,z+oz
-			
-			if not gridTable[cx] or not gridTable[cx][cy] or not gridTable[cx][cy][cz] then
-				addTable(gridTable,cx,cy,cz)
-				gridTable[cx][cy][cz] =true
+		}		
+			if not gridTable[ind_x] or not gridTable[ind_x][ind_y] or not gridTable[ind_x][ind_y][ind_z] then
+				addTable(gridTable,ind_x,ind_y,ind_z)
+				gridTable[ind_x][ind_y][ind_z] = true
 			end
-		end
-		
+	for i=1, #gridTable, 1 do
+		ox,oy,oz = gridTable[i]()
+		gridTable[ind_x+ox][ind_y+oy][ind_z+oz] = false	
+	end
+	
+	return freeSpotList,gridTable
 	end
 	
 	-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
@@ -4727,32 +4730,35 @@ function vardump(value, depth, key)
 		
 		hideT(Blocks)
 		--default dirTable
-		
+			dirTable=	{
+			[1]=function() return 1,			0,			0 end,
+			[0]=function() return 0,			1,			0 end,
+			[2]=function() return 0,			0,			1 end,
+			[3]=function() return -1,			0,			0 end,
+			[4]=function() return 0,			0,			-1 end,
+			[5]=function() return 0,			1,			0 end
+		}
 		
 		blocksize=25
+		
 		for i=table.getn(Blocks),1,-1 do
 			if Blocks[i] then 
-				Show(Blocks[i])			
-				echo("createRandomizedBuilding::Adding Block Nr.".. i)
+				Show(Blocks[i])		
+				
 				randIndex=math.ceil(math.random(1,#freeSpotList))
-				moveBlockAddPod(	freeSpots[randIndex].x*blocksize,
-				freeSpots[randIndex].y*blocksize+ orgOffSet,
-				freeSpots[randIndex].z*blocksize											
-				)
-				
-				table.remove(Blocks,i)
-				table.remove(freeSpots,randIndex)
-				
-				for k=1, #dirTable do
-					rx,ry,rz,number=dirTable[k](blocksize)
-					freeSpots[#freeSpots+1]={}
-					freeSpots[#freeSpots][1]=rx
-					freeSpots[#freeSpots][2]=ry
-					freeSpots[#freeSpots][3]=rz	
+				local index = freeSpotList[randIndex]
+				if gridTable[index.x] and gridTable[index.x][index.y] and gridTable[index.x][index.y][index.z] then
+					
+					moveBlockAddPod(	freeSpotList[randIndex].x*blocksize,
+					freeSpotList[randIndex].y*blocksize+ orgOffSet,
+					freeSpotList[randIndex].z*blocksize)
+					
+					table.remove(Blocks,i)
+					table.remove(freeSpotList,randIndex)
 				end
 				
-				
-				
+			addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize)	
+					
 			end
 		end
 	end

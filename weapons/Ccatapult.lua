@@ -1,8 +1,8 @@
 local weaponName="ccatapult"
 local weaponDef={
-name="Catapult Weapon",
+
 weaponType=[[Cannon]],
-description="DarkMatter Singularity Catapult",
+name="DarkMatter Singularity Catapult",
 highTrajectory =1,
 
 

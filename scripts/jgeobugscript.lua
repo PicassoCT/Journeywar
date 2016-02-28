@@ -23,7 +23,7 @@ pieceTable={
 local SIG_WALK = 1	--signal for the walk animation thread
 local SIG_AIM = 2 --signal for the weapon aiming thread
 local SIG_LEG=4
-local SIG_IDLE= 8
+local SIG_STOP= 8
 local SIG_AIM2=16
 local SIG_DEFAULT=32
 
@@ -38,7 +38,6 @@ RearLeg={
 }
 
 function legs_down()
-	SetSignalMask(SIG_LEG)
 	Sleep(550)
 	Move(Turner,x_axis,0,12)
 	Move(Turner,y_axis,0,12)
@@ -203,6 +202,7 @@ function walk()
 boolWalking = false
 
 function script.StartMoving()
+	Signal(SIG_STOP)
 	boolWalking = true
 	
 end
@@ -317,7 +317,7 @@ end
 function script.AimWeapon1( heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 	--Turn(turret, y_axis, heading)
-	Signal(SIG_IDLE)
+
 	
 	Signal(SIG_AIM2)
 	SetSignalMask(SIG_AIM2)
@@ -376,7 +376,7 @@ end
 
 function script.Killed(recentDamage, _)
 	
-	Signal(SIG_IDLE)
+
 	--legs_down()
 	Turn(DeathTurner,x_axis,math.rad(-179),120)
 	Sleep(400)

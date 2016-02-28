@@ -562,6 +562,11 @@ function spawnCommander()
 						Move(center,y_axis,-300,5)
 					end
 				end
+		
+	if math.random(0,1)== 1 then
+		Sleep(6*60*10000)
+		Spring.PlaySoundFile("sounds/citadell/centpropagendspeech.ogg",0.9)
+	end
 			
 end
 

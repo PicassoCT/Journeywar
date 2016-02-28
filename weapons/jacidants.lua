@@ -1,8 +1,8 @@
 local weaponName="jacidants"
 local weaponDef={
-name="Accidic Ant Wedding",
 
-description="Hive Sweet Hive",
+
+name="Acidic Ant Wedding: Hive Sweet Hive",
 
 weaponType=[[MissileLauncher]],
 --vlaunch=1,

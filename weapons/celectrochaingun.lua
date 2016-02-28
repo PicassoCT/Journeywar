@@ -3,7 +3,7 @@ local weaponDef={
 
 name="EletrocChaingLightning",
 weaponType=[[Cannon]],
-description="Rod",
+name="Rod",
 highTrajectory =0,
 
 --Physic/flight path

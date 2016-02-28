@@ -9,7 +9,7 @@ local weaponDef = {
   -- beamlaser=1,
  -- WeaponAcceleration=0,
    accuracy           = 0,
-   guidance=1,
+   --guidance=1,
    laserflaresize = 3,--0.3
 	beamTtl=   0.15,--0.01
 	movingaccuracy=5000,
@@ -49,7 +49,7 @@ local weaponDef = {
 	 rgbColor                = [[0.27 0.27 0.9]],		
 	HardStop=1,--test It
 	Intensity=1.4,--test It
-	ScrollSeed=0.3,
+	scrollspeed=0.3,
 		customParams = {
 				dgunwarped=1,
 			},

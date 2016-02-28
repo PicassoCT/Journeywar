@@ -38,8 +38,9 @@ local screen0
 
 
 local guiPath='luaui/wdigets/'
+if _G and not G_.imageDir then
 _G.imageDir = 'luaui/images/'
-
+end
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 boolStackNotEmpty=false

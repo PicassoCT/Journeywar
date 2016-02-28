@@ -2,7 +2,7 @@ local weaponName="crabshell"
 local weaponDef={
 name="crabshell",
 weaponType=[[MissileLauncher]],
-description="HeadCrabShell",
+name="HeadCrabShell",
 
 
 
