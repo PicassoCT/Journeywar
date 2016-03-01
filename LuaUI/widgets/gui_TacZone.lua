@@ -16,11 +16,11 @@
 	LastCommandStack[#LastCommandStack+1]=Command	
 	end
 
-if not _G.imageDir  then _G.imageDir = 'luaui/images/' end
+if not WG.imageDir  then WG.imageDir = 'luaui/images/' end
 
-local azTex = {_G.imageDir .. 'taczone/action.png'}
-local rzTex = {_G.imageDir .. 'taczone/reservoire.png'}
-local tzTex = {_G.imageDir .. 'taczone/trigger.png'}
+ azTex = {WG.imageDir .. 'taczone/action.png'}
+ rzTex = {WG.imageDir .. 'taczone/reservoire.png'}
+ tzTex = {WG.imageDir .. 'taczone/trigger.png'}
 
 --Create 
 function Create_TacZones()
@@ -37,7 +37,8 @@ function Create_TacZones()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	TZButton=Chili.Button:New{
+	--TacZone Button
+	TacZoneButton=Chili.Button:New{
 			backgroundColor = {0.1,0.8,0.8,1},
 			textColor = {0.8,1,1,1}, 			
 			caption = "", 
@@ -53,7 +54,7 @@ function Create_TacZones()
 			OnClick = {function () push("DEA|TZ|") end}
 			}
 			
-			TZButtonImage = Image:New {
+			TacZoneButtonImage = Image:New {
 			width="100%";
 			height= "100%";
 			bottom = nil;
@@ -61,10 +62,10 @@ function Create_TacZones()
 			x="0%";
 			keepAspect = true,
 			file = tzTex[1];
-			parent = TZButton;			
+			parent = TacZoneButton;			
 				}
-							
-		AZButton=Chili.Button:New
+		--ActionZone Button					
+		ActionZoneButton=Chili.Button:New
 			{
 			backgroundColor = {0.1,0.8,0.8,1}, 
 			textColor = {0.8,1,1,1}, 
@@ -78,7 +79,7 @@ function Create_TacZones()
 			minHeight =48,
 			OnClick = {function () push("DEA|AZ|") end}
 			}
-		 	 AZButtonImage = Image:New {
+		 	 ActionZoneButtonImage = Image:New {
 			width="90%";
 			height= "90%";
 			bottom = nil;
@@ -86,10 +87,10 @@ function Create_TacZones()
 			x="0%";
 			keepAspect = true,
 			file = azTex[1];
-			parent = AZButton;			
+			parent = ActionZoneButton;			
 				}
-				
-			RZButton=Chili.Button:New
+			--Reservoir Zone Button	
+			ReservoirZoneButton=Chili.Button:New
 			{
 			backgroundColor = {0.1,0.8,0.8,1}, 
 			textColor = {0.8,1,1,1}, 
@@ -104,16 +105,16 @@ function Create_TacZones()
 			OnClick = {function () push("DEA|RZ|") end}
 			}
 			
-			RZButtonImage = Image:New {
+			ReservoirZoneButtonImage = Image:New {
 			width="90%";
 			height= "90%";
 			bottom = nil;
 			y="0%"; x="0%";
 			keepAspect = true,
 			file = rzTex[1];
-			parent = RZButton;			
+			parent = ReservoirZoneButton;			
 				} 
-
+		--TacZone ButtonGrid
 		button_rack = Grid:New{
 --		y=42,
 		padding = {5,3,3,5},
@@ -128,9 +129,9 @@ function Create_TacZones()
 		columns=1,
 		children = 
 		{ 
-		TZButton,
-		AZButton,
-		RZButton,
+		TacZoneButton,
+		ActionZoneButton,
+		ReservoirZoneButton,
 		},
 		
 		}

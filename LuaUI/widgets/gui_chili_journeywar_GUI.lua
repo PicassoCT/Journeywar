@@ -6,12 +6,12 @@ function widget:GetInfo()
   return {
     name      = "Journeywar GUI",
     desc      = version .. " - GUI.",
-    author    = "CarRepairer",
+    author    = "PicassoCT",
     date      = "2013-08-22",
     license   = "GNU GPL, v2 or later",
-    layer     = 1000,
+    layer     = math.huge,
 	handler   = true,
-    enabled   = false,
+    enabled   = true,
   }
 end
 
@@ -45,9 +45,9 @@ end
 -------------------------------------------------------------------------------
 boolStackNotEmpty=false
 fileName=guiPath.."gui_TacZone.lua"
-VFS.Include(fileName, VFS.RAW_FIRST)
+VFS.Include(fileName)
 fileName=guiPath.."gui_AbilityWindow.lua"
-VFS.Include(fileName, VFS.RAW_FIRST)
+VFS.Include(fileName)
 
 local boolShowUpgrade=false
 local stack_main

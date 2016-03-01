@@ -336,6 +336,7 @@ function script.Create()
 	CataUp=TablesOfPiecesGroups["CataUp"]
 	CataHead=TablesOfPiecesGroups["CataHead"]
 	DronePodTable=TablesOfPiecesGroups["DronePod"]
+	DronePodTable,_ = keyTableToTables(DronePodTable)
 	
 	for i=1,#Mag do
 		Sign=i%2
@@ -1260,12 +1261,14 @@ end
 
 
 function script.AimFromWeapon(weaponID)
-	temp=WeaponsTable[weaponID].aimpiece or DronePodTable[1]	
+	temp=WeaponsTable[weaponID].aimpiece 
+	assert(temp)
 	return temp
 end
 
 function script.QueryWeapon(weaponID)
-	temp=WeaponsTable[weaponID].emitpiece or DronePodTable[1]
+	temp=WeaponsTable[weaponID].emitpiece 
+	assert(temp)
 	return temp
 	
 end

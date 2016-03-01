@@ -1,5 +1,6 @@
 
 include "lib_UnitScript.lua"
+include "suddenDeath.lua"
 
 jgeohive=piece"jgeohive"
 naptime=80000

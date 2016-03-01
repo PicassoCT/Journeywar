@@ -1097,7 +1097,7 @@ function shieldDraw()
 						Spring.AddUnitDamage( k ,12, 1400, unitID, -1, factor*tx,factor*ty,factor*tz)
 					
 					enabled, shieldpower = Spring.GetUnitShieldState(unitID,SHIELDNUMBER)
-					Spring.Echo("Citadell: Shieldpower"..shieldpower)
+		
 					Spring.SetUnitShieldState(unitID,SHIELDNUMBER, true, shieldpower - SHIELD_COST_REFLECT_UNIT)
 					if (enabled == false or shieldpower <= 0 ) then 
 					boolShield = false 

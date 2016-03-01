@@ -1,10 +1,5 @@
 
-function widget:GetInfo()
-  return {
-    name      = "gui_AbilityWindow",  
-    layer     = 1,
-    enabled   = false,  }
-end
+
 
 
 local onOffButtonImage

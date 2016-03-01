@@ -18,13 +18,14 @@ ShieldMaxSpeed=400,
 ShieldPower=9999,
 ShieldPowerRegen =999,
 shieldpowerregenenergy=1000,
-SHIELDRADIUS=420,
-repulser =true, --true for journeys
+shieldRadius=420,
+shieldRepulser =true, --true for journeys
 ShieldStartingPower =10000,
 SmartShield = false,
 VisibleShield = true,
 VisibleShieldHitFrames =45,
 VisibleShieldRepulse=true,
+
 texture1 = [[shield3mist]],
 weaponType = [[Shield]],
 

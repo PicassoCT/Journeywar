@@ -68,8 +68,9 @@ buildoptions =
 	"builux","bbind","coverworldgate",
 	"condepot","fclvlone","cairbase",
 	"cdistrictnone","buibaicity2","buibaicity1",
-	"crailgun","sentry","bonker", "cdefusermine",
-	"chopper","comendbonker","ctransithub"
+	"crailgun","sentry","bonker",
+	"cdefusermine",	"chopper","efence",
+	"comendbonker","ctransithub"
 	},
 	
 sounds = {

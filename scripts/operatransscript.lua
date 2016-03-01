@@ -331,7 +331,7 @@ function costlyUnderAttack()
 	id,olhp, hp = 0,0,0
 	while true do
 
-		if LastDamage> 0  then
+		if LastDamage and LastDamage> 0  then
 			LastDamage=0
 			Spring.UseUnitResource(unitID,"e",50)
 			Spring.UseUnitResource(unitID,"m",5)
@@ -339,7 +339,7 @@ function costlyUnderAttack()
 		end
 		
 		--Add Reward with Battles in Sight
-		if id and oldhp > hp then
+		if id and oldhp and hp and oldhp > hp then
 			if exists(id) == true and GetUnitDistance(id,uniID) < SIGHT_DISTANCE then
 				Spring.AddUnitResource(unitID,"m",10)
 				oldhp=hp

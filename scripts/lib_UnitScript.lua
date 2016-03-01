@@ -29,7 +29,7 @@ lib_boolDebug= GG.BoolDebug or false
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
 function makeCascadingGlobalTables(FormatString,assignedValue, ...)
 	--local arg = table.pack(...)
-	if string.load(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; string.load(FormatString) return end
+	if loadstring(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; loadstring(FormatString) return end
 	--SplitByDot
 	SubTables={}
 	--split that string
@@ -43,20 +43,20 @@ function makeCascadingGlobalTables(FormatString,assignedValue, ...)
 			ExtractedTable=string.gsub(SubT,ExtracedIndex,"")
 			Terminator="."
 			if ExtractedTable then
-				if boolAvoidFutureChecks==true or not string.load(Appendix..ExtractedTable) then 
-					string.load(Appendix..ExtractedTable.."= {}")
+				if boolAvoidFutureChecks==true or not loadstring(Appendix..ExtractedTable) then 
+					loadstring(Appendix..ExtractedTable.."= {}")
 					boolAvoidFutureChecks=true
 				end
 		else ExtractedTable="" ;Terminator=""end
-			if boolAvoidFutureChecks==true or ExtracedIndex and not string.load(Appendix..ExtractedTable..ExtracedIndex) then
-				string.load(Appendix..ExtractedTable..ExtracedIndex.."={}")
+			if boolAvoidFutureChecks==true or ExtracedIndex and not loadstring(Appendix..ExtractedTable..ExtracedIndex) then
+				loadstring(Appendix..ExtractedTable..ExtracedIndex.."={}")
 			end
 			
 			Appendix=Appendix..ExtractedTable..ExtracedIndex..Terminator
 		end
 	end
-	string.load(Appendix.."="..assignedValue)
-	return string.load(Appendix.."==".. asignedValue)
+	loadstring(Appendix.."="..assignedValue)
+	return loadstring(Appendix.."==".. asignedValue)
 end
 
 -->moves Piece by a exponential Decreasing or Increasing Speed to target
@@ -670,12 +670,12 @@ function addTable(T,TableName,...)
 	for k,v in ipairs(arg) do
 		String= String.."["..k.."]"
 		if boolOneTimeNil == false then	
-			if	string.load("assert("..String.." ~= nil)") == true then
+			if	loadstring("assert("..String.." ~= nil)") == true then
 			else
 				boolOneTimeNil=true
 			end		
 		else
-			string.load(String.."={}")
+			loadstring(String.."={}")
 		end
 	end
 end
@@ -3138,12 +3138,17 @@ function vardump(value, depth, key)
 	
 	
 	
-	function keyTableToTable(T,T2,Keyfunction)
-		KeyTable={}
-		for i=1,#T do
-			KeyTable[T[i]]=Keyfunction(T[i],T2)
+	function keyTableToTables(T)
+		TableKey={}
+		TableValue={}
+		counter= 1
+		for k,v in pairs(T) do
+			TableKey[counter]=k
+			TableValue[counter]=v
+			counter = counter +1
 		end
-		return reTable
+		
+		return TableKey, TableValue
 		
 	end
 	
@@ -3160,7 +3165,7 @@ function vardump(value, depth, key)
 	function foreach(T,fooNction)
 		reTable={}
 		if type(fooNction)=="string" then
-			fooNction=string.load("function(k,v)\n"..fooNction.. "\n end")
+			fooNction=loadstring("function(k,v)\n"..fooNction.. "\n end")
 			assert(type(fooNction)=="function", "string not a function in foreach(k,v) @ toolKit.lua")
 		end
 		
@@ -3220,7 +3225,7 @@ function vardump(value, depth, key)
 		local TC=T
 		for _, f in pairs(arg) do
 			executableString="function(TC) if TC["..f.."] then TC=TC[f] return true,TC else return false,TC end end"
-			f=string.load(executableString)
+			f=loadstring(executableString)
 			TC,bool=f(TC)
 			if bool ==false then return false end
 			
@@ -3801,7 +3806,11 @@ function vardump(value, depth, key)
 						number=string.reverse(w)
 					}
 					
-					if TableByName[	NameAndNumber[i].name] then TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 else TableByName[NameAndNumber[i].name] =1 end
+					if TableByName[	NameAndNumber[i].name] then 
+						TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 
+					else 
+						TableByName[NameAndNumber[i].name] =1 
+					end
 					break
 					
 				end
@@ -3981,7 +3990,7 @@ function vardump(value, depth, key)
 		--local arg = table.pack(...)
 		if arg then
 			for k,Val in pairs(arg) do
-				if string.load("Var"..fillterConditionString.."Val")==false then return end
+				if loadstring("Var"..fillterConditionString.."Val")==false then return end
 			end
 			return true
 		else
@@ -3991,7 +4000,7 @@ function vardump(value, depth, key)
 	
 	function is(Var,fillterConditionString,...)
 		--local arg = table.pack(...)
-		f=string.load(fillterConditionString)
+		f=loadstring(fillterConditionString)
 		if type(f)=="function" then
 			for k,Val in pairs(arg) do
 				if( f(Var,Val)==true )then return true end
@@ -4000,7 +4009,7 @@ function vardump(value, depth, key)
 		else
 			
 			for k,Val in pairs(arg) do
-				if string.load("Var"..fillterConditionString.."Val")==true then return true end
+				if loadstring("Var"..fillterConditionString.."Val")==true then return true end
 			end
 			
 			return false
@@ -4707,7 +4716,7 @@ function vardump(value, depth, key)
 			[5]=function() return 0,			1,			0 end
 		}		
 			if not gridTable[ind_x] or not gridTable[ind_x][ind_y] or not gridTable[ind_x][ind_y][ind_z] then
-				addTable(gridTable,ind_x,ind_y,ind_z)
+				addTable(gridTable,"gridTable", ind_x,ind_y,ind_z)
 				gridTable[ind_x][ind_y][ind_z] = true
 			end
 	for i=1, #gridTable, 1 do

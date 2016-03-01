@@ -14,14 +14,16 @@ function gadget:GetInfo()
     enabled   = true  --  loaded by default?
   }
 end
-	
-		local C_CITADEL_DEF_ID = UnitDefNames["citadel"].id
+
+if ( gadgetHandler:IsSyncedCode()) then
+
+	local C_CITADEL_DEF_ID = UnitDefNames["citadell"].id
 	local J_BEANSTALK_DEF_ID = UnitDefNames["beanstalk"].id
 	
 
-if ( gadgetHandler:IsSyncedCode()) then
+
 	function gadget:AllowBuilderHoldFire(unitID, unitDefID, action)
-		if UnitDef == C_CITADEL_DEF_ID or UnitDef == J_BEANSTALK_DEF_ID then
+		if unitDefID == C_CITADEL_DEF_ID or unitDefID == J_BEANSTALK_DEF_ID then
 			return false
 		else	
 			return true
