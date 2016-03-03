@@ -57,7 +57,7 @@ SimpleParticles.Default = {
   emitRotSpread = 0,
   size        = 0,
   sizeSpread  = 0,
-  sizeGrowth  = 0,
+  sizeGrowth   = 0,
   colormap    = { {0, 0, 0, 0} }, --//max 12 entries
   srcBlend    = GL.ONE,
   dstBlend    = GL.ONE_MINUS_SRC_ALPHA,
@@ -311,7 +311,7 @@ function SimpleParticles:Update(n)
     self.urot = (self.urot * (self.rotairdrag^n)) + rotBoost
   end
 
-  self.usize  = self.usize + n*self.sizeGrowth
+  self.usize  = self.usize + n*self.sizeGrowth 
   self.frame  = self.frame + n
 
   self.urot2Speed = self.rot2Speed*self.frame
@@ -371,7 +371,7 @@ function SimpleParticles:CreateParticle()
   self.radius        = self.size + self.sizeSpread + self.maxSpawnRadius + 100
   self.maxSpeed      = self.speed+ abs(self.speedSpread)
   self.forceStrength = Vlength(self.force)
-  self.sphereGrowth  = self.forceStrength+self.sizeGrowth
+  self.sphereGrowth  = self.forceStrength+self.sizeGrowth 
 end
 
 function SimpleParticles:Destroy()

@@ -4,6 +4,7 @@
 return {
   ["artillery_explosion"] = {
     groundflash = {
+	class              = [[CSimpleGroundFlash]],
       air                = true,
       alwaysvisible      = true,
       circlealpha        = 0.6,
@@ -19,6 +20,7 @@ return {
         [3]  = 0.9,--0.10000000149012,
       },
     },
+	
     poof01 = {
       air                = true,
       class              = [[CSimpleParticleSystem]],
@@ -48,6 +50,7 @@ return {
         useairlos          = true,
       },
     },
+	
     pop1 = {
       air                = true,
       class              = [[heatcloud]],
@@ -66,6 +69,7 @@ return {
         texture            = [[novabg]],
       },
     },
+	
     pop2 = {
       air                = true,
       class              = [[heatcloud]],
@@ -84,6 +88,7 @@ return {
         texture            = [[flare]],
       },
     },
+	
     smokeblack = {
       air                = true,
       class              = [[smoke]],
@@ -97,7 +102,7 @@ return {
         pos                = [[r-60 r60, 24, r-60 r60]],
         size               = 50,
         sizeexpansion      = 0.6,
-        sizegrowth         = 15,
+       -- sizegrowth         = 15,
         speed              = [[r-4.0 r4.0, -1.5 r-1.0, r-4.0 r4.0]],
         startsize          = 10,
       },
@@ -115,7 +120,7 @@ return {
         pos                = [[r-60 r60, 24, r-60 r60]],
         size               = 50,
         sizeexpansion      = 0.6,
-        sizegrowth         = 15,
+    --    sizegrowth         = 15,
         speed              = [[r-3 r3, 1 r2.3, r-3 r3]],
         startsize          = 10,
       },

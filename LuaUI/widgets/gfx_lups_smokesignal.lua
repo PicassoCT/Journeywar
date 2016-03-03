@@ -48,7 +48,7 @@ local smokeFX = {
     rotSpread    = 360,	
 	size = 30,
     sizeSpread   = 5,
-    sizeGrowth   = 0.9,
+    sizeGrowth    = 0.9,
     emitVector   = {0,1,0},
     emitRotSpread = 60,
 	

@@ -34,7 +34,7 @@ ShieldSphereParticle.Default = {
   life       = 0,
 
   size       = 0,
-  sizeGrowth = 0,
+  sizeGrowth  = 0,
 
   margin     = 1,
 
@@ -160,7 +160,7 @@ end
 function ShieldSphereParticle:Update(n)
   if (self.life<1) then
     self.life     = self.life + n*self.life_incr
-    self.size     = self.size + n*self.sizeGrowth
+    self.size     = self.size + n*self.sizeGrowth 
     self.color1 = {GetColor(self.colormap1,self.life)}
     self.color2 = {GetColor(self.colormap2,self.life)}
   end

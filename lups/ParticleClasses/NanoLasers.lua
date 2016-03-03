@@ -296,7 +296,7 @@ function NanoLasers:CreateParticle()
         life         = 31,
         size         = self.count*0.1,
         sizeSpread   = 1,
-        sizeGrowth   = 0.1,
+        sizeGrowth    = 0.1,
         colormap     = { {r*2,g*2,b*2,0.01},{r*2,g*2,b*2,0.01},{r*2,g*2,b*2,0.01} },
         texture      = 'bitmaps/GPL/groundflash.tga',
         count        = 2,

@@ -80,6 +80,7 @@ return {
       },
     },
     groundflash = {
+	  class              = [[CSimpleGroundFlash]],
       air                = true,
       alwaysvisible      = true,
       circlealpha        = 0.6,
@@ -96,6 +97,7 @@ return {
       },
     },
     smoke = {
+	  class              = [[CSimpleParticleSystem]],
       air                = true,
       count              = 8,
       ground             = true,

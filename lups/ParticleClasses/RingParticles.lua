@@ -49,7 +49,7 @@ RingParticles.Default = {
   emitRotSpread = 0,
   size       = 0,
   sizeSpread = 0,
-  sizeGrowth = 0,
+  sizeGrowth  = 0,
   colormap   = { {0, 0, 0, 0} },
   srcBlend   = GL.ONE,
   dstBlend   = GL.ONE_MINUS_SRC_ALPHA,
@@ -98,7 +98,7 @@ function RingParticles:UpdatePartList(partList,n)
 
   partList.radius   = partList.radius   + n*partList.speed
   partList.altitude = partList.altitude + n*partList.vspeed
-  partList.size     = partList.size     + n*self.sizeGrowth
+  partList.size     = partList.size     + n*self.sizeGrowth 
   partList.life     = partList.life     + n*partList.life_incr
   local r,g,b,a     = GetColor(self.colormap,partList.life)
   partList.color    = {r,g,b,a}

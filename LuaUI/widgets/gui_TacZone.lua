@@ -1,29 +1,38 @@
+
+TacZone = {
+  classname= "taczone",
+  caption  = 'button', 
+  LastCommandStack={},
+  boolStackNotEmpty = false
+}
+
+local this = TacZone
+local inherited = this.inherited
 --action of the GUI
-	LastCommandStack={}
-	function pop(xCoords,zCoords)
-		if #LastCommandStack> 0 then
-		t=LastCommandStack[#LastCommandStack]
-		table.remove(LastCommandStack,#LastCommandStack)
-			if table.getn(LastCommandStack) == 0 then boolStackNotEmpty=false end
+
+	function TacZone: pop(xCoords,zCoords)
+		if #self.LastCommandStack> 0 then
+		t=self.LastCommandStack[#self.LastCommandStack]
+		table.remove(self.LastCommandStack,#self.LastCommandStack)
+			if table.getn(self.LastCommandStack) == 0 then self.boolStackNotEmpty=false end
 		--Get a ScreenRay and Attach the coords
 		Spring.SendLuaRulesMsg(t..xCoords.."|"..zCoords)
 		end
 	end
 
 
-	function push(Command)
-	boolStackNotEmpty=true
-	LastCommandStack[#LastCommandStack+1]=Command	
+	function TacZone: push(Command)
+	self.boolStackNotEmpty=true
+	self.LastCommandStack[#self.LastCommandStack+1]=Command	
 	end
 
-if not WG.imageDir  then WG.imageDir = 'luaui/images/' end
+
+--Create 
+function TacZone: Create_TacZoneWindow()
 
  azTex = {WG.imageDir .. 'taczone/action.png'}
  rzTex = {WG.imageDir .. 'taczone/reservoire.png'}
  tzTex = {WG.imageDir .. 'taczone/trigger.png'}
-
---Create 
-function Create_TacZones()
 
 	Chili = WG.Chili
 	Button = Chili.Button

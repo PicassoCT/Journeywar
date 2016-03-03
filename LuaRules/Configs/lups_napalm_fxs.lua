@@ -26,7 +26,7 @@ local napalm = {
 
     size            = 40,
     sizeSpread      = 10,
-    sizeGrowth      = 0.15,
+    sizeGrowth       = 0.15,
     sizeExp         = 2.5,
 
     layer           = 1,
@@ -55,7 +55,7 @@ local heat = {
 
     size            = 100,
     sizeSpread      = 40,
-    sizeGrowth      = 0.3,
+    sizeGrowth       = 0.3,
     sizeExp         = 2.5,
 
     strength      = 0.75,
@@ -71,7 +71,7 @@ local heat = {
 	lifeSpread = 300,
 	speed           = 0.025,
 	speedSpread     = 0.01,
-	sizeGrowth		= 0.06,
+	sizeGrowth 		= 0.06,
   },
 }
 

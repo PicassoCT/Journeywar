@@ -33,7 +33,7 @@ SphereParticle.Default = {
   life       = 0,
 
   size       = 0,
-  sizeGrowth = 0,
+  sizeGrowth  = 0,
   colormap   = { {0, 0, 0, 0} },
 
   texture    = 'bitmaps/GPL/Lups/sphere.png',
@@ -119,7 +119,7 @@ end
 function SphereParticle:Update(n)
   if (self.life<1) then
     self.life     = self.life + n*self.life_incr
-    self.size     = self.size + n*self.sizeGrowth
+    self.size     = self.size + n*self.sizeGrowth 
     self.color    = {GetColor(self.colormap,self.life)}
   end
 end

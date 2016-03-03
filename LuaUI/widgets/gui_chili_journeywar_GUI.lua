@@ -1,11 +1,12 @@
 -------------------------------------------------------------------------------
 
-local version = "v0.002"
 
 function widget:GetInfo()
+local version = "v0.002"
+
   return {
     name      = "Journeywar GUI",
-    desc      = version .. " - GUI.",
+    desc      = version .. " - JourneyWar GUI Cortex",
     author    = "PicassoCT",
     date      = "2013-08-22",
     license   = "GNU GPL, v2 or later",
@@ -35,20 +36,25 @@ local screen0
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 
+local jwGui ={}
+
+local includes = {
+  "gui_TacZone.lua",
+  "gui_AbilityWindow.lua"
+}
 
 
-local guiPath='luaui/wdigets/'
-if _G and not G_.imageDir then
-_G.imageDir = 'luaui/images/'
+for _, file in ipairs(includes) do
+  VFS.Include("luaui/widgets/" .. file, jwGui, VFS.RAW_FIRST)
+end
+
+
+if jwGui and not jwGui.imageDir then
+jwGui.imageDir = 'luaui/images/'
 end
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 boolStackNotEmpty=false
-fileName=guiPath.."gui_TacZone.lua"
-VFS.Include(fileName)
-fileName=guiPath.."gui_AbilityWindow.lua"
-VFS.Include(fileName)
-
 local boolShowUpgrade=false
 local stack_main
 local echo = Spring.Echo
@@ -65,7 +71,7 @@ function widget:MousePress(x,y,button)
 	if button== 1 and boolStackNotEmpty ==true then
 	_,World=Spring.TraceScreenRay(x,y,true)
 	if World then
-	pop(World[1],World[3])
+		pop(World[1],World[3])
 	end 
 	end	
 end	
@@ -91,17 +97,20 @@ function widget:GameFrame(f)
 	end
 end
 
-
+--Loads the Gui Elements
 function widget:Initialize()
 	if (not WG.Chili) then
 		widgetHandler:RemoveWidget(widget)
+		Spring.Echo("JW: Gui Initialize Shutdown")
 		return
 	end
-	
+	local chili = WG.Chili
 	--Element Constructors 
-	Create_TacZones()
-	Create_OnOffButton()
-	Create_SpecialAbilityButton()	
+	tacZoneWindow = jwGui.TacZone
+	tacZoneWindow.Create_TacZoneWindow(chili)
+	
+	jwGui.Create_SpecialAbilityButton()	
+	Create_OnOffButton()	
 	Create_ExpBar()
 	Create_AmmoBar()
 	Create_UpgradeGrid()

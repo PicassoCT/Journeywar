@@ -60,7 +60,7 @@ JitterParticles2.Default = {
 
   size           = 0,
   sizeSpread     = 0,
-  sizeGrowth     = 0,
+  sizeGrowth      = 0,
   sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
 
   texture        = 'bitmaps/GPL/Lups/mynoise.png',
@@ -149,7 +149,7 @@ function JitterParticles2:CreateParticleAttributes(up, right, forward, partpos,n
   delay     = rand() * self.delaySpread
 
   sizeStart = self.size + rand() * self.sizeSpread
-  sizeEnd   = sizeStart + self.sizeGrowth * life
+  sizeEnd   = sizeStart + self.sizeGrowth  * life
 
   if (partpos) then
     local part = { speed=speed, velocity=Vlength(speed), life=life, delay=delay, i=n }
@@ -378,7 +378,7 @@ function JitterParticles2:CreateParticle()
   self.radius        = self.size + self.sizeSpread + self.maxSpawnRadius + 100
   self.maxSpeed      = self.speed + abs(self.speedSpread)
   self.forceStrength = Vlength(self.force)
-  self.sphereGrowth  = self.forceStrength + self.sizeGrowth + self.maxSpeed
+  self.sphereGrowth  = self.forceStrength + self.sizeGrowth  + self.maxSpeed
 end
 
 function JitterParticles2:Destroy()

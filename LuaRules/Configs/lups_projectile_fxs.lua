@@ -19,7 +19,7 @@ local fx = {
       speedExp     = 1.5,
 
       size         = 15,
-      sizeGrowth   = 5.0,
+      sizeGrowth    = 5.0,
 
       scale        = 1.5,
       strength     = 1.0,
@@ -52,7 +52,7 @@ local fx = {
       --speedExp     = 1.5,
 
       size         = 2,
-      sizeGrowth   = 4.0,
+      sizeGrowth    = 4.0,
       sizeExp      = 0.7,
 
       --texture     = "bitmaps/smoke/smoke06.tga",
@@ -81,7 +81,7 @@ local fx = {
       --speedSpread  = 0,
 
       size         = 2,
-      sizeGrowth   = 4.0,
+      sizeGrowth    = 4.0,
       sizeExp      = 0.65,
 
       --texture     = "bitmaps/smoke/smoke06.tga",

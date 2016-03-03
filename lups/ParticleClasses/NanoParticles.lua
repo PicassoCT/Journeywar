@@ -58,7 +58,7 @@ NanoParticles.Default = {
   delaySpread = 30,
   size        = 3,
   sizeSpread  = 1,
-  sizeGrowth  = 0.05,
+  sizeGrowth   = 0.05,
   rotSpeed    = 0.15,
   particles   = 1,
   texture     = 'bitmaps/PD/nano.png',
@@ -200,7 +200,7 @@ function NanoParticles:Draw()
   glMultiTexCoord(1, endPosNew[1], endPosNew[2], endPosNew[3], 1)
   glMultiTexCoord(2, endPosOld[1], endPosOld[2], endPosOld[3], 1)
 
-  glMultiTexCoord(6,self.size,self.sizeSpread,self.sizeGrowth,self.targetradius)
+  glMultiTexCoord(6,self.size,self.sizeSpread,self.sizeGrowth ,self.targetradius)
   glMultiTexCoord(7,self.delaySpread,1/self.life)
 
   local color = self.color
@@ -231,7 +231,7 @@ function NanoParticles:Initialize()
 
       #define minsize     gl_MultiTexCoord6.x
       #define sizeSpread  gl_MultiTexCoord6.y
-      #define sizeGrowth  gl_MultiTexCoord6.z
+      #define sizeGrowth   gl_MultiTexCoord6.z
       #define radius      gl_MultiTexCoord6.w
 
       #define delaySpread gl_MultiTexCoord7.x
@@ -253,7 +253,7 @@ function NanoParticles:Initialize()
       {
          float lframe = frame - (delay * delaySpread);
          float lifeN  = lframe * invspeed;
-         float psize  = (lframe * sizeGrowth) + minsize + (size * sizeSpread);
+         float psize  = (lframe * sizeGrowth ) + minsize + (size * sizeSpread);
 
          if (lifeN<0.0 || lifeN>1.0 || psize<=0.0) {
            // paste dead particles offscreen, this way we don't dump the fragment shader with it

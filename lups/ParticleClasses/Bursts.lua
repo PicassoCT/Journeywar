@@ -43,7 +43,7 @@ Bursts.Default = {
 
   size       = 0,
   sizeSpread = 0,
-  sizeGrowth = 0,
+  sizeGrowth  = 0,
   colormap   = { {0, 0, 0, 0} },
 
   directional= false, -- This option only looks good in combination with a sphere. So you can do sunburst effects with it.
@@ -88,7 +88,7 @@ function Bursts:UpdatePartList(partList,n)
 
   partList.rotspeed = partList.rotspeed*(self.rotairdrag^n)
   partList.rotArc   = partList.rotArc*(self.rotairdrag^n) + rotBoost
-  partList.size     = partList.size  + n*self.sizeGrowth
+  partList.size     = partList.size  + n*self.sizeGrowth 
   partList.life     = partList.life  + n*partList.life_incr
   local r,g,b,a     = GetColor(self.colormap,partList.life)
   partList.color    = {r,g,b,a}

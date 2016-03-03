@@ -57,7 +57,7 @@ SimpleParticles2.Default = {
   emitRotSpread  = 0,
   size           = 0,
   sizeSpread     = 0,
-  sizeGrowth     = 0,
+  sizeGrowth      = 0,
   sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
   colormap       = { {0, 0, 0, 0} }, --//max 16 entries
   texture        = '',
@@ -139,7 +139,7 @@ function SimpleParticles2:CreateParticleAttributes(up, right, forward, partpos,n
   delay     = rand() * self.delaySpread
 
   sizeStart = self.size + rand() * self.sizeSpread
-  sizeEnd   = sizeStart + self.sizeGrowth * life
+  sizeEnd   = sizeStart + self.sizeGrowth  * life
   rotStart  = rand() * self.rotSpread * degreeToPI
   rotEnd    = (self.rotSpeed + rand() * self.rotSpeedSpread) * life * degreeToPI
 
@@ -372,7 +372,7 @@ function SimpleParticles2:CreateParticle()
   self.radius        = self.size + self.sizeSpread + self.maxSpawnRadius + 100
   self.maxSpeed      = self.speed + abs(self.speedSpread)
   self.forceStrength = Vlength(self.force)
-  self.sphereGrowth  = self.forceStrength + self.sizeGrowth + self.maxSpeed
+  self.sphereGrowth  = self.forceStrength + self.sizeGrowth  + self.maxSpeed
 end
 
 function SimpleParticles2:Destroy()

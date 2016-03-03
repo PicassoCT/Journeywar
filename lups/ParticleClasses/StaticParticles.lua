@@ -46,7 +46,7 @@ StaticParticles.Default = {
   rot2Speed   = 0, --// global effect rotation
   size        = 0,
   sizeSpread  = 0,
-  sizeGrowth  = 0,
+  sizeGrowth   = 0,
   colormap    = { {0, 0, 0, 0} }, --//max 12 entries
   srcBlend    = GL.ONE,
   dstBlend    = GL.ONE_MINUS_SRC_ALPHA,
@@ -246,7 +246,7 @@ end
 
 function StaticParticles:Update(n)
   self.frame  = self.frame + n
-  self.usize  = self.usize + n*self.sizeGrowth
+  self.usize  = self.usize + n*self.sizeGrowth 
 end
 
 -- used if repeatEffect=true;
@@ -286,7 +286,7 @@ function StaticParticles:CreateParticle()
 
   --// visibility check vars
   self.radius        = self.size + self.sizeSpread + maxSpawnRadius + 100
-  self.sphereGrowth  = self.sizeGrowth
+  self.sphereGrowth  = self.sizeGrowth 
 end
 
 function StaticParticles:Destroy()

@@ -45,7 +45,7 @@ JitterParticles.Default = {
   emitRotSpread = 0,
   size        = 0,
   sizeSpread  = 0,
-  sizeGrowth  = 0,
+  sizeGrowth   = 0,
   texture     = 'bitmaps/GPL/Lups/mynoise.png',
   count       = 1,
   jitterStrength = 1,
@@ -266,7 +266,7 @@ function JitterParticles:Update(n)
     end
   end
 
-  self.usize  = self.usize + n*self.sizeGrowth
+  self.usize  = self.usize + n*self.sizeGrowth 
   local force,frame = self.force,self.frame
   self.uforce[1],self.uforce[2],self.uforce[3] = force[1]*frame,force[2]*frame,force[3]*frame
 end
@@ -316,7 +316,7 @@ function JitterParticles:CreateParticle()
   self.radius        = self.size + self.sizeSpread + self.maxSpawnRadius + 100
   self.maxSpeed      = self.speed+ abs(self.speedSpread)
   self.forceStrength = Vlength(self.force)
-  self.sphereGrowth  = self.forceStrength+self.sizeGrowth
+  self.sphereGrowth  = self.forceStrength+self.sizeGrowth 
 end
 
 function JitterParticles:Destroy()

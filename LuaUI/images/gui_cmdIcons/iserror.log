@@ -1,0 +1,32 @@
+		Initializing .... 
+
+Total memory allocated = 5452148
+		Begin Printing Seed information
+
+Seed point: 18 232 	Path 0 0 	User path -1 -1 -1
+
+---------------------
+
+Print path: 
+
+
+
+[18 232] 
+
+		Begin Printing Seed information
+
+Seed point: 18 232 	Path 0 23 	User path 0 43 0
+
+Seed point: 3 222 	Path 24 24 	User path 62 62 62
+
+---------------------
+
+Print path: 
+
+
+
+[18 232] [17 232] [17 231] [16 231] [16 230] [15 230] [14 230] 
+[13 230] [12 230] [11 230] [10 230] [9 230] [8 230] [7 230] 
+[6 230] [6 229] [5 229] [5 228] [4 227] [3 226] [3 225] 
+[3 224] [3 223] [3 222] [3 222] 
+
