@@ -338,6 +338,7 @@ end
 			for i=1,table.getn(CarTable),1 do
 				x,y,z=spGetPosition(CarTable[i].unitid)
 				grabUnitsInReach={}
+				if x then
 				grabUnitsInReach=Spring.GetUnitsInCylinder(x,y,80)
 				if grabUnitsInReach then
 					for t=1,table.getn(grabUnitsInReach),1 do
@@ -355,6 +356,7 @@ end
 					if boolbreakOut==true then break end
 					end
 					
+				end
 				end
 				end
 

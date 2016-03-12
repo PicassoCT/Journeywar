@@ -410,6 +410,14 @@ function convPointsToDeg(ox,oz,bx,bz)
 	end
 end
 
+function whileMovingDo(piece,axis, fuoonction)
+
+
+
+
+end
+
+
 -->Turn a piece towards a random direction
 function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,LIMLOWZ)
 	if not LIMUPX then
@@ -423,6 +431,79 @@ function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,
 	end
 end
 
+	
+	-->Helperfunction of recursiveAddTable
+	function buildBone(parent ,piecetable)
+	
+		PieceInfo =Spring.GetUnitPieceInfo(unitID,parent)
+		children= tableToKeyTable(PieceInfo.children)
+		
+	SubBoneTables={}
+	if children then
+		for key, piecenumber in pairs(piecetable) do			
+			
+			if children[key] then
+			SubSubBoneTable={}
+			SubSubBoneTable=buildBone(key, piecetable)
+			SubBoneTables[key]=SubSubBoneTable
+			end
+		
+		end
+	end
+	
+	return SubBoneTables
+	end
+	
+	function getElementsNStepsDown(Steps, Value)
+	if Steps == 0 then return Value end
+	
+		if Steps > 0 and type(Value) == "table" then
+		Tables={}
+			for i=1, #Value do
+			foundIt= getElementsNStepsDown(Steps-1,Value[i])
+				if foundIt then
+					table.insert(Tables,foundIt)	
+				end
+			end
+		return Tables
+		end	
+	end
+	
+	function getAllBonesOfDepth(N, BoneTable, CenterPiece)
+		for bone,tables in pairs(BoneTable) do
+		
+		
+		end
+	end
+	
+	
+	--Hashmap of pieces --> with accumulated Weight in every Node
+	--> Every Node also holds a bendLimits which defaults to ux=-45 x=45, uy=-180 y=180,uz=-45 z=45
+	function buildSkeleton(rootpiecename,keyPieceNrtable)
+	
+	Bones={}
+	SubPieces={}
+	for key, piecenumber in pairs(keyPieceNrtable) do
+		--not rootpiece and 		
+		PieceInfo =Spring.GetUnitPieceInfo(unitID,key)
+		parent= PieceInfo.parent	
+	
+		if parent and parent == rootpiecename then
+			SubPieces[key] = {}
+		end
+	end
+	
+	Bones[rootpiecename] = SubPieces
+	
+	for key,v in pairs(Bones[rootpiecename]) do
+	subBoneTables= buildBone(key, keyPieceNrtable)	
+		if subBoneTables then
+		table.insert(Bones[rootpiecename][key],	subBoneTables)
+		end	
+	end	
+	
+	end
+	
 
 -->Reset a Piece at speed
 function resetPiece(piecename,speed,boolWaitForIT)
@@ -1619,6 +1700,7 @@ for i=1,intNrOfCases,1 do
 	intCases[i][3]=false
 end
 -----------------------------------------
+-->turns a Piece syncInTime working with a Table of Move Commands
 function turnSyncInTimeTable(Table, time,x_deg,y_deg,z_deg)
 	
 	for piece,v in pairs(Table) do
@@ -1628,7 +1710,7 @@ function turnSyncInTimeTable(Table, time,x_deg,y_deg,z_deg)
 end
 
 
-
+-->Turns a Piece on all given axis, snychronously
 function turnSyncInSpeed(piecename,x,y,z,speed,x_deg,y_deg,z_deg)
 	if not piecename then return end
 	if speed ==0 then
@@ -1692,25 +1774,29 @@ function makePieceTable(unitID)
 end
 
 -->generates a Pieces List 
-function generatepiecesTableAndArrayCode(unitID)
-	Spring.Echo("")
-	Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
-	Spring.Echo("--PIECES")
-	Spring.Echo("piecesTable={}")
-	piecesTable={}
-	piecesTable=Spring.GetUnitPieceList(unitID)
-	--Spring.Echo("local piecesTable={}")
-	if piecesTable ~= nil then
-		for i=1,#piecesTable,1 do
-			workingString=piecesTable[i]
-			Spring.Echo(""..piecesTable[i].." = piece(\""..piecesTable[i].."\")\n piecesTable[#piecesTable+1]= "..piecesTable[i])
+function generatepiecesTableAndArrayCode(unitID, boolLoud)
+	bLoud = boolLoud or false
+	
+	if bLoud == true then  
+		Spring.Echo("")
+		Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
+		Spring.Echo("piecesTable={}")
+		piecesTable={}
+		piecesTable=Spring.GetUnitPieceList(unitID)
+		--Spring.Echo("local piecesTable={}")
+		if piecesTable ~= nil then
+			for i=1,#piecesTable,1 do
+				workingString=piecesTable[i]
+				Spring.Echo(""..piecesTable[i].." = piece(\""..piecesTable[i].."\")\n piecesTable[#piecesTable+1]= "..piecesTable[i])			
+			end
+			
 			
 		end
 		
-		
+		Spring.Echo("PIECESLIST::END |>-----------------------------")
 	end
 	
-	Spring.Echo("PIECESLIST::END |>-----------------------------")
+
 	return makePieceTable(unitID)
 end
 
@@ -3016,11 +3102,16 @@ function vardump(value, depth, key)
 	end
 	
 	--> Turns a Pieces table according to a function provided
-	function waveATable(Table, axis, func, signum, speed,funcscale,totalscale, boolContra,offset)
+	function waveATable(Table, axis, foonction, signum, speed,funcscale,totalscale, boolContra,offset)
+	
+	if type(Table) ~= "table" then return end
+	
+	
+		func = foonction or function(x) return x end
 		boolCounter=boolContra or false
 		offset=offset or 0
 		scalar= signum* (totalscale)
-		nr=#Table
+		nr=table.getn(Table)
 		pscale=funcscale/nr
 		total=0
 		
@@ -3099,6 +3190,8 @@ function vardump(value, depth, key)
 	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllInCircle(unitID,x,z,Range,teamid)
+	if not unitID or not z then return {} end
+	
 		T={}
 		if teamid then
 			T=Spring.GetUnitsInCylinder(x,z,Range,teamid)
@@ -3114,6 +3207,7 @@ function vardump(value, depth, key)
 	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getInCircle(unitID,Range,teamid)
+	
 		T={}
 		x,_,z=Spring.GetUnitBasePosition(unitID)
 		if teamid then
@@ -3136,16 +3230,23 @@ function vardump(value, depth, key)
 		return reTable
 	end
 	
-	
+	function tableToKeyTable(T)
+	KT={}
+	for i=1, #T do
+	KT[T[i]] =T[i]
+	end
+	return KT
+	end
 	
 	function keyTableToTables(T)
+			counter= 1
 		TableKey={}
 		TableValue={}
 		counter= 1
 		for k,v in pairs(T) do
 			TableKey[counter]=k
-			TableValue[counter]=v
-			counter = counter +1
+			TableValue[counter+1]=v
+			counter = counter +2
 		end
 		
 		return TableKey, TableValue

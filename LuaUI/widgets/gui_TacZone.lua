@@ -1,38 +1,54 @@
 
-TacZone = {
-  classname= "taczone",
-  caption  = 'button', 
-  LastCommandStack={},
-  boolStackNotEmpty = false
-}
+function widget:GetInfo()
+	local version = "v0.002"
+	
+	return {
+		name = "gui_tacZone",
+		desc = version .. " - JourneyWar GUI Cortex",
+		author = "PicassoCT",
+		date = "2013-08-22",
+		license = "GNU GPL, v2 or later",
+		layer = math.huge,
+		enabled = true -- loaded by default?
+	}
+end
 
-local this = TacZone
-local inherited = this.inherited
+
+local Chili
+local Button
+local Label
+local Window
+local Panel
+local Image
+local Progressbar
+local screen0
+
+imageDir = "luaui/images/"
+classname= "taczone"
+caption = 'button'
+local LastCommandStack={}
+
 --action of the GUI
 
-	function TacZone: pop(xCoords,zCoords)
-		if #self.LastCommandStack> 0 then
-		t=self.LastCommandStack[#self.LastCommandStack]
-		table.remove(self.LastCommandStack,#self.LastCommandStack)
-			if table.getn(self.LastCommandStack) == 0 then self.boolStackNotEmpty=false end
-		--Get a ScreenRay and Attach the coords
-		Spring.SendLuaRulesMsg(t..xCoords.."|"..zCoords)
-		end
-	end
+boolStackNotEmpty=false
+local stack_main
+local echo = Spring.Echo
 
+-------------------------------------------------------------------------------
 
-	function TacZone: push(Command)
-	self.boolStackNotEmpty=true
-	self.LastCommandStack[#self.LastCommandStack+1]=Command	
-	end
+tacZone_window_height = 182
+tacZone_window_width = 72
+tacZone_window_positionX= "16.25%"
+tacZone_window_positionY= "83%"
 
+-------------------------------------------------------------------------------
 
 --Create 
-function TacZone: Create_TacZoneWindow()
-
- azTex = {WG.imageDir .. 'taczone/action.png'}
- rzTex = {WG.imageDir .. 'taczone/reservoire.png'}
- tzTex = {WG.imageDir .. 'taczone/trigger.png'}
+function widget: Initialize()
+	if (not WG.Chili) then
+		widgetHandler:RemoveWidget(widget)
+		return
+	end
 
 	Chili = WG.Chili
 	Button = Chili.Button
@@ -46,86 +62,12 @@ function TacZone: Create_TacZoneWindow()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	--TacZone Button
-	TacZoneButton=Chili.Button:New{
-			backgroundColor = {0.1,0.8,0.8,1},
-			textColor = {0.8,1,1,1}, 			
-			caption = "", 
-
-			isDisabled=false,
-			parent=button_rack,
-			width="60%",
-			height= "33%",
-			x = 29,
-			y = 35,
-			minWidth =48,
-			minHeight =48,
-			OnClick = {function () push("DEA|TZ|") end}
-			}
-			
-			TacZoneButtonImage = Image:New {
-			width="100%";
-			height= "100%";
-			bottom = nil;
-			y="0%"; 
-			x="0%";
-			keepAspect = true,
-			file = tzTex[1];
-			parent = TacZoneButton;			
-				}
-		--ActionZone Button					
-		ActionZoneButton=Chili.Button:New
-			{
-			backgroundColor = {0.1,0.8,0.8,1}, 
-			textColor = {0.8,1,1,1}, 
-			caption = "", 
-			parent=button_rack,
-			width="50%",
-			height= "33%",
-			x = 91,
-			y = 35,
-			minWidth =48,
-			minHeight =48,
-			OnClick = {function () push("DEA|AZ|") end}
-			}
-		 	 ActionZoneButtonImage = Image:New {
-			width="90%";
-			height= "90%";
-			bottom = nil;
-			y="0%"; 
-			x="0%";
-			keepAspect = true,
-			file = azTex[1];
-			parent = ActionZoneButton;			
-				}
-			--Reservoir Zone Button	
-			ReservoirZoneButton=Chili.Button:New
-			{
-			backgroundColor = {0.1,0.8,0.8,1}, 
-			textColor = {0.8,1,1,1}, 
-			caption = "",
-			parent=button_rack,
-			width="50%",
-			height= "33%",
-			x = 145,
-			y = 35,
-			minWidth =48,
-			minHeight =48,
-			OnClick = {function () push("DEA|RZ|") end}
-			}
-			
-			ReservoirZoneButtonImage = Image:New {
-			width="90%";
-			height= "90%";
-			bottom = nil;
-			y="0%"; x="0%";
-			keepAspect = true,
-			file = rzTex[1];
-			parent = ReservoirZoneButton;			
-				} 
-		--TacZone ButtonGrid
-		button_rack = Grid:New{
---		y=42,
+	azTex = {imageDir .. 'taczone/action.png'}
+	rzTex = {imageDir .. 'taczone/reservoire.png'}
+	tzTex = {imageDir .. 'taczone/trigger.png'}
+	--TacZone ButtonGrid
+	button_rack = Grid:New{
+		--		y=42,
 		padding = {5,3,3,5},
 		itemPadding = {0, 0, 0, 0},
 		itemMargin = {0, 0, 0, 0},
@@ -138,12 +80,92 @@ function TacZone: Create_TacZoneWindow()
 		columns=1,
 		children = 
 		{ 
-		TacZoneButton,
-		ActionZoneButton,
-		ReservoirZoneButton,
+			TacZoneButton,
+			ActionZoneButton,
+			ReservoirZoneButton,
 		},
 		
-		}
+	}
+	
+	--TacZone Button
+	TacZoneButton=Chili.Button:New{
+		backgroundColor = {0.1,0.8,0.8,1},
+		textColor = {0.8,1,1,1}, 			
+		caption = "", 
+		
+		isDisabled=false,
+		parent=button_rack,
+		width="60%",
+		height= "33%",
+		x = 29,
+		y = 35,
+		minWidth =48,
+		minHeight =48,
+		OnClick = {function () push("DEA|TZ|") end}
+	}
+	
+	TacZoneButtonImage = Image:New {
+		width="100%",
+		height= "100%",
+		bottom = nil,
+		y="0%", 
+		x="0%",
+		keepAspect = true,
+		file = tzTex[1],
+		parent = TacZoneButton,			
+	}
+	--ActionZone Button					
+	ActionZoneButton=Chili.Button:New
+	{
+		backgroundColor = {0.1,0.8,0.8,1}, 
+		textColor = {0.8,1,1,1}, 
+		caption = "", 
+		parent=button_rack,
+		width="50%",
+		height= "33%",
+		x = 91,
+		y = 35,
+		minWidth =48,
+		minHeight =48,
+		OnClick = {function () push("DEA|AZ|") end}
+	}
+	ActionZoneButtonImage = Image:New {
+		width="90%",
+		height= "90%",
+		bottom = nil,
+		y="0%", 
+		x="0%",
+		keepAspect = true,
+		file = azTex[1],
+		parent = ActionZoneButton,			
+	}
+	--Reservoir Zone Button	
+	ReservoirZoneButton=Chili.Button:New
+	{
+		backgroundColor = {0.1,0.8,0.8,1}, 
+		textColor = {0.8,1,1,1}, 
+		caption = "",
+		parent=button_rack,
+		width="50%",
+		height= "33%",
+		x = 145,
+		y = 35,
+		minWidth =48,
+		minHeight =48,
+		OnClick = {function () push("DEA|RZ|") end}
+	}
+	
+	ReservoirZoneButtonImage = Image:New {
+		width="90%",
+		height= "90%",
+		bottom = nil,
+		y="0%",
+		x="0%",
+		keepAspect = true,
+		file = rzTex[1],
+		parent = ReservoirZoneButton,			
+	} 
+	
 	
 	TacZone_main = Window:New{
 		padding = {5,5,5,5,},
@@ -152,10 +174,10 @@ function TacZone: Create_TacZoneWindow()
 		--textColor = {0.45,0.8,0.98,0.9},
 		textColor = {0.6,0.8,0.91,0.9},
 		name = "TacZonePanel",
-		right = '-10%', 
-		y = "10%",
-		width  = 72,
-		height =182,
+		x = tacZone_window_positionX,
+		y = tacZone_window_positionY,
+		width = tacZone_window_width,
+		height =tacZone_window_height,
 		parent = Chili.Screen0,
 		draggable = false,
 		tweakDraggable = true,
@@ -164,14 +186,41 @@ function TacZone: Create_TacZoneWindow()
 		--clientHeight = 96,
 		resizable = false,
 		dragUseGrip = false,
-		minWidth = 72,
-		minHeight = 182,
-		color = {0.1,0.1,0.15,1},
+		minWidth = tacZone_window_width,
+		minHeight = tacZone_window_height,
+		color = {0.1,0.1,0.15,1},		
 		backgroundColor = {0.35,0.61,0.8,0.8},
 		children = 
 		{ 
-		button_rack,
+			button_rack,
 		}
 	}
+	
+	
+end
 
+-- callins
+function widget:MousePress(x,y,button)	
+	if button== 1 and boolStackNotEmpty ==true then
+		_,World=Spring.TraceScreenRay(x,y,true)
+		if World then
+			pop(World[1],World[3])
+		end 
+	end	
 end	
+
+function pop(xCoords,zCoords)
+	if #LastCommandStack> 0 then
+		t= LastCommandStack[#LastCommandStack]
+		table.remove( LastCommandStack,#LastCommandStack)
+		if table.getn( LastCommandStack) == 0 then  boolStackNotEmpty=false end
+		--Get a ScreenRay and Attach the coords
+		Spring.SendLuaRulesMsg(t..xCoords.."|"..zCoords)
+	end
+end
+
+
+function push(Command)
+	 boolStackNotEmpty=true
+	 LastCommandStack[# LastCommandStack+1]=Command	
+end

@@ -84,6 +84,7 @@ x,y,z=Spring.GetUnitPosition(unitid)
 	--Does Building allready exist--
 	UnitsAtSpot=Spring.GetUnitsInCylinder(x,z,125)
 	Building={}
+	
 	for i=1,#UnitsAtSpot do
 		if spGetDefID(UnitsAtSpot[i])==BuildTargetDefID then
 			Building[#Building+1]=UnitsAtSpot[i]

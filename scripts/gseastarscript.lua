@@ -52,8 +52,6 @@ Spring.DestroyUnit(unitID,true,false)
 	end
 --wiggles the feet, and applies motion if turning
 function wiggleFeet(FirstPoint,NaturalDeg)
-Spring.Echo("gseastar::wiggle")
-
 		
 		for k=1,5 do
 				frame=Spring.GetGameFrame()

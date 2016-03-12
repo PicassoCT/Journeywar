@@ -33,7 +33,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local HARDCODED_RETREATDISTANCE=420
 	
 	local cRestrictorThumperID= WeaponDefNames["crestrictorthumper"].id
-	local crabWeaponDefID = WeaponDefNames["crabshell"].id
+	local crabShelWDefID = WeaponDefNames["crabshell"].id
 	local bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
 	local jHiveHoundID= WeaponDefNames["jhivehoundrocket"].id
 	local jSwiftSpearID= WeaponDefNames["swiftprojectile"].id
@@ -92,7 +92,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jHiveHoundID , true)
 	Script.SetWatchWeapon(jSwiftSpearID , true)
 	Script.SetWatchWeapon(jghostDancerWeaponDefID , true)
-	Script.SetWatchWeapon(crabWeaponDefID,true)
+	Script.SetWatchWeapon(crabShelWDefID,true)
 	Script.SetWatchWeapon(bunkerPlasmaDefID,true)
 	Script.SetWatchWeapon(cCssFlameT,true)
 	Script.SetWatchWeapon(glavaWeaponID,true)
@@ -377,7 +377,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		--this one creates the headcrabs
-		if (weaponDefID == crabWeaponDefID) then
+		if (weaponDefID == crabShelWDefID) then
 			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
 		end

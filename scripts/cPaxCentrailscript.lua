@@ -126,183 +126,183 @@ WeaponTable ={}
 
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua"
- include "lib_Build.lua" 
+include "lib_UnitScript.lua"
+include "lib_Build.lua" 
 
 function HitByWeapon ( x, z, weaponDefID, damage ) 
---Turn Shielding 
-if boolBattle== false then StartThread(battleReseter) end
-boolBattle=true
+	--Turn Shielding 
+	if boolBattle== false then StartThread(battleReseter) end
+	boolBattle=true
 end
 
 function battleReseter()
-Sleep(3000)
-boolBattle=false
+	Sleep(3000)
+	boolBattle=false
 end
 
 
 function script.Create()
-Spring.PlaySoundFile("sounds/cPaxCentrail/PaxCentrailSound.wav",1.0)
-    local map = Spring.GetUnitPieceMap(unitID)
-    local offsets = constructSkeleton(unitID,deathpivot, {0,0,0})
-    
-    for a,anim in pairs(Animations) do
-        for i,keyframe in pairs(anim) do
-            local commands = keyframe.commands;
-            for k,command in pairs(commands) do
-                -- commands are described in (c)ommand,(p)iece,(a)xis,(t)arget,(s)peed format
-                -- the t attribute needs to be adjusted for move commands from blender's absolute values
-                if (command.c == "move") then
-                    local adjusted =  command.t - (offsets[command.p][command.a]);
-                    Animations[a][i]['commands'][k].t = command.t - (offsets[command.p][command.a]);
-                end
-            end
-        end
-    end
-
-StartThread(cExpReloader)
-StartThread(moveStarter)
-StartThread(underPressure)
-
+	Spring.PlaySoundFile("sounds/cPaxCentrail/PaxCentrailSound.wav",1.0)
+	local map = Spring.GetUnitPieceMap(unitID)
+	local offsets = constructSkeleton(unitID,deathpivot, {0,0,0})
+	
+	for a,anim in pairs(Animations) do
+		for i,keyframe in pairs(anim) do
+			local commands = keyframe.commands;
+			for k,command in pairs(commands) do
+				-- commands are described in (c)ommand,(p)iece,(a)xis,(t)arget,(s)peed format
+				-- the t attribute needs to be adjusted for move commands from blender's absolute values
+				if (command.c == "move") then
+					local adjusted = command.t - (offsets[command.p][command.a]);
+					Animations[a][i]['commands'][k].t = command.t - (offsets[command.p][command.a]);
+				end
+			end
+		end
+	end
+	
+	StartThread(cExpReloader)
+	StartThread(moveStarter)
+	StartThread(underPressure)
+	
 end
 
 function animTest()
 	
-
-while true do
-pack()
-Sleep(10000)
-PlayAnimation("pax_unpack")
-Sleep(2000)
-end
-
+	
+	while true do
+		pack()
+		Sleep(10000)
+		PlayAnimation("pax_unpack")
+		Sleep(2000)
+	end
+	
 end
 
 function moveStarter()
-PlayAnimation("pax_unpack")
-Sleep(500)
-Signal(SIG_IDLE)
-StartThread(move)
+	PlayAnimation("pax_unpack")
+	Sleep(500)
+	Signal(SIG_IDLE)
+	StartThread(move)
 end
 local animCmd = {['turn']=Turn,['move']=Move};
 
 function PlayAnimation(animname)
-boolCo=false
-if animname == "pax_defensive" 	then boolCo=true;		Move(Body,y_axis,-32,12) end
-if animname == "pax_unpack" 	then boolCo=true;		StartThread(pax_unpack_CoThread) end
-if animname == "pack" 	then boolCo=true;		StartThread(pack);	return end
-
-if boolCo==false then 
-resetPiece(Body,22)
-resetPiece(deathpivot,22)
-end
-
-if not Animations[animname] then Spring.Echo(animname) end
-
-    local anim = Animations[animname];
+	boolCo=false
+	if animname == "pax_defensive" 	then boolCo=true;		Move(Body,y_axis,-32,12) end
+	if animname == "pax_unpack" 	then boolCo=true;		StartThread(pax_unpack_CoThread) end
+	if animname == "pack" 	then boolCo=true;		StartThread(pack);	return end
+	
+	if boolCo==false then 
+		resetPiece(Body,22)
+		resetPiece(deathpivot,22)
+	end
+	
+	if not Animations[animname] then Spring.Echo(animname) end
+	
+	local anim = Animations[animname];
 	assert(anim, animname)
-    for i = 1, #anim do
-        local commands = anim[i].commands;
-        for j = 1,#commands do
-            local cmd = commands[j];
-            animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
-        end
-        if(i < #anim) then
-            local t = anim[i+1]['time'] - anim[i]['time'];
-            Sleep(t*33); -- sleep works on milliseconds
-        end
-    end
+	for i = 1, #anim do
+		local commands = anim[i].commands;
+		for j = 1,#commands do
+			local cmd = commands[j];
+			animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
+		end
+		if(i < #anim) then
+			local t = anim[i+1]['time'] - anim[i]['time'];
+			Sleep(t*33); -- sleep works on milliseconds
+		end
+	end
 end
 
 local ListedPieces={Body,LR,LL,LUR,LUL}
 function resetStance()
 	PlayAnimation("pax_standing")
-
+	
 end
 
 function identifyNearestEnemyAir()
-ed=Spring.GetUnitNearestEnemy(unitID)
-ex,ey,ez=Spring.GetUnitPosition(ed)
-h=Spring.GetGroundHeight(ex,ez)
-return ey-math.abs(h) > 100
+	ed=Spring.GetUnitNearestEnemy(unitID)
+	ex,ey,ez=Spring.GetUnitPosition(ed)
+	h=Spring.GetGroundHeight(ex,ez)
+	return ey-math.abs(h) > 100
 end
 
 function script.Killed(recentDamage,_)
-    --the Centrail knows no mercy
+	--the Centrail knows no mercy
 	if Spring.ValidUnitID(hostageid) ==true then
-	Spring.DestroyUnit(hostageid,true,false,unitID)
+		Spring.DestroyUnit(hostageid,true,false,unitID)
 	end
-fooward=1
---if math.random(false,true) then Spring.Echo("Math.random accepts false/true as true in cPaxCentrail/PaxCentrailSound") end 
-PlayAnimation("pax_death")
-suddenDeathV(recentDamage)
-return 0
+	fooward=1
+	--if math.random(false,true) then Spring.Echo("Math.random accepts false/true as true in cPaxCentrail/PaxCentrailSound") end 
+	PlayAnimation("pax_death")
+	suddenDeathV(recentDamage)
+	return 0
 end
 
 boolMoving=false
 function move()
-Signal(SIG_IDLE)
-boolMoving=false
-PlayAnimation("pack")
+	Signal(SIG_IDLE)
+	boolMoving=false
+	PlayAnimation("pack")
 	while boolMoving == false do
-	Sleep(100)
+		Sleep(100)
 	end
-
-PlayAnimation("pax_unpack")
+	
+	PlayAnimation("pax_unpack")
 	
 	while true do
-			if boolMoving==true then
+		if boolMoving==true then
 			moveAnimation()
-				else
-				if boolBattle==true then
+		else
+			if boolBattle==true then
 				boolIsAir=identifyNearestEnemyAir()
-					if boolIsAir==false then
-						idle()
-					else 
-						PlayAnimation("paxcentrail_antiairstance")
-					end
-							while boolMoving==false and boolBattle==true do
-							Sleep(100)
-							end
-						resetStance()	
-						
-				else
-					while boolMoving==false and boolBattle==false do
-					resetStance()
-					end
+				if boolIsAir==false then
+					idle()
+				else 
+					PlayAnimation("paxcentrail_antiairstance")
 				end
-		Sleep(200)
+				while boolMoving==false and boolBattle==true do
+					Sleep(100)
+				end
+				resetStance()	
+				
+			else
+				while boolMoving==false and boolBattle==false do
+					resetStance()
+				end
+			end
+			Sleep(200)
 		end
-	
+		
 	end
-
+	
 end
 
 function hammerclawin(boolleft)
 	if boolleft==true then
-	Move(SR4,y_axis,-9,35)
-	Move(SR5,y_axis,-9,35)
-	Move(SR6,y_axis,-9,35)
-	Move(SR4,z_axis,5,35)
-	else               
-	Move(SR1,y_axis,-9,35)
-	Move(SR2,y_axis,-9,35)
-	Move(SR3,y_axis,-9,35)
-	Move(SR1,z_axis,5,35)
+		Move(SR4,y_axis,-9,35)
+		Move(SR5,y_axis,-9,35)
+		Move(SR6,y_axis,-9,35)
+		Move(SR4,z_axis,5,35)
+	else 
+		Move(SR1,y_axis,-9,35)
+		Move(SR2,y_axis,-9,35)
+		Move(SR3,y_axis,-9,35)
+		Move(SR1,z_axis,5,35)
 	end
 end
 
 function retractclaw(boolleft)
 	if boolleft==true then
-	Move(SR4,y_axis,0,15)
-	Move(SR5,y_axis,0,15)
-	Move(SR6,y_axis,0,15)
-	Move(SR4,z_axis,0,15)
-	else              
-	Move(SR1,y_axis,0,15)
-	Move(SR2,y_axis,0,15)
-	Move(SR3,y_axis,0,15)
-	Move(SR1,z_axis,0,15)
+		Move(SR4,y_axis,0,15)
+		Move(SR5,y_axis,0,15)
+		Move(SR6,y_axis,0,15)
+		Move(SR4,z_axis,0,15)
+	else 
+		Move(SR1,y_axis,0,15)
+		Move(SR2,y_axis,0,15)
+		Move(SR3,y_axis,0,15)
+		Move(SR1,z_axis,0,15)
 	end
 end
 
@@ -322,125 +322,125 @@ local globalHeading=0
 
 function moveAnimation()
 	if boolBattle==false then
-		if ThreeInArow > 0 then ThreeInArow=ThreeInArow-1 else ThreeInArow=3; Dec=  Dec ==false end
+		if ThreeInArow > 0 then ThreeInArow=ThreeInArow-1 else ThreeInArow=3; Dec= Dec ==false end
 		
-			if Dec==1 then
+		if Dec==1 then
 			PlayAnimation("pax_walk")
-			else
-			PlayAnimation("paxcentrail_walk")
-			end
 		else
+			PlayAnimation("paxcentrail_walk")
+		end
+	else
 		ed=spGetNearestEnemy()
 		
 		ex,_,ez=spGetUnitPosition(ed)
 		ux,_,uz=Spring.GetUnitPiecePosition(unitID,stomp)
 		ex,ez=ex-ux,ez-uz
 		
-			if ed and ex and math.sqrt(ex^2+ez^2) < 60 then
+		if ed and ex and math.sqrt(ex^2+ez^2) < 60 then
 			Turn(deathpivot,y_axis,-globalHeading,33)
 			PlayAnimation("paxcentrail_stomp")
 			WaitForTurn(deathpivot,y_axis)
 			Turn(deathpivot,y_axis,0,12)
-			else
+		else
 			PlayAnimation("pax_attack")
-			end
+		end
 		
 	end
-StartThread(OhLawd)
-
+	StartThread(OhLawd)
+	
 end
 
 boolBattle=false
 
 
 TableOfSoundPathStrings={
-			[1]={path="sounds/cPaxCentrail/ghospell1.ogg", time=2500},
-			[2]={path="sounds/cPaxCentrail/ghospell2.ogg", time=3500},
-			[3]={path="sounds/cPaxCentrail/ghospell3.ogg", time=3000},
-			[4]={path="sounds/cPaxCentrail/ghospell4.ogg",time=2500},
-			[5]={path="sounds/cPaxCentrail/ghospell5.ogg", time=2500},
-			[5]={path="sounds/cPaxCentrail/ghospell6.ogg", time=4500},
+	[1]={path="sounds/cPaxCentrail/ghospell1.ogg", time=2500},
+	[2]={path="sounds/cPaxCentrail/ghospell2.ogg", time=3500},
+	[3]={path="sounds/cPaxCentrail/ghospell3.ogg", time=3000},
+	[4]={path="sounds/cPaxCentrail/ghospell4.ogg",time=2500},
+	[5]={path="sounds/cPaxCentrail/ghospell5.ogg", time=2500},
+	[5]={path="sounds/cPaxCentrail/ghospell6.ogg", time=4500},
 	
 }
 
- unitdefID=Spring.GetUnitDefID(unitID)
+unitdefID=Spring.GetUnitDefID(unitID)
 counter=1
 boolBusy=false
 function OhLawd()
-
-
+	
+	
 	if boolBusy==false and TableOfSoundPathStrings[counter] and TableOfSoundPathStrings[counter].path and TableOfSoundPathStrings[counter].time then
-	boolBusy=true
-	StartThread(PlaySoundByUnitType,unitdefID,TableOfSoundPathStrings[counter].path,1,TableOfSoundPathStrings[counter].time,1)
-	Sleep(TableOfSoundPathStrings[counter].time)
-	counter=(counter%(5))+1
-	boolBusy=false
+		boolBusy=true
+		StartThread(PlaySoundByUnitType,unitdefID,TableOfSoundPathStrings[counter].path,1,TableOfSoundPathStrings[counter].time,1)
+		Sleep(TableOfSoundPathStrings[counter].time)
+		counter=(counter%(5))+1
+		boolBusy=false
 	end
-
-
+	
+	
 end
 
 
 numberTable={"one","two","three","four","five"}
 function NotYetProperlyMotivated()
-
-StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/number.ogg",1,1000,1)
-StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/"..(numberTable[math.random(1,#numberTable)])..".ogg",1,1000,1,1002)
-StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/motivation.ogg",1,14000,1,2005)
+	
+	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/number.ogg",1,1000,1)
+	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/"..(numberTable[math.random(1,#numberTable)])..".ogg",1,1000,1,1002)
+	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/motivation.ogg",1,14000,1,2005)
 end
 SIG_IDLE=8
 
 function idle()
-SetSignalMask(SIG_IDLE)
-PlayAnimation("pax_defensive")
+	SetSignalMask(SIG_IDLE)
+	PlayAnimation("pax_defensive")
 end
 
 function script.StartMoving()
-boolMoving=true
+	boolMoving=true
 end
 
 function delayedStop()
-SetSignalMask(SIG_STOP)
-Sleep(1000)
+	SetSignalMask(SIG_STOP)
+	Sleep(1000)
 	if math.abs(Spring.GetUnitHeading(unitID)-startHeading)< 25 then
-	boolMoving=false
+		boolMoving=false
 	end
 end
 
 startHeading=0
 local SIG_STOP=2
 function script.StopMoving()
-Signal(SIG_STOP)
-startHeading=Spring.GetUnitHeading(unitID)
-StartThread(delayedStop)		
-		
+	Signal(SIG_STOP)
+	startHeading=Spring.GetUnitHeading(unitID)
+	StartThread(delayedStop)		
+	
 end
 
 hostageid=""
 function underPressure()
 	while hostageid== "" do
-	Sleep(500)
+		Sleep(500)
 	end
 	
-boolUnderPressure=true
+	boolUnderPressure=true
 	while Spring.GetUnitIsDead(hostageid)==false do
-	Sleep(1000)
+		Sleep(1000)
 	end
-
-eid=Spring.GetUnitNearestEnemy(unitID)
+	
+	eid=Spring.GetUnitNearestEnemy(unitID)
 	eteam=Spring.GetUnitTeam(eid)
 	if eteam then
-	Spring.TransferUnit(unitID,eteam,true)
+		Spring.TransferUnit(unitID,eteam,true)
 	end	
 end
 
 function unblockWhileThere(ex,ey,ez)
-boolUnderPressure=true
-
-x,y,z=Spring.GetUnitPosition(unitID)
-
-
-	while  math.abs(x-ex)+ math.abs(y-ey)+math.abs(z-ez) < 450 do
+	boolUnderPressure=true
+	
+	x,y,z=Spring.GetUnitPosition(unitID)
+	
+	
+	while math.abs(x-ex)+ math.abs(y-ey)+math.abs(z-ez) < 450 do
 		x,y,z=Spring.GetUnitPosition(unitID)
 		Sleep(500)
 	end
@@ -451,156 +451,156 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	x,y,z=Spring.GetUnitPosition(hostageid)
 	Spring.SetUnitBlocking (hostageid,false,false)
 	while table.getn(getAllInCircle(hostageid,x,z,75)) > 0 do
-	Sleep(500)
+		Sleep(500)
 	end
-Spring.SetUnitBlocking (hostageid,true,true)
+	Spring.SetUnitBlocking (hostageid,true,true)
 end
 
 boolUnderPressure=false
 function script.Activate()
 	if boolUnderPressure==false then
-
-	x,y,z=Spring.GetUnitPosition(unitID)
-	
+		
+		x,y,z=Spring.GetUnitPosition(unitID)
+		
 		
 		StartThread(unblockWhileThere,x,y,z)
 		
 	end
-return 1
+	return 1
 end
 
 function script.Deactivate()
-
-return 0
+	
+	return 0
 end
 
 aimWeapFunc= function (Heading, pitch,nr)
-if nr ~=7 then
-					Turn(WeaponTable[nr].qpiece,y_axis,-Heading,1.8)
-					Turn(WeaponTable[nr].qpiece,x_axis,pitch,1.8)
-					WaitForTurn(WeaponTable[nr].qpiece,y_axis)
-					WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-					return true
-				else
-				piecename=""
-
-					if math.random(0,1)==1 then piecename= Weapon1 else piecename= Weapon2 end
-					Turn(piecename,y_axis,-Heading,1.8)
-					Turn(piecename,x_axis,pitch,1.8)
-					WaitForTurn(piecename,y_axis)
-					WaitForTurn(piecename,x_axis)
-					return true
-				end
+	if nr ~=7 then
+		Turn(WeaponTable[nr].qpiece,y_axis,-Heading,1.8)
+		Turn(WeaponTable[nr].qpiece,x_axis,pitch,1.8)
+		WaitForTurn(WeaponTable[nr].qpiece,y_axis)
+		WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+		return true
+	else
+		piecename=""
+		
+		if math.random(0,1)==1 then piecename= Weapon1 else piecename= Weapon2 end
+		Turn(piecename,y_axis,-Heading,1.8)
+		Turn(piecename,x_axis,pitch,1.8)
+		WaitForTurn(piecename,y_axis)
+		WaitForTurn(piecename,x_axis)
+		return true
+	end
 end
 
- WeaponTable={
-[1]={ 
-	AimFromqpiece	=podturret2,
-	qpiece=Weapon7,
-	fireweapon= function() return true 
- end,
-	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
-	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-	return true 
- end
-	},
-[2]={
-	AimFromqpiece=podturret4,
-	qpiece=Weapon4,
-	fireweapon= function() return true 
- end,
+WeaponTable={
+	[1]={ 
+		AimFromqpiece	=podturret2,
+		qpiece=Weapon7,
+		fireweapon= function() return true 
+		end,
 		aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
-	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-		if boolExponentialGunReloaded== true then
-			boolExponentialGunReloaded=false
-			return true 
-		else
-			return false
-		end
- end
-	},
-[3]={
-	AimFromqpiece=podturret5,
-	qpiece=Weapon8,
-	fireweapon= function() return true 
- end,
-	aimweapon=function(Heading,pitch,nr) 
-	globalHeading=Heading
-	Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
-	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-	return true 
- end
-	},
-[4]={
-	AimFromqpiece=podturret1,
-	qpiece=Weapon3,
-	fireweapon= function() return true 
- end,
-	aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
-	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-		if boolExponentialGunReloaded== true then
-			boolExponentialGunReloaded=false
-			return true 
-		else
-			return false
-		end
- end
-	},
-[5]={
-	AimFromqpiece=podturret0,
-	qpiece=Weapon5,
-	fireweapon= function() 
-		return true 
-	end,
-		aimweapon=function(Heading,pitch,nr) 
-	Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
-	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-	return true 
- end
-	},
-[6]={
-	AimFromqpiece=podturret3,
-	qpiece=Weapon6,
-	fireweapon= function() return true 
- end,
-	
-	aimweapon=function(Heading,pitch,nr) 
-	globalHeading=Heading
-	Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
-	Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
-	WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
-	WaitForTurn(WeaponTable[nr].qpiece,x_axis)
-	return true 
- end
-	},
-[7]={
-	AimFromqpiece=Core,
-	qpiece=Head,
-	fireweapon= function() 
-		return true 
-	end,
-	aimweapon=function(Heading,pitch,nr) 
-		if math.abs(Heading) < 3.141/2 then
 			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
 			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+			return true 
 		end
-	return true 
- end
+	},
+	[2]={
+		AimFromqpiece=podturret4,
+		qpiece=Weapon4,
+		fireweapon= function() return true 
+		end,
+		aimweapon=function(Heading,pitch,nr) 
+			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+			if boolExponentialGunReloaded== true then
+				boolExponentialGunReloaded=false
+				return true 
+			else
+				return false
+			end
+		end
+	},
+	[3]={
+		AimFromqpiece=podturret5,
+		qpiece=Weapon8,
+		fireweapon= function() return true 
+		end,
+		aimweapon=function(Heading,pitch,nr) 
+			globalHeading=Heading
+			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+			return true 
+		end
+	},
+	[4]={
+		AimFromqpiece=podturret1,
+		qpiece=Weapon3,
+		fireweapon= function() return true 
+		end,
+		aimweapon=function(Heading,pitch,nr) 
+			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+			if boolExponentialGunReloaded== true then
+				boolExponentialGunReloaded=false
+				return true 
+			else
+				return false
+			end
+		end
+	},
+	[5]={
+		AimFromqpiece=podturret0,
+		qpiece=Weapon5,
+		fireweapon= function() 
+			return true 
+		end,
+		aimweapon=function(Heading,pitch,nr) 
+			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+			return true 
+		end
+	},
+	[6]={
+		AimFromqpiece=podturret3,
+		qpiece=Weapon6,
+		fireweapon= function() return true 
+		end,
+		
+		aimweapon=function(Heading,pitch,nr) 
+			globalHeading=Heading
+			Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+			Turn(WeaponTable[nr].qpiece,x_axis,pitch, 8)
+			WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			WaitForTurn(WeaponTable[nr].qpiece,x_axis)
+			return true 
+		end
+	},
+	[7]={
+		AimFromqpiece=Core,
+		qpiece=Head,
+		fireweapon= function() 
+			return true 
+		end,
+		aimweapon=function(Heading,pitch,nr) 
+			if math.abs(Heading) < 3.141/2 then
+				Turn(WeaponTable[nr].AimFromqpiece,y_axis,-Heading, 8)
+				WaitForTurn(WeaponTable[nr].AimFromqpiece,y_axis)
+			end
+			return true 
+		end
 	}
-
+	
 }
 --Weapon1
 
@@ -611,13 +611,13 @@ local Exponent=0
 local ReloadTime=2049
 
 function cExpReloader()
-coolDownTimer=CoolDownTime
+	coolDownTimer=CoolDownTime
 	while true do 
 		ReloadTime=math.max(1,2049- (2^Exponent))
 		--if not reloaded 
-			if boolExponentialGunReloaded==false then
-				
-			if ReloadTime > 1128  then
+		if boolExponentialGunReloaded==false then
+			
+			if ReloadTime > 1128 then
 				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/singleShotExponential.ogg",1,500,2,0)
 			elseif ReloadTime <= 1128 and ReloadTime > 978 then
 				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/TenShotsPerSecond.ogg",1,1100,2,0)
@@ -626,16 +626,16 @@ coolDownTimer=CoolDownTime
 			elseif ReloadTime <= 512 and ReloadTime > 0 then
 				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/MaxShotsPerSecond.ogg",1,2400,2,0)
 			end
-				Sleep(ReloadTime)
-				Exponent=Exponent+1
-				coolDownTimer=CoolDownTime-ReloadTime
-				boolExponentialGunReloaded=true
-			end
+			Sleep(ReloadTime)
+			Exponent=Exponent+1
+			coolDownTimer=CoolDownTime-ReloadTime
+			boolExponentialGunReloaded=true
+		end
 		Sleep(5)
 		coolDownTimer=coolDownTimer-5
-			if coolDownTimer <= 0 then 
-				Exponent=0
-			end
+		if coolDownTimer <= 0 then 
+			Exponent=0
+		end
 	end
 end
 
@@ -655,7 +655,7 @@ end
 function script.AimWeapon1( Heading ,pitch)	
 	return WeaponTable[1].aimweapon(Heading,pitch,1)and boolUnderPressure==true
 end
- 
+
 
 function script.FireWeapon1()	
 	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
@@ -664,12 +664,12 @@ end
 
 
 
- aimpiece2 = WeaponTable[2].AimFromqpiece
+aimpiece2 = WeaponTable[2].AimFromqpiece
 function script.AimFromWeapon2() 
 	return aimpiece2
 end
 
- weaponpiece2 = WeaponTable[2].qpiece
+weaponpiece2 = WeaponTable[2].qpiece
 function script.QueryWeapon2() 
 	return weaponpiece2
 end
@@ -678,7 +678,7 @@ end
 function script.AimWeapon2( Heading ,pitch)	
 	return WeaponTable[2].aimweapon(Heading,pitch,2)and boolUnderPressure==true
 end
- 
+
 
 function script.FireWeapon2()	
 	return WeaponTable[2].fireweapon()
@@ -686,12 +686,12 @@ end
 
 --------------------------------------------------------------
 
- aimpiece3 = WeaponTable[3].AimFromqpiece
+aimpiece3 = WeaponTable[3].AimFromqpiece
 function script.AimFromWeapon3() 
 	return aimpiece3
 end
 
- weaponpiece3 = WeaponTable[3].qpiece
+weaponpiece3 = WeaponTable[3].qpiece
 function script.QueryWeapon3() 
 	return weaponpiece3
 end
@@ -700,7 +700,7 @@ end
 function script.AimWeapon3( Heading ,pitch)	
 	return WeaponTable[3].aimweapon(Heading,pitch,3)and boolUnderPressure==true
 end
- 
+
 
 function script.FireWeapon3()	
 	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
@@ -709,12 +709,12 @@ end
 
 --------------------------------------------------------------
 
- aimpiece4 = WeaponTable[4].AimFromqpiece
+aimpiece4 = WeaponTable[4].AimFromqpiece
 function script.AimFromWeapon4() 
 	return aimpiece4
 end
 
- weaponpiece4 = WeaponTable[4].qpiece
+weaponpiece4 = WeaponTable[4].qpiece
 function script.QueryWeapon4() 
 	return weaponpiece4
 end
@@ -723,18 +723,18 @@ end
 function script.AimWeapon4( Heading ,pitch)	
 	return WeaponTable[4].aimweapon(Heading,pitch,4) and boolUnderPressure==true
 end
- 
+
 
 function script.FireWeapon4()	
 	return WeaponTable[4].fireweapon()
 end
 
- aimpiece5 = WeaponTable[5].AimFromqpiece
+aimpiece5 = WeaponTable[5].AimFromqpiece
 function script.AimFromWeapon5() 
 	return aimpiece5
 end
 
- weaponpiece5 = WeaponTable[5].qpiece
+weaponpiece5 = WeaponTable[5].qpiece
 function script.QueryWeapon5() 
 	return weaponpiece5
 end
@@ -743,19 +743,19 @@ end
 function script.AimWeapon5( Heading ,pitch)	
 	return WeaponTable[5].aimweapon(Heading,pitch,5)and boolUnderPressure==true and true==false
 end
- 
+
 
 function script.FireWeapon5()	
 	return WeaponTable[5].fireweapon()
 end
 
 
- aimpiece6 = WeaponTable[6].AimFromqpiece
+aimpiece6 = WeaponTable[6].AimFromqpiece
 function script.AimFromWeapon6() 
 	return aimpiece6
 end
 
- weaponpiece6 = WeaponTable[6].qpiece
+weaponpiece6 = WeaponTable[6].qpiece
 function script.QueryWeapon6() 
 	return weaponpiece6
 end
@@ -764,28 +764,28 @@ end
 function script.AimWeapon6( Heading ,pitch)	
 	return WeaponTable[6].aimweapon(Heading,pitch,6)and boolUnderPressure==true
 end
- 
+
 
 function script.FireWeapon6()	
 	return WeaponTable[6].fireweapon()
 end
 
- aimpiece7 = WeaponTable[7].AimFromqpiece
+aimpiece7 = WeaponTable[7].AimFromqpiece
 function script.AimFromWeapon7() 
 	return aimpiece7
 end
 
- weaponpiece7 = WeaponTable[7].qpiece
+weaponpiece7 = WeaponTable[7].qpiece
 function script.QueryWeapon7() 
 	return weaponpiece7
 end
 
 
 function script.AimWeapon7( Heading ,pitch)	
- 
+	
 	return WeaponTable[7].aimweapon(Heading,pitch,7)and boolUnderPressure==true 
 end
- 
+
 
 function script.FireWeapon7()	
 	return WeaponTable[7].fireweapon()
@@ -1515,7 +1515,7 @@ Animations['pax_walk'] = {
 	{
 		['time'] = 0,
 		['commands'] = {
-	
+			
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.358180, ['s']=0.344609},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.199964, ['s']=5.744802},
 			{['c']='turn',['p']=AUL, ['a']=y_axis, ['t']=-1*0.015476, ['s']=0.694790},	
@@ -1885,7 +1885,7 @@ Animations['pax_walk'] = {
 			{['c']='turn',['p']=AUL, ['a']=y_axis, ['t']=-1*-0.005367, ['s']=0.097928},
 		}
 	},
-
+	
 	{
 		['time'] = 99,
 		['commands'] = {
@@ -1905,7 +1905,7 @@ Animations['pax_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*0.012000, ['s']=0.428590},
 		}
 	},
-
+	
 }
 
 Animations['pax_depressed'] = {
@@ -2109,7 +2109,7 @@ Animations['pax_depressed'] = {
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*0.001851, ['s']=0.353639},
 		}
 	},
-
+	
 	{
 		['time'] = 50,
 		['commands'] = {
@@ -2709,7 +2709,7 @@ Animations['pax_defensive'] = {
 			{['c']='turn',['p']=Shield1, ['a']=x_axis, ['t']=0.000004, ['s']=0.111888},
 			{['c']='turn',['p']=Shield1, ['a']=z_axis, ['t']=-0.000271, ['s']=0.134197},
 			{['c']='turn',['p']=Shield1, ['a']=y_axis, ['t']=-1*0.000043, ['s']=3.350025},
-
+			
 		}
 	},
 	{
@@ -3022,13 +3022,13 @@ Animations['pax_attack'] = {
 }
 
 function pax_unpack_CoThread()
-
-Sleep(1600)
-Move(Body,y_axis,15,80.972222222222222222222222222222)
-WaitForMove(Body,y_axis)
-Move(Body,y_axis,0,60)
-WaitForMove(Body,y_axis)
-Spring.PlaySoundFile("sounds/cComEnder/comEnderStep.wav",0.9)	
+	
+	Sleep(1600)
+	Move(Body,y_axis,15,80.972222222222222222222222222222)
+	WaitForMove(Body,y_axis)
+	Move(Body,y_axis,0,60)
+	WaitForMove(Body,y_axis)
+	Spring.PlaySoundFile("sounds/cComEnder/comEnderStep.wav",0.9)	
 end
 
 Animations['pax_unpack'] = {
@@ -3460,23 +3460,23 @@ Animations['pax_unpack'] = {
 }
 
 function pack()
-Move(Body,y_axis,-40,0)
-Turn(Body,x_axis,math.rad(-90),0)
-tP(AUL,0,0,90,0)
-tP(AL,88,0,0,0)
-
-tP(AUR,44,0,-69,0)
-tP(AR,44,25,0,0)
-
-
-tP(LL,92,0,0,0)
-tP(LUL,88,0,0,0)
-
-tP(LR,92,0,0,0)
-tP(LUR,88,0,0,0)
-
-
-
+	Move(Body,y_axis,-40,0)
+	Turn(Body,x_axis,math.rad(-90),0)
+	tP(AUL,0,0,90,0)
+	tP(AL,88,0,0,0)
+	
+	tP(AUR,44,0,-69,0)
+	tP(AR,44,25,0,0)
+	
+	
+	tP(LL,92,0,0,0)
+	tP(LUL,88,0,0,0)
+	
+	tP(LR,92,0,0,0)
+	tP(LUR,88,0,0,0)
+	
+	
+	
 end
 
 
@@ -3491,15 +3491,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.388859, ['s']=2.697053},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.015124, ['s']=0.038519},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*-0.016531, ['s']=0.075625},
-
+			
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.002856, ['s']=0.005100},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.005717, ['s']=0.001952},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*-0.683117, ['s']=1.203706},
-	
+			
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.994413, ['s']=3.691073},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.023924, ['s']=0.052328},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.106236, ['s']=0.296152},
-	
+			
 			{['c']='turn',['p']=Shield1, ['a']=x_axis, ['t']=-0.020115, ['s']=0.011812},
 			{['c']='turn',['p']=Shield1, ['a']=z_axis, ['t']=-0.050290, ['s']=0.032294},
 			{['c']='turn',['p']=Shield1, ['a']=y_axis, ['t']=-1*-1.157691, ['s']=0.680397},
@@ -3511,7 +3511,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield5, ['a']=x_axis, ['t']=0.063065, ['s']=0.028682},
 			{['c']='turn',['p']=Shield5, ['a']=z_axis, ['t']=-0.027927, ['s']=0.014790},
 			{['c']='turn',['p']=Shield5, ['a']=y_axis, ['t']=-1*-1.855356, ['s']=0.842882},
-		
+			
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=-0.004244, ['s']=0.004510},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.007020, ['s']=0.002582},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*1.063510, ['s']=1.140564},
@@ -3527,7 +3527,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.345132, ['s']=2.621227},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.013570, ['s']=0.053064},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*0.007887, ['s']=0.031300},
-		
+			
 			{['c']='turn',['p']=Shield7	, ['a']=x_axis, ['t']=0.058263, ['s']=0.052998},
 			{['c']='turn',['p']=Shield7	, ['a']=z_axis, ['t']=0.043115, ['s']=0.035004},
 			{['c']='turn',['p']=Shield7	, ['a']=y_axis, ['t']=-1.003590, ['s']=0.911431},
@@ -3535,7 +3535,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=1.005645, ['s']=8.208740},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.027112, ['s']=0.178458},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*-0.003685, ['s']=0.012229},
-		
+			
 			{['c']='turn',['p']=Weapon6, ['a']=x_axis, ['t']=-0.000368, ['s']=0.000100},
 			{['c']='turn',['p']=Weapon6, ['a']=z_axis, ['t']=0.005066, ['s']=0.000137},
 			{['c']='turn',['p']=Weapon6, ['a']=y_axis, ['t']=-1*-0.001145, ['s']=0.000039},
@@ -3543,7 +3543,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.391584, ['s']=0.978873},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.027610, ['s']=0.057498},
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.027284, ['s']=0.065668},
-		
+			
 			{['c']='turn',['p']=SR1, ['a']=x_axis, ['t']=-0.000368, ['s']=0.000100},
 			{['c']='turn',['p']=SR1, ['a']=z_axis, ['t']=0.005067, ['s']=0.000137},
 			{['c']='turn',['p']=SR1, ['a']=y_axis, ['t']=-1*-0.001143, ['s']=0.000038},
@@ -3575,7 +3575,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Core, ['a']=x_axis, ['t']=-0.000369, ['s']=0.000100},
 			{['c']='turn',['p']=Core, ['a']=z_axis, ['t']=0.005067, ['s']=0.000137},
 			{['c']='turn',['p']=Core, ['a']=y_axis, ['t']=-1*-0.001140, ['s']=0.000037},
-		
+			
 			{['c']='turn',['p']=podturret3, ['a']=x_axis, ['t']=-0.000368, ['s']=0.000100},
 			{['c']='turn',['p']=podturret3, ['a']=z_axis, ['t']=0.005067, ['s']=0.000137},
 			{['c']='turn',['p']=podturret3, ['a']=y_axis, ['t']=-1*-0.001143, ['s']=0.000038},
@@ -3595,7 +3595,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.311119, ['s']=0.777710},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.023229, ['s']=0.046545},
 			{['c']='turn',['p']=AUL, ['a']=y_axis, ['t']=-1*-0.022554, ['s']=0.053843},
-		
+			
 			{['c']='turn',['p']=Weapon3, ['a']=x_axis, ['t']=-0.000449, ['s']=0.000103},
 			{['c']='turn',['p']=Weapon3, ['a']=z_axis, ['t']=0.005067, ['s']=0.000137},
 			{['c']='turn',['p']=Weapon3, ['a']=y_axis, ['t']=-1*-0.001113, ['s']=0.000030},
@@ -3603,7 +3603,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Weapon1, ['a']=x_axis, ['t']=-0.000369, ['s']=0.000100},
 			{['c']='turn',['p']=Weapon1, ['a']=z_axis, ['t']=0.005067, ['s']=0.000137},
 			{['c']='turn',['p']=Weapon1, ['a']=y_axis, ['t']=-1*-0.001142, ['s']=0.000038},
-		
+			
 			{['c']='turn',['p']=Shield2, ['a']=x_axis, ['t']=0.015097, ['s']=0.018914},
 			{['c']='turn',['p']=Shield2, ['a']=z_axis, ['t']=-0.043721, ['s']=0.060415},
 			{['c']='turn',['p']=Shield2, ['a']=y_axis, ['t']=-1*1.847208, ['s']=2.310280},
@@ -3619,7 +3619,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.209780, ['s']=0.286111},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.068136, ['s']=0.086626},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*0.135627, ['s']=0.186332},
-
+			
 		}
 	},
 	{
@@ -3628,7 +3628,7 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=1.362967, ['s']=1.786610},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.106289, ['s']=0.395883},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.013397, ['s']=0.085406},
-
+			
 		}
 	},
 	{
@@ -3641,9 +3641,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.451713, ['s']=0.213163},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.032060, ['s']=0.036979},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*0.018338, ['s']=0.020902},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3652,15 +3652,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.909215, ['s']=0.283991},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.075860, ['s']=0.332614},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.095299, ['s']=0.036456},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.727284, ['s']=2.118943},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.098358, ['s']=0.026434},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.037901, ['s']=0.081680},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3669,27 +3669,27 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.128212, ['s']=0.820730},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.122868, ['s']=0.150408},
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.007879, ['s']=0.030639},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.511787, ['s']=0.136819},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.012620, ['s']=0.007233},
 			{['c']='turn',['p']=AUL, ['a']=y_axis, ['t']=-1*0.041726, ['s']=0.043827},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-0.497126, ['s']=0.035502},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=0.002937, ['s']=0.017776},
 			{['c']='turn',['p']=AUR, ['a']=y_axis, ['t']=-1*0.012141, ['s']=0.031045},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-0.403330, ['s']=0.502362},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-0.048200, ['s']=0.050444},
 			{['c']='turn',['p']=AL, ['a']=y_axis, ['t']=-1*0.091013, ['s']=0.044499},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3698,9 +3698,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000101, ['s']=0.003412},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.004828, ['s']=0.001025},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*-0.033460, ['s']=0.749604},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3709,21 +3709,21 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.224686, ['s']=0.340619},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.016317, ['s']=0.045068},
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*0.152973, ['s']=0.401933},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.285903, ['s']=0.945815},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.020761, ['s']=0.166279},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.066247, ['s']=0.060742},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.511243, ['s']=1.085381},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.089223, ['s']=0.036445},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.075238, ['s']=0.054712},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3732,9 +3732,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.101750, ['s']=0.467296},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.032299, ['s']=0.150653},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*-0.039236, ['s']=0.262294},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3743,15 +3743,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.574382, ['s']=0.382822},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.029761, ['s']=0.010036},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*-0.052023, ['s']=0.039547},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.688026, ['s']=1.709609},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.048559, ['s']=0.120928},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*0.089903, ['s']=0.107348},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3760,9 +3760,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield2, ['a']=x_axis, ['t']=-0.000368, ['s']=0.006105},
 			{['c']='turn',['p']=Shield2, ['a']=z_axis, ['t']=0.005067, ['s']=0.019258},
 			{['c']='turn',['p']=Shield2, ['a']=y_axis, ['t']=-1*-0.001143, ['s']=0.729612},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3771,9 +3771,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000222, ['s']=0.006380},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.005108, ['s']=0.002731},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.000648, ['s']=1.518375},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3782,9 +3782,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=1.855919, ['s']=5.207787},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.120442, ['s']=0.194316},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*0.006750, ['s']=0.125942},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3793,15 +3793,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.540047, ['s']=0.494202},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.031167, ['s']=0.110042},
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.035923, ['s']=0.033653},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.436792, ['s']=2.031502},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.120630, ['s']=0.449686},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.022393, ['s']=0.113240},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3816,9 +3816,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield8, ['a']=x_axis, ['t']=0.003235, ['s']=0.016521},
 			{['c']='turn',['p']=Shield8, ['a']=z_axis, ['t']=-0.023488, ['s']=0.016463},
 			{['c']='turn',['p']=Shield8, ['a']=y_axis, ['t']=-1*1.220757, ['s']=0.133714},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3827,9 +3827,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.331915, ['s']=1.684959},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.091485, ['s']=0.192882},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.042288, ['s']=0.065344},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3838,9 +3838,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield6, ['a']=x_axis, ['t']=-0.000369, ['s']=0.018102},
 			{['c']='turn',['p']=Shield6, ['a']=z_axis, ['t']=0.005067, ['s']=0.042060},
 			{['c']='turn',['p']=Shield6, ['a']=y_axis, ['t']=-1*-0.001142, ['s']=0.637395},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3849,9 +3849,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.318081, ['s']=0.484421},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.105872, ['s']=0.084892},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*-0.062037, ['s']=0.026309},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3860,21 +3860,21 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.002123, ['s']=0.002301},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.005795, ['s']=0.001000},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*-0.531204, ['s']=0.514908},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.960515, ['s']=5.372425},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.085996, ['s']=0.206673},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*-0.022730, ['s']=0.176877},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.891131, ['s']=1.218631},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.057954, ['s']=0.056371},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*0.100253, ['s']=0.062098},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3883,15 +3883,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.262524, ['s']=0.290446},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.113360, ['s']=0.012116},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.029720, ['s']=0.012212},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.577764, ['s']=0.460968},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.056742, ['s']=0.065143},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.060783, ['s']=0.034678},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3900,9 +3900,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.196209, ['s']=0.485648},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.056998, ['s']=0.046940},
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*0.174638, ['s']=0.024998},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3911,15 +3911,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.460231, ['s']=1.250708},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.059187, ['s']=0.067023},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*-0.025342, ['s']=0.006531},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.404763, ['s']=0.972735},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.118097, ['s']=0.120286},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*-0.002997, ['s']=0.206500},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3928,9 +3928,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=-0.002260, ['s']=0.004381},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.005516, ['s']=0.000720},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.483825, ['s']=0.852666},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3939,9 +3939,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield1, ['a']=x_axis, ['t']=-0.000368, ['s']=0.012090},
 			{['c']='turn',['p']=Shield1, ['a']=z_axis, ['t']=0.005067, ['s']=0.033892},
 			{['c']='turn',['p']=Shield1, ['a']=y_axis, ['t']=-1*-0.001143, ['s']=0.708090},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3950,27 +3950,27 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.255297, ['s']=1.704308},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.130487, ['s']=0.212829},
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.073709, ['s']=0.080969},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.415565, ['s']=0.103095},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.028262, ['s']=0.016759},
 			{['c']='turn',['p']=AUL, ['a']=y_axis, ['t']=-1*-0.001330, ['s']=0.046131},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-0.506402, ['s']=0.019875},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=0.113712, ['s']=0.237374},
 			{['c']='turn',['p']=AUR, ['a']=y_axis, ['t']=-1*-0.003800, ['s']=0.034161},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=0.319610, ['s']=0.774579},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-0.037901, ['s']=0.011034},
 			{['c']='turn',['p']=AL, ['a']=y_axis, ['t']=-1*0.033910, ['s']=0.061182},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3979,9 +3979,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.236384, ['s']=2.089845},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.023451, ['s']=0.107209},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*0.015988, ['s']=0.123991},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -3990,9 +3990,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.896528, ['s']=4.422877},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.022602, ['s']=0.102421},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.001341, ['s']=0.178326},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4001,15 +4001,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.829735, ['s']=2.047987},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.034357, ['s']=0.148132},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.018163, ['s']=0.021669},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.071336, ['s']=1.428974},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.079761, ['s']=0.164295},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*-0.022762, ['s']=0.084704},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4018,15 +4018,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield5, ['a']=x_axis, ['t']=-0.000369, ['s']=0.055971},
 			{['c']='turn',['p']=Shield5, ['a']=z_axis, ['t']=0.005067, ['s']=0.029112},
 			{['c']='turn',['p']=Shield5, ['a']=y_axis, ['t']=-1*-0.001142, ['s']=1.636071},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=-0.000368, ['s']=0.001669},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.005067, ['s']=0.000396},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*-0.001140, ['s']=0.427911},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4035,9 +4035,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.075332, ['s']=0.491767},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.086406, ['s']=0.240348},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*0.082576, ['s']=0.180767},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4046,27 +4046,27 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.766783, ['s']=1.394961},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.005824, ['s']=0.339990},
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.027109, ['s']=0.127089},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.570784, ['s']=0.627002},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.030850, ['s']=0.013874},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*-0.032254, ['s']=0.090454},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-0.494170, ['s']=0.033358},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=0.005350, ['s']=0.295532},
 			{['c']='turn',['p']=AUR, ['a']=y_axis, ['t']=-1*-0.001391, ['s']=0.006571},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.612981, ['s']=1.283095},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.048203, ['s']=0.239932},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*0.023904, ['s']=0.087498},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4075,9 +4075,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.665574, ['s']=0.866077},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.045758, ['s']=0.086835},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*0.019262, ['s']=0.067205},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4086,15 +4086,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000368, ['s']=0.002669},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.005067, ['s']=0.000779},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*-0.001140, ['s']=0.567925},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.231135, ['s']=0.754137},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.001626, ['s']=0.103455},
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*-0.261342, ['s']=0.769375},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4114,21 +4114,21 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.631253, ['s']=0.850640},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.019681, ['s']=0.231590},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*-0.012133, ['s']=0.025846},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=Shield8, ['a']=x_axis, ['t']=-0.000368, ['s']=0.005147},
 			{['c']='turn',['p']=Shield8, ['a']=z_axis, ['t']=0.005067, ['s']=0.040792},
 			{['c']='turn',['p']=Shield8, ['a']=y_axis, ['t']=-1*-0.001143, ['s']=1.745571},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.360451, ['s']=1.465750},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=0.002888, ['s']=0.069495},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*-0.006280, ['s']=0.036488},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4137,15 +4137,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.000369, ['s']=1.210127},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.005067, ['s']=0.001194},
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.001140, ['s']=0.041003},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-0.000369, ['s']=0.779687},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=0.005067, ['s']=0.000447},
 			{['c']='turn',['p']=AUR, ['a']=y_axis, ['t']=-1*-0.001142, ['s']=0.000393},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4154,15 +4154,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.000369, ['s']=0.778493},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.005067, ['s']=0.043490},
 			{['c']='turn',['p']=AUL, ['a']=y_axis, ['t']=-1*-0.001142, ['s']=0.000353},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-0.000369, ['s']=0.599960},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=0.005067, ['s']=0.080567},
 			{['c']='turn',['p']=AL, ['a']=y_axis, ['t']=-1*-0.001140, ['s']=0.065719},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4171,21 +4171,21 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.355266, ['s']=2.113968},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.005226, ['s']=0.053373},
 			{['c']='turn',['p']=LL, ['a']=y_axis, ['t']=-1*0.002531, ['s']=0.031422},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=1.140893, ['s']=5.705593},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.086994, ['s']=0.392816},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*0.026308, ['s']=0.195205},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.263777, ['s']=2.922527},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.011931, ['s']=0.200444},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*-0.018218, ['s']=0.140406},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4194,9 +4194,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.000369, ['s']=0.631374},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.005067, ['s']=0.018256},
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*-0.001140, ['s']=0.709639},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4205,9 +4205,9 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.000369, ['s']=0.281113},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.005068, ['s']=0.305018},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*-0.001139, ['s']=0.313933},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 	{
@@ -4216,15 +4216,15 @@ Animations['pax_alt_walk'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.338078, ['s']=4.816892},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.005339, ['s']=0.553999},
 			{['c']='turn',['p']=LUR, ['a']=y_axis, ['t']=-1*0.004100, ['s']=0.133248},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.358043, ['s']=0.565597},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.000889, ['s']=0.066250},
 			{['c']='turn',['p']=LR, ['a']=y_axis, ['t']=-1*-0.000907, ['s']=0.103862},
-			 
-			 
-			 
+			
+			
+			
 		}
 	},
 }
@@ -5393,7 +5393,7 @@ Animations['paxcentrail_walk'] = {
 	},
 }
 
-            
+
 
 Animations['paxcentrail_antiairstance'] = {
 	{
@@ -6976,29 +6976,29 @@ Animations['paxcentrail_stomp'] = {
 
 
 function constructSkeleton(unit, piece, offset)
-    if (offset == nil) then
-        offset = {0,0,0};
-    end
-
-    local bones = {};
-    local info = Spring.GetUnitPieceInfo(unit,piece);
-
-    for i=1,3 do
-        info.offset[i] = offset[i]+info.offset[i];
-    end 
-
-    bones[piece] = info.offset;
-    local map = Spring.GetUnitPieceMap(unit);
-    local children = info.children;
-
-    if (children) then
-        for i, childName in pairs(children) do
-            local childId = map[childName];
-            local childBones = constructSkeleton(unit, childId, info.offset);
-            for cid, cinfo in pairs(childBones) do
-                bones[cid] = cinfo;
-            end
-        end
-    end        
-    return bones;
+	if (offset == nil) then
+		offset = {0,0,0};
+	end
+	
+	local bones = {};
+	local info = Spring.GetUnitPieceInfo(unit,piece);
+	
+	for i=1,3 do
+		info.offset[i] = offset[i]+info.offset[i];
+	end 
+	
+	bones[piece] = info.offset;
+	local map = Spring.GetUnitPieceMap(unit);
+	local children = info.children;
+	
+	if (children) then
+		for i, childName in pairs(children) do
+			local childId = map[childName];
+			local childBones = constructSkeleton(unit, childId, info.offset);
+			for cid, cinfo in pairs(childBones) do
+				bones[cid] = cinfo;
+			end
+		end
+	end 
+	return bones;
 end

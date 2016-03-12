@@ -84,7 +84,6 @@ end
 -- e.g. [1]= {situationFunction(frame,TABLE,nr), continuecondtion(frame,TABLE,nr,boolsuccess), continuecondtion(frame,TABLE,nr,boolsuccess)}
 -- in Addition every Functions Table contains a MissionMap which consists basically of a statediagramm starting at one
 -- MissionMap={[1]=> {2,5},[2] => {1,5},[3]=>{5},[4]=>{5},[5]=>{1,5}}
-
 function missionHandler(frame,TABLE,nr)
 	--wethere the mission is continuing to the next nr
 	boolContinue=false
@@ -109,6 +108,7 @@ function missionHandler(frame,TABLE,nr)
 	end
 	
 end
+
 --> jobfunc header jobFunction(unitID,x,y,z, Previousoutcome) --> checkFuncHeader checkFunction(unitID,x,y,z,outcome)
 function getJobDone(unitID, dataTable, jobFunction, checkFunction,rest)
 	local dataT=dataTable
@@ -212,7 +212,6 @@ function genericOS(unitID, dataTable,jobFunctionTable, checkFunctionTable,rest)
 	end
 end
 
-
 -->encapsulates a function, stores arguments given, chooses upon returned nil, 
 --	the most often chosen argument
 function heuristicDefault(fooNction,fname, teamID, ...)
@@ -285,7 +284,6 @@ function buildJob(id, frame,Package)
 	return nextFrame, Package
 end
 
-
 -->Expects in the Package {updaterate, Pos, DefID, hitpoints, assignedSubAI, guardid}
 function guardJob(id, frame,Package)
 	
@@ -315,8 +313,6 @@ function exploreJob(id, frame,Package)
 	return nextFrame, Package
 end
 
-
-
 -->Turn Piece into various diretions within range
 function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
 	while true do
@@ -325,4 +321,30 @@ function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
 		Sleep(1000)
 	end
 	
+end
+
+--> breath 
+function breathOS(body, distance, LegTable,LegNumber, degree, speed)
+
+time= (distance/speed)
+speedDeg= 1/(degree *time)
+
+degHalf= degree/2
+	while true do
+	Move(body, y_axis, -distance, speed)
+		for i=1, LegNumber do
+			Turn(LegTable[i].up,x_axis, math.rad(degree), speedDeg)
+			Turn(LegTable[i].down,x_axis, math.rad(-2* degree), speedDeg)
+		end
+	WaitForMove(body, y_axis)
+	Sleep(100)
+	Move(body, y_axis, 0, speed)
+
+		for i=1,LegNumber do
+			Turn(LegTable[i].up,x_axis, math.rad(degHalf), speedDeg)
+			Turn(LegTable[i].down,x_axis, math.rad(-2* degree), speedDeg)
+		end
+	WaitForMove(body, y_axis)
+	Sleep(100)
+	end
 end

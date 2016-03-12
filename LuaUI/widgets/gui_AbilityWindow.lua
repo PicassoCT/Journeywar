@@ -1,200 +1,46 @@
 
-
-
-
-
-
-local onOffButtonImage
-local onOffButton
-local SpecialAbilityButton
-local upgradeGrid
-local AmmoBar
-local ExpBar
-local imageDirComands = 'luaui/images/commands/'
-local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
-
-local function inflateUpgradeMenue()	
-	if boolShowUpgrade== false then
-	boolShowUpgrade=true
-
-	Chili.Screen0:RemoveChild(upgradeGrid)
-	
-	else 
-	boolShowUpgrade=false
-	
-	Chili.Screen0:AddChild(upgradeGrid)
-	end
-end
-
-
-function updateAmmo()
-
-
-end
-
-function updateExp()
-
-end
-
-local function Create_ExpBar()
-	
-	ExpBar=			Chili.Progressbar:New
-							{
-					x     = 10,
-					y     = 60,
-					width= 90,
-					height=35,
-					value=0,
-					textColor = {0.8,1,1,1},
-					color = {0.3,0.85,0.95,1},
-					backgroundColor = {0.15,0.3,0.35,1},
-					caption = "EXP ",
-					OnChange = {updateExp},
-							}	
-end
-
-
-
-local function Create_AmmoBar()
-	AmmoBar=Chili.Progressbar:New
-							{
-					x     = 10,
-					y     = 20,
-					width= 90,
-					height=35,
-					textColor = {0.8,1,1,1},
-					color = {0.8,0.5,0.25,1},
-					backgroundColor = {0.1,0.2,0.2,1},
-					caption = "AMMO ",
-					OnChange = {updateAmmo},
-							}	 						 
-end
-
-local function inflateControllGrid ()
-
-
-
-
-	return Chili.Grid:New{
-		--name = 'foogrid',
-		width = 440,
-		height = 330,
-		color = {0,0,0,1},
-		
-		
-		children = {
-			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "SPEED", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SPEED") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "ARMOR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."ARMOR") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "STABILITY", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."STABILITY") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "AMMO", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AMMO") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "SENSORS", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SENSORS") end}},
-			
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SHOTGUN", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SHOTGUN") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SUBMG", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SUBMG") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SNIPER", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SNIPER") end}},
-
-			
-		
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "GRENADE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."GRENADE") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SLICER",OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SLICER") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "FLARE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."FLARE") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "TANGLE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."TANGLE") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "AROCKET", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AROCKET") end}},
-			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "GROCKET", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."GROCKET") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "EATER", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."EATER") end}},	
-			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "", OnClick = {function ()  end}},
-	
-			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "EJECTPOD", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."EJECTPOD") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "AMMOFAC", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AMMOFAC") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "STEALTH", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."STEALTH") end}},
-			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "RADAR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."RADAR") end}},
-				},
-
-		}
-	
-
-	end
-
-	
-
-local function UpdateAbilitiesWindow()
-	window_main:ClearChildren()
-
-	
-	
-	local unitID = selectedUnits[1]
-	if not unitID then 
-	Chili.Screen0:RemoveChild(upgradeGrid)
-	return 
-	end
-
-	local udid = spGetUnitDefID(unitID)
-	local ud = UnitDefs[udid]
-	
-	if ud.name == 'ccomender' then
-	
-	
-		ShowSpecialAbilityButton()
-		return
-	end
-	
-	local commands = widgetHandler.commands
-	for i = 1, #commands do
-		local cmd = commands[i]
-		if cmd.id == CMD.ONOFF then
-			local texture = onoffTexture[cmd.params[1]+1]
-			ShowOnOffButton(texture)
-		end
-	
-	boolShowUpgrade=true
-	Chili.Screen0:RemoveChild(upgradeGrid)
-	
-	
-	end
-end
-
-
-local function Create_UpgradeGrid()
-
-upgradeGrid =	Chili.Window:New{
-		
-				caption="UPGRADES                                  ",
-				textColor = {0.9,1,1,0.7},
-				fontSize=24,
-				fontShadow = false,
-				x = "65%",
-				y = "25%",
-				resizable = false,
-				draggable = false,
-			
-				clientWidth = 430,
-				clientHeight = 320,
-				children = 
-				{
-				inflateControllGrid()
-				},
-		
-		}
-
-end
-
-local function Create_SpecialAbilityButton()
-	SpecialAbilityButton = Button:New{
-		name = unitDefID,
-		x=5,
-		y=100,
-		caption='UPGRADE',
-		width = 100,
-		height = 60,
-		backgroundColor = {0.1,0.8,0.8,1}, 
-		textColor = {0.8,1,1,1},
-		OnClick = {
-			inflateUpgradeMenue
-		},
+function widget:GetInfo()
+	return {
+		name = "gui_ability_window",
+		desc = "Displays Special Abilitys",
+		author = "PicassoCT",
+		date = "2011-6-2",
+		license = "GNU GPL, v2 or later",
+		layer = math.huge,
+		enabled = true,
 	}
 end
 
 
+--Shared Data
+local Chili
+local Button
+local Label
+local Window
+local Panel
+local Image
+local Progressbar
+local screen0
+
+local boolShowUpgrade=false
+onOffButtonImage
+onOffButton ={}
+SpecialAbilityButton ={}
+upgradeGrid ={}
+AmmoBar ={}
+ExpBar ={}
+local imageDirComands = 'luaui/images/commands/'
+local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
+local selectedUnits = {}
+local ability_window
+local spGetUnitDefID = Spring.GetUnitDefID
+local spGetSelectedUnits = Spring.GetSelectedUnits
+
+
+ability_window_height = 180
+ability_window_width = 115
+ability_window_positionX= "20%"
+ability_window_positionY= "83%"
 
 local function Create_OnOffButton()
 	local buttonsize = 80
@@ -220,17 +66,257 @@ local function Create_OnOffButton()
 		textColor = {0.8,1,1,1},
 		OnClick = { onOffFunction },
 	}
-	onOffButtonImage = Image:New {
+	onOffButtonImage = Image:New { 
 		width="90%";
 		height= "90%";
 		bottom = nil;
 		y="5%"; x="5%";
 		keepAspect = true,
-		file = onoffTexture[1];
-		parent = onOffButton;
+		file = onoffTexture[1],
+		parent = onOffButton,
 	}
 end
-function Create_AbilityButton()
+
+local function inflateControllGrid ()
+	
+	return Chili.Grid:New{
+		--name = 'foogrid',
+		width = 440,
+		height = 330,
+		color = {0,0,0,1},
+		
+		
+		children = {
+			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "SPEED", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SPEED") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "ARMOR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."ARMOR") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "STABILITY", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."STABILITY") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "AMMO", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AMMO") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "SENSORS", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SENSORS") end}},
+			
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SHOTGUN", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SHOTGUN") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SUBMG", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SUBMG") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SNIPER", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SNIPER") end}},
+			
+			
+			
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "GRENADE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."GRENADE") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "SLICER",OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SLICER") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "FLARE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."FLARE") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "TANGLE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."TANGLE") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "AROCKET", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AROCKET") end}},
+			Chili.Button:New{backgroundColor = {0.3,0.6,0.8,1}, textColor = {0.8,1,1,1}, caption = "GROCKET", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."GROCKET") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "EATER", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."EATER") end}},	
+			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "", OnClick = {function () end}},
+			
+			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "EJECTPOD", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."EJECTPOD") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "AMMOFAC", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AMMOFAC") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "STEALTH", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."STEALTH") end}},
+			Chili.Button:New{backgroundColor = {0.1,0.5,0.6,1}, textColor = {0.8,1,1,1}, caption = "RADAR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."RADAR") end}},
+		},
+		
+	}
+	
+	
+end
+
+local function Create_UpgradeGrid()
+	
+	upgradeGrid =	Chili.Window:New{
+		
+		caption="UPGRADES ",
+		textColor = {0.9,1,1,0.7},
+		fontSize=24,
+		fontShadow = false,
+		x = "65%",
+		y = "25%",
+		resizable = false,
+		draggable = false,
+		
+		clientWidth = 430,
+		clientHeight = 320,
+		children = 
+		{
+			inflateControllGrid()
+		},
+		
+	}
+	
+end
+
+
+local function inflateUpgradeMenue()	
+	if not upgradeGrid then return end
+	
+	if boolShowUpgrade== false then
+		boolShowUpgrade=true
+		
+		Chili.Screen0:RemoveChild(upgradeGrid)
+		
+	else 
+		boolShowUpgrade=false
+		
+		Chili.Screen0:AddChild(upgradeGrid)
+	end
+end
+
+local function updateAmmo()
+	
+	
+end
+
+local function updateExp()
+	
+end
+
+local function Create_ExpBar()
+	
+	ExpBar=			Chili.Progressbar:New
+	{
+		x = 10,
+		y = 60,
+		width= 90,
+		height=35,
+		value=0,
+		textColor = {0.8,1,1,1},
+		color = {0.3,0.85,0.95,1},
+		backgroundColor = {0.15,0.3,0.35,1},
+		caption = "EXP ",
+		OnChange = {updateExp},
+	}	
+end
+
+local function Create_AmmoBar()
+	AmmoBar=Chili.Progressbar:New
+	{
+		x = 10,
+		y = 20,
+		width= 90,
+		height=35,
+		textColor = {0.8,1,1,1},
+		color = {0.8,0.5,0.25,1},
+		backgroundColor = {0.1,0.2,0.2,1},
+		caption = "AMMO ",
+		OnChange = {updateAmmo},
+	}	 						 
+end
+
+local unitTypeButtonMap={
+	["ccomender"]	= ShowSpecialAbilityButton
+}
+
+local function ShowOnOffButton(texture)
+	if not onOffButton then Create_OnOffButton() end
+	
+	if ability_window then
+		ability_window.AddChild(onOffButton)
+	end
+	onOffButton.file = texture
+	onOffButton.Invalidate()
+end
+
+
+function UpdateAbilitiesWindow()
+	--	upgradeGrid.ClearChildren()
+	selectedUnits = spGetSelectedUnits()
+	
+	
+	if not selectedUnits then return end
+	
+	local unitID = selectedUnits[1]
+	if not unitID then 
+		Chili.Screen0:RemoveChild(upgradeGrid)
+		return 
+	end
+	
+	local udid = spGetUnitDefID(unitID)
+	local ud = UnitDefs[udid]
+	
+	--empty the upgrade Grid
+	Chili.Screen0:RemoveChild(upgradeGrid)
+	
+	--adapt the button to unit
+	if unitTypeButtonMap[ud.name] then
+		--generate the Gui Specific by unittype
+		unitTypeButtonMap[ud.name]()
+		
+		boolShowUpgrade=true
+	else
+		
+		local commands = Spring.GetUnitCmdDescs (unitID)
+		
+		--show Default Button
+		for i = 1, #commands do
+			local cmd = commands[i]
+			-- if the unit has the CMD enable option, add the button
+			if cmd.id == CMD.ONOFF then
+				local texture = onoffTexture[cmd.params[1]+1]
+				ShowOnOffButton(texture)
+			end
+			
+			boolShowUpgrade=true
+			
+			
+		end
+	end
+end
+
+
+
+
+
+local updateCommandsSoon = false
+function widget:CommandsChanged()
+	updateCommandsSoon = true
+	
+end
+
+local function Create_UpgradeButton()
+	SpecialAbilityButton = Button:New{
+		name = unitDefID,
+		x=5,
+		y=100,
+		caption='UPGRADE',
+		width = 100,
+		height = 60,
+		backgroundColor = {0.1,0.8,0.8,1}, 
+		textColor = {0.8,1,1,1},
+		OnClick = {
+			inflateUpgradeMenue
+		},
+	}
+end
+
+
+
+local function ShowSpecialAbilityButton(texture)
+	if ability_window then
+		assert(SpecialAbilityButton)
+		assert(AmmoBar)
+		assert(ExpBar)
+		
+		ability_window.AddChild(SpecialAbilityButton)
+		ability_window.AddChild(AmmoBar)
+		ability_window.AddChild(ExpBar)
+		
+	end
+end
+
+
+--update functions
+function widget:GameFrame(f)
+	if updateCommandsSoon and (f % 16 == 0) then
+		
+		updateCommandsSoon = false
+		UpdateAbilitiesWindow()	
+	end
+end
+
+
+
+
+function widget:Initialize()
+	
+	
 	-- setup Chili
 	Chili = WG.Chili
 	Button = Chili.Button
@@ -243,7 +329,7 @@ function Create_AbilityButton()
 	Progressbar = Chili.Progressbar
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
-
+	
 	stack_main = Grid:New{
 		y=20,
 		padding = {0,0,0,0},
@@ -256,17 +342,18 @@ function Create_AbilityButton()
 		centerItems = false,
 		columns=2,
 	}
-
-	window_main = Window:New{
+	
+	ability_window = Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
 		caption = 'Abilities',
 		textColor = {0.9,1,1,0.7},
 		name = "facpanel",
-		right = '-10%', y = "30%",
-		width  = 115,
-		height = 180,
-		parent = Chili.Screen0,
+		x = ability_window_positionX, 
+		y = ability_window_positionY,
+		width = ability_window_width,
+		height = ability_window_height,
+		parent = screen0,
 		draggable = false,
 		tweakDraggable = true,
 		tweakResizable = true,
@@ -277,27 +364,9 @@ function Create_AbilityButton()
 		color = {0,0,0,1},
 		
 		
-		
-		children = {
-			
-					stack_main,
-			
-	
-		
+		children = {			
+			stack_main,			
 		},
 	}
-
-end
-local function ShowOnOffButton(texture)
-	window_main:AddChild(onOffButton)
-	onOffButtonImage.file = texture
-	onOffButtonImage:Invalidate()
-end
-
-local function ShowSpecialAbilityButton(texture)
-	window_main:AddChild(SpecialAbilityButton)
-	window_main:AddChild(AmmoBar)
-	window_main:AddChild(ExpBar)
-
-
+	
 end

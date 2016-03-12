@@ -1146,6 +1146,7 @@ function PlanetNameGenerator(llenght, lNamingSamples, lBreakers, lLetterTable,lB
 	
 end
 
+-->add a Terraindeformation to the LandLord
 function jw_AddTerrainDeformation(x,z, size, shapeFunction, ldepth, lblendType,lfilterType)
 	blendType=lblendType or "melt"
 	filterType=lfilterType or "borderblur"
