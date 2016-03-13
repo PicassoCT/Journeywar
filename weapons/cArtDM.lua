@@ -1,6 +1,6 @@
-local weaponName="cArtDM"
+local weaponName="cartdarkmat"
 local weaponDef={
-name="cArtDM",
+name="cartdarkmat",
 weaponType=[[StarburstLauncher]],
 vlaunch=1,
 
@@ -30,7 +30,7 @@ smokeTrail=false,
 
 explosionGenerator=[[custom:artillery_explosion]], 
 --CegTag="smoketrail",
-cegtag="CARTDM_STARFX",
+cegtag="cartdarkmat_STARFX",
 
 ----TARGETING
 turret=true,

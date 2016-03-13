@@ -36,7 +36,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_jw.lua" 	)
 	VFS.Include("scripts/lib_Build.lua" 	)
 	
-	local METAMAP_RES = 48
+	local MetaMapResDivider = 48
 	--Food
 	--AccumulatedHeat
 	
@@ -49,8 +49,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	--TestData DelMe
 	local fireCounter=1	
-	local mapX=Game.mapSizeX/METAMAP_RES
-	local mapY=Game.mapSizeZ/METAMAP_RES
+	local mapX=Game.mapSizeX/MetaMapResDivider
+	local mapY=Game.mapSizeZ/MetaMapResDivider
 	local PointOfIgnition=120
 	
 	local counter=1
@@ -67,17 +67,28 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function plotLanscapeTable(tableP)
 		
-		for x=1,METAMAP_RES do
+		for x=1,tableP.ResX do
 			RowString="||"
 			
-			for z=1,METAMAP_RES do
+			for z=1, tableP.ResZ do
 				boolprintOnce=true
 				if not tableP[x][z] then RowString =RowString.."X";boolprintOnce=false end
+				
 				if boolprintOnce==true and	tableP[x][z].y < 0 then RowString =RowString.."S" ;boolprintOnce=false ; end
-				if boolprintOnce==true and	tableP[x][z].Food > 0 then RowString= RowString.." ";boolprintOnce=false;end		
+				
+				if boolprintOnce==true and	tableP[x][z].Food > 0 then 
+					
+					if boolprintOnce== true and tableP[x][z].Food > 100 then				
+					RowString= RowString..":";boolprintOnce=false;
+					elseif boolprintOnce== true and tableP[x][z].Food > 50 then			
+					RowString= RowString..";";boolprintOnce=false;
+					elseif boolprintOnce== true and tableP[x][z].Food > 25 then			
+					RowString= RowString..".";boolprintOnce=false;
+					end		
+				end		
 				
 			end
-			RowString=	RowString.."||"
+
 			Spring.Echo(RowString)
 		end
 		
@@ -85,20 +96,24 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	function init()
+	
 		local	localLandScapeTable={}
+		localLandScapeTable.ResX= mapX
+		localLandScapeTable.ResZ= mapY
+		localLandScapeTable.ResolutionFactor =MetaMapResDivider
 		
 		for x=1,math.ceil(mapX), 1 do
 			localLandScapeTable[x]={}
 			
 			for z =1, math.ceil(mapY),1 do
 				
-				xValue= x*METAMAP_RES
-				zValue= z*METAMAP_RES
-				groundHeigth= Spring.GetGroundHeight(xValue,zValue)
+				xValue= x*MetaMapResDivider
+				zValue= z*MetaMapResDivider
+				groundHeigth= Spring.GetGroundHeight(zValue,xValue)
 				
 				localLandScapeTable[x][z]={}
 				localLandScapeTable[x][z].boolBurning=false
-				localLandScapeTable[x][z].Food= amountFlamableMaterial(xValue, zValue)
+				localLandScapeTable[x][z].Food= amountFlamableMaterial( zValue, xValue)
 				localLandScapeTable[x][z].y= groundHeigth
 				localLandScapeTable[x][z].AccumulatedHeat= 0
 				
@@ -113,11 +128,11 @@ if (gadgetHandler:IsSyncedCode()) then
 		nx,ny,nz=spGetGroundNormal(x,z)
 		nx,ny,nz=math.abs(nx),math.abs(ny),math.abs(nz)
 		norm=math.sqrt(nx*nx+ny*ny+nz*nz)
-		nx,ny,nz=nx/norm,ny/norm,nz/norm
+		nx,ny,nz= nx/norm,ny/norm,nz/norm
 		terrainflatFactor=ny/(math.max(math.abs(nx)+math.abs(nz),0.1))
 		
 		if ny < 0.5 then terrainflatFactor=0 end
-		T=Spring.GetFeaturesInCylinder(x,z,METAMAP_RES)
+		T=Spring.GetFeaturesInCylinder(x,z,MetaMapResDivider)
 		T=#T
 		featureFactor=T+1 or 1
 		h=spGetGroundHeight(x,z)
@@ -147,16 +162,18 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function mergeSmallFiresToPermaFire()
 		local LT=GG.LandScapeT
+		
 		for x=2,#LT-1,3 do
 			for z=2,#LT[x]-1,3 do
 				if LT[x-1][z-1].boolBurning==true and LT[x-1][z].boolBurning==true and LT[x-1][z+1].boolBurning==true and
 				LT[x][z-1].boolBurning==true and LT[x][z].boolBurning==true and LT[x][z+1].boolBurning==true and
 				LT[x+1][z-1].boolBurning==true and LT[x+1][z].boolBurning==true and LT[x+1][z+1].boolBurning==true then
-					bigFireTable[#bigFireTable+1]={x=x*METAMAP_RES,y=spGetGroundHeight(x*METAMAP_RES,z*METAMAP_RES),z=z*METAMAP_RES}
+					bigFireTable[#bigFireTable+1]={x=x*MetaMapResDivider,y=spGetGroundHeight(x*MetaMapResDivider,z*MetaMapResDivider),z=z*MetaMapResDivider}
 					removeFromFireTable({{x-1,z-1},{x-1,z},{x-1,z+1},{x,z-1},{x,z},{x,z+1},{x+1,z-1},{x+1,z},{x+1,z+1}})
 				end
 			end
 		end
+		
 		fireCounter=fireCounter-8
 	end
 	
@@ -164,7 +181,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	function removeFromFireTable(T)
 		KeyX={}
 		KeyZ={}
-		for i=1, #T do KeyX[T[i][1]*METAMAP_RES]=true ;KeyZ[T[i][2]*METAMAP_RES]=true end 
+		for i=1, #T do KeyX[T[i][1]*MetaMapResDivider]=true ;KeyZ[T[i][2]*MetaMapResDivider]=true end 
 		
 		for i= #fireT,1,-1 do
 			if KeyX[fireT[i].x] and KeyZ[fireT[i].z] then
@@ -179,8 +196,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		if not GG.AddFire then GG.AddFire={} end
 		for i=1,#GG.AddFire,1 do
 			
-			xClamped=clamp(math.ceil(GG.AddFire[i].x/METAMAP_RES),1,METAMAP_RES)
-			zClamped=clamp(math.ceil(GG.AddFire[i].z/METAMAP_RES),1,METAMAP_RES)
+			xClamped=clamp(math.ceil(GG.AddFire[i].x/MetaMapResDivider),1,LandScapeT.ResX)
+			zClamped=clamp(math.ceil(GG.AddFire[i].z/MetaMapResDivider),1,LandScapeT.ResZ)
 			
 			if GG.AddFire[i].Food and LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] then
 				if not LandScapeT[xClamped][zClamped].Food then LandScapeT[xClamped][zClamped].Food = GG.AddFire[i].Food end
@@ -208,15 +225,17 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				if math.random(0,3)~=1 then
 					boolOnce=true
-					spSpawnCEG("foorestfire", fireT[i].x+math.random(-16,16), fireT[i].y+math.random(1,5), fireT[i].z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1),METAMAP_RES,20)
+					spSpawnCEG("foorestfire", fireT[i].x+math.random(-16,16), fireT[i].y+math.random(1,5), fireT[i].z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1),MetaMapResDivider,20)
 				end
-				FT=Spring.GetFeaturesInCylinder(fireT[i].x,fireT[i].z,METAMAP_RES)
+				FT=Spring.GetFeaturesInCylinder(fireT[i].x,fireT[i].z,MetaMapResDivider)
 				if FT and #FT > 0 then
 					for k=1,#FT do
 						Spring.DestroyFeature(FT[k])
 					end
 				end
-				T=getAllInCircle("placeholder", fireT[i].x, fireT[i].z,METAMAP_RES)
+				
+				assert(fireT[i].x)
+				T=getAllInCircle("placeholder", fireT[i].x, fireT[i].z,MetaMapResDivider)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes, ShitWasSoCache)
 				if T and #T> 0 then
 					
@@ -236,8 +255,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		local dMap=delayMap
 		for i=1,#bigFireTable,1 do			
 			if dMap[i] and dMap[i] % frame ==0 then
+			    assert(bigFireTable[i].x)
 				spSpawnCEG("bigfoorestfire", bigFireTable[i].x+math.random(-16,16), bigFireTable[i].y+math.random(1,15), bigFireTable[i].z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1))
-				
 				T=getAllInCircle("placeholder", bigFireTable[i].x, bigFireTable[i].z,52)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes,ShitWasSoCache)
 				
@@ -261,7 +280,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		local LandScapeT= GG.LandScapeT
 		wX=math.floor(windVector.x/math.max(math.abs(windVector.x),math.abs(windVector.z)))
 		wZ=math.floor(windVector.z/math.max(math.abs(windVector.x),math.abs(windVector.z)))
-		X,Y=math.floor(fireT[nr].x/METAMAP_RES),math.floor(fireT[nr].z/METAMAP_RES)
+		X=math.floor(fireT[nr].x/MetaMapResDivider)
+		Y=math.floor(fireT[nr].z/MetaMapResDivider)
 		X,Y=math.floor(X+wX),math.floor(Y+wZ)
 		
 		
@@ -275,8 +295,8 @@ if (gadgetHandler:IsSyncedCode()) then
 					if 	LandScapeT[x][z].AccumulatedHeat > PointOfIgnition*math.random(1,2) and math.random(0,1) and
 					LandScapeT[x][z].boolBurning==false and 
 					LandScapeT[x][z].Food >0 and
-					spGetGroundHeight(x*METAMAP_RES,z*METAMAP_RES)>0 then
-						fireT[#fireT+1]={x=x*METAMAP_RES,y=15+spGetGroundHeight(x*METAMAP_RES, z*METAMAP_RES),z=z*METAMAP_RES}
+					spGetGroundHeight(x*MetaMapResDivider,z*MetaMapResDivider)>0 then
+						fireT[#fireT+1]={x=x*MetaMapResDivider,y=15+spGetGroundHeight(x*MetaMapResDivider, z*MetaMapResDivider),z=z*MetaMapResDivider}
 						spSpawnCEG("baarestfire", fireT[#fireT].x, fireT[#fireT].y, fireT[#fireT].z,math.random(0,0.1),math.random(0.8,1),math.random(0,0.1))
 						LandScapeT[x][z].boolBurning=true
 						fireCounter=fireCounter+1
@@ -293,7 +313,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		local LandScapeT= GG.LandScapeT
 		--Spring.Echo("Jw:Foorestfire3")
 		for i= table.getn(fireT),1,-1 do
-			x,z= math.ceil(fireT[i].x/METAMAP_RES), math.ceil(fireT[i].z/METAMAP_RES)
+			x,z= math.ceil(fireT[i].x/MetaMapResDivider), math.ceil(fireT[i].z/MetaMapResDivider)
 			
 			if not LandScapeT[ x][ z].Food then 
 				LandScapeT[ x][ z].Food = 0 
@@ -318,12 +338,12 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		for i= table.getn(bigFireTable),1,-1 do
-			x,z= math.ceil(bigFireTable[i].x/METAMAP_RES), math.ceil(bigFireTable[i].z/METAMAP_RES)
+			x,z= math.ceil(bigFireTable[i].x/MetaMapResDivider), math.ceil(bigFireTable[i].z/MetaMapResDivider)
 			tri(x,z,10)
 			if LandScapeT[ x][ z].Food < 0 and math.random(0,3)==2 then 
 				table.remove(bigFireTable,i);		
 				fireCounter	=fireCounter-1
-				GG.UnitsToSpawn:PushCreateUnit("gforrestfiredecalfactory",x*METAMAP_RES,0,z*METAMAP_RES,0,teamGaia)			
+				GG.UnitsToSpawn:PushCreateUnit("gforrestfiredecalfactory",x*MetaMapResDivider,0,z*MetaMapResDivider,0,teamGaia)			
 			end
 		end
 		
@@ -355,9 +375,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function regrowFlameableMaterial()
 		local LandScapeT=GG.LandScapeT
-		for i=1,Game.mapSizeX/METAMAP_RES, 1 do
-			for j=1,Game.mapSizeZ/METAMAP_RES,1 do
-				LandScapeT[i][j].Food=math.min(MaxFood,LandScapeT[i][j].Food+math.ceil(amountFlamableMaterial(i*METAMAP_RES,j*METAMAP_RES)/100))
+		for i=1,GG.LandScapeT.ResX, 1 do
+			for j=1,GG.LandScapeT.ResZ,1 do
+				LandScapeT[i][j].Food=math.min(MaxFood,LandScapeT[i][j].Food+math.ceil(amountFlamableMaterial(i*MetaMapResDivider,j*MetaMapResDivider)/100))
 			end
 		end
 		GG.LandScapeT=LandScapeT
@@ -393,7 +413,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				Spring.PlaySoundFile("sounds/gadgetsound/wildfire1.ogg",1.0)
 			end
 			
-			if fireCounter > METAMAP_RES then mergeSmallFiresToPermaFire()	end
+			if fireCounter > MetaMapResDivider then mergeSmallFiresToPermaFire()	end
 		end
 		
 		if fireCounter== 0 and frame % 400 == 0 then

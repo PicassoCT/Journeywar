@@ -61,7 +61,7 @@ strafeToAttack=true,
 Category = [[AIR]],
 
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 	ShowNanoSpray = false,
 	CanBeAssisted = false,
 	CanReclaim=false,	

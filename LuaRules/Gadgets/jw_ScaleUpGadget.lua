@@ -81,7 +81,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			ScaleUpLimit=3.14159
 			end
 			
-			if unitDefID== UnitDefNames["ghohymen"].id then 		
+			if unitDefID== UnitDefNames["ghohymen"].id then 	
+			StartScale=0.12			
 			ScaleFactorProFrame=0.0005
 			ScaleUpLimit=2.14159
 			end

@@ -21,7 +21,7 @@ maxdamage=650,
 	levelground=false,
 	
 	explodeAs="cbonkerplasma",
-	selfDestructAs="cArtDM",
+	selfDestructAs="cartdarkmat",
 	FootprintX = 6,
 	FootprintZ = 6,
 	MaxSlope = 10,	

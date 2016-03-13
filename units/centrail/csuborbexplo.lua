@@ -26,7 +26,7 @@ MaxWaterDepth =0,
 
 sightDistance = 300,
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM",
+	selfDestructAs="cartdarkmat",
 
 
 

@@ -16,6 +16,9 @@ bgcorpseId=FeatureDefNames["bgcorpse"].id
 iSeeId=FeatureDefNames["cinfantrycorpse"].id
 jcorpse=FeatureDefNames["jbiocorpse"].id
 jCorpusDelicti=FeatureDefNames["jskincorpse"].id
+unitTable={}
+unitTable[UnitDefNames["gjmedbiogwaste"].id] = UnitDefNames["gzombiehorse"].id
+
 corpseTable={}
 table.insert(corpseTable,jCorpusDelicti)
 table.insert(corpseTable,jcorpse)
@@ -32,7 +35,8 @@ features={}
 while(true) do
 upx,upy,upz=Spring.GetUnitPosition(unitID)
 features=Spring.GetFeaturesInCylinder( upx, upz, checkRange )
-	if features~=nil then
+units=Spring.GetUnitsInCylinder( upx, upz, checkRange )
+	if features	then
 			for i=1,table.getn(features),1 do
 			     foundFeatureID=Spring.GetFeatureDefID(features[i])
 				 -- if the table of corpses contains stuff the headcrab can eat.. it will
@@ -52,12 +56,37 @@ features=Spring.GetFeaturesInCylinder( upx, upz, checkRange )
 					Spring.SpawnCEG("dirt",fpx,fpy,fpz,0,1,0,50,0)
 					Spring.SpawnCEG("bloodspray",fpx,fpy,fpz,0,1,0,50,0)
 					Spring.DestroyUnit (unitID,false,true)
-
-					--get unit into position over corpse
-
-					--
-					end
+					break
+					end					
 			end
+			
+			
+			
+	end
+	if units then
+		for i=1,table.getn(units),1 do
+			     foundUnitDefID=Spring.GetUnitDefID(units[i])
+				 -- if the table of corpses contains stuff the headcrab can eat.. it will
+				 --Spring.Echo("CheckThem")
+					if  unitTable[foundUnitDefID] then
+					boolAllreadyResurrected=true
+					boolFireOnce=false
+					fpx,fpy,fpz=Spring.GetUnitPosition(units[i])
+					Spring.SetUnitMoveGoal (unitID, fpx,fpy,fpz)
+					Sleep(2000)
+					EmitSfx(hc,1024)
+					EmitSfx(hc,1024)
+					Spring.SetUnitPosition(unitID,fpx,fpy,fpz)
+					EmitSfx(hc,1024)
+					Spring.DestroyFeature(units[i])
+					Spring.CreateUnit( unitTable[foundUnitDefID] ,fpx,fpy,fpz, 0, teamID)  
+					Spring.SpawnCEG("dirt",fpx,fpy,fpz,0,1,0,50,0)
+					Spring.SpawnCEG("bloodspray",fpx,fpy,fpz,0,1,0,50,0)
+					Spring.DestroyUnit (unitID,false,true)
+					break
+					end					
+			end
+			
 	end
 Sleep(4000)
 end

@@ -29,7 +29,7 @@ collisionvolumescales = "30 65 30",
 collisionvolumeoffsets = "0 0 0",
  --collisionVolumeTest = 1;
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 
 
 

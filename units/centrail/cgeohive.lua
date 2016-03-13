@@ -27,7 +27,7 @@ local unitDef = {
 	nanocolor=[[0 0.9 0.9]],
 
 
-	explodeAs="cArtDM",
+	explodeAs="cartdarkmat",
 	selfDestructAs= [[NOWEAPON]],
 
 -- Internal settings	

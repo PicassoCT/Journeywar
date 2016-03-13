@@ -1,5 +1,5 @@
 return {
-["CARTDM_STARFX"] = {  
+["cartdarkmat_STARFX"] = {  
 	glowing = {
       air                = true,
       class              = [[explspike]],

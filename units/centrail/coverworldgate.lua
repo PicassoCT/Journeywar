@@ -30,8 +30,8 @@ CanGuard = false,
 
 levelGround            = true,
  corpse             = "bgcorpse",
- 	explodeAs="cArtDM",
-	selfDestructAs="cArtDM", 
+ 	explodeAs="cartdarkmat",
+	selfDestructAs="cartdarkmat", 
 
   maxSlope               = 255,
 CanMove = false,

@@ -324,18 +324,23 @@ function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
 end
 
 --> breath 
-function breathOS(body, lowDist, upDist , LegTable,LegNumber,degree, speed)
+function breathOS(body, lowDist, upDist , LegTable,LegNumber,degree, speed, count)
 leglength= upDist/2
 
+bLoop =  true
 frames= 30
+lcount = count or 1
+	if count and count > 0 then
+		bLoop = false
+	end
 
 if lowDist > upDist then return end
 
-	while true do
-	
+	while bLoop == true or lcount > 0 do
+
 	distance= math.random(lowDist,upDist)
 	percentage= distance/upDist
-	time= distance/speed
+	time= distance/(math.abs(speed)+0.001)
 	degreeC = percentage*degree
 	--downDeg=math.asin(leglength*distance)
 	--upDeg= math.asin()
@@ -363,7 +368,7 @@ if lowDist > upDist then return end
 			end
 		WaitForMove(body, y_axis)
 		Sleep(100)
-
+	lcount= lcount-1
 	end
 end
 

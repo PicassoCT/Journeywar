@@ -1,7 +1,7 @@
 -- xamelimpact as created by Smoth... 
 
 return {
-  ["CARTDM_STARIMPACTFX"] = {
+  ["cartdarkmat_STARIMPACTFX"] = {
     dirta = {
       air                = true,
       class              = [[CSimpleParticleSystem]],

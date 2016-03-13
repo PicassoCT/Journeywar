@@ -47,8 +47,8 @@ Category = [[LAND]],
  customParams = {},
  sfxtypes = {
   explosiongenerators = {
-    "custom:CARTDM_STARFX",
-    "custom:CARTDM_STARIMPACTFX",
+    "custom:cartdarkmat_STARFX",
+    "custom:cartdarkmat_STARIMPACTFX",
 
   },
 },
@@ -58,7 +58,7 @@ weapons = {
 [1]={name  = "crabshell",
 	onlyTargetCategory = [[LAND]],
 	},
-[2]={name  = "cArtDM",
+[2]={name  = "cartdarkmat",
 	onlyTargetCategory = [[LAND]],
 	},
 

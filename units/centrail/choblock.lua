@@ -21,7 +21,7 @@ maxdamage=150,
 nanocolor=[[0 0.9 0.9]],
 
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 }
 
 return lowerkeys({ [unitName] = unitDef })

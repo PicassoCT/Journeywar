@@ -24,8 +24,8 @@ local unitDef = {
 	ActivateWhenBuilt=1,
   nanocolor=[[0 0.9 0.9]],
 	
-	explodeAs="cArtDM",
-	selfDestructAs="cArtDM", 
+	explodeAs="cartdarkmat",
+	selfDestructAs="cartdarkmat", 
   Category=[[LAND BUILDING]],	
 }
 

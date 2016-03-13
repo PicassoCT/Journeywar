@@ -28,7 +28,7 @@ Category=[[LAND BUILDING]],
 	MakesMetal = 0, 
 	MetalMake = 0,	
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 
 
 

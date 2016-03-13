@@ -37,8 +37,8 @@ CanPatrol = true,
 CanStop = true,
 
 
-	explodeAs="cArtDM",
-	selfDestructAs="cArtDM", 
+	explodeAs="cartdarkmat",
+	selfDestructAs="cartdarkmat", 
 
 
 

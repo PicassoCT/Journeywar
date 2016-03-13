@@ -34,6 +34,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	local cRestrictorThumperID= WeaponDefNames["crestrictorthumper"].id
 	local crabShelWDefID = WeaponDefNames["crabshell"].id
+	local cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
 	local bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
 	local jHiveHoundID= WeaponDefNames["jhivehoundrocket"].id
 	local jSwiftSpearID= WeaponDefNames["swiftprojectile"].id
@@ -194,8 +195,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		-- get all units in range
 		if not GG.ShockWaves then GG.ShockWaves ={} end
 		local OtherWaves= GG.ShockWaves
-		
-		T=getAllInCircle(x,y,range)
+		assert(x)
+		T=getAllInCircle(x,z,range)
 		
 		for i=1,#T do
 			ex,ey,ez=Spring.GetUnitPosition(T[i])
@@ -214,7 +215,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
 		
-		
+		if weaponDefID == cArtDarkMaterWDefID then
+			if not GG.AddFire then 	GG.AddFire={} end		
+			GG.AddFire[#GG.AddFire+1]={x=px,y=py,z=pz}	
+		end
 		
 		if weaponDefID == lazarusDeviceDefID then
 			teamid=Spring.GetUnitTeam(AttackerID)
@@ -409,6 +413,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	HarvestRocketLoadTable={}
 	
 	
+
 	WeaponDefTable[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not fuckingSpecial[unitDefID] then
 			unitVannishAntimatterSFX(unitID) 
@@ -802,6 +807,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if stillAlive and stillAlive == true then
 			--explosion
 			ux,uy,uz=Spring.GetUnitPosition(unit,true)
+			if ux then
 			_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unit,piece)
 			Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
 			Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
@@ -816,6 +822,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
 			Spring.SetUnitRotation(unit,r.x,r.y,r.z)
 			Spring.AddUnitImpulse(unit,v.x,v.y,v.z) 
+			
 			T=getAllInCircle(unit,ux,uz,120)
 			--SplashDamage
 			foreach(
@@ -827,6 +834,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			return false
 		end
 		return true 
+		end
 	end
 	
 	

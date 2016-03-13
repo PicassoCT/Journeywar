@@ -44,7 +44,7 @@ terraformSpeed = 0.2,
   isMobileBuilder = true,
 
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 
 upright=true,
  --transportCapacity   = 3,

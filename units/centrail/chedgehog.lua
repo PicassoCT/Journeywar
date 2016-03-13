@@ -43,7 +43,7 @@ Category = [[LAND]],
 
   
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 	 customParams = {},
  sfxtypes = {
 				explosiongenerators = {

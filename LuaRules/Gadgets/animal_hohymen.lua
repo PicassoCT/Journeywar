@@ -23,7 +23,7 @@
 		if AgentTable[unitid].Type == "Hohymen" then
 	
 			if getMap(x,z).Food > 0  then
-			setMap(x,z, 0)
+			setMapFood(x,z, 0)
 			AgentTable[unitid].Values["Food"]=	math.min(AgentTable[unitid].Values["Food"]+ GRASSNUTRITION,100)
 			return transferStatechangeToUnitScript(unitid,"Eat", other)
 			end
@@ -42,10 +42,10 @@
 	end 	
 	
 	function 	 MoveCloser  (unitid,  other,x,y,z)
-	Spring.Echo("Social")
+	Spring.Echo("Agent is socializing")
 		AgentTable[unitid].Values["Water"]=math.max(0,AgentTable[unitid].Values["Water"]-0.5)
 		AgentTable[unitid].Values["Food"]=math.max(0,AgentTable[unitid].Values["Food"]-0.5)
-		AgentTable[unitid].Values["Social"]=math.min(AgentTable[unitid].Values["Social"]+1,100)
+		AgentTable[unitid].Values["Social"]=math.min(AgentTable[unitid].Values["Social"]+2 ,100)
 		 
 	return transferStatechangeToUnitScript(unitid,"MoveCloser",{[1]=other})
 	end	
@@ -390,24 +390,35 @@ AT={}
 	local spGetHeight=Spring.GetGroundHeight
 
 	
-	function clampX(x)
-	return math.floor(math.min(math.max(1,x/48),48)	)
+	function clampR(x, resolution)
+	return math.floor(math.min(math.max(1,x/resolution),resolution)	)
 	end
-	
-	function clampZ(z)
-	return  math.floor(math.min(math.max(1,z/48),48))	
-	end
+
 	
 	function getMap(x,z)
-
+	local xRes = GG.LandScapeT.ResX
+	local zRes = GG.LandScapeT.ResZ
 	
-	if not GG.LandScapeT[clampX(x)] or not GG.LandScapeT[clampX(x)][clampZ(z)]	 then Spring.Echo("NoLandscapetable at:"..x.." - ".. z) end
-	return GG.LandScapeT[clampX(x)][clampZ(z)]	
+	local itx= clampR(x, xRes)
+	local itz= clampR(z, zRes)
+	
+	if not GG.LandScapeT[itx] or not GG.LandScapeT[itx][itz]	 then Spring.Echo("NoLandscapetable at:"..x.." - ".. z) end
+	return GG.LandScapeT[itx][itz]	
 	end
 
 	
-	function setMap(x,z,val)
-	GG.LandScapeT[clampX(x)][clampZ(z)].Food	=val	
+	function setMapFood(x,z,val)
+	
+	local xRes = GG.LandScapeT.ResX
+	local zRes = GG.LandScapeT.ResZ
+	
+	local itx= clampR(x, xRes)
+	local itz= clampR(z, zRes)
+	
+	if not GG.LandScapeT[itx] or not GG.LandScapeT[itx][itz]	 then Spring.Echo("NoLandscapetable at:"..x.." - ".. z) end
+	
+	GG.LandScapeT[itx][itz].Food = val
+	
 	end
 		
    	   
@@ -549,6 +560,8 @@ AT={}
 			x,z=getADryWalkAbleSpot()
 			if x and z then
 			id=Spring.CreateUnit("ghohymen",x,0,z,1,gaiaTeam)
+			ix,iy,iz = math.random(10,20), math.random(10,20), math.random(10,20)
+			Spring.AddUnitImpulse(id,ix,iy,iz)
 			Spring.SetUnitAlwaysVisible(id,true)
 			end
 			

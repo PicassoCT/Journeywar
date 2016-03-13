@@ -57,8 +57,8 @@ workerTime = 0.005,
 buildDistance = 1200,
 terraformSpeed = 350,
 
-	explodeAs="cArtDM",
-	selfDestructAs="cArtDM", 
+	explodeAs="cartdarkmat",
+	selfDestructAs="cartdarkmat", 
 
 
 buildoptions = 

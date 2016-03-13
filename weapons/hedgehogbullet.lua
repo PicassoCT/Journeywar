@@ -33,7 +33,7 @@ smokeTrail=false,
 
 explosionGenerator=[[custom:artillery_explosion]], 
 --CegTag="smoketrail",
---cegtag="CARTDM_STARFX",
+--cegtag="cartdarkmat_STARFX",
 
 ----TARGETING
 turret=true,

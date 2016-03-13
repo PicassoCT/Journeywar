@@ -73,7 +73,7 @@ sounds = {
 	}
 		},
 			]]	
-explodeAs = "cArtDM",
+explodeAs = "cartdarkmat",
 	  customParams = {},
  sfxtypes = {
     explosiongenerators = {

@@ -27,8 +27,8 @@ nanocolor=[[0 0.9 0.9]],
 ShowNanoSpray = false,
 CanBeAssisted = false,
 CanReclaim=false,	
-	explodeAs="cArtDM",
-	selfDestructAs="cArtDM", 
+	explodeAs="cartdarkmat",
+	selfDestructAs="cartdarkmat", 
 
 
 

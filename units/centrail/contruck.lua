@@ -36,7 +36,7 @@ CanPatrol = true,
 CanStop = true,
 
 	explodeAs="citadelldrone",
-	selfDestructAs="cArtDM", 
+	selfDestructAs="cartdarkmat", 
 
 upright=false,
 
