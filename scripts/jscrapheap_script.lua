@@ -1,5 +1,7 @@
 include "lib_OS.lua"
- include "lib_UnitScript.lua"
+ include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
  include "lib_Build.lua" 
  include "lib_jw.lua" 
 
@@ -624,8 +626,8 @@ Move(ldrop,y_axis,-35,32)
 WaitForMove(ldrop,y_axis)
 EmitSfx(ldrop,1025)
 Hide(sdrop)
-resetPiece(sdrop)
-resetPiece(ldrop)
+resetP(sdrop)
+resetP(ldrop)
 Sleep(300)
 
 
@@ -652,7 +654,7 @@ live=math.ceil(math.random(20,60)*1000)
 	signum=signum*-1
 	speed=math.max(math.sqrt(speed),0.001)
 		if speed ==0.001 then
-		resetPiece(Leg[i],0.001)
+		resetP(Leg[i],0.001)
 		else
 		for i=1,#Leg do turnPieceRandDir(Leg[i],speed,signum*120,120,signum*180,180,0,5) end
 		turnT(apend,y_axis,signum*math.rad(speed),speed^2,false)
@@ -719,7 +721,7 @@ function pipes(i)
 	Sleep(100)
 	
 	Show(Pipe[i])
-	resetPiece(Pipe[i],math.random(9,22))
+	resetP(Pipe[i],math.random(9,22))
 	Spin(Pipe[i],y_axis,math.rad(math.random(-42,42)))
 	WaitForTurn(Pipe[i],x_axis)
 	WaitForTurn(Pipe[i],z_axis)

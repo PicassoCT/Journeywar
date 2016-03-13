@@ -1,5 +1,7 @@
 
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 include "suddenDeath.lua"
 
 jgeohive=piece"jgeohive"

@@ -1,5 +1,7 @@
 include "lib_OS.lua"
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 include "lib_Build.lua" 
 include "lib_jw.lua" 
 

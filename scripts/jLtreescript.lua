@@ -1,6 +1,8 @@
 	include "suddenDeath.lua"
 	include "lib_OS.lua"
-	include "lib_UnitScript.lua"
+	include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 	include "lib_jw.lua" 
 	include "lib_Build.lua" 
 
@@ -67,7 +69,7 @@
 	hideT(EndPiece)
 	--reset Table of Pieces
 			reseT(TreePiece)
-			resetPiece(center,0)
+			resetP(center,0)
 			StartThread(BuildLtree)
 			StartThread(foulTheSurroundings)
 				StartThread(playSoundByUnitTypOS,unitID,0.5,{

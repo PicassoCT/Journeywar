@@ -13,7 +13,7 @@ center=piece"center"
 body=piece"body"
 DeathStick=piece"DeathStick"
 
-function resetPiece(piecename,speed,boolWaitForIT)
+function resetP(piecename,speed,boolWaitForIT)
 	if not piecename then return end
 	
 	Turn(piecename,x_axis,0,speed)
@@ -36,7 +36,7 @@ function reseT(tableName,speed, ShowAll, boolWait)
 	
 	for i=1,#tableName do
 		
-		resetPiece(tableName[i],lspeed,lboolWait)
+		resetP(tableName[i],lspeed,lboolWait)
 		if ShowAll and tableName[i] then
 			Show(tableName[i])
 		end

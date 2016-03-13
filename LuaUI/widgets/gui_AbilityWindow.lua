@@ -23,12 +23,13 @@ local Progressbar
 local screen0
 
 local boolShowUpgrade=false
-onOffButtonImage
-onOffButton ={}
-SpecialAbilityButton ={}
-upgradeGrid ={}
-AmmoBar ={}
-ExpBar ={}
+local onOffButtonImage
+local onOffButton ={}
+local SpecialAbilityButton ={}
+local upgradeGrid ={}
+local AmmoBar ={}
+local ExpBar ={}
+local stack_main
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
@@ -55,17 +56,19 @@ local function Create_OnOffButton()
 	end
 	
 	onOffButton = Button:New{
-		name = unitDefID,
+		name = "onOffButton",
 		--tooltip=tooltip,
 		x=15,
 		y=90,
-		caption='',
+		caption='Ability',
 		width = buttonsize,
 		height = buttonsize,
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1},
 		OnClick = { onOffFunction },
+		parent= stack_main	
 	}
+	
 	onOffButtonImage = Image:New { 
 		width="90%";
 		height= "90%";
@@ -75,12 +78,14 @@ local function Create_OnOffButton()
 		file = onoffTexture[1],
 		parent = onOffButton,
 	}
+	
+	onOffButton.Hide()
 end
 
-local function inflateControllGrid ()
+local function CreateUpgradeMenue ()
 	
-	return Chili.Grid:New{
-		--name = 'foogrid',
+	upgradeGrid= Chili.Grid:New{
+		name = 'UpgradeGrid',
 		width = 440,
 		height = 330,
 		color = {0,0,0,1},
@@ -115,14 +120,15 @@ local function inflateControllGrid ()
 		},
 		
 	}
-	
+	Chili.Screen0.Add(upgradeGrid)
+	upgradeGrid.Hide()	
 	
 end
 
 local function Create_UpgradeGrid()
 	
-	upgradeGrid =	Chili.Window:New{
-		
+	upgradeButton =	Chili.Window:New{
+		name = 'upgradeButton',
 		caption="UPGRADES ",
 		textColor = {0.9,1,1,0.7},
 		fontSize=24,
@@ -131,31 +137,30 @@ local function Create_UpgradeGrid()
 		y = "25%",
 		resizable = false,
 		draggable = false,
-		
+		parent=stack_main,
 		clientWidth = 430,
 		clientHeight = 320,
 		children = 
 		{
-			inflateControllGrid()
+			inflateComEndUpdateMenue()
 		},
 		
 	}
+	upgradeButton.Hide()
+	
 	
 end
 
 
 local function inflateUpgradeMenue()	
-	if not upgradeGrid then return end
-	
+
 	if boolShowUpgrade== false then
 		boolShowUpgrade=true
-		
-		Chili.Screen0:RemoveChild(upgradeGrid)
+		upgradeGrid.Show()
 		
 	else 
 		boolShowUpgrade=false
-		
-		Chili.Screen0:AddChild(upgradeGrid)
+		upgradeGrid.Hide()
 	end
 end
 
@@ -172,22 +177,26 @@ local function Create_ExpBar()
 	
 	ExpBar=			Chili.Progressbar:New
 	{
+		name= "ExpBar",
 		x = 10,
 		y = 60,
 		width= 90,
 		height=35,
 		value=0,
+		parent= stack_main,
 		textColor = {0.8,1,1,1},
 		color = {0.3,0.85,0.95,1},
 		backgroundColor = {0.15,0.3,0.35,1},
 		caption = "EXP ",
 		OnChange = {updateExp},
 	}	
+
 end
 
 local function Create_AmmoBar()
 	AmmoBar=Chili.Progressbar:New
 	{
+		name = "AmmoBar",
 		x = 10,
 		y = 20,
 		width= 90,
@@ -197,21 +206,23 @@ local function Create_AmmoBar()
 		backgroundColor = {0.1,0.2,0.2,1},
 		caption = "AMMO ",
 		OnChange = {updateAmmo},
-	}	 						 
+	}	
+
 end
 
 local unitTypeButtonMap={
+	--unitname --> Function Showing Button
 	["ccomender"]	= ShowSpecialAbilityButton
 }
 
 local function ShowOnOffButton(texture)
-	if not onOffButton then Create_OnOffButton() end
-	
-	if ability_window then
-		ability_window.AddChild(onOffButton)
+	if not onOffButton then
+		Create_OnOffButton()
 	end
-	onOffButton.file = texture
-	onOffButton.Invalidate()
+	
+		onOffButton.file = texture
+		onOffButton.Show()
+		
 end
 
 
@@ -219,8 +230,10 @@ function UpdateAbilitiesWindow()
 	--	upgradeGrid.ClearChildren()
 	selectedUnits = spGetSelectedUnits()
 	
-	
-	if not selectedUnits then return end
+	if not selectedUnits then 
+		HideAllActiveButtons()
+	return 
+	end
 	
 	local unitID = selectedUnits[1]
 	if not unitID then 
@@ -239,7 +252,6 @@ function UpdateAbilitiesWindow()
 		--generate the Gui Specific by unittype
 		unitTypeButtonMap[ud.name]()
 		
-		boolShowUpgrade=true
 	else
 		
 		local commands = Spring.GetUnitCmdDescs (unitID)
@@ -253,8 +265,7 @@ function UpdateAbilitiesWindow()
 				ShowOnOffButton(texture)
 			end
 			
-			boolShowUpgrade=true
-			
+			boolShowUpgrade=true	
 			
 		end
 	end
@@ -284,33 +295,40 @@ local function Create_UpgradeButton()
 			inflateUpgradeMenue
 		},
 	}
-end
 
-
-
-local function ShowSpecialAbilityButton(texture)
-	if ability_window then
+	assert(stack_main)
 		assert(SpecialAbilityButton)
-		assert(AmmoBar)
-		assert(ExpBar)
-		
-		ability_window.AddChild(SpecialAbilityButton)
-		ability_window.AddChild(AmmoBar)
-		ability_window.AddChild(ExpBar)
-		
-	end
+	SpecialAbilityButton.Hide()
+	stack_main:AddChild(SpecialAbilityButton)
+	
 end
+
 
 
 --update functions
 function widget:GameFrame(f)
-	if updateCommandsSoon and (f % 16 == 0) then
+	if updateCommandsSoon == true and (f % 16 == 0) then
 		
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
 	end
 end
 
+activeButtons={}
+function HideAllActiveButtons()
+	for i=1,#activeButtons do
+		activeButtons[i].Hide()
+	end
+end
+
+
+function createAllButtons()
+	Create_OnOffButton()
+	Create_UpgradeButton()
+	CreateUpgradeMenue()
+	
+
+end
 
 
 
@@ -368,5 +386,7 @@ function widget:Initialize()
 			stack_main,			
 		},
 	}
-	
+	--assert(ability_window)
+	--screen0:AddChild(ability_window)
+	createAllButtons()
 end

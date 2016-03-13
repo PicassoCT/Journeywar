@@ -31,7 +31,7 @@ local LastCommandStack={}
 --action of the GUI
 
 boolStackNotEmpty=false
-local stack_main
+
 local echo = Spring.Echo
 
 -------------------------------------------------------------------------------
@@ -129,6 +129,7 @@ function widget: Initialize()
 		minHeight =48,
 		OnClick = {function () push("DEA|AZ|") end}
 	}
+	
 	ActionZoneButtonImage = Image:New {
 		width="90%",
 		height= "90%",

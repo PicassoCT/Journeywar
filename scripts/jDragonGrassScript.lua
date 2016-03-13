@@ -1,6 +1,8 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua"
+ include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
  include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
@@ -39,7 +41,7 @@ function swayInWind()
 
 	Turn(rotator,y_axis,math.rad(math.random(-4.2,4.2)),0.01)
 	WaitForTurn(rotator,y_axis)
-	resetPiece(rotator, 0.01)
+	resetP(rotator, 0.01)
 	Sleep(100)
 	end
 

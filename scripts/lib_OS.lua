@@ -324,27 +324,182 @@ function randomRotate(Piecename,axis, speed, rangeStart,rangeEnd)
 end
 
 --> breath 
-function breathOS(body, distance, LegTable,LegNumber, degree, speed)
+function breathOS(body, lowDist, upDist , LegTable,LegNumber,degree, speed)
+leglength= upDist/2
 
-time= (distance/speed)
-speedDeg= 1/(degree *time)
+frames= 30
 
-degHalf= degree/2
+if lowDist > upDist then return end
+
 	while true do
-	Move(body, y_axis, -distance, speed)
-		for i=1, LegNumber do
-			Turn(LegTable[i].up,x_axis, math.rad(degree), speedDeg)
-			Turn(LegTable[i].down,x_axis, math.rad(-2* degree), speedDeg)
-		end
-	WaitForMove(body, y_axis)
-	Sleep(100)
-	Move(body, y_axis, 0, speed)
+	
+	distance= math.random(lowDist,upDist)
+	percentage= distance/upDist
+	time= distance/speed
+	degreeC = percentage*degree
+	--downDeg=math.asin(leglength*distance)
+	--upDeg= math.asin()
+	
+	
+	speedDeg= frames/(degreeC *(time))+0.0001 
+	--speedDeg= 0.5
+	degHalf= degreeC/9 +0.001
+	degHalfMins= degHalf *-1.3
+	degreeMinus= degreeC *-1.7
 
-		for i=1,LegNumber do
-			Turn(LegTable[i].up,x_axis, math.rad(degHalf), speedDeg)
-			Turn(LegTable[i].down,x_axis, math.rad(-2* degree), speedDeg)
-		end
-	WaitForMove(body, y_axis)
-	Sleep(100)
+		Move(body, y_axis, -distance, speed)
+			for i=1, LegNumber, 1 do
+				Turn(LegTable[i].up,x_axis, math.rad(degreeC), speedDeg)
+				Turn(LegTable[i].down,x_axis, math.rad(degreeMinus), 2*speedDeg)
+			end
+		
+		WaitForMove(body, y_axis)
+		Sleep(100)
+		Move(body, y_axis, 0, speed)
+			for i=1,LegNumber do
+
+				Turn(LegTable[i].up,x_axis, math.rad(degHalf), speedDeg)
+				Turn(LegTable[i].down,x_axis, math.rad( degHalfMins), speedDeg)
+			end
+		WaitForMove(body, y_axis)
+		Sleep(100)
+
 	end
+end
+
+-->plays the sounds handed over in a table 
+function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeT)
+	local SoundNameTimeTable=SoundNameTimeT
+	unitdef=Spring.GetUnitDefID(unitID)
+	
+	while true do
+		dice=math.random(1,#SoundNameTimeTable)
+		
+		PlaySoundByUnitType(unitdef, SoundNameTimeTable[dice].name,loudness, SoundNameTimeTable[dice].time, 1)
+		Sleep(1000)
+	end
+end
+
+-->partOfShipPartOfCrew binds a creature to a piece
+function partOfShipPartOfCrew( point, CreatureID,MotherID)
+	Spring.SetUnitNeutral(CreatureID,true)
+	Spring.MoveCtrl.Enable(CreatureID,true)
+	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+	roX,roY,roZ=0,0,0
+	
+	while GGboolBuildEnded == false do
+		tx,ty,tz=spGetUnitPiecePosDir(unitID,CreatureID)
+		Spring.MoveCtrl.SetPosition(CreatureID,tx+math.random(-5,5),ty,tz+math.random(-5,5))
+		Spring.MoveCtrl.SetRotation(CreatureID,roX, roY,roZ)
+		roX,roY,roZ=roX+math.random(-0.01,0.01),roY+math.random(-0.01,0.01),roZ+math.random(-0.01,0.01)
+		Sleep(500)
+	end
+	
+	Spring.SetUnitAlwaysVisible(CreatureID,false)
+	Spring.DestroyUnit(CreatureID,true,true)
+end
+
+
+--================================================================================================================
+--OS Support Functionality
+
+
+--> Sorts Pieces By Height in Model
+function sortPiecesByHeight(ableStableTableOfBabelEnable)
+	bucketSortList={}
+	
+	for i=1,#ableStableTableOfBabelEnable do
+		px,py,pz=Spring.GetUnitPiecePosDir(unitID,ableStableTableOfBabelEnable[i])
+		if not bucketSortList[math.ceil(py)] then 
+			bucketSortList[math.ceil(py)]={}
+		end
+	end
+	sortedTable={}
+	index=1
+	for k,v in pairs(bucketSortList) do
+		if type(v)=="number" then
+			sortedTable[index]=ableStableTableOfBabelEnable[v]
+		else
+			for i=1,#v do
+				sortedTable[index]=ableStableTableOfBabelEnable[v[i]]
+			end
+		end
+	end
+	return sortedTable
+end
+
+
+
+-->Transformer OS: Assembles from SubUnits in Team a bigger Unit
+function assemble(center,unitid,udefSub,CubeLenghtSub, nrNeeded,range, AttachPoints)
+	--Move UnderGround
+	
+	makeCascadingGlobalTables("InfoTable["..unitid"].boolBuildEnded",true)
+	
+	piecesTable=Spring.GetUnitPieceList(unitid)
+	for i=1,#piecesTable do
+		piecesTable[i]=piece(piecesTable[i])
+	end
+	hideT(piecesTable)
+	if AttachPoints then
+		AttachPoints=sortPiecesByHeight(AttachPoints) 
+	else
+		AttachPoints=sortPiecesByHeight(piecesTable)
+	end
+	indexP=1
+	hx,hy,hz=spGetUnitPiecePosDir(untid,AttachPoints[indexP])
+	base=Spring.GetGroundHeight(hx,hz)
+	DistanceDown=base-hy
+	Move(center,y_axis,DistanceDown,0)
+	
+	makeCascadingGlobalTables("BoundToThee")
+	
+	oldHP=Spring.GetUnitHealth(unitid)
+	newHP=oldHP
+	
+	while nrAdded < nrNeeded and Spring.GetUnitIsDead(unitid)==false do
+		Move(center,y_axis,DistanceDown*(nrAdded/nrNeeded),1.5)
+		--check VaryFoos around you
+		allSub={}
+		--check wether we are under Siege and send the Underlings not allready buildin
+		newHP=Spring.GetUnitHealth(unitid)
+		boolUnderAttack=oldHP > newHP
+		oldHP=newHP
+		if GG.InfoTable[unitid].boolUnderAttack==true then
+			--defend moma
+			ax,ay,az=Spring.GetUnitNearestEnemy(untid)
+			for i=1,#allSub do
+				if not GG.BoundToThee[allSub[i]] then
+					Spring.SetUnitMoveGoal(allSub[i],ax,ay,az)		
+				end
+			end
+			
+		else --build on
+			--get nextPiece above ground
+			attachP=AttachPoints[math.min(indexP,#AttachPoints)]
+			indexP=indexP+1
+			
+			x,y,z=Spring.GetUnitPiecePosDir(untid,attachP)
+			for i=1,#allSub do
+				
+				ux,uy,uz=Spring.GetUnitPosition(allSub[i])
+				if (ux-x) *(uy-y)* (uz-z) < 50 then --integrate it into the Avatara
+					if not GG.BoundToThee[allSub[i]] then
+						StartThread(partOfShipPartOfCrew, attachP, allSub[i],unitid)
+					end
+				else
+					Spring.SetUnitMoveGoal(allSub[i],x,y,z)	
+				end
+			end
+		end
+		
+	end
+	
+	GG.BoundToThee[unitid]=nil 
+	MoveCtrl.Enable(unitID,false)
+	GG.InfoTable[unitid].boolBuildEnded=true
+	boolComplete=true
+	Move(center,y_axis,0,12)
+	showT(piecesTable)
+	return true
 end

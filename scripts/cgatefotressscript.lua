@@ -1,7 +1,9 @@
 
 
 include "lib_OS.lua"
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 include "lib_Build.lua" 
 
 TableOfPieces={}
@@ -1034,7 +1036,7 @@ function 	DeployInOrderTower(boolReverse)
 	end
 	
 	
-	resetPiece(SeedCenter,0)
+	resetP(SeedCenter,0)
 	pieceToGo=0
 	for i=1,#towerDeployTable, 1 do
 		
@@ -1068,7 +1070,7 @@ function 	DeployInOrder(boolReverse)
 	end
 	
 	
-	resetPiece(SeedCenter,0)
+	resetP(SeedCenter,0)
 	pieceToGo=0
 	for i=1,#piecesDeployTable, 1 do
 		

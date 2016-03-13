@@ -94,8 +94,8 @@
 		}
 	
 	function locClamp(x)
-	if x < 1 then return 1 end
-	if x > 48 then return 48 end
+	if x < 2 then return 2 end
+	if x > 47 then return 47 end
 	return x
 	end
 	
@@ -108,6 +108,8 @@
 		
 	local lMap=getMap	
 		if not lMap then Spring.Echo("No global RessourceMapTable found") end
+	
+	--get the current LandScapeCell
 	LandScapeCell=lMap(ux,uz)
 
 
@@ -143,11 +145,14 @@
 	--explore openTable
 		for o=#openTable, 1, -1 do	
 		local	v=openTable[o]
+		
 		start,endv,inc=1,8,1
 		if math.random(0,1)==1 then start,endv,inc=8,1,-1 end
 				for i=start,endv,inc do
+				
+					--Get a RessourceType Index
 					ex,ez=locClamp(v.x+Vec[i].x),	locClamp(v.z+Vec[i].z)
-					echo("				ex,ez=locClamp(v.x+Vec[i].x),	locClamp(v.z+Vec[i].z)"..ex)
+
 					if closedTable[ex] and closedTable[ex][ez] and closedTable[ex][ez]==true then -- we allread explored this
 					else		
 						openTable[#openTable+1]={x=ex,z=ez}
@@ -156,6 +161,7 @@
 							closedTable[ex]={} 
 						end
 						
+						--add the node
 						closedTable[ex][ez] =true 					
 						unexploredNodes=unexploredNodes-1		
 					end
@@ -164,11 +170,12 @@
 						if valueType == GRASS and LandScapeCell and LandScapeCell.Food > 0 then 
 						echo("Found Goal:"..(tileSizeX) .."  |  "..( v.x))
 						echo("Found Goal:"..(v.x*tileSizeX) .."  |  "..( v.z*tileSizeZ))
+						
 						return v.x*tileSizeX, v.z*tileSizeZ
 						end
 						
 						if valueType == WATER and LandScapeCell and LandScapeCell.y < 0 then 
-						echo("Found Goal:"..(tileSizeX) .."  |  "..( v.x))
+	
 						echo("Found Goal:"..(v.x*tileSizeX) .."  |  "..( v.z*tileSizeZ))
 						return v.x*tileSizeX, v.z*tileSizeZ
 						end
@@ -176,10 +183,6 @@
 						table.remove(openTable,o)
 				
 				end
-		
-		
-		
-		
 		
 		end
 	
@@ -396,17 +399,18 @@ AT={}
 	end
 	
 	function getMap(x,z)
-	if not GG.LandScapeT[clampX(x)] or not GG.LandScapeT[clampX(x)][clampZ(z)]	 then Spring.Echo(x.." - ".. z) end
+
+	
+	if not GG.LandScapeT[clampX(x)] or not GG.LandScapeT[clampX(x)][clampZ(z)]	 then Spring.Echo("NoLandscapetable at:"..x.." - ".. z) end
 	return GG.LandScapeT[clampX(x)][clampZ(z)]	
 	end
 
+	
 	function setMap(x,z,val)
 	GG.LandScapeT[clampX(x)][clampZ(z)].Food	=val	
 	end
 		
-   
-
-			   
+   	   
 
 	--initialisises the eco-system
 	function spawnAgent(typename, x,y,z, id)

@@ -1,5 +1,7 @@
 
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 
 local jbug = piece "jbug"
 local jbugleg1 = piece "bugleg1"

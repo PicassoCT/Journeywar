@@ -1,4 +1,6 @@
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 include "lib_OS.lua"
 
 pieceTable = generatepiecesTableAndArrayCode(unitID, false)
@@ -631,7 +633,7 @@ function resetPosition()
 	SetSignalMask(SIG_RESET)
 	Sleep(500)
 	reseT(legsTable,1,true, false)
-	resetPiece(kuttel,3)
+	resetP(kuttel,3)
 	if math.random(0,1)==1 then
 		Turn(kuttel,x_axis,math.rad(30),60)
 		Move(kuttel,y_axis,-15,54)
@@ -644,7 +646,8 @@ function resetPosition()
 	if maRa()==true then
 		dropDead()
 	else
-		breathOS(kuttel, 10, LegTable,4, 66, 3)
+
+		breathOS(kuttel,5, 10, LegTable,4, 66, 6)
 	end
 end
 
@@ -674,7 +677,7 @@ function dropDead()
 			end
 			time=math.ceil(math.random(300,500))
 			Sleep(time)
-			resetPiece(kuttel,2)
+			resetP(kuttel,2)
 			Move(kuttel,y_axis,0,12)
 			while (true==Spring.UnitScript.IsInMove (kuttel, y_axis)) do
 				signum=signum*-1
@@ -709,8 +712,8 @@ stopCounter=0
 
 function walk()
 	SetSignalMask(SIG_WALK)
-	resetPiece(kuttel,3)
-	resetPiece(center,3)
+	resetP(kuttel,3)
+	resetP(center,3)
 	if stopCounter <= 0 then
 	Spring.PlaySoundFile("sounds/zombie/gzombiehores.ogg")
 	stopCounter= math.random(5,12)
@@ -757,6 +760,14 @@ end
 
 function script.Create()
 	StartPoints=Spring.GetUnitHealth(unitID)
+		
+		
+				speed= math.random(0.5,1.2)
+				waveATable(waveTablePipesAddPerspective,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
+				waveATable(waveTablePipesAdd,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
+				waveATable(waveTablePipes,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
+				
+	
 	
 	local map = Spring.GetUnitPieceMap(unitID)
 	local offsets = constructSkeleton(unitID,center, {0,0,0})

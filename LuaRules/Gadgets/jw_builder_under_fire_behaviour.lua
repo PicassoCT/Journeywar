@@ -17,8 +17,8 @@ end
 
 if ( gadgetHandler:IsSyncedCode()) then
 
-	local C_CITADEL_DEF_ID = UnitDefNames["citadell"].id
-	local J_BEANSTALK_DEF_ID = UnitDefNames["beanstalk"].id
+	C_CITADEL_DEF_ID = UnitDefNames["citadell"].id
+	J_BEANSTALK_DEF_ID = UnitDefNames["beanstalk"].id
 	
 
 

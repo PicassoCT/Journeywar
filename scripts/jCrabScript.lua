@@ -1,5 +1,7 @@
 
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 
 deathpivot = piece "deathpivot"
 Crabbase = piece "Crabbase"

@@ -1,6 +1,8 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua"
+ include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
  include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
@@ -110,7 +112,7 @@ BUILDPROGRESS=updateBP()
 	BUILDPROGRESS=updateBP()
 	Move(center,y_axis,0,22)
 
-	resetPieceDir(center,0.2)
+	resetDir(center,0.2)
 	Sleep(4000)
 	currently=currently*signum
 	Up=math.random(0,5)*currently

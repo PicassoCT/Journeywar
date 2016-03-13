@@ -1,6 +1,8 @@
   include "suddenDeath.lua"
 	include "lib_OS.lua"
- include "lib_UnitScript.lua"
+ include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
  include "lib_Build.lua" 
 
 	--HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
@@ -174,26 +176,26 @@
 			x=x*x+z*z+y*y
 				if math.sqrt(x) < 35 then 
 				--MilkTime
-					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-42), 1.9)
-					Turn(AniT[AgeStage]["Body"],x_axis,math.rad(13), 1.9)
+					Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-42), 0.19)
+					Turn(AniT[AgeStage]["Body"],x_axis,math.rad(13), 0.19)
 					for i=1,5, 1 do
 						if i%2== 1 then
-						Turn(AniT[AgeStage][i][1],x_axis,math.rad(-48), 1.55)
+						Turn(AniT[AgeStage][i][1],x_axis,math.rad(-48), 0.155)
 							if i== 3 then
-							Turn(AniT[AgeStage][i][1],z_axis,math.rad(-14), 1.14)
+							Turn(AniT[AgeStage][i][1],z_axis,math.rad(-14), 0.114)
 							elseif i==5 then
-							Turn(AniT[AgeStage][i][1],z_axis,math.rad(math.random(-14,14)), 1.14)
+							Turn(AniT[AgeStage][i][1],z_axis,math.rad(math.random(-14,14)), 0.114)
 							else
-							Turn(AniT[AgeStage][i][1],z_axis,math.rad(14), 1.12)
+							Turn(AniT[AgeStage][i][1],z_axis,math.rad(14), 0.112)
 							end
 						else
-						Turn(AniT[AgeStage][i][1],x_axis,math.rad(0), 1.59)
+						Turn(AniT[AgeStage][i][1],x_axis,math.rad(0), 0.159)
 						end
 					end
 						for i=1,22, 1 do
-						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-30), 1.15)
+						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-30), 0.115)
 						WaitForTurn(AniT[AgeStage]["Head"],x_axis)
-						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-45), 1.15)
+						Turn(AniT[AgeStage]["Head"],x_axis,math.rad(-45), 0.115)
 						WaitForTurn(AniT[AgeStage]["Head"],x_axis)		
 						end
 				end

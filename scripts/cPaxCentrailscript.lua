@@ -126,7 +126,9 @@ WeaponTable ={}
 
 include "suddenDeath.lua"
 include "lib_OS.lua"
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 include "lib_Build.lua" 
 
 function HitByWeapon ( x, z, weaponDefID, damage ) 
@@ -193,8 +195,8 @@ function PlayAnimation(animname)
 	if animname == "pack" 	then boolCo=true;		StartThread(pack);	return end
 	
 	if boolCo==false then 
-		resetPiece(Body,22)
-		resetPiece(deathpivot,22)
+		resetP(Body,22)
+		resetP(deathpivot,22)
 	end
 	
 	if not Animations[animname] then Spring.Echo(animname) end

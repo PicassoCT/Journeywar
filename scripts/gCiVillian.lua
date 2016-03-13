@@ -1,4 +1,6 @@
-include "lib_UnitScript.lua"
+include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
 --Define the wheel pieces
 local over=piece"over"
 --Define the pieces of the weapon

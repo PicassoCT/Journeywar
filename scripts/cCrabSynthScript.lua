@@ -4,7 +4,9 @@
 
  include "suddenDeath.lua"
  include "lib_OS.lua"
- include "lib_UnitScript.lua"
+ include "lib_UnitScript.lua" 
+ include "lib_anim.lua"
+
  include "lib_Build.lua" 
 
  KpiecesTable=makeKeyPiecesTable(unitID,piece)
@@ -298,9 +300,9 @@ function 	unfoldWeapon()
  end
  
  function 	reloadAnim() 
-	resetPiece(TwinCannon,12)
+	resetP(TwinCannon,12)
 	Sleep(700)
-	resetPiece(GunSled,12)
+	resetP(GunSled,12)
  end 
 
 function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3,offset,time,signum)
