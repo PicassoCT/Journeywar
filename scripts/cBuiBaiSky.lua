@@ -21,14 +21,18 @@ cg=piece"CG"
 CoreGeneratorTable={}
 for i=1,6 do
 	name="CG"..i
-	CoreGeneratorTable[#CoreGeneratorTable+1]=piece(name)
+	CoreGeneratorTable[i]=piece(name)
 end
 
 ArcoStump=piece"stump"
 Blocks={}
-for i=1,99 do
+for i=1,100 do
 	name="Block"..i
-	Blocks[#Blocks+1]=piece(name)
+	number= piece(name)
+	if number then
+	Blocks[#Blocks+1]=number
+	end
+	
 end
 
 NrOfPoints=0
@@ -98,8 +102,15 @@ function investMent()
 			boolDamaged=false	
 		end
 		Sleep(500)
+		
 	end
 	
+end
+
+function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+boolDelayedStart = true
+
+return damage
 end
 
 function fireEmit()
@@ -180,9 +191,15 @@ function script.Killed(recentDamage)
 	return 1
 end
 
+boolDelayedStart= false
 function buildIt()
+
+	while boolDelayedStart== false do
+	Sleep(100)	
+	end
 	hideT(Blocks)
 	Hide(ArcoStump)
+
 	
 	
 	if maRa()==true then
@@ -191,40 +208,39 @@ function buildIt()
 		
 		splits=math.ceil(math.random(2,6))
 		tableOfTables={}
-		
-		T2=Blocks
-		splitStart=math.ceil(#Blocks/splits)
-		for k=1,splits,1 do
-			local T1={}
-			T1,T2=splitTable(T2,splitStart)
-			
+
 			gridTable={}
 			freeSpotList={}
 			for i= -3,3,1 do
 				gridTable[i]={}
 				for j=-3,3,1 do
 					gridTable[i][j]={}
-					
-					
-					if ((i+4)%2==0 and (j+4)%2 ==0 ) then
-						gridTable[i][j][0]= false
-						gridTable[i][j][1]= true
-						freeSpotList[#freeSpotList+1]={x=i,z=j,y=1}
+						
+					if math.abs(i %3) == 0 or math.abs(j %3) == 0 or math.abs(i) == 1 or math.abs( j)== 1 then
+					gridTable[i][j][1]= true
+					gridTable[i][j][0]= true
+					freeSpotList[#freeSpotList+1]={x=i,z=j,y= 0}
+					freeSpotList[#freeSpotList+1]={x=i,z=j,y= 1}
 					else
-						gridTable[i][j][0]= true
-						freeSpotList[#freeSpotList+1]={x=i,z=j,y=0}
-					end				
+					gridTable[i][j][0]= false
+					
+					end
+					
+						
 				end
 			end
-			offSet=290
-			createRandomizedBuilding(T1, CoreGeneratorTable[math.ceil(math.min(k,#CoreGeneratorTable))],offSet,gridTable,freeSpotList)
-		end		
+		
+	
+			createRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 20)			
+		
+		
 		
 	else 
 		hideT(Blocks)
 		Hide(ArcoStump)
 		Show(buibaicity)
 	end
+	Hide(ArcoStump)--DeleteMe
 	hideT(CoreGeneratorTable)
 end
 
@@ -235,14 +251,14 @@ function script.Create()
 	teamID=Spring.GetUnitTeam(unitID)
 	
 	if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
-	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+	--GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 	--Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
 	
 	--</buildanimationscript>
 	StartThread(peaceLoop)
 	StartThread(investMent)
 	StartThread(SideEffects)
-	
 	Hide(cg)
+	Spring.AddUnitDamage(unitID,10)
 end
 --------BUILDING---------

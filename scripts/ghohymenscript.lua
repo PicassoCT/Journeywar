@@ -617,7 +617,7 @@ SetSignalMask(SIG_IDLE)
 	
 	body = AniT[AgeStage]["Body"]
 	while true do
-		breathOS(body, 1, 4, LegTable,5, 96, 0.67, 1)
+		breathOS(body, 1, 4, LegTable,5, 60, 0.67, 1)
 		Sleep(100)
 	end	
 end

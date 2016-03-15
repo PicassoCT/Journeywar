@@ -258,21 +258,26 @@ function hideAllPieces(unitID)
 end
 
 --> adds to the table arguments
-function addTable(T,TableName,...)
+function addTable(T,...)
 	--local arg = table.pack(...)
-	String=TableName
+	String="T"
 	boolOneTimeNil=false
-	for k,v in ipairs(arg) do
-		String= String.."["..k.."]"
-		if boolOneTimeNil == false then	
-			if	loadstring("assert("..String.." ~= nil)") == true then
+	if arg then
+		for k,v in ipairs(arg) do
+			String= String.."["..v.."]"
+			Spring.Echo(String)
+		
+			if boolOneTimeNil == false then	
+				if	loadstring(String) ~= nil  then
+				else
+					boolOneTimeNil=true
+				end		
 			else
-				boolOneTimeNil=true
-			end		
-		else
-			loadstring(String.."={}")
+				loadstring(String.."={}")
+			end
 		end
 	end
+	return T
 end
 
 function makeTable(default, XDimension, yDimension,zDimension)
@@ -2094,7 +2099,9 @@ function vardump(value, depth, key)
 	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllInCircle(unitID,x,z,Range,teamid)
-	if not unitID or not z then return {} end
+	if not unitID or not x or not z then 
+	return {} 
+	end
 	
 		T={}
 		if teamid then
@@ -2206,7 +2213,7 @@ function vardump(value, depth, key)
 		--local arg = table.pack(...)
 		T={}
 		if Table then T=Table else Spring.Echo("Lua:Toolkit:Process: No Table handed over") return end
-		if not arg then Spring.Echo("process has not functions to work on table") return end
+		if not arg then return end
 		if type(arg)== "function" then return elementWise(T,arg) end
 		
 		
@@ -3510,31 +3517,63 @@ function vardump(value, depth, key)
 		
 	end
 	
-	function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize)
-	freeSpotList[#freeSpotList+1] ={x = ind_x, y= ind_y, z= ind_z }
+	function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize,pieceheight)
+
 	
 				dirTable=	{
-			[1]=function() return 1,			0,			0 end,
 			[0]=function() return 0,			1,			0 end,
+			[1]=function() return 1,			0,			0 end,		
 			[2]=function() return 0,			0,			1 end,
 			[3]=function() return -1,			0,			0 end,
 			[4]=function() return 0,			0,			-1 end,
 			[5]=function() return 0,			1,			0 end
-		}		
-			if not gridTable[ind_x] or not gridTable[ind_x][ind_y] or not gridTable[ind_x][ind_y][ind_z] then
-				addTable(gridTable,"gridTable", ind_x,ind_y,ind_z)
-				gridTable[ind_x][ind_y][ind_z] = true
-			end
-	for i=1, #gridTable, 1 do
-		ox,oy,oz = gridTable[i]()
+		}	
+
+		if not gridTable[ind_x] then
+		gridTable[ind_x] ={} 
+		end
+		if not gridTable[ind_x][ind_y]then 
+		gridTable[ind_x][ind_y] ={} 
+		end
+		if not gridTable[ind_x][ind_y][ind_z]  then 
+		gridTable[ind_x][ind_y][ind_z]  ={} 
+		end
+		gridTable[ind_x][ind_y][ind_z] = false
+	
+	dirRandomizer= math.ceil(math.random(0,1)*5)
+
+		ox,oy,oz = dirTable[0]()
+		oy= (pieceheight/blocksize) *0.5
+		if not gridTable[ind_x+ox] then gridTable[ind_x+ox] ={} end
+		if not gridTable[ind_x+ox][ind_y+oy]then gridTable[ind_x+ox][ind_y+oy] ={} end
+		if not gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  then gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  ={} end
+		gridTable[ind_x+ox][ind_y+oy][ind_z+oz] = true	
+		freeSpotList[#freeSpotList+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+	
+	for i=1, dirRandomizer, 1 do
+		ox,oy,oz = dirTable[i]()
+		
+		if not gridTable[ind_x+ox] then 
+		gridTable[ind_x+ox] ={} 
+		end
+		
+		if not gridTable[ind_x+ox][ind_y+oy]then
+		gridTable[ind_x+ox][ind_y+oy] ={} 
+		end
+		
+		if not gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  then 
+		gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  = true
+		end
+		
 		gridTable[ind_x+ox][ind_y+oy][ind_z+oz] = false	
+		freeSpotList[#freeSpotList+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
 	end
 	
 	return freeSpotList,gridTable
 	end
 	
 	-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
-	function createRandomizedBuilding(lBlocks, originPiece, gridOffset,gridTable,freeSpotList)
+	function createRandomizedBuilding(lBlocks,  gridOffsetY,gridTable,freeSpotList, blocksize)
 		local Blocks = lBlocks	
 		
 		for i=1,table.getn(Blocks),1 do
@@ -3542,41 +3581,42 @@ function vardump(value, depth, key)
 			Move(Blocks[i],y_axis,0,0)
 			Move(Blocks[i],z_axis,0,0,true)
 		end
+
+		orgOffSetY= gridOffsetY
 		
 		hideT(Blocks)
-		--default dirTable
-			dirTable=	{
-			[1]=function() return 1,			0,			0 end,
-			[0]=function() return 0,			1,			0 end,
-			[2]=function() return 0,			0,			1 end,
-			[3]=function() return -1,			0,			0 end,
-			[4]=function() return 0,			0,			-1 end,
-			[5]=function() return 0,			1,			0 end
-		}
+
 		
-		blocksize=25
-		
-		for i=table.getn(Blocks),1,-1 do
-			if Blocks[i] then 
-				Show(Blocks[i])		
+		--for all blocks in the blocklist
+		for i=1,table.getn(Blocks), 1 do
+		if Blocks[i] then 
+				--Show the block
+			Show(Blocks[i])	
+			boolNotPlace=true		
+			
+			while boolNotPlace==true and table.getn(freeSpotList) > 0 do
+					randIndex=math.ceil(math.random(1,table.getn(freeSpotList)))
 				
-				randIndex=math.ceil(math.random(1,#freeSpotList))
-				local index = freeSpotList[randIndex]
-				if gridTable[index.x] and gridTable[index.x][index.y] and gridTable[index.x][index.y][index.z] then
-					
-					moveBlockAddPod(	freeSpotList[randIndex].x*blocksize,
-					freeSpotList[randIndex].y*blocksize+ orgOffSet,
-					freeSpotList[randIndex].z*blocksize)
-					
-					table.remove(Blocks,i)
-					table.remove(freeSpotList,randIndex)
+					local index = freeSpotList[randIndex]
+					if gridTable[index.x] and gridTable[index.x][index.y] and gridTable[index.x][index.y][index.z]== true then
+						
+						moveBlockAddPod(	
+						freeSpotList[randIndex].x * blocksize ,
+						freeSpotList[randIndex].y * blocksize + orgOffSetY ,
+						freeSpotList[randIndex].z * blocksize ,
+						Blocks[i]
+						)
+						Show(	Blocks[i])
+						table.remove(freeSpotList,randIndex)
+						boolNotPlace= false
+						_,pieceheight,_ = Spring.GetUnitPieceCollisionVolumeData(unitID, Blocks[i])
+						freeSpotList,gridTable =addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize,pieceheight)		
+					end
 				end
-				
-			addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize)	
-					
-			end
+		end
 		end
 	end
+	--]]
 	
 	function binaryInsertTable(Table,Value,ToInsert,key)
 		i=math.floor(table.getn(Table)/2)
@@ -3602,19 +3642,13 @@ function vardump(value, depth, key)
 	end
 	
 
-	function moveBlockAddPod(x,y,z,nrFreeSpot,nrBlok,bloks)
+	function moveBlockAddPod(x,y,z, block)--nrFreeSpot,nrBlok,bloks)
 		
-		
-		MovePieceToPos(bloks[nrBlok],x,y,z,0)
+		MovePieceToPos(block,x,y,z,0)
 		d=math.floor(math.random(0,3))*90
-		Turn(bloks[nrBlok],y_axis,math.rad(d),0)
-		Show(bloks[nrBlok])
-		--bx,by,bz=Spring.GetUnitBasePosition(unitID)
-		x,y,z=Spring.GetUnitPiecePosition(unitID,bloks[nrBlok])
-		x=x*-1
-		
-		
-		
+		Turn(block,y_axis,math.rad(d),0)
+		Show(block)
+
 	end
 	
 	-->Sanitizes a Variable for a table
@@ -3623,21 +3657,17 @@ function vardump(value, depth, key)
 	end
 	
 	-->Splits a Table into Two Pieces
-	function splitTable(T,breakP)
+	function splitTable(T,breakP,breakEnd)
 		breakPoint=breakP or math.ceil(#T/2)
-		breakPoint=sanitizeItterator(breakPoint,1,#T)
+		breakPoint=sanitizeItterator(breakPoint,1,table.getn(T))
 		local	T1={}
-		local	T2={}
-		
-		for i=1,breakPoint do
-			T1[i]=T[i]
+
+		for i=breakPoint,breakEnd,1 do
+			T1[#T1+1]=T[i]
 		end
 		
-		for i=math.min(breakPoint+1,#T),table.getn(T) do
-			T2[#T2+1]=T[i]
-		end
-		
-		return T1,T2
+		return T1
+
 	end
 	
 	

@@ -94,6 +94,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jSwiftSpearID , true)
 	Script.SetWatchWeapon(jghostDancerWeaponDefID , true)
 	Script.SetWatchWeapon(crabShelWDefID,true)
+	Script.SetWatchWeapon( cArtDarkMaterWDefID, true)
 	Script.SetWatchWeapon(bunkerPlasmaDefID,true)
 	Script.SetWatchWeapon(cCssFlameT,true)
 	Script.SetWatchWeapon(glavaWeaponID,true)
@@ -195,7 +196,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		-- get all units in range
 		if not GG.ShockWaves then GG.ShockWaves ={} end
 		local OtherWaves= GG.ShockWaves
-		assert(x)
+		assert(range)
 		T=getAllInCircle(x,z,range)
 		
 		for i=1,#T do
@@ -382,7 +383,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		--this one creates the headcrabs
 		if (weaponDefID == crabShelWDefID) then
-			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
+			ShockWaveRippleOutwards( px, pz, 150,     180,  90)
+			ShockWaveRippleOutwards(x,    z, force, speed, range)
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
 		end
 		

@@ -91,11 +91,9 @@ function script.AimWeapon2( heading, pitch )
 			StartThread(playChareUpSound)
 		end
 		
-		
 		return boolPlasmaReady
 	end
-	
-	
+		
 	return false
 end
 

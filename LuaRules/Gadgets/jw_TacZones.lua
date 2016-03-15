@@ -124,7 +124,9 @@ end
 			end	
 		
 	function addTriggerZone(unitID,unitDefID,teamID)
-			if MasterTable[teamID][3] == nil then MasterTable[teamID][3]={} 	end
+			
+			if not MasterTable[teamID] then MasterTable[teamID]={} 	end
+			if not MasterTable[teamID][3] then MasterTable[teamID][3]={} 	end
 			MasterTable[teamID][3][unitID] = unitID	
 			end		
 	---- /////////////////////////////////// ZONEFUNCTIONS

@@ -34,7 +34,7 @@
 		
 	function 	 DrinkWater  (unitid,  other,x,y,z)
 	Spring.Echo("Drinking")
-		if Spring.GetGroundHeight(x,z) <= 0 then
+		if Spring.GetGroundHeight(x,z) <= 2 then
 		AgentTable[unitid].Values["Water"]= 100
 		return transferStatechangeToUnitScript(unitid,"DrinkWater")
 		end
@@ -131,9 +131,7 @@
 
 	local lMap=getMap
 	nodeTable={}
-	unexploredNodes=48*48
-	mx,mz= Spring.GetMetalMapSize()
-	
+	unexploredNodes=tileSizeX*tileSizeZ
 
 	openTable={}
 	openTable[1]={x=ux,z=uz}
@@ -174,7 +172,7 @@
 						return v.x*tileSizeX, v.z*tileSizeZ
 						end
 						
-						if valueType == WATER and LandScapeCell and LandScapeCell.y < 0 then 
+						if valueType == WATER and LandScapeCell and LandScapeCell.y <= 0 then 
 	
 						echo("Found Goal:"..(v.x*tileSizeX) .."  |  "..( v.z*tileSizeZ))
 						return v.x*tileSizeX, v.z*tileSizeZ

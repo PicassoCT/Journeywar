@@ -466,8 +466,13 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 	
 end
 
+function echoMove(name, x,y,z)
+Spring.Echo("Moving Piece "..name.." to x:"..x.." ,y:"..y.." , z:"..z)
+end
+
 -->Moves a UnitPiece to a UnitPiece at speed
 function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
+
 	if not pieceDest or not piecename then return end
 	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceDest)
 	orx,ory,orz=Spring.GetUnitPiecePosition(unitID,piecename)
@@ -479,6 +484,8 @@ function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 	if offset then
 		ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.z
 	end	
+	
+	echoMove(piecename, ox,oy,oz)
 	Move(piecename,x_axis,ox,0)
 	Move(piecename,y_axis,oy,0)
 	Move(piecename,z_axis,oz,0,forceUpdate or true)
