@@ -17,12 +17,6 @@ for i=1,nrOfFires,1 do
 	piecename= "fireEmit"..i
 	fireemitters[i]=piece(piecename)
 end
-cg=piece"CG"
-CoreGeneratorTable={}
-for i=1,6 do
-	name="CG"..i
-	CoreGeneratorTable[i]=piece(name)
-end
 
 ArcoStump=piece"stump"
 Blocks={}
@@ -197,10 +191,10 @@ function buildIt()
 	while boolDelayedStart== false do
 	Sleep(100)	
 	end
+	reseT(Blocks)
 	hideT(Blocks)
 	Hide(ArcoStump)
 
-	
 	
 	if maRa()==true then
 		Hide(buibaicity)
@@ -216,14 +210,13 @@ function buildIt()
 				for j=-3,3,1 do
 					gridTable[i][j]={}
 						
-					if math.abs(i %3) == 0 or math.abs(j %3) == 0 or math.abs(i) == 1 or math.abs( j)== 1 then
-					gridTable[i][j][1]= true
+					if 	math.abs(i) %2 == 0 and 
+						math.abs(j) %2 == 0  then
+
 					gridTable[i][j][0]= true
-					freeSpotList[#freeSpotList+1]={x=i,z=j,y= 0}
-					freeSpotList[#freeSpotList+1]={x=i,z=j,y= 1}
+					freeSpotList[#freeSpotList+1]={x=i,y= 0,z=j}			
 					else
 					gridTable[i][j][0]= false
-					
 					end
 					
 						
@@ -231,7 +224,7 @@ function buildIt()
 			end
 		
 	
-			createRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 20)			
+			createRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 22.5)			
 		
 		
 		
@@ -240,8 +233,8 @@ function buildIt()
 		Hide(ArcoStump)
 		Show(buibaicity)
 	end
-	Hide(ArcoStump)--DeleteMe
-	hideT(CoreGeneratorTable)
+
+	
 end
 
 function script.Create()

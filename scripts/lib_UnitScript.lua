@@ -3517,8 +3517,7 @@ function vardump(value, depth, key)
 		
 	end
 	
-	function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize,pieceheight)
-
+	function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize)
 	
 				dirTable=	{
 			[0]=function() return 0,			1,			0 end,
@@ -3529,26 +3528,18 @@ function vardump(value, depth, key)
 			[5]=function() return 0,			1,			0 end
 		}	
 
-		if not gridTable[ind_x] then
-		gridTable[ind_x] ={} 
-		end
-		if not gridTable[ind_x][ind_y]then 
-		gridTable[ind_x][ind_y] ={} 
-		end
-		if not gridTable[ind_x][ind_y][ind_z]  then 
-		gridTable[ind_x][ind_y][ind_z]  ={} 
-		end
-		gridTable[ind_x][ind_y][ind_z] = false
 	
-	dirRandomizer= math.ceil(math.random(0,1)*5)
+		dirRandomizer= math.ceil(math.random(1,5))
 
-		ox,oy,oz = dirTable[0]()
-		oy= (pieceheight/blocksize) *0.5
-		if not gridTable[ind_x+ox] then gridTable[ind_x+ox] ={} end
-		if not gridTable[ind_x+ox][ind_y+oy]then gridTable[ind_x+ox][ind_y+oy] ={} end
-		if not gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  then gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  ={} end
-		gridTable[ind_x+ox][ind_y+oy][ind_z+oz] = true	
-		freeSpotList[#freeSpotList+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+		ox,oy,oz = dirTable[0]()	
+		
+		if not gridTable[ind_x+ox] then gridTable[ind_x+ox] ={} end		
+		if not gridTable[ind_x+ox][ind_z+oz]then gridTable[ind_x+ox][ind_z+oz] ={} end		
+		if not gridTable[ind_x+ox][ind_z+oz][ind_y+oy]  then gridTable[ind_x+ox][ind_z+oz][ind_y+oy] ={} end
+		
+		gridTable[ind_x+ox][ind_z+oz][ind_y+oy] = true	
+		freeSpotList[table.getn(freeSpotList)+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+
 	
 	for i=1, dirRandomizer, 1 do
 		ox,oy,oz = dirTable[i]()
@@ -3557,16 +3548,15 @@ function vardump(value, depth, key)
 		gridTable[ind_x+ox] ={} 
 		end
 		
-		if not gridTable[ind_x+ox][ind_y+oy]then
-		gridTable[ind_x+ox][ind_y+oy] ={} 
+		if not gridTable[ind_x+ox][ind_z+oz]then
+		gridTable[ind_x+ox][ind_z+oz] ={} 
 		end
 		
-		if not gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  then 
-		gridTable[ind_x+ox][ind_y+oy][ind_z+oz]  = true
-		end
+		if not gridTable[ind_x+ox][ind_z+oz][ind_y+oy]  then
 		
-		gridTable[ind_x+ox][ind_y+oy][ind_z+oz] = false	
-		freeSpotList[#freeSpotList+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+		gridTable[ind_x+ox][ind_z+oz][ind_y+oy] = true	
+		freeSpotList[table.getn(freeSpotList)+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+		end
 	end
 	
 	return freeSpotList,gridTable
@@ -3575,6 +3565,7 @@ function vardump(value, depth, key)
 	-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
 	function createRandomizedBuilding(lBlocks,  gridOffsetY,gridTable,freeSpotList, blocksize)
 		local Blocks = lBlocks	
+		ux,uy,uz= Spring.GetUnitPosition(unitID)
 		
 		for i=1,table.getn(Blocks),1 do
 			Move(Blocks[i],x_axis,0,0)
@@ -3582,6 +3573,8 @@ function vardump(value, depth, key)
 			Move(Blocks[i],z_axis,0,0,true)
 		end
 
+		
+		
 		orgOffSetY= gridOffsetY
 		
 		hideT(Blocks)
@@ -3590,30 +3583,39 @@ function vardump(value, depth, key)
 		--for all blocks in the blocklist
 		for i=1,table.getn(Blocks), 1 do
 		if Blocks[i] then 
-				--Show the block
+			
+			--Show the block
 			Show(Blocks[i])	
 			boolNotPlace=true		
 			
-			while boolNotPlace==true and table.getn(freeSpotList) > 0 do
-					randIndex=math.ceil(math.random(1,table.getn(freeSpotList)))
-				
-					local index = freeSpotList[randIndex]
-					if gridTable[index.x] and gridTable[index.x][index.y] and gridTable[index.x][index.y][index.z]== true then
+				while boolNotPlace==true and table.getn(freeSpotList) > 0 do
+						randIndex=math.ceil(math.random(1,table.getn(freeSpotList)))
+			
+						local index = freeSpotList[randIndex]
 						
-						moveBlockAddPod(	
-						freeSpotList[randIndex].x * blocksize ,
-						freeSpotList[randIndex].y * blocksize + orgOffSetY ,
-						freeSpotList[randIndex].z * blocksize ,
-						Blocks[i]
-						)
-						Show(	Blocks[i])
-						table.remove(freeSpotList,randIndex)
-						boolNotPlace= false
-						_,pieceheight,_ = Spring.GetUnitPieceCollisionVolumeData(unitID, Blocks[i])
-						freeSpotList,gridTable =addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize,pieceheight)		
-					end
+						if	gridTable[index.x] and 	
+						gridTable[index.x][index.z] and 
+						gridTable[index.x][index.z][index.y] and
+						gridTable[index.x][index.z][index.y]== true then
+							
+
+						
+							moveBlockAddPod(	
+							freeSpotList[randIndex].x * blocksize ,
+							freeSpotList[randIndex].y * blocksize + orgOffSetY ,
+							freeSpotList[randIndex].z * blocksize ,
+							Blocks[i]
+							)
+							Show(Blocks[i])
+							gridTable[index.x][index.z][index.y]= false
+							table.remove(freeSpotList,randIndex)
+							boolNotPlace= false
+						
+							freeSpotList,gridTable =addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize)		
+						end				
 				end
-		end
+
+		end		
 		end
 	end
 	--]]
