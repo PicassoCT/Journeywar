@@ -51,7 +51,7 @@ LeaveTracks = false,
 
 
 
-Category = [[LAND]],
+Category = [[NOTARGET]],
 
 
    customParams = {},

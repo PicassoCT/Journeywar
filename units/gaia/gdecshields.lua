@@ -50,7 +50,7 @@ LeaveTracks = false,
 		buildinggrounddecalsizey = 112,
 		buildinggrounddecaltype = "gdecshield.dds",
 
-Category = [[LAND]],
+Category = [[NOTARGET]],
   
    customParams = {},
  sfxtypes = {

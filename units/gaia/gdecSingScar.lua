@@ -77,6 +77,7 @@ Category = [[LAND]],
 				},
 
 			},
+			Category = [[NOTARGET]],
 
 }
 
