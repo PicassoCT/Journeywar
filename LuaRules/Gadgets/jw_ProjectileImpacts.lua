@@ -196,7 +196,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		-- get all units in range
 		if not GG.ShockWaves then GG.ShockWaves ={} end
 		local OtherWaves= GG.ShockWaves
-		assert(range)
+
 		T=getAllInCircle(x,z,range)
 		
 		for i=1,#T do
@@ -383,8 +383,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		--this one creates the headcrabs
 		if (weaponDefID == crabShelWDefID) then
-			ShockWaveRippleOutwards( px, pz, 150,     180,  90)
-			ShockWaveRippleOutwards(x,    z, force, speed, range)
+			ShockWaveRippleOutwards( px, pz, 150,   180,  90)
+
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
 		end
 		
@@ -804,13 +804,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	function blowItUp(unit,piece,vectordamage)
-		stillAlive= Spring.ValidUnitID(unit)
+	function blowItUp(unitID,piece,vectordamage)
+		stillAlive= Spring.ValidUnitID(unitID)
 		if stillAlive and stillAlive == true then
 			--explosion
-			ux,uy,uz=Spring.GetUnitPosition(unit,true)
+			ux,uy,uz=Spring.GetUnitPosition(unitID,true)
 			if ux then
-			_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unit,piece)
+			_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 			Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
 			Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
 			--directionalShove
@@ -822,15 +822,15 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			-- crossproduct = (vectordamage x v ) -> Transfer to local coordsystem hitpiece origin vector 
 			r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
-			Spring.SetUnitRotation(unit,r.x,r.y,r.z)
-			Spring.AddUnitImpulse(unit,v.x,v.y,v.z) 
+			Spring.SetUnitRotation(unitID,r.x,r.y,r.z)
+			Spring.AddUnitImpulse(unitID,v.x,v.y,v.z) 
 			
-			T=getAllInCircle(unit,ux,uz,120)
+			T=getAllInCircle(unitID,ux,uz,120)
 			--SplashDamage
 			foreach(
 			T, 
 			function (id) if math.random(0,1)==1 then Spring.AddUnitDamage(id,75) end end) 
-			Spring.AddUnitDamage(unit,10)
+			Spring.AddUnitDamage(unitID,10)
 			
 		else
 			return false

@@ -22,14 +22,15 @@ local Image
 local Progressbar
 local screen0
 
-local boolShowUpgrade=false
+local boolShowUpgrade = false
 local onOffButtonImage
-local onOffButton ={}
-local SpecialAbilityButton ={}
-local upgradeGrid ={}
-local AmmoBar ={}
-local ExpBar ={}
-local stack_main
+local onOffButton = {}
+local SpecialAbilityButton = {}
+local upgradeGrid = {}
+local AmmoBar = {}
+local ExpBar = {}
+local stack_main = {}
+
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
@@ -40,8 +41,8 @@ local spGetSelectedUnits = Spring.GetSelectedUnits
 
 ability_window_height = 180
 ability_window_width = 115
-ability_window_positionX= "20%"
-ability_window_positionY= "83%"
+ability_window_positionX = "20%"
+ability_window_positionY = "83%"
 
 local function Create_OnOffButton()
 	local buttonsize = 80
@@ -57,23 +58,23 @@ local function Create_OnOffButton()
 	
 	onOffButton = Button:New{
 		name = "onOffButton",
-		--tooltip=tooltip,
-		x=15,
-		y=90,
-		caption='Ability',
+		--tooltip = tooltip,
+		x = 15,
+		y = 90,
+		caption = 'Ability',
 		width = buttonsize,
 		height = buttonsize,
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1},
 		OnClick = { onOffFunction },
-		parent= stack_main	
+		parent = stack_main	
 	}
 	
 	onOffButtonImage = Image:New { 
-		width="90%";
-		height= "90%";
+		width = "90%";
+		height = "90%";
 		bottom = nil;
-		y="5%"; x="5%";
+		y = "5%"; x = "5%";
 		keepAspect = true,
 		file = onoffTexture[1],
 		parent = onOffButton,
@@ -84,7 +85,7 @@ end
 
 local function CreateUpgradeMenue ()
 	
-	upgradeGrid= Chili.Grid:New{
+	upgradeGrid = Chili.Grid:New{
 		name = 'UpgradeGrid',
 		width = 440,
 		height = 330,
@@ -127,17 +128,17 @@ end
 
 local function Create_UpgradeGrid()
 	
-	upgradeButton =	Chili.Window:New{
+	upgradeButton = 	Chili.Window:New{
 		name = 'upgradeButton',
-		caption="UPGRADES ",
+		caption = "UPGRADES ",
 		textColor = {0.9,1,1,0.7},
-		fontSize=24,
+		fontSize = 24,
 		fontShadow = false,
 		x = "65%",
 		y = "25%",
 		resizable = false,
 		draggable = false,
-		parent=stack_main,
+		parent = stack_main,
 		clientWidth = 430,
 		clientHeight = 320,
 		children = 
@@ -154,12 +155,12 @@ end
 
 local function inflateUpgradeMenue()	
 
-	if boolShowUpgrade== false then
-		boolShowUpgrade=true
+	if boolShowUpgrade == false then
+		boolShowUpgrade = true
 		upgradeGrid.Show()
 		
 	else 
-		boolShowUpgrade=false
+		boolShowUpgrade = false
 		upgradeGrid.Hide()
 	end
 end
@@ -175,15 +176,15 @@ end
 
 local function Create_ExpBar()
 	
-	ExpBar=			Chili.Progressbar:New
+	ExpBar = 			Chili.Progressbar:New
 	{
-		name= "ExpBar",
+		name = "ExpBar",
 		x = 10,
 		y = 60,
-		width= 90,
-		height=35,
-		value=0,
-		parent= stack_main,
+		width = 90,
+		height = 35,
+		value = 0,
+		parent = stack_main,
 		textColor = {0.8,1,1,1},
 		color = {0.3,0.85,0.95,1},
 		backgroundColor = {0.15,0.3,0.35,1},
@@ -193,14 +194,27 @@ local function Create_ExpBar()
 
 end
 
+
+local function ShowOnOffButton()
+		stack_main:AddChild(onOffButton)
+		activeButtons[#activeButtons+1]= onOffButton
+		
+end
+
+local function ShowSpecialAbilityButton()
+		stack_main:AddChild(onOffButton)
+		activeButtons[#activeButtons+1]= onOffButton
+		
+end
+
 local function Create_AmmoBar()
-	AmmoBar=Chili.Progressbar:New
+	AmmoBar = Chili.Progressbar:New
 	{
 		name = "AmmoBar",
 		x = 10,
 		y = 20,
-		width= 90,
-		height=35,
+		width = 90,
+		height = 35,
 		textColor = {0.8,1,1,1},
 		color = {0.8,0.5,0.25,1},
 		backgroundColor = {0.1,0.2,0.2,1},
@@ -210,20 +224,12 @@ local function Create_AmmoBar()
 
 end
 
-local unitTypeButtonMap={
+local unitTypeButtonMap = {
 	--unitname --> Function Showing Button
-	["ccomender"]	= ShowSpecialAbilityButton
+	["ccomender"]	 = ShowSpecialAbilityButton,
+	["default"] = ShowOnOffButton
 }
 
-local function ShowOnOffButton(texture)
-	if not onOffButton then
-		Create_OnOffButton()
-	end
-	
-		onOffButton.file = texture
-		onOffButton.Show()
-		
-end
 
 
 function UpdateAbilitiesWindow()
@@ -237,15 +243,14 @@ function UpdateAbilitiesWindow()
 	
 	local unitID = selectedUnits[1]
 	if not unitID then 
-		Chili.Screen0:RemoveChild(upgradeGrid)
-		return 
+			HideAllActiveButtons()
+	return 
 	end
 	
 	local udid = spGetUnitDefID(unitID)
 	local ud = UnitDefs[udid]
 	
 	--empty the upgrade Grid
-	Chili.Screen0:RemoveChild(upgradeGrid)
 	
 	--adapt the button to unit
 	if unitTypeButtonMap[ud.name] then
@@ -253,22 +258,10 @@ function UpdateAbilitiesWindow()
 		unitTypeButtonMap[ud.name]()
 		
 	else
-		
-		local commands = Spring.GetUnitCmdDescs (unitID)
-		
-		--show Default Button
-		for i = 1, #commands do
-			local cmd = commands[i]
-			-- if the unit has the CMD enable option, add the button
-			if cmd.id == CMD.ONOFF then
-				local texture = onoffTexture[cmd.params[1]+1]
-				ShowOnOffButton(texture)
-			end
-			
-			boolShowUpgrade=true	
-			
-		end
+			unitTypeButtonMap["default"]()
 	end
+
+
 end
 
 
@@ -284,9 +277,9 @@ end
 local function Create_UpgradeButton()
 	SpecialAbilityButton = Button:New{
 		name = unitDefID,
-		x=5,
-		y=100,
-		caption='UPGRADE',
+		x = 5,
+		y = 100,
+		caption = 'UPGRADE',
 		width = 100,
 		height = 60,
 		backgroundColor = {0.1,0.8,0.8,1}, 
@@ -296,10 +289,11 @@ local function Create_UpgradeButton()
 		},
 	}
 
-	assert(stack_main)
-		assert(SpecialAbilityButton)
-	SpecialAbilityButton.Hide()
+
+	
 	stack_main:AddChild(SpecialAbilityButton)
+	
+	SpecialAbilityButton.Hide()
 	
 end
 
@@ -314,20 +308,18 @@ function widget:GameFrame(f)
 	end
 end
 
-activeButtons={}
+local activeButtons = {}
 function HideAllActiveButtons()
-	for i=1,#activeButtons do
+	for i = 1,#activeButtons do
 		activeButtons[i].Hide()
 	end
 end
 
-
+--subConstructors
 function createAllButtons()
 	Create_OnOffButton()
 	Create_UpgradeButton()
 	CreateUpgradeMenue()
-	
-
 end
 
 
@@ -349,16 +341,16 @@ function widget:Initialize()
 	screen0 = Chili.Screen0
 	
 	stack_main = Grid:New{
-		y=20,
+		y = 20,
 		padding = {0,0,0,0},
 		itemPadding = {0, 0, 0, 0},
 		itemMargin = {0, 0, 0, 0},
-		width='100%',
+		width = '100%',
 		height = '100%',
 		resizeItems = false,
 		orientation = 'horizontal',
 		centerItems = false,
-		columns=2,
+		columns = 2,
 	}
 	
 	ability_window = Window:New{
@@ -386,7 +378,6 @@ function widget:Initialize()
 			stack_main,			
 		},
 	}
-	--assert(ability_window)
-	--screen0:AddChild(ability_window)
+
 	createAllButtons()
 end

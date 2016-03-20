@@ -2100,8 +2100,9 @@ function vardump(value, depth, key)
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllInCircle(unitID,x,z,Range,teamid)
 	if not unitID or not x or not z then 
-	return {} 
+		return {} 
 	end
+	if not Range then assert(Range) end
 	
 		T={}
 		if teamid then

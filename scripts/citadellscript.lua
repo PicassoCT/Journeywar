@@ -749,7 +749,9 @@ end
 
 function script.Killed(recentDamage,maxHealth)
 	StartThread(FireCloud)
-	
+		if GG.LandScapeT then
+		GG.LandScapeT:setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
+		end
 	StartThread(fireflakeBurst)
 	StartThread(debrisBurst)
 	Spin (cifireclou, y_axis, math.rad(-72))
@@ -760,7 +762,7 @@ function script.Killed(recentDamage,maxHealth)
 	Spin (cifireclo1, y_axis, math.rad(-12))
 	Spring.UnitScript.Show(cifireclo1)
 	
-	allHellBreaksLoose()
+	allHellBreaksLooseallHellBreaksLoose()
 	
 	Spring.UnitScript.Show(shater)
 	Explode (shater, SFX.SHATTER)
@@ -1056,14 +1058,29 @@ tz =tz /norm
 return  strength* tx, strength * ty, strength *tz
 end
 
+function setAreaFireShielded(object)
+object.boolShielded=true
+return object
+end
+
+function setAreaFireUnShielded(object)
+object.boolShielded=false
+return object
+end
+
 boolShield=false
 function shieldDraw()
 		
 	while true do
 
+		if boolShield==true then
+		
+		if GG.LandScapeT then
+		GG.LandScapeT:setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
+		end
 		
 		while boolShield==true do
-
+		
 	
 			
 			--Repulse Units from outside
@@ -1113,6 +1130,11 @@ function shieldDraw()
 				--Spring.CreateUnit("gdecshields",cx+math.random(-25,25),cy+math.random(-25,25),cz+math.random(-25,25), 0, teamID) 
 			end
 			Sleep(100)
+		end
+		
+		if GG.LandScapeT then
+		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireUnShielded)
+		end
 		end
 		
 		Sleep(500)
