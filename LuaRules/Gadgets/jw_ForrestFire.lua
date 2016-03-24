@@ -95,7 +95,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 		
-local function setAreaEffect(x,z, Range, sfxFunction)
+ function setAreaEffect(x,z, Range, sfxFunction)
 		
 		local areaEffectFunction=sfxFunction
 		local RangeX=Range/mapX
@@ -113,7 +113,7 @@ local function setAreaEffect(x,z, Range, sfxFunction)
 			for z=math.max(1,limz-RangeZ),math.min(mapZ,math.ceil(limz+RangeZ)), 1 do
 			
 				dist =math.sqrt((x -midX)*(x -midX)  + (z-midZ)*(z-midZ))
-				if dist < range then
+				if dist < Range then
 				GG.LandScapeT[x][z]=areaEffectFunction(GG.LandScapeT[x][z])
 				end
 			end

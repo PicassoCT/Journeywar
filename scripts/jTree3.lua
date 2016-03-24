@@ -157,7 +157,7 @@ end
 EXITNGUISH_RADIUS= 240
 function script.Killed(recentdamage,_)
 		if GG.LandScapeT then
-		GG.LandScapeT:setAreaEffect(cx,cz,EXITNGUISH_RADIUS,extinguishFire )
+		GG.LandScapeT.setAreaEffect(cx,cz,EXITNGUISH_RADIUS,extinguishFire )
 		end
 
 Spring.PlaySoundFile("sounds/jEtree/tree.wav")

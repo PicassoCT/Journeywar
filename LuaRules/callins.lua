@@ -72,7 +72,9 @@ CallInsList = {
   "AllowFeatureCreation",
   "AllowFeatureBuildStep",
   "AllowResourceLevel",
+  "AllowBuilderHoldFire",
   "AllowResourceTransfer",
+  "MoveCtrlNotify"
 }
 
 

@@ -10,7 +10,7 @@ function gadget:GetInfo()
     author    = "Google Frog",
     date      = "22 June 2014",
     license   = "GNU GPL, v2 or later",
-    layer     = 0,
+    layer     = 55,
     enabled   = true  --  loaded by default?
   }
 end

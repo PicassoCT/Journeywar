@@ -394,7 +394,7 @@
 		local itx= clampR(x, xRes)
 		local itz= clampR(z, zRes)
 		
-		if not GG.LandScapeT[itx] or not GG.LandScapeT[itx][itz]	 then --Spring.Echo("NoLandscapetable at:"..x.." - ".. z) end
+		if not GG.LandScapeT[itx] or not GG.LandScapeT[itx][itz]	 then Spring.Echo("NoLandscapetable at:"..x.." - ".. z) end
 		return GG.LandScapeT[itx][itz]	
 	end
 

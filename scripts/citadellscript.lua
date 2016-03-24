@@ -750,7 +750,7 @@ end
 function script.Killed(recentDamage,maxHealth)
 	StartThread(FireCloud)
 		if GG.LandScapeT then
-		GG.LandScapeT:setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
+		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
 		end
 	StartThread(fireflakeBurst)
 	StartThread(debrisBurst)
@@ -1076,7 +1076,7 @@ function shieldDraw()
 		if boolShield==true then
 		
 		if GG.LandScapeT then
-		GG.LandScapeT:setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
+		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
 		end
 		
 		while boolShield==true do

@@ -485,7 +485,7 @@ function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 		ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.z
 	end	
 	
-	echoMove(piecename, ox,oy,oz)
+--	echoMove(piecename, ox,oy,oz)
 	Move(piecename,x_axis,ox,0)
 	Move(piecename,y_axis,oy,0)
 	Move(piecename,z_axis,oz,0,forceUpdate or true)

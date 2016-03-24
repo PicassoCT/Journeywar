@@ -79,8 +79,9 @@ local function Create_OnOffButton()
 		file = onoffTexture[1],
 		parent = onOffButton,
 	}
-	
-	onOffButton.Hide()
+	if onOffButton then
+	onOffButton:Hide()
+	end
 end
 
 local function CreateUpgradeMenue ()
@@ -122,8 +123,9 @@ local function CreateUpgradeMenue ()
 		
 	}
 	Chili.Screen0.Add(upgradeGrid)
-	upgradeGrid.Hide()	
-	
+	if upgradeGrid then 
+	upgradeGrid:Hide()	
+	end
 end
 
 local function Create_UpgradeGrid()
@@ -147,8 +149,9 @@ local function Create_UpgradeGrid()
 		},
 		
 	}
-	upgradeButton.Hide()
-	
+	if upgradeButton then
+	upgradeButton:Hide()
+	end
 	
 end
 
@@ -161,7 +164,9 @@ local function inflateUpgradeMenue()
 		
 	else 
 		boolShowUpgrade = false
-		upgradeGrid.Hide()
+		if upgradeGrid then
+		upgradeGrid:Hide()
+		end
 	end
 end
 
@@ -293,7 +298,7 @@ local function Create_UpgradeButton()
 	
 	stack_main:AddChild(SpecialAbilityButton)
 	
-	SpecialAbilityButton.Hide()
+	SpecialAbilityButton:Hide()
 	
 end
 
@@ -311,7 +316,7 @@ end
 local activeButtons = {}
 function HideAllActiveButtons()
 	for i = 1,#activeButtons do
-		activeButtons[i].Hide()
+		activeButtons[i]:Hide()
 	end
 end
 
