@@ -24,10 +24,10 @@ collideFriendly=true,
 
 ----APPEARANCE
 model="cHarvestProj.s3o",
-smokeTrail=true,
+smokeTrail=false,
 explosionGenerator="custom:bloodslay",
 --CegTag="smoketrail",
-CegTag="razorstripe",
+CegTag="eaterstrip",
 ----TARGETING
 turret=true,
 cylinderTargeting=100,
@@ -50,8 +50,8 @@ lineOfSight=true,
 
 
 --sound
---soundHit="skinfantry/birdrockethit.wav",
---soundStart="skinfantry/birdrocketstart.wav",
+soundStart="cweapons/eaterlaunch.ogg",
+soundHit="cweapons/eaterlaunch.ogg",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

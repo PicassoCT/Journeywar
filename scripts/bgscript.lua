@@ -455,19 +455,19 @@ function offOverHead()
 	
 	Explode(Head,SFX.FALL+SFX.NO_HEATCLOUD)
 	Hide(Head)
-	wavetime=math.ceil(math.random(2000,4000))
+	wavetime=math.ceil(math.random(500,1000))
 	itterator=1
 	Show(LArm)
 	Show(RArm)
 	Hide(bgarm)
 	Turn(RArm,x_axis,math.rad(-108*itterator),5)
 	Turn(LArm,x_axis,math.rad(-108*itterator),5)
-	StartThread(headexplode,wavetime,18)
+	StartThread(headexplode,wavetime,35)
 	while wavetime > 0 do
-		for i=1,10 do 
+		for i=1,5 do 
 			
 			spawnCegAtPiece(unitID,bloodtable[math.random(1,#bloodtable)],"bgbloodslay",false)
-			Sleep(120)
+			Sleep(240)
 		end
 		itterator=itterator*0.9	
 		Turn(RArm,x_axis,math.rad(-108*itterator),3)

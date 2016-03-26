@@ -467,8 +467,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		local	 HarvestRocketParams={
 			pos = { gx, gy+max,gz}, 
-			["end"] = {tx,ty,tz},
-			speed={v.x,v.y,v.z},
+			["end"] = {tx,ty+10,tz},
+			speed={v.x,v.y+2,v.z},
 			owner = unitID,
 			team = ateamid,	
 			spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},

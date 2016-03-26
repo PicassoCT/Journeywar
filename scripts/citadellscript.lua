@@ -173,10 +173,12 @@ function reInforCements()
 		
 		for a=1,270,1 do
 			if a > 220 then
-				if a % 25 then
-					EmitSfx(PortalEmit,1039)
+				if a % 25 == 0 then
+				Spring.SpawnCEG("clightball",	 cx,cy+2150,cz,0,1,0,60)
+				Spring.SpawnCEG("citlightpillar",cx,cy+550, cz,0,-1,0,60)
+
 				end
-				EmitSfx(cishadersp,1038)
+				
 				EmitSfx(cishadersp,1026)
 			else
 				EmitSfx(cishadersp,1030)

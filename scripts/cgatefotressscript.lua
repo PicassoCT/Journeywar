@@ -1280,11 +1280,11 @@ function script.AimWeapon(weaponID, heading, pitch)
 		Signal(WeaponsTable[weaponID].signal)
 		SetSignalMask(WeaponsTable[weaponID].signal)
 		if WeaponsTable[weaponID].aimfunc then
-			return WeaponsTable[weaponID].aimfunc(weaponID,heading,pitch)
+			return WeaponsTable[weaponID].aimfunc(weaponID,heading,pitch) and boolDeployed==true
 		else
 			WTurn(WeaponsTable[weaponID].aimpiece,y_axis,heading,turretSpeed)
 			WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
-			return true
+			return true and  boolDeployed==true
 		end
 	else
 		return false 

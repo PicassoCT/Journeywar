@@ -42,9 +42,30 @@ function emitSFX()
 				Spring.SpawnCEG("bghdexplode",x,y+400,z,0,150,0)	
 			Sleep(300)
 			randoX,randoZ=math.random(-50,50),math.random(-50,50)
-				Spring.SpawnCEG("cexpprojectile",x+randoX,y+400,z+randoZ,0,1,0,60)
+				--Spring.SpawnCEG("cexpprojectile",x+randoX,y+400,z+randoZ,0,1,0,60)
+				Sleep(300)
+				Spring.SpawnCEG("clightball",x,y+2000,z,0,1,0,60)
+				Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
 
 		end
 
 end
 
+----aimining & fire weapon
+function script.AimFromWeapon1() 
+	return center 
+end
+
+
+
+function script.QueryWeapon1() 
+	return center
+end
+
+function script.AimWeapon1( Heading ,pitch)	
+	--aiming animation: instantly turn the gun towards the enemy
+
+	return true
+
+end
+ 

@@ -61,8 +61,18 @@ useSmoothMesh = false,
 
  
  
-Category = [[LAND]],
 
+
+weapons = {
+
+
+[1]={name  = "ceater",
+	onlyTargetCategory = [[LAND AIR WATER]],
+	},
+
+		},
+Category = [[LAND]],
+		
 
 
 

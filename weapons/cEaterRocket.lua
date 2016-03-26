@@ -7,7 +7,7 @@ Accuracy=2000,
 
 --Physic/flight path
 range=1800,
-reloadtime=15,
+reloadtime=3,
 weaponVelocity=250,
 startVelocity=150,
 weaponAcceleration=250,
@@ -42,7 +42,7 @@ damage={
 default=325,
 heavyarmor=150,
 },
-areaOfEffect=100,
+areaOfEffect=1,
 craterMult=0,
 
 --?FIXME***
@@ -50,8 +50,8 @@ lineOfSight=true,
 
 
 --sound
---soundHit="skinfantry/birdrockethit.wav",
-soundStart="cgatefortress/DroneSalvoFire.ogg",
+soundHit="cweapons/eaterImpact.ogg",
+soundStart="cweapons/eaterlaunch.ogg",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})
