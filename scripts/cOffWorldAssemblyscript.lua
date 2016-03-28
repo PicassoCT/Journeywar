@@ -890,7 +890,7 @@ function eggDeploy(speed)
 				Arm[5], 117,0,0,speed,
 				Arm[6], 0,0,0,speed,
 			  }
-	echoTable(go)		  
+	echoT(go)		  
 TurnPieceList(refUnitScript,
 							go,
 			  false, --TurnInOrder

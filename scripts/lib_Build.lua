@@ -1158,3 +1158,239 @@ function jw_AddTerrainDeformation(x,z, size, shapeFunction, ldepth, lblendType,l
 	GG.DynRefMap[#GG.DynRefMap+1]=	shapeFunction(size,depth)
 	
 end
+
+function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize)
+	
+	dirTable=	{
+		[0]=function() return 0,			1,			0 end,
+		[1]=function() return 1,			0,			0 end,		
+		[2]=function() return 0,			0,			1 end,
+		[3]=function() return -1,			0,			0 end,
+		[4]=function() return 0,			0,			-1 end,
+		[5]=function() return 0,			1,			0 end
+	}	
+	
+	
+	dirRandomizer= math.ceil(math.random(1,5))
+	
+	ox,oy,oz = dirTable[0]()	
+	
+	if not gridTable[ind_x+ox] then gridTable[ind_x+ox] ={} end		
+	if not gridTable[ind_x+ox][ind_z+oz]then gridTable[ind_x+ox][ind_z+oz] ={} end		
+	if not gridTable[ind_x+ox][ind_z+oz][ind_y+oy] then gridTable[ind_x+ox][ind_z+oz][ind_y+oy] ={} end
+	
+	gridTable[ind_x+ox][ind_z+oz][ind_y+oy] = true	
+	freeSpotList[table.getn(freeSpotList)+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+	
+	
+	for i=1, dirRandomizer, 1 do
+		ox,oy,oz = dirTable[i]()
+		
+		if not gridTable[ind_x+ox] then 
+			gridTable[ind_x+ox] ={} 
+		end
+		
+		if not gridTable[ind_x+ox][ind_z+oz]then
+			gridTable[ind_x+ox][ind_z+oz] ={} 
+		end
+		
+		if not gridTable[ind_x+ox][ind_z+oz][ind_y+oy] then
+			
+			gridTable[ind_x+ox][ind_z+oz][ind_y+oy] = true	
+			freeSpotList[table.getn(freeSpotList)+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
+		end
+	end
+	
+	return freeSpotList,gridTable
+end
+
+
+function moveBlockAddPod(x,y,z, block)--nrFreeSpot,nrBlok,bloks)
+	assert(block)
+	MovePieceToPos(block,x,y,z,0)
+	d=math.floor(math.random(0,3))*90
+	Turn(block,y_axis,math.rad(d),0)
+	Show(block)
+	
+end
+
+
+-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
+function buildRandomizedBuilding(lBlocks, gridOffsetY,gridTable,freeSpotList, blocksize, givenIndexFunction, gItteratorFunction, gposPostProcessFunc)
+	local Blocks = lBlocks	
+	ux,uy,uz= Spring.GetUnitPosition(unitID)
+	
+	for i=1,table.getn(Blocks),1 do
+		Move(Blocks[i],x_axis,0,0)
+		Move(Blocks[i],y_axis,0,0)
+		Move(Blocks[i],z_axis,0,0,true)
+	end
+	
+	defaultPieceItteratorFunction = function (lastIndex) return lastIndex+1 end
+	defaultIndexFunction = function (index)
+		return math.ceil(math.random(1,table.getn(freeSpotList))),{}
+	end
+	
+	posPostProcessFunc= gposPostProcessFunc or function(pname, x,y,z) return x,y,z end 
+	--selects the default random growth 
+	persistancePosition={}
+	selectIndexFunction = givenIndexFunction or defaultIndexFunction
+	ItteratorFunction = gItteratorFunction or defaultPieceItteratorFunction
+	orgOffSetY= gridOffsetY
+	
+	hideT(Blocks)
+	
+	
+	--for all blocks in the blocklist
+	for i=1,table.getn(Blocks), 1 do
+		
+		iterator= ItteratorFunction(i-1)	
+		pieceToMove =	Blocks[iterator] 
+		
+		
+		if pieceToMove then 
+			
+			--Show the block
+			Show(Blocks[i])	
+			boolNotPlace=true		
+			
+			
+			while boolNotPlace==true and table.getn(freeSpotList) > 0 do
+				randIndex, persistancePosition= selectIndexFunction(i,persistancePosition,freeSpotList, lastIndex)
+				
+				local index = freeSpotList[randIndex]
+				
+				if	index and gridTable[index.x] and 	
+				gridTable[index.x][index.z] and 
+				gridTable[index.x][index.z][index.y] and
+				gridTable[index.x][index.z][index.y]== true then
+					
+					
+					
+					moveBlockAddPod(	
+					freeSpotList[randIndex].x * blocksize ,
+					freeSpotList[randIndex].y * blocksize + orgOffSetY ,
+					freeSpotList[randIndex].z * blocksize ,
+					pieceToMove
+					)
+					Show(pieceToMove)
+					--PostProcessPosition
+					posPostProcessFunc(pieceToMove,freeSpotList[randIndex].x,freeSpotList[randIndex].y,freeSpotList[randIndex].z)
+					gridTable[index.x][index.z][index.y]= false
+					table.remove(freeSpotList,randIndex)
+					boolNotPlace= false
+					
+					freeSpotList,gridTable =addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize)		
+					--update current index as lastIndex
+					lastIndex = index
+					
+				end				
+			end
+			
+		end		
+	end
+end
+--]]
+
+function inLimits(value, llim,uplim)
+	if value >= llim and value <= uplim then return true end
+	return false
+end
+
+
+function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
+	
+	
+	gridTable={}
+	freeSpotList={}
+	for i= -3,4,1 do
+		gridTable[i]={}
+		for j=-3,4,1 do
+			gridTable[i][j]={}
+			
+			if j == 0 and math.abs(i) == 3 then
+				
+				gridTable[i][j][0]= true
+				freeSpotList[#freeSpotList+1]={x=i,y= 0,z=j}			
+			else
+				gridTable[i][j][0]= false
+			end
+			
+			
+		end
+	end
+	
+	reseT(pieceTable)
+	
+	
+	getFreeSpotFunction = function (elementIndex,perPosition, freeSpotList)
+		
+		
+		persistancePosition = perPosition or {}
+		Sleep(100)
+		
+		if elementIndex < 41 then
+			
+			
+			--check wether even or uneven piece
+			--if evenpiece get a random index in one half +
+			ListOfBuildSpots={}
+			mySpot={}
+			
+			for i=1,table.getn(freeSpotList),1 do
+				
+				
+				if freeSpotList[i] and freeSpotList[i].x and freeSpotList[i].z then
+					--	Spring.Echo("Itterating Freespot ".. i .. " -> ".. freeSpotList[i].x .. " / "..freeSpotList[i].z)
+					if freeSpotList[i].z >= 0 and freeSpotList[i].z < 5 and freeSpotList[i].x > -5 and freeSpotList[i].x < 5 then
+						
+						ListOfBuildSpots[#ListOfBuildSpots+1]= freeSpotList[i]
+						ListOfBuildSpots[#ListOfBuildSpots].index=i
+					end
+				end
+			end
+			
+			index = math.ceil(math.random(1,table.getn(ListOfBuildSpots)))
+			assert(index)
+			
+			
+			persistancePosition[elementIndex]= {x=freeSpotList[index].x, y =freeSpotList[index].y, z = freeSpotList[index].z*-1 }
+			return ListOfBuildSpots[index].index, persistancePosition 
+			--store that ones brother index in persistancePosition
+		else
+			--if uneven get the index to go 
+			indX= math.max(1,math.min(elementIndex-40,80))
+			if 	persistancePosition[indX] then
+			for i=1,table.getn(freeSpotList),1 do
+			
+				if freeSpotList[i] then 
+					if 	persistancePosition[indX].x ==freeSpotList[i].x and 
+					persistancePosition[indX].y ==freeSpotList[i].y and
+					persistancePosition[indX].z ==freeSpotList[i].z*-1 then 
+					
+						return i, freeSpotList[i] 
+					end
+				end
+				
+			end
+			end
+			
+		end
+		
+		Spring.Echo("buildInfernalMachine:getFreeSpotFunction- Error "..elementIndex.." no index found")
+	end
+	
+	
+	postProc =function (pname, x, y, z)
+		Turn(pname,x_axis, math.rad(90),0)
+	end
+	
+	gItteratorFunction = function (index) 
+		return index
+	end
+	
+	
+	
+	buildRandomizedBuilding(pieceTable ,1, gridTable, freeSpotList, 16, getFreeSpotFunction, gItteratorFunction, postProc)		
+	
+end

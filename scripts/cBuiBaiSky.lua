@@ -3,8 +3,7 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
-
+include "lib_Animation.lua"
 include "lib_Build.lua" 
 
 
@@ -199,10 +198,7 @@ function buildIt()
 	if maRa()==true then
 		Hide(buibaicity)
 		Show(ArcoStump)	
-		
-		splits=math.ceil(math.random(2,6))
-		tableOfTables={}
-
+	
 			gridTable={}
 			freeSpotList={}
 			for i= -3,3,1 do
@@ -224,7 +220,7 @@ function buildIt()
 			end
 		
 	
-			createRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 22.5)			
+			buildRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 22.5)			
 		
 		
 		

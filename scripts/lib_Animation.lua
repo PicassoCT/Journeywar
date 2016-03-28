@@ -437,17 +437,24 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 	
 	--Get the Data of the Piece we want to align to
 	_,_,_,vx,vy,vz=Spring.GetUnitPiecePosDir(unitID,PieceToAlignTo)
-	norm=distance(vx,vy,vz)
-	vx,vy,vz=vx/norm,vy/norm,vz/norm
+	norm=distance(vx,vy,vz)+0.00001
+	
+	vx=vx/norm
+	vy=vy/norm
+	vz=vz/norm
 	-----------------------------------------------------------------
 	
-	W0={x=vy*-1,y=vx,z=0}
+	OrientVec={x=vy*-1,
+		y=vx,
+		z=0}
+
 	DirectionV={x=vx,y=vy,z=vz}
-	U0=mulVector(W0,DirectionV)
-	U = {x=0,y=1,z=0}
+
+	OrientUpVec=mulVector(OrientVec,DirectionV)
+	UpVec = {x=0,y=1,z=0}
 	
 	
-	angleX= math.atan2(VDotProduct(W0,U), 	VDotProduct(U0,U)/ Vabs(W0) * Vabs(U0))
+	angleX= math.atan2(VDotProduct(OrientVec,UpVec), 	VDotProduct(OrientUpVec,UpVec)/ Vabs(OrientVec) * Vabs(OrientUpVec))
 	
 	--Turn the Piece to the Vector of the PieceToAlignTo
 	Turn(pieceToAlign,x_axis,angleX,speed)

@@ -251,6 +251,8 @@ function makePieceMap(unitID)
 end
 
 function hideAllPieces(unitID)
+List = Spring.GetUnitPieceMap(unitID)
+
 	for k,v in pairs(List) do
 		Hide(v)
 	end
@@ -504,7 +506,7 @@ function HideWrap(piecenr)
 		end
 		if type(piecenr)=="table" then 
 			Spring.Echo("PieceNr in hide is a table");
-			echoTable(piecenr)
+			echoT(piecenr)
 			assert(true==false);
 		end
 		
@@ -537,7 +539,7 @@ function ShowWrap(piecenr)
 		end
 		if type(piecenr)=="table" then 
 			Spring.Echo("PieceNr in hide is a table");
-			echoTable(piecenr)
+			echoT(piecenr)
 			assert(true==false);
 		end
 		
@@ -1353,7 +1355,8 @@ end
 
 
 local countConstAnt=0
-function mulVector(v1,value)
+function mulVector(vl,value)
+
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
 	if not vl.x and type(vl)== 'number' then
@@ -1361,12 +1364,12 @@ function mulVector(v1,value)
 	end
 	
 	if value and type(value)=='number' then --Skalar
-		return {x = v1.x*value,
-			y=v1.y*value,
-		z=v1.z*value}
+		return {x = vl.x*value,
+			y=vl.y*value,
+		z=vl.z*value}
 	else		--return vector
 		Spring.Echo("JW:ToolKit:mulVector"..countConstAnt)
-		return {x = v1.x*value.x, y=	v1.y*value.y, z=	v1.z*value.z}
+		return {x = vl.x*value.x, y=	vl.y*value.y, z=	vl.z*value.z}
 	end
 end
 
@@ -1495,7 +1498,7 @@ function vardump(value, depth, key)
 		end
 	end
 	
-	function echoTable(T,boolAssertTable, name)
+	function echoT(T,boolAssertTable, name)
 		lboolAssertTable=boolAssertTable or false
 		lname= T.name or name or ""
 		if lname then 
@@ -1774,7 +1777,7 @@ function vardump(value, depth, key)
 		
 		
 		mD=MatrixBuilder3x3(MatrixBuilder3x3(mA,mB),mC)
-		echoTable(mD)
+		echoT(mD)
 		
 		
 	end
@@ -1818,6 +1821,7 @@ function vardump(value, depth, key)
 	function checkCenterPastPoint(MidPoint,GatePoint,PrevGatePoint)
 		
 		OrgPoint=subVector(GatePoint,PrevGatePoint)
+		assert(OrgPoint)
 		MirrorPointV=mulVector(OrgPoint,-1)
 		
 		-- if distance to PrevGatePoint < then distance to mirrored Point
@@ -3518,108 +3522,7 @@ function vardump(value, depth, key)
 		
 	end
 	
-	function addFreeSpots(ind_x, ind_y, ind_z, freeSpotList, gridTable, blocksize)
-	
-				dirTable=	{
-			[0]=function() return 0,			1,			0 end,
-			[1]=function() return 1,			0,			0 end,		
-			[2]=function() return 0,			0,			1 end,
-			[3]=function() return -1,			0,			0 end,
-			[4]=function() return 0,			0,			-1 end,
-			[5]=function() return 0,			1,			0 end
-		}	
 
-	
-		dirRandomizer= math.ceil(math.random(1,5))
-
-		ox,oy,oz = dirTable[0]()	
-		
-		if not gridTable[ind_x+ox] then gridTable[ind_x+ox] ={} end		
-		if not gridTable[ind_x+ox][ind_z+oz]then gridTable[ind_x+ox][ind_z+oz] ={} end		
-		if not gridTable[ind_x+ox][ind_z+oz][ind_y+oy]  then gridTable[ind_x+ox][ind_z+oz][ind_y+oy] ={} end
-		
-		gridTable[ind_x+ox][ind_z+oz][ind_y+oy] = true	
-		freeSpotList[table.getn(freeSpotList)+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
-
-	
-	for i=1, dirRandomizer, 1 do
-		ox,oy,oz = dirTable[i]()
-		
-		if not gridTable[ind_x+ox] then 
-		gridTable[ind_x+ox] ={} 
-		end
-		
-		if not gridTable[ind_x+ox][ind_z+oz]then
-		gridTable[ind_x+ox][ind_z+oz] ={} 
-		end
-		
-		if not gridTable[ind_x+ox][ind_z+oz][ind_y+oy]  then
-		
-		gridTable[ind_x+ox][ind_z+oz][ind_y+oy] = true	
-		freeSpotList[table.getn(freeSpotList)+1] ={x = ind_x+ox, y= ind_y+oy, z= ind_z+oz }
-		end
-	end
-	
-	return freeSpotList,gridTable
-	end
-	
-	-->generates from Randomized squarefeeted blocks of size A and height B a Buildings
-	function createRandomizedBuilding(lBlocks,  gridOffsetY,gridTable,freeSpotList, blocksize)
-		local Blocks = lBlocks	
-		ux,uy,uz= Spring.GetUnitPosition(unitID)
-		
-		for i=1,table.getn(Blocks),1 do
-			Move(Blocks[i],x_axis,0,0)
-			Move(Blocks[i],y_axis,0,0)
-			Move(Blocks[i],z_axis,0,0,true)
-		end
-
-		
-		
-		orgOffSetY= gridOffsetY
-		
-		hideT(Blocks)
-
-		
-		--for all blocks in the blocklist
-		for i=1,table.getn(Blocks), 1 do
-		if Blocks[i] then 
-			
-			--Show the block
-			Show(Blocks[i])	
-			boolNotPlace=true		
-			
-				while boolNotPlace==true and table.getn(freeSpotList) > 0 do
-						randIndex=math.ceil(math.random(1,table.getn(freeSpotList)))
-			
-						local index = freeSpotList[randIndex]
-						
-						if	gridTable[index.x] and 	
-						gridTable[index.x][index.z] and 
-						gridTable[index.x][index.z][index.y] and
-						gridTable[index.x][index.z][index.y]== true then
-							
-
-						
-							moveBlockAddPod(	
-							freeSpotList[randIndex].x * blocksize ,
-							freeSpotList[randIndex].y * blocksize + orgOffSetY ,
-							freeSpotList[randIndex].z * blocksize ,
-							Blocks[i]
-							)
-							Show(Blocks[i])
-							gridTable[index.x][index.z][index.y]= false
-							table.remove(freeSpotList,randIndex)
-							boolNotPlace= false
-						
-							freeSpotList,gridTable =addFreeSpots(index.x,index.y,index.z,freeSpotList,gridTable, blocksize)		
-						end				
-				end
-
-		end		
-		end
-	end
-	--]]
 	
 	function binaryInsertTable(Table,Value,ToInsert,key)
 		i=math.floor(table.getn(Table)/2)
@@ -3645,15 +3548,6 @@ function vardump(value, depth, key)
 	end
 	
 
-	function moveBlockAddPod(x,y,z, block)--nrFreeSpot,nrBlok,bloks)
-		
-		MovePieceToPos(block,x,y,z,0)
-		d=math.floor(math.random(0,3))*90
-		Turn(block,y_axis,math.rad(d),0)
-		Show(block)
-
-	end
-	
 	-->Sanitizes a Variable for a table
 	function sanitizeItterator(Data,Min,Max)
 		return math.max(Min,math.min(Max,math.floor(Data)))

@@ -2,9 +2,9 @@ local unitName = "cnanorecon"
 
 local unitDef = {
 name = "Swarming Nano Bots",
-Description = "Harvesting Ressources to generate a new Super Portal",
-objectName = "placeholder.s3o",
-script = "placeholder.lua",
+Description = "harvest Ressources to generate a new Portal",
+objectName = "cNanoRecon.s3o",
+script = "cNanoReconScript.lua",
 buildPic = "cbg.png",
 moveState =3,
  fireState=2,
@@ -60,11 +60,8 @@ shownanoframe=0,
 Category = [[LAND]],
 
 weapons = {
-[1]={name  = "AR2",
+[1]={name  = "ceater",
 	onlyTargetCategory = [[ LAND AIR]],
-	mainDir=[[0 0 1]],--nerfed
-	maxAngleDif        = 120,--nerfed
-	
 	},
 },
 
