@@ -6,6 +6,7 @@
 	include "lib_Build.lua" 
 
 	center = piece"center"
+	pieceTable= generatepiecesTableAndArrayCode(unitID, false)
 
 	local SIG_DELAYSTOP=4
 	
@@ -47,6 +48,7 @@ end
 
 function testThread()
 while(1) do
+reseT(pieceTable)
 StartThread(buildVehicle,center,AMax,LMax, DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
 Sleep(30000)
 end
