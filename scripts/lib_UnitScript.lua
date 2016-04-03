@@ -1734,7 +1734,7 @@ function vardump(value, depth, key)
 			--TranslatePieces to new Positions
 			
 			Sleep(simStep)
-			if boolDebug then
+			if lib_boolDebug then
 				debugDisplayPieceChain(RopePieceTable)
 			end
 		end
@@ -2101,6 +2101,18 @@ function vardump(value, depth, key)
 		return returnTable
 	end
 	
+	--> Grabs every Feature in a circle, filters out the featureID
+	function getAllFeatureNearUnit(unitID,Range)
+	px,py,pz=Spring.GetUnitPosition(unitID)
+	return Spring.GetFeaturesInCylinder(px,pz,Range)	
+	end	
+	
+	--> Grabs every Unit in a circle, filters out the unitid
+	function getAllNearUnit(unitID,Range)
+	px,py,pz=Spring.GetUnitPosition(unitID)
+	return 	getAllInCircle(unitID,px,pz,Range)	
+	end
+	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllInCircle(unitID,x,z,Range,teamid)
 	if not unitID or not x or not z then 
@@ -2213,12 +2225,16 @@ function vardump(value, depth, key)
 		return it
 	end
 	
+	function bDbgEcho(strings)
+	if lib_boolDebug==true then Spring.Echo(strings) end
+	end
 	--> takes a Table, and executes ArgTable/Function,Functions on it
-	function process(Table,...)
+	function process(Table, ...)
+	local arg={...}
 		--local arg = table.pack(...)
 		T={}
 		if Table then T=Table else Spring.Echo("Lua:Toolkit:Process: No Table handed over") return end
-		if not arg then return end
+		if not arg then bDbgEcho("No args in process") return end
 		if type(arg)== "function" then return elementWise(T,arg) end
 		
 		
@@ -2227,7 +2243,7 @@ function vardump(value, depth, key)
 		--if not arg then return Table end
 		
 		for _, f in pairs(arg) do
-			if type(f)=="function" then
+			if type(f)=="function" then				
 				T=elementWise(T,f,TempArg)				
 				TempArg={}			
 			else				
@@ -2237,6 +2253,7 @@ function vardump(value, depth, key)
 		return T
 	end
 	
+
 	function accessInOrder(T,...)
 		--local arg = table.pack(...)
 		local TC=T

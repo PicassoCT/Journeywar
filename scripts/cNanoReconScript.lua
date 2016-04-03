@@ -3,6 +3,15 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_Build.lua" 
+---
+
+NanoSubQuota = 42
+PriceOfNewCitadell= 250000
+boolCreateCitadell=false
+
+--
+
+
 
 NumberOfSwingers=23
 TablesOfPiecesGroups={}
@@ -49,6 +58,13 @@ swarm[11] = piece("swarm06") --43
 swarm[12] = piece("swarm07") --44
 swarm[13] = piece("swarm08") --45
 swarm[14]= piece("swarm09") --46
+Body=piece"Body"
+PortalPillar=piece"PortalPillar"
+Hinterbein=piece"Hinterbein"
+VorderBein=piece"VorderBein"
+aimspot=piece"aimspot"
+center=piece"center"
+bodys={Body, Hinterbein, VorderBein}
 
 allReadyInAction={}
 
@@ -73,7 +89,7 @@ for i=1,23, 1 do
 	grouped[i].rot=rotaters[i]
 	grouped.index=i
 	
-	if  i > 9 then
+	if i > 9 then
 		grouped[i].swarm=swarm[i-9]	
 	end
 end
@@ -82,16 +98,16 @@ end
 
 
 function turnGroupSwing( group,groupindex)
-randSpeed=math.random(-0.5,1) +2.1
-randDeg=math.random(1,90)*-1
-degSpeed=6
-returnSpeed=math.random(1,degSpeed/5)
-offSet=math.random(1,20)
-moveSpeed=offSet*3
-
-boolSwingDirection = (groupindex % 2 ~= 0 )
-if groupindex <10 then boolSwingDirection = not boolSwingDirection end
-
+	randSpeed=math.random(-0.5,1) +2.1
+	randDeg=math.random(1,90)*-1
+	degSpeed=6
+	returnSpeed=math.random(1,degSpeed/5)
+	offSet=math.random(1,20)
+	moveSpeed=offSet*3
+	
+	boolSwingDirection = (groupindex % 2 ~= 0 )
+	if groupindex <10 then boolSwingDirection = not boolSwingDirection end
+	
 	if boolSwingDirection == true then	
 		Move(group.rot,x_axis,offSet*-1, moveSpeed)
 		Turn(group.move,z_axis,math.rad(randDeg),degSpeed)
@@ -107,7 +123,7 @@ if groupindex <10 then boolSwingDirection = not boolSwingDirection end
 		Move(group.rot,x_axis,0,moveSpeed)
 		WTurn(group.swing,y_axis,math.rad(355),randSpeed)
 	end
-
+	
 	WTurn(group.swing,y_axis,math.rad(0), randSpeed)
 end
 
@@ -125,12 +141,12 @@ function swarmTurn (group,groupindex)
 end
 
 function showWiggleEater(group, groupindex)
-
+	
 	if not group then return end
 	hideT(group)
 	index=1
 	additive= 1
-
+	
 	while(allReadyInAction[groupindex]==true) do
 		Hide(group.eaters[index])
 		index= math.min(math.max(1,index+additive),3)
@@ -142,23 +158,23 @@ function showWiggleEater(group, groupindex)
 end
 
 function wigglingEater(group, groupindex)
-echoNumber=1
-
-
-
+	echoNumber=1
+	
+	
+	
 	if not allReadyInAction[groupindex] then allReadyInAction[groupindex]= false end
-	if allReadyInAction[groupindex]== true  then Spring.Echo("Group"..groupindex .." allready in action"); return end
+	if allReadyInAction[groupindex]== true then Spring.Echo("Group"..groupindex .." allready in action"); return end
 	allReadyInAction[groupindex]=true
 	
 	reseT(group.eaters,0)
 	StartThread(showWiggleEater,group, groupindex)
 	Spin(group.rot,z_axis,math.rad(42),0.1)
-
+	
 	--actual animation code
-
+	
 	turnGroupSwing(group, groupindex)	
-
-
+	
+	
 	StopSpin(group.rot,z_axis)
 	hideT(group.eaters)
 	allReadyInAction[groupindex]=false 
@@ -178,6 +194,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 		if element.swarm then			
 			StartThread(swarmTurn,element,element.index)
 		elseif element.eaters then			
+			assert(element.index)
 			StartThread(wigglingEater,element,element.index)
 		end
 	end
@@ -190,6 +207,7 @@ function DissolveOnMove()
 		while boolMoving ==true do
 			for i=1,NumberOfSwingers, 1 do
 				if i< 10 then					
+					assert(i)
 					StartThread(wigglingEater,grouped[i],i)
 				else
 					StartThread(swarmTurn,grouped[i],i)--eater swarm
@@ -197,15 +215,16 @@ function DissolveOnMove()
 			end
 			boolHideTheBody=false
 			if maRa()==true then
-			hideT(bodys)
+				hideT(bodys)
+				boolHideTheBody=true
 			end
-				for i=1,23,1 do
-					while ( allReadyInAction[i]==true) do
-						Sleep(100)
-					end
+			for i=1,23,1 do
+				while ( allReadyInAction[i]==true) do
+					Sleep(100)
 				end
+			end
 			if boolHideTheBody==true then
-			showT(bodys)
+				showT(bodys)
 			end
 			Sleep(100)	
 		end
@@ -218,37 +237,32 @@ function DissolveOnMove()
 end
 
 
-Body=piece"Body"
-Hinterbein=piece"Hinterbein"
-VorderBein=piece"VorderBein"
-aimspot=piece"aimspot"
-center=piece"center"
-bodys={Body, Hinterbein, VorderBein}
+
 
 
 
 function script.Create()
-reseT(allT)
-for i=1,10, 1 do	
-	grouped[i].eaters={}
+Hide(PortalPillar)
 
+	reseT(allT)
+	for i=1,10, 1 do	
+		grouped[i].eaters={}
+		
+		grouped[i].eaters={
+			[1]=Eater[3*(i-1)+1],
+			[2]=Eater[3*(i-1)+2],
+			[3]=Eater[3*(i-1)+3]
+		}
+		
+	end
 	
 	
-	grouped[i].eaters={
-					[1]=Eater[3*(i-1)+1],
-					[2]=Eater[3*(i-1)+2],
-					[3]=Eater[3*(i-1)+3]
-					   }
-
-					   
-end
-
-
-hideT(allT)
-showT(bodys)
+	hideT(allT)
+	showT(bodys)
 	StartThread(DissolveOnMove)
 	StartThread(MoveThread)
-
+	StartThread(harvestThoseNearby)
+	
 end
 
 function script.Killed(recentDamage,_)
@@ -258,28 +272,6 @@ function script.Killed(recentDamage,_)
 	
 end
 
-function crawlTowardsSwarm()
-
-			hideT(Eater)			
-			process(swarm, 
-			function (piecenr) 
-				if maRa()==true then 
-					Show(piecenr);
-					return piecenr; 
-				else 
-					Hide(piecenr) 
-				end 
-			end,
-			function(piecenr)
-				x,y,z=Spring.GetUnitPosition(unitID);
-				ox,oy=iRand(-20,20),iRand(-20,20); 
-				y=Spring.GetGroundHeigth(x+ox,z+oz);
-				MovePieceToPos(piecenr,x+ox,y,z+oz);
-				TurnPieceTowardsPiece(piecenr, center,0);
-			end
-			)
-
-end
 
 function MoveThread()
 	speedbreath=2
@@ -305,23 +297,36 @@ function MoveThread()
 			tP(VorderBein,0,0,0,3)
 			tP(Body,0,0,0,1.75,true)
 		else
-		Sleep(100)
-		if boolMoving == false then
-			StartThread(crawlTowardsSwarm)			
-			tP(VorderBein,-10,0,0,0.13*speedbreath)
-			tP(Hinterbein,10,0,0,0.13*speedbreath)
-			WMove(Body,y_axis,-1,1*speedbreath)
-			tPrad(VorderBein,0,0,0,0.13*speedbreath)
-			tPrad(VorderBein,0,0,0,0.13*speedbreath)
-			tPrad(Hinterbein,0,0,0,0.13*speedbreath)
-			WMove(Body,y_axis,0,1*speedbreath)
-			
-			process(swarm, 	
-			function(piecenr)
-				resetP(piecenr,12,true)
+			Sleep(100)
+			if boolMoving == false then
+				process(swarm,
+				function (piecenr)
+					movePieceRandDir(piecenr,12,4,-4,4,-4,4,-4)
+					return piecenr
+				end,
+				function(piecenr)
+					WaitForMove(piecenr,x_axis)
+					WaitForMove(piecenr,y_axis)
+					WaitForMove(piecenr,z_axis)
+				end
+				)
+				
+				
+				tP(VorderBein,-10,0,0,0.13*speedbreath)
+				tP(Hinterbein,10,0,0,0.13*speedbreath)
+				WMove(Body,y_axis,-1,1*speedbreath)
+				tPrad(VorderBein,0,0,0,0.13*speedbreath)
+				tPrad(VorderBein,0,0,0,0.13*speedbreath)
+				tPrad(Hinterbein,0,0,0,0.13*speedbreath)
+				WMove(Body,y_axis,0,1*speedbreath)
+				
+				
+				process(swarm, 	
+				function(piecenr)
+					resetP(piecenr,12,true)
+				end
+				)
 			end
-			)
-		end
 		end
 		
 	end
@@ -329,6 +334,79 @@ function MoveThread()
 end
 
 
+function harvestThoseNearby()
+	while true do
+	Sleep(10)
+	
+	px,py,pz = Spring.GetUnitPosition(unitID)
+	pv= makeVector(px,py,pz)
+		--get all in Range
+	 victimT=getAllInCircle(unitID, px,pz,360)
+	 featureT=getAllFeatureNearUnit(unitID, 360)
+		
+
+		if victimT then
+		process(victimT,
+		function (id) 
+		boolValidId=Spring.ValidUnitID(id)
+		if not boolValidId or boolValidId == false  then return end
+		if id== unitID then return end
+		return id 
+		end,
+		function(id)
+			
+			ex,ey,ez=Spring.GetUnitPosition(id)
+			ev= makeVector(ex,ey,ez)
+			ev = normVector(subVector(ev,pv))
+			ev = mulVector(ev,-1)
+			Spring.SpawnCEG("cnanotics",ex,ey+35, ez,ev.x,ev.y,ev.z,0)
+			return id
+		end
+		,
+		function(id)
+			hp,maxhp= Spring.GetUnitHealth(id)
+			hp=hp-NanoSubQuota
+			PriceOfNewCitadell = PriceOfNewCitadell - NanoSubQuota
+			Spring.SetUnitHealth(id,hp)
+		end
+		)
+		end
+		
+		if featureT then
+		process(featureT,
+		function(id)
+			ex,ey,ez=Spring.GetFeaturePosition(id)
+			ev= makeVector(ex,ey,ez)
+			ev = normVector(subVector(ev,pv))
+			ev = mulVector(ev,-1)
+
+			_,height,_=Spring.GetFeatureCollisionVolumeData(id)
+			offset=math.random(50,math.max(height,100))
+			Spring.SpawnCEG("cnanotics",ex,ey+15, ez,ev.x,ev.y,ev.z,0)
+			return id
+		end
+		,
+		function(id)
+			hp,maxhp= Spring.GetFeatureHealth(id)
+			hp=hp-NanoSubQuota
+			PriceOfNewCitadell = PriceOfNewCitadell - NanoSubQuota
+			Spring.SetFeatureHealth(id,hp)
+			hp,maxhp = Spring.GetUnitHealth(unitID)
+			Spring.SetUnitHealth(unitID,hp+NanoSubQuota,maxhp + NanoSubQuota/2)
+			return id
+		end
+		)
+		end
+		
+		
+		if 	PriceOfNewCitadell < 0 then
+			boolCreateCitadell =true
+		end
+		
+		Sleep(750)
+	end
+
+end
 
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
@@ -354,19 +432,80 @@ function script.FireWeapon1()
 	return true
 end
 
+function leaveNanoTrail(boolForward)
+
+	px,py,pz=Spring.GetUnitPosition(unitID)
+	vx,vy,vz=Spring.GetUnitDirection(unitID)
+	dv=makeVector(vx,vy,vz)
+		for i=1,5, 1 do
+		Sleep(250)
+		if boolForward==false then
+			vx,vy,vz=-1*vx,-1*vy,-1*vz
+		end
+		
+			for k=1,3, 1 do			
+			Spring.SpawnCEG("cnanotics",px,py+5*k, pz,vx,vy, vz,0)
+			end
+		end
+		Sleep(5000)
+		dv=mulVector(dv,17)
+		dv=mulVector(makeVector(px,py,pz),dv)
+		px,py,py= dv.x, dv.y,dv.z
+		--reversing nanotics
+		vx,vy,vz=-1*vx,-1*vy,-1*vz
+		for i=1,5, 1 do
+		Sleep(250)
+			for k=1,3, 1 do	
+			Spring.SpawnCEG("cnanotics",px,py+5*k, pz,vx,vy, vz,0)
+			end
+		end
+		
+end
 
 
 function script.StartMoving()
+StartThread(leaveNanoTrail,true)
 	boolMoving=true
 end
 
 function script.StopMoving()
+StartThread(leaveNanoTrail,false)
 	boolMoving=false
 	
 end
 
-function script.Activate()
+function spawnCitadell()
+	SetUnitValue(COB.MAX_SPEED,0)
+	boolMoving=false
+		process(swarm,			
+		function(piecenr)
+			WaitForMove(piecenr,x_axis)
+			WaitForMove(piecenr,y_axis)
+			WaitForMove(piecenr,z_axis)
+		end
+		)
+	hideT(allT)
+	Show(PortalPillar)
+	WMove(PortalPillar,y_axis,100,5)
+	Spin(PortalPillar,y_axis,math.rad(420),0.05)
+	Sleep(10000)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	local facing=math.abs(Game.mapSizeX/2 - x) > math.abs(Game.mapSizeZ/2 - z)	
+	local unitID = Spring.CreateUnit("citadell", x, y, z, facing, teamID)
+	for i=100,500,50 do
+	WMove(PortalPillar,y_axis,i,i)
+	end
+	Spring.DestroyUnit(unitID,true,true)	
 	
+end
+
+
+boolOnceSemaphore=true
+function script.Activate()
+	if boolCreateCitadell == true and boolOnceSemaphore== true then
+		boolOnceSemaphore=false
+		StartThread(spawnCitadell)
+	end
 	return 1
 end
 

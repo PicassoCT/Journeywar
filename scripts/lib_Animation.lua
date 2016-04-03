@@ -71,6 +71,16 @@ function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,
 	end
 end
 
+-->Move a piece towards a random direction
+function movePieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,LIMLOWZ)
+	if not LIMUPX then
+		return
+	else
+		Move(piecename,x_axis,math.rad(math.random(LIMLOWX,LIMUPX)),speed)
+		Move(piecename,y_axis,math.rad(math.random(LIMLOWY,LIMUPY)),speed)
+		Move(piecename,z_axis,math.rad(math.random(LIMLOWZ,LIMUPZ)),speed)
+	end
+end
 -->generic AmphibMovementThread: Threaded Creates with the given pieces and animations a Unit that auto changes its animation
 -- between land and water
 function AmphibMoveThread(unitid

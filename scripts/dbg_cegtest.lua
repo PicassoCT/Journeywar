@@ -39,13 +39,11 @@ function emitSFX()
 			--Sleep(1500)
 			--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
 			Sleep(1500)
-				Spring.SpawnCEG("bghdexplode",x,y+400,z,0,150,0)	
-			Sleep(300)
+				Spring.SpawnCEG("cnanotics",x,y+400,z,1,0,0,0)	
+			Sleep(1500)
 			randoX,randoZ=math.random(-50,50),math.random(-50,50)
-				--Spring.SpawnCEG("cexpprojectile",x+randoX,y+400,z+randoZ,0,1,0,60)
-				Sleep(300)
-				Spring.SpawnCEG("clightball",x,y+2000,z,0,1,0,60)
-				Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
+				Spring.SpawnCEG("bghdexplode",x,y+400,z,0,1,0,60)
+			--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
 
 		end
 
