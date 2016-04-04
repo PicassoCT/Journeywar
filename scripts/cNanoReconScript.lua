@@ -159,7 +159,7 @@ end
 
 function wigglingEater(group, groupindex)
 	echoNumber=1
-	
+	if not groupindex then return end
 	
 	
 	if not allReadyInAction[groupindex] then allReadyInAction[groupindex]= false end
@@ -187,27 +187,24 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	function (element)
 		if math.random(1,3)==3 then
 			return element
-		else
 		end
 	end,		
 	function(element)
 		if element.swarm then			
 			StartThread(swarmTurn,element,element.index)
 		elseif element.eaters then			
-			assert(element.index)
 			StartThread(wigglingEater,element,element.index)
 		end
 	end
 	)
 	
 end
-
+SIG_HARVEST=2
 function DissolveOnMove()
 	while true do
 		while boolMoving ==true do
 			for i=1,NumberOfSwingers, 1 do
 				if i< 10 then					
-					assert(i)
 					StartThread(wigglingEater,grouped[i],i)
 				else
 					StartThread(swarmTurn,grouped[i],i)--eater swarm
@@ -217,6 +214,7 @@ function DissolveOnMove()
 			if maRa()==true then
 				hideT(bodys)
 				boolHideTheBody=true
+				StartThread(leaveNanoTrail,true)
 			end
 			for i=1,23,1 do
 				while ( allReadyInAction[i]==true) do
@@ -333,17 +331,19 @@ function MoveThread()
 	
 end
 
-
+unitdef=Spring.GetUnitDefID(unitID)
+soundfile= "sounds/cNanoRecon/activeNanos.ogg"
 function harvestThoseNearby()
+SetSignalMask(SIG_HARVEST)
 	while true do
-	Sleep(10)
+	Sleep(100)
 	
 	px,py,pz = Spring.GetUnitPosition(unitID)
 	pv= makeVector(px,py,pz)
 		--get all in Range
 	 victimT=getAllInCircle(unitID, px,pz,360)
 	 featureT=getAllFeatureNearUnit(unitID, 360)
-		
+	StartThread(	 PlaySoundByUnitType,unitdef, soundfile,1.0, 10000, 1,0)
 
 		if victimT then
 		process(victimT,
@@ -380,9 +380,10 @@ function harvestThoseNearby()
 			ev = normVector(subVector(ev,pv))
 			ev = mulVector(ev,-1)
 
-			_,height,_=Spring.GetFeatureCollisionVolumeData(id)
-			offset=math.random(50,math.max(height,100))
-			Spring.SpawnCEG("cnanotics",ex,ey+15, ez,ev.x,ev.y,ev.z,0)
+			a,height,b=Spring.GetFeatureCollisionVolumeData(id)
+			offset=math.random(5,math.max(math.min(height*2,75),15))
+			if maRa()==true then offset=15 end
+			Spring.SpawnCEG("cnanotics",ex,ey+offset, ez,ev.x,ev.y,ev.z,0)
 			return id
 		end
 		,
@@ -397,7 +398,6 @@ function harvestThoseNearby()
 		end
 		)
 		end
-		
 		
 		if 	PriceOfNewCitadell < 0 then
 			boolCreateCitadell =true
@@ -432,31 +432,26 @@ function script.FireWeapon1()
 	return true
 end
 
+nanoTrailTable={
+[1]={[1]=true,[2]=true,[3]=true},
+[2]={[1]=false,[2]=true,[3]=true},
+[3]={[1]=false,[2]=true,[3]=false},
+[4]={[1]=false,[2]=true,[3]=false},
+[5]={[1]=true,[2]=true,[3]=false},
+
+}
+
 function leaveNanoTrail(boolForward)
 
 	px,py,pz=Spring.GetUnitPosition(unitID)
 	vx,vy,vz=Spring.GetUnitDirection(unitID)
 	dv=makeVector(vx,vy,vz)
 		for i=1,5, 1 do
-		Sleep(250)
-		if boolForward==false then
-			vx,vy,vz=-1*vx,-1*vy,-1*vz
-		end
-		
-			for k=1,3, 1 do			
+		Sleep(250)	
+			for k=1,3, 1 do	
+			if nanoTrailTable[i][k]==true then
 			Spring.SpawnCEG("cnanotics",px,py+5*k, pz,vx,vy, vz,0)
 			end
-		end
-		Sleep(5000)
-		dv=mulVector(dv,17)
-		dv=mulVector(makeVector(px,py,pz),dv)
-		px,py,py= dv.x, dv.y,dv.z
-		--reversing nanotics
-		vx,vy,vz=-1*vx,-1*vy,-1*vz
-		for i=1,5, 1 do
-		Sleep(250)
-			for k=1,3, 1 do	
-			Spring.SpawnCEG("cnanotics",px,py+5*k, pz,vx,vy, vz,0)
 			end
 		end
 		
@@ -464,7 +459,6 @@ end
 
 
 function script.StartMoving()
-StartThread(leaveNanoTrail,true)
 	boolMoving=true
 end
 
@@ -473,8 +467,10 @@ StartThread(leaveNanoTrail,false)
 	boolMoving=false
 	
 end
+teamID=Spring.GetUnitTeam(unitID)
 
 function spawnCitadell()
+Signal(SIG_HARVEST)
 	SetUnitValue(COB.MAX_SPEED,0)
 	boolMoving=false
 		process(swarm,			
@@ -486,13 +482,15 @@ function spawnCitadell()
 		)
 	hideT(allT)
 	Show(PortalPillar)
-	WMove(PortalPillar,y_axis,100,5)
+	for i=1,400,50 do
+	WMove(PortalPillar,y_axis,i,i)
+	end
 	Spin(PortalPillar,y_axis,math.rad(420),0.05)
-	Sleep(10000)
+	Sleep(5000)
 	x,y,z=Spring.GetUnitPosition(unitID)
-	local facing=math.abs(Game.mapSizeX/2 - x) > math.abs(Game.mapSizeZ/2 - z)	
-	local unitID = Spring.CreateUnit("citadell", x, y, z, facing, teamID)
-	for i=100,500,50 do
+	 facing=1
+	citID = Spring.CreateUnit("citadell", x, y, z, facing, teamID)
+	for i=400,800,50 do
 	WMove(PortalPillar,y_axis,i,i)
 	end
 	Spring.DestroyUnit(unitID,true,true)	

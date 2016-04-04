@@ -20,7 +20,7 @@ return {
 									length             = 1500,
 									--sidetexture        = [[TouchGround]],
 									sidetexture        = [[pulseshot]],
-									size               = 350,
+									size               = 100,
 									sizegrowth         = 0.01,
 									ttl                = 300,
 								  },

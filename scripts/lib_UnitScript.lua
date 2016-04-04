@@ -1368,7 +1368,7 @@ function mulVector(vl,value)
 			y=vl.y*value,
 		z=vl.z*value}
 	else		--return vector
-		Spring.Echo("JW:ToolKit:mulVector"..countConstAnt)
+--		Spring.Echo("JW:ToolKit:mulVector"..countConstAnt)
 		return {x = vl.x*value.x, y=	vl.y*value.y, z=	vl.z*value.z}
 	end
 end

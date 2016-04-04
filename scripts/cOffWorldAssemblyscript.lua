@@ -1274,7 +1274,7 @@ TurnPieceList(refUnitScript,
 Sleep(postDelay)		 
 
 end
-
+OpTool=6
 
 function operate()
 
@@ -1305,13 +1305,33 @@ function operate()
 			setOfTools[math.ceil(math.random(1,#ArmsTable))]= true 
 		end
 	--open
-		
+			--config
+			tolerance=2
+			boolPartStepExecution=true
+			boolWait=true
+							
 		for k,v in pairs(setOfTools) do
+		
+		Piece_Deg_Length_PointIndex_boolGateCrossed_List={
+		PointIndex=1,
+		Piece= 	ArmsTable[k][1],
+		boolGateCrossed= false,
+		Length=3,
+		Deg=0		
+		}
+		
+		SnakePoints={
+		[1]=  makeVector(3,5,0),
+		[2]=  makeVector(7,9,0)
+		}
+		
+		
+		
 			 snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
 							SnakePoints,
-							axis,
-							speed, 
-							FirstSensor,
+							z_axis,
+							0.5, 
+							ArmsTable[k][OpTool],
 							tolerance,  
 							boolPartStepExecution, 
 							boolWait
