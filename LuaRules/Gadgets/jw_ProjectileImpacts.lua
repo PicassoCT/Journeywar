@@ -509,11 +509,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		--AaaahaaAaaaaAaaaahahaAAAAaaaaaaah
 	end
 	
-	--perma speed reduction
-	WeaponDefTable[glueMineWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	--perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
+	WeaponDefTable[glueMineWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
-	WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+		WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
+		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
 	

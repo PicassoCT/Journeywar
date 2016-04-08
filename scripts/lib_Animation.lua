@@ -635,6 +635,7 @@ end
 	-- }
 	function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed, FirstSensor,tolerance, boolPartStepExecution, boolWait)
 		local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
+		if not PPDLL then echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return end
 		--get StartPosition and Move First Piece Into the Cube
 		boolResolved=false
 		if not SnakePoints then echo("snakeOnAPlane:: Not SnakePoints delivered"); return end

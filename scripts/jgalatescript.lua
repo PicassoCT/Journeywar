@@ -188,7 +188,62 @@ showT(PivotPoints)
 	end
 	
 end
+
 nlwalkAnimation= function   (PivotPoints,pieces)
+  hideT(pieces.pumps)
+  hideT(pieces.tails)
+			Move(PivotPoints[1],2,-1,0.7)
+			Turn(fireGalate,1,math.rad(90),0.06)
+	
+	
+		   val=math.random(91,179)
+		  Turn(pieces["Leg1"],2,math.rad(val),0.4*2)
+		  Turn(pieces["Leg4"],2,math.rad(-1*val),0.4*2)
+		  Turn(pieces["LegL2"],2,math.rad(-val),0.3*2)
+		  Turn(pieces["LegL3"],2,math.rad(val),0.3*2)
+		  
+		  	  val=math.random(280,359)
+		  Turn(pieces["Leg2"],2,math.rad(val),0.4*2)
+		  Turn(pieces["Leg3"],2,math.rad(-1*val),0.4*2)
+		  
+		  Turn(pieces["LegL1"],2,math.rad(15),0.3*2)
+		  Turn(pieces["LegL4"],2,math.rad(15),0.3*2)
+		  
+
+		  
+		  WaitForTurn(pieces["Leg1"],2)
+		  WaitForTurn(pieces["Leg4"],2)
+		  WaitForTurn(pieces["Leg3"],2)
+		  WaitForTurn(pieces["Leg2"],2)
+		--Turn Over
+		 Turn(fireGalate,1,math.rad(90),0.6)
+		  val=math.random(91,179)
+		  Turn(pieces["Leg2"],2,math.rad(val),0.4*2)
+		  Turn(pieces["Leg3"],2,math.rad(-1*val),0.4*2)
+		  Turn(pieces["LegL1"],2,math.rad(val),0.3*2)
+		  Turn(pieces["LegL4"],2,math.rad(-val),0.3*2)
+		  
+		  val=math.random(280,359)
+		  Turn(pieces["Leg1"],2,math.rad(val),0.4*2)
+		  Turn(pieces["Leg4"],2,math.rad(-1*val),0.4*2)
+		  
+		  Turn(pieces["LegL2"],2,math.rad(15),0.3*2)
+		  Turn(pieces["LegL3"],2,math.rad(-15),0.3*2)
+		  
+		  WaitForTurn(pieces["Leg1"],2)
+		  WaitForTurn(pieces["Leg4"],2)
+		  WaitForTurn(pieces["Leg3"],2)
+		  WaitForTurn(pieces["Leg2"],2)
+	
+	
+		  
+	  	Move(PivotPoints[1],2,0,0.7)
+
+		  end
+
+
+
+dePrecatedSafetyCopynlwalkAnimation= function   (PivotPoints,pieces)
   hideT(pieces.pumps)
   hideT(pieces.tails)
   frame= (Spring.GetGameFrame()%250)
@@ -198,6 +253,7 @@ nlwalkAnimation= function   (PivotPoints,pieces)
 	  if boolQuart==true then	
 		Move(PivotPoints[1],2,0,0.7)
 		Turn(PivotPoints[1],1,math.rad(0),0.15)
+		
 		Sleep(300)
 
 		WaitForTurn(pieces["LegL1"],3)

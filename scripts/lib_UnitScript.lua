@@ -71,6 +71,14 @@ function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, end
 	
 end
 
+function randVec(boolStayPositive)
+
+	if not boolStayPositive  and boolStayPositive == true then 
+		return {x= math.random(0,1),y=math.random(0,1),z=math.random(0,1)}
+	else
+		return {x= math.random(-1,1),y=math.random(-1,1),z=math.random(-1,1)}
+	end
+end
 
 --> creates a ceg, that traverses following its behavioural function
 function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)

@@ -79,6 +79,7 @@ local function Create_OnOffButton()
 		file = onoffTexture[1],
 		parent = onOffButton,
 	}
+	
 	if onOffButton then
 	onOffButton:Hide()
 	end
@@ -91,7 +92,6 @@ local function CreateUpgradeMenue ()
 		width = 440,
 		height = 330,
 		color = {0,0,0,1},
-		
 		
 		children = {
 			Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "SPEED", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SPEED") end}},
@@ -122,9 +122,9 @@ local function CreateUpgradeMenue ()
 		},
 		
 	}
-	Chili.Screen0.Add(upgradeGrid)
+	Chili.Screen0.AddChild(upgradeGrid)
 	if upgradeGrid then 
-	upgradeGrid:Hide()	
+		upgradeGrid:Hide()	
 	end
 end
 
