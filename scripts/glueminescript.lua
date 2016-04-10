@@ -76,7 +76,8 @@ function script.AimWeapon1( Heading ,pitch)
 					end	
 		for i=1,2 do
 		x,y,z=Spring.GetUnitPosition(unitID)
-		StartThread( cegDevil,"gluesfx", x,y,z,rate, 
+		--cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
+		StartThread( cegDevil,"gluesfx", x,y,z,300, 
 					function(time) return time < 5000 end, 
 					endofLifeFunc, true, 250, 0)
 		end

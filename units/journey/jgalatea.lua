@@ -17,7 +17,7 @@ idleAutoHeal = 0,
 autoheal=0,
 --Movement
 mass=180020,
-upRight=true,
+upRight=false,
 blocking=false,
 pushResistant=false,
 Acceleration = 0.001,

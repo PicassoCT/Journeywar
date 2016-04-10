@@ -196,7 +196,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		-- get all units in range
 		if not GG.ShockWaves then GG.ShockWaves ={} end
 		local OtherWaves= GG.ShockWaves
-
+		assert(range)
 		T=getAllInCircle(x,z,range)
 		
 		for i=1,#T do

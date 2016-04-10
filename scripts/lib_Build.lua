@@ -1385,6 +1385,13 @@ function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
 		Turn(pname,x_axis, math.rad(90),0)
 	end
 	
+	if maRa()== true then
+		postProc =function (pname, x, y, z)
+		val= math.random(-90,90)
+		Turn(pname,x_axis, math.rad(val),0)
+		end
+	end
+	
 	gItteratorFunction = function (index) 
 		return index
 	end

@@ -103,15 +103,15 @@ function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, r
 	end
 	functionbehaviour=behaviour or knallfrosch
 	time=0			
-	local SpawnCeg=Spring.SpawnCeg
+	local SpawnCeg=Spring.SpawnCEG
 	v= {x=0,y=0,z=0}
 	
 	while lifetimefunc(time)==true do
 		x,y,z,v=functionbehaviour(x,y,z,time,v)
 		
 		if boolStrobo==true then
-			dx,dy,dz=randVec()
-			SpawnCeg(cegname,x,y,z,dx,dy,dz,range,damage)
+			d=randVec()
+			SpawnCeg(cegname,x,y,z,d.x,d.y,d.z,range,damage)
 		else
 			SpawnCeg(cegname,x,y,z,0,1,0,range,damage)
 		end
@@ -2022,40 +2022,7 @@ function vardump(value, depth, key)
 		end
 	end
 	
-	--> Turns a Pieces table according to a function provided
-	function waveATable(Table, axis, foonction, signum, speed,funcscale,totalscale, boolContra,offset)
 	
-	if type(Table) ~= "table" then return end
-	
-	
-		func = foonction or function(x) return x end
-		boolCounter=boolContra or false
-		offset=offset or 0
-		scalar= signum* (totalscale)
-		nr=table.getn(Table)
-		pscale=funcscale/nr
-		total=0
-		
-		for i=1,nr do
-			val=scalar*func(offset+i*pscale)
-			
-			if type(Table[i])=="table" then 
-				waveATable(Table[i], axis, func, signum, speed,funcscale,totalscale, boolContra,offset)
-			else	
-				
-				if boolCounter == true then
-					
-					Turn(Table[i],axis,math.rad(total+val),speed)
-					
-					total=total+val
-				else
-					Turn(Table[i],axis,math.rad(val),speed)
-				end
-			end
-		end
-		
-		
-	end
 	
 	--> spawn a ceg on the map above ground
 	function markPosOnMap(x,y,z, colourname)
@@ -2485,6 +2452,7 @@ function vardump(value, depth, key)
 	--> Apply a function to a unit Table 
 	function forTableUseFunction(T,boolFilterDead,...)
 		--local arg = table.pack(...)
+		local arg={...}
 		TempT={}
 		for _, f in pairs(arg) do
 			

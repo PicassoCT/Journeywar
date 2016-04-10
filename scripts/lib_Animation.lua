@@ -199,10 +199,11 @@ function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
 end
 
 -->Turns a piece with radiants
-function tPrad(piecename,x_val,y_val,z_val,speed)
-	Turn(piecename,x_axis,x_val,speed)
-	Turn(piecename,y_axis,y_val,speed)
-	Turn(piecename,z_axis,z_val,speed)
+function tPrad(piecename,xval,yval,zval,speed)
+
+	Turn(piecename,1,xval,speed)
+	Turn(piecename,2,yval,speed)
+	Turn(piecename,3,zval,speed)
 end
 
 --> synTurns a Piece to arrive at time on all axis
@@ -337,6 +338,7 @@ function TurnTowardsWind(piecename,speed,offset)
 	dx,dy,dz=Spring.GetWind()
 	headRad=math.atan2(dx,dz)
 	Turn(piecename,y_axis,headRad+offSet,speed)
+	return headRad
 end
 
 -->Spins a Table
@@ -742,6 +744,18 @@ end
 		
 		return true
 	end
+	
+	function hang(pieceName,offSetVec,speed)
+	diVec=makeVector(0,0,0)
+
+	diVec.x,diVec.y,diVec.z= Spring.GetUnitDirection(unitID)
+	diVec= mulVector(diVec,-1)	
+	diVec=normVector(diVec)
+	diVec=addVector(diVec,offSetVec)
+	
+	tPVector(pieceName,diVec,speed)
+	end
+	
 	
 	function TurnPieceList( ScriptEnviroment,PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
 		
@@ -1167,9 +1181,17 @@ function TurnPieceTowardsPoint (piecename, x,y,z,Speed)
 	v=normVector(v)
 	v=subVector(v,pvec)
 	v=normVector(v)
-	tPrad(math.atan2(vec.y,vec.z),math.atan2(vec.x,vec.z),math.atan2(vec.x,vec.y),Speed)
+	
+	tPrad(piecename,math.atan2(vec.y,vec.z),math.atan2(vec.x,vec.z),math.atan2(vec.x,vec.y),Speed)
 end
 
+function tPVector(piece, vec, speed)
+x=math.atan2(vec.y,vec.z)
+y=math.atan2(vec.x,vec.z)
+z=math.atan2(vec.x,vec.y)
+	tPrad(piece, x,y,z,speed)
+
+end
 
 --> Moves a Piece to a WorldPosition relative to the Units Position
 function MovePieceToRelativeWorldPos(id,piecename, relX,relY,relZ,speed)
@@ -1271,6 +1293,44 @@ end
 		end
 		
 	end
+
+--> Turns a Pieces table according to a function provided
+	function waveATable(Table, axis, lfoonction, lsignum, lspeed,lfuncscale,ltotalscale, boolContra,offset)
 	
+	if type(Table) ~= "table" then return end
+	
+	
+		func = lfoonction or function(x) return x end
+		signum = lsignum or 1
+		speed = lspeed or 1
+		totalscale= ltotalscale or (#Table *3.14159)
+		funcscale = lfuncscale or 3.14159
+		boolCounter=boolContra or false
+		offset=offset or 0
+		scalar= signum* (totalscale)
+		nr=table.getn(Table)
+		pscale=funcscale/nr
+		total=0
+		
+		for i=1,nr do
+			val=scalar*func(offset+i*pscale)
+			
+			if type(Table[i])=="table" then 
+				waveATable(Table[i], axis, func, signum, speed,funcscale,totalscale, boolContra,offset)
+			else	
+				
+				if boolCounter == true then
+					
+					Turn(Table[i],axis,math.rad(total+val),speed)
+					
+					total=total+val
+				else
+					Turn(Table[i],axis,math.rad(val),speed)
+				end
+			end
+		end
+		
+		
+	end	
 --================================================================================================================
 --================================================================================================================

@@ -190,6 +190,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 		end
 	end,		
 	function(element)
+	if not element then return end
 		if element.swarm then			
 			StartThread(swarmTurn,element,element.index)
 		elseif element.eaters then			
@@ -330,7 +331,10 @@ function MoveThread()
 	end
 	
 end
-
+UnitTypeTable={
+[1]=Spring.GetUnitDefID(unitID)
+}
+Cache={}
 unitdef=Spring.GetUnitDefID(unitID)
 soundfile= "sounds/cNanoRecon/activeNanos.ogg"
 function harvestThoseNearby()
@@ -344,7 +348,10 @@ SetSignalMask(SIG_HARVEST)
 	 victimT=getAllInCircle(unitID, px,pz,360)
 	 featureT=getAllFeatureNearUnit(unitID, 360)
 	StartThread(	 PlaySoundByUnitType,unitdef, soundfile,1.0, 10000, 1,0)
-
+		if victimT then
+		victimT,Cache = filterOutUnitsOfType(victimT, UnitTypeTable,Cache)
+		end
+		
 		if victimT then
 		process(victimT,
 		function (id) 
@@ -354,7 +361,7 @@ SetSignalMask(SIG_HARVEST)
 		return id 
 		end,
 		function(id)
-			
+			if Spring.ValidUnitID(id)==true then
 			ex,ey,ez=Spring.GetUnitPosition(id)
 			ev= makeVector(ex,ey,ez)
 			ev = normVector(subVector(ev,pv))
@@ -362,12 +369,16 @@ SetSignalMask(SIG_HARVEST)
 			Spring.SpawnCEG("cnanotics",ex,ey+35, ez,ev.x,ev.y,ev.z,0)
 			return id
 		end
+		
+		end
 		,
 		function(id)
+			if Spring.ValidUnitID(id)==true then
 			hp,maxhp= Spring.GetUnitHealth(id)
 			hp=hp-NanoSubQuota
 			PriceOfNewCitadell = PriceOfNewCitadell - NanoSubQuota
 			Spring.SetUnitHealth(id,hp)
+			end
 		end
 		)
 		end
