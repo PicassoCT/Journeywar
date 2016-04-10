@@ -182,10 +182,8 @@ LegTable[#LegTable+1]=piece"striderle6"
 	
 	
 	--CinematicExceedsTreshold
-		if  (BASEDISTANCE > 122) and true==false then
-
 		--you are in deep deep trouble --> abort animation there early and get feet inwards asap
-		return false
+		if  (BASEDISTANCE > 122) and true==false then		return false
 		else
 		--Spring.Echo("StriderScript::ResolvoingKinematiks")
 		--Turn it y-directionwise
@@ -196,33 +194,35 @@ LegTable[#LegTable+1]=piece"striderle6"
 		--sanitizedHeading=math.abs(currentHeading  +32767)/182 
 		
 		--uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),1)
-		uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),1)
-		printV("uplegyaw", uplegyaw,"currentHeading",currentHeading, "Yaw", yaw)
-		Spring.Echo(uplegyaw)
-		Turn(StriTable[number].UpLeg,y_axis,uplegyaw,25,true)
+		uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),(number*4)+1)
+		--printV("uplegyaw", uplegyaw,"currentHeading",currentHeading, "Yaw", yaw)
+		--Spring.Echo(uplegyaw)
+		Turn(StriTable[number].UpLeg,y_axis,uplegyaw,12)
 		
 		--first lets get the rad for the upper leg
 		 beta=math.acos((LEGSQR-UPLEGSQR-BASEDISTSQR)/(-2*UPLEGLENGTH*BASEDISTANCE))
 		 alpha=math.atan2(zvx,zvy)+beta
 		
-		uplegval=smoothVal(3.14159 +alpha,2)%6.1831853071795
+		uplegval=smoothVal(3.14159 +alpha,(number*4)+2)%6.1831853071795
+		if Limit(uplegval,math.rad(-36),math.rad(36))== false then return false end
+		
 	--	Spring.Echo("Strider_upval"..uplegval)
-		Turn(StriTable[number].UpLeg,x_axis,uplegval,22,true)
+		Turn(StriTable[number].UpLeg,x_axis,uplegval,12,true)
 	
 		-- gama=-3.14159+(1.570796326-beta)+(1.570796326-math.acos((BASELOWLEGDIST*BASELOWLEGDIST+LEGLENGTH*LEGLENGTH-UPLEGLENGTH*UPLEGLENGTH)/(2*LEGLENGTH*BASELOWLEGDIST)))
 		 optgama=-beta -(math.acos((BASELOWLEGDIST*BASELOWLEGDIST+LEGLENGTH*LEGLENGTH-UPLEGLENGTH*UPLEGLENGTH)/(2*LEGLENGTH*BASELOWLEGDIST))) 
 		-- Spring.Echo("JW_STRIDER.."..gama.."  ->"..optgama)
+		if Limit(optgama,math.rad(-70),math.rad(22))== false then return false end
+		optgama=smoothVal(optgama,(number*4)+3)
 		
-		optgama=smoothVal(optgama,3)
+		Turn(StriTable[number].Leg,x_axis,optgama,12,true)
 		
-		Turn(StriTable[number].Leg,x_axis,optgama,22,true)
-		
- 		lowoptgame=smoothVal(-1*(3.14159 +alpha)-optgama,4)
+ 		lowoptgame=smoothVal(-1*(3.14159 +alpha)-optgama,(number*4)+4)
 		
 	
 		--if math.abs(lowoptgame) > 3.14159/2 then return false end
-		
- 		Turn(StriTable[number].LowLeg,x_axis,lowoptgame,22,true)
+		if Limit(lowoptgame,math.rad(-77),math.rad(22))== false then return false end
+ 		Turn(StriTable[number].LowLeg,x_axis,lowoptgame,12,true)
 		
 		--Turn Leg
 		return true
@@ -251,53 +251,28 @@ LegTable[#LegTable+1]=piece"striderle6"
 
 
 	--get the StartPosition of the unit
-	local 	sx,sy,sz=spGetUnitPosition(unitID)
+	asx,asy,asz=Spring.GetUnitPiecePosDir(unitID,targPoint)
+	
 
 	Sleep(10)
 		while CinematicsResolveSuccesfull==true do
-
-		
-			--grab the currentVelocity of the Unit
-			vx,vy,vz,vl=spGetUnitVelocity(unitID)
-			vx,vy,vz=(vx)*vl,(vy)*vl,(vz)*vl
-			
-			--get the current Position of the Unit
-			rx,ry,rz=spGetUnitPosition(unitID)
-			--get the current Position of the targPoint where the leg should go
-			px,py,pz,_,_,_=spGetUnitPiecePosDir(unitID,targPoint)
-			
-			--computate the relative grounddistance to Unitbase
-			gd=(spGetGroundHeight(px,py)-ry)*-1
-
-			--how far the Unit has moved away from the StartPosition
-			tx,ty,tz=(rx-sx),(ry-sy),(rz-sz)
-			         			
-			--current Heading difference in deg
-			deg=(orgHeading-currentHeading)	
-				
-			-- we turn the MoveVector by 
-			tx,tz=RotationMatrice(tx,tz,math.rad(currentHeading+deg)) --rad
-			
-			
-			--Velocity comes as elmos per frame	
-			--here we calculate wether a hitsphere is beneath the foot
-			gd=lstepitup(tx,gd,tz)
-			
-			--finall
-			Move(targPoint,z_axis,tz*-1,vz*30)
-			--Move(targPoint,y_axis,gd,vy*30)
-			Move(targPoint,x_axis,tx*-1,vx*30)		 
-			-- res=(orgHeading- currentHeading)*-1
-		
-			--lebgbase pos
-			ulbx,ulby,ulbz	=spGetUnitPiecePosDir(unitID,StriTable[number].UpOrg)
-			tx,ty,tz		=spGetUnitPiecePosDir(unitID,targPoint)
-			--to succesfully resolve cinematics we need the units position, the base pieces position and the upLegsPosition												
-			CinematicsResolveSuccesfull=lresolveKinematics(rx,ry,rz, tx,ty,tz, ulbx,ulby,ulbz,number, targPoint)
-			Sleep(10)
-			end
-			Spring.Echo("JW_STRIDER:KinematikLimitReached")
+			ux,uy,uz=Spring.GetUnitPosition(unitID)	
 	
+			sx,sz=drehMatrix (0, 0, asx-ux, asz-uz, diffdance)
+		
+			TODO(solveMe)					
+			TurnPieceTowardsPoint(upLeg,sx,asy+5,sz,3,0,0,0)
+			TurnPieceTowardsPoint(Leg,sx,asy,sz,0,0,0)		
+			Sleep(100)
+			
+			
+			if distance(	ux,uy,uz,	sx,sy,sz) < 70 then 
+			CinematicsResolveSuccesfull=true
+			else			
+			Spring.Echo("JW_STRIDER:KinematikLimitReached")
+			--CinematicsResolveSuccesfull=false
+			end
+		end
 
 	end
 
@@ -404,23 +379,26 @@ LegTable[#LegTable+1]=piece"striderle6"
 	Turn(StriTable[number].Leg,z_axis,0,15)
 	Turn(StriTable[number].Leg,x_axis,33,15)
 	end
+	
 	 function walk()
 		local ldeaAnim=deactiveAnim
 		SetSignalMask(SIG_WALK)
 		
 		--	test(StriTable[number].Leg,"371,walk")
 		--Monotonous DeebugWalk
+
 		while true do		
+	
 		StartThread(keepFeetRelative,relPos1,center1,Sens1, SIG_F1,striderlegA3, striderlegB3, striderlegC3,0,0,-10	,1)
 		Sleep(1700)
 --		StartThread(keepFeetRelative,relPos3,center3,Sens3, SIG_F3,striderlegA2, striderlegB2, striderlegC2,-26,0,60		,3)
 		--StartThread(keepFeetRelative,relPos2,center2,Sens2, SIG_F2,striderlegA, striderlegB, striderlegC,26,0,60		,2)
 		Sleep(1300)	
-		ldeaAnim(1,SIG_F1)
+		--ldeaAnim(1,SIG_F1)
 		--StartThread(keepFeetRelative,relPos1,center1,Sens1, SIG_F1,striderlegA3, striderlegB3, striderlegC3,0,0,-10	,1)
 		Sleep(2300)	
-		ldeaAnim(2,SIG_F2)
-		ldeaAnim(3,SIG_F3)
+		--ldeaAnim(2,SIG_F2)
+		--ldeaAnim(3,SIG_F3)
 		end
 		
 			while (true) do
@@ -553,6 +531,7 @@ LegTable[#LegTable+1]=piece"striderle6"
 	function script.StartMoving()
 		Spring.Echo ("starting to walk!")
 		Signal(SIG_ORG)
+		Signal(SIG_WARP)
 		boolWalkStart=true
 	end
 
@@ -562,6 +541,7 @@ LegTable[#LegTable+1]=piece"striderle6"
 			Signal(SIG_F1)
 			Signal(SIG_F2)
 			Signal(SIG_F3)
+			Signal(SIG_WARP)
 			legs_down (false)
 	end
 
@@ -588,16 +568,19 @@ LegTable[#LegTable+1]=piece"striderle6"
 	function script.FireWeapon1()	
 		return true
 	end
-
+SIG_WARP= 128
 	----aimining & fire weapon 2
 	function WarpCanonStance()
-		Move(strider,y_axis,-13,30)
-		Turn(striderlegA,z_axis,math.rad(35),1)
-		Turn(striderlegB,z_axis,math.rad(-35),3)
-		Turn(striderlegA2,z_axis,math.rad(-36),1)
-		Turn(striderlegB2,z_axis,math.rad(48),2)
-		Turn(striderlegA3,x_axis,math.rad(33),1)
-		Turn(striderlegB3,x_axis,math.rad(-39),3)
+	SetSignalMask(SIG_WARP)
+	Move(strider,y_axis,-13,0.5)
+	while true do
+
+		Turn(striderlegA,z_axis,math.rad(40),0.1)
+		Turn(striderlegB,z_axis,math.rad(-40),0.3)
+		Turn(striderlegA2,z_axis,math.rad(-45),0.1)
+		Turn(striderlegB2,z_axis,math.rad(48),0.2)
+		Turn(striderlegA3,x_axis,math.rad(35),0.1)
+		Turn(striderlegB3,x_axis,math.rad(-45),0.3)
 		WaitForTurn(striderlegA,z_axis)     
 		WaitForTurn(striderlegB,z_axis)     
 		WaitForTurn(striderlegA2,z_axis)     
@@ -605,7 +588,22 @@ LegTable[#LegTable+1]=piece"striderle6"
 		WaitForTurn(striderlegA3,x_axis)    
 		WaitForTurn(striderlegB3,x_axis)    
 		WaitForMove(strider,y_axis)
-		
+		Move(strider,y_axis,-13,0.5)
+		Turn(striderlegA,z_axis,math.rad(35),0.1)
+		Turn(striderlegB,z_axis,math.rad(-35),0.3)
+		Turn(striderlegA2,z_axis,math.rad(-36),0.1)
+		Turn(striderlegB2,z_axis,math.rad(48),0.2)
+		Turn(striderlegA3,x_axis,math.rad(33),0.1)
+		Turn(striderlegB3,x_axis,math.rad(-39),0.3)
+		WaitForTurn(striderlegA,z_axis)     
+		WaitForTurn(striderlegB,z_axis)     
+		WaitForTurn(striderlegA2,z_axis)     
+		WaitForTurn(striderlegB2,z_axis)    
+		WaitForTurn(striderlegA3,x_axis)    
+		WaitForTurn(striderlegB3,x_axis)    	
+		WaitForMove(strider,y_axis)		
+		Move(strider,y_axis,-16,0.5)
+	end
 		end
 
 	function script.AimFromWeapon2() 
@@ -631,8 +629,9 @@ LegTable[#LegTable+1]=piece"striderle6"
 		return true
 	end
 
-	function script.FireWeapon2()	
-		WarpCanonStance()
+	function script.FireWeapon2()
+	Signal(SIG_WARP)
+		StartThread(WarpCanonStance)
 		Sleep(450)
 		Spring.SetUnitCOBValue(unitID, COB.ACTIVATION, 0)
 		return true

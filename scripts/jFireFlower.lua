@@ -680,7 +680,7 @@ WaitForMove(Pod,y_axis)
 x,y,z=Spring.GetUnitPosition(unitID)
 boolSupperTime=false
 	while boolSupperTime==false do
-	T=getAllInCircle(unitID,x,z,50)
+	T=getAllInCircle(x,z,50,unitID)
 		if T then
 		boolSupperTime=true
 		forTableUseFunction(T,

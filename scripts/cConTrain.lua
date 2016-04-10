@@ -1021,7 +1021,7 @@ function healWhileStandingStill()
 			x,y,z=Spring.GetUnitPosition(unitID)
 			hp=Spring.GetUnitHealth(unitID)
 			if hp then
-				T=getAllInCircle(unitID,x,z,300,teamid)
+				T=getAllInCircle(x,z,300,unitID,teamID)
 				hp=math.ceil(math.ceil(hp*0.5)/#T)
 				hpcopy=hp
 				for i=1,#T do

@@ -261,8 +261,8 @@ if (gadgetHandler:IsSyncedCode()) then
 					end
 				end
 				
-				
-				T=getAllInCircle("placeholder", fireT[i].x, fireT[i].z,MetaMapResDivider)
+				assert(MetaMapResDivider)
+				T=getAllInCircle(fireT[i].x, fireT[i].z,MetaMapResDivider)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes, ShitWasSoCache)
 				if T and #T> 0 then
 					
@@ -284,7 +284,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			if dMap[i] and dMap[i] % frame ==0 then
 				
 				spSpawnCEG("bigfoorestfire", bigFireTable[i].x+math.random(-16,16), bigFireTable[i].y+math.random(1,15), bigFireTable[i].z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1))
-				T=getAllInCircle("placeholder", bigFireTable[i].x, bigFireTable[i].z,52)
+				T=getAllInCircle( bigFireTable[i].x, bigFireTable[i].z,52)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes,ShitWasSoCache)
 				
 				if T and #T > 0 then

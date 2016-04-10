@@ -168,7 +168,7 @@ function FeedMe()
 		
 		for i=1, #sensorT, 1 do
 			x,y,z=Spring.GetUnitPiecePosDir(unitID,sensorT[i])
-			T=getAllInCircle(unitID,x,z,10)
+			T=getAllInCircle(x,z,10,unitID)
 			if T then 	T= filterOutMobileBuilder (T,true) end
 			if T then filterOutUnitsOfType(T,Seastars)end
 			table.remove(T,unitID)

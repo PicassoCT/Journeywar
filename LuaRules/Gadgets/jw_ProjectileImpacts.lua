@@ -827,7 +827,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SetUnitRotation(unitID,r.x,r.y,r.z)
 			Spring.AddUnitImpulse(unitID,v.x,v.y,v.z) 
 			
-			T=getAllInCircle(unitID,ux,uz,120)
+			T=getAllInCircle(ux,uz,120,unitID)
 			--SplashDamage
 			foreach(
 			T, 

@@ -315,7 +315,7 @@ end
 		
 			while boolMoving==true do
 			x,_,z=Spring.GetUnitPiecePosDir(unitID,treeSpot)
-			T=getAllInCircle(unitID,x,z,50,teamID)
+			T=getAllInCircle(x,z,50,unitID,teamID)
 				if T then
 				T=filterUnitTableforDefIDTable(T,treeTypeTable)
 					if T then

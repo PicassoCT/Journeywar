@@ -790,7 +790,7 @@ function script.Killed(recentDamage,maxHealth)
 		Sleep(math.ceil(500/i))	
 	end
 	T={}
-	T=getAllInCircle(unitID,cx,cz,256,teamID)
+	T=getAllInCircle(cx,cz,256,unitID,teamID)
 	DestroyTable(T, 
 	false,
 	true, 

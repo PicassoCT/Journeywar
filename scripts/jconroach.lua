@@ -95,7 +95,7 @@ hp=Spring.GetUnitHealth(unitID)
 	if hp > 0 then
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamid=Spring.GetUnitTeam(unitID)
-	T=getAllInCircle(unitID,x,z,90,teamid)
+	T=getAllInCircle(x,z,90,unitID,teamid)
 	hp=math.ceil(math.ceil(hp/2)/#T)
 		for i=1,#T do
 		EmitSfx(legz [(i%8)+1],1024)

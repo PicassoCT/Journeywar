@@ -22,7 +22,7 @@ Observator = piece"Observator"
 piecesTable[#piecesTable+1]= Observator
 RadarDish = piece"RadarDish" 
 piecesTable[#piecesTable+1]= RadarDish
-local TRAPRANGE=400
+TRAPRANGE=400
 TIMETILLREVENGE=24000
 
 function script.Create()
@@ -43,7 +43,7 @@ GoingBoom=false
 function CountPassingByEnemys()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	while true do
-	T=getAllInCircle(unitID,x,z, TRAPRANGE)
+	T=getAllInCircle(x,z, TRAPRANGE,unitID)
 	T=filterTableByTable(T,AllreadyPassingUnits,function (element,T2) return T2[element]== nil end )
 	AllreadyPassingUnits=insertKeysIntoTable(T,AllreadyPassingUnits)
 	Sleep(300)

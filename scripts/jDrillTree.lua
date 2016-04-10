@@ -239,7 +239,7 @@ local spGetUnitHealth=Spring.GetUnitHealth
 local spSetUnitHealth=Spring.SetUnitHealth
 	while(true) do
 	UnitsTable={}
-	UnitsTable=getAllInCircle(unitID,x,z,radiationRange)
+	UnitsTable=getAllInCircle(x,z,radiationRange,unitID)
 	
 		if UnitsTable~=nil and table.getn(UnitsTable)~= 0 then
 		

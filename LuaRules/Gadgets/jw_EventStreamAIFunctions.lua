@@ -80,7 +80,7 @@ local spGetDefID=Spring.GetUnitDefID
 PersPackage.hp=hp --To be sure
 
 x,y,z=Spring.GetUnitPosition(unitid)
-	if dist2Vec (x,y,z,Pos.x,Pos.y,Pos.z) < 150  then
+	if distance (x,y,z,Pos.x,Pos.y,Pos.z) < 150  then
 	--Does Building allready exist--
 	UnitsAtSpot=Spring.GetUnitsInCylinder(x,z,125)
 	Building={}
@@ -165,7 +165,7 @@ PersPackage.hp=hp --To be sure
 PersPackage.armrange=PersPackage.armrange or GetMaxArmRange(Spring.GetUnitDefID(unitid))
 
 x,y,z=Spring.GetUnitPosition(unitid)
-	if dist2Vec (x,y,z,Pos.x,Pos.y,Pos.z) < PersPackage.armrange  then
+	if distance (x,y,z,Pos.x,Pos.y,Pos.z) < PersPackage.armrange  then
 	--We are nearby
 	Command(unitid,"attack",{x=Pos.x,y=Pos.y,z=Pos.z})
 	return frame+10,PersPackage

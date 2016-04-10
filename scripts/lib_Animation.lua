@@ -745,14 +745,33 @@ end
 		return true
 	end
 	
+	function mulVectorS4Mat(mat,vec)
+	enVec={[1]=vec.x,[2]=vec.y,[3]=vec.z, [4]= 1}
+	resVec={[1]=0,[2]=0,[3]=0,[4]=0 }
+		
+		for u=0,3, 1 do
+		sum=0
+			for v=1,4, 1 do
+			sum= sum + (enVec[v]*mat[u*4 + v])		
+			end
+			
+		resVec[u+1]=sum
+		end
+		
+	return {x=resVec[1],y=resVec[2],z=resVec[3],w= resVec[4] }
+	end
+	
+	
 	function hang(pieceName,offSetVec,speed)
 	diVec=makeVector(0,0,0)
+	matrice,b= Spring.GetUnitPieceMatrix(unitID,pieceName)	
+	echo(type(matrice),type(b))
+	diVec= mulVectorS4Mat(matrice, diVec)
+	--norm it
+	diVec= divVector(diVec,diVec.w)
+	diVec.w=1
+	diVec= mulVector(diVec, offSetVec)
 
-	diVec.x,diVec.y,diVec.z= Spring.GetUnitDirection(unitID)
-	diVec= mulVector(diVec,-1)	
-	diVec=normVector(diVec)
-	diVec=addVector(diVec,offSetVec)
-	
 	tPVector(pieceName,diVec,speed)
 	end
 	
@@ -1149,7 +1168,7 @@ function MovePieceoPieceUnitSpace(unitID,piecename, piecenameB,speed, waitForIt)
 	end
 end
 
--->Turns a Piece towards a direction 
+-->Turns a Piece towards a position in unitspace 
 function TurnPieceTowards(piecename,x,y,z,speed)
 	
 	Turn(piecename,x_axis,math.rad(x),speed)
@@ -1160,29 +1179,36 @@ end
 
 -->Turn a Piece towards another Piece 
 function TurnPieceTowardsPiece(piecename,pieceB,speed)
-	x,y,z=Spring.GetUnitPiecePosition(unitID,piecename)
+	ax,ay,az=Spring.GetUnitPiecePosition(unitID,piecename)
+	assert(ax)
 	px,py,pz=Spring.GetUnitPiecePosition(unitID,pieceB)
-	px,py,pz=x-px,y-py,z-pz
-	dx,dy,dz=math.rad(math.atan2(dy,dz)),math.rad(math.atan2(px,pz)),math.rad(math.atan2(dy,dx))
-	if py then
+	assert(px)
+	px,py,pz=ax-px,ay-py,az-pz
+	dx = math.deg(math.atan2(px,pz))
+	dy = math.deg(math.atan2(px,pz))
+	dz = math.deg(math.atan2(py,px))
+	
+	echo("Turntoards point")
 		TurnPieceTowards(piecename,dx,dy,dz,speed)
-	end
+
 	
 end
 
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
-function TurnPieceTowardsPoint (piecename, x,y,z,Speed)
+function TurnPieceTowardsPoint (piecename, x,y,z,Speed,lox,loy,loz)
 	pvec={x=0,y=0,z=0}
+	ox,oy,oz=lox or 0, loy or 0, loz or 0
+
 	px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
 	pvec=normVector(pvec)
 	
 	vec={}
 	vec.x,vec.y,vec.z=x-px,y-py,z-pz
-	v=normVector(v)
-	v=subVector(v,pvec)
-	v=normVector(v)
+	vec=normVector(vec)
+	vec=subVector(vec,pvec)
+	vec=normVector(vec)
 	
-	tPrad(piecename,math.atan2(vec.y,vec.z),math.atan2(vec.x,vec.z),math.atan2(vec.x,vec.y),Speed)
+	tPrad(piecename,math.atan2(vec.y,vec.z)+ox,math.atan2(vec.x,vec.z)+oy,math.atan2(vec.x,vec.y)+oz,Speed)
 end
 
 function tPVector(piece, vec, speed)

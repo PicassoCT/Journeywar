@@ -156,13 +156,14 @@ function mirror(value)
 	return value
 end
 
+
 -->returns the 2 norm of a vector
-function dist2Vec(x,y, z,xa,ya,za)
+function distance(x,y, z,xa,ya,za)
+if ax then
 	return math.sqrt(x*xa+y*ya+z*za)
-end
--->returns the 2 norm of a vector
-function distance(x,y, z)
+else
 	return math.sqrt(x*x+y*y+z*z)
+end
 end
 
 -->returns the Distance between two units
@@ -1420,6 +1421,11 @@ function normVector(v)
 	return {x=v.x/l ,y=v.y/l,z=v.z/l}
 end
 
+function sumNormVector(v)
+	sum= math.abs(v.x)+math.abs(v.y)+math.abs(v.z)
+		return {x=v.x/sum ,y=v.y/sum,z=v.z/sum}
+end
+
 function solveSpring(s, sucessor, frictionConstant)
 	springVector =subVector(s.mass1.pos,sucessor.mass1.pos) -- Vector Between The Two Masses
 	
@@ -2085,12 +2091,12 @@ function vardump(value, depth, key)
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllNearUnit(unitID,Range)
 	px,py,pz=Spring.GetUnitPosition(unitID)
-	return 	getAllInCircle(unitID,px,pz,Range)	
+	return 	getAllInCircle(px,pz,Range,unitID)	
 	end
 	
 	--> Grabs every Unit in a circle, filters out the unitid
-	function getAllInCircle(unitID,x,z,Range,teamid)
-	if not unitID or not x or not z then 
+	function getAllInCircle(x,z,Range,unitID,teamid)
+	if not x or not z then 
 		return {} 
 	end
 	if not Range then assert(Range) end
@@ -2102,7 +2108,7 @@ function vardump(value, depth, key)
 			T=Spring.GetUnitsInCylinder(x,z,Range)
 		end
 		
-		if T and #T>1 and type(unitID)=='number' then
+		if unitID and  T and #T>1 and type(unitID)=='number' then
 			table.remove(T,unitID)
 		end
 		return T
@@ -3001,7 +3007,7 @@ function vardump(value, depth, key)
 		if px and tpx then
 			size=square(px,py,pz)	
 			if size then
-				T=getAllInCircle(unitID, tpx,tpz,size/2)
+				T=getAllInCircle( tpx,tpz,size/2, unitID)
 				
 				if T and #T > 0 then
 					

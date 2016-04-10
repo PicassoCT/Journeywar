@@ -53,7 +53,7 @@ Spring.PlaySoundFile("sounds/bgmtw/grenade.ogg",1.0)
 	
 
 	x,y,z=Spring.GetUnitPosition(unitID)
-	T=getAllInCircle(unitID,x,z,100)
+	T=getAllInCircle(x,z,100,unitID)
 	for i=1,#T do
 	Spring.AddUnitDamage(T[i],90) 
 	end

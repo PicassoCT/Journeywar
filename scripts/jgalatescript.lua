@@ -71,10 +71,14 @@ function ImSailing()
 		SetUnitValue(COB.MAX_SPEED,ratio)
 		
 		if LocalBoolInWater==true then
+
+		
 			for i=2,#PivotPoints do		
 				Turn(PivotPoints[i],y_axis,Heading+16384,0.2)
 			end
-			hang(pieces["wholeBodyCenter"],{x=0,y=0,z=0},0.5)
+		
+		else
+		tP(pieces["wholeBodyCenter"],0,0,0,1.5)
 		end
 		
 		Sleep(250)
@@ -207,7 +211,7 @@ nlwalkAnimation= function (PivotPoints,pieces)
 	--reset
 	
 	
-	hang(fireGalate,makeVector(0,0,-1), 1.3)
+	hang(fireGalate,makeVector(0,1,0),0.8)
 	WaitForTurn(pieces["Leg3"],2)
 	WaitForTurn(pieces["Leg2"],2)
 	WaitForTurn(pieces["Leg1"],2)
@@ -238,7 +242,7 @@ nlwalkAnimation= function (PivotPoints,pieces)
 	--Forward
 	
 	--Backward
-	hang(fireGalate,{x=0,y=0,z=-1}, 1.3)
+		hang(fireGalate,makeVector(0,1,0), 0.8)
 	Turn(pieces["Leg1"],2,math.rad(0),0.8 )	
 	Turn(pieces["Leg2"],2,math.rad(0),0.8 )
 	Turn(pieces["Leg3"],2,math.rad(269+360),0.8 )	
@@ -253,8 +257,7 @@ nlwalkAnimation= function (PivotPoints,pieces)
 	Turn(pieces["LegL3"],3,math.rad(55),0.6 )
 	Turn(pieces["Leg4"],3,math.rad(-22),0.4 )
 	Turn(pieces["LegL4"],3,math.rad(55),0.6 )
-	Turn(fireGalate,1,math.rad(89),0.3)
-	
+
 	WaitForMove(PivotPoints[1],2)
 	WaitForTurn(pieces["Leg1"],2)
 end
@@ -263,7 +266,7 @@ end
 
 
 nlstopWalkAnimation= function (PivotPoints,pieces) 
-	hang(fireGalate,{x=0,y=0,z=-1}, 1.3)
+	hang(fireGalate,makeVector(0,1,0),0.8)
 	WaitForTurn(pieces["Leg3"],2)
 	WaitForTurn(pieces["Leg2"],2)
 	WaitForTurn(pieces["Leg1"],2)
@@ -287,35 +290,40 @@ nlstopWalkAnimation= function (PivotPoints,pieces)
 	Spin(pieces["fireGalate"],z_axis,math.rad(-4.2),0.5)
 	Move(PivotPoints[1],2,-10,3.5)
 	Turn(pieces["Leg1"],3,math.rad( 22),0.4 )
-	Turn(pieces["LegL1"],3,math.rad( -55),0.6 )
+	Turn(pieces["LegL1"],3,math.rad( -50),0.8 )
 	Turn(pieces["Leg2"],3,math.rad( 22),0.4 )
-	Turn(pieces["LegL2"],3,math.rad( -55),0.6 )
+	Turn(pieces["LegL2"],3,math.rad( -50),0.8 )
 	Turn(pieces["Leg3"],3,math.rad(-22),0.4 )
-	Turn(pieces["LegL3"],3,math.rad(55),0.6 )
+	Turn(pieces["LegL3"],3,math.rad(50),0.8 )
 	Turn(pieces["Leg4"],3,math.rad(-22),0.4 )
-	Turn(pieces["LegL4"],3,math.rad(55),0.6 )
+	Turn(pieces["LegL4"],3,math.rad(50),0.8 )
+	WaitForMove(PivotPoints[1],2)
 	if math.random(1,7)==3 then
 		
 		--> Turns a Pieces table according to a function provided
-		--waveATable(Legs, x_axis)	
-		
+		waveATable(Legs, y_axis,function(x) return x end ,randSign(),0.5)	
+		WaitForTurns(Legs)
+		waveATable(Legs, y_axis,function(x) return x end ,randSign(),0.5)	
+		WaitForTurns(Legs)
+		reseT(Legs, 0.5)
+		WaitForTurns(Legs)
 	else
 		val=math.random(-15,15)
-		Turn(pieces["Leg1"],2,math.rad(val),0.4*2)
+		Turn(pieces["Leg1"],2,math.rad(val),0.4)
 		val=math.random(-15,15)
-		Turn(pieces["LegL1"],2,math.rad(val),0.4*2)
+		Turn(pieces["LegL1"],2,math.rad(val),0.8)
 		val=math.random(-15,15)
-		Turn(pieces["Leg3"],2,math.rad(val),0.4*2)
+		Turn(pieces["Leg3"],2,math.rad(val),0.4)
 		val=math.random(-15,15)
-		Turn(pieces["LegL3"],2,math.rad(val),0.4*2)
+		Turn(pieces["LegL3"],2,math.rad(val),0.8)
 		val=math.random(-15,15)		
-		Turn(pieces["Leg2"],2,math.rad(val),0.4*2)
+		Turn(pieces["Leg2"],2,math.rad(val),0.4)
 		val=math.random(-15,15)		
-		Turn(pieces["LegL2"],2,math.rad(val),0.4*2)
+		Turn(pieces["LegL2"],2,math.rad(val),0.8)
 		val=math.random(-15,15)
-		Turn(pieces["Leg4"],2,math.rad(val),0.4*2)
+		Turn(pieces["Leg4"],2,math.rad(val),0.4)
 		val=math.random(-15,15)
-		Turn(pieces["LegL4"],2,math.rad(val),0.4*2)
+		Turn(pieces["LegL4"],2,math.rad(val),0.8)
 		WaitForTurn(pieces["Leg3"],2)
 		WaitForTurn(pieces["Leg2"],2)
 		WaitForTurn(pieces["Leg1"],2)
@@ -340,7 +348,7 @@ function InWaterFeedingFrenzy()
 		x,y,z=Spring.GetUnitPosition(unitID)
 		
 		while y < 0 do
-			T=getAllInCircle(unitID,x,z, stunRange)
+			T=getAllInCircle(x,z, stunRange,unitID)
 			T,Cache=filterOutUnitsOfType(T, {[UnitDefNames["jgalatea"].id]=true},Cache)
 			T= process(T,
 			function(element)
@@ -440,13 +448,14 @@ function script.AimWeapon1( heading ,pitch)
 	WaitForTurn(fireGalate,y_axis)
 	Signal(SIG_RESET)
 	WaitForTurn(fireGalate,x_axis)
-	return true
+	return LocalBoolInWater ==false
 	
 end
 function reset()
 	SetSignalMask(SIG_RESET)
 	Sleep(3000) 
-	Turn(fireGalate,x_axis,math.rad(90),1.2)
+	
+		hang(fireGalate,makeVector(0,1,0),0.8)
 	
 end
 

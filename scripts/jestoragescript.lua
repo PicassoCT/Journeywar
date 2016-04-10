@@ -317,7 +317,7 @@ Spring.PlaySoundFile("sounds/jestorage/good_explosion.wav",1)
 if percenTage then
 Range=math.ceil(percenTage*explosionRange)
 x,y,z=Spring.GetUnitPosition(unitID)
-T=getAllInCircle(unitID,x,z,Range)
+T=getAllInCircle(x,z,Range,unitID)
 defID=Spring.GetUnitDefID(unitID)	
 Spring.SpawnCEG("factory_explosion",x,y+15,z,0,1,0,50,0)
 	for i=1,#T do 

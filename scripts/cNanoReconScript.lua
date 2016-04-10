@@ -345,7 +345,7 @@ SetSignalMask(SIG_HARVEST)
 	px,py,pz = Spring.GetUnitPosition(unitID)
 	pv= makeVector(px,py,pz)
 		--get all in Range
-	 victimT=getAllInCircle(unitID, px,pz,360)
+	 victimT=getAllInCircle( px,pz,360,unitID)
 	 featureT=getAllFeatureNearUnit(unitID, 360)
 	StartThread(	 PlaySoundByUnitType,unitdef, soundfile,1.0, 10000, 1,0)
 		if victimT then

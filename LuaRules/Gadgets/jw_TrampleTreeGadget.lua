@@ -48,9 +48,11 @@
 								env = Spring.UnitScript.GetScriptEnv(UnitsToCheck[i])
 								
 									if env then
-									TrampeledTrees=TaddT(TrampeledTrees, env.TrampledTrees)
-									Spring.Echo("TrampledTrees added")
-									env.TrampeledTrees={}
+										if  env.TrampledTrees then
+										TrampeledTrees=TaddT(TrampeledTrees, env.TrampledTrees)
+										Spring.Echo("TrampledTrees added")
+										env.TrampeledTrees={}
+										end
 									end
 								
 								else
