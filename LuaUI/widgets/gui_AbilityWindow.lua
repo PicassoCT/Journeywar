@@ -30,6 +30,7 @@ local upgradeGrid = {}
 local AmmoBar = {}
 local ExpBar = {}
 local stack_main = {}
+local activeButtons = {}
 
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
@@ -37,7 +38,7 @@ local selectedUnits = {}
 local ability_window
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
-
+ updateCommandsSoon = false
 
 ability_window_height = 180
 ability_window_width = 115
@@ -117,13 +118,14 @@ function widget:Initialize()
 			width = "90%";
 			height = "90%";
 			bottom = nil;
-			y = "5%"; x = "5%";
+			y = "5%"; x = "15%";
 			keepAspect = true,
 			file = onoffTexture[1],
 			parent = onOffButton,
 		}
 		
 		if onOffButton then
+		activeButtons["default"]=onOffButton
 			onOffButton:Hide()
 		end
 	end
@@ -137,6 +139,7 @@ function widget:Initialize()
 			width = 440,
 			height = 330,
 			color = {0,0,0,1},
+			parent= screen0,
 			
 			children = {
 				Chili.Button:New{backgroundColor = {0.1,0.8,0.8,1}, textColor = {0.8,1,1,1}, caption = "SPEED", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SPEED") end}},
@@ -167,7 +170,7 @@ function widget:Initialize()
 			},
 			
 		}
-		Chili.Screen0.AddChild(upgradeGrid)
+	
 		if upgradeGrid then 
 			upgradeGrid:Hide()	
 		end
@@ -214,87 +217,16 @@ function widget:Initialize()
 			end
 		end
 	end
-	
-	local function updateAmmo()
-		
-		
-	end
-	
-	local function updateExp()
-		
-	end
-	
-	local function Create_ExpBar()
-		
-		ExpBar = 			Chili.Progressbar:New
-		{
-			name = "ExpBar",
-			x = 10,
-			y = 60,
-			width = 90,
-			height = 35,
-			value = 0,
-			parent = stack_main,
-			textColor = {0.8,1,1,1},
-			color = {0.3,0.85,0.95,1},
-			backgroundColor = {0.15,0.3,0.35,1},
-			caption = "EXP ",
-			OnChange = {updateExp},
-		}	
-		
-	end
-	
-	
-	local function ShowOnOffButton()
-		stack_main:AddChild(onOffButton)
-		activeButtons[#activeButtons+1]= onOffButton
-		
-	end
-	
-	local function ShowSpecialAbilityButton()
-		stack_main:AddChild(onOffButton)
-		activeButtons[#activeButtons+1]= onOffButton
-		
-	end
-	
-	local function Create_AmmoBar()
-		AmmoBar = Chili.Progressbar:New
-		{
-			name = "AmmoBar",
-			x = 10,
-			y = 20,
-			width = 90,
-			height = 35,
-			textColor = {0.8,1,1,1},
-			color = {0.8,0.5,0.25,1},
-			backgroundColor = {0.1,0.2,0.2,1},
-			caption = "AMMO ",
-			OnChange = {updateAmmo},
-		}	
-		
-	end
-	
-	local unitTypeButtonMap = {
-		--unitname --> Function Showing Button
-		["ccomender"]	 = ShowSpecialAbilityButton,
-		["default"] = ShowOnOffButton
-	}
-	
-	
-	
-	
-	
-	local updateCommandsSoon = false
-	function widget:CommandsChanged()
-		updateCommandsSoon = true
-		
-	end
 
 	
-	local activeButtons = {}
+	
+	
+
+	
+	
 	function HideAllActiveButtons()
-		for i = 1,#activeButtons do
-			activeButtons[i]:Hide()
+		for k,v in pairs(activeButtons) do
+			activeButtons[k]:Hide()
 		end
 	end
 	
@@ -352,25 +284,101 @@ function widget:Initialize()
 	
 end
 
+	function widget:CommandsChanged()
+			Spring.Echo("Selction changed")
+		updateCommandsSoon = true
+		
+	end
+
 --update functions
 function widget:GameFrame(f)
+	
+	local function updateAmmo()
+		
+		
+	end
+	
+	local function updateExp()
+		
+	end
+	
+	local function Create_ExpBar()
+		
+		ExpBar = 			Chili.Progressbar:New
+		{
+			name = "ExpBar",
+			x = 10,
+			y = 60,
+			width = 90,
+			height = 35,
+			value = 0,
+			parent = stack_main,
+			textColor = {0.8,1,1,1},
+			color = {0.3,0.85,0.95,1},
+			backgroundColor = {0.15,0.3,0.35,1},
+			caption = "EXP ",
+			OnChange = {updateExp},
+		}	
+		
+	end
+	
+	
+	local function ShowOnOffButton(typeString)
+
+	
+		activeButtons[typeString].Show()
+		
+	end
+	
+
+	local function ShowSpecialAbilityButton()
+		onOffButton.Show()
+		activeButtons[#activeButtons+1]= onOffButton	
+	end
+	
+	local function Create_AmmoBar()
+		AmmoBar = Chili.Progressbar:New
+		{
+			name = "AmmoBar",
+			x = 10,
+			y = 20,
+			width = 90,
+			height = 35,
+			textColor = {0.8,1,1,1},
+			color = {0.8,0.5,0.25,1},
+			backgroundColor = {0.1,0.2,0.2,1},
+			caption = "AMMO ",
+			OnChange = {updateAmmo},
+		}	
+		
+	end
+	
+
+
+		local unitTypeButtonMap = {
+		--unitname --> Function Showing Button
+		["ccomender"]	 = ShowSpecialAbilityButton,
+		["default"] = ShowOnOffButton
+	}
 	
 	function UpdateAbilitiesWindow()
 		--	upgradeGrid.ClearChildren()
 		selectedUnits = spGetSelectedUnits()
 		
 		if not selectedUnits then 
+			Spring.Echo("No Unit selected")
 			HideAllActiveButtons()
 			return 
 		end
 		
 		local unitID = selectedUnits[1]
 		if not unitID then 
+			Spring.Echo("No Unit selected")
 			HideAllActiveButtons()
 			return 
 		end
 		
-		local udid = spGetUnitDefID(unitID)
+		local udid = Spring.GetUnitDefID(unitID)
 		local ud = UnitDefs[udid]
 		
 		--empty the upgrade Grid
@@ -381,7 +389,7 @@ function widget:GameFrame(f)
 			unitTypeButtonMap[ud.name]()
 			
 		else
-			unitTypeButtonMap["default"]()
+			unitTypeButtonMap["default"]("default")
 		end
 		
 		
@@ -389,7 +397,8 @@ function widget:GameFrame(f)
 	
 	
 	
-	if updateCommandsSoon == true and (f % 16 == 0) then		
+	if updateCommandsSoon == true and (f % 16 == 0) then
+		Spring.Echo("updateCommandsSoon")	
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
 	end
