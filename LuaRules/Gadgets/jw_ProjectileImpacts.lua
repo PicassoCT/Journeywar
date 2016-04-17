@@ -350,6 +350,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if weaponDefID== striderWeaponDefID then
 			teamid=Spring.GetUnitTeam(AttackerID)
 			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
+			Spring.SpawnCEG("factory_explosion",px,py+10,pz,0,1,0,50)
 		end
 		
 		--MTW Grenade

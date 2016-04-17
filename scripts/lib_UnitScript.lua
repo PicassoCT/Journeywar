@@ -159,7 +159,7 @@ end
 
 -->returns the 2 norm of a vector
 function distance(x,y, z,xa,ya,za)
-if ax then
+if xa and ya and za then
 	return math.sqrt(x*xa+y*ya+z*za)
 else
 	return math.sqrt(x*x+y*y+z*z)
@@ -742,6 +742,12 @@ function pointWithinTriangle(x1,y1,x2,y2,x3,y3,xt,yt)
 		return false
 	end
 	
+end
+-->Sanitizing RandomIntervall -cause brando has electrolytes
+function cbrandoVal(LowLimit,UpLimit)
+	upLim=UpLimit or LowLimit+1
+	if LowLimit >= upLim then LowLimit=upLim-1 end
+	return math.ceil(math.random(LowLimit,UpLimit))
 end
 
 -->Sanitizing RandomIntervall -cause brando has electrolytes
@@ -1449,13 +1455,13 @@ function stringOfLength(char,length)
 	return strings
 end
 
-function rEchoTable(T,layer)
+function rEchoT(T,layer)
 	l=layer or 0
 	if T then
 		if type(T)=='table' then
 			Spring.Echo("+"..(stringOfLength("_",l)).."___ RTable ")
 			for k,v in pairs(T) do
-				rEchoTable(T[k],l+1)
+				rEchoT(T[k],l+1)
 			end
 			Spring.Echo((stringOfLength("_",l)))
 		else

@@ -82,7 +82,9 @@ end
 
 function GetDistanceToHole(vicID,x,y,z)
 vx,vy,vz=Spring.GetUnitPosition(vicID)
+if vx then
 return math.sqrt((vx-x)^2+(vz-z)^2)
+end
 end
 
 function getEaten(victimID,distance, unitID,x,z)
@@ -151,7 +153,7 @@ if boolInitCompleted==true then
 						if SuckerTable[Table[k]] then 
 						else
 						SuckerTable[Table[k]]=GetDistanceToHole(Table[k],x,y,z)				
-							if SuckerTable[Table[k]] < range then
+							if SuckerTable[Table[k]] and SuckerTable[Table[k]] < range then
 							StartThread(dragtowards,SuckerTable[Table[k]], Table[k], unitID,x,z, SuckerTable[Table[k]]/range)
 							if math.random(0,1)==0 then Spring.PlaySoundFile("sounds/jdarkgate/suckInAtIt.ogg",1.0) else Spring.PlaySoundFile("sounds/jdarkgate/jdarkgatevortex3.ogg",1.0) end
 							

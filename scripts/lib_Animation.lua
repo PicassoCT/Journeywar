@@ -35,6 +35,8 @@ end
 -->Waits for anyTurnToComplete
 function WaitForTurns(...)
 	--local arg = table.pack(...)
+	
+	local arg={...}
 	if not arg then
 		return 
 	end
@@ -187,7 +189,7 @@ end
 
 --> Turns a piece in all 3 axis and waits for it
 function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
-	
+if piecename == nil then echo("libAnimation::tP got nil piece ".. x_val,y_val) end
 	Turn(piecename,x_axis,math.rad(x_val),speed)
 	Turn(piecename,y_axis,math.rad(y_val),speed)
 	Turn(piecename,z_axis,math.rad(z_val),speed)
@@ -222,7 +224,8 @@ end
 function turnSyncInTimeT(Table, time,x_deg,y_deg,z_deg)
 	
 	for piece,v in pairs(Table) do
-		turnInTime(v.piecenr, v.axis,math.rad(v.deg), time, false,x_deg,y_deg,z_deg)
+
+		turnInTime(v.piecenr, v.axis,math.rad(v.deg), time, x_deg,y_deg,z_deg,false)
 	end
 	
 end
@@ -257,25 +260,31 @@ end
 
 
 -->Turns a piece in the speed necessary to arrive after x Milliseconds - overrirdes the spring shortes path turns
-function turnInTime(piecename,axis,degree,timeInMs,boolWait,x_deg,y_deg,z_deg )
+function turnInTime(piecename,taxis,degree,timeInMs,x_deg,y_deg,z_deg, boolWait )
 	assert(z_deg)
 	
-	absoluteDeg=absoluteRotation(piecename,axis,degree,x_deg,y_deg,z_deg)+0.01
+	absoluteDeg=absoluteRotation(piecename,taxis,degree,x_deg,y_deg,z_deg)
 	
-	timeInMs=timeInMs/1000
-	Speed=math.abs(absoluteDeg)/timeInMs --9.3
+	timeInMs=(timeInMs+1)/1000
+	Speed=(math.abs(math.rad(absoluteDeg))/math.pi) /(math.abs(timeInMs))--9.3
+	
+	if absoluteDeg < 0.0001 then return end
 	
 	if lib_boolDebug==true then
-		Spring.Echo(" TurnInTime Speed:"..Speed.." to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in time "..timeInMs.. " seconds"	)
+		--Spring.Echo(" TurnInTime for"..piecename.." Speed:"..Speed)
+		--Spring.Echo("to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in time "..timeInMs.. " seconds"	)
 	end
 	
+
 	if absoluteDeg <= 180 then
-		Turn(piecename,axis,math.rad(degree),Speed)
-		if boolWait and boolWait==true then WaitForTurn(piecename,axis) end
+		
+		Turn(piecename,taxis,math.rad(degree),Speed)
+		
+		if boolWait and boolWait==true then WaitForTurn(piecename,taxis) end
 		
 	else
-		OverTurnDirection(piecename,axis,degree,Speed)
-		if boolWait and boolWait==true then Sleep(10); WaitForTurn(piecename,axis) end
+		OverTurnDirection(piecename,taxis,degree,Speed)
+		if boolWait and boolWait==true then Sleep(10); WaitForTurn(piecename,taxis) end
 	end	
 end
 
@@ -306,19 +315,31 @@ function OverTurnDirection(piecename,axis, degree,speed)
 	
 end
 
+function tSyncIn(piecename,x_val,y_val,z_val,time, UnitScript)
+x_deg,y_deg,z_deg= UnitScript.GetPieceRotation(piecename)
+syncTurnInTime(piecename,x_val,y_val,z_val,time,x_deg,y_deg,z_deg)
+end
 
 -->Turns a piece on every axis in time 
 function syncTurnInTime(piecename,x_val,y_val,z_val,time,x_deg,y_deg,z_deg)
 	if lib_boolDebug==true then
-		Spring.Echo("Time for syncTurnInTime:"..time)
+		--Spring.Echo("Time for syncTurnInTime:"..time)
 	end
-	
-	turnInTime(piecename,x_axis, (x_val),time,false,x_deg,y_deg,z_deg) -- -28 3000
-	turnInTime(piecename,y_axis, (y_val),time,false,x_deg,y_deg,z_deg)
-	turnInTime(piecename,z_axis, (z_val),time,false,x_deg,y_deg,z_deg)
+
+	turnInTime(piecename,1, (x_val),time,x_deg,y_deg,z_deg,false) -- -28 3000
+	turnInTime(piecename,2, (y_val),time,x_deg,y_deg,z_deg,false)
+	turnInTime(piecename,3, (z_val),time,x_deg,y_deg,z_deg,false)
 	
 end
-
+--> Move a piece so that it arrives at  all axis on the given time
+function syncMoveInTime(piecename,x_val,y_val,z_val,time)	
+	time=time/1000
+	--ratio = 1/(val/max)*time => max*time / val
+	Move(piecename,1,x_val,math.abs(x_val/time))
+	Move(piecename,2,y_val,math.abs(y_val/time))
+	Move(piecename,3,z_val,math.abs(z_val/time))
+	
+end
 
 --> Move a piece so that it arrives at the same time on all axis
 function syncMove(piecename,x_val,y_val,z_val,speed)
@@ -764,15 +785,14 @@ end
 	
 	function hang(pieceName,offSetVec,speed)
 	diVec=makeVector(0,0,0)
-	matrice,b= Spring.GetUnitPieceMatrix(unitID,pieceName)	
-	echo(type(matrice),type(b))
-	diVec= mulVectorS4Mat(matrice, diVec)
-	--norm it
-	diVec= divVector(diVec,diVec.w)
-	diVec.w=1
-	diVec= mulVector(diVec, offSetVec)
-
-	tPVector(pieceName,diVec,speed)
+	mat={}
+	hx,hy =Spring.GetUnitPosition(unitID)
+	dx,dy,dz=Spring.GetGroundNormal(hx,hy)
+	dv=makeVector(dx,dy,dz)
+	upv= makeVector(0,1,0)
+	dv= subVector(upv,dv)
+	
+	tPVector(pieceName,dv,speed)
 	end
 	
 	
@@ -1197,7 +1217,8 @@ end
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
 function TurnPieceTowardsPoint (piecename, x,y,z,Speed,lox,loy,loz)
 	pvec={x=0,y=0,z=0}
-	ox,oy,oz=lox or 0, loy or 0, loz or 0
+	ox,oy,oz=math.rad(lox or 0), math.rad(loy or 0), math.rad(loz or 0)
+	
 
 	px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
 	pvec=normVector(pvec)
@@ -1208,7 +1229,7 @@ function TurnPieceTowardsPoint (piecename, x,y,z,Speed,lox,loy,loz)
 	vec=subVector(vec,pvec)
 	vec=normVector(vec)
 	
-	tPrad(piecename,math.atan2(vec.y,vec.z)+ox,math.atan2(vec.x,vec.z)+oy,math.atan2(vec.x,vec.y)+oz,Speed)
+	tPrad(piecename, math.atan2(vec.y,vec.z)+ox,math.atan2(vec.x,vec.z)+oy,math.atan2(vec.x,vec.y)+oz,Speed)
 end
 
 function tPVector(piece, vec, speed)

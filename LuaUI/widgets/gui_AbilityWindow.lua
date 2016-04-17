@@ -126,7 +126,7 @@ function widget:Initialize()
 		
 		if onOffButton then
 		activeButtons["default"]=onOffButton
-			onOffButton:Hide()
+			onOffButton.Hide()
 		end
 	end
 	

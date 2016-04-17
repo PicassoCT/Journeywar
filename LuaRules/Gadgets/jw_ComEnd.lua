@@ -10,6 +10,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local J_COMMANDER_DEF_ID = UnitDefNames["jabyss"].id
 
 	function gadget:UnitDestroyed(Unit, UnitDef, Team)
+		if not 	GG.LazarusDeviceActive then 	GG.LazarusDeviceActive= {} end
 		if (UnitDef == C_COMMANDER_DEF_ID and ( GG.LazarusDeviceActive[Unit] == nil or GG.LazarusDeviceActive[Unit] <= 0 )) 
 		or UnitDef == J_COMMANDER_DEF_ID then
 			--any code to be executed when commander dies

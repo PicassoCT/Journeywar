@@ -48,7 +48,26 @@ RArm	=piece"RArm"
 Head	=piece"Head"
 Gun		=piece"Gun"
 Neck= piece"Neck"
-
+attackedSounds={}
+for i=1,14,1 do
+	if i < 10 then
+		attackedSounds[i]="sounds/bgmtw/attacked/attacked00"..i..".ogg"
+	else
+		attackedSounds[i]="sounds/bgmtw/attacked/attacked0"..i..".ogg"
+	end
+end
+killedSounds={}
+for i=1,4,1 do
+	killedSounds[i]="sounds/bgmtw/killed/killed00"..i..".ogg"
+end
+shieldSounds={}
+for i=1,6,1 do
+	shieldSounds[i]="sounds/bgmtw/moving/moving00"..i..".ogg"
+end
+movingSounds={}
+for i=1,8,1 do
+	movingSounds[i]="sounds/bgmtw/moving/moving00"..i..".ogg"
+end
 
 function bodyBuilder()
 	Hide(LArm)
@@ -237,13 +256,17 @@ function walk()
 		
 		
 		if timeSinceLastChatter== 0 and math.random(0,800) ==100 then
-			
-			if math.random(0,1)== 0 then
+			dec= math.random(0,2)== 1
+			if dec == 1 then
 				StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
 				timeSinceLastChatter=19000
 				StartThread(reduceTimeSinceLastChatter)
-			else
+			elseif dec == 2 then			
 				StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
+				timeSinceLastChatter=19000
+				StartThread(reduceTimeSinceLastChatter)
+			else
+				StartThread(PlaySoundByUnitType,bgdefID,movingSounds[math.floor(math.random(1,#movingSounds))],0.5, 2000, 1,0)
 				timeSinceLastChatter=19000
 				StartThread(reduceTimeSinceLastChatter)
 			end
@@ -641,6 +664,11 @@ function script.Killed(recentDamage, maxHealth)
 	Signal(SIG_KNEE)
 	Signal(SIG_FIRE)
 	killinTime(recentDamage,maxHealth)
+	
+	if math.random(0,12)==7 then
+			PlaySoundByUnitType(bgdefID,killedSounds[math.floor(math.random(1,#killedSounds))],0.5, 2000, 1,0)
+	end	
+	
 	return 1 
 end
 --]]
@@ -660,10 +688,23 @@ function soundStart()
 		if boolShieldDown==true then
 			boolShieldDown=false
 			StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/shielddrop.ogg",1500,1,1)
+			Sleep(1600)
+			if timeSinceLastChatter== 0 and math.random(0,4)==1 then
+			StartThread(PlaySoundByUnitType,bgdefID,shieldSounds[math.floor(math.random(1,#shieldSounds))],0.5, 2000, 1,0)
+			timeSinceLastChatter=19000
+			StartThread(reduceTimeSinceLastChatter)
+			end
 		end
 	end
 	
 	
+end
+
+function script.HitByWeapon( x, z, weaponDefID, damage )
+	if damage > 15 and math.random(0,42)== 22 then
+	StartThread(PlaySoundByUnitType,bgdefID,attackedSounds[math.floor(math.random(1,#attackedSounds))],0.5, 2000, 1,0)
+	end
+return damage
 end
 
 function showShield()

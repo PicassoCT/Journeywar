@@ -136,7 +136,7 @@ function landed()
 	
 	StopSpin (conspin, y_axis, 1)
 	
-	Spin (conspin, y_axis, math.rad(35),2)
+	Spin (conspin, y_axis, math.rad(135),12)
 	Turn(conaircenter,x_axis,math.rad(0),5)
 	Turn(conairfron,x_axis,math.rad(0),4)
 	Turn(conairRear,x_axis,math.rad(0),4)
@@ -152,7 +152,7 @@ end
 function onTheFly()
 	
 	
-	Spin (conspin, y_axis, math.rad(60),9)
+	Spin (conspin, y_axis, math.rad(260),19)
 	Turn(conaircenter,x_axis,math.rad(8),3)
 	booleightDegree=true
 	Turn(conairfron,x_axis,math.rad(82),4)
@@ -944,7 +944,7 @@ function workInProgress()
 	end
 	
 	boolUnitIsSoldier=unitBuiltCheck()
-	Spin (conspin, y_axis, math.rad(45),7)
+	Spin (conspin, y_axis, math.rad(145),7)
 	
 	
 	SetSignalMask(SIG_HOVER)

@@ -499,7 +499,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	function bd_SymmetricExpand(pieceA,pieceB,dirVec)
 		--Spring.Echo("JW:VaryFoo:SymetricExpanding_1 >>"..table.getn(SymBodyCon))
-		--rEchoTable(SymBodyCon)
+		--rEchoT(SymBodyCon)
 		--TODO
 		-->Align Piece A -- add all pieces as symmetrics
 		AlignPieceToPiece(ConCenter,pieceA,0)
@@ -993,7 +993,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	function bd_alignLegsToGround()
 		if #ArmTable > 0 then
-			--rEchoTable(ArmTable)
+			--rEchoT(ArmTable)
 			local spGetUnitPiecePos=Spring.GetUnitPiecePosition
 			oldMaxDif=99999
 			smallestIntervallSoFar=1	

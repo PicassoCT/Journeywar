@@ -10,6 +10,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 end
 center=piece"center"
 Quader04=piece"Quader04"
+Quader01=piece"Quader01"
 
 function script.Create()
 --generatepiecesTableAndArrayCode(unitID)
@@ -22,8 +23,22 @@ suddenDeathV(recentDamage)
 return 1
 end
 
+function testTurnInTime()
+
+syncTurnInTime(Quader01,0,-45,0,300,0,0,0)
+while true do
+syncTurnInTime(Quader01,0,0,0,3000,0,-45,0)
+WaitForTurn(Quader01,y_axis)
+Sleep(3000)
+syncTurnInTime(Quader01,0,-45,0,3000,0,0,0)
+WaitForTurn(Quader01,y_axis)
+Sleep(3000)
+end
+
+end
 
 function emitSFX()
+	StartThread(testTurnInTime)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	modHeight=0
 	i=0

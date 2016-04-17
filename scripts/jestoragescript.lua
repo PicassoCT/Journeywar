@@ -258,8 +258,8 @@ function gyroScopic()
 		-- if the unit takes a step, add that change of bodyvec as a opposite force to the targetvec
 		--TargVec={x= (-1*(bodyVec.x-oldBodyVec.x)),y= (-1*(bodyVec.y-oldBodyVec.y)),z=(-1*(bodyVec.z-oldBodyVec.z))}
 				
-		TargVec=vAddV(vMul(TargVec,0.5),vMul(LiquidVec,0.5))
-		TargVec=vAddV(vMul(TargVec,0.85),vMul(UpRightVec,0.15))		
+		TargVec=addVector(vectorMul(TargVec,0.5),vectorMul(LiquidVec,0.5))
+		TargVec=addVector(vectorMul(TargVec,0.85),vectorMul(UpRightVec,0.15))		
 		
 		RadX,RadZ=makeDegFromVec(TargVec)
 		-- Spring.Echo("JW:jestorage - TurnVecX:"..RadX.. " - TurnVecZ: "..RadZ)
@@ -270,7 +270,7 @@ function gyroScopic()
 			Sleep(150)
 			end
 		--flip the TargVec we have reached the highest Point and everything tell us to go backwards..
-		TargVec=vMul(TargVec,-0.9)
+		TargVec=vectorMul(TargVec,-0.9)
 		
 		end
 	oldBodyVec=bodyVec
