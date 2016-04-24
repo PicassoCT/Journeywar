@@ -1,9 +1,9 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
@@ -13,28 +13,28 @@ Quader04=piece"Quader04"
 Quader01=piece"Quader01"
 
 function script.Create()
---generatepiecesTableAndArrayCode(unitID)
-StartThread(emitSFX)
+	--generatepiecesTableAndArrayCode(unitID)
+	StartThread(emitSFX)
 end
 
 function script.Killed(recentDamage,_)
-
-suddenDeathV(recentDamage)
-return 1
+	
+	suddenDeathV(recentDamage)
+	return 1
 end
 
 function testTurnInTime()
-
-syncTurnInTime(Quader01,0,-45,0,300,0,0,0)
-while true do
-syncTurnInTime(Quader01,0,0,0,3000,0,-45,0)
-WaitForTurn(Quader01,y_axis)
-Sleep(3000)
-syncTurnInTime(Quader01,0,-45,0,3000,0,0,0)
-WaitForTurn(Quader01,y_axis)
-Sleep(3000)
-end
-
+	
+	syncTurnInTime(Quader01,0,-45,0,300,0,0,0)
+	while true do
+		syncTurnInTime(Quader01,0,0,0,3000,0,-45,0)
+		WaitForTurn(Quader01,y_axis)
+		Sleep(3000)
+		syncTurnInTime(Quader01,0,-45,0,3000,0,0,0)
+		WaitForTurn(Quader01,y_axis)
+		Sleep(3000)
+	end
+	
 end
 
 function emitSFX()
@@ -44,27 +44,27 @@ function emitSFX()
 	i=0
 	while true do
 		modHeight=(modHeight%250)+10
-
+		
+		
+		--Sleep(1500)	
+		
+		--	Spring.SpawnCEG("jvaryfoohit",x,y,z,0,1,0)
+		--Sleep(1500)
+		--	Spring.SpawnCEG("jvaryfoohit2",x,y,z,0,1,0)	
+		--Sleep(1500)
+		--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
+		Sleep(1500)
+		Spring.SpawnCEG("cnanotics",x,y+400,z,1,0,0,0)	
+		Sleep(1500)
+		Spring.SpawnCEG("jgalateatend",x,y+20,z,0,1,0,60)
+		Sleep(1500)
+		randoX,randoZ=math.random(-50,50),math.random(-50,50)
+		Spring.SpawnCEG("bghdexplode",x,y+400,z,0,1,0,60)
+		
+		--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
+		
+	end
 	
-	--Sleep(1500)	
-	
-			--	Spring.SpawnCEG("jvaryfoohit",x,y,z,0,1,0)
-			--Sleep(1500)
-			--	Spring.SpawnCEG("jvaryfoohit2",x,y,z,0,1,0)	
-			--Sleep(1500)
-			--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
-			Sleep(1500)
-				Spring.SpawnCEG("cnanotics",x,y+400,z,1,0,0,0)	
-			Sleep(1500)
-				Spring.SpawnCEG("jgalateatend",x,y+20,z,0,1,0,60)
-			Sleep(1500)
-			randoX,randoZ=math.random(-50,50),math.random(-50,50)
-				Spring.SpawnCEG("bghdexplode",x,y+400,z,0,1,0,60)
-
-			--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
-
-		end
-
 end
 
 ----aimining & fire weapon
@@ -80,8 +80,7 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-
+	
 	return true
-
+	
 end
- 

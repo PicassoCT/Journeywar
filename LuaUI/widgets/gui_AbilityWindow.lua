@@ -47,7 +47,6 @@ ability_window_positionY = "83%"
 
 --subConstructors
 
-
 function widget:Initialize()
 	
 	
@@ -65,7 +64,7 @@ function widget:Initialize()
 	screen0 = Chili.Screen0
 	
 		
-	local function Create_UpgradeButton()
+	function Create_UpgradeButton()
 		SpecialAbilityButton = Button:New{
 			name = unitDefID,
 			x = 5,
@@ -83,9 +82,11 @@ function widget:Initialize()
 		
 		
 		stack_main:AddChild(SpecialAbilityButton)
-		
+		if SpecialAbilityButton then
+		activeButtons["ability"]=SpecialAbilityButton
 		SpecialAbilityButton:Hide()
-		
+		end
+	
 	end
 	
 	function Create_OnOffButton()
@@ -110,10 +111,10 @@ function widget:Initialize()
 			height = buttonsize,
 			backgroundColor = {0.1,0.8,0.8,1}, 
 			textColor = {0.8,1,1,1},
+			parent= stack_main,
 			OnClick = { onOffFunction },
-			parent = stack_main	
 		}
-		
+		--[[
 		onOffButtonImage = Image:New { 
 			width = "90%";
 			height = "90%";
@@ -122,17 +123,17 @@ function widget:Initialize()
 			keepAspect = true,
 			file = onoffTexture[1],
 			parent = onOffButton,
-		}
+		}]]
+
+		stack_main:AddChild(onOffButton)
 		
 		if onOffButton then
 		activeButtons["default"]=onOffButton
-			onOffButton.Hide()
+			onOffButton:Hide()
 		end
 	end
-	
-
-	
-	local function CreateUpgradeMenue ()
+	 
+	function CreateUpgradeMenue ()
 		
 		upgradeGrid = Chili.Grid:New{
 			name = 'UpgradeGrid',
@@ -176,7 +177,7 @@ function widget:Initialize()
 		end
 	end
 	
-	local function Create_UpgradeGrid()
+	function Create_UpgradeGrid()
 		
 		upgradeButton = 	Chili.Window:New{
 			name = 'upgradeButton',
@@ -202,13 +203,12 @@ function widget:Initialize()
 		end
 		
 	end
-	
-	
-	local function inflateUpgradeMenue()	
+		
+	function inflateUpgradeMenue()	
 		
 		if boolShowUpgrade == false then
 			boolShowUpgrade = true
-			upgradeGrid.Show()
+			upgradeGrid:Show()
 			
 		else 
 			boolShowUpgrade = false
@@ -217,12 +217,6 @@ function widget:Initialize()
 			end
 		end
 	end
-
-	
-	
-	
-
-	
 	
 	function HideAllActiveButtons()
 		for k,v in pairs(activeButtons) do
@@ -236,9 +230,7 @@ function widget:Initialize()
 		CreateUpgradeMenue()
 	end
 	
-	
-	
-	--Actual initialisatioin Code
+			--Actual initialisatioin Code
 	stack_main = Grid:New{
 		y = 20,
 		padding = {0,0,0,0},
@@ -246,12 +238,13 @@ function widget:Initialize()
 		itemMargin = {0, 0, 0, 0},
 		width = '100%',
 		height = '100%',
-		resizeItems = false,
+		resizeItems = false,		
 		orientation = 'horizontal',
 		centerItems = false,
 		columns = 2,
+		
 	}
-	
+
 	ability_window = Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
@@ -277,15 +270,12 @@ function widget:Initialize()
 			stack_main,			
 		},
 	}
-	
-	createAllButtons()
-	
-	
-	
+		
+	createAllButtons()		
 end
 
-	function widget:CommandsChanged()
-			Spring.Echo("Selction changed")
+function widget:CommandsChanged()
+		Spring.Echo("Selction changed")
 		updateCommandsSoon = true
 		
 	end
@@ -293,73 +283,34 @@ end
 --update functions
 function widget:GameFrame(f)
 	
-	local function updateAmmo()
-		
-		
-	end
-	
-	local function updateExp()
-		
-	end
-	
-	local function Create_ExpBar()
-		
-		ExpBar = 			Chili.Progressbar:New
-		{
-			name = "ExpBar",
-			x = 10,
-			y = 60,
-			width = 90,
-			height = 35,
-			value = 0,
-			parent = stack_main,
-			textColor = {0.8,1,1,1},
-			color = {0.3,0.85,0.95,1},
-			backgroundColor = {0.15,0.3,0.35,1},
-			caption = "EXP ",
-			OnChange = {updateExp},
-		}	
-		
-	end
-	
-	
+
 	local function ShowOnOffButton(typeString)
 
 	
-		activeButtons[typeString].Show()
+		activeButtons[typeString]:Show()
 		
 	end
 	
 
 	local function ShowSpecialAbilityButton()
-		onOffButton.Show()
-		activeButtons[#activeButtons+1]= onOffButton	
-	end
-	
-	local function Create_AmmoBar()
-		AmmoBar = Chili.Progressbar:New
-		{
-			name = "AmmoBar",
-			x = 10,
-			y = 20,
-			width = 90,
-			height = 35,
-			textColor = {0.8,1,1,1},
-			color = {0.8,0.5,0.25,1},
-			backgroundColor = {0.1,0.2,0.2,1},
-			caption = "AMMO ",
-			OnChange = {updateAmmo},
-		}	
+	--TODO replace
+		activeButtons["ability"]:Show()
 		
 	end
-	
 
-
-		local unitTypeButtonMap = {
+	local unitTypeButtonMap = {
 		--unitname --> Function Showing Button
-		["ccomender"]	 = ShowSpecialAbilityButton,
-		["default"] = ShowOnOffButton
+		["ccomender"]	 	= ShowSpecialAbilityButton,
+		["default"] 		= ShowOnOffButton
 	}
+	
+	function isUnitOnOffable(unitDefID_T)
+		local index = Spring.GetCmdDescIndex(CMD.ONOFF)
+			if index then
+				return true
+			end
+		return false
+	end
 	
 	function UpdateAbilitiesWindow()
 		--	upgradeGrid.ClearChildren()
@@ -388,8 +339,11 @@ function widget:GameFrame(f)
 			--generate the Gui Specific by unittype
 			unitTypeButtonMap[ud.name]()
 			
-		else
+		elseif isUnitOnOffable(ud.name)== true then
 			unitTypeButtonMap["default"]("default")
+		else
+			--default no button
+			HideAllActiveButtons()
 		end
 		
 		

@@ -157,7 +157,14 @@ local options =
     name   = 'Map Related Settings',
     desc   = 'Configure map related settings.',
     type   = 'section',
-  },  
+  }, 
+  {
+    key    = 'LuaRules',
+    name   = 'Enable LuaRules',
+    desc   = 'Enable mod usage of luarules',
+    type   = 'bool',
+    def    = true,
+  }  
 --[[   {
     key    = 'DisableMapDamage',
     name   = 'Disable Map Deformations',
@@ -183,13 +190,7 @@ local options =
     def    = false,
   },
  
-  {
-    key    = 'LuaRules',
-    name   = 'Enable LuaRules',
-    desc   = 'Enable mod usage of luarules',
-    type   = 'bool',
-    def    = true,
-  }, ]]
+, ]]
 
 }
 return options

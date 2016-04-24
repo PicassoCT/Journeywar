@@ -20,7 +20,9 @@ aim1=piece"aim1"
 centCase=piece"centCase"
 centrotor=piece"centrotor"
 centrotors=piece"centrotors"
-
+nightlight=piece"nightlight"
+NLRed=piece"NLRed"
+NLBlue=piece"NLBlue"
 dirtemit1=piece"dirtemit1"
 dirtemit2=piece"dirtemit2"
 
@@ -46,6 +48,22 @@ SIG_RESET=128
 local buildProgress=1
 local boolShortStop=false
 local boolLongStop=false
+boolIsNight=true
+
+boolRedBlue= math.random(0,1)==1
+
+function hideNightlight()
+	Hide(NLBlue)
+	Hide(NLRed)
+	end
+	
+function showNightlight()
+	if boolRedBlue== true then
+	Show(NLBlue)	
+	else
+	Show(NLRed)
+	end
+end
 
 function rotorsUp()
 	Sleep(200)
@@ -56,6 +74,7 @@ function rotorsUp()
 SetSignalMask(SIG_UP)
 --Spring.Echo("Imflying-Copterscript")
   Spin(rotor,y_axis,math.rad(-105192),35.4)
+  Spin(nightlight,y_axis,math.rad(105192),35.4)
   Spin(centrotor,x_axis,math.rad(-105192),35.4)
   Spin(tailrotor,x_axis,math.rad(-105192),35.4)  
   Spin(centrotors,x_axis,math.rad(272),15.5)
@@ -69,8 +88,9 @@ SetSignalMask(SIG_UP)
   Hide(rotor)
   Hide(centrotor)
   Hide(tailrotor)
-
- 
+	if boolIsNight == true and boolAir == true then
+	showNightlight() 
+	end
 end
 
 function rotorsDown ()
@@ -80,6 +100,7 @@ Sleep(600)
 --Spring.Echo("Imlanding-Copterscript")
 Spin(tailrotor,x_axis,math.rad(-190),0.001)
 Spin(rotor,y_axis,math.rad(-190),0.001)
+Spin(nightlight,y_axis,math.rad(190),0.001)
 Spin(centrotor,x_axis,math.rad(-190),0.001)
 Sleep(350)
   Hide(tailrotors)
@@ -95,7 +116,7 @@ StopSpin(centrotors,x_axis,0.01)
 Sleep(1000)
 Turn(center,x_axis,math.rad(-18),0.25)
 Move(center,y_axis,-5.5,2.8)
-
+hideNightlight()
 end
  
 function script.Activate()
@@ -297,7 +318,7 @@ function script.Create()
 --test
 Turn(rotoscope,x_axis,math.rad(18),0)
 Spin(rotoscope,y_axis,math.rad(640),0)
-
+hideNightlight()
 --/test
 Hide(dirtemit1)
 Hide(dirtemit2)
