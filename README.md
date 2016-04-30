@@ -1,5 +1,7 @@
 # JOURNEYWAR#
 
+Version 52.3
+
 ##Centrail Confederacy vs Journeyman##
 
 Remember how geared up the Combine of the Half-Life Universe where? 
