@@ -19,7 +19,7 @@ return {
 
 				 pos                = [[0 r-13 r13, 26, 0 r-13 r13]],
 				gravity            = [[0, 0.1, 0]],
-				emitvector         = [[0, dir, 0]],
+				emitvector         = [[0, 1,0]],
 				  emitRot		= 22,
 				 emitRotSpread	= 12.824,
 
@@ -60,7 +60,7 @@ return {
         directional        = false,
         emitrot            = 22,
         emitrotspread      = 12,
-              emitvector         = [[0,dir,0]],
+              emitvector         = [[0,1,0]],
         gravity            = [[0, 0.022, 0]],
         numparticles       = 1,
         particlelife       = 65,
@@ -96,7 +96,7 @@ dirtgff = {
         directional        = false,
         emitrot            = 22,
         emitrotspread      = 12,
-              emitvector         = [[0,dir,0]],
+              emitvector         = [[0,1,0]],
         gravity            = [[0, 0.018, 0]],
         numparticles       = 1,
         particlelife       = 65,

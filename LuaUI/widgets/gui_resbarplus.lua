@@ -36,36 +36,38 @@ local Spring_GetTeamResources = Spring.GetTeamResources
 local Spring_GetGameFrame = Spring.GetGameFrame
 local Spring_GetGameSeconds = Spring.GetGameSeconds
 local math_floor = math.floor
-teamid=Spring.GetMyTeamID()
+teamid=Spring.GetLocalTeamID()
 combine="centrail"
-sideCombine=true
+
+sideCombine=false
+pathEnergy="luaui/images/cres_energy.png"
+pathMetall="luaui/images/cres_metal.png"
+
+function setTeam()
 if teamid then
 	teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier= Spring.GetTeamInfo(teamid)
 	if side and side ~= "" and type(side)== "string" then
-		sideCombine= string.lower(side)==combine
+		if string.lower(side)==combine then
+			sideCombine = true
+		elseif string.lower(side)== 'journeyman' then
+			sideCombine= false
+		end
+		
 	end
+	
+	
+	if sideCombine==false then
+		pathEnergy= 'luaui/images/jres_energy.png' 
+		pathMetall= 'luaui/images/jres_metal.png' 
+	end
+
+end
 end
 
 
-energy,metall=" "," "
-if sideCombine==true then
-	energy="Securitybudget"
-else
-	energy="Light"
-end
-if combine==true then
-	metall="Materialbudget"
-else
-	metall="Matter"
-end
-
-pathEnergy="luaui/images/cres_energy.png"
-pathMetall="luaui/images/cres_metal.png"
-if sideCombine==false then pathEnergy= 'luaui/images/jres_energy.png' end
-if sideCombine==false then pathMetall= 'luaui/images/jres_metal.png' end
 
 components[1] = { --"Energy bar, yellow"--
-	name=energy ,
+	name= 'energy' ,
 	
 	left = 81,
 	top = 59,
@@ -192,7 +194,7 @@ components[8] = { --"base"--
 }
 
 components[10] = { --"Metal penis"--
-	name=metall ,
+	name= 'metal' ,
 	
 	left = 80,
 	top = 58, --11 for E bar
@@ -498,22 +500,22 @@ function DrawEbar(pct)
 end
 
 function DrawMbar(pct)
-	local number=10
-	local mbarwidth=components[number].tx2-components[number].tx1
+	local eMetallBar=10
+	local mbarwidth=components[eMetallBar].tx2-components[eMetallBar].tx1
 	local drawwidth=pct*mbarwidth
 	--	Spring.Echo(pct)
 	
-	gl_Color(1,1,1,components[number].alpha)
+	gl_Color(1,1,1,components[eMetallBar].alpha)
 	gl_Texture(pathMetall)	
-	local x1= vsx +components[number].left -pngx -465 -seperation --bottom left of placing
-	local y1= vsy -components[number].top -math.abs(components[number].ty1-components[number].ty2) 
+	local x1= vsx +components[eMetallBar].left -pngx -465 -seperation --bottom left of placing
+	local y1= vsy -components[eMetallBar].top -math.abs(components[eMetallBar].ty1-components[eMetallBar].ty2) 
 	local x2= x1 +drawwidth+1	--top right of placing
 	
-	local y2= y1 +(components[number].ty1-components[number].ty2)
-	local s1=(components[number].tx2 -drawwidth )/pngx--top left bounding
-	local t1=(pngy-components[number].ty2) /pngy
-	local s2=(components[number].tx2 ) /pngx--bottom right bounding
-	local t2=(pngy-components[number].ty1) /pngy
+	local y2= y1 +(components[eMetallBar].ty1-components[eMetallBar].ty2)
+	local s1=(components[eMetallBar].tx2 -drawwidth )/pngx--top left bounding
+	local t1=(pngy-components[eMetallBar].ty2) /pngy
+	local s2=(components[eMetallBar].tx2 ) /pngx--bottom right bounding
+	local t2=(pngy-components[eMetallBar].ty1) /pngy
 	DrawTexRect(x1,y1,x2,y2,s1,t1,s2,t2)
 	
 	gl_Texture(false)
@@ -539,10 +541,10 @@ function DrawMbar(pct)
 		
 		
 		
-		--components[21].alpha=mglow/cooldownglowtime
+		components[21].alpha=mglow/cooldownglowtime
 		--components[18].alpha=mglow/cooldownglowtime
 		--components[19].alpha=mglow/cooldownglowtime
-		--components[20].alpha=mglow/cooldownglowtime --
+		components[20].alpha=mglow/cooldownglowtime --
 		--components[16].alpha=mglow/cooldownglowtime --
 		--components[17].alpha=norm(math.abs( (now- math_floor(now/60)*60)/30 -1))
 		
@@ -560,7 +562,7 @@ function DrawMbar(pct)
 		--DrawComponent(18)--exhaust glow
 		--DrawComponent(19)--grill glow
 		DrawComponent(20)--M on
-		--DrawComponent(21)--M on glow
+		DrawComponent(21)--M on glow
 		
 	else 
 		local now=Spring.GetGameFrame()
@@ -574,7 +576,7 @@ function DrawMbar(pct)
 		
 		--components[18].alpha=mglow/cooldownglowtime
 		--components[19].alpha=mglow/cooldownglowtime
-		--components[20].alpha=mglow/cooldownglowtime
+		components[20].alpha=mglow/cooldownglowtime
 		--components[15].top=default+(1-mglow/cooldownglowtime)*5
 		----Spring.Echo(components[15].top)
 		--components[16].top=default+(1-mglow/cooldownglowtime)*5
@@ -668,6 +670,8 @@ function widget:Initialize()
 	local vsx, vsy = widgetHandler:GetViewSizes()
 	widget:ViewResize(vsx, vsy)
 	Spring.SendCommands({"resbar 0"})
+	setTeam()
+	
 	Spring.SetShareLevel("metal",mshare)
 	Spring.SetShareLevel("energy",eshare)
 	--offsetx =Spring.GetConfigInt("ResourcebarPlusOffsetx", 0)
@@ -774,19 +778,20 @@ function widget:DrawScreen()
 		
 		--OK metal bar time now:
 		
+
 		DrawComponent(11) --furnace shadow
 		
 		
 		DrawMbar(curMpct)	
 		
 		
-		--components[14].alpha=norm((curMpct-0.10) *20)--normal bars
+		components[14].alpha=norm((curMpct-0.10) *20)--normal bars
 		DrawComponent(14)
 		components[13].alpha=norm((0.15 -curMpct) *20)--glowy bars
 		DrawComponent(13)
 		
 		--drawcomponent
-		--DrawComponent(22) --base
+		DrawComponent(22) --base
 		
 		gl_Blending(true)
 		
