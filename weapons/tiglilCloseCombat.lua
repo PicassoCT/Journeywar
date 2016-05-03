@@ -5,7 +5,7 @@ local weaponDef = {
 	      weaponType              = [[Melee]],
 	      --damage
 		  damage = {
-				default = 325,
+				default = 125,
 				HeavyArmor = 90,
 				},	      
 	      areaOfEffect            = 3,

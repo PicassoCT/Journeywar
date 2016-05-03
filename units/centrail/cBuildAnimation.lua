@@ -22,7 +22,7 @@ nanocolor=[[0 0.9 0.9]],
 				   
 				},
 				},
- 
-
+ 	NoWeapon=true,
+category=[[ BUILDING]],		
 }
 return lowerkeys({ [unitName] = unitDef })

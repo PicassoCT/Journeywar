@@ -1787,8 +1787,8 @@ function bladewhirl_thread()
 			Turn (tlarm,x_axis,math.rad(0),6)
 			Turn (tlarm,y_axis,math.rad(0),6)--i
 			Turn (tlarm,z_axis,math.rad(49),14)
-			EmitSfx(tlsparksemit, 1024)
-			EmitSfx(tlsparksemit2, 1024)
+			EmitSfx(tlHead, 1024)
+
 			Turn (tlarmr,x_axis,math.rad(10),3)
 			Turn (tlarmr,y_axis,math.rad(0),5)--i
 			Turn (tlarmr,z_axis,math.rad(-53),14)
@@ -2070,8 +2070,8 @@ function bladewhirl_thread()
 			Turn(tllegUp ,y_axis,math.rad(-11),2)
 			Turn(tllegUp ,z_axis,math.rad(- 8),2)
 			--FixMe
-			EmitSfx(tlsparksemit, 1024)
-			EmitSfx(tlsparksemit2, 1024)
+			EmitSfx(tlHead, 1024)
+
 			Turn(tllegUpR,x_axis,math.rad(34),4)
 			Turn(tllegUpR,y_axis,math.rad(-39),4)
 			Turn(tllegUpR,z_axis,math.rad(- 17),2)
@@ -2151,8 +2151,8 @@ function bladewhirl_thread()
 			Turn(tlhairup,x_axis,math.rad(randomvalue),3)
 			randomvalue=creaRandomValue(-52,-16)
 			Turn(tlhairdown,x_axis,math.rad(randomvalue),4)
-			EmitSfx(tlsparksemit, 1024)
-			EmitSfx(tlsparksemit2, 1024) 
+			EmitSfx(tlHead, 1024)
+
 			Turn(tlarmr,x_axis,math.rad(97),8)
 			Turn(tlarmr,y_axis,math.rad(-11),1)
 			Turn(tlarmr,z_axis,math.rad(-16),2)
@@ -2214,8 +2214,8 @@ function bladewhirl_thread()
 			WaitForTurn (deathpivot,x_axis) 
 			WaitForTurn (deathpivot,y_axis) 
 			
-			EmitSfx(tlsparksemit, 1024)
-			EmitSfx(tlsparksemit2, 1024)
+			EmitSfx(tlHead, 1024)
+	
 			
 			
 			Sleep(150)
@@ -8998,7 +8998,7 @@ end
 
 --eggspawn --tigLil and SkinFantry
 
-experienceSoFar=0
+experienceSoFar=1
 teamID=Spring.GetUnitTeam(unitID)
 function spawnAEgg(x,z)
 	randSleep=math.ceil(math.random(370,1200))
@@ -9017,12 +9017,13 @@ function EGG_LOOP()
 		if y <= 0 then	
 			-- if in Water check experience
 			temp=Spring.GetUnitExperience(unitID)
-			if temp > experienceSoFar then
-				experienceSoFar=experienceSoFar+1
+			if temp > experienceSoFar+1 then --levelup
+
 				--spawn numberofEggsToSpawn
 				for i=1,math.ceil(experienceSoFar),1 do
 					StartThread(spawnAEgg,x,z)
 				end
+				experienceSoFar=temp
 				--update experienceSoFar
 			end
 		end
@@ -9043,7 +9044,7 @@ function script.Create()
 	Hide(tlharp)
 	Hide(tlflute)
 	Hide(tldancedru)
-	
+	StartThread(ReloadCountDown)
 end
 
 function script.Killed(recentDamage,maxHealth)
@@ -9751,6 +9752,7 @@ end
 -- can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon1(heading,pitch)
 	--make sure the aiming animation is only run once
+
 	Signal(SIG_AIM)
 	Signal(SIG_ONTHEMOVE)
 	Signal(SIG_INCIRCLE)
@@ -9762,6 +9764,7 @@ function script.AimWeapon1(heading,pitch)
 	--wait until the weapon is pointed in the right direction
 	boolCanFire= WeaponAmbushMode()
 	if boolCanFire==true then
+	
 		everyHundredTigLils=math.random(0,25)
 		if everyHundredTigLils == 9 then
 			Spring.PlaySoundFile("sounds/tiglil/tgAttac.wav")
@@ -9774,6 +9777,9 @@ function script.AimWeapon1(heading,pitch)
 end
 
 function ReloadCountDown()
+	if boolAmbushInProgress == true then RELOADTIME= 0; return end
+	
+	RELOADTIME=COOLDOWNTIMER
 	Sleep(RELOADTIME)
 	RELOADTIME=0
 end
@@ -9782,7 +9788,7 @@ end
 function script.FireWeapon1()
 	Signal(SIG_WHIR)
 	if boolAmbushInProgress==false then
-		RELOADTIME=COOLDOWNTIMER
+	
 		StartThread(ReloadCountDown)
 	end
 	

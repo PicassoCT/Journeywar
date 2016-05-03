@@ -2240,6 +2240,13 @@ function vardump(value, depth, key)
 		return T
 	end
 	
+	--> Executes a random Function from a table of functions
+	function raFoo( ...)
+	local arg={...}
+	if not arg then return end
+	index= math.random(1,#arg)
+	return arg[index]()	
+	end
 
 	function accessInOrder(T,...)
 		--local arg = table.pack(...)

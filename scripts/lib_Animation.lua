@@ -1270,7 +1270,7 @@ function reseT(tableName,speed, ShowAll, boolWait)
 	lboolWait=boolWait or false
 	lspeed=speed or 0
 	
-	
+	assert(tableName,"libAnimation::reseT: No valid Table")
 	
 	for i=1,#tableName do
 		

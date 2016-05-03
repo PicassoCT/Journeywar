@@ -378,8 +378,26 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 		end
 		
+		--if you are a  ghostdancer --create a copy of yourself near the enemy and kill all previous copys
 		if (weaponDefID == jghostDancerWeaponDefID or weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
-			Spring.SetUnitPosition(AttackerID,px,py,pz)
+		if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
+		if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
+		teamid=Spring.GetUnitTeam(AttackerID)
+	
+		if GG.GhostDancerOrgCopy[AttackerID] then -- attacker is a org --destroy old twin -create new twin
+			if Spring.ValidUnitID(GG.GhostDancerOrgCopy[AttackerID]) == true then
+				ox,oy,oz= Spring.GetUnitPosition(GG.GhostDancerOrgCopy[AttackerID])
+				Spring.DestroyUnit(GG.GhostDancerOrgCopy[AttackerID] ,true,true)
+				Spring.CreateUnit("jshadow",ox,oy,oz,teamid)
+			end
+		end
+		--create a new copy if you are the original
+			if not GG.GhostDancerCopyOrg[AttackerID] then 
+			teamid=Spring.GetUnitTeam(AttackerID)
+			--a new copy
+			GG.GhostDancerOrgCopy[AttackerID] = Spring.CreateUnit("ghostdancercopy",px,py,pz,teamid)
+			GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[AttackerID]] = AttackerID
+			end
 		end
 		
 		--this one creates the headcrabs
@@ -776,14 +794,14 @@ if (gadgetHandler:IsSyncedCode()) then
 				end				
 			end
 			
-			--affectedUnits
+			--affectedUnits --slows down ghostdancer attackers
 			if affectedUnits ~= nil and table.getn(affectedUnits) ~= 0 then
 				for i=1,#affectedUnits,1 do
 					if affectedUnits[i]~=nil then
 						affectedUnits[i][2]= affectedUnits[i][2]-1 
 						if affectedUnits[i][2] <= 0 then
 							if Spring.ValidUnitID(affectedUnits[i][1])==true then
-								Spring.SetUnitSpeed(affectedUnits[1],affectedUnits[i][3])
+								Spring.SetUnitVelocity(affectedUnits[1],affectedUnits[i][3])
 							end
 							affectedUnits[i]=nil	 
 						end	 

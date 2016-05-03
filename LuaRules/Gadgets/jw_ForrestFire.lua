@@ -96,6 +96,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 		
  function setAreaEffect(x,z, Range, sfxFunction)
+		if not GG.LandScapeT then init() end
 		
 		local areaEffectFunction=sfxFunction
 		local RangeX=Range/mapX
@@ -108,12 +109,24 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		limx=math.min(math.max(1,math.ceil(x/mapResX)),mapResX)
 		limz=math.min(math.max(1,math.ceil(z/mapResZ)),mapResZ)
+		
+		
+		
 
 		for x=math.max(1,limx-RangeX),math.min(mapX,math.ceil(limx+RangeX)), 1 do
 			for z=math.max(1,limz-RangeZ),math.min(mapZ,math.ceil(limz+RangeZ)), 1 do
 			
 				dist =math.sqrt((x -midX)*(x -midX)  + (z-midZ)*(z-midZ))
 				if dist < Range then
+				if not GG.LandScapeT[x] then 	GG.LandScapeT[x] ={} end
+					if not GG.LandScapeT[x][z]  then GG.LandScapeT[x][z]  ={}
+						GG.LandScapeT[x][z].boolBurning=false
+						GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
+						GG.LandScapeT[x][z].y= groundHeigth
+						GG.LandScapeT[x][z].AccumulatedHeat= 0
+						GG.LandScapeT[x][z].boolShielded = false
+					end
+
 				GG.LandScapeT[x][z]=areaEffectFunction(GG.LandScapeT[x][z])
 				end
 			end

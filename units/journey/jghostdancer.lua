@@ -48,7 +48,7 @@ Category = [[LAND]],
  sfxtypes = {
 				explosiongenerators = {
 				   "custom:dirt",             --Thumper
-				   "custom:gdShadows",             --Thumper
+				   "custom:jghoststripe",             --Thumper
 				   --
 				    --Bulletof The Cannon
 				},

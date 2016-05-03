@@ -330,7 +330,7 @@ Animations['talk'] = {
 }
 function script.Create()
 Move(center,y_axis,44,0)
-generatepiecesTableAndArrayCode(unitID)
+--generatepiecesTableAndArrayCode(unitID)
 
     local map = Spring.GetUnitPieceMap(unitID)
     local offsets = constructSkeleton(unitID,deathpivot, {0,0,0})
