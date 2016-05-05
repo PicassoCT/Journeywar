@@ -5,17 +5,19 @@ local unitDef  =  {
     ObjectName = "operatrans.s3o",
     name = "Operahovercraft",
     Side = "CentrAIl",
-TEDClass            = [[VTOL]],
-steeringmode        = [[1]],
-maneuverleashlength = 1380,
-turnRadius		  	= 80,
-dontLand		 	= true,
+	TEDClass = "HOVER",
+	
+	-- TEDClass            = [[VTOL]],
+	-- steeringmode        = [[1]],
+	-- maneuverleashlength = 1380,
+	-- turnRadius		  	= 80,
+	-- dontLand		 	= true,
 
     script = "operatransscript.lua",
     
 --Unit limitations and properties
     BuildTime = 82,
-    Description = "citizens who enjoy the war, might donate more into your security-budget",
+    Description = "its never over until the Fat Lady sings",
     MaxDamage = 1240,
     RadarDistance = 0,
     SightDistance = 500,
@@ -36,7 +38,7 @@ dontLand		 	= true,
     -- MaxVelocity = 2.0,
     -- MaxWaterDepth = 20,
     floater=true,
-    MovementClass = "Default2x2",
+      MovementClass = "HOVER2x2",
     mass                = 9750,
 	
 	

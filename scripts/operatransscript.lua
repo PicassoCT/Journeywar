@@ -84,14 +84,12 @@ StartThread(costlyUnderAttack)
 end
 
 function script.StartMoving()
-												
-																								
+		
 end
 
 function script.StopMoving()
 
 end
-
 
 
 local function RestoreAfterDelay()
@@ -220,7 +218,9 @@ function script.TransportPickup(passengerID)
 		return
 	end
 Signal(SIG_BAY)
-	
+							
+	StartThread(playOperaSound)		
+
 	--if opera has full house
 	if cargo >= cargoMax then return end
 	SetUnitValue(COB.BUSY, 1)
@@ -321,8 +321,26 @@ end
 
 
 LastDamage=0
+_,maxHP=Spring.GetUnitHealth(unitID)
+enumerate=1
+operaDefID=Spring.GetUnitDefID(unitID)
+
+function playOperaSound()
+path= "sounds/cOperaT/opera"..enumerate..".ogg"
+succesfull= PlaySoundByUnitType(operaDefID,path,0.5, 10000, 1,0)
+	if succesfull == true then
+	enumerate= enumerate%6 +1
+	end
+end
+
 
 	function script.HitByWeapon ( x, z, weaponDefID, damage )
+	
+	if damage > maxHP/20 then
+		StartThread(playOperaSound)	
+	end
+	
+	
 	LastDamage=damage
 	return damage
 	end

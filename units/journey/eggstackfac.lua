@@ -33,8 +33,7 @@ CanPatrol = false,
 CanStop = false,
 LeaveTracks = false,
 
-	YardMap ="c",
-
+	YardMap ="ooccoo occcco cccccc cccccc occcco ooccoo",
 -- Building	
 
 	ShowNanoSpray = true,
