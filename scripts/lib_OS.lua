@@ -35,6 +35,76 @@ function printV(...)
 	
 end
 
+-->Plays a Soundscape
+--> Expects: a path, a table containing :
+-- a Table of openers, containing "Name"
+-- Numbers and time to play
+
+-- a similar table for the backgrounds
+-- a similar table for the single sound solos
+-- a Table of closers, containing "Name"
+-- Numbers and time to play
+function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, loudness, unitID)
+	unitTypeunitdefDefID=Spring.GetUnitDefID(unitID)
+	
+	if GG.UnitDefSoundLock == nil then GG.UnitDefSoundLock={} end
+	if GG.UnitDefSoundLock[unitdef] == nil then GG.UnitDefSoundLock[unitdef]=0 end
+	timeTable={soloGo=0, backgroundGo=0}
+	
+	while true do
+		if GG.UnitDefSoundLock[unitdef] <= 0 then
+			GG.UnitDefSoundLock[unitdef] = 1
+			openerIndex=iRand(1,#dataTable.opener)
+			otime =dataTable.opener[openerIndex]
+			--opening
+			Spring.PlaySoundFile(path.."opener/single"..openerIndex..".ogg",loudness)
+			Sleep(otime)
+			--work out solos
+			soloNumber= dataTable.storyBoard Rand(1,dataTable.soloNumber)
+			
+			while soloNumber > 0 do
+				if timetable.backgroundGo <= 0 then
+					backgroundIndx=iRand(1,#dataTable.background)
+					Spring.PlaySoundFile(path.."background/background"..backgroundIndx..".ogg",loudness)
+					timetable.backgroundGo = dataTable.background[backgroundIndx]
+				end
+				-- if there is no storyboard randomize
+				currentSolo=iRand(1,#dataTable.solo)
+				if dataTable.storyBoard then
+					currentSolo = dataTable.storyBoard[dataTable.storyBoard.index]
+					dataTable.storyBoard.index=dataTable.storyBoard.index+1
+				end
+				
+				if timetable.soloGo <= 0 then
+					soloIndx=iRand(1,#dataTable.solo)
+					Spring.PlaySoundFile(path.."solo/solo"..soloIndx..".ogg",loudness)
+					timetable.soloGo = dataTable.solo[soloIndx]
+				end
+				maxRestTime=math.min(timetable.soloGo,timetable.backgroundGo)
+				Sleep(maxRestTime)
+				timetable.soloGo,timetable.backgroundGo=timetable.soloGo-maxRestTime,timetable.backgroundGo-maxRestTime
+				
+				soloNumber=soloNumber-1
+			end
+			remainTime=math.max(math.abs(timetable.backgroundGo)-500,1)
+			Sleep(remainTime)
+			--play Closer
+			currentCloser=iRand(1,#dataTable.closer)
+			Spring.PlaySoundFile(path.."closer/closer"..currentCloser..".ogg",loudness)
+			Sleep(dataTable.closer[currentCloser])
+			
+			
+			--release lock
+			GG.UnitDefSoundLock[unitdef] = 0
+		else
+			Sleep(500)
+		end
+
+		 rest=iRand(restIntervallMin, restIntervallMax)
+		 Sleep(rest)
+	end
+end
+
 
 --> Plays a DescriptorTable in Order reciving Signals for a global soundOrderTable	
 function playSoundInOrder(soundInOrderTable)
@@ -325,50 +395,50 @@ end
 
 --> breath 
 function breathOS(body, lowDist, upDist , LegTable,LegNumber,degree, speed, count)
-leglength= upDist/2
-
-bLoop =  true
-frames= 30
-lcount = count or 1
+	leglength= upDist/2
+	
+	bLoop = true
+	frames= 30
+	lcount = count or 1
 	if count and count > 0 then
 		bLoop = false
 	end
-
-if lowDist > upDist then return end
-
+	
+	if lowDist > upDist then return end
+	
 	while bLoop == true or lcount > 0 do
-
-	distance= math.random(lowDist,upDist)
-	percentage= distance/upDist
-	time= distance/(math.abs(speed)+0.001)
-	degreeC = percentage*degree
-	--downDeg=math.asin(leglength*distance)
-	--upDeg= math.asin()
-	
-	
-	speedDeg= frames/(degreeC *(time))+0.0001 
-	--speedDeg= 0.5
-	degHalf= degreeC/9 +0.001
-	degHalfMins= degHalf *-1.3
-	degreeMinus= degreeC *-1.7
-
+		
+		distance= math.random(lowDist,upDist)
+		percentage= distance/upDist
+		time= distance/(math.abs(speed)+0.001)
+		degreeC = percentage*degree
+		--downDeg=math.asin(leglength*distance)
+		--upDeg= math.asin()
+		
+		
+		speedDeg= frames/(degreeC *(time))+0.0001 
+		--speedDeg= 0.5
+		degHalf= degreeC/9 +0.001
+		degHalfMins= degHalf *-1.3
+		degreeMinus= degreeC *-1.7
+		
 		Move(body, y_axis, -distance, speed)
-			for i=1, LegNumber, 1 do
-				Turn(LegTable[i].up,x_axis, math.rad(degreeC), speedDeg)
-				Turn(LegTable[i].down,x_axis, math.rad(degreeMinus), 2*speedDeg)
-			end
+		for i=1, LegNumber, 1 do
+			Turn(LegTable[i].up,x_axis, math.rad(degreeC), speedDeg)
+			Turn(LegTable[i].down,x_axis, math.rad(degreeMinus), 2*speedDeg)
+		end
 		
 		WaitForMove(body, y_axis)
 		Sleep(100)
 		Move(body, y_axis, 0, speed)
-			for i=1,LegNumber do
-
-				Turn(LegTable[i].up,x_axis, math.rad(degHalf), speedDeg)
-				Turn(LegTable[i].down,x_axis, math.rad( degHalfMins), speedDeg)
-			end
+		for i=1,LegNumber do
+			
+			Turn(LegTable[i].up,x_axis, math.rad(degHalf), speedDeg)
+			Turn(LegTable[i].down,x_axis, math.rad( degHalfMins), speedDeg)
+		end
 		WaitForMove(body, y_axis)
 		Sleep(100)
-	lcount= lcount-1
+		lcount= lcount-1
 	end
 end
 

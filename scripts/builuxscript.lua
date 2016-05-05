@@ -1,6 +1,6 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -335,6 +335,42 @@ function close()
 	--StartThread(alarmCheck)
 end
 
+	soundScapeDefinition={}
+	soundScapeDefinition.opener={
+	[1]=1000,
+	[2]=1000,
+	[3]=1000,
+	[4]=1000,
+	}
+	
+		soundScapeDefinition.closer={
+	[1]=1000,
+	[2]=1000,
+	[3]=1000,
+	[4]=1000,
+	}
+	
+	soundScapeDefinition.background={
+	[1]=10000,
+	[2]=10000,
+	[3]=10000,
+	[4]=10000,
+	[5]=10000,
+	[6]=10000,
+	}
+	
+		soundScapeDefinition.solo={
+	[1]=20000,
+	[2]=20000,
+	[3]=20000,
+	[4]=20000,
+	[5]=20000,
+	[6]=20000,
+	[7]=20000,
+	}
+
+
+
 
 function script.Create()
 	--<buildanimationscript>
@@ -361,12 +397,10 @@ function script.Create()
 	StartThread(upgraDDe)
 	StartThread(alarmCheck)--
 	StartThread(windyS)
-	StartThread(playSoundByUnitTypOS,unitID,0.13,{
-		{name="sounds/cbuilux/neverendingparty.ogg",time=25000},
-		{name="sounds/cbuilux/neverendingpartyup.ogg",time=25000},
-		{name="sounds/cbuilux/neverendingpartyup2.ogg",time=25000},
-		{name="sounds/cbuilux/neverendingpartyup3.ogg",time=20000},
-	})
+	if true==false then --DelMe
+		StartThread(playSoundScape_OS,"sounds/cbuil/soundscape/", soundScapeDefinition,10000,70000,0.75, unitID)
+		
+	end
 end
 
 
