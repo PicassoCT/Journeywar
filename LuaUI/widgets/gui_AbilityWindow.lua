@@ -7,7 +7,7 @@ function widget:GetInfo()
 		date = "2011-6-2",
 		license = "GNU GPL, v2 or later",
 		layer = math.huge,
-		enabled = true,
+		enabled = false,
 	}
 end
 
@@ -123,7 +123,7 @@ function widget:Initialize()
 		stack_main:AddChild(onOffButton)
 		
 		if onOffButton then
-			ButtonsTable["defaultOnOff"]=onOffButton
+		ButtonsTable["defaultOnOff"]=onOffButton
 			onOffButton:Hide()
 		end
 	end
@@ -198,7 +198,7 @@ function widget:Initialize()
 				Chili.Button:New{backgroundColor = UpgCol, textColor = texCol, caption = "RADAR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."RADAR") end}},
 			},		
 		}
-		upgrade_window:AddChild(upgrade_Grid)
+		--upgrade_window:AddChild(upgrade_Grid)
 		
 		if upgrade_window  then 
 			upgrade_window:Hide()	
@@ -231,11 +231,6 @@ function widget:Initialize()
 		end
 		
 	end
-local 	function HideAllActiveElements()
-		for k,element in pairs(activeElements)  do
-			element.Hide()
-		end
-	end
 		
 	function showComEndUpgradeMenue()	
 		
@@ -252,7 +247,12 @@ local 	function HideAllActiveElements()
 		end
 	end
 	
-
+	function HideAllActiveElements()
+		for k,element in pairs(activeElements)  do
+			element:Hide()
+		end
+	end
+	
 	function createAllButtons()
 		Create_OnOffButton()
 		Create_UpgradeButton()
@@ -293,10 +293,13 @@ local 	function HideAllActiveElements()
 		minWidth = 50,
 		minHeight = 50,
 		color = {0,0,0,1},
+		
+		
 		children = {			
 			stack_main,			
 		},
-	}	
+	}
+		
 	createAllButtons()		
 end
 
