@@ -28,7 +28,7 @@ ring=piece"ring"
 	 booltoo=math.random(-1,1)
 	 Sleep(naptime)
 	 x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,ALM)
-	 Spring.CreateUnit("gfireplace",x+randoval,y,z+math.floor(randoval*booltoo), 0, teamID)  
+	 Spring.CreateUnit("jfireplace",x+randoval,y,z+math.floor(randoval*booltoo), 0, teamID)  
 	 
 	 end
  

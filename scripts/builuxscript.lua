@@ -168,6 +168,7 @@ function windyS()
 			--(delaytime,StartVal, StrengthInDegree, StrenghtOfWind,length,negset)
 			StartThread(lwindstoss,delayDice,i, StarStrenght, windStrenght,longusLonger,negset)
 		end
+		
 		randOmTimes=math.ceil(math.random(13500,25600))
 		Sleep(randOmTimes)
 		Signal(SIG_WIND)
@@ -319,12 +320,8 @@ function close()
 	WaitForMove(bldoor2,y_axis)
 	WaitForMove(bldoor1,y_axis)
 	
-	
-	
 	Sleep(50)
-	
-	
-	
+		
 	WaitForTurn(bldoor1,z_axis)
 	WaitForTurn(bldoor2,z_axis)
 	--while(globalCityWideAlarm==1) do
@@ -335,39 +332,8 @@ function close()
 	--StartThread(alarmCheck)
 end
 
-	soundScapeDefinition={}
-	soundScapeDefinition.opener={
-	[1]=1000,
-	[2]=1000,
-	[3]=1000,
-	[4]=1000,
-	}
-	
-		soundScapeDefinition.closer={
-	[1]=1000,
-	[2]=1000,
-	[3]=1000,
-	[4]=1000,
-	}
-	
-	soundScapeDefinition.background={
-	[1]=10000,
-	[2]=10000,
-	[3]=10000,
-	[4]=10000,
-	[5]=10000,
-	[6]=10000,
-	}
-	
-		soundScapeDefinition.solo={
-	[1]=20000,
-	[2]=20000,
-	[3]=20000,
-	[4]=20000,
-	[5]=20000,
-	[6]=20000,
-	[7]=20000,
-	}
+soundScapeDefinition=getBuiLuxSoundScapeDefinition()
+
 
 
 
@@ -397,10 +363,10 @@ function script.Create()
 	StartThread(upgraDDe)
 	StartThread(alarmCheck)--
 	StartThread(windyS)
-	if true==false then --DelMe
-		StartThread(playSoundScape_OS,"sounds/cbuil/soundscape/", soundScapeDefinition,10000,70000,0.75, unitID)
+	
+		StartThread(playSoundScape_OS,"sounds/cbuilux/soundscape/", soundScapeDefinition,40000,160000,0.75, unitID)
 		
-	end
+
 end
 
 

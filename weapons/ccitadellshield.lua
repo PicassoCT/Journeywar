@@ -3,7 +3,7 @@ local weaponDef = {
 weaponType="Shield",
 name = "citadellshield",
 
-isShield = 1,
+
 
 exteriorShield = false,
 

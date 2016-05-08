@@ -74,7 +74,7 @@ moduLater=1
 				if throwDice== 45 then
 			   local x,y,z=Spring.GetUnitPosition (unitID)
 			   local teamID = Spring.GetUnitTeam (unitID)
-			   Spring.CreateUnit("gFirePlace", x+15, y, z+15, 0, teamID)  
+			   Spring.CreateUnit("jFirePlace", x+15, y, z+15, 0, teamID)  
 				end
 
 	xRand=math.random(-67,6)
@@ -148,8 +148,6 @@ function script.QueryWeapon1()
 	return vDisChar1
 	end
 	
-
-
 
 function script.AimWeapon1( heading ,pitch)	
 	Turn(vorthead,x_axis,pitch,5)

@@ -1383,7 +1383,7 @@ function mulVector(vl,value)
 			y=vl.y*value,
 		z=vl.z*value}
 	else		--return vector
---		Spring.Echo("JW:ToolKit:mulVector"..countConstAnt)
+--		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
 		return {x = vl.x*value.x, y=	vl.y*value.y, z=	vl.z*value.z}
 	end
 end
@@ -1829,6 +1829,8 @@ function vardump(value, depth, key)
 
 	
 	function iRand(start, fin)
+	if not fin or fin < start then fin= start+1 end
+	
 		return math.ceil(math.random(start,fin))
 	end
 	
@@ -1868,9 +1870,9 @@ function vardump(value, depth, key)
 		boolAdd=offset or 10
 		
 		
-		if not unitID then error("ToolKit::Not enough arguments to spawnCEGatUnit") end
-		if not pieceId then error("ToolKit::Not enough arguments to spawnCEGatUnit") end
-		if not cegname then error("ToolKit::Not enough arguments to spawnCEGatUnit") end
+		if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+		if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+		if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
 		x,y,z=Spring.GetUnitPiecePosDir(unitID,pieceId)
 		
 		if y then
@@ -2182,7 +2184,7 @@ function vardump(value, depth, key)
 		reTable={}
 		if type(fooNction)=="string" then
 			fooNction=loadstring("function(k,v)\n"..fooNction.. "\n end")
-			assert(type(fooNction)=="function", "string not a function in foreach(k,v) @ toolKit.lua")
+			assert(type(fooNction)=="function", "string not a function in foreach(k,v) @ lib_UnitScript.lua")
 		end
 		
 		for k,v in pairs(T) do	
@@ -2220,7 +2222,7 @@ function vardump(value, depth, key)
 	local arg={...}
 		--local arg = table.pack(...)
 		T={}
-		if Table then T=Table else Spring.Echo("Lua:Toolkit:Process: No Table handed over") return end
+		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
 		if not arg then bDbgEcho("No args in process") return end
 		if type(arg)== "function" then return elementWise(T,arg) end
 		

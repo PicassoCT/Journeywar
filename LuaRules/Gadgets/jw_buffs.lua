@@ -17,7 +17,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 if not GG.GluedForLife then GG.GluedForLife={} end
 
-local OPERAID=UnitDefNames["operatrans"].id
+local OPERAID=UnitDefNames["coperatrans"].id
 local AffectedUnitTables={}
 	AffectedUnitTables[OPERAID]=true
 

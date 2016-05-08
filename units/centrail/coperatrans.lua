@@ -1,54 +1,70 @@
-local unitName  =  "operatrans"
+local unitName  =  "coperatrans"
 local unitDef  =  {
 --Internal settings
     BuildPic = "filename.bmp",
     ObjectName = "operatrans.s3o",
     name = "Operahovercraft",
     Side = "CentrAIl",
-	TEDClass = "HOVER",
-	
-	-- TEDClass            = [[VTOL]],
-	-- steeringmode        = [[1]],
-	-- maneuverleashlength = 1380,
-	-- turnRadius		  	= 80,
-	-- dontLand		 	= true,
-
     script = "operatransscript.lua",
-    
---Unit limitations and properties
-    BuildTime = 82,
-    Description = "its never over until the Fat Lady sings",
-    MaxDamage = 1240,
-    RadarDistance = 0,
-    SightDistance = 500,
-    Upright = 1,
-	--floater             = true,    
---Energy and metal related
+
+--cost
     buildCostMetal =  1200,
 	buildCostEnergy = 900,
-
-
---Pathfinding and related
-	holdSteady          = true,
-    Acceleration = 0.05,
-    BrakeRate = 0.1,
-    FootprintX = 4,
+    BuildTime = 82,
+--Health
+maxDamage =1950,
+idleAutoHeal = 0,
+--Movement
+Acceleration = 1.9,
+BrakeRate = 0.4,
+ FootprintX = 4,
     FootprintZ = 4,
-    -- MaxSlope = 7,
-    -- MaxVelocity = 2.0,
-    -- MaxWaterDepth = 20,
-    floater=true,
-      MovementClass = "HOVER2x2",
-    mass                = 9750,
-	
-	
+TEDClass            = [[VTOL]],
+steeringmode        = [[1]],
+maneuverleashlength = 1380,
+turnRadius		  	= 80,
+dontLand		 	= false,
+MaxVelocity = 2.0,
+MaxWaterDepth = 20,
+MovementClass = "Default2x2",
+TurnRate = 250,
 nanocolor=[[0 0.9 0.9]],
-  smoothAnim          = true,
+sightDistance = 500,
+
+airstrafe=true,
+factoryHeadingTakeoff =true,
+Builder = false,
+--canHover=true,
+CanAttack = true,
+CanGuard = true,
+CanMove = true,
+CanPatrol = true,
+Canstop  = true,--alt
+LeaveTracks = false, 
+
+cruiseAlt=3,
+CanFly   = true,
+ActivateWhenBuilt=1,
+--maxBank=0.4,
+myGravity =0.5,
+mass                = 1900,
+canSubmerge         = false,
+useSmoothMesh =	true,
+collide             = false,
+crashDrag =0.1,
+airHoverFactor=0,
+airStrafe =true,
+floater = false,
+isHoveringAirUnit = true,
+hoverAttack  = true,
+strafeToAttack=false,
+--Transport
+  --smoothAnim          = true,
   transportByEnemy    = false,
   transportCapacity   = 5,
   transportSize       = 30000,
---Ressources
 
+--Ressourcing
 	EnergyStorage = 800,
 	EnergyUse = 0,
 	MetalStorage = 0,
@@ -56,20 +72,17 @@ nanocolor=[[0 0.9 0.9]],
 	MetalUse = 3,
 	MakesMetal = 0, 
 	MetalMake = 0,	 
-	
---Abilities
-    Builder = 0,
-    CanAttack = 1,
-    CanGuard = 1,
-    CanMove = 1,
-    CanPatrol = 1,
-    CanStop = 1,
-    LeaveTracks = 0,
-    Reclaimable = 0,
-	Category = [[LAND]],
-	
-	explodeAs = [[NOWEAPON]],
-	selfDestructAs= [[NOWEAPON]], 
+
+Category = [[LAND]],
+
+	explodeAs="citadelldrone",
+	selfDestructAs="cartdarkmat", 
+	ShowNanoSpray = false,
+	CanBeAssisted = false,
+	CanReclaim=false,	
+
+  customParams = {},
+ 
   
 --Hitbox
     collisionVolumeOffsets    =  "0 0 0",

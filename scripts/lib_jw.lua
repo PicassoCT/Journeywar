@@ -1,3 +1,6 @@
+
+
+
 --===================================================================================================================
 --Journeywar specific functions 
 --> creates a table from names to check unittypes against
@@ -76,7 +79,7 @@ function getPokerTypeTable(UnitDefNames)
 	BattleTypes[UnitDefNames["cgunship"].id]=true
 	BattleTypes[UnitDefNames["cichneumonidae"].id]=true
 	BattleTypes[UnitDefNames["strider"].id]=true
-	BattleTypes[UnitDefNames["operatrans"].id]=true
+	BattleTypes[UnitDefNames["coperatrans"].id]=true
 	BattleTypes[UnitDefNames["mtw"].id]=true
 	BattleTypes[UnitDefNames["res"].id]=true
 	BattleTypes[UnitDefNames["zombie"].id]=true
@@ -168,6 +171,46 @@ function dustCloudPostExplosion(unitID,Density,totalTime,SpawnDelay, dirx,diry,d
 	if math.random(0,1)==1 then
 		Spring.SpawnCEG("earcexplosion",x,y+30,z,0,-1,0)		
 	end
+end
+
+function getBuiLuxSoundScapeDefinition()
+
+soundScapeDefinition={}
+soundScapeDefinition.opener={
+	[1]=1000,
+	[2]=1000,
+	[3]=1000,
+	[4]=1000
+}
+
+soundScapeDefinition.closer={
+	[1]=1000,
+	[2]=1000
+}
+
+soundScapeDefinition.background={
+	[1]=10000,
+	[2]=10000,
+	[3]=10000,
+	[4]=10000,
+	[5]=10000,
+	[6]=10000
+}
+--1sec9_2sec12_4sec21_8sec22_10sec25_16sec26
+soundScapeDefinition.solo={}
+	for i=1, 27, 1 do
+		
+		soundScapeDefinition.solo[i]=1
+		if i >= 9 then soundScapeDefinition.solo[i]=2	end
+		if i >= 12 then soundScapeDefinition.solo[i]=4 end
+		if i >=21 then soundScapeDefinition.solo[i]=8 end
+		if i >= 22 then soundScapeDefinition.solo[i]=16 end
+		if i >= 25 then soundScapeDefinition.solo[i]=20 end
+		soundScapeDefinition.solo[i]=soundScapeDefinition.solo[i]*1000
+	end
+
+return soundScapeDefinition
+
 end
 
 --===================================================================================================================

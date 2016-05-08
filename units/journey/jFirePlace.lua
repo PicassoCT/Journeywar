@@ -1,4 +1,4 @@
-local unitName = "gFirePlace"
+local unitName = "jFirePlace"
 
 local unitDef = {
 name = "Fire Place",

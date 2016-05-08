@@ -1,12 +1,11 @@
 Combine Storys:
 Exotic:
-	anyone Remeber Franceskas & Pascals?
-	They had a themed-orgy last night.
-	<Do tell>
-	Basically, ancient airport. Everyone had glowsticks everywhere. 
-	Was really bizzare.
-	<Truelly zar>
-	<True>
+	Hey Kato, remember Franceskas & Pascals?
+	They had a orgy last second.
+<Do tell the theme>
+	Basically, ancient airport. Everyone had glowsticks shoved everywhere. 
+	Caesar  bizzar.
+<Will drop by for some seconds on the next break>
 
 3Sek leave
 <Beep> 
@@ -23,15 +22,10 @@ Exotic:
 <Thousand Lifes in a Eyeblink>
 
 Retirment:
-
-	Yeah, time is up, always wanted to retire to the city, finally have enough dough.
-	Gonna have me some avatara-offspring and become a family founder.
-	Well, bye, also meet the new guy.
-	Hi, my name is Simon Rodriguez, im fresh out of training, origin Earth,
-	recruited yesterday. 
-	Original Body whereabouts - no idea.
-	Might as well have been a stalker at the start.
-	Lets get this meat puppet to dance.
+	Finally enough dough for retirement, ah the sweet city life as a abstract only.
+	I ve sold my body out to a guy from earth.
+	Ex-Rebell, Ex-Stalker, lived for half a century in the city.
+	So long fuckers!
 	
 Manifold:
 	Guys im now a Manifold.
@@ -40,17 +34,17 @@ Manifold:
 	Meet Diane, Orkar, Duriel, Ann, Mortak and my wifes and consorts Isis, Melann´, Vionna, James and Alex.
 
 
-Putch:
+Putch:<done>
 	Why i joined the force?
-	I was on the wrong side of the waffle-toaster rebellion. 
-	Someone builded a toaster just to bright, the thing became centrail instead of the centrail.
-	Offer to all non-loyals is exile in slow-time or storage.
-	So here i am, riddled with shitty memora replacements.
+	I was on the wrong side of the 256th toaster rebellion. 
+	Someone builded a machine just to bright, the thing became centrail instead of the centrail.
+	Offer to all non-loyals is always exile in slow-time or storage.
+	So here i am, riddled with shitty memory replacements.
 	Well at least i got to do what i love. Work for the Universal Union.
 	Contribute to the Combined Forces. Have you ever thought about joining Overwatch?
-<We are allready in it, just like you, lobohobo >
+<We are allready in it, you, lobohobo >
 
-Bodys:
+Bodys: <done>
 	At first the Body seems eternal. 
 	Everlasting. 
 	Especially in city-time.
@@ -79,7 +73,7 @@ Whereabouts:
 	 Law?
 	< You shall have no other AI besides me!>
 	
-Synths:
+Synths:<done>
 	<Why the Synths, why not real tanks?>
 	Because, they are cheaper, faster to produce and..
 	<and?>

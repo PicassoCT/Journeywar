@@ -76,7 +76,7 @@ terraformSpeed = 50,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"genupgrade","coffworldassemblyseed","operatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+	"genupgrade","coffworldassemblyseed","coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
 	},
 	
 	   customParams = {},

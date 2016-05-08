@@ -45,7 +45,7 @@ end
 -- a Table of closers, containing "Name"
 -- Numbers and time to play
 function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, loudness, unitID)
-	unitTypeunitdefDefID=Spring.GetUnitDefID(unitID)
+	unitdef =Spring.GetUnitDefID(unitID)
 	
 	if GG.UnitDefSoundLock == nil then GG.UnitDefSoundLock={} end
 	if GG.UnitDefSoundLock[unitdef] == nil then GG.UnitDefSoundLock[unitdef]=0 end
@@ -57,16 +57,20 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
 			openerIndex=iRand(1,#dataTable.opener)
 			otime =dataTable.opener[openerIndex]
 			--opening
-			Spring.PlaySoundFile(path.."opener/single"..openerIndex..".ogg",loudness)
+			Spring.PlaySoundFile(path.."opener/opener"..openerIndex..".ogg",loudness)
 			Sleep(otime)
 			--work out solos
-			soloNumber= dataTable.storyBoard Rand(1,dataTable.soloNumber)
-			
+	
+			soloNumber=  iRand(1,dataTable.soloNumber)
+		if dataTable.storyBoard then
+			storyBoardIndex=dataTable.storyBoard.Index+1
+			soloNumber= dataTable.storyBoard[storyBoardIndex] 
+		end
 			while soloNumber > 0 do
-				if timetable.backgroundGo <= 0 then
+				if timeTable.backgroundGo <= 0 then
 					backgroundIndx=iRand(1,#dataTable.background)
 					Spring.PlaySoundFile(path.."background/background"..backgroundIndx..".ogg",loudness)
-					timetable.backgroundGo = dataTable.background[backgroundIndx]
+					timeTable.backgroundGo = dataTable.background[backgroundIndx]
 				end
 				-- if there is no storyboard randomize
 				currentSolo=iRand(1,#dataTable.solo)
@@ -75,18 +79,18 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
 					dataTable.storyBoard.index=dataTable.storyBoard.index+1
 				end
 				
-				if timetable.soloGo <= 0 then
+				if timeTable.soloGo <= 0 then
 					soloIndx=iRand(1,#dataTable.solo)
-					Spring.PlaySoundFile(path.."solo/solo"..soloIndx..".ogg",loudness)
-					timetable.soloGo = dataTable.solo[soloIndx]
+					Spring.PlaySoundFile(path.."single/single"..soloIndx..".ogg",loudness)
+					timeTable.soloGo = dataTable.solo[soloIndx]
 				end
-				maxRestTime=math.min(timetable.soloGo,timetable.backgroundGo)
+				maxRestTime=math.min(timeTable.soloGo,timeTable.backgroundGo)
 				Sleep(maxRestTime)
-				timetable.soloGo,timetable.backgroundGo=timetable.soloGo-maxRestTime,timetable.backgroundGo-maxRestTime
+				timeTable.soloGo,timeTable.backgroundGo=timeTable.soloGo-maxRestTime,timeTable.backgroundGo-maxRestTime
 				
 				soloNumber=soloNumber-1
 			end
-			remainTime=math.max(math.abs(timetable.backgroundGo)-500,1)
+			remainTime=math.max(math.abs(timeTable.backgroundGo)-500,1)
 			Sleep(remainTime)
 			--play Closer
 			currentCloser=iRand(1,#dataTable.closer)
