@@ -175,6 +175,35 @@ function DrawBorder(obj,state)
   gl.Vertex(x,     y+h)
 end
 
+function normVector(vec)
+dist= math.sqrt(vec.x^2 +vec.y^2)
+return {x= vec.x/dist, y=vec.y/dist}
+end
+
+function DrawIrregBorder(obj,state)
+  local nGone =obj.nGone
+  local bt = obj.borderThickness
+  gl.Color((state.pressed and obj.borderColor2) or obj.borderColor)
+	  for i=1,#nGone-1, 1 do
+		  vec={x=nGone[i].x-nGone[i+1].x,y=nGone[i].y-nGone[i+1].y}
+		  
+		  perpVec=normVector({x=nGone[i+1].y-nGone[i+1].y, y=-1*(nGone[i+1].x-nGone[i+1].x)}) 
+		  lowPA={x=nGone[i].x+perpVec.x*bt, y=nGone[i].y+perpVec.y*bt}
+		  lowPB={x=nGone[i].x+perpVec.x*bt* -1, y=nGone[i].y+ perpVec.y*bt*-1}
+		  upPA,upPB= lowPA,lowPB
+		  upPA.x,upPA.y=lowPA.x + vec.x,lowPA.y +vec.y
+		  upPB.x,upPB.y=lowPB.x + vec.x,lowPB.y +vec.y
+		  --upper Triangle
+		  gl.Vertex(lowPA.x,lowPA.y)
+		  gl.Vertex(lowPB.x,lowPB.y)
+		  gl.Vertex(upPA.x,upPA.y)
+		  --lower Triangle
+		  gl.Vertex(lowPA.x,lowPA.y)
+		  gl.Vertex(upPB.x,upPB.y)
+		  gl.Vertex(upPA.x,upPA.y)
+	  end
+
+end
 
 function DrawBackground(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBackground, obj)
@@ -208,6 +237,18 @@ function _DrawBackground(obj)
   gl.Vertex(x+w, y+h)
 end
 
+function _DrawIrregBackground(obj)
+  local nGone =obj.nGone
+  local x= 0
+  local y= 0
+  gl.Color(obj.backgroundColor)
+	for i=1, #nGone-1, 2 do
+	 gl.Vertex(x,y) 
+	 gl.Vertex(nGone[i].x,nGone[i].y) 
+	 gl.Vertex(nGone[i+1].x,nGone[i+1].y) 
+	end
+
+end
 
 function _DrawTabBackground(obj)
   local x = 0
@@ -257,6 +298,17 @@ function DrawWindow(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBorder, obj, obj.state)
 end
 
+function DrawIrregular(obj)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawIrregBackground, obj, obj.state)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, DrawIrregBorder, obj, obj.state)
+
+  if (obj.caption) then
+    local w = obj.width
+    local h = obj.height
+
+    obj.font:Print(obj.caption, w*0.5, h*0.5, "center", "center")
+  end
+end
 
 function DrawButton(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBackground, obj, obj.state)
@@ -629,6 +681,10 @@ skin.icons = {
 }
 
 skin.image = {
+}
+
+skin.irregular = {
+  DrawControl = DrawIrregular,
 }
 
 skin.button = {

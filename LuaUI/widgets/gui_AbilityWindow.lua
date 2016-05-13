@@ -7,7 +7,8 @@ function widget:GetInfo()
 		date = "2011-6-2",
 		license = "GNU GPL, v2 or later",
 		layer = math.huge,
-		enabled = false,
+		hidden= true,
+		enabled = true,
 	}
 end
 
@@ -34,7 +35,9 @@ local ExpBar = {}
 local stack_main = {}
 local ButtonsTable = {}
 local activeElements={}
-
+local  exp_bar= {}
+local  ammo_bar	= {}
+ 
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
@@ -48,7 +51,7 @@ ability_window_width = 115
 ability_window_positionX = "20%"
 ability_window_positionY = "83%"
 upgrade_window_height= 180
-upgrade_window_width= 880
+upgrade_window_width= 650
 upgrade_window_positionX = "28%"
 upgrade_window_positionY = "83%"
 
@@ -105,15 +108,18 @@ function widget:Initialize()
 				Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
 			end
 		end
+	
+		
 		
 		onOffButton = Button:New{
 			name = "onOffButton",
 			--tooltip = tooltip,
-			x = 15,
-			y = 90,
-			caption = 'Ability',
-			width = buttonsize,
-			height = buttonsize,
+			x = 5,
+			y = 100,
+			width = 100,
+			height = 60,
+			caption = 'ABILITY',
+
 			backgroundColor = {0.1,0.8,0.8,1}, 
 			textColor = {0.8,1,1,1},
 			parent= stack_main,
@@ -126,6 +132,22 @@ function widget:Initialize()
 		ButtonsTable["defaultOnOff"]=onOffButton
 			onOffButton:Hide()
 		end
+	end
+	indexVarVal=1
+
+	 function createNewUpgradeButton(buttonwidth,buttonheigth,BaseCol, texCol, name)
+			buttonwidth= buttonwidth..'%'
+			buttonheigth=buttonheigth..'%'
+	
+		return Chili.Button:New{
+								
+								width=buttonwidth,
+								height = buttonheigth, 
+								backgroundColor = BaseCol,
+								textColor = texCol, 
+								caption = name, 
+								OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|"..name) end}
+								}
 	end
 	 
 	function CreateUpgradeMenue ()
@@ -157,48 +179,52 @@ function widget:Initialize()
 	UpgCol={0.1,0.5,0.6,1}
 	texCol={0.8,1,1,1}
 	upgrade_Grid = Grid:New{
-				x= 200,
-				y = 200,
-				padding = {0,0,0,0},
+				x= 0,
+				y = 0,
+				padding = {5,5,5,5},
 				itemPadding = {0, 0, 0, 0},
 				itemMargin = {0, 0, 0, 0},
-				width = '100%',
-				height = '100%',
+				--autosize =true,
+				--weightedResize  =true,
 				resizeItems = true,		
 				orientation = 'horizontal',
-				centerItems = false,
-				columns = 8,		
+				centerItems = true,
+				columns = 7,	
+				rows = 3,
 				name = 'UpgradeGrid',
-				width = 880,
-				height = 180,
+				width = 630,
+				height = 140,
+
+				  minItemHeight =	 '21%',
+				  maxItemHeight =	 '32%',
+				
 				color = {0,0,0,1},
 			
-			children = {
-				Chili.Button:New{backgroundColor = BaseCol, textColor = texCol, caption = "SPEED", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SPEED") end}},
-				Chili.Button:New{backgroundColor = BaseCol, textColor = texCol, caption = "ARMOR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."ARMOR") end}},
-				Chili.Button:New{backgroundColor = BaseCol, textColor = texCol, caption = "STABILITY", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."STABILITY") end}},
-				Chili.Button:New{backgroundColor = BaseCol, textColor = texCol, caption = "AMMO", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AMMO") end}},
-				Chili.Button:New{backgroundColor = BaseCol, textColor = texCol, caption = "SENSORS", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SENSORS") end}},
+children = {
+				createNewUpgradeButton(100,90, BaseCol, texCol, "SPEED"),
+				createNewUpgradeButton(100,90, BaseCol, texCol, "ARMOR"),
+				createNewUpgradeButton(100,90, BaseCol, texCol,"STABILITY"),
+				createNewUpgradeButton(100,90, BaseCol, texCol,"AMMO"),
+				createNewUpgradeButton(100,90, BaseCol, texCol,"SENSORS"),
+				createNewUpgradeButton(100,90, UpgCol, texCol,"EJECTPOD"), 
+				createNewUpgradeButton(100,90, UpgCol, texCol,"AMMOFAC"), 				
 				
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "SHOTGUN", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SHOTGUN") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "SUBMG", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SUBMG") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "SNIPER", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SNIPER") end}},
-								
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "GRENADE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."GRENADE") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "SLICER",OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."SLICER") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "FLARE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."FLARE") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "TANGLE", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."TANGLE") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "AROCKET", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AROCKET") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "GROCKET", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."GROCKET") end}},
-				Chili.Button:New{backgroundColor = WeapCol, textColor = texCol, caption = "EATER", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."EATER") end}},	
+				createNewUpgradeButton(100,90, WeapCol, texCol, "SHOTGUN"), 
+				createNewUpgradeButton(100,90, WeapCol, texCol, "SUBMG"), 
+				createNewUpgradeButton(100,90, WeapCol, texCol, "SNIPER"),			
+				createNewUpgradeButton(100,90, WeapCol, texCol, "GRENADE"), 
+				createNewUpgradeButton(100,90, WeapCol, texCol, "SLICER"),
+				createNewUpgradeButton(100,90, UpgCol, texCol,"STEALTH"),
+				createNewUpgradeButton(100,90, UpgCol, texCol,"RADAR"),
 				
-				Chili.Button:New{backgroundColor = UpgCol, textColor = texCol, caption = "EJECTPOD", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."EJECTPOD") end}},
-				Chili.Button:New{backgroundColor = UpgCol, textColor = texCol, caption = "AMMOFAC", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."AMMOFAC") end}},
-				Chili.Button:New{backgroundColor = UpgCol, textColor = texCol, caption = "STEALTH", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."STEALTH") end}},
-				Chili.Button:New{backgroundColor = UpgCol, textColor = texCol, caption = "RADAR", OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|".."RADAR") end}},
+				createNewUpgradeButton(100,90, WeapCol, texCol, "FLARE"), 
+				createNewUpgradeButton(100,90, WeapCol, texCol, "TANGLE"),
+				createNewUpgradeButton(100,90, WeapCol, texCol, "AROCKET"), 
+				createNewUpgradeButton(100,90, WeapCol, texCol, "GROCKET"),
+				createNewUpgradeButton(100,90, WeapCol, texCol, "EATER"), 
 			},		
 		}
-		--upgrade_window:AddChild(upgrade_Grid)
+		upgrade_window:AddChild(upgrade_Grid)
 		
 		if upgrade_window  then 
 			upgrade_window:Hide()	
@@ -260,8 +286,31 @@ function widget:Initialize()
 	end
 	
 			--Actual initialisatioin Code
+  exp_bar= Progressbar:New{
+	  x=0,
+	  y=0,
+	  width = '100%',
+		height = '70%',
+    caption   = "EXP:",
+	value =50,
+	 color     =  {0.05,0.93,0.95,1},
+	backgroundColor = {0.1,0.8,0.8,1}, 
+	}
+	
+  ammo_bar	= Progressbar:New{
+  	  x=0,
+	  y=0,
+		width = '100%',
+		height = '50%',
+     caption   = "Ammonition",
+	 value =50,
+	 color     =  {0.2,0.85,0.85,0.5},
+	backgroundColor = {0.1,0.8,0.8,1}, 
+	}
+
 	stack_main = Grid:New{
-		y = 20,
+		x=20,
+		y = 0,
 		padding = {0,0,0,0},
 		itemPadding = {0, 0, 0, 0},
 		itemMargin = {0, 0, 0, 0},
@@ -271,8 +320,33 @@ function widget:Initialize()
 		orientation = 'horizontal',
 		centerItems = false,
 		columns = 1,
+		rows= 1,
 		
 	}
+			
+			
+	base_stack = Grid:New{
+		y = 20,
+		padding = {5,5,5,5},
+		itemPadding = {0, 0, 0, 0},
+		itemMargin = {0, 0, 0, 0},
+		width = '100%',
+		height = '100%',
+		resizeItems = true,	
+	autosize=true,		
+		orientation = 'vertical',
+		centerItems = false,
+		columns = 1,
+		rows= 3,
+		children={stack_main,
+				  ammo_bar,
+				  exp_bar,
+				
+				  }
+		
+	}
+	
+	
 
 	ability_window = Window:New{
 		padding = {3,3,3,3,},
@@ -296,7 +370,7 @@ function widget:Initialize()
 		
 		
 		children = {			
-			stack_main,			
+			base_stack,			
 		},
 	}
 		
@@ -338,24 +412,46 @@ function widget:GameFrame(f)
 		return false
 	end
 	
+	function resetElements()
+		exp_bar.caption="EXP: -"
+		exp_bar.value= 0	
+	end
+	
+	function updateExperienceBar(xp)
+		Relative= xp - math.floor(xp)
+		Total= math.ceil(xp - Relative)
+		
+		exp_bar.caption="EXP: "..Total
+		exp_bar.value= math.ceil(Relative*100)
+	
+	end
+	
 	function UpdateAbilitiesWindow()
 	
 		selectedUnits = spGetSelectedUnits()
 		
 		if not selectedUnits then 
 			HideAllActiveElements()
+			resetElements()
 			return 
 		end
 		
 		local unitID = selectedUnits[1]
 		if not unitID then 
 			HideAllActiveElements()
+			resetElements()
 			return 
 		end
 		
 		local udid = Spring.GetUnitDefID(unitID)
 		local ud = UnitDefs[udid]
+		--update Unit Experience
 		
+		xp= Spring.GetUnitExperience(unitID)
+		if xp then
+			updateExperienceBar(xp)
+	
+		end
 		--empty the upgrade Grid
 		
 		--adapt the button to unit

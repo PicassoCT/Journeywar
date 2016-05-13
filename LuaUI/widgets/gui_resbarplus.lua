@@ -39,7 +39,7 @@ local math_floor = math.floor
 teamid=Spring.GetLocalTeamID()
 combine="centrail"
 
-sideCombine=false
+sideCombine=true
 pathEnergy="luaui/images/cres_energy.png"
 pathMetall="luaui/images/cres_metal.png"
 
