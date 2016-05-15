@@ -7,13 +7,13 @@ Accuracy=1000,
 
 --Physic/flight path
 range=750,
-reloadtime=15,
+reloadtime=5,
 weaponVelocity=250,
 startVelocity=250,
 weaponAcceleration=50,
 flightTime=3.5,
 BurnBlow=0,
-FixedLauncher=true,
+FixedLauncher=false,
 dance=0,
 wobble=0,
 turnrate=0,
@@ -50,8 +50,7 @@ lineOfSight=true,
 
 
 --sound
-soundHit="",
-soundStart="",
+
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

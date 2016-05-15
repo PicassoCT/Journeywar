@@ -228,7 +228,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		--we got to spawn some chain lightning
 		if weaponDefID == celetrochainWeaponDefID then
-			Spring.Echo("celetrochainWeaponDefID Explosion::jw_projectileimpacts"..AttackerID)
+			--Spring.Echo("celetrochainWeaponDefID Explosion::jw_projectileimpacts"..AttackerID)
 			teamid=Spring.GetUnitTeam(AttackerID)
 			T=Spring.GetUnitsInCylinder(px,pz,350)
 			ChainLightningTable[AttackerID]= 30
@@ -674,7 +674,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		--cBonkerPlasmaWeapon + FireWeapons
 		if FireWeapons[weaponDefID] and unitDefID ~= cssDefID then
 			if GG.OnFire == nil then GG.OnFire={} end
-			Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
+		--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
 			boolInsertIt=true
 			--very bad sollution n-times
 			for i=1, table.getn(GG.OnFire), 1 do

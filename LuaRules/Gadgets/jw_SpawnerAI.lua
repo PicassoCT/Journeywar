@@ -22,7 +22,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	teamTable={}
 	meridianTable={}
 		spawnUnits={ ["journeyman"]={"jgeohive", "jbeehive"}
-		,["centrail"]={"bonker","sentry","coverworldgate","crewarder","combinedfeature"}
+		,["centrail"]={"scumslum","hc","gcivilian","zombie","combinedfeature"}
 	}
 	
 	

@@ -180,15 +180,22 @@ dist= math.sqrt(vec.x^2 +vec.y^2)
 return {x= vec.x/dist, y=vec.y/dist}
 end
 
-function DrawIrregBorder(obj,state)
+function DrawIrregularBorder(obj,state)
   local nGone =obj.nGone
   local bt = obj.borderThickness
+  local w = obj.width
+  local h = obj.height
+
+  --[[
   gl.Color((state.pressed and obj.borderColor2) or obj.borderColor)
 	  for i=1,#nGone-1, 1 do
-		  vec={x=nGone[i].x-nGone[i+1].x,y=nGone[i].y-nGone[i+1].y}
+		
+		  vec={x=nGone[i].x-nGone[i+1].x,
+		       y=nGone[i].y-nGone[i+1].y+w}
 		  
 		  perpVec=normVector({x=nGone[i+1].y-nGone[i+1].y, y=-1*(nGone[i+1].x-nGone[i+1].x)}) 
 		  lowPA={x=nGone[i].x+perpVec.x*bt, y=nGone[i].y+perpVec.y*bt}
+		  --calculate the perendicular
 		  lowPB={x=nGone[i].x+perpVec.x*bt* -1, y=nGone[i].y+ perpVec.y*bt*-1}
 		  upPA,upPB= lowPA,lowPB
 		  upPA.x,upPA.y=lowPA.x + vec.x,lowPA.y +vec.y
@@ -202,7 +209,7 @@ function DrawIrregBorder(obj,state)
 		  gl.Vertex(upPB.x,upPB.y)
 		  gl.Vertex(upPA.x,upPA.y)
 	  end
-
+--]]
 end
 
 function DrawBackground(obj)
@@ -237,10 +244,10 @@ function _DrawBackground(obj)
   gl.Vertex(x+w, y+h)
 end
 
-function _DrawIrregBackground(obj)
+function _DrawIrregularBackground(obj)
   local nGone =obj.nGone
-  local x= 0
-  local y= 0
+  local x= obj.xCenter
+  local y= obj.yCenter
   gl.Color(obj.backgroundColor)
 	for i=1, #nGone-1, 2 do
 	 gl.Vertex(x,y) 
@@ -299,8 +306,8 @@ function DrawWindow(obj)
 end
 
 function DrawIrregular(obj)
-  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawIrregBackground, obj, obj.state)
-  gl.BeginEnd(GL.TRIANGLE_STRIP, DrawIrregBorder, obj, obj.state)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawIrregularBackground, obj, obj.state)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, DrawIrregularBorder, obj, obj.state)
 
   if (obj.caption) then
     local w = obj.width

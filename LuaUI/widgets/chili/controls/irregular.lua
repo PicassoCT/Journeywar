@@ -13,6 +13,8 @@ Irregular = Control:Inherit{
   --local Coordinates
   defaultWidth  = 70,
   defaultHeight = 20,
+  xCenter=0,
+  yCenter=0,
   --Points in Order, Clockwise  in local Coordinates - last coordinate is a Copy of the first
   --nGone should not be self-intersecting or incomplete
   nGone ={}
@@ -55,6 +57,9 @@ xMax= math.max(math.abs(xMin),math.abs(xMax))
 yMax= math.max(math.abs(yMin),math.abs(yMax))
   defaultWidth  = xMax*2
   defaultHeight = yMax*2
+ 
+  this.xCenter=defaultWidth/2
+  this.yCenter=defaultHeight/2
 end
 --//=============================================================================
 --//=============================================================================

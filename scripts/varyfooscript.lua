@@ -1059,6 +1059,8 @@ local spCreateUnit=Spring.CreateUnit
  boolTeleportCharged=true
  local maxDist=250
  unitSize=80
+ 
+
 
  
 function script.HitByWeapon ( x, z, weaponDefID, damage )
@@ -1074,7 +1076,7 @@ if boolAttack==false then boolAttack=true end
 	
 	if boolTeleportCharged==true and GetDistanceNearestEnemy(unitID) < maxDist then
 	boolTeleportCharged=false
-	StartThread(telePortTimer)
+	StartThread(TeleportCharge)
 	end
 	
 return damage

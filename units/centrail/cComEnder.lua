@@ -110,7 +110,7 @@ weapons = {
 	},
 [7]={name  = "shotgunnogamble",
 	mainDir = "0 0 1",
-	maxAngleDif = 45,
+	maxAngleDif = 90,
  onlyTargetCategory = [[LAND AIR]],
 	},
 [8]={name  = "tractorbeam",
@@ -122,8 +122,7 @@ weapons = {
 	onlyTargetCategory = [[LAND]],
 	},	
 [10]={name  = "slicergun",
-	mainDir = "0 0 1",
-	maxAngleDif = 45,
+	
 	onlyTargetCategory = [[LAND]],
 	},	
 [11]={name  = "crazorgrenade",

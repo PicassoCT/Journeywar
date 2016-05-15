@@ -1271,7 +1271,6 @@ function showShotgun()
 	Spin(bullets,x_axis,math.rad(42),0.01)
 	Spin(bullets,z_axis,math.rad(24),0.01)
 end
-
 function showSunburst()
 	if 	Weapons[eTractorGun][1]== 1 then Show(SunBurst1) end
 	if 	Weapons[eTractorGun][1]== 2 then Show(SunBurst2) end
@@ -1293,19 +1292,16 @@ end
 function showSliceGun()
 	showT(cFieldScooper) 
 end
-
 function showSniper()
 	for i=1,#cSniper,1 do
 		Show(cSniper[i])
 	end	
 end
-
 function showFlareGun()
 	
 	Show(AmmoFlareGunTurret)
 	
 end
-
 function showSMG() 
 	for i=1,#smg,1 do
 		Show(smg[i]) 
@@ -1319,7 +1315,6 @@ function showT(able)
 		Show(able[i])
 	end
 end
-
 function showArmor()
 	
 	for i=1, Stats[eProperty][eAmor], 1 do
@@ -1372,7 +1367,6 @@ function showArmor()
 	end
 	
 end
-
 function showLegs()--The Basic Legs - No Armor
 	local Nr=Stats[eProperty][eStability]
 	
@@ -1411,7 +1405,6 @@ function showLegs()--The Basic Legs - No Armor
 	showArmor()
 	
 end
-
 function showTime()
 	while true do
 		Sleep(250)
@@ -1499,7 +1492,7 @@ Weapons[eSlicer][eStabCost]=0.0 				-- StabilityCost
 Weapons[eSlicer][ePrioLevl]= 5 				--PriorityLevel 
 Weapons[eSlicer][eCoolDown]= 6000				-- Downtime
 Weapons[eSlicer][eRecoilMx]= 0.1 		 		 --RecoilMax
-Weapons[eSlicer][10]= true				-- fireReady
+Weapons[eSlicer][eCurrCool]= 0			-- fireReady
 
 
 
@@ -1720,8 +1713,10 @@ end
 maxSpeed= math.ceil(COB.MAX_SPEED *65533)
 
 function setSpeed(percent)
-	percent = math.ceil(percent*maxSpeed)
-	SetUnitValue(COB.MAX_SPEED,percent)
+	limitedpercdent=math.max(0,math.min(percent,100))
+	limitedpercdent= 100/limitedpercdent
+	speed = math.ceil(limitedpercdent*maxSpeed)
+	SetUnitValue(COB.MAX_SPEED,speed)
 end
 
 local	x_Turn_Shields={
@@ -1809,8 +1804,17 @@ function threadStarter()
 	end
 end
 
+SIG_RECENTD=256
+function resetRecentDamage()
+SetSignalMask(SIG_RECENTD)
+Sleep(15000)
+boolOccupiedRecently=false
+end
+
 function script.HitByWeapon ( x, z, weaponDefID, damage )
-	
+	Signal(SIG_RECENTD)
+	boolOccupiedRecently=true
+	StartThread(resetRecentDamage)
 	
 	if damage > 40 and math.random(0,6)== 1 then
 		loud=math.random(0.8,1)
@@ -1839,15 +1843,9 @@ function delayedSound(soundname,delay)
 end
 
 function script.Create()
-	--delMe
-	if true == false andGG.BoolDebug==true then
-		spSetUnitExperience(unitID,12)		
-		Weapons[eTangleGun][1]=1
-		
-	end
-	--delMe
+		Weapons[eSlicer][1]=1
 	
-	setSpeed(50)
+	setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
@@ -1878,6 +1876,7 @@ function script.Create()
 	StartThread(showTime)
 	StartThread(ammoFacLoop)
 	StartThread(reactorThread)
+	StartThread(idleLoop)
 	
 	
 end
@@ -1885,7 +1884,21 @@ end
 function script.StopBuilding()
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
+boolOccupiedRecently=false
 
+function idleLoop()
+	while true do
+		if boolWalking == false then
+		Sleep(1000)
+			if boolWalking == false and boolOccupiedRecently== false then
+				idle(0.15)
+			end
+		end
+
+	Sleep(1000)
+	end
+
+end
 
 --[[ 	
 Stats[eProperty][eStabilityinternal]=stability=1.0
@@ -1914,14 +1927,14 @@ function theActualUpgrade(upgradeType)
 	if XP >= 1 then
 		if upgradeType == "SPEED" and Stats[eProperty][eWalkSpeed] <= Stats[eProperty][eWalkSpeedLimit]then
 			Stats[eProperty][eWalkSpeed]=Stats[eProperty][eWalkSpeed]+1
-			setSpeed(50 + ((50/3)*Stats[eProperty][eWalkSpeed]))
+			setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 			spSetUnitExperience(unitID,XP -1)	
 		end
 		
 		if upgradeType ==	"ARMOR" and 	Stats[eProperty][eAmor] < 	Stats[eProperty][eAmorMax] then
 			Stats[eProperty][eAmor]=Stats[eProperty][eAmor]+1
 			Stats[eProperty][eWalkSpeed]=math.max(Stats[eProperty][eWalkSpeed]-0.5,1)
-			setSpeed(50 + ((50/3)*Stats[eProperty][eWalkSpeed]))
+			setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 			
 			health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(unitID)
 			ratio=health/maxHealth
@@ -2049,6 +2062,10 @@ function theActualUpgrade(upgradeType)
 end
 
 function fireWeaponCost(typeW)
+	Signal(SIG_RECENTD)
+	boolOccupiedRecently=true
+	StartThread(resetRecentDamage)
+
 	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[typeW][eStabCost] 
 	Stats[eProperty][eAmmonition] =math.max(Stats[eProperty][eAmmonition]-Weapons[typeW][eAmmoCost],0)
 end
@@ -2889,14 +2906,15 @@ function script.FireWeapon3()
 end
 
 function idle(speed)
-	WMove(center,y_axis,-5,3)
+	Move(center,y_axis,-5,1.5)
+	times=5/3
 	rval=iRand(10,24)
-	equiTurn(ARML,AS04,x_axis,rval,speed)
-	equiTurn(ARMR,AS03,x_axis,rval,speed)
+	equiTurn(ARML,AS04,x_axis,rval,rval/times)
+	equiTurn(ARMR,AS03,x_axis,rval,rval/times)
 	
-	equiTurn(LS08,LK08,x_axis,20,speed)
-	equiTurn(LS07,LK07,x_axis,20,speed)
-	Sleep(500)
+	equiTurn(LS08,LK08,x_axis,-20,speed)
+	equiTurn(LS07,LK07,x_axis,-20,speed)
+	WaitForTurns(LS07,LK07,LS08,LK08,ARML,ARMR)
 	
 	
 	equiTurn(LS08,LK08,x_axis,0,speed)
@@ -2904,7 +2922,8 @@ function idle(speed)
 	equiTurn(ARML,AS04,x_axis,0,speed)
 	equiTurn(ARMR,AS03,x_axis,0,speed)
 	
-	WMove(center,y_axis,0,3)
+	WMove(center,y_axis,0,1.5)
+	WaitForTurns(LS07,LK07,LS08,LK08,ARML,ARMR)
 end
 
 --<SNIPER>
@@ -3038,7 +3057,7 @@ function script.FireWeapon4()
 	StartThread(countDownSniperTimer)
 	fireWeaponCost(eSniper)
 	
-	setSpeed(50 + ((50/3)*Stats[eProperty][eWalkSpeed]))
+	setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	return true
 end
 
@@ -3258,8 +3277,6 @@ function script.AimFromWeapon8()
 	return You 
 end
 
-
-
 function script.QueryWeapon8() 
 	
 end
@@ -3279,16 +3296,12 @@ function script.FireWeapon8()
 	return true
 end
 
-
-
 --</SHOTGUN>
 --<FlareGun>
 
 function script.AimFromWeapon9() 
 	return You 
 end
-
-
 
 function script.QueryWeapon9() 
 	return You
@@ -3320,7 +3333,6 @@ function script.AimWeapon9( heading ,pitch)
 	return false
 end
 
-
 function script.FireWeapon9()	
 	fireWeaponCost(eFlareGun)
 	
@@ -3333,47 +3345,47 @@ end
 
 --</FlareGun>
 
-
 --<SliceGun>
-
 function script.AimFromWeapon10() 
 	return You 
 end
 
 
-
 function script.QueryWeapon10() 
-	return Weapons[eSlicer][3]
+	return fieldscooperzom
 end
 
 boolSliceGunReloadInProgress=false
 function reloadSliceGun()
-	if boolSliceGunReloadInProgress==false then boolSliceGunReloadInProgress=true return end
-	Sleep(Weapons[eSlicer][6]/Weapons[eSlicer][1])
-	Weapons[eSlicer][5]= true	
+		if boolSliceGunReloadInProgress==true then return end
+		if boolSliceGunReloadInProgress==false then boolSliceGunReloadInProgress=true  end
+	Weapons[eSlicer][eCurrCool]=math.abs( Weapons[eSlicer][eCoolDown]/Weapons[eSlicer][eWeapnLvl])
+
+	Sleep(Weapons[eSlicer][eCurrCool])
+	Weapons[eSlicer][eCurrCool]= 0
 	boolSliceGunReloadInProgress=false
 end
 
--- Weapons[eSlicer][1]=0 					--	WeaponLevel 
--- Weapons[eSlicer][2]=3						-- WeaponMax 
--- Weapons[eSlicer][3]= SliceGun					-- CurrentAmmo 
--- Weapons[eSlicer][4]=showSliceGun				 
--- Weapons[eSlicer][5]= true					-- fireReady
--- Weapons[eSlicer][6]= 6000					-- CurrentCoolDownTime
--- Weapons[eSlicer][7]= 5					-- Priority
--- Weapons[eSlicer][8]= 5					-- AmmoCost
-
 function script.AimWeapon10( heading ,pitch)	
-	return true 
+	echo("CComEnderScript::1")
+	if Weapons[eSlicer][eCurrCool] > 0  then 
+echo("CComEnderScript::2")	
+	return false
+		end
+		echo("CComEnderScript::3")
+	if Weapons[eSlicer][1] > 0 and gotPriority(Weapons[eSlicer][ePrioLevl])==true then 		
+			echo("CComEnderScript::4")
+		return boolOutOfAmmo ==false
+	end
+	
+	return false
 end
-
 
 function sliceGunSFX()
 	EmitSfx( Weapons[eSlicer][3],1028)
 	Sleep(1300)
 	EmitSfx(Weapons[eSlicer][3],1029 )
 end
-
 
 function script.FireWeapon10()	
 	fireWeaponCost(eSlicer)
@@ -3391,11 +3403,9 @@ function script.AimFromWeapon11()
 	return You 
 end
 
-
 function script.QueryWeapon11() 
 	return Weapons[eSlicer][3]
 end
-
 
 
 function script.AimWeapon11( heading ,pitch)	
@@ -3407,14 +3417,10 @@ function script.AimWeapon11( heading ,pitch)
 	return false	
 end
 
-
-
 function script.FireWeapon11()	
 	fireWeaponCost(eRazorGrenade)
 	return true
 end
-
-
 
 
 --</RazorGrenade>
@@ -3423,8 +3429,6 @@ end
 function script.AimFromWeapon12() 
 	return You 
 end
-
-
 
 function script.QueryWeapon12() 
 	return Weapons[eTangleGun][eAimPiece]
@@ -3482,8 +3486,6 @@ function script.FireWeapon12()
 	
 	return true
 end
-
-
 
 --</TangleGun>
 --<AAROCKET>

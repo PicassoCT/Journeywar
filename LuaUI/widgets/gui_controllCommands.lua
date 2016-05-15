@@ -7,7 +7,6 @@ function widget:GetInfo()
 		date = "2016-6-2",
 		license = "GNU GPL, v2 or later",
 		layer = math.huge,
-		hidden= true,
 		enabled = true,
 	}
 end
@@ -34,10 +33,12 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
  updateCommandsSoon = false
 
-controllCommand_window_height = 220
-controllCommand_window_width =  220
-controllCommand_window_positionX = "0%"
-controllCommand_window_positionY = "73%"
+controllCommand_window_height = 255
+controllCommand_window_width =  310
+controllCommand_window_positionX = 0
+controllCommand_window_positionY = "75%"
+
+
 extendedCommand_window_positionX = "0%" 
 extendedCommand_window_positionY= "45%"
 extendedCommand_window_width= 220
@@ -114,10 +115,12 @@ function widget:Initialize()
 		
 	testIrregular= 	Chili.Irregular:New{
 						nGone={
-						{x= 3, y = 3},
-						{x= -3, y = 3},
-						{x= -3, y = -3},
-						{x= 7, y = -7}
+						{x= 2*35, y = 2*35},
+						{x= 2*15, y = 2*15},
+						{x= 0, y = 2*30},
+						{x= 2*-15, y = 2*-15},
+						{x= 2*-15, y = 2*15},
+						{x= 0, y = 2*-30}
 		
 						},
 						caption= "WTF",
@@ -149,8 +152,25 @@ function widget:Initialize()
 								height = buttonheigth, 
 								backgroundColor = BaseCol,
 								textColor = texCol, 
-								caption = name, 
-								OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|"..name) end}
+								caption = "11", 								
+								},
+								Chili.Button:New{
+								
+								width=buttonwidth,
+								height = buttonheigth, 
+								backgroundColor = BaseCol,
+								textColor = texCol, 
+								caption = "12", 
+								
+								},
+								Chili.Button:New{
+								
+								width=buttonwidth,
+								height = buttonheigth, 
+								backgroundColor = BaseCol,
+								textColor = texCol, 
+								caption = "13", 
+							
 								},
 								testIrregular
 								
