@@ -430,11 +430,15 @@ function widget:GameFrame(f)
 	
 	function updateAmmonitionBar(unitID)
 	val=Spring.GetUnitRulesParams(unitID)
-		if val and val["Ammonition"] then
-			ammo_bar.value = math.ceil(val["Ammonition"])
-		else
-			ammo_bar.value = 100
+	ammostat=0
+	for i=1,#val do 
+		if val[i]["Ammonition"] then
+		ammostat= val[i]["Ammonition"] 
+		break
 		end
+	end
+			
+			ammo_bar.value =ammostat
 	
 	end
 	

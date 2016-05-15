@@ -674,7 +674,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		--cBonkerPlasmaWeapon + FireWeapons
 		if FireWeapons[weaponDefID] and unitDefID ~= cssDefID then
 			if GG.OnFire == nil then GG.OnFire={} end
-			----Spring.Echo("jw_projectileimpacts: BonkerFireDetected")
+			Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
 			boolInsertIt=true
 			--very bad sollution n-times
 			for i=1, table.getn(GG.OnFire), 1 do

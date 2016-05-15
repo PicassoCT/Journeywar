@@ -29,7 +29,7 @@ Turnrate=16000,
 collideFriendly=true,
 
 ----APPEARANCE
-model="crazorgrenade.s3o",
+model="cRazorDroneProj.s3o",
 smokeTrail=true,
 
 CegTag="redstripe",

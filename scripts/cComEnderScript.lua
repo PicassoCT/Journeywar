@@ -1260,7 +1260,7 @@ end
 Stats[eProperty][eAmmonition]=100
 Stats[eProperty][eAmmonitionMax]=100
 
-local teamID=Spring.GetUnitTeam(unitID)
+teamID=Spring.GetUnitTeam(unitID)
 --</STATS>
 --<ONUPGRADESHOW>
 function showShotgun()
@@ -1514,7 +1514,7 @@ Weapons[eFlareGun][eWeapnMax]=3						-- WeaponMax
 Weapons[eFlareGun][eAimPiece]= FlareGun					-- CurrentAmmo 
 Weapons[eFlareGun][eShowFunc]=showFlareGun				 
 Weapons[eFlareGun][eAmmoCost]= 3					-- CurrentAmmo 
-Weapons[eFlareGun][eStabCost]= 0.0					-- Stability 
+Weapons[eFlareGun][eStabCost]= 0.1					-- Stability 
 Weapons[eFlareGun][ePrioLevl]= 5					-- Priority
 
 --ShotGun
@@ -1535,7 +1535,7 @@ Weapons[eShotGun][10]= 0 		 	 --ScrapAmmonition
 boolTractorWeaponActivated=false
 eTractorGun=8
 Weapons[eTractorGun]={}
-Weapons[eTractorGun][eWeapnLvl]=1 				 --WeaponLevel 
+Weapons[eTractorGun][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eTractorGun][eWeapnMax]=1 				 --WeaponMax 
 Weapons[eTractorGun][eAimPiece]=cMagneto 
 Weapons[eTractorGun][eShowFunc]=showShotgun 		 
@@ -1549,15 +1549,16 @@ Weapons[eTractorGun][eRecoilMx]= 0.2 		 	 --RecoilMax
 --TangleGun
 eTangleGun=9
 Weapons[eTangleGun]={}
-Weapons[eTangleGun][eWeapnLvl]=1 				 --WeaponLevel 
+Weapons[eTangleGun][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eTangleGun][eWeapnMax]=3 				 --WeaponMax 
-Weapons[eTangleGun][eAimPiece]=tangleGunT 
+Weapons[eTangleGun][eAimPiece]=TangleGun 
 Weapons[eTangleGun][eShowFunc]=showTangleGun 		 
 Weapons[eTangleGun][eAmmoCost]= 0.1 	 --AmmoCost 
 Weapons[eTangleGun][eStabCost]= 0.05 		 --StabilityCost	 
 Weapons[eTangleGun][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
 Weapons[eTangleGun][eCoolDown]= 500 		 --Downtime
 Weapons[eTangleGun][eRecoilMx]= 0 		 	 --RecoilMax	
+Weapons[eTangleGun][eCurrCool]= 0 		 	 --eCurrCool	
 
 --RazorGrenade
 function showRazorGrenade()
@@ -1565,7 +1566,7 @@ function showRazorGrenade()
 end
 eRazorGrenade=11
 Weapons[eRazorGrenade]={}
-Weapons[eRazorGrenade][eWeapnLvl]=1 				 --WeaponLevel 
+Weapons[eRazorGrenade][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eRazorGrenade][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eRazorGrenade][eAimPiece]=You 
 Weapons[eRazorGrenade][eShowFunc]=showRazorGrenade 		 
@@ -1585,7 +1586,7 @@ end
 
 eAARocket=13
 Weapons[eAARocket]={}
-Weapons[eAARocket][eWeapnLvl]=1 				 --WeaponLevel 
+Weapons[eAARocket][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eAARocket][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eAARocket][eAimPiece]=guidedMissile 
 Weapons[eAARocket][eShowFunc]=showARocket 		 
@@ -1594,6 +1595,8 @@ Weapons[eAARocket][eStabCost]= 0.05 		 --StabilityCost
 Weapons[eAARocket][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
 Weapons[eAARocket][eCoolDown]= 700 		 --Downtime
 Weapons[eAARocket][eRecoilMx]= 0 		 	 --RecoilMax	
+Weapons[eAARocket][eCurrCool]= 0 		 	 --RecoilMax	
+
 
 
 function showGroundRocket()
@@ -1604,7 +1607,7 @@ end
 eGRocket=14
 -- Ground Rocket 
 Weapons[eGRocket]={}
-Weapons[eGRocket][eWeapnLvl]=1 				 --WeaponLevel 
+Weapons[eGRocket][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eGRocket][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eGRocket][eAimPiece]=unguidedMissile 
 Weapons[eGRocket][eShowFunc]=showGroundRocket 		 
@@ -1613,6 +1616,7 @@ Weapons[eGRocket][eStabCost]= 0.05 		 --StabilityCost
 Weapons[eGRocket][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
 Weapons[eGRocket][eCoolDown]= 700 		 --Downtime
 Weapons[eGRocket][eRecoilMx]= 0 		 	 --RecoilMax	
+Weapons[eGRocket][eCurrCool] = 0
 
 --</WEAPONS>
 --<TOOLS>
@@ -1836,12 +1840,10 @@ end
 
 function script.Create()
 	--delMe
-	if GG.BoolDebug==true then
+	if true == false andGG.BoolDebug==true then
 		spSetUnitExperience(unitID,12)		
-			
-		for i=1, #Weapons,1 do 
-			Weapons[i][1]=1
-		end
+		Weapons[eTangleGun][1]=1
+		
 	end
 	--delMe
 	
@@ -1850,11 +1852,11 @@ function script.Create()
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
 	--generatepiecesTableAndArrayCode(unitID)
-
+	
 	
 	reseT(piecesTable)
 	hideT(piecesTable)
-
+	
 	showT(basics)
 	hideT(cMagneto)
 	hideT(tangleGunT)
@@ -1893,15 +1895,15 @@ Stats[eProperty][eStabilityMax]=stabilityMax=6.0
 
 --> Energy produced by the comender
 function reactorThread()
-local cloakCost = UnitDefNames["ccomender"].cloakCost
-
+	local cloakCost = UnitDefNames["ccomender"].cloakCost
+	
 	while true do
-	boolUnitCloaked=Spring.GetUnitIsCloaked(unitID)
+		boolUnitCloaked=Spring.GetUnitIsCloaked(unitID)
 		if boolUnitCloaked == true then
-		addValueEnergy= math.ceil(math.abs((cloakCost*1.5)/3 * StealthEffectiveness))
-		Spring.AddUnitResource(unitID,"e",addValueEnergy)
+			addValueEnergy= math.ceil(math.abs((cloakCost*1.5)/3 * StealthEffectiveness))
+			Spring.AddUnitResource(unitID,"e",addValueEnergy)
 		end
-	Sleep(1000)
+		Sleep(1000)
 	end
 end
 
@@ -1920,7 +1922,7 @@ function theActualUpgrade(upgradeType)
 			Stats[eProperty][eAmor]=Stats[eProperty][eAmor]+1
 			Stats[eProperty][eWalkSpeed]=math.max(Stats[eProperty][eWalkSpeed]-0.5,1)
 			setSpeed(50 + ((50/3)*Stats[eProperty][eWalkSpeed]))
-		
+			
 			health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(unitID)
 			ratio=health/maxHealth
 			Spring.SetUnitMaxHealth(unitID,maxHealth*Stats[eProperty][eAmor])
@@ -2036,7 +2038,7 @@ function theActualUpgrade(upgradeType)
 		
 		if upgradeType == "STEALTH" and StealthEffectiveness ~= StealthEffectivenessMax then
 			StealthEffectiveness=math.min(StealthEffectiveness+1,StealthEffectivenessMax)
-
+			
 			spSetUnitExperience(unitID,XP -1)
 		end
 		--identify Upgrade Possible
@@ -2044,6 +2046,11 @@ function theActualUpgrade(upgradeType)
 		
 	end
 	
+end
+
+function fireWeaponCost(typeW)
+	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[typeW][eStabCost] 
+	Stats[eProperty][eAmmonition] =math.max(Stats[eProperty][eAmmonition]-Weapons[typeW][eAmmoCost],0)
 end
 
 --UPGRADECONST
@@ -2205,6 +2212,7 @@ function walkTheDog()
 	local llegs_down=legs_down
 	local lLegBoolean=false
 	spPlaySoundFile("sounds/cComEnder/startup.wav")
+	globalHipTurn=0
 	while(true)do 
 		Sleep(70)
 		while boolWalking==true do
@@ -2214,6 +2222,7 @@ function walkTheDog()
 			--	spPlaySoundFile("sounds/cComEnder/comEnderStep.wav")
 			--<!LEG>
 			Turn(bb05,x_axis,math.rad(3),0.15)
+			
 			--Turn(ARML,x_axis,math.rad(-3),0.16)
 			--Turn(ARMR,x_axis,math.rad(-3),0.16)
 			--<!LEG>
@@ -2570,7 +2579,7 @@ function updateProgressBar()
 	local lcitadellDefID=UnitDefNames["citadell"].id
 	local lcomendbonkerDefID=UnitDefNames["comendbonker"].id
 	
-
+	
 	
 	while true do
 		if Stats[eProperty][eAmmonition] <= 0 then
@@ -2581,26 +2590,32 @@ function updateProgressBar()
 		
 		if Stats[eProperty][eAmmonition] < Stats[eProperty][eAmmonitionMax] then
 			x,y,z=lspGetUnitPosition(unitID)
-			unitsInResupplyCircle={}
-			unitsInResupplyCircle=lspGetUnitsInCylinder(x,z, 150)
+			
+			unitsInResupplyCircle=lspGetUnitsInCylinder(x,z, 125)
 			table.remove(unitsInResupplyCircle,unitID)
 			if unitsInResupplyCircle ~= nil then
+				
 				for i=1,#unitsInResupplyCircle,1 do
+					
 					defID=lGetUnitDefID(unitsInResupplyCircle[i])
-					if (defID== lcitadellDefID or defID== lcomendbonkerDefID ) and teamID == Spring.GetUnitTeam(unitsInResupplyCircle[i]) then 	
+					tid= Spring.GetUnitTeam(unitsInResupplyCircle[i])
+					if (defID == lcitadellDefID or defID== lcomendbonkerDefID ) and teamID == tid then 	
+						
 						if defID== lcitadellDefID then
 							Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonitionMax]
 						else
+							Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonitionMax]
 							h=Spring.GetUnitHealth(unitID)	
 							Spring.SetUnitHealth(unitID,h+50)
 						end
-						break
+						
+						
 					end
 				end
 			end
 		end
 		Spring.SetUnitRulesParam(unitID,"Ammonition",Stats[eProperty][eAmmonition])
-		echo("CComEnderScript::Ammonition"..Stats[eProperty][eAmmonition])
+		
 		
 		
 		Sleep(350)
@@ -2642,7 +2657,7 @@ function script.AimWeapon1( heading ,pitch)
 			--return canFire
 			
 			releasePriority(Weapons[eGLauncher][7])
-			return true and boolOutOfAmmo ==false
+			return boolOutOfAmmo ==false
 		end
 	end
 	return false 
@@ -2652,9 +2667,7 @@ end
 
 
 function script.FireWeapon1()
-	
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eGLauncher][5] 
-	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[eGLauncher][6] 		 --StabilityCost	
+	fireWeaponCost(eGLauncher)
 	secondShot=secondShot+1
 	if secondShot==2 then
 		StartThread(loader)
@@ -2704,7 +2717,7 @@ function script.AimWeapon2( heading ,pitch)
 		
 		--return canFire
 		releasePriority(Weapons[eGLauncher][7])	
-		return true and boolOutOfAmmo ==false
+		return boolOutOfAmmo ==false
 	else 
 		releasePriority(Weapons[eGLauncher][7])			
 		return false 
@@ -2713,8 +2726,8 @@ end
 
 function script.FireWeapon2()	
 	releasePriority(Weapons[eGLauncher][7])
-	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[eGLauncher][6] 
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eGLauncher][5] 
+	fireWeaponCost(eGLauncher)
+	
 	secondShot=secondShot+1
 	if secondShot == 2 then
 		StartThread(loader)
@@ -2764,7 +2777,7 @@ function script.AimWeapon3( heading ,pitch)
 		
 		--return canFire
 		releasePriority(Weapons[eGLauncher][7])	
-		return true and boolOutOfAmmo ==false
+		return boolOutOfAmmo ==false
 	else 
 		releasePriority(Weapons[eGLauncher][7])	
 		return false 
@@ -2857,8 +2870,8 @@ end
 secondShot=1
 function script.FireWeapon3()	
 	releasePriority(Weapons[eGLauncher][7])
-	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[eGLauncher][6] 
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eGLauncher][5] 
+	fireWeaponCost(eGLauncher)
+	
 	secondShot=secondShot+1
 	if secondShot==2 then
 		StartThread(loader)
@@ -2875,6 +2888,24 @@ function script.FireWeapon3()
 	return true
 end
 
+function idle(speed)
+	WMove(center,y_axis,-5,3)
+	rval=iRand(10,24)
+	equiTurn(ARML,AS04,x_axis,rval,speed)
+	equiTurn(ARMR,AS03,x_axis,rval,speed)
+	
+	equiTurn(LS08,LK08,x_axis,20,speed)
+	equiTurn(LS07,LK07,x_axis,20,speed)
+	Sleep(500)
+	
+	
+	equiTurn(LS08,LK08,x_axis,0,speed)
+	equiTurn(LS07,LK07,x_axis,0,speed)
+	equiTurn(ARML,AS04,x_axis,0,speed)
+	equiTurn(ARMR,AS03,x_axis,0,speed)
+	
+	WMove(center,y_axis,0,3)
+end
 
 --<SNIPER>
 function script.AimFromWeapon4() 
@@ -2896,7 +2927,7 @@ function sniperKneeDown()
 			echo("JW_COMENDERSCRIPT::GetIntoPosition")
 			Turn(bb05,x_axis,-gSniperPitch,5)
 			Turn(testComEnder3DS,y_axis,gSniperHeading,Stats[eProperty][eWalkSpeed])
-			setSpeed(0)
+			
 			
 			while (true==Spring.UnitScript.IsInTurn (testComEnder3DS, y_axis)) do
 				echo("JW_COMENDERSCRIPT::Aligning to fire")
@@ -2905,6 +2936,7 @@ function sniperKneeDown()
 			end
 			boolWalking=false
 			legs_down()
+			--setSpeed(0)
 			boolWalking=false
 			
 			DT(LSK10,LSK09,6,1.7*Stats[eProperty][eWalkSpeed],nil,nil,5)			------------------------------------------
@@ -2962,11 +2994,11 @@ function script.AimWeapon4( heading ,pitch)
 	
 	if Weapons[eSniper][1] > 0 and Weapons[eSniper][eCurrCool] <= 0 and gotPriority(Weapons[eSniper][ePrioLevl])==true then
 		--Sniper Kneel Animation
-
-		Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[eSniper][6] 
-		Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eSniper][5] 
+		
+		
+		
 		if Weapons[eSniper][1]> 0 then
-
+			
 			if boolSniperOnce== false then 
 				boolSniperGetIntoPosition=true
 				boolSniperOnce=true
@@ -3004,7 +3036,8 @@ function script.FireWeapon4()
 	
 	Spring.AddUnitImpulse(unitID,recoilX*-1*	Weapons[eSniper][1],0,recoilZ*-1*	Weapons[eSniper][1],0.7)
 	StartThread(countDownSniperTimer)
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eSniper][5] 
+	fireWeaponCost(eSniper)
+	
 	setSpeed(50 + ((50/3)*Stats[eProperty][eWalkSpeed]))
 	return true
 end
@@ -3082,11 +3115,11 @@ function smgFireAnimation(pitch) --Aproximated Time of Execution: 0.9333 Seconds
 	
 	
 end
-
+globalHipTurn=0
 function script.AimWeapon5( heading ,pitch)	
 	
 	if gotPriority(Weapons[eSubMG][7])==true then
-	
+		
 		if boolSMGOnlyOnce== false then 
 			boolSMGOnlyOnce=true
 			StartThread(smWaitForIt)
@@ -3096,6 +3129,7 @@ function script.AimWeapon5( heading ,pitch)
 		
 		--/spinlock
 		if boolCanSMGFire == true then
+			globalHipTurn=heading
 			Turn(bb05, y_axis, heading, 7)
 			WaitForTurn(A32,x_axis)
 			Turn(ARML, x_axis, math.rad(-5), 7)
@@ -3127,8 +3161,7 @@ end
 
 function script.FireWeapon5()	
 	releasePriority(Weapons[eSubMG][7])
-	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[eSubMG][6] 
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eSubMG][5] 
+	fireWeaponCost(eSubMG)
 	
 	boolCanSMGFire=false
 	return true
@@ -3159,7 +3192,7 @@ function script.AimWeapon6( heading ,pitch)
 		SalvoMax=Weapons[eEater][1]
 		Turn(Eater[1],x_axis,math.rad(-59),24)
 		WaitForTurn(Eater[1],x_axis)
-		return true and boolOutOfAmmo ==false
+		return boolOutOfAmmo ==false
 	end
 	
 	--/spinlock
@@ -3176,8 +3209,8 @@ end
 
 function script.FireWeapon6()	
 	FiredSalvos=FiredSalvos+1
-	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[eEater][6] 
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eEater][5] 
+	fireWeaponCost(eEater)
+	
 	if FiredSalvos==SalvoMax then
 		releasePriority(Weapons[eEater][7]) 
 		boolEaterLoaded=false
@@ -3190,17 +3223,16 @@ end
 --<SHOTGUN>
 --DODO
 function script.AimFromWeapon7() 
-	return You 
+	return You
 end
 
 
 function script.QueryWeapon7() 
-	
+	return MagneticSh
 end
 
 function script.AimWeapon7( heading ,pitch)	
-	--Turn(piecename,y_axis,heading,0.42)
-	--Turn(piecename,x_axis,-pitch,0.42)
+	
 	if Weapons[eShotGun][1]>0 and Weapons[eShotGun][10] > 0 then
 		return true
 	else
@@ -3212,6 +3244,7 @@ function reloadWeapon7()
 end
 
 function script.FireWeapon7()	
+	fireWeaponCost(eShotGun)
 	Weapons[eShotGun][10]=0
 	Hide(bullets)
 	return true
@@ -3220,7 +3253,7 @@ end
 -- script.BlockShot8= function BlockShot8()
 -- return
 -- end
-
+--<Weapon Workaround tractor beam>
 function script.AimFromWeapon8() 
 	return You 
 end
@@ -3281,7 +3314,7 @@ function script.AimWeapon9( heading ,pitch)
 		if Weapons[eFlareGun][5] <= 0 then 
 			return false
 		end
-		return true and boolOutOfAmmo ==false
+		return boolOutOfAmmo ==false
 	end
 	
 	return false
@@ -3289,7 +3322,8 @@ end
 
 
 function script.FireWeapon9()	
-	Weapons[eFlareGun][5]=math.max(Weapons[eFlareGun][5]-1,0)
+	fireWeaponCost(eFlareGun)
+	
 	Spring.PlaySoundFile("sounds/cComEnder/flare.wav",1.0)
 	if Weapons[eFlareGun][5] <= 0 then 
 		StartThread(reloadFlareGun)
@@ -3342,7 +3376,7 @@ end
 
 
 function script.FireWeapon10()	
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eSlicer][8] 
+	fireWeaponCost(eSlicer)
 	StartThread(reloadSliceGun)
 	StartThread(sliceGunSFX)
 	
@@ -3365,11 +3399,9 @@ end
 
 
 function script.AimWeapon11( heading ,pitch)	
-	if Weapons[eRazorGrenade][1] > 0 and gotPriority(Weapons[eRazorGrenade][7])==true then 
-		if Weapons[eRazorGrenade][5] <= 0 then 
-			return false
-		end
-		return true and boolOutOfAmmo ==false
+	if Weapons[eRazorGrenade][eWeapnLvl] > 0 and gotPriority(Weapons[eRazorGrenade][7])==true then 
+		
+		return boolOutOfAmmo ==false
 	end
 	
 	return false	
@@ -3378,7 +3410,7 @@ end
 
 
 function script.FireWeapon11()	
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eSlicer][8] 		
+	fireWeaponCost(eRazorGrenade)
 	return true
 end
 
@@ -3395,32 +3427,54 @@ end
 
 
 function script.QueryWeapon12() 
-	return Weapons[eTangleGun][3]
+	return Weapons[eTangleGun][eAimPiece]
 end
 
 
 function reloadTangleGun()
+	Weapons[eTangleGun][eCurrCool]=Weapons[eTangleGun][eCoolDown]
+	StopSpin(TangleRota,y_axis)
+	StopSpin(TangleRota,x_axis)
+	fireWeaponCost(eTangleGun)
+	WTurn(TangleGun,y_axis,math.rad(-15), 5)
+	WTurn(TangleGun,y_axis,math.rad(15), 5)
+	WTurn(TangleGun,y_axis,math.rad(0), 5)
+	
 	Spin(TangleRota,y_axis,math.rad(-512),0.5)
 	Spin(TangleRota,x_axis,math.rad(-12),0.5)
-	Sleep(Weapons[eTangleGun][6]/Weapons[eTangleGun][1]) 
-	boolTangleGunLoaded=true
+	Sleep(Weapons[eTangleGun][eCurrCool])
+	Weapons[eTangleGun][eCurrCool]=0
 end
 
 function script.AimWeapon12( heading ,pitch)	
-	 WTurn(TangleGun,y_axis,heading, 5)
-	return boolTangleGunLoaded 
+	if Weapons[eTangleGun][eWeapnLvl] > 0 then
+		diff= math.abs(65533 +globalHipTurn)-math.abs(65533+heading)
+		diff= (diff % 65533)
+		WTurn(TangleGun,y_axis, diff, 5)
+		
+		return Weapons[eTangleGun][eCurrCool] <= 0 and boolOutOfAmmo == false
+	else
+		
+		return false
+	end
 end
 
 TangleCounter=0
 function script.FireWeapon12()	
+	EmitSfx(TangleGun,2031)
+	EmitSfx(TangleGun,2031)
+	EmitSfx(TangleGun,2031)
 	StopSpin(TangleRota,y_axis,0.5)
 	StopSpin(TangleRota,x_axis,0.5)
 	
 	TangleCounter= 	TangleCounter+1
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eTangleGun][8] 
+	
+	
+	
 	if TangleCounter > 3* Weapons[eTangleGun][1] then --tangling ended
-		boolTangleGunLoaded=false
-		StartThread(reloadTangleGun)
+		Weapons[eTangleGun][eCurrCool] = Weapons[eTangleGun][eCoolDown]
+		
+		StartThread(reloadTangleGun)		
 		TangleCounter=0
 	end
 	
@@ -3446,28 +3500,24 @@ end
 
 boolAARocketLoaded=true
 function reloadAARockets()
-	
-	Sleep(Weapons[eAARocket][6]/Weapons[eAARocket][1]) 
-	boolAARocketLoaded=true
+	Weapons[eAARocket][eCurrCool]=Weapons[eAARocket][eCoolDown]
+	Sleep(	Weapons[eAARocket][eCurrCool]) 
+	Weapons[eAARocket][eCurrCool]=0
 end
 
 function script.AimWeapon13( heading ,pitch)	
-	return boolTangleGunLoaded 
+	if Weapons[eAARocket][eWeapnLvl] <= 0 then return false end
+	
+	return 	Weapons[eAARocket][eCurrCool] <= 0 and boolOutOfAmmo == false
 end
 
 
 function script.FireWeapon13()	
-	
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eAARocket][8] 
+	fireWeaponCost(eTangleGun)
 	StartThread(reloadAARockets)
-	
-	
 	
 	return true
 end
-
-
-
 
 --</AAROCKET>
 --<GROCKET>
@@ -3483,27 +3533,23 @@ function script.QueryWeapon14()
 end
 
 
-function reloadTangleGun()
+function reloadGRockets()
+	Weapons[eGRocket][eCurrCool]=Weapons[eGRocket][eCoolDown]
 	
-	Sleep(Weapons[eGRocket][6]/Weapons[eGRocket][1]) 
-	boolTangleGunLoaded=true
+	Sleep(	Weapons[eGRocket][eCurrCool]) 
+	Weapons[eGRocket][eCurrCool]=0
 end
 
 function script.AimWeapon14( heading ,pitch)	
-	return boolTangleGunLoaded 
+	if Weapons[eGRocket][eWeapnLvl] <= 0 then return false end
+	return Weapons[eGRocket][eCurrCool] <= 0 and boolOutOfAmmo == false
 end
 
 TangleCounter=0
 function script.FireWeapon14()	
-	TangleCounter= 	TangleCounter+1
-	Stats[eProperty][eAmmonition]=Stats[eProperty][eAmmonition]-Weapons[eGRocket][8] 
-	if TangleCounter > 3* Weapons[eGRocket][1] then --tangling ended
-		boolTangleGunLoaded=false
-		StartThread(reloadTangleGun)
-		TangleCounter=0
-	end
+	fireWeaponCost(eGRocket)
 	
-	
+	StartThread(reloadGRockets)
 	
 	return true
 end
