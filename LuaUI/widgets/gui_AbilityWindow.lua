@@ -217,6 +217,7 @@ children = {
 				createNewUpgradeButton(100,90, UpgCol, texCol,"STEALTH"),
 				createNewUpgradeButton(100,90, UpgCol, texCol,"RADAR"),
 				
+				createNewUpgradeButton(100,90, WeapCol, texCol,"RAZOR"),				
 				createNewUpgradeButton(100,90, WeapCol, texCol, "FLARE"), 
 				createNewUpgradeButton(100,90, WeapCol, texCol, "TANGLE"),
 				createNewUpgradeButton(100,90, WeapCol, texCol, "AROCKET"), 
@@ -303,7 +304,7 @@ children = {
 		width = '100%',
 		height = '50%',
      caption   = "Ammonition",
-	 value =50,
+	 value =0,
 	 color     =  {0.2,0.85,0.85,0.5},
 	backgroundColor = {0.1,0.8,0.8,1}, 
 	}
@@ -415,6 +416,7 @@ function widget:GameFrame(f)
 	function resetElements()
 		exp_bar.caption="EXP: -"
 		exp_bar.value= 0	
+		ammo_bar.value= 0
 	end
 	
 	function updateExperienceBar(xp)
@@ -423,6 +425,16 @@ function widget:GameFrame(f)
 		
 		exp_bar.caption="EXP: "..Total
 		exp_bar.value= math.ceil(Relative*100)
+	
+	end
+	
+	function updateAmmonitionBar(unitID)
+	val=Spring.GetUnitRulesParams(unitID)
+		if val and val["Ammonition"] then
+			ammo_bar.value = math.ceil(val["Ammonition"])
+		else
+			ammo_bar.value = 100
+		end
 	
 	end
 	
@@ -452,7 +464,9 @@ function widget:GameFrame(f)
 			updateExperienceBar(xp)
 	
 		end
-		--empty the upgrade Grid
+		
+		updateAmmonitionBar(unitID)
+	
 		
 		--adapt the button to unit
 		if unitTypeButtonMap[ud.name] then

@@ -9,7 +9,8 @@ function widget:GetInfo()
     date      = "WIP",
     license   = "WIP",
     layer     = 1,
-    enabled   = true  --  loaded by default?
+    enabled   = false,  --  loaded by default?
+	hidden = true
   }
 end
 

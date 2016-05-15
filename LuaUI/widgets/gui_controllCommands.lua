@@ -114,9 +114,10 @@ function widget:Initialize()
 		
 	testIrregular= 	Chili.Irregular:New{
 						nGone={
-						{x= 0, y = 1},
-						{x= -1, y = -1},
-						{x= 1, y = -1},
+						{x= 3, y = 3},
+						{x= -3, y = 3},
+						{x= -3, y = -3},
+						{x= 7, y = -7}
 		
 						},
 						caption= "WTF",
