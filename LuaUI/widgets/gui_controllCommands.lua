@@ -35,7 +35,7 @@ local spGetSelectedUnits = Spring.GetSelectedUnits
 
 controllCommand_window_height = 255
 controllCommand_window_width =  310
-controllCommand_window_positionX = 0
+controllCommand_window_positionX = "0%"
 controllCommand_window_positionY = "75%"
 
 
@@ -113,7 +113,7 @@ function widget:Initialize()
 		extendedCommand_window:AddChild(extendedCommand_Grid)
 		
 		
-	testIrregular= 	Chili.Irregular:New{
+	testIrregular= 	Chili.BeanButton:New{
 						nGone={
 						{x= 2*35, y = 2*35},
 						{x= 2*15, y = 2*15},

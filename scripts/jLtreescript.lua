@@ -474,7 +474,7 @@ FixFunctionTabel[9]=	function ()
 	--2:1 hexagons : pentagons 
 	for i=3,NUMBEROFPIECES,1 do
 		MovePieceToPiece(TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
-		turnPieceRandDir(TreePiece[i],0, 0,90,0,360,0,90)
+		turnPieceRandDir(TreePiece[i],0, 90,0,0,360,0,90)
 		WaitForTurn(TreePiece[i],x_axis)
 		WaitForTurn(TreePiece[i],y_axis)
 		WaitForTurn(TreePiece[i],z_axis)

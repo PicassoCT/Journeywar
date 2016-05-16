@@ -1,15 +1,15 @@
 --//=============================================================================
 
---- Irregular module
+--- BeanButton module
 
---- Irregular fields.
+--- BeanButton fields.
 -- Inherits from Control.
 -- @see control.Control
--- @table Irregular
--- @string[opt="irregular"] caption caption to be displayed
-Irregular = Control:Inherit{
-  classname= "irregular",
-  caption  = 'irregular', 
+-- @table BeanButton
+-- @string[opt="beanbutton"] caption caption to be displayed
+BeanButton = Control:Inherit{
+  classname= "beanbutton",
+  caption  = 'beanbutton', 
   --local Coordinates
   defaultWidth  = 70,
   defaultHeight = 20,
@@ -21,14 +21,14 @@ Irregular = Control:Inherit{
 
 }
 
-local this = Irregular
+local this = BeanButton
 local inherited = this.inherited
 
 --//=============================================================================
 
---- Sets the caption of the irregular
--- @string caption new caption of the irregular
-function Irregular:SetCaption(caption)
+--- Sets the caption of the beanbutton
+-- @string caption new caption of the beanbutton
+function BeanButton:SetCaption(caption)
   if (self.caption == caption) then return end
   self.caption = caption
   self:Invalidate()
@@ -36,12 +36,12 @@ end
 
 --//=============================================================================
 
-function Irregular:DrawControl()
+function BeanButton:DrawControl()
   --// gets overriden by the skin/theme
 end
 
 --//=============================================================================
-function Irregular:GetSizeFromNGone()
+function BeanButton:GetSizeFromNGone()
 xMin,xMax=0,0
 yMin,yMax=0,0
 
@@ -63,7 +63,7 @@ yMax= math.max(math.abs(yMin),math.abs(yMax))
 end
 --//=============================================================================
 --//=============================================================================
-function Irregular:DeterminantCheck(x,y)
+function BeanButton:DeterminantCheck(x,y)
 	x,y =  x - self.x , y - self.y
 	local j= #self.nGone-1
 	boolOddNodes=false
@@ -89,7 +89,7 @@ end
 
 
 
-function Irregular:HitTest(x,y)
+function BeanButton:HitTest(x,y)
 	--rough test is this in shape
 	localQuadUpLeft_X,localQuadUpLeft_Y = self.x- self.defaultWidth/2, self.y- self.defaultHeight/2
 	localQuadDowRight_X,localQuadDowRight_Y = self.x+ self.defaultWidth/2, self.y+ self.defaultHeight/2
@@ -104,14 +104,14 @@ function Irregular:HitTest(x,y)
 	end
 end
 
-function Irregular:MouseDown(...)
+function BeanButton:MouseDown(...)
   self.state.pressed = true
   inherited.MouseDown(self, ...)
   self:Invalidate()
   return self
 end
 
-function Irregular:MouseUp(...)
+function BeanButton:MouseUp(...)
   if (self.state.pressed) then
     self.state.pressed = false
     inherited.MouseUp(self, ...)

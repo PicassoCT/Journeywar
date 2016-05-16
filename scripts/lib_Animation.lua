@@ -522,7 +522,10 @@ function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 
 	ox=ox*-1
 	if offset then
-		ox,oy,oz=ox+offset.x,oy+offset.y,oz+offset.z
+		
+		ox= ox +(offset.x)
+		oy= oy +offset.y
+		oz= oz +offset.z
 	end	
 	
 --	echoMove(piecename, ox,oy,oz)
@@ -949,8 +952,8 @@ end
 			SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)
 		end
 		
-		dirX,dirY,dirZ= Spring.GetUnitPiecePosition(unitID,Head)
-		bdirX,bdirY,bdirZ= Spring.GetUnitPiecePosition(unitID,Gun)
+		dirX,dirY,dirZ= Spring.GetUnitPiecePosition(unitID,piece)
+		bdirX,bdirY,bdirZ= Spring.GetUnitPiecePosition(unitID,piece)
 		dirX,dirZ=bdirX-dirX,bdirZ-dirZ
 		
 		--Spring.Echo("Spring.GetUnitWeaponVectors(unitID,1)"..dirX.. " z:"..dirZ)

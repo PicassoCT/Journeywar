@@ -180,7 +180,7 @@ dist= math.sqrt(vec.x^2 +vec.y^2)
 return {x= vec.x/dist, y=vec.y/dist}
 end
 
-function DrawIrregularBorder(obj,state)
+function DrawBeanButtonBorder(obj,state)
   local nGone =obj.nGone
   local bt = obj.borderThickness
   local w = obj.width
@@ -244,7 +244,7 @@ function _DrawBackground(obj)
   gl.Vertex(x+w, y+h)
 end
 
-function _DrawIrregularBackground(obj)
+function _DrawBeanButtonBackground(obj)
   local nGone =obj.nGone
   local x= obj.xCenter
   local y= obj.yCenter
@@ -305,9 +305,9 @@ function DrawWindow(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBorder, obj, obj.state)
 end
 
-function DrawIrregular(obj)
-  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawIrregularBackground, obj, obj.state)
-  gl.BeginEnd(GL.TRIANGLE_STRIP, DrawIrregularBorder, obj, obj.state)
+function DrawBeanButton(obj)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBeanButtonBackground, obj, obj.state)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBeanButtonBorder, obj, obj.state)
 
   if (obj.caption) then
     local w = obj.width
@@ -690,8 +690,8 @@ skin.icons = {
 skin.image = {
 }
 
-skin.irregular = {
-  DrawControl = DrawIrregular,
+skin.beanbutton = {
+  DrawControl = DrawBeanButton,
 }
 
 skin.button = {

@@ -657,7 +657,7 @@ function dropDead()
 		
 		if math.random(0,25) <15 then
 			turnPieceRandDir(spine,6, 22,-44,44,-44,22 , -22)
-			turnPieceRandDir(head,6, 22,22,44,-44,22 , -22)
+			turnPieceRandDir(head,6, 22,21,44,-44,22 , -22)
 		end
 		if math.random(0,9) ==2 then
 			signum=signum * -1

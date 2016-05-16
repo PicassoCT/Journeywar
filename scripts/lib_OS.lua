@@ -107,20 +107,30 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
 		 rest=iRand(restIntervallMin, restIntervallMax)
 		 Sleep(rest)
 	end
+	
 end
 
 
 --> Plays a DescriptorTable in Order reciving Signals for a global soundOrderTable	
-function playSoundInOrder(soundInOrderTable)
+function playSoundInOrder(soundInOrderTable,name)
 	
 	for i=1,#soundInOrderTable,1 do
-		if soundInOrderTable[i].boolOnce then
+		if soundInOrderTable[i].boolOnce == true then
 			if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
 			Spring.PlaySoundFile(soundInOrderTable[i].sound,1.0)
 			if soundInOrderTable[i].postdelay then 	Sleep(soundInOrderTable[i].postdelay) end
 			
 		else
-			while soundInOrderTable[i].signal==true do
+		if name then
+			if not GG.soundInOrderTable then 
+			GG.soundInOrderTable={}
+			end
+		
+			if not GG.soundInOrderTable[name] or not GG.soundInOrderTable[name].signal then
+			GG.soundInOrderTable[name]={}
+			GG.soundInOrderTable[name].signal=true
+			end
+			while GG.soundInOrderTable[name].signal==true do
 				if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
 				if type(soundInOrderTable[i].sound)=="table" then
 					dice=math.floor(math.random(1,#soundInOrderTable[i].sound))
@@ -130,6 +140,9 @@ function playSoundInOrder(soundInOrderTable)
 				end
 				if soundInOrderTable[i].postdelay then 	Sleep(soundInOrderTable[i].postdelay) end
 			end
+			
+			GG.soundInOrderTable[name].signal=true
+		end
 		end
 	end
 end

@@ -160,7 +160,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 			end
 		end
-		plotLanscapeTable(localLandScapeTable)
+		--plotLanscapeTable(localLandScapeTable)
 		GG.LandScapeT =	localLandScapeTable
 		GG.LandScapeT.setAreaEffect = setAreaEffect
 	end
