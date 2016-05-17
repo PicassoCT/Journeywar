@@ -8,7 +8,7 @@ function widget:GetInfo()
 		author = "PicassoCT",
 		date = "2013-08-22",
 		license = "GNU GPL, v2 or later",
-		layer = math.huge,
+		layer = 255,
 		enabled = true -- loaded by default?
 	}
 end
@@ -36,10 +36,10 @@ local echo = Spring.Echo
 
 -------------------------------------------------------------------------------
 
-tacZone_window_height = "30%"
-tacZone_window_width = "5%"
-tacZone_window_positionX= "17%"
-tacZone_window_positionY= "70%"
+tacZone_window_height = "25%"
+tacZone_window_width = "4%"
+tacZone_window_positionX= "15%"
+tacZone_window_positionY= "75%"
 
 -------------------------------------------------------------------------------
 
@@ -186,9 +186,7 @@ function widget: Initialize()
 		--clientWidth = 200,
 		--clientHeight = 96,
 		resizable = false,
-		dragUseGrip = false,
-		minWidth = tacZone_window_width,
-		minHeight = tacZone_window_height,
+		dragUseGrip = false,		
 		color = {0.1,0.1,0.15,1},		
 		backgroundColor = {0.35,0.61,0.8,0.8},
 		children = 

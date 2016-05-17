@@ -6,7 +6,7 @@ function widget:GetInfo()
 		author = "PicassoCT",
 		date = "2011-6-2",
 		license = "GNU GPL, v2 or later",
-		layer = math.huge,
+		layer = 256,
 		hidden= true,
 		enabled = true,
 	}
@@ -46,12 +46,17 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
  updateCommandsSoon = false
 
-ability_window_height = "30%"--180
-ability_window_width = "10%"--115
-ability_window_positionX = "25%"
-ability_window_positionY = "70,%"
+ability_window_height = "23%"--180
+ability_window_height_numeric =180
+ability_window_width = "7%"--115
+ability_window_width_numeric = 115
+ability_window_positionX = "24%"
+ability_window_positionY = "77%"
+
 upgrade_window_height= "25%"
+upgrade_window_height_numeric= 300
 upgrade_window_width= "40%"
+upgrade_window_width_numeric= 300
 upgrade_window_positionX = "36%"
 upgrade_window_positionY = "80%"
 
@@ -167,8 +172,8 @@ function widget:Initialize()
 		tweakResizable = false,
 		resizable = false,
 		dragUseGrip = false,
-		minWidth = math.ceil(upgrade_window_width*0.75),
-		minHeight = math.ceil(upgrade_window_height*0.75),
+	--minWidth = math.ceil(upgrade_window_width_numeric*0.75),
+	--minHeight = math.ceil(upgrade_window_height_numeric*0.75),
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {},
@@ -365,8 +370,8 @@ children = {
 		tweakResizable = true,
 		resizable = false,
 		dragUseGrip = false,
-		minWidth = 50,
-		minHeight = 50,
+		--minWidth = 50,
+		--minHeight = 50,
 		color = {0,0,0,1},
 		
 		
@@ -379,8 +384,7 @@ children = {
 end
 
 --subConstructors
-function widget:CommandsChanged()
-		Spring.Echo("Update is coming")
+function widget:CommandsChanged()		
 		updateCommandsSoon = true		
 	end
 
@@ -485,7 +489,7 @@ function widget:GameFrame(f)
 		end
 	end
 	
-	if updateCommandsSoon == true and (f % 16 == 0) the
+	if updateCommandsSoon == true and (f % 16 == 0) then
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
 	end

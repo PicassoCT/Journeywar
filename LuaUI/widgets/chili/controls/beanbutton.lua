@@ -89,7 +89,7 @@ end
 
 
 function BeanButton:HitTest(x,y)
-	Spring.Echo("BeanButton:Checking for Range")
+	
 	--rough test is this in shape
 	localQuadUpLeft_X,localQuadUpLeft_Y = self.x, self.y
 	localQuadDowRight_X,localQuadDowRight_Y = self.x+ self.defaultWidth, self.y + self.defaultHeight
@@ -97,7 +97,7 @@ function BeanButton:HitTest(x,y)
 	--check if we are in the aufgespanntem quad
 	if x >= localQuadUpLeft_X and x <= localQuadDowRight_X and
 	   y <= localQuadUpLeft_Y and y >= localQuadDowRight_Y then
-	   
+	   Spring.Echo("BeanButton: In  Range")
 	   return self:DeterminantCheck(x,y)
 	else
 		return false
