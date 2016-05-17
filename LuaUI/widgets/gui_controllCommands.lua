@@ -33,16 +33,16 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
  updateCommandsSoon = false
 
-controllCommand_window_height = 255
-controllCommand_window_width =  310
+controllCommand_window_height = "30%"
+controllCommand_window_width =  "15%"
 controllCommand_window_positionX = "0%"
-controllCommand_window_positionY = "75%"
+controllCommand_window_positionY = "70%"
 
 
 extendedCommand_window_positionX = "0%" 
 extendedCommand_window_positionY= "45%"
-extendedCommand_window_width= 220
-extendedCommand_window_height= 220
+extendedCommand_window_width= "15%"
+extendedCommand_window_height= "30%"
 --main Constructors
 function widget:Initialize()
 	
@@ -115,20 +115,20 @@ function widget:Initialize()
 		
 	testIrregular= 	Chili.BeanButton:New{
 						nGone={
-						{x= 2*35, y = 2*35},
-						{x= 2*15, y = 2*15},
-						{x= 0, y = 2*30},
-						{x= 2*-15, y = 2*-15},
-						{x= 2*-15, y = 2*15},
-						{x= 0, y = 2*-30}
-		
+						
+						{x= 30, y = 70},
+						{x= -30, y = 70},
+						{x= -30, y = -70},
+						{x=  30, y = -100},
+						{x=  45, y = -85},
+						{x= 30, y = -70},
 						},
 						caption= "WTF",
 						
 								backgroundColor = BaseCol,
 								textColor = texCol, 
 
-								OnClick = {function () Spring.Echo("The first nGone was pressed") end}
+								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
 					}
 					
 	testIrregular.GetSizeFromNGone()	

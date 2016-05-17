@@ -18,7 +18,6 @@ BeanButton = Control:Inherit{
   --Points in Order, Clockwise  in local Coordinates - last coordinate is a Copy of the first
   --nGone should not be self-intersecting or incomplete
   nGone ={}
-
 }
 
 local this = BeanButton
@@ -41,7 +40,7 @@ function BeanButton:DrawControl()
 end
 
 --//=============================================================================
-function BeanButton:GetSizeFromNGone()
+function BeanButton:Init()
 xMin,xMax=0,0
 yMin,yMax=0,0
 
@@ -58,8 +57,8 @@ yMax= math.max(math.abs(yMin),math.abs(yMax))
   defaultWidth  = xMax*2
   defaultHeight = yMax*2
  
-  this.xCenter=defaultWidth/2
-  this.yCenter=defaultHeight/2
+  this.xCenter=xMax
+  this.yCenter=yMax
 end
 --//=============================================================================
 --//=============================================================================
@@ -90,9 +89,10 @@ end
 
 
 function BeanButton:HitTest(x,y)
+	Spring.Echo("BeanButton:Checking for Range")
 	--rough test is this in shape
-	localQuadUpLeft_X,localQuadUpLeft_Y = self.x- self.defaultWidth/2, self.y- self.defaultHeight/2
-	localQuadDowRight_X,localQuadDowRight_Y = self.x+ self.defaultWidth/2, self.y+ self.defaultHeight/2
+	localQuadUpLeft_X,localQuadUpLeft_Y = self.x, self.y
+	localQuadDowRight_X,localQuadDowRight_Y = self.x+ self.defaultWidth, self.y + self.defaultHeight
 	
 	--check if we are in the aufgespanntem quad
 	if x >= localQuadUpLeft_X and x <= localQuadDowRight_X and

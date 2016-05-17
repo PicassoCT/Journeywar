@@ -46,14 +46,14 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
  updateCommandsSoon = false
 
-ability_window_height = 180
-ability_window_width = 115
-ability_window_positionX = "20%"
-ability_window_positionY = "83%"
-upgrade_window_height= 180
-upgrade_window_width= 650
-upgrade_window_positionX = "28%"
-upgrade_window_positionY = "83%"
+ability_window_height = "30%"--180
+ability_window_width = "10%"--115
+ability_window_positionX = "25%"
+ability_window_positionY = "70,%"
+upgrade_window_height= "25%"
+upgrade_window_width= "40%"
+upgrade_window_positionX = "36%"
+upgrade_window_positionY = "80%"
 
 
 --main Constructors
@@ -269,7 +269,7 @@ children = {
 		else 
 			boolShowUpgrade = false
 			if upgrade_Grid then
-				HideAllActiveElements()
+				upgrade_window:Hide()
 			end
 		end
 	end
@@ -462,11 +462,9 @@ function widget:GameFrame(f)
 		local udid = Spring.GetUnitDefID(unitID)
 		local ud = UnitDefs[udid]
 		--update Unit Experience
-		
 		xp= Spring.GetUnitExperience(unitID)
 		if xp then
 			updateExperienceBar(xp)
-	
 		end
 		
 		updateAmmonitionBar(unitID)
@@ -475,17 +473,19 @@ function widget:GameFrame(f)
 		--adapt the button to unit
 		if unitTypeButtonMap[ud.name] then
 			--generate the Gui Specific by unittype
+			Spring.Echo("Show typespeicific acitivty button")
 			unitTypeButtonMap[ud.name]()		
 		elseif isUnitOnOffable(ud.name)== true then
+			Spring.Echo("Show dfault acitivty button")
 			unitTypeButtonMap["default"]("default")
 		else
+			Spring.Echo("Hide all Buttons")
 			--default no button
 			HideAllActiveElements()
 		end
 	end
 	
-	if updateCommandsSoon == true and (f % 16 == 0) then
-		Spring.Echo("updateCommandsSoon")	
+	if updateCommandsSoon == true and (f % 16 == 0) the
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
 	end

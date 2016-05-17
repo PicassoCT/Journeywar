@@ -36,10 +36,10 @@ local echo = Spring.Echo
 
 -------------------------------------------------------------------------------
 
-tacZone_window_height = 182
-tacZone_window_width = 72
-tacZone_window_positionX= "16.25%"
-tacZone_window_positionY= "83%"
+tacZone_window_height = "30%"
+tacZone_window_width = "5%"
+tacZone_window_positionX= "17%"
+tacZone_window_positionY= "70%"
 
 -------------------------------------------------------------------------------
 
