@@ -43,8 +43,7 @@ extendedCommand_window_positionX = "0%"
 extendedCommand_window_positionY= "41%"
 extendedCommand_window_width= "15%"
 extendedCommand_window_height= "30%"
-extendedCommand_window_height_numeric=400
-extendedCommand_window_width_numeric=400
+
 --main Constructors
 function widget:Initialize()
 	
@@ -77,8 +76,6 @@ function widget:Initialize()
 		tweakResizable = false,
 		resizable = false,
 		dragUseGrip = false,
-		--minWidth =math.ceil(extendedCommand_window_width_numeric*0.75),
-		--minHeight = math.ceil(extendedCommand_window_height_numeric*0.75),
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {},
@@ -105,8 +102,8 @@ function widget:Initialize()
 				width = 630,
 				height = 140,
 
-				 -- minItemHeight =	 '21%',
-				 -- maxItemHeight =	 '32%',
+				  minItemHeight =	 '21%',
+				  maxItemHeight =	 '32%',
 				
 				color = {0,0,0,1},
 			
