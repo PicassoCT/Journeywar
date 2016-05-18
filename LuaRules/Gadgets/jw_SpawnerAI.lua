@@ -21,8 +21,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	gaiaTeam=Spring.GetGaiaTeamID()
 	teamTable={}
 	meridianTable={}
-		spawnUnits={ ["journeyman"]={"jgeohive", "jbeehive"}
-		,["centrail"]={"scumslum","gzombiespawner","zombie","combinedfeature"}
+	spawnUnits={ 
+		["journeyman"]={"jgeohive", "jbeehive"},
+		["centrail"]={"scumslum","gzombiespawner","zombie","combinedfeature"}
 	}
 	
 	
@@ -34,7 +35,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		boolBio= volume < 0
 		volume=math.abs(volume)
 		
-		for _=1, volume do
+		for _=1, volume,1 do
+			Spring.Echo("Meridian Table")
 			if #meridianTable <=1 then return end
 			
 			meridian=meridianTable[math.random(1,#meridianTable)]
@@ -47,6 +49,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			dirZSign=math.random(-1,1);dirZSign=math.abs(dirZSign)/dirZSign
 			
 			while T and #T > 0 do	
+				Spring.Echo("SearchingFor Spawnspot")
 				if math.random(0,1)==1 then
 					dirXSign=math.random(-1,1);dirXSign=math.abs(dirXSign)/dirXSign
 				else
@@ -60,12 +63,15 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 				
 			end
-	
-				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,0,team)	
+			
+			Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,0,team)	
 			
 		end
 	end
 	
+	function randomSide()
+		if math.random(0,1)==1 then return "centrail" else return "journeyman" end
+	end
 	
 	spawnerAI={}
 	function gadget:Initialize()
@@ -83,6 +89,9 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			if isAI and isAI ==true and typeAI== "spawner" then
 				spawnerAI[teamID] = side
+				if side ~="journeyman" and side ~="centrail" then
+					spawnerAI[teamID] = randomSide()
+				end
 				
 				boolAtLeastOneSPawner=true
 			else
@@ -93,6 +102,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end
 		if boolAtLeastOneSPawner == false then
+			Spring.Echo("RemoveGadget:SpawnerAI")
 			gadgetHandler:RemoveGadget ()
 		end
 		
@@ -125,14 +135,15 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	incRate=0
-	total=9000-incRate
+	total=49000-incRate
 	function gadget:GameFrame(frame)
 		if frame > 0 and frame % total == 0 then
+			Spring.Echo("SpawnerAI:Active")
 			for k,v in pairs(spawnerAI) do
 				spawnSpawners(frame,k,v)
 			end
 			incRate=math.abs(math.sin(frame/1000)*1024)
-			total=9000-incRate
+			total=49000-incRate
 		end
 	end
 	

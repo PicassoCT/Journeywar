@@ -49,7 +49,7 @@ function widget: Initialize()
 		widgetHandler:RemoveWidget(widget)
 		return
 	end
-
+	
 	Chili = WG.Chili
 	Button = Chili.Button
 	Label = Chili.Label
@@ -212,7 +212,7 @@ function pop(xCoords,zCoords)
 	if #LastCommandStack> 0 then
 		t= LastCommandStack[#LastCommandStack]
 		table.remove( LastCommandStack,#LastCommandStack)
-		if table.getn( LastCommandStack) == 0 then  boolStackNotEmpty=false end
+		if table.getn( LastCommandStack) == 0 then boolStackNotEmpty=false end
 		--Get a ScreenRay and Attach the coords
 		Spring.SendLuaRulesMsg(t..xCoords.."|"..zCoords)
 	end
@@ -220,6 +220,6 @@ end
 
 
 function push(Command)
-	 boolStackNotEmpty=true
-	 LastCommandStack[# LastCommandStack+1]=Command	
+	boolStackNotEmpty=true
+	LastCommandStack[# LastCommandStack+1]=Command	
 end

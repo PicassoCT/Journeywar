@@ -35,16 +35,16 @@ local ExpBar = {}
 local stack_main = {}
 local ButtonsTable = {}
 local activeElements={}
-local  exp_bar= {}
-local  ammo_bar	= {}
- 
+local exp_bar= {}
+local ammo_bar	= {}
+
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
 local ability_window
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
- updateCommandsSoon = false
+updateCommandsSoon = false
 
 ability_window_height = "23%"--180
 ability_window_height_numeric =180
@@ -78,7 +78,7 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-		
+	
 	function Create_UpgradeButton()
 		SpecialAbilityButton = Button:New{
 			name = unitDefID,
@@ -93,13 +93,13 @@ function widget:Initialize()
 				showComEndUpgradeMenue
 			},
 		}
-			
+		
 		stack_main:AddChild(SpecialAbilityButton)
 		if SpecialAbilityButton then
-		ButtonsTable["ability"]=SpecialAbilityButton
-		SpecialAbilityButton:Hide()
+			ButtonsTable["ability"]=SpecialAbilityButton
+			SpecialAbilityButton:Hide()
 		end
-	
+		
 	end
 	
 	function Create_OnOffButton()
@@ -113,7 +113,7 @@ function widget:Initialize()
 				Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
 			end
 		end
-	
+		
 		
 		
 		onOffButton = Button:New{
@@ -124,88 +124,87 @@ function widget:Initialize()
 			width = 100,
 			height = 60,
 			caption = 'ABILITY',
-
+			
 			backgroundColor = {0.1,0.8,0.8,1}, 
 			textColor = {0.8,1,1,1},
 			parent= stack_main,
 			OnClick = { onOffFunction },
 		}
-	
+		
 		stack_main:AddChild(onOffButton)
 		
 		if onOffButton then
-		ButtonsTable["defaultOnOff"]=onOffButton
+			ButtonsTable["defaultOnOff"]=onOffButton
 			onOffButton:Hide()
 		end
 	end
 	indexVarVal=1
-
-	 function createNewUpgradeButton(buttonwidth,buttonheigth,BaseCol, texCol, name)
-			buttonwidth= buttonwidth..'%'
-			buttonheigth=buttonheigth..'%'
 	
-		return Chili.Button:New{
-								
-								width=buttonwidth,
-								height = buttonheigth, 
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-								caption = name, 
-								OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|"..name) end}
-								}
+	function createNewUpgradeButton(buttonwidth,buttonheigth,BaseCol, texCol, name)
+		buttonwidth= buttonwidth..'%'
+		buttonheigth=buttonheigth..'%'
+		
+		return Chili.Button:New{								
+			width=buttonwidth,
+			height = buttonheigth, 
+			backgroundColor = BaseCol,
+			textColor = texCol, 
+			caption = name, 
+			OnClick = {function () Spring.SendLuaRulesMsg("UPG".."|"..name) end}
+		}
 	end
-	 
+	
 	function CreateUpgradeMenue ()
-
-	upgrade_window = Window:New{
-		padding = {3,3,3,3,},
-		dockable = true,
-		textColor = {0.9,1,1,0.7},
-		name = "upgrade_window",
-		x = upgrade_window_positionX, 
-		y = upgrade_window_positionY,
-		width = upgrade_window_width,
-		height = upgrade_window_height,
-		parent = screen0,
-		draggable = false,
-		tweakDraggable = false,
-		tweakResizable = false,
-		resizable = false,
-		dragUseGrip = false,
-	--minWidth = math.ceil(upgrade_window_width_numeric*0.75),
-	--minHeight = math.ceil(upgrade_window_height_numeric*0.75),
-		color = {0.1,0.7,0.85,0.42},
-		backgroundColor= {0.1,0.2,0.6,0.32},
-		children = {},
-	}
-
-	BaseCol={0.1,0.8,0.8,1}
-	WeapCol={0.3,0.6,0.8,1}
-	UpgCol={0.1,0.5,0.6,1}
-	texCol={0.8,1,1,1}
-	upgrade_Grid = Grid:New{
-				x= 0,
-				y = 0,
-				padding = {5,5,5,5},
-				itemPadding = {0, 0, 0, 0},
-				itemMargin = {0, 0, 0, 0},
-				--autosize =true,
-				--weightedResize  =true,
-				resizeItems = true,		
-				orientation = 'horizontal',
-				centerItems = true,
-				columns = 7,	
-				rows = 3,
-				name = 'UpgradeGrid',
-				width = 630,
-				height = 140,
-
-				  minItemHeight =	 '21%',
-				  maxItemHeight =	 '32%',
-				
-				color = {0,0,0,1},
+		
+		upgrade_window = Window:New{
+			padding = {3,3,3,3,},
+			dockable = true,
+			textColor = {0.9,1,1,0.7},
+			name = "upgrade_window",
+			x = upgrade_window_positionX, 
+			y = upgrade_window_positionY,
+			width = upgrade_window_width,
+			height = upgrade_window_height,
+			parent = screen0,
+			draggable = false,
+			tweakDraggable = false,
+			tweakResizable = false,
+			resizable = false,
+			dragUseGrip = false,
+			--minWidth = math.ceil(upgrade_window_width_numeric*0.75),
+			--minHeight = math.ceil(upgrade_window_height_numeric*0.75),
+			color = {0.1,0.7,0.85,0.42},
+			backgroundColor= {0.1,0.2,0.6,0.32},
+			children = {},
+		}
+		
+		BaseCol={0.1,0.8,0.8,1}
+		WeapCol={0.3,0.6,0.8,1}
+		UpgCol={0.1,0.5,0.6,1}
+		texCol={0.8,1,1,1}
+		upgrade_Grid = Grid:New{
+			x= 0,
+			y = 0,
+			padding = {5,5,5,5},
+			itemPadding = {0, 0, 0, 0},
+			itemMargin = {0, 0, 0, 0},
+			--autosize =true,
+			--weightedResize =true,
+			resizeItems = true,		
+			orientation = 'horizontal',
+			centerItems = true,
+			columns = 7,	
+			rows = 3,
+			name = 'UpgradeGrid',
+			width = 630,
+			height = 140,
 			
-children = {
+			minItemHeight =	 '21%',
+			maxItemHeight =	 '32%',
+			
+			color = {0,0,0,1},
+			
+			children = {
 				createNewUpgradeButton(100,90, BaseCol, texCol, "SPEED"),
 				createNewUpgradeButton(100,90, BaseCol, texCol, "ARMOR"),
 				createNewUpgradeButton(100,90, BaseCol, texCol,"STABILITY"),
@@ -232,7 +231,7 @@ children = {
 		}
 		upgrade_window:AddChild(upgrade_Grid)
 		
-		if upgrade_window  then 
+		if upgrade_window then 
 			upgrade_window:Hide()	
 		end
 	end
@@ -263,13 +262,13 @@ children = {
 		end
 		
 	end
-		
+	
 	function showComEndUpgradeMenue()	
 		
 		if boolShowUpgrade == false then
 			boolShowUpgrade = true
 			upgrade_window:Show()
-			activeElements["ComEndUpgradeMenue"]  = upgrade_window
+			activeElements["ComEndUpgradeMenue"] = upgrade_window
 			
 		else 
 			boolShowUpgrade = false
@@ -280,7 +279,7 @@ children = {
 	end
 	
 	function HideAllActiveElements()
-		for k,element in pairs(activeElements)  do
+		for k,element in pairs(activeElements) do
 			element:Hide()
 		end
 	end
@@ -291,29 +290,29 @@ children = {
 		CreateUpgradeMenue()
 	end
 	
-			--Actual initialisatioin Code
-  exp_bar= Progressbar:New{
-	  x=0,
-	  y=0,
-	  width = '100%',
+	--Actual initialisatioin Code
+	exp_bar= Progressbar:New{
+		x=0,
+		y=0,
+		width = '100%',
 		height = '70%',
-    caption   = "EXP:",
-	value =50,
-	 color     =  {0.05,0.93,0.95,1},
-	backgroundColor = {0.1,0.8,0.8,1}, 
+		caption = "EXP:",
+		value =50,
+		color = {0.05,0.93,0.95,1},
+		backgroundColor = {0.1,0.8,0.8,1}, 
 	}
 	
-  ammo_bar	= Progressbar:New{
-  	  x=0,
-	  y=0,
+	ammo_bar	= Progressbar:New{
+		x=0,
+		y=0,
 		width = '100%',
 		height = '50%',
-     caption   = "Ammonition",
-	 value =0,
-	 color     =  {0.2,0.85,0.85,0.5},
-	backgroundColor = {0.1,0.8,0.8,1}, 
+		caption = "Ammonition",
+		value =0,
+		color = {0.2,0.85,0.85,0.5},
+		backgroundColor = {0.1,0.8,0.8,1}, 
 	}
-
+	
 	stack_main = Grid:New{
 		x=20,
 		y = 0,
@@ -329,8 +328,8 @@ children = {
 		rows= 1,
 		
 	}
-			
-			
+	
+	
 	base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
@@ -339,21 +338,21 @@ children = {
 		width = '100%',
 		height = '100%',
 		resizeItems = true,	
-	autosize=true,		
+		autosize=true,		
 		orientation = 'vertical',
 		centerItems = false,
 		columns = 1,
 		rows= 3,
 		children={stack_main,
-				  ammo_bar,
-				  exp_bar,
-				
-				  }
+			ammo_bar,
+			exp_bar,
+			
+		}
 		
 	}
 	
 	
-
+	
 	ability_window = Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
@@ -379,21 +378,22 @@ children = {
 			base_stack,			
 		},
 	}
-		
+	
 	createAllButtons()		
 end
 
 --subConstructors
 function widget:CommandsChanged()		
-		updateCommandsSoon = true		
-	end
+	updateCommandsSoon = true		
+end
 
 --update functions
 function widget:GameFrame(f)
 	
-	local function ShowOnOffButton(typeString)
-	if not ButtonsTable[typeString] then typeString = "defaultOnOff" end
 	
+	function ShowOnOffButton(typeString)
+		if not ButtonsTable[typeString] then typeString = "defaultOnOff" end
+		
 		ButtonsTable[typeString]:Show()
 		activeElements[typeString]=ButtonsTable[typeString]
 	end
@@ -402,7 +402,7 @@ function widget:GameFrame(f)
 		ButtonsTable["ability"]:Show()
 		activeElements["ability"]=ButtonsTable["ability"]
 	end
-
+	
 	local unitTypeButtonMap = {
 		--unitname --> Function Showing Button
 		["ccomender"]	 	= ShowSpecialAbilityButton,
@@ -411,9 +411,9 @@ function widget:GameFrame(f)
 	
 	function isUnitOnOffable(unitDefID_T)
 		local index = Spring.GetCmdDescIndex(CMD.ONOFF)
-			if index then
-				return true
-			end
+		if index then
+			return true
+		end
 		return false
 	end
 	
@@ -429,25 +429,25 @@ function widget:GameFrame(f)
 		
 		exp_bar.caption="EXP: "..Total
 		exp_bar.value= math.ceil(Relative*100)
-	
+		
 	end
 	
 	function updateAmmonitionBar(unitID)
-	val=Spring.GetUnitRulesParams(unitID)
-	ammostat=0
-	for i=1,#val do 
-		if val[i]["Ammonition"] then
-		ammostat= val[i]["Ammonition"] 
-		break
+		val=Spring.GetUnitRulesParams(unitID)
+		ammostat=0
+		for i=1,#val do 
+			if val[i]["Ammonition"] then
+				ammostat= val[i]["Ammonition"] 
+				break
+			end
 		end
-	end
-			
-			ammo_bar.value =ammostat
-	
+		
+		ammo_bar.value =ammostat
+		
 	end
 	
 	function UpdateAbilitiesWindow()
-	
+		
 		selectedUnits = spGetSelectedUnits()
 		
 		if not selectedUnits then 
@@ -472,7 +472,7 @@ function widget:GameFrame(f)
 		end
 		
 		updateAmmonitionBar(unitID)
-	
+		
 		
 		--adapt the button to unit
 		if unitTypeButtonMap[ud.name] then
