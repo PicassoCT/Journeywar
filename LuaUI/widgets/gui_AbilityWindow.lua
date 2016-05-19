@@ -50,7 +50,7 @@ ability_window_height = "23%"--180
 ability_window_height_numeric =180
 ability_window_width = "7%"--115
 ability_window_width_numeric = 115
-ability_window_positionX = "24%"
+ability_window_positionX = "19%"
 ability_window_positionY = "77%"
 
 upgrade_window_height= "25%"

@@ -19,7 +19,7 @@ pieces[#pieces]=rotor
 
 littleWulf= piece"littleWulf"
 pieces[#pieces+1]={}
-pieces[#pieces]=rotor
+pieces[#pieces]=littleWulf
 
 
 body= piece"body"
@@ -106,9 +106,11 @@ function legsDown()
 	SetSignalMask(SIG_IDLE)
 	reseT(pieces)
 	
-	breathOS(body,1, 3, LegTable,4, 44, 3)
-	
-	
+	while true do
+	breathOS(body,1, 3, LegTable,4, 33, 3,iRand(12,22))
+		Sleep(500)
+		howl()
+	end
 	
 end
 
@@ -263,6 +265,41 @@ function script.AimWeapon1( Heading, pitch )
 	else return false
 	end
 	
+end
+
+function howl()
+factor=8
+Turn(littleWulf,x_axis,math.rad(-35),35/factor)
+Turn(bUpR,x_axis,math.rad(49),49/factor)
+Turn(bfootL,x_axis,math.rad(-56),65/factor)
+Turn(bUpL,x_axis,math.rad(49),49/factor)
+Turn(bfootR,x_axis,math.rad(-56),65/factor)
+Turn(Tail,x_axis,math.rad(24),24)
+
+Turn(fUpR,x_axis,math.rad(29),29/factor)
+Turn(ffootL,x_axis,math.rad(43),43/factor)
+Turn(fUpL,x_axis,math.rad(29),29/factor)
+Turn(ffootR,x_axis,math.rad(43),43/factor)
+WaitForTurns(ffootL,littleWulf,bUpR)
+
+index=iRand(2,8)
+for i=1, index do
+Turn(jaw,x_axis,math.rad(17),12/factor)
+val=math.random(-40,-30)
+WTurn(Head,x_axis,math.rad(val),65)
+Sleep(500)
+Turn(jaw,x_axis,math.rad(0),12)
+WTurn(Head,x_axis,math.rad(-15),5/factor)
+Sleep(1200)
+
+if iRand(i,5)==1 then
+Spring.PlaySoundFile("sounds/jhivehound/juniorwulf.wav")
+end
+
+end
+Sleep(1200)
+reseT(pieces)
+
 end
 
 function inLimit(value,altVal,limit)

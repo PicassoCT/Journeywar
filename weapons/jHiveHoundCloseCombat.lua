@@ -5,7 +5,7 @@ local weaponDef = {
 	      weaponType              = [[Cannon]],
 	      --damage
 		  damage = {
-				default = 25,
+				default = 175,
 				HeavyArmor = 5,
 				},	      
 	      areaOfEffect            = 28,
@@ -29,7 +29,7 @@ local weaponDef = {
 	      turret                  =true,
 		  craterMult              = 0,	      
 		
-		  soundStart         = "",
+		  soundStart         = "sounds/jhivehound/aggressive.ogg",
 		  soundtrigger=1,
 		
 		  --apperance
