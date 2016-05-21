@@ -378,13 +378,13 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 		end
 		
-		if  weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
+		if  (weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
 			Spring.SetUnitPosition(AttackerID, px, py, pz)				
 		end
 		--if you are a  ghostdancer --create a copy of yourself near the enemy and kill all previous copys
-		if (weaponDefID == jghostDancerWeaponDefID then
-		if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
-		if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
+		if (weaponDefID == jghostDancerWeaponDefID) then
+			if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
+			if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
 		teamid=Spring.GetUnitTeam(AttackerID)
 	
 		if GG.GhostDancerOrgCopy[AttackerID] then -- attacker is a org --destroy old twin -create new twin

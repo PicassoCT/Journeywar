@@ -208,7 +208,7 @@
 
 	function walkAnimations()
 		local TurnP=TurnPiece
-		SetSignalMask(SIG_PACK)
+
 		Sleep(50)
 		for i=1, #Pack, 1 do
 			Move(Pack[i][4],y_axis,0,29)
@@ -216,7 +216,7 @@
 			TurnPiece(Pack[i][6],0,0,0,9)
 		end
 		
-		while true do
+		while boolMoving==true or boolCircling== true do
 			for i=1, #Pack, 1 do
 				--even legs forward
 				
@@ -226,20 +226,21 @@
 				TurnP(Pack[i][6],14,2,7,9)
 				
 			end
-			WaitForTurn(Pack[3][6],x_axis)
+			Sleep(450)
+			
 			for i=1, #Pack, 1 do
 				--even legs forward
 				TurnP(Pack[i][4],2,0,4,9)
 				TurnP(Pack[i][6],-14,-14,7,9)
 				TurnP(Pack[i][5],13,-5,6,9)
 			end
-			WaitForTurn(Pack[#Pack][6],x_axis)
-			Sleep(10)
+			Sleep(450)
 		end
 	end
 
 	function PackInMotion ()
 		SetSignalMask(SIG_PACK)
+		
 		
 		
 		StartThread(walkAnimations)
@@ -607,9 +608,12 @@
 		
 	end
 
-
-
+boolMoving=false
+boolCircling=false
 	function script.StartMoving()
+	boolCircling=false
+	boolMoving=true
+	Turn(deathpivot,x_axis,math.rad(0),35)
 		Signal(SIG_IDLE)
 		Signal(SIG_HOWL)
 		Signal(SIG_LEG)
@@ -635,6 +639,7 @@
 
 
 	function script.StopMoving()
+		boolMoving=false
 		GSpeed=2.5
 		Signal(SIG_HOWL)
 		Signal(SIG_MOVE)
@@ -650,7 +655,6 @@
 
 
 	function circle()
-		Signal(SIG_PACK)
 		StartThread(walkAnimations)
 		
 		for i=1,#Pack,1 do --itterate over the Pack		
@@ -721,7 +725,7 @@ end
 
 end
 Sleep(1200)
-reseT(allPieces)
+reseT(allPieces,5)
 
 
 	end
@@ -732,14 +736,17 @@ reseT(allPieces)
 		
 		while true do
 			if math.random(0,1)==1 then
+			boolCircling=true
 				for i=1, 6, 1 do
 					circle()
 				end
 				
 			elseif math.random(0,1)==1 then
+			boolCircling=false
 				howlIdle()
 			
 			else
+			boolCircling=false
 				layDownIdle()
 			end
 			Sleep(1000)

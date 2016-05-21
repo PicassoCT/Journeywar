@@ -54,7 +54,7 @@ local weaponDef = {
 				dgunwarped=1,
 			},
 
-		  explosionGenerator="powerplant_explosion",
+		  explosionGenerator="custom:powerplant_explosion",
 	tolerance          = 1000,
 
     damage = {

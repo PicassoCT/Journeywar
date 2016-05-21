@@ -186,7 +186,7 @@ function DrawBeanButtonBorder(obj,state)
   local w = obj.width
   local h = obj.height
 
-  --[[
+
   gl.Color((state.pressed and obj.borderColor2) or obj.borderColor)
 	  for i=1,#nGone-1, 1 do
 		
@@ -201,15 +201,15 @@ function DrawBeanButtonBorder(obj,state)
 		  upPA.x,upPA.y=lowPA.x + vec.x,lowPA.y +vec.y
 		  upPB.x,upPB.y=lowPB.x + vec.x,lowPB.y +vec.y
 		  --upper Triangle
-		  gl.Vertex(lowPA.x,lowPA.y)
-		  gl.Vertex(lowPB.x,lowPB.y)
-		  gl.Vertex(upPA.x,upPA.y)
+		  gl.Vertex(-w+lowPA.x,lowPA.y	-h)
+		  gl.Vertex(-w+lowPB.x,lowPB.y	-h)
+		  gl.Vertex(-w+upPA.x,upPA.y 	 -h)
 		  --lower Triangle
-		  gl.Vertex(lowPA.x,lowPA.y)
-		  gl.Vertex(upPB.x,upPB.y)
-		  gl.Vertex(upPA.x,upPA.y)
+		  gl.Vertex(-w+lowPA.x,lowPA.y	-h)
+		  gl.Vertex(-w+upPB.x,upPB.y	-h)
+		  gl.Vertex(-w+upPA.x,upPA.y	-h)
 	  end
---]]
+
 end
 
 function DrawBackground(obj)
@@ -249,12 +249,29 @@ function _DrawBeanButtonBackground(obj)
   local x= obj.xCenter
   local y= obj.yCenter
   gl.Color(obj.backgroundColor)
+
+ if obj.triangleStrip = false then 
 	for i=1, #nGone-1, 2 do
 	 gl.Vertex(x,y) 
 	 gl.Vertex(nGone[i].x,nGone[i].y) 
 	 gl.Vertex(nGone[i+1].x,nGone[i+1].y) 
+	 gl.Vertex(x,y) 
 	end
+	
+  	 gl.Vertex(x,y) 
+	 gl.Vertex(nGone[#nGone].x,nGone[#nGone].y) 
+	 gl.Vertex(nGone[1].x,nGone[1].y) 
+	 gl.Vertex(x,y) 
+ else
+ 
+	for i=1, #nGone-2, 1 do
+	 gl.Vertex(nGone[i].x,nGone[i].y) 
+	 gl.Vertex(nGone[i+1].x,nGone[i+1].y) 
+	 gl.Vertex(nGone[i+2].x,nGone[i+2].y) 
 
+	end 
+ end
+	 
 end
 
 function _DrawTabBackground(obj)
@@ -307,7 +324,7 @@ end
 
 function DrawBeanButton(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBeanButtonBackground, obj, obj.state)
-  gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBeanButtonBorder, obj, obj.state)
+ -- gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBeanButtonBorder, obj, obj.state)
 
   if (obj.caption) then
     local w = obj.width

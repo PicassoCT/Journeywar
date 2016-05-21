@@ -83,6 +83,7 @@ function widget:Initialize()
 
 	BaseCol={0.1,0.8,0.8,1}
 	WeapCol={0.3,0.6,0.8,1}
+	BeanCol={0.3,0.6,0.8,0.6}
 	UpgCol={0.1,0.5,0.6,1}
 	texCol={0.8,1,1,1}
 	extendedCommand_Grid = Grid:New{
@@ -114,14 +115,30 @@ function widget:Initialize()
 	testIrregular= 	Chili.BeanButton:New{
 						nGone={
 						
-						{x= 30, y = 70},
-						{x= -30, y = 70},
-						{x= -30, y = -70},
-						{x=  30, y = -100},
-						{x=  45, y = -85},
-						{x= 30, y = -70},
+						{x= 0, y = 70},
+						{x= 0, y = 0},
+						{x= 70, y = 0},
+						{x= 70, y = 35},
+
 						},
 						caption= "WTF",
+						
+								backgroundColor = BeanCol,
+								textColor = texCol, 
+
+								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+					}
+					
+	bestIrregular= 	Chili.BeanButton:New{
+						nGone={
+						
+						{x= 0, y = -15},
+						{x= 0, y = 25},
+						{x= 70, y = 55},
+						{x= 70, y = -50}
+
+						},
+						caption= "PICA",
 						
 								backgroundColor = BaseCol,
 								textColor = texCol, 
@@ -129,7 +146,66 @@ function widget:Initialize()
 								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
 					}
 					
+	restIrregular= 	Chili.BeanButton:New{
+						nGone={
+						
+						{x= 70, y = -30},
+						{x= 0, y = -85},
+						{x= 0, y = 60},
+						{x= 70, y = 60},
+
+						},
+						caption= "LEARN 2 GUI",
+						
+								backgroundColor = UpgCol,
+								textColor = texCol, 
+
+								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+					}	
+
+	aestIrregular= 	Chili.BeanButton:New{
+						nGone={
+						
+						{x= 0, y = 70},
+						{x= 0, y = 0},
+						{x= 70, y = 0},
+						{x= 70, y = 35},
+
+						},
+						caption= "GO HOME",
+						
+								backgroundColor = BeanCol,
+								textColor = texCol, 
+
+								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+					}
+					
+	destIrregular= 	Chili.BeanButton:New{
+						nGone={
+						
+						{x= 0, y = -15},
+						{x= 70, y = -55},
+						{x= 55, y = 0},
+						{x= 35, y = 35},
+						{x= 70, y = 65},						
+						{x= 0, y = 65}
+					
+
+						},
+						caption= "UR DRUNK",
+						
+								backgroundColor = BaseCol,
+								textColor = texCol, 
+
+								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+					}
+					
+					
 	testIrregular.Init()	
+	bestIrregular.Init()
+	restIrregular.Init()
+	aestIrregular.Init()
+	destIrregular.Init()
 	
 	base_stack = Grid:New{
 		y = 20,
@@ -150,7 +226,7 @@ function widget:Initialize()
 								height = buttonheigth, 
 								backgroundColor = BaseCol,
 								textColor = texCol, 
-								caption = "11", 								
+								caption = "HOW", 								
 								},
 								Chili.Button:New{
 								
@@ -158,7 +234,7 @@ function widget:Initialize()
 								height = buttonheigth, 
 								backgroundColor = BaseCol,
 								textColor = texCol, 
-								caption = "12", 
+								caption = "TO", 
 								
 								},
 								Chili.Button:New{
@@ -167,11 +243,23 @@ function widget:Initialize()
 								height = buttonheigth, 
 								backgroundColor = BaseCol,
 								textColor = texCol, 
-								caption = "13", 
+								caption = "CHILLIii", 
 							
 								},
-								testIrregular
+								testIrregular,
+								bestIrregular,
+								restIrregular,
+								Chili.Button:New{
 								
+								width=buttonwidth,
+								height = buttonheigth, 
+								backgroundColor = BaseCol,
+								textColor = texCol, 
+								caption = "SRSLY", 
+
+								},
+								aestIrregular,
+								destIrregular
 								}
 		
 	}

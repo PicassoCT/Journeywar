@@ -55,7 +55,7 @@ pairs = function(...)
 	end
 end
 
-local SAFEWRAP = 0
+local SAFEWRAP = 2
 -- 0: disabled
 -- 1: enabled, but can be overriden by gadget.GetInfo().unsafe
 -- 2: always enabled
