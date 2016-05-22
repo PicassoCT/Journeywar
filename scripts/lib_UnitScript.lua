@@ -1867,6 +1867,7 @@ function vardump(value, depth, key)
 	end
 	
 	function spawnCegAtPiece(unitID,pieceId,cegname,offset)
+
 		boolAdd=offset or 10
 		
 		

@@ -152,7 +152,7 @@ function ThreadLauncher()
 			Sleep(time)
 		end		
 		
-		StartThread(LaunchSkywards)
+		LaunchSkywards()
 		Sleep(100000)
 	end
 end

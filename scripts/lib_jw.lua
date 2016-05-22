@@ -55,6 +55,7 @@ end
 
 function getTreeTypeTable(UnitDefNames)
 	FactoryTypes={}
+	FactoryTypes[UnitDefNames["jscrapheap_tree"].id]=true
 	FactoryTypes[UnitDefNames["jtree2"].id]=true
 	FactoryTypes[UnitDefNames["jtree2activate"].id]=true
 	FactoryTypes[UnitDefNames["jtree3"].id]=true

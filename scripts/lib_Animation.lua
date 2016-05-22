@@ -60,6 +60,34 @@ function WaitForTurns(...)
 	end
 end
 
+-->Waits for anyTurnToComplete
+function WaitForMoves(...)
+	--local arg = table.pack(...)
+	
+	local arg={...}
+	if not arg then
+		return 
+	end
+	
+	typeArg=type(arg)
+	
+	if typeArg == "table" then
+		
+		for k,v in pairs(arg) do
+			if type(v)=="number" then
+				WaitForMove(v,x_axis)
+				WaitForMove(v,y_axis)
+				WaitForMove(v,z_axis)
+			end
+		end
+		return 
+	elseif typeArg == "number" then
+		WaitForMove(arg,x_axis)
+		WaitForMove(arg,y_axis)
+		WaitForMove(arg,z_axis)
+	end
+end
+
 -->Turn a piece towards a random direction
 function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,LIMLOWZ)
 	if not LIMUPX then
@@ -83,6 +111,7 @@ function movePieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,
 		Move(piecename,z_axis,math.rad(math.random(LIMLOWZ,LIMUPZ)),speed)
 	end
 end
+
 -->generic AmphibMovementThread: Threaded Creates with the given pieces and animations a Unit that auto changes its animation
 -- between land and water
 function AmphibMoveThread(unitid
