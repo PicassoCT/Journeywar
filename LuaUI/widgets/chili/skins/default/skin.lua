@@ -250,7 +250,7 @@ function _DrawBeanButtonBackground(obj)
   local y= obj.yCenter
   gl.Color(obj.backgroundColor)
 
- if obj.triangleStrip = false then 
+ if obj.triangleStrip == false then 
 	for i=1, #nGone-1, 2 do
 	 gl.Vertex(x,y) 
 	 gl.Vertex(nGone[i].x,nGone[i].y) 

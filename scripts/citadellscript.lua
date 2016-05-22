@@ -764,7 +764,7 @@ function script.Killed(recentDamage,maxHealth)
 	Spin (cifireclo1, y_axis, math.rad(-12))
 	Spring.UnitScript.Show(cifireclo1)
 	
-	allHellBreaksLooseallHellBreaksLoose()
+	--allHellBreaksLooseallHellBreaksLoose()
 	
 	Spring.UnitScript.Show(shater)
 	Explode (shater, SFX.SHATTER)
@@ -794,6 +794,7 @@ function script.Killed(recentDamage,maxHealth)
 	DestroyTable(T, 
 	false,
 	true, 
+	
 	function(id) 
 		hp=Spring.GetUnitHealth(id) 
 		if hp > 800 then 

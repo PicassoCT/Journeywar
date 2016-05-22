@@ -258,8 +258,8 @@ function gyroScopic()
 		-- if the unit takes a step, add that change of bodyvec as a opposite force to the targetvec
 		--TargVec={x= (-1*(bodyVec.x-oldBodyVec.x)),y= (-1*(bodyVec.y-oldBodyVec.y)),z=(-1*(bodyVec.z-oldBodyVec.z))}
 				
-		TargVec=addVector(vectorMul(TargVec,0.5),vectorMul(LiquidVec,0.5))
-		TargVec=addVector(vectorMul(TargVec,0.85),vectorMul(UpRightVec,0.15))		
+		TargVec=addVector(mulVector(TargVec,0.5),mulVector(LiquidVec,0.5))
+		TargVec=addVector(mulVector(TargVec,0.85),mulVector(UpRightVec,0.15))		
 		
 		RadX,RadZ=makeDegFromVec(TargVec)
 		-- Spring.Echo("JW:jestorage - TurnVecX:"..RadX.. " - TurnVecZ: "..RadZ)
@@ -270,7 +270,8 @@ function gyroScopic()
 			Sleep(150)
 			end
 		--flip the TargVec we have reached the highest Point and everything tell us to go backwards..
-		TargVec=vectorMul(TargVec,-0.9)
+		TargVec=mulVector(TargVec,-0.9)
+		
 		
 		end
 	oldBodyVec=bodyVec
@@ -313,7 +314,7 @@ end
 
 explosionRange=1.5
 function script.Killed(recentDamage,_)
-Spring.PlaySoundFile("sounds/jestorage/good_explosion.wav",1) 
+Spring.PlaySoundFile("sounds/jestorage/good_explosion.ogg",1) 
 if percenTage then
 Range=math.ceil(percenTage*explosionRange)
 x,y,z=Spring.GetUnitPosition(unitID)

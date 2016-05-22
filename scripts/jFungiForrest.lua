@@ -1,3 +1,10 @@
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+ include "lib_Animation.lua"
+
+include "lib_Build.lua" 
+
 local UnitsToSpare={}
 UnitsToSpare[UnitDefNames["jtree47"].id]=true
 UnitsToSpare[UnitDefNames["jtree46"].id]=true

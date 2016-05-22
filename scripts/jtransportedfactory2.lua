@@ -60,6 +60,7 @@ function script.Create()
 	Hide(Kugel02)
 	StartThread(transferCommands)
 	StartThread(whileMyThreadGentlyWeeps)
+	StartThread(delayedUpgrade)
 	
 	if GG.JFactorys== nil then GG.JFactorys={} end
 	GG.JFactorys[unitID]={}
@@ -73,30 +74,40 @@ end
 Spring.SetUnitNanoPieces(unitID,{ Kugel01})
 
 local defID=Spring.GetUnitDefID(unitID)
-
+local upgradeDefID=UnitDefNames["jupgradefactory2"].id
 local first=true
 function delayedUpgrade()
-	if first==true then first=false return end
-	SetSignalMask(SIG_UPGRADE)
-	Sleep(5000)
-	id=Spring.GetUnitIsBuilding(unitID)
-	x,y,z=Spring.GetUnitPosition(unitID)
-	if (id and Spring.ValidUnitID(id)==false) or id== nil and y < 0 then	
-		if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+
+
+	while true do
+		Sleep(5000)
+		id=Spring.GetUnitIsBuilding(unitID)
+		if (id and Spring.ValidUnitID(id)==true) then
 		x,y,z=Spring.GetUnitPosition(unitID)
-		teamID=Spring.GetUnitTeam(unitID)
-		GG.UnitsToSpawn:PushCreateUnit("jfactorylvl2transform",x,y,z,0,teamID)		
-		Sleep(9000)		
-		Spring.DestroyUnit(	GG.JFactorys[unitID][1],false,true)
-		Spring.DestroyUnit(unitID,false,true)
+			if  y < -5 then
+				defIDChild = 	Spring.GetUnitDefID(id)
+				if  defIDChild == upgradeDefID then	
+					if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+					x,y,z=Spring.GetUnitPosition(unitID)
+					teamID=Spring.GetUnitTeam(unitID)
+					GG.UnitsToSpawn:PushCreateUnit("jfactorylvl2transform",x,y,z,0,teamID)		
+					Sleep(9000)		
+					Spring.DestroyUnit(	GG.JFactorys[unitID][1],false,true)
+					Spring.DestroyUnit(unitID,false,true)
+				end		
+			else
+						hp,mh,pd,cp,buildProgress= Spring.GetUnitHealth(id)
+						Spring.SetUnitHealth(id,{["build"]=0})
+						
+			end
+		end
+
 	end
-	
 end
 
 
 
 function script.Activate()
-	StartThread(delayedUpgrade)
 	SetUnitValue(COB.YARD_OPEN, 1)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 	SetUnitValue(COB.BUGGER_OFF, 1)
@@ -105,7 +116,6 @@ end
 
 
 function script.Deactivate()
-	Signal(SIG_UPGRADE)
 	SetUnitValue(COB.YARD_OPEN, 0)
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 	SetUnitValue(COB.BUGGER_OFF, 0)

@@ -515,7 +515,7 @@ function HideWrap(piecenr)
 		end
 		if type(piecenr)=="table" then 
 			Spring.Echo("PieceNr in hide is a table");
-			echoT(piecenr)
+			--echoT(piecenr)
 			assert(true==false);
 		end
 		
@@ -548,7 +548,7 @@ function ShowWrap(piecenr)
 		end
 		if type(piecenr)=="table" then 
 			Spring.Echo("PieceNr in hide is a table");
-			echoT(piecenr)
+			--echoT(piecenr)
 			assert(true==false);
 		end
 		
@@ -1797,7 +1797,7 @@ function vardump(value, depth, key)
 		
 		
 		mD=MatrixBuilder3x3(MatrixBuilder3x3(mA,mB),mC)
-		echoT(mD)
+		--echoT(mD)
 		
 		
 	end

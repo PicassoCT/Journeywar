@@ -44,7 +44,9 @@ LeaveTracks = false,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"jglowworms","jbeherith","jeliah"
+	"jglowworms","jbeherith","jeliah",
+	"jshroudshrike","jswiftspear", 	"jviralfac",
+	"jupgradefactory2"
 	},
 
 

@@ -61,7 +61,6 @@ local unitDef = {
 	{
 		--factorys
 		"jmovingfac1",
-		"jviralfac",
 		"jharbour",
 		"jgeohive",
 		"jmeggstack",

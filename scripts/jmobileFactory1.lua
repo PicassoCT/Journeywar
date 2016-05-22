@@ -1,6 +1,10 @@
---Define the wheel pieces
---TODO:Get The Mobile Factory to work
---Define the pieces of the weapon
+
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+
+include "lib_Build.lua" 
+
 
 deathpivot=piece"deathpivot"
 teamID=Spring.GetUnitTeam(unitID)
@@ -135,23 +139,23 @@ function newFactory ()
 	
 end
 
+	boolLaunch=false
+	function launchBuilding(delayTime)
+		boolLaunch=true
+	end
 
 
 function ThreadLauncher()
 	time=math.ceil(math.random(1500,8000))
 	while true do
-		while not GG.jJourneyWon or GG.jJourneyWon == false do
+		while boolLaunch==false do
 			Sleep(time)
-		end
-		
+		end		
 		
 		StartThread(LaunchSkywards)
 		Sleep(100000)
 	end
 end
-
-
-
 
 --Launches the factory after gameend
 function LaunchSkywards()
@@ -244,7 +248,7 @@ end
 function fruitLoop()
 	while(boolBuilding==true) do
 		EmitSfx(lightEmit,1027)
-		Sleep(50)
+		Sleep(150)
 	end
 end
 
@@ -313,8 +317,10 @@ function wiggleEggs()
 end
 
 function script.Killed(recentDamage, maxHealth)
+	
 	Spring.DestroyUnit(factoryID,true,false)
 	GG.JFactorys[factoryID]=nil
+	suddenDeathjBuildCorpse(unitID,recentDamage)
 	return 0
 	----Spring.Echo ("He is dead, Jim!")
 end
@@ -343,9 +349,9 @@ function circler()
 	while(true) do
 		----Spring.Echo("Wonna go for a walk!")
 		if boolBuilding==true then 	
-			Signal(SIG_FOLD)
-			StartThread(unfold)
-			
+			unfold()
+					StartThread(fruitLoop)							
+					StartThread(growth)	
 			
 			----Spring.Echo("I feel happy!")
 			
@@ -373,20 +379,15 @@ function circler()
 				WaitForTurn(dotter[1],y_axis)		
 				Sleep(50)
 				----Spring.Echo(budProgress)
-				if templ%100== 0 then
-					StartThread(fruitLoop)							
-					StartThread(growth)	
-				end
+				
 				if templ > 1000 then templ=0 end
 				templ=templ+10						
 				
 				Sleep(templ)
 			end
-		else
-			Signal(SIG_UNFOLD)
-			StartThread(fold,false)	
-			
+			fold(false)
 		end
+		
 		
 		Sleep(25)
 	end
@@ -522,11 +523,9 @@ end
 
 function unfold()
 	--Spring.Echo("Reaching UNFolD")
-	SetSignalMask(SIG_UNFOLD)
+
 	Move(dotter[1],y_axis,-65,0)
-	for i=1, #dotter do
-		Hide(dotter[i])
-	end
+	hideT(dotter)
 	
 	
 	
@@ -561,29 +560,22 @@ function fold(boolInstant)
 	
 	if boolInstant==true then
 		Move(dotter[1],y_axis,-65,0)
-		
-		for i=1, #dotter do
-			Hide(dotter[i])
-		end
+		hideT(dotter)
 		
 	else
-		Move(dotter[1],y_axis,-17,35.5)
-		WaitForMove(dotter[1],y_axis) 
+		WMove(dotter[1],y_axis,-17,35.5)
 		Hide(dotter[1])
 		
-		Move(dotter[1],y_axis,-34,35.5)
-		WaitForMove(dotter[1],y_axis) 
+		WMove(dotter[1],y_axis,-34,35.5)
 		Hide(dotter[2])
 		
-		Move(dotter[1],y_axis,-45,37.5)
-		WaitForMove(dotter[1],y_axis) 
+		WMove(dotter[1],y_axis,-45,37.5)
 		Hide(dotter[3])
 		
-		Move(dotter[1],y_axis,-55,35.5)
-		WaitForMove(dotter[1],y_axis) 
+		WMove(dotter[1],y_axis,-55,35.5)	
 		Hide(dotter[4])
 		
-		Move(dotter[1],y_axis,-65,35.5)
+		WMove(dotter[1],y_axis,-65,35.5)
 		WaitForMove(dotter[1],y_axis)
 		
 		Hide(dotter[5])

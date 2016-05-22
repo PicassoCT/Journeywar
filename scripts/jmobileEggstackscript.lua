@@ -1,6 +1,9 @@
-
+include "suddenDeath.lua"
+include "lib_OS.lua"
 include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
+
+include "lib_Build.lua" 
 
 Kapsel=piece"Kapsel"
 feetFetish={}
@@ -16,13 +19,13 @@ temp1= "UpJoin0"..i
 temp2= "UpLeg0"..i
 temp3= "LoJoin0"..i
 temp4= "LoLeg0"..i
-temp5= "DirEmit"..i
+
 
 feetFetish[i][1]=piece(temp1)-- the Upper joint
 feetFetish[i][2]=piece(temp2) -- upper leg
 feetFetish[i][3]=piece(temp3) --lower joint
 feetFetish[i][4]=piece(temp4) --lower leg
-feetFetish[i][5]=piece(temp5) --dir emitter
+
 end
 
 SIG_FOLD=2
@@ -68,11 +71,6 @@ end
 
 
 
-function script.Killed(recentDamage, maxHealth)
-	return 1
-	
-	
-end
 
 function water()
 	xR=math.random(-42,42)
@@ -123,7 +121,7 @@ function newFactory ()
   if GG.JFactorys == nil then GG.JFactorys={} end
    local x,y,z = Spring.GetUnitPosition(unitID)
    teamID = Spring.GetUnitTeam (unitID)
-   factoryID = Spring.CreateUnit ("jmeggstack", x,y+40,z+20, 0, teamID) 
+   factoryID = Spring.CreateUnit ("jtransportedeggstack", x,y+40,z+20, 0, teamID) 
    GG.JFactorys[factoryID]={}
    GG.JFactorys[factoryID][1]= unitID 
    GG.JFactorys[factoryID][2]= false
@@ -194,11 +192,11 @@ end
 		if GG.JFactorys[factoryID][2]==true then
 		--Spring.Echo("JW:Firstborn:Building")
 		boolBuilding=true
-		Turn(Kapsel,x_axis,math.rad(0),0.5)
+		Turn(Kapsel,z_axis,math.rad(0),0.5)
 		else 
 		--Spring.Echo("JW:Firstborn:Not building")
 		boolBuilding=false
-		Turn(Kapsel,x_axis,math.rad(120),0.5)
+		Turn(Kapsel,z_axis,math.rad(-120),0.5)
 		end
 
 
@@ -217,7 +215,7 @@ local LUpdateUnitPosition=UpdateUnitPosition
    while (true) do
       if (not spValidUnitID (factoryID)) then newFactory () end
       local x,y,z = spGetUnitPosition (unitID)	 
-	 spMovCtrlSetPos(factoryID,x,y+50,z+2)
+	  spMovCtrlSetPos(factoryID,x,y+50,z+2)
       Sleep (50)
    end
 end
@@ -266,10 +264,10 @@ Turn(feetFetish[nr][3],z_axis,math.rad(0),1.7)
 	WaitForTurn(feetFetish[nr][3],x_axis)
 	end
 
-EmitSfx(feetFetish[nr][5],1024)
+EmitSfx(feetFetish[nr][4],1024)
 
 end
-
+comonValue=0
 function moveIt()
 SetSignalMask(SIG_MOVE)
 comonSpeed=0.2
@@ -281,7 +279,7 @@ comonSpeed=0.2
 	liftFeet(5)
 	lowerFeet(2,true)
 	Turn(center,y_axis,math.rad(2),0.1)
-	Turn(roof,x_axis,math.rad(0.5),0.025)
+	Turn(Kapsel,z_axis,math.rad(0.5),0.025)
 	comonValue=comonValue-5
 
 	TurnF(3,40,false)
@@ -294,7 +292,7 @@ comonSpeed=0.2
 	liftFeet(6)
 	WaitForTurn(center,y_axis)
 	Turn(center,y_axis,math.rad(-2),0.1)
-	Turn(roof,x_axis,math.rad(-0.5),0.025)
+	Turn(Kapsel,z_axis,math.rad(-0.5),0.025)
 	comonValue=comonValue+5
 	comonSpeed=0.2
 	TurnF(4,-56,false)
@@ -319,10 +317,7 @@ justOnce=true
 function script.StartMoving()
 Signal(SIG_MOVE)
 StartThread(moveIt)								
-	if justOnce==true then
-	StartThread(moveFactory)
-	justOnce=false
-	end																		
+																	
 end
 
 function legs_down()
@@ -332,7 +327,7 @@ function legs_down()
 		Turn(feetFetish[i][j],y_axis,math.rad(0),3.141)
 		Turn(feetFetish[i][j],z_axis,math.rad(0),3.141)
 		end
-		Turn(roof,x_axis,math.rad(0),0.025)
+		Turn(Kapsel,z_axis,math.rad(0),0.025)
 	end
 
 end
@@ -347,7 +342,14 @@ legs_down()
 end
 
 
+function script.Killed(recentDamage, maxHealth)
+	
 
+	suddenDeathjBuildCorpse(unitID,recentDamage)
+	return 0
+	----Spring.Echo ("He is dead, Jim!")
+end
+--Buildi
 
 function script.Activate()
 
@@ -365,10 +367,14 @@ function script.Create()
 	Spring.SetUnitMoveGoal(unitID,x-20,y,z)
 	
 	hideT(Eggtable)	
-	Move(center,y_axis,-30,8.7)
+	
 	StartThread(updateBoolisBuilding)
 	
 	StartThread(workInProgress)
 	StartThread(bobbingEggs)
+	
+
+	StartThread(moveFactory)
+	
 
 end

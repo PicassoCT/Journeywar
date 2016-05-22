@@ -1004,9 +1004,9 @@ end
 				MoveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
 				dx,dy,dz, slope =Spring.GetGroundNormal(x,z)
 				
-				Spring.Echo("X>"..vec.x .. " Y> ".. vec.y .. " Z>" .. vec.z) 
-				Spring.Echo("VX>"..vec.vx .. " VY> ".. vec.vy .. " VZ>" .. vec.vz) 
-				Spring.Echo("DX>"..dx .. " DZ>" .. dz) 
+				--Spring.Echo("X>"..vec.x .. " Y> ".. vec.y .. " Z>" .. vec.z) 
+				--Spring.Echo("VX>"..vec.vx .. " VY> ".. vec.vy .. " VZ>" .. vec.vz) 
+				--Spring.Echo("DX>"..dx .. " DZ>" .. dz) 
 				if math.abs(dy) > 0.5 and force < 1 then 
 					StopSpin(piece,x_axis,0.5)
 					StopSpin(piece,y_axis,0.5)

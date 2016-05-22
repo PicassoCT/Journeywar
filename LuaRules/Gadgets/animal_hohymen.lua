@@ -537,7 +537,7 @@
 			end
 		end
 		
-		echoT(AgentTable[unitid].Values)
+		--echoT(AgentTable[unitid].Values)
 	end
 
 	VaryFooAvatara={}

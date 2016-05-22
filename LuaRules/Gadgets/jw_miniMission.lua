@@ -11,7 +11,7 @@ function gadget:GetInfo()
 		license = "GNU GPL, v2 or later",
 		layer = 0,
 		version = 1,
-		enabled = modOptions.minimission 
+		enabled = modOptions.minimission ==true
 	}
 end
 
@@ -2167,9 +2167,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		if frame%frameValue == 0 then
 			--abort missions if you have a spawner AI active
 			if GG.AtLeastOneSpawner and GG.AtLeastOneSpawner == true then
-			return
+				return
 			end
-		
+			
 			--if not yet a mission - organize one
 			if boolMission and boolMission==true then
 				if MissionFunctionTable~= nil then					

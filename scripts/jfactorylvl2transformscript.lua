@@ -11,6 +11,8 @@ Pieces={}
 
 
 local ExcludeDefIDs={}
+ExcludeDefIDs[UnitDefNames["jvaryfoo"].id]=true
+ExcludeDefIDs[UnitDefNames["jvaryavatara"].id]=true
 ExcludeDefIDs[UnitDefNames["ccomender"].id]=true
 ExcludeDefIDs[UnitDefNames["jabyss"].id]=true
 ExcludeDefIDs[UnitDefNames["citadell"].id]=true

@@ -282,6 +282,7 @@ function widget:Initialize()
 		for k,element in pairs(activeElements) do
 			element:Hide()
 		end
+		activeElements={}
 	end
 	
 	function createAllButtons()
@@ -477,13 +478,13 @@ function widget:GameFrame(f)
 		--adapt the button to unit
 		if unitTypeButtonMap[ud.name] then
 			--generate the Gui Specific by unittype
-			Spring.Echo("Show typespeicific acitivty button")
+			--Spring.Echo("Show typespeicific acitivty button")
 			unitTypeButtonMap[ud.name]()		
 		elseif isUnitOnOffable(ud.name)== true then
-			Spring.Echo("Show dfault acitivty button")
+			--Spring.Echo("Show dfault acitivty button")
 			unitTypeButtonMap["default"]("default")
 		else
-			Spring.Echo("Hide all Buttons")
+			--Spring.Echo("Hide all Buttons")
 			--default no button
 			HideAllActiveElements()
 		end

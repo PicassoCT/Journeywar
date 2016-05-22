@@ -1,3 +1,11 @@
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+ include "lib_Animation.lua"
+
+include "lib_Build.lua" 
+
+
 local piecesTable={}
 center = piece"center"
 piecesTable[#piecesTable+1]={}
@@ -424,6 +432,15 @@ function script.StopMoving()
 	legs_down()
 end
 
+function script.Killed(recentDamage, maxHealth)
+	
+	Spring.DestroyUnit(factoryID,true,false)
+	GG.JFactorys[factoryID]=nil
+	suddenDeathjBuildCorpse(unitID,recentDamage)
+	return 0
+	----Spring.Echo ("He is dead, Jim!")
+end
+--Buildi
 
 function script.Create()
 	StartThread(moveFactory)

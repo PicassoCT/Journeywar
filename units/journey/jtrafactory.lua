@@ -48,7 +48,9 @@ corpse             = "bgcorpse",
 		workerTime = 0.54,
 	buildoptions = 
 	{
-	"jtigeggnogg","jskineggnogg","jghostdancer","jhivehoundmoma","jswiftspear","vort","jantart","jshroudshrike"--ShroudShrike,
+	"jtigeggnogg","jskineggnogg","jghostdancer",
+	"jhivehoundmoma","vort", "jantart",
+	"jupgradefactory1"
 	},
 
 
