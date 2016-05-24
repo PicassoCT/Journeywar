@@ -17,19 +17,15 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 
 		function gadget:GameFrame(frame)
-		if frame % 5== 0 and GG.Dialog then
-		local dialog=GG.Dialog
-		itterator=#dialog
-			while itterator > 0 do
-			dialog[itterator].frames=		dialog[itterator].frames-5
-			if dialog[itterator].frames < 1 then
-			dialog[itterator]=nil
+			if frame % 5== 0 and GG.Dialog then
+
+			itterator=#dialog
+				for k,v in pairs(_G.Dialog) do	
+					if v.frames <= 0 then 
+					GG.Dialog[k]= nil 
+					end
+				end
 			end
-			itterator=itterator-1
-			
-		
-		end
-		end
 	
 		end
 end

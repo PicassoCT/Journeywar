@@ -1519,8 +1519,13 @@ function vardump(value, depth, key)
 	end
 	
 	function echoT(T,boolAssertTable, name)
+		
 		lboolAssertTable=boolAssertTable or false
-		lname= T.name or name or ""
+		if not type(T)=="table" then Spring.Echo("Element is of Type:"..type(T)); return end
+		lname= name or "AnnonymTable"
+		if T.name then lname = T.name end
+		
+		
 		if lname then 
 			Spring.Echo("============================= "..lname .." ======================================")
 			Spring.Echo("|| ||")
@@ -2726,11 +2731,13 @@ function vardump(value, depth, key)
 	end
 	
 	-->prepares large speaches for the release to the world
-	function prep( Speach, Names,Limits, Alphas, DefaultSleepBylines)
+	function prepSpeach( Speach, Names,Limits, Alphas, DefaultSleepBylines)
 		--if only Speach 
-		if Speach and not Names and not Limits then return Speach end
-		if not Speach or not Names or not Limits then return nil end
-		Name 			=Names or "Dramatis Persona"
+		if Speach and not Names and not Limits then 
+	
+		return {Speach=Speach} end
+		
+		Name 	=Names or "Dramatis Persona"
 		Limit 	= Limits or 42
 		Alpha 	= Alphas or 0.9
 		DefaultSleepByline	= DefaultSleepBylines or 750
@@ -2744,13 +2751,21 @@ function vardump(value, depth, key)
 		assert(lineend and type(lineend)=="number","Limit not a number", Limit)
 		assert(size and type(size)=="number","Limit not a number", Limit)
 		
+		if string.len(Speach) < Limit then 
+	
+		subtable={line=Speach ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}	
+		retTable= {}
+		retTable[1]=subtable
+		return retTable
+		end
 		
-		
+
+		whitespace="%s"
 		while lineend < size do 
 			
-			lineend=string.find(Speach, "[^a-zA-Z0-9]", itterator+Limit)
+			lineend=string.find(Speach, whitespace, itterator+Limit) or string.len(Speach)
 			subString=string.sub(Speach,itterator,lineend)
-			
+			Spring.Echo(subString)
 			if subString then
 				T[#T+1]={line= subString ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}
 			else
@@ -2760,52 +2775,70 @@ function vardump(value, depth, key)
 			if not lineend then 
 				break
 			else
-				itterator=lineend+1
+				itterator=Limit+1
 			end
 			assert(lineend)
 			assert(size)
 		end
+
 		return T, true
 	end
 	
 	
 	--> Displays Text at UnitPos Thread
 	-->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
-	function say( TableOfLineAndT, redrawDelay, NameColour, TextColour,OptionString,UnitID)
-		if type(TableOfLineAndT) == "string" then Spring.Echo(TableOfLineAndT) return end
+	function say( LineNameTimeT, redrawDelay, NameColour, TextColour,OptionString,UnitID)
+		assert(LineNameTimeT)
+		
 		px,py,pz=0,0,0
 		if not UnitID or Spring.ValidUnitID(UnitID)==false then
+			echo("Im out 1")
 			return 
 		end
 		
-		local LineNameTimeT= TableOfLineAndT
+		if type(LineNameTimeT)=="string" then 
+		Tables={}
+		Tables[1]={name="speaker", line=LineNameTimeT,DelayByLine =500 , Alpha= 1.0}
+		LineNameTimeT=Tables		
+		end
 		
 		--catching the case that there is not direct Unit speaking
-		if type(UnitID)=="string" then 
+		if not UnitID or type(UnitID)=="string" then 
 			Spring.Echo(LineNameTimeT[1].name.. ": "..LineNameTimeT[i].line)
 			if not 	LineNameTimeT[2].line then return end
-			for i=2, #LineNameTimeT, 1 do
-				Spring.Echo(LineNameTimeT[i].line)		
-			end
+		for i=1, #LineNameTimeT, 1 do			
+		for j=1, #LineNameTimeT[i], 1 do	
+			echo(LineNameTimeT[i][j].line)			
+		end
+		end
+			echo("Im out 2")
 			return
 		end
 		
 		local spGetUnitPosition=Spring.GetUnitPosition	
+		if not GG.Dialog then GG.Dialog ={} end
+
 		
-		for i=1, #LineNameTimeT, 1 do
-			
-			spaceString=stringOfLength(" ",string.len(TableOfLineAndT[i].name))
+		GG.Dialog[UnitID]={}
+		for i=1, #LineNameTimeT, 1 do	
+				Spring.Echo("NumberOfLines"..#LineNameTimeT)
+		local subTableOfLines=LineNameTimeT[i]
+
+		
+			spaceString=stringOfLength(" ",string.len(subTableOfLines.name or 5))
 			--Sleep time till next line
 			px,py,pz=Spring.GetUnitPosition(UnitID)
-			if not GG.Dialog then GG.Dialog ={} end
-			GG.Dialog[#GG.Dialog+1]={frames=120, txt, x=px, y=py, z=pz}
-			Sleep( LineNameTimeT[i].DelayByLine)
+			GG.Dialog[UnitID][#GG.Dialog[UnitID]+1]={
+													frames=120,
+													line= spaceString..subTableOfLines.line,
+													x=px, 
+													y=240,
+													z=pz}	
+	
 		end
 		
-		for i= #GG.Dialog, 1, -1 do
-			if GG.Dialog[i].frames <=0 then table.remove(GG.Dialog,i) end	
-		end
 		
+			echo("Im out 3")
 	end
 	
 	--> creates a table of pieces with name

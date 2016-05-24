@@ -275,7 +275,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if TeamCentId then 
 			x,_,z=Spring.GetTeamStartPosition(TeamCentId)		
 			id=spCreateUnit("cmissambassador",x+45,0,z,2,TeamCentId)
-			
+			MissionFunctionTable[2]["TeamCentId"]=TeamCentId
 			return id
 		else
 			d=math.max(1,math.floor(math.random(1,table.getn(tables))))
@@ -300,7 +300,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		spPlaySound("sounds/Missions/Mission2/Solo-Flut1.ogg",0.8)
 		
 		while boolHeightmapPlain == false and attemptsToFindPlace < 22 do
-			--	T=prep("GAIA_SAVEMYVILLAGE")
+			--	T=prepSpeach("GAIA_SAVEMYVILLAGE")
 			y=spGetGroundHeight(x,z)
 			if y > -10 then
 				attemptsToFindPlace=attemptsToFindPlace+1
@@ -379,7 +379,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						return idTable
 					end
 				else
-					--	T=prep("Test23")
+					--	T=prepSpeach("Test23")
 					powToo=powToo+100
 					base=base+0.1
 					x=math.ceil(math.random(x-powToo,x+powToo)*base)%Game.mapSizeX
@@ -540,7 +540,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 0 and frame-MissionFunctionTable[2][2] > 500 then
-				T=prep(string1, Name,charPerLine, Alpha, DefaultSleepByline)
+				T=prepSpeach(string1, Name,charPerLine, Alpha, DefaultSleepByline)
 				say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_1.ogg",1)
 				
@@ -553,7 +553,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 1 and frame-MissionFunctionTable[2][2] > 1300 then
-				T=prep(string2, Name,charPerLine, Alpha, DefaultSleepByline)
+				T=prepSpeach(string2, Name,charPerLine, Alpha, DefaultSleepByline)
 				say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_2.ogg",1)
 				MissionFunctionTable[2][2]=frame
@@ -564,7 +564,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 2 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true then
-				T=prep("Unusual, in nearly all contact gametheory, the not-Knowing party intercepts the intruders long before the weakspot. Mr.Chieftain, i presume- and thats a Arrowr. ", Name,charPerLine, Alpha, DefaultSleepByline)
+				T=prepSpeach("Unusual, in nearly all contact gametheory, the not-Knowing party intercepts the intruders long before the weakspot. Mr.Chieftain, i presume- and thats a Arrowr. ", Name,charPerLine, Alpha, DefaultSleepByline)
 				say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/Mission2/Miss2_3.ogg",1)
 				
@@ -596,7 +596,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 4 and frame-MissionFunctionTable[2][2] > 800 then
-				T=prep("Administrator, im back. Met some of your men, at the memoryclinic, those who made it out of there bodys intime-"..
+				T=prepSpeach("Administrator, im back. Met some of your men, at the memoryclinic, those who made it out of there bodys intime-"..
 				"I sold the exp to some PervHurts, took a sabbatical year off, visited some partys, learned the natives language, got divorced, whored it up and wrote a book about you as a historic person."..
 				"Got a new body forged, femalien, this time, now look at this wingcolours -oh, right you cant see it. "..
 				"The implants in your head will overlay it with your own species- less xenophobia that way. We all get along.", Name,charPerLine, Alpha, DefaultSleepByline)
@@ -611,7 +611,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 4 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true then
-				T=prep("Might as well let you in on ancient news.The Natives are not looplocked, means they do not engage in the usual circle"..
+				T=prepSpeach("Might as well let you in on ancient news.The Natives are not looplocked, means they do not engage in the usual circle"..
 				"of overpopulation and tribal warfare plus territorial behaviour. "..
 				"There unique physique spared them, they have genetic memorys and eggs,	thousands of them, burried everywhere on there territory, ready to hatch on a pheromonic whim. "..
 				"Hello beautiful,im a little present from the tribe with the metall-tent!", Name,charPerLine, Alpha, DefaultSleepByline)
@@ -625,7 +625,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 5 and frame-MissionFunctionTable[2][2] > 1000 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true then
-				T=prep("Relations soured a little, im getting gang raped to death by the whole tribe, for speaking up to the chieftain."..
+				T=prepSpeach("Relations soured a little, im getting raped to death by the whole tribe, for speaking up to the chieftain."..
 				"Turns out, the female of the species, have devolved to little more then reproductive diplomacy automatons- and they dont share power to foreigners. I spare you the details .."..
 				"harder,faster,makes us wronger,more then ever, power under, our work is never over <Exitus>", Name,charPerLine, Alpha, DefaultSleepByline)
 				say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
@@ -651,7 +651,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			if MissionFunctionTable[2][3]== 6 and frame-MissionFunctionTable[2][2] > 1000 then
 				Spring.SetUnitNoSelect(MissionFunctionTable[2][10],false)
 				Spring.SetUnitNoDraw(MissionFunctionTable[2][10],false)
-				T=prep(" Hi, im Koma Icnivad the third, my filthy rich grandfather retired - moneywise mission "
+				T=prepSpeach(" Hi, im Koma Icnivad the third, my filthy rich grandfather retired - moneywise mission "
 				.."time is eight times city-dime. ".."I m here to pick up the mission were destiny dropped him. Would you kindly, get me too the freakshow, Administrator?", 
 				Name,charPerLine, Alpha, DefaultSleepByline)
 				say(T,redrawDelay , NameColour, TextColour,OptionString,UnitID)
@@ -667,7 +667,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 7 and frame-MissionFunctionTable[2][2] > 2500 and isAmbassadorNearTribe(MissionFunctionTable[2][10],MissionFunctionTable[2][11][1],250)==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_8.ogg",1)
-				T=prep("Oh, Citynews: All hail the new Centrail, the old datadragon got bored by slowlifeinfo drippin and peeked into his predecessors data-vaults."..
+				T=prepSpeach("Oh, Citynews: All hail the new Centrail, the old datadragon got bored by slowlifeinfo drippin and peeked into his predecessors data-vaults."..
 				"New one is rumored to originate from a sandwichmaker, that had a memory leak which	bitflipped to sentience."..
 				"Suprising little chaos, confusion and only 30 mk death when some cityparts crashed, and less suprising- no changes in the mission.	"..
 				"(Arriving) .", Name,charPerLine, Alpha, DefaultSleepByline)
@@ -686,7 +686,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				spPlaySound("sounds/Missions/Mission2/potLash.ogg",0.9)	
 				spPlaySound("sounds/Missions/Mission2/Miss2_9.ogg",1)
-				T=prep("Administrator, it seems they wanna hold a feast to honor our repeated visit. "..
+				T=prepSpeach("Administrator, it seems they wanna hold a feast to honor our repeated visit. "..
 				"Customs demands that the chief outshines everyone in destroying his wealthy and valued posessions."..
 				"Quick! Grab 30 infantryman, march them in front of the village, "..
 				"and blow there suicide implants. Lets see you top that, great Spender!", Name,charPerLine, Alpha, DefaultSleepByline)
@@ -703,7 +703,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 10 and thirthyInfantryCorpses(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_10.ogg",1)
-				T=prep("Party Up in here! More rotten Dokami for me! Shame you got duty Administrator, they know how to squeeze Live for the juice! "..
+				T=prepSpeach("Party Up in here! More rotten Dokami for me! Shame you got duty Administrator, they know how to squeeze Live for the juice! "..
 				"Oh, we are the silent judgy one, are we!"..
 				"I know my prehistory Administrator, your artillery drove over a dike of bodys on Tabula 4 - noone needs to apologize!"..
 				"Cultural Superiority? Dont make me laugh, these guys have the memory of a whole civilisation for 300.000 years. "..
@@ -722,7 +722,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 11 and twoContrucks(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_11.ogg",1)
-				T=prep("Little sacrivices, we all make them Administrator, for greater Gains."..
+				T=prepSpeach("Little sacrivices, we all make them Administrator, for greater Gains."..
 				"Gold, Gems smash it up, it is? Mine, is longer then yours again. "..
 				"Administrator, build one luxery appartment in front of the city."..
 				"Blow it up."..
@@ -740,7 +740,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if boolStillAlive==true then
 			if MissionFunctionTable[2][3]== 12 and oneLuxBuildBlow(MissionFunctionTable[2][10],frame-MissionFunctionTable[2][2])==true then
 				spPlaySound("sounds/Missions/Mission2/Miss2_12.ogg",1)
-				T=prep("- raise a toast to Chieftain OoohmyHeard, who special circumstances took from us before his time."..
+				T=prepSpeach("- raise a toast to Chieftain OoohmyHeard, who special circumstances took from us before his time."..
 				"Time to beginn cultural relations in my newly aquired harem."..
 				"The Reward should be spilling into your security Account this very moment.", Name,charPerLine, Alpha, DefaultSleepByline)
 				
@@ -763,7 +763,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			spPlaySound("sounds/Missions/Mission2/genocide.ogg",0.9)
 			
 			spPlaySound("sounds/Missions/Mission2/CitizenCunt.ogg",1)
-			T=prep("Centrail: You know Administrator, normally a fullcitizen screwup like you, would ends in one of those little orange capsules at the "..
+			T=prepSpeach("Centrail: You know Administrator, normally a fullcitizen screwup like you, would ends in one of those little orange capsules at the "..
 			"foundations of my citadells."..
 			"But this guy is good, excellent to be honest, even i had him not figured out - after a spree of 19 worlds and three civil interdimensional unrests and 9 Overpopulation incidents."..
 			"	All the efficient, corrupt - but mostly loyal servant, disguised as family buisness."..
@@ -774,6 +774,12 @@ if (gadgetHandler:IsSyncedCode()) then
 			"Lay the village low, gamasoak the terrain - and do something against the smell.", Name,charPerLine, Alpha, DefaultSleepByline)
 			
 			say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
+			x,y,z=Spring.GetUnitPosition(MissionFunctionTable[2][11][1])
+			if x and 	MissionFunctionTable[2]["TeamCentId"] then 
+				teamid= Spring.GetUnitTeam()
+				Spring.CreateUnit("gworldengine",x,y,z,2,	MissionFunctionTable[2]["TeamCentId"])
+			end
+			
 			
 			enemy=Spring.GetUnitNearestEnemy(MissionFunctionTable[2][10])
 			teamID=spGetUnitTeam(enemy)
@@ -812,7 +818,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			if Spring.GetUnitIsDead(MissionFunctionTable[2][10])==true then
 				spPlaySound("sounds/Missions/Mission2/genocidere.ogg",1)
-				T=prep("-there was a festival in my homesector, the Brightday. They would pick all new inventions, and burn them with there Creators, at the foot of the citadell."
+				T=prepSpeach("-there was a festival in my homesector, the Brightday. They would pick all new inventions, and burn them with there Creators, at the foot of the citadell."
 				.."Nobody stepped in to stop them, and nobody steped up to stop me when i pined them all on there own spear made from cowardice and stupidity."
 				.."They stormed the citadell, and threw the Administrator from the highest window they could find. His scream is said to have lasted all the way down."
 				.."If you dont dare to stand for the best of men, they wont stop the beast of men."
@@ -837,7 +843,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			if boolVillagePeopleDead==true and Spring.GetUnitIsDead(MissionFunctionTable[2][10])==false and frame-MissionFunctionTable[2][2] < 19000 then
 				spPlaySound("sounds/Missions/Mission2/historyHappening.ogg.ogg",1)
-				T=prep( "-Confederated Press: Administrator a Statement regarding the Allegations? "..
+				T=prepSpeach( "-Confederated Press: Administrator a Statement regarding the Allegations? "..
 				"-Reporting on a Warcrime in Progress- of a Administrator who joined the Universal Union. Unspeakable Attrocities.."..
 				"-sentenced to 25 years of citytime, to be spend in Slowtime, as a perpetual Reminder-"..
 				"-is it a still ongoing debate among historians, that the battle of Icnivad-Village, was not started by Natives, named Koma-"..
@@ -1347,7 +1353,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			"One last thing. Know that the sisterhood of the Crystallforrest is traversing the landscape,terraforming, rebuilding destroyed settlements."..
 			"If- they see you going 'Yes-we-Khan' on some villagers, they will rile up the whole planet- drag you before a interdimensional-court."..
 			" So no wittnesses.. not even if they have a cute smile or a nice ass. "
-			T=prep(strings, Name,charPerLine, Alpha, DefaultSleepByline)
+			T=prepSpeach(strings, Name,charPerLine, Alpha, DefaultSleepByline)
 			say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 			MissionFunctionTable[4][3] =MissionFunctionTable[4][3] +1
@@ -1426,8 +1432,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	Mission4Table={}
-	ThatsAHorribleThingToSay={ "Mission: Cauterize, Sterilize, Desinfect!",
-		"You an run, but you can not hide. Bangarang, motherfucker!",
+	ThatsAHorribleThingToSay={ 
+		"Mission: Cauterize, Sterilize, Desinfect!",
+		"You can run, but you can not hide. Bangarang, motherfucker!",
 		"Democracy and atrocities dont exlude each other. Anyone of a diffrent opinion and still having a hand please raise it..",	
 		"Nothing against stress like the sacking of a city - though the sight aint pretty-",
 		"Article 4, Paragraph 5 of the Centrail War Convention explicitly forbids.. law from having the last word!",
@@ -1457,12 +1464,14 @@ if (gadgetHandler:IsSyncedCode()) then
 		"You know, i m thinking about training one of those peasants, to do the looting for me, and retire.",
 		"5 out of 6 persons, enjoy a good gangbang.",
 		"Look at your horse, your horse was amazing!",
-		"Golden Teeths, the seem like a good investment for hard times.. Then the world facefists you.",
-		"One of those days, were the most popular maiden in town, becomes the town in most popular maiden.",
+		"Golden Teeths, the seem like a good investment for hard times.. Then the hard times facefist you, so you chew on the hard times.",
+		"One of those days, were the most popular maiden in town, becomes the town in the most popular maiden.",
 		"Okay, those of you who have deadly diseases, and are not fit for organ donation, step forward..",
 		"Makes one wish for the invention called radio, doesent it?",
 		"Two hands, three holes, what a dilema.",
 		"Dont wanna say anything bad, but i think you brought this on yourself, like all foreigners in tragedy's do.",
+		"I know, they  promised you, if you good faithfull lives, you would go to heaven. \n"..
+		"And guess what- he bought himself a ticket out with your donations.",
 		
 	}
 	
@@ -1482,7 +1491,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			--Thats a horrible Thing to say
 			if math.random(0,12)==6 then
-				T=prep(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))], Name,charPerLine, Alpha, DefaultSleepByline)
+				T=prepSpeach(ThatsAHorribleThingToSay[math.floor(math.random(1,#ThatsAHorribleThingToSay))], Name,charPerLine, Alpha, DefaultSleepByline)
 				say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 				spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 			end
@@ -1715,7 +1724,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			for i=1, table.getn(finStatEng), 1 do
 				if finStatEng[i].boolActive then --filters out the currentActive state
-					--	T=prep("JW_MiniMIssion::StateMachine_State ->"..i)
+					--	T=prepSpeach("JW_MiniMIssion::StateMachine_State ->"..i)
 					
 					--S-tate Gorden doesent exist--
 					if finStatEng[i].state =="GordonNo" then
@@ -1762,7 +1771,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							if dist < 150 then
 								--message the freeman
 								dic=math.random(1,#messages)
-								T=prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
+								T=prepSpeach(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
 								say(T,redrawDelay, NameColour, TextColour,OptionString,MissionFunctionTable[5][6])
 								Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
 								
@@ -1810,7 +1819,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			"Entertain me, "..
 			"or i shall open the pandering boxes, to see for myself,".. 
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
-			T=prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
+			T=prepSpeach(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
 			say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 			return true
@@ -1874,7 +1883,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if MissionFunctionTable[6][3] == 0 and mT > 14200 then
 			Briefing=""
-			T=prep(Briefing, Name,charPerLine, Alpha, DefaultSleepByline)
+			T=prepSpeach(Briefing, Name,charPerLine, Alpha, DefaultSleepByline)
 			say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 			spawnResistanceOutposts()
@@ -1902,7 +1911,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			for i=1, table.getn(finStatEng), 1 do
 				if finStatEng[i].boolActive then --filters out the currentActive state
-					--	T=prep("JW_MiniMIssion::StateMachine_State ->"..i)
+					--	T=prepSpeach("JW_MiniMIssion::StateMachine_State ->"..i)
 					
 					--S-tate Gorden doesent exist--
 					if finStatEng[i].state =="GordonNo" then
@@ -1949,7 +1958,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							if dist < 150 then
 								--message the freeman
 								dic=math.random(1,#messages)
-								T=prep(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
+								T=prepSpeach(messages[dic].text, Name,charPerLine, Alpha, DefaultSleepByline)
 								say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 								Spring.PlaySoundFile(messages[math.random(1,4)].sound,0.75)
 								
@@ -1997,7 +2006,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			"Entertain me, "..
 			"or i shall open the pandering boxes, to see for myself,".. 
 			"what put me on the shelf and to be a torturing unknown for my succcesor. And you and the civilisaiton will perish, like the last time,"
-			T=prep(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
+			T=prepSpeach(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
 			say(T,redrawDelay, NameColour, TextColour,OptionString,UnitID)
 			spPlaySound("sounds/Missions/missionBriefing.ogg",1)
 			return true

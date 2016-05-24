@@ -15,6 +15,7 @@ Quader01=piece"Quader01"
 function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(emitSFX)
+	StartThread(saySay)
 end
 
 function script.Killed(recentDamage,_)
@@ -35,6 +36,16 @@ function testTurnInTime()
 		Sleep(3000)
 	end
 	
+end
+
+function saySay()
+while true do
+	Sleep(1000)
+		T=prepSpeach("Test 1 2 3     ", "Honk",64, 0.5, 500)
+	
+		say(T,10, NameColour, {r=1.0,g=1.0, b=1.0},OptionString,unitID)
+
+	end
 end
 
 function emitSFX()
