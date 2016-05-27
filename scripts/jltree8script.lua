@@ -15,7 +15,7 @@
 	center=piece"center"
 	
 	function script.Create()
-	reseT(flats)
+	resetT(flats)
 	dice=math.random(0,4)
 	
 	if dice==0 then

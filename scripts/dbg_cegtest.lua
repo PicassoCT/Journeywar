@@ -40,10 +40,10 @@ end
 
 function saySay()
 while true do
-	Sleep(1000)
+	Sleep(10000)
 		T=prepSpeach("Test 1 2 3     ", "Honk",64, 0.5, 500)
 	
-		say(T,10, NameColour, {r=1.0,g=1.0, b=1.0},OptionString,unitID)
+		say(T,5000, NameColour, {r=1.0,g=1.0, b=1.0},OptionString,unitID)
 
 	end
 end

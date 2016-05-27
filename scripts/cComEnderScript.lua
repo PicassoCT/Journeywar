@@ -1852,7 +1852,7 @@ function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
 	
 	
-	reseT(piecesTable)
+	resetT(piecesTable)
 	hideT(piecesTable)
 	
 	showT(basics)

@@ -1,8 +1,8 @@
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 
 boolWaitForGLGo=false --is the trigger for the SuperSizeGadget once it brought the unitUpToScale
@@ -75,20 +75,20 @@ RotTable[#RotTable]= Rot41
 
 SunTable={}
 for i=1,5, 1 do
-name="Sun0"..i
-SunTable[i]=piece(name)
+	name="Sun0"..i
+	SunTable[i]=piece(name)
 end
 
 RedSunTable={}
 for i=1,5, 1 do
-name="RedSun0"..i
-RedSunTable[i]=piece(name)
+	name="RedSun0"..i
+	RedSunTable[i]=piece(name)
 end
 
 PlanetTable={}
 for i=1,21, 1 do
-name="Planet0"..i
-PlanetTable[i]=piece(name)
+	name="Planet0"..i
+	PlanetTable[i]=piece(name)
 end
 
 piecesTable={}
@@ -239,121 +239,121 @@ cx,cy,cz=Spring.GetUnitBasePosition(unitID)
 
 GrowthStartTime=Spring.GetGameFrame()
 EndTimes=12000
-		
+
 function emitCegAtPiece(cegname, piece)
-CurrentFrame=GrowthStartTime-(Spring.GetGameFrame())
-Time=math.ceil((CurrentFrame/30)*1000)
-Factor=0.043633194444444444444444444444444*Time
-px,py,pz=spGetUnitPiecePosDir(unitID,piece)
-vx,vy,vz=Factor*(px-cx),Factor*(py-cy),Factor*(pz-cz)
-spSpawnCEG(cegname,vx+cx,vy+cy,vz+cz,0,1,0,50,0)
+	CurrentFrame=GrowthStartTime-(Spring.GetGameFrame())
+	Time=math.ceil((CurrentFrame/30)*1000)
+	Factor=0.043633194444444444444444444444444*Time
+	px,py,pz=spGetUnitPiecePosDir(unitID,piece)
+	vx,vy,vz=Factor*(px-cx),Factor*(py-cy),Factor*(pz-cz)
+	spSpawnCEG(cegname,vx+cx,vy+cy,vz+cz,0,1,0,50,0)
 end
 
 function planetarium(timeInS)
-Hide(Emitor)
-
-for i=1,5, 1 do
-val=math.random(-21,21)
-if math.random(0,1)==1 then Spin(SunTable[i],y_axis,math.rad(val),0) else Spin(SunTable[i],y_axis,math.rad(val*-1),0) end
-if math.random(0,1)==1 then Spin(SunTable[i],x_axis,math.rad(val/10),0) else Spin(SunTable[i],z_axis,math.rad(val*-1/10),0) end
-end
-
-
-for i=1,5, 1 do
-Hide(RedSunTable[i])
-val=math.random(-21,21)
-if math.random(0,1)==1 then Spin(RedSunTable[i],y_axis,math.rad(val),0) else Spin(RedSunTable[i],y_axis,math.rad(val*-1),0) end
-if math.random(0,1)==1 then Spin(RedSunTable[i],x_axis,math.rad(val/10),0) else Spin(RedSunTable[i],z_axis,math.rad(val*-1/10),0) end
-end
-
-for i=1,21, 1 do
-val=math.random(-21,21)
-if math.random(0,1)==1 then Spin(PlanetTable[i],y_axis,math.rad(val),0) else Spin(PlanetTable[i],y_axis,math.rad(val*-1),0) end
-end
-
-for i=1,#RotTable, 1 do
-val=math.random(-21,21)
-if math.random(0,1)==1 then Spin(RotTable[i],y_axis,math.rad(val),0) else Spin(RotTable[i],y_axis,math.rad(val*-1),0) end
-if math.random(0,4)==2 then Spin(RotTable[i],x_axis,math.rad(val/10),0) end
-end
-
-for i=1,5, 1 do
-val=math.random(-21,21)
-if math.random(0,1)==1 then Spin(SunTable[i],y_axis,math.rad(val),0) else Spin(SunTable[i],y_axis,math.rad(val*-1),0) end
-if math.random(0,1)==1 then Spin(SunTable[i],x_axis,math.rad(val/10),0) else Spin(SunTable[i],z_axis,math.rad(val*-1/10),0) end
-end
-
+	Hide(Emitor)
+	
 	for i=1,5, 1 do
-	valx=betweenVals(12,17)
-	valz=betweenVals(12,17)
-	valy=math.random(15,17)
-
-	Move(SunTable[i],y_axis,-10,0)
-
-	biggest=math.max(math.max(math.abs(valx),math.abs(valy)),math.abs(valz))
-	speed=biggest/timeInS
-	Move(SunTable[i],x_axis,valx,speed,true)
-	Move(SunTable[i],z_axis,valz,speed,true)
-	Move(SunTable[i],y_axis,valy,speed,true)
-
+		val=math.random(-21,21)
+		if math.random(0,1)==1 then Spin(SunTable[i],y_axis,math.rad(val),0) else Spin(SunTable[i],y_axis,math.rad(val*-1),0) end
+		if math.random(0,1)==1 then Spin(SunTable[i],x_axis,math.rad(val/10),0) else Spin(SunTable[i],z_axis,math.rad(val*-1/10),0) end
 	end
-
+	
+	
 	for i=1,5, 1 do
-	WaitForMove(SunTable[i],x_axis)
-	WaitForMove(SunTable[i],y_axis)
-	WaitForMove(SunTable[i],z_axis)
+		Hide(RedSunTable[i])
+		val=math.random(-21,21)
+		if math.random(0,1)==1 then Spin(RedSunTable[i],y_axis,math.rad(val),0) else Spin(RedSunTable[i],y_axis,math.rad(val*-1),0) end
+		if math.random(0,1)==1 then Spin(RedSunTable[i],x_axis,math.rad(val/10),0) else Spin(RedSunTable[i],z_axis,math.rad(val*-1/10),0) end
 	end
-
+	
+	for i=1,21, 1 do
+		val=math.random(-21,21)
+		if math.random(0,1)==1 then Spin(PlanetTable[i],y_axis,math.rad(val),0) else Spin(PlanetTable[i],y_axis,math.rad(val*-1),0) end
+	end
+	
+	for i=1,#RotTable, 1 do
+		val=math.random(-21,21)
+		if math.random(0,1)==1 then Spin(RotTable[i],y_axis,math.rad(val),0) else Spin(RotTable[i],y_axis,math.rad(val*-1),0) end
+		if math.random(0,4)==2 then Spin(RotTable[i],x_axis,math.rad(val/10),0) end
+	end
+	
 	for i=1,5, 1 do
-	Move(SunTable[i],x_axis,0,0.0001)
-	Move(SunTable[i],z_axis,0,0.0001)
-	Move(SunTable[i],y_axis,0,0.0001)
+		val=math.random(-21,21)
+		if math.random(0,1)==1 then Spin(SunTable[i],y_axis,math.rad(val),0) else Spin(SunTable[i],y_axis,math.rad(val*-1),0) end
+		if math.random(0,1)==1 then Spin(SunTable[i],x_axis,math.rad(val/10),0) else Spin(SunTable[i],z_axis,math.rad(val*-1/10),0) end
 	end
-
-
+	
+	for i=1,5, 1 do
+		valx=betweenVals(12,17)
+		valz=betweenVals(12,17)
+		valy=math.random(15,17)
+		
+		Move(SunTable[i],y_axis,-10,0)
+		
+		biggest=math.max(math.max(math.abs(valx),math.abs(valy)),math.abs(valz))
+		speed=biggest/timeInS
+		Move(SunTable[i],x_axis,valx,speed,true)
+		Move(SunTable[i],z_axis,valz,speed,true)
+		Move(SunTable[i],y_axis,valy,speed,true)
+		
+	end
+	
+	for i=1,5, 1 do
+		WaitForMove(SunTable[i],x_axis)
+		WaitForMove(SunTable[i],y_axis)
+		WaitForMove(SunTable[i],z_axis)
+	end
+	
+	for i=1,5, 1 do
+		Move(SunTable[i],x_axis,0,0.0001)
+		Move(SunTable[i],z_axis,0,0.0001)
+		Move(SunTable[i],y_axis,0,0.0001)
+	end
+	
+	
 end
 
 function betweenVals(Smaller,Bigger)
-if math.random(0,1)==1 then return math.random(Smaller,Bigger) else return math.random(math.min(Smaller*-1,Bigger*-1),Bigger*-1) end
+	if math.random(0,1)==1 then return math.random(Smaller,Bigger) else return math.random(math.min(Smaller*-1,Bigger*-1),Bigger*-1) end
 end
 
 killThemAllTable={}
 killThemAllCounter=1
 
 function catchThem()
-Sleep(2000)
-_,limit,_=Spring.GetUnitPiecePosDir(unitID,Emitor)
-x,y,z=Spring.GetUnitPosition(unitID)
-killThemAllTable=Spring.GetUnitsInCylinder(x,z,125)
+	Sleep(2000)
+	_,limit,_=Spring.GetUnitPiecePosDir(unitID,Emitor)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	killThemAllTable=Spring.GetUnitsInCylinder(x,z,125)
 	if killThemAllTable then
-	table.remove(killThemAllTable,unitID)
+		table.remove(killThemAllTable,unitID)
 		if killThemAllTable then
-			for i=1,#killThemAllTable,1  do
-			StartThread(risingPosition,killThemAllTable[i],limit)
+			for i=1,#killThemAllTable,1 do
+				StartThread(risingPosition,killThemAllTable[i],limit)
 			end
-		killThemAllCounter=table.getn(killThemAllTable)
+			killThemAllCounter=table.getn(killThemAllTable)
 		end
 	else
-	killThemAllCounter=0
+		killThemAllCounter=0
 	end
-
+	
 end
 
 function spawn(totalTime)
-
-
-
-Hide(halfSphere)
-Hide(flipSphere)
-Show(fullSphere)
-StartThread(catchThem)
--- will be sucked in and then dissolved
-Spin(halfSphere,y_axis,math.rad(42),0.6)
-val=math.random(-4.2,4.2)
+	
+	
+	
+	Hide(halfSphere)
+	Hide(flipSphere)
+	Show(fullSphere)
+	StartThread(catchThem)
+	-- will be sucked in and then dissolved
+	Spin(halfSphere,y_axis,math.rad(42),0.6)
+	val=math.random(-4.2,4.2)
 	if math.random(0,1) then
-	Spin(halfSphere,z_axis,math.rad(val),0)
+		Spin(halfSphere,z_axis,math.rad(val),0)
 	else
-	Spin(halfSphere,x_axis,math.rad(val),0)
+		Spin(halfSphere,x_axis,math.rad(val),0)
 	end
 	Sleep(totalTime/6)
 	Show(flipSphere)
@@ -361,183 +361,181 @@ val=math.random(-4.2,4.2)
 	Sleep(totalTime/2)
 	Hide(flipSphere)
 	Show(halfSphere)
-	Sleep(totalTime/3)
-		 hideT(piecesTable)
-		 hideT(RedSunTable)
-		 hideT(SunTable)
-		 hideT(PlanetTable)
-
-
+	Sleep(totalTime*4)
+	hideT(piecesTable)
+	hideT(RedSunTable)
+	hideT(SunTable)
+	hideT(PlanetTable)
+	
+	
 end
 
 function risingPosition(anyID,limit)
-if anyID== unitID then return end
-local spSpawnCEG=Spring.SpawnCEG
-local spGetUnitPos=Spring.GetUnitPosition
-local spSetRotationOffset=Spring.MoveCtrl.SetRotationOffset
-local spSetPosition= Spring.MoveCtrl.SetPosition
-
-Spring.MoveCtrl.Enable(anyID,true)
-Spring.SetUnitNeutral(anyID,true)
-Spring.SetUnitNoSelect(anyID,true)
---slowly Move It Up
---Make it spin around
-local ax=0
-local ay=0
-local az=0
+	if anyID== unitID then return end
+	local spSpawnCEG=Spring.SpawnCEG
+	local spGetUnitPos=Spring.GetUnitPosition
+	local spSetRotationOffset=Spring.MoveCtrl.SetRotationOffset
+	local spSetPosition= Spring.MoveCtrl.SetPosition
+	
+	Spring.MoveCtrl.Enable(anyID,true)
+	Spring.SetUnitNeutral(anyID,true)
+	Spring.SetUnitNoSelect(anyID,true)
+	--slowly Move It Up
+	--Make it spin around
+	local ax=0
+	local ay=0
+	local az=0
 	ax,ay,az=spGetUnitPos(anyID)
 	while( ay < limit) do
-	val=math.random(2,6)	
-	ax,ay,az=spGetUnitPos(anyID)
-	spSetPosition(anyID,ax,ay+val,az)
-	spSetRotationOffset(anyID,0,0.01,0)
-	spSpawnCEG("blackspheredissolvefx",ax,ay+val,az,0,1,0,50,0)--blackbublesBody, white rising particles
-	Sleep(70)
+		val=math.random(2,6)	
+		ax,ay,az=spGetUnitPos(anyID)
+		spSetPosition(anyID,ax,ay+val,az)
+		spSetRotationOffset(anyID,0,0.01,0)
+		spSpawnCEG("blackspheredissolvefx",ax,ay+val,az,0,1,0,50,0)--blackbublesBody, white rising particles
+		Sleep(70)
 	end
-Spring.DestroyUnit(anyID,false,true)
-for i=1,12, 1 do
-spSpawnCEG("blackspheredissolvefx",ax,ay+(i*2),az,0,1,0,50,0)--blackbublesBody, white rising particles
-Sleep(i*10)
-end
-killThemAllCounter=killThemAllCounter-1
---
+	Spring.DestroyUnit(anyID,false,true)
+	for i=1,12, 1 do
+		spSpawnCEG("blackspheredissolvefx",ax,ay+(i*2),az,0,1,0,50,0)--blackbublesBody, white rising particles
+		Sleep(i*10)
+	end
+	killThemAllCounter=killThemAllCounter-1
+	--
 end
 
 
 function emitSFX(totaltime)
---BigBang
+	--BigBang
 	EmitSfx(Emitor,1027)
 	Sleep(totaltime/4)
 	for i=1,4, 1 do
-	EmitSfx(Emitor,1024)
+		EmitSfx(Emitor,1024)
 	end
 	StartThread(sunSet,totaltime/2)
 	Sleep(totaltime/4)
 	for i=1,7,1 do
-	val=math.random(0,360)
-	Turn(Emitor,y_axis,math.rad(val),0,true)
-	EmitSfx(Emitor,1025)	
+		val=math.random(0,360)
+		Turn(Emitor,y_axis,math.rad(val),0,true)
+		EmitSfx(Emitor,1025)	
 	end	
 	Sleep(totaltime/4)
-
-		for i=1, #SunTable, 1 do
+	
+	for i=1, #SunTable, 1 do
 		Hide(SunTable[i])
-		end
-		for i=1, #SunTable, 1 do
+	end
+	for i=1, #SunTable, 1 do
 		Show(RedSunTable[i])
-		end
-			Sleep(totaltime/4)
-			
+	end
+	Sleep(totaltime/4)
+	
 	
 	
 end
 
 function sunSet(time)
-local x=time
+	local x=time
 	while x > 0 do
 		for i=1, #SunTable, 1 do
-		EmitSfx(SunTable[i],1026)
-		EmitSfx(RedSunTable[i],1026)
+			EmitSfx(SunTable[i],1026)
+			EmitSfx(RedSunTable[i],1026)
 		end
-	x=x-5
-	Sleep(5)
+		x=x-5
+		Sleep(5)
 	end
-
-
+	
+	
 end
 
 function preparhalfSphereTable(size)
-center=math.ceil(size/2)
-T={}
+	center=math.ceil(size/2)
+	T={}
 	for o=1,size,1 do
-	T[o]={}
+		T[o]={}
 		for i=1,size,1 do
-		--default
-		T[o][i]=0
-		distCenter=math.sqrt((center-i)^2+(center-o)^2)	
+			--default
+			T[o][i]=0
+			distCenter=math.sqrt((center-i)^2+(center-o)^2)	
 			if distCenter < center-1 then
-			T[o][i]=(center-distCenter)*-8
+				T[o][i]=(center-distCenter)*-8
 			end
 		end
 	end
 	
-return T	
+	return T	
 end
 
 function script.Create()
-x,y,z=Spring.GetUnitPosition(unitID)
-Spring.MoveCtrl.Enable(unitID,true)
-Spring.MoveCtrl.SetPosition(unitID,x,y+25,z)
-Spring.SetUnitAlwaysVisible(unitID,true)
-Spring.SetUnitNoSelect(unitID,true)
-Spring.SetUnitBlocking(unitID,false)
-
-
-
-teamID=Spring.GetUnitTeam(unitID)
--- Show halfSphere - Dig Hole for halfSphere
-
---<TERRAFORM>
- --<DIGHOLE>										
-size=30
-if GG.DynDefMap == nil then GG.DynDefMap={} end
-if GG.DynRefMap == nil then GG.DynRefMap={} end
-GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size)
-GG.boolForceLandLordUpdate=true
-
---tempTable=preparhalfSphereTable(size)
---printOUT(tempTable)
-GG.UnitsToSpawn:PushCreateUnit("gdecbigbangscar",x,0,z,0,teamID)
---</DIGHOLE>
-
---</TERRAFORM>
-StartThread(emitSFX,12000)
-StartThread(spawn,12000)
-StartThread(planetarium,6)
-StartThread(sunEmitSFx,12000)
-
-
-
-
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.MoveCtrl.Enable(unitID,true)
+	Spring.MoveCtrl.SetPosition(unitID,x,y+25,z)
+	Spring.SetUnitAlwaysVisible(unitID,true)
+	Spring.SetUnitNoSelect(unitID,true)
+	Spring.SetUnitBlocking(unitID,false)
+	
+	
+	
+	teamID=Spring.GetUnitTeam(unitID)
+	-- Show halfSphere - Dig Hole for halfSphere
+	
+	--<TERRAFORM>
+	--<DIGHOLE>										
+	size=30
+	if GG.DynDefMap == nil then GG.DynDefMap={} end
+	if GG.DynRefMap == nil then GG.DynRefMap={} end
+	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
+	GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size)
+	GG.boolForceLandLordUpdate=true
+	
+	--tempTable=preparhalfSphereTable(size)
+	--printOUT(tempTable)
+	GG.UnitsToSpawn:PushCreateUnit("gdecbigbangscar",x,0,z,0,teamID)
+	--</DIGHOLE>
+	
+	--</TERRAFORM>
+	StartThread(emitSFX,12000)
+	StartThread(spawn,12000)
+	StartThread(planetarium,6)
+	StartThread(sunEmitSFx,12000)
+	
+	
+	
+	
 end
 
 function sunEmitSFx()
 	while true do
-	Sleep(50)
-			for i=1,#SunTable, 1 do
+		Sleep(50)
+		for i=1,#SunTable, 1 do
 			emitCegAtPiece("sunfx",SunTable[i])
-			end
+		end
 	end
-
+	
 end
 
 function particleTestThread(totalTime)
-local spSpawnCEG=Spring.SpawnCEG
-ax,ay,az=Spring.GetUnitPosition(unitID)
-ay=ay+200
-totalTime=math.ceil(totalTime/5)
-
-
-
+	local spSpawnCEG=Spring.SpawnCEG
+	ax,ay,az=Spring.GetUnitPosition(unitID)
+	ay=ay+200
+	totalTime=math.ceil(totalTime/5)
+	
+	
+	
 	Sleep(totalTime)
 	EmitSfx(Emitor,1024)
 	Sleep(totalTime)
 	EmitSfx(Emitor,1025)
-
+	
 	Sleep(totalTime)
 	
 	--DoDO test this
-
+	
 	Sleep(totalTime)
 	EmitSfx(Emitor,1027)
 	Sleep(totalTime)
-
-
+	
+	
 end
-		function script.Killed()
-			
-		return 0
-		end
-
-		
+function script.Killed()
+	
+	return 0
+end

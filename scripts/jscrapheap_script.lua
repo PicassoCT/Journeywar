@@ -694,7 +694,7 @@ function flailingFlesh()
 	live=live -2000	
 	end
 	
-	reseT(Leg,0.1)
+	resetT(Leg,0.1)
 end
 
 function maMa()

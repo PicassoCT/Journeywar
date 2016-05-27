@@ -673,12 +673,29 @@ end
 
 	
 	-->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
-		-- ListPiece={[1]={ cx=0,y=0,z=0, 		--current setting allowed
-			-- lx = 25,ly = 25,lz = 25,-- length of piece 
-			--orgx, orgy, orgz
-			-- sx=false, sy=true,sz=true, --active axis
-			--lastPointIndex
-			--length
+		-- ListPiece={
+		--ArmCenterOffset={ox = 0, oy=0, oz=0}
+		--[1]={ 
+			-- Piece = pieceName,			
+			--CenterPoint - used for a Offset of the Arm to UnitCenter
+				-- cX=0, 
+				-- cY=0,
+				-- cZ=0, 		
+			--current setting allowed
+			-- length of piece 
+				-- lX = 25,
+				-- lY = 25,
+				-- lZ = 25,
+
+			-- dirX,
+			-- dirY,
+			-- dirZ,
+			--active axis
+				-- ax =false, 
+				-- ay=true,
+				-- az=true, 
+			-- lastPointIndex
+			-- piecelength
 			
 		-- } --Active Axis for this piece
 		
@@ -688,46 +705,119 @@ end
 		-- vx,vy,vz --VoluminaCube
 		
 	-- }
-	function snakeOnAPlane(Piece_Deg_Length_PointIndex_boolGateCrossed_List,SnakePoints,axis,speed, FirstSensor,tolerance, boolPartStepExecution, boolWait)
-		local PPDLL= Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
-		if not PPDLL then echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return end
+	function snakeOnAPlane(unitID, cPceDescLst,FirstSensor, WindowDescriptorList, axis,speed ,tolerance, boolPartStepExecution, boolWait)
+		local PceDescLst= cPceDescLst --Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
+		
+		--early error out
+		if not PceDescLst then echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return end
+		if  WindowDescriptorList == nil then echo("libAnimation::snakeOnAPlane - No Valid Goals to move"); return end
+	
+
+	--Working Defaults
+	
+		--if not defined ArmCenter - define Arm as centered in UnitSpace
+		if not PceDescLst.ArmCenterOffset then PceDescLst.ArmCenterOffset ={ox=0, oy = 0, oz = 0} end
+		
+		--total Length arm
+		--Preparations and Default Initialisations
+		for iNumerated,arm in ipairs(PceDescLst) do
+
+			if not arm.Piece then echo("libAnimation::snakeOnAPlane - No Valid Piece in Arm"); return end
+			
+			armTcX, armTcY, armTcZ, armTdX,armTdY,armTdZ =Spring.GetUnitPiecePosDir(unitID, arm.Piece)
+			--initialise the arm direction
+			if not arm.cx then 		arm.cX, arm.cY, arm.cZ = armTcX, armTcY, armTcZ;	end
+			if not arm.dirX then 	arm.dirX, arm.dirY, arm.dirZ = armTdX,armTdY,armTdZ;	end
+			
+			--length of the piece
+			successorPiece= FirstSensor
+			if PceDescLst[iNumerated+1] and PceDescLst[iNumerated+1].Piece then successorPiece = PceDescLst[iNumerated+1].Piece  end
+			
+			sucTcX, sucTcY, sucTcZ = Spring.GetUnitPiecePosDir(unitID, successorPiece)
+			
+			--default arm length per piece
+			if not arm.lx then
+			arm.lx,arm.ly,arm.lz = absDistance(armTcX,sucTcX), absDistance(armTcY,sucTcY), absDistance(armTcZ,sucTcZ)
+			end
+			
+			--set default axis
+			if not arm.ax then
+				if  iNumerated ~= 1 then
+				arm.ax, arm.ay, arm.az=true,false,false
+				else
+				arm.ax, arm.ay, arm.az=false,true,false
+				end
+			end
+			
+			if not arm.piecelength  then 
+			if arm.ax==true then 	arm.piecelength = arm.lx end
+			if arm.ay==true then 	arm.piecelength = arm.ly end
+			if arm.ay==true then 	arm.piecelength = arm.lz end		
+
+			end
+			
+
+			if not arm.lastPointIndex then arm.lastPointIndex = 0 end
+		end
+		
+		--local copy of the ArmTable
+		local ArmTable={}
+		for i=1,#PceDescLst do ArmTable[i]=PceDescLst[i].Piece end
+		
 		--get StartPosition and Move First Piece Into the Cube
 		boolResolved=false
-		if not SnakePoints then echo("snakeOnAPlane:: Not SnakePoints delivered"); return end
+		if not WindowDescriptorList then echo("snakeOnAPlane:: Not WindowDescriptorList delivered"); return end
 		
-		LastInsertedPoint=SnakePoints[1]
+		LastInsertedPoint=WindowDescriptorList[1]
 		Sensor=FirstSensor
 		
-		vOrigin={}; vOrigin.x,vOrigin.y,vOrigin.z=Spring.GetUnitPiecePosition(unitID,PPDLL[#PPDLL].Piece)
+		vOrg={};
+		vOrg.x,vOrg.y,vOrg.z=Spring.GetUnitPiecePosition(unitID,PceDescLst[#PceDescLst].Piece)
+		echoT(PceDescLst)
+		for i=1, #WindowDescriptorList do
+		
+		end
 		--func
+	
+--Preparations Completed
+		
+		
+		
+		
+			--Turn the axis towards the goal
 		--getPointPlane(point, -degAroundAxis)
+				
+		TurnPieceTowardsPoint(cPceDescLst[1].Piece, vOrg.x,vOrg.y,vOrg.z,0.5)	
+		WaitForTurns(cPceDescLst[1].Piece)
+		
 		
 		while boolResolved==false do
 			
 			boolAlgoRun=false
 			while boolAlgoRun ==false do
-				hypoModel=PPDLL
-				GlobalIndex= #PPDLL
+				hypoModel=PceDescLst
+				GlobalIndex= #PceDescLst
 				
 				
 				
-				for Index= #PPDLL, 1, -1 do
+				for Index= #PceDescLst, 1, -1 do
 					
-					local nextGoal=PPDLL[Index].PointIndex
-					x,y,z,dx,dy,dz=Spring.GetUnitPiecePosDir(unitID,PPDLL[Index].Piece)
+					local nextGoal=PceDescLst[Index].PointIndex
+					x,y,z,dx,dy,dz=Spring.GetUnitPiecePosDir(unitID,PceDescLst[Index].Piece)
 					
 					local PieceStartPoint =makeVector(x,y,z)
-					px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,PPDLL[math.min(Index+1,#PPDLL)].Piece)
+					px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,PceDescLst[math.min(Index+1,#PceDescLst)].Piece)
 					local PieceEndPoint		 =makeVector(px,py,pz)
 					
-					ppx,ppy,ppz,ppdx,ppdy,ppdz=Spring.GetUnitPiecePosDir(unitID,PPDLL[math.min(Index+1,#PPDLL)].Piece)
+					ppx,ppy,ppz,ppdx,ppdy,ppdz=Spring.GetUnitPiecePosDir(unitID,PceDescLst[math.min(Index+1,#PceDescLst)].Piece)
 					local PrevGatePoint		 =makeVector(ppx,ppy,ppz)
 					
 					
 					--CheckCenterPastPoint_PointIndex 
 					boolPastCenterPoint=checkCenterPastPoint( midVector(PieceStartPoint,PieceEndPoint),
-					SnakePoints[nextGoal],
+					WindowDescriptorList[nextGoal],
 					PrevGatePoint)
+					
 					-->if pointIndex is beyond Last Point this piece is far beyond 
 					if nextGoal > #SnakePoint then 
 						-- align yourself counterVectorwise from the last Point you crossed
@@ -735,20 +825,21 @@ end
 					end
 					
 					-->True && boolGateCrossed =false
-					if boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==false then
+					if boolPastCenterPoint == true and PceDescLst[Index].boolGateCrossed ==false then
 						
 						--TurnPieceTowardstNextPoint(PrevPieceIndex) hypoModel
+						--WaitForTurns(ArmTable)
 						counterTurnDeg=0
-						for BackTrackIndex= Index, #PPDLL, 1 do
+						for BackTrackIndex= Index, #PceDescLst, 1 do
 							--ReAlign Piece Goal
 						end
 						--
-						PPDLL[Index].boolGateCrossed =checkCenterPastPoint( midVector(PieceStartPoint,	PieceEndPoint),
-						SnakePoints[nextGoal],
+						PceDescLst[Index].boolGateCrossed = checkCenterPastPoint( midVector(PieceStartPoint,	PieceEndPoint),
+						WindowDescriptorList[nextGoal],
 						PrevGatePoint)
 						
-						if PPDLL[Index].boolGateCrossed == true then
-							PPDLL[Index].PointIndex= PPDLL[Index].PointIndex +1 
+						if PceDescLst[Index].boolGateCrossed == true then
+							PceDescLst[Index].PointIndex= PceDescLst[Index].PointIndex +1 
 						end
 						--boolGateCrossed=True 
 						--IncPointIndex
@@ -759,7 +850,7 @@ end
 						--SubIndex
 						
 						-->True && boolGateCrossed =true
-					elseif boolPastCenterPoint == true and PPDLL[Index].boolGateCrossed ==true then
+					elseif boolPastCenterPoint == true and PceDescLst[Index].boolGateCrossed ==true then
 						
 						if boolPartStepExecution == true then 
 							--Execute from top down to index, moves in order
@@ -772,6 +863,7 @@ end
 					elseif	boolPastCenterPoint == false	then
 						-->False
 						--TurnPieceTowardstPoint(PieceIndex) hypoModel
+						--WaitForTurns(ArmTable)
 						--CounterTurnPrevPiece hypoModel
 					end
 					
@@ -779,17 +871,18 @@ end
 					if Index== 1 then boolAlgoRun=true; break end
 				end
 			end
-			applyChangesAsTurns(PPDLL)
-			boolResolved=isSnakeAtMax(PPDLL)
+			applyChangesAsTurns(PceDescLst)
+			--WaitForTurns(ArmTable)
+			boolResolved=isSnakeAtMax(PceDescLst)
 		end
 		--]]
 	end
 	
-	function isSnakeAtMax(PPDLL,SnakePoints)
+	function isSnakeAtMax(PceDescLst,SnakePoints)
 		--if every point from the base point out is aligned towards its next goal
-		for i=1, #PPDLL do
-			px,py,pz,dx,dy,dz=Spring.GetUnitPiecePosDir(unitID,PPDLL[i].Piece)
-			pgx,pgy,pgz,dgx,dgy,dgz=Spring.GetUnitPiecePosDir(unitID,SnakePoints[PPDLL[Index].PointIndex])
+		for i=1, #PceDescLst do
+			px,py,pz,dx,dy,dz=Spring.GetUnitPiecePosDir(unitID,PceDescLst[i].Piece)
+			pgx,pgy,pgz,dgx,dgy,dgz=Spring.GetUnitPiecePosDir(unitID,SnakePoints[PceDescLst[Index].PointIndex])
 			vec=	norm2Vector(makeVector(px-pgx,py-pgy,pz-pgz))
 			if eqVec(makeVector(dx,dy,dz),vec)==false then return false end
 			
@@ -911,7 +1004,7 @@ end
 		PieceIDSizeTable={}
 		PieceIDHeightTable={}
 		AllreadyVisiblePieces={}
-		HideT(ListOfPieces)
+		hideT(ListOfPieces)
 		for k,v in pairs(ListOfPieces) do
 			x,y,z=Spring.GetUnitPieceCollisionVolumeData(unitID,v)
 			min=math.floor(math.min(x,math.min(y,z)))
@@ -1100,6 +1193,8 @@ end
 	end
 	
 	
+	
+	
 	--unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
 	--> Trys to create a animation using every piece there is as Legs.. 
 	function adaptiveAnimation(configTable,inPeace,id,ScriptEnviroment)
@@ -1249,7 +1344,10 @@ end
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
 function TurnPieceTowardsPoint (piecename, x,y,z,Speed,lox,loy,loz)
 	pvec={x=0,y=0,z=0}
-	ox,oy,oz=math.rad(lox or 0), math.rad(loy or 0), math.rad(loz or 0)
+	lox=lox or 0
+	loy=loy or 0
+	loz= loz or 0
+	ox,oy,oz=math.rad(loy), math.rad(lox), math.rad(loz)
 	
 
 	px,py,pz,pvec.x,pvec.y,pvec.z =Spring.GetUnitPiecePosDir(unitID,piecename) 
@@ -1298,11 +1396,11 @@ function GetSpeed(timeInSeconds, degree)
 end
 
 -->Reset a Table of Pieces at speed
-function reseT(tableName,speed, ShowAll, boolWait)
+function resetT(tableName,speed, ShowAll, boolWait)
 	lboolWait=boolWait or false
 	lspeed=speed or 0
 	
-	assert(tableName,"libAnimation::reseT: No valid Table")
+	assert(tableName,"libAnimation::resetT: No valid Table")
 	
 	for i=1,#tableName do
 		
@@ -1330,6 +1428,73 @@ function recReseT(Table,speed)
 	end
 	
 	
+end
+
+function resetP(piecename,speed,boolWaitForIT)
+	if not piecename then return end
+	
+	Turn(piecename,x_axis,0,speed)
+	Turn(piecename,y_axis,0,speed)
+	Turn(piecename,z_axis,0,speed)
+	
+	Move(piecename,x_axis,0,speed)
+	Move(piecename,y_axis,0,speed)
+	Move(piecename,z_axis,0,speed,true)
+	if boolWaitForIT then 
+		WaitForTurn(piecename,1)
+		WaitForTurn(piecename,2)
+		WaitForTurn(piecename,3)
+	end	
+end
+
+
+-->Shows a Pieces Table
+function showT(tablename,lowLimit,upLimit,delay)
+	if not tablename then Spring.Echo("No table given as argument for showT") return end
+	
+	if lowLimit and upLimit then
+		for i=lowLimit,upLimit, 1 do
+			if tablename[i] then
+				Show(tablename[i])
+			end
+			if delay and delay > 0 then Sleep(delay) end
+		end
+		
+	else
+		for i=1,table.getn(tablename), 1 do
+			if tablename[i] then
+				Show(tablename[i])
+			end
+		end
+	end
+end
+
+
+--> Hides a PiecesTable, 
+function hideT(tablename,lowLimit,upLimit,delay)
+	if not tablename then return end
+	boolDebugActive= (lib_boolDebug==true and lowLimit and type(lowLimit) ~= "string")
+	
+	if lowLimit and upLimit then
+		for i=upLimit,lowLimit, -1 do
+			if tablename[i] then
+				Hide(tablename[i])
+			elseif boolDebugActive == true then
+				echo("In HideT, table ".. lowLimit .." contains a empty entry")
+			end
+			
+			if delay and delay > 0 then Sleep(delay) end
+		end
+		
+	else
+		for i=1,table.getn(tablename), 1 do
+			if tablename[i] then
+				Hide(tablename[i])
+			elseif boolDebugActive == true then
+				echo("In HideT, table ".. lowLimit .." contains a empty entry")
+			end
+		end
+	end
 end
 
 		

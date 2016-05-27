@@ -161,7 +161,7 @@ function MoveAnimation()
 				foldWeapon(0)
 				idleAnim()
 			else
-				reseT(piecesTable,2.25,true)
+				resetT(piecesTable,2.25,true)
 			end 
 		end
 		Sleep(100)
@@ -496,8 +496,8 @@ function 	idleAnim ()
 end 
 
 function script.Create()
-	reseT(piecesTable,0)
-	reseT(Plate,0)
+	resetT(piecesTable,0)
+	resetT(Plate,0)
 	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(foldWeapon,0)
 	

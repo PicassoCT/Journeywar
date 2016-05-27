@@ -107,7 +107,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 		
 	end
-	reseT(BodyPieces)
+	resetT(BodyPieces)
 	
 	--ARM
 	ArmPieces={}
@@ -267,9 +267,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		hideT(HeadPieces)
 		hideT(DecoPieces)
-		reseT(BodyPieces)
-		reseT(DecoPieces)
-		reseT(HeadPieces)
+		resetT(BodyPieces)
+		resetT(DecoPieces)
+		resetT(HeadPieces)
 		bd_init()
 		StartThread(bd_buildRandomizedVehicle)
 		
@@ -1320,7 +1320,7 @@ function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
 		end
 	end
 	
-	reseT(pieceTable)
+	resetT(pieceTable)
 	
 	
 	getFreeSpotFunction = function (elementIndex,perPosition, freeSpotList)

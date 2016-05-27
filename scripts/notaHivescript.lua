@@ -43,7 +43,7 @@ end
 yOffset=8
 function placePillars()
 	
-	reseT(spire)
+	resetT(spire)
 	randLim=math.ceil(math.random(6,12))
 	positions={}
 	prevDeg= 180
@@ -85,7 +85,7 @@ function putTheLotionInTheBasket()
 --preparations
 Hide(Egg)
 local QAss=TablesOfPiecesGroups["QAss"]
-reseT(QAss)
+resetT(QAss)
 hideT(TablesOfPiecesGroups["QAss"])
 Turn(QAss[1],x_axis,math.rad(-90),0)
 Move(QAss[1],z_axis,10,0)

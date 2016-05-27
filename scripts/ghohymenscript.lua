@@ -460,7 +460,7 @@ function script.Create()
 
 	StartThread(walk)
 	StartThread(reProduce)
-	reseT(piecesTable)
+	resetT(piecesTable)
 end
 
 function script.Killed(recentDamage,_)

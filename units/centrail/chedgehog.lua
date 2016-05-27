@@ -39,7 +39,7 @@ Category = [[LAND]],
 
   trackType ="cRes",
   trackStrength=12,
-  trackWidth =64,
+  trackWidth =80,
 
   
 	explodeAs="citadelldrone",

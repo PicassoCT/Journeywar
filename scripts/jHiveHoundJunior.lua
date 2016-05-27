@@ -104,7 +104,7 @@ pieces[#pieces]=aimspot
 
 function legsDown()
 	SetSignalMask(SIG_IDLE)
-	reseT(pieces)
+	resetT(pieces)
 	
 	while true do
 	breathOS(body,1, 3, LegTable,4, 33, 3,iRand(12,22))
@@ -298,7 +298,7 @@ end
 
 end
 Sleep(1200)
-reseT(pieces)
+resetT(pieces)
 
 end
 

@@ -190,7 +190,7 @@ function buildIt()
 	while boolDelayedStart== false do
 	Sleep(100)	
 	end
-	reseT(Blocks)
+	resetT(Blocks)
 	hideT(Blocks)
 	Hide(ArcoStump)
 

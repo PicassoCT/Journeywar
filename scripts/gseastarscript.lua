@@ -2,7 +2,6 @@ include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
 include "lib_Build.lua" 
 
 SIG_WALK=2
@@ -139,7 +138,7 @@ function script.Create()
 	
 	
 	inPieces=Spring.GetUnitPieceMap(unitID)
-	reseT(inPieces)
+	resetT(inPieces)
 	for nr=1,5 do 
 		Turn(firstAxis[nr],y_axis,math.rad(-190+(65)*nr),0)
 	end

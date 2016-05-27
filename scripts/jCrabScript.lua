@@ -185,7 +185,7 @@ function legs_down()
 				end
 			end
 	
-		reseT(pieceTable,1 , true, true)
+		resetT(pieceTable,1 , true, true)
 		
 		if math.random(0,7)== 3 then
 		Sleep(7000)

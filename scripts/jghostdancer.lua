@@ -174,7 +174,7 @@ end
 
 
 function standingGuard()
-reseT(tails)
+resetT(tails)
 resetP(ghostdance,30)
 Turn(gdbhleg,z_axis,math.rad(0),63/1.5)
 Turn(gdbhleg,x_axis,math.rad(0),63/1.5)
@@ -217,7 +217,7 @@ end
 
 
 function standingWave()
-reseT(tails,2.5)
+resetT(tails,2.5)
 xdeg=math.random(-3,30)
 ripple=math.random(-10,10)
 tailstart=1
@@ -245,7 +245,7 @@ Turn(ears,x_axis,math.rad(0),7)
 end
 
 function pranceStance()
-	reseT(piecesTable,42)
+	resetT(piecesTable,42)
 	Move(ghostdance,y_axis,-2.5,2.55)
 	Turn(HeadRump,x_axis,math.rad(RumpOffset),math.abs(-18-RumpOffset)/10)
 	Turn(Head,x_axis,math.rad(-17),1.7)
@@ -270,15 +270,15 @@ end
 function idle()
 boolIdle=true
 RumpOffset=12
-	reseT(tails)
-	reseT(piecesTable,22)
+	resetT(tails)
+	resetT(piecesTable,22)
 
 	while( boolIdle==true)  do
 	if maRa()==true then wiggle()end
 	if maRa()==true then standingWave()end
 	if maRa()==true then standingGuard()end
 	if maRa() == true then pranceStance() end
-	reseT(piecesTable,12)
+	resetT(piecesTable,12)
 	Sleep(3000)
 	resetLegs()
 	
@@ -288,7 +288,7 @@ RumpOffset=12
 	Move(ghostdance,y_axis,0,0.5)
 	WTurn(gdfrontleg,y_axis,math.rad(0),1.8)
 	WTurn(gdbhleg,y_axis,math.rad(-18),1.8)
-	reseT(piecesTable,42)
+	resetT(piecesTable,42)
 end
 
 function reset()
@@ -302,7 +302,7 @@ function script.Create()
 	Hide(gdbhlegj)
 	Hide(gdflegj)
 	Show(gdfrontleg)
-	reseT(piecesTable)
+	resetT(piecesTable)
 	StartThread(spawnAndManageShadows)
 	
 end
@@ -352,7 +352,7 @@ function walk()
 	boolIdle=false
 
 	Turn(ears,x_axis,math.rad(-70),35)
-	reseT(piecesTable,22)
+	resetT(piecesTable,22)
 	while (true) do
 		if maRa()== true then
 		smokeEmit()

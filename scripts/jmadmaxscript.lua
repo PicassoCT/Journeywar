@@ -48,7 +48,7 @@ end
 
 function testThread()
 while(1) do
-reseT(pieceTable)
+resetT(pieceTable)
 StartThread(buildVehicle,center,AMax,LMax, DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
 Sleep(30000)
 end

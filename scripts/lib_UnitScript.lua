@@ -72,8 +72,8 @@ function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, end
 end
 
 function randVec(boolStayPositive)
-
-	if not boolStayPositive  and boolStayPositive == true then 
+	
+	if not boolStayPositive and boolStayPositive == true then 
 		return {x= math.random(0,1),y=math.random(0,1),z=math.random(0,1)}
 	else
 		return {x= math.random(-1,1),y=math.random(-1,1),z=math.random(-1,1)}
@@ -136,8 +136,8 @@ end
 
 -->filters out the dead 
 function validateUnitTable(T)
-TVeryMuchAlive={}
-
+	TVeryMuchAlive={}
+	
 	for i=#T,1, -1 do
 		boolUnitDead = Spring.GetUnitIsDead(T[i])
 		if not boolUnitDead and boolUnitDead==false then
@@ -156,14 +156,23 @@ function mirror(value)
 	return value
 end
 
+-->returns the absolute distance
+function absDistance(valA, valB)
+	if sigNum(valA) == signNum(valB) then
+		return math.abs(valA)-math.abs(valB)
+	else
+		return math.abs(valA) + math.abs(valB)
+	end
+end
+
 
 -->returns the 2 norm of a vector
 function distance(x,y, z,xa,ya,za)
-if xa and ya and za then
-	return math.sqrt(x*xa+y*ya+z*za)
-else
-	return math.sqrt(x*x+y*y+z*z)
-end
+	if xa and ya and za then
+		return math.sqrt(x*xa+y*ya+z*za)
+	else
+		return math.sqrt(x*x+y*y+z*z)
+	end
 end
 
 -->returns the Distance between two units
@@ -212,8 +221,8 @@ function convPointsToDeg(ox,oz,bx,bz)
 	end
 end
 
-	
-	
+
+
 
 -->clamps rotationonal values
 function absoluteRotation(piecename, axis, finalRotation,x_deg,y_deg,z_deg)
@@ -260,8 +269,8 @@ function makePieceMap(unitID)
 end
 
 function hideAllPieces(unitID)
-List = Spring.GetUnitPieceMap(unitID)
-
+	List = Spring.GetUnitPieceMap(unitID)
+	
 	for k,v in pairs(List) do
 		Hide(v)
 	end
@@ -277,9 +286,9 @@ function addTable(T,...)
 		for k,v in ipairs(arg) do
 			String= String.."["..v.."]"
 			Spring.Echo(String)
-		
+			
 			if boolOneTimeNil == false then	
-				if	loadstring(String) ~= nil  then
+				if	loadstring(String) ~= nil then
 				else
 					boolOneTimeNil=true
 				end		
@@ -445,67 +454,67 @@ end
 
 -->idle Animation Loop
 function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, time, boolNoDown)
-
-Turn(Body,axis, math.rad(degree),speed)
-	for i=1, #FrontLeg, 1 do
-	Turn(FrontLeg[i].Up,axis, math.rad(-degree ), speed)
-	if boolNoDown == false then
-	Turn(FrontLeg[i].Down,axis, math.rad(0 ), speed)
-	end
-	end
 	
-	for i=1, #RearLeg, 1 do
-	Turn(RearLeg[i].Up,axis, math.rad(-degree ), speed)
-		if boolNoDown == false then
-		Turn(RearLeg[i].Down,axis, math.rad(0), speed)
-		end
-	end
-	
-		for i=1, #FrontLeg, 1 do
-		WaitForTurns(FrontLeg[i].Up)
-			if boolNoDown == false then
-			WaitForTurns(FrontLeg[i].Down)
-			end
-		end
-		
-		for i=1, #RearLeg, 1 do
-		WaitForTurns(RearLeg[i].Up)
-			if boolNoDown == false then
-			WaitForTurns(RearLeg[i].Down)
-			end
-		end
-WaitForTurn(Body,axis)
-Sleep(time)
-
-Turn(Body,axis, math.rad(BodyBackDeg),speed)
+	Turn(Body,axis, math.rad(degree),speed)
 	for i=1, #FrontLeg, 1 do
-	Turn(FrontLeg[i].Up,axis, math.rad( -BodyBackDeg), speed)
+		Turn(FrontLeg[i].Up,axis, math.rad(-degree ), speed)
 		if boolNoDown == false then
-		Turn(FrontLeg[i].Down,axis, math.rad( 0 ), speed)
+			Turn(FrontLeg[i].Down,axis, math.rad(0 ), speed)
 		end
 	end
 	
 	for i=1, #RearLeg, 1 do
-	Turn(RearLeg[i].Up,axis, math.rad(-BodyBackDeg), speed)
+		Turn(RearLeg[i].Up,axis, math.rad(-degree ), speed)
 		if boolNoDown == false then
-		Turn(RearLeg[i].Down,axis, math.rad(0), speed)
+			Turn(RearLeg[i].Down,axis, math.rad(0), speed)
 		end
 	end
-		for i=1, #FrontLeg, 1 do
+	
+	for i=1, #FrontLeg, 1 do
 		WaitForTurns(FrontLeg[i].Up)
-			if boolNoDown == false then
+		if boolNoDown == false then
 			WaitForTurns(FrontLeg[i].Down)
-			end
 		end
-		
-		for i=1, #RearLeg, 1 do
+	end
+	
+	for i=1, #RearLeg, 1 do
 		WaitForTurns(RearLeg[i].Up)
-			if boolNoDown == false then
+		if boolNoDown == false then
 			WaitForTurns(RearLeg[i].Down)
-			end		
+		end
+	end
+	WaitForTurn(Body,axis)
+	Sleep(time)
+	
+	Turn(Body,axis, math.rad(BodyBackDeg),speed)
+	for i=1, #FrontLeg, 1 do
+		Turn(FrontLeg[i].Up,axis, math.rad( -BodyBackDeg), speed)
+		if boolNoDown == false then
+			Turn(FrontLeg[i].Down,axis, math.rad( 0 ), speed)
+		end
+	end
+	
+	for i=1, #RearLeg, 1 do
+		Turn(RearLeg[i].Up,axis, math.rad(-BodyBackDeg), speed)
+		if boolNoDown == false then
+			Turn(RearLeg[i].Down,axis, math.rad(0), speed)
+		end
+	end
+	for i=1, #FrontLeg, 1 do
+		WaitForTurns(FrontLeg[i].Up)
+		if boolNoDown == false then
+			WaitForTurns(FrontLeg[i].Down)
+		end
+	end
+	
+	for i=1, #RearLeg, 1 do
+		WaitForTurns(RearLeg[i].Up)
+		if boolNoDown == false then
+			WaitForTurns(RearLeg[i].Down)
 		end		
-WaitForTurn(Body,axis)
-Sleep(time)
+	end		
+	WaitForTurn(Body,axis)
+	Sleep(time)
 end
 
 function HideWrap(piecenr)
@@ -977,7 +986,7 @@ end
 function generatepiecesTableAndArrayCode(unitID, boolLoud)
 	bLoud = boolLoud or false
 	
-	if bLoud == true then  
+	if bLoud == true then 
 		Spring.Echo("")
 		Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
 		Spring.Echo("piecesTable={}")
@@ -996,7 +1005,7 @@ function generatepiecesTableAndArrayCode(unitID, boolLoud)
 		Spring.Echo("PIECESLIST::END |>-----------------------------")
 	end
 	
-
+	
 	return makePieceTable(unitID)
 end
 
@@ -1371,7 +1380,7 @@ end
 
 local countConstAnt=0
 function mulVector(vl,value)
-
+	
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
 	if not vl.x and type(vl)== 'number' then
@@ -1383,7 +1392,7 @@ function mulVector(vl,value)
 			y=vl.y*value,
 		z=vl.z*value}
 	else		--return vector
---		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
+		--		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
 		return {x = vl.x*value.x, y=	vl.y*value.y, z=	vl.z*value.z}
 	end
 end
@@ -1429,7 +1438,7 @@ end
 
 function sumNormVector(v)
 	sum= math.abs(v.x)+math.abs(v.y)+math.abs(v.z)
-		return {x=v.x/sum ,y=v.y/sum,z=v.z/sum}
+	return {x=v.x/sum ,y=v.y/sum,z=v.z/sum}
 end
 
 function solveSpring(s, sucessor, frictionConstant)
@@ -1556,7 +1565,7 @@ function vardump(value, depth, key)
 		Spring.Echo("================================================================================")
 		
 	end
-
+	
 	
 	function checkYourself()
 		return GG.SniperRope[unitID] or false
@@ -1831,11 +1840,11 @@ function vardump(value, depth, key)
 			[9]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7],B[3]),eraNonArgMul(A[8],B[6])),eraNonArgMul(A[9],B[9])),
 		}
 	end
-
+	
 	
 	function iRand(start, fin)
-	if not fin or fin < start then fin= start+1 end
-	
+		if not fin or fin < start then fin= start+1 end
+		
 		return math.ceil(math.random(start,fin))
 	end
 	
@@ -1872,7 +1881,7 @@ function vardump(value, depth, key)
 	end
 	
 	function spawnCegAtPiece(unitID,pieceId,cegname,offset)
-
+		
 		boolAdd=offset or 10
 		
 		
@@ -2098,23 +2107,23 @@ function vardump(value, depth, key)
 	
 	--> Grabs every Feature in a circle, filters out the featureID
 	function getAllFeatureNearUnit(unitID,Range)
-	px,py,pz=Spring.GetUnitPosition(unitID)
-	return Spring.GetFeaturesInCylinder(px,pz,Range)	
+		px,py,pz=Spring.GetUnitPosition(unitID)
+		return Spring.GetFeaturesInCylinder(px,pz,Range)	
 	end	
 	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllNearUnit(unitID,Range)
-	px,py,pz=Spring.GetUnitPosition(unitID)
-	return 	getAllInCircle(px,pz,Range,unitID)	
+		px,py,pz=Spring.GetUnitPosition(unitID)
+		return 	getAllInCircle(px,pz,Range,unitID)	
 	end
 	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllInCircle(x,z,Range,unitID,teamid)
-	if not x or not z then 
-		return {} 
-	end
-	if not Range then assert(Range) end
-	
+		if not x or not z then 
+			return {} 
+		end
+		if not Range then assert(Range) end
+		
 		T={}
 		if teamid then
 			T=Spring.GetUnitsInCylinder(x,z,Range,teamid)
@@ -2122,7 +2131,7 @@ function vardump(value, depth, key)
 			T=Spring.GetUnitsInCylinder(x,z,Range)
 		end
 		
-		if unitID and  T and #T>1 and type(unitID)=='number' then
+		if unitID and T and #T>1 and type(unitID)=='number' then
 			table.remove(T,unitID)
 		end
 		return T
@@ -2130,7 +2139,7 @@ function vardump(value, depth, key)
 	
 	--> Grabs every Unit in a circle, filters out the unitid
 	function getInCircle(unitID,Range,teamid)
-	
+		
 		T={}
 		x,_,z=Spring.GetUnitBasePosition(unitID)
 		if teamid then
@@ -2154,15 +2163,15 @@ function vardump(value, depth, key)
 	end
 	
 	function tableToKeyTable(T)
-	KT={}
-	for i=1, #T do
-	KT[T[i]] =T[i]
-	end
-	return KT
+		KT={}
+		for i=1, #T do
+			KT[T[i]] =T[i]
+		end
+		return KT
 	end
 	
 	function keyTableToTables(T)
-			counter= 1
+		counter= 1
 		TableKey={}
 		TableValue={}
 		counter= 1
@@ -2221,11 +2230,11 @@ function vardump(value, depth, key)
 	end
 	
 	function bDbgEcho(strings)
-	if lib_boolDebug==true then Spring.Echo(strings) end
+		if lib_boolDebug==true then Spring.Echo(strings) end
 	end
 	--> takes a Table, and executes ArgTable/Function,Functions on it
 	function process(Table, ...)
-	local arg={...}
+		local arg={...}
 		--local arg = table.pack(...)
 		T={}
 		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
@@ -2250,12 +2259,12 @@ function vardump(value, depth, key)
 	
 	--> Executes a random Function from a table of functions
 	function raFoo( ...)
-	local arg={...}
-	if not arg then return end
-	index= math.random(1,#arg)
-	return arg[index]()	
+		local arg={...}
+		if not arg then return end
+		index= math.random(1,#arg)
+		return arg[index]()	
 	end
-
+	
 	function accessInOrder(T,...)
 		--local arg = table.pack(...)
 		local TC=T
@@ -2309,7 +2318,7 @@ function vardump(value, depth, key)
 	-->filters Out Immobile Units
 	function filterOutImmobile (T)
 		returnTable={} 
-			for k,v in pairs(T) do 
+		for k,v in pairs(T) do 
 			def=Spring.GetUnitDefID(k) 
 			if false== UnitDefs[def].isImmobile then 
 				returnTable[k]=v 
@@ -2734,7 +2743,7 @@ function vardump(value, depth, key)
 	function prepSpeach( Speach, Names,Limits, Alphas, DefaultSleepBylines)
 		--if only Speach 
 		if Speach and not Names and not Limits then 
-	
+			
 		return {Speach=Speach} end
 		
 		Name 	=Names or "Dramatis Persona"
@@ -2752,14 +2761,14 @@ function vardump(value, depth, key)
 		assert(size and type(size)=="number","Limit not a number", Limit)
 		
 		if string.len(Speach) < Limit then 
-	
-		subtable={line=Speach ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}	
-		retTable= {}
-		retTable[1]=subtable
-		return retTable
+			
+			subtable={line=Speach ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}	
+			retTable= {}
+			retTable[1]=subtable
+			return retTable
 		end
 		
-
+		
 		whitespace="%s"
 		while lineend < size do 
 			
@@ -2780,15 +2789,16 @@ function vardump(value, depth, key)
 			assert(lineend)
 			assert(size)
 		end
-
+		
 		return T, true
 	end
 	
 	
 	--> Displays Text at UnitPos Thread
 	-->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
-	function say( LineNameTimeT, redrawDelay, NameColour, TextColour,OptionString,UnitID)
+	function say( LineNameTimeT, timeToShowMs, NameColour, TextColour,OptionString,UnitID)
 		assert(LineNameTimeT)
+		timeToShowFrames=math.ceil((timeToShowMs/1000)*30)
 		
 		px,py,pz=0,0,0
 		if not UnitID or Spring.ValidUnitID(UnitID)==false then
@@ -2797,48 +2807,52 @@ function vardump(value, depth, key)
 		end
 		
 		if type(LineNameTimeT)=="string" then 
-		Tables={}
-		Tables[1]={name="speaker", line=LineNameTimeT,DelayByLine =500 , Alpha= 1.0}
-		LineNameTimeT=Tables		
+			Tables={}
+			Tables[1]={name="speaker", line=LineNameTimeT,DelayByLine =500 , Alpha= 1.0}
+			LineNameTimeT=Tables		
 		end
 		
 		--catching the case that there is not direct Unit speaking
 		if not UnitID or type(UnitID)=="string" then 
 			Spring.Echo(LineNameTimeT[1].name.. ": "..LineNameTimeT[i].line)
 			if not 	LineNameTimeT[2].line then return end
-		for i=1, #LineNameTimeT, 1 do			
-		for j=1, #LineNameTimeT[i], 1 do	
-			echo(LineNameTimeT[i][j].line)			
-		end
-		end
+			for i=1, #LineNameTimeT, 1 do			
+				for j=1, #LineNameTimeT[i], 1 do	
+					echo(LineNameTimeT[i][j].line)			
+				end
+			end
 			echo("Im out 2")
 			return
 		end
 		
 		local spGetUnitPosition=Spring.GetUnitPosition	
 		if not GG.Dialog then GG.Dialog ={} end
-
+		
+		lineBuilder=""
+		spaceString=stringOfLength(" ",string.len(LineNameTimeT[1].name..": " or 5))
 		
 		GG.Dialog[UnitID]={}
-		for i=1, #LineNameTimeT, 1 do	
-				Spring.Echo("NumberOfLines"..#LineNameTimeT)
-		local subTableOfLines=LineNameTimeT[i]
-
+		lineBuilder=lineBuilder..LineNameTimeT[1].name..": "..LineNameTimeT[1].line.."\n"
 		
-			spaceString=stringOfLength(" ",string.len(subTableOfLines.name or 5))
-			--Sleep time till next line
-			px,py,pz=Spring.GetUnitPosition(UnitID)
-			GG.Dialog[UnitID][#GG.Dialog[UnitID]+1]={
-													frames=120,
-													line= spaceString..subTableOfLines.line,
-													x=px, 
-													y=240,
-													z=pz}	
-	
+		for i=2, #LineNameTimeT, 1 do	
+			lineBuilder=spaceString..LineNameTimeT[i].line.."\n"
 		end
 		
 		
-			echo("Im out 3")
+		--Sleep time till next line
+		_,unitheigth,_=Spring.GetUnitCollisionVolumeData(UnitID)
+		GG.Dialog[UnitID][#GG.Dialog[UnitID]+1]={
+			frames=timeToShowFrames,
+			line= lineBuilder,
+			lifetime= timeToShowFrames,			
+			unitheigth=unitheigth,
+			color= TextColour
+		}	
+		
+		
+		
+		
+		echo("Im out 3")
 	end
 	
 	--> creates a table of pieces with name
@@ -2945,7 +2959,7 @@ function vardump(value, depth, key)
 	end
 	
 	
-
+	
 	--> GetDistanceNearestEnemy
 	function GetDistanceNearestEnemy(id)
 		ed=Spring.GetUnitNearestEnemy(id)
@@ -3500,7 +3514,7 @@ function vardump(value, depth, key)
 	
 	--expects a Table containing:
 	
-
+	
 	
 	function getADryWalkAbleSpot()
 		min,max=Spring.GetGroundExtremes()
@@ -3570,7 +3584,7 @@ function vardump(value, depth, key)
 		
 	end
 	
-
+	
 	
 	function binaryInsertTable(Table,Value,ToInsert,key)
 		i=math.floor(table.getn(Table)/2)
@@ -3595,7 +3609,7 @@ function vardump(value, depth, key)
 		end
 	end
 	
-
+	
 	-->Sanitizes a Variable for a table
 	function sanitizeItterator(Data,Min,Max)
 		return math.max(Min,math.min(Max,math.floor(Data)))
@@ -3606,13 +3620,13 @@ function vardump(value, depth, key)
 		breakPoint=breakP or math.ceil(#T/2)
 		breakPoint=sanitizeItterator(breakPoint,1,table.getn(T))
 		local	T1={}
-
+		
 		for i=breakPoint,breakEnd,1 do
 			T1[#T1+1]=T[i]
 		end
 		
 		return T1
-
+		
 	end
 	
 	

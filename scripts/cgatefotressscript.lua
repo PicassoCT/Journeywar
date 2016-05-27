@@ -428,7 +428,7 @@ soundInOrderTableUnfold[3]={boolOnce=false, postdelay=2500,sound={[1]="sounds/cg
 
 function unfoldAnimation()
 	
-	reseT(TableOfPieces)
+	resetT(TableOfPieces)
 	hideT(TableOfPieces)
 	--randoVal=iRand(-360,360)
 	--Turn(center,y_axis,math.rad(randoVal),0)
@@ -507,7 +507,7 @@ function foldAnimation()
 	boolOnTheMove=true
 	hideT(TableOfPieces)
 
-	reseT(TableOfPieces)
+	resetT(TableOfPieces)
 	hideT(TableOfPieces)
 	GG.soundInOrderTable["cgatefort"..unitID]=false
 
@@ -1066,7 +1066,7 @@ function UpperCircleLoop (boolReverse,totalLength)
 		Counter=Counter+1
 		if Counter== totalLength then 
 			Turn(BigLUpCenter,y_axis,math.rad(0),0)
-			reseT(UpTable)
+			resetT(UpTable)
 			showT(UpTable)
 			Hide(OuterLoop14)
 			Move(Wall,y_axis,-7,0);Show(Wall);Move(Wall,y_axis,0,3.1415)
@@ -1076,13 +1076,13 @@ function UpperCircleLoop (boolReverse,totalLength)
 	--clean up
 	if boolDirection ==true then
 		Turn(BigLUpCenter,y_axis,math.rad(0),0)
-		reseT(UpTable)
+		resetT(UpTable)
 		showT(UpTable)
 		Hide(OuterLoop14)
 		Move(Wall,y_axis,-7,0);Show(Wall);Move(Wall,y_axis,0,3.1415)
 	else
 		Turn(BigLUpCenter,y_axis,math.rad(0),0)
-		reseT(UpTable)
+		resetT(UpTable)
 		hideT(UpTable)
 		Hide(OuterLoop14)
 		WMove(Wall,y_axis,-7,3.1415);Hide(Wall);
@@ -1285,10 +1285,10 @@ function reloadCataPult()
 	hideT(CataLow	)
 	hideT(CataUp	)
 	hideT(CataHead	)
-	reseT(CataRoto	)
-	reseT(CataLow	)
-	reseT(CataUp	)
-	reseT(CataHead	)
+	resetT(CataRoto	)
+	resetT(CataLow	)
+	resetT(CataUp	)
+	resetT(CataHead	)
 	
 	turnT(CataHead,x_axis,31,0,true)
 	moveT(CataLow,y_axis,-20,0)

@@ -68,7 +68,7 @@ function script.Create()
 	hideT(TreePiece)
 	hideT(EndPiece)
 	--reset Table of Pieces
-	reseT(TreePiece)
+	resetT(TreePiece)
 	resetP(center,0)
 	StartThread(BuildLtree)
 	StartThread(foulTheSurroundings)
@@ -108,7 +108,7 @@ FixFunctionTabel[1]=	function ()
 end
 --FruitBambooColony
 FixFunctionTabel[2]= function ()
-	reseT(TreePiece)
+	resetT(TreePiece)
 	Spring.Echo("FixFunctionTabel::Centrallized Colony")
 	
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -212,7 +212,7 @@ end
 
 -- FruitField
 FixFunctionTabel[4]= function ()
-	reseT(TreePiece)
+	resetT(TreePiece)
 	
 	Spring.Echo("FixFunctionTabel::FruitField")
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -319,8 +319,8 @@ FixFunctionTabel[6]=	function ()
 	Spring.Echo("FixFunctionTabel::Spiraltree")
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(EndPiece)
-	reseT(TreePiece)
+	resetT(EndPiece)
+	resetT(TreePiece)
 	Turn(center,y_axis,0,0)
 	Turn(center,x_axis,0,0)
 	Turn(center,z_axis,0,0)
@@ -427,7 +427,7 @@ end
 -- RingWeed
 FixFunctionTabel[8]=	function ()
 	Spring.Echo("FixFunctionTabel::RingWeed")
-	reseT(TreePiece)
+	resetT(TreePiece)
 	showT(TreePiece)
 	showT(EndPiece)
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -487,7 +487,7 @@ end
 --StarPlants
 FixFunctionTabel[10]=	function ()
 	Spring.Echo("FixFunctionTabel::StarPlants")
-	reseT(TreePiece)
+	resetT(TreePiece)
 	showT(TreePiece)
 	showT(EndPiece)
 	
@@ -598,7 +598,7 @@ FixFunctionTabel[12]= function ()
 	Spring.Echo("FixFunctionTabel::CircleTree")
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	
 	const=math.random(9,45)*randSign()
 	spirallength=math.floor(math.random(4,8))
@@ -644,7 +644,7 @@ EndPointReservoir={}
 --free Form Function function
 FixFunctionTabel[13]= function ()
 	Spring.Echo("Free Form Function")
-	reseT(TreePiece)
+	resetT(TreePiece)
 	showT(TreePiece)
 	showT(EndPiece)
 	
@@ -709,7 +709,7 @@ end
 FixFunctionTabel[14]= function ()
 	Director=maRa()==true
 	Spring.Echo("Fern Function")
-	reseT(TreePiece)
+	resetT(TreePiece)
 	showT(TreePiece)
 	showT(EndPiece)
 	
@@ -770,7 +770,7 @@ end
 --"Fern Function"
 FixFunctionTabel[15]= function ()
 	Spring.Echo("Fern Function")
-	reseT(TreePiece)
+	resetT(TreePiece)
 	showT(TreePiece)
 	showT(EndPiece)
 	
@@ -830,7 +830,7 @@ FixFunctionTabel[16]= function ()
 	Spring.Echo("FixFunctionTabel::BowTie")
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	
 	const=math.random(9,18)*randSign()
 	spirallength=math.floor(math.random(5,12))
@@ -868,7 +868,7 @@ FixFunctionTabel[17]= function ()
 	Spring.Echo("FixFunctionTabel::TriTree")
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	offSet={[1]={x=5,y=-5},[2]={x=5,y=5},[3]={x=-5,y=0}}
 	
 	--Trunk
@@ -942,7 +942,7 @@ FixFunctionTabel[18]= function ()
 	Spring.Echo("FixFunction:Crawl Plant")
 	Threads={}
 	showT(TreePiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	boolForkRoot=maRa()==true
 	many=math.ceil(math.random(5,12))
 	
@@ -1018,7 +1018,7 @@ FixFunctionTabel[20]= function ()
 	Spring.Echo("FixFunctionTabel::Airroot")
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	trueAirRoot=maRa()==true
 	
 	const=1.66
@@ -1066,7 +1066,7 @@ FixFunctionTabel[21]= function ()
 	
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	
 	
 	TotalPieces=#TreePiece
@@ -1127,7 +1127,7 @@ FixFunctionTabel[19]= function ()
 	
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(TreePiece)
+	resetT(TreePiece)
 	
 	Deg={x=0,y=0,z=0}
 	
@@ -1192,8 +1192,8 @@ FixFunctionTabel[22]=	function ()
 	DeltaV=FullCircle/math.ceil(#TreePiece/2)
 	showT(TreePiece)
 	showT(EndPiece)
-	reseT(EndPiece)
-	reseT(TreePiece)
+	resetT(EndPiece)
+	resetT(TreePiece)
 	Turn(center,y_axis,0,0)
 	Turn(center,x_axis,0,0)
 	Turn(center,z_axis,0,0)

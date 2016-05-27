@@ -161,7 +161,7 @@ boolFixedDirection=maRa()
 SetSignalMask(SIG_FALL)
 
 hideT(CrystallPieces)
-reseT(CrystallPieces)
+resetT(CrystallPieces)
 
 boolCollapsInProgress=false
 
@@ -188,7 +188,7 @@ WaitForMove(BasePiece,y_axis)
 end
 
 function script.Create()
-reseT(CrystallPieces)
+resetT(CrystallPieces)
 
 StartThread(grow)
 end

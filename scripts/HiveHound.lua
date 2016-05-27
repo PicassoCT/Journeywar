@@ -725,7 +725,7 @@ end
 
 end
 Sleep(1200)
-reseT(allPieces,5)
+resetT(allPieces,5)
 
 
 	end

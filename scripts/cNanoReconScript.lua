@@ -166,7 +166,7 @@ function wigglingEater(group, groupindex)
 	if allReadyInAction[groupindex]== true then Spring.Echo("Group"..groupindex .." allready in action"); return end
 	allReadyInAction[groupindex]=true
 	
-	reseT(group.eaters,0)
+	resetT(group.eaters,0)
 	StartThread(showWiggleEater,group, groupindex)
 	Spin(group.rot,z_axis,math.rad(42),0.1)
 	
@@ -178,7 +178,7 @@ function wigglingEater(group, groupindex)
 	StopSpin(group.rot,z_axis)
 	hideT(group.eaters)
 	allReadyInAction[groupindex]=false 
-	reseT(group.eaters,0)
+	resetT(group.eaters,0)
 end
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
@@ -243,7 +243,7 @@ end
 function script.Create()
 Hide(PortalPillar)
 
-	reseT(allT)
+	resetT(allT)
 	for i=1,10, 1 do	
 		grouped[i].eaters={}
 		

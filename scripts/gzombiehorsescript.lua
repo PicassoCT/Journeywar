@@ -632,7 +632,7 @@ end
 function resetPosition()
 	SetSignalMask(SIG_RESET)
 	Sleep(500)
-	reseT(legsTable,1,true, false)
+	resetT(legsTable,1,true, false)
 	resetP(kuttel,3)
 	if math.random(0,1)==1 then
 		Turn(kuttel,x_axis,math.rad(30),60)
@@ -686,7 +686,7 @@ function dropDead()
 			end
 		
 			Sleep(500)
-			reseT(legsTable,3,true, false)
+			resetT(legsTable,3,true, false)
 		end
 		
 		Sleep(1000)

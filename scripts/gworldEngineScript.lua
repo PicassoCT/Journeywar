@@ -1,3 +1,8 @@
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_Build.lua" 
 
 TablesOfPiecesGroups={}
 
@@ -12,85 +17,6 @@ Pump1=piece"Pump1"
 center=piece"center"
 body=piece"body"
 DeathStick=piece"DeathStick"
-
-function resetP(piecename,speed,boolWaitForIT)
-	if not piecename then return end
-	
-	Turn(piecename,x_axis,0,speed)
-	Turn(piecename,y_axis,0,speed)
-	Turn(piecename,z_axis,0,speed)
-	
-	Move(piecename,x_axis,0,speed)
-	Move(piecename,y_axis,0,speed)
-	Move(piecename,z_axis,0,speed,true)
-	if boolWaitForIT then 
-		WaitForTurn(piecename,1)
-		WaitForTurn(piecename,2)
-		WaitForTurn(piecename,3)
-	end	
-end
-
-function reseT(tableName,speed, ShowAll, boolWait)
-	lboolWait=boolWait or false
-	lspeed=speed or 0	
-	
-	for i=1,#tableName do
-		
-		resetP(tableName[i],lspeed,lboolWait)
-		if ShowAll and tableName[i] then
-			Show(tableName[i])
-		end
-		
-	end
-end
--->Shows a Pieces Table
-function showT(tablename,lowLimit,upLimit,delay)
-	if not tablename then Spring.Echo("No table given as argument for showT") return end
-	
-	if lowLimit and upLimit then
-		for i=lowLimit,upLimit, 1 do
-			if tablename[i] then
-				Show(tablename[i])
-			end
-			if delay and delay > 0 then Sleep(delay) end
-		end
-		
-	else
-		for i=1,table.getn(tablename), 1 do
-			if tablename[i] then
-				Show(tablename[i])
-			end
-		end
-	end
-end
-
-
---> Hides a PiecesTable, 
-function hideT(tablename,lowLimit,upLimit,delay)
-	if not tablename then return end
-	boolDebugActive= (lib_boolDebug==true and lowLimit and type(lowLimit) ~= "string")
-	
-	if lowLimit and upLimit then
-		for i=upLimit,lowLimit, -1 do
-			if tablename[i] then
-				Hide(tablename[i])
-			elseif boolDebugActive == true then
-				echo("In HideT, table ".. lowLimit .." contains a empty entry")
-			end
-			
-			if delay and delay > 0 then Sleep(delay) end
-		end
-		
-	else
-		for i=1,table.getn(tablename), 1 do
-			if tablename[i] then
-				Hide(tablename[i])
-			elseif boolDebugActive == true then
-				echo("In HideT, table ".. lowLimit .." contains a empty entry")
-			end
-		end
-	end
-end
 
 function makePieceMap(unitID)
 	List=Spring.GetUnitPieceMap(unitID)
@@ -185,7 +111,7 @@ end
 function script.Create()
  	TablesOfPiecesGroups=makePieceMap(unitID)
 	hideT(TablesOfPiecesGroups)
-	reseT(TablesOfPiecesGroups,0)
+	resetT(TablesOfPiecesGroups,0)
 	Turn(Leg3,y_axis,math.rad(120),0)
 	Turn(Leg2,y_axis,math.rad(240),0)
  

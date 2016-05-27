@@ -20,7 +20,7 @@ function rebuildThread()
 				
 	StartThread(buildInfernalMachine,center, 16, pieceTable)
 	Sleep(10000)
-	reseT(pieceTable)
+	resetT(pieceTable)
 	end
 
 end

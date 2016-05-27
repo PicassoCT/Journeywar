@@ -610,7 +610,7 @@ ArmsTable={}
 function script.Create()
 	
 	
-	reseT(piecesTable)
+	resetT(piecesTable)
 	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	WindowTable=TablesOfPiecesGroups["Window"]
@@ -856,7 +856,7 @@ function fold	(boolDirection, lspeed)
 		return state,Instate 
 	else 
 		
-		reseT(OperationSet,speed,true,true)
+		resetT(OperationSet,speed,true,true)
 		hideT(OperationSet)
 		
 		
@@ -879,7 +879,7 @@ end
 function eggDeploy(speed)	
 	
 	Arm=ArmsTable[18]
-	reseT(Arm,speed,false,true)
+	resetT(Arm,speed,false,true)
 	showT(Arm)
 	Hide(Op18)
 	
@@ -978,7 +978,7 @@ function eggDeploy(speed)
 	Sleep(5000)
 	
 	
-	reseT(Arm,5,false,true)
+	resetT(Arm,5,false,true)
 	
 	
 	
@@ -1335,13 +1335,14 @@ function snakeEyes()
 		--open
 		--config
 		tolerance=2
+		speed= 0.5
 		boolPartStepExecution=true
 		boolWait=true
 		
 		for k,v in pairs(setOfTools) do
 			
 			Piece_Deg_Length_PointIndex_boolGateCrossed_List={
-				PointIndex=1,
+				lastPointIndex=0,
 				Piece= 	ArmsTable[k][1],
 				boolGateCrossed= false,
 				Length=3,
@@ -1353,14 +1354,15 @@ function snakeEyes()
 				[2]= makeVector(7,9,0)
 			}
 			
-			snakeOnAPlane(	Piece_Deg_Length_PointIndex_boolGateCrossed_List,
-			SnakePoints,
-			z_axis,
-			0.5, 
-			ArmsTable[k][OpTool],
-			tolerance, 
-			boolPartStepExecution, 
-			boolWait
+			snakeOnAPlane(	unitID,
+							Piece_Deg_Length_PointIndex_boolGateCrossed_List,
+							ArmsTable[k][OpTool],
+							SnakePoints,
+							z_axis,
+							speed, 							
+							tolerance, 
+							boolPartStepExecution, 
+							boolWait
 			)
 		end
 		
