@@ -31,6 +31,7 @@ local LastCommandStack={}
 --action of the GUI
 
 boolStackNotEmpty=false
+boolDeleteMode= true
 
 local echo = Spring.Echo
 
@@ -83,6 +84,7 @@ function widget: Initialize()
 			TacZoneButton,
 			ActionZoneButton,
 			ReservoirZoneButton,
+			DeleteZonesButton,
 		},
 		
 	}
@@ -156,6 +158,23 @@ function widget: Initialize()
 		OnClick = {function () push("DEA|RZ|") end}
 	}
 	
+	DeleteZonesButton=Chili.Button:New
+	{
+		backgroundColor = {0.1,0.8,0.8,1}, 
+		textColor = {0.8,1,1,1}, 
+		caption = "Delete /n Zones",
+		parent=button_rack,
+		width="50%",
+		height= "33%",
+		x = 145,
+		y = 35,
+		minWidth =48,
+		minHeight =48,
+		OnClick = {function () 
+		boolDeleteMode= not boolDeleteMode
+	}
+	
+	
 	ReservoirZoneButtonImage = Image:New {
 		width="90%",
 		height= "90%",
@@ -206,6 +225,10 @@ function widget:MousePress(x,y,button)
 			pop(World[1],World[3])
 		end 
 	end	
+	
+	if boolDeleteMode== true then
+		genericMessage(World[1],World[3],"DEA|DEL")	
+	end
 end	
 
 function pop(xCoords,zCoords)
@@ -218,6 +241,9 @@ function pop(xCoords,zCoords)
 	end
 end
 
+function genericMessage(x,z,String)
+	Spring.SendLuaRulesMsg(String.."|"..x.."|"..z)
+end
 
 function push(Command)
 	boolStackNotEmpty=true

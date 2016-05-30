@@ -718,6 +718,9 @@ end
 		--if not defined ArmCenter - define Arm as centered in UnitSpace
 		if not PceDescLst.ArmCenterOffset then PceDescLst.ArmCenterOffset ={ox=0, oy = 0, oz = 0} end
 		
+		for iNumerated,arm in ipairs(PceDescLst) do
+		--TODO
+		end
 		--total Length arm
 		--Preparations and Default Initialisations
 		for iNumerated,arm in ipairs(PceDescLst) do

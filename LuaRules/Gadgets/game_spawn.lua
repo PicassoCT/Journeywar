@@ -108,7 +108,7 @@ end
 local function SpawnStartUnit(teamID)
 	local startUnit = GetStartUnit(teamID)
 	if (startUnit and startUnit ~= "") then
-		Spring.Echo("GameStart::Called for 3 team .."..teamID)
+		--Spring.Echo("GameStart::Called for 3 team .."..teamID)
 		-- spawn the specified start unit
 		local x,y,z = Spring.GetTeamStartPosition(teamID)
 		-- snap to 16x16 grid
@@ -182,7 +182,7 @@ function gadget:GameStart()
 	local teams = Spring.GetTeamList()
 	for i = 1,#teams do
 		local teamID = teams[i]
-		Spring.Echo("GameStart::Called for team .."..teamID)
+		--Spring.Echo("GameStart::Called for team .."..teamID)
 		-- don't spawn a start unit for the Gaia team
 		if (teamID ~= gaiaTeamID) then
 			SpawnStartUnit(teamID)

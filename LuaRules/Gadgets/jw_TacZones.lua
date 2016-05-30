@@ -236,16 +236,17 @@ end
 					end
 			
 				local t=Spring.GetUnitCommands(id)
-
+				if t then 
 					 for tid,cmd in ipairs(t) do
 
 						 if cmd.params then
 									if cmd.id == CMD.GUARD and cmd.params[1] then
-									--Spring.Echo("Got a Guarded Actionzone.."..(cmd.params[1]))
+									--Spring.Echo("Got a Guarded Actionzone.."..(cmd.params[1]))  	
 									return cmd.params[1]
 									end
 						end
 					 end
+				end
 		end
 	
 function getKeyN(myTable)
