@@ -66,19 +66,22 @@ function widget: Initialize()
 	azTex = {imageDir .. 'taczone/action.png'}
 	rzTex = {imageDir .. 'taczone/reservoire.png'}
 	tzTex = {imageDir .. 'taczone/trigger.png'}
+	delTex = {imageDir .. 'taczone/delete.png'}
 	--TacZone ButtonGrid
 	button_rack = Grid:New{
 		--		y=42,
-		padding = {5,3,3,5},
+		padding = {5,5,5,5},
 		itemPadding = {0, 0, 0, 0},
 		itemMargin = {0, 0, 0, 0},
-		width='90%',
+		width='100%',
 		height = '100%',
 		y=10,
-		resizeItems = false,
+		resizeItems = true,
+		resizeItems = true,
 		orientation = 'vertical',
 		centerItems = false,
 		columns=1,
+		row = 4,
 		children = 
 		{ 
 			TacZoneButton,
@@ -99,8 +102,8 @@ function widget: Initialize()
 		parent=button_rack,
 		width="60%",
 		height= "33%",
-		x = 29,
-		y = 35,
+		x = 40,
+		y = 50,
 		minWidth =48,
 		minHeight =48,
 		OnClick = {function () push("DEA|TZ|") end}
@@ -134,7 +137,7 @@ function widget: Initialize()
 	
 	ActionZoneButtonImage = Image:New {
 		width="90%",
-		height= "90%",
+		height= "75%",
 		bottom = nil,
 		y="0%", 
 		x="0%",
@@ -158,21 +161,7 @@ function widget: Initialize()
 		OnClick = {function () push("DEA|RZ|") end}
 	}
 	
-	DeleteZonesButton=Chili.Button:New
-	{
-		backgroundColor = {0.1,0.8,0.8,1}, 
-		textColor = {0.8,1,1,1}, 
-		caption = "Delete /n Zones",
-		parent=button_rack,
-		width="50%",
-		height= "33%",
-		x = 145,
-		y = 35,
-		minWidth =48,
-		minHeight =48,
-		OnClick = {function () 
-		boolDeleteMode= not boolDeleteMode
-	}
+	
 	
 	
 	ReservoirZoneButtonImage = Image:New {
@@ -186,6 +175,33 @@ function widget: Initialize()
 		parent = ReservoirZoneButton,			
 	} 
 	
+	
+	
+	DeleteZonesButton=Chili.Button:New
+	{
+		backgroundColor = {0.1,0.8,0.8,1}, 
+		textColor = {0.8,1,1,1}, 
+		caption = "Delete",
+		parent=button_rack,
+		width="50%",
+		height= "33%",
+		x = 160,
+		y = 35,
+		minWidth =48,
+		minHeight =48,
+		OnClick = {function () 	boolDeleteMode= not boolDeleteMode;	end	}
+	}
+	
+	DeleteZoneButtonImage = Image:New {
+		width="90%",
+		height= "90%",
+		bottom = nil,
+		y="0%",
+		x="0%",
+		keepAspect = true,
+		file = delTex[1],
+		parent = DeleteZonesButton,			
+	}
 	
 	TacZone_main = Window:New{
 		padding = {5,5,5,5,},
@@ -219,15 +235,18 @@ end
 
 -- callins
 function widget:MousePress(x,y,button)	
-	if button== 1 and boolStackNotEmpty ==true then
+	if button== 1 and boolStackNotEmpty ==true or boolDeleteMode== true then
 		_,World=Spring.TraceScreenRay(x,y,true)
-		if World then
-			pop(World[1],World[3])
-		end 
-	end	
-	
-	if boolDeleteMode== true then
-		genericMessage(World[1],World[3],"DEA|DEL")	
+		
+		if button== 1 and boolStackNotEmpty ==true then		
+			if World then
+				pop(World[1],World[3])
+			end 
+		end	
+		
+		if boolDeleteMode== true then
+			genericMessage(World[1],World[3],"DEA|DEL")	
+		end
 	end
 end	
 

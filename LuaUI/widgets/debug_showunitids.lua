@@ -6,7 +6,8 @@
                             date    = "August 2010",
                             license = "Free, run, jump- play with the other software packages. What do you mean, you want to hold slaves?",
                             layer   = 0,
-                            enabled = true,
+                            enabled = false,
+							hidden = true
                     }
     end
      

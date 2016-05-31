@@ -76,7 +76,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				elseif typeOfZone == "del" then
 					TableOfUnits= Spring.GetUnitsInCylinder(coordx,coordz, 50)
 					if TableOfUnits and #TableOfUnits > 0 then
-						for i=1, TableOfUnits do
+						for i=1, #TableOfUnits do
 							id=Spring.GetUnitDefID(TableOfUnits[i])	
 							if id and ZoneDefs[id] then
 								Spring.DestroyUnit(TableOfUnits[i],true,true)
