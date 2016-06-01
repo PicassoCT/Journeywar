@@ -96,7 +96,7 @@ function widget: Initialize()
 	TacZoneButton=Chili.Button:New{
 		backgroundColor = {0.1,0.8,0.8,1},
 		textColor = {0.8,1,1,1}, 			
-		caption = "", 
+		caption = "Trigger", 
 		
 		isDisabled=false,
 		parent=button_rack,
@@ -124,7 +124,7 @@ function widget: Initialize()
 	{
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1}, 
-		caption = "", 
+		caption = "Action", 
 		parent=button_rack,
 		width="50%",
 		height= "33%",
@@ -150,7 +150,7 @@ function widget: Initialize()
 	{
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1}, 
-		caption = "",
+		caption = "Resevoir",
 		parent=button_rack,
 		width="50%",
 		height= "33%",
