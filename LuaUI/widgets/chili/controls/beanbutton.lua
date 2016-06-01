@@ -49,13 +49,13 @@ function BeanButton:Init(btriangleStrip)
 	
 	--computate the preBox
 	for i=1,table.getn(this.nGone) do
-		local point= nGone[i]
-		
+		local point= nGone[i]		
 		if point.x < xMin then xMin= point.x end
 		if point.x > xMax then xMax= point.x end
 		if point.y < yMin then yMin= point.y end
 		if point.y > yMax then yMax= point.y end
 	end
+	
 	xMax= math.max(math.abs(xMin),math.abs(xMax))
 	yMax= math.max(math.abs(yMin),math.abs(yMax))
 	defaultWidth = xMax*2
