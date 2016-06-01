@@ -9,6 +9,7 @@ function widget:GetInfo()
 		date = "2013-08-22",
 		license = "GNU GPL, v2 or later",
 		layer = 255,
+		hidden=true,
 		enabled = true -- loaded by default?
 	}
 end
@@ -96,7 +97,7 @@ function widget: Initialize()
 	TacZoneButton=Chili.Button:New{
 		backgroundColor = {0.1,0.8,0.8,1},
 		textColor = {0.8,1,1,1}, 			
-		caption = "Trigger", 
+		caption = "", 
 		
 		isDisabled=false,
 		parent=button_rack,
@@ -106,7 +107,9 @@ function widget: Initialize()
 		y = 50,
 		minWidth =48,
 		minHeight =48,
-		OnClick = {function () push("DEA|TZ|") end}
+		OnMouseOut= {function () TacZoneButtonImage:Show(); TacZoneButton.caption="";end},
+		OnMouseOver= {function () TacZoneButtonImage:Hide(); TacZoneButton.caption="Trigger";end},
+		OnClick = {function ()boolDeleteMode=false; push("DEA|TZ|") end}
 	}
 	
 	TacZoneButtonImage = Image:New {
@@ -124,7 +127,7 @@ function widget: Initialize()
 	{
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1}, 
-		caption = "Action", 
+		caption = "", 
 		parent=button_rack,
 		width="50%",
 		height= "33%",
@@ -132,7 +135,9 @@ function widget: Initialize()
 		y = 35,
 		minWidth =48,
 		minHeight =48,
-		OnClick = {function () push("DEA|AZ|") end}
+		OnMouseOut= {function () ActionZoneButtonImage:Show(); ActionZoneButton.caption="";end},
+		OnMouseOver= {function () ActionZoneButtonImage:Hide(); ActionZoneButton.caption="Action";end},
+		OnClick = {function ()boolDeleteMode=false; push("DEA|AZ|") end}
 	}
 	
 	ActionZoneButtonImage = Image:New {
@@ -150,7 +155,7 @@ function widget: Initialize()
 	{
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1}, 
-		caption = "Resevoir",
+		caption = "",
 		parent=button_rack,
 		width="50%",
 		height= "33%",
@@ -158,7 +163,9 @@ function widget: Initialize()
 		y = 35,
 		minWidth =48,
 		minHeight =48,
-		OnClick = {function () push("DEA|RZ|") end}
+		 OnMouseOut= {function () ReservoirZoneButtonImage:Show(); ReservoirZoneButton.caption="";end},
+		OnMouseOver= {function () ReservoirZoneButtonImage:Hide(); ReservoirZoneButton.caption="Reseve";end},
+		OnClick = {function ()boolDeleteMode=false; push("DEA|RZ|") end}
 	}
 	
 	
@@ -181,7 +188,7 @@ function widget: Initialize()
 	{
 		backgroundColor = {0.1,0.8,0.8,1}, 
 		textColor = {0.8,1,1,1}, 
-		caption = "Delete",
+		caption = "",
 		parent=button_rack,
 		width="50%",
 		height= "33%",
@@ -189,6 +196,9 @@ function widget: Initialize()
 		y = 35,
 		minWidth =48,
 		minHeight =48,
+		OnMouseOut= {function () DeleteZoneButtonImage:Show(); DeleteZonesButton.caption="";end},
+		OnMouseOver= {function () DeleteZoneButtonImage:Hide(); DeleteZonesButton.caption="Delete";end},
+		
 		OnClick = {function () 	boolDeleteMode= not boolDeleteMode;	end	}
 	}
 	

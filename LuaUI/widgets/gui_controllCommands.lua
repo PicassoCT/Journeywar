@@ -136,7 +136,8 @@ function widget:Initialize()
 						{x= 0, y = -15},
 						{x= 0, y = 25},
 						{x= 70, y = 55},
-						{x= 70, y = -50}
+						{x= 70, y = -50},
+						{x= 70, y = -50},
 
 						},
 						caption= "PICA",
@@ -185,14 +186,11 @@ function widget:Initialize()
 						nGone={
 						
 						{x= 0, y = -15},
-						{x= 70, y = -55},
-						{x= 55, y = 0},
-						{x= 35, y = 35},
-						{x= 70, y = 65},						
-						{x= 0, y = 65}
-					
+						{x= 25, y = -25},
+						{x= 55, y = -35}						
 
 						},
+						
 						caption= "UR DRUNK",
 						
 								backgroundColor = BaseCol,

@@ -101,17 +101,20 @@ function BeanButton:BruteForceTriStripTest(x,y)
 	
 	point= {x=x, y= y}
 	
-	for i=1, #nGone-2, 1 do
-		if PointInTriangle(point,nGone[i],nGone[i+1],nGone[i+2] ) == true then return true end
+	for i=3, #nGone, 1 do
+		if PointInTriangle(point,nGone[i],nGone[i-1],nGone[i-2] ) == true then return true end
 	end 
 	return false
 end
 
 
 --//=============================================================================
+
+
+
 function BeanButton:DeterminantCheck(x,y)
 	
-	local x,y = self.x , self.y
+
 	local j= #self.nGone-1
 	boolOddNodes=false
 	
@@ -136,11 +139,17 @@ function BeanButton:DeterminantCheck(x,y)
 	
 end
 
+
+
+
 --//=============================================================================
 
 
 function BeanButton:HitTest(x,y)
-	
+
+	--x,y = self:LocalToClient(x,y)
+	Spring.Echo("Point"..x.."/"..y.." -> "..self.x.." / "..self.y) 
+
 	--rough test is this in shape
 	localQuadUpLeft_X,localQuadUpLeft_Y = self.x, self.y
 	localQuadDowRight_X,localQuadDowRight_Y = self.x + self.defaultWidth, self.y + self.defaultHeight
@@ -151,11 +160,15 @@ function BeanButton:HitTest(x,y)
 		Spring.Echo("BeanButton: In Range")
 		
 		if self.triangleStrip == false then
+			Spring.Echo("BeanButton:DeterminantCheck"..x.." / "..y.." = "..result)
 			return self:DeterminantCheck(x,y)
 		else
-			return self:BruteForceTriStripTest(x,y)
+			result = self:BruteForceTriStripTest(x,y)
+			Spring.Echo("BeanButton:TriangleHitTest"..x.." / "..y.." = "..result)
+			return result
 		end
 	else
+		Spring.Echo("BeanButton:OutOfTheBox"..x.." / "..y.." = false")
 		return false
 	end
 end
