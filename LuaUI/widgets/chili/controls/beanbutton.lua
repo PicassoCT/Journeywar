@@ -157,6 +157,7 @@ end
 
 
 
+
 --//=============================================================================
 
 
@@ -172,9 +173,12 @@ function BeanButton:HitTest(x,y)
 	--check if we are in the aufgespanntem quad
 	if x >= localQuadUpLeft_X and x <= localQuadDowRight_X and
 	y >= localQuadUpLeft_Y and y <= localQuadDowRight_Y then
-	
+		
+		if self.triangleStrip == false then
+			return self:DeterminantCheck(x,y)
+		else	
 			return self:BruteForceTriStripTest(x,y)
-
+		end
 	else
 		return false
 	end
