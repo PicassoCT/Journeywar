@@ -56,13 +56,21 @@ function BeanButton:Init(btriangleStrip)
 		if point.y > yMax then yMax= point.y end
 	end
 	
-	xMax= math.max(math.abs(xMin),math.abs(xMax))
-	yMax= math.max(math.abs(yMin),math.abs(yMax))
-	defaultWidth = xMax*2
-	defaultHeight = yMax*2
+	xMinRes= xMin+ math.abs(xMax)+ math.abs(xMin)
+	xMaxRes= xMax+ math.abs(xMax)+ math.abs(xMin)
+	xWidth = xMaxRes - xMinRes
 	
-	this.xCenter=xMax
-	this.yCenter=yMax
+	yMinRes= yMin+ math.abs(yMax)+ math.abs(yMin)
+	yMaxRes= yMax+ math.abs(yMax)+ math.abs(yMin)
+	yHeigth = yMaxRes - yMinRes
+	
+	
+
+	defaultWidth = xWidth
+	defaultHeight =yHeigth
+	
+	this.xCenter=xWidth/2
+	this.yCenter=yHeigth/2
 end
 --//=============================================================================
 --//=============================================================================
@@ -102,7 +110,7 @@ function BeanButton:BruteForceTriStripTest(x,y)
 	point= {x=x, y= y}
 	
 	for i=3, #nGone, 1 do
-		if PointInTriangle(point,nGone[i],nGone[i-1],nGone[i-2] ) == true then return true end
+		if PointInTriangle(point,nGone[i],nGone[i-1],nGone[i-2] ) == true then return self end
 	end 
 	return false
 end
@@ -135,10 +143,17 @@ function BeanButton:DeterminantCheck(x,y)
 		j=i
 	end
 	
-	return boolOddNodes
+	if boolOddNodes == true then
+	Spring.Echo("BeanButton:DeterminantCheck:true")
+		return self
+	else 
+	Spring.Echo("BeanButton:DeterminantCheck:false")
+		return false
+	end
+	
+
 	
 end
-
 
 
 
@@ -148,27 +163,19 @@ end
 function BeanButton:HitTest(x,y)
 
 	--x,y = self:LocalToClient(x,y)
-	Spring.Echo("Point"..x.."/"..y.." -> "..self.x.." / "..self.y) 
+	Spring.Echo("Point"..x.." < "..(self.defaultWidth) .." / "..y.." -> ".." < "..( self.defaultHeight)) 
 
 	--rough test is this in shape
-	localQuadUpLeft_X,localQuadUpLeft_Y = self.x, self.y
-	localQuadDowRight_X,localQuadDowRight_Y = self.x + self.defaultWidth, self.y + self.defaultHeight
+	localQuadUpLeft_X,localQuadUpLeft_Y = 0, 0
+	localQuadDowRight_X,localQuadDowRight_Y =  self.defaultWidth, self.defaultHeight
 	
 	--check if we are in the aufgespanntem quad
 	if x >= localQuadUpLeft_X and x <= localQuadDowRight_X and
-	y <= localQuadUpLeft_Y and y >= localQuadDowRight_Y then
-		Spring.Echo("BeanButton: In Range")
-		
-		if self.triangleStrip == false then
-			Spring.Echo("BeanButton:DeterminantCheck"..x.." / "..y.." = "..result)
-			return self:DeterminantCheck(x,y)
-		else
-			result = self:BruteForceTriStripTest(x,y)
-			Spring.Echo("BeanButton:TriangleHitTest"..x.." / "..y.." = "..result)
-			return result
-		end
+	y >= localQuadUpLeft_Y and y <= localQuadDowRight_Y then
+	
+			return self:BruteForceTriStripTest(x,y)
+
 	else
-		Spring.Echo("BeanButton:OutOfTheBox"..x.." / "..y.." = false")
 		return false
 	end
 end

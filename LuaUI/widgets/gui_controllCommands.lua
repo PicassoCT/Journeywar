@@ -126,10 +126,10 @@ function widget:Initialize()
 						
 								backgroundColor = BeanCol,
 								textColor = texCol, 
-
+	
 								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
 					}
-					
+	--[[				
 	bestIrregular= 	Chili.BeanButton:New{
 						nGone={
 						
@@ -200,12 +200,13 @@ function widget:Initialize()
 					}
 					
 					
-	testIrregular.Init()	
+	
 	bestIrregular.Init()
 	restIrregular.Init()
 	aestIrregular.Init()
 	destIrregular.Init()
-	
+	]]
+	testIrregular.Init()
 	base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
