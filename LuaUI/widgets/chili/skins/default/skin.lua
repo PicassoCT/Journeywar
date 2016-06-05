@@ -180,23 +180,23 @@ dist= math.sqrt(vec.x^2 +vec.y^2)
 return {x= vec.x/dist, y=vec.y/dist}
 end
 
-function DrawBeanButtonBorder(obj,state)
-  local nGone =obj.nGone
+function DrawHabaneroButtonBorder(obj,state)
+  local triStrip =obj.triStrip
   local bt = obj.borderThickness
   local w = obj.width
   local h = obj.height
 
 
   gl.Color((state.pressed and obj.borderColor2) or obj.borderColor)
-	  for i=1,#nGone-1, 1 do
+	  for i=1,#triStrip-1, 1 do
 		
-		  vec={x=nGone[i].x-nGone[i+1].x,
-		       y=nGone[i].y-nGone[i+1].y+w}
+		  vec={x=triStrip[i].x-triStrip[i+1].x,
+		       y=triStrip[i].y-triStrip[i+1].y+w}
 		  
-		  perpVec=normVector({x=nGone[i+1].y-nGone[i+1].y, y=-1*(nGone[i+1].x-nGone[i+1].x)}) 
-		  lowPA={x=nGone[i].x+perpVec.x*bt, y=nGone[i].y+perpVec.y*bt}
+		  perpVec=normVector({x=triStrip[i+1].y-triStrip[i+1].y, y=-1*(triStrip[i+1].x-triStrip[i+1].x)}) 
+		  lowPA={x=triStrip[i].x+perpVec.x*bt, y=triStrip[i].y+perpVec.y*bt}
 		  --calculate the perendicular
-		  lowPB={x=nGone[i].x+perpVec.x*bt* -1, y=nGone[i].y+ perpVec.y*bt*-1}
+		  lowPB={x=triStrip[i].x+perpVec.x*bt* -1, y=triStrip[i].y+ perpVec.y*bt*-1}
 		  upPA,upPB= lowPA,lowPB
 		  upPA.x,upPA.y=lowPA.x + vec.x,lowPA.y +vec.y
 		  upPB.x,upPB.y=lowPB.x + vec.x,lowPB.y +vec.y
@@ -244,35 +244,19 @@ function _DrawBackground(obj)
   gl.Vertex(x+w, y+h)
 end
 
-function _DrawBeanButtonBackground(obj)
-  local nGone =obj.nGone
-  local x= obj.xCenter
-  local y= obj.yCenter
+function _DrawHabaneroButtonBackground(obj)
+  local triStrip =obj.triStrip
   gl.Color(obj.backgroundColor)
-
- if obj.triangleStrip == false then 
-	for i=1, #nGone-1, 2 do
-	 gl.Vertex(x,y) 
-	 gl.Vertex(nGone[i].x,nGone[i].y) 
-	 gl.Vertex(nGone[i+1].x,nGone[i+1].y) 
-	 gl.Vertex(x,y) 
-	end
-	
-  	 gl.Vertex(x,y) 
-	 gl.Vertex(nGone[#nGone].x,nGone[#nGone].y) 
-	 gl.Vertex(nGone[1].x,nGone[1].y) 
-	 gl.Vertex(x,y) 
- else
- 
-	for i=1, #nGone-2, 1 do
-	 gl.Vertex(nGone[i].x,nGone[i].y) 
-	 gl.Vertex(nGone[i+1].x,nGone[i+1].y) 
-	 gl.Vertex(nGone[i+2].x,nGone[i+2].y) 
+  
+	for i=3, #triStrip, 1 do
+	 gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
+	 gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
+	 gl.Vertex(triStrip[i].x,  triStrip[i].y) 
 
 	end 
  end
 	 
-end
+
 
 function _DrawTabBackground(obj)
   local x = 0
@@ -322,9 +306,9 @@ function DrawWindow(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBorder, obj, obj.state)
 end
 
-function DrawBeanButton(obj)
-  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBeanButtonBackground, obj, obj.state)
- -- gl.BeginEnd(GL.TRIANGLE_STRIP, DrawBeanButtonBorder, obj, obj.state)
+function DrawHabaneroButton(obj)
+  gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBackground, obj, obj.state)
+ -- gl.BeginEnd(GL.TRIANGLE_STRIP, DrawHabaneroButtonBorder, obj, obj.state)
 
   if (obj.caption) then
     local w = obj.width
@@ -707,8 +691,8 @@ skin.icons = {
 skin.image = {
 }
 
-skin.beanbutton = {
-  DrawControl = DrawBeanButton,
+skin.HabaneroButton = {
+  DrawControl = DrawHabaneroButton,
 }
 
 skin.button = {

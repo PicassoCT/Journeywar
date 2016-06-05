@@ -1,3 +1,2 @@
 --AllowUnsafeChanges("blahblah")
-VFS.Include("luagadgets/gadgets.lua",nil, VFS.BASE)
-Spring.Echo('LuaRules Entry Point: \"main.lua\"')
+VFS.Include("LuaRules/gadgets.lua",nil, VFS.BASE)

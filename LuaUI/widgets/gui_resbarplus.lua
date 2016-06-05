@@ -24,6 +24,7 @@ local offsety=0
 local esurge=4
 local esurge2=4
 local seperation=100
+local opSignum= 1
 
 
 
@@ -44,24 +45,24 @@ pathEnergy="luaui/images/cres_energy.png"
 pathMetall="luaui/images/cres_metal.png"
 
 function setTeam()
-if teamid then
-	teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier= Spring.GetTeamInfo(teamid)
-	if side and side ~= "" and type(side)== "string" then
-		if string.lower(side)==combine then
-			sideCombine = true
-		elseif string.lower(side)== 'journeyman' then
-			sideCombine= false
+
+	if teamid then
+		teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier= Spring.GetTeamInfo(teamid)
+		if side and side ~= "" and type(side)== "string" then
+			if string.lower(side)==combine then
+				sideCombine = true
+			elseif string.lower(side)== 'journeyman' then
+				sideCombine= false
+			end			
 		end
 		
-	end
-	
-	
-	if sideCombine==false then
-		pathEnergy= 'luaui/images/jres_energy.png' 
-		pathMetall= 'luaui/images/jres_metal.png' 
-	end
+		
+		if sideCombine==false then
+			pathEnergy= 'luaui/images/jres_energy.png' 
+			pathMetall= 'luaui/images/jres_metal.png' 
+		end
 
-end
+	end
 end
 
 
@@ -761,12 +762,12 @@ function widget:DrawScreen()
 				--Spring.Echo(esurge)
 				
 				esurge=esurge2
-				repeat
-					esurge2=math.random(4,7)
-				until esurge~=esurge2
+				esurge2 = (esurge2 +1) % 8
+				if esurge2 < 4 then  esurge2 = 4 end			
 				
 			end
-			DrawComponent(esurge)			
+		
+			DrawComponent(esurge)
 			DrawComponent(esurge2)
 			
 		end

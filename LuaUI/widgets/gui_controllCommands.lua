@@ -113,13 +113,13 @@ function widget:Initialize()
 		}
 		extendedCommand_window:AddChild(extendedCommand_Grid)
 
-	testIrregular= 	Chili.BeanButton:New{
-						nGone={
-						
-						{x= 0, y = 70},
+	testIrregular= 	Chili.HabaneroButton:New{
+						triStrip={
+						{x= 70, y = 0},			
 						{x= 0, y = 0},
-						{x= 70, y = 0},
-						{x= 70, y = 35},
+						{x= 70, y = 70},						
+						{x= 0, y = 70},
+						{x= 0, y = 100},
 
 						},
 						caption= "WTF",
@@ -127,11 +127,11 @@ function widget:Initialize()
 								backgroundColor = BeanCol,
 								textColor = texCol, 
 	
-								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
 					}
 	--[[				
-	bestIrregular= 	Chili.BeanButton:New{
-						nGone={
+	bestIrregular= 	Chili.HabaneroButton:New{
+						triStrip={
 						
 						{x= 0, y = -15},
 						{x= 0, y = 25},
@@ -145,11 +145,11 @@ function widget:Initialize()
 								backgroundColor = BaseCol,
 								textColor = texCol, 
 
-								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
 					}
 					
-	restIrregular= 	Chili.BeanButton:New{
-						nGone={
+	restIrregular= 	Chili.HabaneroButton:New{
+						triStrip={
 						
 						{x= 70, y = -30},
 						{x= 0, y = -85},
@@ -162,11 +162,11 @@ function widget:Initialize()
 								backgroundColor = UpgCol,
 								textColor = texCol, 
 
-								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
 					}	
 
-	aestIrregular= 	Chili.BeanButton:New{
-						nGone={
+	aestIrregular= 	Chili.HabaneroButton:New{
+						triStrip={
 						
 						{x= 0, y = 70},
 						{x= 0, y = 0},
@@ -179,11 +179,11 @@ function widget:Initialize()
 								backgroundColor = BeanCol,
 								textColor = texCol, 
 
-								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
 					}
 					
-	destIrregular= 	Chili.BeanButton:New{
-						nGone={
+	destIrregular= 	Chili.HabaneroButton:New{
+						triStrip={
 						
 						{x= 0, y = -15},
 						{x= 25, y = -25},
@@ -196,7 +196,7 @@ function widget:Initialize()
 								backgroundColor = BaseCol,
 								textColor = texCol, 
 
-								OnClick = {function () Spring.Echo("The first beanButton is pressed into service") end}
+								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
 					}
 					
 					

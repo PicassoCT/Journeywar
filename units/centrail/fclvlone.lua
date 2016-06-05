@@ -1,92 +1,91 @@
 local unitName = "fclvlone"
 
 local unitDef = {
-name = "Farcaster",
-Description = "orders units from a higher Dimension",
-TEDClass = "PLANT",
-
-
-buildPic = "cfc1.dds",
-objectName = "fclvlone.s3o",
-script = "fclvlone.lua",
-
-onoffable = false,
-activateWhenBuilt=false,
-
+	name = "Farcaster",
+	Description = "orders units from a higher Dimension",
+	TEDClass = "PLANT",
+	
+	
+	buildPic = "cfc1.dds",
+	objectName = "fclvlone.s3o",
+	script = "fclvlone.lua",
+	
+	onoffable = false,
+	activateWhenBuilt=false,
+	
 	Upright = 1,	
 	levelground = 1,
-
-nanocolor=[[0 0.9 0.9]],
-
---cost
-buildCostMetal = 900,
-buildCostEnergy = 250,
-buildTime = 36,
---Health
-maxDamage = 1025,
-idleAutoHeal = 0,
---Movement
+	
+	nanocolor=[[0 0.9 0.9]],
+	
+	--cost
+	buildCostMetal = 900,
+	buildCostEnergy = 250,
+	buildTime = 36,
+	--Health
+	maxDamage = 1025,
+	idleAutoHeal = 0,
+	--Movement
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat",
-FootprintX = 5,
-FootprintZ = 8,
-MaxSlope = 20,
-
-MaxWaterDepth = 0,
-MovementClass = "Default2x2",
-
-
-radardistance=150,
-sightDistance = 300,
-
-
+	FootprintX = 5,
+	FootprintZ = 8,
+	MaxSlope = 20,
 	
-
-		EnergyStorage = 0,
+	MaxWaterDepth = 0,
+	MovementClass = "Default2x2",
+	
+	
+	radardistance=150,
+	sightDistance = 300,
+	
+	
+	
+	EnergyStorage = 0,
 	EnergyUse = 0,
 	MetalStorage = 0,
 	EnergyMake = 0, 
 	MakesMetal = 0, 
 	MetalMake = 0,	
- corpse             = "bgcorpse",
-
-CanPatrol = true,
-
-ShowNanoSpray = false,
-
-CanReclaim=false,
-canmove=true,	
-canBeAssisted =false,
-Reclaimable = true,
-buildDistance = 200,
-terraformSpeed = 50,
-
--- Pathfinding and related
+	corpse = "bgcorpse",
+	
+	CanPatrol = true,
+	
+	ShowNanoSpray = false,
+	
+	CanReclaim=false,
+	canmove=true,	
+	canBeAssisted =false,
+	Reclaimable = true,
+	buildDistance = 200,
+	terraformSpeed = 50,
+	
+	-- Pathfinding and related
 	FootprintX = 5,
 	FootprintZ = 5,
 	MaxSlope = 10,	
 	YardMap ="ooooo occco occco occco occco",
-
--- Building	
+	
+	-- Building	
 	Builder = true,
-   
+	
 	
 	
 	workerTime = 0.54,
 	buildoptions = 
 	{
-	"genupgrade","upgradefactory","mtw","campro","advisor","restrictor","cgamagardener","csniper"
+		"genupgrade","upgradefactory","mtw","campro","advisor","restrictor","cgamagardener","csniper"
 	},
 	
-	   customParams = {},
- sfxtypes = {
-				explosiongenerators = {
-				"custom:factorywarp", --1024
-				},
-				},
+	customParams = {},
+	sfxtypes = {
+		explosiongenerators = {
+			"custom:factorywarp", --1024
+		},
+	},
 	
 	
-Category = [[LAND BUILDING]],
+	Category = [[LAND BUILDING]],
 }
 
 

@@ -247,16 +247,15 @@ end
 function widget:MousePress(x,y,button)	
 	if button== 1 and boolStackNotEmpty ==true or boolDeleteMode== true then
 		_,World=Spring.TraceScreenRay(x,y,true)
-		
-		if button== 1 and boolStackNotEmpty ==true then		
-			if World then
-				pop(World[1],World[3])
-			end 
-		end	
-		
-		if boolDeleteMode== true then
-			genericMessage(World[1],World[3],"DEA|DEL")	
-		end
+		if World then
+			if button== 1 and boolStackNotEmpty ==true then					
+					pop(World[1],World[3])				
+			end	
+			
+			if boolDeleteMode== true then
+				genericMessage(World[1],World[3],"DEA|DEL")	
+			end
+		end 
 	end
 end	
 
