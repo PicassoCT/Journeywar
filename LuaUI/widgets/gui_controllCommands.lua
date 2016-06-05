@@ -63,9 +63,12 @@ end
 backgroundCol[1]={163/255, 229/255, 243/255, 0.75}	
 
 triStrip[2] ={
-	{x= 0, y = 10},			
 	{x= 70, y = -15},
+	{x= 0, y = 10},			
+	{x= 80, y = -5},
+
 	{x= 0, y = 70},
+	{x= 80, y = 80},
 	{x= 70, y = 90},
 }
 backgroundCol[2]={58/255, 172/255, 226/255, 0.75}					
@@ -79,8 +82,8 @@ triStrip[3] ={
 
 backgroundCol[3]={35/255, 124/255, 166/255, 0.75}		
 
-triStrip[4] ={
-	{x= 0, y = 0},			
+triStrip[4] ={		
+	{x= 0, y = 0},	
 	{x= 80, y =0},
 	{x= 0, y = 70},
 	{x= 80, y = 70},
@@ -113,16 +116,18 @@ triStrip[7] ={
 backgroundCol[7]={163/255, 229/255, 243/255, 0.75}	
 
 triStrip[8] ={
-	{x= -10, y = -15},			
-	{x= 80, y = -40},
-	{x= -10, y = 70},
-	{x= 80, y = 90},
+	{x= 0, y = -20},			
+	{x= 70, y = -40},			
+	{x= -10, y = -10},			
+	{x= 80, y = -35},
+	{x= -10, y = 95},
+	{x= 80, y = 60},
 }	
 backgroundCol[8]={52/255, 167/255, 222/255, 0.75}	
 
 triStrip[9] ={
-	{x= 0, y = -15},			
-	{x= 80, y = 5},
+	{x= 0, y = 5},			
+	{x= 80, y = -25},
 	{x= 0, y = 70},
 	{x= 80, y = 70},
 }	
@@ -133,7 +138,7 @@ caption={
 	[1]="ATTAC",
 	[2]="STOP",
 	[3]="MOVE",
-	[4]="FIRESTATE",
+	[4]="FIRESTATE   ",
 	[5]="REPEAT ",
 	[6]="MANOVEUR",
 	[7]="REPAIR \n\n",
@@ -150,7 +155,7 @@ controllCommand_window_positionY = "70%"
 
 extendedCommand_window_positionX = "0%" 
 extendedCommand_window_positionY= "41%"
-extendedCommand_window_width= "15%"
+extendedCommand_window_width= "10%"
 extendedCommand_window_height= "30%"
 
 function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
@@ -200,7 +205,9 @@ function widget:Initialize()
 		dragUseGrip = false,
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
-		children = {},
+		children = {
+		
+		},
 	}
 	
 	
@@ -214,19 +221,71 @@ function widget:Initialize()
 		--weightedResize =true,
 		resizeItems = true,		
 		orientation = 'horizontal',
-		centerItems = true,
-		columns = 3,	
-		rows = 3,
+		centerItems = false,
+		columns = 1,	
+		rows = 6,
 		name = 'UpgradeGrid',
-		width = 630,
-		height = 140,
+		width = '100%',
+		height = '100%',
 		
 		minItemHeight =	 '21%',
 		maxItemHeight =	 '32%',
 		
 		color = {0,0,0,1},
 		
-		children = {},		
+		children = {
+			Button:New{
+			name = "RECLAIM",
+			--tooltip = tooltip,
+			width = 100,
+			height = 40,
+			caption = 'RECLAIM',			
+			backgroundColor = basCol,
+			textColor =texCol,		
+			OnClick = { function()Spring.Echo("Hi World") end},
+			},	
+			Button:New{
+			name = "DROP/LOAD",
+			--tooltip = tooltip,
+			width = 200,
+			height = 40,
+			caption = 'DROP/LOAD',			
+			backgroundColor = basCol,
+			textColor =texCol,		
+			OnClick = { function()Spring.Echo("Hi World") end},
+			},	
+			Button:New{
+			name = "CLOAK",
+			--tooltip = tooltip,
+			width = 200,
+			height = 40,
+			caption = 'CLOAK',			
+			backgroundColor = basCol,
+			textColor =texCol,		
+			OnClick = { function()Spring.Echo("Hi World") end},
+			},
+			Button:New{
+			name = "RESTORE",
+			--tooltip = tooltip,
+			width = 200,
+			height = 40,
+			caption = 'RESTORE',			
+			backgroundColor = basCol,
+			textColor =texCol,		
+			OnClick = { function()Spring.Echo("Hi World") end},
+			},
+			Button:New{
+			name = "QUEUE COMMANDS",
+			--tooltip = tooltip,
+			width = 200,
+			height = 40,
+			caption = 'QUEUE COMMANDS',			
+			backgroundColor = basCol,
+			textColor =texCol,		
+			OnClick = { function()Spring.Echo("Hi World") end},
+			},
+		
+		},		
 	}
 	extendedCommand_window:AddChild(extendedCommand_Grid)
 	testFoonction= function () Spring.Echo("The first HabaneroButton is pressed into service") end
