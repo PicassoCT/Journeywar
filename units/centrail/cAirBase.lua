@@ -3,9 +3,7 @@ local unitName = "cairbase"
 local unitDef = {
 	name = "Airbase",
 	Description = "builds and repairs Aircrafts",
-	TEDClass = "PLANT",
-	
-	
+
 	
 	objectName = "cAirBase.s3o",
 	script = "cAirBaseScript.lua",
@@ -79,7 +77,7 @@ local unitDef = {
 	
 	buildoptions = 
 	{
-		"genupgrade","chunterchopper","csuborbital","conair","cgunship","callygator","cichneumonidae"
+		"genupgrade","chunterchopper","csuborbital","conair","cgunship","callygator"
 	},
 	
 	customParams = {},

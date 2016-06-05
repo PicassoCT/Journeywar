@@ -32,10 +32,118 @@ local controllCommand_window
 
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
- updateCommandsSoon = false
+updateCommandsSoon = false
+BaseCol={0.1,0.8,0.8,1}
+WeapCol={0.3,0.6,0.8,1}
+BeanCol={0.3,0.6,0.8,0.6}
+UpgCol={0.1,0.5,0.6,1}
+texCol={0,0,0,1}
+triStrip={}
+backgroundCol={}
+for i=1, 9 do
+	triStrip[i] ={
+		{x= 80, y = 0},			
+		{x= 0, y = 0},
+		{x= 80, y = 70},						
+		{x= 0, y = 70},
+		{x= 0, y = 100},
+		
+		
+	}
+	backgroundCol[i]={35/255, 124/255, 166/255, 0.75}
+end
+
+	triStrip[1] ={		
+	{x= 80, y = 0},			
+	{x= 0, y = 0},
+	{x= 80, y = 70},						
+	{x= 0, y = 70},
+	{x= 0, y = 100},
+}
+backgroundCol[1]={163/255, 229/255, 243/255, 0.75}	
+
+triStrip[2] ={
+	{x= 0, y = 10},			
+	{x= 70, y = -15},
+	{x= 0, y = 70},
+	{x= 70, y = 90},
+}
+backgroundCol[2]={58/255, 172/255, 226/255, 0.75}					
+
+triStrip[3] ={
+	{x= 0, y = -20},			
+	{x= 80, y = 2.5},
+	{x= 0, y = 70},
+	{x= 80, y = 70},
+}	
+
+backgroundCol[3]={35/255, 124/255, 166/255, 0.75}		
+
+triStrip[4] ={
+	{x= 0, y = 0},			
+	{x= 80, y =0},
+	{x= 0, y = 70},
+	{x= 80, y = 70},
+}	
+
+backgroundCol[4]={52/255, 167/255, 222/255, 0.75}	
+triStrip[5] ={
+	{x= 0, y = -15},			
+	{x= 70, y =-15},
+	{x= 0, y = 90},
+	{x= 70, y = 110},
+}	
+
+backgroundCol[5]={52/255, 167/255, 222/255, 0.75}	
+
+triStrip[6] ={
+	{x= 0, y = 5},			
+	{x= 80, y =25},
+	{x= 0, y = 70},
+	{x= 80, y = 70},
+}	
+backgroundCol[6]={35/255, 124/255, 166/255, 0.75}	
+
+triStrip[7] ={
+	{x= 0, y = 0},			
+	{x= 80, y = 0},
+	{x= 0, y = 70},
+	{x= 80, y = 48},
+}	
+backgroundCol[7]={163/255, 229/255, 243/255, 0.75}	
+
+triStrip[8] ={
+	{x= -10, y = -15},			
+	{x= 80, y = -40},
+	{x= -10, y = 70},
+	{x= 80, y = 90},
+}	
+backgroundCol[8]={52/255, 167/255, 222/255, 0.75}	
+
+triStrip[9] ={
+	{x= 0, y = -15},			
+	{x= 80, y = 5},
+	{x= 0, y = 70},
+	{x= 80, y = 70},
+}	
+backgroundCol[9]={52/255, 167/255, 222/255, 0.75}	
+
+
+caption={
+	[1]="ATTAC",
+	[2]="STOP",
+	[3]="MOVE",
+	[4]="FIRESTATE",
+	[5]="REPEAT ",
+	[6]="MANOVEUR",
+	[7]="REPAIR \n\n",
+	[8]="PATROL",
+	[9]="GUARD",
+}
+
 
 controllCommand_window_height = "30%"
-controllCommand_window_width =  "15%"
+controllCommand_window_width = "15%"
 controllCommand_window_positionX = "0%"
 controllCommand_window_positionY = "70%"
 
@@ -44,6 +152,19 @@ extendedCommand_window_positionX = "0%"
 extendedCommand_window_positionY= "41%"
 extendedCommand_window_width= "15%"
 extendedCommand_window_height= "30%"
+
+function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
+	
+	return 	Chili.HabaneroButton:New{
+		triStrip=triStrip	,
+		caption=caption,
+		
+		backgroundColor = basCol,
+		textColor = textCol, 
+		
+		OnClick = functionOnClick
+	}
+end
 
 --main Constructors
 function widget:Initialize()
@@ -61,7 +182,7 @@ function widget:Initialize()
 	Progressbar = Chili.Progressbar
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
-
+	
 	extendedCommand_window = Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
@@ -81,132 +202,48 @@ function widget:Initialize()
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {},
 	}
-
-	BaseCol={0.1,0.8,0.8,1}
-	WeapCol={0.3,0.6,0.8,1}
-	BeanCol={0.3,0.6,0.8,0.6}
-	UpgCol={0.1,0.5,0.6,1}
-	texCol={0.8,1,1,1}
+	
+	
 	extendedCommand_Grid = Grid:New{
-				x= 0,
-				y = 0,
-				padding = {5,5,5,5},
-				itemPadding = {0, 0, 0, 0},
-				itemMargin = {0, 0, 0, 0},
-				--autosize =true,
-				--weightedResize  =true,
-				resizeItems = true,		
-				orientation = 'horizontal',
-				centerItems = true,
-				columns = 3,	
-				rows = 3,
-				name = 'UpgradeGrid',
-				width = 630,
-				height = 140,
-
-				  minItemHeight =	 '21%',
-				  maxItemHeight =	 '32%',
-				
-				color = {0,0,0,1},
-			
-				children = {},		
-		}
-		extendedCommand_window:AddChild(extendedCommand_Grid)
-
-	testIrregular= 	Chili.HabaneroButton:New{
-						triStrip={
-						{x= 70, y = 0},			
-						{x= 0, y = 0},
-						{x= 70, y = 70},						
-						{x= 0, y = 70},
-						{x= 0, y = 100},
-
-						},
-						caption= "WTF",
-						
-								backgroundColor = BeanCol,
-								textColor = texCol, 
+		x= 0,
+		y = 0,
+		padding = {5,5,5,5},
+		itemPadding = {0, 0, 0, 0},
+		itemMargin = {0, 0, 0, 0},
+		--autosize =true,
+		--weightedResize =true,
+		resizeItems = true,		
+		orientation = 'horizontal',
+		centerItems = true,
+		columns = 3,	
+		rows = 3,
+		name = 'UpgradeGrid',
+		width = 630,
+		height = 140,
+		
+		minItemHeight =	 '21%',
+		maxItemHeight =	 '32%',
+		
+		color = {0,0,0,1},
+		
+		children = {},		
+	}
+	extendedCommand_window:AddChild(extendedCommand_Grid)
+	testFoonction= function () Spring.Echo("The first HabaneroButton is pressed into service") end
+	Habaneros={ }
 	
-								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
-					}
-	--[[				
-	bestIrregular= 	Chili.HabaneroButton:New{
-						triStrip={
-						
-						{x= 0, y = -15},
-						{x= 0, y = 25},
-						{x= 70, y = 55},
-						{x= 70, y = -50},
-						{x= 70, y = -50},
-
-						},
-						caption= "PICA",
-						
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-
-								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
-					}
-					
-	restIrregular= 	Chili.HabaneroButton:New{
-						triStrip={
-						
-						{x= 70, y = -30},
-						{x= 0, y = -85},
-						{x= 0, y = 60},
-						{x= 70, y = 60},
-
-						},
-						caption= "LEARN 2 GUI",
-						
-								backgroundColor = UpgCol,
-								textColor = texCol, 
-
-								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
-					}	
-
-	aestIrregular= 	Chili.HabaneroButton:New{
-						triStrip={
-						
-						{x= 0, y = 70},
-						{x= 0, y = 0},
-						{x= 70, y = 0},
-						{x= 70, y = 35},
-
-						},
-						caption= "GO HOME",
-						
-								backgroundColor = BeanCol,
-								textColor = texCol, 
-
-								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
-					}
-					
-	destIrregular= 	Chili.HabaneroButton:New{
-						triStrip={
-						
-						{x= 0, y = -15},
-						{x= 25, y = -25},
-						{x= 55, y = -35}						
-
-						},
-						
-						caption= "UR DRUNK",
-						
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-
-								OnClick = {function () Spring.Echo("The first HabaneroButton is pressed into service") end}
-					}
-					
-					
+	for i=1, 9 do
+		Habaneros[i] = createHabanero(triStrip[i],
+		caption[i],
+		backgroundCol[i],
+		texCol,
+		testFoonction					
+		)		
+		Habaneros[i].Init()
+	end
 	
-	bestIrregular.Init()
-	restIrregular.Init()
-	aestIrregular.Init()
-	destIrregular.Init()
-	]]
-	testIrregular.Init()
+	
+	
 	base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
@@ -220,56 +257,28 @@ function widget:Initialize()
 		centerItems = false,
 		columns = 3,
 		rows= 3,
-		children={Chili.Button:New{
-								
-								width=buttonwidth,
-								height = buttonheigth, 
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-								caption = "HOW", 								
-								},
-								Chili.Button:New{
-								
-								width=buttonwidth,
-								height = buttonheigth, 
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-								caption = "TO", 
-								
-								},
-								Chili.Button:New{
-								
-								width=buttonwidth,
-								height = buttonheigth, 
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-								caption = "CHILLIii", 
-							
-								},
-								testIrregular,
-								bestIrregular,
-								restIrregular,
-								Chili.Button:New{
-								
-								width=buttonwidth,
-								height = buttonheigth, 
-								backgroundColor = BaseCol,
-								textColor = texCol, 
-								caption = "SRSLY", 
-
-								},
-								aestIrregular,
-								destIrregular
-								}
+		children={
+			Habaneros[1],
+			Habaneros[2],
+			Habaneros[3],
+			Habaneros[4],
+			Habaneros[5],
+			Habaneros[6],
+			Habaneros[7],
+			Habaneros[8],
+			Habaneros[9],
+			
+		}
+		
 		
 	}
 	
 	
-
+	
 	controllCommand_window = Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
-		caption = 'BaseCommands',
+		caption = '',
 		textColor = {0.9,1,1,0.7},
 		name = "controllCommand_window",
 		x = controllCommand_window_positionX, 
@@ -291,8 +300,8 @@ function widget:Initialize()
 			base_stack,			
 		},
 	}
-		
-
+	
+	
 end
 
 --subConstructors
@@ -302,5 +311,5 @@ end
 --update functions
 function widget:GameFrame(f)
 	
-
+	
 end
