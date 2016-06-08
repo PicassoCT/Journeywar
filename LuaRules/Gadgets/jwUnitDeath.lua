@@ -89,7 +89,7 @@ end
 			--itterate over the whole GoneForGood table
 			--decrease the time 
 				for i=1,#GoneForGood,1 do
-					if GoneForGood[i] ~= nil then
+					if GoneForGood[i] and GoneForGood[i][1] then
 						GoneForGood[i][1]=GoneForGood[i][1]-intIntervall
 						--to avoid n² we do this onloop
 							if GoneForGood[i][1] < 0 then
