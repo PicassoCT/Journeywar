@@ -157,6 +157,7 @@ end
 EXITNGUISH_RADIUS= 240
 function script.Killed(recentdamage,_)
 		if GG.LandScapeT then
+		cx,cy,cz=Spring.GetUnitPosition(unitID)
 		GG.LandScapeT.setAreaEffect(cx,cz,EXITNGUISH_RADIUS,extinguishFire )
 		end
 

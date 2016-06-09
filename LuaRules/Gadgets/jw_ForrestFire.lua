@@ -97,6 +97,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
  function setAreaEffect(x,z, Range, sfxFunction)
 		if not GG.LandScapeT then init() end
+		if not x then 
 		
 		local areaEffectFunction=sfxFunction
 		local RangeX=Range/mapX

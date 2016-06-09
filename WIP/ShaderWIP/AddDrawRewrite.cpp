@@ -4,6 +4,11 @@
 				vec2 pNewIn, 
 				vec2 pOldOut, 
 				vec2 pOldIn){
+					
+	float a, b, c, d, e , f , g, h;	
+		
+	
+					
 	
 
 		return mat16( 	x, , , ,
@@ -17,8 +22,10 @@
 	  
   }
 
+  //precompute the matrice
+  
 
-  vec4 AddDraw(	colSampler qFrontCol,
+  vec4 AddDraw(	colSampler qFrontCol,d
 				colSampler qRearCol, 
 				vec2 pNewOut, 
 				vec2 pNewIn, 
@@ -28,6 +35,13 @@
 				mat16 transformationMatrice,
 				int gradIndex)
    { 
+		float distTopNewOut = distance(pPixel,pNewOut);
+		float distTopNewIn = distance(pPixel,pNewIn);
+		float distTopOldOut = distance(pPixel,pOldOut);
+		float distTopOldIn = distance(pPixel,pOldIn);
+		float distTotal= distTopNewOut + distTopNewIn + distTopOldOut + distTopOldIn;d
+		
+   
 		//matrice proportionieren
 		
 		//einmultiplizieren

@@ -166,8 +166,7 @@ function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
 		
 		backgroundColor = basCol,
 		textColor = textCol, 
-		
-		OnClick = functionOnClick
+		OnClick= { functionOnClick}
 	}
 end
 

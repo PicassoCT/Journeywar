@@ -2316,7 +2316,7 @@ function vardump(value, depth, key)
 	end 
 	
 	-->filters Out Immobile Units
-	function filterOutImmobile (T)
+	function filterOutImmobile (T,UnitDefs)
 		returnTable={} 
 		for k,v in pairs(T) do 
 			def=Spring.GetUnitDefID(k) 
@@ -2327,7 +2327,7 @@ function vardump(value, depth, key)
 		return returnTable 
 	end
 	--> filters Out Buildings
-	function filterOutBuilding (T)
+	function filterOutBuilding (T, UnitDefs)
 		returnTable={} 
 		for k,v in pairs(T) do 
 			def=Spring.GetUnitDefID(k) 

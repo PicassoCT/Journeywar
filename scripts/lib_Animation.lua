@@ -615,7 +615,8 @@ function PaintPatternPieces(ListOfPieces, ListOfCoords,sx,sy,sz)
 end
 
 -->Moves a Piece to a Position on the Ground in Worldspace
-function MoveUnitPieceToRelativeWorldPos(unitID,piecename, relX,relZ,speed,offset)
+function MoveUnitPieceToRelativeWorldPos(unitID,piecename, relX,relZ,speed,loffset)
+	offset = loffset or 0
 	x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 	x,z=relX-x,relZ-z
 	Move(piecename,x_axis,x,0,true)
@@ -624,7 +625,7 @@ function MoveUnitPieceToRelativeWorldPos(unitID,piecename, relX,relZ,speed,offse
 	myHeight=Spring.GetGroundHeight(x,z)
 	heightdifference=math.abs(globalHeightUnit-myHeight)
 	if myHeight < globalHeightUnit then heightdifference=-heightdifference end
-	Move(piecename,y_axis,heightdifference+offset,speed,true)
+	Move(piecename,y_axis,heightdifference+ offset ,speed,true)
 end
 
 --> Move with a speed Curve

@@ -216,7 +216,7 @@ Sleep(1000)
 		T=Spring.GetUnitsInCylinder(px,pz,RANGE)
 			if #T > 0 then
 			T=filterOutTeam(T,teamid)
-			T=filterOutBuilding(T or {})
+			T=filterOutBuilding(T or {}, UnitDefs)
 			
 			--var=var+1
 			--Spring.Echo("JW:DragonGrass:DrugLoop"..var)

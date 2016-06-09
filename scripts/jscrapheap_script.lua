@@ -696,7 +696,7 @@ function flailingFlesh()
 	
 	resetT(Leg,0.1)
 end
-
+	speed=50
 function maMa()
 	
 	linenumber=1	
@@ -708,7 +708,7 @@ function maMa()
 	Show(Baby)
 	Show(Navel)
 	BabyDir=0
-	speed=50
+
 	signum=-1
 	
 	live=math.ceil(math.random(20,60)*1000)

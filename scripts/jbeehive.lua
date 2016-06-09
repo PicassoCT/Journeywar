@@ -1,4 +1,4 @@
-
+include "suddenDeath.lua"
 --Define the wheel pieces
 
 --Define the pieces of the weapon
