@@ -1751,6 +1751,7 @@ function hair_inwind()
 	end
 end
 
+AttackCounter=3000
 function bladewhirl_thread()
 	--redo with sinking to knee
 	
@@ -1758,12 +1759,12 @@ function bladewhirl_thread()
 	
 	Signal(SIG_WHIR)
 	SetSignalMask(SIG_WHIR)
-	while(true)do 
+	while(AttackCounter > 0)do 
 		Signal(SIG_WALK)
 		Signal(SIG_IDLE)
 		Sleeper=Sleeper+1
 		Sleeper=Sleeper%11
-		stillAttacking=true
+		AttackCounter= AttackCounter - 500
 		if Sleeper==1 then
 			
 			
@@ -2225,6 +2226,8 @@ function bladewhirl_thread()
 			Sleep(150)
 		end
 	end
+	
+	StartThread (walk) 
 end
 
 
@@ -9791,7 +9794,7 @@ function script.FireWeapon1()
 	
 		StartThread(ReloadCountDown)
 	end
-	
+	AttackCounter=3000
 	StartThread (bladewhirl_thread)
 	sound=math.random(0,1)
 	if sound== 0 then

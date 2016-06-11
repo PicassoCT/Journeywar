@@ -56,7 +56,7 @@ local weaponDef={
 
 				--wobble=0,
 
-				tolerance=16000,
+				tolerance=4000,
 				tracks=true,
 				--Turnrate=32000,
 				collideFriendly=true,

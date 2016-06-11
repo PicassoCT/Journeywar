@@ -1572,45 +1572,47 @@ local aVd=acquireVehicleDegree()
 	end
 				
 				
-	TrampledTrees={}
+
 	boolMoving=false
+
 	function treeTrample()
-	local myTeam=Spring.GetUnitTeam(unitID)
-	local	treeTypeTable=getTypeTable(UnitDefNames,{
-												"jtree",												
-												"jtree2",												
-												"jtree3",												
+		treeTypeTable=getTypeTable(UnitDefNames,{
+												"jtree",
+												"jtree2",
+												"jtree3",
 												"jtree41",
 												"jtree42",
 												"jtree43",
 												"jtree44",
 												"jtree45",
 												"jtree46",
-												"jtree47",
-												"jtree48",
-												"campole",
-												"scumslum",
-												"cdistrictnone",
-												"combinedfeature"
+												"jtree47"
 												})
 		while true do
 		
 			while boolMoving==true do
 			x,_,z=Spring.GetUnitPiecePosDir(unitID,treeSpot)
-			T=getAllInCircle(x,z,50,myTeam,unitID)
+			T=getAllInCircle(x,z,15,unitID,teamID)
 				if T then
 				T=filterUnitTableforDefIDTable(T,treeTypeTable)
-					if T then
-					TableMergeTable(TrampledTrees,T)
+				
+					if T and #T > 0 then
+					GG.TreesTrampled= true
+					
+					if not GG.TableTreesTrampled then  GG.TableTreesTrampled ={} end
+					 
+						for i=1, #T do
+						GG.TableTreesTrampled[T[i]]=[T[i]]
+						end
 					end
 				end
 			Sleep(150)
 			end
 		Sleep(300)	
 		end
-	
+
 	end
-	
+
 	
 					
 			

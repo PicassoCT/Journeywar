@@ -48,7 +48,7 @@ eratio=1/((UnitDefNames["scumslum"].energyCost /ratio )/(UnitDefNames["gcivillia
 
 hp,maxhp=Spring.GetUnitHealth(unitID)
 ratioDamage=math.abs(maxhp*((mratio+eratio)/2))
---gcivilian
+--gcivillian
 --metalCost  = 250,
 --energyCost = 750,
 
@@ -64,7 +64,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 			px,_,pz=Spring.GetUnitPosition(unitID)
 			px,pz=px+ (x*-35),pz+(z*-35)	
 		end
-		id=Spring.CreateUnit("gcivilian",px,0,pz,0,teamID)
+		id=Spring.CreateUnit("gcivillian",px,0,pz,0,teamID)
 		if id then
 			Spring.SetUnitNoSelect(id,true)
 		end

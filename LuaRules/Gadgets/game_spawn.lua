@@ -44,6 +44,14 @@ function GetAIStartUnit(teamID, leader, isDead, boolIsAI, side,playerInfo)
 	aiName=Spring.GetTeamLuaAI (teamID) 
 	
 	if aiName and aiName== "spawner" then
+		if side =="journeyman" then
+			return "jgeohive"
+		end
+		
+		if side == "centrail" then 
+			return "gzombiespawner"
+		end
+		
 		return "jgeohive" 
 	end
 	

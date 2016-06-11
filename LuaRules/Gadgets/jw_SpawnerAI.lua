@@ -34,6 +34,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		boolBio= volume < 0
 		volume=math.abs(volume)
+		totalAbortCount=0
 		
 		for _=1, volume,1 do
 			Spring.Echo("Meridian Table")
@@ -48,8 +49,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			dirXSign=math.random(-1,1);dirXSign=math.abs(dirXSign)/dirXSign
 			dirZSign=math.random(-1,1);dirZSign=math.abs(dirZSign)/dirZSign
 			
-			while T and #T > 0 do	
-				Spring.Echo("SearchingFor Spawnspot")
+			while T and #T > 0 and totalAbortCount < 64 do	
+			
 				if math.random(0,1)==1 then
 					dirXSign=math.random(-1,1);dirXSign=math.abs(dirXSign)/dirXSign
 				else
@@ -61,7 +62,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				if Spring.GetGroundHeight(px,pz) > 0 then
 					T=Spring.GetUnitsInCylinder(px,pz,50)
 				end
-				
+			totalAbortCount=totalAbortCount+1	
 			end
 			
 			Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,0,team)	

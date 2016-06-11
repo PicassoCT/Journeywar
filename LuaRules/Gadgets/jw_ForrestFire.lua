@@ -68,7 +68,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	function plotLanscapeTable(tableP)
 		
 		for x=1,tableP.ResX do
-			RowString="||"
+			RowString=""
 			
 			for z=1, tableP.ResZ do
 				boolprintOnce=true
@@ -89,7 +89,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 			end
 			
-			Spring.Echo(RowString)
+			Spring.Echo("| "..RowString.." |")
 		end
 		
 	end
@@ -97,7 +97,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
  function setAreaEffect(x,z, Range, sfxFunction)
 		if not GG.LandScapeT then init() end
-		if not x then 
+		if not x then Sping.Echo("jw_forrestfirst:setAreaEffect:Coordinates are nil and void"); return false end 
 		
 		local areaEffectFunction=sfxFunction
 		local RangeX=Range/mapX

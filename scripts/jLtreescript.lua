@@ -76,6 +76,7 @@ function script.Create()
 		{name="sounds/jtree/accidtrees.ogg",time=15000}
 	})
 	
+	StartThread(delayedActivation)
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.25+0.125)
 end
 
@@ -2101,7 +2102,7 @@ function BuildLtree()
 	if math.random(0,3)==1 and boolVaryFooTree == false then 
 		max=#FixFunctionTabel+0.4999 
 		--boolTakeATurn=FixFunctionTabel[18]()
-			boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
+		boolTakeATurn=FixFunctionTabel[math.floor(math.random(1,max))]()
 		--boolTakeATurn=FixFunctionTabel[22]()
 		--	boolTakeATurn=FixFunctionTabel[GG.TestNumber]()
 	else
@@ -2197,10 +2198,26 @@ function foulTheSurroundings ()
 	
 end
 
+boolDenialActive=false
+
+function delayedActivation()
+	health, maxHealth, paralyzeDamage, captureProgress, bp=Spring.GetUnitHealth(unitID)
+	
+	while bp and bp < 1 do
+		health, maxHealth, paralyzeDamage, captureProgress, bp=Spring.GetUnitHealth(unitID)
+		Sleep(200)
+	end
+	Sleep(1000)
+	boolDenialActive=true
+end
+
+
 
 function script.Activate()
-	setDenial(unitID)
-	return 1
+	if boolDenialActive == true then
+		setDenial(unitID)
+		return 1
+	end
 end
 
 function script.Deactivate()

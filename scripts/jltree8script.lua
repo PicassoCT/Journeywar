@@ -1,75 +1,91 @@
-	include "suddenDeath.lua"
-	include "lib_OS.lua"
-	include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
 
-	include "lib_jw.lua" 
-	include "lib_Build.lua" 
+include "lib_jw.lua" 
+include "lib_Build.lua" 
 
-	--include "spring_lua_dsl.lua"
-	flats={}
-	for i=1,21 do
+--include "spring_lua_dsl.lua"
+flats={}
+for i=1,21 do
 	temp="flat"..i
 	flats[i]=piece(temp)
-	end
-	center=piece"center"
-	
-	function script.Create()
+end
+center=piece"center"
+
+function script.Create()
+	StartThread(delayedActivation)
 	resetT(flats)
 	dice=math.random(0,4)
 	
 	if dice==0 then
-	val=math.random(-1,15)
-	interVal=math.random(5,21)
-	Turn(center,y_axis,math.rad(math.random(0,360)),0)
+		val=math.random(-1,15)
+		interVal=math.random(5,21)
+		Turn(center,y_axis,math.rad(math.random(0,360)),0)
 		for i=1,21 do
-		deg=math.cos(i/interVal)*val
-		Turn(flats[i],x_axis,math.rad(deg),0)
+			deg=math.cos(i/interVal)*val
+			Turn(flats[i],x_axis,math.rad(deg),0)
 		end	
 	elseif dice==4 then
-
+		
 		val=math.random(-1,15)
-	interVal=math.random(5,21)
-	Turn(center,y_axis,math.rad(math.random(0,360)),0)
+		interVal=math.random(5,21)
+		Turn(center,y_axis,math.rad(math.random(0,360)),0)
 		for i=1,21 do
-		deg=math.cos(i/interVal)*val
-		Turn(flats[i],x_axis,math.rad(deg),0)
+			deg=math.cos(i/interVal)*val
+			Turn(flats[i],x_axis,math.rad(deg),0)
 		end	
 		
 	elseif dice==3 then	
 		for i=1,21 do
-		deg=math.cos(i/i^2)
-		Turn(flats[i],z_axis,math.rad(deg),0)
-		Move(flats[i],z_axis,math.random(-15,15),0)
-		Move(flats[i],x_axis,math.random(-15,15),0)
+			deg=math.cos(i/i^2)
+			Turn(flats[i],z_axis,math.rad(deg),0)
+			Move(flats[i],z_axis,math.random(-15,15),0)
+			Move(flats[i],x_axis,math.random(-15,15),0)
 		end	
-	
+		
 	else
 		for i=1,21 do
-		deg=math.cos(i/i^2)
-		Turn(flats[i],z_axis,math.rad(deg),0)
-		Move(flats[i],z_axis,math.random(-15,15),0)
-		Move(flats[i],x_axis,math.random(-15,15),0)
+			deg=math.cos(i/i^2)
+			Turn(flats[i],z_axis,math.rad(deg),0)
+			Move(flats[i],z_axis,math.random(-15,15),0)
+			Move(flats[i],x_axis,math.random(-15,15),0)
 		end	
 	end
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.25)
-	end
-	
-	
-	function script.Killed(recentDamage,_)
+end
 
+
+function script.Killed(recentDamage,_)
+	
 	return 1
+end
+
+boolDenialActive=false
+
+function delayedActivation()
+	health, maxHealth, paralyzeDamage, captureProgress, bp=Spring.GetUnitHealth(unitID)
+	
+	while bp and bp < 1 do
+		health, maxHealth, paralyzeDamage, captureProgress, bp=Spring.GetUnitHealth(unitID)
+		Sleep(200)
 	end
+	Sleep(1000)
+	boolDenialActive=true
+end
 
 
-	function script.Activate()
+
+function script.Activate()
+	if boolDenialActive == true then
 		setDenial(unitID)
 		return 1
 	end
+end
 
-	function script.Deactivate()
-		
-
-		return 0
-	end
-
+function script.Deactivate()
+	
+	
+	return 0
+end

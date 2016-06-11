@@ -1,7 +1,7 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -576,7 +576,7 @@ function greatEntry()
 	
 	
 	Signal(SIG_DIRT)	
-	
+	boolEntryOver=true
 end
 
 nrOfReinforcements=3
@@ -631,7 +631,55 @@ function reInforCements()
 		
 	end
 end
+function reEntry()
+	Spin(bsfetas,y_axis,math.rad(3.2),0.2)
+	Spin(bshelix,y_axis,math.rad(4.2),0.2)
+	tableOfPieces={}
+	tableOfPieces=Spring.GetUnitPieceList(unitID)
+	
+	for i=1,table.getn(tableOfPieces),1 do
+		name=tableOfPieces[i]
+		x=piece(name)
+		Show(x)
+		
+	end
+	
+	for i=1,6,1 do
+		Hide(dirt[i])
+	end
+	
+	Hide(unRooted)
+	Hide(spindl)
+	Hide(spindl2)
+	Hide(spindl3)
+	Hide(fireFx1)
+	Hide(fireFx2)
+	Hide(fireFx3)
+	Hide(seed)
+	Hide(bean1)
+	Hide(rootgrow)
+	
+	Hide(bean2)
+	
+	Hide(bean3)
+	
+	Hide(spindl)
+	
+	Hide(spindl2)
+	
+	Hide(spindl3)
+	
+	Hide(rootRotate)
+	for i=1,14,1 do
+		Hide(greenSleaves[i])
+		
+	end
+	
+	hideT(wurzelballen)
+	boolEntryOver=true
+end
 
+defID=Spring.GetUnitDefID(unitID)
 function script.Create()
 	StartThread(soundSleeper)
 	StartThread(darkEnergyReactor)
@@ -643,8 +691,13 @@ function script.Create()
 	Hide(fireFx1)
 	Hide(fireFx2)
 	Hide(fireFx3)
+	if defID == UnitDefNames["beanstalk"].id then
+		greatEntry()
+	elseif defid == UnitDefNames["dbeanstalk"].id then
+		reEntry()
+		
+	end
 	
-	greatEntry()
 	StartThread(idle)
 	StartThread(nanoEmitIdler)
 	StartThread(playHeartBeat)
@@ -655,14 +708,16 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	
-
+	
 	suddenDeathjBuildCorpse(unitID,recentDamage)
 	return 0
-
+	
 end
 
-local boolreVert=false
+ boolreVert=false
+boolEntryOver=false
 function waitingGame()
+	while boolEntryOver== false do Sleep(500) end
 	while(true) do
 		if boolreVert==true and (Spring.ValidUnitID (unitID)) then
 			Sleep(500)
@@ -670,6 +725,8 @@ function waitingGame()
 				local x,y,z=Spring.GetUnitPosition (unitID)
 				local teamID = Spring.GetUnitTeam (unitID)
 				mexID= Spring.CreateUnit("mbeanstalk", x, y, z, 0, teamID) 
+				
+				
 				health=Spring.GetUnitHealth(unitID)
 				Spring.SetUnitHealth(mexID,health)	
 				Spring.DestroyUnit (unitID,false,true)

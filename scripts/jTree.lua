@@ -182,7 +182,7 @@ end
 
 rootTurnDeg=0
 function script.Create()
-	
+	StartThread(delayedActivation)
 	teamID=Spring.GetUnitTeam(unitID)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	if math.random(0,1)==1 then
@@ -376,10 +376,25 @@ function script.Killed(recentdamage,_)
 	
 end
 
+boolDenialActive=false
+
+function delayedActivation()
+	health, maxHealth, paralyzeDamage, captureProgress, bp=Spring.GetUnitHealth(unitID)
+	
+	while bp and bp < 1 do
+		health, maxHealth, paralyzeDamage, captureProgress, bp=Spring.GetUnitHealth(unitID)
+		Sleep(200)
+	end
+	Sleep(1000)
+	boolDenialActive=true
+end
+
 
 
 function script.Activate()
-	setDenial(unitID)
+	if boolDenialActive== true then
+		setDenial(unitID)
+	end
 	return 1
 end
 

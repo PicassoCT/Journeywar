@@ -296,10 +296,10 @@ end
 
 
 ------------------------------------------------------------------------------------------
-	TrampledTrees={}
+
 
 	function treeTrample()
-	local	treeTypeTable=getTypeTable(UnitDefNames,{
+		treeTypeTable=getTypeTable(UnitDefNames,{
 												"jtree",
 												"jtree2",
 												"jtree3",
@@ -318,8 +318,15 @@ end
 			T=getAllInCircle(x,z,50,unitID,teamID)
 				if T then
 				T=filterUnitTableforDefIDTable(T,treeTypeTable)
-					if T then
-					TableMergeTable(TrampledTrees,T)
+				
+					if T and #T > 0 then
+					GG.TreesTrampled= true
+					
+					if not GG.TableTreesTrampled then  GG.TableTreesTrampled ={} end
+					 
+						for i=1, #T do
+						GG.TableTreesTrampled [T[i]]=true
+						end
 					end
 				end
 			Sleep(150)

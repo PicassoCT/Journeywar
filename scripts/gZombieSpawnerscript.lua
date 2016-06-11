@@ -4,7 +4,7 @@ include "lib_UnitScript.lua"
 
 include "suddenDeath.lua"
 
-jgeohive=piece"jgeohive"
+Deco1=piece"Deco1"
 naptime=80000
 howManyHoneyPots=5
 
@@ -58,7 +58,7 @@ function spawner()
 		enemyID=Spring.GetUnitNearestEnemy(unitID)
 		
 		if enemyID ~= nil then
-			--EmitSfx(jgeohive,1024)
+			--EmitSfx(Deco1,1024)
 			ex,ey,ez=spGetUnitPosition(enemyID)
 			if math.random(0,1)==1 then 
 				eteam=Spring.GetUnitTeam(enemyID)
@@ -66,8 +66,8 @@ function spawner()
 			end
 			Spring.SetUnitBlocking(unitID,false)
 				for i=1, howManyHoneyPots,1 do
-					spEmitSfx(jgeohive,1025)
-					spEmitSfx(jgeohive,1025)
+					spEmitSfx(Deco1,1025)
+					spEmitSfx(Deco1,1025)
 					randoval=math.random(-65,-45)
 					bool=math.random(0,1)
 					if bool==1 then
@@ -84,7 +84,7 @@ function spawner()
 					if dice==1 then	
 						spawnedUnit=spCreateUnit("zombie",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
 					elseif dice==2 then
-						spawnedUnit=spCreateUnit("gcivilian",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
+						spawnedUnit=spCreateUnit("gcivillian",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
 					else --we addd the crab here
 						spawnedUnit=spCreateUnit("gzombiehorse",x+randoval,y,z+(randoval*booltoo), 0, teamID) 
 					end
@@ -93,8 +93,8 @@ function spawner()
 					spSetUnitNoSelect(spawnedUnit,true)
 					
 					Sleep(350)
-					spEmitSfx(jgeohive,1025)
-					spEmitSfx(jgeohive,1025)
+					spEmitSfx(Deco1,1025)
+					spEmitSfx(Deco1,1025)
 					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
 					table.insert(monsterTable,spawnedUnit)
 				end
@@ -123,7 +123,7 @@ function NextState(State,time)
 
 
 	if State=="BUILDUP" and time > BuildUPTime then 
-	time=0; --Spring.Echo("jgeohive::Peak") ;
+	time=0; --Spring.Echo("Deco1::Peak") ;
 	return "PEAK" , time ,  BuildUPTime
 	end
 	
@@ -140,7 +140,7 @@ function NextState(State,time)
 	if State=="RELAX" and time > RELAXTIME then 
 		time=0 ;
 		RELAXTIME= 60000+ math.ceil(math.random(4000,60000)) 
-	--	Spring.Echo("jgeohive::BUILDUP") ;
+	--	Spring.Echo("Deco1::BUILDUP") ;
 		return "BUILDUP", time, RELAXTIME
 	end	
 
@@ -285,7 +285,7 @@ function DebugTargetOS()
 	
 
 			State, time,percent =NextState(State, time)
-		--	Spring.Echo("JGeohive::State::"..State.." -> ".. percent)	
+		--	Spring.Echo("Deco1::State::"..State.." -> ".. percent)	
 					
 					enemyID= spGetUnitNearestEnemy(unitID)
 					if enemyID then
@@ -306,7 +306,7 @@ end
 
 function script.Create()
 	x=math.random(0,360)
-	Turn(jgeohive,y_axis,math.rad(x),0)
+	Turn(Deco1,y_axis,math.rad(x),0)
 	StartThread(spawner)
 	StartThread(TargetOS)
 	--StartThread(DebugTargetOS)
@@ -314,8 +314,8 @@ end
 
 
 function script.Killed()
-	Move(jgeohive,y_axis,-25,18)
-	EmitSfx(jgeohive,1024)
+	Move(Deco1,y_axis,-25,18)
+	EmitSfx(Deco1,1024)
 	Sleep(180)
-	EmitSfx(jgeohive,1024)
+	EmitSfx(Deco1,1024)
 end

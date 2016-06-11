@@ -45,6 +45,13 @@ pathEnergy="luaui/images/cres_energy.png"
 pathMetall="luaui/images/cres_metal.png"
 
 function setTeam()
+if true then --DelMe
+pathEnergy= 'luaui/images/jres_energy.png' 
+			pathMetall= 'luaui/images/jres_metal.png' 
+sideCombine=false 
+return 
+end
+
 
 	if teamid then
 		teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier= Spring.GetTeamInfo(teamid)
@@ -178,8 +185,8 @@ components[7] = { --"Surge 4"--
 	alpha = 1
 }
 
-
-components[8] = { --"base"--
+eGuiBase = 8
+components[eGuiBase] = { --"base"--
 	name='base' ,
 	
 	left = 0,
@@ -193,18 +200,22 @@ components[8] = { --"base"--
 	
 	alpha = 1
 }
-
-components[10] = { --"Metal penis"--
+eMetallBar = 10
+components[eMetallBar] = { --"Metal penis"--
 	name= 'metal' ,
 	
 	left = 80,
 	top = 58, --11 for E bar
 	
 	tx1 = 0, --TL
+	atx1 = 0, --TL
 	ty1 = 400 ,
+	aty1 = 400 ,
 	
 	tx2 = 360 ,--BR
+	atx2 = 360 ,--BR
 	ty2 = 377,
+	aty2 = 377,
 	
 	alpha = 1
 }
@@ -274,117 +285,8 @@ components[14] = { --"Warning bars, fade away when bars_glow are completely on"-
 }
 
 
-components[15] = { --"Fire tray, move 5px down on animation"--
-	name='fire_tray' ,
-	
-	left = 0,
-	top = 87,
-	
-	tx1 = 370 ,--TL
-	ty1 = 405 ,
-	
-	tx2 = 444 ,--BR
-	ty2 = 381,
-	alpha = 1
-}
-
-
-components[16] = { --"Fire, base, move 5px down on animation"--
-	name='fire' ,
-	
-	left = 5,
-	top = 87,
-	
-	tx1 = 225 ,--TL
-	ty1 = 365 ,
-	
-	tx2 = 285 ,--BR
-	ty2 = 350,
-	
-	alpha = 1
-}
-
-
-components[17] = { --"Fire, fadeaway, fade this over base fire to make it burn, move 5px down on animation"--
-	name='fire_fade' ,
-	
-	left = 5,
-	top = 87,
-	
-	tx1 = 225 ,--TL
-	ty1 = 345 ,
-	
-	tx2 = 285 ,--BR
-	ty2 = 330,
-	
-	alpha = 1
-}
-
-
-components[18] = { --"Exhaust glow, fades away when tray opens, needs to be below base"--
-	name='exhaust_glow' ,
-	
-	left = 0,
-	top = 47,
-	
-	tx1 = 450, --TL
-	ty1 = 405 ,
-	
-	tx2 = 462 ,--BR
-	ty2 = 375,
-	
-	alpha = 1
-}
-
-
-components[19] = { --"Grill glow, fades away when tray opens"--
-	name='grill_glow' ,
-	
-	left = 10,
-	top = 72,
-	
-	tx1 = 290 ,--TL
-	ty1 = 370 ,
-	
-	tx2 = 308, --BR
-	ty2 = 353,
-	
-	alpha = 1
-}
-
-
-components[20] = { --"M on, fades away when tray opens"--
-	name='M_on' ,
-	
-	left = 0,
-	top = 47,
-	
-	tx1 = 320, --TL
-	ty1 = 375 ,
-	tx2 = 365 ,--BR
-	ty2 = 330,
-	
-	alpha = 1
-}
-
-
-components[21] = { --"M glow,fades away when tray opens, fade this over M_on to make it glow randomly"--
-	name='M_glow' ,
-	
-	left = 0,
-	top = 47,
-	
-	tx1 = 370, --TL
-	ty1 = 375,
-	
-	tx2 = 415 ,--BR
-	ty2 = 330,
-	
-	alpha = 1
-}
-
-
-components[22] = { --"base"--
+eGuiBaseMetal =15
+components[eGuiBaseMetal] = { --"base"--
 	name='base' ,
 	
 	left = 0,
@@ -398,6 +300,23 @@ components[22] = { --"base"--
 	
 	alpha = 1
 }
+
+eJourneyFlyingGhosts=16
+components[eJourneyFlyingGhosts] = {
+	name='ghost' ,
+	
+	left = 172,
+	top = 56,
+	
+	tx1 = 158, --TL
+	ty1 = 366 ,
+	
+	tx2 = 172 ,--BR
+	ty2 = 335,
+	
+	alpha = 1
+}
+
 
 function DrawTexRect(x1,y1,x2,y2,s1,t1,s2,t2)
 	gl_TexRect(x1-offsetx+47,y1-offsety+47,x2-offsetx+47,y2-offsety+47,s1,t1,s2,t2)
@@ -501,7 +420,13 @@ function DrawEbar(pct)
 end
 
 function DrawMbar(pct)
-	local eMetallBar=10
+
+	local now=Spring.GetGameFrame()
+	
+	--now = (now % 3000)/3000 
+	--components[eMetallBar].tx2= math.ceil(components[eMetallBar].atx2*now)
+	--components[eMetallBar].tx1= math.ceil(components[eMetallBar].atx2*now)
+
 	local mbarwidth=components[eMetallBar].tx2-components[eMetallBar].tx1
 	local drawwidth=pct*mbarwidth
 	--	Spring.Echo(pct)
@@ -517,14 +442,11 @@ function DrawMbar(pct)
 	local t1=(pngy-components[eMetallBar].ty2) /pngy
 	local s2=(components[eMetallBar].tx2 ) /pngx--bottom right bounding
 	local t2=(pngy-components[eMetallBar].ty1) /pngy
-	DrawTexRect(x1,y1,x2,y2,s1,t1,s2,t2)
+	DrawTexRect(x1,y1,x2,y2,s1,t1	,s2,t2)
 	
 	gl_Texture(false)
 	
-	
-	
-	
-	
+		
 	--	Spring.Echo(mglow)
 	DrawMShare(mshare)
 	
@@ -534,68 +456,21 @@ function DrawMbar(pct)
 		
 		
 		
-		local now=Spring.GetGameFrame()
+	
 		if mglow >0 then
 			mglow=mglow -norm(now-gameframe)
 		end
 		gameframe=now
 		
 		
-		
-		components[21].alpha=mglow/cooldownglowtime
-		--components[18].alpha=mglow/cooldownglowtime
-		--components[19].alpha=mglow/cooldownglowtime
-		components[20].alpha=mglow/cooldownglowtime --
-		--components[16].alpha=mglow/cooldownglowtime --
-		--components[17].alpha=norm(math.abs( (now- math_floor(now/60)*60)/30 -1))
-		
-		--components[15].top=default+(1-mglow/cooldownglowtime)*5
-		--components[16].top=default+(1-mglow/cooldownglowtime)*5
-		--components[17].top=default+(1-mglow/cooldownglowtime)*5
-		
-		
-		--	Spring.Echo(components[17].alpha)
-		
-		--DrawComponent(16)--fire 
-		--DrawComponent(17)--fire glow
-		--DrawComponent(15)--firetray
-		DrawComponent(22)--bASE
-		--DrawComponent(18)--exhaust glow
-		--DrawComponent(19)--grill glow
-		DrawComponent(20)--M on
-		DrawComponent(21)--M on glow
-		
 	else 
-		local now=Spring.GetGameFrame()
+		
 		if mglow <cooldownglowtime then
 			mglow=mglow + norm(now-gameframe)
 		end
 		gameframe=now
 		
-		
-		components[21].alpha=norm(mglow/cooldownglowtime - math.abs( (now- math_floor(now/60)*60)/30 -1))
-		
-		--components[18].alpha=mglow/cooldownglowtime
-		--components[19].alpha=mglow/cooldownglowtime
-		components[20].alpha=mglow/cooldownglowtime
-		--components[15].top=default+(1-mglow/cooldownglowtime)*5
-		----Spring.Echo(components[15].top)
-		--components[16].top=default+(1-mglow/cooldownglowtime)*5
-		--components[17].top=default+(1-mglow/cooldownglowtime)*5
-		--
-		--
-		--	Spri--ng.Echo(components[21].alpha)
-		--DrawComponent(16)--fire 
-		--DrawComponent(17)--fire glow
-		--DrawComponent(15)--firetray
-		--components[15].top =35
-		DrawComponent(22)--bASE
-		--DrawComponent(19)--grill glow
-		DrawComponent(20)--M on
-		--DrawComponent(18)--exhaust glow
-		--DrawComponent(21)--M on glow
-		
-		
+
 	end	
 	
 	
@@ -630,7 +505,7 @@ function DrawMShare(ms)
 	gl_Color(1,1,1,components[number].alpha)
 	gl_Texture(pathMetall)	
 	
-	local pos= math_floor((components[10].tx2-components[10].tx1)*ms)
+	local pos= math_floor((components[eMetallBar].tx2-components[eMetallBar].tx1)*ms)
 	
 	x1= vsx +components[number].left -pngx -465-seperation +pos --bottom left of placing
 	y1= vsy -components[number].top -math.abs(components[number].ty1-components[number].ty2) 
@@ -740,12 +615,10 @@ function widget:DrawScreen()
 		
 		local curElevel,curEstore,curEpull,curEinc,curEexpense,curEshare,curEsent,curErecieved = Spring.GetTeamResources(myTeam, 'energy')
 		local curMlevel,curMstore,curMpull,curMinc,curMexpense,curMshare,curMsent,curMrecieved = Spring.GetTeamResources(myTeam, 'metal')
-		
-		
+				
 		curElevel = math_floor(curElevel)
 		curMlevel = math_floor(curMlevel)
-		
-		
+				
 		local curEpct = curElevel / curEstore
 		local curMpct = curMlevel / curMstore
 		
@@ -753,7 +626,8 @@ function widget:DrawScreen()
 		gl_Color(1, 1, 1, 1)
 		
 		--draw the main bar thingy
-		DrawComponent(8)
+
+		DrawComponent(eGuiBase)
 		local t= Spring.GetGameSeconds()
 		
 		
@@ -773,32 +647,24 @@ function widget:DrawScreen()
 		end
 		
 		DrawEbar(curEpct)
+		
 		local curEsharepct=curEstore/curEshare
 		
 		DrawEShare(eshare)
 		
 		--OK metal bar time now:
-		
-
-		DrawComponent(11) --furnace shadow
-		
-		
-		DrawMbar(curMpct)	
-		
+		DrawComponent(eGuiBaseMetal) --base
+		DrawComponent(11) --furnace shadow		
 		
 		components[14].alpha=norm((curMpct-0.10) *20)--normal bars
-		DrawComponent(14)
+		--DrawComponent(14)
 		components[13].alpha=norm((0.15 -curMpct) *20)--glowy bars
 		DrawComponent(13)
-		
+		DrawMbar(curMpct)
 		--drawcomponent
-		DrawComponent(22) --base
-		
-		gl_Blending(true)
-		
-		gl_Color(1,1,1)
-		
-		
+		if sideCombine == false then
+		DrawComponent(eJourneyFlyingGhosts)
+		end
 		--TIME FOR TEXT
 		
 		

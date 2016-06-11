@@ -33,8 +33,10 @@ function transferCommands()
 					if first==false then
 						first=true
 						x,y,z=Spring.GetUnitPosition(unitID)
-						if cmd.id== CMD.MOVE and getDistance(cmd,x,z) > 165 then					
-							Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})
+						if Spring.ValidUnitID(GG.JFactorys[unitID][1])==true then
+							if cmd.id== CMD.MOVE and getDistance(cmd,x,z) > 165 then	
+								Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})
+							end
 						end
 					else
 						Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{"shift"})
