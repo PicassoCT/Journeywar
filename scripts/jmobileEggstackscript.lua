@@ -123,7 +123,7 @@ function newFactory ()
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	teamID = Spring.GetUnitTeam (unitID)
 	
-	factoryID = Spring.CreateUnit ("jtransportedeggstack", x,y+40,z+20, 0, teamID) 
+	factoryID = Spring.CreateUnit ("jtransportedeggstack", x,y+100,z+10, 0, teamID) 
 	GG.JFactorys[factoryID]={}
 	GG.JFactorys[factoryID][1]= unitID 
 	GG.JFactorys[factoryID][2]= false
@@ -137,6 +137,10 @@ end
 
 boolBuilding=false
 function workInProgress()
+while factoryID == nil do
+Sleep(250)
+end
+
 	StartThread(water)
 	
 	buildID=nil
@@ -145,24 +149,25 @@ function workInProgress()
 	while(true)do
 	
 		if factoryID and Spring.ValidUnitID(factoryID)== true then
+
 		buildID=Spring.GetUnitIsBuilding(factoryID)
-		if buildID and buildID~= buildIDofOld then
-			
+		if buildID and buildID ~= buildIDofOld then
+		Spring.Echo("jmobileEggstack::workInProgress:2")	
 			counter=counter+1
 			if counter >35 then 	Spring.DestroyUnit(unitID,true,false) end
 			Hide(eggnok[counter])
 			boolBuilding=true
 			Spring.SetUnitNoDraw(buildID,true)
 			buildProgress=0
-			
+			Spring.Echo("jmobileEggstack::workInProgress:3")
 			while buildProgress and buildProgress < 1 do
-			Spring.Echo("Buildprogress")
+						Spring.Echo("jmobileEggstack::workInProgress:4")
 				health,maxHealth,paralyzeDamage,captureProgress,buildProgress=Spring.GetUnitHealth(buildID)
 				if buildProgress then
 					--show the egg
-					buildProgress=math.min(math.max(1,math.floor(buildProgress*10)),#Eggtable)
+					eggSelector=math.min(math.max(1,math.floor(buildProgress*10)),#Eggtable)
 					hideT(Eggtable)
-					Show(Eggtable[buildProgress])			
+					Show(Eggtable[eggSelector])			
 				end
 				Sleep(150)
 			end
@@ -232,27 +237,6 @@ function LaunchSkywards()
 	HideAllPieces()
 end
 
-function updateBoolisBuilding()
-	while GG.JFactorys== nil or GG.JFactorys[factoryID]== nil do
-		Sleep(150)
-	end
-	
-	while true do
-		if GG.JFactorys[factoryID][2]==true then
-			--Spring.Echo("JW:Firstborn:Building")
-			boolBuilding=true
-			Turn(Kapsel,z_axis,math.rad(0),0.5)
-		else 
-			--Spring.Echo("JW:Firstborn:Not building")
-			boolBuilding=false
-			Turn(Kapsel,z_axis,math.rad(-120),0.5)
-		end
-		
-		
-		Sleep(500)
-	end
-	
-end
 
 function moveFactory ()
 	local spGetUnitPosition=Spring.GetUnitPosition
@@ -264,7 +248,7 @@ function moveFactory ()
 	while (true) do
 		if (not spValidUnitID (factoryID)) then newFactory () end
 		local x,y,z = spGetUnitPosition (unitID)	 
-		spMovCtrlSetPos(factoryID,x,y+50,z+2)
+		spMovCtrlSetPos(factoryID,x,y+120,z+10)
 		Sleep (50)
 	end
 end
@@ -379,7 +363,26 @@ function legs_down()
 	
 end
 
-
+boolBuilding=false
+function updateBoolisBuilding()
+	while GG.JFactorys== nil or GG.JFactorys[factoryID]== nil do
+		Sleep(150)
+	end
+	
+	while true do
+		if GG.JFactorys[factoryID][2]==true then
+			--Spring.Echo("JW:Firstborn:Building")
+			boolBuilding=true
+		else 
+			--Spring.Echo("JW:Firstborn:Not building")
+			boolBuilding=false
+		end
+		
+		
+		Sleep(500)
+	end
+	
+end
 
 function script.StopMoving()
 	Turn(center,y_axis,math.rad(0),0.2)

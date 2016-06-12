@@ -1,12 +1,14 @@
 local unitName = "jtransportedeggstack"
 local unitDef = {
-	name = "",
-	Description = "",
+	
+	name = "Eggstack",
+	Description = "gives birth to worker Drones",
+	TEDClass = "PLANT",
 	
 	objectName = "placeholder.s3o",
 	script = "jtransportedeggstackscript.lua",
-	buildPic = "eggstack.png",
-	--cost
+	buildPic = "placeholderj.png",
+	
 	--cost
 	buildCostMetal = 200,
 	buildCostEnergy = 50,
@@ -47,7 +49,7 @@ local unitDef = {
 	workerTime = 0.54,
 	buildoptions = 
 	{
-		"jstealthdrone","jconroach","conbigfoot",
+		"jconroach","conbigfoot","jstealthdrone"
 	},
 	
 	
@@ -87,6 +89,7 @@ local unitDef = {
 		},
 		
 	},
+	
 	
 	
 	

@@ -45,13 +45,6 @@ pathEnergy="luaui/images/cres_energy.png"
 pathMetall="luaui/images/cres_metal.png"
 
 function setTeam()
-if true then --DelMe
-pathEnergy= 'luaui/images/jres_energy.png' 
-			pathMetall= 'luaui/images/jres_metal.png' 
-sideCombine=false 
-return 
-end
-
 
 	if teamid then
 		teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier= Spring.GetTeamInfo(teamid)

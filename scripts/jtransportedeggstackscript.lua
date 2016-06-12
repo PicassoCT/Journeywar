@@ -3,7 +3,7 @@
 --Define the pieces of the weapon
 
 local SIG_RESET=2
-local SIG_UPGRADE=4
+
 teamID=Spring.GetUnitTeam(unitID)
 Quad={}
 for i=1,8, 1 do
@@ -29,26 +29,29 @@ function transferCommands()
 			first=false
 			
 			for _,cmd in pairs(CommandTable) do			
-				if #CommandTable ~= 0 then
+				
+				if Spring.ValidUnitID(GG.JFactorys[unitID][1])==true then
+				if #CommandTable ~= 0 then			
 					if first==false then
 						first=true
-						x,y,z=Spring.GetUnitPosition(unitID)
-						if Spring.ValidUnitID(GG.JFactorys[unitID][1])==true then
-							if cmd.id== CMD.MOVE and getDistance(cmd,x,z) > 165 then	
-								Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})
-							end
-						end
+						x,y,z=Spring.GetUnitPosition(unitID)					
+							if cmd.id == CMD.MOVE and getDistance(cmd,x,z) > 160 then	
+								Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})						
+							elseif cmd.id== CMD.STOP then
+								Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],CMD.STOP,{},{})
+							end						
 					else
 						Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{"shift"})
 					end
 				else
 					Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],CMD.STOP,{},{})
 				end			
+				end			
 			end			
 			
 			
 		end
-		Sleep(250)
+		Sleep(150)
 	end
 	
 end
@@ -63,9 +66,9 @@ function script.Create()
 	Hide(Kugel02)
 	StartThread(transferCommands)
 	StartThread(whileMyThreadGentlyWeeps)
+
 	
-	
-	if GG.JFactorys== nil then GG.JFactorys={} end
+	if GG.JFactorys == nil then GG.JFactorys={} end
 	GG.JFactorys[unitID]={}
 	
 end
@@ -79,10 +82,6 @@ Spring.SetUnitNanoPieces(unitID,{ Kugel01})
 
 
 function script.Activate()
-	if GG.JFactorys[unitID] then
-		GG.JFactorys[unitID][2]=true
-	end
-
 	SetUnitValue(COB.YARD_OPEN, 1)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 	SetUnitValue(COB.BUGGER_OFF, 1)
@@ -99,31 +98,37 @@ function script.Deactivate()
 end
 
 
-
-
-
-function script.StartBuilding()
-	--Spring.Echo("JW:TransportedFactory starting to build")
-	--animation
+function delayedBuildEnd()
+	SetSignalMask(SIG_RESET)
+	Sleep(1500)
 	if GG.JFactorys[unitID] then
-		GG.JFactorys[unitID][2]=true
+		GG.JFactorys[unitID][2]=false
 	end
-	Signal(SIG_RESET)
-
 end
 
 
+function script.StartBuilding()
+	Spring.Echo("JW:TransportedEggFactory starting to build")
+	--animation
+	Signal(SIG_RESET)
+	if GG.JFactorys[unitID] then
+		GG.JFactorys[unitID][2]=true
+	end
+end
+
+boolDoIt=false
 function whileMyThreadGentlyWeeps()
 	while true do
-	
+		if boolDoIt==true then
+			boolDoIt=false
+			StartThread(delayedBuildEnd)
+		end
 		Sleep(150)
 	end
 end
 
 function script.StopBuilding()
-if GG.JFactorys[unitID] then
-		GG.JFactorys[unitID][2]=false
-	end
+	boolDoIt=true
 end
 
 function script.Killed(endh,_)

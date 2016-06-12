@@ -1602,7 +1602,7 @@ local aVd=acquireVehicleDegree()
 					if not GG.TableTreesTrampled then  GG.TableTreesTrampled ={} end
 					 
 						for i=1, #T do
-						GG.TableTreesTrampled[T[i]]=[T[i]]
+						GG.TableTreesTrampled[T[i]]=T[i]
 						end
 					end
 				end

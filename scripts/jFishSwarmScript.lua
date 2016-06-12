@@ -287,7 +287,7 @@ end
 function rotatefish()
 	local spGetGroundHeight=Spring.GetGroundHeight
 	local spGetUnitPosition=Spring.GetUnitPosition
-	randsignum= *randSign()
+	randsignum= randSign()
 	while true do
 		x,y,z=spGetUnitPosition(unitID)
 		GroundHeight=spGetGroundHeight(x,z)
@@ -298,7 +298,7 @@ function rotatefish()
 			mara=85 *randsignum
 			if boolShallowWaters==false then 
 			mara =math.random(-89,89) 
-			randsignum= *randSign()
+			randsignum= randSign()
 			end
 			Turn(centers[i],z_axis,math.rad(mara), 0.4)
 		end

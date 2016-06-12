@@ -29,9 +29,11 @@ local SIG_PEACE=32
 --eggspawn --tigLil and SkinFantry
 local AMBUSHLOADTIME=30000
 local AMBUSHTIME=9000
-
+piecePeriod=15000
+costPerEgg=0.2
 experienceSoFar=0
 teamID=Spring.GetUnitTeam(unitID)
+
 function spawnAEgg(x,z)
 	randSleep=math.ceil(math.random(370,1200))
 	Sleep(randSleep)
@@ -46,13 +48,13 @@ function EGG_LOOP()
 		x,_,z=Spring.GetUnitPosition(unitID)
 		--check if standing in Water
 		y=spGetGroundHeight(x,z)
-		if y <= 0 then	
+		if boolPeacefull== true then	
 			-- if in Water check experience
 			temp=Spring.GetUnitExperience(unitID)
 			if temp > experienceSoFar then
-				experienceSoFar=experienceSoFar+1
+				experienceSoFar=experienceSoFar+ costPerEgg
 				--spawn numberofEggsToSpawn
-				for i=1,math.ceil(experienceSoFar),1 do
+				for i=1,math.ceil(experienceSoFar),costPerEgg do
 					StartThread(spawnAEgg,x,z)
 				end
 				--update experienceSoFar
@@ -322,6 +324,7 @@ end
 
 function script.FireWeapon1()	
 	StartThread(boolFireWeaponReset)
+	StartThread(restorePeace)
 	return true
 end
 
@@ -466,6 +469,7 @@ end
 function script.FireWeapon2()
 	StartThread(boolFireWeaponReset)	
 	boolSecondAiming=false
+	StartThread(restorePeace)
 	return true
 end
 
@@ -598,15 +602,17 @@ function script.Deactivate()
 	return 0
 end
 
-boolPeacefull=true
+
 function restorePeace()
+	Signal(SIG_PEACE)
+	boolPeacefull=false
 	SetSignalMask(SIG_PEACE)
-	Sleep(5000)
+	Sleep(piecePeriod)
 	boolPeacefull=true
 end
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	boolPeacefull=false
-	Signal(SIG_PEACE)
+	
 	StartThread(restorePeace)
 end

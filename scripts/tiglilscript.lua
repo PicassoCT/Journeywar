@@ -51,7 +51,7 @@ Heading=0
 boolANewAttack=true
 howlong=1
 ---Signals to be spread
-
+costPerEgg=0.1
 ---------------------IdleStance10-Fucntions-------
 
 
@@ -9001,7 +9001,7 @@ end
 
 --eggspawn --tigLil and SkinFantry
 
-experienceSoFar=1
+experienceSoFar=0
 teamID=Spring.GetUnitTeam(unitID)
 function spawnAEgg(x,z)
 	randSleep=math.ceil(math.random(370,1200))
@@ -9020,10 +9020,10 @@ function EGG_LOOP()
 		if y <= 0 then	
 			-- if in Water check experience
 			temp=Spring.GetUnitExperience(unitID)
-			if temp > experienceSoFar+1 then --levelup
+			if temp > experienceSoFar+costPerEgg then --levelup
 
 				--spawn numberofEggsToSpawn
-				for i=1,math.ceil(experienceSoFar),1 do
+				for i=1,math.ceil(experienceSoFar),costPerEgg do
 					StartThread(spawnAEgg,x,z)
 				end
 				experienceSoFar=temp

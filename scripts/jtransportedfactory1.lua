@@ -81,26 +81,30 @@ function delayedUpgrade()
 
 
 	while true do
-		Sleep(5000)
+		Sleep(2500)
 		id=Spring.GetUnitIsBuilding(unitID)
+	
+		
 		if (id and Spring.ValidUnitID(id)==true) then
-		x,y,z=Spring.GetUnitPosition(unitID)
-			if  y < -5 then
-				defIDChild = 	Spring.GetUnitDefID(id)
-				if  defIDChild == upgradeDefID then	
-					if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
-					x,y,z=Spring.GetUnitPosition(unitID)
-					teamID=Spring.GetUnitTeam(unitID)
-					GG.UnitsToSpawn:PushCreateUnit("jfactorylvl1transform",x,y,z,0,teamID)		
-					Sleep(9000)		
-					Spring.DestroyUnit(	GG.JFactorys[unitID][1],false,true)
-					Spring.DestroyUnit(unitID,false,true)
-				end		
-			else
-						hp,mh,pd,cp,buildProgress= Spring.GetUnitHealth(id)
-						Spring.SetUnitHealth(id,{["build"]=0})
-						
-			end
+			if  defIDChild == upgradeDefID then	
+				x,y,z=Spring.GetUnitPosition(unitID)
+				if  y < -5 then
+					defIDChild = 	Spring.GetUnitDefID(id)
+					
+						if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+						x,y,z=Spring.GetUnitPosition(unitID)
+
+						GG.UnitsToSpawn:PushCreateUnit("jfactorylvl1transform",x,y,z,0,teamID)		
+						Sleep(9000)		
+						Spring.DestroyUnit(	GG.JFactorys[unitID][1],false,true)
+						Spring.DestroyUnit(unitID,false,true)
+					
+				else
+							hp,mh,pd,cp,buildProgress= Spring.GetUnitHealth(id)
+							Spring.SetUnitHealth(id,{["build"]=0})
+							
+				end
+			end		
 		end
 
 	end

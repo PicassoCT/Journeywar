@@ -695,6 +695,7 @@ function script.StartMoving()
 	end																		
 end
 
+
 function legs_down()
 	for i=1,table.getn(feetFetish),1 do
 		for j=1,4, 1 do

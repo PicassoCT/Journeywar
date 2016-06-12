@@ -37,7 +37,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--Every unit signs up, is checked for its UnitdefId beeing that of a WaterAdder or a WaterSubstractor
 	function gadget:UnitCreated(unitID, unitDefID, unitTeam)
 
-		if unitDefID==UnitDefNames["condepot"].id or unitDefID==UnitDefNames["eggstackfac"].id  then
+		if unitDefID==UnitDefNames["condepot"].id or unitDefID==UnitDefNames["jtransportedeggstack"].id  then
 		temp_O_RaryC={}
 		temp_O_RaryJ={}
 		temp_O_RaryC=Spring.GetTeamUnitsByDefs(unitTeam,UnitDefNames["citadell"].id)

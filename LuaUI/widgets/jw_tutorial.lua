@@ -130,7 +130,7 @@ TutorialInfoTable=
 ----Buildings
 [UnitDefNames["jnativevil"      ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Native Village \n Converts damage done by the enemy to light and matter"},
 [UnitDefNames["jdrilltree"      ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Drilltree \n Digs deep to provide matter"},
-[UnitDefNames["eggstackfac"     ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Eggstack \n Gives birth to construction units"},
+[UnitDefNames["jtransportedeggstack"     ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Eggstack \n Gives birth to construction units"},
 [UnitDefNames["jtree"           ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Tree \n Collects light"},
 [UnitDefNames["jtree2"          ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Wastelandtree \n Collects radiowaves"},
 [UnitDefNames["jtree3"          ].id]={active=false , time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Watertree \n Collects light -regrows with delay after fire"},

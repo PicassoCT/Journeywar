@@ -28,14 +28,14 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 	
 	if IWant=="j" then
 		FactoryTypes[UnitDefNames["jtrafactory"].id]=true
-		FactoryTypes[UnitDefNames["eggstackfac"].id]=true
+		FactoryTypes[UnitDefNames["jtransportedeggstack"].id]=true
 		FactoryTypes[UnitDefNames["jmovingfac1"].id]=true
 		return FactoryTypes
 	end
 	
 	--I want it all
 	FactoryTypes[UnitDefNames["jtrafactory"].id]=true
-	FactoryTypes[UnitDefNames["eggstackfac"].id]=true
+	FactoryTypes[UnitDefNames["jtransportedeggstack"].id]=true
 	FactoryTypes[UnitDefNames["jmovingfac1"].id]=true
 	FactoryTypes[UnitDefNames["fclvlone"].id]=true
 	FactoryTypes[UnitDefNames["fclvl2"].id]=true

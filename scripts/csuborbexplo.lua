@@ -122,9 +122,7 @@ function goTooKillThemAllPicaMon()
 	proChoice={}
 	proChoice=Spring.GetUnitsInCylinder(piecePosX, piecePosZ,selectRange )--no idea why 2.9 but satan told me so
 	
-	if proChoice ~= nil then
-		
-		
+	if proChoice ~= nil then		
 		
 		--Kill the Unit
 		for i=1,table.getn(proChoice),1 do		
@@ -137,6 +135,19 @@ function goTooKillThemAllPicaMon()
 		end
 		
 	end
+	
+	proFeature = Spring.GetFeaturesInCylinder(piecePosX, piecePosZ,selectRange )
+	if proFeature ~= nil then		
+		
+		--Kill the Unit
+		for i=1,table.getn(proFeature),1 do				
+				x,y,z=Spring.GetFeaturePosition(proFeature[i])
+				StartThread(spawnFire,82,x,y,z)
+				Spring.DestroyFeature(proFeature[i],false,false) --leave no wreck
+		end
+		
+	end
+	
 end
 --Reset the Parts
 function randomFire(time)					

@@ -21,7 +21,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	[UnitDefNames["jswiftspear"].id]=true,
  	[UnitDefNames["jmovingfac1"].id]=true,	
 	[UnitDefNames["jdrilltree"].id]=true,
-	[UnitDefNames["eggstackfac"].id]=true,
+	[UnitDefNames["jmeggstack"].id]=true,
 	[UnitDefNames["jtree"].id]=true,
 	[UnitDefNames["jtree2"].id]=true,
 	[UnitDefNames["jtree3"].id]=true,
