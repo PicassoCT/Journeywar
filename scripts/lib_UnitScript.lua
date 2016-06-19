@@ -2949,6 +2949,51 @@ function vardump(value, depth, key)
 		
 	end
 	
+	--> creates a heightmap distortion table
+	function preparhalfSphereTable(size,height)
+	cent=math.ceil(size/2)
+	T={}
+	for o=1,size,1 do
+		T[o]={}
+		for i=1,size,1 do
+			--default
+			T[o][i]=0
+			distcent=math.sqrt((cent-i)^2+(cent-o)^2)	
+			if distcent < cent-1 then
+				T[o][i]=(cent-distcent)*height
+			end
+		end
+	end
+	
+	return T	
+	end
+
+			 
+	function consumeAvailableRessource(typeRessource, amount, teamID )
+		
+		if "m" == string.lower(typeRessource) or "metal" == string.lower(typeRessource) then
+			currentLevel= Spring.GetTeamResources(teamID,"metal")
+			if amount > currentLevel then
+				return false 
+			end	
+			
+			return Spring.UseTeamResource( teamID, "metal",amount)
+			
+		end
+		
+		if "enery" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
+			currentLevel= Spring.GetTeamResources(teamID,"energy")
+			if amount > currentLevel then
+				return false 
+			end	
+			
+			return Spring.UseTeamResource( teamID, "enery",amount)
+			
+		end
+		
+	end
+	
+	
 	function clampMaxSign(value,Max)
 		if math.abs(value) > Max then 
 			signum=math.abs(value)/value
@@ -2958,7 +3003,29 @@ function vardump(value, depth, key)
 		end	
 	end
 	
-	
+	-->samples over a given Array around Point x,y, with the samplefunction 
+function sample(NumericIndex, x, y, sampleFunction, factor)
+quadNumericIndex={}
+	if type(NumericIndex)== "number" then
+		for i=-1*NumericIndex, NumericIndex do
+			for j=-1*NumericIndex, NumericIndex do
+
+			quadNumericIndex[i][j]={x=i*factor, z=j*factor}
+			end
+		end
+	else
+	quadNumericIndex = NumericIndex
+	end
+
+
+
+	for i=1, #quadNumericIndex, 1 do
+		for j=1, #quadNumericIndex, 1 do
+		quadNumericIndex[i][j]= sampleFunction(x +quadNumericIndex[i][j].x ,y + (quadNumericIndex[i][j].z or quadNumericIndex[i][j].y))
+		end
+	end
+return quadNumericIndex
+end
 	
 	--> GetDistanceNearestEnemy
 	function GetDistanceNearestEnemy(id)
@@ -3631,6 +3698,8 @@ function vardump(value, depth, key)
 	
 	
 	
+	
+	
 	function getMidPoint(a,b)
 		ax,ay,az=a.x,a.y,a.z
 		bx,by,bz=b.x.b.y,b.z
@@ -3680,6 +3749,8 @@ function vardump(value, depth, key)
 		
 	end
 	
+	-->renames piecenames placeholders in a given s3o file 
+	-- replaced asciichars must be equal in digits	
 	function objectPieceRenamer(filename)
 		
 		

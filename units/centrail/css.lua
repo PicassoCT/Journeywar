@@ -1,7 +1,7 @@
 local unitName = "css"
 
 local unitDef = {
-name = "Combine Super Soldier",
+name = "Combine Synth Soldier",
 Description = "Combine Soldier",
 objectName = "css.s3o",
 script = "css.lua",

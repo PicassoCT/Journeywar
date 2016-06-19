@@ -63,6 +63,10 @@ citadell=  {
   },
   
 
+cwallbuilder={
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,-25,0}, size=55, precision=22, strength   = 0.015,  repeatEffect=true}},     
+	 },
+	 
 jshroudshrike={
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,15,0}, size=90, precision=22, strength   = 0.015,  repeatEffect=true}},     
 	 },

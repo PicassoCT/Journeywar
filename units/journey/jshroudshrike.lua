@@ -1,7 +1,7 @@
 local unitName = "jshroudshrike"
 local unitDef = {
 name = "Shroudshrike",
-Description = "Inpenetrateable Shield Unit", -- can only be destroyed if no unit of team is in shield
+Description = "Vampires Experience - creates a Beanstalk",
 
 
 objectName = "jshroudshrike.s3o",

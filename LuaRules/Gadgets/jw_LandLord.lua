@@ -115,15 +115,12 @@
 				Spring.Echo("JW:FilterFunc:undefined")
 				return function (boolinBounds,anyVal) return anyVal end
 			end
-			
+		
 			function getBlendFunction(BlendName)
 				--blindly adds or subs the value
 				if BlendName== "melt" then return function(anyTable) return anyTable end end	
 				--adds subs the value to 
-				if BlendName== "sub" or BlendName== "add" then 
-					hub=true
-					if BlendName=="sub" then hub=false end
-					if hub == true then
+				if BlendName== "add"  then				
 						return 
 						---------add--------------------------
 						function (anyTable,vi,vj)
@@ -159,9 +156,10 @@
 							--printOUT(anyTable)	
 							return anyTable
 						end 	
-						-----------------------------------
-					else
-						return
+				end
+				
+				if BlendName == "sub" then
+				return
 						-------------sub----------------------
 						function (anyTable,vi,vj)
 							
@@ -197,16 +195,82 @@
 							--printOUT(anyTable)		
 							return anyTable	
 						end 
-						-----------------------------------	
-					end
-					--defaults the save lifes
-					return 
-					-----------------------------------
-					function(anyTable)
-						return anyTable
-					end 
-					-----------------------------------
 				end
+						-----------------------------------	
+					
+
+						---------------relative--------------------	
+					if BlendName == "relative" then
+					return function (anyTable,vi,vj)
+							
+							
+							h1=Spring.GetGroundHeight(vi*8,vj*8)
+							h2=Spring.GetGroundHeight(vi*8+100,vj*8)
+							h3=Spring.GetGroundHeight(vi*8-100,vj*8)
+							h4=Spring.GetGroundHeight(vi*8,vj*8+100)
+							h5=Spring.GetGroundHeight(vi*8,vj*8-100)
+							h6=Spring.GetGroundHeight(vi*8-100,vj*8+100)
+							h7=Spring.GetGroundHeight(vi*8-100,vj*8-100)
+							h8=Spring.GetGroundHeight(vi*8+100,vj*8+100)
+							h9=Spring.GetGroundHeight(vi*8+100,vj*8-100)
+							local bcheck=boundCheck
+							h=(h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+							for i=1,#anyTable,1 do
+								if bcheck("x",i) ==true then
+									for j=1,#anyTable,1 do
+										if bcheck("z",j) ==true then	
+											
+											if orgTerrainMap[i][j]-h < anyTable[i][j] then
+												orgTerrainMap[i][j] = orgTerrainMap[i][j] + math.abs(orgTerrainMap[i][j]-h) + anyTable[i][j]												
+											else
+												orgTerrainMap[i][j] = orgTerrainMap[i][j] + math.abs(orgTerrainMap[i][j]-h) - anyTable[i][j]
+											end											
+										end
+									end
+								end
+							end
+							--Spring.Echo("JW_LANDLORD:SUB-----------------------")
+							--printOUT(anyTable)		
+							return anyTable	
+						end 				
+					end	
+					
+					---------------normal standard absolute add or substract value--------------------	
+		
+					return 
+					function (anyTable,vi,vj)
+							
+							
+							h1=Spring.GetGroundHeight(vi*8,vj*8)
+							h2=Spring.GetGroundHeight(vi*8+100,vj*8)
+							h3=Spring.GetGroundHeight(vi*8-100,vj*8)
+							h4=Spring.GetGroundHeight(vi*8,vj*8+100)
+							h5=Spring.GetGroundHeight(vi*8,vj*8-100)
+							h6=Spring.GetGroundHeight(vi*8-100,vj*8+100)
+							h7=Spring.GetGroundHeight(vi*8-100,vj*8-100)
+							h8=Spring.GetGroundHeight(vi*8+100,vj*8+100)
+							h9=Spring.GetGroundHeight(vi*8+100,vj*8-100)
+							local bcheck=boundCheck
+							h=(h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+							for i=1,#anyTable,1 do
+								if bcheck("x",i) ==true then
+									for j=1,#anyTable,1 do
+										if bcheck("z",j) ==true then			
+											if orgTerrainMap[i][j] then
+												orgTerrainMap[i][j] = orgTerrainMap[i][j] + anyTable[i][j]
+											end											
+										end
+									end
+								end
+							end
+							--Spring.Echo("JW_LANDLORD:SUB-----------------------")
+							--printOUT(anyTable)		
+							return anyTable	
+						end 
+					
+					
+				
+				
 			end
 			
 			--by Convention a dynamic Deformation Map is a Piece of HeightmapOffsets, pushed to 

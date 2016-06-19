@@ -46,6 +46,21 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 updateCommandsSoon = false
 
+defaultCaptionByUnitType={
+--centrail 
+	["cwallbuilder"]= "Terraform",
+	["mtw"]= "Grnd.Trooper\n Synthsoldier",
+	["bg"]= "Ballistic\nShield",
+	["bg2"]= "Ballistic\nShield",
+	["mdigg"]= "Start\nMining",
+	["mdiggmex"]= "Stop\nMining",
+	["citadell"]= "Energy\nShield",
+
+--journeyman
+	["beanstalk"]= "Unroot",
+}
+
+
 ability_window_height = "23%"--180
 ability_window_height_numeric =180
 ability_window_width = "7%"--115
@@ -459,6 +474,7 @@ function widget:GameFrame(f)
 		
 		local unitID = selectedUnits[1]
 		if not unitID then 
+			onOffButton.caption = "ABILITY"
 			HideAllActiveElements()
 			resetElements()
 			return 
@@ -480,12 +496,20 @@ function widget:GameFrame(f)
 			--generate the Gui Specific by unittype
 			--Spring.Echo("Show typespeicific acitivty button")
 			unitTypeButtonMap[ud.name]()		
+			
 		elseif isUnitOnOffable(ud.name)== true then
 			--Spring.Echo("Show dfault acitivty button")
 			unitTypeButtonMap["default"]("default")
+			--Check for captionReplacement
+			if defaultCaptionByUnitType[ud.name] then
+				onOffButton.caption = defaultCaptionByUnitType[ud.name] 
+			else
+				onOffButton.caption = "ABILITY"
+			end
 		else
 			--Spring.Echo("Hide all Buttons")
 			--default no button
+			onOffButton.caption = "ABILITY"
 			HideAllActiveElements()
 		end
 	end
