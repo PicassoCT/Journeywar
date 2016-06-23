@@ -214,4 +214,40 @@ return soundScapeDefinition
 
 end
 
+function spawnFlareCircle(unitID)
+spiralcenter =piece "spiralcenter"
+fireFx =piece "fireFx"
+x,y,z=Spring.GetUnitPosition(unitID)
+	local spSpawnCEG=Spring.SpawnCEG
+spSpawnCEG("portalspherespawn",x,y+50,z,0,1,0,0)	
+
+	temp=25
+	max=600
+
+	while(temp < 350 ) do
+		Move(fireFx,x_axis,temp,0)
+		temp=temp+18.4
+		for i=1, 360, 1 do
+			holyRandoma=math.random(0,1)
+			if holyRandoma==1 then
+				Turn(spiralcenter,y_axis,math.rad(i),0,true)
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,fireFx)
+				if maRa()==true then
+				spSpawnCEG("portalflares",x,y,z,0,1,0,0)
+				else
+				spSpawnCEG("csuborbscrap",x,y,z,0,1,0,0)
+				end
+			end
+		end
+		Turn(spiralcenter,y_axis,math.rad(0),0,true)
+		Sleep(2)
+	end
+	
+end
+
+function portalStorm(unitID)
+		StartThread(spawnFlareCircle,unitID)
+
+
+end
 --===================================================================================================================

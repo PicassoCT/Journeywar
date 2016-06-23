@@ -141,9 +141,9 @@ function goTooKillThemAllPicaMon()
 		
 		--Kill the Unit
 		for i=1,table.getn(proFeature),1 do				
-				x,y,z=Spring.GetFeaturePosition(proFeature[i])
-				StartThread(spawnFire,82,x,y,z)
-				Spring.DestroyFeature(proFeature[i],false,false) --leave no wreck
+			x,y,z=Spring.GetFeaturePosition(proFeature[i])
+			StartThread(spawnFire,82,x,y,z)
+			Spring.DestroyFeature(proFeature[i],false,false) --leave no wreck
 		end
 		
 	end
@@ -173,22 +173,22 @@ function randomFire(time)
 end
 
 function prepareDeformTable(size,height)
-cent=math.ceil(size/2)
-T={}
+	cent=math.ceil(size/2)
+	T={}
 	for o=1,size,1 do
-	T[o]={}
+		T[o]={}
 		for i=1,size,1 do
-		--default
-		T[o][i]=0
-		distcent=math.sqrt((cent-i)^2+(cent-o)^2)		
-		
+			--default
+			T[o][i]=0
+			distcent=math.sqrt((cent-i)^2+(cent-o)^2)		
+			
 			if distcent < cent-1 then
-			T[o][i]=(cent-distcent)*height
+				T[o][i]=(cent-distcent)*height
 			end
 		end
 	end
 	
-return T	
+	return T	
 end
 function randomFires()
 	nr=math.random(2,4)
@@ -212,9 +212,9 @@ function volcaniclavalamp()
 end
 
 function justWaitAndSee()
+	Hide(impactor)
 	
-	
-	Turn(center,y_axis,math.rad(180),0)
+	Turn(center,y_axis,math.rad(180),0,true)
 	
 	posX,posY,posZ=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
@@ -231,14 +231,14 @@ function justWaitAndSee()
 	StartThread(playSound)
 	Turn(impactor,z_axis,math.rad(0),0.41083005)
 	WaitForTurn(impactor,z_axis)
-size=20
-x,y,z=Spring.GetUnitPosition(unitID)
-if GG.DynDefMap == nil then GG.DynDefMap={} end
-if GG.DynRefMap == nil then GG.DynRefMap={} end
-GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="sub", filterType="borderblur"}
-GG.DynRefMap[#GG.DynRefMap+1]=	prepareDeformTable(240,-2)
-GG.boolForceLandLordUpdate=true
-
+	size=20
+	x,y,z=Spring.GetUnitPosition(unitID)
+	if GG.DynDefMap == nil then GG.DynDefMap={} end
+	if GG.DynRefMap == nil then GG.DynRefMap={} end
+	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="sub", filterType="borderblur"}
+	GG.DynRefMap[#GG.DynRefMap+1]=	prepareDeformTable(240,-2)
+	GG.boolForceLandLordUpdate=true
+	
 	
 	Spring.CreateUnit("NukedecalFactory",posX,posY,posZ,0, teamID) 
 	Hide(impactor)
