@@ -219,11 +219,11 @@ spiralcenter =piece "spiralcenter"
 fireFx =piece "fireFx"
 x,y,z=Spring.GetUnitPosition(unitID)
 	local spSpawnCEG=Spring.SpawnCEG
-spSpawnCEG("portalspherespawn",x,y+50,z,0,1,0,0)	
+
 
 	temp=25
 	max=600
-
+	allReadyImpulsed={}
 	while(temp < 350 ) do
 		Move(fireFx,x_axis,temp,0)
 		temp=temp+18.4
@@ -232,22 +232,49 @@ spSpawnCEG("portalspherespawn",x,y+50,z,0,1,0,0)
 			if holyRandoma==1 then
 				Turn(spiralcenter,y_axis,math.rad(i),0,true)
 				x,y,z=Spring.GetUnitPiecePosDir(unitID,fireFx)
-				if maRa()==true then
-				spSpawnCEG("portalflares",x,y,z,0,1,0,0)
-				else
+				if y < 0 then y = 1 end
+				
+				if math.random(0,4)==2 then
 				spSpawnCEG("csuborbscrap",x,y,z,0,1,0,0)
+				else
+				spSpawnCEG("portalflares",x,y,z,0,1,0,0)
 				end
 			end
 		end
+		
+		Units=Spring.GetUnitsInCylinder(x,z, temp)
+		table.remove(Units, unitID)
+		if Units then
+		for i=1, #Units do 
+			if 	Units[i] ~= unitID and not allReadyImpulsed[Units[i]] then
+				allReadyImpulsed[Units[i]]=true
+				defID= Spring.GetUnitDefID(Units[i])
+				mass=  UnitDefs[defID].mass
+				if mass < 500 then
+
+				Spring.AddUnitImpulse(Units[i],0, mass/100,0) 
+			end
+			end
+		end
+		end
+		
 		Turn(spiralcenter,y_axis,math.rad(0),0,true)
 		Sleep(2)
 	end
 	
 end
 
-function portalStorm(unitID)
+function portalStormWave(unitID)
+		local spSpawnCEG=Spring.SpawnCEG
+		ax,ay,az=Spring.GetUnitPosition(unitID)
+		spSpawnCEG("portalspherespawn",ax,ay+50,az,0,1,0,0)	
+		
 		StartThread(spawnFlareCircle,unitID)
-
+			
+		for i=1, 2 do
+		Sleep(50*i)
+				spSpawnCEG("portalspherespawn",ax,ay+50,az,0,1,0,0)	
+		end
 
 end
 --===================================================================================================================

@@ -3,6 +3,7 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_Build.lua" 
+include "lib_jw.lua" 
 ---
 
 NanoSubQuota = 42
@@ -482,6 +483,7 @@ teamID=Spring.GetUnitTeam(unitID)
 
 function spawnCitadell()
 Signal(SIG_HARVEST)
+	StartThread(portalStormWave,unitID)
 	SetUnitValue(COB.MAX_SPEED,0)
 	boolMoving=false
 		process(swarm,			
@@ -498,6 +500,7 @@ Signal(SIG_HARVEST)
 	end
 	Spin(PortalPillar,y_axis,math.rad(420),0.05)
 	Sleep(5000)
+	StartThread(portalStormWave,unitID)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	 facing=1
 	citID = Spring.CreateUnit("citadell", x, y, z, facing, teamID)

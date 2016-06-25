@@ -15,7 +15,7 @@ Quader01=piece"Quader01"
 function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(emitSFX)
-	StartThread(saySay)
+--	StartThread(saySay)
 end
 
 function script.Killed(recentDamage,_)
@@ -73,6 +73,8 @@ function emitSFX()
 		Spring.SpawnCEG("ctanglegunstrip",x+40,y+25,z,0,1,0,60)
 		
 		--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
+		Sleep(3000)
+		StartThread(portalStormWave,unitID)
 		
 	end
 	

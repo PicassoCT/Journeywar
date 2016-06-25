@@ -22,7 +22,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if totalDamage > 320 then
 		totalDamage=0
 		StartThread(delayedReset)
-		portalStorm()
+		StartThread(portalStormWave,unitID)
 	end
 end
 

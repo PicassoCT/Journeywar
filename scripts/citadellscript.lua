@@ -1,9 +1,9 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
-
+include "lib_Animation.lua"
 include "lib_Build.lua" 
+include "lib_jw.lua" 
 
 SHIELDRADIUS=850
 SHIELDNUMBER = 6
@@ -441,6 +441,8 @@ function sfxThread(time,step,piecename,nr)
 end
 
 local function WarpEntry()
+	StartThread(portalStormWave,unitID)
+	Sleep(1000)
 	Move(blade,y_axis,300,0)
 	for r=1,8,1 do
 		Show(rocks[r])
@@ -750,6 +752,7 @@ end
 
 
 function script.Killed(recentDamage,maxHealth)
+
 	StartThread(FireCloud)
 		if GG.LandScapeT then
 		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
@@ -764,7 +767,7 @@ function script.Killed(recentDamage,maxHealth)
 	Spin (cifireclo1, y_axis, math.rad(-12))
 	Spring.UnitScript.Show(cifireclo1)
 	
-	--allHellBreaksLooseallHellBreaksLoose()
+
 	
 	Spring.UnitScript.Show(shater)
 	Explode (shater, SFX.SHATTER)
@@ -785,6 +788,7 @@ function script.Killed(recentDamage,maxHealth)
 	Explode (citurret, SFX.FIRE)
 	
 	--PortalStorm
+	StartThread(portalStormWave,unitID)
 	for i=1,5 do
 		EmitSfx(citadel,1033)
 		Sleep(math.ceil(500/i))	
