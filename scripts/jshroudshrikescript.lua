@@ -189,12 +189,13 @@ function giveExpFromUnitToTeam(unitID, Range, filterTeams)
 		--Distribute along own Team
 		if TeamToGive then
 			amount= exP/#Tuid
-			for i=1, #Tuid
+			for i=1, #Tuid do
 			currXP=Spring.GetUnitExperience(Tuid[i])
 			Spring.SetUnitExperience(Tuid[i],currXP+ amount)
 			currXP=Spring.GetUnitExperience(unitID)
 			Spring.SetUnitExperience(unitID,currXP- amount)
 			
+			end
 		end
 	end
 	

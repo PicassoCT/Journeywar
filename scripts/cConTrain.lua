@@ -1010,7 +1010,7 @@ boolSelfRepairedToDeath=false
 
 function healWhileStandingStill()
 	Sleep(3000)
-	SetSignalMask(SIG_HEAL)
+
 	teamid=Spring.GetUnitTeam(unitID)
 	conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair"})
 	local ud=UnitDefs

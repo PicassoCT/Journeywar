@@ -73,12 +73,13 @@ end
 
 
 function script.StartMoving()
-	
+	Turn(center,x_axis,math.rad(90),0.5)
+	Spin(deathpivot,z_axis,math.rad(42),0.5)
 end
 
 function script.StopMoving()
-	
-	
+	Turn(center,x_axis,math.rad(0),1.5)
+		StopSpin(deathpivot,z_axis,0.3)
 end
 
 function script.Activate()
