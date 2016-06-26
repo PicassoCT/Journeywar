@@ -228,6 +228,8 @@ if (gadgetHandler:IsSyncedCode()) then
 				hp=spGetUnitHealth(unitID)	
 				if hp then
 					scaleTable[unitID].scale=math.max(0.01,hp/100)
+				else
+					scaleTable[unitID].scale=0.01
 				end
 			end
 			--ending clause
