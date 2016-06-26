@@ -21,17 +21,10 @@ buildspot=center
 function script.Create()
 	Spring.SetUnitHealth(unitID,1)
 	StartThread(wiggleAndUnfold)
-	StartThread(setHealthRandom)
+
 end
 
-function setHealthRandom()
-hp=1
-	while true do
-	Spring.SetUnitHealth(unitID,hp)
-	hp=(hp%100)+1
-	Sleep(1000)
-	end
-end
+
 
 function wiggleAndUnfold()
 	local spGetUnitHealth=Spring.GetUnitHealth

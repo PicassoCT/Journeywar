@@ -1012,7 +1012,7 @@ function healWhileStandingStill()
 	Sleep(3000)
 
 	teamid=Spring.GetUnitTeam(unitID)
-	conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair"})
+	conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair","citadell"})
 	local ud=UnitDefs
 	
 	while true do
@@ -1021,6 +1021,7 @@ function healWhileStandingStill()
 			x,y,z=Spring.GetUnitPosition(unitID)
 			hp=Spring.GetUnitHealth(unitID)
 			if hp then
+
 				T=getAllInCircle(x,z,300,unitID,teamID)
 				hp=math.ceil(math.ceil(hp*0.5)/#T)
 				hpcopy=hp
@@ -1030,8 +1031,10 @@ function healWhileStandingStill()
 						p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
 						
 						if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
-							boolHealedOne=true
+
 							Spring.SetUnitHealth(T[i],p+hp)
+								sx,sy,sz=Spring.GetUnitPosition(T[i])
+								Spring.SpawnCEG("healtrain",sx,sy+70,sz,0,1,0,0)
 							if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
 							Spring.AddUnitDamage(unitID,hp)
 							
@@ -1039,11 +1042,7 @@ function healWhileStandingStill()
 					end
 				end
 			end
-			if boolHealedOne==true then 
-				sx,sy,sz=Spring.GetUnitPosition(unitID)
-				Spring.SpawnCEG("healtrain",sx,sy+70,sz,0,1,0,0)
-				--for i=1,3 do EmitSfx(center,1026) Sleep(50) end
-			end
+		
 			Sleep(750)
 		end
 		Sleep(100)

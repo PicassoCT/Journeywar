@@ -1,26 +1,42 @@
 
-return {
-  ["healtrain"] = {
-   
-  groundflash = {
-      air                = false,
-      alwaysvisible      = true,
-      circlealpha        = 0.5,
-      circlegrowth       = 7,--6
-      flashalpha         = 0.01,
-      flashsize          = 210,
+
+    return {
+      ["healtrain"] = {
+		  
+	  ants2 = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
       ground             = true,
-      ttl                = 53,--53
       water              = false,
-      color = {
-        [1]  = 0.2,
-        [2]  = 0.05,
-        [3]  = 0.4125,
+      properties = {
+        airdrag            = 1,
+		
+            colormap           = [[1 0.1 0.1   0.01   1 0.13 0.15   0.01		0 0 0   0.01]],
+        directional        = true,
+        emitrot            = 0,
+        emitrotspread      = 0,
+            emitvector         = [[0,0.45,0]],
+        gravity            = [[0, 0.00000007, 0]],
+        numparticles       = 1,
+        particlelife       = 110,
+        particlelifespread = 11,
+        particlesize       = 22.2,
+        particlesizespread = 4,
+        particlespeed      = 0.02,
+        particlespeedspread = 1.005,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = [[0.0 0]],
+        sizemod            = 0.999995,
+        texture            = [[expandingstrobe]],
+        useairlos          = false,
       },
     },
-	
-	
-  },
-
-}
-
+		
+		
+	  
+				 
+				 
+				 
+    },
+    }
