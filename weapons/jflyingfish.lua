@@ -50,8 +50,8 @@ lineOfSight=true,
 
 
 --sound
-soundHit="sounds/skinfantry/birdrockethit.ogg",
-soundStart="sounds/skinfantry/birdrocketstart.ogg",
+soundHit="sounds/jfishswarm/jFishSwarmAttack.wav",
+soundStart="sounds/jfishswarm/jFishSwarmFlyingAttack.wav",
 
 }
 

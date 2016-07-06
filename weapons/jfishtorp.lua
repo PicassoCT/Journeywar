@@ -38,6 +38,8 @@ name="Torpedous Deadlionis",
       weaponTimer             = 4,
       weaponType              = [[TorpedoLauncher]],
       weaponVelocity          = 140,
+	  soundHit="sounds/jfishswarm/jFishSwarmFireTorpedo.wav",
+	  soundHit="sounds/jfishswarm/jFishSwarmAttack.wav",
 
 }
 

@@ -260,6 +260,7 @@ else
   end
 
   function gadget:Initialize()
+	Spring.Echo("Initialize profiler")
     gadgetHandler.actionHandler.AddSyncAction(gadget, "prf_started",SyncedCallinStarted) 
     gadgetHandler.actionHandler.AddSyncAction(gadget, "prf_finished",SyncedCallinFinished) 
 

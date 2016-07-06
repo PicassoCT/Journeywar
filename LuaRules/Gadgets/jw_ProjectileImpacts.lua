@@ -30,6 +30,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local stunTime=9
 	local selectRange=300
 	local totalTime=9000
+	jEthiefStealingQuota=5
 	local HARDCODED_RETREATDISTANCE=420
 	
 	local cRestrictorThumperID= WeaponDefNames["crestrictorthumper"].id
@@ -61,6 +62,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
 	local CEaterRocketDefID=WeaponDefNames["ceater"].id
+	 jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
+	 jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
 	local cHarvestRocketDefID=WeaponDefNames["charvest"].id
 	local cAntiMatterDefID=WeaponDefNames["cantimatter"].id
 	local catapultDefID=WeaponDefNames["ccatapult"].id
@@ -83,6 +86,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(crazorgrenadeDefID , true)
 	Script.SetWatchWeapon(jvaryjumpDefID , true)
 	Script.SetWatchWeapon(striderWeaponDefID , true)
+	Script.SetWatchWeapon(jethiefweaponDefID , true)
+	Script.SetWatchWeapon(jethiefretweaponDefID , true)
 	Script.SetWatchWeapon(tiglilWeaponDefID , true)
 	Script.SetWatchWeapon(slicergunDefID , true)
 	Script.SetWatchWeapon(weaponDefIDjmotherofmercy , true)
@@ -580,7 +585,60 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
+	WeaponDefTable[jethiefweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+		--only if the unit is hitsphere wise big enough 
+		if unitID and  attackerTeam then
+			energy= Spring.GetTeamResources(attackerTeam,"energy")
+			if energy and energy > jEthiefStealingQuota then
+			Spring.UseUnitResource(unitID,"e",jEthiefStealingQuota)
+			
 	
+		gx,gy,gz=Spring.GetUnitPosition(unitID)
+		tx,ty,tz=Spring.GetUnitPosition(attackerID)
+		ateamid=Spring.GetUnitTeam(attackerID)
+		vx,vy,vz=Spring.GetUnitCollisionVolumeData(unitID)
+		max=math.max(vx,math.max(vy,vz))
+		
+		v=makeVector(tx-gx,ty-gy,tz-gz)
+		v=normVector(v)
+		--v=mulVector(v,-1)
+		
+		 local HarvestRocketParams={
+			pos = { gx, gy+max,gz}, 
+			["end"] = {tx,ty+10,tz},
+			speed={v.x,v.y+2,v.z},
+			owner = unitID,
+			team = ateamid,	
+			target= attackerID,
+			spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
+			ttl=420,
+			error = {0,0,0},
+			maxRange = 1200,
+			gravity = Game.gravity,
+			startAlpha = 1,
+			endAlpha = 1,						
+			model = "jGlowProj.s3o",
+			  cegTag = "jglowstrip",
+		}						
+		projID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
+			if projID then
+			Spring.SetProjectileTarget(attackerID,"u")
+			end
+			end
+		end
+
+	end
+	
+		WeaponDefTable[jethiefretweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+		--only if the unit is hitsphere wise big enough 
+		if unitID and  attackerTeam then
+			energy= Spring.GetTeamResources(attackerTeam,"energy")
+			if energy and energy > jEthiefStealingQuota then
+			Spring.AddUnitResource(unitID,"e",jEthiefStealingQuota)
+			end
+		end
+
+	end
 	
 	--restrictor			
 	

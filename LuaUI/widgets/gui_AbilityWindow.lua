@@ -235,13 +235,15 @@ function widget:Initialize()
 				createNewUpgradeButton(100,90, WeapCol, texCol, "SLICER"),
 				createNewUpgradeButton(100,90, UpgCol, texCol,"STEALTH"),
 				createNewUpgradeButton(100,90, UpgCol, texCol,"RADAR"),
+
 				
 				createNewUpgradeButton(100,90, WeapCol, texCol,"RAZOR"),				
 				createNewUpgradeButton(100,90, WeapCol, texCol, "FLARE"), 
 				createNewUpgradeButton(100,90, WeapCol, texCol, "TANGLE"),
 				createNewUpgradeButton(100,90, WeapCol, texCol, "AROCKET"), 
 				createNewUpgradeButton(100,90, WeapCol, texCol, "GROCKET"),
-				createNewUpgradeButton(100,90, WeapCol, texCol, "EATER"), 
+				createNewUpgradeButton(100,90, WeapCol, texCol, "EATER"),
+				createNewUpgradeButton(100,90, UpgCol, texCol,	"LAZARUS"),				
 			},		
 		}
 		upgrade_window:AddChild(upgrade_Grid)

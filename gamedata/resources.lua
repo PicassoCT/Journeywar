@@ -21,9 +21,6 @@ local   resources = {
             muzzleside         = 'muzzleside.tga',
             muzzlefront         = 'muzzlefront.tga',
             largebeam         = 'largelaserfalloff.tga',
-			cartooncloud = 'effects/cartooncloud.png',
-			springlogo = 'effects/springlogo.png',
-			star = 'effects/star.png',
 
          },
       }

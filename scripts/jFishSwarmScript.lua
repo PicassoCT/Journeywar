@@ -258,13 +258,15 @@ function idle ()
 			Turn(subcenters[i],y_axis,math.rad(179*direction),speed)
 		end
 	end
-	
+		for i=1, 9 do
+		if going[i]==1 then
+		WaitForTurn(subcenters[i],y_axis)
+		end
+		end
 	if one ~=0 then 
 		WaitForTurn(subcenters[one],y_axis)
 	end
-	val=math.ceil(math.random(1000,1500))
-	Sleep(val)
-	
+
 	for i=1, 9 do
 		if going[i]==1 then
 			speed=math.random(2,8)
@@ -273,13 +275,24 @@ function idle ()
 			Turn(subcenters[i],y_axis,math.rad(357*direction),speed)
 		end
 	end
-	val=math.ceil(math.random(1200,1500))
-	Sleep(val)
+
+	for i=1, 9 do
+		if going[i]==1 then
+		WaitForTurn(subcenters[i],y_axis)
+		end
+	end
+
 	
 	for i=1, 9 do
 		speed=math.random(2,9)
 		Turn(subcenters[i],y_axis,math.rad(0),speed)
 	end
+		for i=1, 9 do
+		if going[i]==1 then
+		WaitForTurn(subcenters[i],y_axis)
+		end
+	end
+	
 	
 end
 

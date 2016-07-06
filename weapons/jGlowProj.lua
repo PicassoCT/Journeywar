@@ -5,17 +5,17 @@ weaponType=[[MissileLauncher]],
 
 Accuracy=1000,
 
---Physic/flight path
-range=1200,
+
+
 reloadtime=3,
-weaponVelocity=250,
+weaponVelocity=350,
 startVelocity=50,
-weaponAcceleration=50,
+weaponAcceleration=250,
 flightTime=18.5,
 BurnBlow=0,
 FixedLauncher=false,
-dance=120,
-wobble=60,
+dance=42,
+wobble=12,
 turnrate=12200,
 tolerance=16000,
 tracks=true,

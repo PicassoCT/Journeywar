@@ -26,7 +26,7 @@
         pos                = [[0, 0, 0]],
         sizegrowth         = [[0.0 0.0000000000000000001]],
         sizemod            = 0.99999999,
-        texture            = [[LEAVE]],
+        texture            = [[feather]],
         useairlos          = false,
       },
     },
