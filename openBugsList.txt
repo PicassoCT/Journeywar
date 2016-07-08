@@ -1,0 +1,9 @@
+Bugs:
+Grass - of the Chunterchoppered
+Fish still has default corpse
+Galatea legs wont hide
+Seastar ScaleUpGadget hides Units
+jplanktoner still spawns with regular wreckage
+deactivate the rolling burning man animation and fire when corpses are under water
+heightmap is not updating fully
+jplanktoner aimspot in colvol

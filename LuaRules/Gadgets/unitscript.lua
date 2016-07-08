@@ -21,7 +21,7 @@ if (not gadgetHandler:IsSyncedCode()) then
         return false
 end
 
-local bool_GadgetDebug= GG.BoolDebug or true 
+local bool_GadgetDebug= GG.BoolDebug or false 
 if not GG.BoolDebug then GG.BoolDebug=bool_GadgetDebug end
 -- This lists all callins which may be wrapped in a coroutine (thread).
 -- The ones which should not be thread-wrapped are commented out.

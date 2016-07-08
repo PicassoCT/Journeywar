@@ -18,7 +18,7 @@ MA 02110-1301, USA.
 ]]--
 --------------DEBUG HEADER
 --Central Debug Header Controlled in UnitScript
-lib_boolDebug= GG.BoolDebug or false
+lib_boolDebug= false --GG.BoolDebug or false
 --------------DEBUG HEADER
 
 

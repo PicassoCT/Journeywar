@@ -550,8 +550,7 @@ function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 	
 
 	ox=ox*-1
-	if offset then
-		
+	if offset then		
 		ox= ox +(offset.x)
 		oy= oy +offset.y
 		oz= oz +offset.z
