@@ -25,7 +25,7 @@ local weaponDef={
 	----APPEARANCE
 	model="jplanktonerproj.s3o",
 	smokeTrail=false,
-	--explosionGenerator="custom:redsmoke",
+	explosionGenerator="custom:jplankaaimpact",
 	CegTag="jplankaatail",
 	
 	----TARGETING

@@ -581,6 +581,14 @@ if (gadgetHandler:IsSyncedCode()) then
 		eventFunction = function (id,frame, persPack)
 			nextFrame=frame+1
 			if persPack then
+				if persPack.unitID then
+				--check 
+				boolDead= Spring.GetUnitIsDead(persPack.unitID )
+				
+				if boolDead and boolDead == true then
+					Spring.MoveCtrl.Disable(persPack.unitID)
+				end
+			  
 			  
 				 if not persPack.startFrame then
 					persPack.startFrame=frame
@@ -591,14 +599,14 @@ if (gadgetHandler:IsSyncedCode()) then
 				 end
 				 
 				 if frame >= nextFrame then
-					Spring.MoveCtrl.Disable(unitID)
+					Spring.MoveCtrl.Disable(persPack.unitID)
 					return 
 				 end
 			end	 
 			return nextFrame, persPack
 			end	
 	
-		GG.EventStream:CreateEvent({action= eventFunction, persPack={totalTime=JPLANKTONER_AA_STUNTIME}})
+		GG.EventStream:CreateEvent({action= eventFunction, persPack={unitID= unitID, totalTime=JPLANKTONER_AA_STUNTIME}})
 		end
 	return damage
 	end

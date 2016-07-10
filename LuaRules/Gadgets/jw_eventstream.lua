@@ -58,10 +58,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		if #GG.EventStream > 0 then
 			local streamLine=GG.EventStream
 			for i=1,#streamLine do
+				
+				if Events and streamLine[i] and streamLine[i].id and Events[streamLine[i].id] then
 				Events[streamLine[i].id]=streamLine[i]
 				
 				if not	TimeTable[frame] then TimeTable[frame] ={}end 
 				table.insert(TimeTable[frame],streamLine[i].id)
+				end
 			end
 			GG.EventStream={CreateEvent=CreateEvent}
 		end

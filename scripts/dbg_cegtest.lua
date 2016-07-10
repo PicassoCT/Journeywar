@@ -69,7 +69,7 @@ function emitSFX()
 		--Sleep(1500)
 		--Spring.SpawnCEG("jgalateatend",x,y+20,z,0,1,0,60)
 		Sleep(1500)
-		Spring.SpawnCEG("jplankaatail",x,y+60,z,0,1,0,60)	
+		Spring.SpawnCEG("jplankaaimpact",x,y+60,z,0,1,0,60)	
 		Sleep(1500)
 
 		--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
