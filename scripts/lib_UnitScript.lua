@@ -2855,6 +2855,19 @@ function vardump(value, depth, key)
 		echo("Im out 3")
 	end
 	
+	function getUnitGroundHeigth(unitID)
+	px,py,pz=Spring.GetUnitPosition(unitID)
+	
+		if px then
+		h=Spring.GetGroundHeight(px,pz)
+			if h then 
+				return h
+			end
+		end
+		
+	
+	end
+	
 	--> creates a table of pieces with name
 	function makeTableOfNames(name,startnr,endnr)
 		T={}

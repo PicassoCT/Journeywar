@@ -33,7 +33,7 @@ local unitDef = {
 	FootprintX = 1,
 	FootprintZ = 1,
 	MaxSlope =72,
-	MaxVelocity = 4,
+	MaxVelocity = 2,
 	
 	
 	sightDistance = 550,
@@ -42,7 +42,7 @@ local unitDef = {
 	steeringmode = true,
 	TEDClass = [[WATER]],
 	turninplace = 0,
-	turnRate = 255,
+	turnRate = 64,
 	upright = true,
 	waterline = 3,
 	workerTime = 0,
@@ -71,12 +71,10 @@ local unitDef = {
 	
 	Category = [[WATER]],	
 	weapons = {
-		[1]={name = "jflyingfish",
-			onlyTargetCategory = [[LAND]],
+		[1]={name = "jplanktoneraa",
+			onlyTargetCategory = [[AIR]],
 		},
-		[2]={name = "jfishtorp",
-			onlyTargetCategory = [[WATER]],
-		},
+
 	}
 	
 	

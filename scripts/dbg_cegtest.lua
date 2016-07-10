@@ -69,12 +69,9 @@ function emitSFX()
 		--Sleep(1500)
 		--Spring.SpawnCEG("jgalateatend",x,y+20,z,0,1,0,60)
 		Sleep(1500)
-
-		Spring.SpawnCEG("healtrain",x,y+25,z,0,1,0,60)	
+		Spring.SpawnCEG("jplankaatail",x,y+60,z,0,1,0,60)	
 		Sleep(1500)
 
-	--	Spring.SpawnCEG("ctanglegunstrip",x+40,y+25,z,0,1,0,60)
-		
 		--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
 		--Sleep(3000)
 		--StartThread(portalStormWave,unitID)

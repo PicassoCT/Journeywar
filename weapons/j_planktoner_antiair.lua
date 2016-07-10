@@ -1,6 +1,6 @@
-local weaponName="birdrocket"
+local weaponName="jplanktoneraa"
 local weaponDef={
-	name="birdrocket",
+	name="anti air particles",
 	weaponType=[[MissileLauncher]],
 	
 	Accuracy=2000,
@@ -23,10 +23,10 @@ local weaponDef={
 	collideFriendly=true,
 	
 	----APPEARANCE
-	model="birdrocket.s3o",
-	smokeTrail=true,
+	model="jplanktonerproj.s3o",
+	smokeTrail=false,
 	--explosionGenerator="custom:redsmoke",
-	--CegTag="smoketrail",
+	CegTag="jplankaatail",
 	
 	----TARGETING
 	turret=true,
@@ -39,8 +39,8 @@ local weaponDef={
 	
 	----DAMAGE
 	damage={
-		default=150,
-		heavyarmor=150,
+		default=1,
+		heavyarmor=1,
 	},
 	areaOfEffect=100,
 	craterMult=0,
@@ -50,8 +50,8 @@ local weaponDef={
 	
 	
 	--sound
-	soundHit="sounds/skinfantry/birdrockethit.ogg",
-	soundStart="sounds/skinfantry/birdrocketstart.ogg",
+	soundHit="sounds/jplanktoner/jplankimpact.ogg",
+	soundStart="sounds/jplanktoner/jplankaachargeup.ogg",
 	
 }
 

@@ -92,11 +92,9 @@ function checkFeaturesInCircle()
 end
 
 function jumpattack()
+
 	Spring.SetUnitNoDraw(unitID,true)-- i know the api.. its all in my head... brb, have to see doctor freeman
-	
-	--KillTheUnit
-	Spring.DestroyUnit (unitID,false,true) --leave no wreck, except in the coments, showing were you copied and pasted out of knorkes kitchen 
-	
+
 end
 
 

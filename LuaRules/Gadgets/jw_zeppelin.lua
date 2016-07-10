@@ -45,7 +45,8 @@ if (gadgetHandler:IsSyncedCode()) then
  end
 
  local function sign(num)
-	return num/math.abs(num)
+ if num < 0 then return -1 end
+ return 1
  end
 
  function gadget:GameFrame(f)

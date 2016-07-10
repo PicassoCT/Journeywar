@@ -27,9 +27,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	--1 unitid
 	--2 counter
 	--3 orgBuildSpeed
-	local stunTime=9
-	local selectRange=300
-	local totalTime=9000
+	--local stunTime=9
+	--local selectRange=300
+	--local totalTime=9000
+	JPLANKTONER_AA_STUNTIME= 15000
 	jEthiefStealingQuota=5
 	local HARDCODED_RETREATDISTANCE=420
 	
@@ -61,6 +62,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
 	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
+		  jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
+		  chcprojectileDefID=WeaponDefNames["hcprojectile"].id
 	local CEaterRocketDefID=WeaponDefNames["ceater"].id
 	 jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
 	 jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
@@ -76,6 +79,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	}
 	RazorGrenadeTable={}
 	
+	Script.SetWatchWeapon(chcprojectileDefID , true)
 	Script.SetWatchWeapon(cAntiMatterDefID , true)
 	Script.SetWatchWeapon(catapultDefID , true)
 	Script.SetWatchWeapon(cHarvestRocketDefID , true)
@@ -562,6 +566,52 @@ if (gadgetHandler:IsSyncedCode()) then
 		GG.Poisoned[unitID]=pval --time till poison wears off
 	end
 	
+	--set the Unit
+	WeaponDefTable[jplanktoneraaDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	
+	--stun this unit
+	hp = Spring.GetUnitHealth(unitID)
+
+		if hp then 
+			Spring.SetUnitHealth(unitID,{paralyze = hp * JPLANKTONER_AA_STUNTIME})
+
+		--moveControll
+			Spring.MoveCtrl.Enable(unitID)
+
+		eventFunction = function (id,frame, persPack)
+			nextFrame=frame+1
+			if persPack then
+			  
+				 if not persPack.startFrame then
+					persPack.startFrame=frame
+				 end
+			 
+				 if  persPack.startFrame then
+					nextFrame= persPack.startFrame + JPLANKTONER_AA_STUNTIME
+				 end
+				 
+				 if frame >= nextFrame then
+					Spring.MoveCtrl.Disable(unitID)
+					return 
+				 end
+			end	 
+			return nextFrame, persPack
+			end	
+	
+		GG.EventStream:CreateEvent({action= eventFunction, persPack={totalTime=JPLANKTONER_AA_STUNTIME}})
+		end
+	return damage
+	end
+
+	--headcrab function - sets the headcrab where its victim was
+	WeaponDefTable[chcprojectileDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	px,py,pz=Spring.GetUnitPosition(unitID)
+		if px and attackerID and Spring.ValidUnitID(attackID)==true then
+			Spring.SetUnitPosition(attackerID, px+5, py, pz)
+			Spring.SetUnitNoDraw(attackerID,true)
+		end
+	return damage
+	end
 	
 	WeaponDefTable[slicergunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")

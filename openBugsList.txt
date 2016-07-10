@@ -3,7 +3,14 @@ Grass - of the Chunterchoppered
 Fish still has default corpse
 Galatea legs wont hide
 Seastar ScaleUpGadget hides Units
-jplanktoner still spawns with regular wreckage
-deactivate the rolling burning man animation and fire when corpses are under water
+jatlantai rockets not hitting home
+
 heightmap is not updating fully
 jplanktoner aimspot in colvol
+
+
+jplanktoner impact ceg
+jplanktoner impact air unit freeze effect
+
+
+jbugcreeper crawls on its back

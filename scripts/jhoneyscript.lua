@@ -234,7 +234,7 @@ Signal(SIG_IDLE)
 Turn(Turner,x_axis,math.rad(-206),25)
 Move(Turner,y_axis,-3,3)
 WaitForTurn(Turner,x_axis)
-shake=math.random(8,12)
+shake=math.random(2,6)
 flopFlip=-1
 for i=1,shake,1 do
 		Turn(jhoneyleg1,x_axis,math.rad(-104),8)

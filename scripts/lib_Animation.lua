@@ -75,9 +75,14 @@ function WaitForMoves(...)
 		
 		for k,v in pairs(arg) do
 			if type(v)=="number" then
+			
 				WaitForMove(v,x_axis)
+			
 				WaitForMove(v,y_axis)
+			
 				WaitForMove(v,z_axis)
+
+			
 			end
 		end
 		return 
@@ -85,6 +90,7 @@ function WaitForMoves(...)
 		WaitForMove(arg,x_axis)
 		WaitForMove(arg,y_axis)
 		WaitForMove(arg,z_axis)
+	
 	end
 end
 
@@ -534,15 +540,72 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 	end
 	
 end
+function sigN(num)
+if num < 0 then return -1 end
+return 1
+end
 
 function echoMove(name, x,y,z)
 Spring.Echo("Moving Piece "..name.." to x:"..x.." ,y:"..y.." , z:"..z)
 end
+-->Moves a UnitPiece to a UnitPiece at speed
+function MovePieceToPieceAlt(piecename, pieceDest,speed,offset,forceUpdate)
 
+	if not pieceDest or not piecename then return end	
+	
+	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceDest)
+	orx,ory,orz=Spring.GetUnitPiecePosition(unitID,piecename)
+	
+	dirSignX,dirSignY,dirSignZ= 1, 1 ,1 
+	dirValX,dirValY,dirValZ= 1, 1 ,1 
+	
+	if sigN(ox) < sigN(orx) then dirSignX= -1 end
+	if sigN(oy) < sigN(ory) then dirSignY= -1 end
+	if sigN(oz) < sigN(orz) then dirSignZ= -1 end
+	
+	if sigN(ox) == sigN(orx) then
+		ox= math.abs(ox- orx)*dirSignX
+	else
+		ox= (math.abs(ox) + math.abs(orx))*dirSignX
+	end
+	
+	if sigN(oy) == sigN(ory) then
+		oy= math.abs(oy- ory)*dirSignY
+	else
+		oy= (math.abs(oy) + math.abs(ory))*dirSignY
+	end
+	
+	if sigN(oz) == sigN(orz) then
+		oz= math.abs(oz- orz)*dirSignZ
+	else
+		oz= (math.abs(oz) + math.abs(orz))*dirSignZ
+	end
+
+	
+
+	ox=ox*-1
+	if offset then		
+		ox= ox +(offset.x)
+		oy= oy +offset.y
+		oz= oz +offset.z
+	end	
+	
+--	echoMove(piecename, ox,oy,oz)
+	Move(piecename,x_axis,ox,0)
+	Move(piecename,y_axis,oy,0)
+	Move(piecename,z_axis,oz,0,forceUpdate or true)
+	
+	
+	WaitForMove(piecename,x_axis); WaitForMove(piecename,z_axis); WaitForMove(piecename,y_axis);
+	
+	
+	
+end
 -->Moves a UnitPiece to a UnitPiece at speed
 function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 
-	if not pieceDest or not piecename then return end
+	if not pieceDest or not piecename then return end	
+	
 	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceDest)
 	orx,ory,orz=Spring.GetUnitPiecePosition(unitID,piecename)
 	
@@ -1399,7 +1462,7 @@ function GetSpeed(timeInSeconds, degree)
 end
 
 -->Reset a Table of Pieces at speed
-function resetT(tableName,speed, ShowAll, boolWait)
+function resetT(tableName,speed, ShowAll, boolWait, boolIstantUpdate)
 	lboolWait=boolWait or false
 	lspeed=speed or 0
 	
@@ -1407,7 +1470,7 @@ function resetT(tableName,speed, ShowAll, boolWait)
 	
 	for i=1,#tableName do
 		
-		resetP(tableName[i],lspeed,false)
+		resetP(tableName[i],lspeed,false, boolIstantUpdate)
 		if ShowAll and tableName[i] then
 			Show(tableName[i])
 		end
@@ -1433,16 +1496,16 @@ function recReseT(Table,speed)
 	
 end
 
-function resetP(piecename,speed,boolWaitForIT)
+function resetP(piecename,speed,boolWaitForIT, boolIstantUpdate)
 	if not piecename then return end
-	
+	bIstantUpdate = boolIstantUpdate or true
 	Turn(piecename,x_axis,0,speed)
 	Turn(piecename,y_axis,0,speed)
 	Turn(piecename,z_axis,0,speed)
 	
 	Move(piecename,x_axis,0,speed)
 	Move(piecename,y_axis,0,speed)
-	Move(piecename,z_axis,0,speed,true)
+	Move(piecename,z_axis,0,speed,bIstantUpdate)
 	if boolWaitForIT then 
 		WaitForTurn(piecename,1)
 		WaitForTurn(piecename,2)

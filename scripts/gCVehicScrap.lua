@@ -1,6 +1,6 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 include "lib_jw.lua" 
@@ -81,19 +81,19 @@ end
 SIG_DEATH=32
 stmax=20
 function turnEmitorToTheWind()
-dx,dy,dz,strength=Spring.GetWind()
-stmax=math.min(strength,stmax)
-dx=dx*-1
-dz=dz*-1
-dx=dx/(math.abs(dx)+math.abs(dz))
-dz=dz/(math.abs(dx)+math.abs(dz))
-
-strength=  (strength/math.abs(strength))*  ((strength/stmax)*35)
-
-Turn(emitfire,x_axis,math.rad(strength),10)
-degreeToTurn=math.atan2(dx,dz)
-Turn(emitfire,y_axis,math.rad(degreeToTurn),2.5)
-
+	dx,dy,dz,strength=Spring.GetWind()
+	stmax=math.min(strength,stmax)
+	dx=dx*-1
+	dz=dz*-1
+	dx=dx/(math.abs(dx)+math.abs(dz))
+	dz=dz/(math.abs(dx)+math.abs(dz))
+	
+	strength= (strength/math.abs(strength))* ((strength/stmax)*35)
+	
+	Turn(emitfire,x_axis,math.rad(strength),10)
+	degreeToTurn=math.atan2(dx,dz)
+	Turn(emitfire,y_axis,math.rad(degreeToTurn),2.5)
+	
 end
 
 
@@ -295,21 +295,21 @@ function TimeOfMyLife()
 end
 
 function script.Killed()
-return 0
+	return 0
 end
-				   -- "custom:330rlexplode",1024
-	   		       -- "custom:flames",
-				   -- "custom:glowsmoke",
-				   -- "custom:blackerThenSmoke",
-				   -- "custom:LightUponSmoke",
-				   -- "custom:vortflames",--1029
-				   -- "custom:volcanolightsmall",--1030
-				    -- "custom:cburningwreckage",--1031
-				  
+-- "custom:330rlexplode",1024
+-- "custom:flames",
+-- "custom:glowsmoke",
+-- "custom:blackerThenSmoke",
+-- "custom:LightUponSmoke",
+-- "custom:vortflames",--1029
+-- "custom:volcanolightsmall",--1030
+-- "custom:cburningwreckage",--1031
+
 
 function onFire(times,endtimes)
-time=math.ceil(math.random(100,160))
-StartThread(dustCloudPostExplosion,unitID,1,time,50,0,1,0)
+	time=math.ceil(math.random(100,160))
+	StartThread(dustCloudPostExplosion,unitID,1,time,50,0,1,0)
 	Schlackung()
 	--turnEmitorToTheWind()
 	Hide(base02)
@@ -322,7 +322,7 @@ StartThread(dustCloudPostExplosion,unitID,1,time,50,0,1,0)
 	for i=1,times,1 do
 		if i < endtimes then
 			Show(base01)
-
+			
 			EmitSfx(emitfire, 1025)
 			EmitSfx(emitfire, 1028)			
 			EmitSfx(emitfire, 1026)
@@ -332,8 +332,8 @@ StartThread(dustCloudPostExplosion,unitID,1,time,50,0,1,0)
 			
 			Hide(base01)
 			Show(base02)
-		EmitSfx(emitfire, 1028)	
-
+			EmitSfx(emitfire, 1028)	
+			
 		end	
 		--turnEmitorToTheWind()		
 		Sleep(200)
@@ -354,7 +354,11 @@ end
 
 
 function script.Create()
-	
+
+if getUnitGroundHeigth(unitID) > -5 then
+
+
+
 	
 	if math.random(0,1)==1 then
 		
@@ -378,7 +382,9 @@ function script.Create()
 	fireTime=math.random(40,360)
 	endTimes=math.random(0,500)
 	StartThread(onFire,fireTime,endTimes)
-	StartThread(goDieInAFire)
+	StartThread(goDieInAFire)	
+end
+
 	hideAndSeek()
 	StartThread(TimeOfMyLife)
 	StartThread(contemplateOrigin)
