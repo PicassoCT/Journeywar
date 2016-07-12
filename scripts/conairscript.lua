@@ -279,7 +279,7 @@ function moveThatTrooper(arrivingAlphaX,arrivingAlphaZ,moveSpeed,buildProgress)
 	if moveSpeed < 0.1 or nil then
 		moveSpeed=0.1
 	end
-	if numberOfElements < 2 or numberOfElements == nil then
+	if not numberOfElements or  numberOfElements < 2 then
 		numberOfElements = 2
 	end
 	

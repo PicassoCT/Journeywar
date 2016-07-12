@@ -1,7 +1,7 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -482,6 +482,7 @@ end
 
 --plays the sound that a unit is done for
 function playThatFunkyHorn()
+	Signal(SIG_RAZOR)
 	SetSignalMask(SIG_RAZOR)
 	Sleep(500)
 	boolRazorSoundInUse=true
@@ -847,7 +848,7 @@ local function unfoldPillar(number, callingSituation,boolInstReset)
 	if speed== nil or speed== 0 then speed=0 end
 	
 	if number == 4 and callingSituation== SMove then
-	--	StartThread(goTooKillThemAllPicaMon)
+		--	StartThread(goTooKillThemAllPicaMon)
 	end
 	-- this function uses comonPillarSpeed update in the situation-While-loop to save performance
 	-- that would otherwise go to waste by 6 threads constantly querying spring for speedInfos.
@@ -1010,40 +1011,45 @@ boolSelfRepairedToDeath=false
 
 function healWhileStandingStill()
 	Sleep(3000)
-
+	
 	teamid=Spring.GetUnitTeam(unitID)
 	conTypeTable= getTypeTable(UnitDefNames,{"contrain","contruck","conair","citadell"})
 	local ud=UnitDefs
 	
 	while true do
 		while boolHealingActive==true do
-			boolHealedOne=false
-			x,y,z=Spring.GetUnitPosition(unitID)
-			hp=Spring.GetUnitHealth(unitID)
-			if hp then
-
-				T=getAllInCircle(x,z,300,unitID,teamID)
-				hp=math.ceil(math.ceil(hp*0.5)/#T)
-				hpcopy=hp
-				for i=1,#T do
-					defID=Spring.GetUnitDefID(T[i])
-					if ud[defID].isBuilding ==false and not conTypeTable[defID] then
-						p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
-						
-						if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
-
-							Spring.SetUnitHealth(T[i],p+hp)
+			
+			StartThread(playThatFunkyHorn)
+			while boolHealingActive==true do
+				boolHealedOne=false
+				x,y,z=Spring.GetUnitPosition(unitID)
+				hp=Spring.GetUnitHealth(unitID)
+				if hp then
+					
+					T=getAllInCircle(x,z,300,unitID,teamID)
+					hp=math.ceil(math.ceil(hp*0.5)/#T)
+					hpcopy=hp
+					for i=1,#T do
+						defID=Spring.GetUnitDefID(T[i])
+						if ud[defID].isBuilding ==false and not conTypeTable[defID] then
+							p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
+							
+							if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
+								
+								Spring.SetUnitHealth(T[i],p+hp)
 								sx,sy,sz=Spring.GetUnitPosition(T[i])
 								Spring.SpawnCEG("healtrain",sx,sy+70,sz,0,1,0,0)
-							if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
-							Spring.AddUnitDamage(unitID,hp)
-							
+								if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
+								Spring.AddUnitDamage(unitID,hp)
+								
+							end
 						end
 					end
 				end
+				
+				Sleep(750)
 			end
-		
-			Sleep(750)
+			Sleep(100)
 		end
 		Sleep(100)
 	end
@@ -1512,7 +1518,7 @@ function PillarManager()
 end
 contrainDef=Spring.GetUnitDefID(unitID)
 function soundOSLoop()
-	
+	partTime=500
 	while true do
 		
 		if getConstantMove()==true then
@@ -1530,9 +1536,15 @@ function soundOSLoop()
 			end
 		else
 			zZzZzZ=math.random(2000,17000)
-			Sleep(zZzZzZ)--he is snorring, but it could be sleep(apnoe) he should see the thread-doctor
-			PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_idle.wav",0.1,10000,1,0)
-			Sleep(zZzZzZ)
+			
+			while zZzZzZ > 0 and getConstantMove()== false do Sleep(partTime); zZzZzZ = zZzZzZ-partTime end
+			if getConstantMove()==false then
+				--he is snorring, but it could be sleep(apnoe) he should see the thread-doctor
+				PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_idle.wav",0.05,10000,1,0)
+			end
+			zZzZzZ=math.random(2000,17000)		
+			while zZzZzZ > 0 and getConstantMove()== false do Sleep(partTime); zZzZzZ = zZzZzZ-partTime end
+			
 			
 			
 		end

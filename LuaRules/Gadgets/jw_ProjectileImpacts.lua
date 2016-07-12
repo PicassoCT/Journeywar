@@ -578,31 +578,32 @@ if (gadgetHandler:IsSyncedCode()) then
 		--moveControll
 			Spring.MoveCtrl.Enable(unitID)
 
-		eventFunction = function (id,frame, persPack)
+			eventFunction = function (id,frame, persPack)
 			nextFrame=frame+1
-			if persPack then
-				if persPack.unitID then
-				--check 
-				boolDead= Spring.GetUnitIsDead(persPack.unitID )
-				
-				if boolDead and boolDead == true then
-					Spring.MoveCtrl.Disable(persPack.unitID)
-				end
-			  
-			  
-				 if not persPack.startFrame then
-					persPack.startFrame=frame
-				 end
-			 
-				 if  persPack.startFrame then
-					nextFrame= persPack.startFrame + JPLANKTONER_AA_STUNTIME
-				 end
+				if persPack then
+					if persPack.unitID then
+					--check 
+					boolDead= Spring.GetUnitIsDead(persPack.unitID )
+					
+					if boolDead and boolDead == true then
+						Spring.MoveCtrl.Disable(persPack.unitID)
+					end
+				  
+				  
+					 if not persPack.startFrame then
+						persPack.startFrame=frame
+					 end
 				 
-				 if frame >= nextFrame then
-					Spring.MoveCtrl.Disable(persPack.unitID)
-					return 
-				 end
-			end	 
+					 if  persPack.startFrame then
+						nextFrame= persPack.startFrame + JPLANKTONER_AA_STUNTIME
+					 end
+					 
+					 if frame >= nextFrame then
+						Spring.MoveCtrl.Disable(persPack.unitID)
+						return 
+					 end
+					 end
+				end	 
 			return nextFrame, persPack
 			end	
 	

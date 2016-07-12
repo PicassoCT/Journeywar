@@ -265,8 +265,8 @@ function delayedUpgrade()
 						myBuildSpeed=myBuildSpeed+buildup
 						resetUpgradeCmd(unitID)	
 					else --Rückerstattung
-						if boolm and boolm==true then Spring.AddTeamResource(teamID,"m",amount) end
-						if boole and boole==true then Spring.AddTeamResource(teamID,"e",amount) end
+						if boolm and boolm==true then Spring.AddUnitResource(teamID,"m",amount) end
+						if boole and boole==true then Spring.AddUnitResource(teamID,"e",amount) end
 					end
 				else
 					resetUpgradeCmd(unitID)

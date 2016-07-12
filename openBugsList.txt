@@ -15,3 +15,8 @@ jplanktoner impact air unit freeze effect
 
 jbugcreeper crawls on its back
 remains alive after beeing killed
+
+mtw-grenades not enough area damage
+nanoforge upgrade to fclvl2 is stuck
+music license
+in building spawning critters destroy bases

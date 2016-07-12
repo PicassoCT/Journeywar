@@ -7,22 +7,22 @@ local unitDef = {
 	buildPic = "placeholder.png",
 	--cost
 	maxdamage=3000,
+	idleAutoHeal=0,
+	AutoHeal=0,
 	nanocolor=[[0 0.9 0.9]],
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
 	FootprintX = 12,
 	FootprintZ = 12,
 	
-	  customParams = {},
- sfxtypes = {
-				explosiongenerators = {
-				   "custom:cbuildCubeDisolveSfx",
-	   		
-				  
-				   
-				},
-				},
- 
-
+	customParams = {},
+	sfxtypes = {
+		explosiongenerators = {
+			"custom:cbuildCubeDisolveSfx",
+				
+		},
+	},
+	
+	
 }
 return lowerkeys({ [unitName] = unitDef })
