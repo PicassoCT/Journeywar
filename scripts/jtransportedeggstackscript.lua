@@ -13,6 +13,7 @@ for i=1,8, 1 do
 end
 Kugel01=piece"Kugel01"
 Kugel02=piece"Kugel02"
+fireFx=piece"fireFx"
 
 function getDistance(cmd,x,z)
 	val=((cmd.params[1]-x)^2 + (cmd.params[3]-z)^2)^0.5
@@ -64,6 +65,7 @@ function script.Create()
 
 	Hide(Kugel01)
 	Hide(Kugel02)
+	Hide(fireFx)
 	StartThread(transferCommands)
 	StartThread(whileMyThreadGentlyWeeps)
 

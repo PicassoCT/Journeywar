@@ -1383,7 +1383,9 @@ function mulVector(vl,value)
 	
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
-	if not vl.x and type(vl)== 'number' then
+	
+	
+	if not vl.x and type(vl)== 'number' and type(value) == "number" then
 		return vl * value
 	end
 	

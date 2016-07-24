@@ -1,4 +1,3 @@
-   // KELEK 010 V
 
 
    uniform float time0_1;

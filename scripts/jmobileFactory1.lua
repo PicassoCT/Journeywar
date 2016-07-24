@@ -139,10 +139,10 @@ function newFactory ()
 	
 end
 
-	boolLaunch=false
-	function launchBuilding(delayTime)
-		boolLaunch=true
-	end
+boolLaunch=false
+function launchBuilding(delayTime)
+	boolLaunch=true
+end
 
 
 function ThreadLauncher()
@@ -350,8 +350,8 @@ function circler()
 		----Spring.Echo("Wonna go for a walk!")
 		if boolBuilding==true then 	
 			unfold()
-					StartThread(fruitLoop)							
-					StartThread(growth)	
+			StartThread(fruitLoop)							
+			StartThread(growth)	
 			
 			----Spring.Echo("I feel happy!")
 			
@@ -523,7 +523,7 @@ end
 
 function unfold()
 	--Spring.Echo("Reaching UNFolD")
-
+	
 	Move(dotter[1],y_axis,-65,0)
 	hideT(dotter)
 	

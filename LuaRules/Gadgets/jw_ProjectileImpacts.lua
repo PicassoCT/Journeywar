@@ -921,7 +921,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						affectedUnits[i][2]= affectedUnits[i][2]-1 
 						if affectedUnits[i][2] <= 0 then
 							if Spring.ValidUnitID(affectedUnits[i][1])==true then
-								Spring.SetUnitVelocity(affectedUnits[1],affectedUnits[i][3])
+								Spring.SetUnitVelocity(affectedUnits[i][1],affectedUnits[i][3])
 							end
 							affectedUnits[i]=nil	 
 						end	 

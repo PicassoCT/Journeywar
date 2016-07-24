@@ -3,16 +3,22 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_Build.lua" 
-
+prop={}
+for i=1,3 do
+prop[i]="prop"..i
+prop[i]=piece(prop[i])
+end
 TablesOfPiecesGroups={}
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 end
 center=piece"center"
+aimpiece=piece"aimpiece"
 
 function script.Create()
-generatepiecesTableAndArrayCode(unitID)
-	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
+for i=1,3 do
+Spin(prop[i],y_axis,math.rad(-1720),0)
+end
 end
 
 function script.Killed(recentDamage,_)

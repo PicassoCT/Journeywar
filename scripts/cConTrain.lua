@@ -1031,14 +1031,14 @@ function healWhileStandingStill()
 					hpcopy=hp
 					for i=1,#T do
 						defID=Spring.GetUnitDefID(T[i])
-						if ud[defID].isBuilding ==false and not conTypeTable[defID] then
+						if defID and ud[defID].isBuilding ==false and not conTypeTable[defID] then
 							p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
-							
-							if bP and bP >=1 and p and p < maxhp and maxhp > 400 then
+
+							if  p and p < maxhp and maxhp > 400 then
 								
 								Spring.SetUnitHealth(T[i],p+hp)
 								sx,sy,sz=Spring.GetUnitPosition(T[i])
-								Spring.SpawnCEG("healtrain",sx,sy+70,sz,0,1,0,0)
+								Spring.SpawnCEG("healtrain",sx,sy+10,sz,0,1,0,0)
 								if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
 								Spring.AddUnitDamage(unitID,hp)
 								
@@ -1588,7 +1588,7 @@ end
 
 
 
-boolHealingActive=false
+boolHealingActive=true
 function script.StartMoving()
 	boolHealingActive=false
 	

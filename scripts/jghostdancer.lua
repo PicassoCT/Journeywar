@@ -311,8 +311,8 @@ function script.Killed(recentDamage,maxHealth)
 		if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
 		if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
 	-- if at death you are the original -- make the copy the original
-	if GG.GhostDancerOrgCopy[unitID] or not GG.GhostDancerCopyOrg[unitID] then
-	GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[unitID]]= nil 
+	if GG.GhostDancerOrgCopy[unitID] and not GG.GhostDancerCopyOrg[unitID] then
+		GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[unitID]]= nil 
 	GG.GhostDancerOrgCopy[unitID]=nil
 	end
 

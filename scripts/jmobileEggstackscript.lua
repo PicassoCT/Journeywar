@@ -28,12 +28,14 @@ for i=1, 6, 1 do
 	
 end
 
+-- Signals for moving
 SIG_FOLD=2
 SIG_MOVE=4
 SIG_RESET=8
 SIG_UNFOLD=16
 SIG_BREATH=32
 SIG_UPGRADE=64
+SIG_STOP=128
 
 
 
@@ -43,6 +45,7 @@ for i=1,36,1 do
 	temp="eggnog"..i
 	eggnok[i]=piece (temp)
 end
+
 eggrotate=piece"eggrotate"
 local boolAllreadyDead=false
 local boolAllreadyStarted=false
@@ -137,54 +140,54 @@ end
 
 boolBuilding=false
 function workInProgress()
-while factoryID == nil do
-Sleep(250)
-end
-
+	while factoryID == nil do
+		Sleep(250)
+	end
+	
 	StartThread(water)
 	
 	buildID=nil
 	buildIDofOld=nil
 	counter=0
 	while(true)do
-	
+		
 		if factoryID and Spring.ValidUnitID(factoryID)== true then
-
-		buildID=Spring.GetUnitIsBuilding(factoryID)
-		if buildID and buildID ~= buildIDofOld then
-		Spring.Echo("jmobileEggstack::workInProgress:2")	
-			counter=counter+1
-			if counter >35 then 	Spring.DestroyUnit(unitID,true,false) end
-			Hide(eggnok[counter])
-			boolBuilding=true
-			Spring.SetUnitNoDraw(buildID,true)
-			buildProgress=0
-			Spring.Echo("jmobileEggstack::workInProgress:3")
-			while buildProgress and buildProgress < 1 do
-						Spring.Echo("jmobileEggstack::workInProgress:4")
-				health,maxHealth,paralyzeDamage,captureProgress,buildProgress=Spring.GetUnitHealth(buildID)
-				if buildProgress then
-					--show the egg
-					eggSelector=math.min(math.max(1,math.floor(buildProgress*10)),#Eggtable)
-					hideT(Eggtable)
-					Show(Eggtable[eggSelector])			
+			
+			buildID=Spring.GetUnitIsBuilding(factoryID)
+			if buildID and buildID ~= buildIDofOld then
+				Spring.Echo("jmobileEggstack::workInProgress:2")	
+				counter=counter+1
+				if counter >35 then 	Spring.DestroyUnit(unitID,true,false) end
+				Hide(eggnok[counter])
+				boolBuilding=true
+				Spring.SetUnitNoDraw(buildID,true)
+				buildProgress=0
+				Spring.Echo("jmobileEggstack::workInProgress:3")
+				while buildProgress and buildProgress < 1 do
+					Spring.Echo("jmobileEggstack::workInProgress:4")
+					health,maxHealth,paralyzeDamage,captureProgress,buildProgress=Spring.GetUnitHealth(buildID)
+					if buildProgress then
+						--show the egg
+						eggSelector=math.min(math.max(1,math.floor(buildProgress*10)),#Eggtable)
+						hideT(Eggtable)
+						Show(Eggtable[eggSelector])			
+					end
+					Sleep(150)
 				end
-				Sleep(150)
-			end
-			
-			if buildID ~=nil then
-				buildIDofOld=buildID	
-				buildID=nil
-			end	
-			
-			if buildID == nil and buildIDofOld ~= nil and Spring.ValidUnitID(buildIDofOld)==true then				
-				Spring.SetUnitNoDraw(buildIDofOld,false)
-				hideT(Eggtable)
-				Move(eggrotate,y_axis,0,0)
-				buildIDofOld=nil
 				
-			end		
-		end
+				if buildID ~=nil then
+					buildIDofOld=buildID	
+					buildID=nil
+				end	
+				
+				if buildID == nil and buildIDofOld ~= nil and Spring.ValidUnitID(buildIDofOld)==true then				
+					Spring.SetUnitNoDraw(buildIDofOld,false)
+					hideT(Eggtable)
+					Move(eggrotate,y_axis,0,0)
+					buildIDofOld=nil
+					
+				end		
+			end
 		end
 		Sleep(120)
 	end
@@ -248,7 +251,7 @@ function moveFactory ()
 	while (true) do
 		if (not spValidUnitID (factoryID)) then newFactory () end
 		local x,y,z = spGetUnitPosition (unitID)	 
-		spMovCtrlSetPos(factoryID,x,y+120,z+10)
+		spMovCtrlSetPos(factoryID,x,y+130,z+10)
 		Sleep (50)
 	end
 end
@@ -347,7 +350,8 @@ justOnce=true
 function script.StartMoving()
 	Turn(center,y_axis,math.rad(90),0.2)
 	Signal(SIG_MOVE)
-	StartThread(moveIt)								
+	StartThread(moveIt)		
+	boolMoving= true
 	
 end
 
@@ -384,17 +388,59 @@ function updateBoolisBuilding()
 	
 end
 
+function turnCheck()
+	--check for constant Turning
+	oldHeading = Spring.GetUnitHeading(unitID)
+	newHeading= oldHeading
+	while true do
+			boolChangeOfState=false
+			while boolMoving== false do
+					
+					--Still moving because the unit is turning
+					if math.abs(oldHeading)-math.abs(newHeading) > 128 then
+						Signal(SIG_MOVE)
+						StartThread(moveIt)		
+					else
+						--
+
+						Signal(SIG_MOVE)
+						legs_down()
+					end
+				Sleep(500)
+				oldHeading=newHeading
+				newHeading= Spring.GetUnitHeading(unitID)	
+			end
+		Sleep(500)
+
+	end
+	
+	
+end
+boolMoving=false
+function delayedStop()
+	Signal(SIG_STOP)
+	SetSignalMask(SIG_STOP)
+	Sleep(400)
+	Spring.Echo("Eggstack: Animation Stopped")
+	boolMoving= false
+	legs_down()
+end
+
 function script.StopMoving()
+	
 	Turn(center,y_axis,math.rad(0),0.2)
 	Signal(SIG_MOVE)
+	StartThread(delayedStop)
 	
-	legs_down()
+	
 end
 
 
 function script.Killed(recentDamage, maxHealth)
 	
-	
+	if Spring.ValidUnitID(factoryID)== true then
+		Spring.DestroyUnit(factoryID,true,true)
+	end
 	suddenDeathjBuildCorpse(unitID,recentDamage)
 	return 0
 	----Spring.Echo ("He is dead, Jim!")
@@ -446,5 +492,6 @@ function script.Create()
 	StartThread(moveFactory)
 	StartThread(updateBoolisBuilding)	
 	StartThread(ThreadLauncher)	
+	StartThread(turnCheck)	
 	
 end
