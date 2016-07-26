@@ -3,8 +3,8 @@ local unitName = "callygator"
 local unitDef = {
 name = "callygator",
 Description = "eats units alive",
-objectName = "placeholder.s3o",
-script = "Ichneumonidaescript.lua",
+objectName = "cAllygator.s3o",
+script = "cAllygatorScript.lua",
 buildPic = "conair.dds",
 --floater = true,
 --cost
