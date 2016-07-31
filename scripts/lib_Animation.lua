@@ -223,7 +223,7 @@ function equiTurn(p1,p2,axis,deg,speed)
 end
 
 --> Turns a piece in all 3 axis and waits for it
-function tP(piecename,x_val,y_val,z_val,speed,boolWaitForIT)
+function tP(piecename,x_val,y_val,z_val,speed, boolWaitForIT)
 if piecename == nil then echo("libAnimation::tP got nil piece ".. x_val,y_val) end
 	Turn(piecename,x_axis,math.rad(x_val),speed)
 	Turn(piecename,y_axis,math.rad(y_val),speed)

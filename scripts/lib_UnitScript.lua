@@ -210,7 +210,7 @@ function TAddT(OrgT,T)
 	return OrgT
 end
 
---> Converts to points, to a degree
+--> Converts to points, to a degree in Radians
 function convPointsToDeg(ox,oz,bx,bz)
 	if not bx then --orgin cleaned point
 		return math.atan2(ox,oz)
@@ -1159,10 +1159,10 @@ function mirrorAngle(nX,nY,nZ,dirX,dirY,dirZ)
 end
 
 -->RotationMatrice for allready Normalized Values
-function RotationMatrice(x,z,rad)
+function RotationMatrice(x,z,Rad)
 	
-	sinus=math.sin(rad)
-	cosinus= math.cos(rad)
+	sinus=math.sin(Rad)
+	cosinus= math.cos(Rad)
 	
 	return x*cosinus + z*-sinus, x*sinus + z*cosinus
 end

@@ -45,7 +45,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
 	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
-	lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
+		lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
 	local slicergunDefID = WeaponDefNames["slicergun"].id
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
@@ -64,6 +64,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
 		  jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
 		  chcprojectileDefID=WeaponDefNames["hcprojectile"].id
+		  cAllyGatorMarkerDefID= WeaponDefNames["callygatormarker"].id
 	local CEaterRocketDefID=WeaponDefNames["ceater"].id
 	 jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
 	 jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
@@ -112,6 +113,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(highExLineGunDefID , true)
 	Script.SetWatchWeapon(jvaryfoospearDefID , true)
 	Script.SetWatchWeapon(jgluegunDefID , true)
+	Script.SetWatchWeapon(cAllyGatorMarkerDefID , true)
 	
 	--units To be exempted from instantly lethal force
 	local fuckingSpecial ={
@@ -477,6 +479,18 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		return 0
 	end 
+		
+	WeaponDefTable[cAllyGatorMarkerDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+			
+			env = Spring.UnitScript.GetScriptEnv(attackerID)
+			if env then
+				Spring.Echo("callygatormarker has hit target")
+				Spring.UnitScript.CallAsUnit(attackerID, env.tagYourIt, unitID )		
+			end	
+	
+		return 0
+	end 
+	
 	WeaponDefTable[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackID, attackerDefID, attackerTeam) 			
 		
 		attackerID= attackID 

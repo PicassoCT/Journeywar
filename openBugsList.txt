@@ -6,17 +6,19 @@ Seastar ScaleUpGadget hides Units
 jatlantai rockets not hitting home
 
 heightmap is not updating fully
-jplanktoner aimspot in colvol
+mining holes and bulletdeformations are interfering with one another
 
 
-jplanktoner impact ceg
-jplanktoner impact air unit freeze effect
+jbugcreeper crawls on its back 
 
-
-jbugcreeper crawls on its back
-remains alive after beeing killed
-
+csniper: towing the dead is borked
 mtw-grenades not enough area damage
 nanoforge upgrade to fclvl2 is stuck
 music license
 in building spawning critters destroy bases
+
+scumslu: Has open sides
+jtreel: displaced pieces
+cCrabSynth is currently not placing the defensewall correctly
+collissionssphere of allygator must be box
+heightmap holes are applied to often and thus- go to deep
