@@ -1568,6 +1568,46 @@ function vardump(value, depth, key)
 		
 	end
 	
+	function stringBuilder(length, sign)
+	str=""
+	for i=1, length do
+	str=str..sign
+	end
+	return str
+	
+	end
+	
+	function printT(tab, size)
+	maxdigit=getDigits(tab[size/2][size/2])
+	step= size/12
+		Spring.Echo(stringBuilder(size,"_").."\n")
+	for i=1,size, step do
+	seperator="|"
+	str=""
+
+		for j=1,size, step do
+			str=str.. seperator..math.floor(tab[math.ceil(i)][math.ceil(j)])
+			if getDigits(math.floor(tab[math.ceil(i)][math.ceil(j)])) < maxdigit then			
+				for i=1,maxdigit -getDigits(math.floor(tab[math.ceil(i)][math.ceil(j)])), 1 do
+					str=str.." "	
+				end
+			end
+		end
+	Spring.Echo(str)
+	
+	end
+	Spring.Echo(stringBuilder(size,"_").."\n")
+	end
+	
+	function getDigits(number)
+	digit=1
+	if number < 0 then digit =2 end
+	while math.abs(number)> 10 do
+	number=number/10
+	digit=digit+1
+	end
+	return digit
+	end
 	
 	function checkYourself()
 		return GG.SniperRope[unitID] or false
@@ -2285,7 +2325,7 @@ function vardump(value, depth, key)
 		if Cache then
 			returnTable={}
 			for i=1, #Table do
-				if Cache[Table[i]] and Cache[Table[i]]==true or not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
+				if Cache[Table[i]] and Cache[Table[i]]==true or Table[i]and not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
 					Cache[Table[i]]=true
 					returnTable[#returnTable+1]=Table[i]
 				else
@@ -2548,7 +2588,7 @@ function vardump(value, depth, key)
 		end
 	end
 	
-	function numTabletokeyTable(T)
+	function TableToDict(T)
 		reT={}
 		if not T then return reT end
 		
@@ -2578,7 +2618,7 @@ function vardump(value, depth, key)
 	function TableMergeTable(TA,TB)
 		T={}
 		if #TA >= #TB then
-			T=numTabletokeyTable(TA)
+			T=TableToDict(TA)
 			
 			for i=1,#TB do
 				if not T[TB[i]] then
@@ -2587,7 +2627,7 @@ function vardump(value, depth, key)
 			end
 			return TA
 		else
-			T=numTabletokeyTable(TB)
+			T=TableToDict(TB)
 			for i=1,#TA do
 				if not T[TA[i]] then
 					TB[#TB+1]=TA[i]

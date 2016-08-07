@@ -329,8 +329,8 @@
 						if debugVAL and debugVAL==false then Spring.Echo("Error>LandLord>>insertDynamicDeformationMaps"..x.." | "..z.." | "..i) end
 					end	
 				end
-				GG.DynDefMap={} 		
-				GG.DynRefMap={} 		
+				GG.DynDefMap=nil
+				GG.DynRefMap=nil		
 			end
 			
 			function withinBounds(x,z,Nr,halfSize,blendFunction,filterFunction)

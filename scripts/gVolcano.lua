@@ -76,23 +76,6 @@ function script.Killed()
 
 end
 
-function preparhalfSphereTable(size)
-cent=math.ceil(size/2)
-T={}
-	for o=1,size,1 do
-	T[o]={}
-		for i=1,size,1 do
-		--default
-		T[o][i]=0
-		distcent=math.sqrt((cent-i)^2+(cent-o)^2)	
-			if distcent < cent-1 then
-			T[o][i]=(cent-distcent)*4
-			end
-		end
-	end
-	
-return T	
-end
 
 
 
@@ -522,7 +505,7 @@ size=42
 if GG.DynDefMap == nil then GG.DynDefMap={} end
 if GG.DynRefMap == nil then GG.DynRefMap={} end
 GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size)
+GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size, 4)
 GG.boolForceLandLordUpdate=true
 
 

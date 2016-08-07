@@ -95,24 +95,6 @@ function script.FireWeapon2()
 	return true
 end
 
-function preparhalfSphereTable(size,height)
-cent=math.ceil(size/2)
-T={}
-	for o=1,size,1 do
-	T[o]={}
-		for i=1,size,1 do
-		--default
-		T[o][i]=0
-		distcent=math.sqrt((cent-i)^2+(cent-o)^2)	
-			if distcent < cent-1 then
-			T[o][i]=(cent-distcent)*height
-			end
-		end
-	end
-	
-return T	
-end
-
 function script.Killed(recentDamage, maxHealth)
 	EmitSfx(amturret,1025)
 	Explode(amturret,SFX.FIRE +SFX.FALL)

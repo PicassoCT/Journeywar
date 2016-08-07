@@ -62,12 +62,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
 	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
-		  jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
-		  chcprojectileDefID=WeaponDefNames["hcprojectile"].id
-		  cAllyGatorMarkerDefID= WeaponDefNames["callygatormarker"].id
+		jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
+		chcprojectileDefID=WeaponDefNames["hcprojectile"].id
+		cAllyGatorMarkerDefID= WeaponDefNames["callygatormarker"].id
 	local CEaterRocketDefID=WeaponDefNames["ceater"].id
-	 jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
-	 jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
+		jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
+		jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
 	local cHarvestRocketDefID=WeaponDefNames["charvest"].id
 	local cAntiMatterDefID=WeaponDefNames["cantimatter"].id
 	local catapultDefID=WeaponDefNames["ccatapult"].id
@@ -117,11 +117,11 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	--units To be exempted from instantly lethal force
 	local fuckingSpecial ={
-	[UnitDefNames["ccomender"].id]=true,
-	[UnitDefNames["beanstalk"].id]=true,
-	[UnitDefNames["citadell"].id]=true,
-	[UnitDefNames["gvolcano"].id]=true,
-	[UnitDefNames["gproceduralfeature"].id]=true,
+		[UnitDefNames["ccomender"].id]=true,
+		[UnitDefNames["beanstalk"].id]=true,
+		[UnitDefNames["citadell"].id]=true,
+		[UnitDefNames["gvolcano"].id]=true,
+		[UnitDefNames["gproceduralfeature"].id]=true,
 	}
 	
 	local	gaiaTeamID=Spring.GetGaiaTeamID()
@@ -389,35 +389,35 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 		end
 		
-		if  (weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
+		if (weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
 			Spring.SetUnitPosition(AttackerID, px, py, pz)				
 		end
-		--if you are a  ghostdancer --create a copy of yourself near the enemy and kill all previous copys
+		--if you are a ghostdancer --create a copy of yourself near the enemy and kill all previous copys
 		if (weaponDefID == jghostDancerWeaponDefID) then
 			if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
 			if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
-		teamid=Spring.GetUnitTeam(AttackerID)
-	
-		if GG.GhostDancerOrgCopy[AttackerID] then -- attacker is a org --destroy old twin -create new twin
-			if Spring.ValidUnitID(GG.GhostDancerOrgCopy[AttackerID]) == true then
-				ox,oy,oz= Spring.GetUnitPosition(GG.GhostDancerOrgCopy[AttackerID])
-				Spring.DestroyUnit(GG.GhostDancerOrgCopy[AttackerID] ,true,true)
-				Spring.CreateUnit("jshadow",ox,oy,oz,teamid)
-			end
-		end
-		--create a new copy if you are the original
-			if not GG.GhostDancerCopyOrg[AttackerID] then 
 			teamid=Spring.GetUnitTeam(AttackerID)
-			--a new copy
-			GG.GhostDancerOrgCopy[AttackerID] = Spring.CreateUnit("ghostdancer",px,py,pz,teamid)
-			GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[AttackerID]] = AttackerID
+			
+			if GG.GhostDancerOrgCopy[AttackerID] then -- attacker is a org --destroy old twin -create new twin
+				if Spring.ValidUnitID(GG.GhostDancerOrgCopy[AttackerID]) == true then
+					ox,oy,oz= Spring.GetUnitPosition(GG.GhostDancerOrgCopy[AttackerID])
+					Spring.DestroyUnit(GG.GhostDancerOrgCopy[AttackerID] ,true,true)
+					Spring.CreateUnit("jshadow",ox,oy,oz,teamid)
+				end
+			end
+			--create a new copy if you are the original
+			if not GG.GhostDancerCopyOrg[AttackerID] then 
+				teamid=Spring.GetUnitTeam(AttackerID)
+				--a new copy
+				GG.GhostDancerOrgCopy[AttackerID] = Spring.CreateUnit("ghostdancer",px,py,pz,teamid)
+				GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[AttackerID]] = AttackerID
 			end
 		end
 		
 		--this one creates the headcrabs
 		if (weaponDefID == crabShelWDefID) then
-			ShockWaveRippleOutwards( px, pz, 150,   180,  90)
-
+			ShockWaveRippleOutwards( px, pz, 150, 180, 90)
+			
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
 		end
 		
@@ -448,7 +448,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	HarvestRocketLoadTable={}
 	
 	
-
+	
 	WeaponDefTable[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not fuckingSpecial[unitDefID] then
 			unitVannishAntimatterSFX(unitID) 
@@ -479,15 +479,15 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		return 0
 	end 
-		
-	WeaponDefTable[cAllyGatorMarkerDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-			
-			env = Spring.UnitScript.GetScriptEnv(attackerID)
-			if env then
-				Spring.Echo("callygatormarker has hit target")
-				Spring.UnitScript.CallAsUnit(attackerID, env.tagYourIt, unitID )		
-			end	
 	
+	WeaponDefTable[cAllyGatorMarkerDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		
+		env = Spring.UnitScript.GetScriptEnv(attackerID)
+		if env then
+			
+			Spring.UnitScript.CallAsUnit(attackerID, env.tagYourIt, unitID )		
+		end	
+		
 		return 0
 	end 
 	
@@ -559,7 +559,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
-		WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
+	WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
@@ -582,58 +582,58 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	--set the Unit
 	WeaponDefTable[jplanktoneraaDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-	
-	--stun this unit
-	hp = Spring.GetUnitHealth(unitID)
-
+		
+		--stun this unit
+		hp = Spring.GetUnitHealth(unitID)
+		
 		if hp then 
 			Spring.SetUnitHealth(unitID,{paralyze = hp * JPLANKTONER_AA_STUNTIME})
-
-		--moveControll
+			
+			--moveControll
 			Spring.MoveCtrl.Enable(unitID)
-
+			
 			eventFunction = function (id,frame, persPack)
-			nextFrame=frame+1
+				nextFrame=frame+1
 				if persPack then
 					if persPack.unitID then
-					--check 
-					boolDead= Spring.GetUnitIsDead(persPack.unitID )
-					
-					if boolDead and boolDead == true then
-						Spring.MoveCtrl.Disable(persPack.unitID)
+						--check 
+						boolDead= Spring.GetUnitIsDead(persPack.unitID )
+						
+						if boolDead and boolDead == true then
+							Spring.MoveCtrl.Disable(persPack.unitID)
+						end
+						
+						
+						if not persPack.startFrame then
+							persPack.startFrame=frame
+						end
+						
+						if persPack.startFrame then
+							nextFrame= persPack.startFrame + JPLANKTONER_AA_STUNTIME
+						end
+						
+						if frame >= nextFrame then
+							Spring.MoveCtrl.Disable(persPack.unitID)
+							return 
+						end
 					end
-				  
-				  
-					 if not persPack.startFrame then
-						persPack.startFrame=frame
-					 end
-				 
-					 if  persPack.startFrame then
-						nextFrame= persPack.startFrame + JPLANKTONER_AA_STUNTIME
-					 end
-					 
-					 if frame >= nextFrame then
-						Spring.MoveCtrl.Disable(persPack.unitID)
-						return 
-					 end
-					 end
 				end	 
-			return nextFrame, persPack
+				return nextFrame, persPack
 			end	
-	
-		GG.EventStream:CreateEvent({action= eventFunction, persPack={unitID= unitID, totalTime=JPLANKTONER_AA_STUNTIME}})
+			
+			GG.EventStream:CreateEvent({action= eventFunction, persPack={unitID= unitID, totalTime=JPLANKTONER_AA_STUNTIME}})
 		end
-	return damage
+		return damage
 	end
-
+	
 	--headcrab function - sets the headcrab where its victim was
 	WeaponDefTable[chcprojectileDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-	px,py,pz=Spring.GetUnitPosition(unitID)
+		px,py,pz=Spring.GetUnitPosition(unitID)
 		if px and attackerID and Spring.ValidUnitID(attackID)==true then
 			Spring.SetUnitPosition(attackerID, px+5, py, pz)
 			Spring.SetUnitNoDraw(attackerID,true)
 		end
-	return damage
+		return damage
 	end
 	
 	WeaponDefTable[slicergunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
@@ -660,57 +660,57 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	WeaponDefTable[jethiefweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--only if the unit is hitsphere wise big enough 
-		if unitID and  attackerTeam then
+		if unitID and attackerTeam then
 			energy= Spring.GetTeamResources(attackerTeam,"energy")
 			if energy and energy > jEthiefStealingQuota then
-			Spring.UseUnitResource(unitID,"e",jEthiefStealingQuota)
-			
-	
-		gx,gy,gz=Spring.GetUnitPosition(unitID)
-		tx,ty,tz=Spring.GetUnitPosition(attackerID)
-		ateamid=Spring.GetUnitTeam(attackerID)
-		vx,vy,vz=Spring.GetUnitCollisionVolumeData(unitID)
-		max=math.max(vx,math.max(vy,vz))
-		
-		v=makeVector(tx-gx,ty-gy,tz-gz)
-		v=normVector(v)
-		--v=mulVector(v,-1)
-		
-		 local HarvestRocketParams={
-			pos = { gx, gy+max,gz}, 
-			["end"] = {tx,ty+10,tz},
-			speed={v.x,v.y+2,v.z},
-			owner = unitID,
-			team = ateamid,	
-			target= attackerID,
-			spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
-			ttl=420,
-			error = {0,0,0},
-			maxRange = 1200,
-			gravity = Game.gravity,
-			startAlpha = 1,
-			endAlpha = 1,						
-			model = "jGlowProj.s3o",
-			  cegTag = "jglowstrip",
-		}						
-		projID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
-			if projID then
-			Spring.SetProjectileTarget(attackerID,"u")
-			end
+				Spring.UseUnitResource(unitID,"e",jEthiefStealingQuota)
+				
+				
+				gx,gy,gz=Spring.GetUnitPosition(unitID)
+				tx,ty,tz=Spring.GetUnitPosition(attackerID)
+				ateamid=Spring.GetUnitTeam(attackerID)
+				vx,vy,vz=Spring.GetUnitCollisionVolumeData(unitID)
+				max=math.max(vx,math.max(vy,vz))
+				
+				v=makeVector(tx-gx,ty-gy,tz-gz)
+				v=normVector(v)
+				--v=mulVector(v,-1)
+				
+				local HarvestRocketParams={
+					pos = { gx, gy+max,gz}, 
+					["end"] = {tx,ty+10,tz},
+					speed={v.x,v.y+2,v.z},
+					owner = unitID,
+					team = ateamid,	
+					target= attackerID,
+					spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
+					ttl=420,
+					error = {0,0,0},
+					maxRange = 1200,
+					gravity = Game.gravity,
+					startAlpha = 1,
+					endAlpha = 1,						
+					model = "jGlowProj.s3o",
+					cegTag = "jglowstrip",
+				}						
+				projID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
+				if projID then
+					Spring.SetProjectileTarget(attackerID,"u")
+				end
 			end
 		end
-
+		
 	end
 	
-		WeaponDefTable[jethiefretweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	WeaponDefTable[jethiefretweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--only if the unit is hitsphere wise big enough 
-		if unitID and  attackerTeam then
+		if unitID and attackerTeam then
 			energy= Spring.GetTeamResources(attackerTeam,"energy")
 			if energy and energy > jEthiefStealingQuota then
-			Spring.AddUnitResource(unitID,"e",jEthiefStealingQuota)
+				Spring.AddUnitResource(unitID,"e",jEthiefStealingQuota)
 			end
 		end
-
+		
 	end
 	
 	--restrictor			
@@ -808,7 +808,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		--cBonkerPlasmaWeapon + FireWeapons
 		if FireWeapons[weaponDefID] and unitDefID ~= cssDefID then
 			if GG.OnFire == nil then GG.OnFire={} end
-		--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
+			--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
 			boolInsertIt=true
 			--very bad sollution n-times
 			for i=1, table.getn(GG.OnFire), 1 do
@@ -965,32 +965,32 @@ if (gadgetHandler:IsSyncedCode()) then
 			--explosion
 			ux,uy,uz=Spring.GetUnitPosition(unitID,true)
 			if ux then
-			_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-			Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
-			Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
-			--directionalShove
-			v={}
-			r={}
-			v.x,v.y,v.z=x-ux,y-uy,z-uz
-			v=normVector(v)
-			v=vMul(v, 900) --power
-			
-			-- crossproduct = (vectordamage x v ) -> Transfer to local coordsystem hitpiece origin vector 
-			r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
-			Spring.SetUnitRotation(unitID,r.x,r.y,r.z)
-			Spring.AddUnitImpulse(unitID,v.x,v.y,v.z) 
-			
-			T=getAllInCircle(ux,uz,120,unitID)
-			--SplashDamage
-			foreach(
-			T, 
-			function (id) if math.random(0,1)==1 then Spring.AddUnitDamage(id,75) end end) 
-			Spring.AddUnitDamage(unitID,10)
-			
-		else
-			return false
-		end
-		return true 
+				_,_,_,x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+				Spring.SpawnCEG("chiexploammo",x+math.random(-5,5),y+10,z+math.random(-5,5),0,1,0,50)
+				Spring.PlaySoundFile("sounds/cweapons/HiEx.ogg",1)
+				--directionalShove
+				v={}
+				r={}
+				v.x,v.y,v.z=x-ux,y-uy,z-uz
+				v=normVector(v)
+				v=vMul(v, 900) --power
+				
+				-- crossproduct = (vectordamage x v ) -> Transfer to local coordsystem hitpiece origin vector 
+				r.x,r.y,r.z= 0,math.rad(math.random(-5,5)),0
+				Spring.SetUnitRotation(unitID,r.x,r.y,r.z)
+				Spring.AddUnitImpulse(unitID,v.x,v.y,v.z) 
+				
+				T=getAllInCircle(ux,uz,120,unitID)
+				--SplashDamage
+				foreach(
+				T, 
+				function (id) if math.random(0,1)==1 then Spring.AddUnitDamage(id,75) end end) 
+				Spring.AddUnitDamage(unitID,10)
+				
+			else
+				return false
+			end
+			return true 
 		end
 	end
 	

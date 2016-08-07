@@ -39,9 +39,9 @@ local unitDef = {
 	ShowNanoSpray = true,
 	CanBeAssisted = true,	
 	workerTime = 0.1,
-	buildoptions = 
+	buildoptions=
 	{
-		"jmotherofmercy","jsempresequoia","jrecycler","jsunship"
+		"jmotherofmercy","jsempresequoia","jrecycler","jsunshipwater"
 	},
 	
 	
