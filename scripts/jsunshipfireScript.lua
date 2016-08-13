@@ -107,7 +107,7 @@ Sleep(250)
 end
 
 function meltLandscape(x,y,z,timeCounter)
-if Spring.GetGroundHeigth(x,z) < maxDepth then
+if Spring.GetGroundHeight(x,z) < maxDepth then
 
 
 	if timeCounter % 8== 0 then

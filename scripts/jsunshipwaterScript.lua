@@ -5,16 +5,35 @@ include "lib_Animation.lua"
 include "lib_Build.lua" 
 
 TablesOfPiecesGroups={}
-
+MAXFORCELOOP=7
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 end
 center=piece"center"
 
+Main= piece"Main"
+circDanceCenter= piece"circDanceCenter"
+crysCenter= piece"crysCenter"
 
 function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
-	--TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
+	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	StartThread(releaseTimer)
+	hideAllNonVitalPieces()
+	StartForceRotators()
+	StartThread(CrystallAnimations)
+	StartThread(sunCycle)
+	
+end
+
+function CrystallAnimations()
+	Spin(Main,y_axis,math.rad(math.random(-math.pi,math.pi)))
+	value=math.random(-math.pi,math.pi)
+	Spin(circDanceCenter,y_axis,math.rad(value))
+	Spin(crysCenter,y_axis,math.rad(value*-1))
+	while true do
+	WMove (crysCenter,y_axis, math.random(-10,10),0.5)
+	Sleep(100)	
+	end
 end
 
 function releaseTimer()
@@ -58,8 +77,6 @@ function script.FireWeapon1()
 	return true
 end
 
-
-
 function script.StartMoving()
 
 end
@@ -97,3 +114,54 @@ end
 
 Spring.SetUnitNanoPieces(unitID,{ center})
 
+function StartForceRotators()
+	for i=1, MAXFORCELOOP,1 do
+	Turn(TablesOfPiecesGroups["lopRot"][i],y_axis,math.random(-math.pi,math.pi),0,true)
+	Spin(TablesOfPiecesGroups["lopRot"][i],y_axis, math.rad(math.random(-55,55)))
+	Spin(TablesOfPiecesGroups["forceLoop"][i],z_axis, math.rad(math.random(-55,-35)))
+	Spin(TablesOfPiecesGroups["outRot"][i],y_axis, math.rad(math.random(75,155)*randSign()))
+		if math.random(0,1)==1 then Spin(TablesOfPiecesGroups["gate"][i],y_axis, math.rad(math.random(75,155)*randSign())) end
+	end
+	StartThread(hideAndSeek)
+end
+
+function hideAndSeek()
+	while true do
+		for i=1, MAXFORCELOOP,1 do
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,TablesOfPiecesGroups["outRot"][i])
+		gh= Spring.GetGroundHeight(x,z)
+
+			if gh > y  then
+				Hide(TablesOfPiecesGroups["outRot"][i])
+				Hide(TablesOfPiecesGroups["forceLoop"][i])
+				Hide(TablesOfPiecesGroups["gate"][i])
+
+			else
+				Show(TablesOfPiecesGroups["outRot"][i])
+				Show(TablesOfPiecesGroups["forceLoop"][i])
+				Show(TablesOfPiecesGroups["gate"][i])
+			end
+		end
+	Sleep(100)
+	end
+end
+
+function sunCycle(liveTime)
+spinT(TablesOfPiecesGroups["Sun"],y_axis,math.random(-22,22))
+hideT(TablesOfPiecesGroups["Sun"])
+for i=1,#TablesOfPiecesGroups["Sun"] do
+Show(TablesOfPiecesGroups["Sun"][i])
+Sleep(math.ceil(liveTime/#TablesOfPiecesGroups["Sun"]))
+if TablesOfPiecesGroups["Sun"][i-1] then
+Hide(TablesOfPiecesGroups["Sun"][i-1])
+end
+
+end
+
+end
+
+function hideAllNonVitalPieces()
+hideT(TablesOfPiecesGroups["Sun"])
+hideT(TablesOfPiecesGroups["water"])
+
+end

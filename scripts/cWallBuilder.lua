@@ -268,24 +268,6 @@ function script.StopMoving()
 	
 end
 
-function preparhalfSphereTable(size)
-	center=math.ceil(size/2)
-	T={}
-	for o=1,size,1 do
-		T[o]={}
-		for i=1,size,1 do
-			--default
-			T[o][i]=0
-			distCenter=math.sqrt((center-i)^2+(center-o)^2)	
-			if distCenter < center-1 then
-				T[o][i]=1
-			end
-		end
-	end
-	
-	return T	
-end
-
 function degreeSin (x)
 	return math.sin(math.rad(x))
 end
