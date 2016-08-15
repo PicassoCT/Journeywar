@@ -53,7 +53,19 @@ local presets = {
 
 
 effectUnitDefs = {
+jsunshipfire=  {
 
+
+--	{class='UnitPieceLight', options={delay=0,life=math.huge, worldspace=true, piece= "sun1", colormap ={ {1,1,1,0}},  repeatEffect=true}},
+
+	--{class='ShieldSphere', options={life=math.huge, pos={0,-1200,0}, size=1000, onActive=true, colormap1 = {{1, 0.75, 0.3, 0.8}}, repeatEffect=true}},
+	--{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,-1180,0}, size=1000, precision=22, strength   = 0.05,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=1000, precision=22, strength   = 0.005,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=225, precision=22, strength   = 0.005,  repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=250, precision=22, strength   = 0.029,  repeatEffect=true}},
+  },
+  
+  
 citadell=  {
 	
 	{class='ShieldSphere', options={life=math.huge, pos={0,496,0}, size=1000, onActive=true, colormap1 = {{0.2, 0.8, 0.9, 0.8}}, repeatEffect=true}},

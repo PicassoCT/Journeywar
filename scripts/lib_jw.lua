@@ -43,9 +43,29 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 	return FactoryTypes
 	
 end
+function getAirUnitTable(UnitDefNames)
+retTab={}
+retTab[UnitDefNames["callygator"].id]=true
+retTab[UnitDefNames["conair"].id]=true
+retTab[UnitDefNames["chunterchopper"].id]=true
+retTab[UnitDefNames["csuborital"].id]=true
+retTab[UnitDefNames["cgunship"].id]=true
 
+retTab[UnitDefNames["gnewsdrone"].id]=true
+
+retTab[UnitDefNames["jsunshipfire"].id]=true
+retTab[UnitDefNames["jmotherofmercy"].id]=true
+retTab[UnitDefNames["jsempresequoia"].id]=true
+retTab[UnitDefNames["jrecycler"].id]=true
+retTab[UnitDefNames["beanstalk"].id]=true
+retTab[UnitDefNames["jatlantai"].id]=true
+retTab[UnitDefNames["jwatchbird"].id]=true
+
+return reTab
+end
 function getPyroProofTable(UnitDefNames)
 	FireProofTypes={}
+	FireProofTypes[UnitDefNames["jsunshipfire"].id]=true
 	FireProofTypes[UnitDefNames["css"].id]=true
 	FireProofTypes[UnitDefNames["jfireflower"].id]=true
 	FireProofTypes[UnitDefNames["citadell"].id]=true

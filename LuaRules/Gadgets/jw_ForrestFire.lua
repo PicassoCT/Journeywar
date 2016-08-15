@@ -95,9 +95,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 		
- function setAreaEffect(x,z, Range, sfxFunction)
+ function setAreaEffect(px,pz, Range, sfxFunction)
 		if not GG.LandScapeT then init() end
-		if not x then Sping.Echo("jw_forrestfirst:setAreaEffect:Coordinates are nil and void"); return false end 
+		if not px then Sping.Echo("jw_forrestfirst:setAreaEffect:Coordinates are nil and void"); return false end 
 		
 		local areaEffectFunction=sfxFunction
 		local RangeX=Range/mapX
@@ -105,14 +105,11 @@ if (gadgetHandler:IsSyncedCode()) then
 		local mapResX = GG.LandScapeT.ResX
 		local mapResZ = GG.LandScapeT.ResZ
 		--midpoint
-		midX = x/mapResX
-		midZ = z/mapResZ
+		midX = px/mapResX
+		midZ = pz/mapResZ
 		
-		limx=math.min(math.max(1,math.ceil(x/mapResX)),mapResX)
-		limz=math.min(math.max(1,math.ceil(z/mapResZ)),mapResZ)
-		
-		
-		
+		limx=math.min(math.max(1,math.ceil(px/mapResX)),mapResX)
+		limz=math.min(math.max(1,math.ceil(pz/mapResZ)),mapResZ)
 
 		for x=math.max(1,limx-RangeX),math.min(mapX,math.ceil(limx+RangeX)), 1 do
 			for z=math.max(1,limz-RangeZ),math.min(mapZ,math.ceil(limz+RangeZ)), 1 do
@@ -120,15 +117,17 @@ if (gadgetHandler:IsSyncedCode()) then
 				dist =math.sqrt((x -midX)*(x -midX)  + (z-midZ)*(z-midZ))
 				if dist < Range then
 				if not GG.LandScapeT[x] then 	GG.LandScapeT[x] ={} end
-					if not GG.LandScapeT[x][z]  then GG.LandScapeT[x][z]  ={}
+					if not GG.LandScapeT[x][z]  then 
+						GG.LandScapeT[x][z]  ={}
 						GG.LandScapeT[x][z].boolBurning=false
 						GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
 						GG.LandScapeT[x][z].y= groundHeigth
 						GG.LandScapeT[x][z].AccumulatedHeat= 0
 						GG.LandScapeT[x][z].boolShielded = false
 					end
-
+				
 				GG.LandScapeT[x][z]=areaEffectFunction(GG.LandScapeT[x][z])
+				GG.LandScapeT[x][z].y= spGetGroundHeight(x*mapResX,z*mapResZ)
 				end
 			end
 		end
@@ -235,28 +234,32 @@ if (gadgetHandler:IsSyncedCode()) then
 	function addFiresFromGG()
 		local LandScapeT= GG.LandScapeT
 		if not GG.AddFire then GG.AddFire={} end
+		
 		for i=1,#GG.AddFire,1 do
-			
-			xClamped=clamp(math.ceil(GG.AddFire[i].x/MetaMapResDivider),1,LandScapeT.ResX)
-			zClamped=clamp(math.ceil(GG.AddFire[i].z/MetaMapResDivider),1,LandScapeT.ResZ)
-			
-			if GG.AddFire[i].Food and LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] then
-				if not LandScapeT[xClamped][zClamped].Food then LandScapeT[xClamped][zClamped].Food = GG.AddFire[i].Food end
-				LandScapeT[xClamped][zClamped].Food =GG.AddFire[i].Food
-			end
-			
-			if LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] and LandScapeT[xClamped][zClamped].Food > 0 then
-				fireT[#fireT+1]={x=GG.AddFire[i].x,y=spGetGroundHeight(GG.AddFire[i].x,GG.AddFire[i].z)+15, z=GG.AddFire[i].z}
+		groundHeigth = spGetGroundHeight(GG.AddFire[i].x,GG.AddFire[i].z)
+		if groundHeigth >= 0 then	 
+				xClamped=clamp(math.ceil(GG.AddFire[i].x/MetaMapResDivider),1,LandScapeT.ResX)
+				zClamped=clamp(math.ceil(GG.AddFire[i].z/MetaMapResDivider),1,LandScapeT.ResZ)
+				
+				if GG.AddFire[i].Food and LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] then
+					if not LandScapeT[xClamped][zClamped].Food then LandScapeT[xClamped][zClamped].Food = GG.AddFire[i].Food end
+					LandScapeT[xClamped][zClamped].Food =GG.AddFire[i].Food
+				end
+				
+				if LandScapeT[xClamped] and LandScapeT[xClamped][zClamped] and LandScapeT[xClamped][zClamped].Food > 0 then
+					fireT[#fireT+1]={x=GG.AddFire[i].x,y= groundHeigth +15, z=GG.AddFire[i].z}
+				end
 			end
 		end
-		GG.AddFire={} 
+		local emptyTable= {}
+		GG.AddFire=emptyTable
 		GG.LandScapeT=	 LandScapeT
 	end
 	
 	
 	
 	ProofTypes=getPyroProofTable(UnitDefNames)
-	
+	AirTypes=getAirUnitTable(UnitDefNames)
 	
 	function drawFlames_AddDamage(delayMap, nr) 
 		boolOnce=false
@@ -278,6 +281,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				assert(MetaMapResDivider)
 				T=getAllInCircle(fireT[i].x, fireT[i].z,MetaMapResDivider)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes, ShitWasSoCache)
+				T,ShitWasSoCache=filterOutUnitsOfType(T,AirTypes, ShitWasSoCache)
 				if T and #T> 0 then
 					
 					
@@ -300,7 +304,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				spSpawnCEG("bigfoorestfire", bigFireTable[i].x+math.random(-16,16), bigFireTable[i].y+math.random(1,15), bigFireTable[i].z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1))
 				T=getAllInCircle( bigFireTable[i].x, bigFireTable[i].z,52)
 				T,ShitWasSoCache=filterOutUnitsOfType(T,ProofTypes,ShitWasSoCache)
-				
+				T,ShitWasSoCache=filterOutUnitsOfType(T,AirTypes, ShitWasSoCache)
 				if T and #T > 0 then
 					for k=1,#T do
 						if Spring.ValidUnitID(T[k])==true then Spring.AddUnitDamage(T[k],10) end
@@ -355,7 +359,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		--Spring.Echo("Jw:Foorestfire3")
 		for i= table.getn(fireT),1,-1 do
 			x,z= math.ceil(fireT[i].x/MetaMapResDivider), math.ceil(fireT[i].z/MetaMapResDivider)
-			
+			--if not initialized initialize as zero food for the fire
 			if not LandScapeT[ x][ z].Food then 
 				LandScapeT[ x][ z].Food = 0 
 			end
@@ -369,7 +373,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			LandScapeT[ x][ z].AccumulatedHeat =		LandScapeT[ x][ z].AccumulatedHeat+InHeat
 			addHeatToSurroundingArea(i,LandScapeT[ x][ z].AccumulatedHeat)
 			
-			if LandScapeT[ x][ z].boolShielded== true or LandScapeT[ x][ z].Food < 0 then 
+			if LandScapeT[ x][ z].boolShielded== true or LandScapeT[ x][ z].Food < 0   then 
 				
 				LandScapeT[ x][ z].boolBurning=false
 				table.remove(fireT,i);

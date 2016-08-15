@@ -15,6 +15,7 @@ maxDamage = 420,
 AutoHeal=22,
 idleAutoHeal = 30,
 idletime=1200,
+maxWaterdepth= 200,
 --Movement
 Acceleration = 0.7,
 BrakeRate = 0.5,

@@ -3,6 +3,21 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_Build.lua" 
+include "jsunShipComonScript.lua"
+
+--Declared pieces
+center=piece"center"
+Main= piece"Main"
+circDanceCenter= piece"circDanceCenter"
+crysCenter= piece"crysCenter"
+centerCore = piece"centerCore"
+Sun1 = piece"Sun1"
+inRotX = piece"inRotX"
+inRotY = piece"inRotY"
+center = piece"center"
+waterPivot= piece"waterPivot"
+diamond1= piece"diamond1"
+diamond2= piece"diamond2"
 
 TablesOfPiecesGroups={}
 cCircleRange= 1200
@@ -10,75 +25,121 @@ maxDepth = 800
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 end
+LifeTimeMax= 80
+SunyCycleMax= 7
 center=piece"center"
 boolAlive=true
 sunStage=1
+ local LupsApi = GG.Lups
 function script.Create()
-	--generatepiecesTableAndArrayCode(unitID)
-	--TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
-	StartThread(LiveTimer)
+	Hide(inRotX)
+	Hide(inRotY)
+	Hide(Main)
+
+
+	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
+	for k,v in pairs(TablesOfPiecesGroups) do
+		resetT(v)
+		hideT(v)
+	end
+		
+	if LupsApi then
+	 --LupsApi.AddParticles(class,options)
+	end
+	StartThread(sunLifeTimeControll)
 	StartThread(damageDealer)
 end
 unitDefID= Spring.GetUnitDefID(unitID)
-function damageDealer()
-timeCounter=0
-	while true do
-	timeCounter=timeCounter+1
-	x,y,z=Spring.GetUnitPosition(unitID)
-	filterOutTypeTable={[unitDefID]=true}
-	
-	allUnits= getAllInCircle(x,z, cCircleRange,unitID)
-	allUnits= filterOutUnitsOfType(allUnits,filterOutTypeTable )
-	
-	if allUnits  then
-	for i=1, table.getn(allUnits) do
-		if allUnits[i]== unitID then
-		 allUnits[i]= nil
-		end
-	end
-	
-	allUnitsEvaporating= getAllInCircle(x,z, cCircleRange/2,unitID)
-	allUnitsEvaporating= filterOutUnitsOfType(allUnitsEvaporating,filterOutTypeTable )
-	for i=1, table.getn(allUnitsEvaporating) do
-		if allUnitsEvaporating[i]== unitID then
-		 allUnitsEvaporating[i]= nil
-		end
-	end
 
-		if GG.OnFire == nil then GG.OnFire={} end			
+function damageDealer()
+	timeCounter=0
+	--StartThread(stabilize)
+	StartThread(sfxCreator)
+	
+	while true do
+		timeCounter=timeCounter+1
+		ux,uy,uz=Spring.GetUnitPosition(unitID)
+		filterOutTypeTable={[unitDefID]=true}
+		
+		allUnits= getAllInCircle(ux,uz, cCircleRange,unitID)
+		allUnits= filterOutUnitsOfType(allUnits,filterOutTypeTable )
+		
+		if allUnits then
+			for i=1, table.getn(allUnits) do
+				if allUnits[i]== unitID then
+					allUnits[i]= nil
+				end
+			end
+			
+			allUnitsEvaporating= getAllInCircle(ux,uz, cCircleRange/2,unitID)
+			allUnitsEvaporating= filterOutUnitsOfType(allUnitsEvaporating,filterOutTypeTable )
+			for i=1, table.getn(allUnitsEvaporating) do
+				if allUnitsEvaporating[i]== unitID then
+					allUnitsEvaporating[i]= nil
+				end
+			end
+			
+			if GG.OnFire == nil then GG.OnFire={} end			
 			-- Units taking Firdamage
 			dict=TableToDict(allUnits)
 			groupOnFire(dict)
 			
 			--Units evaporating
-			process(allUnitsEvaporating, 
+			process(
+			allUnitsEvaporating, 
 			function(id) 
-			x,y,z=Spring.GetUnitPosition(id)
-				if y > - 30 then
+				x,y,z=Spring.GetUnitPosition(id)
 				y=math.max(15,y)
+				--at least one falme per evaporating unit
 				Spring.SpawnCEG("fireDisolveFx",x,y+10,z,0,1,0,0)	
+				
+				pieceMap= Spring.GetUnitPieceMap(id)
+				--burn for everyPiece
+				convertedPieceMap={}
+				for key,value in pairs(pieceMap)do convertedPieceMap[#convertedPieceMap+1] =value end
+				--evaporate by piece if piece is bigger in volume then 2000
+				
+				process(convertedPieceMap,
+				function (pieceID)
+					scaleX, scaleY, scaleZ = Spring.GetUnitPieceCollisionVolumeData(id,pieceID)
+					if scaleX then
+						volume=scaleX*scaleY*scaleZ 
+						if volume > 2000 then
+							return pieceID
+						end
+					end
+				end,				
+				function (pieceID) 
+					if pieceID then
+						fx,fy,fz= Spring.GetUnitPiecePosDir(id,pieceID)
+						Spring.SpawnCEG("fireDisolveFx",fx,fy+10,fz,0,1,0,0)					
+					end				
+				end				
+				)
+				
+				
 				Spring.DestroyUnit(id,true,true);
 				return id; 
-				end
+				
 			end)
 			
 			allFeatures = getAllFeatureNearUnit(unitID,cCircleRange)
 			if allFeatures then
-			process(allFeatures,
-			function(id)
-			hp=Spring.GetFeatureHealth(id)
-			hp=math.max(0,hp-20)
-			
-			if hp > 0 then
-			x,y,z=Spring.GetFeaturePosition(id)
-			Spring.SpawnCEG("fireDisolveFx",x,y+10,z,0,1,0,0)	
-			else
-			Spring.DestroyFeature(id,true,true)
-			end
-				Spring.SetFeatureHealth(id,hp)
-				
-			return id
-			end)
+				process(allFeatures,
+				function(id)
+					hp=Spring.GetFeatureHealth(id)
+					hp=math.max(0,hp-20)
+					
+					if hp > 0 then
+						fx,fy,fz=Spring.GetFeaturePosition(id)
+						Spring.SpawnCEG("fireDisolveFx",fx,fy+10,fz,0,1,0,0)	
+					else
+						Spring.DestroyFeature(id,true,true)
+					end
+					Spring.SetFeatureHealth(id,hp)
+					
+					return id
+				end)
 			end
 			
 			--Features Evaporating
@@ -86,52 +147,125 @@ timeCounter=0
 			if allFeatures then
 				process(allFeatures,
 				function(id)
-		
-				x,y,z=Spring.GetFeaturePosition(id)
-				y= math.max(5,y)
-				Spring.SpawnCEG("fireDisolveFx",x,y+10,z,0,1,0,0)	
+					
+					fx,fy,fz=Spring.GetFeaturePosition(id)
+					fy= math.max(5,fy)
+					Spring.SpawnCEG("fireDisolveFx",fx,fy+10,fz,0,1,0,0)	
 				Spring.DestroyFeature(id,true,true) end
 				)
 			end
-
-
+			
+			
+		end
+		
+	Sleep(250)
 	end
-
-	--Landscape melting
-	meltLandscape(x,y,z,timeCounter)
 	
-Sleep(250)
+end
 
+function stabilize()
+while true do
+
+
+Spring.SetUnitDirection(unitID,0,1,0)
+Sleep(10)
+end
+end
+
+function spawnCorona()
+
+while true do
+
+	x,y,z =Spring.GetUnitPiecePosDir(unitID,center)
+	Spring.SpawnCEG("jsunshipcorona",x,y,z,0,1,0)	
+	Sleep(800)
+end
+
+
+end
+
+function sfxCreator()
+	StartThread(spawnCorona)
+	timeCounter=0
+	while true do
+		timeCounter=timeCounter+1
+		ux,uy,uz=Spring.GetUnitPosition(unitID)
+	
+		--Landscape melting
+		meltLandscape(ux,uy,uz,timeCounter)
+		setFireToLandscape(ux,uy,uz, 1212)
+		gh=Spring.GetGroundHeight(ux,uz)
+
+		Spring.SpawnCEG("jsunwave",ux+math.random(-20,20),math.max(10,gh+10),uz+math.random(-20,20),0,1,0,0)
+		Sleep(250)
+
+		
+		--decal
+		if timeCounter % 30 == 0 then
+		Spring.CreateUnit("jsunshipscardecalfactory",ux+ 50,gh,uz+ 50,math.ceil(math.random(0,3)),gaiaTeamId)
+		end
 	end
+
+end
+gaiaTeamId=Spring.GetGaiaTeamID()
+function setFireToLandscape(x,y,z, range)
+
+sfxFunction = function (LanscapeCell)
+				LanscapeCell.boolBurning= true
+				return LanscapeCell
+				end
+				
+	if GG.LandScapeT.setAreaEffect then
+		GG.LandScapeT.setAreaEffect(x,z, range, sfxFunction)
+	end	
 
 end
 
 function meltLandscape(x,y,z,timeCounter)
-if Spring.GetGroundHeight(x,z) < maxDepth then
-
-
-	if timeCounter % 8== 0 then
+	if Spring.GetGroundHeight(x,z) < maxDepth then
+		
+		
+		if timeCounter % 8== 0 then
 			if GG.DynDefMap == nil then GG.DynDefMap={} end
-	if GG.DynRefMap == nil then GG.DynRefMap={} end
-	size=160
-	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="j"}
-	GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,-0.1)
-	printT(GG.DynRefMap[#GG.DynRefMap],size)
-	GG.boolForceLandLordUpdate=true
+			if GG.DynRefMap == nil then GG.DynRefMap={} end
+			size=160
+			GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="j"}
+			GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,-0.1)
+			--printT(GG.DynRefMap[#GG.DynRefMap],size)
+			GG.boolForceLandLordUpdate=true
+		end
 	end
-	end
-
+	
 end
 
-function LiveTimer()
-Sleep(3*1000*60)
-boolAlive = false
+function init()
+	spinT(TablesOfPiecesGroups["Sun"],y_axis,12, -122)
+	recProcess(TablesOfPiecesGroups, function(id) Hide(id) end)
+end
+
+function showSun(index)
+	hideT(TablesOfPiecesGroups["Sun"])
+	Show(TablesOfPiecesGroups["Sun"][index])
+end
+
+RemainLifeTime=LifeTimeMax
+function sunLifeTimeControll()
+	init()
+	SunyCycleMax=1
+	
+	for i=1, LifeTimeMax, LifeTimeMax/7 do
+		showSun(SunyCycleMax)
+		SunyCycleMax=SunyCycleMax+1
+		Spring.Echo("jsunShipComonScript"..SunyCycleMax)
+		Sleep(math.ceil(LifeTimeMax/7)*1000)
+		RemainLifeTime=RemainLifeTime-math.ceil(LifeTimeMax/7)*1000
+	end
+	
+	Spring.DestroyUnit(unitID,true,true)
 end
 
 function script.Killed(recentDamage,_)
-
-suddenDeathV(recentDamage)
-return 1
+	return 1
 end
 
 
@@ -148,41 +282,40 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-
+	
 	return true
-
+	
 end
- 
+
 
 function script.FireWeapon1()	
-
+	
 	return true
 end
 
 
 
 function script.StartMoving()
-
+	
 end
 
 function script.StopMoving()
-		
-		
+	
+	
 end
 
 function script.Activate()
-
-return 1
+	
+	return 1
 end
 
 function script.Deactivate()
-
-return 0
+	
+	return 0
 end
 
 function script.QueryBuildInfo() 
-  return center 
+	return center 
 end
 
 Spring.SetUnitNanoPieces(unitID,{ center})
-

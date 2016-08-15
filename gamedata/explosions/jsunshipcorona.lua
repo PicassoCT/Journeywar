@@ -1,0 +1,97 @@
+-- blood_spray
+
+return {
+  ["jsunshipcorona"] = {
+   
+	
+	 protoberanz = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      water              = true,
+      properties = {
+        airdrag            = 1,
+        colormap           = [[0.0 0.3 0.9 0.01  	0.9 0.9 0 0.01  0.9 0 0 0.0125	 0 0 0 0]],
+        directional        = true,
+        emitrot            = 70,
+        emitrotspread      = 40,
+        emitvector         = [[0,0,0]],
+        gravity            = [[0, 0.00, 0]],
+        numparticles       = 1,
+        particlelife       = 70,
+        particlelifespread = 0,
+        particlesize       = 442,
+        particlesizespread = 22.5,
+        particlespeed      = 6,
+        particlespeedspread = 8,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = 1.000000000000002,
+        sizemod            = 1.0000001,
+        texture            = [[nuke]],
+        useairlos          = false,
+      },
+    },
+	
+	 firenovaexplo = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      water              = true,
+      properties = {
+        airdrag            = 1,
+        colormap           = [[0.0 0.3 0.9 0.01  	0.9 0.9 0 0.01  0.9 0 0 0.0125	 0 0 0 0]],
+        directional        = true,
+        emitrot            = 70,
+        emitrotspread      = 40,
+        emitvector         = [[0,0,0]],
+        gravity            = [[0, 0.00, 0]],
+        numparticles       = 1,
+        particlelife       = 70,
+        particlelifespread = 50,
+        particlesize       = 442,
+        particlesizespread = 22.5,
+        particlespeed      = 6,
+        particlespeedspread = 8,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = 1.000000000000002,
+        sizemod            = 1.0000001,
+        texture            = [[firenovaexplo]],
+        useairlos          = false,
+      },
+    },
+	
+	startstreak = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      water              = true,
+      properties = {
+        airdrag            = 1,
+        colormap           = [[0.0 0.3 0.9 0.01  	0.9 0.9 0 0.01  0.9 0 0 0.0125	 0 0 0 0]],
+        directional        = true,
+        emitrot            = 50,
+        emitrotspread      = 10,
+        emitvector         = [[0,0,0]],
+        gravity            = [[0, 0.00, 0]],
+        numparticles       = 1,
+        particlelife       = 70,
+        particlelifespread = 50,
+        particlesize       = 342,
+        particlesizespread = 600.5,
+        particlespeed      = 6,
+        particlespeedspread = 8,
+        pos                = [[0, 0, 0]],
+        sizegrowth         = 1.000000000000002,
+        sizemod            = 1.0000001,
+        texture            = [[flash2]],
+        useairlos          = false,
+      },
+    },
+	
+	
+  },
+
+}

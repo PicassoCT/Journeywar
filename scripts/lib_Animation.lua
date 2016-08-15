@@ -398,14 +398,18 @@ function TurnTowardsWind(piecename,speed,offset)
 end
 
 -->Spins a Table
-function spinT(Table, axis,speed,deg, degup)
+function spinT(Table, axis,speed,rdeg, degup)
 	if not degup then
-		for i=1,#Table do
-			Spin(Table[i],axis,math.rad(deg),speed)
+		for k,v in pairs(Table) do
+			if v then
+			Spin(v,axis,math.rad(rdeg),speed)
+			end
 		end
 	else
-		for i=1,#Table do
-			Spin(Table[i],axis,math.rad(math.random(deg,degup)),speed)
+		for k,v in pairs(Table) do
+			if v then
+			Spin(v,axis,math.rad(math.random(rdeg,degup)),speed)
+			end
 		end
 	end
 	

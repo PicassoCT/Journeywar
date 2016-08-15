@@ -2262,6 +2262,20 @@ function vardump(value, depth, key)
 		return reTable
 	end
 	
+		--recursive itterates over a Keytable, executing a function 
+	function recElementWise(T,fooNction,ArghT)
+		reTable={}
+		
+		for i=1,#T, 1 do
+			if type(T[i]) ~= "table" then
+				reTable[i]=fooNction(T[i],ArghT)		
+			else
+				reTable[i]=recElementWise(T[i],fooNction,ArghT)
+			end
+		end
+		
+		return reTable
+	end
 	
 	function countKey(T)
 		it=0
@@ -2299,6 +2313,30 @@ function vardump(value, depth, key)
 		return T
 	end
 	
+	function recProcess(Table, ...)
+		local arg={...}
+		--local arg = table.pack(...)
+		T={}
+		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
+		if not arg then bDbgEcho("No args in process") return end
+		if type(arg)== "function" then return elementWise(T,arg) end
+		
+		
+		TempArg={}
+		TempFunc={}
+		--if not arg then return Table end
+		
+		for _, f in pairs(arg) do
+			if type(f)=="function" then				
+				T=recElementWise(T,f,TempArg)				
+				TempArg={}			
+			else				
+				TempArg[#TempArg+1]=f
+			end			 
+		end
+		return T
+	end
+	
 	--> Executes a random Function from a table of functions
 	function raFoo( ...)
 		local arg={...}
@@ -2307,6 +2345,7 @@ function vardump(value, depth, key)
 		return arg[index]()	
 	end
 	
+
 	function accessInOrder(T,...)
 		--local arg = table.pack(...)
 		local TC=T
@@ -3395,7 +3434,7 @@ end
 	end
 	
 	-->MovesAParentPiece
-	function movePieceAboveGround(parent, subPiece,Speed)
+	function movePieceToGround(parent, subPiece,Speed)
 		
 		local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 		px,py,pz=spGetUnitPiecePosDir(unitID,subPiece)

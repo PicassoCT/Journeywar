@@ -22,3 +22,9 @@ jtreel: displaced pieces
 cCrabSynth is currently not placing the defensewall correctly
 collissionssphere of allygator must be box
 heightmap holes are applied to often and thus- go to deep
+
+-jsunship
++forrestfire
++grow
++decal
++

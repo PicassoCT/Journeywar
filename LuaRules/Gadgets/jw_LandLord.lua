@@ -92,14 +92,14 @@
 		function getFilterFunction(FilterName)
 			
 			if FilterName== "none" then
-				Spring.Echo("JW:FilterFunc:None")
+			--	Spring.Echo("JW:FilterFunc:None")
 				return function (boolinBounds,anyVal)
 					assert(anyVal,"JW:FilterFunc:TableEmpty")
 				return anyVal end 
 			end
 			
 			if FilterName=="borderblur" then 
-				Spring.Echo("JW:FilterFunc:borderblur")
+			--	Spring.Echo("JW:FilterFunc:borderblur")
 				return function(boolinBounds,anyVal, rateOfBlur)	
 					local lgetNine=getNine
 					for rB=1,rateOfBlur, 1 do
@@ -112,20 +112,11 @@
 					return anyVal
 				end end
 				--default case	
-				Spring.Echo("JW:FilterFunc:undefined")
+				--	Spring.Echo("JW:FilterFunc:undefined")
 				return function (boolinBounds,anyVal) return anyVal end
 			end
-		
-			function getBlendFunction(BlendName)
-				--blindly adds or subs the value
-				if BlendName== "melt" then return function(anyTable) return anyTable end end	
-				--adds subs the value to 
-				if BlendName== "add"  then				
-						return 
-						---------add--------------------------
-						function (anyTable,vi,vj)
-							
-							
+			
+					function getNormalizedGroundHeigth(vi,vj)
 							h1=Spring.GetGroundHeight(vi*8,vj*8)
 							h2=Spring.GetGroundHeight(vi*8+100,vj*8)
 							h3=Spring.GetGroundHeight(vi*8-100,vj*8)
@@ -135,8 +126,21 @@
 							h7=Spring.GetGroundHeight(vi*8-100,vj*8-100)
 							h8=Spring.GetGroundHeight(vi*8+100,vj*8+100)
 							h9=Spring.GetGroundHeight(vi*8+100,vj*8-100)
+					return (h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+					end
+					
+			function getBlendFunction(BlendName)
+				--blindly adds or subs the value
+				if BlendName== "melt" then return function(anyTable) return anyTable end end	
+				--adds subs the value to 
+				if BlendName== "add"  then				
+						return 
+						---------add--------------------------
+						function (anyTable,vi,vj)							
+							
+				
 							local bcheck=boundCheck
-							h=(h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+							h=getNormalizedGroundHeigth(vi,vj)
 							for i=1,#anyTable,1 do
 								if bcheck("x",i) ==true then
 									for j=1,#anyTable,1 do
@@ -163,18 +167,9 @@
 						-------------sub----------------------
 						function (anyTable,vi,vj)
 							
-							
-							h1=Spring.GetGroundHeight(vi*8,vj*8)
-							h2=Spring.GetGroundHeight(vi*8+100,vj*8)
-							h3=Spring.GetGroundHeight(vi*8-100,vj*8)
-							h4=Spring.GetGroundHeight(vi*8,vj*8+100)
-							h5=Spring.GetGroundHeight(vi*8,vj*8-100)
-							h6=Spring.GetGroundHeight(vi*8-100,vj*8+100)
-							h7=Spring.GetGroundHeight(vi*8-100,vj*8-100)
-							h8=Spring.GetGroundHeight(vi*8+100,vj*8+100)
-							h9=Spring.GetGroundHeight(vi*8+100,vj*8-100)
+					
 							local bcheck=boundCheck
-							h=(h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+							h=getNormalizedGroundHeigth(vi,vj)
 							for i=1,#anyTable,1 do
 								if bcheck("x",i) ==true then
 									for j=1,#anyTable,1 do
@@ -197,24 +192,16 @@
 						end 
 				end
 						-----------------------------------	
-					
+		
 
 						---------------relative--------------------	
 					if BlendName == "relative" then
 					return function (anyTable,vi,vj)
 							
 							
-							h1=Spring.GetGroundHeight(vi*8,vj*8)
-							h2=Spring.GetGroundHeight(vi*8+100,vj*8)
-							h3=Spring.GetGroundHeight(vi*8-100,vj*8)
-							h4=Spring.GetGroundHeight(vi*8,vj*8+100)
-							h5=Spring.GetGroundHeight(vi*8,vj*8-100)
-							h6=Spring.GetGroundHeight(vi*8-100,vj*8+100)
-							h7=Spring.GetGroundHeight(vi*8-100,vj*8-100)
-							h8=Spring.GetGroundHeight(vi*8+100,vj*8+100)
-							h9=Spring.GetGroundHeight(vi*8+100,vj*8-100)
+						
 							local bcheck=boundCheck
-							h=(h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+							h= getNormalizedGroundHeigth(vi,vj)
 							for i=1,#anyTable,1 do
 								if bcheck("x",i) ==true then
 									for j=1,#anyTable,1 do
@@ -239,19 +226,9 @@
 		
 					return 
 					function (anyTable,vi,vj)
-							
-							
-							h1=Spring.GetGroundHeight(vi*8,vj*8)
-							h2=Spring.GetGroundHeight(vi*8+100,vj*8)
-							h3=Spring.GetGroundHeight(vi*8-100,vj*8)
-							h4=Spring.GetGroundHeight(vi*8,vj*8+100)
-							h5=Spring.GetGroundHeight(vi*8,vj*8-100)
-							h6=Spring.GetGroundHeight(vi*8-100,vj*8+100)
-							h7=Spring.GetGroundHeight(vi*8-100,vj*8-100)
-							h8=Spring.GetGroundHeight(vi*8+100,vj*8+100)
-							h9=Spring.GetGroundHeight(vi*8+100,vj*8-100)
+
 							local bcheck=boundCheck
-							h=(h1+h2+h3+h4+h5+h6+h7+h8+h9)/9
+							h=getNormalizedGroundHeigth(vi,vj)
 							for i=1,#anyTable,1 do
 								if bcheck("x",i) ==true then
 									for j=1,#anyTable,1 do
@@ -409,15 +386,7 @@
 			halfLife=squareSideDimension/2
 			totalRange=outRange-inRange
 			
-			--HeightDifferencePerElement=(EndHeight-StartHeight)/outRange-inRange
-			--range=math.floor(math.sqrt((xCoord-halfLife)^2+ (zCoord-halfLife)^2))
-			
-			--nrOfChoice=math.floor(math.sqrt((xCoord-halfLife)^2+ (zCoord-halfLife)^2))-inRange
-			--Spring.Echo("JWL__-----------------------------------------------------")
-			--Spring.Echo("JWL__Range:",(math.ceil(math.sqrt((xCoord-halfLife)^2+ (zCoord-halfLife)^2))-inRange))
-			--Spring.Echo("JWL_Results ",unNeg((math.ceil(math.sqrt((xCoord-halfLife)^2+ (zCoord-halfLife)^2))-inRange)*((EndHeight-StartHeight)/divNonZero(outRange-inRange)))+StartHeight)	
-			--Spring.Echo("JWL__-----------------------------------------------------")
-			return unNeg(((((math.ceil(math.sqrt((xCoord-halfLife)^2+ (zCoord-halfLife)^2))-(inRange-halfLife))*-1)+totalRange)*((EndHeight-StartHeight)/totalRange)))+ StartHeight
+				return unNeg(((((math.ceil(math.sqrt((xCoord-halfLife)^2+ (zCoord-halfLife)^2))-(inRange-halfLife))*-1)+totalRange)*((EndHeight-StartHeight)/totalRange)))+ StartHeight
 			
 			
 		end

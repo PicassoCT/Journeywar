@@ -110,6 +110,8 @@ local splEmitSfx=EmitSfx
 end
 
 function shockwave()
+x,y,z=Spring.GetUnitPosition(unitID)
+Spring.SpawnCEG("jsunwave",x,y+10,z,0,1,0,60)	
 local splEmitSfx= EmitSfx
 for i=1,12,1 do
 splEmitSfx(spiralCenter,1025)
