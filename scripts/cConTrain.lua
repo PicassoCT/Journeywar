@@ -586,6 +586,7 @@ function goTooKillThemAllPicaMon()
 			if (Spring.ValidUnitID(trainFullDeathID)==true) then
 				Spring.SetUnitNoDraw(trainFullDeathID,false)
 				Spring.DestroyUnit(trainFullDeathID,false,true) --leave no wreck
+				boolYouBroughtThisOnYourself= true
 			end
 			
 			
@@ -599,6 +600,8 @@ function goTooKillThemAllPicaMon()
 	hardReset()
 	----Spring.Echo("MurderousFunction has left the build")
 end
+
+boolYouBroughtThisOnYourself= false
 
 function threadSafety(globalBoolNr,value2ChangeInto,boolLockedNR)
 	while(true) do
@@ -1039,9 +1042,9 @@ function healWhileStandingStill()
 								Spring.SetUnitHealth(T[i],p+hp)
 								sx,sy,sz=Spring.GetUnitPosition(T[i])
 								Spring.SpawnCEG("healtrain",sx,sy+10,sz,0,1,0,0)
-								if hpcopy-hp <0 then boolSelfRepairedToDeath=true end
+								if hpcopy-hp <0 then 	boolYouBroughtThisOnYourself =true end
 								Spring.AddUnitDamage(unitID,hp)
-								
+							
 							end
 						end
 					end
@@ -1603,7 +1606,7 @@ end
 
 function script.Killed()
 	
-	if boolSelfRepairedToDeath ==true then return 1 end
+	if boolYouBroughtThisOnYourself ==true then return 0 end
 	
 	if getConstantMove()==true then
 		for i=5,12,1 do

@@ -20,7 +20,7 @@ local weaponDef={
 	tolerance=16000,
 	tracks=true,
 	Turnrate=16000,
-	collideFriendly=true,
+	collideFriendly=false,
 	
 	----APPEARANCE
 	model="birdrocket.s3o",
@@ -32,7 +32,7 @@ local weaponDef={
 	turret=true,
 	cylinderTargeting=66,
 	avoidFeature=true,
-	avoidFriendly=true,
+	avoidFriendly=false,
 	
 	
 	--commandfire=true,

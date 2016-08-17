@@ -1,3 +1,9 @@
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_Build.lua" 
+include "jsunShipComonScript.lua"
 
 --<CopyPasteTemplate for TerraFormingUnit>
 
@@ -258,6 +264,20 @@ function script.Deactivate ( )
 	return 0
 end
 
+function destroyAllFeatures()
+--Features Evaporating
+			allFeatures = getAllFeatureNearUnit(unitID,180)
+			if allFeatures then
+				process(allFeatures,
+				function(id)			
+				Spring.DestroyFeature(id,true,true)
+				end
+				)
+			end
+
+
+end
+
 
 
 
@@ -267,5 +287,6 @@ function script.Create()
 	StartThread(makeSoundIfCamisClose)
 	StartThread(waitingGame)
 	StartThread(stillAlive)
+	StartThread(destroyAllFeatures)
 	
 end

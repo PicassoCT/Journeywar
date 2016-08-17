@@ -25,7 +25,7 @@ turnrate=100,
 
 tracks=false,
 
-collideFriendly=true,
+collideFriendly=false,
 
 ----APPEARANCE
 model="SIprojectile.s3o",

@@ -52,8 +52,8 @@ function foldPillar()
 	--fold railways
 	Turn(pillar1[5],y_axis,math.rad(65),speedO)
 	Turn(pillar1[9],y_axis,math.rad(-69),speedO)--
-	Turn(pillar1[6],z_axis,math.rad(85),speedO)
-	Turn(pillar1[10],z_axis,math.rad(87),speedO)--
+	Turn(cRailWay11,z_axis,math.rad(85),speedO)
+	Turn(cRailWay11,z_axis,math.rad(-87),speedO)--
 	
 	WaitForTurn(pillar1[6],z_axis)
 	WaitForTurn(pillar1[10],z_axis)
