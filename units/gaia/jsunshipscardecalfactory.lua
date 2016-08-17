@@ -49,7 +49,7 @@ local unitDef = {
 	
 	usebuildinggrounddecal = true,
 	
-	buildinggrounddecaldecayspeed = 0.02,
+	buildinggrounddecaldecayspeed = 0.005,
 	buildinggrounddecalsizex = 128,
 	buildinggrounddecalsizey = 128,
 	buildinggrounddecaltype = "sunscardecal.dds",

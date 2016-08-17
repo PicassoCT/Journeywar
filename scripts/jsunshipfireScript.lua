@@ -30,21 +30,21 @@ SunyCycleMax= 7
 center=piece"center"
 boolAlive=true
 sunStage=1
- local LupsApi = GG.Lups
+local LupsApi = GG.Lups
 function script.Create()
 	Hide(inRotX)
 	Hide(inRotY)
 	Hide(Main)
-
-
+	
+	
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	for k,v in pairs(TablesOfPiecesGroups) do
 		resetT(v)
 		hideT(v)
 	end
-		
+	
 	if LupsApi then
-	 --LupsApi.AddParticles(class,options)
+		--LupsApi.AddParticles(class,options)
 	end
 	StartThread(sunLifeTimeControll)
 	StartThread(damageDealer)
@@ -158,30 +158,30 @@ function damageDealer()
 			
 		end
 		
-	Sleep(250)
+		Sleep(250)
 	end
 	
 end
 
 function stabilize()
-while true do
-
-
-Spring.SetUnitDirection(unitID,0,1,0)
-Sleep(10)
-end
+	while true do
+		
+		
+		Spring.SetUnitDirection(unitID,0,1,0)
+		Sleep(10)
+	end
 end
 
 function spawnCorona()
-
-while true do
-
-	x,y,z =Spring.GetUnitPiecePosDir(unitID,center)
-	Spring.SpawnCEG("jsunshipcorona",x,y,z,0,1,0)	
-	Sleep(800)
-end
-
-
+	
+	while true do
+		
+		x,y,z =Spring.GetUnitPiecePosDir(unitID,center)
+		Spring.SpawnCEG("jsunshipcorona",x,y,z,0,1,0)	
+		Sleep(800)
+	end
+	
+	
 end
 
 function sfxCreator()
@@ -190,35 +190,35 @@ function sfxCreator()
 	while true do
 		timeCounter=timeCounter+1
 		ux,uy,uz=Spring.GetUnitPosition(unitID)
-	
+		
 		--Landscape melting
 		meltLandscape(ux,uy,uz,timeCounter)
 		setFireToLandscape(ux,uy,uz, 1212)
 		gh=Spring.GetGroundHeight(ux,uz)
-
+		
 		Spring.SpawnCEG("jsunwave",ux+math.random(-20,20),math.max(10,gh+10),uz+math.random(-20,20),0,1,0,0)
 		Sleep(250)
-
+		
 		
 		--decal
 		if timeCounter % 30 == 0 then
-		Spring.CreateUnit("jsunshipscardecalfactory",ux+ 50,gh,uz+ 50,math.ceil(math.random(0,3)),gaiaTeamId)
+			Spring.CreateUnit("jsunshipscardecalfactory",ux+ 50,gh,uz+ 50,math.ceil(math.random(0,3)),gaiaTeamId)
 		end
 	end
-
+	
 end
 gaiaTeamId=Spring.GetGaiaTeamID()
 function setFireToLandscape(x,y,z, range)
-
-sfxFunction = function (LanscapeCell)
-				LanscapeCell.boolBurning= true
-				return LanscapeCell
-				end
-				
+	
+	sfxFunction = function (LanscapeCell)
+		LanscapeCell.boolBurning= true
+		return LanscapeCell
+	end
+	
 	if GG.LandScapeT.setAreaEffect then
 		GG.LandScapeT.setAreaEffect(x,z, range, sfxFunction)
 	end	
-
+	
 end
 
 function meltLandscape(x,y,z,timeCounter)

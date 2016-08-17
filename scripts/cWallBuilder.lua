@@ -385,7 +385,7 @@ function constTerraFormin()
 				x,y,z=spGetUnitPosition(unitID)
 					
 					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="add", filterType="borderblur"}
-					GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,16)
+					GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,32)
 					GG.boolForceLandLordUpdate=true
 				
 					while boolWalking == true do

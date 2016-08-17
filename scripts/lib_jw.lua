@@ -44,24 +44,24 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 	
 end
 function getAirUnitTable(UnitDefNames)
-retTab={}
-retTab[UnitDefNames["callygator"].id]=true
-retTab[UnitDefNames["conair"].id]=true
-retTab[UnitDefNames["chunterchopper"].id]=true
-retTab[UnitDefNames["csuborital"].id]=true
-retTab[UnitDefNames["cgunship"].id]=true
-
-retTab[UnitDefNames["gnewsdrone"].id]=true
-
-retTab[UnitDefNames["jsunshipfire"].id]=true
-retTab[UnitDefNames["jmotherofmercy"].id]=true
-retTab[UnitDefNames["jsempresequoia"].id]=true
-retTab[UnitDefNames["jrecycler"].id]=true
-retTab[UnitDefNames["beanstalk"].id]=true
-retTab[UnitDefNames["jatlantai"].id]=true
-retTab[UnitDefNames["jwatchbird"].id]=true
-
-return reTab
+	retTab={}
+	retTab[UnitDefNames["callygator"].id]=true
+	retTab[UnitDefNames["conair"].id]=true
+	retTab[UnitDefNames["chunterchopper"].id]=true
+	retTab[UnitDefNames["csuborital"].id]=true
+	retTab[UnitDefNames["cgunship"].id]=true
+	
+	retTab[UnitDefNames["gnewsdrone"].id]=true
+	
+	retTab[UnitDefNames["jsunshipfire"].id]=true
+	retTab[UnitDefNames["jmotherofmercy"].id]=true
+	retTab[UnitDefNames["jsempresequoia"].id]=true
+	retTab[UnitDefNames["jrecycler"].id]=true
+	retTab[UnitDefNames["beanstalk"].id]=true
+	retTab[UnitDefNames["jatlantai"].id]=true
+	retTab[UnitDefNames["jwatchbird"].id]=true
+	
+	return reTab
 end
 function getPyroProofTable(UnitDefNames)
 	FireProofTypes={}
@@ -195,30 +195,30 @@ function dustCloudPostExplosion(unitID,Density,totalTime,SpawnDelay, dirx,diry,d
 end
 
 function getBuiLuxSoundScapeDefinition()
-
-soundScapeDefinition={}
-soundScapeDefinition.opener={
-	[1]=1000,
-	[2]=1000,
-	[3]=1000,
-	[4]=1000
-}
-
-soundScapeDefinition.closer={
-	[1]=1000,
-	[2]=1000
-}
-
-soundScapeDefinition.background={
-	[1]=10000,
-	[2]=10000,
-	[3]=10000,
-	[4]=10000,
-	[5]=10000,
-	[6]=10000
-}
---1sec9_2sec12_4sec21_8sec22_10sec25_16sec26
-soundScapeDefinition.solo={}
+	
+	soundScapeDefinition={}
+	soundScapeDefinition.opener={
+		[1]=1000,
+		[2]=1000,
+		[3]=1000,
+		[4]=1000
+	}
+	
+	soundScapeDefinition.closer={
+		[1]=1000,
+		[2]=1000
+	}
+	
+	soundScapeDefinition.background={
+		[1]=10000,
+		[2]=10000,
+		[3]=10000,
+		[4]=10000,
+		[5]=10000,
+		[6]=10000
+	}
+	--1sec9_2sec12_4sec21_8sec22_10sec25_16sec26
+	soundScapeDefinition.solo={}
 	for i=1, 27, 1 do
 		
 		soundScapeDefinition.solo[i]=1
@@ -229,18 +229,18 @@ soundScapeDefinition.solo={}
 		if i >= 25 then soundScapeDefinition.solo[i]=20 end
 		soundScapeDefinition.solo[i]=soundScapeDefinition.solo[i]*1000
 	end
-
-return soundScapeDefinition
-
+	
+	return soundScapeDefinition
+	
 end
 
 function spawnFlareCircle(unitID)
-spiralcenter =piece "spiralcenter"
-fireFx =piece "fireFx"
-x,y,z=Spring.GetUnitPosition(unitID)
+	spiralcenter =piece "spiralcenter"
+	fireFx =piece "fireFx"
+	x,y,z=Spring.GetUnitPosition(unitID)
 	local spSpawnCEG=Spring.SpawnCEG
-
-
+	
+	
 	temp=25
 	max=600
 	allReadyImpulsed={}
@@ -255,9 +255,9 @@ x,y,z=Spring.GetUnitPosition(unitID)
 				if y < 0 then y = 1 end
 				
 				if math.random(0,4)==2 then
-				spSpawnCEG("csuborbscrap",x,y,z,0,1,0,0)
+					spSpawnCEG("csuborbscrap",x,y,z,0,1,0,0)
 				else
-				spSpawnCEG("portalflares",x,y,z,0,1,0,0)
+					spSpawnCEG("portalflares",x,y,z,0,1,0,0)
 				end
 			end
 		end
@@ -265,17 +265,17 @@ x,y,z=Spring.GetUnitPosition(unitID)
 		Units=Spring.GetUnitsInCylinder(x,z, temp)
 		table.remove(Units, unitID)
 		if Units then
-		for i=1, #Units do 
-			if 	Units[i] ~= unitID and not allReadyImpulsed[Units[i]] then
-				allReadyImpulsed[Units[i]]=true
-				defID= Spring.GetUnitDefID(Units[i])
-				mass=  UnitDefs[defID].mass
-				if mass < 500 then
-
-				Spring.AddUnitImpulse(Units[i],0, mass/100,0) 
+			for i=1, #Units do 
+				if 	Units[i] ~= unitID and not allReadyImpulsed[Units[i]] then
+					allReadyImpulsed[Units[i]]=true
+					defID= Spring.GetUnitDefID(Units[i])
+					mass= UnitDefs[defID].mass
+					if mass < 500 then
+						
+						Spring.AddUnitImpulse(Units[i],0, mass/100,0) 
+					end
+				end
 			end
-			end
-		end
 		end
 		
 		Turn(spiralcenter,y_axis,math.rad(0),0,true)
@@ -285,67 +285,67 @@ x,y,z=Spring.GetUnitPosition(unitID)
 end
 
 function portalStormWave(unitID)
-		local spSpawnCEG=Spring.SpawnCEG
-		ax,ay,az=Spring.GetUnitPosition(unitID)
-		spSpawnCEG("portalspherespawn",ax,ay+50,az,0,1,0,0)	
-		
-		StartThread(spawnFlareCircle,unitID)
-			
-		for i=1, 2 do
+	local spSpawnCEG=Spring.SpawnCEG
+	ax,ay,az=Spring.GetUnitPosition(unitID)
+	spSpawnCEG("portalspherespawn",ax,ay+50,az,0,1,0,0)	
+	
+	StartThread(spawnFlareCircle,unitID)
+	
+	for i=1, 2 do
 		Sleep(50*i)
-				spSpawnCEG("portalspherespawn",ax,ay+50,az,0,1,0,0)	
-		end
-
+		spSpawnCEG("portalspherespawn",ax,ay+50,az,0,1,0,0)	
+	end
+	
 end
 
 function groupOnFire(DictionaryOfUnits,argtimeToburnMin, argtimeToburnMax)
-
-timeToburnMax= argtimeToburnMax or 1000
-timeToburnMin = argtimeToburnMin or 150
-
-			if GG.OnFire == nil then GG.OnFire={} end
-		--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
-			boolInsertIt=true
-			--very bad sollution n-times
-			for k,v in pairs(DictionaryOfUnits) do
-			DictionaryOfUnits[k]=true
-			end
-			
-			for i=1, table.getn(GG.OnFire), 1 do
-				if 	GG.OnFire[i][1]	~= nil and	DictionaryOfUnits[GG.OnFire[i][1]]  then
-					GG.OnFire[i][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
-					DictionaryOfUnits[GG.OnFire[i][1]]=false						
-				end
-			end
-			
-			for k,v in pairs(DictionaryOfUnits) do
-				if v== true then
-					GG.OnFire[#GG.OnFire+1]={}
-					GG.OnFire[#GG.OnFire][1]=k
-					GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
-				end
-			end
-			
+	
+	timeToburnMax= argtimeToburnMax or 1000
+	timeToburnMin = argtimeToburnMin or 150
+	
+	if GG.OnFire == nil then GG.OnFire={} end
+	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
+	boolInsertIt=true
+	--very bad sollution n-times
+	for k,v in pairs(DictionaryOfUnits) do
+		DictionaryOfUnits[k]=true
+	end
+	
+	for i=1, table.getn(GG.OnFire), 1 do
+		if 	GG.OnFire[i][1]	~= nil and	DictionaryOfUnits[GG.OnFire[i][1]] then
+			GG.OnFire[i][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
+			DictionaryOfUnits[GG.OnFire[i][1]]=false						
+		end
+	end
+	
+	for k,v in pairs(DictionaryOfUnits) do
+		if v== true then
+			GG.OnFire[#GG.OnFire+1]={}
+			GG.OnFire[#GG.OnFire][1]=k
+			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
+		end
+	end
+	
 end
 
 function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
-
-timeToburnMax= argtimeToburnMax or 1000
-timeToburnMin = argtimeToburnMin or 15
-
-			if GG.OnFire == nil then GG.OnFire={} end
-		--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
-		
-			--very bad sollution n-times
-			for i=1, table.getn(GG.OnFire), 1 do
-				if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== unitID then
-					GG.OnFire[i][2]= math.ceil(math.random(timeToburnMin,timeToburnMax)) 				
-				else
-				GG.OnFire[#GG.OnFire+1]={}
-				GG.OnFire[#GG.OnFire][1]=unitID
-				GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 				
-				end
-			end
-		
+	
+	timeToburnMax= argtimeToburnMax or 1000
+	timeToburnMin = argtimeToburnMin or 15
+	
+	if GG.OnFire == nil then GG.OnFire={} end
+	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
+	
+	--very bad sollution n-times
+	for i=1, table.getn(GG.OnFire), 1 do
+		if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== unitID then
+			GG.OnFire[i][2]= math.ceil(math.random(timeToburnMin,timeToburnMax)) 				
+		else
+			GG.OnFire[#GG.OnFire+1]={}
+			GG.OnFire[#GG.OnFire][1]=unitID
+			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 				
+		end
+	end
+	
 end
 --===================================================================================================================

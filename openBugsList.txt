@@ -5,10 +5,8 @@ Galatea legs wont hide
 Seastar ScaleUpGadget hides Units
 jatlantai rockets not hitting home
 
-heightmap is not updating fully
-mining holes and bulletdeformations are interfering with one another
-
-
+skinfantry/tiglil ignore maxwaterdepth -> movement class?
+even non existant mines digg down
 jbugcreeper crawls on its back 
 
 csniper: towing the dead is borked
@@ -23,8 +21,5 @@ cCrabSynth is currently not placing the defensewall correctly
 collissionssphere of allygator must be box
 heightmap holes are applied to often and thus- go to deep
 
--jsunship
-+forrestfire
-+grow
-+decal
-+
+jsunship
+forrestfire

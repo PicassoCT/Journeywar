@@ -585,7 +585,7 @@ function goTooKillThemAllPicaMon()
 			--Kill the Unit
 			if (Spring.ValidUnitID(trainFullDeathID)==true) then
 				Spring.SetUnitNoDraw(trainFullDeathID,false)
-				Spring.DestroyUnit(trainFullDeathID,false,false) --leave no wreck
+				Spring.DestroyUnit(trainFullDeathID,false,true) --leave no wreck
 			end
 			
 			

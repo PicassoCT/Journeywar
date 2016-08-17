@@ -13,7 +13,7 @@ buildTime = 9,
 --Health
 maxDamage = 320,
 idleAutoHeal = 3,
-maxWaterdepth= 200,
+maxWaterdepth= 50,
 --Movement
 mass=720,
 Acceleration = 1.4,
