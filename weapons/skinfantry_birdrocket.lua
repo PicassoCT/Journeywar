@@ -12,21 +12,21 @@ local weaponDef={
 	startVelocity=150,
 	weaponAcceleration=250,
 	flightTime=2.5,
-	BurnBlow=0,
+	BurnBlow=1,
 	FixedLauncher=false,
-	dance=1,
-	wobble=4,
+	dance=5,--1
+	wobble=1,--4
 	
 	tolerance=16000,
 	tracks=true,
-	Turnrate=16000,
+	Turnrate=32000,
 	collideFriendly=false,
 	
 	----APPEARANCE
 	model="birdrocket.s3o",
-	smokeTrail=true,
+	smokeTrail=false,
 	--explosionGenerator="custom:redsmoke",
-	--CegTag="smoketrail",
+	CegTag="jbirdtrail",
 	
 	----TARGETING
 	turret=true,

@@ -73,6 +73,7 @@ function script.Create()
 	Hide(tent)
 	StartThread(cloakCheckAndAmbushLoad)
 	StartThread(coolDownTimer)
+
 end
 
 function idle()
@@ -102,8 +103,8 @@ function idle()
 		rand=math.random(0,3)
 		if rand==3 then
 			Turn(center,x_axis,math.rad(85),6)
-			Turn(turret2,x_axis,math.rad(-170),7)
-			Turn(turret,x_axis,math.rad(-170),7)
+			Turn(turret2,x_axis,math.rad(armoffset-170),7)
+			Turn(turret,x_axis,math.rad(armoffset-170),7)
 			tentShow=math.random(0,1)
 			if tentShow==1 then
 				Move(tent,y_axis,-10,0)
@@ -115,11 +116,11 @@ function idle()
 			Sleep(sleepSnowWhite)
 			Move(tent,y_axis,-10,1.8)
 			Hide(tent)
-			Turn(turret,x_axis,math.rad(-175),7)
+			Turn(turret,x_axis,math.rad(armoffset-175),7)
 		end
 		if rand==1 then
 			Turn(center,x_axis,math.rad(69),4)
-			Turn(turret2,x_axis,math.rad(-90),7)
+			Turn(turret2,x_axis,math.rad(armoffset-90),7)
 			ringAlingADingDong=math.random(2,26)
 			WaitForTurn(center,x_axis)
 			for i=0, ringAlingADingDong, 1 do
@@ -134,8 +135,8 @@ function idle()
 		end
 		
 		if rand==0 then
-			Turn(turret,x_axis,math.rad(-90),7)
-			Turn(turret2,x_axis,math.rad(-90),7)
+			Turn(turret,x_axis,math.rad(armoffset-90),7)
+			Turn(turret2,x_axis,math.rad(armoffset-90),7)
 			WaitForTurn(turret,x_axis)
 			WaitForTurn(turret2,x_axis)
 			
@@ -146,8 +147,8 @@ function idle()
 				Turn(skinleg2,x_axis,math.rad(-42),3)
 				Turn(lowlegsk,x_axis,math.rad(121),10)
 				Turn(lowlegsk02,x_axis,math.rad(121),10)
-				Turn(turret,x_axis,math.rad(-80),2)
-				Turn(turret2,x_axis,math.rad(-82),2)
+				Turn(turret,x_axis,math.rad(armoffset-80),2)
+				Turn(turret2,x_axis,math.rad(armoffset-82),2)
 				
 				WaitForTurn(turret,x_axis) 
 				WaitForTurn(turret2,x_axis) 
@@ -160,8 +161,8 @@ function idle()
 				
 				fixFertig=math.random(20,120)
 				Sleep(fixFertig)
-				Turn(turret,x_axis,math.rad(-90),3)
-				Turn(turret2,x_axis,math.rad(-90),3)
+				Turn(turret,x_axis,math.rad(armoffset -90),3)
+				Turn(turret2,x_axis,math.rad(armoffset -90),3)
 				Turn(skinleg,x_axis,math.rad(0),3)
 				Turn(skinleg2,x_axis,math.rad(0),3)
 				Turn(lowlegsk,x_axis,math.rad(0),5)
@@ -186,8 +187,8 @@ function idle()
 			for i=0, sitUps, 1 do
 				Move(center,y_axis,-9,9)
 				Turn(body,x_axis,math.rad(0),4)
-				Turn(turret2,x_axis,math.rad(-90),5)
-				Turn(turret,x_axis,math.rad(-90),5)
+				Turn(turret2,x_axis,math.rad(armoffset -90),5)
+				Turn(turret,x_axis,math.rad(armoffset -90),5)
 				Turn(skinleg,x_axis,math.rad(-92),5)
 				Turn(skinleg2,x_axis,math.rad(-92),5)
 				WaitForTurn(body,x_axis)
@@ -200,8 +201,8 @@ function idle()
 				Turn(skinleg,x_axis,math.rad(-166),4)
 				Turn(skinleg2,x_axis,math.rad(-166),4)
 				Move(center,y_axis,-10,8)
-				Turn(turret2,x_axis,math.rad(-150),3)
-				Turn(turret,x_axis,math.rad(-156),3)
+				Turn(turret2,x_axis,math.rad(armoffset -150),3)
+				Turn(turret,x_axis,math.rad(armoffset -156),3)
 				WaitForTurn(turret2,x_axis)
 				WaitForTurn(turret,x_axis)
 				WaitForTurn(skinleg,x_axis)
@@ -247,18 +248,24 @@ function walk()
 			
 		end
 		--left leg up, right leg down
-		Turn(skinleg, x_axis,math.rad(-26) ,12 )
+		walkStep(leg_movespeed,0, true)
+	end
+end
+
+
+function walkStep(leg_movespeed, footOffset, bDisregardArms)
+		Turn(skinleg, x_axis,math.rad(footOffset -26) ,12 )
 		Turn(lowlegsk,x_axis,math.rad(50), 24)
 		
 		Turn(skinleg2, x_axis, math.rad(12), leg_movespeed)
-		Turn(turret2,x_axis,math.rad(14),8)
+		if bDisregardArms == true then Turn(turret2,x_axis,math.rad(armoffset + 14),8) end
 		WaitForTurn (skinleg, x_axis)
 		WaitForTurn (skinleg2, x_axis)	
 		WaitForTurn (lowlegsk02,x_axis)
 		
-		Turn(turret,x_axis,math.rad(-58),8)
-		Turn(skinleg, x_axis,math.rad(-33) ,12 )
-		Turn(skinleg2, x_axis, math.rad(22), leg_movespeed)
+		if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset -58),8) end
+		Turn(skinleg, x_axis,math.rad(footOffset -33) ,12 )
+		Turn(skinleg2, x_axis, math.rad(footOffset + 22), leg_movespeed)
 		Turn(lowlegsk02, x_axis, math.rad(24), leg_movespeed)
 		Turn(lowlegsk,x_axis,math.rad(50), 24)
 		
@@ -270,18 +277,18 @@ function walk()
 		Sleep (randSleep)
 		--left leg down, right leg up
 		
-		Turn(skinleg2, x_axis,math.rad(-26) ,12 )
+		Turn(skinleg2, x_axis,math.rad(footOffset -26) ,12 )
 		Turn(lowlegsk02,x_axis,math.rad(50), 24)
 		
-		Turn(skinleg, x_axis, math.rad(12), leg_movespeed)
-		Turn(turret2,x_axis,math.rad(-58),8)
+		Turn(skinleg, x_axis, math.rad(footOffset + 12), leg_movespeed)
+		if bDisregardArms == true then  Turn(turret2,x_axis,math.rad(armoffset -58),8) end
 		WaitForTurn (skinleg2, x_axis)
 		WaitForTurn (skinleg, x_axis)	
 		WaitForTurn (lowlegsk,x_axis)
 		WaitForTurn (lowlegsk02, x_axis)
 		
-		Turn(turret,x_axis,math.rad(14),8)
-		Turn(skinleg2, x_axis,math.rad(-33) ,19 )
+		if bDisregardArms == true then  Turn(turret,x_axis,math.rad(armoffset + 14),8) end
+		Turn(skinleg2, x_axis,math.rad(footOffset -33) ,19 )
 		Turn(lowlegsk, x_axis, math.rad(15), leg_movespeed)
 		Turn(lowlegsk02,x_axis,math.rad(78), 20)
 		
@@ -289,9 +296,8 @@ function walk()
 		WaitForTurn (lowlegsk,x_axis)
 		WaitForTurn (lowlegsk02, x_axis)
 		Sleep (80)
-	end
-end
 
+end
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return turret 
@@ -303,6 +309,7 @@ end
 
 function script.AimWeapon1( heading ,pitch)	
 	Signal(SIG_IDLE)
+
 	--aiming animation: instantly turn the gun towards the enemy
 	--Turn(turret, y_axis, heading)
 	if boolSecondAiming==true then
@@ -313,10 +320,8 @@ function script.AimWeapon1( heading ,pitch)
 		SetSignalMask(SIG_AIM2)
 		
 		
-		Turn(turret, x_axis,math.rad(-80),3)
-		WaitForTurn(turret,x_axis)
-		Turn(body,y_axis,heading,3)
-		WaitForTurn(body,y_axis)
+		Turn(turret, x_axis,math.rad(armoffset -40),3)
+		WaitForTurn(turret,x_axis)		
 		boolFiringWeapon=true
 		return true
 	end
@@ -329,79 +334,43 @@ function script.FireWeapon1()
 end
 
 function script.Killed(recentDamage, maxHealth)
-	Move(center,x_axis,0,0)
+	killedAnimation()
+	return 0
+end
+
+function killedAnimation()
+Move(center,x_axis,0,0)
 	leg_movespeed=12
-	stepsBack=math.ceil(math.random(3,6))
+	stepsBack=math.ceil(math.random(2,4))
+	boodyShake=19
 	for i=1, stepsBack,1 do
 		--Armrand
 		xrand=math.random(80,90)
 		yrand=math.random(-10,70)
-		Turn(turret,y_axis,math.rad(-1*yrand),130)
-		Turn(turret,x_axis,math.rad(-1*xrand),130)
+		Turn(turret,y_axis,math.rad( -1*yrand * (-1)^i),130)
+		Turn(turret,x_axis,math.rad(armoffset+ -1*xrand),130)
 		xrand=math.random(80,90)
 		yrand=math.random(-10,70)
-		Turn(turret2,y_axis,math.rad(yrand),130)
-		Turn(turret2,x_axis,math.rad(-1*xrand),130)
-		deg=math.random(-35,-10)
-		Turn(center,x_axis,math.rad(deg),29)
+		Turn(turret2,y_axis,math.rad( yrand *  (-1)^(i+1)),130)
+		Turn(turret2,x_axis,math.rad(armoffset + -1*xrand),130)
+		ddeg=math.random(-35,-10)
+		Turn(center,x_axis,math.rad(boodyShake*(-1^i)),29)
 		WaitForTurn(center,x_axis)
-		Move(center,z_axis,-4*i,0)
+		Move(center,z_axis,-4*i,20)
 		Turn(center,x_axis,math.rad(0),92)
 		
 		
+		walkStep(6, 2* boodyShake*(-1^i), footfalse)
 		
-		-- Turn(skinleg, x_axis,math.rad(-33) ,12 )
-		-- Turn(skinleg2, x_axis, math.rad(22), leg_movespeed)
-		-- Turn(lowlegsk02, x_axis, math.rad(24), leg_movespeed)
-		-- Turn(lowlegsk,x_axis,math.rad(50), 24)
-		
-		-- WaitForTurn (skinleg, x_axis)
-		-- WaitForTurn (lowlegsk02,x_axis)
-		-- WaitForTurn (skinleg2, x_axis)		
-		-- WaitForTurn (lowlegsk, x_axis)
-		-- randSleep=math.ceil(math.random(40,100))
-		-- Turn(skinleg, x_axis,math.rad(-26) ,12 )
-		-- Turn(lowlegsk,x_axis,math.rad(50), 24)
-		
-		-- Turn(skinleg2, x_axis, math.rad(12), leg_movespeed)
-		-- WaitForTurn (skinleg, x_axis)
-		-- WaitForTurn (skinleg2, x_axis)	
-		-- WaitForTurn (lowlegsk02,x_axis)
-		
-		
-		
-		-- Sleep (randSleep)
-		-- WaitForTurn(center,x_axis)
-		
-		-- Turn(turret,x_axis,math.rad(14),8)
-		-- Turn(skinleg2, x_axis,math.rad(-33) ,19 )
-		-- Turn(lowlegsk, x_axis, math.rad(15), leg_movespeed)
-		-- Turn(lowlegsk02,x_axis,math.rad(78), 20)
-		
-		-- WaitForTurn ( skinleg2, x_axis)
-		-- WaitForTurn (lowlegsk,x_axis)
-		-- WaitForTurn (lowlegsk02, x_axis)
-		--	left leg down, right leg up
-		
-		-- Turn(skinleg2, x_axis,math.rad(-26) ,12 )
-		-- Turn(lowlegsk02,x_axis,math.rad(50), 24)
-		
-		-- Turn(skinleg, x_axis, math.rad(12), leg_movespeed)
-		-- WaitForTurn (skinleg2, x_axis)
-		-- WaitForTurn (skinleg, x_axis)	
-		-- WaitForTurn (lowlegsk,x_axis)
-		-- WaitForTurn (lowlegsk02, x_axis)
-		
-		Sleep (80)
-		Sleep(300)
+
+		Sleep(50)
 	end
-	Turn(center,x_axis,math.rad(-90),29)
-	Sleep(1200)
+
+	Turn(turret2,y_axis,math.rad( 90*randSign()),130)
+	Turn(turret,x_axis,math.rad( 90*randSign()),130)
+	WTurn(center,x_axis,math.rad(-90),5)
 	
-	return 0
 end
-
-
 
 function script.AimFromWeapon2() 
 	return turret2 
@@ -419,15 +388,9 @@ function script.AimWeapon2( heading ,pitch)
 	SetSignalMask(SIG_AIM)
 	
 	boolSecondAiming=true
-	Turn(turret2, x_axis, math.rad(-80),3)
+	Turn(turret2, x_axis, math.rad(0),3)
 	WaitForTurn(turret2,x_axis)
 	----Spring.Echo(heading)
-	heading=heading*0.1
-	Turn(turret2,y_axis,heading,2)
-	heading=heading*10-heading*0.1
-	Turn(body,y_axis,heading*0.9,3)
-	WaitForTurn(turret2,y_axis)
-	WaitForTurn(body,y_axis)
 	boolFiringWeapon=true
 	return Weapon2AmbushMode()
 end
@@ -493,7 +456,7 @@ local function legs_down()
 	
 	
 end
-local boolMoving=false
+local boolMoving=falseh
 function script.StartMoving()
 	
 	Signal(SIG_IDLE)
@@ -514,6 +477,10 @@ function script.StopMoving()
 end
 
 
+
+
+
+armoffset=90
 boolAmbushCharged=false
 boolAmbushInProgress=false
 boolFiringWeapon=false
@@ -529,14 +496,14 @@ end
 
 function waitPosition()
 	Turn(center,x_axis,math.rad(85),6)
-	Turn(turret2,x_axis,math.rad(-170),7)
-	Turn(turret,x_axis,math.rad(-170),7)
+	Turn(turret2,x_axis,math.rad(armoffset -170),7)
+	Turn(turret,x_axis,math.rad(armoffset -170),7)
 end
 
 function resetwaitPosition()
 	Turn(center,x_axis,math.rad(0),26)
-	Turn(turret2,x_axis,math.rad(0),27)
-	Turn(turret,x_axis,math.rad(0),27)
+	Turn(turret2,x_axis,math.rad(armoffset),27)
+	Turn(turret,x_axis,math.rad(armoffset),27)
 end
 
 function AmbushCounterThread()
