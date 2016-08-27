@@ -233,13 +233,13 @@ function getTargetAngle(targetID)
 	
 end
 
-
+unitdefID=Spring.GetUnitDefID(unitID)
 boolAteItAlive=false
 function nomNomNom(targetID)
 	
 	boolAteItAlive=false
 	offset = math.random(0,25)
-	
+	StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/openMouth.ogg",1,4000,1,0)
 	rexGate(0, 1.5, offset)
 	showPortals()
 	
@@ -247,12 +247,16 @@ function nomNomNom(targetID)
 		randoVal=math.random(-5, 15)
 		rexGate(randoVal,0.7,offset)
 		if math.random(0,3) == 2 then Sleep(600) end
-		
+		StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/portal.ogg",1,3000,1,0)	
 	end
-	
+	StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/eating.ogg",1,3000,1,0)	
 	swallow()
-	Sleep(3000)
+	for i=1, 2 do
+		StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/portal.ogg",1,3000,1,0)	
+		Sleep(3000)
+	end
 	hidePortals()
+	StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/closeMouth.ogg",1,3000,1,0)	
 	rexGate(90, 1.52, offset)
 end
 
