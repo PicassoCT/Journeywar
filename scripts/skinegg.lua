@@ -121,18 +121,33 @@ Sleep(200)
 	Move(finalEggE,y_axis,2.5,6.24)
 	WaitForMove(finalEgg0,y_axis)
 	WaitForMove(finalEggE,y_axis)
-Hide(eggStage2)
-Hide(finalEgg0)
-Hide(finalEggE)
-Show(eggStage3)
-Show(eggswim)
---Show ThirdEgg (Pulsating) + Spin +InsideKicks into X/Z if skinfantry
-while(napple > 0 ) do
-start=math.random(1,5)
-	for nr=1,table.getn(allTheOtherKidsWithThePumpedUpKicks),1 do
-	if allTheOtherKidsWithThePumpedUpKicks[nr][2]==true then
-	speedRand=math.random(5,10)
-	StartThread( exTend,speedRand,100, 0, start)
+	Hide(eggStage2)
+	Hide(finalEgg0)
+	Hide(finalEggE)
+	Show(eggStage3)
+	Show(eggswim)
+	--Show ThirdEgg (Pulsating) + Spin +InsideKicks into X/Z if skinfantry
+	while(napple > 0 ) do
+		start=math.random(1,5)
+		for nr=1,table.getn(allTheOtherKidsWithThePumpedUpKicks),1 do
+			if allTheOtherKidsWithThePumpedUpKicks[nr][2]==true then
+				speedRand=math.random(5,10)
+				StartThread( exTend,speedRand,100, 0, start)
+			end
+		end
+		Sleep(500)
+		napple=napple-500
+	end 
+	
+	--Release and Vannish
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Explode(eggStage3,SFX.SHATTER+SFX.NO_HEATCLOUD)
+	Spring.DestroyUnit(unitID,false,false)
+	id=Spring.CreateUnit("skinfantry",x,y,z, 0, teamID) 
+	transferOrders(unitID,id)
+	for i=1,12,1 do
+		EmitSfx(SpinPoint,1024) -- fruchtwasser everywhere..
+		Sleep(90)
 	end
 end
 Sleep(500)

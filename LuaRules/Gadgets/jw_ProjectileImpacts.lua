@@ -147,53 +147,25 @@ if (gadgetHandler:IsSyncedCode()) then
 		return T	
 	end
 	
-	function getPieceMap(id)
-		
-		dpiecesTable=Spring.GetUnitPieceMap(id)
-		ux,uy,uz=Spring.GetUnitPosition(id)
-		tpiecesTable={}
-		i=1
-		for k,v in pairs(dpiecesTable) do
-			x,y,z=Spring.GetUnitPiecePosDir(id,v)
-			tpiecesTable[i]={}
-			tpiecesTable[i].pid=v
-			tpiecesTable[i].x=x or ux
-			tpiecesTable[i].y=y or uy
-			tpiecesTable[i].z=z or uz
-			i=i+1
-		end
-		return tpiecesTable
-	end
+	
 	
 	function unitVannishAntimatterSFX(id)
-		
-		
+				
 		Spring.SetUnitNoSelect(id,true)
 		boolIsBuilding=UnitDefs[Spring.GetUnitDefID(id)].id
-		ux,uy,uz=Spring.GetUnitPosition(id)
+		tpiecesTable=getPieceMap(id)		
 		
-		local spCEG=Spring.SpawnCEG
-		heighest=math.huge*-1
-		it=0
-		counter=0
-		tpiecesTable=getPieceMap(id)
-		
-		
-		for i=1,#tpiecesTable do
-			if boolIsBuilding and boolIsBuilding==true then
-				spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",0)
-				spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",0)
-			end				
-		end
-		
+		for i=1,table.getn(tpiecesTable) do	
+				spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",10)
+				spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",10)		
+		end		
 		Spring.DestroyUnit(id,true,true) 
+		
 		size=8
 		if GG.DynDefMap == nil then GG.DynDefMap={} end
 		if GG.DynRefMap == nil then GG.DynRefMap={} end
 		GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-		GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,-0.25)
-		
-		
+		GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,-0.25)		
 	end
 	
 	

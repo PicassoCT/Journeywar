@@ -246,27 +246,36 @@ function dropLeave(nr)
 		Show(greenSleaves[nr])
 		Move(greenSleaves[nr],y_axis,0,0,true)
 		Move(greenSleaves[nr],y_axis,-800,math.random(5,10))
+		xval=math.random(-60,60)
+		zval=math.random(-60,60)
 		while (true==Spring.UnitScript.IsInMove (greenSleaves[nr], y_axis)) do
-			xval=math.random(1,5)
-			zval=math.random(1,5)
-			deci= 1
+	
+		speed= (math.abs(xval)+math.abs(zval))*0.05 * 0.1
 			if math.random(0,1)==1 then deci=-1 end
 			
-			Turn(greenSleaves[nr],x_axis,math.rad(xval),0.1)
-			Turn(greenSleaves[nr],z_axis,math.rad(zval*deci),0.1)
+			Turn(greenSleaves[nr],x_axis,math.rad(xval),speed)
+			Turn(greenSleaves[nr],z_axis,math.rad(zval), speed)
 			if math.abs(xval) > math.abs(zval) then
 				WaitForTurn(greenSleaves[nr],x_axis)
 			else
 				WaitForTurn(greenSleaves[nr],z_axis)
 			end
+			xval=xval*0.75
+			zval=zval*0.75
+			
 			Sleep(100)
-			Turn(greenSleaves[nr],x_axis,math.rad(xval*-1),0.1)
-			Turn(greenSleaves[nr],z_axis,math.rad(zval*deci*-1),0.1)
+			Turn(greenSleaves[nr],x_axis,math.rad(xval*-1),speed)
+			Turn(greenSleaves[nr],z_axis,math.rad(zval*-1),speed)
 			if math.abs(xval) > math.abs(zval) then
 				WaitForTurn(greenSleaves[nr],x_axis)
 			else
 				WaitForTurn(greenSleaves[nr],z_axis)
 			end
+
+			
+			--refill
+			if math.abs(xval) < 5 then xval=math.random(-60,60) end
+			if math.abs(zval) < 5 then zval=math.random(-60,60) end
 			Sleep(100)
 		end
 		

@@ -1,9 +1,9 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
@@ -170,128 +170,128 @@ piecesTable[#piecesTable+1]= ProdPod7
 
 local ProdPods={}
 for i=1, 47, 1 do
-temp="ProdPod"..i
-ProdPods[#ProdPods+1]=  piece(temp)
+	temp="ProdPod"..i
+	ProdPods[#ProdPods+1]= piece(temp)
 end
 
 EMITORS={}
 for i=1, 8, 1 do
-temp="EMIT"..i
-EMITORS[#EMITORS+1]=  piece(temp)
+	temp="EMIT"..i
+	EMITORS[#EMITORS+1]= piece(temp)
 end
 local chain={piece("P10"),piece("P8"),piece("P6"),piece("P4"),piece("P2"),piece("P1"),piece("P3"),piece("P5"),piece("P7"),piece("P9"),piece("P11")}
---1== -Pi*1.5   11= Pi*1.5
+--1== -Pi*1.5 11= Pi*1.5
 
 function translateInterVal(lue)
-if lue < 5 then
-return -0.942477*(6-lue)
-else
-return 0.942477*(lue-6)
-end
+	if lue < 5 then
+		return -0.942477*(6-lue)
+	else
+		return 0.942477*(lue-6)
+	end
 end
 
 SIG_BUILD=2
 SIG_WALK=4
 Slime={}
 for i=1, 11, 1 do
-temp="SLIM"..i
-Slime[#Slime+1]=  piece(temp)
+	temp="SLIM"..i
+	Slime[#Slime+1]= piece(temp)
 end
 
 AdaptTable={}
 for i=1, 11, 1 do
-temp="P"..i
-AdaptTable[#AdaptTable+1]={}
-AdaptTable[#AdaptTable][1]=  	piece(temp)
-temp="S"..i
-AdaptTable[#AdaptTable][2]=  	piece(temp)
-AdaptTable[#AdaptTable][3]=  	0
+	temp="P"..i
+	AdaptTable[#AdaptTable+1]={}
+	AdaptTable[#AdaptTable][1]= 	piece(temp)
+	temp="S"..i
+	AdaptTable[#AdaptTable][2]= 	piece(temp)
+	AdaptTable[#AdaptTable][3]= 	0
 end
 
 function script.Create()
---generatepiecesTableAndArrayCode(unitID)
-StartThread(wiggleProdPods)
-retractThe(0)
-for i=1,#EMITORS,1 do StopSpin(EMITORS[i],y_axis,0) end
-StartThread(adapt)
-StartThread(buildLoop)
-Turn(center,y_axis,math.rad(90),0)
+	
+	StartThread(wiggleProdPods)
+	retractThe(0)
+	for i=1,#EMITORS,1 do StopSpin(EMITORS[i],y_axis,0) end
+	StartThread(adapt)
+	StartThread(buildLoop)
+	Turn(center,y_axis,math.rad(90),0)
 end
 
 function worm()
-local ltransVal=translateInterVal
-SetSignalMask(SIG_WALK)
-
+	local ltransVal=translateInterVal
+	SetSignalMask(SIG_WALK)
+	
 	while true do
 		for i=1,#chain, 1 do
-		Turn(chain[i],y_axis,math.rad(-8*math.sin(ltransVal(i))),0.02)
+			Turn(chain[i],y_axis,math.rad(-8*math.sin(ltransVal(i))),0.02)
 		end
-	WaitForTurn(chain[1],y_axis)
-	WaitForTurn(chain[11],y_axis)
+		WaitForTurn(chain[1],y_axis)
+		WaitForTurn(chain[11],y_axis)
 		for i=1,#chain, 1 do
-		Turn(chain[i],y_axis,math.rad(-8*math.cos(ltransVal(i))),0.02)
+			Turn(chain[i],y_axis,math.rad(-8*math.cos(ltransVal(i))),0.02)
 		end
-	WaitForTurn(chain[1],y_axis)
-	WaitForTurn(chain[11],y_axis)
-	Sleep(100)
+		WaitForTurn(chain[1],y_axis)
+		WaitForTurn(chain[11],y_axis)
+		Sleep(100)
 	end
-
+	
 end
 
 
 function wiggleProdPods()
-i=1
-local lProdPods=ProdPods
-while(true) do
-	i=(i%#lProdPods)+1
-	if math.random(0,1)==1 then 
-	r,p,y=math.random(-12,12),math.random(-8,8),math.random(-12,12)
-	speed=math.random(0.2,5)
+	i=1
+	local lProdPods=ProdPods
+	while(true) do
+		i=(i%#lProdPods)+1
+		if math.random(0,1)==1 then 
+			r,p,y=math.random(-12,12),math.random(-8,8),math.random(-12,12)
+			speed=math.random(0.2,5)
 			Turn(lProdPods[i],x_axis,math.rad(r),speed)
 			Turn(lProdPods[i],y_axis,math.rad(p),speed)
 			Turn(lProdPods[i],z_axis,math.rad(y),speed)
-	else
-	i=math.ceil(math.random(1,#lProdPods-1))
+		else
+			i=math.ceil(math.random(1,#lProdPods-1))
+		end
+		Sleep(50)
+		
 	end
-Sleep(50)
 	
-end
-
 end
 local fVal={{M=-100,T=90},{M=-150,T=0},{M=-120,T=0},{M=-225,T=0},{M=-150,T=0},{M=-65,T=0},{M=-150,T=0},{M=-40,T=0}}
 
 function unfoldThe(m)
 	for i=1,#EMITORS,1 do
-	Move(EMITORS[i],y_axis, 0,m)
-	del=math.random(-10,10)
+		Move(EMITORS[i],y_axis, 0,m)
+		del=math.random(-10,10)
 	Spin(EMITORS[i],y_axis, math.rad(del),m/20)	end
 	
 end
 
 function retractThe(m)
 	for i=1,#EMITORS,1 do
-	Move(EMITORS[i],y_axis, fVal[i].M,m)
-	if fVal[i].T then
-	Turn(EMITORS[i],y_axis, fVal[i].T,m)
-	end
-	del=math.random(-10,10)
-	Spin(EMITORS[i],y_axis, math.rad(del),m/20)
+		Move(EMITORS[i],y_axis, fVal[i].M,m)
+		if fVal[i].T then
+			Turn(EMITORS[i],y_axis, fVal[i].T,m)
+		end
+		del=math.random(-10,10)
+		Spin(EMITORS[i],y_axis, math.rad(del),m/20)
 	end
 end
 
 function script.Killed(recentDamage,_)
-
-suddenDeathjBuildCorpse(unitID, recentDamage)
+	
+	suddenDeathjBuildCorpse(unitID, recentDamage)
 end
 
 function script.StartMoving()
-Signal(SIG_WALK)
-StartThread(worm)
+	Signal(SIG_WALK)
+	StartThread(worm)
 end
 
 function script.StopMoving()
-Signal(SIG_WALK)		
-		
+	Signal(SIG_WALK)		
+	
 end
 
 --The funcy Part keeping the Worm close to the Ground
@@ -300,122 +300,124 @@ local spGetGroundHeight=Spring.GetGroundHeight
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 
 function HowHighIsTheTireMama(i,piecename)
-x,y,z,_,_,_=spGetUnitPiecePosDir(unitID,piecename)
-h=spGetGroundHeight(x,z)
-return     y,h
+	x,y,z,_,_,_=spGetUnitPiecePosDir(unitID,piecename)
+	h=spGetGroundHeight(x,z)
+	return y,h
 end
 
-	
-function adapt()
-local lHowHighIsTheTireMama=HowHighIsTheTireMama
-local lAdaptTable=AdaptTable
-		lal=math.random(-22,22)		
-		Spin(Slime[1],y_axis,math.rad(lal),0.001)
+function randomizeSlime(i)
+	val=math.random(-22,22)
+				if i<10 then
+					Spin(Slime[i],y_axis,math.rad(val),0.001)
+				else
+					Spin(Slime[i],x_axis,math.rad(val),0.001)
+				end
+				if math.random(0,1)==1 then
+					rx,ry,rz=math.random(-3,3),math.random(-3,3),math.random(-3,3)
+					Move(Slime[i],x_axis,rx,0.0001)
+					Move(Slime[i],y_axis,ry,0.0001)
+					Move(Slime[i],z_axis,rz,0.0001)
+				end
+end
 
+
+function adapt()
+	local lHowHighIsTheTireMama=HowHighIsTheTireMama
+
+	lal=math.random(-22,22)		
+	Spin(Slime[1],y_axis,math.rad(lal),0.001)
+	
 	while true do
 		for i=2,11,1 do
-		--Meassuring
-		y,h=lHowHighIsTheTireMama(i,lAdaptTable[i][2])
-		
-		if math.random(0,1)==1 then
-		val=math.random(-22,22)
-			if i<10 then
-			Spin(Slime[i],y_axis,math.rad(val),0.001)
+			--Meassuring
+			y,h=lHowHighIsTheTireMama(i,AdaptTable[i][2])
+			
+			if randSign()== true then
+				randomizeSlime(i)
+			end
+			
+	
+			boolAboveGround=false
+			
+			if i%2==0 then
+				boolAboveGround = (h-y > 5)
 			else
-			Spin(Slime[i],x_axis,math.rad(val),0.001)
+				boolAboveGround = (h-y < 5)
 			end
-			if math.random(0,1)==1 then
-			rx,ry,rz=math.random(-3,3),math.random(-3,3),math.random(-3,3)
-			Move(Slime[i],x_axis,rx,0.0001)
-			Move(Slime[i],y_axis,ry,0.0001)
-			Move(Slime[i],z_axis,rz,0.0001)
-			end
-		end
-		
-		if i%2==0 then
-		
-			if h-y > 5 then --and AdaptTable[i][3] > 25 then 
-			Turn(lAdaptTable[i][1],z_axis,math.rad(lAdaptTable[i][3]-1),0.005)
-			lAdaptTable[i][3]=lAdaptTable[i][3]-1
+				
+				if boolAboveGround == true then 
+					Turn(AdaptTable[i][1],z_axis,math.rad(AdaptTable[i][3]-1),0.0125)
+					AdaptTable[i][3]=AdaptTable[i][3]-1
 				else
-				Turn(lAdaptTable[i][1],z_axis,math.rad(lAdaptTable[i][3]+1),0.05)
-				lAdaptTable[i][3]=lAdaptTable[i][3]+1
-				end
-		
-		else	
-		
-		
-			if h-y < 3 then --and AdaptTable[i][3] > 25 then 
-			Turn(lAdaptTable[i][1],z_axis,math.rad(lAdaptTable[i][3]-1),0.005)
-			lAdaptTable[i][3]=lAdaptTable[i][3]-1
-				else
-				Turn(lAdaptTable[i][1],z_axis,math.rad(lAdaptTable[i][3]+1),0.05)
-				lAdaptTable[i][3]=lAdaptTable[i][3]+1
-				end
+					Turn(AdaptTable[i][1],z_axis,math.rad(AdaptTable[i][3]+1),0.025)
+					AdaptTable[i][3]=AdaptTable[i][3]+1
+				end			
+			
+			
 		end
-		
-		end
-	Sleep(1050)
+		Sleep(1050)
 	end
 end
+
+
 
 -----------------
 change=0
 
 function buildLoop()
-while true do	
-	if change>0 then
-		if boolbuilding==true then
-		change=0		
-		unfoldThe(5)
-		Sleep(600)
-		for i=1,#EMITORS,1 do StopSpin(EMITORS[i],y_axis,0.001) end
-
-		elseif boolbuilding==false then
-		change=0
-		retractThe(5)
-		Sleep(600)
-		for i=1,#EMITORS,1 do StopSpin(EMITORS[i],y_axis,0.001) end
-		end
-	end	
-	Sleep(400)
-
+	while true do	
+		if change>0 then
+			if boolbuilding==true then
+				change=0		
+				unfoldThe(5)
+				Sleep(600)
+				for i=1,#EMITORS,1 do StopSpin(EMITORS[i],y_axis,0.001) end
+				
+			elseif boolbuilding==false then
+				change=0
+				retractThe(5)
+				Sleep(600)
+				for i=1,#EMITORS,1 do StopSpin(EMITORS[i],y_axis,0.001) end
+			end
+		end	
+		Sleep(400)
+		
 	end
 end
 
 
 function building()
-SetSignalMask(SIG_BUILD)
-			while(boolbuilding==true) do
+	SetSignalMask(SIG_BUILD)
+	while(boolbuilding==true) do
+		
+		--expand Tentacles
+		nano=math.floor(math.random(1,8))
+		
+		Sleep(125)
+	end
 	
-			--expand Tentacles
-			nano=math.floor(math.random(1,8))
-
-			Sleep(125)
-			end
-
 end
 
 function script.StopBuilding()
-
-    boolbuilding=false
+	
+	boolbuilding=false
 	change=change+1
 	Signal(SIG_BUILD)
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
 
 function script.StartBuilding(heading, pitch)
-	--Spring.PlaySoundFile("sounds/jroach/roachbuild2.wav")  
-    boolbuilding=true
+	--Spring.PlaySoundFile("sounds/jroach/roachbuild2.wav") 
+	boolbuilding=true
 	change=change+1
 	Signal(SIG_BUILD)
 	StartThread(building)
-							
+	
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
 local nano=1
 function script.QueryNanoPiece()
-temp=EMITORS[nano]
-     return temp
+	temp=EMITORS[nano]
+	return temp
 end

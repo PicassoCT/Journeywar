@@ -19,8 +19,8 @@ local unitDef = {
 	--Movement
 	Acceleration = 0.4,
 	BrakeRate = 0.3,
-	FootprintX = 6,
-	FootprintZ = 6,
+	FootprintX = 1,
+	FootprintZ = 1,
 	MaxSlope = 5,
 	MaxVelocity = 0.5,
 	MaxWaterDepth = 20,

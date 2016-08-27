@@ -1,7 +1,7 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -28,7 +28,7 @@ end
 teamID=Spring.GetUnitTeam(unitID)
 
 function script.Create()
-	
+
 end
 
 maxspeed=math.ceil(UnitDefNames["campro"].speed *65533)

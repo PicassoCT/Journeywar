@@ -4,9 +4,7 @@ Fish still has default corpse
 Galatea legs wont hide
 Seastar ScaleUpGadget hides Units
 jatlantai rockets not hitting home
-cairbaise: generated generators are not removed & float
 
-scumslum: Has open sides
 skinfantry/tiglil ignore maxwaterdepth -> movement class?
 even non existant mines digg down
 jbugcreeper crawls on its back 
@@ -17,6 +15,7 @@ nanoforge upgrade to fclvl2 is stuck
 music license
 in building spawning critters destroy bases
 
+scumslu: Has open sides
 jtreel: displaced pieces
 cCrabSynth is currently not placing the defensewall correctly
 collissionssphere of allygator must be box

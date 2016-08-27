@@ -1485,58 +1485,37 @@ function wizzardryOfOSLoop ()
 	end
 end
 
+function moveCubeToPoint(axis, limit)
+	while(true)do
+			Move(cubes[i],axis,limit,0.3)
+			WaitForMove(cubes[i],axis)
+			randSleep=math.random(100,400)
+			Sleep(randSleep)
+			Move(cubes[i],axis,limit*-1,0.3)
+			WaitForMove(cubes[i],axis)
+			randSleep=math.random(100,400)
+			Sleep(randSleep)
+	end
+
+end
+
+
 function pumpItUp(i)
+	if not cubes[i] then return end
+	
 	decider=math.random(0,3)
 	limit=math.random(2,6)
-	axis={}
+	axis= 
 	
 	if decider== 0 then
-		while(true)do
-			Move(cubes[i],x_axis,limit,0.3)
-			WaitForMove(cubes[i],x_axis)
-			randSleep=math.random(100,400)
-			Sleep(randSleep)
-			Move(cubes[i],x_axis,limit*-1,0.3)
-			WaitForMove(cubes[i],x_axis)
-			randSleep=math.random(100,400)
-			Sleep(randSleep)
-		end
+		moveCubeToPoint(x_axis, limit)
 	elseif decider==1 then
-		while(true)do
-			Move(cubes[i],y_axis,limit,0.3)
-			WaitForMove(cubes[i],y_axis)
-			randSleep=math.random(100,400)
-			Sleep(randSleep)
-			Move(cubes[i],y_axis,limit*-1,0.3)
-			WaitForMove(cubes[i],y_axis)
-			randSleep=math.random(100,400)
-			Sleep(randSleep)
-		end
+		moveCubeToPoint(y_axis, limit)
 	else 
-		while(true)do
-			Move(cubes[i],z_axis,limit,0.3)
-			WaitForMove(cubes[i],z_axis)
-			randSleep=math.random(100,400)
-			Sleep(randSleep)
-			Move(cubes[i],z_axis,limit*-1,0.3)
-			WaitForMove(cubes[i],z_axis)
-			randSleep=math.random(100,400)
-			Sleep(randSleep)
-		end
+		moveCubeToPoint(z_axis, limit)
 	end
 	
-	
-	while(true)do
-		Move(cubes[i],axis,limit,0.3)
-		WaitForMove(cubes[i],axis)
-		randSleep=math.random(100,400)
-		Sleep(randSleep)
-		Move(cubes[i],axis,limit*-1,0.3)
-		WaitForMove(cubes[i],axis)
-		randSleep=math.random(100,400)
-		Sleep(randSleep)
-	end
-end
+
 
 function script.Create()
 	Spring.SetUnitAlwaysVisible(unitID,true)

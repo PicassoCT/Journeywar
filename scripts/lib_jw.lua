@@ -48,7 +48,7 @@ function getAirUnitTable(UnitDefNames)
 	retTab[UnitDefNames["callygator"].id]=true
 	retTab[UnitDefNames["conair"].id]=true
 	retTab[UnitDefNames["chunterchopper"].id]=true
-	retTab[UnitDefNames["csuborital"].id]=true
+	retTab[UnitDefNames["csuborbital"].id]=true
 	retTab[UnitDefNames["cgunship"].id]=true
 	
 	retTab[UnitDefNames["gnewsdrone"].id]=true

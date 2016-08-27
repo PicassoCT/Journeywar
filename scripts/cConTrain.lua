@@ -424,9 +424,7 @@ function workInProgress()
 			actualHealth=actualHealth-1
 			spSetUnitNoSelect (unitID, true)
 			--makes the Unit go home, to the place it was born- west Virginia
-			
-			
-			spSetUnitHealth(unitID,actualHealth)
+			Spring.DestroyUnit(unitID,false,true)		
 		end
 		actualHealth=actualHealth-1
 		spSetUnitHealth(unitID,actualHealth)
@@ -584,7 +582,7 @@ function goTooKillThemAllPicaMon()
 			
 			--Kill the Unit
 			if (Spring.ValidUnitID(trainFullDeathID)==true) then
-				Spring.SetUnitNoDraw(trainFullDeathID,false)
+				Spring.SetUnitNoDraw(trainFullDeathID,false)					
 				Spring.DestroyUnit(trainFullDeathID,false,true) --leave no wreck
 				boolYouBroughtThisOnYourself= true
 			end

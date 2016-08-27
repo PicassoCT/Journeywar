@@ -360,7 +360,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		for i= table.getn(fireT),1,-1 do
 			x,z= math.ceil(fireT[i].x/MetaMapResDivider), math.ceil(fireT[i].z/MetaMapResDivider)
 			--if not initialized initialize as zero food for the fire
-			if not LandScapeT[ x][ z].Food then 
+			if not LandScapeT[x] then LandScapeT[x] ={} end
+			if not LandScapeT[x][z] then LandScapeT[x][z] ={} end
+			if not LandScapeT[x][ z].Food then 
 				LandScapeT[ x][ z].Food = 0 
 			end
 			

@@ -135,7 +135,7 @@ function script.Create()
 	Show(cityblock1)
 	Show(roof)
 	Show(plaza)
-	
+
 	StartThread(delayedUpgrade)
 	Hide(base)
 	if(math.random(0,1))==1 then Hide(cityblock1) end
@@ -149,7 +149,7 @@ function script.Create()
 		Hide(plaza)
 	end
 	
-	
+	StartThread(fold)
 	--<buildanimationscript>
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
@@ -212,6 +212,7 @@ end
 
 
 function unfold()
+	Signal(SIG_FOLD)
 	SetSignalMask(SIG_UNFOLD)
 	Move(spine7,y_axis,215,7)
 	StartThread(showBase)
@@ -297,6 +298,7 @@ end
 
 
 function fold()
+	Signal(SIG_UNFOLD)
 	SetSignalMask(SIG_FOLD)
 	Move(spine7,y_axis,0,7)
 	StartThread(hideBase)
@@ -311,7 +313,6 @@ function fold()
 	Turn(spine1,y_axis,math.rad(0),0.5)
 	
 	Sleep(4000)
-	Signal(SIG_UNFOLD)
 	WaitForMove(spine7,y_axis)
 	Signal(SIG_WELD)
 end
@@ -346,7 +347,6 @@ end
 function script.StartBuilding(heading, pitch)	
 	Signal(SIG_WELD)
 	StartThread(arcWeld)
-	Signal(SIG_FOLD)
 	StartThread(unfold)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 end

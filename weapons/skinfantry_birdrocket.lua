@@ -7,7 +7,7 @@ local weaponDef={
 	
 	--Physic/flight path
 	range=800,
-	reloadtime=3,
+	reloadtime=8,
 	weaponVelocity=1000,
 	startVelocity=150,
 	weaponAcceleration=250,
@@ -32,7 +32,7 @@ local weaponDef={
 	turret=true,
 	cylinderTargeting=66,
 	avoidFeature=true,
-	avoidFriendly=false,
+	avoidFriendly=true,
 	
 	
 	--commandfire=true,

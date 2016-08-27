@@ -126,7 +126,7 @@ function newFactory ()
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	teamID = Spring.GetUnitTeam (unitID)
 	
-	factoryID = Spring.CreateUnit ("jtransportedeggstack", x,y+100,z+10, 0, teamID) 
+	factoryID = Spring.CreateUnit ("jtransportedeggstack", x,y+ 40,z+ 20, 0, teamID) 
 	GG.JFactorys[factoryID]={}
 	GG.JFactorys[factoryID][1]= unitID 
 	GG.JFactorys[factoryID][2]= false
@@ -155,16 +155,16 @@ function workInProgress()
 			
 			buildID=Spring.GetUnitIsBuilding(factoryID)
 			if buildID and buildID ~= buildIDofOld then
-				Spring.Echo("jmobileEggstack::workInProgress:2")	
+		
 				counter=counter+1
 				if counter >35 then 	Spring.DestroyUnit(unitID,true,false) end
 				Hide(eggnok[counter])
 				boolBuilding=true
 				Spring.SetUnitNoDraw(buildID,true)
 				buildProgress=0
-				Spring.Echo("jmobileEggstack::workInProgress:3")
+	
 				while buildProgress and buildProgress < 1 do
-					Spring.Echo("jmobileEggstack::workInProgress:4")
+		
 					health,maxHealth,paralyzeDamage,captureProgress,buildProgress=Spring.GetUnitHealth(buildID)
 					if buildProgress then
 						--show the egg
@@ -209,7 +209,7 @@ function LaunchSkywards()
 	naptime=4500
 	Signal(SIG_BREATH)
 	while naptime > 0 do
-		--launchEcho()
+
 		for i=1,6,1 do
 			EmitSfx(feetFetish[i][4],1024)	
 		end
@@ -222,10 +222,8 @@ function LaunchSkywards()
 	Sleep(350)
 	speed=0.60
 	distanceMax=19000
-	--launchEcho()
 	
 	
-	--launchEcho()
 	Move(center,y_axis,distanceMax,speed)
 	while(true==Spring.UnitScript.IsInMove(center, y_axis)) do
 		Signal(SIG_BREATH)
@@ -251,8 +249,8 @@ function moveFactory ()
 	while (true) do
 		if (not spValidUnitID (factoryID)) then newFactory () end
 		local x,y,z = spGetUnitPosition (unitID)	 
-		spMovCtrlSetPos(factoryID,x,y+130,z+10)
-		Sleep (50)
+		spMovCtrlSetPos(factoryID, x, y+ 50, z+ 2)
+		Sleep(50)
 	end
 end
 
@@ -375,10 +373,10 @@ function updateBoolisBuilding()
 	
 	while true do
 		if GG.JFactorys[factoryID][2]==true then
-			--Spring.Echo("JW:Firstborn:Building")
+			
 			boolBuilding=true
 		else 
-			--Spring.Echo("JW:Firstborn:Not building")
+			
 			boolBuilding=false
 		end
 		
@@ -421,7 +419,6 @@ function delayedStop()
 	Signal(SIG_STOP)
 	SetSignalMask(SIG_STOP)
 	Sleep(400)
-	Spring.Echo("Eggstack: Animation Stopped")
 	boolMoving= false
 	legs_down()
 end
@@ -443,7 +440,6 @@ function script.Killed(recentDamage, maxHealth)
 	end
 	suddenDeathjBuildCorpse(unitID,recentDamage)
 	return 0
-	----Spring.Echo ("He is dead, Jim!")
 end
 --Buildi
 

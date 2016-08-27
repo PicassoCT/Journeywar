@@ -1918,8 +1918,7 @@ function vardump(value, depth, key)
 	end
 	
 	function eqVec(vecA,vecB)
-		
-		
+		return vecA.x== vecB.x and vecA.y == vecB.y and vecA.z == vecB.z		
 	end
 	
 	function spawnCegAtPiece(unitID,pieceId,cegname,offset)
@@ -1936,6 +1935,24 @@ function vardump(value, depth, key)
 			y=y+boolAdd
 			Spring.SpawnCEG(cegname,x,y,z,0,1,0,0,0)
 		end
+	end
+	
+	function getPieceMap(id)
+		
+		dpiecesTable=Spring.GetUnitPieceMap(id)
+		ux,uy,uz=Spring.GetUnitPosition(id)
+		tpiecesTable={}
+		i=1
+		for k,v in pairs(dpiecesTable) do
+			x,y,z=Spring.GetUnitPiecePosDir(id,v)
+			tpiecesTable[i]={}
+			tpiecesTable[i].pid=v
+			tpiecesTable[i].x=x or ux
+			tpiecesTable[i].y=y or uy
+			tpiecesTable[i].z=z or uz
+			i=i+1
+		end
+		return tpiecesTable
 	end
 	
 	function getFrameDependentUniqueOffset(limit)
@@ -4035,4 +4052,70 @@ end
 		
 	end
 	return Result
+end
+--> Transforms a selected unit into another type
+function transformUnitInto(unitID, unitType, setVel)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	teamID = Spring.GetUnitTeam (unitID)	
+	vx,vy,vz,vl =Spring.GetUnitVelocity(unitID)
+	rotx,roty,rotz = Spring.GetUnitRotation(unitID)
+	
+	exP=Spring.GetUnitExperience(unitID)
+	hp,maxHP,para, cap, bP = Spring.GetUnitHealth(unitID)
+	
+	id= Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0,3)), teamID) 
+	if id and vx and rotx and exP then
+	
+	_, opMaxHP= Spring.GetUnitHealth(id)
+		if opMaxHP then
+			factor= 1/(maxHP/opMaxHP)
+			hp=hp*factor
+		end
+
+		Spring.SetUnitPosition(id, x,y,z)
+		if setVel then
+		Spring.SetUnitVelocity(id,	vx*vl,vy*vl,vz*vl)
+		end
+		Spring.SetUnitRotation(id,	rotx,roty,rotz)
+		Spring.SetUnitExperience(id,exP)
+		Spring.SetUnitHealth(id,{health=hp, capture= cap, paralyze= para, build= bP})
+		transferOrders(unitID, id)
+		Spring.DestroyUnit(unitID, false,true)	
+	end	
+end
+
+
+function getUnitMoveGoal(unitID)
+cmds=Spring.GetCommandQueue(unitID,4)
+	for i=#cmds,1, -1 do
+		if cmds[i].id and cmds[i].id == CMD.MOVE and cmds[i].params then
+		return cmds[i].params[1],cmds[i].params[2],cmds[i].params[3]
+		end
+	end
+end
+
+
+function transferOrders( originID, unitID)
+
+	CommandTable=Spring.GetUnitCommands( originID)					
+	first=false
+	if CommandTable then
+		for _,cmd in pairs(CommandTable) do	
+			if #CommandTable ~= 0 then	
+				if first==false then
+				first=true									
+						if cmd.id == CMD.MOVE  then	
+							Spring.GiveOrderToUnit(unitID,cmd.id,cmd.params,{})						
+						elseif cmd.id== CMD.STOP then
+							Spring.GiveOrderToUnit(unitID,CMD.STOP,{},{})
+						end						
+				else
+					Spring.GiveOrderToUnit(unitID,cmd.id,cmd.params,{"shift"})
+				end
+			else
+				Spring.GiveOrderToUnit(unitID,CMD.STOP,{},{})
+			end			
+	
+		end			
+	end		
 end

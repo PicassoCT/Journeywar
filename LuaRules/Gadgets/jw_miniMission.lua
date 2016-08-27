@@ -1475,7 +1475,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		"And guess what- he bought himself a ticket out with your donations.",
 		"Impaling is so babaric, burrying alive so much work, shooting them is conventional - tough choices, anybody suggestions?",
 		"Remember what your authoritys said- pluck your nose - and bam- evil man everywhere. Now, lets not point fingers- but..",
-		"Arr, antoher of those towns. Keep the womanfolk on the fields and sell the goats as lust-slaves."
+		"Arr, antoher of those towns. Keep the womanfolk on the fields and sell the goats as lust-slaves.",
+		"For some its just corpse-kama-sutra, but for others its the longest fucking with aerchologists, since the invention of culture.",
+		"Sometimes you just come to late, word of mouth was there first, and all the murder, thiefing, raping and torching is done by the locals. Well at least they left the blame behind",
+		"You think cynism makes for good jokes? No, cynism makes for dead critics. And dead critics make for good jokes.",
+		"The times are hard, until you robbed enough to pay your own historian and can afford to have a good time.",
+		"And we proof once again, that salt water burns orange on a stake. Its the natrium - not the witches.",
+		
 	}
 	
 	boolMission4Watch=false

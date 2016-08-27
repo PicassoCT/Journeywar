@@ -175,8 +175,8 @@ end
 
 function createExtrema()
 	GG.Extrema= {}
-	min,max=Spring.GetGroundExtremes()
-	GG.Extrema= max+math.abs(min)+100 or 250
+	emin,emax=Spring.GetGroundExtremes()
+	GG.Extrema= (emax+math.abs(emin)+100) or 250
 end
 
 

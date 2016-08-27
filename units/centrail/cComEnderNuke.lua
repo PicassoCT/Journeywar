@@ -28,7 +28,7 @@ MaxWaterDepth =0,
 sightDistance = 300,
 
 
-Category = [[NONTARGET]],
+Category = [[NOTARGET]],
 
 
 

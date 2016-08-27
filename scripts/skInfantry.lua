@@ -15,6 +15,7 @@ local center= piece "center"
 local skinleg = piece"skinleg"
 local lowlegsk = piece"lowlegsk"
 local skinleg2 = piece"skinleg2"
+local torso = piece"Torso"
 local lowlegsk02 = piece"lowlegsk02"
 local boolSecondAiming=false
 
@@ -30,14 +31,16 @@ local SIG_PEACE=32
 local AMBUSHLOADTIME=30000
 local AMBUSHTIME=9000
 piecePeriod=15000
-costPerEgg=0.2
-experienceSoFar=0
+costPerEgg=0.5
+experienceSoFar=Spring.GetUnitExperience(unitID)
+eggEnemySpawnDistance = 700
 teamID=Spring.GetUnitTeam(unitID)
 
 function spawnAEgg(x,z)
 	randSleep=math.ceil(math.random(370,1200))
 	Sleep(randSleep)
-	Spring.CreateUnit("jskineggnogg",x,-10,z, 0, teamID) 
+	id= Spring.CreateUnit("jskineggnogg",x,-10,z, 0, teamID) 
+	transferOrders(unitID,id)
 	
 end
 
@@ -48,16 +51,22 @@ function EGG_LOOP()
 		x,_,z=Spring.GetUnitPosition(unitID)
 		--check if standing in Water
 		y=spGetGroundHeight(x,z)
+		
 		if boolPeacefull== true then	
-			-- if in Water check experience
-			temp=Spring.GetUnitExperience(unitID)
-			if temp > experienceSoFar then
-				experienceSoFar=experienceSoFar+ costPerEgg
-				--spawn numberofEggsToSpawn
-				for i=1,math.ceil(experienceSoFar),costPerEgg do
-					StartThread(spawnAEgg,x,z)
+			ed= Spring.GetUnitNearestEnemy(unitID)
+			if ed and GetUnitDistance(unitID,ed) > eggEnemySpawnDistance then
+		
+				-- if in Water check experience
+				temp=Spring.GetUnitExperience(unitID)
+				if temp > experienceSoFar+costPerEgg then
+					--spawn numberofEggsToSpawn
+					for i=experienceSoFar, temp,costPerEgg do
+						StartThread(spawnAEgg,x+math.random(-5,5),z+math.random(-5,5))
+						experienceSoFar=experienceSoFar+ costPerEgg
+					end
+					--update experienceSoFar
+				
 				end
-				--update experienceSoFar
 			end
 		end
 		Sleep(2500)
@@ -79,8 +88,9 @@ end
 function idle()
 	
 	sleeper=math.random(1024,8192)
-	
+	Signal(SIG_IDLE)
 	SetSignalMask(SIG_IDLE)
+
 	while(boolCloaked==false)do
 		Move (center,x_axis,0,12)
 		Move (center,y_axis,0,12)
@@ -214,13 +224,9 @@ function idle()
 	
 	
 end
-----driving animation
---local skinleg = piece" skinleg "
---local lowlegsk = piece" lowlegsk "
---local skinleg2 = piece" skinleg2 "
---local lowlegsk02 = piece" lowlegsk02 "
+
 local skinDef=Spring.GetUnitDefID(unitID)
---http://answers.springlobby.info/questions/427/howto-spinning-wheels-on-moving-units
+
 function skinSound()
 	oneOrTwo=math.random(1,8)			
 	toConcat=oneOrTwo..".wav"
@@ -232,6 +238,7 @@ end
 function walk()
 	Hide(tent)
 	Signal(SIG_WALK)
+	Signal(SIG_IDLE)
 	SetSignalMask(SIG_WALK)
 	Turn(body, x_axis, math.rad(22), 14)
 	WaitForTurn(body,x_axis)
@@ -240,12 +247,9 @@ function walk()
 	
 	StartThread(skinSound)				
 	
-	
-	
 	while (true) do
 		if leg_movespeed <14 then
-			leg_movespeed=leg_movespeed+4
-			
+			leg_movespeed=leg_movespeed+4			
 		end
 		--left leg up, right leg down
 		walkStep(leg_movespeed,0, true)
@@ -258,12 +262,12 @@ function walkStep(leg_movespeed, footOffset, bDisregardArms)
 		Turn(lowlegsk,x_axis,math.rad(50), 24)
 		
 		Turn(skinleg2, x_axis, math.rad(12), leg_movespeed)
-		if bDisregardArms == true then Turn(turret2,x_axis,math.rad(armoffset + 14),8) end
+			if bDisregardArms == true then Turn(turret2,x_axis,math.rad(armoffset + 14),8) end
 		WaitForTurn (skinleg, x_axis)
 		WaitForTurn (skinleg2, x_axis)	
 		WaitForTurn (lowlegsk02,x_axis)
 		
-		if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset -58),8) end
+			if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset -58),8) end
 		Turn(skinleg, x_axis,math.rad(footOffset -33) ,12 )
 		Turn(skinleg2, x_axis, math.rad(footOffset + 22), leg_movespeed)
 		Turn(lowlegsk02, x_axis, math.rad(24), leg_movespeed)
@@ -281,13 +285,13 @@ function walkStep(leg_movespeed, footOffset, bDisregardArms)
 		Turn(lowlegsk02,x_axis,math.rad(50), 24)
 		
 		Turn(skinleg, x_axis, math.rad(footOffset + 12), leg_movespeed)
-		if bDisregardArms == true then  Turn(turret2,x_axis,math.rad(armoffset -58),8) end
+			if bDisregardArms == true then  Turn(turret2,x_axis,math.rad(armoffset -58),8) end
 		WaitForTurn (skinleg2, x_axis)
 		WaitForTurn (skinleg, x_axis)	
 		WaitForTurn (lowlegsk,x_axis)
 		WaitForTurn (lowlegsk02, x_axis)
 		
-		if bDisregardArms == true then  Turn(turret,x_axis,math.rad(armoffset + 14),8) end
+			if bDisregardArms == true then  Turn(turret,x_axis,math.rad(armoffset + 14),8) end
 		Turn(skinleg2, x_axis,math.rad(footOffset -33) ,19 )
 		Turn(lowlegsk, x_axis, math.rad(15), leg_movespeed)
 		Turn(lowlegsk02,x_axis,math.rad(78), 20)
@@ -296,7 +300,6 @@ function walkStep(leg_movespeed, footOffset, bDisregardArms)
 		WaitForTurn (lowlegsk,x_axis)
 		WaitForTurn (lowlegsk02, x_axis)
 		Sleep (80)
-
 end
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
@@ -319,8 +322,7 @@ function script.AimWeapon1( heading ,pitch)
 		Signal(SIG_AIM2)
 		SetSignalMask(SIG_AIM2)
 		
-		
-		Turn(turret, x_axis,math.rad(armoffset -40),3)
+		Turn(turret, x_axis,math.rad( -10),3)
 		WaitForTurn(turret,x_axis)		
 		boolFiringWeapon=true
 		return true
@@ -357,12 +359,9 @@ Move(center,x_axis,0,0)
 		Turn(center,x_axis,math.rad(boodyShake*(-1^i)),29)
 		WaitForTurn(center,x_axis)
 		Move(center,z_axis,-4*i,20)
-		Turn(center,x_axis,math.rad(0),92)
-		
+		Turn(center,x_axis,math.rad(0),92)	
 		
 		walkStep(6, 2* boodyShake*(-1^i), footfalse)
-		
-
 		Sleep(50)
 	end
 
@@ -381,15 +380,17 @@ function script.QueryWeapon2()
 end
 
 function script.AimWeapon2( heading ,pitch)	
-	Signal(SIG_IDLE)
+
 	--aiming animation: instantly turn the gun towards the enemy
-	--Turn(turret, y_axis, heading)
 	Signal(SIG_AIM)
-	SetSignalMask(SIG_AIM)
-	
+	SetSignalMask(SIG_AIM)	
 	boolSecondAiming=true
 	Turn(turret2, x_axis, math.rad(0),3)
+	Turn(torso, y_axis,heading,3)
+		Signal(SIG_IDLE)
 	WaitForTurn(turret2,x_axis)
+	WaitForTurn(torso,y_axis)
+	
 	----Spring.Echo(heading)
 	boolFiringWeapon=true
 	return Weapon2AmbushMode()
@@ -443,6 +444,7 @@ local function legs_down()
 	Move (body,x_axis,0,12)
 	Move (body,y_axis,0,12)
 	Move (body,z_axis,0,12)
+	Turn (torso, y_axis,math.rad(0), 15)	
 	Turn (center, x_axis,math.rad(0), 15)	
 	Turn (center, y_axis,math.rad(0), 15)	
 	Turn (center, z_axis,math.rad(0), 15)
@@ -459,7 +461,7 @@ end
 local boolMoving=falseh
 function script.StartMoving()
 	
-	Signal(SIG_IDLE)
+
 	legs_down()
 	StartThread (walk)
 	
@@ -468,7 +470,7 @@ end
 function script.StopMoving()
 	
 	-- ----Spring.Echo ("stopped walking!")
-	Signal(SIG_IDLE)
+
 	Signal(SIG_WALK)
 	legs_down()
 	StartThread(idle)
@@ -511,20 +513,20 @@ function AmbushCounterThread()
 	SetSignalMask(SIG_AMBUSH)
 	Sleep(AMBUSHLOADTIME)
 	boolAmbushCharged=true
-	Spring.Echo("AmbushReady")
+	
 end
 boolCloaked=false
 function cloakCheckAndAmbushLoad()
-	local boolPrevCloaked=false
+	 boolPrevCloaked=false
 	
 	
 	while true do
 		--check wether the Unit is cloaked 
-		boolCloaked=GetUnitValue(COB.CLOAKED)
+		boolCloaked=(GetUnitValue(COB.CLOAKED) == 1)
 		--if first time true, set unit FireStats to ReturnFire, set to Hold Position, start AmbushCounter --setFirstTime False
 		if boolPrevCloaked==false and boolCloaked==true then
-			Spring.Echo("Cloaking")
 			Signal(SIG_AMBUSH)
+			Spring.Echo("Cloaked and  Charging Ambush")
 			if boolPeacefull==true then
 				StartThread(AmbushCounterThread)
 				GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {})

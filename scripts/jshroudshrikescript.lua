@@ -132,6 +132,8 @@ end
 
 function collectExpFromTeamsToUnit(unitID, Range, amount, filterTeams, boolNegateFilter)
 	x,y,z= Spring.GetUnitPosition(unitID)
+	
+	exP= Spring.GetUnitExperience(unitID)
 	Range= math.max(minRange, maxRange* (exP/maxStore))
 	teamid=Spring.GetUnitTeam(unitID)
 	Tuid= getAllInCircle(x,z, Range)
@@ -168,9 +170,10 @@ function collectExpFromTeamsToUnit(unitID, Range, amount, filterTeams, boolNegat
 	
 end
 
+exP=Spring.GetUnitExperience(unitID)
 function giveExpFromUnitToTeam(unitID, Range, filterTeams)
 	teamid=Spring.GetUnitTeam(unitID)
-	x,y,z=Spring.getUnitPosition(unitID)
+	x,y,z=Spring.GetUnitPosition(unitID)
 	
 	exP=Spring.GetUnitExperience(unitID)
 	if exP > 0 then -- reDistribute
@@ -190,11 +193,11 @@ function giveExpFromUnitToTeam(unitID, Range, filterTeams)
 		if TeamToGive then
 			amount= exP/#Tuid
 			for i=1, #Tuid do
-			currXP=Spring.GetUnitExperience(Tuid[i])
-			Spring.SetUnitExperience(Tuid[i],currXP+ amount)
-			currXP=Spring.GetUnitExperience(unitID)
-			Spring.SetUnitExperience(unitID,currXP- amount)
-			
+				currXP=Spring.GetUnitExperience(Tuid[i])
+				Spring.SetUnitExperience(Tuid[i],currXP+ amount)
+				currXP=Spring.GetUnitExperience(unitID)
+				Spring.SetUnitExperience(unitID,currXP- amount)
+				
 			end
 		end
 	end
@@ -213,9 +216,13 @@ boolFlowDirectionTowardsTeam=true
 
 function leachExpLoop()
 	teamid =Spring.GetUnitTeam(unitID)
+	
+	
+	
 	while true do
 		
-		
+	Range= math.max(minRange, maxRange* (exP/maxStore))	
+	amount=maxLeachQuote
 		
 		if boolFlowDirectionTowardsTeam== true then
 			collectExpFromTeamsToUnit(unitID, Range, amount, {[teamid]=true})
@@ -300,89 +307,90 @@ function animationLoop()
 	
 	--Localisations
 	--test
-	boolOnce=true
+	restartRoots()
+			
 	while true do
-		Sleep(100)
-		if boolOnce==true then
-			restartRoots()
-			boolOnce=false
-		end
-		Hide(standing)
-		Hide(face)
-		while boolMoving==false do
-			Move(Root[1],x_axis,math.rad(math.random(-26,26),0.3))
-			Move(Root[2],x_axis,math.rad(math.random(-26,26),0.3))
-			Spin(rootspin1,y_axis,math.rad(math.random(-42,42)),0.3)
-			Spin(rootspin2,y_axis,math.rad(math.random(-42,42)),0.3)
-			for i=1,#SpinT do
-				if maRa()==true then
-					Move(SpinT[i],y_axis,math.rad(math.random(0,55)*2),4.5)
+	
+	--Move State
+		if boolMoving == true then
+			Hide(standing)
+			Hide(face)
+				
+			if math.random(0,1)==1 then
+				StartThread(dissapearRoots)
+				diceAnimation()
+			else	
+				while boolMoving == true do		
+						Show(GMAN)
+					Spin(GMAN,y_axis,math.rad(math.random(-42,42)),0)
+					Sleep(50)
 				end
 			end
-			
-			
-			
-			
-			Show(GMAN)
-			
-			Sleep(5000)		
 		end
-		if boolOnce==false then
-			dissapearRoots()
-			boolOnce=true
-		end
-		Hide(GMAN)
-		Show(dice)
 		
-		StartVal=128
-		HalfWay=32
-		local CopyVal=StartVal
-		local speed=256
-		
-		while boolMoving==true do
-			Sleep(100)
-			Turn(dice,x_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
-			Turn(dice,y_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
-			Turn(dice,z_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
-			Move(dice,y_axis,CopyVal*0.75, speed)
-			WaitForMove(dice,y_axis)
-			Move(dice,y_axis,CopyVal*0.85, speed*0.75)
-			WaitForMove(dice,y_axis)
-			Move(dice,y_axis,CopyVal, speed*0.5)
-			WaitForMove(dice,y_axis)
-			WaitForTurn(dice,x_axis)
-			WaitForTurn(dice,y_axis)
-			WaitForTurn(dice,z_axis)
-			
-			Turn(dice,x_axis,math.rad(0),9)
-			Turn(dice,y_axis,math.rad(0),9)
-			Turn(dice,z_axis,math.rad(0),9)
-			Move(dice,y_axis,CopyVal*0.85, speed*0.5)
-			WaitForMove(dice,y_axis)
-			Move(dice,y_axis,CopyVal*0.75, speed*0.75)
-			WaitForMove(dice,y_axis)
-			Move(dice,y_axis,0, speed)
-			WaitForMove(dice,y_axis)
-			CopyVal=math.random(CopyVal/1.25,CopyVal)
-			if CopyVal <= HalfWay then CopyVal=StartVal end
-			Sleep(100)
-		end
-		Sleep(1000)
-		
-		Hide(dice)
-		
-		Hide(GMAN)
-		
-		showT(SpinT)
-		
-		showT(Root)
-		Sleep(6000)
+		dissapearRoots()
+		Hide(dice)		
+		Hide(GMAN)		
+		sudoRootOnGroot()
+
 		while (boolMoving== false ) do
 			Show(standing)
 			Show(face)
+			Spin(face,y_axis,math.rad(42),3)
+			Spin(standing,y_axis,math.rad(-42),3)
 			hideT(Root)
+			Hide(GMAN)
 			Sleep(100)	
 		end
 	end
 	
+end
+
+function diceAnimation()
+	StartVal=128
+	HalfWay=32
+	
+	local CopyVal=StartVal
+	local speed=256
+	Show(dice)
+	while boolMoving==true do
+		
+		Sleep(100)
+		Turn(dice,x_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
+		Turn(dice,y_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
+		Turn(dice,z_axis,math.rad(math.ceil(math.random(-3,3))*90),9)
+		Move(dice,y_axis,CopyVal*0.75, speed)
+		WaitForMove(dice,y_axis)
+		Move(dice,y_axis,CopyVal*0.85, speed*0.75)
+		WaitForMove(dice,y_axis)
+		Move(dice,y_axis,CopyVal, speed*0.5)
+		WaitForMove(dice,y_axis)
+		WaitForTurns(dice)
+		
+		tP(dice,0,0,0,9)
+		Move(dice,y_axis,CopyVal*0.85, speed*0.5)
+		WaitForMove(dice,y_axis)
+		Move(dice,y_axis,CopyVal*0.75, speed*0.75)
+		WaitForMove(dice,y_axis)
+		Move(dice,y_axis,0, speed)
+		WaitForMove(dice,y_axis)
+		CopyVal=math.random(CopyVal/1.25,CopyVal)
+		if CopyVal <= HalfWay then CopyVal=StartVal end
+		
+	end
+end
+
+function sudoRootOnGroot()
+	showT(Root)
+	showT(SpinT)
+	Move(Root[1],x_axis,math.rad(math.random(-26,26),0.3))
+	Move(Root[2],x_axis,math.rad(math.random(-26,26),0.3))
+	Spin(rootspin1,y_axis,math.rad(math.random(-42,42)),0.3)
+	Spin(rootspin2,y_axis,math.rad(math.random(-42,42)),0.3)
+	spinT(SpinT,y_axis,4, math.random(22,55)*-1)
+	for i=1,#SpinT do
+		if maRa()==true then
+			Move(SpinT[i],y_axis,math.rad(math.random(0,55)*2),4.5)
+		end
+	end
 end

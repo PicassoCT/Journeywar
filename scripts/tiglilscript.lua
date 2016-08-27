@@ -1,5 +1,9 @@
 --All Praise goes to Knorke. Just look under Awesome in the Wiki.
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
 
+include "lib_Build.lua" 
 
 --Those who enter: Beware, only mindfucks here, i swear!
 -- i worked really hard to de-robotimize these - and i think i succeded. 
@@ -51,7 +55,7 @@ Heading=0
 boolANewAttack=true
 howlong=1
 ---Signals to be spread
-costPerEgg=0.1
+costPerEgg=0.5
 ---------------------IdleStance10-Fucntions-------
 
 
@@ -9001,13 +9005,13 @@ end
 
 --eggspawn --tigLil and SkinFantry
 
-experienceSoFar=0
+experienceSoFar=Spring.GetUnitExperience(unitID)
 teamID=Spring.GetUnitTeam(unitID)
 function spawnAEgg(x,z)
 	randSleep=math.ceil(math.random(370,1200))
 	Sleep(randSleep)
-	Spring.CreateUnit("jtigeggnogg",x,-10,z, 0, teamID) 
-	
+	id=Spring.CreateUnit("jtigeggnogg",x,-10,z, 0, teamID) 
+	transferOrders(unitID,id)
 end
 
 function EGG_LOOP()
@@ -9023,10 +9027,11 @@ function EGG_LOOP()
 			if temp > experienceSoFar+costPerEgg then --levelup
 
 				--spawn numberofEggsToSpawn
-				for i=1,math.ceil(experienceSoFar),costPerEgg do
+				for i=experienceSoFar,temp,costPerEgg do
 					StartThread(spawnAEgg,x,z)
+					experienceSoFar=experienceSoFar+costPerEgg
 				end
-				experienceSoFar=temp
+			
 				--update experienceSoFar
 			end
 		end
