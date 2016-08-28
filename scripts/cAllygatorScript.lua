@@ -248,7 +248,8 @@ function nomNomNom(targetID)
 		rexGate(randoVal,0.7,offset)
 		if math.random(0,3) == 2 then Sleep(600) end
 		StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/portal.ogg",1,3000,1,0)	
-	end
+	end 
+	
 	StartThread(PlaySoundByUnitType, unitdefID, "sounds/callygator/eating.ogg",1,3000,1,0)	
 	swallow()
 	for i=1, 2 do
