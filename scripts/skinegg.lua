@@ -1,3 +1,9 @@
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+ include "lib_Animation.lua"
+
+
 eggStage3=piece"eggSt3"
 eggStage1=piece"eggSt1"
 eggStage2=piece"eggSt2"
@@ -84,9 +90,9 @@ end
 
 totalGrowthTime=math.random(25000,32000)
 function growInStages()
-for i=1, table.getn(allTheOtherKidsWithThePumpedUpKicks),1 do
-Hide(allTheOtherKidsWithThePumpedUpKicks[i][1])
-end
+	for i=1, table.getn(allTheOtherKidsWithThePumpedUpKicks),1 do
+	Hide(allTheOtherKidsWithThePumpedUpKicks[i][1])
+	end
 Hide(eggStage3)
 Hide(eggStage1)
 Hide(eggStage2)
@@ -150,20 +156,7 @@ Sleep(200)
 		Sleep(90)
 	end
 end
-Sleep(500)
-napple=napple-500
-end 
 
---Release and Vannish
-x,y,z=Spring.GetUnitPosition(unitID)
-Explode(eggStage3,SFX.SHATTER+SFX.NO_HEATCLOUD)
-Spring.DestroyUnit(unitID,false,false)
-Spring.CreateUnit("skinfantry",x,y,z, 0, teamID)  
-for i=1,12,1 do
-EmitSfx(SpinPoint,1024) -- fruchtwasser everywhere..
-Sleep(90)
-end
-end
 
 function script.Create()
 StartThread(getToWaterLevelPlusBouncing)

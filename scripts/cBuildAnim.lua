@@ -1,3 +1,9 @@
+include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+ include "lib_Animation.lua"
+
+
 --<pieces>
 cubes={}
 outerCubes={}
@@ -1485,7 +1491,7 @@ function wizzardryOfOSLoop ()
 	end
 end
 
-function moveCubeToPoint(axis, limit)
+function moveCubeToPoint(i, axis, limit)
 	while(true)do
 			Move(cubes[i],axis,limit,0.3)
 			WaitForMove(cubes[i],axis)
@@ -1505,17 +1511,17 @@ function pumpItUp(i)
 	
 	decider=math.random(0,3)
 	limit=math.random(2,6)
-	axis= 
+
 	
 	if decider== 0 then
-		moveCubeToPoint(x_axis, limit)
+		moveCubeToPoint(i, x_axis, limit)
 	elseif decider==1 then
-		moveCubeToPoint(y_axis, limit)
+		moveCubeToPoint(i, y_axis, limit)
 	else 
-		moveCubeToPoint(z_axis, limit)
+		moveCubeToPoint(i, z_axis, limit)
 	end
 	
-
+end
 
 function script.Create()
 	Spring.SetUnitAlwaysVisible(unitID,true)

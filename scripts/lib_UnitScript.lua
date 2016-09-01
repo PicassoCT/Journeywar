@@ -2429,8 +2429,9 @@ function vardump(value, depth, key)
 		returnTable={} 
 		for k,v in pairs(T) do 
 			def=Spring.GetUnitDefID(k) 
-			if false== UnitDefs[def].isBuilding then 
-			returnTable[k]=v end 
+			if UnitDefs[def] and UnitDefs[def].isBuilding and false== UnitDefs[def].isBuilding then 
+			returnTable[k]=v 
+			end 
 		end 
 		return returnTable 
 	end
