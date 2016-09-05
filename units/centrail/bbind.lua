@@ -13,7 +13,7 @@ local unitDef = {
 	RadarDistance = 0,
 	SightDistance = 400,	
 	Upright = 1,	
-	levelground = 1,
+	levelground = false,
 
 nanocolor=[[0 0.9 0.9]],
 

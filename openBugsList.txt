@@ -4,6 +4,16 @@ Fish still has default corpse
 Galatea legs wont hide
 Seastar ScaleUpGadget hides Units
 jatlantai rockets not hitting home
+-jgeohive mini-ai sends creepers to the wall
+-> jw:Landlord should get buildings intial terraindeformation
+TODO: Find a backtracking solution to the units getting stuck problem
+jbiocorpse: Pillar Animation still running
+drones: Building should only use hp if progress is made
+Hide Beanstalk while the seedpod is underway
+Train exploded on repairing stuff
+crabcreeper have the parkinsons on attack
+
+--cusborexplo terraindeformation resets waterlevel :(
 
 skinfantry/tiglil ignore maxwaterdepth -> movement class?
 even non existant mines digg down

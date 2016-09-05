@@ -12,7 +12,7 @@ local unitDef = {
 	RadarDistance = 0,
 	SightDistance = 400,	
 	Upright = 1,	
-	levelground = 1,
+	levelground = false,
 	--cost
 	buildCostMetal = 200,
 	buildCostEnergy = 150,

@@ -645,19 +645,22 @@ function ropeThread()
 			
 			
 			buildProgress= lupdateBuildProgress()
+			if not buildProgress then boolRopeRelease = true end
 			
-			----Spring.Echo("Dont leave me hanging")
-			lmoveThatTrooper(changeX,changeZ,2,buildProgress)	
-			----Spring.Echo("SPIKE_IT_WITH_TRACERS7")
-			
-			if flopFlip == -1 and changeX ~= 0 then	
-				----Spring.Echo("SPIKE_IT_WITH_TRACERS7A")
-				WaitForTurn(rp19,x_axis)
-				----Spring.Echo("SPIKE_IT_WITH_TRACERS7B")
-			end
-			if flopFlip == 1 and changeZ ~= 0 then 
-				----Spring.Echo("SPIKE_IT_WITH_TRACERS7C")
-				WaitForTurn(rp19,z_axis)
+			if buildProgress then
+				----Spring.Echo("Dont leave me hanging")
+				lmoveThatTrooper(changeX,changeZ,2,buildProgress)	
+				----Spring.Echo("SPIKE_IT_WITH_TRACERS7")
+				
+				if flopFlip == -1 and changeX ~= 0 then	
+					----Spring.Echo("SPIKE_IT_WITH_TRACERS7A")
+					WaitForTurn(rp19,x_axis)
+					----Spring.Echo("SPIKE_IT_WITH_TRACERS7B")
+				end
+				if flopFlip == 1 and changeZ ~= 0 then 
+					----Spring.Echo("SPIKE_IT_WITH_TRACERS7C")
+					WaitForTurn(rp19,z_axis)
+				end
 			end
 			
 			

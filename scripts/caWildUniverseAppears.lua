@@ -336,10 +336,22 @@ function catchThem()
 	else
 		killThemAllCounter=0
 	end
+	--Features Evaporating
+			allFeatures = getAllFeatureNearUnit(unitID,150)
+			if allFeatures then
+				process(allFeatures,
+				function(id)
+					
+					fx,fy,fz=Spring.GetFeaturePosition(id)
+					fy= math.max(5,fy)
+					Spring.SpawnCEG("blackspheredissolvefx",fx,fy+10,fz,0,1,0,0)	
+				Spring.DestroyFeature(id,true,true) end
+				)
+			end
 	
 end
 
-function spawn(totalTime)
+function spawn (totalTime)
 	
 	
 	
@@ -366,12 +378,16 @@ function spawn(totalTime)
 	hideT(RedSunTable)
 	hideT(SunTable)
 	hideT(PlanetTable)
-	
+	Spring.DestroyUnit(unitID,false,true)
 	
 end
 
 function risingPosition(anyID,limit)
 	if anyID== unitID then return end
+	validID= Spring.ValidUnitID(anyID)
+	if not  validID or validID == false then return end
+	if not Spring.GetUnitIsDead(anyID) then return end
+
 	local spSpawnCEG=Spring.SpawnCEG
 	local spGetUnitPos=Spring.GetUnitPosition
 	local spSetRotationOffset=Spring.MoveCtrl.SetRotationOffset
@@ -448,6 +464,7 @@ end
 
 
 function script.Create()
+	StartThread(spawn,12000)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.MoveCtrl.Enable(unitID,true)
 	Spring.MoveCtrl.SetPosition(unitID,x,y+25,z)
@@ -476,7 +493,7 @@ function script.Create()
 	
 	--</TERRAFORM>
 	StartThread(emitSFX,12000)
-	StartThread(spawn,12000)
+
 	StartThread(planetarium,6)
 	StartThread(sunEmitSFx,12000)
 	

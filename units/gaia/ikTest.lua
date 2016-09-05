@@ -1,10 +1,10 @@
-local unitName = "cegtest"
+local unitName = "iktest"
 
 local unitDef = {
-	name = "cegtestunit",
-	Description = "Testing the Cegs all day long",
-	objectName = "placeholder.s3o",
-	script = "dbg_cegtest.lua",
+	name = "inverse kinematik Testunit	",
+	Description = "Testing the IK all day long",
+	objectName = "iktest.s3o",
+	script = "dbg_iktestscript.lua",
 	buildPic = "placeholder.png",
 	levelGround =false,
 	--cost

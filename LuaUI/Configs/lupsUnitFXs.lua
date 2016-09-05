@@ -64,7 +64,11 @@ jsunshipfire=  {
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=225, precision=22, strength   = 0.005,  repeatEffect=true}},
 	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=250, precision=22, strength   = 0.029,  repeatEffect=true}},
   },
-  
+ cawilduniverseappears=  {
+	{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=125, onActive=true, colormap1 = {{172/255, 116/255, 230/255, 0.8}}, repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=130, precision=22, strength   = 0.013,  repeatEffect=true}},
+  },
+   
   
 citadell=  {
 	

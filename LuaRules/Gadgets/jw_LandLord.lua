@@ -918,25 +918,24 @@
 							--Spring.Echo("JWL_JWLandLord:: Line 586:: Zeile:",value1.. " Spalte:",value2)
 							-- Zeile:, 3178 Spalte, 1891
 							
-							if GroundDeformation[((x-startx)+1+offsetstartx)][((z-startz)+1+offsetstartz)] ~= 0 then 
-								
-								
-								
-								--	if the mining unit is new, equalize the terrain, til 0.15 percent is reached
-								if LandLordTable[i][5] <= 0.15 then
-									y=getGroundHeight(LandLordTable[i][6]*8,LandLordTable[i][7]*8)
-									if 	orgTerrainMap[x][z]== nil then 
-										--Spring.Echo("JWL_JWLandLord_X Nil:",x.." and z:",z) 
+							if orgTerrainMap[x][z] and GroundDeformation[((x-startx)+1+offsetstartx)][((z-startz)+1+offsetstartz)] ~= 0 then 
+										
+									--	if the mining unit is new, equalize the terrain, til 0.15 percent is reached
+									if LandLordTable[i][5] <= 0.15 then
+										y=getGroundHeight(LandLordTable[i][6]*8,LandLordTable[i][7]*8)
+										
+										
+										orgTerrainMap[x][z]= 	(((orgTerrainMap[x][z] *2) + y)/3) + upDown
+										--then start to dig down/up 
+									elseif LandLordTable[i][5] > 0.15 and LandLordTable[i][5] < 0.5 then
+										orgTerrainMap[x][z]= orgTerrainMap[x][z] + (((GroundDeformation[(x-startx+offsetstartx)+1][(z-startz+offsetstartz)+1])/((0.5-0.15)/incRate))*upDown)
+									else --finally go into overdrive and dig 
+										orgTerrainMap[x][z]= orgTerrainMap[x][z] + ((upDown*((GroundDeformation[(x-startx+offsetstartx)+1][(z-startz+offsetstartz)+1])/100)*extremataGlobal)/(0.5/incRate))
 									end
-									
-									orgTerrainMap[x][z]= 	(((orgTerrainMap[x][z] *2) + y)/3) + upDown
-									--then start to dig down/up 
-								elseif LandLordTable[i][5] > 0.15 and LandLordTable[i][5] < 0.5 then
-									orgTerrainMap[x][z]= orgTerrainMap[x][z] + (((GroundDeformation[(x-startx+offsetstartx)+1][(z-startz+offsetstartz)+1])/((0.5-0.15)/incRate))*upDown)
-								else --finally go into overdrive and dig 
-									orgTerrainMap[x][z]= orgTerrainMap[x][z] + ((upDown*((GroundDeformation[(x-startx+offsetstartx)+1][(z-startz+offsetstartz)+1])/100)*extremataGlobal)/(0.5/incRate))
-								end
-								
+							end
+							
+							if orgTerrainMap[x][z] 	== nil then 
+								Spring.Echo("JWL_JWLandLord orgTerrain undefined at:",x.." and z:",z) 
 							end 
 						end
 					end

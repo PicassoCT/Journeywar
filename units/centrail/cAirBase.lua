@@ -12,7 +12,7 @@ local unitDef = {
 	
 	
 	Upright = 1,	
-	levelground = 1,
+	levelground = true,
 	
 	nanocolor=[[0 0.9 0.9]],
 	

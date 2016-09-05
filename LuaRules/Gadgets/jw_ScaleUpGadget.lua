@@ -7,7 +7,7 @@ function gadget:GetInfo()
 		date = "21st of March 2013",
 		license = "Free, wishing for a benevolent dicatorship, cause instinctarded. To value luarulesdom, you got to be able to use it.",--Janus License- under Software Patent Nr. 23432-756F-11-2014 held by the FSF for commercial purposes, under GPL for non-commercial usage
 		layer = 0,
-		enabled = false
+		enabled = true
 	}
 end
 

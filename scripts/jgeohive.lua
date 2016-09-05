@@ -39,6 +39,12 @@ function sanitizeCoords(monsterID,x,y,z, sfactor)
 end
 
 function spawner()
+
+	repeat 
+	Sleep(100)
+	_,_,_,_,bP= Spring.GetUnitHealth(unitID)
+	bP = bP or 0
+	until (bP >= 1) 
 	
 	local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 	local spGetUnitPosition=Spring.GetUnitPosition

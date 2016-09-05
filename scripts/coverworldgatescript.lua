@@ -182,7 +182,7 @@ function spawner()
 		enemyID=spGetUnitNearestEnemy(unitID)
 		
 		if enemyID ~= nil then
-			spEmitSfx(center,1024)
+			spawnPortalEffect()
 			
 			ex,ey,ez=spGetUnitPosition(enemyID)-- this should allow the unit to follow a friend closest to a foe
 			if math.abs(ex-ox+ey-oy+ez-oz) < 5 then
@@ -228,7 +228,7 @@ function spawner()
 				spawnedUnit=lCreateUnitFunction(Unittype)
 				if spawnedUnit~= nil then
 					spSetUnitNoSelect(spawnedUnit,true)
-					
+					spawnPortalEffect()
 					Sleep(1550)
 					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
 					table.insert(monsterTable,spawnedUnit)
@@ -238,6 +238,12 @@ function spawner()
 			powerDown()
 		end
 	end
+end
+
+function spawnPortalEffect()
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.SpawnCEG("portable",x,y+70,z,0,1,0,60)	
+	Spring.SpawnCEG("holeinthesky",x,y+320,z,0,1,0,60)	
 end
 
 function TargetOS()
