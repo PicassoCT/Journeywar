@@ -31,14 +31,11 @@ end
 function iktest()
 	ikID= Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
 	Spring.SetUnitIKActive(ikID, true)
-			-- static int CreateUnitIKChain(lua_State* L);
-
+		-- static int CreateUnitIKChain(lua_State* L);
 		-- static int SetUnitIKActive(lua_State* L);
-
 		-- static int SetUnitIKGoal(lua_State* L);
-
 		-- static int SetUnitIKPieceLimits(lua_State* L);
-
+		--TODO adapt speed
 		-- static int SetUnitIKPieceSpeed(lua_State* L);
 	for pieceid,v in pairs(pieceNameTable) do
 		if type(pieceid)== number then
