@@ -34,6 +34,7 @@ function iktest()
 	Spring.Echo("Set IK Chain active")
 	Spring.SetUnitIKActive(unitID, ikID, true)
 	Spring.Echo("Set IK Chain is now active")
+	--I add this comment only to test something
 		-- static int CreateUnitIKChain(lua_State* L);
 		-- static int SetUnitIKActive(lua_State* L);
 		-- static int SetUnitIKGoal(lua_State* L);
