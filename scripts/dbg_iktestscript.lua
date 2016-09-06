@@ -32,7 +32,7 @@ function iktest()
 	Spring.Echo("Intialize the IK Chain")
 	ikID= Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
 	Spring.Echo("Set IK Chain active")
-	Spring.SetUnitIKActive(ikID, true)
+	Spring.SetUnitIKActive(unitID, ikID, true)
 		-- static int CreateUnitIKChain(lua_State* L);
 		-- static int SetUnitIKActive(lua_State* L);
 		-- static int SetUnitIKGoal(lua_State* L);
