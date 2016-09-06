@@ -29,9 +29,13 @@ return 1
 end
 --FOOO load the new Version
 function iktest()
+	Sleep(100)
+
 	Spring.Echo("Intialize the IK Chain")
 	ikID = Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
+	Spring.Echo("UnitID".. unitID, "IkID"..ikID)
 	Spring.Echo("Set IK Chain active")
+	
 	Spring.SetUnitIKActive(unitID, ikID, true)
 	Spring.Echo("Set IK Chain is now active")
 	--I add this comment only to test something
