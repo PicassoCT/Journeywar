@@ -6,7 +6,7 @@ local unitDef = {
 	objectName = "iktest.s3o",
 	script = "dbg_iktestscript.lua",
 	buildPic = "placeholder.png",
-	levelGround =false,
+
 	--cost
 	buildCostMetal = 15,
 	buildCostEnergy = 1,
@@ -59,22 +59,8 @@ local unitDef = {
 		
 	},
 	
-	
-	
-	
-	
-	weapons = {
-		
-		
-		[1]={name = "ceater",
-			onlyTargetCategory = [[LAND AIR WATER]],
-		},
-		
-	},
-	Category = [[LAND]],
-	
-	
-	
+
+	Category = [[NOTARGET LAND]],
 	
 }
 
