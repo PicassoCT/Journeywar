@@ -29,10 +29,26 @@ return 1
 end
 
 function iktest()
-	ikID= Spring.CreateUnitIkChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
+	ikID= Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
+	Spring.SetUnitIKActive(ikID, true)
+			-- static int CreateUnitIKChain(lua_State* L);
+
+		-- static int SetUnitIKActive(lua_State* L);
+
+		-- static int SetUnitIKGoal(lua_State* L);
+
+		-- static int SetUnitIKPieceLimits(lua_State* L);
+
+		-- static int SetUnitIKPieceSpeed(lua_State* L);
+	for pieceid,v in pairs(pieceNameTable) do
+		if type(pieceid)== number then
+		Spring.SetUnitIKGoal(unitID,ikID,v, 0.1,0.2,0.3)
+		end
+	end
+		
 	while true do
-	--Lol, i wrote the Api, and i dont remember it..
-	Spring.SetUnitIKChain(ikID, true, math.random(-100,100),math.random(-100,100),25)
-	Sleep(100)
+		--Lol, i wrote the Api, and i dont remember it..
+		Spring.SetUnitIKGoal(unitID,ikID, math.random(-100,100),math.random(-100,100),25)
+		Sleep(1000)
 	end
 end
