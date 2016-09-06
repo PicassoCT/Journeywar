@@ -27,7 +27,7 @@ function script.Killed(recentDamage,_)
 suddenDeathV(recentDamage)
 return 1
 end
-
+--FOOO load the new Version
 function iktest()
 	Spring.Echo("Intialize the IK Chain")
 	ikID= Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
