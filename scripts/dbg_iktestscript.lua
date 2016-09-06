@@ -29,7 +29,9 @@ return 1
 end
 
 function iktest()
+	Spring.Echo("Intialize the IK Chain")
 	ikID= Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
+	Spring.Echo("Set IK Chain active")
 	Spring.SetUnitIKActive(ikID, true)
 		-- static int CreateUnitIKChain(lua_State* L);
 		-- static int SetUnitIKActive(lua_State* L);
@@ -37,15 +39,12 @@ function iktest()
 		-- static int SetUnitIKPieceLimits(lua_State* L);
 		--TODO adapt speed
 		-- static int SetUnitIKPieceSpeed(lua_State* L);
-	for pieceid,v in pairs(pieceNameTable) do
-		if type(pieceid)== number then
-		Spring.SetUnitIKGoal(unitID,ikID,v, 0.1,0.2,0.3)
-		end
-	end
 		
 	while true do
 		--Lol, i wrote the Api, and i dont remember it..
-		Spring.SetUnitIKGoal(unitID,ikID, math.random(-100,100),math.random(-100,100),25)
+		Spring.Echo("Setting IK-Goal")
+		Spring.SetUnitIKGoal(unitID,ikID, math.random(-100,100), math.random(-100,100),25)
+		
 		Sleep(1000)
 	end
 end
