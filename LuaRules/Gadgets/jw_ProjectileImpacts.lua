@@ -248,7 +248,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							cegTag = "cchainlightning"
 						}					
 						
-						projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
+						 projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
 						
 						
 					end
@@ -274,7 +274,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						cegTag = "cchainlightning"
 					}
 					
-					projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
+					 projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
 					
 					
 				end
@@ -498,11 +498,11 @@ if (gadgetHandler:IsSyncedCode()) then
 			model = "cHarvestProj.s3o",
 		}					
 		
-		projID = Spring.SpawnProjectile( cHarvestRocketDefID ,HarvestRocketParams)
+		 projectileID = Spring.SpawnProjectile( cHarvestRocketDefID ,HarvestRocketParams)
 		
-		if projID then
+		if  projectileID then
 			if not HarvestRocketLoadTable[attackerID] then HarvestRocketLoadTable[attackerID]={} end
-			HarvestRocketLoadTable[attackerID][unitID]={metal=metalRes, energy=energyRes, vicID = projID }
+			HarvestRocketLoadTable[attackerID][unitID]={metal=metalRes, energy=energyRes, vicID =  projectileID }
 		end
 		
 	end
@@ -665,8 +665,8 @@ if (gadgetHandler:IsSyncedCode()) then
 					model = "jGlowProj.s3o",
 					cegTag = "jglowstrip",
 				}						
-				projID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
-				if projID then
+				 projectileID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
+				if  projectileID then
 					Spring.SetProjectileTarget(attackerID,"u")
 				end
 			end
@@ -718,7 +718,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,projID, attackerID, attackerDefID, attackerTeam) 
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam) 
 		
 		
 		--chain Lightning 
@@ -764,7 +764,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				cegTag = "cchainlightning"
 			}
 			
-			projID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams) 
+			 projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams) 
 			
 			
 			

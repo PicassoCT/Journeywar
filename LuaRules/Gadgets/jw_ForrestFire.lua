@@ -194,7 +194,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
 	end
 	
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
 	end
 	
 	local bigFireTable={}

@@ -1485,7 +1485,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	}
 	
 	boolMission4Watch=false
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 	
 		
 		if boolMission4Watch==true and GG.Misson4Table and GG.Misson4Table[unitID]~= nil then	
 			--Crime and (not) Punishment

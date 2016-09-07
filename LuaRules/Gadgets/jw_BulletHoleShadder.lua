@@ -55,7 +55,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
 			if HoleInOneT[weaponDefID] then	
 			Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
 			vx,vy,vz=Spring.GetUnitWeaponVectors(attackerID, HoleInOneT[weaponDefID].pos)

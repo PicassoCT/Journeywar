@@ -31,7 +31,7 @@ local spSpawnCEG= Spring.SpawnCEG
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 local spGetUnitPieceMap=Spring.GetUnitPieceMap
 
-  function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+  function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
 	if weaponDefID==weapondefID1 or weaponDefID == weapondefID2 then
 	pieceMap=spGetUnitPieceMap(unitID)
 		if pieceMap then

@@ -219,7 +219,7 @@ end	 ]]
 	
 	
 	
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
 	if UnitDefID== UnitDefNames["gcivilbuilding"].id or UnitDefID== UnitDefNames["gcivillian"].id or UnitDefID== UnitDefNames["scumslum"].id or UnitDefID== UnitDefNames["mtw"].id or attackerDefID== UnitDefNames["mtw"].id or attackerDefID== UnitDefNames["css"].id or attackerDefID== UnitDefNames["bg"].id and table.getn(GG.NewsDroneTable)>0 then
 	x,k,c=spGetPosition(unitID)
 		for i=1,3,1 do

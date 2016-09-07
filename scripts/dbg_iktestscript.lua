@@ -49,8 +49,8 @@ function iktest()
 	while true do
 		--Lol, i wrote the Api, and i dont remember it..
 		Spring.Echo("Setting IK-Goal")
-		Spring.SetUnitIKGoal(unitID,ikID, math.random(-100,100), math.random(-100,100),25)
+		Spring.SetUnitIKGoal(unitID,ikID, math.random(-50,50), math.random(-50,50),0)
+		Sleep(30000)
 		
-		Sleep(1000)
 	end
 end

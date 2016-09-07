@@ -26,7 +26,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	weapondatID= WeaponDefNames["jbeefeatermarker"].id
 	Script.SetWatchWeapon(weapondatID , true)
 	
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
 	----Spring.Echo("Unit damaged")
 		  if (weapondatID==weaponDefID) and Spring.GetUnitIsDead(attackerID) == false then
 		 -- --Spring.Echo("And the beefeater was it") 

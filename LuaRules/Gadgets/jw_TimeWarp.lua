@@ -66,7 +66,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
   timeWarpers[unitID] = nil
 end
 
-  function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+  function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
 	  if timeWarpers[unitID] then   timeWarpers[unitID].active=true end   
   end
  
