@@ -98,10 +98,8 @@ end
 			 
 			dist=math.sqrt(x*x+z*z)
 			if dist < TRIGGERSIZE then 
-			Spring.Echo("JW_TriggerZone::TriggerHappy") 
 			return true
 				else 
-				Spring.Echo("JW_TriggerZone::TrigerSad")
 				return false
 				end
 			--Spring.Echo("JW_TriggerZone:TriggerDepressed")

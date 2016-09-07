@@ -1,4 +1,9 @@
 include "suddenDeath.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_Build.lua" 
+
 aim2=piece"aim2"
 
 center =piece"center"
@@ -31,6 +36,7 @@ dirtemit2=piece"dirtemit2"
 --unitPieces
 
 
+soundfolder = "sounds/cHunterchopper/"
 rotoscope=piece"rotoscope"
 
 
@@ -141,18 +147,18 @@ end
 RepEated=2
 function landed()
 	SetSignalMask(SIG_LANDED)
-	--Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav") 
+	
 	Sleep(350)
 	local spPlaySound=Spring.PlaySoundFile
 	local lrand=math.random 
 	local lceil=math.ceil
-	spPlaySound("sounds/cHunterchopper/copterlanding.wav",0.9)
+	StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."copterlanding.wav",0.9, 3000, 1)
 	Sleep(4000)
 	
 	while RepEated > 0 do 
 		RepEated=RepEated-1
 		w=lrand(0.5,0.65)
-		spPlaySound("sounds/cHunterchopper/copterlanded.wav",w)
+		StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."copterlanded.wav",w, 3000, 1)
 		rest=lceil(lrand(1900,2400))
 		
 		for i=1, rest, 100 do
@@ -172,14 +178,17 @@ function landed()
 	end
 end
 
-boolTurning=false
+
 function flyBySound()
-	if boolTurning==true then
+	if maRa()==true then
+		PlaySoundBytUnitType(unitdef,soundfolder .."copterflyby.wav",0.7, 5000, 1)
 		
-	end 
+	else
+		PlaySoundBytUnitType(unitdef,soundfolder .."copterflyby2.wav",0.7, 5000, 1)
+	end
 	
 end
-
+unitdef= Spring.GetUnitDefID(unitID)
 function onTheFly()
 	SetSignalMask(SIG_FLY)
 	Sleep(300)
@@ -187,13 +196,13 @@ function onTheFly()
 	local lsin=math.sin
 	local lrand=math.random
 	
-	spPlaySound("sounds/cHunterchopper/copterTakeOff.wav",0.9)
+	StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."copterTakeOff.wav",0.9, 3000, 1)
 	Sleep(3000)
 	SumSini=0
 	boolFlop=true
 	while true do
 		if boolFlop==true then
-			spPlaySound("sounds/cHunterchopper/flying.wav",lsin(SumSini))
+			StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."flying.wav",lsin(SumSini), 1050, 1)
 			SumSini=SumSini+0.05
 			rest=lrand(950,1050)
 			Sleep(rest)
@@ -202,7 +211,7 @@ function onTheFly()
 				SumSini=0
 			end
 		else
-			spPlaySound("sounds/cHunterchopper/flying2.wav",lsin(SumSini))
+			StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."flying2.wav",lsin(SumSini), 1050, 1)
 			SumSini=SumSini+0.01
 			rest=lrand(950,1050)
 			Sleep(rest)
@@ -214,7 +223,7 @@ function onTheFly()
 		end
 		--Chance for Flyby Sound
 		oneInTen=math.random(1,55)
-		if oneInTen == 22 then StartThread(flyBySound) end
+		if oneInTen == 22 then flyBySound() end
 		Sleep(10)
 	end
 	

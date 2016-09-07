@@ -11,10 +11,10 @@ center=piece"center"
 
 piecesTable={}
 pieceNameTable={}
-for i=1,5 do
+for i=1,6 do
 sting="bone"..i
 piecesTable[#piecesTable+1]=piece(sting)
-pieceNameTable[sting]=piecesTable[#piecesTable]
+
 end
 
 function script.Create()
@@ -32,7 +32,7 @@ function iktest()
 	Sleep(100)
 
 	Spring.Echo("Intialize the IK Chain")
-	ikID = Spring.CreateUnitIKChain(unitID,pieceNameTable["bone1"],pieceNameTable["bone5"])
+	ikID = Spring.CreateUnitIKChain(unitID,pieceNameTable[1],pieceNameTable[5])
 	Spring.Echo("UnitID".. unitID, "IkID"..ikID)
 	Spring.Echo("Set IK Chain active")
 	
