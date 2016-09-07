@@ -30,9 +30,13 @@ end
 --FOOO load the new Version
 function iktest()
 	Sleep(100)
-
+		for i=1, 6 do
+		stringBuild= "bone"..i
+		Spring.Echo("PieceNumber for Piece"..i .." = "..(piece(stringBuild)))
+		end
+	
 	Spring.Echo("Intialize the IK Chain")
-	ikID = Spring.CreateUnitIKChain(unitID,pieceNameTable[1],pieceNameTable[5])
+	ikID = Spring.CreateUnitIKChain(unitID,piecesTable[1],piecesTable[5])
 	Spring.Echo("UnitID".. unitID, "IkID"..ikID)
 	Spring.Echo("Set IK Chain active")
 	
