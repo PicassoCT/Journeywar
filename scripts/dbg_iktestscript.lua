@@ -49,11 +49,18 @@ function iktest()
 		-- static int SetUnitIKPieceLimits(lua_State* L);
 		--TODO adapt speed
 		-- static int SetUnitIKPieceSpeed(lua_State* L);
-		
+	for i=1,#piecesTable do
+		Spring.SetUnitIKPieceSpeed(ikID,piecesTable[i],0.3,0.3,0.3)
+	end	
+	
 	while true do
 		--Lol, i wrote the Api, and i dont remember it..
-		Spring.Echo("Setting IK-Goal")
-		Spring.SetUnitIKGoal(unitID,ikID, math.random(-50,50), math.random(-50,50),0)
+		ikx= math.ceil( math.random(-50,50))
+		iky= math.ceil( math.random(-50,50))
+	
+		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Y:"..iky)
+		
+		Spring.SetUnitIKGoal(unitID,ikID,ikx,iky,0)
 		Sleep(30000)
 		
 	end
