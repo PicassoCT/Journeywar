@@ -36,7 +36,7 @@ function iktest()
 		end
 	
 	Spring.Echo("Intialize the IK Chain")
-	ikID = Spring.CreateUnitIKChain(unitID,piecesTable[1],piecesTable[5])
+	ikID = Spring.CreateUnitIKChain(unitID,piecesTable[1],piecesTable[6])
 	Spring.Echo("UnitID".. unitID, "IkID"..ikID)
 	Spring.Echo("Set IK Chain active")
 	
