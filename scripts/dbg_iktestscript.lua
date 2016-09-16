@@ -27,12 +27,19 @@ function script.Killed(recentDamage,_)
 suddenDeathV(recentDamage)
 return 1
 end
+
+function echoPiecePosition(name, id)
+x,y,z= Spring.GetUnitPiecePosDir(unitID,id)
+Spring.Echo("Piece:"..name.." P(".. x.."/"..y.."/"..z)
+end
+
 --FOOO load the new Version
 function iktest()
 	Sleep(100)
 		for i=1, 6 do
 		stringBuild= "bone"..i
 		Spring.Echo("PieceNumber for Piece"..i .." = "..(piece(stringBuild)))
+		echoPiecePosition(stringBuild, (piece(stringBuild)))
 		end
 	
 	Spring.Echo("Intialize the IK Chain")
@@ -56,11 +63,11 @@ function iktest()
 	while true do
 		--Lol, i wrote the Api, and i dont remember it..
 		ikx= math.ceil( math.random(-50,50))
-		iky= math.ceil( math.random(-50,50))
-	
-		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Y:"..iky)
-		
-		Spring.SetUnitIKGoal(unitID,ikID,ikx,iky,0)
+		ikz= math.ceil( math.random(-50,50))
+		ux,uy,uz=Spring.GetUnitPosition(unitID)
+		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Z:"..ikz)
+		StartThread(markPosOnMap,ikx +ux,iky + uy,ikz +uz,"greenlight")		
+		Spring.SetUnitIKGoal(unitID,ikID,ikx,0,ikz)
 		Sleep(30000)
 		
 	end

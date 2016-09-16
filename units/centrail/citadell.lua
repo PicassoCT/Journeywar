@@ -13,12 +13,9 @@ local unitDef = {
 	maxDamage = 2500,
 	idleAutoHeal = 5,
 	--Movement
-	Acceleration = 0.25,
-	BrakeRate = 0.3,
 	FootprintX = 8,
 	FootprintZ = 8,
 	MaxSlope = 20,
-	MaxVelocity = 3.0,
 	MaxWaterDepth = 20,
 	TurnRate = 500,
 	-- explodeAs = "csuborbitalstrike",
