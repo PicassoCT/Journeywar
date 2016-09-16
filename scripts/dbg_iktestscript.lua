@@ -64,6 +64,7 @@ function iktest()
 		--Lol, i wrote the Api, and i dont remember it..
 		ikx= math.ceil( math.random(-50,50))
 		ikz= math.ceil( math.random(-50,50))
+		iky= math.ceil( math.random(0,50))
 		ux,uy,uz=Spring.GetUnitPosition(unitID)
 		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Z:"..ikz)
 		StartThread(markPosOnMap,ikx +ux,iky + uy,ikz +uz,"greenlight")		
