@@ -69,7 +69,7 @@ function iktest()
 		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Z:"..ikz)
 		StartThread(markPosOnMap,ikx +ux,iky + uy,ikz +uz,"greenlight")		
 		Spring.SetUnitIKGoal(unitID,ikID,ikx,0,ikz)
-		Sleep(1000)
+		Sleep(10000)
 		
 	end
 end
