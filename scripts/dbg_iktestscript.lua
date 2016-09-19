@@ -78,8 +78,8 @@ function iktest()
 		-- iky= math.ceil( math.random(0,50))
 		-- ux,uy,uz=Spring.GetUnitPosition(unitID)
 		for i=1, # testArray do
-		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Z:"..ikz)
-		StartThread(markPosOnMap,ikx +testArray[i].x,iky + testArray[i].y,ikz +testArray[i].z,"greenlight")		
+		Spring.Echo("Setting IK-Goal(X:"..testArray[i].x.."/Z:"..testArray[i].z)
+		StartThread(markPosOnMap,testArray[i].x, testArray[i].y, testArray[i].z,"greenlight")		
 		Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
 		Sleep(10000)
 		
