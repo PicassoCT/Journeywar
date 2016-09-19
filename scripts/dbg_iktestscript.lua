@@ -59,17 +59,30 @@ function iktest()
 	for i=1,#piecesTable do
 		Spring.SetUnitIKPieceSpeed(ikID,piecesTable[i],0.3,0.3,0.3)
 	end	
+	--Need a beetter IK-Test
+	testArray=	{
+				[1]={x=500,y=0,z=0},
+				[2]={x=0,y=0,z=500},
+				[3]={x=-500,y=0,z=0},
+				[4]={x=0,y=0,z=-500},
+				[5]={x=500,y=0,z=500},
+				[6]={x=-500,y=0,z=-500}
+				}
+	
+	
 	
 	while true do
 		--Lol, i wrote the Api, and i dont remember it..
-		ikx= math.ceil( math.random(-50,50))
-		ikz= math.ceil( math.random(-50,50))
-		iky= math.ceil( math.random(0,50))
-		ux,uy,uz=Spring.GetUnitPosition(unitID)
+		-- ikx= math.ceil( math.random(-50,50))
+		-- ikz= math.ceil( math.random(-50,50))
+		-- iky= math.ceil( math.random(0,50))
+		-- ux,uy,uz=Spring.GetUnitPosition(unitID)
+		for i=1, # testArray do
 		Spring.Echo("Setting IK-Goal(X:"..ikx.."/Z:"..ikz)
-		StartThread(markPosOnMap,ikx +ux,iky + uy,ikz +uz,"greenlight")		
-		Spring.SetUnitIKGoal(unitID,ikID,ikx,0,ikz)
+		StartThread(markPosOnMap,ikx +testArray[i].x,iky + testArray[i].y,ikz +testArray[i].z,"greenlight")		
+		Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
 		Sleep(10000)
 		
+		end
 	end
 end
