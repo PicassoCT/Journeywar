@@ -84,6 +84,7 @@ function iktest()
 			Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
 			Sleep(3000)
 			
-	
+			Spring.SetUnitIKGoal(unitID,ikID,0,500,0)
+			Sleep(3000)
 		end
 end
