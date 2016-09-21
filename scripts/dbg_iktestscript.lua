@@ -82,9 +82,12 @@ function iktest()
 			i=1
 			StartThread(markPosOnMap,testArray[i].x, testArray[i].y+10, testArray[i].z,"greenlight")		
 			Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
-			Sleep(3000)
+			Sleep(10000)
 			
 			Spring.SetUnitIKGoal(unitID,ikID,0,500,0)
+			Sleep(3000)
+			
+			Spring.SetUnitIKGoal(unitID,ikID,0,-500,0)
 			Sleep(3000)
 		end
 end
