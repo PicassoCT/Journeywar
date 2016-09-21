@@ -71,19 +71,19 @@ function iktest()
 	
 	
 	
-	while true do
-		--Lol, i wrote the Api, and i dont remember it..
-		-- ikx= math.ceil( math.random(-50,50))
-		-- ikz= math.ceil( math.random(-50,50))
-		-- iky= math.ceil( math.random(0,50))
-		-- ux,uy,uz=Spring.GetUnitPosition(unitID)
-		--for i=1, # testArray do
-		--Spring.Echo("Setting IK-Goal(X:"..testArray[i].x.."/Z:"..testArray[i].z)
-		i=1
-		StartThread(markPosOnMap,testArray[i].x, testArray[i].y+10, testArray[i].z,"greenlight")		
-		Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
-		Sleep(3000)
-		
+		while true do
+			--Lol, i wrote the Api, and i dont remember it..
+			-- ikx= math.ceil( math.random(-50,50))
+			-- ikz= math.ceil( math.random(-50,50))
+			-- iky= math.ceil( math.random(0,50))
+			-- ux,uy,uz=Spring.GetUnitPosition(unitID)
+			--for i=1, # testArray do
+			--Spring.Echo("Setting IK-Goal(X:"..testArray[i].x.."/Z:"..testArray[i].z)
+			i=1
+			StartThread(markPosOnMap,testArray[i].x, testArray[i].y+10, testArray[i].z,"greenlight")		
+			Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
+			Sleep(3000)
+			
+	
 		end
-	end
 end
