@@ -452,7 +452,7 @@ function walk()
 
 	while true do
 	
-
+	--Analytical IK
 		while (boolWalking==true and boolAiming == false)do
 
 			--left leg front
