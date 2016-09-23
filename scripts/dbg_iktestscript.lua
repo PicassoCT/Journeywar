@@ -65,8 +65,8 @@ function iktest()
 				[2]={x=0,y=0,z=500},
 				[3]={x=-500,y=0,z=0},
 				[4]={x=0,y=0,z=-500},
-				[5]={x=500,y=0,z=500},
-				[6]={x=-500,y=0,z=-500}
+				[5]={x=0,y=500,z=0},
+
 				}
 	
 	
@@ -77,17 +77,15 @@ function iktest()
 			-- ikz= math.ceil( math.random(-50,50))
 			-- iky= math.ceil( math.random(0,50))
 			-- ux,uy,uz=Spring.GetUnitPosition(unitID)
-			--for i=1, # testArray do
+			for i=1, #testArray do
 			--Spring.Echo("Setting IK-Goal(X:"..testArray[i].x.."/Z:"..testArray[i].z)
-			i=1
+
 			StartThread(markPosOnMap,testArray[i].x, testArray[i].y+10, testArray[i].z,"greenlight")		
 			Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
-			Sleep(10000)
+			WaitForTurns(piecesTable)
+			Sleep(1000)
+			end
 			
-			Spring.SetUnitIKGoal(unitID,ikID,0,500,0)
-			Sleep(3000)
-			
-			Spring.SetUnitIKGoal(unitID,ikID,0,-500,0)
-			Sleep(3000)
+
 		end
 end
