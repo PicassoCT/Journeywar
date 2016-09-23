@@ -152,13 +152,13 @@ function landed()
 	local spPlaySound=Spring.PlaySoundFile
 	local lrand=math.random 
 	local lceil=math.ceil
-	StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."copterlanding.wav",0.9, 3000, 1)
+	StartThread(PlaySoundByUnitType,unitdef,soundfolder .."copterlanding.wav",0.9, 3000, 1)
 	Sleep(4000)
 	
 	while RepEated > 0 do 
 		RepEated=RepEated-1
 		w=lrand(0.5,0.65)
-		StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."copterlanded.wav",w, 3000, 1)
+		StartThread(PlaySoundByUnitType,unitdef,soundfolder .."copterlanded.wav",w, 3000, 1)
 		rest=lceil(lrand(1900,2400))
 		
 		for i=1, rest, 100 do
@@ -181,10 +181,10 @@ end
 
 function flyBySound()
 	if maRa()==true then
-		PlaySoundBytUnitType(unitdef,soundfolder .."copterflyby.wav",0.7, 5000, 1)
+		PlaySoundByUnitType(unitdef,soundfolder .."copterflyby.wav",0.7, 5000, 1)
 		
 	else
-		PlaySoundBytUnitType(unitdef,soundfolder .."copterflyby2.wav",0.7, 5000, 1)
+		PlaySoundByUnitType(unitdef,soundfolder .."copterflyby2.wav",0.7, 5000, 1)
 	end
 	
 end
@@ -196,13 +196,13 @@ function onTheFly()
 	local lsin=math.sin
 	local lrand=math.random
 	
-	StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."copterTakeOff.wav",0.9, 3000, 1)
+	StartThread(PlaySoundByUnitType,unitdef,soundfolder .."copterTakeOff.wav",0.9, 3000, 1)
 	Sleep(3000)
 	SumSini=0
 	boolFlop=true
 	while true do
 		if boolFlop==true then
-			StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."flying.wav",lsin(SumSini), 1050, 1)
+			StartThread(PlaySoundByUnitType,unitdef,soundfolder .."flying.wav",lsin(SumSini), 1050, 1)
 			SumSini=SumSini+0.05
 			rest=lrand(950,1050)
 			Sleep(rest)
@@ -211,7 +211,7 @@ function onTheFly()
 				SumSini=0
 			end
 		else
-			StartThread(PlaySoundBytUnitType,unitdef,soundfolder .."flying2.wav",lsin(SumSini), 1050, 1)
+			StartThread(PlaySoundByUnitType,unitdef,soundfolder .."flying2.wav",lsin(SumSini), 1050, 1)
 			SumSini=SumSini+0.01
 			rest=lrand(950,1050)
 			Sleep(rest)
