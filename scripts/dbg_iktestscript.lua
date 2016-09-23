@@ -82,10 +82,13 @@ function iktest()
 
 			StartThread(markPosOnMap,testArray[i].x, testArray[i].y+10, testArray[i].z,"greenlight")		
 			Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
-			WaitForTurns(piecesTable)
-			Sleep(1000)
+			for i=1, #piecesTable do
+			WaitForTurns(piecesTable[i])
 			end
 			
+			Sleep(5000)
+			end
+			Sleep(10000)
 
 		end
 end
