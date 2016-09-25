@@ -292,12 +292,11 @@ function turnSyncInSpeed(piecename,x,y,z,speed,x_deg,y_deg,z_deg)
 end
 
 
-
-
 -->Turns a piece in the speed necessary to arrive after x Milliseconds - overrirdes the spring shortes path turns
 function turnInTime(piecename,taxis,degree,timeInMs,x_deg,y_deg,z_deg, boolWait )
 	assert(z_deg)
 	
+	--Gets the absolute Biggest Rotation
 	absoluteDeg=absoluteRotation(piecename,taxis,degree,x_deg,y_deg,z_deg)
 	
 	timeInMs=(timeInMs+1)/1000

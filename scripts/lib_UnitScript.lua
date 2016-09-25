@@ -1,4 +1,5 @@
 
+include "lib_type.lua" 
 --[[
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1358,7 +1359,11 @@ function PseudoPhysix(piecename,pearthTablePiece, nrOfCollissions, forceFunction
 end
 
 function createMass(mass,PosX,PosY,PosZ,velX,velY,velZ,fx,fy,fz)
-	return {m=mass,pos={x=PosX,y=PosY,z=PosZ},vel={x=velX,y=velY,z=velZ},force={x=fx,y=fy,z=fz}}
+retourTable={mass=mass,
+			pos= Vector:new{x=PosX,y=PosY,z=PosZ},
+			vel= Vector:new{x=velX,y=velY,z=velZ},
+			force=Vector:new{x=fx,y=fy,z=fz}}
+return retourTable
 end
 
 function debugDisplayPieceChain(Tables)
@@ -1380,7 +1385,7 @@ end
 
 local countConstAnt=0
 function mulVector(vl,value)
-	
+	if not v1 or not value then return nil end
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
 	
@@ -1393,19 +1398,29 @@ function mulVector(vl,value)
 		return {x = vl.x*value,
 			y=vl.y*value,
 		z=vl.z*value}
-	else		--return vector
-		--		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
-		return {x = vl.x*value.x, y=	vl.y*value.y, z=	vl.z*value.z}
 	end
+	
+	if value.x and vl.x then
+		--		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
+		return {x = vl.x* value.x, y=	vl.y*value.y, z=	vl.z*value.z}
+	end
+	 
+	return nil
 end
 
 function norm2Vector(v1,v2)
-	v=subVector(v1,v2)
+	if not v1 then return nil end
+	if not v1.x  then return nil end
+	
+	v=subVector(v1,v2) or v1
 	return math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
 end
 
 function divVector(v1, val)
-	if not val.x then
+		if not v1 or not val then return nil end
+	if not v1.x or type(val) ~= "number" then return nil end
+	
+	if type(val)=="number" then
 		return {x=v1.x/val,y=v1.y/val,z=v1.z/val}
 	else
 		return {x=v1.x/val.x,y=v1.y/val.y,z=v1.z/val.y}
@@ -1413,10 +1428,18 @@ function divVector(v1, val)
 end
 
 function addVector(v1,val)
-	return {x= v1.x+val.x, y= v1.y+val.y,z=v1.z+val.z}
+	if not v1 or not val then return nil end
+	
+	if type(val)== "table" then
+		return {x= v1.x+val.x, y= v1.y+val.y,z=v1.z+val.z}
+	else
+		return {x= v1.x+val, y= v1.y+val,z=v1.z+val}
+	end
 end
 
 function subVector(v1,v2)
+	if not v1 or not v2 then return end
+
 	if type(v1)=="number" then
 		Spring.Echo("lib_UnitScript::Error:: Cant substract a Vector from a value!")
 		return
@@ -1444,8 +1467,10 @@ function sumNormVector(v)
 end
 
 function solveSpring(s, sucessor, frictionConstant)
-	springVector =subVector(s.mass1.pos,sucessor.mass1.pos) -- Vector Between The Two Masses
+
 	
+	springVector =subVector(s.mass1.pos,sucessor.mass1.pos) -- Vector Between The Two Masses
+	assert(springVector)
 	r = norm2Vector(springVector) -- Distance Between The Two Masses
 	
 	force={x=0,y=0,z=0} -- Force Initially Has A Zero Value
@@ -1613,9 +1638,10 @@ function vardump(value, depth, key)
 		return GG.SniperRope[unitID] or false
 	end
 	
-	function Limit(val,min,max)
-		if val < min then return min end
-		if val > max then return max end
+	function Limit(val,lmin,lmax)
+		if type(val)=="table" or  type(lmin)=="table" or  type(lmax)=="table" then return nil end --TODO Remove after debug
+		if val < lmin then return lmin end
+		if val > lmax then return lmax end
 		return val 
 	end
 	
@@ -1663,23 +1689,25 @@ function vardump(value, depth, key)
 		ForcesTable={}
 		
 		rcx,rcy,rcz=Spring.GetUnitPiecePosDir(unitID,RopeConnectionT.Piece)
+		assert(rcx)
 		RopeConnection={
-			Pos={x=rcx,y=rcy,z=rcz},
-			vel={x=0,y=0,z=0},
+			Pos= Vector:new{x=rcx,y=rcy,z=rcz},
+			vel= Vector:new{x=0,y=0,z=0},
 			mass=1500, --unrealistic, yet you cant reach escape velocity 
 			Radius=RopeConnectionT.ColRadius
 		}
 		
-		local ObjT={}
+		ObjT={}
 		--contains the startpos, as the sensory piece
 		for i=1,#RopePieceTable, 1 do
 			px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,RopePieceTable[i])
 			
 			ObjT[#ObjT+1]={ 
 				piecename=RopePieceTable[i],
-				posdir={x,y,z,xd,yd,zd=px,py,pz,pdx,pdy,pdz},
-				mass1={mass= createMass(RopeMass/2,px,py,pz,0,0,0,0,0,0)},
-				vel={x=0,y=0,z=0},
+				pos = Vector:new{x= px, y=py, z= pz},
+				dir = Vector:new{x= pdx, y=pdy, z= pdz},
+				mass1= createMass(RopeMass/2,px,py,pz,0,0,0,0,0,0),
+				vel= Vector:new{x=0,y=0,z=0},
 				PrevPiece=(math.max(1,i-1)),
 				NextPiece=math.min(i+1,#RopePieceTable),
 				length=Ropelength,
@@ -1690,24 +1718,21 @@ function vardump(value, depth, key)
 		px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,LoadPieceT.Piece)
 		ObjT[#ObjT+1]={ 
 			piecename=LoadPieceT.Piece,
-			posdir={x,y,z,xd,yd,zd=px,py,pz,pdx,pdy,pdz},
-			mass1={mass= createMass(LoadPieceT.Mass,px,py,pz,0,0,0,0,0,0)},
-			vel={x=0,y=0,z=0},
+			pos = Vector:new{x= px, y=py, z= pz},
+			dir = Vector:new{x= pdx, y=pdy, z= pdz},
+			mass1= createMass(LoadPieceT.Mass,px,py,pz,0,0,0,0,0,0),
+			vel= Vector:new{x=0,y=0,z=0},
 			PrevPiece=(#ObjT),
 			length=Ropelength,
 			springConstant=SpringConstant
 		}
 		--/INIT
-		
-		
 		local simStep=75
-		
-		
 		
 		while checkYourself() do
 			--init and reset
 			for i=1,#ObjT,1 do
-				ObjT[i].mass1.force={x=0,y=0,z=0}
+				ObjT[i].mass1.force=Vector:new{x=0,y=0,z=0}
 			end
 			
 			--applyForces
@@ -1716,19 +1741,19 @@ function vardump(value, depth, key)
 				if ffT.pieceList then
 					for k in pairs(fft.piecelist) do
 						if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x,ObjT[k].posdir.y,ObjT[k].posdir.z) == true then
-							ObjT[k].mass1.force=addVector(ObjT[k].mass1.force, mulVector(ffT[j].acceleration,ObjT[k].mass1.mass))		 
+							ObjT[k].mass1.force = ObjT[k].mass1.force + (ffT[j].acceleration * ObjT[k].mass1.mass)		 
 						end
 					end
 				else
 					for i=1,#ObjT, 1 do
-						ObjT[i].mass1.force=addVector(ObjT[i].mass1.force, mulVector(ffT[j].acceleration,ObjT[i].mass1.mass))		
+						ObjT[i].mass1.force=ObjT[i].mass1.force + (ffT[j].acceleration *ObjT[i].mass1.mass)		
 					end
 				end
 			end	
 			
 			--Lets SpringSimulation
 			for i=1,#ObjT, 2 do
-				ObjT[i],ObjT[Limit(i+1,1,#ObjT)] =solveSpring(ObjT[i],ObjT[Limit(i+1,1,#ObjT)],SpringInnerFriction)	
+				ObjT[i], ObjT[Limit(i+1,1,#ObjT)] = solveSpring(ObjT[i],ObjT[Limit(i+1,1,#ObjT)],SpringInnerFriction)	
 			end		
 			
 			
@@ -1736,11 +1761,11 @@ function vardump(value, depth, key)
 			for i=1,#ObjT, 2 do -- Start A Loop To Apply Forces Which Are Common For All Masses
 				local Succesor=Limit(i,1,ObjT)
 				
-				ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,mulVector(gravitation,ObjT[i].mass1.mass))
+				ObjT[i].mass1.force=ObjT[i].mass1.force + (gravitation *ObjT[i].mass1.mass)
 				
 				-- masses[a]->applyForce(gravitation * masses[a]->m); -- The Gravitational Force
 				-- The air friction
-				ObjT[i].mass1.force=addVector(ObjT[i].mass1.force, mulVector(ObjT[i].vel, airFrictionConstant*-1))
+				ObjT[i].mass1.force= ObjT[i].mass1.force + (ObjT[i].vel * (airFrictionConstant*-1))
 				
 				-- masses[a]->applyForce(-masses[a]->vel * airFrictionConstant);
 				
@@ -1748,11 +1773,11 @@ function vardump(value, depth, key)
 				if 	ObjT[i].mass1.pos.y > groundHeight(ObjT[i].piecename) then
 					-- Forces From The Ground Are Applied If A Mass Collides With The Ground
 					
-					v1={x=0,y=0,z=0} -- A Temporary Vector3D
-					v2={x=0,y=0,z=0} -- A Temporary Vector3D
+					v1=Vector:new{x=0,y=0,z=0} -- A Temporary Vector3D
+					v2=Vector:new{x=0,y=0,z=0} -- A Temporary Vector3D
 					
-					v1=ObjT[i].mass1.vel
-					v2 = ObjT[Succesor].mass2.vel -- Get The Velocity
+					v1= ObjT[i].mass1.vel
+					v2= ObjT[Succesor].mass2.vel -- Get The Velocity
 					
 					v1.y=0
 					v2.y=0
@@ -1763,8 +1788,8 @@ function vardump(value, depth, key)
 					-- In The Absorption Effect.
 					
 					-- Ground Friction Force Is Applied 
-					ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,mulVector(mulVector(v1,-1),groundFrictionConstant))
-					ObjT[Succesor].mass1.force=addVector(ObjT[Succesor].mass1.force,mulVector(mulVector(v2,-1),groundFrictionConstant))			
+					ObjT[i].mass1.force= ObjT[i].mass1.force + ((-v1 )* groundFrictionConstant)
+					ObjT[Succesor].mass1.force=ObjT[Succesor].mass1.force + ((-v2) * groundFrictionConstant)			
 					
 					
 					v1 =ObjT[i].mass1.vel -- Get The Velocity
@@ -1777,35 +1802,37 @@ function vardump(value, depth, key)
 					-- The Absorption Force
 					
 					if (v1.y < 0) then 
-						ObjT[i].mass1.force=addVector(ObjT[i].mass1.force, mulVector(mulVector(mulVector(v1,-1),groundAbsorptionConstant))) 
+						ObjT[i].mass1.force=ObjT[i].mass1.force + (((-v1)*groundAbsorptionConstant)) 
 					end
 					
 					if ( v2.y < 0) then
-						ObjT[Succesor].mass1.force=addVector(ObjT[Succesor].mass1.force, mulVector(mulVector(mulVector(v2,-1),groundAbsorptionConstant)))
+						ObjT[Succesor].mass1.force= ObjT[Succesor].mass1.force + ((-v2)*groundAbsorptionConstant)
 					end
 					
+
+				else
 					x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,ObjT[i].piecename)
 					vx,vy,vz=Spring.GetGroundNormal(x,z)
-				else
+					vecGround = Vector:new{x=vx,y=vy,z=vz}
 					-- The Ground Shall Repel A Mass Like A Spring.
 					-- By "Vector3D(0, groundRepulsionConstant, 0)" We Create A Vector In The Plane Normal Direction
 					-- With A Magnitude Of groundRepulsionConstant.
 					-- By (groundHeight - masses[a]->pos.y) We Repel A Mass As Much As It Crashes Into The Ground.
 					gh=groundHeight(	ObjT[i].piecename)
-					f1=mulVector(mulVector({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[i].mass1.pos.y)
-					f2=mulVector(mulVector({x=vx,y=vy,z=vz},groundRepulsionConstant),gh-ObjT[Succesor].mass1.pos.y)
+					f1=(vecGround*groundRepulsionConstant)* (gh-ObjT[i].mass1.pos.y)
+					f2=(vecGround*groundRepulsionConstant)* (gh-ObjT[Succesor].mass1.pos.y)
 					
-					ObjT[Succesor].mass1.force=addVector(ObjT[Succesor].mass1.force,f2)		
+					ObjT[Succesor].mass1.force=(ObjT[Succesor].mass1.force+ f2)		
 					ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,f1)		 -- The Ground Repulsion Force Is Applied
 				end
+
 			end	 
-			--simulate 
+			--simulate
 			for i=1, #ObjT, 1 do
 				--vel += (force/mass)* dt
-				ObjT[i].mass1.vel= addVector(ObjT[i].mass1.vel,mulVector( divVector(ObjT[i].mass1.force,ObjT[i].mass1.m),timeInMS))
-				ObjT[Succesor].mass1.vel= addVector(ObjT[Succesor].mass1.vel,mulVector( divVector(ObjT[Succesor].mass1.force,ObjT[Succesor].mass1.m),timeInMS))
-				ObjT[i].mass1.pos=addVector(ObjT[i].mass1.pos, subVector(ObjT[i].mass1.vel,timeInMS))
-				ObjT[Succesor].mass1.pos=addVector(ObjT[Succesor].mass1.pos, subVector(ObjT[Succesor].mass1.vel,timeInMS))
+				ObjT[i].mass1.vel= (ObjT[i].mass1.vel+ ((ObjT[i].mass1.force/ObjT[i].mass1.mass)* timeInMS))
+
+				ObjT[i].mass1.pos=ObjT[i].mass1.pos + ((ObjT[i].mass1.dir * ObjT[i].mass1.vel) * timeInMS)
 			end
 			--TranslatePieces to new Positions
 			

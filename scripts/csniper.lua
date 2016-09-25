@@ -1,9 +1,9 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
-
+include "lib_Animation.lua"
 include "lib_Build.lua" 
+include "lib_type.lua"
 
 
 turret = piece "sstowgab"
@@ -49,7 +49,7 @@ local bloodemt= piece"bloodemt"
 local emitblood= piece"emitblood"
 local pm1= piece"pm1"
 local pm2= piece"pm2"
-local maxSpeed=math.ceil( 2.5 *65533)
+local maxSpeed=math.ceil( 2.5 * 65533)
 
 local AttachUnit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
@@ -141,12 +141,7 @@ function acquireVehicleDegree()
 	return deg
 end
 
-Infantry={}
-Infantry[UnitDefNames["bg"].id]=true
-Infantry[UnitDefNames["tiglil"].id]=true
-Infantry[ UnitDefNames["skinfantry"].id]=true
-Infantry[ UnitDefNames["vort"].id]=true
-Infantry[ UnitDefNames["css"].id]=true
+Infantry=getInfantryTypeTable()
 
 function isInfantry(passengerDefID)
 	if Infantry[passengerDefID] then return true else return false end
@@ -584,8 +579,9 @@ function ourOnlyRope(passengerID)
 		
 		
 		--function PseudoRopePhysix(RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength, forceFunctionTable,SpringConstant)
-		forceFunctionTable={
-				[1]={	acceleration		=	{x=0,y=-9.81,z=0}, 
+	vec=	module.Vector:new{x=0,y=-9.81,z=0}
+	forceFunctionTable={
+				[1]={	acceleration	=	vec, 
 				geometryfunction	=	function(x,y,z) return true end
 			}
 		}
@@ -614,13 +610,13 @@ function ourOnlyRope(passengerID)
 	
 end
 
-
+transportableDefIds= getRecycleableUnitTypeTable()
 
 local transportedID=nil
 function script.TransportPickup(passengerID)
 	--Spring.Echo("TransportPickup")
 	local UnitedDefIDs=Spring.GetUnitDefID(passengerID)
-	if loaded == false and (UnitedDefIDs == UnitDefNames["gjbigbiowaste"].id or UnitedDefIDs == UnitDefNames["gjmedbiogwaste"].id or UnitedDefIDs == UnitDefNames["gcvehiccorpse"].id or UnitedDefIDs == UnitDefNames["gcvehiccorpsemini"].id or isInfantry(UnitedDefIDs)==true) then
+	if loaded == false and (transportableDefIds[UnitedDefIDs] or isInfantry(UnitedDefIDs)==true) then
 		
 		SetUnitValue(COB.BUSY, 1)
 		
@@ -643,9 +639,6 @@ function script.TransportPickup(passengerID)
 		loaded=true
 		
 		StartThread(ourOnlyRope,passengerID)
-		
-		
-		
 		
 		Turn(csniper, y_axis, math.rad(0),19)
 		SetUnitValue(COB.BUSY, 0)

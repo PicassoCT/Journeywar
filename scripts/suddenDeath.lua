@@ -102,6 +102,27 @@ function suddenDeathjBigCorpse(recentDamage)
 	
 end
 
+function suddenDeathjMeatBalls(recentDamage)
+	
+	if recentDamage== nil or recentDamage > 1 then
+		--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
+		spx,spy,spz=Spring.GetUnitPosition(unitID)
+		--teamID=Spring.GetUnitTeam(unitID)
+		teamID=Spring.GetGaiaTeamID()
+		--dirx,diry,dirz=Spring.GetUnitDirection(unitID)
+		dx,dy,dz=Spring.GetUnitDirection(unitID)
+		heading=Spring.GetUnitHeading(unitID)
+		heapID=Spring.CreateUnit("gJMeatBalls",spx,spy,spz, 1, teamID)
+		
+		Spring.SetUnitDirection(heapID,dx,dy,dz)
+		--Spring.SetUnitDirection(heapID,dirx,diry,dirz)
+		Spring.SetUnitNeutral(heapID,true)
+		
+	end 	
+	
+	
+end
+
 function suddenDeathjMedCorpse(recentDamage)
 	
 	if recentDamage== nil or recentDamage > 1 then

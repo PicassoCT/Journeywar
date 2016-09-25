@@ -78,21 +78,28 @@ SIG_IDLE= 256
 
 LegTable={}
 LegTable[#LegTable+1]=piece"striderleg"--2
+Leg2= #LegTable
 LegTable[#LegTable+1]=piece"striderle1"
 LegTable[#LegTable+1]=piece"striderle0"
 
+
 LegTable[#LegTable+1]=piece"striderle4"--3
+Leg3= #LegTable
 LegTable[#LegTable+1]=piece"striderle2"
 LegTable[#LegTable+1]=piece"striderle3"
 
+
 LegTable[#LegTable+1]=piece"striderle7"--1
+Leg1= #LegTable
 LegTable[#LegTable+1]=piece"striderle5"
 LegTable[#LegTable+1]=piece"striderle6"
 
 --You who venture here in hope of awesome source, turn back now,
 --nothing but Goons in drag await you here
 function script.Create()
-	
+	Hide(relPos1)
+	Hide(relPos2)
+	Hide(relPos3)
 	Hide(pOrg1)
 	Hide(pOrg2)
 	Hide(pOrg3)
@@ -393,7 +400,7 @@ function relativeTurnFeet()
 				if h and h < min then min = h end
 			end
 			
-			diffy=((baseheight-min)*-1) -34
+			diffy=((baseheight-min)*-1) -14
 			if striderHeigthOverride==false then
 				Move(strider,y_axis,diffy,gravity)
 			end
@@ -405,28 +412,6 @@ end
 
 
 
-
-function monoDebugWalk()
-	--	test(StriTable[number].Leg,"371,walk")
-	--Monotonous DeebugWalk
-	
-	--while true do		
-		
-		--keepFeetRelative(relPos1,center1,Sens1, SIG_F1,striderlegA3, striderlegB3, striderlegC3,0,0,-10	,1)
-		
-		--		StartThread(keepFeetRelative,relPos3,center3,Sens3, SIG_F3,striderlegA2, striderlegB2, striderlegC2,-26,0,60		,3)
-		--StartThread(keepFeetRelative,relPos2,center2,Sens2, SIG_F2,striderlegA, striderlegB, striderlegC,26,0,60		,2)
-		--Sleep(1500)
-		--feetSignals[1]=false		
-		--resPos(relPos1,center1,3)		
-		--Signal(SIG_F1)
-		--StartThread(keepFeetRelative,relPos1,center1,Sens1, SIG_F1,striderlegA3, striderlegB3, striderlegC3,0,0,-10	,1)
-
-		--ldeaAnim(2,SIG_F2)
-		--ldeaAnim(3,SIG_F3)
-	--end
-	
-end
 ---WALKING---
 function deactiveAnim(number,signal)
 	Signal(signal)
@@ -446,6 +431,43 @@ function deactiveAnim(number,signal)
 	WaitForTurns(StriTable[number].Leg,StriTable[number].UpOrg)
 end
 
+function forward(number, speed)
+Turn(LegTable[number+1],x_axis,math.rad(22),speed)
+WaitForTurns(LegTable[number+1])
+Turn(LegTable[number],x_axis,math.rad(-39),speed)
+Turn(LegTable[number],z_axis,math.rad(0),speed)
+Turn(LegTable[number],y_axis,math.rad(0),speed)
+WaitForTurns(LegTable[number])
+WaitForTurns(LegTable[number+1])
+Turn(LegTable[number],x_axis,math.rad(-29),speed)
+Turn(LegTable[number+1],x_axis,math.rad(29),speed)
+end
+
+--angleY 65
+function stabilize(number, signumYAxis, angleY, speed)
+Turn(LegTable[number],x_axis,math.rad(25),speed)
+Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
+Turn(LegTable[number],y_axis,math.rad(-1*angleY*signumYAxis),speed)
+end
+
+--angleY 65
+function stabilizeArc(number, angleYBegin, angleYEnd, speed)
+Turn(LegTable[number],x_axis,math.rad(25),speed)
+Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
+Turn(LegTable[number],y_axis,math.rad(angleYBegin),speed)
+WaitForTurns(LegTable[number])
+WaitForTurns(LegTable[number+1])
+Turn(LegTable[number],y_axis,math.rad(angleYEnd),speed)
+WaitForTurns(LegTable[number])
+end
+
+function push(number, speed)
+Turn(LegTable[number],z_axis,math.rad(0),speed)
+Turn(LegTable[number],y_axis,math.rad(0),speed)
+Turn(LegTable[number],x_axis,math.rad(32),speed)
+Turn(LegTable[number+1],x_axis,math.rad(-32),speed)
+end
+
 counter= 0
 function walk()
 	local ldeaAnim=deactiveAnim
@@ -453,28 +475,37 @@ function walk()
 	while true do
 	
 	--Analytical IK
-		while (boolWalking==true and boolAiming == false)do
-
-			--left leg front
-			feetSignals[3]=true
-			Sleep(20)
-
-			StartThread(keepFeetRelative,relPos3,center3,Sens3, SIG_F3,striderlegA2, striderlegB2, striderlegC2,-15,0,0,3)
-			Sleep(1000)	
-
-			resPos(relPos2,center2,3,2,SIG_F2)	
-			feetSignals[1]=true
-			Sleep(20)
-			StartThread(keepFeetRelative,relPos1,center1,Sens1, SIG_F1,striderlegA3, striderlegB3, striderlegC3,-15,0,0,1)
-			Sleep(1000)	
-			resPos(relPos3,center3,3,3,SIG_F3)
-			feetSignals[2]=true
-			Sleep(20)
-			StartThread(keepFeetRelative,relPos2,center2,Sens2, SIG_F2,striderlegA, striderlegB, striderlegC,-15,0,15,2)
-			Sleep(1000)		
-			resPos(relPos1,center1,3,1,SIG_F1)		
+	if boolWalking==true and boolAiming == false then
+	resetT(LegTable,3)
+	WaitForTurns(LegTable)
 		
+		while (boolWalking==true and boolAiming == false)do
+		--third leg goes forward
+		forward(Leg3, 1.41)
+		--second leg stabilizes
+		stabilize(Leg2, 1, math.random(110,160), 1.41)
+		--first leg pushes
+		push(Leg1, 1.41)
+		Sleep(750)
+		
+		--third leg stabilizes
+		stabilize(Leg3, -1,  math.random(110,160), 1.41)
+		--second leg pushes
+		push(Leg2, 1.41)
+		--first leg goes forward
+		forward(Leg1, 1.41)
+		Sleep(750)
+		--third leg pushes
+		push(Leg3, 1.41)
+		--second leg forward
+		forward(Leg2, 1.41)
+		--first leg stabilizes 
+		StartThread(stabilizeArc,Leg1, -42, 32, 1.41)
+		Sleep(750)
 		end
+	resetT(LegTable,3)
+	WaitForTurns(LegTable)
+	end
 	Sleep(250)
 	end
 end

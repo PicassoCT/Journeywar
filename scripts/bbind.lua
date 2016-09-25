@@ -343,6 +343,8 @@ function citizencrane()
 	end
 end
 
+recycleAble= getRecycleableUnitTypeTable()
+
 function unitTest(handedOverId)
 	if handedOverId== nil then return false end
 	if Spring.ValidUnitID(handedOverId)== false then return false end
@@ -350,22 +352,14 @@ function unitTest(handedOverId)
 	local passengerDefID=Spring.GetUnitDefID(handedOverId)
 	if passengerDefID== nil then return false end
 	if passengerDefID== UnitDefNames["tiglil"].id or passengerDefID== UnitDefNames["skinfantry"].id or passengerDefID== UnitDefNames["vort"].id then return true end
-	if (passengerDefID == UnitDefNames["gjbigbiowaste"].id or passengerDefID == UnitDefNames["gjmedbiogwaste"].id or passengerDefID == UnitDefNames["gcvehiccorpse"].id or passengerDefID == UnitDefNames["gcvehiccorpsemini"].id) then 
+	if recycleAble[passengerDefID] then 
 		return true 
 	end
 	return false 
 end
 
-Infantry={}
-Infantry[UnitDefNames["bg"].id]=true
-Infantry[UnitDefNames["tiglil"].id]=true
-Infantry[ UnitDefNames["skinfantry"].id]=true
-Infantry[ UnitDefNames["vort"].id]=true
-Infantry[ UnitDefNames["css"].id]=true
+Infantry=getInfantryTypeTable()
 
-function isInfantry(passengerDefID)
-	if Infantry[passengerDefID] then return true else return false end
-end
 
 eatItAlive={
 	[ UnitDefNames["gjbigbiowaste"].id]=true,
@@ -377,7 +371,7 @@ eatItAlive={
 
 function isBio(ids)
 	passengerDefID=Spring.GetUnitDefID(ids)
-	if isInfantry(passengerDefID)==true or eatItAlive[passengerDefID] or Rewards[passengerDefID] then
+	if Infantry[passengerDefID] or eatItAlive[passengerDefID] or Rewards[passengerDefID] then
 		return true
 	end
 	
@@ -560,34 +554,7 @@ end
 
 local MstoredReward=0
 local EstoredReward=0
-Rewards ={
-	[UnitDefNames["gjmedbiogwaste"].id ] = {	ereward=1000
-	,mreward=500},
-	[UnitDefNames["tiglil"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["skinfantry"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["gjbigbiowaste"].id ] = {	ereward=2000
-	,mreward=1000},
-	[UnitDefNames["vort"].id ] = {},
-	[UnitDefNames["gtreetrunk"].id] = {},
-	[UnitDefNames["gcvehiccorpsemini"].id ] = {	mreward=1000
-	,ereward=500},
-	[UnitDefNames["gcvehiccorpse"].id] = {	mreward=2000,
-	ereward=1000},
-	[UnitDefNames["gzombiehorse"].id] = {	mreward=2000,
-	ereward=1000},
-	[UnitDefNames["ghohymen"].id] = {	mreward=2000,
-	ereward=1000},
-	[UnitDefNames["bg"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["bg2"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["css"].id] = {ereward=100
-	,mreward=100}
-	
-}
-
+Rewards = getRewardTable()
 
 function rewarder(id, boolIsBio)
 	ereward=0

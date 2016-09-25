@@ -43,6 +43,7 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 	return FactoryTypes
 	
 end
+
 function getAirUnitTable(UnitDefNames)
 	retTab={}
 	retTab[UnitDefNames["callygator"].id]=true
@@ -123,7 +124,63 @@ function getPokerTypeTable(UnitDefNames)
 	BattleTypes[UnitDefNames["vort"].id]=true
 	return BattleTypes
 end
+function getInfantryTypeTable()
+	Infantry={}
+	Infantry[UnitDefNames["bg"].id]=true
+	Infantry[UnitDefNames["bg2"].id]=true
+	Infantry[UnitDefNames["tiglil"].id]=true
+	Infantry[ UnitDefNames["skinfantry"].id]=true
+	Infantry[ UnitDefNames["vort"].id]=true
+	Infantry[ UnitDefNames["css"].id]=true
+	return Infantry
+end
 
+function getRecycleableUnitTypeTable()
+	 TransportTable={
+	[UnitDefNames["gjbigbiowaste"].id ]=true,
+	[UnitDefNames["gjmedbiogwaste"].id ]=true,
+	[UnitDefNames["gcvehiccorpse"].id ]=true,
+	[UnitDefNames["gcvehiccorpsemini"].id ]=true,
+	[UnitDefNames["gjmeatballs"].id ]=true,
+	[UnitDefNames["gseastar"].id ]=true
+	}
+
+return TransportTable
+end
+
+function getRewardTable()
+ Rewards ={
+	[UnitDefNames["gjmeatballs"].id ] = {	ereward=1000
+	,mreward=500},	
+	[UnitDefNames["gjmedbiogwaste"].id ] = {	ereward=1000
+	,mreward=500},
+	[UnitDefNames["tiglil"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["skinfantry"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["gjbigbiowaste"].id ] = {	ereward=2000
+	,mreward=1000},
+	[UnitDefNames["vort"].id ] = {},
+	[UnitDefNames["gtreetrunk"].id] = {},
+	[UnitDefNames["gcvehiccorpsemini"].id ] = {	mreward=1000
+	,ereward=500},
+	[UnitDefNames["gcvehiccorpse"].id] = {	mreward=2000,
+	ereward=1000},
+	[UnitDefNames["gzombiehorse"].id] = {	mreward=2000,
+	ereward=1000},
+	[UnitDefNames["ghohymen"].id] = {	mreward=2000,
+	ereward=1000},
+	[UnitDefNames["bg"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["bg2"].id] = {ereward=100
+	,mreward=100},
+	[UnitDefNames["css"].id] = {ereward=100
+	,mreward=100}
+	
+}
+return Rewards
+
+end
 function setDenial(key)
 	if not GG.jw_denyCommunication then GG.jw_denyCommunication = {} end
 	if not GG.jw_denyCommunication[key] then GG.jw_denyCommunication[key]=true end

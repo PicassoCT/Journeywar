@@ -354,6 +354,7 @@ function combineShatter()
 	end
 end
 
+
 function script.Create()
 	for i=1,5,1 do
 		Hide(comb[i])
