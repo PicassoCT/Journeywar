@@ -16,219 +16,187 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 ]]
-local module = {}
-      module.Vector3D = function (ix, iy, iz)
-	local v3d = {}
-	      v3d.v = {}
-	      v3d.v.x = ix
-	      v3d.v.y = iy
-	      v3d.v.z = iz
-	      mt = {} --Metatable
-	
-	function v3d:deepcopy(orig) --Deeply copy a table. This is for the operation metatables.
-    		local orig_type = type(orig)
-    		local copy
-    		if orig_type == 'table' then
-        		copy = {}
-        		for orig_key, orig_value in next, orig, nil do
-            			copy[self:deepcopy(orig_key)] = self:deepcopy(orig_value)
-        		end
-        		setmetatable(copy, self:deepcopy(getmetatable(orig)))
-   		else -- number, string, boolean, etc
-        		copy = orig
-    		end
-    		return copy
-	end
-	
-	--Vector Specific Math
+Vector = {}
+Vector.__index = Vector
 
-	function v3d:getAngle() --Return the 3D angle (heading, carom) of the vector IN RADIANS!.
-		hdg = math.atan2(self:getY(), self:getX())
-		crm = math.atan2(self:getZ(), 0)
-		return hdg, crm
-	end
-	
-	function v3d:getLength() --Return the length of the vector (i.e. the distance from (0,0), see README.md for examples of using this)
-		origin = self:deepcopy(self) --Get a new vector to work with
-		origin:setX(0) --Set the origin equal to the geometric origin
-		origin:setY(0)
-		origin:setZ(0)
-		return self .. origin --Linear distance from us to the origin
-	end
-	
-        function module.average (vectors)
-                local n = #vectors
-                local tmp = module.Vector3D(0, 0, 0)
-                local j = 1 --Position in new_vectors
-                if n == 0 then
-                        error("average() called with 0 inputs!")
-                end
-                for i, vector in ipairs(vectors) do
-                        tmp = tmp + vector
-                end
-                return tmp / module.Vector3D(n, n, n)
-        end
+   function Vector.new (ix, iy, iz) 
+	   if ix and type(ix)== "number" then
+			return setmetatable({x = ix , 
+								 y = iy ,
+								 z = iz }, Vector)
+		end
 
+		return setmetatable({x =  0, 
+							 y =  0,
+							 z =  0}, Vector)
+	end
+	
 
 	--Comparisons
 
-	mt.__eq = function(lhs, rhs)
+	function Vector.__eq (lhs, rhs)
 		--Equal To operator for Vector3Ds
-		return (lhs.getX() == rhs.getX()) and (lhs.getY() == rhs.getY()) and (lhs.getZ() == rhs.getZ())
+		return (self.x == rhs.x) and (self.y == rhs.y) and (self.z == rhs.z)
 	end
 	
-	mt.__lt = function(lhs, rhs)
+	function Vector.__lt (lhs, rhs)
 		--Less Than operator for Vector3Ds
-		return sqrt((lhs.getX()^2) + (lhs.getY()^2) + (lhs.getZ()^2)) < sqrt((rhs.getX()^2) + (rhs.getY()^2) + (lhs.getZ()^2)) --We do this to compute the linear value of the vector so that, for example, (a % b) < (c % d) will not be broken.
+		return sqrt((self.x^2) + (self.y^2) + (self.z^2)) < sqrt((rhs.x^2) + (rhs.y^2) + (self.z^2)) --We do this to compute the linear value of the vector so that, for example, (a % b) < (c % d) will not be broken.
 	end
 	
-	mt.__le = function(lhs, rhs)
+	function Vector.__le (lhs, rhs)
 		--Less Than Or Equal To operator for Vector3Ds
-		return sqrt((lhs.getX()^2) + (lhs.getY()^2) + (lhs.getZ()^2)) <= sqrt((rhs.getX()^2) + (rhs.getY()^2) + (lhs.getZ()^2)) --We do this to compute the linear value of the vector so that, for example, (a % b) < (c % d) will not be broken.
+		return sqrt((self.x^2) + (self.y^2) + (self.z^2)) <= sqrt((rhs.x^2) + (rhs.y^2) + (self.z^2)) --We do this to compute the linear value of the vector so that, for example, (a % b) < (c % d) will not be broken.
 	end
 	
 	--Operations
-	
-	function v3d:setX(x)
-		self.v.x = x
-	end
-	
-	function v3d:setY(y)
-		self.v.y = y
-	end
 
-	function v3d:setZ(z)
-		self.v.z = z
-	end
-
-	function v3d:getX()
-		return self.v.x
-	end
 	
-	function v3d:getY()
-		return self.v.y
-	end
-
-	function v3d:getZ()
-		return self.v.z
-	end
-	
-	mt.__unm = function(rhs)
+	function Vector.__unm (rhs)
 		--Unary Minus (negation) operator for Vector3Ds
-		out = rhs:deepcopy(rhs) --Copy the operand for the output (else the output won't have metamethods)
-		out:setX(-rhs:getX()) --Operate on the X property
-		out:setY(-rhs:getY()) --Operate on the Y property
-		out:setY(-rhs:getZ()) --Operate on the Z property
-		return out
+		out = Vector:new()
+		out.x =(-rhs.x) --Operate on the X property
+		out.y =(-rhs.y) --Operate on the Y property
+		out.y =(-rhs.z) --Operate on the Z property
+		return Vector:new(-rhs.x,
+							 -rhs.y,
+							 -rhs.z
+							)
 	end
 	
-	mt.__add = function(lhs, rhs)
-	
+	function Vector.__add (lhs, rhs)
+		--assert(rhs)
+		--assert(lhs)
 		--Addition operator for Vector3Ds
-		out = lhs:deepcopy(lhs)--Copy the operand for the output (else the output won't have metamethods)
-	if type(rhs)=="number" then
-		out:setX(lhs:getX() + rhs) --Operate on the X property
-		out:setY(lhs:getY() + rhs) --Operate on the Y property
-		out:setZ(lhs:getZ() + rhs) --Operate on the Z property
+		out = Vector:new()--Copy the operand for the output (else the output won't have metamethods)
+		if type(rhs)=="number" then
+		out.x =(lhs.x + rhs) --Operate on the X property
+		out.y =(lhs.y + rhs) --Operate on the Y property
+		out.z =(lhs.z + rhs) --Operate on the Z property
 	else
-		out:setX(lhs:getX() + rhs:getX()) --Operate on the X property
-		out:setY(lhs:getY() + rhs:getY()) --Operate on the Y property
-		out:setZ(lhs:getZ() + rhs:getZ()) --Operate on the Z property
+		out.x =(lhs.x + rhs.x) --Operate on the X property
+		out.y =(lhs.y + rhs.y) --Operate on the Y property
+		out.z =(lhs.z + rhs.z) --Operate on the Z property
 	end
 	
 	return out
 	end
 
-	mt.__sub = function(lhs, rhs)
+	function Vector.__sub (lhs, rhs)
+		--assert(rhs)
+		--assert(lhs)
 		--Subtraction operator for Vector3Ds
-		out = lhs:deepcopy(lhs)--Copy the operand for the output (else the output won't have metamethods)
-		if type(rhs)=="number" then
-			out:setX(lhs:getX() - rhs) --Operate on the X property
-			out:setY(lhs:getY() - rhs) --Operate on the Y property
-			out:setZ(lhs:getZ() - rhs) --Operate on the Z property
+		out = Vector:new()
+		if type(rhs)=="number" then		
+			out.x =(lhs.x - rhs) --Operate on the X property
+			out.y =(lhs.y - rhs) --Operate on the Y property
+			out.z =(lhs.z - rhs) --Operate on the Z property
 		else
-			out:setX(lhs:getX() - rhs:getX()) --Operate on the X property
-			out:setY(lhs:getY() - rhs:getY()) --Operate on the Y property
-			out:setZ(lhs:getZ() - rhs:getZ()) --Operate on the Z property
+			out.x =(lhs.x - rhs.x) --Operate on the X property
+			out.y =(lhs.y - rhs.y) --Operate on the Y property
+			out.z =(lhs.z - rhs.z) --Operate on the Z property
 		end
 			return out
 	end
 
-	mt.__mul = function(lhs, rhs)
-	out = lhs:deepcopy(lhs)--Copy the operand for the output (else the output won't have metamethods)
+	function Vector.__mul (lhs, rhs)
+		----assert(rhs)
+		----assert(lhs)
+	
+		if type(lhs)=="number" then
 
-	if type(rhs)=="number" then
-		out:setX(lhs:getX() * rhs) --Operate on the X property
-		out:setY(lhs:getY() * rhs) --Operate on the Y property
-		out:setZ(lhs:getZ() * rhs) --Operate on the Z property
-	else
-		--Multiplication operator for Vector3Ds
-		out:setX(lhs:getX() * rhs:getX()) --Operate on the X property
-		out:setY(lhs:getY() * rhs:getY()) --Operate on the Y property
-		out:setZ(lhs:getZ() * rhs:getZ()) --Operate on the Z property
-	end
-		return out
+			return Vector:new(rhs.x * lhs,
+							  rhs.y * lhs,
+							  rhs.z * lhs
+							 )
+		end
+	
+		if type(rhs)=="number" then
+
+			return Vector:new(lhs.x * rhs,
+							  lhs.y * rhs,
+							  lhs.z * rhs
+							 )
+		end
+		
+			--Multiplication operator for Vector3Ds
+				return Vector:new(lhs.x * rhs.x,
+								  lhs.y * rhs.y,
+								  lhs.z * rhs.z)
+		
+		
 	end
 
-	mt.__div = function(lhs, rhs)
-	out = lhs:deepcopy(lhs)--Copy the operand for the output (else the output won't have metamethods)
+	function Vector.__div (lhs, rhs)
+		out = Vector:new()
 
 	if type(rhs)=="number" then
 		--Division operator for Vector3Ds
-		out:setX(lhs:getX() / rhs) --Operate on the X property
-		out:setY(lhs:getY() / rhs) --Operate on the Y property
-		out:setZ(lhs:getZ() / rhs) --Operate on the Z property
+		out.x =(lhs.x / rhs) --Operate on the X property
+		out.y =(lhs.y / rhs) --Operate on the Y property
+		out.z =(lhs.z / rhs) --Operate on the Z property
 	else
 		--Division operator for Vector3Ds
-		out:setX(lhs:getX() / rhs:getX()) --Operate on the X property
-		out:setY(lhs:getY() / rhs:getY()) --Operate on the Y property
-		out:setZ(lhs:getZ() / rhs:getZ()) --Operate on the Z property
+		out.x =(lhs.x / rhs.x) --Operate on the X property
+		out.y =(lhs.y / rhs.y) --Operate on the Y property
+		out.z =(lhs.z / rhs.z) --Operate on the Z property
 	end
 		return out
 	end
 	
-	mt.__mod = function(lhs, rhs)
+	function Vector.__mod (lhs, rhs)
 		--Vector distance operator for Vector3Ds. Denoted by modulo (%)
-		out = lhs:deepcopy(lhs)		--Copy the operand for the output (else the output won't have metamethods)
-		out:setX(math.abs(rhs:getX() - lhs:getX())) --Operate on the X property
-		out:setY(math.abs(rhs:getY() - lhs:getY())) --Operate on the Y property
-		out:setZ(math.abs(rhs:getZ() - lhs:getZ())) --Operate on the Z property
+		out = Vector:new()
+		out.x =(math.abs(rhs.x - lhs.x)) --Operate on the X property
+		out.y =(math.abs(rhs.y - lhs.y)) --Operate on the Y property
+		out.z =(math.abs(rhs.z - lhs.z)) --Operate on the Z property
 		return out	
 	end
 
-	mt.__cross = function(lhs, rhs)
-		--Vector cross product 
-		out = lhs:deepcopy(lhs)		--Copy the operand for the output (else the output won't have metamethods)
-		out:setX(lhs:getY()*rhs:getZ() - lhs:getZ()*rhs:getY()) --Operate on the X property
-		out:setY(lhs:getZ()*rhs:getY() - lhs:getX()*rhs:getZ()) --Operate on the Y property
-		out:setZ(lhs:getX()*rhs:getY() - lhs:getY()*rhs:getX()) --Operate on the Z property
-		return out	
-	end
-	
-	mt.__concat = function(lhs, rhs)
+	function Vector.__concat (lhs, rhs)
 		--Linear distance operator for Vector3Ds. Denoted by concat (..)
 		out = 0		--This is a linear operation, so no deepcopy. 
-		out = math.sqrt(((rhs:getX() - lhs:getX())^2) + (((rhs:getY() - lhs:getY())^2) + ((rhs:getZ() - lhs:getZ())^2))) --Distance formula
+		out = math.sqrt(((rhs.x - lhs.x)^2) + (((rhs.y - lhs.y)^2) + ((rhs.z - lhs.z)^2))) --Distance formula
 		return out
 	end
 
-	mt.__tostring = function(s)
+	function Vector.__tostring (s)
 		--tostring handler for Vector3D
 		out = ""	--This is a string operation, so no deepcopy.
 		out = "[(X:"
-		out = out .. s:getX() 
+		out = out .. s.x 
 		out = out .. "),(Y:" 
-		out = out .. s:getY() 
+		out = out .. s.y 
 		out = out .. "),(Z:" 
-		out = out .. s:getZ() 
+		out = out .. s.z 
 		out = out .. ")]"
 		return out
 	end
-	
-	
-	
-	setmetatable(v3d, mt)
 
-	return v3d
-end
-return module
+	--Vector Specific Math
+
+	function Vector:getAngle() --Return the 3D angle (heading, carom) of the vector IN RADIANS!.
+		hdg = math.atan2(self.y, self.x)
+		crm = math.atan2(self.z, 0)
+		return hdg, crm
+	end
+	
+	function Vector:length() --Return the length of the vector (i.e. the distance from (0,0), see README.md for examples of using this)
+		return math.sqrt (self.x *self.x +self.y*self.y + self.z*self.z)
+	end
+	
+	function Vector:cross ( rhs)
+		--Vector cross product 
+		out = Vector:new()
+		out.x =(self.y*rhs.z - self.z*rhs.y) --Operate on the X property
+		out.y =(self.z*rhs.y - self.x*rhs.z) --Operate on the Y property
+		out.z =(self.x*rhs.y - self.y*rhs.x) --Operate on the Z property
+		return out	
+	end
+	
+	function Vector:normalized()
+		return self/ self.length()
+	end
+	
+	
+setmetatable(Vector, { __call = function(_, ...) return Vector.new(...) end })	

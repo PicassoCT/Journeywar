@@ -3,7 +3,8 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_Build.lua" 
-include "lib_type.lua"
+include "lib_type.lua" 
+
 
 
 turret = piece "sstowgab"
@@ -34,6 +35,7 @@ SIG_LAS=64
 SIG_ROPE=128
 SIG_TURNER=256
 
+
 local boolStillAiming=false
 boolFireLock=false
 spamfilterSTART=true
@@ -56,7 +58,7 @@ local DropUnit = Spring.UnitScript.DropUnit
 local loaded=false
 local ropestarts={}
 local sensors={}
-local rope={}
+rope={}
 for i=1,12,1 do
 	ropestarts[i]={}
 	rope[i]={}
@@ -117,16 +119,13 @@ end
 
 function reSetSpeed()
 	SetUnitValue(COB.MAX_SPEED,maxSpeed)
-	
 end
 
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 function acquireVehicleDegree()
 	ax,ay,az,_,_,_=spGetUnitPiecePosDir(unitID,pm1)
 	bx,by,bz,_,_,_=spGetUnitPiecePosDir(unitID,pm2)
-	--deg=math.atan2(by-ay,math.sqrt(((bz-az)^2)+((ay-by)^2)))*(180/pi)
-	
-	-- dx,dy,dz=Spring.GetUnitDirection(unitID)
+
 	opposite=ay-by
 	
 	local ax=ax-bx
@@ -134,10 +133,8 @@ function acquireVehicleDegree()
 	
 	local len = math.sqrt( ax*ax +az * az)
 	
-	
 	deg=math.floor(math.atan2(opposite, len)*(180/pi))
-	--Spring.Echo("acquireVehicleDegree",deg)
-	
+
 	return deg
 end
 
@@ -183,82 +180,46 @@ function dustEmit(boolIsABioUnit)
 	local lEmitSfx=EmitSfx
 	local spCreateUnit=Spring.CreateUnit
 	while(true) do
-		if boolIsABioUnit==true then
-			dice=math.random(0,1)
-			if dice==1 then 
+	
+	if boolMoving==true then
+			if boolIsABioUnit==true then
+				dice=math.random(0,1)
+				if dice==1 then 
+					throw=math.random(4,12)
+					for i=1,throw,1 do
+						lEmitSfx(emitblood,1025) 
+						lEmitSfx(emitblood,1025) 
+						Sleep(98)
+						Sleep(throw)
+					end
+				else 
+					throw=math.random(4,12)
+					for i=1,throw,1 do
+						lEmitSfx(emitblood,1025) 
+						lEmitSfx(emitblood,1025) 
+						Sleep(98)
+						Sleep(throw)
+					end
+					x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID, emitblood)
+					teamID=Spring.GetGaiaTeamID()
+					spCreateUnit("blooddecalfactory",x,y,z,0,teamID)
+				end
+				
+			else
 				throw=math.random(4,12)
 				for i=1,throw,1 do
-					lEmitSfx(emitblood,1025) 
-					lEmitSfx(emitblood,1025) 
-					Sleep(98)
+					lEmitSfx(emitblood,1026) 
 					Sleep(throw)
-				end
-			else 
-				throw=math.random(4,12)
-				for i=1,throw,1 do
-					lEmitSfx(emitblood,1025) 
-					lEmitSfx(emitblood,1025) 
-					Sleep(98)
 					Sleep(throw)
+					lEmitSfx(emitblood,1026) 
+					Sleep(98)
 				end
-				x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID, emitblood)
-				teamID=Spring.GetGaiaTeamID()
-				spCreateUnit("blooddecalfactory",x,y,z,0,teamID)
+				
 			end
-			
-		else
-			throw=math.random(4,12)
-			for i=1,throw,1 do
-				lEmitSfx(emitblood,1026) 
-				Sleep(throw)
-				Sleep(throw)
-				lEmitSfx(emitblood,1026) 
-				Sleep(98)
-			end
-			
-		end
+	end
 		nap=math.random(30,200)
 		Sleep(nap)
 	end
-end
-
-function setIntervallStraight(intStart,intEnd,degree)
-	
-	temp=0
-	if intStart== 1 then
-		nPrevDegTable[12]= acquireVehicleDegree() + degree
-		temp=nPrevDegTable[12]
-	else
-		nPrevDegTable[13-intStart]=-1* nPrevDegTable[14-intStart]+degree
-		temp=nPrevDegTable[13-intStart]
-	end
-	if intStart == intEnd then 
-		Turn(rope[13-intStart],x_axis,math.rad(degree),ropeSpeed)		
-		return false
-	end
-	
-	
-	Turn(rope[13-intStart],x_axis,math.rad(nPrevDegTable[13-intStart]),ropeSpeed)
-	
-	
-	--set the remains of the rope straight -- checking if there is a rest
-	if intStart+1 >= intEnd or intStart+1==13 then 
-		return false
-	else
-		
-		for i=intStart+1,intEnd,1 do	
-			--assert(	nPrevDegTable[13-i])
-			----Spring.Echo(	nPrevDegTable[13-i])
-			----Spring.Echo(i .." and thirteen minus ",13-i)
-			
-			nPrevDegTable[13-i]=temp
-			Turn(rope[13-i],x_axis,math.rad(0),ropeSpeed)
-			nPrevDegTable[13-i]=temp
-		end
-	end
-	--now wee need the summed up previous degrees 
-	
-	return true
 end
 
 
@@ -327,73 +288,6 @@ function echoNPreveDegTable()
 	end
 end
 
-
-
-function setIntervallSmooth(intStart,intEnd)
-	if intStart== intEnd then return false end
-	--set the SensorPhalanx at a right angle over the crowd		
-	avd=acquireVehicleDegree()
-	Turn(sensors[12],x_axis,math.rad(avd),ropeSpeed)	
-	Turn(ropestarts[12],x_axis,math.rad(avd),ropeSpeed)	
-	--sensorBlink()
-	--updateHeights()
-	
-	for i=intStart,intEnd,1 do	
-		
-		
-		resultDeg=0
-		tarDegree=(acquireRopeDegree(i))
-		--StandardCase
-		if i~=1 then
-			
-			
-			resultDeg=math.floor(-1*nPrevDegTable[13+1-i] + (tarDegree)) --bachelors rope by now
-			nPrevDegTable[13-i]=resultDeg
-			-- --Spring.Echo("Element: ",13-i.." has forerunner Degree: ", nPrevDegTable[13-i+1] .."and rope-degree is ", tarDegree.." resulting in ",resultDeg )
-			
-		else --start intervall clause 
-			
-			resultDeg=math.floor(avd + tarDegree)
-			--Spring.Echo("FirstPiece",resultDeg)
-			resultDeg=avd-15
-			nPrevDegTable[12]=resultDeg
-		end
-		
-		
-		
-		--Result Stage
-		
-		
-		Turn(rope[13-i],x_axis,math.rad(resultDeg),ropeSpeed)
-		
-		
-		
-		
-	end
-	--	echoNPreveDegTable()
-	return true 
-end
-
-function findMaxInIntervall(intStart,intEnd,tableToCheck)
-	if intStart == intEnd then
-		return nil
-	end
-	
-	maximum=-9000000
-	nr=nil
-	for i=intStart,intEnd,1 do
-		if tableToCheck[13-i] > maximum then
-			
-			maximum=tableToCheck[13-i]
-			nr=13-i
-		end
-	end
-	if nr~=nil then
-		return maximum, nr
-	end
-	
-end
-
 function unNeg(val)
 	if val >= 0 then return val end
 	return val*-1
@@ -415,13 +309,7 @@ function sumDegree(startv,endv)
 	if startv==endv then return nPrevDegTable[13-starv] end
 	
 	degSum=0
-	
-	
-	--Spring.Echo(startv)
-	--Spring.Echo(endv)
-	
-	
-	
+
 	for i=startv,endv,1 do
 		
 		if nPrevDegTable[13-i]~= nil then
@@ -488,28 +376,56 @@ end
 heightTable={}
 nPrevDegTable={}
 
+--Keep the ropebase physicaly Resting
+function setRopeBaseResting()
 
+	while true do	
+		heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
+		Turn(rope[12],y_axis, -heading + rotationOffset,0)
+		Sleep(10)
+	end
 
-function relativeRestingRope()
-	Sleep(50)
 end
 
---function estimate
-function stillInRange()
-	--210, value of the pieces lenght (13 mal anzahl der pieces 12 +50 zur base vom sniper)
-	--if no collisions detected,then
-	px,py,pz,_,_,_=Spring.GetUnitPiecePosDir(unitID,bloodemt)
-	x,y,z=Spring.GetUnitBasePosition(unitID)
-	distance=math.sqrt((px-x)^2 +(pz-z)^2)
-return false end
+local COB_ANGULAR = 182
+rotationOffset=0
+--function 
+function fakedRelativeRope(meatID)
 
--- if distance > totalDistanceToEndPiece then 
--- return false
--- else
--- return true
--- end
+	vec = Vector:new()
+	vec.x,vec.y,vec.z= Spring.GetUnitPosition(unitID)
+	px,py,pz= Spring.GetUnitPiecePosDir(unitID, rope[1])
+	vec.x,vec.y,vec.z= vec.x - px ,vec.y -py,vec.z -pz
+	maxRange= math.sqrt(vec.x^2 + vec.y^2 +vec.z^2)-1
+	
+	worldPos = Vector:new()
+	worldPos.x, worldPos.y, worldPos.z = Spring.GetUnitPosition(meatID)
+	
+	while true do
+		vec.x,vec.y,vec.z= Spring.GetUnitPosition(unitID)
+		ux,uy,uz = vec.x - worldPos.x,vec.y -worldPos.y ,vec.z -worldPos.z
+		range= math.sqrt(ux^2 + uy^2 + uz^2)
+		
+		if range <= maxRange then
+			xComponent, yComponent = worldPos.x - 
+			--keep at same Position
+			rotationOffset =  math.deg(convPointsToDeg(vec.x, worldPos.x, vec.z, worldPos.z))*COB_ANGULAR
+			else
+			--Turn toward inverted Direction
+			heading= Spring.GetUnitHeading(unitID)
+			--Half a Turn  + the offset
+			rotationOffset= math.deg(math.pi)*COB_ANGULAR  - heading
+			--update the position only if at range max
+			worldPos.x, worldPos.y, worldPos.z = Spring.GetUnitPosition(meatID)
+		end
 
--- end
+	
+	Sleep(10)
+	end
+
+end
+
+
 function tableInit()
 	for i=1,12,1 do
 		heightTable[i]={}
@@ -519,17 +435,8 @@ function tableInit()
 	end
 	
 end
---updates the ropephysicks, start a particle emit Thread dependent upon the type
 
--- local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
--- local px2, py2, pz2 = Spring.GetUnitBasePosition(passengerID)
--- local dx, dy , dz = px2 - px1, py2 - py1, pz2 - pz1
--- local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID))/32768*math.pi
--- local dist = (dx^2 + dz^2)^0.5
-
--- Turn(load_shoulder, y_axis, heading)
--- Move(load_shoulder, y_axis, dy)
--- Move(load_arm, z_axis, dist)
+--limits ropephysix instances
 function checkSnipers()
 	local snipersTotal= GG.GlobalSniperRopeSimTable.Ids
 	local boolAltered=false
@@ -547,7 +454,7 @@ function checkSnipers()
 	return boolAltered
 end
 
-function ourOnlyRope(passengerID)
+function ourOnlyRope (passengerID)
 	--tableInit()
 	--Spring.Echo("Script did it!")
 	SetSignalMask(SIG_ROPE)
@@ -561,12 +468,17 @@ function ourOnlyRope(passengerID)
 	Turn(bloodemt,y_axis,math.rad(-90),0.03)
 	StartThread(dustEmit,boolBioUnit)
 	StartThread(draggingOn)
+	StartThread(setRopeBaseResting)
+	StartThread(fakedRelativeRope,passengerID)
+	
 	if not GG.SniperRope then GG.SniperRope={} end
 	GG.SniperRope[unitID]=true
 	
 	--To limit the usage of ropePhysix a alternative is needed aka pulling the object near the sniper and thats it..
-	if not GG.GlobalSniperRopeSimTable then GG.GlobalSniperRopeSimTable={number = 0, Ids={}} end
-	
+	if not GG.GlobalSniperRopeSimTable then
+	GG.GlobalSniperRopeSimTable={number = 0, Ids={}} 
+	end
+	--[[
 	if GG.GlobalSniperRopeSimTable.number < 5 or checkSnipers()==true then
 		
 		GG.GlobalSniperRopeSimTable.number=GG.GlobalSniperRopeSimTable.number+1
@@ -579,7 +491,7 @@ function ourOnlyRope(passengerID)
 		
 		
 		--function PseudoRopePhysix(RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength, forceFunctionTable,SpringConstant)
-	vec=	module.Vector:new{x=0,y=-9.81,z=0}
+	vec=Vector.new(0,-9.81,0)
 	forceFunctionTable={
 				[1]={	acceleration	=	vec, 
 				geometryfunction	=	function(x,y,z) return true end
@@ -594,12 +506,13 @@ function ourOnlyRope(passengerID)
 			RopePieceTable[#RopePieceTable+1]=rope[i]
 			RopePieceTable[#RopePieceTable+1]=sensors[i]		
 		end
-		StartThread(PseudoRopePhysix,RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength,forceFunctionTable ,100000.0)
+		--StartThread(PseudoRopePhysix,RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength,forceFunctionTable ,100000.0)
 		
 		
 	else -- not RopeSimAlternative
-		
+		retractRope()
 	end
+	]]
 	
 	while(loaded==true) do
 		Sleep(50)
@@ -617,21 +530,18 @@ function script.TransportPickup(passengerID)
 	--Spring.Echo("TransportPickup")
 	local UnitedDefIDs=Spring.GetUnitDefID(passengerID)
 	if loaded == false and (transportableDefIds[UnitedDefIDs] or isInfantry(UnitedDefIDs)==true) then
+		SetUnitValue(COB.BUSY, 1)	
 		
-		SetUnitValue(COB.BUSY, 1)
-		
-		
-		
-		local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
-		local px2, py2, pz2 = Spring.GetUnitBasePosition(passengerID)
+		local px1, py1, pz1 = Spring.GetUnitPosition(unitID)
+		local px2, py2, pz2 = Spring.GetUnitPosition(passengerID)
 		local dx, dy , dz = px2 - px1, py2 - py1, pz2 - pz1
-		local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID))/32768*math.pi
-		local dist = (dx^2 + dy^2)^0.5
-		
-		
+		norm= math.sqrt(dx^2 +dy^2 +dz^2)
+		heading = (65533 - Spring.GetHeadingFromVector(dx/norm, dz/norm)) - (Spring.GetUnitHeading(unitID))/(32768*math.pi))
+		local dist = (dx^2 + dz^2)^0.5
 		
 		if dist > 200 then return end
-		Turn(csniper,y_axis,heading-(32768/2),12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
+		
+		Turn(csniper,y_axis,heading ,12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
 		WaitForTurn(csniper,y_axis)
 		expandRope()
 		transportedID=passengerID
@@ -640,30 +550,24 @@ function script.TransportPickup(passengerID)
 		
 		StartThread(ourOnlyRope,passengerID)
 		
-		Turn(csniper, y_axis, math.rad(0),19)
+	
 		SetUnitValue(COB.BUSY, 0)
 	end		
-		retractRope()
-end
-	
 
+	
 
 
 function script.TransportDrop(passengerID, x, y, z)
 	Signal(SIG_ROPE)
 	--Spring.Echo("TransportDrop")
-	
+	retractRope() 
 	if loaded == false then return end
 	--if unit not loaded
-	
 	SetUnitValue(COB.BUSY, 1)
-	
 	
 	DropUnit(transportedID)
 	transportedID=nil
 	loaded=false
-	retractRope()
-	
 	
 	SetUnitValue(COB.BUSY, 0)
 end
@@ -672,7 +576,6 @@ end
 
 local function spamFilter()
 	SetSignalMask(SIG_SPAM)
-	
 	
 	while (true) do
 		
@@ -797,33 +700,29 @@ function constLazzorsEmit()
 		Turn(flare,y_axis,math.rad(0),0)
 		Turn(flare,z_axis,math.rad(0),0)
 		lEmitSfx(flare, 2049)
-		
 		--EmitSfx by force
-		Sleep(65)
-		
-		
-		
+		Sleep(65)		
 	end
-	
-	
 end
 
-
+boolMoving= false
 
 
 function script.StartMoving()
+	boolMoving= true
 	if boolFilterActive==false then
 		Signal(SIG_SPAM)
 		StartThread(spamFilter)
 		boolFilterActive=true
 	end
-	
+	Turn(csniper, y_axis, math.rad(0),9)
 	spamfilterSTOP=false
 	spamfilterSTART=true
 	
 end
 
 function script.StopMoving()
+	boolMoving= false
 	-- ----Spring.Echo ("stopped walking!")
 	spamfilterSTART=false 
 	spamfilterSTOP=true 
@@ -1050,9 +949,7 @@ function script.Create()
 	for i=1, 12,1 do
 		Hide(rope[i])
 	end
-	--StartThread(testOsterOn)
-	
-	
+
 end
 
 function script.Killed(recentDamage,_)

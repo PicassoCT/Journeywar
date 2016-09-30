@@ -33,3 +33,7 @@ heightmap holes are applied to often and thus- go to deep
 
 jsunship
 forrestfire
+
+sniper- pseudo rope physix
+hunter for journeys und centrail
+

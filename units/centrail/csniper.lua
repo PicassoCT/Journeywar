@@ -32,7 +32,6 @@ collisionvolumeoffsets = "0 0 0",
 	explodeAs="citadelldrone",
 	selfDestructAs="cartdarkmat", 
 
-
 sightDistance = 650,
 
 Builder = false,
@@ -43,7 +42,7 @@ CanPatrol = true,
 CanStop = true,
 LeaveTracks = true, 
 
-isFirePlatform=true,
+isFirePlatform=false,
 holdSteady =true,
 releaseHeld =true,
 transportCapacity   = 1,

@@ -97,6 +97,15 @@ LegTable[#LegTable+1]=piece"striderle6"
 --You who venture here in hope of awesome source, turn back now,
 --nothing but Goons in drag await you here
 function script.Create()
+
+Move(strider,y_axis,-110,0)
+tP(LegTable[Leg3],z_axis,math.rad(143),0)
+tP(LegTable[Leg3+1],z_axis,math.rad(-176),0)
+tP(LegTable[Leg2],z_axis,math.rad(-143),0)
+tP(LegTable[Leg2+1],z_axis,math.rad(176),0)
+tP(LegTable[Leg1],x_axis,math.rad(143),0)
+tP(LegTable[Leg1+1],x_axis,math.rad(-176),0)
+
 	Hide(relPos1)
 	Hide(relPos2)
 	Hide(relPos3)
@@ -410,8 +419,6 @@ function relativeTurnFeet()
 	
 end
 
-
-
 ---WALKING---
 function deactiveAnim(number,signal)
 	Signal(signal)
@@ -432,83 +439,136 @@ function deactiveAnim(number,signal)
 end
 
 function forward(number, speed)
-Turn(LegTable[number+1],x_axis,math.rad(22),speed)
-WaitForTurns(LegTable[number+1])
-Turn(LegTable[number],x_axis,math.rad(-39),speed)
-Turn(LegTable[number],z_axis,math.rad(0),speed)
-Turn(LegTable[number],y_axis,math.rad(0),speed)
-WaitForTurns(LegTable[number])
-WaitForTurns(LegTable[number+1])
-Turn(LegTable[number],x_axis,math.rad(-29),speed)
-Turn(LegTable[number+1],x_axis,math.rad(29),speed)
+	TaskTable[number].FinnishedExecution = false
+
+	Turn(LegTable[number+1],x_axis,math.rad(22),speed)
+	WaitForTurns(LegTable[number+1])
+	Turn(LegTable[number],x_axis,math.rad(-39),speed)
+	Turn(LegTable[number],z_axis,math.rad(0),speed)
+	Turn(LegTable[number],y_axis,math.rad(0),speed)
+	WaitForTurns(LegTable[number])
+	WaitForTurns(LegTable[number+1])
+	Turn(LegTable[number],x_axis,math.rad(-29),speed)
+	Turn(LegTable[number+1],x_axis,math.rad(29),speed)
+
+	WaitForTurns(LegTable[number],LegTable[number+1])
+	TaskTable[number].FinnishedExecution = true
 end
 
 --angleY 65
-function stabilize(number, signumYAxis, angleY, speed)
-Turn(LegTable[number],x_axis,math.rad(25),speed)
-Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
-Turn(LegTable[number],y_axis,math.rad(-1*angleY*signumYAxis),speed)
+function stabilize(number, speed)
+	TaskTable[number].FinnishedExecution = false
+	 signumYAxis =1 
+	if number == Leg3 then  signumYAxis = -1 end
+	angleY = math.random(110,160)
+
+	Turn(LegTable[number],x_axis,math.rad(25),speed)
+	Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
+	Turn(LegTable[number],y_axis,math.rad(-1*angleY*signumYAxis),speed)
+
+	WaitForTurns(LegTable[number],LegTable[number+1])
+	TaskTable[number].FinnishedExecution = true
 end
 
 --angleY 65
-function stabilizeArc(number, angleYBegin, angleYEnd, speed)
-Turn(LegTable[number],x_axis,math.rad(25),speed)
-Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
-Turn(LegTable[number],y_axis,math.rad(angleYBegin),speed)
-WaitForTurns(LegTable[number])
-WaitForTurns(LegTable[number+1])
-Turn(LegTable[number],y_axis,math.rad(angleYEnd),speed)
-WaitForTurns(LegTable[number])
+function stabilizeArc(number, speed)
+	TaskTable[number].FinnishedExecution = false
+	 angleYBegin =-42
+	 angleYEnd =32
+
+	Turn(LegTable[number],x_axis,math.rad(25),speed)
+	Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
+	Turn(LegTable[number],y_axis,math.rad(angleYBegin),speed)
+	WaitForTurns(LegTable[number])
+	WaitForTurns(LegTable[number+1])
+	Turn(LegTable[number],y_axis,math.rad(angleYEnd),speed)
+	WaitForTurns(LegTable[number])
+	WaitForTurns(LegTable[number],LegTable[number+1])
+	TaskTable[number].FinnishedExecution = true
 end
 
 function push(number, speed)
-Turn(LegTable[number],z_axis,math.rad(0),speed)
-Turn(LegTable[number],y_axis,math.rad(0),speed)
-Turn(LegTable[number],x_axis,math.rad(32),speed)
-Turn(LegTable[number+1],x_axis,math.rad(-32),speed)
+	TaskTable[number].FinnishedExecution = false
+
+	Turn(LegTable[number],z_axis,math.rad(0),speed)
+	Turn(LegTable[number],y_axis,math.rad(0),speed)
+	Turn(LegTable[number],x_axis,math.rad(32),speed)
+	Turn(LegTable[number+1],x_axis,math.rad(-32),speed)
+
+	WaitForTurns(LegTable[number],LegTable[number+1])
+	TaskTable[number].FinnishedExecution = true
 end
 
+	TaskTable={}
+					
 counter= 0
 function walk()
-	local ldeaAnim=deactiveAnim
-
+	Move(strider,y_axis,0,16)
 	while true do
 	
 	--Analytical IK
 	if boolWalking==true and boolAiming == false then
 	resetT(LegTable,3)
 	WaitForTurns(LegTable)
+
+
+	TaskTable[Leg1]={
+		CurrentFunctionIndex= 0 ,
+		FinnishedExecution=true,
+			functions={
+			[1]=push,
+			[2]= forward,
+			[3]= stabilizeArc
+			}
+		}
 		
+		TaskTable[Leg2]={
+		CurrentFunctionIndex= 2,
+		FinnishedExecution=true,
+			functions={
+			[1]= push,
+			[2]= forward,
+			[3]= stabilize
+			}
+		}
+		
+		TaskTable[Leg3]={
+		CurrentFunctionIndex=1 ,
+		FinnishedExecution=true,
+			functions={
+			[1]= push,
+			[2]= forward,
+			[3]= stabilize
+			}
+		}
+
 		while (boolWalking==true and boolAiming == false)do
-		--third leg goes forward
-		forward(Leg3, 1.41)
-		--second leg stabilizes
-		stabilize(Leg2, 1, math.random(110,160), 1.41)
-		--first leg pushes
-		push(Leg1, 1.41)
-		Sleep(750)
-		
-		--third leg stabilizes
-		stabilize(Leg3, -1,  math.random(110,160), 1.41)
-		--second leg pushes
-		push(Leg2, 1.41)
-		--first leg goes forward
-		forward(Leg1, 1.41)
-		Sleep(750)
-		--third leg pushes
-		push(Leg3, 1.41)
-		--second leg forward
-		forward(Leg2, 1.41)
-		--first leg stabilizes 
-		StartThread(stabilizeArc,Leg1, -42, 32, 1.41)
-		Sleep(750)
+
+				if TaskTable[Leg1].FinnishedExecution== true then
+				TaskTable[Leg1].CurrentFunctionIndex = (TaskTable[Leg1].CurrentFunctionIndex%3) +1
+				StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, 1.41)
+				end
+				
+				if TaskTable[Leg2].FinnishedExecution== true then
+				TaskTable[Leg2].CurrentFunctionIndex = (TaskTable[Leg2].CurrentFunctionIndex%3) +1
+				StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, 1.41)
+				end
+				
+				if TaskTable[Leg3].FinnishedExecution== true then
+				TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex%3) +1
+				StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 1.41)
+				end
+			
+		Sleep(10)
 		end
+		
 	resetT(LegTable,3)
 	WaitForTurns(LegTable)
 	end
 	Sleep(250)
 	end
 end
+
 
 function resPos(piece,center,speed,number,SIG)
 if not feetSignals[number] then feetSignals[number]= false end
@@ -682,7 +742,7 @@ function breath()
 	WaitForTurns(strider,striderlegA,striderlegA2,striderlegA3)
 end
 
-function swayLeftRight(boolLeft, distancefX, distancefY,time)
+function swayLeftRight(boolLeft, distancefX, distancefY,motiontimer)
 	if boolLeft == true then
 		dAXSigPosZ=1.0 	--left positiv
 		dAXSigNegZ=-1.0	--left negative
@@ -693,20 +753,36 @@ function swayLeftRight(boolLeft, distancefX, distancefY,time)
 	
 	offsetZ=distancefX/3
 	
-	syncMoveInTime(strider, distancefX*dAXSigNegZ, distancefY, 0, 	time)
-	syncTurnInTime(striderlegA2,0,0,-121 +offsetZ*dAXSigPosZ*7,		time,0,0,-121 +offsetZ*dAXSigPosZ*7*-1)
-	syncTurnInTime(striderlegB2,0,0,156 +offsetZ*dAXSigNegZ*4,		time,0,0,156 +offsetZ*dAXSigNegZ*4*-1)
+	syncMoveInTime(strider, distancefX*dAXSigNegZ, distancefY, 0, 	motiontimer, distancefX*dAXSigNegZ*-1,distancefY, 0 )
+	syncTurnInTime(striderlegA2,0,0,-121 +offsetZ*dAXSigPosZ*7,		motiontimer,0,0,-121 +offsetZ*dAXSigPosZ*7*-1)
+	syncTurnInTime(striderlegB2,0,0,125 +offsetZ*dAXSigNegZ*4,		motiontimer,0,0,125 +offsetZ*dAXSigNegZ*4*-1)
 	
-	syncTurnInTime(striderlegA,	0,0, 121 +offsetZ*dAXSigNegZ,		time,0,0,121 +offsetZ*dAXSigNegZ*-1)
-	syncTurnInTime(striderlegB,0,0, -156 +offsetZ*dAXSigPosZ*3 ,	time,0,0,-156 +offsetZ*dAXSigPosZ*3*-1)
+	syncTurnInTime(striderlegA,0,0, 121 +offsetZ*dAXSigNegZ,		motiontimer,0,0,121 +offsetZ*dAXSigNegZ*-1)
+	syncTurnInTime(striderlegB,0,0, -125 +offsetZ*dAXSigPosZ*3 	,motiontimer,0,0,-125 +offsetZ*dAXSigPosZ*3*-1)
 	
-	syncTurnInTime(striderlegA3,121,0,offsetZ*dAXSigNegZ,			time,121,0,offsetZ*dAXSigNegZ*-1)
+	syncTurnInTime(striderlegA3, 130,0,-30*dAXSigPosZ ,		motiontimer, 130,0,-30*dAXSigPosZ*-1  )
+	syncTurnInTime(striderlegB3, -155,0,0 ,		motiontimer, -160,0,0  )
+	Turn(striderlegB3,x_axis,math.rad(-155), 12)				
+	
+	WaitForTurns(strider,striderlegA,striderlegA2,striderlegA3)
+	--inverted tupels
+	syncMoveInTime(strider, distancefX*dAXSigNegZ*-1,distancefY, 0 , 		motiontimer, distancefX*dAXSigNegZ, distancefY, 0)
+	syncTurnInTime(striderlegA2,0,0,-121 +offsetZ*dAXSigPosZ*7*-1,		motiontimer,0,0,-121 +offsetZ*dAXSigPosZ*7)
+	syncTurnInTime(striderlegB2,0,0,125 +offsetZ*dAXSigNegZ*4*-1,		motiontimer,0,0,125 +offsetZ*dAXSigNegZ*4)
+	
+	syncTurnInTime(striderlegA,0,0,121 +offsetZ*dAXSigNegZ*-1,			motiontimer,	0,0, 121 +offsetZ*dAXSigNegZ)
+	syncTurnInTime(striderlegB,0,0,-125 +offsetZ*dAXSigPosZ*3*-1,		motiontimer,0,0, -125 +offsetZ*dAXSigPosZ*3 )
+	
+	
+	syncTurnInTime(striderlegA3, 130,0,-30*dAXSigPosZ *-1,		motiontimer, 130,0,-30*dAXSigPosZ  )
+	syncTurnInTime(striderlegB3, -160,0,0 ,		motiontimer, -155,0,0  )			
+	
 	WaitForTurns(strider,striderlegA,striderlegA2,striderlegA3)
 end
 
 function kneelRiseAKnight()--SirLongLeg
 	SetSignalMask(SIG_IDLE)
-	Spring.Echo("swayLeftRight")
+
 	dirAXSignPosZ=1.0 	--left positiv
 	dirAXSignNegZ=-1.0	--left negative
 	
@@ -717,17 +793,20 @@ function kneelRiseAKnight()--SirLongLeg
 	syncTurnInTime(striderlegB, 0,0,-156,	1000,0,0,0)
 	syncTurnInTime(striderlegA3,121,0,0,	1000,0,0,0)
 	syncTurnInTime(striderlegB3,-148,0,0,	1000,0,0,0)
-	syncMoveInTime(strider, 0, -105, 0, 			4000)
+	syncMoveInTime(strider, 0, -105, 0, 			2000)
 	WaitForMove(strider,y_axis)
 	WaitForTurns(strider,striderlegA,striderlegA2,striderlegA3)
 	
-	if maRa()==true then
-		swayTime= cbrandoVal(1,6)
-		for i=1, swayTime, 1 do	 
-			swayLeftRight(i %2 == 0, math.random(10,25), -105,4000)
-		end
+
+		if maRa()==true then
+			swayTime= cbrandoVal(1,6)
+			for i=1, swayTime, 1 do	
 		
-	end
+				swayLeftRight(i %2 == 0, math.random(10,25), -105,4000)
+			end
+		end	
+
+	
 	timeKneel=0
 	offSetswing=5
 	while timeKneel < 12000 do
@@ -737,7 +816,7 @@ function kneelRiseAKnight()--SirLongLeg
 		syncTurnInTime(striderlegB, 0,0,-156+offSetswing,	2000,0,-156+offSetswing*-1,0)
 		syncTurnInTime(striderlegA3,121-offSetswing,0,0,	2000,0,121-offSetswing*-1,0)
 		syncTurnInTime(striderlegB3,-148+offSetswing,0,0,	2000,0,148+offSetswing*-1,0)
-		Move(strider,y_axis, -105+offSetswing,offSetswing/2)
+		Move(strider,y_axis, -105+offSetswing,50)
 		Sleep(2000)
 		offSetswing=offSetswing*-1
 		timeKneel=timeKneel+2000

@@ -1,5 +1,5 @@
+VFS.Include("scripts/lib_type.lua", nil, VFS.DEF_MODE)
 
-include "lib_type.lua" 
 --[[
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1359,10 +1359,10 @@ function PseudoPhysix(piecename,pearthTablePiece, nrOfCollissions, forceFunction
 end
 
 function createMass(mass,PosX,PosY,PosZ,velX,velY,velZ,fx,fy,fz)
-retourTable={mass=mass,
-			pos= Vector:new{x=PosX,y=PosY,z=PosZ},
-			vel= Vector:new{x=velX,y=velY,z=velZ},
-			force=Vector:new{x=fx,y=fy,z=fz}}
+local retourTable={mass=mass or 1,
+			pos= Vector:new(PosX,PosY,PosZ),
+			vel= Vector:new(velX,velY,velZ),
+			force=Vector:new(fx,fy,fz)}
 return retourTable
 end
 
@@ -1685,14 +1685,14 @@ function vardump(value, depth, key)
 		local airFrictionConstant 		= 0.5 
 		
 		--INIT
-		
+		gravitation= Vector:new(0,-0.981,0)
 		ForcesTable={}
 		
 		rcx,rcy,rcz=Spring.GetUnitPiecePosDir(unitID,RopeConnectionT.Piece)
 		assert(rcx)
 		RopeConnection={
-			Pos= Vector:new{x=rcx,y=rcy,z=rcz},
-			vel= Vector:new{x=0,y=0,z=0},
+			Pos= Vector:new(rcx,rcy,rcz),
+			vel= Vector:new(),
 			mass=1500, --unrealistic, yet you cant reach escape velocity 
 			Radius=RopeConnectionT.ColRadius
 		}
@@ -1704,10 +1704,10 @@ function vardump(value, depth, key)
 			
 			ObjT[#ObjT+1]={ 
 				piecename=RopePieceTable[i],
-				pos = Vector:new{x= px, y=py, z= pz},
-				dir = Vector:new{x= pdx, y=pdy, z= pdz},
+				pos = Vector:new( px, py,  pz),
+				dir = Vector:new( pdx, pdy, pdz),
 				mass1= createMass(RopeMass/2,px,py,pz,0,0,0,0,0,0),
-				vel= Vector:new{x=0,y=0,z=0},
+				vel= Vector:new(),
 				PrevPiece=(math.max(1,i-1)),
 				NextPiece=math.min(i+1,#RopePieceTable),
 				length=Ropelength,
@@ -1718,10 +1718,10 @@ function vardump(value, depth, key)
 		px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,LoadPieceT.Piece)
 		ObjT[#ObjT+1]={ 
 			piecename=LoadPieceT.Piece,
-			pos = Vector:new{x= px, y=py, z= pz},
-			dir = Vector:new{x= pdx, y=pdy, z= pdz},
+			pos = Vector:new( px, py,  pz),
+			dir = Vector:new(pdx, pdy,  pdz),
 			mass1= createMass(LoadPieceT.Mass,px,py,pz,0,0,0,0,0,0),
-			vel= Vector:new{x=0,y=0,z=0},
+			vel= Vector:new(),
 			PrevPiece=(#ObjT),
 			length=Ropelength,
 			springConstant=SpringConstant
@@ -1732,7 +1732,7 @@ function vardump(value, depth, key)
 		while checkYourself() do
 			--init and reset
 			for i=1,#ObjT,1 do
-				ObjT[i].mass1.force=Vector:new{x=0,y=0,z=0}
+				ObjT[i].mass1.force=Vector:new()
 			end
 			
 			--applyForces
@@ -1758,10 +1758,15 @@ function vardump(value, depth, key)
 			
 			
 			--solve Objforces
-			for i=1,#ObjT, 2 do -- Start A Loop To Apply Forces Which Are Common For All Masses
-				local Succesor=Limit(i,1,ObjT)
+			for i=1,#ObjT-1, 2 do -- Start A Loop To Apply Forces Which Are Common For All Masses
 				
-				ObjT[i].mass1.force=ObjT[i].mass1.force + (gravitation *ObjT[i].mass1.mass)
+				local Succesor=Limit(i,1,ObjT)
+				if not  ObjT[i].mass1  then
+					px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,RopePieceTable[math.max(math.min(i,#RopePieceTable),1)])
+					ObjT[i].mass1= createMass(RopeMass/2,px,py,pz,0,0,0,0,0,0)
+				end
+				
+				ObjT[i].mass1.force= ObjT[i].mass1.force + ( ObjT[i].mass1.mass * gravitation )
 				
 				-- masses[a]->applyForce(gravitation * masses[a]->m); -- The Gravitational Force
 				-- The air friction
@@ -1773,8 +1778,8 @@ function vardump(value, depth, key)
 				if 	ObjT[i].mass1.pos.y > groundHeight(ObjT[i].piecename) then
 					-- Forces From The Ground Are Applied If A Mass Collides With The Ground
 					
-					v1=Vector:new{x=0,y=0,z=0} -- A Temporary Vector3D
-					v2=Vector:new{x=0,y=0,z=0} -- A Temporary Vector3D
+					v1=Vector:new() -- A Temporary Vector3D
+					v2=Vector:new() -- A Temporary Vector3D
 					
 					v1= ObjT[i].mass1.vel
 					v2= ObjT[Succesor].mass2.vel -- Get The Velocity
@@ -1813,17 +1818,14 @@ function vardump(value, depth, key)
 				else
 					x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,ObjT[i].piecename)
 					vx,vy,vz=Spring.GetGroundNormal(x,z)
-					vecGround = Vector:new{x=vx,y=vy,z=vz}
+					vecGround = Vector:new(vx,vy,vz)
 					-- The Ground Shall Repel A Mass Like A Spring.
 					-- By "Vector3D(0, groundRepulsionConstant, 0)" We Create A Vector In The Plane Normal Direction
 					-- With A Magnitude Of groundRepulsionConstant.
 					-- By (groundHeight - masses[a]->pos.y) We Repel A Mass As Much As It Crashes Into The Ground.
 					gh=groundHeight(	ObjT[i].piecename)
-					f1=(vecGround*groundRepulsionConstant)* (gh-ObjT[i].mass1.pos.y)
-					f2=(vecGround*groundRepulsionConstant)* (gh-ObjT[Succesor].mass1.pos.y)
-					
-					ObjT[Succesor].mass1.force=(ObjT[Succesor].mass1.force+ f2)		
-					ObjT[i].mass1.force=addVector(ObjT[i].mass1.force,f1)		 -- The Ground Repulsion Force Is Applied
+					f1=(vecGround*groundRepulsionConstant)* (gh-ObjT[i].mass1.pos.y)		
+					ObjT[i].mass1.force= ObjT[i].mass1.force+ f1		 -- The Ground Repulsion Force Is Applied
 				end
 
 			end	 
