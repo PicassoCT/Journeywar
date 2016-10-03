@@ -9,11 +9,8 @@ object
   |_textbox
   |_trackbar
   |_colorbars
-
   |_scrollpanel
-
   |_selectionbox
-
   |_layoutpanel
     |_imagelistview
     |_grid
