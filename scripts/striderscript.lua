@@ -8,6 +8,7 @@ include "lib_Build.lua"
 --modified stridercode
 --Define the pieces of the weapon
 strider= piece"strider"
+automg= piece"automg"
 flare1= piece"flare01"
 flare2= piece"flare02"
 striderlegA= piece"striderleg"--2
@@ -888,8 +889,8 @@ function script.AimWeapon1( heading ,pitch)
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
 	
-	Turn(flare1, y_axis, heading)
-	Turn(flare1, x_axis, -pitch)
+	Turn(automg, y_axis, heading)
+	Turn(automg, x_axis, -pitch)
 	
 	return true
 end

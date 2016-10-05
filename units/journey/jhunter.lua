@@ -1,7 +1,7 @@
-local unitName = "hunter"
+local unitName = "jhunter"
 
 local unitDef = {
-name = "hu ter",
+name = "hunter",
 Description = "Small Tripod",
 objectName = "jHunter.s3o",
 script = "jhunterscript.lua",

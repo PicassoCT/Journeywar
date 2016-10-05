@@ -4126,33 +4126,38 @@ end
 
 function drawFunctionGenerator(sizeX, sizeY, typeName)
 heightMapTable= makeTable({},sizeX,sizeY)
-if typeName == "Cliff" then
---generate a Point rotate to random deg, at random offset add to opposing rotation  a second and a third point
-	cliffstartpoint = Vector:new(0,sizeY/2)
-	startPointRad = math.random(-math.pi, math.pi)
-	cliffEndPointARad =  startPointRad + math.pi +math.random(math.pi/8,math.pi/4)
-	cliffEndPointBRad =  startPointRad + math.pi -math.random(math.pi/8,math.pi/4)
-	cliffEndPointA = Vector:new(0,sizeY/-2)
-	cliffEndPointB = Vector:new(0,sizeY/-2)
-	
-	extrapolationFunction= 
-	function(value,maxValue, bLeftRight)
-	if bLeftRight == true then
-		return math.sin((value/maxValue)*math.pi*2) end
-	else
-		return math.cos((value/maxValue)*math.pi*3)  
+	if typeName == "Cliff" then
+	--generate a Point rotate to random deg, at random offset add to opposing rotation  a second and a third point
+		cliffstartpoint = Vector:new(0,sizeY/2)
+		startPointRad = math.random(-math.pi, math.pi)
+		cliffEndPointARad =  startPointRad + math.pi +math.random(math.pi/8,math.pi/4)
+		cliffEndPointBRad =  startPointRad + math.pi -math.random(math.pi/8,math.pi/4)
+		cliffEndPointA = Vector:new(0,sizeY/-2)
+		cliffEndPointB = Vector:new(0,sizeY/-2)
+		
+		--rotate cliffstartpoint by startPointRad
+		--rotate cliffEndPointA by  cliffEndPointA
+		--rotate cliffEndPointB by cliffEndPointB
+		
+		
+		extrapolationFunction=  function(value,maxValue, bLeftRight)
+			if bLeftRight == true then
+				return math.sin((value/maxValue)*math.pi*2) 
+			else
+				return math.cos((value/maxValue)*math.pi*3)  
+			end
+		end
+		
+		
+		
+		return heightMapTable
 	end
-	
-	
-	
-	
-	return heightMapTable
-end
 
 end
 
---> every PixelPiecetable consists of a List of Pieces, a selectFunction and a PlaceFunction both recive a List of allready in Pixel Placed Pieces and the relative Heigth they are at, and gives back a piece, and its heigth, 
-the Selector returns nil upon Complete 
+--> every PixelPiecetable consists of a List of Pieces, a selectFunction and a PlaceFunction
+-- both recive a List of allready in Pixel Placed Pieces and the relative Heigth they are at, 
+-- and gives back a piece, and its heigth, the Selector returns nil upon Complete 
 function createLandscapeFromFeaturePieces(pixelPieceTable,   drawFunctionTable)
 
 

@@ -26,7 +26,7 @@ local weaponDef={
 	model="jhunterdart.s3o",
 	smokeTrail=false,
 	--explosionGenerator="custom:redsmoke",
-	CegTag="jbirdtrail",
+	CegTag="jhuntertrail",
 	
 	----TARGETING
 	turret=true,

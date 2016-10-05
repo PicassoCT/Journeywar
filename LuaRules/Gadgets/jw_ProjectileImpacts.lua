@@ -45,7 +45,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
 	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
-		lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
+			jhunterDartDefID = WeaponDefNames["jdartgun"].id
+			lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
 	local slicergunDefID = WeaponDefNames["slicergun"].id
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
@@ -100,6 +101,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(cUniverseGun , true)
 	Script.SetWatchWeapon(cRestrictorThumperID , true)
 	Script.SetWatchWeapon(cmtwgrenade , true)
+	Script.SetWatchWeapon(jhunterDartDefID , true)
 	Script.SetWatchWeapon(jHiveHoundID , true)
 	Script.SetWatchWeapon(jSwiftSpearID , true)
 	Script.SetWatchWeapon(jghostDancerWeaponDefID , true)
@@ -336,6 +338,19 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SpawnCEG("factory_explosion",px,py+10,pz,0,1,0,50)
 		end
 		
+		--MTW Grenade
+		if weaponDefID== jhunterDartDefID then
+				
+					teamid=Spring.GetUnitTeam(AttackerID)
+					teamid = teamid or gaiaTeamID
+					
+				dartID= Spring.CreateUnit("jhunterdart",px,py,pz,1,teamid)
+				if dartID and AttackerID and Spring.ValidUnitID(AttackerID) ==true then
+				hx,hy,hz = Spring.GetUnitDirection(dartID)
+				Spring.SetUnitDirection (dartID, hx,hy,hz)
+				end
+		end
+
 		--MTW Grenade
 		if weaponDefID== cmtwgrenade and Spring.ValidUnitID(AttackerID) ==true then
 			if Spring.GetUnitIsDead(AttackerID)==false then
