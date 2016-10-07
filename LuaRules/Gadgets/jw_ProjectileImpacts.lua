@@ -339,16 +339,18 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		--MTW Grenade
-		if weaponDefID== jhunterDartDefID then
-				
-					teamid=Spring.GetUnitTeam(AttackerID)
-					teamid = teamid or gaiaTeamID
-					
-				dartID= Spring.CreateUnit("jhunterdart",px,py,pz,1,teamid)
-				if dartID and AttackerID and Spring.ValidUnitID(AttackerID) ==true then
-				hx,hy,hz = Spring.GetUnitDirection(dartID)
+		if weaponDefID == jhunterDartDefID then
+		
+			dartID= ""
+			if Spring.GetUnitIsDead(AttackerID)==false then
+				teamid=Spring.GetUnitTeam(AttackerID)
+				dartID= Spring.CreateUnit("jhunterdart",px,py,pz,1,teamid)	
+				hx,hy,hz = Spring.GetUnitDirection(AttackerID)
 				Spring.SetUnitDirection (dartID, hx,hy,hz)
-				end
+			else
+				dartID= Spring.CreateUnit("jhunterdart",px,py,pz,1,gaiaTeamID)	
+			end
+		
 		end
 
 		--MTW Grenade

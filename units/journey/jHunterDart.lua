@@ -34,11 +34,11 @@ CanPatrol = false,
 CanStop = true,
 LeaveTracks = false, 
 levelGround =false,
-Category = [[LAND]],
+Category = [[NOTARGET]],
  sfxtypes = {
 				explosiongenerators = {				  
-	   		         "custom:tess",
-					 "custom:redlight"
+	   		    "custom:antimatter",
+					 "custom:antimatter"
 				  
 				   
 				},

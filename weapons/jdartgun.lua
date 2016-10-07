@@ -1,6 +1,6 @@
 local weaponName="jdartgun"
 local weaponDef={
-	name="jdartgu ",
+	name="jdartgun",
 	weaponType=[[MissileLauncher]],
 	
 	Accuracy=2000,
@@ -39,10 +39,10 @@ local weaponDef={
 	
 	----DAMAGE
 	damage={
-		default=150,
-		heavyarmor=150,
+		default=1,
+		heavyarmor=1,
 	},
-	areaOfEffect=100,
+	areaOfEffect=1,
 	craterMult=0,
 	
 	--?FIXME***

@@ -406,7 +406,7 @@ function fakedRelativeRope(meatID)
 		ux,uy,uz = vec.x - worldPos.x,vec.y -worldPos.y ,vec.z -worldPos.z
 		range= math.sqrt(ux^2 + uy^2 + uz^2)
 		
-		if range <= maxRange then
+		if range =< maxRange then
 			--xComponent, yComponent = worldPos.x - 
 			--keep at same Position
 			rotationOffset =  math.deg(convPointsToDeg(vec.x, worldPos.x, vec.z, worldPos.z))*COB_ANGULAR
