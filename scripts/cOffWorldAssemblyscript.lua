@@ -564,10 +564,14 @@ Window085 = piece("Window085")
 piecesTable[#piecesTable+1]= Window085
 Window086 = piece("Window086")
 piecesTable[#piecesTable+1]= Window086
+birthWater = piece("birthWater")
+piecesTable[#piecesTable+1]= birthWater
+bloodWater = piece("bloodWater")
+piecesTable[#piecesTable+1]= bloodWater
 
 GrowSpot= piece"GrowSpot"
 piecesTable[#piecesTable+1]= GrowSpot
-
+Meat = piece"Meat"
 TablesOfPiecesGroups={}
 StompTable={}
 StompBaseTable={}
@@ -692,6 +696,8 @@ end
 function setUp()
 	Move(GrowSpot,y_axis,totalDistanceDown,0)
 	hide("centerpipes",centerpipes)
+	Hide(bloodWater)
+	Hide(birthWater)
 	StartThread(stompBases)
 	StartThread(randomBlink)
 	StartThread(LoopeggDeploy)
@@ -749,7 +755,7 @@ function BuildingAnimation(buildID)
 	
 	eggDeploy(0.5)
 	StartThread(LooppumpUp,getUniqueSignal())
-	
+	while(buildProgress <0.25 ) do Sleep(10) end
 	operate()
 	while true do
 		Sleep(10000) 
@@ -1179,7 +1185,10 @@ function LooppumpUp				 (nr)
 	while buildProgress < 0.25 and boolBuilding==true or StableLoopSignalTable[nr]do
 		speed=buildProgress*4
 		WayToGo=(1-buildProgress)
-		if WayToGo < 0.75 then WayToGo = 0 end
+		if WayToGo < 0.75 then 
+		WayToGo = 0;
+		speed= 9
+		end
 		percentage=totalDistanceDown* WayToGo		
 		Move(GrowSpot,y_axis,percentage, speed)
 		Sleep(60)
@@ -1195,6 +1204,10 @@ function LooppumpUp				 (nr)
 	Turn(pump1,y_axis,math.rad(0),0.125)
 	Turn(pump2,y_axis,math.rad(0),0.125)	
 	
+	while true do
+		pumpBeat(5)
+		Sleep(100)
+	end
 	
 end
 
@@ -1227,7 +1240,7 @@ function calcArmSpecificFirstZ(nr, value)
 end 
 
 function runArmTest(sideSign, nr,speed,predelay,postDelay)
-	
+	Hide(Meat)
 	Sleep(predelay)
 	TurnPieceList(refUnitScript,
 	{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
@@ -1278,96 +1291,125 @@ function runArmTest(sideSign, nr,speed,predelay,postDelay)
 end
 OpTool=6
 
-function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber)
+function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildProgressLimit)
 	
 	Sleep(predelay)
 	for i=1,CutNumber,1 do
+		TurnPieceList(refUnitScript,
+		{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
+			ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
+			ArmsTable[nr][3],0,0,sideSign*45,speed,
+			ArmsTable[nr][4], 0,0,sideSign*90,speed,
+			ArmsTable[nr][5],0,0,sideSign*45,speed,
+			ArmsTable[nr][6],0,0,0,speed,
+		},
+		false, --TurnInOrder
+		true, -- WaitForTurn
+		true --synced
+		)
+		OperationMoves = math.ceil(math.random(5, 12)) 
+		if nr == 19 then Show(Meat) end
+		for i=1, OperationMoves, 1 do
+			Sleep(3000)
+			randoVal= math.random(85, 120)
+			opVal1=math.random(-10,10)
+			opVal2=math.random(-45,45)
+			rSign=randSign()
+		
+			TurnPieceList(refUnitScript,
+			{	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr,randoVal),speed,
+				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
+				ArmsTable[nr][3],0,0,sideSign*90 - (randoVal-90)*sideSign ,speed,
+				ArmsTable[nr][4], 0,0,sideSign*90 ,speed,
+				ArmsTable[nr][5],0,0,sideSign*opVal1,speed,
+				ArmsTable[nr][6],0,0,sideSign*opVal2,speed,
+			},
+			false, --TurnInOrder
+			true, -- WaitForTurn
+			true --synced
+			)
+			
+				if buildProgress > buildProgressLimit then
+						TurnPieceList(refUnitScript,
+					{	ArmsTable[nr][1],0,0, 0 ,speed,
+						ArmsTable[nr][2],0,0,0,speed,
+						ArmsTable[nr][3],0,0,0,speed,
+						ArmsTable[nr][4], 0,0,sideSign*90,speed,
+						ArmsTable[nr][5],0,0,0,speed,
+						ArmsTable[nr][6],0,0,0,speed,
+					},
+					false, --TurnInOrder
+					true, -- WaitForTurn
+					true --synced
+					)
+					operationCounter=operationCounter-1
+					return
+				end
+		end
+
+		
+	
+		Sleep(3000)
+			TurnPieceList(refUnitScript,
+		{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
+			ArmsTable[nr][2],calcArmSpecificSecY(nr),0 ,0,speed,
+			ArmsTable[nr][3],0,0,sideSign*45,speed,
+			ArmsTable[nr][4], 0,0,sideSign*90,speed,
+			ArmsTable[nr][5],0,0,sideSign*45,speed,
+			ArmsTable[nr][6],0,0,0,speed,
+		},
+		false, --TurnInOrder
+		true, -- WaitForTurn
+		true --synced
+		)
+	end
+		Sleep(3000)
+	
 	TurnPieceList(refUnitScript,
-	{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
-		ArmsTable[nr][2],0,calcArmSpecificSecY(nr),0,speed,
-		ArmsTable[nr][3],0,0,sideSign*45,speed,
+	{	ArmsTable[nr][1],0,0, 0 ,speed,
+		ArmsTable[nr][2],0,0,0,speed,
+		ArmsTable[nr][3],0,0,0,speed,
 		ArmsTable[nr][4], 0,0,sideSign*90,speed,
-		ArmsTable[nr][5],0,0,sideSign*45,speed,
-		ArmsTable[nr][6],0,0,0,speed,
-	},
-	false, --TurnInOrder
-	true, -- WaitForTurn
-	true --synced
-	)
-	Sleep(3000)		
-	TurnPieceList(refUnitScript,
-	{	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr,145),speed,
-		ArmsTable[nr][2],0,calcArmSpecificSecY(nr),0,speed,
-		ArmsTable[nr][3],0,0,sideSign*70,speed,
-		ArmsTable[nr][4], 0,0,sideSign*52,speed,
 		ArmsTable[nr][5],0,0,0,speed,
 		ArmsTable[nr][6],0,0,0,speed,
 	},
 	false, --TurnInOrder
 	true, -- WaitForTurn
 	true --synced
-	)	
-		Sleep(3000)
-		TurnPieceList(refUnitScript,
-	{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
-		ArmsTable[nr][2],0,calcArmSpecificSecY(nr),0,speed,
-		ArmsTable[nr][3],0,0,sideSign*45,speed,
-		ArmsTable[nr][4], 0,0,sideSign*90,speed,
-		ArmsTable[nr][5],0,0,sideSign*45,speed,
-		ArmsTable[nr][6],0,0,0,speed,
-	},
-	false, --TurnInOrder
-	true, -- WaitForTurn
-	true --synced
 	)
-	end
-	Sleep(postDelay)		 
-	
+		Sleep(postDelay)
+	operationCounter=operationCounter-1
+
 end
 
-function snakeEyes()
-	--fixate
-		setOfTools={}
-		nrOfIntstruments=math.random(2,7)
-		for i=1,nrOfIntstruments do 
-			setOfTools[math.ceil(math.random(1,#ArmsTable))]= true 
+function cutDeep(buildProgressLimit)
+			for i=1,#ArmsTable, 1 do
+				startval=math.random(0.25,1)
+				range=math.random(0.5,1.5)
+				sideSign=-1
+				if i > 9 then sideSign=1 end
+				
+				if ArmsTable[i] and i ~=4 and i ~=18 then	
+					if maRa()== true or operationCounter <= 0 then
+						operationCounter=operationCounter+1
+						StartThread(incisionWithArm,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000), iRand(3,9),buildProgressLimit)
+					end
+				end
+			end
+		while (operationCounter > 0 and buildProgress < buildProgressLimit) do
+			Sleep(100)
 		end
-		--open
-		--config
-		tolerance=2
-		speed= 0.5
-		boolPartStepExecution=true
-		boolWait=true
-		
-		for k,v in pairs(setOfTools) do
-			
-			Piece_Deg_Length_PointIndex_boolGateCrossed_List={
-				lastPointIndex=0,
-				Piece= 	ArmsTable[k][1],
-				boolGateCrossed= false,
-				Length=3,
-				Deg=0		
-			}
-			
-			SnakePoints={
-				[1]= makeVector(3,5,0),
-				[2]= makeVector(7,9,0)
-			}
-			
-			snakeOnAPlane(	unitID,
-							Piece_Deg_Length_PointIndex_boolGateCrossed_List,
-							ArmsTable[k][OpTool],
-							SnakePoints,
-							z_axis,
-							speed, 							
-							tolerance, 
-							boolPartStepExecution, 
-							boolWait
-			)
-		end
-		
 end
 
+function bloodyHell()
+
+		Hide(Sack)
+		Show(SackWIP)
+		Hide(GrowCapsule)
+		Show(BloodCapsule)´
+end
+
+operationCounter=0
 function operate()
 	
 	while true do 
@@ -1383,31 +1425,20 @@ function operate()
 				StartThread(runArmTest,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
 			end
 		end
-		Sleep(12000)
-		--incision
-		for i=1,#ArmsTable, 1 do
-			startval=math.random(0.25,1)
-			range=math.random(0.5,1.5)
-			sideSign=-1
-			if i > 9 then sideSign=1 end
-			
-			if ArmsTable[i] and i ~=4 and i ~=18 then	
-		StartThread(incisionWithArm,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
-		end
-		end
-		--bloody work to be done
-		Hide(Sack)
-		Show(SackWIP)
-		Hide(GrowCapsule)
-		Show(BloodCapsule)
 		
-		snakeEyes()
+		while buildProgress < 0.25 do Sleep(10) end
+		--incision
+		cutDeep(0.5)
+		--bloody work to be done
+		bloodyHell()
 		--remove tissue
 		
 		--insert implant
 		
 		--special case --loose instrument
 		--close up
+	
+	
 	end
 	
 end
@@ -1456,7 +1487,8 @@ function buildOS()
 	while true do 
 		for i=1,100 do
 			buildProgress=i/100
-			Sleep(10000)
+			Sleep(2000)
+			Spring.Echo("BuildProgress:"..buildProgress)
 		end
 		Sleep(5000)
 	end
@@ -1501,8 +1533,8 @@ function randomBlink()
 		changeVal=math.ceil(math.random(2,42))
 		ignoreVal=math.ceil(math.random(2,6))
 		
-		time=math.ceil(math.abs(1+math.ceil(1100+math.sin(itterate)*100)))
-		Sleep(time)
+		times=math.ceil(math.abs(1+ math.ceil(1100+math.sin(itterate)*100)))
+		Sleep(times)
 		for i=1,#WindowTable-1,2 do
 			if i % ignoreVal == 0 or i % changeVal ~= 0 then
 				Show(WindowTable[i]) 

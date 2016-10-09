@@ -8,7 +8,7 @@ local weaponDef={
 	--Physic/flight path
 	burst = 3,
 	burstRate = 1.3,
-	
+
 	range=400,
 	reloadtime=9,
 	weaponVelocity=1000,
@@ -30,7 +30,7 @@ local weaponDef={
 	smokeTrail=false,
 	--explosionGenerator="custom:redsmoke",
 	CegTag="jhuntertrail",
-	
+
 	----TARGETING
 	turret=true,
 	cylinderTargeting=66,

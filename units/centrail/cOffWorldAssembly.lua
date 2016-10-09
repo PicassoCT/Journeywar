@@ -78,7 +78,8 @@ terraformSpeed = 50,
 	workerTime = 1,
 	buildoptions = 
 	{
-	"paxcentrail","strider","cgatefort","ccrabsynth","cnanorecon"
+	"paxcentrail","cgatefort","cnanorecon",
+	"strider","ccrabsynth", "chunter"
 	},
 	
 	   customParams = {},

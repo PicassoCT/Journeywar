@@ -36,13 +36,14 @@ function letsWalkAndTalk()
 	end
 end
 
+boolWalking= false
 function walk()
 Signal(SIG_IDLE)
 SetSignalMask(SIG_WALK)
 Turn(cssBody,y_axis,math.rad(0),20)
 Turn(cssBody,x_axis,math.rad(20),0)
+boolWalking=true
 	while(true) do
-		Signal(SIG_AIM)
 	Turn(center,y_axis,math.rad(3),0.25)
 	Turn(cssArmL,x_axis,math.rad(34),5)
 	Turn(cssArmR,x_axis,math.rad(-12),5)
@@ -52,9 +53,7 @@ Turn(cssBody,x_axis,math.rad(20),0)
 	Turn(cssLegR,x_axis,math.rad(-29),7)
 	Turn(cssLegRlow,x_axis,math.rad(32),7)
 
-	--
-		Signal(SIG_AIM)
-	WaitForTurn(cssLegR,x_axis)
+	--	WaitForTurn(cssLegR,x_axis)
 	WaitForTurn(cssLegL,x_axis)
 	--
 	Turn(cssLegL,x_axis,math.rad(-49),7)
@@ -67,7 +66,6 @@ Turn(cssBody,x_axis,math.rad(20),0)
 	Turn(cssArmL,x_axis,math.rad(-12),5)
 	Turn(cssArmR,x_axis,math.rad(34),5)
 	--
-		Signal(SIG_AIM)
 	Turn(cssLegL,x_axis,math.rad(10),7)
 	Turn(cssLegLlow,x_axis,math.rad(61),7)
 	Turn(cssLegR,x_axis,math.rad(-62),7)
@@ -122,7 +120,7 @@ end
 
 function script.StopMoving()
 
-		
+		boolWalking = false
 		Signal(SIG_COUNTER)
 	
 --    --Spring.Echo ("stopped walking!")
@@ -136,6 +134,8 @@ end
 
 
 function script.Create()
+Hide(jet1)
+Hide(jet2)
 Hide(flare01)
 Hide(flare02)
 StartThread(letsWalkAndTalk)
@@ -197,14 +197,19 @@ flare02 end
 	
 	function script.AimWeapon1( heading, pitch )
 		SetSignalMask(SIG_AIM)
-        Turn(cssArmL, x_axis, math.rad(-69),12)
+	if boolWalking == false then
+        Turn(cssArmL, x_axis, math.rad(-62),12)
         WaitForTurn(cssArmL, x_axis)
-		Turn(center,y_axis,heading,7)	
+			Sleep(10)
+		Turn(center,y_axis,heading,7)
+		WaitForTurn(center, y_axis)		
 		--Turn(lgun, x_axis, -pitch, math.rad(100))
         	
         	--WaitForTurn(lgun, x_axis)
 		--StartThread(RestoreAfterDelay)
 		return true
+	end
+	return false
 	end
 	
 	
@@ -216,23 +221,28 @@ flare02 end
 	--lua_FlameShot(1)
 	end
 	
-function script.QueryWeapon2() return 
-flare01 end
+function script.QueryWeapon2() 
+	return flare01 
+end
 	
 	function script.AimFromWeapon2() 
 	--soundstart="centeralert"
 	return cssArmR end
 	
 	function script.AimWeapon2( heading, pitch )
-		SetSignalMask(SIG_AIM)
-        Turn(cssArmR, x_axis, math.rad(-69),12)
-        WaitForTurn(cssArmR, x_axis)
-		
-		--Turn(lgun, x_axis, -pitch, math.rad(100))
-        	
-        	--WaitForTurn(lgun, x_axis)
-		--StartThread(RestoreAfterDelay)
-		return true
+	SetSignalMask(SIG_AIM)
+			if boolWalking == false then
+			Sleep(50)
+			Turn(cssArmR, x_axis, math.rad(-62),12)
+			WaitForTurn(cssArmR, x_axis)
+			
+			--Turn(lgun, x_axis, -pitch, math.rad(100))
+				
+				--WaitForTurn(lgun, x_axis)
+			--StartThread(RestoreAfterDelay)
+			return true
+		end
+	return false
 	end
 	
 	function playSound2()

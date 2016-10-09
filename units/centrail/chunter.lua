@@ -1,13 +1,13 @@
-local unitName = "jhunter"
+local unitName = "chunter"
 
 local unitDef = {
-	name = "SunGods Shepard",
-	Description = "Small Tripod",
+	name = "Hunter Synth",
+	Description = "Close Combat Warrior",
 	objectName = "jHunter.s3o",
 	script = "jhunterscript.lua",
 	buildPic = "placeholder.png",
 	--cost
-	buildCostMetal = 2500,
+	buildCostMetal = 3500,
 	buildCostEnergy = 1200,
 	buildTime = 50,
 	--Health
@@ -18,8 +18,8 @@ local unitDef = {
 	BrakeRate = 0.3,
 	FootprintX = 2,
 	FootprintZ = 2,
-	MaxSlope = 90,
-	MaxVelocity = 1.8,
+	MaxSlope = 80,
+	MaxVelocity = 1.6,
 	MaxWaterDepth = 65,
 	MovementClass = "Default2x2",
 	TurnRate = 1250,

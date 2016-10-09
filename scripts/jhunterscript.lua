@@ -36,22 +36,49 @@ Leg1= #LegTable
 LegTable[#LegTable+1]=piece"jleg10"
 LegTable[#LegTable+1]=piece"jleg12"
 
+conversionTable={}
+for i=1,12 do
+	cPiece= "cLeg"..i
+	jPiece= "jleg"..i
+
+		conversionTable[i]= {}
+		conversionTable[i].cPiece=piece(cPiece)
+		conversionTable[i].jPiece=piece(jPiece)
+
+		
+end
 
 function hideByUnitType()
-
-	if Spring.GetUnitDefID(unitID) == UnitDefNames["jhunter"].id then
 		hideT(TablesOfPiecesGroups["cLeg"])
 		Hide(cHead)
 		Hide(Com)
 		showT(TablesOfPiecesGroups["jleg"])
 		Show(jHead)
-
-	else
-		hideT(TablesOfPiecesGroups["jleg"])
-		Hide(jHead)
-		showT(TablesOfPiecesGroups["cLeg"])
-		Show(cHead)
-		Show(Com)
+		
+	if Spring.GetUnitDefID(unitID) == UnitDefNames["chunter"].id then
+	 _, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+	while not buildProgress do
+		Sleep(10)
+	end
+  	
+	while buildProgress and buildProgress < 1 do
+		upperBound= buildProgress*12
+		for i=1,upperBound do
+		Hide(conversionTable[i].jPiece)
+		Show(conversionTable[i].cPiece)
+		end
+		Sleep(50)
+		_, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+	end
+	
+	for i=1,12 do
+		Hide(conversionTable[i].jPiece)
+		Show(conversionTable[i].cPiece)
+	end
+	Hide(jHead)
+	Show(cHead)
+	Show(Com)
+	
 	end
 
 end
@@ -80,7 +107,7 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-	 walkState = "stop" 
+	walkState="stop"
 	return true
 
 end
@@ -141,11 +168,11 @@ function stabilize(number, speed)
 	TaskTable[number].FinnishedExecution = false
 	 signumYAxis =1 
 	if number == Leg3 then  signumYAxis = -1 end
-	angleY = math.random(110,160)
+	angleY = math.random(50,90)
 
 	Turn(LegTable[number],x_axis,math.rad(25),speed)
 	Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
-	Turn(LegTable[number],y_axis,math.rad(-1*angleY*signumYAxis),speed)
+	Turn(LegTable[number],y_axis,math.rad(-1*angleY*signumYAxis*-1),speed)
 
 	WaitForTurns(LegTable[number],LegTable[number+1])
 	TaskTable[number].FinnishedExecution = true

@@ -1,8 +1,8 @@
-local unitName = "jhunterdart"
+local unitName = "chunterdart"
 local unitDef = {
 name = "dart",
 Description = " 3.. 2... 1",
-objectName = "jhunterdart.s3o",
+objectName = "cHunterdart.s3o",
 script = "jhunterdart_script.lua",
 buildPic = "placeholder.dds",
 --cost
