@@ -406,7 +406,7 @@ function fakedRelativeRope(meatID)
 		ux,uy,uz = vec.x - worldPos.x,vec.y -worldPos.y ,vec.z -worldPos.z
 		range= math.sqrt(ux^2 + uy^2 + uz^2)
 		
-		if range =< maxRange then
+		if range <= maxRange then
 			--xComponent, yComponent = worldPos.x - 
 			--keep at same Position
 			rotationOffset =  math.deg(convPointsToDeg(vec.x, worldPos.x, vec.z, worldPos.z))*COB_ANGULAR
@@ -536,7 +536,7 @@ function script.TransportPickup(passengerID)
 		local px2, py2, pz2 = Spring.GetUnitPosition(passengerID)
 		local dx, dy , dz = px2 - px1, py2 - py1, pz2 - pz1
 		norm= math.sqrt(dx^2 +dy^2 +dz^2)
-		heading = (65533 - Spring.GetHeadingFromVector(dx/norm, dz/norm)) - (Spring.GetUnitHeading(unitID))/(32768*math.pi))
+		heading = (65533 - Spring.GetHeadingFromVector(dx/norm, dz/norm)) - (Spring.GetUnitHeading(unitID))/(32768*math.pi)
 		local dist = (dx^2 + dz^2)^0.5
 		
 		if dist > 200 then return end

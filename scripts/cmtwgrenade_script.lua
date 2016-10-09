@@ -27,6 +27,7 @@ function timeTillBoom()
 			end
 
 Spring.PlaySoundFile("sounds/bgmtw/grenade.ogg",1.0)
+
 	Hide(blink)
 	it=true
 	period=512

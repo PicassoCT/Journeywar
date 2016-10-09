@@ -1,7 +1,7 @@
 local unitName = "jhunter"
 
 local unitDef = {
-	name = "hunter",
+	name = "SunGods Shepard",
 	Description = "Small Tripod",
 	objectName = "jHunter.s3o",
 	script = "jhunterscript.lua",
@@ -16,8 +16,8 @@ local unitDef = {
 	--Movement
 	Acceleration = 0.25,
 	BrakeRate = 0.3,
-	FootprintX = 3,
-	FootprintZ = 3,
+	FootprintX = 2,
+	FootprintZ = 2,
 	MaxSlope = 80,
 	MaxVelocity = 1.8,
 	MaxWaterDepth = 65,
@@ -25,7 +25,7 @@ local unitDef = {
 	TurnRate = 1250,
 
 	sightDistance = 900,
-	upright=true,
+	upright=false,
 	onoffable=true,
 	activateWhenBuilt =false,
 	CanAttack = true,

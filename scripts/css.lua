@@ -1,6 +1,8 @@
   cssArmL =piece "cssArmL"
   cssArmR =piece "cssArmR"
   center = piece"center"
+  jet2 =piece "jet2"
+  jet1 =piece "jet1"
   flare02 =piece "flare02"
   flare01 =piece "flare01"
   cssBody=piece"cssBody"
@@ -94,7 +96,7 @@ function script.StartMoving()
 
 	Signal(SIG_IDLE)
 	Signal(SIG_LEG)
-	Signal(SIG_AIM)
+	Signal(SIG_moveStatemachine)
 	StartThread(walk)
 	
 end
@@ -139,7 +141,7 @@ Hide(flare02)
 StartThread(letsWalkAndTalk)
 	Signal(SIG_IDLE)
 	Signal(SIG_LEG)
-	Signal(SIG_AIM)
+	Signal(SIG_moveStatemachine)
 
   ----Spring.Echo "This was a Triumph! Im making a note here huge Success!"
   --Spring.UnitScript.Play("centerdeploy")
@@ -208,7 +210,9 @@ flare02 end
 	
 	function script.FireWeapon1()
 	EmitSfx(flare01,1026)
-	EmitSfx(flare02,1026)
+	EmitSfx(jet1,1027)
+
+
 	--lua_FlameShot(1)
 	end
 	
@@ -247,8 +251,8 @@ flare01 end
 		end
 		--emits the fire of the flamethrower
 	
-		EmitSfx(flare01,1026)
-		EmitSfx(flare02,1026)
+	EmitSfx(flare02,1026)
+	EmitSfx(jet2,1027)
 		--lua_FlameShot(2)
 	end
 	

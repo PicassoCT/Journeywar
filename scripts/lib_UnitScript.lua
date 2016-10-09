@@ -2407,6 +2407,12 @@ function vardump(value, depth, key)
 	
 	-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
 	function filterOutUnitsOfType(Table, UnitTypeTable,Cache)
+	if type(UnitTypeTable) == "number" then 
+		copyOfType= UnitTypeTable;
+		UnitTypeTable= {}
+		UnitTypeTable[copyOfType]= copyOfType
+	end
+	
 		if Cache then
 			returnTable={}
 			for i=1, #Table do

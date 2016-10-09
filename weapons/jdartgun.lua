@@ -6,13 +6,16 @@ local weaponDef={
 	Accuracy=2000,
 	
 	--Physic/flight path
-	range=800,
-	reloadtime=8,
+	burst = 3,
+	burstRate = 1.3,
+	
+	range=400,
+	reloadtime=9,
 	weaponVelocity=1000,
 	startVelocity=150,
 	weaponAcceleration=250,
 	flightTime=2.5,
-	BurnBlow=1,
+	BurnBlow=0,
 	FixedLauncher=false,
 	dance=0,--1
 	wobble=0,--4
@@ -50,8 +53,8 @@ local weaponDef={
 	
 	
 	--sound
---	soundHit="sounds/skinfantry/birdrockethit.ogg",
---	soundStart="sounds/skinfantry/birdrocketstart.ogg",
+	soundHit="sounds/jracedart/jbabyracedart.ogg",
+
 	
 }
 

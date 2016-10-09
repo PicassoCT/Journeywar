@@ -51,7 +51,8 @@ shownanoframe=0,
 
 	   "custom:cssdeathflames",
 	   "custom:fireball",
-	   "custom:firefive"		--1026
+	   "custom:firefive",		--1026
+	   "custom:cssfirejet"		--1027
 	   
 	   
 	   

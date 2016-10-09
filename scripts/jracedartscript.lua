@@ -1,12 +1,11 @@
 include "suddenDeath.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
-
- include "lib_Build.lua" 
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-
+LifeTime= 20000
 center=piece"center"
 RaceDrone=piece"RaceDrone"
 
@@ -26,7 +25,7 @@ function trail()
 end
 
 function uHave20Seconds()
-Sleep(20000)
+Sleep(LifeTime)
 Spring.DestroyUnit(unitID,true)
 end
 

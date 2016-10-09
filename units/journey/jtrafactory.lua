@@ -50,7 +50,7 @@ local unitDef = {
 	{
 		"jtigeggnogg","jskineggnogg","jghostdancer",
 		"jhivehoundmoma","vort", "jantart",
-		"jupgradefactory1"
+		"jhunter","jupgradefactory1"
 	},
 	
 	
