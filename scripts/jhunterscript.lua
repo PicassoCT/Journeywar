@@ -82,7 +82,23 @@ function hideByUnitType()
 	end
 
 end
+SIG_AIM= 2
 
+function aimPos(speed)
+SetSignalMask(SIG_AIM)
+tP(LegTable[Leg2], 20, 0, 35, speed)
+tP(LegTable[Leg2+1], 32, -36, -76, speed)
+tP(LegTable[Leg2+2], 0, 0, 0, speed)
+
+tP(LegTable[Leg3], 31, 0, -44, speed)
+tP(LegTable[Leg3+1], 0, 27, 76, speed)
+tP(LegTable[Leg3+2], 0, 0, 0, speed)
+
+tP(LegTable[Leg1], -31, 0, 0, speed)
+tP(LegTable[Leg1+1], 56, 0, 0, speed)
+tP(LegTable[Leg1+2], 0, 0, 0, speed)
+
+end
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
@@ -108,13 +124,16 @@ end
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 	walkState="stop"
+
 	return true
 
 end
  
 
 function script.FireWeapon1()	
-	 StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterDartGun.ogg", 1, 5000, 1,0)
+	Signal(SIG_AIM)
+	StartThread(aimPos,6)
+	StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterDartGun.ogg", 1, 5000, 1,0)
 	return true
 end
 

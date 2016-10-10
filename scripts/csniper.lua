@@ -553,6 +553,7 @@ function script.TransportPickup(passengerID)
 	
 		SetUnitValue(COB.BUSY, 0)
 	end		
+end		
 
 	
 
