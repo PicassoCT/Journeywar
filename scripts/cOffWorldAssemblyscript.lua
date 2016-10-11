@@ -614,6 +614,8 @@ ArmsTable={}
 function script.Create()
 	
 	Hide(Meat)
+	Hide(Crate1)
+	Hide(Crate1Open)
 	resetT(piecesTable)
 	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
@@ -700,7 +702,7 @@ function setUp()
 	Hide(birthWater)
 	StartThread(stompBases)
 	StartThread(randomBlink)
-	StartThread(LoopeggDeploy)
+	StartThread(LoopBirthEggs)
 	hide("Sack",Sack)
 	hide("GrowCapsule",GrowCapsule)
 	hide("BloodCapsule",BloodCapsule)
@@ -720,17 +722,17 @@ function setUp()
 	for i=1,19,1 do
 		sign=-90 
 		
-		if ArmsTable[i] and i ~= 18 and i~= 4 then
+		if ArmsTable[i] and i ~= 18 and i~= 4  then
 			
 			if i > 9 then sign=90 end
-			go={	ArmsTable[i][1],0 ,0,0,0,
+			go={
+				ArmsTable[i][1],0 ,0,0,0,
 				ArmsTable[i][2],0,0,0,0,
 				ArmsTable[i][3],0,0,0,0,
 				ArmsTable[i][4], 0,0,sign,0,
 				ArmsTable[i][5],0,0,0,0,
 				ArmsTable[i][6],0,0,0,0,
 			}
-			
 			
 			
 			TurnPieceList(refUnitScript,
@@ -753,10 +755,10 @@ function BuildingAnimation(buildID)
 	--unfold
 	fold(true,1)
 	
-	eggDeploy(0.5)
+	eggDeploy(1.5)
 	StartThread(LooppumpUp,getUniqueSignal())
 	while(buildProgress <0.25 ) do Sleep(10) end
-		operate()
+	operate()
 	while true do
 		Sleep(10000) 
 	end
@@ -914,16 +916,16 @@ function eggDeploy(speed)
 	
 	
 	TurnPieceList(refUnitScript,
-	{	Arm[1],98,0,0,speed,
-		Arm[2], 0,0,-127,speed,
-		Arm[3],0,0,0,speed,
-		Arm[4], 0,0,0,speed,
+	{	Arm[6],0,0,0,speed,	
 		Arm[5],-75,0,0,speed,
-		Arm[6],0,0,0,speed,
+		Arm[4], 0,0,0,speed,
+		Arm[3],0,0,0,speed,
+		Arm[2], 0,0,-127,speed,
+		Arm[1],98,0,0,speed,
 	},
 	true, --TurnInOrder
 	true, -- WaitForTurn
-	true --synced
+	false --synced
 	)
 	
 	WaitForTurns(Arm)
@@ -967,7 +969,20 @@ function eggDeploy(speed)
 	Show(GrowCapsule)
 	Hide(Op18)
 	Move(GrowSpot,y_axis,totalDistanceDown,0)
-	
+	TurnPieceList(refUnitScript,
+	{	
+	Arm[6],180,0,0,speed,
+	Arm[5],179,0,0,speed,
+	Arm[4],90,0,0,speed,
+	Arm[3],179,0,0,speed,
+	Arm[2],0,0,0,speed,
+	Arm[1],90,0,0,speed,
+					
+	},
+	true, --TurnInOrder
+	true, -- WaitForTurn
+	false --synced
+	)
 	TurnPieceList(refUnitScript,
 	{	Arm[1],90,0,0,speed,
 		Arm[2],0,0,0,speed,
@@ -995,7 +1010,7 @@ totalDistanceDown= -60
 
 
 
-function LoopeggDeploy			 ()
+function LoopBirthEggs			 ()
 	EggT=TablesOfPiecesGroups["Egg"]
 	degToTurn=-45
 	hideT(EggT)
@@ -1073,12 +1088,16 @@ function pumpBeat(speed)
 	Move(Pump2,y_axis,0,32)	
 	WTurn(GrowCapsule,y_axis,math.rad(-5),0.125)	
 end
+
 boolImplantImported= false
 function implantImplant(speed)
-
+	
 	while true do
-	Sleep(100)
+
+		Sleep(100)
 		if boolImplantImported== true then
+			Hide(Crate1)
+			Show(Crate1Open)
 			Arm=ArmsTable[4]
 			Hide(Op4)
 			TurnPieceList(refUnitScript,
@@ -1089,156 +1108,242 @@ function implantImplant(speed)
 				Arm[5],5,0,0,speed,
 				Arm[6],0,-45,0,speed,
 			},
-			false, --TurnInOrder
+			true, --TurnInOrder
 			true, -- WaitForTurn
 			false --synced
 			)
-			WaitForTurns(Arm)
+			for i=1, #Arm do	WaitForTurns(Arm[i]) end ;			Sleep(500)
 			Hide(Crate1)
 			Show(Crate1Open)
 			hideT(TablesOfPiecesGroups["Implant"])
-
+			
 			implant= TablesOfPiecesGroups["Implant"][math.ceil(math.random(1,#TablesOfPiecesGroups["Implant"]))]
 			Show(implant)
 			TurnPieceList(refUnitScript,
-			{	Arm[1],90,0,0,speed,
-				Arm[2],0,0,42,speed,
-				Arm[3],50,0,0,speed,
-				Arm[4],-15,0,0,speed,
-				Arm[5],45,0,0,speed,
-				Arm[6],0,0,0,speed,
+			{	Arm[1],90,0,87,speed/4,
+				Arm[2],0,0,0,speed/2,
+				Arm[3],0,0,0,speed/2,
+				Arm[4], 0,0,0,speed/2,
+				Arm[5],90,0,0,speed/2,
+				Arm[6],0,0,0,speed/2,
+			},
+			false, --TurnInOrder
+			true, -- WaitForTurn
+			true --synced
+			)
+			
+			Sleep(500)	
+			
+			TurnPieceList(refUnitScript,
+			{	Arm[1],90,0,-22,speed/4,
+				Arm[2],0,0,0,speed/2,
+				Arm[3],0,0,0,speed/2,
+				Arm[4], 0,0,0,speed/2,
+				Arm[5],90,0,0,speed/2,
+				Arm[6],0,0,0,speed/2,
+			},
+			false, --TurnInOrder
+			true, -- WaitForTurn
+			true --synced
+			)
+			
+			Sleep(500)
+			TurnPieceList(refUnitScript,
+			{	Arm[1],90,0,0,speed/2,
+				Arm[2],0,0,-42,speed/2,
+				Arm[3],50,0,0,speed/2,
+				Arm[4],-15,0,0,speed/2,
+				Arm[5],45,0,0,speed/2,
+				Arm[6],0,0,0,speed/2,
 			},
 			false, --TurnInOrder
 			true, -- WaitForTurn
 			false --synced
 			)
-			WaitForTurns(Arm)
+			for i=1, #Arm do	WaitForTurns(Arm[i]) end ;			Sleep(500)
+
 			hideT(TablesOfPiecesGroups["Implant"])
-					TurnPieceList(refUnitScript,
-			{	Arm[1],90,0,0,speed,
-				Arm[2],0,0,-225,speed,
-				Arm[3],100,0,0,speed,
-				Arm[4], -15,0,0,speed,
-				Arm[5],5,0,0,speed,
-				Arm[6],0,-45,0,speed,
+			TurnPieceList(refUnitScript,
+			{	
+			Arm[6],180,0,0,speed,
+			Arm[5],179,0,0,speed,
+			Arm[4],90,0,0,speed,
+			Arm[3],179,0,0,speed,
+			Arm[2],0,0,0,speed,
+			Arm[1],90,0,0,speed
+							
 			},
-			false, --TurnInOrder
+			true, --TurnInOrder
 			true, -- WaitForTurn
 			false --synced
 			)
-			WaitForTurns(Arm)
+			Hide(Crate1Open)
 			boolImplantImported=false
 		end	
 	end
 end
-	function importImplant(nr,speed)
+function importImplant(nr,speed)
+	Arm=ArmsTable[4]
 	while true do
-	Sleep(100)	
-			if boolImplantImported == false then
-				
-				
-				
-				distanceGate=12*4
-				for i=1,4 do
-					Move(CrationismT[i],z_axis,(distanceGate - i*(distanceGate/4))*-1,0,true)
-					Hide(CrationismT[i])
-				end
-				TurnPieceList(refUnitScript,
-				{Arm[1],110,0,0,speed,
-					Arm[2],0,0,-130,speed,
-					Arm[3],5,0,0,speed,
-					Arm[4], 25,0,0,speed,
-					Arm[5],0,0,0,speed,
-					Arm[6],-16*-1,-16,43,speed,
-				},
-				true, --TurnInOrder
-				true, -- WaitForTurn
-				false --synced
-				)
-				for i=1,4 do
-					tag=math.ceil(math.random(2,4))
-					Show(DesT[tag]) 
-					Move(CrationismT[i],z_axis,0,3.5)
-					Show(CrationismT[i])
-					WaitForMove(CrationismT[i],z_axis)
-				end
-				
-				hideT(DesT)
-				Arm=ArmsTable[4]
-				
-				Sleep(12000)
-				Hide(Crate4)
-				Show(Op4)
-				TurnPieceList(refUnitScript,
-				{	Arm[1],0,0,0,speed,
-					Arm[2],0,0,0,speed,
-					Arm[3],0,0,0,speed,
-					Arm[4], 0,0,0,speed,
-					Arm[5],90,0,0,speed,
-					Arm[6],0,0,0,speed,
-				},
-				false, --TurnInOrder
-				true, -- WaitForTurn
-				false --synced
-				
-				)
-				Sleep(12000)
-				
-				TurnPieceList(refUnitScript,
-				{	Arm[1],0,0,0,speed,
-					Arm[2],0,0,-225,speed,
-					Arm[3],0,0,0,speed,
-					Arm[4], 0,0,0,speed,
-					Arm[5],55,0,0,speed,
-					Arm[6],0,0,0,speed,
-				},
-				false, --TurnInOrder
-				true, -- WaitForTurn
-				false --synced
-				
-				)
-				Sleep(12000)
-				TurnPieceList(refUnitScript,
-				{	Arm[1],90,0,0,speed,
-					Arm[2],0,0,-225,speed,
-					Arm[3],100,0,0,speed,
-					Arm[4], -15,0,0,speed,
-					Arm[5],5,0,0,speed,
-					Arm[6],0,-45,0,speed,
-				},
-				false, --TurnInOrder
-				true, -- WaitForTurn
-				false --synced
-				)
-
-				Sleep(12000)
-				Hide(Op4)
-				Show(Crate1)
-				TurnPieceList(refUnitScript,
-				{	Arm[1],0,0,0,speed,
-					Arm[2],0,0,0,speed,
-					Arm[3],0,0,0,speed,
-					Arm[4], 0,0,0,speed,
-					Arm[5],0,0,0,speed,
-					Arm[6],0,0,0,speed,
-				},
-				true, --TurnInOrder
-				true, -- WaitForTurn
-				false --synced
-				
-				)
-				
-				Sleep(10000)	
-				boolImplantImported = true		 
+		Sleep(100)	
+		
+		if boolImplantImported == false then
+			Hide(Crate1)
+			Hide(Crate1Open)
+			
+			
+			distanceGate=12*4
+			for i=1,4 do
+				Move(CrationismT[i],z_axis,(distanceGate - i*(distanceGate/4))*-1,0,true)
+				Hide(CrationismT[i])
 			end
+			TurnPieceList(refUnitScript,
+			{	Arm[1],110,0,0,speed,
+				Arm[2],0,0,-130,speed,
+				Arm[3],5,0,0,speed,
+				Arm[4], 25,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],-17,-16,-43,speed,
+			},
+			true, --TurnInOrder
+			true, -- WaitForTurn
+			false --synced
+			)
+			
+			for i=1,4 do
+				tag=math.ceil(math.random(2,4))
+				Show(DesT[tag]) 
+				Move(CrationismT[i],z_axis,0,8.5)
+				Show(CrationismT[i])
+				WaitForMove(CrationismT[i],z_axis)
+			end
+			
+			hideT(DesT)
+			for i=1,4 do
+				Hide(CrationismT[i])
+			end
+			Arm=ArmsTable[4]
+			Hide(Crate4)
+			Show(Op4)
+			Sleep(1500)
+			TurnPieceList(refUnitScript,
+			{
+				Arm[1],110,0,0,speed,
+				Arm[2],0,0,-130,speed,
+				Arm[3],-25,0,0,speed,
+				Arm[4], 45,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],-5,-12,-49,speed,
+			},
+			false, --TurnInOrder
+			true, -- WaitForTurn
+			true --synced
+			)
+			
+				TurnPieceList(refUnitScript,
+			{
+				Arm[1],110,0,0,speed,
+				Arm[3],-85,0,0,speed,
+				Arm[2],0,0,0,speed,
+				Arm[4], 45,0,0,speed,
+				Arm[5],0,0,0,speed,
+				Arm[6],-5,-12,-49,speed,
+			},
+			true, --TurnInOrder
+			true, -- WaitForTurn
+			false --synced
+			)
+			
+			Sleep(3000)
+			TurnPieceList(refUnitScript,
+			{	Arm[1],90,0,127,speed*2,
+				Arm[2],0,0,0,speed*2,
+				Arm[3],0,0,0,speed*2,
+				Arm[4], 0,0,0,speed*2,
+				Arm[5],90,0,0,speed*2,
+				Arm[6],0,0,0,speed*2,
+			},
+			false, --TurnInOrder
+			true, -- WaitForTurn
+			true --synced
+			)
+			Sleep(3000)
+			TurnPieceList(refUnitScript,
+			{	Arm[1],90,0,0,speed*2,
+				Arm[2],0,0,-225,speed*2,
+				Arm[3],100,0,0,speed*2,
+				Arm[4], -15,0,0,speed*2,
+				Arm[5],5,0,0,speed*2,
+				Arm[6],0,-45,0,speed*2,
+			},
+			false, --TurnInOrder
+			true, -- WaitForTurn
+			true --synced
+			)
+			Hide(Op4)
+			Show(Crate1)
+			Sleep(3000)
+			TurnPieceList(refUnitScript,
+			{	
+			Arm[6],180,0,0,speed*2,
+			Arm[5],179,0,0,speed*2,
+			Arm[4],90,0,0,speed*2,
+			Arm[3],179,0,0,speed*2,
+			Arm[2],0,0,0,speed*2,
+			Arm[1],90,0,0,speed*2,
+							
+			},
+			true, --TurnInOrder
+			true, -- WaitForTurn
+			false --synced
+			)
+
+			Sleep(3000)
+
+			TurnPieceList(refUnitScript,
+			{	Arm[1],0,0,0,speed*2,
+				Arm[2],0,0,0,speed*2,
+				Arm[3],0,0,0,speed*2,
+				Arm[4], 0,0,0,speed*2,
+				Arm[5],0,0,0,speed*2,
+				Arm[6],0,0,0,speed*2,
+			},
+			true, --TurnInOrder
+			true, -- WaitForTurn
+			false --synced
+			
+			)
+			
+			Sleep(3000)	
+			boolImplantImported = true		 
 		end
+	end
+end
+
+function birthFluidLoop()
+Signal(SIG_WATER)
+SetSignalMask(SIG_WATER)
+Hide(bloodWater)
+Show(birthWater)
+Show(Sack)
+Show(GrowCapsule)
+Hide(BloodCapsule)
+
+
+	while true do
+	Spin(birthWater,y_axis,math.random(-math.pi,math.pi),0)
+	WMove(birthWater,y_axis,math.random(-1,-0.25),math.random(0.5,2))
+	WMove(birthWater,y_axis,0,math.random(0.5,2))
+	end
 end
 
 signalImportImplant=getUniqueSignal()
 function LooppumpUp				 (nr)
 	StableLoopSignalTable[nr]=true
+	StartThread(birthFluidLoop)
 	StartThread(sackTurn, nr+1)
-	StartThread(importImplant,signalImportImplant,0.1)
+	StartThread(importImplant,signalImportImplant,0.65)
+	StartThread(implantImplant,1.5)
 	Show(Sack)
 	Show(centerpipes)
 	
@@ -1246,8 +1351,8 @@ function LooppumpUp				 (nr)
 		speed=buildProgress*4
 		WayToGo=(1-buildProgress)
 		if WayToGo < 0.75 then 
-		WayToGo = 0;
-		speed= 9
+			WayToGo = 0;
+			speed= 9
 		end
 		percentage=totalDistanceDown* WayToGo		
 		Move(GrowSpot,y_axis,percentage, speed)
@@ -1290,10 +1395,10 @@ end
 
 function calcArmSpecificFirstZ(nr, value)
 	if nr < 10 then
-	if value then return value *-1 end
+		if value then return value *-1 end
 		return -90
 	else
-	if value then return value end
+		if value then return value end
 		return 90
 	end 
 	
@@ -1375,7 +1480,7 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 			opVal1=math.random(-10,10)
 			opVal2=math.random(-45,45)
 			rSign=randSign()
-		
+			
 			TurnPieceList(refUnitScript,
 			{	ArmsTable[nr][1],0 ,0,calcArmSpecificFirstZ(nr,randoVal),speed,
 				ArmsTable[nr][2],calcArmSpecificSecY(nr),0,0,speed,
@@ -1389,29 +1494,31 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 			true --synced
 			)
 			
-				if buildProgress > buildProgressLimit then
-						TurnPieceList(refUnitScript,
-					{	ArmsTable[nr][1],0,0, 0 ,speed,
-						ArmsTable[nr][2],0,0,0,speed,
-						ArmsTable[nr][3],0,0,0,speed,
-						ArmsTable[nr][4], 0,0,sideSign*90,speed,
-						ArmsTable[nr][5],0,0,0,speed,
-						ArmsTable[nr][6],0,0,0,speed,
-					},
-					false, --TurnInOrder
-					true, -- WaitForTurn
-					true --synced
-					)
-					Sleep(3000)
-					operationCounter=operationCounter-1
-					return
-				end
-		end
+			if buildProgress > buildProgressLimit then
+				TurnPieceList(refUnitScript,
+				{	ArmsTable[nr][1],0,0, 0 ,speed,
+					ArmsTable[nr][2],0,0,0,speed,
+					ArmsTable[nr][3],0,0,0,speed,
+					ArmsTable[nr][4], 0,0,sideSign*90,speed,
+					ArmsTable[nr][5],0,0,0,speed,
+					ArmsTable[nr][6],0,0,0,speed,
+				},
+				false, --TurnInOrder
+				true, -- WaitForTurn
+				true --synced
+				)
+				if nr == 19 then 	Explode(Meat,SFX.FALL +SFX.NO_HEATCLOUD); Hide(Meat) end
 
+				Sleep(3000)
+				operationCounter=operationCounter-1
+				return
+			end
+		end
 		
-	
+		
+		
 		Sleep(3000)
-			TurnPieceList(refUnitScript,
+		TurnPieceList(refUnitScript,
 		{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
 			ArmsTable[nr][2],calcArmSpecificSecY(nr),0 ,0,speed,
 			ArmsTable[nr][3],0,0,sideSign*45,speed,
@@ -1424,9 +1531,9 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 		true --synced
 		)
 	end
-		Sleep(3000)
-
-
+	Sleep(3000)
+	
+	
 	TurnPieceList(refUnitScript,
 	{	ArmsTable[nr][1],0,0, 0 ,speed,
 		ArmsTable[nr][2],0,0,0,speed,
@@ -1442,52 +1549,61 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 	Sleep(3000)
 	if nr == 19 then 	Explode(Meat,SFX.FALL +SFX.NO_HEATCLOUD); Hide(Meat) end
 	Sleep(postDelay)
-
+	
 	operationCounter=operationCounter-1
-
+	
 end
 
 function cutDeep(buildProgressLimit)
 	if buildProgress > buildProgressLimit then return end
-
-			for i=1,#ArmsTable, 1 do
-				startval=math.random(0.45,1)
-				range=math.random(0.5,1.5)
-				sideSign=-1
-				if i > 9 then sideSign=1 end
-				
-				if ArmsTable[i] and i ~=4 and i ~=18 then	
-					if maRa()== true or operationCounter <= 0 then
-						operationCounter=operationCounter+1
-						StartThread(incisionWithArm,sideSign, i, math.max(0.45,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000), iRand(3,9),buildProgressLimit)
-					else
-						speed=5
-						TurnPieceList(refUnitScript,
-						{	ArmsTable[i][1],0,0, 0 ,speed,
-							ArmsTable[i][2],0,0,0,speed,
-							ArmsTable[i][3],0,0,0,speed,
-							ArmsTable[i][4], 0,0,sideSign*90,speed,
-							ArmsTable[i][5],0,0,0,speed,
-							ArmsTable[i][6],0,0,0,speed,
-						},
-						false, --TurnInOrder
-						false, -- WaitForTurn
-						true --synced
-						)
-					end
-				end
+	
+	for i=1,#ArmsTable, 1 do
+		startval=math.random(0.45,1)
+		range=math.random(0.5,1.5)
+		sideSign=-1
+		if i > 9 then sideSign=1 end
+		
+		if ArmsTable[i] and i ~=4 and i ~=18 then	
+			if maRa()== true or operationCounter <= 0 then
+				operationCounter=operationCounter+1
+				StartThread(incisionWithArm,sideSign, i, math.max(0.45,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000), iRand(3,9),buildProgressLimit)
+			else
+				speed=5
+				TurnPieceList(refUnitScript,
+				{	ArmsTable[i][1],0,0, 0 ,speed,
+					ArmsTable[i][2],0,0,0,speed,
+					ArmsTable[i][3],0,0,0,speed,
+					ArmsTable[i][4], 0,0,sideSign*90,speed,
+					ArmsTable[i][5],0,0,0,speed,
+					ArmsTable[i][6],0,0,0,speed,
+				},
+				false, --TurnInOrder
+				false, -- WaitForTurn
+				true --synced
+				)
 			end
-		while (operationCounter > 0 and buildProgress < buildProgressLimit) do
-			Sleep(100)
 		end
+	end
+	while (operationCounter > 0 and buildProgress < buildProgressLimit) do
+		Sleep(100)
+	end
 end
-
+SIG_WATER=4
 function bloodyHell()
+	Signal(SIG_WATER)
+	SetSignalMask(SIG_WATER)
+	Hide(Sack)
+	Show(SackWIP)
+	Hide(GrowCapsule)
+	Show(BloodCapsule)
+	Show(bloodWater)
 
-		Hide(Sack)
-		Show(SackWIP)
-		Hide(GrowCapsule)
-		Show(BloodCapsule)
+	Hide(birthWater)
+	while true do
+	Spin(bloodWater,y_axis,math.random(-math.pi,math.pi),0)
+	WMove(bloodWater,y_axis,math.random(-1,-0.25),math.random(0.5,2))
+	WMove(bloodWater,y_axis,0,math.random(0.5,2))
+	end
 end
 
 operationCounter=0
@@ -1503,27 +1619,25 @@ function operate()
 			if i > 9 then sideSign=1 end
 			
 			if ArmsTable[i] and i ~=4 and i ~=18 then
-				StartThread(runArmTest,sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
+				StartThread(runArmTest, sideSign, i, math.max(0.1,math.random(startval,startval+range)),iRand(100,1000),iRand(1400,3000))
 			end
 		end
 		--wait for the unit to "grow"
-		while buildProgress < 0.10 do Sleep(10) end
-		StableLoopSignalTable[signalImportImplant]=false
 		while buildProgress < 0.25 do Sleep(10) end
 		--incision
 		cutDeep(0.5)
 		while buildProgress < 0.5 do Sleep(10) end
 		--bloody work to be done
-		bloodyHell()
-		StartThread(implantImplant,1.5)
+		StartThread(bloodyHell)
 
-		while buildProgress < 0.75 do Sleep(10) end
-		cutDeep(0.75)
+		while buildProgress < 0.6 do Sleep(10) end
+		cutDeep(0.95)
+
 		while buildProgress < 1 do Sleep(10) end
 		--special case --loose instrument
 		--close up
-	
-	Sleep(10)
+		
+		Sleep(10)
 	end
 	
 end
@@ -1595,11 +1709,11 @@ function buildOS()
 				buildProgress= progress or 0.1
 				Sleep(100)
 			end
-		Sleep(100)	
+			Sleep(100)	
 			Spring.SetUnitAlwaysVisible(buildID,true)
 			boolBuilding=false
 		end
-	
+		
 		Sleep(500)
 		--Debug DelMe
 		buildProgress=math.max(buildProgress,math.random(1,100))
@@ -1629,7 +1743,7 @@ function randomBlink()
 				Show(WindowTable[i+1]) 
 			end
 		end
-	Sleep(100)
+		Sleep(100)
 	end
 	
 end 

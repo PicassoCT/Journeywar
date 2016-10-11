@@ -9,7 +9,7 @@ TablesOfPiecesGroups={}
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 	if damage > 150 then
-	 StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterScreach.ogg", 1, 25000, 1,0)
+		StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterScreach.ogg", 1, 25000, 1,0)
 	end
 end
 center=piece"center"
@@ -40,64 +40,64 @@ conversionTable={}
 for i=1,12 do
 	cPiece= "cLeg"..i
 	jPiece= "jleg"..i
-
-		conversionTable[i]= {}
-		conversionTable[i].cPiece=piece(cPiece)
-		conversionTable[i].jPiece=piece(jPiece)
-
-		
+	
+	conversionTable[i]= {}
+	conversionTable[i].cPiece=piece(cPiece)
+	conversionTable[i].jPiece=piece(jPiece)
+	
+	
 end
 
 function hideByUnitType()
-		hideT(TablesOfPiecesGroups["cLeg"])
-		Hide(cHead)
-		Hide(Com)
-		showT(TablesOfPiecesGroups["jleg"])
-		Show(jHead)
-		
+	hideT(TablesOfPiecesGroups["cLeg"])
+	Hide(cHead)
+	Hide(Com)
+	showT(TablesOfPiecesGroups["jleg"])
+	Show(jHead)
+	
 	if Spring.GetUnitDefID(unitID) == UnitDefNames["chunter"].id then
-	 _, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-	while not buildProgress do
-		Sleep(10)
-	end
-  	
-	while buildProgress and buildProgress < 1 do
-		upperBound= buildProgress*12
-		for i=1,upperBound do
-		Hide(conversionTable[i].jPiece)
-		Show(conversionTable[i].cPiece)
-		end
-		Sleep(50)
 		_, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+		while not buildProgress do
+			Sleep(10)
+		end
+		
+		while buildProgress and buildProgress < 1 do
+			upperBound= buildProgress*12
+			for i=1,upperBound do
+				Hide(conversionTable[i].jPiece)
+				Show(conversionTable[i].cPiece)
+			end
+			Sleep(50)
+			_, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+		end
+		
+		for i=1,12 do
+			Hide(conversionTable[i].jPiece)
+			Show(conversionTable[i].cPiece)
+		end
+		Hide(jHead)
+		Show(cHead)
+		Show(Com)
+		
 	end
 	
-	for i=1,12 do
-		Hide(conversionTable[i].jPiece)
-		Show(conversionTable[i].cPiece)
-	end
-	Hide(jHead)
-	Show(cHead)
-	Show(Com)
-	
-	end
-
 end
 SIG_AIM= 2
 
 function aimPos(speed)
-SetSignalMask(SIG_AIM)
-tP(LegTable[Leg2], 20, 0, 35, speed)
-tP(LegTable[Leg2+1], 32, -36, -76, speed)
-tP(LegTable[Leg2+2], 0, 0, 0, speed)
-
-tP(LegTable[Leg3], 31, 0, -44, speed)
-tP(LegTable[Leg3+1], 0, 27, 76, speed)
-tP(LegTable[Leg3+2], 0, 0, 0, speed)
-
-tP(LegTable[Leg1], -31, 0, 0, speed)
-tP(LegTable[Leg1+1], 56, 0, 0, speed)
-tP(LegTable[Leg1+2], 0, 0, 0, speed)
-
+	SetSignalMask(SIG_AIM)
+	tP(LegTable[Leg2], 20, 0, -35, speed)
+	tP(LegTable[Leg2+1], 32, -36, 76, speed)
+	tP(LegTable[Leg2+2], 0, 0, 0, speed)
+	
+	tP(LegTable[Leg3], 31, 0, 44, speed)
+	tP(LegTable[Leg3+1], 0, 27, -76, speed)
+	tP(LegTable[Leg3+2], 0, 0, 0, speed)
+	
+	tP(LegTable[Leg1], -31, 0, 0, speed)
+	tP(LegTable[Leg1+1], 56, 0, 0, speed)
+	tP(LegTable[Leg1+2], 0, 0, 0, speed)
+	
 end
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
@@ -107,9 +107,9 @@ function script.Create()
 end
 
 function script.Killed(recentDamage,_)
-
-suddenDeathV(recentDamage)
-return 1
+	
+	suddenDeathV(recentDamage)
+	return 1
 end
 
 ----aimining & fire weapon
@@ -124,11 +124,11 @@ end
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 	walkState="stop"
-
+	
 	return true
-
+	
 end
- 
+
 
 function script.FireWeapon1()	
 	Signal(SIG_AIM)
@@ -143,23 +143,23 @@ boolAiming=false
 function script.StartMoving()
 	--idleEnd=true
 	walkState="walking"
-		Signal(SIG_IDLE)
+	Signal(SIG_IDLE)
 end
 
 function script.StopMoving()
 	walkState="stop"
 	--StartThread(idle)	
-		
+	
 end
 
 function script.Activate()
-
-return 1
+	
+	return 1
 end
 
 function script.Deactivate()
-
-return 0
+	
+	return 0
 end
 
 
@@ -167,7 +167,7 @@ end
 
 function forward(number, speed)
 	TaskTable[number].FinnishedExecution = false
-
+	
 	Turn(LegTable[number+1],x_axis,math.rad(22),speed)
 	WaitForTurns(LegTable[number+1])
 	Turn(LegTable[number],x_axis,math.rad(-39),speed)
@@ -177,7 +177,7 @@ function forward(number, speed)
 	WaitForTurns(LegTable[number+1])
 	Turn(LegTable[number],x_axis,math.rad(-29),speed)
 	Turn(LegTable[number+1],x_axis,math.rad(29),speed)
-
+	
 	WaitForTurns(LegTable[number],LegTable[number+1])
 	TaskTable[number].FinnishedExecution = true
 end
@@ -185,14 +185,14 @@ end
 --angleY 65
 function stabilize(number, speed)
 	TaskTable[number].FinnishedExecution = false
-	 signumYAxis =1 
-	if number == Leg3 then  signumYAxis = -1 end
+	signumYAxis =1 
+	if number == Leg3 then signumYAxis = -1 end
 	angleY = math.random(50,90)
-
+	
 	Turn(LegTable[number],x_axis,math.rad(25),speed)
 	Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
 	Turn(LegTable[number],y_axis,math.rad(-1*angleY*signumYAxis*-1),speed)
-
+	
 	WaitForTurns(LegTable[number],LegTable[number+1])
 	TaskTable[number].FinnishedExecution = true
 end
@@ -200,9 +200,9 @@ end
 --angleY 65
 function stabilizeArc(number, speed)
 	TaskTable[number].FinnishedExecution = false
-	 angleYBegin =-42
-	 angleYEnd =32
-
+	angleYBegin =-42
+	angleYEnd =32
+	
 	Turn(LegTable[number],x_axis,math.rad(25),speed)
 	Turn(LegTable[number+1],x_axis,math.rad(-25),speed)
 	Turn(LegTable[number],y_axis,math.rad(angleYBegin),speed)
@@ -216,12 +216,12 @@ end
 
 function push(number, speed)
 	TaskTable[number].FinnishedExecution = false
-
+	
 	Turn(LegTable[number],z_axis,math.rad(0),speed)
 	Turn(LegTable[number],y_axis,math.rad(0),speed)
 	Turn(LegTable[number],x_axis,math.rad(32),speed)
 	Turn(LegTable[number+1],x_axis,math.rad(-32),speed)
-
+	
 	WaitForTurns(LegTable[number],LegTable[number+1])
 	TaskTable[number].FinnishedExecution = true
 end
@@ -231,7 +231,7 @@ SIG_IDLE = 2
 function breath()
 	SetSignalMask(SIG_IDLE)
 	randVal=cbrandoVal(1,22)
-
+	
 	for i=1, randVal do
 		Move(jHead,y_axis,-7,0.4)
 		Turn(LegTable[Leg2],z_axis,math.rad(48),0.075,true)
@@ -248,7 +248,7 @@ function breath()
 		Sleep(100)
 		WaitForTurns(LegTable)
 		WaitForMove(jHead,y_axis)
-
+		
 		Move(jHead,y_axis,0,0.7)
 		Turn(LegTable[Leg2],z_axis,math.rad(0),0.1,true)
 		Turn(LegTable[Leg2+1],z_axis,math.rad(0),0.15,true)
@@ -269,9 +269,9 @@ function breath()
 end
 
 function idle()
-
+	
 	Sleep(3000)
-	while walkState == "stop"   do
+	while walkState == "stop" do
 		
 		Signal(SIG_IDLE)
 		StartThread(breath)
@@ -290,150 +290,150 @@ function idle()
 	
 end
 
-	TaskTable={}
-	PUSH =1
-	FORWARD =2
-	STABILIZE = 3
+TaskTable={}
+PUSH =1
+FORWARD =2
+STABILIZE = 3
 
 function walking()
-
-				if TaskTable[Leg1].FinnishedExecution== true then
-				TaskTable[Leg1].CurrentFunctionIndex = (TaskTable[Leg1].CurrentFunctionIndex%3) +1
-				StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, 3.141)
-				end
-				
-				if TaskTable[Leg2].FinnishedExecution== true then
-				TaskTable[Leg2].CurrentFunctionIndex = (TaskTable[Leg2].CurrentFunctionIndex%3) +1
-				StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, 3.141)
-				end
-				
-				if TaskTable[Leg3].FinnishedExecution== true then
-				TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex%3) +1
-				StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 3.141)
-				end
+	
+	if TaskTable[Leg1].FinnishedExecution== true then
+		TaskTable[Leg1].CurrentFunctionIndex = (TaskTable[Leg1].CurrentFunctionIndex%3) +1
+		StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, 3.141)
+	end
+	
+	if TaskTable[Leg2].FinnishedExecution== true then
+		TaskTable[Leg2].CurrentFunctionIndex = (TaskTable[Leg2].CurrentFunctionIndex%3) +1
+		StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, 3.141)
+	end
+	
+	if TaskTable[Leg3].FinnishedExecution== true then
+		TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex%3) +1
+		StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 3.141)
+	end
 end
 
 function turning(turnState)
-		normalLeg, inversedLeg = Leg3, Leg2
-		if turnState == "turnRight" then
-			normalLeg, inversedLeg = Leg2, Leg3
+	normalLeg, inversedLeg = Leg3, Leg2
+	if turnState == "turnRight" then
+		normalLeg, inversedLeg = Leg2, Leg3
+	end
+	
+	if TaskTable[inversedLeg].FinnishedExecution== true then
+		if TaskTable[inversedLeg].CurrentFunctionIndex == 0 then TaskTable[inversedLeg].CurrentFunctionIndex = PUSH end
+		
+		if TaskTable[inversedLeg].CurrentFunctionIndex == PUSH then
+			TaskTable[inversedLeg].CurrentFunctionIndex = STABILIZE
+			
+		elseif TaskTable[inversedLeg].CurrentFunctionIndex == STABILIZE then
+			TaskTable[inversedLeg].CurrentFunctionIndex = FORWARD
+			
+		elseif TaskTable[inversedLeg].CurrentFunctionIndex == FORWARD then
+			TaskTable[inversedLeg].CurrentFunctionIndex = PUSH
 		end
-
-				if TaskTable[inversedLeg].FinnishedExecution== true then
-				if TaskTable[inversedLeg].CurrentFunctionIndex == 0 then TaskTable[inversedLeg].CurrentFunctionIndex = PUSH end
-				
-						if TaskTable[inversedLeg].CurrentFunctionIndex == PUSH then
-							TaskTable[inversedLeg].CurrentFunctionIndex = STABILIZE
-							
-						elseif  TaskTable[inversedLeg].CurrentFunctionIndex == STABILIZE then
-							TaskTable[inversedLeg].CurrentFunctionIndex = FORWARD
-							
-						elseif  TaskTable[inversedLeg].CurrentFunctionIndex == FORWARD then
-							TaskTable[inversedLeg].CurrentFunctionIndex = PUSH
-						end
-						
-
-
-					StartThread(TaskTable[inversedLeg].functions[TaskTable[inversedLeg].CurrentFunctionIndex], inversedLeg, 3.141)
-				end
-
-				if TaskTable[normalLeg].FinnishedExecution== true then
-					TaskTable[normalLeg].CurrentFunctionIndex = (TaskTable[normalLeg].CurrentFunctionIndex%3) +1
-					StartThread(TaskTable[normalLeg].functions[TaskTable[normalLeg].CurrentFunctionIndex], normalLeg, 3.141)
-				end
-				
-				if TaskTable[Leg3].FinnishedExecution== true then
-					TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex%3) +1
-					StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 3.141)
-				end
-
+		
+		
+		
+		StartThread(TaskTable[inversedLeg].functions[TaskTable[inversedLeg].CurrentFunctionIndex], inversedLeg, 3.141)
+	end
+	
+	if TaskTable[normalLeg].FinnishedExecution== true then
+		TaskTable[normalLeg].CurrentFunctionIndex = (TaskTable[normalLeg].CurrentFunctionIndex%3) +1
+		StartThread(TaskTable[normalLeg].functions[TaskTable[normalLeg].CurrentFunctionIndex], normalLeg, 3.141)
+	end
+	
+	if TaskTable[Leg3].FinnishedExecution== true then
+		TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex%3) +1
+		StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 3.141)
+	end
+	
 end
 
 
-	
+
 counter= 0
 function moveStatemachine()
 	StartThread(TurnDetect)
 	Move(center,y_axis,0,16)
-		while true do
+	while true do
 		
-			
+		
 		--Analytical IK
-		if walkState ~= "stop"  then
-		resetT(LegTable,3)
-		WaitForTurns(LegTable)
-		
-		TaskTable[Leg1]={
-			CurrentFunctionIndex= 0 ,
-			FinnishedExecution=true,
+		if walkState ~= "stop" then
+			resetT(LegTable,3)
+			WaitForTurns(LegTable)
+			
+			TaskTable[Leg1]={
+				CurrentFunctionIndex= 0 ,
+				FinnishedExecution=true,
 				functions={
-				[1]= push,
-				[2]= forward,
-				[3]= stabilizeArc
+					[1]= push,
+					[2]= forward,
+					[3]= stabilizeArc
 				}
 			}
 			
 			TaskTable[Leg2]={
-			CurrentFunctionIndex= 2,
-			FinnishedExecution=true,
+				CurrentFunctionIndex= 2,
+				FinnishedExecution=true,
 				functions={
-				[1]= push,
-				[2]= forward,
-				[3]= stabilize
+					[1]= push,
+					[2]= forward,
+					[3]= stabilize
 				}
 			}
 			
 			TaskTable[Leg3]={
-			CurrentFunctionIndex=1 ,
-			FinnishedExecution=true,
+				CurrentFunctionIndex=1 ,
+				FinnishedExecution=true,
 				functions={
-				[1]= push,
-				[2]= forward,
-				[3]= stabilize
+					[1]= push,
+					[2]= forward,
+					[3]= stabilize
 				}
 			}
-				
-			if  walkState == "walking" then StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterWalk.ogg", 1, 5000, 1,0) end
+			
+			if walkState == "walking" then StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterWalk.ogg", 1, 5000, 1,0) end
 			while (walkState == "walking") do
 				walking()		
-			Sleep(10)
+				Sleep(10)
 			end
 			
 			while (walkState == "turnLeft" or walkState == "turnRight") do
-			--Push > Stabilize  > Forward
+				--Push > Stabilize > Forward
 				turning(walkState)	
-			Sleep(10)
+				Sleep(10)
 			end
 		end
-
-	resetT(LegTable,3)
-	WaitForTurns(LegTable)
+		
+		resetT(LegTable,3)
+		WaitForTurns(LegTable)
 		while (walkState == "stop") do
 			idle()
-		Sleep(10)
+			Sleep(10)
 		end
 		
-	Sleep(50)
+		Sleep(50)
 	end
 end
 
 function TurnDetect()
-local spGetUnitHeading=Spring.GetUnitHeading
-oldHeading=spGetUnitHeading(unitID)
-Sleep(500)
-newHeading=oldHeading
-
-	while true do	
-	newHeading=spGetUnitHeading(unitID)
-	
-	if math.abs(newHeading-oldHeading)> 10000 then
-		if newHeading-oldHeading < 0 then walkState="turnLeft" else walkState="turnRight" end
-	elseif walkState ~= "stop" and walkState ~= "aiming" then
-	walkState="walking"
-	end
-
+	local spGetUnitHeading=Spring.GetUnitHeading
+	oldHeading=spGetUnitHeading(unitID)
 	Sleep(500)
-	oldHeading=newHeading
+	newHeading=oldHeading
+	
+	while true do	
+		newHeading=spGetUnitHeading(unitID)
+		
+		if math.abs(newHeading-oldHeading)> 10000 then
+			if newHeading-oldHeading < 0 then walkState="turnLeft" else walkState="turnRight" end
+		elseif walkState ~= "stop" and walkState ~= "aiming" then
+			walkState="walking"
+		end
+		
+		Sleep(500)
+		oldHeading=newHeading
 	end
 end
 

@@ -45,8 +45,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
 	local cFlareGun = WeaponDefNames["flaregun"].id
 	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
-			jhunterDartDefID = WeaponDefNames["jdartgun"].id
-			lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
+	jhunterDartDefID = WeaponDefNames["jdartgun"].id
+	lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
 	local slicergunDefID = WeaponDefNames["slicergun"].id
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
@@ -63,12 +63,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
 	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
 	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
-		jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
-		chcprojectileDefID=WeaponDefNames["hcprojectile"].id
-		cAllyGatorMarkerDefID= WeaponDefNames["callygatormarker"].id
+	jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
+	chcprojectileDefID=WeaponDefNames["hcprojectile"].id
+	cAllyGatorMarkerDefID= WeaponDefNames["callygatormarker"].id
 	local CEaterRocketDefID=WeaponDefNames["ceater"].id
-		jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
-		jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
+	jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
+	jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
 	local cHarvestRocketDefID=WeaponDefNames["charvest"].id
 	local cAntiMatterDefID=WeaponDefNames["cantimatter"].id
 	local catapultDefID=WeaponDefNames["ccatapult"].id
@@ -152,14 +152,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	function unitVannishAntimatterSFX(id)
-				
+		
 		Spring.SetUnitNoSelect(id,true)
 		boolIsBuilding=UnitDefs[Spring.GetUnitDefID(id)].id
 		tpiecesTable=getPieceMap(id)		
 		
 		for i=1,table.getn(tpiecesTable) do	
-				spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",10)
-				spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",10)		
+			spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",10)
+			spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",10)		
 		end		
 		Spring.DestroyUnit(id,true,true) 
 		
@@ -250,7 +250,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							cegTag = "cchainlightning"
 						}					
 						
-						 projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
+						projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
 						
 						
 					end
@@ -276,7 +276,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						cegTag = "cchainlightning"
 					}
 					
-					 projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
+					projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams)
 					
 					
 				end
@@ -355,9 +355,9 @@ if (gadgetHandler:IsSyncedCode()) then
 			else
 				dartID= Spring.CreateUnit(unitChoice,px,py,pz,1,gaiaTeamID)	
 			end
-		
+			
 		end
-
+		
 		--MTW Grenade
 		if weaponDefID== cmtwgrenade and Spring.ValidUnitID(AttackerID) ==true then
 			if Spring.GetUnitIsDead(AttackerID)==false then
@@ -520,11 +520,11 @@ if (gadgetHandler:IsSyncedCode()) then
 			model = "cHarvestProj.s3o",
 		}					
 		
-		 projectileID = Spring.SpawnProjectile( cHarvestRocketDefID ,HarvestRocketParams)
+		projectileID = Spring.SpawnProjectile( cHarvestRocketDefID ,HarvestRocketParams)
 		
-		if  projectileID then
+		if projectileID then
 			if not HarvestRocketLoadTable[attackerID] then HarvestRocketLoadTable[attackerID]={} end
-			HarvestRocketLoadTable[attackerID][unitID]={metal=metalRes, energy=energyRes, vicID =  projectileID }
+			HarvestRocketLoadTable[attackerID][unitID]={metal=metalRes, energy=energyRes, vicID = projectileID }
 		end
 		
 	end
@@ -687,8 +687,8 @@ if (gadgetHandler:IsSyncedCode()) then
 					model = "jGlowProj.s3o",
 					cegTag = "jglowstrip",
 				}						
-				 projectileID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
-				if  projectileID then
+				projectileID = Spring.SpawnProjectile( jethiefretweaponDefID ,HarvestRocketParams)
+				if projectileID then
 					Spring.SetProjectileTarget(attackerID,"u")
 				end
 			end
@@ -786,7 +786,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				cegTag = "cchainlightning"
 			}
 			
-			 projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams) 
+			projectileID = Spring.SpawnProjectile( ChainLightningDefID ,ChaingProjParams) 
 			
 			
 			
