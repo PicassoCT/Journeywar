@@ -8,7 +8,10 @@ function script.Create()
 	Hide(wood[i])
 	rot=math.random(0,360)
 	Turn(wood[i],y_axis,math.rad(rot),0)
-	val=math.random(-4,4)
+	
+	multiplicator=1
+	if i>11 then multiplicator = 5 end
+	val=math.random(-4,4)*multiplicator
 	Turn(wood[i],x_axis,math.rad(val),0)
 	val=math.random(-4,4)
 	Turn(wood[i],z_axis,math.rad(val),0)

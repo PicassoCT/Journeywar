@@ -17,6 +17,7 @@ bshelix=piece"bshelix"
 unRooted=piece"unRooted"
 bsfetas=piece"bsfetas"
 growGroup=piece"growGroup"
+bsholo= piece"bsholo"
 local SIG_ENTER=1
 local SIG_PUMP=2
 local SIG_DIRT=4
@@ -291,6 +292,8 @@ function dropLeave(nr)
 end
 
 function emitSparks()
+	while boolEntryOver== false do Sleep(10) end
+
 	while(true) do
 		for i=1,table.getn(dirt),1 do
 			EmitSfx(dirt[i],1030)
@@ -657,7 +660,7 @@ function script.Create()
 	StartThread(soundSleeper)
 	StartThread(darkEnergyReactor)
 
-	
+	Turn(bsholo,y_axis,math.rad(-90),0)
 	Hide(unRooted)
 	Hide(spindl)
 	Hide(spindl2)
