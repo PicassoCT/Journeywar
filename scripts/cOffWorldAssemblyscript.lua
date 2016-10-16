@@ -8,6 +8,15 @@ piecesTable={}
 
 --PIECES
 piecesTable={}
+bodyBag = piece("bodyBag")
+piecesTable[#piecesTable+1]= bodyBag
+emptyCapsule = piece("emptyCapsu")
+piecesTable[#piecesTable+1]= emptyCapsule
+fluidsack = piece("fluidsack")
+piecesTable[#piecesTable+1]= fluidsack
+buildSpot = piece("buildSpot")
+piecesTable[#piecesTable+1]= buildSpot
+
 deathpivot = piece("deathpivot")
 piecesTable[#piecesTable+1]= deathpivot
 center = piece("center")
@@ -610,9 +619,12 @@ function stompBases()
 end
 OperationSet= {}
 ArmsTable={}
+opTable={}
 
 function script.Create()
-	
+	Hide(bodyBag)
+	Hide(emptyCapsule)
+	Hide(fluidsack)	
 	Hide(Meat)
 	Hide(Crate1)
 	Hide(Crate1Open)
@@ -620,6 +632,8 @@ function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	WindowTable=TablesOfPiecesGroups["Window"]
+	Spring.SetUnitNanoPieces(unitID, WindowTable)
+	Spring.Echo("Number of Windows", #WindowTable)
 	StompBaseTable=TablesOfPiecesGroups["StompBase"]
 	StompTable=TablesOfPiecesGroups["Stomp"]
 	
@@ -637,6 +651,7 @@ function script.Create()
 	OPTU_T=TablesOfPiecesGroups["OPTU"]
 	
 	zeropad="00"	
+	
 	for i=1,19,1 do
 		
 		if i == 10 then zeropad="0" end
@@ -654,7 +669,8 @@ function script.Create()
 		ArmsTable[i][5]=piece(name)
 		name="Op"..i
 		ArmsTable[i][6]=piece(name)
-		
+		opTable[#opTable+1] = ArmsTable[i][6]
+
 		for k=1,6,1 do
 			if ArmsTable[i][k] == nil then			
 				echo("coffworldAssembly::piece missing Arm"..i.." / ".. k)
@@ -663,7 +679,7 @@ function script.Create()
 		
 		
 	end	
-	
+
 	OperationSet=TableMergeTable(OP_T,OPTA_T)	
 	OperationSet=TableMergeTable(OperationSet,OPFA_T)	
 	OperationSet=TableMergeTable(OperationSet,OPSA_T)	
@@ -696,6 +712,7 @@ function hide(name,pece)
 end
 
 function setUp()
+
 	Move(GrowSpot,y_axis,totalDistanceDown,0)
 	hide("centerpipes",centerpipes)
 	Hide(bloodWater)
@@ -748,21 +765,21 @@ function setUp()
 	
 end
 
+SIG_BUILD= 8
 function BuildingAnimation(buildID)
-	
-	
-	
-	--unfold
-	fold(true,1)
-	
-	eggDeploy(1.5)
-	StartThread(LooppumpUp,getUniqueSignal())
-	while(buildProgress <0.25 ) do Sleep(10) end
-	operate()
-	while true do
-		Sleep(10000) 
-	end
-	
+		SetSignalMask(SIG_BUILD)
+		Spring.SetUnitAlwaysVisible(buildID,false)
+
+		--unfold
+		fold(true,1)
+		
+		eggDeploy(1.5)
+		StartThread(LooppumpUp,getUniqueSignal())
+		while(buildProgress <0.25 ) do Sleep(10) end
+		operate(buildID)
+		fold(false,1)
+		while		boolBuilding== true do Sleep(10) end
+
 end
 
 CrationismT={}
@@ -876,9 +893,16 @@ function fold	(boolDirection, lspeed)
 		WTurn(ToolMidT[3],x_axis,math.rad(-115),speed)
 		WTurn(ToolLowT[3],x_axis,math.rad(-90),speed)
 		foldAttrapp(boolDirection,speed)
-		
-		
-		
+		Hide(birthWater)
+		Hide(bloodWater)
+		Hide(Sack)
+		Hide(SackWIP)
+		Hide(GrowCapsule)
+		Hide(BloodCapsule)
+		Hide(bodyBag)
+		Hide(fluidsack)
+		Hide(emptyCapsule)
+		resetT(piecesTable)
 		
 		return CurrentStat,Instate 
 	end
@@ -1473,7 +1497,7 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 		true --synced
 		)
 		OperationMoves = math.ceil(math.random(5, 12)) 
-		if nr == 19 then Show(Meat) end
+		
 		for i=1, OperationMoves, 1 do
 			Sleep(1500)
 			randoVal= math.random(85, 120)
@@ -1495,6 +1519,7 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 			)
 			
 			if buildProgress > buildProgressLimit then
+			if nr == 19 then Show(Meat) end
 				TurnPieceList(refUnitScript,
 				{	ArmsTable[nr][1],0,0, 0 ,speed,
 					ArmsTable[nr][2],0,0,0,speed,
@@ -1516,7 +1541,7 @@ function incisionWithArm(sideSign, nr,speed,predelay,postDelay,CutNumber, buildP
 		end
 		
 		
-		
+		if nr == 19 then Show(Meat) end
 		Sleep(3000)
 		TurnPieceList(refUnitScript,
 		{	ArmsTable[nr][1],0,0,calcArmSpecificFirstZ(nr) ,speed,
@@ -1607,9 +1632,9 @@ function bloodyHell()
 end
 
 operationCounter=0
-function operate()
+function operate(buildID)
 	
-	while buildProgress < 0.9 do 
+
 		--test tools
 		for i=1,#ArmsTable, 1 do
 			
@@ -1633,15 +1658,31 @@ function operate()
 		while buildProgress < 0.6 do Sleep(10) end
 		cutDeep(0.95)
 
+		while buildProgress < 0.95 do Sleep(10) end
+		showUnit(buildID)
 		while buildProgress < 1 do Sleep(10) end
-		--special case --loose instrument
-		--close up
-		
-		Sleep(10)
-	end
-	
+
 end
 
+function showUnit(buildID)
+
+	Hide(Sack)
+
+	Hide(GrowCapsule)
+	Hide(birthWater)
+	Hide(BloodCapsule)
+	Hide(bloodWater)
+	Show(emptyCapsule)
+	Show(fluidsack)
+	Show(bodyBug)
+	Spring.SetUnitAlwaysVisible(buildID,true)
+	WMove(SackWIP,y_axis,-25,100)
+	Hide(SackWIP)
+	reset(SackWIP)
+
+
+
+end
 
 function insertArm(sideSign,nr)
 	
@@ -1678,45 +1719,40 @@ boolBuilding=false
 buildProgress=0
 
 function buildOS()
-	--TestLoop
-	boolBuilding=true
-	Sleep(3000)
-	StartThread(BuildingAnimation, buildID,false)
-	Sleep(3000)
-	while true do 
-		for i=1,100 do
-			buildProgress=i/100
-			Sleep(2000)
-			Spring.Echo("BuildProgress:"..buildProgress)
-		end
-		Sleep(5000)
-	end
-	--/TestLoop	
-	
+	oldID= nil
 	while true do
 		buildID=Spring.GetUnitIsBuilding(unitID)
-		if buildID then 
+		if buildID and buildID ~= oldID then 
 			boolBuilding=true
 			progress=0
 			buildProgress=0
+			Signal(SIG_BUILD)
 			StartThread(BuildingAnimation, buildID,false)
 			
 			--building something
 			Spring.SetUnitAlwaysVisible(buildID,false)
 			
-			while Spring.ValidUnitID(buildID)==true and progress < 1 do
-				hp,progress=Spring.GetUnitHealth(buildID)
-				buildProgress= progress or 0.1
+			while Spring.ValidUnitID(buildID) and progress < 1 do
+				_,_,pd, cp, progress=Spring.GetUnitHealth(buildID)
+				Spring.Echo("BuildProgress:"..progress)
+				buildProgress = progress or 0.01
 				Sleep(100)
 			end
-			Sleep(100)	
-			Spring.SetUnitAlwaysVisible(buildID,true)
+			
+			if Spring.ValidUnitID(buildID)== false or Spring.GetUnitIsDead(buildID) == true then
+				Signal(SIG_BUILD)
+				fold(false,7)
+			end
+			
+			if Spring.GetUnitIsDead(buildID) == false then
+				Spring.SetUnitAlwaysVisible(buildID,true)
+			end
 			boolBuilding=false
+			oldID= buildID
 		end
 		
 		Sleep(500)
-		--Debug DelMe
-		buildProgress=math.max(buildProgress,math.random(1,100))
+
 	end
 end 
 
@@ -1753,21 +1789,38 @@ function script.Killed(recentDamage,_)
 	return 1
 end
 
+function script.StopBuilding()
+	SetUnitValue(COB.INBUILDSTANCE, 0)
+end
+
+function script.StartBuilding(heading, pitch)	
+	SetUnitValue(COB.INBUILDSTANCE, 1)
+end
 
 function script.Activate()
-	
+   
+  SetUnitValue(COB.YARD_OPEN, 1)
+
+  SetUnitValue(COB.BUGGER_OFF, 1)
+
+   SetUnitValue(COB.INBUILDSTANCE, 1)
+--Sleep(150)
 	return 1
 end
 
 function script.Deactivate()
-	
+   
+  SetUnitValue(COB.YARD_OPEN, 0)
+
+  SetUnitValue(COB.BUGGER_OFF, 0)
+
+   SetUnitValue(COB.INBUILDSTANCE, 0)
+--Sleep(150)
 	return 0
 end
 
 
 
 function script.QueryBuildInfo() 
-	return center 
+	return GrowSpot 
 end
-
-Spring.SetUnitNanoPieces(unitID,{ center})

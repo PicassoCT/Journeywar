@@ -684,9 +684,8 @@ function dropDead()
 				waveATable(legsTable,x_axis, modFunction, signum, math.random(0.25,1.2), math.random(0.5,1),math.random(0.2,1),false, 0)
 				Sleep(150)
 			end
-		
-			Sleep(500)
-			resetT(legsTable,3,true, false)
+
+			resetT(legsTable,9,true, false)
 		end
 		
 		Sleep(1000)

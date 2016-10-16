@@ -364,7 +364,7 @@ function harvestThoseNearby()
 			function(id)
 				if Spring.ValidUnitID(id)==true then
 					ex,ey,ez=Spring.GetUnitPosition(id)
-					ev= makeVector(ex,ey,ez)
+					ev= Vector:new(ex,ey,ez)
 					ev = normVector(subVector(ev,pv))
 					ev = mulVector(ev,-1)
 					Spring.SpawnCEG("cnanotics",ex,ey+35, ez,ev.x,ev.y,ev.z,0)

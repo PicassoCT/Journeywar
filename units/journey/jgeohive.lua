@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Spawns Creepers who autoattack",
 	
 	objectName = "jgeohive.s3o",
-	script = "jgeohive.lua",
+	script = "jgeohivescript.lua",
 	buildPic = "jgeohive.png",
 	
 	

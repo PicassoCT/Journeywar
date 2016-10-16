@@ -49,7 +49,7 @@ function GetAIStartUnit(teamID, leader, isDead, boolIsAI, side,playerInfo)
 		end
 		
 		if side == "centrail" then 
-			return "gzombiespawner"
+			return "gzombspa"
 		end
 		
 		return "jgeohive" 

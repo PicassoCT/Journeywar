@@ -10,8 +10,10 @@ function gadget:GetInfo()
 					return false; 
 				end 
 			end 
+			Spring.Echo("ForrestFire:Gadget is activated")
 			return true 
 		end
+			Spring.Echo("ForrestFire:Gadget is deactivated")
 		return false
 	end
 	

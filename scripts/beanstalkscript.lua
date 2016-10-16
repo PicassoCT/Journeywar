@@ -37,7 +37,7 @@ spindl= piece"spindl"
 spindl2=piece"spindl2"
 spindl3=piece"spindl3"
 pipePieces={}
-for i=1,59,1 do
+for i=0,59,1 do
 	pipePieces[i]={}
 	stone= "bspip01p"..i
 	pipePieces[i]=piece (stone)
@@ -333,60 +333,13 @@ function flameEmitEntry()
 		emOz=emitZ
 		Sleep(40)
 	end
-end
-
-function pumpAnimationDeprecated()
-	for i=1,59,1 do
-		Hide(pipePieces[i])
-	end
-	SetSignalMask(SIG_PIPE)
-	while(true) do
-		--3
-		for i=3,59,3 do
-			Show(pipePieces[i])
-		end
-		Sleep(50)
-		for i=2,59,3 do
-			Hide(pipePieces[i])
-		end
-		
-		second=math.random(280,360)
-		Sleep(second)
-		
-		--1
-		for i=3,58,3 do
-			Hide(pipePieces[i])
-		end
-		
-		for i=1,59,3 do
-			Show(pipePieces[i])
-		end
-		first=math.random(150,250)
-		Sleep(first)
-		--2
-		for i=2,59,3 do
-			Show(pipePieces[i])
-		end
-		Sleep(50)
-		
-		for i=1,59,3 do
-			Hide(pipePieces[i])
-		end
-		second=iRand(200,300)
-		Sleep(second)
-		
-		
-	end
-	
-	
-	
-end
+end	
 
 
 function pumpAnimation()
 	local lpipePieces={}
 	lpipePieces=pipePieces
-	for i=1,59,1 do
+	for i=0,59,1 do
 		Hide(lpipePieces[i])
 		Move(lpipePieces[i],x_axis,0,0,true)
 		Move(lpipePieces[i],y_axis,0,0,true)
@@ -397,7 +350,7 @@ function pumpAnimation()
 	SetSignalMask(SIG_PIPE)
 	while(true) do
 		--3
-		for i=3,57,3 do
+		for i=0,57,3 do
 			
 			
 			ox,oy,oz=spGetUnitPiecePosition(unitID,lpipePieces[i])
@@ -414,19 +367,23 @@ function pumpAnimation()
 				Move(lpipePieces[i],z_axis,oz,timepiece*oz)
 			end
 		end
+		Sleep(850)
+		for i=0,57,3 do Show(lpipePieces[i+2])end
 		WaitForMove(lpipePieces[51],x_axis)
 		WaitForMove(lpipePieces[51],y_axis)
 		WaitForMove(lpipePieces[51],z_axis)
 		
-		for i=3,59,3 do
+		for i=0,59,3 do
 			Hide(lpipePieces[i])
 			Move(lpipePieces[i],x_axis,0,0)
 			Move(lpipePieces[i],y_axis,0,0)
 			Move(lpipePieces[i],z_axis,0,0)	
 		end
 		
+		for i=0,57,3 do Show(lpipePieces[i])end
 		second=iRand(80,660)
 		Sleep(second)
+		for i=0,57,3 do Hide(lpipePieces[i+2])end
 		
 		
 	end
@@ -436,7 +393,7 @@ function pumpAnimation()
 end
 function playHeartBeat()
 	while(true) do
-		Spring.PlaySoundFile("sounds/jBeanStalk/beanstalkhbeat.wav")
+		Spring.PlaySoundFile("sounds/jBeanStalk/beanstalkhbeat.wav",0.5)
 		Sleep(9000)
 	end
 end
@@ -450,6 +407,13 @@ function idle()
 		Sleep(sleepTime)
 		StartThread(moveUpAndDown)
 		
+	end
+end
+
+function swayBeanstalk()
+	while true do
+		WTurn(beanstalk,z_axis,math.rad(0.12),0.00015)
+		WTurn(beanstalk,z_axis,math.rad(-0.12),0.00015)
 	end
 end
 
@@ -545,7 +509,7 @@ function greatEntry()
 	teamID=Spring.GetUnitTeam(unitID)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	GG.UnitsToSpawn:PushCreateUnit("jbeanstalkplate",x,y,z,0,teamID)
-	
+	Move(bean3,y_axis,-2450,675)
 	Move(beans,y_axis,0,0)
 	Sleep(4000)
 	Hide(bean1)
@@ -591,7 +555,7 @@ end
 nrOfReinforcements=3
 function reInforCements()
 	Sleep(65000)
-	
+	StartThread(swayBeanstalk)
 	--Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav") 
 	Sleep(180000)
 	dropPx,dropPy,dropZ=Spring.GetUnitPosition(unitID)
@@ -692,6 +656,7 @@ defID=Spring.GetUnitDefID(unitID)
 function script.Create()
 	StartThread(soundSleeper)
 	StartThread(darkEnergyReactor)
+
 	
 	Hide(unRooted)
 	Hide(spindl)

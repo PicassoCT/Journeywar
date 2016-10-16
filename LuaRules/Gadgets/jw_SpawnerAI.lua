@@ -23,7 +23,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	meridianTable={}
 	spawnUnits={ 
 		["journeyman"]={"jgeohive", "jbeehive"},
-		["centrail"]={"scumslum","gzombiespawner","zombie","combinedfeature"}
+		["centrail"]={"goildrum","gzombspa","zombie","jmadmax"}
 	}
 	
 	
@@ -65,7 +65,9 @@ if (gadgetHandler:IsSyncedCode()) then
 			totalAbortCount=totalAbortCount+1	
 			end
 			
-			Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,0,team)	
+			if  #T == 0 and totalAbortCount < 64 then
+				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,0,team)	
+			end
 			
 		end
 	end

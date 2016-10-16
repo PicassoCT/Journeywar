@@ -48,6 +48,32 @@ for i=1,12 do
 	
 end
 
+myDefID = Spring.GetUnitDefID(unitID)
+function letsWalkAndTalk()
+	
+	
+	while(true) do
+			randSleep=math.ceil(math.random(25000,500000))
+			Sleep(randSleep)
+		while walkState == "stop" do
+			randSleep=math.ceil(math.random(10000,25000))
+			Sleep(randSleep)
+		burst=math.ceil(math.random(1,3))
+		for i=1,burst,1 do
+			StringOfStrings="sounds/csupsold/talk"
+			appendMe=math.floor(math.random(1,9))
+			EndOfStrings=".wav"
+			result=StringOfStrings..appendMe
+			result=result..EndOfStrings
+			PlaySoundByUnitType(myDefID,result,0.5, 2000, 1,0)
+
+			Sleep(4200)
+		end
+		
+		end
+	end
+end
+
 function hideByUnitType()
 	hideT(TablesOfPiecesGroups["cLeg"])
 	Hide(cHead)
@@ -104,6 +130,7 @@ function script.Create()
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	hideByUnitType()
 	StartThread(moveStatemachine)
+	StartThread(letsWalkAndTalk)
 end
 
 function script.Killed(recentDamage,_)

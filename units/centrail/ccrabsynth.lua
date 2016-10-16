@@ -11,7 +11,7 @@ moveState =3,
 --cost
 buildCostMetal = 105,
 buildCostEnergy = 200,
-buildTime = 6,
+buildTime = 160,
 --Health
 maxDamage = 18000,
 idleAutoHeal = 3,

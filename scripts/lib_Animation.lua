@@ -520,8 +520,9 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 		z=0}
 
 	DirectionV={x=vx,y=vy,z=vz}
-
+	
 	OrientUpVec=mulVector(OrientVec,DirectionV)
+
 	UpVec = {x=0,y=1,z=0}
 	
 	

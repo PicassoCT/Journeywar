@@ -22,10 +22,10 @@ local unitDef = {
 	radardistance=150,
 	sightDistance = 700,
 	
-	collisionVolumeScales		= [[48 468 28]],
+	collisionVolumeScales	= [[48 468 28]],
 	collisionVolumeOffsets	= [[0 -8 3]],
-	collisionVolumeTest	 = 1,
-	collisionVolumeType	 = [[box]],
+	collisionVolumeTest	 	= 1,
+	collisionVolumeType	 	= [[box]],
 	
 	EnergyStorage = 200,
 	EnergyUse = 0,
@@ -66,8 +66,8 @@ local unitDef = {
 		"condepot","fclvlone","cairbase",
 		"cdistrictnone","buibaicity2","buibaicity1",
 		"crailgun","sentry","bonker",
-		"cdefusermine",	"chopper","efence",
-		"comendbonker","ctransithub"
+		"cdefusermine",	"chopper","combinedfeature",
+		"efence","comendbonker","ctransithub"
 	},
 	
 	sounds = {

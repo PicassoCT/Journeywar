@@ -502,7 +502,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		v=makeVector(tx-gx,ty-gy,tz-gz)
 		v=normVector(v)
-		--v=mulVector(v,-1)
+
 		
 		local	 HarvestRocketParams={
 			pos = { gx, gy+max,gz}, 
@@ -668,7 +668,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				v=makeVector(tx-gx,ty-gy,tz-gz)
 				v=normVector(v)
-				--v=mulVector(v,-1)
+
 				
 				local HarvestRocketParams={
 					pos = { gx, gy+max,gz}, 

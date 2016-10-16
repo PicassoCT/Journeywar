@@ -1,4 +1,9 @@
 Bugs:
+
+--update the shader librarys from zero-k
+--add rapdi-download to spring-lobby
+
+
 Grass - of the Chunterchoppered
 Fish still has default corpse
 Galatea legs wont hide

@@ -390,17 +390,19 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 	timeToburnMax= argtimeToburnMax or 1000
 	timeToburnMin = argtimeToburnMin or 15
 	
-	if GG.OnFire == nil then GG.OnFire={} end
+	if not GG.OnFire  then GG.OnFire={} end
 	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
 	
 	--very bad sollution n-times
 	for i=1, table.getn(GG.OnFire), 1 do
 		if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== unitID then
-			GG.OnFire[i][2]= math.ceil(math.random(timeToburnMin,timeToburnMax)) 				
+			GG.OnFire[i][2]= math.ceil(math.random(timeToburnMin,timeToburnMax)) 
+			break
 		else
 			GG.OnFire[#GG.OnFire+1]={}
 			GG.OnFire[#GG.OnFire][1]=unitID
-			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 				
+			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax))  
+			break
 		end
 	end
 	
