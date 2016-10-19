@@ -1,4 +1,4 @@
-include"suddenDeath.lua"
+include"createCorpse.lua"
 
 Wheel1 =piece "Wheel1"
 Wheel2 =piece "Wheel2"
@@ -46,6 +46,6 @@ Spin(Wheel2,z_axis,math.rad(70),0)
 --StartThread(main)
 end
 function script.Killed(recentDamage,_)
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 return 0
 end

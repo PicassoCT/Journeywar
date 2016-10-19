@@ -293,7 +293,7 @@ function script.Killed(recentdamage,_)
 	Sleep(4500)
 	Move(center,y_axis,-32,3.141)--circle
 	WaitForMove(center,y_axis)
-	suddenDeathjBuildCorpse(unitID, recentDamage)
+	createCorpseJBuilding(unitID, recentDamage)
 	return 1
 	
 end

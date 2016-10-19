@@ -6,7 +6,7 @@ include "lib_Build.lua"
 include "lib_jw.lua" 
 
 
-function suddenDeath(unitID,recentDamage)
+function createCorpseCBuilding(unitID,recentDamage)
 	--<RubbleScript>
 	if unitID and Spring.ValidUnitID(unitID)==true then
 		if recentDamage== nil or recentDamage > 1 then
@@ -43,7 +43,7 @@ function suddenDeath(unitID,recentDamage)
 	
 end
 
-function suddenDeathVM(recentDamage)
+function createCorpseCUnitSmall(recentDamage)
 	
 	if recentDamage == nil or recentDamage > 1 then
 		--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
@@ -61,7 +61,7 @@ function suddenDeathVM(recentDamage)
 	
 end
 
-function suddenDeathV(recentDamage)
+function createCorpseCUnitGeneric(recentDamage)
 	
 	if recentDamage== nil or recentDamage > 1 then
 		
@@ -81,7 +81,7 @@ function suddenDeathV(recentDamage)
 	
 end
 
-function suddenDeathjBigCorpse(recentDamage)
+function createCorpseJUnitBig(recentDamage)
 	
 	if recentDamage== nil or recentDamage > 1 then
 		--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
@@ -102,7 +102,7 @@ function suddenDeathjBigCorpse(recentDamage)
 	
 end
 
-function suddenDeathjMeatBalls(recentDamage)
+function createCorpseJUnitGeneric(recentDamage)
 	
 	if recentDamage== nil or recentDamage > 1 then
 		--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
@@ -123,7 +123,7 @@ function suddenDeathjMeatBalls(recentDamage)
 	
 end
 
-function suddenDeathjMedCorpse(recentDamage)
+function createCorpseJUnitSmall(recentDamage)
 	
 	if recentDamage== nil or recentDamage > 1 then
 		--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
@@ -145,7 +145,7 @@ function suddenDeathjMedCorpse(recentDamage)
 end
 
 
-function suddenDeathjBuildCorpse(unitID, recentDamage)
+function createCorpseJBuilding(unitID, recentDamage)
 	teamID=Spring.GetUnitTeam(unitID)
 	
 	if recentDamage and recentDamage > 1 then

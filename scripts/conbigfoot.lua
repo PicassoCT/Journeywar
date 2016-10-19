@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -58,7 +58,7 @@ function script.Create()
 end
 
 function script.Killed(recentdamage)
-	suddenDeathjMeatBalls(recentdamage)
+	createCorpseJUnitGeneric(recentdamage)
 	return 1
 end
 

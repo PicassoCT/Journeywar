@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -2538,7 +2538,7 @@ function script.Killed(recentDamage, maxHealth)
 	
 	explodeT(piecesTable,SFX.FALL+SFX.FIRE,math.ceil(math.random(1,3)))
 	
-	suddenDeathV(recentDamage)
+	createCorpseCUnitGeneric(recentDamage)
 	
 	return 1
 end

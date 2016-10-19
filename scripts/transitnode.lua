@@ -1,4 +1,4 @@
-include"suddenDeath.lua"
+include"createCorpse.lua"
 
 Wheel1 =piece "Wheel1"
 Wheel2 =piece "Wheel2"
@@ -272,6 +272,6 @@ displayNumber()
 end
 function script.Killed(recentDamage,_)
 if Spring.ValidUnitID(buildID)== true then Spring.DestroyUnit(buildID,true,false)end
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 return 0
 end

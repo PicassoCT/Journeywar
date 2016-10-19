@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -127,7 +127,7 @@ Move(nano,y_axis, 2048,360)
 WaitForMove(nano,y_axis)
 Hide(nano)
 Explode (nano, SFX.SHATTER)
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 Sleep(10)
 return 0
 end

@@ -109,7 +109,7 @@ end
 
 
 
-function suddenDeath(unitID)
+function createCorpseCBuilding(unitID)
 
 --moveX=unitPosX -birthX
 --moveZ=birthZ-unitPosZ
@@ -199,7 +199,7 @@ local function workInProgress()
 												actualHealth=actualHealth-1
 												 Spring.SetUnitNoSelect (unitID, true)
 												--makes the Unit go home, to the place it was born- west Virginia
-												suddenDeath(unitID)
+												createCorpseCBuilding(unitID)
 												
 												Spring.SetUnitHealth(unitID,actualHealth)
 												end

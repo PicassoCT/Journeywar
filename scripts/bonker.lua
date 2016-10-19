@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -235,7 +235,7 @@ for i=1,4,1 do
 	Spring.CreateUnit("bg",dropPx+20,dropPy,dropZ+90, 0, teamID)  
 
 end
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 Sleep(10)
 --whatever
 return 0

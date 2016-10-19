@@ -4,7 +4,7 @@ include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
-include "suddenDeath.lua"
+include "createCorpse.lua"
 local builux = piece "builux"
 local bldoor1 = piece "bldoor1"
 local bldoor2 = piece "bldoor2"
@@ -375,7 +375,7 @@ function script.Killed(recentDamage,_)
 	Explode(builux,SFX.SHATTER)
 	Explode(bldoor1,SFX.FIRE)
 	Explode(bldoor2,SFX.FIRE)
-	suddenDeath(unitID,recentDamage)
+	createCorpseCBuilding(unitID,recentDamage)
 	return 0
 end
 

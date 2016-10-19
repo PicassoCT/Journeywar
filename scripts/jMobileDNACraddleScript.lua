@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -436,7 +436,7 @@ function script.Killed(recentDamage, maxHealth)
 	
 	Spring.DestroyUnit(factoryID,true,false)
 	GG.JFactorys[factoryID]=nil
-	suddenDeathjBuildCorpse(unitID,recentDamage)
+	createCorpseJBuilding(unitID,recentDamage)
 	return 0
 	----Spring.Echo ("He is dead, Jim!")
 end

@@ -4,7 +4,7 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 
 include "lib_Build.lua" 
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
 center= piece "center"
 water=piece"water"
@@ -181,7 +181,7 @@ function script.Killed(recentdamage,_)
 	Sleep(4500)
 	Move(center,y_axis,-32,3.141)--circle
 	WaitForMove(center,y_axis)
-	suddenDeathjBuildCorpse(unitID, recentDamage)
+	createCorpseJBuilding(unitID, recentDamage)
 	return 1
 end
 

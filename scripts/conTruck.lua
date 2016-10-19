@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
 deathpivot=piece"deathpivot"
 dustemit1=piece"dustemit1"
@@ -444,7 +444,7 @@ function script.Killed(recentDamage,_)
 	
 	
 	Sleep(700)
-	suddenDeathVM(recentDamage)
+	createCorpseCUnitSmall(recentDamage)
 	
 	return 1
 end

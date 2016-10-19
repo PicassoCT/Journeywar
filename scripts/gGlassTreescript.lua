@@ -1,4 +1,4 @@
---include "suddenDeath.lua"
+--include "createCorpse.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
 function spawnGrassDecals()
@@ -42,7 +42,7 @@ Explode(gtree,  SFX.FIRE+SFX.SHATTER)
 Move(treetop,y_axis,-32,96)
 Sleep(300)
 Explode(treetop, SFX.FIRE+SFX.SHATTER)
---suddenDeathV(recentDamage)
+--createCorpseCUnitGeneric(recentDamage)
 return 0
 end
 

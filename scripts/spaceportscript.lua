@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
   piecesTable={}
@@ -309,7 +309,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.CreateUnit("jresistancewarrior",x+25,y,z-25,0,teamID)
 	end
 end
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 return 0
 end
 

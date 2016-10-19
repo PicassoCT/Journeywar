@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage
 Black=piece"Black"

@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -936,7 +936,7 @@ end
 -- Explode(mbuilux,SFX.SHATTER)
 -- Explode(bldoor1,SFX.FIRE)
 -- Explode(bldoor2,SFX.FIRE)
--- suddenDeath(unitID,recentDamage)
+-- createCorpseCBuilding(unitID,recentDamage)
 -- return 0
 -- end
 

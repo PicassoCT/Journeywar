@@ -1,5 +1,5 @@
 include "jVitalFunctions.lua"
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -374,7 +374,7 @@ for i=1,table.getn(piecesTable),1 do
 Spring.SpawnCEG("330RLexplode",unitx,unity,unitz,0,1,0,50,0)
 end
 
-suddenDeathVM(recentDamage)
+createCorpseCUnitSmall(recentDamage)
 return 0
 end
 

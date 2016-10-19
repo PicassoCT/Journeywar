@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --<pieces>
 
 
@@ -303,7 +303,7 @@ function script.Killed(recentDamage,_)
 	heapID=Spring.CreateUnit("cRewarder",spx,spy,spz, math.max(teamID,-1))
 	Sleep(200)
 	
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 	
 	
 return 1

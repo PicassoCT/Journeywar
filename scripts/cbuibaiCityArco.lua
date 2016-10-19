@@ -6,7 +6,7 @@ include "lib_UnitScript.lua"
 include "lib_Build.lua" 
 
 include "jVitalFunctions.lua"
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --Alarm SystemPieces
 TheNews= piece "spinTheNews"
 AlarmOne={}
@@ -1653,7 +1653,7 @@ function script.Killed(recentDamage, maxHealth)
 	Sleep(800)
 	Hide(buibaicity)
 	
-	suddenDeath(unitID,recentDamage)
+	createCorpseCBuilding(unitID,recentDamage)
 	return 0
 end
 

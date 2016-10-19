@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -438,7 +438,7 @@ function script.Killed(recentDamage, maxHealth)
 	if Spring.ValidUnitID(factoryID)== true then
 		Spring.DestroyUnit(factoryID,true,true)
 	end
-	suddenDeathjBuildCorpse(unitID,recentDamage)
+	createCorpseJBuilding(unitID,recentDamage)
 	return 0
 end
 --Buildi

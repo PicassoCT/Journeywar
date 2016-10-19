@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -230,7 +230,7 @@ function script.Killed(recentDamage,_)
 			GG.UnitsToSpawn:PushCreateUnit("gwood",x+xplus,0,z+zplus,0,teamID)
 		end
 	end
-	suddenDeath(unitID,recentDamage)
+	createCorpseCBuilding(unitID,recentDamage)
 	return 0
 end
 

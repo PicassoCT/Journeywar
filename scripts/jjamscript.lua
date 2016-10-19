@@ -1,5 +1,5 @@
 --a wild function appears
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
 flare1 =piece"flare1"
 rotator=piece"rotator"

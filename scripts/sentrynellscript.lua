@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
 --My BASE the unit does nothing
 flare=piece"flare"
@@ -337,7 +337,7 @@ nearEnemyID=Spring.GetUnitNearestEnemy(unitID,3000,false)
 			end
 
 													if boolIsItDeadYet==true then
-												Spring.PlaySoundFile("sounds/mt/suddendeath2.wav",0.2)
+												Spring.PlaySoundFile("sounds/mt/createCorpse2.wav",0.2)
 												--play Soundfile beeping heartdead...
 												Sleep(LenghtOfSoundfile)
 												Signal(SIG_TRACK)
@@ -739,7 +739,7 @@ function script.Killed(recentDamage,_)
    Explode(nanoemit,SFX.FIRE)
 	Explode(sentrynelshield2,SFX.FIRE)
 	Explode(sentrynelshield,SFX.FIRE)
-suddenDeathVM(recentDamage)
+createCorpseCUnitSmall(recentDamage)
 
 end
 

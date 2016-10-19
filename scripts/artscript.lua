@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_UnitScript.lua"
 
 local art = piece "art"
@@ -41,7 +41,7 @@ function script.Killed(recentDamage,_)
 	-- number radius = 0, number damage = 0
 	-- )
 	
-	suddenDeathV(recentDamage)
+	createCorpseCUnitGeneric(recentDamage)
 	
 	
 end

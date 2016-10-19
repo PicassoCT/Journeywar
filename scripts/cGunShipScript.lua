@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
 
 
@@ -167,7 +167,7 @@ function script.Killed()
 	-- StopSpin(imgoingdown,y_axis,0)
 	-- Turn(imgoingdown,y_axis,math.rad(0),0)
 	-- Spring.SetUnitPosition(unitID,x,z)
-	suddenDeathV()
+	createCorpseCUnitGeneric()
 	Sleep(250)
 	return 0
 end

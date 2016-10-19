@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -92,7 +92,7 @@ Spring.SpawnCEG("330RLexplode",unitx,unity,unitz,0,1,0,50,0)
 Explode(Balls[5], SFX.FIRE+ SFX.FALL)
 Sleep(450)
 Explode(Balls[2], SFX.FIRE)
-suddenDeathVM(recentDamage)
+createCorpseCUnitSmall(recentDamage)
 
 end
 

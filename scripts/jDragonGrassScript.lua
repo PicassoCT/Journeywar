@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -122,7 +122,7 @@ function script.Killed(recentDamage,_)
 	for k,v in pairs(AddictList) do
 		if k then Spring.DestroyUnit(k,true,false) end
 	end
-	suddenDeathjBuildCorpse(unitID, recentDamage)
+	createCorpseJBuilding(unitID, recentDamage)
 	return 1
 end
 

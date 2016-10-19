@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 
  globalCityWideAlarm=0
 local condepotre = piece"condepotre"
@@ -305,7 +305,7 @@ Hide(cdcontain8)
 
 WaitForTurn(condepotre,x_axis)
 
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 Explode(condepotre, SFX.SHATTER)
 Sleep(10)
 return 0

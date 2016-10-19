@@ -1,6 +1,6 @@
 
 
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -180,7 +180,7 @@ function script.Killed(recentDamage)
 		
 		
 	end
-	suddenDeath(unitID,recentDamage)
+	createCorpseCBuilding(unitID,recentDamage)
 	return 1
 end
 

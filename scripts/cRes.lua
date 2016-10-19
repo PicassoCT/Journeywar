@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 local res = piece "res"
 local resDust = piece "resDust"
 local resturm = piece "resturm"
@@ -75,7 +75,7 @@ function script.Killed()
 	Explode(resturm, SFX.FIRE+ SFX.FALL)
 	Sleep(450)
 	Explode(res, SFX.FIRE)
-	suddenDeathVM(recentDamage)
+	createCorpseCUnitSmall(recentDamage)
 	
 end
 

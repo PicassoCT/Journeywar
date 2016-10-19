@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --Define the wheel pieces
 
 --Define the pieces of the weapon
@@ -79,7 +79,7 @@ end
 
 
 function script.Killed(recentDamage, maxHealth)
-suddenDeathjBuildCorpse(unitID, recentDamage)
+createCorpseJBuilding(unitID, recentDamage)
 return 1
 end
 --Building

@@ -2,7 +2,7 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_jw.lua"
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_Build.lua" 
 
 
@@ -231,7 +231,7 @@ function script.Killed(recentDamage, maxHealth)
 	
 	Explode(potato,SFX.FALL+SFX.NO_HEATCLOUD)
 	Hide(potato) 
-	suddenDeathjBuildCorpse(unitID, recentDamage)
+	createCorpseJBuilding(unitID, recentDamage)
 end
 
 function radiation()

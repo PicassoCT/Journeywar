@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -368,7 +368,7 @@ function script.Killed(recentDamage, maxHealth)
 	WaitForMove(scumslum,y_axis)
 	Spring.SpawnCEG("factory_explosion",unitx,unity,unitz,0,1,0,50,0)
 	
-	suddenDeath(unitID,recentDamage)
+	createCorpseCBuilding(unitID,recentDamage)
 	Sleep(10)
 	return 0
 end

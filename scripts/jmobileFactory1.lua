@@ -320,7 +320,7 @@ function script.Killed(recentDamage, maxHealth)
 	
 	Spring.DestroyUnit(factoryID,true,false)
 	GG.JFactorys[factoryID]=nil
-	suddenDeathjBuildCorpse(unitID,recentDamage)
+	createCorpseJBuilding(unitID,recentDamage)
 	return 0
 	----Spring.Echo ("He is dead, Jim!")
 end

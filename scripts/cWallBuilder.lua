@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_UnitScript.lua"
 --Define the wheel pieces
 buildpieces={}
@@ -233,7 +233,7 @@ function script.Killed(recentDamage, maxHealth)
 		Explode(i,SFX.FALL+SFX.SHATTER)
 	end
 	
-	suddenDeathV(recentDamage)
+	createCorpseCUnitGeneric(recentDamage)
 	
 	return 1
 end

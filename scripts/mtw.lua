@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --Define the wheel pieces
 
 --Define the pieces of the weapon
@@ -129,7 +129,7 @@ function script.Killed(recentDamage, maxHealth)
 	Explode (mtwthemwhe, SFX.FIRE)
 	Explode (body, SFX.SHATTER)
 	
-	suddenDeathVM(recentDamage)
+	createCorpseCUnitSmall(recentDamage)
 	------Spring.Echo ("He is dead, Jim!")
 end
 --Building

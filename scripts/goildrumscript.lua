@@ -1,7 +1,7 @@
 
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-include "suddenDeath.lua" 
+include "createCorpse.lua" 
 include "lib_jw.lua" 
 OilMatrix={}
 Oildrum={}

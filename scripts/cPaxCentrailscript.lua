@@ -124,7 +124,7 @@ piecesTable[#piecesTable+1]= Shield7
 local Animations = {};
 WeaponTable ={}
 
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -237,7 +237,7 @@ function script.Killed(recentDamage,_)
 	fooward=1
 	--if math.random(false,true) then Spring.Echo("Math.random accepts false/true as true in cPaxCentrail/PaxCentrailSound") end 
 	PlayAnimation("pax_death")
-	suddenDeathV(recentDamage)
+	createCorpseCUnitGeneric(recentDamage)
 	return 0
 end
 

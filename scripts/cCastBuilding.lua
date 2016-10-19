@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
 
@@ -107,7 +107,7 @@ end
 function script.Killed(recentDamage,_)
 
 
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 return 0
 end
 

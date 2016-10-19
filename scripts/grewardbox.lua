@@ -1,4 +1,4 @@
-include "suddenDeath.lua"
+include "createCorpse.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
 function PositionChecked()
@@ -45,7 +45,7 @@ end
 
 function script.Killed(recentDamage,_)
 
-suddenDeathV(recentDamage)
+createCorpseCUnitGeneric(recentDamage)
 end
 
 

@@ -1,5 +1,5 @@
 	include "jVitalFunctions.lua"
-	include "suddenDeath.lua"
+	include "createCorpse.lua"
 	--Pieces
 	treeSpot=piece"treeSpot"
 	nomnom1=piece"nomnom1"
@@ -1194,7 +1194,7 @@ local 	checkRange=60
 	end
 
 	--Spawn the big biorotting Feature and some gulls to circle on 
-			suddenDeathjBigCorpse(recentDamage)
+			createCorpseJUnitBig(recentDamage)
 			x,y,z=Spring.GetUnitPosition(unitID)
 			teamID=Spring.GetGaiaTeamID()
 			   rondo=math.random(2,9)

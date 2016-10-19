@@ -1,6 +1,6 @@
 include "AniMatrix.lua"
 include "NeverEndingParty.lua"
-include "suddenDeath.lua"
+include "createCorpse.lua"
 include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
 
@@ -409,7 +409,7 @@ function script.Killed(recentDamage, maxHealth)
 	WaitForTurn(base,z_axis)
 	unitx,unity,unitz=Spring.GetUnitBasePosition(unitID)
 	Spring.SpawnCEG("factory_explosion",unitx,unity,unitz,0,1,0,50,0)
-	suddenDeathV(recentDamage)
+	createCorpseCUnitGeneric(recentDamage)
 	i=1+1
 end
 

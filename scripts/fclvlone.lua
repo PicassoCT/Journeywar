@@ -1,4 +1,4 @@
-include"suddenDeath.lua"
+include"createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
  include "lib_Animation.lua"
@@ -169,7 +169,7 @@ Spring.SetUnitNanoPieces(unitID,{ buildspot})
 
 
 function script.Killed(recentDamage,_)
-suddenDeath(unitID,recentDamage)
+createCorpseCBuilding(unitID,recentDamage)
 Sleep(10)
 return 0
 end

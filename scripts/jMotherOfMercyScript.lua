@@ -5,7 +5,7 @@
 
  include "lib_Build.lua" 
 
-	include "suddenDeath.lua"
+	include "createCorpse.lua"
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 hp=Spring.GetUnitHealth(unitID)
 if hp and  hp-damage < 0 then
@@ -258,7 +258,7 @@ function script.Killed(recentDamage)
 
   
 Sleep(400)
-suddenDeathjBuildCorpse(unitID, recentDamage)
+createCorpseJBuilding(unitID, recentDamage)
 return 0
 end
 

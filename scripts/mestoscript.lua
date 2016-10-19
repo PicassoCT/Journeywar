@@ -1,5 +1,5 @@
 
-	include "suddenDeath.lua"
+	include "createCorpse.lua"
 
 	local mestorage = piece "mestorage"
 	local meelevator  = piece  "meelevator"
@@ -160,7 +160,7 @@ boolMeElevator=true
 	Explode(mestorage,SFX.SHATTER)
 	Explode(meelevator,SFX.FALL+SFX.FIRE)
 
-		suddenDeath(unitID,recentDamage)
+		createCorpseCBuilding(unitID,recentDamage)
 
 	return 0
 	end

@@ -843,7 +843,7 @@ end
 
 
 
-function suddenDeath(unitID)
+function createCorpseCBuilding(unitID)
 	
 	--moveX=unitPosX -birthX
 	--moveZ=birthZ-unitPosZ
