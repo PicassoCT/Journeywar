@@ -424,8 +424,8 @@ end
 -->Moves a UnitPiece to Position in Unitspace at speed
 function MovePieceToPos(piecename, X,Y,Z,speed)
 	
-	Move(piecename,x_axis,X,speed,true)
-	Move(piecename,y_axis,Y,speed,true)
+	Move(piecename,x_axis,X,speed)
+	Move(piecename,y_axis,Y,speed)
 	Move(piecename,z_axis,Z,speed,true)	
 	
 end
@@ -520,11 +520,18 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 		z=0}
 
 	DirectionV={x=vx,y=vy,z=vz}
-	
-	OrientUpVec=mulVector(OrientVec,DirectionV)
 
-	UpVec = {x=0,y=1,z=0}
+	assert(OrientVec)
+	assert(DirectionV)
+	assert(type(OrientVec)=="table")
+	assert(type(DirectionV)=="table")
+	assert(OrientVec.x)
+	assert(DirectionV.x)
+	OrientUpVec=mulVector(OrientVec,DirectionV)
 	
+	UpVec = {x=0,y=1,z=0}
+	assert(OrientUpVec)
+	assert(UpVec)
 	
 	angleX= math.atan2(VDotProduct(OrientVec,UpVec), 	VDotProduct(OrientUpVec,UpVec)/ Vabs(OrientVec) * Vabs(OrientUpVec))
 	

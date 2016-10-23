@@ -318,10 +318,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		if weaponDefID == jvaryjumpDefID then
-			Spring.SetUnitPosition(AttackerID,px,py+80,pz)
-			Spring.MoveCtrl.Enable(AttackerID,true)
-			Spring.SetUnitAlwaysVisible(AttackerID,true)
-			Spring.SetUnitBlocking (AttackerID,true,true,true)
+			Spring.SetUnitPosition(AttackerID,px,py+35,pz)
+
 		end
 		
 		if weaponDefID== jvaryfoospearDefID then

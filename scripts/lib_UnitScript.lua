@@ -379,6 +379,7 @@ function echo(stringToEcho,...)
 end
 
 function VDotProduct(V1,V2)
+	if not V1 or not V2 then return nil end
 	return DotProduct(V1.x,V1.y,V1.z,V2.x,V2.y,V2.z)
 end
 
@@ -386,6 +387,8 @@ function Vabs(Vectors)
 	return distance(Vectors.x,Vectors.y,Vectors.z)
 end
 function Vcross(V1,V2)
+	if not V1 or not V2 then return nil end
+
 	return (V1.y*V2.z-V1.z*V2.y)-(V1.x*V2.z-V1.z*V2.x)-(V1.x*V2.y-V1.y*V2.x)
 end
 
@@ -1385,7 +1388,7 @@ end
 
 local countConstAnt=0
 function mulVector(vl,value)
-	if not v1 or not value then return nil end
+	if not vl or not value then return nil end
 	countConstAnt=countConstAnt+1
 	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
 	

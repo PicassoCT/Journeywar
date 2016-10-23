@@ -752,9 +752,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			Spring.Echo("vehicular::bodybuilding")
 			-- while there exist BodyParts2 and numberOfBodyPiecesUsed <bodydice
 			--dice usage as a linear connector
-			if true ==true or linConLimit < math.random(1,Max) then
+			if  linConLimit < math.random(1,Max) then
 				--FindPiece -FindSocket -- bd_LinAddPieceSocketsToPool
-				bodyNum=bodyNum+bd_LinearExpandPiece(bodyNum)
+				bodyNum=bodyNum+ bd_LinearExpandPiece(bodyNum)
 			else
 				--Check if on of them is existing twice
 				-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)

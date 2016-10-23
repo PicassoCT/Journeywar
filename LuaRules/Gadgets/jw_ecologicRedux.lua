@@ -48,7 +48,7 @@
 	function gadget:UnitDestroyed(unitid,unitdefid, unitTeam)
 	
 	if unitdefid== VARYFOODEF then
-	table.remove(VariousFoos[unitTeam],unitID)
+	table.remove(VariousFoos[unitTeam],unitid)
 	end
 	
 	if unitdefid== HOHYMDEF then

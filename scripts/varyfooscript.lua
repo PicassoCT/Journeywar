@@ -224,14 +224,20 @@
 		Hide(ArmPieces[i][2])
 		end
 	hideT(BodyPieces)
+
+	StartThread(delayedBuild)
+	end
 	
-	--hideT(HeadPieces)
-	--hideT(DecoPieces)
+	function delayedBuild()
+	resetT(BodyPieces,0,true,true)
+		Sleep(150)
+
 
 	init()
 	StartThread(buildAVaryFoo)
 	StartThread(walk)
 	StartThread(sound)
+	
 	end
 	
 	function existsParts(tablename)
@@ -1250,14 +1256,14 @@ end
 		
 
 	end
-	
+	aimspot = piece"aimspot"
 	----aimining & fire weapon
 function script.AimFromWeapon1() 
-	return center 
+	return aimspot 
 end
 
 function script.QueryWeapon1() 
-	return center 
+	return aimspot 
 end
 
 function script.AimWeapon1( heading ,pitch)	
@@ -1280,11 +1286,11 @@ end
 
 
 	function script.AimFromWeapon2() 
-	return center 
+	return aimspot 
 end
 
 function script.QueryWeapon2() 
-	return center 
+	return aimspot 
 end
 
 function script.AimWeapon2( heading ,pitch)	

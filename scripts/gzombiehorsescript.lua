@@ -708,13 +708,13 @@ signum= -1
 modFunction = function(x) return x end
 
 stopCounter=0
-
+zombieDefID= Spring.GetUnitDefID(unitID)
 function walk()
 	SetSignalMask(SIG_WALK)
 	resetP(kuttel,3)
 	resetP(center,3)
 	if stopCounter <= 0 then
-	Spring.PlaySoundFile("sounds/zombie/gzombiehores.ogg")
+	StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/gzombiehores.ogg",0.5, 2000, 1,0)
 	stopCounter= math.random(5,12)
 	end
 	
