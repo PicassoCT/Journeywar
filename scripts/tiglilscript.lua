@@ -1676,58 +1676,30 @@ end
 
 function armswing()
 	SetSignalMask(SIG_SWING)
-	Turn(tlarmr,z_axis,math.rad(-80),480)
-	Turn(tlarmr,y_axis,math.rad(-86),3)
-	WaitForTurn(tlarmr,y_axis)
-	Turn(tlarmr,x_axis,math.rad(12),3)
-	WaitForTurn(tlarmr,x_axis)
-	
-	Turn(tlarm,y_axis,math.rad(-85),12)
-	WaitForTurn(tlarm,y_axis)
-	Turn(tlarm,y_axis,math.rad(-104),12)
-	WaitForTurn(tlarm,y_axis)
-	Turn(tlarm,x_axis,math.rad(-12),3)
-	WaitForTurn(tlarm,x_axis)
+
 	
 	
 	while(true) do
 		--needs a redo
 		--RightArmForwards,195 --i
 		--ToFix: armright swings backward
+		dice=math.random(1,12)
+
+		if dice== 1 then
+		tP(tlarmr,0,0,0,6)
+		end
+		if dice== 2 then
+		tP(tlarm,0,0,0,6)
+		end
 		
-		
-		
-		Turn(tlarmr,z_axis,math.rad(-102),5)
-		
-		WaitForTurn(tlarmr,z_axis)
-		Turn(tlarmr,z_axis,math.rad(-67),6)
-		
-		WaitForTurn(tlarmr,z_axis)
-		Turn(tlarmr,z_axis,math.rad(-30),6)
-		
-		WaitForTurn(tlarmr,z_axis)
-		Turn(tlarmr,z_axis,math.rad(-15),5)
-		WaitForTurn(tlarmr,z_axis)
-		Sleep(25)
-		
-		
-		
-		Turn(tlarm,z_axis,math.rad(95),5)
-		WaitForTurn(tlarm,z_axis)
-		Turn(tlarm,z_axis,math.rad(107),6)
-		WaitForTurn(tlarm,z_axis)
-		Turn(tlarm,z_axis,math.rad(143),6)
-		WaitForTurn(tlarm,z_axis)
-		Turn(tlarm,z_axis,math.rad(170),5)
-		WaitForTurn(tlarm,z_axis)
-		
-		Sleep(25)
-		
-		-- Left ArmBack
-		
-		
-		
-		
+		if dice > 2 then
+		xdice,ydice,zdice= -1*math.random(25,35), -1*math.random(37,47),math.random(35,45)
+		tP(tlarmr,xdice, ydice, zdice,6)
+		xdice,ydice,zdice= -1*math.random(25,35),math.random(37,47),math.random(35,45)
+		tP(tlarm,xdice,ydice,zdice,6)
+		end
+	Sleep(1350)
+				
 		
 	end
 end
@@ -9498,7 +9470,6 @@ function walk()
 		Turn(tllegUp,x_axis,math.rad(21),2)
 		Turn(tllegUp,y_axis,math.rad(0),3)
 		Turn(tllegUp,z_axis,math.rad(0),3)
-		--Turn(tllegLow,x_axis,math.rad(12),2)
 		Turn(tllegLow,x_axis,math.rad(12),4)
 		Turn(tllegLow,y_axis,math.rad(0),3)
 		Turn(tllegLow,z_axis,math.rad(0),3)

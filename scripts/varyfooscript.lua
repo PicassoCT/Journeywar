@@ -245,7 +245,7 @@
 	end
 	
 	function LinAddPieceSocketsToPool(part,boolAddSymetrics)
-		LinearCon=ConPieces[part].Linear
+	LinearCon=ConPieces[part].Linear
 	SymCon=ConPieces[part].Symetric
 		if LinearCon then
 			for i=1,table.getn(LinearCon), 1 do

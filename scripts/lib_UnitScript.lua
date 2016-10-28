@@ -1998,6 +1998,7 @@ function vardump(value, depth, key)
 	
 	--> Play a soundfile only by unittype
 	function PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
+		if not unitdef then return false end
 		if predelay and predelay > 0 then Sleep(predelay) end
 		
 		loud=loudness or 1
@@ -2049,6 +2050,8 @@ function vardump(value, depth, key)
 	end
 	
 	function getLowestPointOfSet(Table,axis)
+	if #Table < 1 then return nil end
+	
 		index=1
 		y=math.huge
 		if axis=="y_axis" then
@@ -2085,8 +2088,13 @@ function vardump(value, depth, key)
 	end
 	
 	function getHighestPointOfSet(Table,axis)
+	if type(Table)  ~= "Table" then 
+		return nil
+	end
+	echoT()
+	
 		index=1
-		y=math.huge*-1
+		y=-math.huge
 		if axis=="y_axis" then
 			for i=1,#Table do
 				if Table[i].y > y then 
@@ -2119,21 +2127,42 @@ function vardump(value, depth, key)
 		return Table[index].x,Table[index].y,Table[index].z,index
 	end
 	
+	function pieceToPoint(pieceNumber)
+		reTab={}
+
+		reTab.x,reTab.y,reTab.z=Spring.GetUnitPiecePosition(unitID,pieceNumber)
+		return reTab
+	
+
+	end
+	
 	function piec2Point(piecesTable)
+		reTab={}
+
+		if type(piecesTable)=="number" then
+		reTab.x, reTab.y, reTab.z=Spring.GetUnitPiecePosDir(unitID,piecesTable)
+		assert(reTab.x)
+		return reTab
+		end
+
+	
 		if #piecesTable > 7 then
-			local spGetUnitPiecePos=Spring.GetUnitPiecePosDir
-			reTab={}
+		
+		
 			for i=1,#piecesTable do
 				reTab[i]={}
-				reTab[i].x,reTab[i].y,reTab[i].z=spGetUnitPiecePos(unitID,piecesTable[i])
+				reTab[i].Piece =piecesTable[i]
+				reTab[i].x,reTab[i].y,reTab[i].z=Spring.GetUnitPiecePosDir(unitID,piecesTable[i])
 				reTab[i].index=i
 			end
-			
+			assert(reTab.x)
 			return reTab
 		else
-			reTab={}
+			if #piecesTable == 0 then return nil end
+		
 			for i=1,#piecesTable do
 				reTab[i]={}
+				reTab[i].Piece =piecesTable[i]
 				reTab[i].x,reTab[i].y,reTab[i].z=Spring.GetUnitPiecePosDir(unitID,piecesTable[i])
 				reTab[i].index=i
 			end

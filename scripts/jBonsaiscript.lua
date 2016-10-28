@@ -20,7 +20,7 @@ function script.Create()
 	resetT(TablesOfPiecesGroups["pEnd"])
 	bonsaiPieces={}
 	
-	for i=1, 3,1 do
+	for i=1, 3, 1 do
 		bonsaiPieces[i]={}
 		for k=1 , 10, 1 do
 			pieceName= "bP"..(((i-1)*10)+k)
@@ -33,7 +33,7 @@ function script.Create()
 		end
 	end
 	
-	sizeX, sizeY, sizeZ= 8,4,8
+	sizeX, sizeY, sizeZ= 8,3,8
 	baseShapeTable = createBaseShapeTable(sizeX, sizeY, sizeZ, 30)
 	buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY)
 end
@@ -45,7 +45,7 @@ function createBaseShapeTable(sizeX, sizeY, sizeZ, piecenumber)
 	baseRotLikelikhoodMax =math.random(0.1,0.95)--
 	
 	baseShapeTable ={}
-	radiusA,radiusB= math.random(1,sizeX),math.random(1,sizeZ)
+	radiusA,radiusB= math.random(sizeX/2,sizeX),math.random(sizeZ/2,sizeZ)
 	y=1
 	for x= 1, sizeX, 1 do
 		for z= 1, sizeZ, 1 do
@@ -54,9 +54,9 @@ function createBaseShapeTable(sizeX, sizeY, sizeZ, piecenumber)
 			if not baseShapeTable[x][z][y] then baseShapeTable[x][z][y] ={} end
 			
 			baseShapeTable[x][z][y]= true
-			if distance(x,z,sizeX,sizeZ) < radiusA then baseShapeTable[x][z][y]= false end
-			if distance(x,z,1,sizeZ) < radiusB then baseShapeTable[x][z][y]= false end
-			if math.random(0.01,1) > baseRotLikelikhoodMax then	baseShapeTable[x][z][y]= false	end
+				if distance(x,z,sizeX,sizeZ) < radiusA then baseShapeTable[x][z][y]= false end
+				if distance(x,z,1,sizeZ) < radiusB then baseShapeTable[x][z][y]= false end
+				if math.random(0.01,1) > baseRotLikelikhoodMax then	baseShapeTable[x][z][y]= false	end
 			
 			if baseShapeTable[x][z][y]== true then
 				piecenumber=piecenumber-1
@@ -137,9 +137,15 @@ end
 	function getHeightGradient(sizeX, sizeZ, maxHeight)
 	heightGradient=makeTable(0, sizeX)
 	fractionHeight= maxHeight/sizeX
+	if math.random(0,5)==2 then
 		for i=0, sizeX, 1 do
 			heightGradient[i]= i* fractionHeight
 		end
+	else
+		for i=0, sizeX, 1 do
+			heightGradient[sizeX-i]= i* fractionHeight
+		end
+	end
 	return heightGradient
 	end
 	
@@ -151,25 +157,27 @@ end
 				return bonsaiPieces[1][i].Piece , bonsaiPieces[1][i].Sensory 
 			end
 		end
-	for y=1, sizeY do
-		for i=1,#bonsaiPieces[y], 1 do
-			if math.random(0,1) == 1 and not allreadyInsertedPieces[bonsaiPieces[y][i].Piece] then
-				allreadyInsertedPieces[bonsaiPieces[y][i].Piece] =true
-				return bonsaiPieces[y][i].Piece , bonsaiPieces[y][i].Sensory 
+		
+		for y=1, sizeY, 1  do
+
+			for i=1,#bonsaiPieces[y], 1 do
+				if math.random(0,1) == 1 and not allreadyInsertedPieces[bonsaiPieces[y][i].Piece] then
+					allreadyInsertedPieces[bonsaiPieces[y][i].Piece] =true
+					return bonsaiPieces[y][i].Piece , bonsaiPieces[y][i].Sensory 
+				end
 			end
 		end
-	end
 	
 	return nil
 	end
 	
 	--bonsaiPieces must be a objecttable containing layers of tables, containing a table with a piece and a Sensory
 	function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeight)
-
+	WTurn(center,y_axis,0,0)
 	--This hides all the bonsaisPieces
 		for i=1,#bonsaiPieces, 1 do
 			for k=1,#bonsaiPieces[i] do
-				--Hide(bonsaiPieces[i][k].Piece)
+				Hide(bonsaiPieces[i][k].Piece)
 			end
 		end
 		--bonsaiTable[x][z][1]={height, BoolGround, piece, Sensory}
@@ -215,12 +223,13 @@ end
 						dir = dir + math.random(-15,15)
 						--Turn Boulder towards dir
 						Turn(bonsaiTable[x][z][1].Piece,y_axis,math.rad(dir), 0)
-						Turn(bonsaiTable[x][z][1].Piece,x_axis,math.rad(angular), 0, true)
-						
+						WTurn(bonsaiTable[x][z][1].Piece,x_axis,math.rad(angular), 0)
+						Show(bonsaiTable[x][z][1].Piece)
+						Sleep(1)
 					end
-				end
-				
-				if true == false and y~=1 and baseShapeTable[x][z][y] == true then
+
+			
+				if  y~=1 and baseShapeTable[x][z][y] == true then
 					
 					--get the heightOffset
 					heightOffset= heightGradient[x] + cliffFactor*(math.random(-boldHght/4,boldHght/4))
@@ -230,13 +239,22 @@ end
 						if not 	bonsaiTable[x][z][y].Piece then return end
 					Show(bonsaiTable[x][z][y].Piece)
 					
-						if baseShapeTable[x][z][y-1].BoolGround == true then
-							MovePieceToPiece(bonsaiTable[x][z][y].Piece, bonsaiTable[x][z][y-1].Sensory, 0)
-							WaitForMoves(bonsaiTable[x][z][y].Piece)
+			
+						if baseShapeTable[x][z][y-1] == true then
+								Sleep(1)
+								ox,oy,oz=Spring.GetUnitPiecePosition(unitID,bonsaiTable[x][z][y-1].Sensory)
+								Spring.Echo(x," / ",y," / ",z)
+								Spring.Echo(ox," / ",oy," / ",oz)
+								ox=ox*-1
+								Move(bonsaiTable[x][z][y].Piece,x_axis,ox,0)
+								Move(bonsaiTable[x][z][y].Piece,y_axis,oy,0)
+								Move(bonsaiTable[x][z][y].Piece,z_axis,oz,0,true)
+								Sleep(1)
+							
 						else
-							px,py,pz= bx*x, bonsaiTable[x][z][y-1].Height, bz*z
+							px,py,pz= bx*x, bonsaiTable[x][z][y].Height, bz*z
 							MovePieceToPos(bonsaiTable[x][z][y].Piece, px, py, pz, 0)
-							WaitForMoves(bonsaiTable[x][z][y].Piece)
+							Sleep(1)
 						end
 					
 					--place a bolder a the predecessorpiece 
@@ -249,9 +267,10 @@ end
 				
 			end
 		end
-		
+	end	
 		Move(center,y_axis, 0, 0)-- boldHght/-2,0)
 		Turn(center,y_axis,math.random(-math.pi,math.pi),0)
+
 end
 
 

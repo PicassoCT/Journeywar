@@ -85,13 +85,7 @@ function script.Create()
 
 end
 
-function idle()
-	
-	sleeper=math.random(1024,8192)
-	Signal(SIG_IDLE)
-	SetSignalMask(SIG_IDLE)
-
-	while(boolCloaked==false)do
+function resetPosture()
 		Move (center,x_axis,0,12)
 		Move (center,y_axis,0,12)
 		Move (center,z_axis,0,12)
@@ -108,6 +102,25 @@ function idle()
 		Turn (skinleg, x_axis,math.rad(0), 15)
 		Turn(lowlegsk,x_axis,math.rad(0), 32)
 		Turn(lowlegsk02,x_axis,math.rad(0), 32)
+		Hide(tent)
+
+end
+
+function aimReset()
+		Turn (center, x_axis,math.rad(0), 15)	
+		Turn (center, y_axis,math.rad(0), 15)	
+		Turn (center, z_axis,math.rad(0), 15)
+		Hide(tent)
+end
+
+function idle()
+	
+	sleeper=math.random(1024,8192)
+	Signal(SIG_IDLE)
+	SetSignalMask(SIG_IDLE)
+
+	while(boolCloaked==false)do
+
 		Sleep(sleeper)
 		
 		rand=math.random(0,3)
@@ -321,7 +334,7 @@ function script.AimWeapon1( heading ,pitch)
 	if boolSecondAiming==false then
 		Signal(SIG_AIM2)
 		SetSignalMask(SIG_AIM2)
-		
+		aimReset()
 		Turn(turret, x_axis,math.rad( -10),3)
 		WaitForTurn(turret,x_axis)		
 		boolFiringWeapon=true
@@ -390,7 +403,7 @@ function script.AimWeapon2( heading ,pitch)
 		Signal(SIG_IDLE)
 	WaitForTurn(turret2,x_axis)
 	WaitForTurn(torso,y_axis)
-	
+	aimReset()
 	----Spring.Echo(heading)
 	boolFiringWeapon=true
 	return Weapon2AmbushMode()

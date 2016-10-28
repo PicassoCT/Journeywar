@@ -472,7 +472,7 @@ function greatEntry()
 	Turn(seedRotator,y_axis,math.rad(dir),0)--sets the impactor direction to a random value.. 
 	
 	--send in the seed 15 secs
-	Spring.PlaySoundFile("sounds/jBeanStalk/beanstalkgrowth.wav")
+	Spring.PlaySoundFile("sounds/jBeanStalk/beanstalkgrowth.wav",0.3)
 	
 	Turn(seed,x_axis,math.rad(0),0.074467381418424728615410806122181)--4.22222226
 	WaitForTurn(seed,x_axis)

@@ -13,14 +13,12 @@ DrugPieceActiveList={}
 DrugPieceList={}
 
 local RANGE= 50
-local AddictList={}--[unitid]={time=relapseTime,team=orgTeam}
+ AddictList={}--[unitid]={addTime=relapseTime,team=orgTeam}
 for i=1, 9 do
 	name="DrugPiece"..i
 	DrugPieceList[i]=piece(name)
 	DrugPieceActiveList[i]=false
 end
-
-
 
 
 function script.Create()
@@ -72,8 +70,8 @@ function putDrugPieceInPlace(nr,id)
 	end
 	
 	WaitForMove(footneedle,y_axis)
-	time=math.ceil(math.random(6000,12000))
-	Sleep(time)
+	addTime=math.ceil(math.random(6000,12000))
+	Sleep(addTime)
 	Move(footneedle,y_axis,-90,22.3)
 	WaitForMove(footneedle,y_axis)
 	Hide(footneedle)
@@ -97,12 +95,10 @@ function ifSomeDayItMayHappenThatAVictimMustBeFound()
 end
 
 function DragonGrassGrowth() 
-	Spring.Echo("JW:DragonGrass1")
 	Sleep(2900)
 	health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(unitID)
 	while not health or health < maxHealth do
 		Sleep(200)
-		Spring.Echo("JW:DragonGrass2")
 		health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(unitID)
 	end
 	
@@ -132,7 +128,7 @@ local gaiaTeam=Spring.GetGaiaTeamID()
 local INJECT=42000
 local STUNNED= 32000
 local LOYAL= 25000
-local SYMTOMFREE= 17000
+local SYMTOMFREE= 18000
 local RELAPSE= 6000
 local PAININGFORTHEPOPPEYFIELDS=0
 local x,y,z=Spring.GetUnitPosition(unitID)
@@ -140,25 +136,31 @@ local x,y,z=Spring.GetUnitPosition(unitID)
 function AddictBehaviour()
 	Sleep(900)
 	while true do
-		if #AddictList > 1 then
+
 			for k,v in pairs(AddictList) do
 				if k and Spring.GetUnitIsDead(k)==false then
-					if v.time > STUNNED then
+					if v.addTime > STUNNED then
 						Spring.SetUnitNoSelect(k,true)
 						stunUnit(k)
-					elseif v.time > LOYAL then
-						Spring.SetUnitNoSelect(k,false)
 						makeUnitLoyalToTeam(k,teamid)
-					elseif v.time > SYMTOMFREE then
+
+					elseif v.addTime > LOYAL then
+						x,y,z=Spring.GetUnitPosition(unitID)
+						x,z= x + math.random(-1200,1200),z + math.random(-1200,1200)
+						Spring.SetUnitMoveGoal(k,x,y,z)
+						Spring.SetUnitNoSelect(k,false)	
+						
+					elseif v.addTime > SYMTOMFREE then
 						makeUnitLoyalToTeam(k,v.team)
-					elseif v.time > RELAPSE then
+						
+					elseif v.addTime > RELAPSE then
 						makeUnitLoyalToTeam(k,teamid)
 						Spring.SetUnitNoSelect(k,true)
 						Spring.SetUnitMoveGoal(k,x,y,z)
 						checkDistanceAndReinject(k,x,y,z)
-					elseif v.time < PAININGFORTHEPOPPEYFIELDS then
+					elseif v.addTime < PAININGFORTHEPOPPEYFIELDS then
 						hp=Spring.GetUnitHealth(k)
-						Spring.SetUnitHealth(k,hp-42)
+						Spring.SetUnitHealth(k,hp-22)
 						checkDistanceAndReinject(k,x,y,z)
 					end
 					
@@ -170,10 +172,10 @@ function AddictBehaviour()
 			
 			for k,v in pairs(AddictList) do
 				if k and v then
-					AddictList[k].time=v.time-300
+					AddictList[k].addTime=v.addTime-300
 				end
 			end
-		end
+
 		Sleep(300)
 	end
 end
@@ -183,8 +185,8 @@ function checkDistanceAndReinject(k,x,y,z)
 	if not ux then return end
 	ux,uy,uz=ux-x,uy-y,uz-z
 	
-	if math.sqrt(ux*ux,uy*uy,uz*uz) < RANGE then
-		AddictList[k].time= INJECT
+	if math.sqrt(ux*ux,uy*uy,uz*uz) < DrugRange then
+		AddictList[k].addTime= INJECT
 		PlayInjectSoundFiles()
 	end
 end
@@ -196,46 +198,42 @@ end
 function 	stunUnit(k)
 	hp=Spring.GetUnitHealth(k)
 	
-	if hp then Spring.SetUnitHealth(k,{paralyze=hp*8 }) end
+	if hp then Spring.SetUnitHealth(k,{paralyze=hp*1.2 }) end
 end
 
 
 ----aimining & fire weapon
 function DrugLoop()
-	var=0
-	--var=var+1
-	Spring.Echo("JW:DragonGrass:DrugLoop"..var)
+
+
 	Sleep(1000)
 	while true do
 		--add people not yet on the list 
 		for i=1,#DrugPieceList do
 			px,py,pz=Spring.GetUnitPiecePosDir(unitID,DrugPieceList[i])
 			
-			--var=var+1
-			--Spring.Echo("JW:DragonGrass:DrugLoop"..var)
-			T=Spring.GetUnitsInCylinder(px,pz,RANGE)
+			T=	getAllInCircle(px,pz,DrugRange,unitID)	
+
 			if #T > 0 then
 				T=filterOutTeam(T,teamid)
-				if #T > 0 then	
-					T=filterOutBuilding(T or {}, UnitDefs)
+			
+	
 					
-					--var=var+1
-					--Spring.Echo("JW:DragonGrass:DrugLoop"..var)
 					if #T > 0 then
 						boolNewOneOnTheHouse=false
 						for i=1,#T do
 							if T[i]~=unitID and not AddictList[T[i]] then
+
+								AddictList[T[i]]={
 								
-								--var=var+1
-								--Spring.Echo("JW:DragonGrass:DrugLoop"..var)
-								AddictList[T[i]]={}
-								AddictList[T[i]]={time=INJECT,team=Spring.GetUnitTeam(T[i])}
+													addTime=INJECT,
+													team=Spring.GetUnitTeam(T[i])}
 								boolNewOneOnTheHouse=true
 							end	
 						end
 						if boolNewOneOnTheHouse==true then PlayInjectSoundFiles() end
 					end
-				end
+				
 			end
 		end
 		
@@ -261,5 +259,29 @@ function PlayInjectSoundFiles()
 	if maRa()==true then
 		filename="sounds/jDragonGrass/jdragongrass"..(math.random(1,5))..".ogg"
 	end
-	PlaySoundByUnitType(unitdef, filename,0.9, 5000, 1)
+	StartThread(PlaySoundByUnitType, unitdef, filename,0.9, 5000, 1)
+end
+
+
+px,_,pz=Spring.GetUnitPosition(unitID)
+function script.HitByWeapon( x, z, weaponDefID, damage ) 
+T= getAllInCircle(RANGE, px,pz, unitID)
+	if T then
+		process(T,
+
+				function (id)
+					if AddictList[id] then
+						AddictList[id].addTime=INJECT
+					else
+						AddictList[id]={
+									
+														addTime=INJECT,
+														team=Spring.GetUnitTeam(id)}
+					end
+				end
+			
+				)
+	end
+
+return damage
 end

@@ -20,7 +20,7 @@ function setHivePiece()
 	end
 	
 	x=math.random(0,360)
-	assert(hivePiece)
+	
 	Turn(hivePiece,y_axis,math.rad(x),0)
 	
 end
@@ -34,13 +34,14 @@ numX = (Game.mapSizeX )-1
 numZ = (Game.mapSizeZ )-1
 function sanitizeCoords(monsterID,x,y,z, sfactor)
 	
-	if (not x or not z ) or x== 0 and z == 0 or (x >=numX or z >= numZ) then	
+	if (not x or not z ) or x<= 0 and z <= 0 or (x >=numX or z >= numZ) then	
 		x,y,z=Spring.GetUnitPosition(unitID)
 		ez=Spring.GetUnitNearestEnemy(unitID)
 		if ez then
+			distance= GetUnitDistance(monsterID,ez)
 			ex,ey,ez=Spring.GetUnitPosition(ez)
 			sfactor= math.sin(sfactor* 3.14159)
-			ox,oz=ex*sfactor, ez*sfactor
+			ox,oz=ex+ distance*sfactor, ez+ distance*sfactor
 			x,z=x+ox,z+oz
 		else
 			dx,dy,dz=Spring.GetUnitDirection(monsterID)	
@@ -54,6 +55,7 @@ function sanitizeCoords(monsterID,x,y,z, sfactor)
 		return x,y,z
 	end		
 	
+	Spring.Echo("jGeoHive:Defaulting on the Coordinates with x"..x, "z: "..z)
 	x,z=  (math.random(1,9)/10)*Game.mapSizeX, (math.random(1,9)/10)* Game.mapSizeZ
 	return x,y,z
 	
