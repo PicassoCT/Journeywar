@@ -8,8 +8,8 @@ myDefID = Spring.GetUnitDefID(unitID)
 jGeoHiveID = UnitDefNames["jgeohive"].id
 
 function setHivePiece()
-	Spring.Echo("ID",Spring.GetUnitDefID(unitID))
-	Spring.Echo("Ids", UnitDefNames["gzombspa"].id, UnitDefNames["jgeohive"].id )
+--	Spring.Echo("ID",Spring.GetUnitDefID(unitID))
+--	Spring.Echo("Ids", UnitDefNames["gzombspa"].id, UnitDefNames["jgeohive"].id )
 	if Spring.GetUnitDefID(unitID) ==  UnitDefNames["jgeohive"].id then
 		Spring.Echo("jgeohive Piece detected")
 		hivePiece=piece"jgeohive"

@@ -195,8 +195,8 @@ function PlayAnimation(animname)
 	if animname == "pack" 	then boolCo=true;		StartThread(pack);	return end
 	
 	if boolCo==false then 
-		resetP(Body,22)
-		resetP(deathpivot,22)
+		reset(Body,22)
+		reset(deathpivot,22)
 	end
 	
 	if not Animations[animname] then Spring.Echo(animname) end

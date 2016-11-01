@@ -196,8 +196,9 @@ end
 
 
 -->Reset a Piece at speed
-function resetP(piecename,speed,boolWaitForIT)
+function reset(piecename,lspeed,boolWaitForIT)
 	if not piecename then return end
+	speed= lspeed or 0 
 	
 	Turn(piecename,x_axis,0,speed)
 	Turn(piecename,y_axis,0,speed)
@@ -206,7 +207,7 @@ function resetP(piecename,speed,boolWaitForIT)
 	Move(piecename,x_axis,0,speed)
 	Move(piecename,y_axis,0,speed)
 	Move(piecename,z_axis,0,speed,true)
-	if boolWaitForIT then 
+	if boolWaitForIT and boolWaitForIT==true then 
 		WaitForTurn(piecename,1)
 		WaitForTurn(piecename,2)
 		WaitForTurn(piecename,3)
@@ -1481,7 +1482,7 @@ function resetT(tableName,speed, ShowAll, boolWait, boolIstantUpdate)
 	
 	for i=1,#tableName do
 		
-		resetP(tableName[i],lspeed,false, boolIstantUpdate)
+		reset(tableName[i],lspeed,false, boolIstantUpdate)
 		if ShowAll and tableName[i] then
 			Show(tableName[i])
 		end
@@ -1501,13 +1502,13 @@ function recReseT(Table,speed)
 			recReseT(v,speed)
 		end
 	elseif type(Table)=="number" then
-		resetP(Table,speed)
+		reset(Table,speed)
 	end
 	
 	
 end
 
-function resetP(piecename,speed,boolWaitForIT, boolIstantUpdate)
+function reset(piecename,speed,boolWaitForIT, boolIstantUpdate)
 	if not piecename then return end
 	bIstantUpdate = boolIstantUpdate or true
 	Turn(piecename,x_axis,0,speed)

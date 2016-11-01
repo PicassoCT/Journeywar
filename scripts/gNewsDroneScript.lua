@@ -56,27 +56,6 @@ SetSignalMask(SIG_EXAUST)
 	end 
  end
  
- function reset()
- Turn(center,y_axis,math.rad(0),5)
- Turn(center,z_axis,math.rad(0),5)
- Turn(center,x_axis,math.rad(0),5)
- Turn(DroneBody,x_axis,math.rad(0),5)
- Turn(DroneBody,z_axis,math.rad(0),5)
- Turn(DroneBody,y_axis,math.rad(0),5)
-  Turn(engine1,x_axis,math.rad(0),25)
-  Turn(engine1,y_axis,math.rad(0),25)
-  Turn(engine1,z_axis,math.rad(0),25) 
-
-  Turn(engine3,x_axis,math.rad(0),25)
-  Turn(engine3,y_axis,math.rad(0),25)
-  Turn(engine3,z_axis,math.rad(0),25)
-  
-  Turn(engine2,x_axis,math.rad(0),25)
-  Turn(engine2,y_axis,math.rad(0),25)
-  Turn(engine2,z_axis,math.rad(0),25)
-	Move(center,y_axis,0,12)
- 
- end
  
  
 function goTeamCNN()
@@ -106,7 +85,8 @@ end
 
 
   Sleep(25000)
-  reset()
+  Move(center,y_axis,0,12)
+  resetT(piecesTable)
   Sleep(5000)
   
   end
@@ -146,7 +126,8 @@ id=null
  
  boolReporting=false
  function idle()
- reset()
+ 	Move(center,y_axis,0,12)
+	resetT(piecesTable)
  Sleep(250)
  boolOnlyOnce=true
  boolReporting=true
@@ -211,8 +192,9 @@ end
 
 
 
-
+piecesTable={}
 function script.Create()
+piecesTable =generatepiecesTableAndArrayCode(unitID, false)
 Spring.SetUnitNoSelect(unitID,true)
 Spring.SetUnitAlwaysVisible(unitID,true)
 StartThread(exaust)

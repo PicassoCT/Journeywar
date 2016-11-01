@@ -52,11 +52,6 @@ local int3=0
 g_WaterOffSet=0
 g_AddOnRate=0.025
 --</variables>
-function decoRation()
-	while(true) do
-		Sleep(400)
-	end
-end
 
 function emitit()
 	SetSignalMask(SIG_WATER)
@@ -311,7 +306,6 @@ function script.Create()
 	StartThread(emitSound)
 	StartThread(emitWaterSFX)
 	StartThread(addWaterLvl)
-	StartThread(decoRation)
 	StartThread(waveItLikeYouJustdontCare)
 	StartThread(impactShow)
 	StartThread(emitit)

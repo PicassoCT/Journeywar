@@ -451,7 +451,7 @@ function script.AimWeapon1( heading ,pitch)
 	return LocalBoolInWater ==false
 	
 end
-function reset()
+function resetGal()
 	SetSignalMask(SIG_RESET)
 	Sleep(3000) 
 	
@@ -462,7 +462,7 @@ end
 function script.FireWeapon1()	
 	StartThread(PlaySoundByUnitType,unitDefID,"sounds/jgalatea/jGalateaGlueGun.ogg",0.5, 1000, 1,0)
 	
-	StartThread(reset)
+	StartThread(resetGal)
 	return true
 end
 

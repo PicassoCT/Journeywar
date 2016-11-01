@@ -175,7 +175,7 @@ end
 
 function standingGuard()
 resetT(tails)
-resetP(ghostdance,30)
+reset(ghostdance,30)
 Turn(gdbhleg,z_axis,math.rad(0),63/1.5)
 Turn(gdbhleg,x_axis,math.rad(0),63/1.5)
 Turn(gdflegj,x_axis,math.rad(0),63/1.5)
@@ -225,7 +225,7 @@ Turn(ears,x_axis,math.rad(0),7)
 	while tailstart < #tails do
 			for i=1,tailstart,1 do
 			randOffset= math.random(-5,5)
-			resetP(tails[i],3)
+			reset(tails[i],3)
 			Turn(tails[i],x_axis, math.rad(randOffset),2)
 			end
 		turnT(tails,x_axis,xdeg,math.abs(xdeg)/5)
@@ -274,10 +274,10 @@ RumpOffset=12
 	resetT(piecesTable,22)
 
 	while( boolIdle==true)  do
-	if maRa()==true then wiggle()end
-	if maRa()==true then standingWave()end
-	if maRa()==true then standingGuard()end
-	if maRa() == true then pranceStance() end
+		if maRa()==true then wiggle()end
+		if maRa()==true then standingWave()end
+		if maRa()==true then standingGuard()end
+		if maRa() == true then pranceStance() end
 	resetT(piecesTable,12)
 	Sleep(3000)
 	resetLegs()
@@ -291,10 +291,6 @@ RumpOffset=12
 	resetT(piecesTable,42)
 end
 
-function reset()
-
-	
-end
 
 
 

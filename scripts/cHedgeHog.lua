@@ -565,11 +565,7 @@ else Show(molt3) end
 	Move(antirecoil,z_axis,0,9)
 end
 
-function reset(piece)
-	Move(piece,x_axis,0,0)
-	Move(piece,y_axis,0,0)
-	Move(piece,z_axis,0,0)
-end
+
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if math.random(0,32) == 16 then

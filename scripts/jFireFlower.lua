@@ -716,7 +716,7 @@ constOffset= 4
 heigthTable={}
 function getSfxHeigth()
 bx,_,bz= Spring.GetUnitPosition(unitID)
-baseHeigth =Spring.GetGroundHeigth(bx,bz)
+baseHeigth =Spring.GetGroundHeight(bx,bz)
 maxGroundheigth=  baseHeigth
 
 	for i=1,360, 1 do
@@ -724,7 +724,7 @@ maxGroundheigth=  baseHeigth
 					Turn(fireCenter,y_axis,math.rad(i),0,true)
 					WaitForTurn(fireCenter,y_axis)
 					gx,_,gz= Spring.GetUnitPiecePosDir(unitID,fireEmitor)
-					gh= Spring.GetGroundHeigth(gx,gz)
+					gh= Spring.GetGroundHeight(gx,gz)
 					if gh > baseHeigth then 
 					heigthTable[i]=gh-baseHeigth
 					else

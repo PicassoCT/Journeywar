@@ -303,9 +303,9 @@ function fireAnimation()
 end
 
 function 	reloadAnim() 
-	resetP(TwinCannon,12)
+	reset(TwinCannon,12)
 	Sleep(700)
-	resetP(GunSled,12)
+	reset(GunSled,12)
 end 
 
 function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3,offset,time,signum)

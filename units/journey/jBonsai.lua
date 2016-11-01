@@ -2,21 +2,21 @@ local unitName = "jbonsai"
 
 local unitDef = {
 	name = "Bonsai",
-	Description = " the Gonarch lurks here",
+	Description = " Wall Unit, raising the water level",
 	objectName = "jBonsai.s3o",
 	script = "jBonsaiScript.lua",
 	buildPic = "jtree.png",
 	--cost
-	buildCostMetal = 100,
-	buildCostEnergy = 50,
+	buildCostMetal = 240,
+	buildCostEnergy = 10,
 	buildTime =1,
 	--Health
-	maxDamage = 400,
+	maxDamage = 12000,
 	idleAutoHeal = 1,
 	--Movement
 	
-	FootprintX = 2,
-	FootprintZ = 2,
+	FootprintX = 8,
+	FootprintZ = 8,
 	
 	--MaxVelocity = 0.5,
 	MaxWaterDepth =15,
@@ -29,13 +29,9 @@ local unitDef = {
 	
 	
 	reclaimable=true,
-	CanAttack = false,
-	CanGuard = false,
-	CanMove = false,
-	CanPatrol = false,
-	CanStop = false,
+
 	TurnRate = 200,
-	LeaveTracks = false,
+
 	-- Building	
 	Category = [[LAND BUILDING]],
 	
@@ -65,9 +61,9 @@ local unitDef = {
 	usebuildinggrounddecal = true,
 	
 	buildinggrounddecaldecayspeed = 0.00002,
-	buildinggrounddecalsizex = 6,
-	buildinggrounddecalsizey = 6,
-	buildinggrounddecaltype = "GiggerDecal.png",
+	buildinggrounddecalsizex = 16,
+	buildinggrounddecalsizey = 16,
+	buildinggrounddecaltype = "jTreePlater2.png",
 	
 	sfxtypes = {
 		explosiongenerators = {

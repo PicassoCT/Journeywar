@@ -205,7 +205,7 @@ function newFactory ()
 	if GG.JFactorys == nil then GG.JFactorys={} end
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	teamID = Spring.GetUnitTeam (unitID)
-	factoryID = Spring.CreateUnit ("jtransportedfactory2", x,y+40,z+20, 0, teamID) 
+	factoryID = Spring.CreateUnit ("jtrafactory2", x,y+40,z+20, 0, teamID) 
 	GG.JFactorys[factoryID]={}
 	GG.JFactorys[factoryID][1]= unitID 
 	GG.JFactorys[factoryID][2]= false

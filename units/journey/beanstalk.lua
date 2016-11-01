@@ -62,26 +62,30 @@ local unitDef = {
 		--factorys
 		"jmovingfac1",
 		"jharbour",
-		"jgeohive",
 		"jmeggstack",
 		--eco
 		"jnativevil",
 		"jdrilltree",
 		"jmeconverter",
+		
 		"jtree",
 		"jtree2",
 		"jtree3",
-		"jtreel",
-		--defense
+		--passive 		--defense
 		"jjamforrest",
+		"jbonsai",
 		"jwatergate",
+		
+		--active 		--defense
 		"jfireflower",
 		"jdragongrass",
 		"jbeehive",
-		"jfungiforrest",
+	
 		"jrefugeetrap",
-		
+		"jgeohive",
+		"jfungiforrest",
 		--endgame
+		"jtreel",
 		"jabyss"
 		
 	},

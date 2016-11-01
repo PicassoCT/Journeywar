@@ -1785,14 +1785,7 @@ end
 
 shielddegree=0
 shielddamage=0
-function reset(t_able)
-	for i=1,#t_able,1 do
-		Turn(t_able[i],x_axis,math.rad(0),12)
-		Turn(t_able[i],y_axis,math.rad(0),12)
-		Turn(t_able[i],z_axis,math.rad(0),12)
-	end
-	
-end
+
 
 function threadStarter()
 	while true do
@@ -2492,10 +2485,10 @@ function walkTheDog()
 		spPlaySoundFile("sounds/cComEnder/comEnderStep.wav",0.9)		
 		llegs_down(false,0)
 		if boolWalking== false then
-			reset(Legg4)
-			reset(Legg3)
-			reset(Legg5)
-			reset(Legg6)
+			resetT(Legg4)
+			resetT(Legg3)
+			resetT(Legg5)
+			resetT(Legg6)
 		end
 		while boolWalking== false do
 			Sleep(50)
@@ -2547,11 +2540,7 @@ function totalReset(boolDelayed,time)
 	SetSignalMask(SIG_RESET)
 	if boolDelayed==true then Sleep(time) end
 	Move(testComEnder3DS,y_axis,0,39)
-	for i=1, #piecesTable, 1 do 
-		Turn(piecesTable[i],x_axis,math.rad(0),12)
-		Turn(piecesTable[i],y_axis,math.rad(0),12)
-		Turn(piecesTable[i],z_axis,math.rad(0),12)
-	end
+	resetT(piecesTable,12)
 	
 	
 end

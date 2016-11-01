@@ -212,47 +212,54 @@ function getJobDone(unitID, dataTable, jobFunction, checkFunction,rest)
 end
 
 -->pumpOS shows a circularMovingObject
-function circulOS(TableOfPieces,CircleCenter,axis, PieceLength, AnimSpeed, arcStart, arcEnd, arcMoving)
+function circulOS(TableOfPieces,CircleCenter,axis, speed, arcStart, arcEnd)
 	start,ending= arcStart,arcEnd
-	boolArcMoving= arcMoving ~= nil
+
 	hideT(TableOfPieces)
-	speed=arcMoving or AnimSpeed
-	speed=speed/100
+	PieceLength=(2*math.pi)/#TableOfPieces
+
+	
+	dirSign= -1
+	if speed <= 0 then dirSign = 1 end
+	reset(CircleCenter)
 	
 	accumulatedTurn=0
 	modulatedTurn=0
 	
 	Spin(CircleCenter,axis,math.rad(speed),0)
 	while true do
-		if start < ending then
-			for i=1,#TableOfPieces, 1 do
-				if i <start or i> ending then
-					Hide(TableOfPieces[i])
-				else
-					Show(TableOfPieces[i])
-				end
-			end
+		hideT(TableOfPieces)
+		i=start
+		if i > #TableOfPieces then i= 1 end
+		if i < 1 then i =#TableOfPieces end
+		
+
+
+			while i ~= ending do
 			
-		else
-			for i=1,#TableOfPieces, 1 do
-				if i < start and i > ending then
-					Hide(TableOfPieces[i])
-				else
-					Show(TableOfPieces[i])
-				end
+				Show(TableOfPieces[i])
+				
+				i= i + dirSign
+				
+				if i > #TableOfPieces then i= 1 end
+				if i < 1 then i =#TableOfPieces end
 			end
-			
-			if math.abs(modulatedTurn-accumulatedTurn) > PieceLength then
-				start=start+1
+	
+
+			if math.abs(modulatedTurn-math.abs(accumulatedTurn)) > PieceLength then
+				start=start+ dirSign
 				if start > #TableOfPieces then start=1 end
-				ending=ending+1
+				if start < 1 then start=#TableOfPieces end
+				
+				ending=ending+ dirSign
 				if ending > #TableOfPieces then ending=1 end
-				modulatedTurn=accumulatedTurn
-			end
+				if ending < 1 then ending=#TableOfPieces  end
+				modulatedTurn=modulatedTurn + PieceLength
+	
 			
 		end
 		
-		accumulatedTurn=accumulatedTurn+speed
+		accumulatedTurn=accumulatedTurn+ math.abs(math.rad(speed)/10)
 		Sleep(100)
 	end
 	

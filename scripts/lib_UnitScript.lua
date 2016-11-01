@@ -301,6 +301,188 @@ function addTable(T,...)
 	return T
 end
 
+--expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
+function assertT(Table, ... )
+	 arg = table.pack(...)
+	dimensions={}
+	dimensionsIndex=0
+	comperator={}
+	boolNeedDimension=true
+	accessString="Table"
+
+	function buildAccesString(currIndex, dimensions)
+		accessString="Table"
+		coordTable={}
+		for i=1, #currIndex, 1 do
+			accessString=accessString.."["..currIndex[i].."]"
+			coordTable[i]=currIndex[i]
+		end
+
+		return accessString, coordTable
+	end
+
+
+	function echoCoordinates(Tables)
+		if not Tables then return end
+		echoString="Assert Table:Table"
+		for i=1,#Tables do
+			echoString=echoString.."["..Tables[i].."]"
+		end
+		Spring.Echo(echoString)
+	end
+
+	boolComperatorFound=false
+	for k,v in pairs(arg) do
+
+		if type(v)=="number" and boolComperatorFound== false then
+
+			dimensionsIndex=dimensionsIndex+1
+			dimensions[dimensionsIndex] = v
+
+
+		elseif type(v)== "function" then
+			boolComperatorFound=true
+			comperator = v
+			break
+		elseif type(v)== "string" then
+			boolComperatorFound=true
+
+			if v== "number" and boolComperatorFound == false then
+				comperator= function (value, coordTable)
+					if type(value)=="number" then
+						return true
+					else
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: Number expected, recived "..type(value).." = "..value.." instead")
+						return false
+					end;
+				end
+				break
+			end
+
+			if v== "string" then
+				comperator = 	function (value, coordTable)
+					if type(value)~="string" then
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: String expected, recived "..type(value).." = "..value.." instead")
+						return false
+					end
+
+					if value== v then
+						return true
+					else
+						echoCoordinates(coordTable)
+						Sring.Echo("Assert Table failed:: String is "..value.." expected was "..v )
+						return false
+					end;
+				end
+				break
+			end
+
+			if v== "true" then
+				comperator = 	function (value, coordTable)
+					if type(value)~="boolean" then
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: Boolean expected, recived "..type(value).." = "..value.." instead")
+						return false
+					end
+
+					if value== true then
+						return true
+					else
+						echoCoordinates(coordTable)
+						Sring.Echo("Assert Table failed:: Boolean value is not true" )
+						return false
+					end;
+				end
+				break
+			end
+
+			if v== "false" then
+				comperator = 	function (value, coordTable)
+					if type(value)~="boolean" then
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: Boolean expected, recived "..type(value).." = "..value.." instead")
+						return false
+					end
+
+
+					if value== false then
+						return true
+					else
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: Boolean value is not false" )
+						return false
+					end;
+				end
+				break
+			end
+
+		elseif type(v)== "table" then
+		boolComperatorFound=true
+		comperator = 	function (object, coordTable)
+				boolEqual=true
+
+				for key,value in pairs(v) do
+				Spring.Echo(key,value)
+					if not object[key] then
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: Expected key "..key.." not in object" )
+					end
+
+					if  type(object[key])~= value then
+
+						echoCoordinates(coordTable)
+						Spring.Echo("Assert Table failed:: Expected key.. "..key.." value is not of type "..value..".Got "..type(object[key]).." with value: "..object[key].." instead")
+						--echoT(object)
+						boolEqual=false
+					end
+				end
+				return boolEqual
+			end
+		end
+
+
+
+	end
+
+
+	currIndex={}
+	function indexMaxedOut(currIndex, dimensions)
+		for i=1,#currIndex, 1 do
+			if currIndex[i] < dimensions[i] then return false end
+		end
+		return true
+	end
+
+	function incIndex(currIndex, dimensions)
+		for i=#currIndex, 1, -1 do
+			if currIndex[i] < dimensions[i] then
+				currIndex[i]=currIndex[i]+1
+				for k=i+1, #currIndex do
+					currIndex[k]=1
+				end
+
+				return currIndex
+			end
+		end
+		return currIndex
+	end
+
+	for i=1, #dimensions do currIndex[i]=1 end
+
+	while indexMaxedOut(currIndex, dimensions)== false do
+		accessString, coordTable = buildAccesString(currIndex, dimensions)
+		compare= loadstring("return function (Table,comperator,coordTable) return comperator("..accessString..", coordTable) end")
+		comp= compare()
+		if ( comp(Table, comperator,coordTable)== false) then return false end
+		currIndex= incIndex(currIndex, dimensions)
+	end
+
+	return true
+end
+
+
 function makeTable(default, XDimension, yDimension,zDimension)
 	RetTable={}
 	
@@ -1576,6 +1758,12 @@ function vardump(value, depth, key)
 		for k,v in pairs(T) do
 			typek=type(k)
 			typev=type(v)
+			
+			if typev== "table" then
+				rEchoT(typev,0)
+			end
+			
+			
 			typek=typek~="table" and typek ~="function"
 			typev=typev~="table" and typev ~="function"
 			if typek and typev and v then
@@ -1583,6 +1771,8 @@ function vardump(value, depth, key)
 			else
 				Spring.Echo("Key "..k .." -> ".. " holds no value")
 			end
+			
+		
 		end
 		
 		if lboolAssertTable ==true then
@@ -3523,7 +3713,7 @@ end
 		
 		local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 		px,py,pz=spGetUnitPiecePosDir(unitID,subPiece)
-		gh=Spring.GetGetGroundHeight(px,pz)
+		gh=Spring.GetGroundHeight(px,pz)
 		--necessaryData
 		paX,paY,paZ=spGetUnitPiecePosDir(unitID,parent)
 		

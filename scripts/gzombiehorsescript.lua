@@ -633,7 +633,7 @@ function resetPosition()
 	SetSignalMask(SIG_RESET)
 	Sleep(500)
 	resetT(legsTable,1,true, false)
-	resetP(kuttel,3)
+	reset(kuttel,3)
 	if math.random(0,1)==1 then
 		Turn(kuttel,x_axis,math.rad(30),60)
 		Move(kuttel,y_axis,-15,54)
@@ -677,7 +677,7 @@ function dropDead()
 			end
 			time=math.ceil(math.random(300,500))
 			Sleep(time)
-			resetP(kuttel,2)
+			reset(kuttel,2)
 			Move(kuttel,y_axis,0,12)
 			while (true==Spring.UnitScript.IsInMove (kuttel, y_axis)) do
 				signum=signum*-1
@@ -711,8 +711,8 @@ stopCounter=0
 zombieDefID= Spring.GetUnitDefID(unitID)
 function walk()
 	SetSignalMask(SIG_WALK)
-	resetP(kuttel,3)
-	resetP(center,3)
+	reset(kuttel,3)
+	reset(center,3)
 	if stopCounter <= 0 then
 	StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/gzombiehores.ogg",0.5, 2000, 1,0)
 	stopCounter= math.random(5,12)

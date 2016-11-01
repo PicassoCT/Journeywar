@@ -75,9 +75,12 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 			Spring.CreateUnit (result.unit, x,y,z, 0, teamID)
 		end
+		
+		finishedUnits[unitID] = nil
 	end
 	
 	--THis part watches for shell
+	
 	
 	
 	

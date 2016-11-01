@@ -224,7 +224,7 @@ local function idle()
 			Sleep(1000)
 		end		
 		StopSpin(staff,y_axis,1)
-		resetP(staff,1)
+		reset(staff,1)
 		end
 		
 		

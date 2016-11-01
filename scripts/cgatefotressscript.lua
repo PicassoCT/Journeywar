@@ -1180,7 +1180,7 @@ if boolReverse==true then
 		
 		offSet= towerDeployTable[i].offA
 		DirVec=towerDeployTable[i].SeedDir
-		resetP(SeedCenter,0)
+		reset(SeedCenter,0)
 		MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 		
 		Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
@@ -1203,7 +1203,7 @@ else
 		
 		offSet= towerDeployTable[i].offA
 		DirVec=towerDeployTable[i].SeedDir
-		resetP(SeedCenter,0)
+		reset(SeedCenter,0)
 		MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 		Hide(pieceToGo)
 		Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
@@ -1237,7 +1237,7 @@ if boolReverse == true then
 		
 		offSet=piecesDeployTable[i].offA
 		DirVec=piecesDeployTable[i].SeedDir
-		resetP(SeedCenter,0)
+		reset(SeedCenter,0)
 		MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 		
 		Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
@@ -1258,7 +1258,7 @@ else
 		
 		offSet=piecesDeployTable[i].offA
 		DirVec=piecesDeployTable[i].SeedDir
-		resetP(SeedCenter,0)
+		reset(SeedCenter,0)
 		MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 		
 		Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)

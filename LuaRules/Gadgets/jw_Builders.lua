@@ -16,6 +16,26 @@
 
 	-- synced only
 if (gadgetHandler:IsSyncedCode()) then
+	
+	jupgradefactory2DefID= UnitDefNames["jupgradefactory2"].id
+	jupgradefactory1DefID= UnitDefNames["jupgradefactory1"].id
+	
+	upgradeHandlerTable={}
+	upgradeHandlerTable[jupgradefactory2DefID]= function (unitID, unitDefID, unitTeam)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		Spring.DestroyUnit(unitID, false, true)
+		id=Spring.CreateUnit("jfactorylvl2transform",x,y,z,1,unitTeam)
+	end
+	
+	upgradeHandlerTable[jupgradefactory1DefID]= function (unitID, unitDefID, unitTeam)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		Spring.DestroyUnit(unitID, false, true)
+		id=Spring.CreateUnit("jfactorylvl1transform",x,y,z,1,unitTeam)
+	end
+	
+	
+
+
 	function findNearestUnit(x,z,tableOfUnits)
 	distances=1  				--SmallestDistance
 
@@ -71,7 +91,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		end
 
-	
+		if (upgradeHandlerTable[unitDefID]) then
+			upgradeHandlerTable[unitDefID](unitID, unitDefID, unitTeam)
+		end
 
 	end
 

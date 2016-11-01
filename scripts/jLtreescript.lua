@@ -4,9 +4,8 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 
 include "lib_jw.lua" 
-include "lib_Build.lua" 
 
---include "spring_lua_dsl.lua"
+
 
 local INFLUENCERADIUS=120
 NUMBEROFPIECES=56
@@ -37,6 +36,13 @@ for i=1, NUMBEROFPIECES do
 	TreePiece[#TreePiece+1]=piece(name)
 	EndPiece[#EndPiece+1]=piece(namet)
 end
+
+
+function divcompare(it,val,pos)
+	if math.abs(val-pos)>500 then Spring.Echo("Node behaving badly"..it-1) end
+	
+end
+
 
 function TreeTrample()
 	
@@ -69,7 +75,7 @@ function script.Create()
 	hideT(EndPiece)
 	--reset Table of Pieces
 	resetT(TreePiece)
-	resetP(center,0)
+	reset(center,0)
 	StartThread(BuildLtree)
 	StartThread(foulTheSurroundings)
 	StartThread(playSoundByUnitTypOS,unitID,0.5,{
@@ -79,6 +85,25 @@ function script.Create()
 	StartThread(delayedActivation)
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.25+0.125)
 end
+function placeFollowUps(X,Z,sizeOfPlant,maxDist,i)
+	sizeOfColony=colonySizeByDistance(X,Z,sizeOfPlant,maxDist)
+	--Spring.Echo("Colonysize"..sizeOfColony)
+	
+	for ok=i+1,math.min(i+sizeOfPlant-1,i+sizeOfColony),1 do
+		ox,oy,oz=Spring.GetUnitPiecePosition(unitID, EndPiece[ok-1])
+		
+		--Move Piece to Position
+		
+		Show(TreePiece[ok])
+		
+		Move(TreePiece[ok],x_axis,ox,0)
+		Move(TreePiece[ok],y_axis,oy,0)
+		Move(TreePiece[ok],z_axis,oz ,0,true)
+		Sleep(400)
+	end
+	
+end
+
 
 --Contains Fixed Production Rules
 FixFunctionTabel={}
@@ -147,25 +172,6 @@ FixFunctionTabel[2]= function ()
 		
 	end
 	return false
-end
-
-function placeFollowUps(X,Z,sizeOfPlant,maxDist,i)
-	sizeOfColony=colonySizeByDistance(X,Z,sizeOfPlant,maxDist)
-	--Spring.Echo("Colonysize"..sizeOfColony)
-	
-	for ok=i+1,math.min(i+sizeOfPlant-1,i+sizeOfColony),1 do
-		ox,oy,oz=Spring.GetUnitPiecePosition(unitID, EndPiece[ok-1])
-		
-		--Move Piece to Position
-		
-		Show(TreePiece[ok])
-		
-		Move(TreePiece[ok],x_axis,ox,0)
-		Move(TreePiece[ok],y_axis,oy,0)
-		Move(TreePiece[ok],z_axis,oz ,0,true)
-		Sleep(400)
-	end
-	
 end
 
 
@@ -587,11 +593,6 @@ FixFunctionTabel[11]= function ()
 	
 	
 	return true	
-end
-
-function divcompare(it,val,pos)
-	if math.abs(val-pos)>500 then Spring.Echo("Node behaving badly"..it-1) end
-	
 end
 
 

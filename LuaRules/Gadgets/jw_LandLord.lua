@@ -856,7 +856,7 @@
 				
 				local FMS=futureMapSize
 				local incRate=increaseRate 
-				local getGroundHeight=Spring.GetGroundHeight
+				local GetGroundHeight=Spring.GetGroundHeight
 				
 				for i=1,#LandLordTable,1 do
 					--increment the Percentage
@@ -922,7 +922,7 @@
 										
 									--	if the mining unit is new, equalize the terrain, til 0.15 percent is reached
 									if LandLordTable[i][5] <= 0.15 then
-										y=getGroundHeight(LandLordTable[i][6]*8,LandLordTable[i][7]*8)
+										y=GetGroundHeight(LandLordTable[i][6]*8,LandLordTable[i][7]*8)
 										
 										
 										orgTerrainMap[x][z]= 	(((orgTerrainMap[x][z] *2) + y)/3) + upDown

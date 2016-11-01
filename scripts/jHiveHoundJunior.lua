@@ -127,8 +127,8 @@ function walk()
 	
 	Sleep(100)
 	boolCloseCombat= false
-	resetP(rotor,2)
-	resetP(rotor2,3)
+	reset(rotor,2)
+	reset(rotor2,3)
 	
 	Turn(fUpR,z_axis,math.rad(-16),1)
 	Turn(bUpR,z_axis,math.rad(-16),1)

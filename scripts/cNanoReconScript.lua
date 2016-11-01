@@ -133,7 +133,7 @@ function swarmTurn (group,groupindex)
 	allReadyInAction[groupindex]=true
 	--actual animation code
 	Hide(group.swarm)
-	resetP(group.swarm)
+	reset(group.swarm)
 	Show(group.swarm)
 	
 	turnGroupSwing(group, groupindex)
@@ -323,7 +323,7 @@ function MoveThread()
 				
 				process(swarm, 	
 				function(piecenr)
-					resetP(piecenr,12,true)
+					reset(piecenr,12,true)
 				end
 				)
 			end

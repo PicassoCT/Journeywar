@@ -39,7 +39,7 @@ function swayInWind()
 		
 		Turn(rotator,y_axis,math.rad(math.random(-4.2,4.2)),0.01)
 		WaitForTurn(rotator,y_axis)
-		resetP(rotator, 0.01)
+		reset(rotator, 0.01)
 		Sleep(100)
 	end
 	
