@@ -1,9 +1,9 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
@@ -102,127 +102,109 @@ piecesTable[#piecesTable]= Kugel02
 
 CellRings={}
 for i=1,5, 1 do
-name="CellRing"..i
-CellRings[i]=piece(name)
+	name="CellRing"..i
+	CellRings[i]=piece(name)
 end
 
 function script.Create()
---generatepiecesTableAndArrayCode(unitID)
-StartThread(addWaterLvl)
-StartThread(float)
-StartThread(CellWiggling)
-StartThread(CenterCellRingTurn)
-StartThread(waterDrop)
+	--generatepiecesTableAndArrayCode(unitID)
+	
+	StartThread(float)
+	StartThread(CellWiggling)
+	StartThread(CenterCellRingTurn)
+	StartThread(waterDrop)
 end
 
 function waterDrop()
 	while true do
-	Show(Kugel02)
-	Move(Kugel02,y_axis,-100,31)
-	WaitForMove(Kugel02,y_axis)
-	Hide(Kugel02)
-	Move(Kugel02,y_axis,0,0)
-	Sleep(1900)
+		Show(Kugel02)
+		Move(Kugel02,y_axis,-100,31)
+		WaitForMove(Kugel02,y_axis)
+		Hide(Kugel02)
+		Move(Kugel02,y_axis,0,0)
+		Sleep(1900)
 	end
 end
 
 function float()
-Spin(Kreis03,y_axis,math.rad(22),0)
-Spin(Kreis01,y_axis,math.rad(22),0)
-Spin(Kreis02,y_axis,math.rad(-22),0)
-Spin(Kugel01,y_axis,math.rad(-22),0)
+	Spin(Kreis03,y_axis,math.rad(22),0)
+	Spin(Kreis01,y_axis,math.rad(22),0)
+	Spin(Kreis02,y_axis,math.rad(-22),0)
+	Spin(Kugel01,y_axis,math.rad(-22),0)
 	while true do
-	Move(center,y_axis,-10,2.3)
-	Move(Kreis03,y_axis,15,2.3)
-	Move(Kreis02,y_axis,12.5,2.3)
-	Move(Kreis01,y_axis,10,2.3)
-	WaitForMove(Kreis03,y_axis)
-	Move(center,y_axis,0,2.3)
-	Move(Kreis03,y_axis,-5,2.3)
-	Move(Kreis02,y_axis,-2.5,2.3)
-	Move(Kreis01,y_axis,0,2.3)
-	WaitForMove(Kreis03,y_axis)
-	Sleep(30)
+		Move(center,y_axis,-10,2.3)
+		Move(Kreis03,y_axis,15,2.3)
+		Move(Kreis02,y_axis,12.5,2.3)
+		Move(Kreis01,y_axis,10,2.3)
+		WaitForMove(Kreis03,y_axis)
+		Move(center,y_axis,0,2.3)
+		Move(Kreis03,y_axis,-5,2.3)
+		Move(Kreis02,y_axis,-2.5,2.3)
+		Move(Kreis01,y_axis,0,2.3)
+		WaitForMove(Kreis03,y_axis)
+		Sleep(30)
 	end
-
+	
 end
 
 
 
 
 function CenterCellRingTurn()
-
+	
 	while true do
-	Turn(CellRing0,y_axis,math.rad(0),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-47),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-94),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-141),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-188),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-235),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-281),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-327),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-281),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-235),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-188),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-141),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-94),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(-47),0)
-	Sleep(120)
-	Turn(CellRing0,y_axis,math.rad(0),0)
-	Sleep(120)
-
+		Turn(CellRing0,y_axis,math.rad(0),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-47),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-94),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-141),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-188),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-235),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-281),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-327),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-281),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-235),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-188),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-141),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-94),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(-47),0)
+		Sleep(120)
+		Turn(CellRing0,y_axis,math.rad(0),0)
+		Sleep(120)
+		
 	end
-
+	
 end
 
 
 function CellWiggling()
 	while true do
-	for i=1,#CellRings do
-	Turn(CellRings[i],y_axis,math.rad(math.random(-5,5)),0.1)
-	end
-	dice=math.random(190,500)
-	Sleep(math.ceil(dice))
-end
-
-end
-
-
-local g_AddOnRate=0.015
-
-
-function addWaterLvl()
-Sleep(200)
-	while(true) do
-		if GG.addWaterLevel ~= nil then
-
-		GG.addWaterLevel=GG.addWaterLevel+g_AddOnRate
-		--Spring.Echo(GG.addWaterLevel)
-		Sleep(1000)
-		--Spring.Echo("WaterUp",g_WaterOffSet)
-		else
-		Sleep(1000)
+		for i=1,#CellRings do
+			Turn(CellRings[i],y_axis,math.rad(math.random(-5,5)),0.1)
 		end
+		dice=math.random(190,500)
+		Sleep(math.ceil(dice))
 	end
+	
 end
+
 
 function script.Killed(recentDamage,_)
-
-createCorpseCUnitGeneric(recentDamage)
-return 1
+	
+	createCorpseCUnitGeneric(recentDamage)
+	return 1
 end
 
 
@@ -238,41 +220,40 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-
+	
 	return true
-
+	
 end
- 
+
 
 function script.FireWeapon1()	
-
+	
 	return true
 end
 
 
 
 function script.StartMoving()
-
+	
 end
 
 function script.StopMoving()
-		
-		
+	
+	
 end
 
 function script.Activate()
-
-return 1
+	
+	return 1
 end
 
 function script.Deactivate()
-
-return 0
+	
+	return 0
 end
 
 function script.QueryBuildInfo() 
-  return center 
+	return center 
 end
 
 Spring.SetUnitNanoPieces(unitID,{ center})
-

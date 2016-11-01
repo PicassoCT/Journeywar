@@ -293,7 +293,7 @@
 					end
 					
 					--</Blend&FilterFunc>
-					y=Spring.GetGroundHeight(x*8,z*8)
+					--y=Spring.GetGroundHeight(x*8,z*8)
 					
 					--if the value is within bounds, we can avoid expensive nilChecking
 					
@@ -311,8 +311,7 @@
 			end
 			
 			function withinBounds(x,z,Nr,halfSize,blendFunction,filterFunction)
-				--Spring.Echo("JW_LANDLORD:",filterFunction)
-				--Spring.Echo("JW_LANDLORD:",blendFunction)
+
 				startx,endx=x-halfSize,x+halfSize 
 				startz,endz=z-halfSize,z+halfSize
 				--assert(GG.DynRefMap[Nr],"JW:WhatTheHell"..Nr)

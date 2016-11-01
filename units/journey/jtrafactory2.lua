@@ -45,7 +45,7 @@ local unitDef = {
 	buildoptions = 
 	{
 		"jglowworms","jbeherith","jeliah",
-		"jshroudshrike","jswiftspear", 	"jviralfac", "jhoneypot"
+		"jshroudshrike","jswiftspear", 	"jviralfac", "jhoneypot",
 		"jupgradefactory2"
 	},
 	

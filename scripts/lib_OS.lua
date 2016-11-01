@@ -212,7 +212,10 @@ function getJobDone(unitID, dataTable, jobFunction, checkFunction,rest)
 end
 
 -->pumpOS shows a circularMovingObject
-function circulOS(TableOfPieces,CircleCenter,axis, speed, arcStart, arcEnd)
+function circulOS(TableOfPieces,CircleCenter,axis, speed, arcStart, arcEnd, osKey)
+	if not GG.OsKeys then GG.OsKeys ={} end
+	if not GG.OsKeys[osKey] then GG.OsKeys[osKey] = true end
+	
 	start,ending= arcStart,arcEnd
 
 	hideT(TableOfPieces)
@@ -227,7 +230,7 @@ function circulOS(TableOfPieces,CircleCenter,axis, speed, arcStart, arcEnd)
 	modulatedTurn=0
 	
 	Spin(CircleCenter,axis,math.rad(speed),0)
-	while true do
+	while GG.OsKeys[osKey] == true do
 		hideT(TableOfPieces)
 		i=start
 		if i > #TableOfPieces then i= 1 end
@@ -263,6 +266,41 @@ function circulOS(TableOfPieces,CircleCenter,axis, speed, arcStart, arcEnd)
 		Sleep(100)
 	end
 	
+	while start ~= ending do
+		hideT(TableOfPieces)
+		i=start
+		if i > #TableOfPieces then i= 1 end
+		if i < 1 then i =#TableOfPieces end
+		
+
+
+			while i ~= ending do
+			
+				Show(TableOfPieces[i])
+				
+				i= i + dirSign
+				
+				if i > #TableOfPieces then i= 1 end
+				if i < 1 then i =#TableOfPieces end
+			end
+	
+
+			if math.abs(modulatedTurn-math.abs(accumulatedTurn)) > PieceLength then
+				start=start+ dirSign
+				if start > #TableOfPieces then start=1 end
+				if start < 1 then start=#TableOfPieces end
+				
+				
+				modulatedTurn=modulatedTurn + PieceLength
+	
+			
+		end
+		
+		accumulatedTurn=accumulatedTurn+ math.abs(math.rad(speed)/10)
+		Sleep(100)
+	end
+	hideT(TableOfPieces)
+	GG.OsKeys[osKey]=nil
 	
 end
 

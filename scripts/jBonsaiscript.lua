@@ -13,17 +13,24 @@ wheelPivot=piece"wheelPivot"
 waterwheel=piece"waterwheel"
 WaterPlan0=piece"WaterPlan0"
 WaterPlane=piece"WaterPlane"
+DryBasin=piece"DryBasin"
+BasinFarnDry=piece"BasinFarnDry"
+Basin=piece"Basin"
+BasinFarn=piece"BasinFarn"
 FlucWheel=piece"FlucWheel"
 foamsphere1=piece"foamsphere1"
 foamsphere2=piece"foamsphere2"
 foamsphere3=piece"foamsphere3"
+spherespin= piece"spherespin"
+
+g_AddOnRate= 0.00125
 
 rval = function () 
 	val= math.random(-35,35) 
 	if val == 0 then return 42 end
 	return val
 end
-spherespin= piece"spherespin"
+
 
 function foamspheres()
 	yval=math.random(-5,-0.5)
@@ -41,17 +48,19 @@ function foamspheres()
 	Spin(foamsphere2,y_axis, rval(),0)
 	Spin(foamsphere1,y_axis, rval(),0)
 end
-
+SIG_WATER = 2 
+boolWaterWheelDone=false
 function waterWheel()
-	
+	boolWaterWheelDone=false
+	showWaterWheels()
 	Spin(FlucWheel,z_axis,math.rad(-65),0)
 	Spin(waterwheel,z_axis,math.rad(-65),0)
 	
-	StartThread(circulOS,TablesOfPiecesGroups["WatWhe"],wheelPivot,z_axis, -65, 10, 3)
+	StartThread(circulOS,TablesOfPiecesGroups["WatWhe"],wheelPivot,z_axis, -65, 10, 3, "waterWheel"..unitID)
 	
 	
 	
-	while true do
+	while boolWaterSpilling== true do
 		foamspheres()
 		
 		val=math.random(-75,75)
@@ -81,35 +90,54 @@ function waterWheel()
 		Sleep(2000)
 		
 	end
+	 GG.OsKeys["waterWheel"..unitID]=false
+	 hideWaterWheels()
+	 while 	 GG.OsKeys["waterWheel"..unitID]== false do 
+		Sleep(100)
+	 end
+	 boolWaterWheelDone=true
 end
 
 basinpillar=piece"basinpillar"
 Basin=piece"Basin"
 
 function showWaterWheels()
-Show(waterwheel	)
-Show(WaterPlan0	)
-Show(WaterPlane	)
-if maRa()==true then Show(FlucWheel	) end
-Show(foamsphere1)
-Show(foamsphere2)
-Show(foamsphere3)
-Show(basinpillar)
-Show(Basin)
+	Hide(DryBasin)
+	Hide(BasinFarnDry)
+	Show(BasinFarn)
+	Show(Basin)
+	Sleep(500)
+	Show(waterwheel	)
+	Show(WaterPlan0	)
+	Show(WaterPlane	)
+	Show(waterwheel)
+	if maRa()==true then Show(FlucWheel) end
+	Show(foamsphere1)
+	Show(foamsphere2)
+	Show(foamsphere3)
+
 end
 function hideWaterWheels()
 	hideT(TablesOfPiecesGroups["WatWhe"])
-Hide(waterwheel	)
-Hide(WaterPlan0	)
-Hide(WaterPlane	)
-Hide(FlucWheel	)
-Hide(foamsphere1)
-Hide(foamsphere2)
-Hide(foamsphere3)
-Hide(basinpillar)
-Hide(Basin)
+	Hide(waterwheel	)
+
+	Hide(FlucWheel	)
+	Hide(foamsphere1)
+	Hide(foamsphere2)
+	Hide(foamsphere3)
+	
+	Hide(waterwheel)
+	Hide(Basin)
+	Show(DryBasin)
+	Sleep(550)
+	Hide(WaterPlan0	)
+	Hide(WaterPlane	)
+
+	Show(BasinFarnDry)
+	Hide(BasinFarn)
 end
 
+boolWaterSpilling=true
 TablesOfPiecesGroups={}
 function script.Create()
 	allreadyInsertedPieces={}
@@ -118,6 +146,7 @@ function script.Create()
 	resetT(TablesOfPiecesGroups["bP"])
 	resetT(TablesOfPiecesGroups["Tree"])
 	hideT(TablesOfPiecesGroups["bP"])
+	Show(basinpillar)
 	reset(wheelPivot)
 	reset(FlucWheel)
 	
@@ -136,14 +165,13 @@ function script.Create()
 			end
 		end
 	end
-	
+	StartThread(addWaterLvl)
 	StartThread(buildLTree,center, 7, "Bonsai", "B", 18)
-	if math.random(0,3)== 2 then
-	showWaterWheels()
 	StartThread(waterWheel)
-	else
-	hideWaterWheels()
-	end
+	StartThread(showWaterWheels)
+	
+	
+	
 	sizeX, sizeY, sizeZ= 8,3,8
 	baseShapeTable = createBaseShapeTable(sizeX, sizeY, sizeZ, 30)
 	
@@ -411,27 +439,56 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeigh
 	for k,v in pairs (TablesOfPiecesGroups["Tree"]) do
 		for key,value in pairs(roofPieceTable)do
 			if value then
-			if math.random(0,1)== 1 then
-				--place piece on top
-				x,y,z= getCollissionOffset(unitID, value)
-				MovePieceToPos(v,x,y,z, 0)
+				if math.random(0,1)== 1 then
+					--place piece on top
+					x,y,z= getCollissionOffset(unitID, value)
+					MovePieceToPos(v,x,y,z, 0)
+					
+				else
+					pox,_,poz= Spring.GetUnitPiecePosDir(unitID,value)
+					pox,poz= pox +math.random(-75,75), poz +math.random(-75,75)
+					groundHeight= Spring.GetGroundHeight(pox,poz)
+					movePieceToGround(value,v, 0)
+				end
+				Show(value)
+				roofPieceTable[key]= nil
 				
-			else
-				pox,_,poz= Spring.GetUnitPiecePosDir(unitID,value)
-				pox,poz= pox +math.random(-75,75), poz +math.random(-75,75)
-				groundHeight= Spring.GetGroundHeight(pox,poz)
-				movePieceToGround(value,v, 0)
-			end
-			Show(value)
-			roofPieceTable[key]= nil
-			
 			end
 		end
 	end
 	
 end
 
+	function addWaterLvl()
+		Sleep(100)
+		while(true) do
+			if GG.addWaterLevel ~= nil and boolWaterSpilling == true then
+				
+				GG.addWaterLevel=GG.addWaterLevel+g_AddOnRate
+				Sleep(1000)
 
+			else
+				Sleep(1000)
+			end
+		end
+	end
+
+function script.Activate()
+	if boolWaterWheelDone== true then
+		boolWaterSpilling=true
+		StartThread(waterWheel)
+	end
+
+	return 1
+end
+
+
+function script.Deactivate()
+
+
+	boolWaterSpilling=false
+	return 0
+end
 
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
