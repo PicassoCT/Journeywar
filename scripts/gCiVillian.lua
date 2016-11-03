@@ -43,12 +43,12 @@ healthOfOld=health
 		AleaActaEst=math.random(0,14)
 		
 			if AleaActaEst==0 then
-			StartThread(PlaySoundByUnitType,unitdef, "sounds/gCiv/screamWaah.wav",0.3,700, 1,50)	
+			StartThread(PlaySoundByUnitDefID,unitdef, "sounds/gCiv/screamWaah.wav",0.3,700, 1,50)	
 			
 			elseif AleaActaEst==2 then
-				StartThread(PlaySoundByUnitType,unitdef, "sounds/gCiv/woah.wav",0.3,700, 1,50)				
+				StartThread(PlaySoundByUnitDefID,unitdef, "sounds/gCiv/woah.wav",0.3,700, 1,50)				
 			elseif AleaActaEst==3 then
-			StartThread(PlaySoundByUnitType,unitdef,"sounds/gCiv/woohw.wav",0.3,700, 1,50)			
+			StartThread(PlaySoundByUnitDefID,unitdef,"sounds/gCiv/woohw.wav",0.3,700, 1,50)			
 			
 			end
 		end
@@ -266,7 +266,7 @@ end
 function script.Killed(recentDamage, maxHealth)
 	if math.random(0,2)==1 then
 
-		StartThread(PlaySoundByUnitType,unitdef, "sounds/gCiv/screamWaah.wav",0.3,700, 1,50)	
+		StartThread(PlaySoundByUnitDefID,unitdef, "sounds/gCiv/screamWaah.wav",0.3,700, 1,50)	
 	end
 			EmitSfx(emit1,1024)
 			EmitSfx(emit2,1024)

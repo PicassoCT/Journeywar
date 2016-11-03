@@ -471,7 +471,7 @@ function ropeThread()
 	
 	if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
 	lastLoudness=lastLoudness+valToAdd
-	PlaySoundByUnitType(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+	PlaySoundByUnitDefID(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 	
 	
 	Turn(swingersClub,x_axis,math.rad(0),150)
@@ -1024,7 +1024,7 @@ function script.Create()
 	StartThread(landed)
 	if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
 	lastLoudness=lastLoudness+valToAdd
-	StartThread(PlaySoundByUnitType,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+	StartThread(PlaySoundByUnitDefID,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 end
 _,maxhealth=Spring.GetUnitHealth(unitID)
 
@@ -1075,7 +1075,7 @@ function script.StartBuilding(heading, pitch)
 	
 	if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
 	lastLoudness=lastLoudness+valToAdd
-	StartThread(PlaySoundByUnitType,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
+	StartThread(PlaySoundByUnitDefID,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 	
 	boolRopeRelease=false
 	Signal(SIG_HOVER)

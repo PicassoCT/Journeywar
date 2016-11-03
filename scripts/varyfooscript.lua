@@ -1107,12 +1107,12 @@ end
 			
 			dice=math.ceil(math.random(4,6))
 			soundfile=strings..dice..".ogg"
-			PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
+			PlaySoundByUnitDefID(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
 				elseif boolAttack==true then
 				boolAttack=false
 				dice=math.ceil(math.random(2,3))
 				soundfile=strings..dice..".ogg"
-				PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
+				PlaySoundByUnitDefID(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
 				end
 		Sleep(16000)
 		end
@@ -1280,7 +1280,7 @@ else
 EmitSfx(LinArms[math.ceil(math.random(1,#i))][2],1026)
 EmitSfx(LinArms[math.ceil(math.random(1,#i))][1],1026)
 end
-	PlaySoundByUnitType(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
+	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
 	return true
 end
 
@@ -1327,7 +1327,7 @@ Spring.SetUnitAlwaysVisible(unitID,false)
 Spring.SetUnitBlocking (unitID,false,false,false)
 StartThread(iAmFlying)
 StartThread(TeleportCharge)
-	PlaySoundByUnitType(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
+	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
 	return true
 end
 

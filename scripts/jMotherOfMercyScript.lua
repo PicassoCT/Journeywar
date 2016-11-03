@@ -445,7 +445,7 @@ end
 local unitdef=Spring.GetUnitDefID(unitID)
 local soundfile="sounds/jMom/TractorDeployed.ogg"
 function emitTractorSFX()
-PlaySoundByUnitType(unitdef, soundfile, 0.5, 2500,1)
+PlaySoundByUnitDefID(unitdef, soundfile, 0.5, 2500,1)
 end
 
 ROCKDISTANCE=2000

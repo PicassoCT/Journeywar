@@ -9,7 +9,7 @@ TablesOfPiecesGroups={}
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 	if damage > 150 then
-		StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterScreach.ogg", 1, 25000, 1,0)
+		StartThread(PlaySoundByUnitDefID, unitdef, "sounds/jHunter/jHunterScreach.ogg", 1, 25000, 1,0)
 	end
 end
 center=piece"center"
@@ -65,7 +65,7 @@ function letsWalkAndTalk()
 			EndOfStrings=".wav"
 			result=StringOfStrings..appendMe
 			result=result..EndOfStrings
-			PlaySoundByUnitType(myDefID,result,0.5, 2000, 1,0)
+			PlaySoundByUnitDefID(myDefID,result,0.5, 2000, 1,0)
 
 			Sleep(4200)
 		end
@@ -160,7 +160,7 @@ end
 function script.FireWeapon1()	
 	Signal(SIG_AIM)
 	StartThread(aimPos,6)
-	StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterDartGun.ogg", 1, 5000, 1,0)
+	StartThread(PlaySoundByUnitDefID, unitdef, "sounds/jHunter/jHunterDartGun.ogg", 1, 5000, 1,0)
 	return true
 end
 
@@ -420,7 +420,7 @@ function moveStatemachine()
 				}
 			}
 			
-			if walkState == "walking" then StartThread(PlaySoundByUnitType, unitdef, "sounds/jHunter/jHunterWalk.ogg", 1, 5000, 1,0) end
+			if walkState == "walking" then StartThread(PlaySoundByUnitDefID, unitdef, "sounds/jHunter/jHunterWalk.ogg", 1, 5000, 1,0) end
 			while (walkState == "walking") do
 				walking()		
 				Sleep(10)

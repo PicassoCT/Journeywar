@@ -148,7 +148,7 @@ function movementAnimation()
 		end
 		Sleep(100)
 		if math.random(0,15)==5 then
-			PlaySoundByUnitType(fishDefID, "sounds/jfishswarm/jFishSwarmMoving.ogg",1, 1200, 1)
+			PlaySoundByUnitDefID(fishDefID, "sounds/jfishswarm/jFishSwarmMoving.ogg",1, 1200, 1)
 		end
 	end
 	

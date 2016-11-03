@@ -512,7 +512,7 @@ function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeT)
 	while true do
 		dice=math.random(1,#SoundNameTimeTable)
 		
-		PlaySoundByUnitType(unitdef, SoundNameTimeTable[dice].name,loudness, SoundNameTimeTable[dice].time, 1)
+		PlaySoundByUnitDefID(unitdef, SoundNameTimeTable[dice].name,loudness, SoundNameTimeTable[dice].time, 1)
 		Sleep(1000)
 	end
 end

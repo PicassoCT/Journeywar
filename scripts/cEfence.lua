@@ -65,12 +65,12 @@ boolImInCharge=boolischarged
 
 	if prevInCharge==false and boolImInCharge==true then
 		if maRa()==true then
-		StartThread(PlaySoundByUnitType,unitdef, "sounds/cEfence/Activate.ogg",0.9, 5000,1)
+		StartThread(PlaySoundByUnitDefID,unitdef, "sounds/cEfence/Activate.ogg",0.9, 5000,1)
 		else
-		StartThread(PlaySoundByUnitType,unitdef, "sounds/cEfence/chargingUp.wav",0.9, 70000,1)
+		StartThread(PlaySoundByUnitDefID,unitdef, "sounds/cEfence/chargingUp.wav",0.9, 70000,1)
 		end
 	elseif prevInCharge==true and boolImInCharge==false then
-	StartThread(PlaySoundByUnitType,unitdef, "sounds/cEfence/DeActivate.ogg",0.9, 5000,1)
+	StartThread(PlaySoundByUnitDefID,unitdef, "sounds/cEfence/DeActivate.ogg",0.9, 5000,1)
 	end
 
 

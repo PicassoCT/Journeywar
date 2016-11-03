@@ -389,7 +389,7 @@ local	Birds={}
 
 	local unitdef=Spring.GetUnitDefID(unitID)
 	function LiftOff(nr)
-	PlaySoundByUnitType(unitdef, "sounds/jwatchbird/Raven.ogg",1, 2000, 2)
+	PlaySoundByUnitDefID(unitdef, "sounds/jwatchbird/Raven.ogg",1, 2000, 2)
 
 		if Birds[nr].boolStillActive==true then
 				Turn(Birds[nr].Land[3],x_axis,math.rad(60),3)
@@ -505,7 +505,7 @@ end
 				ex,ey,ez=spGetUnitPos(ed)
 				ex,ey,ez=	ex-x,ey-y,ez-z
 				dist=math.sqrt(ex*ex+ey*ey+ez*ez)
-					if dist < 1024 then PlaySoundByUnitType(defid,"sounds/jwatchbird/Falcon.wav",1.0, 20000,2) end
+					if dist < 1024 then PlaySoundByUnitDefID(defid,"sounds/jwatchbird/Falcon.wav",1.0, 20000,2) end
 				
 				end
 			Sleep(1000)

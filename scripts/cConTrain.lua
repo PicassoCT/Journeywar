@@ -484,7 +484,7 @@ function playThatFunkyHorn()
 	SetSignalMask(SIG_RAZOR)
 	Sleep(500)
 	boolRazorSoundInUse=true
-	PlaySoundByUnitType(contrainDef, "sounds/conTrain/razortrain_horn1.wav",0.9,10000,1,0)
+	PlaySoundByUnitDefID(contrainDef, "sounds/conTrain/razortrain_horn1.wav",0.9,10000,1,0)
 	Sleep(5000)
 	boolRazorSoundInUse=false
 	
@@ -571,7 +571,7 @@ function goTooKillThemAllPicaMon()
 			Spring.SetUnitNoDraw(trainFullDeathID,true)
 			Spring.UnitScript.DropUnit(trainFullDeathID)
 			--Explode the GorePieces with no effects
-			PlaySoundByUnitType(contrainDef, "sounds/conTrain/conbump.wav",0.5,10000,1,0)
+			PlaySoundByUnitDefID(contrainDef, "sounds/conTrain/conbump.wav",0.5,10000,1,0)
 			for i=1,7,1 do
 				Show(ctgoresub[i])
 				Explode(ctgoresub[i], SFX.FALL )
@@ -1523,16 +1523,16 @@ function soundOSLoop()
 	while true do
 		
 		if getConstantMove()==true then
-			PlaySoundByUnitType(contrainDef, "sounds/conTrain/razor_train_wheels_loop2.wav",0.35,10000,1,0)
+			PlaySoundByUnitDefID(contrainDef, "sounds/conTrain/razor_train_wheels_loop2.wav",0.35,10000,1,0)
 			Sleep(4000)
 			z=math.random(0,12)
 			if z==9 then
-				PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_freight_loop2.wav",0.35,10000,1,0)
+				PlaySoundByUnitDefID(contrainDef, "sounds/conTrain/train_freight_loop2.wav",0.35,10000,1,0)
 				Sleep(5000)
 			end
 			if z==4 then
 				
-				PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_freight_loop1.wav",0.35,10000,1,0)
+				PlaySoundByUnitDefID(contrainDef, "sounds/conTrain/train_freight_loop1.wav",0.35,10000,1,0)
 				Sleep(19000)
 			end
 		else
@@ -1541,7 +1541,7 @@ function soundOSLoop()
 			while zZzZzZ > 0 and getConstantMove()== false do Sleep(partTime); zZzZzZ = zZzZzZ-partTime end
 			if getConstantMove()==false then
 				--he is snorring, but it could be sleep(apnoe) he should see the thread-doctor
-				PlaySoundByUnitType(contrainDef, "sounds/conTrain/train_idle.wav",0.05,10000,1,0)
+				PlaySoundByUnitDefID(contrainDef, "sounds/conTrain/train_idle.wav",0.05,10000,1,0)
 			end
 			zZzZzZ=math.random(2000,17000)		
 			while zZzZzZ > 0 and getConstantMove()== false do Sleep(partTime); zZzZzZ = zZzZzZ-partTime end

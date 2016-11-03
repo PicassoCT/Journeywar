@@ -2187,7 +2187,7 @@ function vardump(value, depth, key)
 	end
 	
 	--> Play a soundfile only by unittype
-	function PlaySoundByUnitType(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
+	function PlaySoundByUnitDefID(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
 		if not unitdef then return false end
 		if predelay and predelay > 0 then Sleep(predelay) end
 		

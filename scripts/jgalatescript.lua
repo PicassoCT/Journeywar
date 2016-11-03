@@ -224,7 +224,7 @@ nlwalkAnimation= function (PivotPoints,pieces)
 	Turn(pieces["Leg4"],2,math.rad(0),0.8 )	
 	
 	--Backward
-	StartThread(PlaySoundByUnitType,unitDefID,"sounds/jgalatea/jGalateaFootstep.ogg",0.5, 1000, 1,0)
+	StartThread(PlaySoundByUnitDefID,unitDefID,"sounds/jgalatea/jGalateaFootstep.ogg",0.5, 1000, 1,0)
 	--UpAndDown
 	Move(PivotPoints[1],2,0,3.5)
 	Turn(pieces["Leg1"],3,math.rad(-11),0.2 )
@@ -373,7 +373,7 @@ function InWaterFeedingFrenzy()
 				if math.random(1,5)==3 then
 					
 					Spring.SpawnCEG("jgalateatend",x,-5,z,0,1,0,0)
-					StartThread(PlaySoundByUnitType,unitDefID,"sounds/jgalatea/jgalateafeeding.ogg",0.5, 4000, 1,0)
+					StartThread(PlaySoundByUnitDefID,unitDefID,"sounds/jgalatea/jgalateafeeding.ogg",0.5, 4000, 1,0)
 				end
 			end
 			Sleep(500)
@@ -460,7 +460,7 @@ function resetGal()
 end
 
 function script.FireWeapon1()	
-	StartThread(PlaySoundByUnitType,unitDefID,"sounds/jgalatea/jGalateaGlueGun.ogg",0.5, 1000, 1,0)
+	StartThread(PlaySoundByUnitDefID,unitDefID,"sounds/jgalatea/jGalateaGlueGun.ogg",0.5, 1000, 1,0)
 	
 	StartThread(resetGal)
 	return true

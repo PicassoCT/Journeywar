@@ -74,7 +74,7 @@ unitdef = Spring.GetUnitDefID(unitID)
 boolSoundOnlyOnce=false
 boolPlasmaReady=false
 function playChareUpSound()
-	StartThread(PlaySoundByUnitType,unitdef, "sounds/cart/lnduo.wav",1, 5000, 1,0)
+	StartThread(PlaySoundByUnitDefID,unitdef, "sounds/cart/lnduo.wav",1, 5000, 1,0)
 	Sleep(5000)
 	boolPlasmaReady=true
 end

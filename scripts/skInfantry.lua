@@ -245,7 +245,7 @@ function skinSound()
 	toConcat=oneOrTwo..".wav"
 	toConcat="sounds/skinfantry/skInfantry"..toConcat
 	
-	PlaySoundByUnitType(skinDef, toConcat,1, 2000, 1)
+	PlaySoundByUnitDefID(skinDef, toConcat,1, 2000, 1)
 end
 
 function walk()

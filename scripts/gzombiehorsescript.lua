@@ -714,7 +714,7 @@ function walk()
 	reset(kuttel,3)
 	reset(center,3)
 	if stopCounter <= 0 then
-	StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/gzombiehores.ogg",0.5, 2000, 1,0)
+	StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/gzombiehores.ogg",0.5, 2000, 1,0)
 	stopCounter= math.random(5,12)
 	end
 	

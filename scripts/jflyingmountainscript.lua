@@ -129,7 +129,7 @@ end
 local unitdef=Spring.GetUnitDefID(unitID)
 local soundfile="sounds/jMom/jMountain.ogg"
 function riseAnimation()
-	PlaySoundByUnitType(unitdef, soundfile,0.9, 2000, 1)
+	PlaySoundByUnitDefID(unitdef, soundfile,0.9, 2000, 1)
 	downUnderVal=-200
 	speed=3
 	Move(center,y_axis,downUnderVal,0,true)
@@ -153,7 +153,7 @@ function riseAnimation()
 		Move(center,y_axis,math.random(-5,5),math.random(0.1,1.2))
 		WaitForMove(center,y_axis)
 		if math.random(1,42)==32 then
-			PlaySoundByUnitType(unitdef, soundfile,0.9, 2000, 1)
+			PlaySoundByUnitDefID(unitdef, soundfile,0.9, 2000, 1)
 		end
 	end
 end

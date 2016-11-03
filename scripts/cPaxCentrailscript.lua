@@ -373,7 +373,7 @@ function OhLawd()
 	
 	if boolBusy==false and TableOfSoundPathStrings[counter] and TableOfSoundPathStrings[counter].path and TableOfSoundPathStrings[counter].time then
 		boolBusy=true
-		StartThread(PlaySoundByUnitType,unitdefID,TableOfSoundPathStrings[counter].path,1,TableOfSoundPathStrings[counter].time,1)
+		StartThread(PlaySoundByUnitDefID,unitdefID,TableOfSoundPathStrings[counter].path,1,TableOfSoundPathStrings[counter].time,1)
 		Sleep(TableOfSoundPathStrings[counter].time)
 		counter=(counter%(5))+1
 		boolBusy=false
@@ -386,9 +386,9 @@ end
 numberTable={"one","two","three","four","five"}
 function NotYetProperlyMotivated()
 	
-	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/number.ogg",1,1000,1)
-	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/"..(numberTable[math.random(1,#numberTable)])..".ogg",1,1000,1,1002)
-	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/motivation.ogg",1,14000,1,2005)
+	StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/number.ogg",1,1000,1)
+	StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/"..(numberTable[math.random(1,#numberTable)])..".ogg",1,1000,1,1002)
+	StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/motivation.ogg",1,14000,1,2005)
 end
 SIG_IDLE=8
 
@@ -620,13 +620,13 @@ function cExpReloader()
 		if boolExponentialGunReloaded==false then
 			
 			if ReloadTime > 1128 then
-				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/singleShotExponential.ogg",1,500,2,0)
+				StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/singleShotExponential.ogg",1,500,2,0)
 			elseif ReloadTime <= 1128 and ReloadTime > 978 then
-				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/TenShotsPerSecond.ogg",1,1100,2,0)
+				StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/TenShotsPerSecond.ogg",1,1100,2,0)
 			elseif ReloadTime <= 978 and ReloadTime > 512 then
-				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/TwenShotsPerSecond.ogg",1,2400,2,0)
+				StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/TwenShotsPerSecond.ogg",1,2400,2,0)
 			elseif ReloadTime <= 512 and ReloadTime > 0 then
-				StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/MaxShotsPerSecond.ogg",1,2400,2,0)
+				StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/MaxShotsPerSecond.ogg",1,2400,2,0)
 			end
 			Sleep(ReloadTime)
 			Exponent=Exponent+1
@@ -660,7 +660,7 @@ end
 
 
 function script.FireWeapon1()	
-	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
+	StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
 	return WeaponTable[1].fireweapon()
 end
 
@@ -705,7 +705,7 @@ end
 
 
 function script.FireWeapon3()	
-	StartThread(PlaySoundByUnitType,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
+	StartThread(PlaySoundByUnitDefID,unitdefID,"sounds/cPaxCentrail/LineGunFire.ogg",5000,1,1)
 	return WeaponTable[3].fireweapon()
 end
 

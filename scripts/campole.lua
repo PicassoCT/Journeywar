@@ -28,15 +28,15 @@ function speachHolder()
 			if boolRessourceConverting == true then	
 				speach=math.random(0,9)
 				if speach== 1 then
-					PlaySoundByUnitType(unitDefID,"sounds/ccampole/speecha.wav",1,9000,0.1)
+					PlaySoundByUnitDefID(unitDefID,"sounds/ccampole/speecha.wav",1,9000,0.1)
 				elseif speach == 2 then
-					PlaySoundByUnitType(unitDefID,"sounds/ccampole/speechb.wav",1,9000,0.1)
+					PlaySoundByUnitDefID(unitDefID,"sounds/ccampole/speechb.wav",1,9000,0.1)
 				elseif speach == 3 then
-					PlaySoundByUnitType(unitDefID,"sounds/ccampole/speechc.wav",1,9000,0.1)
+					PlaySoundByUnitDefID(unitDefID,"sounds/ccampole/speechc.wav",1,9000,0.1)
 				elseif speach == 4 then
-					PlaySoundByUnitType(unitDefID,"sounds/ccampole/speechd.wav",1,9000,0.1)
+					PlaySoundByUnitDefID(unitDefID,"sounds/ccampole/speechd.wav",1,9000,0.1)
 				elseif speach ==5 then
-					PlaySoundByUnitType(unitDefID,"sounds/ccampole/speeche.wav",1,9000,0.1)
+					PlaySoundByUnitDefID(unitDefID,"sounds/ccampole/speeche.wav",1,9000,0.1)
 					
 				end
 			end

@@ -111,7 +111,7 @@ zombieDefID= Spring.GetUnitDefID(unitID)
 		if hitPoints < dreiviertelHitpoints then
 				 if boolOneTime==true then
 					EmitSfx(ztorso,1024)
-					PlaySoundByUnitType(zombieDefID,"sounds/zombie/zombiemoan.wav",0.5, 3000, 1,0)
+					PlaySoundByUnitDefID(zombieDefID,"sounds/zombie/zombiemoan.wav",0.5, 3000, 1,0)
 
 				 boolOneTime=false
 				 loseYourself=math.floor(math.random(0,1))
@@ -124,13 +124,13 @@ zombieDefID= Spring.GetUnitDefID(unitID)
 													Explode(zRTent,  SFX.NO_HEATCLOUD + SFX.FALL)
 													EmitSfx(zRTent,1024)
 													Hide(zRTent)
-													StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 3000, 1,0)
+													StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 3000, 1,0)
 													end						
 													if ID_DICE == 3 or ID_DICE ==6 or ID_DICE == 0 or ID_DICE == 1 then
 													Explode(zRArm,  SFX.NO_HEATCLOUD+  SFX.FALL)
 														EmitSfx(zRArm,1024)
 													Hide(zRArm)
-													StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 3000, 1,0)
+													StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 3000, 1,0)
 													end
 											 else   			 --left arm
 																if ID_DICE == 3 or ID_DICE == 6 or ID_DICE == 4 or ID_DICE == 8 then
@@ -142,7 +142,7 @@ zombieDefID= Spring.GetUnitDefID(unitID)
 																Explode(zLArm, SFX.NO_HEATCLOUD +  SFX.FALL)
 																EmitSfx(zLArm,1024)
 																Hide(zLArm)
-																StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 3000, 1,0)
+																StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 3000, 1,0)
 																end
 															 
 											 end
@@ -154,7 +154,7 @@ zombieDefID= Spring.GetUnitDefID(unitID)
 		if hitPoints < halfHitpoints then
 		
 			if boolFirstTime == true then
-			StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiemoan2.wav",0.5, 3000, 1,0)
+			StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiemoan2.wav",0.5, 3000, 1,0)
 
 			EmitSfx(ztorso,1024)
 			   boolFirstTime=false
@@ -556,7 +556,7 @@ function buildCrawler()
 EmitSfx(ztorso,1024)
 boolCrawler=true
 itBits=math.random(0,1)
-StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 2000, 1,0)
+StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 2000, 1,0)
 
 --crawler
 	if itBits == 1 then
@@ -758,7 +758,7 @@ end
 
 function script.FireWeapon1()	
 if boolCrawler== false then
-		StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombieattack.wav",0.5, 2000, 1,0)
+		StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombieattack.wav",0.5, 2000, 1,0)
 
 		Turn(zLArm,x_axis,math.rad(-123),34)
 		Turn(zLArm,y_axis,math.rad(0),22)
@@ -922,7 +922,7 @@ rand=math.random(-25,25)
 		Sleep(450)
 dice=math.random(0,1)
 	if dice == 1 then
-			StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 2000, 1,0)
+			StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 2000, 1,0)
 			
 			Explode(zHead,SFX.FALL+SFX.NO_HEATCLOUD)
 		
@@ -964,7 +964,7 @@ dice=math.random(0,1)
 				end
 				
 if dice == 0 then	
-		StartThread(PlaySoundByUnitType,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 2000, 1,0)
+		StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/zombiedead2.wav",0.5, 2000, 1,0)
 
 		Explode(ztorso,SFX.FALL+SFX.NO_HEATCLOUD)
 		EmitSfx(ztorso,1024)

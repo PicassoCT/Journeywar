@@ -348,7 +348,7 @@ function harvestThoseNearby()
 		--get all in Range
 		victimT=getAllInCircle( px,pz,360,unitID)
 		featureT=getAllFeatureNearUnit(unitID, 360)
-		StartThread(	 PlaySoundByUnitType,unitdef, soundfile,1.0, 10000, 1,0)
+		StartThread(	 PlaySoundByUnitDefID,unitdef, soundfile,1.0, 10000, 1,0)
 		if victimT then
 			victimT,Cache = filterOutUnitsOfType(victimT, UnitTypeTable,Cache)
 		end

@@ -27,7 +27,7 @@ if y==1 then
 	rand=math.random(1,19)
 	resultString=FourString..rand
 	resultString=resultString..SecondString
-	PlaySoundByUnitType(unitdef, resultString,1.0, 3500, 1)
+	PlaySoundByUnitDefID(unitdef, resultString,1.0, 3500, 1)
 
 
 	end
@@ -40,9 +40,9 @@ function playBattleLoop()
 	if maRa()==true then
 	decDicer=math.random(0,1)
 		if decDicer==1 then
-		PlaySoundByUnitType(unitdef, "sounds/gCrubbleHeap/battle_loop1.wav",1.0, 30000, 1)
+		PlaySoundByUnitDefID(unitdef, "sounds/gCrubbleHeap/battle_loop1.wav",1.0, 30000, 1)
 		else
-		PlaySoundByUnitType(unitdef, "sounds/gCrubbleHeap/battle_loop2.wav",1.0, 30000, 1)
+		PlaySoundByUnitDefID(unitdef, "sounds/gCrubbleHeap/battle_loop2.wav",1.0, 30000, 1)
 		end
 	end
 Sleep(30000)

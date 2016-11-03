@@ -149,7 +149,7 @@ function script.Killed()
 	end
 	
 	index=math.ceil(math.random(1,3))
-	StartThread(PlaySoundByUnitType,Spring.GetUnitDefID(unitID), "sounds/goildrum/oilexplo"..index..".ogg",1, 5000, 1)
+	StartThread(PlaySoundByUnitDefID,Spring.GetUnitDefID(unitID), "sounds/goildrum/oilexplo"..index..".ogg",1, 5000, 1)
 	
 	
 	

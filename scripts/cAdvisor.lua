@@ -87,7 +87,7 @@ numbers={["1"]=true,["2"]=true,["3"]=true,["4"]=true,["5"]=true,["6"]=true,["7"]
 advisorDef=Spring.GetUnitDefID(unitID)
 function reportForNeuralEnhancement()
 strings="Citizen Nr:"
-PlaySoundByUnitType(advisorDef, "sounds/cadvisor/advisorreportA.ogg",1, 1000, 1)
+PlaySoundByUnitDefID(advisorDef, "sounds/cadvisor/advisorreportA.ogg",1, 1000, 1)
 
 unitidstring=""..unitID..""
 for i=1,string.len(unitidstring) do
@@ -99,13 +99,13 @@ for i=1,string.len(unitidstring) do
 	strings=strings..c
 	success=false
 		while success==false do
-		success=PlaySoundByUnitType(advisorDef, "sounds/numbers/"..c..".ogg",1, 650, 1)
+		success=PlaySoundByUnitDefID(advisorDef, "sounds/numbers/"..c..".ogg",1, 650, 1)
 		Sleep(500)
 		end
 	end
 
 end
-PlaySoundByUnitType(advisorDef, "sounds/cadvisor/advisorreportB.ogg",1, 25000, 1)
+PlaySoundByUnitDefID(advisorDef, "sounds/cadvisor/advisorreportB.ogg",1, 25000, 1)
 Spring.Echo(strings.." please report to administration for a performance review")	
 end
 

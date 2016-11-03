@@ -327,7 +327,7 @@ operaDefID=Spring.GetUnitDefID(unitID)
 
 function playOperaSound()
 path= "sounds/cOperaT/opera"..enumerate..".ogg"
-succesfull= PlaySoundByUnitType(operaDefID,path,0.5, 10000, 1,0)
+succesfull= PlaySoundByUnitDefID(operaDefID,path,0.5, 10000, 1,0)
 	if succesfull == true then
 	enumerate= enumerate%6 +1
 	end

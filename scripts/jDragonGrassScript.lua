@@ -259,7 +259,7 @@ function PlayInjectSoundFiles()
 	if maRa()==true then
 		filename="sounds/jDragonGrass/jdragongrass"..(math.random(1,5))..".ogg"
 	end
-	StartThread(PlaySoundByUnitType, unitdef, filename,0.9, 5000, 1)
+	StartThread(PlaySoundByUnitDefID, unitdef, filename,0.9, 5000, 1)
 end
 
 

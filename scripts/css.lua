@@ -33,7 +33,7 @@ function letsWalkAndTalk()
 			EndOfStrings=".wav"
 			result=StringOfStrings..appendMe
 			result=result..EndOfStrings
-			PlaySoundByUnitType(myDefID,result,0.5, 2000, 1,0)
+			PlaySoundByUnitDefID(myDefID,result,0.5, 2000, 1,0)
 
 			Sleep(4200)
 		end

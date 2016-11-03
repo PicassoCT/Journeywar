@@ -133,7 +133,7 @@ crabunitdef=Spring.GetUnitDefID(unitID)
 function MoveAnimation()
 	while true do
 		if 	( boolMoving ==true ) and boolDeployed==false then
-			StartThread(PlaySoundByUnitType,crabunitdef, movsoundfile, 1, 2500,1)
+			StartThread(PlaySoundByUnitDefID,crabunitdef, movsoundfile, 1, 2500,1)
 			--Spring.Echo("WalkingState")
 			while (boolMoving ==true ) and boolDeployed==false do
 				walkAnim(1500)
@@ -141,7 +141,7 @@ function MoveAnimation()
 			end
 			
 		elseif (boolDeployWanted==true and boolMoving==false) or boolDeployed == true then
-			StartThread(PlaySoundByUnitType,crabunitdef, deploysoundfile, 1, 5000,1)
+			StartThread(PlaySoundByUnitDefID,crabunitdef, deploysoundfile, 1, 5000,1)
 			--Spring.Echo("AllreadyDeploayedState")
 			while (boolDeployWanted==true and boolMoving==false) or boolDeployed == true do 
 				Sleep(100)

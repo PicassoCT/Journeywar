@@ -48,6 +48,7 @@ function script.Create()
 	end
 	StartThread(sunLifeTimeControll)
 	StartThread(damageDealer)
+	StartThread(playSoundTillYouDie)
 end
 unitDefID= Spring.GetUnitDefID(unitID)
 
@@ -237,6 +238,24 @@ function meltLandscape(x,y,z,timeCounter)
 	end
 	
 end
+function playSoundTillYouDie()
+myDefID=Spring.GetUnitDefID(unitID)
+Sleep(350)
+Spring.PlaySoundFile("sounds/jsunship/ignite.ogg", 1)
+timeLoudness=0
+	while true  do 
+		
+		StartThread(PlaySoundByUnitDefID,myDefID,"sounds/jsunship/sunBurning"..math.ceil(math.random(1,3))..".ogg",1, 14000, 1,0)
+		timeLoudness=timeLoudness+ math.pi/4
+		Sleep(5000)
+	end
+
+
+
+end
+
+
+
 
 function init()
 	spinT(TablesOfPiecesGroups["Sun"],y_axis,12, -122)

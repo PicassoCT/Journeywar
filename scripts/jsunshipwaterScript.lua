@@ -19,7 +19,7 @@ waterPivot= piece"waterPivot"
 diamond1= piece"diamond1"
 diamond2= piece"diamond2"
 
-local SIG_FORCELOOP= 2
+ SIG_FORCELOOP= 2
 local TablesOfPiecesGroups={}
 MAXFORCELOOP=7
 boolSunshipActivateable=false
@@ -37,6 +37,7 @@ function script.Create()
 	hideAllNonVitalPieces(TablesOfPiecesGroups)	
 	StartThread(CrystallAnimations)	
 	StartThread(spinCore)
+	StartThread(playSoundTillYouDie)
 	
 end
 --resets the Units pieces and shown pieces 
@@ -49,6 +50,27 @@ function init()
 	Move(center,y_axis,0,0)
 
 end
+
+function playSoundTillYouDie()
+myDefID=Spring.GetUnitDefID(unitID)
+timeLoudness=0
+	while boolChargeUp == false do 
+		StartThread(PlaySoundByUnitDefID,myDefID,"sounds/jsunship/sunShipGlass.ogg",(math.sin(timeLoudness)+2)/2, 5000, 1,0)
+		timeLoudness=timeLoudness+ math.pi/4
+		Sleep(5000)
+	end
+	Spring.PlaySoundFile("sounds/jsunship/startSun.ogg", 1.0)
+	while boolChargeUp == true do 
+		StartThread(PlaySoundByUnitDefID,myDefID,"sounds/jsunship/waterSuck.ogg",(math.sin(timeLoudness)+2)/2, 5000, 1,0)
+		timeLoudness=timeLoudness+ math.pi/4
+		Sleep(5000)
+	end
+		Spring.PlaySoundFile("sounds/jsunship/ignite.ogg", 1.0)
+
+
+end
+
+
 
 --animatin to spin the core
 function spinCore()
@@ -162,6 +184,7 @@ function showWater()
 end
 
 -- Deploy Sunship into a sun
+boolChargeUp=false
 function InitializeSunShip()
 	Spin(diamond1,y_axis,math.rad(42))
 	Spin(diamond2,y_axis,math.rad(-42))
@@ -172,6 +195,7 @@ function InitializeSunShip()
 	WMove(waterPivot,y_axis, (-250),0)
 	
 	while chargeUp < 100 do
+	boolChargeUp=true
 		Move(center,y_axis, (chargeUp*2.5), 2.5)
 		Move(waterPivot,y_axis, ((-250)+(chargeUp*2.5)), 5.5)
 		x,y,z=Spring.GetUnitPiecePosDir(unitID,waterPivot)
@@ -233,6 +257,7 @@ Spring.SetUnitNanoPieces(unitID,{ center})
 -- Animate the force Rotator Loops
 function StartForceRotators(handedDirection)
 	direction= handedDirection or 1
+	Signal(SIG_FORCELOOP)
 	SetSignalMask(SIG_FORCELOOP)
 	for i=1, MAXFORCELOOP,1 do
 		Turn(TablesOfPiecesGroups["lopRot"][i],y_axis,math.random(-math.pi,math.pi),0,true)

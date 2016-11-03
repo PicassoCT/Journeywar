@@ -258,15 +258,15 @@ function walk()
 		if timeSinceLastChatter== 0 and math.random(0,800) ==100 then
 			dec= math.random(0,2)== 1
 			if dec == 1 then
-				StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
+				StartThread(PlaySoundByUnitDefID,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
 				timeSinceLastChatter=19000
 				StartThread(reduceTimeSinceLastChatter)
 			elseif dec == 2 then			
-				StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
+				StartThread(PlaySoundByUnitDefID,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
 				timeSinceLastChatter=19000
 				StartThread(reduceTimeSinceLastChatter)
 			else
-				StartThread(PlaySoundByUnitType,bgdefID,movingSounds[math.floor(math.random(1,#movingSounds))],0.5, 2000, 1,0)
+				StartThread(PlaySoundByUnitDefID,bgdefID,movingSounds[math.floor(math.random(1,#movingSounds))],0.5, 2000, 1,0)
 				timeSinceLastChatter=19000
 				StartThread(reduceTimeSinceLastChatter)
 			end
@@ -328,10 +328,10 @@ function counter()
 	Sleep(napTime)
 	oneInThreeHundred=math.random(0,35)
 	if oneInThreeHundred == 5 then
-		StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
+		StartThread(PlaySoundByUnitDefID,bgdefID,"sounds/bgmtw/bgAff.wav",0.5, 2000, 1,0)
 	end
 	if oneInThreeHundred == 7 then
-		StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
+		StartThread(PlaySoundByUnitDefID,bgdefID,"sounds/bgmtw/bgAff2.wav",0.5, 2000, 1,0)
 	end
 	
 	
@@ -666,7 +666,7 @@ function script.Killed(recentDamage, maxHealth)
 	killinTime(recentDamage,maxHealth)
 	
 	if math.random(0,12)==7 then
-			PlaySoundByUnitType(bgdefID,killedSounds[math.floor(math.random(1,#killedSounds))],0.5, 2000, 1,0)
+			PlaySoundByUnitDefID(bgdefID,killedSounds[math.floor(math.random(1,#killedSounds))],0.5, 2000, 1,0)
 	end	
 	
 	return 1 
@@ -687,10 +687,10 @@ function soundStart()
 		Sleep(500)
 		if boolShieldDown==true then
 			boolShieldDown=false
-			StartThread(PlaySoundByUnitType,bgdefID,"sounds/bgmtw/shielddrop.ogg",1500,1,1)
+			StartThread(PlaySoundByUnitDefID,bgdefID,"sounds/bgmtw/shielddrop.ogg",1500,1,1)
 			Sleep(1600)
 			if timeSinceLastChatter== 0 and math.random(0,4)==1 then
-			StartThread(PlaySoundByUnitType,bgdefID,shieldSounds[math.floor(math.random(1,#shieldSounds))],0.5, 2000, 1,0)
+			StartThread(PlaySoundByUnitDefID,bgdefID,shieldSounds[math.floor(math.random(1,#shieldSounds))],0.5, 2000, 1,0)
 			timeSinceLastChatter=19000
 			StartThread(reduceTimeSinceLastChatter)
 			end
@@ -702,7 +702,7 @@ end
 
 function script.HitByWeapon( x, z, weaponDefID, damage )
 	if damage > 15 and math.random(0,42)== 22 then
-	StartThread(PlaySoundByUnitType,bgdefID,attackedSounds[math.floor(math.random(1,#attackedSounds))],0.5, 2000, 1,0)
+	StartThread(PlaySoundByUnitDefID,bgdefID,attackedSounds[math.floor(math.random(1,#attackedSounds))],0.5, 2000, 1,0)
 	end
 return damage
 end

@@ -23,7 +23,7 @@ foamsphere2=piece"foamsphere2"
 foamsphere3=piece"foamsphere3"
 spherespin= piece"spherespin"
 
-g_AddOnRate= 0.00125
+g_AddOnRate= 0.005
 
 rval = function () 
 	val= math.random(-35,35) 
