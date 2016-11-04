@@ -122,14 +122,11 @@ function playSoundInOrder(soundInOrderTable,name)
 			
 		else
 		if name then
-			if not GG.soundInOrderTable then 
-			GG.soundInOrderTable={}
-			end
+			if  GG.soundInOrderTable == nil then GG.soundInOrderTable={} end
 		
-			if not GG.soundInOrderTable[name] or not GG.soundInOrderTable[name].signal then
-			GG.soundInOrderTable[name]={}
-			GG.soundInOrderTable[name].signal=true
-			end
+			if  GG.soundInOrderTable[name] == nil then 	GG.soundInOrderTable[name]={} end
+			if   GG.soundInOrderTable[name].signal == nil then	GG.soundInOrderTable[name].signal = true end
+			
 			while GG.soundInOrderTable[name].signal==true do
 				if soundInOrderTable[i].predelay then 	Sleep(soundInOrderTable[i].predelay) end
 				if type(soundInOrderTable[i].sound)=="table" then

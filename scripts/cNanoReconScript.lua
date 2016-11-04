@@ -130,6 +130,7 @@ end
 
 function swarmTurn (group,groupindex)
 	if allReadyInAction[groupindex]== true then Spring.Echo("Group"..groupindex .." allready in action"); return end
+	if not groupindex or not groupindex then return end
 	allReadyInAction[groupindex]=true
 	--actual animation code
 	Hide(group.swarm)

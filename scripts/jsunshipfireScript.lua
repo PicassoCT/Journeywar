@@ -288,29 +288,9 @@ function script.Killed(recentDamage,_)
 end
 
 
-----aimining & fire weapon
-function script.AimFromWeapon1() 
-	return aimpiece 
-end
 
 
 
-function script.QueryWeapon1() 
-	return aimpiece
-end
-
-function script.AimWeapon1( Heading ,pitch)	
-	--aiming animation: instantly turn the gun towards the enemy
-	
-	return true
-	
-end
-
-
-function script.FireWeapon1()	
-	
-	return true
-end
 
 
 
