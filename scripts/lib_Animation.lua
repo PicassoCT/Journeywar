@@ -1510,7 +1510,7 @@ end
 
 function reset(piecename,speed,boolWaitForIT, boolIstantUpdate)
 	if not piecename then return end
-	if type(piecename) != "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got ".. piecename)
+	if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got ".. piecename) end
 	bIstantUpdate = boolIstantUpdate or true
 	Turn(piecename,x_axis,0,speed)
 	Turn(piecename,y_axis,0,speed)
