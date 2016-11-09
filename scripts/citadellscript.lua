@@ -136,12 +136,12 @@ boolBloodyVirginMary=true
 local spGetUnitPiecePosition=Spring.GetUnitPiecePosition
 
 function darkEnergyReactor()
-	time=0
+	times=0
 	PIE=3.14159/60
 	med=0
 	while true do
-		time=(time+PIE)%6.28318530
-		val=math.ceil(((math.sin(time)*75)+med)/2)
+		times=(times+PIE)%6.28318530
+		val=math.ceil(((math.sin(times)*75)+med)/2)
 		med=val
 		if val > 0 then 
 			Spring.AddUnitResource(unitID,"e",val)
@@ -1087,7 +1087,7 @@ function shieldDraw()
 		end
 		
 		while boolShield==true do
-		
+
 	
 			
 			--Repulse Units from outside

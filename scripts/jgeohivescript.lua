@@ -135,9 +135,10 @@ function spawner()
 					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
 					table.insert(monsterTable,spawnedUnit)
 				end
-			Sleep(10000)
+
 			Spring.SetUnitBlocking(unitID,true)
 		end
+		Sleep(10000)
 	end
 end
 

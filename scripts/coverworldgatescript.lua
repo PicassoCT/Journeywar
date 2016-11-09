@@ -136,9 +136,9 @@ function createUnitFunction(unitTypeString)
 	--Add impulse depending upon building direction..
 	if spawnedID ~= nil then
 		dx,dy,dz=Spring.GetUnitDirection(unitID)
-		max=math.max(dx,dy,dz)
-		dx=dx/max
-		dz=dz/max
+		lmax=math.max(math.abs(dx),math.abs(math.max(dy,dz)))
+		dx=dx/lmax
+		dz=dz/lmax
 		dx=dx*31
 		dz=dz*31
 		Spring.AddUnitImpulse(spawnedID,dx,3,dz)

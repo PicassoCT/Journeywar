@@ -21,10 +21,16 @@ diamond2= piece"diamond2"
 
 TablesOfPiecesGroups={}
 cCircleRange= 1200
+dragInRange= 1500
+liftUpRange= 900
 maxDepth = 800
 
+_,maxHP=Spring.GetUnitHealth(unitID)
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+RemainLifeTime=RemainLifeTime - math.floor(damage/100)
+return damage
 end
+
 LifeTimeMax= 80
 SunyCycleMax= 7
 center=piece"center"
@@ -49,8 +55,88 @@ function script.Create()
 	StartThread(sunLifeTimeControll)
 	StartThread(damageDealer)
 	StartThread(playSoundTillYouDie)
+	StartThread(constDistanceDrag)
 end
-unitDefID= Spring.GetUnitDefID(unitID)
+
+function constDistanceDrag()
+	it=0
+	while true do
+	it=(it+50)%200
+	--Units
+				px,py,pz=Spring.GetUnitPosition(unitID)
+				T=getAllInCircle(px,pz,unitID)
+				myDefID=Spring.GetUnitDefID(unitID)
+				
+				if T then
+				process(T,
+						function(id) if Spring.ValidUnitID(id)==true then return id end end,
+						function (id)
+							defID= Spring.GetUnitDefID(id)
+							if UnitDefs[defID].isBuilding== false then
+								idID =Spring.GetUnitDefID(id)
+
+								if idID ==UnitDefNames["jdarkgate"].id and GetUnitDistance(id,unitID) < 100  then
+									Spring.DestroyUnit(id,true,false)
+									Spring.DestroyUnit(unitID,true,false)
+								end
+								
+								if id ~= unitID and idID ~= UnitDefNames["jsunshipfire"].id then 
+									return id 
+								end 
+							end
+						end,		
+						function(id)
+							if type(id)=="number" then
+							dist=GetUnitDistance(id,unitID) 
+							
+								if dist and dist < dragInRange and dist > liftUpRange then
+									ix,iy,iz= Spring.GetUnitPosition(id)
+									vec= makeVector(px- ix,py-iy,pz-iz)
+									vec= normVector(vec) 
+									mass =Spring.GetUnitMass(id)
+									vec= mulVector(vec,(1-((dist-liftUpRange)/(dragInRange-liftUpRange))))
+									Spring.AddUnitImpulse(id,vec.x*(1/mass),vec.y*(1/mass),vec.z*(1/mass))		
+									if it == 0 then
+									Spring.SpawnCEG("jsunshipburnup",ix,iy+10,iz,vec.x*-1,vec.y*-1,vec.z*-1,10,0)							
+									end
+								end
+							end
+						
+							if dist and dist < liftUpRange then
+								StartThread(moveTowards,id,50, 10,  px,py,pz,1-(dist/liftUpRange))
+							end
+						end
+						)
+				end
+				
+	Sleep(50)			
+	end
+
+end
+
+function moveTowards(id, times,resolution, px,py,pz, percentageCompleted)
+	if id then
+
+	Spring.MoveCtrl.Enable(id)
+
+			
+		for i=1,times,resolution do
+			ox,oy,oz= Spring.GetUnitPosition(id)
+			if ox then
+			ox = ox*(1-percentageCompleted)+ px *percentageCompleted
+			oy = oy*(1-percentageCompleted)+ py *percentageCompleted + (percentageCompleted*100)
+			oz = oz*(1-percentageCompleted)+ pz *percentageCompleted
+
+			Spring.MoveCtrl.SetPosition(id,ox, oy,oz)
+			end
+			Sleep(resolution)
+		end
+					
+		
+	Spring.MoveCtrl.Disable(id)
+	end
+end
+
 
 function damageDealer()
 	timeCounter=0
@@ -268,9 +354,10 @@ function showSun(index)
 end
 
 RemainLifeTime=LifeTimeMax
+SunyCycleMax=1
 function sunLifeTimeControll()
 	init()
-	SunyCycleMax=1
+
 	
 	for i=1, LifeTimeMax, LifeTimeMax/7 do
 		showSun(SunyCycleMax)
@@ -278,8 +365,15 @@ function sunLifeTimeControll()
 		Spring.Echo("jsunShipComonScript"..SunyCycleMax)
 		Sleep(math.ceil(LifeTimeMax/7)*1000)
 		RemainLifeTime=RemainLifeTime-math.ceil(LifeTimeMax/7)*1000
+		if RemainLifeTime <  RemainLifeTime-math.ceil(LifeTimeMax+1/7)*1000 then
+			SunyCycleMax=SunyCycleMax+1
+		end
 	end
-	
+	x,y,z=Spring.GetUnitPiecePosDir(unitID,center)
+	recProcess(TablesOfPiecesGroups, function(id) Hide(id) end)
+	Spring.SpawnCEG("jsupernovaprep",x,y+10,z, 0, 1,0 )	
+	Sleep(4000)
+	Spring.SpawnCEG("jsupernova",x,y+10 ,z,  0, 1,0  )	
 	Spring.DestroyUnit(unitID,true,true)
 end
 

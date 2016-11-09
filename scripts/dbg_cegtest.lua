@@ -49,6 +49,7 @@ while true do
 end
 
 function emitSFX()
+	--StartThread(constDistanceDrag)
 	StartThread(testTurnInTime)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	modHeight=0
@@ -68,12 +69,13 @@ function emitSFX()
 		--Spring.SpawnCEG("cnanotics",x,y+400,z,1,0,0,0)	
 		--Sleep(1500)
 		--Spring.SpawnCEG("jgalateatend",x,y+20,z,0,1,0,60)
-		Sleep(1500)
+		Sleep(8000)
 	--	Spring.SpawnCEG("jplankaaimpact",x,y+60,z,0,1,0,60)	
 
-	Spring.SpawnCEG("cssfirejet",x,y+70,z,0,1,0,60)	
+	Spring.SpawnCEG("jsupernovaprep",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
+	Sleep(4000)
+	Spring.SpawnCEG("jsupernova",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
 
-	Sleep(1500)
 	--Spring.SpawnCEG("suckfire",x,y+60,z,0,1,0,60)	
 		--	Spring.SpawnCEG("citlightpillar",x,y+400,z,0,-1,0,60)
 		--Sleep(3000)
@@ -82,6 +84,10 @@ function emitSFX()
 	end
 	
 end
+dragInRange= 1200
+liftUpRange= 900
+
+
 
 ----aimining & fire weapon
 function script.AimFromWeapon1() 

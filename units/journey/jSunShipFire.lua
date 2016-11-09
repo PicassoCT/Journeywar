@@ -67,7 +67,6 @@ local unitDef = {
 	speedToFront=0,
 	myGravity=0,
 	turnRadius=500,
-	badTargetCategory="AIR NOTARGET",
 	Acceleration = 0.0015,
 	fireState=1,
 	BrakeRate = 0.01,
@@ -117,12 +116,7 @@ local unitDef = {
 		
 	},
 	
-	weapons = {
-		[1]={name = "jmountainmark",
-			onlyTargetCategory = [[LAND]],
-		},
-	},
-	
+
 	
 	
 }

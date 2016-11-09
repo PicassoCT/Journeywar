@@ -109,7 +109,7 @@
 		
 		local lgetMap=getMap	
 		if not lgetMap then 
-		Spring.Echo("No global RessourceMapTable found") 
+			Spring.Echo("No global RessourceMapTable found") 
 		end
 		
 		--get the current LandScapeCell
@@ -179,9 +179,8 @@
 			
 			
 		
-		
-		
-		Spring.Echo("Searching Food/Water failed")	
+		echoT(openTable)
+		Spring.Echo("Searching ".. valueType .." failed with".. unexploredNodes.." nodes unexplored and "..#openTable.."in open table")	
 		return false,false
 	end	
 

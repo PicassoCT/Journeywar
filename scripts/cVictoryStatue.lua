@@ -408,7 +408,7 @@ end
 
 
 function script.Create ()
-----Spring.Echo("weee... im born")
+
 Hide(FiWoSpin)
 Hide(cVS_warp06)
 Hide(cVS_warp05)

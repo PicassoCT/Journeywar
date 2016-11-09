@@ -71,10 +71,6 @@ local spSetUnitMoveGoal=Spring.SetUnitMoveGoal
 	
 		Spring.GiveOrderToUnit(unitID, CMD.MOVE , {xRand,y+10,zRand  }, {})
 
-	
-
-		--Spring.AddUnitImpulse(unitID,0,5,0)
-
 		Sleep(500)
 		end
 	Sleep(200)
