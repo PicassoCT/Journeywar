@@ -19,7 +19,7 @@ waterPivot= piece"waterPivot"
 diamond1= piece"diamond1"
 diamond2= piece"diamond2"
 
- SIG_FORCELOOP= 2
+SIG_FORCELOOP= 2
 local TablesOfPiecesGroups={}
 MAXFORCELOOP=7
 boolSunshipActivateable=false
@@ -48,12 +48,12 @@ function init()
 	Show(diamond2)
 	showT(TablesOfPiecesGroups["circDa"])
 	Move(center,y_axis,0,0)
-
+	
 end
 
 function playSoundTillYouDie()
-myDefID=Spring.GetUnitDefID(unitID)
-timeLoudness=0
+	myDefID=Spring.GetUnitDefID(unitID)
+	timeLoudness=0
 	while boolChargeUp == false do 
 		StartThread(PlaySoundByUnitDefID,myDefID,"sounds/jsunship/sunShipGlass.ogg",(math.sin(timeLoudness)+2)/2, 5000, 1,0)
 		timeLoudness=timeLoudness+ math.pi/4
@@ -65,9 +65,9 @@ timeLoudness=0
 		timeLoudness=timeLoudness+ math.pi/4
 		Sleep(5000)
 	end
-		Spring.PlaySoundFile("sounds/jsunship/ignite.ogg", 1.0)
-
-
+	Spring.PlaySoundFile("sounds/jsunship/ignite.ogg", 1.0)
+	
+	
 end
 
 
@@ -195,15 +195,15 @@ function InitializeSunShip()
 	WMove(waterPivot,y_axis, (-250),0)
 	
 	while chargeUp < 100 do
-	boolChargeUp=true
+		boolChargeUp=true
 		Move(center,y_axis, (chargeUp*2.5), 2.5)
 		Move(waterPivot,y_axis, ((-250)+(chargeUp*2.5)), 5.5)
 		x,y,z=Spring.GetUnitPiecePosDir(unitID,waterPivot)
 		chargeUp=chargeUp+1	
 		
 		if chargeUp == 50 then
-		Signal(SIG_FORCELOOP)
-		StartForceRotators(-1)
+			Signal(SIG_FORCELOOP)
+			StartForceRotators(-1)
 		end
 		
 		Sleep(1000)
@@ -291,4 +291,3 @@ function hideAndSeek()
 		Sleep(100)
 	end
 end
-

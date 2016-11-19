@@ -64,9 +64,10 @@ local unitDef = {
 		"jharbour",
 		"jmeggstack",
 		--eco
-		"jnativevil",
+		
 		"jdrilltree",
 		"jmeconverter",
+		"jestorage",
 		
 		"jtree",
 		"jtree2",
@@ -83,8 +84,10 @@ local unitDef = {
 	
 		"jrefugeetrap",
 		"jgeohive",
-		"jfungiforrest",
+		"jnativevil",
+
 		--endgame
+		"jfungiforrest",
 		"jtreel",
 		"jabyss"
 		

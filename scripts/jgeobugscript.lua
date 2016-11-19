@@ -377,7 +377,7 @@ function script.FireWeapon1()
 end
 
 function script.Killed(recentDamage, _)
-	
+	SetUnitValue(COB.MAX_SPEED,1)
 
 	--legs_down()
 	Turn(DeathTurner,x_axis,math.rad(-179),120)

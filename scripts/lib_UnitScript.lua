@@ -303,7 +303,10 @@ end
 
 --expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
 function assertT(Table, ... )
+	arg= ...
+	if table.pack then
 	 arg = table.pack(...)
+	end
 	dimensions={}
 	dimensionsIndex=0
 	comperator={}
@@ -332,6 +335,7 @@ function assertT(Table, ... )
 	end
 
 	boolComperatorFound=false
+	if not arg then echo("Assertion failed, this is not a Argument- is a Contradiction"); return false end
 	for k,v in pairs(arg) do
 
 		if type(v)=="number" and boolComperatorFound== false then
@@ -3972,6 +3976,25 @@ end
 	-->gets Signum of a number
 	function sigNum(val)
 		return math.abs(val)/val
+	end
+	
+	-->Randomize a given Tables entrys
+	function randT(T)
+	resulT={}
+	
+		for i=1,#T do
+		
+		threeRandomAttempts= 0
+			index= math.random(1,#T)
+			while threeRandomAttempts < 3 and resulT[index] do
+				index= math.random(1,#T)	
+			end
+			while resulT[index] do
+				index= math.max(math.min(#T,(index+1)%#T),1)
+			end
+			resulT[index]=T[i]
+		end
+	return resulT
 	end
 	
 	--> returns a randomized Signum

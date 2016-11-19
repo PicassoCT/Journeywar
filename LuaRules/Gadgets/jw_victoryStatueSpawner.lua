@@ -44,6 +44,10 @@ if (gadgetHandler:IsSyncedCode()) then
 					distancez=math.ceil(math.random(100,150))+z
 					
 					Spring.CreateUnit("jvictory",distancex,y,distancez,0,teamID)
+					distancex=math.ceil(math.random(100,150))+x
+					distancez=math.ceil(math.random(100,150))+z
+					
+					Spring.CreateUnit("grecForrest",distancex,y,distancez,0,teamID)
 					end
 			end
 	end	

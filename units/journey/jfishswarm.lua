@@ -46,7 +46,7 @@ local unitDef = {
 	upright = true,
 	waterline = 3,
 	workerTime = 0,
-	corpse = "cInfantryCorpse",
+
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
 	

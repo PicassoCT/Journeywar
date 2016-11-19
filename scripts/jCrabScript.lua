@@ -1,6 +1,6 @@
 
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 
 deathpivot = piece "deathpivot"
@@ -15,7 +15,7 @@ local SIG_LEG=4
 local SIG_DEFAULT=32
 
 pieceTable={
-[1] = Crabbase 
+	[1] = Crabbase 
 }
 
 crableg={}
@@ -30,12 +30,12 @@ for i=1, 4,1 do
 end
 
 FrontLeg ={
-[1] = {Up =crableg[2] },
-[2] = {Up =crableg[3] }
+	[1] = {Up =crableg[2] },
+	[2] = {Up =crableg[3] }
 }
 RearLeg={
-[1] = {Up =crableg[1] },
-[2] = {Up =crableg[4] }
+	[1] = {Up =crableg[1] },
+	[2] = {Up =crableg[4] }
 }
 
 function script.Create()
@@ -162,33 +162,33 @@ function legs_down()
 	Turn(Crabbase,x_axis,math.rad(0),12)
 	Turn(Crabbase,y_axis,math.rad(0),12)
 	Turn(Crabbase,z_axis,math.rad(0),12)
-
+	
 	
 	Sleep(600)
 	time = 0.1
 	while true do
-			factor= math.abs(math.cos(time))
-			value= factor *23
-			time = time +0.2
-			dice= math.ceil(math.random(0,3))
-				if dice == 1 then
-					idleLoop(Crabbase,x_axis, FrontLeg, RearLeg, value *-1, value * 0.5,  value/16, 500, true)		
-				end
-				if dice == 2 then
-					idleLoop(Crabbase, x_axis,FrontLeg, RearLeg, math.random(-23,23), math.random(-13,13),  value/16 , 700, true)				
-				end
-			if dice == 3 then
+		factor= math.abs(math.cos(time))
+		value= factor *23
+		time = time +0.2
+		dice= math.ceil(math.random(0,3))
+		if dice == 1 then
+			idleLoop(Crabbase,x_axis, FrontLeg, RearLeg, value *-1, value * 0.5, value/16, 500, true)		
+		end
+		if dice == 2 then
+			idleLoop(Crabbase, x_axis,FrontLeg, RearLeg, math.random(-23,23), math.random(-13,13), value/16 , 700, true)				
+		end
+		if dice == 3 then
 			randsign = math.random(-1,1)
 			randsign= randsign/math.abs(randsign) * value
-				if math.abs(randsign) < 47 and math.abs(randsign) > 3.14159 then
-					idleLoop(Crabbase, y_axis,FrontLeg, RearLeg, randsign, 1  ,  value/16 , 700, true)				
-				end
+			if math.abs(randsign) < 47 and math.abs(randsign) > 3.14159 then
+				idleLoop(Crabbase, y_axis,FrontLeg, RearLeg, randsign, 1 , value/16 , 700, true)				
 			end
-	
+		end
+		
 		resetT(pieceTable,1 , true, true)
 		
 		if math.random(0,7)== 3 then
-		Sleep(7000)
+			Sleep(7000)
 		end
 	end
 	
@@ -258,7 +258,7 @@ function walk()
 			legz()
 		end
 		--left forwards back left down
-	Turn(deathpivot,y_axis,math.rad(45),7)
+		Turn(deathpivot,y_axis,math.rad(45),7)
 	end
 end
 
@@ -306,7 +306,7 @@ end
 
 
 function script.HitByWeapon(x,z,weaponDefID,damage)
-
+	
 	if damage > 25 then
 		h=Spring.GetHeadingFromVector(x,z)
 		h=h-32768
@@ -337,7 +337,7 @@ function script.AimWeapon1( heading ,pitch)
 	--Turn(turret, y_axis, heading)
 	
 	Signal(SIG_AIM2)
-
+	
 	
 	
 	SetSignalMask(SIG_AIM2)
@@ -351,25 +351,29 @@ function script.AimWeapon1( heading ,pitch)
 	return true
 end
 
+	boolClawAnimationRunning=false
 function Clawanimation()
-
+	boolClawAnimationRunning=true
 	Turn(crabattack1,y_axis,math.rad(0),64)
 	Turn(crabattack2,y_axis,math.rad(0),64)			
 	WaitForTurn(crabattack1,y_axis)
 	WaitForTurn(crabattack2,y_axis)
 	Turn(deathpivot,y_axis,0,7)	
+	boolClawAnimationRunning=false
 end
 
 function script.FireWeapon1()	
-	
-	Spring.PlaySoundFile("sounds/jcrabcreep/crabattack.wav",1)
-	StartThread(Clawanimation)
+	if boolClawAnimationRunning== false then
+		Spring.PlaySoundFile("sounds/jcrabcreep/crabattack.wav",1)
+		StartThread(Clawanimation)
+	end
 	return true
 end
 
 
 
 function script.Killed(recentDamage,_)
+	SetUnitValue(COB.MAX_SPEED,0)
 	Turn(Crabbase,x_axis,math.rad(180),90)
 	WaitForTurn(Crabbase,x_axis)
 	for i=1,15,1 do 

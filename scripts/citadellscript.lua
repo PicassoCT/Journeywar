@@ -30,6 +30,7 @@ for i=1,27,1 do
 	sparks[i]=piece (spark)
 end
 
+teamID=Spring.GetUnitTeam(unitID)
 shields={}
 for i=1,12,1 do
 	shields[i]={}
@@ -174,9 +175,9 @@ function reInforCements()
 		for a=1,270,1 do
 			if a > 220 then
 				if a % 25 == 0 then
-				Spring.SpawnCEG("clightball",	 cx,cy+2150,cz,0,1,0,60)
-				Spring.SpawnCEG("citlightpillar",cx,cy+550, cz,0,-1,0,60)
-
+					Spring.SpawnCEG("clightball",	 cx,cy+2150,cz,0,1,0,60)
+					Spring.SpawnCEG("citlightpillar",cx,cy+550, cz,0,-1,0,60)
+					
 				end
 				
 				EmitSfx(cishadersp,1026)
@@ -222,7 +223,7 @@ function reInforCements()
 		end
 		
 	end
-
+	
 	
 end
 
@@ -431,13 +432,33 @@ function hideAndThrowRocks(numberx,numbery)
 	
 end
 
-function sfxThread(time,step,piecename,nr)
+function sfxThread(times,step,piecename,nr)
 	
-	while time > 0 do
+	while times > 0 do
 		EmitSfx(piecename,nr)
 		Sleep(step)
-		time=time-step
+		times=times-step
 	end
+end
+
+function 	dealPortalStormDamage()
+px,_,pz= Spring.GetUnitPiecePosDir(unitID,sparks[26])
+T= GetAllInCircle(px,pz,150,unitID)
+process(T,
+		function(id)
+		unitTeam=Spring.GetUnitTeam(id)
+			if unitTeam then
+				if unitTeam ~= teamID then
+					return id
+				end		
+			end
+		end,
+		function(id)
+			Spring.DestroyUnit(id,false,false,unitID)
+		end
+		)
+
+
 end
 
 local function WarpEntry()
@@ -482,7 +503,7 @@ local function WarpEntry()
 		for i=1,out,1 do
 			local SemitX,SemitY,SemitZ=spGetUnitPiecePosition(unitID,sparks[i])
 			spSpawnCEG("portalstorm",SemitX+unitX,SemitY+unitY,SemitZ+unitZ,0,1,0,50,0)
-			
+			dealPortalStormDamage()
 		end
 		
 		if out==6 then
@@ -590,7 +611,7 @@ local function WarpEntry()
 end
 function spawnDecal()
 	x,y,z=Spring.GetUnitPosition(unitID)
-	teamID=Spring.GetUnitTeam(unitID)
+
 	
 	decalID=Spring.CreateUnit("ccittadeldecal",x,y,z,0,teamID)
 end
@@ -610,8 +631,8 @@ end
 boolTwice=false
 function script.Activate()	
 	Spring.PlaySoundFile("sounds/citadell/shield_powerup.ogg",1.0)
-		boolShield=true
-		Spring.SetUnitShieldState(unitID,SHIELDNUMBER,true)
+	boolShield=true
+	Spring.SetUnitShieldState(unitID,SHIELDNUMBER,true)
 	
 	
 	Signal(SIG_DUST)
@@ -752,11 +773,11 @@ end
 
 
 function script.Killed(recentDamage,maxHealth)
-
+	
 	StartThread(FireCloud)
-		if GG.LandScapeT then
+	if GG.LandScapeT then
 		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
-		end
+	end
 	StartThread(fireflakeBurst)
 	StartThread(debrisBurst)
 	Spin (cifireclou, y_axis, math.rad(-72))
@@ -767,7 +788,7 @@ function script.Killed(recentDamage,maxHealth)
 	Spin (cifireclo1, y_axis, math.rad(-12))
 	Spring.UnitScript.Show(cifireclo1)
 	
-
+	
 	
 	Spring.UnitScript.Show(shater)
 	Explode (shater, SFX.SHATTER)
@@ -814,7 +835,7 @@ function script.Killed(recentDamage,maxHealth)
 	if recentDamage > 1 then
 		--This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
 		spx,spy,spz=Spring.GetUnitPosition(unitID)
-		teamID=Spring.GetUnitTeam(unitID)
+
 		x=math.random(0,3)
 		heapID=Spring.CreateUnit("gCScrapHeap",spx,spy,spz, x, teamID)
 		Spring.SetUnitNeutral(heapID,true)
@@ -1047,101 +1068,101 @@ end
 
 
 cx,cy,cz=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
+
 
 function GetUnitImpulseByShield(cx,cy,cz,tx,ty,tz,strength)
-
-tx= tx -cx 
-ty = ty -cy
-tz = tz -cz
-norm = math.sqrt(tx*tx +ty*ty +tz*tz)
-tx= tx /norm 
-ty =ty /norm
-tz =tz /norm
-
-
-
-
-return  strength* tx, strength * ty, strength *tz
+	
+	tx= tx -cx 
+	ty = ty -cy
+	tz = tz -cz
+	norm = math.sqrt(tx*tx +ty*ty +tz*tz)
+	tx= tx /norm 
+	ty =ty /norm
+	tz =tz /norm
+	
+	
+	
+	
+	return strength* tx, strength * ty, strength *tz
 end
 
 function setAreaFireShielded(object)
-object.boolShielded=true
-return object
+	object.boolShielded=true
+	return object
 end
 
 function setAreaFireUnShielded(object)
-object.boolShielded=false
-return object
+	object.boolShielded=false
+	return object
 end
 
 boolShield=false
 function shieldDraw()
-		
+	
 	while true do
-
+		
 		if boolShield==true then
-		
-		if GG.LandScapeT then
-		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
-		end
-		
-		while boolShield==true do
-
-	
 			
-			--Repulse Units from outside
-			T=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS+90)
-			N=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS-12)
-			T=KeyValueTableConverter(T)
-			N=KeyValueTableConverter(N)
-		
-			
-			T=SubSetFromSet(T,N)
-			
-			T = filterOutBuilding(T,UnitDefs)
-			T = filterOutImmobile(T,UnitDefs)			
-			
-	
-			factor=10
-			impulsfactor= 6
-			if T then
-				for k,v in pairs(T) do
-					if  k  then
-						tx,ty,tz=Spring.GetUnitPosition( k )
-						tx,ty,tz=tx-cx,ty-cy,tz-cz
-						norm=math.sqrt(tx*tx+ ty*ty + tz*tz)
-						tx,ty,tz= 	tx/norm,ty/norm,tz/norm
-						
-						if maRa()==true then
-							spawnCEGatUnit( k , "cshieldsparks", math.random(-15,15),math.random(5,25), math.random(-15,15))
-						end
-						
-						dx,dy,dz = tx*impulsfactor,ty*impulsfactor,tz*impulsfactor
-						Spring.AddUnitImpulse( k , dx,dy,dz)
-						
-						Spring.AddUnitDamage( k ,12, 1400, unitID, -1, factor*tx,factor*ty,factor*tz)
-					
-					enabled, shieldpower = Spring.GetUnitShieldState(unitID,SHIELDNUMBER)
-		
-					Spring.SetUnitShieldState(unitID,SHIELDNUMBER, true, shieldpower - SHIELD_COST_REFLECT_UNIT)
-					if (enabled == false or shieldpower <= 0 ) then 
-					boolShield = false 
-					SetUnitValue(COB.ACTIVATION, 0)
-					break
-					end
-					
-					end
-				end		
-				
-				--Spring.CreateUnit("gdecshields",cx+math.random(-25,25),cy+math.random(-25,25),cz+math.random(-25,25), 0, teamID) 
+			if GG.LandScapeT then
+				GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireShielded )
 			end
-			Sleep(100)
-		end
-		
-		if GG.LandScapeT then
-		GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireUnShielded)
-		end
+			
+			while boolShield==true do
+				
+				
+				
+				--Repulse Units from outside
+				T=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS+90)
+				N=Spring.GetUnitsInCylinder(cx,cz,SHIELDRADIUS-12)
+				T=KeyValueTableConverter(T)
+				N=KeyValueTableConverter(N)
+				
+				
+				T=SubSetFromSet(T,N)
+				
+				T = filterOutBuilding(T,UnitDefs)
+				T = filterOutImmobile(T,UnitDefs)			
+				
+				
+				factor=10
+				impulsfactor= 6
+				if T then
+					for k,v in pairs(T) do
+						if k then
+							tx,ty,tz=Spring.GetUnitPosition( k )
+							tx,ty,tz=tx-cx,ty-cy,tz-cz
+							norm=math.sqrt(tx*tx+ ty*ty + tz*tz)
+							tx,ty,tz= 	tx/norm,ty/norm,tz/norm
+							
+							if maRa()==true then
+								spawnCEGatUnit( k , "cshieldsparks", math.random(-15,15),math.random(5,25), math.random(-15,15))
+							end
+							
+							dx,dy,dz = tx*impulsfactor,ty*impulsfactor,tz*impulsfactor
+							Spring.AddUnitImpulse( k , dx,dy,dz)
+							
+							Spring.AddUnitDamage( k ,12, 1400, unitID, -1, factor*tx,factor*ty,factor*tz)
+							
+							enabled, shieldpower = Spring.GetUnitShieldState(unitID,SHIELDNUMBER)
+							
+							Spring.SetUnitShieldState(unitID,SHIELDNUMBER, true, shieldpower - SHIELD_COST_REFLECT_UNIT)
+							if (enabled == false or shieldpower <= 0 ) then 
+								boolShield = false 
+								SetUnitValue(COB.ACTIVATION, 0)
+								break
+							end
+							
+						end
+					end		
+					
+					--Spring.CreateUnit("gdecshields",cx+math.random(-25,25),cy+math.random(-25,25),cz+math.random(-25,25), 0, teamID) 
+				end
+				Sleep(100)
+			end
+			
+			if GG.LandScapeT then
+				GG.LandScapeT.setAreaEffect(cx,cz,SHIELDRADIUS,setAreaFireUnShielded)
+			end
 		end
 		
 		Sleep(500)
@@ -1191,11 +1212,11 @@ function script.HitByWeapon(damage)
 end
 
 function SubSetFromSet(O,P)
-R={}
-for k,v in pairs(O) do
-	if not P[k] then R[k]=v end
-end
-return R
+	R={}
+	for k,v in pairs(O) do
+		if not P[k] then R[k]=v end
+	end
+	return R
 end
 
 function KeyValueTableConverter(T)

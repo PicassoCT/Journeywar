@@ -9028,6 +9028,7 @@ function script.Create()
 end
 
 function script.Killed(recentDamage,maxHealth)
+	SetUnitValue(COB.MAX_SPEED,1)
 	randKill=math.random(0,1)
 	Spring.PlaySoundFile("sounds/tiglil/tgdeath.wav") 
 	if randKill==1 then

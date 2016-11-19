@@ -1548,7 +1548,6 @@ function showT(tablename,lowLimit,upLimit,delay)
 	end
 end
 
-
 --> Hides a PiecesTable, 
 function hideT(tablename,lowLimit,upLimit,delay)
 	if not tablename then return end
@@ -1656,5 +1655,22 @@ end
 		
 	end	
 
+--> creates a table of Accessors 
+function getTableAccessor(xDepth, zDepth, boolRandomize)
+	halfX=math.ceil(math.abs((xDepth/2)))*-1
+	halfZ=math.ceil(math.abs((zDepth/2)))*-1
+	resulT={}
+	Spring.Echo("getTableAccessor::",halfX,halfZ)
+	for x=halfX, math.abs(halfX) do
+		for z=halfZ, math.abs(halfZ) do
+			resulT[#resulT+1]={x=x, z = z}
+		end
+	end
+	if boolRandomize== true then
+		return randT(resulT)
+	else
+		return resulT
+	end
+end
 --================================================================================================================
 --================================================================================================================

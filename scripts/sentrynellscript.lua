@@ -348,19 +348,7 @@ function motionTrack()
 		
 		Sleep(50)
 		Distance = getNearestMovingEnemyDistance(xu,zu)
-		
-		nearEnemyID=Spring.GetUnitNearestEnemy(unitID,3000,false)
-		if nearEnemyID == nil then
-			Distance =9000
-		else
-			local xe,ye,ze=Spring.GetUnitPosition(nearEnemyID)
-			
-			Distance = vectorBetrag(xu,yu,xe,ye)
-		end
-		
-		
-		
-		
+	
 		
 		if boolIsItDeadYet==false then
 			for beep=0,2,1 do

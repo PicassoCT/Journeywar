@@ -89,7 +89,7 @@ function script.Create()
 end
 
 function script.Killed(recentDamage,_)
-	--bloody Waters
+	createCorpseJUnitGeneric(recentDamage)
 	return 1
 end
 

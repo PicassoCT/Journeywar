@@ -27,8 +27,8 @@ maxDepth = 800
 
 _,maxHP=Spring.GetUnitHealth(unitID)
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
-RemainLifeTime=RemainLifeTime - math.floor(damage/100)
-return damage
+	RemainLifeTime=RemainLifeTime - math.floor(damage/100)
+	return damage
 end
 
 LifeTimeMax= 80
@@ -61,79 +61,82 @@ end
 function constDistanceDrag()
 	it=0
 	while true do
-	it=(it+50)%200
-	--Units
-				px,py,pz=Spring.GetUnitPosition(unitID)
-				T=getAllInCircle(px,pz,unitID)
-				myDefID=Spring.GetUnitDefID(unitID)
-				
-				if T then
-				process(T,
-						function(id) if Spring.ValidUnitID(id)==true then return id end end,
-						function (id)
-							defID= Spring.GetUnitDefID(id)
-							if UnitDefs[defID].isBuilding== false then
-								idID =Spring.GetUnitDefID(id)
-
-								if idID ==UnitDefNames["jdarkgate"].id and GetUnitDistance(id,unitID) < 100  then
-									Spring.DestroyUnit(id,true,false)
-									Spring.DestroyUnit(unitID,true,false)
-								end
-								
-								if id ~= unitID and idID ~= UnitDefNames["jsunshipfire"].id then 
-									return id 
-								end 
-							end
-						end,		
-						function(id)
-							if type(id)=="number" then
-							dist=GetUnitDistance(id,unitID) 
-							
-								if dist and dist < dragInRange and dist > liftUpRange then
-									ix,iy,iz= Spring.GetUnitPosition(id)
-									vec= makeVector(px- ix,py-iy,pz-iz)
-									vec= normVector(vec) 
-									mass =Spring.GetUnitMass(id)
-									vec= mulVector(vec,(1-((dist-liftUpRange)/(dragInRange-liftUpRange))))
-									Spring.AddUnitImpulse(id,vec.x*(1/mass),vec.y*(1/mass),vec.z*(1/mass))		
-									if it == 0 then
-									Spring.SpawnCEG("jsunshipburnup",ix,iy+10,iz,vec.x*-1,vec.y*-1,vec.z*-1,10,0)							
-									end
-								end
-							end
-						
-							if dist and dist < liftUpRange then
-								StartThread(moveTowards,id,50, 10,  px,py,pz,1-(dist/liftUpRange))
-							end
+		it=(it+50)%200
+		--Units
+		px,py,pz=Spring.GetUnitPosition(unitID)
+		T=getAllInCircle(px,pz,unitID)
+		myDefID=Spring.GetUnitDefID(unitID)
+		
+		if T then
+			process(T,
+			function(id) if Spring.ValidUnitID(id)==true then return id end end,
+			function (id)
+				defID= Spring.GetUnitDefID(id)
+				if UnitDefs[defID].isBuilding== false then
+					idID =Spring.GetUnitDefID(id)
+					
+					if idID ==UnitDefNames["jdarkgate"].id and GetUnitDistance(id,unitID) < 100 then
+						Spring.DestroyUnit(id,true,false)
+						Spring.DestroyUnit(unitID,true,false)
+					end
+					
+					if id ~= unitID and idID ~= UnitDefNames["jsunshipfire"].id then 
+						return id 
+					end 
+				end
+			end,		
+			function(id)
+				if type(id)=="number" then
+					dist=GetUnitDistance(id,unitID) 
+					
+					if dist and dist < dragInRange and dist > liftUpRange then
+						ix,iy,iz= Spring.GetUnitPosition(id)
+						vec= makeVector(px- ix,py-iy,pz-iz)
+						vec= normVector(vec) 
+						mass =Spring.GetUnitMass(id)
+						vec= mulVector(vec,(1-((dist-liftUpRange)/(dragInRange-liftUpRange))))
+						Spring.AddUnitImpulse(id,vec.x*(1/mass),vec.y*(1/mass),vec.z*(1/mass))		
+	
+						if it == 0 then
+							Spring.SpawnCEG("jsunshipburnup",ix,iy+10,iz,vec.x*-1,vec.y*-1,vec.z*-1,10,0)							
 						end
-						)
+					end
 				end
 				
-	Sleep(50)			
+				if dist and dist < liftUpRange then
+					StartThread(moveTowards,id,50, 10, px,py,pz,1-(dist/liftUpRange))
+				end
+				
+				Spring.AddUnitDamage(id,4)	
+			end
+			)
+		end
+		
+		Sleep(50)			
 	end
-
+	
 end
 
 function moveTowards(id, times,resolution, px,py,pz, percentageCompleted)
 	if id then
-
-	Spring.MoveCtrl.Enable(id)
-
-			
+		
+		Spring.MoveCtrl.Enable(id)
+		
+		
 		for i=1,times,resolution do
 			ox,oy,oz= Spring.GetUnitPosition(id)
 			if ox then
-			ox = ox*(1-percentageCompleted)+ px *percentageCompleted
-			oy = oy*(1-percentageCompleted)+ py *percentageCompleted + (percentageCompleted*100)
-			oz = oz*(1-percentageCompleted)+ pz *percentageCompleted
-
-			Spring.MoveCtrl.SetPosition(id,ox, oy,oz)
+				ox = ox*(1-percentageCompleted)+ px *percentageCompleted
+				oy = oy*(1-percentageCompleted)+ py *percentageCompleted + (percentageCompleted*100)
+				oz = oz*(1-percentageCompleted)+ pz *percentageCompleted
+				
+				Spring.MoveCtrl.SetPosition(id,ox, oy,oz)
 			end
 			Sleep(resolution)
 		end
-					
 		
-	Spring.MoveCtrl.Disable(id)
+		
+		Spring.MoveCtrl.Disable(id)
 	end
 end
 
@@ -325,19 +328,19 @@ function meltLandscape(x,y,z,timeCounter)
 	
 end
 function playSoundTillYouDie()
-myDefID=Spring.GetUnitDefID(unitID)
-Sleep(350)
-Spring.PlaySoundFile("sounds/jsunship/ignite.ogg", 1)
-timeLoudness=0
-	while true  do 
+	myDefID=Spring.GetUnitDefID(unitID)
+	Sleep(350)
+	Spring.PlaySoundFile("sounds/jsunship/ignite.ogg", 1)
+	timeLoudness=0
+	while true do 
 		
 		StartThread(PlaySoundByUnitDefID,myDefID,"sounds/jsunship/sunBurning"..math.ceil(math.random(1,3))..".ogg",1, 14000, 1,0)
 		timeLoudness=timeLoudness+ math.pi/4
 		Sleep(5000)
 	end
-
-
-
+	
+	
+	
 end
 
 
@@ -357,7 +360,7 @@ RemainLifeTime=LifeTimeMax
 SunyCycleMax=1
 function sunLifeTimeControll()
 	init()
-
+	
 	
 	for i=1, LifeTimeMax, LifeTimeMax/7 do
 		showSun(SunyCycleMax)
@@ -365,7 +368,7 @@ function sunLifeTimeControll()
 		Spring.Echo("jsunShipComonScript"..SunyCycleMax)
 		Sleep(math.ceil(LifeTimeMax/7)*1000)
 		RemainLifeTime=RemainLifeTime-math.ceil(LifeTimeMax/7)*1000
-		if RemainLifeTime <  RemainLifeTime-math.ceil(LifeTimeMax+1/7)*1000 then
+		if RemainLifeTime < RemainLifeTime-math.ceil(LifeTimeMax+1/7)*1000 then
 			SunyCycleMax=SunyCycleMax+1
 		end
 	end
@@ -373,18 +376,13 @@ function sunLifeTimeControll()
 	recProcess(TablesOfPiecesGroups, function(id) Hide(id) end)
 	Spring.SpawnCEG("jsupernovaprep",x,y+10,z, 0, 1,0 )	
 	Sleep(4000)
-	Spring.SpawnCEG("jsupernova",x,y+10 ,z,  0, 1,0  )	
+	Spring.SpawnCEG("jsupernova",x,y+10 ,z, 0, 1,0 )	
 	Spring.DestroyUnit(unitID,true,true)
 end
 
 function script.Killed(recentDamage,_)
 	return 1
 end
-
-
-
-
-
 
 
 

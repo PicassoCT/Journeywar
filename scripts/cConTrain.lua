@@ -1009,7 +1009,7 @@ function initScript()
 	
 end
 boolSelfRepairedToDeath=false 
-
+myTeamID=Spring.GetUnitTeam(unitID)
 function healWhileStandingStill()
 	Sleep(3000)
 	
@@ -1028,6 +1028,8 @@ function healWhileStandingStill()
 				if hp then
 					
 					T=getAllInCircle(x,z,300,unitID,teamID)
+					T=process(T,function(id) if Spring.GetUnitTeam(id) == myTeamID then return id else end end)
+					
 					hp=math.ceil(math.ceil(hp*0.5)/#T)
 					hpcopy=hp
 					for i=1,#T do
@@ -1040,9 +1042,13 @@ function healWhileStandingStill()
 								Spring.SetUnitHealth(T[i],p+hp)
 								sx,sy,sz=Spring.GetUnitPosition(T[i])
 								Spring.SpawnCEG("healtrain",sx,sy+10,sz,0,1,0,0)
-								if hpcopy-hp <0 then 	boolYouBroughtThisOnYourself =true end
-								Spring.AddUnitDamage(unitID,hp)
-							
+								if hpcopy-hp < 0 then 
+									boolYouBroughtThisOnYourself =true 
+									Spring.DestroyUnit(unitID,false,true)	
+								else
+									Spring.AddUnitDamage(unitID,hp)
+									hpcopy= hpcopy-hp
+								end
 							end
 						end
 					end

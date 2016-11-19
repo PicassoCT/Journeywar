@@ -140,7 +140,11 @@ function script.Deactivate()
 	return 0
 end
 
-
+chopperdirt=1024
+choppermuzzle= 1025
+flyinggrass =1026
+blackerthensmoke = 1027
+rlexplode = 1028
 
 
 
@@ -165,11 +169,11 @@ function landed()
 			dx=lrand(1,6)
 			if boolAir==true then
 				if dx== 3 then 
-					EmitSfx(dirtemit1,1024)
-					EmitSfx(dirtemit2,1024)
+					EmitSfx(dirtemit1,chopperdirt)
+					EmitSfx(dirtemit2,chopperdirt)
 				else
-					EmitSfx(dirtemit2,1026)
-					EmitSfx(dirtemit2,1024)
+					EmitSfx(dirtemit2,flyinggrass)
+					EmitSfx(dirtemit2,chopperdirt)
 				end
 			end		
 			Sleep(100)
@@ -253,9 +257,9 @@ function moveStateCheck()
 		
 		if boolMoving == false and boolShortStop == false then
 			Sleep(512)
-			RepEated=2
-			if boolShortStop == false then
-				
+		
+			if boolLongStop== false and boolShortStop == false then
+				RepEated=2
 				boolLongStop=true
 			end
 		end
@@ -304,15 +308,15 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if hp and hp-damage < 0 and boolYouOnlyDieOnce== false then
 		boolYouOnlyDieOnce=true
 		StartThread(emitSmoke)
-		EmitSfx(bady,1028)
+		EmitSfx(bady,rlexplode)
 		Explode(Shield1,SFX.FALL+SFX.FIRE)
 		
-		EmitSfx(bady,1028)
+		EmitSfx(bady,rlexplode)
 		Explode(Shield2,SFX.FALL + SFX.FIRE)
 		Hide(centrotors)
 		Show(centrotor)
 		Spin(imgoingdown,y_axis,math.rad(-250),0.01)
-		EmitSfx(bady,1028)
+		EmitSfx(bady,rlexplode)
 		
 		SetUnitValue(COB.CRASHING, 1)
 		Spring.SetUnitNeutral(unitID,true)
@@ -356,7 +360,7 @@ function script.Create()
 end
 function emitSmoke()
 	while(true) do
-		EmitSfx(bady,1027)
+		EmitSfx(bady,blackerthensmoke)
 		Sleep(15)
 	end
 end
@@ -364,7 +368,7 @@ function script.Killed()
 	
 	
 	
-	EmitSfx(bady,1028)
+	EmitSfx(bady,rlexplode)
 	createCorpseCUnitGeneric()
 	return 0
 end
@@ -372,7 +376,7 @@ end
 
 function script.AimFromWeapon1() 	
 	
-	--	EmitSfx(frontAppendixTable[1],1025)	
+	--	EmitSfx(frontAppendixTable[1],choppermuzzle)	
 	
 	return aim1
 	
@@ -399,7 +403,7 @@ end
 function script.FireWeapon1()
 	
 	for i=1,11,1 do
-		EmitSfx(aim1, 1025)
+		EmitSfx(aim1, choppermuzzle)
 		Sleep(142)
 	end
 end

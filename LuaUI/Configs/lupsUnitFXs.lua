@@ -54,8 +54,8 @@ local presets = {
 
 effectUnitDefs = {
 	
-	cvictory =		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}
-},
+		cvictory =		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}
+	},
 	jsunshipwater ={
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=325, precision=22, strength = 0.00125, repeatEffect=true}}
 		

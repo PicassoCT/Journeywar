@@ -31,6 +31,20 @@ rval = function ()
 	return val
 end
 
+function emitSound()
+unitDefID=Spring.GetUnitDefID(unitID)
+	while true do 
+		
+		while boolWaterSpilling== true do
+		modulation=math.random(0.5,1)
+		StartThread(PlaySoundByUnitDefID,unitDefID,"sounds/jBonsai/jBonsaiWater.ogg",modulation,7500,1)
+			
+			Sleep(50)
+					
+		end
+		Sleep(150)
+	end
+end
 
 function foamspheres()
 	yval=math.random(-5,-0.5)
@@ -76,8 +90,7 @@ function waterWheel()
 		if math.random(0,1)==1 then
 			Show(WaterPlan0)
 			Hide(WaterPlane)
-			
-			Spring.Echo(speed)
+	
 			Move(WaterPlan0,y_axis,0.5 ,speed)
 			
 		else
@@ -165,6 +178,7 @@ function script.Create()
 			end
 		end
 	end
+	StartThread(emitSound)
 	StartThread(addWaterLvl)
 	StartThread(buildLTree,center, 7, "Bonsai", "B", 18)
 	StartThread(waterWheel)
@@ -394,8 +408,7 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeigh
 					if baseShapeTable[x][z][y-1] == true then
 						Sleep(1)
 						ox,oy,oz= getCollissionOffset(unitID,bonsaiTable[x][z][y-1].Piece)
-						Spring.Echo(x," / ",y," / ",z)
-						Spring.Echo(ox," / ",oy," / ",oz)
+					
 						ox=ox*-1
 						Move(bonsaiTable[x][z][y].Piece,x_axis,ox,0)
 						Move(bonsaiTable[x][z][y].Piece,y_axis,oy,0)
