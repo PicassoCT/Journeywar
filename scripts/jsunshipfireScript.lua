@@ -275,7 +275,6 @@ function sunLifeTimeControll()
 	for i=1, LifeTimeMax, LifeTimeMax/7 do
 		showSun(SunyCycleMax)
 		SunyCycleMax=SunyCycleMax+1
-		Spring.Echo("jsunShipComonScript"..SunyCycleMax)
 		Sleep(math.ceil(LifeTimeMax/7)*1000)
 		RemainLifeTime=RemainLifeTime-math.ceil(LifeTimeMax/7)*1000
 	end

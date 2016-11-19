@@ -29,9 +29,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			if x~= nil then
 			teamID,leader,boolIsDead,boolIsAITeam,side,_,_,_=	Spring.GetTeamInfo(TeamID)
 
-					--Spring.Echo(side)
-					assert(side)
-				if side =="centrail" or side =="Centrail" then
+				if string.lower(side) =="centrail" then
 
 				teamID=Spring.GetGaiaTeamID()
 				distancex=math.ceil(math.random(100,150))+x
@@ -44,6 +42,10 @@ if (gadgetHandler:IsSyncedCode()) then
 					distancez=math.ceil(math.random(100,150))+z
 					
 					Spring.CreateUnit("jvictory",distancex,y,distancez,0,teamID)
+					
+					distancex=math.ceil(math.random(100,150))+x
+					distancez=math.ceil(math.random(100,150))+z
+					Spring.CreateUnit("grecforrest",distancex,y,distancez,0,teamID)
 					end
 			end
 	end	

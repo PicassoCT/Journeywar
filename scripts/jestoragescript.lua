@@ -247,7 +247,9 @@ function gyroScopic()
 	local   UpRightVec={x=0,y=1,z=0}
 	
 	while true do
-	_,_,_,bodyVec.x, bodyVec.y, bodyVec.z =spGetUnitPiePosDir(unitID,body)	
+	ux,_,uz= Spring.GetUnitPosition(unitID)
+	bodyVec.x, bodyVec.y, bodyVec.z =Spring.GetGroundNormal(ux,uz)	
+	bodyVec= normalizeVector(bodyVec)
 	_,_,_,LiquidVec.x, LiquidVec.y, LiquidVec.z =spGetUnitPiePosDir(unitID,Number[1])
 		--if the LiquidVec is not resting and the Target is still not the UpRightVec 
 	
