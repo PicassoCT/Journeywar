@@ -895,7 +895,13 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end		
 	
 	function bd_getSymDecoCon()
-		Spring.Echo("TODO: getSymDecoCon")
+	
+	if SymBodyConCoords and table.getn(SymBodyConCoords) > 0 then
+			--Spring.Echo("JW:SymetricExpand_1.5")
+			dice=math.floor(math.random(1,math.max(1,table.getn(SymBodyConCoords)	)))
+			socketA,socketB=bd_getPairNrSymBodyConCoords(dice)
+		return SocketA, SocketB
+	end
 	end
 	
 	--StartPoint

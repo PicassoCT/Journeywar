@@ -72,7 +72,7 @@ function emitSFX()
 
 	--	Spring.SpawnCEG("jplankaaimpact",x,y+60,z,0,1,0,60)	
 
-	Spring.SpawnCEG("jmeteortrail",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
+	Spring.SpawnCEG("bignukeland",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
 	Sleep(4000)
 	--Spring.SpawnCEG("jsupernova",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
 

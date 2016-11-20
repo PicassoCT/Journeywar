@@ -728,7 +728,12 @@ function LinearExpandArm()
 end		
 
 function getSymDecoCon()
-Spring.Echo("TODO: getSymDecoCon")
+
+	if SymBodyCon and table.getn(SymBodyCon) > 0 then
+				dice=math.floor(math.random(1,math.max(1,#SymBodyCon)	))
+				socketA,socketB=getPairNrSymBodyCon(dice)
+				return SocketA, SocketB
+	end
 end
 
 --StartPoint
@@ -740,7 +745,10 @@ poinTable=piec2Point(LinBodyCon)
 	if linDecP.x == nil or boolFoundSomething==false then 
 	linDecP.x,linDecP.y,linDecP.z,linDecP.index=getLowestPointOfSet(poinTable,"z_axis") 
 	temp={}
+	assertT(poinTable,{Piece="number",x="number",y="number",z="number", index="number"})
 	temp.x,temp.y,temp.z,temp.index=getHighestPointOfSet(poinTable,"z_axis") 
+
+	assert(linDecP.y)
 		if temp.y < linDecP.y then
 		linDecP.x,linDecP.y,linDecP.z,linDecP.index= temp.x,temp.y,temp.z,temp.index
 		end

@@ -443,7 +443,7 @@ end
 
 function 	dealPortalStormDamage()
 px,_,pz= Spring.GetUnitPiecePosDir(unitID,sparks[26])
-T= GetAllInCircle(px,pz,150,unitID)
+T= getAllInCircle(px,pz,150,unitID)
 process(T,
 		function(id)
 		unitTeam=Spring.GetUnitTeam(id)

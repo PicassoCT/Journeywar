@@ -440,10 +440,7 @@ function script.Killed(recentDamage, _)
 		WaitForTurn(jbugleg4,y_axis)
 		WaitForTurn(jbugleg4,z_axis)
 		Sleep(120)
-		
-		
-		
-		
+				
 	end
 	Turn(jbugleg1,x_axis,math.rad(0),6)
 	Turn(jbugleg1,y_axis,math.rad(0),6)
@@ -457,9 +454,6 @@ function script.Killed(recentDamage, _)
 	Turn(jbugleg4,x_axis,math.rad(0),6)
 	Turn(jbugleg4,y_axis,math.rad(0),6)
 	Turn(jbugleg4,z_axis,math.rad(0),6)
-
-	
-	
 	
 	return 0
 end

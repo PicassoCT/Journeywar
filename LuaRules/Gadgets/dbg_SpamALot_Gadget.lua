@@ -49,6 +49,8 @@ local over = false
 local unitDefIDTable = {}
 local maxUnitDefIDs
 
+blackListDefID={}
+blackListDefID[UnitDefNames["grecforrest"].id]= true
 --------------------------------------
 ----------------Funcs-----------------
 
@@ -102,12 +104,15 @@ function PickUnitDefID(x,z)
 	local isAirUnit, airTest, isWaterUnit, waterTest, moveTest
 	local testNum = math.random(maxUnitDefIDs)
 	--choose random unitDef
-	for try = 0,500 do
+	for try = 0,220 do
 		testNum = testNum + 1
 		if testNum >= maxUnitDefIDs then
 			testNum = 1
 		end
 		unitDef = UnitDefs[unitDefIDTable[testNum]]
+		
+		if not blackListDefID[unitDef] then 
+		
 		--test to see if its suitable
 		--Spring.Echo(testNum, unitDefIDTable[testNum], maxUnitDefIDs)
 		if (not unitDef.isFactory) then
@@ -125,6 +130,7 @@ function PickUnitDefID(x,z)
 					unitDefIDbackup = unitDef.id
 				end
 			end
+		end
 		end
 	end
 	--failsafe

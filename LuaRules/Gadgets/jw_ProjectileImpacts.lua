@@ -51,7 +51,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
 	local cCssFlameT=WeaponDefNames["cflamethrower"].id
 	local cUniverseGun=WeaponDefNames["cuniversegun"].id
-	local weapondefID3 = WeaponDefNames["cnukegrenadelvl3"].id
+	local nukeLvl2WeaponDefID = WeaponDefNames["cnukegrenadelvl2"].id
+	local nukeLvl3WeaponDefID = WeaponDefNames["cnukegrenadelvl3"].id
 	local weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
 	local tiglilWeaponDefID= WeaponDefNames["tiglilclosecombat"].id
 	local striderWeaponDefID= WeaponDefNames["warpcannon"].id
@@ -111,7 +112,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(cCssFlameT,true)
 	Script.SetWatchWeapon(glavaWeaponID,true)
 	Script.SetWatchWeapon(gVolcanoWeaponID,true)
-	Script.SetWatchWeapon(weapondefID3 , true)
+	Script.SetWatchWeapon(nukeLvl2WeaponDefID , true)
+	Script.SetWatchWeapon(nukeLvl3WeaponDefID , true)
 	Script.SetWatchWeapon(highExLineGunDefID , true)
 	Script.SetWatchWeapon(jvaryfoospearDefID , true)
 	Script.SetWatchWeapon(jgluegunDefID , true)
@@ -413,9 +415,15 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
 		end
 		
-		if weaponDefID== weapondefID3 then
+		if weaponDefID== nukeLvl2WeaponDefID then
 			Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
 			grenadeID=Spring.CreateUnit("ccomendernuke",px,py,pz,0,gaiaTeamID)
+			Spring.SetUnitNoSelect(grenadeID,true)
+		end	
+		
+		if weaponDefID== nukeLvl3WeaponDefID then
+			Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
+			grenadeID=Spring.CreateUnit("ccomendernukelvl3",px,py,pz,0,gaiaTeamID)
 			Spring.SetUnitNoSelect(grenadeID,true)
 		end
 		

@@ -2349,7 +2349,7 @@ function vardump(value, depth, key)
 				reTab[i].x,reTab[i].y,reTab[i].z=Spring.GetUnitPiecePosDir(unitID,piecesTable[i])
 				reTab[i].index=i
 			end
-			assert(reTab.x)
+			assert(reTab[#reTab].x)
 			return reTab
 		else
 			if #piecesTable == 0 then return nil end

@@ -116,7 +116,7 @@ end
 		end
 					
 	function addActionZone(unitID,unitDefID,teamID)
-		
+			if not MasterTable[teamID] then MasterTable[teamID]={} 	end
 			if MasterTable[teamID][2] == nil then MasterTable[teamID][2]={}	end
 			MasterTable[teamID][2][unitID] = unitID
 			end	
