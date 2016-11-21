@@ -568,7 +568,7 @@ end
 function assemble(center,unitid,udefSub,CubeLenghtSub, nrNeeded,range, AttachPoints)
 	--Move UnderGround
 	
-	makeCascadingGlobalTables("InfoTable["..unitid"].boolBuildEnded",true)
+	makeTableFromString("InfoTable["..unitid"].boolBuildEnded",true)
 	
 	piecesTable=Spring.GetUnitPieceList(unitid)
 	for i=1,#piecesTable do
@@ -586,7 +586,7 @@ function assemble(center,unitid,udefSub,CubeLenghtSub, nrNeeded,range, AttachPoi
 	DistanceDown=base-hy
 	Move(center,y_axis,DistanceDown,0)
 	
-	makeCascadingGlobalTables("BoundToThee")
+	makeTableFromString("BoundToThee")
 	
 	oldHP=Spring.GetUnitHealth(unitid)
 	newHP=oldHP

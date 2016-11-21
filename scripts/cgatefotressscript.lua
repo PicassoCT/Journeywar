@@ -467,7 +467,7 @@ function unfoldAnimation()
 	InnerCityDeploy(true)
 	RailGunUnfold(true)
 	unfoldDepots(true)
-	GG.soundInOrderTable["cgatefort"..unitID]=false
+	GG.soundInOrderTable["cgatefort"..unitID].signal=false
 
 	boolDeployed=true
 	for k,v in pairs(SignalTable)do 
@@ -509,7 +509,7 @@ function foldAnimation()
 
 	resetT(TableOfPieces)
 	hideT(TableOfPieces)
-	GG.soundInOrderTable["cgatefort"..unitID]=false
+	GG.soundInOrderTable["cgatefort"..unitID].signal=false
 
 	for k,v in pairs(SignalTable)do 
 	SignalTable[k]=false	
@@ -1370,7 +1370,7 @@ turretSpeed=3.141
 function Weapon1fire()	
 	if boolActivateTravelling==false then return false end
 	boolOneShot=false
-	makeCascadingGlobalTables("FiringGateFotressTable["..teamid.."["..unitID.."]]",true)
+	makeTableFromString("FiringGateFotressTable["..teamid.."["..unitID.."]]",true)
 	StartThread(watchForImpact)
 	return true
 end

@@ -12,12 +12,12 @@ pieces={}
 -- pieces[#pieces+1]=piece"name"
 -- Hide(pieces[#pieces])
 -- end
-main=piece"Deco1"
-pieces[#pieces+1]=main
+
+
 
 function script.Create()
-dice=math.random(1,#pieces)
-Turn(pieces[dice],y_axis,math.rad(math.random(-360,360)),0)
+
+Turn(center,y_axis,math.rad(math.random(-360,360)),0)
 Spring.SetUnitAlwaysVisible(unitID,true)
 Spring.SetUnitNeutral(unitID,true)
 StartThread(Emit)

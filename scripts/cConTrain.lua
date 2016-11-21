@@ -1028,10 +1028,16 @@ function healWhileStandingStill()
 				if hp then
 					
 					T=getAllInCircle(x,z,300,unitID,teamID)
-					T=process(T,function(id) if Spring.GetUnitTeam(id) == myTeamID then return id else end end)
+					T=process(T,
+					function(id) 
+						if Spring.GetUnitTeam(id) == myTeamID then 
+						return id 
+						end
+					end)
 					
 					hp=math.ceil(math.ceil(hp*0.5)/#T)
 					hpcopy=hp
+					if #T > 0 then
 					for i=1,#T do
 						defID=Spring.GetUnitDefID(T[i])
 						if defID and ud[defID].isBuilding ==false and not conTypeTable[defID] then
@@ -1052,6 +1058,7 @@ function healWhileStandingStill()
 							end
 						end
 					end
+				end
 				end
 				
 				Sleep(750)

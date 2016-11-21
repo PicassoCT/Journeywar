@@ -86,7 +86,7 @@ function constDistanceDrag()
 				end
 			end,		
 			function(id)
-				if type(id)=="number" then
+				if id and  type(id)=="number" then
 					dist=GetUnitDistance(id,unitID) 
 					
 					if dist and dist < dragInRange and dist > liftUpRange then
@@ -101,13 +101,17 @@ function constDistanceDrag()
 							Spring.SpawnCEG("jsunshipburnup",ix,iy+10,iz,vec.x*-1,vec.y*-1,vec.z*-1,10,0)							
 						end
 					end
+					
+					if dist and dist < liftUpRange then
+						StartThread(moveTowards,id,50, 10, px,py,pz,1-(dist/liftUpRange))
+					end
+				
+					if id then
+						Spring.AddUnitDamage(id,4)	
+					end
 				end
 				
-				if dist and dist < liftUpRange then
-					StartThread(moveTowards,id,50, 10, px,py,pz,1-(dist/liftUpRange))
-				end
 				
-				Spring.AddUnitDamage(id,4)	
 			end
 			)
 		end

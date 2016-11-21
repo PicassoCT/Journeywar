@@ -37,6 +37,7 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 VFS.Include("scripts/lib_UnitScript.lua" )
+VFS.Include("scripts/lib_jw.lua" )
 local modOptions = Spring.GetModOptions()
 
 function GetAIStartUnit(teamID, leader, isDead, boolIsAI, side,playerInfo)
@@ -180,6 +181,10 @@ end
 
 
 function gadget:GameStart()
+	--creates a Tech Tree in GG
+	local teams = Spring.GetTeamList()
+	createTechTree(teams)
+
 	-- only activate if engine didn't already spawn units (compatibility)
 	if (#Spring.GetAllUnits() > 0) then
 		return
@@ -187,7 +192,7 @@ function gadget:GameStart()
 	
 	-- spawn start units
 	local gaiaTeamID = Spring.GetGaiaTeamID()
-	local teams = Spring.GetTeamList()
+
 	for i = 1,#teams do
 		local teamID = teams[i]
 		--Spring.Echo("GameStart::Called for team .."..teamID)
@@ -196,4 +201,6 @@ function gadget:GameStart()
 			SpawnStartUnit(teamID)
 		end
 	end
+
+	
 end

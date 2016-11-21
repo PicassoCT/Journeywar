@@ -25,7 +25,7 @@ lib_boolDebug= false --GG.BoolDebug or false
 
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
-function makeCascadingGlobalTables(FormatString,assignedValue, ...)
+function makeTableFromString(FormatString,assignedValue, ...)
 	--local arg = table.pack(...)
 	if loadstring(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; loadstring(FormatString) return end
 	--SplitByDot
@@ -307,6 +307,8 @@ function assertT(Table, ... )
 	if table.pack then
 	 arg = table.pack(...)
 	end
+	
+	if type(arg) =="number" then echo("assertT:: Not a valid table- recived number "..arg);return false end
 	dimensions={}
 	dimensionsIndex=0
 	comperator={}
@@ -2283,9 +2285,14 @@ function vardump(value, depth, key)
 	
 	function getHighestPointOfSet(Table,axis)
 	if type(Table)  ~= "Table" then 
+		echo("getHighestPointOfSet:not a table")
 		return nil
 	end
-	echoT()
+	
+	if #T < 1 then 
+		echo("getHighestPointOfSet:table is empty")
+		return nil
+	end
 	
 		index=1
 		y=-math.huge
@@ -2560,6 +2567,11 @@ function vardump(value, depth, key)
 	function bDbgEcho(strings)
 		if lib_boolDebug==true then Spring.Echo(strings) end
 	end
+	
+	
+	--> Join Operation on two tables
+	
+	
 	--> takes a Table, and executes ArgTable/Function,Functions on it
 	function process(Table, ...)
 		local arg={...}
@@ -3324,6 +3336,7 @@ function vardump(value, depth, key)
 	
 	--> creates a heightmap distortion table
 	function preparhalfSphereTable(size,height)
+	if not size or not height then return nil end
 	cent=math.ceil(size/2)
 	T={}
 	for o=1,size,1 do
@@ -3660,7 +3673,8 @@ end
 	end
 	
 	function average(...)
-		--local arg = table.pack(...)
+		local arg = table.pack(...)
+		if not arg then return nil end
 		sum=0
 		it=0
 		for k,v in pairs(arg) do

@@ -27,6 +27,7 @@ return {
 				[3] = 0,
 			},
 		},
+		
 		explosionspike = {
 			air = true,
 			class = [[CSimpleParticleSystem]],
@@ -64,7 +65,7 @@ return {
 			properties = {
 				alwaysvisible = true,
 				heat = 10,
-				emitvector = [[0, 1, 0]],
+
 				heatfalloff = 0.1,
 				maxheat = 15,
 				pos = [[r-2 r2, 5, r-2 r2]],
@@ -214,7 +215,74 @@ return {
 				ttl = 150,
 			},
 		},
-		
+		explosionCloud = {
+			air = true,
+			class = [[CSimpleParticleSystem]],
+			count = 12,
+			ground = true,
+			properties = {
+				emitrot = 0,
+				emitrotspread = 3,
+				airdrag = 0.8,
+				alwaysvisible = true,
+	
+				colormap = [[	0 0 0 0
+								1.0 1.0 1.0 0.01	
+								0.9 0.5 0.2 0.01
+								0.8 0.1 0.1 0.01 	
+								0.8 0.1 0.1 0.0]],
+				directional = true,
+	
+				emitvector = [[0r0.001r-0.001, 0r0.001, 0r0.001r-0.001]],
+				gravity = [[0, 0.05r0.1, 0]],
+				numparticles = 1,
+				particlelife = 450,
+				particlelifespread = 25,
+				particlesize = 10,
+				particlesizespread = 35,
+				particlespeed = 0,
+				particlespeedspread = 0,
+				pos = [[0r15r-15, 0, 0r15r-15]],
+				sizegrowth = 0.00000001,
+				sizemod = 1.0,
+				texture = [[SmokeAshCloud]],
+				useairlos = false,
+			},
+		},	
+		explosionCloudGoingUp = {
+			air = true,
+			class = [[CSimpleParticleSystem]],
+			count = 22,
+			ground = true,
+			properties = {
+				emitrot = 0,
+				emitrotspread = 3,
+				airdrag = 0.8,
+				alwaysvisible = true,
+	
+				colormap = [[	0.9 0.5 0.2 0.01
+								1.0 4.0 0.2 0.01	
+								0.9 0.5 0.2 0.01
+								0.8 0.1 0.1 0.01 	
+								0.8 0.1 0.1 0.0]],
+				directional = true,
+	
+				emitvector = [[0r0.001r-0.001, 0r0.001, 0r0.001r-0.001]],
+				gravity = [[0, 0.3, 0]],
+				numparticles = 1,
+				particlelife = 150,
+				particlelifespread = 25,
+				particlesize = 10,
+				particlesizespread = 35,
+				particlespeed = 0,
+				particlespeedspread = 0,
+				pos = [[0r265r-265, 0, 0r265r-265]],
+				sizegrowth = 0.00000001,
+				sizemod = 1.0,
+				texture = [[SmokeAshCloud]],
+				useairlos = false,
+			},
+		},
 		fireballup = {
 			air = true,
 			class = [[CSimpleParticleSystem]],
@@ -411,7 +479,8 @@ return {
 		},
 		-- /Smokepillar==================================================================================
 		-- Cloudring==================================================================================
-			cloudring = {
+	
+		cloudring = {
 			class = [[CBitmapMuzzleFlame]],
 			count = 12,
 			underwater = 1,
@@ -447,6 +516,8 @@ return {
 				ttl = 575,
 			},
 		},		
+		
+	
 		-- /Cloudring==================================================================================
 	},
 }

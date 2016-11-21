@@ -41,9 +41,17 @@ function script.Create()
 	Move(wood[1],y_axis,-10,	2.9)
 	if boolIsRecursiveWood== true then
 		StartThread(recursiveForrest)
+		StartThread(delayedKickOff)
 	end
 end
+
+
+function delayedKickOff()
+Sleep(25)
+boolDelayedKickOff=true
+end
 searchAccessor1x1= getTableAccessor(1,1, true)
+
 function slopeChecker(posX, posZ)
 	boolSlipperySlope=false
 	for i=1,#searchAccessor1x1 do
@@ -62,6 +70,9 @@ return(posX > ForrestDiameter*2 and posX < mapX-ForrestDiameter*2  and posZ > Fo
 end
 
 function recursiveForrest()
+	while boolDelayedKickOff==false do 
+		Sleep(10)
+	end
 	Sleep(350)
 	if not GG.RecursiveForrestCounter then GG.RecursiveForrestCounter = 1 end
 	if GG.RecursiveForrestCounter > RECURSIVE_FORREST_MAX then return end

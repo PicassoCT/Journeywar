@@ -393,7 +393,7 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 	if not GG.OnFire  then GG.OnFire={} end
 	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
 	
-	--very bad sollution n-times
+	--very bad solution n-times
 	for i=1, table.getn(GG.OnFire), 1 do
 		if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== unitID then
 			GG.OnFire[i][2]= math.ceil(math.random(timeToburnMin,timeToburnMax)) 
@@ -407,4 +407,74 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 	end
 	
 end
---===================================================================================================================
+
+--=======================================Tech Tree=============================================================
+
+function getCombinNewTechTree()
+		return {["origin"]={
+			["cupgshield"]={lvl=0, unlocks={}, unlockedBy=""},
+			["cadvisorstalker"]={lvl=0, unlocks={},unlockedBy=""},
+			["ccontrainheal"]={lvl=0, unlocks={},unlockedBy=""},
+			["cresthumper"]={lvl=0, unlocks={},unlockedBy=""}
+		}
+	}			
+end
+
+function getSideNewTechTree(team, side)
+	if not GG.orgTechTree then GG.orgTechTree={} end
+	
+	if not GG.orgTechTree[team] and side == "centrail" then 
+		GG.orgTechTree[team]=getCombinNewTechTree() 
+		flattenTechTree(team)
+	end
+	
+	if not GG.orgTechTree[team] and side == "journeyman" then 
+		GG.orgTechTree[team]={} 
+		flattenTechTree(team)
+	end	
+end
+
+function flattenTechTree(team)
+	if not GG.TechTree then GG.TechTree ={} end
+	GG.TechTree[team] ={}
+	
+	local Tree = GG.orgTechTree[team][origin]
+	if not Tree then GG.TechTree[team]={} ; return end
+	
+	for key,values in pairs(Tree) do
+		if Tree[values.unlockedBy] and Tree[values.unlockedBy].lvl > 0 then 
+			GG.TechTree[team][key]=values.lvl
+		else
+			GG.TechTree[team][key]=0
+		end
+	end
+	
+	return 
+end
+
+function alterTechTree(team, TechName, funcModifier, boolOverride)
+	parent=GG.orgTechTree[team]["origin"][TechName].unlockedBy
+	
+	if GG.orgTechTree[team]["origin"][parent].lvl > 0 or boolOverride == true then
+		GG.orgTechTree[team]["origin"][TechName].lvl= funcModifier(GG.orgTechTree[team]["origin"][TechName])
+		flattenTechTree(team)
+	end
+end
+
+
+function checkOnTech(team, TechName)
+	if not 	GG.TechTree or not 	GG.TechTree[team] or not 	GG.TechTree[team][TechName] then return 0
+	else
+		return GG.TechTree[team][TechName] 
+	end
+	
+end
+
+function createTechTree(teams)
+	for i=1, #teams do
+		--get side
+		 _,_,_,ai,side = Spring.GetTeamInfo(teams[i])
+		--erect new tech tree
+		getSideNewTechTree(teams[i],side)	
+	end
+end

@@ -139,14 +139,14 @@ if gadgetHandler:IsSyncedCode() then
 	
 	function gadget:GameFrame(n)
 		
-		if (n>0 and n%4001==0) then
+		if (n>0 and n%8000==0) then
 			destroyTable(idTable)
 			idTable={}
 			boolCreateThem=true
 			i=1
 		end
 		
-		if boolCreateThem==true and n% 61 ==0 then
+		if boolCreateThem==true and n% 18000 ==0 then
 			x,z=math.random(1,numX),math.random(1,numZ)
 			x,z=math.ceil(x),math.ceil(z)
 			--(x,z,typdefid,typdefIDother,team,teamother)
