@@ -242,11 +242,17 @@ local function RecvFromSynced(arg1,arg2,...)
     end
     
     for i,callInfo in ipairs(callInfoList) do
-      local func = callInfo[1]
-      -- local gadget = callInfo[2]
-      if (func(arg1,arg2,...)) then
-        return true
-      end
+		  local func = callInfo[1]
+		  if not func then 
+		  Spring.Echo("actions.lua::no function with arguments"..arg1.." "..arg2)
+		  
+		  return false
+	  else
+		  -- local gadget = callInfo[2]
+		  if (func(arg1,arg2,...)) then
+			return true
+		  end
+     end
     end
     return false
   end

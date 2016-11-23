@@ -158,6 +158,7 @@ function idle()
 		end
 		
 		if rand==0 then
+			Turn(center,x_axis,math.rad(0),15)
 			Turn(turret,x_axis,math.rad(armoffset-90),7)
 			Turn(turret2,x_axis,math.rad(armoffset-90),7)
 			WaitForTurn(turret,x_axis)
@@ -205,7 +206,7 @@ function idle()
 			end
 		end
 		if rand==2 then
-			
+			Turn(center,x_axis,math.rad(0),15)
 			sitUps=math.random(4,28)
 			for i=0, sitUps, 1 do
 				Move(center,y_axis,-9,9)

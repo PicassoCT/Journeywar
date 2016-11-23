@@ -30,34 +30,17 @@ spawnCycleRestTime = 80000
 howManyUnitsPerSpawnCycle=5
 
 monsterTable={}
-numX = (Game.mapSizeX )-1
-numZ = (Game.mapSizeZ )-1
-function sanitizeCoords(monsterID,x,y,z, sfactor)
+mapX,mapZ=Spring.GetMetalMapSize
+numX = mapX*8
+numZ = mapZ*8
+function sanitizeCoords(x,y,z, sfactor)
 	
-	if (not x or not z ) or x<= 0 and z <= 0 or (x >=numX or z >= numZ) then	
-		x,y,z=Spring.GetUnitPosition(unitID)
-		ez=Spring.GetUnitNearestEnemy(unitID)
-		if ez then
-			distance= GetUnitDistance(monsterID,ez)
-			ex,ey,ez=Spring.GetUnitPosition(ez)
-			sfactor= math.sin(sfactor* 3.14159)
-			ox,oz=ex+ distance*sfactor, ez+ distance*sfactor
-			x,z=x+ox,z+oz
-		else
-			dx,dy,dz=Spring.GetUnitDirection(monsterID)	
-			if dx then 
-				x,z= x + dx * 7,z+ dz*7
-			end
-		end
-	end
-	
-	if x > 10 and z > 10 and x < Game.mapSizeX -10 and z < Game.mapSizeZ - 10 then 			
+	if (not x or not z ) or x<= 50 and z <= 50 or (x >=numX-50 or z >= numZ -50) then	
+		x,z=math.random(numX*0.05,numX*0.95),math.random(numZ*0.05,numZ*0.95)
 		return x,y,z
-	end		
-	
-	Spring.Echo("jGeoHive:Defaulting on the Coordinates with x"..x, "z: "..z)
-	x,z=  (math.random(1,9)/10)*Game.mapSizeX, (math.random(1,9)/10)* Game.mapSizeZ
-	return x,y,z
+	else
+		return x,y,z
+	end
 	
 end
 
@@ -156,47 +139,79 @@ totalTable={
 ["RELAX"]= RELAXTIME
 }
 
-function NextState(State,time)
+function NextState(State,times)
 
 
 
-	if State=="BUILDUP" and time > BuildUPTime then 
-	time=0; --Spring.Echo("hivePiece::Peak") ;
-	return "PEAK" , time ,  BuildUPTime
+	if State=="BUILDUP" and times > BuildUPTime then 
+	times=0; --Spring.Echo("hivePiece::Peak") ;
+	return "PEAK" , times ,  BuildUPTime
 	end
 	
-	if State=="PEAK" and time > PeakTime then 
-	time=0; 
-	return "PEAKFADE", time , PeakTime
+	if State=="PEAK" and times > PeakTime then 
+	times=0; 
+	return "PEAKFADE", times , PeakTime
 	end
 	
-	if State=="PEAKFADE" and time > PEAKFADETIME then 
-	time=0; 
-	return "RELAX", time, PEAKFADETIME
+	if State=="PEAKFADE" and times > PEAKFADETIME then 
+	times=0; 
+	return "RELAX", times, PEAKFADETIME
 	end
 	
-	if State=="RELAX" and time > RELAXTIME then 
-		time=0 ;
+	if State=="RELAX" and times > RELAXTIME then 
+		times=0 ;
 		RELAXTIME= 60000+ math.ceil(math.random(4000,60000)) 
 	--	Spring.Echo("hivePiece::BUILDUP") ;
-		return "BUILDUP", time, RELAXTIME
+		return "BUILDUP", times, RELAXTIME
 	end	
 
-	return State, time, time/totalTable[State]
+	return State, times, times/totalTable[State]
 end
 
+function findBiggestCluster(team)
+mapX,mapZ=Spring.GetMetalMapSize
+mapRepresentiv=makeTable(0,mapx,mapZ)
+teamUnits=Spring.GetTeamUnits(team)
+maxTuple{x=mapX/2,z=mapZ/2,val=0}
+		if teamUnits then
+		local spGetUnitPos= Spring.GetUnitPosition
+			process(teamUnits,
+					function(id)
+						ix,_,iz= spGetUnitPos(id)
+						ix,iz=math.ceil(ix/8),math.ceil(iz/8)
+						if mapRepresentiv[ix] and mapRepresentiv[ix][iz] then
+						 mapRepresentiv[ix][iz] = mapRepresentiv[ix][iz] +1
+						end
+						end)
+
+			for i=1,#mapX do
+				for j=1,#mapZ do
+				if mapRepresentiv[i][j] > maxTuple.val then
+				maxTuple.val=mapRepresentiv[i][j] 
+				maxTuple.x=i
+				maxTuple.z=j
+				end
+			end
+			end
+		end
+	return maxTuple.x*8, maxTuple.z*8
+end
+
+
 ax,ay,az=Spring.GetUnitPosition(unitID)
---attack relentless
+--attack relentless the biggest cluster
 function PEAK(monsterID, enemyID,Time,mteam, factor)
-	eteam=Spring.GetUnitTeam(enemyID)
-	ex,ey,ez=Spring.GetUnitPosition(enemyID)
-	ex,ey,ez=sanitizeCoords(monsterID,ex,ey,ez,Time/8500)
-	if math.random(0,1)==1 then
+	if math.random(0,1)==0 then
+		eteam=Spring.GetUnitTeam(enemyID)
+		ex,ez=findBiggestCluster(eteam)
+			return ex,0,ez
+	else
 		ad=Spring.GetUnitNearestAlly(enemyID)
 		ex,ey,ez=Spring.GetUnitPosition(ad)
-		ex,ey,ez=sanitizeCoords(monsterID,ex,ey,ez,Time/8500)
+		ex,ey,ez=sanitizeCoords(ex,ey,ez,Time/8500)
+			return ex,ey,ez
 	end
-	return ex,ey,ez
+
 end
 PEAKFADEHALF=PEAKFADETIME/4
 
@@ -208,25 +223,27 @@ function PEAKFADE(monsterID, enemyID,Time,mteam, factor)
 	else
 		eteam=Spring.GetUnitTeam(enemyID)
 		ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-		
+		ax,ay,az=Spring.GetTeamStartPosition(mteam)
 		cof=Time/PEAKFADETIME
 		cof= math.max(cof,0.5)
-		x,y,z = sanitizeCoords(monsterID,(1-cof)*ex+ ax*cof, ay, (1-cof)*ez+ az*cof,Time/PEAKFADETIME)
+		x,y,z = sanitizeCoords((1-cof)*ex+ ax*cof, ay, (1-cof)*ez+ az*cof,Time/PEAKFADETIME)
 		return x,y,z
 	end
 	
 end
 
-function BUILDUP(monsterID, enemyID,Time,mteam, factor)
+function BUILDUP( enemyID,Time,mteam, factor)
 	coef=Time/BuildUPTime +  math.max( math.min(0.1,math.cos(factor* 3.14158*7)*(1/10)),-0.1)
 	Inv=1-coef
 	--we try to calc a midvalue -- and get everyone to assemble there
 	ecx,ecy,ecz=Spring.GetUnitPosition(enemyID)
 	eteam=Spring.GetUnitTeam(enemyID)
 	ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-	ex, ey, ez = ex + (math.cos(factor)/10) *  ex, ey,  ez + (math.cos(Inv )/10)*ez
+	ecx,ecy,ecz= ecx-ex,ecy-ey,ecz-ez
 	
-	rx,ry,rz=sanitizeCoords(monsterID,(ecx*Inv+ex*coef),(ecy+ey),(ecz*Inv+ez*coef),Time/BuildUPTime)
+	ex, ey, ez = ex + (math.cos(factor)/10) *  ecx, ey,  ez + (math.cos(Inv )/10)*ecz
+	
+	rx,ry,rz=sanitizeCoords(ex,ey,ez,Time/BuildUPTime)
 	--well away from the mainbase
 	if math.abs(ex-rx)> 1000 and math.abs(ez-rz)> 1000 then 
 		return rx,ry,rz 
@@ -236,7 +253,7 @@ function BUILDUP(monsterID, enemyID,Time,mteam, factor)
 		unitDead =Spring.GetUnitIsDead(eneMyne) 
 		if unitDead and unitDead == false then
 			dax,day,daz=Spring.GetUnitPosition(eneMyne)
-			dax,day,daz=sanitizeCoords(monsterID,(ex*Inv+dax*coef),(ey*Inv+day*coef),(ez*Inv+daz*coef),Time/BuildUPTime)
+			dax,day,daz=sanitizeCoords((ex*Inv+dax*coef),(ey*Inv+day*coef),(ez*Inv+daz*coef),Time/BuildUPTime)
 			return dax,day,daz
 		end
 		end
@@ -270,7 +287,7 @@ funcTable["RELAX"]=RELAX
 function TargetOS()
 
 	State="RELAX"
-	time=0
+	times=0
 	local spValidUnitID=Spring.GetUnitIsDead
 	local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 	local spGetUnitPosition=Spring.GetUnitPosition
@@ -280,9 +297,9 @@ function TargetOS()
 	
 	while(true) do
 		Sleep(5000)
-		time=time+5000
+		times=times+5000
 		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
-			State, time, percent =NextState(State,math.ceil(time/30))
+			State, times, percent =NextState(State,math.ceil(times/30))
 			
 			
 			for i=1,table.getn(monsterTable),1 do
@@ -291,7 +308,7 @@ function TargetOS()
 					
 					enemyID= spGetUnitNearestEnemy(monsterTable[i])
 					if enemyID then						
-						ex,ey,ez = lfuncTable[State](unitID,enemyID,time,teamID, time/totalTable[State])
+						ex,ey,ez = lfuncTable[State](unitID,enemyID,times,teamID, times/totalTable[State])
 						if ex then
 						StartThread(markPosOnMap,ex,ey,ez,"greenlight")						
 						spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)

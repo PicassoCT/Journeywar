@@ -6,7 +6,7 @@ include "lib_Animation.lua"
 include "lib_Build.lua" 
 include "lib_jw.lua" 
 
-
+ResetTime= 8000
 function delayedReset()
 	boolFlowDirectionTowardsTeam= false
 	Signal(SIG_RESET)
@@ -14,7 +14,7 @@ function delayedReset()
 	Sleep(ResetTime)
 	boolFlowDirectionTowardsTeam=true
 end
---include "spring_lua_dsl.lua"
+
 totalDamage=0
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )

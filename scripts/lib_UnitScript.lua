@@ -26,7 +26,7 @@ lib_boolDebug= false --GG.BoolDebug or false
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
 function makeTableFromString(FormatString,assignedValue, ...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	if loadstring(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; loadstring(FormatString) return end
 	--SplitByDot
 	SubTables={}
@@ -280,7 +280,7 @@ end
 
 --> adds to the table arguments
 function addTable(T,...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	String="T"
 	boolOneTimeNil=false
 	if arg then
@@ -303,10 +303,10 @@ end
 
 --expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
 function assertT(Table, ... )
-	arg= ...
-	if table.pack then
-	 arg = table.pack(...)
-	end
+   local arg = arg
+   if (not arg) then arg = {...}; arg.n = #arg end
+
+
 	
 	if type(arg) =="number" then echo("assertT:: Not a valid table- recived number "..arg);return false end
 	dimensions={}
@@ -551,7 +551,7 @@ function getUnitSide(unitID)
 end
 
 function echo(stringToEcho,...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	
 	Spring.Echo(stringToEcho)
 	if arg then
@@ -882,7 +882,7 @@ end
 -->Generalized map processing Function
 -->Get the Ground Normal, uses all handed over functions for processing and returns a corresponding Table
 function doForMapPos(Resolution,...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	
 	for k,v in pairs(arg) do if type(v)~="function" then return Spring.Echo(" Argument is not a processing function") end end
 	
@@ -2404,7 +2404,7 @@ function vardump(value, depth, key)
 	end
 	
 	function normTwo(...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		sum=0
 		for k,v in pairs(arg) do
 			sum=sum+ v*v
@@ -2575,7 +2575,7 @@ function vardump(value, depth, key)
 	--> takes a Table, and executes ArgTable/Function,Functions on it
 	function process(Table, ...)
 		local arg={...}
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		T={}
 		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
 		if not arg then bDbgEcho("No args in process") return end
@@ -2599,7 +2599,7 @@ function vardump(value, depth, key)
 	
 	function recProcess(Table, ...)
 		local arg={...}
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		T={}
 		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
 		if not arg then bDbgEcho("No args in process") return end
@@ -2631,7 +2631,7 @@ function vardump(value, depth, key)
 	
 
 	function accessInOrder(T,...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		local TC=T
 		for _, f in pairs(arg) do
 			executableString="function(TC) if TC["..f.."] then TC=TC[f] return true,TC else return false,TC end end"
@@ -2835,7 +2835,7 @@ function vardump(value, depth, key)
 	end
 	
 	function funcyMeta (T, ...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		for _, f in pairs(arg) do
 			T=f(T)
 		end
@@ -2859,7 +2859,7 @@ function vardump(value, depth, key)
 	
 	--> Apply a function to a unit Table 
 	function forTableUseFunction(T,boolFilterDead,...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		local arg={...}
 		TempT={}
 		for _, f in pairs(arg) do
@@ -2931,7 +2931,7 @@ function vardump(value, depth, key)
 	end
 	
 	function mergeTables(...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		Table={}
 		if not arg then return end
 		
@@ -3101,7 +3101,7 @@ function vardump(value, depth, key)
 	end
 	
 	function assertAllArgs(...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		if not arg then error("No arguments were given") return end
 		nr=1
 		for k,v in pairs(arg) do
@@ -3420,7 +3420,7 @@ end
 	end
 	
 	function holdsForAll(Var,fillterConditionString,...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		if arg then
 			for k,Val in pairs(arg) do
 				if loadstring("Var"..fillterConditionString.."Val")==false then return end
@@ -3432,7 +3432,7 @@ end
 	end
 	
 	function is(Var,fillterConditionString,...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		f=loadstring(fillterConditionString)
 		if type(f)=="function" then
 			for k,Val in pairs(arg) do
@@ -3661,7 +3661,7 @@ end
 	end
 	
 	function square(...)
-		--local arg = table.pack(...)
+		   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 		if not arg then return 0 end
 		sum=0
 		for k,v in pairs(arg) do

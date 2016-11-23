@@ -34,7 +34,7 @@ end
 
 -->Waits for anyTurnToComplete
 function WaitForTurns(...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	
 	local arg={...}
 	if not arg then
@@ -62,7 +62,7 @@ end
 
 -->Waits for anyTurnToComplete
 function WaitForMoves(...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	
 	local arg={...}
 	if not arg then
@@ -704,7 +704,7 @@ end
 
 --> Move with a speed Curve
 function moveSpeedCurve(piecename, axis, NumberOfArgs, now, timeTotal , distToGo, Offset,...)
-	--local arg = table.pack(...)
+	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	--!TODO calcSpeedUpId from functionkeys,check calculations for repetitons and store that key in to often as result in GG
 	--should handle all sort of equations of the type 0.3*x^2+0.1*x^1+offset
 	-- in our case that would be [2]=0.3 ,[1]=0.1 and so forth
