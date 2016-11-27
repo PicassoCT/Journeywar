@@ -24,7 +24,7 @@ local unitDef = {
 	MaxSlope = 83,
 	MaxVelocity = 2.5,
 	
-	MovementClass = "Default2x2",
+	MovementClass = "jinfantry",
 	TurnRate = 450,
 	mass=420,
 	

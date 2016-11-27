@@ -8,7 +8,7 @@ local unitDef = {
 	script 			 = "jCrabScript.lua",
 	maxDamage = 2550, 
 	
-	MovementClass = "Default2x2",
+	MovementClass = "jcreeper",
 	buildCostMetal =30,
 	buildCostEnergy =200,
 	buildTime=3,

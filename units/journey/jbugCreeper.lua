@@ -8,7 +8,7 @@ local unitDef = {
 	script 			 = "jgeobugscript.lua",
 	maxDamage = 250, 
 	
-	MovementClass = "Default2x2",
+	MovementClass = "jcreeper",
 	buildCostMetal =30,
 	buildCostEnergy =200,
 	buildTime=3,

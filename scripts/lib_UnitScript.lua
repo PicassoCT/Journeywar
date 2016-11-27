@@ -2698,11 +2698,12 @@ function vardump(value, depth, key)
 		return returnTable 
 	end
 	--> filters Out Buildings
-	function filterOutBuilding (T, UnitDefs)
+	function filterOutBuilding (T, UnitDefs, boolFilterOut)
+	boolFilterOut= boolFilterOut or false
 		returnTable={} 
 		for k,v in pairs(T) do 
 			def=Spring.GetUnitDefID(k) 
-			if UnitDefs[def] and UnitDefs[def].isBuilding and false== UnitDefs[def].isBuilding then 
+			if UnitDefs[def] and UnitDefs[def].isBuilding and boolFilterOut== UnitDefs[def].isBuilding then 
 			returnTable[k]=v 
 			end 
 		end 

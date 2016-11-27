@@ -9,6 +9,20 @@ local moveDefs =
 		crushStrength = 0,
 	},
 	{
+		name = "jcreeper",
+		footprintX = 2,
+		maxWaterDepth = 200,
+		maxSlope = 20,
+		crushStrength = 25,
+	},
+	{
+		name = "jinfantry",
+		footprintX = 2,
+		maxWaterDepth = 200,
+		maxSlope = 20,
+		crushStrength = 25,
+	},
+	{
 		name = "Default2x2",
 		footprintX = 2,
 		maxWaterDepth = 10,

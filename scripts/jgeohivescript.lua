@@ -30,7 +30,7 @@ spawnCycleRestTime = 80000
 howManyUnitsPerSpawnCycle=5
 
 monsterTable={}
-mapX,mapZ=Spring.GetMetalMapSize
+mapX,mapZ=Spring.GetMetalMapSize()
 numX = mapX*8
 numZ = mapZ*8
 function sanitizeCoords(x,y,z, sfactor)
@@ -89,7 +89,7 @@ function spawner()
 					sigNum= randSign()
 					
 					spSpawnCEG("dirt",x+randoval,y,z+randoval,0,1,0,50,0)
-					dice=math.random(1,3)
+					dice=math.random(1,4)
 					spawnedUnit=0
 				if myDefID== jGeoHiveID then	
 					if dice==1 then	
@@ -100,7 +100,7 @@ function spawner()
 						spawnedUnit=spCreateUnit("jcrabcreeper",x+randoval,y,z+(randoval*sigNum), 0, teamID) 
 					end
 				else
-					if dice==1 then	
+					if dice==2 then	
 						spawnedUnit=spCreateUnit("gzombiehorse",x+randoval,y,z+(randoval*sigNum), 0, teamID) 
 					else 
 						spawnedUnit=spCreateUnit("zombie",x+randoval,y,z+(randoval*sigNum), 0, teamID) 

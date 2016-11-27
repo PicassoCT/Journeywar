@@ -220,7 +220,7 @@ function vectorBetrag(xv,yv,x2,y2)
 	local xyv=xv+yv
 	return math.sqrt(xyv)
 	
-	 
+	
 end
 
 function round2(num,idp)
@@ -282,26 +282,27 @@ MovingEnemysNearby={}
 local myTeamID=Spring.GetUnitTeam(unitID)
 
 function getNearestMovingEnemyDistance(ux,uz)
-
-T= getAllInCircle(ux,uz, 3000, unitID)
-
-T=process(T,
-		function(id)
+	
+	T= getAllInCircle(ux,uz, 3000, unitID)
+	ux,uy,uz=Spring.GetUnitPosition(unitID)
+	T=process(T,
+	function(id)
 		if Spring.GetUnitTeam(id) ~= myTeamID then
-		return id
+			return id
 		end
-		end,
-		function(id)
-		ex,ey,ez=Spring.GetUnitPosition(id)
-		--new Unit
-		if not MovingEnemysNearby[id] then	
-			MovingEnemysNearby[id] = makeVector(ex,ey,ez)
-		end
-		
-		--update Distance
-		MovingEnemysNearby[id].distance= vectorBetrag(ex)
-		
-		--check wether the unit moved
+	end,
+	function(id)
+		if id then
+			ex,ey,ez=Spring.GetUnitPosition(id)
+			--new Unit
+			if not MovingEnemysNearby[id] then	
+				MovingEnemysNearby[id] = makeVector(ex,ey,ez)
+			end
+			
+			--update Distance
+			MovingEnemysNearby[id].distance= vectorBetrag(ex,ez,ux,uz)
+			
+			--check wether the unit moved
 			locEl= MovingEnemysNearby[id]
 			if ex ~= locEl.x or ey ~= locEl.y or ez ~= locEl.z then
 				MovingEnemysNearby[id].x,MovingEnemysNearby[id].y,MovingEnemysNearby[id].z=ex,ey,ez
@@ -310,34 +311,34 @@ T=process(T,
 				MovingEnemysNearby[id].boolMoved=false		
 			end
 			
-
-		end	
-		)
-		
-		for id, set in pairs(MovingEnemysNearby) do
-			if Spring.GetUnitIsDead(id)==true then
-			MovingEnemysNearby[id]= nil
-			end
 		end
-		
-		biggestDistance=9000
-		for id, set in pairs(MovingEnemysNearby) do
-			if id and set then
-				if set.boolMoved== true then
-					if set.distance < biggestDistance then
+	end	
+	)
+	
+	for id, set in pairs(MovingEnemysNearby) do
+		if Spring.GetUnitIsDead(id)==true then
+			MovingEnemysNearby[id]= nil
+		end
+	end
+	
+	biggestDistance=9000
+	for id, set in pairs(MovingEnemysNearby) do
+		if id and set then
+			if set.boolMoved== true then
+				if set.distance < biggestDistance then
 					biggestDistance = set.distance
-					end
 				end
 			end
 		end
-		
-
-
-
-return biggestDistance
+	end
+	
+	
+	
+	
+	return biggestDistance
 end
 
-	xu,yu,zu=Spring.GetUnitPosition(unitID)
+xu,yu,zu=Spring.GetUnitPosition(unitID)
 function motionTrack()
 	MovingEnemysNearby={}
 	SetSignalMask(SIG_TRACK)
@@ -348,7 +349,7 @@ function motionTrack()
 		
 		Sleep(50)
 		Distance = getNearestMovingEnemyDistance(xu,zu)
-	
+		
 		
 		if boolIsItDeadYet==false then
 			for beep=0,2,1 do

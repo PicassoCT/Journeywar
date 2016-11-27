@@ -30,7 +30,7 @@ local SIG_PEACE=32
 --eggspawn --tigLil and SkinFantry
 local AMBUSHLOADTIME=30000
 local AMBUSHTIME=9000
-piecePeriod=15000
+piecePeriod=12500
 costPerEgg=0.5
 experienceSoFar=Spring.GetUnitExperience(unitID)
 eggEnemySpawnDistance = 700
@@ -43,7 +43,7 @@ function spawnAEgg(x,z)
 	transferOrders(unitID,id)
 	
 end
-
+boolPeacefull = true
 function EGG_LOOP()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	local spGetGroundHeight=Spring.GetGroundHeight
@@ -595,7 +595,7 @@ function restorePeace()
 end
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
-	boolPeacefull=false
-	
+
 	StartThread(restorePeace)
+	return damage
 end

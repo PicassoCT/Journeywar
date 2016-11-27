@@ -55,7 +55,7 @@ Heading=0
 boolANewAttack=true
 howlong=1
 ---Signals to be spread
-costPerEgg=0.5
+costPerEgg=1
 ---------------------IdleStance10-Fucntions-------
 
 
@@ -1349,7 +1349,7 @@ function gestiKulieren()
 	end
 end
 
-
+tiglildefid=Spring.GetUnitDefID(unitID)
 function onTheMove()
 	Signal(SIG_ONTHEMOVE)
 	SetSignalMask(SIG_ONTHEMOVE)
@@ -1357,7 +1357,7 @@ function onTheMove()
 	while (true) do
 		
 		if nCounter== 0 then
-			Spring.PlaySoundFile("sounds/tiglil/tgdance.wav") 
+			PlaySoundByUnitDefID(tiglildefid,"sounds/tiglil/tgdance.wav",0.75, 1000, 2,0)
 		elseif nCounter== 5 then
 			nCounter=0
 		end

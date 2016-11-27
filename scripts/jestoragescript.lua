@@ -233,8 +233,8 @@ end
 
 function relativeUpRight(bodyVec)
 	bodyVec.x=bodyVec.x*-1
-	bodyVec.z=bodyVec.z
-	bodyVec.y=bodyVec.y*-1
+	bodyVec.y=bodyVec.y
+	bodyVec.z=bodyVec.z*-1
 	return bodyVec
 	--return vec3MulMatrice3x3(bodyVec,YRotationMatrice(180))
 end
@@ -253,7 +253,8 @@ function gyroScopic()
 
 	ux,_,uz= Spring.GetUnitPosition(unitID)
 	bodyVec.x, bodyVec.y, bodyVec.z =Spring.GetGroundNormal(ux,uz)	
-	bodyVec= normalizeVector(bodyVec)
+	bodyVec= normVector(bodyVec)
+	TargVec=makeVector(0,1,0)
 	
 	_,_,_,LiquidVec.x, LiquidVec.y, LiquidVec.z =spGetUnitPiePosDir(unitID,Number[1])
 
@@ -266,7 +267,7 @@ function gyroScopic()
 			-- if the unit takes a step, add that change of bodyvec as a opposite force to the targetvec
 			--TargVec={x= (-1*(bodyVec.x-oldBodyVec.x)),y= (-1*(bodyVec.y-oldBodyVec.y)),z=(-1*(bodyVec.z-oldBodyVec.z))}
 			
-			TargVec=addVector(mulVector(TargVec,0.5),mulVector(LiquidVec,0.5))
+			--TargVec=addVector(mulVector(TargVec,0.5),mulVector(LiquidVec,0.5))
 			TargVec=addVector(mulVector(TargVec,0.85),mulVector(UpRightVec,0.15))		
 			
 			RadX,RadZ=makeDegFromVec(TargVec)

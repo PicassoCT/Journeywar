@@ -3,11 +3,12 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_Build.lua" 
-
+local AttachUnit = Spring.UnitScript.AttachUnit
+local DropUnit = Spring.UnitScript.DropUnit
 SIG_WALK=2
-
+boolCringeNotRunning=true 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
-	if maRa()==true then
+	if maRa()==true and boolCringeNotRunning==true then
 		
 		StartThread(cringe)
 		
@@ -15,8 +16,9 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	end
 	return damage
 end
-
+myDefID=Spring.GetUnitDefID(unitID)
 function cringe()
+boolCringeNotRunning=false
 	value=math.random(-42,42)
 	for k=1,5 do
 		for i=2,6 do
@@ -26,8 +28,8 @@ function cringe()
 			
 		end
 	end
-	
-	
+
+boolCringeNotRunning=true	
 end
 
 
@@ -158,6 +160,10 @@ seastardefID=Spring.GetUnitDefID(unitID)
 Seastars={}
 table.insert(Seastars,seastardefID)
 
+infantryTable= getInfantryTypeTable()
+creeperTypeTable= getCreeperTypeTable()
+corpseTypeTable=getCorpseTypeTable()
+neutralTypeTable=getNeutralTypeTable()
 function FeedMe()
 	Sleep(13000)
 	while true do
@@ -167,16 +173,35 @@ function FeedMe()
 		
 		for i=1, #sensorT, 1 do
 			x,y,z=Spring.GetUnitPiecePosDir(unitID,sensorT[i])
-			T=getAllInCircle(x,z,10,unitID)
-			if T then 	T= filterOutMobileBuilder (T,true) end
+			T=getAllInCircle(x,z,80,unitID)
+
 			if T then filterOutUnitsOfType(T,Seastars)end
-			table.remove(T,unitID)
-			if T and #T > 0 then boolfoundSomething=true; Sensor=i;break end
+			T= process(T,
+					function (id)
+					uDefid=Spring.GetUnitDefID(id)
+					if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid]or corpseTypeTable[uDefid] then
+						return id
+					end
+					end,
+					function(id)
+					if id then
+					transportID=Spring.GetUnitTransporter(id)
+					if transportID== nil or transportID == unitID then
+					return id
+					end
+					end
+					end
+					)
+			if T and #T > 0 then
+			boolfoundSomething=true; 
+			Sensor=i;
+			break 
+			end
 			
 		end
 		
 		if boolfoundSomething==true then
-			echo("gseastar::FeedMe")
+
 			Signal(4)
 			Signal(8)
 			--Attach victim
@@ -186,26 +211,32 @@ function FeedMe()
 			if #T > 1 then index=math.ceil(math.random(1,#T)) end
 			
 			if Spring.ValidUnitID(T[index])==true then
-				Spring.UnitScript.AttachUnit ( sensorT[Sensor], T[index] ) 
+				if infantryTable[Spring.GetUnitDefID(T[index])] then
+				selects=math.random(1,4)
+				StartThread(PlaySoundByUnitDefID,myDefID,"sounds/gSeastar/scream"..selects..".ogg",0.5, 2000, 2,0)
+				end
+				AttachUnit( Knees[Sensor][1], T[index] ) 
 				Turn(sensorT[Sensor],y_axis,math.rad(90),2)
 				for i=1,6 do
-					Turn(Knees[Sensor][i],x_axis,math.rad(-15),9.33)			
+					Turn(Knees[Sensor][i],x_axis,math.rad(-15),5.33)	
+			
 					WaitForTurn(Knees[Sensor][i],x_axis)
 				end	
-				
+				Sleep(250)
 				for i=1,6 do
-					Turn(Knees[Sensor][i],y_axis,math.rad(75),19.33)
-					Turn(Knees[Sensor][i],x_axis,math.rad(3),9.33)	
+					Turn(Knees[Sensor][i],y_axis,math.rad(75),5.33)
+					Turn(Knees[Sensor][i],x_axis,math.rad(3),3.33)	
 					WaitForTurn(Knees[Sensor][i],y_axis)
 				end
+				Sleep(250)
 				WaitForTurn(sensorT[Sensor],y_axis)
-				Spring.UnitScript.DropUnit ( T[index] ) 	
+				DropUnit( T[index] ) 	
 				Spring.DestroyUnit(T[index],true,true)
 			end
 			
 			StartThread(adaptiveAnimationThreadStarter,configTable,inPieces,4,unitID)
 			
-			
+			Sleep(12000)
 		end
 		
 		Sleep(500)
@@ -252,6 +283,24 @@ end
 
 function script.QueryBuildInfo() 
 	return center 
+end
+
+
+function script.TransportPickup(passengerID)
+
+	SetUnitValue(COB.BUSY, 1)
+		
+	SetUnitValue(COB.BUSY, 0)
+
+end
+
+
+function script.TransportDrop(passengerID, x, y, z)
+	SetUnitValue(COB.BUSY, 1)
+	
+	
+
+	SetUnitValue(COB.BUSY, 0)
 end
 
 Spring.SetUnitNanoPieces(unitID,{ center})

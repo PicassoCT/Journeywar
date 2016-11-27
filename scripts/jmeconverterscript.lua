@@ -182,6 +182,7 @@ function lowerFeet(nr,boolWait)
 end
 
 function moveIt()
+	Signal(SIG_MOVE)
 	SetSignalMask(SIG_MOVE)
 
 	while(true) do
@@ -226,11 +227,16 @@ function moveIt()
 end
 justOnce=true
 function script.StartMoving()
-	Signal(SIG_MOVE)
+
 	StartThread(moveIt)								
 	
 end
+function script.StopMoving()
 
+Signal(SIG_MOV)
+legs_down()					
+	
+end
 function legs_down()
 	for i=1,table.getn(feetFetish),1 do
 		for j=1,4, 1 do

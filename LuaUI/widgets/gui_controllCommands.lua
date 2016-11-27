@@ -39,6 +39,8 @@ BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
 triStrip={}
+holoCommandCol={163/255, 229/255, 243/255, 0.75}	
+holoTextCol={200/255, 239/255, 253/255, 1}	
 backgroundCol={}
 for i=1, 9 do
 	triStrip[i] ={
@@ -53,7 +55,7 @@ for i=1, 9 do
 	backgroundCol[i]={35/255, 124/255, 166/255, 0.75}
 end
 
-	triStrip[1] ={		
+triStrip[1] ={		
 	{x= 80, y = 0},			
 	{x= 0, y = 0},
 	{x= 80, y = 70},						
@@ -66,7 +68,7 @@ triStrip[2] ={
 	{x= 70, y = -15},
 	{x= 0, y = 10},			
 	{x= 80, y = -5},
-
+	
 	{x= 0, y = 70},
 	{x= 80, y = 80},
 	{x= 70, y = 90},
@@ -133,17 +135,24 @@ triStrip[9] ={
 }	
 backgroundCol[9]={52/255, 167/255, 222/255, 0.75}	
 
+function upByRow(str,num)
+	for i=1,num do
+		str=str.."\n"
+	end
+	return str
+end
+
 
 caption={
-	[1]="ATTAC",
-	[2]="STOP",
-	[3]="MOVE",
-	[4]="FIRESTATE   ",
-	[5]="REPEAT ",
-	[6]="MANOVEUR",
-	[7]="REPAIR \n\n",
-	[8]="PATROL",
-	[9]="GUARD",
+	[1]="|ATTAC",
+	[2]="|STOP",
+	[3]=upByRow("|MOVE",2),
+	[4]=upByRow("|FIRE\nSTATE",3),
+	[5]="|REPEAT ",
+	[6]="MANOVEUR ",
+	[7]=upByRow("|REPAIR ",4),
+	[8]=upByRow("|PATROL",4),
+	[9]="|GUARD",
 }
 
 
@@ -159,7 +168,8 @@ extendedCommand_window_width= "10%"
 extendedCommand_window_height= "30%"
 
 function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
-	
+	functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
+
 	return 	Chili.HabaneroButton:New{
 		triStrip=triStrip	,
 		caption=caption,
@@ -205,7 +215,7 @@ function widget:Initialize()
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {
-		
+			
 		},
 	}
 	
@@ -234,68 +244,67 @@ function widget:Initialize()
 		
 		children = {
 			Button:New{
-			name = "RECLAIM",
-			--tooltip = tooltip,
-			width = 100,
-			height = 40,
-			caption = 'RECLAIM',			
-			backgroundColor = basCol,
-			textColor =texCol,		
-			OnClick = { function()Spring.Echo("Hi World") end},
+				name = "RECLAIM",
+				tooltip = "Reclaim a objects ressources",
+				width = 100,
+				height = 40,
+				caption = 'RECLAIM',			
+				backgroundColor = holoCommandCol,
+				textColor =holoTextCol,		
+				OnClick = { function()Spring.Echo("Hi World") end},
 			},	
 			Button:New{
-			name = "DROP/LOAD",
-			--tooltip = tooltip,
-			width = 200,
-			height = 40,
-			caption = 'DROP/LOAD',			
-			backgroundColor = basCol,
-			textColor =texCol,		
-			OnClick = { function()Spring.Echo("Hi World") end},
+				name = "DROP/LOAD",
+				--tooltip = tooltip,
+				width = 200,
+				height = 40,
+				caption = 'DROP/LOAD',			
+				backgroundColor = holoCommandCol,
+				textColor =holoTextCol,		
+				OnClick = { function()Spring.Echo("Hi World") end},
 			},	
 			Button:New{
-			name = "CLOAK",
-			--tooltip = tooltip,
-			width = 200,
-			height = 40,
-			caption = 'CLOAK',			
-			backgroundColor = basCol,
-			textColor =texCol,		
-			OnClick = { function()Spring.Echo("Hi World") end},
+				name = "CLOAK",
+				--tooltip = tooltip,
+				width = 200,
+				height = 40,
+				caption = 'CLOAK',			
+				backgroundColor = holoCommandCol,
+				textColor =holoTextCol,		
+				OnClick = { function()Spring.Echo("Hi World") end},
 			},
 			Button:New{
-			name = "RESTORE",
-			--tooltip = tooltip,
-			width = 200,
-			height = 40,
-			caption = 'RESTORE',			
-			backgroundColor = basCol,
-			textColor =texCol,		
-			OnClick = { function()Spring.Echo("Hi World") end},
+				name = "RESTORE",
+				--tooltip = tooltip,
+				width = 200,
+				height = 40,
+				caption = 'RESTORE',			
+				backgroundColor = holoCommandCol,
+				textColor =holoTextCol,		
+				OnClick = { function()Spring.Echo("Hi World") end},
 			},
 			Button:New{
-			name = "QUEUE COMMANDS",
-			--tooltip = tooltip,
-			width = 200,
-			height = 40,
-			caption = 'QUEUE COMMANDS',			
-			backgroundColor = basCol,
-			textColor =texCol,		
-			OnClick = { function()Spring.Echo("Hi World") end},
+				name = "QUEUE COMMANDS",
+				--tooltip = tooltip,
+				width = 200,
+				height = 40,
+				caption = 'QUEUE COMMANDS',			
+				backgroundColor = holoCommandCol,
+				textColor =holoTextCol,		
+				OnClick = { function()Spring.Echo("Hi World") end},
 			},
-		
+			
 		},		
 	}
 	extendedCommand_window:AddChild(extendedCommand_Grid)
-	testFoonction= function () Spring.Echo("The first HabaneroButton is pressed into service") end
 	Habaneros={ }
 	
 	for i=1, 9 do
 		Habaneros[i] = createHabanero(triStrip[i],
 		caption[i],
 		backgroundCol[i],
-		texCol,
-		testFoonction					
+		holoTextCol,
+		nil		
 		)		
 		Habaneros[i].Init()
 	end

@@ -150,7 +150,9 @@ function legs_down()
 	SetSignalMask(SIG_LEG)
 	Sleep(550)
 	Signal(SIG_WALK)
-	Turn(deathpivot,y_axis,math.rad(0),7)
+	if boolAimining == false then
+		Turn(deathpivot,y_axis,math.rad(0),7)
+	end
 	for i=1, 4,1 do
 		Turn(crableg[i],x_axis,math.rad(0),12)
 		Turn(crableg[i],y_axis,math.rad(0),12)
@@ -165,11 +167,11 @@ function legs_down()
 	
 	
 	Sleep(600)
-	time = 0.1
+	times = 0.1
 	while true do
-		factor= math.abs(math.cos(time))
+		factor= math.abs(math.cos(times))
 		value= factor *23
-		time = time +0.2
+		times = times +0.2
 		dice= math.ceil(math.random(0,3))
 		if dice == 1 then
 			idleLoop(Crabbase,x_axis, FrontLeg, RearLeg, value *-1, value * 0.5, value/16, 500, true)		
@@ -258,7 +260,9 @@ function walk()
 			legz()
 		end
 		--left forwards back left down
-		Turn(deathpivot,y_axis,math.rad(45),7)
+		if boolAimining== false then
+			Turn(deathpivot,y_axis,math.rad(45),7)
+		end
 	end
 end
 
@@ -277,8 +281,9 @@ end
 function script.StopMoving()
 	StartThread(defaultEnemy)
 	StartThread(legs_down)
-	Turn(deathpivot,y_axis,math.rad(0),7)
-	
+	if boolAimining== false then
+		Turn(deathpivot,y_axis,math.rad(0),7)
+	end
 	
 end
 
@@ -307,7 +312,7 @@ end
 
 function script.HitByWeapon(x,z,weaponDefID,damage)
 	
-	if damage > 25 then
+	if damage > 25 and boolAimining==false then
 		h=Spring.GetHeadingFromVector(x,z)
 		h=h-32768
 		Turn(crabTakingCrapPoint,y_axis,h,0)
@@ -316,7 +321,7 @@ function script.HitByWeapon(x,z,weaponDefID,damage)
 		end
 	end
 	
-	
+	return damage
 end
 
 
@@ -331,42 +336,46 @@ end
 function script.QueryWeapon1() 
 	return aimpoint 
 end
-
+boolOneShot=true
+boolAimining=false
 function script.AimWeapon1( heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 	--Turn(turret, y_axis, heading)
 	
-	Signal(SIG_AIM2)
-	
-	
-	
-	SetSignalMask(SIG_AIM2)
-	Turn(deathpivot,y_axis,heading,7)	
-	Turn(crabattack1,y_axis,math.rad(-61),4)
-	Turn(crabattack2,y_axis,math.rad(62),4)			
-	WaitForTurn(deathpivot,y_axis)
-	WaitForTurn(crabattack1,y_axis)
-	WaitForTurn(crabattack2,y_axis)
-	
-	return true
+	if boolOneShot==true then
+		boolAimining=true
+		Turn(deathpivot,y_axis,heading,7)	
+		Spring.PlaySoundFile("sounds/jcrabcreep/crabattack.wav",1)	
+		Turn(crabattack1,y_axis,math.rad(-61),4)
+		Turn(crabattack2,y_axis,math.rad(62),4)			
+		WaitForTurn(deathpivot,y_axis)
+		WaitForTurn(crabattack1,y_axis)
+		WaitForTurn(crabattack2,y_axis)
+		
+		return true
+	else
+		return false
+	end
 end
 
-	boolClawAnimationRunning=false
+
 function Clawanimation()
-	boolClawAnimationRunning=true
+	boolOneShot=false
 	Turn(crabattack1,y_axis,math.rad(0),64)
-	Turn(crabattack2,y_axis,math.rad(0),64)			
+	Turn(crabattack2,y_axis,math.rad(0),64)	
+	Spring.PlaySoundFile("sounds/jcrabcreep/crabshear.ogg",1)	
 	WaitForTurn(crabattack1,y_axis)
 	WaitForTurn(crabattack2,y_axis)
 	Turn(deathpivot,y_axis,0,7)	
-	boolClawAnimationRunning=false
+	
+	boolOneShot=true
+	boolAimining=false
 end
 
 function script.FireWeapon1()	
-	if boolClawAnimationRunning== false then
-		Spring.PlaySoundFile("sounds/jcrabcreep/crabattack.wav",1)
-		StartThread(Clawanimation)
-	end
+	
+	StartThread(Clawanimation)
+	
 	return true
 end
 
