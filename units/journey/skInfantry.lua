@@ -32,7 +32,7 @@ local unitDef = {
 	
 	onoffable=true,
 	
-	MovementClass = "Default2x2",
+	MovementClass = "jinfantry",
 	TurnRate = 1000,
 	upRight=true,
 	sightDistance = 630,

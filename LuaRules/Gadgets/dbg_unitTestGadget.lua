@@ -10,8 +10,7 @@ function gadget:GetInfo()
 		version = "v0.1.ham.and.jam.and...",
 		license = "GPL spam v3.0 or later",
 		layer = -1, 
-		enabled = true,
-		spam 	 = spam,
+		enabled = false
 	}
 end
 

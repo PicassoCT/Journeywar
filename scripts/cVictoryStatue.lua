@@ -29,12 +29,12 @@ local SIG_BLITZ=4
 local FiWoSpin=piece"FiWoSpin"
 local FireWorks=piece"FireWorks"
 
-function fireWorks(time)
+function fireWorks(times)
 	Sleep(22000)
 	
 	
 	
-	while time > 0 do
+	while times > 0 do
 		dx= math.random(-45,45)
 		y=math.random(-360,360)
 		Turn(FiWoSpin,y_axis,math.rad(y),0)
@@ -67,7 +67,7 @@ function fireWorks(time)
 		end
 		d=math.floor(math.random(250,700))
 		Sleep(d)
-		time=time-d
+		times=times-d
 	end
 	
 end
@@ -367,7 +367,7 @@ function statueWarpIn()
 	Hide(cVS_warp)
 	Show(cVictorySt)
 	i=math.random(0,2)
-
+	
 	if i==1 then
 		--Head and Crown
 		Show(cVSrand1)

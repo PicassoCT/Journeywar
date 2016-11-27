@@ -1,5 +1,5 @@
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_OS.lua"
 
@@ -56,11 +56,11 @@ legsTable[#legsTable+1]= foleg2
 LegTable ={}
 
 for i=1, 4 do
-LegTable[i]={}
-upName = "bhleg"..i
-downName= "foleg"..i
-LegTable[i].down= piece(downName)
-LegTable[i].up= piece(upName)
+	LegTable[i]={}
+	upName = "bhleg"..i
+	downName= "foleg"..i
+	LegTable[i].down= piece(downName)
+	LegTable[i].up= piece(upName)
 end
 
 
@@ -592,6 +592,13 @@ function moveTowardsNearestEnemy()
 	
 	while(true) do
 		
+		commands=Spring.GetUnitCommands(unitID,2)
+		while #commands > 0 do
+			Sleep(1000)
+			commands=Spring.GetUnitCommands(unitID,2)
+		end
+		
+		
 		px,py,pz=Spring.GetUnitPosition(unitID)
 		enemyId=Spring.GetUnitNearestEnemy(unitID)
 		allyID=Spring.GetUnitNearestAlly(unitID)
@@ -646,7 +653,7 @@ function resetPosition()
 	if maRa()==true then
 		dropDead()
 	else
-
+		
 		breathOS(kuttel,5, 10, LegTable,4, 66, 6)
 	end
 end
@@ -662,7 +669,7 @@ function dropDead()
 		if math.random(0,9) ==2 then
 			signum=signum * -1
 			upVal=math.random(3,9)
-
+			
 			for i=1, upVal do
 				turnPieceRandDir(kuttel,0.75, 22,-22,66,-66,22 , -22)
 				limit= math.random(-20,-15)
@@ -684,13 +691,13 @@ function dropDead()
 				waveATable(legsTable,x_axis, modFunction, signum, math.random(0.25,1.2), math.random(0.5,1),math.random(0.2,1),false, 0)
 				Sleep(150)
 			end
-
+			
 			resetT(legsTable,9,true, false)
 		end
 		
 		Sleep(1000)
 	end
-
+	
 end
 
 modULater=0
@@ -714,8 +721,8 @@ function walk()
 	reset(kuttel,3)
 	reset(center,3)
 	if stopCounter <= 0 then
-	StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/gzombiehores.ogg",0.5, 2000, 1,0)
-	stopCounter= math.random(5,12)
+		StartThread(PlaySoundByUnitDefID,zombieDefID,"sounds/zombie/gzombiehores.ogg",0.5, 2000, 1,0)
+		stopCounter= math.random(5,12)
 	end
 	
 	while (true) do
@@ -759,13 +766,13 @@ end
 
 function script.Create()
 	StartPoints=Spring.GetUnitHealth(unitID)
-		
-		
-				speed= math.random(0.5,1.2)
-				waveATable(waveTablePipesAddPerspective,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
-				waveATable(waveTablePipesAdd,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
-				waveATable(waveTablePipes,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
-				
+	
+	
+	speed= math.random(0.5,1.2)
+	waveATable(waveTablePipesAddPerspective,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
+	waveATable(waveTablePipesAdd,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
+	waveATable(waveTablePipes,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
+	
 	
 	
 	local map = Spring.GetUnitPieceMap(unitID)
@@ -829,7 +836,7 @@ end
 
 
 function script.StopMoving()
-stopCounter=stopCounter-1
+	stopCounter=stopCounter-1
 	-- health check
 	--lay down
 	boolRegen=false
@@ -840,8 +847,15 @@ stopCounter=stopCounter-1
 end
 
 function script.AimWeapon1(heading ,pitch)	
-	
-	return true
+	if boolSnapWeaponLoaded== true then
+		Turn(spine,y_axis,heading,8)
+		Turn(spine,x_axis,math.rad(-24),12)
+		Turn(head,x_axis,math.rad(56),12)
+		WaitForTurns(head,spine)
+		return true
+	else
+		return boolSnapWeaponLoaded
+	end
 end
 
 
@@ -852,9 +866,16 @@ end
 function script.QueryWeapon1() 
 	return zHead
 end
-
+boolSnapWeaponLoaded=true
+function snapAnim()
+	boolSnapWeaponLoaded=false
+	Turn(spine,x_axis,math.rad(0),12)
+	Turn(head,x_axis,math.rad(0),12)
+	WaitForTurns(head,spine)
+	boolSnapWeaponLoaded=true
+end
 function script.FireWeapon1()	
-	
+	StartThread(snapAnim)
 	
 	return true
 end

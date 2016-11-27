@@ -741,11 +741,11 @@ local linDecP={}
 boolFoundSomething=false
 function LinFindDecoCon()
 --we find a startpoint by finding start and endpoint and choosing the lowest
-poinTable=piec2Point(LinBodyCon)
+	poinTable=piec2Point(LinBodyCon)
 	if linDecP.x == nil or boolFoundSomething==false then 
 	linDecP.x,linDecP.y,linDecP.z,linDecP.index=getLowestPointOfSet(poinTable,"z_axis") 
 	temp={}
-	assertT(poinTable,{Piece="number",x="number",y="number",z="number", index="number"})
+	assertT({Piece="number",x="number",y="number",z="number", index="number"}, poinTable)
 	temp.x,temp.y,temp.z,temp.index=getHighestPointOfSet(poinTable,"z_axis") 
 
 	assert(linDecP.y)

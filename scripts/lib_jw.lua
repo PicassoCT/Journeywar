@@ -130,9 +130,74 @@ function getInfantryTypeTable()
 	Infantry[UnitDefNames["bg2"].id]=true
 	Infantry[UnitDefNames["tiglil"].id]=true
 	Infantry[ UnitDefNames["skinfantry"].id]=true
+	Infantry[ UnitDefNames["jhivehound"].id]=true
 	Infantry[ UnitDefNames["vort"].id]=true
 	Infantry[ UnitDefNames["css"].id]=true
 	return Infantry
+end
+
+function getNeutralTypeTable()
+	TypeTable={}
+	TypeTable[UnitDefNames["ggluemine"].id]=true
+	TypeTable[UnitDefNames["ghohymen"].id]=true
+	TypeTable[UnitDefNames["gcar"].id]=true
+	TypeTable[UnitDefNames["jmadmax"].id]=true
+	return TypeTable
+end
+
+
+function getCorpseTypeTable()
+	Creep={}
+	Creep[UnitDefNames["gzombiehorse"].id]=true
+	Creep[UnitDefNames["zombie"].id]=true
+	Creep[UnitDefNames["hc"].id]=true
+	return Creep
+end
+function getJourneyCorpseTypeTable()
+	TypeTable={}
+	TypeTable[UnitDefNames["gjbigbiowaste"].id]=true
+	TypeTable[UnitDefNames["gjmeatballs"].id]=true
+	TypeTable[UnitDefNames["gjmedbiogwaste"].id]=true
+	return TypeTable
+end
+function getCentrailCorpseTypeTable()
+	TypeTable={}
+	TypeTable[UnitDefNames["gcvehiccorpse"].id]=true
+	TypeTable[UnitDefNames["gcvehiccorpsemini"].id]=true
+	return TypeTable
+end
+function getCorpseTypeTable()
+	CorpseTable=getJourneyCorpseTypeTable()
+	for key,v in pairs(getCentrailCorpseTypeTable()) do
+		CorpseTable[key]=true
+	end
+	return CorpseTable
+end
+
+function getJourneyCreeperTypeTable()
+	Creep={}
+	Creep[UnitDefNames["jhoneypot"].id]=true
+	Creep[UnitDefNames["jbugcreeper"].id]=true
+	Creep[UnitDefNames["jcrabcreeper"].id]=true
+	Creep[UnitDefNames["jsungodcattle"].id]=true
+	return Creep
+end
+
+function getCentrailCreeperTypeTable()
+	Creep={}
+	Creep[UnitDefNames["gzombiehorse"].id]=true
+	Creep[UnitDefNames["zombie"].id]=true
+	Creep[UnitDefNames["hc"].id]=true
+	return Creep
+end
+function getCreeperTypeTable()
+	CreepTable=getJourneyCreeperTypeTable()
+	
+	for key,v in pairs(getCentrailCreeperTypeTable()) do
+		CreepTable[key]=true
+	end
+	
+	return CreepTable
 end
 
 function getRecycleableUnitTypeTable()
@@ -478,3 +543,4 @@ function createTechTree(teams)
 		getSideNewTechTree(teams[i],side)	
 	end
 end
+

@@ -190,7 +190,16 @@ cafusCorona = {
   count       = 1,
   repeatEffect = true,
 }
-
+	yellowGlow_small = {
+  life        = 60,
+  lifeSpread  = 0,
+  size        = 30,
+  sizeSpread  = 8,
+  colormap    = { {0.9, 0.5, 0.1, 0.015}, {0.75, 0.045, 0.05, 0.012}, },
+  texture     = 'bitmaps/GPL/smallflare.tga',
+  count       = 1,
+  repeatEffect = true,
+}
 corfusCorona = {
   delay       = 25,
   pos         = {0,40.5,0},

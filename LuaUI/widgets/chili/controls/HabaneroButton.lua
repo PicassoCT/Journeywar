@@ -17,13 +17,10 @@ HabaneroButton = Control:Inherit{
 	xMax = 1,
 	yMin = 0,
 	yMax = 1,
-
+	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
-	triStrip ={},
-	
-	
-
+	triStrip ={},	
 }
 
 local this = HabaneroButton
@@ -50,7 +47,7 @@ function HabaneroButton:Init()
 	xMinLoc,xMaxLoc=0,0
 	yMinLoc,yMaxLoc=0,0
 	
-
+	
 	
 	--computate the preBox
 	for i=1,table.getn(this.triStrip) do
@@ -60,10 +57,10 @@ function HabaneroButton:Init()
 		if point.y < yMinLoc then yMinLoc= point.y end
 		if point.y > yMaxLoc then yMaxLoc= point.y end
 	end	
-
+	
 	xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
 	yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-
+	
 	xMax=xMaxLoc
 	xMin =xMinLoc
 	yMax=yMaxLoc
@@ -72,7 +69,7 @@ function HabaneroButton:Init()
 	defaultWidth = xWidth
 	defaultHeight =yHeigth
 	
-
+	
 end
 --//=============================================================================
 --//=============================================================================
@@ -92,7 +89,7 @@ function SameSide(pPoint,pPointA, pPointB, pPointC)
 	p1MinusA={}
 	p1MinusA.x=pPoint.x-pPointB.x
 	p1MinusA.y=pPoint.y-pPointB.y
-	 p2MinusA={}	
+	p2MinusA={}	
 	p2MinusA.x=pPointA.x-pPointB.x
 	p2MinusA.y=pPointA.y-pPointB.y
 	
@@ -106,10 +103,10 @@ function SameSide(pPoint,pPointA, pPointB, pPointC)
 end
 -->Rather unelegant tests for every triangle wether the point is inside
 function PointInTriangle(pPoint, pPointA,pPointB,pPointC)
-
+	
 	if 	SameSide(pPoint,pPointA, pPointB,pPointC) ==true and
-		SameSide(pPoint,pPointB, pPointA,pPointC) ==true and
-		SameSide(pPoint,pPointC, pPointA,pPointB) ==true 
+	SameSide(pPoint,pPointB, pPointA,pPointC) ==true and
+	SameSide(pPoint,pPointC, pPointA,pPointB) ==true 
 	then 
 		return true
 	else 
@@ -117,17 +114,19 @@ function PointInTriangle(pPoint, pPointA,pPointB,pPointC)
 	end
 end
 
+
 -->Rather unelegant tests for every triangle wether the point is inside for all points
 function HabaneroButton:BruteForceTriStripTest(x,y)
 	
 	point= {x=x, y= y}
 	
 	for i=3, #self.triStrip, 1 do
+		
 		if PointInTriangle(	point,
-							self.triStrip[i],
-							self.triStrip[i-1],
-							self.triStrip[i-2] ) == true then 
-
+		self.triStrip[i],
+		self.triStrip[i-1],
+		self.triStrip[i-2] ) == true then 
+			
 			return self 
 		end
 	end 
@@ -140,21 +139,9 @@ end
 
 
 function HabaneroButton:HitTest(x,y)
-	--x,y = self:LocalToClient(x,y)
-
-	--rough test is this in shape
-	localQuadUpLeft_X,localQuadUpLeft_Y = 0, 0
-	localQuadDowRight_X,localQuadDowRight_Y =  self.defaultWidth, self.defaultHeight
 	
-	--check if we are in the aufgespanntem quad
-	if x >= self.xMin and x <= self.xMax and
-	y >= self.yMin and y <= self.yMax then		
-
-			return self:BruteForceTriStripTest(x,y)
-	else 
-
-	return false
-	end
+	return self:BruteForceTriStripTest(x,y)
+	
 end
 
 function HabaneroButton:MouseDown(...)

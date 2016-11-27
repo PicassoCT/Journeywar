@@ -278,8 +278,8 @@ end
 
 function damageFunction()
 	
-	selectRange=250
-	fixDamage=900
+	selectRange=350
+	fixDamage=1900
 	piecePosX,piecePosY,piecePosZ=Spring.GetUnitPosition(unitID)
 	----Spring.Echo("PiecePosX:",piecePosX.." | PiecePosZ:",piecePosZ)
 	--get Piece Position
