@@ -1,6 +1,6 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -139,8 +139,8 @@ function createUnitFunction(unitTypeString)
 		lmax=math.max(math.abs(dx),math.abs(math.max(dy,dz)))
 		dx=dx/lmax
 		dz=dz/lmax
-		dx=dx*31
-		dz=dz*31
+		dx=dx
+		dz=dz
 		Spring.AddUnitImpulse(spawnedID,dx,3,dz)
 	end
 	

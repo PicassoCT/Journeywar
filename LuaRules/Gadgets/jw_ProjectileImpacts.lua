@@ -162,8 +162,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		for i=1,table.getn(tpiecesTable) do	
 			spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",10)
 			spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",10)		
-		end		
-		Spring.DestroyUnit(id,true,true) 
+		end	
+		GG.UnitsToKill:PushToKill(id,true,true)
 		
 		size=8
 		if GG.DynDefMap == nil then GG.DynDefMap={} end

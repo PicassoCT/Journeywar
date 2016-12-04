@@ -108,7 +108,8 @@ function script.Killed(recentDamage, maxHealth)
 		return def==defID 
 	end)
 	,
-	function(id)Spring.DestroyUnit(id) end )
+	function(id) GG.UnitsToKill:PushToKill(id) end 
+	)
 	
 
 size=8

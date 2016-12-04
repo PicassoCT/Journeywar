@@ -18,6 +18,7 @@ defID= Spring.GetUnitDefID(unitID)
 boolIsRecursiveWood= (defID == UnitDefNames["grecforrest"].id)
 
 function script.Create()
+Spring.SetUnitNoSelect(unitID,true)
 	for i=1,#wood,1 do
 		Hide(wood[i])
 		rot=math.random(0,360)
@@ -115,7 +116,7 @@ function recursiveForrest()
 		end
 	end
 	
-	if math.random(0,12) < 3 then 
+	if math.random(0,12) < 3 or Spring.GetGroundHeight(ux,uz) <= 0 then 
 	Spring.DestroyUnit(unitID,true, false) 
 	GG.RecursiveForrestCounter=GG.RecursiveForrestCounter-1
 	end

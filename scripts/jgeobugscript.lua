@@ -1,7 +1,7 @@
 
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
-
+include "lib_Animation.lua"
+include "lib_jw.lua"
 
 local jbug = piece "jbug"
 local jbugleg1 = piece "bugleg1"
@@ -63,18 +63,7 @@ function legs_down()
 	Turn(jbugleg4,x_axis,math.rad(0),12)
 	Turn(jbugleg4,y_axis,math.rad(0),12)
 	Turn(jbugleg4,z_axis,math.rad(0),12)
-	WaitForTurn(jbugleg1,x_axis)
-	WaitForTurn(jbugleg1,y_axis)
-	WaitForTurn(jbugleg1,z_axis)
-	WaitForTurn(jbugleg2,x_axis)
-	WaitForTurn(jbugleg2,y_axis)
-	WaitForTurn(jbugleg2,z_axis)
-	WaitForTurn(jbugleg3,x_axis)
-	WaitForTurn(jbugleg3,y_axis)
-	WaitForTurn(jbugleg3,z_axis)
-	WaitForTurn(jbugleg4,x_axis)
-	WaitForTurn(jbugleg4,y_axis)
-	WaitForTurn(jbugleg4,z_axis)
+	WaitForTurns(jbugleg1,jbugleg2,jbugleg3,jbugleg4)
 	
 	
 end
@@ -235,11 +224,11 @@ function idle()
 	end
 	
 	Sleep(600)
-	time = 0.1
+	times = 0.1
 	for i= 1, 3 do
-			factor= math.abs(math.cos(time))
+			factor= math.abs(math.cos(times))
 			value= factor *47
-			time = time +0.2
+			times = times +0.2
 			dice= math.ceil(math.random(0,3))
 			if dice == 1 then
 			idleLoop(jbug,x_axis, FrontLeg, RearLeg, value *-1, value * 0.5,  value/9, 500, true)		
@@ -274,33 +263,6 @@ end
 function script.StopMoving()
 Signal(SIG_STOP)
 StartThread(delayedStop)	
-end
-
-
-function defaultEnemy()
-
-x,y,z = Spring.GetUnitPosition(unitID)
-oldX, oldZ = x+1,z+1
-	while x ~= oldX and z ~= oldZ do
-	oldX, oldZ = x,z
-	x,y,z=Spring.GetUnitPosition(unitID)
-	Sleep(500)
-	end
-
-	
-	while true do
-		Sleep(10000)
-		ed=Spring.GetUnitNearestEnemy(unitID)
-		if ed then
-			x,y,z=Spring.GetUnitPosition(ed)
-			if x then
-				Spring.SetUnitMoveGoal(unitID,x,y,z)
-			end
-		end
-	end
-	
-	
-	
 end
 
 
@@ -463,4 +425,5 @@ function script.Create()
 	Soundname="sounds/jGeoCreeper/jBugSpawn"..i..".wav"
 	Spring.PlaySoundFile(Soundname) 
 	StartThread(animationLoop)
+	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
 end

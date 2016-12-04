@@ -1,5 +1,5 @@
 
-
+include "lib_jw.lua"
 
 jhoney = piece "jhoney"
 jhoneyleg1 = piece "jhoneyleg1"
@@ -17,7 +17,7 @@ SIG_LEG=4
 SIG_AIM2 = 8
 SIG_DEFAULT=32
 function script.Create()
-	StartThread(defaultEnemy)
+	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 33000)
 end
 
 function legs_down()
@@ -139,35 +139,13 @@ end
 
 function script.StartMoving()
 	StartThread(walk)
-	Signal(SIG_DEFAULT)
+
 end
 
 function script.StopMoving()
 	Signal(SIG_WALK)
 	StartThread(legs_down)
-	StartThread(defaultEnemy)
-end
 
-
-
-
-function defaultEnemy()
-	SetSignalMask(SIG_DEFAULT)
-	Sleep(25000)
-	
-	while true do
-		Sleep(10000)
-		ed=Spring.GetUnitNearestEnemy(unitID)
-		if ed then
-			x,y,z=Spring.GetUnitPosition(ed)
-			if x then
-				Spring.SetUnitMoveGoal(unitID,x,y,z)
-			end
-		end
-	end
-	
-	
-	
 end
 
 

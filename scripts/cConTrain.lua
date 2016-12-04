@@ -1039,6 +1039,7 @@ function healWhileStandingStill()
 					hpcopy=hp
 					if #T > 0 then
 					for i=1,#T do
+					if T[i] then
 						defID=Spring.GetUnitDefID(T[i])
 						if defID and ud[defID].isBuilding ==false and not conTypeTable[defID] then
 							p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
@@ -1057,6 +1058,7 @@ function healWhileStandingStill()
 								end
 							end
 						end
+					end
 					end
 				end
 				end

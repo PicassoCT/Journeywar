@@ -473,6 +473,27 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 	
 end
 
+
+
+-->Attack Nearest Non-Gaia Enemy
+function defaultEnemyAttack(unitID,SignalMask, delayTime)
+	SetSignalMask(SIG_DEFAULT)
+	gaiaTeam=Spring.GetUnitTeam(unitID)
+	Sleep(15000)
+	delayTime=delayTime or 1500
+	
+	while true do
+		Sleep(delayTime)
+		ed=Spring.GetUnitNearestEnemy(unitID)
+		if ed and Spring.GetUnitTeam(ed) ~= gaiaTeam then
+			x,y,z=Spring.GetUnitPosition(ed)
+			if x then
+				Spring.SetUnitMoveGoal(unitID,x,y,z)
+			end
+		end
+	end
+end
+
 --=======================================Tech Tree=============================================================
 
 function getCombinNewTechTree()

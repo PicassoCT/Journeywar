@@ -1,7 +1,7 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -336,16 +336,19 @@ end
 
 function aChainExplosion(ed)
 	distance =0 
-	posx,posy,posz=GetUnitDistance(ed)
+	posx,posy,posz=GetUnitDistance(unitID,ed)
 	
 	while distance <32 do
 		wed=Spring.GetUnitNearesAlly(ed)
-		osx,osy,osz=GetUnitDistance(wed)
+		if wed then
+		assertNum(wed)
+		osx,osy,osz=GetUnitDistance(UnitID,wed)
 		a,b,c=posx-osx,posy-osy,posz-osz
 		distance=math.sqrt(a*a+b*b+c*c)
 		Spring.DestroyUnit(ed)
 		posx,posy,posz=osx,osy,osz
 		ed=wed
+		end
 	end
 	
 end

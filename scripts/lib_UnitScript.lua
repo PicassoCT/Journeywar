@@ -179,7 +179,8 @@ end
 -->returns the Distance between two units
 function GetUnitDistance(idA, idB)
 	
-	
+	assertNum(idA)
+	assertNum(idB)
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
@@ -301,6 +302,17 @@ function addTable(T,...)
 	return T
 end
 
+function assertBool(val)
+assert(type(val)=="boolean")
+end
+
+function assertStr(val)
+assert(type(val)=="string")
+end
+
+function assertNum(val)
+assert(type(val)=="number")
+end
 --expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
 function assertT(Table, ... )
    local arg = arg
@@ -2570,7 +2582,21 @@ function vardump(value, depth, key)
 	
 	
 	--> Join Operation on two tables
+	join = function(id,argT)
+			resulT={}
+			for i=1,#argT do
+			resulT[#resulT+1]= {id=id, obj=argT[i]}
+			end
+			return resulT
+			end
 	
+	--> Validator
+	validator=function(id)
+				deadOrAlive=Spring.GetUnitIsDead(id)
+				if deadOrAlive and deadOrAlive == false then 
+					return id
+				end				
+			  end
 	
 	--> takes a Table, and executes ArgTable/Function,Functions on it
 	function process(Table, ...)

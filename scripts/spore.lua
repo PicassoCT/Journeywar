@@ -1,5 +1,5 @@
 
-
+	sporeRange=235
 	attaPoint=piece"attaPoint"
 	swingersClub=piece"swingersClub"
 		local AttachUnits = Spring.UnitScript.AttachUnit
@@ -68,7 +68,7 @@ local fungiforrestid=UnitDefNames["jfungiforrest"].id
 
 	x,y,z=Spring.GetUnitPosition(unitID)
 	proChoice={}
-	proChoice=Spring.GetUnitsInCylinder(x,z,235)
+	proChoice=Spring.GetUnitsInCylinder(x,z,sporeRange)
 	proChoice=filterForHostDefID(proChoice)
 	--proChoice if 
 	fixxedNumber=table.getn(proChoice)
@@ -197,7 +197,7 @@ local fungiforrestid=UnitDefNames["jfungiforrest"].id
 											if o==2 and i==1 then
 											
 											nextDeadGuy=grabTooKill(RottenToTheCore)
-												if nextDeadGuy~=nil and math.random(0,4)==2 then
+												if nextDeadGuy~=nil and math.random(0,1)==1 then
 												StartThread(delayedSound,nextDeadGuy)
 													if GG.Spore== nil then GG.Spore={} end
 														GG.Spore[#GG.Spore+1] ={}

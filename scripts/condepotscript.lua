@@ -81,7 +81,7 @@ StartThread(alarmCheck)
 end
 
 function script.QueryBuildInfo() 
-  
+	assert(type(currentBuildSpot)=="number")
 	return currentBuildSpot
 
 end

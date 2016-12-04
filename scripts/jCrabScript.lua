@@ -1,7 +1,7 @@
 
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
+include "lib_jw.lua"
 
 deathpivot = piece "deathpivot"
 Crabbase = piece "Crabbase"
@@ -39,7 +39,7 @@ RearLeg={
 }
 
 function script.Create()
-	StartThread(defaultEnemy)
+	StartThread(defaultEnemyAttack, unitID, SIG_DEFAULT, 25000)
 end
 
 function frontLeg(nr,inverter)
@@ -221,43 +221,49 @@ function walk()
 		tol=math.random(2,7)
 		Turn(Crabbase,z_axis,math.rad(tol),0.5)
 		val=math.random(10,20)
-		Turn(crabattack1,y_axis,math.rad(val),4)
-		Turn(crabattack1,z_axis,math.rad(-2),6)
-		Turn(crabattack2,z_axis,math.rad(-8),6)
-		val=math.random(5,14)
-		Turn(crabattack2,y_axis,math.rad(val),4)
-		Turn(crabattack2,x_axis,math.rad(1),6)
+		if boolAimining==false then
+			Turn(crabattack1,y_axis,math.rad(val),4)
+			Turn(crabattack1,z_axis,math.rad(-2),6)
+			Turn(crabattack2,z_axis,math.rad(-8),6)
+			val=math.random(5,14)
+			Turn(crabattack2,y_axis,math.rad(val),4)
+			Turn(crabattack2,x_axis,math.rad(1),6)
+		end
 		legz()
 		Sleep(450)
 		Turn(Crabbase,x_axis,math.rad(-3),0.5)
 		tol=math.random(-7,-2)
 		Turn(Crabbase,z_axis,math.rad(tol),0.5)
 		legz()
-		if math.random(0,1) ==1 then
-			Turn(crabattack1,x_axis,math.rad(-3),6)
-			val=math.random(-12,-4)
-			Turn(crabattack1,y_axis,math.rad(val),4)
-			Turn(crabattack1,z_axis,math.rad(14),6)
-			Turn(crabattack2,z_axis,math.rad(3),6)
-			val=math.random(-36,-30)
-			Turn(crabattack2,y_axis,math.rad(val),6)
-			val=math.random(7,12)
-			Turn(crabattack2,x_axis,math.rad(val),4)
-		else
-			Turn(crabattack1,y_axis,math.rad(0),4)
-			Turn(crabattack1,x_axis,math.rad(0),6)
-			Turn(crabattack1,z_axis,math.rad(0),6)
-			
-			Turn(crabattack2,y_axis,math.rad(0),4)
-			Turn(crabattack2,x_axis,math.rad(0),6)
-			Turn(crabattack2,z_axis,math.rad(0),6)
-			Sleep(250)
-			legz()
-			deci= math.random(5,55)
-			Turn(crabattack1,y_axis,math.rad(deci),4)
-			Turn(crabattack2,y_axis,math.rad(-deci),4)
-			Sleep(380)
-			legz()
+		if boolAimining==false then
+			if math.random(0,1) ==1 then
+				Turn(crabattack1,x_axis,math.rad(-3),6)
+				val=math.random(-12,-4)
+				Turn(crabattack1,y_axis,math.rad(val),4)
+				Turn(crabattack1,z_axis,math.rad(14),6)
+				
+				Turn(crabattack2,z_axis,math.rad(3),6)
+				val=math.random(-36,-30)
+				Turn(crabattack2,y_axis,math.rad(val),6)
+				val=math.random(7,12)
+				Turn(crabattack2,x_axis,math.rad(val),4)
+				
+			else
+				Turn(crabattack1,y_axis,math.rad(0),4)
+				Turn(crabattack1,x_axis,math.rad(0),6)
+				Turn(crabattack1,z_axis,math.rad(0),6)
+				
+				Turn(crabattack2,y_axis,math.rad(0),4)
+				Turn(crabattack2,x_axis,math.rad(0),6)
+				Turn(crabattack2,z_axis,math.rad(0),6)
+				Sleep(250)
+				legz()
+				deci= math.random(5,55)
+				Turn(crabattack1,y_axis,math.rad(deci),4)
+				Turn(crabattack2,y_axis,math.rad(-deci),4)
+				Sleep(380)
+				legz()
+			end
 		end
 		--left forwards back left down
 		if boolAimining== false then
@@ -274,12 +280,12 @@ function script.StartMoving()
 	Turn(crabattack2,y_axis,math.rad(0),12)
 	Turn(crabattack2,z_axis,math.rad(0),12)
 	
-	Signal(SIG_DEFAULT)
+	
 	StartThread(walk)
 end
 
 function script.StopMoving()
-	StartThread(defaultEnemy)
+	
 	StartThread(legs_down)
 	if boolAimining== false then
 		Turn(deathpivot,y_axis,math.rad(0),7)
@@ -287,24 +293,6 @@ function script.StopMoving()
 	
 end
 
-function defaultEnemy()
-	SetSignalMask(SIG_DEFAULT)
-	Sleep(15000)
-	
-	while true do
-		Sleep(10000)
-		ed=Spring.GetUnitNearestEnemy(unitID)
-		if ed then
-			x,y,z=Spring.GetUnitPosition(ed)
-			if x then
-				Spring.SetUnitMoveGoal(unitID,x,y,z)
-			end
-		end
-	end
-	
-	
-	
-end
 
 
 

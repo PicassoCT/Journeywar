@@ -31,8 +31,8 @@ function script.Create()
 	StartThread(DragonGrassGrowth)
 	
 end
-local DrugRange= 200
-local 	x,y,z=Spring.GetUnitPosition(unitID)
+ DrugRange= 200
+ 	x,y,z=Spring.GetUnitPosition(unitID)
 
 function swayInWind()
 	while true do
@@ -131,7 +131,7 @@ local LOYAL= 25000
 local SYMTOMFREE= 18000
 local RELAPSE= 6000
 local PAININGFORTHEPOPPEYFIELDS=0
-local x,y,z=Spring.GetUnitPosition(unitID)
+
 
 function AddictBehaviour()
 	Sleep(900)
@@ -163,19 +163,13 @@ function AddictBehaviour()
 						Spring.SetUnitHealth(k,hp-22)
 						checkDistanceAndReinject(k,x,y,z)
 					end
-					
+					AddictList[k].addTime=v.addTime-300	
 				elseif k then
 					AddictList[k]=nil	
 				end
 				
 			end
-			
-			for k,v in pairs(AddictList) do
-				if k and v then
-					AddictList[k].addTime=v.addTime-300
-				end
-			end
-
+	
 		Sleep(300)
 	end
 end
@@ -185,7 +179,7 @@ function checkDistanceAndReinject(k,x,y,z)
 	if not ux then return end
 	ux,uy,uz=ux-x,uy-y,uz-z
 	
-	if math.sqrt(ux*ux,uy*uy,uz*uz) < DrugRange then
+	if math.sqrt(ux*ux+uy*uy+uz*uz) < DrugRange then
 		AddictList[k].addTime= INJECT
 		PlayInjectSoundFiles()
 	end
@@ -209,37 +203,33 @@ function DrugLoop()
 	Sleep(1000)
 	while true do
 		--add people not yet on the list 
-		for i=1,#DrugPieceList do
-			px,py,pz=Spring.GetUnitPiecePosDir(unitID,DrugPieceList[i])
-			
+
+			px,py,pz=Spring.GetUnitPosition(unitID)
+			teamid=Spring.GetUnitTeam(unitID)
 			T=	getAllInCircle(px,pz,DrugRange,unitID)	
-
-			if #T > 0 then
-				T=filterOutTeam(T,teamid)
-			
-	
-					
-					if #T > 0 then
-						boolNewOneOnTheHouse=false
-						for i=1,#T do
-							if T[i]~=unitID and not AddictList[T[i]] then
-
-								AddictList[T[i]]={
-								
-													addTime=INJECT,
-													team=Spring.GetUnitTeam(T[i])}
-								boolNewOneOnTheHouse=true
-							end	
+			process(T,
+					function(id)
+					 idTeam= Spring.GetUnitTeam(id) 
+					 if idTeam==teamid then return end
+						if id ~= unitID and not AddictList[id] then
+						AddictList[id]={
+									addTime=INJECT,
+									team=idTeam}
+						return id
 						end
-						if boolNewOneOnTheHouse==true then PlayInjectSoundFiles() end
 					end
+					)
+					--T now contains newl addicted units
+			if #T > 0 then	 PlayInjectSoundFiles() end
+				 
+
 				
-			end
+				Sleep(200)
 		end
 		
-		Sleep(200)
+	
 	end
-end
+
 
 
 
@@ -265,7 +255,7 @@ end
 
 px,_,pz=Spring.GetUnitPosition(unitID)
 function script.HitByWeapon( x, z, weaponDefID, damage ) 
-T= getAllInCircle(RANGE, px,pz, unitID)
+T= getAllInCircle( px,pz, RANGE,unitID)
 	if T then
 		process(T,
 
@@ -274,9 +264,8 @@ T= getAllInCircle(RANGE, px,pz, unitID)
 						AddictList[id].addTime=INJECT
 					else
 						AddictList[id]={
-									
-														addTime=INJECT,
-														team=Spring.GetUnitTeam(id)}
+						addTime=INJECT,
+						team=Spring.GetUnitTeam(id)}
 					end
 				end
 			

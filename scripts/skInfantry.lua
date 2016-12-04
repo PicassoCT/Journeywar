@@ -140,6 +140,7 @@ function idle()
 			Move(tent,y_axis,-10,1.8)
 			Hide(tent)
 			Turn(turret,x_axis,math.rad(armoffset-175),7)
+			Turn(center,x_axis,math.rad(0),6)
 		end
 		if rand==1 then
 			Turn(center,x_axis,math.rad(69),4)
@@ -155,6 +156,7 @@ function idle()
 				WaitForTurn(center,x_axis)
 				Sleep(120)
 			end
+			Turn(center,x_axis,math.rad(0),4)
 		end
 		
 		if rand==0 then
@@ -204,6 +206,7 @@ function idle()
 				fixFertig=math.random(80,620)
 				Sleep(fixFertig)
 			end
+			Turn(center,x_axis,math.rad(0),4)
 		end
 		if rand==2 then
 			Turn(center,x_axis,math.rad(0),15)
@@ -233,6 +236,8 @@ function idle()
 				WaitForTurn(skinleg2,x_axis)
 				Sleep(150)
 			end
+			Turn(body,x_axis,math.rad(0),4)
+			resetT({body,skinleg,skinleg2},0)
 		end
 	end
 	
@@ -539,14 +544,13 @@ function cloakCheckAndAmbushLoad()
 		boolCloaked=(GetUnitValue(COB.CLOAKED) == 1)
 		--if first time true, set unit FireStats to ReturnFire, set to Hold Position, start AmbushCounter --setFirstTime False
 		if boolPrevCloaked==false and boolCloaked==true then
-			Signal(SIG_AMBUSH)
-			Spring.Echo("Cloaked and  Charging Ambush")
+			Signal(SIG_AMBUSH) 
 			if boolPeacefull==true then
 				StartThread(AmbushCounterThread)
-				GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {})
-				GiveOrderToUnit(unitID, CMD.MOVE_STATE, {0}, {}) 
+				Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {})
+				Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {0}, {}) 
 				boolPrevCloaked=true 
-				WaitPosition()
+				waitPosition()
 				SetUnitValue(COB.CLOAKED, 1)
 				SetUnitValue(COB.WANT_CLOAK, 0)
 			end
@@ -559,8 +563,8 @@ function cloakCheckAndAmbushLoad()
 			SetUnitValue(COB.WANT_CLOAK, 0)
 			SetUnitValue(COB.CLOAKED, 0)
 			boolPrevCloaked=false
-			GiveOrderToUnit(unitID, CMD.FIRE_STATE, {2}, {}) 
-			GiveOrderToUnit(unitID, CMD.MOVE_STATE, {1}, {})
+			Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {2}, {}) 
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {1}, {})
 			Signal(SIG_AMBUSH)
 			if boolAmbushCharged==true then
 				StartThread(AmbushinProgressThread)

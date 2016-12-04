@@ -436,7 +436,8 @@ end
 function script.Killed(recentDamage, maxHealth)
 	
 	if Spring.ValidUnitID(factoryID)== true then
-		Spring.DestroyUnit(factoryID,true,true)
+	GG.UnitsToKill:PushKillUnit(factoryID,true,true)
+	
 	end
 	createCorpseJBuilding(unitID,recentDamage)
 	return 0

@@ -56,15 +56,23 @@ function script.Create()
 	StartThread(damageDealer)
 	StartThread(playSoundTillYouDie)
 	StartThread(constDistanceDrag)
+	StartThread(setSunCol)
+	
 end
+function setSunCol()
 
+defaultConfig=  GG.SunConfig:getDefaultConfg()
+defaultConfig.sunColor={255,128,0,255}
+defaultConfig.lifeTime=LifeTimeMax*1000
+ GG.SunConfig:PushSunConfig(defaultConfig)
+end
 function constDistanceDrag()
 	it=0
 	while true do
 		it=(it+50)%200
 		--Units
 		px,py,pz=Spring.GetUnitPosition(unitID)
-		T=getAllInCircle(px,pz,unitID)
+		T=getAllInCircle(px,pz,dragInRange,unitID)
 		myDefID=Spring.GetUnitDefID(unitID)
 		
 		if T then
@@ -143,6 +151,7 @@ function moveTowards(id, times,resolution, px,py,pz, percentageCompleted)
 		Spring.MoveCtrl.Disable(id)
 	end
 end
+
 
 
 function damageDealer()

@@ -34,6 +34,7 @@ if gadgetHandler:IsSyncedCode() then
 		return value
 	end
 	
+ 
 	--if you want diffrent colours for your day, modify this table
 	sunCol={}
 	--night
@@ -95,7 +96,7 @@ if gadgetHandler:IsSyncedCode() then
 		}
 	end 
 	--Various Atmosphere and Sun setting getters
-	function getDefaultConfg(rgba)
+local	function getDefaultConfg(rgba)
 		confg={
 			groundAmbientColor = {rgba.r, rgba.r, rgba.r},
 			groundDiffuseColor = {rgba.r, rgba.r, rgba.r},
@@ -114,6 +115,12 @@ if gadgetHandler:IsSyncedCode() then
 		
 		return confg
 	end
+
+		 local function PushSunConfig(self,...)
+            self[#self+1] = {...}
+    end
+	if GG.SunConfig== nil then GG.SunConfig = { PushSunConfig = PushSunConfig, getDefaultConfg =getDefaultConfg  } end
+   
 	function getgroundAmbientColor(percent)
 		return factor(getsunColor(percent),0.66)
 	end 
@@ -196,9 +203,15 @@ if gadgetHandler:IsSyncedCode() then
 			--Spring.Echo("sunGadget::"..getDayTime(timeFrame%(WholeDay),WholeDay))
 		-- end
 		percent=((timeFrame%(WholeDay))/(WholeDay))
-		
-		
-		config= getDefaultConfg({r=0.5,g=0.5,b=0.5,a=0.5})	
+		config=getDefaultConfg({r=0.5,g=0.5,b=0.5,a=0.5})	
+		if GG.SunConfig and GG.SunConfig[1] then
+			config= GG.SunConfig[1]
+			GG.SunConfig[1].lifeTime=GG.SunConfig[1].lifeTime-32
+			if GG.SunConfig[1].lifeTime <= 0 then
+				GG.SunConfig[1]= nil
+			end
+		else
+	
 		rgba=getgroundAmbientColor(percent)
 		
 		config.groundAmbientColor = {rgba.r, rgba.g, rgba.b}
@@ -226,6 +239,7 @@ if gadgetHandler:IsSyncedCode() then
 		config.fogEnd = 8192* (1.001-getFogFactor(percent))
 		rgba=getFogColor(percent)
 		config.fogColor = {rgba.r, rgba.g, rgba.b, rgba.a}
+		end
 		
 		setSun(config,percent)	
 		

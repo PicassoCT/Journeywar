@@ -693,10 +693,13 @@ function seedToBeFeed()
 		table.remove(T,unitID)	
 		--TODO
 		if T and #T > 0 then
-			boolSupperTime=true
+		
 			process(T,
 					function (id) 
-					Spring.DestroyUnit(id,true,false)
+						if id ~= unitID then 
+						boolSupperTime=true
+						Spring.DestroyUnit(id,true,false)
+						end
 					end
 					)
 		end
