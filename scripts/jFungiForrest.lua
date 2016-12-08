@@ -1,7 +1,7 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
@@ -100,15 +100,15 @@ end
 	dowNer=-75
 	
 	function delayedAppearance(piece)
-	Xrand=math.random(150,450)
-	Move(piece,x_axis,Xrand,0)
+	times=math.ceil(math.random(60000, 300000))
+	Sleep(times)
+	Move(piece,x_axis,500,0)
 	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piece)
 	myHeight=Spring.GetGroundHeight(x,z)
 	heightdifference=math.abs(globalHeightUnit-myHeight)
 	if myHeight < globalHeightUnit then heightdifference=-heightdifference end
 	
-	time=math.ceil(math.random(60000, 300000))
-	Sleep(time)
+
 	Show(piece)
 	
 	SpeedRand=math.random(0.3,1)
@@ -137,7 +137,7 @@ end
 		for i=1,11,1 do
 		Hide(swings[i])
 		Move(swings[i],y_axis,dowNer,0)
-		RandRot=math.random(-360,360)
+		RandRot=i*(360/11)
 		Turn(rotators[i],y_axis,math.rad(RandRot),0)
 		StartThread(delayedAppearance, swings[i])
 		end
@@ -148,8 +148,8 @@ end
 	Move(fungi4,y_axis,0,0.5)
 		
 	WaitForMove(fungi4,y_axis)
+	delayTillComplete(unitID)
 	StartThread(breathingDeath)
-	
 	StartThread(circleOfLife)
 	end
 

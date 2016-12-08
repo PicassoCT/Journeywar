@@ -2169,7 +2169,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	if deMaRaVal(5)==4 then currentMission=4 end
 	if deMaRaVal(5)==2 then currentMission=2 end
 	
-	cout(currentMission .. "Mission selected")
+	cout("jw_miniMission::Mission "..currentMission.." selected")
 	--<DEBUG>
 	
 	--</DEBUG>

@@ -16,12 +16,12 @@ local unitDef = {
 	maxDamage =3200,
 	idleAutoHeal = 1500,
 	--Movement
-	airhoverfactor=0,
+
 	bankingallowed=false,
 	airstrafe=0,
 	strafe=0,
-	hoverattack=0,
-	
+	hoverattack=0, 
+	airHoverFactor=1,
 	canCrash=0,
 	canFly=1,
 	dontLand=1,
@@ -72,7 +72,7 @@ local unitDef = {
 	BrakeRate = 0.01,
 	FootprintX =12,
 	FootprintZ = 12,
-	TEDClass = [[VTOL]],
+
 	steeringmode = [["]],
 	--maneuverleashlength = 1380,
 	
@@ -81,7 +81,7 @@ local unitDef = {
 	MovementClass = "Default2x2",
 	TurnRate = 1024,
 	nanocolor=[[0 0.9 0.9]],
-	sightDistance = 1024,
+	sightDistance = 2048,
 	CanFly = true,
 	alwaysupright=true,
 	selfDestructAs ="defaultweapon",

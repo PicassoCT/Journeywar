@@ -97,8 +97,8 @@ function water()
 		WaitForMove(fruitwat[1],y_axis)
 		Move(fruitwat[2],y_axis,-3,1.25)
 		WaitForMove(fruitwat[2],y_axis)
-		if math.random(0,1)==1 then Move(eggrotate,x_axis,math.random(-2.5,2.5),0.7) end
-		if math.random(0,1)==1 then Move(eggrotate,z_axis,math.random(-2.5,2.5),0.7) end
+		if math.random(0,1)==1 then Move(eggrotate,x_axis,(math.random(-25,25)/10),0.7) end
+		if math.random(0,1)==1 then Move(eggrotate,z_axis,(math.random(-25,25)/10),0.7) end
 	end
 end
 
@@ -436,7 +436,8 @@ end
 function script.Killed(recentDamage, maxHealth)
 	
 	if Spring.ValidUnitID(factoryID)== true then
-		Spring.DestroyUnit(factoryID,true,true)
+	GG.UnitsToKill:PushKillUnit(factoryID,true,true)
+	
 	end
 	createCorpseJBuilding(unitID,recentDamage)
 	return 0

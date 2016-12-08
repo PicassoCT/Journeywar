@@ -66,11 +66,13 @@ function getAirUnitTable(UnitDefNames)
 end
 function getPyroProofTable(UnitDefNames)
 	FireProofTypes={}
+	FireProofTypes[UnitDefNames["jfiredancebomb"].id]=true
 	FireProofTypes[UnitDefNames["jsunshipfire"].id]=true
 	FireProofTypes[UnitDefNames["css"].id]=true
 	FireProofTypes[UnitDefNames["jfireflower"].id]=true
 	FireProofTypes[UnitDefNames["citadell"].id]=true
 	FireProofTypes[UnitDefNames["beanstalk"].id]=true
+	FireProofTypes[UnitDefNames["jtree3"].id]=true
 	return FireProofTypes
 end
 
@@ -471,6 +473,28 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 		end
 	end
 	
+end
+
+
+
+-->Attack Nearest Non-Gaia Enemy
+function defaultEnemyAttack(unitID,SignalMask, delayTime)
+	Signal(SIG_DEFAULT)
+	SetSignalMask(SIG_DEFAULT)
+	gaiaTeam=Spring.GetUnitTeam(unitID)
+	Sleep(15000)
+	delayTime=delayTime or 1500
+	
+	while true do
+		Sleep(delayTime)
+		ed=Spring.GetUnitNearestEnemy(unitID)
+		if ed and Spring.GetUnitTeam(ed) ~= gaiaTeam then
+			x,y,z=Spring.GetUnitPosition(ed)
+			if x then
+				Spring.SetUnitMoveGoal(unitID,x,y,z)
+			end
+		end
+	end
 end
 
 --=======================================Tech Tree=============================================================

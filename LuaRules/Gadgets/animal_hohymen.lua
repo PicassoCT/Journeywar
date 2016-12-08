@@ -105,7 +105,7 @@
 	function FindValuePos(unitid,valueType)
 		
 		ux,uy,uz=Spring.GetUnitPosition(unitid)
-		if not ux then Spring.Echo("Coords not find for hohymen"); return false, false end
+		if not ux then Spring.Echo("Coords not found for hohymen"); return false, false end
 		
 		local lgetMap=getMap	
 		if not lgetMap then 
@@ -503,7 +503,7 @@
 	function Transition(unitid,LongedState)
 		--Spring.Echo("Transition1")
 		isDead=Spring.GetUnitIsDead(unitid)
-		if isDead == true then return false, "DEAD" end
+		if not isDead or isDead == true then return false, "DEAD" end
 		
 		
 		LongedState=LongedStateLongedTransitionTable[LongedState]

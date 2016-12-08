@@ -454,7 +454,9 @@ process(T,
 			end
 		end,
 		function(id)
+		if id then
 			Spring.DestroyUnit(id,false,false,unitID)
+		end
 		end
 		)
 

@@ -37,7 +37,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		totalAbortCount=0
 		
 		for _=1, volume,1 do
-			Spring.Echo("Meridian Table")
+
 			if #meridianTable <=1 then return end
 			
 			meridian=meridianTable[math.random(1,#meridianTable)]
@@ -79,7 +79,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	spawnerAI={}
 	function gadget:Initialize()
 		boolAtLeastOneSPawner=false
-		Spring.Echo("(Initializing SpawnerAI")
+
 		for _, t in ipairs (Spring.GetTeamList ()) do
 			
 			local teamID, leader, isDead, isAI, side = Spring.GetTeamInfo (t)
@@ -105,7 +105,6 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end
 		if boolAtLeastOneSPawner == false then
-			Spring.Echo("RemoveGadget:SpawnerAI")
 			gadgetHandler:RemoveGadget ()
 		end
 		
@@ -135,18 +134,34 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 	end
 	
+	function checkOnTeams()
+	okayCount=0
+		for teamID, side in pairs(spawnerAI) do
+		teamID,leader,isDead =	Spring.GetTeamInfo(teamID)
+			if isDead and isDead == false then
+				okayCount=okayCount+1
+			else
+				spawnerAI[teamID]= nil
+			end
+		end
+		
+		if okayCount == 0 then
+			gadgetHandler:RemoveGadget ()
+		end
+	end
 	
-	
-	incRate=0
-	total=49000-incRate
+	counter=0
+	total=49000
 	function gadget:GameFrame(frame)
 		if frame > 0 and frame % total == 0 then
-			Spring.Echo("SpawnerAI:Active")
+		counter=counter+1
+		end
+		if counter % 3== 0 then
+		checkOnTeams()
+
 			for k,v in pairs(spawnerAI) do
 				spawnSpawners(frame,k,v)
-			end
-			incRate=math.abs(math.sin(frame/1000)*1024)
-			total=49000-incRate
+			end			
 		end
 	end
 	

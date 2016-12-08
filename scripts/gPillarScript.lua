@@ -1,7 +1,7 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
- include "lib_Animation.lua"
+include "lib_Animation.lua"
 
  include "lib_Build.lua" 
 
@@ -42,7 +42,7 @@ function terraformingFunction(x,z)
 
 --Replace with a Terraforming GadgetCall of your choice
 	size= math.ceil(math.random(3,5))*4
-	jw_AddTerrainDeformation(x,z, size , preparhalfSphereTable, 4, "melt","borderblur")
+	jw_AddTerrainDeformation(x,z, size , prepareHalfSphereTable, 4, "melt","borderblur")
 
 end
 
@@ -182,7 +182,7 @@ defID=Spring.GetUnitDefID(unitID)
 teamid=Spring.GetUnitTeam(unitID)
 Spring.CreateUnit(defID,x,y,z,0,teamid)
 
-	jw_AddTerrainDeformation(x,z, 22, preparhalfSphereTable, 2, "melt","borderblur")
+	jw_AddTerrainDeformation(x,z, 22, prepareHalfSphereTable, 2, "melt","borderblur")
 return 1
 end
 

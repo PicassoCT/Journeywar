@@ -79,10 +79,10 @@ buildoptions =
   customParams = {},
  sfxtypes = {
     explosiongenerators = {
-		"custom:conDroneLightShadow",
-		"custom:conDroneMedShadow",
-		"custom:condronecloud",
-		"custom:conDroneShadow",
+		--"custom:conDroneLightShadow",
+		--"custom:conDroneMedShadow",
+		--"custom:condronecloud",
+		--"custom:conDroneShadow",
 	   
 	   
 						  },

@@ -97,12 +97,12 @@ teamID=Spring.GetGaiaTeamID()
 function ElevatorScript()
 Show(Elevator1)
 Show(Elevator2)
-speed=math.random(9.14,22)
+speed=math.random(91,220)/10
 boolElveator1GotJob=false
 boolElveator2GotJob=false
 	while true do
 	if boolElveator1GotJob== false then
-	factor=math.ceil(math.random(0,1)*420)
+	factor=math.ceil(math.random()*420)
 	factor=factor -(factor%25)
 	Move(Elevator1,y_axis,factor,speed)
 	boolElveator1GotJob=true
@@ -110,7 +110,7 @@ boolElveator2GotJob=false
 
 
 	if boolElveator2GotJob== false then
-	factor=math.ceil(math.random(0,1)*420)
+	factor=math.ceil(math.random()*420)
 	factor=factor -(factor%25)
 	Move(Elevator2,y_axis,factor,speed)
 	boolElveator2GotJob=true

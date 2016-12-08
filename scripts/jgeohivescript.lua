@@ -6,11 +6,11 @@ include "createCorpse.lua"
 hivePiece=nil
 myDefID = Spring.GetUnitDefID(unitID)
 jGeoHiveID = UnitDefNames["jgeohive"].id
-
+gaiaTeamID=Spring.GetGaiaTeamID()
 function setHivePiece()
---	Spring.Echo("ID",Spring.GetUnitDefID(unitID))
---	Spring.Echo("Ids", UnitDefNames["gzombspa"].id, UnitDefNames["jgeohive"].id )
-	if Spring.GetUnitDefID(unitID) ==  UnitDefNames["jgeohive"].id then
+	--	Spring.Echo("ID",Spring.GetUnitDefID(unitID))
+	--	Spring.Echo("Ids", UnitDefNames["gzombspa"].id, UnitDefNames["jgeohive"].id )
+	if Spring.GetUnitDefID(unitID) == UnitDefNames["jgeohive"].id then
 		Spring.Echo("jgeohive Piece detected")
 		hivePiece=piece"jgeohive"
 	end
@@ -36,23 +36,23 @@ numZ = mapZ*8
 function sanitizeCoords(x,y,z, sfactor)
 	
 	if (not x or not z ) or x<= 50 and z <= 50 or (x >=numX-50 or z >= numZ -50) then	
-		x,z=math.random(numX*0.05,numX*0.95),math.random(numZ*0.05,numZ*0.95)
+		x,z=math.random(numX-(numX*0.05),numX*0.95),math.random(numZ-(numZ*0.05),numZ*0.95)
 		return x,y,z
 	else
 		return x,y,z
 	end
 	
 end
-
+teamID=Spring.GetUnitTeam(unitID)
 function spawner()
-
+	
 	repeat 
-	Sleep(100)
-	hp,maxhp,_,_,bP= Spring.GetUnitHealth(unitID)
-	bP = bP or 0
+		Sleep(100)
+		hp,maxhp,_,_,bP= Spring.GetUnitHealth(unitID)
+		bP = bP or 0
 	until (bP >= 1 or hp == maxhp) 
 	
-
+	
 	local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spSpawnCEG=Spring.SpawnCEG
@@ -63,7 +63,7 @@ function spawner()
 	
 	local x,y,z = Spring.GetUnitPosition(unitID)
 	
-	teamID=Spring.GetUnitTeam(unitID)
+	
 	
 	while(true) do
 		----Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
@@ -78,19 +78,19 @@ function spawner()
 				ex,ey,ez=Spring.GetTeamStartPosition(eteam)
 			end
 			Spring.SetUnitBlocking(unitID,false)
-				for i=1, howManyUnitsPerSpawnCycle,1 do
-					spEmitSfx(hivePiece,1025)
-					spEmitSfx(hivePiece,1025)
-					randoval=math.random(-65,-45)
-					bool=math.random(0,1)
-					if bool==1 then
-						randoval=randoval*-1
-					end
-					sigNum= randSign()
-					
-					spSpawnCEG("dirt",x+randoval,y,z+randoval,0,1,0,50,0)
-					dice=math.random(1,4)
-					spawnedUnit=0
+			for i=1, howManyUnitsPerSpawnCycle,1 do
+				spEmitSfx(hivePiece,1025)
+				spEmitSfx(hivePiece,1025)
+				randoval=math.random(-65,-45)
+				bool=math.random(0,1)==1
+				if bool==true then
+					randoval=randoval*-1
+				end
+				sigNum= randSign()
+				
+				spSpawnCEG("dirt",x+randoval,y,z+randoval,0,1,0,50,0)
+				dice=math.random(1,4)
+				spawnedUnit=0
 				if myDefID== jGeoHiveID then	
 					if dice==1 then	
 						spawnedUnit=spCreateUnit("jhoneypot",x+randoval,y,z+(randoval*sigNum), 0, teamID) 
@@ -105,20 +105,20 @@ function spawner()
 					else 
 						spawnedUnit=spCreateUnit("zombie",x+randoval,y,z+(randoval*sigNum), 0, teamID) 
 					end
+					
+					
+				end
 				
 				
-				end
-					
-					
-					spSetUnitNoSelect(spawnedUnit,true)
-					
-					Sleep(350)
-					spEmitSfx(hivePiece,1025)
-					spEmitSfx(hivePiece,1025)
-					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
-					table.insert(monsterTable,spawnedUnit)
-				end
-
+				spSetUnitNoSelect(spawnedUnit,true)
+				
+				Sleep(350)
+				spEmitSfx(hivePiece,1025)
+				spEmitSfx(hivePiece,1025)
+				spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
+				table.insert(monsterTable,spawnedUnit)
+			end
+			
 			Spring.SetUnitBlocking(unitID,true)
 		end
 		Sleep(10000)
@@ -133,67 +133,67 @@ RandVAl=math.ceil(math.random(40000,600000))
 RELAXTIME=600000 + RandVAl
 
 totalTable={
-["BUILDUP"]= BuildUPTime,
-["PEAKFADE"]= PeakTime,
-["PEAK"]= PEAKFADETIME,
-["RELAX"]= RELAXTIME
+	["BUILDUP"]= BuildUPTime,
+	["PEAKFADE"]= PeakTime,
+	["PEAK"]= PEAKFADETIME,
+	["RELAX"]= RELAXTIME
 }
 
 function NextState(State,times)
-
-
-
+	
+	
+	
 	if State=="BUILDUP" and times > BuildUPTime then 
-	times=0; --Spring.Echo("hivePiece::Peak") ;
-	return "PEAK" , times ,  BuildUPTime
+		times=0; --Spring.Echo("hivePiece::Peak") ;
+		return "PEAK" , times , BuildUPTime
 	end
 	
 	if State=="PEAK" and times > PeakTime then 
-	times=0; 
-	return "PEAKFADE", times , PeakTime
+		times=0; 
+		return "PEAKFADE", times , PeakTime
 	end
 	
 	if State=="PEAKFADE" and times > PEAKFADETIME then 
-	times=0; 
-	return "RELAX", times, PEAKFADETIME
+		times=0; 
+		return "RELAX", times, PEAKFADETIME
 	end
 	
 	if State=="RELAX" and times > RELAXTIME then 
 		times=0 ;
 		RELAXTIME= 60000+ math.ceil(math.random(4000,60000)) 
-	--	Spring.Echo("hivePiece::BUILDUP") ;
+		--	Spring.Echo("hivePiece::BUILDUP") ;
 		return "BUILDUP", times, RELAXTIME
 	end	
-
+	
 	return State, times, times/totalTable[State]
 end
 
 function findBiggestCluster(team)
-mapX,mapZ=Spring.GetMetalMapSize
-mapRepresentiv=makeTable(0,mapx,mapZ)
-teamUnits=Spring.GetTeamUnits(team)
-maxTuple{x=mapX/2,z=mapZ/2,val=0}
-		if teamUnits then
+	mapX,mapZ=Spring.GetMetalMapSize
+	mapRepresentiv=makeTable(0,mapx,mapZ)
+	teamUnits=Spring.GetTeamUnits(team)
+	maxTuple{x=mapX/2,z=mapZ/2,val=0}
+	if teamUnits then
 		local spGetUnitPos= Spring.GetUnitPosition
-			process(teamUnits,
-					function(id)
-						ix,_,iz= spGetUnitPos(id)
-						ix,iz=math.ceil(ix/8),math.ceil(iz/8)
-						if mapRepresentiv[ix] and mapRepresentiv[ix][iz] then
-						 mapRepresentiv[ix][iz] = mapRepresentiv[ix][iz] +1
-						end
-						end)
-
-			for i=1,#mapX do
-				for j=1,#mapZ do
+		process(teamUnits,
+		function(id)
+			ix,_,iz= spGetUnitPos(id)
+			ix,iz=math.ceil(ix/8),math.ceil(iz/8)
+			if mapRepresentiv[ix] and mapRepresentiv[ix][iz] then
+				mapRepresentiv[ix][iz] = mapRepresentiv[ix][iz] +1
+			end
+		end)
+		
+		for i=1,#mapX do
+			for j=1,#mapZ do
 				if mapRepresentiv[i][j] > maxTuple.val then
-				maxTuple.val=mapRepresentiv[i][j] 
-				maxTuple.x=i
-				maxTuple.z=j
+					maxTuple.val=mapRepresentiv[i][j] 
+					maxTuple.x=i
+					maxTuple.z=j
 				end
 			end
-			end
 		end
+	end
 	return maxTuple.x*8, maxTuple.z*8
 end
 
@@ -204,14 +204,14 @@ function PEAK(monsterID, enemyID,Time,mteam, factor)
 	if math.random(0,1)==0 then
 		eteam=Spring.GetUnitTeam(enemyID)
 		ex,ez=findBiggestCluster(eteam)
-			return ex,0,ez
+		return ex,0,ez
 	else
 		ad=Spring.GetUnitNearestAlly(enemyID)
 		ex,ey,ez=Spring.GetUnitPosition(ad)
 		ex,ey,ez=sanitizeCoords(ex,ey,ez,Time/8500)
-			return ex,ey,ez
+		return ex,ey,ez
 	end
-
+	
 end
 PEAKFADEHALF=PEAKFADETIME/4
 
@@ -233,7 +233,7 @@ function PEAKFADE(monsterID, enemyID,Time,mteam, factor)
 end
 
 function BUILDUP( enemyID,Time,mteam, factor)
-	coef=Time/BuildUPTime +  math.max( math.min(0.1,math.cos(factor* 3.14158*7)*(1/10)),-0.1)
+	coef=Time/BuildUPTime + math.max( math.min(0.1,math.cos(factor* 3.14158*7)*(1/10)),-0.1)
 	Inv=1-coef
 	--we try to calc a midvalue -- and get everyone to assemble there
 	ecx,ecy,ecz=Spring.GetUnitPosition(enemyID)
@@ -241,7 +241,7 @@ function BUILDUP( enemyID,Time,mteam, factor)
 	ex,ey,ez=Spring.GetTeamStartPosition(eteam)
 	ecx,ecy,ecz= ecx-ex,ecy-ey,ecz-ez
 	
-	ex, ey, ez = ex + (math.cos(factor)/10) *  ecx, ey,  ez + (math.cos(Inv )/10)*ecz
+	ex, ey, ez = ex + (math.cos(factor)/10) * ecx, ey, ez + (math.cos(Inv )/10)*ecz
 	
 	rx,ry,rz=sanitizeCoords(ex,ey,ez,Time/BuildUPTime)
 	--well away from the mainbase
@@ -250,12 +250,12 @@ function BUILDUP( enemyID,Time,mteam, factor)
 	else --we assmeble at the middistance to our ally
 		eneMyne=Spring.GetUnitNearestEnemy(enemyID)
 		if eneMyne and type(eneMyne) == "number" then
-		unitDead =Spring.GetUnitIsDead(eneMyne) 
-		if unitDead and unitDead == false then
-			dax,day,daz=Spring.GetUnitPosition(eneMyne)
-			dax,day,daz=sanitizeCoords((ex*Inv+dax*coef),(ey*Inv+day*coef),(ez*Inv+daz*coef),Time/BuildUPTime)
-			return dax,day,daz
-		end
+			unitDead =Spring.GetUnitIsDead(eneMyne) 
+			if unitDead and unitDead == false then
+				dax,day,daz=Spring.GetUnitPosition(eneMyne)
+				dax,day,daz=sanitizeCoords((ex*Inv+dax*coef),(ey*Inv+day*coef),(ez*Inv+daz*coef),Time/BuildUPTime)
+				return dax,day,daz
+			end
 		end
 	end
 	
@@ -282,36 +282,64 @@ funcTable["PEAK"]= PEAK
 funcTable["PEAKFADE"]=PEAKFADE
 funcTable["BUILDUP"]=BUILDUP
 funcTable["RELAX"]=RELAX
+local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
+function getNearestEnemy(id)
 
-
+	minDist=math.huge
+	minDistID=nil
+	
+	process(AllUnitsUpdated,
+	function(ed)
+		edTeam=Spring.GetUnitTeam(ed)
+		if edTeam == teamID or edTeam == gaiaTeamID then
+		else
+			return id
+		end
+	end,
+	function(ed)
+		if ed and id and GetUnitDistance(ed,id) <minDist then 
+			minDistID= ed
+			minDist=GetUnitDistance(ed,id)
+		end
+	end)		
+	if minDistID~=nil then return minDistID end
+	
+	return Spring.GetUnitNearestEnemy(id)
+end
+AllUnitsUpdated={}
 function TargetOS()
-
+	
 	State="RELAX"
 	times=0
 	local spValidUnitID=Spring.GetUnitIsDead
-	local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
+	
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
 	local lfuncTable=funcTable
 	
-	
+	oldState="RELAX"
 	while(true) do
 		Sleep(5000)
 		times=times+5000
+		AllUnitsUpdated=Spring.GetAllUnits()
+		
 		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
 			State, times, percent =NextState(State,math.ceil(times/30))
-			
+			if State ~= oldState then
+			Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
+			oldState=State
+			end
 			
 			for i=1,table.getn(monsterTable),1 do
 				v=(spValidUnitID(monsterTable[i]))
 				if v and v == true then 
 					
-					enemyID= spGetUnitNearestEnemy(monsterTable[i])
+					enemyID= getNearestEnemy(monsterTable[i])
 					if enemyID then						
 						ex,ey,ez = lfuncTable[State](unitID,enemyID,times,teamID, times/totalTable[State])
 						if ex then
-						StartThread(markPosOnMap,ex,ey,ez,"greenlight")						
-						spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
+							StartThread(markPosOnMap,ex,ey,ez,"greenlight")						
+							spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
 						end
 					end
 				end
@@ -324,17 +352,17 @@ function TargetOS()
 end
 
 
-		
-		
+
+
 
 
 function script.Create()
-
+	
 	setHivePiece()
-
+	
 	StartThread(spawner)
 	StartThread(TargetOS)
-
+	
 end
 
 

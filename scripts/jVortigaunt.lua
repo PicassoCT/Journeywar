@@ -150,28 +150,32 @@ function script.QueryWeapon1()
 	
 
 function script.AimWeapon1( heading ,pitch)	
+if boolReloaded==false then return false end
 	Turn(vorthead,x_axis,pitch,5)
 	Turn(vort,y_axis,heading,12)
 	WaitForTurn(vort,y_axis)
+	ax,ay,az=Spring.GetUnitPosition(unitID)
+	Spring.SpawnCEG("vortcharge",ax ,ay+15,az ,math.random(-1,1),1,math.random(-1,1))
 	for i=1,2,1 do
 	random=math.random(1,5)
-	if random==1 then
-	Spring.PlaySoundFile("sounds/vort/zap1.wav")
-	elseif random==2 then
-	Spring.PlaySoundFile("sounds/vort/zap2.wav")
-	elseif random==3 then
-	Spring.PlaySoundFile("sounds/vort/zap3.wav")
-	elseif random==4 then
-	Spring.PlaySoundFile("sounds/vort/zap4.wav")
-	elseif random==5 then
-	Spring.PlaySoundFile("sounds/vort/zap5.wav")
-	elseif random==6 then
-	Spring.PlaySoundFile("sounds/vort/zap6.wav")
-	else
-	Spring.PlaySoundFile("sounds/vort/zap7.wav")
+		if random==1 then
+		Spring.PlaySoundFile("sounds/vort/zap1.wav")
+		elseif random==2 then
+		Spring.PlaySoundFile("sounds/vort/zap2.wav")
+		elseif random==3 then
+		Spring.PlaySoundFile("sounds/vort/zap3.wav")
+		elseif random==4 then
+		Spring.PlaySoundFile("sounds/vort/zap4.wav")
+		elseif random==5 then
+		Spring.PlaySoundFile("sounds/vort/zap5.wav")
+		elseif random==6 then
+		Spring.PlaySoundFile("sounds/vort/zap6.wav")
+		else
+		Spring.PlaySoundFile("sounds/vort/zap7.wav")
+		end
+	Sleep(550)
 	end
-	Sleep(150)
-	end
+	Sleep(550)
 	Turn(vortarmr,x_axis,math.rad(-12),3)
 	Turn(vortarmr,y_axis,math.rad(-101),23)
 	Turn(vortarmr,z_axis,math.rad(75),19)
@@ -189,9 +193,15 @@ function script.AimWeapon1( heading ,pitch)
 
 	return true
 end
-
+boolReloaded=true
+function reloader()
+boolReloaded=false
+Sleep(2000)
+boolReloaded=true
+end
 
 function script.FireWeapon1()	
+StartThread(reloader)
 boolHasFired=true
 	return true
 end

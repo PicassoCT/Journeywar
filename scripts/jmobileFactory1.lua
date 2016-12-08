@@ -2,7 +2,7 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
+include "createCorpse.lua"
 include "lib_Build.lua" 
 
 
@@ -270,7 +270,7 @@ function dropLeave(i)
 	x=math.random(0,360)
 	y=math.random(0,360)
 	z=math.random(0,360)
-	randSpeed=math.random(0.01,0.05)
+	randSpeed=math.random(1,5)/100
 	Turn(leaveAbsence[i],x_axis,math.rad(x),randSpeed)
 	Turn(leaveAbsence[i],y_axis,math.rad(y),randSpeed)
 	Show(leaveAbsence[i])

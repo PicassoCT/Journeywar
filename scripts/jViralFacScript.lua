@@ -246,7 +246,7 @@ function wiggleProdPods()
 		i=(i%#lProdPods)+1
 		if math.random(0,1)==1 then 
 			r,p,y=math.random(-12,12),math.random(-8,8),math.random(-12,12)
-			speed=math.random(0.2,5)
+			speed=math.random(2,50)/10
 			Turn(lProdPods[i],x_axis,math.rad(r),speed)
 			Turn(lProdPods[i],y_axis,math.rad(p),speed)
 			Turn(lProdPods[i],z_axis,math.rad(y),speed)

@@ -62,13 +62,12 @@ local unitDef = {
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:greenbloodspray",
-			
-			
+				
 		},
 	},
 	
 	weapons = {
-		[1]={name = "jBugCloseCombat",
+		[1]={name = "jcrabclosecombat",
 			onlyTargetCategory = [[LAND]],
 		},
 		

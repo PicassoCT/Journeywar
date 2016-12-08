@@ -47,26 +47,7 @@ end
 
 
 
-function exaust()
-	Signal(SIG_EXAUST)
-	SetSignalMask(SIG_EXAUST)
-	while(true) do
-		for i=1,table.getn(flares),1 do
-			dice=math.random(-1,3)
-			if dice==1 then EmitSfx(flares[i],1024) 
-			elseif dice== 2 then EmitSfx(flares[i],1025) 
-		else EmitSfx(flares[i],1026) end
-		end
-		randSleep=math.ceil(math.random(50,250))	 
-		Sleep(50)
-	end 
-end
 
-local function timedelayedExaustExtinct()
-	SetSignalMask(SIG_TIMER)
-	Sleep(4000) 
-	Signal(SIG_EXAUST)
-end
 
 local function landed()
 	
@@ -129,13 +110,7 @@ end
 function moveStateCheck()
 	while(true) do
 		
-		if boolMoving == true then
-			Signal(SIG_EXAUST)
-			StartThread(exaust)
-			onTheFly()
-			Sleep(500)
-			
-		end
+		
 		
 		if boolMoving == false and boolShortStop == false then
 			Sleep(512)
@@ -175,7 +150,6 @@ end
 function script.StopMoving()
 	
 	Signal(SIG_TIMER)
-	StartThread(timedelayedExaustExtinct)
 	boolMoving=false
 	boolShortStop=false
 end

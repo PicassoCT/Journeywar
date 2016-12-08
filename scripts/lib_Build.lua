@@ -2503,7 +2503,7 @@ fixFunctionTabel[6]=	function (NUMBEROFPIECES)
 		PrevPiece=EndPiece[i]
 		Turn(TreePiece[i+1],y_axis,math.rad(it),0)
 		
-		AddOn=math.random(0.15,0.5)
+		AddOn=math.random(15,50)/100
 		
 		v=v-AddOn
 		Turn(TreePiece[i+1],x_axis,math.rad(v),0,true)
@@ -2652,7 +2652,7 @@ fixFunctionTabel[10]=	function (NUMBEROFPIECES)
 	randCent=math.ceil(math.random(4,9))
 	PiecesNumber=math.floor(NUMBEROFPIECES/randCent)
 	for k=1,randCent do
-		ex,ez=math.random(0.5,1)*90*randSign(),math.random(0.5,1)*90*randSign()
+		ex,ez=(math.random(5,10)/10)*90*randSign(),(math.random(5,10)/10)*90*randSign()
 		
 		MoveUnitPieceToGroundPos(unitID,TreePiece[k],ex,ez,0,SIZEOFPIECE)
 		WaitForMove(TreePiece[k],x_axis)

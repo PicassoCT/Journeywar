@@ -133,7 +133,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local	cssDefID=UnitDefNames["css"].id
 	local	gvolcanoDefID=UnitDefNames["gvolcano"].id
 	--Effect Functions
-	function preparhalfSphereTable(size,height)
+	function prepareHalfSphereTable(size,height)
 		cent=math.ceil(size/2)
 		T={}
 		for o=1,size,1 do
@@ -162,14 +162,14 @@ if (gadgetHandler:IsSyncedCode()) then
 		for i=1,table.getn(tpiecesTable) do	
 			spawnCegAtPiece(id,tpiecesTable[i].pid,"antimatter",10)
 			spawnCegAtPiece(id,tpiecesTable[i].pid,"bgantimatter",10)		
-		end		
-		Spring.DestroyUnit(id,true,true) 
+		end	
+		GG.UnitsToKill:PushToKill(id,true,true)
 		
 		size=8
 		if GG.DynDefMap == nil then GG.DynDefMap={} end
 		if GG.DynRefMap == nil then GG.DynRefMap={} end
 		GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-		GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,-0.25)		
+		GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,-0.25)		
 	end
 	
 	

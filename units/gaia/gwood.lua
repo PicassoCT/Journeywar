@@ -12,9 +12,9 @@ local unitDef = {
 	buildCostEnergy = 1,
 	buildTime = 1,
 	--Health
-	maxDamage = 6660,
-	idleAutoHeal = 15,
-	autoheal=10,
+	maxDamage = 1200,
+	idleAutoHeal = 2,
+	autoheal=1,
 	--Movement
 	mass=8020,
 	upRight=false,
