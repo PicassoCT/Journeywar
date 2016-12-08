@@ -1,6 +1,7 @@
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
+include "lib_jw.lua"
 include "lib_OS.lua"
 
 pieceTable = generatepiecesTableAndArrayCode(unitID, false)
@@ -177,6 +178,7 @@ local viewDistance=650
 
 SIG_WALK=2
 SIG_RESET = 16
+SIG_DEFAULT = 32
 
 local hitPoints =0
 local StartPoints =0
@@ -593,7 +595,7 @@ function moveTowardsNearestEnemy()
 	while(true) do
 		
 		commands=Spring.GetUnitCommands(unitID,2)
-		while #commands > 0 do
+		while #commands > 0 or boolMoving== true do
 			Sleep(1000)
 			commands=Spring.GetUnitCommands(unitID,2)
 		end
@@ -820,11 +822,12 @@ function PlayAnimation(animname)
 	end
 end
 
-
+boolMoving=false
 function script.StartMoving()
-	
+	boolMoving=true
 	
 	Signal(SIG_RESET)	
+	Signal(SIG_DEFAULT)	
 	
 	
 	StartThread(walk)
@@ -840,9 +843,11 @@ function script.StopMoving()
 	-- health check
 	--lay down
 	boolRegen=false
+	boolMoving=false
 	Signal(SIG_WALK)
 	
 	StartThread(resetPosition)
+	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
 	
 end
 

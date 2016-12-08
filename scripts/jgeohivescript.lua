@@ -6,7 +6,7 @@ include "createCorpse.lua"
 hivePiece=nil
 myDefID = Spring.GetUnitDefID(unitID)
 jGeoHiveID = UnitDefNames["jgeohive"].id
-
+gaiaTeamID=Spring.GetGaiaTeamID()
 function setHivePiece()
 	--	Spring.Echo("ID",Spring.GetUnitDefID(unitID))
 	--	Spring.Echo("Ids", UnitDefNames["gzombspa"].id, UnitDefNames["jgeohive"].id )
@@ -36,7 +36,7 @@ numZ = mapZ*8
 function sanitizeCoords(x,y,z, sfactor)
 	
 	if (not x or not z ) or x<= 50 and z <= 50 or (x >=numX-50 or z >= numZ -50) then	
-		x,z=math.random(numX*0.05,numX*0.95),math.random(numZ*0.05,numZ*0.95)
+		x,z=math.random(numX-(numX*0.05),numX*0.95),math.random(numZ-(numZ*0.05),numZ*0.95)
 		return x,y,z
 	else
 		return x,y,z

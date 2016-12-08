@@ -110,6 +110,16 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
 	
 end
 
+function delayTillComplete(unitID)
+_,_,_,_,bP= Spring.GetUnitHealth(unitID)
+if bP == nil then return false end
+	while bP < 1.0 do
+	Sleep(100)
+	_,_,_,_,bP= Spring.GetUnitHealth(unitID)
+	end
+return true
+
+end
 
 --> Plays a DescriptorTable in Order reciving Signals for a global soundOrderTable	
 function playSoundInOrder(soundInOrderTable,name)
@@ -525,7 +535,7 @@ function partOfShipPartOfCrew( point, CreatureID,MotherID)
 		tx,ty,tz=spGetUnitPiecePosDir(unitID,CreatureID)
 		Spring.MoveCtrl.SetPosition(CreatureID,tx+math.random(-5,5),ty,tz+math.random(-5,5))
 		Spring.MoveCtrl.SetRotation(CreatureID,roX, roY,roZ)
-		roX,roY,roZ=roX+math.random(-0.01,0.01),roY+math.random(-0.01,0.01),roZ+math.random(-0.01,0.01)
+		roX,roY,roZ=roX+(math.random(-100,100)/10000),roY+(math.random(-100,100)/10000),roZ+(math.random(-100,100)/10000)
 		Sleep(500)
 	end
 	

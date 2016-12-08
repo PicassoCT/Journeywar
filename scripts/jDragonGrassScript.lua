@@ -32,7 +32,7 @@ function script.Create()
 	
 end
  DrugRange= 200
- 	x,y,z=Spring.GetUnitPosition(unitID)
+ 	ux,uy,uz=Spring.GetUnitPosition(unitID)
 
 function swayInWind()
 	while true do
@@ -45,28 +45,16 @@ function swayInWind()
 	
 end
 
-function putDrugPieceInPlace(nr,id)
+function putDrugPieceInPlace(nr)
+
 	local footneedle=DrugPieceList[nr]
 	Hide(footneedle)
 	Move(footneedle,y_axis,-90,0)
-	Turn(footneedle,y_axis,math.rad(math.random(-360,360)),0)
-	Turn(footneedle,x_axis,math.rad(math.random(-5,5)),0)
-	Turn(footneedle,z_axis,math.rad(math.random(-5,5)),0)
+	degree=360*(nr/#DrugPieceList)+math.sin(Spring.GetGameFrame()/3000)
 	
-	Show(footneedle)
-	
-	--find out if a enemy is nearby -- that is not yet in the books
-	
-	
-	if id and GetUnitDistance(unitID,id) < DrugRange then
-		px,py,pz=Spring.GetUnitPosition(id)
+
+		px,pz=RotationMatrice(0,DrugRange,math.rad(degree)*nr)
 		MoveUnitPieceToRelativeWorldPos(unitID,footneedle,px,pz,22)
-	else --just find a place in the midst of nowhere
-		px,py,pz=x,y,z
-		diceOne,diceTwo= 1,1
-		if math.random(0,1)==1 then diceOne= -1 end
-		if math.random(0,1)==1 then diceTwo= -1 end
-		MoveUnitPieceToRelativeWorldPos(unitID,footneedle,px+math.random(35,DrugRange-RANGE)*diceOne,pz+math.random(35,DrugRange-RANGE)*diceTwo,22)
 	end
 	
 	WaitForMove(footneedle,y_axis)
@@ -82,7 +70,7 @@ end
 
 function ifSomeDayItMayHappenThatAVictimMustBeFound()
 	T={}
-	T=Spring.GetUnitsInCylinder(x,z,DrugRange)
+	T=Spring.GetUnitsInCylinder(ux,uz,DrugRange)
 	table.remove(T,unitID)
 	if #T > 1 then
 		T=filterOutBuilding(T, UnitDefs)
@@ -105,8 +93,8 @@ function DragonGrassGrowth()
 	while true do
 		for i=1,#DrugPieceActiveList do
 			if DrugPieceActiveList[i]==false then
-				id=ifSomeDayItMayHappenThatAVictimMustBeFound()
-				StartThread(putDrugPieceInPlace,i,id)
+				ifSomeDayItMayHappenThatAVictimMustBeFound()
+				StartThread(putDrugPieceInPlace,i)
 				DrugPieceActiveList[i]=true
 			end
 		end
@@ -145,9 +133,9 @@ function AddictBehaviour()
 						makeUnitLoyalToTeam(k,teamid)
 
 					elseif v.addTime > LOYAL then
-						x,y,z=Spring.GetUnitPosition(unitID)
-						x,z= x + math.random(-1200,1200),z + math.random(-1200,1200)
-						Spring.SetUnitMoveGoal(k,x,y,z)
+
+						ex,ez= ux + math.random(-1200,1200),uz + math.random(-1200,1200)
+						Spring.SetUnitMoveGoal(k,ex,uy,ez)
 						Spring.SetUnitNoSelect(k,false)	
 						
 					elseif v.addTime > SYMTOMFREE then
@@ -156,12 +144,12 @@ function AddictBehaviour()
 					elseif v.addTime > RELAPSE then
 						makeUnitLoyalToTeam(k,teamid)
 						Spring.SetUnitNoSelect(k,true)
-						Spring.SetUnitMoveGoal(k,x,y,z)
-						checkDistanceAndReinject(k,x,y,z)
+						Spring.SetUnitMoveGoal(k,ux,uy,uz)
+						checkDistanceAndReinject(k,ux,uy,uz)
 					elseif v.addTime < PAININGFORTHEPOPPEYFIELDS then
 						hp=Spring.GetUnitHealth(k)
 						Spring.SetUnitHealth(k,hp-22)
-						checkDistanceAndReinject(k,x,y,z)
+						checkDistanceAndReinject(k,ux,uy,uz)
 					end
 					AddictList[k].addTime=v.addTime-300	
 				elseif k then
@@ -175,11 +163,8 @@ function AddictBehaviour()
 end
 
 function checkDistanceAndReinject(k,x,y,z)
-	ux,uy,uz=Spring.GetUnitPosition(k)
-	if not ux then return end
-	ux,uy,uz=ux-x,uy-y,uz-z
-	
-	if math.sqrt(ux*ux+uy*uy+uz*uz) < DrugRange then
+
+	if GetUnitDistance(k,unitID) < DrugRange then
 		AddictList[k].addTime= INJECT
 		PlayInjectSoundFiles()
 	end

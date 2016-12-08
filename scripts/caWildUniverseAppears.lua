@@ -483,10 +483,10 @@ function script.Create()
 	if GG.DynDefMap == nil then GG.DynDefMap={} end
 	if GG.DynRefMap == nil then GG.DynRefMap={} end
 	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-	GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,-8)
+	GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,-8)
 	GG.boolForceLandLordUpdate=true
 	
-	--tempTable=preparhalfSphereTable(size)
+	--tempTable=prepareHalfSphereTable(size)
 	--printOUT(tempTable)
 	GG.UnitsToSpawn:PushCreateUnit("gdecbigbangscar",x,0,z,0,teamID)
 	--</DIGHOLE>

@@ -46,7 +46,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					
 					distancex=math.ceil(math.random(100,150))+x
 					distancez=math.ceil(math.random(100,150))+z
-					Spring.CreateUnit("grecforrest",distancex,y,distancez,0,teamID)
+					Spring.CreateUnit("grecforrest",distancex,y,distancez,0,gaiaTeamID)
 
 					end
 			end

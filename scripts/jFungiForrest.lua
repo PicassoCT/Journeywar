@@ -148,8 +148,8 @@ end
 	Move(fungi4,y_axis,0,0.5)
 		
 	WaitForMove(fungi4,y_axis)
+	delayTillComplete(unitID)
 	StartThread(breathingDeath)
-	
 	StartThread(circleOfLife)
 	end
 

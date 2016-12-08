@@ -4,10 +4,10 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua" 
 
-RECURSIVE_FORREST_MAX= 768
+RECURSIVE_FORREST_MAX= 64
 ForrestDiameter=  90
 
-
+center=piece"Wood1"
 wood={}
 for i=1,13,1 do
 	wood[i]=piece(("Wood"..i))
@@ -105,7 +105,7 @@ function recursiveForrest()
 		
 				randoVal= math.random(0,3)> 1
 				if slopeChecker(posX, posZ)== false and GG.RecursiveForrestCounter <	RECURSIVE_FORREST_MAX and randoVal== true  then
-					echo("grecforrest::"..3)
+				--	echo("grecforrest::"..3)
 					posX=posX + math.random(1,ForrestDiameter/3)*randSign()
 					posZ=posZ + math.random(1,ForrestDiameter/3)*randSign()
 					
@@ -121,9 +121,15 @@ function recursiveForrest()
 	GG.RecursiveForrestCounter=GG.RecursiveForrestCounter-1
 	end
 	
-	
+	StartThread(timeDelayedKill)
 end
-
+function timeDelayedKill()
+randVal=math.random(1,8)*60*1000
+Sleep(randVal)
+Move(center,y_axis,-35,1)
+WaitForMove(center,y_axis)
+	Spring.DestroyUnit(unitID,true, false) 
+end
 function script.Killed(recentDamage,_)
 	return 1
 end

@@ -89,7 +89,7 @@ function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, r
 			if v then
 				return x*v.x,y*v.y,z*v.z, v
 			else
-				return x,y,z, {x=math.random(1,1.4)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+				return x,y,z, {x=(math.random(10,14)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
 			end
 		elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
 			return x,y,z
@@ -97,7 +97,7 @@ function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, r
 			if v and v.y < 0 then
 				return x*v.x,y*v.y,z*v.z, v
 			else
-				return x,y,z, {x=math.random(1,1.1)*randSign(),y=math.random(1,2),z=math.random(1,1.4)*randSign()}
+				return x,y,z, {x=(math.random(10,11)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
 			end
 			
 		end
@@ -178,9 +178,9 @@ end
 
 -->returns the Distance between two units
 function GetUnitDistance(idA, idB)
-	
-	assertNum(idA)
-	assertNum(idB)
+	if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return nil end
+	if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return nil end
+
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
@@ -279,8 +279,8 @@ function hideAllPieces(unitID)
 	
 end
 
---> adds to the table arguments
-function addTable(T,...)
+
+	   function addTable(T,...)
 	   local arg = arg ;  if (not arg) then arg = {...}; arg.n = #arg end
 	String="T"
 	boolOneTimeNil=false
@@ -1295,7 +1295,24 @@ function showT(tablename,lowLimit,upLimit,delay)
 	end
 end
 
-
+-->Validates that a table of UnitIds or a UnitID still exist
+function affirm(T)
+	if type(T)=="number" then t1=T; T={[1]=t1} end
+	resulT= process(T,
+	function(id)
+		if Spring.ValidUnitID(id)==true then return id end
+	end,
+	function (id)
+		isDead=Spring.GetUnitIsDead(id)
+		if isDead and isDead== false then return id end
+	end)
+	if resulT then
+		if #resulT > 1 then 
+		return resulT else
+			return resulT[1]
+		end
+	end
+end
 
 --> This function process result of Spring.PathRequest() to say whether target is reachable or not
 function IsTargetReachable (moveID, ox,oy,oz,tx,ty,tz,radius)
@@ -1506,11 +1523,11 @@ function PseudoPhysix(piecename,pearthTablePiece, nrOfCollissions, forceFunction
 			--	up=math.max(math.max((total/mass)%5,4),1)+1
 			
 			dirX,dirY,dirZ=mirAng(nX,nY,nZ,dirX,dirY,dirZ)
-			speed=math.random(0.55,7)
+			speed=math.random(5,70)/10
 			Turn(piecename,x_axis,dirX,speed)
-			speed=math.random(0.55,6)
+			speed=math.random(5,60)/10
 			Turn(piecename,y_axis,dirY,speed)
-			speed=math.random(0.55,5)
+			speed=math.random(5,50)/10
 			Turn(piecename,z_axis,dirZ,speed)
 			
 			
@@ -3362,7 +3379,7 @@ function vardump(value, depth, key)
 	end
 	
 	--> creates a heightmap distortion table
-	function preparhalfSphereTable(size,height)
+	function prepareHalfSphereTable(size,height)
 	if not size or not height then return nil end
 	cent=math.ceil(size/2)
 	T={}

@@ -1,4 +1,4 @@
-VFS.Include("luarules/Utilities/tablefunctions.lua")
+VFS.Include("LuaRules/Utilities/tablefunctions.lua")
 
 ----------------------------------------------------------------------------
 -- GROUNDFLASHES -----------------------------------------------------------

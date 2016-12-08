@@ -40,7 +40,7 @@ function idle(negset,target)
 	while(true) do
 		for i=target,target+5, 1 do
 			Speeddiffy=(math.random(1,2))/(((i+1)*5)-target)
-			val=math.random(-4.2,0.25)
+			val=math.random(-42,2)/10
 			Turn(curtain[i],x_axis,math.rad(val*negset),Speeddiffy/10)
 		end
 		WaitForTurn(curtain[target],x_axis)
@@ -273,7 +273,7 @@ person[8]=typeDef
 boolOnItsWay=false
 person[9]=boolOnItsWay 
 -- speedvalue of the the person
-speedPerson=math.random(1.9,8)
+speedPerson=math.random(19,80)/10
 person[10]=speedPerson 
 --numberOfPieces
 numberOfPieces=1
@@ -339,7 +339,7 @@ person[8]=typeDef
 boolOnItsWay=false
 person[9]=boolOnItsWay 
 -- speedvalue of the the person
-speedPerson=math.random(1.9,9)
+speedPerson=math.random(19,80)/10
 person[10]=speedPerson 
 --numberOfPieces
 numberOfPieces=1
@@ -403,7 +403,7 @@ person[8]=typeDef
 boolOnItsWay=false
 person[9]=boolOnItsWay 
 -- speedvalue of the the person
-speedPerson=math.random(1.9,11)
+speedPerson=math.random(19,110)/10
 person[10]=speedPerson 
 --numberOfPieces
 numberOfPieces=1
@@ -465,7 +465,7 @@ person[8]=typeDef
 boolOnItsWay=false
 person[9]=boolOnItsWay 
 -- speedvalue of the the person
-speedPerson=math.random(7.9,22)
+speedPerson=math.random(79,220)/10
 person[10]=speedPerson 
 --numberOfPieces
 numberOfPieces=1
@@ -527,7 +527,7 @@ person[8]=typeDef
 boolOnItsWay=false
 person[9]=boolOnItsWay 
 -- speedvalue of the the person
-speedPerson=math.random(7.9,22)
+speedPerson=math.random(79,220)/10
 person[10]=speedPerson 
 --numberOfPieces
 numberOfPieces=1
@@ -589,7 +589,7 @@ person[8]=typeDef
 boolOnItsWay=false
 person[9]=boolOnItsWay 
 -- speedvalue of the the person
-speedPerson=math.random(7.9,22)
+speedPerson=math.random(79,220)/10
 person[10]=speedPerson 
 --numberOfPieces
 numberOfPieces=1
@@ -725,7 +725,7 @@ function senderJobFunc(personNr)
 	--now we update the current position 
 	
 	if personNr ~=11 and personNr ~= 1 and personNr ~= 2 and personNr ~= 3 then
-		dramatisPersona3d[personNr][10]=math.random(7.9,22)
+		dramatisPersona3d[personNr][10]=math.random(79,220)/10
 	end
 	
 	-- we turn the persona into a random direction

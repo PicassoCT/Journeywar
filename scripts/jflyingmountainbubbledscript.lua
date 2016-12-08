@@ -19,7 +19,7 @@ mountains[i]=piece(stringTango)
 end
 
 
-function preparhalfSphereTable(size,height)
+function prepareHalfSphereTable(size,height)
 cent=math.ceil(size/2)
 T={}
 	for o=1,size,1 do
@@ -50,7 +50,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 
 
 Turn(mountainSpinCenter,y_axis,math.rad(math.random(-360,360)),0)
-Spin(mountainSpinCenter,y_axis,math.rad(math.random(-0.360,0.360)))
+Spin(mountainSpinCenter,y_axis,math.rad(math.random(-360,360)/100))
 showOneOfTheMountains()
 
 
@@ -63,7 +63,7 @@ size=32
 if GG.DynDefMap == nil then GG.DynDefMap={} end
 if GG.DynRefMap == nil then GG.DynRefMap={} end
 GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,4)
+GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,4)
 GG.boolForceLandLordUpdate=true
 
 

@@ -48,7 +48,7 @@
 		
             while(timeBudgetinMs > 0) do
             --Spring.PlaySoundFile(as al ,loudness)
-        var=math.random(-0.1,0.1)
+        var=math.random(-10,10)/100
             Spring.PlaySoundFile(Soundfilename1,loudness+var)
             Sleep(lenght1)
             timeBudgetinMs=timeBudgetinMs-lenght1

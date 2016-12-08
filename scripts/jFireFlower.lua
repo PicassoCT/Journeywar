@@ -1,4 +1,5 @@
 
+include "lib_jw.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -148,15 +149,26 @@ function flySeed(nr)
 	Move(Seed[nr],y_axis,randHeight,randSpeed)
 	
 	--Get Winddir
-	wx,_,wz=Spring.GetWind()
-	norm=normTwo(wx,wz)
-	wx,wz=wx/norm,wz/norm
-	randoVal=math.random(0,220)
-	Move(Seed[nr],x_axis,wx,(randSpeed/10))
-	randoVal=math.random(0,220)
-	Move(Seed[nr],z_axis,wz,(randSpeed/10))
+	_,_,_,str,wx,_,wz=Spring.GetWind()
+
+	Move(Seed[nr],x_axis,wx*50,(randSpeed/10))
+	Move(Seed[nr],z_axis,wz*50,(randSpeed/10))
+	WaitForMove(Seed[nr],y_axis)
+
+	Move(Seed[nr],x_axis,wx*122,8)
+	Move(Seed[nr],z_axis,wz*122,8)
+	Move(Seed[nr],y_axis,0,(randSpeed/10)*3)
 	WaitForMove(Seed[nr],y_axis)
 	
+	if boolAtLeatOne==false then
+
+	boolAtLeatOne=true
+	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Seed[nr])
+	teamid=Spring.GetUnitTeam(unitID)
+	GG.UnitsToSpawn:PushCreateUnit("jfireflower",px,py,pz, 0,teamid ) 
+	Sleep(12000)
+	delayedDestruction()
+	end
 	
 	Hide(Seed[nr])
 end
@@ -336,15 +348,17 @@ function centerFire()
 		
 	end
 end
-
+boolAtLeatOne=false
 
 function flyP(nr)
 	Show(WindP[nr])
+	
 	randMove=math.random(-62,62)
 	Move(WindP[nr],y_axis,0,0)
 	Move((WindP[nr]),z_axis,randMove,0)
 	randMove=math.random(-62,62)
-	Move((WindP[nr]),x_axis,randMove,0)
+	Move((WindP[nr]),x_axis,randMove,0,true)
+
 	randHeight=math.random(200,500)
 	spinSpeed=math.random(0.3,1.2)
 	spinWpeed=math.random(62,110)
@@ -353,6 +367,7 @@ function flyP(nr)
 	randspeed=math.random(9.141,17.8172)
 	Move(WindP[nr],y_axis,randHeight,randspeed)
 	WaitForMove(WindP[nr],y_axis)
+
 	Hide(WindP[nr])
 end
 --dust going inwards
@@ -377,16 +392,16 @@ function dirtSuckedInwards()
 	end	
 end
 
-function timeDelayedUnfold(i,time)
+function timeDelayedUnfold(i,times)
 	if i%2==0 then
 		Turn(Leaves[i],x_axis,math.rad(90),0)
-		Sleep(time)
+		Sleep(times)
 		Turn(Leaves[i],x_axis,math.rad(-75),2)
 		WaitForTurn(Leaves[i],x_axis)
 		
 	else
 		Turn(Leaves[i],x_axis,math.rad(-90),0)
-		Sleep(time)
+		Sleep(times)
 		Turn(Leaves[i],x_axis,math.rad(75),2)
 		WaitForTurn(Leaves[i],x_axis)
 	end
@@ -546,17 +561,15 @@ function haveSoundArround()
 	
 end
 
-local sparedUnits={}
-sparedUnits[UnitDefNames["css"].id]=true
-sparedUnits[UnitDefNames["jfiredancer"].id]=true
-sparedUnits[UnitDefNames["jfiredancebomb"].id]=true
+local sparedUnits=getPyroProofTable(UnitDefNames)
 
-function spawnFire(time,enemyID)
+
+function spawnFire(times,enemyID)
 	temp=0
 	x,y,z=0
 	local spSpawnCEG=Spring.SpawnCEG
 	local spGetUnitPosition=Spring.GetUnitPosition
-	while (temp < time) do
+	while (temp < times) do
 		x,y,z=spGetUnitPosition(enemyID)
 		spSpawnCEG("disolvefire",x,y,z,0,1,0,50,0)
 		randtime=math.random(50,72)
@@ -578,7 +591,12 @@ function spawnFire(time,enemyID)
 end
 
 function goTooKillThemAllPicaMon()
-	
+	T=getAllInCircle(x,z,350,unitID)
+	if T then
+	Tdict=TableToDict(T)
+	groupOnFire(Tdict)
+			
+	end
 	selectRange=250
 	piecePosX,piecePosY,piecePosZ=Spring.GetUnitPosition(unitID)
 	----Spring.Echo("PiecePosX:",piecePosX.." | PiecePosZ:",piecePosZ)
@@ -588,9 +606,7 @@ function goTooKillThemAllPicaMon()
 	
 	local spGetUnitPosition=Spring.GetUnitPosition
 	if proChoice ~= nil then
-		
-		
-		
+			
 		--Kill the Unit
 		for i=1,table.getn(proChoice),1 do		
 			if proChoice[i] ~= unitID then
@@ -604,8 +620,8 @@ function goTooKillThemAllPicaMon()
 end
 
 function theBigFireStorm()
-	getSfxHeigth()
-	Move(fireCenter,y_axis,sfxOffset,0, true)
+	sfxOffset=getSfxHeigth()
+	Move(fireCenter,y_axis,0,0, true)
 	StartThread(haveSoundArround)
 	Spin(spiralCenter,y_axis,math.rad(42),0.5)
 	Sleep(3200)
@@ -622,10 +638,10 @@ function theBigFireStorm()
 			StartThread(flyP,i)
 		end
 		
-		
-		for i=1,table.getn(Seed),1 do
+		for i=1,#Seed,1 do
 			StartThread(flySeed,i)
 		end
+
 		Spring.PlaySoundFile("sounds/jfireflower/ignite.wav") 	
 		Sleep(400)
 		----- fire ignite + shockwave
@@ -652,11 +668,18 @@ function theBigFireStorm()
 		EmitSfx(spiralCenter,1025)
 		Spring.PlaySoundFile("sounds/jfireflower/ignite.wav") 	
 		StartThread(fireLight)
-		for i=1,62,1 do
+		
+	
+		while boolAtLeatOne == false do
+				goTooKillThemAllPicaMon()
+			Sleep(1000)
+		end
+		while true do
 			goTooKillThemAllPicaMon()
 			Sleep(1000)
 		end
-		reSeed()
+		Sleep(1000)
+
 	end
 end
 
@@ -675,41 +698,46 @@ ClosedPod=piece"ClosedPot"
 piecesTable[#piecesTable+1]=Pod
 
 function seedToBeFeed()
+	delayTillComplete(unitID)
+	Hide(Pod)
+	Hide(ClosedPod)
+	Sleep(4000)
 	boolFullGrown=false
 	--Move Pod up
-	Move(Pod,y_axis,-80,0)
-	Hide(Pod)
+	Move(Pod,y_axis,-80,0)	
 	Show(ClosedPod)
 	Move(Pod,y_axis,0,5.5)
 	WaitForMove(Pod,y_axis) 
 	Show(Pod)
 	Hide(ClosedPod)
+	Spring.PlaySound("sounds/jfireflower/popup.ogg",0.8)
 	--unfold Pod
 	--Feed Me
 	x,y,z=Spring.GetUnitPosition(unitID)
 	boolSupperTime=false
 	while boolSupperTime==false do
-		local T=getAllInCircle(x,z,50,unitID)
+		T=getAllInCircle(x,z,50,unitID)
 		table.remove(T,unitID)	
 		--TODO
 		if T and #T > 0 then
-		
+			
 			process(T,
-					function (id) 
-						if id ~= unitID then 
-						boolSupperTime=true
-						Spring.DestroyUnit(id,true,false)
-						end
-					end
-					)
+			function (id) 
+				if id ~= unitID then 
+					boolSupperTime=true
+					Spring.DestroyUnit(id,true,false)
+				end
+			end
+			)
 		end
 		Sleep(100)
 	end
 	
 	--foldFast Animation
 	boolFullGrown=true
-	Hide(ClosedPod)
-	Show(Pod)
+	Show(ClosedPod)
+	Spring.PlaySoundFile("sounds/jfireflower/popup.ogg",0.8)
+	Hide(Pod)
 	
 	--Fold
 	Move(Pod,y_axis,-150,7.5)
@@ -718,27 +746,26 @@ end
 constOffset= 4
 heigthTable={}
 function getSfxHeigth()
-bx,_,bz= Spring.GetUnitPosition(unitID)
-baseHeigth =Spring.GetGroundHeight(bx,bz)
-maxGroundheigth=  baseHeigth
-
+	bx,_,bz= Spring.GetUnitPosition(unitID)
+	baseHeigth =Spring.GetGroundHeight(bx,bz)
+	maxGroundheigth= baseHeigth
+	
 	for i=1,360, 1 do
-					
-					Turn(fireCenter,y_axis,math.rad(i),0,true)
-					WaitForTurn(fireCenter,y_axis)
-					gx,_,gz= Spring.GetUnitPiecePosDir(unitID,fireEmitor)
-					gh= Spring.GetGroundHeight(gx,gz)
-					if gh > baseHeigth then 
-					heigthTable[i]=gh-baseHeigth
-					else
-					heigthTable[i]=baseHeigth
-					end
-					
+		ox,oz=RotationMatrice(0,270,math.rad(i))
+
+		gh= Spring.GetGroundHeight(bx+ox,bz+oz)
+		if gh > baseHeigth then 
+			heigthTable[i]=gh-baseHeigth
+			maxGroundheigth=heigthTable[i]
+		else
+			heigthTable[i]=5
+		end
+		
 	end
-
-
-return (maxGroundheigth-baseHeigth) + constOffset
-
+	
+	
+	return (maxGroundheigth-baseHeigth) + constOffset
+	
 end
 
 function script.Create()
@@ -759,6 +786,7 @@ function script.Create()
 	x360=math.random(0,360)
 	Turn(center,y_axis,math.rad(x360),0)
 	StartThread(seedToBeFeed)
+
 	
 	
 end
@@ -782,7 +810,7 @@ end
 
 
 function script.AimWeapon1( heading, pitch )
-	if boolFullGrown==false then return boolFullGrown end
+	if boolFullGrown==false then return false end
 	
 	if oneShot == true then	
 		return true

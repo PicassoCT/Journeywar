@@ -49,7 +49,7 @@ function script.Create()
 	if GG.DynDefMap == nil then GG.DynDefMap={} end
 	if GG.DynRefMap == nil then GG.DynRefMap={} end
 	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-	GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(20,-8)
+	GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(20,-8)
 	GG.boolForceLandLordUpdate=true
 	
 	
@@ -69,7 +69,7 @@ function comeOnDown()
 	if GG.DynDefMap == nil then GG.DynDefMap={} end
 	if GG.DynRefMap == nil then GG.DynRefMap={} end
 	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-	GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,4)
+	GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,4)
 	GG.boolForceLandLordUpdate=true
 	Spring.DestroyUnit(unitID,true,true)
 	
@@ -83,7 +83,7 @@ function script.Killed(recentDamage,_)
 	if GG.DynDefMap == nil then GG.DynDefMap={} end
 	if GG.DynRefMap == nil then GG.DynRefMap={} end
 	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-	GG.DynRefMap[#GG.DynRefMap+1]=	preparhalfSphereTable(size,4)
+	GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,4)
 	GG.boolForceLandLordUpdate=true
 	
 	

@@ -92,8 +92,8 @@ end
 
 -- animation for rotating crystalls
 function CrystallAnimations()
-	Spin(Main,y_axis,math.rad(math.random(-math.pi,math.pi)))
-	value=math.random(1,math.pi)
+	Spin(Main,y_axis,math.rad(math.random()*math.pi*randSign()))
+	value=math.random()*math.pi
 	value=value*randSign()
 	
 	if math.abs(value) < 0.5 then value= 0.5 end

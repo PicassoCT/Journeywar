@@ -66,11 +66,13 @@ function getAirUnitTable(UnitDefNames)
 end
 function getPyroProofTable(UnitDefNames)
 	FireProofTypes={}
+	FireProofTypes[UnitDefNames["jfiredancebomb"].id]=true
 	FireProofTypes[UnitDefNames["jsunshipfire"].id]=true
 	FireProofTypes[UnitDefNames["css"].id]=true
 	FireProofTypes[UnitDefNames["jfireflower"].id]=true
 	FireProofTypes[UnitDefNames["citadell"].id]=true
 	FireProofTypes[UnitDefNames["beanstalk"].id]=true
+	FireProofTypes[UnitDefNames["jtree3"].id]=true
 	return FireProofTypes
 end
 
@@ -477,6 +479,7 @@ end
 
 -->Attack Nearest Non-Gaia Enemy
 function defaultEnemyAttack(unitID,SignalMask, delayTime)
+	Signal(SIG_DEFAULT)
 	SetSignalMask(SIG_DEFAULT)
 	gaiaTeam=Spring.GetUnitTeam(unitID)
 	Sleep(15000)
