@@ -45,7 +45,9 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 end
 
 function getFungiImuneUnitTyeTable(UnitDefNames)
-retTab={}
+	retTab={}
+	retTab[UnitDefNames["jcondrone"].id]=true
+	retTab[UnitDefNames["ccontrain"].id]=true
 	retTab[UnitDefNames["jfungiforrest"].id]=true
 	retTab[UnitDefNames["jtreel"].id]=true
 	retTab[UnitDefNames["vort"].id]=true
@@ -55,7 +57,7 @@ retTab={}
 	for i=1,9 do
 		retTab[UnitDefNames["jtree4"..i].id]=true
 	end
-
+	
 	return retTab
 end
 
@@ -218,50 +220,50 @@ function getCreeperTypeTable()
 end
 
 function getRecycleableUnitTypeTable()
-	 TransportTable={
-	[UnitDefNames["gjbigbiowaste"].id ]=true,
-	[UnitDefNames["gjmedbiogwaste"].id ]=true,
-	[UnitDefNames["gcvehiccorpse"].id ]=true,
-	[UnitDefNames["gcvehiccorpsemini"].id ]=true,
-	[UnitDefNames["gjmeatballs"].id ]=true,
-	[UnitDefNames["gseastar"].id ]=true
+	TransportTable={
+		[UnitDefNames["gjbigbiowaste"].id ]=true,
+		[UnitDefNames["gjmedbiogwaste"].id ]=true,
+		[UnitDefNames["gcvehiccorpse"].id ]=true,
+		[UnitDefNames["gcvehiccorpsemini"].id ]=true,
+		[UnitDefNames["gjmeatballs"].id ]=true,
+		[UnitDefNames["gseastar"].id ]=true
 	}
-
-return TransportTable
+	
+	return TransportTable
 end
 
 function getRewardTable()
- Rewards ={
-	[UnitDefNames["gjmeatballs"].id ] = {	ereward=1000
-	,mreward=500},	
-	[UnitDefNames["gjmedbiogwaste"].id ] = {	ereward=1000
-	,mreward=500},
-	[UnitDefNames["tiglil"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["skinfantry"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["gjbigbiowaste"].id ] = {	ereward=2000
-	,mreward=1000},
-	[UnitDefNames["vort"].id ] = {},
-	[UnitDefNames["gtreetrunk"].id] = {},
-	[UnitDefNames["gcvehiccorpsemini"].id ] = {	mreward=1000
-	,ereward=500},
-	[UnitDefNames["gcvehiccorpse"].id] = {	mreward=2000,
-	ereward=1000},
-	[UnitDefNames["gzombiehorse"].id] = {	mreward=2000,
-	ereward=1000},
-	[UnitDefNames["ghohymen"].id] = {	mreward=2000,
-	ereward=1000},
-	[UnitDefNames["bg"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["bg2"].id] = {ereward=100
-	,mreward=100},
-	[UnitDefNames["css"].id] = {ereward=100
-	,mreward=100}
+	Rewards ={
+		[UnitDefNames["gjmeatballs"].id ] = {	ereward=1000
+		,mreward=500},	
+		[UnitDefNames["gjmedbiogwaste"].id ] = {	ereward=1000
+		,mreward=500},
+		[UnitDefNames["tiglil"].id] = {ereward=100
+		,mreward=100},
+		[UnitDefNames["skinfantry"].id] = {ereward=100
+		,mreward=100},
+		[UnitDefNames["gjbigbiowaste"].id ] = {	ereward=2000
+		,mreward=1000},
+		[UnitDefNames["vort"].id ] = {},
+		[UnitDefNames["gtreetrunk"].id] = {},
+		[UnitDefNames["gcvehiccorpsemini"].id ] = {	mreward=1000
+		,ereward=500},
+		[UnitDefNames["gcvehiccorpse"].id] = {	mreward=2000,
+		ereward=1000},
+		[UnitDefNames["gzombiehorse"].id] = {	mreward=2000,
+		ereward=1000},
+		[UnitDefNames["ghohymen"].id] = {	mreward=2000,
+		ereward=1000},
+		[UnitDefNames["bg"].id] = {ereward=100
+		,mreward=100},
+		[UnitDefNames["bg2"].id] = {ereward=100
+		,mreward=100},
+		[UnitDefNames["css"].id] = {ereward=100
+		,mreward=100}
+		
+	}
+	return Rewards
 	
-}
-return Rewards
-
 end
 function setDenial(key)
 	if not GG.jw_denyCommunication then GG.jw_denyCommunication = {} end
@@ -472,7 +474,7 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 	timeToburnMax= argtimeToburnMax or 1000
 	timeToburnMin = argtimeToburnMin or 15
 	
-	if not GG.OnFire  then GG.OnFire={} end
+	if not GG.OnFire then GG.OnFire={} end
 	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
 	
 	--very bad solution n-times
@@ -483,7 +485,7 @@ function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
 		else
 			GG.OnFire[#GG.OnFire+1]={}
 			GG.OnFire[#GG.OnFire][1]=unitID
-			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax))  
+			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
 			break
 		end
 	end
@@ -577,9 +579,8 @@ end
 function createTechTree(teams)
 	for i=1, #teams do
 		--get side
-		 _,_,_,ai,side = Spring.GetTeamInfo(teams[i])
+		_,_,_,ai,side = Spring.GetTeamInfo(teams[i])
 		--erect new tech tree
 		getSideNewTechTree(teams[i],side)	
 	end
 end
-
