@@ -21,47 +21,55 @@ fungi2=piece"fungi2"
 fungi3=piece"fungi3"
 fungi4=piece"fungi4"
 emitPoint=piece"emitPoint"
-	center=piece"center"
-	
+center=piece"center"
+
 
 function breathingDeath()
-local lEmitSfx=EmitSfx
+	local lEmitSfx=EmitSfx
 	while(true) do
 		Move(fungi1,y_axis,5,0.3)
 		Move(fungi2,y_axis,5,0.4)
 		Move(fungi3,y_axis,5,0.5)
-
-
+		
+		
 		WaitForMove(fungi1,y_axis)
 		for i=1,10, 1 do
-		lEmitSfx(emitPoint,1024)
-		Sleep(50)
+			lEmitSfx(emitPoint,1024)
+			Sleep(50)
 		end
-
+		
 		Move(fungi1,y_axis,0,0.55)
 		Move(fungi2,y_axis,0,0.4)
 		Move(fungi3,y_axis,0,0.3)
 		for i=1,14, 1 do
-		lEmitSfx(emitPoint,1024)
-		Sleep(75)
+			lEmitSfx(emitPoint,1024)
+			Sleep(75)
 		end
-
+		
 		WaitForMove(fungi3,y_axis)
 		
-
-
+		
+		
 	end
-
-
+	
+	
 end
 
+fungiImuneTypeTable=getFungiImuneUnitTyeTable()
 local spGetUnitDefID=Spring.GetUnitDefID
 
-	function grabTooKill()
-
+function grabTooKill()
+	
 	x,y,z=Spring.GetUnitPosition(unitID)
 	proChoice={}
 	proChoice=Spring.GetUnitsInCylinder(x,z,500)
+	proChoice=process(proChoice,
+	function(id)
+		if not fungiImuneTypeTable[Spring.GetUnitDefID(id)]then
+			return id
+		end
+	end
+	)
 	--proChoice if 
 	fixxedNumber=table.getn(proChoice)
 	--removing the fat from the table
@@ -74,17 +82,17 @@ local spGetUnitDefID=Spring.GetUnitDefID
 	end
 	newTable={}	
 	for i=1,#proChoice do
-	defID=spGetUnitDefID(proChoice[i])
+		defID=spGetUnitDefID(proChoice[i])
 		if not UnitsToSpare[defID] then
-		newTable[#newTable+1]=proChoice[i]
+			newTable[#newTable+1]=proChoice[i]
 		end
 	end
-return newTable
+	return newTable
 end
 
-	rotators={}
-	swings={}
-	for i=1,11,1 do
+rotators={}
+swings={}
+for i=1,11,1 do
 	
 	rotators[i]={}
 	swings[i]={}
@@ -94,12 +102,12 @@ end
 	rotators[i]=piece(tempr)
 	swings[i]=piece(temps)
 	
-	end
-	
-	globalHeightUnit=0
-	dowNer=-75
-	
-	function delayedAppearance(piece)
+end
+
+globalHeightUnit=0
+dowNer=-75
+
+function delayedAppearance(piece)
 	times=math.ceil(math.random(60000, 300000))
 	Sleep(times)
 	Move(piece,x_axis,500,0)
@@ -108,17 +116,17 @@ end
 	heightdifference=math.abs(globalHeightUnit-myHeight)
 	if myHeight < globalHeightUnit then heightdifference=-heightdifference end
 	
-
+	
 	Show(piece)
 	
 	SpeedRand=math.random(0.3,1)
 	Move(piece,y_axis,heightdifference, SpeedRand)
 	WaitForMove(piece,y_axis)
 	boolNotGrown=false
-	end
-	
-	
-	function init()
+end
+
+
+function init()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	globalHeightUnit=Spring.GetGroundHeight(x,z)
 	Move(fungi1,y_axis,-34,0)
@@ -126,83 +134,79 @@ end
 	Move(fungi3,y_axis,-34,0)
 	Move(fungi4,y_axis,-34,0)
 	Sleep(10)
-		Show(fungi1)
-		Show(fungi2)
-		Show(fungi3)
-		Show(fungi4)
+	Show(fungi1)
+	Show(fungi2)
+	Show(fungi3)
+	Show(fungi4)
 	
 	
 	RandRot=math.random(-360,360)
 	Turn(center,y_axis,math.rad(RandRot),0)
-		for i=1,11,1 do
+	for i=1,11,1 do
 		Hide(swings[i])
 		Move(swings[i],y_axis,dowNer,0)
 		RandRot=i*(360/11)
 		Turn(rotators[i],y_axis,math.rad(RandRot),0)
 		StartThread(delayedAppearance, swings[i])
-		end
+	end
 	
 	Move(fungi1,y_axis,0,0.9)
 	Move(fungi2,y_axis,0,0.7)
 	Move(fungi3,y_axis,0,0.6)
 	Move(fungi4,y_axis,0,0.5)
-		
+	
 	WaitForMove(fungi4,y_axis)
 	delayTillComplete(unitID)
 	StartThread(breathingDeath)
 	StartThread(circleOfLife)
-	end
+end
 
 boolNotGrown=true
-	
-	function circleOfLife()
 
+function circleOfLife()
+	
 	
 	tables={}
 	while boolNotGrown==true do
-	Sleep(500)
+		Sleep(500)
 	end
 	
-		while true do
+	while true do
 		Sleep(450)
 		tables=grabTooKill()
 		if tables~= nil and table.getn(tables) > 0 then
 			for i=1,table.getn(tables),1 do
-			if GG.Spore== nil then GG.Spore={} end
-		
+				if GG.Spore== nil then GG.Spore={} end
+				
 				if math.random(1,6)==2 then
-				 valLua=tables[i]
-				 GG.Spore[#GG.Spore+1] ={}
-				 GG.Spore[#GG.Spore] =valLua
+					valLua=tables[i]
+					GG.Spore[#GG.Spore+1] ={}
+					GG.Spore[#GG.Spore] =valLua
 				end
-			 end
+			end
 		end
 		
 		
-		end
 	end
+end
 
-		function script.Create()
-		x,y,z=Spring.GetUnitPosition(unitID)
-		holsDerGaia=Spring.GetGaiaTeamID()
-		Spring.CreateUnit("jfungiforrestdecalfactory",x,y,z,0,holsDerGaia)
-		Hide(fungi1)
-		Hide(fungi2)
-		Hide(fungi3)
-		Hide(fungi4)
-		for i=1,11,1 do
+function script.Create()
+	x,y,z=Spring.GetUnitPosition(unitID)
+	holsDerGaia=Spring.GetGaiaTeamID()
+	Spring.CreateUnit("jfungiforrestdecalfactory",x,y,z,0,holsDerGaia)
+	Hide(fungi1)
+	Hide(fungi2)
+	Hide(fungi3)
+	Hide(fungi4)
+	for i=1,11,1 do
 		Hide(swings[i])
-		end
-		
-
+	end
+	
+	
 	StartThread(init)
-		end
+end
 
-		function script.Killed()
-			
-		return 0
-		end
-
-
-
-			
+function script.Killed()
+	
+	return 0
+end

@@ -237,7 +237,7 @@ function idle()
 				Sleep(150)
 			end
 			Turn(body,x_axis,math.rad(0),4)
-			resetT({body,skinleg,skinleg2},0)
+			resetT({[4]=center,[1]=body,[2]=skinleg,[3]=skinleg2},3)
 		end
 	end
 	

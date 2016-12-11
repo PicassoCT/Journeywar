@@ -101,6 +101,7 @@ function turnPieceRandDir(piecename,speed, LIMUPX,LIMLOWX,LIMUPY,LIMLOWY,LIMUPZ,
 		Turn(piecename,y_axis,math.rad(math.random(-360,360)),speed)
 		Turn(piecename,z_axis,math.rad(math.random(-360,360)),speed)
 	else
+
 		Turn(piecename,x_axis,math.rad(math.random(LIMLOWX,LIMUPX)),speed)
 		Turn(piecename,y_axis,math.rad(math.random(LIMLOWY,LIMUPY)),speed)
 		Turn(piecename,z_axis,math.rad(math.random(LIMLOWZ,LIMUPZ)),speed)
@@ -184,13 +185,13 @@ function AmphibMoveThread(unitid
 	
 end	
 
--->Executes a function every n-time during a move
-function whileMovingDo(PIECE,axis, time, fuoonction)
+-->Executes a function every n-times during a move
+function whileMovingDo(PIECE,axis, times, fuoonction)
 totalTime=0
 	while  (true==Spring.UnitScript.IsInMove (PIECE, axis) ) do
 	fuoonction(totalTime)
-	Sleep(time)
-	totalTime=totalTime + time
+	Sleep(times)
+	totalTime=totalTime + times
 	end
 end
 
@@ -244,24 +245,30 @@ function tPrad(piecename,xval,yval,zval,speed)
 	Turn(piecename,3,zval,speed)
 end
 
---> synTurns a Piece to arrive at time on all axis
-function syncTurn(piecename,x_val,y_val,z_val,speed)
-	max=math.max(x_val,math.max(z_val,y_val))
-	time=math.abs(max/speed)
+--> synTurns a Piece to arrive at times on all axis
+function syncTurn(unitID,piecename,x_val,y_val,z_val,speed)
+	speed=math.max(speed,0.0001)
+	maxv=math.max(math.abs(x_val),math.max(math.abs(z_val),math.abs(y_val)))
+	if maxv== 0 then
+		x_deg,y_deg,z_deg=Spring.GetUnitPieceDirection(unitID,piecename)
+		turnSyncInSpeed(piecename,x_val,y_val,z_val,speed,x_deg,y_deg,z_deg)
+		return
+	end
+	times=math.abs(maxv/speed)
 	
-	Turn(piecename,x_axis,math.rad(x_val),(time/x_val)*speed)
-	Turn(piecename,y_axis,math.rad(y_val),(time/y_val)*speed)
-	Turn(piecename,z_axis,math.rad(z_val),(time/z_val)*speed)
+	Turn(piecename,x_axis,math.rad(x_val),(times/x_val)*speed)
+	Turn(piecename,y_axis,math.rad(y_val),(times/y_val)*speed)
+	Turn(piecename,z_axis,math.rad(z_val),(times/z_val)*speed)
 	
 end
 
 -----------------------------------------
 -->turns a Piece syncInTime working with a Table of Move Commands
-function turnSyncInTimeT(Table, time,x_deg,y_deg,z_deg)
+function turnSyncInTimeT(Table, times,x_deg,y_deg,z_deg)
 	
 	for piece,v in pairs(Table) do
 
-		turnInTime(v.piecenr, v.axis,math.rad(v.deg), time, x_deg,y_deg,z_deg,false)
+		turnInTime(v.piecenr, v.axis,math.rad(v.deg), times, x_deg,y_deg,z_deg,false)
 	end
 	
 end
@@ -274,7 +281,7 @@ function turnSyncInSpeed(piecename,x,y,z,speed,x_deg,y_deg,z_deg)
 		tP(piecename,x,y,z,speed)
 		return
 	end
-	assert(z_deg)
+	
 	
 	tx=	absoluteRotation(piecename,x_axis,x,x_deg,y_deg,z_deg)+0.01
 	ty=	absoluteRotation(piecename,y_axis,y,x_deg,y_deg,z_deg)+0.01
@@ -307,7 +314,7 @@ function turnInTime(piecename,taxis,degree,timeInMs,x_deg,y_deg,z_deg, boolWait 
 	
 	if lib_boolDebug==true then
 		--Spring.Echo(" TurnInTime for"..piecename.." Speed:"..Speed)
-		--Spring.Echo("to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in time "..timeInMs.. " seconds"	)
+		--Spring.Echo("to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in times "..timeInMs.. " seconds"	)
 	end
 	
 
@@ -350,40 +357,40 @@ function OverTurnDirection(piecename,axis, degree,speed)
 	
 end
 
-function tSyncIn(piecename,x_val,y_val,z_val,time, UnitScript)
+function tSyncIn(piecename,x_val,y_val,z_val,times, UnitScript)
 x_deg,y_deg,z_deg= UnitScript.GetPieceRotation(piecename)
-syncTurnInTime(piecename,x_val,y_val,z_val,time,x_deg,y_deg,z_deg)
+syncTurnInTime(piecename,x_val,y_val,z_val,times,x_deg,y_deg,z_deg)
 end
 
--->Turns a piece on every axis in time 
-function syncTurnInTime(piecename,x_val,y_val,z_val,time,x_deg,y_deg,z_deg)
+-->Turns a piece on every axis in times 
+function syncTurnInTime(piecename,x_val,y_val,z_val,times,x_deg,y_deg,z_deg)
 	if lib_boolDebug==true then
-		--Spring.Echo("Time for syncTurnInTime:"..time)
+		--Spring.Echo("times for syncTurnInTime:"..times)
 	end
 
-	turnInTime(piecename,1, (x_val),time,x_deg,y_deg,z_deg,false) -- -28 3000
-	turnInTime(piecename,2, (y_val),time,x_deg,y_deg,z_deg,false)
-	turnInTime(piecename,3, (z_val),time,x_deg,y_deg,z_deg,false)
+	turnInTime(piecename,1, (x_val),times,x_deg,y_deg,z_deg,false) -- -28 3000
+	turnInTime(piecename,2, (y_val),times,x_deg,y_deg,z_deg,false)
+	turnInTime(piecename,3, (z_val),times,x_deg,y_deg,z_deg,false)
 	
 end
---> Move a piece so that it arrives at  all axis on the given time
-function syncMoveInTime(piecename,x_val,y_val,z_val,time)	
-	time=time/1000
-	--ratio = 1/(val/max)*time => max*time / val
-	Move(piecename,1,x_val,math.abs(x_val/time))
-	Move(piecename,2,y_val,math.abs(y_val/time))
-	Move(piecename,3,z_val,math.abs(z_val/time))
+--> Move a piece so that it arrives at  all axis on the given times
+function syncMoveInTime(piecename,x_val,y_val,z_val,times)	
+	times=times/1000
+	--ratio = 1/(val/max)*times => max*times / val
+	Move(piecename,1,x_val,math.abs(x_val/times))
+	Move(piecename,2,y_val,math.abs(y_val/times))
+	Move(piecename,3,z_val,math.abs(z_val/times))
 	
 end
 
---> Move a piece so that it arrives at the same time on all axis
+--> Move a piece so that it arrives at the same times on all axis
 function syncMove(piecename,x_val,y_val,z_val,speed)
 	max=math.max(math.abs(x_val),math.max(math.abs(z_val),math.abs(y_val)))
-	time=math.abs(max/speed)
-	--ratio = 1/(val/max)*time => max*time / val
-	Move(piecename,x_axis,(x_val),(max*time/x_val)*speed)
-	Move(piecename,y_axis,(y_val),(max*time/y_val)*speed)
-	Move(piecename,z_axis,(z_val),(max*time/z_val)*speed)
+	times=math.abs(max/speed)
+	--ratio = 1/(val/max)*times => max*times / val
+	Move(piecename,x_axis,(x_val),(max*times/x_val)*speed)
+	Move(piecename,y_axis,(y_val),(max*times/y_val)*speed)
+	Move(piecename,z_axis,(z_val),(max*times/z_val)*speed)
 	
 end
 
@@ -1145,8 +1152,8 @@ end
 		speed=speedPerSecond or 9.81
 		speedMax=VspeedMax or 9.81
 		bounceNr = lbounceNr or 12
-		time=1000
-		factorT=time/1000
+		times=1000
+		factorT=times/1000
 		
 		if boolSpinWhileYouDrop and boolSpinWhileYouDrop==true then
 			SpinAlongSmallestAxis(unitID,piece, math.random(-25,25),2)

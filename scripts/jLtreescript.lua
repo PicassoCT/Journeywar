@@ -2176,7 +2176,7 @@ function BuildLtree()
 end
 
 accidTreeDefID=Spring.GetUnitDefID(unitID)
-fungiforrestid=UnitDefNames["jfungiforrest"].id
+imuneIDs=getFungiImuneUnitTable()
 
 
 
@@ -2187,7 +2187,7 @@ function foulTheSurroundings ()
 		if T and table.getn(T) > 0 then
 			process(T, function (unit)
 				defID=Spring.GetUnitDefID(unit)
-				if defID and defID ~= fungiforrestid and defID ~= accidTreeDefID then
+				if defID and not imuneIDs[defID] then
 					hp=Spring.GetUnitHealth(unit)
 					Spring.SetUnitHealth(unit,hp-math.abs(damagePerSecond))
 				end

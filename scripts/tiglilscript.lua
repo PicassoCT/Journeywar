@@ -55,7 +55,7 @@ Heading=0
 boolANewAttack=true
 howlong=1
 ---Signals to be spread
-costPerEgg=1
+costPerEgg=0.15
 ---------------------IdleStance10-Fucntions-------
 
 
@@ -1676,7 +1676,7 @@ end
 
 function armswing()
 	SetSignalMask(SIG_SWING)
-
+	
 	
 	
 	while(true) do
@@ -1684,22 +1684,22 @@ function armswing()
 		--RightArmForwards,195 --i
 		--ToFix: armright swings backward
 		dice=math.random(1,12)
-
+		
 		if dice== 1 then
-		tP(tlarmr,0,0,0,6)
+			tP(tlarmr,0,0,0,6)
 		end
 		if dice== 2 then
-		tP(tlarm,0,0,0,6)
+			tP(tlarm,0,0,0,6)
 		end
 		
 		if dice > 2 then
-		xdice,ydice,zdice= -1*math.random(25,35), -1*math.random(37,47),math.random(35,45)
-		tP(tlarmr,xdice, ydice, zdice,6)
-		xdice,ydice,zdice= -1*math.random(25,35),math.random(37,47),math.random(35,45)
-		tP(tlarm,xdice,ydice,zdice,6)
+			xdice,ydice,zdice= -1*math.random(25,35), -1*math.random(37,47),math.random(35,45)
+			tP(tlarmr,xdice, ydice, zdice,6)
+			xdice,ydice,zdice= -1*math.random(25,35),math.random(37,47),math.random(35,45)
+			tP(tlarm,xdice,ydice,zdice,6)
 		end
-	Sleep(1350)
-				
+		Sleep(1350)
+		
 		
 	end
 end
@@ -1765,7 +1765,7 @@ function bladewhirl_thread()
 			Turn (tlarm,y_axis,math.rad(0),6)--i
 			Turn (tlarm,z_axis,math.rad(49),14)
 			EmitSfx(tlHead, 1024)
-
+			
 			Turn (tlarmr,x_axis,math.rad(10),3)
 			Turn (tlarmr,y_axis,math.rad(0),5)--i
 			Turn (tlarmr,z_axis,math.rad(-53),14)
@@ -2048,7 +2048,7 @@ function bladewhirl_thread()
 			Turn(tllegUp ,z_axis,math.rad(- 8),2)
 			--FixMe
 			EmitSfx(tlHead, 1024)
-
+			
 			Turn(tllegUpR,x_axis,math.rad(34),4)
 			Turn(tllegUpR,y_axis,math.rad(-39),4)
 			Turn(tllegUpR,z_axis,math.rad(- 17),2)
@@ -2129,7 +2129,7 @@ function bladewhirl_thread()
 			randomvalue=creaRandomValue(-52,-16)
 			Turn(tlhairdown,x_axis,math.rad(randomvalue),4)
 			EmitSfx(tlHead, 1024)
-
+			
 			Turn(tlarmr,x_axis,math.rad(97),8)
 			Turn(tlarmr,y_axis,math.rad(-11),1)
 			Turn(tlarmr,z_axis,math.rad(-16),2)
@@ -2192,7 +2192,7 @@ function bladewhirl_thread()
 			WaitForTurn (deathpivot,y_axis) 
 			
 			EmitSfx(tlHead, 1024)
-	
+			
 			
 			
 			Sleep(150)
@@ -5619,7 +5619,302 @@ function idle_stance_10()
 	Sleep(250)
 	legs_down()
 end
+--headshake
+function idle_stance_12()
+	legs_down()
+	sign=randSign()
+	mP(tigLil,0,-9.4,1.3,17)
+	tP(tigLil,17,0,sign*9,17)
+	tP(tlHead,-10,0,0,17)
+	tP(tlhairup,-58,0,0,17)
+	tP(tlhairdown,-13,0,0,17)
+	tP(tlarm,-34,-11,54,17)
+	tP(tlarmr,-28,0,-65,17)
+	tP(tllegUp,-95,-9*sign,-16,17)
+	tP(tllegLow,158,-22,2,17)
+	tP(tllegUpR,-95,-24*sign,14,17)
+	tP(tllegLowR,158,0,0,17)
+	Sleep(5000)
+	for i=1,math.random(3,8), 1 do
+		tP(tlHead,-10,-26,0,math.random(4,4+i))
+		tP(tlhairup,math.random(-20,-10),0,0,11)
+		tP(tlhairdown,math.random(-10,10),0,0,17)
+		WaitForTurn(tlHead,y_axis)
+		tP(tlHead,-10,20,0,math.random(4,4+i))
+		tP(tlhairup,math.random(-20,-10),0,0,11)
+		tP(tlhairdown,math.random(-10,10),0,0,17)
+		WaitForTurn(tlHead,y_axis)
+	end	
+	
+	sign=randSign()
+	mP(tigLil,0,-9.4,1.3,17)
+	tP(tigLil,17,0,sign*9,17)
+	tP(tlHead,-10,0,0,17)
+	tP(tlhairup,-58,0,0,17)
+	tP(tlhairdown,-13,0,0,17)
+	tP(tlarm,-34,-11,54,17)
+	tP(tlarmr,-28,0,-65,17)
+	tP(tllegUp,-95,-9*sign,-16,17)
+	tP(tllegLow,158,-22,2,17)
+	tP(tllegUpR,-95,-24*sign,14,17)
+	tP(tllegLowR,158,0,0,17)
+	Sleep(3000)
+	legs_down()
+end
 
+function idle_stance13()
+	
+	rammed=math.random(9,22)
+	factor=17/22
+	for i=1,rammed do
+		mP(tigLil,0,-7,-0.8,factor*i*7)
+		tP(tigLil,74,0,0,factor*i)
+		tP(tlHead,-35,0,0,factor*i)
+		tP(tlhairup,-41,0,0,factor*i*2)
+		tP(tlhairdown,0,0,0,factor*i*2)
+		tP(tlarm,0,40,0,factor*i)
+		tP(tlarmr,0,-40,0,factor*i)
+		tP(tllegUp,-67,-13,3,factor*i)
+		tP(tllegLow,88,0,0,factor*i)
+		tP(tllegUpR,-68,23,0,factor*i)
+		tP(tllegLowR,84,0,0,factor*i)
+		Sleep(1300-(i*50))
+		mP(tigLil,0,-7,3.2,factor*i*7)
+		tP(tigLil,88,0,0,factor*i)
+		tP(tlHead,19,0,0,factor*i)
+		tP(tlhairup,78,0,0,factor*i*2)
+		tP(tlhairdown,74,0,0,factor*i*2)
+		tP(tlarm,0,59,36,factor*i)
+		tP(tlarmr,0,-59,-36,factor*i)
+		tP(tllegUp,-62,-13,3,factor*i)
+		tP(tllegLow,54,0,0,factor*i)
+		tP(tllegUpR,-64,23,0,factor*i)
+		tP(tllegLowR,59,0,0,factor*i)
+		Sleep(1300-(i*50))
+	end
+	legs_down()
+	
+end
+--yoga
+function idle_stance14()
+	yoga=math.random(1,14)
+	if yoga==1 then
+		mP(tigLil,0,-5,0,9)
+		syncTurn(unitID,tigLil,0,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,-40,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,0,90,0,5)
+		syncTurn(unitID,tlarmr,0,-90,0,5)
+		syncTurn(unitID,tllegUp,-46,0,0,5)
+		syncTurn(unitID,tllegLow,95,0,0,5)
+		syncTurn(unitID,tllegUpR,-46,0,0,5*2)
+		syncTurn(unitID,tllegLowR,94,0,0,5*2)
+		Sleep(12000)
+	end
+	if yoga==2 then
+		mP(tigLil,0,-5,-1,9)
+		syncTurn(unitID,tigLil,29,0,0,5)
+		syncTurn(unitID,tlHead,-30,0,0,5)
+		syncTurn(unitID,tlhairup,-48,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,11,91,-45,5)
+		syncTurn(unitID,tlarmr,-175,-90,-51,5)
+		syncTurn(unitID,tllegUp,-77,-4,15,5)
+		syncTurn(unitID,tllegLow,95,0,0,5)
+		syncTurn(unitID,tllegUpR,-46,76,-76,5)
+		syncTurn(unitID,tllegLowR,118,0,0,5)
+		Sleep(12000)
+	end
+	
+	if yoga==3 then
+		mP(tigLil,0,0,-1,9)
+		syncTurn(unitID,tigLil,70,0,0,5)
+		syncTurn(unitID,tlHead,-30,0,0,5)
+		syncTurn(unitID,tlhairup,-48,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,0,111,-30,5)
+		syncTurn(unitID,tlarmr,5,-83,38,5)
+		syncTurn(unitID,tllegUp,-74,0,0,5)
+		syncTurn(unitID,tllegLow,0,0,0,5)
+		syncTurn(unitID,tllegUpR,-146,0,0,5)
+		syncTurn(unitID,tllegLowR,0,0,0,5)
+		Sleep(12000)
+	end
+	
+	if yoga==4 then
+		mP(tigLil,0,0,-1,9)
+		syncTurn(unitID,tigLil,70,0,0,5)
+		syncTurn(unitID,tlHead,-30,0,0,5)
+		syncTurn(unitID,tlhairup,-48,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,-4,-109,16,5)
+		syncTurn(unitID,tlarmr,20,80,119,5)
+		syncTurn(unitID,tllegUp,-74,0,0,5)
+		syncTurn(unitID,tllegLow,0,0,0,5)
+		syncTurn(unitID,tllegUpR,86,0,0,5)
+		syncTurn(unitID,tllegLowR,84,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==5 then
+		mP(tigLil,0,0,-1,9)
+		syncTurn(unitID,tigLil,70,0,0,5)
+		syncTurn(unitID,tlHead,-30,0,0,5)
+		syncTurn(unitID,tlhairup,-48,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,0,0,-90,5)
+		syncTurn(unitID,tlarmr,0,0,90,5)
+		syncTurn(unitID,tllegUp,-74,0,0,5)
+		syncTurn(unitID,tllegLow,0,0,0,5)
+		syncTurn(unitID,tllegUpR,24,0,0,5)
+		syncTurn(unitID,tllegLowR,0,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==6 then
+		mP(tigLil,0,-11,3,9)
+		syncTurn(unitID,tigLil,46,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,-50,0,0,5*2)
+		syncTurn(unitID,tlhairdown,29,0,0,5*2)
+		angle=math.random(180,270)*-1
+		syncTurn(unitID,tlarm,angle,-16,-86,5)
+		syncTurn(unitID,tlarmr,angle,-13,94,5)
+		syncTurn(unitID,tllegUp,43,0,0,5)
+		syncTurn(unitID,tllegLow,0,0,0,5)
+		syncTurn(unitID,tllegUpR,45,0,0,5)
+		syncTurn(unitID,tllegLowR,0,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==7 then
+		mP(tigLil,0,-10,0,9)
+		syncTurn(unitID,tigLil,66,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,-50,0,0,5*2)
+		syncTurn(unitID,tlhairdown,29,0,0,5*2)
+		syncTurn(unitID,tlarm,-116,-16,-86,5)
+		syncTurn(unitID,tlarmr,-116,-13,94,5)
+		syncTurn(unitID,tllegUp,-138,0,0,5)
+		syncTurn(unitID,tllegLow,150,0,0,5)
+		syncTurn(unitID,tllegUpR,-138,0,0,5)
+		syncTurn(unitID,tllegLowR,150,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==8 then
+		mP(tigLil,0,-10,0,9)
+		syncTurn(unitID,tigLil,66,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,-50,0,0,5*2)
+		syncTurn(unitID,tlhairdown,29,0,0,5*2)
+		syncTurn(unitID,tlarmr,50,0,94,5)
+		syncTurn(unitID,tlarm,50,0,-94,5)
+		
+		syncTurn(unitID,tllegUp,-138,0,0,5*3)
+		syncTurn(unitID,tllegLow,150,0,0,5*3)
+		syncTurn(unitID,tllegUpR,-138,0,0,5*2)
+		syncTurn(unitID,tllegLowR,150,0,0,5*2)
+		Sleep(12000)
+	end
+	if yoga==9 then
+		mP(tigLil,0,-10,0,9)
+		syncTurn(unitID,tigLil,-96,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,-50,0,0,5*2)
+		syncTurn(unitID,tlhairdown,29,0,0,5*2)
+		syncTurn(unitID,tlarmr,-20,0,94,5)
+		syncTurn(unitID,tlarm,-10,-16,-86,5)
+		syncTurn(unitID,tllegUp,26,0,0,5)
+		syncTurn(unitID,tllegLow,150,0,0,5)
+		syncTurn(unitID,tllegUpR,29,0,0,5)
+		syncTurn(unitID,tllegLowR,150,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==10 then
+		mP(tigLil,0,-5.5,1,9)
+		syncTurn(unitID,tigLil,-57,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,18,0,0,5*2)
+		syncTurn(unitID,tlhairdown,-16,0,0,5*2)
+		syncTurn(unitID,tlarm,-290,0,94,5)
+		syncTurn(unitID,tlarmr,-290,0,-86,5)
+		syncTurn(unitID,tllegUp,74,0,0,5*3)
+		syncTurn(unitID,tllegLow,72,0,0,5*3)
+		syncTurn(unitID,tllegUpR,74,0,0,5*2)
+		syncTurn(unitID,tllegLowR,72,0,0,5*2)
+		Sleep(12000)
+	end
+	if yoga==11 then
+		mP(tigLil,0,-8,1,9)
+		syncTurn(unitID,tigLil,127,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,115,0,0,5*2)
+		syncTurn(unitID,tlhairdown,-16,0,0,5*2)
+		syncTurn(unitID,tlarm,-229,0,86,5)
+		syncTurn(unitID,tlarmr,-227,13,94,5)
+		syncTurn(unitID,tllegUp,-108,0,0,5)
+		syncTurn(unitID,tllegLow,72,0,0,5)
+		syncTurn(unitID,tllegUpR,-108,0,0,5)
+		syncTurn(unitID,tllegLowR,72,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==12 then
+		mP(tigLil,0,-9,1,9)
+		syncTurn(unitID,tigLil,0,0,0,5)
+		syncTurn(unitID,tlHead,-35,0,0,5)
+		syncTurn(unitID,tlhairup,-30,0,0,5*2)
+		syncTurn(unitID,tlhairdown,-16,0,0,5*2)
+		syncTurn(unitID,tlarm,-229,0,86,5)
+		syncTurn(unitID,tlarmr,-227,13,94,5)
+		syncTurn(unitID,tllegUp,-174,36,-94,5)
+		syncTurn(unitID,tllegLow,127,0,0,5)
+		syncTurn(unitID,tllegUpR,-128,0,-8,5)
+		syncTurn(unitID,tllegLowR,129,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==13 then
+		mP(tigLil,0,-3,1,9)
+		syncTurn(unitID,tigLil,117,0,0,15)
+		syncTurn(unitID,tlHead,-70,0,0,5)
+		syncTurn(unitID,tlhairup,0,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,0,0,0,5)
+		syncTurn(unitID,tlarmr,0,0,0,5)
+		syncTurn(unitID,tllegUp,20,0,0,5)
+		syncTurn(unitID,tllegLow,0,0,0,5)
+		syncTurn(unitID,tllegUpR,-112,0,0,5)
+		syncTurn(unitID,tllegLowR,0,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==14 then
+		mP(tigLil,0,-10,1,9)
+		syncTurn(unitID,tigLil,13,0,0,15)
+		syncTurn(unitID,tlHead,-70,0,0,5)
+		syncTurn(unitID,tlhairup,0,0,0,5*2)
+		syncTurn(unitID,tlhairdown,0,0,0,5*2)
+		syncTurn(unitID,tlarm,-6,71,43,5)
+		syncTurn(unitID,tlarmr,16,80,-27,5)
+		syncTurn(unitID,tllegUp,-262,-191,0,5)
+		syncTurn(unitID,tllegLow,0,3,-150,5)
+		syncTurn(unitID,tllegUpR,73,0,0,5)
+		syncTurn(unitID,tllegLowR,138,0,0,5)
+		Sleep(12000)
+	end
+	if yoga==15 then
+		mP(tigLil,0,-2,-2,9)
+		syncTurn(unitID,tigLil,114,0,0,15)
+		syncTurn(unitID,tlHead,0,0,0,5)
+		syncTurn(unitID,tlhairup,102,0,0,5*2)
+		syncTurn(unitID,tlhairdown,57,0,0,5*2)
+		syncTurn(unitID,tlarm,5,88,-24,5)
+		syncTurn(unitID,tlarmr,5,-92,27,5)
+		syncTurn(unitID,tllegUp,-144,-16,0,5)
+		syncTurn(unitID,tllegUpR,-144,16,0,5)
+		syncTurn(unitID,tllegLow,145,0,0,5)
+		syncTurn(unitID,tllegLowR,150,0,0,5)
+		Sleep(12000)
+	end
+	legs_down()
+	
+end
 --even numbers left foot up
 function drumPose1(mspeed, tspeed)
 	
@@ -6858,7 +7153,7 @@ local function drumPose8 (mspeed,tspeed)
 	
 end
 
---TurnÜbungen
+--Turnuebungen
 local function drumPose(mspeed,tspeed,addUp)
 	randyPro=math.random(2,8)
 	
@@ -8284,7 +8579,7 @@ local function idle_stance11()
 		if randOneZero==1 then
 			durRand=math.random(4,18)
 			for it=0, durRand, 1 do
-				--querflöten
+				--querflò´¥®
 				tspeed=1
 				mspeed=1
 				Turn (tigLil, x_axis, math.rad(10), tspeed)
@@ -8473,7 +8768,7 @@ local function idle_stance11()
 			
 		end
 		if randOneZero==0 then		
-			--querTröte
+			--querTrò´¥
 			Show(tlflute)
 			
 			jamin=math.random(5,19)
@@ -8997,13 +9292,13 @@ function EGG_LOOP()
 			-- if in Water check experience
 			temp=Spring.GetUnitExperience(unitID)
 			if temp > experienceSoFar+costPerEgg then --levelup
-
+				
 				--spawn numberofEggsToSpawn
 				for i=experienceSoFar,temp,costPerEgg do
 					StartThread(spawnAEgg,x,z)
 					experienceSoFar=experienceSoFar+costPerEgg
 				end
-			
+				
 				--update experienceSoFar
 			end
 		end
@@ -9508,7 +9803,32 @@ function walk()
 	end
 end
 
+local lidle_stance = idle_stance
 
+local lidle_stance2=idle_stance2
+
+local lidle_stance3=idle_stance3
+
+
+local lidle_stance4=idle_stance4
+
+local lidle_stance5=idle_stance5
+
+local lidle_stance6=idle_stance6
+
+local lidle_stance7= idle_stance7
+
+
+local lidle_stance8= 	idle_stance8
+
+local lidle_stance9= idle_stance9
+
+local lidle_stance_10= 	idle_stance_10
+
+local lidle_stance11= idle_stance11
+local lidle_stance12= idle_stance_12
+local lidle_stance13= idle_stance13
+local lidle_stance14= idle_stance14
 -- Idling
 function idle()
 	Signal(SIG_HAIRWIND)
@@ -9520,29 +9840,7 @@ function idle()
 	Signal(SIG_INCIRCLE)
 	Signal(SIG_GESTE)
 	Signal(SIG_TALKHEAD)
-	local lidle_stance = idle_stance
 	
-	local lidle_stance2=idle_stance2
-	
-	local lidle_stance3=idle_stance3
-	
-	
-	local lidle_stance4=idle_stance4
-	
-	local lidle_stance5=idle_stance5
-	
-	local lidle_stance6=idle_stance6
-	
-	local lidle_stance7= idle_stance7
-	
-	
-	local lidle_stance8= 	idle_stance8
-	
-	local lidle_stance9= idle_stance9
-	
-	local lidle_stance_10= 	idle_stance_10
-	
-	local lidle_stance11= idle_stance11
 	
 	SetSignalMask(SIG_IDLE)
 	while(boolCloaked==false) do
@@ -9621,7 +9919,7 @@ function idle()
 		
 		--changebookmark
 		Sleep(285)
-		Sleeper=math.random(0,10)
+		Sleeper=math.random(0,16)
 		
 		tempsleep=math.random(512,4096)
 		if (Sleeper==0) then
@@ -9667,6 +9965,18 @@ function idle()
 		if (Sleeper==10) then
 			Sleep(tempsleep)
 			lidle_stance11()
+		end
+		if (Sleeper==11) then
+			Sleep(tempsleep)
+			lidle_stance12()
+		end	
+		if (Sleeper==12) then
+			Sleep(tempsleep)
+			lidle_stance13()
+		end
+		if (Sleeper >= 13) then
+			Sleep(tempsleep)
+			lidle_stance14()
 		end
 		
 		
@@ -9732,7 +10042,7 @@ end
 -- can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon1(heading,pitch)
 	--make sure the aiming animation is only run once
-
+	
 	Signal(SIG_AIM)
 	Signal(SIG_ONTHEMOVE)
 	Signal(SIG_INCIRCLE)
@@ -9744,7 +10054,7 @@ function script.AimWeapon1(heading,pitch)
 	--wait until the weapon is pointed in the right direction
 	boolCanFire= WeaponAmbushMode()
 	if boolCanFire==true then
-	
+		
 		everyHundredTigLils=math.random(0,25)
 		if everyHundredTigLils == 9 then
 			Spring.PlaySoundFile("sounds/tiglil/tgAttac.wav")
@@ -9768,7 +10078,7 @@ end
 function script.FireWeapon1()
 	Signal(SIG_WHIR)
 	if boolAmbushInProgress==false then
-	
+		
 		StartThread(ReloadCountDown)
 	end
 	AttackCounter=3000

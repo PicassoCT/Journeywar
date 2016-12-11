@@ -44,6 +44,21 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 	
 end
 
+function getFungiImuneUnitTyeTable(UnitDefNames)
+retTab={}
+	retTab[UnitDefNames["jfungiforrest"].id]=true
+	retTab[UnitDefNames["jtreel"].id]=true
+	retTab[UnitDefNames["vort"].id]=true
+	retTab[UnitDefNames["jracedart"].id]=true
+	retTab[UnitDefNames["jfiredancebomb"].id]=true
+	retTab[UnitDefNames["cgamagardener"].id]=true
+	for i=1,9 do
+		retTab[UnitDefNames["jtree4"..i].id]=true
+	end
+
+	return retTab
+end
+
 function getAirUnitTable(UnitDefNames)
 	retTab={}
 	retTab[UnitDefNames["callygator"].id]=true

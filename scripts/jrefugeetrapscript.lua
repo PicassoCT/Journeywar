@@ -1,9 +1,9 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
@@ -26,13 +26,13 @@ TRAPRANGE=400
 TIMETILLREVENGE=24000
 
 function script.Create()
-Hide(ShedTown)
-Spin(RadarDish,y_axis,math.rad(42),0)
-Spin(Car,y_axis,math.rad(0.42),0)
-StartThread(randomRotate,Observator,y_axis, 1/3, -80,270)
-StartThread(randomRotate,Crane,y_axis, 1/66, -10,15)
-StartThread(randomRotate,Car,y_axis, 1/122, -350,350)
-StartThread(CountPassingByEnemys)
+	Hide(ShedTown)
+	Spin(RadarDish,y_axis,math.rad(42),0)
+	Spin(Car,y_axis,math.rad(0.42),0)
+	StartThread(randomRotate,Observator,y_axis, 1/3, -80,270)
+	StartThread(randomRotate,Crane,y_axis, 1/66, -10,15)
+	StartThread(randomRotate,Car,y_axis, 1/122, -350,350)
+	StartThread(CountPassingByEnemys)
 end
 
 --Keytable containing 
@@ -43,54 +43,53 @@ GoingBoom=false
 function CountPassingByEnemys()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	while true do
-	T=getAllInCircle(x,z, TRAPRANGE,unitID)
-	T=filterTableByTable(T,AllreadyPassingUnits,function (element,T2) return T2[element]== nil end )
-	AllreadyPassingUnits=insertKeysIntoTable(T,AllreadyPassingUnits)
-	Sleep(300)
-
-	count=countKey(AllreadyPassingUnits)
-
+		T=getAllInCircle(x,z, TRAPRANGE,unitID)
+		T=filterTableByTable(T,AllreadyPassingUnits,function (element,T2) return T2[element]== nil end )
+		AllreadyPassingUnits=insertKeysIntoTable(T,AllreadyPassingUnits)
+		Sleep(300)
+		
+		count=countKey(AllreadyPassingUnits)
+		
 		if count > 1 and GoingBoom==false then
-		GoingBoom=true
-		StartThread(spawnUprising, TIMETILLREVENGE)
+			GoingBoom=true
+			StartThread(spawnUprising, TIMETILLREVENGE)
 		end
 	end
 end
 
 function countByType(Keytable)
-
-
+	
+	
 end
 
 function spawnUprising(RestTime)
-Sleep(RestTime)
-teamID=Spring.GetUnitTeam(unitID)
-Spring.Echo("SpawningUprising")
-	
+	Sleep(RestTime)
+	teamID=Spring.GetUnitTeam(unitID)
+
 	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
 	for i=1,carcount do
-	Show(Car)
+		Show(Car)
 		if px and UnitDefNames["jmadmax"] then 
-		GG.UnitsToSpawn:PushCreateUnit("jmadmax",px,py,pz,0,teamID)
-		Hide(Car)
+			GG.UnitsToSpawn:PushCreateUnit("jmadmax",px,py,pz,0,teamID)
+			Hide(Car)
 		end
-	Sleep(1000)
+		Sleep(1000)
 	end
 	
 	for i=1,infcount do
-	px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
+		px,py,pz=Spring.GetUnitPiecePosDir(unitID,Car)
 		if px and UnitDefNames["jresistancewarrior"] then 
-		GG.UnitsToSpawn:PushCreateUnit("jresistancewarrior",px,py,pz,0,teamID)
+			GG.UnitsToSpawn:PushCreateUnit("jresistancewarrior",px,py,pz,0,teamID)
 		end
-	Sleep(500)
+		Sleep(500)
 	end
-
+	
 end
 
 function script.Killed(recentDamage,_)
-
-createCorpseCUnitGeneric(recentDamage)
-return 1
+	
+	createCorpseCUnitGeneric(recentDamage)
+	return 1
 end
 
 ----aimining & fire weapon
@@ -104,41 +103,40 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-
+	
 	return true
-
+	
 end
- 
+
 
 function script.FireWeapon1()	
-
+	
 	return true
 end
 
 
 
 function script.StartMoving()
-
+	
 end
 
 function script.StopMoving()
-		
-		
+	
+	
 end
 
 function script.Activate()
-
-return 1
+	
+	return 1
 end
 
 function script.Deactivate()
-
-return 0
+	
+	return 0
 end
 
 function script.QueryBuildInfo() 
-  return center 
+	return center 
 end
 
 Spring.SetUnitNanoPieces(unitID,{ center})
-

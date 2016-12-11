@@ -23,17 +23,17 @@ if (gadgetHandler:IsSyncedCode()) then
 	meridianTable={}
 	spawnUnits={ 
 		["journeyman"]={"jgeohive", "jbeehive"},
-		["centrail"]={"goildrum","gzombspa","zombie","jmadmax"}
+		["centrail"]={"goildrum","gzombspa","jrefugeetrap"}
 	}
 	
+	function randSign()
+	if math.random(0,1)==1 then return 1 else return -1 end 
+	end
 	
 	
 	function spawnSpawners(frame,team,side)
 		
-		volume=math.sin(frame/10000)*15
-		
-		boolBio= volume < 0
-		volume=math.abs(volume)
+		volume=math.abs(math.sin(frame/10000))*4
 		totalAbortCount=0
 		
 		for _=1, volume,1 do
@@ -46,15 +46,15 @@ if (gadgetHandler:IsSyncedCode()) then
 			px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
 			pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
 			T=Spring.GetUnitsInCylinder(px,pz,50)
-			dirXSign=math.random(-1,1);dirXSign=math.abs(dirXSign)/dirXSign
-			dirZSign=math.random(-1,1);dirZSign=math.abs(dirZSign)/dirZSign
+			dirXSign=randSign()
+			dirZSign=randSign()
 			
 			while T and #T > 0 and totalAbortCount < 64 do	
 			
 				if math.random(0,1)==1 then
-					dirXSign=math.random(-1,1);dirXSign=math.abs(dirXSign)/dirXSign
+					dirXSign=randSign()
 				else
-					dirZSign=math.random(-1,1);dirZSign=math.abs(dirZSign)/dirZSign
+					dirZSign=randSign()
 				end
 				px=px +100 *dirXSign
 				pz=pz +100 *dirZSign
@@ -151,7 +151,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	counter=0
-	total=49000
+	total=30*60*3
 	function gadget:GameFrame(frame)
 		if frame > 0 and frame % total == 0 then
 		counter=counter+1
