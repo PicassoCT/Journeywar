@@ -18,16 +18,16 @@ nx,ny,nz=Spring.GetUnitPosition(unitID)
 Spring.SetUnitNoSelect(unitID,true)
 Spring.SetUnitNeutral(unitID,true)
 Spring.SetUnitBlocking(unitID,true)
-time=0
+Time=0
 
 x,y,z=Spring.GetUnitPosition(unitID)
 nx,ny,nz=Spring.GetUnitPosition(unitID)
 distance=math.sqrt((nx-x)*(nx-x)+(nz-z)*(nz-z))
-	while time < Maxtime and distance < Maxdistance do
+	while Time < Maxtime and distance < Maxdistance do
 	nx,ny,nz=Spring.GetUnitPosition(unitID)
 	nx,nz=x-nx,z-nz
 	distance=math.sqrt(nx*nx+nz*nz)
-	time=time+100
+	Time=Time+100
 	Sleep(100)
 	EmitSfx(center,1024)
 	end

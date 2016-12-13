@@ -338,9 +338,9 @@ end
 		end
 	
 	
-	function randomShivers(time)
+	function randomShivers(Time)
 	SetSignalMask(SIG_SHIVER)
-		while time > 0 do
+		while Time > 0 do
 		xRand=math.random(-5,5)
 		zRand=math.random(-5,5)
 		yRand=math.random(-5,5)
@@ -348,7 +348,7 @@ end
 		Turn(center,z_axis,math.rad(zRand),4)
 		Turn(center,y_axis,math.rad(yRand),4)
 		Sleep(600)
-		time=time-600
+		Time=Time-600
 		end
 	end
 
@@ -361,7 +361,7 @@ end
 
 boolLookAtTheTime=false
 	
-	function rape(time)
+	function rape(Time)
 	Signal(SIG_ROCK)
 	StartThread(rockBackAndForth)
 	--probing

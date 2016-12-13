@@ -267,8 +267,8 @@ function aTerraFormation(ed)
 	end
 end
 
-function aSetUnitSelector(id,time)
-	Sleep(time)
+function aSetUnitSelector(id,Time)
+	Sleep(Time)
 	Spring.SetUnitNoSelect(id,false)
 end
 
@@ -785,12 +785,12 @@ function flyADrone(nr)
 	WaitForMove(DroneTable[nr], y_axis)
 	
 	--weld 
-	time=math.ceil(math.random(9000,40000))
+	Time=math.ceil(math.random(9000,40000))
 	Turn(DroneTable[nr],y_axis,math.rad(math.random(-360,360)),1.5)
 	deci=math.random(-2,2)
 	deci=deci/math.abs(deci)
 	
-	while time > 0 do
+	while Time > 0 do
 		dy=dy +deci*math.random(0.1,2)
 		Move(DroneTable[nr], y_axis,dy ,0.5)
 		
@@ -804,7 +804,7 @@ function flyADrone(nr)
 		hp,maxhp=Spring.GetUnitHealth(unitID)
 		Spring.SetUnitHealth(unitID,math.min(hp+1,maxhp))
 		
-		time=time-lim*4
+		Time=Time-lim*4
 	end
 	
 	

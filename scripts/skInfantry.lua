@@ -542,7 +542,7 @@ function cloakCheckAndAmbushLoad()
 	while true do
 		--check wether the Unit is cloaked 
 		boolCloaked=(GetUnitValue(COB.CLOAKED) == 1)
-		--if first time true, set unit FireStats to ReturnFire, set to Hold Position, start AmbushCounter --setFirstTime False
+		--if first Time true, set unit FireStats to ReturnFire, set to Hold Position, start AmbushCounter --setFirstTime False
 		if boolPrevCloaked==false and boolCloaked==true then
 			Signal(SIG_AMBUSH) 
 			if boolPeacefull==true then

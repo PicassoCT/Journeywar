@@ -197,7 +197,7 @@ PI_FOURTH = 3.1415*2 - (3.14159/2)
 Animations["run"] ={
 	
 	{
-		['time'] = 0,
+		['Time'] = 0,
 		['commands'] = {
 			{['c']='turn',['p']=spine, ['a']=x_axis, ['t']= PI_FOURTH+1.914811, ['s']=1.671767},
 			{['c']='turn',['p']=spine, ['a']=z_axis, ['t']=-0.145958, ['s']=0.560527},
@@ -274,7 +274,7 @@ Animations["run"] ={
 		},
 	},
 	{
-		['time'] = 6,
+		['Time'] = 6,
 		['commands'] = {
 			{['c']='turn',['p']=head, ['a']=x_axis, ['t']= PI_FOURTH+1.713760, ['s']=1.397339},
 			{['c']='turn',['p']=head, ['a']=z_axis, ['t']=-0.075518, ['s']=0.343956},
@@ -287,7 +287,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 7,
+		['Time'] = 7,
 		['commands'] = {
 			{['c']='turn',['p']=kuttel, ['a']=x_axis, ['t']= PI_FOURTH+1.635086, ['s']=0.385363},
 			{['c']='turn',['p']=kuttel, ['a']=z_axis, ['t']=-0.020278, ['s']=0.012625},
@@ -296,7 +296,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 8,
+		['Time'] = 8,
 		['commands'] = {
 			{['c']='turn',['p']=foleg3, ['a']=x_axis, ['t']= PI_FOURTH+2.343386, ['s']=2.171851},
 			{['c']='turn',['p']=foleg3, ['a']=z_axis, ['t']=-0.104626, ['s']=0.895637},
@@ -325,7 +325,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 14,
+		['Time'] = 14,
 		['commands'] = {
 			{['c']='turn',['p']=bhleg2, ['a']=x_axis, ['t']= PI_FOURTH+2.257275, ['s']=3.539646},
 			{['c']='turn',['p']=bhleg2, ['a']=z_axis, ['t']=0.136755, ['s']=0.230181},
@@ -350,7 +350,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 16,
+		['Time'] = 16,
 		['commands'] = {
 			{['c']='turn',['p']=head, ['a']=x_axis, ['t']= PI_FOURTH+2.003366, ['s']=1.086022},
 			{['c']='turn',['p']=head, ['a']=z_axis, ['t']=-0.211024, ['s']=0.508149},
@@ -375,7 +375,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 18,
+		['Time'] = 18,
 		['commands'] = {
 			{['c']='turn',['p']=jaw, ['a']=x_axis, ['t']= PI_FOURTH+1.578821, ['s']=0.001069},
 			{['c']='turn',['p']=jaw, ['a']=z_axis, ['t']=-0.033352, ['s']=0.000327},
@@ -384,7 +384,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 24,
+		['Time'] = 24,
 		['commands'] = {
 			{['c']='turn',['p']=head, ['a']=x_axis, ['t']= PI_FOURTH+1.606202, ['s']=1.489365},
 			{['c']='turn',['p']=head, ['a']=z_axis, ['t']=-0.034302, ['s']=0.662708},
@@ -397,7 +397,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 25,
+		['Time'] = 25,
 		['commands'] = {
 			{['c']='turn',['p']=thehand, ['a']=x_axis, ['t']= PI_FOURTH+1.578821, ['s']=1.685822},
 			{['c']='turn',['p']=thehand, ['a']=z_axis, ['t']=-0.033352, ['s']=0.200583},
@@ -442,7 +442,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 32,
+		['Time'] = 32,
 		['commands'] = {
 			{['c']='turn',['p']=head, ['a']=x_axis, ['t']= PI_FOURTH+1.027331, ['s']=3.473225},
 			{['c']='turn',['p']=head, ['a']=z_axis, ['t']=-0.559519, ['s']=3.151303},
@@ -455,7 +455,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 35,
+		['Time'] = 35,
 		['commands'] = {
 			{['c']='turn',['p']=bhleg3, ['a']=x_axis, ['t']= PI_FOURTH+0.435086, ['s']=4.317076},
 			{['c']='turn',['p']=bhleg3, ['a']=z_axis, ['t']=0.397859, ['s']=0.374119},
@@ -476,7 +476,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=bhleg2, ['a']=x_axis, ['t']= PI_FOURTH+1.927814, ['s']=2.805768},
 			{['c']='turn',['p']=bhleg2, ['a']=z_axis, ['t']=-0.095991, ['s']=0.993218},
@@ -497,7 +497,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=foleg4, ['a']=x_axis, ['t']= PI_FOURTH+1.318394, ['s']=14.533304},
 			{['c']='turn',['p']=foleg4, ['a']=z_axis, ['t']=0.207612, ['s']=3.164080},
@@ -514,7 +514,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 			{['c']='turn',['p']=foleg4, ['a']=x_axis, ['t']= PI_FOURTH+2.343670, ['s']=3.075829},
 			{['c']='turn',['p']=foleg4, ['a']=z_axis, ['t']=-0.230624, ['s']=1.314709},
@@ -527,7 +527,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 44,
+		['Time'] = 44,
 		['commands'] = {
 			{['c']='turn',['p']=head, ['a']=x_axis, ['t']= PI_FOURTH+1.578821, ['s']=2.577388},
 			{['c']='turn',['p']=head, ['a']=z_axis, ['t']=-0.033352, ['s']=0.001838},
@@ -540,7 +540,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 46,
+		['Time'] = 46,
 		['commands'] = {
 			{['c']='turn',['p']=bhleg1, ['a']=x_axis, ['t']= PI_FOURTH+1.330827, ['s']=2.478659},
 			{['c']='turn',['p']=bhleg1, ['a']=z_axis, ['t']=-0.069681, ['s']=0.341613},
@@ -553,7 +553,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 47,
+		['Time'] = 47,
 		['commands'] = {
 			{['c']='turn',['p']=bhleg3, ['a']=x_axis, ['t']= PI_FOURTH+1.164988, ['s']=4.379414},
 			{['c']='turn',['p']=bhleg3, ['a']=z_axis, ['t']=0.027040, ['s']=2.224917},
@@ -566,7 +566,7 @@ Animations["run"] ={
 		}
 	},
 	{
-		['time'] = 52,
+		['Time'] = 52,
 		['commands'] = {
 		}
 	},
@@ -684,8 +684,8 @@ function dropDead()
 				
 				Sleep(1400)
 			end
-			time=math.ceil(math.random(300,500))
-			Sleep(time)
+			Time=math.ceil(math.random(300,500))
+			Sleep(Time)
 			reset(kuttel,2)
 			Move(kuttel,y_axis,0,12)
 			while (true==Spring.UnitScript.IsInMove (kuttel, y_axis)) do
@@ -816,7 +816,7 @@ function PlayAnimation(animname)
 			end
 		end
 		if(i < #anim) then
-			local t = anim[i+1]['time'] - anim[i]['time'];
+			local t = anim[i+1]['Time'] - anim[i]['Time'];
 			Sleep(t*33); -- sleep works on milliseconds
 		end
 	end

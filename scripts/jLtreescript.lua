@@ -79,7 +79,7 @@ function script.Create()
 	StartThread(BuildLtree)
 	StartThread(foulTheSurroundings)
 	StartThread(playSoundByUnitTypOS,unitID,0.5,{
-		{name="sounds/jtree/accidtrees.ogg",time=15000}
+		{name="sounds/jtree/accidtrees.ogg",Time=15000}
 	})
 	
 	StartThread(delayedActivation)

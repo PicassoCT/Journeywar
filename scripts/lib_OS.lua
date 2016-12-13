@@ -38,12 +38,12 @@ end
 -->Plays a Soundscape
 --> Expects: a path, a table containing :
 -- a Table of openers, containing "Name"
--- Numbers and time to play
+-- Numbers and Time to play
 
 -- a similar table for the backgrounds
 -- a similar table for the single sound solos
 -- a Table of closers, containing "Name"
--- Numbers and time to play
+-- Numbers and Time to play
 function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, loudness, unitID)
 	unitdef =Spring.GetUnitDefID(unitID)
 	
@@ -160,16 +160,16 @@ end
 
 --> Unit Statemachine
 function stateMachine(unitid, sleepTime,State, stateT)
-	local time=0
+	local Time=0
 	local StateMachine=stateT
 	local stateStorage={}
 	while true do
 		
 		if not stateStorage[State]then stateStorage[State]={} end
 		
-		State, stateStorage =StateMachine[State](unitid,time,stateStorage)
+		State, stateStorage =StateMachine[State](unitid,Time,stateStorage)
 		Sleep(sleepTime)
-		time=time+sleepTime
+		Time=Time+sleepTime
 	end
 end
 
@@ -479,13 +479,13 @@ function breathOS(body, lowDist, upDist , LegTable,LegNumber,degree, speed, coun
 		
 		distance= math.random(lowDist,upDist)
 		percentage= distance/upDist
-		time= distance/(math.abs(speed)+0.001)
+		Time= distance/(math.abs(speed)+0.001)
 		degreeC = percentage*degree
 		--downDeg=math.asin(leglength*distance)
 		--upDeg= math.asin()
 		
 		
-		speedDeg= frames/(degreeC *(time))+0.0001 
+		speedDeg= frames/(degreeC *(Time))+0.0001 
 		--speedDeg= 0.5
 		degHalf= degreeC/9 +0.001
 		degHalfMins= degHalf *-1.3
@@ -519,7 +519,7 @@ function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeT)
 	while true do
 		dice=math.random(1,#SoundNameTimeTable)
 		
-		PlaySoundByUnitDefID(unitdef, SoundNameTimeTable[dice].name,loudness, SoundNameTimeTable[dice].time, 1)
+		PlaySoundByUnitDefID(unitdef, SoundNameTimeTable[dice].name,loudness, SoundNameTimeTable[dice].Time, 1)
 		Sleep(1000)
 	end
 end

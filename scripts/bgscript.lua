@@ -127,19 +127,19 @@ local function legs_down()
 end
 
 boolCanMove=true
-function kneeDown(time)
+function kneeDown(Time)
 	boolCanMove=false
 	SetUnitValue(COB.MAX_SPEED,math.floor(15))
 	Move(bgbase,y_axis,-4,12)
 	Turn(bgleg,x_axis,math.rad(-90),18)
 	Turn(bglowleg,x_axis,math.rad(90),28)
 	Turn(bglowlegr,x_axis,math.rad(101),28)
-	time=math.floor(math.random(100,time))
-	while (time > 0 and boolFiredRecently==true) do
-		o=math.max(math.floor(time-120),120)
+	Time=math.floor(math.random(100,Time))
+	while (Time > 0 and boolFiredRecently==true) do
+		o=math.max(math.floor(Time-120),120)
 		
 		Sleep(o)
-		time=time-o
+		Time=Time-o
 	end
 	Move(bgbase,y_axis,0,12)
 	Turn(bgleg,x_axis,math.rad(0),18)
@@ -460,8 +460,8 @@ function script.FireWeapon1()
 	end
 end
 
-function headexplode(time,intervall)
-	for i=1,time,intervall do
+function headexplode(Time,intervall)
+	for i=1,Time,intervall do
 		
 		spawnCegAtPiece(unitID,Neck,"bghdexplode",0)
 		Sleep(intervall)

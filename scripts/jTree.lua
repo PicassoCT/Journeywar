@@ -108,10 +108,10 @@ function aSilentGuardian(handedoverNumber)
 	boolGuardian=true
 end
 
-function blinky(nr1, nr2,time)
+function blinky(nr1, nr2,Time)
 	Show(EYES[nr1])
 	Show(EYES[nr2])
-	Sleep(time)
+	Sleep(Time)
 	Hide(EYES[nr1])
 	Hide(EYES[nr2])
 	Sleep(600)
@@ -268,7 +268,7 @@ function script.Create()
 	end
 	if math.random(0,7)==2 then
 		StartThread(playSoundByUnitTypOS,unitID,0.5,{
-			{name="sounds/jtree/djunglefever"..math.floor(math.random(1,3))..".ogg",time=15000}
+			{name="sounds/jtree/djunglefever"..math.floor(math.random(1,3))..".ogg",Time=15000}
 		})
 	end
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs, 0.75)

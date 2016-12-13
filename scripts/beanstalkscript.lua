@@ -153,12 +153,12 @@ function soundSleeper()
 end
 
 function darkEnergyReactor()
-	time=0
+	Time=0
 	PIE=3.14159/60
 	med=0
 	while true do
-		time=(time+PIE)%6.28318530
-		val=math.ceil(((math.sin(time)*75)+med)/2)
+		Time=(Time+PIE)%6.28318530
+		val=math.ceil(((math.sin(Time)*75)+med)/2)
 		med=val
 		if val > 0 then 
 			Spring.AddUnitResource(unitID,"e",val)

@@ -198,7 +198,7 @@ function unfoldPlate()
 	WaitForTurn(Plate14,z_axis)
 end
 
-function UnDeployAnimation(time)
+function UnDeployAnimation(Time)
 	for i=1,#Plate do
 		Turn(Plate[i],z_axis,math.rad(0),0.25)
 		Turn(Plate[i],x_axis,math.rad(0),0.25)
@@ -213,14 +213,14 @@ function UnDeployAnimation(time)
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,-65,0,0,3000,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	WaitForTurns(Leg61,Leg51) 
 	
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg61);syncTurnInTime(Leg61,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg61);syncTurnInTime(Leg61,0,0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,0,0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	WaitForTurns(Leg61,Leg51) 
 	
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg62);syncTurnInTime(Leg62,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg52);syncTurnInTime(Leg52,0,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg63);syncTurnInTime(Leg63, 0,0, 0	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg53);syncTurnInTime(Leg53, 0,0, 0	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg62);syncTurnInTime(Leg62,0,0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg52);syncTurnInTime(Leg52,0,0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg63);syncTurnInTime(Leg63, 0,0, 0	,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg53);syncTurnInTime(Leg53, 0,0, 0	,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 	
 	
@@ -232,7 +232,7 @@ function UnDeployAnimation(time)
 end
 
 
-function DeployAnimation (time)
+function DeployAnimation (Time)
 	equiTurn(Leg11,Leg12,x_axis,-55,1)
 	equiTurn(Leg21,Leg22,x_axis,-53,1)
 	
@@ -241,13 +241,13 @@ function DeployAnimation (time)
 	
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg61);
 	
-	syncTurnInTime(Leg61,-65,-89, 0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,-65,89,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	syncTurnInTime(Leg61,-65,-89, 0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg51);syncTurnInTime(Leg51,-65,89,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	Sleep(3000)
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg62);syncTurnInTime(Leg62,89,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg52);syncTurnInTime(Leg52,89,0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg63);syncTurnInTime(Leg63, 65,0, -89	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg53);syncTurnInTime(Leg53, 65,0, 89	,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg62);syncTurnInTime(Leg62,89,0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg52);syncTurnInTime(Leg52,89,0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg63);syncTurnInTime(Leg63, 65,0, -89	,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Leg53);syncTurnInTime(Leg53, 65,0, 89	,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	WaitForTurns(Leg62,Leg52,Leg63,Leg53)
 	unfoldPlate()
 	unfoldWeapon(0.15)
@@ -308,20 +308,20 @@ function 	reloadAnim()
 	reset(GunSled,12)
 end 
 
-function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3,offset,time,signum)
+function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3,offset,Time,signum)
 	
 	
 	
-	pushTime=math.ceil(time*0.5)
-	time=time*0.5
+	pushTime=math.ceil(Time*0.5)
+	Time=Time*0.5
 	speed=2
 	
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,0+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,0+math.random(-offset,offset),0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,0+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
-	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg1);syncTurnInTime(opBLeg1,0+(-1*centerTurnX)+math.random(-offset,offset),0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg2);syncTurnInTime(opBLeg2,0+math.random(-offset,offset),0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
+	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(opBLeg3);syncTurnInTime(opBLeg3,0+math.random(-offset,offset),0,0,Time,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	Turn(Head,x_axis,math.rad(-2),5)
 	
 	
@@ -330,7 +330,7 @@ function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear
 	StartThread(tP,fShear1,((-1*centerTurnX)- 0),0,0,speed)	
 	StartThread(equiTurn,fShear1,fShear2,y_axis,val*signum ,speed)	
 	StartThread(tP,fShear3,0,(2*val*signum*-1),0 ,speed)
-	Sleep(time)
+	Sleep(Time)
 	WaitForTurns(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3)
 	
 	--pushback
@@ -350,10 +350,10 @@ function pushForth(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear
 	boolPushDone=true
 end
 
-function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum) 
+function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,Time,signum) 
 	
-	quadTime=math.ceil(time*0.35)
-	halfTime=math.ceil(time*0.65)
+	quadTime=math.ceil(Time*0.35)
+	halfTime=math.ceil(Time*0.65)
 	--MidPos
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,-54+(-1*centerTurnX),0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,41,0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
@@ -364,7 +364,7 @@ function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,f
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head);syncTurnInTime(Head,1,0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	--Shear
 	val=math.random(20,70)
-	speed= (val/time)*1000
+	speed= (val/Time)*1000
 	StartThread(tP,fShear1,((-1*centerTurnX)- 25),0,0,speed)
 	StartThread(equiTurn,fShear1,fShear2,y_axis,val*signum ,speed)
 	StartThread(tP,fShear3,0,(val*signum*-1),0 ,speed)
@@ -379,7 +379,7 @@ function MoveLegToFront(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,f
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(Head	);syncTurnInTime(Head		,-1,0,0,halfTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	--Shear
 	val=math.random(2,7)
-	speed= (val/time)*1000
+	speed= (val/Time)*1000
 	tP(fShear1,(-1*centerTurnX)- 15,0,0,speed)
 	StartThread(equiTurn,fShear1,fShear2,y_axis,val*signum ,speed)
 	StartThread(tP,fShear3,0,(val*signum*-1),0 ,speed)	
@@ -395,7 +395,7 @@ end
 centerTurnX=0
 boolMoveDone=false
 boolPushDone=false
-function 	walkAnim(time) 
+function 	walkAnim(Time) 
 	boolMoveDone=false
 	boolPushDone=false	
 	
@@ -404,8 +404,8 @@ function 	walkAnim(time)
 	Turn(Body,x_axis,math.rad(centerTurnX),0.25)
 	Turn(Body,z_axis,math.rad(2),0.25)
 	
-	StartThread(MoveLegToFront,Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63 ,5,time,-1)
-	StartThread(pushForth, Leg31,Leg32, Leg21,Leg22,Leg23, Leg51,Leg52,Leg53,5,time,1)
+	StartThread(MoveLegToFront,Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63 ,5,Time,-1)
+	StartThread(pushForth, Leg31,Leg32, Leg21,Leg22,Leg23, Leg51,Leg52,Leg53,5,Time,1)
 	WaitForTurn(Body,x_axis)
 	while boolMoveDone==false or boolPushDone==false do Sleep(100) end
 	boolMoveDone=false
@@ -417,8 +417,8 @@ function 	walkAnim(time)
 	Turn(Body,z_axis,math.rad(-2),0.25)
 	centerTurnX=centerTurnX*-1
 	
-	StartThread(MoveLegToFront,Leg31,Leg32, Leg21,Leg22,Leg23 ,Leg51,Leg52,Leg53,5,time,1)
-	StartThread(pushForth, Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,time,-1)
+	StartThread(MoveLegToFront,Leg31,Leg32, Leg21,Leg22,Leg23 ,Leg51,Leg52,Leg53,5,Time,1)
+	StartThread(pushForth, Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,Time,-1)
 	WaitForTurn(Body,x_axis)
 	while boolMoveDone==false or boolPushDone==false do Sleep(100) end
 	boolMoveDone=false
@@ -432,14 +432,14 @@ cos=0
 boolFlipFlop=0
 function 	idleAnim () 
 	cos=cos+0.01
-	time=4000--+math.abs(math.cos(cos)*1000)
+	Time=4000--+math.abs(math.cos(cos)*1000)
 	mod=0.05115 
 	movemod=2
 	
 	Move(center,y_axis,-2.25,movemod)
 	
 	val=math.random(12,22)*-1
-	speed=(math.abs(val)/(time/1000))*mod
+	speed=(math.abs(val)/(Time/1000))*mod
 	
 	equiTurn(Leg11,Leg12,x_axis,val ,speed)
 	
@@ -455,7 +455,7 @@ function 	idleAnim ()
 		Turn(Leg53,y_axis,math.rad(2*val) ,speed)
 		Turn(Leg63,y_axis,math.rad(-2*val) ,speed)
 	end
-	speed=(math.abs(val)/(time/1000))*mod
+	speed=(math.abs(val)/(Time/1000))*mod
 	equiTurn(Leg51,Leg52,y_axis,val*-1 ,speed)
 	equiTurn(Leg61,Leg62,y_axis,val ,speed)	
 	boolFlipFlop= (boolFlipFlop%6+1)	
@@ -522,10 +522,10 @@ function script.AimFromWeapon1()
 	return TwinCannon 
 end
 
-function turn_BackWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
+function turn_BackWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,Time,signum)
 	mod=0.075115
-	quadTime=math.ceil(time*0.2)
-	halfTime=math.ceil(time*0.4)
+	quadTime=math.ceil(Time*0.2)
+	halfTime=math.ceil(Time*0.4)
 	
 	--MidPos
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,-51+(-1*centerTurnX),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
@@ -578,10 +578,10 @@ function turn_BackWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,f
 	bool_TurnBackwardDone=true
 end
 
-function turn_ForWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,time,signum)
+function turn_ForWards(fwLeg1,fwLeg2, opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, offset,Time,signum)
 	mod=0.15115
-	quadTime=math.ceil(time*0.25)
-	halfTime=math.ceil(time*0.55)
+	quadTime=math.ceil(Time*0.25)
+	halfTime=math.ceil(Time*0.55)
 	--MidPos
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg1);syncTurnInTime(fwLeg1,12+(-1*centerTurnX),0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
 	x_deg,y_deg,z_deg=Spring.UnitScript.GetPieceRotation(fwLeg2);syncTurnInTime(fwLeg2,-36,0,0,quadTime,math.deg(x_deg),math.deg(y_deg),math.deg(z_deg))
@@ -647,7 +647,7 @@ end
 
 bool_TurnForwardDone=false
 bool_TurnBackwardDone=false
-function turnAnim(time)
+function turnAnim(Time)
 	
 	bool_TurnForwardDone=false
 	bool_TurnBackwardDone=false
@@ -657,14 +657,14 @@ function turnAnim(time)
 	centerTurnX= math.random(1,2)
 	Turn(Body,x_axis,math.rad(centerTurnX),0.25)
 	Turn(Body,z_axis,math.rad(2),0.15)
-	--function turn_BackWards	(fwLeg1,fwLeg2, 	opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, 	offset,time,signum)
-	StartThread(turn_BackWards,		Leg41,Leg42, 	Leg11,Leg12,Leg13, 		Leg61,Leg62,Leg63 ,			5,time,-1)
+	--function turn_BackWards	(fwLeg1,fwLeg2, 	opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, 	offset,Time,signum)
+	StartThread(turn_BackWards,		Leg41,Leg42, 	Leg11,Leg12,Leg13, 		Leg61,Leg62,Leg63 ,			5,Time,-1)
 	
---function turn_ForWards(		fwLeg1,fwLeg2, 	opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, 	offset,time,signum)
-	StartThread(turn_ForWards, 	Leg31,Leg32, 	Leg21,Leg22,Leg23, 		Leg51,Leg52,Leg53, 			5,time,1)
+--function turn_ForWards(		fwLeg1,fwLeg2, 	opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, 	offset,Time,signum)
+	StartThread(turn_ForWards, 	Leg31,Leg32, 	Leg21,Leg22,Leg23, 		Leg51,Leg52,Leg53, 			5,Time,1)
 	WaitForTurn(Body,x_axis)
 	
-	Sleep(time+time/2)
+	Sleep(Time+Time/2)
 	
 	bool_TurnForwardDone=false
 	bool_TurnBackwardDone=false
@@ -673,10 +673,10 @@ function turnAnim(time)
 	Turn(Body,z_axis,math.rad(-2),0.15)
 	centerTurnX=centerTurnX*-1
 	
-	StartThread(turn_BackWards,Leg31, Leg32, Leg21, Leg22, Leg23 ,Leg51, Leg52, Leg53, 5, time,1)
-	StartThread(turn_ForWards, Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,time,-1)
+	StartThread(turn_BackWards,Leg31, Leg32, Leg21, Leg22, Leg23 ,Leg51, Leg52, Leg53, 5, Time,1)
+	StartThread(turn_ForWards, Leg41,Leg42, Leg11,Leg12,Leg13, Leg61,Leg62,Leg63,5,Time,-1)
 	WaitForTurn(Body,x_axis)
-	Sleep(time+time/2)
+	Sleep(Time+Time/2)
 	
 	
 end
@@ -740,21 +740,21 @@ function script.AimWeapon1( Heading ,pitch)
 end
 function blinkLight()
 	
-	time=0
+	Time=0
 	while true do
 		
-		episode= math.abs(math.cos(time/10000))*1000
+		episode= math.abs(math.cos(Time/10000))*1000
 		Show(LightOff)
 		Hide(LightOn)
 		Sleep(episode+150)
-		time=time+episode
+		Time=Time+episode
 		
-		episode= math.abs(math.sin(time/10000))*1000
+		episode= math.abs(math.sin(Time/10000))*1000
 		Hide(LightOff)
 		Show(LightOn)
 		
 		Sleep(episode+150)
-		time=time+episode
+		Time=Time+episode
 	end
 end
 

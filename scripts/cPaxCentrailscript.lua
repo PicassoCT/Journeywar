@@ -210,7 +210,7 @@ function PlayAnimation(animname)
 			animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
 		end
 		if(i < #anim) then
-			local t = anim[i+1]['time'] - anim[i]['time'];
+			local t = anim[i+1]['Time'] - anim[i]['Time'];
 			Sleep(t*33); -- sleep works on milliseconds
 		end
 	end
@@ -356,12 +356,12 @@ boolBattle=false
 
 
 TableOfSoundPathStrings={
-	[1]={path="sounds/cPaxCentrail/ghospell1.ogg", time=2500},
-	[2]={path="sounds/cPaxCentrail/ghospell2.ogg", time=3500},
-	[3]={path="sounds/cPaxCentrail/ghospell3.ogg", time=3000},
-	[4]={path="sounds/cPaxCentrail/ghospell4.ogg",time=2500},
-	[5]={path="sounds/cPaxCentrail/ghospell5.ogg", time=2500},
-	[5]={path="sounds/cPaxCentrail/ghospell6.ogg", time=4500},
+	[1]={path="sounds/cPaxCentrail/ghospell1.ogg", Time=2500},
+	[2]={path="sounds/cPaxCentrail/ghospell2.ogg", Time=3500},
+	[3]={path="sounds/cPaxCentrail/ghospell3.ogg", Time=3000},
+	[4]={path="sounds/cPaxCentrail/ghospell4.ogg",Time=2500},
+	[5]={path="sounds/cPaxCentrail/ghospell5.ogg", Time=2500},
+	[5]={path="sounds/cPaxCentrail/ghospell6.ogg", Time=4500},
 	
 }
 
@@ -371,10 +371,10 @@ boolBusy=false
 function OhLawd()
 	
 	
-	if boolBusy==false and TableOfSoundPathStrings[counter] and TableOfSoundPathStrings[counter].path and TableOfSoundPathStrings[counter].time then
+	if boolBusy==false and TableOfSoundPathStrings[counter] and TableOfSoundPathStrings[counter].path and TableOfSoundPathStrings[counter].Time then
 		boolBusy=true
-		StartThread(PlaySoundByUnitDefID,unitdefID,TableOfSoundPathStrings[counter].path,1,TableOfSoundPathStrings[counter].time,1)
-		Sleep(TableOfSoundPathStrings[counter].time)
+		StartThread(PlaySoundByUnitDefID,unitdefID,TableOfSoundPathStrings[counter].path,1,TableOfSoundPathStrings[counter].Time,1)
+		Sleep(TableOfSoundPathStrings[counter].Time)
 		counter=(counter%(5))+1
 		boolBusy=false
 	end
@@ -800,7 +800,7 @@ end
 
 Animations['pax_death'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-1.124613, ['s']=0.393313},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*-0.363993, ['s']=0.992707},
@@ -838,20 +838,20 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.886042, ['s']=0.681439},
 		}
 	},
 	{
-		['time'] = 3,
+		['Time'] = 3,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.423584, ['s']=0.361816},
 		}
 	},
 	{
-		['time'] = 9,
+		['Time'] = 9,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.363354, ['s']=3.766400},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.101227, ['s']=1.112591},
@@ -871,7 +871,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 11,
+		['Time'] = 11,
 		['commands'] = {
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=0.683713, ['s']=0.011449},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=-0.318116, ['s']=0.044590},
@@ -882,14 +882,14 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 12,
+		['Time'] = 12,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.908695, ['s']=0.809695},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*0.000000, ['s']=1.364972},
 		}
 	},
 	{
-		['time'] = 15,
+		['Time'] = 15,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.312418, ['s']=4.054632},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.091065, ['s']=0.060971},
@@ -906,7 +906,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 16,
+		['Time'] = 16,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-1.551537, ['s']=0.983471},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-0.248001, ['s']=0.032144},
@@ -920,7 +920,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.608606, ['s']=1.000296},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*0.560301, ['s']=1.867670},
@@ -943,7 +943,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 21,
+		['Time'] = 21,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-0.248001, ['s']=0.000000},
 			{['c']='turn',['p']=AL, ['a']=y_axis, ['t']=-1*0.433788, ['s']=3.208176},
@@ -953,7 +953,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 22,
+		['Time'] = 22,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-1.913275, ['s']=1.276437},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=-0.660766, ['s']=0.809962},
@@ -961,7 +961,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 24,
+		['Time'] = 24,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.859067, ['s']=3.763434},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.157346, ['s']=2.206277},
@@ -974,7 +974,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 25,
+		['Time'] = 25,
 		['commands'] = {
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=0.253344, ['s']=1.613882},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=-0.554329, ['s']=0.885797},
@@ -982,7 +982,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 29,
+		['Time'] = 29,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.412650, ['s']=0.979780},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*-0.223597, ['s']=3.919490},
@@ -998,7 +998,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 30,
+		['Time'] = 30,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.456481, ['s']=1.053245},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.331993, ['s']=0.986575},
@@ -1006,7 +1006,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 31,
+		['Time'] = 31,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-0.980946, ['s']=1.069858},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=0.301535, ['s']=1.030380},
@@ -1020,7 +1020,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 33,
+		['Time'] = 33,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.230754, ['s']=0.123383},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.229870, ['s']=0.063957},
@@ -1034,14 +1034,14 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 35,
+		['Time'] = 35,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.383500, ['s']=0.874496},
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*0.000000, ['s']=6.707907},
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.105962, ['s']=0.925126},
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.352279, ['s']=1.174264},
@@ -1049,7 +1049,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.542433, ['s']=3.274749},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.025463, ['s']=0.600848},
@@ -1060,14 +1060,14 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.051558, ['s']=0.782329},
 		}
 	},
 	{
-		['time'] = 39,
+		['Time'] = 39,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-3.420030, ['s']=0.256354},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=-3.579015, ['s']=0.365019},
@@ -1075,7 +1075,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 40,
+		['Time'] = 40,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.760110, ['s']=2.199390},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.129310, ['s']=0.462291},
@@ -1083,7 +1083,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 43,
+		['Time'] = 43,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.191309, ['s']=0.791367},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.401578, ['s']=0.321952},
@@ -1094,7 +1094,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 45,
+		['Time'] = 45,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.060881, ['s']=0.338113},
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.421254, ['s']=0.517308},
@@ -1105,7 +1105,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 46,
+		['Time'] = 46,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.467671, ['s']=1.433015},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.408700, ['s']=0.236808},
@@ -1116,7 +1116,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 47,
+		['Time'] = 47,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-2.014133, ['s']=2.582968},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-0.200348, ['s']=1.254708},
@@ -1124,7 +1124,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.606692, ['s']=8.200810},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=0.075610, ['s']=1.229519},
@@ -1137,7 +1137,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 49,
+		['Time'] = 49,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-0.955798, ['s']=3.835362},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=2.654398, ['s']=0.695698},
@@ -1146,7 +1146,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.120327, ['s']=2.204990},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.259029, ['s']=0.561267},
@@ -1156,7 +1156,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.034916, ['s']=3.208040},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.049973, ['s']=0.627913},
@@ -1167,7 +1167,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 54,
+		['Time'] = 54,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.852132, ['s']=1.952318},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.662740, ['s']=0.425483},
@@ -1175,7 +1175,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 56,
+		['Time'] = 56,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-1.441023, ['s']=4.852251},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=2.423273, ['s']=2.311256},
@@ -1184,7 +1184,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 57,
+		['Time'] = 57,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.164284, ['s']=3.263183},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.046582, ['s']=0.427472},
@@ -1192,7 +1192,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 59,
+		['Time'] = 59,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-1.576616, ['s']=4.067767},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=2.307059, ['s']=3.486407},
@@ -1222,7 +1222,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.326639, ['s']=3.214386},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=1.297177, ['s']=4.328066},
@@ -1234,7 +1234,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 62,
+		['Time'] = 62,
 		['commands'] = {
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=0.058927, ['s']=0.328636},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=0.223303, ['s']=0.421886},
@@ -1242,7 +1242,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 64,
+		['Time'] = 64,
 		['commands'] = {
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-0.614047, ['s']=6.729744},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=0.788176, ['s']=5.648734},
@@ -1250,7 +1250,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 65,
+		['Time'] = 65,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-2.536587, ['s']=1.602334},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-0.087788, ['s']=0.814870},
@@ -1261,7 +1261,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 67,
+		['Time'] = 67,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.586135, ['s']=1.112127},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=0.541835, ['s']=3.237182},
@@ -1278,7 +1278,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 68,
+		['Time'] = 68,
 		['commands'] = {
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-1.505697, ['s']=9.394499},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=1.037127, ['s']=1.292325},
@@ -1286,7 +1286,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.514487, ['s']=0.925858},
@@ -1299,7 +1299,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-3.223152, ['s']=3.432822},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=1.266712, ['s']=6.772499},
@@ -1310,7 +1310,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 73,
+		['Time'] = 73,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-2.670640, ['s']=2.246580},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.423030, ['s']=1.266063},
@@ -1318,7 +1318,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.624847, ['s']=0.580670},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=0.413628, ['s']=1.923098},
@@ -1334,7 +1334,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 75,
+		['Time'] = 75,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.036834, ['s']=2.398136},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.249014, ['s']=0.391347},
@@ -1342,7 +1342,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 76,
+		['Time'] = 76,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.638751, ['s']=0.417137},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=0.375253, ['s']=1.151260},
@@ -1359,7 +1359,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 77,
+		['Time'] = 77,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.665824, ['s']=0.406097},
 			{['c']='move',['p']=Body, ['a']=y_axis, ['t']=0.347458, ['s']=0.416923},
@@ -1367,7 +1367,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 78,
+		['Time'] = 78,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-5.155259, ['s']=5.796321},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=1.387869, ['s']=0.363473},
@@ -1378,19 +1378,19 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 79,
+		['Time'] = 79,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.753061, ['s']=0.872369},
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=1.619076, ['s']=0.187019},
 		}
 	},
 	{
-		['time'] = 80,
+		['Time'] = 80,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.427943, ['s']=0.011094},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.053246, ['s']=0.004684},
@@ -1407,14 +1407,14 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 82,
+		['Time'] = 82,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.784631, ['s']=0.473553},
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=1.637778, ['s']=0.280529},
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='move',['p']=Body, ['a']=z_axis, ['t']=-2.787931, ['s']=0.019798},
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.365513, ['s']=0.548289},
@@ -1425,7 +1425,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.000000, ['s']=0.000000},
@@ -1433,29 +1433,29 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 87,
+		['Time'] = 87,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 88,
+		['Time'] = 88,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-0.949049, ['s']=0.095383},
 			{['c']='move',['p']=Core, ['a']=y_axis, ['t']=2.848042, ['s']=0.031482},
 		}
 	},
 	{
-		['time'] = 91,
+		['Time'] = 91,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.429560, ['s']=0.016172},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.055982, ['s']=0.027360},
@@ -1463,7 +1463,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 94,
+		['Time'] = 94,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.434402, ['s']=0.072635},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.039165, ['s']=0.252249},
@@ -1474,7 +1474,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 96,
+		['Time'] = 96,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.433684, ['s']=0.021537},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.041862, ['s']=0.080887},
@@ -1482,7 +1482,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 97,
+		['Time'] = 97,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.427617, ['s']=0.182014},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.066603, ['s']=0.742252},
@@ -1490,7 +1490,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 98,
+		['Time'] = 98,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.422594, ['s']=0.150687},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.085361, ['s']=0.562731},
@@ -1498,7 +1498,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.418365, ['s']=0.042295},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.105101, ['s']=0.197400},
@@ -1506,7 +1506,7 @@ Animations['pax_death'] = {
 		}
 	},
 	{
-		['time'] = 102,
+		['Time'] = 102,
 		['commands'] = {
 		}
 	},
@@ -1515,7 +1515,7 @@ Animations['pax_death'] = {
 
 Animations['pax_walk'] = {
 	{
-		['time'] = 0,
+		['Time'] = 0,
 		['commands'] = {
 			
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.358180, ['s']=0.344609},
@@ -1527,7 +1527,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.195783, ['s']=0.695990},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.004861, ['s']=0.836158},
@@ -1544,7 +1544,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.320451, ['s']=1.130384},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.070170, ['s']=0.050945},
@@ -1564,7 +1564,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 8,
+		['Time'] = 8,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.404366, ['s']=0.231759},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=-0.089829, ['s']=0.105211},
@@ -1575,7 +1575,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 10,
+		['Time'] = 10,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.393352, ['s']=1.259652},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.032381, ['s']=0.066685},
@@ -1601,7 +1601,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 15,
+		['Time'] = 15,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.326816, ['s']=0.183085},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.006960, ['s']=0.005444},
@@ -1609,7 +1609,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 17,
+		['Time'] = 17,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=1.010676, ['s']=5.183684},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.027515, ['s']=0.213802},
@@ -1617,12 +1617,12 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 23,
+		['Time'] = 23,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.794869, ['s']=1.618551},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.041114, ['s']=0.101988},
@@ -1630,7 +1630,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 25,
+		['Time'] = 25,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-0.512134, ['s']=0.319543},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=0.010845, ['s']=0.352801},
@@ -1641,7 +1641,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 27,
+		['Time'] = 27,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-1.228672, ['s']=1.318926},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.020150, ['s']=0.082944},
@@ -1658,7 +1658,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 28,
+		['Time'] = 28,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.002477, ['s']=0.167389},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.000063, ['s']=0.004616},
@@ -1666,7 +1666,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 33,
+		['Time'] = 33,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.654797, ['s']=0.368929},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.033071, ['s']=0.067368},
@@ -1677,7 +1677,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 35,
+		['Time'] = 35,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.745743, ['s']=0.320041},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.013578, ['s']=0.096944},
@@ -1691,7 +1691,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.491438, ['s']=0.282377},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=0.012926, ['s']=0.000558},
@@ -1702,7 +1702,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 46,
+		['Time'] = 46,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.604252, ['s']=3.122101},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.018732, ['s']=0.194407},
@@ -1719,7 +1719,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 52,
+		['Time'] = 52,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.325291, ['s']=1.195548},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.036731, ['s']=0.077139},
@@ -1733,7 +1733,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.096441, ['s']=2.093836},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.172446, ['s']=0.522659},
@@ -1744,7 +1744,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 55,
+		['Time'] = 55,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.144077, ['s']=5.350019},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.003667, ['s']=0.142125},
@@ -1752,7 +1752,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 56,
+		['Time'] = 56,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.132730, ['s']=0.130252},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.003621, ['s']=0.003558},
@@ -1760,7 +1760,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 59,
+		['Time'] = 59,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.389249, ['s']=1.020771},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.072604, ['s']=0.051248},
@@ -1774,7 +1774,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.990346, ['s']=5.186747},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.001148, ['s']=0.124536},
@@ -1782,7 +1782,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 61,
+		['Time'] = 61,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.587859, ['s']=2.281000},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.060569, ['s']=0.372924},
@@ -1790,7 +1790,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 62,
+		['Time'] = 62,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.118798, ['s']=0.356258},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.013053, ['s']=0.009593},
@@ -1798,7 +1798,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 67,
+		['Time'] = 67,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.745576, ['s']=0.005003},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.084551, ['s']=2.129178},
@@ -1809,7 +1809,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 68,
+		['Time'] = 68,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.371332, ['s']=0.561366},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=-0.127418, ['s']=0.317953},
@@ -1817,7 +1817,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 69,
+		['Time'] = 69,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.643346, ['s']=1.689219},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.013984, ['s']=0.013398},
@@ -1828,7 +1828,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.178768, ['s']=1.227274},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.064541, ['s']=0.011917},
@@ -1839,7 +1839,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 76,
+		['Time'] = 76,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.375523, ['s']=0.320907},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.005479, ['s']=0.009467},
@@ -1847,7 +1847,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 80,
+		['Time'] = 80,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.184357, ['s']=0.307337},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=-0.064565, ['s']=0.012060},
@@ -1858,7 +1858,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.529754, ['s']=0.378638},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.012031, ['s']=0.006511},
@@ -1872,7 +1872,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.473850, ['s']=0.730973},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.013824, ['s']=0.021863},
@@ -1880,7 +1880,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 88,
+		['Time'] = 88,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.271375, ['s']=0.249894},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.006464, ['s']=0.334704},
@@ -1889,7 +1889,7 @@ Animations['pax_walk'] = {
 	},
 	
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.210860, ['s']=0.336268},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=-0.090455, ['s']=1.408212},
@@ -1900,7 +1900,7 @@ Animations['pax_walk'] = {
 		}
 	},
 	{
-		['time'] = 100,
+		['Time'] = 100,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.230830, ['s']=0.149779},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.055172, ['s']=1.092204},
@@ -1912,7 +1912,7 @@ Animations['pax_walk'] = {
 
 Animations['pax_depressed'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000086, ['s']=0.002575},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.003050, ['s']=0.091500},
@@ -1920,7 +1920,7 @@ Animations['pax_depressed'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=1.196512, ['s']=1.994316},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.001613, ['s']=0.007771},
@@ -2040,13 +2040,13 @@ Animations['pax_depressed'] = {
 		}
 	},
 	{
-		['time'] = 3,
+		['Time'] = 3,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.423584, ['s']=0.361816},
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-2.697583, ['s']=1.878181},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.045593, ['s']=0.037199},
@@ -2064,7 +2064,7 @@ Animations['pax_depressed'] = {
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2072,14 +2072,14 @@ Animations['pax_depressed'] = {
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.051558, ['s']=0.782329},
 		}
 	},
 	{
-		['time'] = 41,
+		['Time'] = 41,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.663755, ['s']=0.785990},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.059989, ['s']=0.148223},
@@ -2088,14 +2088,14 @@ Animations['pax_depressed'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*0.030729, ['s']=1.172081},
 		}
 	},
 	{
-		['time'] = 49,
+		['Time'] = 49,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-2.435587, ['s']=7.859874},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.003642, ['s']=1.258545},
@@ -2113,7 +2113,7 @@ Animations['pax_depressed'] = {
 	},
 	
 	{
-		['time'] = 50,
+		['Time'] = 50,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.000118, ['s']=0.364768},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.004552, ['s']=0.000453},
@@ -2146,13 +2146,13 @@ Animations['pax_depressed'] = {
 
 Animations['pax_recover'] = {	
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.277195, ['s']=0.197261},
 		}
 	},
 	{
-		['time'] = 57,
+		['Time'] = 57,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.337449, ['s']=1.877227},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=-0.489765, ['s']=2.684179},
@@ -2160,14 +2160,14 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.514487, ['s']=0.925858},
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2175,7 +2175,7 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 73,
+		['Time'] = 73,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.000118, ['s']=3.931721},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=-0.004552, ['s']=0.344513},
@@ -2189,13 +2189,13 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.431317, ['s']=0.288979},
 		}
 	},
 	{
-		['time'] = 77,
+		['Time'] = 77,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.000118, ['s']=0.330683},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.004552, ['s']=0.002974},
@@ -2212,7 +2212,7 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000049, ['s']=0.000098},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.001501, ['s']=0.003003},
@@ -2220,7 +2220,7 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.000000, ['s']=0.000000},
@@ -2228,7 +2228,7 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='turn',['p']=Core, ['a']=x_axis, ['t']=-0.000038, ['s']=0.000127},
 			{['c']='turn',['p']=Core, ['a']=z_axis, ['t']=-0.001502, ['s']=0.005006},
@@ -2237,7 +2237,7 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 98,
+		['Time'] = 98,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=-0.000002, ['s']=0.000074},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.001502, ['s']=0.045067},
@@ -2245,7 +2245,7 @@ Animations['pax_recover'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 		}
 	},
@@ -2253,7 +2253,7 @@ Animations['pax_recover'] = {
 
 Animations['pax_standing'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.065030, ['s']=0.031281},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.005757, ['s']=0.000357},
@@ -2267,7 +2267,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*0.117003, ['s']=0.126528},
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.072469, ['s']=0.066854},
@@ -2283,7 +2283,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 3,
+		['Time'] = 3,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*-0.137512, ['s']=0.102967},
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.084377, ['s']=0.074120},
@@ -2294,26 +2294,26 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.125962, ['s']=0.288022},
 		}
 	},
 	{
-		['time'] = 28,
+		['Time'] = 28,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*-0.096996, ['s']=0.139565},
 			{['c']='turn',['p']=AL, ['a']=y_axis, ['t']=-1*-0.099784, ['s']=0.107991},
 		}
 	},
 	{
-		['time'] = 32,
+		['Time'] = 32,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*0.084214, ['s']=0.131064},
 		}
 	},
 	{
-		['time'] = 34,
+		['Time'] = 34,
 		['commands'] = {
 			{['c']='turn',['p']=Shield1, ['a']=y_axis, ['t']=-1*-1.985182, ['s']=0.787936},
 			{['c']='turn',['p']=Shield2, ['a']=x_axis, ['t']=0.028304, ['s']=0.013731},
@@ -2322,7 +2322,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 35,
+		['Time'] = 35,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.068350, ['s']=0.133379},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.015363, ['s']=0.009606},
@@ -2333,7 +2333,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.051600, ['s']=0.086794},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.014392, ['s']=0.004512},
@@ -2344,7 +2344,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2352,33 +2352,33 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.051558, ['s']=0.782329},
 		}
 	},
 	{
-		['time'] = 40,
+		['Time'] = 40,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*0.071810, ['s']=0.190293},
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*0.030729, ['s']=1.172081},
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.277195, ['s']=0.197261},
 		}
 	},
 	{
-		['time'] = 65,
+		['Time'] = 65,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.028111, ['s']=0.035505},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.015702, ['s']=0.000299},
@@ -2386,14 +2386,14 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.514487, ['s']=0.925858},
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=y_axis, ['t']=-1*-0.007506, ['s']=0.101911},
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
@@ -2402,7 +2402,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 73,
+		['Time'] = 73,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=y_axis, ['t']=-1*-0.007598, ['s']=0.095290},
 			{['c']='turn',['p']=Shield1, ['a']=y_axis, ['t']=-1*0.000789, ['s']=2.291505},
@@ -2412,7 +2412,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=y_axis, ['t']=-1*0.007346, ['s']=0.125211},
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.431317, ['s']=0.288979},
@@ -2420,7 +2420,7 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 83,
+		['Time'] = 83,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.051600, ['s']=0.000000},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.014392, ['s']=0.000000},
@@ -2431,14 +2431,14 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*0.007311, ['s']=1.010581},
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.000000, ['s']=0.000000},
@@ -2446,18 +2446,18 @@ Animations['pax_standing'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.261913, ['s']=0.564680},
 		}
 	},
 	{
-		['time'] = 98,
+		['Time'] = 98,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 		}
 	},
@@ -2465,7 +2465,7 @@ Animations['pax_standing'] = {
 
 Animations['pax_defensive'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000004, ['s']=0.000118},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.000341, ['s']=0.010229},
@@ -2473,7 +2473,7 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-1.073041, ['s']=0.370013},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.023624, ['s']=0.008029},
@@ -2595,13 +2595,13 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 3,
+		['Time'] = 3,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.423584, ['s']=0.361816},
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.125962, ['s']=0.288022},
 			{['c']='turn',['p']=podturret1, ['a']=x_axis, ['t']=0.000009, ['s']=0.000003},
@@ -2610,7 +2610,7 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2618,14 +2618,14 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.051558, ['s']=0.782329},
 		}
 	},
 	{
-		['time'] = 47,
+		['Time'] = 47,
 		['commands'] = {
 			{['c']='turn',['p']=Shield6, ['a']=x_axis, ['t']=0.000008, ['s']=0.000005},
 			{['c']='turn',['p']=Shield6, ['a']=z_axis, ['t']=-0.000612, ['s']=0.000353},
@@ -2636,14 +2636,14 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*0.030729, ['s']=1.172081},
 		}
 	},
 	{
-		['time'] = 50,
+		['Time'] = 50,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-1.879895, ['s']=1.460100},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=-0.012585, ['s']=0.213801},
@@ -2654,20 +2654,20 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.277195, ['s']=0.197261},
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.514487, ['s']=0.925858},
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2675,13 +2675,13 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.431317, ['s']=0.288979},
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000004, ['s']=0.000008},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000612, ['s']=0.001225},
@@ -2689,7 +2689,7 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.000000, ['s']=0.000000},
@@ -2697,7 +2697,7 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 			{['c']='turn',['p']=Shield8, ['a']=x_axis, ['t']=0.000004, ['s']=0.102704},
 			{['c']='turn',['p']=Shield8, ['a']=z_axis, ['t']=-0.000271, ['s']=0.186270},
@@ -2715,7 +2715,7 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='turn',['p']=Core, ['a']=x_axis, ['t']=0.000008, ['s']=0.000028},
 			{['c']='turn',['p']=Core, ['a']=z_axis, ['t']=-0.000612, ['s']=0.002041},
@@ -2724,7 +2724,7 @@ Animations['pax_defensive'] = {
 		}
 	},
 	{
-		['time'] = 98,
+		['Time'] = 98,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000023, ['s']=0.000692},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000612, ['s']=0.018362},
@@ -2736,7 +2736,7 @@ Animations['pax_defensive'] = {
 
 Animations['pax_attack'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2744,7 +2744,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.265313, ['s']=0.297157},
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
@@ -2777,13 +2777,13 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 3,
+		['Time'] = 3,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.423584, ['s']=0.361816},
 		}
 	},
 	{
-		['time'] = 16,
+		['Time'] = 16,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.570083, ['s']=0.291681},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.313670, ['s']=0.002398},
@@ -2794,13 +2794,13 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.125962, ['s']=0.288022},
 		}
 	},
 	{
-		['time'] = 24,
+		['Time'] = 24,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.772852, ['s']=1.304828},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.288749, ['s']=0.271547},
@@ -2811,14 +2811,14 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 30,
+		['Time'] = 30,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.549029, ['s']=0.386885},
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.097151, ['s']=0.241721},
 		}
 	},
 	{
-		['time'] = 33,
+		['Time'] = 33,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.454509, ['s']=1.363735},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.277954, ['s']=0.011994},
@@ -2829,7 +2829,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.887657, ['s']=3.644350},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.061593, ['s']=0.938156},
@@ -2840,7 +2840,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2848,14 +2848,14 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.051558, ['s']=0.782329},
 		}
 	},
 	{
-		['time'] = 46,
+		['Time'] = 46,
 		['commands'] = {
 			{['c']='turn',['p']=AUR, ['a']=x_axis, ['t']=-0.032005, ['s']=0.335788},
 			{['c']='turn',['p']=AUR, ['a']=z_axis, ['t']=-0.000123, ['s']=0.099323},
@@ -2863,7 +2863,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=1.126793, ['s']=0.597841},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.165532, ['s']=0.259849},
@@ -2873,7 +2873,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 49,
+		['Time'] = 49,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.000012, ['s']=0.000007},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.205569, ['s']=0.321092},
@@ -2884,7 +2884,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 50,
+		['Time'] = 50,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.001753, ['s']=0.256139},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.000087, ['s']=0.056960},
@@ -2892,19 +2892,19 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.277195, ['s']=0.197261},
 		}
 	},
 	{
-		['time'] = 52,
+		['Time'] = 52,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.499035, ['s']=0.045449},
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.834419, ['s']=0.542729},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.216381, ['s']=0.087962},
@@ -2921,7 +2921,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 68,
+		['Time'] = 68,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.297020, ['s']=0.912113},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.347222, ['s']=1.154006},
@@ -2933,14 +2933,14 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.514487, ['s']=0.925858},
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -2948,13 +2948,13 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='move',['p']=Core, ['a']=z_axis, ['t']=-1.431317, ['s']=0.288979},
 		}
 	},
 	{
-		['time'] = 80,
+		['Time'] = 80,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.148545, ['s']=0.494919},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.329025, ['s']=0.060655},
@@ -2962,7 +2962,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.440183, ['s']=1.314122},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.268328, ['s']=0.173158},
@@ -2973,7 +2973,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.305891, ['s']=0.212300},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.145219, ['s']=0.823299},
@@ -2983,7 +2983,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.119738, ['s']=0.812780},
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
@@ -2992,7 +2992,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.014559, ['s']=0.401957},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.365329, ['s']=0.108911},
@@ -3003,7 +3003,7 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.049577, ['s']=1.302021},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.307154, ['s']=0.129421},
@@ -3012,12 +3012,12 @@ Animations['pax_attack'] = {
 		}
 	},
 	{
-		['time'] = 98,
+		['Time'] = 98,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 		}
 	},
@@ -3035,7 +3035,7 @@ end
 
 Animations['pax_unpack'] = {
 	{
-		['time'] = 0,
+		['Time'] = 0,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.046979, ['s']=0.317460},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.000002, ['s']=0.000010},
@@ -3046,7 +3046,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=1.481772, ['s']=0.117162},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.188993, ['s']=0.188961},
@@ -3081,14 +3081,14 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 2,
+		['Time'] = 2,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.886042, ['s']=0.681439},
 		}
 	},
 	{
-		['time'] = 14,
+		['Time'] = 14,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.201377, ['s']=1.459634},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.000005, ['s']=0.000037},
@@ -3105,7 +3105,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='turn',['p']=podturret1, ['a']=x_axis, ['t']=-0.000070, ['s']=0.000027},
 			{['c']='turn',['p']=podturret1, ['a']=z_axis, ['t']=-0.071034, ['s']=0.000002},
@@ -3113,7 +3113,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 31,
+		['Time'] = 31,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=1.090651, ['s']=0.027351},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.763390, ['s']=0.010980},
@@ -3130,7 +3130,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 32,
+		['Time'] = 32,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.222799, ['s']=0.091809},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.657906, ['s']=2.819619},
@@ -3147,7 +3147,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 33,
+		['Time'] = 33,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.073044, ['s']=1.745542},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=-0.505480, ['s']=1.903306},
@@ -3164,7 +3164,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 37,
+		['Time'] = 37,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -3172,7 +3172,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 38,
+		['Time'] = 38,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.381957, ['s']=1.468310},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.000012, ['s']=0.000021},
@@ -3182,7 +3182,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 39,
+		['Time'] = 39,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.486841, ['s']=0.282902},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.243110, ['s']=0.444424},
@@ -3193,14 +3193,14 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield3, ['a']=y_axis, ['t']=-1*0.030729, ['s']=1.172081},
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=0.579776, ['s']=0.766064},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=-1.034073, ['s']=0.227373},
@@ -3208,7 +3208,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 52,
+		['Time'] = 52,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=1.404758, ['s']=11.673628},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.607642, ['s']=0.700917},
@@ -3219,7 +3219,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.000070, ['s']=0.047592},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.000007, ['s']=0.329665},
@@ -3236,7 +3236,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 54,
+		['Time'] = 54,
 		['commands'] = {
 			{['c']='turn',['p']=AL, ['a']=x_axis, ['t']=-0.220144, ['s']=0.894290},
 			{['c']='turn',['p']=AL, ['a']=z_axis, ['t']=0.054143, ['s']=0.851385},
@@ -3244,7 +3244,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 67,
+		['Time'] = 67,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.987426, ['s']=3.754393},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.114684, ['s']=0.963196},
@@ -3261,14 +3261,14 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=Shield4, ['a']=y_axis, ['t']=-1*0.514487, ['s']=0.925858},
 		}
 	},
 	{
-		['time'] = 71,
+		['Time'] = 71,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-1.386684, ['s']=11.977714},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.033285, ['s']=2.441962},
@@ -3282,7 +3282,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.817757, ['s']=8.533895},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.143676, ['s']=1.655862},
@@ -3302,7 +3302,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.860529, ['s']=0.427722},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.119797, ['s']=0.238790},
@@ -3319,7 +3319,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 76,
+		['Time'] = 76,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.375268, ['s']=0.200691},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.001083, ['s']=0.032849},
@@ -3327,7 +3327,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 77,
+		['Time'] = 77,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.045932, ['s']=1.097784},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.049380, ['s']=0.160990},
@@ -3347,7 +3347,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 79,
+		['Time'] = 79,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.762933, ['s']=1.895748},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.122284, ['s']=0.899984},
@@ -3364,7 +3364,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.382472, ['s']=2.282771},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.196239, ['s']=0.443730},
@@ -3378,7 +3378,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.188313, ['s']=2.352922},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=-0.000217, ['s']=0.002145},
@@ -3389,7 +3389,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.000070, ['s']=0.415173},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.000007, ['s']=0.043814},
@@ -3403,7 +3403,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.000070, ['s']=0.106159},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.000007, ['s']=0.113969},
@@ -3423,7 +3423,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 87,
+		['Time'] = 87,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.104682, ['s']=4.394937},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.000136, ['s']=0.005292},
@@ -3431,7 +3431,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.000070, ['s']=0.313838},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.000007, ['s']=0.000388},
@@ -3439,7 +3439,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='turn',['p']=Core, ['a']=x_axis, ['t']=-0.000070, ['s']=0.000233},
 			{['c']='turn',['p']=Core, ['a']=z_axis, ['t']=0.000007, ['s']=0.000022},
@@ -3447,7 +3447,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 98,
+		['Time'] = 98,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=-0.000070, ['s']=0.002097},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.000005, ['s']=0.000147},
@@ -3455,7 +3455,7 @@ Animations['pax_unpack'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 		}
 	},
@@ -3485,7 +3485,7 @@ end
 
 Animations['pax_alt_walk'] = {
 	{
-		['time'] = 0,
+		['Time'] = 0,
 		['commands'] = {
 			{['c']='turn',['p']=Shield8, ['a']=x_axis, ['t']=0.028567, ['s']=0.026001},
 			{['c']='turn',['p']=Shield8, ['a']=z_axis, ['t']=-0.048731, ['s']=0.048492},
@@ -3625,7 +3625,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 5,
+		['Time'] = 5,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=1.362967, ['s']=1.786610},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.106289, ['s']=0.395883},
@@ -3634,7 +3634,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 8,
+		['Time'] = 8,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.650946, ['s']=0.524175},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.031768, ['s']=0.033289},
@@ -3649,7 +3649,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 11,
+		['Time'] = 11,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.909215, ['s']=0.283991},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.075860, ['s']=0.332614},
@@ -3666,7 +3666,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 12,
+		['Time'] = 12,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.128212, ['s']=0.820730},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.122868, ['s']=0.150408},
@@ -3695,7 +3695,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 17,
+		['Time'] = 17,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000101, ['s']=0.003412},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.004828, ['s']=0.001025},
@@ -3706,7 +3706,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=0.224686, ['s']=0.340619},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.016317, ['s']=0.045068},
@@ -3729,7 +3729,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 22,
+		['Time'] = 22,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.101750, ['s']=0.467296},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.032299, ['s']=0.150653},
@@ -3740,7 +3740,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 23,
+		['Time'] = 23,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.574382, ['s']=0.382822},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.029761, ['s']=0.010036},
@@ -3757,7 +3757,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 24,
+		['Time'] = 24,
 		['commands'] = {
 			{['c']='turn',['p']=Shield2, ['a']=x_axis, ['t']=-0.000368, ['s']=0.006105},
 			{['c']='turn',['p']=Shield2, ['a']=z_axis, ['t']=0.005067, ['s']=0.019258},
@@ -3768,7 +3768,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 28,
+		['Time'] = 28,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=0.000222, ['s']=0.006380},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.005108, ['s']=0.002731},
@@ -3779,7 +3779,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 29,
+		['Time'] = 29,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=1.855919, ['s']=5.207787},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.120442, ['s']=0.194316},
@@ -3790,7 +3790,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 31,
+		['Time'] = 31,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=0.540047, ['s']=0.494202},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.031167, ['s']=0.110042},
@@ -3807,7 +3807,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 33,
+		['Time'] = 33,
 		['commands'] = {
 			{['c']='turn',['p']=Shield7	, ['a']=x_axis, ['t']=0.016176, ['s']=0.030795},
 			{['c']='turn',['p']=Shield7	, ['a']=z_axis, ['t']=0.008003, ['s']=0.025691},
@@ -3824,7 +3824,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 34,
+		['Time'] = 34,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.331915, ['s']=1.684959},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.091485, ['s']=0.192882},
@@ -3835,7 +3835,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 39,
+		['Time'] = 39,
 		['commands'] = {
 			{['c']='turn',['p']=Shield6, ['a']=x_axis, ['t']=-0.000369, ['s']=0.018102},
 			{['c']='turn',['p']=Shield6, ['a']=z_axis, ['t']=0.005067, ['s']=0.042060},
@@ -3846,7 +3846,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=0.318081, ['s']=0.484421},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=-0.105872, ['s']=0.084892},
@@ -3857,7 +3857,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 43,
+		['Time'] = 43,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=0.002123, ['s']=0.002301},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.005795, ['s']=0.001000},
@@ -3880,7 +3880,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 45,
+		['Time'] = 45,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.262524, ['s']=0.290446},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.113360, ['s']=0.012116},
@@ -3897,7 +3897,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 46,
+		['Time'] = 46,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.196209, ['s']=0.485648},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.056998, ['s']=0.046940},
@@ -3908,7 +3908,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.460231, ['s']=1.250708},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.059187, ['s']=0.067023},
@@ -3925,7 +3925,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 49,
+		['Time'] = 49,
 		['commands'] = {
 			{['c']='turn',['p']=Shield4, ['a']=x_axis, ['t']=-0.002260, ['s']=0.004381},
 			{['c']='turn',['p']=Shield4, ['a']=z_axis, ['t']=0.005516, ['s']=0.000720},
@@ -3936,7 +3936,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			{['c']='turn',['p']=Shield1, ['a']=x_axis, ['t']=-0.000368, ['s']=0.012090},
 			{['c']='turn',['p']=Shield1, ['a']=z_axis, ['t']=0.005067, ['s']=0.033892},
@@ -3947,7 +3947,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 56,
+		['Time'] = 56,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.255297, ['s']=1.704308},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.130487, ['s']=0.212829},
@@ -3976,7 +3976,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=-0.236384, ['s']=2.089845},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.023451, ['s']=0.107209},
@@ -3987,7 +3987,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 61,
+		['Time'] = 61,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.896528, ['s']=4.422877},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.022602, ['s']=0.102421},
@@ -3998,7 +3998,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 63,
+		['Time'] = 63,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.829735, ['s']=2.047987},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.034357, ['s']=0.148132},
@@ -4015,7 +4015,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 66,
+		['Time'] = 66,
 		['commands'] = {
 			{['c']='turn',['p']=Shield5, ['a']=x_axis, ['t']=-0.000369, ['s']=0.055971},
 			{['c']='turn',['p']=Shield5, ['a']=z_axis, ['t']=0.005067, ['s']=0.029112},
@@ -4032,7 +4032,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 68,
+		['Time'] = 68,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.075332, ['s']=0.491767},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.086406, ['s']=0.240348},
@@ -4043,7 +4043,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.766783, ['s']=1.394961},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.005824, ['s']=0.339990},
@@ -4072,7 +4072,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 71,
+		['Time'] = 71,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=0.665574, ['s']=0.866077},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=-0.045758, ['s']=0.086835},
@@ -4083,7 +4083,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 72,
+		['Time'] = 72,
 		['commands'] = {
 			{['c']='turn',['p']=Shield3, ['a']=x_axis, ['t']=-0.000368, ['s']=0.002669},
 			{['c']='turn',['p']=Shield3, ['a']=z_axis, ['t']=0.005067, ['s']=0.000779},
@@ -4100,7 +4100,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 74,
+		['Time'] = 74,
 		['commands'] = {
 			{['c']='turn',['p']=Shield7	, ['a']=x_axis, ['t']=-0.000368, ['s']=0.019090},
 			{['c']='turn',['p']=Shield7	, ['a']=z_axis, ['t']=0.005067, ['s']=0.003388},
@@ -4111,7 +4111,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 79,
+		['Time'] = 79,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=-0.631253, ['s']=0.850640},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=-0.019681, ['s']=0.231590},
@@ -4134,7 +4134,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			{['c']='turn',['p']=AR, ['a']=x_axis, ['t']=-0.000369, ['s']=1.210127},
 			{['c']='turn',['p']=AR, ['a']=z_axis, ['t']=0.005067, ['s']=0.001194},
@@ -4151,7 +4151,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			{['c']='turn',['p']=AUL, ['a']=x_axis, ['t']=-0.000369, ['s']=0.778493},
 			{['c']='turn',['p']=AUL, ['a']=z_axis, ['t']=0.005067, ['s']=0.043490},
@@ -4168,7 +4168,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			{['c']='turn',['p']=LL, ['a']=x_axis, ['t']=0.355266, ['s']=2.113968},
 			{['c']='turn',['p']=LL, ['a']=z_axis, ['t']=0.005226, ['s']=0.053373},
@@ -4191,7 +4191,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 			{['c']='turn',['p']=Head, ['a']=x_axis, ['t']=-0.000369, ['s']=0.631374},
 			{['c']='turn',['p']=Head, ['a']=z_axis, ['t']=0.005067, ['s']=0.018256},
@@ -4202,7 +4202,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 92,
+		['Time'] = 92,
 		['commands'] = {
 			{['c']='turn',['p']=Body, ['a']=x_axis, ['t']=-0.000369, ['s']=0.281113},
 			{['c']='turn',['p']=Body, ['a']=z_axis, ['t']=0.005068, ['s']=0.305018},
@@ -4213,7 +4213,7 @@ Animations['pax_alt_walk'] = {
 		}
 	},
 	{
-		['time'] = 95,
+		['Time'] = 95,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.338078, ['s']=4.816892},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=0.005339, ['s']=0.553999},
@@ -4234,7 +4234,7 @@ Animations['pax_alt_walk'] = {
 
 Animations['paxcentrail_walk'] = {
 	{
-		['time'] = 0,
+		['Time'] = 0,
 		['commands'] = {
 			
 			
@@ -4251,7 +4251,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			
 			
@@ -4455,7 +4455,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 7,
+		['Time'] = 7,
 		['commands'] = {
 			
 			
@@ -4471,7 +4471,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 8,
+		['Time'] = 8,
 		['commands'] = {
 			
 			
@@ -4512,7 +4512,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 9,
+		['Time'] = 9,
 		['commands'] = {
 			
 			
@@ -4547,7 +4547,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 10,
+		['Time'] = 10,
 		['commands'] = {
 			
 			
@@ -4564,7 +4564,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 13,
+		['Time'] = 13,
 		['commands'] = {
 			
 			
@@ -4587,7 +4587,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 15,
+		['Time'] = 15,
 		['commands'] = {
 			
 			
@@ -4610,7 +4610,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 17,
+		['Time'] = 17,
 		['commands'] = {
 			
 			
@@ -4621,7 +4621,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 18,
+		['Time'] = 18,
 		['commands'] = {
 			
 			
@@ -4643,7 +4643,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 21,
+		['Time'] = 21,
 		['commands'] = {
 			
 			
@@ -4653,7 +4653,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 24,
+		['Time'] = 24,
 		['commands'] = {
 			
 			
@@ -4664,7 +4664,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 25,
+		['Time'] = 25,
 		['commands'] = {
 			
 			
@@ -4687,7 +4687,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 26,
+		['Time'] = 26,
 		['commands'] = {
 			
 			
@@ -4704,7 +4704,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 27,
+		['Time'] = 27,
 		['commands'] = {
 			
 			
@@ -4715,7 +4715,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 28,
+		['Time'] = 28,
 		['commands'] = {
 			
 			
@@ -4732,7 +4732,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 30,
+		['Time'] = 30,
 		['commands'] = {
 			
 			
@@ -4755,7 +4755,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 34,
+		['Time'] = 34,
 		['commands'] = {
 			
 			
@@ -4772,7 +4772,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 35,
+		['Time'] = 35,
 		['commands'] = {
 			
 			
@@ -4795,7 +4795,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			
 			
@@ -4818,7 +4818,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 40,
+		['Time'] = 40,
 		['commands'] = {
 			
 			
@@ -4847,7 +4847,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 44,
+		['Time'] = 44,
 		['commands'] = {
 			
 			
@@ -4864,7 +4864,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 47,
+		['Time'] = 47,
 		['commands'] = {
 			
 			
@@ -4875,7 +4875,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 48,
+		['Time'] = 48,
 		['commands'] = {
 			
 			
@@ -4886,7 +4886,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 50,
+		['Time'] = 50,
 		['commands'] = {
 			
 			
@@ -4903,7 +4903,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 51,
+		['Time'] = 51,
 		['commands'] = {
 			
 			
@@ -4920,7 +4920,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 52,
+		['Time'] = 52,
 		['commands'] = {
 			
 			
@@ -4955,7 +4955,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			
 			
@@ -4972,7 +4972,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 56,
+		['Time'] = 56,
 		['commands'] = {
 			
 			
@@ -4983,7 +4983,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 57,
+		['Time'] = 57,
 		['commands'] = {
 			
 			
@@ -5024,7 +5024,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 58,
+		['Time'] = 58,
 		['commands'] = {
 			
 			
@@ -5053,7 +5053,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 59,
+		['Time'] = 59,
 		['commands'] = {
 			
 			
@@ -5076,7 +5076,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			
 			
@@ -5093,7 +5093,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 61,
+		['Time'] = 61,
 		['commands'] = {
 			
 			
@@ -5104,7 +5104,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 69,
+		['Time'] = 69,
 		['commands'] = {
 			
 			
@@ -5127,7 +5127,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 70,
+		['Time'] = 70,
 		['commands'] = {
 			
 			
@@ -5144,7 +5144,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 71,
+		['Time'] = 71,
 		['commands'] = {
 			
 			
@@ -5155,7 +5155,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 75,
+		['Time'] = 75,
 		['commands'] = {
 			
 			
@@ -5190,7 +5190,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 76,
+		['Time'] = 76,
 		['commands'] = {
 			
 			
@@ -5201,7 +5201,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 80,
+		['Time'] = 80,
 		['commands'] = {
 			
 			
@@ -5217,7 +5217,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			
 			
@@ -5239,7 +5239,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 82,
+		['Time'] = 82,
 		['commands'] = {
 			
 			
@@ -5256,7 +5256,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 84,
+		['Time'] = 84,
 		['commands'] = {
 			
 			
@@ -5278,7 +5278,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 85,
+		['Time'] = 85,
 		['commands'] = {
 			
 			
@@ -5289,7 +5289,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			
 			
@@ -5311,7 +5311,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 87,
+		['Time'] = 87,
 		['commands'] = {
 			
 			
@@ -5322,7 +5322,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 88,
+		['Time'] = 88,
 		['commands'] = {
 			
 			
@@ -5339,7 +5339,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 			
 			
@@ -5350,7 +5350,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 91,
+		['Time'] = 91,
 		['commands'] = {
 			
 			
@@ -5361,7 +5361,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 92,
+		['Time'] = 92,
 		['commands'] = {
 			
 			
@@ -5389,7 +5389,7 @@ Animations['paxcentrail_walk'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 		}
 	},
@@ -5399,7 +5399,7 @@ Animations['paxcentrail_walk'] = {
 
 Animations['paxcentrail_antiairstance'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.195984, ['s']=0.000000},
 			{['c']='turn',['p']=LUL, ['a']=y_axis, ['t']=-1*-0.003386, ['s']=0.000000},
@@ -5588,7 +5588,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 9,
+		['Time'] = 9,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.019765, ['s']=0.005608},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.425941, ['s']=0.078680},
@@ -5608,7 +5608,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 11,
+		['Time'] = 11,
 		['commands'] = {
 			{['c']='turn',['p']=LUL, ['a']=x_axis, ['t']=-0.201425, ['s']=0.009068},
 			{['c']='turn',['p']=LUL, ['a']=z_axis, ['t']=0.274764, ['s']=0.402106},
@@ -5616,7 +5616,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 12,
+		['Time'] = 12,
 		['commands'] = {
 			
 			
@@ -5627,7 +5627,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 13,
+		['Time'] = 13,
 		['commands'] = {
 			
 			
@@ -5638,7 +5638,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 17,
+		['Time'] = 17,
 		['commands'] = {
 			
 			
@@ -5649,7 +5649,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 18,
+		['Time'] = 18,
 		['commands'] = {
 			
 			
@@ -5660,7 +5660,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			
 			
@@ -5671,7 +5671,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 23,
+		['Time'] = 23,
 		['commands'] = {
 			
 			
@@ -5682,7 +5682,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 25,
+		['Time'] = 25,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.097787, ['s']=0.008628},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.536410, ['s']=0.056103},
@@ -5690,7 +5690,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 26,
+		['Time'] = 26,
 		['commands'] = {
 			
 			
@@ -5707,7 +5707,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 29,
+		['Time'] = 29,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=0.019069, ['s']=0.020881},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.429725, ['s']=0.113501},
@@ -5718,7 +5718,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 30,
+		['Time'] = 30,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.195558, ['s']=0.321941},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.392476, ['s']=0.055874},
@@ -5726,7 +5726,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 31,
+		['Time'] = 31,
 		['commands'] = {
 			
 			
@@ -5743,7 +5743,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			
 			
@@ -5772,7 +5772,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 41,
+		['Time'] = 41,
 		['commands'] = {
 			
 			
@@ -5795,7 +5795,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 			
 			
@@ -5806,7 +5806,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 47,
+		['Time'] = 47,
 		['commands'] = {
 			
 			
@@ -5817,7 +5817,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 49,
+		['Time'] = 49,
 		['commands'] = {
 			
 			
@@ -5828,7 +5828,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 50,
+		['Time'] = 50,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.268949, ['s']=0.275218},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.379251, ['s']=0.049591},
@@ -5845,7 +5845,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			
 			
@@ -5856,7 +5856,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 58,
+		['Time'] = 58,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.374379, ['s']=0.243300},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.361443, ['s']=0.041096},
@@ -5873,7 +5873,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			
 			
@@ -5890,7 +5890,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 61,
+		['Time'] = 61,
 		['commands'] = {
 			
 			
@@ -5907,7 +5907,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 67,
+		['Time'] = 67,
 		['commands'] = {
 			{['c']='turn',['p']=LUR, ['a']=x_axis, ['t']=0.352177, ['s']=0.254390},
 			{['c']='turn',['p']=LUR, ['a']=z_axis, ['t']=-0.450675, ['s']=0.085735},
@@ -5915,7 +5915,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 71,
+		['Time'] = 71,
 		['commands'] = {
 			{['c']='turn',['p']=LR, ['a']=x_axis, ['t']=-0.497049, ['s']=0.141542},
 			{['c']='turn',['p']=LR, ['a']=z_axis, ['t']=0.342333, ['s']=0.022050},
@@ -5926,7 +5926,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 75,
+		['Time'] = 75,
 		['commands'] = {
 			
 			
@@ -5937,7 +5937,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 76,
+		['Time'] = 76,
 		['commands'] = {
 			
 			
@@ -5948,7 +5948,7 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 81,
+		['Time'] = 81,
 		['commands'] = {
 			
 			
@@ -5959,17 +5959,17 @@ Animations['paxcentrail_antiairstance'] = {
 		}
 	},
 	{
-		['time'] = 97,
+		['Time'] = 97,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 100,
+		['Time'] = 100,
 		['commands'] = {
 		}
 	},
@@ -5978,7 +5978,7 @@ Animations['paxcentrail_antiairstance'] = {
 
 Animations['paxcentrail_stomp'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			
 			
@@ -6183,7 +6183,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 11,
+		['Time'] = 11,
 		['commands'] = {
 			
 			
@@ -6200,7 +6200,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 15,
+		['Time'] = 15,
 		['commands'] = {
 			
 			
@@ -6217,7 +6217,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 17,
+		['Time'] = 17,
 		['commands'] = {
 			
 			
@@ -6228,7 +6228,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			
 			
@@ -6239,7 +6239,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 24,
+		['Time'] = 24,
 		['commands'] = {
 			
 			
@@ -6259,7 +6259,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 26,
+		['Time'] = 26,
 		['commands'] = {
 			
 			
@@ -6276,7 +6276,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 28,
+		['Time'] = 28,
 		['commands'] = {
 			
 			
@@ -6287,7 +6287,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 30,
+		['Time'] = 30,
 		['commands'] = {
 			
 			
@@ -6310,7 +6310,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 33,
+		['Time'] = 33,
 		['commands'] = {
 			
 			
@@ -6327,7 +6327,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 39,
+		['Time'] = 39,
 		['commands'] = {
 			
 			
@@ -6344,7 +6344,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 40,
+		['Time'] = 40,
 		['commands'] = {
 			
 			
@@ -6376,7 +6376,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 			
 			
@@ -6393,7 +6393,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 43,
+		['Time'] = 43,
 		['commands'] = {
 			
 			
@@ -6410,7 +6410,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 44,
+		['Time'] = 44,
 		['commands'] = {
 			
 			
@@ -6421,7 +6421,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 45,
+		['Time'] = 45,
 		['commands'] = {
 			
 			
@@ -6432,7 +6432,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 47,
+		['Time'] = 47,
 		['commands'] = {
 			
 			
@@ -6455,7 +6455,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 50,
+		['Time'] = 50,
 		['commands'] = {
 			
 			
@@ -6466,7 +6466,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 52,
+		['Time'] = 52,
 		['commands'] = {
 			
 			
@@ -6477,7 +6477,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			
 			
@@ -6527,7 +6527,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 54,
+		['Time'] = 54,
 		['commands'] = {
 			
 			
@@ -6538,7 +6538,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 60,
+		['Time'] = 60,
 		['commands'] = {
 			
 			
@@ -6549,7 +6549,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 64,
+		['Time'] = 64,
 		['commands'] = {
 			
 			
@@ -6578,7 +6578,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 65,
+		['Time'] = 65,
 		['commands'] = {
 			
 			
@@ -6607,7 +6607,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 71,
+		['Time'] = 71,
 		['commands'] = {
 			
 			
@@ -6618,7 +6618,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 73,
+		['Time'] = 73,
 		['commands'] = {
 			
 			
@@ -6629,7 +6629,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 75,
+		['Time'] = 75,
 		['commands'] = {
 			
 			
@@ -6640,7 +6640,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 76,
+		['Time'] = 76,
 		['commands'] = {
 			
 			
@@ -6651,7 +6651,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 80,
+		['Time'] = 80,
 		['commands'] = {
 			
 			
@@ -6667,7 +6667,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 82,
+		['Time'] = 82,
 		['commands'] = {
 			
 			
@@ -6695,7 +6695,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			
 			
@@ -6711,7 +6711,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 87,
+		['Time'] = 87,
 		['commands'] = {
 			
 			
@@ -6722,7 +6722,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 88,
+		['Time'] = 88,
 		['commands'] = {
 			
 			
@@ -6738,7 +6738,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 89,
+		['Time'] = 89,
 		['commands'] = {
 			
 			
@@ -6755,7 +6755,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 91,
+		['Time'] = 91,
 		['commands'] = {
 			
 			
@@ -6766,7 +6766,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 94,
+		['Time'] = 94,
 		['commands'] = {
 			
 			
@@ -6776,7 +6776,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 95,
+		['Time'] = 95,
 		['commands'] = {
 			
 			
@@ -6792,7 +6792,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 99,
+		['Time'] = 99,
 		['commands'] = {
 			
 			
@@ -6969,7 +6969,7 @@ Animations['paxcentrail_stomp'] = {
 		}
 	},
 	{
-		['time'] = 100,
+		['Time'] = 100,
 		['commands'] = {
 		}
 	},

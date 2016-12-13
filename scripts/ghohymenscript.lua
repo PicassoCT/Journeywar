@@ -415,8 +415,8 @@ end
 
 function reProduce()
 	if feMale then
-	time=math.ceil(math.random(120000,900000))
-	Sleep(time)
+	Time=math.ceil(math.random(120000,900000))
+	Sleep(Time)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
 	GG.UnitsToSpawn:PushCreateUnit("ghohymen",x,y,z,0,teamID)	
@@ -501,8 +501,8 @@ end
 
 function TheyGrowUpSoFast()
 	while AgeStage ~= 4 do
-		time=math.ceil(math.random(60000,190000))
-		Sleep(time)
+		Time=math.ceil(math.random(60000,190000))
+		Sleep(Time)
 		Age(AgeStage)
 		if feMale == false then 
 			AgeStage=math.min(3,AgeStage+1)
@@ -641,19 +641,19 @@ function script.StopMoving()
 	boolMoving=false		
 end
 
-function RunAnimationCycle(speed, it,time)
-	time=math.ceil(time/2)
+function RunAnimationCycle(speed, it,Time)
+	Time=math.ceil(Time/2)
 	
 	Turn(AniT[AgeStage]["Body"],x_axis,math.rad(5), speed)
 	Turn(AniT[AgeStage]["Head"],x_axis,math.rad(11), speed)
-	Sleep(time)
+	Sleep(Time)
 	itterator=math.max(1,(itterator+1)%8)	
 	for i=1,5, 1 do
 		runTable[math.max(1,itterator+i%3)](AniT[AgeStage][i][1],AniT[AgeStage][i][2],68)
 	end
 	Turn(AniT[AgeStage]["Body"],x_axis,math.rad(-3), speed)
 	Turn(AniT[AgeStage]["Head"],x_axis,math.rad(8), speed)
-	Sleep(time)
+	Sleep(Time)
 	
 end
 

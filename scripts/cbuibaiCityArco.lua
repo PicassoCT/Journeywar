@@ -1140,7 +1140,7 @@ function senderJobFunc(personNr)
 	--randomTurn=math.random(0,360)
 	--Turn(dramatisPersona3d[personNr][1],y_axis,math.rad(randomTurn),dramatisPersona3d[personNr][10])
 	
-	-- now we need a time, and a idleanimation so the person arriving at the ways end, doesent just stands around
+	-- now we need a Time, and a idleanimation so the person arriving at the ways end, doesent just stands around
 	
 	-- we return the random direction
 	

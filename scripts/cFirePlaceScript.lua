@@ -56,9 +56,9 @@ end
 
 function FireTales()
 	if math.random(0,1)==1 then
-	time=math.ceil(math.random(42000,60000))
+	Time=math.ceil(math.random(42000,60000))
 	storyTime()
-	Sleep(time)
+	Sleep(Time)
 
 	end
 end

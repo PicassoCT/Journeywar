@@ -135,8 +135,8 @@ end
 
 ]]
 function rushHour()
-time=math.ceil(math.random(90000,400000))
-Sleep(time)
+Time=math.ceil(math.random(90000,400000))
+Sleep(Time)
 local spGetUnitPositon=Spring.GetUnitBasePosition
 xo,yo,zo=spGetUnitPositon(unitID)
 	while true do

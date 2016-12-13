@@ -2104,16 +2104,16 @@ function topplingOver(stability, boolImpulse,heading)
 		val=math.random(-140,-90)
 		Turn(LegsTable[i],x_axis,math.rad(val),math.abs(val)*0.3)
 	end
-	time=math.ceil(math.abs(Stats[eProperty][eStabilityinternal]*900))
+	Time=math.ceil(math.abs(Stats[eProperty][eStabilityinternal]*900))
 	if boolImpulse == true then
 		
 		tx,tz=0,0
 		tx,tz=Spring.GetVectorFromHeading(heading)
 		Spring.AddUnitImpulse(unitID,tx*-4,0,tz*-4)
-		Sleep(time)
+		Sleep(Time)
 		
 	else
-		TX=math.ceil(time/7)
+		TX=math.ceil(Time/7)
 		boolMilWalky=false
 		for i=1, 7, 1 do
 			boolMilWalky= not boolMilWalky
@@ -2536,17 +2536,17 @@ function script.Killed(recentDamage, maxHealth)
 	return 1
 end
 
-function totalReset(boolDelayed,time)
+function totalReset(boolDelayed,Time)
 	SetSignalMask(SIG_RESET)
-	if boolDelayed==true then Sleep(time) end
+	if boolDelayed==true then Sleep(Time) end
 	Move(testComEnder3DS,y_axis,0,39)
 	resetT(piecesTable,12)
 	
 	
 end
 
-function legs_down(boolDelayed,time)
-	if boolDelayed==true then Sleep(time) end
+function legs_down(boolDelayed,Time)
+	if boolDelayed==true then Sleep(Time) end
 	------echo("Ccomender::8")
 	T(LS08,0,7,0,7,0,7)
 	T(LK08,0,7,0,7,0,7)
@@ -3076,8 +3076,8 @@ boolCanSMGFire=false
 boolSMGOnlyOnce=false
 
 function smWaitForIt()
-	time=math.floor(200/Weapons[eSubMG][1]) 
-	Sleep(time)
+	Time=math.floor(200/Weapons[eSubMG][1]) 
+	Sleep(Time)
 	boolCanSMGFire=true
 	boolSMGOnlyOnce=false
 end

@@ -118,8 +118,8 @@ for i=1, 500,1 do
 	
 
 	for i=1,12,1 do
-	time=math.ceil(math.random(1900,29000))
-		Sleep(time)
+	Time=math.ceil(math.random(1900,29000))
+		Sleep(Time)
 		dx=math.ceil(math.random(-120,120))
 		dz=math.ceil(math.random(-120,120))
 		rot=math.floor(math.random(1,3))

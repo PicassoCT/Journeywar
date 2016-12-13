@@ -206,7 +206,7 @@ function dragtowards( distance,victimid, unitID,gateX,gateZ, fac)
 	local factor = fac
 	olPoX,_,olPoZ=spGetUnitPosition(victimid)
 	
-	time=15
+	Time=15
 	modulus=0
 	
 	while factor > 0.33 and factor < 1 and Spring.ValidUnitID (victimid) do
@@ -215,7 +215,7 @@ function dragtowards( distance,victimid, unitID,gateX,gateZ, fac)
 		if modulus% 10 ==0 then
 			factor = GetDistanceToHole(victimid,gateX,0,gateZ)/globalRange 		
 		end
-		Sleep(time)
+		Sleep(Time)
 		
 		olPoX,whY,olPoZ		= spGetUnitPosition(victimid)
 		newPosX,newPosZ		= relPos(olPoX,olPoZ,gateX,gateZ)

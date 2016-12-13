@@ -29,8 +29,8 @@ StartThread(timeDelayedDestroy)
 end
 
 function timeDelayedDestroy()
-time=30000*math.ceil(math.random(0,4))
-Sleep(time)
+Time=30000*math.ceil(math.random(0,4))
+Sleep(Time)
 Move(center,y_axis,-100,0.01)
 WaitForMove(center,y_axis)
 Spring.DestroyUnit(unitID,false,true)

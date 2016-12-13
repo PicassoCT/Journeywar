@@ -44,8 +44,8 @@ Hide(DropOut)
 
 	for i=1,22 do
 	EmitSfx(DropOut,1025)
-	time=math.ceil(math.random(10,125))
-	Sleep(time)
+	Time=math.ceil(math.random(10,125))
+	Sleep(Time)
 	end
 Spring.DestroyUnit(vicID,false,true)
 Spring.DestroyUnit(unitID,false,true)

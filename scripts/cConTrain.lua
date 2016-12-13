@@ -699,7 +699,7 @@ function motionDetec()
 end
 
 --function: transforms the speed of the train in the unfold-movement speed of the pillars
---that is necessary to have the pillars unfold just in time
+--that is necessary to have the pillars unfold just in Time
 local function speedTransForm(boolT_PillarMov_F_MoveSpeed,speed, pillarNumber)
 	if boolT_PillarMov_F_MoveSpeed == true then --or pillarNumber~= nil
 		local depth=usul[pillarNumber][13]
@@ -726,7 +726,7 @@ local function speedTransForm(boolT_PillarMov_F_MoveSpeed,speed, pillarNumber)
 		--range=STspeed*216 --distance the unit gets across in one second
 		--nrOfPillars=range/61 -- 0.1 - 3.1 --how many pillars the unit does cross in one second
 		--	splitSecond=1/nrOfPillars
-		--distance/time = velocity
+		--distance/Time = velocity
 		veloCity=61/(1/(((speed/7.2)*216 )/61))
 		--61
 		return veloCity

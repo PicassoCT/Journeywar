@@ -10400,7 +10400,7 @@ function cloakCheckAndAmbushLoad()
 	while true do
 		--check wether the Unit is cloaked 
 		boolCloaked=GetUnitValue(COB.CLOAKED)
-		--if first time true, set unit FireStats to ReturnFire, set to Hold Position, start AmbushCounter --setFirstTime False
+		--if first Time true, set unit FireStats to ReturnFire, set to Hold Position, start AmbushCounter --setFirstTime False
 		if boolPrevCloaked==false and boolCloaked==true then
 			Spring.Echo("Cloaking")
 			Signal(SIG_AMBUSH)

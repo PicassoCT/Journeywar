@@ -62,8 +62,8 @@ end
 
 function FireTales()
 if math.random(0,1)==1 then
-time=math.ceil(math.random(42000,60000))
-Sleep(time)
+Time=math.ceil(math.random(42000,60000))
+Sleep(Time)
 -- Story One: ".. died over fifteen times, on the third star near the horizon. On a gas giants ice-covered moon.
 				 -- We were locked in a stalemate for 1.5 orbs. Icequakes, Glacierbridging, Shardartillery, you name it they threw it at as.
  			-- And everywhere this thin film of frozzen carb,  which sends you instantly drifting if you dont hook.

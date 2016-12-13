@@ -134,10 +134,10 @@ function walk()
 	Turn(bUpR,z_axis,math.rad(-16),1)
 	Turn(fUpL,z_axis,math.rad(16),1)
 	Turn(bUpL,z_axis,math.rad(16),1)
-	time= 0
+	Time= 0
 	while true do
-		time = time +350
-		factor= math.sin(time/3500)
+		Time = Time +350
+		factor= math.sin(Time/3500)
 		bodyfactor= 3*factor
 		invBFac = bodyfactor *-1
 		Turn(body,x_axis,math.rad(bodyfactor),0.25)

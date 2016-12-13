@@ -97,16 +97,16 @@ function flameEmit()
 		Sleep(50)
 	end
 end
-function spawnFire(time,x,y,z)
+function spawnFire(Time,x,y,z)
 	local spSpawnCEG=	Spring.SpawnCEG
-	for i=1, time, 1 do
+	for i=1, Time, 1 do
 		spSpawnCEG("unitonfire",x,y,z,0,1,0,50,0)
 		spSpawnCEG("unitonfire",x,y+7,z,0,1,0,50,0)
 		
 		Sleep(90)
 	end
 	
-	for i=1,time*3,1 do
+	for i=1,Time*3,1 do
 		spSpawnCEG("blackerthensmoke",x,y,z,0,1,0,50,0)
 		Sleep(90)
 	end
@@ -150,7 +150,7 @@ function goTooKillThemAllPicaMon()
 	
 end
 --Reset the Parts
-function randomFire(time)					
+function randomFire(Time)					
 	
 	x,y,z=Spring.GetUnitPosition(unitID)
 	
@@ -160,7 +160,7 @@ function randomFire(time)
 	randz=math.random(-150,150)
 	randx=math.random(-150,150)
 	randz=math.random(-150,150)
-	while (temptime < time) do
+	while (temptime < Time) do
 		
 		
 		spSpawnCEG("flames",x+randx,y,z+randz,0,1,0,50,0)

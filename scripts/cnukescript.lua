@@ -118,8 +118,8 @@ function shockwave()
 		splEmitSfx(spiralCenter,1025)
 		splEmitSfx(spiralCenter,1025)
 		splEmitSfx(spiralCenter,1025)
-		time=i*10
-		Sleep(time)
+		Time=i*10
+		Sleep(Time)
 	end
 end
 

@@ -1181,13 +1181,13 @@ function mONmoNmoN()
 	end
 end 
 
-function bloodEmit(time)
-	while(time >0) do
+function bloodEmit(Time)
+	while(Time >0) do
 		EmitSfx(body,1025)
 		EmitSfx(body,1025)
 		EmitSfx(body,1025)
 		Sleep(90)
-		time=time-90
+		Time=Time-90
 	end
 end
 
@@ -1342,7 +1342,7 @@ function FloraPhysixLoop() --Programmed by Cubex - Warning: This function pseudo
 	--Parameters
 	--local Randomness = 0.50 --Adding some random to trees, never conviced me, use at your wish
 	local Scale = 0.9 --0.6 --Scales the current applied force, bigger means more shakey
-	local Speed = 0.12 --How much time takes a tree to turn to spetified angle, improves smoothness (too high might cause too radical moves, too low can cause lack of time to react)
+	local Speed = 0.12 --How much Time takes a tree to turn to spetified angle, improves smoothness (too high might cause too radical moves, too low can cause lack of Time to react)
 	local RotationLimit = pi / 10 --6 --The maximum angle which a tree can rotate
 	local MoveThreshold = pi / 22 --If the movement is less than this, don't move, used to avoid "shake effect" in trees
 	local RefreshInterval = 66 --How much ms to wait for each iteration
@@ -1509,7 +1509,7 @@ function AppendixPhysixLoop() --Programmed by Cubex - Warning: This function pse
 	--Parameters
 	--local Randomness = 0.50 --Adding some random to trees, never conviced me, use at your wish
 	local Scale = 0.98 --0.6 --Scales the current applied force, bigger means more shakey
-	local Speed = 0.16 --How much time takes a tree to turn to spetified angle, improves smoothness (too high might cause too radical moves, too low can cause lack of time to react)
+	local Speed = 0.16 --How much Time takes a tree to turn to spetified angle, improves smoothness (too high might cause too radical moves, too low can cause lack of Time to react)
 	local RotationLimit = pi / 12 --6 --The maximum angle which a tree can rotate
 	local MoveThreshold = pi / 64--If the movement is less than this, don't move, used to avoid "shake effect" in trees
 	local RefreshInterval = 100 --How much ms to wait for each iteration

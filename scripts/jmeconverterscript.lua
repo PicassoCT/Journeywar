@@ -267,9 +267,9 @@ Spring.SetUnitNanoPieces(unitID,{ center})
 boolLaunch=false
 dtime=10000
 
-function launchBuilding(time)
+function launchBuilding(Time)
 	boolLaunch=true
-	dtime=time
+	dtime=Time
 end
 
 function launchBuildingThread()

@@ -374,8 +374,8 @@ function script.Create()
 end
 
 function waitForAnEnd()
-	time=math.ceil(math.random(12000,48000))
-	Sleep(time)
+	Time=math.ceil(math.random(12000,48000))
+	Sleep(Time)
 	Move(center,y_axis,-67,0.04)
 	WaitForMove(center,y_axis)
 	Spring.DestroyUnit(unitID,true,false)

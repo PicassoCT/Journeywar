@@ -254,8 +254,8 @@ function pranceStance()
 	WTurn(gdbhleg,x_axis,math.rad(-24),1.8)
 	WaitForMove(ghostdance,y_axis)
 	while boolIdle== true do
-	time=math.ceil(math.random(500,1200))
-	Sleep(time)
+	Time=math.ceil(math.random(500,1200))
+	Sleep(Time)
 	swooshTail()
 	end
 end
@@ -330,13 +330,13 @@ if maRa() == true then
 end
 end
 
-function threadedLegs(prevtime,time)
+function threadedLegs(prevtime,Time)
 	Sleep(prevtime)
 	Show(gdbhlegj)
 	Show(gdflegj)
 	Hide(gdfrontleg)
 	Hide(gdbhleg)
-	Sleep(time)
+	Sleep(Time)
 	Hide(gdbhlegj)
 	Hide(gdflegj)
 	Show(gdfrontleg)

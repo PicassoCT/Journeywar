@@ -16,7 +16,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 	{
 
 
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.066902, ['s']=0.200707},
 			{['c']='turn',['p']=LegUL, ['a']=z_axis, ['t']=0.287421, ['s']=0.862262},
@@ -58,7 +58,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 		}
 	},
 	{
-		['time'] = 11,
+		['Time'] = 11,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.567134, ['s']=1.667439},
 			{['c']='turn',['p']=LegUL, ['a']=z_axis, ['t']=0.721728, ['s']=1.447691},
@@ -93,7 +93,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.000000, ['s']=2.430575},
 			{['c']='turn',['p']=LegUL, ['a']=z_axis, ['t']=0.000000, ['s']=3.093120},
@@ -128,7 +128,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 		}
 	},
 	{
-		['time'] = 27,
+		['Time'] = 27,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegUL, ['a']=z_axis, ['t']=0.000000, ['s']=0.000000},
@@ -170,7 +170,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=-0.004479, ['s']=0.001230},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.015884, ['s']=0.501093},
@@ -178,7 +178,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 			{['c']='turn',['p']=Kreis02, ['a']=x_axis, ['t']=0.006918, ['s']=0.010553},
 			{['c']='turn',['p']=Kreis02, ['a']=z_axis, ['t']=-0.095059, ['s']=0.188188},
@@ -186,7 +186,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003503, ['s']=0.009578},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.057148, ['s']=0.049517},
@@ -199,7 +199,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 Animations['stand'] = {
 
 	{
-		['time'] = 3,
+		['Time'] = 3,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL01, ['a']=x_axis, ['t']=2.478740, ['s']=0.334477},
 			{['c']='turn',['p']=LegUL01, ['a']=z_axis, ['t']=1.146267, ['s']=0.292708},
@@ -228,7 +228,7 @@ Animations['stand'] = {
 		}
 	},
 	{
-		['time'] = 26,
+		['Time'] = 26,
 		['commands'] = {
 			{['c']='turn',['p']=UpperJaw, ['a']=x_axis, ['t']=0.119934, ['s']=0.000738},
 			{['c']='turn',['p']=UpperJaw, ['a']=z_axis, ['t']=0.058119, ['s']=0.230964},
@@ -248,12 +248,12 @@ Animations['stand'] = {
 		}
 	},
 	{
-		['time'] = 41,
+		['Time'] = 41,
 		['commands'] = {
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 		}
 	},
@@ -261,7 +261,7 @@ Animations['stand'] = {
 
 Animations['meinFuehrerIcanWalk'] = {
 	{
-		['time'] = 1,
+		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.066902, ['s']=0.200707},
 			{['c']='turn',['p']=LegUL, ['a']=y_axis, ['t']=0.287421, ['s']=0.862262},
@@ -303,7 +303,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 11,
+		['Time'] = 11,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.567134, ['s']=1.667439},
 			{['c']='turn',['p']=LegUL, ['a']=y_axis, ['t']=0.721728, ['s']=1.447691},
@@ -338,7 +338,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 20,
+		['Time'] = 20,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.000000, ['s']=2.430575},
 			{['c']='turn',['p']=LegUL, ['a']=y_axis, ['t']=0.000000, ['s']=3.093120},
@@ -373,7 +373,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 27,
+		['Time'] = 27,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegUL, ['a']=y_axis, ['t']=0.000000, ['s']=0.000000},
@@ -415,7 +415,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 36,
+		['Time'] = 36,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=-0.004479, ['s']=0.001230},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.015884, ['s']=0.501093},
@@ -423,7 +423,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 42,
+		['Time'] = 42,
 		['commands'] = {
 			{['c']='turn',['p']=Kreis02, ['a']=x_axis, ['t']=0.006918, ['s']=0.010553},
 			{['c']='turn',['p']=Kreis02, ['a']=y_axis, ['t']=-0.095059, ['s']=0.188188},
@@ -431,7 +431,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 53,
+		['Time'] = 53,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003503, ['s']=0.009578},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.057148, ['s']=0.049517},
@@ -440,7 +440,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 66,
+		['Time'] = 66,
 		['commands'] = {
 			{['c']='turn',['p']=UpperJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=UpperJaw, ['a']=y_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -450,7 +450,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 68,
+		['Time'] = 68,
 		['commands'] = {
 			{['c']='turn',['p']=Kreis02, ['a']=x_axis, ['t']=0.000000, ['s']=0.006485},
 			{['c']='turn',['p']=Kreis02, ['a']=y_axis, ['t']=-0.000000, ['s']=0.089118},
@@ -458,7 +458,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 78,
+		['Time'] = 78,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.024014, ['s']=0.153830},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.236040, ['s']=1.341689},
@@ -466,7 +466,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 82,
+		['Time'] = 82,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003375, ['s']=0.154787},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.037521, ['s']=1.488894},
@@ -474,7 +474,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.011897, ['s']=0.063916},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.141841, ['s']=0.782405},
@@ -482,7 +482,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.002114, ['s']=0.058702},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.014234, ['s']=0.765643},
@@ -490,7 +490,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 95,
+		['Time'] = 95,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.012682},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-0.000000, ['s']=0.085405},
@@ -498,7 +498,7 @@ Animations['meinFuehrerIcanWalk'] = {
 		}
 	},
 	{
-		['time'] = 100,
+		['Time'] = 100,
 		['commands'] = {
 		}
 	},
@@ -508,7 +508,7 @@ Animations['talk'] = {
 	{
 
 	{
-		['time'] = 66,
+		['Time'] = 66,
 		['commands'] = {
 			{['c']='turn',['p']=UpperJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=UpperJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
@@ -518,7 +518,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 68,
+		['Time'] = 68,
 		['commands'] = {
 			{['c']='turn',['p']=Kreis02, ['a']=x_axis, ['t']=0.000000, ['s']=0.006485},
 			{['c']='turn',['p']=Kreis02, ['a']=z_axis, ['t']=-0.000000, ['s']=0.089118},
@@ -526,7 +526,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 78,
+		['Time'] = 78,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.024014, ['s']=0.153830},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.236040, ['s']=1.341689},
@@ -534,7 +534,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 82,
+		['Time'] = 82,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003375, ['s']=0.154787},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.037521, ['s']=1.488894},
@@ -542,7 +542,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 86,
+		['Time'] = 86,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.011897, ['s']=0.063916},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.141841, ['s']=0.782405},
@@ -550,7 +550,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 90,
+		['Time'] = 90,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.002114, ['s']=0.058702},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.014234, ['s']=0.765643},
@@ -558,7 +558,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 95,
+		['Time'] = 95,
 		['commands'] = {
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.012682},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.085405},
@@ -566,7 +566,7 @@ Animations['talk'] = {
 		}
 	},
 	{
-		['time'] = 100,
+		['Time'] = 100,
 		['commands'] = {
 		}
 	},
@@ -622,7 +622,7 @@ if not Animations[animname] then Spring.Echo(animname) end
             animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
         end
         if(i < #anim) then
-            local t = anim[i+1]['time'] - anim[i]['time'];
+            local t = anim[i+1]['Time'] - anim[i]['Time'];
             Sleep(t*33); -- sleep works on milliseconds
         end
     end

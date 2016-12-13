@@ -460,10 +460,10 @@ function launchBuilding(delayTime)
 end
 
 function ThreadLauncher()
-	time=math.ceil(math.random(1500,8000))
+	Time=math.ceil(math.random(1500,8000))
 	while true do
 		while boolLaunch==false do
-			Sleep(time)
+			Sleep(Time)
 		end		
 		
 		LaunchSkywards()

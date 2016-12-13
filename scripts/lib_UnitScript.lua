@@ -103,12 +103,12 @@ function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, r
 		end
 	end
 	functionbehaviour=behaviour or knallfrosch
-	time=0			
+	Time=0			
 	local SpawnCeg=Spring.SpawnCEG
 	v= {x=0,y=0,z=0}
 	
-	while lifetimefunc(time)==true do
-		x,y,z,v=functionbehaviour(x,y,z,time,v)
+	while lifetimefunc(Time)==true do
+		x,y,z,v=functionbehaviour(x,y,z,Time,v)
 		
 		if boolStrobo==true then
 			d=randVec()
@@ -117,7 +117,7 @@ function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, r
 			SpawnCeg(cegname,x,y,z,0,1,0,range,damage)
 		end
 		
-		time=time+rate
+		Time=Time+rate
 		Sleep(rate)
 	end
 	
@@ -657,7 +657,7 @@ function showTWrap(piecenr)
 end
 
 -->idle Animation Loop
-function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, time, boolNoDown)
+function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, Time, boolNoDown)
 	
 	Turn(Body,axis, math.rad(degree),speed)
 	for i=1, #FrontLeg, 1 do
@@ -688,7 +688,7 @@ function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, tim
 		end
 	end
 	WaitForTurn(Body,axis)
-	Sleep(time)
+	Sleep(Time)
 	
 	Turn(Body,axis, math.rad(BodyBackDeg),speed)
 	for i=1, #FrontLeg, 1 do
@@ -718,7 +718,7 @@ function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, tim
 		end		
 	end		
 	WaitForTurn(Body,axis)
-	Sleep(time)
+	Sleep(Time)
 end
 
 function HideWrap(piecenr)
@@ -1221,12 +1221,12 @@ function worldPosToLocPos(owpX,owpY,owpZ,wpX,wpY,wpZ)
 end
 
 --> Flashes a Piece for debug purposes
-function flashPiece(pname,time,rate)
+function flashPiece(pname,Time,rate)
 	r=rate
-	t=time or 1000
+	t=Time or 1000
 	if not rate then r=50 end
 	
-	for i=0,time,2*r do
+	for i=0,Time,2*r do
 		Sleep(r)
 		Show(pname)
 		Sleep(r)
@@ -2222,7 +2222,7 @@ function vardump(value, depth, key)
 	end
 	
 	--> Play a soundfile only by unittype
-	function PlaySoundByUnitDefID(unitdef, soundfile,loudness, time, nrOfUnitsParallel,predelay)
+	function PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel,predelay)
 		if not unitdef then return false end
 		if predelay and predelay > 0 then Sleep(predelay) end
 		
@@ -2235,8 +2235,8 @@ function vardump(value, depth, key)
 		if GG.UnitDefSoundLock[unitdef] < nrOfUnitsParallel then
 			GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]+1
 			Spring.PlaySoundFile(soundfile,loud)
-			if time > 0 then 
-				Sleep(time)
+			if Time > 0 then 
+				Sleep(Time)
 			end
 			GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]-1
 			return true
@@ -3255,7 +3255,7 @@ function vardump(value, depth, key)
 		end
 		
 		
-		--Sleep time till next line
+		--Sleep Time till next line
 		_,unitheigth,_=Spring.GetUnitCollisionVolumeData(UnitID)
 		GG.Dialog[UnitID][#GG.Dialog[UnitID]+1]={
 			frames=timeToShowFrames,
@@ -3921,7 +3921,7 @@ end
 		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
 		dif=yp- Spring.GetGroundHeight(xp,zp)
 		
-		time=0 
+		Time=0 
 		
 		WaitForTurn(FirstAxisPoint,y_axis)
 	end

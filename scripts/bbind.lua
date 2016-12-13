@@ -498,17 +498,17 @@ function maschineShutDown()
 	Sleep(3000)
 end
 
-function emitStuff(piecename, time, boolIsBio)
-	time=math.ceil(time/50)
+function emitStuff(piecename, Time, boolIsBio)
+	Time=math.ceil(Time/50)
 	if boolIsBio==true then
-		for i=1,math.ceil(time/50), 1 do
+		for i=1,math.ceil(Time/50), 1 do
 			EmitSfx(piecename,1029)
 			Sleep(50)
 		end
 		
 	else 
 		
-		for i=1,math.ceil(time/50), 1 do
+		for i=1,math.ceil(Time/50), 1 do
 			EmitSfx(piecename,1030) 
 			Sleep(50)
 		end

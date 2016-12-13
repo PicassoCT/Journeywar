@@ -1104,7 +1104,7 @@ Move(dramatisPersona[personNr][2],z_axis,targetDist,dramatisPersona[personNr][10
 --randomTurn=math.random(0,360)
 --Turn(dramatisPersona[personNr][1],y_axis,math.rad(randomTurn),dramatisPersona[personNr][10])
 
-		-- now we need a time, and a idleanimation so the person arriving at the ways end, doesent just stands around
+		-- now we need a Time, and a idleanimation so the person arriving at the ways end, doesent just stands around
 		idleTime=math.random(minIdle,maxIdle)
 		spendTime=0
 			while (spendTime< idleTime) do

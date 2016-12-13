@@ -448,8 +448,8 @@ function emitSFX(totaltime)
 	
 end
 
-function sunSet(time)
-	local x=time
+function sunSet(Time)
+	local x=Time
 	while x > 0 do
 		for i=1, #SunTable, 1 do
 			EmitSfx(SunTable[i],1026)

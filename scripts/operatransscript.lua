@@ -67,7 +67,7 @@ local overhead=0
 local cargo=0
 local cargoMax=5
 local RESTORE_DELAY = (Spring.UnitScript.GetLongestReloadTime(unitID) * 2 ) +1024
--- picks a sensible time to wait before trying to turn the turret back to default.
+-- picks a sensible Time to wait before trying to turn the turret back to default.
 
 
 function script.Create()
@@ -110,7 +110,7 @@ end
 
 function script.AimWeapon1( heading, pitch)
 	
-    -- each time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same time.
+    -- each Time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same Time.
 	Turn(body1, y_axis, heading, 6)
 	Turn(oppod1gun2, x_axis, -pitch,5)
 	Turn(oppod1gun1, x_axis, -pitch,5)
@@ -156,7 +156,7 @@ return body1 end
 
 function script.AimWeapon2( heading, pitch)
 	
-    -- each time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same time.
+    -- each Time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same Time.
 	Turn(body2, y_axis, heading, 6)
 	Turn(oppod2gun2, x_axis, -pitch,5)
 	Turn(oppod2gun1, x_axis, -pitch,5)
@@ -415,7 +415,7 @@ end
 
 function script.AimWeapon3( heading, pitch)
 	
-    -- each time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same time.
+    -- each Time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same Time.
 	Turn(body1, y_axis, heading, 6)
 	Turn(oppod1gun2, x_axis, -pitch,5)
 	Turn(oppod1gun1, x_axis, -pitch,5)
@@ -461,7 +461,7 @@ return body1 end
 
 function script.AimWeapon4( heading, pitch)
 	
-    -- each time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same time.
+    -- each Time the Signal is called, all other functions with the same SignalMask will stop running. This makes sure the tank isn't trying to fire at something, and restore the turret position, at the same Time.
 	Turn(body2, y_axis, heading, 6)
 	Turn(oppod2gun2, x_axis, -pitch,5)
 	Turn(oppod2gun1, x_axis, -pitch,5)

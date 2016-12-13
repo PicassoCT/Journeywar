@@ -1104,7 +1104,7 @@ end
 	local strings="sounds/VaryFoo/VaryFoo"
 	local nrOfUnitsParallel=3
 		while true do
-		time=math.random(7000,12000)
+		Time=math.random(7000,12000)
 		loudness=math.min(1,loudness+0.01*signum)
 		
 		
@@ -1115,12 +1115,12 @@ end
 			
 			dice=math.ceil(math.random(4,6))
 			soundfile=strings..dice..".ogg"
-			PlaySoundByUnitDefID(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
+			PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel)
 				elseif boolAttack==true then
 				boolAttack=false
 				dice=math.ceil(math.random(2,3))
 				soundfile=strings..dice..".ogg"
-				PlaySoundByUnitDefID(unitdef, soundfile,loudness, time, nrOfUnitsParallel)
+				PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel)
 				end
 		Sleep(16000)
 		end

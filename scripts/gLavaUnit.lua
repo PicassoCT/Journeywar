@@ -575,7 +575,7 @@ intVar=1
 		
 		Spring.MoveCtrl.SetPosition(unitID,xOrg,yOrg,zOrg)
 		Sleep(1000)
-		intVar=(intVar+1)%4--from time to time this needs a update or the terraforming is going to screw it over
+		intVar=(intVar+1)%4--from Time to Time this needs a update or the terraforming is going to screw it over
 	end
 end
 

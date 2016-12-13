@@ -308,8 +308,8 @@ end
 
 
 function onFire(times,endtimes)
-	time=math.ceil(math.random(100,160))
-	StartThread(dustCloudPostExplosion,unitID,1,time,50,0,1,0)
+	Time=math.ceil(math.random(100,160))
+	StartThread(dustCloudPostExplosion,unitID,1,Time,50,0,1,0)
 	Schlackung()
 	--turnEmitorToTheWind()
 	Hide(base02)

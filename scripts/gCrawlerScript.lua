@@ -208,7 +208,7 @@ function acquireVehicleDegree()
 		--Parameters
 		--local Randomness = 0.50       --Adding some random to trees, never conviced me, use at your wish
 		local Scale = 0.9   --0.6           --Scales the current applied force, bigger means more shakey
-		local Speed = 0.12              --How much time takes a tree to turn to spetified angle, improves smoothness (too high might cause too radical moves, too low can cause lack of time to react)
+		local Speed = 0.12              --How much Time takes a tree to turn to spetified angle, improves smoothness (too high might cause too radical moves, too low can cause lack of Time to react)
 		local RotationLimit = pi / 10  --6  --The maximum angle which a tree can rotate
 		local MoveThreshold = pi / 22 --If the movement is less than this, don't move, used to avoid "shake effect" in trees
 		local RefreshInterval = 66     --How much ms to wait for each iteration

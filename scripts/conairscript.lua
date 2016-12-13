@@ -363,7 +363,7 @@ function moveThatTrooper(arrivingAlphaX,arrivingAlphaZ,moveSpeed,buildProgress)
 	end
 	
 	
-	--way -- time = alpha /
+	--way -- Time = alpha /
 	local moveSpeedZ= (DistanceZ+ zDistanceOfOld)/((alphaZInDegree+alphaOfOldZ+ (0.000001))/moveSpeed)
 	--MoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeedMoveSpeed																
 	
