@@ -1,10 +1,10 @@
-local unitName = "zombie"
+local unitName = "TheCouple"
 
 local unitDef = {
-	name = "zombie",
-	Description = "Zombie",
-	objectName = "zombie.s3o",
-	script = "zombiescript.lua",
+	name = "Couple",
+	Description = "- Love conquers all",
+	objectName = "gCoupleM7.s3o",
+	script = "gTheCoupleM7script.lua",
 	buildPic = "placeholder.png",
 	--cost
 	buildCostMetal = 350,
