@@ -1,8 +1,19 @@
 
+	function missionStepAndTime(expectedStep, Time)
+		if not Time then
+			return MissionFunctionTable[7][3] == expectedStep 
+		end
+		if expectedStep and Time then
+			return MissionFunctionTable[7][3]== expectedStep and frame-MissionFunctionTable[7][2] > Time 
+		end
+	end
+	
+	function nextStep()
+		MissionFunctionTable[7][3] =MissionFunctionTable[7][3] + 1
+	end
 	
 	function Misson7InFairAndLoveEverythingIsWar(frame)
-		
-		--S-etUp
+
 		if MissionFunctionTable[7][2]== nil then MissionFunctionTable[7][2]=frame end
 		if MissionFunctionTable[7][3]== nil then 
 			MissionFunctionTable[7][3]= {}
@@ -10,11 +21,9 @@
 		end
 		
 		
-		mT=frame-MissionFunctionTable[7][2]
-		if MissionFunctionTable[7][3] == -1 and mT > 9200 then
-			--Drop Diamond
+		if missionStepAndTime(1) then 
 			
-			MissionFunctionTable[7][3] =MissionFunctionTable[7][3] +1
+			nextStep()
 			return false
 		end
 		
