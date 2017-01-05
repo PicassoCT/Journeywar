@@ -1,7 +1,7 @@
 ---http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
-local weaponName = "jvaryfoomark"
+local weaponName = "jvarytaraompf"
 local weaponDef = {
-	name = "nomnomnom",
+	name = "ompf",
 	weaponType = [[Melee]],
 	
 	-- --soundHit = "null",
@@ -12,7 +12,7 @@ local weaponDef = {
 	--physics
 	weaponVelocity = 450,
 	reloadtime = 1,
-	range = 120,
+	range = 300,
 	sprayAngle              = 300,
 	 tolerance               = 800,
 	lineOfSight = true,	 

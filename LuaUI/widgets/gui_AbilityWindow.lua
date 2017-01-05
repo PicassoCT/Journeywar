@@ -46,19 +46,7 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 updateCommandsSoon = false
 
-defaultCaptionByUnitType={
---centrail 
-	["cwallbuilder"]= "Terraform",
-	["mtw"]= "Grnd.Trooper\n Synthsoldier",
-	["bg"]= "Ballistic\nShield",
-	["bg2"]= "Ballistic\nShield",
-	["mdigg"]= "Start\nMining",
-	["mdiggmex"]= "Stop\nMining",
-	["citadell"]= "Energy\nShield",
-
---journeyman
-	["beanstalk"]= "Unroot",
-}
+defaultCaptionByUnitType= VFS.Include('LuaUI/widgets/ability_captions.lua', nil, VFSMODE)
 
 
 ability_window_height = "23%"--180
@@ -504,7 +492,11 @@ function widget:GameFrame(f)
 			unitTypeButtonMap["default"]("default")
 			--Check for captionReplacement
 			if defaultCaptionByUnitType[ud.name] then
-				onOffButton.caption = defaultCaptionByUnitType[ud.name] 
+				if onOffButton.caption== defaultCaptionByUnitType[ud.name].active then
+					onOffButton.caption = defaultCaptionByUnitType[ud.name].passive 
+				else
+					onOffButton.caption = defaultCaptionByUnitType[ud.name].active 
+				end
 			else
 				onOffButton.caption = "ABILITY"
 			end

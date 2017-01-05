@@ -157,7 +157,7 @@
 								end
 							end
 							--Spring.Echo("JW_LANDLORD:ADD-----------------------")
-							--printOUT(anyTable)	
+							--print2DMap(anyTable)	
 							return anyTable
 						end 	
 				end
@@ -187,7 +187,7 @@
 								end
 							end
 							--Spring.Echo("JW_LANDLORD:SUB-----------------------")
-							--printOUT(anyTable)		
+							--print2DMap(anyTable)		
 							return anyTable	
 						end 
 				end
@@ -217,7 +217,7 @@
 								end
 							end
 							--Spring.Echo("JW_LANDLORD:SUB-----------------------")
-							--printOUT(anyTable)		
+							--print2DMap(anyTable)		
 							return anyTable	
 						end 				
 					end	
@@ -241,7 +241,7 @@
 								end
 							end
 							--Spring.Echo("JW_LANDLORD:SUB-----------------------")
-							--printOUT(anyTable)		
+							--print2DMap(anyTable)		
 							return anyTable	
 						end 
 					
@@ -272,7 +272,7 @@
 				
 				for i=1,table.getn(GG.DynDefMap), 1 do
 					--Spring.Echo(GG.DynDefMap[i])
-					--printOUT(GG.DynRefMap[i])
+					--print2DMap(GG.DynRefMap[i])
 					local x,z=math.ceil(GG.DynDefMap[i].x),math.ceil(GG.DynDefMap[i].z)
 					halfSize= GG.DynDefMap[i].Size/2
 					--<Blend&FilterFunc>
@@ -488,13 +488,13 @@
 				end	
 			end
 			
-			--printOUT(terrainMap,squareSideDimension)
+			--print2DMap(terrainMap,squareSideDimension)
 			return terrainMap
 		end
 		
 		
 		
-		function printOUT(tmap,squareSideDimension)
+		function print2DMap(tmap,squareSideDimension)
 			map={}
 			local map=tmap
 			step=8
@@ -781,7 +781,7 @@
 			
 			
 			--Spring.Echo("JWL_------------LANDLORD--------------------------Printing Out orgTerrainMap")
-			--	printOUT(orgTerrainMap)
+			--	print2DMap(orgTerrainMap)
 		end
 		
 		
@@ -899,7 +899,7 @@
 					--Spring.Echo("JWL_JWLandLord_offsetstartx:",offsetstartx.." | offsetstartz",offsetstartz)
 					
 					--Spring.Echo("JWL_JWLandLord_TableDance",table.getn(GroundDeformation))
-					--printOUT(GroundDeformation,56)
+					--print2DMap(GroundDeformation,56)
 					
 					
 					--determinate
@@ -1062,7 +1062,7 @@
 				TerraInFormTable()
 				
 				WaterOffsetMain= getGlobalOffset()
-				--	printOUT(orgTerrainMap)
+				--	print2DMap(orgTerrainMap)
 			end
 			
 			--by now we have the global HeightMap stored in the TerrainMapWorkingCopy

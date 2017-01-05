@@ -244,7 +244,7 @@ function unitBuiltCheck()
 end
 
 function sumSiniUp(buildProgress, alphaX)
-	
+	if not buildProgress or type(buildProgress) ~="number" then return 0 end
 	local sumItUp=0
 	for com2Sin=0, buildProgress, 1 do
 		sumItUp=(math.sin(math.rad(com2Sin*alphaX)))+ sumItUp
@@ -469,8 +469,7 @@ valToAdd=0.1
 function ropeThread()
 	-- Resets the Trooper
 	
-	if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
-	lastLoudness=lastLoudness+valToAdd
+	lastLoudness=getLoud(lastLoudness)
 	PlaySoundByUnitDefID(conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 	
 	
@@ -822,8 +821,9 @@ function ropeThread()
 	end
 	----Spring.Echo("OutOfRopeThread")
 	Hide(bgdrop)
-	
-	Spring.SetUnitNoDraw(buildID,false)
+	if Spring.ValidUnitID(buildID)==true then
+		Spring.SetUnitNoDraw(buildID,false)
+	end
 	Turn(swingersClub,x_axis,math.rad(0),150)
 	Turn(bgdrop,y_axis,math.rad(0),150)
 	Turn(swingersClub,z_axis,math.rad(0),150)
@@ -836,7 +836,7 @@ function ropeThread()
 	
 	resetRope()
 	ropeDrop()
-	buildID= -666
+	buildID= nil
 end
 
 
@@ -1022,8 +1022,7 @@ function script.Create()
 	
 	Hide(bgdrop)
 	StartThread(landed)
-	if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
-	lastLoudness=lastLoudness+valToAdd
+	lastLoudness=getLoud(lastLoudness)
 	StartThread(PlaySoundByUnitDefID,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 end
 _,maxhealth=Spring.GetUnitHealth(unitID)
@@ -1070,11 +1069,22 @@ function script.StopBuilding()
 	
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
+sign=1
+function getLoud(lastLoudness)
+	if lastLoudness >= 1 then
+		sign=-1
+		
+	elseif  lastLoudness < 0.3 then
+		sign=1
+
+	end
+	return lastLoudness+valToAdd*sign
+end
 
 function script.StartBuilding(heading, pitch)
 	
-	if lastLoudness >= 1 or lastLoudness < 0.5 then valToAdd=valToAdd*-1 end
-	lastLoudness=lastLoudness+valToAdd
+	lastLoudness=getLoud(lastLoudness)
+
 	StartThread(PlaySoundByUnitDefID,conairDefID, "sounds/conair/cConAir.wav",lastLoudness, 1000, 1,0)
 	
 	boolRopeRelease=false

@@ -525,51 +525,53 @@ function playSoundByUnitTypOS(unitID,loudness,SoundNameTimeT)
 end
 
 -->partOfShipPartOfCrew binds a creature to a piece
-function partOfShipPartOfCrew( point, CreatureID,MotherID)
-	Spring.SetUnitNeutral(CreatureID,true)
-	Spring.MoveCtrl.Enable(CreatureID,true)
-	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
-	roX,roY,roZ=0,0,0
+function partOfShipPartOfCrew( point, VaryFooID,motherID)
+	Spring.SetUnitNeutral(VaryFooID,true)
+	Spring.UnitScript.AttachUnit(point,VaryFooID)
+	Spring.MoveCtrl.Enable(VaryFooID,true)
+
 	
-	while GGboolBuildEnded == false do
-		tx,ty,tz=spGetUnitPiecePosDir(unitID,CreatureID)
-		Spring.MoveCtrl.SetPosition(CreatureID,tx+math.random(-5,5),ty,tz+math.random(-5,5))
-		Spring.MoveCtrl.SetRotation(CreatureID,roX, roY,roZ)
-		roX,roY,roZ=roX+(math.random(-100,100)/10000),roY+(math.random(-100,100)/10000),roZ+(math.random(-100,100)/10000)
+	while GG.BuildCompleteAvatara[motherID] == false  do
+		tx,ty,tz=spGetUnitPiecePosDir(unitID,VaryFooID)
+		roX,roY,roZ=roX+math.random(-100,100)/1000,		roY+math.random(-100,100)/1000,		roZ+math.random(-100,100)/1000
+		Spring.MoveCtrl.SetRotation(VaryFooID,roX, roY,roZ)
 		Sleep(500)
+		
 	end
 	
-	Spring.SetUnitAlwaysVisible(CreatureID,false)
-	Spring.DestroyUnit(CreatureID,true,true)
+	if GG.BuildCompleteAvatara[motherID] == true then	
+		Spring.SetUnitAlwaysVisible(VaryFooID,false)
+		Spring.DestroyUnit(VaryFooID,false,true)
+	else
+		Spring.UnitScript.DropUnit(VaryFooID)
+		Spring.MoveCtrl.Disable(VaryFooID)
+	end
 end
-
 
 --================================================================================================================
 --OS Support Functionality
 
 
 --> Sorts Pieces By Height in Model
-function sortPiecesByHeight(ableStableTableOfBabelEnable)
-	bucketSortList={}
+function sortPiecesByHeight(listOfPieces)
+local	bucketSortList={}
+	pieceHeigthMap={}
+	lowestValue=math.huge
+	heighestValue=-math.huge
 	
-	for i=1,#ableStableTableOfBabelEnable do
-		px,py,pz=Spring.GetUnitPiecePosDir(unitID,ableStableTableOfBabelEnable[i])
-		if not bucketSortList[math.ceil(py)] then 
-			bucketSortList[math.ceil(py)]={}
-		end
+	for num,pieceNum in ipairs(listOfPieces) do
+		px,py,pz=Spring.GetUnitPiecePosition(unitID,pieceNum)
+		pieceHeigthMap[pieceNum]=math.ceil(py)
+		bucketSortList[math.ceil(py)]={}
+		if py < lowestValue then lowestValue= math.ceil(py) end
+		if py > heighestValue then heighestValue= math.ceil(py) end
 	end
-	sortedTable={}
-	index=1
-	for k,v in pairs(bucketSortList) do
-		if type(v)=="number" then
-			sortedTable[index]=ableStableTableOfBabelEnable[v]
-		else
-			for i=1,#v do
-				sortedTable[index]=ableStableTableOfBabelEnable[v[i]]
-			end
-		end
+	
+	for pieceNum, Heigth in pairs(pieceHeigthMap) do
+		bucketSortList[Heigth][#bucketSortList[Heigth]+1]=pieceNum
 	end
-	return sortedTable
+		
+	return bucketSortList, lowestValue, heighestValue
 end
 
 

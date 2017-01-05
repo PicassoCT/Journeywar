@@ -277,9 +277,7 @@
 
 	function FindDangers(unitid, other)
 		--Spring.Echo("On Watch")
-		if AgentTable[unitid].Type == "Hohymen" then
-			
-			
+		if AgentTable[unitid].Type == "Hohymen" then			
 			
 			T=Spring.GetUnitNearestEnemy(unitid,SIGHTDISTANCE,true)
 			if not T then

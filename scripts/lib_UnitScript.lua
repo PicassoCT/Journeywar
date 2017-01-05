@@ -19,7 +19,7 @@ MA 02110-1301, USA.
 ]]--
 --------------DEBUG HEADER
 --Central Debug Header Controlled in UnitScript
-lib_boolDebug= false --GG.BoolDebug or false
+lib_boolDebug= true --GG.BoolDebug or false
 --------------DEBUG HEADER
 
 
@@ -74,12 +74,14 @@ end
 
 function randVec(boolStayPositive)
 	
-	if not boolStayPositive and boolStayPositive == true then 
-		return {x= math.random(0,1),y=math.random(0,1),z=math.random(0,1)}
+	if  boolStayPositive and boolStayPositive == true then 
+		return {x= math.random(0,100)/100,y=math.random(0,100)/100,z=math.random(0,100)/100}
 	else
-		return {x= math.random(-1,1),y=math.random(-1,1),z=math.random(-1,1)}
+		return {x= math.random(-100,100)/100,y=math.random(-100,100)/100,z=math.random(-100,100)/100}
 	end
 end
+
+
 
 --> creates a ceg, that traverses following its behavioural function
 function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
@@ -171,20 +173,26 @@ end
 function distance(x,y, z,xa,ya,za)
 	if xa and ya and za then
 		return math.sqrt(x*xa+y*ya+z*za)
-	else
+	elseif x and y and z then
 		return math.sqrt(x*x+y*y+z*z)
+	elseif x and y then 
+		return math.sqrt((x-y)^2)
 	end
 end
 
 -->returns the Distance between two units
-function GetUnitDistance(idA, idB)
+function distanceUnitToUnit(idA, idB)
+if lib_boolDebug == true then
 	if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return nil end
 	if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return nil end
-
+	if Spring.ValidUnitID(idA)==false  then echo("distanceUnitToUnit::Not a valid UnitID")end
+	if Spring.ValidUnitID(idB)==false  then echo("distanceUnitToUnit::Not a valid UnitID")end
+	
+end
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
-	if not x or not xb then return math.huge end
+	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") end
 	
 	return GetTwoPointDistance(x,y,z,xb,yb,zb)
 end
@@ -570,8 +578,12 @@ function echo(stringToEcho,...)
 		counter=0
 		for k,v in ipairs(arg) do
 			if k and v then
-				Spring.Echo(k.." "..v)
-			else
+				if type(v)== "table" then 
+					echoT(v)
+				else 
+					Spring.Echo(k.." "..v) 
+				end
+			elseif k then
 				Spring.Echo(k)
 			end
 		end
@@ -619,7 +631,7 @@ function maRa()
 end
 
 -->Returns not nil if random
-function maRo()
+function raNil()
 	if math.random(0,1)==1 then return maRa() else return end
 end
 
@@ -796,7 +808,7 @@ function tableCopy(orig)
 end
 
 -->Prints Out a Table	
-function printOUT(tmap,squareSideDimension)
+function print2DMap(tmap,squareSideDimension)
 	local map={}
 	map=tmap
 	step=8
@@ -1177,43 +1189,136 @@ function makeKeyPiecesTable(unitID,piecefunction)
 end
 
 
-function makePieceTable(unitID)
-	RetT={}
-	piecesTable=Spring.GetUnitPieceMap(unitID)
-	for k,v in pairs(piecesTable) do
-		RetT[#RetT+1]=v
+	function makePieceTable(unitID)
+		RetT={}
+		piecesTable=Spring.GetUnitPieceMap(unitID)
+		for k,v in pairs(piecesTable) do
+			RetT[#RetT+1]=v
+		end
+		return RetT
 	end
-	return RetT
-end
 
--->generates a Pieces List 
-function generatepiecesTableAndArrayCode(unitID, boolLoud)
-	bLoud = boolLoud or false
+	-->generates a Pieces List 
+	function generatepiecesTableAndArrayCode(unitID, boolLoud)
+		bLoud = boolLoud or false
+		
+		if bLoud == true then 
+			Spring.Echo("")
+			Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
+			Spring.Echo("piecesTable={}")
+			piecesTable={}
+			piecesTable=Spring.GetUnitPieceList(unitID)
+			--Spring.Echo("local piecesTable={}")
+			if piecesTable ~= nil then
+				for i=1,#piecesTable,1 do
+					workingString=piecesTable[i]
+					Spring.Echo(""..piecesTable[i].." = piece(\""..piecesTable[i].."\")\n piecesTable[#piecesTable+1]= "..piecesTable[i])			
+				end
+				
+				
+			end
+			
+			Spring.Echo("PIECESLIST::END |>-----------------------------")
+		end
+		
+		
+		return makePieceTable(unitID)
+	end
+
+	--> creates a table of pieces with name
+	function makeTableOfNames(name,startnr,endnr)
+		T={}
+		for i=startnr, endnr, 1 do
+			T[#T+1]=name..i	
+		end
+		return T
+	end
 	
-	if bLoud == true then 
-		Spring.Echo("")
-		Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
-		Spring.Echo("piecesTable={}")
-		piecesTable={}
+	--> finds GenericNames and Creates Tables with them
+	function makePiecesTablesByNameGroups(boolMakePiecesTable,boolSilent)
+		
+		boolSilentRun=boolSilent or false
+		pieceMap=Spring.GetUnitPieceMap(unitID)
 		piecesTable=Spring.GetUnitPieceList(unitID)
-		--Spring.Echo("local piecesTable={}")
-		if piecesTable ~= nil then
-			for i=1,#piecesTable,1 do
-				workingString=piecesTable[i]
-				Spring.Echo(""..piecesTable[i].." = piece(\""..piecesTable[i].."\")\n piecesTable[#piecesTable+1]= "..piecesTable[i])			
+		
+		TableByName={}
+		NameAndNumber={}
+		ReturnTable={}
+		
+		for i=1,#piecesTable,1 do
+			s=string.reverse(piecesTable[i])
+			
+			for w in string.gmatch(s,"%d+") do
+				if w then
+					s=string.sub(s,string.len(w),string.len(s))
+					NameAndNumber[i]={name=string.sub(piecesTable[i],1,string.len(piecesTable[i])-string.len(w)),
+						number=string.reverse(w)
+					}
+					
+					if TableByName[	NameAndNumber[i].name] then 
+						TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 
+					else 
+						TableByName[NameAndNumber[i].name] =1 
+					end
+					break
+					
+				end
+			end
+			if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end			
+		end
+		
+		
+		if boolSilentRun== false then
+			for k,v in pairs(TableByName) do
+				if v > 1 then
+					Spring.Echo(k.. " = {}")
+				end
 			end
 			
 			
-		end
+			for k,v in pairs(NameAndNumber) do
+				
+				if v and v.number then
+					Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
+					Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
+				else
+					Spring.Echo(v.name.." = piece("..v.name..")")
+				end
+			end
+			
+			if boolMakePiecesTable and boolMakePiecesTable ==true then
+				generatepiecesTableAndArrayCode(unitID)
+			end
+			
+		else
+			
+			--pack the piecesTables in a UeberTable by Name
+			for tableName,_ in pairs (TableByName) do
+				local PackedAllNames={}
+				--Add the Pieces to the Table
+				for k,v in pairs(NameAndNumber) do
+					
+					if v and v.number and v.name == tableName then
+						piecename=v.name..v.number
+						if lib_boolDebug==true then
+							if lib_boolDebug==true and pieceMap[piecename] then 
+								Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
+							else
+								Spring.Echo("pieceMap contains no piece named "..piecename)
+							end
+						end
+						convertToNumber=tonumber(v.number)
+						PackedAllNames[convertToNumber]= pieceMap[piecename]					
+					end								
+				end
+				ReturnTable[tableName]=PackedAllNames 				
+			end
+			
+			return ReturnTable
+		end	
 		
-		Spring.Echo("PIECESLIST::END |>-----------------------------")
 	end
 	
-	
-	return makePieceTable(unitID)
-end
-
-
 
 --> Transfers a World Position into Unit Space
 function worldPosToLocPos(owpX,owpY,owpZ,wpX,wpY,wpZ)
@@ -1236,6 +1341,7 @@ function flashPiece(pname,Time,rate)
 	
 end
 
+-->allows for a script breakpoint via widget :TODO incomplete
 function stopScript(name)
 	lib_boolOnce=false
 	while true do
@@ -1797,17 +1903,22 @@ function vardump(value, depth, key)
 			if typev== "table" then
 				rEchoT(typev,0)
 			end
-			
-			
-			typek=typek~="table" and typek ~="function"
-			typev=typev~="table" and typev ~="function"
-			if typek and typev and v then
-				Spring.Echo(" "..k.." 	---> 	"..v .." -> 	[ "..((assert(v)) or "nil").." ] ")
-			else
-				Spring.Echo("Key "..k .." -> ".. " holds no value")
-			end
-			
-		
+			nonprintableType={
+						["table"]=true,
+						["function"]=true,
+						["boolean"]=true,
+							}
+			if   nonprintableType[typek] == nil then
+				if  not nonprintableType[typev] then
+					Spring.Echo(" "..k.." 	---> 	"..v.." -> 	[ "..((assert(v))).." ] ")
+				elseif typev== table then				
+					echoT(v)
+				elseif typev=="boolean" then
+							Spring.Echo(" "..k.." 	---> 	"..(boolToString(v)).."  ")
+				else			
+					Spring.Echo("Key "..k .." -> ".. " holds no value")
+				end
+			end		
 		end
 		
 		if lboolAssertTable ==true then
@@ -1819,6 +1930,10 @@ function vardump(value, depth, key)
 		
 		Spring.Echo("================================================================================")
 		
+	end
+	
+	function boolToString(value)
+	if value== true then return "true" else return "false" end
 	end
 	
 	function stringBuilder(length, sign)
@@ -2144,7 +2259,7 @@ function vardump(value, depth, key)
 	function iRand(start, fin)
 		if not fin or fin < start then fin= start+1 end
 		
-		return math.ceil(math.random(start,fin))
+		return math.ceil(sanitizeRandom(start,fin))
 	end
 	
 	function midVector(PointA,PointB)
@@ -2270,7 +2385,7 @@ function vardump(value, depth, key)
 				end
 			end
 		else
-			lplaySoundFile(SoundTable[choosenSound], StandardLoud+math.random(LoudRange*0.1,LoudRange))
+			lplaySoundFile(SoundTable[choosenSound], StandardLoud+math.random(LoudRange/10,LoudRange))
 		end
 	end
 	
@@ -2313,12 +2428,12 @@ function vardump(value, depth, key)
 	end
 	
 	function getHighestPointOfSet(Table,axis)
-	if type(Table)  ~= "Table" then 
+	if type(Table)  ~= "table" then 
 		echo("getHighestPointOfSet:not a table")
 		return nil
 	end
 	
-	if #T < 1 then 
+	if #Table < 1 or table.getn(Table) == 0 then 
 		echo("getHighestPointOfSet:table is empty")
 		return nil
 	end
@@ -2357,6 +2472,37 @@ function vardump(value, depth, key)
 		return Table[index].x,Table[index].y,Table[index].z,index
 	end
 	
+	function getNearestGroundEnemy(id, UnitDefs)
+	ed=Spring.GetUnitNearestEnemy(id)
+	if ed then
+	--early out
+	eType=Spring.GetUnitDefID(ed)
+	
+	if UnitDef[eType].isAirUnit == false then return ed end
+		eTeam=Spring.GetUnitTeam()
+		allUnitsOfTeam=Spring.GetTeamUnits(eTeam)
+		mindist=math.huge
+		foundUnit=nil
+		
+		process(allUnitsOfTeam,
+			function(ied)
+			if ied ~=ed and distanceUnitToUnit(id,ied) < mindist then
+				if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
+					mindist =distanceUnitToUnit(id,ied)
+					foundUnit=ied
+				end
+			end
+			end
+			)
+		if Spring.ValidUnitID(foundUnit)== true then return foundUnit end
+	
+	end
+	
+		
+	
+	end
+	
+	
 	function pieceToPoint(pieceNumber)
 		reTab={}
 
@@ -2367,38 +2513,27 @@ function vardump(value, depth, key)
 	end
 	
 	function piec2Point(piecesTable)
+		if not piecesTable then 
+			echo("lib_UnitScript::piec2Point: No argument recived")
+		return
+		end
+
+		if type(piecesTable)~="table" then
+			echo("lib_UnitScript::piec2Point: Not a valid table- got"..piecesTable.." of type "..type(piecesTable).." instead ")
+		return
+		end
+		
 		reTab={}
-
-		if type(piecesTable)=="number" then
-		reTab.x, reTab.y, reTab.z=Spring.GetUnitPiecePosDir(unitID,piecesTable)
-		assert(reTab.x)
-		return reTab
-		end
-
 	
-		if #piecesTable > 7 then
-		
-		
 			for i=1,#piecesTable do
 				reTab[i]={}
 				reTab[i].Piece =piecesTable[i]
 				reTab[i].x,reTab[i].y,reTab[i].z=Spring.GetUnitPiecePosDir(unitID,piecesTable[i])
 				reTab[i].index=i
 			end
-			assert(reTab[#reTab].x)
+
 			return reTab
-		else
-			if #piecesTable == 0 then return nil end
-		
-			for i=1,#piecesTable do
-				reTab[i]={}
-				reTab[i].Piece =piecesTable[i]
-				reTab[i].x,reTab[i].y,reTab[i].z=Spring.GetUnitPiecePosDir(unitID,piecesTable[i])
-				reTab[i].index=i
-			end
-			
-			return reTab
-		end
+
 	end
 	
 	
@@ -2462,12 +2597,18 @@ function vardump(value, depth, key)
 	end	
 	
 	--> Grabs every Unit in a circle, filters out the unitid
+	function getAllNearPiece(unitID,Piece, Range)
+		px,py,pz=Spring.GetUnitPiecePosDir(unitID,Piece)
+		return 	getAllInCircle(px,pz,Range,unitID)	
+	end
+	
+	--> Grabs every Unit in a circle, filters out the unitid
 	function getAllNearUnit(unitID,Range)
 		px,py,pz=Spring.GetUnitPosition(unitID)
 		return 	getAllInCircle(px,pz,Range,unitID)	
 	end
 	
-	--> Grabs every Unit in a circle, filters out the unitid
+	--> Grabs every Unit in a circle, filters out the unitid or teamid if given
 	function getAllInCircle(x,z,Range,unitID,teamid)
 		if not x or not z then 
 			return {} 
@@ -2668,7 +2809,7 @@ function vardump(value, depth, key)
 	function raFoo( ...)
 		local arg={...}
 		if not arg then return end
-		index= math.random(1,#arg)
+		index= sanitizeRandom(1,#arg)
 		return arg[index]()	
 	end
 	
@@ -3284,100 +3425,7 @@ function vardump(value, depth, key)
 	
 	end
 	
-	--> creates a table of pieces with name
-	function makeTableOfNames(name,startnr,endnr)
-		T={}
-		for i=startnr, endnr, 1 do
-			T[#T+1]=name..i	
-		end
-		return T
-	end
-	
-	--> finds GenericNames and Creates Tables with them
-	function makePiecesTablesByNameGroups(boolMakePiecesTable,boolSilent)
-		
-		boolSilentRun=boolSilent or false
-		pieceMap=Spring.GetUnitPieceMap(unitID)
-		piecesTable=Spring.GetUnitPieceList(unitID)
-		
-		TableByName={}
-		NameAndNumber={}
-		ReturnTable={}
-		
-		for i=1,#piecesTable,1 do
-			s=string.reverse(piecesTable[i])
-			
-			for w in string.gmatch(s,"%d+") do
-				if w then
-					s=string.sub(s,string.len(w),string.len(s))
-					NameAndNumber[i]={name=string.sub(piecesTable[i],1,string.len(piecesTable[i])-string.len(w)),
-						number=string.reverse(w)
-					}
-					
-					if TableByName[	NameAndNumber[i].name] then 
-						TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 
-					else 
-						TableByName[NameAndNumber[i].name] =1 
-					end
-					break
-					
-				end
-			end
-			if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end			
-		end
-		
-		
-		if boolSilentRun== false then
-			for k,v in pairs(TableByName) do
-				if v > 1 then
-					Spring.Echo(k.. " = {}")
-				end
-			end
-			
-			
-			for k,v in pairs(NameAndNumber) do
-				
-				if v and v.number then
-					Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
-					Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
-				else
-					Spring.Echo(v.name.." = piece("..v.name..")")
-				end
-			end
-			
-			if boolMakePiecesTable and boolMakePiecesTable ==true then
-				generatepiecesTableAndArrayCode(unitID)
-			end
-			
-		else
-			
-			--pack the piecesTables in a UeberTable by Name
-			for tableName,_ in pairs (TableByName) do
-				local PackedAllNames={}
-				--Add the Pieces to the Table
-				for k,v in pairs(NameAndNumber) do
-					
-					if v and v.number and v.name == tableName then
-						piecename=v.name..v.number
-						if lib_boolDebug==true then
-							if lib_boolDebug==true and pieceMap[piecename] then 
-								Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
-							else
-								Spring.Echo("pieceMap contains no piece named "..piecename)
-							end
-						end
-						convertToNumber=tonumber(v.number)
-						PackedAllNames[convertToNumber]= pieceMap[piecename]					
-					end								
-				end
-				ReturnTable[tableName]=PackedAllNames 				
-			end
-			
-			return ReturnTable
-		end	
-		
-	end
-	
+
 	--> creates a heightmap distortion table
 	function prepareHalfSphereTable(size,height)
 	if not size or not height then return nil end
@@ -3460,7 +3508,7 @@ end
 	--> GetDistanceNearestEnemy
 	function GetDistanceNearestEnemy(id)
 		ed=Spring.GetUnitNearestEnemy(id)
-		return GetUnitDistance(id,ed)
+		return distanceUnitToUnit(id,ed)
 	end
 	
 	function holdsForAll(Var,fillterConditionString,...)
@@ -3540,6 +3588,7 @@ end
 	function removeFromWorld(unit,offx,offy,offz)
 		--TODO - keepStates in general and commandqueu
 		pox,poy,poz=Spring.GetUnitPosition(unit)
+		Spring.SetUnitCloak(unit, true, 4)
 		Spring.SetUnitAlwaysVisible(unit,false)
 		Spring.SetUnitBlocking(unit,false,false,false)
 		Spring.SetUnitNoSelect(unit,true)
@@ -3550,16 +3599,24 @@ end
 	end
 	-->Removes a Unit from the Game without killing it
 	function returnToWorld(unit,px,py,pz)
-		Spring.MoveCtrl.Enable(unit,false)
+		Spring.MoveCtrl.Disable(unit)
 		if pz then
 			Spring.SetUnitPosition(unit,px,py,pz)
 		end
+		Spring.SetUnitCloak(unit, false, 1)
 		Spring.SetUnitAlwaysVisible(unit,true)
 		Spring.SetUnitBlocking(unit,true,true,true)
 		Spring.SetUnitNoSelect(unit,false)
 	end
 	
+	function showUnit(unit)
+		Spring.SetUnitCloak(unit, false, 1)
+	end
 	
+	function hideUnit(unit)
+		Spring.SetUnitCloak(unit, true, 4)
+	
+	end
 	
 	function killAtPiece(unitID,piecename,selfd,reclaimed, sfxfunction)
 		px,py,pz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
@@ -3625,9 +3682,9 @@ end
 	end
 	
 	-->Helperfunction of recursiveAddTable
-	function returnPieceChildrenTable(piecename,piecetable)
-		if not piecename then return end
-		T=Spring.GetUnitPieceInfo(unitID,piecename)
+	function returnPieceChildrenTable(pieceNum,piecetable)
+		if not pieceNum then return end
+		T=Spring.GetUnitPieceInfo(unitID,pieceNum)
 		children=T.children
 		if children then
 			for i=1,#children do children[i]=piecetable[children[i]] end
@@ -3635,6 +3692,63 @@ end
 		return children, T.max
 	end
 	
+function getRoot(unitID)
+   pieceMap=Spring.GetUnitPieceMap(unitID)
+	for name,number in pairs(pieceMap) do
+		infoTable=Spring.GetUnitPieceInfo(unitID,number)
+		if (infoTable.parent == "[null]") then return name,infoTable.children end
+	end
+
+end
+	
+function recMapHierarchy(unitID, pieceName, hierarchy,pieceFunction)
+	pieceNumber=pieceFunction(pieceName)
+	tables=Spring.GetUnitPieceInfo(unitID,pieceNumber)
+
+		if tables and tables.children then
+		if not 	hierarchy[pieceName] then 	hierarchy[pieceName]={} end
+
+			for _,name in pairs(tables.children) do		
+				hierarchy[pieceName][#hierarchy[pieceName]+1]= pieceFunction(name)
+				hierarchy = recMapHierarchy(unitID, name, hierarchy, pieceFunction)
+			end	
+		end
+
+	return hierarchy
+end
+
+function makePieceHierarchy(unitID,pieceFunction)
+	rootname,children=getRoot(unitID)
+	hierarchy={}
+	hierarchy[rootname]= {}
+	for k,pieceName in pairs(children) do
+		hierarchy[rootname][#hierarchy[rootname]+1] =pieceFunction(pieceName)
+	end
+	
+	hierarchy = recMapHierarchy(unitID, rootname, hierarchy ,pieceFunction)
+	
+	return hierarchy, rootname
+end
+
+function recMapDown(Result,pieceMap,Name)
+	
+	if pieceMap[Name] then
+		for _, pieceNumber in pairs(pieceMap[Name]) do
+			info=Spring.GetUnitPieceInfo(unitID,pieceNumber)
+			Result[#Result+1]= pieceNumber
+			if info and pieceMap[info.name] and info.children then 
+				Result=recMapDown(Result, pieceMap, info.name)
+			end	
+		end
+	end		
+return Result
+end
+
+-->Returns all Pieces in a Hierarchy below the named point
+function getPiecesBelow(unitID, PieceName, pieceFunction)
+	pieceMap=makePieceHierarchy(unitID,pieceFunction)
+return recMapDown({},pieceMap,PieceName)
+end
 	--Hashmap of pieces --> with accumulated Weight in every Node
 	--> Every Node also holds a bendLimits which defaults to ux=-45 x=45, uy=-180 y=180,uz=-45 z=45
 	function recursiveAddTable(T,piecename,parent,piecetable)
@@ -3931,7 +4045,7 @@ end
 		if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::liftFeedForward") end
 		GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
 		speed= clamp(Force/(#KneeT*Weight),0.15,0.25)
-		withOffset=math.random(0,turnDeg)
+		withOffset=sanitizeRandom(0,turnDeg)
 		if withOffset > 180 then withOffset=withOffset*-1 end
 		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet+withOffset), speed)
 		--lifts Feed from the ground 	
@@ -4028,7 +4142,7 @@ end
 				end
 			end
 		end
-		return getSpot(cond,64)
+		return getPathFullfillingCondition(cond,64)
 	end
 	
 	-->gets Signum of a number
@@ -4043,9 +4157,9 @@ end
 		for i=1,#T do
 		
 		threeRandomAttempts= 0
-			index= math.random(1,#T)
+			index= sanitizeRandom(1,#T)
 			while threeRandomAttempts < 3 and resulT[index] do
-				index= math.random(1,#T)	
+				index= sanitizeRandom(1,#T)	
 			end
 			while resulT[index] do
 				index= math.max(math.min(#T,(index+1)%#T),1)
@@ -4063,16 +4177,17 @@ end
 	end
 	
 	-->finds a spot on the map that is dry, and walkable
-	function getSpot(condition,maxRes,filterTable)
+	function getPathFullfillingCondition(condition,maxRes,filterTable)
+		if type(condition)~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
 		local lcondition =condition
 		
-		probeResolution=8
+		probeResolution=4
 		local spGetGroundHeight=Spring.GetGroundHeight
 		
 		while true do
 			
-			chunkSizeX,chunkSizeZ=Game.mapSizeX/probeResolution,Game.mapSizeZ/probeResolution
-			xRand,zRand=math.floor(math.random(1,probeResolution)),math.floor(math.random(1,probeResolution))
+			chunkSizeX,chunkSizeZ=(Game.mapSizeX-1)/probeResolution,(Game.mapSizeZ-1)/probeResolution
+			xRand,zRand=math.floor(sanitizeRandom(1,probeResolution)),math.floor(sanitizeRandom(1,probeResolution))
 			
 			for i=xRand,probeResolution,1 do
 				for j=zRand,probeResolution,1 do
@@ -4094,7 +4209,7 @@ end
 		end
 	end
 	
-	-->CondtionFunction
+	-->ConditionFunction
 	function GetSpot_condDeepSea(x,y,chunksizeX,chunksizeZ,filterTable)
 		h=Spring.GetGroundHeight(x*chunkSizeX,y*chunkSizeZ)
 		if h < filterTable.minBelow and h > filterTable.maxAbove then return x*chunkSizeX,y*chunkSizeZ end 
@@ -4126,6 +4241,26 @@ end
 		end
 	end
 	
+	--> increment a value
+	function inc(value)
+		return value+1
+	end
+	
+	--> decrement a value
+	function dec(value)
+		return value-1
+	end
+	
+	function sanitizeRandom(lowerBound,UpperBound)
+	if lowerBound >= UpperBound then return lowerBound end
+	
+	return math.random(lowerBound,UpperBound)
+	end
+	
+	function todoAssert(object, functionToPass, todoCheckNext)
+	if functionToPass(object)==true then return end
+		echo("Error:Todo:"..todoCheckNext)	
+	end
 	
 	-->Sanitizes a Variable for a table
 	function sanitizeItterator(Data,Min,Max)
@@ -4269,9 +4404,6 @@ end
 		else
 			Spring.Echo(" could not open file")
 		end
-		
-		
-		
 	end
 	
 	-->Inserts a Value only if it is not found
@@ -4423,7 +4555,11 @@ function transformUnitInto(unitID, unitType, setVel)
 	end	
 end
 
+function echoUnitStats(id)
+h,mh,pD,cP,bP= Spring.GetUnitHealth(id)
 
+echo(h,mh,pD,"Capture Progress:"..cP,"Build Progress:"..bP)
+end
 function getUnitMoveGoal(unitID)
 cmds=Spring.GetCommandQueue(unitID,4)
 	for i=#cmds,1, -1 do

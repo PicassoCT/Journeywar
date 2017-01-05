@@ -1,160 +1,158 @@
-	include "createCorpse.lua"
-	include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
+boolWalk= false
+boolAttack=false
+AllReadyUsed={}
+center=piece"center"
+--BODY
+--all the yet unused BodyPieces
+BodyPieces={}
+ConPieces={}
+DoubleBodyPieces={}
+BodyID=1
+DoubleMax=16
+BodyMax=22
+
+nr=1
+
+--Connection pieces for linear Connections only
+for i=1,BodyMax,1 do
 	
-	AllReadyUsed={}
-	center=piece"center"
-	--BODY
-	--all the yet unused BodyPieces
-	BodyPieces={}
-	ConPieces={}
-	DoubleBodyPieces={}
-	BodyID=1
-	DoubleMax=16
-	BodyMax=22
+	bodyPieceName="body"..i.."s2"
+	BodyPieces[i]=piece(bodyPieceName)
+	nr=inc(nr);assert(BodyPieces[i])
+	--add the linear connections
+	ConPieces[BodyPieces[i]]={}
+	ConPieces[BodyPieces[i]].Symetric={}
+	ConPieces[BodyPieces[i]].Linear={}
 	
-	nr=1
-	function echoNr(nr)
-	Spring.Echo(nr)
-	return nr+1
+	for j=1,4,1 do
+		name="lcon"..i..j
+		ConPieces[BodyPieces[i]].Linear[j]={}
+		ConPieces[BodyPieces[i]].Linear[j]=piece(name)
+		nr=inc(nr);assert(ConPieces[BodyPieces[i]].Linear[j])
 	end
-	--Connection pieces for linear Connections only
-	for i=1,BodyMax,1 do
-		
-		bodyPieceName="body"..i.."s2"
-		BodyPieces[i]=piece(bodyPieceName)
-		nr=echoNr(nr);assert(BodyPieces[i])
-		--add the linear connections
-		ConPieces[BodyPieces[i]]={}
-		ConPieces[BodyPieces[i]].Symetric={}
-		ConPieces[BodyPieces[i]].Linear={}
-		
-			for j=1,4,1 do
-			name="lcon"..i..j
-			ConPieces[BodyPieces[i]].Linear[j]={}
-			ConPieces[BodyPieces[i]].Linear[j]=piece(name)
-			nr=echoNr(nr);assert(ConPieces[BodyPieces[i]].Linear[j])
-			end
-		--add the symetric connections
-			
-			for j=1,2,1 do
-			name="scon"..i
-			name=name..j
-			ConPieces[BodyPieces[i]].Symetric[j]=piece(name)
-			nr=echoNr(nr);assert(ConPieces[BodyPieces[i]].Symetric[j])
-			end
-			
+	--add the symetric connections
+	
+	for j=1,2,1 do
+		name="scon"..i
+		name=name..j
+		ConPieces[BodyPieces[i]].Symetric[j]=piece(name)
+		nr=inc(nr);assert(ConPieces[BodyPieces[i]].Symetric[j])
+	end
+	
 	--	--Spring.Echo("JW:VaryFoo:SymetricConections"..table.getn(ConPieces[BodyPieces[i]].Symetric))
-			
-		Move(BodyPieces[i],x_axis,0,0)
-		Move(BodyPieces[i],z_axis,0,0)
-		Move(BodyPieces[i],y_axis,0,0)
-		
-		if i < DoubleMax and i %2 ==0 then
+	
+	Move(BodyPieces[i],x_axis,0,0)
+	Move(BodyPieces[i],z_axis,0,0)
+	Move(BodyPieces[i],y_axis,0,0)
+	
+	if i < DoubleMax and i %2 ==0 then
 		DoubleBodyPieces[#DoubleBodyPieces+1]={k=BodyPieces[i-1],v=BodyPieces[i]}
+		
+		
+	end
+end
+
+--ARM
+ArmPieces={}
+DoubleArmPieces={}
+ArmCon={}
+ArmMax=12
+LinArmMax=4 --arms that can be used for linear expansion
+ExclusiveSymmetricArm={}
+ArmTable={}
+for i=1,ArmMax,1 do
 	
-											
-		end
+	bodyPieceName1="Arm"..i.."1" --Uper Arm
+	bodyPieceName2="Arm"..i.."2" --Lower Arm
+	bodyPieceName3="ArmPoM"..i
+	ArmPieces[i]={}
+	ArmPieces[i][1]=	piece(bodyPieceName1)
+	ArmPieces[i][2]=	piece(bodyPieceName2)
+	ArmPieces[i][3]=	piece(bodyPieceName3)
+	nr=inc(nr);assert(ArmPieces[i][1])
+	nr=inc(nr);assert(ArmPieces[i][2])
+	nr=inc(nr);assert(ArmPieces[i][3])
+	Hide(ArmPieces[i][1])
+	Hide(ArmPieces[i][2])
+	
+	
+	--add the linear connections
+	
+	if i < LinArmMax and i %2 ==0 then
+		DoubleArmPieces[#DoubleArmPieces+1]={k=ArmPieces[i-1],v=ArmPieces[i]			}
 	end
 	
-	--ARM
-	ArmPieces={}
-	DoubleArmPieces={}
-	ArmCon={}
-	ArmMax=12
-	LinArmMax=4 --arms that can be used for linear expansion
-	ExclusiveSymmetricArm={}
-	ArmTable={}
-		for i=1,ArmMax,1 do
-		
-		bodyPieceName1="Arm"..i.."1"   --Uper  Arm
-		bodyPieceName2="Arm"..i.."2"   --Lower Arm
-		bodyPieceName3="ArmPoM"..i
-		ArmPieces[i]={}
-		ArmPieces[i][1]=	piece(bodyPieceName1)
-		ArmPieces[i][2]=	piece(bodyPieceName2)
-		ArmPieces[i][3]=	piece(bodyPieceName3)
-		nr=echoNr(nr);assert(ArmPieces[i][1])
-		nr=echoNr(nr);assert(ArmPieces[i][2])
-		nr=echoNr(nr);assert(ArmPieces[i][3])
-		Hide(ArmPieces[i][1])
-		Hide(ArmPieces[i][2])
 	
-		
-		--add the linear connections
-		
-			if i < LinArmMax and i %2 ==0 then
-			DoubleArmPieces[#DoubleArmPieces+1]={k=ArmPieces[i-1],v=ArmPieces[i]			}
-			end
-		
-	
-		end
+end
 
-	--HEAD
-	HeadPieces={}
-	DoubleHeadPieces={}
-	HeadCon={}
-	HeadMax=8
+--HEAD
+HeadPieces={}
+DoubleHeadPieces={}
+HeadCon={}
+HeadMax=8
+
+for i=1,HeadMax,1 do
 	
-		for i=1,HeadMax,1 do
-		
-		bodyPieceName="Head"..i
-		HeadPieces[i]=piece(bodyPieceName)
-		Hide(HeadPieces[i])
-		bodyPieceName="HeadCon"..i
-		HeadCon[i]=piece(bodyPieceName)
-		--add the linear connections
-		nr=echoNr(nr);assert(HeadPieces[i])
-		nr=echoNr(nr);assert(HeadCon[i])
-		if i < HeadMax and i %2 ==0 then
+	bodyPieceName="Head"..i
+	HeadPieces[i]=piece(bodyPieceName)
+	Hide(HeadPieces[i])
+	bodyPieceName="HeadCon"..i
+	HeadCon[i]=piece(bodyPieceName)
+	--add the linear connections
+	nr=inc(nr);assert(HeadPieces[i])
+	nr=inc(nr);assert(HeadCon[i])
+	if i < HeadMax and i %2 ==0 then
 		DoubleHeadPieces[#DoubleHeadPieces+1]={k=HeadPieces[i-1],v=HeadPieces[i]			}											
-		end
-		
-
-		end
-
-	--DECO
-	DecoPieces={}
-	DoubleDecoPieces={}
-	
-	DecoMax=16
-	DecoDouble=4
-	for i=1,DecoMax,1 do
-		
-		bodyPieceName="Deco"..i
-		DecoPieces[i]=piece(bodyPieceName)
-		--add the linear connectionsk
-				nr=echoNr(nr);assert(DecoPieces[i])
-		if i < DecoDouble and i %2 ==0 then
-		DoubleDecoPieces[#DoubleDecoPieces+1]={k=DecoPieces[i-1],v=DecoPieces[i]			}							
-		end
-	Hide(DecoPieces[i])
-
 	end
+	
+	
+end
+
+--DECO
+DecoPieces={}
+DoubleDecoPieces={}
+
+DecoMax=16
+DecoDouble=4
+for i=1,DecoMax,1 do
+	
+	bodyPieceName="Deco"..i
+	DecoPieces[i]=piece(bodyPieceName)
+	--add the linear connectionsk
+	nr=inc(nr);assert(DecoPieces[i])
+	if i < DecoDouble and i %2 ==0 then
+		DoubleDecoPieces[#DoubleDecoPieces+1]={k=DecoPieces[i-1],v=DecoPieces[i]			}							
+	end
+	Hide(DecoPieces[i])
+	
+end
 -------------------------------------------------------------------EndOfPieceDelcarations-----------
-	--Contains all Connections exposed by allready used BodyParts 
-	--every added Symetric ConnectionPoint is parallel such as [1] <-> [2] form a symetric pair
-	SymBodyCon={}
-	LinBodyCon={}
+--Contains all Connections exposed by allready used BodyParts 
+--every added Symetric ConnectionPoint is parallel such as [1] <-> [2] form a symetric pair
+SymBodyCon={}
+LinBodyCon={}
 
 
-	function turnPieceInRandDir(pie,dirVec,SymSideVal,symPiece)
+function turnPieceInRandDir(pie,dirVec,SymSideVal,symPiece)
 	minx,maxx,miny,maxy,minz,maxz=dirVec.minx,dirVec.maxx,dirVec.miny,dirVec.maxy,dirVec.minz,dirVec.maxz
 	
-	x=math.random(minx,maxx)
-	z=math.random(minz,maxz)%180
-	y=math.random(miny,maxy)
+	x=sanitizeRandom(minx,maxx)
+	z=sanitizeRandom(minz,maxz)%180
+	y=sanitizeRandom(miny,maxy)
 	offSetX= dirVec.offSetX or 0
 	
 	Turn(pie,y_axis,math.rad(y),0,true)
-
-	if  symPiece == nil then
-	--Turn(pie,z_axis,math.rad(0),0,true)
-	Turn(pie,x_axis,math.rad(x+offSetX),0,true)
+	
+	if symPiece == nil then
+		--Turn(pie,z_axis,math.rad(0),0,true)
+		Turn(pie,x_axis,math.rad(x+offSetX),0,true)
 	else --if a Sympiece exists
 		val=y*-1
 		Turn(symPiece,y_axis,math.rad(val),0,true)
@@ -171,178 +169,186 @@ include "lib_Animation.lua"
 		-- Turn(pie,z_axis,math.rad(z*SymSideVal),0,true)
 	end
 	
-		
+	
 	return x,y,z
-	end
+end
 
 --								Socket,ConectionSocket,BodyPiece
-	function conPieceCon2Socket(Con,Pie,dirVec, boolLeftRight)
+function conPieceCon2Socket(Con,Pie,dirVec, boolLeftRight)
 	x,y,z=Spring.GetUnitPiecePosition(unitID,Con)
 	
 	SymSideVal=1	
 	
-		if boolLeftRight and boolLeftRight==true then
+	if boolLeftRight and boolLeftRight==true then
 		SymSideVal=-1
-		end
-		
-		Show(Pie)
-		Move(Pie,x_axis,x,0,true)
-		Move(Pie,z_axis,z,0,true)
-		Move(Pie,y_axis,y,0,true)
-		--Now the piece is at the exact location of the connection piece
-				if dirVec then				
-				turnPieceInRandDir(Pie,dirVec,SymSideVal)
-				end
-				
 	end
 	
-	function sconPieceCon2Socket(Con,Pie,dirVec, boolLeftRight)
-	x,y,z=Spring.GetUnitPiecePosition(unitID,Con)
---	--Spring.Echo("JW:SymetricConPiece:"..Pie.." to Con "..Con)
-	SymSideVal=1	
-	if boolLeftRight and boolLeftRight==true  then SymSideVal=-1 end
+	Show(Pie)
+	Move(Pie,x_axis,x,0,true)
+	Move(Pie,z_axis,z,0,true)
+	Move(Pie,y_axis,y,0,true)
+	--Now the piece is at the exact location of the connection piece
+	if dirVec then				
+		turnPieceInRandDir(Pie,dirVec,SymSideVal)
+	end
 	
-		Show(Pie)
-	
-		Move(Pie,x_axis,x,0,true)
-		Move(Pie,z_axis,z,0,true)
-		Move(Pie,y_axis,y,0,true)
-		--Now the piece is at the exact location of the connection piece
+end
 
-				if dirVec then				
-				turnPieceInRandDir(Pie,dirVec,SymSideVal)
-				end
+function sconPieceCon2Socket(Con,Pie,dirVec, boolLeftRight)
+	x,y,z=Spring.GetUnitPiecePosition(unitID,Con)
+	--	--Spring.Echo("JW:SymetricConPiece:"..Pie.." to Con "..Con)
+	SymSideVal=1	
+	if boolLeftRight and boolLeftRight==true then SymSideVal=-1 end
+	
+	Show(Pie)
+	
+	Move(Pie,x_axis,x,0,true)
+	Move(Pie,z_axis,z,0,true)
+	Move(Pie,y_axis,y,0,true)
+	--Now the piece is at the exact location of the connection piece
+	
+	if dirVec then				
+		turnPieceInRandDir(Pie,dirVec,SymSideVal)
 	end
+end
 ---------------------------
 
-	function script.Create()
---DEBUG
+function script.Create()
+	--DEBUG
 	--Move(center,y_axis,90,0,true)
---DEBUG
-		for i=1,ArmMax,1 do
+	--DEBUG
+	for i=1,ArmMax,1 do
 		Hide(ArmPieces[i][1])
 		Hide(ArmPieces[i][2])
-		end
+	end
 	hideT(BodyPieces)
+	
 
 	StartThread(delayedBuild)
+	StartThread(eatThemAliveWhenNotWalking)
+
+end
+
+function delayedStart()
+	Sleep(500)
+	StartThread(eatThemAliveWhenNotWalking)
 	end
-	
-	function delayedBuild()
+
+function delayedBuild()
 	resetT(BodyPieces,0,true,true)
-		Sleep(150)
-
-
+	Sleep(150)
+	
+	
 	init()
 	StartThread(buildAVaryFoo)
 	StartThread(walk)
 	StartThread(sound)
 	
-	end
-	
-	function existsParts(tablename)
+end
+
+function existsParts(tablename)
 	return table.getn(tablename)~= 0
-	end
-	
-	function LinAddPieceSocketsToPool(part,boolAddSymetrics)
+end
+
+function LinAddPieceSocketsToPool(part,boolAddSymetrics)
 	LinearCon=ConPieces[part].Linear
 	SymCon=ConPieces[part].Symetric
-		if LinearCon then
-			for i=1,table.getn(LinearCon), 1 do
+	if LinearCon then
+		for i=1,table.getn(LinearCon), 1 do
 			LinBodyCon[#LinBodyCon+1]=LinearCon[i]	
-			end
 		end
-		
-		if SymCon and (boolAddSymetrics==nil or boolAddSymetrics==true ) then
-				--	--Spring.Echo("JW:LinearSymetricSockets Added")
-					num=table.getn(SymBodyCon)+1
-					SymBodyCon[num]={}
-					SymBodyCon[num][1]=SymCon[2]
-					SymBodyCon[num][2]=SymCon[1]		
-		end	
 	end
 	
-	function SymAddPieceSocketsToPool(part,sympiece)
+	if SymCon and (boolAddSymetrics==nil or boolAddSymetrics==true ) then
+		--	--Spring.Echo("JW:LinearSymetricSockets Added")
+		num=table.getn(SymBodyCon)+1
+		SymBodyCon[num]={}
+		SymBodyCon[num][1]=SymCon[2]
+		SymBodyCon[num][2]=SymCon[1]		
+	end	
+end
+
+function SymAddPieceSocketsToPool(part,sympiece)
 	local LinearCon=ConPieces[part].Linear
 	local LinearConS=ConPieces[sympiece].Linear
 	local SymCon=ConPieces[part].Symetric
 	local SymConS=ConPieces[sympiece].Symetric
 	
-		if LinearCon then
-			for i=1,#LinearCon, 1 do
+	if LinearCon then
+		for i=1,#LinearCon, 1 do
 			SymBodyCon[#SymBodyCon+1]=	{
-										[1]=LinearCon[i],
-										[2]=LinearConS[i]	
-										}
-			end
-		end
-	
-		if SymCon then
-			for i=1,#SymCon, 1 do
-			SymBodyCon[#SymBodyCon+1]=	{
-										[1]=SymCon[i],
-										[2]=SymConS[i]	
-										}
-			end
+				[1]=LinearCon[i],
+				[2]=LinearConS[i]	
+			}
 		end
 	end
 	
-	function makeDirVecFromDeg(degx,valx,degy,valy,degz,valz,offSetX)
+	if SymCon then
+		for i=1,#SymCon, 1 do
+			SymBodyCon[#SymBodyCon+1]=	{
+				[1]=SymCon[i],
+				[2]=SymConS[i]	
+			}
+		end
+	end
+end
+
+function makeDirVecFromDeg(degx,valx,degy,valy,degz,valz,offSetX)
 	dirVec={}
 	dirVec.minx,dirVec.maxx=degx-valx,degx+valx
 	dirVec.miny,dirVec.maxy=degy-valy,degy+valy
 	dirVec.minz,dirVec.maxz=degz-valz,degz+valz
 	if offSetX then	dirVec.offSetX=offSetX end
 	return dirVec
-	end
+end
+
+function init()
 	
-	function init()
+	Move(BodyPieces[1],x_axis,0,0,true)	
+	Move(BodyPieces[1],y_axis,0,0,true)	
+	Move(BodyPieces[1],z_axis,0,0,true)	
+	Show(BodyPieces[1])
+	LinAddPieceSocketsToPool(BodyPieces[1],true)
+	turnPieceInRandDir(BodyPieces[1],makeDirVecFromDeg(180,180,0,0,0,0),1)
 	
-		Move(BodyPieces[1],x_axis,0,0,true)	
-		Move(BodyPieces[1],y_axis,0,0,true)	
-		Move(BodyPieces[1],z_axis,0,0,true)	
-		Show(BodyPieces[1])
-		LinAddPieceSocketsToPool(BodyPieces[1],true)
-		turnPieceInRandDir(BodyPieces[1],makeDirVecFromDeg(180,180,0,0,0,0),1)
-		
-		usedPiece(BodyPieces[1])
-		
-    end
+	usedPiece(BodyPieces[1])
 	
-	function DoubleCheckPiece(tablename)
+end
+
+function DoubleCheckPiece(tablename)
 	--Rewrite
 	local SymPairedPieces= tablename
 	for i=1, #SymPairedPieces, 1 do
-	if SymPairedPieces[i] then
-	k,v=SymPairedPieces[i].k , SymPairedPieces[i].v
-	
-		if k and v and not AllReadyUsed[k] and not AllReadyUsed[v] then
-		retA,retB= SymPairedPieces[i].k, SymPairedPieces[i].v
-		SymPairedPieces[i]=nil
-		return retA,retB
+		if SymPairedPieces[i] then
+			k,v=SymPairedPieces[i].k , SymPairedPieces[i].v
+			
+			if k and v and not AllReadyUsed[k] and not AllReadyUsed[v] then
+				retA,retB= SymPairedPieces[i].k, SymPairedPieces[i].v
+				SymPairedPieces[i]=nil
+				return retA,retB
+			end
 		end
 	end
-	end
 	--exists a symetric pair- and a symetric socket pair
-
-	end
-
 	
-	function rollDice(max)
-	return math.random(1,max),math.random(1,max)
-	end
-	
-	--FindPiece -FindSocket -- LinAddPieceSocketsToPool
-	function LinearExpandPiece()
-	BodyDice	= math.random(1,table.getn(BodyPieces))
+end
+
+
+function rollDice(maxs)
+	return sanitizeRandom(1,maxs),sanitizeRandom(1,maxs)
+end
+
+--FindPiece -FindSocket -- LinAddPieceSocketsToPool
+function LinearExpandPiece()
+	BodyDice	= sanitizeRandom(1,table.getn(BodyPieces))
 	BodyPiece	= BodyPieces[BodyDice]
-	SocketDice	= math.random(1,table.getn(LinBodyCon))
-	Socket 	  	= LinBodyCon[SocketDice]
+	SocketDice	= sanitizeRandom(1,table.getn(LinBodyCon))
+	Socket 	 	= LinBodyCon[SocketDice]
 	
-		if  not AllReadyUsed[BodyPiece] and not AllReadyUsed[Socket] then
+	if not AllReadyUsed[BodyPiece] and not AllReadyUsed[Socket] then
 		randomVec=makeDirVecFromDeg(180,180,0,0,0,0)
 		Show(BodyPiece)
-
+		
 		conPieceCon2Socket(Socket,BodyPiece,randomVec)
 		LinAddPieceSocketsToPool(BodyPiece,true)	
 		
@@ -350,37 +356,37 @@ include "lib_Animation.lua"
 		usedPiece(BodyPiece)
 		usedPiece(Socket)
 		return 1
-		end
-		
+	end
+	
 	return 0
-	end
-	
-	function getPairNrSymBodyCon(nr)
-		if SymBodyCon[nr] and not AllReadyUsed[SymBodyCon[nr][1]] and not AllReadyUsed[SymBodyCon[nr][2]] then
+end
+
+function getPairNrSymBodyCon(nr)
+	if SymBodyCon[nr] and not AllReadyUsed[SymBodyCon[nr][1]] and not AllReadyUsed[SymBodyCon[nr][2]] then
 		return SymBodyCon[nr][1],SymBodyCon[nr][2]	
-		end
 	end
-	
-	
-	function SymmetricExpand(pieceA,pieceB,dirVec)
+end
+
+
+function SymmetricExpand(pieceA,pieceB,dirVec)
 	--Spring.Echo("JW:VaryFoo:SymetricExpanding_1 >>"..table.getn(SymBodyCon))
 	--rEchoT(SymBodyCon)
 	--TODO
-		if  SymBodyCon and table.getn(SymBodyCon) > 0 then
+	if SymBodyCon and table.getn(SymBodyCon) > 0 then
 		--Spring.Echo("JW:SymetricExpand_1.5")
-		dice=math.floor(math.random(1,math.max(1,table.getn(SymBodyCon)	)))
+		dice=math.floor(sanitizeRandom(1,math.max(1,table.getn(SymBodyCon)	)))
 		socketA,socketB=getPairNrSymBodyCon(dice)
-		--nr=echoNr(nr);assert(socketA)
-			if socketA then 
+		--nr=inc(nr);assert(socketA)
+		if socketA then 
 			--Spring.Echo("JW:VaryFoo:SymetricExpanding_2")
-					
-				if  AllReadyUsed[pieceA] == nil and AllReadyUsed[pieceB] ==  nil then
+			
+			if AllReadyUsed[pieceA] == nil and AllReadyUsed[pieceB] == nil then
 				--Spring.Echo("JW:VaryFoo:SymetricExpanding_3")
 				Show(pieceA)
 				Show(pieceB)	
 				
 				dirVec=makeDirVecFromDeg(90,45,180,90,90,35)
-
+				
 				sconPieceCon2Socket(socketA,pieceA, dirVec, true)
 				sconPieceCon2Socket(socketB,pieceB, dirVec, false)
 				
@@ -390,113 +396,113 @@ include "lib_Animation.lua"
 				usedPiece(pieceA)
 				usedPiece(pieceB)
 				return 2
-				end
 			end
 		end
+	end
 	return 0
-	end
-	
+end
 
-	function findInSymBodyCon(piecename)
-		for i=1,table.getn(SymBodyCon),1 do
-			if SymBodyCon[i][1]==piecename or SymBodyCon[i][2]==piecename then
+
+function findInSymBodyCon(piecename)
+	for i=1,table.getn(SymBodyCon),1 do
+		if SymBodyCon[i][1]==piecename or SymBodyCon[i][2]==piecename then
 			return i
-			end
 		end
 	end
-	
-	function usedPiece(piecename)
+end
+
+function usedPiece(piecename)
 	AllReadyUsed[piecename]=true
 	table.remove(LinBodyCon,piecename)
 	i=findInSymBodyCon(piecename)	
 	if i then table.remove(SymBodyCon,i) end
-	end
-	
+end
 
-	local PiecePositionCache={}
-	
-	function  accessCache(key)
-		if PiecePositionCache[key] then
+
+local PiecePositionCache={}
+
+function accessCache(key)
+	if PiecePositionCache[key] then
 		return PiecePositionCache[key].x, PiecePositionCache[key].y, PiecePositionCache[key].z,PiecePositionCache[key].piecename
-		end
 	end
-	
-	function insertCache(key,x,y,z)
+end
+
+function insertCache(key,x,y,z)
 	PiecePositionCache[key]={x=x,y=y,z=z,piecename=key}
 	return true
-	end
- 
-	function LinFindFrontCon()
+end
+
+function LinFindFrontCon()
 	X=-8192
 	
 	ShorTerMem=0
 	
-		for i=1,#LinBodyCon, 1 do
-			x,y,z,piecename=accessCache(LinBodyCon[i])
-			if z then
-				if z > X  then
+	for i=1,#LinBodyCon, 1 do
+		x,y,z,piecename=accessCache(LinBodyCon[i])
+		if z then
+			if z > X then
 				X=z			
 				ShorTerMem=piecename
-				end
-			else
+			end
+		else
 			x,y,z=Spring.GetUnitPiecePosition(unitID,LinBodyCon[i])
 			insertCache(LinBodyCon[i],z,y,x)
 			
-				if z > X then
+			if z > X then
 				X=z
 				ShorTerMem=LinBodyCon[i]
-				end
 			end
 		end
+	end
 	--StartThread(DeBugPieceLight,ShorTerMem)
 	return ShorTerMem
-	end
-	
-	function getSymHeadCon()
+end
+
+function getSymHeadCon()
 	Spring.Echo("TODO: getSymHeadCon")
 	--find two SymBodyCon who are frontal 
-	end
-	
-	function DeBugPieceLight(piecename)
-		while true do
+end
+
+function DeBugPieceLight(piecename)
+	while true do
 		EmitSfx(piecename,1025)
 		Sleep(250)
-		end
 	end
-	
-	--attaches a Alienhead linear to the body
-	function LinearExpandHead(offSetX)
-		HeadDice=math.random(1,table.getn(HeadPieces))
-		Head=HeadPieces[HeadDice]
+end
 
-		Socket=LinFindFrontCon()
+--attaches a Alienhead linear to the body
+function LinearExpandHead(offSetX)
+	HeadDice=sanitizeRandom(1,table.getn(HeadPieces))
+	Head=HeadPieces[HeadDice]
 	
-		if  AllReadyUsed[Head] == nil and AllReadyUsed[Socket]== nil then
+	Socket=LinFindFrontCon()
+	
+	if AllReadyUsed[Head] == nil and AllReadyUsed[Socket]== nil then
 		randomVec=makeDirVecFromDeg(0,25,0,0,0,0,offSetX)
 		Show(Head)
-
+		
 		conPieceCon2Socket(Socket,Head,randomVec)
 		usedPiece(Head)
 		usedPiece(Socket)
 		return 1
-		end
-		
-	return 0
 	end
+	
+	return 0
+end
 
-	function SymmetricExpandHead(pieceA,pieceB,offSetX)
-		if SymBodyCon and table.getn(SymBodyCon) > 0 then
+function SymmetricExpandHead(pieceA,pieceB,offSetX)
+	if SymBodyCon and table.getn(SymBodyCon) > 0 then
 		
-			socketA,socketB=getSymHeadCon()
+		socketA,socketB=getSymHeadCon()
 		
 		
-
-			if socketA  and AllReadyUsed[pieceA] == nil and AllReadyUsed[pieceB] ==  nil then
+		
+		if socketA and AllReadyUsed[pieceA] == nil and AllReadyUsed[pieceB] == nil then
 			Show(pieceA)
 			Show(pieceB)	
 			
 			dirVec=makeDirVecFromDeg(0,25,90,45,0,0,offSetX)
-
+			
 			sconPieceCon2Socket(socketA,pieceA, dirVec, true)
 			sconPieceCon2Socket(socketB,pieceB, dirVec, false)
 			
@@ -506,80 +512,80 @@ include "lib_Animation.lua"
 			usedPiece(pieceA)
 			usedPiece(pieceB)
 			return 2
-			end
-		
 		end
-	return 0
+		
 	end
+	return 0
+end
 
 function LinearExpandArm()
-		ArmDice=math.random(1,LinArmMax)
-		Arm=ArmPieces[ArmDice]
-		SocketDice=math.random(1,table.getn(LinBodyCon))
-		Socket=LinBodyCon[SocketDice]
+	ArmDice=sanitizeRandom(1,LinArmMax)
+	Arm=ArmPieces[ArmDice]
+	SocketDice=sanitizeRandom(1,table.getn(LinBodyCon))
+	Socket=LinBodyCon[SocketDice]
 	
-		if  AllReadyUsed[Arm] == nil and AllReadyUsed[Socket]== nil then
+	if AllReadyUsed[Arm] == nil and AllReadyUsed[Socket]== nil then
 		randomVec=makeDirVecFromDeg(0,0,0,0,0,0,0)
 		Show(Arm[1])
 		Show(Arm[2])
-
+		
 		conPieceCon2Socket(Socket,Arm[1],randomVec)
 		usedPiece(Arm[1])
 		usedPiece(Arm[2])
 		usedPiece(Socket)
 		return Arm
-		end
-		
-	return -1
-
-	end
-
-	function SymetricExpandArm(ArmTableA,ArmTableB )
-
-		if SymBodyCon and table.getn(SymBodyCon) > 0 then
-			dice=math.floor(math.random(1,math.max(1,#SymBodyCon)	))
-			socketA,socketB=getPairNrSymBodyCon(dice)
-			
-				if socketA then 
-				table.remove(SymBodyCon,socketA)
-				table.remove(SymBodyCon,socketB)
-
-						
-				
-					if  AllReadyUsed[ArmTableA[1]] == nil and AllReadyUsed[ArmTableB[1]] ==  nil then
-					--Spring.Echo("JW:VaryFoo:SymetricExpanding_3")
-					Show(ArmTableA[1])
-					Show(ArmTableA[2])
-					Show(ArmTableB[1])	
-					Show(ArmTableB[2])	
-					
-					dirVec=makeDirVecFromDeg(0,0,0,0,0,0)
-
-					sconPieceCon2Socket(socketA,ArmTableA[1], dirVec, true)
-					sconPieceCon2Socket(socketB,ArmTableB[1], dirVec, false)
-					
-					turnPieceInRandDir(ArmTableA[1],dirVec,1,ArmTableB[1])
-					usedPiece(socketA)
-					usedPiece(socketB)
-					usedPiece(ArmTableA[1])
-					usedPiece(ArmTableA[2])
-					usedPiece(ArmTableB[1])
-					usedPiece(ArmTableB[2])
-					return ArmTableA,ArmTableB
-					end
-				end
-		end
-
 	end
 	
-	function buildAVaryFoo()
+	return -1
+	
+end
+
+function SymetricExpandArm(ArmTableA,ArmTableB )
+	
+	if SymBodyCon and table.getn(SymBodyCon) > 0 then
+		dice=math.floor(sanitizeRandom(1,math.max(1,#SymBodyCon)	))
+		socketA,socketB=getPairNrSymBodyCon(dice)
+		
+		if socketA then 
+			table.remove(SymBodyCon,socketA)
+			table.remove(SymBodyCon,socketB)
+			
+			
+			
+			if AllReadyUsed[ArmTableA[1]] == nil and AllReadyUsed[ArmTableB[1]] == nil then
+				--Spring.Echo("JW:VaryFoo:SymetricExpanding_3")
+				Show(ArmTableA[1])
+				Show(ArmTableA[2])
+				Show(ArmTableB[1])	
+				Show(ArmTableB[2])	
+				
+				dirVec=makeDirVecFromDeg(0,0,0,0,0,0)
+				
+				sconPieceCon2Socket(socketA,ArmTableA[1], dirVec, true)
+				sconPieceCon2Socket(socketB,ArmTableB[1], dirVec, false)
+				
+				turnPieceInRandDir(ArmTableA[1],dirVec,1,ArmTableB[1])
+				usedPiece(socketA)
+				usedPiece(socketB)
+				usedPiece(ArmTableA[1])
+				usedPiece(ArmTableA[2])
+				usedPiece(ArmTableB[1])
+				usedPiece(ArmTableB[2])
+				return ArmTableA,ArmTableB
+			end
+		end
+	end
+	
+end
+
+function buildAVaryFoo()
 	--Nr of Pieces Used to build this VaryFoo
 	bodydice=3
-
+	
 	if not GG.VaryFooPieceMax then GG.VaryFooPieceMax={} end
-
+	
 	if not GG.VaryFooPieceMax[teamID] then 
-	GG.VaryFooPieceMax[teamID]=6 
+		GG.VaryFooPieceMax[teamID]=6 
 	end
 	
 	BodyMax=GG.VaryFooPieceMax[teamID]
@@ -587,39 +593,39 @@ function LinearExpandArm()
 	Spring.SetUnitHealth(unitID,hp,maxhp*math.ceil(6/GG.VaryFooPieceMax[teamID]))
 	
 	if math.random(0,1)==1 then
-	bodydice=math.ceil(math.random(3,BodyMax))
+		bodydice=math.ceil(sanitizeRandom(3,BodyMax))
 	else
-	bodydice=math.ceil(math.random(3,math.ceil(BodyMax/2)))
+		bodydice=math.ceil(sanitizeRandom(3,math.ceil(BodyMax/2)))
 	end
 	bodyNum=1
-		
-	Max=math.random(4,#BodyPieces)
+	
+	Max=sanitizeRandom(4,#BodyPieces)
 	
 	linConLimit=rollDice(Max)
 	symConLimit=rollDice(Max/2)
 	--Body
 	while bodyNum < bodydice and existsParts(BodyPieces)==true do
-	Spring.Echo("jvaryfoo::bodybuilding")
-	-- while there exist  BodyParts2 and numberOfBodyPiecesUsed <bodydice
+		Spring.Echo("jvaryfoo::bodybuilding")
+		-- while there exist BodyParts2 and numberOfBodyPiecesUsed <bodydice
 		--dice usage as a linear connector
-		if  linConLimit < math.random(1,Max) then
-		--FindPiece -FindSocket -- LinAddPieceSocketsToPool
-		bodyNum=bodyNum+LinearExpandPiece()
+		if linConLimit < sanitizeRandom(1,Max) then
+			--FindPiece -FindSocket -- LinAddPieceSocketsToPool
+			bodyNum=bodyNum+LinearExpandPiece()
 		else
 			--Check if on of them is existing twice
-	-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
+			-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
 			pieceA,pieceB=DoubleCheckPiece(DoubleBodyPieces)		
-			if pieceA and pieceB and symConLimit < math.random(1,Max)  then
-			bodyNum=bodyNum+SymmetricExpand(pieceA,pieceB)	
-				else -- apply remainging BodyParts linear			
+			if pieceA and pieceB and symConLimit < sanitizeRandom(1,Max) then
+				bodyNum=bodyNum+SymmetricExpand(pieceA,pieceB)	
+			else -- apply remainging BodyParts linear			
 				bodyNum=bodyNum+LinearExpandPiece()			
-				end
+			end
 		end
-
+		
 	end
-
+	
 	--Arm
-	Armdice=math.ceil(math.random(3,ArmMax))
+	Armdice=math.ceil(sanitizeRandom(3,ArmMax))
 	ArmNum=0
 	
 	--Add at least one symetric Pair
@@ -629,97 +635,97 @@ function LinearExpandArm()
 	table.insert(ArmTable,ArmB)
 	ArmNum=ArmNum+2
 	
-		while ArmNum < Armdice and existsParts(ArmPieces)==true do
+	while ArmNum < Armdice and existsParts(ArmPieces)==true do
 		Spring.Echo("jvaryfoo::arms")
-		-- while there exist  BodyParts2 and numberOfBodyPiecesUsed <Armdice
+		-- while there exist BodyParts2 and numberOfBodyPiecesUsed <Armdice
 		--Spring.Echo("Exit the Loop2")
-			--dice usage as a linear connector
-			if  boolAtLeastOnePair== true and linConLimit < math.random(1,Max) then
+		--dice usage as a linear connector
+		if boolAtLeastOnePair== true and linConLimit < sanitizeRandom(1,Max) then
 			--FindPiece -FindSocket -- LinAddPieceSocketsToPool
 			--Spring.Echo("JW:LinearExpand")
-				res=LinearExpandArm()
-				if res then
+			res=LinearExpandArm()
+			if res then
 				ArmNum=ArmNum+1
-					if res ~= -1 then table.insert(ArmTable,res)	end
-				end
-			else
-				--Check if on of them is existing twice
-				-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
-				pieceA,pieceB=DoubleCheckPiece(DoubleArmPieces)		
-				if  pieceA and pieceB and symConLimit < math.random(1,Max)  then
+				if res ~= -1 then table.insert(ArmTable,res)	end
+			end
+		else
+			--Check if on of them is existing twice
+			-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
+			pieceA,pieceB=DoubleCheckPiece(DoubleArmPieces)		
+			if pieceA and pieceB and symConLimit < sanitizeRandom(1,Max) then
 				--Spring.Echo("JW:SymetricExpand")
 				ArmA,ArmB=SymetricExpandArm(pieceA,pieceB)	
 				table.insert(ArmTable,ArmA)
 				table.insert(ArmTable,ArmB)
 				ArmNum=ArmNum+2
 				boolAtLeastOnePair=true
-				else -- apply remainging BodyParts linear			
-					res=LinearExpandArm()
-					if res then
-					ArmNum=ArmNum+1
-						if res ~= -1 then table.insert(ArmTable,res)	end
-					end
-			
-				end
-			end
-		end
-
-
-	
-	headdice=math.ceil(math.random(1,HeadMax))
-	headNum=0
-	Max=HeadMax
-	--Head
-			
-	linConLimit,symConLimit=rollDice(Max)
-	
-	while headNum < headdice and existsParts(HeadPieces)==true do
-	Spring.Echo("jvaryfoo::giving head")
-	headNum=headNum+1
-		if  linConLimit < math.random(1,Max) then
-		headNum=headNum+LinearExpandHead(offSetX)
-		else
-			--Check if on of them is existing twice
-	-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
-			pieceA,pieceB=DoubleCheckPiece(DoubleHeadPieces)		
-			if pieceA and pieceB and symConLimit < math.random(1,Max)  then
-			headNum=headNum+SymmetricExpandHead(pieceA,pieceB,offSetX)	
 			else -- apply remainging BodyParts linear			
-			headNum=headNum+LinearExpandHead(offSetX)			
+				res=LinearExpandArm()
+				if res then
+					ArmNum=ArmNum+1
+					if res ~= -1 then table.insert(ArmTable,res)	end
+				end
+				
 			end
 		end
 	end
-
---Not every Varyfoo needs deco	
+	
+	
+	
+	headdice=math.ceil(sanitizeRandom(1,HeadMax))
+	headNum=0
+	Max=HeadMax
+	--Head
+	
+	linConLimit,symConLimit=rollDice(Max)
+	
+	while headNum < headdice and existsParts(HeadPieces)==true do
+		Spring.Echo("jvaryfoo::giving head")
+		headNum=headNum+1
+		if linConLimit < sanitizeRandom(1,Max) then
+			headNum=headNum+LinearExpandHead(offSetX)
+		else
+			--Check if on of them is existing twice
+			-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
+			pieceA,pieceB=DoubleCheckPiece(DoubleHeadPieces)		
+			if pieceA and pieceB and symConLimit < sanitizeRandom(1,Max) then
+				headNum=headNum+SymmetricExpandHead(pieceA,pieceB,offSetX)	
+			else -- apply remainging BodyParts linear			
+				headNum=headNum+LinearExpandHead(offSetX)			
+			end
+		end
+	end
+	
+	--Not every Varyfoo needs deco	
 	if math.random(0,1)==1 then
-	decodice=math.ceil(math.random(1,DecoMax))
+		decodice=math.ceil(sanitizeRandom(1,DecoMax))
 		decoNum=0
 		oldDecoNum=0
 		decoCounter=0
 		Max=HeadMax
 		--Head
-				
+		
 		linConLimit,symConLimit=rollDice(Max)
 		
 		while decoCounter < DecoMax and decoNum < decodice and existsParts(HeadPieces)==true do
-		
-			if  linConLimit < math.random(1,Max) then
-			Spring.Echo("jvaryfoo::Linear_decoration")
-			decoNum=decoNum+LinearExpandDeco(offSetX)
+			
+			if linConLimit < sanitizeRandom(1,Max) then
+				Spring.Echo("jvaryfoo::Linear_decoration")
+				decoNum=decoNum+LinearExpandDeco(offSetX)
 			else
 				--Check if on of them is existing twice
-		-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
+				-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
 				pieceA,pieceB=DoubleCheckPiece(DoubleDecoPieces)		
-				if pieceA and pieceB and symConLimit < math.random(1,Max) then
-				decoNum=decoNum+SymmetricExpandDeco(pieceA,pieceB,offSetX)	
-				Spring.Echo("jvaryfoo::Sym_decoration")
+				if pieceA and pieceB and symConLimit < sanitizeRandom(1,Max) then
+					decoNum=decoNum+SymmetricExpandDeco(pieceA,pieceB,offSetX)	
+					Spring.Echo("jvaryfoo::Sym_decoration")
 				else 			
-				Spring.Echo("jvaryfoo::Linear_decoration")
-				decoNum=decoNum+LinearExpandDeco(offSetX)			
+					Spring.Echo("jvaryfoo::Linear_decoration")
+					decoNum=decoNum+LinearExpandDeco(offSetX)			
 				end
 			end
-		if decoNum== oldDecoNum then decoCounter=decoCounter+1 end
-		oldDecoNum=decoNum
+			if decoNum== oldDecoNum then decoCounter=decoCounter+1 end
+			oldDecoNum=decoNum
 		end		
 	end		
 	
@@ -728,11 +734,11 @@ function LinearExpandArm()
 end		
 
 function getSymDecoCon()
-
+	
 	if SymBodyCon and table.getn(SymBodyCon) > 0 then
-				dice=math.floor(math.random(1,math.max(1,#SymBodyCon)	))
-				socketA,socketB=getPairNrSymBodyCon(dice)
-				return SocketA, SocketB
+		dice=math.floor(sanitizeRandom(1,math.max(1,#SymBodyCon)	))
+		socketA,socketB=getPairNrSymBodyCon(dice)
+		return SocketA, SocketB
 	end
 end
 
@@ -740,62 +746,78 @@ end
 local linDecP={}
 boolFoundSomething=false
 function LinFindDecoCon()
---we find a startpoint by finding start and endpoint and choosing the lowest
-	poinTable=piec2Point(LinBodyCon)
-	if linDecP.x == nil or boolFoundSomething==false then 
-	linDecP.x,linDecP.y,linDecP.z,linDecP.index=getLowestPointOfSet(poinTable,"z_axis") 
-	temp={}
-	assertT({Piece="number",x="number",y="number",z="number", index="number"}, poinTable)
-	temp.x,temp.y,temp.z,temp.index=getHighestPointOfSet(poinTable,"z_axis") 
+	--we find a startpoint by finding start and endpoint and choosing the lowest
+	poinTable=piec2Point(LinBodyCon) --DeBug: 
+	todoAssert(poinTable,
+				function(obj) 
+					if type(obj)=="table" and #obj > 0 then 
+						return true 
+					else 
+						return false 
+					end 
+				end, 
+				"poinTable is not a table"
+				)
+				
+	if not poinTable then return end
 
-	assert(linDecP.y)
+	if linDecP.x == nil or boolFoundSomething==false then 
+		linDecP.x,linDecP.y,linDecP.z,linDecP.index=getLowestPointOfSet(poinTable,"z_axis") 
+		temp={}
+		assert(poinTable[1])
+		assert(poinTable[1].x)
+		assertT({Piece="number",x="number",y="number",z="number", index="number"}, poinTable)
+		temp.x,temp.y,temp.z,temp.index=getHighestPointOfSet(poinTable,"z_axis") 
+		
+		assert(temp.y)
 		if temp.y < linDecP.y then
-		linDecP.x,linDecP.y,linDecP.z,linDecP.index= temp.x,temp.y,temp.z,temp.index
+			linDecP.x,linDecP.y,linDecP.z,linDecP.index= temp.x,temp.y,temp.z,temp.index
 		end
 	end
-
---we now have the lowest startpoint and getting from that , we traveser always the nearest, heighest neighbour
-local lx,ly,lz=linDecP.x,linDecP.y,linDecP.z
-local tx,ty,tz,tdist,theight,index=math.huge,math.huge*-1,math.huge, math.huge, math.huge*-1,linDecP.index
-boolFoundSomething=false
+	
+	--we now have the lowest startpoint and getting from that , we traveser always the nearest, heighest neighbour
+	local lx,ly,lz=linDecP.x,linDecP.y,linDecP.z
+	local tx,ty,tz,tdist,theight,index=math.huge,math.huge*-1,math.huge, math.huge, math.huge*-1,linDecP.index
+	boolFoundSomething=false
 	for i=1,#poinTable do
 		dist=math.sqrt((lx-poinTable[i].x)^2+(ly-poinTable[i].y)^2+(lz-poinTable[i].z)^2)
 		if dist < tdist and poinTable[i].y > theight and not AllReadyUsed[LinBodyCon[i]] then
-		 tx,ty,tz,tdist,theight = poinTable[i].x,poinTable[i].y,poinTable[i].z,dist, poinTable[i].y
-		 index=i
-		 --if we found nothing, we need to start again, at another lowest point
-		 boolFoundSomething=true
+			tx,ty,tz,tdist,theight = poinTable[i].x,poinTable[i].y,poinTable[i].z,dist, poinTable[i].y
+			index=i
+			
+--if we found nothing, we need to start again, at another lowest point
+			boolFoundSomething=true
 		end
 	end
 	linDecP.x,linDecP.y,linDecP.z,linDecP.index= tx,ty,tz,index
 	
-return LinBodyCon[index] 
+	return LinBodyCon[index] 
 end
 
 function LinearExpandDeco(offSet)
-	DecoDice=math.random(1,table.getn(DecoPieces))
-		Deco=DecoPieces[DecoDice]
-
-		Socket=LinFindDecoCon()
+	DecoDice=sanitizeRandom(1,table.getn(DecoPieces))
+	Deco=DecoPieces[DecoDice]
+	
+	Socket=LinFindDecoCon()
 	
 	
 	
 	
 	if AllReadyUsed[Socket]== nil then
-	Spring.Echo("Socket allready used")
+		Spring.Echo("Socket allready used")
 	end		
-		
-		if  AllReadyUsed[Deco] == nil and AllReadyUsed[Socket]== nil then
 	
-	randomVec=makeDirVecFromDeg(90,45,0,0,0,0,offSet)
+	if AllReadyUsed[Deco] == nil and AllReadyUsed[Socket]== nil then
+		
+		randomVec=makeDirVecFromDeg(90,45,0,0,0,0,offSet)
 		Show(Deco)
-
+		
 		conPieceCon2Socket(Socket,Deco,randomVec)
 		usedPiece(Deco)
 		usedPiece(Socket)
 		Spring.Echo("jvaryfoo::LinearDecoExpansion Success")
 		return 1
-		end
+	end
 	Spring.Echo("jvaryfoo::LinearDecoExpansion Phail")
 	return 0
 end
@@ -803,14 +825,14 @@ end
 function SymmetricExpandDeco(pieceA, pieceB)
 	if SymBodyCon and table.getn(SymBodyCon) > 0 then
 		
-			socketA,socketB=getSymDecoCon()
+		socketA,socketB=getSymDecoCon()
 		
-			if socketA  and AllReadyUsed[pieceA] == nil and AllReadyUsed[pieceB] ==  nil then
+		if socketA and AllReadyUsed[pieceA] == nil and AllReadyUsed[pieceB] == nil then
 			Show(pieceA)
 			Show(pieceB)	
 			
 			dirVec=makeDirVecFromDeg(180,180,180,180,180,180)
-
+			
 			sconPieceCon2Socket(socketA,pieceA, dirVec, true)
 			sconPieceCon2Socket(socketB,pieceB, dirVec, false)
 			
@@ -819,138 +841,138 @@ function SymmetricExpandDeco(pieceA, pieceB)
 			usedPiece(socketB)
 			usedPiece(pieceA)
 			usedPiece(pieceB)
-				Spring.Echo("jvaryfoo::SymDecoExpansion Success")
+			Spring.Echo("jvaryfoo::SymDecoExpansion Success")
 			return 2
-			end
-		
 		end
+		
+	end
 	Spring.Echo("jvaryfoo::SymDecoExpansion Phail")
 	return 0
 end
-		
-	function findLowestOfSet(Table)
+
+function findLowestOfSet(Table)
 	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 	local Index=1
 	_,Min,_=spGetUnitPiecePosDir(unitID,Table[1][3])
-		for i=1,#Table,1 do
-			if Table[i][3]then 
+	for i=1,#Table,1 do
+		if Table[i][3]then 
 			m=spGetUnitPiecePosDir(unitID,Table[i][3])
-				if m <Min then 
+			if m <Min then 
 				Min=m 
 				Index=i
-				end
 			end
 		end
-	return Index
 	end
-		
-	
-	function alignLegsToGround()
-		if #ArmTable > 0 then
+	return Index
+end
+
+
+function alignLegsToGround()
+	if #ArmTable > 0 then
 		--rEchoT(ArmTable)
 		local spGetUnitPiecePos=Spring.GetUnitPiecePosition
 		oldMaxDif=99999
 		smallestIntervallSoFar=1	
 		
-			for i=1,360,6 do
+		for i=1,360,6 do
 			----Spring.Echo("JW:VaryFoo:Align"..i)
 			Turn(center,x_axis,math.rad(i),0,true)
 			
 			IntervallMax,IntervallMin=0,0
 			
-					for j=1,#ArmTable, 1 do
-					if ArmTable[j] and ArmTable[j][1] then
+			for j=1,#ArmTable, 1 do
+				if ArmTable[j] and ArmTable[j][1] then
 					Turn(ArmTable[j][1],x_axis,math.rad(-1*i),0,true)
 					x,y,z=spGetUnitPiecePos(unitID,ArmTable[j][3])
-						if y then
+					if y then
 						
-							if  y < IntervallMin then IntervallMin=y end
-							if  y > IntervallMax then IntervallMax=y end		
-						end
+						if y < IntervallMin then IntervallMin=y end
+						if y > IntervallMax then IntervallMax=y end		
 					end
-					end
-					
-					if math.abs(IntervallMax-math.abs(IntervallMin)) < oldMaxDif then
-					oldMaxDif=math.abs(IntervallMax-math.abs(IntervallMin))
-					smallestIntervallSoFar=i
-					end		
-		
-			end
-			----Spring.Echo("JW:VaryFoo:SmallestIntervall::"..smallestIntervallSoFar.." Max-> "..IntervallMax.." Min ->"..IntervallMin)
-				
-				h=0
-				y=900
-				negVal=-1*smallestIntervallSoFar
-				for i=1,table.getn(ArmTable), 1 do
-				Turn(ArmTable[i][1],x_axis,math.rad(negVal),0,true)			
 				end
-				Turn(center,x_axis,math.rad(smallestIntervallSoFar),0,true)			
-				WaitForTurn(center,x_axis)
-				
-					i=findLowestOfSet(ArmTable)
-					_,centHeight,_=Spring.GetUnitPiecePosDir(unitID,center)
-					x,y,z=Spring.GetUnitPiecePosDir(unitID,ArmTable[i][3])
-					
-					Move(center,y_axis,centHeight-y,0,true)
-					
-					
-		offSetX=smallestIntervallSoFar
+			end
+			
+			if math.abs(IntervallMax-math.abs(IntervallMin)) < oldMaxDif then
+				oldMaxDif=math.abs(IntervallMax-math.abs(IntervallMin))
+				smallestIntervallSoFar=i
+			end		
+			
 		end
+		----Spring.Echo("JW:VaryFoo:SmallestIntervall::"..smallestIntervallSoFar.." Max-> "..IntervallMax.." Min ->"..IntervallMin)
+		
+		h=0
+		y=900
+		negVal=-1*smallestIntervallSoFar
+		for i=1,table.getn(ArmTable), 1 do
+			Turn(ArmTable[i][1],x_axis,math.rad(negVal),0,true)			
+		end
+		Turn(center,x_axis,math.rad(smallestIntervallSoFar),0,true)			
+		WaitForTurn(center,x_axis)
+		
+		i=findLowestOfSet(ArmTable)
+		_,centHeight,_=Spring.GetUnitPiecePosDir(unitID,center)
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,ArmTable[i][3])
+		
+		Move(center,y_axis,centHeight-y,0,true)
+		
+		
+		offSetX=smallestIntervallSoFar
 	end
+end
+
+
+function script.Killed(recentDamage,_)
 	
-
-	function script.Killed(recentDamage,_)
-
-	createCorpseJUnitBig(recentDamage)
+	--createCorpseJUnitBig(recentDamage)
 	return 1
-	end
+end
 
-	local SymPairArms={}
-	local LinArms={}
-	
-	function processAddedArms()
+local SymPairArms={}
+local LinArms={}
+
+function processAddedArms()
 	temp={}
-		for i=1,#ArmTable,1 do
+	for i=1,#ArmTable,1 do
 		temp[ArmTable[i]]={}
 		temp[ArmTable[i]]=ArmTable[i]
-		end
+	end
 	
-		for i=1,#ArmTable,1 do
+	for i=1,#ArmTable,1 do
 		--check wether the Arm is in DoubleArmPieces and its counterpart is in 
-			if getValByKeyObj(DoubleArmPieces,ArmTable[i]) and temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])] and not AllReadyUsed[temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])]] then
+		if getValByKeyObj(DoubleArmPieces,ArmTable[i]) and temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])] and not AllReadyUsed[temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])]] then
 			SymPairArms={[1]=ArmTable[i],
-						 [2]= temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])],}
-			else
+			[2]= temp[getValByKeyObj(DoubleArmPieces,ArmTable[i])],}
+		else
 			LinArms[#LinArms+1]=ArmTable[i]
-			end
 		end
-		
-	
 	end
 	
-	function getValByKeyObj(Table,key)
+	
+end
+
+function getValByKeyObj(Table,key)
 	local T= Table
-		for i=1,#T do
-			if T.k== key then return T.v end
-		end
+	for i=1,#T do
+		if T.k== key then return T.v end
 	end
+end
 
 
-	function moveLeg(delay, speed,  degvec, pieceA,pieceB, spieceA,spieceB)
-		dspeed=speed*2
-		qspeed=speed*1.25
-		qinspeed=speed*1.6
-		hspeed=speed/2
-		Sleep(delay)
+function moveLeg(delay, speed, degvec, pieceA,pieceB, spieceA,spieceB)
+	dspeed=speed*2
+	qspeed=speed*1.25
+	qinspeed=speed*1.6
+	hspeed=speed/2
+	Sleep(delay)
 	
 	local OffSetMinus=offSetX*-1
+	
+	if sPieceA then
+		while true do
 			
-		if sPieceA then
-			while true do
-		
-				while boolWalk== true do
+			while boolWalk== true do
 				Sleep(200)
-				val=OffSetMinus+math.random(-42,-36)+math.random(1,degvec)
+				val=OffSetMinus+math.random(-42,-36)+sanitizeRandom(1,degvec)
 				Turn(pieceA,x_axis,math.rad(val),speed)
 				Turn(spieceA,x_axis,math.rad(val),speed)
 				val=math.random(-42,-36)
@@ -966,7 +988,7 @@ end
 				Turn(spieceB,x_axis,math.rad(0),qspeed)
 				WaitForTurn(pieceA,x_axis)	
 				
-				val=OffSetMinus+math.random(36,42)+math.random(1,degvec)
+				val=OffSetMinus+math.random(36,42)+sanitizeRandom(1,degvec)
 				Turn(pieceA,x_axis,math.rad(val),qinspeed)
 				Turn(spieceA,x_axis,math.rad(val),qinspeed)
 				
@@ -980,16 +1002,16 @@ end
 				Turn(pieceB,x_axis,		math.rad(OffSetMinus),speed)
 				Turn(spieceB,x_axis,	math.rad(OffSetMinus),speed)
 				WaitForTurn(pieceA,x_axis)	
-				end
-				
-			Sleep(200)	
 			end
-		else
+			
+			Sleep(200)	
+		end
+	else
 		
-			while true do
-				while boolWalk==true do
+		while true do
+			while boolWalk==true do
 				Sleep(200)
-				val=OffSetMinus+(math.random(-42,-36)+math.random(1,degvec))*-1
+				val=OffSetMinus+(math.random(-42,-36)+sanitizeRandom(1,degvec))*-1
 				Turn(pieceA,x_axis,math.rad(val),speed)		
 				val=math.random(-42,-36)*-1
 				Turn(pieceB,x_axis,math.rad(val),speed)			
@@ -999,9 +1021,9 @@ end
 				Turn(pieceB,x_axis,math.rad(0),	qspeed)		
 				WaitForTurn(pieceA,x_axis)	
 				
-				val=OffSetMinus+(math.random(36,42)+math.random(1,degvec))*-1
+				val=OffSetMinus+(math.random(36,42)+sanitizeRandom(1,degvec))*-1
 				Turn(pieceA,x_axis,math.rad(val),qinspeed)
-			
+				
 				val= math.random(36,50)*-1
 				Turn(pieceB,x_axis,math.rad(val),dspeed)		
 				Turn(pieceB,x_axis,math.rad(val/2),hspeed)		
@@ -1009,101 +1031,101 @@ end
 				Turn(pieceB,x_axis,math.rad(OffSetMinus),speed)
 				
 				WaitForTurn(pieceA,x_axis)	
-				end	
-				
-		
+			end	
+			
+			
 			--Turn(pieceA,x_axis,math.rad(0),speed)
 			Turn(pieceB,x_axis,math.rad(0),speed)	
 			Sleep(250)	
-			end
 		end
 	end
-	
-	function walk()
+end
 
+function walk()
+	
 	for i=1,#SymPairArms,1 do
-	StartThread(moveLeg,300*i, 3,  9, SymPairArms[i][1][1],SymPairArms[i][1][2], SymPairArms[i][2][1],SymPairArms[i][2][2])
+		StartThread(moveLeg,300*i, 3, 9, SymPairArms[i][1][1],SymPairArms[i][1][2], SymPairArms[i][2][1],SymPairArms[i][2][2])
 	end
 	for i=1,#LinArms,1 do
-	StartThread(moveLeg,300*i, 3,  9, LinArms[i][1],LinArms[i][2])
+		StartThread(moveLeg,300*i, 3, 9, LinArms[i][1],LinArms[i][2])
 	end
 	
-		while true do
-			while boolWalk==true do
+	while true do
+		while boolWalk==true do
 			Turn(center,x_axis,math.rad(offSetX+math.random(3,7)),0.9)
 			WaitForTurn(center,x_axis)
 			Turn(center,x_axis,math.rad(offSetX-math.random(3,7)),0.9)
 			WaitForTurn(center,x_axis)
-			end
-			
-		Sleep(500)
 		end
+		
+		Sleep(500)
 	end
-	
+end
 
-	local SIG_DELAYSTOP=4
-	
-	function script.StartMoving()
+
+
+local SIG_DELAYSTOP=4
+
+function script.StartMoving()
 	boolWalk=true
 	Signal(SIG_DELAYSTOP)
+	
+end
 
-	end
-
-	function delayedStop()
+function delayedStop()
 	SetSignalMask(SIG_DELAYSTOP)
 	Sleep(500)
 	boolWalk=false
-
-	end
 	
-	function script.StopMoving()
-			Signal(SIG_DELAYSTOP)
-			StartThread(delayedStop)
-			
-	end
+end
 
-local 	boolWalk= false
-local	boolAttack=false
+function script.StopMoving()
+	Signal(SIG_DELAYSTOP)
+	StartThread(delayedStop)
+	
+end
+
+
 ------------------------------------------------------------------------------------UNITCODE	
 weaponTable={}
 local spCreateUnit=Spring.CreateUnit
- teamID=Spring.GetUnitTeam(unitID)
- gaiaID=Spring.GetGaiateamID
+teamID=Spring.GetUnitTeam(unitID)
+gaiaID=Spring.GetGaiateamID
 
- boolTeleportCharged=true
- local maxDist=250
- unitSize=80
- 
+boolTeleportCharged=true
+local maxDist=250
+unitSize=80
 
 
- 
+
+
 function script.HitByWeapon ( x, z, weaponDefID, damage )
-if boolAttack==false then boolAttack=true end
+	if boolAttack==false then boolAttack=true end
 	if WeaponDefID and not weaponTable[weaponDefIDj] and math.random(0,damage) < damage/2 then
 		x,y,z=Spring.GetUnitPosition(unitID)
 		if math.random(0,1)==0 then -- GaiaVaryfoo
-		spCreateUnit("jvaryfoo",x,y,z, math.random(1,3), teamID)
+			spCreateUnit("jvaryfoo",x,y,z, math.random(1,3), teamID)
 		else --playerVaryFoo
-		spCreateUnit("jvaryfoo",x,y,z, math.random(1,3), gaiaID)
+			spCreateUnit("jvaryfoo",x,y,z, math.random(1,3), gaiaID)
 		end
 	end
 	
 	if boolTeleportCharged==true and GetDistanceNearestEnemy(unitID) < maxDist then
-	boolTeleportCharged=false
-	StartThread(TeleportCharge)
+		boolTeleportCharged=false
+		StartThread(TeleportCharge)
 	end
 	
-return damage
+	return damage
 end 
 
-	local unitdef=Spring.GetUnitDefID(unitID)
-	function sound()
-
+local unitdef=Spring.GetUnitDefID(unitID)
+function sound()
+	
 	loudness=0.52
 	local signum=-1
 	local strings="sounds/VaryFoo/VaryFoo"
 	local nrOfUnitsParallel=3
-		while true do
+	while true do
 		Time=math.random(7000,12000)
 		loudness=math.min(1,loudness+0.01*signum)
 		
@@ -1111,161 +1133,153 @@ end
 		if loudness >= 1 then signum=signum*-1 end
 		if loudness < 0.52 then signum = 1 end
 		
-			if boolWalk ==true and boolAttack==false then
+		if boolWalk ==true and boolAttack==false then
 			
 			dice=math.ceil(math.random(4,6))
 			soundfile=strings..dice..".ogg"
 			PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel)
-				elseif boolAttack==true then
-				boolAttack=false
-				dice=math.ceil(math.random(2,3))
-				soundfile=strings..dice..".ogg"
-				PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel)
-				end
-		Sleep(16000)
+		elseif boolAttack==true then
+			boolAttack=false
+			dice=math.ceil(math.random(2,3))
+			soundfile=strings..dice..".ogg"
+			PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel)
 		end
+		Sleep(16000)
 	end
-	
-	local BITDISTCONSTANT		=84
-	local SNACKDISTANCECONSTANT	=42
-	
-	function eatThemAliveWhenNotWalking()
+end
+
+local BITDISTCONSTANT		=84
+local SNACKDISTANCECONSTANT	=142
+
+function eatThemAliveWhenNotWalking()
 	--if the varyfoo is of team Gaia its allready taken care of by the ecology gadget
 	if gaiaID== teamID then return end
-
+	
 	local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 	local spGetUnitNearestAlly=Spring.GetUnitNearestAlly
-	local localGetUnitDistance=GetUnitDistance
+	local localdistanceUnitToUnit=distanceUnitToUnit
 	local spGetUnitDefID=Spring.GetUnitDefID
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spGetUnitsInCylinder=Spring.GetUnitsInCylinder
-
+	
 	local boolCannibalism=false
 	
 	local tabooTable={
-					  [UnitDefNames["jvaryfoo"].id]=true,
-					  [UnitDefNames["varyfootemple"].id]=true
-					  }
-		while true do
-			--if walking, chew on everything within range
-			if boolWalk==true then
+		[UnitDefNames["jvaryavatara"].id]=true,
+		[UnitDefNames["jvaryfoo"].id]=true,
+		[UnitDefNames["jabyss"].id]=true
+	}
+	tummyFill=0
+	
+	while true do
+
 			x,y,z=spGetUnitPosition(unitID)
 			T=spGetUnitsInCylinder(x,z,SNACKDISTANCECONSTANT)
+			tummyFill=tummyFill-1
 			
 			table.remove(T,unitID)
-				if T and #T > 0 then
+			if T and #T > 0 then
 				for i=1,#T do
-					if tabooTable[spGetUnitDefID(T[i])] then T[i]=nil end 
-				end
-
-					if T and table.getn(T) > 0 then
-					biteAnimation(T[math.random(1,#T)])	
+					defID=spGetUnitDefID(T[i])
+					if GG.jAbyss_Moma and GG.jAbyss_Moma[unitID] and isInfantry[defID] then
+						MomaWillBeSoProud(T[i],GG.jAbyss_Moma[unitID])	
+					elseif not tabooTable[defID] and tummyFill < 50 then 
+						if T[i] and Spring.ValidUnitID(T[i]) ==true and Spring.GetUnitIsDead(T[i])== false then
+						biteAnimation(T[i])	
+						tummyFill=100
+						end
+					end 
+			
+				end		
+			else
+			Sleep(1024)
+			enemyID=spGetUnitNearestEnemy(unitID)
+				if enemyID then
+				x,y,z= x+math.random(-35,35),y,z+math.random(-35,35)
+					if maRa()==true then
+					x,y,z= spGetUnitPosition(enemyID)
+					Spring.SetUnitMoveGoal(x,y,z,unitID)
+					else
+					eTeamID=Spring.GetUnitTeam(enemyID)
+					if eTeamID then
+					x,y,z= Spring.GetTeamStartPosition(eTeamID)
 					end
 				end
 			end
-			
-			--go and find yourself a nice snack
-				if boolWalk==false then
-				allyID, allyDistance=spGetUnitNearestAlly(unitID),0
-				enemyID, enemyDistance=spGetUnitNearestEnemy(unitID),0
-				
-					if allyID or enemyID then
-						if allyID and not tabooTable[spGetUnitDefID(allyID)]then
-						allyDistance=localGetUnitDistance(unitID,allyID)	
-						else
-						--Find other things to eat- 
-						-- if that fails eat another Varyfoo
-						end
-							--if enemy is infantry and moma is know then carryHimHomeLoop
-							if GG.jAbyss_Moma and GG.jAbyss_Moma[unitID] and isInfantry[spGetUnitDefID(enemyID)] then
-							MomaWillBeSoProud(enemyID,GG.jAbyss_Moma[unitID])	
-							end
-						
-							if enemyID and not tabooTable[spGetUnitDefID(enemyID)]then
-							enemyDistance=localGetUnitDistance(unitID,allyID)	
-							end
-							
-							
-						if allyDistance > enemyDistance then allyID=enemyID end
-						
-						x,y,z= spGetUnitPosition(allyID)
-						ux,uy,uz= spGetUnitPosition(unitID)
-							if x and ux then
-							dist =GetTwoPointDistance(x,y,z,ux,uy,uz)
-								if dist < BITDISTCONSTANT then
-								biteAnimation(allyID)
-								else
-								Spring.SetUnitMoveGoal(x,y,z,unitID)
-								end
-							end
-					end
-				end
-		Sleep(2047)	
 		end
-	end
-	
-	isInfantry=getTypeTable(UnitDefNames,{
-		"bg",
-		"vort",
-		"skinfantry",
-		"css",
-		"tiglil",
-		"gcivillian"
-	})
-	
-	
-	local spSpawnCEG=Spring.SpawnCEG
-	if not GG.VaryFooFeeding then GG.VaryFooFeeding={} end
-	
-	function MomaWillBeSoProud(enemyID, MomaID)
+		Sleep(500)
+end
+end
+
+
+isInfantry=getTypeTable(UnitDefNames,{
+	"bg",
+	"bg2",
+	"vort",
+	"skinfantry",
+	"css",
+	"tiglil",
+	"gcivillian"
+})
+
+
+local spSpawnCEG=Spring.SpawnCEG
+
+function MomaWillBeSoProud(enemyID, MomaID)
 	local spValidUnitID=Spring.ValidUnitID
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spUnitIsDead=Spring.GetUnitIsDead
 	
 	x,y,z=spGetUnitPosition(MomaID)
-		while (spValidUnitID(enemyID) and spUnitIsDead(enemyID)==false) do	
-			
+	while (spValidUnitID(enemyID) and spUnitIsDead(enemyID)==false) do	
+		
 		Spring.SetUnitMoveGoal(unitID,x,y,z)
 		Sleep(500)
 		mx,my,mz=spGetUnitPosition(unitID)
-			--we are there --suppertime
-			if math.abs(x-mx)+ math.abs(y-my)+math.abs(z-mz) <75 then
+		--we are there --suppertime
+		if math.abs(x-mx)+ math.abs(y-my)+math.abs(z-mz) <75 then
 			Spring.DestroyUnit(enemyID,true,false)
-			end
 		end
 	end
-	
-	function biteAnimation(victimID)
-		if not GG.VaryFooFeeding[unitID] then 
-		GG.VaryFooFeeding[unitID] = 0.001 
-			else
-			GG.VaryFooFeeding[unitID] =math.min(1,GG.VaryFooFeeding[unitID] +0.05) 
-			end
+end
+
+function biteAnimation(victimID)
+	echo("jvaryfoo::Bite with chunks")
+
 	-- we set the unit to attack the victim 
 	ox,oy,oz=Spring.GetUnitPosition(unitID)
 	vx,vy,vz=Spring.GetUnitPosition(victimID)
-	-- Set a Projectile Racing Towards the  Victim
-		dx,dy,dz=(ox-vx)/8,(oy-vy)/8,(oz-vz)/8	
-		for i=1,8 do
-			midX,midY,midZ=vx+dx*i,vy+dy*i,vz+dz*i
-			dx,dy,dz=Spring.GetUnitPieceDirection( LinArms[math.ceil(math.random(1,#i))][1])
-			max=math.max(math.abs(dx),math.max(math.abs(dy),math.abs(dz)))
-			dx,dy,dz=dx/max,dy/max,dz/max
-			spSpawnCEG("jvaryfoohit",dx,dy,dz,0,1,0,50)
-		end
-		
-		for i=1,8 do
-			if math.random(0,1)==1 then
-				spSpawnCEG("bloodsplat",vx+math.random(-25,25),vy+math.random(0,75),vz+math.random(-25,25),0,1,0,50)
-			else
-				
-			end
-		end
-		
+	if ox and vx then
 
+		-- Set a Projectile Racing Towards the Victim
+		dx=(ox-vx)/8
+			
+		dy=(oy-vy)/8
+		dz=(oz-vz)/8	
+		for i=1,8 do
+			if LinArms[1] and  LinArms[1][1] then
+			midX,midY,midZ=vx+dx*i,vy+dy*i,vz+dz*i
+				dx,dy,dz=Spring.GetUnitPieceDirection(unitID, LinArms[sanitizeRandom(1,#LinArms)][1])
+				if dx then
+				maxs=math.max(math.abs(dx),math.max(math.abs(dy),math.abs(dz)))
+				dx,dy,dz=dx/maxs,dy/maxs,dz/maxs
+				end
+			end
+			spSpawnCEG("jvaryfoohit",dx,dy,dz,0,1,0,50)
+
+		end
 	end
-	aimspot = piece"aimspot"
-	----aimining & fire weapon
+	
+	for i=1,3 do
+		if math.random(0,1)==1 then
+			spSpawnCEG("bloodsplat",vx+math.random(-25,25),vy+math.random(0,75),vz+math.random(-25,25),0,1,0,50)
+		end
+	end
+	
+	
+end
+aimspot = piece"aimspot"
+----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return aimspot 
 end
@@ -1275,25 +1289,45 @@ function script.QueryWeapon1()
 end
 
 function script.AimWeapon1( heading ,pitch)	
-
+	
 	return true
-
+	
 end
+
+function getSFXPiece()
+	if #LinArms > 1 then
+		selectorA= sanitizeRandom(1,#LinArms)
+		selectorB= sanitizeRandom(1,#LinArms)
+		if LinArms[selectorA][1] and LinArms[selectorB][2] then
+			
+			return LinArms[selectorA][1],LinArms[selectorB][2]
+		else
+			return aimspot,aimspot
+		end
+	end
+	return aimspot,aimspot
+end
+
 varyfoodefid=Spring.GetUnitDefID(unitID)
 function script.FireWeapon1()	
-if maRa()==true then
-EmitSfx(LinArms[math.ceil(math.random(1,#i))][1],1025)
-EmitSfx(LinArms[math.ceil(math.random(1,#i))][2],1025)
-else
-EmitSfx(LinArms[math.ceil(math.random(1,#i))][2],1026)
-EmitSfx(LinArms[math.ceil(math.random(1,#i))][1],1026)
-end
-	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
+	selectorA,selectorB=getSFXPiece()
+	
+	if maRa()==true then
+		sfxNum=1025
+	else
+		sfxNum=1026
+	end
+	EmitSfx(selectorA,sfxNum)
+	EmitSfx(selectorB,sfxNum)
+	
+	
+	
+	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(70,100)/100, 2000, 2)
 	return true
 end
 
 
-	function script.AimFromWeapon2() 
+function script.AimFromWeapon2() 
 	return aimspot 
 end
 
@@ -1302,41 +1336,40 @@ function script.QueryWeapon2()
 end
 
 function script.AimWeapon2( heading ,pitch)	
-
-	return boolTeleportCharged
-
+	
+	return (boolTeleportCharged and boolInTransit )
+	
 end
+boolInTransit=false
+
+function setInTransit(boolTransitState)
+	boolInTransit=boolTransitState
+end
+
 
 function iAmFlying()
 	justOnce=true
-	while justOnce do
-	Sleep(700)
-	x,y,z=Spring.GetUnitPosition(unitID)
-		if y > Spring.GetGroundHeight(x,z)-25 then
-		Spring.MoveCtrl.Disable(unitID)
-		justOnce=false
-		end
+	boolInTransit=true
+	removeFromWorld(unitID)
+	while	boolInTransit==true do
+		Sleep(100)	
 	end
-	Sleep(1000)
-	Spring.MoveCtrl.Disable(unitID)
+	returnToWorld(unitID)
 end
 
 boolTeleportCharged=true
 function TeleportCharge()
-boolTeleportCharged=false
-Sleep(22000)
-boolTeleportCharged=true
-
+	boolTeleportCharged=false
+	Sleep(22000)
+	boolTeleportCharged=true
+	
 end
 
 varyfoodefid=Spring.GetUnitDefID(unitID)
 function script.FireWeapon2()	
-Spring.SetUnitAlwaysVisible(unitID,false)
-Spring.SetUnitBlocking (unitID,false,false,false)
-StartThread(iAmFlying)
-StartThread(TeleportCharge)
-	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(0.7,1), 2000, 2)
+
+	StartThread(iAmFlying)
+	StartThread(TeleportCharge)
+	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(7,10)/10, 2000, 2)
 	return true
 end
-
-	

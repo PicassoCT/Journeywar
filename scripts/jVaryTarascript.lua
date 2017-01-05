@@ -1,206 +1,216 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 
 SIG_ATTACKED=2
 SIG_DELAYEDSTOP=4
+RAM_DAMAGE=250
 
-
-  piecesTable={}
-  piecesTable[#piecesTable+1]= piece("center");center= piece("center")
-  piecesTable[#piecesTable+1]= piece("varytara.3DS");varytara3DS= piece("varytara.3DS")
-  piecesTable[#piecesTable+1]= piece("AimArm002");AimArm002= piece("AimArm002")
-  piecesTable[#piecesTable+1]= piece("AimArm1");AimArm1= piece("AimArm1")
-  piecesTable[#piecesTable+1]= piece("AimArmF003");AimArmF003= piece("AimArmF003")
-  piecesTable[#piecesTable+1]= piece("AimArmF2");AimArmF2= piece("AimArmF2")
-  piecesTable[#piecesTable+1]= piece("Body2");Body2= piece("Body2")
-  piecesTable[#piecesTable+1]= piece("Body3");Body3= piece("Body3")
-  piecesTable[#piecesTable+1]= piece("Body4");Body4= piece("Body4")
-  piecesTable[#piecesTable+1]= piece("Body5");Body5= piece("Body5")
-  piecesTable[#piecesTable+1]= piece("Body6");Body6= piece("Body6")
-  piecesTable[#piecesTable+1]= piece("FootF003");FootF003= piece("FootF003")
-  piecesTable[#piecesTable+1]= piece("FootF004");FootF004= piece("FootF004")
-  piecesTable[#piecesTable+1]= piece("FootF005");FootF005= piece("FootF005")
-  piecesTable[#piecesTable+1]= piece("FootF006");FootF006= piece("FootF006")
-  piecesTable[#piecesTable+1]= piece("FootF1");FootF1= piece("FootF1")
-  piecesTable[#piecesTable+1]= piece("FootF2");FootF2= piece("FootF2")
-  piecesTable[#piecesTable+1]= piece("FrontF003");FrontF003= piece("FrontF003")
-  piecesTable[#piecesTable+1]= piece("FrontF004");FrontF004= piece("FrontF004")
-  piecesTable[#piecesTable+1]= piece("FrontF1");FrontF1= piece("FrontF1")
-  piecesTable[#piecesTable+1]= piece("FrontF2");FrontF2= piece("FrontF2")
-  piecesTable[#piecesTable+1]= piece("Kugel01");Kugel01= piece("Kugel01")
-  piecesTable[#piecesTable+1]= piece("Kugel011");Kugel011= piece("Kugel011")
-  piecesTable[#piecesTable+1]= piece("Kugel02");Kugel02= piece("Kugel02")
-  piecesTable[#piecesTable+1]= piece("Kugel03");Kugel03= piece("Kugel03")
-  piecesTable[#piecesTable+1]= piece("Kugel04");Kugel04= piece("Kugel04")
-  piecesTable[#piecesTable+1]= piece("Kugel05");Kugel05= piece("Kugel05")
-  piecesTable[#piecesTable+1]= piece("Kugel06");Kugel06= piece("Kugel06")
-  piecesTable[#piecesTable+1]= piece("Kugel07");Kugel07= piece("Kugel07")
-  piecesTable[#piecesTable+1]= piece("Kugel08");Kugel08= piece("Kugel08")
-  piecesTable[#piecesTable+1]= piece("Kugel09");Kugel09= piece("Kugel09")
-  piecesTable[#piecesTable+1]= piece("Kugel10");Kugel10= piece("Kugel10")
-  piecesTable[#piecesTable+1]= piece("Line003");Line003= piece("Line003")
-  piecesTable[#piecesTable+1]= piece("Line004");Line004= piece("Line004")
-  piecesTable[#piecesTable+1]= piece("Line005");Line005= piece("Line005")
-  piecesTable[#piecesTable+1]= piece("Line006");Line006= piece("Line006")
-  piecesTable[#piecesTable+1]= piece("Line007");Line007= piece("Line007")
-  piecesTable[#piecesTable+1]= piece("Line08");Line08= piece("Line08")
-  piecesTable[#piecesTable+1]= piece("Line09");Line09= piece("Line09")
-  piecesTable[#piecesTable+1]= piece("Linie01");Linie01= piece("Linie01")
-  piecesTable[#piecesTable+1]= piece("Linie028");Linie028= piece("Linie028")
-  piecesTable[#piecesTable+1]= piece("Objekt003");Objekt003= piece("Objekt003")
-  piecesTable[#piecesTable+1]= piece("Objekt02");Objekt02= piece("Objekt02")
-  piecesTable[#piecesTable+1]= piece("Sphere017");Sphere017= piece("Sphere017")
-
+center = piece"center"
+piecesTable= {}
 currentPiece=1
 -- piece -->AttachPoints
-AttachPoints={}
+AttachPoints=makeTableOfNames("aPoint",1,30)
+for i=1,30 do
+	AttachPoints[i]= piece(AttachPoints[i])
+end
+
 
 --unitID-->piece
 if not GG.BoundVaryFoos then GG.BoundVaryFoos={} end
 
-boolComplete=false
 boolUnderAttack=false
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
-boolUnderAttack=true
-Signal(SIG_ATTACKED)
-StartThread(resetAttack)
+	boolUnderAttack=true
+	Signal(SIG_ATTACKED)
+	StartThread(resetAttack)
 end
 
 boolBuildEnded=false
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+AttachedUnits={}
 function partOfShipPartOfCrew( point, VaryFooID)
-Spring.SetUnitNeutral(VaryFooID,true)
-Spring.MoveCtrl.Enable(VaryFooID,true)
-
-roX,roY,roZ=0,0,0
-
+	Spring.SetUnitNeutral(VaryFooID,true)
+	Spring.UnitScript.AttachUnit(point,VaryFooID)
+	AttachedUnits[VaryFooID]=true
+	
+	
+	
 	while boolBuildEnded == false do
-	tx,ty,tz=spGetUnitPiecePosDir(unitID,VaryFooID)
-	Spring.MoveCtrl.SetPosition(VaryFooID,tx+math.random(-5,5),ty,tz+math.random(-5,5))
-	Spring.MoveCtrl.SetRotation(VaryFooID,roX, roY,roZ)
-	roX,roY,roZ=roX+math.random(-0.01,0.01),roY+math.random(-0.01,0.01),roZ+math.random(-0.01,0.01)
-	Sleep(500)
+		tx,ty,tz=Spring.GetUnitDirection(VaryFooID)
+		roX,roY,roZ=tx+math.random(-100,100)/1000,		ty+math.random(-100,100)/1000,		tz+math.random(-100,100)/1000
+		Spring.SetUnitDirection(VaryFooID,roX, roY,roZ)
+		Sleep(500)		
 	end
-
-Spring.SetUnitAlwaysVisible(VaryFooID,false)
-Spring.DestroyUnit(VaryFooID,true,true)
+	
+	if boolBuildEnded == false then	
+		
+		Spring.UnitScript.DropUnit(VaryFooID)
+		AttachedUnits[VaryFooID]=nil
+	end
 end
 
 nrAdded=0
-nrNeeded=#AttachPoints
 
-function sortPiecesByHeight(ableStableTableOfBabelEnable)
-bucketSortList={}
+	varyTaraID=UnitDefNames["jvaryavatara"].id
+	nrNeeded= tonumber(UnitDefs[varyTaraID].customParams.varyfooneeded)
 
-	for i=1,#ableStableTableOfBabelEnable do
-	px,py,pz=spGetUnitPiecePosDir(unitID,ableStableTableOfBabelEnable[i])
-		if not bucketSortList[math.ceil(py)] then 
-			bucketSortList[math.ceil(py)]={}
-		end
-	end
-	sortedTable={}
-	index=1
-	for k,v in pairs(bucketSortList) do
-		if type(v)=="number" then
-		sortedTable[index]=ableStableTableOfBabelEnable[v]
-		else
-			for i=1,#v do
-				sortedTable[index]=ableStableTableOfBabelEnable[v[i]]
+function buildMoma(varyFooos)
+	
+	
+	frame=Spring.GetGameFrame()
+	x,y,z=Spring.GetUnitPiecePosDir(unitID,center)
+	for i=#varyFooos,1,-1 do	
+		
+		if Spring.ValidUnitID(varyFooos[i])== false or Spring.GetUnitIsDead(varyFooos[i])==true then
+			table.remove(varyFooos,i)
+		else					
+			indexP=(indexP %#AttachPoints)+1 
+			if distanceUnitToUnit(unitID,varyFooos[i] ) < 75 and not AttachedUnits[varyFooos[i]] then --integrate it into the Avatara
+				nrAdded=nrAdded+1
+				StartThread(partOfShipPartOfCrew, AttachPoints[indexP], varyFooos[i])
+				
+			else
+				ox,oz= RotationMatrice(0,50+ (varyFooos[i]%120),((varyFooos[i]*150)%3000)+frame/64)
+				Spring.SetUnitMoveGoal(varyFooos[i],x+ox,y,z+oz)									
 			end
 		end
 	end
-	return sortedTable
+end
+
+function defendMoma(varyFooos)
+	for k,v in ipairs(	AttachedUnits) do
+		Spring.UnitScript.DropUnit(k)
+		AttachedUnits[k]=nil
+	end
+	nrAdded=0
+	
+	ed=getNearestGroundEnemy(unitID,UnitDefs)
+	if ed then
+		ax,ay,az=Spring.GetUnitPosition(ed)
+		for i=1,#varyFooos do
+			Spring.SetUnitMoveGoal(allVaryFoos[i],ax,ay,az)		
+		end
+	end	
+end
+
+function spinTentacles()
+	tentacles=pieceNameGroupTable["tentacle"]
+	while true do
+		randVal=math.random(500,2000)
+		Sleep(randVal)
+		speed=math.random(2,35)/10
+		spinT(tentacles,y_axis,speed,-42,42)
+	end
+end
+
+function filterNonVaryfoos(id)
+	if Spring.GetUnitDefID(id)== VaryFooDefID then 
+		return id 
+	end 
+end
+
+VaryFooDefID=UnitDefNames["jvaryfoo"].id
+
+pieceNameGroupTable=makePiecesTablesByNameGroups(false,true)
+function raiseAvatara()
+	StartThread(spinTentacles)
+	
+	hideT(piecesTable)
+	frame=Spring.GetGameFrame()
+	minMergeTimeComplete=frame +2048
+	
+	indexP=1
+	
+	DistanceDown=-150
+	Move(center,y_axis,DistanceDown,0,true)
+	while nrAdded < nrNeeded do
+		
+		
+		
+		Move(center,y_axis, math.min(0,DistanceDown*(1-(nrAdded/nrNeeded))),7.5)
+		--check VaryFoos around you
+		ux,uy,uz=Spring.GetUnitPosition(unitID)
+		units=getAllInCircle(ux,uz,300)
+		allVaryFoos=process( units,
+		filterNonVaryfoos
+		)
+		echo("jvaryavatara::nrNeeded"..nrNeeded.." / nrAdded"..nrAdded.." / NrOfFoos"..#units)
+		if boolUnderAttack==true then
+			--defend moma
+			defendMoma(allVaryFoos)
+			hideT(piecesTable)
+		else --build on
+			--get nextPiece above ground
+			buildMoma(allVaryFoos)
+			
+		end
+		Sleep(350)
+	end
+	Move(center,y_axis,0,2.5)
+	times=math.ceil(9000/#piecesTable)
+	for i=1,#piecesTable do
+		Show(piecesTable[i])
+		Sleep(times)
+	end
+	Sleep(9000)
+	WMove(center,y_axis,0,2.5)
+	for k,v in pairs(AttachedUnits) do
+		Spring.DestroyUnit(k,false,true)
+	end
+	boolBuildEnded=true
+	Move(center,y_axis,0,12)
+	showT(piecesTable)
+	StartThread(moveAble)
+end
+
+boolAimingAndFiringWeapon2=false
+function moveAble()
+	while true do
+		if boolMoving ==true then
+			moveAnimation()
+		else
+			StandingAnimation()
+			while boolAimingAndFiringWeapon2==true do
+				--Keep it steady
+				Sleep(300)
+			end
+		end
+		Sleep(200)
+	end
 end
 
 
-function raiseAvatara()
-hideT(piecesTable)
-AttachPoints=sortPiecesByHeight(AttachPoints)
-indexP=1
-hx,hy,hz=spGetUnitPiecePosDir(unitID,AttachPoints[indexP])
-base=Spring.GetGroundHeight(hx,hz)
-DistanceDown=base-hy
-Move(center,y_axis,DistanceDown,0)
-MoveCtrl.Enable(unitID,true)
-	while nrAdded < nrNeeded do
-	Move(center,y_axis,DistanceDown*(nrAdded/nrNeeded),1.5)
-	--check VaryFoos around you
-	allVaryFoos={}
-	
-		if boolUnderAttack==true then
-			--defend moma
-			ax,ay,az=Spring.GetUnitNearestEnemy(unitID)
-			for i=1,#allVaryFoos do
-			if not GG.BoundVaryFoos[allVaryFoos[i]] then
-					Spring.SetUnitMoveGoal(allVaryFoos[i],ax,ay,az)		
-			end
-			end
-	
-		else --build on
-		--get nextPiece above ground
-		attachP=AttachPoints[math.min(indexP,#AttachPoints)]
-		indexP=indexP+1
-		
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,attachP)
-			for i=1,#allVaryFoos do
-			
-				ux,uy,uz=Spring.GetUnitPosition(allVaryFoos[i])
-				if (ux-x) *(uy-y)* (uz-z) < 50 then --integrate it into the Avatara
-					if not GG.BoundVaryFoos[allVaryFoos[i]] then
-					StartThread(partOfShipPartOfCrew, attachP, allVaryFoos[i])
-					end
-				else
-					Spring.SetUnitMoveGoal(allVaryFoos[i],x,y,z)	
-				end
-			end
-		end
-	
-	end
-	MoveCtrl.Enable(unitID,false)
-	boolBuildEnded=true
-	boolComplete=true
-		Move(center,y_axis,0,12)
-		showT(piecesTable)
-	StartThread(moveAble)
-	end
+function moveAnimation()
+	Sleep(100)
+end
 
-	boolAimingAndFiringWeapon2=false
-	function moveAble()
-		while true do
-			if boolMoving ==true then
-				moveAnimation()
-			else
-				StandingAnimation()
-				while boolAimingAndFiringWeapon2==true do
-				--Keep it steady
-				Sleep(300)
-				end
-			end
-		Sleep(200)
-		end
-	end
-	
+function StandingAnimation()
+	resetT(piecesTable,5)
+end
 function resetAttack()
-SetSignalMask(SIG_ATTACKED)
-Sleep(10000)
-boolUnderAttack=false
+	SetSignalMask(SIG_ATTACKED)
+	Sleep(10000)
+	boolUnderAttack=false
 end
 
 function script.Create()
---generatepiecesTableAndArrayCode(unitID)
-StartThread(raiseAvatara)
+	spinT(AttachPoints,y_axis,4.2,-42,42)
+
+	piecesTable=generatepiecesTableAndArrayCode(unitID)
+	hideT(piecesTable)
+	StartThread(raiseAvatara)
 end
 
 function script.Killed(recentDamage,_)
-
-createCorpseCUnitGeneric(recentDamage)
-return 1
+	
+	createCorpseJUnitGeneric(recentDamage)
+	return 1
 end
 
 
@@ -210,54 +220,99 @@ function script.AimFromWeapon1()
 end
 
 
-
+pods=pieceNameGroupTable["Pod"]
+indexPod=1
 function script.QueryWeapon1() 
-	return center
+	return pods[indexPod]
 end
 
 function script.AimWeapon1( Heading ,pitch)	
-	--aiming animation: instantly turn the gun towards the enemy
-
+	--aiming animation: instantly turn the gun towards the enemy´
 	return true
-
+	
 end
- 
 
-function script.FireWeapon1()	
+function delayedRegrowth(number)
+	Hide(pods[number])	
+	Sleep(4500)
+	Show(pods[number])
+	
+end
+function script.FireWeapon1()
+	StartThread(delayedRegrowth,indexPod)
+	
+	indexPod=(indexPod%#pods)+1
+	return true
+end
+aimspot=piece"aimspot"
+function script.QueryWeapon2() 
+	return aimspot
+end
+boolReadyAim=true 
+function takeUpArms(arm1,arm2, pitch)
+Turn(arm2,x_axis,math.rad(53),3)
+WTurn(arm1,x_axis,math.rad(-53)-pitch,3)
+end
+
+	AimArmTable=pieceNameGroupTable["AimArmF"]
+function script.AimWeapon2( Heading ,pitch)	
+if boolReadyAim==true then
+
+	takeUpArms(AimArmTable[1],AimArmTable[2],pitch)
+	takeUpArms(AimArmTable[3],AimArmTable[4],pitch)
+	return true
+else 
+return false
+end	
+end
+
+function fireAnimation(readyAim)
+boolReadyAim=false
+moveT(pieceNameGroupTable["chain"],z_axis,75,60)
+unitsAffected=getAllNearPiece(unitID,pieceNameGroupTable["ram"][1],50)
+process(unitsAffected,
+		function(id) 
+		Spring.AddUnitDamage(id,RAM_DAMAGE)
+		end
+		)
+Sleep(1200)
+if readyAim==true then
+resetT(pieceNameGroupTable["chain"],35,true) 
+resetT(AimArmTable,4,true) 
+boolReadyAim = true 
+end
+end
+
+
+function script.FireWeapon2()
+	StartThread(fireAnimation,AimArmTable[3],AimArmTable[4], true)
 	return true
 end
 
 
 boolMoving=false
 function script.StartMoving()
-Signal(SIG_DELAYEDSTOP)
-boolMoving=true
+	Signal(SIG_DELAYEDSTOP)
+	boolMoving=true
 end
 
 function DelayedStop()
-Signal(SIG_DELAYEDSTOP)
-SetSignalMask(SIG_DELAYEDSTOP)
-Sleep(500)
-boolMoving=false
+	Signal(SIG_DELAYEDSTOP)
+	SetSignalMask(SIG_DELAYEDSTOP)
+	Sleep(500)
+	boolMoving=false
 end
 
 function script.StopMoving()
-StartThread(DelayedStop)		
+	StartThread(DelayedStop)		
 end
 
 function script.Activate()
-
-return 1
+	
+	return 1
 end
 
 function script.Deactivate()
-
-return 0
+	
+	return 0
 end
-
-function script.QueryBuildInfo() 
-  return center 
-end
-
-Spring.SetUnitNanoPieces(unitID,{ center})
-

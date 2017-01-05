@@ -81,15 +81,12 @@ end
 
 maxspeed=math.ceil(COB.MAX_SPEED *65533)
 function script.Activate()
-	
 	--set the MovementSpeed back to the original speed
 	Signal(SIG_THUMB)
-	
-	
+		
 	SetUnitValue(COB.MAX_SPEED,maxspeed)--sets the speed to 5,2 *65533
 	Move(resthumb,y_axis,0,0.5)
-	
-	
+		
 	boolThumperActivated=false
 	Spring.PlaySoundFile("sounds/cRes/cthoff.wav")
 	

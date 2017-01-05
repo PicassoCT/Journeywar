@@ -93,7 +93,7 @@ unitidstring=""..unitID..""
 for i=1,string.len(unitidstring) do
 
      c = string.sub(i,i)
-	 Spring.Echo(c)
+	-- Spring.Echo(c)
 	 if numbers[c] then
     -- do something with c
 	strings=strings..c
@@ -106,7 +106,7 @@ for i=1,string.len(unitidstring) do
 
 end
 PlaySoundByUnitDefID(advisorDef, "sounds/cadvisor/advisorreportB.ogg",1, 25000, 1)
-Spring.Echo(strings.." please report to administration for a performance review")	
+--Spring.Echo(strings.." please report to administration for a performance review")	
 end
 
 function punnish()

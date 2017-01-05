@@ -11,8 +11,6 @@ function widget:GetInfo()
 		hidden= true,
 	}
 end
-
-
 --Shared Data
 local Chili
 local Button
@@ -38,6 +36,41 @@ WeapCol={0.3,0.6,0.8,1}
 BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
+
+extendedCommands={}
+exttriStrip={}
+exttriStrip[1] ={		
+	{x= 0, y = 0},			
+	{x= 160, y = 40},
+	{x= 0, y = 80}
+}
+
+exttriStrip[2] ={
+	{x= 160, y = 0},
+	{x= 160, y = 80},			
+	{x= 0, y = 40},
+	
+}
+
+exttriStrip[3] ={
+	{x= 0, y = 0},			
+	{x= 160, y = 40},
+	{x= 0, y = 80}
+}	
+
+exttriStrip[4] ={		
+	{x= 100	, y = 15},
+	{x= 100	, y = 70},			
+	{x= 0	, y = 40},
+}	
+exttriStrip[5] ={
+	{x= 0, y = 0},			
+	{x= 100, y = 30},
+	{x= 0, y = 80},
+	{x= 100, y = 80},
+}
+extHoloTexCol={200/255, 239/255, 253/255, 1}	
+
 triStrip={}
 holoCommandCol={163/255, 229/255, 243/255, 0.75}	
 holoTextCol={200/255, 239/255, 253/255, 1}	
@@ -54,7 +87,20 @@ for i=1, 9 do
 	}
 	backgroundCol[i]={35/255, 124/255, 166/255, 0.75}
 end
-
+function getCommandTarget()
+	x,z=Spring.GetMouseState()
+	return Spring.TraceScreenRay(x,z)
+end
+function getCommandTable()
+	returnT={}
+	local alt, ctrl, shift, right = Spring.GetModKeyState()
+	
+	if alt then table.insert(returnT,"alt")end
+	if ctrl then table.insert(returnT,"ctrl")end
+	if shift then table.insert(returnT,"shift")end
+	if right then table.insert(returnT,"right")end
+	return returnT
+end
 triStrip[1] ={		
 	{x= 80, y = 0},			
 	{x= 0, y = 0},
@@ -141,7 +187,15 @@ function upByRow(str,num)
 	end
 	return str
 end
-
+eAttac		=1
+eStop		=2
+eMove		=3
+eFire		=4
+eRepeat		=5
+eManouver	=6
+eRepair		=7
+ePatrol		=8
+eGuard		=9
 
 caption={
 	[1]="|ATTAC",
@@ -167,20 +221,11 @@ extendedCommand_window_positionY= "41%"
 extendedCommand_window_width= "10%"
 extendedCommand_window_height= "30%"
 
-function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
-	functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
-
-	return 	Chili.HabaneroButton:New{
-		triStrip=triStrip	,
-		caption=caption,
 		
-		backgroundColor = basCol,
-		textColor = textCol, 
-		OnClick= { functionOnClick}
-	}
-end
-
---main Constructors
+		
+		
+		
+		
 function widget:Initialize()
 	
 	
@@ -196,6 +241,57 @@ function widget:Initialize()
 	Progressbar = Chili.Progressbar
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
+	
+	
+function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
+	functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
+	
+	return 	Chili.HabaneroButton:New{
+		triStrip=triStrip	,
+		caption=caption,
+		
+		backgroundColor = basCol,
+		textColor = textCol, 
+		OnClick= { functionOnClick}
+	}
+end--main Constructors
+	extCallbackFunctions = {
+			[1]= function()
+				selectedUnits=spGetSelectedUnits();
+				if selectedUnits and #selectedUnits > 0 then
+					commandTable= getCommandTable()
+					typeParam, param = getCommandTarget()
+					for i=1,#selectedUnits do
+						Spring.GiveOrderToUnit(selectedUnits[i],CMD.RECLAIM, param, commandTable)
+					end
+				end
+			end,
+			[2]= function()Spring.Echo("Hi Drop")end,
+			[3]= function()Spring.Echo("Hi Cloak")end,
+			[4]= function()Spring.Echo("Hi Restore")end,
+			[5]= function()Spring.Echo("Hi QUEUE")end,
+
+			
+		}
+		extcaption={
+			[1]="RECLAIM",
+			[2]="DROP\nLOAD",
+			[3]="CLOAK",		
+			[4]="RESTORE",		
+			[5]="QUEUE",		
+		}
+		
+	
+		for i= 1, 5 do
+
+			extendedCommands[i] = createHabanero(exttriStrip[i],
+			extcaption[i],
+			backgroundCol[2],
+			extHoloTexCol,
+			extCallbackFunctions[i]		
+			)		
+			extendedCommands[i].Init()
+		end
 	
 	extendedCommand_window = Window:New{
 		padding = {3,3,3,3,},
@@ -243,132 +339,93 @@ function widget:Initialize()
 		color = {0,0,0,1},
 		
 		children = {
-			Button:New{
-				name = "RECLAIM",
-				tooltip = "Reclaim a objects ressources",
-				width = 100,
-				height = 40,
-				caption = 'RECLAIM',			
-				backgroundColor = holoCommandCol,
-				textColor =holoTextCol,		
-				OnClick = { function()Spring.Echo("Hi World") end},
-			},	
-			Button:New{
-				name = "DROP/LOAD",
-				--tooltip = tooltip,
-				width = 200,
-				height = 40,
-				caption = 'DROP/LOAD',			
-				backgroundColor = holoCommandCol,
-				textColor =holoTextCol,		
-				OnClick = { function()Spring.Echo("Hi World") end},
-			},	
-			Button:New{
-				name = "CLOAK",
-				--tooltip = tooltip,
-				width = 200,
-				height = 40,
-				caption = 'CLOAK',			
-				backgroundColor = holoCommandCol,
-				textColor =holoTextCol,		
-				OnClick = { function()Spring.Echo("Hi World") end},
-			},
-			Button:New{
-				name = "RESTORE",
-				--tooltip = tooltip,
-				width = 200,
-				height = 40,
-				caption = 'RESTORE',			
-				backgroundColor = holoCommandCol,
-				textColor =holoTextCol,		
-				OnClick = { function()Spring.Echo("Hi World") end},
-			},
-			Button:New{
-				name = "QUEUE COMMANDS",
-				--tooltip = tooltip,
-				width = 200,
-				height = 40,
-				caption = 'QUEUE COMMANDS',			
-				backgroundColor = holoCommandCol,
-				textColor =holoTextCol,		
-				OnClick = { function()Spring.Echo("Hi World") end},
-			},
-			
-		},		
-	}
-	extendedCommand_window:AddChild(extendedCommand_Grid)
-	Habaneros={ }
-	
-	for i=1, 9 do
-		Habaneros[i] = createHabanero(triStrip[i],
-		caption[i],
-		backgroundCol[i],
-		holoTextCol,
-		nil		
-		)		
-		Habaneros[i].Init()
-	end
-	
-	
-	
-	base_stack = Grid:New{
-		y = 20,
-		padding = {5,5,5,5},
-		itemPadding = {0, 0, 0, 0},
-		itemMargin = {0, 0, 0, 0},
-		width = '100%',
-		height = '100%',
-		resizeItems = true,	
-		autosize=true,		
-		orientation = 'vertical',
-		centerItems = false,
-		columns = 3,
-		rows= 3,
-		children={
-			Habaneros[1],
-			Habaneros[2],
-			Habaneros[3],
-			Habaneros[4],
-			Habaneros[5],
-			Habaneros[6],
-			Habaneros[7],
-			Habaneros[8],
-			Habaneros[9],
-			
+					extendedCommands[1],
+					extendedCommands[2],
+					extendedCommands[3],
+					extendedCommands[4],
+					extendedCommands[5],
+					extendedCommands[6]
+					},
+		
 		}
 		
+extendedCommand_window:AddChild(extendedCommand_Grid)
+
+Habaneros={ }
+HabaneroCallbackFunctions={}
+HabaneroCallbackFunctions[eAttac]= function () end
+HabaneroCallbackFunctions[eStop]= function () end
+HabaneroCallbackFunctions[eMove]= function () end
+HabaneroCallbackFunctions[eFire]= function () end
+HabaneroCallbackFunctions[eRepeat]= function () end
+HabaneroCallbackFunctions[eManouver	]= function () end
+HabaneroCallbackFunctions[eRepair]= function () end
+HabaneroCallbackFunctions[ePatrol]= function () end
+HabaneroCallbackFunctions[eGuard]= function () end
+
+for i=1, 9 do
+	Habaneros[i] = createHabanero(triStrip[i],
+	caption[i],
+	backgroundCol[i],
+	holoTextCol,
+	HabaneroCallbackFunctions[i]		
+	)		
+	Habaneros[i].Init()
+end
+
+base_stack = Grid:New{
+	y = 20,
+	padding = {5,5,5,5},
+	itemPadding = {0, 0, 0, 0},
+	itemMargin = {0, 0, 0, 0},
+	width = '100%',
+	height = '100%',
+	resizeItems = true,	
+	autosize=true,		
+	orientation = 'vertical',
+	centerItems = false,
+	columns = 3,
+	rows= 3,
+	children={
+		Habaneros[eAttac],
+		Habaneros[eStop],
+		Habaneros[eMove],
+		Habaneros[eFire],
+		Habaneros[eRepeat],
+		Habaneros[eManouver	],
+		Habaneros[eRepair],
+		Habaneros[ePatrol],
+		Habaneros[eGuard],
 		
 	}
+}
+
+
+
+controllCommand_window = Window:New{
+	padding = {3,3,3,3,},
+	dockable = true,
+	caption = '',
+	textColor = {0.9,1,1,0.7},
+	name = "controllCommand_window",
+	x = controllCommand_window_positionX, 
+	y = controllCommand_window_positionY,
+	width = controllCommand_window_width,
+	height = controllCommand_window_height,
+	parent = screen0,
+	draggable = false,
+	tweakDraggable = true,
+	tweakResizable = true,
+	resizable = false,
+	dragUseGrip = false,
+	--minWidth = 50,
+	--minHeight = 50,
+	color = {0,0,0,1},
 	
-	
-	
-	controllCommand_window = Window:New{
-		padding = {3,3,3,3,},
-		dockable = true,
-		caption = '',
-		textColor = {0.9,1,1,0.7},
-		name = "controllCommand_window",
-		x = controllCommand_window_positionX, 
-		y = controllCommand_window_positionY,
-		width = controllCommand_window_width,
-		height = controllCommand_window_height,
-		parent = screen0,
-		draggable = false,
-		tweakDraggable = true,
-		tweakResizable = true,
-		resizable = false,
-		dragUseGrip = false,
-		--minWidth = 50,
-		--minHeight = 50,
-		color = {0,0,0,1},
-		
-		
-		children = {			
-			base_stack,			
-		},
-	}
-	
-	
+	children = {			
+		base_stack,			
+	},
+}
 end
 
 --subConstructors
@@ -377,6 +434,4 @@ end
 
 --update functions
 function widget:GameFrame(f)
-	
-	
 end

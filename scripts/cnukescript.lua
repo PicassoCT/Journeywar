@@ -535,7 +535,10 @@ end
 
 function threadMill()
 	if Spring.GetUnitDefID(unitID)== UnitDefNames["ccomendernukelvl3"].id then
+		x,y,z=Spring.GetUnitPosition(unitID)
+		Spring.SpawnCEG("nukebigland",x,y+15,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
 		damageFunction()
+		Spring.DestroyUnit(unitID,true,true)
 	else
 		StartThread(actualExplosion)
 		StartThread(shroom)	
@@ -545,7 +548,7 @@ end
 
 function script.Create()
 	Spring.SetUnitNeutral(unitID,true)
-	--Script.SetUnitNoSelect(unitID,true)
+	Spring.SetUnitNoSelect(unitID,true)
 	
 	Hide(spiralCenter) 
 	Hide(fireSpiral1) 

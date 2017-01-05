@@ -15,7 +15,7 @@ local cdturningpoint= piece"cdturningpoint"
 
 buildspottrain= piece"buildspottrain"
 
-buildspotplan1 = piece "buildspotplane"
+buildspotplane1 = piece "buildspotplane"
 buildspotplane2 = piece "buildspotplane2"
 buildspotplane3 = piece "buildspotplane3"
 buildspotplane4 = piece "buildspotplane4"
@@ -43,10 +43,10 @@ local cdcontain7=piece"cdcontain7"
 local cdcontain8=piece"cdcontain8"
 local cdcontain9=piece"cdcontain9"
 local boolRetracted=true
-local boolBuildSpotFixxed=false
+ boolBuildSpotFixxed=false
 local unitDefID =  0
 local boolIsBuilding=false
-currentBuildSpot=buildspottrain
+currentBuildSpot=piece"buildspottrain"
 local cdcrane = piece "cdcrane"
 local SIG_BUILD=2
 local buildID = nil
@@ -81,7 +81,7 @@ StartThread(alarmCheck)
 end
 
 function script.QueryBuildInfo() 
-	assert(type(currentBuildSpot)=="number")
+	assert(type(currentBuildSpot)=="number","condepot::"..type(currentBuildSpot))
 	return currentBuildSpot
 
 end

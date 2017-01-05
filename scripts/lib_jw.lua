@@ -14,6 +14,13 @@ function getTypeTable(UnitDefNames,StringTable)
 	return retVal
 end
 
+function getJourneyBuildingTypeTable(UnitDefNames)
+JourneyBuildingTypes={}	
+	for i=1,#UnitDefNames["beanstalk"].buildOptions do
+		JourneyBuildingTypes[UnitDefNames["beanstalk"].buildOptions[i]]=true
+	end
+	return JourneyBuildingTypes
+end
 --> JW specific function returning the factorys of the game
 function getFactoryTypeTable(UnitDefNames,IWant)
 	FactoryTypes={}	

@@ -1,3 +1,8 @@
+	VFS.Include("scripts/lib_jw.lua" )
+	VFS.Include("scripts/lib_OS.lua" )
+	VFS.Include("scripts/lib_UnitScript.lua" )
+	VFS.Include("scripts/lib_Build.lua" 	)
+
 --Mission1-----------------------------------------------------------------------------------------
 	
 	gateTypeTable=getTypeTable(UnitDefNames,{"fclvlone","fclvl2","citadell","jdarkgate"})

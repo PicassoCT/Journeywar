@@ -1,8 +1,8 @@
-local unitName = "gcouplem7"
+local unitName = "ghimm7"
 
 local unitDef = {
-	name = "Couple",
-	Description = "- Love conquers all",
+	name = "He",
+	Description = "- ",
 	objectName = "gCoupleM7.s3o",
 	script = "gTheCoupleM7script.lua",
 	buildPic = "placeholder.png",

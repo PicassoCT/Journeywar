@@ -40,7 +40,7 @@ function buildIt()
 	for i=#unitTable,1,-1 do
 		if Spring.GetUnitIsDead(unitTable[i])== false then
 		else
-			internalEnergy=internalEnergy+30
+			internalEnergy= internalEnergy + 30
 			table.remove(unitTable,i)
 		end
 	end
@@ -327,6 +327,7 @@ end
 function glowTail()
 if maRa() == true then
 	EmitSfx(shadowemit,1025)
+
 end
 end
 
@@ -350,9 +351,7 @@ function walk()
 	Turn(ears,x_axis,math.rad(-70),35)
 	resetT(piecesTable,22)
 	while (true) do
-		if maRa()== true then
-		smokeEmit()
-		end
+
 		--landing
 		turnT(tails,y_axis,math.random(-5,5),5)
 		turnT(tails,x_axis,math.random(5),5)
@@ -398,6 +397,9 @@ function walk()
 		turnT(tails,x_axis,math.random(-5,5),5)
 		Turn(ghostdance,x_axis,math.rad(-2),12)
 		glowTail()
+		if maRa()== true then
+			smokeEmit()
+		end
 	end
 	
 end

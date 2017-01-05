@@ -1710,12 +1710,12 @@ function alwaysWatching()
 	
 end
 
-maxSpeed= math.ceil(COB.MAX_SPEED *65533)
-
+maxSpeed= COB.MAX_SPEED 
+WACKY_CONVERSION_FACTOR_1=2184.53
 function setSpeed(percent)
 	limitedpercdent=math.max(0,math.min(percent,100))
 	limitedpercdent= 100/limitedpercdent
-	speed = math.ceil(limitedpercdent*maxSpeed)
+	speed = math.ceil(limitedpercdent*maxSpeed* WACKY_CONVERSION_FACTOR_1)
 	SetUnitValue(COB.MAX_SPEED,speed)
 end
 
@@ -1837,7 +1837,7 @@ end
 
 function script.Create()
 		Weapons[eSlicer][1]=1
-	
+	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
 	setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
@@ -1882,10 +1882,11 @@ boolOccupiedRecently=false
 function idleLoop()
 	while true do
 		if boolWalking == false then
-		Sleep(1000)
+		Sleep(10)
 			if boolWalking == false and boolOccupiedRecently== false then
 				idle(0.15)
 			end
+			Turn(bb05,y_axis,math.rad(0),0.25)
 		end
 
 	Sleep(1000)
@@ -2895,23 +2896,26 @@ function script.FireWeapon3()
 end
 
 function idle(speed)
-	Move(center,y_axis,-5,1.5)
+	Move(center,y_axis,-10,3.6)
 	times=5/3
-	rval=iRand(10,24)
-	equiTurn(ARML,AS04,x_axis,rval,rval/times)
-	equiTurn(ARMR,AS03,x_axis,rval,rval/times)
+	rval=iRand(10,44)
+	equiTurn(ARML,AS04,x_axis,rval,speed)
+	rval=iRand(10,44)
+	equiTurn(ARMR,AS03,x_axis,rval,speed)
 	
 	equiTurn(LS08,LK08,x_axis,-20,speed)
 	equiTurn(LS07,LK07,x_axis,-20,speed)
+	rSign=randSign()
+	Turn(bb05,y_axis,math.rad(math.random(12,22)*rSign),speed)
 	WaitForTurns(LS07,LK07,LS08,LK08,ARML,ARMR)
-	
+	WMove(center,y_axis,-10,3.6)
 	
 	equiTurn(LS08,LK08,x_axis,0,speed)
 	equiTurn(LS07,LK07,x_axis,0,speed)
 	equiTurn(ARML,AS04,x_axis,0,speed)
 	equiTurn(ARMR,AS03,x_axis,0,speed)
-	
-	WMove(center,y_axis,0,1.5)
+		Turn(bb05,y_axis,math.rad(math.random(12,22)*rSign*-1),speed)
+	WMove(center,y_axis,0,3.6)
 	WaitForTurns(LS07,LK07,LS08,LK08,ARML,ARMR)
 end
 

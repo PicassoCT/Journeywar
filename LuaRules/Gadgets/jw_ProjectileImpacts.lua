@@ -320,8 +320,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		if weaponDefID == jvaryjumpDefID then
-			Spring.SetUnitPosition(AttackerID,px,py+35,pz)
-
+			if AttackerID then
+				Spring.SetUnitPosition(AttackerID,px,py+35,pz)
+				env=Spring.UnitScriptEnv(AttackerID)
+				if env then
+					Spring.UnitScript.CallAsUnit(AttackerID,env.setInTransit,false )		
+				end				
+			end
 		end
 		
 		if weaponDefID== jvaryfoospearDefID then
@@ -401,9 +406,9 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 			--create a new copy if you are the original
 			if not GG.GhostDancerCopyOrg[AttackerID] then 
-				teamid=Spring.GetUnitTeam(AttackerID)
+	
 				--a new copy
-				GG.GhostDancerOrgCopy[AttackerID] = Spring.CreateUnit("ghostdancer",px,py,pz,teamid)
+				GG.GhostDancerOrgCopy[AttackerID] = Spring.CreateUnit("jghostdancer",px,py,pz,teamid)
 				GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[AttackerID]] = AttackerID
 			end
 		end
@@ -846,7 +851,10 @@ if (gadgetHandler:IsSyncedCode()) then
 				affectedUnits[tax]={}
 				affectedUnits[tax][1]=attackerID
 				affectedUnits[tax][2]=100
-				affectedUnits[tax][3]=Spring.GetUnitVelocity(attackerID) 
+				env = Spring.UnitScript.GetScriptEnv(attackerID)
+				if env then				
+					affectedUnits[tax][3]=math.ceil(env.COB.MAX_SPEED *65533)
+				end
 				--now we displace it and set its speed to zero
 				Spring.SetUnitSensorRadius(attackerID,"los",5)
 			end
@@ -934,8 +942,11 @@ if (gadgetHandler:IsSyncedCode()) then
 					if affectedUnits[i]~=nil then
 						affectedUnits[i][2]= affectedUnits[i][2]-1 
 						if affectedUnits[i][2] <= 0 then
-							if Spring.ValidUnitID(affectedUnits[i][1])==true then
-								Spring.SetUnitVelocity(affectedUnits[i][1],affectedUnits[i][3])
+							if affectedUnits[i][1] and affectedUnits[i][3] and Spring.ValidUnitID(affectedUnits[i][1])==true then
+								env=Spring.UnitScriptEnv(affectedUnits[i][1])
+								if env then
+									Spring.UnitScript.CallAsUnit(affectedUnits[i][1],env.SetUnitValue,COB.MAX_SPEED, affectedUnits[i][3] )		
+								end
 							end
 							affectedUnits[i]=nil	 
 						end	 

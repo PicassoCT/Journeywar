@@ -297,9 +297,9 @@ function getNearestEnemy(id)
 		end
 	end,
 	function(ed)
-		if ed and id and GetUnitDistance(ed,id) <minDist then 
+		if ed and id and distanceUnitToUnit(ed,id) <minDist then 
 			minDistID= ed
-			minDist=GetUnitDistance(ed,id)
+			minDist=distanceUnitToUnit(ed,id)
 		end
 	end)		
 	if minDistID~=nil then return minDistID end

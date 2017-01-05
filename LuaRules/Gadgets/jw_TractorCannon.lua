@@ -113,8 +113,8 @@ local COLLISION_IMPULSEFACTOR = 0.75 --How much affects unit impulse to damage c
 local COLLISION_MASSFACTOR = 0.50 --How much affects unit mass to damage (same as above)
 
 local TRACTOR_IGNORELIST = { --Units ignored from being tractored
-	ccomender = true,
-	jvarytara = true,
+	["ccomender"] = true,
+	["jvaryavatara"] = true,
 }
 
 local CMD_WAIT = CMD.WAIT

@@ -45,10 +45,13 @@ for i=0,59,1 do
 end
 
 pumps={}
+pumpbase={}
 for i=1,5,1 do
 	pumps[i]={}
 	stone= "pump"..i
 	pumps[i]=piece (stone)
+	name="bspumbase"..i
+	pumpbase[i]=piece (name)
 end
 
 greenSleaves={}
@@ -556,53 +559,56 @@ function greatEntry()
 end
 
 nrOfReinforcements=3
+firstWave={
+"jconroach",
+"skinfantry",
+"skinfantry",
+"tiglil"    ,
+"jconroach",
+"skinfantry",
+"skinfantry",
+"skinfantry",
+"jconroach",
+"skinfantry",
+"skinfantry",
+"skinfantry",
+}
+
+nextWave={
+"jconroach",
+"jconroach",
+"tiglil",
+"tiglil",
+"tiglil",
+"jconroach",
+"skinfantry",
+"skinfantry",
+"skinfantry"
+}
+
+
 function reInforCements()
 	Sleep(65000)
 	StartThread(swayBeanstalk)
-	--Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav") 
+
 	Sleep(180000)
 	dropPx,dropPy,dropZ=Spring.GetUnitPosition(unitID)
 	for i=1,nrOfReinforcements,1 do
-		
+		--done to avoid timing bugs
 		for thee=1,600,1 do
 			Sleep(100)
 		end
-		--Spring.PlaySoundFile("sounds/citadell/reinforcements.wav") 
-		
-		
+			
 		if i==1 then
-			
-			GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+125, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+90, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+75, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+55, 0, teamID) 
-			
-			GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160, 0, teamID)
-			
-			GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260, 0, teamID)
-			
-			
+			for u=1,#firstWave do
+			posX,posY,posZ= Spring.GetUnitPiecePosDir(unitID,pumpbase[u%(#pumpbase)+1])
+			GG.UnitsToSpawn:PushCreateUnit(firstWave[u],getFrameDependentUniqueOffset(5)+posX, posY,posZ,0, teamID)
+			end			
 		else
-			
-			GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340, 0, teamID) 
-			
-			
-			GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("tiglil",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160, 0, teamID)
-			
-			GG.UnitsToSpawn:PushCreateUnit("jconroach",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280, 0, teamID) 
-			GG.UnitsToSpawn:PushCreateUnit("skinfantry",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260, 0, teamID)
-			
+			for u=1,#nextWave do
+			posX,posY,posZ= Spring.GetUnitPiecePosDir(unitID,pumpbase[u%(#pumpbase)+1])
+			GG.UnitsToSpawn:PushCreateUnit(nextWave[u],getFrameDependentUniqueOffset(5)+posX, posY,posZ,0, teamID)
+			end
 		end
 		
 	end

@@ -22,7 +22,7 @@
 			license = "Free",
 			layer = 0,
 			version = 1,
-			enabled = isPlanetFlammeable()
+			enabled = true, -- isPlanetFlammeable()
 		}
 	end
 
@@ -47,8 +47,12 @@
 	
 	function gadget:UnitDestroyed(unitid,unitdefid, unitTeam)
 	
-	if unitdefid== VARYFOODEF then
-	table.remove(VariousFoos[unitTeam],unitid)
+	if unitdefid== VARYFOODEF and VariousFoos and VariousFoos[unitTeam] then
+		for i=#VariousFoos[unitTeam],1,-1 do
+			if VariousFoos[unitTeam][i] == unitid then
+			table.remove(VariousFoos[unitTeam],i)
+			end
+		end
 	end
 	
 	if unitdefid== HOHYMDEF then
@@ -70,7 +74,7 @@
     function gadget:UnitCreated(unitID, unitDefID, unitTeam)
 		if unitDefID== VARYFOODEF then
 			if not VariousFoos[unitTeam] then VariousFoos[unitTeam]={} end
-		table.insert(VariousFoos[unitTeam],unitID)
+			VariousFoos[unitTeam][#VariousFoos[unitTeam]+1]=unitID
 		end
 	
 		if unitDefID== HOHYMDEF  then
@@ -97,6 +101,7 @@
 		end
 		
 		handleVaryFoos(frame)
+		
 		if seastarcounter < 5 then
 		handleSeaStars(frame,seastarcounter)
 		end

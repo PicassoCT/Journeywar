@@ -604,7 +604,7 @@ function GateLoop (boolReverse)
 		Show(GateWave)
 		Show(WaveA)
 		speed=math.random(1.5,4)
-		if maRo() then
+		if raNil() then
 			if AlterRate % 2==1 then
 				Move(GateWave,x_axis,-5.5,speed)
 			end

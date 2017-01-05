@@ -6,9 +6,9 @@ local unitDef = {
   Description 		 =" the end of this world ",
 
   script 			 = "jVaryTarascript.lua",
-  maxDamage = 2550, 
+  maxDamage = 22550, 
 
-  MovementClass = "Default2x2",
+  MovementClass = "jinfantry",
   buildCostMetal =30,
   buildCostEnergy =200,
   buildTime=3,
@@ -18,22 +18,24 @@ local unitDef = {
 	canmove=true,
 	canpatrol=true,
 	canstop=true,
+	transportCapacity = 50,
+	transportSize = 30000*50,
 	
   moveState =2,
   noAutoFire =false,
-  footprintX=2,
-  footprintZ =2,
+  footprintX=8,
+  footprintZ =8,
      
   upright =false,
   pushResistant =true,
   maxVelocity =1.2,
   acceleration =0.1,
-  turnRate =365,
+  turnRate =125,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
   maxwaterdepth=150,
 
-
+	
  
 	maneuverleashlength=640,
 	shootme=true,
@@ -58,15 +60,23 @@ local unitDef = {
 
 
 
-	 customParams = {},
+	 customParams = {
+	 varyfooneeded=[[50]]
+	 },
+	 
  sfxtypes = {
 				explosiongenerators = {
-
-				
-				 
 				},
 				},
 				
+	weapons = {		
+		[1]={name = "jvaryspear",
+			onlyTargetCategory = [[AIR]],
+			},
+		[2]={name = "jvarytaraompf",
+			onlyTargetCategory = [[LAND]],
+		},
+	},
 
 }
 return lowerkeys({ [unitName] = unitDef })

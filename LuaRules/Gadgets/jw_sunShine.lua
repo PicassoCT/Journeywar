@@ -17,7 +17,7 @@ if gadgetHandler:IsSyncedCode() then
 	-------------------------------------
 	----------------SYNCED---------------
 	VFS.Include("scripts/lib_UnitScript.lua")
-
+	DAYLENGTH=28800
 	--==========================WhereTheSunDontShines============================
 	--Initialses the sun control and sets the inital arc
 	function gadget:GameStart ()
@@ -248,9 +248,9 @@ local	function getDefaultConfg(rgba)
 	--set the sun
 	function gadget:GameFrame(n)		
 		if n % 32 == 0 then
-			aDay(n,28800)		
+			aDay(n+DAYLENGTH/2,DAYLENGTH)		
 		end	
-		if n % 28800 == 0 then 
+		if n % DAYLENGTH == 0 then 
 			setSunArc()
 		end
 	end

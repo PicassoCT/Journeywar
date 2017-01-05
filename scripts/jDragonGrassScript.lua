@@ -55,8 +55,7 @@ function putDrugPieceInPlace(nr)
 
 		px,pz=RotationMatrice(0,DrugRange,math.rad(degree)*nr)
 		MoveUnitPieceToRelativeWorldPos(unitID,footneedle,px,pz,22)
-	end
-	
+
 	WaitForMove(footneedle,y_axis)
 	addTime=math.ceil(math.random(6000,12000))
 	Sleep(addTime)
@@ -164,7 +163,7 @@ end
 
 function checkDistanceAndReinject(k,x,y,z)
 
-	if GetUnitDistance(k,unitID) < DrugRange then
+	if distanceUnitToUnit(k,unitID) < DrugRange then
 		AddictList[k].addTime= INJECT
 		PlayInjectSoundFiles()
 	end

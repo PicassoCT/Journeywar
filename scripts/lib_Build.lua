@@ -1,5 +1,4 @@
 
-
 function mirrorMapCenter(x,y,z)
 	mx,mz=Game.mapSizeX,Game.mapSizeZ
 	mx,mz= mx/2,mz/2
@@ -7,6 +6,11 @@ function mirrorMapCenter(x,y,z)
 	return x-1*(x-mx), y, z-1*(z-mz)
 end
 
+	function sanitizeRandom(lowerBound,UpperBound)
+	if lowerBound >= UpperBound then return lowerBound end
+	
+	return math.random(lowerBound,UpperBound)
+	end
 
 --Rule of Order
 --Rule of Shape by Absence
@@ -1439,7 +1443,7 @@ function deterministicTurn(index,maxindex,degree)
 		
 		return detTurnStoreTable[index]+slightVariation(detTurnStoreTable[index] or 3, 7) , (detTurnStoreTable[index]*360) %(index*270)
 	else
-		detTurnStoreTable[index]= math.random(maxindex,180)	/maxindex
+		detTurnStoreTable[index]= sanitizeRandom(maxindex,180)	/maxindex
 		return detTurnStoreTable[index]*4, (detTurnStoreTable[index]*360) %(index*270)+math.random(0,10)
 	end
 end
@@ -1450,10 +1454,10 @@ function deterministicMove(index,maxindex)
 		index=(index%maxindex)+1
 		return detMoveStoreTable[index]
 	else
-		detMoveStoreTable[index]= math.floor(math.random(1,maxindex))	
+		detMoveStoreTable[index]= math.floor(sanitizeRandom(1,maxindex))	
 		return detMoveStoreTable[index]
 	end
-	return math.floor(math.random(1,maxindex))	
+	return math.floor(sanitizeRandom(1,maxindex))	
 end
 
 
@@ -1465,9 +1469,9 @@ function getRandomGramarProcution(ElementTable, NrOfElements, Recursionstart, Re
 		if maRa()==true then 
 			
 			if maRa()==true then 
-				Product=Product..(ElementTable[math.random(1,#ElementTable)])
+				Product=Product..(ElementTable[sanitizeRandom(1,#ElementTable)])
 			else
-				Product=(ElementTable[math.random(1,#ElementTable)])..Product
+				Product=(ElementTable[sanitizeRandom(1,#ElementTable)])..Product
 			end
 			
 		end
@@ -1766,7 +1770,7 @@ gramarTable={
 			["X"]=true
 		},
 		transitions={["A"]= function (olddeg,degree,Tpiece,Epiece,recIt,boolLastLevel) 
-				Turn(Tpiece,x_axis,math.random(-1*math.abs(olddeg),math.abs(degree)))
+				Turn(Tpiece,x_axis,sanitizeRandom(-1*math.abs(olddeg),math.abs(degree)))
 				Turn(Tpiece,y_axis,math.random(0,360),0,true)
 				
 				return "ABA"

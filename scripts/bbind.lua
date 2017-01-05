@@ -821,9 +821,7 @@ function likeCattle()
 	end
 end
 
-function distance(x,x2)
-	return math.sqrt((x-x2)^2)
-end
+
 function moveCadaversToRalleyPoint()
 	local tx,ty,tz,_,_,_=Spring.GetUnitPiecePosDir(unitID,ralleypoint)
 	

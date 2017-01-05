@@ -20,7 +20,7 @@ local unitDef = {
 	MaxSlope = 15,
 	MaxVelocity = 1.4,
 	MaxWaterDepth = 2000,
-	MovementClass = "Default2x2",
+	MovementClass = "jinfantry",
 	TurnRate = 450,
 	mass=9000,
 	

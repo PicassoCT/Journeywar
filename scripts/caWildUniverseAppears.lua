@@ -487,7 +487,7 @@ function script.Create()
 	GG.boolForceLandLordUpdate=true
 	
 	--tempTable=prepareHalfSphereTable(size)
-	--printOUT(tempTable)
+	--print2DMap(tempTable)
 	GG.UnitsToSpawn:PushCreateUnit("gdecbigbangscar",x,0,z,0,teamID)
 	--</DIGHOLE>
 	

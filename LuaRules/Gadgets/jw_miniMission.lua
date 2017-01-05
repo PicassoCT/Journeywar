@@ -60,6 +60,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("LuaRules/Gadgets/jw_miniMission5.lua")
 	---Mission6-----------------------------------------------------------------------------------------
 	VFS.Include("LuaRules/Gadgets/jw_miniMission6.lua")
+	--Mission7--
+	VFS.Include("LuaRules/Gadgets/jw_miniMission7.lua")
+	MissionMax=7
 	--<necessaryInfo>
 	teamTables={}
 	--contains StartPositions per Team
@@ -110,6 +113,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	addMission5()
 	
 	for i=1,MissionMax do
+	if not MissionFunctionTable[i] then MissionFunctionTable[i]={} end
 	MissionFunctionTable[i][10]={}
 	MissionFunctionTable[i][10]=0
 	MissionFunctionTable[i][11]={}

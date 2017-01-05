@@ -66,8 +66,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function gadget:FeatureDestroyed(FeatureID)
 		if WreckList~= nil then
-			for i=1, table.getn(WreckList),1 do
-			if WreckList[i].id == FeatureID then table.remove(WreckList[i]) end
+			for i= table.getn(WreckList),1,-1 do
+			if WreckList[i].id == FeatureID then table.remove(WreckList,i) end
 			end
 		
 		end
@@ -77,9 +77,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	function gadget:GameFrame(frame)
-		
-		
-	
 	
 		if frame % 25 == 0 and  WreckList ~=  nil and table.getn(WreckList) ~= 0 then
 		local spSetFeaturePosition=  Spring.SetFeaturePosition

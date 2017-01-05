@@ -130,6 +130,9 @@ effectUnitDefs = {
 	tiglil ={
 		{class='Ribbon', options={color={.1,.8,0.9,1}, width=3.5, piece="tlhairup", onActive=false}},
 	},
+	jghostdancer ={
+		{class='Ribbon', options={color={.1,.8,0.9,1}, width=3.5, piece="Tail05", onActive=false}},
+	},
 	
 	
 	
