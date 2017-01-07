@@ -183,7 +183,9 @@ effectUnitDefs = {
 		{class='ShieldSphere', options={life=math.huge, pos={0,300,0}, size=150, colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
 		{class='ShieldSphere', options={life=math.huge, pos={0,400,0}, size=140, colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
 		{class='ShieldSphere', options={life=math.huge, pos={0,500,0}, size=130, colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
-		
+
+		{class='Ribbon', options={color={.7,1,0.1,1}, width=12.5, piece="seed", onActive=true}},
+
 		
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength = 0.005, repeatEffect=true}} 
 	},

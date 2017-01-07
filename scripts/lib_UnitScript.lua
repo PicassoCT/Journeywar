@@ -19,9 +19,8 @@ MA 02110-1301, USA.
 ]]--
 --------------DEBUG HEADER
 --Central Debug Header Controlled in UnitScript
-lib_boolDebug= true --GG.BoolDebug or false
+lib_boolDebug= false --GG.BoolDebug or false
 --------------DEBUG HEADER
-
 
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value

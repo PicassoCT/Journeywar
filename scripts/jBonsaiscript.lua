@@ -154,7 +154,7 @@ boolWaterSpilling=true
 TablesOfPiecesGroups={}
 function script.Create()
 	allreadyInsertedPieces={}
-	generatepiecesTableAndArrayCode(unitID)
+	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	resetT(TablesOfPiecesGroups["bP"])
 	resetT(TablesOfPiecesGroups["Tree"])

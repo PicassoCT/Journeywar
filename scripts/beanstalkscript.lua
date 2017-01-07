@@ -313,7 +313,7 @@ function moveUpAndDown()
 	StartThread(pumpAnimation)
 	while(true) do
 		for i=1,table.getn(pumps),1 do
-			Move(pumps[i],y_axis,13,0.8)
+			Move(pumps[i],y_axis,30,0.8)
 		end
 		WaitForMove(pumps[5],y_axis)
 		for i=1,5,1 do

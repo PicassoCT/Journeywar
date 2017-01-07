@@ -76,7 +76,7 @@ function buildMoma(varyFooos)
 	frame=Spring.GetGameFrame()
 	x,y,z=Spring.GetUnitPiecePosDir(unitID,center)
 	for i=#varyFooos,1,-1 do	
-		
+	if 	varyFooos[i] then
 		if Spring.ValidUnitID(varyFooos[i])== false or Spring.GetUnitIsDead(varyFooos[i])==true then
 			table.remove(varyFooos,i)
 		else	
@@ -91,6 +91,7 @@ function buildMoma(varyFooos)
 				Spring.SetUnitMoveGoal(varyFooos[i],x+ox,y,z+oz)									
 			end
 		end
+	end
 	end
 end
 
@@ -146,6 +147,7 @@ function raiseAvatara()
 		--check VaryFoos around you
 		ux,uy,uz=Spring.GetUnitPosition(unitID)
 		units=getAllInCircle(ux,uz,300)
+		if units then 
 		allVaryFoos=process( units,
 		filterNonVaryfoos
 		)
@@ -158,6 +160,7 @@ function raiseAvatara()
 			--get nextPiece above ground
 			buildMoma(allVaryFoos)
 			
+		end
 		end
 		Sleep(350)
 	end
