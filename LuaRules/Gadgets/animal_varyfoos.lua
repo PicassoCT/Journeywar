@@ -43,11 +43,11 @@ VFS.Include("scripts/lib_Build.lua" 	)
 		
 			for team,unittable in pairs (VariousFoos) do
 				if table.getn(unittable) > varyFooNeeded then
-				if  GG.VaryFooAvatara[team]then 
-					 GG.VaryFooAvatara[team]=BuildAvatara(unittable, GG.VaryFooAvatara[team])	
-				else
-					 GG.VaryFooAvatara[team]=BuildAvatara(unittable)
-				end
+					if  GG.VaryFooAvatara[team]then 
+						 GG.VaryFooAvatara[team]=BuildAvatara(unittable, GG.VaryFooAvatara[team])	
+					else
+						 GG.VaryFooAvatara[team]=BuildAvatara(unittable)
+					end
 				end
 			end
 		end

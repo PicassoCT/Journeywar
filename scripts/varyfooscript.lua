@@ -1179,6 +1179,10 @@ function eatThemAliveWhenNotWalking()
 							if id ~= unitID then 
 								return id 
 							end 
+						end,
+					function(id)
+						defIDid=Spring.GetUnitDefID(id)
+						if not tabooTable[defIDid] then return id end
 						end
 					)
 	
@@ -1186,31 +1190,34 @@ function eatThemAliveWhenNotWalking()
 			for i=1,#T do
 				defID=spGetUnitDefID(T[i])
 				if GG.jAbyss_Moma and GG.jAbyss_Moma[unitID] and isInfantry[defID] then
-					MomaWillBeSoProud(T[i],GG.jAbyss_Moma[unitID])	
+						MomaWillBeSoProud(T[i],GG.jAbyss_Moma[unitID])	
 					break
-				elseif (tabooTable[defID] == nil) and tummyFill < 50 then 
+				elseif tummyFill < 50 then 
 					if T[i] and Spring.ValidUnitID(T[i]) ==true and Spring.GetUnitIsDead(T[i])== false then
 						biteAnimation(T[i])	
 						tummyFill=tummyFill+10
-					break
 					end
 				end
 			end
 			
-			if tummyFill < 50 then
+			if tummyFill < 75 then
 						Sleep(4024)
 						enemyID=spGetUnitNearestEnemy(unitID)
 						if enemyID then
-							x,y,z= x+math.random(-35,35),y,z+math.random(-35,35)
+							ex,ey,ez= math.random(-35,35),0, math.random(-35,35)	
 							if maRa()==true then
-								x,y,z= spGetUnitPosition(enemyID)
-								Spring.SetUnitMoveGoal(x,y,z,unitID)
+								ex,ey,ez=Spring.GetUnitPosition(enemyID)														
 							else
 								eTeamID=Spring.GetUnitTeam(enemyID)
 								if eTeamID then
-									x,y,z= Spring.GetTeamStartPosition(eTeamID)
+									ex,ey,ez= Spring.GetTeamStartPosition(eTeamID)
 								end
 							end
+							
+							if ex then
+							Spring.SetUnitMoveGoal(ex,ey,ez,unitID)
+							end
+							
 						end
 					end
 			  end
