@@ -1,8 +1,8 @@
- include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 
 piecesTable={}
@@ -381,197 +381,193 @@ boolPieceArrived=false
 boolPressedButtonTwice=false
 teamID=Spring.GetUnitTeam(unitID)
 
-boolBloodyVirginMary=true
+
 boolFirstActivation=false
 
-		function script.Activate()
-		if boolFirstActivation==false then boolFirstActivation=true end
-		
-		boolPressedButtonTwice=true
-					if boolBloodyVirginMary==true then
-				--	StartThread(spawnDecal)
-					boolBloodyVirginMary=false
-					--StartThread(reInforCements)
-					end
-				     
-						return 1
-		end
-
-		
-		
-		function script.Deactivate()
-		          
-			
-				return 0
-		end
-
-		
-		function enterTheCommEnder(teamID)
-
-		x,y,z=Spring.GetUnitBasePosition(unitID)
+function script.Activate()
+	if boolFirstActivation==false then boolFirstActivation=true end
 	
-		Spring.CreateUnit("ccomederbunkerdecalfactory",x,y,z, 0, teamID)  
-		Sleep(10)
-	  HisID=	Spring.CreateUnit("ccomender",x,y,z, 0, teamID)  
-	  Spring.SetUnitBlocking(unitID,false)
-	  Spring.SetUnitMoveGoal(HisID,x+250,y,z)
-	  HideWrap(MEcha)
-return HisID
+	boolPressedButtonTwice=true
+
+	
+	return 1
 end
 
 
-	function showUP()
+
+function script.Deactivate()
+	
+	
+	return 0
+end
+
+
+function enterTheCommEnder(teamID)
+	
+	x,y,z=Spring.GetUnitBasePosition(unitID)
+	
+	Spring.CreateUnit("ccomederbunkerdecalfactory",x,y,z, 0, teamID) 
+	Sleep(10)
+	HisID=	Spring.CreateUnit("ccomender",x,y,z, 0, teamID) 
+	Spring.SetUnitBlocking(unitID,false)
+	Spring.SetUnitMoveGoal(HisID,x+250,y,z)
+	HideWrap(MEcha)
+	return HisID
+end
+
+
+function showUP()
 	Turn(bridges2,y_axis,math.rad(103),0)
 	Turn(bridges3,y_axis,math.rad(-100),0)
 	Turn(bridges4,y_axis,math.rad(60),0)
 	Turn(bridges5,y_axis,math.rad(-145),0)
 	Turn(bridges6,y_axis,math.rad(146),0)
-		t=-47
-		for i=1,#inAxTable,1 do
-			if i < math.ceil(0.5*#inAxTable) then
+	t=-47
+	for i=1,#inAxTable,1 do
+		if i < math.ceil(0.5*#inAxTable) then
 			Turn(inAxTable[i],y_axis,math.rad(t -((i-1)*11),0))	
-				else
-				Turn(inAxTable[i],y_axis,math.rad(47 +((i-math.ceil(0.5*#inAxTable))*10),0))	
-				end
+		else
+			Turn(inAxTable[i],y_axis,math.rad(47 +((i-math.ceil(0.5*#inAxTable))*10),0))	
 		end
-		
+	end
+	
 	WaitForMove(center,y_axis)
-
+	
 	Move(Earth002,y_axis,-104.939,24)--24
 	Move(Earth002,z_axis,247.025,56)--56
 	WaitForMove(Earth002,y_axis)
 	WaitForMove(Earth002,z_axis)
 	HideWrap(Earth002)
 	Move(ArmShell1,y_axis,-50,0)
-
-
-
-		for i=1, 29, 1 do
+	
+	
+	
+	for i=1, 29, 1 do
 		
-			Sleep(20)
+		Sleep(20)
 		
-			
-			StartThread(PseudoPhysix,EarthTable[i],PEarthTable[i],math.random(50,90))
-			
-			
-		end
-
+		
+		StartThread(PseudoPhysix,EarthTable[i],PEarthTable[i],math.random(50,90))
+		
+		
+	end
+	
 	boolPieceArrived=true
-		Move(ArmShell1,y_axis,0,150)
-
-		while (boolSpawn==false) do
+	Move(ArmShell1,y_axis,0,150)
+	
+	while (boolSpawn==false) do
 		
 		Sleep(150)
-		end
-		Sleep(3000)
-		Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-		budget=20000
-		budget=math.floor(budget/6)/1000
-		Move(ArmShell3,y_axis,-133,math.abs(-133/budget))
-		WaitForMove(ArmShell3,y_axis)
-		Move(ArmShell2,y_axis,-133,math.abs(-133/budget))
-		Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-		WaitForMove(ArmShell2,y_axis)
-		Move(ArmShell1,y_axis,-213,math.abs(-233/budget))
-		Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-		WaitForMove(ArmShell1,y_axis)
-		Move(ArmShell3,y_axis,-133-60,math.abs(-193/budget))
-		Move(ArmShell2,y_axis,-133-60,math.abs(-193/budget))
-			Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-			WaitForMove(ArmShell3,y_axis)
-			Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
-			WaitForMove(ArmShell2,y_axis)
-		for i=1,#inAxTable,1 do
+	end
+	Sleep(3000)
+	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+	budget=20000
+	budget=math.floor(budget/6)/1000
+	Move(ArmShell3,y_axis,-133,math.abs(-133/budget))
+	WaitForMove(ArmShell3,y_axis)
+	Move(ArmShell2,y_axis,-133,math.abs(-133/budget))
+	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+	WaitForMove(ArmShell2,y_axis)
+	Move(ArmShell1,y_axis,-213,math.abs(-233/budget))
+	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+	WaitForMove(ArmShell1,y_axis)
+	Move(ArmShell3,y_axis,-133-60,math.abs(-193/budget))
+	Move(ArmShell2,y_axis,-133-60,math.abs(-193/budget))
+	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+	WaitForMove(ArmShell3,y_axis)
+	Turn(crane,y_axis,math.rad(math.random(-360,360)),12)
+	WaitForMove(ArmShell2,y_axis)
+	for i=1,#inAxTable,1 do
 		Turn(inAxTable[i],x_axis,math.rad(77),12/(budget*i))
-		end
-
-		for i=1,#outAxTable,1 do
+	end
+	
+	for i=1,#outAxTable,1 do
 		Turn(outAxTable[i],x_axis,math.rad(-99),math.abs(-20/(budget*i)))
-		end
-
-		for i=1,#shieldTable,1 do
+	end
+	
+	for i=1,#shieldTable,1 do
 		Turn(shieldTable[i],x_axis,math.rad(120),math.abs(20/(budget*i)))
-		end
+	end
 	Turn(bridges2,y_axis,math.rad(0),2.6)
 	Turn(bridges3,y_axis,math.rad(0),2.6)
 	Turn(bridges4,y_axis,math.rad(0),2.6)
 	Turn(bridges5,y_axis,math.rad(0),2.6)
 	Turn(bridges6,y_axis,math.rad(0),2.6)
-		
-		Turn(crane,y_axis,0,1.2)
+	
+	Turn(crane,y_axis,0,1.2)
 	Move(Kreis02,y_axis,-72,15)	
-
+	
 end
 
 function inYourOwnTime()
-		while(boolFirstActivation== false) do
-			Sleep(50)
-		end
+	while(boolFirstActivation== false) do
+		Sleep(50)
+	end
 	StartThread(spawnCommander)
 	Move(center,y_axis,0,60)
 	StartThread(showUP)
 end
 
 function script.Create()
-
-
+	
+	
 	Move(center,y_axis,-300,0)
 	StartThread(inYourOwnTime)
 end
 boolSpawn=false
 function spawnCommander()
-    if GG.ComEnders== nil then  GG.ComEnders={} end
-
-	if  GG.ComEnders[teamID]== nil then
+	if GG.ComEnders== nil then GG.ComEnders={} end
+	
+	if GG.ComEnders[teamID]== nil then
 		Sleep(4200)
-
+		
 		--play Warning Message Here: "Warning! You requested direct insertion into the Battlefield. By Universal Union Law the Buttonpressing Individual hereby, declares The U^2 responsibilitys nil and void- should he find irreversible neural death on the Battlefield! Button Up here."
-		Spring.PlaySoundFile("sounds/citadell/bushthebutton.wav")  
+		Spring.PlaySoundFile("sounds/citadell/bushthebutton.wav") 
 		Sleep(20000)
 		boolPressedButtonTwice=false
 		while boolPressedButtonTwice==false do
 			Sleep(350)
 		end
 		-- Screen goes Black and then comes back
-	   --play Warning Message: "Binding Agreement is processed. Comander teleported. Comander Capsule inserted. Lock Sealed. Atmospheric Preasure in HangarBay. Please keep limbs inside the capsule at all times. Outside Temperature is 42 ° Degrees. Good Luck, Comander."
+		--play Warning Message: "Binding Agreement is processed. Comander teleported. Comander Capsule inserted. Lock Sealed. Atmospheric Preasure in HangarBay. Please keep limbs inside the capsule at all times. Outside Temperature is 42 ° Degrees. Good Luck, Comander."
 		Spring.PlaySoundFile("sounds/citadell/comEnderDeploy.wav") 
 		--check ComEnderTable for not allready spawned
 		boolSpawn=true
 		Sleep(22000)
 		lteamID=Spring.GetUnitTeam(unitID)
 		--spin UP Sensor
-
-	
-	
-				if GG.ComEnders== nil then GG.ComEnders={} end
-					if GG.ComEnders[teamID]== nil then
-						idEal=enterTheCommEnder(lteamID)	
-						GG.ComEnders[teamID]={}
-						GG.ComEnders[teamID]=idEal
-						Sleep(5000)
-						for i=1,#inAxTable,1 do
-							Turn(inAxTable[i],x_axis,math.rad(0),1.2/i)
-						end
-
-						for i=1,#outAxTable,1 do
-							Turn(outAxTable[i],x_axis,math.rad(0),1.2/i)
-						end
-
-						for i=1,#shieldTable,1 do
-							Turn(shieldTable[i],x_axis,math.rad(0),1.2/i)
-						end
-						
-						Move(center,y_axis,-300,5)
-					end
-				end
 		
+		
+		
+		if GG.ComEnders== nil then GG.ComEnders={} end
+		if GG.ComEnders[teamID]== nil then
+			idEal=enterTheCommEnder(lteamID)	
+			GG.ComEnders[teamID]={}
+			GG.ComEnders[teamID]=idEal
+			Sleep(5000)
+			for i=1,#inAxTable,1 do
+				Turn(inAxTable[i],x_axis,math.rad(0),1.2/i)
+			end
+			
+			for i=1,#outAxTable,1 do
+				Turn(outAxTable[i],x_axis,math.rad(0),1.2/i)
+			end
+			
+			for i=1,#shieldTable,1 do
+				Turn(shieldTable[i],x_axis,math.rad(0),1.2/i)
+			end
+			
+			Move(center,y_axis,-300,5)
+		end
+	end
+	
 	if math.random(0,1)== 1 then
 		Sleep(6*60*10000)
 		Spring.PlaySoundFile("sounds/citadell/centpropagendspeech.ogg",0.9)
 	end
-			
+	
 end
 
 function script.Killed()
-return 0
+	return 0
 end

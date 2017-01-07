@@ -2,10 +2,9 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
 include "lib_Build.lua" 
 
-
+local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 SIG_ATTACKED=2
 SIG_DELAYEDSTOP=4
 RAM_DAMAGE=250
@@ -13,12 +12,11 @@ RAM_DAMAGE=250
 center = piece"center"
 piecesTable= {}
 currentPiece=1
--- piece -->AttachPoints
-AttachPoints=makeTableOfNames("aPoint",1,30)
-for i=1,30 do
-	AttachPoints[i]= piece(AttachPoints[i])
-end
 
+varyTaraID=UnitDefNames["jvaryavatara"].id
+nrNeeded= tonumber(UnitDefs[varyTaraID].customParams.varyfooneeded)
+-- piece -->AttachPoint
+AttachPoints={}
 
 --unitID-->piece
 if not GG.BoundVaryFoos then GG.BoundVaryFoos={} end
@@ -29,26 +27,39 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	boolUnderAttack=true
 	Signal(SIG_ATTACKED)
 	StartThread(resetAttack)
+	hp,maxhp=Spring.GetUnitHealth(unitID)
+	if hp/maxhp < 0.25 and math.random(0,1)==1 then
+	teamID =Spring.GetUnitTeam(unitID)
+		for i=1, 0.25*nrNeeded, 1 do
+			if AttachPoints[i] then
+				x,y,z=spGetUnitPiecePosDir(unitID,AttachPoints[i])
+				if x then
+					GG.UnitsToSpawn:PushCreateUnit("jvaryfoo",x,y,z,0,teamID)	
+				end
+			end
+		end
+	end
 end
 
 boolBuildEnded=false
-local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
+
 AttachedUnits={}
 function partOfShipPartOfCrew( point, VaryFooID)
 	Spring.SetUnitNeutral(VaryFooID,true)
 	Spring.UnitScript.AttachUnit(point,VaryFooID)
 	AttachedUnits[VaryFooID]=true
+
 	
 	
-	
-	while boolBuildEnded == false do
+	while boolBuildEnded == false and Spring.GetUnitIsDead(VaryFooID) == false do
 		tx,ty,tz=Spring.GetUnitDirection(VaryFooID)
+
 		roX,roY,roZ=tx+math.random(-100,100)/1000,		ty+math.random(-100,100)/1000,		tz+math.random(-100,100)/1000
 		Spring.SetUnitDirection(VaryFooID,roX, roY,roZ)
 		Sleep(500)		
 	end
 	
-	if boolBuildEnded == false then	
+	if boolBuildEnded == false and Spring.GetUnitIsDead(VaryFooID) == false  then	
 		
 		Spring.UnitScript.DropUnit(VaryFooID)
 		AttachedUnits[VaryFooID]=nil
@@ -57,8 +68,7 @@ end
 
 nrAdded=0
 
-	varyTaraID=UnitDefNames["jvaryavatara"].id
-	nrNeeded= tonumber(UnitDefs[varyTaraID].customParams.varyfooneeded)
+
 
 function buildMoma(varyFooos)
 	
@@ -69,8 +79,9 @@ function buildMoma(varyFooos)
 		
 		if Spring.ValidUnitID(varyFooos[i])== false or Spring.GetUnitIsDead(varyFooos[i])==true then
 			table.remove(varyFooos,i)
-		else					
-			indexP=(indexP %#AttachPoints)+1 
+		else	
+			indexP=(indexP %#AttachPoints)+1  
+		
 			if distanceUnitToUnit(unitID,varyFooos[i] ) < 75 and not AttachedUnits[varyFooos[i]] then --integrate it into the Avatara
 				nrAdded=nrAdded+1
 				StartThread(partOfShipPartOfCrew, AttachPoints[indexP], varyFooos[i])
@@ -100,7 +111,7 @@ function defendMoma(varyFooos)
 end
 
 function spinTentacles()
-	tentacles=pieceNameGroupTable["tentacle"]
+	tentacles=nameGroupT["tentacle"]
 	while true do
 		randVal=math.random(500,2000)
 		Sleep(randVal)
@@ -117,7 +128,7 @@ end
 
 VaryFooDefID=UnitDefNames["jvaryfoo"].id
 
-pieceNameGroupTable=makePiecesTablesByNameGroups(false,true)
+nameGroupT=makePiecesTablesByNameGroups(false,true)
 function raiseAvatara()
 	StartThread(spinTentacles)
 	
@@ -126,13 +137,11 @@ function raiseAvatara()
 	minMergeTimeComplete=frame +2048
 	
 	indexP=1
-	
+	setSpeed(unitID,0, UnitDefs)
 	DistanceDown=-150
 	Move(center,y_axis,DistanceDown,0,true)
 	while nrAdded < nrNeeded do
-		
-		
-		
+			
 		Move(center,y_axis, math.min(0,DistanceDown*(1-(nrAdded/nrNeeded))),7.5)
 		--check VaryFoos around you
 		ux,uy,uz=Spring.GetUnitPosition(unitID)
@@ -154,10 +163,12 @@ function raiseAvatara()
 	end
 	Move(center,y_axis,0,2.5)
 	times=math.ceil(9000/#piecesTable)
+	
 	for i=1,#piecesTable do
 		Show(piecesTable[i])
 		Sleep(times)
 	end
+	
 	Sleep(9000)
 	WMove(center,y_axis,0,2.5)
 	for k,v in pairs(AttachedUnits) do
@@ -166,33 +177,104 @@ function raiseAvatara()
 	boolBuildEnded=true
 	Move(center,y_axis,0,12)
 	showT(piecesTable)
+	setSpeed(unitID,1, UnitDefs)
 	StartThread(moveAble)
 end
 
 boolAimingAndFiringWeapon2=false
 function moveAble()
 	while true do
-		if boolMoving ==true then
+		while boolMoving ==true do
 			moveAnimation()
-		else
+		end
+		
+		if boolNotAiming==true then
 			StandingAnimation()
-			while boolAimingAndFiringWeapon2==true do
-				--Keep it steady
-				Sleep(300)
-			end
 		end
 		Sleep(200)
 	end
 end
+walkSpeed=0.25
+function push(num, index)
 
+	legPairsDone[index]=false
+	val=math.random(20,35)
+	Turn(nameGroupT["FrontF"][num],x_axis,math.rad(val),walkSpeed)
+	Turn(nameGroupT["FrontF"][num+1],x_axis,math.rad(-1*val),walkSpeed)
+	WaitForTurn(nameGroupT["FrontF"][num+1],x_axis)
+	WaitForTurn(nameGroupT["FrontF"][num],x_axis)
+	legPairsDone[index]=true
+end
+
+function stabilize(num,index)
+
+	legPairsDone[index]=false
+	Turn(nameGroupT["FrontF"][num],x_axis,math.rad(0),walkSpeed)
+	Turn(nameGroupT["FrontF"][num+1],x_axis,math.rad(0),walkSpeed)
+	WaitForTurn(nameGroupT["FrontF"][num+1],x_axis)
+	WaitForTurn(nameGroupT["FrontF"][num],x_axis)
+
+	legPairsDone[index]=true
+end
+
+function bringfront(num,index)
+
+	legPairsDone[index]=false
+	val=math.random(10,20)
+	Turn(nameGroupT["FrontF"][num],x_axis,math.rad(val*-1),1)
+	Turn(nameGroupT["FrontF"][num+1],x_axis,math.rad(-1*val/2),1)
+		WaitForTurn(nameGroupT["FrontF"][num+1],x_axis)
+	WaitForTurn(nameGroupT["FrontF"][num],x_axis)
+	Turn(nameGroupT["FrontF"][num],x_axis,math.rad(val*-1),walkSpeed)
+	Turn(nameGroupT["FrontF"][num+1],x_axis,math.rad(val),walkSpeed)
+
+		WaitForTurn(nameGroupT["FrontF"][num+1],x_axis)
+	WaitForTurn(nameGroupT["FrontF"][num],x_axis)
+	legPairsDone[index]=true
+end
+
+legPairs={
+	[1]=1,
+	[2]=2,
+	[3]=2,
+	[4]=3,
+	[5]=3,
+	[6]=1
+}
+
+legPairsDone={
+	[1]=true,
+	[2]=true,
+	[3]=true,
+	[4]=true,
+	[5]=true,
+	[6]=true
+}
+
+walkFunctions={
+	[1]=bringfront,
+	[2]=stabilize,
+	[3]=push
+}
 
 function moveAnimation()
-	Sleep(100)
+echoT(legPairs)
+	resetT(nameGroupT["Body"],5)
+	for i=1,#legPairsDone do
+		if legPairsDone[i] == true then
+			legPairs[i]=(legPairs[i]%3)+1
+			num=((i-1)*2)+1
+			StartThread(walkFunctions[legPairs[i]],num,i)
+		end
+		Sleep(100)
+	end
 end
 
 function StandingAnimation()
-	resetT(piecesTable,5)
+	resetT(nameGroupT["Body"],5)
+	resetT(nameGroupT["FrontF"],5)
 end
+
 function resetAttack()
 	SetSignalMask(SIG_ATTACKED)
 	Sleep(10000)
@@ -201,11 +283,14 @@ end
 
 function script.Create()
 	spinT(AttachPoints,y_axis,4.2,-42,42)
-
+	
 	piecesTable=generatepiecesTableAndArrayCode(unitID)
+	AttachPoints=piecesTable
 	hideT(piecesTable)
 	StartThread(raiseAvatara)
 end
+
+
 
 function script.Killed(recentDamage,_)
 	
@@ -220,7 +305,7 @@ function script.AimFromWeapon1()
 end
 
 
-pods=pieceNameGroupTable["Pod"]
+pods=nameGroupT["Pod"]
 indexPod=1
 function script.QueryWeapon1() 
 	return pods[indexPod]
@@ -249,43 +334,64 @@ function script.QueryWeapon2()
 	return aimspot
 end
 boolReadyAim=true 
-function takeUpArms(arm1,arm2, pitch)
-Turn(arm2,x_axis,math.rad(53),3)
-WTurn(arm1,x_axis,math.rad(-53)-pitch,3)
+function takeUpArms( pitch)
+	boolNotAiming=false
+	Turn(nameGroupT["Body"][3],x_axis,math.rad(-41),7)
+	Turn(nameGroupT["Body"][2],x_axis,math.rad(-32),7)
+	
+	Turn(nameGroupT["FrontF"][2],x_axis,math.rad(42),7)
+	Turn(nameGroupT["FrontF"][4],x_axis,math.rad(42),7)
+	
+	Turn(AimArmTable[2],x_axis,math.rad(-35),12)
+	Turn(AimArmTable[1],x_axis,math.rad(110)+pitch,12)
+	
+	Turn(AimArmTable[4],x_axis,math.rad(-35),12)
+	WTurn(AimArmTable[3],x_axis,math.rad(110)+pitch,12)
 end
 
-	AimArmTable=pieceNameGroupTable["AimArmF"]
+
+
+AimArmTable=nameGroupT["AimArmF"]
 function script.AimWeapon2( Heading ,pitch)	
-if boolReadyAim==true then
-
-	takeUpArms(AimArmTable[1],AimArmTable[2],pitch)
-	takeUpArms(AimArmTable[3],AimArmTable[4],pitch)
-	return true
-else 
-return false
-end	
+	if boolReadyAim==true then
+		WTurn(center,y_axis,Heading,5)
+		takeUpArms(-1*pitch)
+		
+		return true
+	else 
+		return false
+	end	
 end
-
+boolNotAiming=true
 function fireAnimation(readyAim)
-boolReadyAim=false
-moveT(pieceNameGroupTable["chain"],z_axis,75,60)
-unitsAffected=getAllNearPiece(unitID,pieceNameGroupTable["ram"][1],50)
-process(unitsAffected,
-		function(id) 
+	boolReadyAim=false
+	moveT(nameGroupT["chain"],z_axis,75,220)
+	unitsAffected=getAllNearPiece(unitID,nameGroupT["ram"][1],50)
+	process(unitsAffected,
+	function(id) 
 		Spring.AddUnitDamage(id,RAM_DAMAGE)
-		end
-		)
-Sleep(1200)
-if readyAim==true then
-resetT(pieceNameGroupTable["chain"],35,true) 
-resetT(AimArmTable,4,true) 
-boolReadyAim = true 
+	end
+	)
+	EmitSfx(nameGroupT["ram"][1],1024)
+	EmitSfx(nameGroupT["ram"][2],1024)
+	Sleep(3200)
+	if readyAim==true then
+		resetT(nameGroupT["chain"],235,true) 
+		resetT(AimArmTable,4,true) 
+		boolReadyAim = true 
+	end
+	WTurn(center,y_axis,0,5)
 end
+function delayedAimReset()
+Signal(SIG_DELAYEDAIMRESET)
+SetSignalMask(SIG_DELAYEDAIMRESET)
+Sleep(9000)
+boolNotAiming=true
 end
-
 
 function script.FireWeapon2()
-	StartThread(fireAnimation,AimArmTable[3],AimArmTable[4], true)
+	StartThread(fireAnimation, true)
+	StartThread(delayedAimReset)
 	return true
 end
 
@@ -299,7 +405,7 @@ end
 function DelayedStop()
 	Signal(SIG_DELAYEDSTOP)
 	SetSignalMask(SIG_DELAYEDSTOP)
-	Sleep(500)
+	Sleep(4500)
 	boolMoving=false
 end
 

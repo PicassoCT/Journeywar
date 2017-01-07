@@ -9,6 +9,7 @@ return {
 	["citadell"]= {active="Energy\nShield", passive="Lower Shields"},
 	["comendbonker"]= {active="Conset&\nConfirm", passive="Repeat\nConfirmation"},
 --journeyman
+	["jabyss"]= {active="End this\nWorld", passive="World Ends"},
 	["jbeherith"]= {active="Amok", passive="Amok Active"},
 	["beanstalk"]= {active="Unroot", passive="Reroot"},
 	["skinfantry"]= {active="Ambush\nMode", passive="Assault\nMode"},

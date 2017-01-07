@@ -93,33 +93,7 @@ function controllTurn(passengerID)
 	
 end
 
-function setSpeed(tempDefID)
-	
-	local tspeed=math.floor(2.0*65533)
-	if isInfantry(tempDefID)==true then 
-		SetUnitValue(COB.MAX_SPEED,tspeed)
-		return
-	end
-	
-	local medSpeed=math.floor(1.4*65533)
-	if tempDefID==UnitDefNames["gjmedbiogwaste"].id or tempDefID == UnitDefNames["gcvehiccorpsemini"].id then 
-		SetUnitValue(COB.MAX_SPEED,medSpeed)
-		return
-	end
-	
-	local slowSpeed=math.floor(0.5*65533)
-	if tempDefID == UnitDefNames["gjbigbiowaste"].id or tempDefID == UnitDefNames["gcvehiccorpse"].id then
-		SetUnitValue(COB.MAX_SPEED,slowSpeed)
-		return
-	end
-	
-	SetUnitValue(COB.MAX_SPEED,maxSpeed)
-	
-end
 
-function reSetSpeed()
-	SetUnitValue(COB.MAX_SPEED,maxSpeed)
-end
 
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 function acquireVehicleDegree()

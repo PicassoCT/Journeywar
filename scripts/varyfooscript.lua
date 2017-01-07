@@ -223,16 +223,16 @@ function script.Create()
 	end
 	hideT(BodyPieces)
 	
-
+	
 	StartThread(delayedBuild)
 	StartThread(eatThemAliveWhenNotWalking)
-
+	
 end
 
 function delayedStart()
 	Sleep(500)
 	StartThread(eatThemAliveWhenNotWalking)
-	end
+end
 
 function delayedBuild()
 	resetT(BodyPieces,0,true,true)
@@ -749,18 +749,18 @@ function LinFindDecoCon()
 	--we find a startpoint by finding start and endpoint and choosing the lowest
 	poinTable=piec2Point(LinBodyCon) --DeBug: 
 	todoAssert(poinTable,
-				function(obj) 
-					if type(obj)=="table" and #obj > 0 then 
-						return true 
-					else 
-						return false 
-					end 
-				end, 
-				"poinTable is not a table"
-				)
-				
+	function(obj) 
+		if type(obj)=="table" and #obj > 0 then 
+			return true 
+		else 
+			return false 
+		end 
+	end, 
+	"poinTable is not a table"
+	)
+	
 	if not poinTable then return end
-
+	
 	if linDecP.x == nil or boolFoundSomething==false then 
 		linDecP.x,linDecP.y,linDecP.z,linDecP.index=getLowestPointOfSet(poinTable,"z_axis") 
 		temp={}
@@ -785,7 +785,7 @@ function LinFindDecoCon()
 			tx,ty,tz,tdist,theight = poinTable[i].x,poinTable[i].y,poinTable[i].z,dist, poinTable[i].y
 			index=i
 			
---if we found nothing, we need to start again, at another lowest point
+			--if we found nothing, we need to start again, at another lowest point
 			boolFoundSomething=true
 		end
 	end
@@ -1149,7 +1149,7 @@ function sound()
 end
 
 local BITDISTCONSTANT		=84
-local SNACKDISTANCECONSTANT	=142
+local SNACKDISTANCECONSTANT	=120
 
 function eatThemAliveWhenNotWalking()
 	--if the varyfoo is of team Gaia its allready taken care of by the ecology gadget
@@ -1162,9 +1162,7 @@ function eatThemAliveWhenNotWalking()
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spGetUnitsInCylinder=Spring.GetUnitsInCylinder
 	
-	local boolCannibalism=false
-	
-	local tabooTable={
+	tabooTable={
 		[UnitDefNames["jvaryavatara"].id]=true,
 		[UnitDefNames["jvaryfoo"].id]=true,
 		[UnitDefNames["jabyss"].id]=true
@@ -1172,43 +1170,52 @@ function eatThemAliveWhenNotWalking()
 	tummyFill=0
 	
 	while true do
-
-			x,y,z=spGetUnitPosition(unitID)
-			T=spGetUnitsInCylinder(x,z,SNACKDISTANCECONSTANT)
-			tummyFill=tummyFill-1
-			
-			table.remove(T,unitID)
-			if T and #T > 0 then
-				for i=1,#T do
-					defID=spGetUnitDefID(T[i])
-					if GG.jAbyss_Moma and GG.jAbyss_Moma[unitID] and isInfantry[defID] then
-						MomaWillBeSoProud(T[i],GG.jAbyss_Moma[unitID])	
-					elseif not tabooTable[defID] and tummyFill < 50 then 
-						if T[i] and Spring.ValidUnitID(T[i]) ==true and Spring.GetUnitIsDead(T[i])== false then
-						biteAnimation(T[i])	
-						tummyFill=100
+		
+		x,y,z=spGetUnitPosition(unitID)
+		T=spGetUnitsInCylinder(x,z,SNACKDISTANCECONSTANT)
+		tummyFill=tummyFill-5
+		T=process(T,
+					function(id) 
+							if id ~= unitID then 
+								return id 
+							end 
 						end
-					end 
-			
-				end		
-			else
-			Sleep(1024)
-			enemyID=spGetUnitNearestEnemy(unitID)
-				if enemyID then
-				x,y,z= x+math.random(-35,35),y,z+math.random(-35,35)
-					if maRa()==true then
-					x,y,z= spGetUnitPosition(enemyID)
-					Spring.SetUnitMoveGoal(x,y,z,unitID)
-					else
-					eTeamID=Spring.GetUnitTeam(enemyID)
-					if eTeamID then
-					x,y,z= Spring.GetTeamStartPosition(eTeamID)
+					)
+	
+		if T and #T > 0 then
+			for i=1,#T do
+				defID=spGetUnitDefID(T[i])
+				if GG.jAbyss_Moma and GG.jAbyss_Moma[unitID] and isInfantry[defID] then
+					MomaWillBeSoProud(T[i],GG.jAbyss_Moma[unitID])	
+					break
+				elseif (tabooTable[defID] == nil) and tummyFill < 50 then 
+					if T[i] and Spring.ValidUnitID(T[i]) ==true and Spring.GetUnitIsDead(T[i])== false then
+						biteAnimation(T[i])	
+						tummyFill=tummyFill+10
+					break
 					end
 				end
 			end
-		end
+			
+			if tummyFill < 50 then
+						Sleep(4024)
+						enemyID=spGetUnitNearestEnemy(unitID)
+						if enemyID then
+							x,y,z= x+math.random(-35,35),y,z+math.random(-35,35)
+							if maRa()==true then
+								x,y,z= spGetUnitPosition(enemyID)
+								Spring.SetUnitMoveGoal(x,y,z,unitID)
+							else
+								eTeamID=Spring.GetUnitTeam(enemyID)
+								if eTeamID then
+									x,y,z= Spring.GetTeamStartPosition(eTeamID)
+								end
+							end
+						end
+					end
+			  end
 		Sleep(500)
-end
+	end
 end
 
 
@@ -1244,38 +1251,38 @@ function MomaWillBeSoProud(enemyID, MomaID)
 end
 
 function biteAnimation(victimID)
-	echo("jvaryfoo::Bite with chunks")
-
+	
+	
 	-- we set the unit to attack the victim 
 	ox,oy,oz=Spring.GetUnitPosition(unitID)
 	vx,vy,vz=Spring.GetUnitPosition(victimID)
 	if ox and vx then
-
+		
 		-- Set a Projectile Racing Towards the Victim
-		dx=(ox-vx)/8
-			
+		dx=(ox-vx)/8	
 		dy=(oy-vy)/8
 		dz=(oz-vz)/8	
+		
 		for i=1,8 do
-			if LinArms[1] and  LinArms[1][1] then
-			midX,midY,midZ=vx+dx*i,vy+dy*i,vz+dz*i
+			if LinArms[1] and LinArms[1][1] then
 				dx,dy,dz=Spring.GetUnitPieceDirection(unitID, LinArms[sanitizeRandom(1,#LinArms)][1])
 				if dx then
-				maxs=math.max(math.abs(dx),math.max(math.abs(dy),math.abs(dz)))
-				dx,dy,dz=dx/maxs,dy/maxs,dz/maxs
+					maxs=math.max(math.abs(dx),math.max(math.abs(dy),math.abs(dz)))
+					dx,dy,dz=dx/maxs,dy/maxs,dz/maxs
 				end
 			end
-			spSpawnCEG("jvaryfoohit",dx,dy,dz,0,1,0,50)
-
+			spSpawnCEG("jvaryfoohit",dx,dy,dz,0,1,0,25)
+			
 		end
+		
 	end
 	
 	for i=1,3 do
 		if math.random(0,1)==1 then
-			spSpawnCEG("bloodsplat",vx+math.random(-25,25),vy+math.random(0,75),vz+math.random(-25,25),0,1,0,50)
+			spSpawnCEG("bloodsplat",vx+math.random(-25,25),vy+math.random(0,75),vz+math.random(-25,25),0,1,0,25)
 		end
 	end
-	
+	Spring.AddUnitDamage(victimID, 5)
 	
 end
 aimspot = piece"aimspot"
@@ -1367,7 +1374,7 @@ end
 
 varyfoodefid=Spring.GetUnitDefID(unitID)
 function script.FireWeapon2()	
-
+	
 	StartThread(iAmFlying)
 	StartThread(TeleportCharge)
 	PlaySoundByUnitDefID(unitdef, "sounds/VaryFoo/slice.ogg",math.random(7,10)/10, 2000, 2)

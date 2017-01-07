@@ -4600,14 +4600,26 @@ heightMapTable= makeTable({},sizeX,sizeY)
 
 end
 
+function getMaxSpeed(unitID,UnitDefs)
+	uDefID=Spring.GetUnitDefID(unitID)	
+	return UnitDefs[uDefID].speed
+end
+
+function setSpeed(unitID,speedfactor, UnitDefs)
+	uDefID=Spring.GetUnitDefID(unitID)	
+	Spring.SetUnitCOBValue(unitID,COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed*speedfactor* 2184.53))
+end
+
+function reSetSpeed(unitID,UnitDefs)
+	setSpeed(unitID,1.0, UnitDefs)
+end
+
+
 --> every PixelPiecetable consists of a List of Pieces, a selectFunction and a PlaceFunction
 -- both recive a List of allready in Pixel Placed Pieces and the relative Heigth they are at, 
 -- and gives back a piece, and its heigth, the Selector returns nil upon Complete 
 function createLandscapeFromFeaturePieces(pixelPieceTable,   drawFunctionTable)
-
-
-
-
+	echo("TODO:createLandscapeFromFeaturePieces")
 end
 
 function transferOrders( originID, unitID)

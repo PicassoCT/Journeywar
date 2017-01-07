@@ -6,7 +6,7 @@ local unitDef = {
   Description 		 =" the end of this world ",
 
   script 			 = "jVaryTarascript.lua",
-  maxDamage = 22550, 
+  maxDamage = 44550, 
 
   MovementClass = "jinfantry",
   buildCostMetal =30,
@@ -18,8 +18,8 @@ local unitDef = {
 	canmove=true,
 	canpatrol=true,
 	canstop=true,
-	transportCapacity = 50,
-	transportSize = 30000*50,
+	transportCapacity = 150,
+	transportSize = 3000000000,
 	
   moveState =2,
   noAutoFire =false,
@@ -28,9 +28,9 @@ local unitDef = {
      
   upright =false,
   pushResistant =true,
-  maxVelocity =1.2,
+  maxVelocity =0.6,
   acceleration =0.1,
-  turnRate =125,
+  turnRate =25,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
   maxwaterdepth=150,
@@ -66,6 +66,7 @@ local unitDef = {
 	 
  sfxtypes = {
 				explosiongenerators = {
+					"custom:dirt",--1024
 				},
 				},
 				
