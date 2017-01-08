@@ -22,8 +22,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	teamTable={}
 	meridianTable={}
 	spawnUnits={ 
-		["journeyman"]={"jgeohive", "jbeehive"},
-		["centrail"]={"goildrum","gzombspa","jrefugeetrap"}
+		["journeyman"]={"jgeohive", "jbeehive",},
+		["centrail"]={"goildrum","gzombspa","jrefugeetrap", "coverworldgate"}
 	}
 	
 	function randSign()
