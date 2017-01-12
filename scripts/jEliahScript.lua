@@ -7,7 +7,7 @@ local boolSecondAiming=false
 --define other pieces
 
 local SIG_WALK = 1	--signal for the walk animation thread
-local SIG_AIM = 2  --signal for the weapon aiming thread
+local SIG_AIM = 2 --signal for the weapon aiming thread
 local SIG_IDLE=4
 local SIG_AIM2 = 8
 local SIG_LRESET=16
@@ -52,103 +52,103 @@ p[#p]=RLLeg
 
 weaponPoints={}
 for i=1,6,1 do
-weaponPoints[i]={}
-temp="laserpointer"..i
-weaponPoints[i]=piece(temp)
+	weaponPoints[i]={}
+	temp="laserpointer"..i
+	weaponPoints[i]=piece(temp)
 end
 
 SHIELDRANGE= 240
 
-	function script.HitByWeapon ( x, z, weaponDefID, damage )
+function script.HitByWeapon ( x, z, weaponDefID, damage )
 	NearestAlly=Spring.GetUnitNearestAlly(unitID)
-		if NearestAlly then
+	if NearestAlly then
 		x,y,z=Spring.GetUnitPosition(NearestAlly) 
-			if x then
+		if x then
 			distance=math.sqrt(x*x+ z*z)
-				if distance < SHIELDRANGE then 
-						return 0
-				end
+			if distance < SHIELDRANGE then 
+				return 0
 			end
 		end
-	return damage
 	end
-	
+	return damage
+end
+
 function script.Create()
---Spring.Echo(math.tan(0.85))
---Spring.Echo(math.tan(0.65))
---Spring.Echo(math.deg(math.tan(0.85)))
---Spring.Echo(math.deg(math.tan(0.128)))
-
-
-
-  
+	--Spring.Echo(math.tan(0.85))
+	--Spring.Echo(math.tan(0.65))
+	--Spring.Echo(math.deg(math.tan(0.85)))
+	--Spring.Echo(math.deg(math.tan(0.128)))
+	
+	
+	
+	
 end
 
 local function idle()
 	SetSignalMask(SIG_IDLE)
 	if boolNonCombatant== true then
-	dicebenice=math.random(1,5)
+		dicebenice=math.random(1,5)
 		if dicebenice==5 then
-		sleeper=math.random(1024,8192)
-		Turn(body,x_axis,math.rad(-90),12)
-		goDown=math.random(0,1)
-		boolMrTurner=false
-		if goDown==1 then
-		Move(body,y_axis,-24,2.14)
+			sleeper=math.random(1024,8192)
+			Turn(body,x_axis,math.rad(-90),12)
+			goDown=math.random(0,1)
+			boolMrTurner=false
+			if goDown==1 then
+				Move(body,y_axis,-24,2.14)
 			else
-			boolMrTurner=true
+				boolMrTurner=true
 			end
-
-
+			
+			
 			while(true)do
 				if boolMrTurner==true then
-				Move(body,y_axis,-5,7)
+					Move(body,y_axis,-5,7)
 				end
-			Turn(leftside,y_axis,math.rad(-32),3)
-			Turn(rightside,y_axis,math.rad(30),3)
-			WaitForTurn(rightside,y_axis)
-			Turn(leftside,y_axis,math.rad(25),1)
-			Turn(rightside,y_axis,math.rad(-25),1)
+				Turn(leftside,y_axis,math.rad(-32),3)
+				Turn(rightside,y_axis,math.rad(30),3)
+				WaitForTurn(rightside,y_axis)
+				Turn(leftside,y_axis,math.rad(25),1)
+				Turn(rightside,y_axis,math.rad(-25),1)
 				if boolMrTurner==true then
-				up=math.random(2,6)
-				Move(body,y_axis,up,7)
-				diceTurn=math.random(-360,360)
-				Turn(deathpivot,y_axis,diceTurn,0.5)
+					up=math.random(2,6)
+					Move(body,y_axis,up,7)
+					diceTurn=math.random(-360,360)
+					Turn(deathpivot,y_axis,diceTurn,0.5)
 				end
-			WaitForTurn(rightside,y_axis)
-			rand=math.ceil(math.random(50,250))
-			Sleep(rand)
+				WaitForTurn(rightside,y_axis)
+				rand=math.ceil(math.random(50,250))
+				Sleep(rand)
 			end
-	else
-		while(true) do
-			Turn(leftside,y_axis,math.rad(-7),1.2)
-			Turn(LArm,y_axis,math.rad(13),2.1)
-			Turn(rightside,y_axis,math.rad(7),1.2)
-			Turn(RArm,y_axis,math.rad(-13),2.1)
-			Turn(LLeg,x_axis,math.rad(12),2.1)
-			Turn(LLeg,x_axis,math.rad(12),2.1)
-			Turn(RLLeg,z_axis,math.rad(-14),2.1)
-			Move(body,z_axis,1,1.1)
-			Turn(deathpivot,x_axis,math.rad(-1),0.07)
-			WaitForTurn(rightside,y_axis)
-			
-			Turn(leftside,y_axis,math.rad(3),0.4)
+		else
+			while(true) do
+				Turn(leftside,y_axis,math.rad(-7),1.2)
+				Turn(LArm,y_axis,math.rad(13),2.1)
+				Turn(rightside,y_axis,math.rad(7),1.2)
+				Turn(RArm,y_axis,math.rad(-13),2.1)
+				Turn(LLeg,x_axis,math.rad(12),2.1)
+				Turn(LLeg,x_axis,math.rad(12),2.1)
+				Turn(RLLeg,z_axis,math.rad(-14),2.1)
+				Move(body,z_axis,1,1.1)
+				Turn(deathpivot,x_axis,math.rad(-1),0.07)
+				WaitForTurn(rightside,y_axis)
+				
+				Turn(leftside,y_axis,math.rad(3),0.4)
 				Turn(LArm,y_axis,math.rad(0),1)
-			Turn(rightside,y_axis,math.rad(-3),0.4)
+				Turn(rightside,y_axis,math.rad(-3),0.4)
 				Turn(RArm,y_axis,math.rad(0),1)
 				Turn(LLeg,x_axis,math.rad(0),0.4)
-			Turn(RLLeg,z_axis,math.rad(0),0.4)
-			Move(body,z_axis,0,1)
-			Turn(deathpivot,x_axis,math.rad(2),0.15)
-			WaitForTurn(rightside,y_axis)
+				Turn(RLLeg,z_axis,math.rad(0),0.4)
+				Move(body,z_axis,0,1)
+				Turn(deathpivot,x_axis,math.rad(2),0.15)
+				WaitForTurn(rightside,y_axis)
+			end
 		end
 	end
-end
 end
 
 
 --http://answers.springlobby.info/questions/427/howto-spinning-wheels-on-moving-units
- 
+
 -- p[#p]= body
 -- p[#p]= center
 -- p[#p]= deathpivot
@@ -160,101 +160,101 @@ end
 -- p[#p]=LLeg
 -- p[#p]=rightside
 -- p[#p]=RArm
- --9
+--9
 -- p[#p]=RLLeg
 function takingSteps()
-rand=math.random(-8,-4)
-Turn(body,x_axis,math.rad(6),0.75)
-Turn(body,y_axis,math.rad(rand),1)
-Turn(leftside,y_axis,math.rad(-12),2.1)
-Turn(LArm,y_axis,math.rad(34),4)
-Turn(LArm,x_axis,math.rad(-7),2)
-Turn(rightside,y_axis,math.rad(-19),2)
-Turn(RArm,y_axis,math.rad(18),4)
-Turn(RArm,x_axis,math.rad(11),2)
-Turn(LLeg,x_axis,math.rad(-64),5)
-Turn(RLLeg,x_axis,math.rad(25),3)
-
-WaitForTurn(leftside,y_axis)
-WaitForTurn(rightside,y_axis)
-WaitForTurn(LLeg,x_axis)
-WaitForTurn(RLLeg,x_axis)
-Turn(body,x_axis,math.rad(-3),1)
-Turn(body,y_axis,math.rad(-rand),1)
-
-Turn(leftside,y_axis,math.rad(32),2)
-
-Turn(LArm,y_axis,math.rad(18),2)
-Turn(LArm,x_axis,math.rad(-7),1.7)
-Turn(rightside,y_axis,math.rad(12),2)
-Turn(RArm,y_axis,math.rad(-11),4)
-Turn(RArm,x_axis,math.rad(-18),3)
-Turn(LLeg,x_axis,math.rad(25),5)
-Turn(RLLeg,x_axis,math.rad(-64),3)
-
-
-WaitForTurn(leftside,y_axis)
-WaitForTurn(rightside,y_axis)
-WaitForTurn(LLeg,x_axis)
-WaitForTurn(RLLeg,x_axis)
+	rand=math.random(-8,-4)
+	Turn(body,x_axis,math.rad(6),0.75)
+	Turn(body,y_axis,math.rad(rand),1)
+	Turn(leftside,y_axis,math.rad(-12),2.1)
+	Turn(LArm,y_axis,math.rad(34),4)
+	Turn(LArm,x_axis,math.rad(-7),2)
+	Turn(rightside,y_axis,math.rad(-19),2)
+	Turn(RArm,y_axis,math.rad(18),4)
+	Turn(RArm,x_axis,math.rad(11),2)
+	Turn(LLeg,x_axis,math.rad(-64),5)
+	Turn(RLLeg,x_axis,math.rad(25),3)
+	
+	WaitForTurn(leftside,y_axis)
+	WaitForTurn(rightside,y_axis)
+	WaitForTurn(LLeg,x_axis)
+	WaitForTurn(RLLeg,x_axis)
+	Turn(body,x_axis,math.rad(-3),1)
+	Turn(body,y_axis,math.rad(-rand),1)
+	
+	Turn(leftside,y_axis,math.rad(32),2)
+	
+	Turn(LArm,y_axis,math.rad(18),2)
+	Turn(LArm,x_axis,math.rad(-7),1.7)
+	Turn(rightside,y_axis,math.rad(12),2)
+	Turn(RArm,y_axis,math.rad(-11),4)
+	Turn(RArm,x_axis,math.rad(-18),3)
+	Turn(LLeg,x_axis,math.rad(25),5)
+	Turn(RLLeg,x_axis,math.rad(-64),3)
+	
+	
+	WaitForTurn(leftside,y_axis)
+	WaitForTurn(rightside,y_axis)
+	WaitForTurn(LLeg,x_axis)
+	WaitForTurn(RLLeg,x_axis)
 end
 
 local function walk()
 	local lp=p
 	Signal(SIG_WALK)
 	SetSignalMask(SIG_WALK)
-
-local ltakingSteps=takingSteps
+	
+	local ltakingSteps=takingSteps
 	
 	
 	while (true) do
-
-	Turn(lp[4],y_axis,math.rad(-5),4)
-	Move(body,y_axis,10,7.6)
-	Move(body,z_axis,12,7.6)
-	Turn(lp[3],x_axis,math.rad(-39),3)
-
-	
-	Sleep(320)
-	Turn(lp[5],y_axis,math.rad(63),2)
-	Turn(lp[6],y_axis,math.rad(72),2)
-	Turn(lp[8],y_axis,math.rad(-63),2)
-	Turn(lp[9],y_axis,math.rad(-72),2)
-	Turn(lp[10],x_axis,math.rad(22),7)
-	Turn(lp[7],x_axis,math.rad(22),7)
-	
-	WaitForMove(body,y_axis)
-	WaitForMove(body,z_axis)
+		
+		Turn(lp[4],y_axis,math.rad(-5),4)
+		Move(body,y_axis,10,7.6)
+		Move(body,z_axis,12,7.6)
+		Turn(lp[3],x_axis,math.rad(-39),3)
+		
+		
+		Sleep(320)
+		Turn(lp[5],y_axis,math.rad(63),2)
+		Turn(lp[6],y_axis,math.rad(72),2)
+		Turn(lp[8],y_axis,math.rad(-63),2)
+		Turn(lp[9],y_axis,math.rad(-72),2)
+		Turn(lp[10],x_axis,math.rad(22),7)
+		Turn(lp[7],x_axis,math.rad(22),7)
+		
+		WaitForMove(body,y_axis)
+		WaitForMove(body,z_axis)
 		Turn(lp[3],x_axis,math.rad(9),2)
-
-	Move(body,y_axis,0,17.6)
-	Move(body,z_axis,0,17.6)
-	Turn(lp[10],x_axis,math.rad(0),7)
-	Turn(lp[7],x_axis,math.rad(0),7)
-	
-	WaitForMove(body,y_axis)
-	WaitForMove(body,z_axis)
-
-	Turn(lp[4],y_axis,math.rad(-5),4)
-	Turn(lp[5],y_axis,math.rad(-12),3)
-	Turn(lp[6],y_axis,math.rad(-12),2)
-	Turn(lp[8],y_axis,math.rad(12),3)
-	Turn(lp[9],y_axis,math.rad(12),2)	
-	WaitForTurn(lp[5],y_axis)
-	WaitForTurn(lp[8],y_axis)
+		
+		Move(body,y_axis,0,17.6)
+		Move(body,z_axis,0,17.6)
+		Turn(lp[10],x_axis,math.rad(0),7)
+		Turn(lp[7],x_axis,math.rad(0),7)
+		
+		WaitForMove(body,y_axis)
+		WaitForMove(body,z_axis)
+		
+		Turn(lp[4],y_axis,math.rad(-5),4)
+		Turn(lp[5],y_axis,math.rad(-12),3)
+		Turn(lp[6],y_axis,math.rad(-12),2)
+		Turn(lp[8],y_axis,math.rad(12),3)
+		Turn(lp[9],y_axis,math.rad(12),2)	
+		WaitForTurn(lp[5],y_axis)
+		WaitForTurn(lp[8],y_axis)
 		--Steps
 		why=math.random(0,4)
 		for i=1,why,1 do
-		ltakingSteps()	
+			ltakingSteps()	
 		end
 	end
 end
 
 
 function script.Killed(recentDamage, maxHealth)
---legs_down()
-
-
+	--legs_down()
+	
+	
 	return 0
 end
 
@@ -266,42 +266,42 @@ end
 local function legs_down()
 	Move(body,y_axis,0,57.6)
 	Move(body,z_axis,0,57.6)
-		
+	
 	for i=1,#p,1 do
-	Turn(p[i],y_axis,math.rad(0),27)
-	Turn(p[i],x_axis,math.rad(0),27)
-	Turn(p[i],z_axis,math.rad(0),27)
+		Turn(p[i],y_axis,math.rad(0),27)
+		Turn(p[i],x_axis,math.rad(0),27)
+		Turn(p[i],z_axis,math.rad(0),27)
 	end
 	
 end
 
 function script.StartMoving()
---    ----Spring.Echo ("starting to walk!")
+	-- ----Spring.Echo ("starting to walk!")
 	Signal(SIG_IDLE)
 	legs_down()
 	StartThread (walk)
 end
 
 function script.StopMoving()
-		
---    ----Spring.Echo ("stopped walking!")
-		Signal(SIG_IDLE)
-		Signal(SIG_WALK)
-		legs_down()
-		StartThread(idle)
-		
-		
+	
+	-- ----Spring.Echo ("stopped walking!")
+	Signal(SIG_IDLE)
+	Signal(SIG_WALK)
+	legs_down()
+	StartThread(idle)
+	
+	
 end
 
 
 function setterOfBools(boolLeft)
-if boolLeft==true then SetSignalMask(SIG_RRESET) else SetSignalMask(SIG_LRESET) end
-if boolLeft== true then boolLeftSideAimed=true end
-if boolLeft== false then boolRightSideAimed=true end
-Sleep(250)
-if boolLeft== true then boolLeftSideAimed=false end
-if boolLeft== false then boolRightSideAimed=false end
-
+	if boolLeft==true then SetSignalMask(SIG_RRESET) else SetSignalMask(SIG_LRESET) end
+	if boolLeft== true then boolLeftSideAimed=true end
+	if boolLeft== false then boolRightSideAimed=true end
+	Sleep(250)
+	if boolLeft== true then boolLeftSideAimed=false end
+	if boolLeft== false then boolRightSideAimed=false end
+	
 end	
 
 boolGLHeading=0
@@ -318,44 +318,44 @@ function script.QueryWeapon1()
 end
 
 function stillFighting()
-SetSignalMask(SIG_FIGHTCLUB)
-Sleep(500)
-boolNonCombatant=true
+	SetSignalMask(SIG_FIGHTCLUB)
+	Sleep(500)
+	boolNonCombatant=true
 end
 
 function script.AimWeapon1( heading ,pitch)
-boolGLHeading=heading
-Signal(SIG_AIM)
-Signal(SIG_LRESET)
-SetSignalMask(SIG_AIM)
-Signal(SIG_FIGHTCLUB)
+	boolGLHeading=heading
+	Signal(SIG_AIM)
+	Signal(SIG_LRESET)
+	SetSignalMask(SIG_AIM)
+	Signal(SIG_FIGHTCLUB)
 	Signal(SIG_IDLE)
 	Signal(SIG_WALK)
 	boolNonCombatant=false
 	StartThread(stillFighting)
 	if math.abs(heading) > 0.78525 then 
-	Turn(body,y_axis,heading,21)
-	WaitForTurn(body,y_axis)
-	
-	return false 
-		else
-			--aiming animation: instantly turn the gun towards the enemy
-			--Turn(turret, y_axis, heading)
+		Turn(body,y_axis,heading,21)
+		WaitForTurn(body,y_axis)
+		
+		return false 
+	else
+		--aiming animation: instantly turn the gun towards the enemy
+		--Turn(turret, y_axis, heading)
 		Turn(LArm,y_axis,heading,9)
 		WaitForTurn(LArm,y_axis)
-			return true
-		end
+		return true
+	end
 end
 
 
 function script.FireWeapon1()	
-Signal(SIG_LRESET)
+	Signal(SIG_LRESET)
 	StartThread(setterOfBools,true)
 	return true
 end
 
-		function script.AimWeapon2( heading, pitch )
-		 boolGRHeading=heading
+function script.AimWeapon2( heading, pitch )
+	boolGRHeading=heading
 	
 	Signal(SIG_AIM2)
 	SetSignalMask(SIG_AIM2)
@@ -363,145 +363,143 @@ end
 	Signal(SIG_IDLE)
 	Signal(SIG_WALK)
 	if math.abs(heading) > 0.78525 then 
-	Turn(body,y_axis,heading,21)
-	WaitForTurn(body,y_axis)
-	
-	return false 
-		else
-			--aiming animation: instantly turn the gun towards the enemy
-			--Turn(turret, y_axis, heading)
+		Turn(body,y_axis,heading,21)
+		WaitForTurn(body,y_axis)
+		
+		return false 
+	else
+		--aiming animation: instantly turn the gun towards the enemy
+		--Turn(turret, y_axis, heading)
 		Turn(RArm,y_axis,heading,9)
 		WaitForTurn(RArm,y_axis)
-			return true
-		end	
-		
-		end
-
-	function script.AimFromWeapon2() 
+		return true
+	end	
 	
+end
 
+function script.AimFromWeapon2() 
+	
+	
 	return weaponPoints[4]
+	
+end
 
-	 end
-		
-	function script.QueryWeapon2() 
+function script.QueryWeapon2() 
 	return weaponPoints[4]
-	end
+end
 
 
-	function script.FireWeapon2()
+function script.FireWeapon2()
 	Signal(SIG_RRESET)
 	StartThread(setterOfBools,false)
 	return true
-	 end
-	 
-	 --------------------------------------------------------------------------
-	--weapon3 
-		function script.AimWeapon3( heading, pitch )
-		if boolRightSideAimed==true then
+end
+
+--------------------------------------------------------------------------
+--weapon3 
+function script.AimWeapon3( heading, pitch )
+	if boolRightSideAimed==true then
 		Turn(weaponPoints[2],y_axis,boolGRHeading,0)
 		Turn(weaponPoints[2],x_axis,pitch,0)
 		return true
-		else return false end
+else return false end
+	
+end
 
-		end
-
-	function script.AimFromWeapon3() 	
-		
-		
-
+function script.AimFromWeapon3() 	
+	
+	
+	
 	return weaponPoints[2]
+	
+end
 
-	 end
-		
-	function script.QueryWeapon3() 
+function script.QueryWeapon3() 
 	return weaponPoints[2]
+	
+end
 
-	end
-		
 
-	function script.FireWeapon3()
-
-	 end	
-	--weapon 4
-		function script.AimWeapon4( heading, pitch )
-			if boolRightSideAimed==true then
+function script.FireWeapon3()
+	
+end	
+--weapon 4
+function script.AimWeapon4( heading, pitch )
+	if boolRightSideAimed==true then
 		Turn(weaponPoints[3],y_axis,boolGRHeading,0)
 		Turn(weaponPoints[3],x_axis,pitch,0)
 		return true
-		else return false end
+else return false end
+	
+end
 
-		end
-
-	function script.AimFromWeapon4() 	
-		
-		
-
+function script.AimFromWeapon4() 	
+	
+	
+	
 	return weaponPoints[3]
+	
+end
 
-	 end
-		
-	function script.QueryWeapon4() 
+function script.QueryWeapon4() 
 	return weaponPoints[3]
-	end
-		
-
-	function script.FireWeapon4()
-	 end
+end
 
 
-	--weapon 5
-		function script.AimWeapon5( heading, pitch )
-			if boolLeftSideAimed==true then
+function script.FireWeapon4()
+end
+
+
+--weapon 5
+function script.AimWeapon5( heading, pitch )
+	if boolLeftSideAimed==true then
 		Turn(weaponPoints[5],y_axis,boolGLHeading,0)
 		Turn(weaponPoints[5],x_axis,pitch,0)
 		return true
-		else return false end
-		end
+else return false end
+end
 
-	function script.AimFromWeapon5() 	
-		
-		
-
-	return weaponPoints[5]
-
-	 end
-		
-	function script.QueryWeapon5() 
-	return weaponPoints[5]
-	end
-		
-
-	function script.FireWeapon5()
-	 end
-
-
+function script.AimFromWeapon5() 	
 	
-	--weapon 6
-	function script.AimFromWeapon6() 	
-		
-		
+	
+	
+	return weaponPoints[5]
+	
+end
 
+function script.QueryWeapon5() 
+	return weaponPoints[5]
+end
+
+
+function script.FireWeapon5()
+end
+
+
+
+--weapon 6
+function script.AimFromWeapon6() 	
+	
+	
+	
 	return weaponPoints[6]
+	
+end
 
-	 end
-		
-	function script.QueryWeapon6() 
+function script.QueryWeapon6() 
 	return weaponPoints[6]
-	end
-		
+end
 
-	function script.FireWeapon6()
 
-	 end
-	 
-	 
-		function script.AimWeapon6( heading, pitch )
-				if boolLeftSideAimed==true then
+function script.FireWeapon6()
+	
+end
+
+
+function script.AimWeapon6( heading, pitch )
+	if boolLeftSideAimed==true then
 		Turn(weaponPoints[6],y_axis,boolGLHeading,0)
 		Turn(weaponPoints[6],x_axis,pitch,0)
 		return true
-		else return false end
-		end
-	 
-	
+else return false end
+end

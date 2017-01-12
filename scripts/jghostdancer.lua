@@ -38,8 +38,7 @@ piecesTable= makePieceTable(unitID)
 local JSHADOWCOST=100
 function buildIt()
 	for i=#unitTable,1,-1 do
-		if Spring.GetUnitIsDead(unitTable[i])== false then
-		else
+		if Spring.GetUnitIsDead(unitTable[i])== true then
 			internalEnergy= internalEnergy + 30
 			table.remove(unitTable,i)
 		end
@@ -57,19 +56,67 @@ function buildIt()
 	return false
 end
 
+trackMax=15
+oldPos={}
+boolBackTracking=false
+function storeOldPositions()
+ox,oy,oz= Spring.GetUnitPosition(unitID)
+oldPos=makeTable(makeVector(ox,oy,oz),trackMax)
+
+	while true do
+		if boolBackTracking== false then
+				for i=1,#oldPos-1 do
+				oldPos[i]=oldPos[i+1]
+				end
+
+			ox,oy,oz= Spring.GetUnitPosition(unitID)
+			oldPos[#oldPos]= makeVector(ox,oy,oz)
+		end
+	
+	Sleep(400)
+	end
+end
+
+backTrackindex=trackMax
+SIG_BACKTRACK=128
+function delayedResetBackTrack()
+	SetSignalMask(SIG_BACKTRACK)
+	Sleep(4096)
+	backTrackindex=trackMax
+end
+
+
+function backTrack()
+Signal(SIG_BACKTRACK)
+vec=oldPos[backTrackindex]
+	if vec then
+		for i=math.max(1,backTrackindex-1),math.min(#oldPos,backTrackindex), 1 do 
+			voc=oldPos[i]
+			Spring.SpawnCEG("jghoststripe",voc.x,voc.y+15, voc.z,0,1,0,1,0)
+		end
+		Spring.SetUnitPosition(unitID,vec.x,vec.y,vec.z)
+	end
+backTrackindex=math.max(1,backTrackindex-1)
+StartThread(delayedResetBackTrack)
+end
+
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if damage and damage > 20 then
-		ed=Spring.GetUnitNearestEnemy(unitID)
+		ed=Spring.GetUnitLastAttacker(unitID)
 		if ed then
 			ex,ey,ez=Spring.GetUnitPosition(ed)
 			if ex then
 				ux,uy,uz=Spring.GetUnitPosition(unitID)
 				vx,vz=ex-ux,ez-uz
+				vx,vz= RotationMatrice (vx,vz, 180)
 				
 				if buildIt()==true then
+					--spawn a Shadow
+					--set the attacking unit 
 					Spring.SetUnitPosition(unitID,ex+vx,ey,ez+vz)
-				else
-					Spring.SetUnitPosition(unitID,ux-vx/2,uy,uz-vz/2)
+					Spring.SetUnitPosition(ed,ex - vx/2,ey,ez -vz/2)
+				else --make the Unit Retreat on the last Path
+					backTrack()
 				end
 			end
 		end
@@ -77,7 +124,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	return damage
 end
 
- internalEnergy=0
+internalEnergy=0
 
 function spawnAndManageShadows()
 	
@@ -108,7 +155,7 @@ end
 
 
 local function legs_down()
-
+	
 	Hide(gdbhlegj)
 	Hide(gdflegj)
 	Show(gdfrontleg)
@@ -128,29 +175,29 @@ Ass= piece"Ass"
 boolIdle=true
 tails={}
 for i=0,5,1 do
-name="Tail0"..i
-tails[#tails+1]=piece(name)
+	name="Tail0"..i
+	tails[#tails+1]=piece(name)
 end
 
 function wiggle()
-ydeg,xdeg=math.random(-25,25),math.random(-3,30)
-turnT(tails,x_axis,xdeg,math.abs(xdeg)/5)
-turnT(tails,y_axis,ydeg,math.abs(ydeg)/5)
-WaitForTurns(tails)
-ydeg,xdeg=ydeg*-1,math.random(-3,30)
-turnT(tails,x_axis,xdeg,math.abs(xdeg)/5)
-turnT(tails,y_axis,ydeg,math.abs(ydeg)/5)
-WaitForTurns(tails)
-Sleep(200)
+	ydeg,xdeg=math.random(-25,25),math.random(-3,30)
+	turnT(tails,x_axis,xdeg,math.abs(xdeg)/5)
+	turnT(tails,y_axis,ydeg,math.abs(ydeg)/5)
+	WaitForTurns(tails)
+	ydeg,xdeg=ydeg*-1,math.random(-3,30)
+	turnT(tails,x_axis,xdeg,math.abs(xdeg)/5)
+	turnT(tails,y_axis,ydeg,math.abs(ydeg)/5)
+	WaitForTurns(tails)
+	Sleep(200)
 end
 
 waveTables={
-[1]=-1,
-[2]=1,
-[3]=0,
-[4]=1,
-[5]=-1,
-[6]=0
+	[1]=-1,
+	[2]=1,
+	[3]=0,
+	[4]=1,
+	[5]=-1,
+	[6]=0
 }
 ears=piece"ears"
 Ear1=piece"Ear1"
@@ -165,83 +212,83 @@ function swooshTail()
 	degAloof=math.random(-10,10)
 	PI=3.14159
 	randfac=math.random(3,12)
-		for i=2,#tails, 1 do
+	for i=2,#tails, 1 do
 		offSetYet= degAloof * waveFoo(PI/randfac* i)
 		Turn(tails[i],y_axis,math.rad(degToGoX+ offSetYet),math.abs((degToGoX+ offSetYet)/2))
-		end
+	end
 	glowTail()	
 end
 
 
 function standingGuard()
-resetT(tails)
-reset(ghostdance,30)
-Turn(gdbhleg,z_axis,math.rad(0),63/1.5)
-Turn(gdbhleg,x_axis,math.rad(0),63/1.5)
-Turn(gdflegj,x_axis,math.rad(0),63/1.5)
-Turn(gdflegj,z_axis,math.rad(0),63/1.5)
-Turn(tails[1],x_axis,math.rad(75),70/1.5)
-Turn(rotcenter,x_axis,math.rad(-70),70/1.5)
-Turn(gdbhleg,x_axis,math.rad(63),63/1.5)
-Turn(Head,x_axis,math.rad(42),42/1.5)
-Turn(Rump,x_axis,math.rad(7),7/1.5)
-Turn(Ass,x_axis,math.rad(-8),8/1.5)
-Show(gdflegj)
-Hide(gdfrontleg)
+	resetT(tails)
+	reset(ghostdance,30)
+	Turn(gdbhleg,z_axis,math.rad(0),63/1.5)
+	Turn(gdbhleg,x_axis,math.rad(0),63/1.5)
+	Turn(gdflegj,x_axis,math.rad(0),63/1.5)
+	Turn(gdflegj,z_axis,math.rad(0),63/1.5)
+	Turn(tails[1],x_axis,math.rad(75),70/1.5)
+	Turn(rotcenter,x_axis,math.rad(-70),70/1.5)
+	Turn(gdbhleg,x_axis,math.rad(63),63/1.5)
+	Turn(Head,x_axis,math.rad(42),42/1.5)
+	Turn(Rump,x_axis,math.rad(7),7/1.5)
+	Turn(Ass,x_axis,math.rad(-8),8/1.5)
+	Show(gdflegj)
+	Hide(gdfrontleg)
 	while boolIdle == true do
-	--swooshing tail
-	swooshTail()
+		--swooshing tail
+		swooshTail()
+		
+		if maRa() == true then
+			val1,val2=math.random(-10,10),math.random(-10,10)
+			Turn(Ear1,x_axis,math.rad(val1),25)
+			Turn(Ear2,x_axis,math.rad(val2),25)
+			if math.random(1,15) == 3 then
+				for k=1,5 do
+					WTurn(Head,x_axis,math.rad(32 - k*2*(-1^k)),42/1.5)
+					Sleep(300)
+				end
+				WTurn(Head,x_axis,math.rad(42),42/1.5)
+			end
+		end
+		WaitForTurns(tails)
+		Sleep(200)
+		if math.random(1,64)==42 then 
+			Sleep(5000) 
+			Hide(gdflegj)
+			Show(gdfrontleg)
+		; break; end
+	end
 	
-	if maRa() == true then
-	val1,val2=math.random(-10,10),math.random(-10,10)
-	Turn(Ear1,x_axis,math.rad(val1),25)
-	Turn(Ear2,x_axis,math.rad(val2),25)
-	if math.random(1,15) == 3 then
-	for k=1,5 do
-	WTurn(Head,x_axis,math.rad(32 - k*2*(-1^k)),42/1.5)
-	Sleep(300)
-	end
-	WTurn(Head,x_axis,math.rad(42),42/1.5)
-	end
-	end
-	WaitForTurns(tails)
-	Sleep(200)
-	if math.random(1,64)==42  then 
-	Sleep(5000) 
-	Hide(gdflegj)
-	Show(gdfrontleg)
-	; break; end
-	end
-
 end
 
 
 function standingWave()
-resetT(tails,2.5)
-xdeg=math.random(-3,30)
-ripple=math.random(-10,10)
-tailstart=1
-Turn(ears,x_axis,math.rad(0),7)
+	resetT(tails,2.5)
+	xdeg=math.random(-3,30)
+	ripple=math.random(-10,10)
+	tailstart=1
+	Turn(ears,x_axis,math.rad(0),7)
 	while tailstart < #tails do
-			for i=1,tailstart,1 do
+		for i=1,tailstart,1 do
 			randOffset= math.random(-5,5)
 			reset(tails[i],3)
 			Turn(tails[i],x_axis, math.rad(randOffset),2)
-			end
+		end
 		turnT(tails,x_axis,xdeg,math.abs(xdeg)/5)
-			for i=tailstart,#tails, 1 do
+		for i=tailstart,#tails, 1 do
 			randOffset= math.random(-5,5)
 			Turn(tails[i],y_axis, math.rad(ripple*waveTables[i+1-tailstart] + randOffset),2)
-			end
+		end
 		WaitForTurns(tails)
 		Sleep(300)
 		tailstart =tailstart+1
 	end
-
+	
 	while boolIdle==true and math.random(1,128) == 64 do
-	Sleep(500)
+		Sleep(500)
 	end
-
+	
 end
 
 function pranceStance()
@@ -254,34 +301,34 @@ function pranceStance()
 	WTurn(gdbhleg,x_axis,math.rad(-24),1.8)
 	WaitForMove(ghostdance,y_axis)
 	while boolIdle== true do
-	Time=math.ceil(math.random(500,1200))
-	Sleep(Time)
-	swooshTail()
+		Time=math.ceil(math.random(500,1200))
+		Sleep(Time)
+		swooshTail()
 	end
 end
 
 function resetLegs()
-Hide(gdflegj)
-Hide(gdbhlegj)
-Show(gdfrontleg)
-Show(gdbhleg)
+	Hide(gdflegj)
+	Hide(gdbhlegj)
+	Show(gdfrontleg)
+	Show(gdbhleg)
 end
 
 function idle()
-boolIdle=true
-RumpOffset=12
+	boolIdle=true
+	RumpOffset=12
 	resetT(tails)
 	resetT(piecesTable,22)
-
-	while( boolIdle==true)  do
+	
+	while( boolIdle==true) do
 		if maRa()==true then wiggle()end
 		if maRa()==true then standingWave()end
 		if maRa()==true then standingGuard()end
 		if maRa() == true then pranceStance() end
-	resetT(piecesTable,12)
-	Sleep(3000)
-	resetLegs()
-	
+		resetT(piecesTable,12)
+		Sleep(3000)
+		resetLegs()
+		
 	end
 	Turn(HeadRump,y_axis,math.rad(0),math.abs(-18-RumpOffset)/10)
 	Turn(Head,y_axis,math.rad(0),1.7)
@@ -304,31 +351,31 @@ function script.Create()
 end
 
 function script.Killed(recentDamage,maxHealth)
-		if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
-		if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
+	if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
+	if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
 	-- if at death you are the original -- make the copy the original
 	if GG.GhostDancerOrgCopy[unitID] and not GG.GhostDancerCopyOrg[unitID] then
 		GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[unitID]]= nil 
-	GG.GhostDancerOrgCopy[unitID]=nil
+		GG.GhostDancerOrgCopy[unitID]=nil
 	end
-
-if GG.GhostDancerCopyOrg[unitID] then
-	GG.GhostDancerCopyOrg[unitID] =nil
-end
--- if at death you are a copy -- shit out of luck
-
+	
+	if GG.GhostDancerCopyOrg[unitID] then
+		GG.GhostDancerCopyOrg[unitID] =nil
+	end
+	-- if at death you are a copy -- shit out of luck
+	
 end
 function smokeEmit()
-
-		EmitSfx(shadowemit,1024)
-
+	
+	EmitSfx(shadowemit,1024)
+	
 end
 
 function glowTail()
-if maRa() == true then
-	EmitSfx(shadowemit,1025)
-
-end
+	if maRa() == true then
+		EmitSfx(shadowemit,1025)
+		
+	end
 end
 
 function threadedLegs(prevtime,Time)
@@ -347,11 +394,11 @@ end
 function walk()
 	SetSignalMask(SIG_WALK)
 	boolIdle=false
-
+	
 	Turn(ears,x_axis,math.rad(-70),35)
 	resetT(piecesTable,22)
 	while (true) do
-
+		
 		--landing
 		turnT(tails,y_axis,math.random(-5,5),5)
 		turnT(tails,x_axis,math.random(5),5)
@@ -410,7 +457,7 @@ end
 
 function script.StartMoving()
 	Signal(SIG_IDLE)
-
+	
 	Signal(SIG_WALK)
 	StartThread(walk)
 end
@@ -437,7 +484,7 @@ end
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 -- can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon1(heading,pitch)
-boolIdle=false
+	boolIdle=false
 	return true
 end
 
@@ -446,7 +493,7 @@ function script.FireWeapon1()
 	
 	--Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav") 
 	
-	
+	return true
 end
 
 function script.AimFromWeapon2() 
@@ -461,7 +508,7 @@ end
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 -- can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon2(heading,pitch)
-boolIdle=false
+	boolIdle=false
 	return true
 end
 
@@ -470,5 +517,5 @@ function script.FireWeapon2()
 	
 	--Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav") 
 	
-	
+	return true
 end

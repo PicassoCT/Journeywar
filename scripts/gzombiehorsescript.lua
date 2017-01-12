@@ -865,11 +865,11 @@ end
 
 
 function script.AimFromWeapon1() 
-	return zHead 
+	return head 
 end
 
 function script.QueryWeapon1() 
-	return zHead
+	return head
 end
 boolSnapWeaponLoaded=true
 function snapAnim()

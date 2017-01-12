@@ -304,13 +304,13 @@ teamID=Spring.GetUnitTeam(unitID)
 
 function timeDelayedMoveGoal(myYoung,x,y,z)
 	Sleep(2000)
-	Spring.SetUnitMoveGoal(myYoung,x,y,z)
-	
+	Spring.SetUnitMoveGoal(myYoung,x,y,z)	
 end
 
 boolDefBuffActive=true
 
-
+cegDamageCounter=0
+cegSpawnValue=225
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	
 	if damage then
@@ -319,11 +319,15 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 		Signal(SIG_MOVE)
 		degree=math.deg(math.atan2(x,z))
 		ItterationsTillReSpawn=ItterationsTillReSpawn+damage
-		
+		cegDamageCounter=cegDamageCounter+damage
+		if cegDamageCounter > cegSpawnValue then
+			cegDamageCounter= 0
+			x,y,z= Spring.GetUnitPosition(unitID)
+			Spring.SpawnCEG("greencross",x,y+120,z,0,1,0,50,0)
+		end
 		if ItterationsTillReSpawn > MAGICRESPAWNNUMBER then
 			boolThreadStart=true
-		end
-		
+		end		
 		
 		Spring.SetUnitHealth(unitID,originalHealth)
 	end
@@ -348,8 +352,7 @@ function threadStartLoop()
 end
 function script.Killed(damage,_)
 	GG.SunGodCattleTable[teamID]=GG.SunGodCattleTable[teamID]-1
-	--fallingDown Animation
-	
+	--fallingDown Animation	
 	return 0
 end
 
@@ -386,8 +389,7 @@ function DeBuff()
 			if T then T=filterAllUnitsForDeBuff(T) end
 			if T then applyDeBuff(T) end
 			EmitSfx(1025,Eye1) -- Placeholder Sfx
-		end
-		
+		end		
 	end
 	Sleep(500)
 end			

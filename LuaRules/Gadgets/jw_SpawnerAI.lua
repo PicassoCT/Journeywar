@@ -29,33 +29,34 @@ if (gadgetHandler:IsSyncedCode()) then
 	function randSign()
 	if math.random(0,1)==1 then return 1 else return -1 end 
 	end
-	
-	
+		
 	function spawnSpawners(frame,team,side)
 		
 		volume=math.abs(math.sin(frame/10000))*4
+		Spring.Echo("SpawnVolume "..team.." : "..side)
 		totalAbortCount=0
 		
 		for _=1, volume,1 do
-
-			if #meridianTable <=1 then return end
-			
+		
+			if #meridianTable <=1 then return end			
 			meridian=meridianTable[math.random(1,#meridianTable)]
-			percent=math.random(0,1)
+			percent=math.random(0,100)/100
 			
 			px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
 			pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
 			T=Spring.GetUnitsInCylinder(px,pz,50)
 			dirXSign=randSign()
 			dirZSign=randSign()
-			
-			while T and #T > 0 and totalAbortCount < 64 do	
-			
+			T={}
+			while T and table.getn(T) > 0 and totalAbortCount < 64 do	
+				T={}
+			if totalAbortCount % 4 == 0 then
 				if math.random(0,1)==1 then
 					dirXSign=randSign()
 				else
 					dirZSign=randSign()
 				end
+			end
 				px=px +100 *dirXSign
 				pz=pz +100 *dirZSign
 				
@@ -65,8 +66,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			totalAbortCount=totalAbortCount+1	
 			end
 			
-			if  #T == 0 and totalAbortCount < 64 then
-				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,0,team)	
+			if  table.getn(T) == 0 and totalAbortCount < 64 then
+				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,1,team)	
 			end
 			
 		end
@@ -151,12 +152,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	counter=0
-	total=30*60*3
+	total=30*60*5
 	function gadget:GameFrame(frame)
-		if frame > 0 and frame % total == 0 then
-		counter=counter+1
+		if ((frame %total) % 15)== 0 then
+			Spring.Echo("jw_SpawnerAI:timeToGo "..(total-(frame %total)) )
 		end
-		if counter % 3== 0 then
+		
+		if frame > 0 and frame % total == 0 then
+		
 		checkOnTeams()
 
 			for k,v in pairs(spawnerAI) do
