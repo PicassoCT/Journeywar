@@ -82,7 +82,7 @@ function buildMoma(varyFooos)
 		else	
 			indexP=(indexP %#AttachPoints)+1  
 		
-			if distanceUnitToUnit(unitID,varyFooos[i] ) < 75 and not AttachedUnits[varyFooos[i]] then --integrate it into the Avatara
+			if getDistanceUnitToUnit(unitID,varyFooos[i] ) < 75 and not AttachedUnits[varyFooos[i]] then --integrate it into the Avatara
 				nrAdded=nrAdded+1
 				StartThread(partOfShipPartOfCrew, AttachPoints[indexP], varyFooos[i])
 				

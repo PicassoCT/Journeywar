@@ -11,7 +11,7 @@ local unitDef = {
 	buildCostEnergy = 620,
 	buildTime = 9,
 	--Health
-	maxDamage = 1650,
+	maxDamage = 850,
 	idleAutoHeal = 1,
 	--Movement
 	Acceleration = 0.4,
@@ -60,7 +60,7 @@ local unitDef = {
 			onlyTargetCategory = [[LAND TRAITOR]],
 		},
 		[2]={name = "jGDJump",
-			onlyTargetCategory = [[JBUILD]],
+			onlyTargetCategory = [[LAND]],
 		},
 	},
 }

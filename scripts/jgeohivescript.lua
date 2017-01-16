@@ -105,18 +105,19 @@ function spawner()
 					else 
 						spawnedUnit=spCreateUnit("zombie",x+randoval,y,z+(randoval*sigNum), 0, teamID) 
 					end
-					
-					
 				end
 				
-				
-				spSetUnitNoSelect(spawnedUnit,true)
+				if Spring.ValidUnitID(spawnedUnit) == true  then 
+					spSetUnitNoSelect(spawnedUnit,true)
+					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
+					table.insert(monsterTable,spawnedUnit)
+				end
+
 				
 				Sleep(350)
 				spEmitSfx(hivePiece,1025)
 				spEmitSfx(hivePiece,1025)
-				spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
-				table.insert(monsterTable,spawnedUnit)
+				
 			end
 			
 			Spring.SetUnitBlocking(unitID,true)
@@ -297,9 +298,9 @@ function getNearestEnemy(id)
 		end
 	end,
 	function(ed)
-		if ed and id and distanceUnitToUnit(ed,id) <minDist then 
+		if ed and id and getDistanceUnitToUnit(ed,id) <minDist then 
 			minDistID= ed
-			minDist=distanceUnitToUnit(ed,id)
+			minDist=getDistanceUnitToUnit(ed,id)
 		end
 	end)		
 	if minDistID~=nil then return minDistID end

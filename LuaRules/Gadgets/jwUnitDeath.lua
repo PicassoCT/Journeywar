@@ -41,7 +41,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	distanceTable={}
 	for k=1, #sTable, 1 do
 	for i=1, #sTable, 1 do
-		if i~=k and distanceUnitToUnit(sTable[k],sTable[i]) < ELIAHMERGEDISTANCE then
+		if i~=k and getDistanceUnitToUnit(sTable[k],sTable[i]) < ELIAHMERGEDISTANCE then
 		if not distanceTable[k] then  distanceTable[k] = 0 end
 			distanceTable[k] = distanceTable[k] +1
 		end

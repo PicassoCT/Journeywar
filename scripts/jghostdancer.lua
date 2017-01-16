@@ -25,118 +25,149 @@ gdfrontleg=piece"gdfrontleg"
 ghostdance=piece"ghostdance"
 deathpivot=piece"deathpivot"
 boolActivated=true
-unitTable={}
+
 unitTableNr=0
 recoverTime=90000
 SIG_WALK= 1
 SIG_IDLE= 2
+SIG_CONTDAMAGE=4
 teamID=Spring.GetUnitTeam(unitID)
 boolOnlyOnce=false
 fullHealthOfAShadow=0
 piecesTable= makePieceTable(unitID)
 
-local JSHADOWCOST=100
+unitTable={}
+local JSHADOWCOST=120
+
 function buildIt()
-	for i=#unitTable,1,-1 do
+	for i=table.getn(unitTable),1,-1 do
 		if Spring.GetUnitIsDead(unitTable[i])== true then
-			internalEnergy= internalEnergy + 30
 			table.remove(unitTable,i)
 		end
 	end
 	
-	if internalEnergy - JSHADOWCOST > 0 then
+	if internalEnergy - JSHADOWCOST > 0 and table.getn(unitTable) < 4 then
 		internalEnergy=internalEnergy-JSHADOWCOST
-		if #unitTable < 4 then
-			x,y,z=Spring.GetUnitPosition(unitID)
-			thisID=Spring.CreateUnit("jshadow",x,y,z,1,teamID)
-			table.insert(unitTable,thisID)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		thisID=Spring.CreateUnit("jshadow",x,y,z,1,teamID)
+		table.insert(unitTable,thisID)
+	end
+	
+end
+
+trackMax=25
+
+oldPos={}
+function storeOldPositions()
+	ox,oy,oz= Spring.GetUnitPosition(unitID)
+	for i=1,trackMax do
+		oldPos[i]={x=ox,y=oy,z=oz}
+	end
+	
+	while true do
+		if boolContinousDamage == false then
+			vo={}
+			vo.x,vo.y,vo.z= Spring.GetUnitPosition(unitID)
+
+			if distanceVec(vo,oldPos[#oldPos]) > 30 then 				
+				for i=1,trackMax-1 do
+					oldPos[i].x=oldPos[i+1].x
+					oldPos[i].y=oldPos[i+1].y
+					oldPos[i].z=oldPos[i+1].z
+				end				
+			oldPos[trackMax].x=vo.x
+			oldPos[trackMax].y=vo.y
+			oldPos[trackMax].z=vo.z
+			end
+		end		
+		Sleep(400)
+	end
+end
+
+function showPath(index)
+	for i=index,math.min(#oldPos,backTrackindex), 1 do 
+		oVoc=oldPos[i+1] or oldPos[i-1]
+		voc=oldPos[i]
+		vfx={}
+		vfx.x,vfx.y,vfx.z= Spring.GetUnitDirection(unitID)
+		vfx.x,vfx.y,vfx.z=oVoc.x-voc.x, oVoc.y-voc.y, oVoc.z-voc.z
+		vfx=normVector(vfx)
+		Spring.SpawnCEG("jghostdancerswitch",voc.x,voc.y+15, voc.z,vfx.x,vfx.y,vfx.z,0,0)
+	end
+end
+
+
+backTrackindex=trackMax
+function backTrack()
+
+ox,oy,oz= Spring.GetUnitPosition(unitID)
+for i=1,trackMax do
+	oldPos[i]={x=ox,y=oy,z=oz}
+end
+
+	while true do
+		if boolContinousDamage == true then
+			buildIt()
+			backTrackindex=trackMax
+			while boolContinousDamage == true and backTrackindex ~= 1 do
+
+				vec=oldPos[backTrackindex]	
+				if vec then
+				showPath(backTrackindex)	
+				Spring.SetUnitPosition(unitID,vec.x,vec.y,vec.z)
+				end		
+				
+				backTrackindex=math.max(1,backTrackindex-1)
+				Sleep(50)
+			end
+		boolContinousDamage=false
+		Signal(SIG_CONTDAMAGE)
 		end
-		return true
+		Sleep(400)
+	end
+end
+
+sleepCycles=300*(trackMax-1)
+function continousDamageReset() 
+	boolContinousDamage=true
+	Signal(SIG_CONTDAMAGE)
+	SetSignalMask(SIG_CONTDAMAGE)
+	Sleep(sleepCycles)
+	boolContinousDamage=false	
+end
+
+myTeamID=Spring.GetUnitTeam(unitID)
+function lastAttackerWasMyTeam()
+	lastDamagingID= Spring.GetUnitLastAttacker(unitID)
+	if lastDamagingID == unitID then return true end
+	if lastDamagingID then 
+		lastTeamID=Spring.GetUnitTeam(lastDamagingID)
+		if lastTeamID == myTeamID then
+			return true 
+		end
 	end
 	return false
 end
 
-trackMax=15
-oldPos={}
-boolBackTracking=false
-function storeOldPositions()
-ox,oy,oz= Spring.GetUnitPosition(unitID)
-oldPos=makeTable(makeVector(ox,oy,oz),trackMax)
-
-	while true do
-		if boolBackTracking== false then
-				for i=1,#oldPos-1 do
-				oldPos[i]=oldPos[i+1]
-				end
-
-			ox,oy,oz= Spring.GetUnitPosition(unitID)
-			oldPos[#oldPos]= makeVector(ox,oy,oz)
-		end
-	
-	Sleep(400)
-	end
-end
-
-backTrackindex=trackMax
-SIG_BACKTRACK=128
-function delayedResetBackTrack()
-	SetSignalMask(SIG_BACKTRACK)
-	Sleep(4096)
-	backTrackindex=trackMax
-end
-
-
-function backTrack()
-Signal(SIG_BACKTRACK)
-vec=oldPos[backTrackindex]
-	if vec then
-		for i=math.max(1,backTrackindex-1),math.min(#oldPos,backTrackindex), 1 do 
-			voc=oldPos[i]
-			Spring.SpawnCEG("jghoststripe",voc.x,voc.y+15, voc.z,0,1,0,1,0)
-		end
-		Spring.SetUnitPosition(unitID,vec.x,vec.y,vec.z)
-	end
-backTrackindex=math.max(1,backTrackindex-1)
-StartThread(delayedResetBackTrack)
-end
-
-function script.HitByWeapon ( x, z, weaponDefID, damage )
-	if damage and damage > 20 then
-		ed=Spring.GetUnitLastAttacker(unitID)
-		if ed then
-			ex,ey,ez=Spring.GetUnitPosition(ed)
-			if ex then
-				ux,uy,uz=Spring.GetUnitPosition(unitID)
-				vx,vz=ex-ux,ez-uz
-				vx,vz= RotationMatrice (vx,vz, 180)
-				
-				if buildIt()==true then
-					--spawn a Shadow
-					--set the attacking unit 
-					Spring.SetUnitPosition(unitID,ex+vx,ey,ez+vz)
-					Spring.SetUnitPosition(ed,ex - vx/2,ey,ez -vz/2)
-				else --make the Unit Retreat on the last Path
-					backTrack()
-				end
-			end
-		end
-	end
+boolContinousDamage=false
+function script.HitByWeapon( x, z, weaponDefID, damage )
+	if lastAttackerWasMyTeam()== false then
+		StartThread(continousDamageReset)
+	end	
 	return damage
 end
 
 internalEnergy=0
 
-function spawnAndManageShadows()
-	
-	local MAX=240
+function internalEnergyReactor()	
+	local MAX=240	
 	
 	while(true) do
-		exp=Spring.GetUnitExperience(unitID) 
-		if not exp or exp < 1 then exp=1 end
+		eXp=Spring.GetUnitExperience(unitID) 
+		if not eXp or eXp < 1 then eXp=1 end
 		
-		internalEnergyMax=MAX *exp
-		internalEnergy=math.min(internalEnergyMax,internalEnergy+10 )
-		
+		internalEnergyMax=MAX *eXp
+		internalEnergy=math.min(internalEnergyMax,internalEnergy+10 )		
 		Sleep(500)
 	end
 end
@@ -152,7 +183,6 @@ function script.Deactivate()
 	
 	return 0
 end
-
 
 local function legs_down()
 	
@@ -210,10 +240,10 @@ function swooshTail()
 	waveFoo=math.sin
 	if maRa()==true then waveFoo=math.cos end
 	degAloof=math.random(-10,10)
-	PI=3.14159
+
 	randfac=math.random(3,12)
 	for i=2,#tails, 1 do
-		offSetYet= degAloof * waveFoo(PI/randfac* i)
+		offSetYet= degAloof * waveFoo(math.pi/randfac* i)
 		Turn(tails[i],y_axis,math.rad(degToGoX+ offSetYet),math.abs((degToGoX+ offSetYet)/2))
 	end
 	glowTail()	
@@ -346,35 +376,24 @@ function script.Create()
 	Hide(gdflegj)
 	Show(gdfrontleg)
 	resetT(piecesTable)
-	StartThread(spawnAndManageShadows)
-	
+	StartThread(storeOldPositions)
+	StartThread(internalEnergyReactor)
+	StartThread(backTrack)	
+
 end
 
 function script.Killed(recentDamage,maxHealth)
-	if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
-	if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
-	-- if at death you are the original -- make the copy the original
-	if GG.GhostDancerOrgCopy[unitID] and not GG.GhostDancerCopyOrg[unitID] then
-		GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[unitID]]= nil 
-		GG.GhostDancerOrgCopy[unitID]=nil
-	end
-	
-	if GG.GhostDancerCopyOrg[unitID] then
-		GG.GhostDancerCopyOrg[unitID] =nil
-	end
-	-- if at death you are a copy -- shit out of luck
-	
+	Spring.Echo("Jghostdancer:Killed")
+	return 0	
 end
 function smokeEmit()
 	
-	EmitSfx(shadowemit,1024)
-	
+	EmitSfx(shadowemit,1024)	
 end
 
 function glowTail()
 	if maRa() == true then
-		EmitSfx(shadowemit,1025)
-		
+		EmitSfx(shadowemit,1025)		
 	end
 end
 
@@ -466,14 +485,11 @@ function script.StopMoving()
 	Signal(SIG_WALK)
 	boolIdle=false
 	Turn(ears,x_axis,math.rad(0),35)
-	legs_down()
-	
-	
+	legs_down()	
 end
 
 ---AIMING & SHOOTING -
-function script.AimFromWeapon1() 
-	
+function script.AimFromWeapon1() 	
 	return aimpivot 
 end
 
@@ -489,22 +505,18 @@ function script.AimWeapon1(heading,pitch)
 end
 
 -- called after the weapon has fired
-function script.FireWeapon1()
-	
-	--Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav") 
-	
+function script.FireWeapon1()	
+	--Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav") 	
 	return true
 end
 
-function script.AimFromWeapon2() 
-	
+function script.AimFromWeapon2() 	
 	return aimpivot 
 end
 
 function script.QueryWeapon2() 
 	return aimpivot
 end
-
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 -- can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon2(heading,pitch)
@@ -513,9 +525,7 @@ function script.AimWeapon2(heading,pitch)
 end
 
 -- called after the weapon has fired
-function script.FireWeapon2()
-	
-	--Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav") 
-	
+function script.FireWeapon2()	
+	--Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav") 	
 	return true
 end

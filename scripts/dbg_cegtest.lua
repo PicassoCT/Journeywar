@@ -58,21 +58,9 @@ function emitSFX()
 		modHeight=(modHeight%250)+10
 		
 		
-		--Sleep(1500)	
-		
-		--	Spring.SpawnCEG("jvaryfoohit",x,y,z,0,1,0)
-		--Sleep(1500)
-		--	Spring.SpawnCEG("jvaryfoohit2",x,y,z,0,1,0)	
-		--Sleep(1500)
-		--	Spring.SpawnCEG("jvaryfootrail",x,y,z,0,1,0)	
-		--Sleep(1500)
-		--Spring.SpawnCEG("cnanotics",x,y+400,z,1,0,0,0)	
-		--Sleep(1500)
-		--Spring.SpawnCEG("jgalateatend",x,y+20,z,0,1,0,60)
 
-	--	Spring.SpawnCEG("jplankaaimpact",x,y+60,z,0,1,0,60)	
 
-	Spring.SpawnCEG("greencross",x,y+55,z, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10,60)	
+	Spring.SpawnCEG("jghostdancerswitch",x,y+55,z, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10,60)	
 	Sleep(22000)
 	--Spring.SpawnCEG("jsupernova",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
 

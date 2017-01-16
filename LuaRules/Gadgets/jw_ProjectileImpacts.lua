@@ -31,6 +31,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--local selectRange=300
 	--local totalTime=9000
 	JPLANKTONER_AA_STUNTIME= 15000
+	GHOSTLIFETIME= 450
 	jEthiefStealingQuota=5
 	local HARDCODED_RETREATDISTANCE=420
 	
@@ -392,25 +393,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SetUnitPosition(AttackerID, px, py, pz)				
 		end
 		--if you are a ghostdancer --create a copy of yourself near the enemy and kill all previous copys
-		if (weaponDefID == jghostDancerWeaponDefID) then
-			if not GG.GhostDancerOrgCopy then GG.GhostDancerOrgCopy={} end
-			if not GG.GhostDancerCopyOrg then GG.GhostDancerCopyOrg={} end
-			teamid=Spring.GetUnitTeam(AttackerID)
-			
-			if GG.GhostDancerOrgCopy[AttackerID] then -- attacker is a org --destroy old twin -create new twin
-				if Spring.ValidUnitID(GG.GhostDancerOrgCopy[AttackerID]) == true then
-					ox,oy,oz= Spring.GetUnitPosition(GG.GhostDancerOrgCopy[AttackerID])
-					Spring.DestroyUnit(GG.GhostDancerOrgCopy[AttackerID] ,true,true)
-					Spring.CreateUnit("jshadow",ox,oy,oz,teamid)
-				end
-			end
-			--create a new copy if you are the original
-			if not GG.GhostDancerCopyOrg[AttackerID] then 
-	
-				--a new copy
-				GG.GhostDancerOrgCopy[AttackerID] = Spring.CreateUnit("jghostdancer",px,py,pz,teamid)
-				GG.GhostDancerCopyOrg[GG.GhostDancerOrgCopy[AttackerID]] = AttackerID
-			end
+		if (weaponDefID == jghostDancerWeaponDefID and Spring.ValidUnitID(AttackerID)) then
+			Spring.SetUnitPosition(AttackerID, px, py, pz)					
 		end
 		
 		--this one creates the headcrabs
@@ -435,16 +419,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		return true
 	end
 	
-	local 	affectedUnits={}
-	--1 	unitID
-	--2 	counter
-	--3 	speed
-	function switchUnits(aID,bID)
-		ax,ay,az=Spring.GetUnitPosition(aID)
-		bx,by,bz=Spring.GetUnitPosition(bID)
-		Spring.SetUnitPosition(aID,bx,bz)
-		Spring.SetUnitPosition(bID,ax,az)
-	end
+	local 	ghostShadowEffectedUnits={}
+	
+	
 	
 	blowUpTable={}
 	local timeTillBlowUp=3500	
@@ -513,7 +490,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		v=makeVector(tx-gx,ty-gy,tz-gz)
 		v=normVector(v)
-
+		
 		
 		local	 HarvestRocketParams={
 			pos = { gx, gy+max,gz}, 
@@ -679,7 +656,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				v=makeVector(tx-gx,ty-gy,tz-gz)
 				v=normVector(v)
-
+				
 				
 				local HarvestRocketParams={
 					pos = { gx, gy+max,gz}, 
@@ -830,8 +807,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				GG.OnFire[#GG.OnFire][1]=unitID
 				GG.OnFire[#GG.OnFire][2]={}
 				GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(150,1000)) 
-			end
-			
+			end			
 		end
 		
 		--skySraper is damagedCase
@@ -839,41 +815,28 @@ if (gadgetHandler:IsSyncedCode()) then
 			env = Spring.UnitScript.GetScriptEnv(unitID)
 			if env then
 				Spring.UnitScript.CallAsUnit(unitID, env.nothingEverHappend, attackerTeam )		
-			end
-			
+			end			
 		end
 		--jShadow is hit	
-		if unitDefID== jShadowDefID then
-			
-			--unit attacked a jshadow lets store it for this foolishness
-			if attackerID and Spring.ValidUnitID(attackerID)==true then
-				tax=(#affectedUnits)+1
-				affectedUnits[tax]={}
-				affectedUnits[tax][1]=attackerID
-				affectedUnits[tax][2]=100
-				env = Spring.UnitScript.GetScriptEnv(attackerID)
-				if env then				
-					affectedUnits[tax][3]=math.ceil(env.COB.MAX_SPEED *65533)
-				end
-				--now we displace it and set its speed to zero
-				Spring.SetUnitSensorRadius(attackerID,"los",5)
-			end
-			
-			local lswitchUnits=switchUnits
-			if #affectedUnits > 3 then
-				--switch position
+		if unitDefID == jShadowDefID and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
+	
+			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
+			if boolUnitIsDead == false then		
+
+				--now we displace it and set its speed to zero#
+				ghostShadowEffectedUnits[attackerID]=Spring.GetGameFrame()+ GHOSTLIFETIME
 				
-				for i=1,#affectedUnits-2, 2 do
-					if affectedUnits[i][1] and Spring.ValidUnitID(affectedUnits[i][1]) ==true and affectedUnits[i+1] and Spring.ValidUnitID(affectedUnits[i+1][1]) == true then
-						lswitchUnits(affectedUnits[i][1],affectedUnits[i+1][1])
-					end	
-					
+				offx,offz=math.random(-25,25),math.random(-25,25)
+				px,py,pz=Spring.GetUnitPosition(attackerID)
+				Spring.SetUnitMoveGoal(attackerID, px +offx, py, pz +offz)
+				rotateUnitAroundUnit(unitID,attackerID, 180)
+				if getDistanceUnitToUnit(attackerID, unitID) < 50 then
+					Spring.SetUnitSensorRadius(attackerID,"los",5)
 				end
 				
+				setSpeedEnv(attackerID,0.05)	
 			end
-		end
-		
-		
+		end	
 	end
 	
 	
@@ -897,12 +860,6 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end
 		
-		if frame % 31415 == 0 then
-			for i=1,table.getn(affectedUnits),1 do
-				if affectedUnits[i]== nil then table.remove(affectedUnits,i) end
-			end
-			
-		end
 		
 		if frame % everyNthFrame == 0 then
 			--handling the Poison Darted
@@ -936,29 +893,32 @@ if (gadgetHandler:IsSyncedCode()) then
 				end				
 			end
 			
-			--affectedUnits --slows down ghostdancer attackers
-			if affectedUnits ~= nil and table.getn(affectedUnits) ~= 0 then
-				for i=1,#affectedUnits,1 do
-					if affectedUnits[i]~=nil then
-						affectedUnits[i][2]= affectedUnits[i][2]-1 
-						if affectedUnits[i][2] <= 0 then
-							if affectedUnits[i][1] and affectedUnits[i][3] and Spring.ValidUnitID(affectedUnits[i][1])==true then
-								env=Spring.UnitScriptEnv(affectedUnits[i][1])
-								if env then
-									Spring.UnitScript.CallAsUnit(affectedUnits[i][1],env.SetUnitValue,COB.MAX_SPEED, affectedUnits[i][3] )		
-								end
-							end
-							affectedUnits[i]=nil	 
-						end	 
-					end
-					
-				end
-				
+			--ghostShadowEffectedUnits --slows down ghostdancer attackers
+			if table.getn(ghostShadowEffectedUnits) ~= 0 then
+				for k,v in pairs(ghostShadowEffectedUnits) do				
+					if v > frame then
+						setSpeedEnv(k,1.0)					
+					end	 
+				end	 
+				for k,v in pairs(ghostShadowEffectedUnits) do				
+					if v > frame then
+						ghostShadowEffectedUnits[k]=nil				
+					end	 
+				end	 
 			end
+			--/ghostShadowEffectedUnits
 		end	
-		--/affectedUnits
-		
 	end
+	
+	function setSpeedEnv(k, val)
+		env=Spring.UnitScript.GetScriptEnv(k)
+	
+		if env then
+			udef=Spring.GetUnitDefID(k)	
+			Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed*val* 2184.53))		
+		end
+	end
+	
 	local TableOfAllreadySearchedComender={}
 	function GetWeaponDirection(attackerID)
 		if TableOfAllreadySearchedComender[attackerID] then

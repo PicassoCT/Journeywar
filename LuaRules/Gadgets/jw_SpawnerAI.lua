@@ -18,6 +18,7 @@ end
 
 
 if (gadgetHandler:IsSyncedCode()) then
+	VFS.Include("scripts/lib_UnitScript.lua")
 	gaiaTeam=Spring.GetGaiaTeamID()
 	teamTable={}
 	meridianTable={}
@@ -38,7 +39,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		for _=1, volume,1 do
 		
-			if #meridianTable <=1 then return end			
+			if #meridianTable <=1 then echo("Not enough merdianTable"); return end			
 			meridian=meridianTable[math.random(1,#meridianTable)]
 			percent=math.random(0,100)/100
 			
@@ -139,9 +140,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	okayCount=0
 		for teamID, side in pairs(spawnerAI) do
 		teamID,leader,isDead =	Spring.GetTeamInfo(teamID)
-			if isDead and isDead == false then
+				Spring.Echo("JwSpawnerAI:"..teamID.." - ".. leader.." - "..boolToString(isDead))
+			if  isDead == false then
 				okayCount=okayCount+1
-			else
+			else			
 				spawnerAI[teamID]= nil
 			end
 		end
@@ -168,5 +170,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	
+	function gadget:Shutdown()
+			Spring.Echo("jw_SpawnerAIGadget: Shuting down")
+		
+	end
 end
