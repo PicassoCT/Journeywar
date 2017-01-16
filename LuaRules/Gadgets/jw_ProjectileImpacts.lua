@@ -829,6 +829,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				offx,offz=math.random(-25,25),math.random(-25,25)
 				px,py,pz=Spring.GetUnitPosition(attackerID)
 				Spring.SetUnitMoveGoal(attackerID, px +offx, py, pz +offz)
+				Spring.Echo("Rotating unit around unit")
 				rotateUnitAroundUnit(unitID,attackerID, 180)
 				if getDistanceUnitToUnit(attackerID, unitID) < 50 then
 					Spring.SetUnitSensorRadius(attackerID,"los",5)

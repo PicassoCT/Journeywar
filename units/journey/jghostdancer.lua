@@ -12,7 +12,7 @@ local unitDef = {
 	buildTime = 9,
 	--Health
 	maxDamage = 850,
-	idleAutoHeal = 1,
+	idleAutoHeal = 12,
 	--Movement
 	Acceleration = 0.4,
 	BrakeRate = 0.3,

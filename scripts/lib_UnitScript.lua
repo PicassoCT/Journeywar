@@ -1088,8 +1088,8 @@ end
 function rotateUnitAroundUnit(centerID,rotatedUnit, degree)
 	ax,ay,az=Spring.GetUnitPosition(centerID)
 	bx,by,bz=Spring.GetUnitPosition(rotatedUnit)
-	vx,vz= ax-bx,az-bz
-	vx,vz= RotationMatrice (vx,vz, math.rad(degree))
+	vx,vz= bx-ax,bz-az
+	vx,vz= RotationMatrice(vx,vz, math.rad(degree))
 	
 	Spring.SetUnitPosition(rotatedUnit,ax+vx,az+vz)
 end

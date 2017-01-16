@@ -238,178 +238,127 @@ function stepRight()
 	Turn(shwLL24,z_axis,math.rad(0),7)
 	--
 	Turn(shwUpL21,x_axis,math.rad(-7),7)
-	Turn(shwUpL21,y_axis,math.rad(28),7)
-	Turn(shwUpL21,z_axis,math.rad(24),7)
-	
+
 	Turn(shwLL21,x_axis,math.rad(19),7)
-	Turn(shwLL21,y_axis,math.rad(77),27)
-	Turn(shwLL21,z_axis,math.rad(1),7)
+
 	
 	
 	Turn(shwUpL22,x_axis,math.rad(-23),7)
-	Turn(shwUpL22,y_axis,math.rad(0),7)
-	Turn(shwUpL22,z_axis,math.rad(0),7)
+
 	
 	Turn(shwLL22,x_axis,math.rad(14),7)
-	Turn(shwLL22,y_axis,math.rad(1),7)
-	Turn(shwLL22,z_axis,math.rad(0),7)
+
 	
 	
 	Turn(shwUpL23,x_axis,math.rad(-43),7)
-	Turn(shwUpL23,y_axis,math.rad(0),7)
-	Turn(shwUpL23,z_axis,math.rad(-22),7)
+
 	
 	Turn(shwLL23,x_axis,math.rad(18),7)
-	Turn(shwLL23,y_axis,math.rad(-19),7)
-	Turn(shwLL23,z_axis,math.rad(0),7)
+
 	
 	--
 	
 	
 	Turn(sh1upleg1,x_axis,math.rad(28),7)
-	Turn(sh1upleg1,y_axis,math.rad(0),7)
-	Turn(sh1upleg1,z_axis,math.rad(16),7)
+
 	
 	Turn(sh1upleg2,x_axis,math.rad(-40),7)
-	Turn(sh1upleg2,y_axis,math.rad(0),7)
-	Turn(sh1upleg2,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1upleg3,x_axis,math.rad(-18),7)
-	Turn(sh1upleg3,y_axis,math.rad(0),7)
-	Turn(sh1upleg3,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1upleg4,x_axis,math.rad(-13),7)
-	Turn(sh1upleg4,y_axis,math.rad(13),7)
-	Turn(sh1upleg4,z_axis,math.rad(0),7)
-	--
+
 	
 	Turn(sh1leg1,x_axis,math.rad(-14),7)
-	Turn(sh1leg1,y_axis,math.rad(0),7)
-	Turn(sh1leg1,z_axis,math.rad(-9),7)
+
 	
 	Turn(sh1leg2,x_axis,math.rad(-55),7)
-	Turn(sh1leg2,y_axis,math.rad(0),7)
-	Turn(sh1leg2,z_axis,math.rad(0),7)
-	
+
 	Turn(sh1leg3,x_axis,math.rad(-85),7)
-	Turn(sh1leg3,y_axis,math.rad(0),7)
-	Turn(sh1leg3,z_axis,math.rad(0),7)
-	
+
 	Turn(sh1leg4,x_axis,math.rad(-110),7)
-	Turn(sh1leg4,y_axis,math.rad(0),7)
-	Turn(sh1leg4,z_axis,math.rad(0),7)
+
 	
 	--
 	Turn(sh1lowleg1,x_axis,math.rad(48),7)
-	Turn(sh1lowleg1,y_axis,math.rad(0),7)
-	Turn(sh1lowleg1,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1lowleg2,x_axis,math.rad(82),7)
-	Turn(sh1lowleg2,y_axis,math.rad(0),7)
-	Turn(sh1lowleg2,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1lowleg3,x_axis,math.rad(98),7)
-	Turn(sh1lowleg3,y_axis,math.rad(0),7)
-	Turn(sh1lowleg3,z_axis,math.rad(-33),7)
+
 	
 	Turn(sh1lowleg4,x_axis,math.rad(97),19)
-	Turn(sh1lowleg4,y_axis,math.rad(0),0)
-	Turn(sh1lowleg4,z_axis,math.rad(0),0)
-	
+
 end
 
 function stepLeft()
 	Turn(shwNeck21,x_axis,math.rad(13),7)
 	Turn(shwNeck21,y_axis,math.rad(3),7)
-	Turn(shwNeck22,x_axis,math.rad(-14),7)
+	
+	Turn(shwNeck22,x_axis,math.rad(-14),7)	
 	Turn(shwNeck22,y_axis,math.rad(2),4)
+	
 	Turn(shwHead2,x_axis,math.rad(-16),7)
 	Turn(shwHead2,y_axis,math.rad(1),7)
 	
 	Turn(shwUpL24,x_axis,math.rad(-46),7)
-	Turn(shwUpL24,y_axis,math.rad(0),7)
-	Turn(shwUpL24,z_axis,math.rad(0),7)
-	
+
 	Turn(shwLL24,x_axis,math.rad(68),7)
-	Turn(shwLL24,y_axis,math.rad(14),7)
-	Turn(shwLL24,z_axis,math.rad(0),7)
+
 	--
 	Turn(shwUpL21,x_axis,math.rad(-7),7)
-	Turn(shwUpL21,y_axis,math.rad(-12),7)
-	Turn(shwUpL21,z_axis,math.rad(0),7)
+
 	
-	Turn(shwLL21,x_axis,math.rad(-9),7)
-	Turn(shwLL21,y_axis,math.rad(-22),7)
-	Turn(shwLL21,z_axis,math.rad(-31),7)
-	
+	Turn(shwLL21,x_axis,math.rad(-31),7)
+
 	
 	Turn(shwUpL22,x_axis,math.rad(49),7)
-	Turn(shwUpL22,y_axis,math.rad(0),7)
-	Turn(shwUpL22,z_axis,math.rad(0),7)
-	
+
 	Turn(shwLL22,x_axis,math.rad(-29),7)
-	Turn(shwLL22,y_axis,math.rad(1),7)
-	Turn(shwLL22,z_axis,math.rad(0),7)
-	
+
 	
 	Turn(shwUpL23,x_axis,math.rad(0),7)
-	Turn(shwUpL23,y_axis,math.rad(0),7)
-	Turn(shwUpL23,z_axis,math.rad(0),7)
+
 	
 	Turn(shwLL23,x_axis,math.rad(75),7)
-	Turn(shwLL23,y_axis,math.rad(-19),7)
-	Turn(shwLL23,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1upleg1,x_axis,math.rad(-21),8)
-	Turn(sh1upleg1,y_axis,math.rad(0),7)
-	Turn(sh1upleg1,z_axis,math.rad(0),7)
-	
+
 	Turn(sh1upleg2,x_axis,math.rad(0),7)
-	Turn(sh1upleg2,y_axis,math.rad(0),7)
-	Turn(sh1upleg2,z_axis,math.rad(0),7)
-	
+
 	Turn(sh1upleg3,x_axis,math.rad(0),7)
-	Turn(sh1upleg3,y_axis,math.rad(0),7)
-	Turn(sh1upleg3,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1upleg4,x_axis,math.rad(55),7)
-	Turn(sh1upleg4,y_axis,math.rad(13),7)
-	Turn(sh1upleg4,z_axis,math.rad(0),7)
-	
+
 	
 	Turn(sh1leg1,x_axis,math.rad(-121),7)
-	Turn(sh1leg1,y_axis,math.rad(0),7)
-	Turn(sh1leg1,z_axis,math.rad(0),7)
-	
+
 	Turn(sh1leg2,x_axis,math.rad(0),8)
-	Turn(sh1leg2,y_axis,math.rad(0),7)
-	Turn(sh1leg2,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1leg3,x_axis,math.rad(0),8)
-	Turn(sh1leg3,y_axis,math.rad(0),7)
-	Turn(sh1leg3,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1leg4,x_axis,math.rad(-55),8)
-	Turn(sh1leg4,y_axis,math.rad(0),7)
-	Turn(sh1leg4,z_axis,math.rad(0),7)
-	
+
 	
 	Turn(sh1lowleg1,x_axis,math.rad(130),8)
-	Turn(sh1lowleg1,y_axis,math.rad(0),7)
-	Turn(sh1lowleg1,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1lowleg2,x_axis,math.rad(0),8)
-	Turn(sh1lowleg2,y_axis,math.rad(0),7)
-	Turn(sh1lowleg2,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1lowleg3,x_axis,math.rad(0),7)
-	Turn(sh1lowleg3,y_axis,math.rad(0),7)
-	Turn(sh1lowleg3,z_axis,math.rad(0),7)
+
 	
 	Turn(sh1lowleg4,x_axis,math.rad(-55),9)
-	Turn(sh1lowleg4,y_axis,math.rad(0),7)
-	Turn(sh1lowleg4,z_axis,math.rad(0),7)
-	
+
 end
 ---WALKING---
 local function walk()
@@ -436,14 +385,11 @@ function reSetPiece(piecename)
 	Turn(piecename,z_axis,math.rad(0),3.5)
 end
 
+pieceTable=makePieceTable(unitID)
 local function legs_down ()
 	reSetPiece(center)
-	for i=1,table.getn(shadow1),1 do
-		reSetPiece(shadow1[i])
-	end
-	for i=1,table.getn(shadow2),1 do
-		reSetPiece(shadow2[i])
-	end
+	resetT(pieceTable,3)
+	
 end
 
 function script.StartMoving()

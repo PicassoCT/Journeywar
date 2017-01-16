@@ -139,7 +139,9 @@ end
 myTeamID=Spring.GetUnitTeam(unitID)
 function lastAttackerWasMyTeam()
 	lastDamagingID= Spring.GetUnitLastAttacker(unitID)
-	if lastDamagingID == unitID then return true end
+	if lastDamagingID == unitID then
+		return true 
+	end
 	if lastDamagingID then 
 		lastTeamID=Spring.GetUnitTeam(lastDamagingID)
 		if lastTeamID == myTeamID then
@@ -149,9 +151,11 @@ function lastAttackerWasMyTeam()
 	return false
 end
 
+gdjumpDefID=WeaponDefNames["jgdjump"].id
 boolContinousDamage=false
 function script.HitByWeapon( x, z, weaponDefID, damage )
-	if lastAttackerWasMyTeam()== false then
+	if lastAttackerWasMyTeam()== false and weaponDefID ~= gdjumpDefID then
+
 		StartThread(continousDamageReset)
 	end	
 	return damage
