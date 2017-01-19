@@ -71,7 +71,6 @@ local ciFirCloud2=piece"ciFirCloud2"
 local ciFirCloud3=piece"ciFirCloud3"
 local ciFirCloud4=piece"ciFirCloud4"
 
-
 cifireclo0=piece"cifireclo0"
 cifireclo1=piece"cifireclo1"
 cififlakef=piece"cififlakef"
@@ -99,7 +98,6 @@ local citurrete3=piece"citurrete3"
 local citurrete4=piece"citurrete4"
 --superportal+magnetic sucker
 --local cifireclo2=piece"cifireclo2"
-
 local cisuperpor=piece"cisuperpor"
 local cicylind= piece"cicylind"
 local ciportalvortemit=piece"ciportalvortemit"
@@ -155,6 +153,13 @@ function darkEnergyReactor()
 	end
 end
 
+signOffset={
+			{x=60,z=0},
+			{x=0,z=60},
+			{x=-60,z=0},
+			{x=0,z=-60}
+
+			}
 --arrive every 1:30 secs -> to forwards that hollywood action curve, in which every 3 min something is blown up- 
 function reInforCements()
 	Sleep(65000)
@@ -185,48 +190,46 @@ function reInforCements()
 				EmitSfx(cishadersp,1030)
 				
 			end
+			
 			Sleep(100)
 		end
 		if i==1 then
+			for indHex=1,3 do
+				index=1
+				spCreateUnit("contruck",getFrameDepUnqOff(15)+dropPx+signOffset[index].x,dropPy,dropZ+signOffset[index].z, 0, teamID) 
+				for k=1, 3 do
+				index=(index%#signOffset)+1
+				spCreateUnit("bg",getFrameDepUnqOff(15)+dropPx+signOffset[index].x,dropPy,dropZ+signOffset[index].z, 0, teamID) 
+				end
+				Sleep(50)
+			end
+		
 			
-			spCreateUnit("contruck",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+125, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+90+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+75+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+55+i, 0, teamID) 
+		else				
 			
-			spCreateUnit("contruck",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160+i, 0, teamID)
+			index=1
+			spCreateUnit("contrain",getFrameDepUnqOff(15)+dropPx,dropPy,dropZ+340+i, 0, teamID) 
+			Sleep(50)
 			
-			spCreateUnit("contruck",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260+i, 0, teamID)
-			
-			
-		else
-			
-			spCreateUnit("contrain",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340+i, 0, teamID) 
-			
-			
-			spCreateUnit("conair",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+250, 0+i, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+200+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+180+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+160+i, 0, teamID)
-			
-			spCreateUnit("conair",getFrameDependentUniqueOffset(15)+dropPx,dropPy,dropZ+340+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+300+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx-20,dropPy,dropZ+280+i, 0, teamID) 
-			spCreateUnit("bg",getFrameDependentUniqueOffset(15)+dropPx+20,dropPy,dropZ+260+i, 0, teamID)
-			
+			spCreateUnit("conair",getFrameDepUnqOff(15)+dropPx,dropPy,dropZ+250, 0+i, teamID) 
+			for k=1, 3 do
+				index=(index%#signOffset)+1
+				spCreateUnit("bg",getFrameDepUnqOff(15)+dropPx+signOffset[index].x,dropPy,dropZ+signOffset[index].z, 0, teamID) 
+			end
+			Sleep(50)
+			spCreateUnit("conair",getFrameDepUnqOff(15)+dropPx,dropPy,dropZ+340+i, 0, teamID) 
+			for k=1, 3 do
+				index=(index%#signOffset)+1
+				spCreateUnit("bg",getFrameDepUnqOff(15)+dropPx+signOffset[index].x,dropPy,dropZ+signOffset[index].z, 0, teamID) 
+			end
+			Sleep(50)
+			Sleep(50)
 		end
 		
 	end
 	
 	
 end
-
 
 function FireCloud()
 	boolFireCloud=true
@@ -368,7 +371,6 @@ function CriticalHitDetector()
 	end
 	
 end
-
 
 function DustStomp()
 	
@@ -657,8 +659,6 @@ function script.Deactivate()
 	return 0
 end
 
-
-
 function script.Create()
 	Move(sparkcloudemit,y_axis,0,0)
 	Move(PortalEmit,y_axis,0,0,true)
@@ -728,7 +728,6 @@ function script.Create()
 	
 end
 
-
 function fireflakeBurst()
 	randit=0
 	rand=math.random(64,128)
@@ -772,7 +771,6 @@ function debrisBurst()
 	end
 	
 end
-
 
 function script.Killed(recentDamage,maxHealth)
 	
@@ -883,11 +881,6 @@ end
 
 Spring.SetUnitNanoPieces(unitID,{ cinanoemit1})
 
-
-
-
-
-
 function script.AimFromWeapon1() 
 	return ciscanemi0 
 end
@@ -949,11 +942,9 @@ end
 --------------------------------------------------------------------------
 --turret + two turret emiter
 
-
 function script.AimFromWeapon3() 
 	return citurret04 
 end
-
 
 function script.QueryWeapon3() 
 	rand=math.random(0,1)
@@ -1018,7 +1009,6 @@ function allHellBreaksLoose()
 	
 end
 
-
 function script.AimFromWeapon5() 
 	return citurret3 
 end
@@ -1048,7 +1038,6 @@ function script.FireWeapon5()
 	return true
 end
 
-
 --here be shielding
 function script.AimFromWeapon6() 
 	return cidronesem 
@@ -1068,9 +1057,7 @@ function script.FireWeapon6()
 	return true
 end
 
-
 cx,cy,cz=Spring.GetUnitPosition(unitID)
-
 
 function GetUnitImpulseByShield(cx,cy,cz,tx,ty,tz,strength)
 	

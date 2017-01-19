@@ -602,12 +602,12 @@ function reInforCements()
 		if i==1 then
 			for u=1,#firstWave do
 			posX,posY,posZ= Spring.GetUnitPiecePosDir(unitID,pumpbase[u%(#pumpbase)+1])
-			GG.UnitsToSpawn:PushCreateUnit(firstWave[u],getFrameDependentUniqueOffset(5)+posX, posY,posZ,0, teamID)
+			GG.UnitsToSpawn:PushCreateUnit(firstWave[u],getFrameDepUnqOff(5)+posX, posY,posZ,0, teamID)
 			end			
 		else
 			for u=1,#nextWave do
 			posX,posY,posZ= Spring.GetUnitPiecePosDir(unitID,pumpbase[u%(#pumpbase)+1])
-			GG.UnitsToSpawn:PushCreateUnit(nextWave[u],getFrameDependentUniqueOffset(5)+posX, posY,posZ,0, teamID)
+			GG.UnitsToSpawn:PushCreateUnit(nextWave[u],getFrameDepUnqOff(5)+posX, posY,posZ,0, teamID)
 			end
 		end
 		

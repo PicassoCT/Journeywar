@@ -77,7 +77,10 @@ if (gadgetHandler:IsSyncedCode()) then
 		if survivor ~= nil then
 			x,y,z=Spring.GetUnitPosition(survivor)
 			likeHisFathersFather=Spring.GetUnitTeam(survivor)
-			Spring.CreateUnit("jeliah",x,y,z,0,likeHisFathersFather)
+			id=Spring.CreateUnit("jeliah",x,y,z,0,likeHisFathersFather)
+			if id then
+				Spring.SetUnitExperience(id, GoneForGood[valIum][2].exp)
+			end
 			for i=3,3+numberOfButterflys,1 do
 				if Spring.GetUnitIsDead(GoneForGood[valIum][i])==false then 
 					Spring.DestroyUnit(GoneForGood[valIum][i],false,true)
@@ -146,13 +149,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	conAirDefID=UnitDefNames["conair"].id
 	
 	function inRandomRange(x,z,Range)
-		xR=math.random(1,Range)
-		zR=math.random(1,Range)
-		signed=math.random(-1,1)
-		x=math.abs(math.ceil(x+(signed*xR)))
-		signed=(math.random(-1,1))
-		z=math.abs(math.ceil(z+(signed*zR)))
-		return x,z
+		offx,offz= RotationMatrice(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
+		return x+offx,z+offz
 	end
 	
 	blooddecals={"blooddecalfactory","blooddecalfactory1","blooddecalfactory2","blooddecalfactory3","blooddecalfactory4"}
@@ -199,7 +197,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			GoneForGood[#GoneForGood][1]={}
 			GoneForGood[#GoneForGood][1]=timeInMsTillRespawn
 			GoneForGood[#GoneForGood][2]={}
-			GoneForGood[#GoneForGood][2]=unitID
+			GoneForGood[#GoneForGood][2].id=unitID
+			GoneForGood[#GoneForGood][2].exp=Spring.GetUnitExperience(unitID)
 			
 			for i=3,3+numberOfButterflys,1 do
 				GoneForGood[#GoneForGood][i]={}
@@ -207,7 +206,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				--store the info in a GoneForGood[]={} --Table
 				tx,tz=inRandomRange(x,z,circleRange)
 				GoneForGood[#GoneForGood][i]=Spring.CreateUnit("jbutterfly",tx,y,tz,0,teamID)
-				
+				Spring.SetUnitMoveGoal(GoneForGood[#GoneForGood][i],tx,0,tz)
 				
 			end
 			--spawnWithinCircle

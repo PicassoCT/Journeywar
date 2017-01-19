@@ -155,6 +155,7 @@ function script.Create()
 end
 
 function script.Killed()
+	setSpeed(unitID,0,UnitDefs)
 	Turn(center,x_axis, math.rad(82),math.rad(55))
 	EmitSfx(center,1025)	
 	EmitSfx(center,1026)	

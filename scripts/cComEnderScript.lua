@@ -1712,7 +1712,7 @@ end
 
 maxSpeed= COB.MAX_SPEED 
 WACKY_CONVERSION_FACTOR_1=2184.53
-function setSpeed(percent)
+function setSpeedComEnder(percent)
 	limitedpercdent=math.max(0,math.min(percent,100))
 	limitedpercdent= 100/limitedpercdent
 	speed = math.ceil(limitedpercdent*maxSpeed* WACKY_CONVERSION_FACTOR_1)
@@ -1838,7 +1838,7 @@ end
 function script.Create()
 		Weapons[eSlicer][1]=1
 	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
-	setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
+	setSpeedComEnder(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
@@ -1921,14 +1921,14 @@ function theActualUpgrade(upgradeType)
 	if XP >= 1 then
 		if upgradeType == "SPEED" and Stats[eProperty][eWalkSpeed] <= Stats[eProperty][eWalkSpeedLimit]then
 			Stats[eProperty][eWalkSpeed]=Stats[eProperty][eWalkSpeed]+1
-			setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
+			setSpeedComEnder(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 			spSetUnitExperience(unitID,XP -1)	
 		end
 		
 		if upgradeType ==	"ARMOR" and 	Stats[eProperty][eAmor] < 	Stats[eProperty][eAmorMax] then
 			Stats[eProperty][eAmor]=Stats[eProperty][eAmor]+1
 			Stats[eProperty][eWalkSpeed]=math.max(Stats[eProperty][eWalkSpeed]-0.5,1)
-			setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
+			setSpeedComEnder(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 			
 			health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(unitID)
 			ratio=health/maxHealth
@@ -2948,7 +2948,7 @@ function sniperKneeDown()
 			end
 			boolWalking=false
 			legs_down()
-			--setSpeed(0)
+			--setSpeedComEnder(0)
 			boolWalking=false
 			
 			DT(LSK10,LSK09,6,1.7*Stats[eProperty][eWalkSpeed],nil,nil,5)			------------------------------------------
@@ -3050,7 +3050,7 @@ function script.FireWeapon4()
 	StartThread(countDownSniperTimer)
 	fireWeaponCost(eSniper)
 	
-	setSpeed(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
+	setSpeedComEnder(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	return true
 end
 

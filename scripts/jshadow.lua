@@ -413,6 +413,9 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if dice==secondThrow then
 		boolSelfDestruct=true	
 	end
+	vx,vz=math.random(-5,5),math.random(-5,5)
+	px,py,pz=Spring.GetUnitPosition(unitID)
+	Spring.SetUnitPosition(unitID,px+vx,py,pz+vz)
 return damage
 end
 
@@ -435,5 +438,7 @@ function delayedSelfDestruction()
 end
 ----death animation: fall over & explode
 function script.Killed(recentDamage, maxHealth)
-	
+	for i=1,#pieceTable do
+		Explode(pieceTable[i],SFX.FALL+SFX.SHATTER)
+	end
 end

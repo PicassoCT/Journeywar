@@ -333,18 +333,13 @@ function script.AimWeapon1( heading ,pitch)
 	Signal(SIG_WALK)
 	boolNonCombatant=false
 	StartThread(stillFighting)
-	if math.abs(heading) > 0.78525 then 
-		Turn(body,y_axis,heading,21)
-		WaitForTurn(body,y_axis)
-		
-		return false 
-	else
+
 		--aiming animation: instantly turn the gun towards the enemy
-		--Turn(turret, y_axis, heading)
-		Turn(LArm,y_axis,heading,9)
-		WaitForTurn(LArm,y_axis)
-		return true
-	end
+	Turn(LArm, y_axis, heading)
+	Turn(LArm,x_axis,-pitch,9)
+	WaitForTurn(LArm,x_axis)
+	return true
+	
 end
 
 
@@ -362,23 +357,17 @@ function script.AimWeapon2( heading, pitch )
 	Signal(SIG_RRESET)
 	Signal(SIG_IDLE)
 	Signal(SIG_WALK)
-	if math.abs(heading) > 0.78525 then 
-		Turn(body,y_axis,heading,21)
-		WaitForTurn(body,y_axis)
-		
-		return false 
-	else
+
 		--aiming animation: instantly turn the gun towards the enemy
-		--Turn(turret, y_axis, heading)
-		Turn(RArm,y_axis,heading,9)
-		WaitForTurn(RArm,y_axis)
+		Turn(RArm, y_axis, heading)
+		Turn(RArm,x_axis,-pitch,9)
+		WaitForTurn(RArm,x_axis)
 		return true
 	end	
 	
-end
+
 
 function script.AimFromWeapon2() 
-	
 	
 	return weaponPoints[4]
 	
@@ -396,98 +385,19 @@ function script.FireWeapon2()
 end
 
 --------------------------------------------------------------------------
---weapon3 
-function script.AimWeapon3( heading, pitch )
-	if boolRightSideAimed==true then
-		Turn(weaponPoints[2],y_axis,boolGRHeading,0)
-		Turn(weaponPoints[2],x_axis,pitch,0)
-		return true
-else return false end
-	
-end
 
+
+--weapon 3
 function script.AimFromWeapon3() 	
 	
 	
 	
-	return weaponPoints[2]
-	
-end
-
-function script.QueryWeapon3() 
-	return weaponPoints[2]
-	
-end
-
-
-function script.FireWeapon3()
-	
-end	
---weapon 4
-function script.AimWeapon4( heading, pitch )
-	if boolRightSideAimed==true then
-		Turn(weaponPoints[3],y_axis,boolGRHeading,0)
-		Turn(weaponPoints[3],x_axis,pitch,0)
-		return true
-else return false end
-	
-end
-
-function script.AimFromWeapon4() 	
-	
-	
-	
 	return weaponPoints[3]
-	
-end
-
-function script.QueryWeapon4() 
-	return weaponPoints[3]
-end
-
-
-function script.FireWeapon4()
-end
-
-
---weapon 5
-function script.AimWeapon5( heading, pitch )
-	if boolLeftSideAimed==true then
-		Turn(weaponPoints[5],y_axis,boolGLHeading,0)
-		Turn(weaponPoints[5],x_axis,pitch,0)
-		return true
-else return false end
-end
-
-function script.AimFromWeapon5() 	
-	
-	
-	
-	return weaponPoints[5]
-	
-end
-
-function script.QueryWeapon5() 
-	return weaponPoints[5]
-end
-
-
-function script.FireWeapon5()
-end
-
-
-
---weapon 6
-function script.AimFromWeapon6() 	
-	
-	
-	
-	return weaponPoints[6]
 	
 end
 
 function script.QueryWeapon6() 
-	return weaponPoints[6]
+	return weaponPoints[3]
 end
 
 
@@ -497,9 +407,5 @@ end
 
 
 function script.AimWeapon6( heading, pitch )
-	if boolLeftSideAimed==true then
-		Turn(weaponPoints[6],y_axis,boolGLHeading,0)
-		Turn(weaponPoints[6],x_axis,pitch,0)
-		return true
-else return false end
+return true
 end

@@ -191,13 +191,13 @@ function getDistanceUnitToUnit(idA, idB)
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
-	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") end
-	
+	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return math.huge end
+	assert(x)
 	return GetTwoPointDistance(x,y,z,xb,yb,zb)
 end
 
 -->returns Distance between two points
-function GetTwoPointDistance(x,y,z,ox,oy,oz)
+function GetTwoPointDistance(x, y, z, ox, oy, oz)
 	x=x-ox
 	y=y-oy
 	z=z-oz
@@ -2335,7 +2335,7 @@ function vardump(value, depth, key)
 		return tpiecesTable
 	end
 	
-	function getFrameDependentUniqueOffset(limit)
+	function getFrameDepUnqOff(limit)
 		if not GG.FrameDependentOffset then GG.FrameDependentOffset={val=0, frame=Spring.GetGameFrame() } end
 		if GG.FrameDependentOffset.frame ~=Spring.GetGameFrame() then GG.FrameDependentOffset.val =0; GG.FrameDependentOffset.frame =Spring.GetGameFrame() end
 		
@@ -4610,7 +4610,8 @@ end
 function setSpeed(unitID,speedfactor, UnitDefs)
 	uDefID=Spring.GetUnitDefID(unitID)	
 	if speedfactor > 1 then echo("Error:setSpeed:Recived to big Value") return end
-	Spring.SetUnitValue(unitID,COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed*speedfactor* 2184.53))
+	assert(Spring.UnitScript,"No UnitScript given")
+	Spring.UnitScript.SetUnitValue(unitID,COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed*speedfactor* 2184.53))
 end
 
 function reSetSpeed(unitID,UnitDefs)
