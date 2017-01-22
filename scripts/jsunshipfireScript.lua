@@ -83,7 +83,7 @@ function constDistanceDrag()
 				if UnitDefs[defID].isBuilding== false then
 					idID =Spring.GetUnitDefID(id)
 					
-					if idID ==UnitDefNames["jdarkgate"].id and getDistanceUnitToUnit(id,unitID) < 100 then
+					if idID ==UnitDefNames["jdarkgate"].id and distanceUnitToUnit(id,unitID) < 100 then
 						Spring.DestroyUnit(id,true,false)
 						Spring.DestroyUnit(unitID,true,false)
 					end
@@ -95,7 +95,7 @@ function constDistanceDrag()
 			end,		
 			function(id)
 				if id and  type(id)=="number" then
-					dist=getDistanceUnitToUnit(id,unitID) 
+					dist=distanceUnitToUnit(id,unitID) 
 					
 					if dist and dist < dragInRange and dist > liftUpRange then
 						ix,iy,iz= Spring.GetUnitPosition(id)

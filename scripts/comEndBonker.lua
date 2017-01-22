@@ -433,10 +433,9 @@ function showUP()
 	
 	WaitForMove(center,y_axis)
 	
-	Move(Earth002,y_axis,-104.939,24)--24
-	Move(Earth002,z_axis,247.025,56)--56
-	WaitForMove(Earth002,y_axis)
-	WaitForMove(Earth002,z_axis)
+	Move(Earth002,y_axis,-26.939,96)--24
+	Move(Earth002,z_axis,61.025,224)--56
+	WaitForMoves(Earth002)
 	HideWrap(Earth002)
 	Move(ArmShell1,y_axis,-50,0)
 	
@@ -510,7 +509,7 @@ end
 
 function script.Create()
 	
-	
+	resetT(EarthTable)
 	Move(center,y_axis,-300,0)
 	StartThread(inYourOwnTime)
 end

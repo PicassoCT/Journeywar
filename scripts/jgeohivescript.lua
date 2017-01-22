@@ -13,6 +13,8 @@ function setHivePiece()
 	if Spring.GetUnitDefID(unitID) == UnitDefNames["jgeohive"].id then
 		Spring.Echo("jgeohive Piece detected")
 		hivePiece=piece"jgeohive"
+		Move(hivePiece,y_axis,-45,0,true)
+		Move(hivePiece,y_axis,0,3)
 	end
 	if Spring.GetUnitDefID(unitID) == UnitDefNames["gzombspa"].id then
 		Spring.Echo("ZombieSpawner Piece detected")
@@ -75,7 +77,7 @@ function spawner()
 			ex,ey,ez=spGetUnitPosition(enemyID)
 			if math.random(0,1)==1 then 
 				eteam=Spring.GetUnitTeam(enemyID)
-				ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+				ex,ey,ez, boolValidStartPos=Spring.GetTeamStartPosition(eteam)
 			end
 			Spring.SetUnitBlocking(unitID,false)
 			for i=1, howManyUnitsPerSpawnCycle,1 do
@@ -107,12 +109,14 @@ function spawner()
 					end
 				end
 				
-				if Spring.ValidUnitID(spawnedUnit) == true  then 
+				if spawnedUnit and Spring.ValidUnitID(spawnedUnit) == true then 
 					spSetUnitNoSelect(spawnedUnit,true)
+					if boolValidStartPos== true then
 					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
+					end
 					table.insert(monsterTable,spawnedUnit)
 				end
-
+				
 				
 				Sleep(350)
 				spEmitSfx(hivePiece,1025)
@@ -131,7 +135,7 @@ BuildUPTime=900000
 PEAKFADETIME=900000
 PeakTime = 850000
 RandVAl=math.ceil(math.random(40000,600000))
-RELAXTIME=600000 + RandVAl
+RELAXTIME=60000 + RandVAl
 
 totalTable={
 	["BUILDUP"]= BuildUPTime,
@@ -140,40 +144,50 @@ totalTable={
 	["RELAX"]= RELAXTIME
 }
 
-function NextState(State,times)
+nextState={
+	["BUILDUP"]= "PEAK",
+	["PEAKFADE"]= "RELAX",
+	["PEAK"]= "PEAKFADE",
+	["RELAX"]= "BUILDUP"
+}
+
+function NextState(nState,times)
 	
-	
-	
-	if State=="BUILDUP" and times > BuildUPTime then 
+	Spring.Echo("CurrentState:"..nState.." in "..(times-totalTable[nState]).." next State:"..nextState[nState] )
+	if nState=="BUILDUP" and times > BuildUPTime then 
 		times=0; --Spring.Echo("hivePiece::Peak") ;
 		return "PEAK" , times , BuildUPTime
 	end
 	
-	if State=="PEAK" and times > PeakTime then 
+	if nState=="PEAK" and times > PeakTime then 
 		times=0; 
 		return "PEAKFADE", times , PeakTime
 	end
 	
-	if State=="PEAKFADE" and times > PEAKFADETIME then 
+	if nState=="PEAKFADE" and times > PEAKFADETIME then 
 		times=0; 
 		return "RELAX", times, PEAKFADETIME
 	end
 	
-	if State=="RELAX" and times > RELAXTIME then 
+	if nState=="RELAX" and times > RELAXTIME then 
 		times=0 ;
 		RELAXTIME= 60000+ math.ceil(math.random(4000,60000)) 
 		--	Spring.Echo("hivePiece::BUILDUP") ;
 		return "BUILDUP", times, RELAXTIME
 	end	
 	
-	return State, times, times/totalTable[State]
+	return nState, times, times/totalTable[nState]
 end
 
 function findBiggestCluster(team)
-	mapX,mapZ=Spring.GetMetalMapSize
+	mapX,mapZ=Spring.GetMetalMapSize()
 	mapRepresentiv=makeTable(0,mapx,mapZ)
 	teamUnits=Spring.GetTeamUnits(team)
-	maxTuple{x=mapX/2,z=mapZ/2,val=0}
+	maxTuple={
+			x=mapX/2,
+			z=mapZ/2,
+			val=0
+			}
 	if teamUnits then
 		local spGetUnitPos= Spring.GetUnitPosition
 		process(teamUnits,
@@ -284,33 +298,33 @@ funcTable["PEAKFADE"]=PEAKFADE
 funcTable["BUILDUP"]=BUILDUP
 funcTable["RELAX"]=RELAX
 local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
-function getNearestEnemy(id)
-
+function getNearestEnemy(idID)
+	
 	minDist=math.huge
-	minDistID=nil
-	
-	process(AllUnitsUpdated,
-	function(ed)
-		edTeam=Spring.GetUnitTeam(ed)
-		if edTeam == teamID or edTeam == gaiaTeamID then
-		else
-			return id
+	minDistID=math.huge
+
+	local spGetUnitTeam=Spring.GetUnitTeam
+	for _,id in ipairs(AllUnitsUpdated) do
+		edTeam=spGetUnitTeam(id)
+		if edTeam  ~= teamID and edTeam ~= gaiaTeamID then
+			dist, boolSuccess =distanceUnitToUnit(id,idID) + math.random(0,30)
+			assert(boolSuccess==true)
+			if  dist < minDist then 
+			minDistID= id
+			minDist=dist
+			end
 		end
-	end,
-	function(ed)
-		if ed and id and getDistanceUnitToUnit(ed,id) <minDist then 
-			minDistID= ed
-			minDist=getDistanceUnitToUnit(ed,id)
-		end
-	end)		
-	if minDistID~=nil then return minDistID end
+	end
 	
-	return Spring.GetUnitNearestEnemy(id)
+	if minDistID == math.huge then return Spring.GetUnitNearestEnemy(idID) end
+	
+	return minDistID
 end
 AllUnitsUpdated={}
+State="RELAX"
 function TargetOS()
 	
-	State="RELAX"
+	
 	times=0
 	local spValidUnitID=Spring.GetUnitIsDead
 	
@@ -324,36 +338,64 @@ function TargetOS()
 		times=times+5000
 		AllUnitsUpdated=Spring.GetAllUnits()
 		
-		if monsterTable ~= nil and table.getn(monsterTable) > 0 then
-			State, times, percent =NextState(State,math.ceil(times/30))
+		if monsterTable and table.getn(monsterTable) > 0 then
+			
+			State, times, percent =NextState(State,math.ceil(times))
 			if State ~= oldState then
-			Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
-			oldState=State
+				Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
+				oldState=State
 			end
 			
 			for i=1,table.getn(monsterTable),1 do
-				v=(spValidUnitID(monsterTable[i]))
-				if v and v == true then 
-					
-					enemyID= getNearestEnemy(monsterTable[i])
+				monsterid=monsterTable[i]
+			
+				enemyID= getNearestEnemy(monsterid)
+				if stillInSamePosition(monsterid) == true then
+					eTeam=Spring.GetUnitTeam(enemyID)
+					sx,sy,sz=Spring.GetTeamStartPosition(eTeam)
+					Spring.SetUnitMoveGoal(monsterid,sx,sy,sz)
+				else					
 					if enemyID then						
 						ex,ey,ez = lfuncTable[State](unitID,enemyID,times,teamID, times/totalTable[State])
 						if ex then
 							StartThread(markPosOnMap,ex,ey,ez,"greenlight")						
-							spSetUnitMoveGoal(monsterTable[i],ex,ey,ez)
+							spSetUnitMoveGoal(monsterid,ex,ey,ez)
 						end
 					end
 				end
-				
 			end
 		end
-		
-		
 	end
 end
 
+function aliveAndWell(id)
+	boolExists=Spring.ValidUnitID(id)
+	if boolExists and boolExists==true then
+		boolAlive=Spring.GetUnitIsDead(id)
+		if boolAlive and boolAlive == true then
+			return true
+		end
+	end
+	return false
+	
+end
 
 
+monsterPosTable={}
+function stillInSamePosition(id)
+	
+	mx,my,mz=Spring.GetUnitPosition(id)
+	if mx then
+		mVec=makeVector(mx,my,mz)
+		if not monsterPosTable[id] then
+			monsterPosTable[id]=mVec
+			return false
+		elseif distanceVec(mVec,monsterPosTable[id]) < 20 then
+			return true
+		end	
+	end
+	return false
+end
 
 
 

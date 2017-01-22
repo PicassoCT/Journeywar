@@ -1,3 +1,7 @@
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+
 cssArmL =piece "cssArmL"
 cssArmR =piece "cssArmR"
 center = piece"center"
@@ -155,6 +159,7 @@ function script.Create()
 end
 
 function script.Killed()
+	setSpeed(unitID,0,UnitDefs)
 	Turn(center,x_axis, math.rad(82),math.rad(55))
 	EmitSfx(center,1025)	
 	EmitSfx(center,1026)	

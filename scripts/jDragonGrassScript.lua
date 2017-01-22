@@ -162,8 +162,8 @@ function AddictBehaviour()
 end
 
 function checkDistanceAndReinject(k,x,y,z)
-
-	if getDistanceUnitToUnit(k,unitID) < DrugRange then
+	distanced = distanceUnitToUnit(k,unitID) 
+	if distanced < DrugRange then
 		AddictList[k].addTime= INJECT
 		PlayInjectSoundFiles()
 	end

@@ -19,6 +19,7 @@ end
 
 if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_UnitScript.lua")
+	
 	gaiaTeam=Spring.GetGaiaTeamID()
 	teamTable={}
 	meridianTable={}
@@ -27,51 +28,74 @@ if (gadgetHandler:IsSyncedCode()) then
 		["centrail"]={"goildrum","gzombspa","jrefugeetrap", "coverworldgate"}
 	}
 	
-	function randSign()
-	if math.random(0,1)==1 then return 1 else return -1 end 
+	
+	Distribution={}
+	for _, t in ipairs (Spring.GetTeamList ()) do
+		Distribution[t]= {
+			[1]={x=1,y=1, sum=0},
+			[2]={x=1,y=2, sum=0},
+			[3]={x=2,y=2, sum=0},
+			[4]={x=2,y=1, sum=0}	
+		}	
 	end
+	
+	
+	
+	function findPlaces(team, px, pz)
+		Distro=Distribution[team]
+		sumSums=-math.huge
+		maxIndex=1
+		for i=1,#Distribution do if Distro[i].sum > sumSums then sumSum=Distro[i].sum; maxIndex= i; end end
 		
-	function spawnSpawners(frame,team,side)
-		
-		volume=math.abs(math.sin(frame/10000))*4
-		Spring.Echo("SpawnVolume "..team.." : "..side)
-		totalAbortCount=0
-		
-		for _=1, volume,1 do
-		
-			if #meridianTable <=1 then echo("Not enough merdianTable"); return end			
-			meridian=meridianTable[math.random(1,#meridianTable)]
-			percent=math.random(0,100)/100
-			
-			px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
-			pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
-			T=Spring.GetUnitsInCylinder(px,pz,50)
-			dirXSign=randSign()
-			dirZSign=randSign()
+		T={}
+		dirXSign=randSign()
+		dirZSign=randSign()
+		while totalAbortCount < 32 do	
 			T={}
-			while T and table.getn(T) > 0 and totalAbortCount < 64 do	
-				T={}
-			if totalAbortCount % 4 == 0 then
+			if totalAbortCount % 2 == 0 then
 				if math.random(0,1)==1 then
 					dirXSign=randSign()
 				else
 					dirZSign=randSign()
 				end
 			end
-				px=px +100 *dirXSign
-				pz=pz +100 *dirZSign
-				
-				if Spring.GetGroundHeight(px,pz) > 0 then
-					T=Spring.GetUnitsInCylinder(px,pz,50)
+			px=px +100 *dirXSign
+			pz=pz +100 *dirZSign
+			
+			if Spring.GetGroundHeight(px,pz) > 0 then
+				T=Spring.GetUnitsInCylinder(px,pz,50)
+				if #T == 0 then
+					return px,pz
 				end
+			end
 			totalAbortCount=totalAbortCount+1	
-			end
-			
-			if  table.getn(T) == 0 and totalAbortCount < 64 then
-				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px,0,pz,1,team)	
-			end
-			
 		end
+	end
+	
+	
+	
+	teamAccuVolume={}
+	
+	function spawnSpawners(frame,team,side)
+		if not teamAccuVolume[team] then
+		teamAccuVolume[team]=0 
+		end
+		
+		volume=math.abs(math.sin(frame/10000))*4 + teamAccuVolume[team]
+		Spring.Echo("SpawnVolume "..team.." : "..side)
+		totalAbortCount=0
+		if #meridianTable <=1 then echo("Not enough merdianTable"); return end			
+		meridian=meridianTable[math.random(1,#meridianTable)]
+		percent=math.random(0,100)/100
+		px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
+		pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
+		px,pz= findPlaces(team,px,pz)
+		if px then
+			for _=1, volume,1 do
+				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px+math.random(10,20)*randSign(),0,pz+math.random(10,20)*randSign(),1,team)	
+			end
+		end
+		
 	end
 	
 	function randomSide()
@@ -81,7 +105,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	spawnerAI={}
 	function gadget:Initialize()
 		boolAtLeastOneSPawner=false
-
+		
 		for _, t in ipairs (Spring.GetTeamList ()) do
 			
 			local teamID, leader, isDead, isAI, side = Spring.GetTeamInfo (t)
@@ -117,9 +141,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					medianPoint={x=0,z=0}
 					medianPoint.x,medianPoint.z=(tab.x+atab.x)/2,(tab.z+atab.z)/2
 					meridianTable[#meridianTable+1]=medianPoint
-				end
-				
-				
+				end			
 			end
 		end
 		tempTable={}
@@ -137,11 +159,11 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	function checkOnTeams()
-	okayCount=0
+		okayCount=0
 		for teamID, side in pairs(spawnerAI) do
-		teamID,leader,isDead =	Spring.GetTeamInfo(teamID)
-				Spring.Echo("JwSpawnerAI:"..teamID.." - ".. leader.." - "..boolToString(isDead))
-			if  isDead == false then
+			teamID,leader,isDead =	Spring.GetTeamInfo(teamID)
+			Spring.Echo("JwSpawnerAI:"..teamID.." - ".. leader.." - "..boolToString(isDead))
+			if isDead == false then
 				okayCount=okayCount+1
 			else			
 				spawnerAI[teamID]= nil
@@ -157,21 +179,22 @@ if (gadgetHandler:IsSyncedCode()) then
 	total=30*60*5
 	function gadget:GameFrame(frame)
 		if ((frame %total) % 15)== 0 then
-			Spring.Echo("jw_SpawnerAI:timeToGo "..(total-(frame %total)) )
+			
 		end
 		
 		if frame > 0 and frame % total == 0 then
-		
-		checkOnTeams()
-
+			Spring.Echo("jw_SpawnerAI:checkteam "..(total-(frame %total)) )
+			checkOnTeams()
+			
 			for k,v in pairs(spawnerAI) do
+				Spring.Echo("jw_SpawnerAI:spawnTeam "..k..","..v )
 				spawnSpawners(frame,k,v)
 			end			
 		end
 	end
 	
 	function gadget:Shutdown()
-			Spring.Echo("jw_SpawnerAIGadget: Shuting down")
+		Spring.Echo("jw_SpawnerAIGadget: Shuting down")
 		
 	end
 end

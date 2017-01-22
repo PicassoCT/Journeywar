@@ -658,6 +658,7 @@ end
 TIGLILDAMAGE=325
 bgID=UnitDefNames["bg"].id 
 function script.Killed(recentDamage, maxHealth)
+	setSpeed(unitID,0,UnitDefs)
 	Signal(SIG_AIM)
 	Signal(SIG_IDLE)
 	Signal(SIG_COUNTER)

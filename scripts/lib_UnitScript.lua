@@ -19,7 +19,7 @@ MA 02110-1301, USA.
 ]]--
 --------------DEBUG HEADER
 --Central Debug Header Controlled in UnitScript
-lib_boolDebug= false --GG.BoolDebug or false
+lib_boolDebug= true --GG.BoolDebug or false
 --------------DEBUG HEADER
 
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
@@ -180,24 +180,24 @@ function distance(x,y, z,xa,ya,za)
 end
 
 -->returns the Distance between two units
-function getDistanceUnitToUnit(idA, idB)
+function distanceUnitToUnit(idA, idB)
 	if lib_boolDebug == true then
-		if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return nil end
-		if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return nil end
-		if Spring.ValidUnitID(idA)==false then echo("distanceUnitToUnit::Not a valid UnitID")end
-		if Spring.ValidUnitID(idB)==false then echo("distanceUnitToUnit::Not a valid UnitID")end
+		if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return false,false; end
+		if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return false,false; end
+		if Spring.ValidUnitID(idA)==false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return false,false;end
+		if Spring.ValidUnitID(idB)==false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return false,false; end
 		
 	end
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
-	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") end
-	
-	return GetTwoPointDistance(x,y,z,xb,yb,zb)
+	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return math.huge, false end
+	assert(x)
+	return GetTwoPointDistance(x,y,z,xb,yb,zb), true
 end
 
 -->returns Distance between two points
-function GetTwoPointDistance(x,y,z,ox,oy,oz)
+function GetTwoPointDistance(x, y, z, ox, oy, oz)
 	x=x-ox
 	y=y-oy
 	z=z-oz
@@ -510,6 +510,7 @@ end
 
 function makeTable(default, XDimension, yDimension, zDimension)
 	local RetTable={}
+	if not XDimension then return default end
 	
 	for x=1, XDimension, 1 do
 		if XDimension and yDimension then
@@ -1088,8 +1089,8 @@ end
 function rotateUnitAroundUnit(centerID,rotatedUnit, degree)
 	ax,ay,az=Spring.GetUnitPosition(centerID)
 	bx,by,bz=Spring.GetUnitPosition(rotatedUnit)
-	vx,vz= ax-bx,az-bz
-	vx,vz= RotationMatrice (vx,vz, math.rad(degree))
+	vx,vz= bx-ax,bz-az
+	vx,vz= RotationMatrice(vx,vz, math.rad(degree))
 	
 	Spring.SetUnitPosition(rotatedUnit,ax+vx,az+vz)
 end
@@ -2335,7 +2336,7 @@ function vardump(value, depth, key)
 		return tpiecesTable
 	end
 	
-	function getFrameDependentUniqueOffset(limit)
+	function getFrameDepUnqOff(limit)
 		if not GG.FrameDependentOffset then GG.FrameDependentOffset={val=0, frame=Spring.GetGameFrame() } end
 		if GG.FrameDependentOffset.frame ~=Spring.GetGameFrame() then GG.FrameDependentOffset.val =0; GG.FrameDependentOffset.frame =Spring.GetGameFrame() end
 		
@@ -2488,9 +2489,9 @@ function vardump(value, depth, key)
 			
 			process(allUnitsOfTeam,
 			function(ied)
-				if ied ~=ed and getDistanceUnitToUnit(id,ied) < mindist then
+				if ied ~=ed and distanceUnitToUnit(id,ied) < mindist then
 					if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
-						mindist =getDistanceUnitToUnit(id,ied)
+						mindist =distanceUnitToUnit(id,ied)
 						foundUnit=ied
 					end
 				end
@@ -3510,7 +3511,7 @@ function vardump(value, depth, key)
 	--> GetDistanceNearestEnemy
 	function GetDistanceNearestEnemy(id)
 		ed=Spring.GetUnitNearestEnemy(id)
-		return getDistanceUnitToUnit(id,ed)
+		return distanceUnitToUnit(id,ed)
 	end
 	
 	function holdsForAll(Var,fillterConditionString,...)
@@ -4173,23 +4174,23 @@ function vardump(value, depth, key)
 	
 	--> returns a randomized Signum
 	function randSign()
-		val=math.random(-1,1)
-		if val==0 then val =-1 end 
-		return val/math.abs(val)
+		if math.random(0,1)==1 then return 1 else return -1 end
 	end
 	
 	-->finds a spot on the map that is dry, and walkable
-	function getPathFullfillingCondition(condition,maxRes,filterTable)
+	function getPathFullfillingCondition(condition,maxRes,filterTable, mapSizeX,mapSizeZ)
 		if type(condition)~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
 		local lcondition =condition
 		
-		probeResolution=4
+		probeResolution=4.0
 		local spGetGroundHeight=Spring.GetGroundHeight
-		
+		assert(Game.mapSizeX)
+		assert(Game.mapSizeZ)
 		while true do
 			
-			chunkSizeX,chunkSizeZ=(Game.mapSizeX-1)/probeResolution,(Game.mapSizeZ-1)/probeResolution
-			xRand,zRand=math.floor(sanitizeRandom(1,probeResolution)),math.floor(sanitizeRandom(1,probeResolution))
+			chunkSizeX=(Game.mapSizeX-1)/probeResolution
+			chunkSizeZ=(Game.mapSizeZ-1)/probeResolution
+			xRand,zRand=math.floor(sanitizeRandom(1,probeResolution-1)),math.floor(sanitizeRandom(1,probeResolution-1))
 			
 			for i=xRand,probeResolution,1 do
 				for j=zRand,probeResolution,1 do
@@ -4211,7 +4212,7 @@ function vardump(value, depth, key)
 		end
 	end
 	
-	-->ConditionFunction
+	-->ConditionFunctions
 	function GetSpot_condDeepSea(x,y,chunksizeX,chunksizeZ,filterTable)
 		h=Spring.GetGroundHeight(x*chunkSizeX,y*chunkSizeZ)
 		if h < filterTable.minBelow and h > filterTable.maxAbove then return x*chunkSizeX,y*chunkSizeZ end 
@@ -4610,7 +4611,8 @@ end
 function setSpeed(unitID,speedfactor, UnitDefs)
 	uDefID=Spring.GetUnitDefID(unitID)	
 	if speedfactor > 1 then echo("Error:setSpeed:Recived to big Value") return end
-	Spring.SetUnitValue(unitID,COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed*speedfactor* 2184.53))
+	assert(Spring.UnitScript,"No UnitScript given")
+	Spring.UnitScript.SetUnitValue(unitID,COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed*speedfactor* 2184.53))
 end
 
 function reSetSpeed(unitID,UnitDefs)

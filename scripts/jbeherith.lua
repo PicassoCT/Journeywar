@@ -1233,10 +1233,10 @@ function script.Killed(recentDamage,maxhealth)
 	--Spawn the big biorotting Feature and some gulls to circle on 
 	createCorpseJUnitBig(recentDamage)
 	x,y,z=Spring.GetUnitPosition(unitID)
-	teamID=Spring.GetGaiaTeamID()
+	gaiaTeamID=Spring.GetGaiaTeamID()
 	rondo=math.random(2,9)
 	for i=1,rondo,1 do
-		datID=Spring.CreateUnit("gull", x-i, y, z+i, 0, teamID) 
+		datID=Spring.CreateUnit("gull", x-i, y, z+i, 0, gaiaTeamID) 
 		Spring.SetUnitNeutral(datID,true)
 	end
 	

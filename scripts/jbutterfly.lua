@@ -49,36 +49,7 @@ function upAndDown()
 	end
 end
 
-function moveLoop()
-	
-	x,y,z=Spring.GetUnitPosition(unitID)
-	local spGetUnitIsDead=Spring.GetUnitIsDead
-	local spSetUnitMoveGoal=Spring.SetUnitMoveGoal
-	
-	while (spGetUnitIsDead(unitID)==false) do
-		----Spring.Echo("Im happy! jbutterfly")
-		while boolMoving==false do
-			------Spring.Echo("Im should be moving! jbutterfly")
-			xRand=math.random(1,100)
-			zRand=math.random(1,100)
-			signed=math.random(-1,1)
-			xRand=math.ceil(math.abs(x+xRand*signed))
-			signed=math.random(-1,1)
-			zRand=math.ceil(math.abs(z+zRand*signed))
-			--	----Spring.Echo("x",xRand.."z",zRand)
-			
-			--SetUnitValue(COB.ACTIVATION, 0)
-			
-			Spring.GiveOrderToUnit(unitID, CMD.MOVE , {xRand,y+10,zRand }, {})
-			
-			Sleep(500)
-		end
-		Sleep(200)
-		
-	end
-	
-	
-end
+
 
 function script.StartMoving()
 	boolMoving=true
@@ -103,10 +74,10 @@ function script.Create()
 	Show(wings[x])
 	Show(wings[x-1])
 	
-	Spring.SetUnitNoSelect(unitID,true)
+
 	StartThread(upAndDown)
 	StartThread(wingsClap)
-	StartThread(moveLoop)
+
 end
 
 function script.Killed()

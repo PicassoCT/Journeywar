@@ -916,7 +916,7 @@ end
 
 
 function script.Killed(recentDamage,maxHealth)
-	
+	setSpeed(unitID,0,UnitDefs)
 	boolNotDeadYet=false
 	Signal(SIG_WALK)
 	Signal(SIG_CRAWL)

@@ -351,7 +351,7 @@ function motionTrack()
 		Distance = getNearestMovingEnemyDistance(xu,zu)
 		
 		
-		if boolIsItDeadYet==false then
+		if Distance and boolIsItDeadYet==false then
 			for beep=0,2,1 do
 				sleePer=666
 				if Distance >1000 then
@@ -381,9 +381,8 @@ function motionTrack()
 					--play shrill panicy sound
 					----Spring.Echo("di")
 					sleePer=303+((Distance/2.5)-100)
-					if sleePer < 303 then
-						sleePer=303
-					end
+					sleePer=math.max(sleePer,303)
+					
 					Sleep(sleePer)
 				end
 				

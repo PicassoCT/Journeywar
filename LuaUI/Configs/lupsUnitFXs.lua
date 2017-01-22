@@ -56,11 +56,12 @@ effectUnitDefs = {
 	--centrail
 	
 	css =		{
-		{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet2", onActive=false}},
-	{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet1", onActive=false}}				},	
-	
-		cvictory =		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}
-	},
+				{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet2", onActive=false}},
+				{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet1", onActive=false}}				
+				},	
+	cvictory =		{
+					class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}
+					},
 	cawilduniverseappears= {
 		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=125, onActive=true, colormap1 = {{172/255, 116/255, 230/255, 0.8}}, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=130, precision=22, strength = 0.013, repeatEffect=true}},
@@ -106,6 +107,9 @@ effectUnitDefs = {
 	
 	
 	--journeyman
+	jhoneypot= {
+				{class='Ribbon', options={color={.9,.4,0.1,1}, width=12.5, size= 10, piece="jhoney", onActive=false}},
+				},
 	jstealthdrone ={
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare1", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare2", onActive=true}},
@@ -115,8 +119,7 @@ effectUnitDefs = {
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare6", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare7", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare8", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=22.5, size= 32, piece="nanoemit", onActive=true}},
-		
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=22.5, size= 10, piece="nanoemit", onActive=false}}		
 	},	
 	jsunshipwater ={
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=325, precision=22, strength = 0.00125, repeatEffect=true}}
@@ -183,9 +186,9 @@ effectUnitDefs = {
 		{class='ShieldSphere', options={life=math.huge, pos={0,300,0}, size=150, colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
 		{class='ShieldSphere', options={life=math.huge, pos={0,400,0}, size=140, colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
 		{class='ShieldSphere', options={life=math.huge, pos={0,500,0}, size=130, colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
-
+		
 		{class='Ribbon', options={color={.7,1,0.1,1}, width=12.5, piece="seed", onActive=true}},
-
+		
 		
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength = 0.005, repeatEffect=true}} 
 	},
@@ -231,8 +234,8 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,-69}, size=25, precision=22, strength = 0.015, repeatEffect=true}}, 
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,-101}, size=25, precision=22, strength = 0.015, repeatEffect=true}}, 
 	},
-
-
+	
+	
 	
 	
 }

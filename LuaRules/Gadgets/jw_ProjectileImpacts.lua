@@ -21,7 +21,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua" )
 	VFS.Include("scripts/lib_UnitScript.lua" )
 	VFS.Include("scripts/lib_Build.lua" 	)
-	local WeaponDefTable={}
+	local UnitDamageFuncT={}
 	local StunnedUnitsTable={}
 	nrOfUnits=0
 	--1 unitid
@@ -35,45 +35,47 @@ if (gadgetHandler:IsSyncedCode()) then
 	jEthiefStealingQuota=5
 	local HARDCODED_RETREATDISTANCE=420
 	
-	local cRestrictorThumperID= WeaponDefNames["crestrictorthumper"].id
-	local crabShelWDefID = WeaponDefNames["crabshell"].id
-	local cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
-	local bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
-	local jHiveHoundID= WeaponDefNames["jhivehoundrocket"].id
-	local jSwiftSpearID= WeaponDefNames["swiftprojectile"].id
-	local jghostDancerWeaponDefID= WeaponDefNames["jgdjump"].id
-	local glavaWeaponID= WeaponDefNames["glavaweapon"].id
-	local gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
-	local cFlareGun = WeaponDefNames["flaregun"].id
-	local cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
+	cRestrictorThumperID= WeaponDefNames["crestrictorthumper"].id
+	crabShelWDefID = WeaponDefNames["crabshell"].id
+	cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
+	bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
+	jHiveHoundID= WeaponDefNames["jhivehoundrocket"].id
+	jSwiftSpearID= WeaponDefNames["swiftprojectile"].id
+	jghostDancerWeaponDefID= WeaponDefNames["jgdjump"].id
+	glavaWeaponID= WeaponDefNames["glavaweapon"].id
+	gVolcanoWeaponID= WeaponDefNames["lavabomb"].id
+	cFlareGun = WeaponDefNames["flaregun"].id
+	cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
 	jhunterDartDefID = WeaponDefNames["jdartgun"].id
 	lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
-	local slicergunDefID = WeaponDefNames["slicergun"].id
-	local jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
-	local cCssFlameT=WeaponDefNames["cflamethrower"].id
-	local cUniverseGun=WeaponDefNames["cuniversegun"].id
-	local nukeLvl2WeaponDefID = WeaponDefNames["cnukegrenadelvl2"].id
-	local nukeLvl3WeaponDefID = WeaponDefNames["cnukegrenadelvl3"].id
-	local weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
-	local tiglilWeaponDefID= WeaponDefNames["tiglilclosecombat"].id
-	local striderWeaponDefID= WeaponDefNames["warpcannon"].id
-	local highExLineGunDefID= WeaponDefNames["cexplochaingun"].id
-	local jvaryjumpDefID= WeaponDefNames["jvaryjump"].id
-	local crazorgrenadeDefID= WeaponDefNames["crazorgrenade"].id
-	local jgluegunDefID= WeaponDefNames["jgluegun"].id
-	local glueMineWeaponDefID= WeaponDefNames["gluemineweapon"].id
-	local greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
-	local celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
-	local ChainLightningDefID=WeaponDefNames["cchainlightning"].id
+	slicergunDefID = WeaponDefNames["slicergun"].id
+	jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
+	cCssFlameT=WeaponDefNames["cflamethrower"].id
+	cUniverseGun=WeaponDefNames["cuniversegun"].id
+	nukeLvl2WeaponDefID = WeaponDefNames["cnukegrenadelvl2"].id
+	nukeLvl3WeaponDefID = WeaponDefNames["cnukegrenadelvl3"].id
+	weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
+	tiglilWeaponDefID= WeaponDefNames["tiglilclosecombat"].id
+	striderWeaponDefID= WeaponDefNames["warpcannon"].id
+	highExLineGunDefID= WeaponDefNames["cexplochaingun"].id
+	jvaryjumpDefID= WeaponDefNames["jvaryjump"].id
+	crazorgrenadeDefID= WeaponDefNames["crazorgrenade"].id
+	jgluegunDefID= WeaponDefNames["jgluegun"].id
+	glueMineWeaponDefID= WeaponDefNames["gluemineweapon"].id
+	greenSeerWeaponDefID= WeaponDefNames["greenseer"].id
+	celetrochainWeaponDefID= WeaponDefNames["celetrochain"].id
+	ChainLightningDefID=WeaponDefNames["cchainlightning"].id
 	jplanktoneraaDefID=WeaponDefNames["jplanktoneraa"].id
 	chcprojectileDefID=WeaponDefNames["hcprojectile"].id
 	cAllyGatorMarkerDefID= WeaponDefNames["callygatormarker"].id
-	local CEaterRocketDefID=WeaponDefNames["ceater"].id
+	CEaterRocketDefID=WeaponDefNames["ceater"].id
 	jethiefweaponDefID=WeaponDefNames["jethiefweapon"].id
 	jethiefretweaponDefID=WeaponDefNames["jethiefretweapon"].id
-	local cHarvestRocketDefID=WeaponDefNames["charvest"].id
-	local cAntiMatterDefID=WeaponDefNames["cantimatter"].id
-	local catapultDefID=WeaponDefNames["ccatapult"].id
+	cHarvestRocketDefID=WeaponDefNames["charvest"].id
+	cAntiMatterDefID=WeaponDefNames["cantimatter"].id
+	catapultDefID=WeaponDefNames["ccatapult"].id
+	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
+	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
 		[glavaWeaponID]=true, 	
@@ -83,6 +85,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	}
 	RazorGrenadeTable={}
 	
+	Script.SetWatchWeapon(jeliahbeamDefID , true)
 	Script.SetWatchWeapon(chcprojectileDefID , true)
 	Script.SetWatchWeapon(cAntiMatterDefID , true)
 	Script.SetWatchWeapon(catapultDefID , true)
@@ -133,25 +136,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	local	skySraperDefID=UnitDefNames["buibaicity1"].id
 	local	cssDefID=UnitDefNames["css"].id
 	local	gvolcanoDefID=UnitDefNames["gvolcano"].id
-	--Effect Functions
-	function prepareHalfSphereTable(size,height)
-		cent=math.ceil(size/2)
-		T={}
-		for o=1,size,1 do
-			T[o]={}
-			for i=1,size,1 do
-				--default
-				T[o][i]=0
-				distcent=math.sqrt((cent-i)^2+(cent-o)^2)	
-				if distcent < cent-1 then
-					T[o][i]=(cent-distcent)*height
-				end
-			end
-		end
-		
-		return T	
-	end
-	
 	
 	
 	function unitVannishAntimatterSFX(id)
@@ -200,23 +184,15 @@ if (gadgetHandler:IsSyncedCode()) then
 		GG.ShockWaves=OtherWaves
 	end
 	
-	
-	
-	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
-		
-		if weaponDefID == cArtDarkMaterWDefID then
+	local	explosionFunc={
+		[cArtDarkMaterWDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			if not GG.AddFire then 	GG.AddFire={} end		
-			GG.AddFire[#GG.AddFire+1]={x=px,y=py,z=pz}	
-		end
-		
-		if weaponDefID == lazarusDeviceDefID then
+		end,
+		[lazarusDeviceDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			teamid=Spring.GetUnitTeam(AttackerID)
 			GG.ComEnders[teamID]=Spring.CreateUnit(UnitDefNames["ccomender"].id,	px,py,pz, 1, teamid)
-		end
-		
-		--we got to spawn some chain lightning
-		if weaponDefID == celetrochainWeaponDefID then
-			--Spring.Echo("celetrochainWeaponDefID Explosion::jw_projectileimpacts"..AttackerID)
+		end,	
+		[celetrochainWeaponDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			teamid=Spring.GetUnitTeam(AttackerID)
 			T=Spring.GetUnitsInCylinder(px,pz,350)
 			ChainLightningTable[AttackerID]= 30
@@ -284,16 +260,12 @@ if (gadgetHandler:IsSyncedCode()) then
 					
 				end
 			end
-			
-		end
-		
-		if weaponDefID == jgluegunDefID then
+		end,
+		[jgluegunDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			id=Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
 			Spring.SetUnitBlocking(id,false)
-		end
-		
-		
-		if weaponDefID ==crazorgrenadeDefID then
+		end,
+		[crazorgrenadeDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			
 			if not RazorGrenadeTable[AttackerID] then RazorGrenadeTable[AttackerID] ={} end
 			
@@ -318,9 +290,9 @@ if (gadgetHandler:IsSyncedCode()) then
 				x,y,z=Spring.GetUnitPosition(ed)
 				Spring.SetUnitMoveGoal(ad,x,y,z)
 			end
-		end
-		
-		if weaponDefID == jvaryjumpDefID then
+			
+		end,
+		[jvaryjumpDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			if AttackerID then
 				Spring.SetUnitPosition(AttackerID,px,py+35,pz)
 				env=Spring.UnitScriptEnv(AttackerID)
@@ -328,24 +300,22 @@ if (gadgetHandler:IsSyncedCode()) then
 					Spring.UnitScript.CallAsUnit(AttackerID,env.setInTransit,false )		
 				end				
 			end
-		end
-		
-		if weaponDefID== jvaryfoospearDefID then
+			
+		end,
+		[jvaryjumpDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			--gluteus maximus- ha that sounds funny
 			if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
 			--wait a second thats my ass
 			GG.ProjectileOrigin[AttackerID]={boolHitGround=true}
 			Spring.SetUnitPosition(AttackerID,px,py,pz)	
-		end
-		
-		if weaponDefID== striderWeaponDefID then
+			
+		end,
+		[striderWeaponDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			teamid=Spring.GetUnitTeam(AttackerID)
 			ShockWaveRippleOutwards(px,pz, 150, 180, 90)
-			Spring.SpawnCEG("factory_explosion",px,py+10,pz,0,1,0,50)
-		end
-		
-		--MTW Grenade
-		if weaponDefID == jhunterDartDefID then
+			Spring.SpawnCEG("factory_explosion",px,py+10,pz,0,1,0,50)		
+		end,
+		[jhunterDartDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			udefID= Spring.GetUnitDefID(AttackerID)
 			unitChoice= "jhunterdart"
 			if udefID == UnitDefNames["chunter"].id then
@@ -360,87 +330,87 @@ if (gadgetHandler:IsSyncedCode()) then
 				Spring.SetUnitDirection (dartID, hx,hy,hz)
 			else
 				dartID= Spring.CreateUnit(unitChoice,px,py,pz,1,gaiaTeamID)	
-			end
-			
-		end
-		
-		--MTW Grenade
-		if weaponDefID== cmtwgrenade and Spring.ValidUnitID(AttackerID) ==true then
-			if Spring.GetUnitIsDead(AttackerID)==false then
-				teamid=Spring.GetUnitTeam(AttackerID)
-				Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
-			else
-				Spring.CreateUnit("cmtwgrenade",px,py,pz,1,gaiaTeamID)	
-			end
-		end
-		
-		if weaponDefID== cUniverseGun then
+			end		
+		end,
+		[cmtwgrenade]=function(weaponDefID, px, py, pz, AttackerID)
+			if Spring.ValidUnitID(AttackerID) ==true then
+				if Spring.GetUnitIsDead(AttackerID)==false then
+					teamid=Spring.GetUnitTeam(AttackerID)
+					Spring.CreateUnit("cmtwgrenade",px,py,pz,1,teamid)	
+				else
+					Spring.CreateUnit("cmtwgrenade",px,py,pz,1,gaiaTeamID)	
+				end
+			end		
+		end,
+		[cUniverseGun]=function(weaponDefID, px, py, pz, AttackerID)
 			tid=Spring.CreateUnit("cawilduniverseappears",px,py,pz, 1, gaiaTeamID)
 			Spring.SetUnitAlwaysVisible(tid,true)
-		end
-		
-		--jMotherofMercy
-		if weaponDefID == weaponDefIDjmotherofmercy then
 			
+		end,
+		[weaponDefIDjmotherofmercy]=function(weaponDefID, px, py, pz, AttackerID)
 			env = Spring.UnitScript.GetScriptEnv(AttackerID)
 			if env then
 				Spring.UnitScript.CallAsUnit(AttackerID, env.ripARock, px,py,pz )		
-			end
-			
-		end
-		
-		if (weaponDefID== jSwiftSpearID or weaponDefID== jHiveHoundID) and Spring.ValidUnitID(AttackerID)==true then
-			Spring.SetUnitPosition(AttackerID, px, py, pz)				
-		end
-		--if you are a ghostdancer --create a copy of yourself near the enemy and kill all previous copys
-		if (weaponDefID == jghostDancerWeaponDefID and Spring.ValidUnitID(AttackerID)) then
-			Spring.SetUnitPosition(AttackerID, px, py, pz)					
-		end
-		
-		--this one creates the headcrabs
-		if (weaponDefID == crabShelWDefID) then
-			ShockWaveRippleOutwards( px, pz, 150, 180, 90)
-			
+			end					
+		end,
+		[jSwiftSpearID]=function(weaponDefID, px, py, pz, AttackerID)
+			if Spring.ValidUnitID(AttackerID)==true then Spring.SetUnitPosition(AttackerID, px, py, pz)	end					
+		end,
+		[jHiveHoundID]=function(weaponDefID, px, py, pz, AttackerID)
+			if Spring.ValidUnitID(AttackerID)==true then Spring.SetUnitPosition(AttackerID, px, py, pz)	end
+		end,	
+		[jghostDancerWeaponDefID]=function(weaponDefID, px, py, pz, AttackerID)
+			if Spring.ValidUnitID(AttackerID)==true then Spring.SetUnitPosition(AttackerID, px, py, pz)	end
+		end,
+		[crabShelWDefID]=function(weaponDefID, px, py, pz, AttackerID)
+			ShockWaveRippleOutwards( px, pz, 150, 180, 90)			
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
-		end
-		
-		if weaponDefID== nukeLvl2WeaponDefID then
+		end,
+		[nukeLvl2WeaponDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
 			grenadeID=Spring.CreateUnit("ccomendernuke",px,py,pz,0,gaiaTeamID)
 			Spring.SetUnitNoSelect(grenadeID,true)
-		end	
-		
-		if weaponDefID== nukeLvl3WeaponDefID then
+			end,		[nukeLvl3WeaponDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
 			grenadeID=Spring.CreateUnit("ccomendernukelvl3",px,py,pz,0,gaiaTeamID)
 			Spring.SetUnitNoSelect(grenadeID,true)
-		end
-		
+		end		
+	}	
+	
+	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
+		if 	explosionFunc[weaponDefID] then explosionFunc[weaponDefID](weaponDefID, px, py, pz, AttackerID) end		
 		return true
 	end
 	
-	local 	ghostShadowEffectedUnits={}
-	
-	
+	local 	ghostShadowEffectedUnits={}	
 	
 	blowUpTable={}
 	local timeTillBlowUp=3500	
 	local 	jShadowDefID=UnitDefNames["jshadow"].id
 	
-	HarvestRocketLoadTable={}
+	HarvestRocketLoadTable={}	
+	JeliahBeamAccu={}
+	 JELIAHBEAMDAMAGEMULTIPLIERMAX=24
+	UnitDamageFuncT[jeliahbeamDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		if not JeliahBeamAccu[attackerID] or JeliahBeamAccu[attackerID].targetID ~= unitID  then 
+		newTarget={ targetID=unitID, accu=1.0}
+		JeliahBeamAccu[attackerID]=newTarget
+		end
 	
+			JeliahBeamAccu[attackerID].accu=math.min((JeliahBeamAccu[attackerID].accu * 1.02), JELIAHBEAMDAMAGEMULTIPLIERMAX)
+			Spring.AddUnitDamage(unitID, math.ceil( JeliahBeamAccu[attackerID].accu))
+		end	
 	
-	
-	WeaponDefTable[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	UnitDamageFuncT[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not fuckingSpecial[unitDefID] then
 			unitVannishAntimatterSFX(unitID) 
 		end
 	end
 	
-	WeaponDefTable[catapultDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	UnitDamageFuncT[catapultDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		health=Spring.GetUnitHealth(unitID)
-		Spring.SetUnitHealth(unitID, {paralyze =health*15})
+		Spring.SetUnitHealth(unitID, {paralyze =health * 15})
 		Spring.SetUnitArmored(unitID,3)
 		x,y,z=Spring.GetUnitPosition(unitID)
 		Spring.SetUnitPosition(unitID,x,y+35,z)
@@ -449,7 +419,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 	end 
 	
-	WeaponDefTable[cHarvestRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	UnitDamageFuncT[cHarvestRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		if HarvestRocketLoadTable[unitID] and HarvestRocketLoadTable[unitID][attackerID] then
 			
@@ -462,7 +432,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		return 0
 	end 
 	
-	WeaponDefTable[cAllyGatorMarkerDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	UnitDamageFuncT[cAllyGatorMarkerDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		env = Spring.UnitScript.GetScriptEnv(attackerID)
 		if env then
@@ -473,7 +443,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		return 0
 	end 
 	
-	WeaponDefTable[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[CEaterRocketDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackID, attackerDefID, attackerTeam) 			
 		
 		attackerID= attackID 
 		valid=Spring.ValidUnitID(attackerID)
@@ -517,7 +487,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 	end
 	
-	WeaponDefTable[greenSeerWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[greenSeerWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		
 		hitPoints=Spring.GetUnitHealth(unitID)
 		if damage/hitPoints > 0.3 then 
@@ -527,7 +497,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	WeaponDefTable[jvaryfoospearDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
+	UnitDamageFuncT[jvaryfoospearDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
 		--You Sir, have a living spear attached to your gluteus maximus
 		--gluteus maximus- ha that sounds funny
 		if not 	GG.ProjectileOrigin then	GG.ProjectileOrigin={} end	
@@ -537,17 +507,16 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	--perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
-	WeaponDefTable[glueMineWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	UnitDamageFuncT[glueMineWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
-	WeaponDefTable[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
+	UnitDamageFuncT[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
 	
-	WeaponDefTable[highExLineGunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 		
-		
+	UnitDamageFuncT[highExLineGunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		if 	blowUpTable[unitID] then blowUpTable[unitID].number= blowUpTable[unitID].number+1 
 		else 	
 			blowUpTable[unitID]={number=1, time=timeTillBlowUp, timeSinceBoom=0}	
@@ -555,7 +524,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	--poisonedDart
-	WeaponDefTable[tiglilWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[tiglilWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		
 		if not GG.Poisoned then GG.Poisoned={} end
 		pval=120000 
@@ -563,11 +532,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	--set the Unit
-	WeaponDefTable[jplanktoneraaDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-		
+	UnitDamageFuncT[jplanktoneraaDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--stun this unit
-		hp = Spring.GetUnitHealth(unitID)
-		
+		hp = Spring.GetUnitHealth(unitID)		
 		if hp then 
 			Spring.SetUnitHealth(unitID,{paralyze = hp * JPLANKTONER_AA_STUNTIME})
 			
@@ -583,8 +550,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						
 						if boolDead and boolDead == true then
 							Spring.MoveCtrl.Disable(persPack.unitID)
-						end
-						
+						end						
 						
 						if not persPack.startFrame then
 							persPack.startFrame=frame
@@ -601,15 +567,14 @@ if (gadgetHandler:IsSyncedCode()) then
 					end
 				end	 
 				return nextFrame, persPack
-			end	
-			
+			end				
 			GG.EventStream:CreateEvent({action= eventFunction, persPack={unitID= unitID, totalTime=JPLANKTONER_AA_STUNTIME}})
 		end
 		return damage
 	end
 	
 	--headcrab function - sets the headcrab where its victim was
-	WeaponDefTable[chcprojectileDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[chcprojectileDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		px,py,pz=Spring.GetUnitPosition(unitID)
 		if px and attackerID and Spring.ValidUnitID(attackID)==true then
 			Spring.SetUnitPosition(attackerID, px+5, py, pz)
@@ -618,29 +583,25 @@ if (gadgetHandler:IsSyncedCode()) then
 		return damage
 	end
 	
-	WeaponDefTable[slicergunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[slicergunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")
 		--only if the unit is hitsphere wise big enough 
 		hp,maxhp=Spring.GetUnitHealth(unitID)
 		if hp/maxhp < 0.5 and hp < 300 then
 			sx,sy,sz=Spring.GetUnitCollisionVolumeData(unitID)
-			if math.sqrt(sx ^2 +sy ^2 + sz^2) >35 then
-				
-				
+			if math.sqrt(sx ^2 +sy ^2 + sz^2) >35 then				
 				x,y,z=Spring.GetUnitPosition(unitID)
 				slicerColum=Spring.CreateUnit("cmeatcolumn",	x,y,z, 1, unitTeam) 
 				Spring.SetUnitNoSelect(slicerColum,true)
 				env = Spring.UnitScript.GetScriptEnv(slicerColum)
 				if env then
 					Spring.UnitScript.CallAsUnit(unitID, env.youAreFuckingDead, unitID )		
-				end
-				
-				
+				end				
 			end
 		end
 	end
 	
-	WeaponDefTable[jethiefweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[jethiefweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--only if the unit is hitsphere wise big enough 
 		if unitID and attackerTeam then
 			energy= Spring.GetTeamResources(attackerTeam,"energy")
@@ -684,7 +645,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 	end
 	
-	WeaponDefTable[jethiefretweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+	UnitDamageFuncT[jethiefretweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--only if the unit is hitsphere wise big enough 
 		if unitID and attackerTeam then
 			energy= Spring.GetTeamResources(attackerTeam,"energy")
@@ -697,7 +658,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	--restrictor			
 	
-	WeaponDefTable[cRestrictorThumperID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 		
+	UnitDamageFuncT[cRestrictorThumperID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 		
 		if weaponDefID == cRestrictorThumperID and Spring.ValidUnitID(attackerID)==true then
 			
 			if UnitDefs[unitDefID].isBuilding == true then
@@ -783,8 +744,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		
-		if WeaponDefTable[weaponDefID]	then	
-			WeaponDefTable[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+		if UnitDamageFuncT[weaponDefID]	then	
+		resultDamage=	UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+		if resultDamage then return resultDamage end
 		end
 		
 		--cBonkerPlasmaWeapon + FireWeapons
@@ -819,18 +781,20 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		--jShadow is hit	
 		if unitDefID == jShadowDefID and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
-	
+			
 			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
 			if boolUnitIsDead == false then		
-
+				
 				--now we displace it and set its speed to zero#
 				ghostShadowEffectedUnits[attackerID]=Spring.GetGameFrame()+ GHOSTLIFETIME
 				
 				offx,offz=math.random(-25,25),math.random(-25,25)
 				px,py,pz=Spring.GetUnitPosition(attackerID)
 				Spring.SetUnitMoveGoal(attackerID, px +offx, py, pz +offz)
+				Spring.Echo("Rotating unit around unit")
 				rotateUnitAroundUnit(unitID,attackerID, 180)
-				if getDistanceUnitToUnit(attackerID, unitID) < 50 then
+				distanced =distanceUnitToUnit(attackerID, unitID)
+				if distanced < 50 then
 					Spring.SetUnitSensorRadius(attackerID,"los",5)
 				end
 				
@@ -912,7 +876,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function setSpeedEnv(k, val)
 		env=Spring.UnitScript.GetScriptEnv(k)
-	
+		
 		if env then
 			udef=Spring.GetUnitDefID(k)	
 			Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed*val* 2184.53))		
