@@ -16,80 +16,92 @@ end
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 
 if (gadgetHandler:IsSyncedCode()) then
-	VFS.Include("scripts/lib_OS.lua" )
-	VFS.Include("scripts/lib_UnitScript.lua" )
+	VFS.Include("scripts/lib_OS.lua")
+	VFS.Include("scripts/lib_UnitScript.lua")
 	VFS.Include("scripts/lib_jw.lua" )
-	VFS.Include("scripts/lib_Build.lua" 	)
-	
+	VFS.Include("scripts/lib_Build.lua")
 	
 	-- Configuration:
 	
-	numberOfButterflys=4
-	timeInMsTillRespawn=2500
+	numberOfButterflys=5
+	timeInMsTillRespawn=1500
 	circleRange=500
 	GoneForGood={}
 	--1 Counter
 	--2 FatherID
 	--3 - 3+numberOfButterflys
-	intIntervall=1000
+	intIntervall=250
 	--/Configuration
-	ELIAHMERGEDISTANCE=55
+	ELIAHMERGEDISTANCE=200
 	
 	jTree3RespawnTable={}
 	
-	function closeEnough(sTable)
+	function mergeButterflys(sTable)
+	
 	distanceTable={}
-	for k=1, #sTable, 1 do
-	for i=1, #sTable, 1 do
-		if i~=k and getDistanceUnitToUnit(sTable[k],sTable[i]) < ELIAHMERGEDISTANCE then
-		if not distanceTable[k] then  distanceTable[k] = 0 end
-			distanceTable[k] = distanceTable[k] +1
+	for k,kuid in ipairs(sTable)do
+		for i, iuid in ipairs(sTable) do
+		if i~=k then
+			distance=distanceUnitToUnit(sTable[k],sTable[i])
+			if  sTable[k] and sTable[i] and distance < ELIAHMERGEDISTANCE then
+					if not distanceTable[sTable[k]] then  distanceTable[sTable[k]] = 0 end
+				distanceTable[sTable[k]] = distanceTable[sTable[k]] +1
+				if distanceTable[sTable[k]] > 2 then
+					return sTable[k]
+				end
+			end
 		end
-	end
-	end
-	for k,v in pairs(distanceTable) do
-		if v > 2 then
-			return  k
 		end
 	end
 
 	end
 	
+	function countSurvivors(jDeadEliahIndex)
+		local survivorCount=0			
+		survivors={}
+		for indx, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
+				validUnitID=Spring.ValidUnitID(id)
+				isDead=Spring.GetUnitIsDead(id)
+				if  validUnitID ~= nil and validUnitID == true and isDead ~= nil and isDead == false then 
+					survivors[#survivors+1]=id
+					survivorCount=survivorCount+1	
+				end
+		end
+	return survivorCount, survivors
+	end
+		
 	--respawns the Eliah
-	function lineInItIn(valIum)
+	function reIncarnateAfterTime(jDeadEliahIndex)
 		--check the butterflies for beeing still alive
 		-- if at least one is still in existance then
 		--respawn then eliah
-		--nil the entry
 		--none of the butterflys is- nil entry	
+
+		survivorCount, survivors = countSurvivors(jDeadEliahIndex)
 		
-		survivor={}
-		survivorCount=0
-		for i=3,3+numberOfButterflys,1 do
-			if Spring.GetUnitIsDead(GoneForGood[valIum][i])==false then 
-				survivor[#survivor+1]=GoneForGood[valIum][i] 
-				survivorCount=survivorCount+1
-			end
+		if survivorCount < 2 then
+			table.remove(GoneForGood,jDeadEliahIndex)
+			return
 		end
 		
-		if survivorCount > 3 then
-		survivor = closeEnough(survivor)
-		if survivor ~= nil then
-			x,y,z=Spring.GetUnitPosition(survivor)
-			likeHisFathersFather=Spring.GetUnitTeam(survivor)
+		spawnPointOfEliah = mergeButterflys(survivors)
+
+		if spawnPointOfEliah and Spring.ValidUnitID(spawnPointOfEliah)== true  then
+			x,y,z = Spring.GetUnitPosition(spawnPointOfEliah)
+			likeHisFathersFather=Spring.GetUnitTeam(spawnPointOfEliah)
 			id=Spring.CreateUnit("jeliah",x,y,z,0,likeHisFathersFather)
 			if id then
-				Spring.SetUnitExperience(id, GoneForGood[valIum][2].exp)
+				Spring.SetUnitExperience(id, GoneForGood[jDeadEliahIndex].stats.exp)
 			end
-			for i=3,3+numberOfButterflys,1 do
-				if Spring.GetUnitIsDead(GoneForGood[valIum][i])==false then 
-					Spring.DestroyUnit(GoneForGood[valIum][i],false,true)
+			for index, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
+				if Spring.GetUnitIsDead(id)==false then 
+					Spring.DestroyUnit(id,false,true)
 				end
 			end
 		end
-		end
-		
-		GoneForGood[valIum]=nil
+			
+	
+	
 		--Lets get this out of here before it starts to rot
 	end
 	
@@ -102,9 +114,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		likeHisFathersFather=jTree3RespawnTable[ix][5]
 		Spring.CreateUnit("jtree3",jTree3RespawnTable[ix][1],jTree3RespawnTable[ix][2],jTree3RespawnTable[ix][3],0,likeHisFathersFather)
-		
-		
-		
+				
 		jTree3RespawnTable[ix]=nil
 		--Lets get this out of here before it starts to rot
 	end
@@ -113,34 +123,27 @@ if (gadgetHandler:IsSyncedCode()) then
 		if f % intIntervall == 0 then
 			--itterate over the whole GoneForGood table
 			--decrease the time 
-			for i=1,#GoneForGood,1 do
-				if GoneForGood[i] and GoneForGood[i][1] then
-					GoneForGood[i][1]=GoneForGood[i][1]-intIntervall
+			for i,val in ipairs(GoneForGood) do
+				if GoneForGood[i] and GoneForGood[i].stats then
+					GoneForGood[i].stats.ms=GoneForGood[i].stats.ms-intIntervall
 					--to avoid n² we do this onloop
-					if GoneForGood[i][1] < 0 then
-						lineInItIn(i)
-						
+					if GoneForGood[i].stats.ms < 0 then
+						reIncarnateAfterTime(i)						
 					end
 				end
 			end
 			
-			for i=1,#jTree3RespawnTable,1 do
-				if jTree3RespawnTable[i] ~= nil then
-					jTree3RespawnTable[i][6]=jTree3RespawnTable[i][6]-intIntervall
+			for nr,treeT in ipairs(jTree3RespawnTable) do
+				if treeT then
+					treeT[6]=treeT[6]-intIntervall
 					--to avoid n² we do this onloop
-					if jTree3RespawnTable[i][6] < 0 then
-						reSpawnTree(i)
-						jTree3RespawnTable[i]=nil
+					if treeT[6] < 0 then
+						reSpawnTree(nr)
+						jTree3RespawnTable[nr]=nil
 					end
 				end
 			end
-			
-			
-			
-			-- if time < 0 then
-			
-			
-			
+		
 		end
 		
 	end
@@ -193,40 +196,33 @@ if (gadgetHandler:IsSyncedCode()) then
 			--Spring.Echo("Eliah died")
 			--get the Position where he died
 			x,y,z=Spring.GetUnitPosition(unitID)
-			GoneForGood[#GoneForGood+1]={}
-			GoneForGood[#GoneForGood][1]={}
-			GoneForGood[#GoneForGood][1]=timeInMsTillRespawn
-			GoneForGood[#GoneForGood][2]={}
-			GoneForGood[#GoneForGood][2].id=unitID
-			GoneForGood[#GoneForGood][2].exp=Spring.GetUnitExperience(unitID)
-			
-			for i=3,3+numberOfButterflys,1 do
-				GoneForGood[#GoneForGood][i]={}
-				--spawn numberOfButterflys many butterflies
-				--store the info in a GoneForGood[]={} --Table
+			newIndex=#GoneForGood+1
+			GoneForGood[newIndex]={}
+			GoneForGood[newIndex].stats={}
+			GoneForGood[newIndex].stats.ms=timeInMsTillRespawn
+			GoneForGood[newIndex].stats.ancestor=unitID
+			GoneForGood[newIndex].stats.exp=Spring.GetUnitExperience(unitID)
+
+
+			GoneForGood[newIndex].butterflys={}
+			for i=1,numberOfButterflys,1 do
 				tx,tz=inRandomRange(x,z,circleRange)
-				GoneForGood[#GoneForGood][i]=Spring.CreateUnit("jbutterfly",tx,y,tz,0,teamID)
-				Spring.SetUnitMoveGoal(GoneForGood[#GoneForGood][i],tx,0,tz)
-				
+				ty=Spring.GetGroundHeight(tx,tz)
+				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",tx,ty,tz,0,teamID)
+				Spring.SetUnitMoveGoal(GoneForGood[newIndex].butterflys[i],x,y,z)				
 			end
+			
 			--spawnWithinCircle
 		end
 		if unitDefID== jtree3DefID then
 			x,y,z=Spring.GetUnitPosition(unitID)
 			jTree3RespawnTable[#jTree3RespawnTable+1]={}
-			jTree3RespawnTable[#jTree3RespawnTable][1]={}
 			jTree3RespawnTable[#jTree3RespawnTable][1]=x
-			jTree3RespawnTable[#jTree3RespawnTable][2]={}
 			jTree3RespawnTable[#jTree3RespawnTable][2]=y
-			jTree3RespawnTable[#jTree3RespawnTable][3]={}
 			jTree3RespawnTable[#jTree3RespawnTable][3]=z
-			jTree3RespawnTable[#jTree3RespawnTable][4]={}
 			jTree3RespawnTable[#jTree3RespawnTable][4]=unitID
-			jTree3RespawnTable[#jTree3RespawnTable][5]={}
 			jTree3RespawnTable[#jTree3RespawnTable][5]=teamID
-			jTree3RespawnTable[#jTree3RespawnTable][6]={}
-			jTree3RespawnTable[#jTree3RespawnTable][6]=math.ceil((math.random(3500,120000)))
-			
+			jTree3RespawnTable[#jTree3RespawnTable][6]=math.ceil((math.random(3500,120000)))			
 		end
 		
 		

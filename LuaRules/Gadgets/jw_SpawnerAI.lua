@@ -73,9 +73,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	
-	function randSign()
-		if math.random(0,1)==1 then return 1 else return -1 end 
-	end
+	
 	teamAccuVolume={}
 	
 	function spawnSpawners(frame,team,side)

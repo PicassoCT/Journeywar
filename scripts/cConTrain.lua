@@ -612,12 +612,8 @@ function threadSafety(globalBoolNr,value2ChangeInto,boolLockedNR)
 			return
 		end
 		Sleep(5)
-	end
-	
+	end	
 end
-
-
-
 
 --ROCKON
 local velX,velY,velZ =0
@@ -636,13 +632,8 @@ function speedUpdater()
 		Sleep(15)
 		currentSpeed= math.sqrt(velX*velX + velZ*velZ)
 		Sleep(300)
-	end
-	
+	end	
 end
-
-
-
-
 
 --function compares old speed and new speed, returns false if speed is out of tolerances or speed is zero
 local function speedCompare(speedOfOld,newSpeed,tolerance,boolInstReset)
@@ -662,8 +653,7 @@ local function speedCompare(speedOfOld,newSpeed,tolerance,boolInstReset)
 		return false
 	else
 		return true
-	end
-	
+	end	
 end
 
 local function speedBiggerThenMin(speedIR)
@@ -671,11 +661,8 @@ local function speedBiggerThenMin(speedIR)
 		return true
 	else
 		return false
-	end
-	
+	end	
 end
-
-
 
 function motionDetec()
 	----Spring.Echo("ComeAlive")
@@ -706,14 +693,11 @@ local function speedTransForm(boolT_PillarMov_F_MoveSpeed,speed, pillarNumber)
 		depth=nilCheck(depth)
 		depth=negZero(depth)
 		
-		local distance2Bridge=477+depth --thats correct Grisha
-		
+		local distance2Bridge=477+depth --thats correct Grisha		
 		
 		totalSpeed=((speed/0.072)*2.16)
 		
-		local howManyPilPerS=((speed/0.072)*2.16)/62
-		
-		
+		local howManyPilPerS=((speed/0.072)*2.16)/62		
 		
 		local framesPerPillar=math.ceil(0.3*(1/(howManyPilPerS/100)))
 		local speedTotal=math.ceil(((distance2Bridge) /framesPerPillar)*30)
@@ -733,13 +717,9 @@ local function speedTransForm(boolT_PillarMov_F_MoveSpeed,speed, pillarNumber)
 	end
 end
 
-
-
-
 --folds the pillar - into a Polygon Origami Pillar
 function foldPillar(number,callingSituation,boolInstReset)
-	--	case one or six, wait till pillar is folded, then move it Under
-	
+	--	case one or six, wait till pillar is folded, then move it Under	
 	
 	local speedO=0
 	
@@ -755,10 +735,6 @@ function foldPillar(number,callingSituation,boolInstReset)
 	elseif speed ~= 0 then
 		speedO= speedTransForm(true,speedLimit,number)
 	end
-	
-	
-	
-	
 	--fold Rails
 	
 	if speedCompare(speedO,comonPillarSpeed,speedCompareTolerance,boolInstReset)==true then
@@ -1024,7 +1000,7 @@ function healWhileStandingStill()
 			while boolHealingActive==true do
 				boolHealedOne=false
 				x,y,z=Spring.GetUnitPosition(unitID)
-				hp=Spring.GetUnitHealth(unitID)
+				hp =Spring.GetUnitHealth(unitID)
 				if hp then
 					
 					T=getAllInCircle(x,z,300,unitID,teamID)
@@ -1044,11 +1020,11 @@ function healWhileStandingStill()
 						if defID and ud[defID].isBuilding ==false and not conTypeTable[defID] then
 							p,maxhp,_,bP=Spring.GetUnitHealth(T[i])
 
-							if  p and p < maxhp and maxhp > 400 then
+							if bP and bP >= 1.0 and  p and p < maxhp and maxhp > 400 then
 								
 								Spring.SetUnitHealth(T[i],p+hp)
 								sx,sy,sz=Spring.GetUnitPosition(T[i])
-								Spring.SpawnCEG("healtrain",sx,sy+10,sz,0,1,0,0)
+								Spring.SpawnCEG("healtrain",sx,sy+25,sz,0,1,0,0)
 								if hpcopy-hp < 0 then 
 									boolYouBroughtThisOnYourself =true 
 									Spring.DestroyUnit(unitID,false,true)	

@@ -77,7 +77,7 @@ function spawner()
 			ex,ey,ez=spGetUnitPosition(enemyID)
 			if math.random(0,1)==1 then 
 				eteam=Spring.GetUnitTeam(enemyID)
-				ex,ey,ez=Spring.GetTeamStartPosition(eteam)
+				ex,ey,ez, boolValidStartPos=Spring.GetTeamStartPosition(eteam)
 			end
 			Spring.SetUnitBlocking(unitID,false)
 			for i=1, howManyUnitsPerSpawnCycle,1 do
@@ -109,9 +109,11 @@ function spawner()
 					end
 				end
 				
-				if Spring.ValidUnitID(spawnedUnit) == true then 
+				if spawnedUnit and Spring.ValidUnitID(spawnedUnit) == true then 
 					spSetUnitNoSelect(spawnedUnit,true)
+					if boolValidStartPos== true then
 					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
+					end
 					table.insert(monsterTable,spawnedUnit)
 				end
 				
@@ -178,10 +180,14 @@ function NextState(nState,times)
 end
 
 function findBiggestCluster(team)
-	mapX,mapZ=Spring.GetMetalMapSize
+	mapX,mapZ=Spring.GetMetalMapSize()
 	mapRepresentiv=makeTable(0,mapx,mapZ)
 	teamUnits=Spring.GetTeamUnits(team)
-	maxTuple{x=mapX/2,z=mapZ/2,val=0}
+	maxTuple={
+			x=mapX/2,
+			z=mapZ/2,
+			val=0
+			}
 	if teamUnits then
 		local spGetUnitPos= Spring.GetUnitPosition
 		process(teamUnits,
@@ -292,28 +298,27 @@ funcTable["PEAKFADE"]=PEAKFADE
 funcTable["BUILDUP"]=BUILDUP
 funcTable["RELAX"]=RELAX
 local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
-function getNearestEnemy(id)
+function getNearestEnemy(idID)
 	
 	minDist=math.huge
-	minDistID=nil
-	
-	process(AllUnitsUpdated,
-	function(ed)
-		edTeam=Spring.GetUnitTeam(ed)
-		if edTeam == teamID or edTeam == gaiaTeamID then
-		else
-			return id
+	minDistID=math.huge
+
+	local spGetUnitTeam=Spring.GetUnitTeam
+	for _,id in ipairs(AllUnitsUpdated) do
+		edTeam=spGetUnitTeam(id)
+		if edTeam  ~= teamID and edTeam ~= gaiaTeamID then
+			dist, boolSuccess =distanceUnitToUnit(id,idID) + math.random(0,30)
+			assert(boolSuccess==true)
+			if  dist < minDist then 
+			minDistID= id
+			minDist=dist
+			end
 		end
-	end,
-	function(ed)
-		if ed and id and getDistanceUnitToUnit(ed,id) <minDist then 
-			minDistID= ed
-			minDist=getDistanceUnitToUnit(ed,id)
-		end
-	end)		
-	if minDistID~=nil then return minDistID end
+	end
 	
-	return Spring.GetUnitNearestEnemy(id)
+	if minDistID == math.huge then return Spring.GetUnitNearestEnemy(idID) end
+	
+	return minDistID
 end
 AllUnitsUpdated={}
 State="RELAX"
@@ -343,12 +348,12 @@ function TargetOS()
 			
 			for i=1,table.getn(monsterTable),1 do
 				monsterid=monsterTable[i]
-				
+			
 				enemyID= getNearestEnemy(monsterid)
 				if stillInSamePosition(monsterid) == true then
 					eTeam=Spring.GetUnitTeam(enemyID)
 					sx,sy,sz=Spring.GetTeamStartPosition(eTeam)
-					Spring.SetUnitMoveGoal(monsterID,sx,sy,sz)
+					Spring.SetUnitMoveGoal(monsterid,sx,sy,sz)
 				else					
 					if enemyID then						
 						ex,ey,ez = lfuncTable[State](unitID,enemyID,times,teamID, times/totalTable[State])
@@ -364,7 +369,7 @@ function TargetOS()
 end
 
 function aliveAndWell(id)
-	boolExists=Spring.GetValidUnitID(id)
+	boolExists=Spring.ValidUnitID(id)
 	if boolExists and boolExists==true then
 		boolAlive=Spring.GetUnitIsDead(id)
 		if boolAlive and boolAlive == true then

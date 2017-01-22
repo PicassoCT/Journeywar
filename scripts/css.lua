@@ -1,3 +1,7 @@
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+
 cssArmL =piece "cssArmL"
 cssArmR =piece "cssArmR"
 center = piece"center"

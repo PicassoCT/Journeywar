@@ -70,7 +70,9 @@ local unitDef = {
 	
 	
 	explodeAs = "factory_explosion",
-	customParams = {},
+	customParams = {
+					Ammonition = "0",
+					},
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:factory_explosion",

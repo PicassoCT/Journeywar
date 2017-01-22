@@ -1798,16 +1798,18 @@ function threadStarter()
 end
 
 SIG_RECENTD=256
-function resetRecentDamage()
-SetSignalMask(SIG_RECENTD)
-Sleep(15000)
-boolOccupiedRecently=false
+function idleReset()
+	boolDoNotIdle=true
+	Signal(SIG_RECENTD)
+	SetSignalMask(SIG_RECENTD)
+	Sleep(15000)
+	boolDoNotIdle=false
 end
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
-	Signal(SIG_RECENTD)
-	boolOccupiedRecently=true
-	StartThread(resetRecentDamage)
+	
+	
+	StartThread(idleReset)
 	
 	if damage > 40 and math.random(0,6)== 1 then
 		loud=math.random(0.8,1)
@@ -1835,13 +1837,22 @@ function delayedSound(soundname,delay)
 	
 end
 
+function echoDebugInfo()
+while true do
+Sleep(5500)
+Spring.Echo("CommenderAmmo:"..Stats[eProperty][eAmmonition])
+
+end
+end
+
 function script.Create()
-		Weapons[eSlicer][1]=1
-	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
+	Spring.SetUnitExperience(unitID,12)
+	--	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
 	setSpeedComEnder(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
+	StartThread(echoDebugInfo)
 	--generatepiecesTableAndArrayCode(unitID)
 	
 	
@@ -1854,8 +1865,6 @@ function script.Create()
 	hideT(cFieldScooper)
 	hideT(guidedMissile)
 	hideT(unguidedMissile)
-	
-	
 	
 	
 	Spin(bullets,y_axis,math.rad(182),0.5)
@@ -1877,21 +1886,22 @@ end
 function script.StopBuilding()
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 end
-boolOccupiedRecently=false
+boolDoNotIdle=false
 
 function idleLoop()
 	while true do
 		if boolWalking == false then
-		Sleep(10)
-			if boolWalking == false and boolOccupiedRecently== false then
+			Sleep(10)
+			if boolWalking == false and boolDoNotIdle== false then
 				idle(0.15)
+				Turn(bb05,y_axis,math.rad(0),0.25)
 			end
-			Turn(bb05,y_axis,math.rad(0),0.25)
+			
 		end
-
-	Sleep(1000)
+		
+		Sleep(1000)
 	end
-
+	
 end
 
 --[[ 	
@@ -2056,10 +2066,8 @@ function theActualUpgrade(upgradeType)
 end
 
 function fireWeaponCost(typeW)
-	Signal(SIG_RECENTD)
-	boolOccupiedRecently=true
-	StartThread(resetRecentDamage)
-
+	StartThread(idleReset)
+	
 	Stats[eProperty][eStabilityinternal]=Stats[eProperty][eStabilityinternal]-Weapons[typeW][eStabCost] 
 	Stats[eProperty][eAmmonition] =math.max(Stats[eProperty][eAmmonition]-Weapons[typeW][eAmmoCost],0)
 end
@@ -2621,8 +2629,8 @@ function updateProgressBar()
 				end
 			end
 		end
-		Spring.SetUnitRulesParam(unitID,"Ammonition",Stats[eProperty][eAmmonition])
-		
+		Spring.SetUnitRulesParam(unitID,"Ammonition",Stats[eProperty][eAmmonition] or 0)
+
 		
 		
 		Sleep(350)
@@ -2914,7 +2922,7 @@ function idle(speed)
 	equiTurn(LS07,LK07,x_axis,0,speed)
 	equiTurn(ARML,AS04,x_axis,0,speed)
 	equiTurn(ARMR,AS03,x_axis,0,speed)
-		Turn(bb05,y_axis,math.rad(math.random(12,22)*rSign*-1),speed)
+	Turn(bb05,y_axis,math.rad(math.random(12,22)*rSign*-1),speed)
 	WMove(center,y_axis,0,3.6)
 	WaitForTurns(LS07,LK07,LS08,LK08,ARML,ARMR)
 end
@@ -3003,11 +3011,11 @@ gSniperPitch=0
 function script.AimWeapon4( heading ,pitch)
 	gSniperHeading=heading
 	gSniperPitch=pitch
-	
+	echo("CComEnderScript:SniperAiming:1")
 	if Weapons[eSniper][1] > 0 and Weapons[eSniper][eCurrCool] <= 0 and gotPriority(Weapons[eSniper][ePrioLevl])==true then
 		--Sniper Kneel Animation
 		
-		
+		echo("CComEnderScript:SniperAiming:2")
 		
 		if Weapons[eSniper][1]> 0 then
 			
@@ -3016,10 +3024,11 @@ function script.AimWeapon4( heading ,pitch)
 				boolSniperOnce=true
 			end
 			releasePriority(Weapons[eSniper][7])	
+			echo("CComEnderScript:SniperAiming:3")
 			return 	boolSniperPermit == true and boolOutOfAmmo ==false
 		end
 	end 
-	
+	echo("CComEnderScript:SniperAiming:4")
 	return false
 end
 
@@ -3073,7 +3082,7 @@ function script.QueryWeapon5()
 	if SMGflipFlop==1 then return SMG1B04 end
 	if SMGflipFlop==2 then return SMG2B03 end
 	if SMGflipFlop==3 then return SMG2B04 end
-	return SMG03
+	return SMG1B03
 end
 
 boolCanSMGFire=false
@@ -3204,6 +3213,7 @@ function script.AimWeapon6( heading ,pitch)
 		SalvoMax=Weapons[eEater][1]
 		Turn(Eater[1],x_axis,math.rad(-59),24)
 		WaitForTurn(Eater[1],x_axis)
+		
 		return boolOutOfAmmo ==false
 	end
 	
@@ -3245,7 +3255,8 @@ end
 
 function script.AimWeapon7( heading ,pitch)	
 	
-	if Weapons[eShotGun][1]>0 and Weapons[eShotGun][10] > 0 then
+	if Weapons[eShotGun][1]>0 and Weapons[eShotGun][10] > 0 and gotPriority(Weapons[eShotGun][7])==true then
+		releasePriority(Weapons[eShotGun][7])
 		return true
 	else
 		return false
@@ -3328,7 +3339,7 @@ end
 
 function script.FireWeapon9()	
 	fireWeaponCost(eFlareGun)
-	
+	releasePriority(Weapons[eFlareGun][7])
 	Spring.PlaySoundFile("sounds/cComEnder/flare.wav",1.0)
 	if Weapons[eFlareGun][5] <= 0 then 
 		StartThread(reloadFlareGun)
@@ -3345,32 +3356,33 @@ end
 
 
 function script.QueryWeapon10() 
-	return fieldscooperzom
+	return Weapons[eSlicer][eAimPiece]
 end
 
 boolSliceGunReloadInProgress=false
 function reloadSliceGun()
-		if boolSliceGunReloadInProgress==true then return end
-		if boolSliceGunReloadInProgress==false then boolSliceGunReloadInProgress=true  end
+	if boolSliceGunReloadInProgress==true then return end
+	if boolSliceGunReloadInProgress==false then boolSliceGunReloadInProgress=true end
 	Weapons[eSlicer][eCurrCool]=math.abs( Weapons[eSlicer][eCoolDown]/Weapons[eSlicer][eWeapnLvl])
-
+	
 	Sleep(Weapons[eSlicer][eCurrCool])
 	Weapons[eSlicer][eCurrCool]= 0
 	boolSliceGunReloadInProgress=false
 end
 
 function script.AimWeapon10( heading ,pitch)	
-	echo("CComEnderScript::1")
-	if Weapons[eSlicer][eCurrCool] > 0  then 
-echo("CComEnderScript::2")	
-	return false
-		end
-		echo("CComEnderScript::3")
-	if Weapons[eSlicer][1] > 0 and gotPriority(Weapons[eSlicer][ePrioLevl])==true then 		
-			echo("CComEnderScript::4")
-		return boolOutOfAmmo ==false
-	end
+	echo("CComEnderScript::10:1")
 	
+	if Weapons[eSlicer][eCurrCool] > 0 then 
+		echo("CComEnderScript::10:2")	
+		return false
+	end
+	echo("CComEnderScript::10:3")
+	if Weapons[eSlicer][1] > 0 and gotPriority(Weapons[eSlicer][ePrioLevl]) == true then 		
+		echo("CComEnderScript::10:4")
+		releasePriority(Weapons[eSlicer][7])
+		return boolOutOfAmmo == false
+	end	
 	return false
 end
 
@@ -3383,8 +3395,7 @@ end
 function script.FireWeapon10()	
 	fireWeaponCost(eSlicer)
 	StartThread(reloadSliceGun)
-	StartThread(sliceGunSFX)
-	
+	StartThread(sliceGunSFX)	
 	return true
 end
 
@@ -3403,10 +3414,8 @@ end
 
 function script.AimWeapon11( heading ,pitch)	
 	if Weapons[eRazorGrenade][eWeapnLvl] > 0 and gotPriority(Weapons[eRazorGrenade][7])==true then 
-		
 		return boolOutOfAmmo ==false
-	end
-	
+	end	
 	return false	
 end
 
@@ -3509,8 +3518,7 @@ end
 
 function script.FireWeapon13()	
 	fireWeaponCost(eTangleGun)
-	StartThread(reloadAARockets)
-	
+	StartThread(reloadAARockets)	
 	return true
 end
 
@@ -3556,12 +3564,10 @@ end
 
 --</WEAPON>
 
-function script.Activate()
-	
+function script.Activate()	
 	return 1
 end
 
-function script.Deactivate()
-	
+function script.Deactivate()	
 	return 0
 end

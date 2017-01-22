@@ -91,7 +91,7 @@ function createCorpseJUnitBig(recentDamage)
 		teamID=Spring.GetGaiaTeamID()
 		--dirx,diry,dirz=Spring.GetUnitDirection(unitID)
 		dx,dy,dz=Spring.GetUnitDirection(unitID)
-		heading=Spring.GetUnitHeading(unitID)
+	--	heading=Spring.GetUnitHeading(unitID)
 		heapID=Spring.CreateUnit("gJBigBioWaste",spx,spy,spz, 1, teamID)
 		
 		Spring.SetUnitDirection(heapID,dx,dy,dz)

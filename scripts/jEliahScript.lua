@@ -13,6 +13,7 @@ local SIG_AIM2 = 8
 local SIG_LRESET=16
 local SIG_RRESET=32
 local SIG_FIGHTCLUB=64
+local SIG_MOVE = SIG_FIGHTCLUB*2
 boolNonCombatant=true
 
 --eggspawn --tigLil and SkinFantry
@@ -258,14 +259,21 @@ function script.Killed(recentDamage, maxHealth)
 	return 0
 end
 
-
-
-
-
-
-local function legs_down()
+function readyAiming()
+	Turn(body,x_axis,math.rad(0),12)
+	Turn(body,z_axis,math.rad(0),12)
 	Move(body,y_axis,0,57.6)
+	Move(body,x_axis,0,57.6)
 	Move(body,z_axis,0,57.6)
+	
+end
+
+
+
+
+function legs_down()
+	
+	readyAiming()
 	
 	for i=1,#p,1 do
 		Turn(p[i],y_axis,math.rad(0),27)
@@ -274,12 +282,23 @@ local function legs_down()
 	end
 	
 end
+boolMove=false
+function delayedMove(delay, targetValue)
+	Signal(SIG_MOVE)
+	SetSignalMask(SIG_MOVE)
+	Sleep(delay)
+	boolMove=targetValue
+end
+
+
 
 function script.StartMoving()
 	-- ----Spring.Echo ("starting to walk!")
 	Signal(SIG_IDLE)
 	legs_down()
 	StartThread (walk)
+	StartThread (delayedMove,50, true)
+	
 end
 
 function script.StopMoving()
@@ -289,8 +308,7 @@ function script.StopMoving()
 	Signal(SIG_WALK)
 	legs_down()
 	StartThread(idle)
-	
-	
+	StartThread(delayedMove,500,false)	
 end
 
 
@@ -310,35 +328,42 @@ boolLeftSideAimed=false
 boolRightSideAimed=false
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
-	return weaponPoints[1] 
+	return body
 end
 
 function script.QueryWeapon1() 
-	return weaponPoints[1]
+	return body
 end
 
 function stillFighting()
+	Signal(SIG_FIGHTCLUB)
 	SetSignalMask(SIG_FIGHTCLUB)
 	Sleep(500)
 	boolNonCombatant=true
 end
 
 function script.AimWeapon1( heading ,pitch)
-	boolGLHeading=heading
-	Signal(SIG_AIM)
-	Signal(SIG_LRESET)
-	SetSignalMask(SIG_AIM)
-	Signal(SIG_FIGHTCLUB)
-	Signal(SIG_IDLE)
-	Signal(SIG_WALK)
-	boolNonCombatant=false
-	StartThread(stillFighting)
-
+	if boolMove == false then
+		boolGLHeading=heading
+		Signal(SIG_AIM)
+		Signal(SIG_LRESET)
+		SetSignalMask(SIG_AIM)
+		
+		Signal(SIG_IDLE)
+		Signal(SIG_WALK)
+		boolNonCombatant=false
+		StartThread(stillFighting)
+		readyAiming()
+		
 		--aiming animation: instantly turn the gun towards the enemy
-	Turn(LArm, y_axis, heading)
-	Turn(LArm,x_axis,-pitch,9)
-	WaitForTurn(LArm,x_axis)
-	return true
+		--Turn(center, y_axis, heading)
+		Turn(RArm,x_axis,-pitch,9)
+		Turn(LArm,x_axis,-pitch,9)
+		--WaitForTurn(center,x_axis)
+		return true
+	else
+		return false
+	end
 	
 end
 
@@ -349,63 +374,23 @@ function script.FireWeapon1()
 	return true
 end
 
-function script.AimWeapon2( heading, pitch )
-	boolGRHeading=heading
-	
-	Signal(SIG_AIM2)
-	SetSignalMask(SIG_AIM2)
-	Signal(SIG_RRESET)
-	Signal(SIG_IDLE)
-	Signal(SIG_WALK)
-
-		--aiming animation: instantly turn the gun towards the enemy
-		Turn(RArm, y_axis, heading)
-		Turn(RArm,x_axis,-pitch,9)
-		WaitForTurn(RArm,x_axis)
-		return true
-	end	
-	
 
 
-function script.AimFromWeapon2() 
-	
-	return weaponPoints[4]
-	
+--weapon 3
+function script.AimFromWeapon2() 	
+	return weaponPoints[3]	
 end
 
 function script.QueryWeapon2() 
-	return weaponPoints[4]
+	return weaponPoints[3]
 end
 
 
 function script.FireWeapon2()
-	Signal(SIG_RRESET)
-	StartThread(setterOfBools,false)
-	return true
-end
-
---------------------------------------------------------------------------
-
-
---weapon 3
-function script.AimFromWeapon3() 	
-	
-	
-	
-	return weaponPoints[3]
-	
-end
-
-function script.QueryWeapon6() 
-	return weaponPoints[3]
+	return false
 end
 
 
-function script.FireWeapon6()
-	
-end
-
-
-function script.AimWeapon6( heading, pitch )
-return true
+function script.AimWeapon2( heading, pitch )
+	return false
 end

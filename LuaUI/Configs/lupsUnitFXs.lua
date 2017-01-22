@@ -119,8 +119,7 @@ effectUnitDefs = {
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare6", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare7", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare8", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=22.5, size= 32, piece="nanoemit", onActive=true}},
-		
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=22.5, size= 10, piece="nanoemit", onActive=false}}		
 	},	
 	jsunshipwater ={
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=325, precision=22, strength = 0.00125, repeatEffect=true}}

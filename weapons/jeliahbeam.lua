@@ -18,12 +18,12 @@ local weaponDef = {
 	avoidFriendly = true,
 	soundtrigger = false,
 	
-	collideFriendly = false,
+	collideFriendly = true,
 	
-	beamtime = 1,--0.01
+	beamtime = 2,--0.01
 	
 	FireSubmersed=0,	
-	impulseFactor = 0.025,
+	--impulseFactor = 0.025,
 	largeBeamLaser = true,
 	lineOfSight = false,
 	
@@ -34,7 +34,7 @@ local weaponDef = {
 	reloadtime = 0.42,
 	renderType = 0,	
 	
-	turret 	 = true,
+	turret 	 = false,
 	--	soundHit = "null",
 	--soundStart = "null",
 	FireStarter = 0,
