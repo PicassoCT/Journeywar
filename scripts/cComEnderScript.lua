@@ -2098,7 +2098,7 @@ function ammoFacLoop()
 	
 	while true do
 		
-		Stats[eProperty][eAmmonition]=math.min(Stats[eProperty][eAmmonition]+AmmoFacEffectivenessMax,Stats[eProperty][eAmmonitionMax])
+		Stats[eProperty][eAmmonition]=math.min(Stats[eProperty][eAmmonition]+AmmoFacEffectiveness/10,Stats[eProperty][eAmmonitionMax])
 		Sleep(1000)
 	end
 	
@@ -3071,7 +3071,12 @@ end
 --<SMG>
 
 function script.AimFromWeapon5() 
-	return You 
+	SMGflipFlop=(SMGflipFlop+1)%4
+	if SMGflipFlop==0 then return SMG1B03 end
+	if SMGflipFlop==1 then return SMG1B04 end
+	if SMGflipFlop==2 then return SMG2B03 end
+	if SMGflipFlop==3 then return SMG2B04 end
+	return SMG1B03
 end
 
 SMGflipFlop=1

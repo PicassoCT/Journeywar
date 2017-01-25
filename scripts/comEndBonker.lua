@@ -375,29 +375,34 @@ shieldTable[#shieldTable+1]={}
 shieldTable[#shieldTable]= outShiel11
 
 boolPieceArrived=false
+PepTable={}
+for i=1,3 do
+PepTable[i]="pre1"..i
+PepTable[i+3]="pre2"..i
+PepTable[i]=piece(PepTable[i])
+PepTable[i+3]=piece(PepTable[i+3])
+end
 
 
+function showAlarm(index)
+hideT(PepTable)
+	Show(PepTable[index])
+	Show(PepTable[index+3])
+end
 
 boolPressedButtonTwice=false
 teamID=Spring.GetUnitTeam(unitID)
-
 
 boolFirstActivation=false
 
 function script.Activate()
 	if boolFirstActivation==false then boolFirstActivation=true end
 	
-	boolPressedButtonTwice=true
-
-	
+	boolPressedButtonTwice=true	
 	return 1
 end
 
-
-
-function script.Deactivate()
-	
-	
+function script.Deactivate()	
 	return 0
 end
 
@@ -410,11 +415,12 @@ function enterTheCommEnder(teamID)
 	Sleep(10)
 	HisID=	Spring.CreateUnit("ccomender",x,y,z, 0, teamID) 
 	Spring.SetUnitBlocking(unitID,false)
-	Spring.SetUnitMoveGoal(HisID,x+250,y,z)
+	if HisID then
+		Spring.SetUnitMoveGoal(HisID,x+250,y,z)
+	end
 	HideWrap(MEcha)
 	return HisID
 end
-
 
 function showUP()
 	Turn(bridges2,y_axis,math.rad(103),0)
@@ -508,7 +514,7 @@ function inYourOwnTime()
 end
 
 function script.Create()
-	
+	showAlarm(1)
 	resetT(EarthTable)
 	Move(center,y_axis,-300,0)
 	StartThread(inYourOwnTime)
@@ -524,9 +530,14 @@ function spawnCommander()
 		Spring.PlaySoundFile("sounds/citadell/bushthebutton.wav") 
 		Sleep(20000)
 		boolPressedButtonTwice=false
+		showAlarm(2)
 		while boolPressedButtonTwice==false do
+			showAlarm(2)
+			Sleep(350)
+			showAlarm(1)
 			Sleep(350)
 		end
+		showAlarm(3)
 		-- Screen goes Black and then comes back
 		--play Warning Message: "Binding Agreement is processed. Comander teleported. Comander Capsule inserted. Lock Sealed. Atmospheric Preasure in HangarBay. Please keep limbs inside the capsule at all times. Outside Temperature is 42 ° Degrees. Good Luck, Comander."
 		Spring.PlaySoundFile("sounds/citadell/comEnderDeploy.wav") 
@@ -555,8 +566,10 @@ function spawnCommander()
 			for i=1,#shieldTable,1 do
 				Turn(shieldTable[i],x_axis,math.rad(0),1.2/i)
 			end
-			
-			Move(center,y_axis,-300,5)
+			showAlarm(2)
+			WMove(center,y_axis,-50,5)
+			showAlarm(1)
+			Move(center,y_axis,-150,5)
 		end
 	end
 	
