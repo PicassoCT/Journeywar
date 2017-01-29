@@ -54,8 +54,9 @@ function EGG_LOOP()
 		
 		if boolPeacefull== true then	
 			ed= Spring.GetUnitNearestEnemy(unitID)
+			if ed then
 			distanced = distanceUnitToUnit(unitID,ed) 
-			if ed and distanced > eggEnemySpawnDistance then
+			if  distanced > eggEnemySpawnDistance then
 		
 				-- if in Water check experience
 				temp=Spring.GetUnitExperience(unitID)
@@ -68,6 +69,7 @@ function EGG_LOOP()
 					--update experienceSoFar
 				
 				end
+			end
 			end
 		end
 		Sleep(2500)

@@ -147,6 +147,8 @@ function createUnitFunction(unitTypeString)
 	return spawnedID
 end
 
+
+
 function spawner()
 	
 	local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
@@ -227,7 +229,7 @@ function spawner()
 				
 				spawnedUnit=lCreateUnitFunction(Unittype)
 				if spawnedUnit~= nil then
-					spSetUnitNoSelect(spawnedUnit,true)
+					--spSetUnitNoSelect(spawnedUnit,true)
 					spawnPortalEffect()
 					Sleep(1550)
 					spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)

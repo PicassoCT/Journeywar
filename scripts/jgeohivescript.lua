@@ -299,6 +299,7 @@ funcTable["BUILDUP"]=BUILDUP
 funcTable["RELAX"]=RELAX
 local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 function getNearestEnemy(idID)
+	if Spring.ValidUnitID(idId)==false then return end
 	
 	minDist=math.huge
 	minDistID=math.huge
@@ -306,12 +307,12 @@ function getNearestEnemy(idID)
 	local spGetUnitTeam=Spring.GetUnitTeam
 	for _,id in ipairs(AllUnitsUpdated) do
 		edTeam=spGetUnitTeam(id)
-		if edTeam  ~= teamID and edTeam ~= gaiaTeamID then
-			dist, boolSuccess =distanceUnitToUnit(id,idID) + math.random(0,30)
-			assert(boolSuccess==true)
-			if  dist < minDist then 
+		if edTeam  ~= teamID and edTeam ~= gaiaTeamID and id ~= idID then
+			dist =distanceUnitToUnit(id,idID)
+			
+			if  dist and id and dist  + math.random(0,30)  < minDist then 
 			minDistID= id
-			minDist=dist
+			minDist=dist  + math.random(0,30)
 			end
 		end
 	end
@@ -350,7 +351,7 @@ function TargetOS()
 				monsterid=monsterTable[i]
 			
 				enemyID= getNearestEnemy(monsterid)
-				if stillInSamePosition(monsterid) == true then
+				if enemyID and stillInSamePosition(monsterid) == true then
 					eTeam=Spring.GetUnitTeam(enemyID)
 					sx,sy,sz=Spring.GetTeamStartPosition(eTeam)
 					Spring.SetUnitMoveGoal(monsterid,sx,sy,sz)

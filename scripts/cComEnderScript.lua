@@ -2678,9 +2678,6 @@ function script.AimWeapon1( heading ,pitch)
 	return false 
 end
 
-
-
-
 function script.FireWeapon1()
 	fireWeaponCost(eGLauncher)
 	secondShot=secondShot+1
@@ -2699,19 +2696,13 @@ function script.FireWeapon1()
 	return true
 end
 ----------------
-
-
 function script.AimFromWeapon2() 
 	return glaunch 
 end
 
-
-
-
 function script.QueryWeapon2() 
 	return glaunch
 end
-
 
 function script.AimWeapon2( heading ,pitch)	
 	if Weapons[eGLauncher][1]==2 and gotPriority(Weapons[eGLauncher][7])==true then 
@@ -2932,9 +2923,6 @@ function script.AimFromWeapon4()
 	return sniper 
 end
 
-
-
-
 function script.QueryWeapon4() 
 	return sniper
 	
@@ -3032,8 +3020,6 @@ function script.AimWeapon4( heading ,pitch)
 	return false
 end
 
-
-
 function script.FireWeapon4()
 	boolSniperOnce=false
 	boolSniperPermit=false
@@ -3063,11 +3049,7 @@ function script.FireWeapon4()
 	return true
 end
 
-
 --</SNIPER>
-
-
-
 --<SMG>
 
 function script.AimFromWeapon5() 
@@ -3076,18 +3058,19 @@ function script.AimFromWeapon5()
 	if SMGflipFlop==1 then return SMG1B04 end
 	if SMGflipFlop==2 then return SMG2B03 end
 	if SMGflipFlop==3 then return SMG2B04 end
-	return SMG1B03
+	return bb05
 end
 
 SMGflipFlop=1
 
 function script.QueryWeapon5() 
-	SMGflipFlop=(SMGflipFlop+1)%4
-	if SMGflipFlop==0 then return SMG1B03 end
-	if SMGflipFlop==1 then return SMG1B04 end
-	if SMGflipFlop==2 then return SMG2B03 end
-	if SMGflipFlop==3 then return SMG2B04 end
-	return SMG1B03
+	return bb05
+	-- SMGflipFlop=(SMGflipFlop+1)%4
+	-- if SMGflipFlop==0 then return SMG1B03 end
+	-- if SMGflipFlop==1 then return SMG1B04 end
+	-- if SMGflipFlop==2 then return SMG2B03 end
+	-- if SMGflipFlop==3 then return SMG2B04 end
+	-- return SMG1B03
 end
 
 boolCanSMGFire=false
@@ -3142,6 +3125,7 @@ function smgFireAnimation(pitch) --Aproximated Time of Execution: 0.9333 Seconds
 	
 end
 globalHipTurn=0
+
 function script.AimWeapon5( heading ,pitch)	
 	
 	if gotPriority(Weapons[eSubMG][7])==true then
@@ -3182,8 +3166,6 @@ function script.AimWeapon5( heading ,pitch)
 		return false 
 	end
 end
-
-
 
 function script.FireWeapon5()	
 	releasePriority(Weapons[eSubMG][7])

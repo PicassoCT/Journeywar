@@ -3,6 +3,7 @@
 
 	local mestorage = piece "mestorage"
 	local meelevator  = piece  "meelevator"
+
 	local center=piece"center"
 	local addOn=piece"addOn"
 	local gettinLow=-91
@@ -53,7 +54,7 @@
 			end
 
 		tax=(i)*x
-		Move(center,y_axis,tax,0.3)
+		Move(center,y_axis,150,0.3)
 		WaitForMove(center,y_axis)
 		end
 	end
@@ -85,6 +86,7 @@
 
 boolMeElevator=true
 	function script.Create()
+	showBlocks()
 	randoval=math.random(0,12)
 	randoval=randoval*90
 	Turn(center,y_axis,math.rad(randoval),0)
@@ -98,6 +100,7 @@ boolMeElevator=true
 	Hide(alt1)	
 	Hide(alt2)	
 	Hide(mestorage)	
+	Hide(mestorage2)	
 		
 		if math.random(0,1)==1 then
 		Show(mestorage)
@@ -111,6 +114,7 @@ boolMeElevator=true
 			Hide(meelevator)
 			boolMeElevator=false
 			end
+			
 		else
 		Hide(meelevator)
 		boolMeElevator=false
@@ -164,7 +168,29 @@ boolMeElevator=true
 
 	return 0
 	end
+	
+function showBlocks()
+blockTable={}
+	for i=0,14 do
+		blockTable[i]="Blok"..i
+		blockTable[i]=piece(blockTable[i])
+	end
 
+	for i=0,14,1 do
+		dx,dy,dz=0,0,0
+			if (i-1) % 5== 0 then
+			dx,dy,dz=randSign()*40,-10,randSign()*40
+			else
+			if math.random(0,5) < 4 then
+			dx=math.random(-1,1)*math.random(15,20)	+math.random(-1,1);
+			dz=math.random(-1,1)*math.random(15,20)	+math.random(-1,1);
+			else
+			dy=math.random(0,1)*math.random(15,20)	+math.random(-1,1);
+			end			
+			end
+		mP(blockTable[i],dx,dy,dz,0)
+	end
+end
 
 
 	function script.Activate()

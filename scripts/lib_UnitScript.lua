@@ -19,7 +19,7 @@ MA 02110-1301, USA.
 ]]--
 --------------DEBUG HEADER
 --Central Debug Header Controlled in UnitScript
-lib_boolDebug= true --GG.BoolDebug or false
+lib_boolDebug= false --GG.BoolDebug or false
 --------------DEBUG HEADER
 
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
@@ -179,21 +179,29 @@ function distance(x,y, z,xa,ya,za)
 	end
 end
 
+--> get two unit distVector
+function distanceUnitToUnitVec(idA, idB)
+	x,y,z =Spring.GetUnitPosition(idA)
+	xb,yb,zb=Spring.GetUnitPosition(idB)
+
+	return x-xb, y-yb, z-zb
+end
+
 -->returns the Distance between two units
 function distanceUnitToUnit(idA, idB)
 	if lib_boolDebug == true then
-		if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return false,false; end
-		if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return false,false; end
-		if Spring.ValidUnitID(idA)==false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return false,false;end
-		if Spring.ValidUnitID(idB)==false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return false,false; end
+		if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return ; end
+		if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return ; end
+		if Spring.ValidUnitID(idA)==false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return end
+		if Spring.ValidUnitID(idB)==false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return ; end
 		
 	end
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 	
-	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return math.huge, false end
+	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return end
 	assert(x)
-	return GetTwoPointDistance(x,y,z,xb,yb,zb), true
+	return GetTwoPointDistance(x,y,z,xb,yb,zb)
 end
 
 -->returns Distance between two points
@@ -508,12 +516,12 @@ end
 
 
 
-function makeTable(default, XDimension, yDimension, zDimension)
+function makeTable(default, xDimension, yDimension, zDimension)
 	local RetTable={}
-	if not XDimension then return default end
+	if not xDimension then return default end
 	
-	for x=1, XDimension, 1 do
-		if XDimension and yDimension then
+	for x=1, xDimension, 1 do
+		if yDimension then
 			RetTable[x]={}
 		elseif xDimension then
 			RetTable[x]=default
