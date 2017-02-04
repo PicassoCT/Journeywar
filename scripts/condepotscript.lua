@@ -63,6 +63,7 @@ local boolStable=true
 teamID=Spring.GetUnitTeam(unitID)
 
 function script.Create()
+StartThread(lightThread)
 --<buildanimationscript>
 x,y,z=Spring.GetUnitPosition(unitID)
 
@@ -466,46 +467,45 @@ function themLights()
 
 
 	Show(condepotli)
-	Sleep(175)
+	Sleep(300)	
 	Show(condepotl2)
-	Sleep(50)
 	Hide(condepotli)
-	Sleep(75)
-	Show(condepotl1)
-	Sleep(50)
+	Sleep(300)
 	Hide(condepotl2)
-	Sleep(75)
+	Show(condepotl1)
+	Sleep(300)
 	Show(condepotl0)
-	Sleep(50)
 	Hide(condepotl1)
-	Sleep(125)
+	Sleep(300)
 	Hide(condepotl0)
 	Sleep(550)
 	
 
 
 end
+--In Spring every Thread ends, when its spawning parent ends, thus this does not need to be handled
+function lightThread()
+	while(true)do
+	themLights()
+	end
+end
 
 local function idle()
 SetSignalMask(SIG_IDLE)
+
 	while(true)do
-	themLights()
+	
 	randMove=math.random(0,51)
-	themLights()
 	randSpeed=math.random(0.4,4)
 	Move(cdcrane,x_axis, randMove, randSpeed)
-	themLights()
+	WaitForMove(cdcrane,x_axis)
 	randSleep=math.random(512,1024)
-	themLights()
 	Sleep(randSleep)
-	-- Light chain as function
-	themLights()
-	
-	
+	-- Light chain as function	
 	randMove=math.random(-48,-25)
 	Move(cdcrane,x_axis, randMove, randSpeed)
-	themLights()
-	themLights()
+	WaitForMove(cdcrane,x_axis)
+
 	end
 end
 

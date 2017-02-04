@@ -54,40 +54,79 @@ function vectorBetrag(xv,yv,x2,y2)
 	return math.floor(Betrag)
 end
 ------------------------------------------------------
+function zombieCheck(allyID)
+if allyID and  Spring.ValidUnitID(allyID)== true and Spring.GetUnitDefID(allyID)== ZOMBIEDEFID then return true  end
+return false
+
+end
+
 function moveTowardsNearestEnemy()
-	lx,ly,lz=0,0,0
+	oldPosAllyZombies={}
+	lx,ly,lz=math.random(20,50)*randSign(),0,math.random(20,50)*randSign()
 	ZOMBIEDEFID=UnitDefNames["zombie"].id
 	local spGetUnitDefID=Spring.GetUnitDefID
 	zombX,zombY,zombZ=Spring.GetUnitPosition(unitID)
-	ozombX,ozombY,ozombZ=zombX,zombY,zombZ
+	boolSawAEnemyOnce=false
+	memPos=makeVector(0,0,0)
+	memorytimer=0
 	
 	while(true) do
 		
 		px,py,pz=Spring.GetUnitPosition(unitID)
-		enemyId=Spring.GetUnitNearestEnemy(unitID)
-		allyID=Spring.GetUnitNearestAlly(unitID)
-		
-		if Spring.ValidUnitID(allyID)==true and spGetUnitDefID(allyID)== ZOMBIEDEFID then
-			ozombX,ozombY,ozombZ=	zombX,zombY,zombZ
-			zombX,zombY,zombZ=Spring.GetUnitPosition(allyID)
-			if math.sqrt((ozombX-zombX)^2 +(ozombZ-zombZ)^2)> viewDistance then enemyId=allyID end -- follow your nearest Zombie if he is moving
-		end
-		if enemyId~=nil then
-			ex,ey,ez=Spring.GetUnitPosition(enemyId)
-			
-			distance=math.sqrt((px-ex)*(px-ex)+(pz-ez)*(pz-ez))
-			if ex~= nil and distance < viewDistance then
-				lx,ly,lz=px-ex,py-ey,pz-ez
+		enemyId=Spring.GetUnitNearestEnemy(unitID, viewDistance)
+		if enemyId and Spring.ValidUnitID(enemyId)==true then
+		--if enemy is visible
+				boolSawAEnemyOnce =true
+				memorytimer=90000
+				ex,ey,ez= Spring.GetUnitPosition(enemyId)		
+				if ex then
+				lx,ly,lz=ex-px,ey-py,ez-pz				
 				Spring.SetUnitTarget(unitID,enemyId)
-				Sleep(4000)
-			else --guarantees movement into the last known direction of a enemy
-				if px+lx > Game.mapSizeX or px+lx < 0 then lx=lx*-1 end--creates the pingpong behaviour
-				if pz+lz > Game.mapSizeZ or pz+lz < 0 then lz=lz*-1 end--creates the pingpong behaviour
 				
-				Spring.SetUnitMoveGoal(unitID,px+lx,py+ly,pz+lz)
-				Sleep(4000)
+				informZombieNearbyID=Spring.GetUnitNearestAlly(unitID)
+					if ex and zombieCheck(informZombieNearbyID)== true then
+						Spring.SetUnitMoveGoal(ex,ey,ez)
+					end
+				memPos=makeVector(lx,ly,lz)
+				end
+		elseif boolSawAEnemyOnce == true and memorytimer > 0 then
+				memorytimer=memorytimer-4000
+				lx,ly,lz=memPos.x,memPos.y,memPos.z
+		elseif memorytimer < 0 then
+			memorytimer=memorytimer-4000
+			boolSawAEnemyOnce = false
+		end
+	
+		if eneymID and  memorytimer < -90000 and math.random(0,128)== 64 then
+			eneTeamID=Spring.GetUnitTeam(enemyId)
+			tx,ty,tz=Spring.GetTeamStartPosition(eneTeamID)
+			lx,ly,lz = tx-px,ty-py,tz-pz
+		end
+		
+		--follow the nearest zombie, that looks like its knowing what its doing and not coming towards me
+		if boolSawAEnemyOnce == false and	math.random(0,8)==4 then
+			allyID=Spring.GetUnitNearestAlly(unitID,viewDistance)
+			if zombieCheck(allyID) == true then	 -- we have a zombie		
+				zombX,zombY,zombZ=Spring.GetUnitPosition(allyID)
+				if not oldPosAllyZombies[allyID] then 
+					oldPosAllyZombies[allyID] = makeVector(zombX,zombY,zombZ)
+				else
+					local oldPos=oldPosAllyZombies[allyID] 
+					currPos=makeVector(zombX,zombY,zombZ)
+					lx,ly,lz = (oldPos.x-currPos.x)*25,(oldPos.y-currPos.y)*25,(oldPos.z-currPos.z)*25		
+				end
 			end
 		end
+		
+		
+		
+		if  px+lx > Game.mapSizeX or px+lx < 0  then --creates the pingpong behaviour
+			lx=lx*-1 
+		elseif  pz+lz > Game.mapSizeZ or pz+lz < 0 then--creates the pingpong behaviour
+			lz=lz*-1 
+		end
+		
+		Spring.SetUnitMoveGoal(unitID,px+lx,py+ly,pz+lz)		
 		Sleep(4000)
 	end
 end
