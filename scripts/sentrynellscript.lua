@@ -37,7 +37,6 @@ local SIG_UNFOLD=8
 local SIG_FOLD=4
 local SIG_SPAM=16
 local SIG_TRACK=2
-local SIG_WALK=32
 local sentryID1
 local sentryID2
 local sentryID3
@@ -501,8 +500,7 @@ function sentry_Kill()
 end
 
 
-local function walk()
-	SetSignalMask(SIG_WALK)
+function walk()
 	StopSpin(sentrynel3,y_axis)
 	
 	
@@ -558,7 +556,7 @@ end
 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
-local function spamFilter()
+function spamFilter()
 	SetSignalMask(SIG_SPAM)
 	
 	
@@ -596,7 +594,7 @@ local function spamFilter()
 				--if spamfilterSTOP is still ==true then
 				Signal(SIG_FOLD)
 				Signal(SIG_UNFOLD)
-				Signal(SIG_WALK)
+
 				if boolAllreadyUnfold==false then
 					StartThread(unfold)
 				end
@@ -817,8 +815,9 @@ function script.StopMoving()
 	Turn(sentrynell,x_axis,math.rad(0),3)
 	boolSTOP=true
 	Signal(SIG_TRACK)
-	Signal(SIG_UNDEPLOY)
-	Signal(SIG_WALK)
+
+	Signal(SIG_FOLD)
+	Signal(SIG_UNFOLD)
 	StartThread(motionTrack)
 	
 	

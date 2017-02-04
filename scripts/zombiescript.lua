@@ -742,7 +742,6 @@ function script.StopMoving()
 			StartThread(idle)
 		end	
 	end	
-	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)	
 end
 
 function script.AimWeapon1(heading ,pitch)	
