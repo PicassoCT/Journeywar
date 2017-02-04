@@ -83,11 +83,12 @@ x,y,z=Spring.GetUnitPosition(unitID)
 	Sleep(300)
 	end
 	
-if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+if GG.UnitsToSpawn then
 x,y,z=Spring.GetUnitPosition(unitID)
 teamID=Spring.GetUnitTeam(unitID)
 GG.UnitsToSpawn:PushCreateUnit("jinfinityscraddle",x,y,z,0,teamID)	
 Spring.DestroyUnit(unitID,false,true)	
+end
 end
 
 function script.Killed(recentDamage,_)

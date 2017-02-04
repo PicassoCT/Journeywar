@@ -48,11 +48,12 @@ function upGradde()
 		oldhp = hp
 	end
 	--Congrats you survived growing up
-	if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+	if GG.UnitsToSpawn then 
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
 	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)	
 	GG.UnitsToSpawn:PushCreateUnit("fclvl2",x,y,z,0,teamID)	
+	end
 	Sleep(4000)
 	Spring.DestroyUnit(unitID,false,true)
 end
