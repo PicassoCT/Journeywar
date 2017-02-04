@@ -131,13 +131,12 @@ function createCorpseJUnitSmall(recentDamage)
 		spx,spy,spz=Spring.GetUnitPosition(unitID)
 		--teamID=Spring.GetUnitTeam(unitID)
 		teamID=Spring.GetGaiaTeamID()
-		--dirx,diry,dirz=Spring.GetUnitDirection(unitID)
+		dirx,diry,dirz=Spring.GetUnitDirection(unitID)
 		dx,dy,dz=Spring.GetUnitDirection(unitID)
 		heading=Spring.GetUnitHeading(unitID)
 		heapID=Spring.CreateUnit("gjmedbiogwaste",spx,spy,spz, 1, teamID)
-		
-		Spring.SetUnitDirection(heapID,dx,dy,dz)
-		--Spring.SetUnitDirection(heapID,dirx,diry,dirz)
+
+		Spring.SetUnitDirection(heapID,dirx,diry,dirz)
 		Spring.SetUnitNeutral(heapID,true)
 		
 	end 	

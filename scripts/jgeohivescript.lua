@@ -384,18 +384,22 @@ end
 
 monsterPosTable={}
 function stillInSamePosition(id)
-	
+	bRetVal=false
 	mx,my,mz=Spring.GetUnitPosition(id)
 	if mx then
 		mVec=makeVector(mx,my,mz)
 		if not monsterPosTable[id] then
 			monsterPosTable[id]=mVec
-			return false
-		elseif distanceVec(mVec,monsterPosTable[id]) < 20 then
-			return true
+		bRetVal=false
+		else
+	
+		if distanceVec(mVec,monsterPosTable[id]) < 20 then
+	
+		monsterPosTable[id]=mVec
+			bRetVal=true	
 		end	
 	end
-	return false
+	return bRetVal
 end
 
 

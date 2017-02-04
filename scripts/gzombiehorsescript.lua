@@ -1,6 +1,5 @@
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
 include "lib_jw.lua"
 include "lib_OS.lua"
 
@@ -585,50 +584,6 @@ function vectorBetrag(xv,yv,x2,y2)
 	return math.floor(Betrag)
 end
 ------------------------------------------------------
-function moveTowardsNearestEnemy()
-	lx,ly,lz=0,0,0
-	ZOMBIEDEFID=UnitDefNames["zombie"].id
-	local spGetUnitDefID=Spring.GetUnitDefID
-	zombX,zombY,zombZ=Spring.GetUnitPosition(unitID)
-	ozombX,ozombY,ozombZ=zombX,zombY,zombZ
-	
-	while(true) do
-		
-		commands=Spring.GetUnitCommands(unitID,2)
-		while #commands > 0 or boolMoving== true do
-			Sleep(1000)
-			commands=Spring.GetUnitCommands(unitID,2)
-		end
-		
-		
-		px,py,pz=Spring.GetUnitPosition(unitID)
-		enemyId=Spring.GetUnitNearestEnemy(unitID)
-		allyID=Spring.GetUnitNearestAlly(unitID)
-		
-		if Spring.ValidUnitID(allyID)==true and spGetUnitDefID(allyID)== ZOMBIEDEFID then
-			ozombX,ozombY,ozombZ=	zombX,zombY,zombZ
-			zombX,zombY,zombZ=Spring.GetUnitPosition(allyID)
-			if math.sqrt((ozombX-zombX)^2 +(ozombZ-zombZ)^2)> viewDistance then enemyId=allyID end -- follow your nearest Zombie if he is moving
-		end
-		if enemyId~=nil then
-			ex,ey,ez=Spring.GetUnitPosition(enemyId)
-			
-			distance=math.sqrt((px-ex)*(px-ex)+(pz-ez)*(pz-ez))
-			if ex~= nil and distance < viewDistance then
-				lx,ly,lz=px-ex,py-ey,pz-ez
-				Spring.SetUnitTarget(unitID,enemyId)
-				Sleep(4000)
-			else --guarantees movement into the last known direction of a enemy
-				if px+lx > Game.mapSizeX or px+lx < 0 then lx=lx*-1 end--creates the pingpong behaviour
-				if pz+lz > Game.mapSizeZ or pz+lz < 0 then lz=lz*-1 end--creates the pingpong behaviour
-				
-				Spring.SetUnitMoveGoal(unitID,px+lx,py+ly,pz+lz)
-				Sleep(4000)
-			end
-		end
-		Sleep(4000)
-	end
-end
 
 function getRandomAxis()
 	if math.random(0,1)== 1 then 
@@ -639,6 +594,7 @@ function getRandomAxis()
 end
 
 function resetPosition()
+	Signal(SIG_RESET)
 	SetSignalMask(SIG_RESET)
 	Sleep(500)
 	resetT(legsTable,1,true, false)
@@ -719,6 +675,7 @@ modFunction = function(x) return x end
 stopCounter=0
 zombieDefID= Spring.GetUnitDefID(unitID)
 function walk()
+	Signal(SIG_WALK)
 	SetSignalMask(SIG_WALK)
 	reset(kuttel,3)
 	reset(center,3)
@@ -727,11 +684,8 @@ function walk()
 		stopCounter= math.random(5,12)
 	end
 	
-	while (true) do
-		
-		
+	while (true) do		
 		PlayAnimation("run")
-		
 	end
 end
 
@@ -769,13 +723,10 @@ end
 function script.Create()
 	StartPoints=Spring.GetUnitHealth(unitID)
 	
-	
 	speed= math.random(0.5,1.2)
 	waveATable(waveTablePipesAddPerspective,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
 	waveATable(waveTablePipesAdd,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
 	waveATable(waveTablePipes,getRandomAxis(), modFunction, signum, speed, math.random(3,12),math.random(3,9),maRa(), 90*randSign())
-	
-	
 	
 	local map = Spring.GetUnitPieceMap(unitID)
 	local offsets = constructSkeleton(unitID,center, {0,0,0})
@@ -793,10 +744,9 @@ function script.Create()
 			end
 		end
 	end
-	
-	StartThread(moveTowardsNearestEnemy)
-	
+	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
 end
+
 local animCmd = {['turn']=Turn,['move']=Move};
 
 function PlayAnimation(animname)
@@ -847,8 +797,7 @@ function script.StopMoving()
 	Signal(SIG_WALK)
 	
 	StartThread(resetPosition)
-	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
-	
+		
 end
 
 function script.AimWeapon1(heading ,pitch)	
