@@ -162,11 +162,12 @@ id=Spring.GetUnitIsBuilding(unitID)
 if id and  Spring.ValidUnitID(id)==true then
 defID=Spring.GetUnitDefID(id)
 	if (defID== UPGRADEDEFID and Spring.ValidUnitID(id)==false)  then
-		if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+		if GG.UnitsToSpawn then
 		x,y,z=Spring.GetUnitPosition(unitID)
 		teamID=Spring.GetUnitTeam(unitID)
 		GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 		GG.UnitsToSpawn:PushCreateUnit("coffworldassemblyseed",x,y,z,0,teamID)
+		end
 		Sleep(1000)
 		Spring.DestroyUnit(unitID,false,true)
 	elseif  GENUPGRADEDEFID==defID and Spring.ValidUnitID(id)==true then

@@ -1351,9 +1351,9 @@ function spawnDecal(unitname)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
 	
-	if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
-	GG.UnitsToSpawn:PushCreateUnit(masterTable[masterTableKey][3],x,y,z,0,teamID)
-	
+	if GG.UnitsToSpawn  then
+		GG.UnitsToSpawn:PushCreateUnit(masterTable[masterTableKey][3],x,y,z,0,teamID)
+	end
 	--Spring.CreateUnit((masterTable[masterTableKey][3]),x,y,z,0,teamID)
 end
 

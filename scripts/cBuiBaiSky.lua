@@ -239,8 +239,9 @@ function script.Create()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
 	
-	if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+	if GG.UnitsToSpawn then 
 	--GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+	end
 	--Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
 	
 	--</buildanimationscript>

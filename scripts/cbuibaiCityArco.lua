@@ -1568,11 +1568,11 @@ function script.Create()
 	end
 	
 	
-	if GG.UnitsToSpawn== nil then GG.UnitsToSpawn ={} end
+	if GG.UnitsToSpawn then
 	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 	--if nil ~= Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
 	-- then Spring.Echo ("GeoHive::Success")
-	-- end
+	 end
 	
 	--</buildanimationscript>
 	
