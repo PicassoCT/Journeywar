@@ -390,7 +390,7 @@ function stillInSamePosition(id)
 		mVec=makeVector(mx,my,mz)
 		if not monsterPosTable[id] then
 			monsterPosTable[id]=mVec
-		bRetVal=false
+			bRetVal=false
 		else
 	
 		if distanceVec(mVec,monsterPosTable[id]) < 20 then
@@ -398,6 +398,7 @@ function stillInSamePosition(id)
 		monsterPosTable[id]=mVec
 			bRetVal=true	
 		end	
+		end
 	end
 	return bRetVal
 end

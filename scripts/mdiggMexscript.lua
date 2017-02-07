@@ -221,6 +221,23 @@ function waitingGame()
 		Sleep(1000)
 	end
 end
+
+function heightCompensation()
+	x,y,z=Spring.GetUnitPosition(unitID)
+	if x then 
+		h=Spring.GetGroundHeight(x,z)
+		if h then
+			px,py,pz=Spring.GetUnitPiecePosDir(unitID,mdwheelr)
+			if px then
+				gh=Spring.GetGroundHeight(px,pz)
+				if gh then
+					Move(mdigg,y_axis,gh-h,2)
+				end
+			end
+		end
+	end
+end
+
 local function mining()
 	Signal(SIG_WIP)
 	StartThread(workInProgress)
@@ -233,8 +250,9 @@ local function mining()
 	while(true)do
 		if boolAllActivated==false then
 			boolAllActivated=true
-			Spin(spinAroundSpot,y_axis,math.rad(20),1)
+			Spin(spinAroundSpot,y_axis,math.rad(20),1)			
 		end
+		heightCompensation()
 		Sleep(16192)
 		
 		
@@ -265,17 +283,17 @@ function script.Deactivate ( )
 end
 
 function destroyAllFeatures()
---Features Evaporating
-			allFeatures = getAllFeatureNearUnit(unitID,180)
-			if allFeatures then
-				process(allFeatures,
-				function(id)			
-				Spring.DestroyFeature(id,true,true)
-				end
-				)
-			end
-
-
+	--Features Evaporating
+	allFeatures = getAllFeatureNearUnit(unitID,180)
+	if allFeatures then
+		process(allFeatures,
+		function(id)			
+			Spring.DestroyFeature(id,true,true)
+		end
+		)
+	end
+	
+	
 end
 
 

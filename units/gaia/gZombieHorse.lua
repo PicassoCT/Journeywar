@@ -42,7 +42,7 @@ local unitDef = {
 			
 		},
 		weapons = {
-			[1]={name = "zombieweapon",
+			[1]={name = "zombiehorseclosecombat",
 				onlyTargetCategory = [[LAND]],
 			},
 		},	

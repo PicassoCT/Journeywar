@@ -4535,6 +4535,15 @@ function vardump(value, depth, key)
 	end
 	return Result
 end
+
+--> Transfer UnitStats
+function transferUnitStatusToUnit(unitID,targetID)
+	exP=Spring.GetUnitExperience(unitID)
+	hp,maxHP,para, cap, bP = Spring.GetUnitHealth(unitID)
+		Spring.SetUnitExperience(targetID,exP)
+		Spring.SetUnitHealth(targetID,{health=hp, capture= cap, paralyze= para, build= bP})
+end
+
 --> Transforms a selected unit into another type
 function transformUnitInto(unitID, unitType, setVel)
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -4542,8 +4551,7 @@ function transformUnitInto(unitID, unitType, setVel)
 	vx,vy,vz,vl =Spring.GetUnitVelocity(unitID)
 	rotx,roty,rotz = Spring.GetUnitRotation(unitID)
 	
-	exP=Spring.GetUnitExperience(unitID)
-	hp,maxHP,para, cap, bP = Spring.GetUnitHealth(unitID)
+
 	
 	id= Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0,3)), teamID) 
 	if id and vx and rotx and exP then
@@ -4559,8 +4567,8 @@ function transformUnitInto(unitID, unitType, setVel)
 			Spring.SetUnitVelocity(id,	vx*vl,vy*vl,vz*vl)
 		end
 		Spring.SetUnitRotation(id,	rotx,roty,rotz)
-		Spring.SetUnitExperience(id,exP)
-		Spring.SetUnitHealth(id,{health=hp, capture= cap, paralyze= para, build= bP})
+		
+		transferStatus(unitID,id)
 		transferOrders(unitID, id)
 		Spring.DestroyUnit(unitID, false,true)	
 	end	

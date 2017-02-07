@@ -1055,7 +1055,7 @@ function script.Create()
 	_,_,_,x,y,z=Spring.GetUnitPosition(unitID,true)
 	teamID=Spring.GetUnitTeam(unitID)
 	
-	if GG.UnitsToSpawn then GG.UnitsToSpawn 
+	if GG.UnitsToSpawn then 
 	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 	end
 	--</buildanimationscript>

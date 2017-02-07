@@ -56,12 +56,12 @@ effectUnitDefs = {
 	--centrail
 	
 	css =		{
-				{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet2", onActive=false}},
-				{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet1", onActive=false}}				
-				},	
+		{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet2", onActive=false}},
+		{class='Ribbon', options={color={.9,.4,0.1,1}, width=1.5, piece="jet1", onActive=false}}				
+	},	
 	cvictory =		{
-					class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}
-					},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}}
+	},
 	cawilduniverseappears= {
 		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=125, onActive=true, colormap1 = {{172/255, 116/255, 230/255, 0.8}}, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=130, precision=22, strength = 0.013, repeatEffect=true}},
@@ -108,8 +108,8 @@ effectUnitDefs = {
 	
 	--journeyman
 	jhoneypot= {
-				{class='Ribbon', options={color={.9,.4,0.1,1}, width=12.5, size= 10, piece="jhoney", onActive=false}},
-				},
+		{class='Ribbon', options={color={.9,.4,0.1,1}, width=12.5, size= 10, piece="jhoney", onActive=false}},
+	},
 	jstealthdrone ={
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare1", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare2", onActive=true}},

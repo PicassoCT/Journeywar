@@ -101,11 +101,10 @@ function script.Killed(recentDamage, maxHealth)
 	x,_,z=Spring.GetUnitPosition(unitID)
 	defID=UnitDefNames["campro"].id
 	
-	process(filterTableByTable( getAllInCircle(x,z,90, unitID),
-	defID,
-	function(id, defID)
+	process(filterTableByTable( getAllInCircle(x,z,190, unitID),
+	function(id)
 		def=Spring.GetUnitDefID(id) 
-		return def==defID 
+		if def~=defID  then return id end
 	end)
 	,
 	function(id) GG.UnitsToKill:PushKillUnit(id) end 

@@ -84,8 +84,8 @@ function moveTowardsNearestEnemy()
 				Spring.SetUnitTarget(unitID,enemyId)
 				
 				informZombieNearbyID=Spring.GetUnitNearestAlly(unitID)
-					if ex and zombieCheck(informZombieNearbyID)== true then
-						Spring.SetUnitMoveGoal(ex,ey,ez)
+					if ex  and zombieCheck(informZombieNearbyID)== true then
+						Spring.SetUnitMoveGoal(unitID ,ex,ey,ez)
 					end
 				memPos=makeVector(lx,ly,lz)
 				end

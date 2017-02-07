@@ -24,8 +24,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	teamTable={}
 	meridianTable={}
 	spawnUnits={ 
-		["journeyman"]={"jgeohive", "jbeehive",},
-		["centrail"]={"goildrum","gzombspa","jrefugeetrap", "coverworldgate"}
+		["journeyman"]={[1]="jgeohive", [2]="jbeehive",[3]="jghostdancer"},
+		["centrail"]={[1]="goildrum",[2]="gzombspa", [3]="coverworldgate"}
 	}
 	
 	
@@ -127,12 +127,12 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 				
 				boolAtLeastOneSPawner=true
-			else
+			end
+			
 				px,py,pz= Spring.GetTeamStartPosition(t)
 				if px then
 					teamTable[t]={x=px,z=pz}
-				end
-			end
+				end			
 		end
 		if boolAtLeastOneSPawner == false then
 			gadgetHandler:RemoveGadget ()

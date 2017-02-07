@@ -65,7 +65,7 @@ function SideEffects()
 	while true do
 		--get builux nearby
 		x,y,z=Spring.GetUnitPosition(unitID)
-		T=getAllInCircle(unitID,x,z,512)
+		T=getAllInCircle(x,z,512,unitID)
 		if #T then 
 			T=filterUnitTableforDefIDTable(T,IdTable)
 			if #T then 

@@ -797,7 +797,7 @@ function script.StopMoving()
 	Signal(SIG_WALK)
 	
 	StartThread(resetPosition)
-		
+	
 end
 
 function script.AimWeapon1(heading ,pitch)	
@@ -837,7 +837,24 @@ end
 
 
 function script.Killed(recentDamage,maxHealth)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	T=getAllInCircle(x,z,4192)
+	myteam=Spring.GetUnitTeam(unitID)
+	zombieDefID=UnitDefNames["zombie"].id
 	
+	process(T,
+	function(id)
+		team=Spring.GetUnitTeam(id)
+		if team== myteam then return id end
+	end,
+	function(id)
+		defID=Spring.GetUnitDefID(id)
+		if defID== zombieDefID then return id end
+	end,
+	function(id)
+		Spring.SetUnitMoveGoal(id,x,y,z)
+	end			
+	)
 	boolNotDeadYet=false
 	Signal(SIG_WALK)
 	
