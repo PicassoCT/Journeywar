@@ -352,8 +352,20 @@ function script.Create()
 	
 	hideT(TableOfPieces)
 	--generatepiecesTableAndArrayCode(unitID)
-	StartThread(AnimTest)
+	StartThread(deployOnceComplete)
+	--StartThread(AnimTest)
 	
+end
+
+function deployOnceComplete()
+hp,mHp,_,_,_,buildProgress= Spring.GetUnitHealth(unitID)
+	while buildProgress and buildProgress < 0   do
+	echo(buildProgress)
+	hp,mHp,_,_,_,buildProgress= Spring.GetUnitHealth(unitID)
+	Sleep(1000)
+	end
+	
+unfoldAnimation()
 end
 
 function script.Killed(recentDamage,_)
@@ -471,9 +483,9 @@ function unfoldAnimation()
 
 	boolDeployed=true
 	for k,v in pairs(SignalTable)do 
-	SignalTable[k]=false	
+		SignalTable[k]=false	
 	end
-	
+	StartThread(timeDelayWeapon1 )
 end
 
 function foldAnimation()
@@ -986,8 +998,6 @@ function GoUp(boolReverse,radialSpeed)
 	
 end
 
-
-
 function UpperCircleDeploy (boolReverse) 
 	boolDirection= false 
 	if boolReverse then boolDirection =boolReverse end
@@ -1024,8 +1034,6 @@ end
 
 UpGoTurn1=piece"UpGoTurn1"
 UpGoTurn2=piece"UpGoTurn2"
-
-
 
 function UpperCircleLoop (boolReverse,totalLength) 
 	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
@@ -1093,7 +1101,6 @@ function UpperCircleLoop (boolReverse,totalLength)
 	
 end
 
-
 SecondTowerCenter=OuterLoop30
 TowerCenter=NGon085
 STowerTable={}
@@ -1115,8 +1122,6 @@ function 	TowerDeploy(boolReverse)
 	end
 	
 end
-
-
 
 Seed10=piece"Seed10"
 towerDeployTable={
@@ -1220,8 +1225,6 @@ else
 
 end	
 end	
-
-
 
 function 	DeployInOrder(boolReverse) 
 if boolReverse == true then
@@ -1370,25 +1373,41 @@ turretSpeed=3.141
 function Weapon1fire()	
 	if boolActivateTravelling==false then return false end
 	boolOneShot=false
-	makeTableFromString("FiringGateFotressTable["..teamid.."["..unitID.."]]",true)
+	if not	GG.FiringGateFotressTable then GG.FiringGateFotressTable = {} end
+	if not	GG.FiringGateFotressTable[teamid] then GG.FiringGateFotressTable[teamid] = {} end
+	GG.FiringGateFotressTable[teamid][unitID]=true
+
 	StartThread(watchForImpact)
 	return true
 end
 
 boolUnfoldComplete=false
+boolTimeDelayed=false
+
+function timeDelayWeapon1()
+for i=1,3 do
+for k=1,60 do
+Sleep(1000)
+	if k%10 == 0 then
+	Spring.Echo("Countdown GateRail"..i..":"..k)
+	end
+end
+end
+
+boolTimeDelayed=true
+end
 
 function Weapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
 	gunKey,isUserTarget, val= Spring.GetUnitWeaponTarget(unitID,1)	
-	px,py,p=0,0,0
+	px,py,pz=0,0,0
 	if gunKey== 1 and isUserTarget==true then px,py,pz=Spring.GetUnitPosition(val)
-		return boolOneShot == true and boolDeployed == true
+		return boolOneShot == true and boolDeployed == true and boolTimeDelayed ==true
 	end
 	
 	if gunKey== 2 and isUserTarget==true then 
-		px,py,pz =val[1],val[2],val[3]
-		
-		return boolOneShot == true and boolDeployed == true
+		px,py,pz =val[1],val[2],val[3]		
+		return boolOneShot == true and boolDeployed == true  and boolTimeDelayed ==true
 	end
 end
 
@@ -1439,10 +1458,10 @@ WeaponsTable={}
 WeaponsTable[1]={aimpiece=Projectile,emitpiece=Projectile,aimfunc=Weapon1,firefunc=Weapon1fire, signal=SigGen()}
 WeaponsTable[2]={aimpiece=CataHead1,emitpiece=CataHead1,aimfunc=CataAim1,firefunc=genFire, signal=SigGen()}
 WeaponsTable[3]={aimpiece=CataHead2,emitpiece=CataHead2,aimfunc=CataAim2,firefunc=genFire, signal=SigGen()}
-WeaponsTable[4]={aimpiece=Gun1,emitpiece=Gun1,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
-WeaponsTable[5]={aimpiece=Gun2,emitpiece=Gun2,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
-WeaponsTable[6]={aimpiece=Gun3,emitpiece=Gun3,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
-WeaponsTable[7]={aimpiece=Gun4,emitpiece=Gun4,aimfunc= genAim,firefunc=genFire, signal=SigGen()}
+WeaponsTable[4]={aimpiece=Gun1,emitpiece=Gun1,firefunc=genFire, signal=SigGen()}
+WeaponsTable[5]={aimpiece=Gun2,emitpiece=Gun2,firefunc=genFire, signal=SigGen()}
+WeaponsTable[6]={aimpiece=Gun3,emitpiece=Gun3,firefunc=genFire, signal=SigGen()}
+WeaponsTable[7]={aimpiece=Gun4,emitpiece=Gun4,firefunc=genFire, signal=SigGen()}
 
 enumerator=8
 for k,v in pairs(DronePodTable) do
@@ -1451,33 +1470,6 @@ for k,v in pairs(DronePodTable) do
 	WeaponsTable[enumerator]= {aimpiece=Aimpiece,emitpiece=Emitpiece,aimfunc= function() return true end,firefunc=genFire, signal=SigGen()}
 	enumerator=enumerator+1
 end 
-
-
-function script.AimFromWeapon1() temp=WeaponsTable[1].aimpiece ; return temp; end
-function script.AimFromWeapon2() temp=WeaponsTable[2].aimpiece ; return temp; end
-function script.AimFromWeapon3() temp=WeaponsTable[3].aimpiece ; return temp; end
-function script.AimFromWeapon4() temp=WeaponsTable[4].aimpiece ; return temp; end
-function script.AimFromWeapon5() temp=WeaponsTable[5].aimpiece ; return temp; end
-function script.AimFromWeapon6() temp=WeaponsTable[6].aimpiece ; return temp; end
-function script.AimFromWeapon7() temp=WeaponsTable[7].aimpiece ; return temp; end
-function script.AimFromWeapon8() temp=WeaponsTable[8].aimpiece ; return temp; end
-function script.AimFromWeapon9() temp=WeaponsTable[9].aimpiece ; return temp; end
-function script.AimFromWeapon10() temp=WeaponsTable[10].aimpiece ; return temp; end
-function script.AimFromWeapon11() temp=WeaponsTable[11].aimpiece ; return temp; end
-function script.AimFromWeapon12() temp=WeaponsTable[12].aimpiece ; return temp; end
-
-function script.QueryWeapon1() temp=WeaponsTable[1].emitpiece ; return temp; end
-function script.QueryWeapon2() temp=WeaponsTable[2].emitpiece ; return temp; end
-function script.QueryWeapon3() temp=WeaponsTable[3].emitpiece ; return temp; end
-function script.QueryWeapon4() temp=WeaponsTable[4].emitpiece ; return temp; end
-function script.QueryWeapon5() temp=WeaponsTable[5].emitpiece ; return temp; end
-function script.QueryWeapon6() temp=WeaponsTable[6].emitpiece ; return temp; end
-function script.QueryWeapon7() temp=WeaponsTable[7].emitpiece ; return temp; end
-function script.QueryWeapon8() temp=WeaponsTable[8].emitpiece ; return temp; end
-function script.QueryWeapon9() temp=WeaponsTable[9].emitpiece ; return temp; end
-function script.QueryWeapon10() temp=WeaponsTable[10].emitpiece ; return temp; end
-function script.QueryWeapon11() temp=WeaponsTable[11].emitpiece ; return temp; end
-function script.QueryWeapon12() temp=WeaponsTable[12].emitpiece ; return temp; end
 
 
 -- function script.AimFromWeapon(weaponID)	
@@ -1490,11 +1482,25 @@ function script.QueryWeapon12() temp=WeaponsTable[12].emitpiece ; return temp; e
 	-- return temp	
 -- end
 
+function script.AimFromWeapon(weaponID)	
+	if WeaponsTable[weaponID] then
+		return WeaponsTable[weaponID].aimpiece 
+	else
+		return Gun1
+	end
+end
+
+function script.QueryWeapon(weaponID)
+	if WeaponsTable[weaponID] then
+		return WeaponsTable[weaponID].emitpiece 
+	else
+		return Gun1
+	end
+end
+
 
 function script.AimWeapon(weaponID, heading, pitch)
 	if WeaponsTable[weaponID] then
-		Signal(WeaponsTable[weaponID].signal)
-		SetSignalMask(WeaponsTable[weaponID].signal)
 		if WeaponsTable[weaponID].aimfunc then
 			return WeaponsTable[weaponID].aimfunc(weaponID,heading,pitch) and boolDeployed==true
 		else

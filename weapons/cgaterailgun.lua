@@ -1,22 +1,24 @@
 local weaponName="cgaterailgun"
 local weaponDef={
 name="GateRailGun",
-weaponType=[[MissileLauncher]],
+weaponType=[[StarburstLauncher]],
+vlaunch=1,
 
-Accuracy=2000,
 
 --Physic/flight path
-range=12000,
+range=8000,
 reloadtime=3000,
 weaponVelocity=1000,
-startVelocity=50,
-weaponAcceleration=500,
-flightTime=1.2,
-BurnBlow=2,
-FixedLauncher=true,
-dance=1,
-wobble=1,
+startVelocity=250,
+weaponAcceleration=200,
+flightTime=5.5,
 
+cameraShake=12;
+FixedLauncher=true,
+dance=0,
+wobble=0.5,
+trajectoryheight=0.8,
+accuracy = 600,
 tolerance=1000,
 tracks=false,
 Turnrate=16000,
@@ -25,33 +27,34 @@ collideFriendly=true,
 ----APPEARANCE
 model="CGateProj.s3o",
 smokeTrail=true,
---explosionGenerator=	"custom:bloodspray",	
+
+explosionGenerator=[[custom:artillery_explosion]], 
 --CegTag="smoketrail",
+cegtag="cartdarkmat_STARFX",
 
 ----TARGETING
-turret=false,
-CylinderTargeting=1.0,
-avoidFeature=true,
-avoidFriendly=true,
+turret=true,
+cylinderTargeting=50.0,
+avoidFeature=false,
+avoidFriendly=false,--artillery doesent know friend or foe, only worthwile targets
 
 
 --commandfire=true,
 
 ----DAMAGE
 damage={
-default=50,
-heavyarmor=1,
+default=350,
+heavyarmor=150,
 },
-areaOfEffect=10,
-craterMult=0,
+areaOfEffect=100,
+craterMult=2,
 
---?FIXME***
 lineOfSight=false,
 
 
 --sound
-soundHit="headcrab/hc5.wav",
-soundStart="cgatefortress/RailGunFire.ogg",
+soundHit="cart/darkmExplo",
+
 }
 
 return lowerkeys ({[weaponName]=weaponDef})
