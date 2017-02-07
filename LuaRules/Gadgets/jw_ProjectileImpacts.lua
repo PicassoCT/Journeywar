@@ -75,6 +75,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	cAntiMatterDefID=WeaponDefNames["cantimatter"].id
 	catapultDefID=WeaponDefNames["ccatapult"].id
 	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
+	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
 	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
@@ -85,6 +86,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	}
 	RazorGrenadeTable={}
 	
+	Script.SetWatchWeapon(cgaterailgun , true)
 	Script.SetWatchWeapon(jeliahbeamDefID , true)
 	Script.SetWatchWeapon(chcprojectileDefID , true)
 	Script.SetWatchWeapon(cAntiMatterDefID , true)
@@ -374,8 +376,18 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.CreateUnit("nukedecalfactory",px,py,pz,0,gaiaTeamID)
 			grenadeID=Spring.CreateUnit("ccomendernukelvl3",px,py,pz,0,gaiaTeamID)
 			Spring.SetUnitNoSelect(grenadeID,true)
+		end,
+		[cgaterailgunDefID]=function(weaponDefID, px, py, pz, AttackerID)
+		
+			id= Spring.CreateUnit("cgatefort",px,py,pz,0,gaiaTeamID)
+			ateam=Spring.GetUnitTeam(AttackerID)
+			if GG.FiringGateFotressTable and GG.FiringGateFotressTable[ateam] then GG.FiringGateFotressTable[ateam][AttackerID]=false end
+			transferUnitStatusToUnit(AttackerID, id)
+
 		end		
-	}	
+
+
+		}	
 	
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
 		if 	explosionFunc[weaponDefID] then explosionFunc[weaponDefID](weaponDefID, px, py, pz, AttackerID) end		
