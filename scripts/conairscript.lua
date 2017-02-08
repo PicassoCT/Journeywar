@@ -70,7 +70,7 @@ SIG_EXAUST=256
 SIG_TIMER=512
 
 local ropePieces_n=20
-local buildProgress=1
+buildProgress=1
 local boolShortStop=false
 local boolLongStop=false
 local buildID=-666
@@ -214,9 +214,11 @@ function updateBuildProgress()
 	end 
 	if buildID and Spring.ValidUnitID(buildID)			then		
 		local health,maxhealth,paralyzeDamage,captureProgress,Progress=Spring.GetUnitHealth(buildID)
-		if Progress == nil or Progress == 0 then
-			Progress = 0.05
+		if Progress == nil  then
+			Progress = 1
 		end
+		
+		Progress= math.max(Progress,0.05)
 		--------Spring.Echo("updateBuildProgress")
 		Progress=math.ceil(Progress*ropePieces_n)
 		return Progress

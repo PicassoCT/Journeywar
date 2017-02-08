@@ -86,7 +86,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	}
 	RazorGrenadeTable={}
 	
-	Script.SetWatchWeapon(cgaterailgun , true)
+	Script.SetWatchWeapon(cgaterailgunDefID , true)
 	Script.SetWatchWeapon(jeliahbeamDefID , true)
 	Script.SetWatchWeapon(chcprojectileDefID , true)
 	Script.SetWatchWeapon(cAntiMatterDefID , true)
@@ -378,9 +378,9 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SetUnitNoSelect(grenadeID,true)
 		end,
 		[cgaterailgunDefID]=function(weaponDefID, px, py, pz, AttackerID)
-		
-			id= Spring.CreateUnit("cgatefort",px,py,pz,0,gaiaTeamID)
 			ateam=Spring.GetUnitTeam(AttackerID)
+			id= Spring.CreateUnit("cgatefort",px,py,pz,0,ateam)
+		
 			if GG.FiringGateFotressTable and GG.FiringGateFotressTable[ateam] then GG.FiringGateFotressTable[ateam][AttackerID]=false end
 			transferUnitStatusToUnit(AttackerID, id)
 

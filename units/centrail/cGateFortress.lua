@@ -14,7 +14,8 @@ local unitDef = {
 	
 	maxDamage = 19900,
 	idleAutoHeal = 12,
-	
+	onOffAble=true,
+	ActivateWhenBuilt=1,
 	EnergyStorage = 0,
 	EnergyUse = 0,
 	MetalStorage = 0,
