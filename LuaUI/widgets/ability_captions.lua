@@ -1,5 +1,6 @@
 return {
 --centrail 
+	["cgatefort"]= {active="GateRail\n Active", passive="GateRail\n Deactivated"},
 	["cwallbuilder"]= {active="Terraform", passive=""},
 	["mtw"]= {active="Build\nTrooper ", passive="Build\nSynthsoldier"},
 	["bg"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},

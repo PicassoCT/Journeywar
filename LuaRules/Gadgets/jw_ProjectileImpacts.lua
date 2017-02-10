@@ -378,10 +378,14 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SetUnitNoSelect(grenadeID,true)
 		end,
 		[cgaterailgunDefID]=function(weaponDefID, px, py, pz, AttackerID)
-		
-			id= Spring.CreateUnit("cgatefort",px,py,pz,0,gaiaTeamID)
+			
 			ateam=Spring.GetUnitTeam(AttackerID)
-			if GG.FiringGateFotressTable and GG.FiringGateFotressTable[ateam] then GG.FiringGateFotressTable[ateam][AttackerID]=false end
+			id= Spring.CreateUnit("cgatefort",px,py,pz,0,ateam)
+			if not GG.FiringGateFotressTable then GG.FiringGateFotressTable ={} end 
+			if not GG.FiringGateFotressTable[ateam] then GG.FiringGateFotressTable[ateam] ={} end
+			if not GG.FiringGateFotressTable[ateam][AttackerID] then GG.FiringGateFotressTable[ateam][AttackerID]=false end
+			GG.FiringGateFotressTable[ateam][AttackerID]=false 
+			
 			transferUnitStatusToUnit(AttackerID, id)
 
 		end		
