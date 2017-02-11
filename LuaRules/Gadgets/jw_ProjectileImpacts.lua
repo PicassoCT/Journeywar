@@ -427,11 +427,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	UnitDamageFuncT[catapultDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		health=Spring.GetUnitHealth(unitID)
-		Spring.SetUnitHealth(unitID, {paralyze =health * 15})
+		Spring.SetUnitHealth(unitID, {paralyze =health })
 		Spring.SetUnitArmored(unitID,3)
-		x,y,z=Spring.GetUnitPosition(unitID)
-		Spring.SetUnitPosition(unitID,x,y+35,z)
-		Spring.AddUnitImpuls(unitID,math.random(-1,1),math.random(150,300),math.random(-1,1))
+
+		Spring.AddUnitImpulse(unitID,math.random(-1,1)/10,0,math.random(-1,1)/10)
 		
 		
 	end 

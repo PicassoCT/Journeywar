@@ -70,11 +70,11 @@ local unitDef = {
 		[1]={name = "cgaterailgun",
 			onlyTargetCategory = [[ LAND]],
 			},
-		[2]={name = "catapult",
+		[2]={name = "ccatapult",
 			onlyTargetCategory = [[ LAND]],
 			},		
 		
-		[3]={name = "catapult",
+		[3]={name = "ccatapult",
 			onlyTargetCategory = [[ LAND]],
 		},
 		[4]={name = "cimpulstower",

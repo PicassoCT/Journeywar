@@ -287,6 +287,7 @@ CataHead2 = piece("CataHead2")
 TableOfPieces[#TableOfPieces+1]= CataHead2
 InLoopCenter = piece("InnerLoopC")
 TableOfPieces[#TableOfPieces+1]= InLoopCenter
+flare02=piece"flare02"
 
 
 TablesOfPiecesGroups={}--=makePiecesTablesByNameGroups(false,true)
@@ -327,7 +328,7 @@ end
 
 
 function script.Create()
-	
+	Hide(flare02)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	Feed=TablesOfPiecesGroups["Feed"]
 	hideT(SeedTable)
@@ -471,7 +472,7 @@ function unfoldAnimation()
 	
 	StartThread(UpperCircleLoop ,true,4)
 	
-	Spring.PlaySoundFile("sounds/cgatefortess/gate_fort_out.wav",1.0)
+	Spring.PlaySoundFile("sounds/cgatefortress/gate_fort_out.wav",1.0)
 	TowerDeploy(true)
 	
 	DeployInOrder(true)
@@ -496,7 +497,7 @@ function foldAnimation()
 	StartThread(playSoundInOrder,soundInOrderTableUnfold,"cgatefort"..unitID)
 	StartThread(GateLoop ,false)
 	boolDeployed=false
-	Spring.PlaySoundFile("sounds/cgatefortess/gate_fort_in.wav",1.0)
+	Spring.PlaySoundFile("sounds/cgatefortress/gate_fort_in.wav",1.0)
 	
 	RailGunUnfold(false)
 	InnerCityDeploy(false)
@@ -1377,7 +1378,6 @@ boolFireRailGun=true
 function waitForTheWatcher()
 	while boolFireRailGun== true do
 		Sleep(100)
-		echo("Waiting and watching")
 	end
 	watchForImpact()
 end
@@ -1449,22 +1449,22 @@ function genAim(weaponID,heading, pitch)
 end
 
 function CataAim1(weaponID,heading, pitch)
-	echo("CataAim1 called")
+
 	Signal(WeaponsTable[weaponID].signal)
 	SetSignalMask(WeaponsTable[weaponID].signal)
 	WTurn(CataRoto[1],y_axis,heading,5)
-	WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
-	echo("CataAim1 aimed")
+	--WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
+
 	return boolDeployed == true
 end
 
 function CataAim2(weaponID,heading, pitch)
-	echo("CataAim2 called")
+
 	Signal(WeaponsTable[weaponID].signal)
 	SetSignalMask(WeaponsTable[weaponID].signal)
 	WTurn(CataRoto[2],y_axis,heading,5)
-	WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
-	echo("CataAim2 aimed")
+	--WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
+
 	return boolDeployed == true
 end
 
@@ -1472,8 +1472,7 @@ function genFire(WeaponID)
 	
 	return true
 end
-flare02=piece"flare02"
-Hide(flare02)
+
 WeaponsTable={}
 WeaponsTable[1]={aimpiece=flare02,emitpiece=flare02,aimfunc=Weapon1,firefunc=Weapon1fire, signal=SigGen()}
 WeaponsTable[2]={aimpiece=CataHead1,emitpiece=CataHead1,aimfunc=CataAim1,firefunc=genFire, signal=SigGen()}

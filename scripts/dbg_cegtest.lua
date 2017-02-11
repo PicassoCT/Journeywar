@@ -60,8 +60,8 @@ function emitSFX()
 		
 
 
-	Spring.SpawnCEG("jghostdancerswitch",x,y+55,z, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10,60)	
-	Sleep(22000)
+	Spring.SpawnCEG("ccatapultexplosion",x,y+55,z, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10,60)	
+	Sleep(4000)
 	--Spring.SpawnCEG("jsupernova",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)	
 
 	--Spring.SpawnCEG("suckfire",x,y+60,z,0,1,0,60)	
