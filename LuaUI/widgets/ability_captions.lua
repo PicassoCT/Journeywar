@@ -13,6 +13,6 @@ return {
 	["jabyss"]= {active="End this\nWorld", passive="World Ends"},
 	["jbeherith"]= {active="Amok", passive="Amok Active"},
 	["beanstalk"]= {active="Unroot", passive="Reroot"},
-	["skinfantry"]= {active="Ambush\nMode", passive="Assault\nMode"},
-	["tiglil"]= {active="Ambush\nMode", passive="Assault\nMode"},
+	["skinfantry"]= {active="Ambush\nMode\nOn", passive="Ambush\nMode\nOff"},
+	["tiglil"]= {active="Ambush\nMode\nOn", passive="Ambush\nMode\nOff"},
 }

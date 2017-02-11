@@ -471,7 +471,7 @@ function unfoldAnimation()
 	
 	StartThread(UpperCircleLoop ,true,4)
 	
-	Spring.PlaySoundFile("sounds/cgatefortess/gate_unfold.wav",1.0)
+	Spring.PlaySoundFile("sounds/cgatefortess/gate_fort_out.wav",1.0)
 	TowerDeploy(true)
 	
 	DeployInOrder(true)
@@ -496,7 +496,7 @@ function foldAnimation()
 	StartThread(playSoundInOrder,soundInOrderTableUnfold,"cgatefort"..unitID)
 	StartThread(GateLoop ,false)
 	boolDeployed=false
-	Spring.PlaySoundFile("sounds/cgatefortess/gate_fold.wav",1.0)
+	Spring.PlaySoundFile("sounds/cgatefortess/gate_fort_in.wav",1.0)
 	
 	RailGunUnfold(false)
 	InnerCityDeploy(false)
