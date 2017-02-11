@@ -471,7 +471,7 @@ function unfoldAnimation()
 	
 	StartThread(UpperCircleLoop ,true,4)
 	
-	
+	Spring.PlaySoundFile("sounds/cgatefortess/gate_unfold.wav",1.0)
 	TowerDeploy(true)
 	
 	DeployInOrder(true)
@@ -496,7 +496,7 @@ function foldAnimation()
 	StartThread(playSoundInOrder,soundInOrderTableUnfold,"cgatefort"..unitID)
 	StartThread(GateLoop ,false)
 	boolDeployed=false
-	
+	Spring.PlaySoundFile("sounds/cgatefortess/gate_fold.wav",1.0)
 	
 	RailGunUnfold(false)
 	InnerCityDeploy(false)
@@ -1348,7 +1348,6 @@ function 	RailGunUnfold(boolReverse)
 end
 
 
-
 function watchForImpact()
 	while not GG.FiringGateFotressTable or not GG.FiringGateFotressTable[teamid] do
 		Sleep(500)
@@ -1360,8 +1359,6 @@ function watchForImpact()
 	foldAnimation()	
 	Spring.DestroyUnit(unitID,true,false)
 end
-
-
 
 function script.Activate()
 	Move(RailGun,y_axis,0,45)
@@ -1452,18 +1449,22 @@ function genAim(weaponID,heading, pitch)
 end
 
 function CataAim1(weaponID,heading, pitch)
+	echo("CataAim1 called")
 	Signal(WeaponsTable[weaponID].signal)
 	SetSignalMask(WeaponsTable[weaponID].signal)
-	WTurn(CataRoto[1],y_axis,heading,turretSpeed)
-	WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
+	WTurn(CataRoto[1],y_axis,heading,5)
+	WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
+	echo("CataAim1 aimed")
 	return boolDeployed == true
 end
 
 function CataAim2(weaponID,heading, pitch)
+	echo("CataAim2 called")
 	Signal(WeaponsTable[weaponID].signal)
 	SetSignalMask(WeaponsTable[weaponID].signal)
-	WTurn(CataRoto[2],y_axis,heading,turretSpeed)
-	WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
+	WTurn(CataRoto[2],y_axis,heading,5)
+	WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
+	echo("CataAim2 aimed")
 	return boolDeployed == true
 end
 
@@ -1491,15 +1492,6 @@ for k,v in pairs(DronePodTable) do
 end 
 
 
--- function script.AimFromWeapon(weaponID)	
--- temp=WeaponsTable[weaponID].aimpiece 	
--- return temp
--- end
-
--- function script.QueryWeapon(weaponID)
--- temp=WeaponsTable[weaponID].emitpiece 
--- return temp	
--- end
 
 function turretReseter()
 	while true do
