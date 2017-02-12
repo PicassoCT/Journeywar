@@ -6,7 +6,7 @@ local weaponDef={
 	areaOfEffect = 128,
 	avoidFeature            = false,
 	avoidGround             = false,
-	burst = 20,
+	burst = 10,
 	burstrate = 0.1,
 	CegTag="bluestripe",
 	craterBoost = 1,
@@ -14,7 +14,7 @@ local weaponDef={
 	
 	dance                   = 20,
    edgeEffectiveness       = 0.5,
-	explosionGenerator=	"ccatapultexplosion",	
+	explosionGenerator=	"custom:ccatapultexpl",	
  fireStarter             = 100,
       flightTime              = 8,
       impulseBoost            = 0,

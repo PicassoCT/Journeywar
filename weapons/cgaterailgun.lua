@@ -3,7 +3,7 @@ local weaponDef={
 	name="GateRailGun",
 	weaponType=[[StarburstLauncher]],
 	vlaunch=1,
-	
+	weaponTimer =3.0,
 	
 	--Physic/flight path
 	range=3000,

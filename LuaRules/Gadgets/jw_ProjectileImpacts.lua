@@ -187,6 +187,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	local	explosionFunc={
+		[catapultDefID]= function(weaponDefID, px, py, pz, AttackerID)
+			Spring.SpawnCEG("ccatapultexpl",px,py+5,pz,0,1,0,10)	
+		end,	
 		[cArtDarkMaterWDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			if not GG.AddFire then 	GG.AddFire={} end		
 		end,
@@ -427,9 +430,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	UnitDamageFuncT[catapultDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		health=Spring.GetUnitHealth(unitID)
-		Spring.SetUnitHealth(unitID, {paralyze =health })
+		Spring.SetUnitHealth(unitID, {paralyze =health*1.5 })
 		Spring.SetUnitArmored(unitID,3)
-
 		Spring.AddUnitImpulse(unitID,math.random(-1,1)/10,0,math.random(-1,1)/10)
 		
 		
