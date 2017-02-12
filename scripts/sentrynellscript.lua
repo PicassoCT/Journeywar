@@ -616,7 +616,7 @@ function spamFilter()
 	end
 end
 
-
+boolMoving=false
 
 
 function fold()
@@ -655,7 +655,7 @@ function fold()
 	
 	while(true) do
 		walk()
-		
+		boolMoving=true
 	end
 end
 
@@ -695,6 +695,7 @@ function unfold()
 	triforce=1
 	SetSignalMask(SIG_UNFOLD)
 	while(true) do
+	boolMoving=false
 		triforce=1+triforce
 		
 		
@@ -741,6 +742,7 @@ chargedUp=true
 function script.AimWeapon1(heading ,pitch)
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)
+	if boolMoving== true then return false end
 	Turn(sentrynel4,x_axis,math.rad(64),8)
 	Turn(sentrynel3,y_axis,heading,4)
 	WaitForTurn(sentrynel3,y_axis)
