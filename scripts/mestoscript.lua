@@ -11,6 +11,7 @@ local SIG_ACTIVE=2
 teamID=Spring.GetUnitTeam(unitID)
 alt1=piece"alt1"
 alt2=piece"alt2"
+alt3=piece"alt3"
 
 pillarPieces={}
 for i=1,12,1 do
@@ -24,7 +25,12 @@ for i=1,5,1 do
 	starage="storage"..i
 	store[i]=piece(starage)
 end
-
+bridge={}
+for i=1,4,1 do
+	bridge[i]={}
+	starage="bridge"..i
+	bridge[i]=piece(starage)
+end
 function moveDown()
 	SetSignalMask(SIG_DOWN)
 	Move(center,y_axis,0,0.2)
@@ -54,7 +60,7 @@ function moveUp()
 		end
 		
 		tax=(i)*x
-		Move(center,y_axis,150,0.3)
+		Move(center,y_axis,50,0.3)
 		WaitForMove(center,y_axis)
 	end
 end
@@ -84,7 +90,7 @@ function inStore()
 	
 end
 
-function uncannyTeachVally()
+function uncannyTechVally()
 	while true do
 	Sleep(280000)
 		if math.random(0,1)==1 then 
@@ -93,10 +99,30 @@ function uncannyTeachVally()
 	end
 end
 
-boolMeElevator=true
-function script.Create()
+function bridgesDontKnowAbout()
+hideT(bridge)
+	yVal=math.random(-25,25)
+	Move(bridge[1],y_axis,yVal,0)
+	if math.random(1,16)== 6 then 
+		showT(bridge);
+		process(bridge,
+		function(id)
+		raVal=math.random(-365,365);
+		Turn(id,y_axis,math.rad(raVal),0)
+		end
+		)
+	end
+	radval=math.random(-360,360)
+	Turn(bridge[1],y_axis,math.rad(radval),0)
+	
+end
+
+function unitBuilder()
+
 	moveBlocks(0)
-	StartThread(uncannyTeachVally) 
+	StartThread(uncannyTechVally)
+
+	bridgesDontKnowAbout()
 	randoval=math.random(0,12)
 	randoval=randoval*90
 	Turn(center,y_axis,math.rad(randoval),0)
@@ -109,31 +135,46 @@ function script.Create()
 	end
 	Hide(alt1)	
 	Hide(alt2)	
+	Hide(alt3)	
 	Hide(mestorage)	
 	Hide(mestorage2)	
+	Show(mestorage)
 	
 	if math.random(0,1)==1 then
-		Show(mestorage)
-		x=math.random(0,4)
+		x=math.random(0,12)
 		if x== 1 then
 			StartThread(inStore)
 		end
-		--boolAllreadyAlarmed=false 
-		--StartThread(alarmCheck)
+
 		if math.random(0,6)~=1 then
 			Hide(meelevator)
 			boolMeElevator=false
-		end
+		end	
 		
 	else
 		Hide(meelevator)
 		boolMeElevator=false
-		if math.random(0,1)==1 then 
+		building=math.random(0,3)
+		if building ==1 then 
 			Show(alt1) 
-		else 
+			if math.random(0,1)==1 then
+				Show(alt2) 
+				Move(alt1,y_axis,46,0)
+			end
+		elseif building == 2 then
 			Show(alt2) 
+		
+		elseif building == 3 then
+			Show(alt3) 
 		end
 	end
+
+
+end
+
+boolMeElevator=true
+function script.Create()
+StartThread(unitBuilder)
 end
 
 local function iliketoMoveIt()
