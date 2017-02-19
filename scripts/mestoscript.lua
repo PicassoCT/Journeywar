@@ -20,7 +20,7 @@ for i=1,12,1 do
 	pillarPieces[i]=piece(pillar)
 end
 store={}
-for i=1,5,1 do
+for i=1,4,1 do
 	store[i]={}
 	starage="storage"..i
 	store[i]=piece(starage)
@@ -39,11 +39,7 @@ end
 
 function moveUp()
 	SetSignalMask(SIG_UP)
-	
-	Show(store[1])
-	Show(store[2])
-	Show(store[3])
-	Show(store[4])
+	showT(store)
 	
 	Move(addOn,y_axis,87,0.3)
 	WaitForMove(addOn,y_axis)
@@ -130,13 +126,12 @@ function unitBuilder()
 	for i=1,12,1 do
 		Hide(pillarPieces[i])
 	end
-	for i=1,5,1 do
+	for i=1,#store,1 do
 		Hide(store[i])
 	end
 	Hide(alt1)	
 	Hide(alt2)	
 	Hide(alt3)	
-	Hide(mestorage)	
 	Hide(mestorage2)	
 	Show(mestorage)
 	

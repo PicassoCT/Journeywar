@@ -367,12 +367,11 @@ if (gadgetHandler:IsSyncedCode()) then
 			if not LandScapeT[x][ z].Food then 
 				LandScapeT[ x][ z].Food = 0 
 			end
+			if not LandScapeT[ x][ z].AccumulatedHeat then
+				LandScapeT[ x][ z].AccumulatedHeat=0
+			end
 			
 			LandScapeT[ x][ z].Food =		LandScapeT[ x][ z].Food-costPerFrame
-			
-			if not LandScapeT[ x][ z].AccumulatedHeat then
-				LandScapeT[ x][ z].Food = InHeat
-			end
 			
 			LandScapeT[ x][ z].AccumulatedHeat =		LandScapeT[ x][ z].AccumulatedHeat+InHeat
 			addHeatToSurroundingArea(i,LandScapeT[ x][ z].AccumulatedHeat)

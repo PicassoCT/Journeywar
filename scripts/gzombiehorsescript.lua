@@ -838,16 +838,12 @@ end
 
 function script.Killed(recentDamage,maxHealth)
 	x,y,z=Spring.GetUnitPosition(unitID)
-	T=getAllInCircle(x,z,4192)
 	myteam=Spring.GetUnitTeam(unitID)
+	T=getAllInCircle(x,z,4192,unitID,myteam)
 	zombieDefID=UnitDefNames["zombie"].id
 	
 	process(T,
-	function(id)
-		team=Spring.GetUnitTeam(id)
-		if team== myteam then return id end
-	end,
-	function(id)
+		function(id)
 		defID=Spring.GetUnitDefID(id)
 		if defID== zombieDefID then return id end
 	end,
@@ -857,8 +853,7 @@ function script.Killed(recentDamage,maxHealth)
 	)
 	boolNotDeadYet=false
 	Signal(SIG_WALK)
-	
-	
+	return 0	
 end
 
 
