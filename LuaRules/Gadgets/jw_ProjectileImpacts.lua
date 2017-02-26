@@ -798,7 +798,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			end			
 		end
 		--jShadow is hit	
-		if unitDefID == jShadowDefID and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
+		if unitDefID == jShadowDefID and not fuckingSpecial[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
 			
 			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
 			if boolUnitIsDead == false then		
