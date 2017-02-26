@@ -25,6 +25,8 @@ for i=1,4,1 do
 	starage="storage"..i
 	store[i]=piece(starage)
 end
+
+
 bridge={}
 for i=1,4,1 do
 	bridge[i]={}

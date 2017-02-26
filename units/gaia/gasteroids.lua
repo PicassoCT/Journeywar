@@ -1,4 +1,4 @@
-local unitName = "asteroids"
+local unitName = "gasteroids"
 
 local unitDef = {
 	name = "asteroids",

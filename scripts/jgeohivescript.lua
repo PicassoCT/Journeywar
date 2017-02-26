@@ -153,7 +153,7 @@ nextState={
 
 function NextState(nState,times)
 	
-	Spring.Echo("CurrentState:"..nState.." in "..(times-totalTable[nState]).." next State:"..nextState[nState] )
+	--Spring.Echo("CurrentState:"..nState.." in "..(times-totalTable[nState]).." next State:"..nextState[nState] )
 	if nState=="BUILDUP" and times > BuildUPTime then 
 		times=0; --Spring.Echo("hivePiece::Peak") ;
 		return "PEAK" , times , BuildUPTime

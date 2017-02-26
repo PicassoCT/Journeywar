@@ -2176,7 +2176,7 @@ function BuildLtree()
 end
 
 accidTreeDefID=Spring.GetUnitDefID(unitID)
-imuneIDs=getFungiImuneUnitTable()
+imuneIDs=getFungiImuneUnitTypeTable(UnitDefNames)
 
 
 
