@@ -5,8 +5,8 @@ include "lib_Animation.lua"
 include "lib_Build.lua" 
 
 TablesOfPiecesGroups={}
-heightOfAsteroidsOverMap= 250
-degreeOfAsteroidBelt= math.random(-42,42)
+_,heightOfAsteroidsOverMap= Spring.GetGroundExtremes()
+degreeOfAsteroidBelt= math.random(0,12)
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 end
@@ -18,17 +18,21 @@ function script.Create()
 	Spring.SetUnitNeutral(unitID,true)
 	generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
-	Move(center,y_axis,heightOfAsteroidsOverMap,0)
+	 Spring.MoveCtrl.Enable(unitID,true)
+	 x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.MoveCtrl.SetPosition(unitID,x,heightOfAsteroidsOverMap,z)
 	Turn(center,y_axis,math.rad(degreeOfAsteroidBelt),0)
 	StartThread(releaseAnimationThreads)
 end
-function loopMovement(pieceID,offset,speed)
+function loopMovement(pieceID,offset,speed,delay,startOffset)
 	while true do
+	
 	Hide(pieceID)
-	Move(pieceID,x_axis,-1*offset,0)
+	Sleep(delay)
+	Move(pieceID,z_axis,-1*offset - startOffset,0)
 	Show(pieceID)
-	Move(pieceID,x_axis,offset,speed)
-	WaitForMove(pieceID,x_axis)
+	Move(pieceID,z_axis,offset + startOffset,speed)
+	WaitForMove(pieceID,z_axis)
 	Sleep(10)
 	end
 end
@@ -36,25 +40,27 @@ end
 function releaseAnimationThreads()
 asteroid=TablesOfPiecesGroups["asteroid"]
 bolderorbit=TablesOfPiecesGroups["boldorbit"]
+bolder=TablesOfPiecesGroups["bolder"]
 process(asteroid,
 		function(id)
-		if maRa()== true then
+		if math.random(0,1)== 1 then
 		Show(id)
 		else 
 		Hide(id)
+		return 
 		end
-		return id
-		end
-		,
-		function(id)
+
+
 		--Position
-		yOffset=math.random(0,250)
+		yOffset=math.random(0,150)
 		Move(id,y_axis,yOffset,0)
 		
 		--Movement
-		offset=math.random(360,900)
+		offset=1800
 		speed=math.random(3,7)
-		StartThread(loopMovement,id,offset,speed)
+		delay=math.random(100,8000)
+		startOffset= math.random(-600,600)
+		StartThread(loopMovement,id,offset,speed, delay,startOffset)
 		
 		--Spin
 		Spin(id,y_axis,math.rad(math.random(-42,42)),0.1)
@@ -70,7 +76,12 @@ process(bolderorbit,
 			Spin(id,y_axis,math.rad(math.random(-42,42)),0)
 		end
 		)
-
+		
+process(bolder,
+		function(id)
+			Spin(id,y_axis,math.rad(math.random(-42,42)),0)
+		end
+		)
 end
 
 function script.Killed(recentDamage,_)
