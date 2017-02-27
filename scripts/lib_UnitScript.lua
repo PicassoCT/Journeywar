@@ -2772,7 +2772,14 @@ function vardump(value, depth, key)
 		local arg={...}
 		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
 		T={}
-		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
+			if Table then 
+				T=Table 
+				else 
+					if lib_boolDebug == true then
+					Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") 
+					return 
+					end
+			end
 		if not arg then bDbgEcho("No args in process") return end
 		if type(arg)== "function" then return elementWise(T,arg) end
 		
