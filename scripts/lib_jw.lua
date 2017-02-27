@@ -51,7 +51,7 @@ function getFactoryTypeTable(UnitDefNames,IWant)
 	
 end
 
-function getFungiImuneUnitTyeTable(UnitDefNames)
+function getFungiImuneUnitTypeTable(UnitDefNames)
 	retTab={}
 	retTab[UnitDefNames["jcondrone"].id]=true
 	retTab[UnitDefNames["ccontrain"].id]=true

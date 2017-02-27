@@ -55,7 +55,7 @@ function breathingDeath()
 	
 end
 
-fungiImuneTypeTable=getFungiImuneUnitTyeTable()
+fungiImuneTypeTable=getFungiImuneUnitTypeTable(UnitDefNames)
 local spGetUnitDefID=Spring.GetUnitDefID
 
 function grabTooKill()

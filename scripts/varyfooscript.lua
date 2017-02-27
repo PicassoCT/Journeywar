@@ -1181,8 +1181,10 @@ function eatThemAliveWhenNotWalking()
 							end 
 						end,
 					function(id)
-						defIDid=Spring.GetUnitDefID(id)
-						if not tabooTable[defIDid] then return id end
+						if id and  type(id) == "number" then
+							defIDid=Spring.GetUnitDefID(id)
+							if not tabooTable[defIDid] then return id end
+							end
 						end
 					)
 	
