@@ -4,8 +4,8 @@ function gadget:GetInfo()
 	
 	function isPlanetFlammeable()
 		if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 80 and Game.waterDamage == 0 then
-			badwordsTable={"cold","ice","frost","dessert","sand","dune"} 
-			for i=1, 6,1 do 
+			badwordsTable={"cold","ice","frost","dessert","sand","dune","moon","comet","red","planet"} 
+			for i=1, #badwordsTable,1 do 
 				if string.find(Game.mapName, badwordsTable[i]) then 
 					return false; 
 				end 

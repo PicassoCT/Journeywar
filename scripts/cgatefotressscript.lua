@@ -293,6 +293,11 @@ flare02=piece"flare02"
 TablesOfPiecesGroups={}--=makePiecesTablesByNameGroups(false,true)
 UpTable={}
 SeedTable={}
+genSignal=1
+function SigGen()
+	genSignal=2*genSignal
+	return genSignal
+end
 
 for i=1,12,1 do
 	val=i+12
@@ -327,15 +332,15 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 end
 
 function gunFloater()
-Sleep(1000)
-while true do
-	for i=1, #GunTable do
-	Move(GunTable[i],y_axis,math.random(0,12),1)
+	Sleep(1000)
+	while true do
+		for i=1, #GunTable do
+			Move(GunTable[i],y_axis,math.random(0,12),1)
+		end
+		WaitForMoves(GunTable)
+		Sleep(3000)
 	end
-	WaitForMoves(GunTable)
-Sleep(3000)
-end
-
+	
 end
 function script.Create()
 	Hide(flare02)
@@ -352,7 +357,7 @@ function script.Create()
 	CataUp=TablesOfPiecesGroups["CataUp"]
 	CataHead=TablesOfPiecesGroups["CataHead"]
 	DronePodTable=TablesOfPiecesGroups["DronePod"]
-
+	
 	
 	makeWeaponsTable()
 	for i=1,#Mag do
@@ -388,39 +393,41 @@ function script.Killed(recentDamage,_)
 end
 
 DeTa={}
-DeTa[DronePod1]={x= 0,y=0,	z=-3.4}
-DeTa[DronePod2]={x= 0,y=0,	z=3.4}
-DeTa[DronePod3]={x= 0,y=0,z=-3.4}
-DeTa[DronePod4]={x= -4.3,y=0,z=0}
-DeTa[DronePod5]={x= 4.3,y=0,z=0}
+DeTa[DronePod1]={x= 0,y=0,	z= 	3.4}
+DeTa[DronePod2]={x= 0,y=0,	z=-3.4}
+DeTa[DronePod3]={x= 0,y=0,z=3.4}
+DeTa[DronePod4]={x= 4.3,y=0,z=0}
+DeTa[DronePod5]={x= -4.3,y=0,z=0}
 
 DeTa[Erker1]={x= 0 ,y=0,z=-5.3}
 DeTa[Erker2]={x= -5.3,y=0,z=0}
 DeTa[Erker3]={x= -5.3,y=0,z=0}
 DeTa[Erker4]={x= 0,y=0,z=-5.3}
-DeTa[Erker5]={x= -5.3,y=0,z=-5.3}
-DeTa[Erker6]={x= 5.3,y=0,z=-5.3}
+DeTa[Erker5]={x= -5.3,y=0,z=0}
+DeTa[Erker6]={x= 5.3,y=0,z=0}
 DeTa[Erker7]={x= 5.3,y=0,z=0}
 DeTa[Erker8]={x= -5.3,y=0,z=0}
 DeTa[Erker9]={x= -5.3,y=0,z=0}
 DeTa[Erker10]={x= 5.3,y=0,z=0}
-DeTa[Erker11]={x= 5.3,y=0,z=0}
+DeTa[Erker11]={x= 0,y=0,z=5.3}
 
 un_foldDepotspeed=4.25
-function un_foldDepots(boolDirection)
-		lastPieceName=""
-	if boolDirection==true then
+function un_foldDepots(boolUnfold,speed)
+	lastPieceName=""
+	if boolUnfold==true then
+		un_foldDepots(false,0)
 		for piecename, tab in pairs(DeTa) do
-			mP(piecename,0,0,0,un_foldDepotspeed)
+			mP(piecename,0,0,0,speed)
 			lastPieceName=piecename
+			Show(piecename)
 		end
 		WaitForMove(lastPieceName,x_axis)
 		WaitForMove(lastPieceName,y_axis)
 		WaitForMove(lastPieceName,z_axis)
 	else		
-
+		
 		for piecename, tab in pairs(DeTa) do
-			mP(piecename,tab.x*-1,tab.y,tab.z,un_foldDepotspeed)
+			mP(piecename,tab.x*-1,tab.y,tab.z,speed)
 			lastPieceName=piecename
 		end
 		WaitForMove(lastPieceName,x_axis)
@@ -436,6 +443,12 @@ function AnimTest()
 	while true do 
 		unfoldAnimation()
 		Sleep(1000)
+		while true do
+			TowerDeploy(false)
+			Sleep(1000)
+			TowerDeploy(true)
+		end
+		
 		foldAnimation()
 		Sleep(1000)
 	end
@@ -448,7 +461,7 @@ SignalTable={}
 function stopSoundInOrder(tables)
 	for k, v in pairs(tables) do
 		if v.boolOnce== false then
-		GG.soundInOrderTable["cgatefort"..unitID].signal=false
+			GG.soundInOrderTable["cgatefort"..unitID].signal=false
 		end
 	end
 end
@@ -461,6 +474,12 @@ soundInOrderTableUnfold[3]={boolOnce=false, postdelay=2500,sound={[1]="sounds/cg
 if not GG.soundInOrderTable then GG.soundInOrderTable ={} end
 if not GG.soundInOrderTable["cgatefort"..unitID] then GG.soundInOrderTable["cgatefort"..unitID]={signal= true} end
 
+SIG_SOUNDINORDER=SigGen()
+
+function playSoundChain(soundInOrderTableUnfold,name)
+	SetSignalMask(SIG_SOUNDINORDER)
+	playSoundInOrder(soundInOrderTableUnfold,name)
+end
 
 function unfoldAnimation()
 	
@@ -469,7 +488,7 @@ function unfoldAnimation()
 	--randoVal=iRand(-360,360)
 	--Turn(center,y_axis,math.rad(randoVal),0)
 	Sleep(10)
-	StartThread(playSoundInOrder,soundInOrderTableUnfold,"cgatefort"..unitID)
+	StartThread(playSoundChain,soundInOrderTableUnfold,"cgatefort"..unitID)
 	spawnCegAtPiece(unitID,GatePoint,"dirt",10)
 	GateDeploy( true)	
 	StartThread(GateLoop ,true)
@@ -502,9 +521,10 @@ function unfoldAnimation()
 	
 	InnerCityDeploy(true)
 	un_foldRailGun(true)
-	un_foldDepots(true)
-
+	un_foldDepots(true,un_foldDepotspeed)
+	
 	stopSoundInOrder(soundInOrderTableUnfold)
+	Signal(SIG_SOUNDINORDER)
 	boolDeployed=true
 	for k,v in pairs(SignalTable)do 
 		SignalTable[k]=false	
@@ -512,42 +532,45 @@ function unfoldAnimation()
 	StartThread(timeDelayWeapon1 )
 end
 
-bReverse=false
+bFold=false
 function foldAnimation()
 	Sleep(10)
-	un_foldDepots(bReverse)
-	StartThread(TrainLoop ,bReverse)
-	StartThread(playSoundInOrder,soundInOrderTableUnfold,"cgatefort"..unitID)
-	StartThread(GateLoop ,bReverse)
+	un_foldDepots(bFold, un_foldDepotspeed)	
+	StartThread(TrainLoop ,bFold)
+	
+	StartThread(playSoundChain,soundInOrderTableUnfold,"cgatefort"..unitID)
+	StartThread(GateLoop ,bFold)
 	boolDeployed=false
 	Spring.PlaySoundFile("sounds/cgatefortress/gate_fort_in.wav",1.0)
 	
-	un_foldRailGun(bReverse)
-	InnerCityDeploy(bReverse)
-	DeployInOrder(bReverse)
-	TowerDeploy(bReverse)
-	UpperCircleDeploy(bReverse)
-	StartThread(GoUp ,bReverse,2*math.pi*0.1 *(1/1.1666 ))
-	StartThread(OuterCircleLoop ,bReverse)
-	OuterCircleDeploy( bReverse)		
-	StartThread(InnerCircleLoop ,bReverse)
+	un_foldRailGun(bFold)
+	InnerCityDeploy(bFold)
+	DeployInOrder(bFold)
+	TowerDeploy(bFold)
 	
-	InnerCircleDeploy(bReverse)	
 	
-
+	UpperCircleDeploy(bFold)
+	StartThread(GoUp ,bFold,2*math.pi*0.1 *(1/1.1666 ))
+	StartThread(OuterCircleLoop ,bFold)
+	OuterCircleDeploy( bFold)	
+	StartThread(InnerCircleLoop ,bFold)
+	while true do Sleep(10) end
+	InnerCircleDeploy(bFold)	
 	
-	FirstTrainDeploy(bReverse)	
+	
+	
+	FirstTrainDeploy(bFold)	
 	
 	Sleep(10)
 	
-	GateDeploy( bReverse)	
+	GateDeploy( bFold)	
 	
 	boolOnTheMove=true
 	hideT(TableOfPieces)
 	
 	resetT(TableOfPieces)
 	hideT(TableOfPieces)
-	
+	Signal(SIG_SOUNDINORDER)
 	stopSoundInOrder(soundInOrderTableUnfold)
 	
 	for k,v in pairs(SignalTable)do 
@@ -561,10 +584,10 @@ boolOneShot=true
 teamid=Spring.GetUnitTeam(unitID)
 
 
-function GateDeploy (boolReverse) 
+function GateDeploy (boolUnfold) 
 	
 	
-	if boolReverse==true then
+	if boolUnfold==true then
 		spawnCegAtPiece(unitID,GatePoint,"dirt",15)
 		Sleep(1000)
 		spawnCegAtPiece(unitID,GatePoint,"dirt",10)
@@ -638,9 +661,10 @@ function GateDeploy (boolReverse)
 	
 end
 
-function GateLoop (boolReverse) 
+function GateLoop (boolUnfold) 
 	AlterRate=0
 	SignalTable["GateLoop"]=true
+	if boolUnfold== true then
 	while SignalTable["GateLoop"]==true do
 		AlterRate=AlterRate+1
 		Spin(GateWave,x_axis,math.rad(42),0)
@@ -668,17 +692,21 @@ function GateLoop (boolReverse)
 		
 		Sleep(10)
 	end
+	
+	else
+	
+	end
 	--HoldPosition
 	
 end
 
-function FirstTrainDeploy (boolReverse) 
+function FirstTrainDeploy (boolUnfold) 
 	boolDirection= false 
 	if boolReverse then boolDirection =boolReverse end
 	--if the animation should be aborted, we revert it 
 	
 	
-	if boolDirection==true then
+	if boolUnfold==true then
 		
 		WMove(Feed10,x_axis,0,0)
 		count_up=0
@@ -700,12 +728,12 @@ function FirstTrainDeploy (boolReverse)
 	end 
 	
 end
-function TrainLoop (boolReverse) 
+function TrainLoop (boolUnfold) 
 	
 	SignalTable["TrainLoop"]=true
 	
 	while SignalTable["TrainLoop"]==true do
-		if boolReverse==true then		
+		if boolUnfold==true then		
 			WMove(Feed10,x_axis,0,0)
 			count_up=0
 			
@@ -719,16 +747,16 @@ function TrainLoop (boolReverse)
 			Show(Feed10)
 			WMove(Feed10,x_axis,-LengthFeed,feed_speed)
 			hideT(Feed)
-		else
-			WMove(Feed10,x_axis,LengthFeed,0)
-			count_up=0
+		else -- fold
+			WMove(Feed10,x_axis,-LengthFeed,0)
+			count_down=10
 			showT(Feed)
-			for i=LengthFeed,0,-4.8 do
+			for i=-LengthFeed,0,4.8 do
 				WMove(Feed10,x_axis,i,feed_speed)
-				if 	 Feed[count_up] then			
-					Hide(Feed[count_up])
+				if 	 Feed[count_down] then			
+					Hide(Feed[count_down])
 				end
-				count_up=math.min(count_up+1,9)
+				count_down=math.max(count_down-1,1)
 			end
 			
 			
@@ -794,9 +822,9 @@ function SeedLoop(nrOfPumps,feed_speed,boolDirection,radialSpeed)
 			
 		else
 			seed_count_up=10
-			WMove(SeedTable[10],x_axis,LengthFeed,0)
+			WMove(SeedTable[10],x_axis,LengthFeed*2,0)
 			showT(SeedTable)
-			for seedIndex=LengthFeed,0,-4.8 do
+			for seedIndex=LengthFeed*2,LengthFeed*3,4.8 do
 				WMove(SeedTable[10],x_axis,seedIndex,feed_speed)
 				if 	SeedTable[seed_count_up] then			
 					Hide(SeedTable[seed_count_up])
@@ -854,16 +882,14 @@ function InnerCircleLoop (boolReverse)
 	
 end
 
-function OuterCircleDeploy (boolReverse) 
-	boolDirection= boolReverse 
-	
+function OuterCircleDeploy (boolUnfold) 
+
 	out_radialSpeed= 2*math.pi*0.08333333333333333333 *(1/1.1666 )
 	
 	hideT(OuterLoopTable)
 	
-	if boolDirection==true then
-		Turn(BigLCenter,y_axis,math.rad(-5),0)
-		WaitForTurn(BigLCenter,y_axis)
+	if boolUnfold==true then
+		WTurn(BigLCenter,y_axis,math.rad(-5),0)
 		for out=1,12,1 do
 			
 			temp=((out+1)%12)+1			
@@ -879,6 +905,22 @@ function OuterCircleDeploy (boolReverse)
 		
 		
 	else
+		WTurn(BigLCenter,y_axis,math.rad(-5),0)
+
+		for out=1,12,1 do
+			
+			temp=((out+1)%12)+1			
+			ShowKill(OuterLoopTable[temp])
+			Turn(BigLCenter,y_axis,math.rad(out*30 +25),out_radialSpeed)
+			WaitForTurn(BigLCenter,y_axis)
+			
+			if OuterLoopTable[out-7] then
+				Hide(OuterLoopTable[out-7])
+				return
+			end
+		end
+		
+	
 	end 
 	
 	
@@ -893,11 +935,10 @@ function ShowKill(piecename)
 	Show(piecename)
 end
 
-function OuterCircleLoop (boolReverse) 
-	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+function OuterCircleLoop (boolUnfold) 
+
 	SignalTable["OuterCircleLoop"]=true
-	
-	
+
 	Show(UpGo1)
 	Show(UpGo2)
 	
@@ -905,6 +946,9 @@ function OuterCircleLoop (boolReverse)
 	out_radialSpeed= 2*math.pi*0.08333333333333333333 *(1/1.1666 )
 	
 	out=8
+	if boolUnfold == true then
+	out=4
+	end
 	Show(OuterLoopTable[6])
 	Show(OuterLoopTable[7])
 	Show(OuterLoopTable[8])
@@ -913,13 +957,9 @@ function OuterCircleLoop (boolReverse)
 	Turn(BigLCenter,y_axis,math.rad(-215),0,true)
 	WaitForTurn(BigLCenter,y_axis)
 	
-	while SignalTable["OuterCircleLoop"]==true do
-		
-		if boolDirection==true then
-			
-			
-			temp=((out+1)%12)+1
-			
+	while SignalTable["OuterCircleLoop"]==true do	
+	if boolUnfold== true then				
+			temp=((out+1)%12)+1		
 			
 			Show(OuterLoopTable[temp])
 			Turn(BigLCenter,y_axis,math.rad(out*-30 +25),radialSpeed)
@@ -927,39 +967,23 @@ function OuterCircleLoop (boolReverse)
 			WaitForTurn(BigLCenter,y_axis)
 			offSet= ((out+5)%12) +1
 			
-			if SignalTable["OuterCircleLoop"]==false then 
-				
-			return end
-			Hide(OuterLoopTable[offSet] )
+			if SignalTable["OuterCircleLoop"]==false then 	return end
+			Hide(OuterLoopTable[offSet] )			
+			out=out%12+1			
+		else			
+			showIndex=(out-1)
+			if showIndex <= 0 then showIndex = 12 end
 			
-			
-			out=out%12+1
-			
-			
-			
-		else
-			
-			temp=((out-1)%12)-1
-			if temp <= 0 then temp = 12 end
-			
-			Show(OuterLoopTable[temp])
+			Show(OuterLoopTable[showIndex])
 			Turn(BigLCenter,y_axis,math.rad(out*30 +25),radialSpeed)
 			
 			WaitForTurn(BigLCenter,y_axis)
-			offSet= ((out+5)%12) +1
-			
-			if SignalTable["OuterCircleLoop"]==false then 
-				
-			return end
-			Hide(OuterLoopTable[offSet] )
-			
-			
-			out=out%12-1
-			if out <= 0 then out =12 end
-			
-			
-			
-			
+			hideoffSet= math.min(math.max(math.abs(out-7),1),12)			
+			if SignalTable["OuterCircleLoop"]==false then return end
+			Hide(OuterLoopTable[hideoffSet] )	
+
+			out=(out-1)
+			if out < 1 then out =12 end
 		end 
 	end
 	
@@ -1065,7 +1089,7 @@ end
 UpGoTurn1=piece"UpGoTurn1"
 UpGoTurn2=piece"UpGoTurn2"
 
-function UpperCircleLoop (boolReverse,totalLength) 
+function UpperCircleLoop (boolUnfold,totalLength) 
 	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
 	SignalTable["UpperCircleLoop"]=true
 	
@@ -1074,9 +1098,19 @@ function UpperCircleLoop (boolReverse,totalLength)
 	Turn(BigLUpCenter,y_axis,math.rad(-270),0,true)
 	WaitForTurn(BigLUpCenter,y_axis)
 	
+	if boolUnfold == false then
+		Turn(BigLUpCenter,y_axis,math.rad(0),0)
+		resetT(UpTable)
+		showT(UpTable)
+		Show(OuterLoop14)
+		WMove(Wall,y_axis,-7,math.pi)
+		Hide(Wall)
+		
+	end
+	
 	while SignalTable["UpperCircleLoop"]==true do
 		
-		if boolDirection==true then
+		if boolUnfold==true then
 			temp=((upperCircOutIndex)%12)+1
 			
 			
@@ -1101,14 +1135,16 @@ function UpperCircleLoop (boolReverse,totalLength)
 			upperCircOutIndex=upperCircOutIndex%12+1
 			
 		end 
-		Counter=Counter+1
-		if Counter== totalLength then 
-			Turn(BigLUpCenter,y_axis,math.rad(0),0)
-			resetT(UpTable)
-			showT(UpTable)
-			Hide(OuterLoop14)
-			Move(Wall,y_axis,-7,0);Show(Wall);Move(Wall,y_axis,0,3.1415)
-		return end
+		if boolUnfold == true then
+			Counter=Counter+1
+			if Counter== totalLength then 
+				Turn(BigLUpCenter,y_axis,math.rad(0),0)
+				resetT(UpTable)
+				showT(UpTable)
+				Hide(OuterLoop14)
+				Move(Wall,y_axis,-7,0);Show(Wall);Move(Wall,y_axis,0,3.1415)
+			end
+		end
 	end
 	
 	--clean up
@@ -1140,15 +1176,18 @@ TowerTable[2]={NGon085,NGon086,NGon087}
 STowerTable[1]={OuterLoop31}
 STowerTable[2]={OuterLoop30}
 
-function 	TowerDeploy(boolReverse) 
-	if boolReverse==true then-- up
+function 	TowerDeploy(boolUnfold) 
+	if boolUnfold == true then-- up
 		
-		DeployInOrderTower(boolReverse)
+		DeployInOrderTower(true)
 		SignalTable["UpperCircleLoop"]=false
 		SignalTable["GoUp"]=false
 		SignalTable["OuterCircleLoop"]=false
 	else
-		
+		DeployInOrderTower(false)
+		SignalTable["UpperCircleLoop"]=false
+		SignalTable["GoUp"]=false
+		SignalTable["OuterCircleLoop"]=false
 	end
 	
 end
@@ -1199,18 +1238,14 @@ piecesDeployTable={
 	--[1]={pieceA,offA,pieceList,seedDir},
 }
 
-function 	DeployInOrderTower(boolReverse) 
+function 	DeployInOrderTower(boolUnfold) 
 	
-	if boolReverse==true then
+	if boolUnfold==true then
 		for i=1,#GunTable,1 do
 			Turn(GunTable[i],x_axis,math.rad(-90),0)
-		end
-		
-		
-		
+		end		
 		pieceToGo=0
 		for i=1,#towerDeployTable, 1 do
-			
 			pieceToGo=towerDeployTable[i].pieceA
 			
 			offSet= towerDeployTable[i].offA
@@ -1222,42 +1257,38 @@ function 	DeployInOrderTower(boolReverse)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
 			Turn(SeedCenter,z_axis,math.rad(DirVec.z),0)
 			
-			SeedLoop(1,feed_speed,boolReverse,radialSpeed)
-			
+			SeedLoop(1,feed_speed,true,radialSpeed)
 			
 			Show(pieceToGo)
 			if towerDeployTable[i].pieceList then showT(towerDeployTable[i].pieceList) end
 			
-			
 		end
 		Sleep(100)
-	else
+	else	 --fold
+		echo("Folding Tower")
 		for i=#towerDeployTable,1, -1 do
-			
+			vector={x=0,y=0,z=0}
 			pieceToGo=towerDeployTable[i].pieceA
-			
-			offSet= towerDeployTable[i].offA
+			Hide(pieceToGo)
+			vector.x,vector.y,vector.z=towerDeployTable[i].offA.x,towerDeployTable[i].offA.y,towerDeployTable[i].offA.z
+			vector.y=vector.y+LengthFeed*3
 			DirVec=towerDeployTable[i].SeedDir
 			reset(SeedCenter,0)
-			MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
-			Hide(pieceToGo)
+			
+			MovePieceToPiece(SeedCenter,pieceToGo,0,vector,forceUpdate)
+			
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
 			Turn(SeedCenter,z_axis,math.rad(DirVec.z),0)
 			
-			SeedLoop(1,feed_speed,boolReverse,radialSpeed)
-			
-			
-			
-			if towerDeployTable[i].pieceList then hideT(towerDeployTable[i].pieceList) end
-			
-		end
-		
+			SeedLoop(1,feed_speed,false,radialSpeed)			
+			if towerDeployTable[i].pieceList then hideT(towerDeployTable[i].pieceList) end			
+		end		
 	end	
 end	
 
-function 	DeployInOrder(boolReverse) 
-	if boolReverse == true then
+function 	DeployInOrder(boolUnfold) 
+	if boolUnfold == true then
 		for i=1,#GunTable,1 do
 			Turn(GunTable[i],x_axis,math.rad(-90),0)
 		end
@@ -1276,7 +1307,7 @@ function 	DeployInOrder(boolReverse)
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
 			Turn(SeedCenter,z_axis,math.rad(DirVec.z),0)
-			SeedLoop(1,feed_speed,boolReverse,radialSpeed)
+			SeedLoop(1,feed_speed,boolUnfold,radialSpeed)
 			
 			
 			Show(pieceToGo)
@@ -1285,14 +1316,13 @@ function 	DeployInOrder(boolReverse)
 			
 		end
 		Sleep(100)
-	else
+	else -- fold
 		for i=#piecesDeployTable,1, -1 do
 			pieceToGo=piecesDeployTable[i].pieceA
 			
+			Hide(pieceToGo)
 			offSet=piecesDeployTable[i].offA
-			offSet.x=offSet.x*-1;
-			offSet.y=offSet.y*-1;
-			offSet.z=offSet.z*-1;
+			offSet= mulVector(offSet,-1)
 			DirVec=piecesDeployTable[i].SeedDir
 			reset(SeedCenter,0)
 			MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
@@ -1300,66 +1330,83 @@ function 	DeployInOrder(boolReverse)
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
 			Turn(SeedCenter,z_axis,math.rad(DirVec.z),0)
-			SeedLoop(1,feed_speed,boolReverse,radialSpeed)
+			
+			SeedLoop(1,feed_speed,false,radialSpeed)
 			
 			
-			Hide(pieceToGo)
 			if piecesDeployTable[i].pieceList then hideT(piecesDeployTable[i].pieceList) end
 			
 		end
 	end
 	
 end
+
 CataRoto={}
 CataLow	={}
 CataUp	={}
 CataHead={}
-
-function reloadCataPult()
-	
-	hideT(CataRoto	)
-	hideT(CataLow	)
-	hideT(CataUp	)
-	hideT(CataHead	)
-	resetT(CataRoto	)
+function hideCatapult(speedfactor)
+	resetT(CataRoto,19,false,true)
 	resetT(CataLow	)
 	resetT(CataUp	)
 	resetT(CataHead	)
 	
-	turnT(CataHead,x_axis,31,0,true)
-	moveT(CataLow,y_axis,-20,0)
-	moveT(CataLow,z_axis,16,0)
+	turnT(CataHead,x_axis,-178,6*speedfactor,false,true)
+	turnT(CataUp,x_axis,-11,2*speedfactor,false,true)
 	Sleep(1000)
 	showT(CataHead)
 	showT(CataUp)
-	turnT(CataHead,x_axis,-150,0,true)
-	moveT(CataLow,y_axis,-33,12)
-	moveT(CataLow,y_axis,-12,12)
-	moveT(CataLow,z_axis,0,12)
+	hideT(CataLow)
+	turnT(CataHead,x_axis,-269,6*speedfactor,false,true)
+	turnT(CataLow,x_axis,-179,6*speedfactor)
+	turnT(CataUp,x_axis,125,6*speedfactor,false,true)
 	Sleep(1000)
-	turnT(CataHead,x_axis,-235,12,true)
+	hideT(CataUp)
+	turnT(CataUp,x_axis,210,6*speedfactor,false,true)
+	turnT(CataHead,x_axis,-252,6*speedfactor,false,true)
+	turnT(CataLow,x_axis,-279,6*speedfactor)	
 	Sleep(1000)
-	
-	showT(CataLow)
-	moveT(CataLow,y_axis,0,13)
-	moveT(CataLow,x_axis,0,13)
-	moveT(CataLow,z_axis,0,13)
-	turnT(CataHead,x_axis,0,12,true)
-	Sleep(3000)
-	randMoveCatapult()
+	moveT(CataLow,z_axis,-10,5*speedfactor,false,true)
 end
 
-function 	InnerCityDeploy(boolReverse) 
-	if boolReverse==true then
+function unfoldCatapult(speedfactor)
+	moveT(CataLow,z_axis,0,speedfactor*5,false,true)
+	Sleep(1000)
+	showT(CataHead)
+	showT(CataUp)
+	hideT(CataLow)
+	turnT(CataHead,x_axis,-269,speedfactor*6,false,true)
+	turnT(CataLow,x_axis,-179,speedfactor*6)
+	turnT(CataUp,x_axis,125,speedfactor*6,false,true)
+	Sleep(3000)
+	showT(CataHead)
+	showT(CataUp)
+	showT(CataLow)
+	resetT(CataLow,speedfactor*15,false,true)	
+	resetT(CataUp,speedfactor*15,false,true)	
+	resetT(CataHead,speedfactor*15,false,true)	
+	Sleep(1000)
+	randMoveCatapult()
+end
+function reloadCataPult()
+	
+	hideCatapult(1)
+	unfoldCatapult(1)
+end
+
+function 	InnerCityDeploy(boolUnfold) 
+	if boolUnfold==true then
+		hideCatapult(0)
+		unfoldCatapult(1)
 		for k,v in pairs(SignalTable) do
 			if k ~= "GateLoop" then
 				SignalTable[k]=false
 			end
 		end
 		showT(CataLow)
-		StartThread(reloadCataPult)
+		
 	else
-		hideT(CataLow)
+		hideCatapult(1)
 		
 	end
 	
@@ -1413,8 +1460,8 @@ function waitForTheWatcher()
 end
 
 function Weapon1fire()	
-
-
+	
+	
 	boolOneShot=false
 	if not	GG.FiringGateFotressTable then GG.FiringGateFotressTable = {} end
 	if not	GG.FiringGateFotressTable[teamid] then GG.FiringGateFotressTable[teamid] = {} end
@@ -1449,16 +1496,11 @@ function Weapon1( Heading ,pitch)
 	
 	if gunKey== 2 and isUserTarget==true then 
 		px,py,pz =val[1],val[2],val[3]		
-		return boolOneShot == true and boolDeployed == true and boolTimeDelayed ==true  and boolActivateTravelling ==true
+		return boolOneShot == true and boolDeployed == true and boolTimeDelayed ==true and boolActivateTravelling ==true
 	end
 end
 
 
-genSignal=1
-function SigGen()
-	genSignal=2*genSignal
-	return genSignal
-end
 
 function script.FireWeapon(weaponID)
 	--Spring.Echo("FireWeapon")
@@ -1479,25 +1521,25 @@ function genAim(weaponID,heading, pitch)
 end
 catapult1Heading=math.huge
 function CataAim1(weaponID,heading, pitch)
-
+	
 	Signal(WeaponsTable[weaponID].signal)
 	SetSignalMask(WeaponsTable[weaponID].signal)
 	heading= heading+ math.rad(-5)
 	WTurn(CataRoto[1],y_axis,heading,2)
 	--WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
-
+	
 	return boolDeployed == true
 end
 
 function CataAim2(weaponID,heading, pitch)
-
+	
 	Signal(WeaponsTable[weaponID].signal)
 	SetSignalMask(WeaponsTable[weaponID].signal)
 	heading= heading+ math.rad(5)
-
+	
 	WTurn(CataRoto[2],y_axis,heading,2)
 	--WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,3)
-
+	
 	return boolDeployed == true
 end
 
@@ -1514,22 +1556,22 @@ end
 
 function cataFireFunc()
 	StartThread(randMoveCatapult)
-return true
+	return true
 end
 
 WeaponsTable={} 
 function makeWeaponsTable()
-WeaponsTable[1]={aimpiece=flare02,emitpiece=flare02,aimfunc=Weapon1,firefunc=Weapon1fire, signal=SigGen()}
-WeaponsTable[2]={aimpiece=CataHead1,emitpiece=CataHead1,aimfunc=CataAim1,firefunc=cataFireFunc, signal=SigGen()}
-WeaponsTable[3]={aimpiece=CataHead2,emitpiece=CataHead2,aimfunc=CataAim2,firefunc=cataFireFunc, signal=SigGen()}
-WeaponsTable[4]={aimpiece=Gun1,emitpiece=Gun1,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[5]={aimpiece=Gun2,emitpiece=Gun2,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[6]={aimpiece=Gun3,emitpiece=Gun3,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[7]={aimpiece=Gun4,emitpiece=Gun4,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[8]={aimpiece=DronePodTable[1],emitpiece=DronePodTable[1], aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[9]={aimpiece=DronePodTable[2],emitpiece=DronePodTable[2], aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[10]={aimpiece=DronePodTable[3],emitpiece=DronePodTable[3],aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
-WeaponsTable[11]={aimpiece=DronePodTable[4],emitpiece=DronePodTable[4],aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[1]={aimpiece=flare02,emitpiece=flare02,aimfunc=Weapon1,firefunc=Weapon1fire, signal=SigGen()}
+	WeaponsTable[2]={aimpiece=CataHead1,emitpiece=CataHead1,aimfunc=CataAim1,firefunc=cataFireFunc, signal=SigGen()}
+	WeaponsTable[3]={aimpiece=CataHead2,emitpiece=CataHead2,aimfunc=CataAim2,firefunc=cataFireFunc, signal=SigGen()}
+	WeaponsTable[4]={aimpiece=Gun1,emitpiece=Gun1,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[5]={aimpiece=Gun2,emitpiece=Gun2,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[6]={aimpiece=Gun3,emitpiece=Gun3,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[7]={aimpiece=Gun4,emitpiece=Gun4,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[8]={aimpiece=DronePodTable[1],emitpiece=DronePodTable[1], aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[9]={aimpiece=DronePodTable[2],emitpiece=DronePodTable[2], aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[10]={aimpiece=DronePodTable[3],emitpiece=DronePodTable[3],aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
+	WeaponsTable[11]={aimpiece=DronePodTable[4],emitpiece=DronePodTable[4],aimfunc= function() return true end,firefunc=genFire, signal=SigGen(),coolDownTimer=0}
 end
 
 
@@ -1577,7 +1619,7 @@ function script.AimWeapon(weaponID, heading, pitch)
 			WTurn(WeaponsTable[weaponID].aimpiece,x_axis,-pitch,turretSpeed)
 			return true 
 		end
-	
+		
 	end
-		return false 
+	return false 
 end

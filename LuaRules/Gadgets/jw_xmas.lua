@@ -8,7 +8,7 @@
     date = "Santa is going to town on you all",
     license = "GNU GPL, v2 its goes in all fields",
     layer = 0,
-    enabled = true  -- loaded by default?
+    enabled = false  -- loaded by default?
     }
     end
      

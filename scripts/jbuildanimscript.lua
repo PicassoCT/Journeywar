@@ -40,7 +40,7 @@ function identifyUnit()
 	table.remove(TableTop,unitID)
 	--itterate throught table, searching a familiar building
 	if not TableTop or #TableTop == 0 then return end
-
+	
 	
 	for i=1,table.getn(TableTop),1 do
 		if Spring.ValidUnitID(TableTop[i]) and Spring.GetUnitIsDead(TableTop[i]) == false and TableTop[i] ~= unitID then
@@ -82,19 +82,13 @@ end
 function script.Killed(recentDamage,_)
 	
 	if buildID and buildID ~=unitID and Spring.ValidUnitID(buildID)==true then 
-	Spring.SetUnitAlwaysVisible(buildID,true) 
+		Spring.SetUnitAlwaysVisible(buildID,true) 
 	end
 	return 1
 end
-SIG_BUILD=2
-function osLoop()
-	
-	buildID=unitID
-	
-	while not buildID or buildID == unitID do
-		buildID=identifyUnit()
-		Sleep(100)
-	end
+
+function buildAnimation(buildID)
+
 	Spring.SetUnitAlwaysVisible(buildID,false)
 	StartThread(randomRotate,Egg,y_axis,0.03,-5,5)
 	StartThread(randomRotate,Egg,x_axis,0.03,-15,15)
@@ -103,14 +97,14 @@ function osLoop()
 	hideUnit(unitID)
 	Show(Egg)
 	Show(Base)
-local	BUILDPROGRESS=updateBP()
+	local	BUILDPROGRESS=updateBP()
 	signum=-1
 	currently=1
 	
 	while assureUnitExists(buildID)== true and BUILDPROGRESS and BUILDPROGRESS < 1 do
 		BUILDPROGRESS=updateBP()
 		Sleep(150)
-
+		
 		if BUILDPROGRESS < 0.02 then
 			Move(center,y_axis,Down*(1-BUILDPROGRESS),22)
 		else
@@ -131,6 +125,23 @@ local	BUILDPROGRESS=updateBP()
 	showUnit(unitID)
 	Spring.SetUnitAlwaysVisible(buildID,true)
 	
+
+end
+SIG_BUILD=2
+timeOutMax=3*60*1000
+function osLoop()
+	
+	buildID=unitID
+	timeout=0
+	while not buildID or buildID == unitID and timeout < timeOutMax do
+		buildID=identifyUnit()
+		Sleep(100)
+		timeout=timeout+100
+	end
+	
+	if timeout < timeOutMax and buildID then
+		buildAnimation(buildID)
+	end
 	Move(Base,y_axis,-50,3)
 	Explode ( Egg , SFX.SHATTER) 
 	Explode ( Egg , SFX.SHATTER) 
@@ -138,5 +149,6 @@ local	BUILDPROGRESS=updateBP()
 	Sleep(3000)
 	
 	WaitForMove(Base,y_axis)
+	Hide(Base)
 	Spring.DestroyUnit(unitID,false,true)
 end

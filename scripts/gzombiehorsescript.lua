@@ -838,6 +838,7 @@ end
 
 function script.Killed(recentDamage,maxHealth)
 	x,y,z=Spring.GetUnitPosition(unitID)
+	if x then
 	myteam=Spring.GetUnitTeam(unitID)
 	T=getAllInCircle(x,z,4192,unitID,myteam)
 	zombieDefID=UnitDefNames["zombie"].id
@@ -848,11 +849,14 @@ function script.Killed(recentDamage,maxHealth)
 		if defID== zombieDefID then return id end
 	end,
 	function(id)
+		if id then
 		Spring.SetUnitMoveGoal(id,x,y,z)
+		end			
 	end			
 	)
 	boolNotDeadYet=false
 	Signal(SIG_WALK)
+	end
 	return 0	
 end
 

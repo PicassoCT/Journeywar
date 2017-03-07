@@ -87,9 +87,11 @@ function rotorsUp()
 	Spin(rotors,y_axis,math.rad(272),15.5)
 	Spin(tailrotors,x_axis,math.rad(72),15)
 	Sleep(2000)
+	if boolAir == true then
 	Show(tailrotors)
 	Show(centrotors)
 	Show(rotors)
+	end
 	Sleep(350)
 	Hide(rotor)
 	Hide(centrotor)
@@ -115,10 +117,11 @@ function rotorsDown ()
 	StopSpin(rotors,y_axis,0)
 	StopSpin(tailrotors,x_axis,0.01)
 	StopSpin(centrotors,x_axis,0.01)
-	
+	if boolAir == true then
 	Show(rotor)
 	Show(centrotor)
 	Show(tailrotor)
+	end
 	Sleep(1000)
 	Turn(center,x_axis,math.rad(-18),0.25)
 	Move(center,y_axis,-5.5,2.8)
