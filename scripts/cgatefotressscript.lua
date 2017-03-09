@@ -368,7 +368,6 @@ function script.Create()
 	x,y,z=Spring.GetUnitPiecePosDir(unitID,RingB)
 	
 	hideT(TableOfPieces)
-	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(deployOnceComplete)
 	StartThread(waitForTheWatcher)
 	StartThread(turretReseter)
@@ -441,17 +440,25 @@ end
 
 function AnimTest()
 	while true do 
-		unfoldAnimation()
-		Sleep(1000)
+		--unfoldAnimation()
+
 		while true do
-			TowerDeploy(false)
-			Sleep(1000)
-			TowerDeploy(true)
+				Sleep(1000)
+		echo("FirstTrainDeploy")
+		StartThread(InnerCircleLoop,true)
+		Sleep(10000)
+		SignalTable["InnerCircleLoop"]=false
+	Sleep(500)
+		echo("FirstTrainDeploy")
+		StartThread(InnerCircleLoop,false)
+		Sleep(10000)
+		SignalTable["InnerCircleLoop"]=false
+		Sleep(500)
 		end
-		
-		foldAnimation()
+		--foldAnimation()
 		Sleep(1000)
 	end
+	
 	
 end
 
@@ -503,8 +510,6 @@ function unfoldAnimation()
 	OuterCircleDeploy( true)		
 	
 	StartThread(GoUp ,true,2*math.pi*0.1 *(1/1.1666 ))
-	
-	
 	StartThread(OuterCircleLoop ,true)
 	
 	
@@ -537,28 +542,27 @@ function foldAnimation()
 	Sleep(10)
 	un_foldDepots(bFold, un_foldDepotspeed)	
 	StartThread(TrainLoop ,bFold)
-	
+	StartThread(InnerCircleLoop ,bFold)
 	StartThread(playSoundChain,soundInOrderTableUnfold,"cgatefort"..unitID)
 	StartThread(GateLoop ,bFold)
 	boolDeployed=false
 	Spring.PlaySoundFile("sounds/cgatefortress/gate_fort_in.wav",1.0)
 	
+	
 	un_foldRailGun(bFold)
 	InnerCityDeploy(bFold)
 	DeployInOrder(bFold)
-	TowerDeploy(bFold)
-	
-	
-	UpperCircleDeploy(bFold)
-	StartThread(GoUp ,bFold,2*math.pi*0.1 *(1/1.1666 ))
+	TowerDeploy(bFold)	
 	StartThread(OuterCircleLoop ,bFold)
+	StartThread(GoUp ,bFold,2*math.pi*0.1 *(1/1.1666 ))	
+	UpperCircleDeploy(bFold)
+
 	OuterCircleDeploy( bFold)	
-	StartThread(InnerCircleLoop ,bFold)
-	while true do Sleep(10) end
+	SignalTable["OuterCircleLoop"]=false
+	SignalTable["GoUp"]=false
+	SignalTable["InnerCircleLoop"]=false
+	
 	InnerCircleDeploy(bFold)	
-	
-	
-	
 	FirstTrainDeploy(bFold)	
 	
 	Sleep(10)
@@ -566,8 +570,7 @@ function foldAnimation()
 	GateDeploy( bFold)	
 	
 	boolOnTheMove=true
-	hideT(TableOfPieces)
-	
+	hideT(TableOfPieces)	
 	resetT(TableOfPieces)
 	hideT(TableOfPieces)
 	Signal(SIG_SOUNDINORDER)
@@ -722,14 +725,25 @@ function FirstTrainDeploy (boolUnfold)
 		Show(Feed10)
 		hideT(Feed)
 	else
+		WMove(Feed10,x_axis,-LengthFeed,0)
+		count_dow=10
+		showT(Feed)
+		for i=-1*LengthFeed,0,4.8 do
+			WMove(Feed10,x_axis,i,feed_speed)
+			if 	 Feed[count_dow] then			
+				Hide(Feed[count_dow])
+			end
+			count_dow=math.max(count_dow-1,1)
+		end
 		
+		Show(Feed10)
+		hideT(Feed)
 		
 		
 	end 
 	
 end
-function TrainLoop (boolUnfold) 
-	
+function TrainLoop (boolUnfold) 	
 	SignalTable["TrainLoop"]=true
 	
 	while SignalTable["TrainLoop"]==true do
@@ -758,9 +772,6 @@ function TrainLoop (boolUnfold)
 				end
 				count_down=math.max(count_down-1,1)
 			end
-			
-			
-			
 		end 
 	end
 	
@@ -768,22 +779,16 @@ end
 
 
 innerCircleIterator=0
-function InnerCircleDeploy (boolReverse) 
-	boolDirection= false 
-	if boolReverse then boolDirection =boolReverse end
-	--if the animation should be aborted, we revert it 
-	
-	
-	radialSpeed= 2*math.pi*0.1 *(1/1.1666 )
-	
+function InnerCircleDeploy (boolUnfold) 
+	--if the animation should be aborted, we revert it 	
+	radialSpeed= 2*math.pi*0.1 *(1/1.1666 )	
 	hideT(InnerLoop)
 	
-	if boolDirection==true then
-		
-		for inner=1,10,1 do
+	if boolUnfold ==true then
+		WTurn(InLoopCenter,y_axis,math.rad(-36 ),0)	
+		for inner=1,4,1 do
 			ShowKill(InnerLoop[inner])
-			Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
-			WaitForTurn(InLoopCenter,y_axis)
+			WTurn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)	
 			if InnerLoop[inner-3] then
 				Hide(InnerLoop[inner-3])
 			end
@@ -791,12 +796,19 @@ function InnerCircleDeploy (boolReverse)
 				
 				return 
 			end
-		end
-		
+		end		
 	else
-	end 
-	
-	
+		showT(InnerLoop,1,5)
+		WTurn(InLoopCenter,y_axis,math.rad(-36*4 ),0)	
+			
+		for inner=4,0,-1 do
+			Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
+			WaitForTurn(InLoopCenter,y_axis)
+			if InnerLoop[inner+1] then
+			Hide(InnerLoop[inner+1])
+			end
+		end	
+	end 	
 end
 
 SeedCenter=piece"SeedCenter"
@@ -836,20 +848,25 @@ function SeedLoop(nrOfPumps,feed_speed,boolDirection,radialSpeed)
 	end	
 end
 
-function InnerCircleLoop (boolReverse) 
-	boolDirection= false ; 	if boolReverse then boolDirection =boolReverse end
+function InnerCircleLoop (boolUnfold) 
+
 	SignalTable["InnerCircleLoop"]=true	
-	
+		inner=4
 	radialSpeed=2*math.pi*0.10 *(1/1.1666 )
-	
-	inner=4
+	if boolUnfold == true then
+	hideT(InnerLoop)
+	showT(InnerLoop,1,4)
+	else
+	hideT(InnerLoop)
+	showT(InnerLoop,1,4)
+	end
+	WTurn(InLoopCenter,y_axis,math.rad(inner*-36 ),0)
+
 	while SignalTable["InnerCircleLoop"]==true do
 		
-		if boolDirection==true then
+		if boolUnfold==true then			
 			
-			
-			
-			Show(InnerLoop[inner])
+		Show(InnerLoop[inner])
 			Turn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
 			
 			WaitForTurn(InLoopCenter,y_axis)
@@ -859,21 +876,24 @@ function InnerCircleLoop (boolReverse)
 				Hide(InnerLoop[offSet] )
 			end
 			inner=inner%10+1
+						
+		else -- fold
+			showIndex= inner-2
+			if showIndex < 1 then showIndex =10 + showIndex end
+			Show(InnerLoop[showIndex])
+			WTurn(InLoopCenter,y_axis,math.rad(inner*-36 ),radialSpeed)
 			
+			offSetIndex= showIndex-7
+			if offSetIndex < 1 then offSetIndex = 10 + offSetIndex end
 			
-			
-		else
-			
-			Show(InnerLoop[inner])
-			Turn(InLoopCenter,y_axis,math.rad(inner*36 ),radialSpeed)
-			
-			WaitForTurn(InLoopCenter,y_axis)
-			offSet= ((inner+6)%10) +1
-			
-			if InnerLoop[offSet] then
-				Hide(InnerLoop[offSet] )
+			if InnerLoop[offSetIndex] then
+				Hide(InnerLoop[offSetIndex] )
 			end
-			inner=inner%10+1
+	
+			inner=(inner-1)%10
+			if inner== 0 then inner = 10 end
+			
+			
 			
 		end 
 	end
@@ -946,9 +966,10 @@ function OuterCircleLoop (boolUnfold)
 	out_radialSpeed= 2*math.pi*0.08333333333333333333 *(1/1.1666 )
 	
 	out=8
-	if boolUnfold == true then
+	if boolUnfold == false then
 	out=4
 	end
+	
 	Show(OuterLoopTable[6])
 	Show(OuterLoopTable[7])
 	Show(OuterLoopTable[8])
@@ -1052,16 +1073,13 @@ function GoUp(boolReverse,radialSpeed)
 	
 end
 
-function UpperCircleDeploy (boolReverse) 
-	boolDirection= false 
-	if boolReverse then boolDirection =boolReverse end
-	--if the animation should be aborted, we revert it 
+function UpperCircleDeploy (boolUnfold) 
 	
 	--12
 	out_radialSpeed= 2*math.pi*0.08333333333333333333 *(1/1.1666 )
 	
 	
-	if boolDirection==true then
+	if boolUnfold==true then
 		Turn(BigLUpCenter,y_axis,math.rad(60),0)
 		WaitForTurn(BigLUpCenter,y_axis)
 		for upcircdepindex=0,12,1 do
@@ -1074,13 +1092,21 @@ function UpperCircleDeploy (boolReverse)
 			WaitForTurn(BigLUpCenter,y_axis)
 			
 			if UpTable[upcircdepindex-9] then
-				Hide(UpTable[upcircdepindex-9])
-				
+				Hide(UpTable[upcircdepindex-9])				
 			end
-		end
-		
-		
+		end		
 	else
+	WTurn(BigLUpCenter,y_axis,math.rad(11*-30),out_radialSpeed)
+		for upcircdepindex=12,1,-1 do
+			
+			temp=((upcircdepindex)%12)-1
+			if temp < 1 then temp=12 end
+			
+			if UpTable[upcircdepindex] then Hide(UpTable[upcircdepindex]) end
+			
+			Turn(BigLUpCenter,y_axis,math.rad(upcircdepindex*-30+30 ),out_radialSpeed)
+			WaitForTurn(BigLUpCenter,y_axis)
+		end		
 	end 
 	
 	
@@ -1104,8 +1130,7 @@ function UpperCircleLoop (boolUnfold,totalLength)
 		showT(UpTable)
 		Show(OuterLoop14)
 		WMove(Wall,y_axis,-7,math.pi)
-		Hide(Wall)
-		
+		Hide(Wall)		
 	end
 	
 	while SignalTable["UpperCircleLoop"]==true do
@@ -1148,7 +1173,7 @@ function UpperCircleLoop (boolUnfold,totalLength)
 	end
 	
 	--clean up
-	if boolDirection ==true then
+	if boolUnfold ==true then
 		Turn(BigLUpCenter,y_axis,math.rad(0),0)
 		resetT(UpTable)
 		showT(UpTable)

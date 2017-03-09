@@ -4,9 +4,11 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua" 
 
---HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-
-
+function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+ux,uy,uz=Spring.GetUnitPosition(unitID)
+Spring.SetUnitMoveGoal(unitID,ux- x*15,uy, uz-z*15)
+return damage
+end
 local AniT={} 
 
 for j=1,3,1 do
@@ -158,16 +160,10 @@ function Eat(argTable)
 	while 	SignalTable["STATE"] == true do 
 		--change Position
 		if AgeStage~=1 then
-			if math.random(0,5)==2 then
-				x,y,z=Spring.GetUnitPosition(unitID)
-				if x then
-					x,z=x+math.random(-12,12),z+math.random(-12,12)
-					Spring.SetUnitMoveGoal(unitID,x,y,z)
-				end
-			else
+		
 				--Nom Nom Nom
 				eatingGrass()
-			end
+	
 		elseif argTable then
 			px,py,pz=Spring.GetUnitPosition(argTable[1])
 			x,y,z=Spring.GetUnitPosition(unitID)
@@ -415,7 +411,7 @@ end
 
 function reProduce()
 	if feMale then
-	Time=math.ceil(math.random(120000,900000))
+	Time=math.ceil(math.random(900000,1200000))
 	Sleep(Time)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
@@ -505,9 +501,9 @@ function TheyGrowUpSoFast()
 		Sleep(Time)
 		Age(AgeStage)
 		if feMale == false then 
-			AgeStage=math.min(3,AgeStage+1)
+			AgeStage=math.min(math.min(3,AgeStage+1),3)
 		else
-			AgeStage=math.min(2,AgeStage+1)
+			AgeStage=math.min(math.min(2,AgeStage+1),2)
 		end
 	end
 end
@@ -576,6 +572,7 @@ function walk()
 			Signal(SIG_IDLE)
 			it=lincAndMod(it)
 			WalkAnimationCycle()
+
 			while boolRun==true do
 				Spring.Echo("JW:Ghohymen:Run")
 				SetUnitValue(COB.MAX_SPEED,327665)
@@ -608,6 +605,7 @@ SIG_IDLE = 64
 function idleAnimationLoop()
 SetSignalMask(SIG_IDLE)
 	LegsDown() 	
+	Sleep(100)
 	LegTable={}
 	for i=1, 5 do
 		LegTable[i] ={}
@@ -707,13 +705,9 @@ function WalkAnimationCycle()
 	itterator=math.max(1,(itterator+1)%8)
 	
 	for i=1,5, 1 do
-		if i%2 ~=0 then
 			walkTable[math.max(1,(itterator+i%3)%4)](AniT[AgeStage][i][1],AniT[AgeStage][i][2],7)
-		end
-	end
-	
+	end	
 end
-
 
 function LegsDown()
 	Move(AniT[AgeStage]["Body"],z_axis,0,5.2)
@@ -722,15 +716,15 @@ function LegsDown()
 	
 	Turn(AniT[AgeStage]["Head"],z_axis,math.rad(0), 1.6)
 	Turn(AniT[AgeStage]["Head"],y_axis,math.rad(0), 1.6)				
-	
+	for k=1,#AniT do
 	for i=1,5, 1 do	
-		Turn(AniT[AgeStage][i][1],y_axis,math.rad(0),4.2)
-		Turn(AniT[AgeStage][i][1],z_axis,math.rad(0),4.2)
-		Turn(AniT[AgeStage][i][1],x_axis,math.rad(0),4.2)
+		Turn(AniT[k][i][1],y_axis,math.rad(0),14.2)
+		Turn(AniT[k][i][1],z_axis,math.rad(0),14.2)
+		Turn(AniT[k][i][1],x_axis,math.rad(0),14.2)
 		
-		Turn(AniT[AgeStage][i][2],y_axis,math.rad(0),4.2)
-		Turn(AniT[AgeStage][i][2],z_axis,math.rad(0),4.2)
-		Turn(AniT[AgeStage][i][2],x_axis,math.rad(0),4.2)	
-	end
-	
+		Turn(AniT[k][i][2],y_axis,math.rad(0),14.2)
+		Turn(AniT[k][i][2],z_axis,math.rad(0),14.2)
+		Turn(AniT[k][i][2],x_axis,math.rad(0),14.2)	
+	end	
+	end	
 end

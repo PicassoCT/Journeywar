@@ -61,11 +61,12 @@ function script.Create()
 end
 function setSunCol()
 
-defaultConfig=  GG.SunConfig:getDefaultConfg()
-defaultConfig.sunColor={255,128,0,255}
-defaultConfig.lifeTime=LifeTimeMax*1000
- GG.SunConfig:PushSunConfig(defaultConfig)
+-- local defaultConfig=  GG.SunConfig:getDefaultConfg()
+-- defaultConfig.sunColor={255,128,0,255}
+-- defaultConfig.lifeTime=LifeTimeMax*1000
+ -- GG.SunConfig:PushSunConfig(defaultConfig)
 end
+
 function constDistanceDrag()
 	it=0
 	while true do

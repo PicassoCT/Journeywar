@@ -61,6 +61,15 @@
 		x,y,z=Spring.GetUnitPosition(unitid)
 		AgentTable[unitid].Memory["lastknownposition"]= {x=x,y=y,z=z}
 		AgentTable[unitid].AgentState="DEAD"
+		AgentTable[unitid].Type="ghohymen"
+
+		everyOneNearBy=getAllInCircle(x,z,400,unitid,unitTeam)
+		process(everyOneNearBy,
+				function (id)
+				if AgentTable[id] then
+					AgentTable[id].Security= 0
+				end
+				end)
 		end
 	end
 	
@@ -94,10 +103,9 @@
 	function gadget:GameFrame(frame)
 	if frame > 0 and frame % 10==0 then
 		if boolInit==true then
-		handleHymens(frame,HohymenCounter)
-		else
-		init()
-		boolInit=true		
+			handleHymens(frame,HohymenCounter)
+		else		
+			boolInit=true		
 		end
 		
 		handleVaryFoos(frame)

@@ -20,6 +20,8 @@ SIG_AIM=4
 SIG_WALK=8
 SIG_LEG=16
 
+
+
 myDefID=Spring.GetUnitDefID(unitID)
 function letsWalkAndTalk()
 	

@@ -204,13 +204,13 @@ local	function getDefaultConfg(rgba)
 		-- end
 		percent=((timeFrame%(WholeDay))/(WholeDay))
 		config=getDefaultConfg({r=0.5,g=0.5,b=0.5,a=0.5})	
-		if GG.SunConfig and GG.SunConfig[1] then
-			config= GG.SunConfig[1]
-			GG.SunConfig[1].lifeTime=GG.SunConfig[1].lifeTime-32
-			if GG.SunConfig[1].lifeTime <= 0 then
-				GG.SunConfig[1]= nil
-			end
-		else
+		-- if GG.SunConfig and GG.SunConfig[1] then
+			-- config= GG.SunConfig[1]
+			-- GG.SunConfig[1].lifeTime= GG.SunConfig[1].lifeTime-32
+			-- if GG.SunConfig[1].lifeTime <= 0 then
+				-- GG.SunConfig[1]= nil
+			-- end
+		-- else
 	
 		rgba=getgroundAmbientColor(percent)
 		
@@ -239,7 +239,7 @@ local	function getDefaultConfg(rgba)
 		config.fogEnd = 8192* (1.001-getFogFactor(percent))
 		rgba=getFogColor(percent)
 		config.fogColor = {rgba.r, rgba.g, rgba.b, rgba.a}
-		end
+		--end
 		
 		setSun(config,percent)	
 		

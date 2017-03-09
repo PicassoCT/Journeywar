@@ -80,7 +80,10 @@ function randVec(boolStayPositive)
 	end
 end
 
-
+--> checks wether a value is nan
+function isNaN(value)
+	return (value ~= value) 
+end
 
 --> creates a ceg, that traverses following its behavioural function
 function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
@@ -169,12 +172,12 @@ end
 
 
 -->returns the 2 norm of a vector
-function distance(x,y, z,xa,ya,za)
-	if xa and ya and za then
+function distance(x,y,z,xa,ya,za)
+	if xa ~= nil and ya ~= nil and za ~= nil then
 		return math.sqrt((x-xa)^2+(y-ya)^2+(z-za)^2)
-	elseif x and y and z then
+	elseif x ~= nil and y ~= nil and z ~= nil then
 		return math.sqrt(x*x+y*y+z*z)
-	elseif x and y then 
+	else
 		return math.sqrt((x-y)^2)
 	end
 end
@@ -201,16 +204,10 @@ function distanceUnitToUnit(idA, idB)
 	
 	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return end
 	assert(x)
-	return GetTwoPointDistance(x,y,z,xb,yb,zb)
+	return distance(x,y,z,xb,yb,zb)
 end
 
--->returns Distance between two points
-function GetTwoPointDistance(x, y, z, ox, oy, oz)
-	x=x-ox
-	y=y-oy
-	z=z-oz
-	return math.sqrt(x*x+y*y+z*z)
-end
+
 
 --> gives a close hunch at the distance and avoids expensive sqrt math
 function approxDist(x,y,z)
@@ -4147,15 +4144,15 @@ function vardump(value, depth, key)
 	
 	
 	function getADryWalkAbleSpot()
-		min,max=Spring.GetGroundExtremes()
-		if max <=0 then return end
+		smin,smax=Spring.GetGroundExtremes()
+		if smax <=0 then return end
 		cond=function (i,j,chunkSizeX,chunkSizeZ)
 			h=Spring.GetGroundHeight(i*chunkSizeX,chunkSizeZ*j)
 			if h > 0 then 
 				v={}
 				v.x,v.y,v.z=Spring.GetGroundNormal(i*chunkSizeX,chunkSizeZ*j)
 				v=normVector(v)
-				if v.y -math.abs(v.x)-math.abs(v.z) > 0.1 then
+				if v.y < 0.3 or math.abs(v.x)> 0.7 or math.abs(v.z) < 0.3 then
 					return math.ceil(i*chunkSizeX), math.ceil(i*chunkSizeZ) 
 				end
 			end
@@ -4441,8 +4438,7 @@ function vardump(value, depth, key)
 			x,y,z=Spring.GetUnitPosition(unitID)
 			x,y,z=x+50,y,z+50	
 			Spring.SetUnitMoveGoal(unitID,x,y,z)
-			Spring.GiveOrderToUnit(unitID, -1*target, {}, {})
-			
+			Spring.GiveOrderToUnit(unitID, -1*target, {}, {})			
 		end	
 		
 		if command == "attack" then 
@@ -4456,7 +4452,13 @@ function vardump(value, depth, key)
 		end
 		
 		if command == "go" 	 then
-			Spring.SetUnitMoveGoal(id,target.x,target.y,target.z); return	 	
+		Spring.GiveOrderToUnit(id, CMD.MOVE , {target.x, target.y, target.z },{} )--{"shift"}
+			return	 	
+		end
+		
+		if command == "stop" 	 then
+		Spring.GiveOrderToUnit(id, CMD.STOP,{}, {} )	
+			return	 	
 		end
 		
 		if command == "setactive" 	 then
@@ -4650,6 +4652,7 @@ end
 function createLandscapeFromFeaturePieces(pixelPieceTable, drawFunctionTable)
 	echo("TODO:createLandscapeFromFeaturePieces")
 end
+
 
 function transferOrders( originID, unitID)
 	
