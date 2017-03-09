@@ -36,7 +36,7 @@ function createCorpseCBuilding(unitID,recentDamage)
 			spx,spy,spz=Spring.GetUnitPosition(unitID)
 			teamID=Spring.GetGaiaTeamID()
 			x=math.random(0,3)
-			heapID=Spring.CreateUnit("gCScrapHeapPeace",spx,spy,spz, x,1, teamID)
+			heapID=Spring.CreateUnit("gCScrapHeapPeace",spx,spy,spz, x, teamID)
 			Spring.SetUnitNeutral(heapID,true)
 		end
 		--</RubbleScript>	

@@ -278,7 +278,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			
 			teamID=Spring.GetUnitTeam(AttackerID)
-			ad=0
+			ad=math.huge
 			if #RazorGrenadeTable[AttackerID] > 5 then
 				it=math.floor(math.random(1,5))
 				Spring.DestroyUnit(	RazorGrenadeTable[AttackerID][it],true,true)
@@ -288,12 +288,13 @@ if (gadgetHandler:IsSyncedCode()) then
 				RazorGrenadeTable[AttackerID][#RazorGrenadeTable[AttackerID]+1]=Spring.CreateUnit("crazordrone",px,py,pz,1,teamID)	
 				ad=RazorGrenadeTable[AttackerID][#RazorGrenadeTable[AttackerID]] 
 			end	
-			
+			if ad and Spring.ValidUnitID(ad) == true then
 			
 			ed= Spring.GetUnitNearestEnemy(ad)
 			if ed then 
 				x,y,z=Spring.GetUnitPosition(ed)
 				Spring.SetUnitMoveGoal(ad,x,y,z)
+			end
 			end
 			
 		end,

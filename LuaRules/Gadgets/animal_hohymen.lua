@@ -125,31 +125,13 @@ ALLREADY_EXPLORED= true
 GeoventList={}
 boolGeoventListInitialized=false
 
-function getGeoventList()
-	
-	features=Spring.GetAllFeatures()
-	
-	for i=1,#features do
-	id =features[i]
-	assert(id)
-	assert(isNaN(id)==false)
-	defID=Spring.GetFeatureDefID(id)
-		if defID == FeatureDefNames["geovent"].id then
-			fx,fy,fz=Spring.GetFeaturePosition(id)
-				assert(isNaN(fx)==false)
-				assert(isNaN(fz)==false)
-			--echo("Geovent found:"..id)
-			GeoventList[#GeoventList+1]={x=fx,y=fy,z=fz, id= id}
-	
-		end
-	end
-	rEchoT(GeoventList)
-	
-	boolGeoventListInitialized=true
-end
+
 
 function getNearestGeoVent(gx,gy,gz)
-	if boolGeoventListInitialized ==false then getGeoventList() end
+	if boolGeoventListInitialized ==false then
+	GeoventList= getGeoventList()
+	boolGeoventListInitialized=true
+	end
 	if #GeoventList <= 0 then return nil end
 	
 	lastID=1
@@ -598,9 +580,9 @@ function handleHymens(frame,HohymenCounter)
 		Timer=Timer-128
 		if Timer < 0 and HohymenCounter < 10 then 
 			Timer=2500
-			x,z=getADryWalkAbleSpot()
-			--id=getNearestGeoVent(math.random(1,Game.mapSizeX),0,math.random(1,Game.mapSizeZ))
-			--x,y,z=Spring.GetFeaturePosition(id)
+			
+			id=getNearestGeoVent(math.random(1,Game.mapSizeX),0,math.random(1,Game.mapSizeZ))
+			x,y,z=Spring.GetFeaturePosition(id)
 			if x and z then
 				id=Spring.CreateUnit("ghohymen",x,0,z,1,gaiaTeam)
 				ix,iy,iz = math.random(10,20), math.random(10,20), math.random(10,20)
@@ -613,7 +595,7 @@ function handleHymens(frame,HohymenCounter)
 		isDead=Spring.GetUnitIsDead(id)
 		isValidUnit=Spring.ValidUnitID(id)
 			if isValidUnit ~=nil and isValidUnit == true and isDead ~= nil and isDead == false then
-			printAgent(id,v)
+			--printAgent(id,v)
 			--evaluate Prioritys
 			LongedState=stateMostWanted(id)
 

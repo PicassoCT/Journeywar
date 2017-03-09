@@ -4431,7 +4431,8 @@ function vardump(value, depth, key)
 	end
 	
 	-->Generic Simple Commands
-	function Command(id, command, target)
+	function Command(id, command, target,option)
+	options= option or {}
 		--abort previous command
 		
 		if command == "build" then 
@@ -4452,7 +4453,7 @@ function vardump(value, depth, key)
 		end
 		
 		if command == "go" 	 then
-		Spring.GiveOrderToUnit(id, CMD.MOVE , {target.x, target.y, target.z },{} )--{"shift"}
+		Spring.GiveOrderToUnit(id, CMD.MOVE , {target.x, target.y, target.z },options )--{"shift"}
 			return	 	
 		end
 		
@@ -4471,10 +4472,24 @@ function vardump(value, depth, key)
 		validUnit=Spring.GetUnitIsDead(unitid)
 		if validUnit and validUnit==true then return true end
 		
-		return false
-		
-	end
+		return false		
+	end	
 	
+	--> Gets a List of Geovents + Positions
+	function getGeoventList()
+	
+	features=Spring.GetAllFeatures()
+	GeoventList={}
+	for i=1,#features do
+	id =features[i]
+	defID=Spring.GetFeatureDefID(id)
+		if defID == FeatureDefNames["geovent"].id then
+			fx,fy,fz=Spring.GetFeaturePosition(id)
+			GeoventList[#GeoventList+1]={x=fx,y=fy,z=fz, id= id}	
+		end
+	end	
+	return GeoventList
+end
 	
 	--> testUnit for existance
 	function testUnit(unitid)

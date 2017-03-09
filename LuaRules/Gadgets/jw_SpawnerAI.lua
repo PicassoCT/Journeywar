@@ -1,9 +1,6 @@
 -- In-game, type /luarules kpai in the console to toggle the ai debug messages
 
-function gadget:GetInfo()
-	
-	
-	
+function gadget:GetInfo()	
 	return {
 		name = "spawner",
 		desc = "Spawns Units",
@@ -15,8 +12,6 @@ function gadget:GetInfo()
 	}
 end
 
-
-
 if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_UnitScript.lua")
 	
@@ -24,11 +19,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	teamTable={}
 	meridianTable={}
 	spawnUnits={ 
-		["journeyman"]={[1]="jgeohive", [2]="jbeehive",[3]="jghostdancer"},
-		["centrail"]={[1]="goildrum",[2]="gzombspa", [3]="coverworldgate"}
+		["journeyman"]={[1]="jgeohive", [2]="jbeehive",[3]="jghostdancer",[4]="jswiftspear"},
+		["centrail"]={[1]="goildrum",[2]="gzombspa", [3]="coverworldgate", [4]="crewarder"}
 	}
-	
-	
+		
 	Distribution={}
 	for _, t in ipairs (Spring.GetTeamList ()) do
 		Distribution[t]= {
@@ -38,8 +32,6 @@ if (gadgetHandler:IsSyncedCode()) then
 			[4]={x=2,y=1, sum=0}	
 		}	
 	end
-	
-	
 	
 	function findPlaces(team, px, pz)
 		Distro=Distribution[team]
@@ -71,9 +63,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			totalAbortCount=totalAbortCount+1	
 		end
 	end
-	
-	
-	
+		
 	teamAccuVolume={}
 	
 	function spawnSpawners(frame,team,side)
@@ -88,18 +78,17 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		for _=1, volume,1 do
 			if #meridianTable <=1 then echo("Not enough merdianTable"); return end			
-		meridian=meridianTable[math.random(1,#meridianTable)]
-		percent=math.random(0,100)/100
-		px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
-		pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
-		px,pz= findPlaces(team,px,pz)
+			meridian=meridianTable[math.random(1,#meridianTable)]
+			percent=math.random(10,90)/100
+			px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
+			pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
+			px,pz= findPlaces(team,px,pz)
 			if px then	
 				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px+math.random(10,20)*randSign(),0,pz+math.random(10,20)*randSign(),1,team)	
 			else
 				teamAccuVolume[team]=teamAccuVolume[team]+1			
 			end
-		end
-		
+		end		
 	end
 	
 	function randomSide()
@@ -124,15 +113,14 @@ if (gadgetHandler:IsSyncedCode()) then
 				spawnerAI[teamID] = side
 				if side ~="journeyman" and side ~="centrail" then
 					spawnerAI[teamID] = randomSide()
-				end
-				
+				end				
 				boolAtLeastOneSPawner=true
 			end
 			
-				px,py,pz= Spring.GetTeamStartPosition(t)
-				if px then
-					teamTable[t]={x=px,z=pz}
-				end			
+			px,py,pz= Spring.GetTeamStartPosition(t)
+			if px and px ~= 0 and pz ~= 0 then
+				teamTable[t]={x=px,z=pz}
+			end			
 		end
 		if boolAtLeastOneSPawner == false then
 			gadgetHandler:RemoveGadget ()
@@ -148,7 +136,17 @@ if (gadgetHandler:IsSyncedCode()) then
 				end			
 			end
 		end
+		
 		tempTable={}
+		geoVentList= getGeoventList()
+		for i=1,#geoVentList do
+			for j=1,#geoVentList do
+				if i~=j then
+					tempTable[#tempTable+1]={tab=geoVentList[i],atab=geoVentList[j]}		
+				end
+			end
+		end
+		
 		for i=1,#meridianTable do
 			for j=1,#meridianTable do
 				if i~=j then
@@ -158,8 +156,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		tempTable[#tempTable+1]={tab ={x=Game.mapSizeX/2,z=(Game.mapSizeZ/8)*7} ,atab={x=Game.mapSizeX/2,z=(Game.mapSizeZ/8)} }	
-		meridianTable=tempTable
-		
+		meridianTable=tempTable		
 	end
 	
 	function checkOnTeams()
@@ -182,10 +179,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	counter=0
 	total=30*60*5
 	function gadget:GameFrame(frame)
-		if ((frame %total) % 15)== 0 then
-			
-		end
-		
 		if frame > 0 and frame % total == 0 then
 			checkOnTeams()
 			
@@ -197,7 +190,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	function gadget:Shutdown()
-		Spring.Echo("jw_SpawnerAIGadget: Shuting down")
-		
+		Spring.Echo("jw_SpawnerAIGadget: Shuting down")		
 	end
 end

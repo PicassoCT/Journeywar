@@ -55,78 +55,88 @@ function vectorBetrag(xv,yv,x2,y2)
 end
 ------------------------------------------------------
 function zombieCheck(allyID)
-if allyID and  Spring.ValidUnitID(allyID)== true and Spring.GetUnitDefID(allyID)== ZOMBIEDEFID then return true  end
-return false
-
+	if allyID and Spring.ValidUnitID(allyID)== true and Spring.GetUnitDefID(allyID)== ZOMBIEDEFID then return true end
+	return false
+	
 end
 
+boolSawAEnemyOnce=false
 function moveTowardsNearestEnemy()
 	oldPosAllyZombies={}
 	lx,ly,lz=math.random(20,50)*randSign(),0,math.random(20,50)*randSign()
 	ZOMBIEDEFID=UnitDefNames["zombie"].id
 	local spGetUnitDefID=Spring.GetUnitDefID
 	zombX,zombY,zombZ=Spring.GetUnitPosition(unitID)
-	boolSawAEnemyOnce=false
+	
 	memPos=makeVector(0,0,0)
 	memorytimer=0
 	
 	while(true) do
 		
-		px,py,pz=Spring.GetUnitPosition(unitID)
-		enemyId=Spring.GetUnitNearestEnemy(unitID, viewDistance)
-		if enemyId and Spring.ValidUnitID(enemyId)==true then
-		--if enemy is visible
+		if boolMoving== false or boolSawAEnemyOnce == true then
+			px,py,pz=Spring.GetUnitPosition(unitID)
+			enemyId=Spring.GetUnitNearestEnemy(unitID, viewDistance)
+			if enemyId and Spring.ValidUnitID(enemyId)==true then
+				--if enemy is visible
 				boolSawAEnemyOnce =true
 				memorytimer=90000
 				ex,ey,ez= Spring.GetUnitPosition(enemyId)		
 				if ex then
-				lx,ly,lz=ex-px,ey-py,ez-pz				
-				Spring.SetUnitTarget(unitID,enemyId)
-				
-				informZombieNearbyID=Spring.GetUnitNearestAlly(unitID)
-					if ex  and zombieCheck(informZombieNearbyID)== true then
-						Spring.SetUnitMoveGoal(unitID ,ex,ey,ez)
+					lx,ly,lz=ex-px,ey-py,ez-pz				
+					Spring.SetUnitTarget(unitID,enemyId)
+					
+					informZombieNearbyID=Spring.GetUnitNearestAlly(unitID)
+					if ex and zombieCheck(informZombieNearbyID)== true then
+						Command(unitID,"stop",{},{})
+						Command(unitID,"go",{x=ex,y=ey,z=ez},{"shift"})
+						
 					end
-				memPos=makeVector(lx,ly,lz)
+					memPos=makeVector(lx,ly,lz)
 				end
-		elseif boolSawAEnemyOnce == true and memorytimer > 0 then
+			elseif boolSawAEnemyOnce == true and memorytimer > 0 then
 				memorytimer=memorytimer-4000
 				lx,ly,lz=memPos.x,memPos.y,memPos.z
-		elseif memorytimer < 0 then
-			memorytimer=memorytimer-4000
-			boolSawAEnemyOnce = false
-		end
-	
-		if eneymID and  memorytimer < -90000 and math.random(0,128)== 64 then
-			eneTeamID=Spring.GetUnitTeam(enemyId)
-			tx,ty,tz=Spring.GetTeamStartPosition(eneTeamID)
-			lx,ly,lz = tx-px,ty-py,tz-pz
-		end
-		
-		--follow the nearest zombie, that looks like its knowing what its doing and not coming towards me
-		if boolSawAEnemyOnce == false and	math.random(0,8)==4 then
-			allyID=Spring.GetUnitNearestAlly(unitID,viewDistance)
-			if zombieCheck(allyID) == true then	 -- we have a zombie		
-				zombX,zombY,zombZ=Spring.GetUnitPosition(allyID)
-				if not oldPosAllyZombies[allyID] then 
-					oldPosAllyZombies[allyID] = makeVector(zombX,zombY,zombZ)
-				else
-					local oldPos=oldPosAllyZombies[allyID] 
-					currPos=makeVector(zombX,zombY,zombZ)
-					lx,ly,lz = (oldPos.x-currPos.x)*25,(oldPos.y-currPos.y)*25,(oldPos.z-currPos.z)*25		
+			elseif memorytimer < 0 then
+				memorytimer=memorytimer-4000
+				boolSawAEnemyOnce = false
+			end
+			
+			if eneymID and memorytimer < -90000 and math.random(0,128)== 64 then
+				eneTeamID=Spring.GetUnitTeam(enemyId)
+				tx,ty,tz=Spring.GetTeamStartPosition(eneTeamID)
+				lx,ly,lz = tx-px,ty-py,tz-pz
+			end
+			
+			--follow the nearest zombie, that looks like its knowing what its doing and not coming towards me
+			if boolSawAEnemyOnce == false and	math.random(0,8)==4 then
+				allyID=Spring.GetUnitNearestAlly(unitID,viewDistance)
+				if zombieCheck(allyID) == true then	 -- we have a zombie		
+					zombX,zombY,zombZ=Spring.GetUnitPosition(allyID)
+					if not oldPosAllyZombies[allyID] then 
+						oldPosAllyZombies[allyID] = makeVector(zombX,zombY,zombZ)
+					else
+						local oldPos=oldPosAllyZombies[allyID] 
+						currPos=makeVector(zombX,zombY,zombZ)
+						lx,ly,lz = (oldPos.x-currPos.x)*25,(oldPos.y-currPos.y)*25,(oldPos.z-currPos.z)*25		
+					end
 				end
 			end
+			
+			
+			
+			if px+lx > Game.mapSizeX or px+lx < 0 then --creates the pingpong behaviour
+				lx=lx*-1 
+			elseif pz+lz > Game.mapSizeZ or pz+lz < 0 then--creates the pingpong behaviour
+				lz=lz*-1 
+			end
+			
+			if maRa()==true then
+				Command(unitID,"go",{x=px+lx,y=py+ly,z=pz+lz},{"shift"})
+			else
+				Command(unitID,"stop",{})
+				Spring.SetUnitMoveGoal(unitID,px+lx,py+ly,pz+lz)
+			end
 		end
-		
-		
-		
-		if  px+lx > Game.mapSizeX or px+lx < 0  then --creates the pingpong behaviour
-			lx=lx*-1 
-		elseif  pz+lz > Game.mapSizeZ or pz+lz < 0 then--creates the pingpong behaviour
-			lz=lz*-1 
-		end
-		
-		Spring.SetUnitMoveGoal(unitID,px+lx,py+ly,pz+lz)		
 		Sleep(4000)
 	end
 end
@@ -301,6 +311,16 @@ end
 modULater=0
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	if damage > 10 then
+		enemyId=Spring.GetUnitNearestEnemy(unitID, viewDistance)
+		boolSawAEnemyOnce=true
+		if enemyId then
+			ex,ey,ez=Spring.GetUnitPosition(enemyId)
+			if ex then
+				Command(unitID,"stop",{})
+				Command(unitID,"go",{x=ex,y=ey,z=ez})
+			end
+		end
+		
 		modULater=modULater%10+1
 		if modULater > 5 and math.random(0,1)==1 then
 			EmitSfx(ztorso,1024)
@@ -741,13 +761,13 @@ function script.Create()
 	
 end
 
-
+boolMoving=false
 function script.StartMoving()
 	if boolunDamagedVirgin == true then
 		boolunDamagedVirgin=false
 		StartThread(damageWatcher)
 	end
-	
+	boolMoving=true
 	Signal(SIG_IDLE)
 	Signal(SIG_DEFAULT)
 	if boolCrawler==false then
@@ -769,6 +789,7 @@ end
 
 
 function script.StopMoving()
+	boolMoving=false
 	-- health check
 	--lay down
 	boolRegen=false

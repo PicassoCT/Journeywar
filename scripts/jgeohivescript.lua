@@ -63,7 +63,7 @@ function spawner()
 	local spEmitSfx=EmitSfx
 	local spSetUnitNoSelect=Spring.SetUnitNoSelect
 	
-	local x,y,z = Spring.GetUnitPosition(unitID)
+	local x,y,z = Spring.GetUnitPosition(unitID )
 	
 	
 	
@@ -354,7 +354,12 @@ function TargetOS()
 				if enemyID and stillInSamePosition(monsterid) == true then
 					eTeam=Spring.GetUnitTeam(enemyID)
 					sx,sy,sz=Spring.GetTeamStartPosition(eTeam)
-					Spring.SetUnitMoveGoal(monsterid,sx,sy,sz)
+					if math.random(0,1)==1 then
+						Command(monsterid, "go", {x=sx,y=sy,z=sz},{"shift"})
+					 else
+					 	Command(monsterid, "go", {x=sx,y=sy,z=sz},{})
+					 end
+
 				else					
 					if enemyID then						
 						ex,ey,ez = lfuncTable[State](unitID,enemyID,times,teamID, times/totalTable[State])

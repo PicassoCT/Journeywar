@@ -101,7 +101,9 @@ function bridgesDontKnowAbout()
 hideT(bridge)
 	yVal=math.random(-25,25)
 	Move(bridge[1],y_axis,yVal,0)
-	if math.random(1,16)== 6 then 
+	if not GG.meStorageBridgesCounter then GG.meStorageBridgesCounter =0 end
+	GG.meStorageBridgesCounter =GG.meStorageBridgesCounter +1
+	if 	GG.meStorageBridgesCounter % 7== 0 then 
 		showT(bridge);
 		process(bridge,
 		function(id)

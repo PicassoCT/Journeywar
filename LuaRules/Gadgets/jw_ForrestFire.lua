@@ -3,7 +3,8 @@
 function gadget:GetInfo()
 	
 	function isPlanetFlammeable()
-		if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 80 and Game.waterDamage == 0 then
+		Spring.Echo(Game.mapHardness,Game.windMin,Game.gravity, Game.waterDamage)
+		if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 30 and Game.waterDamage == 0 then
 			badwordsTable={"cold","ice","frost","dessert","sand","dune","moon","comet","red","planet"} 
 			for i=1, #badwordsTable,1 do 
 				if string.find(Game.mapName, badwordsTable[i]) then 
@@ -19,7 +20,7 @@ function gadget:GetInfo()
 	
 	return {
 		name = "Gadget:Weltenbrand",
-		desc = "Only you can prevent Forrest Gump from firing up.",
+		desc = "Revenge of the Chilis",
 		author = "..you, your family, your descendants and everyone you love, what do you mean not the letter to the Bonaccio-family?",
 		date = "Sep. 2015",
 		license = "GNA PPL ASM MOV EAX 3ST LOG BLA BLU B42",
