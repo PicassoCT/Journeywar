@@ -74,6 +74,7 @@ local unitDef = {
 			"custom:electric_explosion",
 			"custom:sparkcloud",
 			"custom:cwallbuildlight",--28
+			"custom:cefencesplash"--29
 		},
 		
 	},

@@ -12,7 +12,6 @@ end
 
 function chargeUp(boolIsCharged)
 	
-	----Spring.Echo("Nonsense all of this is futile!")
 end
 
 
@@ -119,8 +118,9 @@ function emitLight()
 		EmitSfx(centemit,1028)
 	end
 end
-
+TablesOfPiecesGroups={}
 function script.Create()
+	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	StartThread(constTerraFormin)
 	StartThread(emitLight)
 	Hide( citurrete0) 
@@ -349,61 +349,82 @@ function constTerraFormin()
 	teamID=Spring.GetUnitTeam(unitID)
 	averageTable={}
 	while true do
-	
+		
 		if boolIsActive == true then 		
 			if consumeAvailableRessource("e", 50, teamID) == true then
 				
 				if boolWalking == true then
-				
-				--get the average current Height front and rear
-				TC={}	
-				for i=1,size do
-					for j=1,size do
-					TC[i][j]= 0
-						if distance({x=size/2-i,y=size/2-j},{x=size/2,y=size/2})< size/2 then
-						TC[i][j]= 1
+					
+					--get the average current Height front and rear
+					TC={}	
+					for i=1,size do
+						for j=1,size do
+							TC[i][j]= 0
+							if distance({x=size/2-i,y=size/2-j},{x=size/2,y=size/2})< size/2 then
+								TC[i][j]= 1
+							end
 						end
-					end
-				end				
-				x,y,z=spGetUnitPosition(unitID)
-				fx,fy,fz = spGetUnitPiecePosDir(unitID,frontSensor)				
-				rx,ry,rz = spGetUnitPiecePosDir(unitID,rearSensor)				
-				targetheigth=spGetGroundHeight(fx,fz)
-				_,dir,_=spGetUnitRotation(unitID)
-				
-				
-				if dir < 0 then dir= 3.14159+dir end
-				
-				TC=directionColourTable(TC, dir ,y, fy,ry,size)
-
-				echoT(TC)
-				GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="relative", filterType="borderblur"}
-				GG.DynRefMap[#GG.DynRefMap+1]=	TC
-				GG.boolForceLandLordUpdate=true
-				Spring.Echo("Forcing Landlord Update- echoin Transfomration Table")
+					end				
+					x,y,z=spGetUnitPosition(unitID)
+					fx,fy,fz = spGetUnitPiecePosDir(unitID,frontSensor)				
+					rx,ry,rz = spGetUnitPiecePosDir(unitID,rearSensor)				
+					targetheigth=spGetGroundHeight(fx,fz)
+					_,dir,_=spGetUnitRotation(unitID)
+					
+					
+					if dir < 0 then dir= 3.14159+dir end
+					
+					TC=directionColourTable(TC, dir ,y, fy,ry,size)
+					
+					echoT(TC)
+					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="relative", filterType="borderblur"}
+					GG.DynRefMap[#GG.DynRefMap+1]=	TC
+					GG.boolForceLandLordUpdate=true
+					Spring.Echo("Forcing Landlord Update- echoin Transfomration Table")
 				else
-				x,y,z=spGetUnitPosition(unitID)
+					x,y,z=spGetUnitPosition(unitID)
 					
 					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="add", filterType="borderblur"}
 					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,32)
 					GG.boolForceLandLordUpdate=true
-				
+					
 					while boolWalking == true do
-					Sleep(1000)
+						Sleep(1000)
 					end
-				
-				
+					
+					
 				end
 				
 			end	
 		end	
 		Sleep(5000)
-
+		
 	end
 end
 
+SIG_CHARGING=1024
+boolChargingWall=false
+function charging(boolCharged)
+	boolChargingWall=boolCharged
+	if boolCharged== true then
+		StartThread(showArcsOnConnection)
+	else
+		Signal(SIG_CHARGING)
+	end
+end
 
-
+function showArcsOnConnection()
+	SetSignalMask(SIG_CHARGING)
+	while true do
+		process(TablesOfPiecesGroups["cWBtransf"],
+		function(id)
+			EmitSfx(id,1029)
+		end
+		)
+		
+		Sleep(500)
+	end
+end
 
 --The copypastated towers of the citadell
 
@@ -573,9 +594,6 @@ end
 function script.AimFromWeapon5() 
 	return lg2 
 end
-
-
-
 
 function script.QueryWeapon5() 
 	return lg2

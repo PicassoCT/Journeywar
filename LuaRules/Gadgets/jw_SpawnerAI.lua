@@ -133,7 +133,10 @@ if (gadgetHandler:IsSyncedCode()) then
 					medianPoint={x=0,z=0}
 					medianPoint.x,medianPoint.z=(tab.x+atab.x)/2,(tab.z+atab.z)/2
 					meridianTable[#meridianTable+1]=medianPoint
-				end			
+					medianPoint={x=0,z=0}
+					medianPoint.x,medianPoint.z=Game.mapSizeX-(tab.x+atab.x)/2,Game.mapSizeZ-(tab.z+atab.z)/2
+					meridianTable[#meridianTable+1]=medianPoint			
+			end			
 			end
 		end
 		

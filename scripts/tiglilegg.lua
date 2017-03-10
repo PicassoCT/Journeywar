@@ -14,12 +14,12 @@ SIG_PULSE=1
 
 MaxDistance=25
 teamID=Spring.GetUnitTeam(unitID)
-
+	local spgetUnitPosition=Spring.GetUnitPosition
+	local spGetGroundHeight=Spring.GetGroundHeight
 
 
 function getToWaterLevelPlusBouncing()
-	local spgetUnitPosition=Spring.GetUnitPosition
-	local spGetGroundHeight=Spring.GetGroundHeight
+
 	
 	x,ty,z=spgetUnitPosition(unitID)
 	signed=1
@@ -63,9 +63,15 @@ function pulsate()
 		Sleep(250)
 	end
 end
+totalGrowthTime=42000
+ux,uy,uz=Spring.GetUnitPosition(unitID)
+h=Spring.GetGroundHeight(ux,uz)
+if h < 0 then 
+totalGrowthTime=25000
+else 
+totalGrowthTime=42000
+end
 
-
-totalGrowthTime=math.random(25000,32000)
 function growInStages()
 	--Hide
 	Hide(eggstage1)
@@ -130,6 +136,7 @@ function growInStages()
 	x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.DestroyUnit(unitID,false,true)
 	id=Spring.CreateUnit("tiglil",x,y,z, 0, teamID) 
+	
 	transferOrders(unitID,id)
 	for i=1,12,1 do
 		EmitSfx(SpinPoint,1024) -- fruchtwasser everywhere..

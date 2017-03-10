@@ -9287,19 +9287,21 @@ function EGG_LOOP()
 	while(true) do
 		x,_,z=Spring.GetUnitPosition(unitID)
 		--check if standing in Water
-		y=spGetGroundHeight(x,z)
-		if y <= 0 then	
-			-- if in Water check experience
-			temp=Spring.GetUnitExperience(unitID)
-			if temp > experienceSoFar+costPerEgg then --levelup
-				
-				--spawn numberofEggsToSpawn
-				for i=experienceSoFar,temp,costPerEgg do
-					StartThread(spawnAEgg,x,z)
-					experienceSoFar=experienceSoFar+costPerEgg
+		-- if in Water check experience
+		temp=Spring.GetUnitExperience(unitID)
+		
+		if temp > experienceSoFar+costPerEgg then --levelup	
+			--spawn numberofEggsToSpawn
+			for i=experienceSoFar,temp,costPerEgg do
+				StartThread(spawnAEgg,x+math.random(-5,5),z+math.random(-5,5))
+				boolAtLeastOne=true
+				experienceSoFar=experienceSoFar+costPerEgg
+			end
+			--
+			if temp > 10 then
+				for i=1,temp/5, 1 do
+					StartThread(spawnAEgg,x+math.random(-5,5),z+math.random(-5,5))
 				end
-				
-				--update experienceSoFar
 			end
 		end
 		Sleep(1500)

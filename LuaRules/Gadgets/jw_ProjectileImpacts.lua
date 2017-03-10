@@ -76,6 +76,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	catapultDefID=WeaponDefNames["ccatapult"].id
 	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
 	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
+	cEfenceWeapondDefID =WeaponDefNames["cWEFence1"].id
 	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
@@ -86,6 +87,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	}
 	RazorGrenadeTable={}
 	
+	Script.SetWatchWeapon(cEfenceWeapondDefID , true)
 	Script.SetWatchWeapon(cgaterailgunDefID , true)
 	Script.SetWatchWeapon(jeliahbeamDefID , true)
 	Script.SetWatchWeapon(chcprojectileDefID , true)
@@ -449,6 +451,13 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 		end
 		return 0
+	end 
+	
+	UnitDamageFuncT[cEfenceWeapondDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		spawnCegAtUnit(unitID,"cefencesplash",0,10,0)
+		spawnCegAtUnit(attackerID,"cefencesplash",0,10,0)
+	
+		return damage
 	end 
 	
 	UnitDamageFuncT[cAllyGatorMarkerDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
