@@ -9,7 +9,6 @@ local modinfo = {
 	modtype = "1",
 	--Perfectionism is the death of good things
 	depend = {
-		"Shard LuaAI $VERSION",
 		"cursors.sdz"
 	}
 }

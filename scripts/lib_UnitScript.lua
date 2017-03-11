@@ -2680,8 +2680,7 @@ function vardump(value, depth, key)
 			counter = counter +2
 		end
 		
-		return TableKey, TableValue
-		
+		return TableKey, TableValue		
 	end
 	
 	function insertKeysIntoTable(T,T2)
@@ -2708,7 +2707,7 @@ function vardump(value, depth, key)
 		return reTable
 	end
 	
-	--itterates over a Keytable, executing a function 
+	-->itterates over a Keytable, executing a function 
 	function elementWise(T,fooNction,ArghT)
 		reTable={}
 		
@@ -2719,7 +2718,7 @@ function vardump(value, depth, key)
 		return reTable
 	end
 	
-	--recursive itterates over a Keytable, executing a function 
+	-->recursive itterates over a Keytable, executing a function 
 	function recElementWise(T,fooNction,ArghT)
 		reTable={}
 		
@@ -2742,9 +2741,7 @@ function vardump(value, depth, key)
 		return it
 	end
 	
-	function bDbgEcho(strings)
-		if lib_boolDebug==true then Spring.Echo(strings) end
-	end
+
 	
 	
 	--> Join Operation on two tables
@@ -2773,11 +2770,11 @@ function vardump(value, depth, key)
 				T=Table 
 				else 
 					if lib_boolDebug == true then
-					Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") 
+					echo("Lua:lib_UnitScript:Process: No Table handed over") 
 					return 
 					end
 			end
-		if not arg then bDbgEcho("No args in process") return end
+		if not arg then echo("No args in process") return end
 		if type(arg)== "function" then return elementWise(T,arg) end
 		
 		
@@ -2800,8 +2797,8 @@ function vardump(value, depth, key)
 		local arg={...}
 		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
 		T={}
-		if Table then T=Table else Spring.Echo("Lua:lib_UnitScript:Process: No Table handed over") return end
-		if not arg then bDbgEcho("No args in process") return end
+		if Table then T=Table else echo("Lua:lib_UnitScript:Process: No Table handed over") return end
+		if not arg then echo("No args in process") return end
 		if type(arg)== "function" then return elementWise(T,arg) end
 		
 		
