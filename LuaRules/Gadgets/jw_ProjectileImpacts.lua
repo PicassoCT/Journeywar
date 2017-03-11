@@ -14,9 +14,6 @@ end
 
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 
-
-
-
 if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua" )
 	VFS.Include("scripts/lib_UnitScript.lua" )
@@ -76,7 +73,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	catapultDefID=WeaponDefNames["ccatapult"].id
 	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
 	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
-	cEfenceWeapondDefID =WeaponDefNames["cWEFence1"].id
+	cEfenceWeapondDefID =WeaponDefNames["cwefence1"].id
 	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
@@ -140,7 +137,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	local	skySraperDefID=UnitDefNames["buibaicity1"].id
 	local	cssDefID=UnitDefNames["css"].id
 	local	gvolcanoDefID=UnitDefNames["gvolcano"].id
-	
 	
 	function unitVannishAntimatterSFX(id)
 		
@@ -339,6 +335,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			else
 				dartID= Spring.CreateUnit(unitChoice,px,py,pz,1,gaiaTeamID)	
 			end		
+		
+		AttachUnitToPieceNearImpact(dartID, AttackerID,px,py,pz, 10)		
 		end,
 		[cmtwgrenade]=function(weaponDefID, px, py, pz, AttackerID)
 			if Spring.ValidUnitID(AttackerID) ==true then
