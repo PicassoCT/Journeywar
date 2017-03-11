@@ -27,8 +27,8 @@ local unitDef = {
   upright =false,
   pushResistant =true,
   maxVelocity =3.6,
-  acceleration =0.8,
-  turnRate =365,
+  acceleration =1.2,
+  turnRate =965,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
 
