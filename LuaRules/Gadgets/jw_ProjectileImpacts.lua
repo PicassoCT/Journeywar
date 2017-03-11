@@ -1,5 +1,4 @@
 
-
 function gadget:GetInfo()
 	return {
 		name = "Projectiles",
@@ -11,12 +10,7 @@ function gadget:GetInfo()
 		enabled = true,
 	}
 end
-
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
-
-
-
-
 if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua" )
 	VFS.Include("scripts/lib_UnitScript.lua" )
@@ -115,7 +109,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jSwiftSpearID , true)
 	Script.SetWatchWeapon(jghostDancerWeaponDefID , true)
 	Script.SetWatchWeapon(crabShelWDefID,true)
-	Script.SetWatchWeapon( cArtDarkMaterWDefID, true)
+	Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
 	Script.SetWatchWeapon(bunkerPlasmaDefID,true)
 	Script.SetWatchWeapon(cCssFlameT,true)
 	Script.SetWatchWeapon(glavaWeaponID,true)

@@ -101,7 +101,7 @@ function script.Killed(recentDamage, maxHealth)
 	x,_,z=Spring.GetUnitPosition(unitID)
 	defID=UnitDefNames["campro"].id
 	
-	process(filterTableByTable( getAllInCircle(x,z,190, unitID),{[UnitDefNames["campro"].id]=true}
+	process(filterTableByTable( getAllInCircle(x,z,190, unitID),{[UnitDefNames["campro"].id]=true},
 	function(id)
 		def=Spring.GetUnitDefID(id, T2) 
 		if T2[def]  then
