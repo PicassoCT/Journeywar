@@ -101,7 +101,14 @@ function script.Killed(recentDamage, maxHealth)
 	x,_,z=Spring.GetUnitPosition(unitID)
 	defID=UnitDefNames["campro"].id
 	
-	process(filterTableByTable( getAllInCircle(x,z,190, unitID),{[UnitDefNames["campro"].id]=true},
+	process( getAllInCircle(x,z,190, unitID),
+	function(id)
+		 if Spring.GetUnitDefID(id)== UnitDefNames["campro"].id then 
+			return nil
+		 else 
+			return id
+		 end
+	 end,
 	function(id)
 		def=Spring.GetUnitDefID(id, T2) 
 		if T2[def]  then

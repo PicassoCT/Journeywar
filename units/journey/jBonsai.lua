@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " Wall Unit, raising the water level",
 	objectName = "jBonsai.s3o",
 	script = "jBonsaiScript.lua",
-	buildPic = "jtree.png",
+	buildPic = "jbonsai.png",
 	--cost
 	buildCostMetal = 240,
 	buildCostEnergy = 10,

@@ -293,7 +293,7 @@ FixFunctionTabel[5]= function ()
 	PrevPosTable={}
 	PrevPosTable[1]={x=0,y=0,z=0}
 	for i=2,relativeIndex, 1 do
-		PrevPosTable[i]={x=PrevPosTable[i-1].x 	+math.random(-quarterheight,quarterheight), 
+		PrevPosTable[i]={x=PrevPosTable[i-1].x 	+math.random(-1* quarterheight,quarterheight), 
 			y=PrevPosTable[i-1].y	+math.random(-halfHeight,halfHeight),
 		z=PrevPosTable[i-1].z +math.random(-quarterheight,quarterheight)}
 	end
@@ -481,7 +481,7 @@ FixFunctionTabel[9]=	function ()
 	--2:1 hexagons : pentagons 
 	for i=3,NUMBEROFPIECES,1 do
 		MovePieceToPiece(TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
-		turnPieceRandDir(TreePiece[i],0, 90,0,0,360,0,90)
+		turnPieceRandDir(TreePiece[i],0, 90,0,360,0,90,0)
 		WaitForTurn(TreePiece[i],x_axis)
 		WaitForTurn(TreePiece[i],y_axis)
 		WaitForTurn(TreePiece[i],z_axis)

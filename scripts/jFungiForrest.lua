@@ -81,10 +81,14 @@ function grabTooKill()
 		end
 	end
 	newTable={}	
+	if not proChoice or type(proChoice) ~= "table" or #proChoice <=0 then return {}end
+	
 	for i=1,#proChoice do
+		if proChoice[i] and type(proChoice[i])== "number" then
 		defID=spGetUnitDefID(proChoice[i])
-		if not UnitsToSpare[defID] then
-			newTable[#newTable+1]=proChoice[i]
+			if not UnitsToSpare[defID] then
+				newTable[#newTable+1]=proChoice[i]
+			end
 		end
 	end
 	return newTable

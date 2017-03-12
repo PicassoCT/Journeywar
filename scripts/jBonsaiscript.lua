@@ -475,6 +475,14 @@ end
 	function addWaterLvl()
 		Sleep(100)
 		while(true) do
+		
+			minExtreme,maxExtreme=Spring.GetGroundExtremes()
+			if minExtreme -50 > 0 then 
+				g_AddOnRate =0.0005 
+			else
+				g_AddOnRate =1
+			end
+			
 			if GG.addWaterLevel ~= nil and boolWaterSpilling == true then
 				
 				GG.addWaterLevel=GG.addWaterLevel+g_AddOnRate

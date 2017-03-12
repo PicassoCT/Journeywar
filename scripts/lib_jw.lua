@@ -53,7 +53,9 @@ end
 
 function getFungiImuneUnitTypeTable(UnitDefNames)
 	retTab={}
-	retTab[UnitDefNames["jcondrone"].id]=true
+	retTab[UnitDefNames["jstealthdrone"].id]=true
+	retTab[UnitDefNames["conbigfoot"].id]=true
+	retTab[UnitDefNames["jconroach"].id]=true
 	retTab[UnitDefNames["contrain"].id]=true
 	retTab[UnitDefNames["jfungiforrest"].id]=true
 	retTab[UnitDefNames["jtreel"].id]=true
@@ -61,6 +63,10 @@ function getFungiImuneUnitTypeTable(UnitDefNames)
 	retTab[UnitDefNames["jracedart"].id]=true
 	retTab[UnitDefNames["jfiredancebomb"].id]=true
 	retTab[UnitDefNames["cgamagardener"].id]=true
+	retTab[UnitDefNames["beanstalk"].id]=true
+	retTab[UnitDefNames["citadell"].id]=true
+	retTab[UnitDefNames["ccomender"].id]=true
+	retTab[UnitDefNames["jvaryfoo"].id]=true
 	for i=1,9 do
 		retTab[UnitDefNames["jtree4"..i].id]=true
 	end

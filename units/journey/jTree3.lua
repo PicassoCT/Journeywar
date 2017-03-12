@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Regenerates after Destruction. Stores Energy.",
 	objectName = "jETree3.s3o",
 	script = "jTree3.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtreeWater.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

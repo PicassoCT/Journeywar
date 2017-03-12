@@ -30,6 +30,7 @@ function script.Create()
 	Spring.SetUnitAlwaysVisible(unitID,true)
 	hideT(piecesTable)
 	StartThread(osLoop)
+	StartThread(destroyOnTimeOut)
 end
 buildingTypes= getJourneyBuildingTypeTable(UnitDefNames)
 
@@ -152,5 +153,10 @@ function osLoop()
 	WaitForMove(Base,y_axis)
 	Hide(Base)
 	Hide(BaseLow)
+	Spring.DestroyUnit(unitID,false,true)
+end
+MaxTime=9*60*1000
+function destroyOnTimeOut()
+	Sleep(MaxTime)
 	Spring.DestroyUnit(unitID,false,true)
 end

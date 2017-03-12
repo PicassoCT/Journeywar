@@ -125,7 +125,7 @@ function AddictBehaviour()
 	while true do
 
 			for k,v in pairs(AddictList) do
-				if k and Spring.GetUnitIsDead(k)==false then
+				if k and Spring.GetUnitIsDead(k)==false and k~= unitID then
 					if v.addTime > STUNNED then
 						Spring.SetUnitNoSelect(k,true)
 						stunUnit(k)

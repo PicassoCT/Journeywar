@@ -607,8 +607,12 @@ function handleHymens(frame,HohymenCounter)
 				if boolSucessfullTransiton==true then
 					x,y,z=Spring.GetUnitPosition(id)
 					if AgentTable[id].Type=="ghohymen" and z then
-						other="none"						
-						HohymenStates[LongedState].func(id, other,x,y,z)
+						other="none"			
+						if HohymenStates[LongedState].func == nil or not type(HohymenStates[LongedState].func)=="function" then
+							echo("LonngedState"..LongedState.." has no function")
+						else
+							HohymenStates[LongedState].func(id, other,x,y,z)
+						end
 					end					
 				end						
 			end

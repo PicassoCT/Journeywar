@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Jams Enemys Radar.",
 	objectName = "jjam.s3o",
 	script = "jjamscript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jjam.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

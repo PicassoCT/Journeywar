@@ -6,7 +6,7 @@ Description = "Grows into Skinfantry",
 
 objectName = "skinEggNogg.s3o",
 script = "skinegg.lua",
-buildPic = "placeholderj.png",
+buildPic = "skinfantry.png",
 
 
 	RadarDistance = 0,

@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " Resistant to Radiation.",
 	objectName = "jEtree2.s3o",
 	script = "jTree2.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtreeRad.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,
