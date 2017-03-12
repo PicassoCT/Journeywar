@@ -403,7 +403,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		return true
 	end
 	
-	local 	ghostShadowEffectedUnits={}	
+	ghostShadowEffectedUnits={}	
 	
 	blowUpTable={}
 	local timeTillBlowUp=3500	
@@ -813,6 +813,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				--now we displace it and set its speed to zero#
 				ghostShadowEffectedUnits[attackerID]=Spring.GetGameFrame()+ GHOSTLIFETIME
+				Spring.Echo("Set Unit Speed modifier for "..attackerID)
 				
 				offx,offz=math.random(-25,25),math.random(-25,25)
 				px,py,pz=Spring.GetUnitPosition(attackerID)
@@ -886,12 +887,13 @@ if (gadgetHandler:IsSyncedCode()) then
 			--ghostShadowEffectedUnits --slows down ghostdancer attackers
 			if table.getn(ghostShadowEffectedUnits) ~= 0 then
 				for k,v in pairs(ghostShadowEffectedUnits) do				
-					if v > frame then
+					if v < frame then
+						Spring.Echo("Reset Unit Speed modifier for "..k)
 						setSpeedEnv(k,1.0)					
 					end	 
 				end	 
 				for k,v in pairs(ghostShadowEffectedUnits) do				
-					if v > frame then
+					if v < frame then
 						ghostShadowEffectedUnits[k]=nil				
 					end	 
 				end	 

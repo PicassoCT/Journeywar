@@ -39,7 +39,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	local function CreateEvent(self,...)
 		local arg={...}
 		GG.EventStreamID=GG.EventStreamID+1
-		self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg.persPack}
+		self[GG.EventStreamID-1] = {id=GG.EventStreamID-1,action=arg.action,persPack=arg.persPack, startFrame=Spring.GetGameFrame()}
 		return GG.EventStreamID-1
 	end	
 	
@@ -98,8 +98,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			for i=1,#TimeTable[frame] do
 				local id=TimeTable[frame][i]
 				
-				--execute the function
-				nextframe,Events[id].persPack=Events[id].action(id,frame, Events[id].persPack)
+				--execute the function --recives the id, the current frame, the PersitancePackage and the frames since event-creation
+				nextframe,Events[id].persPack=Events[id].action(id,frame, Events[id].persPack,frame-Events[id].startFrame)
 				
 				if nextframe then
 					if not	TimeTable[nextframe] then TimeTable[nextframe] ={}end 
@@ -113,11 +113,7 @@ if (gadgetHandler:IsSyncedCode()) then
 						Events[id]=nil
 					end					
 				end
-			end
-			
-			
-		end
-		
-		
+			end			
+		end	
 	end
 end
