@@ -812,7 +812,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			if boolUnitIsDead == false then		
 				
 				--now we displace it and set its speed to zero#
-				ghostShadowEffectedUnits[attackerID]=Spring.GetGameFrame()+ GHOSTLIFETIME
+				ghostShadowEffectedUnits[attackerID]=
 				Spring.Echo("Set Unit Speed modifier for "..attackerID)
 				
 				offx,offz=math.random(-25,25),math.random(-25,25)
@@ -820,12 +820,21 @@ if (gadgetHandler:IsSyncedCode()) then
 				Spring.SetUnitMoveGoal(attackerID, px +offx, py, pz +offz)
 				Spring.Echo("Rotating unit around unit")
 				rotateUnitAroundUnit(unitID,attackerID, 180)
-				distanced =distanceUnitToUnit(attackerID, unitID)
-				if distanced < 50 then
-					Spring.SetUnitSensorRadius(attackerID,"los",5)
-				end
-				
+
 				setSpeedEnv(attackerID,0.05)	
+				
+				GG.EventStream:CreateEvent({action= function(evtID, frame, persPack)
+				if frame > endFrame  then
+				if Spring.GetUnitIsDead(persPack.unitID)==true then
+				Spring.Echo("Reset Unit Speed modifier for "..persPack.unitID)
+					setSpeedEnv(persPack.unitID,1)	
+					return nil, persPack
+				end
+				else
+					return persPack.endFrame,persPack
+				end
+				end, persPack={unitID= attackerID, endFrame=Spring.GetGameFrame()+ GHOSTLIFETIME}})
+				
 			end
 		end	
 	end
@@ -883,22 +892,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					if values.number==0 then blowUpTable[unit]= nil end
 				end				
 			end
-			
-			--ghostShadowEffectedUnits --slows down ghostdancer attackers
-			if table.getn(ghostShadowEffectedUnits) ~= 0 then
-				for k,v in pairs(ghostShadowEffectedUnits) do				
-					if v < frame then
-						Spring.Echo("Reset Unit Speed modifier for "..k)
-						setSpeedEnv(k,1.0)					
-					end	 
-				end	 
-				for k,v in pairs(ghostShadowEffectedUnits) do				
-					if v < frame then
-						ghostShadowEffectedUnits[k]=nil				
-					end	 
-				end	 
-			end
-			--/ghostShadowEffectedUnits
+
 		end	
 	end
 	
