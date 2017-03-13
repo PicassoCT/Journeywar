@@ -117,7 +117,6 @@ function script.Killed(recentDamage, maxHealth)
 			return true
 		end
 	end
-	)
 	,
 	function(id) GG.UnitsToKill:PushKillUnit(id) end 
 	)

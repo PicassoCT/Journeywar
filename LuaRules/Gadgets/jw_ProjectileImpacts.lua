@@ -593,8 +593,10 @@ if (gadgetHandler:IsSyncedCode()) then
 					end
 				end	 
 				return nextFrame, persPack
-			end				
-			GG.EventStream:CreateEvent({action= eventFunction, persPack={unitID= unitID, totalTime=JPLANKTONER_AA_STUNTIME}})
+			end		
+			persPack={unitID= unitID, totalTime=JPLANKTONER_AA_STUNTIME}
+			GG.EventStream:CreateEvent( eventFunction, persPack,Spring.GetGameFrame()+1)
+			
 		end
 		return damage
 	end
@@ -813,27 +815,33 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				--now we displace it and set its speed to zero#
 				ghostShadowEffectedUnits[attackerID]=
-				Spring.Echo("Set Unit Speed modifier for "..attackerID)
+
 				
 				offx,offz=math.random(-25,25),math.random(-25,25)
 				px,py,pz=Spring.GetUnitPosition(attackerID)
 				Spring.SetUnitMoveGoal(attackerID, px +offx, py, pz +offz)
-				Spring.Echo("Rotating unit around unit")
+
 				rotateUnitAroundUnit(unitID,attackerID, 180)
 
 				setSpeedEnv(attackerID,0.05)	
+
+				action= function(evtID, frame, persPack)
+					if frame >= persPack.startFrame  then
+						if Spring.GetUnitIsDead(persPack.unitID)==false then
+							setSpeedEnv(persPack.unitID,1)	
+						end
+						return nil, persPack
+					else
+						return persPack.startFrame,persPack
+					end
+				end
 				
-				GG.EventStream:CreateEvent({action= function(evtID, frame, persPack)
-				if frame > endFrame  then
-				if Spring.GetUnitIsDead(persPack.unitID)==true then
-				Spring.Echo("Reset Unit Speed modifier for "..persPack.unitID)
-					setSpeedEnv(persPack.unitID,1)	
-					return nil, persPack
-				end
-				else
-					return persPack.endFrame,persPack
-				end
-				end, persPack={unitID= attackerID, endFrame=Spring.GetGameFrame()+ GHOSTLIFETIME}})
+				persPack={unitID= attackerID, startFrame=Spring.GetGameFrame()+ GHOSTLIFETIME}
+				
+				GG.EventStream:CreateEvent(action,
+											persPack,
+											Spring.GetGameFrame()+1
+											)
 				
 			end
 		end	
