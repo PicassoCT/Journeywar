@@ -74,6 +74,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
 	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
 	cEfenceWeapondDefID =WeaponDefNames["cwefence1"].id
+	poisonRaceDartDef =WeaponDefNames["jpoisonracedart"].id
 	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
@@ -629,6 +630,55 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
+	UnitDamageFuncT[poisonRaceDartDef]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
+		--Poison a Unit to 1 Health and recovers it
+		poison = function (evtID, frame, persPack,startFrame)
+				--only apply if Unit is still alive
+				if Spring.GetUnitIsDead(persPack.victimID)==true then
+					return nil, persPack
+				end
+
+				--filter out imune Units
+				if persPack.ImuneUnits then
+					defID= Spring.GetUnitDefID(persPack.victimID)
+					if persPack.ImuneUnits[defID] then
+						return nil, persPack
+					end
+				end
+				healthOffSet=0
+				hp,maxHP= Spring.GetUnitHealth(persPack.victimID)
+				
+				if persPack.lastSetHp and hp ~= persPack.lastSetHp then
+				healthOffSet= hp-persPack.lastSetHp
+				end
+				
+			if not persPack.boolNotFirstCall then   
+				persPack.boolNotFirstCall = true 
+				persPack.factor = 1.01
+				persPack.orgHp = hp
+				persPack.lastSetHp=1
+				Spring.SetUnitHealth(persPack.victimID,1)
+			else
+				toSetFactor= math.max(math.min(1,math.abs(persPack.factor)),0.1)
+				toSetHp = persPack.orgHp * toSetFactor
+				persPack.lastSetHp=toSetHp
+				Spring.SetUnitHealth(persPack.victimID,toSetHp + healthOffSet)
+			end
+			
+			timeExpired=math.abs(frame-startFrame)/50
+			persPack.factor = math.max(0.05, math.min(1,math.log(1+timeExpired)))
+			
+			--Exit Clause
+			if Spring.GetUnitHealth(persPack.victimID) >= persPack.orgHp then
+				return nil, persPack
+			end
+
+			return frame + 50, persPack
+		end
+		
+	GG.EventStream:CreateEvent(poison, frame, {victimID=unitID, ImuneUnits= fuckingSpecial})
+	
+	end
 	UnitDamageFuncT[jethiefweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--only if the unit is hitsphere wise big enough 
 		if unitID and attackerTeam then
