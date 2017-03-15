@@ -10,27 +10,17 @@ center=piece"center"
 RaceDrone=piece"RaceDrone"
 
 function script.Create()
-StartThread(trail)
-StartThread(uHave20Seconds)
+	StartThread(uHave20Seconds)
 end
 
-function trail()
-	while true do
-		while boolMove==true do
-		EmitSfx(RaceDrone,1024)
-		Sleep(50)
-		end
-	Sleep(350)
-	end
-end
 
 function uHave20Seconds()
-Sleep(LifeTime)
-Spring.DestroyUnit(unitID,true)
+	Sleep(LifeTime)
+	Spring.DestroyUnit(unitID,true)
 end
 
 function script.Killed(recentDamage,_)
-return 1
+	return 1
 end
 
 
@@ -62,19 +52,19 @@ end
 boolItsOff=false
 boolMove=false
 function script.StartMoving()
-boolMove=true
-boolItsOff=true
+	boolMove=true
+	boolItsOff=true
 end
 
 function TimeDelayedDestruction()
-Sleep(1000)
-	if boolItsOff==false then
-	Spring.DestroyUnit(unitID,false,true)		
-	end
-boolItsOff=false
+	Sleep(1000)
+		if boolItsOff==false then
+		Spring.DestroyUnit(unitID,false,true)		
+		end
+	boolItsOff=false
 end
 
 function script.StopMoving()
-boolMove=false
-StartThread(TimeDelayedDestruction)
+	boolMove=false
+	StartThread(TimeDelayedDestruction)
 end

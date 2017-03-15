@@ -11,15 +11,8 @@ center=piece"center"
 dart=piece"dart"
 
 function script.Create()
-	StartThread(trail)
-	StartThread(uHave20Seconds)
-end
 
-function trail()
-	while true do
-		EmitSfx(dart,1024)
-		Sleep(100)
-	end
+	StartThread(uHave20Seconds)
 end
 
 function uHave20Seconds()

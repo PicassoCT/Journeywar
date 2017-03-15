@@ -1,5 +1,4 @@
 local unitName = "jpoisonhive"
-
 local unitDef = {
 	name = "Poison Dart Hive :",
 	Description = "Spawns Poisonous Spiders",
@@ -48,8 +47,8 @@ local unitDef = {
 	Category = [[LAND BUILDING]],
 	
 	weapons = {
-		[1]={name = "jhornetBeehive",
-			onlyTargetCategory = [[ LAND AIR]],
+		[1]={name = "jpoisonhivetarget",
+			onlyTargetCategory = [[ LAND ]],
 		},
 		
 	},

@@ -18,7 +18,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	--all units that are buildings
 jBuilding = {
-		[UnitDefNames["jswiftspear"].id]=true,
 		[UnitDefNames["jmovingfac1"].id]=true,	
 		[UnitDefNames["jdrilltree"].id]=true,
 		[UnitDefNames["jmeggstack"].id]=true,
@@ -32,8 +31,9 @@ jBuilding = {
 		[UnitDefNames["jfungiforrest"].id]=true,
 		[UnitDefNames["jnativevil"].id]=true,
 		[UnitDefNames["jtreel"].id]=true,
-		[UnitDefNames["jabyss"].id]=true	
-		 }
+		[UnitDefNames["jabyss"].id]=true,
+		[UnitDefNames["jpoisonhive"].id]=true
+		}
 	
 	
 	

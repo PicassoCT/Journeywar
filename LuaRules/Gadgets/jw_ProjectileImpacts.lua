@@ -75,6 +75,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
 	cEfenceWeapondDefID =WeaponDefNames["cwefence1"].id
 	poisonRaceDartDef =WeaponDefNames["jpoisonracedart"].id
+	jpoisonhivemarkDefID =WeaponDefNames["jpoisonhivemark"].id
 	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
@@ -368,6 +369,16 @@ if (gadgetHandler:IsSyncedCode()) then
 		end,	
 		[jghostDancerWeaponDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			if Spring.ValidUnitID(AttackerID)==true then Spring.SetUnitPosition(AttackerID, px, py, pz)	end
+		end,		
+		[jpoisonhivemarkDefID]=function(weaponDefID, px, py, pz, AttackerID)
+		if Spring.GetUnitIsDead(AttackerID)==true then return end
+		pX,pY,pZ=Spring.GetUnitPosition(AttackerID)
+		teamID= Spring.GetUnitTeam(AttackerID)
+		xVec={x=pX-px, y=0, z=(pZ-pz)}
+		xVec=normVector(xVec)
+
+		GG.UnitsToSpawn:PushCreateUnit("jpoisondart",pX+ 25*xVec.x,pY,pZ+25*xVec.z,teamID)
+			
 		end,
 		[crabShelWDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			ShockWaveRippleOutwards( px, pz, 150, 180, 90)			

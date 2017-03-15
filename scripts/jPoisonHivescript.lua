@@ -12,14 +12,13 @@ center=piece"center"
 
 
 function script.Create()
-	
+
 	PiecesGroups=makePiecesTablesByNameGroups(false,true)
 	hideT(PiecesGroups["Spire"])
 	hideT(PiecesGroups["eggStage"])
 	hideT(PiecesGroups["egg"])
 	StartThread(eggWobble)
-	StartThread(unfoldSpire)
-	
+	StartThread(unfoldSpire)	
 end
 
 function unfoldSpire()
@@ -93,14 +92,15 @@ function script.QueryWeapon1()
 end
 
 function script.AimWeapon1( Heading ,pitch)	
-	--aiming animation: instantly turn the gun towards the enemy
-	
+
 	return true
 	
 end
 
 
 function script.FireWeapon1()	
+	index=math.random(1,#PiecesGroups["Egg"])
+	Explode(PiecesGroups["Egg"][index],SFX.FALL+ SFX.NO_HEATCLOUD)
 	
 	return true
 end
