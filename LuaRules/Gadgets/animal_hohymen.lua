@@ -582,12 +582,15 @@ function handleHymens(frame,HohymenCounter)
 			Timer=2500
 			
 			id=getNearestGeoVent(math.random(1,Game.mapSizeX),0,math.random(1,Game.mapSizeZ))
-			x,y,z=Spring.GetFeaturePosition(id)
-			if x and z then
-				id=Spring.CreateUnit("ghohymen",x,0,z,1,gaiaTeam)
-				ix,iy,iz = math.random(10,20), math.random(10,20), math.random(10,20)
-				Spring.AddUnitImpulse(id,ix,iy,iz)
-				Spring.SetUnitAlwaysVisible(id,true)
+			x,z=Game.mapSizeX/2,Game.mapSizeZ/2
+			if id then
+				x,y,z=Spring.GetFeaturePosition(id)
+				if x and z then
+					id=Spring.CreateUnit("ghohymen",x,0,z,1,gaiaTeam)
+					ix,iy,iz = math.random(10,20), math.random(10,20), math.random(10,20)
+					Spring.AddUnitImpulse(id,ix,iy,iz)
+					Spring.SetUnitAlwaysVisible(id,true)
+				end			
 			end			
 		end
 		

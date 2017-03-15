@@ -50,6 +50,9 @@ local unitDef = {
 	Category = [[LAND]],
 	
 	weapons = {	
+			[1]={name = "jpoisondartweapon",
+			onlyTargetCategory = [[ LAND ]]
+			},
 	},
 }
 

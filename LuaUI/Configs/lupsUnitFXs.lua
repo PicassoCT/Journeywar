@@ -105,16 +105,16 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,24,-20}, size=30, precision=22, strength = 0.005, repeatEffect=true}}, 
 	}, 
 	cdefusordart= {
-		{class='Ribbon', options={color={.9,.1,0.1,1}, width=6.5, size= 32, piece="center", onActive=false}},
+		{class='Ribbon', options={color={.9,.1,0.1,1}, width=6.5, size= 32, piece="dart", onActive=false}},
 	}, 
 	
 	--journeyman
-	jpoisondart= {
-		{class='Ribbon', options={color={.7,.9,0.1,1}, width=6.5, size= 32, piece="center", onActive=false}},
+	jpoisonracedart= {
+		{class='Ribbon', options={color={.7,.9,0.1,1}, width=6.5, size= 32, piece="RaceDrone", onActive=false}},
 	},
 	jracedart= {
 		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=5, colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},
-		{class='Ribbon', options={color={.2,.8,0.9,1}, width=6.5, size= 32, piece="center", onActive=false}},
+		{class='Ribbon', options={color={.2,.8,0.9,1}, width=6.5, size= 32, piece="RaceDrone", onActive=false}},
 	},
 	jhoneypot= {
 		{class='Ribbon', options={color={.9,.4,0.1,1}, width=12.5, size= 32, piece="jhoney", onActive=false}},
@@ -185,9 +185,7 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,35,0}, size=60, precision=28, strength = 0.007, repeatEffect=true}},
 	},
 	
-	jracedart= {
-		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=5, colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}}
-	},
+
 	
 	beanstalk= {
 		{class='ShieldSphere', options={life=math.huge, pos={0,25,0}, size=300, colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},

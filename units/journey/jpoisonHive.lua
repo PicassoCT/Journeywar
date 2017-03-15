@@ -4,7 +4,7 @@ local unitDef = {
 	Description = "Spawns Poisonous Spiders",
 	objectName = "jPoisonDartTower.s3o",
 	script = "jPoisonHivescript.lua",
-	buildPic = "jbeehive.png",
+	buildPic = "jpoisonhive.png",
 	--cost
 	buildCostMetal = 950,
 	buildCostEnergy = 750,
@@ -28,29 +28,21 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
-	
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = true,
 	
 	customParams = {},
 	sfxtypes = {
-		explosiongenerators = {
-			
+		explosiongenerators = {			
 		},
 		
 	},
 	
 	
-	
-	
 	Category = [[LAND BUILDING]],
 	
-	weapons = {
-		[1]={name = "jpoisonhivetarget",
-			onlyTargetCategory = [[ LAND ]],
-		},
-		
+	weapons = {		
 	},
 	
 	

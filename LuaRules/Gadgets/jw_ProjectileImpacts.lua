@@ -74,7 +74,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
 	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
 	cEfenceWeapondDefID =WeaponDefNames["cwefence1"].id
-	poisonRaceDartDef =WeaponDefNames["jpoisonracedart"].id
+	poisonRaceDartDef =WeaponDefNames["jpoisondartweapon"].id
 	jpoisonhivemarkDefID =WeaponDefNames["jpoisonhivemark"].id
 	
 	ChainLightningTable={}

@@ -28,7 +28,7 @@ end
 teamID=Spring.GetUnitTeam(unitID)
 
 function script.Create()
-
+	
 end
 
 maxspeed=math.ceil(UnitDefNames["campro"].speed *65533)
@@ -50,7 +50,7 @@ function flareThread()
 		end
 		Sleep(120)
 	end
-
+	
 end
 
 ----aimining & fire weapon
@@ -69,29 +69,29 @@ end
 boolTurretAimed=false
 SIG_AIM= 4
 function script.AimWeapon1( heading, pitch )	
-boolTurretAimed=false
-Signal(SIG_AIM)
-SetSignalMask(SIG_AIM)
+	boolTurretAimed=false
+	Signal(SIG_AIM)
+	SetSignalMask(SIG_AIM)
 	Turn(amturret,y_axis,heading,2.1)
 	WaitForTurn(amturret,y_axis)
 	boolTurretAimed=true
-			return true	
+	return true	
 end
 
 function script.AimWeapon2( heading, pitch )	
-			return boolTurretAimed	
+	return boolTurretAimed	
 end
 
 
 function script.FireWeapon1()	
-
-
+	
+	
 	StartThread(flareThread)
 	return true
 end
 function script.FireWeapon2()	
-
-
+	
+	
 	return true
 end
 
@@ -103,40 +103,43 @@ function script.Killed(recentDamage, maxHealth)
 	
 	process( getAllInCircle(x,z,190, unitID),
 	function(id)
-		 if Spring.GetUnitDefID(id)== UnitDefNames["campro"].id then 
+		if Spring.GetUnitDefID(id)== UnitDefNames["campro"].id then 
 			return nil
-		 else 
+		else 
 			return id
-		 end
-	 end,
+		end
+	end,
 	function(id)
 		def=Spring.GetUnitDefID(id, T2) 
-		if T2[def]  then
+		if T2[def] then
 			return false 
 		else
 			return true
 		end
 	end
 	,
-	function(id) GG.UnitsToKill:PushKillUnit(id) end 
+	function(id)
+		GG.UnitsToKill:PushKillUnit(id) 
+	end 
 	)
 	
-
-size=8
-if GG.DynDefMap == nil then GG.DynDefMap={} end
-if GG.DynRefMap == nil then GG.DynRefMap={} end
-GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,-1)	
+	
+	size=8
+	if GG.DynDefMap == nil then GG.DynDefMap={} end
+	if GG.DynRefMap == nil then GG.DynRefMap={} end
+	GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
+	GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,-1)	
 	
 	Sleep(450)
 	EmitSfx(amturret,1025)
+	return 
 end
 --Building
 
 
 
 function script.StartMoving()
-
+	
 	
 end
 

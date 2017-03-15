@@ -8,17 +8,19 @@ PiecesGroups={}
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
 end
+aimspot=piece"aimspot"
 center=piece"center"
-
+SIGHT_RANGE= 2500
 
 function script.Create()
-
+	
 	PiecesGroups=makePiecesTablesByNameGroups(false,true)
 	hideT(PiecesGroups["Spire"])
 	hideT(PiecesGroups["eggStage"])
 	hideT(PiecesGroups["egg"])
 	StartThread(eggWobble)
 	StartThread(unfoldSpire)	
+	StartThread(checkSpawn)	
 end
 
 function unfoldSpire()
@@ -70,7 +72,7 @@ function eggWobble()
 		end
 		Sleep(250)
 		hideT(PiecesGroups["eggStage"])
-
+		
 	end
 end
 function script.Killed(recentDamage,_)
@@ -80,31 +82,45 @@ function script.Killed(recentDamage,_)
 end
 
 
-----aimining & fire weapon
-function script.AimFromWeapon1() 
-	return aimpiece 
-end
 
+dartID=-math.huge
 
-
-function script.QueryWeapon1() 
-	return aimpiece
-end
-
-function script.AimWeapon1( Heading ,pitch)	
-
-	return true
+function getTowersDartPoisonDartIfThereIsNone()
+	boolvalidID= Spring.ValidUnitID(dartID) 
+	if boolvalidID and boolvalidID == true then
+		boolAlive= Spring.GetUnitIsDead(dartID) 
+		if boolAlive and boolAlive== true then
+			return dartID
+		end
+	end
+	x,y,z=Spring.GetUnitPosition(unitID)
+	team=Spring.GetUnitTeam(unitID)
 	
+	offx,offz=RotationMatrice(0,35,math.rad(math.random(-360,360)))
+	dartID= Spring.CreateUnit("jpoisonracedart",x+offx,y,z+offz,0,team)
+	soundStart         = "sounds/jPoisondart/jPoisonDartLaunch.ogg"
+	Spring.PlaySoundFile(soundStart,1.0)
+	return dartID
 end
-
-
-function script.FireWeapon1()	
-	index=math.random(1,#PiecesGroups["Egg"])
-	Explode(PiecesGroups["Egg"][index],SFX.FALL+ SFX.NO_HEATCLOUD)
-	
-	return true
+LOAD_TIME=7000
+function checkSpawn()
+	reloadTime=LOAD_TIME
+	while true do
+		
+		enemyID=Spring.GetUnitNearestEnemy(unitID, SIGHT_RANGE)
+		if enemyID then 
+			myDart=getTowersDartPoisonDartIfThereIsNone()
+			Command(myDart,"go",{x=ex,y=ey,z=ez},{"shift"})
+			Sleep(reloadTime)
+			boolNotDeadYet= Spring.GetUnitIsDead(myDart)
+			while boolNotDeadYet and boolNotDeadYet==false do
+				Sleep(200)
+				boolNotDeadYet= Spring.GetUnitIsDead(myDart)
+			end
+		end
+		Sleep(100)
+	end
 end
-
 
 
 function script.StartMoving()
@@ -125,9 +141,3 @@ function script.Deactivate()
 	
 	return 0
 end
-
-function script.QueryBuildInfo() 
-	return center 
-end
-
-Spring.SetUnitNanoPieces(unitID,{ center})
