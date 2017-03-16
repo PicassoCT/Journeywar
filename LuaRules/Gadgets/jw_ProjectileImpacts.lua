@@ -189,12 +189,11 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	local	explosionFunc={
 		
-		[poisonRaceDartDef]= function (weaponDefID, px, py, pz, AttackerID) 	
-			Spring.Echo("Unit Poisoned by dart")		
+		[poisonRaceDartDef]= function (weaponDefID, px, py, pz, AttackerID) 		
 			--Poison a Unit to 1 Health and recovers it
 			
 			poison = function (evtID, frame, persPack,startFrame)
-				Spring.Echo("EventStream Poisoned by active for"..persPack.victimID)		
+				--Spring.Echo("EventStream Poisoned by active for"..persPack.victimID)		
 				--only apply if Unit is still alive
 				if Spring.GetUnitIsDead(persPack.victimID)==true then
 					return nil, persPack
@@ -209,7 +208,9 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 				healthOffSet=0
 				hp,maxHP= Spring.GetUnitHealth(persPack.victimID)
-				
+				if not hp then 
+					return nil, nil
+				end
 				if persPack.lastSetHp and hp ~= persPack.lastSetHp then
 					healthOffSet= hp-persPack.lastSetHp
 				end
@@ -221,14 +222,14 @@ if (gadgetHandler:IsSyncedCode()) then
 					persPack.lastSetHp=1
 					Spring.SetUnitHealth(persPack.victimID,1)
 				else
-					toSetFactor= math.max(math.min(1,math.abs(persPack.factor)),0.1)
-					toSetHp = persPack.orgHp * toSetFactor
-					persPack.lastSetHp=toSetHp
-					Spring.SetUnitHealth(persPack.victimID,toSetHp + healthOffSet)
+
+					toSetHp = persPack.orgHp * persPack.factor
+					persPack.lastSetHp=toSetHp+ healthOffSet
+					Spring.SetUnitHealth(persPack.victimID,persPack.lastSetHp)
 				end
 				
-				timeExpired=math.abs(frame-startFrame)/50
-				persPack.factor = math.max(0.05, math.min(1,math.log(1+timeExpired)))
+
+				persPack.factor = persPack.factor *persPack.factor 
 				
 				--Exit Clause
 				if Spring.GetUnitHealth(persPack.victimID) >= persPack.orgHp then
@@ -439,16 +440,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		[jghostDancerWeaponDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			if Spring.ValidUnitID(AttackerID)==true then Spring.SetUnitPosition(AttackerID, px, py, pz)	end
 		end,		
-		[jpoisonhivemarkDefID]=function(weaponDefID, px, py, pz, AttackerID)
-			if Spring.GetUnitIsDead(AttackerID)==true then return end
-			pX,pY,pZ=Spring.GetUnitPosition(AttackerID)
-			teamID= Spring.GetUnitTeam(AttackerID)
-			xVec={x=pX-px, y=0, z=(pZ-pz)}
-			xVec=normVector(xVec)
-			
-			GG.UnitsToSpawn:PushCreateUnit("jpoisondart",pX+ 25*xVec.x,pY,pZ+25*xVec.z,teamID)
-			
-		end,
+
 		[crabShelWDefID]=function(weaponDefID, px, py, pz, AttackerID)
 			ShockWaveRippleOutwards( px, pz, 150, 180, 90)			
 			Spring.CreateUnit("hc",px,py,pz, 1, gaiaTeamID) 
