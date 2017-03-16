@@ -11,19 +11,19 @@ local unitDef = {
 	buildCostEnergy = 250,
 	buildTime = 5,
 	--Health
-	maxDamage = 3950,
+	maxDamage = 1600,
 	mass=1024,
-	idleAutoHeal =1,
+	idleAutoHeal =0,
 	--Movement
 	Acceleration = 4.5,
 	BrakeRate = 0.0000000000000000003,
-	FootprintX = 3,
-	FootprintZ = 3,
+	FootprintX = 2,
+	FootprintZ = 2,
 	MaxSlope = 60,
 	MaxVelocity = 4.5,
-	MaxWaterDepth = 20,
+	MaxWaterDepth = 100,
 	MovementClass = "Default2x2",
-	TurnRate = 900,
+	TurnRate = 1100,
 	
 	sightDistance = 500,
 	nanocolor=[[0 0.9 0.9]],
@@ -47,11 +47,11 @@ local unitDef = {
 		},	
 	},
 	
-	Category = [[LAND]],
+	Category = [[LAND DART]],
 	
 	weapons = {	
 			[1]={name = "jpoisondartweapon",
-			onlyTargetCategory = [[ LAND ]]
+			onlyTargetCategory = [[LAND]]
 			},
 	},
 }
