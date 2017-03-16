@@ -101,7 +101,8 @@ function script.Killed(recentDamage, maxHealth)
 	x,_,z=Spring.GetUnitPosition(unitID)
 	defID=UnitDefNames["campro"].id
 	
-	process( getAllInCircle(x,z,190, unitID),
+	tooClose=getAllInCircle(x,z,190, unitID)
+	process( tooClose,
 	function(id)
 		if Spring.GetUnitDefID(id)== UnitDefNames["campro"].id then 
 			return nil
@@ -116,8 +117,7 @@ function script.Killed(recentDamage, maxHealth)
 		else
 			return true
 		end
-	end
-	,
+	end,
 	function(id)
 		GG.UnitsToKill:PushKillUnit(id) 
 	end 

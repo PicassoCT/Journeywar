@@ -13,7 +13,6 @@ function script.Create()
 	StartThread(uHave20Seconds)
 end
 
-
 function uHave20Seconds()
 	Sleep(LifeTime)
 	Spring.DestroyUnit(unitID,true)
@@ -23,13 +22,10 @@ function script.Killed(recentDamage,_)
 	return 1
 end
 
-
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return RaceDrone 
 end
-
-
 
 function script.QueryWeapon1() 
 	return RaceDrone
@@ -39,15 +35,12 @@ function script.AimWeapon1( Heading ,pitch)
 	--aiming animation: instantly turn the gun towards the enemy
 
 	return true
-
 end
  
-
 function script.FireWeapon1()	
-
+	Spring.DestroyUnit(unitID,false,true)
 	return true
 end
-
 
 boolItsOff=false
 boolMove=false

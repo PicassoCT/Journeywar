@@ -17,8 +17,8 @@ local unitDef = {
 	--Movement
 	Acceleration = 4.5,
 	BrakeRate = 0.0000000000000000003,
-	FootprintX = 2,
-	FootprintZ = 2,
+	FootprintX = 3,
+	FootprintZ = 3,
 	MaxSlope = 60,
 	MaxVelocity = 4.5,
 	MaxWaterDepth = 100,
@@ -43,14 +43,14 @@ local unitDef = {
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {
-			"custom:jdart",	 
+			"custom:poisonteal",	 
 		},	
 	},
 	
-	Category = [[LAND DART]],
+	Category = [[DART]],
 	
 	weapons = {	
-			[1]={name = "jpoisondartweapon",
+			[1]={name = "jpoisondartw",
 			onlyTargetCategory = [[LAND]]
 			},
 	},

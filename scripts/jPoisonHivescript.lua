@@ -41,7 +41,6 @@ function unfoldSpire()
 	)
 end
 
-
 function eggWobble()
 	while true do
 		showT(PiecesGroups["egg"])
@@ -75,13 +74,12 @@ function eggWobble()
 		
 	end
 end
+
 function script.Killed(recentDamage,_)
 	
 	createCorpseJUnitGeneric(recentDamage)
 	return 1
 end
-
-
 
 dartID=-math.huge
 
@@ -102,6 +100,7 @@ function getTowersDartPoisonDartIfThereIsNone()
 	Spring.PlaySoundFile(soundStart,1.0)
 	return dartID
 end
+
 LOAD_TIME=7000
 function checkSpawn()
 	reloadTime=LOAD_TIME
@@ -109,6 +108,7 @@ function checkSpawn()
 		
 		enemyID=Spring.GetUnitNearestEnemy(unitID, SIGHT_RANGE)
 		if enemyID then 
+			ex,ey,ez=Spring.GetUnitPosition(enemyID)
 			myDart=getTowersDartPoisonDartIfThereIsNone()
 			Command(myDart,"go",{x=ex,y=ey,z=ez},{"shift"})
 			Sleep(reloadTime)

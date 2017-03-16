@@ -1,6 +1,6 @@
-local weaponName="jpoisondartweapon"
+local weaponName="jpoisondartw"
 local weaponDef={
-	--weaponType=[[Cannon]],
+	weaponType=[[Cannon]],
 	rendertype=0,
 	
 	name="Suicidal",
@@ -12,26 +12,18 @@ local weaponDef={
 	avoidFeature=false,
 	avoidFriendly=false,
 	ImpulseBoost=0.2,
-	ImpulseFactor=1,
-	
+	ImpulseFactor=1,	
 	damage={
-		default=1,
+		default=5,
 	},
 	areaOfEffect=250,
 	craterMult=0,
 	lineOfSight=true,
-	soundHit = 	"sounds/jPoisondart/jPoisonDartImpact.ogg"
-	--
-	
-	
+	soundHit = 	"sounds/jPoisondart/jPoisonDartImpact.ogg",
+	--	
 	ballistic=true,
 	turret=true,
 	range=70,
-	weaponvelocity=250,
-	
-	
-	
-	
-	
+	weaponvelocity=1500
 }
 return lowerkeys ({[weaponName]=weaponDef})

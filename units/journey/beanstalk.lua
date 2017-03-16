@@ -75,7 +75,7 @@ local unitDef = {
 		
 		"jtree3",
 		"jtreel",
-		"jfungiforrest",
+		"jnativevil",
 		
 		--passive 		--defense
 		"jjamforrest",
@@ -88,10 +88,11 @@ local unitDef = {
 		"jbeehive",
 	
 		"jrefugeetrap",
-		"jgeohive",
-		"jnativevil",
-
+		"jpoisonhive",
+		"jfungiforrest",
+		
 		--endgame
+		"jgeohive",
 		"jabyss"		
 	},
 	

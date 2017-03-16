@@ -74,8 +74,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	jeliahbeamDefID=WeaponDefNames["jeliahbeam"].id
 	cgaterailgunDefID =WeaponDefNames["cgaterailgun"].id
 	cEfenceWeapondDefID =WeaponDefNames["cwefence1"].id
-	poisonRaceDartDef =WeaponDefNames["jpoisondartweapon"].id
-	jpoisonhivemarkDefID =WeaponDefNames["jpoisonhivemark"].id
+	poisonRaceDartDef =WeaponDefNames["jpoisondartw"].id
+
 	
 	ChainLightningTable={}
 	local FireWeapons={ [gVolcanoWeaponID]=true,
@@ -125,6 +125,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jvaryfoospearDefID , true)
 	Script.SetWatchWeapon(jgluegunDefID , true)
 	Script.SetWatchWeapon(cAllyGatorMarkerDefID , true)
+	Script.SetWatchWeapon(poisonRaceDartDef , true)
 	
 	--units To be exempted from instantly lethal force
 	local fuckingSpecial ={
@@ -187,6 +188,74 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	local	explosionFunc={
+		
+		[poisonRaceDartDef]= function (weaponDefID, px, py, pz, AttackerID) 	
+			Spring.Echo("Unit Poisoned by dart")		
+			--Poison a Unit to 1 Health and recovers it
+			
+			poison = function (evtID, frame, persPack,startFrame)
+				Spring.Echo("EventStream Poisoned by active for"..persPack.victimID)		
+				--only apply if Unit is still alive
+				if Spring.GetUnitIsDead(persPack.victimID)==true then
+					return nil, persPack
+				end
+				
+				--filter out imune Units
+				if persPack.ImuneUnits then
+					defID= Spring.GetUnitDefID(persPack.victimID)
+					if persPack.ImuneUnits[defID] then
+						return nil, persPack
+					end
+				end
+				healthOffSet=0
+				hp,maxHP= Spring.GetUnitHealth(persPack.victimID)
+				
+				if persPack.lastSetHp and hp ~= persPack.lastSetHp then
+					healthOffSet= hp-persPack.lastSetHp
+				end
+				
+				if persPack.boolNotFirstCall == nil then 
+					persPack.boolNotFirstCall = true 
+					persPack.factor = 1.01
+					persPack.orgHp = hp
+					persPack.lastSetHp=1
+					Spring.SetUnitHealth(persPack.victimID,1)
+				else
+					toSetFactor= math.max(math.min(1,math.abs(persPack.factor)),0.1)
+					toSetHp = persPack.orgHp * toSetFactor
+					persPack.lastSetHp=toSetHp
+					Spring.SetUnitHealth(persPack.victimID,toSetHp + healthOffSet)
+				end
+				
+				timeExpired=math.abs(frame-startFrame)/50
+				persPack.factor = math.max(0.05, math.min(1,math.log(1+timeExpired)))
+				
+				--Exit Clause
+				if Spring.GetUnitHealth(persPack.victimID) >= persPack.orgHp then
+					return nil, persPack
+				end
+				
+				return frame + 50, persPack
+			end
+			
+			T=getAllInCircle(px,pz,150)
+			if T then
+				process(T,
+				function(id)
+					if id ~= AttackerID then
+						persPack={victimID=id, ImuneUnits= fuckingSpecial}
+						GG.EventStream:CreateEvent(poison, 
+						persPack,
+						Spring.GetGameFrame()+1)
+					end
+				end
+				)
+				
+				
+				
+			end
+		end,
+		
 		[catapultDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			Spring.SpawnCEG("ccatapultexpl",px,py+5,pz,0,1,0,10)	
 		end,	
@@ -289,12 +358,12 @@ if (gadgetHandler:IsSyncedCode()) then
 				ad=RazorGrenadeTable[AttackerID][#RazorGrenadeTable[AttackerID]] 
 			end	
 			if ad and Spring.ValidUnitID(ad) == true then
-			
-			ed= Spring.GetUnitNearestEnemy(ad)
-			if ed then 
-				x,y,z=Spring.GetUnitPosition(ed)
-				Spring.SetUnitMoveGoal(ad,x,y,z)
-			end
+				
+				ed= Spring.GetUnitNearestEnemy(ad)
+				if ed then 
+					x,y,z=Spring.GetUnitPosition(ed)
+					Spring.SetUnitMoveGoal(ad,x,y,z)
+				end
 			end
 			
 		end,
@@ -337,8 +406,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			else
 				dartID= Spring.CreateUnit(unitChoice,px,py,pz,1,gaiaTeamID)	
 			end		
-		
-		AttachUnitToPieceNearImpact(dartID, AttackerID,px,py,pz, 10)		
+			
+			AttachUnitToPieceNearImpact(dartID, AttackerID,px,py,pz, 10)		
 		end,
 		[cmtwgrenade]=function(weaponDefID, px, py, pz, AttackerID)
 			if Spring.ValidUnitID(AttackerID) ==true then
@@ -371,13 +440,13 @@ if (gadgetHandler:IsSyncedCode()) then
 			if Spring.ValidUnitID(AttackerID)==true then Spring.SetUnitPosition(AttackerID, px, py, pz)	end
 		end,		
 		[jpoisonhivemarkDefID]=function(weaponDefID, px, py, pz, AttackerID)
-		if Spring.GetUnitIsDead(AttackerID)==true then return end
-		pX,pY,pZ=Spring.GetUnitPosition(AttackerID)
-		teamID= Spring.GetUnitTeam(AttackerID)
-		xVec={x=pX-px, y=0, z=(pZ-pz)}
-		xVec=normVector(xVec)
-
-		GG.UnitsToSpawn:PushCreateUnit("jpoisondart",pX+ 25*xVec.x,pY,pZ+25*xVec.z,teamID)
+			if Spring.GetUnitIsDead(AttackerID)==true then return end
+			pX,pY,pZ=Spring.GetUnitPosition(AttackerID)
+			teamID= Spring.GetUnitTeam(AttackerID)
+			xVec={x=pX-px, y=0, z=(pZ-pz)}
+			xVec=normVector(xVec)
+			
+			GG.UnitsToSpawn:PushCreateUnit("jpoisondart",pX+ 25*xVec.x,pY,pZ+25*xVec.z,teamID)
 			
 		end,
 		[crabShelWDefID]=function(weaponDefID, px, py, pz, AttackerID)
@@ -394,7 +463,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SetUnitNoSelect(grenadeID,true)
 		end,
 		[cgaterailgunDefID]=function(weaponDefID, px, py, pz, AttackerID)
-
+			
 			ateam=Spring.GetUnitTeam(AttackerID)
 			id= Spring.CreateUnit("cgatefort",px,py,pz,0,ateam)
 			if not GG.FiringGateFotressTable then GG.FiringGateFotressTable ={} end 
@@ -402,15 +471,16 @@ if (gadgetHandler:IsSyncedCode()) then
 			if not GG.FiringGateFotressTable[ateam][AttackerID] then GG.FiringGateFotressTable[ateam][AttackerID]=false end
 			GG.FiringGateFotressTable[ateam][AttackerID]=false 
 			
-
+			
 			transferUnitStatusToUnit(AttackerID, id)
-
+			
 		end		
-
-
-		}	
+		
+		
+	}	
 	
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
+
 		if 	explosionFunc[weaponDefID] then explosionFunc[weaponDefID](weaponDefID, px, py, pz, AttackerID) end		
 		return true
 	end
@@ -423,16 +493,16 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	HarvestRocketLoadTable={}	
 	JeliahBeamAccu={}
-	 JELIAHBEAMDAMAGEMULTIPLIERMAX=24
+	JELIAHBEAMDAMAGEMULTIPLIERMAX=24
 	UnitDamageFuncT[jeliahbeamDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		if not JeliahBeamAccu[attackerID] or JeliahBeamAccu[attackerID].targetID ~= unitID  then 
-		newTarget={ targetID=unitID, accu=1.0}
-		JeliahBeamAccu[attackerID]=newTarget
+		if not JeliahBeamAccu[attackerID] or JeliahBeamAccu[attackerID].targetID ~= unitID then 
+			newTarget={ targetID=unitID, accu=1.0}
+			JeliahBeamAccu[attackerID]=newTarget
 		end
-	
-			JeliahBeamAccu[attackerID].accu=math.min((JeliahBeamAccu[attackerID].accu * 1.02), JELIAHBEAMDAMAGEMULTIPLIERMAX)
-			Spring.AddUnitDamage(unitID, math.ceil( JeliahBeamAccu[attackerID].accu))
-		end	
+		
+		JeliahBeamAccu[attackerID].accu=math.min((JeliahBeamAccu[attackerID].accu * 1.02), JELIAHBEAMDAMAGEMULTIPLIERMAX)
+		Spring.AddUnitDamage(unitID, math.ceil( JeliahBeamAccu[attackerID].accu))
+	end	
 	
 	UnitDamageFuncT[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not fuckingSpecial[unitDefID] then
@@ -466,7 +536,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	UnitDamageFuncT[cEfenceWeapondDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		spawnCegAtUnit(unitID,"cefencesplash",0,10,0)
 		spawnCegAtUnit(attackerID,"cefencesplash",0,10,0)
-	
+		
 		return damage
 	end 
 	
@@ -641,55 +711,6 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	UnitDamageFuncT[poisonRaceDartDef]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
-		--Poison a Unit to 1 Health and recovers it
-		poison = function (evtID, frame, persPack,startFrame)
-				--only apply if Unit is still alive
-				if Spring.GetUnitIsDead(persPack.victimID)==true then
-					return nil, persPack
-				end
-
-				--filter out imune Units
-				if persPack.ImuneUnits then
-					defID= Spring.GetUnitDefID(persPack.victimID)
-					if persPack.ImuneUnits[defID] then
-						return nil, persPack
-					end
-				end
-				healthOffSet=0
-				hp,maxHP= Spring.GetUnitHealth(persPack.victimID)
-				
-				if persPack.lastSetHp and hp ~= persPack.lastSetHp then
-				healthOffSet= hp-persPack.lastSetHp
-				end
-				
-			if not persPack.boolNotFirstCall then   
-				persPack.boolNotFirstCall = true 
-				persPack.factor = 1.01
-				persPack.orgHp = hp
-				persPack.lastSetHp=1
-				Spring.SetUnitHealth(persPack.victimID,1)
-			else
-				toSetFactor= math.max(math.min(1,math.abs(persPack.factor)),0.1)
-				toSetHp = persPack.orgHp * toSetFactor
-				persPack.lastSetHp=toSetHp
-				Spring.SetUnitHealth(persPack.victimID,toSetHp + healthOffSet)
-			end
-			
-			timeExpired=math.abs(frame-startFrame)/50
-			persPack.factor = math.max(0.05, math.min(1,math.log(1+timeExpired)))
-			
-			--Exit Clause
-			if Spring.GetUnitHealth(persPack.victimID) >= persPack.orgHp then
-				return nil, persPack
-			end
-
-			return frame + 50, persPack
-		end
-		
-	GG.EventStream:CreateEvent(poison, frame, {victimID=unitID, ImuneUnits= fuckingSpecial})
-	
-	end
 	UnitDamageFuncT[jethiefweaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 			
 		--only if the unit is hitsphere wise big enough 
 		if unitID and attackerTeam then
@@ -779,8 +800,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam) 
-		
-		
+
 		--chain Lightning 
 		if weaponDefID == ChainLightningDefID and attackerID then
 			if not ChainLightningTable[attackerID] then ChainLightningTable[attackerID]=30 end
@@ -834,8 +854,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		
 		if UnitDamageFuncT[weaponDefID]	then	
-		resultDamage=	UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
-		if resultDamage then return resultDamage end
+			resultDamage=	UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
+			if resultDamage then return resultDamage end
 		end
 		
 		--cBonkerPlasmaWeapon + FireWeapons
@@ -869,25 +889,21 @@ if (gadgetHandler:IsSyncedCode()) then
 			end			
 		end
 		--jShadow is hit	
-		if unitDefID == jShadowDefID and not fuckingSpecial[attackerDefID] and  attackerTeam ~= unitTeam and type(attackerID)== "number" then	
+		if unitDefID == jShadowDefID and not fuckingSpecial[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
 			
 			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
 			if boolUnitIsDead == false then		
 				
-				--now we displace it and set its speed to zero#
-				ghostShadowEffectedUnits[attackerID]=
-
-				
 				offx,offz=math.random(-25,25),math.random(-25,25)
 				px,py,pz=Spring.GetUnitPosition(attackerID)
 				Spring.SetUnitMoveGoal(attackerID, px +offx, py, pz +offz)
-
+				
 				rotateUnitAroundUnit(unitID,attackerID, 180)
-
+				
 				setSpeedEnv(attackerID,0.05)	
-
+				
 				action= function(evtID, frame, persPack)
-					if frame >= persPack.startFrame  then
+					if frame >= persPack.startFrame then
 						if Spring.GetUnitIsDead(persPack.unitID)==false then
 							setSpeedEnv(persPack.unitID,1)	
 						end
@@ -900,9 +916,9 @@ if (gadgetHandler:IsSyncedCode()) then
 				persPack={unitID= attackerID, startFrame=Spring.GetGameFrame()+ GHOSTLIFETIME}
 				
 				GG.EventStream:CreateEvent(action,
-											persPack,
-											Spring.GetGameFrame()+1
-											)
+				persPack,
+				Spring.GetGameFrame()+1
+				)
 				
 			end
 		end	
@@ -961,7 +977,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					if values.number==0 then blowUpTable[unit]= nil end
 				end				
 			end
-
+			
 		end	
 	end
 	
