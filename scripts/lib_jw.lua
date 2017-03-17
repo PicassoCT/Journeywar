@@ -77,14 +77,7 @@ end
 
 function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	retTab={}
-	{
-		[UnitDefNames["ccomender"].id]=true,
-		[UnitDefNames["beanstalk"].id]=true,
-		[UnitDefNames["citadell"].id]=true,
-		[UnitDefNames["gvolcano"].id]=true,
-		[UnitDefNames["gproceduralfeature"].id]=true,
-	}	
-	
+
 	retTab[UnitDefNames["ccomender"].id]=true
 	retTab[UnitDefNames["beanstalk"].id]=true
 	retTab[UnitDefNames["citadell"].id]=true
