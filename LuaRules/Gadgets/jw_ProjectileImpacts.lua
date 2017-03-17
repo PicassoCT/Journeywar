@@ -4,7 +4,7 @@ function gadget:GetInfo()
 	return {
 		name = "Projectiles",
 		desc = "This gadget handles projectileimpacts",
-		author = "jK - always jk is there anyhting lua, that he didnt do long before you, making you look like a idiot in his fathers shoes. Oh, yeah, there it is, inferiority_complex.lua, author.. jk. of course. :(",
+		author = "",
 		date = "Sep. 2008",
 		license = "GNU GPL, v2 or later",
 		layer = 0,
@@ -18,6 +18,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua" )
 	VFS.Include("scripts/lib_UnitScript.lua" )
 	VFS.Include("scripts/lib_Build.lua" 	)
+	VFS.Include("scripts/lib_jw.lua" 	)
+	
 	local UnitDamageFuncT={}
 	local StunnedUnitsTable={}
 	nrOfUnits=0
@@ -128,13 +130,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(poisonRaceDartDef , true)
 	
 	--units To be exempted from instantly lethal force
-	local fuckingSpecial ={
-		[UnitDefNames["ccomender"].id]=true,
-		[UnitDefNames["beanstalk"].id]=true,
-		[UnitDefNames["citadell"].id]=true,
-		[UnitDefNames["gvolcano"].id]=true,
-		[UnitDefNames["gproceduralfeature"].id]=true,
-	}
+	local lethalBuffExecption = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
+
 	
 	local	gaiaTeamID=Spring.GetGaiaTeamID()
 	local	skySraperDefID=UnitDefNames["buibaicity1"].id
@@ -223,7 +220,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					Spring.SetUnitHealth(persPack.victimID,1)
 				else
 
-					toSetHp = persPack.orgHp * persPack.factor
+					toSetHp = persPack.orgHp * clamp(persPack.factor-1,0.01,1 )
 					persPack.lastSetHp=toSetHp+ healthOffSet
 					Spring.SetUnitHealth(persPack.victimID,persPack.lastSetHp)
 				end
@@ -244,7 +241,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				process(T,
 				function(id)
 					if id ~= AttackerID then
-						persPack={victimID=id, ImuneUnits= fuckingSpecial}
+						persPack={victimID=id, ImuneUnits= lethalBuffExecption}
 						GG.EventStream:CreateEvent(poison, 
 						persPack,
 						Spring.GetGameFrame()+1)
@@ -497,7 +494,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end	
 	
 	UnitDamageFuncT[cAntiMatterDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		if not fuckingSpecial[unitDefID] then
+		if not lethalBuffExecption[unitDefID] then
 			unitVannishAntimatterSFX(unitID) 
 		end
 	end
@@ -881,7 +878,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			end			
 		end
 		--jShadow is hit	
-		if unitDefID == jShadowDefID and not fuckingSpecial[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
+		if unitDefID == jShadowDefID and not lethalBuffExecption[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
 			
 			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
 			if boolUnitIsDead == false then		
