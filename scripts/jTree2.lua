@@ -18,7 +18,7 @@ for i=1, 5, 1 do
 	root[i]=piece (roottemp)
 end
 
-
+TransformRange=250
 
 rotable={}
 for i=1, 13, 1 do
@@ -266,9 +266,34 @@ function script.Create()
 	else
 		
 		StartThread(fruitLoop)
+		StartThread(convertInfantryNearby)
 	end
 	
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.45)
+end
+
+function convertInfantry()
+px,py,pz=Spring.GetUnitPosition(unitID)
+infantryTypeTable=
+while true do
+T=getAllinCircle(px,pz,TransformRange)
+teamID=Spring.GetUnitTeam(unitID)
+process(T,
+		function(id)
+			if id ~= unitID and  infantryTypeTable[Spring.GetUnitDefID(id)] then
+			return id
+			end
+		return nil
+		end,
+		function (id)
+			if id and teamID ~= Spring.GetUnitTeam(id) then
+				--TODO continue
+			end
+		end
+		)
+
+Sleep(350)
+end
 end
 
 
