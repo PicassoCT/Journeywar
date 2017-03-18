@@ -4,14 +4,13 @@ local unitDef  =  {
     BuildPic = "filename.bmp",
     ObjectName = "jbeefeater.s3o",
 	buildPic = "jbeefeater.png",
-    name = "Sniper",
-    Side = "CentrAIl",
-    TEDClass = "HOVER",
+    name = "Beefeater",
+
     script = "jbeefeaterscript.lua",
     
 --Unit limitations and properties
     BuildTime = 82,
-    Description = "- (Very hungry) : ",
+    Description = "sniper Reptile, growing longer with experience.",
     MaxDamage = 1240,
     RadarDistance = 0,
     SightDistance = 500,

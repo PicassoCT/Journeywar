@@ -1,7 +1,8 @@
 local unitName = "geohive"
 
 local unitDef = {
-  name               = "Sprawling Underground City",
+  name               = "Underground City",
+  Description = "rebuilds civilisation upon Destruction"
   objectName         = "geohive.s3o",
   buildPic = "placeholder.png",
   script="cgeohive.lua",

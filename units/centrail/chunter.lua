@@ -1,8 +1,8 @@
 local unitName = "chunter"
 
 local unitDef = {
-	name = "Hunter Synth",
-	Description = "Close Combat Warrior",
+	name = "Huntersynth",
+	Description = "advanced close-combat Warrior",
 	objectName = "jHunter.s3o",
 	script = "jhunterscript.lua",
 	buildPic = "placeholder.png",

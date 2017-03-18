@@ -1,7 +1,7 @@
-local unitName = "conbigfoot"
+local unitName = "jconcaterpillar"
 local unitDef = {
-	name = "conbigfoot",
-	Description = "conbigfoot",
+	name = "Concaterpillar",
+	Description = " Construction Exobiotic, using lifeforce to construct.",
 	objectName = "conbigfoot.s3o",
 	script = "conbigfoot.lua",
 	buildPic = "placeholderj.png",

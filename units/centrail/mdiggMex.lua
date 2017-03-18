@@ -1,8 +1,8 @@
 local unitName = "mdiggMex"
 
 local unitDef = {
-	name = "Metalldiggester (Stationary)",
-	Description = "Mines into the ground till it hits water",
+	name = "Metalldiggester",
+	Description = "mines the ground for Material down to the watertable",
 	objectName = "mdigg.s3o",
 	script = "mdiggMexscript.lua",
 	buildPic = "placeholder.png",

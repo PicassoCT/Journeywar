@@ -1,8 +1,8 @@
 local unitName = "mtw"
 
 local unitDef = {
-name = "MannedTransportVehicle",
-Description = "Deploys CombinedFeatures. Currently holds: 0 0 0 0 0 0. Currently builds:",
+name = "Synth Personal Carrier",
+Description = "Contains: - - - - -. Building:",
 objectName = "mtw.s3o",
 script = "mtw.lua",
 buildPic = "cmtw.png",

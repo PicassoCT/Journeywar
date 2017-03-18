@@ -1,8 +1,8 @@
 local unitName = "chunterchopper"
 
 local unitDef = {
-name = "Hunter Chopper",
-Description = "Helicopter",
+name = "Hunterchopper",
+Description = "ground Assault Helicopter, drops bombs and waterbombs.",
 objectName = "chchopper.s3o",
 script = "cHunterChopperScript.lua",
 buildPic = "chunterchopper.dds",

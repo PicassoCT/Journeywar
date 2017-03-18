@@ -1,6 +1,6 @@
 local unitName = "citadell"
 local unitDef = {
-	name = "Spearspire",
+	name = "Citadell",
 	Description = "Center of Operations, plans and coordinates",
 	objectName = "citadell.s3o",
 	script = "citadellscript.lua",

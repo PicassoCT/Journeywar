@@ -1,8 +1,8 @@
 local unitName = "cgamagardener"
 
 local unitDef = {
-name = "GamaBurst Landscape Sterilization Unit",
-Description = "Cooking the Weed",
+name = "Gammagardener",
+Description = "Landscape gammasoaking sterilization Unit",
 objectName = "gama.s3o",
 script = "cgamagardener.lua",
 buildPic = "cgama.png",

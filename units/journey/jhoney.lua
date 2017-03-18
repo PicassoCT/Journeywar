@@ -3,7 +3,7 @@ local unitDef = {
   objectName="jhoney.s3o",
 
   name               = "Honeypot",
-  Description 		 ="Long Range Creeper with suicide tendencys",
+  Description 		 ="Creeper with suicide bomb tendencys",
 
   script 			 = "jhoneyscript.lua",
   maxDamage = 250, 

@@ -1,8 +1,8 @@
 local unitName = "zombie"
 
 local unitDef = {
-	name = "zombie",
-	Description = "Zombie",
+	name = "Zombie",
+	Description = "possesed living, hungry for the living, envying the dead.",
 	objectName = "zombie.s3o",
 	script = "zombiescript.lua",
 	buildPic = "placeholder.png",

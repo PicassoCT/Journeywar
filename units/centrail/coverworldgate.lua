@@ -1,8 +1,8 @@
 local unitName = "coverworldgate"
 
 local unitDef = {
-	name = "Reinforcement Gate:",
-	Description = "Autospawns expensive troops and sends them on missions",
+	name = "Overworld Gate",
+	Description = "spawns A.I. controlled Creepers who autoattack",
 	objectName = "cOverWorldTeleport.s3o",
 	script = "coverworldgatescript.lua",
 	buildPic = "portals.dds",

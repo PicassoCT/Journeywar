@@ -1,9 +1,9 @@
 local unitName = "buibaicity2"
 
 local unitDef = {
-  name               = "Bait: Arcology",
+  name               = "Arcology",
   objectName         = "buibaicity2.s3o",
-  description="BaitBuilding: Repays Insurrance Money if set on fire by a enemy",
+  description="repays invested Insurrance Money if set on fire by a enemy",
   script ="cbuibaiCityArco.lua",
   buildPic = "carcology.dds",
   maxdamage=1400,

@@ -1,7 +1,7 @@
 local unitName = "jsuneggnogg"
 
 local unitDef = {
-name = "Racedart Egg",
+name = "Egg",
 Description = "Grows into a Racedart",
 
 objectName = "jsuneggnogg.s3o",

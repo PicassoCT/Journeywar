@@ -1,7 +1,7 @@
 local unitName = "jmeconverter"
 local unitDef = {
-name = "Light Transformator",
-Description = "converts Light to Mass.",
+name = "Greenhouse Accelerator",
+Description = "converts Light to Matter.",
 
 
 objectName = "jmeconverter.s3o",
@@ -61,7 +61,7 @@ EnergyStorage = 250,
 	EnergyUse = 75,
 	MetalStorage = 0,
 	EnergyMake = 0, 
-	MakesMetal = 10, 
+	MakesMetal = 5, 
 	MetalMake = 0,	
   acceleration           = 0.3,
 

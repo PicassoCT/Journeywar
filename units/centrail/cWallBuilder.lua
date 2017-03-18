@@ -1,7 +1,7 @@
 local unitName = "cwallbuilder"
 local unitDef = {
-	name = "WallBuilder",
-	Description = "Builds and Charges electric Fences",
+	name = "Wallbuilder",
+	Description = "builds and charges mobile Wall Units",
 	objectName = "cWallBuilder.s3o",
 	script = "cWallBuilder.lua",
 	buildPic = "placeholder.png",

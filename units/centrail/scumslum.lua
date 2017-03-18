@@ -1,7 +1,8 @@
 local unitName = "scumslum"
 
 local unitDef = {
-  name               = "Scumslum: Generates low Securitybudget (Energy)",
+  name               = "Scumslum",
+  Description = " adds Securitybudget "
   objectName         = "scumslum.s3o",
   	buildPic = "scumslum.dds",
   script= "cscumslum.lua",

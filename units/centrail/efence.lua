@@ -1,7 +1,8 @@
 local unitName = "efence"
 
 local unitDef = {
-  name               = "Efence: Charged Powerfull Defense",
+  name               = "Efence",
+  Description= " chargeable electric Defensefence",
   objectName         = "efence.s3o",
   script ="cEfence.lua",
   buildPic = "efence.dds",

@@ -1,8 +1,8 @@
 local unitName = "jtree2"
 
 local unitDef = {
-	name = "Temptree",
-	Description = " Resistant to Radiation.",
+	name = "Future Tree",
+	Description = " Grows into a Dream Tree with Radiation",
 	objectName = "jEtree2.s3o",
 	script = "jTree2.lua",
 	buildPic = "jtreeRad.png",

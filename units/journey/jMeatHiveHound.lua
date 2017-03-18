@@ -2,8 +2,8 @@ local unitName = "jMeatHiveHound"
 local unitDef = {
   objectName="jMeatHiveHound.s3o",
 
-  name               = "ArghlWarghl",
-  Description 		 ="Nom Nom Nom ",
+  name               = "Hivehound",
+  Description 		 ="carrys Meat back to the hive",
 
   script 			 = "beefBringer.lua",
   maxDamage = 2550, 

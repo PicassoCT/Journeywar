@@ -395,28 +395,29 @@ return true
 end
 
 function updateProgressBar(status)
-orgString="Deploys CombinedFeatures. Currently holds: "
+orgString="Contains: "
 passengerString= ""
 for i=1, unitsStored,1 do
 		if passengerList[i]== "BG" then
-		passengerString=passengerString.."B "
+		passengerString=passengerString.." BG "
 		else
-		passengerString=passengerString.."C "
+		passengerString=passengerString.."CSS "
 		end
 end
 
 for i=1,(maxUnits-unitsStored),1 do
-passengerString=passengerString.."  "
+passengerString=passengerString.."- "
 end
 if boolIntBuild == true and status < 11 then
-passengerString=passengerString.." Build Progress: "
+passengerString=passengerString.." Building: ["
 
 for i=1,status,1 do
-passengerString=passengerString.."||"  
+passengerString=passengerString.."|"  
 end
+passengerString=passengerString.."]"
 
 elseif status== 11 then
-passengerString = passengerString.." Build Progress: Completed"
+passengerString = passengerString.." Build Completed"
 else
 
 end

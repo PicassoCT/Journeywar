@@ -2,7 +2,7 @@ local unitName = "jwatchbird"
 
 local unitDef = {
 name = "Birds",
-Description = "watching the enemy",
+Description = "observing enemy movements. Regenerate in Water.",
 objectName = "jwatchbird.s3o",
 script = "jwatchbirdscript.lua",
 --script = "pieceMaker.lua",

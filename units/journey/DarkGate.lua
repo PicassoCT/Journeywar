@@ -1,8 +1,8 @@
 local unitName = "jdarkgate"
 
 local unitDef = {
-name = "dark Gate ",
-Description = "takes and gives of other Journeyworlds",
+name = "Darkgate ",
+Description = "takes and gives Matter and Light from other Journeyworlds",
 objectName = "jDarkGate.s3o",
 script = "jDarkGateScript.lua",
 buildPic = "jdarkgate.png",

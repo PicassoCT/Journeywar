@@ -1,8 +1,8 @@
 local unitName = "jspore"
 
 local unitDef = {
-name = "Spore",
-Description = "Dead",
+name = "Fungispore",
+Description = "will infect any Unit nearby of the same type",
 objectName = "jInfMuShroom.s3o",
 script = "spore.lua",
 buildPic = "placeholderj.png",

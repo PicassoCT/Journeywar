@@ -143,9 +143,9 @@ local function SpawnStartUnit(teamID)
 			
 		else
 			
-			id1=Spring.CreateUnit("conbigfoot", x+100, y, z+50, facing, teamID)
-			id2=Spring.CreateUnit("conbigfoot", x+100, y, z, facing, teamID)
-			id3=Spring.CreateUnit("conbigfoot", x+100, y, z-50, facing, teamID)
+			id1=Spring.CreateUnit("jconcaterpillar", x+100, y, z+50, facing, teamID)
+			id2=Spring.CreateUnit("jconcaterpillar", x+100, y, z, facing, teamID)
+			id3=Spring.CreateUnit("jconcaterpillar", x+100, y, z-50, facing, teamID)
 			
 			Spring.GiveOrderToUnit(id1,CMD.GUARD,{unitID}, {"shift"})
 			Spring.GiveOrderToUnit(id2,CMD.GUARD,{unitID}, {"shift"})

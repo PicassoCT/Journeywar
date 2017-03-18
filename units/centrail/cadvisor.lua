@@ -1,8 +1,8 @@
 local unitName = "advisor"
 
 local unitDef = {
-name = "Advisor Stalker",
-Description = "Psionic Information Unit: Extracts Infos from captured Units",
+name = "Advisor",
+Description = "extracts Information from captured Enemys using PSI",
 objectName = "advisor.s3o",
 script = "cAdvisor.lua",
 buildPic = "advstalker.png",

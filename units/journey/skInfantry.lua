@@ -1,8 +1,8 @@
 local unitName = "skinfantry"
 
 local unitDef = {
-	name = "skInfantry",
-	Description = "Infantry in BioMechSuit",
+	name = "Skinfantry",
+	Description = "Infantry in Biosuits, using Shardgun and Birdrockets",
 	objectName = "skInfantry.s3o",
 	script = "skInfantry.lua",
 	buildPic = "skinfantry.png",

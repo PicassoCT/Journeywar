@@ -1,7 +1,7 @@
 local unitName = "ccomender"
 local unitDef = {
 	name = "ComEnder",
-	Description = "You in a armoured Suit - Memento Mori",
+	Description = "you in a armoured Suit. You live only once.",
 	objectName = "cComEnder.s3o",
 	script = "cComEnderScript.lua",
 	buildPic = "placeholder.png",

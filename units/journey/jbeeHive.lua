@@ -1,8 +1,8 @@
 local unitName = "jbeehive"
 
 local unitDef = {
-	name = "jBeehive :",
-	Description = "Launches Bees",
+	name = "Hornethive",
+	Description = " horryfing Hornets harassing hungry Honeythieves",
 	objectName = "jhornethive.s3o",
 	script = "jbeehive.lua",
 	buildPic = "jbeehive.png",

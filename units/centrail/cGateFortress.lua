@@ -1,7 +1,7 @@
 local unitName = "cgatefort"
 local unitDef = {
-	name = "Gatefotress",
-	Description = "Trainfortress travelling between Worlds",
+	name = "Gatefortress",
+	Description = "Fortress train travelling between Worlds",
 	objectName = "cGateFotress.s3o",
 	script = "cgatefotressscript.lua",
 	buildPic = "crailgun.dds",

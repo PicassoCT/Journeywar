@@ -1,7 +1,7 @@
 local unitName = "jshroudshrike"
 local unitDef = {
 	name = "Shroudshrike",
-	Description = "Transfers Experience",
+	Description = "transfers Experience into a variable Direction.",
 	
 	
 	objectName = "jshroudshrike.s3o",

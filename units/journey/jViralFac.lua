@@ -1,7 +1,7 @@
 local unitName = "jviralfac"
 local unitDef = {
-name = "Viral Factory",
-Description = "builds Units behind in the enemy lines",
+name = "Viralworm",
+Description = "builds Commando-Units behind in the enemy lines",
 objectName = "jViralFac.s3o",
 script = "jViralFacScript.lua",
 buildPic = "placeholderj.png",

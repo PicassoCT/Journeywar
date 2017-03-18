@@ -196,7 +196,7 @@ function replaceUnit(id,typeName)
 end
 
 function fruitLoop()
-	while(true) and boolJustOnceDeny ==true do
+	while boolJustOnceDeny ==true do
 		
 		rest=math.ceil(math.random(4900,62000))
 		Sleep(rest)
@@ -272,28 +272,40 @@ function script.Create()
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.45)
 end
 
+TransformTable=getDreamTreeTransformUnitTypeTable(UnitDefNames)
+
 function convertInfantry()
 px,py,pz=Spring.GetUnitPosition(unitID)
-infantryTypeTable=
-while true do
-T=getAllinCircle(px,pz,TransformRange)
-teamID=Spring.GetUnitTeam(unitID)
-process(T,
-		function(id)
-			if id ~= unitID and  infantryTypeTable[Spring.GetUnitDefID(id)] then
-			return id
-			end
-		return nil
-		end,
-		function (id)
-			if id and teamID ~= Spring.GetUnitTeam(id) then
-				--TODO continue
-			end
-		end
-		)
+local spGetUnitDefID= Spring.GetUnitDefID
+local spGetUnitTeam= Spring.GetUnitTeam
+myTeam=spGetUnitTeam(unitID)
 
-Sleep(350)
-end
+	while true do
+		T=getAllinCircle(px,pz,TransformRange)
+		teamID=Spring.GetUnitTeam(unitID)
+		process(T,
+				function(id)
+					if id ~= unitID and  TransformTable[spGetUnitDefID(id)] then
+					return id
+					end
+				return nil
+				end,
+				function (id)
+					if id and teamID ~= spGetUnitTeam(id) then
+						typeToTransferInto=TransformTable[spGetUnitDefID(id)]
+						if typeToTransferInto then
+						 resultID= transformUnitInto(id, typeToTransferInto)
+						 return resultID
+						end
+					end
+				end,
+				function (id)
+					Spring.TransferUnit(id,myTeam,false)
+				end
+				)
+
+		Sleep(350)
+	end
 end
 
 

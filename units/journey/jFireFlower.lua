@@ -1,8 +1,8 @@
 local unitName = "jfireflower"
 
 local unitDef = {
-  name               = "Fire Flowers",
-  description =" burning all the bridges",
+  name               = "Fireflowers",
+  description =" will bloom into a blazing Inferno if enemys nearby",
   objectName         = "jFireFlower.s3o",
   script ="jFireFlower.lua",
   buildPic = "jfireflower.png",

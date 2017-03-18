@@ -1,8 +1,8 @@
 local unitName = "jharbour"
 local unitDef = {
 name = "Harbour Cliffcolony",
-Description = "a harbour is always where the water is.",
-TEDClass = "PLANT",
+Description = "geonosis for Water and Water-Air Units",
+
 
 objectName = "jharbour.s3o",
 script = "jharbourscript.lua",

@@ -2,7 +2,7 @@ local unitName = "jtreel"
 
 local unitDef = {
 	name = "Accid Tree ",
-	Description = " a Matter Depot in Times of Crisis.",
+	Description = " stores and returns Matter. Corrodes Units nearby.",
 	objectName = "emptyObjectIsEmpty.s3o",
 	script = "jLspawnScript.lua",
 	buildPic = "jaccidtree.png",

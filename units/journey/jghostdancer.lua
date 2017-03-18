@@ -2,7 +2,7 @@ local unitName = "jghostdancer"
 
 local unitDef = {
 	name = "Ghost Dancer",
-	Description = "Scout and Radar Distortion Unit",
+	Description = "backtracks to alternative Timelines on Damage",
 	objectName = "ghostdancer.s3o",
 	script = "jghostdancer.lua",
 	buildPic = "placeholderj.png",

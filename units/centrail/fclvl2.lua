@@ -1,7 +1,7 @@
 local unitName = "fclvl2"
 
 local unitDef = {
-name = "Worldgate",
+name = "Offworld Transfergate",
 Description = "orders Advcanced Units Offworld",
 TEDClass = "PLANT",
 

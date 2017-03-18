@@ -1,8 +1,8 @@
 local unitName = "jtree2activate"
 
 local unitDef = {
-	name = "Temptree ",
-	Description = " Resistant to Radiation - can convert Infantry",
+	name = "Tree of dreams ",
+	Description = " Resistant to Radiation. Converts biological Enemys.",
 	objectName = "jetree2.s3o",
 	script = "jTree2.lua",
 	buildPic = "jtree.png",

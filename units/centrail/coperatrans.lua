@@ -3,7 +3,8 @@ local unitDef = {
 	--Internal settings
 	BuildPic = "filename.bmp",
 	ObjectName = "operatrans.s3o",
-	name = "Operahovercraft",
+	name = "Operatransport",
+	Description= "transports Units, carrys Waterbombs"
 	Side = "CentrAIl",
 	script = "operatransscript.lua",
 	

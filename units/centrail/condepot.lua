@@ -8,7 +8,7 @@ Category=[[LAND BUILDING]],
 	buildPic = "condepot.dds",
   name               = "Construction Unit Depot ",
   objectName         = "condepot.s3o",
-  	Description = " - builts Construction Units. Set to Guard on Citadell.",
+  	Description = "  builds Construction Units. Set to support the citadell.",
   MaxDamage = 1500,
 
 	 corpse             = "cInfantryCorpse",

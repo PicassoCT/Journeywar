@@ -1,8 +1,8 @@
 local unitName = "combinedfeature"
 
 local unitDef = {
-name = "Combine Watchpost",
-Description = "Outpost - sterlizing the nearby fauna",
+name = "Centrail Outwatchpost",
+Description = " sterlizes the nearby Exobiotic fauna",
 objectName = "cCombineOutPost.s3o",
 script = "combinedFeatureScript.lua",
 buildPic = "csniper.dds",

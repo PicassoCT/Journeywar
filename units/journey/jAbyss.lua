@@ -2,7 +2,7 @@ local unitName = "jabyss"
 
 local unitDef = {
 	name = "The Abbys",
-	Description = "releases Varyfoos, once the enemy riskes a Comender",
+	Description = "releases Varyfoos, once the enemy creates a Comender",
 	objectName = "jAbyss.s3o",
 	script = "jabyssscript.lua",
 	buildPic = "jabyss.png",

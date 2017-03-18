@@ -1,8 +1,8 @@
 local unitName = "cgunship"
 
 local unitDef = {
-	name = "Gun Ship",
-	Description = "heavy air harassment",
+	name = "Gunshipsynth",
+	Description = "heavy air-ground Gunship",
 	objectName = "cGunShip.s3o",
 	script = "cGunShipScript.lua",
 	buildPic = "chunterchopper.dds",

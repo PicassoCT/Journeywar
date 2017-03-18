@@ -1,8 +1,8 @@
 local unitName = "cdefusermine"
 
 local unitDef = {
-name = "DartDefuser Mine",
-Description = "launches anti-dart Projectiles",
+name = "Defusedart Deployer",
+Description = "launches free Dartdefusors",
 
 objectName = "cdefusormine.s3o",
 script = "cdefusermine_script.lua",

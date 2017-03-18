@@ -2,7 +2,7 @@ local unitName = "jinfinityscraddle"
 
 local unitDef = {
 	name = "Infinitys Craddle",
-	Description = "Gives birth to the Spaceborn",
+	Description = "gives birth to the Spaceborn",
 	objectName = "jinfinityscraddle.s3o",
 	script = "jinfinityscraddlescript.lua",
 	buildPic = "placeholderj.png",

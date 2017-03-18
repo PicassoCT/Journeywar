@@ -1,7 +1,7 @@
 local unitName = "cWaterExtractor"
 local unitDef = {
 name = "Water Extractor",
-Description = "Pumps Water Offworld",
+Description = "pumps Water Offworld for a greater cause",
 objectName = "cWaterExtractor.s3o",
 script = "c_WaterExtractor.lua",
 buildPic = "cwater.dds",

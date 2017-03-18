@@ -1,7 +1,7 @@
 local unitName = "cmeatcolumn"
 
 local unitDef = {
-	name = "MeatColum",
+	name = "Meatcolumn",
 	Description = "That got to hurt ",
 	objectName = "cSlicerMeatColumn.s3o",
 	script = "slicerImpact.lua",

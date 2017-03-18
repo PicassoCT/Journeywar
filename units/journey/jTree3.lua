@@ -2,7 +2,7 @@ local unitName = "jtree3"
 
 local unitDef = {
 	name = "Watertree ",
-	Description = "Regenerates after Destruction. Stores Energy.",
+	Description = "Stores Energy. Extinguishes fires and regenerates on Destruction. ",
 	objectName = "jETree3.s3o",
 	script = "jTree3.lua",
 	buildPic = "jtreeWater.png",

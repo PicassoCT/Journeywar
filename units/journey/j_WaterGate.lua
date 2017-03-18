@@ -1,7 +1,7 @@
 local unitName = "jwatergate"
 local unitDef = {
-name = "Water Gate",
-Description = "Floods the Map via Waterworldwormhole",
+name = "Watergate",
+Description = "floods the World via a Waterworldwormhole",
 objectName = "jWaterGate.s3o",
 script = "j_WaterGate.lua",
 buildPic = "watergate.png",

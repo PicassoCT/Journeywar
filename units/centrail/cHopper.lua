@@ -1,7 +1,7 @@
 local unitName = "cHopper"
 
 local unitDef = {
-	name = "Hopper Mine Field",
+	name = "Hopper Minefield",
 	objectName = "cHopperMinefield.s3o",
 	script ="cHopper.lua",
 	buildPic = "mines.dds",

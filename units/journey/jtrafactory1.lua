@@ -1,8 +1,7 @@
 local unitName = "jtrafactory"
 local unitDef = {
 	name = "Firstborn Unituterus",
-	Description = "gives birth to lvl1 units.",
-	TEDClass = "PLANT",
+	Description = "gives birth to first tear units.",
 	
 	objectName = "placeholder.s3o",
 	script = "jtransportedfactory1.lua",

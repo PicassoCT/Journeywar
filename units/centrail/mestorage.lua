@@ -2,7 +2,8 @@ local unitName = "mestorage"
 
 local unitDef = {
   maxdamage=600,
-  name               = "Depot: Stores Materials and Securitybudget",
+  name               = "Depot",
+  Description = "stores Material and Securitybudget"
   objectName         = "mestorage.s3o",
   script= "mestoscript.lua",
    corpse             = "bgcorpse",

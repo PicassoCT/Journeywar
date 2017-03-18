@@ -2,8 +2,8 @@ local unitName = "jsunshipwater"
 
 local unitDef = {
 	name = "Swimming Sunnship",
-	name = "Swimming Sunnship",
-	Description = "Waiting for the Sun to come up",
+
+	Description = "swallows a ocean, turns into a sun",
 	objectName = "jSunShip.s3o",
 	script = "jsunshipwaterScript.lua",
 	buildPic = "placeholder.png",

@@ -1,8 +1,8 @@
 local unitName = "jjamforrest"
 
 local unitDef = {
-	name = "Rainforrest ",
-	Description = "Jams Enemys Radar.",
+	name = "Fogforrest ",
+	Description = "reduces Enemys Sight to near zero.",
 	objectName = "jjam.s3o",
 	script = "jjamscript.lua",
 	buildPic = "jjam.png",

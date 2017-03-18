@@ -2,7 +2,7 @@ local unitName = "jfiredancer"
 
 local unitDef = {
 name = "Firedancer",
-Description = "those who created the Centrail, amending for there sins.",
+Description = "weaving Nanotics into AntiAir Fire. Creators of the CentrAIl",
 objectName = "jfiredancer.s3o",
 script = "jfiredancerscript.lua",
 buildPic = "placeholderj.png",

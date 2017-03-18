@@ -2,7 +2,7 @@ local unitName = "coffworldassembly"
 
 local unitDef = {
 name = "OffWorld Assembly",
-Description = "Assembles forbidden Units from parts distributed allover the centrail confederacy",
+Description = "assembles forbidden Technology Units for the centrail confederacy",
 TEDClass = "PLANT",
 
 

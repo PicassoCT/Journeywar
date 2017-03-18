@@ -1,8 +1,8 @@
 local unitName = "jviciouscycler"
 
 local unitDef = {
-name = "Cylcler",
-Description = "Disolving Aircraft",
+name = "Vicious Recycler",
+Description = "Disolves everything with biological Nanotics",
 objectName = "placeholder.s3o",
 script = "jViciousCycler.lua",
 buildPic = "placeholderj.png",

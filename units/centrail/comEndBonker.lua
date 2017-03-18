@@ -2,8 +2,8 @@ local unitName = "comendbonker"
 
 local unitDef = {
 maxdamage=650,
-  name               = "Underground Teleporter",
-  description = "Spawns a Com Ender if you press Activate twice",
+  name               = "Comender Mech Hangar",
+  description = "places you in a Mechanized Suit, if you agree twice",
   objectName         = "comendbonker.s3o",
   	buildPic = "comEndBonker.dds",
     script = "comEndBonker.lua",

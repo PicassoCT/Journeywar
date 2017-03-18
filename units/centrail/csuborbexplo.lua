@@ -1,7 +1,7 @@
 local unitName = "csuborbexplo"
 
 local unitDef = {
-	name = "Explosions",
+	name = "Ground Zero",
 	Description = "If you read this.. everyone around you is doomed",
 	objectName = "cSubOrbImpactor.s3o",
 	script = "csuborbexplo.lua",

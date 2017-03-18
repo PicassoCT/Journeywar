@@ -1,9 +1,9 @@
 local unitName = "buibaicity1"
 
 local unitDef = {
-  name               = "Baitbuilding: Skyskrapers",
+  name               = "Skyskrapers",
   objectName         = "buibaicity.s3o",
-  description=" Returns once attacked your Investment + Bonu donated by everyone in the enemy team,except last attacker",
+  description=" returns invested Money on Attack. Diverts Money from all but second-last Attacker. Upgrades Luxus Appartments nearby.",
   script ="cBuiBaiSky.lua",
   buildPic = "cskyscrape.dds",
 

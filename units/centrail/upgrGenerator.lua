@@ -1,8 +1,8 @@
 local unitName = "genupgrade"
 
 local unitDef = {
-name = "Upgrade Generators",
-Description = "adds additional Build Power Generator",
+name = "Upgrade Generator",
+Description = "adds additional Build Power",
 objectName = "emptyObjectIsEmpty.s3o",
 script = "not_implemented_yet.lua",
 buildPic = "upgradeGen.dds",

@@ -1,7 +1,7 @@
 local unitName = "jpoisonhive"
 local unitDef = {
 	name = "Poison Dart Hive :",
-	Description = "Spawns Poisonous Spiders",
+	Description = "Spawns Poisonous Darts if enemys are nearby",
 	objectName = "jPoisonDartTower.s3o",
 	script = "jPoisonHivescript.lua",
 	buildPic = "jpoisonhive.png",

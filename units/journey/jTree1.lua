@@ -1,8 +1,8 @@
 local unitName = "jtree"
 
 local unitDef = {
-	name = "Tree ",
-	Description = "Harvests Light",
+	name = "Rainforrest Tree ",
+	Description = "harvesting Light",
 	objectName = "jETree1.s3o",
 	script = "jTree.lua",
 	buildPic = "jtree.png",

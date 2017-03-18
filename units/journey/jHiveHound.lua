@@ -3,8 +3,7 @@ local unitDef = {
   objectName="jHiveHound.s3o",
 
   name               = "Hivewulf",
-  Description 		 ="Attacks anything that insults his Mother",
-
+  Description 		 = "Bites anything that comes close to the hive",
   script 			 = "jHiveHoundJunior.lua",
   maxDamage = 450, 
 

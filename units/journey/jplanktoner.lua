@@ -2,7 +2,7 @@ local unitName = "jplanktoner"
 
 local unitDef = {
 	name = "Plank toner",
-	Description = "Single Cell Anti Air Accelerator",
+	Description = "Single Cell Anti Air Accelerator Unit",
 	objectName = "jplanktoner.s3o",
 	script = "jplanktonerscript.lua",
 	buildPic = "placeholder.png",

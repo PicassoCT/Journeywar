@@ -2,8 +2,8 @@ local unitName = "campole"
 
 local unitDef = {
 	maxdamage=150,
-	name = "Camera Pole",
-	description = "Converts: Energy to Material(Securitybudget)",
+	name = "Propagandapole",
+	description = "Converts Material to Securitybudget",
 	objectName = "campole.s3o",
 	buildPic = "campole.dds",
 	script="campole.lua",

@@ -2,7 +2,7 @@ local unitName = "jupgradefactory2"
 
 local unitDef = {
 	name = "Upgrade to Infinity Craddle",
-	Description = " Needs to be in water for this",
+	Description = " Needs to be in water and constantly fed to succeed.",
 	objectName = "emptyObjectIsEmpty.s3o",
 	script = "not_implemented_yet.lua",
 	buildPic = "nanoupgrade.dds",

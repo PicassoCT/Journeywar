@@ -2,7 +2,7 @@ local unitName = "cdefusordart"
 
 local unitDef = {
 	name = "Defuse Dart",
-	Description = "destroys Journey Race Darts close-up",
+	Description = "destroys Race Darts close-up",
 	objectName = "cdefusordart.s3o",
 	script = "cdefusordart_script.lua",
 	buildPic = "cdefuserdart.png",

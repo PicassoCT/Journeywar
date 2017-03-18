@@ -1,7 +1,7 @@
 local unitName = "cheadlauncher"
 local unitDef = {
-name = "HeadLauncher",
-Description = "Provokes Enemys into Melee",
+name = "Headlauncher",
+Description = "provokes enemies into Melees. Withstands 3 enemies ",
 objectName = "hl.s3o",
 script = "jwHeadLaunchScript.lua",
 buildPic = "placeholder.png",

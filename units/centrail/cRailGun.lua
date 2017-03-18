@@ -1,9 +1,9 @@
 local unitName = "cRailGun"
 
 local unitDef = {
-  name               = "RailGun",
+  name               = "Railgun",
   objectName         = "cRailGun.s3o",
-  description= "Powerfull Base Defenses",
+  description= "powerfull, longrange base Defenses.",
   script ="cRailGund.lua",
   buildPic = "crailgun.dds",
   	RadarDistance = 25,

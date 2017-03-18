@@ -1,17 +1,17 @@
 local unitName = "jHiveHoundMoma"
 local unitDef = {
-  objectName="jHiveHoundMoma.s3o",
-
-  name               = "Wulfhive",
-  Description 		 ="Long Distance Harrasment ",
-
-  script 			 = "HiveHound.lua",
-  maxDamage = 2550, 
-
-  MovementClass = "Default2x2",
-  buildCostMetal =30,
-  buildCostEnergy =200,
-  buildTime=3,
+	objectName="jHiveHoundMoma.s3o",
+	
+	name               = "Wulfhive",
+	Description 		 ="Ranged Ground-Assault Unit ",
+	
+	script 			 = "HiveHound.lua",
+	maxDamage = 2550, 
+	
+	MovementClass = "Default2x2",
+	buildCostMetal =30,
+	buildCostEnergy =200,
+	buildTime=3,
  
   	canattack=true,
 	canguard=true,
@@ -19,20 +19,20 @@ local unitDef = {
 	canpatrol=true,
 	canstop=true,
 	
-  moveState =2,
-  noAutoFire =false,
-  footprintX=2,
-  footprintZ =2,
-     selfDestructAs ="defaultweapon",
-  explodeAs = "defaultweapon",
-
-  
-  upright =false,
-  pushResistant =true,
-  maxVelocity =5.2,
-  acceleration =0.1,
-  brakeRate=3.2,
-  turnRate =965,
+	moveState =2,
+	noAutoFire =false,
+	footprintX=2,
+	footprintZ =2,
+		selfDestructAs ="defaultweapon",
+	explodeAs = "defaultweapon",
+	
+	
+	upright =false,
+	pushResistant =true,
+	maxVelocity =5.2,
+	acceleration =0.1,
+	brakeRate=3.2,
+	turnRate =965,
   
 
  

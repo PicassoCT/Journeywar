@@ -2,7 +2,7 @@ local unitName = "jglowworms"
 
 local unitDef = {
 name = "Fireflys",
-Description = "Dangerous insectoids",
+Description = "dangerous near immortal Insectoids",
 objectName = "jGlowSwamp.s3o",
 script = "jGlowWormScript.lua",
 buildPic = "jglowworm.png",

@@ -54,7 +54,7 @@ end
 function getFungiImuneUnitTypeTable(UnitDefNames)
 	retTab={}
 	retTab[UnitDefNames["jstealthdrone"].id]=true
-	retTab[UnitDefNames["conbigfoot"].id]=true
+	retTab[UnitDefNames["jconcaterpillar"].id]=true
 	retTab[UnitDefNames["jconroach"].id]=true
 	retTab[UnitDefNames["contrain"].id]=true
 	retTab[UnitDefNames["jfungiforrest"].id]=true
@@ -77,13 +77,31 @@ end
 
 function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	retTab={}
+	{
+		[UnitDefNames["ccomender"].id]=true,
+		[UnitDefNames["beanstalk"].id]=true,
+		[UnitDefNames["citadell"].id]=true,
+		[UnitDefNames["gvolcano"].id]=true,
+		[UnitDefNames["gproceduralfeature"].id]=true,
+	}	
 
-	retTab[UnitDefNames["ccomender"].id]=true
-	retTab[UnitDefNames["beanstalk"].id]=true
-	retTab[UnitDefNames["citadell"].id]=true
-	retTab[UnitDefNames["gvolcano"].id]=true
-	retTab[UnitDefNames["gproceduralfeature"].id]=true
 	
+	return retTab
+end
+
+function getDreamTreeTransformUnitTypeTable(UnitDefNames)
+	retTab={}
+	{
+		[UnitDefNames["bg1"].id]		=UnitDefNames["skinegg"].id,
+		[UnitDefNames["bg2"].id]		=UnitDefNames["tigegg"].id,
+		[UnitDefNames["ghohymen"].id]	=UnitDefNames["jwatchbird"].id,
+		[UnitDefNames["css"].id]		=UnitDefNames["jfiredancer"].id,
+		[UnitDefNames["advisor"].id]	=UnitDefNames["jghostdancer"].id,
+		[UnitDefNames["zombie"].id]		=UnitDefNames["gcivilian"].id,
+		[UnitDefNames["chunter"].id]	=UnitDefNames["jhunter"].id
+		
+	}	
+		
 	return retTab
 end
 

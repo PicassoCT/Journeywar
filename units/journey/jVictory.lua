@@ -2,7 +2,7 @@ local unitName = "jVictory"
 
 local unitDef = {
 name = "Victory Statue",
-Description = "TriumphantStatue",
+Description = " Journeyman where victorious",
 objectName = "jVictory.s3o",
 script = "jVictoryScript.lua",
 buildPic = "placeholderj.png",

@@ -4572,8 +4572,6 @@ function transformUnitInto(unitID, unitType, setVel)
 	vx,vy,vz,vl =Spring.GetUnitVelocity(unitID)
 	rotx,roty,rotz = Spring.GetUnitRotation(unitID)
 	
-
-	
 	id= Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0,3)), teamID) 
 	if id and vx and rotx and exP then
 		
@@ -4591,15 +4589,17 @@ function transformUnitInto(unitID, unitType, setVel)
 		
 		transferStatus(unitID,id)
 		transferOrders(unitID, id)
-		Spring.DestroyUnit(unitID, false,true)	
+		Spring.DestroyUnit(unitID, false,true)
+		return id
 	end	
 end
 
 function echoUnitStats(id)
-	h,mh,pD,cP,bP= Spring.GetUnitHealth(id)
-	
+	h,mh,pD,cP,bP= Spring.GetUnitHealth(id)	
 	echo(h,mh,pD,"Capture Progress:"..cP,"Build Progress:"..bP)
 end
+
+--> Get Unit Target if a Move.Cmd was issued
 function getUnitMoveGoal(unitID)
 	cmds=Spring.GetCommandQueue(unitID,4)
 	for i=#cmds,1, -1 do

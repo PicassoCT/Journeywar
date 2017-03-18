@@ -1,8 +1,8 @@
 local unitName = "jtyrion"
 
 local unitDef = {
-name = "All is allowed in love and war",
-Description = "Press Activate to turn this units allegiance",
+name = "Traitor",
+Description = "turns its Allegiance upon Activation. All is allowed in love and war",
 objectName = "emptyObjectIsEmpty.s3o",
 script = "jytrion.lua",
 buildPic = "placeholderj.png",

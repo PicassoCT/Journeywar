@@ -2,7 +2,7 @@ local unitName = "csuborbital"
 
 local unitDef = {
 name = "Sub Orbital Launcher",
-Description = "Sub Orbital Artillery - (Press C to aim)",
+Description = "fires Orbital Projectiles once deployed ",
 objectName = "csuborbital.s3o",
 script = "csuborbital.lua",
 buildPic = "placeholder.png",

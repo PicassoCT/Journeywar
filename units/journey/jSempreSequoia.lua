@@ -2,7 +2,7 @@ local unitName = "jsempresequoia"
 
 local unitDef = {
 name = "Sequoia ",
-Description = "Tree Ship",
+Description = "ground dominating Tree Ship",
 objectName = "jsequoia.s3o",
 script = "sequoiascript.lua",
 buildPic = "placeholderj.png",

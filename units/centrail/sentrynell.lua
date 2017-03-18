@@ -2,7 +2,7 @@ local unitName = "sentrynell"
 
 local unitDef = {
 name = "Sentrynell",
-Description = "Heavy Anti Air Defense Unit, able do deploy Sentrys",
+Description = "heavy Anti Air Defense Unit. Deploys sentry once stopped.",
 objectName = "sentrynell.s3o",
 script = "sentrynellscript.lua",
 buildPic = "sentrynell.dds",

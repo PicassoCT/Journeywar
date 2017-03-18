@@ -1,8 +1,8 @@
 local unitName = "jeliah"
 
 local unitDef = {
-	name = "eliah",
-	Description = "Infantry in BioMechSuit",
+	name = "Eliah",
+	Description = " close Combat Unit. Reborn from a Survivor on Destruction.",
 	objectName = "jeliah.s3o",
 	script = "jEliahScript.lua",
 	buildPic = "jeliah.png",

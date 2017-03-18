@@ -2,7 +2,7 @@ local unitName = "jfiredanceglider"
 
 local unitDef = {
 	name = "Gliding Firedancer",
-	Description = "Firedancer gliding downhill",
+	Description = "Firedancer flying downhill",
 	objectName = "jFireDancerGlider.s3o",
 	script = "jfiredancegliderscript.lua",
 	buildPic = "placeholder.png",

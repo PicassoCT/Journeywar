@@ -2,7 +2,7 @@ local unitName = "bg"
 
 local unitDef = {
 	name = "Ground Trooper",
-	Description = "Combine Soldier",
+Description = "enhanced Soldier, carrying a Tatical Shield",
 	objectName = "bg.s3o",
 	script = "bgscript.lua",
 	buildPic = "cbg.png",

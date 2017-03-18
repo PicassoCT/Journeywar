@@ -2,7 +2,7 @@ local unitName = "jdrilltree"
 
 local unitDef = {
 	name = "Drill Tree ",
-	Description = "Drills deep into the planets crust. Slag is radioactive.",
+	Description = "produces Matter. Slag is radioactive.",
 	objectName = "jDrillTree.s3o",
 	script = "jDrillTree.lua",
 	buildPic = "DrillTree.png",
