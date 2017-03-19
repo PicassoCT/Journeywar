@@ -1471,6 +1471,7 @@ function GetSpeed(timeInSeconds, degree)
 	return (degRad/timeInSeconds)
 end
 
+
 -->Reset a Table of Pieces at speed
 function resetT(tableName,speed, ShowAll, boolWait, boolIstantUpdate)
 	lboolWait=boolWait or false
@@ -1494,16 +1495,14 @@ function resetT(tableName,speed, ShowAll, boolWait, boolIstantUpdate)
 end
 
 -->Recursively Resets Tables
-function recReseT(Table,speed)
+function recResetT(Table,speed)
 	if type(Table)=="table" then 
 		for k,v in pairs(Table) do
-			recReseT(v,speed)
+			recResetT(v,speed)
 		end
 	elseif type(Table)=="number" then
 		reset(Table,speed)
 	end
-	
-	
 end
 
 function reset(piecename,speed,boolWaitForIT, boolIstantUpdate)

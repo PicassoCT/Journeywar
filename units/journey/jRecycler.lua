@@ -35,20 +35,21 @@ local unitDef = {
 	CanFly = true,
 	
 	CanReclaim=true,
+	CanRepair=false,
 	reclaimSpeed=22,
 	buildDistance = 2048,
-	Builder = false,
+	Builder = true,
 	--canHover=true,
 	CanAttack = false,
 	CanGuard = true,
 	CanMove = true,
 	CanPatrol = true,
 	Canstop = false,
-	
+	showNanoFrame=false,
 	onOffable = true,
 	LeaveTracks = false, 
 	cruiseAlt=265,
-	
+
 	ActivateWhenBuilt=0,
 	maxBank=0.4,
 	myGravity =0.5,

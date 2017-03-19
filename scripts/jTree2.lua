@@ -18,7 +18,7 @@ for i=1, 5, 1 do
 	root[i]=piece (roottemp)
 end
 
-TransformRange=250
+TransformRange=150
 
 rotable={}
 for i=1, 13, 1 do
@@ -65,11 +65,9 @@ end
 fruits={}
 for i=1, 10, 1 do
 	fruits[i]={}
-	fruits[i][1]={}
-	fruits[i][2]={}
 	fruits[i][2]=false
 	asttemp="fruit"..i
-	fruits[i][1]=piece (asttemp)
+	fruits[i][1]=piece(asttemp)
 end 
 
 function diceNewDeg(oldDeg,upValue,margin)
@@ -143,43 +141,40 @@ local isInfantry={
 local spGetUnitDefID=Spring.GetUnitDefID
 local teamid=Spring.GetUnitTeam(unitID)
 function fallingFruit(nr)
-	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,fruits[nr][1])
+	x,fy,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,fruits[nr][1])
 	y2=Spring.GetGroundHeight(x,z)
-	distance=math.abs(y-y2)
+	distance=math.abs(fy-y2)
 	
 	fruits[nr][2]=true
-	speed=1
+	speed=2.01
 	
-	for i=1,distance,1 do
+	for i=1,distance-10,10 do
 		Move(fruits[nr][1],y_axis, -i,speed)
-		WaitForMove(fruits[nr][1],y_axis)
-		speed=math.min(speed*i*speed, 120)
-		
-		Sleep(2500)
+		Sleep(10)
+		speed=math.min(i*(speed^2), 120)
 	end
-	StartThread(fieldsOfFruit,nr) 
+	fieldsOfFruit(nr) 
 	
 end
 maxtime=90000
-
+splatterFruit={
+[2]=true,
+[7]=true,
+[8]=true
+}
 function fieldsOfFruit(nr)
-	--convert infantry
-	restTime=math.ceil(math.random(2500,maxtime))
-	Sleep(restTime)
-	
-	t=Spring.GetUnitsInCylinder(x,z,200)
-	table.remove(t,unitID)
-	if t and #t > 0 then
-		for i=1,#t do
-			defid=spGetUnitDefID(t[i])
-			if math.random(0,1)==1 and isInfantry[defid] then
-				replaceUnit(t[i], "tiglil")
-			end
-		end
+	if splatterFruit[nr]then
+		Explode(fruits[nr][1],SFX.SHATTER+SFX.NO_HEATCLOUD)
+		Hide(fruits[nr][1])
 	end
-	
+	restTime=math.ceil(math.random(2500,maxtime))
+	if maRa()==true then	
+	Explode(fruits[nr][1],SFX.FALL+SFX.NO_HEATCLOUD)		
+	else
+		Sleep(restTime)
+	end
 	Hide(fruits[nr][1])
-	Move(fruits[nr][1],y_axis, 0,0)
+	WMove(fruits[nr][1],y_axis, 0,0)
 	rest=maxtime-restTime
 	Sleep(rest)
 	Show(fruits[nr][1])
@@ -187,31 +182,64 @@ function fieldsOfFruit(nr)
 end
 
 
-function replaceUnit(id,typeName)
-	x,y,z=Spring.GetUnitPosition(id)
-	if x and GG.UnitsToSpawn then
-		GG.UnitsToSpawn:PushCreateUnit(typeName,x,y,z, 0, teamid)
+boolJustOnceDeny=true
+function fruitLoop()
+	index=1
+	while boolJustOnceDeny ==true do
+
+		Sleep(5000)
+		index=(index%10)+1
+			if  fruits[index][2]==false and maRa()==true then
+				StartThread(fallingFruit,index)
+			end
+		
 	end
-	Spring.DestroyUnit(id,true,true)
 end
 
-function fruitLoop()
-	while boolJustOnceDeny ==true do
-		
-		rest=math.ceil(math.random(4900,62000))
-		Sleep(rest)
-		deci=math.ceil(math.random(0,table.getn(fruits)))
-		if deci~=2 and deci~=7 and deci~=8 then
-			if fruits[deci] and fruits[deci][2] and fruits[deci][2]==false then
-				StartThread(fallingFruit,deci)
+
+TransformTable=getDreamTreeTransformUnitTypeTable(UnitDefNames)
+
+function convertInfantryNearby()
+
+	myTeam=Spring.GetUnitTeam(unitID)
+	
+	while true do
+		px,py,pz=Spring.GetUnitPosition(unitID)
+		T=getAllInCircle(px,pz,TransformRange,unitID)
+
+		process(T,
+		function(id)
+			defID=Spring.GetUnitDefID(id)
+			if id ~= unitID and TransformTable[defID]then
+				return id
+			end
+		end,
+		function (id)	
+		unitTeam=Spring.GetUnitTeam(id)
+				typeToTransferInto=TransformTable[Spring.GetUnitDefID(id)]
+				if typeToTransferInto then
+					resultID= transformUnitInto(id, typeToTransferInto)
+					return resultID
+				end
+
+		end,
+		function (id)
+			if id then
+				Spring.TransferUnit(id,myTeam,false)
+				ux,uy,uz=Spring.GetUnitPosition(id)
+				Spring.SpawnCEG("jtree2trans",ux,uy+15,uz, 0,1,0,60)
 			end
 		end
+		)
+		
+		Sleep(350)
 	end
 end
 
-
+TableOfPieceGroups={}
 rootTurnDeg=0
 function script.Create()
+	TableOfPieceGroups=	makePiecesTablesByNameGroups(false,true)
 	StartThread(delayedActivation)
 	Spin(centRot,y_axis,math.rad(4),0.001)
 	Spin(rot1,y_axis,math.rad(4),0.001)
@@ -229,7 +257,7 @@ function script.Create()
 		rootTurnDeg=diceNewDeg(rootTurnDeg,75,25)
 	end
 	
-	
+	resetT(TableOfPieceGroups["fruit"],0)
 	add=0
 	for i=1,table.getn(leaves),1 do
 		this=math.random(0,360)
@@ -258,8 +286,8 @@ function script.Create()
 		astTurndeg=diceNewDeg(astTurndeg,51,15)
 	end
 	StartThread(randomizedSpin)
-	tempDEFID=Spring.GetUnitDefID(unitID)
-	if tempDEFID==UnitDefNames["jtree2"].id then
+	
+	if Spring.GetUnitDefID(unitID)==UnitDefNames["jtree2"].id then
 		for i=1, table.getn(fruits),1 do
 			Hide(fruits[i][1])
 		end
@@ -271,43 +299,6 @@ function script.Create()
 	
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.45)
 end
-
-TransformTable=getDreamTreeTransformUnitTypeTable(UnitDefNames)
-
-function convertInfantry()
-px,py,pz=Spring.GetUnitPosition(unitID)
-local spGetUnitDefID= Spring.GetUnitDefID
-local spGetUnitTeam= Spring.GetUnitTeam
-myTeam=spGetUnitTeam(unitID)
-
-	while true do
-		T=getAllinCircle(px,pz,TransformRange)
-		teamID=Spring.GetUnitTeam(unitID)
-		process(T,
-				function(id)
-					if id ~= unitID and  TransformTable[spGetUnitDefID(id)] then
-					return id
-					end
-				return nil
-				end,
-				function (id)
-					if id and teamID ~= spGetUnitTeam(id) then
-						typeToTransferInto=TransformTable[spGetUnitDefID(id)]
-						if typeToTransferInto then
-						 resultID= transformUnitInto(id, typeToTransferInto)
-						 return resultID
-						end
-					end
-				end,
-				function (id)
-					Spring.TransferUnit(id,myTeam,false)
-				end
-				)
-
-		Sleep(350)
-	end
-end
-
 
 
 function script.Killed(recentdamage,_)

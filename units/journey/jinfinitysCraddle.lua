@@ -33,7 +33,7 @@ local unitDef = {
 	CanStop = false,
 	LeaveTracks = false,
 	YardMap ="cccccc cccccc cccccc cccccc cccccc cccccc",
-	
+	showNanoFrame=false,
 	-- Building	
 	
 	ShowNanoSpray = true,

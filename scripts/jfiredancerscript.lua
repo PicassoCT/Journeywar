@@ -92,7 +92,7 @@ function sound()
 		randoVal=math.ceil(math.random(-50,50))
 		res=GG.FireDance[2]+randoVal
 		Sleep(res)
-		Res=String..GG.FireDance[1]..String2
+		Res=String..(GG.FireDance[1])..String2
 		Spring.PlaySoundFile(Res,1.0)
 		Sleep(250)
 		

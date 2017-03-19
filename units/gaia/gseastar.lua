@@ -41,7 +41,7 @@ CanStop = true,
  transportCapacity   = 1,
   transportSize       = 30000,
 
-Category = [[LAND]],
+Category = [[LAND WATER]],
 selfDestructAs= [[NOWEAPON]],
 
   explodeAs = "330RLexplode",

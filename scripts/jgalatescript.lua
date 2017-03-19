@@ -172,7 +172,7 @@ nlstopSwimAnimation= function (PivotPoints,pieces)
 end
 
 function nloutOfWaterAnimation (PivotPoints,pieces)
-	recReseT(pieces,4.3)
+	recResetT(pieces,4.3)
 	resetT(PivotPoints,4.5)
 	WaitForMove(PivotPoints[1],2)
 	WaitForMove(PivotPoints[2],2)

@@ -179,74 +179,80 @@ Line042 = piece"Line042"
 piecesTable[#piecesTable+1]= Line042
 
 piecesTable[#piecesTable+1]= navel
+SIG_FOLD= 2
+SIG_UNFOLD= 4
+emitIt={}
+for i=1,9,1 do
+	emitIt[i]={}
+	stone= "nano"..i
+	emitIt[i]=piece (stone)
+end
 
 buildspot=Egg
 function script.Create()
+	Spring.SetUnitNanoPieces(unitID,emitIt)
 	StartThread(keepAtSeaLevel)
-	StartThread(fold,0.75)
-
+	StartThread(stateChanger)
+	StartThread(buildLoop)
+	
 end
 
 function script.Killed(recentDamage,_)
 	
 	createCorpseJBuilding(unitID, recentDamage)
 	return 1
+	
 end
 
 
 function keepAtSeaLevel()
-x,y,z=Spring.GetUnitPiecePosDir(unitID,center)
-WMove(center,y_axis,y*-1 +52, 1.85)
-	while true do
-		
+	
+	while true do		
 		x,y,z=Spring.GetUnitPiecePosDir(unitID,center)
-		WMove(center,y_axis,y*-1 +52, 0.5)
-
-		
+		speed= math.max(math.abs(y)/3,0.1)
+		Move(center,y_axis,y*-1 + 80, speed)	
+		Sleep(1000)
 	end
 end
 
 function createConcon(buildspot)
 	--Animation
-	
+	teamid=Spring.GetUnitTeam(unitID)
 	x,y,z=Spring.GetUnitPiecePosDir(unitID,buildspot)
 	id=Spring.CreateUnit("jspacebornembryo",x,y,z,1, teamid)
-	Spring.MoveCtrl.Enable(id,true)
-	Spring.MoveCtrl.SetPosition(id,x,y,z)
+	Spring.AttachUnit(unitID,id,Egg)
 	return id
 end
 
+function build(buildID)
+	
+	health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(buildID)
+	concoonID=createConcon(buildspot)
+	Spring.SetUnitAlwaysVisible(buildID,false)
+	
+	while Spring.ValidUnitID(buildID)==true and Spring.GetUnitIsDead(buildID)==false and buildProgress < 1.0 do		
+		health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(buildID)
+		
+		hp=math.max(1,math.ceil(buildProgress*100))
+		if Spring.GetUnitIsDead(concoonID)==true then
+			concoonID= createConcon(buildspot)
+		end
+		Spring.SetUnitHealth(concoonID,hp)
+		
+		
+		Sleep(100)
+	end
+	Spring.SetUnitAlwaysVisible(buildID,true)
+	Spring.DestroyUnit(concoonID,true,false)
+end
+
 function buildLoop()
-	 buildIdOfOld=0
-	 concoonID=0
 	
 	while true do
 		buildID=Spring.GetUnitIsBuilding(unitID)
-		if buildID then
-			Spring.SetUnitVisible(buildID,false)
-			--unit is building
-			if buildID ~= buildIdOfOld then --new Unit
-				Spring.SetUnitVisible(buildIdOfOld,true)
-				buildIdOfOld=buildID
-				if Spring.ValidUnitID(concoonID) then Spring.DestroyUnit(concoonID,true,false) end
-				concoonID=createConcon(buildspot)
-			end
-			--get buildprogress and set it as hp
-			buildProgress= 0.01
-			while Spring.ValidUnitID(buildID)==true and buildProgress < 1 do
-				health, maxHealth, paralyzeDamage, captureProgress, buildProgress=Spring.GetUnitHealth(buildID)
-				hp=math.max(1,math.ceil(buildProgress*100))
-				if Spring.ValidUnitID(concoonID)==false then
-				concoonID= createConcon(buildspot)
-				end
-				Spring.SetUnitHealth(concoonID,hp)
-			Sleep(100)
-			end
-	
-			
-		elseif buildIdOfOld and Spring.ValidUnitID(buildIdOfOld)==true then
-			Spring.SetUnitVisible(buildIdOfOld,true)
-			if Spring.ValidUnitID(concoonID) then Spring.DestroyUnit(concoonID,true,false) end
+		
+		if builID then
+			build(builID)
 		end
 		Sleep(500)
 	end
@@ -254,43 +260,65 @@ function buildLoop()
 end
 
 boolMovementInProgress=false
-
 function fold(speed)
-if boolMovementInProgress== true then return end
-boolMovementInProgress=true
-Turn(Circle081,x_axis,math.rad(-90),speed)
-WTurn(Circle082,x_axis,math.rad(90),speed)
-hideT(solarTable)
-Turn(Line041,x_axis,math.rad(-76),speed)
-Turn(Line042,x_axis,math.rad(76),speed)
-Turn(Line039,x_axis,math.rad(58),speed)
-Turn(Line013,x_axis,math.rad(-58),speed)
-
-Turn(Line040,z_axis,math.rad(95),speed)
-WTurn(Line007,z_axis,math.rad(-95),speed)
-boolMovementInProgress=false
+	Signal(SIG_FOLD)
+	SetSignalMask(SIG_FOLD)
+	boolMovementInProgress=true
+	Turn(Circle081,x_axis,math.rad(-90),speed)
+	WTurn(Circle082,x_axis,math.rad(90),speed)
+	hideT(solarTable)
+	Turn(Line041,x_axis,math.rad(-76),speed)
+	Turn(Line042,x_axis,math.rad(76),speed)
+	Turn(Line039,x_axis,math.rad(58),speed)
+	Turn(Line013,x_axis,math.rad(-58),speed)
+	
+	Turn(Line040,z_axis,math.rad(95),speed)
+	WTurn(Line007,z_axis,math.rad(-95),speed)
+	boolMovementInProgress=false
 end
 
 function unfold(speed)
-if boolMovementInProgress== true then return end
-boolMovementInProgress=true
-Turn(Line040,z_axis,math.rad(0),speed)
-WTurn(Line007,z_axis,math.rad(0),speed)
+	
+	Signal(SIG_UNFOLD)
+	SetSignalMask(SIG_UNFOLD)
+	boolMovementInProgress=true
+	Turn(Line040,z_axis,math.rad(0),speed)
+	WTurn(Line007,z_axis,math.rad(0),speed)
+	
+	Turn(Line041,x_axis,math.rad(0),speed)
+	Turn(Line042,x_axis,math.rad(0),speed)
+	Turn(Line039,x_axis,math.rad(0),speed)
+	WTurn(Line013,x_axis,math.rad(0),speed)
+	
+	showT(solarTable)
+	Turn(Circle081,x_axis,math.rad(0),speed)
+	WTurn(Circle082,x_axis,math.rad(0),speed)
+	
+	boolMovementInProgress=false
+end
 
-Turn(Line041,x_axis,math.rad(0),speed)
-Turn(Line042,x_axis,math.rad(0),speed)
-Turn(Line039,x_axis,math.rad(0),speed)
-WTurn(Line013,x_axis,math.rad(0),speed)
-
-showT(solarTable)
-Turn(Circle081,x_axis,math.rad(0),speed)
-WTurn(Circle082,x_axis,math.rad(0),speed)
-
-boolMovementInProgress=false
+boolUnfold=true
+boolOldFoldState=false
+function stateChanger()
+	while true do
+		
+		if boolUnfold ~= boolOldFoldState then
+			Signal(SIG_FOLD)
+			Signal(SIG_UNFOLD)
+			if boolUnfold==true then
+				StartThread(unfold,1.75)
+			else
+				StartThread(fold,1.75)
+			end
+			boolUnfold = boolOldFoldState
+		end
+		Sleep(100)
+	end
+	
 end
 
 function script.Activate()
-StartThread(unfold,0.75)
+	boolUnfold=true
 	SetUnitValue(COB.YARD_OPEN, 1)
 	SetUnitValue(COB.INBUILDSTANCE, 1)
 	SetUnitValue(COB.BUGGER_OFF, 1)
@@ -298,7 +326,8 @@ StartThread(unfold,0.75)
 end
 
 function script.Deactivate()
-StartThread(fold,0.75)
+	boolUnfold=false
+	StartThread(fold,1.75)
 	SetUnitValue(COB.YARD_OPEN, 0)
 	SetUnitValue(COB.INBUILDSTANCE, 0)
 	SetUnitValue(COB.BUGGER_OFF, 0)

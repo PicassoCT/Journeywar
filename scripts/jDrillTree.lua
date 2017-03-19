@@ -114,7 +114,9 @@ function gamaDamage()
 	HitPointsReduce=5
 	selectRange=260
 	SetSignalMask(SIG_GAMA)
-	
+	CuredByRadiationUnitTypes={
+	UnitDefNames[""]
+	}
 	
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spGetUnitDefID=Spring.GetUnitDefID
@@ -123,61 +125,50 @@ function gamaDamage()
 	local spGetUnitHealth=Spring.GetUnitHealth
 	local ltransformTree=transFormTree 
 	local lsteam= Steam
+	radiationResistantUnitTypes= getRadiationResistantUnitTypeTable(UnitDefNames)
 	while(true) do
 		
 		piecePosX,piecePosY,piecePosZ=spGetUnitPosition(unitID)
 		proChoice={}
 		proChoice=spGetUnitsInCylinder(piecePosX, piecePosZ,selectRange )
-		
-		if proChoice ~= nil then
-			
-			
-			
-			--Kill the Unit
-			for i=1,table.getn(proChoice),1 do		
-				if proChoice[i] ~= unitID then
-					if proChoice[i] ~= unitID then
-						tempDefid=spGetUnitDefID(proChoice[i])
-						tempHP=spGetUnitHealth(proChoice[i])
-						boolSteam=true
-						if tempDefid ~= UnitDefNames["jtree2"].id and tempDefid ~= UnitDefNames["jtree2activate"].id then
-							
-							tempHP=tempHP-HitPointsReduce
+
+		process(proChoice,
+				function (id)
+					if id then
+					defID=Spring.GetUnitDefID(id)
+						if radiationResistantUnitTypes[defID] then
+								if defID == UnitDefNames["jtree2"].id then
+										ltransformTree(id)
+								end
+								if defID == UnitDefNames["jtree2activate"].id then
+									tempHP= Spring.GetUnitHealth(id)
+									tempHP=tempHP+HitPointsReduce
+									Spring.SetUnitHealth(id,tempHP)
+								end						
+						
 						else
-							boolSteam=false
-							if tempDefid== UnitDefNames["jtree2"].id then
-								ltransformTree(proChoice[i])
-							else
-								tempHP=tempHP+HitPointsReduce
-							end
-							
-							
-							
+							StartThread(lsteam,id)
+							Spring.AddUnitDamage(id,HitPointsReduce)
 						end
-						
-						
-						if tempHP < 0 then
-							Spring.DestroyUnit(proChoice[i],false,false)
-						end
-						spSetUnitHealth(proChoice[i],tempHP)
-						if boolSteam==true then StartThread(lsteam,proChoice[i]) end
 					end
-					
 				end
-				
+				)
+			Sleep(1000)
 			end
 			
 		end
 		
 		
-		Sleep(1000)
-	end
-end
+
 
 function createExtrema()
-	GG.Extrema= {}
+
 	emin,emax=Spring.GetGroundExtremes()
-	GG.Extrema= (emax+math.abs(emin)+100) or 250
+	if emin and emax then 
+		GG.Extrema= (emax+math.abs(emin)+100) 
+	else
+		GG.Extrema=250
+	end
 end
 
 
@@ -185,26 +176,26 @@ function thisIsTheEnd()
 	x=-9999
 	y=-9999
 	z=-9999
-	while (GG.Extrema == nil) do
+
 		Sleep(1000)
-		
-	end
+
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spGetGroundHeight=Spring.GetGroundHeight
 	
 	x,y,z=Spring.GetUnitPosition(unitID)
 	----Spring.Echo("x:",x)
-	while y== nil do
+	while y == nil do
 		Sleep(500)
 		x,y,z=Spring.GetUnitPosition(unitID)
 		----Spring.Echo("x:",x)
 	end
 	
-	if not GG.Extrema then 
+	if  GG.Extrema == nil then 
 		createExtrema()
 	end
+
 	
-	while( y < GG.Extrema) do
+	while((not GG.Extrema or not y) or  y < GG.Extrema) do
 		if x ~= nil and z~= nil then
 			y=spGetGroundHeight(x,z)
 		else

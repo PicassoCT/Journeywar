@@ -76,30 +76,29 @@ end
 
 
 function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
-	retTab={}
-	{
+	retTab=	{
 		[UnitDefNames["ccomender"].id]=true,
 		[UnitDefNames["beanstalk"].id]=true,
 		[UnitDefNames["citadell"].id]=true,
 		[UnitDefNames["gvolcano"].id]=true,
-		[UnitDefNames["gproceduralfeature"].id]=true,
-	}	
-
+		[UnitDefNames["gproceduralfeature"].id]=true
+	}
 	
 	return retTab
 end
 
 function getDreamTreeTransformUnitTypeTable(UnitDefNames)
-	retTab={}
-	{
-		[UnitDefNames["bg1"].id]		=UnitDefNames["skinegg"].id,
-		[UnitDefNames["bg2"].id]		=UnitDefNames["tigegg"].id,
+	retTab=	{
+		[UnitDefNames["bg"].id]			=UnitDefNames["jskineggnogg"].id,
+		[UnitDefNames["bg2"].id]		=UnitDefNames["jtigeggnogg"].id,
 		[UnitDefNames["ghohymen"].id]	=UnitDefNames["jwatchbird"].id,
 		[UnitDefNames["css"].id]		=UnitDefNames["jfiredancer"].id,
 		[UnitDefNames["advisor"].id]	=UnitDefNames["jghostdancer"].id,
-		[UnitDefNames["zombie"].id]		=UnitDefNames["gcivilian"].id,
-		[UnitDefNames["chunter"].id]	=UnitDefNames["jhunter"].id
-		
+		[UnitDefNames["zombie"].id]		=UnitDefNames["gcivillian"].id,
+		[UnitDefNames["chunter"].id]	=UnitDefNames["jhunter"].id,
+		[UnitDefNames["gzombiehorse"].id]	=UnitDefNames["ghohymen"].id,
+		[UnitDefNames["gseastar"].id]	=UnitDefNames["gnewsdrone"].id,
+		[UnitDefNames["gcar"].id]	=UnitDefNames["gull"].id	
 	}	
 		
 	return retTab
@@ -235,6 +234,16 @@ function getCorpseTypeTable()
 		CorpseTable[key]=true
 	end
 	return CorpseTable
+end
+
+function getRadiationResistantUnitTypeTable(UnitDefNames)
+	Resistance={}
+	Resistance[UnitDefNames["jvaryfoo"].id]=true
+	Resistance[UnitDefNames["jtree2"].id]=true
+	Resistance[UnitDefNames["jtree2activate"].id]=true
+	Resistance[UnitDefNames["jdrilltree"].id]=true
+	Resistance[UnitDefNames["cgamagardener"].id]=true
+	return Resistance
 end
 
 function getJourneyCreeperTypeTable()

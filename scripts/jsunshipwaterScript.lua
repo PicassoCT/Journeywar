@@ -42,8 +42,8 @@ function script.Create()
 end
 --resets the Units pieces and shown pieces 
 function init()
-	recReseT(TablesOfPiecesGroups)
-	recReseT(TablesOfPiecesGroups)
+	recResetT(TablesOfPiecesGroups)
+	recResetT(TablesOfPiecesGroups)
 	Show(diamond1)
 	Show(diamond2)
 	showT(TablesOfPiecesGroups["circDa"])

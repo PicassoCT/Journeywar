@@ -39,37 +39,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 		end
 		
---[[ 	function printTable(tA)
-	--Spring.Echo(tA)
-	--Spring.Echo(tA[1])
-	--assert(tA,"No Table at all")
-	for i=1,#tA,1 do
-	strings=""
-		if tA[i] then
-		for j=1,#tA[1],1 do
-			if tA and tA[i] and tA[i][j]~= nil then
-			if tA[i][j]==true then
-			strings=strings.."T"
-			elseif tA[i][j]== false then
-			strings=strings.."F"
-			else
-			strings=strings.."N"
-			end
-		end
-		end
-		--Spring.Echo(strings)
-		end
-	end	
-end	 ]]
-	
---[[ 	function addSubByDir(direction)
-	if direction=="s" then return -35, 0 end
-	if direction=="n" then return 35,0 end
-	if direction=="w" then return 0,-35 end
-	if direction=="e" then return 0,35 end
-	
-	end	 ]]
-	
+
 	function mOx(val)
 	return math.max(1,val)	
 	end
@@ -292,15 +262,10 @@ end
 	function init()
 	--Spring.Echo("JW_TrafficGadget InitReached")
 		if  sPTable and table.getn(sPTable) > 2 and RouteTable and #RouteTabel > 0 then
-		--if val and  #NodesTable>0 and sPTable and table.getn(sPTable) > 2 and #RouteTabel > 0 then
-		--Spring.Echo("JW_TrafficGadget InitSuccess")
+
 		return true 	
 		end
-	
-	
-		--if GG.Nodetable then 
-		--NodesTable=GG.Nodetable
-		--else return false end
+
 		
 		if GG.SpawnPointTable then
 --		printTable(GG.SpawnPointTable)
@@ -312,9 +277,6 @@ end
 			end
 			end
 			sPTable=tableCopy(GG.SpawnPointTable)
-		--assert(sPTable,"Sptable missing")
-		--Spring.Echo("JW_TrafficGadget::sPTable",table.getn(sPTable))	
-			
 		end
 	
 
@@ -338,28 +300,27 @@ end
 			for i=1,table.getn(CarTable),1 do
 				x,y,z=spGetPosition(CarTable[i].unitid)
 				grabUnitsInReach={}
-				if x then
-				grabUnitsInReach=Spring.GetUnitsInCylinder(x,y,80)
-				if grabUnitsInReach then
-					for t=1,table.getn(grabUnitsInReach),1 do
-					boolbreakOut=false
-					for d=1,table.getn(sPTable),1 do
-						if grabUnitsInReach[t]==sPTable[d]  then
-						Spring.DestroyUnit(CarTable[i].unitid,false,true)
-						boolbreakOut=true
-						break 
-						elseif grabUnitsInReach[t] == CarTable[i].spawnerid then
-						CarTable[i].spawnerid =nil
+					if x then
+					grabUnitsInReach=Spring.GetUnitsInCylinder(x,y,80)
+						if grabUnitsInReach then
+							for t=1,table.getn(grabUnitsInReach),1 do
+								boolbreakOut=false
+								for d=1,table.getn(sPTable),1 do
+									if grabUnitsInReach[t]==sPTable[d]  then
+										Spring.DestroyUnit(CarTable[i].unitid,false,true)
+										boolbreakOut=true
+										break 
+									elseif grabUnitsInReach[t] == CarTable[i].spawnerid then
+										CarTable[i].spawnerid =nil
+									end
+								end
+							--let see if this actually works
+							if boolbreakOut==true then break end
+							end
+							
 						end
 					end
-					--let see if this actually works
-					if boolbreakOut==true then break end
-					end
-					
 				end
-				end
-				end
-
 		end
 		
 		
@@ -376,12 +337,12 @@ end
 		id=Spring.CreateUnit("gcar",x,100,z, dir, gaiaTeamID)
 		--assert(id,"This Car needs a Repairer")
 			if id then
-			Spring.SetUnitNoSelect(id,true)
-			Spring.SetUnitAlwaysVisible(id,true)
-			Spring.SetUnitNeutral(id,true)
-			CarTable[table.getn(CarTable)+1]={}
-			CarTable[table.getn(CarTable)]={unitid=id,ctnI=i,ctnJ=j,lvnI=i,lvnJ=j, tNr=trackNr}
-			giveWaypointsToUnit (id, i, CarTable[table.getn(CarTable)].tNr)
+				Spring.SetUnitNoSelect(id,true)
+				Spring.SetUnitAlwaysVisible(id,true)
+				Spring.SetUnitNeutral(id,true)
+				CarTable[table.getn(CarTable)+1]={}
+				CarTable[table.getn(CarTable)]={unitid=id,ctnI=i,ctnJ=j,lvnI=i,lvnJ=j, tNr=trackNr}
+				giveWaypointsToUnit (id, i, CarTable[table.getn(CarTable)].tNr)
 			end
 		
 		end
@@ -395,13 +356,7 @@ end
 					for i=1,numberOfVehicles-table.getn(CarTable),1 do
 					selector=math.max(1,math.floor(math.random(1,table.getn(sPTable))))
 						if sPTable and selector and sPTable[selector].unitid then
-						--Spring.Echo("JW_TrafficGadget::InerSanctumSpawn1")
-							
 							if true==Spring.ValidUnitID(sPTable[selector].unitid ) and false==Spring.GetUnitIsDead(sPTable[selector].unitid ) then
-							--Spring.Echo("JW_TrafficGadget::InerSanctumSpawn2")
-							
-							
-								--Spring.Echo("JW_TrafficGadget::InerSanctumSpawn3")
 								spawnACar(sPTable[selector].unitid ,sPTable[selector].CoordI,sPTable[selector].CoordJ)		
 								
 							end

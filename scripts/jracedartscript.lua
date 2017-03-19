@@ -9,6 +9,7 @@ LifeTime= 20000
 center=piece"center"
 RaceDrone=piece"RaceDrone"
 
+isPoisonRaceDart= UnitDefNames["jpoisonracedart"].id == Spring.GetUnitDefID(unitID)
 function script.Create()
 	StartThread(uHave20Seconds)
 end
@@ -38,6 +39,10 @@ function script.AimWeapon1( Heading ,pitch)
 end
  
 function script.FireWeapon1()	
+	if isPoisonRaceDart == true then
+		x,y,z=Spring.GetUnitPosition(unitID)
+		Spring.SpawnCEG("poisonteal",x,y+25,z, 0,1,0,60)	
+	end
 	Spring.DestroyUnit(unitID,false,true)
 	return true
 end

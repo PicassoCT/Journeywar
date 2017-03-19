@@ -112,6 +112,10 @@ effectUnitDefs = {
 	jpoisonracedart= {
 		{class='Ribbon', options={color={.7,.9,0.1,1}, width=6.5, size= 32, piece="RaceDrone", onActive=false}},
 	},
+	ggluemine= {
+		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=10, colormap1 = {{0.36, 0.36, 0.9, 0.8}}, repeatEffect=true}},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=10.5, precision=22, strength = 0.005, repeatEffect=true}}
+		},
 	jracedart= {
 		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=5, colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},
 		{class='Ribbon', options={color={.2,.8,0.9,1}, width=6.5, size= 32, piece="RaceDrone", onActive=false}},
@@ -120,16 +124,30 @@ effectUnitDefs = {
 		{class='Ribbon', options={color={.9,.4,0.1,1}, width=12.5, size= 32, piece="jhoney", onActive=false}},
 	},
 	jstealthdrone ={
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare1", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare2", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare3", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare4", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare5", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare6", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare7", onActive=true}},
-		{class='Ribbon', options={color={.1,.4,0.9,1}, width=3.5, size= 32, piece="flare8", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare1", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare2", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare3", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare4", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare5", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare6", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare7", onActive=true}},
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare8", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=22.5, size= 10, piece="nanoemit", onActive=false}}		
 	},	
+	jrecycler ={
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit1", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit2", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit3", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit4", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit5", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit6", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit7", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit8", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit9", onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit10",onActive=false}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=2, size= 32, piece="emit11",onActive=false}},
+		{class='Ribbon', options={color={.4,.9,.9,1}, width=4, size= 32, piece="emit12",onActive=false}}	
+	},
 	jsunshipwater ={
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=325, precision=22, strength = 0.00125, repeatEffect=true}}
 		

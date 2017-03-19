@@ -2,6 +2,8 @@
 
 return {
 	["poisonteal"] = {
+		alwaysvisible = true,
+		
 		groundflash = {
 			alwaysvisible = true,
 			circlealpha = 1,

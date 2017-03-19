@@ -11,7 +11,7 @@ end
 aimspot=piece"aimspot"
 center=piece"center"
 SIGHT_RANGE= 2500
-
+LOAD_TIME=21000
 function script.Create()
 	
 	PiecesGroups=makePiecesTablesByNameGroups(false,true)
@@ -46,12 +46,21 @@ function eggWobble()
 		showT(PiecesGroups["egg"])
 		process(PiecesGroups["egg"],
 		function(id)
-			randSpeed=math.random(1,7)
-			turnPieceRandDir(id,randSpeed,15,-15,15,-15,15,-15)
-		end)
-		Sleep(1200)
-		randSpeed=math.random(1,7)
+				if math.random(0,1)==1 then
+							randSpeed=math.random(10,35)/10
+					turnPieceRandDir(id,randSpeed,25,-25,25,-25,25,-25)
+					return id
+				end
+			end,
+			function(id)
+				WaitForTurns(id)
+			end
+			)
+		
+		Sleep(150)
+		randSpeed=math.random(10,35)/10
 		resetT(PiecesGroups["egg"], randSpeed)
+		WaitForTurns(PiecesGroups["egg"])
 		hideT(PiecesGroups["egg"])
 		for i=1,#PiecesGroups["eggStage"] do
 			if PiecesGroups["eggStage"][i-1] then
@@ -69,7 +78,7 @@ function eggWobble()
 			restVal=math.random(150,350)
 			Sleep(restVal)
 		end
-		Sleep(250)
+		Sleep(150)
 		hideT(PiecesGroups["eggStage"])
 		
 	end
@@ -101,7 +110,7 @@ function getTowersDartPoisonDartIfThereIsNone()
 	return dartID
 end
 
-LOAD_TIME=7000
+
 function checkSpawn()
 	reloadTime=LOAD_TIME
 	while true do

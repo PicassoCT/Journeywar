@@ -4,9 +4,6 @@ include "createCorpse.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
-
-
-
 local AttachUnit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
 local loaded=false
@@ -33,16 +30,12 @@ for i=1,5,1 do
 	
 end
 
--- include AnimMatrix.lua
-
 
 local base = piece "operatrans"
 local opcrane= piece "opcrane"
 local operadoor1= piece"operadoor1"
 local operadoor2=piece "operadoor2"
 local testCenter1= piece "testCenter1"
-
-
 
 local body1 = piece "oppod"
 local oppod1gun1 =piece "oppod1gun1"
@@ -214,7 +207,6 @@ function script.TransportPickup(passengerID)
 	local ourTeam = Spring.GetUnitTeam(unitID)
 	local gaiaTeamID=Spring.GetGaiaTeamID()
 	if Spring.AreTeamsAllied(passengerTeam,ourTeam)== false and passengerTeam ~= gaiaTeamID then
-		Spring.Echo("Opera Transport, doesent pick up Enemy Units")
 		return
 	end
 	Signal(SIG_BAY)
@@ -224,18 +216,16 @@ function script.TransportPickup(passengerID)
 	--if opera has full house
 	if cargo >= cargoMax then return end
 	SetUnitValue(COB.BUSY, 1)
-	Move(operadoor1,x_axis,-12,2)
-	Move(operadoor1,z_axis,-14,2)
-	Move(operadoor2,x_axis,12,2)
-	Move(operadoor2,z_axis,-14,2)
+	Move(operadoor1,x_axis,-12,4)
+	Move(operadoor1,z_axis,-14,4)
+	Move(operadoor2,x_axis,12,4)
+	Move(operadoor2,z_axis,-14,4)
 	Spring.PlaySoundFile("sounds/cOperaT/opendoor.wav")
 	WaitForMove(operadoor2,z_axis)
 	WaitForMove(operadoor2,x_axis)
 	WaitForMove(operadoor1,z_axis)
 	WaitForMove(operadoor1,x_axis)
-	
-	
-	
+		
 	local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
 	local px2, py2, pz2 = Spring.GetUnitBasePosition(passengerID)
 	local dx, dy , dz = px2 - px1, py2 - py1, pz2 - pz1

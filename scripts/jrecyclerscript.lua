@@ -70,16 +70,35 @@ function script.FireWeapon1()
 	return true
 end
 
+function detectStopEarly()
+	Sleep(3000)
+	OftenEnoughAtSameSpotCounter=0
+	while OftenEnoughAtSameSpotCounter < 3 do
+	ox,oy,oz=Spring.GetUnitPosition(unitID)
+	Sleep(250)
+
+	px,py,pz=Spring.GetUnitPosition(unitID)
+		if math.sqrt((ox-px)^2+(oz-pz)^2) <= 1 then
+			OftenEnoughAtSameSpotCounter=OftenEnoughAtSameSpotCounter+1
+		else
+			OftenEnoughAtSameSpotCounter=0
+		end
+	end
+	
+	WTurn(center,x_axis,math.rad(0),2.5)
+	StopSpin(deathpivot,z_axis,0.3)
+	Turn(deathpivot,z_axis,math.rad(0),1.5)
+end
 
 
 function script.StartMoving()
 	Turn(center,x_axis,math.rad(90),0.5)
 	Spin(deathpivot,z_axis,math.rad(42),0.5)
+	StartThread(detectStopEarly)
 end
 
 function script.StopMoving()
-	Turn(center,x_axis,math.rad(0),1.5)
-		StopSpin(deathpivot,z_axis,0.3)
+
 end
 
 function script.Activate()
@@ -93,7 +112,7 @@ function script.Activate()
 end
 
 function script.Deactivate()
-	
+
 	return 0
 end
 

@@ -511,7 +511,27 @@ function assertT(Table, ... )
 	return true
 end
 
-
+--> Attaches a Unit to a Piece near a Impact side
+function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID,px,py,pz, range)
+	T=getAllInCircle(px,pz,range)
+	boolFirstMatch=false
+	process(T,
+		function(id)
+		if Spring.GetUnitLastAttacker(id)== AttackerID then
+			return id
+		end
+		end,
+		function(id)
+			if boolFirstMatch==true then return end
+			
+			lastAttackedPiece=Spring.GetUnitLastAttackedPiece(id)
+			if lastAttackedPiece then
+				boolFirstMatch=true
+				Spring.UnitAttach(id,toAttachUnitID, lastAttackedPiece)
+			end		
+		end		
+	)
+end
 
 function makeTable(default, xDimension, yDimension, zDimension)
 	local RetTable={}
@@ -2629,9 +2649,13 @@ function vardump(value, depth, key)
 		else
 			T=Spring.GetUnitsInCylinder(x,z,Range)
 		end
-		
+	
 		if unitID and T and #T>1 and type(unitID)=='number' then
-			table.remove(T,unitID)
+			for num, id in ipairs(T) do
+				if id == unitID then 
+				table.remove(T,num)
+				end
+			end
 		end
 		return T
 	end 
@@ -2707,12 +2731,12 @@ function vardump(value, depth, key)
 		return reTable
 	end
 	
-	-->itterates over a Keytable, executing a function 
+	-->itterates over a table, executing a function 
 	function elementWise(T,fooNction,ArghT)
 		reTable={}
 		
-		for i=1,#T, 1 do
-			reTable[i]=fooNction(T[i],ArghT)		
+		for k,v in pairs(T) do
+			reTable[k]=fooNction(T[k],ArghT)		
 		end
 		
 		return reTable
@@ -2722,11 +2746,11 @@ function vardump(value, depth, key)
 	function recElementWise(T,fooNction,ArghT)
 		reTable={}
 		
-		for i=1,#T, 1 do
-			if type(T[i]) ~= "table" then
-				reTable[i]=fooNction(T[i],ArghT)		
+		for k,v in pairs(T) do
+			if type(T[k]) ~= "table" then
+				reTable[k]=fooNction(T[k],ArghT)		
 			else
-				reTable[i]=recElementWise(T[i],fooNction,ArghT)
+				reTable[k]=recElementWise(T[k],fooNction,ArghT)
 			end
 		end
 		
@@ -4561,7 +4585,12 @@ end
 function transferUnitStatusToUnit(unitID,targetID)
 	exP=Spring.GetUnitExperience(unitID)
 	hp,maxHP,para, cap, bP = Spring.GetUnitHealth(unitID)
+	newhp,newmaxHP,_, _, _ = Spring.GetUnitHealth(unitID)
 		Spring.SetUnitExperience(targetID,exP)
+			
+			factor= 1/(hp/maxHP)
+			hp=math.ceil(newmaxHP*factor)
+
 		Spring.SetUnitHealth(targetID,{health=hp, capture= cap, paralyze= para, build= bP})
 end
 
@@ -4571,27 +4600,23 @@ function transformUnitInto(unitID, unitType, setVel)
 	teamID = Spring.GetUnitTeam (unitID)	
 	vx,vy,vz,vl =Spring.GetUnitVelocity(unitID)
 	rotx,roty,rotz = Spring.GetUnitRotation(unitID)
+	currHp,oldMaxHp= Spring.GetUnitHealth(unitID)
 	
 	id= Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0,3)), teamID) 
-	if id and vx and rotx and exP then
-		
-		_, opMaxHP= Spring.GetUnitHealth(id)
-		if opMaxHP then
-			factor= 1/(maxHP/opMaxHP)
-			hp=hp*factor
-		end
-		
+	if id and vx and rotx  then
+
 		Spring.SetUnitPosition(id, x,y,z)
 		if setVel then
 			Spring.SetUnitVelocity(id,	vx*vl,vy*vl,vz*vl)
 		end
 		Spring.SetUnitRotation(id,	rotx,roty,rotz)
 		
-		transferStatus(unitID,id)
-		transferOrders(unitID, id)
+		transferUnitStatusToUnit(unitID,id)
+		transferOrders(unitID, id)	
 		Spring.DestroyUnit(unitID, false,true)
 		return id
 	end	
+	Spring.DestroyUnit(unitID, false,true)
 end
 
 function echoUnitStats(id)

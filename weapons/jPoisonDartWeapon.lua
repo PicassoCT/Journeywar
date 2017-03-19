@@ -8,7 +8,7 @@ local weaponDef={
 	
 	CameraShake=6,
 	accuracy = 10,
-	explosionGenerator="custom:poisonteal",
+
 	avoidFeature=false,
 	avoidFriendly=false,
 	ImpulseBoost=0.2,

@@ -89,9 +89,11 @@ local unitDef = {
 	
 		"jrefugeetrap",
 		"jpoisonhive",
-		"jfungiforrest",
+		"ggluemine",
+
 		
-		--endgame
+		--endgame	
+		"jfungiforrest",
 		"jgeohive",
 		"jabyss"		
 	},
