@@ -629,7 +629,6 @@ function HideShield()
 		Hide(shields[i])
 	end
 	Hide(shield)
-	Move(shield,y_axis,0,0)
 end
 
 boolTwice=false
@@ -637,7 +636,7 @@ function script.Activate()
 	Spring.PlaySoundFile("sounds/citadell/shield_powerup.ogg",1.0)
 	boolShield=true
 	Spring.SetUnitShieldState(unitID,SHIELDNUMBER,true)
-	
+	Move(shield,y_axis,1400,0)
 	
 	Signal(SIG_DUST)
 	if DustStomp then
@@ -654,7 +653,7 @@ function script.Deactivate()
 	end
 	
 	Show(shield)
-	Move(shield,y_axis,-1200,2400)
+	Move(shield,y_axis,0,2400)
 	StartThread(HideShield)
 	return 0
 end

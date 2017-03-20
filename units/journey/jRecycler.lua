@@ -32,12 +32,14 @@ local unitDef = {
 	TurnRate = 150,
 	nanocolor=[[0 0.9 0.9]],
 	sightDistance = 500,
-	CanFly = true,
+
 	
 	CanReclaim=true,
 	CanRepair=false,
 	reclaimSpeed=22,
-	buildDistance = 2048,
+	buildDistance = 3000,
+	ShowNanoSpray = true,
+	workerTime = 0.005,
 	Builder = true,
 	--canHover=true,
 	CanAttack = false,
@@ -49,7 +51,9 @@ local unitDef = {
 	onOffable = true,
 	LeaveTracks = false, 
 	cruiseAlt=265,
-
+	canassist=false,
+	canRestore=false,
+	
 	ActivateWhenBuilt=0,
 	maxBank=0.4,
 	myGravity =0.5,

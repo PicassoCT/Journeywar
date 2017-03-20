@@ -123,6 +123,16 @@ effectUnitDefs = {
 	jhoneypot= {
 		{class='Ribbon', options={color={.9,.4,0.1,1}, width=12.5, size= 32, piece="jhoney", onActive=false}},
 	},
+	jmotherofmercy ={
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=8, size= 32, piece="thrustemit", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=8, size= 32, piece="eye1", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=8, size= 32, piece="eye2", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=4, size= 32, piece="Kreis13", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=4, size= 32, piece="Kreis06", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=4, size= 32, piece="Kreis16", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=4, size= 32, piece="Kreis15", onActive=true}},
+		{class='Ribbon', options={color={.6,.9,0.0,1}, width=4, size= 32, piece="Kreis14", onActive=true}},
+	},	
 	jstealthdrone ={
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare1", onActive=true}},
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=4, size= 32, piece="flare2", onActive=true}},

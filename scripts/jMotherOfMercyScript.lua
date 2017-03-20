@@ -220,6 +220,8 @@ function script.Activate()
 function script.StartMoving()
 Signal(SIG_AIM)
 	--windGet()
+
+	
 	 
    boolMoving=true
 
@@ -230,6 +232,8 @@ end
 function script.StopMoving()
 
 
+
+ boolMoving=false
 end
 
 
@@ -241,8 +245,6 @@ function script.Create()
 	 StartThread(sfx)
 	 StartThread(TurnDetect)
 	 StartThread(aimOS)
-	 StartThread(stopDetector)
-
 
  --updateDelete
 
@@ -423,31 +425,6 @@ while true do
 Sleep(250)
 end
 end
-
-
-function stopDetector()
-	while true do
-		Sleep(150)
-		if boolMoving == true then
-			OftenEnoughAtSameSpotCounter=0
-			while OftenEnoughAtSameSpotCounter < 3 do
-			ox,oy,oz=Spring.GetUnitPosition(unitID)
-			Sleep(250)
-			px,py,pz=Spring.GetUnitPosition(unitID)
-				if math.sqrt((ox-px)^2+(oz-pz)^2) <= 1 then
-					OftenEnoughAtSameSpotCounter=OftenEnoughAtSameSpotCounter+1
-				else
-					OftenEnoughAtSameSpotCounter=0
-					boolMoving=true
-				end
-			end
-			boolMoving=false
-		end
-
-	end
-end
-
-
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
 	return center 
