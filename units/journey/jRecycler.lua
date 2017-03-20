@@ -31,7 +31,7 @@ local unitDef = {
 	MovementClass = "Default2x2",
 	TurnRate = 150,
 	nanocolor=[[0 0.9 0.9]],
-	sightDistance = 500,
+	sightDistance = 2000,
 
 	
 	CanReclaim=true,
