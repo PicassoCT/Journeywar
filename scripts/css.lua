@@ -290,9 +290,15 @@ function 	getInFlamePose()
 	Turn(cssLegL,x_axis,math.rad(43),5)
 	Turn(cssLegLlow,x_axis,math.rad(-132),5)
 end
+range=80
+function reduceGrass(LanscapeCell)
+	LanscapeCell.Food=0
+return LanscapeCell
+end
 
-function reduceGrassInSector()
-	Spring.Echo("Todo:css ReduceGrass")
+function reduceGrassInSector(cx,cz)
+	GG.LandScapeT.setAreaEffect(cx,cz,range,reduceGrass )	
+
 end
 
 function torchAnimation()
@@ -305,10 +311,10 @@ function torchAnimation()
 			getInFlamePose()
 			while boolTorchIt == true do
 				flameSFX(x,y,z)
-				TorchUnits(x,y,z,80)	
-				TorchFeatures(x,y,z,80)
+				TorchUnits(x,y,z,range)	
+				TorchFeatures(x,y,z,range)
 				sign=-1*sign
-				reduceGrassInSector()
+				reduceGrassInSector(x,z)
 				Turn(cssArmL,y_axis,math.rad(45*sign),1.5)
 				WTurn(cssArmR,y_axis,math.rad(45*sign),1.5)
 	
