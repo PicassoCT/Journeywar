@@ -104,8 +104,8 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
 	return retTab
 end
 
-function getAirUnitTable(UnitDefNames)
-	retTab={}
+function getAirUnitTypeTable(UnitDefNames)
+	local retTab={}
 	retTab[UnitDefNames["callygator"].id]=true
 	retTab[UnitDefNames["conair"].id]=true
 	retTab[UnitDefNames["chunterchopper"].id]=true
@@ -122,10 +122,10 @@ function getAirUnitTable(UnitDefNames)
 	retTab[UnitDefNames["jatlantai"].id]=true
 	retTab[UnitDefNames["jwatchbird"].id]=true
 	
-	return reTab
+	return retTab
 end
-function getPyroProofTable(UnitDefNames)
-	FireProofTypes={}
+function getPyroProofUnitTypeTable(UnitDefNames)
+	local FireProofTypes={}
 	FireProofTypes[UnitDefNames["jfiredancebomb"].id]=true
 	FireProofTypes[UnitDefNames["jsunshipfire"].id]=true
 	FireProofTypes[UnitDefNames["css"].id]=true

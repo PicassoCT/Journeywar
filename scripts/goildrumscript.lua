@@ -132,7 +132,7 @@ function script.Killed()
 										z=z
 									}
 		end
-	pyroProofTable=getPyroProofTable(UnitDefNames)
+	pyroProofTable=getPyroProofUnitTypeTable(UnitDefNames)
 
 	T= getAllInCircle(x,z,range*33,unitID)
 	process(	T,

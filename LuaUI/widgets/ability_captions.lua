@@ -1,8 +1,9 @@
 return {
 --centrail 
 	["cgatefort"]= {active="GateRail\nOn", passive="GateRail\nOff"},
-	["cwallbuilder"]= {active="Terraform", passive=""},
+	["cwallbuilder"]= {active="Terraform \nOn", passive="Terraform \nOff"},
 	["mtw"]= {active="Build\nTrooper ", passive="Build\nSynthsoldier"},
+	["css"]= {active="Torch\nEnvironment", passive="Cease\nFire"},
 	["bg"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},
 	["bg2"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},
 	["mdigg"]= {active="Start\nMining", passive="Stop\nMining"},

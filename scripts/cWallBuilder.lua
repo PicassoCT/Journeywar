@@ -67,10 +67,10 @@ local podturret2=piece"podturret2"
 local citurrete3=piece"citurrete3"
 local citurrete4=piece"citurrete4"
 
-local frontsensor=piece"frontSensor"
-local rearsensor=piece"rearSensor"
-local boolIsActive=true
-local boolWalking=false
+frontSensor=piece"frontSensor"
+rearSensor=piece"rearSensor"
+boolIsActive=true
+boolWalking=false
 --superportal+magnetic sucker
 --local cifireclo2=piece"cifireclo2"
 
@@ -123,6 +123,7 @@ function script.Create()
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	StartThread(constTerraFormin)
 	StartThread(emitLight)
+	StartThread(motionDetector)
 	Hide( citurrete0) 
 	Hide( citurretem) 
 	
@@ -237,31 +238,37 @@ function script.Killed(recentDamage, maxHealth)
 	
 	return 1
 end
-
+SIG_STOP=2048
 function legs_down()
+	
 	for i=1,6,1 do
 		Move(JollyWalker[i],z_axis,0,22)
 	end
+	Sleep(500)
 	
 	
 	
 end
 
+function motionDetector()
+	while true do 
+		ox,oy,oz=Spring.GetUnitPosition(unitID)
+		Sleep(500)
+		ux,uy,uz=Spring.GetUnitPosition(unitID)
+		if math.sqrt((ox-ux)^2 +(oz-uz)^2) > 0.25 then boolWalking = true else boolWalking=false end
+	end
+	
+end
 
 function script.StartMoving()
 	Move(centemit,z_axis,34,0)
-	boolWalking=true
-	----Spring.Echo("walk")
-	--Signal(SIG_WALK)
-	--Signal(SIG_IDLE)
-	--legs_down()
-	--StartThread(walk)
+	
 end
 
 function script.StopMoving()
 	Move(centemit,z_axis,0,0)
 	--	--Spring.Echo("stop")
-	boolWalking=false
+	
 	legs_down()
 	
 	
@@ -336,62 +343,41 @@ end
 
 function constTerraFormin()
 	T={}
-	size=128/8
+	size=512/8
 	local T	=prepareHalfSphereTable(size)
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 	local spGetGroundHeight=Spring.GetGroundHeight
 	local spGetUnitRotation=Spring.GetUnitRotation
 	
-	if not GG.DynDefMap then GG.DynDefMap={} end
-	if not GG.DynRefMap then GG.DynRefMap={} end
+	
 	
 	teamID=Spring.GetUnitTeam(unitID)
 	averageTable={}
 	while true do
-		
+		Spring.Echo("Terraform Loop")
 		if boolIsActive == true then 		
-			if consumeAvailableRessource("e", 50, teamID) == true then
-				
+			Spring.Echo("Terraform Loop Active")
+			if Spring.UseTeamResource( teamID, 'energy',50) then
+				Spring.Echo("Terraform Loop Resource Active")
+				x,y,z=spGetUnitPosition(unitID)
 				if boolWalking == true then
+					Spring.Echo("Terraform Loop Walking")
 					
-					--get the average current Height front and rear
-					TC={}	
-					for i=1,size do
-						for j=1,size do
-							TC[i][j]= 0
-							if distance({x=size/2-i,y=size/2-j},{x=size/2,y=size/2})< size/2 then
-								TC[i][j]= 1
-							end
-						end
-					end				
-					x,y,z=spGetUnitPosition(unitID)
-					fx,fy,fz = spGetUnitPiecePosDir(unitID,frontSensor)				
-					rx,ry,rz = spGetUnitPiecePosDir(unitID,rearSensor)				
-					targetheigth=spGetGroundHeight(fx,fz)
-					_,dir,_=spGetUnitRotation(unitID)
+					if GG.DynDefMap == nil then GG.DynDefMap={} end
+					if GG.DynRefMap == nil then GG.DynRefMap={} end
+					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
+					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,1)
+					GG.boolForceLandLordUpdate=false
+					Spring.Echo("Terraforming Moving")
 					
-					
-					if dir < 0 then dir= 3.14159+dir end
-					
-					TC=directionColourTable(TC, dir ,y, fy,ry,size)
-					
-					echoT(TC)
-					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="relative", filterType="borderblur"}
-					GG.DynRefMap[#GG.DynRefMap+1]=	TC
-					GG.boolForceLandLordUpdate=true
-					Spring.Echo("Forcing Landlord Update- echoin Transfomration Table")
-				else
-					x,y,z=spGetUnitPosition(unitID)
-					
+				else -- not walking -- we average the surface
+					if GG.DynDefMap == nil then GG.DynDefMap={} end
+					if GG.DynRefMap == nil then GG.DynRefMap={} end
 					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="add", filterType="borderblur"}
-					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,32)
-					GG.boolForceLandLordUpdate=true
-					
-					while boolWalking == true do
-						Sleep(1000)
-					end
-					
+					GG.DynRefMap[#GG.DynRefMap+1]=	smoothGroundHeigthmap(size,x,z)
+					GG.boolForceLandLordUpdate=false					
+					Spring.Echo("Terraforming Standstill")					
 					
 				end
 				
@@ -459,14 +445,10 @@ function script.FireWeapon2()
 end
 --------------------------------------------------------------------------
 --turret + two turret emiter
-
-
-function script.AimFromWeapon2() 
+ function script.AimFromWeapon2() 
 	return podturret3 
 end
-
-
-
+ 
 
 function script.QueryWeapon2() 
 	rand=math.random(0,1)

@@ -10,7 +10,8 @@ local unitDef = {
 	buildCostMetal = 105,
 	buildCostEnergy = 200,
 	buildTime = 6,
-
+	onoffable=true,
+	ActivateWhenBuilt=0,
 
 
 	--Health
@@ -52,7 +53,8 @@ local unitDef = {
 		   "custom:cssdeathflames",
 		   "custom:fireball",
 		   "custom:firefive",		--1026
-		   "custom:cssfirejet"		--1027
+		   "custom:cssfirejet",		--1027
+		   "custom:bigfoorestfire",		--1028
 		   
 		   
 		   

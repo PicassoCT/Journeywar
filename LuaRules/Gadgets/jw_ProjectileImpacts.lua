@@ -849,25 +849,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		--cBonkerPlasmaWeapon + FireWeapons
 		if FireWeapons[weaponDefID] and unitDefID ~= cssDefID then
-			if GG.OnFire == nil then GG.OnFire={} end
-			--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
-			boolInsertIt=true
-			--very bad sollution n-times
-			for i=1, table.getn(GG.OnFire), 1 do
-				if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== unitID then
-					GG.OnFire[i][2]=math.ceil(math.random(190,1500)) 
-					boolInsertIt=false
-				end
-			end
-			
-			if boolInsertIt==true then
-				----Spring.Echo("jw_projectileimpacts:InsertIt")
-				GG.OnFire[#GG.OnFire+1]={}
-				GG.OnFire[#GG.OnFire][1]={}
-				GG.OnFire[#GG.OnFire][1]=unitID
-				GG.OnFire[#GG.OnFire][2]={}
-				GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(150,1000)) 
-			end			
+			setUnitOnFire(unitID, math.random(190,1500))			
 		end
 		
 		--skySraper is damagedCase
@@ -970,14 +952,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end	
 	end
 	
-	function setSpeedEnv(k, val)
-		env=Spring.UnitScript.GetScriptEnv(k)
-		
-		if env then
-			udef=Spring.GetUnitDefID(k)	
-			Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed*val* 2184.53))		
-		end
-	end
+
 	
 	local TableOfAllreadySearchedComender={}
 	function GetWeaponDirection(attackerID)

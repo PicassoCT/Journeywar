@@ -1,3 +1,4 @@
+include "lib_jw.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
@@ -27,23 +28,23 @@ function letsWalkAndTalk()
 	
 	
 	while(true) do
-			randSleep=math.ceil(math.random(25000,500000))
-			Sleep(randSleep)
+		randSleep=math.ceil(math.random(25000,500000))
+		Sleep(randSleep)
 		while boolMoving == false do
 			randSleep=math.ceil(math.random(10000,25000))
 			Sleep(randSleep)
-		burst=math.ceil(math.random(1,3))
-		for i=1,burst,1 do
-			StringOfStrings="sounds/csupsold/talk"
-			appendMe=math.floor(math.random(1,9))
-			EndOfStrings=".wav"
-			result=StringOfStrings..appendMe
-			result=result..EndOfStrings
-			PlaySoundByUnitDefID(myDefID,result,0.5, 2000, 1,0)
-
-			Sleep(4200)
-		end
-		
+			burst=math.ceil(math.random(1,3))
+			for i=1,burst,1 do
+				StringOfStrings="sounds/csupsold/talk"
+				appendMe=math.floor(math.random(1,9))
+				EndOfStrings=".wav"
+				result=StringOfStrings..appendMe
+				result=result..EndOfStrings
+				PlaySoundByUnitDefID(myDefID,result,0.5, 2000, 1,0)
+				
+				Sleep(4200)
+			end
+			
 		end
 	end
 end
@@ -52,6 +53,7 @@ boolWalking= false
 function walk()
 	Signal(SIG_IDLE)
 	SetSignalMask(SIG_WALK)
+	Move(cssBody,y_axis,0,17)
 	Turn(cssBody,y_axis,math.rad(0),20)
 	Turn(cssBody,x_axis,math.rad(20),0)
 	boolWalking=true
@@ -112,8 +114,10 @@ function script.StartMoving()
 end
 
 function legs_down()
+
 	SetSignalMask(SIG_LEG)
 	Sleep(100)
+	Move(cssBody,y_axis,0,17)
 	Turn(center,y_axis,math.rad(0),0)
 	Turn(cssArmL,z_axis,math.rad(0),7)
 	Turn(cssArmR,z_axis,math.rad(0),7)
@@ -143,7 +147,7 @@ function script.StopMoving()
 	
 end
 
-
+PiecesGroups={}
 
 function script.Create()
 	Hide(jet1)
@@ -151,10 +155,11 @@ function script.Create()
 	Hide(flare01)
 	Hide(flare02)
 	StartThread(letsWalkAndTalk)
+	StartThread(torchAnimation)
 	Signal(SIG_IDLE)
 	Signal(SIG_LEG)
 	Signal(SIG_moveStatemachine)
-	
+	PiecesGroups =makePiecesTablesByNameGroups(false,true)
 	----Spring.Echo "This was a Triumph! Im making a note here huge Success!"
 	--Spring.UnitScript.Play("centerdeploy")
 	
@@ -220,7 +225,7 @@ function script.AimWeapon1( heading, pitch )
 		
 		--WaitForTurn(lgun, x_axis)
 		--StartThread(RestoreAfterDelay)
-		return true
+		return true and boolTorchIt == false
 	end
 	return false
 end
@@ -253,7 +258,7 @@ function script.AimWeapon2( heading, pitch )
 		
 		--WaitForTurn(lgun, x_axis)
 		--StartThread(RestoreAfterDelay)
-		return true
+		return true and boolTorchIt == false
 	end
 	return false
 end
@@ -278,4 +283,86 @@ function script.FireWeapon2()
 	EmitSfx(jet2,1027)
 	--lua_FlameShot(2)
 end
+function 	getInFlamePose()
+	Move(cssBody,y_axis,-10,7)
+	Turn(cssLegR,x_axis,math.rad(97),5)
+	Turn(cssLegRlow,x_axis,math.rad(-97),5)
+	Turn(cssLegL,x_axis,math.rad(43),5)
+	Turn(cssLegLlow,x_axis,math.rad(-132),5)
+end
 
+function reduceGrassInSector()
+	Spring.Echo("Todo:css ReduceGrass")
+end
+
+function torchAnimation()
+	
+	while true do
+		if boolTorchIt==true then
+			sign=-1
+			ShitWasSoCache={}
+			x,y,z=Spring.GetUnitPosition(unitID)
+			getInFlamePose()
+			while boolTorchIt == true do
+				flameSFX(x,y,z)
+				TorchUnits(x,y,z,80)	
+				TorchFeatures(x,y,z,80)
+				sign=-1*sign
+				reduceGrassInSector()
+				Turn(cssArmL,y_axis,math.rad(45*sign),1.5)
+				WTurn(cssArmR,y_axis,math.rad(45*sign),1.5)
+	
+			end
+
+		end
+		Sleep(250)
+	end
+	
+end
+function flameSFX(x,y,z)	
+	Spring.SpawnCEG("bigfoorestfire",x+math.random(-16,16), y+math.random(1,15), z+math.random(-16,16),math.random(0,0.1),math.random(0.8,1),math.random(0,0.1))
+end
+
+function TorchFeatures(x,y,z,range)
+	T=Spring.GetFeaturesInCylinder(x,z,range)
+	process(T,
+	function (id)
+		hp=Spring.GetFeatureHealth(id)
+		if hp <= 0 then
+			Spring.DestroyFeature(id)
+		elseif hp then
+			Spring.SetFeatureHealth(id,hp-10)
+		end
+	end
+	)
+end
+FireProofTypes=getPyroProofUnitTypeTable(UnitDefNames)
+AirTypes=getAirUnitTypeTable(UnitDefNames)
+function TorchUnits(x,y,z,range)
+
+	T=getAllInCircle( x, z,range)
+
+	process(T,
+	function(lambID)
+		detID= Spring.GetUnitDefID(lambID)				
+		if not FireProofTypes[detID] and  not AirTypes[detID]  then 
+			setUnitOnFire(lambID, math.random(190,1500))		
+		end
+	end
+	)			
+	
+end
+function script.Activate ( )
+	boolTorchIt=true
+	--setMoveRateToZero
+	setSpeedEnv(unitID,0)
+	return 1
+end
+
+function script.Deactivate ( )
+	boolTorchIt=false
+	
+	setSpeedEnv(unitID,1)
+	
+	return 0
+end

@@ -561,7 +561,7 @@ function haveSoundArround()
 	
 end
 
-local sparedUnits=getPyroProofTable(UnitDefNames)
+local sparedUnits=getPyroProofUnitTypeTable(UnitDefNames)
 
 
 function spawnFire(times,enemyID)

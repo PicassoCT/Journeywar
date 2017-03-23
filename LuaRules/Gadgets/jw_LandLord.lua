@@ -270,26 +270,26 @@
 				--Spring.Echo("JW::LandLord::insertDynamicDeformationMaps-1")
 				
 				
-				for i=1,table.getn(GG.DynDefMap), 1 do
-					--Spring.Echo(GG.DynDefMap[i])
-					--print2DMap(GG.DynRefMap[i])
-					local x,z=math.ceil(GG.DynDefMap[i].x),math.ceil(GG.DynDefMap[i].z)
-					halfSize= GG.DynDefMap[i].Size/2
+				for key,value in pairs(GG.DynDefMap) do
+					--Spring.Echo(value)
+					print2DMap(GG.DynRefMap[key])
+					local x,z=math.ceil(value.x),math.ceil(value.z)
+					halfSize= value.Size/2
 					--<Blend&FilterFunc>
 					blendType="melt"
 					filterType="none"
 					
-					if GG.DynDefMap[i].blendType then
-						blendType=GG.DynDefMap[i].blendType
+					if value.blendType then
+						blendType=value.blendType
 					end
 					
-					filterFunction=getFilterFunction(filterType)
+					filterFunction=getFilterFunction(valuefilterType)
 					assert(filterFunction,"JW_LANDLORD::WithinBOunds::filterFunctionInit")
 					
 					blendFunction=getBlendFunction(blendType)
 					assert(blendFunction,"JW_LANDLORD::WithinBOunds::blendFunctionInit")
-					if GG.DynDefMap[i].filterType then
-						filterType=GG.DynDefMap[i].filterType		
+					if value.filterType then
+						filterType=value.filterType		
 					end
 					
 					--</Blend&FilterFunc>

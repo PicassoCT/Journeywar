@@ -260,8 +260,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	
-	ProofTypes=getPyroProofTable(UnitDefNames)
-	AirTypes=getAirUnitTable(UnitDefNames)
+	ProofTypes=getPyroProofUnitTypeTable(UnitDefNames)
+	AirTypes=getAirUnitTypeTable(UnitDefNames)
 	
 	function drawFlames_AddDamage(delayMap, nr) 
 		boolOnce=false

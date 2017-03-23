@@ -2862,13 +2862,14 @@ function vardump(value, depth, key)
 		end
 		return true
 	end
+
 	
 	-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
 	function filterOutUnitsOfType(Table, UnitTypeTable,Cache)
 		if type(UnitTypeTable) == "number" then 
 			copyOfType= UnitTypeTable;
 			UnitTypeTable= {}
-			UnitTypeTable[copyOfType]= copyOfType
+			UnitTypeTable[copyOfType]= true
 		end
 		
 		if Cache then
@@ -2885,12 +2886,13 @@ function vardump(value, depth, key)
 			return returnTable,Cache
 			
 		else
-			returnTable={}
+			local returnTable={}
 			for i=1, #Table do
-				if not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
-					returnTable[#returnTable+1]=Table[i]
-				end
-				
+			id=Table[i]
+			defID = Spring.GetUnitDefID(id)
+				if not  UnitTypeTable[defID] then
+					returnTable[#returnTable+1]=id
+				end				
 			end
 			return returnTable
 		end
@@ -3461,7 +3463,6 @@ function vardump(value, depth, key)
 		
 	end
 	
-	
 	--> creates a heightmap distortion table
 	function prepareHalfSphereTable(size,height)
 		if not size or not height then return nil end
@@ -3483,6 +3484,28 @@ function vardump(value, depth, key)
 	end
 	
 	
+	--> creates a heightmap distortion table that averages the height 
+	function smoothGroundHeigthmap(size,x,z)
+	gh=Spring.GetGroundHeight(x,z)
+
+		if not size  then return nil end
+
+		T={}
+		for o=1,size,1 do
+			T[o]={}
+			for i=1,size,1 do
+				lgh=Spring.GetGroundHeight(x +((o-(size/2))*8), z +((i-(size/2))*8))
+				sign= 1
+				if lgh < gh then sign=-1 end
+				--default
+				T[o][i]= math.abs(gh-lgh)*sign				
+			end
+		end
+		
+		return T	
+	end
+	
+	
 	function consumeAvailableRessource(typeRessource, amount, teamID )
 		
 		if "m" == string.lower(typeRessource) or "metal" == string.lower(typeRessource) then
@@ -3491,8 +3514,7 @@ function vardump(value, depth, key)
 				return false 
 			end	
 			
-			return Spring.UseTeamResource( teamID, "metal",amount)
-			
+			if  Spring.UseTeamResource( teamID, "metal",amount) then return true end			
 		end
 		
 		if "enery" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
@@ -3501,10 +3523,10 @@ function vardump(value, depth, key)
 				return false 
 			end	
 			
-			return Spring.UseTeamResource( teamID, "enery",amount)
+			if Spring.UseTeamResource( teamID, "enery",amount) then return true end
 			
 		end
-		
+		return false
 	end
 	
 	
@@ -3955,6 +3977,33 @@ function vardump(value, depth, key)
 		GG.MovementOS_Table[unitID].stability > 0.5 and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,q),1)] > 0 or GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)] and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)]>0 
 	end
 	
+	function setUnitOnFire(id, timeOnFire)
+		if GG.OnFire == nil then GG.OnFire={} end
+			boolInsertIt=true
+			--very bad sollution n-times
+			
+			for i=1, table.getn(GG.OnFire), 1 do
+				if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== id then
+					GG.OnFire[i][2]=math.ceil(timeOnFire) 
+					boolInsertIt=false
+				end
+			end
+			
+			if boolInsertIt==true then
+				GG.OnFire[#GG.OnFire+1]={}
+				GG.OnFire[#GG.OnFire][1]=id
+				GG.OnFire[#GG.OnFire][2]=math.ceil(timeOnFire) 
+			end			
+	end
+	
+	function setSpeedEnv(k, val)
+		env=Spring.UnitScript.GetScriptEnv(k)
+		
+		if env then
+			udef=Spring.GetUnitDefID(k)	
+			Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed*val* 2184.53))		
+		end
+	end
 	
 	
 	--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
