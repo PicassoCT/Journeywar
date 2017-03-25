@@ -67,19 +67,10 @@ function ImSailing()
 		windHead=TurnTowardsWind(SailGalatea,0.5,Heading)
 		diff= Heading-windHead
 		ratio= 1-(diff/(32188))
-		ratio=math.ceil(math.max(math.min(maxspeed, ratio*maxspeed),maxspeed*0.5))
-		SetUnitValue(COB.MAX_SPEED,ratio)
 		
-		if LocalBoolInWater==true then
+		setSpeedEnv(unitID,ratio)	
 
-		
-			for i=2,#PivotPoints do		
-				Turn(PivotPoints[i],y_axis,Heading+16384,0.2)
-			end
-		
-		else
-		tP(pieces["wholeBodyCenter"],0,0,0,1.5)
-		end
+	
 		
 		Sleep(250)
 	end
@@ -101,7 +92,7 @@ function swimSimplySwimming()
 			LocalBoolInWater=true
 			wx,wy,wz=Spring.GetUnitPosition(unitID)
 			offset=offset*-1
-			KeepPieceAfloat(unitID,pieces["wholeBodyCenter"],3.15,-65+offset)
+			KeepPieceAfloat(unitID,pieces["wholeBodyCenter"],9.15, -15, 5)
 			
 			Sleep(300)
 		end
@@ -126,7 +117,7 @@ nlswimAnimation = function (PivotPoints,pieces)
 	for i=2,#PivotPoints do
 		Turn(PivotPoints[i],1,math.rad(90),0.2)
 		--Turn(PivotPoints[i],2,math.rad(27*mul),1.2)
-		KeepPieceAfloat(unitID,PivotPoints[i],1.15,0)
+		KeepPieceAfloat(unitID,PivotPoints[i],3.15,-5,5)
 	end
 	showT(pieces.pumps)
 	showT(pieces.tails)
@@ -153,7 +144,6 @@ end
 nlstopSwimAnimation= function (PivotPoints,pieces) 
 	frame=Spring.GetGameFrame()
 	
-	
 	for i=2,#PivotPoints do
 		mul =math.sin((i*300+frame)/3000) 
 		Turn(PivotPoints[i],1,math.rad(0),0.2)
@@ -163,9 +153,9 @@ nlstopSwimAnimation= function (PivotPoints,pieces)
 		Move(PivotPoints[i],3, val,3)
 		Turn(PivotPoints[i],2,math.rad(mul*360),0.2)
 		if i < 5 then
-			KeepPieceAfloat(unitID,PivotPoints[i],3.15,0)
+			KeepPieceAfloat(unitID,PivotPoints[i],6.15,-3,3)
 		else
-			KeepPieceAfloat(unitID,PivotPoints[i],3.15,-40)
+			KeepPieceAfloat(unitID,PivotPoints[i],6.15,-3,3)
 		end
 	end
 	stopSpinT(pieces.tails,2,0.3)
@@ -173,16 +163,16 @@ end
 
 function nloutOfWaterAnimation (PivotPoints,pieces)
 	recResetT(pieces,4.3)
-	resetT(PivotPoints,4.5)
-	WaitForMove(PivotPoints[1],2)
-	WaitForMove(PivotPoints[2],2)
+	resetT(PivotPoints,14.5)
+
 	hideT(PivotPoints)
 	Show(PivotPoints[1])
 	hideT(pieces.tails)
 	hideT(pieces.pumps)
 	showT(pieces.leg)
 	showT(pieces.legl)
-	
+	WaitForMove(PivotPoints[1],2)
+	WaitForMove(PivotPoints[2],2)	
 end
 nlbackIntoWaterAnimation= function (PivotPoints,pieces)
 	
@@ -191,16 +181,14 @@ nlbackIntoWaterAnimation= function (PivotPoints,pieces)
 	hideT(pieces.leg)
 	hideT(pieces.legl)
 	showT(PivotPoints)
-	KeepPieceAfloat(unitID,pieces["wholeBodyCenter"],31.15,-75+offset)
+	reset(FireGalatea,6)
+	StartThread(KeepPieceAfloat,unitID,pieces["wholeBodyCenter"],31.15,-15,15)
 	for i=2,#PivotPoints do
-		val=math.random(20,65)* (-1^math.random(1,i))
-		Move(PivotPoints[i],1, val,3)
-		val=math.random(-20,0)
-		Move(PivotPoints[i],3, val,3)
+		StartThread(KeepPieceAfloat,unitID,PivotPoints[i],31.15,-15,15)
 		Spin(PivotPoints[i],2,math.rad(math.random(-22,22)),0.01)
-		Turn(PivotPoints[i],1,math.rad(90),0.02)
+		Turn(PivotPoints[i],1,math.rad(90),0.02)	
 	end
-	
+	WaitForMoves(PivotPoints)
 end
 
 unitDefID=Spring.GetUnitDefID(unitID)
@@ -265,38 +253,39 @@ end
 
 
 
-nlstopWalkAnimation= function (PivotPoints,pieces) 
-	hang(fireGalate,makeVector(0,1,0),0.8)
-	WaitForTurn(pieces["Leg3"],2)
-	WaitForTurn(pieces["Leg2"],2)
-	WaitForTurn(pieces["Leg1"],2)
-	WaitForTurn(pieces["Leg4"],2)
+nlstopWalkAnimation= function (PivotPoints,pieces,lfactor) 
+factor= lfactor or 1
+	hang(fireGalate,makeVector(0,1,0),0.8*factor)
+	WaitForTurn(pieces["Leg3"],2*factor)
+	WaitForTurn(pieces["Leg2"],2*factor)
+	WaitForTurn(pieces["Leg1"],2*factor)
+	WaitForTurn(pieces["Leg4"],2*factor)
 	Spin(pieces["fireGalate"],z_axis,math.rad(4.2),0.5)
 	
 	resetT(PivotPoints,0.6)
 	--resetT(pieces.legl,0.6)
 	--resetT(pieces.leg,0.6)
 	Move(PivotPoints[1],2,0,3.5)
-	Turn(pieces["Leg1"],3,math.rad(-11),0.2 )
-	Turn(pieces["LegL1"],3,math.rad(44),1 )
-	Turn(pieces["Leg2"],3,math.rad(-11),0.2 )
-	Turn(pieces["LegL2"],3,math.rad(44),1 )
-	Turn(pieces["Leg3"],3,math.rad(11),0.2 )
-	Turn(pieces["LegL3"],3,math.rad(-44),1 )
-	Turn(pieces["Leg4"],3,math.rad(11),0.2 )
-	Turn(pieces["LegL4"],3,math.rad(-44),1 )
+	Turn(pieces["Leg1"],3,math.rad(-11),0.2*factor )
+	Turn(pieces["LegL1"],3,math.rad(44),1 *factor)
+	Turn(pieces["Leg2"],3,math.rad(-11),0.2*factor )
+	Turn(pieces["LegL2"],3,math.rad(44),1 *factor)
+	Turn(pieces["Leg3"],3,math.rad(11),0.2 *factor)
+	Turn(pieces["LegL3"],3,math.rad(-44),1 *factor)
+	Turn(pieces["Leg4"],3,math.rad(11),0.2 *factor)
+	Turn(pieces["LegL4"],3,math.rad(-44),1 *factor)
 	
-	WaitForMove(PivotPoints[1],2)
-	Spin(pieces["fireGalate"],z_axis,math.rad(-4.2),0.5)
-	Move(PivotPoints[1],2,-10,3.5)
-	Turn(pieces["Leg1"],3,math.rad( 22),0.4 )
-	Turn(pieces["LegL1"],3,math.rad( -50),0.8 )
-	Turn(pieces["Leg2"],3,math.rad( 22),0.4 )
-	Turn(pieces["LegL2"],3,math.rad( -50),0.8 )
-	Turn(pieces["Leg3"],3,math.rad(-22),0.4 )
-	Turn(pieces["LegL3"],3,math.rad(50),0.8 )
-	Turn(pieces["Leg4"],3,math.rad(-22),0.4 )
-	Turn(pieces["LegL4"],3,math.rad(50),0.8 )
+	WaitForMove(PivotPoints[1],2*factor)
+	Spin(pieces["fireGalate"],z_axis,math.rad(-4.2),0.5*factor)
+	Move(PivotPoints[1],2,-10,3.5*factor)
+	Turn(pieces["Leg1"],3,math.rad( 22),0.4 *factor)
+	Turn(pieces["LegL1"],3,math.rad( -50),0.8	*factor )
+	Turn(pieces["Leg2"],3,math.rad( 22),0.4 	*factor)
+	Turn(pieces["LegL2"],3,math.rad( -50),0.8 	*factor)
+	Turn(pieces["Leg3"],3,math.rad(-22),0.4		*factor)
+	Turn(pieces["LegL3"],3,math.rad(50),0.8 	*factor)
+	Turn(pieces["Leg4"],3,math.rad(-22),0.4 	*factor)
+	Turn(pieces["LegL4"],3,math.rad(50),0.8 	*factor)
 	WaitForMove(PivotPoints[1],2)
 	if math.random(1,7)==3 then
 		
@@ -309,21 +298,21 @@ nlstopWalkAnimation= function (PivotPoints,pieces)
 		WaitForTurns(Legs)
 	else
 		val=math.random(-15,15)
-		Turn(pieces["Leg1"],2,math.rad(val),0.4)
+		Turn(pieces["Leg1"],2,math.rad(val),0.4*factor)
 		val=math.random(-15,15)
-		Turn(pieces["LegL1"],2,math.rad(val),0.8)
+		Turn(pieces["LegL1"],2,math.rad(val),0.8*factor)
 		val=math.random(-15,15)
-		Turn(pieces["Leg3"],2,math.rad(val),0.4)
+		Turn(pieces["Leg3"],2,math.rad(val),0.4*factor)
 		val=math.random(-15,15)
-		Turn(pieces["LegL3"],2,math.rad(val),0.8)
+		Turn(pieces["LegL3"],2,math.rad(val),0.8*factor)
 		val=math.random(-15,15)		
-		Turn(pieces["Leg2"],2,math.rad(val),0.4)
+		Turn(pieces["Leg2"],2,math.rad(val),0.4*factor)
 		val=math.random(-15,15)		
-		Turn(pieces["LegL2"],2,math.rad(val),0.8)
+		Turn(pieces["LegL2"],2,math.rad(val),0.8*factor)
 		val=math.random(-15,15)
-		Turn(pieces["Leg4"],2,math.rad(val),0.4)
+		Turn(pieces["Leg4"],2,math.rad(val),0.4*factor)
 		val=math.random(-15,15)
-		Turn(pieces["LegL4"],2,math.rad(val),0.8)
+		Turn(pieces["LegL4"],2,math.rad(val),0.8*factor)
 		WaitForTurn(pieces["Leg3"],2)
 		WaitForTurn(pieces["Leg2"],2)
 		WaitForTurn(pieces["Leg1"],2)
@@ -359,14 +348,16 @@ function InWaterFeedingFrenzy()
 			if T and #T > 0 then
 				
 				for i=1, #T do 
-					theLuckOne=T[i]
-					hp=Spring.GetUnitHealth(theLuckOne)
-					myHP,maxHP=Spring.GetUnitHealth(unitID)
-					if hp then 
-						hp=math.max(-10,hp-feedingDamage)
-						Spring.SetUnitHealth(theLuckOne,hp, 0, hp*stundamage)
-						myHp=math.min(myHP+feedingDamage/2,maxHP)
-						Spring.SetUnitHealth(unitID,myHp)
+					theLuckOne=affirm(T[i])
+						if theLuckOne then
+						hp=Spring.GetUnitHealth(theLuckOne)
+						myHP,maxHP=Spring.GetUnitHealth(unitID)
+						if hp then 
+							hp=math.max(-10,hp-feedingDamage)
+							Spring.SetUnitHealth(theLuckOne,hp, 0, hp*stundamage)
+							myHp=math.min(myHP+feedingDamage/2,maxHP)
+							Spring.SetUnitHealth(unitID,myHp)
+						end
 					end
 				end
 				
@@ -390,7 +381,8 @@ tail3=piece("tail3")
 tail4=piece("tail4")
 
 function script.Create()
-
+	PieceGroups=	makePiecesTablesByNameGroups(false,true)
+	resetT(PieceGroups,0)
 	hideT(Tails)
 	hideT(Pumps)
 	StartThread(ImSailing)

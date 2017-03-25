@@ -309,7 +309,8 @@ end
 
 boolDefBuffActive=true
 
-cegDamageCounter=0
+oldFrame=0
+currentFrame=0
 cegSpawnValue=225
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	
@@ -319,9 +320,10 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 		Signal(SIG_MOVE)
 		degree=math.deg(math.atan2(x,z))
 		ItterationsTillReSpawn=ItterationsTillReSpawn+damage
-		cegDamageCounter=cegDamageCounter+damage
-		if cegDamageCounter > cegSpawnValue then
-			cegDamageCounter= 0
+		currentFrame=Spring.GetGameFrame()
+		if currentFrame > oldFrame+30 then
+			oldFrame=currentFrame
+
 			x,y,z= Spring.GetUnitPosition(unitID)
 			Spring.SpawnCEG("greencross",x,y+120,z,0,1,0,50,0)
 		end
@@ -373,7 +375,7 @@ function applyDeBuff(T)
 		Spring.SetUnitHealth(T[i], {paralyze = hp*(15-(15*ratio))})
 		--sfx
 		x,y,z=Spring.GetUnitPosition(T[i])
-		spSpawnCEG("electric_explosion",x,y+10,z,0,1,0,50,0)
+		spSpawnCEG("parallyzebuff",x,y+10,z,0,1,0,50,0)
 	end
 end
 
@@ -390,8 +392,9 @@ function DeBuff()
 			if T then applyDeBuff(T) end
 			EmitSfx(1025,Eye1) -- Placeholder Sfx
 		end		
-	end
 	Sleep(500)
+	end
+
 end			
 
 local spGetUnitTeam=Spring.GetUnitTeam

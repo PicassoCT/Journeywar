@@ -132,7 +132,7 @@ function nightLights()
 	oldhours=hours+1
 	while true do
 		hours, minutes, seconds = getDayTime()
-		Spring.Echo("ScumSlumTime:"..hours..":"..minutes)
+
 		if oldhours > hours then
 			hideT(PieceGroups["Rectangl"])
 			--reinitialize ShowTable

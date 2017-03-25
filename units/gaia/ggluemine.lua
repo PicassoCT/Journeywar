@@ -21,7 +21,7 @@ local unitDef = {
 	canmove=false,
 	cancloak=true,
 	cloakCost=0.0,
-	initCloaked=false,
+	initCloaked=true,
 	
 	footprintX=2,
 	footprintZ =2,

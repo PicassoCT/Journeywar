@@ -1,9 +1,9 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 
 function script.HitByWeapon ( x, z, weaponDefID, damage ) 
@@ -12,10 +12,10 @@ center=piece"center"
 
 Animations={}
 local animCmd = {['turn']=Turn,['move']=Move};
-	Animations['walk'] = {
+Animations['walk'] = {
 	{
-
-
+		
+		
 		['Time'] = 1,
 		['commands'] = {
 			{['c']='turn',['p']=LegUL, ['a']=x_axis, ['t']=0.066902, ['s']=0.200707},
@@ -32,9 +32,9 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=LegUU, ['a']=x_axis, ['t']=-1.140458, ['s']=3.421374},
 			{['c']='turn',['p']=LegUU, ['a']=z_axis, ['t']=-0.016751, ['s']=0.050253},
 			{['c']='turn',['p']=LegUU, ['a']=y_axis, ['t']=-1*-5.141648, ['s']=6.000165},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LegUL01, ['a']=x_axis, ['t']=-0.060187, ['s']=0.180562},
 			{['c']='turn',['p']=LegUL01, ['a']=z_axis, ['t']=0.243041, ['s']=0.729124},
 			{['c']='turn',['p']=LegUL01, ['a']=y_axis, ['t']=-1*-3.478970, ['s']=1.012133},
@@ -47,9 +47,9 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=LegUU01, ['a']=x_axis, ['t']=0.492988, ['s']=1.478964},
 			{['c']='turn',['p']=LegUU01, ['a']=z_axis, ['t']=0.023457, ['s']=0.070371},
 			{['c']='turn',['p']=LegUU01, ['a']=y_axis, ['t']=-1*-0.908746, ['s']=6.698540},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LegLL, ['a']=x_axis, ['t']=0.473665, ['s']=1.420994},
 			{['c']='turn',['p']=LegLL, ['a']=z_axis, ['t']=0.589191, ['s']=1.767572},
 			{['c']='turn',['p']=LegLL, ['a']=y_axis, ['t']=-1*-3.013098, ['s']=0.385485},
@@ -72,9 +72,9 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=LegUU, ['a']=x_axis, ['t']=-0.051387, ['s']=3.630238},
 			{['c']='turn',['p']=LegUU, ['a']=z_axis, ['t']=-0.028889, ['s']=0.040460},
 			{['c']='turn',['p']=LegUU, ['a']=y_axis, ['t']=-1*-4.039178, ['s']=3.674900},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LegLL01, ['a']=x_axis, ['t']=-0.000000, ['s']=2.127527},
 			{['c']='turn',['p']=LegLL01, ['a']=z_axis, ['t']=-0.000000, ['s']=1.860791},
 			{['c']='turn',['p']=LegLL01, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.559835},
@@ -84,9 +84,9 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=LegUU01, ['a']=x_axis, ['t']=0.050725, ['s']=1.474210},
 			{['c']='turn',['p']=LegUU01, ['a']=z_axis, ['t']=-0.018216, ['s']=0.138910},
 			{['c']='turn',['p']=LegUU01, ['a']=y_axis, ['t']=-1*-2.325583, ['s']=4.722789},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LegLL, ['a']=x_axis, ['t']=-0.000000, ['s']=1.578882},
 			{['c']='turn',['p']=LegLL, ['a']=z_axis, ['t']=0.000000, ['s']=1.963968},
 			{['c']='turn',['p']=LegLL, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.428317},
@@ -142,9 +142,9 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=UpperJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=UpperJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=UpperJaw, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.000000},
-			 
-			 
-			 
+			
+			
+			
 			{['c']='turn',['p']=LegUU, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegUU, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegUU, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.000000},
@@ -157,7 +157,7 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=LegLU01, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegLU01, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegLU01, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.000000},
-			 
+			
 			{['c']='turn',['p']=LegUU01, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegUU01, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
 			{['c']='turn',['p']=LegUU01, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.000000},
@@ -191,13 +191,13 @@ local animCmd = {['turn']=Turn,['move']=Move};
 			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003503, ['s']=0.009578},
 			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.057148, ['s']=0.049517},
 			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.165802, ['s']=0.027564},
-			 
+			
 		}
 	},
 }
 
 Animations['stand'] = {
-
+	
 	{
 		['Time'] = 3,
 		['commands'] = {
@@ -506,132 +506,132 @@ Animations['meinFuehrerIcanWalk'] = {
 
 Animations['talk'] = {
 	{
-
-	{
-		['Time'] = 66,
-		['commands'] = {
-			{['c']='turn',['p']=UpperJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
-			{['c']='turn',['p']=UpperJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
-			 
-			 
-			 
-		}
-	},
-	{
-		['Time'] = 68,
-		['commands'] = {
-			{['c']='turn',['p']=Kreis02, ['a']=x_axis, ['t']=0.000000, ['s']=0.006485},
-			{['c']='turn',['p']=Kreis02, ['a']=z_axis, ['t']=-0.000000, ['s']=0.089118},
-			{['c']='turn',['p']=Kreis02, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.038019},
-		}
-	},
-	{
-		['Time'] = 78,
-		['commands'] = {
-			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.024014, ['s']=0.153830},
-			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.236040, ['s']=1.341689},
-			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.244802, ['s']=0.592500},
-		}
-	},
-	{
-		['Time'] = 82,
-		['commands'] = {
-			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003375, ['s']=0.154787},
-			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.037521, ['s']=1.488894},
-			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.157999, ['s']=0.651017},
-		}
-	},
-	{
-		['Time'] = 86,
-		['commands'] = {
-			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.011897, ['s']=0.063916},
-			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.141841, ['s']=0.782405},
-			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.202658, ['s']=0.334944},
-		}
-	},
-	{
-		['Time'] = 90,
-		['commands'] = {
-			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.002114, ['s']=0.058702},
-			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.014234, ['s']=0.765643},
-			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.148008, ['s']=0.327903},
-		}
-	},
-	{
-		['Time'] = 95,
-		['commands'] = {
-			{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.012682},
-			{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.085405},
-			{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.038489},
-		}
-	},
-	{
-		['Time'] = 100,
-		['commands'] = {
-		}
-	},
-}
+		
+		{
+			['Time'] = 66,
+			['commands'] = {
+				{['c']='turn',['p']=UpperJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.000000},
+				{['c']='turn',['p']=UpperJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.000000},
+				
+				
+				
+			}
+		},
+		{
+			['Time'] = 68,
+			['commands'] = {
+				{['c']='turn',['p']=Kreis02, ['a']=x_axis, ['t']=0.000000, ['s']=0.006485},
+				{['c']='turn',['p']=Kreis02, ['a']=z_axis, ['t']=-0.000000, ['s']=0.089118},
+				{['c']='turn',['p']=Kreis02, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.038019},
+			}
+		},
+		{
+			['Time'] = 78,
+			['commands'] = {
+				{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.024014, ['s']=0.153830},
+				{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.236040, ['s']=1.341689},
+				{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.244802, ['s']=0.592500},
+			}
+		},
+		{
+			['Time'] = 82,
+			['commands'] = {
+				{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.003375, ['s']=0.154787},
+				{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.037521, ['s']=1.488894},
+				{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.157999, ['s']=0.651017},
+			}
+		},
+		{
+			['Time'] = 86,
+			['commands'] = {
+				{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.011897, ['s']=0.063916},
+				{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.141841, ['s']=0.782405},
+				{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.202658, ['s']=0.334944},
+			}
+		},
+		{
+			['Time'] = 90,
+			['commands'] = {
+				{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=0.002114, ['s']=0.058702},
+				{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.014234, ['s']=0.765643},
+				{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.148008, ['s']=0.327903},
+			}
+		},
+		{
+			['Time'] = 95,
+			['commands'] = {
+				{['c']='turn',['p']=LowerJaw, ['a']=x_axis, ['t']=-0.000000, ['s']=0.012682},
+				{['c']='turn',['p']=LowerJaw, ['a']=z_axis, ['t']=-0.000000, ['s']=0.085405},
+				{['c']='turn',['p']=LowerJaw, ['a']=y_axis, ['t']=-1*-3.141593, ['s']=0.038489},
+			}
+		},
+		{
+			['Time'] = 100,
+			['commands'] = {
+			}
+		},
+	}
 }
 function script.Create()
-Move(center,y_axis,44,0)
---generatepiecesTableAndArrayCode(unitID)
-
-    local map = Spring.GetUnitPieceMap(unitID)
-    local offsets = constructSkeleton(unitID,deathpivot, {0,0,0})
-    
-    for a,anim in pairs(Animations) do
-        for i,keyframe in pairs(anim) do
-            local commands = keyframe.commands;
-            for k,command in pairs(commands) do
-                -- commands are described in (c)ommand,(p)iece,(a)xis,(t)arget,(s)peed format
-                -- the t attribute needs to be adjusted for move commands from blender's absolute values
-                if (command.c == "move") then
-                    local adjusted =  command.t - (offsets[command.p][command.a]);
-                    Animations[a][i]['commands'][k].t = command.t - (offsets[command.p][command.a]);
-                end
-            end
-        end
-    end
-StartThread(MoveControll)
+	Move(center,y_axis,44,0)
+	--generatepiecesTableAndArrayCode(unitID)
+	
+	local map = Spring.GetUnitPieceMap(unitID)
+	local offsets = constructSkeleton(unitID,deathpivot, {0,0,0})
+	
+	for a,anim in pairs(Animations) do
+		for i,keyframe in pairs(anim) do
+			local commands = keyframe.commands;
+			for k,command in pairs(commands) do
+				-- commands are described in (c)ommand,(p)iece,(a)xis,(t)arget,(s)peed format
+				-- the t attribute needs to be adjusted for move commands from blender's absolute values
+				if (command.c == "move") then
+					local adjusted = command.t - (offsets[command.p][command.a]);
+					Animations[a][i]['commands'][k].t = command.t - (offsets[command.p][command.a]);
+				end
+			end
+		end
+	end
+	StartThread(MoveControll)
 end
 
 function MoveControll()
 	while true do
 		if boolMoving==true then
-		PlayAnimation("walk")
+			PlayAnimation("walk")
 		else
-		
-		
+			
+			
 		end
-	Sleep(150)
+		Sleep(150)
 	end
-
+	
 end
 
 function PlayAnimation(animname)
-
-
-if not Animations[animname] then Spring.Echo(animname) end
-
-    local anim = Animations[animname];
+	
+	
+	if not Animations[animname] then Spring.Echo(animname) end
+	
+	local anim = Animations[animname];
 	assert(anim, animname)
-    for i = 1, #anim do
-        local commands = anim[i].commands;
-        for j = 1,#commands do
-            local cmd = commands[j];
-            animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
-        end
-        if(i < #anim) then
-            local t = anim[i+1]['Time'] - anim[i]['Time'];
-            Sleep(t*33); -- sleep works on milliseconds
-        end
-    end
+	for i = 1, #anim do
+		local commands = anim[i].commands;
+		for j = 1,#commands do
+			local cmd = commands[j];
+			animCmd[cmd.c](cmd.p,cmd.a,cmd.t,cmd.s);
+		end
+		if(i < #anim) then
+			local t = anim[i+1]['Time'] - anim[i]['Time'];
+			Sleep(t*33); -- sleep works on milliseconds
+		end
+	end
 end
 
 function script.Killed(recentDamage,_)
-
-createCorpseCUnitGeneric(recentDamage)
-return 1
+	
+	createCorpseCUnitGeneric(recentDamage)
+	return 1
 end
 
 
@@ -648,67 +648,67 @@ end
 
 function script.AimWeapon1( Heading ,pitch)	
 	--aiming animation: instantly turn the gun towards the enemy
-
+	
 	return true
-
+	
 end
- 
- function watchAndWait()
- --hide Unit
- removeFromWorld(unitID)
- 
- 
- if not GG.ProjectileOrigin then	GG.ProjectileOrigin={} end
- GG.ProjectileOrigin[unitID]=nil
- 
- --wakeupcondition
- lifetimeOfProj= 3000*2
- while lifetimeOfProj > 0 and not GG.ProjectileOrigin[unitID] do
- Sleep(150)
- lifetimeOfProj=lifetimeOfProj-150
- end 
- 
- --we did wake up, but stuck to the ground or stuck to a unit?
- if  GG.ProjectileOrigin[unitID] then -- we did make it
- 
-	if  GG.ProjectileOrigin[unitID].boolHitGround==true then -- we are where we should be
-	StartThread(getUnstuck_Ground)
-	else -- we are Stuck to a Unit
-	StartThread(getUnstuck_Unit,GG.ProjectileOrigin[unitID].id,GG.ProjectileOrigin[unitID].lastAttackedPiece)
-	end
- 
- else
- Spring.Echo("Varyfoospear in projectile nirwana")
- Spring.DestroyUnit(unitID,true,true) 
- end
- 
- end
 
- function getUnstuck_Ground ()
- returnToWorld(unitID)
- PlayAnimation("varyfoospear_unstuckGround")
- end
- 
- function getUnstuck_Unit(id, unitpiece)
- Spring.AddUnitDamage(id,120)
- Sleep(3)
-	if Spring.ValidUnitID(id) ==true then
-	PlayAnimation("varyfoospear_unstuckUnit")
+function watchAndWait()
+	--hide Unit
+	removeFromWorld(unitID)
+	
+	
+	if not GG.ProjectileOrigin then	GG.ProjectileOrigin={} end
+	GG.ProjectileOrigin[unitID]=nil
+	
+	--wakeupcondition
+	lifetimeOfProj= 3000*2
+	while lifetimeOfProj > 0 and not GG.ProjectileOrigin[unitID] do
+		Sleep(150)
+		lifetimeOfProj=lifetimeOfProj-150
+	end 
+	
+	--we did wake up, but stuck to the ground or stuck to a unit?
+	if GG.ProjectileOrigin[unitID] then -- we did make it
+		
+		if GG.ProjectileOrigin[unitID].boolHitGround==true then -- we are where we should be
+			StartThread(getUnstuck_Ground)
+		else -- we are Stuck to a Unit
+			StartThread(getUnstuck_Unit,GG.ProjectileOrigin[unitID].id,GG.ProjectileOrigin[unitID].lastAttackedPiece)
+		end
+		
+	else
+		Spring.Echo("Varyfoospear in projectile nirwana")
+		Spring.DestroyUnit(unitID,true,true) 
 	end
- end
- 
+	
+end
+
+function getUnstuck_Ground ()
+	returnToWorld(unitID)
+	PlayAnimation("varyfoospear_unstuckGround")
+end
+
+function getUnstuck_Unit(id, unitpiece)
+	Spring.AddUnitDamage(id,120)
+	Sleep(3)
+	if Spring.ValidUnitID(id) ==true then
+		PlayAnimation("varyfoospear_unstuckUnit")
+	end
+end
+
 function script.FireWeapon1()	
-StartThread(watchAndWait)
+	StartThread(watchAndWait)
 	return true
 end
 
 
 
 function script.StartMoving()
-
+	
 end
 
 function script.StopMoving()
-		
-		
+	
+	
 end

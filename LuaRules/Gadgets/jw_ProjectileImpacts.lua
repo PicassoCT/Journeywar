@@ -334,7 +334,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end,
 		[jgluegunDefID]=function(weaponDefID, px, py, pz, AttackerID)
-			id=Spring.CreateUnit("ggluemine",	 px, py, pz ,1, gaiaTeamID)
+			attackerTeam= Spring.GetUnitTeam(AttackerID)
+			id=Spring.CreateUnit("ggluemine",	 px, py, pz ,1, attackerTeam)
 			Spring.SetUnitBlocking(id,false)
 		end,
 		[crazorgrenadeDefID]=function(weaponDefID, px, py, pz, AttackerID)
@@ -523,8 +524,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	end 
 	
 	UnitDamageFuncT[cEfenceWeapondDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		spawnCegAtUnit(unitID,"cefencesplash",0,10,0)
-		spawnCegAtUnit(attackerID,"cefencesplash",0,10,0)
+		 spawnCEGatUnit(unitID,"cefencesplash",0,10,0)
+		 spawnCEGatUnit(attackerID,"cefencesplash",0,10,0)
 		
 		return damage
 	end 
@@ -606,10 +607,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	--perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
 	UnitDamageFuncT[glueMineWeaponDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
+		 spawnCEGatUnit(unitID, "gluebuff",0,30,0)
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
 	UnitDamageFuncT[jgluegunDefID]= function (unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 	
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
+
 		GG.GluedForLife[unitID]=GG.GluedForLife[unitID]*0.9
 	end
 	

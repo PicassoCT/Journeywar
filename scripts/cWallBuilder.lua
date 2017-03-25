@@ -355,29 +355,29 @@ function constTerraFormin()
 	teamID=Spring.GetUnitTeam(unitID)
 	averageTable={}
 	while true do
-		Spring.Echo("Terraform Loop")
+		-- Spring.Echo("Terraform Loop")
 		if boolIsActive == true then 		
-			Spring.Echo("Terraform Loop Active")
+			-- Spring.Echo("Terraform Loop Active")
 			if Spring.UseTeamResource( teamID, 'energy',50) then
 				Spring.Echo("Terraform Loop Resource Active")
 				x,y,z=spGetUnitPosition(unitID)
 				if boolWalking == true then
-					Spring.Echo("Terraform Loop Walking")
+					-- Spring.Echo("Terraform Loop Walking")
 					
 					if GG.DynDefMap == nil then GG.DynDefMap={} end
 					if GG.DynRefMap == nil then GG.DynRefMap={} end
 					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
 					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,1)
 					GG.boolForceLandLordUpdate=false
-					Spring.Echo("Terraforming Moving")
+					-- Spring.Echo("Terraforming Moving")
 					
 				else -- not walking -- we average the surface
-					if GG.DynDefMap == nil then GG.DynDefMap={} end
-					if GG.DynRefMap == nil then GG.DynRefMap={} end
-					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="add", filterType="borderblur"}
-					GG.DynRefMap[#GG.DynRefMap+1]=	smoothGroundHeigthmap(size,x,z)
-					GG.boolForceLandLordUpdate=false					
-					Spring.Echo("Terraforming Standstill")					
+					-- if GG.DynDefMap == nil then GG.DynDefMap={} end
+					-- if GG.DynRefMap == nil then GG.DynRefMap={} end
+					-- GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="add", filterType="borderblur"}
+					-- GG.DynRefMap[#GG.DynRefMap+1]=	smoothGroundHeigthmap(size,x,z)
+					-- GG.boolForceLandLordUpdate=false					
+					-- Spring.Echo("Terraforming Standstill")					
 					
 				end
 				

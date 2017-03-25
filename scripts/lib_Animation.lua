@@ -657,16 +657,26 @@ function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
 end
 
 -->Moves a Piece to WaterLevel on the Ground in UnitSpace
-function KeepPieceAfloat(unitID,piecename,speed,offset)
+function KeepPieceAfloat(unitID,piecename,speed,randoValLow,randoValUp)
 	if not piecename then return error("No piecename given") end
-	loffset=offset or 0
-	x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
-	
+	randoVal= math.random(randoValLow or -1,randoValUp or 0)
+
+	--unitspace
+	px,py,pz,_,_,_=Spring.GetUnitPiecePosition(unitID,piecename)
+	--worldspace
 	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
-	myHeight=0
-	heightdifference=math.abs(globalHeightUnit-myHeight)
-	if myHeight < globalHeightUnit then heightdifference=-heightdifference end
-	Move(piecename,y_axis,heightdifference+loffset,speed,true)
+	pieceInfoTable= Spring.GetUnitPieceInfo(unitID,piecename)
+	sizeOfPiece,offsetOfPiece =pieceInfoTable.max[2],pieceInfoTable.offset[2]
+
+	if y > 0  then 
+		WMove(piecename,y_axis,py-y -offsetOfPiece +randoVal ,speed)
+	else
+		WMove(piecename,y_axis,py-y -offsetOfPiece  +randoVal,speed)
+	end
+	
+	px,py,pz,_,_,_=Spring.GetUnitPiecePosition(unitID,piecename)
+	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
+
 end
 
 -->Paint a Piece Pattern 
