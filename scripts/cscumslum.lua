@@ -42,14 +42,14 @@ ratio=4
 
 
 
-mratio=1/((UnitDefNames["scumslum"].metalCost  /ratio )/(UnitDefNames["gcivillian"].metalCost  /2))
+mratio=1/((UnitDefNames["scumslum"].metalCost /ratio )/(UnitDefNames["gcivillian"].metalCost /2))
 eratio=1/((UnitDefNames["scumslum"].energyCost /ratio )/(UnitDefNames["gcivillian"].energyCost /2))
 
 
 hp,maxhp=Spring.GetUnitHealth(unitID)
 ratioDamage=math.abs(maxhp*((mratio+eratio)/2))
 --gcivillian
---metalCost  = 250,
+--metalCost = 250,
 --energyCost = 750,
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
@@ -72,16 +72,18 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 	
 	return damage
 end
-
+windowTable={}
 function buildSlum()
-if maRa()==true then Turn(Foundation,x_axis,math.rad(180),0)
-if maRa()==true then 
-Turn(Foundation,x_axis,math.rad(180+math.random(-1,1)),0) end
- end
-
+	if maRa()==true then Turn(Foundation,x_axis,math.rad(180),0)
+		if maRa()==true then 
+		Turn(Foundation,x_axis,math.rad(180+math.random(-1,1)),0) end
+	end
+	
+	hideT(PieceGroups["Rectangl"])
 	hideT(slumTable)
 	if math.random(0,1)==1 then 
 		Show(scumslum)
+		StartThread(nightLights)
 	else
 		boolAtLeastOne=false
 		
@@ -92,11 +94,73 @@ Turn(Foundation,x_axis,math.rad(180+math.random(-1,1)),0) end
 				if i > 1 and maRa() ==true then Turn(slumTable[i],y_axis,math.rad(math.ceil(math.random(1,8))*90),0) end
 			end
 		end
-		if boolAtLeastOne==false then Show(scumslum) end
+		if boolAtLeastOne==false then Show(scumslum);		StartThread(nightLights) end
 	end
 end
+function getRandomizedLightTimeTable()
+	retTable={}
+	for times=0,9,1 do
+		if times < 4 then 	retTable[times]=0 else
+			retTable[times]=math.random(1,times-3)*3
+		end	
+	end
+	for times=17,20,1 do
+		retTable[times]=math.random(2,8) 
+	end
+	
+	for times=21,22,1 do
+		retTable[times]=math.random(8,10) 
+	end
+	
+	for times=23,24,1 do
+		retTable[times]=math.random(2,6) 
+	end
+	return retTable
+end
+function randDelayedShow(timew,pieces)
+Sleep(timew)
+Show(pieces)
+end
 
-
+function randDelayedHide(timew,pieces)
+Sleep(timew)
+Hide(pieces)
+end
+nightLightTable={}
+function nightLights()
+	hours, minutes, seconds = getDayTime()
+	oldhours=hours+1
+	while true do
+		hours, minutes, seconds = getDayTime()
+		Spring.Echo("ScumSlumTime:"..hours..":"..minutes)
+		if oldhours > hours then
+			hideT(PieceGroups["Rectangl"])
+			--reinitialize ShowTable
+			for window=1,table.getn(PieceGroups["Rectangl"]),1 do
+				nightLightTable[window]={}
+				nightLightTable[window]=getRandomizedLightTimeTable()
+			end
+		end
+		oldhours=hours
+		
+		
+		if hours > 17 or hours < 8 then
+			for window=1,#PieceGroups["Rectangl"],1 do
+				if nightLightTable[window] and nightLightTable[window][hours] and PieceGroups["Rectangl"][window] then
+					if math.random(0, nightLightTable[window][hours]) > 3  then
+						StartThread(randDelayedShow,math.random(1,7000),PieceGroups["Rectangl"][window])
+					else
+						StartThread(randDelayedHide,math.random(1,7000),PieceGroups["Rectangl"][window])
+					end
+				end
+			end
+		else
+			hideT(PieceGroups["Rectangl"])
+		end
+		
+		Sleep(25000)
+	end
+end
 function showGangsta()
 	Hide(scgangsta)
 	Hide(scgangsta2)
@@ -109,10 +173,10 @@ function showGangsta()
 end
 
 function moveGansta(number, turner, ganstapiece,currentheading3)
-if ganstaTable[number]==true then return end
-
-ganstaTable[number]=true
-
+	if ganstaTable[number]==true then return end
+	
+	ganstaTable[number]=true
+	
 	cripWalkSpeed3=math.random(4,8)
 	distance3=math.random(26,84)	
 	
@@ -125,7 +189,7 @@ ganstaTable[number]=true
 	WaitForTurn(turner,y_axis)
 	Turn(ganstapiece,y_axis,math.rad(0),12)
 	WaitForTurn(ganstapiece,y_axis)	
-
+	
 	
 	distValue=0
 	boolOnGround=true
@@ -141,14 +205,14 @@ ganstaTable[number]=true
 	Move(ganstapiece,x_axis,0,cripWalkSpeed3)
 	WaitForMove(ganstapiece,x_axis)	
 	
-ganstaTable[number]=false
+	ganstaTable[number]=false
 end
 
 
 function onGround(piecename)
 	px,py,pz=Spring.GetUnitPiecePosDir(unitID,piecename)
 	gh=Spring.GetGroundHeight(px,pz)
-	return  math.abs(py -gh) < 15 
+	return math.abs(py -gh) < 15 
 end
 
 
@@ -177,27 +241,27 @@ function breakdance()
 	
 	
 end
-		
-		ganstaTable={}
-		for i=1,3 do
-		ganstaTable[i]=false
-		end
-		
-function gangstaIdling()
 
+ganstaTable={}
+for i=1,3 do
+	ganstaTable[i]=false
+end
+
+function gangstaIdling()
+	
 	local moveOnTheTurf1=0
 	local moveOnTheTurf2=0
 	local moveOnTheTurf3=0
 	
 	while(true) do
-	
-	
+		
+		
 		Sleep(350)
 		xOr=math.random(0,4)
 		--one, two , or all three got to move
 		if xOr == 0 then
 			StartThread(moveGansta,1,gangstaturner1,scgangsta,math.random(85,330))
- 			--one moves
+			--one moves
 		end
 		if xOr == 1 then
 			--two moves
@@ -210,7 +274,7 @@ function gangstaIdling()
 			StartThread(moveGansta,2,gangstaturner2,scgangsta2,math.random(-89,208))
 			StartThread(moveGansta,1,gangstaturner1,scgangsta,math.random(85,330))
 		end
-		if xOr == 3 or xOr == 4  then
+		if xOr == 3 or xOr == 4 then
 			boolGanstaWalk=false
 			for i=1,3 do
 				if ganstaTable[i]== true then boolGanstaWalk= false end
@@ -231,12 +295,13 @@ function upgraDDe()
 		Sleep(500)
 	end
 	Spring.SetUnitResourcing(unitID, "ume", 68)
-
-
+	
+	
 	
 end
 
 function script.Create()
+	PieceGroups =	makePiecesTablesByNameGroups(false,true)
 	buildSlum()
 	--<buildanimationscript>
 	x,y,z=Spring.GetUnitPosition(unitID)

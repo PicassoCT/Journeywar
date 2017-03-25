@@ -272,7 +272,7 @@
 				
 				for key,value in pairs(GG.DynDefMap) do
 					--Spring.Echo(value)
-					print2DMap(GG.DynRefMap[key])
+				--	print2DMap(GG.DynRefMap[key])
 					local x,z=math.ceil(value.x),math.ceil(value.z)
 					halfSize= value.Size/2
 					--<Blend&FilterFunc>
@@ -284,10 +284,10 @@
 					end
 					
 					filterFunction=getFilterFunction(valuefilterType)
-					assert(filterFunction,"JW_LANDLORD::WithinBOunds::filterFunctionInit")
+					assert(filterFunction,"JW_LANDLORD::WithinBounds::filterFunctionInit")
 					
 					blendFunction=getBlendFunction(blendType)
-					assert(blendFunction,"JW_LANDLORD::WithinBOunds::blendFunctionInit")
+					assert(blendFunction,"JW_LANDLORD::WithinBounds::blendFunctionInit")
 					if value.filterType then
 						filterType=value.filterType		
 					end
