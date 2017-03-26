@@ -165,14 +165,7 @@ function charged()
 	end
 end
 
-function giveSignal(x,z)
-	f2,height,f=Spring.GetUnitPosition(unitID)
-	for i=1,25, 1 do
-		Sleep(50)
-		Spring.SpawnCEG("glowsmoke",x,height,z,0,1,0,50,0)
-	end
-	
-end
+
 
 range=75
 function getFreeSpot()
@@ -187,10 +180,7 @@ function getFreeSpot()
 		
 		unitTable=spGetUnitsInCylinder(repcoords[i][1], repcoords[i][2],range)
 		
-		
-		--	giveSignal(repcoords[i][1], repcoords[i][2])
-		--	giveSignal((repcoords[i][1])+range, repcoords[i][2])
-		
+
 		if unitTable == nil or table.getn(unitTable) == 0 then
 			table.insert(pointsTable,i)
 			boolFoundSomething=true
@@ -337,7 +327,7 @@ end
 function script.Create()
 	Spring.SetUnitBlocking(unitID,false)
 	setUp()
-	buildItUp()
+	StartThread(buildItUp)
 	StartThread(OS_LOOP)
 	StartThread(damageWatcher)
 end
@@ -347,8 +337,7 @@ function script.Killed(recentDamage,_)
 	spx,spy,spz=Spring.GetUnitPosition(unitID)
 	
 	heapID=Spring.CreateUnit("cRewarder",spx,spy,spz, math.max(teamID,-1))
-	Sleep(200)
-	
+
 	createCorpseCBuilding(unitID,recentDamage)
 	
 	

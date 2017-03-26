@@ -106,9 +106,6 @@ function simpleTransform()
 		Turn(Pipes[i],y_axis,math.rad(dy),0)
 		Turn(Pipes[i],z_axis,math.rad(dz),0)
 	end
-	-- Turn(Pipes[33],x_axis,math.rad(-1*totalX),0)
-	-- Turn(Pipes[33],y_axis,math.rad(-1*totalY),0)
-	-- Turn(Pipes[33],z_axis,math.rad(-1*totalZ-90),0)
 	
 	totalX,totalZ,totalY=0,0,0
 	for i=42,84,1 do
@@ -121,9 +118,6 @@ function simpleTransform()
 		Turn(Pipes[i],y_axis,math.rad(dy),0)
 		Turn(Pipes[i],z_axis,math.rad(dz),0)
 	end
-	-- Turn(Pipes[73],x_axis,math.rad(-1*totalX),0)
-	-- Turn(Pipes[73],y_axis,math.rad(-1*totalY),0)
-	-- Turn(Pipes[73],z_axis,math.rad(-1*totalZ-90),0)
 	
 	Turn(Pipes[85],y_axis,math.rad(90),0)
 	totalX,totalZ,totalY=0,0,0
@@ -137,9 +131,6 @@ function simpleTransform()
 		Turn(Pipes[i],y_axis,math.rad(dy),0)
 		Turn(Pipes[i],z_axis,math.rad(dz),0)
 	end
-	-- Turn(Pipes[101],x_axis,math.rad(-1*totalX),0)
-	-- Turn(Pipes[101],y_axis,math.rad(-1*totalY),0)
-	-- Turn(Pipes[101],z_axis,math.rad(-1*totalZ-90),0)
 end
 
 
@@ -152,13 +143,9 @@ TurnTotal={x=0,y=0,z=0}
 
 function exploreMatrice(start,Max)
 	freeMatrice()
-	
-	Spring.Echo("JW_BBIND:exploreMatrice")
-	
 	for i=start,Max-10, 1 do
 		
 		x,y,z=exploreNode()
-		Spring.Echo("JW_BBIND:exploredNode"..x.." "..y.." "..z)
 		if x ~= nil then 
 			break
 		else
@@ -207,7 +194,6 @@ function exploreNode()
 		end
 	end
 	t=table.getn(TableOfOptions)
-	Spring.Echo("JW_BBIND:TableOfOptions:"..t)	
 	
 	if not t or t == 0 then
 		return nil 
@@ -221,9 +207,6 @@ function exploreNode()
 		return 	TurnMatrice[i].x,TurnMatrice[i].y,TurnMatrice[i].z
 	end 
 end 
-
-
-
 
 
 function moveDrumEmit()
@@ -273,9 +256,7 @@ function idle()
 		
 		
 		for i=1,3,1 do
-			EmitSfx(fireemit1,1028)
-			
-			
+			EmitSfx(fireemit1,1028)			
 			
 			EmitSfx(fireemitters[i],1028) --glowsmoke
 			
@@ -348,7 +329,8 @@ recycleAble= getRecycleableUnitTypeTable()
 function unitTest(handedOverId)
 	if handedOverId== nil then return false end
 	if Spring.ValidUnitID(handedOverId)== false then return false end
-	if handedOverId== unitID then return false end
+	if handedOverId == unitID then return false end
+	
 	local passengerDefID=Spring.GetUnitDefID(handedOverId)
 	if passengerDefID== nil then return false end
 	if passengerDefID== UnitDefNames["tiglil"].id or passengerDefID== UnitDefNames["skinfantry"].id or passengerDefID== UnitDefNames["vort"].id then return true end
@@ -534,20 +516,9 @@ end
 
 function unitPositioner(id)
 	SetSignalMask(SIG_POS)
-	Spring.MoveCtrl.Enable(id)
-	Spring.MoveCtrl.SetNoBlocking(id, true)
-	Spring.SetUnitBlocking(id, false, false,false)
-	heading=Spring.GetUnitHeading(unitID)
-	heading=heading +math.floor(65533/4)
-	Spring.MoveCtrl.SetHeading(id,heading)
-	
-	
-	local spSetPostion=Spring.MoveCtrl.SetPosition
-	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 	
 	while(Spring.ValidUnitID(id)==true)do
-		ux,uy,uz,_,_,_=spGetUnitPiecePosDir(unitID,attachpoint)
-		spSetPostion(id,ux,uy,uz)
+		Spring.UnitAttach (unitID,id, attachpoint)
 		Sleep(5)
 	end
 end
@@ -585,10 +556,6 @@ function dissSolveUnit(boolIsBio,id)
 	
 	
 	while (true==Spring.UnitScript.IsInMove (attachpoint, y_axis)) do
-		
-		
-		
-		
 		
 		if boolIsBio==true then
 			EmitSfx(attaemit,1029)
@@ -637,6 +604,7 @@ function dissSolveUnit(boolIsBio,id)
 	StopSpin(hax2,z_axis,0.1)
 	StopSpin(hax3,z_axis,0.1)
 	table.remove(arrived,id)
+	Spring.UnitDetach(id)
 	Spring.DestroyUnit(id,false,true)
 end
 
@@ -716,10 +684,27 @@ function lateWhileEmit(boolIsBio)
 		EmitSfx(cut5e2,1030)
 	end
 end
-
+function checkForOtherFactories(id)
+	teamID=Spring.GetUnitTeam(unitID)
+	if not GG.cBBindustryVictims then GG.cBBindustryVictims ={} end
+	if not GG.cBBindustryVictims[teamID] then GG.cBBindustryVictims[teamID] ={} end
+	
+	boolFoundFactoryProcessing=false
+	for teams, TeamTables in pairs(GG.cBBindustryVictims) do
+		if GG.cBBindustryVictims[teams][id] then boolFoundFactoryProcessing= true end
+	end
+	
+	if boolFoundFactoryProcessing== false then
+		GG.cBBindustryVictims[teamID][id]=true
+		return true
+	end
+	
+	return false
+end
 function theProcess(id)
 	Signal(SIG_HAUL)
 	Signal(SIG_ANIM)
+	if checkForOtherFactories(id) == true then return end
 	StartThread(buildanimOverhead)
 	
 	Spin(hax1,z_axis,math.rad(690),0.01)
@@ -1056,7 +1041,7 @@ function script.Create()
 	teamID=Spring.GetUnitTeam(unitID)
 	
 	if GG.UnitsToSpawn then 
-	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+		GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 	end
 	--</buildanimationscript>
 	StartThread(bringThemIn)

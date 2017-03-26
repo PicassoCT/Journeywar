@@ -614,6 +614,39 @@ function echo(stringToEcho,...)
 	end
 end
 
+function echo2DMap(tmap,squareSideDimension, valueSignMap)
+			map={}
+			local map=tmap
+			step=8
+			
+			valueSignMap= valueSignMap or {
+											[0]=   " 0 ",
+											[false]=" € ",
+											[true]= " T "									
+											}
+											
+		if squareSideDimension~= nil and squareSideDimension < 128 then step=1 end
+		
+			for x=2,#map,step do
+				StringToConcat=""
+				for z=2,#map,step do					
+					if not map[x][z]  then 
+						StringToConcat=StringToConcat.."  "
+					elseif 		valueSignMap[map[x][z]] then
+						StringToConcat=StringToConcat..valueSignMap[map[x][z]]
+					else 
+						StringToConcat=StringToConcat..printFloat(map[x][z],3).." "
+					end							
+				end	
+				Spring.Echo(StringToConcat)
+		end			
+end
+
+function printFloat(anyNumber, charsToPrint)
+	stringifyFloat=""..anyNumber
+	return string.sub(stringifyFloat,1,charsToPrint)
+end
+
 function distanceVec(v1,v2)
 	return distance(v1.x,v1.y,v1.z,v2.x,v2.y,v2.z)
 end
@@ -695,6 +728,7 @@ function showTWrap(piecenr)
 	end
 	
 end
+
 
 -->idle Animation Loop
 function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, Time, boolNoDown)
@@ -834,44 +868,6 @@ function tableCopy(orig)
 	end
 	return copy
 end
-
--->Prints Out a Table	
-function print2DMap(tmap,squareSideDimension)
-	local map={}
-	map=tmap
-	step=8
-	if squareSideDimension~= nil and squareSideDimension < 129 then step=1 end
-	for x=2,#map,step do
-		StringToConcat=""
-		for z=2,#map,step do
-			
-			
-			if map[x][z] == nil then 
-				StringToConcat=StringToConcat.." X "
-			elseif map[x][z] == 0 then
-				StringToConcat=StringToConcat.." 0 "
-			elseif map[x][z] == false or map[x][z] == true then
-				StringToConcat=StringToConcat.." € "
-			else
-				val=math.ceil(map[x][z])		
-				if val < 10 and val >=0 then
-					
-					StringToConcat=StringToConcat.." "..val.." "
-				elseif val >9 and val < 100 then
-					StringToConcat=StringToConcat.." "..val
-				elseif val > 99 then
-					StringToConcat=StringToConcat..val
-				else
-					StringToConcat=StringToConcat..val
-				end
-			end		
-			
-			
-		end	
-		Spring.Echo("::"..StringToConcat.."::")
-	end
-	
-end	
 
 
 function ANHINEG(value)
@@ -1370,9 +1366,7 @@ function flashPiece(pname,Time,rate)
 		Show(pname)
 		Sleep(r)
 		Hide(pname)
-	end
-	
-	
+	end	
 end
 
 -->allows for a script breakpoint via widget :TODO incomplete
@@ -3487,7 +3481,6 @@ function vardump(value, depth, key)
 	--> creates a heightmap distortion table that averages the height 
 	function smoothGroundHeigthmap(size,x,z)
 	gh=Spring.GetGroundHeight(x,z)
-
 		if not size  then return nil end
 
 		T={}
@@ -3495,14 +3488,65 @@ function vardump(value, depth, key)
 			T[o]={}
 			for i=1,size,1 do
 				lgh=Spring.GetGroundHeight(x +((o-(size/2))*8), z +((i-(size/2))*8))
-				sign= 1
-				if lgh < gh then sign=-1 end
+				sign= -1
+				if lgh < gh then sign= 1 end
 				--default
 				T[o][i]= math.abs(gh-lgh)*sign				
 			end
+		end		
+	return T	
+	end
+	
+	function getGroundHeigthDistance(h1,h2)
+		return distance(h1,0,0,h2,0,0)
+	end
+	
+
+	--> multiplies a deformation map with a factor
+	function multiplyHeigthmapByFactor(map,factor)
+	for o=1,#map,1 do
+			for i=1,#map[o],1 do
+			map[o][i]=map[o][i]*factor
+			end
 		end
+	return map
+	end
+	
+	--> blend Heigthmap
+	function blendToValueHeigthmap(map,dimension, blendStartRadius, blendEndRadius, ValueToBlend)
+		center={x=math.ceil(dimension/2),z=math.ceil(dimension/2)}
+		total=blendEndRadius- blendStartRadius
 		
-		return T	
+		for o=1,dimension,1 do
+			for i=1,dimension,1 do
+				ldist =distance(center.x,0,center.z,o,0,i)
+				if ldist > blendStartRadius and ldist < blendEndRadius then
+				factor= (ldist-blendStartRadius)/total
+				map[o][i]=map[o][i]* (1-factor)+ ValueToBlend*(factor)
+				end				
+			end
+		end
+	return map
+	end
+	
+	--> takes any given MapTable and nullifys the value outside and inside the circle
+	function circularClampHeigthmap(map,dimension, radius, boolInside, overWriteValue)
+	center={x=math.ceil(dimension/2),z=math.ceil(dimension/2)}
+	for o=1,dimension,1 do
+			for i=1,dimension,1 do
+				
+				if distance(center.x,0,center.z,o,0,i) > radius then -- we are Outside
+					if boolInside==false then
+						map[o][i]=overWriteValue
+					end
+				else
+					if boolInside==true then
+						map[o][i]=overWriteValue
+					end
+				end		
+			end
+		end		
+	return map
 	end
 	
 	
@@ -3517,13 +3561,13 @@ function vardump(value, depth, key)
 			if  Spring.UseTeamResource( teamID, "metal",amount) then return true end			
 		end
 		
-		if "enery" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
+		if "energy" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
 			currentLevel= Spring.GetTeamResources(teamID,"energy")
 			if amount > currentLevel then
 				return false 
 			end	
 			
-			if Spring.UseTeamResource( teamID, "enery",amount) then return true end
+			if Spring.UseTeamResource( teamID, "energy",amount) then return true end
 			
 		end
 		return false

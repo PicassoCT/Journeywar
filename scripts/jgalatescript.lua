@@ -174,8 +174,7 @@ function nloutOfWaterAnimation (PivotPoints,pieces)
 	WaitForMove(PivotPoints[1],2)
 	WaitForMove(PivotPoints[2],2)	
 end
-nlbackIntoWaterAnimation= function (PivotPoints,pieces)
-	
+nlbackIntoWaterAnimation= function (PivotPoints,pieces)	
 	
 	Show(PivotPoints[1])
 	hideT(pieces.leg)
@@ -249,8 +248,6 @@ nlwalkAnimation= function (PivotPoints,pieces)
 	WaitForMove(PivotPoints[1],2)
 	WaitForTurn(pieces["Leg1"],2)
 end
-
-
 
 
 nlstopWalkAnimation= function (PivotPoints,pieces,lfactor) 

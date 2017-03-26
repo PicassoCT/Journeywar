@@ -30,7 +30,9 @@
 
 	-- synced only
 	if (gadgetHandler:IsSyncedCode()) then
-		GG.boolForceLandLordUpdate=false
+	VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
+	
+	GG.boolForceLandLordUpdate=false
 		--------------------------------------------------------------------------------
 		--------------------------------------------------------------------------------
 		--TODO Function that allows the insertion of various terraindeformations
@@ -93,27 +95,36 @@
 			
 			if FilterName== "none" then
 			--	Spring.Echo("JW:FilterFunc:None")
-				return function (boolinBounds,anyVal)
+				return function (boolinBounds,anyVal,rateOfBlur)
 					assert(anyVal,"JW:FilterFunc:TableEmpty")
 				return anyVal end 
 			end
 			
 			if FilterName=="borderblur" then 
 			--	Spring.Echo("JW:FilterFunc:borderblur")
-				return function(boolinBounds,anyVal, rateOfBlur)	
-					local lgetNine=getNine
-					for rB=1,rateOfBlur, 1 do
-						for i=1,#anyVal,1 do
-							for j=1,#anyVal,1 do
-								if anyVal[i][j]==0 then anyVal[i][j]= lgetNine(anyVal,i,j) end
+					return function(boolinBounds,anyVal, rateOfBlur)	
+					if not anyVal then Spring.Echo(" FilterFunction: Borderblur: Did not recive any Value to work on"); return anyVale; end
+					rateOfBlur= math.max(1,(rateOfBlur or 1))
+					
+						local lgetNine=getNine
+						for rB=1,rateOfBlur, 1 do
+							for outIndex, outerTable in pairs(anyVal) do
+								for inIndex, innerTable in pairs(outerTable) do							
+									if innerTable ==0 then 
+									anyVal[outIndex][inIndex]= lgetNine(anyVal,outIndex,inIndex) 
+									end									
+								end
 							end
 						end
-					end
-					return anyVal
-				end end
+						return anyVal
+					end 				
+				end 
 				--default case	
-				--	Spring.Echo("JW:FilterFunc:undefined")
-				return function (boolinBounds,anyVal) return anyVal end
+				Spring.Echo("JW:FilterFunc:"..FilterName.." undefined")
+				return function (boolinBounds,anyVal) 
+						return anyVal 
+						end
+				
 			end
 			
 					function getNormalizedGroundHeigth(vi,vj)
@@ -131,33 +142,29 @@
 					
 			function getBlendFunction(BlendName)
 				--blindly adds or subs the value
-				if BlendName== "melt" then return function(anyTable) return anyTable end end	
+				if BlendName== "melt" then return function(anyTable,vi,vj, wStartX,wStartZ)	 return anyTable end end	
 				--adds subs the value to 
 				if BlendName== "add"  then				
-						return 
-						---------add--------------------------
-						function (anyTable,vi,vj)							
-							
-				
-							local bcheck=boundCheck
+						return 	function (anyTable,vi,vj, wStartX,wStartZ)				
+						if not anyTable then Spring.Echo(" BlendFunction: add: Did not recive any Value to work on"); return anyTable; end
+
 							h=getNormalizedGroundHeigth(vi,vj)
 							for i=1,#anyTable,1 do
-								if bcheck("x",i) ==true then
+								if boundCheck("x",i) ==true then
 									for j=1,#anyTable,1 do
-										if bcheck("z",j) ==true then
-											
-											if orgTerrainMap[i][j] and orgTerrainMap[i][j] > h + anyTable[i][j] then 
-												anyTable[i][j]=0
-											else
-												anyTable[i][j]= ((h + anyTable[i][j]) - orgTerrainMap[i][j] + (h-orgTerrainMap[i][j]))
-											end
-											
+										if boundCheck("z",j) ==true then	
+										orgTerrainValue= orgTerrainMap[wStartX+i][wStartZ+j]
+											--if orgTerrainValue then
+											--if orgTerrainValue > h + anyTable[i][j] then 
+											--	anyTable[i][j]=0
+											--else
+											--	anyTable[i][j]= getGroundHeigthDistance(orgTerrainValue,h)+  anyTable[i][j]
+											--end											
+											--end											
 										end
 									end
 								end
 							end
-							--Spring.Echo("JW_LANDLORD:ADD-----------------------")
-							--print2DMap(anyTable)	
 							return anyTable
 						end 	
 				end
@@ -165,20 +172,17 @@
 				if BlendName == "sub" then
 				return
 						-------------sub----------------------
-						function (anyTable,vi,vj)
-							
-					
-							local bcheck=boundCheck
+						function (anyTable,vi,vj, wStartX,wStartZ)	
+
 							h=getNormalizedGroundHeigth(vi,vj)
 							for i=1,#anyTable,1 do
-								if bcheck("x",i) ==true then
+								if boundCheck("x",i) ==true then
 									for j=1,#anyTable,1 do
-										if bcheck("z",j) ==true then			
+										if boundCheck("z",j) ==true then			
 											if orgTerrainMap[i][j] then
 												if orgTerrainMap[i][j] < h + anyTable[i][j] then 
 													anyTable[i][j]=0
-												else
-													
+												else													
 													anyTable[i][j]=(orgTerrainMap[i][j] - (h + anyTable[i][j]) - math.max(orgTerrainMap[i][j] - h,0))*-1
 												end
 											end
@@ -186,8 +190,7 @@
 									end
 								end
 							end
-							--Spring.Echo("JW_LANDLORD:SUB-----------------------")
-							--print2DMap(anyTable)		
+	
 							return anyTable	
 						end 
 				end
@@ -196,7 +199,7 @@
 
 						---------------relative--------------------	
 					if BlendName == "relative" then
-					return function (anyTable,vi,vj)
+					return function (anyTable,vi,vj, wStartX,wStartZ)	
 							
 							
 						
@@ -266,31 +269,19 @@
 				if GG.DynDefMap == nil then GG.DynDefMap={} end
 				if GG.DynRefMap == nil then GG.DynRefMap={} end
 				
-				--Spring.Echo("JW::LandLord::insertDynamicDeformationMaps::GG.DynDefMap".. table.getn(GG.DynDefMap))
-				--Spring.Echo("JW::LandLord::insertDynamicDeformationMaps-1")
-				
-				
 				for key,value in pairs(GG.DynDefMap) do
 					--Spring.Echo(value)
 				--	print2DMap(GG.DynRefMap[key])
 					local x,z=math.ceil(value.x),math.ceil(value.z)
 					halfSize= value.Size/2
 					--<Blend&FilterFunc>
-					blendType="melt"
-					filterType="none"
-					
-					if value.blendType then
-						blendType=value.blendType
-					end
-					
-					filterFunction=getFilterFunction(valuefilterType)
+	
+					filterFunction=getFilterFunction(value.filterType or "none")
 					assert(filterFunction,"JW_LANDLORD::WithinBounds::filterFunctionInit")
 					
-					blendFunction=getBlendFunction(blendType)
+					blendFunction=getBlendFunction(value.blendType or "melt")
 					assert(blendFunction,"JW_LANDLORD::WithinBounds::blendFunctionInit")
-					if value.filterType then
-						filterType=value.filterType		
-					end
+	
 					
 					--</Blend&FilterFunc>
 					--y=Spring.GetGroundHeight(x*8,z*8)
@@ -299,10 +290,10 @@
 					
 					if x-halfSize > 0 and x+halfSize < MSX and z-halfSize > 0 and z+halfSize < MSZ then
 						--	Spring.Echo("JW::LandLord::insertDynamicDeformationMaps-2")
-						withinBounds(x,z,i,halfSize,blendFunction,filterFunction)
+						withinBounds(x,z,key,halfSize,blendFunction,filterFunction )
 					else
 						--Spring.Echo("JW::LandLord::insertDynamicDeformationMaps-3")
-						debugVAL= withoutBounds(x,z,i,halfSize,blendFunction,filterFunction)
+						debugVAL= withoutBounds(x,z,key,halfSize,blendFunction,filterFunction)
 						if debugVAL and debugVAL==false then Spring.Echo("Error>LandLord>>insertDynamicDeformationMaps"..x.." | "..z.." | "..i) end
 					end	
 				end
@@ -315,10 +306,10 @@
 				startx,endx=x-halfSize,x+halfSize 
 				startz,endz=z-halfSize,z+halfSize
 				--assert(GG.DynRefMap[Nr],"JW:WhatTheHell"..Nr)
-				tempTable=filterFunction(true,GG.DynRefMap[Nr])
-				--assert(tempTable,"JW_LANDLORD::WithinBOunds::filterFunction")
-				tempTable=blendFunction(tempTable,x,z)
-				--assert(tempTable,"JW_LANDLORD::WithinBOunds::blendFunction")
+				tempTable=filterFunction(true,GG.DynRefMap[Nr], 3,startx,startz)
+
+				tempTable=blendFunction(tempTable,x,z,startx,startz)
+
 				for o=startx,endx,1 do
 					for i=startz,endz,1 do
 						orgTerrainMap[o][i]=orgTerrainMap[o][i]+ tempTable[math.max(1,o-startx)][math.max(1,i-startz)]
@@ -327,17 +318,15 @@
 			end
 			
 			function withoutBounds(x,z,Nr,halfSize,blendFunction,filterFunction)
-				--Spring.Echo("JW_LANDLORD:",filterFunction)
-				--Spring.Echo("JW_LANDLORD:",blendFunction)
-				--	Spring.Echo("JW::LandLord::insertDynamicDeformationMaps"..Table)
+
 				local bcheck= boundCheck
 				startx,endx=x-halfSize,x+halfSize
 				startz,endz=z-halfSize,z+halfSize
 				--boundCheck
-				tempTable=filterFunction(false,GG.DynRefMap[Nr])
-				--	assert(tempTable,"JW_LANDLORD::WithinBOunds::filterFunction")
-				tempTable=blendFunction(tempTable,x,z)
-				--	assert(tempTable,"JW_LANDLORD::WithinBOunds::blendFunction")
+				tempTable=filterFunction(false,GG.DynRefMap[Nr],3,startx,startz)
+					assert(tempTable,"JW_LANDLORD::WithinBOunds::filterFunction flawed")
+				tempTable=blendFunction(tempTable,x,z,startx,startz)
+
 				
 				for o=startx,endx,1 do
 					if bcheck("x",o) ==true then
@@ -494,41 +483,7 @@
 		
 		
 		
-		function print2DMap(tmap,squareSideDimension)
-			map={}
-			local map=tmap
-			step=8
-			if squareSideDimension~= nil and squareSideDimension <128 then step=1 end
-			for x=2,#map,step do
-				StringToConcat=""
-				for z=2,#map,step do
-					
-					--Spring.Echo(map[x][z])
-					
-					if map[x][z] == nil then 
-						StringToConcat=StringToConcat.." X "
-					elseif map[x][z] == 0 then
-						StringToConcat=StringToConcat.." 0 "
-					elseif map[x][z] == false or map[x][z] == true then
-						StringToConcat=StringToConcat.." € "
-					else
-						val=math.ceil(map[x][z])		
-						if val < 10 and val >=0 then
-							
-							StringToConcat=StringToConcat.." "..val.." "
-						elseif val >9 and val < 100 then
-							StringToConcat=StringToConcat.." "..val
-						elseif val > 99 then
-							StringToConcat=StringToConcat..val
-						end
-					end		
-					
-					
-				end	
-				Spring.Echo(StringToConcat)
-			end
-			
-		end
+		
 		
 		
 		--function validates Unit Table

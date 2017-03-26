@@ -199,9 +199,7 @@ local	function getDefaultConfg(rgba)
 	
 	--gets a config and sets the time of day as sun
 	function aDay(timeFrame,WholeDay)
-		-- if boolDebug == true then
-			--Spring.Echo("sunGadget::"..getDayTime(timeFrame%(WholeDay),WholeDay))
-		-- end
+
 		percent=((timeFrame%(WholeDay))/(WholeDay))
 		config=getDefaultConfg({r=0.5,g=0.5,b=0.5,a=0.5})	
 		-- if GG.SunConfig and GG.SunConfig[1] then

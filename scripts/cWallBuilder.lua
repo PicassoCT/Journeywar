@@ -244,10 +244,6 @@ function legs_down()
 	for i=1,6,1 do
 		Move(JollyWalker[i],z_axis,0,22)
 	end
-	Sleep(500)
-	
-	
-	
 end
 
 function motionDetector()
@@ -262,7 +258,6 @@ end
 
 function script.StartMoving()
 	Move(centemit,z_axis,34,0)
-	
 end
 
 function script.StopMoving()
@@ -270,9 +265,6 @@ function script.StopMoving()
 	--	--Spring.Echo("stop")
 	
 	legs_down()
-	
-	
-	
 end
 
 function degreeSin (x)
@@ -283,7 +275,6 @@ end
 function degreeCos (x)
 	return math.cos(math.rad(x))
 end
-
 
 function drehMatrix(y,x,zx,zy,degree)
 	--many manhours were given here invain, 
@@ -343,7 +334,8 @@ end
 
 function constTerraFormin()
 	T={}
-	size=512/8
+	flatsize=64
+	hillsize=16
 	local T	=prepareHalfSphereTable(size)
 	local spGetUnitPosition=Spring.GetUnitPosition
 	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
@@ -361,29 +353,42 @@ function constTerraFormin()
 			if Spring.UseTeamResource( teamID, 'energy',50) then
 				Spring.Echo("Terraform Loop Resource Active")
 				x,y,z=spGetUnitPosition(unitID)
+									
+	
 				if boolWalking == true then
-					-- Spring.Echo("Terraform Loop Walking")
-					
+					Spring.Echo("Terraform Loop Walking")
 					if GG.DynDefMap == nil then GG.DynDefMap={} end
 					if GG.DynRefMap == nil then GG.DynRefMap={} end
-					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="melt", filterType="borderblur"}
-					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(size,1)
+					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,
+													Size=hillsize,
+													blendType ="melt",
+													filterType="borderblur"}
+					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(hillsize,0.25)
 					GG.boolForceLandLordUpdate=false
-					-- Spring.Echo("Terraforming Moving")
-					
+					Sleep(5000)
 				else -- not walking -- we average the surface
-					-- if GG.DynDefMap == nil then GG.DynDefMap={} end
-					-- if GG.DynRefMap == nil then GG.DynRefMap={} end
-					-- GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,Size=size,blendType ="add", filterType="borderblur"}
-					-- GG.DynRefMap[#GG.DynRefMap+1]=	smoothGroundHeigthmap(size,x,z)
-					-- GG.boolForceLandLordUpdate=false					
-					-- Spring.Echo("Terraforming Standstill")					
-					
+					Sleep(5000)
+					if boolWalking== false then
+					if GG.DynDefMap == nil then GG.DynDefMap={} end
+					if GG.DynRefMap == nil then GG.DynRefMap={} end
+					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,
+													Size=flatsize,
+													blendType ="add", 
+													filterType="borderblur"}
+					theMap=smoothGroundHeigthmap(flatsize,x,z)
+					theMap=blendToValueHeigthmap(theMap,flatsize,flatsize/2 - 8, flatsize/2, 0)
+					theMap=multiplyHeigthmapByFactor(theMap,0.05) 
+					GG.DynRefMap[#GG.DynRefMap+1]=	circularClampHeigthmap(theMap,flatsize,flatsize/2, false, 0, flatsize+8)
+
+					GG.boolForceLandLordUpdate=true					
+					Spring.Echo("Terraforming Standstill")		
+					Sleep(20000)
+					end
 				end
 				
 			end	
 		end	
-		Sleep(5000)
+		Sleep(1000)
 		
 	end
 end
@@ -428,7 +433,6 @@ function script.QueryWeapon1()
 	if rand==1 then
 		return citurretem
 	end
-	
 end
 
 function script.AimWeapon1( heading ,pitch)	
@@ -449,7 +453,6 @@ end
 	return podturret3 
 end
  
-
 function script.QueryWeapon2() 
 	rand=math.random(0,1)
 	if rand==0 then
@@ -463,7 +466,6 @@ function script.QueryWeapon2()
 end
 
 function script.AimWeapon2( heading ,pitch)	
-	
 	Turn(podturret3,y_axis, heading, 3)
 	Turn(podturret3,x_axis, -pitch, 3)
 	WaitForTurn(podturret3,y_axis)
@@ -482,10 +484,6 @@ end
 function script.AimFromWeapon3() 
 	return podturret1 
 end
-
-
-
-
 
 
 function script.QueryWeapon3() 
@@ -516,13 +514,9 @@ end
 -------------------------------------------------------------------------
 --turret + two turret emiter
 
-
 function script.AimFromWeapon4() 
 	return citurret3 
 end
-
-
-
 
 function script.QueryWeapon4() 
 	rand=math.random(0,1)
@@ -556,9 +550,6 @@ lg2=piece"lg2"
 function script.AimFromWeapon4() 
 	return lg1 
 end
-
-
-
 
 function script.QueryWeapon4() 
 	return lg1
