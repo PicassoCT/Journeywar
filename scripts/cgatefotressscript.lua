@@ -1276,7 +1276,7 @@ function 	DeployInOrderTower(boolUnfold)
 			offSet= towerDeployTable[i].offA
 			DirVec=towerDeployTable[i].SeedDir
 			reset(SeedCenter,0)
-			MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
+			movePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 			
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
@@ -1300,7 +1300,7 @@ function 	DeployInOrderTower(boolUnfold)
 			DirVec=towerDeployTable[i].SeedDir
 			reset(SeedCenter,0)
 			
-			MovePieceToPiece(SeedCenter,pieceToGo,0,vector,forceUpdate)
+			movePieceToPiece(SeedCenter,pieceToGo,0,vector,forceUpdate)
 			
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
@@ -1327,7 +1327,7 @@ function 	DeployInOrder(boolUnfold)
 			offSet=piecesDeployTable[i].offA
 			DirVec=piecesDeployTable[i].SeedDir
 			reset(SeedCenter,0)
-			MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
+			movePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 			
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)
@@ -1350,7 +1350,7 @@ function 	DeployInOrder(boolUnfold)
 			offSet= mulVector(offSet,-1)
 			DirVec=piecesDeployTable[i].SeedDir
 			reset(SeedCenter,0)
-			MovePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
+			movePieceToPiece(SeedCenter,pieceToGo,0,offSet,forceUpdate)
 			
 			Turn(SeedCenter,x_axis,math.rad(DirVec.x),0)
 			Turn(SeedCenter,y_axis,math.rad(DirVec.y),0)

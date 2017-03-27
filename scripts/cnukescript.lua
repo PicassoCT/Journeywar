@@ -1,5 +1,6 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua" 
+include "lib_jw.lua"
 include "lib_Animation.lua"
 
 include "lib_Build.lua" 
@@ -297,10 +298,8 @@ function damageFunction()
 			
 			if proChoice[i] ~= unitID then
 				--WATCH OUT FALLOUT-BOY
-				if GG.OnFire == nil then GG.OnFire={} end
-				GG.OnFire[#GG.OnFire+1]={}
-				GG.OnFire[#GG.OnFire][1]=unitID
-				GG.OnFire[#GG.OnFire][2]=900
+				setUnitOnFire(proChoice[i],900)
+
 				x,y,z=Spring.GetUnitPosition(proChoice[i])
 				distance=math.sqrt((piecePosX-x)*(piecePosX-x)+(piecePosY-y)*(piecePosY-y)+(piecePosZ-z)*(piecePosZ-z))
 				Spring.AddUnitDamage(proChoice[i],fixDamage+math.ceil(10000/distance))

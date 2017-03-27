@@ -549,8 +549,8 @@ function showOutPosts()
 			Turn(OutPostPieces[i+1].center,y_axis, math.rad(360-deg),0,true)
 			ax,_,az=Spring.GetUnitPiecePosDir(unitID,OutPostPieces[i].piece)
 			bx,_,bz=Spring.GetUnitPiecePosDir(unitID,OutPostPieces[i+1].piece)
-			MoveUnitPieceToRelativeWorldPos(unitID,OutPostPieces[i].piece,ax,az,0,-CenterUP)
-			MoveUnitPieceToRelativeWorldPos(unitID,OutPostPieces[i+1].piece,bx,bz,0,-CenterUP)
+			moveUnitPieceToRelativeWorldPos(unitID,OutPostPieces[i].piece,ax,az,0,-CenterUP)
+			moveUnitPieceToRelativeWorldPos(unitID,OutPostPieces[i+1].piece,bx,bz,0,-CenterUP)
 		end
 	end
 end

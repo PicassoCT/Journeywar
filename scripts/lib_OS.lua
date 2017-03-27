@@ -19,22 +19,6 @@ MA 02110-1301, USA.
 ]]--
 
 
-
-
--->Print Seperated
-function printV(...)
-	conCat=""
-	if arg then
-		for k,v in pairs(arg) do
-			
-			conCat=conCat.." || "..k .. " <-> "..v.. " ¦ "
-			
-		end
-	end
-	Spring.Echo(conCat)
-	
-end
-
 -->Plays a Soundscape
 --> Expects: a path, a table containing :
 -- a Table of openers, containing "Name"
@@ -109,6 +93,23 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
 	end
 	
 end
+
+-->pulsates a UnitsSpeed
+-->Gets a CurveFunction, a UnitID, and a Maxtime
+function pulsateMovement(unitID, Maxtime, curveFunction, resolution)
+resolution= resolution or 1000
+times=0
+	while times < Maxtime do
+		factor= curveFunction(times)
+		factor=math.min(1.0,math.max(0.00001,factor))
+		setSpeedEnv(unitID,factor)
+		Sleep(resolution)
+		times=times+resolution
+	end
+
+return true
+end
+
 
 function delayTillComplete(unitID)
 _,_,_,_,bP= Spring.GetUnitHealth(unitID)

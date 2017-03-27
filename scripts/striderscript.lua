@@ -236,7 +236,6 @@ function resolveKinematics(x,y,z, tPx,tPy,tPz, lorgx,lorgy,lorgz, number,targPoi
 	
 	--uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),1)
 	uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),number,1)
-	--printV("uplegyaw", uplegyaw,"currentHeading",currentHeading, "Yaw", yaw)
 	--Spring.Echo(uplegyaw)
 	--	if Limit(uplegyaw,-90,90)== false then return stillInRange, errorInterpolation end
 	Turn(StriTable[number].UpLeg,y_axis,uplegyaw,turnSpeed)
@@ -260,7 +259,6 @@ function resolveKinematics(x,y,z, tPx,tPy,tPz, lorgx,lorgy,lorgz, number,targPoi
 	Turn(StriTable[number].Leg,x_axis,optgama,turnSpeed,true)
 	
 	lowoptgame=smoothVal(-1*(3.14159 +alpha)-optgama,number,4)
-	
 	
 	--if math.abs(lowoptgame) > 3.14159/2 then return false end
 	if Limit(lowoptgame,math.rad(-45),math.rad(45))== false then return stillInRange, errorInterpolation end

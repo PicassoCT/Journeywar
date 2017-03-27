@@ -501,7 +501,7 @@ function init()
 		--echo("Ring"..i)
 			Turn(Ring[i],x_axis,math.rad(d),0)
 			x,z= drehMatrix (dis, dis, 0, 0, i*(360/#Ring))
-			MoveUnitPieceToGroundPos(unitID,Ring[i], x,z,1.8,3)
+			moveUnitPieceToGroundPos(unitID,Ring[i], x,z,1.8,3)
 			Show(Ring[i])	
 		end
 		
@@ -534,7 +534,7 @@ function pillarHandling()
 		--echo("pillarHandlingj"..j)
 			if maRa()==true then
 				Show(Pillar[j])
-				MovePieceToPiece(Pillar[j],PillP[j])	
+				movePieceToPiece(Pillar[j],PillP[j])	
 			end
 		end	
 		
@@ -547,11 +547,11 @@ function pillarHandling()
 		--stay upright and fall down
 		for j=i,math.min(i+4,#Pillar),1 do
 			if maRa()==true then
-				StartThread(PieceDropTillStop,unitID,Pillar[j],2, 39.81, math.ceil(math.random(3,6)),true)
+				StartThread(dropPieceTillStop,unitID,Pillar[j],2, 39.81, math.ceil(math.random(3,6)),true)
 				Move(Pillar[j],x_axis,math.random(-45,45),10)
 				Move(Pillar[j],z_axis,math.random(-45,45),10)
 			else
-				StartThread(PieceDropTillStop,unitID,Pillar[j],1.4, 39.81, 0,true)
+				StartThread(dropPieceTillStop,unitID,Pillar[j],1.4, 39.81, 0,true)
 			end
 			
 		end
@@ -612,7 +612,7 @@ function Pump1()
 
 	Turn(Flood,y_axis,0,0)
 	Show(Drip1)
-	MoveUnitPieceToGroundPos(unitID,Drip1, math.random(-72,72),math.random(-72,72),0)
+	moveUnitPieceToGroundPos(unitID,Drip1, math.random(-72,72),math.random(-72,72),0)
 	Spin(Flood,z_axis,math.rad(-42),1)
 	
 	Show(Flood)
@@ -622,7 +622,7 @@ end
 
 function Pump2()
 
-	MoveUnitPieceToGroundPos(unitID,Drip2, math.random(-72,72),math.random(-72,72),0)
+	moveUnitPieceToGroundPos(unitID,Drip2, math.random(-72,72),math.random(-72,72),0)
 	Show(Drip2)
 	
 	while true do
@@ -733,7 +733,7 @@ function maMa()
 			--echo("This kills it")		
 			bx,by,bz=Spring.GetUnitPiecePosition(unitID,targetPos)
 			--echo("No This kills it")
-		--	MoveUnitPieceToGroundPos(unitID,Baby,bx,bz,0.2,-2)	
+		--	moveUnitPieceToGroundPos(unitID,Baby,bx,bz,0.2,-2)	
 			--echo("None of those kills it")
 			Sleep(1000)
 			WaitForTurns(Baby,Navel)
@@ -776,7 +776,7 @@ function pipes(i)
 			turnPieceRandDir(Pipe[i],0, 30,-30,360,-360,30,-30)	
 		end
 		
-		--MoveUnitPieceToGroundPos(unitID,Pipe[i],xval,zval,0,0)
+		--moveUnitPieceToGroundPos(unitID,Pipe[i],xval,zval,0,0)
 		
 		Sleep(100)
 		

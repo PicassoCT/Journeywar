@@ -144,7 +144,7 @@ SetSignalMask(SIG_ACCELERATOR)
 		distanceDown= Sign*15*(7-j)
 		
 		for i=math.min(33,2^(j-1)), math.min(33,2^j),1 do	
-			MovePieceToPiece(locT[i],center, 22,{x=0,y=distanceDown,z=0})	
+			movePieceToPiece(locT[i],center, 22,{x=0,y=distanceDown,z=0})	
 			
 			
 			Move(locM[i],x_axis,distanceOut, 9)

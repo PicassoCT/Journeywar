@@ -504,7 +504,7 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 	if not pieceToAlign or not PieceToAlignTo then return end
 	
 	--We use existing function to move the piece to the other pieces center
-	MovePieceToPiece(pieceToAlign,PieceToAlignTo,0)
+	movePieceToPiece(pieceToAlign,PieceToAlignTo,0)
 	
 	WaitForMove(pieceToAlign,x_axis)
 	WaitForMove(pieceToAlign,y_axis)
@@ -563,8 +563,24 @@ end
 function echoMove(name, x,y,z)
 	Spring.Echo("Moving Piece "..name.." to x:"..x.." ,y:"..y.." , z:"..z)
 end
+
+-->moves Piece by a exponential Decreasing or Increasing Speed to target
+function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, endspeed, speedUpSlowDown)
+	speed=startspeed
+	for i=startPos, targetPos, 1 do
+		if speedUpSlowDown==true then
+			speed=math.min(endspeed,speed+increaseval^2)
+		else
+			speed=math.max(endspeed,speed-increaseval^2)
+		end
+		Move(piece,axis,i,speed)
+		WaitForMove(piece,axis)
+	end
+	
+end
+
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceToPieceAlt(piecename, pieceDest,speed,offset,forceUpdate)
+function movePieceToPieceAlt(piecename, pieceDest,speed,offset,forceUpdate)
 	
 	if not pieceDest or not piecename then return end	
 	
@@ -612,7 +628,7 @@ function MovePieceToPieceAlt(piecename, pieceDest,speed,offset,forceUpdate)
 	WaitForMove(piecename,x_axis); WaitForMove(piecename,z_axis); WaitForMove(piecename,y_axis);
 end
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
+function movePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 	
 	if not pieceDest or not piecename then return end	
 	
@@ -620,7 +636,6 @@ function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 	orx,ory,orz=Spring.GetUnitPiecePosition(unitID,piecename)
 	
 	ox,oy,oz = ox -	orx,oy - ory,oz - orz
-	
 	
 	ox=ox*-1
 	if offset then		
@@ -636,12 +651,9 @@ function MovePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
 	
 	
 	WaitForMove(piecename,x_axis); WaitForMove(piecename,z_axis); WaitForMove(piecename,y_axis);
-	
-	
-	
 end
 -->Moves a Piece to a Position on the Ground in UnitSpace
-function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
+function moveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
 	if not piecename then return error("No piecename given") end
 	if not X or not Z then return end
 	loffset=offset or 0
@@ -657,7 +669,7 @@ function MoveUnitPieceToGroundPos(unitID,piecename, X,Z,speed,offset)
 end
 
 -->Moves a Piece to WaterLevel on the Ground in UnitSpace
-function KeepPieceAfloat(unitID,piecename,speed,randoValLow,randoValUp)
+function keepPieceAfloat(unitID,piecename,speed,randoValLow,randoValUp)
 	if not piecename then return error("No piecename given") end
 	randoVal= math.random(randoValLow or -1,randoValUp or 0)
 
@@ -680,9 +692,8 @@ function KeepPieceAfloat(unitID,piecename,speed,randoValLow,randoValUp)
 end
 
 -->Paint a Piece Pattern 
-function PaintPatternPieces(ListOfPieces, ListOfCoords,sx,sy,sz)
+function paintPatternPieces(ListOfPieces, ListOfCoords,sx,sy,sz)
 	prevx,prevy,prevz=sx,sy,sz
-	
 	
 	MovePieceToPos(ListOfPieces[1],ListOfCoords[1].x,ListOfCoords[1].y,ListOfCoords[i].z)
 	TurnPieceTowards(ListOfPieces[1],sx,sy,sz,0)
@@ -697,7 +708,7 @@ function PaintPatternPieces(ListOfPieces, ListOfCoords,sx,sy,sz)
 end
 
 -->Moves a Piece to a Position on the Ground in Worldspace
-function MoveUnitPieceToRelativeWorldPos(unitID,piecename, relX,relZ,speed,loffset)
+function moveUnitPieceToRelativeWorldPos(unitID,piecename, relX,relZ,speed,loffset)
 	offset = loffset or 0
 	x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 	x,z=relX-x,relZ-z
@@ -745,7 +756,7 @@ end
 --> Drops a piece to the ground
 function DropPieceToGround(unitID,piecename,speed, boolWait,boolHide, ExplodeFunction,SFXCOMBO)
 	x,y,z=Spring.GetUnitPiecePosition(unitID,piecename)
-	MoveUnitPieceToGroundPos(unitID,piecename,x,z,speed, 5)
+	moveUnitPieceToGroundPos(unitID,piecename,x,z,speed, 5)
 	
 	if boolWait then WaitForMove(piecename,y_axis) end
 	
@@ -788,6 +799,7 @@ end
 	-- vx,vy,vz --VoluminaCube
 	
 -- }
+--> solves a kinetic system snaking through goal windows of limited size
 function snakeOnAPlane(unitID, cPceDescLst,FirstSensor, WindowDescriptorList, axis,speed ,tolerance, boolPartStepExecution, boolWait)
 	local PceDescLst= cPceDescLst --Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
 	
@@ -993,7 +1005,7 @@ function mulVectorS4Mat(mat,vec)
 	return {x=resVec[1],y=resVec[2],z=resVec[3],w= resVec[4] }
 end
 
-
+-->hangs a Piece towards gravity + offset
 function hang(pieceName,offSetVec,speed)
 	diVec=makeVector(0,0,0)
 	mat={}
@@ -1008,9 +1020,6 @@ end
 
 
 function TurnPieceList( ScriptEnviroment,PieceList, boolTurnInOrder, boolWaitForTurn,boolSync)
-	
-	
-	
 	
 	for i=1,table.getn(PieceList),5 do
 		
@@ -1033,8 +1042,6 @@ function TurnPieceList( ScriptEnviroment,PieceList, boolTurnInOrder, boolWaitFor
 			WaitForTurns(PieceList[i])
 		end
 	end
-	
-	
 end
 
 --> Turn a Table towards local T
@@ -1065,7 +1072,7 @@ function turnTableRand(t, taxis, uparg, downarg,speed,boolInstantUpdate)
 	if down > up then down=down*-1-1 end
 	
 	if boolInstantUpdate then
-		for i=1,#t,1 do
+		for i=1,#t,1 do		
 			Turn(t[i],axis,math.rad(math.random(down,up)),0,true)
 		end
 		return
@@ -1129,7 +1136,7 @@ function unfoldAnimation(ListOfPieces,specialeffectsfunction,unitID,maxSpeed)
 				end
 			end
 			
-			MovePieceToPiece( HeightSortedTable[i].value, PieceBiggerThenMe,0)
+			movePieceToPiece( HeightSortedTable[i].value, PieceBiggerThenMe,0)
 			Show(HeightSortedTable[i].value)
 			--get Element Bigger in Table 
 			Move(HeightSortedTable[i].value,0,x_axis,speed)
@@ -1146,7 +1153,7 @@ function unfoldAnimation(ListOfPieces,specialeffectsfunction,unitID,maxSpeed)
 end	
 
 -->Drops a unitpiece towards the ground
-function PieceDropTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
+function dropPieceTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, boolSpinWhileYouDrop, bounceConstant,driftFunc)
 	if not unitID or not piece or not speedPerSecond or not VspeedMax then return end
 	x,globalHeightUnit,z=Spring.GetUnitPosition(unitID)
 	
@@ -1197,19 +1204,15 @@ function PieceDropTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, bo
 		--Spring.Echo("Looping Physics")
 		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 		gh=Spring.GetGroundHeight(x,z)
-		
-		
-		
-		if gh - y > 5 then
-			
-			
+				
+		if gh - y > 5 then			
 			bump=bump+1
 			force=math.sqrt(force)
 			--not realistic but a start we take the ground normal as new vector 
 			--reset Position
 			x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 			
-			MoveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
+			moveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
 			dx,dy,dz, slope =Spring.GetGroundNormal(x,z)
 			
 			--Spring.Echo("X>"..vec.x .. " Y> ".. vec.y .. " Z>" .. vec.z) 
@@ -1221,7 +1224,7 @@ function PieceDropTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, bo
 				StopSpin(piece,z_axis,0.5)
 				LayFlatOnGround(piece)
 				x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-				MoveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
+				moveUnitPieceToGroundPos(unitID,piece,x,z,0,0)
 				
 				return
 			else
@@ -1235,16 +1238,10 @@ function PieceDropTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, bo
 			vec.z= vec.z + clampMaxSign(vec.vz* force^2				, factorT*speedMax)
 			mP(piece,vec.x,vec.y,vec.z, factorT*speed)
 			WaitForMove(piece,y_axis)
-			Sleep(10)
-			
-			
-		end
-		
-	end
-	
-	
+			Sleep(10)			
+		end		
+	end	
 end
-
 
 --> Move all Elements of a Table to Zero
 function resetMT(t)
@@ -1278,9 +1275,6 @@ function turnT(t, axis, deg,speed,boolInstantUpdate,boolWait)
 	return
 end
 
-
-
-
 --unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
 --> Trys to create a animation using every piece there is as Legs.. 
 function adaptiveAnimation(configTable,inPeace,id,ScriptEnviroment)
@@ -1295,10 +1289,6 @@ function adaptiveAnimation(configTable,inPeace,id,ScriptEnviroment)
 	quadrantMap={[1]=0,[2]=0,[3]=0,[4]=0}
 	tx,ty,tz=spGetUnitPosition(unitID)
 	GG.MovementOS_Table[unitID]={quadrantMap=quadrantMap,boolmoving=false, stability=1, tx=tx,ty=ty,tz=tz, ForwardVector={x=0,z=0}}
-	
-	
-	
-	
 	
 	maxDeg=math.random(12,32)
 	turnOffset=360/#infoT.feetTable.Knees

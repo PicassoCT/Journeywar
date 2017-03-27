@@ -22,6 +22,9 @@ MA 02110-1301, USA.
 lib_boolDebug= false --GG.BoolDebug or false
 --------------DEBUG HEADER
 
+
+--//Chapter: Tableoperations
+
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
 function makeTableFromString(FormatString,assignedValue, ...)
@@ -56,20 +59,6 @@ function makeTableFromString(FormatString,assignedValue, ...)
 	return loadstring(Appendix.."==".. asignedValue)
 end
 
--->moves Piece by a exponential Decreasing or Increasing Speed to target
-function moveExpPiece(piece,axis,targetPos,startPos, increaseval,startspeed, endspeed, speedUpSlowDown)
-	speed=startspeed
-	for i=startPos, targetPos, 1 do
-		if speedUpSlowDown==true then
-			speed=math.min(endspeed,speed+increaseval^2)
-		else
-			speed=math.max(endspeed,speed-increaseval^2)
-		end
-		Move(piece,axis,i,speed)
-		WaitForMove(piece,axis)
-	end
-	
-end
 
 function randVec(boolStayPositive)
 	
@@ -3573,7 +3562,7 @@ function vardump(value, depth, key)
 		return false
 	end
 	
-	
+	--> clamp Disregarding Signum
 	function clampMaxSign(value,Max)
 		if math.abs(value) > Max then 
 			signum=math.abs(value)/value
@@ -3688,9 +3677,9 @@ function vardump(value, depth, key)
 	
 	-->Returns a Unit from the Game without killing it
 	function removeFromWorld(unit,offx,offy,offz)
+		hideUnit(unit)
 		--TODO - keepStates in general and commandqueu
 		pox,poy,poz=Spring.GetUnitPosition(unit)
-		Spring.SetUnitCloak(unit, true, 4)
 		Spring.SetUnitAlwaysVisible(unit,false)
 		Spring.SetUnitBlocking(unit,false,false,false)
 		Spring.SetUnitNoSelect(unit,true)
@@ -3701,11 +3690,11 @@ function vardump(value, depth, key)
 	end
 	-->Removes a Unit from the Game without killing it
 	function returnToWorld(unit,px,py,pz)
+		showUnit(unit)
 		Spring.MoveCtrl.Disable(unit)
 		if pz then
 			Spring.SetUnitPosition(unit,px,py,pz)
 		end
-		Spring.SetUnitCloak(unit, false, 1)
 		Spring.SetUnitAlwaysVisible(unit,true)
 		Spring.SetUnitBlocking(unit,true,true,true)
 		Spring.SetUnitNoSelect(unit,false)
@@ -3716,10 +3705,10 @@ function vardump(value, depth, key)
 	end
 	
 	function hideUnit(unit)
-		Spring.SetUnitCloak(unit, true, 4)
-		
+		Spring.SetUnitCloak(unit, true, 4)		
 	end
 	
+	--> kill All Units near Pieces Volume
 	function killAtPiece(unitID,piecename,selfd,reclaimed, sfxfunction)
 		px,py,pz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
 		tpx,tpy,tpz=Spring.GetUnitPiecePosDir(unitID,piecename)
@@ -3819,6 +3808,7 @@ function vardump(value, depth, key)
 		return hierarchy
 	end
 	
+	--> creates a hierarchical table of pieces, descending from root
 	function makePieceHierarchy(unitID,pieceFunction)
 		rootname,children=getRoot(unitID)
 		hierarchy={}
@@ -3851,6 +3841,7 @@ function vardump(value, depth, key)
 		pieceMap=makePieceHierarchy(unitID,pieceFunction)
 		return recMapDown({},pieceMap,PieceName)
 	end
+	
 	--Hashmap of pieces --> with accumulated Weight in every Node
 	--> Every Node also holds a bendLimits which defaults to ux=-45 x=45, uy=-180 y=180,uz=-45 z=45
 	function recursiveAddTable(T,piecename,parent,piecetable)
@@ -3879,7 +3870,7 @@ function vardump(value, depth, key)
 		return T
 	end
 	
-	--> finds the degree in a triangle where only the lenght of two sides are known
+	--> finds the radian in a triangle where only the lenght of two sides are known
 	function triAngleTwoSided(LowerSide, OpposingSide)
 		norm= math.sqrt(LowerSide*LowerSide +OpposingSide*OpposingSide)
 		return math.atan2(LowerSide/norm,OpposingSide/norm)
@@ -3932,6 +3923,7 @@ function vardump(value, depth, key)
 		return math.sqrt(sum) 
 	end
 	
+	--> takes the average over a number of argument
 	function average(...)
 		local arg = table.pack(...)
 		if not arg then return nil end
@@ -4021,26 +4013,10 @@ function vardump(value, depth, key)
 		GG.MovementOS_Table[unitID].stability > 0.5 and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,q),1)] > 0 or GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)] and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)]>0 
 	end
 	
-	function setUnitOnFire(id, timeOnFire)
-		if GG.OnFire == nil then GG.OnFire={} end
-			boolInsertIt=true
-			--very bad sollution n-times
-			
-			for i=1, table.getn(GG.OnFire), 1 do
-				if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== id then
-					GG.OnFire[i][2]=math.ceil(timeOnFire) 
-					boolInsertIt=false
-				end
-			end
-			
-			if boolInsertIt==true then
-				GG.OnFire[#GG.OnFire+1]={}
-				GG.OnFire[#GG.OnFire][1]=id
-				GG.OnFire[#GG.OnFire][2]=math.ceil(timeOnFire) 
-			end			
-	end
-	
+
+	--> Sets the Speed of a Unit
 	function setSpeedEnv(k, val)
+		val=math.max(0.000000001,math.min(val,1.0))
 		env=Spring.UnitScript.GetScriptEnv(k)
 		
 		if env then
@@ -4056,19 +4032,20 @@ function vardump(value, depth, key)
 		oldHeading=0
 		Sleep(500)
 		
-		stabilize(quadrant,
-		degOffSet,
-		turnDeg,
-		nr,
-		FirstAxisPoint,
-		KneeT,
-		SensorPoint,
-		Weight,
-		Force,
-		LiftFunction,
-		ScriptEnviroment,
-		SensorT
-		)
+		stabilize(
+				quadrant,
+				degOffSet,
+				turnDeg,
+				nr,
+				FirstAxisPoint,
+				KneeT,
+				SensorPoint,
+				Weight,
+				Force,
+				LiftFunction,
+				ScriptEnviroment,
+				SensorT
+				)
 		
 		while true do
 			while GG.MovementOS_Table[unitID].boolmoving == true do
@@ -4605,7 +4582,7 @@ function vardump(value, depth, key)
 	return GeoventList
 end
 	
-	--> testUnit for existance
+	--> testUnit for existance - Debugfunction
 	function testUnit(unitid)
 		if not unitid then echo("TestUnit no unitid given to testUnit()"); return end
 		echo("UnitTested")
@@ -4757,12 +4734,13 @@ function drawFunctionGenerator(sizeX, sizeY, typeName)
 	end
 	
 end
-
+--> Gets the MaxSpeed Of A unit
 function getMaxSpeed(unitID,UnitDefs)
 	uDefID=Spring.GetUnitDefID(unitID)	
 	return UnitDefs[uDefID].speed
 end
 
+--> Sets the Speed - Unitscript only
 function setSpeed(unitID,speedfactor, UnitDefs)
 	uDefID=Spring.GetUnitDefID(unitID)	
 	if speedfactor > 1 then echo("Error:setSpeed:Recived to big Value") return end
@@ -4783,7 +4761,7 @@ function createLandscapeFromFeaturePieces(pixelPieceTable, drawFunctionTable)
 	echo("TODO:createLandscapeFromFeaturePieces")
 end
 
-
+--> transfers Order from one Unit to another
 function transferOrders( originID, unitID)
 	
 	CommandTable=Spring.GetUnitCommands( originID)					
@@ -4804,7 +4782,6 @@ function transferOrders( originID, unitID)
 			else
 				Spring.GiveOrderToUnit(unitID,CMD.STOP,{},{})
 			end			
-			
 		end			
 	end		
 end

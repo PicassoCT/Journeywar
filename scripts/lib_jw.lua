@@ -496,56 +496,33 @@ function groupOnFire(DictionaryOfUnits,argtimeToburnMin, argtimeToburnMax)
 	
 	timeToburnMax= argtimeToburnMax or 1000
 	timeToburnMin = argtimeToburnMin or 150
-	
-	if GG.OnFire == nil then GG.OnFire={} end
-	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
-	boolInsertIt=true
-	--very bad sollution n-times
+
 	for k,v in pairs(DictionaryOfUnits) do
-		DictionaryOfUnits[k]=true
-	end
-	
-	for i=1, table.getn(GG.OnFire), 1 do
-		if 	GG.OnFire[i][1]	~= nil and	DictionaryOfUnits[GG.OnFire[i][1]] then
-			GG.OnFire[i][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
-			DictionaryOfUnits[GG.OnFire[i][1]]=false						
-		end
-	end
-	
-	for k,v in pairs(DictionaryOfUnits) do
-		if v== true then
-			GG.OnFire[#GG.OnFire+1]={}
-			GG.OnFire[#GG.OnFire][1]=k
-			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
-		end
+		setUnitOnFire(k,math.ceil(math.random(timeToburnMin,timeToburnMax))) 		
 	end
 	
 end
 
-function setOnFire(unitID, argtimeToburnMin, argtimeToburnMax)
-	
-	timeToburnMax= argtimeToburnMax or 1000
-	timeToburnMin = argtimeToburnMin or 15
-	
-	if not GG.OnFire then GG.OnFire={} end
-	--	Spring.Echo("jw_projectileimpacts: Fire WeaponfDetected")
-	
-	--very bad solution n-times
-	for i=1, table.getn(GG.OnFire), 1 do
-		if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== unitID then
-			GG.OnFire[i][2]= math.ceil(math.random(timeToburnMin,timeToburnMax)) 
-			break
-		else
-			GG.OnFire[#GG.OnFire+1]={}
-			GG.OnFire[#GG.OnFire][1]=unitID
-			GG.OnFire[#GG.OnFire][2]=math.ceil(math.random(timeToburnMin,timeToburnMax)) 
-			break
-		end
+	--> Sets A Unit on Fire
+	function setUnitOnFire(id, timeOnFire)
+		if GG.OnFire == nil then GG.OnFire={} end
+			boolInsertIt=true
+			--very bad sollution n-times
+			
+			for i=1, table.getn(GG.OnFire), 1 do
+				if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== id then
+					GG.OnFire[i][2]=math.ceil(timeOnFire) 
+					boolInsertIt=false
+				end
+			end
+			
+			if boolInsertIt==true then
+				GG.OnFire[#GG.OnFire+1]={}
+				GG.OnFire[#GG.OnFire][1]=id
+				GG.OnFire[#GG.OnFire][2]=math.ceil(timeOnFire) 
+			end			
 	end
 	
-end
-
-
 
 -->Attack Nearest Non-Gaia Enemy
 function defaultEnemyAttack(unitID,SignalMask, delayTime)

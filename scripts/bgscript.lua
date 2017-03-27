@@ -520,7 +520,7 @@ function killinTime(recentDamage,maxHealth)
 	dice=math.random(1,3)
 	if dice==1 then
 		if math.random(0,1)==1 then
-			StartThread(PieceDropTillStop,unitID,Gun,9.81, 32, 5, true)
+			StartThread(dropPieceTillStop,unitID,Gun,9.81, 32, 5, true)
 			Show(Gun)
 		else
 			Explode(Gun,SFX.NO_HEATCLOUD+SFX.FALL)

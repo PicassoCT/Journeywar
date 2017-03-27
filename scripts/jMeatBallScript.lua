@@ -13,7 +13,7 @@ function script.Create()
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	Meat=TablesOfPiecesGroups["Meat"]
 	for i=1, #Meat do	
-		MoveUnitPieceToGroundPos(unitID,Meat[i],math.random(-40,40),math.random(-40,40),6, math.random(0,10))
+		moveUnitPieceToGroundPos(unitID,Meat[i],math.random(-40,40),math.random(-40,40),6, math.random(0,10))
 	end
 	turnTableRand(Meat, y_axis, 360, -360, 0,false)
 	turnTableRand(Meat, x_axis, 360, -360, 0,false)

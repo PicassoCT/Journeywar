@@ -377,12 +377,10 @@ function constTerraFormin()
 													filterType="borderblur"}
 					theMap=smoothGroundHeigthmap(flatsize,x,z)
 					theMap=blendToValueHeigthmap(theMap,flatsize,flatsize/2 - 8, flatsize/2, 0)
-					theMap=multiplyHeigthmapByFactor(theMap,0.05) 
+					theMap=multiplyHeigthmapByFactor(theMap,0.0125) 
 					GG.DynRefMap[#GG.DynRefMap+1]=	circularClampHeigthmap(theMap,flatsize,flatsize/2, false, 0, flatsize+8)
 
-					GG.boolForceLandLordUpdate=true					
-					Spring.Echo("Terraforming Standstill")		
-					Sleep(20000)
+					GG.boolForceLandLordUpdate = true					
 					end
 				end
 				

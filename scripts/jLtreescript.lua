@@ -238,7 +238,7 @@ FixFunctionTabel[4]= function ()
 		Show(TreePiece[i])
 		mx,mz=math.random(-35,35),math.random(-34,34)
 		if not TreePiece[math.min(i,#TreePiece)] then return end
-		MoveUnitPieceToGroundPos(unitID,TreePiece[math.min(i,#TreePiece)],mx,mz,0,5)		
+		moveUnitPieceToGroundPos(unitID,TreePiece[math.min(i,#TreePiece)],mx,mz,0,5)		
 	end
 	Sleep(100)
 	if maRa() ==true then
@@ -419,7 +419,7 @@ FixFunctionTabel[7]=	function ()
 			for i=start,End,1 do
 				p= TreePiece[math.min(math.max(1,i),#TreePiece)]
 				if p then
-					MoveUnitPieceToGroundPos(unitID,p,ex,ez,0,15)
+					moveUnitPieceToGroundPos(unitID,p,ex,ez,0,15)
 					turnPieceRandDir(TreePiece[i],0.5)
 				end
 			end
@@ -446,7 +446,7 @@ FixFunctionTabel[8]=	function ()
 		xorZ=maRa()==true
 		signum=randSign()
 		for k=i+1,i+9, 1 do
-			MovePieceToPiece(TreePiece[k],AddonPiece,0)
+			movePieceToPiece(TreePiece[k],AddonPiece,0)
 			degval=(k-i)*40*signum
 			if xorZ==true then
 				Turn(TreePiece[k],z_axis,math.rad(degval),0,true)
@@ -480,7 +480,7 @@ FixFunctionTabel[9]=	function ()
 	--first and last row have equal number of pentagons and hexagons
 	--2:1 hexagons : pentagons 
 	for i=3,NUMBEROFPIECES,1 do
-		MovePieceToPiece(TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
+		movePieceToPiece(TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
 		turnPieceRandDir(TreePiece[i],0, 90,0,360,0,90,0)
 		WaitForTurn(TreePiece[i],x_axis)
 		WaitForTurn(TreePiece[i],y_axis)
@@ -503,7 +503,7 @@ FixFunctionTabel[10]=	function ()
 	for k=1,randCent do
 		ex,ez=(math.random(5,10)/10)*90*randSign(),(math.random(5,10)/10)*90*randSign()
 		
-		MoveUnitPieceToGroundPos(unitID,TreePiece[k],ex,ez,0,SIZEOFPIECE)
+		moveUnitPieceToGroundPos(unitID,TreePiece[k],ex,ez,0,SIZEOFPIECE)
 		WaitForMove(TreePiece[k],x_axis)
 		WaitForMove(TreePiece[k],y_axis)
 		WaitForMove(TreePiece[k],z_axis)
@@ -662,7 +662,7 @@ FixFunctionTabel[13]= function ()
 		for i=j, j+spirallength,1 do
 			if i==j then
 				
-				MoveUnitPieceToGroundPos(unitID,TreePiece[i],aPos,bPos,0,0)	
+				moveUnitPieceToGroundPos(unitID,TreePiece[i],aPos,bPos,0,0)	
 			else
 				
 				sval=math.random(10,120)
@@ -925,7 +925,7 @@ FixFunctionTabel[17]= function ()
 		
 		offSet=math.random(0,360)
 		for j=i,i+3,1 do	
-			MovePieceToPiece(TreePiece[j],CurrEndPoint,0)
+			movePieceToPiece(TreePiece[j],CurrEndPoint,0)
 			--Turn(TreePiece[j],y_axis,math.rad(offSet+(j-i+1)*120),0)
 			--Turn(TreePiece[j],x_axis,math.rad(90),0,true)
 			--WaitForMove(TreePiece[j],x_axis)
@@ -1090,7 +1090,7 @@ FixFunctionTabel[21]= function ()
 	for i=1, PiecesPerLayer,1 do
 		
 		x,y= RotationMatrice (0,Radius, i*DegStep)
-		MoveUnitPieceToGroundPos(unitID,TreePiece[i],x,y,0,0)
+		moveUnitPieceToGroundPos(unitID,TreePiece[i],x,y,0,0)
 		ContinuosRing[i]=EndPiece[i]
 		Show(TreePiece[i])
 	end
@@ -1135,7 +1135,7 @@ FixFunctionTabel[19]= function ()
 	
 	floaterStem=math.ceil(math.random(5,10))
 	for i=2,floaterStem do
-		MovePieceToPiece(TreePiece[i],EndPiece[i-1],0)
+		movePieceToPiece(TreePiece[i],EndPiece[i-1],0)
 		Turn(TreePiece[i],x_axis,math.rad(Deg.x),0)
 		Turn(TreePiece[i],y_axis,math.rad(Deg.y),0)
 		Turn(TreePiece[i],z_axis,math.rad(Deg.z),0,true)
