@@ -31,11 +31,49 @@ local controllCommand_window
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 updateCommandsSoon = false
+
+-------------Declarations of Enums and Tables
+eAttac		=1
+eStop		=2
+eMove		=3
+eFire		=4
+eRepeat		=5
+eManouver	=6
+eRepair		=7
+ePatrol		=8
+eGuard		=9
+
+
+activatedGuiButtons={
+	[eAttac]= false
+}
+--> [Name] -> booleanActive
+
 BaseCol={0.1,0.8,0.8,1}
 WeapCol={0.3,0.6,0.8,1}
 BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
+
+VFS.Include("scripts/lib_UnitScript.lua")
+
+function getOrderAbleUnits(playerTeam)
+	local spGetUnitTeam =Spring.GetUnitTeam
+	
+	T=Spring.GetSelectedUnits()
+	
+	if T then
+		T=process(T,
+		function(id)
+			if spGetUnitTeam(id)== playerTeam then
+				return id
+			end
+		end
+		)
+		if T then 	return T; end
+	end	
+	return {}
+end
 
 extendedCommands={}
 exttriStrip={}
@@ -56,7 +94,7 @@ exttriStrip[3] ={
 	{x= 0, y = 0},			
 	{x= 160, y = 40},
 	{x= 0, y = 80}
-}	
+}
 
 exttriStrip[4] ={		
 	{x= 100	, y = 15},
@@ -87,10 +125,13 @@ for i=1, 9 do
 	}
 	backgroundCol[i]={35/255, 124/255, 166/255, 0.75}
 end
+
+
 function getCommandTarget()
 	x,z=Spring.GetMouseState()
 	return Spring.TraceScreenRay(x,z)
 end
+
 function getCommandTable()
 	returnT={}
 	local alt, ctrl, shift, right = Spring.GetModKeyState()
@@ -187,15 +228,7 @@ function upByRow(str,num)
 	end
 	return str
 end
-eAttac		=1
-eStop		=2
-eMove		=3
-eFire		=4
-eRepeat		=5
-eManouver	=6
-eRepair		=7
-ePatrol		=8
-eGuard		=9
+
 
 caption={
 	[1]="|ATTAC",
@@ -206,7 +239,7 @@ caption={
 	[6]="MANOVEUR ",
 	[7]=upByRow("|REPAIR ",4),
 	[8]=upByRow("|PATROL",4),
-	[9]="|GUARD",
+	[9]="|GUARD"
 }
 
 
@@ -221,11 +254,11 @@ extendedCommand_window_positionY= "41%"
 extendedCommand_window_width= "10%"
 extendedCommand_window_height= "30%"
 
-		
-		
-		
-		
-		
+
+
+
+
+
 function widget:Initialize()
 	
 	
@@ -243,55 +276,55 @@ function widget:Initialize()
 	screen0 = Chili.Screen0
 	
 	
-function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
-	functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
-	
-	return 	Chili.HabaneroButton:New{
-		triStrip=triStrip	,
-		caption=caption,
+	function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
+		functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
 		
-		backgroundColor = basCol,
-		textColor = textCol, 
-		OnClick= { functionOnClick}
-	}
-end--main Constructors
-	extCallbackFunctions = {
-			[1]= function()
-				selectedUnits=spGetSelectedUnits();
-				if selectedUnits and #selectedUnits > 0 then
-					commandTable= getCommandTable()
-					typeParam, param = getCommandTarget()
-					for i=1,#selectedUnits do
-						Spring.GiveOrderToUnit(selectedUnits[i],CMD.RECLAIM, param, commandTable)
-					end
-				end
-			end,
-			[2]= function()Spring.Echo("Hi Drop")end,
-			[3]= function()Spring.Echo("Hi Cloak")end,
-			[4]= function()Spring.Echo("Hi Restore")end,
-			[5]= function()Spring.Echo("Hi QUEUE")end,
-
+		return 	Chili.HabaneroButton:New{
+			triStrip=triStrip	,
+			caption=caption,
 			
+			backgroundColor = basCol,
+			textColor = textCol, 
+			OnClick= { functionOnClick}
 		}
-		extcaption={
-			[1]="RECLAIM",
-			[2]="DROP\nLOAD",
-			[3]="CLOAK",		
-			[4]="RESTORE",		
-			[5]="QUEUE",		
-		}
+	end--main Constructors
+	extCallbackFunctions = {
+		[1]= function()
+			selectedUnits=getOrderAbleUnits(Spring.GetLocalTeamID());
+			if selectedUnits then
+				commandTable= getCommandTable()
+				typeParam, param = getCommandTarget()
+				for i=1,#selectedUnits do
+					Spring.GiveOrderToUnit(selectedUnits[i],CMD.RECLAIM, param, commandTable)
+				end
+			end
+		end,
+		[2]= function()Spring.Echo("Hi Drop")end,
+		[3]= function()Spring.Echo("Hi Cloak")end,
+		[4]= function()Spring.Echo("Hi Restore")end,
+		[5]= function()Spring.Echo("Hi QUEUE")end,
 		
+		
+	}
+	extcaption={
+		[1]="RECLAIM",
+		[2]="DROP\nLOAD",
+		[3]="CLOAK",		
+		[4]="RESTORE",		
+		[5]="QUEUE",		
+	}
 	
-		for i= 1, 5 do
-
-			extendedCommands[i] = createHabanero(exttriStrip[i],
-			extcaption[i],
-			backgroundCol[2],
-			extHoloTexCol,
-			extCallbackFunctions[i]		
-			)		
-			extendedCommands[i].Init()
-		end
+	
+	for i= 1, 5 do
+		
+		extendedCommands[i] = createHabanero(exttriStrip[i],
+		extcaption[i],
+		backgroundCol[2],
+		extHoloTexCol,
+		extCallbackFunctions[i]		
+		)		
+		extendedCommands[i].Init()
+	end
 	
 	extendedCommand_window = Window:New{
 		padding = {3,3,3,3,},
@@ -339,98 +372,161 @@ end--main Constructors
 		color = {0,0,0,1},
 		
 		children = {
-					extendedCommands[1],
-					extendedCommands[2],
-					extendedCommands[3],
-					extendedCommands[4],
-					extendedCommands[5],
-					extendedCommands[6]
-					},
-		
-		}
-		
-extendedCommand_window:AddChild(extendedCommand_Grid)
-
-Habaneros={ }
-HabaneroCallbackFunctions={}
-HabaneroCallbackFunctions[eAttac]= function () end
-HabaneroCallbackFunctions[eStop]= function () end
-HabaneroCallbackFunctions[eMove]= function () end
-HabaneroCallbackFunctions[eFire]= function () end
-HabaneroCallbackFunctions[eRepeat]= function () end
-HabaneroCallbackFunctions[eManouver	]= function () end
-HabaneroCallbackFunctions[eRepair]= function () end
-HabaneroCallbackFunctions[ePatrol]= function () end
-HabaneroCallbackFunctions[eGuard]= function () end
-
-for i=1, 9 do
-	Habaneros[i] = createHabanero(triStrip[i],
-	caption[i],
-	backgroundCol[i],
-	holoTextCol,
-	HabaneroCallbackFunctions[i]		
-	)		
-	Habaneros[i].Init()
-end
-
-base_stack = Grid:New{
-	y = 20,
-	padding = {5,5,5,5},
-	itemPadding = {0, 0, 0, 0},
-	itemMargin = {0, 0, 0, 0},
-	width = '100%',
-	height = '100%',
-	resizeItems = true,	
-	autosize=true,		
-	orientation = 'vertical',
-	centerItems = false,
-	columns = 3,
-	rows= 3,
-	children={
-		Habaneros[eAttac],
-		Habaneros[eStop],
-		Habaneros[eMove],
-		Habaneros[eFire],
-		Habaneros[eRepeat],
-		Habaneros[eManouver	],
-		Habaneros[eRepair],
-		Habaneros[ePatrol],
-		Habaneros[eGuard],
+			extendedCommands[1],
+			extendedCommands[2],
+			extendedCommands[3],
+			extendedCommands[4],
+			extendedCommands[5],
+			extendedCommands[6]
+		},
 		
 	}
-}
-
-
-
-controllCommand_window = Window:New{
-	padding = {3,3,3,3,},
-	dockable = true,
-	caption = '',
-	textColor = {0.9,1,1,0.7},
-	name = "controllCommand_window",
-	x = controllCommand_window_positionX, 
-	y = controllCommand_window_positionY,
-	width = controllCommand_window_width,
-	height = controllCommand_window_height,
-	parent = screen0,
-	draggable = false,
-	tweakDraggable = true,
-	tweakResizable = true,
-	resizable = false,
-	dragUseGrip = false,
-	--minWidth = 50,
-	--minHeight = 50,
-	color = {0,0,0,1},
 	
-	children = {			
-		base_stack,			
-	},
-}
+	extendedCommand_window:AddChild(extendedCommand_Grid)
+	
+	function setAttackOnTarget(T)
+		if not T then return end
+		-- we do have a Table of Units
+		
+		--now we get a Target
+		
+		
+		
+		
+		
+	end
+	
+	function commanceAttack()
+		T= getOrderAbleUnits(Spring.GetLocalTeamID())
+		T= filterOutUnarmed(T)
+		setAttackOnTarget(T)
+		Spring.Echo("Attac")
+	end
+	
+	
+	Habaneros={ }
+	HabaneroCallbackFunctions={}
+	HabaneroCallbackFunctions[eAttac]= function ()
+		activatedGuiButtons[eAttac]=true;
+		Spring.Echo("AttackMode Activated")
+	end
+	HabaneroCallbackFunctions[eStop]= function () 
+		Spring.Echo("eStop")
+	end
+	HabaneroCallbackFunctions[eMove]= function ()
+		Spring.Echo("eMove")
+	end
+	HabaneroCallbackFunctions[eFire]= function ()
+		Spring.Echo("eFire")
+	end
+	HabaneroCallbackFunctions[eRepeat]= function ()
+		Spring.Echo("eRepeat")
+	end
+	HabaneroCallbackFunctions[eManouver	]= function () 
+		Spring.Echo("eManouver")
+	end
+	HabaneroCallbackFunctions[eRepair]= function ()
+		Spring.Echo("eRepair")
+	end
+	HabaneroCallbackFunctions[ePatrol]= function () 
+		Spring.Echo("ePatrol")
+	end
+	HabaneroCallbackFunctions[eGuard]= function () 
+		Spring.Echo("eGuard")
+	end
+	
+	for i=1, 9 do
+		Habaneros[i] = createHabanero(triStrip[i],
+		caption[i],
+		backgroundCol[i],
+		holoTextCol,
+		HabaneroCallbackFunctions[i]		
+		)		
+		Habaneros[i].Init()
+	end
+	
+	base_stack = Grid:New{
+		y = 20,
+		padding = {5,5,5,5},
+		itemPadding = {0, 0, 0, 0},
+		itemMargin = {0, 0, 0, 0},
+		width = '100%',
+		height = '100%',
+		resizeItems = true,	
+		autosize=true,		
+		orientation = 'vertical',
+		centerItems = false,
+		columns = 3,
+		rows= 3,
+		children={
+			Habaneros[eAttac],
+			Habaneros[eStop],
+			Habaneros[eMove],
+			Habaneros[eFire],
+			Habaneros[eRepeat],
+			Habaneros[eManouver	],
+			Habaneros[eRepair],
+			Habaneros[ePatrol],
+			Habaneros[eGuard],
+			
+		}
+	}
+	
+	controllCommand_window = Window:New{
+		padding = {3,3,3,3,},
+		dockable = true,
+		caption = '',
+		textColor = {0.9,1,1,0.7},
+		name = "controllCommand_window",
+		x = controllCommand_window_positionX, 
+		y = controllCommand_window_positionY,
+		width = controllCommand_window_width,
+		height = controllCommand_window_height,
+		parent = screen0,
+		draggable = false,
+		tweakDraggable = true,
+		tweakResizable = true,
+		resizable = false,
+		dragUseGrip = false,
+		--minWidth = 50,
+		--minHeight = 50,
+		color = {0,0,0,1},
+		
+		children = {			
+			base_stack,			
+		},
+	}
 end
 
---subConstructors
-function widget:CommandsChanged()
+ModeFunction={
+	[eAttac] = function() commanceAttack(); end
+}
+
+--> Selects the first valid Modefunction
+function guiModeSelected()
+	for Name, boolean in pairs(activatedGuiButtons) do
+		if boolean== true then return Name end
+	end
 end
+
+--TODO make this valid LuaCode
+function widget:MouseRelease(x, y, button)
+	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+	if lmb then
+		selectedMode= guiModeSelected() 
+		if selectedMode then
+			ModeFunction[selectedMode]()
+		end	
+	end
+	
+	if rmb then
+		for Name, boolean in pairs(activatedGuiButtons) do
+			activatedGuiButtons[Name]= false
+		end	
+	end
+end
+
+
 
 --update functions
 function widget:GameFrame(f)
