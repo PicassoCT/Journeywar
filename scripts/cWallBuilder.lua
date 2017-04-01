@@ -342,8 +342,6 @@ function constTerraFormin()
 	local spGetGroundHeight=Spring.GetGroundHeight
 	local spGetUnitRotation=Spring.GetUnitRotation
 	
-	
-	
 	teamID=Spring.GetUnitTeam(unitID)
 	averageTable={}
 	while true do

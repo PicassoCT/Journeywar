@@ -48,7 +48,7 @@ function CountPassingByEnemys()
 		AllreadyPassingUnits=insertKeysIntoTable(T,AllreadyPassingUnits)
 		Sleep(300)
 		
-		count=countKey(AllreadyPassingUnits)
+		count=countT(AllreadyPassingUnits)
 		
 		if count > 1 and GoingBoom==false then
 			GoingBoom=true
@@ -57,10 +57,7 @@ function CountPassingByEnemys()
 	end
 end
 
-function countByType(Keytable)
-	
-	
-end
+
 
 function spawnUprising(RestTime)
 	Sleep(RestTime)

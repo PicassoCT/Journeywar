@@ -22,9 +22,9 @@ MA 02110-1301, USA.
 lib_boolDebug= false --GG.BoolDebug or false
 --------------DEBUG HEADER
 
-
---//Chapter: Tableoperations
-
+--======================================================================================
+--Chapter: Tableoperations
+--======================================================================================
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
 function makeTableFromString(FormatString,assignedValue, ...)
@@ -60,73 +60,78 @@ function makeTableFromString(FormatString,assignedValue, ...)
 end
 
 
-function randVec(boolStayPositive)
+function makeTable(default, xDimension, yDimension, zDimension)
+	local RetTable={}
+	if not xDimension then return default end
 	
-	if boolStayPositive and boolStayPositive == true then 
-		return {x= math.random(0,100)/100,y=math.random(0,100)/100,z=math.random(0,100)/100}
-	else
-		return {x= math.random(-100,100)/100,y=math.random(-100,100)/100,z=math.random(-100,100)/100}
-	end
-end
-
---> checks wether a value is nan
-function isNaN(value)
-	return (value ~= value) 
-end
-
---> creates a ceg, that traverses following its behavioural function
-function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
-	
-	knallfrosch=function(x,y,z,counter,v)
-		if counter % 120 < 60 then -- aufwärts
-			if v then
-				return x*v.x,y*v.y,z*v.z, v
-			else
-				return x,y,z, {x=(math.random(10,14)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
-			end
-		elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
-			return x,y,z
-		else --fall down
-			if v and v.y < 0 then
-				return x*v.x,y*v.y,z*v.z, v
-			else
-				return x,y,z, {x=(math.random(10,11)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
-			end
-			
-		end
-	end
-	functionbehaviour=behaviour or knallfrosch
-	Time=0			
-	local SpawnCeg=Spring.SpawnCEG
-	v= {x=0,y=0,z=0}
-	
-	while lifetimefunc(Time)==true do
-		x,y,z,v=functionbehaviour(x,y,z,Time,v)
-		
-		if boolStrobo==true then
-			d=randVec()
-			SpawnCeg(cegname,x,y,z,d.x,d.y,d.z,range,damage)
+	for x=1, xDimension, 1 do
+		if yDimension then
+			RetTable[x]={}
+		elseif xDimension then
+			RetTable[x]=default
 		else
-			SpawnCeg(cegname,x,y,z,0,1,0,range,damage)
+			return default
 		end
 		
-		Time=Time+rate
-		Sleep(rate)
+		if yDimension then
+			for y=1, yDimension, 1 do
+				if zDimension then
+					RetTable[x][y]={}
+				else
+					RetTable[x][y]=default
+				end	
+				
+				if zDimension then
+					for z=1, zDimension, 1 do
+						RetTable[x][y][z]=default
+					end
+				end
+			end
+		end
 	end
+	return RetTable
+end
+
+-->Creates basically a table of piecenamed enumerated strings
+function makeTableOfPieceNames(name, nr,startnr, piecefoonction)
+	T={}
+	start=startnr or 1
 	
-	endofLifeFunc(x,y,z)
-end
-
-
---PieceDebug loop
-function PieceLight(unitID, piecename,cegname)
-	while true do
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
-		Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
-		Sleep(250)
+	for i=start,nr do
+		namecopy=name	
+		namecopy=namecopy..i
+		T[i]=namecopy
 	end
+	if piecefoonction then
+		for i=start,nr do
+			T[i]=piecefoonction(T[i])
+		end
+	end	
+	return T
 end
 
+--> Adds to a Table, argument as keys, subtables
+function addTableTables(T,...)
+	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
+	String="T"
+	boolOneTimeNil=false
+	if arg then
+		for k,v in ipairs(arg) do
+			String= String.."["..v.."]"
+			Spring.Echo(String)
+			
+			if boolOneTimeNil == false then	
+				if	loadstring(String) ~= nil then
+				else
+					boolOneTimeNil=true
+				end		
+			else
+				loadstring(String.."={}")
+			end
+		end
+	end
+	return T
+end
 
 -->filters out the dead 
 function validateUnitTable(T)
@@ -142,13 +147,17 @@ function validateUnitTable(T)
 	return TVeryMuchAlive or {}
 end
 
-
---functions
--->returns the Negated Axis
-function mirror(value)
-	value=-1*value
-	return value
+-->adds a num Table to a num Table
+function TAddT(OrgT,T)
+	for i=1,#T do
+		OrgT[#OrgT+i]=T[i]
+	end
+	return OrgT
 end
+
+--======================================================================================
+--Distance Measurement
+--======================================================================================
 
 -->returns the absolute distance
 function absDistance(valA, valB)
@@ -159,6 +168,12 @@ function absDistance(valA, valB)
 	end
 end
 
+--functions
+-->returns the Negated Axis
+function mirror(value)
+	value=-1*value
+	return value
+end
 
 -->returns the 2 norm of a vector
 function distance(x,y,z,xa,ya,za)
@@ -205,103 +220,38 @@ function approxDist(x,y,z)
 	return ((((1+ (x/2))+ ((xs)/-8))+((xs*x)/16))+((xs*xs*5)/-128))
 end
 
--->adds a num Table to a num Table
-function TAddT(OrgT,T)
-	for i=1,#T do
-		OrgT[#OrgT+i]=T[i]
-	end
-	return OrgT
-end
-
---> Converts to points, to a degree in Radians
-function convPointsToDeg(ox,oz,bx,bz)
-	if not bx then --orgin cleaned point
-		return math.atan2(ox,oz)
-	else
-		bx=bx-ox
-		bz=bz-oz
-		return math.atan2(bx,bz)
-	end
-end
-
-
-
-
--->clamps rotationonal values
-function absoluteRotation(piecename, axis, finalRotation,x_deg,y_deg,z_deg)
-	
-	if axis==x_axis then
-		return math.abs( x_deg -finalRotation)%180
-	elseif axis==y_axis then
-		return math.abs( y_deg -finalRotation)%180
-	else
-		return math.abs( z_deg -finalRotation)%180
-	end
-end
-
-
-
-function mP(piecename,x_val,y_val,z_val,speed,boolWait)
-	if boolWait then
-		Move(piecename,x_axis,x_val,speed)
-		Move(piecename,y_axis,y_val,speed)
-		Move(piecename,z_axis,z_val,speed)
-		WaitForMove(piecename,x_axis)
-		WaitForMove(piecename,y_axis)
-		WaitForMove(piecename,z_axis)
-	else
-		Move(piecename,x_axis,x_val,speed)
-		Move(piecename,y_axis,y_val,speed)
-		Move(piecename,z_axis,z_val,speed)
-	end
-end
-
-
-function makeVector(x,y,z)
-	return {x=x,y=y,z=z}
-end
-
-function makePiecePoint(piece)
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	return {x=x, y= y, z= z}
-end
-
-function makePieceMap(unitID)
-	List=Spring.GetUnitPieceMap(unitID)
-	return List or {}
-end
-
-function hideAllPieces(unitID)
-	List = Spring.GetUnitPieceMap(unitID)
-	
-	for k,v in pairs(List) do
-		Hide(v)
-	end
-	
-end
-
-
-function addTable(T,...)
-	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-	String="T"
-	boolOneTimeNil=false
-	if arg then
-		for k,v in ipairs(arg) do
-			String= String.."["..v.."]"
-			Spring.Echo(String)
-			
-			if boolOneTimeNil == false then	
-				if	loadstring(String) ~= nil then
-				else
-					boolOneTimeNil=true
-				end		
-			else
-				loadstring(String.."={}")
-			end
-		end
+--======================================================================================
+--String Operations
+--======================================================================================
+--> creates a table of pieces with name
+function makeTableOfNames(name,startnr,endnr)
+	T={}
+	for i=startnr, endnr, 1 do
+		T[#T+1]=name..i	
 	end
 	return T
 end
+
+
+--======================================================================================
+--Basic Operations
+--======================================================================================
+
+-->Returns randomized Boolean
+function maRa()
+	return math.random(0,1)==1 
+end
+
+-->Returns not nil if random
+function raNil()
+	if math.random(0,1)==1 then return maRa() else return end
+end
+
+--> checks wether a value is nan
+function isNaN(value)
+	return (value ~= value) 
+end
+
 
 function assertBool(val)
 	assert(type(val)=="boolean")
@@ -314,6 +264,7 @@ end
 function assertNum(val)
 	assert(type(val)=="number")
 end
+
 --expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
 function assertT(Table, ... )
 	local arg = arg
@@ -499,6 +450,126 @@ function assertT(Table, ... )
 	end
 	return true
 end
+--======================================================================================
+--Math perations
+--======================================================================================
+
+--> Converts to points, to a degree in Radians
+function convPointsToDeg(ox,oz,bx,bz)
+	if not bx then --orgin cleaned point
+		return math.atan2(ox,oz)
+	else
+		bx=bx-ox
+		bz=bz-oz
+		return math.atan2(bx,bz)
+	end
+end
+
+	--> clamp Disregarding Signum
+	function clampMaxSign(value,Max)
+		if math.abs(value) > Max then 
+			signum=math.abs(value)/value
+			return Max*signum
+		else
+			return value
+		end	
+	end
+
+--======================================================================================
+--VectorOperations
+--======================================================================================
+
+function randVec(boolStayPositive)
+	
+	if boolStayPositive and boolStayPositive == true then 
+		return {x= math.random(0,1000)/1000,y=math.random(0,1000)/1000,z=math.random(0,1000)/1000}
+	else
+		return {x= math.random(-1000,1000)/1000,y=math.random(-1000,1000)/1000,z=math.random(-1000,1000)/1000}
+	end
+end
+
+--> old Vector constructor- deprecated - use lib_types vector type instead
+function makeVector(x,y,z)
+	return {x=x,y=y,z=z}
+end
+--======================================================================================
+--Sfx Operations
+--======================================================================================
+--> creates a ceg, that traverses following its behavioural function
+function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
+	
+	knallfrosch=function(x,y,z,counter,v)
+		if counter % 120 < 60 then -- aufwärts
+			if v then
+				return x*v.x,y*v.y,z*v.z, v
+			else
+				return x,y,z, {x=(math.random(10,14)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
+			end
+		elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
+			return x,y,z
+		else --fall down
+			if v and v.y < 0 then
+				return x*v.x,y*v.y,z*v.z, v
+			else
+				return x,y,z, {x=(math.random(10,11)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
+			end
+			
+		end
+	end
+	functionbehaviour=behaviour or knallfrosch
+	Time=0			
+	local SpawnCeg=Spring.SpawnCEG
+	v= makeVector(0,0,0)
+	
+	while lifetimefunc(Time)==true do
+		x,y,z,v=functionbehaviour(x,y,z,Time,v)
+		
+		if boolStrobo==true then
+			d=randVec()
+			SpawnCeg(cegname,x,y,z,d.x,d.y,d.z,range,damage)
+		else
+			SpawnCeg(cegname,x,y,z,0,1,0,range,damage)
+		end
+		
+		Time=Time+rate
+		Sleep(rate)
+	end
+	
+	endofLifeFunc(x,y,z)
+end
+
+
+-->PieceDebug loop
+function PieceLight(unitID, piecename,cegname)
+	while true do
+		x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
+		Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
+		Sleep(250)
+	end
+end
+
+-->SortPoint
+
+
+
+
+function makePiecePoint(piece)
+	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
+	return {x=x, y= y, z= z}
+end
+
+function makePieceMap(unitID)
+	List=Spring.GetUnitPieceMap(unitID)
+	return List or {}
+end
+
+function hideAllPieces(unitID)
+	List = Spring.GetUnitPieceMap(unitID)
+	
+	for k,v in pairs(List) do
+		Hide(v)
+	end
+end
 
 --> Attaches a Unit to a Piece near a Impact side
 function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID,px,py,pz, range)
@@ -520,56 +591,6 @@ function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID,px,py,pz, range)
 			end		
 		end		
 	)
-end
-
-function makeTable(default, xDimension, yDimension, zDimension)
-	local RetTable={}
-	if not xDimension then return default end
-	
-	for x=1, xDimension, 1 do
-		if yDimension then
-			RetTable[x]={}
-		elseif xDimension then
-			RetTable[x]=default
-		else
-			return default
-		end
-		
-		if yDimension then
-			for y=1, yDimension, 1 do
-				if zDimension then
-					RetTable[x][y]={}
-				else
-					RetTable[x][y]=default
-				end	
-				
-				if zDimension then
-					for z=1, zDimension, 1 do
-						RetTable[x][y][z]=default
-					end
-				end
-			end
-		end
-	end
-	return RetTable
-end
-
--->Creates basically a table of piecenamed enumerated strings
-function makeTableOfPieceNames(name, nr,startnr, piecefoonction)
-	T={}
-	start=startnr or 1
-	
-	for i=start,nr do
-		namecopy=name	
-		namecopy=namecopy..i
-		T[i]=namecopy
-	end
-	if piecefoonction then
-		for i=start,nr do
-			T[i]=piecefoonction(T[i])
-		end
-	end	
-	return T
 end
 
 
@@ -674,16 +695,6 @@ function clampMod(val,low,up)
 end
 
 
-
--->Returns randomized Boolean
-function maRa()
-	return math.random(0,1)==1 
-end
-
--->Returns not nil if random
-function raNil()
-	if math.random(0,1)==1 then return maRa() else return end
-end
 
 
 --> Destroys A Table of Units
@@ -1244,14 +1255,6 @@ function generatepiecesTableAndArrayCode(unitID, boolLoud)
 	return makePieceTable(unitID)
 end
 
---> creates a table of pieces with name
-function makeTableOfNames(name,startnr,endnr)
-	T={}
-	for i=startnr, endnr, 1 do
-		T[#T+1]=name..i	
-	end
-	return T
-end
 
 --> finds GenericNames and Creates Tables with them
 function makePiecesTablesByNameGroups(boolMakePiecesTable,boolSilent)
@@ -2740,7 +2743,7 @@ function vardump(value, depth, key)
 		return reTable
 	end
 	
-	function countKey(T)
+	function countT(T)
 		it=0
 		for k,v in pairs(T) do
 			it=it+1
@@ -2754,8 +2757,8 @@ function vardump(value, depth, key)
 	--> Join Operation on two tables
 	join = function(id,argT)
 		resulT={}
-		for i=1,#argT do
-			resulT[#resulT+1]= {id=id, obj=argT[i]}
+		for num,idInTable in pairs(argT) do
+			resulT[#resulT+1]= {id=id, obj=idInTable}
 		end
 		return resulT
 	end
@@ -2832,23 +2835,10 @@ function vardump(value, depth, key)
 		return arg[index]()	
 	end
 	
-	
-	function accessInOrder(T,...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		local TC=T
-		for _, f in pairs(arg) do
-			executableString="function(TC) if TC["..f.."] then TC=TC[f] return true,TC else return false,TC end end"
-			f=loadstring(executableString)
-			TC,bool=f(TC)
-			if bool ==false then return false end
-			
-		end
-		return true
-	end
 
 	
 	-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
-	function filterOutUnitsOfType(Table, UnitTypeTable,Cache)
+	function filterOutUnitsOfType(T, UnitTypeTable,Cache)
 		if type(UnitTypeTable) == "number" then 
 			copyOfType= UnitTypeTable;
 			UnitTypeTable= {}
@@ -2857,12 +2847,12 @@ function vardump(value, depth, key)
 		
 		if Cache then
 			returnTable={}
-			for i=1, #Table do
-				if Cache[Table[i]] and Cache[Table[i]]==true or Table[i]and not UnitTypeTable[Spring.GetUnitDefID(Table[i])] then
-					Cache[Table[i]]=true
-					returnTable[#returnTable+1]=Table[i]
+		for num,id in pairs(T) do 
+				if Cache[id] and Cache[id]==true or Table[id]and not UnitTypeTable[Spring.GetUnitDefID(id)] then
+					Cache[id]=true
+					returnTable[#returnTable+1]=id
 				else
-					Cache[Table[i]]=false
+					Cache[id]=false
 					
 				end
 			end
@@ -2870,8 +2860,7 @@ function vardump(value, depth, key)
 			
 		else
 			local returnTable={}
-			for i=1, #Table do
-			id=Table[i]
+		for num,id in pairs(T) do 
 			defID = Spring.GetUnitDefID(id)
 				if not  UnitTypeTable[defID] then
 					returnTable[#returnTable+1]=id
@@ -2880,13 +2869,24 @@ function vardump(value, depth, key)
 			return returnTable
 		end
 	end
+	
+	function filterOutUnarmed(T)
+		returnTable={} 
+		for num,id in pairs(T) do 
+		def=Spring.GetUnitDefID(id) 
+		if UnitDefs[def].canAttack or UnitDefs[def].canFight then
+			returnTable[#returnTable+1]= id
+		end
+		end
+			return returnTable		
+end	
 	-->filters Out TransportUnits
 	function filterOutTransport		(T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
-			if false== UnitDefs[def].isTransport		 then 
-			returnTable[#returnTable+1]=T[i] end 
+		for num,id in pairs(T) do 
+			def=Spring.GetUnitDefID(id) 
+			if false== UnitDefs[def].isTransport then 
+			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 
 	end 
@@ -2894,10 +2894,10 @@ function vardump(value, depth, key)
 	-->filters Out Immobile Units
 	function filterOutImmobile (T,UnitDefs)
 		returnTable={} 
-		for k,v in pairs(T) do 
-			def=Spring.GetUnitDefID(k) 
+		for num,id in pairs(T) do 
+			def=Spring.GetUnitDefID(id) 
 			if false== UnitDefs[def].isImmobile then 
-				returnTable[k]=v 
+				returnTable[#returnTable+1]=id
 			end 
 		end 
 		return returnTable 
@@ -2906,10 +2906,10 @@ function vardump(value, depth, key)
 	function filterOutBuilding (T, UnitDefs, boolFilterOut)
 		boolFilterOut= boolFilterOut or false
 		returnTable={} 
-		for k,v in pairs(T) do 
-			def=Spring.GetUnitDefID(k) 
+		for num,id in pairs(T) do 
+			def=Spring.GetUnitDefID(id) 
 			if UnitDefs[def] and UnitDefs[def].isBuilding and boolFilterOut== UnitDefs[def].isBuilding then 
-				returnTable[k]=v 
+				returnTable[#returnTable+1]=id 
 			end 
 		end 
 		return returnTable 
@@ -2918,10 +2918,10 @@ function vardump(value, depth, key)
 	--> filters Out Builders
 	function filterOutBuilder (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for num,id in pairs(T) do
+			def=Spring.GetUnitDefID(id) 
 			if false== UnitDefs[def].isBuilder then 
-			returnTable[#returnTable+1]=T[i] end 
+			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 
 	end
@@ -2931,38 +2931,38 @@ function vardump(value, depth, key)
 		boolCond=boolCondi or false
 		
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for num,id in pairs(T) do
+			def=Spring.GetUnitDefID(id) 
 			if boolCond== UnitDefs[def].isMobileBuilder then 
-			returnTable[#returnTable+1]=T[i] end 
+			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 
 	end
 	
 	function filterOutStaticBuilder (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for num,id in pairs(T) do
+			def=Spring.GetUnitDefID(id) 
 			if false== UnitDefs[def].isStaticBuilder then 
-			returnTable[#returnTable+1]=T[i] end 
+			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 
 	end
 	
 	function filterOutFactory (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for num,id in pairs(T) do
+			def=Spring.GetUnitDefID(id) 
 			if false== UnitDefs[def].isFactory then 
-			returnTable[#returnTable+1]=T[i] end 
+			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 
 	end
 	
 	function filterOutExtractor (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for num,id in pairs(T) do
+			def=Spring.GetUnitDefID(id) 
 			if false== UnitDefs[def].isExtractor then 
 			returnTable[#returnTable+1]=T[i] end 
 		end 
@@ -2971,7 +2971,7 @@ function vardump(value, depth, key)
 	
 	function filterOutGroundUnit (T)
 		returnTable={} 
-		for i=1,#T do 
+		for num,id in pairs(T) do
 			def=Spring.GetUnitDefID(T[i]) 
 			if false== UnitDefs[def].isGroundUnit then 
 			returnTable[#returnTable+1]=T[i] end 
@@ -2981,10 +2981,10 @@ function vardump(value, depth, key)
 	
 	function filterOutAirUnit (T)
 		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
+		for num,id in pairs(T) do
+			def=Spring.GetUnitDefID(id) 
 			if false== UnitDefs[def].isAirUnit then 
-			returnTable[#returnTable+1]=T[i] end 
+			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 
 	end
@@ -3562,16 +3562,7 @@ function vardump(value, depth, key)
 		return false
 	end
 	
-	--> clamp Disregarding Signum
-	function clampMaxSign(value,Max)
-		if math.abs(value) > Max then 
-			signum=math.abs(value)/value
-			return Max*signum
-		else
-			return value
-		end	
-	end
-	
+
 	-->samples over a given Array around Point x,y, with the samplefunction 
 	function sample(NumericIndex, x, y, sampleFunction, factor)
 		quadNumericIndex={}

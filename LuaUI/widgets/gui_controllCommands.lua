@@ -20,9 +20,8 @@ local Panel
 local Image
 local Progressbar
 local screen0
-
 local testIrregular
-
+VFS.Include("LuaUI/widgets/guiEnums.lua")
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
@@ -37,6 +36,11 @@ BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
 
+
+if not WG.SelectedCommand then WG.SelectedCommand ={} end
+playerID= Spring.GetMyPlayerID()
+if not WG.SelectedCommand[playerID] then  WG.SelectedCommand[playerID] ={} end
+
 extendedCommands={}
 exttriStrip={}
 exttriStrip[1] ={		
@@ -48,8 +52,7 @@ exttriStrip[1] ={
 exttriStrip[2] ={
 	{x= 160, y = 0},
 	{x= 160, y = 80},			
-	{x= 0, y = 40},
-	
+	{x= 0, y = 40}	
 }
 
 exttriStrip[3] ={
@@ -81,9 +84,7 @@ for i=1, 9 do
 		{x= 0, y = 0},
 		{x= 80, y = 70},						
 		{x= 0, y = 70},
-		{x= 0, y = 100},
-		
-		
+		{x= 0, y = 100}		
 	}
 	backgroundCol[i]={35/255, 124/255, 166/255, 0.75}
 end
@@ -101,69 +102,67 @@ function getCommandTable()
 	if right then table.insert(returnT,"right")end
 	return returnT
 end
-triStrip[1] ={		
+triStrip[eAttac] ={		
 	{x= 80, y = 0},			
 	{x= 0, y = 0},
 	{x= 80, y = 70},						
 	{x= 0, y = 70},
-	{x= 0, y = 100},
+	{x= 0, y = 100}
 }
-backgroundCol[1]={163/255, 229/255, 243/255, 0.75}	
+backgroundCol[eAttac]={163/255, 229/255, 243/255, 0.75}	
 
-triStrip[2] ={
+triStrip[eStop] ={
 	{x= 70, y = -15},
 	{x= 0, y = 10},			
 	{x= 80, y = -5},
 	
 	{x= 0, y = 70},
 	{x= 80, y = 80},
-	{x= 70, y = 90},
+	{x= 70, y = 90}
 }
-backgroundCol[2]={58/255, 172/255, 226/255, 0.75}					
+backgroundCol[eStop]={58/255, 172/255, 226/255, 0.75}					
 
-triStrip[3] ={
+triStrip[eMove] ={
 	{x= 0, y = -20},			
 	{x= 80, y = 2.5},
 	{x= 0, y = 70},
-	{x= 80, y = 70},
+	{x= 80, y = 70}
 }	
+backgroundCol[eMove]={35/255, 124/255, 166/255, 0.75}		
 
-backgroundCol[3]={35/255, 124/255, 166/255, 0.75}		
-
-triStrip[4] ={		
+triStrip[eFireState] ={		
 	{x= 0, y = 0},	
 	{x= 80, y =0},
 	{x= 0, y = 70},
-	{x= 80, y = 70},
+	{x= 80, y = 70}
 }	
+backgroundCol[eFireState]={52/255, 167/255, 222/255, 0.75}	
 
-backgroundCol[4]={52/255, 167/255, 222/255, 0.75}	
-triStrip[5] ={
+triStrip[eRepeat] ={
 	{x= 0, y = -15},			
 	{x= 70, y =-15},
 	{x= 0, y = 90},
-	{x= 70, y = 110},
+	{x= 70, y = 110}
 }	
+backgroundCol[eRepeat]={52/255, 167/255, 222/255, 0.75}	
 
-backgroundCol[5]={52/255, 167/255, 222/255, 0.75}	
-
-triStrip[6] ={
+triStrip[eManouver] ={
 	{x= 0, y = 5},			
 	{x= 80, y =25},
 	{x= 0, y = 70},
 	{x= 80, y = 70},
 }	
-backgroundCol[6]={35/255, 124/255, 166/255, 0.75}	
+backgroundCol[eManouver]={35/255, 124/255, 166/255, 0.75}	
 
-triStrip[7] ={
+triStrip[eRepair] ={
 	{x= 0, y = 0},			
 	{x= 80, y = 0},
 	{x= 0, y = 70},
 	{x= 80, y = 48},
 }	
-backgroundCol[7]={163/255, 229/255, 243/255, 0.75}	
+backgroundCol[eRepair]={163/255, 229/255, 243/255, 0.75}	
 
-triStrip[8] ={
+triStrip[ePatrol] ={
 	{x= 0, y = -20},			
 	{x= 70, y = -40},			
 	{x= -10, y = -10},			
@@ -171,15 +170,15 @@ triStrip[8] ={
 	{x= -10, y = 95},
 	{x= 80, y = 60},
 }	
-backgroundCol[8]={52/255, 167/255, 222/255, 0.75}	
+backgroundCol[ePatrol]={52/255, 167/255, 222/255, 0.75}	
 
-triStrip[9] ={
+triStrip[eGuard] ={
 	{x= 0, y = 5},			
 	{x= 80, y = -25},
 	{x= 0, y = 70},
 	{x= 80, y = 70},
 }	
-backgroundCol[9]={52/255, 167/255, 222/255, 0.75}	
+backgroundCol[eGuard]={52/255, 167/255, 222/255, 0.75}	
 
 function upByRow(str,num)
 	for i=1,num do
@@ -187,15 +186,6 @@ function upByRow(str,num)
 	end
 	return str
 end
-eAttac		=1
-eStop		=2
-eMove		=3
-eFire		=4
-eRepeat		=5
-eManouver	=6
-eRepair		=7
-ePatrol		=8
-eGuard		=9
 
 caption={
 	[1]="|ATTAC",
@@ -220,11 +210,6 @@ extendedCommand_window_positionX = "0%"
 extendedCommand_window_positionY= "41%"
 extendedCommand_window_width= "10%"
 extendedCommand_window_height= "30%"
-
-		
-		
-		
-		
 		
 function widget:Initialize()
 	
@@ -242,7 +227,6 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	
 function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
 	functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
 	
@@ -254,7 +238,7 @@ function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
 		textColor = textCol, 
 		OnClick= { functionOnClick}
 	}
-end--main Constructors
+end
 	extCallbackFunctions = {
 			[1]= function()
 				selectedUnits=spGetSelectedUnits();
@@ -266,24 +250,21 @@ end--main Constructors
 					end
 				end
 			end,
-			[2]= function()Spring.Echo("Hi Drop")end,
-			[3]= function()Spring.Echo("Hi Cloak")end,
-			[4]= function()Spring.Echo("Hi Restore")end,
-			[5]= function()Spring.Echo("Hi QUEUE")end,
-
-			
+			[2]= function(self, ...)Spring.Echo("Switch to  Drop at MouseLocation")end,
+			[3]= function(self, ...)Spring.Echo("Set Units to Cloak") end,
+			[4]= function(self, ...)Spring.Echo("Set Unit to Ground Restore")end,
+			[5]= function(self, ...)Spring.Echo("Hi QUEUE")end	
 		}
+		
 		extcaption={
 			[1]="RECLAIM",
 			[2]="DROP\nLOAD",
 			[3]="CLOAK",		
 			[4]="RESTORE",		
 			[5]="QUEUE",		
-		}
-		
+		}		
 	
 		for i= 1, 5 do
-
 			extendedCommands[i] = createHabanero(exttriStrip[i],
 			extcaption[i],
 			backgroundCol[2],
@@ -313,8 +294,7 @@ end--main Constructors
 		children = {
 			
 		},
-	}
-	
+	}	
 	
 	extendedCommand_Grid = Grid:New{
 		x= 0,
@@ -353,15 +333,15 @@ extendedCommand_window:AddChild(extendedCommand_Grid)
 
 Habaneros={ }
 HabaneroCallbackFunctions={}
-HabaneroCallbackFunctions[eAttac]= function () end
-HabaneroCallbackFunctions[eStop]= function () end
-HabaneroCallbackFunctions[eMove]= function () end
-HabaneroCallbackFunctions[eFire]= function () end
-HabaneroCallbackFunctions[eRepeat]= function () end
-HabaneroCallbackFunctions[eManouver	]= function () end
-HabaneroCallbackFunctions[eRepair]= function () end
-HabaneroCallbackFunctions[ePatrol]= function () end
-HabaneroCallbackFunctions[eGuard]= function () end
+HabaneroCallbackFunctions[eAttac]	= function() WG.SelectedCommand[playerID][eAttac	  	]=true; end
+HabaneroCallbackFunctions[eStop]	= function() WG.SelectedCommand[playerID][eStop		]=true    ; end
+HabaneroCallbackFunctions[eMove]	= function() WG.SelectedCommand[playerID][eMove		]=true    ; end
+HabaneroCallbackFunctions[eFireState]	= function() WG.SelectedCommand[playerID][eFireState]=true    ; end
+HabaneroCallbackFunctions[eRepeat]	= function() WG.SelectedCommand[playerID][eRepeat	]=true    ; end
+HabaneroCallbackFunctions[eManouver]= function() WG.SelectedCommand[playerID][eManouver]	=true ; end
+HabaneroCallbackFunctions[eRepair]	= function() WG.SelectedCommand[playerID][eRepair	]=true    ; end
+HabaneroCallbackFunctions[ePatrol]	= function() WG.SelectedCommand[playerID][ePatrol	]=true    ; end
+HabaneroCallbackFunctions[eGuard]	= function() WG.SelectedCommand[playerID][eGuard		]=true; en
 
 for i=1, 9 do
 	Habaneros[i] = createHabanero(triStrip[i],
@@ -390,7 +370,7 @@ base_stack = Grid:New{
 		Habaneros[eAttac],
 		Habaneros[eStop],
 		Habaneros[eMove],
-		Habaneros[eFire],
+		Habaneros[eFireState],
 		Habaneros[eRepeat],
 		Habaneros[eManouver	],
 		Habaneros[eRepair],
@@ -399,8 +379,6 @@ base_stack = Grid:New{
 		
 	}
 }
-
-
 
 controllCommand_window = Window:New{
 	padding = {3,3,3,3,},
@@ -428,10 +406,3 @@ controllCommand_window = Window:New{
 }
 end
 
---subConstructors
-function widget:CommandsChanged()
-end
-
---update functions
-function widget:GameFrame(f)
-end

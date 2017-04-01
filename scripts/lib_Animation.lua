@@ -273,6 +273,32 @@ function turnSyncInTimeT(Table, times,x_deg,y_deg,z_deg)
 	
 end
 
+--> move a Piece  to all 3 axis at once 
+function mP(piecename,x_val,y_val,z_val,speed,boolWait)
+	if boolWait then
+		Move(piecename,x_axis,x_val,speed)
+		Move(piecename,y_axis,y_val,speed)
+		Move(piecename,z_axis,z_val,speed)
+		WaitForMoves(piecename)
+	else
+		Move(piecename,x_axis,x_val,speed)
+		Move(piecename,y_axis,y_val,speed)
+		Move(piecename,z_axis,z_val,speed)
+	end
+end
+
+
+-->clamps rotationonal values
+function absoluteRotation(piecename, axis, finalRotation,x_deg,y_deg,z_deg)
+	
+	if axis==x_axis then
+		return math.abs( x_deg -finalRotation)%180
+	elseif axis==y_axis then
+		return math.abs( y_deg -finalRotation)%180
+	else
+		return math.abs( z_deg -finalRotation)%180
+	end
+end
 
 -->Turns a Piece on all given axis, snychronously
 function turnSyncInSpeed(piecename,x,y,z,speed,x_deg,y_deg,z_deg)
