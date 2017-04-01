@@ -40,14 +40,14 @@ VFS.Include("scripts/lib_UnitScript.lua")
 
 undoSelectionButton		=0
 selectSelectionButton	=1
-
 function widget:MouseRelease(x, y, button)
 	if button == undoSelectionButton then
 		for k,v in pairs(WG.SelectedCommand[playerID]) do
 			WG.SelectedCommand[playerID][k]=false
 		end
 	end
-	if button == selectSelectionButton then
+	
+	if WG.AtLeastOneSelection== true and button == selectSelectionButton then
 		commandID=0
 		for key,value in pairs(WG.SelectedCommand[playerID]) do
 				if value== true then
@@ -55,6 +55,7 @@ function widget:MouseRelease(x, y, button)
 				break
 				end
 			end
+
 		playerID=Spring.GetMyPlayerID()
 		playerTeamID= Spring.GetMyTeamID
 		T =getSelectedUnits(playerID)

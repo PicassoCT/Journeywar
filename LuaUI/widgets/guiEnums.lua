@@ -1,26 +1,45 @@
 
-WG.uniqueCommandID= 0
-function getUniqueCommandID()
-	WG.uniqueCommandID=WG.uniqueCommandID+1
-	return WG.uniqueCommandID
-end
 
-eAttac		=	getUniqueCommandID()-- Can the unit be issued Attack orders? 
-eStop		=	getUniqueCommandID()--
-eFight		=	getUniqueCommandID()
-eMove		=	getUniqueCommandID()--  Can the unit be issued Move orders? 
-ePatrol		=	getUniqueCommandID()
-eCloak		=	getUniqueCommandID()
-eGuard		=	getUniqueCommandID()
-eSelfDestruct=  getUniqueCommandID()	
-eRestore	=	getUniqueCommandID()	
-eFireState	=	getUniqueCommandID()--
-eMoveState  =  getUniqueCommandID()
-eRepeat		=	getUniqueCommandID()--
-ePatrol		=	getUniqueCommandID()--
-eReclaim	=  getUniqueCommandID()
+targetCommands={
+[CMD.STOP            ]=true,
+[CMD.WAIT            ]=true,
+[CMD.TIMEWAIT        ]=true,
+[CMD.DEATHWAIT       ]=true,
+[CMD.SQUADWAIT       ]=true,
+[CMD.GATHERWAIT      ]=true,
+[CMD.MOVE            ]=true,
+[CMD.PATROL          ]=true,
+[CMD.FIGHT           ]=true,
+[CMD.ATTACK          ]=true,
+[CMD.AREA_ATTACK     ]=true,
+[CMD.GUARD           ]=true,
+[CMD.AISELECT        ]=true,
+[CMD.GROUPSELECT     ]=true,
+[CMD.GROUPADD        ]=true,
+[CMD.GROUPCLEAR      ]=true,
+[CMD.REPAIR          ]=true,
+[CMD.FIRE_STATE      ]=true,
+[CMD.MOVE_STATE      ]=true,
+[CMD.SELFD           ]=true,
+[CMD.LOAD_UNITS      ]=true,
+[CMD.LOAD_ONTO       ]=true,
+[CMD.UNLOAD_UNITS    ]=true,
+[CMD.UNLOAD_UNIT     ]=true,
+[CMD.ONOFF           ]=true,
+[CMD.RECLAIM         ]=true,
+[CMD.CLOAK           ]=true,
+[CMD.STOCKPILE       ]=true,
+[CMD.DGUN            ]=true,
+[CMD.RESTORE         ]=true,
+[CMD.REPEAT          ]=true,
+[CMD.TRAJECTORY      ]=true,
+[CMD.RESURRECT       ]=true,
+[CMD.CAPTURE         ]=true,
+[CMD.AUTOREPAIRLEVEL ]=true,
+[CMD.LOOPBACKATTACK  ]=true,
+[CMD.IDLEMODE		 ]=true,
+}
 
-eRepair		=	getUniqueCommandID()--
-eResurrect  = getUniqueCommandID()
-eCapture	= getUniqueCommandID()
+
+
 

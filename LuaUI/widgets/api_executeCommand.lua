@@ -24,7 +24,7 @@ function getSelectedUnits(playerID)
 end
 
 filterFunctionTable={
-	[eAttac]= function(T,filterID,playerID,playerTeamID)
+	[CMD.ATTACK]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)
 			defID=spGetUnitDefID(id)
@@ -35,18 +35,18 @@ filterFunctionTable={
 		) or {}	
 	end,
 	
-	[eMove]= function(T,filterID,playerID,playerTeamID)
+	[CMD.MOVE]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)
 			defID=spGetUnitDefID(id)
-			if defID and UnitDefs[defID].canStop then
+			if defID and UnitDefs[defID].canMove then
 				return id
 			end 						
 		end
 		) or {}	
 	end,
 	
-	[eFireState]= function(T,filterID,playerID,playerTeamID)
+	[CMD.FIRE_STATE]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -56,7 +56,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eStop]= function(T,filterID,playerID,playerTeamID)
+	[CMD.STOP]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -66,7 +66,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eFight]= function(T,filterID,playerID,playerTeamID)
+	[CMD.FIGHT]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -76,7 +76,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[ePatrol]= function(T,filterID,playerID,playerTeamID)
+	[CMD.PATROL]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -86,7 +86,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eCloak]= function(T,filterID,playerID,playerTeamID)
+	[CMD.CLOAK]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -96,7 +96,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eGuard]= function(T,filterID,playerID,playerTeamID)
+	[CMD.GUARD]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -106,7 +106,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eSelfDestruct]= function(T,filterID,playerID,playerTeamID)
+	[CMD.SELFD]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -116,7 +116,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eRestore]= function(T,filterID,playerID,playerTeamID)
+	[CMD.RESTORE]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -126,7 +126,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eMoveState]= function(T,filterID,playerID,playerTeamID)
+	[CMD.MOVE_STATE]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -136,7 +136,7 @@ filterFunctionTable={
 		end
 		) or {}	
 	end,
-	[eRepeat]= function(T,filterID,playerID,playerTeamID)
+	[CMD.REPEAT]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -147,7 +147,7 @@ filterFunctionTable={
 		) or {}	
 	end,
 	
-	[eReclaim]= function(T,filterID,playerID,playerTeamID)
+	[CMD.RECLAIM]= function(T,filterID,playerID,playerTeamID)
 		return process(T,
 		function(id)		
 			defID=spGetUnitDefID(id)
@@ -178,290 +178,27 @@ function filterUnits(T, filterID, playerID, playerTeamID, boolFilterTeam)
 	end	
 end
 
-commandOnUnitFunctionTable={
-	[eAttac]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.ATTACK,{target},params)
-	end,
-	
-	[eMove]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.MOVE,{target},params)
-	end,
-	
-	[eFireState]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			--TODO		
-		end
-		) 
-	end,
-	[eStop]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.STOP,{target},params)
-	end,
-	[eFight]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.FIGHT,{target},params)
-	end,
-	[ePatrol]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.PATROL,{target},params) 
-	end,
-	[eCloak]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			--TODO
-		end
-		) 
-	end,
-	[eGuard]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.GUARD,{target},params) 		
-	end,
-	[eSelfDestruct]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			--TODO
-		end
-		) 
-	end,
-	[eRestore]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			--TODO
-		end
-		) 
-	end,
-	[eMoveState]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			--TODO
-		end
-		)
-	end,
-	[eRepeat]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	
-	[eReclaim]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.RECLAIM,{target},params) 		
-		
-	end
-	
-}
-
-commandOnGroundFunctionTable={
-	[eAttac]= function(T,commandID,playerID,playerTeamID,target, params)
-		Spring.GiveOrderToUnitArray(T,CMD.ATTACK,target,params)
-
-	end,
-	
-	[eMove]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)
-			
-		end
-		) 
-	end,
-	
-	[eFireState]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eStop]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		)
-	end,
-	[eFight]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		)
-	end,
-	[ePatrol]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eCloak]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eGuard]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eSelfDestruct]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eRestore]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eMoveState]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		)
-	end,
-	[eRepeat]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	
-	[eReclaim]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end
-	
-}
-commandOnFeatureFunctionTable={
-	[eAttac]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)
-			
-		end
-		) 
-	end,
-	
-	[eMove]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)
-			
-		end
-		) 
-	end,
-	
-	[eFireState]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eStop]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		)
-	end,
-	[eFight]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		)
-	end,
-	[ePatrol]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eCloak]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eGuard]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eSelfDestruct]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eRestore]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	[eMoveState]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		)
-	end,
-	[eRepeat]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end,
-	
-	[eReclaim]= function(T,commandID,playerID,playerTeamID,target, params)
-		return process(T,
-		function(id)		
-			
-		end
-		) 
-	end
-	
-}
 function acquireParameters()
 	params={}
 	local alt, ctrl, meta, shift = Spring.GetModKeyState()
 	return params
 end
+
 function issueCommand(T, commandID, playerID, playerTeamID,mouseX,mouseY)
-	mouseX,mouseY=
-	resultType,result= Spring.TraceScreenRay(mouseX,mouseY,false,true)
+	
+
+	targetType,target= Spring.TraceScreenRay(mouseX,mouseY,false,true)
 	params= acquireParameters()
 	
-	if resultType then
-		if resultType=="unit" 	 then 
-			-- number unitID |
-			commandOnUnitFunctionTable(T, commandID, playerID, playerTeamID,result, params)
+	if targetType then
+		if targetType=="unit" 	 then 
+			Spring.GiveOrderToUnitArray(T,commandID,{target},params)  
 		end
-		if resultType=="feature" then 
-			-- number featureID |
-			commandOnFeatureFunctionTable(T, commandID, playerID, playerTeamID, result, params)
+		if targetType=="feature" then 
+			Spring.GiveOrderToUnitArray(T,commandID,{target},params) 
 		end
-		if resultType=="ground"	 then 
-			-- { [1] = number x, [2] = number y, [3] = number z }
-			commandOnGroundFunctionTable(T, commandID, playerID, playerTeamID,result, params)
+		if targetType=="ground"	 then 
+			Spring.GiveOrderToUnitArray(T,commandID,target,params) 
 		end
 	end
 end
