@@ -1,5 +1,4 @@
 
-
 targetCommands={
 [CMD.STOP            ]=true,
 [CMD.WAIT            ]=true,
@@ -40,6 +39,25 @@ targetCommands={
 [CMD.IDLEMODE		 ]=true,
 }
 
-
-
+nonTargetCommands={
+[CMD.STOP            ]=true,
+[CMD.WAIT            ]=true,
+[CMD.TIMEWAIT        ]=true,
+[CMD.DEATHWAIT       ]=true,
+[CMD.SQUADWAIT       ]=true,
+[CMD.GATHERWAIT      ]=true,
+[CMD.AISELECT        ]=true,
+[CMD.GROUPSELECT     ]=true,
+[CMD.GROUPADD        ]=true,
+[CMD.GROUPCLEAR      ]=true,
+[CMD.FIRE_STATE      ]=true,
+[CMD.MOVE_STATE      ]=true,
+[CMD.SELFD           ]=true,
+[CMD.ONOFF           ]=true,
+[CMD.CLOAK           ]=true,
+[CMD.STOCKPILE       ]=true,
+[CMD.REPEAT          ]=true,
+[CMD.TRAJECTORY      ]=true,
+[CMD.AUTOREPAIRLEVEL ]=true,
+}
 

@@ -12,6 +12,7 @@ function widget:GetInfo()
 	}
 end
 include("LuaUI/widgets/guiEnums.lua")
+include("LuaUI/widgets/gui_helper.lua")
 
 --Localisations
 local spGetUnitTeam =	Spring.GetUnitTeam
@@ -178,27 +179,26 @@ function filterUnits(T, filterID, playerID, playerTeamID, boolFilterTeam)
 	end	
 end
 
-function acquireParameters()
-	params={}
-	local alt, ctrl, meta, shift = Spring.GetModKeyState()
-	return params
-end
 
-function issueCommand(T, commandID, playerID, playerTeamID,mouseX,mouseY)
-	
 
-	targetType,target= Spring.TraceScreenRay(mouseX,mouseY,false,true)
-	params= acquireParameters()
+function issueCommand(T, commandID, playerID, playerTeamID,mouseX,mouseY,boolNoTarget)
 	
-	if targetType then
-		if targetType=="unit" 	 then 
-			Spring.GiveOrderToUnitArray(T,commandID,{target},params)  
-		end
-		if targetType=="feature" then 
-			Spring.GiveOrderToUnitArray(T,commandID,{target},params) 
-		end
-		if targetType=="ground"	 then 
-			Spring.GiveOrderToUnitArray(T,commandID,target,params) 
+	if boolNoTarget== true then
+		Spring.GiveOrderToUnitArray(T,commandID,{},params) 
+	else
+		targetType,target= Spring.TraceScreenRay(mouseX,mouseY,false,true)
+		params= getCommandTable()
+		
+		if targetType then
+			if targetType=="unit" 	 then 
+				Spring.GiveOrderToUnitArray(T,commandID,{target},params) 
+			end
+			if targetType=="feature" then 
+				Spring.GiveOrderToUnitArray(T,commandID,{target},params) 
+			end
+			if targetType=="ground"	 then 
+				Spring.GiveOrderToUnitArray(T,commandID,target,params) 
+			end
 		end
 	end
 end
