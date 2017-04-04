@@ -15,7 +15,7 @@ function getTypeTable(UnitDefNames,StringTable)
 end
 
 function getJourneyBuildingTypeTable(UnitDefNames)
-JourneyBuildingTypes={}	
+	JourneyBuildingTypes={}	
 	for i=1,#UnitDefNames["beanstalk"].buildOptions do
 		JourneyBuildingTypes[UnitDefNames["beanstalk"].buildOptions[i]]=true
 	end
@@ -100,7 +100,7 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
 		[UnitDefNames["gseastar"].id]	=UnitDefNames["gnewsdrone"].id,
 		[UnitDefNames["gcar"].id]	=UnitDefNames["gull"].id	
 	}	
-		
+	
 	return retTab
 end
 
@@ -496,39 +496,39 @@ function groupOnFire(DictionaryOfUnits,argtimeToburnMin, argtimeToburnMax)
 	
 	timeToburnMax= argtimeToburnMax or 1000
 	timeToburnMin = argtimeToburnMin or 150
-
+	
 	for k,v in pairs(DictionaryOfUnits) do
 		setUnitOnFire(k,math.ceil(math.random(timeToburnMin,timeToburnMax))) 		
 	end
 	
 end
 
-	--> Sets A Unit on Fire
-	function setUnitOnFire(id, timeOnFire)
-		if GG.OnFire == nil then GG.OnFire={} end
-			boolInsertIt=true
-			--very bad sollution n-times
-			
-			for i=1, table.getn(GG.OnFire), 1 do
-				if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== id then
-					GG.OnFire[i][2]=math.ceil(timeOnFire) 
-					boolInsertIt=false
-				end
-			end
-			
-			if boolInsertIt==true then
-				GG.OnFire[#GG.OnFire+1]={}
-				GG.OnFire[#GG.OnFire][1]=id
-				GG.OnFire[#GG.OnFire][2]=math.ceil(timeOnFire) 
-			end			
+--> Sets A Unit on Fire
+function setUnitOnFire(id, timeOnFire)
+	if GG.OnFire == nil then GG.OnFire={} end
+	boolInsertIt=true
+	--very bad sollution n-times
+	
+	for i=1, table.getn(GG.OnFire), 1 do
+		if 	GG.OnFire[i][1]	~= nil and	GG.OnFire[i][1]	== id then
+			GG.OnFire[i][2]=math.ceil(timeOnFire) 
+			boolInsertIt=false
+		end
 	end
 	
+	if boolInsertIt==true then
+		GG.OnFire[#GG.OnFire+1]={}
+		GG.OnFire[#GG.OnFire][1]=id
+		GG.OnFire[#GG.OnFire][2]=math.ceil(timeOnFire) 
+	end			
+end
+
 
 -->Attack Nearest Non-Gaia Enemy
 function defaultEnemyAttack(unitID,SignalMask, delayTime)
 	Signal(SIG_DEFAULT)
 	SetSignalMask(SIG_DEFAULT)
-	gaiaTeam=Spring.GetUnitTeam(unitID)
+	gaiaTeam=Spring.GetGaiaTeamID()
 	Sleep(15000)
 	delayTime=delayTime or 1500
 	
@@ -544,6 +544,51 @@ function defaultEnemyAttack(unitID,SignalMask, delayTime)
 	end
 end
 
+-->Attack Nearest Non-Gaia Enemy if in a grop of size
+function defaultEnemyGroupAttack(unitID,SignalMask, delayTime,range, groupsize)
+	Signal(SIG_DEFAULT)
+	SetSignalMask(SIG_DEFAULT)
+	gaiaTeam=Spring.GetGaiaTeamID()
+	delayTime=delayTime or 1500
+	
+	while true do
+		Sleep(delayTime)
+		T=getAllNearUnit(unitID,range)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		if T and table.getn(T)> groupsize then
+			ed=Spring.GetUnitNearestEnemy(unitID)
+			if ed and Spring.GetUnitTeam(ed) ~= gaiaTeam then
+				x,y,z=Spring.GetUnitPosition(ed)	
+			end
+		else
+			ad=Spring.GetUnitNearestAlly(unitID)
+			x,y,z=Spring.GetUnitPosition(ad)
+		end
+		Spring.SetUnitMoveGoal(unitID,x,y,z)
+	end
+end
+
+function groupHivebehaviour(unitID,SIG_DEFAULT,range,groupsize,defaultdelay)
+	defaultdelay=defaultdelay or 100
+	if not GG.AI_HiveAgentIndepentT then GG.AI_HiveAgentIndepentT={}end
+	if not GG.AI_HiveAgentIndepentT[myTeamID] then GG.AI_HiveAgentIndepentT[myTeamID]={}end
+	GG.AI_HiveAgentIndepentT[myTeamID][myID]=false
+	boolSemaphore=false
+	
+	while true do
+		if GG.AI_HiveAgentIndepentT[myTeamID][myID] == false then
+			if boolSemaphore==false then
+				boolSemaphore=true
+				StartThread(defaultEnemyGroupAttack,unitID,SIG_DEFAULT,500,range,groupsize)
+			end
+		else
+			Signal(SIG_DEFAULT)
+			boolSemaphore=false
+			
+		end
+		Sleep(defaultdelay)
+	end
+end
 --=======================================Tech Tree=============================================================
 
 function getCombinNewTechTree()
@@ -616,11 +661,11 @@ function createTechTree(teams)
 end
 
 function getDayTime()
-		DAYLENGTH=28800
-		Frame=(Spring.GetGameFrame() + (DAYLENGTH/2))%DAYLENGTH
-
-		hours=math.floor((Frame/DAYLENGTH)*24)
-		minutes=math.ceil((((Frame/DAYLENGTH)*24)-hours)*60)		
-		seconds= 60 - ((24*60*60 -(hours*60*60) -(minutes*60))%60)
-return hours,minutes,seconds
+	DAYLENGTH=28800
+	Frame=(Spring.GetGameFrame() + (DAYLENGTH/2))%DAYLENGTH
+	
+	hours=math.floor((Frame/DAYLENGTH)*24)
+	minutes=math.ceil((((Frame/DAYLENGTH)*24)-hours)*60)		
+	seconds= 60 - ((24*60*60 -(hours*60*60) -(minutes*60))%60)
+	return hours,minutes,seconds
 end

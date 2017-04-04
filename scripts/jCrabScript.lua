@@ -39,7 +39,8 @@ RearLeg={
 }
 
 function script.Create()
-	StartThread(defaultEnemyAttack, unitID, SIG_DEFAULT, 25000)
+	StartThread(groupHivebehaviour, unitID, SIG_DEFAULT,250,3)
+
 end
 
 function frontLeg(nr,inverter)

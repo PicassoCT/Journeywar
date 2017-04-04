@@ -425,5 +425,6 @@ function script.Create()
 	Soundname="sounds/jGeoCreeper/jBugSpawn"..i..".wav"
 	Spring.PlaySoundFile(Soundname) 
 	StartThread(animationLoop)
-	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
+	StartThread(groupHivebehaviour, unitID, SIG_DEFAULT,250,3)
+
 end

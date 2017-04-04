@@ -17,8 +17,10 @@ SIG_LEG=4
 SIG_AIM2 = 8
 SIG_DEFAULT=32
 function script.Create()
-	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 33000)
+	StartThread(groupHivebehaviour, unitID, SIG_DEFAULT,250,3)
 end
+
+
 
 function legs_down()
 	SetSignalMask(SIG_LEG)
@@ -139,13 +141,13 @@ end
 
 function script.StartMoving()
 	StartThread(walk)
-
+	
 end
 
 function script.StopMoving()
 	Signal(SIG_WALK)
 	StartThread(legs_down)
-
+	
 end
 
 

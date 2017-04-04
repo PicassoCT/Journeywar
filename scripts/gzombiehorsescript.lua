@@ -744,7 +744,8 @@ function script.Create()
 			end
 		end
 	end
-	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
+	
+	StartThread(groupHivebehaviour, unitID, SIG_DEFAULT,250,3)
 end
 
 local animCmd = {['turn']=Turn,['move']=Move};

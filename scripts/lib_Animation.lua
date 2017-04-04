@@ -273,6 +273,11 @@ function turnSyncInTimeT(Table, times,x_deg,y_deg,z_deg)
 	
 end
 
+function checkPiece(unitID, piecenameOrNumber)
+pieceList= Spring.GetUnitPieceList(unitID)
+return pieceList[piecenameOrNumber] ~= nil, pieceList
+end
+
 --> move a Piece  to all 3 axis at once 
 function mP(piecename,x_val,y_val,z_val,speed,boolWait)
 	if boolWait then

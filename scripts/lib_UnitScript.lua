@@ -1812,6 +1812,10 @@ function sumNormVector(v)
 	return {x=v.x/sum ,y=v.y/sum,z=v.z/sum}
 end
 
+function blendVector(fac,vA,vB)
+fac=math.min(1.0,math.max(0.0,fac))
+return addVector(mulVector(vA,fac),mulVector(vB,1-fac))
+end
 function solveSpring(s, sucessor, frictionConstant)
 	
 	
