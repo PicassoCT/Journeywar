@@ -223,12 +223,12 @@ function PEAK(monsterID, enemyID,Time,mteam, factor)
 	if math.random(0,1)==0 then
 		eteam=Spring.GetUnitTeam(enemyID)
 		ex,ez=findBiggestCluster(eteam)
-		return false, 
+		return false 
 	else
 		ad=Spring.GetUnitNearestAlly(enemyID)
 		ex,ey,ez=Spring.GetUnitPosition(ad)
 		ex,ey,ez=sanitizeCoords(ex,ey,ez)
-		return false,
+		return false
 	end
 	
 end
@@ -375,7 +375,7 @@ function setStateDependantMoveGoal(unitID,enemyID,times,teamID, times,totalTable
 	if not GG.AI_HiveAgentIndepentT[myTeam] then GG.AI_HiveAgentIndepentT[myTeam]={}end
 	GG.AI_HiveAgentIndepentT[myTeam][monsterid]=boolHiveMindActive
 	
-	if ex then
+	if boolHiveMindActive == true and ex then
 		StartThread(markPosOnMap,ex,ey,ez,"greenlight")						
 		spSetUnitMoveGoal(monsterid,ex,ey,ez)
 	end

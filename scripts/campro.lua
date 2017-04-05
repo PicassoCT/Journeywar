@@ -100,22 +100,19 @@ function script.Killed(recentDamage, maxHealth)
 	Explode(amturret,SFX.FIRE +SFX.FALL)
 	x,_,z=Spring.GetUnitPosition(unitID)
 	defID=UnitDefNames["campro"].id
-	
+	T2=getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	tooClose=getAllInCircle(x,z,190, unitID)
 	process( tooClose,
 	function(id)
-		if Spring.GetUnitDefID(id)== UnitDefNames["campro"].id then 
-			return nil
-		else 
+		if Spring.GetUnitDefID(id)~= UnitDefNames["campro"].id then 
+
 			return id
 		end
 	end,
 	function(id)
-		def=Spring.GetUnitDefID(id, T2) 
-		if T2[def] then
-			return false 
-		else
-			return true
+		def=Spring.GetUnitDefID(id) 
+		if not T2[def] then
+			return id 
 		end
 	end,
 	function(id)

@@ -3,6 +3,103 @@ VFS.Include("scripts/lib_UnitScript.lua")
 VFS.Include("scripts/lib_Build.lua")
 
 
+MetaMapResDivider = 48
+lMapX=Game.mapSizeX/MetaMapResDivider
+lMapZ=Game.mapSizeZ/MetaMapResDivider
+	_,extrema= 	Spring.GetGroundExtremes()
+	MaxFood=150
+
+function initLandScapeTable()
+	
+	local	localLandScapeTable={}
+	localLandScapeTable.ResX= lMapX
+	localLandScapeTable.ResZ= lMapZ
+	localLandScapeTable.ResolutionFactor =MetaMapResDivider
+	
+	for x=1,math.ceil(lMapX), 1 do
+		localLandScapeTable[x]={}
+		
+		for z =1, math.ceil(lMapZ),1 do
+			
+			xValue= x*MetaMapResDivider
+			zValue= z*MetaMapResDivider
+			groundHeigth= Spring.GetGroundHeight(zValue,xValue)
+			
+			localLandScapeTable[x][z]={}
+			localLandScapeTable[x][z].boolBurning=false
+			localLandScapeTable[x][z].Food= getAmountFlamableMaterial( zValue, xValue)
+			localLandScapeTable[x][z].y= groundHeigth
+			localLandScapeTable[x][z].AccumulatedHeat= 0
+			localLandScapeTable[x][z].boolShielded = false
+			
+		end
+	end
+	--plotLanscapeTable(localLandScapeTable)
+	GG.LandScapeT =	localLandScapeTable
+	GG.LandScapeT.setAreaEffect = setAreaEffect
+end
+
+function getAmountFlamableMaterial(x,z)
+	nx,ny,nz=Spring.GetGroundNormal(x,z)
+	nx,ny,nz=math.abs(nx),math.abs(ny),math.abs(nz)
+	norm=math.sqrt(nx*nx+ny*ny+nz*nz)
+	nx,ny,nz= nx/norm,ny/norm,nz/norm
+	terrainflatFactor=ny/(math.max(math.abs(nx)+math.abs(nz),0.1))
+	
+	if ny < 0.5 then terrainflatFactor=0 end
+	T=Spring.GetFeaturesInCylinder(x,z,MetaMapResDivider)
+	T=#T
+	featureFactor=T+1 or 1
+	h=Spring.GetGroundHeight(x,z)
+	Groundfactor=0
+	if h-15 > 0 then Groundfactor= (1-(math.log(h)/math.log(extrema))) end
+	if Groundfactor >0.7 then Groundfactor=0 else Groundfactor=Groundfactor*15 end
+	
+	return math.min(150*terrainflatFactor*featureFactor*Groundfactor ,MaxFood)
+end
+
+function setAreaEffect(px,pz, Range, sfxFunction)
+	if not GG.LandScapeT then initLandScapeTable() end
+	if not px then Sping.Echo("jw_forrestfirst:setAreaEffect:Coordinates are nil and void"); return false end 
+	
+	local areaEffectFunction=sfxFunction
+	local RangeX=Range/lMapX
+	local RangeZ=Range/lMapZ
+	local mapResX = GG.LandScapeT.ResX
+	local mapResZ = GG.LandScapeT.ResZ
+	--midpoint
+	midX = px/mapResX
+	midZ = pz/mapResZ
+	
+	limx=math.min(math.max(1,math.ceil(px/mapResX)),mapResX)
+	limz=math.min(math.max(1,math.ceil(pz/mapResZ)),mapResZ)
+	
+	for x=math.max(1,limx-RangeX),math.min(lMapX,math.ceil(limx+RangeX)), 1 do
+		for z=math.max(1,limz-RangeZ),math.min(lMapZ,math.ceil(limz+RangeZ)), 1 do
+			
+			dist =math.sqrt((x -midX)*(x -midX) + (z-midZ)*(z-midZ))
+			if dist < Range then
+				if not GG.LandScapeT[x] then 	GG.LandScapeT[x] ={} end
+				if not GG.LandScapeT[x][z] then 
+					GG.LandScapeT[x][z] ={}
+					GG.LandScapeT[x][z].boolBurning=false
+					GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
+					GG.LandScapeT[x][z].y= groundHeigth
+					GG.LandScapeT[x][z].AccumulatedHeat= 0
+					GG.LandScapeT[x][z].boolShielded = false
+				end
+				
+				GG.LandScapeT[x][z]=areaEffectFunction(GG.LandScapeT[x][z])
+				GG.LandScapeT[x][z].y= Spring.GetGroundHeight(x*mapResX,z*mapResZ)
+			end
+		end
+	end
+	
+end
+
+  
+		
+
 AgentTable={}
 local distance=approxDist
 --Constants
@@ -431,14 +528,16 @@ end
 
 --Map encoding
 -- 0 Water --1 Grass --2 Grass Goone -- 3 Meat
-local spGetHeight=Spring.GetGroundHeight
 
 
 function clampR(x, resolution)
 	return math.floor(math.min(math.max(1,x/resolution),resolution)	)
 end
 
+	
+	
 function getMap(x,z)
+	if not GG.LandScapeT then initLandScapeTable() end
 	local xRes = GG.LandScapeT.ResX
 	local zRes = GG.LandScapeT.ResZ
 	

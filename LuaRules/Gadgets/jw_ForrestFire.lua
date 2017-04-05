@@ -1,9 +1,8 @@
 
-
 function gadget:GetInfo()
 	function isPlanetFlammeable()
 		Spring.Echo(Game.mapHardness,Game.windMin,Game.gravity, Game.waterDamage)
-		if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 30  then
+		if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 30 then
 			badwordsTable={"cold","ice","frost","dessert","sand","dune","moon","comet","red","planet"} 
 			for i=1, #badwordsTable,1 do 
 				if string.find(Game.mapName, badwordsTable[i]) then 
@@ -13,7 +12,7 @@ function gadget:GetInfo()
 			Spring.Echo("ForrestFire:Gadget is activated")
 			return true 
 		end
-			Spring.Echo("ForrestFire:Gadget is deactivated")
+		Spring.Echo("ForrestFire:Gadget is deactivated")
 		return false
 	end
 	
@@ -37,117 +36,24 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_UnitScript.lua" )
 	VFS.Include("scripts/lib_jw.lua" 	)
 	VFS.Include("scripts/lib_Build.lua" 	)
-	
-	local MetaMapResDivider = 48
-	--Food
-	--AccumulatedHeat
-	
-	windVector={x=5,z=10}
-	InHeat=25
-	costPerFrame=10
-	--x --z
-	local fireT={}
-	--TestData DelMe	
-	
-	--TestData DelMe
-	local fireCounter=1	
-	local mapX=Game.mapSizeX/MetaMapResDivider
-	local mapZ=Game.mapSizeZ/MetaMapResDivider
-	local PointOfIgnition=120
-	
-	local counter=1
-	local delayMap={}
-	local bigdelayMap={}
-	
 	local spGetGroundHeight=Spring.GetGroundHeight
 	local spGetGroundNormal=Spring.GetGroundNormal
 	local spSpawnCEG=Spring.SpawnCEG
-	_,extrema= 	Spring.GetGroundExtremes()
-	MaxFood=150
-	--testcase
+	MetaMapResDivider = 48
+	lMapX=Game.mapSizeX/MetaMapResDivider
+	lMapZ=Game.mapSizeZ/MetaMapResDivider
 	
-	
-	function plotLanscapeTable(tableP)
-		
-		for x=1,tableP.ResX do
-			RowString=""
-			
-			for z=1, tableP.ResZ do
-				boolprintOnce=true
-				if not tableP[x][z] then RowString =RowString.."X";boolprintOnce=false end
-				
-				if boolprintOnce==true and	tableP[x][z].y < 0 then RowString =RowString.."S" ;boolprintOnce=false ; end
-				
-				if boolprintOnce==true and	tableP[x][z].Food > 0 then 
-					
-					if boolprintOnce== true and tableP[x][z].Food > 100 then				
-						RowString= RowString..":";boolprintOnce=false;
-					elseif boolprintOnce== true and tableP[x][z].Food > 50 then			
-						RowString= RowString..";";boolprintOnce=false;
-					elseif boolprintOnce== true and tableP[x][z].Food > 25 then			
-						RowString= RowString..".";boolprintOnce=false;
-					end		
-				end		
-				
-			end
-			
-			Spring.Echo("| "..RowString.." |")
-		end
-		
-	end
-	
-		
- function setAreaEffect(px,pz, Range, sfxFunction)
-		if not GG.LandScapeT then init() end
-		if not px then Sping.Echo("jw_forrestfirst:setAreaEffect:Coordinates are nil and void"); return false end 
-		
-		local areaEffectFunction=sfxFunction
-		local RangeX=Range/mapX
-		local RangeZ=Range/mapZ
-		local mapResX = GG.LandScapeT.ResX
-		local mapResZ = GG.LandScapeT.ResZ
-		--midpoint
-		midX = px/mapResX
-		midZ = pz/mapResZ
-		
-		limx=math.min(math.max(1,math.ceil(px/mapResX)),mapResX)
-		limz=math.min(math.max(1,math.ceil(pz/mapResZ)),mapResZ)
-
-		for x=math.max(1,limx-RangeX),math.min(mapX,math.ceil(limx+RangeX)), 1 do
-			for z=math.max(1,limz-RangeZ),math.min(mapZ,math.ceil(limz+RangeZ)), 1 do
-			
-				dist =math.sqrt((x -midX)*(x -midX)  + (z-midZ)*(z-midZ))
-				if dist < Range then
-				if not GG.LandScapeT[x] then 	GG.LandScapeT[x] ={} end
-					if not GG.LandScapeT[x][z]  then 
-						GG.LandScapeT[x][z]  ={}
-						GG.LandScapeT[x][z].boolBurning=false
-						GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
-						GG.LandScapeT[x][z].y= groundHeigth
-						GG.LandScapeT[x][z].AccumulatedHeat= 0
-						GG.LandScapeT[x][z].boolShielded = false
-					end
-				
-				GG.LandScapeT[x][z]=areaEffectFunction(GG.LandScapeT[x][z])
-				GG.LandScapeT[x][z].y= spGetGroundHeight(x*mapResX,z*mapResZ)
-				end
-			end
-		end
-	
-	end
-	
-	
-	function init()
+	function initLandScapeTable()
 		
 		local	localLandScapeTable={}
-		localLandScapeTable.ResX= mapX
-		localLandScapeTable.ResZ= mapZ
+		localLandScapeTable.ResX= lMapX
+		localLandScapeTable.ResZ= lMapZ
 		localLandScapeTable.ResolutionFactor =MetaMapResDivider
 		
-		for x=1,math.ceil(mapX), 1 do
+		for x=1,math.ceil(lMapX), 1 do
 			localLandScapeTable[x]={}
 			
-			for z =1, math.ceil(mapZ),1 do
+			for z =1, math.ceil(lMapZ),1 do
 				
 				xValue= x*MetaMapResDivider
 				zValue= z*MetaMapResDivider
@@ -155,7 +61,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				localLandScapeTable[x][z]={}
 				localLandScapeTable[x][z].boolBurning=false
-				localLandScapeTable[x][z].Food= amountFlamableMaterial( zValue, xValue)
+				localLandScapeTable[x][z].Food= getAmountFlamableMaterial( zValue, xValue)
 				localLandScapeTable[x][z].y= groundHeigth
 				localLandScapeTable[x][z].AccumulatedHeat= 0
 				localLandScapeTable[x][z].boolShielded = false
@@ -167,7 +73,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		GG.LandScapeT.setAreaEffect = setAreaEffect
 	end
 	
-	function amountFlamableMaterial(x,z)
+	function getAmountFlamableMaterial(x,z)
 		nx,ny,nz=spGetGroundNormal(x,z)
 		nx,ny,nz=math.abs(nx),math.abs(ny),math.abs(nz)
 		norm=math.sqrt(nx*nx+ny*ny+nz*nz)
@@ -186,7 +92,72 @@ if (gadgetHandler:IsSyncedCode()) then
 		return math.min(150*terrainflatFactor*featureFactor*Groundfactor ,MaxFood)
 	end
 	
-	if not GG.LandScapeT then init() end
+	function setAreaEffect(px,pz, Range, sfxFunction)
+		if not GG.LandScapeT then initLandScapeTable() end
+		if not px then Sping.Echo("jw_forrestfirst:setAreaEffect:Coordinates are nil and void"); return false end 
+		
+		local areaEffectFunction=sfxFunction
+		local RangeX=Range/lMapX
+		local RangeZ=Range/lMapZ
+		local mapResX = GG.LandScapeT.ResX
+		local mapResZ = GG.LandScapeT.ResZ
+		--midpoint
+		midX = px/mapResX
+		midZ = pz/mapResZ
+		
+		limx=math.min(math.max(1,math.ceil(px/mapResX)),mapResX)
+		limz=math.min(math.max(1,math.ceil(pz/mapResZ)),mapResZ)
+		
+		for x=math.max(1,limx-RangeX),math.min(lMapX,math.ceil(limx+RangeX)), 1 do
+			for z=math.max(1,limz-RangeZ),math.min(lMapZ,math.ceil(limz+RangeZ)), 1 do
+				
+				dist =math.sqrt((x -midX)*(x -midX) + (z-midZ)*(z-midZ))
+				if dist < Range then
+					if not GG.LandScapeT[x] then 	GG.LandScapeT[x] ={} end
+					if not GG.LandScapeT[x][z] then 
+						GG.LandScapeT[x][z] ={}
+						GG.LandScapeT[x][z].boolBurning=false
+						GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
+						GG.LandScapeT[x][z].y= groundHeigth
+						GG.LandScapeT[x][z].AccumulatedHeat= 0
+						GG.LandScapeT[x][z].boolShielded = false
+					end
+					
+					GG.LandScapeT[x][z]=areaEffectFunction(GG.LandScapeT[x][z])
+					GG.LandScapeT[x][z].y= spGetGroundHeight(x*mapResX,z*mapResZ)
+				end
+			end
+		end
+		
+	end
+	
+	
+	
+	
+	--Food
+	--AccumulatedHeat
+	
+	windVector={x=5,z=10}
+	InHeat=25
+	costPerFrame=10
+	--x --z
+	local fireT={}
+	--TestData DelMe	
+	
+	--TestData DelMe
+	local fireCounter=1	
+	
+	local PointOfIgnition=120
+	
+	local counter=1
+	local delayMap={}
+	local bigdelayMap={}
+	
+	
+	_,extrema= 	Spring.GetGroundExtremes()
+	MaxFood=150
+	
+	
 	
 	--SETUP	
 	function addRareSFX()
@@ -196,12 +167,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	function gadget:Explosion(weaponID, px, py, pz, AttackerID)
 	end
 	
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam) 
 	end
 	
 	local bigFireTable={}
 	
 	function mergeSmallFiresToPermaFire()
+		if not GG.LandScapeT then initLandScapeTable() end
 		local LT=GG.LandScapeT
 		
 		for x=2,#LT-1,3 do
@@ -231,15 +203,16 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 	end
-
+	
 	
 	function addFiresFromGG()
+		if not GG.LandScapeT then initLandScapeTable() end
 		local LandScapeT= GG.LandScapeT
 		if not GG.AddFire then GG.AddFire={} end
 		
 		for i=1,#GG.AddFire,1 do
-		groundHeigth = spGetGroundHeight(GG.AddFire[i].x,GG.AddFire[i].z)
-		if groundHeigth >= 0 then	 
+			groundHeigth = spGetGroundHeight(GG.AddFire[i].x,GG.AddFire[i].z)
+			if groundHeigth >= 0 then	 
 				xClamped=clamp(math.ceil(GG.AddFire[i].x/MetaMapResDivider),1,LandScapeT.ResX)
 				zClamped=clamp(math.ceil(GG.AddFire[i].z/MetaMapResDivider),1,LandScapeT.ResZ)
 				
@@ -332,8 +305,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		X,Z=math.floor(X+wX),math.floor(Z+wZ)
 		
 		
-		startX,endX=math.max(1,X-1),math.min(X+1,mapX)
-		startZ,endZ=math.max(1,Z-1),math.min(Z+1,mapZ)
+		startX,endX=math.max(1,X-1),math.min(X+1,lMapX)
+		startZ,endZ=math.max(1,Z-1),math.min(Z+1,lMapZ)
 		for x=startX,endX,1 do
 			for z=startZ,endZ,1 do
 				if LandScapeT[x][z].boolShielded == false and math.abs(fireT[nr].y- LandScapeT[x][z].y) < 60 then 
@@ -376,7 +349,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			LandScapeT[ x][ z].AccumulatedHeat =		LandScapeT[ x][ z].AccumulatedHeat+InHeat
 			addHeatToSurroundingArea(i,LandScapeT[ x][ z].AccumulatedHeat)
 			
-			if LandScapeT[ x][ z].boolShielded== true or LandScapeT[ x][ z].Food < 0   then 
+			if LandScapeT[ x][ z].boolShielded== true or LandScapeT[ x][ z].Food < 0 then 
 				
 				LandScapeT[ x][ z].boolBurning=false
 				table.remove(fireT,i);

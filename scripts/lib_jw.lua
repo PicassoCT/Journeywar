@@ -1,6 +1,5 @@
 
 
-
 --===================================================================================================================
 --Journeywar specific functions 
 --> creates a table from names to check unittypes against
@@ -545,16 +544,16 @@ function defaultEnemyAttack(unitID,SignalMask, delayTime)
 end
 
 -->Attack Nearest Non-Gaia Enemy if in a grop of size
-function defaultEnemyGroupAttack(unitID,SignalMask, delayTime,range, groupsize)
-	Signal(SIG_DEFAULT)
-	SetSignalMask(SIG_DEFAULT)
+function defaultEnemyGroupAttack(unitID, delayTime,range, groupsize)
+	
 	gaiaTeam=Spring.GetGaiaTeamID()
 	delayTime=delayTime or 1500
 	
 	while true do
 		Sleep(delayTime)
-		T=getAllNearUnit(unitID,range)
 		x,y,z=Spring.GetUnitPosition(unitID)
+		T=Spring.GetUnitsInCylinder(x,y,range)
+
 		if T and table.getn(T)> groupsize then
 			ed=Spring.GetUnitNearestEnemy(unitID)
 			if ed and Spring.GetUnitTeam(ed) ~= gaiaTeam then
@@ -568,27 +567,9 @@ function defaultEnemyGroupAttack(unitID,SignalMask, delayTime,range, groupsize)
 	end
 end
 
-function groupHivebehaviour(unitID,SIG_DEFAULT,range,groupsize,defaultdelay)
-	defaultdelay=defaultdelay or 100
-	if not GG.AI_HiveAgentIndepentT then GG.AI_HiveAgentIndepentT={}end
-	if not GG.AI_HiveAgentIndepentT[myTeamID] then GG.AI_HiveAgentIndepentT[myTeamID]={}end
-	GG.AI_HiveAgentIndepentT[myTeamID][myID]=false
-	boolSemaphore=false
-	
-	while true do
-		if GG.AI_HiveAgentIndepentT[myTeamID][myID] == false then
-			if boolSemaphore==false then
-				boolSemaphore=true
-				StartThread(defaultEnemyGroupAttack,unitID,SIG_DEFAULT,500,range,groupsize)
-			end
-		else
-			Signal(SIG_DEFAULT)
-			boolSemaphore=false
-			
-		end
-		Sleep(defaultdelay)
-	end
-end
+
+--=======================================LandscapeTable=============================================================
+
 --=======================================Tech Tree=============================================================
 
 function getCombinNewTechTree()

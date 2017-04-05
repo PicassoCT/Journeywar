@@ -9,7 +9,7 @@ include "lib_Build.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
 center=piece"center"
-BaseLow=piece"BaseLow"
+
 
 piecesTable={}
 piecesTable[#piecesTable+1]={}
@@ -152,7 +152,7 @@ function osLoop()
 	
 	WaitForMove(Base,y_axis)
 	Hide(Base)
-	Hide(BaseLow)
+
 	Spring.DestroyUnit(unitID,false,true)
 end
 MaxTime=9*60*1000

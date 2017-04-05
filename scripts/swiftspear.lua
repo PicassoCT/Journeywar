@@ -490,10 +490,7 @@ boolLookAtTheTime=false
 	      GG.Prego[table.getn(GG.Prego)][1]=passengerID
 	      GG.Prego[table.getn(GG.Prego)][2]=teamID
 		 end
-			-- else
-			-- AttachUnit(body, passengerID)
-			-- Spring.SetUnitNoDraw(passengerID,true) 
-			-- end
+
 
 			SetUnitValue(COB.BUSY, 0)
 			StartThread(potencyReloader)
@@ -507,7 +504,7 @@ boolLookAtTheTime=false
 			--post coital function is ankward
 
 		
-			
+			if Spring.GetUnitIsDead(passengerID)==true then  return end
 			
 			SetUnitValue(COB.BUSY, 1)
 			

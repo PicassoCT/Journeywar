@@ -219,9 +219,19 @@ function reset(piecename,lspeed,boolWaitForIT)
 end
 
 -->counterturns a piece pair
-function equiTurn(p1,p2,axis,deg,speed)
-	Turn(p1,axis,math.rad(deg),speed)
-	Turn(p2,axis,math.rad(-1*deg),speed)
+function equiTurn(p1,p2,axis,degv,speed)
+	Turn(p1,axis,math.rad(degv),speed)
+	Turn(p2,axis,math.rad(-1*degv),speed)
+end
+
+function breath(p1,p2,axis,degv,speed,itteration, speedreduce)
+for i=1, itteration do
+ equiTurn(p1,p2,axis,degv,speed)
+ WaitForTurns(p1,p2)
+ equiTurn(p1,p2,axis,degv*-1,speed)
+  WaitForTurns(p1,p2)
+  speed=speed -speedreduce
+end
 end
 
 --> Turns a piece in all 3 axis and waits for it

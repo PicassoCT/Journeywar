@@ -66,7 +66,7 @@ local unitDef = {
 		"condepot","fclvlone","cairbase",
 		"cdistrictnone","buibaicity2","buibaicity1",
 		"crailgun","sentry","bonker",
-		"cdefusermine",	"chopper","combinedfeature",
+		"cdefusermine",	"chopper","cwatchpost",
 		"efence","comendbonker","ctransithub"
 	},
 	

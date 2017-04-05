@@ -10,7 +10,7 @@ SIG_AIM=2
 SIG_WALK=4
 SIG_TAKEAIM=8
 SIG_GUARD=16
-SIG_RESET=32
+
 SIG_AIMWEAPON=64
 local pi=3.14159
 
@@ -99,24 +99,46 @@ piecesTable[#piecesTable+1]= tllowlr
 gun = piece"gun"
 
 piecesTable[#piecesTable+1]= gun
-
+field3=piece"field3"
 armrotator=piece"armrotator"
+field1x=0
+field1y=0
+field3x=0
+field3y=0
+function fieldLoop()
+	Hide(field1)
+	Show(field3)
+	speed=60
+	startFrame=Spring.GetGameFrame()
+	while(true) do
+		if math.random(0,1)==1 then Show(field1);Hide(field3)else Show(field3);Hide(field1)end
+		if math.random(0,2)==1 then Show(field1);Show(field3)end
 
-
+		if math.random(0,1)==1 then Turn(field2,y_axis,math.rad(180),0) else Turn(field2,y_axis,math.rad(0),0) end
+		if math.random(0,1)==0 then	Turn(field3,y_axis,math.rad(180),0)else Turn(field3,y_axis,math.rad(0),0) end
+		if math.random(0,1)==0 then	Turn(field1,y_axis,math.rad(180),0)else Turn(field1,y_axis,math.rad(0),0) end
+		if math.random(0,1)==0 then	Turn(field3,z_axis,math.rad(180),0)else Turn(field3,z_axis,math.rad(0),0) end
+		if math.random(0,1)==0 then	Turn(field1,z_axis,math.rad(180),0)else Turn(field1,z_axis,math.rad(0),0) end
+		if math.random(0,1)==0 then field1x=math.min(0.20,math.max(-0.20,field1x+math.random(-100,100)/1000)) else Move(field1,x_axis,field1x)  end
+		if math.random(0,1)==0 then field1y=math.min(0.0125,math.max(-0.05,field1y+math.random(-100,100)/1000)) else Move(field1,y_axis,field1y)  end
+		
+		frame=Spring.GetGameFrame()
+		Sleep(speed)
+		speed=math.max(30,math.ceil(60)+math.cos(math.pi*(frame-startFrame)/900)*120)
+	end
+end
 
 function upLoop()
 	oldSpeed=math.random(3.141,19)
 	while(true) do
-		Turn(field1,y_axis,math.rad(180),0)
-		if math.random(0,1)==1 then Turn(field2,y_axis,math.rad(180),0) end
+		
 		Move(ballsbebou,y_axis,8,oldSpeed)
 		WaitForMove(ballsbebou,y_axis)
-		Turn(field1,y_axis,math.rad(0),0)
-		Turn(field2,y_axis,math.rad(0),0)
+		
 		newSpeed=math.random(3.141,19)
 		Move(ballsbebou,y_axis,-3,(newSpeed+oldSpeed*2)/3)
 		oldSpeed=newSpeed
-		Sleep(30)
+		Sleep(50)
 		WaitForMove(ballsbebou,y_axis)
 		
 	end
@@ -127,11 +149,10 @@ function sideLoop()
 	speed=0.9
 	
 	while true do
-		if math.random(0,1)==0 then	Turn(field1,z_axis,math.rad(180),0)end
+		
 		Move(ballsbebou,x_axis,0.9, speed)
 		WaitForMove(ballsbebou,x_axis)
 		speed=speed+math.random(0.1,0.3)
-		Turn(field1,z_axis,math.rad(0),0)
 		Move(ballsbebou,x_axis,-0.9, speed)
 		WaitForMove(ballsbebou,x_axis)
 		speed=speed-math.random(0.1,0.3)
@@ -145,8 +166,7 @@ function takeAim(pitch)
 	
 	pitch=math.rad(360)-pitch
 	----Spring.Echo(pitch)
-	SetSignalMask(SIG_TAKEAIM)
-	Turn(tigLil,y_axis,math.rad(18),0.028)
+
 	Turn(tllegLowR0,x_axis,math.rad(11),3.141)
 	Turn(tllegUpR01,x_axis,math.rad(-17),3.141)
 	Turn(tllegUpR,x_axis,math.rad(10),3.141)
@@ -180,7 +200,7 @@ function takeAim(pitch)
 	
 	WaitForTurn(armrotator,x_axis)
 end
-
+AimPiece2=piece"AimPiece2"
 function script.AimWeapon1(heading ,pitch) 
 	Signal(SIG_AIMWEAPON)
 	Signal(SIG_GUARD)
@@ -195,14 +215,16 @@ function script.AimWeapon1(heading ,pitch)
 	boolGuardWalking=false
 	----Spring.Echo("CombinedFeatureScript_AIMWEAPON1")	
 	
-	Signal(SIG_TAKEAIM)
+
 	
 	boolAiming=true
 	
-	Turn(tigLil,y_axis,heading)
+
+	Turn(tigLil,y_axis,heading + math.rad(-141+180),5)
 	takeAim(pitch)
 	WaitForTurn(tigLil,y_axis)
-	Signal(SIG_RESET)
+	--Spring.Echo("AimWeapon1:Completed")
+
 	StartThread(AimReseter)
 	return true
 end
@@ -210,15 +232,14 @@ end
 
 
 function AimReseter()
-	
-	SetSignalMask(SIG_RESET)
+
 	Sleep(6000)
 	boolAiming=false
 end
 
 function script.AimFromWeapon1()
 	
-	return gun 
+	return tigLil 
 end
 
 function script.QueryWeapon1()
@@ -248,20 +269,23 @@ function reLoader()
 	Sleep(3000)
 	boolLoaded=true
 end
+
 ------------------------------------------------------------
 function script.AimWeapon2(heading,pitch) 
-	
+
+	Turn(AimPiece2,y_axis,math.rad(180) ,0)
+
 	return boolLoaded
 	
 	
 end
 
 function script.AimFromWeapon2()
-	return gun
+	return tigLil
 end
 
 function script.QueryWeapon2()
-	return gun
+	return AimPiece2
 end
 
 function script.FireWeapon2() 
@@ -276,11 +300,13 @@ boolAiming=false
 boolGuardWalking=false	
 function setUp()
 	Turn(animCenter,y_axis,math.rad(141),0)
+		--Spring.Echo("setUp")
 end
 
 function reSume()
 	takeAim(-math.rad(15))
 	Turn(tigLil,y_axis,math.rad(0),3)
+		--Spring.Echo("Resume")
 	
 end
 function legsDown()
@@ -346,137 +372,140 @@ function legsDown()
 	end
 	
 end
-function walkAnimation(orgDegY)
+function walkAnimation(orgDegY,factor)
 	SetSignalMask(SIG_WALK)
-	
+		--Spring.Echo("Resume")
 	
 	while true do
 		----Spring.Echo("combinedFeatureScript::1")
 		--HeadBody
-		Turn(tlHead,y_axis,math.rad(17),3)
-		Turn(tlHead,z_axis,math.rad(-8),1.2)
-		Turn(tigLil,x_axis,math.rad(1.4),1.2)
-		Turn(tigLil,z_axis,math.rad(0.5),1)
+		Turn(tlHead,y_axis,math.rad(17),3*factor)
+		Turn(tlHead,z_axis,math.rad(-8),1.2*factor)
+		Turn(tigLil,x_axis,math.rad(1.4),1.2*factor)
+		Turn(tigLil,z_axis,math.rad(0.5),1*factor)
 		--Legs
-		Turn(tigLil,y_axis,math.rad(orgDegY-3),0.5)
-		Turn(tllegUpR,x_axis,math.rad(20),2.2)
-		Turn(tllegUpR,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR,z_axis,math.rad(11),1.8)
+		Turn(tigLil,y_axis,math.rad(orgDegY-5),0.5*factor)
+		Turn(tllegUpR,x_axis,math.rad(20),2.2*factor)
+		Turn(tllegUpR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR,z_axis,math.rad(11),1.8*factor)
 		
-		Turn(tllegLowR,x_axis,math.rad(-26),0.3)
-		Turn(tllegLowR,y_axis,math.rad(-6),0.3)
-		Turn(tllegLowR,z_axis,math.rad(0),1.2)
+		Turn(tllegLowR,x_axis,math.rad(-26),0.3*factor)
+		Turn(tllegLowR,y_axis,math.rad(-6),0.3*factor)
+		Turn(tllegLowR,z_axis,math.rad(0),1.2*factor)
 		
-		Turn(tllegUpR01,x_axis,math.rad(-26),1.3)
-		Turn(tllegUpR01,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR01,z_axis,math.rad(-6),0.3)
+		Turn(tllegUpR01,x_axis,math.rad(-26),1.3*factor)
+		Turn(tllegUpR01,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR01,z_axis,math.rad(-6),0.3*factor)
 		
-		Turn(tllegLowR0,x_axis,math.rad(-11),1.2)
-		Turn(tllegLowR0,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR0,z_axis,math.rad(-14),1.2)
+		Turn(tllegLowR0,x_axis,math.rad(-11),1.2*factor)
+		Turn(tllegLowR0,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR0,z_axis,math.rad(-14),1.2*factor)
 		
-		Sleep(220)
+		WaitForTurns(tllegLowR0,tllegUpR01,tllegLowR,tllegUpR,tlHead)
 		----Spring.Echo("combinedFeatureScript::2")
 		--HeadBody
-		Turn(tlHead,x_axis,math.rad(-19),1.2)
-		Turn(tlHead,y_axis,math.rad(-3),1.2)
-		Turn(tlHead,z_axis,math.rad(1),1.2)
-		Turn(tigLil,x_axis,math.rad(1.4),0.3)
-		Turn(tigLil,z_axis,math.rad(1.4),1.2)
+		Turn(tlHead,x_axis,math.rad(-19),1.2*factor)
+		Turn(tlHead,y_axis,math.rad(-3),1.2*factor)
+		Turn(tlHead,z_axis,math.rad(1),1.2*factor)
+		Turn(tigLil,x_axis,math.rad(1.4),0.3*factor)
+		Turn(tigLil,z_axis,math.rad(1.4),1.2*factor)
 		--Legs
-		Turn(tigLil,y_axis,math.rad(orgDegY),0.5)
-		Turn(tllegUpR,x_axis,math.rad(8),1.3)
-		Turn(tllegUpR,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR,z_axis,math.rad(11),1.5)
+		Turn(tigLil,y_axis,math.rad(orgDegY),0.5*factor)
+		Turn(tllegUpR,x_axis,math.rad(8),1.3*factor)
+		Turn(tllegUpR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR,z_axis,math.rad(11),1.5*factor)
 		
-		Turn(tllegLowR,x_axis,math.rad(-32),1.6)
-		Turn(tllegLowR,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR,z_axis,math.rad(3),1.2)
+		Turn(tllegLowR,x_axis,math.rad(-32),1.6*factor)
+		Turn(tllegLowR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR,z_axis,math.rad(3),1.2*factor)
 		
-		Turn(tllegUpR01,x_axis,math.rad(17),2.2)
-		Turn(tllegUpR01,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR01,z_axis,math.rad(-2),1.2)
+		Turn(tllegUpR01,x_axis,math.rad(17),2.2*factor)
+		Turn(tllegUpR01,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR01,z_axis,math.rad(-2),1.2*factor)
 		
-		Turn(tllegLowR0,x_axis,math.rad(-41),1.8)
-		Turn(tllegLowR0,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR0,z_axis,math.rad(20),1.2)
-		Sleep(520)
+		Turn(tllegLowR0,x_axis,math.rad(-41),1.8*factor)
+		Turn(tllegLowR0,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR0,z_axis,math.rad(20),1.2*factor)
+		WaitForTurns(tllegLowR0,tllegUpR01,tllegLowR,tllegUpR,tlHead,tigLil)
 		----Spring.Echo("combinedFeatureScript::3")
 		--HeadBody
-		Turn(tigLil,y_axis,math.rad(orgDegY+1),0.5)
-		Turn(tlHead,x_axis,math.rad(-7),1.2)
-		Turn(tlHead,y_axis,math.rad(-19),2.2)
-		Turn(tlHead,z_axis,math.rad(12),1.2)
-		Turn(tigLil,x_axis,math.rad(0),0.3)
-		Turn(tigLil,z_axis,math.rad(-1.4),1.2)
+		Turn(tigLil,y_axis,math.rad(orgDegY+5),0.5*factor)
+		Turn(tlHead,x_axis,math.rad(-7),1.2*factor)
+		Turn(tlHead,y_axis,math.rad(-19),2.2*factor)
+		Turn(tlHead,z_axis,math.rad(12),1.2*factor)
+		Turn(tigLil,x_axis,math.rad(0),0.3*factor)
+		Turn(tigLil,z_axis,math.rad(-1.4),1.2*factor)
 		--Legs
-		Turn(tllegUpR,x_axis,math.rad(-4),1.2)
-		Turn(tllegUpR,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR,z_axis,math.rad(3),1.2)
+		Turn(tllegUpR,x_axis,math.rad(-4),2.2*factor)
+		Turn(tllegUpR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR,z_axis,math.rad(3),1.2*factor)
 		
-		Turn(tllegLowR,x_axis,math.rad(0),1.2)
-		Turn(tllegLowR,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR,z_axis,math.rad(0),1.2)
+		Turn(tllegLowR,x_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR,z_axis,math.rad(0),1.2*factor)
 		
-		Turn(tllegUpR01,x_axis,math.rad(20),2.2)
-		Turn(tllegUpR01,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR01,z_axis,math.rad(-11),1.2)
+		Turn(tllegUpR01,x_axis,math.rad(20),2.2*factor)
+		Turn(tllegUpR01,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR01,z_axis,math.rad(-11),1.2*factor)
 		
-		Turn(tllegLowR0,x_axis,math.rad(-26),1.3)
-		Turn(tllegLowR0,y_axis,math.rad(-6),1.3)
-		Turn(tllegLowR0,z_axis,math.rad(0),1.2)
-		Sleep(320)
+		Turn(tllegLowR0,x_axis,math.rad(-26),2.3*factor)
+		Turn(tllegLowR0,y_axis,math.rad(-6),1.3*factor)
+		Turn(tllegLowR0,z_axis,math.rad(0),1.2*factor)
+		WaitForTurns(tllegLowR0,tllegUpR01,tllegLowR,tllegUpR,tlHead,tigLil)
 		
 		--HeadBody
-		Turn(tlHead,x_axis,math.rad(0),1.2)
-		Turn(tlHead,y_axis,math.rad(0),1.2)
-		Turn(tlHead,z_axis,math.rad(0),1.2)
-		Turn(tigLil,x_axis,math.rad(-1.4),0.3)
-		Turn(tigLil,z_axis,math.rad(0),1.2)
+		Turn(tlHead,x_axis,math.rad(0),1.2*factor)
+		Turn(tlHead,y_axis,math.rad(0),1.2*factor)
+		Turn(tlHead,z_axis,math.rad(0),1.2*factor)
+		Turn(tigLil,x_axis,math.rad(-1.4),0.3*factor)
+		Turn(tigLil,z_axis,math.rad(0),1.2*factor)
 		--Legs
-		Turn(tigLil,y_axis,math.rad(orgDegY+3),0.5)
-		Turn(tllegUpR,x_axis,math.rad(-26),1.3)
-		Turn(tllegUpR,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR,z_axis,math.rad(6),0.3)
+		Turn(tigLil,y_axis,math.rad(orgDegY),0.5*factor)
+		Turn(tllegUpR,x_axis,math.rad(-26),2.3*factor)
+		Turn(tllegUpR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR,z_axis,math.rad(6),0.3*factor)
 		
-		Turn(tllegLowR,x_axis,math.rad(-11),1.2)
-		Turn(tllegLowR,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR,z_axis,math.rad(14),1.2)
+		Turn(tllegLowR,x_axis,math.rad(-11),1.2*factor)
+		Turn(tllegLowR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR,z_axis,math.rad(14),1.2*factor)
 		
-		Turn(tllegUpR01,x_axis,math.rad(8),1.2)
-		Turn(tllegUpR01,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR01,z_axis,math.rad(-11),1.2)
+		Turn(tllegUpR01,x_axis,math.rad(8),2.2*factor)
+		Turn(tllegUpR01,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR01,z_axis,math.rad(-11),1.2*factor)
 		
-		Turn(tllegLowR0,x_axis,math.rad(-32),1.2)
-		Turn(tllegLowR0,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR0,z_axis,math.rad(-3),1.2)
-		Sleep(350)
+		Turn(tllegLowR0,x_axis,math.rad(-32),2.2*factor)
+		Turn(tllegLowR0,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR0,z_axis,math.rad(-3),1.2*factor)
+		WaitForTurns(tllegLowR0,tllegUpR01,tllegLowR,tllegUpR,tlHead,tigLil)
+		
 		----Spring.Echo("combinedFeatureScript::4")
 		--HeadBody
-		Turn(tigLil,y_axis,math.rad(orgDegY-1),0.5)
-		Turn(tlHead,x_axis,math.rad(-1),1.2)
-		Turn(tlHead,y_axis,math.rad(0),1.2)
-		Turn(tlHead,z_axis,math.rad(15),1.2)
-		Turn(tigLil,x_axis,math.rad(0),0.3)
-		Turn(tigLil,z_axis,math.rad(-2),1.2)
+		Turn(tigLil,y_axis,math.rad(orgDegY-5),0.5*factor)
+		Turn(tlHead,x_axis,math.rad(-1),1.2*factor)
+		Turn(tlHead,y_axis,math.rad(0),1.2*factor)
+		Turn(tlHead,z_axis,math.rad(15),1.2*factor)
+		Turn(tigLil,x_axis,math.rad(0),0.3*factor)
+		Turn(tigLil,z_axis,math.rad(-2),1.2*factor)
 		--Legs
-		Turn(tllegUpR,x_axis,math.rad(17),2.2)
-		Turn(tllegUpR,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR,z_axis,math.rad(2),1.2)
+		Turn(tllegUpR,x_axis,math.rad(17),2.2*factor)
+		Turn(tllegUpR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR,z_axis,math.rad(2),1.2*factor)
 		
-		Turn(tllegLowR,x_axis,math.rad(-41),1.5)
-		Turn(tllegLowR,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR,z_axis,math.rad(-20),1.2)
+		Turn(tllegLowR,x_axis,math.rad(-41),1.5*factor)
+		Turn(tllegLowR,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR,z_axis,math.rad(-20),1.2*factor)
 		
-		Turn(tllegUpR01,x_axis,math.rad(-4),1.2)
-		Turn(tllegUpR01,y_axis,math.rad(0),1.2)
-		Turn(tllegUpR01,z_axis,math.rad(-3),1.2)
+		Turn(tllegUpR01,x_axis,math.rad(-4),2.2*factor)
+		Turn(tllegUpR01,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegUpR01,z_axis,math.rad(-3),1.2*factor)
 		
-		Turn(tllegLowR0,x_axis,math.rad(0),1.2)
-		Turn(tllegLowR0,y_axis,math.rad(0),1.2)
-		Turn(tllegLowR0,z_axis,math.rad(0),1.2)
+		Turn(tllegLowR0,x_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR0,y_axis,math.rad(0),1.2*factor)
+		Turn(tllegLowR0,z_axis,math.rad(0),1.2*factor)
 		
-		Sleep(450)
+		WaitForTurns(tllegLowR0,tllegUpR01,tllegLowR,tllegUpR,tlHead,tigLil)
+		WaitForTurns(tllegLowR0,tllegUpR01,tllegLowR,tllegUpR,tlHead,tigLil)
+		Sleep(10)
 		
 	end
 	
@@ -557,11 +586,12 @@ function walkingTheGuard()
 	boolGuardWalking=true
 	SetSignalMask(SIG_GUARD)
 	setUp()
+	
 	reSume()
 	while true do
 		--Reseting it
 		Move(tigLil,y_axis,0,21)
-		StartThread(walkAnimation,0)
+		StartThread(walkAnimation,0,math.random(141,241)/100)
 		for i=1,56,1 do
 			Move(tigLil,z_axis,-i,3.2)
 			WaitForMove(tigLil,z_axis)
@@ -580,7 +610,7 @@ function walkingTheGuard()
 		Turn(tigLil,y_axis,math.rad(180),19)
 		WaitForTurn(tigLil,y_axis)
 		boolIDLE=idle("end")
-		StartThread(walkAnimation,180)
+		StartThread(walkAnimation,180,math.random(141,200)/100)
 		
 		Move(tigLil,y_axis,0,21)
 		
@@ -617,8 +647,11 @@ function guardOS()
 	setUp()
 	while true do
 		if boolAiming==false and boolGuardWalking==false then
+			Sleep(250)
+			if boolAiming==false and boolGuardWalking==false then
 			Signal(SIG_GUARD)
 			StartThread(walkingTheGuard)
+			end
 		end
 		
 		if boolAiming==true then
@@ -683,6 +716,8 @@ end
 xPos=0
 zPos=0
 function script.Create()
+	Hide(AimPiece2)
+
 	--generatepiecesTableAndArrayCode(unitID)
 	xPos,_,zPos=Spring.GetUnitPosition(unitID)
 	StartThread(guardOS)
@@ -690,6 +725,7 @@ function script.Create()
 	StartThread(sideLoop)
 	StartThread(upLoop)
 	StartThread(KillEggLoop)
+	StartThread(fieldLoop)
 end
 
 

@@ -8,6 +8,7 @@ include "lib_jw.lua"
 SHIELDRADIUS=850
 SHIELDNUMBER = 6
 SHIELD_COST_REFLECT_UNIT = 5
+ENERGY_COST_REFLECT_UNIT = 35
 
 boolPressedButtonTwice=false
 PortalEmit=piece"PortalEmit"
@@ -1108,38 +1109,34 @@ function shieldDraw()
 				
 				T=SubSetFromSet(T,N)
 				
-				T = filterOutBuilding(T,UnitDefs)
-				T = filterOutImmobile(T,UnitDefs)			
+				T = filterBuilding(T,UnitDefs,true)
+				T = filterImmobile(T,UnitDefs,true)			
 				
 				
 				factor=10
 				impulsfactor= 6
 				if T then
 					for k,v in pairs(T) do
-						if k then
-							tx,ty,tz=Spring.GetUnitPosition( k )
+						if v then
+							tx,ty,tz=Spring.GetUnitPosition( v )
 							tx,ty,tz=tx-cx,ty-cy,tz-cz
 							norm=math.sqrt(tx*tx+ ty*ty + tz*tz)
 							tx,ty,tz= 	tx/norm,ty/norm,tz/norm
 							
 							if maRa()==true then
-								spawnCEGatUnit( k , "cshieldsparks", math.random(-15,15),math.random(5,25), math.random(-15,15))
+								spawnCEGatUnit( v , "cshieldsparks", math.random(-15,15),math.random(5,25), math.random(-15,15))
 							end
 							
 							dx,dy,dz = tx*impulsfactor,ty*impulsfactor,tz*impulsfactor
-							Spring.AddUnitImpulse( k , dx,dy,dz)
-							
-							Spring.AddUnitDamage( k ,12, 1400, unitID, -1, factor*tx,factor*ty,factor*tz)
-							
-							enabled, shieldpower = Spring.GetUnitShieldState(unitID,SHIELDNUMBER)
-							
+							Spring.AddUnitImpulse( v , dx,dy,dz)
+							Spring.AddUnitDamage( v ,12, 1400, unitID, -1, factor*tx,factor*ty,factor*tz)
+							boolPaidForIt = Spring.UseUnitResource(unitID,"e",ENERGY_COST_REFLECT_UNIT)
+							enabled, shieldpower = Spring.GetUnitShieldState(unitID,SHIELDNUMBER)							
 							Spring.SetUnitShieldState(unitID,SHIELDNUMBER, true, shieldpower - SHIELD_COST_REFLECT_UNIT)
-							if (enabled == false or shieldpower <= 0 ) then 
+							if boolPaidForIt == false then
 								boolShield = false 
 								SetUnitValue(COB.ACTIVATION, 0)
-								break
 							end
-							
 						end
 					end		
 					

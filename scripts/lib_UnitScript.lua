@@ -2852,7 +2852,7 @@ function vardump(value, depth, key)
 		if Cache then
 			returnTable={}
 		for num,id in pairs(T) do 
-				if Cache[id] and Cache[id]==true or Table[id]and not UnitTypeTable[Spring.GetUnitDefID(id)] then
+				if Cache[id] and Cache[id]==true or T[id]and not UnitTypeTable[Spring.GetUnitDefID(id)] then
 					Cache[id]=true
 					returnTable[#returnTable+1]=id
 				else
@@ -2896,26 +2896,29 @@ end
 	end 
 	
 	-->filters Out Immobile Units
-	function filterOutImmobile (T,UnitDefs)
+	function filterImmobile (T,UnitDefs, boolFilterOut)
 		returnTable={} 
+		boolFilterOut= boolFilterOut or true
 		for num,id in pairs(T) do 
 			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isImmobile then 
+			if not boolFilterOut == UnitDefs[def].isImmobile then 
 				returnTable[#returnTable+1]=id
 			end 
 		end 
 		return returnTable 
 	end
 	--> filters Out Buildings
-	function filterOutBuilding (T, UnitDefs, boolFilterOut)
-		boolFilterOut= boolFilterOut or false
-		returnTable={} 
+	function filterBuilding (T, UnitDefs, boolFilterOut)
+		boolFilterOut= boolFilterOut or true
+		returnTable={}
+
 		for num,id in pairs(T) do 
 			def=Spring.GetUnitDefID(id) 
-			if UnitDefs[def] and UnitDefs[def].isBuilding and boolFilterOut== UnitDefs[def].isBuilding then 
+			if UnitDefs[def] and UnitDefs[def].isBuilding == not boolFilterOut then 
 				returnTable[#returnTable+1]=id 
 			end 
 		end 
+	
 		return returnTable 
 	end
 	

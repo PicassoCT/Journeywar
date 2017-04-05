@@ -85,7 +85,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				if not Events[nextFrame] then Events[nextFrame]={} end
 					Events[nextFrame][#Events[nextFrame]+1]=evtID
 				else
-					Spring.Echo("Event "..evtID .." is completed" )
+					--Spring.Echo("Event "..evtID .." is completed" )
 				 GG.EventStream[evtID]= nil		
 				end
 				end

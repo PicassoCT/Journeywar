@@ -399,24 +399,21 @@ boolWeeImATree= Trees[WeeImATree] or false
 SIG_DEATH=32
 
 function contemplateOrigin()
-
+	
 	boolPositionUnchanged=true
 	xo,yo,zo=Spring.GetUnitPosition(unitID)
 	while(boolPositionUnchanged==true) do
 		x,y,z=Spring.GetUnitPosition(unitID)
 		if math.abs(x-xo) > 10 and math.abs(z-zo) >10 then
 			boolPositionUnchanged=false
-			hideT(piecesTable)
-	
+			hideT(piecesTable)	
 			
 			if boolWeeImATree== true then
 				Show(Transport3)
 			else
-			pieceOfChoice=Transport[irand(1,2)]
+				pieceOfChoice=Transport[irand(1,2)]
 				Show(pieceOfChoice)			
 			end
-			
-			
 			
 			Signal(SIG_DEATH)
 		end
@@ -438,15 +435,13 @@ end
 
 
 function init()
-
+	
 	if boolWeeImATree==true then
 		hideT(piecesTable)
 		Show(Transport[3])
 		Show(Root)
 		
-	else
-		
-			
+	else			
 		turnTableRand(Ring)
 		turnTableRand(Shell)
 		turnTableRand(Husk)
@@ -464,14 +459,11 @@ function init()
 			StartThread(maMa)
 		end
 		
+		StartThread(flailingFlesh)
 		
-		 StartThread(flailingFlesh)
-
-	
 		--Shells 
 		for i=1,#Shield, 1 do
-			StartThread(shieldset,i)
-			
+			StartThread(shieldset,i)			
 		end	
 		
 		for i=1,#Balls, 1 do
@@ -498,87 +490,78 @@ function init()
 		dis=math.random(25,45)
 		
 		for i=1,#Ring do
-		--echo("Ring"..i)
+			--echo("Ring"..i)
 			Turn(Ring[i],x_axis,math.rad(d),0)
 			x,z= drehMatrix (dis, dis, 0, 0, i*(360/#Ring))
 			moveUnitPieceToGroundPos(unitID,Ring[i], x,z,1.8,3)
 			Show(Ring[i])	
 		end
 		
-		StartThread(pillarHandling)
-		
-	
+		StartThread(pillarHandling)	
 	end
-		
+	
 end
 
-
-
-
 function pillarHandling()
---echo("pillarHandling")
+	--echo("pillarHandling")
 	val=360-math.random(10,150)
 	counter=1
+	boolPillarbreath=maRa()
+	if boolPillarbreath == false then
+		for j=1,#spin,1 do
+		v=counter*(val/#spin)
+		Turn(spin[j],y_axis,math.rad(v),0)
+		Turn(spin[j],x_axis,math.rad(90)*randSign(),1)			
+	end
+	WaitForTurns(spin)
+	
+	end
 	for i=1,#Pillar,4 do
-	--echo("pillarHandling"..i)
+		--echo("pillarHandling"..i)
 		Show(Pillar[i])
 		counter=counter+1
-		if spin[i] then
-			v=counter*(val/#Pillar)
-			Turn(spin[i],y_axis,math.rad(v),0)
+		if spin[i] then	
 			Move(Pillar[i],z_axis,90,0,true)
 			Sleep(20)
 		end
 		
 		for j=i+1,math.min(i+4,#Pillar),1 do
-		--echo("pillarHandlingj"..j)
+			--echo("pillarHandlingj"..j)
 			if maRa()==true then
 				Show(Pillar[j])
 				movePieceToPiece(Pillar[j],PillP[j])	
 			end
-		end	
-		
-		
+		end			
 	end
 	
 	
-	if maRa() == true then 
-		i=1
-		--stay upright and fall down
-		for j=i,math.min(i+4,#Pillar),1 do
-			if maRa()==true then
-				StartThread(dropPieceTillStop,unitID,Pillar[j],2, 39.81, math.ceil(math.random(3,6)),true)
-				Move(Pillar[j],x_axis,math.random(-45,45),10)
-				Move(Pillar[j],z_axis,math.random(-45,45),10)
-			else
-				StartThread(dropPieceTillStop,unitID,Pillar[j],1.4, 39.81, 0,true)
-			end
-			
-		end
-	else
-		
-		
+	if boolPillarbreath== true then 
 		--breath it
-		
-		
-		for i=1,#Pillar-1 do
+		counter=0
+		predecessor=Pillar[1]
+		for k,v in pairs(Pillar) do
+			counter=counter+1
 			rand=math.random(-32,32)
-			StartThread(equiTurn,Pillar[i],Pillar[i+1],x_axis, rand, 0.5)
+			if counter % 2 == 0 then
+				StartThread(breath,predecessor,v,x_axis, rand, 0.5,10, 0.4/10)
+			else
+				predecessor=v
+			end
 		end
-		
-
 	end
+
+	--stay upright and fall down
+
 	
-	Sleep(15000)
-		for i=1,#Pipe do
-			StopSpin(Pipe[i],y_axis)
-			StopSpin(Pipe[i],x_axis)
-		end
+	for i=1,#Pipe do
+		StopSpin(Pipe[i],y_axis)
+		StopSpin(Pipe[i],x_axis)
+	end
 	
 end
 
 function Ballsset(i)
-
+	
 	Move(Balls[i],z_axis,math.random(-40,40),0)
 	Move(Balls[i],x_axis,math.random(-40,40),0)
 	Move(Balls[i],y_axis,math.random(25,50),0,true)
@@ -588,7 +571,7 @@ function Ballsset(i)
 end
 
 function Huskset(i)
-
+	
 	Move(Husk[i],z_axis,math.random(-40,40),0)
 	Move(Husk[i],x_axis,math.random(-40,40),0,true)
 	
@@ -599,7 +582,7 @@ function Huskset(i)
 end
 
 function shieldset(i)
-
+	
 	Move(Shield[i],z_axis,math.random(-120,120),0)
 	Move(Shield[i],x_axis,math.random(-120,120),0)
 	Move(Shield[i],y_axis,math.random(40,182),0,true)
@@ -609,7 +592,7 @@ function shieldset(i)
 end
 
 function Pump1()
-
+	
 	Turn(Flood,y_axis,0,0)
 	Show(Drip1)
 	moveUnitPieceToGroundPos(unitID,Drip1, math.random(-72,72),math.random(-72,72),0)
@@ -621,7 +604,7 @@ function Pump1()
 end
 
 function Pump2()
-
+	
 	moveUnitPieceToGroundPos(unitID,Drip2, math.random(-72,72),math.random(-72,72),0)
 	Show(Drip2)
 	
@@ -664,21 +647,21 @@ function flailingFlesh()
 	
 	speed=math.max(math.sqrt(speed),0.001)
 	while live > 0 do
-	--echo("flailingFlesh")
+		--echo("flailingFlesh")
 		signum=signum*-1	
 		
 		
-			for i=1,#Leg do 
-				turnPieceRandDir(Leg[i],speed,120,-120,180,-180,8,-5) 
-			end
-			val=iRand(-12,12)
-			valor=iRand(-12,12)
-			Turn(apend[1],y_axis,math.rad(signum*val),0.13,false)
-			Turn(apend[2],x_axis,math.rad(signum*val),0.13,false)
-			Turn(apend[1],x_axis,math.rad(signum*valor),0.13,false)
-			Turn(apend[2],x_axis,math.rad(signum*valor),0.13,false)
-			
-	
+		for i=1,#Leg do 
+			turnPieceRandDir(Leg[i],speed,120,-120,180,-180,8,-5) 
+		end
+		val=iRand(-12,12)
+		valor=iRand(-12,12)
+		Turn(apend[1],y_axis,math.rad(signum*val),0.13,false)
+		Turn(apend[2],x_axis,math.rad(signum*val),0.13,false)
+		Turn(apend[1],x_axis,math.rad(signum*valor),0.13,false)
+		Turn(apend[2],x_axis,math.rad(signum*valor),0.13,false)
+		
+		
 		
 		if live > 15000 then
 			if maRa()==maRa() then
@@ -689,14 +672,14 @@ function flailingFlesh()
 				spawnCegAtPiece(unitID,pName,"bloodspray",0)
 			end
 		end
-
+		
 		Sleep(2000)
-	live=live -2000	
+		live=live -2000	
 	end
 	
 	resetT(Leg,0.1)
 end
-	speed=50
+speed=50
 function maMa()
 	
 	linenumber=1	
@@ -708,7 +691,7 @@ function maMa()
 	Show(Baby)
 	Show(Navel)
 	BabyDir=0
-
+	
 	signum=-1
 	
 	live=math.ceil(math.random(20,60)*1000)
@@ -723,17 +706,17 @@ function maMa()
 		
 		signum=signum*-1	
 		--Move Baby
-			valLueSpin=iRand(15,90)*signum
-			Turn(Baby,y_axis,math.rad(valLueSpin),0.3)
-			valLueSpin=valLueSpin*-1
-			Turn(Navel,y_axis,math.rad(valLueSpin),0.3)
-			WaitForTurn(Baby,y_axis)
+		valLueSpin=iRand(15,90)*signum
+		Turn(Baby,y_axis,math.rad(valLueSpin),0.3)
+		valLueSpin=valLueSpin*-1
+		Turn(Navel,y_axis,math.rad(valLueSpin),0.3)
+		WaitForTurn(Baby,y_axis)
 		
 		if maRa()==true then
 			--echo("This kills it")		
 			bx,by,bz=Spring.GetUnitPiecePosition(unitID,targetPos)
 			--echo("No This kills it")
-		--	moveUnitPieceToGroundPos(unitID,Baby,bx,bz,0.2,-2)	
+			--	moveUnitPieceToGroundPos(unitID,Baby,bx,bz,0.2,-2)	
 			--echo("None of those kills it")
 			Sleep(1000)
 			WaitForTurns(Baby,Navel)
@@ -741,7 +724,7 @@ function maMa()
 		--echo("ljscrapheap:"..linenumber);linenumber=linenumber+1 --5
 		Sleep(1000)
 		live=live-2000
-
+		
 	end
 	
 	--echo("Did you kill my mama")
@@ -751,7 +734,7 @@ function maMa()
 end
 
 function pipes(i)
-
+	
 	if maRa()==true then
 		xval=math.random(-35,35)
 		zval=math.random(-35,35)
@@ -776,7 +759,6 @@ function pipes(i)
 			turnPieceRandDir(Pipe[i],0, 30,-30,360,-360,30,-30)	
 		end
 		
-		--moveUnitPieceToGroundPos(unitID,Pipe[i],xval,zval,0,0)
 		
 		Sleep(100)
 		
@@ -789,22 +771,20 @@ function pipes(i)
 		StopSpin(Pipe[i],y_axis)	
 		Turn(Pipe[i],y_axis,math.rad(0),6)
 		WaitForMove(Pipe[i],x_axis)	
-		WaitForMove(Pipe[i],z_axis)
-		
-		
+		WaitForMove(Pipe[i],z_axis)		
 	end
 end
 
 
 function TimeOfMyLife()
-
+	
 	SetSignalMask(SIG_DEATH)
 	
 	foo=function (pieces) 
 		dice=math.random(-1,1)
 		dice=(dice/math.abs(dice))*-20
 		Turn(pieces,x_axis,math.rad(dice),0) 
-		end
+	end
 	
 	process(Shell,foo)
 	
@@ -818,11 +798,6 @@ function script.Killed()
 	return 1
 end
 
-
-
-
-
-
 function script.Create()
 	
 	init()
@@ -831,8 +806,6 @@ function script.Create()
 		teamID=Spring.GetUnitTeam(unitID)
 		GG.UnitsToSpawn:PushCreateUnit("gdecjscrapheap",x,y,z, 0, teamID) 
 	end
-	
-	
 	
 	StartThread(TimeOfMyLife)
 	StartThread(contemplateOrigin)

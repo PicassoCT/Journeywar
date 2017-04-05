@@ -39,6 +39,7 @@
 	VFS.Include("luarules/Gadgets/animal_hohymen.lua")
 	VFS.Include("luarules/Gadgets/animal_varyfoos.lua")
 	VFS.Include("luarules/Gadgets/animal_seastar.lua")
+
 	
 	SEASTARDEF		= 	UnitDefNames["gseastar"].id
 	HOHYMDEF		=	UnitDefNames["ghohymen"].id
