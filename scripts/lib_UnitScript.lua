@@ -951,16 +951,12 @@ end
 -->Rotates a point around another Point
 function drehMatrix (x, y, zx, zy, degInRad)
 	x= x-zx
-	y=y-zy
-	x=(math.cos(degInRad)+ (-1*math.sin(degInRad)))*x
-	y=(math.cos(degInRad)+ (math.sin(degInRad)))*y
+	y= y-zy
+	tempX=(math.cos(degInRad)*x+ (-1*math.sin(degInRad))*y)
+	y=(math.cos(degInRad)*x+ (math.sin(degInRad))*y)
 	
-	IntCastX=x%1
-	x=x-IntCastX
-	IntCastY=y%1
-	y=y-IntCastY
-	
-	x=x+zx
+
+	x=tempX+zx
 	y=y+zy
 	return x,y
 end

@@ -523,21 +523,25 @@ function setUnitOnFire(id, timeOnFire)
 end
 
 
--->Attack Nearest Non-Gaia Enemy
+-->Attack Nearest Non-Gaia Enemy if standing still
 function defaultEnemyAttack(unitID,SignalMask, delayTime)
 	Signal(SIG_DEFAULT)
 	SetSignalMask(SIG_DEFAULT)
 	gaiaTeam=Spring.GetGaiaTeamID()
 	Sleep(15000)
 	delayTime=delayTime or 1500
-	
+	times=0
 	while true do
+	times=times+delayTime
 		Sleep(delayTime)
 		ed=Spring.GetUnitNearestEnemy(unitID)
 		if ed and Spring.GetUnitTeam(ed) ~= gaiaTeam then
 			x,y,z=Spring.GetUnitPosition(ed)
+			offx,offz=0,0
+			if math.random(0,10)==5 then offx,offz=math.random(-100,100),math.random(-100,100) end
 			if x then
-				Spring.SetUnitMoveGoal(unitID,x,y,z)
+
+				Spring.SetUnitMoveGoal(unitID,x+offx,y,z+offz)
 			end
 		end
 	end

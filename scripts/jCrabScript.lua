@@ -40,6 +40,7 @@ RearLeg={
 
 function script.Create()
 	StartThread(defaultEnemyAttack, unitID, SIG_DEFAULT, 25000)
+	
 end
 
 function frontLeg(nr,inverter)

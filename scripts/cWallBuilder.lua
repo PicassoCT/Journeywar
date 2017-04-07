@@ -276,24 +276,6 @@ function degreeCos (x)
 	return math.cos(math.rad(x))
 end
 
-function drehMatrix(y,x,zx,zy,degree)
-	--many manhours were given here invain, 
-	--let this be a reminder to future coder generations, 
-	--to not squander there investments to poor understanding of the work gone before
-	x=x-zx
-	y=y-zy	
-	
-	sinus 	= degreeSin(degree)
-	cosinus = degreeCos(degree)
-	
-	tempX= x*cosinus + y*sinus*-1
-	y= x*sinus + y*cosinus
-	x=tempX
-	x=zx+x
-	y=zy+y
-	
-	return math.floor(x),math.floor(y)
-end
 
 function directionColourTable(TC, y,fh,rh,size)
 	--Prepare the Values

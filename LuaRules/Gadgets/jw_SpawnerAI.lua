@@ -22,6 +22,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		["journeyman"]={[1]="jgeohive", [2]="jbeehive",[3]="jghostdancer",[4]="jpoisonhive"},
 		["centrail"]={[1]="goildrum",[2]="gzombspa", [3]="coverworldgate", [4]="crewarder"}
 	}
+	
+	teamHiveTable={}
 		
 	Distribution={}
 	for _, t in ipairs (Spring.GetTeamList ()) do
@@ -83,8 +85,14 @@ if (gadgetHandler:IsSyncedCode()) then
 			px=math.abs(percent*(meridian.tab.x)- (1-percent)*(meridian.atab.x))
 			pz=math.abs(percent*(meridian.tab.z)- (1-percent)*(meridian.atab.z))
 			px,pz= findPlaces(team,px,pz)
+			
 			if px then	
-				Spring.CreateUnit(spawnUnits[side][math.random(1,#spawnUnits[side])],px+math.random(10,20)*randSign(),0,pz+math.random(10,20)*randSign(),1,team)	
+				unitType=spawnUnits[side][math.random(1,#spawnUnits[side])]
+				Spring.CreateUnit(unitType,px+math.random(10,20)*randSign(),0,pz+math.random(10,20)*randSign(),1,team)	
+			if not teamHiveTable[team] then teamHiveTable[team]={} end
+			if not teamHiveTable[team][unitType] then teamHiveTable[team][unitType]=0 end
+			teamHiveTable[team][unitType]=teamHiveTable[team][unitType]+1
+			
 			else
 				teamAccuVolume[team]=teamAccuVolume[team]+1			
 			end
@@ -162,11 +170,18 @@ if (gadgetHandler:IsSyncedCode()) then
 		meridianTable=tempTable		
 	end
 	
+	function teamHasHive(teamID)
+	return 		teamHiveTable[teamID][UnitDefNames["gzombspa"].id] > 0 or 
+				teamHiveTable[teamID][UnitDefNames["coverworldgate"].id] > 0 or
+				teamHiveTable[teamID][UnitDefNames["jgeohive"].id] > 0 
+	end
+	
 	function checkOnTeams()
 		okayCount=0
 		for teamID, side in pairs(spawnerAI) do
 			teamID,leader,isDead =	Spring.GetTeamInfo(teamID)
 			Spring.Echo("JwSpawnerAI:"..teamID.." - ".. leader.." - "..boolToString(isDead))
+			isDead= isDead and ( teamHasHive(teamID) ==true)
 			if isDead == false then
 				okayCount=okayCount+1
 			else			
@@ -191,6 +206,16 @@ if (gadgetHandler:IsSyncedCode()) then
 			end			
 		end
 	end
+	
+	function gadget:UnitDestroyed(unitID,unitDefID, unitTeam)
+		if  teamHiveTable[unitTeam] then 
+			if not teamHiveTable[unitTeam][unitDefID] then teamHiveTable[unitTeam][unitDefID]=0 end
+			teamHiveTable[unitTeam][unitDefID]=teamHiveTable[unitTeam][unitDefID]-1
+		end
+	end
+		
+			
+
 	
 	function gadget:Shutdown()
 		Spring.Echo("jw_SpawnerAIGadget: Shuting down")		

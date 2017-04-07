@@ -230,7 +230,7 @@ function dragtowards( distance,victimid, unitID,gateX,gateZ, fac)
 	
 	
 	if factor >= 1 then return end
-	local ldrehM=drehMatrix
+
 	local lretPos=retPos
 	local lrelPos=relPos
 	local spMovCtrlSetPos=Spring.MoveCtrl.SetPosition
@@ -260,7 +260,7 @@ function dragtowards( distance,victimid, unitID,gateX,gateZ, fac)
 		--assertFour(midX,midZ,gateX,gateZ,2)
 		
 		
-		tx,tz=ldrehM(midX,midZ,degree+0.025)
+		tx,tz=drehMatrix(midX,midZ,0,0,degree+0.025)
 		degree=(degree+(1-factor))% 6.28318
 		tx,tz= retPos(tx,tz,x,z)
 		spMovCtrlSetPos(victimid,tx,whY,tz)
@@ -270,21 +270,6 @@ function dragtowards( distance,victimid, unitID,gateX,gateZ, fac)
 	end
 	Spring.DestroyUnit(victimid,true,true)
 	
-end
-
-
-function drehMatrix(y,x,rad)
-	--assertFour(y,x,zx,zy,4)
-	
-	
-	sinus=math.sin(rad)
-	cosinus= math.cos(rad)
-	
-	tempX= x*cosinus + y*sinus*-1
-	y= x*sinus + y*cosinus
-	
-	
-	return tempX,y
 end
 
 
