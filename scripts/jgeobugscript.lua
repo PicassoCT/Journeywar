@@ -425,36 +425,5 @@ function script.Create()
 	Soundname="sounds/jGeoCreeper/jBugSpawn"..i..".wav"
 	Spring.PlaySoundFile(Soundname) 
 	StartThread(animationLoop)
-	StartThread(groupHivebehaviour, unitID, SIG_DEFAULT,500,3)
-
-end
-
-function groupHivebehaviour(unitID,SIG_DEFAULT,range,groupsize,defaultdelay)
-	defaultdelay=defaultdelay or 100
-	myTeamID=Spring.GetUnitTeam(unitID)
-	if not GG.AI_HiveAgentIndepentT then GG.AI_HiveAgentIndepentT={}end
-	if not GG.AI_HiveAgentIndepentT[myTeamID] then GG.AI_HiveAgentIndepentT[myTeamID]={}end
-	GG.AI_HiveAgentIndepentT[myTeamID][unitID]=false
-	boolSemaphore=false
-	
-	while true do
-		if GG.AI_HiveAgentIndepentT[myTeamID][unitID] == false then
-			if boolSemaphore==false then
-				boolSemaphore=true
-				defaultEnemyGroupAttackThreadStarter(unitID,500,range,groupsize)
-			end
-		else
-			Signal(SIG_DEFAULT)
-			boolSemaphore=false
-			
-		end
-		Sleep(defaultdelay)
-	end
-end
-
-
-function defaultEnemyGroupAttackThreadStarter(unitID,waitTime,range,groupsize)
-	Signal(SIG_DEFAULT)
-	SetSignalMask(SIG_DEFAULT)
-	StartThread(defaultEnemyGroupAttack,unitID,waitTime,range,groupsize)
+	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
 end

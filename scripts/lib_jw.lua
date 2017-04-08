@@ -522,24 +522,41 @@ function setUnitOnFire(id, timeOnFire)
 	end			
 end
 
+function standingStill(ud,ed,cache)
+x,y,z=Spring.GetUnitPosition(ud)
+boolFullfilled=false
+if not cache.x then cache={x=x,y=y,z=z}; return boolFullfilled,cache end
+if cache.x==x and cache.y==y and cache.z==z then
+boolFullfilled=true
+end
+cache={x=x,y=y,z=z}
+return boolFullfilled,cache
 
--->Attack Nearest Non-Gaia Enemy
-function defaultEnemyAttack(unitID,SignalMask, delayTime)
+end
+
+-->Attack Nearest Non-Gaia Enemy if standing still
+function defaultEnemyAttack(unitID,SignalMask, delayTime, condition)
 	Signal(SIG_DEFAULT)
 	SetSignalMask(SIG_DEFAULT)
+	condition=condition or standingStill
 	gaiaTeam=Spring.GetGaiaTeamID()
 	Sleep(15000)
 	delayTime=delayTime or 1500
-	
+	times=0
+	lastEd= math.huge
+	cache={}
 	while true do
+	times=times+delayTime
 		Sleep(delayTime)
 		ed=Spring.GetUnitNearestEnemy(unitID)
-		if ed and Spring.GetUnitTeam(ed) ~= gaiaTeam then
-			x,y,z=Spring.GetUnitPosition(ed)
-			if x then
-				Spring.SetUnitMoveGoal(unitID,x,y,z)
-			end
+		if ed == lastEd then ed=Spring.GetUnitNearestAlly(ed) end		
+		boolFullfilled,cache= condition(unitID,ed,cache) 
+		
+		if boolFullfilled == true and  ed and ed ~= lasEd and Spring.GetUnitTeam(ed) ~= gaiaTeam then
+			x,y,z=Spring.GetUnitPosition(ed)			
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE , {x, y, z },{} )--{"shift"}
 		end
+		lastEd= ed
 	end
 end
 

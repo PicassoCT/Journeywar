@@ -117,7 +117,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					if not GG.LandScapeT[x][z] then 
 						GG.LandScapeT[x][z] ={}
 						GG.LandScapeT[x][z].boolBurning=false
-						GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
+						GG.LandScapeT[x][z].Food= getAmountFlamableMaterial( x, z)
 						GG.LandScapeT[x][z].y= groundHeigth
 						GG.LandScapeT[x][z].AccumulatedHeat= 0
 						GG.LandScapeT[x][z].boolShielded = false
@@ -398,7 +398,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		local LandScapeT=GG.LandScapeT
 		for i=1,GG.LandScapeT.ResX, 1 do
 			for j=1,GG.LandScapeT.ResZ,1 do
-				LandScapeT[i][j].Food=math.min(MaxFood,LandScapeT[i][j].Food+math.ceil(amountFlamableMaterial(i*MetaMapResDivider,j*MetaMapResDivider)/100))
+				LandScapeT[i][j].Food=math.min(MaxFood,LandScapeT[i][j].Food+math.ceil(getAmountFlamableMaterial(i*MetaMapResDivider,j*MetaMapResDivider)/100))
 			end
 		end
 		GG.LandScapeT=LandScapeT

@@ -27,6 +27,9 @@ function setHivePiece()
 	
 end
 
+function sanitizeCoords(x,y,z)
+return x,y,z
+end
 
 spawnCycleRestTime = 80000
 howManyUnitsPerSpawnCycle=5
@@ -35,16 +38,7 @@ monsterTable={}
 mapX,mapZ=Spring.GetMetalMapSize()
 numX = mapX*8
 numZ = mapZ*8
-function sanitizeCoords(x,y,z)
-	
-	if (not x or not z ) or x<= 50 and z <= 50 or (x >=numX-50 or z >= numZ -50) then	
-		x,z=math.random((numX*0.05),numX*0.95),math.random((numZ*0.05),numZ*0.95)
-		return x,y,z
-	else
-		return x,y,z
-	end
-	
-end
+
 teamID=Spring.GetUnitTeam(unitID)
 function spawner()
 	
@@ -110,10 +104,6 @@ function spawner()
 				end
 				
 				if spawnedUnit and Spring.ValidUnitID(spawnedUnit) == true then 
-					myTeam=Spring.GetUnitTeam(unitID)
-					
-					GG.AI_HiveAgentIndepentT[myTeam][spawnedUnit]=boolHiveMindActive
-					
 					spSetUnitNoSelect(spawnedUnit,true)
 					if boolValidStartPos== true then
 						spSetUnitMoveGoal(spawnedUnit,ex,ey,ez)
@@ -183,11 +173,21 @@ function NextState(nState,times)
 	return nState, times, times/totalTable[nState]
 end
 
-function findBiggestCluster(team)
+maxTuple={
+		x=mapX/2,
+		z=mapZ/2,
+		val=0
+	}
+oldtime=-math.huge
+function findBiggestCluster(team,times)
+
+if math.abs(times-oldtime) < 20000 then return maxTuple.x*8, maxTuple.z*8 end
+oldtime=times
+
 	mapX,mapZ=Spring.GetMetalMapSize()
-	mapRepresentiv=makeTable(0,mapx,mapZ)
+local	mapRepresentiv=makeTable(0,mapX,mapZ)
 	teamUnits=Spring.GetTeamUnits(team)
-	maxTuple={
+maxTuple={
 		x=mapX/2,
 		z=mapZ/2,
 		val=0
@@ -198,13 +198,13 @@ function findBiggestCluster(team)
 		function(id)
 			ix,_,iz= spGetUnitPos(id)
 			ix,iz=math.ceil(ix/8),math.ceil(iz/8)
-			if mapRepresentiv[ix] and mapRepresentiv[ix][iz] then
+			if not mapRepresentiv[ix] then  mapRepresentiv[ix] ={} end
+			if not mapRepresentiv[ix][iz] then  mapRepresentiv[ix][iz] = 0 end
 				mapRepresentiv[ix][iz] = mapRepresentiv[ix][iz] +1
-			end
-		end)
+			end)
 		
-		for i=1,#mapX do
-			for j=1,#mapZ do
+		for i=1,#mapRepresentiv do
+			for j=1,#mapRepresentiv[i]  do
 				if mapRepresentiv[i][j] > maxTuple.val then
 					maxTuple.val=mapRepresentiv[i][j] 
 					maxTuple.x=i
@@ -220,79 +220,98 @@ end
 ax,ay,az=Spring.GetUnitPosition(unitID)
 --attack relentless the biggest cluster
 function PEAK(monsterID, enemyID,Time,mteam, factor)
-	if math.random(0,1)==0 then
+	rVal=math.random(16,64)
+	rx,rz = drehMatrix(0,rVal,0,0,math.cos(factor*2*math.pi+monsterID)*4*math.pi)
+	if math.random(0,2)==1 then
 		eteam=Spring.GetUnitTeam(enemyID)
-		ex,ez=findBiggestCluster(eteam)
-		return false 
+		ex,ez=findBiggestCluster(eteam, Time)
+		ex,ey, ez= sanitizeCoords(ex+rx,0,ez+rz)
+		return ex,0,ez
 	else
-		ad=Spring.GetUnitNearestAlly(enemyID)
-		ex,ey,ez=Spring.GetUnitPosition(ad)
-		ex,ey,ez=sanitizeCoords(ex,ey,ez)
-		return false
+
+		ex,ey,ez=Spring.GetUnitPosition(enemyID)
+		ex,ey, ez= sanitizeCoords(ex+rx,0,ez+rz)
+		return ex,ey,ez
 	end
 	
 end
 PEAKFADEHALF=PEAKFADETIME/4
 
 function PEAKFADE(monsterID, enemyID,Time,mteam, factor)
-	if Time/PEAKFADETIME < 0.5 or math.random(1,Time)/PEAKFADEHALF > 1 then
-		-- Allow for the Unit to display its own behaviour usually attack
-		
-		return false, ex,ey,ez
+	if monsterID % math.random(12,27) == 0 then 
+		ex,ey,ez=Spring.GetUnitPosition(enemyID)
+		ex,ey,ez= sanitizeCoords(ex,ey,ez)
+	return ex,ey,ez
+	end
+
+	if distanceUnitToUnit(monsterID,enemyID)< 1024 then
+		ex,ey,ez=Spring.GetUnitPosition(enemyID)
+		mx,my,mz=Spring.GetUnitPosition(monsterID)
+		dx,dy,dz= mx-ex,my-ey,mz-ez
+		dx,dy,dz=dx*math.pi,dy*math.pi,dz*math.pi
+		ax,ay,az=sanitizeCoords( ex+dx,ey+dy,ez+dz)
+		return ax,ay,az
 	else
-		-- 
-		eteam=Spring.GetUnitTeam(enemyID)
-		ex,ey,ez=Spring.GetTeamStartPosition(eteam)
-		ax,ay,az=Spring.GetTeamStartPosition(mteam)
-		cof=Time/PEAKFADETIME
-		
-		sinf=0
-		if Time/PEAKFADETIME > 0.75 then sinf=math.sin(cof*math.pi*3)/10 end
-		
-		cof= math.min(math.max(cof+sinf,0.25),0.85) 
-		x,y,z = sanitizeCoords((1-cof)*ex+ ax*cof, ay, (1-cof)*ez+ az*cof)
-		return true, x,y,z
+		mx,my,mz=Spring.GetTeamStartPosition(mteam)
+		allyID=Spring.GetUnitNearestAlly(monsterID)
+		allyID = allyID or monsterID
+		ax,ay,az=Spring.GetUnitPosition(allyID)
+		ax,az=ax-mx,az-mz
+		zoomFactor=1-factor
+		ax,az=ax*zoomFactor,az*zoomFactor
+		px,pz = drehMatrix(ax,az,0,0,math.cos(7*math.pi*factor)*2*math.pi)
+		ex,ey,ez= sanitizeCoords(mx+px,y,mz+pz)
+		return ex,ey,ez
 	end
 	
-end
-
-function BUILDUP( enemyID,Time,mteam, factor)
-	waveaddition=math.cos(factor* 3.14158*7)*(1/10)
-	coef=math.min(math.max(0.25,Time/BuildUPTime + waveaddition),0.90)
-	Inv=1-coef
-	--we try to calc a midvalue -- and get everyone to assemble there
-	enemyTeamID=Spring.GetUnitTeam(enemyID)
-	if not enemyID or not enemyTeamID then return false end
-	
-	ecx,ecy,ecz=Spring.GetTeamStartPosition(enemyTeamID)
-	vEc=makeVector(ecx,ecy,ecz)
-	
-	ax,ay,az=Spring.GetTeamStartPosition(mteam)
-	vAs=makeVector(	ax,ay,az)
-	
-	offVec=subVector(vAs,vEc)
-	resVec=blendVector(coef,vAs,vEc)
-	
-	
-	
-	resVec.x,resVec.y,resVec.z=sanitizeCoords(resVec.x,resVec.y,resVec.z)
-	--well away from the mainbase
-	return true,resVec.x,resVec.y,resVec.z 
 	
 end
 
 
-function RELAX(monsterID, enemyID,Time,mteam, factor)
-	allyTeamID=Spring.GetUnitTeam(monsterID)	
-	ax,ay,az=Spring.GetTeamStartPosition(allyTeamID)
+function BUILDUP(monsterID, enemyID,Time,mteam, factor)
 	ex,ey,ez=Spring.GetUnitPosition(enemyID)
+	if monsterID % math.random(22,27) == 0 then 
+
+		ex,ey,ez= sanitizeCoords(ex,ey,ez)
+		return ex,ey,ez
+	end
 	
+	if distanceUnitToUnit(monsterID,enemyID) < 768 then 
+		return ex,ey,ez
+	end	
 	
-	factor= math.min(0.75,math.max(0.35,(math.sin((Time/(RELAXTIME/3))*3.14159))))
+	allyID=Spring.GetUnitNearestAlly(enemyID)		
+
+	ex,ey,ez=Spring.GetUnitPosition(allyID)	
+	mx,my,mz=Spring.GetTeamStartPosition(mteam)
 	
-	vDa= blendVector(factor,makeVector(ax,ay,az),makeVector(ex,ey,ez))
+	waveFactor=factor+math.sin(factor*math.pi*8)/5
+	limitedFactor=math.max(0.25,math.min(0.55,waveFactor))
+	vBlend= blendVector(limitedFactor, makeVector(ex,ey,ez),makeVector(mx,my,mz))
+	randVal=math.random(96,256)
+	rx,rz = drehMatrix(0,randVal,0,0,math.sin(factor*5*math.pi)*2*math.pi + monsterID% (math.pi/3))
+	vBlend.x,vBlend.z=vBlend.x+rx,vBlend.z+rz
 	
-	return true, vDa.x,vDa.y,vDa.z
+	dax,day,daz=sanitizeCoords( vBlend.x,vBlend.y,vBlend.z)	
+	
+	return dax,day,daz
+end
+
+ux,uy,uz=Spring.GetUnitPosition(unitID)
+function RELAX(monsterID, enemyID,Time,mteam, factor)
+	if monsterID % math.random(45,67) == 0 then 
+		ex,ey,ez=Spring.GetUnitPosition(enemyID)
+		ex,ey,ez= sanitizeCoords(ex,ey,ez)
+		return ex,ey,ez
+	end
+	
+	mx,my,mz=Spring.GetTeamStartPosition(mteam)
+
+	randVal=math.max(64,512*factor) + (monsterID%25)
+	rx,rz = drehMatrix(0,randVal,0,0,math.sin(factor*5*math.pi)*2*math.pi + (monsterID%math.pi))
+	
+	dax,day,daz=sanitizeCoords( mx+rx,my,mz+rz)	
+	return 	dax,day,daz
 end
 
 funcTable={}
@@ -303,7 +322,7 @@ funcTable["BUILDUP"]=BUILDUP
 funcTable["RELAX"]=RELAX
 local spGetUnitNearestEnemy=Spring.GetUnitNearestEnemy
 function getNearestEnemy(idID)
-	if Spring.ValidUnitID(idId)==false then return end
+	if Spring.ValidUnitID(idID)==false then return end
 	
 	minDist=math.huge
 	minDistID=math.huge
@@ -339,57 +358,78 @@ function TargetOS()
 	
 	oldState="RELAX"
 	while(true) do
-		Sleep(5000)
-		times=times+5000
+		Sleep(2500)
+		times=times+2500
 		AllUnitsUpdated=Spring.GetAllUnits()
-		myTeam=Spring.GetUnitTeam(unitID)
 		
 		if monsterTable and table.getn(monsterTable) > 0 then
 			
 			State, times, percent =NextState(State,math.ceil(times))
 			if State ~= oldState then
-				Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
+				--Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
 				oldState=State
 			end
 			
-			for i=1,table.getn(monsterTable),1 do
-				monsterid=monsterTable[i]
-				
-				enemyID= getNearestEnemy(monsterid)
-				if enemyID and stillInSamePosition(monsterid) == true then
-					moveIfInSamePosition(enemyID,monsterID)
-					
-				else					
-					if enemyID then						
-						setStateDependantMoveGoal(unitID,enemyID,times,teamID, times,totalTable,State)
-					end
+			for num,monsterid in pairs(monsterTable) do
+				if monsterid then
+					enemyID= getNearestEnemy(monsterid)		
+						if enemyID then						
+							ex,ey,ez = lfuncTable[State](monsterid,enemyID,times,teamID, times/totalTable[State])
+							if ex then
+								--Spring.Echo("jgeohive:Sending".. monsterid.." to state pos")
+								--StartThread(markPosOnMap,ex,ey,ez,"greenlight")		
+								Command(monsterid, "go", {x=ex,y=ey,z=ez},{})
+							end
+						end				
 				end
 			end
 		end
 	end
 end
 
-function setStateDependantMoveGoal(unitID,enemyID,times,teamID, times,totalTable,State)
-	boolHiveMindActive, ex,ey,ez = lfuncTable[State](unitID,enemyID,times,teamID, times/totalTable[State])
-	if not GG.AI_HiveAgentIndepentT then GG.AI_HiveAgentIndepentT={}end
-	if not GG.AI_HiveAgentIndepentT[myTeam] then GG.AI_HiveAgentIndepentT[myTeam]={}end
-	GG.AI_HiveAgentIndepentT[myTeam][monsterid]=boolHiveMindActive
+function TestOS()
+	Sleep(10)
 	
-	if boolHiveMindActive == true and ex then
-		StartThread(markPosOnMap,ex,ey,ez,"greenlight")						
-		spSetUnitMoveGoal(monsterid,ex,ey,ez)
-	end
-end
+	times=0
+	local spValidUnitID=Spring.GetUnitIsDead
+	
+	local spGetUnitPosition=Spring.GetUnitPosition
+	local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
+	local lfuncTable=funcTable
+	x,y,z=math.random(2048,8192),math.random(2048,8192),math.random(2048,8192)
+	monsterid=Spring.CreateUnit("cegtest",x,y,z,0,teamID)
+	
+	oldState="RELAX"
+	while(true) do
+		Sleep(500)
+		times=times+500
+		AllUnitsUpdated=Spring.GetAllUnits()
+		
+			State, times, percent =NextState(State,math.ceil(times))
+			if State ~= oldState then
+				Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
+				oldState=State
+			end
+					
+					if Spring.GetUnitIsDead(monsterid)==true then 	monsterid=Spring.CreateUnit("cegtest",x,y,z,0,teamID) end
+					enemyID= getNearestEnemy(monsterid)		
+						if enemyID then						
+							ex,ey,ez = lfuncTable[State](monsterid,enemyID,times,teamID, times/totalTable[State])
+							if ex then
+								--Spring.Echo("jgeohive:Sending".. monsterid.." to state pos")
+								StartThread(markPosOnMap,ex,ey,ez,"greenlight")		
+								Spring.Echo(State.."with ",ex," ",ey," ",ez,times/totalTable[State]) 
+								
+								Command(monsterid, "go", {x=ex,y=ey,z=ez},{"shift"})
+							end
+						else
+						echo("No Enemy")
+						end
+				
+				end
+			end
 
-function moveIfInSamePosition(enemyID,monsterID)
-	eTeam=Spring.GetUnitTeam(enemyID)
-	sx,sy,sz=Spring.GetTeamStartPosition(eTeam)
-	if math.random(0,1)==1 then
-		Command(monsterid, "go", {x=sx,y=sy,z=sz},{"shift"})
-	else
-		Command(monsterid, "go", {x=sx,y=sy,z=sz},{})
-	end
-end
+
 
 function aliveAndWell(id)
 	boolExists=Spring.ValidUnitID(id)
@@ -404,28 +444,6 @@ function aliveAndWell(id)
 end
 
 
-monsterPosTable={}
-function stillInSamePosition(id)
-	bRetVal=false
-	mx,my,mz=Spring.GetUnitPosition(id)
-	if mx then
-		mVec=makeVector(mx,my,mz)
-		if not monsterPosTable[id] then
-			monsterPosTable[id]=mVec
-			bRetVal=false
-		else
-			
-			if distanceVec(mVec,monsterPosTable[id]) < 20 then
-				
-				monsterPosTable[id]=mVec
-				bRetVal=true	
-			end	
-		end
-	end
-	return bRetVal
-end
-
-
 
 function script.Create()
 	
@@ -433,6 +451,7 @@ function script.Create()
 	
 	StartThread(spawner)
 	StartThread(TargetOS)
+	--StartThread(TestOS)
 	
 end
 

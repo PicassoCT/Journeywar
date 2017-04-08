@@ -200,3 +200,15 @@ Vector.__index = Vector
 	
 	
 setmetatable(Vector, { __call = function(_, ...) return Vector.new(...) end })	
+
+AngleAxis={}
+AngleAxis.__index = AngleAxis
+
+   function AngleAxis.new (Angle, Axis) 
+
+			return setmetatable({angle = Angle , 
+								 axis = Axis }, AngleAxis)
+		
+	end
+	
+setmetatable(AngleAxis, { __call = function(_, ...) return AngleAxis.new(...) end })	

@@ -83,7 +83,7 @@ function setAreaEffect(px,pz, Range, sfxFunction)
 				if not GG.LandScapeT[x][z] then 
 					GG.LandScapeT[x][z] ={}
 					GG.LandScapeT[x][z].boolBurning=false
-					GG.LandScapeT[x][z].Food= amountFlamableMaterial( x, z)
+					GG.LandScapeT[x][z].Food= getAmountFlamableMaterial( x, z)
 					GG.LandScapeT[x][z].y= groundHeigth
 					GG.LandScapeT[x][z].AccumulatedHeat= 0
 					GG.LandScapeT[x][z].boolShielded = false

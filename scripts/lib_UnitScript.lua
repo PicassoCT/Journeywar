@@ -951,16 +951,12 @@ end
 -->Rotates a point around another Point
 function drehMatrix (x, y, zx, zy, degInRad)
 	x= x-zx
-	y=y-zy
-	x=(math.cos(degInRad)+ (-1*math.sin(degInRad)))*x
-	y=(math.cos(degInRad)+ (math.sin(degInRad)))*y
+	y= y-zy
+	tempX=(math.cos(degInRad)*x)+ ((-1.0 *math.sin(degInRad))*y)
+	y=(math.sin(degInRad)*x+ (math.cos(degInRad))*y)
 	
-	IntCastX=x%1
-	x=x-IntCastX
-	IntCastY=y%1
-	y=y-IntCastY
-	
-	x=x+zx
+
+	x=tempX+zx
 	y=y+zy
 	return x,y
 end
@@ -1841,15 +1837,22 @@ function stringOfLength(char,length)
 	return strings
 end
 
+function echoPieceNameTable(unitID, T)
+	for k,v in pairs(T) do
+	retT=	Spring.GetUnitPieceInfo(unitID,v)
+	Spring.Echo("Piecename:"..k.." -> "..retT.name)
+	end
+
+end
+
 function rEchoT(T,layer)
-	l=layer or 0
+local l=layer or 0
 	if T then
 		if type(T)=='table' then
-			Spring.Echo("+"..(stringOfLength("_",l)).."___ RTable ")
+			Spring.Echo(stringOfLength(" ",l).."T:")
 			for k,v in pairs(T) do
 				rEchoT(T[k],l+1)
 			end
-			Spring.Echo((stringOfLength("_",l)))
 		else
 			Concated=stringOfLength(" ",math.max(1,l)-1).."|"
 			
@@ -3790,32 +3793,70 @@ end
 		
 	end
 	
-	function recMapHierarchy(unitID, pieceName, hierarchy,pieceFunction)
-		pieceNumber=pieceFunction(pieceName)
-		tables=Spring.GetUnitPieceInfo(unitID,pieceNumber)
-		
-		if tables and tables.children then
-			if not 	hierarchy[pieceName] then 	hierarchy[pieceName]={} end
-			
-			for _,name in pairs(tables.children) do		
-				hierarchy[pieceName][#hierarchy[pieceName]+1]= pieceFunction(name)
-				hierarchy = recMapHierarchy(unitID, name, hierarchy, pieceFunction)
-			end	
-		end
-		
-		return hierarchy
+	function getUniqueID()
+	if not GG.GUID then GG.GUID=0 end
+	GG.GUID=GG.GUID+ 0.1/math.pi
+	return GG.GUID
 	end
 	
-	--> creates a hierarchical table of pieces, descending from root
-	function makePieceHierarchy(unitID,pieceFunction)
+	function recPieceBelow(hierarchy, currentPiece, endPiece, reTable)
+	boolBelow=false
+	
+	if not hierarchy[currentPiece] then return nil end
+		for k, pieceNumber in pairs(hierarchy[currentPiece]) do
+		local retTable= reTable
+		
+			if pieceNumber == endPiece then
+			retTable[#retTable+1]=endPiece
+			return true, retTable
+			end
+			
+			retTable[#retTable+1]=pieceNumber
+			boolFound, T= recPieceBelow(hierarchy,pieceNumber,endPiece,retTable)
+			if boolFound == true then
+				return true, T
+			end
+		end
+	return false
+	end
+	
+	
+	
+	function getPieceChain(hierarchy, startPiece, endPiece)
+		pieceChain={}
+		pieceChain[1]=startPiece
+		boolBelow,pieceChain=recPieceBelow(hierarchy,startPiece,endPiece, pieceChain)			
+		return pieceChain
+	end
+	
+		--> creates a hierarchical table of pieces, descending from root
+	function getPieceHierarchy(unitID,pieceFunction)
+
 		rootname,children=getRoot(unitID)
+		rootNumber=pieceFunction(rootname)
 		hierarchy={}
-		hierarchy[rootname]= {}
+		hierarchy[rootNumber]= {}
+		openTable={}
 		for k,pieceName in pairs(children) do
-			hierarchy[rootname][#hierarchy[rootname]+1] =pieceFunction(pieceName)
+			hierarchy[rootNumber][#hierarchy[rootNumber]+1] =pieceFunction(pieceName)
+			table.insert(openTable,pieceFunction(pieceName))
 		end
 		
-		hierarchy = recMapHierarchy(unitID, rootname, hierarchy ,pieceFunction)
+		while table.getn(openTable) > 0 do
+			for num,pieceNumber in pairs(openTable) do
+				tables=Spring.GetUnitPieceInfo(unitID,pieceNumber)
+				if not hierarchy[pieceNumber] then hierarchy[pieceNumber] ={} end
+				if tables and tables.children then
+					for num, pieceName in pairs(tables.children) do
+						newPieceNumber=pieceFunction(pieceName)						
+						hierarchy[pieceNumber][#hierarchy[pieceNumber]+1] =newPieceNumber
+						table.insert(openTable,pieceFunction(pieceName))
+					end
+				table.remove(openTable,num)
+				end
+			end
+		end
+
 		
 		return hierarchy, rootname
 	end
@@ -3836,7 +3877,7 @@ end
 	
 	-->Returns all Pieces in a Hierarchy below the named point
 	function getPiecesBelow(unitID, PieceName, pieceFunction)
-		pieceMap=makePieceHierarchy(unitID,pieceFunction)
+		pieceMap=getPieceHierarchy(unitID,pieceFunction)
 		return recMapDown({},pieceMap,PieceName)
 	end
 	
