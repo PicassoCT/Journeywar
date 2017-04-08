@@ -952,8 +952,8 @@ end
 function drehMatrix (x, y, zx, zy, degInRad)
 	x= x-zx
 	y= y-zy
-	tempX=(math.cos(degInRad)*x+ (-1*math.sin(degInRad))*y)
-	y=(math.cos(degInRad)*x+ (math.sin(degInRad))*y)
+	tempX=(math.cos(degInRad)*x)+ ((-1.0 *math.sin(degInRad))*y)
+	y=(math.sin(degInRad)*x+ (math.cos(degInRad))*y)
 	
 
 	x=tempX+zx
