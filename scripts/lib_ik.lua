@@ -19,6 +19,26 @@ MA 02110-1301, USA.
 include "lib_UnitScript.lua"
 include "lib_type.lua"
 
+function isValidIKPiece(self, PieceID) --TODO Test
+if #self.segments < 1 then return false end
+
+	for k,v in pairs(self.segments) do
+		if v.pieceID==PieceID then return true end
+	end
+return false
+end
+
+function SetTransformation(self, valX, valY, valZ) --TODO Test
+	for i=0, i < 3* #self.segments, 1 do
+				-- apply the change to the theta angle
+				self.segments[i/3].apply_angle_change(valX, self.segments[i/3].get_right());
+				-- apply the change to the phi angle
+				self.segments[i/3].apply_angle_change(valY, self.segments[i/3].get_up());
+				-- apply the change to the z angle
+				self.segments[i/3].apply_angle_change(valZ, self.segments[i/3].get_z());
+	end
+end
+
 function solveIK(self, frames)
 
 end
@@ -41,11 +61,6 @@ end
 
 function SetUnitIKPieceLimits(self, pieceNumber, vLimX, vLimY, vLimZ)
 
-end
-
-function initIkChain(ikChain)
-
-return ikChain
 end
 
 -- //////////////////////////////////////////////////////////////////////
@@ -406,16 +421,22 @@ end
 
 
 -- /******************************************************************************/
+function getMaxLength(self) --TODO test
+totalLength=0
+	for k,segment in pairs(self.segments) do
+		totalLength=totalLength+segment.magnitude
+	end
+return totalLength
+end
 
-function setTransformation(vVec)
-		-- //Initiator
-	    -- for(int i=0; i<3*segments.size(); i+=3) {
-			-- // apply the change to the theta angle
-		    -- segments[i/3].apply_angle_change(valX ,segments[i/3].get_right());
-			-- // apply the change to the phi angle
-			-- segments[i/3].apply_angle_change(valY, segments[i/3].get_up());
-			-- // apply the change to the z angle
-		    -- segments[i/3].apply_angle_change(valZ, segments[i/3].get_z());
+function printIkChain(self)
+	for k,segment in pairs(self.segments) do
+		segment:printSelf()
+	end
+end
+
+function createJacobiMatrice(self)
+--TODO implement
 end
 
 function createIkChain(unitID, startPiece, endPiece)
@@ -439,7 +460,7 @@ local	ikChain={
 	}
 	for i=1, table.getn(pieceChain) do
 		ikChain.segments[i]={
-							pieceNum =pieceChain[i],
+							pieceID =pieceChain[i],
 							Transformation = AngleAxis:new(0,0),
 							savedTransformation = AngleAxis:new(0,0),
 							lastTransformation = AngleAxis:new(0,0),
@@ -452,6 +473,8 @@ local	ikChain={
 	end
 	
 	ikChain=initIkChain(ikChain)
+	ikChain.jacobiMatrice=createJacobiMatrice(ikChain)
+	
 	setmetatable(ikChain,solveIK)
 	setmetatable(ikChain,applyIK)
 	setmetatable(ikChain,setIKActive)
@@ -459,6 +482,8 @@ local	ikChain={
 	setmetatable(ikChain,SetUnitIKSpeed)
 	setmetatable(ikChain,SetUnitIKPieceLimits)
 	setmetatable(ikChain,setTransformation)
+	setmetatable(ikChain,isValidIKPiece)
+	setmetatable(ikChain,printIkChain)
 	
 	
 	return ikChain, ikChain.ikID
