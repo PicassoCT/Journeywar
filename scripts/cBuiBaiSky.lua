@@ -209,13 +209,8 @@ function buildIt()
 					
 						
 				end
-			end
-		
-	
-			buildRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 22.5)			
-		
-		
-		
+			end	
+			buildRandomizedBuilding(Blocks ,160 ,gridTable, freeSpotList, 22.5)	
 	else 
 		hideT(Blocks)
 		Hide(ArcoStump)
