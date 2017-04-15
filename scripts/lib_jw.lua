@@ -549,6 +549,8 @@ function defaultEnemyAttack(unitID,SignalMask, delayTime, condition)
 	times=times+delayTime
 		Sleep(delayTime)
 		ed=Spring.GetUnitNearestEnemy(unitID)
+		if not ed then ed =Spring.GetUnitNearestAlly(unitID) or unitID end
+		
 		if ed == lastEd then ed=Spring.GetUnitNearestAlly(ed) end		
 		boolFullfilled,cache= condition(unitID,ed,cache) 
 		

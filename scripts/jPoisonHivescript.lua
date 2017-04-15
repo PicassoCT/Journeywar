@@ -113,6 +113,7 @@ end
 
 function checkSpawn()
 	reloadTime=LOAD_TIME
+	Sleep(100)
 	while true do
 		
 		enemyID=Spring.GetUnitNearestEnemy(unitID, SIGHT_RANGE)
