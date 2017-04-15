@@ -247,21 +247,22 @@ function buildingTentacles()
 		itTable={}
 		while it and fcvlvl2[it]==false and cubes[it] do
 			Move(cubes[it],y_axis,-260,0)
-			if cubes[it] then
+			if cubes[it] ~= nil then
 				table.insert(itTable,it)
 				
 				Show(cubes[it])
 				Move(cubes[it],y_axis,0,25)
 				Move(cubes[it],x_axis,0,25)
 				Move(cubes[it],z_axis,0,25)
+				
 				WaitForMove(cubes[it],x_axis)
 				WaitForMove(cubes[it],z_axis)
 				WaitForMove(cubes[it],y_axis)					
-				if cubes[it] then	
+				if cubes[it] ~= nil then	
 					x,y,z=Spring.GetUnitPiecePosition(unitID,cubes[it])
 					
 					it=nextIt(it)
-					if cubes[it] then
+					if cubes[it] ~= nilthen
 						Move(cubes[it],y_axis,0,0,true)
 						px,py,pz=Spring.GetUnitPiecePosition(unitID,cubes[it])
 						x,y,z=px-x,py-y,pz-z
