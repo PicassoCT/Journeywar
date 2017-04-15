@@ -19,14 +19,6 @@ end
 
 ArcoStump=piece"stump"
 Blocks={}
-for i=1,100 do
-	name="Block"..i
-	number= piece(name)
-	if number then
-	Blocks[#Blocks+1]=number
-	end
-	
-end
 
 NrOfPoints=0
 
@@ -232,23 +224,25 @@ function buildIt()
 
 	
 end
-
+TableOfPieceGroups={}
 function script.Create()
+
+
+	TableOfPieceGroups=	makePiecesTablesByNameGroups(false,true)
+	Blocks=TableOfPieceGroups["Block"]
 	StartThread(buildIt)
 	--<buildanimationscript>
 	x,y,z=Spring.GetUnitPosition(unitID)
 	teamID=Spring.GetUnitTeam(unitID)
 	
 	if GG.UnitsToSpawn then 
-	--GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+		GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
 	end
-	--Spring.CreateUnit("cbuildanimation",x,y,z,0,teamID)
 	
 	--</buildanimationscript>
 	StartThread(peaceLoop)
 	StartThread(investMent)
 	StartThread(SideEffects)
-	Hide(cg)
 	Spring.AddUnitDamage(unitID,10)
 end
 --------BUILDING---------

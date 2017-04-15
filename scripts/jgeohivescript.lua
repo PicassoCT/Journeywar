@@ -7,17 +7,41 @@ hivePiece=nil
 myDefID = Spring.GetUnitDefID(unitID)
 jGeoHiveID = UnitDefNames["jgeohive"].id
 gaiaTeamID=Spring.GetGaiaTeamID()
+
+TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
+
+function underground()
+		hideT(TablesOfPiecesGroups["root"])
+		WaitForMove(hivePiece,y_axis)
+		showT(TablesOfPiecesGroups["root"])
+		boolUndergroundCounter=0
+		for i=1,#TablesOfPiecesGroups["root"] do
+			pieceID=TablesOfPiecesGroups["sensor"][i] 
+			radVal=math.random(-360,360)
+			ux,uy,uz=Spring.GetUnitPosition(unitID)
+			boolUnderground=false
+			while boolUnderground==false or radVal > radVal + 360 do
+				WTurn(TablesOfPiecesGroups["root"][i],y_axis,math.rad(radVal),0)
+				radVal=radVal+5
+				gh,py, boolUnderground= getGroundHeigthAtPiece(unitID,pieceID)
+			end
+				if boolUnderground == true then boolUndergroundCounter=boolUndergroundCounter+1 end
+		end
+
+if boolUndergroundCounter < 5 then hideT(TablesOfPiecesGroups["root"]) end
+end
+
 function setHivePiece()
-	--	Spring.Echo("ID",Spring.GetUnitDefID(unitID))
-	--	Spring.Echo("Ids", UnitDefNames["gzombspa"].id, UnitDefNames["jgeohive"].id )
+
 	if Spring.GetUnitDefID(unitID) == UnitDefNames["jgeohive"].id then
-		Spring.Echo("jgeohive Piece detected")
+
 		hivePiece=piece"jgeohive"
 		Move(hivePiece,y_axis,-45,0,true)
 		Move(hivePiece,y_axis,0,3)
+		StartThread(underground)
 	end
 	if Spring.GetUnitDefID(unitID) == UnitDefNames["gzombspa"].id then
-		Spring.Echo("ZombieSpawner Piece detected")
+
 		hivePiece=piece"center"
 	end
 	
