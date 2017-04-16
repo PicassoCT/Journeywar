@@ -775,8 +775,6 @@ if (gadgetHandler:IsSyncedCode()) then
 				ux,uz=ux/max,uz/max
 				ux,uz=((ux+uz)/ux)*HARDCODED_RETREATDISTANCE,((ux+uz)/uz)*HARDCODED_RETREATDISTANCE
 				Spring.SetUnitMoveGoal(unitID,ux+ax,uy,uz+az)							
-			elseif attackerDefID== unitDefID then
-				Spring.SetUnitHealth(unitID, {paralyze =0})
 			end
 			
 		end
@@ -866,7 +864,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		if unitDefID == jShadowDefID and not lethalBuffExecption[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
 			
 			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
-			if boolUnitIsDead == false then		
+			boolUnitIsBuilding= UnitDefNames[attackerDefID].isBuilding
+			if boolUnitIsDead == false and boolUnitIsBuilding == false then		
 				
 				offx,offz=math.random(-25,25),math.random(-25,25)
 				px,py,pz=Spring.GetUnitPosition(attackerID)

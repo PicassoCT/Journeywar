@@ -19,8 +19,176 @@ MA 02110-1301, USA.
 include "lib_UnitScript.lua"
 include "lib_type.lua"
 
+function isValidIKPiece(self, PieceID) --TODO Test
+if #self.segments < 1 then return false end
+
+	for k,v in pairs(self.segments) do
+		if v.pieceID==PieceID then return true end
+	end
+return false
+end
+
+function SetTransformation(self, valX, valY, valZ) --TODO Test
+	for i=0, i < 3* #self.segments, 1 do
+				-- apply the change to the theta angle
+				self.segments[i/3].apply_angle_change(valX, self.segments[i/3].get_right());
+				-- apply the change to the phi angle
+				self.segments[i/3].apply_angle_change(valY, self.segments[i/3].get_up());
+				-- apply the change to the z angle
+				self.segments[i/3].apply_angle_change(valZ, self.segments[i/3].get_z());
+	end
+end
+
 function solveIK(self, frames)
 
+	-- // prev and curr are for use of halving
+	-- // last is making sure the iteration gets a better solution than the last iteration,
+	-- // otherwise revert changes
+	-- Point3f goal_point;
+	-- goal_point = this->goalPoint;
+    -- float prev_err, curr_err, last_err = 9999;
+    -- Point3f current_point;
+    -- int max_iterations = 200;
+    -- int count = 0;
+    -- float err_margin = 0.01;
+
+    -- goal_point -= base;
+    -- if (goal_point.norm() > this->getMaxLength()) {
+		-- std::cout<<"Goal Point out of reachable sphere! Normalied to" << this->getMaxLength()<<std::endl;
+	    -- goal_point =  ( this->goalPoint.normalized() * this->getMaxLength());
+	-- }
+	
+    -- current_point = calculate_end_effector();
+	-- printPoint("Base Point:",base);
+	-- printPoint("Start Point:",current_point);
+	-- printPoint("Goal  Point:",goal_point);
+	-- // save the first err
+    -- prev_err = (goal_point - current_point).norm();
+    -- curr_err = prev_err;
+    -- last_err = curr_err;
+
+	-- // while the current point is close enough, stop iterating
+    -- while (curr_err > err_margin) {
+		-- // calculate the difference between the goal_point and current_point
+	    -- Vector3f dP = goal_point - current_point;
+
+		-- // create the jacovian
+	    -- int segment_size = segments.size();
+
+		-- // build the transpose matrix (easier for eigen matrix construction)
+	    -- MatrixXf jac_t(3*segment_size, 3);
+	    -- for(int i=0; i<3*segment_size; i+=3) {
+		    -- Matrix<float, 1, 3> row_theta =compute_jacovian_segment(i/3, goal_point, segments[i/3].get_right());
+		    -- Matrix<float, 1, 3> row_phi = compute_jacovian_segment(i/3, goal_point, segments[i/3].get_up());
+		    -- Matrix<float, 1, 3> row_z = compute_jacovian_segment(i/3, goal_point, segments[i/3].get_z());
+
+		    -- jac_t(i, 0) = row_theta(0, 0);
+		    -- jac_t(i, 1) = row_theta(0, 1);
+		    -- jac_t(i, 2) = row_theta(0, 2);
+
+		    -- jac_t(i+1, 0) = row_phi(0, 0);
+		    -- jac_t(i+1, 1) = row_phi(0, 1);
+		    -- jac_t(i+1, 2) = row_phi(0, 2);
+
+		    -- jac_t(i+2, 0) = row_z(0, 0);
+		    -- jac_t(i+2, 1) = row_z(0, 1);
+		    -- jac_t(i+2, 2) = row_z(0, 2);
+		-- }
+
+		-- // compute the final jacovian
+	    -- MatrixXf jac(3, 3*segment_size);
+	    -- jac = jac_t.transpose();
+
+	    -- Matrix<float, Dynamic, Dynamic> pseudo_ijac;
+	    -- MatrixXf pinv_jac(3*segment_size, 3);
+	    -- pinv_jac = pseudoInverse(jac);
+
+	    -- Matrix<float, Dynamic, 1> changes = pinv_jac * dP;
+
+
+	    -- for(int i=0; i<3*segment_size; i+=3) {
+			-- // save the current transformation on the segments
+		    -- segments[i/3].save_transformation();
+
+			-- // apply the change to the theta angle
+		    -- segments[i/3].apply_angle_change(changes[i], segments[i/3].get_right());
+			-- // apply the change to the phi angle
+			-- //segments[i/3].apply_angle_change(3.1415/3, segments[i/3].get_up());
+			-- segments[i/3].apply_angle_change(changes[i+1], segments[i/3].get_up());
+			-- // apply the change to the z angle
+		    -- segments[i/3].apply_angle_change(changes[i+2], segments[i/3].get_z());
+		-- }
+
+		-- // compute current_point after making changes
+	    -- current_point = calculate_end_effector();
+
+		-- //cout << "current_point: " << vectorString(current_point) << endl;
+		-- //cout << "goal_point: " << vectorString(goal_point) << endl;
+
+	    -- prev_err = curr_err;
+	    -- curr_err = (goal_point - current_point).norm();
+
+	    -- int halving_count = 0;
+
+		-- // make sure we aren't iterating past the solution
+	    -- while (curr_err > last_err) {
+			-- // undo changes
+		    -- for(int i=0; i<segment_size; i++) {
+				-- // unapply the change to the saved angle
+			    -- segments[i].load_transformation();
+			-- }
+		    -- current_point = calculate_end_effector();
+		    -- changes *= 0.5;
+			-- // reapply halved changes
+		    -- for(int i=0; i<3*segment_size; i+=3) {
+				-- // save the current transformation on the segments
+			    -- segments[i/3].save_transformation();
+
+				-- // apply the change to the theta angle
+			   -- // segments[i/3].apply_angle_change(3.1415/8, segments[i/3].get_right());
+				-- segments[i/3].apply_angle_change(changes[i], segments[i/3].get_right());
+				-- // apply the change to the phi angle
+			    -- segments[i/3].apply_angle_change(changes[i+1], segments[i/3].get_up());
+				-- // apply the change to the z angle
+			    -- segments[i/3].apply_angle_change(changes[i+2], segments[i/3].get_z());
+			-- }
+
+			-- // compute the end_effector and measure error
+		    -- current_point = calculate_end_effector();
+		    -- prev_err = curr_err;
+		    -- curr_err = (goal_point - current_point).norm();
+
+		    -- halving_count++;
+		    -- if (halving_count > 100)
+			    -- break;
+		-- }
+
+	    -- if (curr_err > last_err) {
+			-- // undo changes
+		    -- for(int i=0; i<segment_size; i++) {
+				-- // unapply the change to the saved angle
+			    -- segments[i].load_last_transformation();
+			-- }
+		    -- current_point = calculate_end_effector();
+		    -- curr_err = (goal_point - current_point).norm();
+		    -- break;
+		-- }
+	    -- for(int i=0; i<segment_size; i++) {
+			-- // unapply the change to the saved angle
+		    -- segments[i].save_last_transformation();
+		-- }
+	    -- last_err = curr_err;
+
+
+		-- // make sure we don't infinite loop
+	    -- count++;
+	    -- if (count > max_iterations) {
+		    -- break;
+		-- }
+	-- }
+
+
+	-- applyIkTransformation(OVERRIDE);
 end
 
 function applyIK(self,boolCounterUnitRotation)
@@ -32,7 +200,7 @@ function setIKActive(self)
 end
 
 function SetUnitIKGoal(self,boolIsWorldCoordinate,vTarget)
-
+	self.vGoal= vTarget
 end
 
 function SetUnitIKSpeed(self)
@@ -41,11 +209,6 @@ end
 
 function SetUnitIKPieceLimits(self, pieceNumber, vLimX, vLimY, vLimZ)
 
-end
-
-function initIkChain(ikChain)
-
-return ikChain
 end
 
 -- //////////////////////////////////////////////////////////////////////
@@ -64,22 +227,8 @@ end
 	-- 0).matrix().asDiagonal() * svd.matrixU().adjoint();
 -- }
 -- //////////////////////////////////////////////////////////////////////
--- float IkChain::getMaxLength(){
-	-- float totalDistance=0.0001;
-  -- //Get DecendantsNumber
-	-- for (auto seg = segments.begin(); seg != segments.end(); ++seg) 
-	-- {
-		-- totalDistance += seg->get_mag();
-	-- }
-		
--- return totalDistance;
--- }
 
--- Point3f IkChain::TransformGoalToUnitspace(Point3f goal){
-	-- float3 fGoal= float3(goal(0,0),goal(1,0),goal(2,0));
-	-- float3 unitPoint =unit->GetTransformMatrix()*fGoal;
-	-- return Point3f(unitPoint.x ,unitPoint.y,unitPoint.z);
--- }
+
 
 -- void IkChain::solve( float  life_count) 
 -- {
@@ -234,7 +383,7 @@ end
    -- }
 
 -- //Returns the Negated Accumulated Rotation
--- Point3f IkChain::GetBoneBaseRotation()
+function GetBoneBaseRotation()-- Point3f IkChain::GetBoneBaseRotation()
 -- {
 	-- Point3f accumulatedRotation = Point3f(0,0,0);
 	-- float3  modelRot;
@@ -264,73 +413,10 @@ end
 	
 -- return accumulatedRotation;
 -- }
+end
 	
--- void IkChain::applyIkTransformation(MotionBlend motionBlendMethod){
-
-	-- GoalChanged=false;
 
 
-	-- //The Rotation the Pieces accumulate, so each piece can roate as if in world
-	-- Point3f pAccRotation= GetBoneBaseRotation();
-	-- pAccRotation= Point3f(0,0,0);
-	
-		-- //Get the Unitscript for the Unit that holds the segment
-		-- for (auto seg = segments.begin(); seg !=  segments.end(); ++seg) {
-			-- seg->alteredInSolve = true;
-
-			-- Point3f velocity = seg->velocity;
-			-- Point3f rotation = seg->get_rotation();
-
-			-- rotation -= pAccRotation;
-			-- pAccRotation+= rotation;
-
-			-- unit->script->AddAnim(   CUnitScript::ATurn,
-									-- (int)(seg->pieceID),  //pieceID 
-									-- xAxis,//axis  
-									-- 1.0,//velocity(0,0),// speed
-									-- rotation[0], //TODO jointclamp this
-									-- 0.0f //acceleration
-									-- );
-
-			-- unit->script->AddAnim( CUnitScript::ATurn,
-									-- (int)(seg->pieceID),  //pieceID 
-									-- yAxis,//axis  
-									-- 1.0,//,// speed
-									-- rotation[1], //TODO jointclamp this
-									-- 0.0f //acceleration
-									-- );
-
-			-- unit->script->AddAnim(  CUnitScript::ATurn,
-									-- (int)(seg->pieceID),  //pieceID 
-									-- zAxis,//axis  
-									-- 1.0,// speed
-									-- rotation[2], //TODO jointclamp this
-									-- 0.0f //acceleration
-									-- );
-		-- }
--- }
-
-
--- // computes end_effector up to certain number of segments
--- Point3f IkChain::calculate_end_effector(int segment_num /* = -1 */) {
-	-- Point3f reti;
-
-	-- int segment_num_to_calc = segment_num;
-	-- // if default value, compute total end effector
-	-- if (segment_num == -1) {
-		-- segment_num_to_calc = segments.size() - 1;
-	-- }
-	-- // else don't mess with it
-
-	-- // start with base
-	-- reti = base;
-	-- for(int i=0; i<=segment_num_to_calc; i++) {
-		-- // add each segments end point vector to the base
-		-- reti += segments[i].get_end_point();
-	-- }
-	-- // return calculated end effector
-	-- return reti ;
--- }
 
 
 -- //Returns a Jacovian Segment a row of 3 Elements
@@ -402,22 +488,109 @@ end
 	-- // return calculated end effector
 	-- return ret;
 -- }
+function todoGetUnitMatrice()
 
 
-
--- /******************************************************************************/
-
-function setTransformation(vVec)
-		-- //Initiator
-	    -- for(int i=0; i<3*segments.size(); i+=3) {
-			-- // apply the change to the theta angle
-		    -- segments[i/3].apply_angle_change(valX ,segments[i/3].get_right());
-			-- // apply the change to the phi angle
-			-- segments[i/3].apply_angle_change(valY, segments[i/3].get_up());
-			-- // apply the change to the z angle
-		    -- segments[i/3].apply_angle_change(valZ, segments[i/3].get_z());
 end
 
+function calculateEndEffector(self)
+	vecReti = Vector:new(0,0,0)
+	--  computes end_effector up to certain number of segments
+
+	vecReti=
+
+	-- // start with base
+	-- reti = base;
+	-- for(int i=0; i<=segment_num_to_calc; i++) {
+		-- // add each segments end point vector to the base
+		-- reti += segments[i].get_end_point();
+	-- }
+	-- // return calculated end effector
+	-- return reti ;
+-- }
+end
+
+-- /******************************************************************************/
+function transformGoalToUnitSpace(self,vecGoal) --TODO test
+	matrice= todoGetUnitMatrice()
+
+	vTemp={[1]=vecGoal.x,[2]=vecGoal.y,[3]=vecGoal.z,[4]=1}
+	vGoal={[1]=vecGoal.x,[2]=vecGoal.y,[3]=vecGoal.z,[4]=1}
+	for y=1,4 do
+	sum=0	
+		for idx=1,4 do
+			sum=sum + matrice[y][idx]* vecGoal[idx]
+		end
+	vGoal[y]=sum
+	end
+	
+	--normalize it
+	for y=1,4 do
+	vGoal[y]=vGoal[y]/vGoal[4]
+	end
+
+	return vecGoal
+end
+
+function getMaxLength(self) --TODO test
+totalLength=0
+	for k,segment in pairs(self.segments) do
+		totalLength=totalLength+segment.magnitude
+	end
+return totalLength
+end
+
+function printIkChain(self)
+	for k,segment in pairs(self.segments) do
+		segment:printSelf()
+	end
+end
+
+function createJacobiMatrice(self)
+--TODO implement
+end
+function applyTransformation(motionBlendMethod)
+	-- GoalChanged=false;
+	-- //The Rotation the Pieces accumulate, so each piece can roate as if in world
+	-- Point3f pAccRotation= GetBoneBaseRotation();
+	-- pAccRotation= Point3f(0,0,0);
+	
+		-- //Get the Unitscript for the Unit that holds the segment
+		-- for (auto seg = segments.begin(); seg !=  segments.end(); ++seg) {
+			-- seg->alteredInSolve = true;
+
+			-- Point3f velocity = seg->velocity;
+			-- Point3f rotation = seg->get_rotation();
+
+			-- rotation -= pAccRotation;
+			-- pAccRotation+= rotation;
+
+			-- unit->script->AddAnim(   CUnitScript::ATurn,
+									-- (int)(seg->pieceID),  //pieceID 
+									-- xAxis,//axis  
+									-- 1.0,//velocity(0,0),// speed
+									-- rotation[0], //TODO jointclamp this
+									-- 0.0f //acceleration
+									-- );
+
+			-- unit->script->AddAnim( CUnitScript::ATurn,
+									-- (int)(seg->pieceID),  //pieceID 
+									-- yAxis,//axis  
+									-- 1.0,//,// speed
+									-- rotation[1], //TODO jointclamp this
+									-- 0.0f //acceleration
+									-- );
+
+			-- unit->script->AddAnim(  CUnitScript::ATurn,
+									-- (int)(seg->pieceID),  //pieceID 
+									-- zAxis,//axis  
+									-- 1.0,// speed
+									-- rotation[2], //TODO jointclamp this
+									-- 0.0f //acceleration
+									-- );
+		-- }
+
+end
 function createIkChain(unitID, startPiece, endPiece)
 	boolStartPieceValid, _=checkPiece(unitID,startPiece)
 	boolEndPieceValid, PiecList=checkPiece(unitID,endPiece)
@@ -439,7 +612,7 @@ local	ikChain={
 	}
 	for i=1, table.getn(pieceChain) do
 		ikChain.segments[i]={
-							pieceNum =pieceChain[i],
+							pieceID =pieceChain[i],
 							Transformation = AngleAxis:new(0,0),
 							savedTransformation = AngleAxis:new(0,0),
 							lastTransformation = AngleAxis:new(0,0),
@@ -452,6 +625,8 @@ local	ikChain={
 	end
 	
 	ikChain=initIkChain(ikChain)
+	ikChain.jacobiMatrice=createJacobiMatrice(ikChain)
+	
 	setmetatable(ikChain,solveIK)
 	setmetatable(ikChain,applyIK)
 	setmetatable(ikChain,setIKActive)
@@ -459,6 +634,11 @@ local	ikChain={
 	setmetatable(ikChain,SetUnitIKSpeed)
 	setmetatable(ikChain,SetUnitIKPieceLimits)
 	setmetatable(ikChain,setTransformation)
+	setmetatable(ikChain,isValidIKPiece)
+	setmetatable(ikChain,printIkChain)
+	setmetatable(ikChain,calculateEndEffector)
+	setmetatable(ikChain,applyTransformation)
+	setmetatable(ikChain,transformGoalToUnitSpace)
 	
 	
 	return ikChain, ikChain.ikID

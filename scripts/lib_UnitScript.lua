@@ -264,7 +264,15 @@ end
 function assertNum(val)
 	assert(type(val)=="number")
 end
-
+function assertTable(Table)
+	for k,v in pairs(Table) do
+			if not v then echo("asserTable has key "..k.." without a value") 
+			else
+			typeV=type(v)
+			if typeV== "table" then echo("<SubTable>");asserTable(v);echo("</SubTable>")end			
+			end
+	end
+end
 --expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
 function assertT(Table, ... )
 	local arg = arg
@@ -3498,6 +3506,13 @@ end
 	
 	function getGroundHeigthDistance(h1,h2)
 		return distance(h1,0,0,h2,0,0)
+	end
+	
+	function getGroundHeigthAtPiece(uID, pieceName)
+	px,py,pz=Spring.GetUnitPiecePosDir(uID,pieceName)
+	gh=Spring.GetGroundHeight(px,pz)
+	
+	return gh, py, py < gh
 	end
 	
 
