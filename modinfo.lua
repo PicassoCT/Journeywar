@@ -3,7 +3,7 @@ local modinfo = {
 	shortname = "JW",
 	game = "Journeywar",
 	shortgame = "JW",
-	description = "Nature vs Technology - This game is not suitable for minors or children. ",
+	description = "Nature vs Nanonurture - This game is not suitable for minors or children. ",
 	url = "http://springrts.com/phpbb/viewtopic.php?f=69&t=23275",
 	version = '$VERSION',
 	modtype = "1",
