@@ -31,175 +31,164 @@ end
 function SetTransformation(self, valX, valY, valZ) --TODO Test
 	for i=0, i < 3* #self.segments, 1 do
 				-- apply the change to the theta angle
-				self.segments[i/3].apply_angle_change(valX, self.segments[i/3].get_right());
+				self.segments[math.floor(i/3)].apply_angle_change(valX, self.segments[math.floor(i/3)].get_right());
 				-- apply the change to the phi angle
-				self.segments[i/3].apply_angle_change(valY, self.segments[i/3].get_up());
+				self.segments[math.floor(i/3)].apply_angle_change(valY, self.segments[math.floor(i/3)].get_up());
 				-- apply the change to the z angle
-				self.segments[i/3].apply_angle_change(valZ, self.segments[i/3].get_z());
+				self.segments[math.floor(i/3)].apply_angle_change(valZ, self.segments[math.floor(i/3)].get_z());
 	end
 end
 
 function solveIK(self, frames)
 
-	-- // prev and curr are for use of halving
-	-- // last is making sure the iteration gets a better solution than the last iteration,
-	-- // otherwise revert changes
-	-- Point3f goal_point;
-	-- goal_point = this->goalPoint;
-    -- float prev_err, curr_err, last_err = 9999;
-    -- Point3f current_point;
-    -- int max_iterations = 200;
-    -- int count = 0;
-    -- float err_margin = 0.01;
+	-- prev and curr are for use of halving
+	--  last is making sure the iteration gets a better solution than the last iteration,
+	--  otherwise revert changes
+	local goal_point = self.goalPoint
+	local current_point= vector:new(0,0,0)
+	prev_err,curr_err,last_err= math.huge,math.huge,math.huge
+	max_iterations = 200;
+   ItterationCount = 0;
+    local err_margin = 0.01;
 
-    -- goal_point -= base;
-    -- if (goal_point.norm() > this->getMaxLength()) {
-		-- std::cout<<"Goal Point out of reachable sphere! Normalied to" << this->getMaxLength()<<std::endl;
-	    -- goal_point =  ( this->goalPoint.normalized() * this->getMaxLength());
-	-- }
+     goal_point -= self.base;
+    if (goal_point.norm() > self.getMaxLength()) then
+		Spring.Echo("Goal Point out of reachable sphere! Normalied to"..self.getMaxLength())
+	    goal_point =  ( self.goalPoint.normalized() * self.getMaxLength())
+	end
 	
-    -- current_point = calculate_end_effector();
+    current_point = self.calculate_end_effector();
 	-- printPoint("Base Point:",base);
 	-- printPoint("Start Point:",current_point);
 	-- printPoint("Goal  Point:",goal_point);
-	-- // save the first err
-    -- prev_err = (goal_point - current_point).norm();
-    -- curr_err = prev_err;
-    -- last_err = curr_err;
+	-- save the first err
+    prev_err = (goal_point - current_point).norm()
+    curr_err = prev_err
+    last_err = curr_err
 
-	-- // while the current point is close enough, stop iterating
-    -- while (curr_err > err_margin) {
-		-- // calculate the difference between the goal_point and current_point
-	    -- Vector3f dP = goal_point - current_point;
+	--while the current point is close enough, stop iterating
+    while (curr_err > err_margin) do
+		-- calculate the difference between the goal_point and current_point
+	    local dP = goal_point - current_point;
 
-		-- // create the jacovian
-	    -- int segment_size = segments.size();
+		-- create the jacovian
+	   segment_size = #self.segments
 
-		-- // build the transpose matrix (easier for eigen matrix construction)
-	    -- MatrixXf jac_t(3*segment_size, 3);
-	    -- for(int i=0; i<3*segment_size; i+=3) {
-		    -- Matrix<float, 1, 3> row_theta =compute_jacovian_segment(i/3, goal_point, segments[i/3].get_right());
-		    -- Matrix<float, 1, 3> row_phi = compute_jacovian_segment(i/3, goal_point, segments[i/3].get_up());
-		    -- Matrix<float, 1, 3> row_z = compute_jacovian_segment(i/3, goal_point, segments[i/3].get_z());
+		-- build the transpose matrix (easier for eigen matrix construction)
+	     jac_t = matrix:new(3*segment_size, 3);
+	     for( i=1, i<3*segment_size,3) do
+			selector=math.floor(i/3)
+		     row_theta =compute_jacovian_segment(selector, goal_point, self.segments[selector].get_right());
+		     row_phi = compute_jacovian_segment(selector, goal_point, self.segments[selector].get_up());
+		     row_z = compute_jacovian_segment(selector, goal_point, self.segments[selector].get_z());
 
-		    -- jac_t(i, 0) = row_theta(0, 0);
-		    -- jac_t(i, 1) = row_theta(0, 1);
-		    -- jac_t(i, 2) = row_theta(0, 2);
+		    jac_t.setRow(i, row_theta)
 
-		    -- jac_t(i+1, 0) = row_phi(0, 0);
-		    -- jac_t(i+1, 1) = row_phi(0, 1);
-		    -- jac_t(i+1, 2) = row_phi(0, 2);
+		    jac_t.setRow(i+1, row_phi) 
 
-		    -- jac_t(i+2, 0) = row_z(0, 0);
-		    -- jac_t(i+2, 1) = row_z(0, 1);
-		    -- jac_t(i+2, 2) = row_z(0, 2);
-		-- }
+		    jac_t.setRow(i+2, row_z) 
+		end
 
-		-- // compute the final jacovian
-	    -- MatrixXf jac(3, 3*segment_size);
-	    -- jac = jac_t.transpose();
+		-- compute the final jacovian
+	   jac =jac_t.transpose()
+		pinv_jac = Matrix:new(3*segment_size,3)
+		pinv_jac= getPseudoInverse(jac)
+		
+		changes = pinv_jac * dP
+		
+		for i=1, i<3*segment_size, 3 do
+			selector=math.floor(i/3)
+			-- save the current transformation on the segments
+		   self.segments[selector].save_transformation();
 
-	    -- Matrix<float, Dynamic, Dynamic> pseudo_ijac;
-	    -- MatrixXf pinv_jac(3*segment_size, 3);
-	    -- pinv_jac = pseudoInverse(jac);
+			-- apply the change to the theta angle
+		    self.segments[selector].apply_angle_change(changes[i], segments[selector].get_right())
+			-- apply the change to the phi angle
+			 self.segments[selector].apply_angle_change(changes[i+1], self.segments[selector].get_up())
 
-	    -- Matrix<float, Dynamic, 1> changes = pinv_jac * dP;
+			-- apply the change to the z angle
+			self.segments[selector].apply_angle_change(changes[i+2], self.segments[selector].get_up())
+		end
 
+		-- compute current_point after making changes
+		current_point = self.calculate_end_effector()
 
-	    -- for(int i=0; i<3*segment_size; i+=3) {
-			-- // save the current transformation on the segments
-		    -- segments[i/3].save_transformation();
+		--cout << "current_point: " << vectorString(current_point) << endl;
+		--cout << "goal_point: " << vectorString(goal_point) << endl;
 
-			-- // apply the change to the theta angle
-		    -- segments[i/3].apply_angle_change(changes[i], segments[i/3].get_right());
-			-- // apply the change to the phi angle
-			-- //segments[i/3].apply_angle_change(3.1415/3, segments[i/3].get_up());
-			-- segments[i/3].apply_angle_change(changes[i+1], segments[i/3].get_up());
-			-- // apply the change to the z angle
-		    -- segments[i/3].apply_angle_change(changes[i+2], segments[i/3].get_z());
-		-- }
+	    prev_err = curr_err;
+	    curr_err = (goal_point - current_point).norm();
 
-		-- // compute current_point after making changes
-	    -- current_point = calculate_end_effector();
+	    halving_count = 0;
 
-		-- //cout << "current_point: " << vectorString(current_point) << endl;
-		-- //cout << "goal_point: " << vectorString(goal_point) << endl;
+		-- make sure we aren't iterating past the solution
+	    while (curr_err > last_err) do
+			-- undo changes
+		    for int i=1, segment_size,1 do
+				-- unapply the change to the saved angle
+			    self.segments[i].load_transformation();
+			end
+			
+		    current_point = self.calculate_end_effector();
+		     changes = changes/2;
+			-- reapply halved changes
+		    for i=1, 3*segment_size, 3 do 
+			selector=i/3
+				-- save the current transformation on the segments
+			    -- segments[selector].save_transformation();
 
-	    -- prev_err = curr_err;
-	    -- curr_err = (goal_point - current_point).norm();
+				-- apply the change to the theta angle
+				self.segments[selector].apply_angle_change(changes[i], self.segments[selector].get_right());
+				-- apply the change to the phi angle
+			    self.segments[selector].apply_angle_change(changes[i+1], self.segments[selector].get_up());
+				-- apply the change to the z angle
+			    self.segments[selector].apply_angle_change(changes[i+2], self.segments[selector].get_z());
+			end
 
-	    -- int halving_count = 0;
+			-- compute the end_effector and measure error
+		    current_point = self.calculate_end_effector();
+		     prev_err = curr_err;
+		     curr_err = (goal_point - current_point).norm();
 
-		-- // make sure we aren't iterating past the solution
-	    -- while (curr_err > last_err) {
-			-- // undo changes
-		    -- for(int i=0; i<segment_size; i++) {
-				-- // unapply the change to the saved angle
-			    -- segments[i].load_transformation();
-			-- }
-		    -- current_point = calculate_end_effector();
-		    -- changes *= 0.5;
-			-- // reapply halved changes
-		    -- for(int i=0; i<3*segment_size; i+=3) {
-				-- // save the current transformation on the segments
-			    -- segments[i/3].save_transformation();
+		     halving_count++;
+		    if (halving_count > 100) then
+			     break
+			end
+		end
 
-				-- // apply the change to the theta angle
-			   -- // segments[i/3].apply_angle_change(3.1415/8, segments[i/3].get_right());
-				-- segments[i/3].apply_angle_change(changes[i], segments[i/3].get_right());
-				-- // apply the change to the phi angle
-			    -- segments[i/3].apply_angle_change(changes[i+1], segments[i/3].get_up());
-				-- // apply the change to the z angle
-			    -- segments[i/3].apply_angle_change(changes[i+2], segments[i/3].get_z());
-			-- }
-
-			-- // compute the end_effector and measure error
-		    -- current_point = calculate_end_effector();
-		    -- prev_err = curr_err;
-		    -- curr_err = (goal_point - current_point).norm();
-
-		    -- halving_count++;
-		    -- if (halving_count > 100)
-			    -- break;
-		-- }
-
-	    -- if (curr_err > last_err) {
-			-- // undo changes
-		    -- for(int i=0; i<segment_size; i++) {
-				-- // unapply the change to the saved angle
-			    -- segments[i].load_last_transformation();
-			-- }
-		    -- current_point = calculate_end_effector();
-		    -- curr_err = (goal_point - current_point).norm();
-		    -- break;
-		-- }
-	    -- for(int i=0; i<segment_size; i++) {
-			-- // unapply the change to the saved angle
-		    -- segments[i].save_last_transformation();
-		-- }
-	    -- last_err = curr_err;
+			if (curr_err > last_err) then
+				-- undo changes
+					for(int i=1, segment_size, i++) do
+						-- unapply the change to the saved angle
+						self.segments[i].load_last_transformation();
+					end
+				current_point = self.calculate_end_effector();
+				curr_err = (goal_point - current_point).norm();
+				break
+			end
+			
+			for  i=1, segment_size do
+				-- unapply the change to the saved angle
+			   self.segments[i].save_last_transformation();
+			end
+		last_err = curr_err;
 
 
-		-- // make sure we don't infinite loop
-	    -- count++;
-	    -- if (count > max_iterations) {
-		    -- break;
-		-- }
-	-- }
+		-- make sure we don't infinite loop
+	     ItterationCount=ItterationCount+1
+		if (ItterationCount > max_iterations) then
+		    break
+		end
+	end
 
-
-	-- applyIkTransformation(OVERRIDE);
+	self.applyIkTransformation("OVERRIDE");
 end
 
-function applyIK(self,boolCounterUnitRotation)
 
-end
 
-function setIKActive(self)
-
-end
 
 function SetUnitIKGoal(self,boolIsWorldCoordinate,vTarget)
+	self.boolIsWorldCoordinate=boolIsWorldCoordinate
 	self.vGoal= vTarget
 end
 
@@ -211,9 +200,13 @@ function SetUnitIKPieceLimits(self, pieceNumber, vLimX, vLimY, vLimZ)
 
 end
 
--- //////////////////////////////////////////////////////////////////////
--- // Template for the pseudo Inverse
--- //////////////////////////////////////////////////////////////////////
+
+function getPseudoInverse(jac)
+
+
+----------------------------------------------------------------------
+-- Template for the pseudo Inverse
+----------------------------------------------------------------------
 -- template<typename _Matrix_Type_>
 -- _Matrix_Type_ pseudoInverse(const _Matrix_Type_ &a, double epsilon =
 -- std::numeric_limits<double>::epsilon())
@@ -226,171 +219,19 @@ end
 	-- tolerance).select(svd.singularValues().array().inverse(),
 	-- 0).matrix().asDiagonal() * svd.matrixU().adjoint();
 -- }
--- //////////////////////////////////////////////////////////////////////
+----------------------------------------------------------------------
+end
+ 
 
-
-
--- void IkChain::solve( float  life_count) 
--- {
-	-- // prev and curr are for use of halving
-	-- // last is making sure the iteration gets a better solution than the last iteration,
-	-- // otherwise revert changes
-	-- Point3f goal_point;
-	-- goal_point = this->goalPoint;
-    -- float prev_err, curr_err, last_err = 9999;
-    -- Point3f current_point;
-    -- int max_iterations = 200;
-    -- int count = 0;
-    -- float err_margin = 0.01;
-
-    -- goal_point -= base;
-    -- if (goal_point.norm() > this->getMaxLength()) {
-		-- std::cout<<"Goal Point out of reachable sphere! Normalied to" << this->getMaxLength()<<std::endl;
-	    -- goal_point =  ( this->goalPoint.normalized() * this->getMaxLength());
-	-- }
-	
-    -- current_point = calculate_end_effector();
-	-- printPoint("Base Point:",base);
-	-- printPoint("Start Point:",current_point);
-	-- printPoint("Goal  Point:",goal_point);
-	-- // save the first err
-    -- prev_err = (goal_point - current_point).norm();
-    -- curr_err = prev_err;
-    -- last_err = curr_err;
-
-	-- // while the current point is close enough, stop iterating
-    -- while (curr_err > err_margin) {
-		-- // calculate the difference between the goal_point and current_point
-	    -- Vector3f dP = goal_point - current_point;
-
-		-- // create the jacovian
-	    -- int segment_size = segments.size();
-
-		-- // build the transpose matrix (easier for eigen matrix construction)
-	    -- MatrixXf jac_t(3*segment_size, 3);
-	    -- for(int i=0; i<3*segment_size; i+=3) {
-		    -- Matrix<float, 1, 3> row_theta =compute_jacovian_segment(i/3, goal_point, segments[i/3].get_right());
-		    -- Matrix<float, 1, 3> row_phi = compute_jacovian_segment(i/3, goal_point, segments[i/3].get_up());
-		    -- Matrix<float, 1, 3> row_z = compute_jacovian_segment(i/3, goal_point, segments[i/3].get_z());
-
-		    -- jac_t(i, 0) = row_theta(0, 0);
-		    -- jac_t(i, 1) = row_theta(0, 1);
-		    -- jac_t(i, 2) = row_theta(0, 2);
-
-		    -- jac_t(i+1, 0) = row_phi(0, 0);
-		    -- jac_t(i+1, 1) = row_phi(0, 1);
-		    -- jac_t(i+1, 2) = row_phi(0, 2);
-
-		    -- jac_t(i+2, 0) = row_z(0, 0);
-		    -- jac_t(i+2, 1) = row_z(0, 1);
-		    -- jac_t(i+2, 2) = row_z(0, 2);
-		-- }
-
-		-- // compute the final jacovian
-	    -- MatrixXf jac(3, 3*segment_size);
-	    -- jac = jac_t.transpose();
-
-	    -- Matrix<float, Dynamic, Dynamic> pseudo_ijac;
-	    -- MatrixXf pinv_jac(3*segment_size, 3);
-	    -- pinv_jac = pseudoInverse(jac);
-
-	    -- Matrix<float, Dynamic, 1> changes = pinv_jac * dP;
-
-
-	    -- for(int i=0; i<3*segment_size; i+=3) {
-			-- // save the current transformation on the segments
-		    -- segments[i/3].save_transformation();
-
-			-- // apply the change to the theta angle
-		    -- segments[i/3].apply_angle_change(changes[i], segments[i/3].get_right());
-			-- // apply the change to the phi angle
-			-- //segments[i/3].apply_angle_change(3.1415/3, segments[i/3].get_up());
-			-- segments[i/3].apply_angle_change(changes[i+1], segments[i/3].get_up());
-			-- // apply the change to the z angle
-		    -- segments[i/3].apply_angle_change(changes[i+2], segments[i/3].get_z());
-		-- }
-
-		-- // compute current_point after making changes
-	    -- current_point = calculate_end_effector();
-
-		-- //cout << "current_point: " << vectorString(current_point) << endl;
-		-- //cout << "goal_point: " << vectorString(goal_point) << endl;
-
-	    -- prev_err = curr_err;
-	    -- curr_err = (goal_point - current_point).norm();
-
-	    -- int halving_count = 0;
-
-		-- // make sure we aren't iterating past the solution
-	    -- while (curr_err > last_err) {
-			-- // undo changes
-		    -- for(int i=0; i<segment_size; i++) {
-				-- // unapply the change to the saved angle
-			    -- segments[i].load_transformation();
-			-- }
-		    -- current_point = calculate_end_effector();
-		    -- changes *= 0.5;
-			-- // reapply halved changes
-		    -- for(int i=0; i<3*segment_size; i+=3) {
-				-- // save the current transformation on the segments
-			    -- segments[i/3].save_transformation();
-
-				-- // apply the change to the theta angle
-			   -- // segments[i/3].apply_angle_change(3.1415/8, segments[i/3].get_right());
-				-- segments[i/3].apply_angle_change(changes[i], segments[i/3].get_right());
-				-- // apply the change to the phi angle
-			    -- segments[i/3].apply_angle_change(changes[i+1], segments[i/3].get_up());
-				-- // apply the change to the z angle
-			    -- segments[i/3].apply_angle_change(changes[i+2], segments[i/3].get_z());
-			-- }
-
-			-- // compute the end_effector and measure error
-		    -- current_point = calculate_end_effector();
-		    -- prev_err = curr_err;
-		    -- curr_err = (goal_point - current_point).norm();
-
-		    -- halving_count++;
-		    -- if (halving_count > 100)
-			    -- break;
-		-- }
-
-	    -- if (curr_err > last_err) {
-			-- // undo changes
-		    -- for(int i=0; i<segment_size; i++) {
-				-- // unapply the change to the saved angle
-			    -- segments[i].load_last_transformation();
-			-- }
-		    -- current_point = calculate_end_effector();
-		    -- curr_err = (goal_point - current_point).norm();
-		    -- break;
-		-- }
-	    -- for(int i=0; i<segment_size; i++) {
-			-- // unapply the change to the saved angle
-		    -- segments[i].save_last_transformation();
-		-- }
-	    -- last_err = curr_err;
-
-
-		-- // make sure we don't infinite loop
-	    -- count++;
-	    -- if (count > max_iterations) {
-		    -- break;
-		-- }
-	-- }
-
-
-	-- applyIkTransformation(OVERRIDE);
-   -- }
-
--- //Returns the Negated Accumulated Rotation
+--Returns the Negated Accumulated Rotation
 function GetBoneBaseRotation()-- Point3f IkChain::GetBoneBaseRotation()
 -- {
 	-- Point3f accumulatedRotation = Point3f(0,0,0);
 	-- float3  modelRot;
 	-- LocalModelPiece * parent = segments[0].piece;
-	-- //if the goalPoint is a world coordinate, we need the units rotation out of the picture
+	--if the goalPoint is a world coordinate, we need the units rotation out of the picture
   
-	-- while (parent != NULL){
+	-- while (parent != NULL)then
 		-- modelRot= parent->GetRotation();
 		-- accumulatedRotation[0] -= modelRot.x;
 		-- accumulatedRotation[1] -= modelRot.y;
@@ -400,8 +241,8 @@ function GetBoneBaseRotation()-- Point3f IkChain::GetBoneBaseRotation()
 			
 	-- }
 
-	-- //add unit rotation on top
-	-- if (isWorldCoordinate){
+	--add unit rotation on top
+	-- if (isWorldCoordinate)then
 		-- const CMatrix44f& matrix = unit->GetTransformMatrix(true);
 		-- assert(matrix.IsOrthoNormal());
 		-- const float3 angles = matrix.GetEulerAnglesLftHand();
@@ -417,98 +258,79 @@ end
 	
 
 
-
-
--- //Returns a Jacovian Segment a row of 3 Elements
+function compute_jacovian_segment( segmentNum, vGoalPoint, vAngle)
+--returns a Point (1 Column, 3 Rows)
+--Returns a Jacovian Segment a row of 3 Elements
 -- Matrix<float, 1, 3>  IkChain::compute_jacovian_segment(int seg_num, Vector3f  goalPoint, Point3f angle) 
--- {
+
 	-- Segment *s = &(segments.at(seg_num));
-	-- // mini is the amount of angle you go in the direction for numerical calculation
+	-- mini is the amount of angle you go in the direction for numerical calculation
 	-- float mini = 0.0005;
 
 	-- Point3f transformed_goal = goalPoint;
-	-- for(int i=segments.size()-1; i>seg_num; i--) {
-		-- // transform the goal point to relevence to this segment
-		-- // by removing all the transformations the segments afterwards
-		-- // apply on the current segment
+	-- for(int i=segments.size()-1; i>seg_num; i--) then
+		-- transform the goal point to relevence to this segment
+		-- by removing all the transformations the segments afterwards
+		-- apply on the current segment
 		-- transformed_goal -= segments[i].get_end_point();
 	-- }
 
 	-- Point3f my_end_effector = calculate_end_effector(seg_num);
 
-	-- // transform them both to the origin
-	-- if (seg_num-1 >= 0) {
+	-- transform them both to the origin
+	-- if (seg_num-1 >= 0) then
 		-- my_end_effector -= calculate_end_effector(seg_num-1);
 		-- transformed_goal -= calculate_end_effector(seg_num-1);
 	-- }
 
-	-- // original end_effector
+	-- original end_effector
 	-- Point3f original_ee = calculate_end_effector();
 
-	-- // angle input is the one you rotate around
-	-- // remove all the rotations from the previous segments by applying them
+	-- angle input is the one you rotate around
+	-- remove all the rotations from the previous segments by applying them
 	-- AngleAxisf t = AngleAxisf(mini, angle);
 
-	-- // transform the segment by some delta(theta)
+	-- transform the segment by some delta(theta)
 	-- s->transform(t);
-	-- // new end_effector
+	-- new end_effector
 	-- Point3f new_ee = calculate_end_effector();
 	
-	-- // reverse the transformation afterwards
+	-- reverse the transformation afterwards
 	-- s->transform(t.inverse());
 
-		-- // difference between the end_effectors
-	-- // since mini is very small, it's an approximation of
-	-- // the derivative when divided by mini
+		-- difference between the end_effectors
+	-- since mini is very small, it's an approximation of
+	-- the derivative when divided by mini
 	-- Vector3f  diff = new_ee - original_ee;
 
-	-- // return the row of dx/dtheta, dy/dtheta, dz/dtheta
+	-- return the row of dx/dtheta, dy/dtheta, dz/dtheta
 	-- Matrix<float, 1, 3> ret;
 	-- ret << diff[0]/mini, diff[1]/mini, diff[2]/mini;
 	-- return ret;
 -- }
+end
+function calculateEndEffector(self, pSgementNumber)
 
--- // computes end_effector up to certain number of segments
--- Point3f IkChain::calculateEndEffector(int segment_num /* = -1 */) {
-	-- Point3f ret;
+	--  computes end_effector up to certain number of segments
 
-	-- int segment_num_to_calc = segment_num;
-	-- // if default value, compute total end effector
-	-- if (segment_num == -1) {
-		-- segment_num_to_calc = segments.size() - 1;
-	-- }
-	-- // else don't mess with it
+	local vecReti= self.base()
+	
+	for i=1;#self.segments do
+		vecReti=vecReti+ self.segments[i].get_end_point()
+	end
 
-	-- // start with base
-	-- ret = base;
-	-- for(int i=0; i<=segment_num_to_calc; i++) {
-		-- // add each segments end point vector to the base
-		-- ret += segments[i].get_end_point();
-	-- }
-	-- // return calculated end effector
-	-- return ret;
--- }
+	-- return calculated end effector
+	 return vecReti
+end
+
+
+
+
 function todoGetUnitMatrice()
 
 
 end
 
-function calculateEndEffector(self)
-	vecReti = Vector:new(0,0,0)
-	--  computes end_effector up to certain number of segments
-
-	vecReti=
-
-	-- // start with base
-	-- reti = base;
-	-- for(int i=0; i<=segment_num_to_calc; i++) {
-		-- // add each segments end point vector to the base
-		-- reti += segments[i].get_end_point();
-	-- }
-	-- // return calculated end effector
-	-- return reti ;
--- }
-end
 
 -- /******************************************************************************/
 function transformGoalToUnitSpace(self,vecGoal) --TODO test
@@ -549,14 +371,15 @@ end
 function createJacobiMatrice(self)
 --TODO implement
 end
+
 function applyTransformation(motionBlendMethod)
 	-- GoalChanged=false;
-	-- //The Rotation the Pieces accumulate, so each piece can roate as if in world
+	--The Rotation the Pieces accumulate, so each piece can roate as if in world
 	-- Point3f pAccRotation= GetBoneBaseRotation();
 	-- pAccRotation= Point3f(0,0,0);
 	
-		-- //Get the Unitscript for the Unit that holds the segment
-		-- for (auto seg = segments.begin(); seg !=  segments.end(); ++seg) {
+		--Get the Unitscript for the Unit that holds the segment
+		-- for (auto seg = segments.begin(); seg !=  segments.end(); ++seg) then
 			-- seg->alteredInSolve = true;
 
 			-- Point3f velocity = seg->velocity;
@@ -566,32 +389,50 @@ function applyTransformation(motionBlendMethod)
 			-- pAccRotation+= rotation;
 
 			-- unit->script->AddAnim(   CUnitScript::ATurn,
-									-- (int)(seg->pieceID),  //pieceID 
-									-- xAxis,//axis  
-									-- 1.0,//velocity(0,0),// speed
-									-- rotation[0], //TODO jointclamp this
-									-- 0.0f //acceleration
+									-- (int)(seg->pieceID),  --pieceID 
+									-- xAxis,--axis  
+									-- 1.0,--velocity(0,0),-- speed
+									-- rotation[0], --TODO jointclamp this
+									-- 0.0f --acceleration
 									-- );
 
 			-- unit->script->AddAnim( CUnitScript::ATurn,
-									-- (int)(seg->pieceID),  //pieceID 
-									-- yAxis,//axis  
-									-- 1.0,//,// speed
-									-- rotation[1], //TODO jointclamp this
-									-- 0.0f //acceleration
+									-- (int)(seg->pieceID),  --pieceID 
+									-- yAxis,--axis  
+									-- 1.0,--,-- speed
+									-- rotation[1], --TODO jointclamp this
+									-- 0.0f --acceleration
 									-- );
 
 			-- unit->script->AddAnim(  CUnitScript::ATurn,
-									-- (int)(seg->pieceID),  //pieceID 
-									-- zAxis,//axis  
-									-- 1.0,// speed
-									-- rotation[2], //TODO jointclamp this
-									-- 0.0f //acceleration
+									-- (int)(seg->pieceID),  --pieceID 
+									-- zAxis,--axis  
+									-- 1.0,-- speed
+									-- rotation[2], --TODO jointclamp this
+									-- 0.0f --acceleration
 									-- );
 		-- }
 
 end
-function createIkChain(unitID, startPiece, endPiece)
+			function get_end_point(self) echo("Todo") end
+			function set_LimitJoint(self) echo("Todo") end
+			function clampJoint(self) echo("Todo") end
+			function get_Rotation(self) echo("Todo") end
+			function get_right(self) echo("Todo") end
+			function get_up(self) echo("Todo") end
+			function get_z(self) echo("Todo") end
+			function get_T(self) echo("Todo") end
+			function get_Magnitude(self) echo("Todo") end
+			function save_transformation(self) echo("Todo") end
+			function load_transformation(self) echo("Todo") end
+			function save_last_transformation(self) echo("Todo") end
+			function load_last_transformation(self) echo("Todo") end
+			function apply_angle_change(self) echo("Todo") end
+			function resetSegment(self) echo("Todo") end
+			function randomizeSegment(self) echo("Todo") end
+			function transformSegment(self) echo("Todo") end
+
+function createIkChain(unitID, startPiece, endPiece,timeResolution, boolIsWorldCoordinate, boolCounterUnitRotation)
 	boolStartPieceValid, _=checkPiece(unitID,startPiece)
 	boolEndPieceValid, PiecList=checkPiece(unitID,endPiece)
 	if not boolStartPieceValid or not boolEndPieceValid then return nil, false end
@@ -604,11 +445,15 @@ local	ikChain={
 		ikID=getUniqueID(),
 		vSpeed=Vector:new(0,0,0),
 		vGoal= Vector:new(0,0,0),
+		base= Vector:new(0,0,0),
 		segments={}
 		jacobiMatrice={},
 		boolGoalChanged=false,
-		boolIsWorldCoordinate=true,
+		boolIsWorldCoordinate=boolIsWorldCoordinate,
 		boolAktive=true,
+		boolCounterUnitRotation = boolCounterUnitRotation,
+		resolution = timeResolution,
+		boolDeleteIkChain= false
 	}
 	for i=1, table.getn(pieceChain) do
 		ikChain.segments[i]={
@@ -621,25 +466,55 @@ local	ikChain={
 							pUnitPieceBasePoint= Vector:new(0,0,0),
 							magnitude =0.0,
 							vOrgDirVec= Vector:new(0,0,0),
+							
 							}
+			setmetatable(ikChain.segments[i],get_end_point)
+			setmetatable(ikChain.segments[i],set_LimitJoint)
+			setmetatable(ikChain.segments[i],clampJoint)
+			setmetatable(ikChain.segments[i],get_Rotation)
+			setmetatable(ikChain.segments[i],get_right)
+			setmetatable(ikChain.segments[i],get_up)
+			setmetatable(ikChain.segments[i],get_z)
+			setmetatable(ikChain.segments[i],get_T)
+			setmetatable(ikChain.segments[i],get_Magnitude)
+			setmetatable(ikChain.segments[i],save_transformation)
+			setmetatable(ikChain.segments[i],load_transformation)
+			setmetatable(ikChain.segments[i],save_last_transformation)
+			setmetatable(ikChain.segments[i],load_last_transformation)
+			setmetatable(ikChain.segments[i],apply_angle_change)
+			setmetatable(ikChain.segments[i],resetSegment)
+			setmetatable(ikChain.segments[i],randomizeSegment)
+			setmetatable(ikChain.segments[i],transformSegment)
+			
+			
 	end
 	
 	ikChain=initIkChain(ikChain)
 	ikChain.jacobiMatrice=createJacobiMatrice(ikChain)
 	
 	setmetatable(ikChain,solveIK)
-	setmetatable(ikChain,applyIK)
-	setmetatable(ikChain,setIKActive)
+
 	setmetatable(ikChain,SetUnitIKGoal)
 	setmetatable(ikChain,SetUnitIKSpeed)
 	setmetatable(ikChain,SetUnitIKPieceLimits)
 	setmetatable(ikChain,setTransformation)
 	setmetatable(ikChain,isValidIKPiece)
 	setmetatable(ikChain,printIkChain)
-	setmetatable(ikChain,calculateEndEffector)
+	setmetatable(ikChain,calculate_end_effector)
 	setmetatable(ikChain,applyTransformation)
 	setmetatable(ikChain,transformGoalToUnitSpace)
 	
-	
+	StartThread(ikLoop, ikChain)
 	return ikChain, ikChain.ikID
+end
+
+function ikLoop(self)
+	while self.boolDeleteIkChain== false do
+	Sleep(self.resolution)
+		while self.boolAktive==true do
+		self:solveIK()
+		Sleep(self.resolution)
+		end
+	end
+
 end
