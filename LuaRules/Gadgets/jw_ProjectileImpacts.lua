@@ -591,7 +591,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if damage/hitPoints > 0.3 then 
 			x,y,z=Spring.GetUnitPosition(unitID)
 			Spring.DestroyUnit(unitID)
-			Spring.CreateUnit("jtree",x,y,z,1,attackerTeam)
+			Spring.CreateUnit("jtree1",x,y,z,1,attackerTeam)
 		end
 	end
 	

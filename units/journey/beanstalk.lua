@@ -70,7 +70,7 @@ local unitDef = {
 		"jestorage",
 		
 		"jdarkgate",		
-		"jtree",
+		"jtree1",
 		"jtree2",
 		
 		"jtree3",
