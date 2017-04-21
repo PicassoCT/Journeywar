@@ -68,7 +68,7 @@ local unitDef = {
 		"jnativevil",
 		"jdrilltree",
 		"jmeconverter",
-		"jtree",
+		"jtree1",
 		"jtree2",
 		"jtree3",
 		"jtreel",

@@ -29,7 +29,7 @@ return {
 	["beanstalk"]= {active="Unroot", passive="Reroot"},
 	["skinfantry"]= {active="Ambush\nMode\nOn", passive="Ambush\nMode\nOff"},
 	["tiglil"]= {active="Ambush\nMode\nOn", passive="Ambush\nMode\nOff"},
-	["jtree"]= {active="Deny \n Energy", passive="Sucked\ndry"},
+	["jtree1"]= {active="Deny \n Energy", passive="Sucked\ndry"},
 	["jtree2"]= {active="Deny \n Energy", passive="Sucked\ndry"},
 	["jtree2active"]= {active="Deny \n Energy", passive="Sucked\ndry"},
 	["jtree3"]= {active="Deny \n Energy", passive="Sucked\ndry"},

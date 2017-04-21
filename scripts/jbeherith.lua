@@ -1614,7 +1614,7 @@ boolMoving=false
 
 function treeTrample()
 	treeTypeTable=getTypeTable(UnitDefNames,{
-		"jtree",
+		"jtree1",
 		"jtree2",
 		"jtree3",
 		"jtree41",

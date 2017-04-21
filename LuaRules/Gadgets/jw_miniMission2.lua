@@ -131,7 +131,7 @@ davinciSpeach1="I dont like this anymore then you do, Administrator, we all miss
 						
 						if boolFlipFlop==false then
 							boolFlipFlop=true
-							tet=spCreateUnit("jtree",math.floor(x+xrand),0,math.floor(z+zrand), 0,_gaiaTeam ) 
+							tet=spCreateUnit("jtree1",math.floor(x+xrand),0,math.floor(z+zrand), 0,_gaiaTeam ) 
 							spSetUnitNeutral(tet,true)
 						else
 							boolFlipFlop=false

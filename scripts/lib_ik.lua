@@ -19,7 +19,26 @@ MA 02110-1301, USA.
 include "lib_UnitScript.lua"
 include "lib_type.lua"
 
-function isValidIKPiece(self, PieceID) --TODO Test
+IkChain={
+		ikID=getUniqueID(),
+		vSpeed=Vector:new(0,0,0),
+		vGoal= Vector:new(0,0,0),
+		base= Vector:new(0,0,0),
+		segments={}
+		jacobiMatrice={},
+		boolGoalChanged=false,
+		boolIsWorldCoordinate=boolIsWorldCoordinate,
+		boolAktive=true,
+		boolCounterUnitRotation = boolCounterUnitRotation,
+		resolution = timeResolution,
+		boolDeleteIkChain= false
+	}
+	
+	IkChain.__index = IkChain
+	
+
+
+function IkChain:isValidIKPiece(self, PieceID) --TODO Test
 if #self.segments < 1 then return false end
 
 	for k,v in pairs(self.segments) do
@@ -28,7 +47,7 @@ if #self.segments < 1 then return false end
 return false
 end
 
-function SetTransformation(self, valX, valY, valZ) --TODO Test
+function IkChain:SetTransformation(self, valX, valY, valZ) --TODO Test
 	for i=0, i < 3* #self.segments, 1 do
 				-- apply the change to the theta angle
 				self.segments[math.floor(i/3)].apply_angle_change(valX, self.segments[math.floor(i/3)].get_right());
@@ -39,7 +58,7 @@ function SetTransformation(self, valX, valY, valZ) --TODO Test
 	end
 end
 
-function solveIK(self, frames)
+function IkChain:solveIK(self, frames)
 
 	-- prev and curr are for use of halving
 	--  last is making sure the iteration gets a better solution than the last iteration,
@@ -187,21 +206,21 @@ end
 
 
 
-function SetUnitIKGoal(self,boolIsWorldCoordinate,vTarget)
+function IkChain:SetUnitIKGoal(self,boolIsWorldCoordinate,vTarget)
 	self.boolIsWorldCoordinate=boolIsWorldCoordinate
 	self.vGoal= vTarget
 end
 
-function SetUnitIKSpeed(self)
+function IkChain:SetUnitIKSpeed(self)
 
 end
 
-function SetUnitIKPieceLimits(self, pieceNumber, vLimX, vLimY, vLimZ)
+function IkChain:SetUnitIKPieceLimits(self, pieceNumber, vLimX, vLimY, vLimZ)
 
 end
 
 
-function getPseudoInverse(jac)
+function IkChain:getPseudoInverse(jac)
 
 
 ----------------------------------------------------------------------
@@ -224,11 +243,11 @@ end
  
 
 --Returns the Negated Accumulated Rotation
-function GetBoneBaseRotation()-- Point3f IkChain::GetBoneBaseRotation()
--- {
-	-- Point3f accumulatedRotation = Point3f(0,0,0);
-	-- float3  modelRot;
-	-- LocalModelPiece * parent = segments[0].piece;
+function IkChain:GetBoneBaseRotation(self)-- Point3f IkChain::GetBoneBaseRotation()
+
+	accumulatedRotation = Vector:new(0,0,0)
+	 modelRot = Vector:new(0,0,0)
+	self.LocalModelPiece * parent = segments[0].piece
 	--if the goalPoint is a world coordinate, we need the units rotation out of the picture
   
 	-- while (parent != NULL)then
@@ -258,7 +277,7 @@ end
 	
 
 
-function compute_jacovian_segment( segmentNum, vGoalPoint, vAngle)
+function IkChain:compute_jacovian_segment( segmentNum, vGoalPoint, vAngle)
 --returns a Point (1 Column, 3 Rows)
 --Returns a Jacovian Segment a row of 3 Elements
 -- Matrix<float, 1, 3>  IkChain::compute_jacovian_segment(int seg_num, Vector3f  goalPoint, Point3f angle) 
@@ -333,7 +352,7 @@ end
 
 
 -- /******************************************************************************/
-function transformGoalToUnitSpace(self,vecGoal) --TODO test
+function IkChain:transformGoalToUnitSpace(self,vecGoal) --TODO test
 	matrice= todoGetUnitMatrice()
 
 	vTemp={[1]=vecGoal.x,[2]=vecGoal.y,[3]=vecGoal.z,[4]=1}
@@ -354,7 +373,7 @@ function transformGoalToUnitSpace(self,vecGoal) --TODO test
 	return vecGoal
 end
 
-function getMaxLength(self) --TODO test
+function IkChain:getMaxLength(self) --TODO test
 totalLength=0
 	for k,segment in pairs(self.segments) do
 		totalLength=totalLength+segment.magnitude
@@ -362,17 +381,17 @@ totalLength=0
 return totalLength
 end
 
-function printIkChain(self)
+function IkChain:printIkChain(self)
 	for k,segment in pairs(self.segments) do
 		segment:printSelf()
 	end
 end
 
-function createJacobiMatrice(self)
+function IkChain:createJacobiMatrice(self)
 --TODO implement
 end
 
-function applyTransformation(motionBlendMethod)
+function IkChain:applyTransformation(motionBlendMethod)
 	-- GoalChanged=false;
 	--The Rotation the Pieces accumulate, so each piece can roate as if in world
 	-- Point3f pAccRotation= GetBoneBaseRotation();
@@ -432,7 +451,7 @@ end
 			function randomizeSegment(self) echo("Todo") end
 			function transformSegment(self) echo("Todo") end
 
-function createIkChain(unitID, startPiece, endPiece,timeResolution, boolIsWorldCoordinate, boolCounterUnitRotation)
+function IkChain:new(unitID, startPiece, endPiece,timeResolution, boolIsWorldCoordinate, boolCounterUnitRotation)
 	boolStartPieceValid, _=checkPiece(unitID,startPiece)
 	boolEndPieceValid, PiecList=checkPiece(unitID,endPiece)
 	if not boolStartPieceValid or not boolEndPieceValid then return nil, false end
@@ -440,21 +459,7 @@ function createIkChain(unitID, startPiece, endPiece,timeResolution, boolIsWorldC
 
 	pieceHierarchy=getPieceHierarchy(unitID,piece)
 	pieceChain=getPieceChain(pieceHierarchy,startPiece, endPiece)
-
-local	ikChain={
-		ikID=getUniqueID(),
-		vSpeed=Vector:new(0,0,0),
-		vGoal= Vector:new(0,0,0),
-		base= Vector:new(0,0,0),
-		segments={}
-		jacobiMatrice={},
-		boolGoalChanged=false,
-		boolIsWorldCoordinate=boolIsWorldCoordinate,
-		boolAktive=true,
-		boolCounterUnitRotation = boolCounterUnitRotation,
-		resolution = timeResolution,
-		boolDeleteIkChain= false
-	}
+	
 	for i=1, table.getn(pieceChain) do
 		ikChain.segments[i]={
 							pieceID =pieceChain[i],
@@ -489,26 +494,17 @@ local	ikChain={
 			
 	end
 	
+
 	ikChain=initIkChain(ikChain)
 	ikChain.jacobiMatrice=createJacobiMatrice(ikChain)
 	
-	setmetatable(ikChain,solveIK)
 
-	setmetatable(ikChain,SetUnitIKGoal)
-	setmetatable(ikChain,SetUnitIKSpeed)
-	setmetatable(ikChain,SetUnitIKPieceLimits)
-	setmetatable(ikChain,setTransformation)
-	setmetatable(ikChain,isValidIKPiece)
-	setmetatable(ikChain,printIkChain)
-	setmetatable(ikChain,calculate_end_effector)
-	setmetatable(ikChain,applyTransformation)
-	setmetatable(ikChain,transformGoalToUnitSpace)
 	
 	StartThread(ikLoop, ikChain)
 	return ikChain, ikChain.ikID
 end
 
-function ikLoop(self)
+function IkChain:ikLoop(self)
 	while self.boolDeleteIkChain== false do
 	Sleep(self.resolution)
 		while self.boolAktive==true do
@@ -518,3 +514,5 @@ function ikLoop(self)
 	end
 
 end
+
+setmetatable(IkChain, { __call = function(_, ...) return IkChain.new(...) end })	
