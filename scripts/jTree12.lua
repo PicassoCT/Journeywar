@@ -7,168 +7,25 @@ include "lib_Animation.lua"
 
 include "lib_Build.lua" 
 
-eyenumber=14
-local EYES= {}
-for i=1, 14, 1 do
-	EYES[i]= {}
-	eyetemp = "eye0"..i
-	EYES[i]= piece (eyetemp)
-end
 
-
-root={}
-for i=1, 9, 1 do
-	root[i]={}
-	roottemp="root"..i
-	root[i]=piece (roottemp)
-end
-
-standtree={}
-for i=1, 5, 1 do
-	standtree[i]={}
-	standtreetemp="standtree"..i
-	standtree[i]=piece (standtreetemp)
-end
-
-ast={}
-for i=1, 7, 1 do
-	ast[i]={}
-	asttemp="ast"..i
-	ast[i]=piece (asttemp)
-end
-
-function TreeTrample()
-	Spring.DestroyUnit(unitID,true,false)
-end
-
-
-ast3L2=piece "ast3L2"
-ast2L3=piece "ast2L3"
-treerotatestump=piece "treerotatestump"
-center=piece "center"
-ast2L1=piece "ast2L1"
-ast5L1=piece "ast5L1"
-ast4L1=piece "ast4L1"
-ast4L2=piece "ast4L2"
-ast1L3=piece "ast1L3"
-ast1L2=piece "ast1L2"
-ast1L1=piece "ast1L1"
-root5base=piece "root5base"
-ast2L2=piece "ast2L2"
-ast5L2=piece "ast5L2"
-ast3L1=piece "ast3L1"
-ast1L4=piece "ast1L4"
-baumkrone=piece "baumkrone"
-rootbase=piece "rootbase"
-root2base=piece "root2base"
-root3base=piece "root3base"
 treebasis=piece "treebasis"
+center=piece "center"
+treetoproto=piece "treetoproto"
+treerotatestump=piece "LowStem"
+counterrotatestump=piece "UpStem"
 
-
-function diceNewDeg(oldDeg,upValue,margin)
+oldDeg=0
+function diceNewDeg(upValue,margin)
 	temp=0
 	if margin > 0 then
 		temp=math.random((margin*-1),margin)
 	else
 		temp=math.random(margin,-1*margin)
 	end
-	return (oldDeg+(upValue+temp))
+	oldDeg=oldDeg +(upValue+temp)
+	return oldDeg
 end
 
-function shuffle(t)
-	local n = #t
-	
-	while n >= 2 do
-		-- n is now the last pertinent index
-		local k = math.random(n) -- 1 <= k <= n
-		-- Quick swap
-		t[n], t[k] = t[k], t[n]
-		n = n - 1
-	end
-	
-	return t
-end
-
-function aSilentGuardian(handedoverNumber)
-	boolGuardian=false
-	Sleep(500)
-	howlong=math.random(10,50)
-	for i=1,howlong,1 do
-		Show(EYES[handedoverNumber])
-		trulla=handedoverNumber-1
-		Show(EYES[trulla])
-		showy=(1000-(i*10))
-		Sleep(showy)
-		Hide(EYES[handedoverNumber])
-		Hide(EYES[trulla])
-		Sleep(1024)
-		Sleep(i)
-	end
-	
-	boolGuardian=true
-end
-
-function blinky(nr1, nr2,Time)
-	Show(EYES[nr1])
-	Show(EYES[nr2])
-	Sleep(Time)
-	Hide(EYES[nr1])
-	Hide(EYES[nr2])
-	Sleep(600)
-	Show(EYES[nr1])
-	Show(EYES[nr2])
-end
-
-boolGuardian=false
-function hungryEYES()
-	
-	while(true)do
-		--guardian
-		
-		choicy=math.random(2,eyenumber)
-		StartThread(aSilentGuardian,choicy)
-		--idelwaiting thread
-		while(boolGuardian==true) do
-			Sleep(400)
-		end
-		--rest
-		randTime=math.random(5000,42000)
-		Sleep(randTime)
-		
-		--wideAwake, one after another
-		for i=1, (eyenumber)-1,1 do
-			Show((EYES[i]))
-			Show(EYES[i+1])
-			s=math.random(100,500)
-			Sleep(s)
-		end
-		x=math.random(10,25)
-		while (x > 0 ) do 
-			--
-			for i=1,(eyenumber)-1,2 do
-				y=math.random(100,900)	
-				Sleep(y)
-				StartThread(blinky,i,i+1,y*3)
-			end
-			Sleep(3000)
-			
-			x=x-1	
-		end	
-		
-		
-		--dosing off
-		for i=1,(eyenumber),1 do
-			Hide((EYES[i]))
-			Sleep(800)
-			if i%2==0 then
-				Sleep(i*250)
-			end
-		end
-		Sleep(9000)
-		
-	end
-	
-end
 
 function aListOfRandom(nrOfElements)
 	tempList={}
@@ -179,9 +36,79 @@ function aListOfRandom(nrOfElements)
 	return tempList
 end
 
+function TurnRoofRandom()
 
-rootTurnDeg=0
+	--if a tree is drunk in the woods and falls down
+	randoValX=math.random(-22,22)
+	randoValZ=math.random(-11,11)
+	randoValY=math.random(-360,360)
+	Turn(treerotatestump,x_axis,math.rad(randoValX),0)
+	Turn(treerotatestump,y_axis,math.rad(randoValY),0)
+	Turn(treerotatestump,z_axis,math.rad(randoValZ),0)
+	process(TableOfPieceGroups["Root"],
+			function(id)
+			Turn(id,x_axis,math.rad(-1*randoValX),0)
+			Turn(id,z_axis,math.rad(-1*randoValZ),0)
+			end
+			)
+	-- getting the baumkrone straighted
+	percentage=math.random(1,100)/100
+	Turn(counterrotatestump,x_axis,math.rad(-1*randoValX*percentage),0)
+	Turn(counterrotatestump,z_axis,math.rad(-1*randoValZ*percentage),0)
+	Turn(counterrotatestump,y_axis,math.rad(-1*randoValY*percentage),0)
+	
+	Turn(treetoproto,x_axis,math.rad(-1*randoValX*(1-percentage)),0)
+	Turn(treetoproto,z_axis,math.rad(-1*randoValZ*(1-percentage)),0)
+	Turn(treetoproto,y_axis,math.rad(-1*randoValY*(1-percentage)),0)
+	
+end
+
+function createTreeTop()
+
+	process(TableOfPieceGroups["rooftop"],
+	function(id)
+		Turn(id,z_axis,math.rad(math.random(-10,10)),0)
+		rotationValue=diceNewDeg(15,6)
+		Turn(id,y_axis,math.rad(rotationValue),0)
+	end)
+	
+	process(TableOfPieceGroups["TreeCarry"],
+	function(id)
+		Turn(id,y_axis,math.rad(math.random(-15,15)),0)
+		Turn(id,z_axis,math.rad(math.random(-5,5)),0)
+	end)
+		process(TableOfPieceGroups["TreeMid"],
+	function(id)
+		Turn(id,y_axis,math.rad(math.random(-15,15)),0)
+		Turn(id,z_axis,math.rad(math.random(-5,5)),0)
+	end)
+	
+			process(TableOfPieceGroups["TreeUp"],
+	function(id)
+		Turn(id,y_axis,math.rad(math.random(-15,15)),0)
+		Turn(id,z_axis,math.rad(math.random(-5,5)),0)
+	end)
+			process(TableOfPieceGroups["TreeTop"],
+	function(id)
+		Turn(id,z_axis,math.rad(math.random(-5,5)),0)
+	end)
+	
+
+end
+
+function buildATree()
+	createTreeTop()
+	--centerturn
+	randoMarlo=math.random(0,360)
+	Turn(center,y_axis,math.rad(randoMarlo))
+	StartThread(buildATree)
+end
+
+pieceTable= generatepiecesTableAndArrayCode(unitID, false)
+TableOfPieceGroups={}
 function script.Create()
+	TableOfPieceGroups=	makePiecesTablesByNameGroups(false,true)
+	
 	StartThread(delayedActivation)
 	teamID=Spring.GetUnitTeam(unitID)
 	x,y,z=Spring.GetUnitPosition(unitID)
@@ -191,86 +118,8 @@ function script.Create()
 		GG.UnitsToSpawn:PushCreateUnit("gtreeplate2",x,y,z,0,teamID)
 	end
 	
-	--centerturn
-	randoMarlo=math.random(0,360)
-	Turn(center,y_axis,math.rad(randoMarlo))
-	
-	--the roots turning
-	selector=aListOfRandom(table.getn(root))
-	for i=1,table.getn(root),1 do
-		Turn((root[selector[i]]),y_axis,rootTurnDeg)
-		rootTurnDeg=diceNewDeg(rootTurnDeg,40,15)
-	end
-	--setup the rootrotatbles
-	pie=math.random(0,360)
-	Turn(root2base,y_axis,pie,0)
-	pie=math.random(0,360)
-	Turn(root3base,y_axis,pie,0)
-	pie=math.random(0,360)
-	Turn(root5base,y_axis,pie,0)
-	
-	--we decide upon a log
-	deci=math.random(1,5)
-	
-	add=0
-	for i=1,table.getn(standtree),1 do
-		if i~= deci then
-			Hide(standtree[i])
-		end
-	end
-	--shwoing another trunk
-	deciAdd=math.random(0,1)
-	if deciAdd== 1 then
-		add=math.random(1,5)
-		Show(standtree[add])
-	end
-	--EYES wide shut?
-	if deci== 4 or add == 4 then
-		StartThread(hungryEYES)
-		Hide(baumkrone)
-		for i=1, eyenumber,1 do
-			temp=(EYES[i])
-			Hide(temp)
-		end
-		
-	else
-		for i=1, eyenumber,1 do
-			temp=(EYES[i])
-			Hide(temp)
-		end
-	end
-	
-	--if a tree is drunk in the woods and falls down
-	randoValX=math.random(-22,22)
-	randoValZ=math.random(-11,11)
-	randoValY=math.random(0,360)
-	Turn(treerotatestump,x_axis,math.rad(randoValX),0)
-	Turn(treerotatestump,y_axis,math.rad(randoValY),0)
-	Turn(treerotatestump,z_axis,math.rad(randoValZ),0)
-	-- getting the baumkrone straighted
-	Turn(baumkrone,x_axis,math.rad(-1*randoValX),0)
-	Turn(baumkrone,z_axis,math.rad(-1*randoValZ),0)
-	
-	--liane?
-	li=math.random(0,2)
-	if li==1 then
-		Hide(ast4L1)
-		Hide(ast4L2)
-	end
-	--the treetop randomizing
-	
-	--the roots turning
-	astTurndeg=0
-	selector=aListOfRandom(table.getn(ast))
-	for i=1,table.getn(ast),1 do
-		Turn((ast[selector[i]]),y_axis,astTurndeg)
-		astTurndeg=diceNewDeg(astTurndeg,51,15)
-	end
-	if math.random(0,7)==2 then
-		StartThread(playSoundByUnitTypOS,unitID,0.5,{
-			{name="sounds/jtree/djunglefever"..math.floor(math.random(1,3))..".ogg",Time=15000}
-		})
-	end
+
+
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs, 0.75)
 end
 
