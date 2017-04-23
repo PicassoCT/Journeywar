@@ -262,7 +262,10 @@ if (gadgetHandler:IsSyncedCode()) then
 		end,
 		[lazarusDeviceDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			teamid=Spring.GetUnitTeam(AttackerID)
+			oldComender=GG.ComEnders[teamID]
 			GG.ComEnders[teamID]=Spring.CreateUnit(UnitDefNames["ccomender"].id,	px,py,pz, 1, teamid)
+			GG.LazarusDeviceActive[GG.ComEnders[teamID]]= GG.LazarusDeviceActive[oldComender]-1
+			
 		end,	
 		[celetrochainWeaponDefID]= function(weaponDefID, px, py, pz, AttackerID)
 			teamid=Spring.GetUnitTeam(AttackerID)
@@ -691,14 +694,13 @@ if (gadgetHandler:IsSyncedCode()) then
 		hp,maxhp=Spring.GetUnitHealth(unitID)
 		if hp/maxhp < 0.5 and hp < 300 then
 			sx,sy,sz=Spring.GetUnitCollisionVolumeData(unitID)
-			if math.sqrt(sx ^2 +sy ^2 + sz^2) >35 then				
+			if math.sqrt(sx ^2 + sy ^2 + sz^2) >15 then				
 				x,y,z=Spring.GetUnitPosition(unitID)
 				slicerColum=Spring.CreateUnit("cmeatcolumn",	x,y,z, 1, unitTeam) 
 				Spring.SetUnitNoSelect(slicerColum,true)
-				env = Spring.UnitScript.GetScriptEnv(slicerColum)
-				if env then
-					Spring.UnitScript.CallAsUnit(unitID, env.youAreFuckingDead, unitID )		
-				end				
+				if not  GG.SlicerTable then  GG.SlicerTable ={} end
+				 GG.SlicerTable[slicerColum]=unitID
+			
 			end
 		end
 	end

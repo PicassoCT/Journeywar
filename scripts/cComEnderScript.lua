@@ -1586,7 +1586,7 @@ Weapons[eAARocket][eShowFunc]=showARocket
 Weapons[eAARocket][eAmmoCost]= 0.1 	 --AmmoCost 
 Weapons[eAARocket][eStabCost]= 0.05 		 --StabilityCost	 
 Weapons[eAARocket][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
-Weapons[eAARocket][eCoolDown]= 700 		 --Downtime
+Weapons[eAARocket][eCoolDown]= 6700 		 --Downtime
 Weapons[eAARocket][eRecoilMx]= 0 		 	 --RecoilMax	
 Weapons[eAARocket][eCurrCool]= 0 		 	 --RecoilMax	
 
@@ -2511,19 +2511,19 @@ function script.Killed(recentDamage, maxHealth)
 	if LazarusDevice > 0 then
 		if not 	GG.LazarusDeviceActive then 	GG.LazarusDeviceActive= {} end
 		
-		GG.LazarusDeviceActive[unitID]=LazarusDevice-1
+		GG.LazarusDeviceActive[unitID]=LazarusDevice
 		x,y,z=Spring.GetUnitPosition(unitID)
 		teamid=Spring.GetUnitTeam(attackerID)
 		gx,gy,gz=Spring.GetTeamStartPosition(teamid)
 		
 		local	 EjectProject={
 			pos = { x, y+max+10, z}, 
-			speed={0,math.random(1,3),0},
+			speed={0,math.random(10,15)/10,0},
 			["end"] = {gx,gy,gz},
 			owner = unitID,
 			team = teamid,	
-			spread={math.random(-5,5),math.random(-5,5),math.random(-5,5)},
-			ttl=1520,
+			spread={math.random(-5,5),math.random(1,5),math.random(-5,5)},
+			ttl=19520,
 			maxRange = 3600,
 			gravity = Game.gravity,
 			startAlpha = 1,

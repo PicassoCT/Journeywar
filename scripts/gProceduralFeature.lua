@@ -336,17 +336,17 @@ end
 
 function aChainExplosion(ed)
 	distance =0 
-	posx,posy,posz=distanceUnitToUnitVec(unitID,ed)
+	pos=vectorUnitToUnit(unitID,ed)
 	
 	while distance <32 do
 		wed=Spring.GetUnitNearesAlly(ed)
 		if wed then
 		assertNum(wed)
-		osx,osy,osz=distanceUnitToUnitVec(UnitID,wed)
-		a,b,c=posx-osx,posy-osy,posz-osz
+		osv=vectorUnitToUnit(UnitID,wed)
+		a,b,c=pos.x-osv.x,pos.y-osv.y,pos.z-osv.z
 		distance=math.sqrt(a*a+b*b+c*c)
 		Spring.DestroyUnit(ed)
-		posx,posy,posz=osx,osy,osz
+		pos.x,pos.y,pos.z=osv.x,osv.y,osv.z
 		ed=wed
 		end
 	end
