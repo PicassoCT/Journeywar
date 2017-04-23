@@ -26,7 +26,7 @@ lib_boolDebug= false --GG.BoolDebug or false
 --Chapter: Tableoperations
 --======================================================================================
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
--->Example: TableContaining[key].TableReamining[key].valueName or [nr] , value
+-->Example: "TableContaining[key].TableReamining[key].valueName" or [nr] , value
 function makeTableFromString(FormatString,assignedValue, ...)
 	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
 	if loadstring(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; loadstring(FormatString) return end
@@ -59,7 +59,7 @@ function makeTableFromString(FormatString,assignedValue, ...)
 	return loadstring(Appendix.."==".. asignedValue)
 end
 
-
+--> Creates a Table and initalizazes it with default value
 function makeTable(default, xDimension, yDimension, zDimension)
 	local RetTable={}
 	if not xDimension then return default end
@@ -139,7 +139,7 @@ function validateUnitTable(T)
 	
 	for i=#T,1, -1 do
 		boolUnitDead = Spring.GetUnitIsDead(T[i])
-		if not boolUnitDead and boolUnitDead==false then
+		if boolUnitDead and boolUnitDead==false then
 			TVeryMuchAlive[#TVeryMuchAlive+1]=T[i]
 		end
 	end
@@ -187,11 +187,11 @@ function distance(x,y,z,xa,ya,za)
 end
 
 --> get two unit distVector
-function distanceUnitToUnitVec(idA, idB)
+function vectorUnitToUnit(idA, idB)
 	x,y,z =Spring.GetUnitPosition(idA)
 	xb,yb,zb=Spring.GetUnitPosition(idB)
 
-	return x-xb, y-yb, z-zb
+	return Vector:new(x-xb, y-yb, z-zb)
 end
 
 -->returns the Distance between two units
@@ -213,11 +213,14 @@ end
 
 
 
---> gives a close hunch at the distance and avoids expensive sqrt math
-function approxDist(x,y,z)
-	x=(x*x+y*y+z*z)-1
-	xs=x*x
-	return ((((1+ (x/2))+ ((xs)/-8))+((xs*x)/16))+((xs*xs*5)/-128))
+--> gives a close hunch at the distance and avoids expensive sqrt math by using herons Algo
+function approxDist(x,y,z, digitsPrecision)
+resultSoFar=x*x+y*y+z*z
+lastResult=resultSoFar
+	for i=1,digitsPrecision do
+		lastResult=(lastResult+resultSoFar/lastResult)/2
+	end
+return lastResult
 end
 
 --======================================================================================

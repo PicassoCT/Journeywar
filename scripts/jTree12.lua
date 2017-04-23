@@ -13,6 +13,7 @@ center=piece "center"
 treetoproto=piece "treetoproto"
 treerotatestump=piece "LowStem"
 counterrotatestump=piece "UpStem"
+baumkrone=treetoproto
 
 oldDeg=0
 function diceNewDeg(upValue,margin)

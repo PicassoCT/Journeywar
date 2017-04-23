@@ -1,9 +1,8 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 
 rotaryCenter=piece"rotaryCenter"
@@ -13,57 +12,60 @@ SliceCylin=piece"SliceCylin"
 
 
 function script.Create()
-Hide(rotaryCenter)
-Hide(DropOut)
-Hide(SliceCylin)
-StartThread(ThreadStarter)
+	Hide(rotaryCenter)
+	Hide(DropOut)
+	Hide(SliceCylin)
+	StartThread(ThreadStarter)
 end
 
 function script.Killed(recentDamage,_)
+	return 1
+end
 
-createCorpseCUnitGeneric(recentDamage)
-return 1
+function getAttackVector(victimid)
+dx,dy,dz=math.random(-160,-95),math.random(-360,360),0
+attacker=Spring.GetUnitLastAttacker(victimid)
+if attacker then
+attackVector=vectorUnitToUnit(victimid,attacker)
+
+end
 end
 
 function ThreadStarter()
-while boolKillHim==false do
-
-	Sleep(100)
-end
-Sleep(100)
-x,y,z=Spring.GetUnitPosition(vicID)
-	Spring.MoveCtrl.SetPosition(unitID,x,y,z)
-
-Turn(rotaryCenter,y_axis,math.rad(math.random(-360,360)),0)
-Turn(rotaryCenter,x_axis,math.rad(math.random(-160,-95)),0)
-Show(DropOut)
-Show(SliceCylin)
-Move(DropOut,y_axis,-35.5,12)
-WaitForMove(DropOut,y_axis)
-Hide(DropOut)
-
-	for i=1,22 do
-	EmitSfx(DropOut,1025)
-	Time=math.ceil(math.random(10,125))
-	Sleep(Time)
+existenceCounter=0
+	while not GG.SlicerTable[unitID] and existenceCounter < 50 do
+		existenceCounter=existenceCounter+1
+		Sleep(100)
 	end
-Spring.DestroyUnit(vicID,false,true)
-Spring.DestroyUnit(unitID,false,true)
+	if existenceCounter== 50 then Spring.DestroyUnit(unitID,false,true) end
+	
+	victimid= GG.SlicerTable[unitID]
+	Spring.MoveCtrl.Enable(victimid,true)
+	Spring.MoveCtrl.Enable(unitID,true)
+	Spring.SetUnitBlocking(unitID,false)
+	Spring.SetUnitNoSelect(unitID,true)
+	
+	Sleep(100)
+	x,y,z=Spring.GetUnitPosition(vicID)
+	Spring.MoveCtrl.SetPosition(unitID,x,y+50,z)
+	dx,dy,dz= getAttackVector(victimid)
+	Turn(rotaryCenter,y_axis,math.rad(dy),0)
+	Turn(rotaryCenter,x_axis,math.rad(dx),0)
+	Show(DropOut)
+	Show(SliceCylin)
+	Move(DropOut,y_axis,-35.5,12)
+	Hide(DropOut)
+	
+	for i=1,22 do
+		EmitSfx(DropOut,1025)
+		Time=math.ceil(math.random(10,125))
+		Sleep(Time)
+	end
+		WaitForMove(DropOut,y_axis)
+	Spring.DestroyUnit(vicID,false,true)
+	 GG.SlicerTable[unitID]=nil
+	Spring.DestroyUnit(unitID,false,true)
 	
 
 end
-vicID=0
-boolKillHim=false
-function youAreFuckingDead(victimid)
-Spring.MoveCtrl.Enable(victimid,true)
-Spring.MoveCtrl.Enable(unitID,true)
-Spring.SetUnitBlocking(unitID,false)
-Spring.SetUnitNoSelect(unitID,true)
-
-vicID=victimid
-boolKillHim=true
-end
-
-
-
 

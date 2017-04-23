@@ -101,7 +101,7 @@ end
 		
 
 AgentTable={}
-local distance=approxDist
+
 --Constants
 ---------------------------------------------------------------------------------------------------
 --Global Variables
