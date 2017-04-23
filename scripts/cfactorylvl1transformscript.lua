@@ -262,7 +262,7 @@ function buildingTentacles()
 					x,y,z=Spring.GetUnitPiecePosition(unitID,cubes[it])
 					
 					it=nextIt(it)
-					if cubes[it] ~= nilthen
+					if cubes[it] ~= nil then
 						Move(cubes[it],y_axis,0,0,true)
 						px,py,pz=Spring.GetUnitPiecePosition(unitID,cubes[it])
 						x,y,z=px-x,py-y,pz-z

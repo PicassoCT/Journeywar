@@ -1,10 +1,10 @@
-local unitName = "jtree12"
+local unitName = "jtree5"
 
 local unitDef = {
-	name = "Rainforrest Tree ",
-	Description = "harvesting Light",
+	name = "Skyhook Tree ",
+	Description = "flips gravity - when under fire",
 	objectName = "jETree12.s3o",
-	script = "jTree12.lua",
+	script = "jTree5.lua",
 	buildPic = "jtree.png",
 	--cost
 	buildCostMetal = 100,
