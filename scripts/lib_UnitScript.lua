@@ -155,6 +155,33 @@ function TAddT(OrgT,T)
 	return OrgT
 end
 
+--> shuffles a Table 
+function shuffleT(Table)
+size=#Table
+local shuT={}
+for i=1, size do 
+rIndexStart=math.random(1,size)
+boolFoundSomething=false
+	for rIndexStart, size do
+		if Table[rIndexStart]then
+		shuT[i]=Table[rIndexStart]
+		Table[rIndexStart]=nil
+		boolFoundSomething = true
+		end
+	end
+	if boolFoundSomething == false then
+		for 1, rIndexStart do
+			if Table[rIndexStart]then
+			shuT[i]=Table[rIndexStart]
+			Table[rIndexStart]=nil
+			boolFoundSomething = true
+			end
+		end
+	end
+end
+
+return shuT
+end
 --======================================================================================
 --Distance Measurement
 --======================================================================================
