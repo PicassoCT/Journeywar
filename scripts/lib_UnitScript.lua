@@ -162,18 +162,18 @@ local shuT={}
 for i=1, size do 
 rIndexStart=math.random(1,size)
 boolFoundSomething=false
-	for rIndexStart, size do
-		if Table[rIndexStart]then
-		shuT[i]=Table[rIndexStart]
-		Table[rIndexStart]=nil
+	for k=rIndexStart, size do
+		if Table[k]then
+		shuT[i]=Table[k]
+		Table[k]=nil
 		boolFoundSomething = true
 		end
 	end
 	if boolFoundSomething == false then
-		for 1, rIndexStart do
-			if Table[rIndexStart]then
-			shuT[i]=Table[rIndexStart]
-			Table[rIndexStart]=nil
+		for k=1, rIndexStart do
+			if Table[k]then
+			shuT[i]=Table[k]
+			Table[k]=nil
 			boolFoundSomething = true
 			end
 		end
@@ -4733,6 +4733,12 @@ end
 		
 	end
 	return Result
+end
+
+-->Stuns a Unit
+function stunUnit(k, factor)
+	hp=Spring.GetUnitHealth(k)
+	if hp then Spring.SetUnitHealth(k,{paralyze=hp*factor }) end
 end
 
 --> Transfer UnitStats

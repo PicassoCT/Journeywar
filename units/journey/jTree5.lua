@@ -3,7 +3,7 @@ local unitName = "jtree5"
 local unitDef = {
 	name = "Skyhook Tree ",
 	Description = "flips gravity - when under fire",
-	objectName = "jETree12.s3o",
+	objectName = "jETree5.s3o",
 	script = "jTree5.lua",
 	buildPic = "jtree.png",
 	--cost
