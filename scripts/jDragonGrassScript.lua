@@ -128,7 +128,7 @@ function AddictBehaviour()
 				if k and Spring.GetUnitIsDead(k)==false and k~= unitID then
 					if v.addTime > STUNNED then
 						Spring.SetUnitNoSelect(k,true)
-						stunUnit(k)
+						stunUnit(k, 1.2)
 						makeUnitLoyalToTeam(k,teamid)
 
 					elseif v.addTime > LOYAL then
@@ -173,11 +173,6 @@ function makeUnitLoyalToTeam(k,tid)
 	Spring.TransferUnit(k,tid,false)
 end
 
-function 	stunUnit(k)
-	hp=Spring.GetUnitHealth(k)
-	
-	if hp then Spring.SetUnitHealth(k,{paralyze=hp*1.2 }) end
-end
 
 
 ----aimining & fire weapon
