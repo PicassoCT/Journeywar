@@ -132,7 +132,7 @@ TutorialInfoTable=
 [UnitDefNames["jdrilltree"      ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Drilltree \n Digs deep to provide matter"},
 [UnitDefNames["jtransportedeggstack"     ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Eggstack \n Gives birth to construction units"},
 [UnitDefNames["jtree1"           ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Tree \n Collects light"},
-[UnitDefNames["jtree12"           ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Tree \n Collects light"},
+[UnitDefNames["jtree5"           ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Skyhooktree \n Collects light, locally inverts Gravity "},
 [UnitDefNames["jtree2"          ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Wastelandtree \n Collects radiowaves"},
 [UnitDefNames["jtree3"          ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Watertree \n Collects light -regrows with delay after fire"},
 [UnitDefNames["jtreel"          ].id]={active=false , Time=100,delay=350 	,speach=silentPlaceHolder,text="\a|Accidtree \n Stores Matter"},

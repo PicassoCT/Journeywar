@@ -137,21 +137,16 @@ function dropLianes(boolUp,speed)
 		
 		process(TableOfPieceGroups["Liane"],
 		function(id)
+			xs,ys,zs=Spring.GetUnitPieceCollisionVolumeData(unitID,id)
 			Spin(id,y_axis,math.rad(math.random(-4.2,4.2)),0)
-			if boolXAxis == true then
-				Turn(id,x_axis,math.rad(math.random(170,190)),speed*10)
-				Turn(id,z_axis,0,speed)
-			else
-				Turn(id,z_axis,math.rad(math.random(170,190)),speed*10)
-				Turn(id,x_axis,0,speed)
-			end
+			Move(id,y_axis,ys,450)
 		end
 		)
+		
 		process(TableOfPieceGroups["TreeTop"],
 		function(id)
 			Turn(id,z_axis,math.rad( 30 ),speed)
 		end)
-		
 		process(TableOfPieceGroups["TreeCarry"],
 		function(id)
 			Turn(id,z_axis,math.rad(30),speed)
@@ -162,8 +157,7 @@ function dropLianes(boolUp,speed)
 		process(TableOfPieceGroups["Liane"],
 		function(id)
 			Spin(id,y_axis,math.rad(math.random(-4.2,4.2)),0)
-			Turn(id,x_axis,math.rad(0),speed)
-			Turn(id,z_axis,math.rad(0),speed)
+			Move(id,y_axis,0,650)
 		end
 		)
 		
@@ -203,20 +197,26 @@ function createLiane()
 	)
 	dropLianes(false,0)	
 end
-RangeSkyHook=600
-ImpulseProportion=1000
+RangeSkyHook=450
+
 flyingUnits={}
 x,y,z=Spring.GetUnitPosition(unitID)
 function fallingOff()
 	local spGetUnitPosition=Spring.GetUnitPosition
+	exemptUnits=getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
+	gravResistantUnits=getGravityChaneReistantUnitTypeTable(UnitDefNames)
 	
 	T=getAllInCircle(x,z,RangeSkyHook,unitID,unitTeam)
 	if T then
 		process(T,
 		function(id)
-			if id ==unitID then return end
+			
 			--filter out imobile Units
 			if flyingUnits[id] then return end
+			
+			idDefID=Spring.GetUnitDefID(id)
+			if gravResistantUnits[idDefID] then return end
+			if exemptUnits[idDefID] then return end
 			
 			return id			
 		end,
@@ -227,25 +227,74 @@ function fallingOff()
 	end
 end
 
+--flyingFeatures
+
+--flyingProjectiles
+
+maxHeigth=950 
+function nearUnit()
+	
+	
+end
 function flyingUnit(id)
+	ox,oy,oz=Spring.GetUnitPosition(unitID)
 	flyingUnits[id]=id		
-	while boolGravityOff==true do
+	Spring.MoveCtrl.Enable(id)
+	Spring.MoveCtrl.SetNoBlocking(id, true)
+	orgX,_,orgZ=Spring.GetUnitDirection(id)
+	speed=0
+	cosvalue=math.random(1,150)/1000
+	personalOffset=math.random(0,50)
+	ux,uy,uz=Spring.GetUnitPosition(id)
+	sindex=0
+	cosdex=math.pi/2
+	boolNearUnit=true
+	
+	while uy < oy + maxHeigth and boolNearUnit==true do
 		stunUnit(id, math.pi)
-		x,y,z=Spring.GetUnitPosition(id)
+		ux,uy,uz=Spring.GetUnitPosition(id)
 		if x then
-		gh=Spring.GetGroundHeight(x,z)
-		factor=ImpulseProportion/y-(gh)
-		defID=Spring.GetUnitDefID(id)
-		mass= UnitDefs[defID].mass
-		Spring.AddUnitImpulse(0,factor/mass,0)
+			boolNearUnit= math.sqrt((ox-ux)^2+(oz-uz)^2)< RangeSkyHook
+			gh=Spring.GetGroundHeight(ux,uz)
+			uy=uy+ speed
+			Spring.MoveCtrl.SetPosition(id, ux+orgX*5, uy+personalOffset , uz+orgZ*5)
+			rx,ry,rz=Spring.GetUnitRotation(id)
+			Spring.MoveCtrl.SetRotation(id,math.cos(-cosdex),math.sin(sindex),math.cos(cosdex))
+			ssindex=sindex+0.001
+			cosdex=cosdex+cosvalue
+			
+		end
+		speed=math.min(55,speed+0.981)
+		Sleep(100)
+		
+	end
+	
+	boolNearUnit=true
+	
+	while boolGravityOff==true and boolNearUnit == true do
+		
+		Spring.MoveCtrl.SetGravity(id, 0)
+		ux,uy,uz=Spring.GetUnitPosition(id)
+		if ux then
+		boolNearUnit= math.sqrt((ox-ux)^2+(oz-uz)^2)< RangeSkyHook
+		Spring.MoveCtrl.SetPosition(id, ux+orgX*1.5, uy , uz+orgZ*1.5)
 		end
 		Sleep(100)
-
 	end
-	flyingUnits[id]=nil
+	
+	for i=1,15 do
+		Spring.MoveCtrl.SetGravity(id, i/15)
+		Sleep(100)	
+	end
+	
 	--StartEventStream	fallingDown()
+	Spring.MoveCtrl.SetGravity(id, 1)
+		Spring.MoveCtrl.SetRotation(id,0,0,0)
+	Spring.MoveCtrl.SetNoBlocking(id, false)
+	Spring.MoveCtrl.Disable(id)
 	
 	
+	flyingUnits[id]=nil
 end
 
 function fallingDown()
@@ -267,8 +316,8 @@ function invertGravityLoop()
 	Sleep(1500)
 	while true do
 		if boolGravityOff == false then
-		StartThread(dropLianes,false,4.2)
-		Sleep(500)
+			StartThread(dropLianes,false,4.2)
+			Sleep(500)
 			while boolGravityOff==false do
 				giveEnergy()
 				Sleep(100)
@@ -276,12 +325,12 @@ function invertGravityLoop()
 		end
 		
 		if boolGravityOff == true then
-		StartThread(dropLianes,true,4.2)
+			StartThread(dropLianes,true,4.2)
 			while 	boolGravityOff ==true do
 				if consumeEnergy()==true then	
 					fallingOff()	
 				end
-					Sleep(100)
+				Sleep(100)
 			end
 		end
 		
@@ -305,6 +354,7 @@ TableOfPieceGroups={}
 root={}
 function script.Create()
 	TableOfPieceGroups=	makePiecesTablesByNameGroups(false,true)
+	resetT(TableOfPieceGroups)
 	root=TableOfPieceGroups["Root"]
 	
 	teamID=Spring.GetUnitTeam(unitID)
@@ -363,12 +413,31 @@ function fire(x)
 	
 end
 
+function fallingProcess(evtID, frame, persPack,startFrame)
+	--> EventStreamify
+	for i=1,15 do
+		Spring.MoveCtrl.SetGravity(persPack.id, i/15)
+		Sleep(100)	
+	end
+	
+	--StartEventStream	fallingDown()
+	Spring.MoveCtrl.SetGravity(persPack.id, 1)
+			Spring.MoveCtrl.SetRotation(persPack.id,0,0,0)
+	Spring.MoveCtrl.SetNoBlocking(persPack.id, false)
+	Spring.MoveCtrl.Disable(persPack.id)
+	
+end
 
 
 function script.Killed(recentdamage,_)
 	
-	for i=1,#flyingUnits do
-		--StartEventStream fallingDown
+	for id,ready in pairs(flyingUnits) do
+		if ready then
+			persPack={id=id}
+			GG.EventStream:CreateEvent(fallingProcess, 
+			persPack,
+			Spring.GetGameFrame()+1)
+		end
 	end
 	
 	Spring.PlaySoundFile("sounds/jEtree/tree.wav")
@@ -434,4 +503,5 @@ function script.Deactivate()
 	boolGravityOff=false	
 	
 	return 0
+	
 end

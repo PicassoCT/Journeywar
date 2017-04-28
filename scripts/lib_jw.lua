@@ -284,6 +284,17 @@ function getRecycleableUnitTypeTable()
 	return TransportTable
 end
 
+function getGravityChaneReistantUnitTypeTable(UnitDefNames)
+	TransportTable={
+		[UnitDefNames["jtree5"].id ]=true,
+		[UnitDefNames["vort"].id ]=true,
+		[UnitDefNames["tiglil"].id ]=true,
+		[UnitDefNames["jghostdancer"].id ]=true
+	}
+	
+	return TransportTable
+end
+
 function getRewardTable()
 	Rewards ={
 		[UnitDefNames["gjmeatballs"].id ] = {	ereward=1000
