@@ -10,8 +10,12 @@ include "lib_Build.lua"
 --Skyhooktree
 -- This tree generates Energy under normal Circumstances.. upon Attack it consumes Energy and
 -- inverts Gravity in a Cylinder around the tree
-
-
+--Config
+ActiveOnAttackTime=15000
+EnergyCostSkyHook=25
+EnergyGainedDuringPeace=10
+RangeSkyHook=450
+--/Config
 treebasis=piece "treebasis"
 center=piece "center"
 treetoproto=piece "treetoproto"
@@ -49,12 +53,10 @@ function TurnRootRandom()
 	randoValX=math.random(-22,22)
 	
 	randoValZ=math.random(-55,-11)*randSign()
-	--	randoValY=math.random(-360,360)
-	
+
 	--	Turn(treerotatestump,y_axis,math.rad(randoValY),0)
 	Turn(rooter,z_axis,math.rad(-1*randoValZ),0)
 	Turn(treerotatestump,z_axis,math.rad(randoValZ),0)
-	
 	
 	-- getting the baumkrone straighted
 	percentage=math.random(1,99)/100
@@ -63,7 +65,6 @@ function TurnRootRandom()
 	Turn(treetoproto,x_axis,math.rad(-1*randoValX*(1-percentage)),0)
 	offset=math.random(-10,10)
 	Turn(treetoproto,z_axis,math.rad(-1*randoValZ*(1-percentage)+offset),0)
-	
 end
 
 function createRoot()
@@ -73,10 +74,8 @@ function createRoot()
 	function(id)
 		offsetVal=math.random(360/12,360/4)
 		rootOffset=rootOffset+offsetVal
-		Turn(id,y_axis,math.rad(rootOffset),0)
-		
-	end)
-	
+		Turn(id,y_axis,math.rad(rootOffset),0)	
+	end)	
 end
 
 treeFormVal=math.random(-9,20)
@@ -183,7 +182,6 @@ function dropLianes(boolUp,speed)
 			Show(id)
 		end
 	end)
-	
 end
 
 function createLiane()
@@ -197,7 +195,6 @@ function createLiane()
 	)
 	dropLianes(false,0)	
 end
-RangeSkyHook=450
 
 flyingUnits={}
 x,y,z=Spring.GetUnitPosition(unitID)
@@ -297,19 +294,30 @@ function flyingUnit(id)
 	flyingUnits[id]=nil
 end
 
-function fallingDown()
-	
+SIG_DEACTIVATE=2
+function delayedDeactivation()
+	Spring.SetUnitCOBValue(unitID, COB.ACTIVATION, 1)
+	Signal(SIG_DEACTIVATE)
+	SetSignalMask(SIG_DEACTIVATE)
+	Sleep(ActiveOnAttackTime)
+	Spring.SetUnitCOBValue(unitID, COB.ACTIVATION, 0)
 end
 
-COST_SKYHOOK=250
+
+function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+	StartThread(delayedDeactivation)
+	return damage
+end
+
+
 function consumeEnergy()
-	teamID=Spring.GetUnitTeam(unitID)
-	boolHadEnough=Spring.UseTeamResource(teamID, "energy", COST_SKYHOOK)
+
+	boolHadEnough=Spring.UseUnitResource(unitID, "e", EnergyCostSkyHook)
 	return boolHadEnough or false
 end
+
 function giveEnergy()
-	
-	
+	Spring.AddUnitResource(unitID, "e", EnergyGainedDuringPeace)	
 end
 
 function invertGravityLoop()
