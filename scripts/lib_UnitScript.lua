@@ -2949,7 +2949,7 @@ end
 	end 
 	
 	-->filters Out Immobile Units
-	function filterImmobile (T,UnitDefs, boolFilterOut)
+	function filterOutImmobile (T,UnitDefs, boolFilterOut)
 		returnTable={} 
 		boolFilterOut= boolFilterOut or true
 		for num,id in pairs(T) do 
@@ -3029,7 +3029,7 @@ end
 		return returnTable 
 	end
 	
-	function filterOutGroundUnit (T)
+	function filterForGroundUnit (T)
 		returnTable={} 
 		for num,id in pairs(T) do
 			def=Spring.GetUnitDefID(T[i]) 
@@ -3039,11 +3039,13 @@ end
 		return returnTable 
 	end
 	
-	function filterOutAirUnit (T)
+	function filterOutAirUnit (T, UnitDefs, boolFilterOut)
+	
+	boolFilterOut=boolFilterOut or false
 		returnTable={} 
 		for num,id in pairs(T) do
 			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isAirUnit then 
+			if boolFilterOut == UnitDefs[def].isAirUnit then 
 			returnTable[#returnTable+1]=id end 
 		end 
 		return returnTable 

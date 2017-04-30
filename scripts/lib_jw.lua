@@ -150,6 +150,7 @@ function getTreeTypeTable(UnitDefNames)
 	FactoryTypes[UnitDefNames["jtree47"].id]=true
 	FactoryTypes[UnitDefNames["jtree48"].id]=true
 	FactoryTypes[UnitDefNames["jtree1"].id]=true
+	FactoryTypes[UnitDefNames["jtree5"].id]=true
 	return FactoryTypes
 end
 

@@ -31,7 +31,7 @@ sbranch1=piece"sbranch1"
 sbranch2=piece"sbranch2"
 sbranch3=piece"sbranch3"
 sbranch4=piece"sbranch4"
-
+DNASpiral=piece"DNASpiral"
 
 function TreeTrample()
 	Turn(center,z_axis,math.rad(30),0.3)
@@ -225,6 +225,7 @@ function convertInfantryNearby()
 		end,
 		function (id)
 			if id then
+	
 				Spring.TransferUnit(id,myTeam,false)
 				ux,uy,uz=Spring.GetUnitPosition(id)
 				Spring.SpawnCEG("jtree2trans",ux,uy+15,uz, 0,1,0,60)
@@ -232,7 +233,23 @@ function convertInfantryNearby()
 		end
 		)
 		
+		
 		Sleep(350)
+	end
+end
+
+function dnaspiralloop()
+	Show(DNASpiral)
+	while true do 
+		Spin(DNASpiral,y_axis,math.rad(-12),0.001)
+		WMove(DNASpiral,y_axis,-10,1)
+		StopSpin(DNASpiral,y_axis,0.001)
+		Sleep(1000)
+		Spin(DNASpiral,y_axis,math.rad(12),0.001)
+		WMove(DNASpiral,y_axis,0,1)
+		StopSpin(DNASpiral,y_axis,0.001)
+		Sleep(4000)
+
 	end
 end
 
@@ -244,6 +261,7 @@ function script.Create()
 	Spin(centRot,y_axis,math.rad(4),0.001)
 	Spin(rot1,y_axis,math.rad(4),0.001)
 	Spin(rot2,y_axis,math.rad(-8),0.001)
+
 	--centerturn
 	randoMarlo=math.random(0,360)
 	Turn(center,y_axis,math.rad(randoMarlo))
@@ -263,7 +281,7 @@ function script.Create()
 		this=math.random(0,360)
 		Turn(leaves[i],y_axis,math.rad(this),0)
 	end
-	
+	Hide(DNASpiral)
 	
 	--if a tree is drunk in the woods and falls down
 	randoValX=math.random(-5,5)
@@ -295,6 +313,7 @@ function script.Create()
 		
 		StartThread(fruitLoop)
 		StartThread(convertInfantryNearby)
+		StartThread(dnaspiralloop)
 	end
 	
 	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.45)

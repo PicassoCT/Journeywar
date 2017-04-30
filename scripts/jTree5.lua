@@ -199,12 +199,15 @@ end
 
 flyingUnits={}
 x,y,z=Spring.GetUnitPosition(unitID)
+
 function fallingOff()
 	local spGetUnitPosition=Spring.GetUnitPosition
 	exemptUnits=getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	gravResistantUnits=getGravityChaneReistantUnitTypeTable(UnitDefNames)
 	
 	T=getAllInCircle(x,z,RangeSkyHook,unitID,unitTeam)
+	T=filterOutBuilding(T,UnitDefs,true)
+	T=filterOutAirUnit(T,UnitDefs,true)
 	if T then
 		process(T,
 		function(id)
