@@ -314,6 +314,7 @@ function script.HitByWeapon ( x, z, weaponDefID, damage )
 end
 
 
+
 function consumeEnergy()
 
 	boolHadEnough=Spring.UseUnitResource(unitID, "e", EnergyCostSkyHook)
@@ -350,6 +351,35 @@ function invertGravityLoop()
 	end
 end
 
+function invertGravitySoundLoop()
+	Sleep(1500)
+	while true do
+		if boolGravityOff == false then
+			Sleep(500)
+			while boolGravityOff==false do
+				Sleep(100)
+			end
+		end
+		
+		if boolGravityOff == true then
+		minWaitTime=10000
+		Spring.PlaySoundFile("sounds/jSkyhooktree/GravityOff.ogg",1.0)
+			while 	boolGravityOff ==true do
+				Sleep(15000)
+				minWaitTime=0
+				index=math.random(1,2)then
+				if boolGravityOff==true 
+					Spring.PlaySoundFile("sounds/jSkyhooktree/GravityLoop"..index..".ogg",1.0)
+				end
+			end
+			if minWaitTime > 0 then Sleep(minWaitTime) end
+					Spring.PlaySoundFile("sounds/jSkyhooktree/GravityOff.ogg",1.0)
+		end
+		
+		Sleep(500)
+	end
+end
+
 function buildATree()
 	
 	TurnRootRandom()
@@ -380,6 +410,7 @@ function script.Create()
 	
 	StartThread(buildATree)
 	StartThread(invertGravityLoop)
+	StartThread(invertGravitySoundLoop)
 	
 end
 

@@ -69,14 +69,16 @@ local unitDef = {
 		"jmeconverter",
 		"jestorage",
 		
-		"jdarkgate",		
+
+		"jnativevil",		
 		"jtree1",
 		"jtree2",
-		
+	
 		"jtree3",
 		"jtreel",
-		"jnativevil",
-		
+		"jtree5",
+
+			
 		--passive 		--defense
 		"jjamforrest",
 		"jbonsai",
@@ -95,7 +97,9 @@ local unitDef = {
 		--endgame	
 		"jfungiforrest",
 		"jgeohive",
-		"jabyss"		
+		"jabyss",
+
+		"jdarkgate",	
 	},
 	
 	Category = [[LAND BUILDING]],
