@@ -362,18 +362,22 @@ function invertGravitySoundLoop()
 		end
 		
 		if boolGravityOff == true then
-		minWaitTime=10000
+
 		Spring.PlaySoundFile("sounds/jSkyhooktree/GravityOff.ogg",1.0)
+		Sleep(15000)
 			while 	boolGravityOff ==true do
-				Sleep(15000)
-				minWaitTime=0
+
+
 				index=math.random(1,2)then
 				if boolGravityOff==true 
 					Spring.PlaySoundFile("sounds/jSkyhooktree/GravityLoop"..index..".ogg",1.0)
+					Sleep(25000)
 				end
+				
 			end
-			if minWaitTime > 0 then Sleep(minWaitTime) end
+
 					Spring.PlaySoundFile("sounds/jSkyhooktree/GravityOff.ogg",1.0)
+					Sleep(5000)
 		end
 		
 		Sleep(500)

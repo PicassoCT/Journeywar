@@ -4889,3 +4889,739 @@ function transferOrders( originID, unitID)
 		end			
 	end		
 end
+
+
+-->Generate a Description Text for a Unit
+function unitDescriptionGenerator(Unit, UnitDefNames)
+local ud=UnitDefNames[Unit]
+stringBuilder=""
+lB="\n"
+
+
+function unitDefToStr(ud)
+str="normal"
+if ud.reclaimable ==true  then str=str..", reclaimable" end
+if ud.capturable ==true  then str=str..", capturable" end
+if ud.repairable ==true  then str=str..", repairable" end
+return str
+end
+function trueStr(bool)
+if bool==false then return "not" end
+ return " " 
+end
+function retStr(val,str1,str2)
+if not val then return str1 end
+return str2 or ""
+end
+
+function cStr(bool, str) if bool and bool==true then return str else return "" end end
+utype			= generateTypeString(ud)
+name			=ud.name
+description		=ud.description
+maxDamage		=ud.maxDamage
+autoHeal		=ud.autoHeal
+idleAutoHeal	=ud.idleAutoHeal
+idleTime		=ud.idleTime
+buildCostMetal	=ud.buildCostMetal
+buildCostEnergy	=ud.buildCostEnergy
+ustatus			=generateStatusString(ud)
+harvestStorage	=ud.harvestStorage
+metalStorage	=metalStorage
+energyStorage	=energyStorage
+extractsMetal	=extractsMetal
+windGenerator	=windGenerator
+tidalGenerator	=tidalGenerator  
+metalUse		=metalUse
+metalUpkeep		=metalUpkeep
+ energyUse  
+metalMake
+   energyMake
+
+   makesMetal
+onOffable
+activateWhenBuilt
+sightDistance
+airSightDistance
+losEmitHeight
+radarEmitHeight
+radarDistance
+radarDistanceJam
+sonarDistance
+sonarDistanceJam
+stealth
+
+canCloak
+cloakCostMoving
+initCloaked
+minCloakDistance
+decloakOnFire
+cloakTimeout
+canMove  
+ canAttack  
+
+ canFight  
+ canRepeat 
+ canPatrol 
+ canGuard 
+ canCloak 
+ canSelfDestruct
+ moveState
+ fireState
+noAutoFire
+canManualFire
+
+
+stringBuilder=stringBuilder..
+"=== Unit: "..name.." ==="..lB..
+"The unit "..name".." is a "..utype.." unit."..
+"Internally also described as "..description, the "..name.." has "..maxDamage.." Hitpoints."..
+"To build a "..name.." costs "..buildCostMetal.." metal and "..buildCostEnergy.." energy.
+"The "..name.." is a "..ustatus.. " unit."..
+retStr(harvestStorage, "This harvester can store "..harvestStorage.." in internal holds.")..lB..
+reStr(metalStorage, "The "..name.."s storage contributes ".. metalStorage.." to the teams metal storage.")
+..lB..
+reStr(metalStorage, "The "..name.."s storage contributes ".. energyStorage.." to the teams energy storage.")
+..lB..
+reStr(extractsMetal, "The "..name.." extracts "..extractsMetal.." from the ground.")
+..lB..
+reStr(windGenerator, "It is able to convert gas-currents into energy at a rate of "..windGenerator)
+..lB..
+reStr(tidalGenerator, "Tidal forces can be converted to energy up too "..tidalGenerator .. " per Unit.")
+..lB..
+reStr(metalUse, "The unit uses up to "..metalUse .. " metal.")
+..lB..
+reStr(metalUpkeep,metalUpkeep.. " is used once the"..name.. " is activated.")
+..lB..
+reStr(energyUse,energyUse.. " units of energy are used once the"..name.. " is activated.")..lB..
+reStr(metalMake," The "..name.. " generates "..metalMake.." uncoditionally every gametick.")
+..lB..
+reStr(energyMake," Further the "..name.. " is constantly generating "..energyMake.." of energy.")..lB..
+reStr(makesMetal," In Addition the "..name.. " cpmverts "..makesMetal.." units of energy into metal.")..lB..
+"==== Unit Stats ===="..lB..   
+reStr(onOffable,"A "..name.. " special abilitys can "..trueStr(onOffable).." be toggled  via  GUI. By default the special Ability is "..trueStr(activateWhenBuilt).." active."
+..lB..   
+reStr(sightDistance,"The  "..name.. " can, depending on terrain, see as far as "..sightDistance.." at day and night."
+..lB..   
+reStr(airSightDistance,"The  "..name.. " can set Air Units as far as "..airSightDistance..".")
+..lB..   
+reStr(losEmitHeight,""..name.. " viewpoint is "..losEmitHeight.." over ground.")
+..lB..   
+reStr(radarEmitHeight," Radar is emitted at "..radarEmitHeight.." over ground with a distance of "..radarDistance.."by the "..name..)
+..lB..   
+reStr(radarDistanceJam," Radar is jammed in a range of "..radarDistanceJam.." elmos.")
+..lB..   
+reStr(sonarDistance,""..name.." detects Submarines/Ships in a Range of "..sonarDistance.." around itself.")
+..lB..   
+reStr(sonarDistanceJam," Other ships sonar is d Submarines/Ships in a Range of "..sonarDistance.." around itself.")
+..lB..   
+reStr(stealth,"The "..name.." s a stealth unit.")
+..lB..   
+reStr(sonarStealth,"Capable of hidding from Sonarunits.")
+..lB..   
+reStr(seismicDistance,"And able to detect enemys via seismic Signatures at a distance of "..seismicDistance.." .")
+..lB..   
+reStr(seismicDistance,"The "..name.." itself emits a seismic signature detectable up to ".. seismicDistance*15 .." elmos.")
+..lB..   
+reStr(seismicDistance,"The "..name.." itself emits a seismic signature detectable up to ".. seismicDistance*15 .." elmos.")
+..lB..   
+reStr(canCloak,"The "..name.." is clokable with costs of "..cloakCost.." per second to uphold and "..reStr(cloakCostMoving," and additional costs of "..cloakCostMoving.. " while moving."..reStr(initCloaked, " The "..name.." is cloaked from the start.")))
+..lB..   
+reStr(canCloak,"The "..name.." is clokable with costs of "..cloakCost.." per second to uphold and "..reStr(cloakCostMoving," and additional costs of "..cloakCostMoving.. " while moving."..reStr(initCloaked, " The "..name.." is cloaked from the start.")))
+..lB..   
+reStr(minCloakDistance,"The "..name.." will be unveiled when a enemy comes closer as "..minCloakDistance.." in a  "( reStr(decloakSpherical, "sphere.", "circle.")or " it.")
+..lB..   
+reStr(decloakOnFire,"If the "..name.." fires its weapon, it will "..trueStr(decloakOnFire)decloaked.." decloak."
+..lB..   
+reStr(cloakTimeout,"To recloak the "..name.." will have to wait for "..cloakTimeout.." seconds.") 
+..lB..   
+reStr(cloakTimeout,"Among the commands for the Unit are"..
+cStr(canMove," move,")..
+cStr(canAttack, " attack,")..
+cStr(canFight, " fight,")..
+cStr(canPatrol, " patrol,")..
+cStr(canGuard, " guard,")..
+cStr(canCloak, " cloak,").." and "
+cStr(canRepeat, " repeat ").."."
+.."In Addition the "..name.." can be orders to "..
+cStr(canSelfDestruct, " selfdestruct,")..
+cStr(moveState ~= -1, " switch between move states,")..
+cStr(noAutoFire, " switch between the fire state,")..
+cStr(fireState ~= -1, " with "..fireState.." as default ")..
+cStr(canManualFire, " and the order to manfual fire ").."."..
+
+cStr(builder, name.." is a builder that can be orders to "..
+cStr(canRestore, " restore ")..
+cStr(canRepair, " repair ")..
+cStr(canReclaim, " relcaim")..
+cStr(canResurrect," and ressurect ")..
+cStr(canCapture, " or capture. ")).."other units."..
+
+
+
+--[[
+
+ buildDistance  default: 128.0 
+
+    How far away from itself the unit can build, measured to the centre of the unit being built. The minimum value is 38.0. 
+
+ buildRange3D  default: false 
+
+    Does the builders buildDistance apply in all 3 dimensions or only 2? 
+
+ workerTime  default: 0.0 lua: buildSpeed 
+
+    How fast the builder builds, used in conjunction with the buildTime of the unit being built. Effectively, Time to build = buildTime / workerTime. If this value is <= 0.0 then builder is set to false. 
+
+ repairSpeed  default: workerTime 
+
+    How fast the builder can repair other units. 
+
+ reclaimSpeed  default: workerTime 
+
+    How fast the builder can reclaim other units and features. 
+
+ resurrectSpeed  default: workerTime 
+
+    How fast the builder can resurrect corpse features back o living units. 
+
+ captureSpeed  default: workerTime 
+
+    How fast the builder can capture other units. 
+
+ terraformSpeed  default: workerTime 
+
+    How fast the builder levels and restores terrain. 
+
+ canAssist  default: builder 
+
+    Can the builder assist other constructions? 
+
+ canBeAssisted  default: true 
+
+    Can the builder be assisted by other builders? 
+
+ canSelfRepair  default: false 
+
+    Can the builder repair itself? 
+
+ showNanoSpray  default: true 
+
+    Does the builder emit OTA-style nanospray whilst constructing? 
+
+[3] nanoColor  default: {0.2, 0.7, 0.2} aka green 
+
+    The RGB colour of a builders' emitted nano particles if showNanoSpray = true. Also controls the RBG colour of a unit's own nanoframe if showNanoFrame = true. 
+
+ fullHealthFactory  default: ? 
+
+    If true, units are repaired before they are allowed to leave the factory i.e. units from this factory will be healed back to 100% health if they are damaged during construction. 
+
+ isAirbase  default: false Removed in 101.0 in favour of more flexible lua custom commands
+
+    Is this unit an airbase? Aircraft may land and repair on units which are airbases. 
+
+Movement & Placement
+
+ footprX  default: 1 
+
+    How wide the unit is in footpr units, left to right. 1 footpr unit = 16 elmos. Cannot be below 1. For mobile units this should be the same as the footprX of its movementClass. Also used for obstacle avoidance. 
+
+ footprZ  default: 1 
+
+    How wide the unit is in footpr units, top to bottom. 1 footpr unit = 16 elmos. Cannot be below 1. For mobile units this should be the same as the footprZ of its movementClass. Also used for obstacle avoidance. 
+
+string yardmap  default: "" 
+
+    Used to determine a structure from a mobile unit. A string of characters which defines in detail each 'footpr square' of the structure. Each footpr square may be:
+
+        y - 'Yard' - Always open, unblocking, 
+        c - 'Construction' - Open and unblocking only while constructing (for factories, controlled via COB.YARD_OPEN see Animation-LuaCallouts#Other), 
+        i - 'Inversed Construction' - Closed and blocking only while constructing (for factories, controlled via COB.YARD_OPEN see Animation-LuaCallouts#Other) (New in version 89.0), 
+        g - 'Geothermal' - Flags that the unit must be placed over a geoThermal feature, does not actually count as a square, 
+        h - 'High Resolution' - Indicates that the yardmap will use double resolution with four times as many characters. Must be the first character, and does not count as a square itself (New in version 93.0), 
+        o - 'Obstacle' - Always closed, blocking, all other chars are treated the same way. 
+
+    Tip: 'Draw' out the yardmap over multiple lines. As of 89.0 all whitespace characters are ignored, including newlines. 
+
+ levelGround  default: false 
+
+    For structures. Does the constructor have to level the ground underneath the build area before beginning to build the structure? 
+
+string movementClass  default: "" lua: moveDef.name 
+
+    The name of the movement type a mobile, non aircraft, unit should use. See Movedefs.lua. 
+
+ canHover  default: false Removed in 95.0
+
+    Is the unit a hovercraft? Hovercraft can cross water of any depth without a speed penalty. Hover's must also have HOVER within the name of their movementClass (see Movedefs.lua). 
+
+ er  default: true if waterline = true, false otherwise 
+
+    When a mobile unit is crossing water, or a structure is placed on water, does it  on top of the water or crawl / lay on the sea bed? 
+
+ upright  default: false 
+
+    Does the unit follow the terrain or always remain upright? Generally used for walkers. 
+
+ maxSlope  default: 0.0 lua: maxHeightDif 
+
+    The maximum slope a building can be placed on. Mobile unit's use the maxSlope set in their movementClass. The value is in degrees and is clamped between 0.0 and 89.0. This value is converted to a "maximum allowed height difference" (call it M), which involves a hard-coded constant. When a building gets placed, the height of each of its footpr squares is compared to a reference height (calculated for the build position). If the difference exceeds M for any square, that build position is rejected. The value readable from lua has been changed from that in the unitdef and reflects the ernal engine value. 
+
+ minWaterDepth  default: -10e6 
+
+    The minimum depth of water a building can be placed on. Mobile unit's use the minWaterDepth set in their movementClass. 
+
+ maxWaterDepth  default: 10e6 
+
+    The maximum depth of water a building can be placed on. Mobile unit's use the maxWaterDepth set in their movementClass. 
+
+ waterline  default: 0.0 
+
+    How low in the water does a ship sit? Higher values means the ship is lower in the water. 
+
+ minCollisionSpeed  default: 1.0 
+
+    The minimum net impact speed that will cause a unit to be damaged by collisions with another unit. 
+
+ pushResistant  default: false 
+
+    Can the unit be pushed around by other units? Turning it on doesn't remove all pushing but is a marked improvement. 
+
+ maxVelocity  default: 0.0 lua: speed 
+
+    The maximum speed attainable by the unit in elmos per frame. If the value is -ve, the absolute value is used. 
+
+ maxReverseVelocity  default: 0.0 lua: rSpeed New in version 99.0
+
+    The maximum speed attainable by the unit in reverse in elmos per frame. If the value is -ve, the absolute value is used. 
+
+ acceleration  default: 0.5 lua: maxAcc 
+
+    The acceleration of the unit, in elmos per frame2. If the value is -ve, the absolute value is used. 
+
+ brakeRate  default: acceleration lua: maxDec 
+
+    The deceleration of the unit, in elmos per frame2. If the value is -ve, the absolute value is used. For units with canFly = true this is multiplied by 0.1. Prior to 95.0 this was scaled by 0.1 for aircraft and the default was 3x acceleration. 
+
+ myGravity  default: 0.4 
+
+    As Spring aircraft are slower than real aircraft this tag allows to lower gravity to compensate. Multiplies against map gravity for aircraft, replaces map gravity for ground vehicles if non-zero. 
+
+ turnRate  default: 0.0 
+
+    How fast the unit can turn. degrees per seconds = 0.16 * turnRate. 
+
+ turnInPlace  default: true 
+
+    Does the unit turn on the spot (like a person or tank) or must it be moving forwards to turn (like a car). 
+
+ turnInPlaceSpeedLimit  default: A complex formula based on turnRate and maxVelocity 
+
+    For units with turnInPlace = false, this defines the minimum speed it will slow down to (the speed at which the turn is actually performed can be higher depending on the angular difference and turnRate). 
+
+ turnInPlaceAngleLimit  default: 0.0 New in version 86.0
+
+    For units with turnInPlace = true, defines the maximum angle (in degrees) of a turn above which it starts to brake. 
+
+ blocking  default: true 
+
+    Does the unit block the movement of other units? (Mines, i.e. non-mobile units with the kamikaze tag default to false). 
+
+ crushResistance  default: mass New in version 85.0
+
+    How resistant is the unit to being crushed? Any MoveClass with a crushStrength greater than this will crush the unit - IFF this has been enabled via Spring.SetUnitBlocking and the collider impulse exceeds that of the colidee. 
+
+Flanking
+
+ flankingBonusMode  default: flankingBonus.defaultMode set in Modrules.lua 
+
+    The mode of operation of Spring's inbuilt flanking system. Can be 0 - No flanking bonus. Mode 1 builds up the ability to move over time, and swings to face attacks, but does not respect the way the unit is facing. Mode 2 also can swing, but moves with the unit as it turns. Mode 3 stays with the unit as it turns and otherwise doesn't move, the ideal mode to simulate something such as tank armour. 
+
+[3] flankingBonusDir  default: {0.0, 0.0, 1.0} 
+
+    This is the direction vector where the armour is facing; i.e. where the least damage is applied. The default is straight forwards. 
+
+ flankingBonusMax  default: 1.9 
+
+    The maximum multiplier to the damage dealt, when a unit is hit from the opposite direction to flankingBonusDir. 
+
+ flankingBonusMin  default: 0.9 
+
+    The minimum multiplier to the damage dealt, when a unit is hit from the same direction as flankingBonusDir. 
+
+ flankingBonusMobilityAdd  default: 0.01 
+
+    This defines the ability of flankingBonusDir to move over time. Its value is added to the mobility every SlowUpdate. When the unit is attacked, the build up mobility value is multiplied by a vector facing the attack, which is added to flankingBonusDir. 
+
+Aircraft
+
+ canFly  default: false 
+
+    Can the unit fly, i.e. is it an aircraft? 
+
+ canSubmerge  default: false 
+
+    Can the aircraft land underwater? 
+
+ factoryHeadingTakeoff  default: true 
+
+    Controls the take-off behaviour of aircraft with hoverAttack = true. true means planes start matching their heading right after taking off from the pad, false means they maain the heading of the pad until reaching cruiseAlt. 
+
+ collide  default: true 
+
+    Does the unit collide with other aircraft, or can it occupy the same space? 
+
+ hoverAttack  default: false 
+
+    Controls whether the aircraft flys and attacks like a fighter/bomber or a helicopter/gunship. 
+
+ airStrafe  default: true 
+
+    For aircraft with hoverAttack = true, controls if the unit strafes side to side while attacking or remains stationary. 
+
+ cruiseAlt  default: 0.0 lua: wantedHeight 
+
+    The altitude in elmos which the unit attempts to fly at while cruising. 
+
+ airHoverFactor  default: -1.0 lua: dlHoverFactor 
+
+    For aircraft with hoverAttack = true, less then 0 means it can land and >= 0 indicates how much the unit will move during hovering on the spot. 
+
+ bankingAllowed  default: true 
+
+    For aircraft with hoverAttack = true, controls whether or not the unit banks when moving turning. 
+
+ useSmoothMesh  default: true 
+
+    Does the aircraft follow the real map terrain or the special smoothed out navigation mesh generated by Spring specifically for aircraft?} Can become problematic for construction aircrafts, building in canyons. 
+
+ maxFuel  default: 0.0 Removed in 101.0 in favour of more flexible lua custom commands
+
+    The maximum flight time in seconds before aircraft must return to an airbase to refuel. 
+
+ refuelTime  default: 5.0 Removed in 101.0 in favour of more flexible lua custom commands
+
+    The time in seconds required to refuel the aircraft at an airbase. 
+
+ minAirbasePower  default: 0.0 Removed in 101.0 in favour of more flexible lua custom commands
+
+    The minimum workerTime an airbase must have to repair / refuel this aircraft. 
+
+ canLoopbackAttack  default: false 
+
+    Can the aircraft perform an Immelmann turn? 
+
+Advanced Air Tags
+
+The following set of tags are not well understood and using non-default values can lead to undesired flight behaviours.  wingDrag  default: 0.07 
+
+    The drag caused by the aircraft's wing. Clamped between 0.0 and 1.0. 
+
+ wingAngle  default: 0.08 
+
+    The angle between the front and the wing plane. 
+
+ frontToSpeed  default: 0.1 
+
+    Fudge factor for lining up speed and front of plane. 
+
+ speedToFront  default: 0.07 
+
+    Fudge factor for lining up speed and front of plane. 
+
+ crashDrag  default: 0.005 
+
+    The drag used when crashing. Clamped between 0.0 and 1.0. 
+
+ maxBank  default: 0.8 
+
+    The maximum roll (z-axis rotation) the aircraft can achieve. 
+
+ maxPitch  default: 0.45 
+
+    The maximum pitch (x-axis rotation) the aircraft tries to keep. 
+
+ turnRadius  default: 500.0 
+
+    H to Spring unit AI about the required turning radius. 
+
+ verticalSpeed  default: 3.0 
+
+    The speed of takeoff and landing, at least for gunships (hoverAttack = true). 
+
+ maxAileron  default: 0.015 
+
+    The maximum turn speed around the roll (z) axis. 
+
+ maxElevator  default: 0.01 
+
+    The maximum turn speed around the pitch (x) axis. 
+
+ maxRudder  default: 0.004 
+
+    The maximum turn speed around the yaw (y) axis. 
+
+ maxAcc  default: 0.065 
+
+    The maximum acceleration or 'engine power' of the aircraft. 
+
+ attackSafetyDistance  default: 0 Exists only in version 99.0
+
+    Fighters abort dive toward target if within attackSafetyDistance and try to climb back to normal altitude while still moving toward target. It's disabled by default. Set to half of the minimum weapon range to avoid collisions, enemy fire, AOE damage. If set to greater than the weapon range, the unit will fly over the target like a bomber. This tag was removed in version 100.0 and changed to a Spring.SetMoveTypeData key. 
+
+Flares
+
+The following set of tags are rarely used and are hardcoded to only work vs. missile weapons. The texture is hardcoded to be flareprojectiletexture defined in Resources.lua.  canDropFlare  default: false 
+
+    Can this aircraft drop flares to distract missile weapons? 
+
+ flareReload  default: 5.0 lua: flareReloadTime 
+
+    The time in seconds between successive flare drops. 
+
+ flareDelay  default: 0.3 
+
+    The delay between detecting an incoming missile and launching flares. Multiplied by a random number between 1 and 16. 
+
+ flareEfficiency  default: 0.5 
+
+    The probability that an incoming missile will target the flare instead of the aircraft. 
+
+[3] flareDropVector  default: {0.0, 0.0, 0.0} 
+
+    The direction vector which flares are emitted in. 
+
+ flareTime  default: 3 
+
+    The lifetime of a dropped flare in frames. 
+
+ flareSalvoSize  default: 4 
+
+    How many flares are dropped at once? 
+
+ flareSalvoDelay  default: 0 
+
+    The delay in frames between the release of each individual flare in a burst. 
+
+Transports
+
+ transportSize  default: 0 
+
+    The size of units that the transport can pick up, in terms of the passengers footprX. 
+
+ mransportSize  default: 0 
+
+    The smallest size of unit that the transport can pick up, in terms of the passengers footprX. 
+
+ transportCapacity  default: 0 
+
+    The total number of units that the transport can pick up, with each unit multiplied by it's footprX size. Prior to 101.0 if this tag is not present, then any Script.AttachUnit and Script.DropUnit call in the animation script will be ignored (See Animation-LuaCallouts#Other), in successive versions all units can use Spring.UnitAttach et al regardless of this tag. 
+
+ transportMass  default: 100000.0 
+
+    The total cumulative mass of passengers the transport can carry. 
+
+ mransportMass  default: 0.0 
+
+    The minimum mass passenger the transport can carry. 
+
+ loadingRadius  default: 220.0 
+
+    How far away in elmos can the transporter pick up and drop units? 
+
+ unloadSpread  default: 1.0 
+
+    How spread out the passengers are when unloaded. Is multiplied by the passengers radius. 
+
+ isFirePlatform  default: false 
+
+    Can transported units still aim and shoot while loaded by this transport? 
+
+ holdSteady  default: false 
+
+    If true - passengers are slaved to orientation of transporter attachment piece, if false - passengers are slaved to orientation of transporter body. 
+
+ releaseHeld  default: false 
+
+    Does the transporter unload it's passengers when it dies? 
+
+ cantBeTransported  default: false for mobile units, true for structures 
+
+    Controls if a unit is transportable at all or not. If false it is overridden by Modrules.lua transportability subtable tags. 
+
+ transportByEnemy  default: true 
+
+    Controls if a unit can be transported by an enemy transport. i.e. can it be kidnapped. 
+
+ transportUnloadMethod  default: 0 
+
+    For air transports. Can be 0 - Land to unload individually, 1 - Flyover drop (i.e. Parachute), or 2 - Land and flood unload all passengers. Can be used on ground transports with mixed results. 
+
+ fallSpeed  default: 0.2 
+
+    For air transports with transportUnloadMethod = 1. The speed in elmos per second which units will fall at when released from the transport. 
+
+ unitFallSpeed  default: 0.0 
+
+    Allows you to override fallSpeed for an individual passenger. 
+
+Categories
+
+string category  default: "" 
+
+    The category tag is a string of separate words, each representing a category of units. There is a maximum of 32 categories. The primary purpose of categories is weapon targeting (See #weapons). 
+
+string noChaseCategory  default: "" 
+
+    The unit will still target enemies with a matching category, but will not chase after it if it moves out of weapon range. 
+
+Decals
+
+ leaveTracks  default: false 
+
+    Does the unit leave a track mark decal behind it when it moves? For mobile units. 
+
+string trackType  default: "stdTank" 
+
+    The filename of the image, without extension, assumed to be in Bitmaps/Tracks/, to be used as the track decal. The red channel of the image controls the brightness and the green channel the alpha (how visible it is) of the track. Blue channel is unused. 
+
+ trackWidth  default: 32.0 
+
+    The width of the track decal left on the ground, in elmos. 
+
+ trackOffset  default: 0.0 
+
+    How far back in elmos the track should be drawn from the centre of the unit. 
+
+ trackStrength  default: 32.0 
+
+    How visible or 'deep' the track mark should be. Also used to determine how long the decal should last. 
+
+ trackStretch  default: 1.0 
+
+    How much the track is stretched in the forward direction compared to the sides (i.e. used to change aspect ratio). 
+
+ useBuildingGroundDecal  default: false 
+
+    For structures, do they display a ground decal on the terrain under their model? 
+
+string buildingGroundDecalType  default: "" 
+
+    The filename of the image to be used as ground decal. Assumed to be in Unittextures/. 
+
+ buildingGroundDecalSizeX  default: 4 
+
+    How wide the decal is left to right, in footpr units. 
+
+ buildingGroundDecalSizeY  default: 4 
+
+    How wide the decal is top to bottom, in footpr units. 
+
+ buildingGroundDecalDecaySpeed  default: 0.1 
+
+    A measure of how quickly the decal should fade out if the structure dies. Essentially this value is multiplied by the time since death and subtracted from the original alpha until the decal is fully transparent. 
+
+Collision Volumes
+
+For a deeper explanation of these tags, see Gamedev:CollisionVolumes. Note that all collision checks first do a pre-check with the unit radius before doing the colvol checks. Ergo the unit radius must be larger or equal to the colvol! [3] modelCenterOffset  default: {0.0, 0.0, 0.0} Removed in 89.0 (Now set via lua)
+
+    How far from the model's defined centre should the centre of the unit be? 
+
+ usePieceCollisionVolumes  default: false lua: collisionVolume.defaultToPieceTree 
+
+    When turned on the model and UnitDef collision volumes are ignored and Spring generates a bounding box volume for each piece of the unit model. These volumes can be manipulated or replaced by Spring.SetUnitPieceCollisionVolumeData. Increases the performance cost of collision calculations. 
+
+string collisionVolumeType  default: "ellipsoid" lua: collisionVolume.type 
+
+    What shape should the unit's collision volume be? Can be box, ellipsoid or a cylinder aligned to an axis; cylX, cylY, cylZ. 
+
+[3] collisionVolumeScales  default: {0.0, 0.0, 0.0} lua: collisionVolume.scale{X|Y|Z} 
+
+    The lengths of the collision volume in each of the three axes. Note that non-spherical ellipsoids and elliptical cylinders are not supported. 
+
+[3] collisionVolumeOffsets  default: {0.0, 0.0, 0.0} lua: collisionVolume.offset{X|Y|Z} 
+
+    The offset from the unit centre to the hit volume centre in each axis. 
+
+ useFootPrCollisionVolume  default: false lua: .collisionVolume.defaultToFootpr New in version 92.0
+
+    Replaces any defined collision volume with a box with dimensions equal to the object's footpr (this also overrides any custom scaling and/or offsets). 
+
+ collisionVolumeTest  default: 0 Removed in 90.0 (Now always continuous)
+
+    The type of test used to detect collisions. Can be 0 (discrete) or 1 (continuous). Use the latter for catching high speed projectiles which may otherwise 'skip through' small collision volumes, but beware of the increased performance cost. 
+
+Attack Behaviours
+
+ highTrajectory  default: 0 lua: highTrajectoryType 
+
+    Can the unit fire it's (ballistic) weapons in a high trajectory arc? Can be 0 - Low trajectory only, 1 - High trajectory only, or 2 - Toggle button. 
+
+ kamikaze  default: false lua: canKamikaze 
+
+    Does the unit attack its target by blowing itself up? 
+
+ kamikazeDistance  default: 0.0 lua: kamikazeDist 
+
+    How close to the target, in elmos, the unit must get before detonating. Measured in 3D, not 2D. 
+
+ kamikazeUseLOS  default: false 
+
+    Does the target unit have to be in LOS when detonating or only within kamikazeDistance. 
+
+ strafeToAttack  default: false 
+
+    Should the unit move sideways when it can't shoot? 
+
+Other
+
+string decoyFor  default: "" 
+
+    The UnitDef name (not human name) which this unit is a decoy for. 
+
+ selfDestructCountdown  default: 5 lua: selfDCountdown 
+
+    The length in seconds taken between issuing self destruct order and the unit exploding. 
+
+ damageModifier  default: 1.0 lua: armoredMultiple 
+
+    The multiplier applied to weapon damage when the units ARMORED status (See Lua_ConstCOB) is turned on. 
+
+ isTargetingUpgrade  default: false lua: targFac 
+
+    Does the unit upgrade the targeting so that units shoot accurately at enemy units which are in radar but not in LOS. 
+
+ isFeature  default: false 
+
+    Does the unit immediately die o it's corpse feature when built? Used mainly for making walls. 
+
+ hideDamage  default: false 
+
+    Should the units current health be invisible to enemy players? 
+
+ showPlayerName  default: false 
+
+    Should the unit display it's controlling player as its name instead of name. Generally used for commander or hero units. 
+
+ showNanoFrame  default: true 
+
+    Does the unit show an OTA-style nanoframe whilst being constructed? 
+
+ unitRestricted  default: MAX_UNITS lua: maxThisUnit 
+
+    How many of this unit type may a player control at once? Defaults to being the maximum amount of units controllable. Is overridden by lobby unit restrictions. 
+
+ power  default: buildCostMetal + (buildCostEnergy / 60.0) 
+
+    The relative power of the unit. Used in weapon targeting priority and experience gain calculations. 
+
+
+
+
+echo("Unit: "..name)
+echo("The "..name.." is a "utype
+
+
+]]
+
+end
