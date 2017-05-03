@@ -90,7 +90,8 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
 	retTab=	{
 		[UnitDefNames["bg"].id]			=UnitDefNames["jskineggnogg"].id,
 		[UnitDefNames["bg2"].id]		=UnitDefNames["jtigeggnogg"].id,
-		[UnitDefNames["ghohymen"].id]	=UnitDefNames["jwatchbird"].id,
+		[UnitDefNames["ccrabsynth"].id]	=UnitDefNames["jcrabcreeper"].id,
+		[UnitDefNames["cgunship"].id]	=UnitDefNames["jwatchbird"].id,
 		[UnitDefNames["css"].id]		=UnitDefNames["jfiredancer"].id,
 		[UnitDefNames["advisor"].id]	=UnitDefNames["jghostdancer"].id,
 		[UnitDefNames["zombie"].id]		=UnitDefNames["gcivillian"].id,

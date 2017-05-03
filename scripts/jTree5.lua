@@ -27,14 +27,15 @@ rooter=piece"rooter"
 
 oldDeg={}
 function diceNewDeg(saveKey,upValue,margin)
-	if not oldDeg[saveKey] then oldDeg[saveKey] =0 end
-	temp=0
+	if not oldDeg[saveKey] then oldDeg[saveKey] =0.0 end
+	temp=0.0
 	if margin > 0 then
 		temp=math.random((margin*-1),margin)
 	else
 		temp=math.random(margin,-1*margin)
 	end
 	oldDeg[saveKey]=oldDeg[saveKey] +(upValue+temp)
+	echo("j5Tree"..oldDeg[saveKey])
 	return oldDeg[saveKey]
 end
 
@@ -85,18 +86,19 @@ function createTreeTop()
 	rotationValue={}
 	index=1
 	for i=1,24 do
-		rotationValue[#rotationValue+1]=diceNewDeg("a",360/12,6)
+		rotationValue[#rotationValue+1]=diceNewDeg("a",360/12,6.0)
 	end
 	rotationValue=shuffleT(rotationValue)
 	boolSinus=math.random(0,1)==1
+	currKey,value =getNextKey(rotationValue,nil, true)
 	
 	process(TableOfPieceGroups["rooftop"],
 	function(id)
 		if boolSinus == false then
 			Turn(id,z_axis,math.rad(math.random(-10,10)),0)	
-			if rotationValue[index] then
-				Turn(id,y_axis,math.rad(rotationValue[index]),0)
-			end
+			currKey,value =getNextKey(rotationValue, currKey)
+			if not value then value= math.random(-360,360) end
+			Turn(id,y_axis,math.rad(value),0)	
 		else
 			factor=math.sin(((index/12)*2*math.pi))*10
 			Turn(id,z_axis,math.rad(factor),0)	
@@ -197,17 +199,16 @@ function createLiane()
 	dropLianes(false,0)	
 end
 
-flyingUnits={}
+flyingUnits=getAirUnitTypeTable(UnitDefNames)
 x,y,z=Spring.GetUnitPosition(unitID)
-
+ 
 function fallingOff()
 	local spGetUnitPosition=Spring.GetUnitPosition
 	exemptUnits=getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	gravResistantUnits=getGravityChaneReistantUnitTypeTable(UnitDefNames)
 	
-	T=getAllInCircle(x,z,RangeSkyHook,unitID,unitTeam)
-	T=filterOutBuilding(T,UnitDefs,true)
-	T=filterOutAirUnit(T,UnitDefs,true)
+	T=getAllInCircle(x,z,RangeSkyHook,unitID)
+
 	if T then
 		process(T,
 		function(id)
@@ -216,6 +217,8 @@ function fallingOff()
 			if flyingUnits[id] then return end
 			
 			idDefID=Spring.GetUnitDefID(id)
+			if UnitDefs[idDefID].isBuilding then return end
+			if UnitDefs[idDefID].isAirUnit then return end
 			if gravResistantUnits[idDefID] then return end
 			if exemptUnits[idDefID] then return end
 			
@@ -368,8 +371,8 @@ function invertGravitySoundLoop()
 			while 	boolGravityOff ==true do
 
 
-				index=math.random(1,2)then
-				if boolGravityOff==true 
+				index=math.random(1,2)
+				if boolGravityOff==true then
 					Spring.PlaySoundFile("sounds/jSkyhooktree/GravityLoop"..index..".ogg",1.0)
 					Sleep(25000)
 				end
@@ -462,14 +465,16 @@ end
 
 function fallingProcess(evtID, frame, persPack,startFrame)
 	--> EventStreamify
-	for i=1,15 do
+	totalTimeRunning=frame-startFrame
+	i= math.ceil(totalTimeRunning/100)
+	if i < 15 then
 		Spring.MoveCtrl.SetGravity(persPack.id, i/15)
-		Sleep(100)	
+		return frame+100,persPack
 	end
 	
 	--StartEventStream	fallingDown()
 	Spring.MoveCtrl.SetGravity(persPack.id, 1)
-			Spring.MoveCtrl.SetRotation(persPack.id,0,0,0)
+	Spring.MoveCtrl.SetRotation(persPack.id,0,0,0)
 	Spring.MoveCtrl.SetNoBlocking(persPack.id, false)
 	Spring.MoveCtrl.Disable(persPack.id)
 	

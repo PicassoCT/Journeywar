@@ -1109,7 +1109,7 @@ function shieldDraw()
 				
 				T=SubSetFromSet(T,N)
 				
-				T = filterBuilding(T,UnitDefs,true)
+				T = filterOutBuilding(T,UnitDefs,true)
 				T = filterOutImmobile(T,UnitDefs,true)			
 				
 				

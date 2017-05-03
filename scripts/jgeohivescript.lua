@@ -294,6 +294,7 @@ end
 
 function BUILDUP(monsterID, enemyID,Time,mteam, factor)
 	ex,ey,ez=Spring.GetUnitPosition(enemyID)
+
 	if monsterID % math.random(22,27) == 0 then 
 
 		ex,ey,ez= sanitizeCoords(ex,ey,ez)
@@ -304,7 +305,8 @@ function BUILDUP(monsterID, enemyID,Time,mteam, factor)
 		return ex,ey,ez
 	end	
 	
-	allyID=Spring.GetUnitNearestAlly(enemyID)		
+	allyID=Spring.GetUnitNearestAlly(enemyID)	
+	if not allyID or type(allyID) ~= "number" then return  ex,ey,ez end
 
 	ex,ey,ez=Spring.GetUnitPosition(allyID)	
 	mx,my,mz=Spring.GetTeamStartPosition(mteam)
