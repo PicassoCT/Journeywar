@@ -361,7 +361,7 @@ function script.Create()
 	Hide(bldoor2)
 	StartThread(open)
 	StartThread(upgraDDe)
-	StartThread(alarmCheck)--
+	StartThread(alarmCheck)
 	StartThread(windyS)
 	
 		StartThread(playSoundScape_OS,"sounds/cbuilux/soundscape/", soundScapeDefinition,40000,160000,0.75, unitID)
@@ -372,6 +372,7 @@ end
 
 function script.Killed(recentDamage,_)
 	
+	Explode(builux,SFX.SHATTER)
 	Explode(builux,SFX.SHATTER)
 	Explode(bldoor1,SFX.FIRE)
 	Explode(bldoor2,SFX.FIRE)

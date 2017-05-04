@@ -236,7 +236,7 @@ for i=1,4,1 do
 
 end
 createCorpseCBuilding(unitID,recentDamage)
-Sleep(10)
+
 --whatever
 return 0
 end

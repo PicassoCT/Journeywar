@@ -1,8 +1,14 @@
---NOTE: UNTESTED CODE, EXECUTE IT UNDER YOUR PANTS um i mean your RESPONSABILITY
-
-
---NOTE: PUT THIS AT YOUR CONSTANTS DECLARATION AREA IN THE FILE
-
+function gadget:GetInfo()
+	return {
+		name = "jw_ComEnder",
+		desc = "Ends the game if endgame units die",
+		author = "Picasso",
+		date = "January, 2010",
+		license = "GNU GPL, v2 or later",
+		layer = 16,
+		enabled = true -- loaded by default?
+	}
+end
 
 if (gadgetHandler:IsSyncedCode()) then
 	

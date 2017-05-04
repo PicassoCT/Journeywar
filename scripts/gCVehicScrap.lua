@@ -295,7 +295,8 @@ function TimeOfMyLife()
 end
 
 function script.Killed()
-	return 0
+
+	return 1
 end
 -- "custom:330rlexplode",1024
 -- "custom:flames",
@@ -354,37 +355,33 @@ end
 
 
 function script.Create()
-
-if getUnitGroundHeigth(unitID) > -5 then
-
-
-
 	
-	if math.random(0,1)==1 then
-		
-		for i=1,6,1 do
-			Explode(explo[i],SFX.FIRE+SFX.FALL)
-			--StartThread(PseudoPhysix,explo[i],empty[i], math.random(5,10), nil)
-			Hide(explo[i])
+	if getUnitGroundHeigth(unitID) > -5 then
+		if math.random(0,1)==1 then
+			
+			for i=1,6,1 do
+				Explode(explo[i],SFX.FIRE+SFX.FALL)
+				--StartThread(PseudoPhysix,explo[i],empty[i], math.random(5,10), nil)
+				Hide(explo[i])
+			end
+			
+		else
+			for i=1,6,1 do
+				Hide(explo[i])
+			end
 		end
 		
-	else
-		for i=1,6,1 do
-			Hide(explo[i])
-		end
+		
+		x=math.random(0,360)
+		EmitSfx(emitfire, 1024)
+		Turn(corpserotator,y_axis,math.rad(x),0)
+		
+		fireTime=math.random(40,360)
+		endTimes=math.random(0,500)
+		StartThread(onFire,fireTime,endTimes)
+		StartThread(goDieInAFire)	
 	end
 	
-	
-	x=math.random(0,360)
-	EmitSfx(emitfire, 1024)
-	Turn(corpserotator,y_axis,math.rad(x),0)
-	
-	fireTime=math.random(40,360)
-	endTimes=math.random(0,500)
-	StartThread(onFire,fireTime,endTimes)
-	StartThread(goDieInAFire)	
-end
-
 	hideAndSeek()
 	StartThread(TimeOfMyLife)
 	StartThread(contemplateOrigin)
