@@ -2973,8 +2973,7 @@ function vardump(value, depth, key)
 			if boolFilterOut == false  and UnitDefs[def] and UnitDefs[def].isBuilding ==  false then 
 				returnTable[#returnTable+1]=id 
 			end 
-		end 
-		
+		end 	
 		return returnTable 
 	end
 	
