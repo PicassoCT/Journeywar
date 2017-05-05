@@ -210,7 +210,7 @@ function createBaseShapeTable(sizeX, sizeY, sizeZ, piecenumber)
 			baseShapeTable[x][z][y]= true
 			if distance(x,z,sizeX,sizeZ) < radiusA then baseShapeTable[x][z][y]= false end
 			if distance(x,z,1,sizeZ) < radiusB then baseShapeTable[x][z][y]= false end
-			if math.random(0.01,1) > baseRotLikelikhoodMax then	baseShapeTable[x][z][y]= false	end
+			if math.random(1,100)/100 > baseRotLikelikhoodMax then	baseShapeTable[x][z][y]= false	end
 			
 			if baseShapeTable[x][z][y]== true then
 				piecenumber=piecenumber-1
