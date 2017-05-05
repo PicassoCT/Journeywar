@@ -446,7 +446,7 @@ FixFunctionTabel[8]=	function ()
 		xorZ=maRa()==true
 		signum=randSign()
 		for k=i+1,i+9, 1 do
-			movePieceToPiece(TreePiece[k],AddonPiece,0)
+			movePieceToPiece(unitID,TreePiece[k],AddonPiece,0)
 			degval=(k-i)*40*signum
 			if xorZ==true then
 				Turn(TreePiece[k],z_axis,math.rad(degval),0,true)
@@ -480,7 +480,7 @@ FixFunctionTabel[9]=	function ()
 	--first and last row have equal number of pentagons and hexagons
 	--2:1 hexagons : pentagons 
 	for i=3,NUMBEROFPIECES,1 do
-		movePieceToPiece(TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
+		movePieceToPiece(unitID,TreePiece[i],PiecesToGrowUpon[math.random(1,#PiecesToGrowUpon)],0)
 		turnPieceRandDir(TreePiece[i],0, 90,0,360,0,90,0)
 		WaitForTurn(TreePiece[i],x_axis)
 		WaitForTurn(TreePiece[i],y_axis)
@@ -925,7 +925,7 @@ FixFunctionTabel[17]= function ()
 		
 		offSet=math.random(0,360)
 		for j=i,i+3,1 do	
-			movePieceToPiece(TreePiece[j],CurrEndPoint,0)
+			movePieceToPiece(unitID,TreePiece[j],CurrEndPoint,0)
 			--Turn(TreePiece[j],y_axis,math.rad(offSet+(j-i+1)*120),0)
 			--Turn(TreePiece[j],x_axis,math.rad(90),0,true)
 			--WaitForMove(TreePiece[j],x_axis)
@@ -1135,7 +1135,7 @@ FixFunctionTabel[19]= function ()
 	
 	floaterStem=math.ceil(math.random(5,10))
 	for i=2,floaterStem do
-		movePieceToPiece(TreePiece[i],EndPiece[i-1],0)
+		movePieceToPiece(unitID,TreePiece[i],EndPiece[i-1],0)
 		Turn(TreePiece[i],x_axis,math.rad(Deg.x),0)
 		Turn(TreePiece[i],y_axis,math.rad(Deg.y),0)
 		Turn(TreePiece[i],z_axis,math.rad(Deg.z),0,true)

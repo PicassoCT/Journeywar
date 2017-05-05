@@ -4906,6 +4906,14 @@ function transferOrders( originID, unitID)
 	end		
 end
 
+--> createAccessTable
+function createAccessTable(T, a, b ,c)
+	if a and not T[a] then T[a]={} end
+	if b and not T[a][b] then T[a][b]={} end
+	if c and not T[a][b][c] then T[a][b][c]={} end
+return T
+
+end
 
 -->Generate a Description Text for a Unit
 function unitDescriptionGenerator(Unit, UnitDefNames)

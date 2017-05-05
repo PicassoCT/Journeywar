@@ -529,7 +529,7 @@ function pillarHandling()
 			--echo("pillarHandlingj"..j)
 			if maRa()==true then
 				Show(Pillar[j])
-				movePieceToPiece(Pillar[j],PillP[j])	
+				movePieceToPiece(unitID,Pillar[j],PillP[j])	
 			end
 		end			
 	end

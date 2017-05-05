@@ -545,7 +545,7 @@ function AlignPieceToPiece( pieceToAlign, PieceToAlignTo,speed, boolWaitForIt,bo
 	if not pieceToAlign or not PieceToAlignTo then return end
 	
 	--We use existing function to move the piece to the other pieces center
-	movePieceToPiece(pieceToAlign,PieceToAlignTo,0)
+	movePieceToPiece(unitID,pieceToAlign,PieceToAlignTo,0)
 	
 	WaitForMove(pieceToAlign,x_axis)
 	WaitForMove(pieceToAlign,y_axis)
@@ -669,8 +669,8 @@ function movePieceToPieceAlt(piecename, pieceDest,speed,offset,forceUpdate)
 	WaitForMove(piecename,x_axis); WaitForMove(piecename,z_axis); WaitForMove(piecename,y_axis);
 end
 -->Moves a UnitPiece to a UnitPiece at speed
-function movePieceToPiece(piecename, pieceDest,speed,offset,forceUpdate)
-	
+function movePieceToPiece(unitID,piecename, pieceDest,speed,offset,forceUpdate)
+	reset(piecename,0) --last changeset
 	if not pieceDest or not piecename then return end	
 	
 	ox,oy,oz=Spring.GetUnitPiecePosition(unitID,pieceDest)
@@ -1177,7 +1177,7 @@ function unfoldAnimation(ListOfPieces,specialeffectsfunction,unitID,maxSpeed)
 				end
 			end
 			
-			movePieceToPiece( HeightSortedTable[i].value, PieceBiggerThenMe,0)
+			movePieceToPiece(unitID, HeightSortedTable[i].value, PieceBiggerThenMe,0)
 			Show(HeightSortedTable[i].value)
 			--get Element Bigger in Table 
 			Move(HeightSortedTable[i].value,0,x_axis,speed)

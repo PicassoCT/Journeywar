@@ -151,7 +151,8 @@ function hideWaterWheels()
 end
 
 boolWaterSpilling=true
-TablesOfPiecesGroups={}
+
+	
 function script.Create()
 	allreadyInsertedPieces={}
 	--generatepiecesTableAndArrayCode(unitID)
@@ -164,16 +165,18 @@ function script.Create()
 	reset(FlucWheel)
 	
 	bonsaiPieces={}
+	endPieces={}
 	
 	for i=1, 9, 1 do
 		bonsaiPieces[i]={}
 		for k=1 , 10, 1 do
 			if (((i-1)*10)+k) < 98 then
 				pieceName= "bP"..(((i-1)*10)+k)
-				
 				pieceName= piece(pieceName)
 				bonsaiPieces[math.max(math.min(3,i%3),1)][#bonsaiPieces[i]+k]={	Piece= pieceName 
-					
+				--EndPiece
+				endPieceName="E"..(((i-1)*10)+k)
+				endPieces[#endPieces+1]=piece(endPieceName)				
 				}
 			end
 		end
@@ -189,7 +192,7 @@ function script.Create()
 	sizeX, sizeY, sizeZ= 8,3,8
 	baseShapeTable = createBaseShapeTable(sizeX, sizeY, sizeZ, 30)
 	
-	StartThread(buildBonsai, bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY)
+	StartThread(buildBonsai, bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPieces)
 end
 
 function createBaseShapeTable(sizeX, sizeY, sizeZ, piecenumber)
@@ -308,7 +311,7 @@ function getBonsaiPiece(y, bonsaiPieces, sizeY)
 	for i=1,#bonsaiPieces[1], 1 do
 		if math.random(0,1) == 1 and not allreadyInsertedPieces[bonsaiPieces[1][i].Piece] then
 			allreadyInsertedPieces[bonsaiPieces[1][i].Piece] =true
-			return bonsaiPieces[1][i].Piece
+			return bonsaiPieces[1][i].Piece, i
 		end
 	end
 	
@@ -317,7 +320,7 @@ function getBonsaiPiece(y, bonsaiPieces, sizeY)
 		for i=1,#bonsaiPieces[y], 1 do
 			if math.random(0,1) == 1 and not allreadyInsertedPieces[bonsaiPieces[y][i].Piece] then
 				allreadyInsertedPieces[bonsaiPieces[y][i].Piece] =true
-				return bonsaiPieces[y][i].Piece
+				return bonsaiPieces[y][i].Piece, i
 			end
 		end
 	end
@@ -335,8 +338,19 @@ function getCollissionOffset(id, piece)
 	return px, py,pz
 end
 
+
+function initPiece(id,x,y,z,mx,my,mz,speed)
+tP(id,x,y,z,speed)
+mP(id,mx,my,mz,speed)
+Show(id)
+Sleep(1)
+
+end
+
+
+
 --bonsaiPieces must be a objecttable containing layers of tables, containing a table with a piece and a Sensory
-function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeight)
+function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPieces)
 	
 	WTurn(center,y_axis,0,0)
 	--This hides all the bonsaisPieces
@@ -365,7 +379,7 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeigh
 	vx,vy,vz= Spring.GetUnitPieceCollisionVolumeData(unitID, bonsaiPieces[1][1].Piece)
 	sx,sy,sz= getCollissionOffset(unitID, bonsaiPieces[1][1].Piece)
 	bx, boldHght, bz = math.max(vx,sz)*0.75, math.abs(sy-vy) , math.abs(vz,sz)*0.75
-	
+	predecessorTable={}
 	
 	for y=1,sizeY, 1 do
 		for x= 1, sizeX, 1 do
@@ -376,10 +390,12 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeigh
 					--get the heightOffset
 					
 					heightOffset= heightGradient[z] + cliffFactor*(math.random(boldHght/-4,boldHght/4))
-					bonsaiTable[x][z][1].Height=heightOffset	
-					bonsaiTable[x][z][1].BoolGround=true
-					bonsaiTable[x][z][1].Piece = getBonsaiPiece(y, bonsaiPieces, sizeY)
-					if not 	bonsaiTable[x][z][1].Piece then return end
+					Piece, index= getBonsaiPiece(y, bonsaiPieces, sizeY)
+					bonsaiTable[x][z][1]={Height=heightOffset, BoolGround=true, Piece= Piece}#
+					
+					predecessorTable=createAccessTable(predecessorTable,x,z,1)
+					predecessorTable[x][z][1]=index
+					assert(onsaiTable[x][z][1].Piece)
 					--place a bolder
 					px,py,pz= bx*x, -10 + bonsaiTable[x][z][1].Height, bz*z
 					MovePieceToPos(bonsaiTable[x][z][y].Piece, px, py, pz, 0)
@@ -387,32 +403,29 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, maxHeigh
 					dir, angular = getClosestDirection(directionTable,x,z) 
 					dir = dir + math.random(-15,15)
 					--Turn Boulder towards dir
-					Turn(bonsaiTable[x][z][1].Piece,y_axis,math.rad(dir), 0)
-					WTurn(bonsaiTable[x][z][1].Piece,x_axis,math.rad(angular), 0)
-					Show(bonsaiTable[x][z][1].Piece)
-					Sleep(1)
+					initPiece(bonsaiTable[x][z][1].Piece,angular,dir,0,0,0,0,0)
+				
 				end
 				
 				
 				if y~=1 and baseShapeTable[x][z][y] == true then
-					
+				
 					--get the heightOffset
 					heightOffset= heightGradient[x] + cliffFactor*(math.random(-boldHght/4,boldHght/4))
-					bonsaiTable[x][z][y].Height=heightOffset	
-					bonsaiTable[x][z][y].BoolGround= true	
-					bonsaiTable[x][z][y].Piece = getBonsaiPiece(y, bonsaiPieces, sizeY)
+					Piece,index = getBonsaiPiece(y, bonsaiPieces, sizeY)
+					bonsaiTable[x][z][y]={Height=heightOffset	,BoolGround= true, Piece=Piece}
+
+					predecessorTable=createAccessTable(predecessorTable,x,z,y)
+					predecessorTable[x][z][y]=index
+					
 					if not 	bonsaiTable[x][z][y].Piece then return end
 					Show(bonsaiTable[x][z][y].Piece)
 					
 					
+						
 					if baseShapeTable[x][z][y-1] == true then
-						Sleep(1)
-						ox,oy,oz= getCollissionOffset(unitID,bonsaiTable[x][z][y-1].Piece)
-					
-						ox=ox*-1
-						Move(bonsaiTable[x][z][y].Piece,x_axis,ox,0)
-						Move(bonsaiTable[x][z][y].Piece,y_axis,oy,0)
-						Move(bonsaiTable[x][z][y].Piece,z_axis,oz,0,true)
+
+						MovePieceToPiece(unitID, bonsaiTable[x][z][y].Piece,EndPieces[predecessorTable[x][z][y-1]],0,0)
 						Sleep(1)
 						
 					else
