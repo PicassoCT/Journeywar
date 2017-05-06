@@ -393,6 +393,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			Spring.SpawnCEG("factory_explosion",px,py+10,pz,0,1,0,50)		
 		end,
 		[jhunterDartDefID]=function(weaponDefID, px, py, pz, AttackerID)
+			if not AttackerID or type(AttackerID) ~= "number" then return end
 			udefID= Spring.GetUnitDefID(AttackerID)
 			unitChoice= "jhunterdart"
 			if udefID == UnitDefNames["chunter"].id then
@@ -866,7 +867,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if unitDefID == jShadowDefID and not lethalBuffExecption[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID)== "number" then	
 			
 			boolUnitIsDead=Spring.GetUnitIsDead(attackerID)
-			boolUnitIsBuilding= UnitDefNames[attackerDefID].isBuilding
+			boolUnitIsBuilding= UnitDefs[attackerDefID].isBuilding
 			if boolUnitIsDead == false and boolUnitIsBuilding == false then		
 				
 				offx,offz=math.random(-25,25),math.random(-25,25)

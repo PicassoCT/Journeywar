@@ -225,13 +225,13 @@ function equiTurn(p1,p2,axis,degv,speed)
 end
 
 function breath(p1,p2,axis,degv,speed,itteration, speedreduce)
-for i=1, itteration do
- equiTurn(p1,p2,axis,degv,speed)
- WaitForTurns(p1,p2)
- equiTurn(p1,p2,axis,degv*-1,speed)
-  WaitForTurns(p1,p2)
-  speed=speed -speedreduce
-end
+	for i=1, itteration do
+		equiTurn(p1,p2,axis,degv,speed)
+		WaitForTurns(p1,p2)
+		equiTurn(p1,p2,axis,degv*-1,speed)
+		WaitForTurns(p1,p2)
+		speed=speed -speedreduce
+	end
 end
 
 --> Turns a piece in all 3 axis and waits for it
@@ -284,11 +284,11 @@ function turnSyncInTimeT(Table, times,x_deg,y_deg,z_deg)
 end
 
 function checkPiece(unitID, piecenameOrNumber)
-pieceList= Spring.GetUnitPieceList(unitID)
-return pieceList[piecenameOrNumber] ~= nil, pieceList
+	pieceList= Spring.GetUnitPieceList(unitID)
+	return pieceList[piecenameOrNumber] ~= nil, pieceList
 end
 
---> move a Piece  to all 3 axis at once 
+--> move a Piece to all 3 axis at once 
 function mP(piecename,x_val,y_val,z_val,speed,boolWait)
 	if boolWait then
 		Move(piecename,x_axis,x_val,speed)
@@ -652,7 +652,7 @@ function movePieceToPieceAlt(piecename, pieceDest,speed,offset,forceUpdate)
 	else
 		oz= (math.abs(oz) + math.abs(orz))*dirSignZ
 	end
-		
+	
 	ox=ox*-1
 	if offset then		
 		ox= ox +(offset.x)
@@ -713,23 +713,23 @@ end
 function keepPieceAfloat(unitID,piecename,speed,randoValLow,randoValUp)
 	if not piecename then return error("No piecename given") end
 	randoVal= math.random(randoValLow or -1,randoValUp or 0)
-
+	
 	--unitspace
 	px,py,pz,_,_,_=Spring.GetUnitPiecePosition(unitID,piecename)
 	--worldspace
 	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
 	pieceInfoTable= Spring.GetUnitPieceInfo(unitID,piecename)
 	sizeOfPiece,offsetOfPiece =pieceInfoTable.max[2],pieceInfoTable.offset[2]
-
-	if y > 0  then 
+	
+	if y > 0 then 
 		WMove(piecename,y_axis,py-y -offsetOfPiece +randoVal ,speed)
 	else
-		WMove(piecename,y_axis,py-y -offsetOfPiece  +randoVal,speed)
+		WMove(piecename,y_axis,py-y -offsetOfPiece +randoVal,speed)
 	end
 	
 	px,py,pz,_,_,_=Spring.GetUnitPiecePosition(unitID,piecename)
 	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piecename)
-
+	
 end
 
 -->Paint a Piece Pattern 
@@ -794,6 +794,30 @@ function moveSpeedCurve(piecename, axis, NumberOfArgs, now, timeTotal , distToGo
 	Move(piecename, axis, distToGo, Totalspeed)
 end
 
+
+function stuckInPlaceAvoidance(unitID, times,intervall)
+	impulsfactor=6
+	x,y,z=Spring.GetUnitPosition(unitID)
+	oP,newPos={x=x,y=y,z=z},{x=x,y=y,z=z}
+	
+	while true do
+		x,y,z=Spring.GetUnitPosition(unitID)
+		intervallCounter=0
+		nP={x=x,y=y,z=z}
+		if math.abs(oP.x-nP.x) < 1 or  math.abs(oP.z-nP.z) < 1 then
+			intervallCounter=intervallCounter+1
+		else
+			intervallCounter=0
+		end
+		oldPos=newPos
+		
+		if intervallCounter > intervall then
+			dx,dy,dz=Spring.GetUnitDirection(unitID)
+			Spring.AddUnitImpulse(unitID,dx*impulsfactor,dy*impulsfactor,dz*impulsfactor)
+		end
+		Sleep(times)
+	end
+end
 --> Drops a piece to the ground
 function DropPieceToGround(unitID,piecename,speed, boolWait,boolHide, ExplodeFunction,SFXCOMBO)
 	x,y,z=Spring.GetUnitPiecePosition(unitID,piecename)
@@ -1245,7 +1269,7 @@ function dropPieceTillStop(unitID,piece,speedPerSecond, VspeedMax, lbounceNr, bo
 		--Spring.Echo("Looping Physics")
 		x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
 		gh=Spring.GetGroundHeight(x,z)
-				
+		
 		if gh - y > 5 then			
 			bump=bump+1
 			force=math.sqrt(force)

@@ -2,6 +2,7 @@
 include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_jw.lua"
+include "lib_type.lua"
 
 local jbug = piece "jbug"
 local jbugleg1 = piece "bugleg1"
@@ -426,4 +427,5 @@ function script.Create()
 	Spring.PlaySoundFile(Soundname) 
 	StartThread(animationLoop)
 	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 10000)
+	StartThread(stuckInPlaceAvoidance,unitID, 500,300)
 end

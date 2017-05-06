@@ -1,5 +1,7 @@
 
 include "lib_jw.lua"
+include "lib_type.lua"
+include "lib_Animation.lua"
 
 jhoney = piece "jhoney"
 jhoneyleg1 = piece "jhoneyleg1"
@@ -18,6 +20,7 @@ SIG_AIM2 = 8
 SIG_DEFAULT=32
 function script.Create()
 	StartThread(defaultEnemyAttack,unitID,SIG_DEFAULT, 33000)
+	StartThread(stuckInPlaceAvoidance,unitID, 500,300)
 end
 
 function legs_down()

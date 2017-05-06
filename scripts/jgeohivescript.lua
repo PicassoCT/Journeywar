@@ -272,7 +272,7 @@ function PEAK(monsterID, enemyID,Time,mteam, factor)
 		
 		ex,ey,ez=Spring.GetUnitPosition(enemyID)
 		ex,ey, ez= sanitizeCoords(ex+rx,0,ez+rz)
-		return ex,ey,ez
+		return ex+rx,0,ez+rz
 	end
 	
 end
@@ -397,8 +397,10 @@ function handleHiveAttacks()
 			boolStillAlive=Spring.GetUnitIsDead(lastAttacker)
 			ex,ey,ez=Spring.GetUnitPosition(lastAttacker)
 			for num,monsterid in pairs(monsterTable) do
-				if monsterid then
-					Command(monsterid, "go", {x=ex,y=ey,z=ez},{})
+				if  Spring.GetUnitIsDead(monsterid)== false  then
+					Command(monsterid, "go", {x=ex+math.random(-25,25),y=ey,z=ez+math.random(-25,25)},{})
+				else
+					monsterTable[monsterid]=nil
 				end
 			end
 		end
@@ -435,7 +437,7 @@ function TargetOS()
 			end
 			
 			for num,monsterid in pairs(monsterTable) do
-				if monsterid then
+				if monsterid and Spring.GetUnitIsDead(monsterid)== false then
 					enemyID= getNearestEnemy(monsterid)		
 					if enemyID then						
 						ex,ey,ez = lfuncTable[State](monsterid,enemyID,times,teamID, times/totalTable[State])
@@ -451,50 +453,6 @@ function TargetOS()
 	end
 end
 
-function TestOS()
-	Sleep(10)
-	
-	times=0
-	local spValidUnitID=Spring.GetUnitIsDead
-	
-	local spGetUnitPosition=Spring.GetUnitPosition
-	local spSetUnitMoveGoal=	Spring.SetUnitMoveGoal
-	local lfuncTable=funcTable
-	x,y,z=math.random(2048,8192),math.random(2048,8192),math.random(2048,8192)
-	monsterid=Spring.CreateUnit("cegtest",x,y,z,0,teamID)
-	
-	oldState="RELAX"
-	while(true) do
-		Sleep(500)
-		
-		
-		
-		times=times+500
-		AllUnitsUpdated=Spring.GetAllUnits()
-		
-		State, times, percent =NextState(State,math.ceil(times))
-		if State ~= oldState then
-			Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
-			oldState=State
-		end
-		
-		if Spring.GetUnitIsDead(monsterid)==true then 	monsterid=Spring.CreateUnit("cegtest",x,y,z,0,teamID) end
-		enemyID= getNearestEnemy(monsterid)		
-		if enemyID then						
-			ex,ey,ez = lfuncTable[State](monsterid,enemyID,times,teamID, times/totalTable[State])
-			if ex then
-				--Spring.Echo("jgeohive:Sending".. monsterid.." to state pos")
-				StartThread(markPosOnMap,ex,ey,ez,"greenlight")		
-				Spring.Echo(State.."with ",ex," ",ey," ",ez,times/totalTable[State]) 
-				
-				Command(monsterid, "go", {x=ex,y=ey,z=ez},{"shift"})
-			end
-		else
-			echo("No Enemy")
-		end
-		
-	end
-end
 
 
 

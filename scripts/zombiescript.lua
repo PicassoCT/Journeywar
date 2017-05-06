@@ -1045,7 +1045,7 @@ function script.Killed(recentDamage,maxHealth)
 		Explode(zRLeg, SFX.FALL+SFX.NO_HEATCLOUD)
 	end
 	
-	
+	return 1
 end
 
 

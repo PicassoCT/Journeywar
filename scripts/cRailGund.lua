@@ -54,14 +54,14 @@ local boolRailGunTerraForm=false
 
 particleTable={}
 for x=1,nrOfParticles,1 do
-partTesticle={}
+	partTesticle={}
 	for i=1,4,1 do
-	tempString= "particle"..x
-	 tempString= tempString..i
-	tempPiece= piece (tempString)
-	table.insert(partTesticle,i,tempPiece)
+		tempString= "particle"..x
+		tempString= tempString..i
+		tempPiece= piece (tempString)
+		table.insert(partTesticle,i,tempPiece)
 	end
-table.insert(particleTable,x,partTesticle)
+	table.insert(particleTable,x,partTesticle)
 end
 local unitPosX=0
 local unitPosY=0
@@ -76,83 +76,52 @@ local terraFormTable={}
 
 
 --function: CaveInLoop
-boolForOnce=true
-function CaveInLoop()
-	while(true) do 
-	
-				while elementsInTable ~= 0 do
-				--Spring.Echo("table not empty")
-				--get the randomized CaveInPoint
-			
-      			x=math.random(1,elementsInTable)
-		
-						if terraFormTable[x][1]~= nil then
-						xCaveIn=terraFormTable[x][1]
-						--Spring.Echo(xCaveIn)
-						zCaveIn=(terraFormTable[x][2])
-						--Spring.Echo(zCaveIn)
-						--Spring.Echo(yCaveIn)
-						yCaveIn=(terraFormTable[x][3])-math.random(0,50)
-						--get Spring to set the Terrain on CaveIn
-									
-						
-				Spring.SetHeightMapFunc(Spring.SetHeightMap,xCaveIn,zCaveIn,yCaveIn)
-					--TODO:NO F***ING CLUE! (YET!)
-						
-					
-						table.remove(terraFormTable,x)
-						elementsInTable=elementsInTable-1
-						end
-				end
-	sleep=math.random(400,1200)
-	Sleep(sleep)
-	end
-end
+
 
 
 function sparkEmit()
-for a=1,17,2 do
-
-EmitSfx(emitArray[a], 1026)
-
-EmitSfx(emitArray[a+1], 1026)
-Sleep(122)
-end
-
-return
+	for a=1,17,2 do
+		
+		EmitSfx(emitArray[a], 1026)
+		
+		EmitSfx(emitArray[a+1], 1026)
+		Sleep(122)
+	end
+	
+	return
 end
 
 
 function addShotIntersectedPoints()
---calculate the equation of the line 
-
-slope=math.tan(math.deg(gHeading))
-
---Spring.Echo("AddingaPoint",slope)
-
-x,z,zOfOld=0
+	--calculate the equation of the line 
+	
+	slope=math.tan(math.deg(gHeading))
+	
+	--Spring.Echo("AddingaPoint",slope)
+	
+	x,z,zOfOld=0
 	for i=15,range,1 do
-	--calc point
-	x=i+unitPosX
-	z=(slope*x)+unitPosZ
-	--modulu -if != yOfOld
-			if zOfOld ~= (z-(z%1))then
+		--calc point
+		x=i+unitPosX
+		z=(slope*x)+unitPosZ
+		--modulu -if != yOfOld
+		if zOfOld ~= (z-(z%1))then
 			--getHeight add set point if height > unitPosX
 			y=Spring.GetGroundHeight(x,z)
-					if y > unitPosY then
-					tempTable={}
-					--add unitPosition
-					tempTable[1]=x
-					tempTable[2]=z
-					tempTable[3]=y
-					table.insert(terraFormTable,elementsInTable+1,tempTable)
-					elementsInTable=elementsInTable+1
-					
-					--yOfOld =y
-					end
-			zOfOld=z
+			if y > unitPosY then
+				tempTable={}
+				--add unitPosition
+				tempTable[1]=x
+				tempTable[2]=z
+				tempTable[3]=y
+				table.insert(terraFormTable,elementsInTable+1,tempTable)
+				elementsInTable=elementsInTable+1
+				
+				--yOfOld =y
 			end
-
+			zOfOld=z
+		end
+		
 	end
 end
 
@@ -175,7 +144,7 @@ end
 ---AIMING & SHOOTING---
 -----------------------------------------WEAPON ONE ----------------------------
 function script.AimFromWeapon1() 
-    	return shotEmit
+	return shotEmit
 end
 
 function script.QueryWeapon1() 
@@ -184,85 +153,83 @@ end
 
 function pitchInRange(pitch)
 	if pitch > 12 then 
-	return false 
+		return false 
 	end
-				if pitch < -12 then 
-				return false 
-				end
-return true
+	if pitch < -12 then 
+		return false 
+	end
+	return true
 end
 
 function script.AimWeapon1( heading, pitch )
-		if boolReload==true and pitchInRange(pitch) then
+	if boolReload==true and pitchInRange(pitch) then
 		
-        Turn(cRailG,y_axis, heading, 0.4)
+		Turn(cRailG,y_axis, heading, 0.4)
 		Turn(cRailG,x_axis, - pitch, 1.3)
 		WaitForTurn(cRailG,y_axis)
 		WaitForTurn(cRailG,x_axis)
-        Spring.PlaySoundFile("sounds/cRailgun/railGun.wav")
+		Spring.PlaySoundFile("sounds/cRailgun/railGun.wav")
 		sparkEmit()
 		gHeading=heading
 		gPitch=pitch
-      
-
+		
+		
 		return true
-			else
-			  Turn(cRailG,y_axis, heading, 0.4)
-			  --Turn(cRailG,x_axis, - pitch, 1.3)
-			
-			
-			return false
-			end
+	else
+		Turn(cRailG,y_axis, heading, 0.4)
+		--Turn(cRailG,x_axis, - pitch, 1.3)
+		
+		
+		return false
+	end
 end
 
 
 function waitThread()
-Sleep(12000)
-boolReload=true
+	Sleep(12000)
+	boolReload=true
 end
 
 function itsCoolMan()
 	for i=0,12,1 do
-	EmitSfx(cool1, 1027)
-	EmitSfx(cool2, 1027)
-	EmitSfx(cool3, 1027)
-	Sleep(100)
+		EmitSfx(cool1, 1027)
+		EmitSfx(cool2, 1027)
+		EmitSfx(cool3, 1027)
+		Sleep(100)
 	end
 end
 
 function script.FireWeapon1()
-boolReload=false
-StartThread(waitThread)
-if boolRailGunTerraForm==true then
-addShotIntersectedPoints()
-end
-Sleep(800)
-Spring.PlaySoundFile("sounds/cRailgun/railGunReCharge.wav")
-StartThread(itsCoolMan)
+	boolReload=false
+	StartThread(waitThread)
+	if boolRailGunTerraForm==true then
+		addShotIntersectedPoints()
+	end
+	Sleep(800)
+	Spring.PlaySoundFile("sounds/cRailgun/railGunReCharge.wav")
+	StartThread(itsCoolMan)
 end
 
 function script.Create()
---<buildanimationscript>
-x,y,z=Spring.GetUnitPosition(unitID)
-teamID=Spring.GetUnitTeam(unitID)
-  GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+	--<buildanimationscript>
+	x,y,z=Spring.GetUnitPosition(unitID)
+	teamID=Spring.GetUnitTeam(unitID)
+	GG.UnitsToSpawn:PushCreateUnit("cbuildanimation",x,y,z,0,teamID)
+	
+	--</buildanimationscript>
 
---</buildanimationscript>
-if boolRailGunTerraForm==true then
-StartThread(CaveInLoop)
-end
-for x=1,nrOfParticles,1 do
-	for i=1,4,1 do
-	Hide(particleTable[x][i])
+	for x=1,nrOfParticles,1 do
+		for i=1,4,1 do
+			Hide(particleTable[x][i])
+		end
 	end
-end
- unitPosX,unitPosY,unitPosZ = Spring.GetUnitPosition(unitID)
+	unitPosX,unitPosY,unitPosZ = Spring.GetUnitPosition(unitID)
 end
 
 
 function script.Killed(recentDamage, maxHealth)
-Explode(cRailGTripod,SFX.FIRE+SFX.FALL)
-Explode(cRailG,SFX.FIRE+SFX.FALL)
-Spring.PlaySoundFile("sounds/cHopper/detonation.wav")
-		return 1 
+	Explode(cRailGTripod,SFX.FIRE+SFX.FALL)
+	Explode(cRailG,SFX.FIRE+SFX.FALL)
+	Spring.PlaySoundFile("sounds/cHopper/detonation.wav")
+	return 1 
 end

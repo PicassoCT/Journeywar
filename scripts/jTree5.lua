@@ -209,26 +209,24 @@ function fallingOff()
 	
 	T=getAllInCircle(x,z,RangeSkyHook,unitID)
 
-	if T then
 		process(T,
 		function(id)
+				idDefID=Spring.GetUnitDefID(id)
 			
 			--filter out imobile Units
-			if flyingUnits[id] then return end
-			
-			idDefID=Spring.GetUnitDefID(id)
-			if UnitDefs[idDefID].isBuilding then return end
-			if UnitDefs[idDefID].isAirUnit then return end
-			if gravResistantUnits[idDefID] then return end
-			if exemptUnits[idDefID] then return end
-			
+			if flyingUnits[idDefID]  then return nil end		
+			if UnitDefs[idDefID].isImmobile == true then return nil end
+			if UnitDefs[idDefID].isAirUnit == true then return nil end
+			if gravResistantUnits[idDefID] then return nil end
+			if exemptUnits[idDefID] then return nil end
+
 			return id			
 		end,
 		function(id)
 			StartThread(flyingUnit,id)
 		end
 		)
-	end
+
 end
 
 --flyingFeatures

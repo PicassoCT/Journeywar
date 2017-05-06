@@ -4,7 +4,7 @@ local weaponDef={
 	weaponType=[[MissileLauncher]],
 	
 	Accuracy=1000,
-	
+	range=1200,
 	
 	
 	reloadtime=3,

@@ -173,11 +173,11 @@ function script.Create()
 			if (((i-1)*10)+k) < 98 then
 				pieceName= "bP"..(((i-1)*10)+k)
 				pieceName= piece(pieceName)
-				bonsaiPieces[math.max(math.min(3,i%3),1)][#bonsaiPieces[i]+k]={	Piece= pieceName 
+				bonsaiPieces[math.max(math.min(3,i%3),1)][#bonsaiPieces[i]+k]={	Piece= pieceName }
 				--EndPiece
 				endPieceName="E"..(((i-1)*10)+k)
 				endPieces[#endPieces+1]=piece(endPieceName)				
-				}
+				
 			end
 		end
 	end
@@ -347,11 +347,8 @@ Sleep(1)
 
 end
 
+function resetBonsai()
 
-
---bonsaiPieces must be a objecttable containing layers of tables, containing a table with a piece and a Sensory
-function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPieces)
-	
 	WTurn(center,y_axis,0,0)
 	--This hides all the bonsaisPieces
 	for i=1,#bonsaiPieces, 1 do
@@ -359,20 +356,32 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPiece
 			Hide(bonsaiPieces[i][k].Piece)
 		end
 	end
-	--bonsaiTable[x][z][1]={height, BoolGround, piece, Sensory}
-	defaultTable= {height=0, BoolGround=false, Piece= -math.huge}
-	
-	
-	bonsaiTable= makeTable( defaultTable, sizeX, sizeZ, sizeY)
-	--layers of stone in the bonsai
-	numberOfDirections=math.ceil(math.random(1,3))
-	directionTable={}
-	cliffFactor=math.random(0.01,0.399)
+end
+
+function makeDrectionTable()
+directionTable ={}
 	for i=1, 3 do
 		radoAnguVal=math.random(-40,40)
 		directionTable[i]={ x=math.ceil(1,sizeX), 
 		z=math.ceil(1,sizeZ), direction=math.random(0,360), angular=radoAnguVal}
 	end
+return directionTable
+end
+
+--bonsaiPieces must be a objecttable containing layers of tables, containing a table with a piece and a Sensory
+function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPieces)
+	
+	resetBonsai()
+
+	--bonsaiTable[x][z][1]={height, BoolGround, piece, Sensory}
+	defaultTable= {height=0, BoolGround=false, Piece= -math.huge}
+	bonsaiTable= makeTable( defaultTable, sizeX, sizeZ, sizeY)
+	
+	--layers of stone in the bonsai
+	numberOfDirections=math.ceil(math.random(1,3))
+	directionTable=makeDrectionTable()
+	cliffFactor=math.random(0.01,0.399)
+
 	maxHeight = math.random(10,120)
 	heightGradient = getHeightGradient(sizeX, sizeZ, maxHeight)
 	
@@ -391,7 +400,7 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPiece
 					
 					heightOffset= heightGradient[z] + cliffFactor*(math.random(boldHght/-4,boldHght/4))
 					Piece, index= getBonsaiPiece(y, bonsaiPieces, sizeY)
-					bonsaiTable[x][z][1]={Height=heightOffset, BoolGround=true, Piece= Piece}#
+					bonsaiTable[x][z][1]={Height=heightOffset, BoolGround=true, Piece= Piece}
 					
 					predecessorTable=createAccessTable(predecessorTable,x,z,1)
 					predecessorTable[x][z][1]=index
@@ -418,7 +427,6 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPiece
 					predecessorTable=createAccessTable(predecessorTable,x,z,y)
 					predecessorTable[x][z][y]=index
 					
-					if not 	bonsaiTable[x][z][y].Piece then return end
 					Show(bonsaiTable[x][z][y].Piece)
 					
 					
@@ -485,16 +493,23 @@ function buildBonsai(bonsaiPieces, baseShapeTable, sizeX, sizeZ, sizeY, endPiece
 	
 end
 
+	function getMapHeightDependantWaterlevel()
+		minExtreme,maxExtreme=Spring.GetGroundExtremes()
+	
+			if minExtreme -70 < 0 then 
+				return 0.0005 
+			else
+				x = math.log(i)/3
+				return math.min(3,math.max(x,0.0005))
+			end	
+	end
+
 	function addWaterLvl()
 		Sleep(100)
 		while(true) do
 		
-			minExtreme,maxExtreme=Spring.GetGroundExtremes()
-			if minExtreme -50 > 0 then 
-				g_AddOnRate =0.0005 
-			else
-				g_AddOnRate =1
-			end
+		
+			g_AddOnRate=getMapHeightDependantWaterlevel()
 			
 			if GG.addWaterLevel ~= nil and boolWaterSpilling == true then
 				

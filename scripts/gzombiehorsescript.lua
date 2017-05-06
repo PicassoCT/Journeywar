@@ -2,6 +2,7 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_jw.lua"
 include "lib_OS.lua"
+include "lib_type.lua"
 
 pieceTable = generatepiecesTableAndArrayCode(unitID, false)
 skeleton = buildSkeleton("center",pieceTable)
