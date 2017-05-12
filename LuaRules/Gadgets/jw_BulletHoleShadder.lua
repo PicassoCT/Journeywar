@@ -1,85 +1,86 @@
 function gadget:GetInfo()
-  return {
-    name      = "BulletHoleshader",
-    desc      = "Fire in the hole- another word for yesterdays peperoni",
-    author    = "me",
-    date      = "Sep. 20014",
-    license   = "The Exhibitionistic GPL- meaning if you use this, you have to talk a day and a hour to everyone you meet about journeywar",
-    layer     = 0,
-    enabled   = false,
-  }
+    return {
+        name = "BulletHoleshader",
+        desc = "Fire in the hole- another word for yesterdays peperoni",
+        author = "me",
+        date = "Sep. 20014",
+        license = "The Exhibitionistic GPL- meaning if you use this, you have to talk a day and a hour to everyone you meet about journeywar",
+        layer = 0,
+        enabled = false,
+    }
 end
 
 if (gadgetHandler:IsSyncedCode()) then
 
 
-   function GetWeaponIndex(weaponname,unitname)
-   if UnitDefNames[unitname] and UnitDefNames[unitname].weapons then
-		for i=1, table.getn(UnitDefNames[unitname].weapons),1 do
-			if UnitDefNames[unitname].weapons[i].name == weaponname then return i end
-		end
-	end
-   end
-   
-	local HoleInOneT={}
-	unitdefWeaponPos=GetWeaponIndex("comendsniper","ccomender")
-	HoleInOneT[WeaponDefNames["comendsniper"].id] = {diameter=45,pos=unitdefWeaponPos }	
-	unitdefWeaponPos=GetWeaponIndex("sniperslavemelee","csniper")	
-	HoleInOneT[WeaponDefNames["sniperslavemelee"].id] = {diameter=45, pos= 1}
-	local PIECE_VOLUMEMINFORHOLE = 420
-	local PIECE_INV = 1/PIECE_VOLUMEMINFORHOLE
+    function GetWeaponIndex(weaponname, unitname)
+        if UnitDefNames[unitname] and UnitDefNames[unitname].weapons then
+            for i = 1, table.getn(UnitDefNames[unitname].weapons), 1 do
+                if UnitDefNames[unitname].weapons[i].name == weaponname then return i end
+            end
+        end
+    end
 
-		--set the weapons registrated above on the watchlist
-		for k,_ in ipairs(HoleInOneT) do
-		Script.SetWatchWeapon(k , true)
-		end
-	--Sends Hole Data to unsynced
-	function TearANewOne(unitid, piecename, x,y,z, amountOfDamage, dirSX, dirSY, dirSZ,WeaponType)
-		sx,sy,sz,ox,oy,oz=Spring.GetUnitPieceCollisionVolumeData(unitid, piecename)
-		if ((sx*ox)*(sz*oz)*(sy*oy))*PIECE_INV > PIECE_VOLUMEMINFORHOLE then 
-		--find out if that shot makes a hole
-		_,max=Spring.GetUnitHealth(unitid)
-			if amountOfDamage > max/12 and (nx*dirSX+ny*dirSY+nz*dirSZ) > 1.5 then
-			Hole={	unitID=unitid,
-					piecename=piecename,
-					depth=amountOfDamage/max,
-					diameter=HoleInOneT[WeaponType].diameter,
-					pos={[1]=x,[2]=y,[3]=z}, 
-					dirShot={[1]=dirSX,[2]=dirSY,[3]=dirSZ},
-					teamColourInternal={ [1]=1.0,[2]=0.0,[3]=0.0,[4]=0.0},
-					teamColurExternal={[1]=0.0,[2]=1.0,[3]=0.0,[4]=0.0}
-					}
-					
-			SendToUnsynced("BulletHole", Hole)
-			end
-		end
-	end
+    local HoleInOneT = {}
+    unitdefWeaponPos = GetWeaponIndex("comendsniper", "ccomender")
+    HoleInOneT[WeaponDefNames["comendsniper"].id] = { diameter = 45, pos = unitdefWeaponPos }
+    unitdefWeaponPos = GetWeaponIndex("sniperslavemelee", "csniper")
+    HoleInOneT[WeaponDefNames["sniperslavemelee"].id] = { diameter = 45, pos = 1 }
+    local PIECE_VOLUMEMINFORHOLE = 420
+    local PIECE_INV = 1 / PIECE_VOLUMEMINFORHOLE
 
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
-			if HoleInOneT[weaponDefID] then	
-			Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
-			vx,vy,vz=Spring.GetUnitWeaponVectors(attackerID, HoleInOneT[weaponDefID].pos)
-				if vx then
-				norm=math.sqrt(vx*vx+vy*vy+vz*vz)*-1
-				vx,vy,vz=vx/norm,vy/norm,vz/norm
-			
-				piecename,frame=Spring.GetUnitLastAttackedPiece(unitID)
-				map=Spring.GetUnitPieceMap(unitID)
-					Spring.Echo(#map)
-					Spring.Echo(map)
-				Spring.Echo(map[piecename])
-			
-				TearANewOne(unitID,map[piecename], x,y,z, amountOfDamage, vx,vy,vz, weaponDefID)
-				else
-				Spring.Echo("JW_BULETHOLESHADER:: No viable WeaponVector found")
-				end
-			end
-	end
-	
-else  --UNSYNCED
-	--shaderCode
-	---[[----------------------------------------------------------------------------
-	local vertexShaderSource=[[
+    --set the weapons registrated above on the watchlist
+    for k, _ in ipairs(HoleInOneT) do
+        Script.SetWatchWeapon(k, true)
+    end
+    --Sends Hole Data to unsynced
+    function TearANewOne(unitid, piecename, x, y, z, amountOfDamage, dirSX, dirSY, dirSZ, WeaponType)
+        sx, sy, sz, ox, oy, oz = Spring.GetUnitPieceCollisionVolumeData(unitid, piecename)
+        if ((sx * ox) * (sz * oz) * (sy * oy)) * PIECE_INV > PIECE_VOLUMEMINFORHOLE then
+            --find out if that shot makes a hole
+            _, max = Spring.GetUnitHealth(unitid)
+            if amountOfDamage > max / 12 and (nx * dirSX + ny * dirSY + nz * dirSZ) > 1.5 then
+                Hole = {
+                    unitID = unitid,
+                    piecename = piecename,
+                    depth = amountOfDamage / max,
+                    diameter = HoleInOneT[WeaponType].diameter,
+                    pos = { [1] = x, [2] = y, [3] = z },
+                    dirShot = { [1] = dirSX, [2] = dirSY, [3] = dirSZ },
+                    teamColourInternal = { [1] = 1.0, [2] = 0.0, [3] = 0.0, [4] = 0.0 },
+                    teamColurExternal = { [1] = 0.0, [2] = 1.0, [3] = 0.0, [4] = 0.0 }
+                }
+
+                SendToUnsynced("BulletHole", Hole)
+            end
+        end
+    end
+
+    function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+        if HoleInOneT[weaponDefID] then
+            Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
+            vx, vy, vz = Spring.GetUnitWeaponVectors(attackerID, HoleInOneT[weaponDefID].pos)
+            if vx then
+                norm = math.sqrt(vx * vx + vy * vy + vz * vz) * -1
+                vx, vy, vz = vx / norm, vy / norm, vz / norm
+
+                piecename, frame = Spring.GetUnitLastAttackedPiece(unitID)
+                map = Spring.GetUnitPieceMap(unitID)
+                Spring.Echo(#map)
+                Spring.Echo(map)
+                Spring.Echo(map[piecename])
+
+                TearANewOne(unitID, map[piecename], x, y, z, amountOfDamage, vx, vy, vz, weaponDefID)
+            else
+                Spring.Echo("JW_BULETHOLESHADER:: No viable WeaponVector found")
+            end
+        end
+    end
+
+else --UNSYNCED
+    --shaderCode
+    --- [[----------------------------------------------------------------------------
+    local vertexShaderSource = [[
 
 //#define use_shadow
 	#define MaxDepth= 50
@@ -194,8 +195,8 @@ void main()
 
 }
     ]]
-	
-	local  fragmentShaderSource =[[
+
+    local fragmentShaderSource = [[
 	precision highp float;
 uniform float time;
 uniform vec2 resolution;
@@ -235,78 +236,78 @@ void main()
   
 }
 	]]
-	local shaderTable = {
-	vertex= vertexShaderSource,
-	fragment = fragmentShaderSource,
-	-- uniformInt = uniformInt,
-	}
-	--]]--------------------------------------------------------------------------	
+    local shaderTable = {
+        vertex = vertexShaderSource,
+        fragment = fragmentShaderSource,
+        -- uniformInt = uniformInt,
+    }
+    --]]--------------------------------------------------------------------------
 
-	--variables for the task ahead	
-	local shaderProgram 	
-	local glUseShader 		= gl.UseShader
-	local glCopyToTexture 	= gl.CopyToTexture
-	local glTexture 		= gl.Texture
-	local glTexRect 		= gl.TexRect
-	local boolShaderWorking	= true
-	local vsx,vsy 
-	local screencopy
-	local boolWorking=true
-	local PenetratedUnits ={}
-	
-	
-	--Transfers the Data to the shader
-	local function BulletHole(callname,Hole)		
-	--Forge values in which to store the Holes Data
-					if gl.CreateShader then
-					Spring.Echo("JW_BULETHOLESHADER::forging Shader")
-					shaderTable.uniform={	depth=Hole.depth,
-											diameter=Hole.diameter, 
-											posX=Hole.pos[1],
-											posY=Hole.pos[2], 
-											posZ=Hole.pos[3], 
-											dirX=Hole.dirShot[1],
-											dirY=Hole.dirShot[2],
-											dirZ=Hole.dirShot[3],
-											tColInt1=Hole.teamColourInternal[1],
-											tColInt2=Hole.teamColourInternal[2],
-											tColInt2=Hole.teamColourInternal[3],
-											tColExt1=Hole.teamColurExternal[1],
-											tColExt2=Hole.teamColurExternal[2],
-											tColExt3=Hole.teamColurExternal[3],
-											}
-											
-											
-					shaderProgram=gl.CreateShader(shaderTable)			
-						if shaderProgram then 
-						PenetratedUnits[Hole.unitID]={shader=shaderProgram, piecename=Hole.piecename} 
-						else
-						Spring.Echo("shader not created")
-						Spring.Echo(gl.GetShaderLog())
-						end
-					Spring.UnitRendering.SetUnitLuaDraw(Hole.unitID,true)
-					else
-					Spring.Echo("<BulletHoleshader>: GLSL not supported.")
-					end
-	end
+    --variables for the task ahead
+    local shaderProgram
+    local glUseShader = gl.UseShader
+    local glCopyToTexture = gl.CopyToTexture
+    local glTexture = gl.Texture
+    local glTexRect = gl.TexRect
+    local boolShaderWorking = true
+    local vsx, vsy
+    local screencopy
+    local boolWorking = true
+    local PenetratedUnits = {}
 
-	function gadget:Initialize()   
-		Spring.Echo("BulletHoleshader Initialised")
-      -- This associate the messages with the functions
-      -- So that when the synced sends a message "f" it calls the function f in unsynced
-		gadgetHandler:AddSyncAction("BulletHole", BulletHole)
-	end	  
-    
-	function gadget:DrawUnit(unitID, drawMode)
-		if PenetratedUnits[unitID] then
-		-- DODO is that the shader works for the whole unit.. not only for the unitpiece
-		--Solutions, store the piecename in the shader and grab the piece-matrix
-		glUseShader(PenetratedUnits[unitID].shader)	
-		PenetratedUnits[unitID]=nil
-		end
-	end 
-	
-end 
+
+    --Transfers the Data to the shader
+    local function BulletHole(callname, Hole)
+        --Forge values in which to store the Holes Data
+        if gl.CreateShader then
+            Spring.Echo("JW_BULETHOLESHADER::forging Shader")
+            shaderTable.uniform = {
+                depth = Hole.depth,
+                diameter = Hole.diameter,
+                posX = Hole.pos[1],
+                posY = Hole.pos[2],
+                posZ = Hole.pos[3],
+                dirX = Hole.dirShot[1],
+                dirY = Hole.dirShot[2],
+                dirZ = Hole.dirShot[3],
+                tColInt1 = Hole.teamColourInternal[1],
+                tColInt2 = Hole.teamColourInternal[2],
+                tColInt2 = Hole.teamColourInternal[3],
+                tColExt1 = Hole.teamColurExternal[1],
+                tColExt2 = Hole.teamColurExternal[2],
+                tColExt3 = Hole.teamColurExternal[3],
+            }
+
+
+            shaderProgram = gl.CreateShader(shaderTable)
+            if shaderProgram then
+                PenetratedUnits[Hole.unitID] = { shader = shaderProgram, piecename = Hole.piecename }
+            else
+                Spring.Echo("shader not created")
+                Spring.Echo(gl.GetShaderLog())
+            end
+            Spring.UnitRendering.SetUnitLuaDraw(Hole.unitID, true)
+        else
+            Spring.Echo("<BulletHoleshader>: GLSL not supported.")
+        end
+    end
+
+    function gadget:Initialize()
+        Spring.Echo("BulletHoleshader Initialised")
+        -- This associate the messages with the functions
+        -- So that when the synced sends a message "f" it calls the function f in unsynced
+        gadgetHandler:AddSyncAction("BulletHole", BulletHole)
+    end
+
+    function gadget:DrawUnit(unitID, drawMode)
+        if PenetratedUnits[unitID] then
+            -- DODO is that the shader works for the whole unit.. not only for the unitpiece
+            --Solutions, store the piecename in the shader and grab the piece-matrix
+            glUseShader(PenetratedUnits[unitID].shader)
+            PenetratedUnits[unitID] = nil
+        end
+    end
+end
 
 --[[
 uniform vec2 mapSizePO2;     // (1.0 / pwr2map{x,z} * SQUARE_SIZE)

@@ -1,26 +1,25 @@
 include "createCorpse.lua"
 include "lib_UnitScript.lua"
 --Define the wheel pieces
-buildpieces={}
+buildpieces = {}
 
-for i=0,17,1 do
-	buildpieces[i]={}
-	local temp = "cWBshow"..i
-	buildpieces[i]=piece (temp)
+for i = 0, 17, 1 do
+    buildpieces[i] = {}
+    local temp = "cWBshow" .. i
+    buildpieces[i] = piece(temp)
 end
 
 
 function chargeUp(boolIsCharged)
-	
 end
 
 
-Light1= piece "Light1"
-Light2= piece "Light2"
-Light3= piece "Light3"
-Light4= piece "Light4"
-local cWBLightON= piece "cWBLighton"
-local cWBLightOF= piece "cWBLightOf"
+Light1 = piece "Light1"
+Light2 = piece "Light2"
+Light3 = piece "Light3"
+Light4 = piece "Light4"
+local cWBLightON = piece "cWBLighton"
+local cWBLightOF = piece "cWBLightOf"
 
 local cWBfeeder = piece "cWBfeeder"
 local cWBfeeder2 = piece "cWBfeeder2"
@@ -28,145 +27,146 @@ local cWBgrab = piece "cWBgrab"
 local cWBgrab2 = piece "cWBgrab2"
 local cWBnanosf0 = piece "cWBnanosf0"
 local cWBnanosfx = piece "cWBnanosfx"
-local cWBcenter=piece "cWBcenter"
-local centemit=piece "centemit"
+local cWBcenter = piece "cWBcenter"
+local centemit = piece "centemit"
 
 
-rotator={}
-for i=0,8,1 do
-	rotator[i]={}
-	local cWBrotato= "cWBrotato"..i
-	rotator[i]=piece (cWBrotato)
+rotator = {}
+for i = 0, 8, 1 do
+    rotator[i] = {}
+    local cWBrotato = "cWBrotato" .. i
+    rotator[i] = piece(cWBrotato)
 end
 
 
 
 
-JollyWalker={}
+JollyWalker = {}
 
-for i=1,6,1 do
-	JollyWalker[i]={}
-	local walkThisWay = "cWBwalker"..i
-	JollyWalker[i]= piece(walkThisWay)
+for i = 1, 6, 1 do
+    JollyWalker[i] = {}
+    local walkThisWay = "cWBwalker" .. i
+    JollyWalker[i] = piece(walkThisWay)
 end
 --Define the pieces of the weapon
 --turret + two turret emiter
-local podturret0=piece"podturret0" --citurret
-local citurrete0=piece"citurrete0"
-local citurretem=piece"citurretem"
+local podturret0 = piece "podturret0" --citurret
+local citurrete0 = piece "citurrete0"
+local citurretem = piece "citurretem"
 --turret + two turret emiter --
-local podturret3=piece"podturret3" --citurret1
-local citurrete5=piece"citurrete5"
-local citurrete6=piece"citurrete6"
+local podturret3 = piece "podturret3" --citurret1
+local citurrete5 = piece "citurrete5"
+local citurrete6 = piece "citurrete6"
 --turret + two turret emiter--
-local podturret1=piece"podturret1" --podturret1
-local citurrete1=piece"citurrete1"
-local citurrete2=piece"citurrete2"
+local podturret1 = piece "podturret1" --podturret1
+local citurrete1 = piece "citurrete1"
+local citurrete2 = piece "citurrete2"
 --turret + two turret emiter		--citurret3
-local podturret2=piece"podturret2"
-local citurrete3=piece"citurrete3"
-local citurrete4=piece"citurrete4"
+local podturret2 = piece "podturret2"
+local citurrete3 = piece "citurrete3"
+local citurrete4 = piece "citurrete4"
 
-frontSensor=piece"frontSensor"
-rearSensor=piece"rearSensor"
-boolIsActive=true
-boolWalking=false
+frontSensor = piece "frontSensor"
+rearSensor = piece "rearSensor"
+boolIsActive = true
+boolWalking = false
 --superportal+magnetic sucker
 --local cifireclo2=piece"cifireclo2"
 
 --define other pieces
 
-local SIG_WALK = 1	--signal for the walk animation thread
-local SIG_IDLE=4
+local SIG_WALK = 1 --signal for the walk animation thread
+local SIG_IDLE = 4
 
 function script.Activate()
-	----Spring.Echo("Activate")
-	boolIsActive=true
-	
-	return 1
+    --- -Spring.Echo("Activate")
+    boolIsActive = true
+
+    return 1
 end
 
 function script.Deactivate()
-	boolIsActive=false
-	--	--Spring.Echo("Deactivate")
-	
-	return 0
+    boolIsActive = false
+    --	--Spring.Echo("Deactivate")
+
+    return 0
 end
 
 local function Lights()
-	while(true) do
-		
-		
-		while(boolIsActive==true) do
-			Show(cWBLightOF)
-			Hide(cWBLightON)
-			Sleep(1200)
-			Hide(cWBLightOF)
-			Show(cWBLightON)
-			Sleep(1200)
-		end
-		Show(cWBLightOF)
-		Hide(cWBLightON)
-		Sleep(100)
-	end
+    while (true) do
+
+
+        while (boolIsActive == true) do
+            Show(cWBLightOF)
+            Hide(cWBLightON)
+            Sleep(1200)
+            Hide(cWBLightOF)
+            Show(cWBLightON)
+            Sleep(1200)
+        end
+        Show(cWBLightOF)
+        Hide(cWBLightON)
+        Sleep(100)
+    end
 end
 
 function emitLight()
-	while(true) do
-		maRandom=math.random(55,155)
-		Sleep(maRandom)
-		EmitSfx(centemit,1028)
-	end
+    while (true) do
+        maRandom = math.random(55, 155)
+        Sleep(maRandom)
+        EmitSfx(centemit, 1028)
+    end
 end
-TablesOfPiecesGroups={}
+
+TablesOfPiecesGroups = {}
 function script.Create()
-	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
-	StartThread(constTerraFormin)
-	StartThread(emitLight)
-	StartThread(motionDetector)
-	Hide( citurrete0) 
-	Hide( citurretem) 
-	
-	Hide( citurrete5) 
-	Hide( citurrete6) 
-	
-	Hide( citurrete1) 
-	Hide( citurrete2) 
-	
-	
-	Hide( citurrete3) 
-	Hide( citurrete4) 
-	----Spring.Echo("Im talking therfore i am")
-	for i=0,8,1 do
-		randspin=math.random(7,16)
-		Spin((rotator[i]),y_axis,randspin,0.2)
-	end
-	for i=0,17,1 do
-		Hide(buildpieces[i])
-	end
-	
-	Hide(cWBLightON)
-	Spin(cWBnanosfx,y_axis,0.6,0.1)
-	Spin(cWBnanosf0,y_axis,-1,0.5)
-	StartThread(walkTheDog)
-	StartThread(Lights)
+    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    StartThread(constTerraFormin)
+    StartThread(emitLight)
+    StartThread(motionDetector)
+    Hide(citurrete0)
+    Hide(citurretem)
+
+    Hide(citurrete5)
+    Hide(citurrete6)
+
+    Hide(citurrete1)
+    Hide(citurrete2)
+
+
+    Hide(citurrete3)
+    Hide(citurrete4)
+    --- -Spring.Echo("Im talking therfore i am")
+    for i = 0, 8, 1 do
+        randspin = math.random(7, 16)
+        Spin((rotator[i]), y_axis, randspin, 0.2)
+    end
+    for i = 0, 17, 1 do
+        Hide(buildpieces[i])
+    end
+
+    Hide(cWBLightON)
+    Spin(cWBnanosfx, y_axis, 0.6, 0.1)
+    Spin(cWBnanosf0, y_axis, -1, 0.5)
+    StartThread(walkTheDog)
+    StartThread(Lights)
 end
 
 function script.StopBuilding()
-	Turn(cWBcenter,y_axis,math.rad(0),4)
-	
-	SetUnitValue(COB.INBUILDSTANCE, 0)
+    Turn(cWBcenter, y_axis, math.rad(0), 4)
+
+    SetUnitValue(COB.INBUILDSTANCE, 0)
 end
 
 
 function script.StartBuilding(heading, pitch)
-	Turn(cWBcenter,y_axis,heading+math.rad(180),0.9)
-	SetUnitValue(COB.INBUILDSTANCE, 1)
+    Turn(cWBcenter, y_axis, heading + math.rad(180), 0.9)
+    SetUnitValue(COB.INBUILDSTANCE, 1)
 end
 
 function script.QueryNanoPiece()
-	x=math.random(1,8)
-	return rotator[x]
+    x = math.random(1, 8)
+    return rotator[x]
 end
 
 
@@ -174,387 +174,384 @@ end
 
 --http://answers.springlobby.info/questions/427/howto-spinning-wheels-on-moving-units
 function walkTheDog()
-	while(true)do 
-		Sleep(70)
-		while boolWalking==true do
-			legMoveSpeed=22
-			Move(JollyWalker[3],z_axis,0,26)
-			Move(JollyWalker[4],z_axis,0,26)
-			Move(JollyWalker[1],z_axis,40,22)
-			Move(JollyWalker[2],z_axis,40,22)
-			Move(cWBfeeder,z_axis,0,3)
-			Move(cWBfeeder2,z_axis,-13,3)
-			
-			Turn(cWBgrab,y_axis,math.rad(-40),7)
-			Turn(cWBgrab2,y_axis,math.rad(0),8)
-			WaitForTurn(cWBgrab2,y_axis)
-			Move(cWBgrab2,z_axis,0,22)
-			Move(cWBgrab,z_axis,14,16)
-			sleep=legMoveSpeed*25
-			Sleep(sleep)
-			WaitForMove(cWBfeeder2,z_axis)
-			Move(JollyWalker[6],z_axis,0,23)
-			Move(JollyWalker[5],z_axis,0,22)
-			Move(JollyWalker[3],z_axis,17,8)
-			Move(JollyWalker[4],z_axis,17,8)
-			WaitForMove(JollyWalker[3],z_axis)
-			WaitForMove(JollyWalker[4],z_axis)
-			WaitForMove(JollyWalker[5],z_axis)
-			Move(JollyWalker[6],z_axis,9,4)
-			Move(JollyWalker[5],z_axis,9,4)
-			Move(cWBfeeder,z_axis,-13,5)
-			Move(cWBfeeder2,z_axis,0,5)
-			Turn(cWBgrab2,y_axis,math.rad(-40),9)
-			Turn(cWBgrab,y_axis,math.rad(0),9)
-			WaitForTurn(cWBgrab,y_axis)
-			Move(cWBgrab,z_axis,0,22)
-			Move(cWBgrab2,z_axis,14,8)
-			WaitForMove(cWBfeeder2,z_axis)
-			Sleep(60)
-			
-		end
-	end
-	
+    while (true) do
+        Sleep(70)
+        while boolWalking == true do
+            legMoveSpeed = 22
+            Move(JollyWalker[3], z_axis, 0, 26)
+            Move(JollyWalker[4], z_axis, 0, 26)
+            Move(JollyWalker[1], z_axis, 40, 22)
+            Move(JollyWalker[2], z_axis, 40, 22)
+            Move(cWBfeeder, z_axis, 0, 3)
+            Move(cWBfeeder2, z_axis, -13, 3)
+
+            Turn(cWBgrab, y_axis, math.rad(-40), 7)
+            Turn(cWBgrab2, y_axis, math.rad(0), 8)
+            WaitForTurn(cWBgrab2, y_axis)
+            Move(cWBgrab2, z_axis, 0, 22)
+            Move(cWBgrab, z_axis, 14, 16)
+            sleep = legMoveSpeed * 25
+            Sleep(sleep)
+            WaitForMove(cWBfeeder2, z_axis)
+            Move(JollyWalker[6], z_axis, 0, 23)
+            Move(JollyWalker[5], z_axis, 0, 22)
+            Move(JollyWalker[3], z_axis, 17, 8)
+            Move(JollyWalker[4], z_axis, 17, 8)
+            WaitForMove(JollyWalker[3], z_axis)
+            WaitForMove(JollyWalker[4], z_axis)
+            WaitForMove(JollyWalker[5], z_axis)
+            Move(JollyWalker[6], z_axis, 9, 4)
+            Move(JollyWalker[5], z_axis, 9, 4)
+            Move(cWBfeeder, z_axis, -13, 5)
+            Move(cWBfeeder2, z_axis, 0, 5)
+            Turn(cWBgrab2, y_axis, math.rad(-40), 9)
+            Turn(cWBgrab, y_axis, math.rad(0), 9)
+            WaitForTurn(cWBgrab, y_axis)
+            Move(cWBgrab, z_axis, 0, 22)
+            Move(cWBgrab2, z_axis, 14, 8)
+            WaitForMove(cWBfeeder2, z_axis)
+            Sleep(60)
+        end
+    end
 end
 
 function script.Killed(recentDamage, maxHealth)
-	--legs_down()
-	
-	Signal(SIG_WALK)
-	Signal(SIG_AIM) 
-	Signal(SIG_IDLE)
-	Signal(SIG_AIM2)
-	Explode(podturret0, SFX.FALL+SFX.FIRE)
-	Explode(podturret1, SFX.FALL+SFX.FIRE)
-	Explode(podturret2, SFX.FALL+SFX.FIRE)
-	Explode(podturret3, SFX.FALL+SFX.FIRE)
-	Explode(podturret3, SFX.FALL+SFX.FIRE)
-	for i=1,63,1 do
-		
-		Explode(i,SFX.FALL+SFX.SHATTER)
-	end
-	
-	createCorpseCUnitGeneric(recentDamage)
-	
-	return 1
+    --legs_down()
+
+    Signal(SIG_WALK)
+    Signal(SIG_AIM)
+    Signal(SIG_IDLE)
+    Signal(SIG_AIM2)
+    Explode(podturret0, SFX.FALL + SFX.FIRE)
+    Explode(podturret1, SFX.FALL + SFX.FIRE)
+    Explode(podturret2, SFX.FALL + SFX.FIRE)
+    Explode(podturret3, SFX.FALL + SFX.FIRE)
+    Explode(podturret3, SFX.FALL + SFX.FIRE)
+    for i = 1, 63, 1 do
+
+        Explode(i, SFX.FALL + SFX.SHATTER)
+    end
+
+    createCorpseCUnitGeneric(recentDamage)
+
+    return 1
 end
-SIG_STOP=2048
+
+SIG_STOP = 2048
 function legs_down()
-	
-	for i=1,6,1 do
-		Move(JollyWalker[i],z_axis,0,22)
-	end
+
+    for i = 1, 6, 1 do
+        Move(JollyWalker[i], z_axis, 0, 22)
+    end
 end
 
 function motionDetector()
-	while true do 
-		ox,oy,oz=Spring.GetUnitPosition(unitID)
-		Sleep(500)
-		ux,uy,uz=Spring.GetUnitPosition(unitID)
-		if math.sqrt((ox-ux)^2 +(oz-uz)^2) > 0.25 then boolWalking = true else boolWalking=false end
-	end
-	
+    while true do
+        ox, oy, oz = Spring.GetUnitPosition(unitID)
+        Sleep(500)
+        ux, uy, uz = Spring.GetUnitPosition(unitID)
+        if math.sqrt((ox - ux) ^ 2 + (oz - uz) ^ 2) > 0.25 then boolWalking = true else boolWalking = false end
+    end
 end
 
 function script.StartMoving()
-	Move(centemit,z_axis,34,0)
+    Move(centemit, z_axis, 34, 0)
 end
 
 function script.StopMoving()
-	Move(centemit,z_axis,0,0)
-	--	--Spring.Echo("stop")
-	
-	legs_down()
+    Move(centemit, z_axis, 0, 0)
+    --	--Spring.Echo("stop")
+
+    legs_down()
 end
 
-function degreeSin (x)
-	return math.sin(math.rad(x))
-end
-
-
-function degreeCos (x)
-	return math.cos(math.rad(x))
+function degreeSin(x)
+    return math.sin(math.rad(x))
 end
 
 
-function directionColourTable(TC, y,fh,rh,size)
-	--Prepare the Values
-	NT={}
-	NT=TC
-	dif=math.abs(fh-rh)
-	midval=(fh-rh)/2
-	boolGoingDown= fh-rh < 0
-	steigung=math.tan(y)
-	step=dif/size*-1
-	--Prepare the Values
-	
-	--Make a GradientTable
-	for i=1,#TC,1 do
-		for j=1,#TC,1 do
-			if TC[i][j]==1 then
-				if boolGoingDown==true or boolWalking==false then
-					TC[i][j]=0
-				else
-					TC[i][j]=math.ceil(dif-(i*step))
-				end
-			end
-		end
-	end
-	
-	--Turn the Tables - DJ like a mad man
-	for i=1,#TC,1 do
-		for j=1,#TC,1 do
-			if TC[i][j]==1 then
-				ki,kj=drehMatrix(i,j,size/2,size/2, math.deg(y))
-				if not NT[ki] then NT[ki]={}end
-				NT[ki][kj]=TC[i][j]
-			end
-		end
-	end
-	return NT
+function degreeCos(x)
+    return math.cos(math.rad(x))
+end
+
+
+function directionColourTable(TC, y, fh, rh, size)
+    --Prepare the Values
+    NT = {}
+    NT = TC
+    dif = math.abs(fh - rh)
+    midval = (fh - rh) / 2
+    boolGoingDown = fh - rh < 0
+    steigung = math.tan(y)
+    step = dif / size * -1
+    --Prepare the Values
+
+    --Make a GradientTable
+    for i = 1, #TC, 1 do
+        for j = 1, #TC, 1 do
+            if TC[i][j] == 1 then
+                if boolGoingDown == true or boolWalking == false then
+                    TC[i][j] = 0
+                else
+                    TC[i][j] = math.ceil(dif - (i * step))
+                end
+            end
+        end
+    end
+
+    --Turn the Tables - DJ like a mad man
+    for i = 1, #TC, 1 do
+        for j = 1, #TC, 1 do
+            if TC[i][j] == 1 then
+                ki, kj = drehMatrix(i, j, size / 2, size / 2, math.deg(y))
+                if not NT[ki] then NT[ki] = {} end
+                NT[ki][kj] = TC[i][j]
+            end
+        end
+    end
+    return NT
 end
 
 function constTerraFormin()
-	T={}
-	flatsize=64
-	hillsize=16
-	local T	=prepareHalfSphereTable(size)
-	local spGetUnitPosition=Spring.GetUnitPosition
-	local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
-	local spGetGroundHeight=Spring.GetGroundHeight
-	local spGetUnitRotation=Spring.GetUnitRotation
-	
-	teamID=Spring.GetUnitTeam(unitID)
-	averageTable={}
-	while true do
-		-- Spring.Echo("Terraform Loop")
-		if boolIsActive == true then 		
-			-- Spring.Echo("Terraform Loop Active")
-			if Spring.UseTeamResource( teamID, 'energy',50) then
-				Spring.Echo("Terraform Loop Resource Active")
-				x,y,z=spGetUnitPosition(unitID)
-									
-	
-				if boolWalking == true then
-					Spring.Echo("Terraform Loop Walking")
-					if GG.DynDefMap == nil then GG.DynDefMap={} end
-					if GG.DynRefMap == nil then GG.DynRefMap={} end
-					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,
-													Size=hillsize,
-													blendType ="melt",
-													filterType="borderblur"}
-					GG.DynRefMap[#GG.DynRefMap+1]=	prepareHalfSphereTable(hillsize,0.25)
-					GG.boolForceLandLordUpdate=false
-					Sleep(5000)
-				else -- not walking -- we average the surface
-					Sleep(5000)
-					if boolWalking== false then
-					if GG.DynDefMap == nil then GG.DynDefMap={} end
-					if GG.DynRefMap == nil then GG.DynRefMap={} end
-					GG.DynDefMap[#GG.DynDefMap+1]=	{x=x/8, z=z/8,
-													Size=flatsize,
-													blendType ="add", 
-													filterType="borderblur"}
-					theMap=smoothGroundHeigthmap(flatsize,x,z)
-					theMap=blendToValueHeigthmap(theMap,flatsize,flatsize/2 - 8, flatsize/2, 0)
-					theMap=multiplyHeigthmapByFactor(theMap,0.0125) 
-					GG.DynRefMap[#GG.DynRefMap+1]=	circularClampHeigthmap(theMap,flatsize,flatsize/2, false, 0, flatsize+8)
+    T = {}
+    flatsize = 64
+    hillsize = 16
+    local T = prepareHalfSphereTable(size)
+    local spGetUnitPosition = Spring.GetUnitPosition
+    local spGetUnitPiecePosDir = Spring.GetUnitPiecePosDir
+    local spGetGroundHeight = Spring.GetGroundHeight
+    local spGetUnitRotation = Spring.GetUnitRotation
 
-					GG.boolForceLandLordUpdate = true					
-					end
-				end
-				
-			end	
-		end	
-		Sleep(1000)
-		
-	end
+    teamID = Spring.GetUnitTeam(unitID)
+    averageTable = {}
+    while true do
+        -- Spring.Echo("Terraform Loop")
+        if boolIsActive == true then
+            -- Spring.Echo("Terraform Loop Active")
+            if Spring.UseTeamResource(teamID, 'energy', 50) then
+                Spring.Echo("Terraform Loop Resource Active")
+                x, y, z = spGetUnitPosition(unitID)
+
+
+                if boolWalking == true then
+                    Spring.Echo("Terraform Loop Walking")
+                    if GG.DynDefMap == nil then GG.DynDefMap = {} end
+                    if GG.DynRefMap == nil then GG.DynRefMap = {} end
+                    GG.DynDefMap[#GG.DynDefMap + 1] = {
+                        x = x / 8,
+                        z = z / 8,
+                        Size = hillsize,
+                        blendType = "melt",
+                        filterType = "borderblur"
+                    }
+                    GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(hillsize, 0.25)
+                    GG.boolForceLandLordUpdate = false
+                    Sleep(5000)
+                else -- not walking -- we average the surface
+                    Sleep(5000)
+                    if boolWalking == false then
+                        if GG.DynDefMap == nil then GG.DynDefMap = {} end
+                        if GG.DynRefMap == nil then GG.DynRefMap = {} end
+                        GG.DynDefMap[#GG.DynDefMap + 1] = {
+                            x = x / 8,
+                            z = z / 8,
+                            Size = flatsize,
+                            blendType = "add",
+                            filterType = "borderblur"
+                        }
+                        theMap = smoothGroundHeigthmap(flatsize, x, z)
+                        theMap = blendToValueHeigthmap(theMap, flatsize, flatsize / 2 - 8, flatsize / 2, 0)
+                        theMap = multiplyHeigthmapByFactor(theMap, 0.0125)
+                        GG.DynRefMap[#GG.DynRefMap + 1] = circularClampHeigthmap(theMap, flatsize, flatsize / 2, false, 0, flatsize + 8)
+
+                        GG.boolForceLandLordUpdate = true
+                    end
+                end
+            end
+        end
+        Sleep(1000)
+    end
 end
 
-SIG_CHARGING=1024
-boolChargingWall=false
+SIG_CHARGING = 1024
+boolChargingWall = false
 function charging(boolCharged)
-	boolChargingWall=boolCharged
-	if boolCharged== true then
-		StartThread(showArcsOnConnection)
-	else
-		Signal(SIG_CHARGING)
-	end
+    boolChargingWall = boolCharged
+    if boolCharged == true then
+        StartThread(showArcsOnConnection)
+    else
+        Signal(SIG_CHARGING)
+    end
 end
 
 function showArcsOnConnection()
-	SetSignalMask(SIG_CHARGING)
-	while true do
-		process(TablesOfPiecesGroups["cWBtransf"],
-		function(id)
-			EmitSfx(id,1029)
-		end
-		)
-		
-		Sleep(500)
-	end
+    SetSignalMask(SIG_CHARGING)
+    while true do
+        process(TablesOfPiecesGroups["cWBtransf"],
+            function(id)
+                EmitSfx(id, 1029)
+            end)
+
+        Sleep(500)
+    end
 end
 
 --The copypastated towers of the citadell
 
 
-function script.AimFromWeapon1() 
-	return podturret0 
+function script.AimFromWeapon1()
+    return podturret0
 end
 
-function script.QueryWeapon1() 
-	rand=math.random(0,1)
-	if rand==0 then
-		return citurrete0
-	end
-	
-	if rand==1 then
-		return citurretem
-	end
+function script.QueryWeapon1()
+    rand = math.random(0, 1)
+    if rand == 0 then
+        return citurrete0
+    end
+
+    if rand == 1 then
+        return citurretem
+    end
 end
 
-function script.AimWeapon1( heading ,pitch)	
-	
-	Turn(podturret0,y_axis, heading, 3)
-	Turn(podturret0,x_axis, -pitch, 3)
-	WaitForTurn(podturret0,y_axis)
-	WaitForTurn(podturret0,x_axis)
-	return true
+function script.AimWeapon1(heading, pitch)
+
+    Turn(podturret0, y_axis, heading, 3)
+    Turn(podturret0, x_axis, -pitch, 3)
+    WaitForTurn(podturret0, y_axis)
+    WaitForTurn(podturret0, x_axis)
+    return true
 end
 
-function script.FireWeapon2()	
-	return true
-end
---------------------------------------------------------------------------
---turret + two turret emiter
- function script.AimFromWeapon2() 
-	return podturret3 
-end
- 
-function script.QueryWeapon2() 
-	rand=math.random(0,1)
-	if rand==0 then
-		return citurrete5
-	end
-	
-	if rand==1 then
-		return citurrete6
-	end
-	
-end
-
-function script.AimWeapon2( heading ,pitch)	
-	Turn(podturret3,y_axis, heading, 3)
-	Turn(podturret3,x_axis, -pitch, 3)
-	WaitForTurn(podturret3,y_axis)
-	WaitForTurn(podturret3,x_axis)
-	return true
-end
-
-function script.FireWeapon2()	
-	return true
+function script.FireWeapon2()
+    return true
 end
 
 --------------------------------------------------------------------------
---turret + two turret emiter
+-- turret + two turret emiter
+function script.AimFromWeapon2()
+    return podturret3
+end
 
+function script.QueryWeapon2()
+    rand = math.random(0, 1)
+    if rand == 0 then
+        return citurrete5
+    end
 
-function script.AimFromWeapon3() 
-	return podturret1 
+    if rand == 1 then
+        return citurrete6
+    end
+end
+
+function script.AimWeapon2(heading, pitch)
+    Turn(podturret3, y_axis, heading, 3)
+    Turn(podturret3, x_axis, -pitch, 3)
+    WaitForTurn(podturret3, y_axis)
+    WaitForTurn(podturret3, x_axis)
+    return true
+end
+
+function script.FireWeapon2()
+    return true
+end
+
+--------------------------------------------------------------------------
+-- turret + two turret emiter
+function script.AimFromWeapon3()
+    return podturret1
 end
 
 
-function script.QueryWeapon3() 
-	rand=math.random(0,1)
-	if rand==0 then
-		return citurrete1
-	end
-	
-	if rand==1 then
-		return citurrete2
-	end
-	
+function script.QueryWeapon3()
+    rand = math.random(0, 1)
+    if rand == 0 then
+        return citurrete1
+    end
+
+    if rand == 1 then
+        return citurrete2
+    end
 end
 
-function script.AimWeapon3( heading ,pitch)	
-	
-	Turn(podturret1,y_axis, heading, 3)
-	Turn(podturret1,x_axis, -pitch, 3)
-	WaitForTurn(podturret1,y_axis)
-	WaitForTurn(podturret1,x_axis)
-	return true
+function script.AimWeapon3(heading, pitch)
+
+    Turn(podturret1, y_axis, heading, 3)
+    Turn(podturret1, x_axis, -pitch, 3)
+    WaitForTurn(podturret1, y_axis)
+    WaitForTurn(podturret1, x_axis)
+    return true
 end
 
-function script.FireWeapon3()	
-	return true
+function script.FireWeapon3()
+    return true
 end
 
 -------------------------------------------------------------------------
---turret + two turret emiter
-
-function script.AimFromWeapon4() 
-	return citurret3 
+-- turret + two turret emiter
+function script.AimFromWeapon4()
+    return citurret3
 end
 
-function script.QueryWeapon4() 
-	rand=math.random(0,1)
-	if rand==0 then
-		return citurrete3
-	end
-	
-	if rand==1 then
-		return citurrete4
-	end
-	
+function script.QueryWeapon4()
+    rand = math.random(0, 1)
+    if rand == 0 then
+        return citurrete3
+    end
+
+    if rand == 1 then
+        return citurrete4
+    end
 end
 
-function script.AimWeapon4( heading ,pitch)	
-	
-	Turn(podturret2,y_axis, heading, 3)
-	Turn(podturret2,x_axis, -pitch, 3)
-	WaitForTurn(podturret2,y_axis)
-	WaitForTurn(podturret2,x_axis)
-	return true
+function script.AimWeapon4(heading, pitch)
+
+    Turn(podturret2, y_axis, heading, 3)
+    Turn(podturret2, x_axis, -pitch, 3)
+    WaitForTurn(podturret2, y_axis)
+    WaitForTurn(podturret2, x_axis)
+    return true
 end
 
-function script.FireWeapon4()	
-	return true
+function script.FireWeapon4()
+    return true
 end
+
 ----------------------------------------------
 
-lg1=piece"lg1"
-lg2=piece"lg2"
+lg1 = piece "lg1"
+lg2 = piece "lg2"
 
-function script.AimFromWeapon4() 
-	return lg1 
+function script.AimFromWeapon4()
+    return lg1
 end
 
-function script.QueryWeapon4() 
-	return lg1
+function script.QueryWeapon4()
+    return lg1
 end
 
-function script.AimWeapon4( heading ,pitch)	
-	
-	return false
+function script.AimWeapon4(heading, pitch)
+
+    return false
 end
 
-function script.FireWeapon4()	
-	return true
+function script.FireWeapon4()
+    return true
 end
 
-function script.AimFromWeapon5() 
-	return lg2 
+function script.AimFromWeapon5()
+    return lg2
 end
 
-function script.QueryWeapon5() 
-	return lg2
+function script.QueryWeapon5()
+    return lg2
 end
 
-function script.AimWeapon5( heading ,pitch)	
-	
-	return false
+function script.AimWeapon5(heading, pitch)
+
+    return false
 end
 
-function script.FireWeapon5()	
-	return true
+function script.FireWeapon5()
+    return true
 end

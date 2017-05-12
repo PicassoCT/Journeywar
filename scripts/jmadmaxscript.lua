@@ -1,73 +1,68 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
-include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-include "lib_Build.lua" 
+include "lib_Build.lua"
 
-center = piece"center"
-pieceTable= generatepiecesTableAndArrayCode(unitID, false)
+center = piece "center"
+pieceTable = generatepiecesTableAndArrayCode(unitID, false)
 
-local SIG_DELAYSTOP=4
+local SIG_DELAYSTOP = 4
 
 function script.StartMoving()
-	boolWalk=true
-	Signal(SIG_DELAYSTOP)
-	
+    boolWalk = true
+    Signal(SIG_DELAYSTOP)
 end
 
 function delayedStop()
-	SetSignalMask(SIG_DELAYSTOP)
-	Sleep(500)
-	boolWalk=false
-	
+    SetSignalMask(SIG_DELAYSTOP)
+    Sleep(500)
+    boolWalk = false
 end
 
 function script.StopMoving()
-	Signal(SIG_DELAYSTOP)
-	StartThread(delayedStop)
-	
+    Signal(SIG_DELAYSTOP)
+    StartThread(delayedStop)
 end
 
-local 	boolWalk= false
-local	boolAttack=false
-------------------------------------------------------------------------------------UNITCODE	
+local boolWalk = false
+local boolAttack = false
+------------------------------------------------------------------------------------ UNITCODE
 function confVehicle()
-		resetT(pieceTable)
-		Sleep(100)
-		StartThread(buildVehicle,center,AMax,LMax, DMax,HMax, DecoM, DecoD,BMax, symDegFilterFunction, linDegFilterFunction)
-	
+    resetT(pieceTable)
+    Sleep(100)
+    StartThread(buildVehicle, center, AMax, LMax, DMax, HMax, DecoM, DecoD, BMax, symDegFilterFunction, linDegFilterFunction)
 end
 
 function script.Create()
-	
-	
-	--DEBUG
-	ux,uy,uz=Spring.GetUnitPosition(unitID)
-	Spring.MoveCtrl.Enable(unitID)
-	Spring.MoveCtrl.SetPosition(unitID,ux,uy+90,uz)
-	--DEBUG
-	
-	
-	--center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction)
-	StartThread(confVehicle)
+
+
+    --DEBUG
+    ux, uy, uz = Spring.GetUnitPosition(unitID)
+    Spring.MoveCtrl.Enable(unitID)
+    Spring.MoveCtrl.SetPosition(unitID, ux, uy + 90, uz)
+    --DEBUG
+
+
+    --center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction)
+    StartThread(confVehicle)
 end
 
 
-----aimining & fire weapon
-function script.AimFromWeapon1() 
-	return center 
+--- -aimining & fire weapon
+function script.AimFromWeapon1()
+    return center
 end
 
-function script.QueryWeapon1() 
-	return center 
+function script.QueryWeapon1()
+    return center
 end
 
-function script.AimWeapon1( CockPiting ,pitch)	
-	
-	return true
-	
+function script.AimWeapon1(CockPiting, pitch)
+
+    return true
 end
 
-function script.FireWeapon1()	
-	return true
+function script.FireWeapon1()
+    return true
 end

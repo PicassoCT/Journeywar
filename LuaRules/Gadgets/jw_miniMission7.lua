@@ -1,140 +1,138 @@
-	
-	eStateStart= 1
-	eStateGoingDown=eStateStart+ 1
-	eStateCrashed=eStateGoingDown+1
+eStateStart = 1
+eStateGoingDown = eStateStart + 1
+eStateCrashed = eStateGoingDown + 1
 
-	eStateSaveUs=eStateCrashed+1
-	eInsurgentStatementCentrail=eStateSaveUs+1
-	eInsurgentStatementJourney=eInsurgentStatementCentrail+1
-	eInsurgenCounterUpdate= eInsurgentStatementJourney +1
-	--InsurgencyEnd
-	eStateSavedCentrail=eInsurgenCounterUpdate+1
-	eStateSavedJourney=eStateSavedCentrail+1
-	eStatsCureQuest=eStateSavedJourney+1
-	eStateFoundCure=eStatsCureQuest+1
-	eStateCureRetrieved=eStateFoundCure+1 
-	eStatePlanetsEndTerraformingStart= eStateCureRetrieved+1
-	eStateSheSearchStart= eStatePlanetsEndTerraformingStart+1
-	eStateFoundHim=eStateSheSearchStart+1
-	eStateEvacuationCompleted=eStateFoundHim+1
-	eBlackHoleRayPlanetSinger=eStatePlanetsEndTerraformingStart+1
-	
-	eStateMissionFailed=math.huge
-	startTime=180000
-	
-	exampleDialogue={
-	index=1,
-	[1]={Time=300, Sound="sounds/Missions/missionBriefing.ogg", Text= "Ratatat"}
-	}
-	
-	function speakDialogue(frame, dialogueTable)
-	if dialogueTable.Time and dialogueTable.Time > frame then return false,dialogueTable;	end
-	
-	if not dialogueTable[dialogueTable.index] then  return true, dialogueTable
-	--Done here		
-	end
-	
-	
-	dialogueTable.Time= frame + dialogueTable[dialogueTable.index].Time
-	say(dialogueTable[dialogueTable.index].Text,dialogueTable[dialogueTable.index].Time , NameColour, TextColour,OptionString,dialogueTable[dialogueTable.index].id)
-	Spring.PlaySoundFile(dialogueTable[dialogueTable.index].Sound, 1.0)
-	
-	dialogueTable.index=dialogueTable.index+1	
-	return false, dialogueTable
-	end
-	
-	function missionStepAndTime(frame, expectedStep, Time)
-		if not Time then
-			return MissionFunctionTable[7][3] == expectedStep 
-		end
-		if expectedStep and Time then
-			return MissionFunctionTable[7][3]== expectedStep and frame-MissionFunctionTable[7][2] > Time 
-		end
-	end
-	
-	function nextStep(targetStep)
-		MissionFunctionTable[7][3] =targetStep
-	end
-	
-	function missionOngoing(fooNction)
-	return fooNction()	
-	end
-	stillAlive= function(id) return Spring.GetUnitIsDead(id)==false; end
-	conditionlessOngoing= function() return false; end
-	gameOver= function() return true; end
-	function Misson7InFairAndLoveEverythingIsWar(frame)
+eStateSaveUs = eStateCrashed + 1
+eInsurgentStatementCentrail = eStateSaveUs + 1
+eInsurgentStatementJourney = eInsurgentStatementCentrail + 1
+eInsurgenCounterUpdate = eInsurgentStatementJourney + 1
+--InsurgencyEnd
+eStateSavedCentrail = eInsurgenCounterUpdate + 1
+eStateSavedJourney = eStateSavedCentrail + 1
+eStatsCureQuest = eStateSavedJourney + 1
+eStateFoundCure = eStatsCureQuest + 1
+eStateCureRetrieved = eStateFoundCure + 1
+eStatePlanetsEndTerraformingStart = eStateCureRetrieved + 1
+eStateSheSearchStart = eStatePlanetsEndTerraformingStart + 1
+eStateFoundHim = eStateSheSearchStart + 1
+eStateEvacuationCompleted = eStateFoundHim + 1
+eBlackHoleRayPlanetSinger = eStatePlanetsEndTerraformingStart + 1
 
-		if not MissionFunctionTable[7][2] then MissionFunctionTable[7][2]=frame end
-		if not MissionFunctionTable[7][3] then MissionFunctionTable[7][3]= eStateStart	end
-		
-		--send the transport crashing
-		if missionStepAndTime(frame, eStateStart, startTime) then
-			teamID=getCombinePlayer()
-			x,y,z=getOrthoLocation()
-		   id= Spring.CreateUnit("cconair",x,y,z,teamID,1,0)
-		   if id then 
-		   Spring.SetUnitCrashing(id,true)
-		   MissionFunctionTable[7][10]= teamID
-		   MissionFunctionTable[7][12]= id
-		   MissionFunctionTable[7][9]= {x=x,y=y,z=z}
-		   
-			nextStep(eStateGoingDown)
-			return missionOngoing(conditionlessOngoing)
-			else
-			nextStep(eStateMissionFailed)
-			return missionOngoing(gameOver)
-			end
-		end
-		
-		callForHelp={
-		index=1,
-		[1]={Time=3000, Sound="sounds/Missions/missionBriefing.ogg", Text= "I know, the Centrail wont allow for it, but Help me, to help her. She has the exobiotics Change upon her and i can barely stall it.."},
-		[2]={Time=3000, Sound="sounds/Missions/missionBriefing.ogg", Text= "He loved my old once, when i was not part of the choire, and will do anything, to prevent the butterflys completition. Help me, to end this, help him to see what is free. "},
-		[3]={Time=3000, Sound="sounds/Missions/missionBriefing.ogg", Text= "Centrail: Communication Containment breached, the Adminstration is deemed infected and must be disposed. Cauterization in progress.."},
-		[4]={Time=3000, Sound="sounds/Missions/missionBriefing.ogg", Text= "Loyalists: We do not reveal ourselves, usually- but we all have lost ones, and preseving those is a worthy endavour. We shall fight the Exobiotics- and the Centrail Confederates in the Citadell.."},
-		[5]={Time=3000, Sound="sounds/Missions/missionBriefing.ogg", Text= "Journeys: Who are we, if we do not fight for live to be free of the datadragon, the metall disease, the undead."},
-		[6]={Time=3000, Sound="sounds/Missions/missionBriefing.ogg", Text= "Journeys: Who are we, to seperate lovers, to divide and destroy, and call the ashes conquered? Becoming like the abomination, that we shall have no part in that."},
-		}
-	
-		if missionStepAndTime(frame, eStateGoingDown) then
-		if Spring.GetUnitIsDead(MissionFunctionTable[7][12]) == true then
-			if not MissionFunctionTable[7][11] then
-				MissionFunctionTable[7][11]= Spring.CreateUnit("thecouple",MissionFunctionTable[7][9].x,MissionFunctionTable[7][9].y,MissionFunctionTable[7][9].z,MissionFunctionTable[7][10],1)
-				process(callForHelp,function(Table) Table.id=MissionFunctionTable[7][11]; return Table; end)
-			end
-		 boolDialgoueDone, callForHelp= speakDialogue(callForHelp)
-			if boolDialgoueDone== true  then
-				nextStep(eStateSaveUs)
-			end
-		end
-		
-			return missionOngoing(conditionlessOngoing)
-		end
-		
-		
-		
-		if missionStepAndTime(frame,eStateSaveUs )then
-		
-			--check Civil War Status
-			if civilWarIsOver(frame) == true then
-			
-			return missionOngoing(gameOver)
-			end
-		
-			--check for the couple reaching the citadell
-			if unitReached(MissionFunctionTable[7][11],"citadell", 50)== true then
-			
-			
-			end
-			if  unitReached(MissionFunctionTable[7][11],"beanstalk", 50)== true then
-			
-			nextStep(eState)
-			end
-		
-		
-			return stillAlive(MissionFunctionTable[7][11]) == false		
-		end
-		--[[
+eStateMissionFailed = math.huge
+startTime = 180000
+
+exampleDialogue = {
+    index = 1,
+    [1] = { Time = 300, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Ratatat" }
+}
+
+function speakDialogue(frame, dialogueTable)
+    if dialogueTable.Time and dialogueTable.Time > frame then return false, dialogueTable; end
+
+    if not dialogueTable[dialogueTable.index] then return true, dialogueTable
+        --Done here
+    end
+
+
+    dialogueTable.Time = frame + dialogueTable[dialogueTable.index].Time
+    say(dialogueTable[dialogueTable.index].Text, dialogueTable[dialogueTable.index].Time, NameColour, TextColour, OptionString, dialogueTable[dialogueTable.index].id)
+    Spring.PlaySoundFile(dialogueTable[dialogueTable.index].Sound, 1.0)
+
+    dialogueTable.index = dialogueTable.index + 1
+    return false, dialogueTable
+end
+
+function missionStepAndTime(frame, expectedStep, Time)
+    if not Time then
+        return MissionFunctionTable[7][3] == expectedStep
+    end
+    if expectedStep and Time then
+        return MissionFunctionTable[7][3] == expectedStep and frame - MissionFunctionTable[7][2] > Time
+    end
+end
+
+function nextStep(targetStep)
+    MissionFunctionTable[7][3] = targetStep
+end
+
+function missionOngoing(fooNction)
+    return fooNction()
+end
+
+stillAlive = function(id) return Spring.GetUnitIsDead(id) == false; end
+conditionlessOngoing = function() return false; end
+gameOver = function() return true; end
+function Misson7InFairAndLoveEverythingIsWar(frame)
+
+    if not MissionFunctionTable[7][2] then MissionFunctionTable[7][2] = frame end
+    if not MissionFunctionTable[7][3] then MissionFunctionTable[7][3] = eStateStart end
+
+    --send the transport crashing
+    if missionStepAndTime(frame, eStateStart, startTime) then
+        teamID = getCombinePlayer()
+        x, y, z = getOrthoLocation()
+        id = Spring.CreateUnit("cconair", x, y, z, teamID, 1, 0)
+        if id then
+            Spring.SetUnitCrashing(id, true)
+            MissionFunctionTable[7][10] = teamID
+            MissionFunctionTable[7][12] = id
+            MissionFunctionTable[7][9] = { x = x, y = y, z = z }
+
+            nextStep(eStateGoingDown)
+            return missionOngoing(conditionlessOngoing)
+        else
+            nextStep(eStateMissionFailed)
+            return missionOngoing(gameOver)
+        end
+    end
+
+    callForHelp = {
+        index = 1,
+        [1] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "I know, the Centrail wont allow for it, but Help me, to help her. She has the exobiotics Change upon her and i can barely stall it.." },
+        [2] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "He loved my old once, when i was not part of the choire, and will do anything, to prevent the butterflys completition. Help me, to end this, help him to see what is free. " },
+        [3] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Centrail: Communication Containment breached, the Adminstration is deemed infected and must be disposed. Cauterization in progress.." },
+        [4] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Loyalists: We do not reveal ourselves, usually- but we all have lost ones, and preseving those is a worthy endavour. We shall fight the Exobiotics- and the Centrail Confederates in the Citadell.." },
+        [5] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Journeys: Who are we, if we do not fight for live to be free of the datadragon, the metall disease, the undead." },
+        [6] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Journeys: Who are we, to seperate lovers, to divide and destroy, and call the ashes conquered? Becoming like the abomination, that we shall have no part in that." },
+    }
+
+    if missionStepAndTime(frame, eStateGoingDown) then
+        if Spring.GetUnitIsDead(MissionFunctionTable[7][12]) == true then
+            if not MissionFunctionTable[7][11] then
+                MissionFunctionTable[7][11] = Spring.CreateUnit("thecouple", MissionFunctionTable[7][9].x, MissionFunctionTable[7][9].y, MissionFunctionTable[7][9].z, MissionFunctionTable[7][10], 1)
+                process(callForHelp, function(Table) Table.id = MissionFunctionTable[7][11]; return Table; end)
+            end
+            boolDialgoueDone, callForHelp = speakDialogue(callForHelp)
+            if boolDialgoueDone == true then
+                nextStep(eStateSaveUs)
+            end
+        end
+
+        return missionOngoing(conditionlessOngoing)
+    end
+
+
+
+    if missionStepAndTime(frame, eStateSaveUs) then
+
+        --check Civil War Status
+        if civilWarIsOver(frame) == true then
+
+            return missionOngoing(gameOver)
+        end
+
+        --check for the couple reaching the citadell
+        if unitReached(MissionFunctionTable[7][11], "citadell", 50) == true then
+        end
+        if unitReached(MissionFunctionTable[7][11], "beanstalk", 50) == true then
+
+            nextStep(eState)
+        end
+
+
+        return stillAlive(MissionFunctionTable[7][11]) == false
+    end
+    --[[
 
 [22:25:46] <Pica>  and the centrial player gets news, that a citadell too <direction> has fallen
 [22:26:14] <Pica> One final decal "She is infected. Please!"
@@ -189,17 +187,17 @@
 [23:42:27] <Pica> "Let those who come after us know, what happend here
 [23:43:16] <Pica> Journeylive grows around the blackhole, and dies off- a dry dead, dysonsphere of twigs...
 [23:43:22] <Pica> The end
-		]]
-		if MissionFunctionTable[7][3] > 12 then
-			
-			CentrailSpeech=
-			"Gone are the barbarians- now true civilization can start."
-			T=prepSpeach(CentrailSpeech, Name,charPerLine, Alpha, DefaultSleepByline)
-			say(T,25000, NameColour, TextColour,OptionString,UnitID)
-			spPlaySound("sounds/Missions/missionBriefing.ogg",1)
-			return true
-		end
-		
-		return false
-	end
+    ]]
+    if MissionFunctionTable[7][3] > 12 then
+
+        CentrailSpeech =
+        "Gone are the barbarians- now true civilization can start."
+        T = prepSpeach(CentrailSpeech, Name, charPerLine, Alpha, DefaultSleepByline)
+        say(T, 25000, NameColour, TextColour, OptionString, UnitID)
+        spPlaySound("sounds/Missions/missionBriefing.ogg", 1)
+        return true
+    end
+
+    return false
+end
 	

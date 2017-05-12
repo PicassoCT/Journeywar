@@ -1,81 +1,78 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
-include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-include "lib_Build.lua" 
-prop={}
-for i=1,3 do
-prop[i]="prop"..i
-prop[i]=piece(prop[i])
+include "lib_Build.lua"
+prop = {}
+for i = 1, 3 do
+    prop[i] = "prop" .. i
+    prop[i] = piece(prop[i])
 end
-TablesOfPiecesGroups={}
+TablesOfPiecesGroups = {}
 
-function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+function script.HitByWeapon(x, z, weaponDefID, damage)
 end
-center=piece"center"
-aimpiece=piece"aimpiece"
+
+center = piece "center"
+aimpiece = piece "aimpiece"
 
 function script.Create()
-for i=1,3 do
-Spin(prop[i],y_axis,math.rad(-1720),0)
-end
-end
-
-function script.Killed(recentDamage,_)
-
-createCorpseCUnitGeneric(recentDamage)
-return 1
+    for i = 1, 3 do
+        Spin(prop[i], y_axis, math.rad(-1720), 0)
+    end
 end
 
+function script.Killed(recentDamage, _)
 
-----aimining & fire weapon
-function script.AimFromWeapon1() 
-	return center 
+    createCorpseCUnitGeneric(recentDamage)
+    return 1
 end
 
 
-
-function script.QueryWeapon1() 
-	return center
+--- -aimining & fire weapon
+function script.AimFromWeapon1()
+    return center
 end
 
-function script.AimWeapon1( Heading ,pitch)	
-	--aiming animation: instantly turn the gun towards the enemy
 
-	return true
 
+function script.QueryWeapon1()
+    return center
 end
- 
 
-function script.FireWeapon1()	
+function script.AimWeapon1(Heading, pitch)
+    --aiming animation: instantly turn the gun towards the enemy
 
-	return true
+    return true
+end
+
+
+function script.FireWeapon1()
+
+    return true
 end
 
 
 
 function script.StartMoving()
-
 end
 
 function script.StopMoving()
-		
-		
 end
 
 function script.Activate()
 
-return 1
+    return 1
 end
 
 function script.Deactivate()
 
-return 0
+    return 0
 end
 
-function script.QueryBuildInfo() 
-  return center 
+function script.QueryBuildInfo()
+    return center
 end
 
-Spring.SetUnitNanoPieces(unitID,{ center})
+Spring.SetUnitNanoPieces(unitID, { center })
 

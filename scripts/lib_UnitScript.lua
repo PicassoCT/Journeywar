@@ -16,262 +16,263 @@ along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 MA 02110-1301, USA.
 
-]]--
---------------DEBUG HEADER
---Central Debug Header Controlled in UnitScript
-lib_boolDebug= false --GG.BoolDebug or false
---------------DEBUG HEADER
+]] --
+-------------- DEBUG HEADER
+-- Central Debug Header Controlled in UnitScript
+lib_boolDebug = false --GG.BoolDebug or false
+-------------- DEBUG HEADER
 
 --======================================================================================
 --Chapter: Tableoperations
 --======================================================================================
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: "TableContaining[key].TableReamining[key].valueName" or [nr] , value
-function split(div,str)
-	if (div=='') then return false end
-	local pos,arr = 0,{}
-	-- for each divider found
-	for st,sp in function() return string.find(str,div,pos,true) end do
-	table.insert(arr,string.sub(str,pos,st-1)) -- Attach chars left of current divider
-	pos = sp + 1 -- Jump past current divider
-end
-table.insert(arr,string.sub(str,pos)) -- Attach chars right of last divider
-return arr
+function split(div, str)
+    if (div == '') then return false end
+    local pos, arr = 0, {}
+    -- for each divider found
+    for st, sp in function() return string.find(str, div, pos, true) end do
+        table.insert(arr, string.sub(str, pos, st - 1)) -- Attach chars left of current divider
+        pos = sp + 1 -- Jump past current divider
+    end
+    table.insert(arr, string.sub(str, pos)) -- Attach chars right of last divider
+    return arr
 end
 
-function makeTableFromString(FormatString,assignedValue, ...)
-	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-	if loadstring(FormatString) ~= nil then FormatString=FormatString.."="..assignedValue; loadstring(FormatString) return end
-	--SplitByDot
-	SubTables={}
-	--split that string
-	SubT=string.split(FormatString,".")
-	Appendix="GG."
-	boolAvoidFutureChecks=false
-	for i=1,#SubT do
-		if not SubT[i]=="GG" then 
-			SubT=string.gsub(SubT,".")
-			ExtracedIndex=string.match(SubT,"[","]")
-			ExtractedTable=string.gsub(SubT,ExtracedIndex,"")
-			Terminator="."
-			if ExtractedTable then
-				if boolAvoidFutureChecks==true or not loadstring(Appendix..ExtractedTable) then 
-					loadstring(Appendix..ExtractedTable.."= {}")
-					boolAvoidFutureChecks=true
-				end
-		else ExtractedTable="" ;Terminator=""end
-			if boolAvoidFutureChecks==true or ExtracedIndex and not loadstring(Appendix..ExtractedTable..ExtracedIndex) then
-				loadstring(Appendix..ExtractedTable..ExtracedIndex.."={}")
-			end
-			
-			Appendix=Appendix..ExtractedTable..ExtracedIndex..Terminator
-		end
-	end
-	loadstring(Appendix.."="..assignedValue)
-	return loadstring(Appendix.."==".. asignedValue)
+function makeTableFromString(FormatString, assignedValue, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    if loadstring(FormatString) ~= nil then FormatString = FormatString .. "=" .. assignedValue; loadstring(FormatString) return end
+    --SplitByDot
+    SubTables = {}
+    --split that string
+    SubT = string.split(FormatString, ".")
+    Appendix = "GG."
+    boolAvoidFutureChecks = false
+    for i = 1, #SubT do
+        if not SubT[i] == "GG" then
+            SubT = string.gsub(SubT, ".")
+            ExtracedIndex = string.match(SubT, "[", "]")
+            ExtractedTable = string.gsub(SubT, ExtracedIndex, "")
+            Terminator = "."
+            if ExtractedTable then
+                if boolAvoidFutureChecks == true or not loadstring(Appendix .. ExtractedTable) then
+                    loadstring(Appendix .. ExtractedTable .. "= {}")
+                    boolAvoidFutureChecks = true
+                end
+            else ExtractedTable = ""; Terminator = ""
+            end
+            if boolAvoidFutureChecks == true or ExtracedIndex and not loadstring(Appendix .. ExtractedTable .. ExtracedIndex) then
+                loadstring(Appendix .. ExtractedTable .. ExtracedIndex .. "={}")
+            end
+
+            Appendix = Appendix .. ExtractedTable .. ExtracedIndex .. Terminator
+        end
+    end
+    loadstring(Appendix .. "=" .. assignedValue)
+    return loadstring(Appendix .. "==" .. asignedValue)
 end
 
 --> Creates a Table and initalizazes it with default value
 function makeTable(default, xDimension, yDimension, zDimension)
-	local RetTable={}
-	if not xDimension then return default end
-	
-	for x=1, xDimension, 1 do
-		if yDimension then
-			RetTable[x]={}
-		elseif xDimension then
-			RetTable[x]=default
-		else
-			return default
-		end
-		
-		if yDimension then
-			for y=1, yDimension, 1 do
-				if zDimension then
-					RetTable[x][y]={}
-				else
-					RetTable[x][y]=default
-				end	
-				
-				if zDimension then
-					for z=1, zDimension, 1 do
-						RetTable[x][y][z]=default
-					end
-				end
-			end
-		end
-	end
-	return RetTable
+    local RetTable = {}
+    if not xDimension then return default end
+
+    for x = 1, xDimension, 1 do
+        if yDimension then
+            RetTable[x] = {}
+        elseif xDimension then
+            RetTable[x] = default
+        else
+            return default
+        end
+
+        if yDimension then
+            for y = 1, yDimension, 1 do
+                if zDimension then
+                    RetTable[x][y] = {}
+                else
+                    RetTable[x][y] = default
+                end
+
+                if zDimension then
+                    for z = 1, zDimension, 1 do
+                        RetTable[x][y][z] = default
+                    end
+                end
+            end
+        end
+    end
+    return RetTable
 end
 
 -->Creates basically a table of piecenamed enumerated strings
-function makeTableOfPieceNames(name, nr,startnr, piecefoonction)
-	T={}
-	start=startnr or 1
-	
-	for i=start,nr do
-		namecopy=name	
-		namecopy=namecopy..i
-		T[i]=namecopy
-	end
-	if piecefoonction then
-		for i=start,nr do
-			T[i]=piecefoonction(T[i])
-		end
-	end	
-	return T
+function makeTableOfPieceNames(name, nr, startnr, piecefoonction)
+    T = {}
+    start = startnr or 1
+
+    for i = start, nr do
+        namecopy = name
+        namecopy = namecopy .. i
+        T[i] = namecopy
+    end
+    if piecefoonction then
+        for i = start, nr do
+            T[i] = piecefoonction(T[i])
+        end
+    end
+    return T
 end
 
 --> Adds to a Table, argument as keys, subtables
-function addTableTables(T,...)
-	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-	String="T"
-	boolOneTimeNil=false
-	if arg then
-		for k,v in ipairs(arg) do
-			String= String.."["..v.."]"
-			Spring.Echo(String)
-			
-			if boolOneTimeNil == false then	
-				if	loadstring(String) ~= nil then
-				else
-					boolOneTimeNil=true
-				end		
-			else
-				loadstring(String.."={}")
-			end
-		end
-	end
-	return T
+function addTableTables(T, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    String = "T"
+    boolOneTimeNil = false
+    if arg then
+        for k, v in ipairs(arg) do
+            String = String .. "[" .. v .. "]"
+            Spring.Echo(String)
+
+            if boolOneTimeNil == false then
+                if loadstring(String) ~= nil then
+                else
+                    boolOneTimeNil = true
+                end
+            else
+                loadstring(String .. "={}")
+            end
+        end
+    end
+    return T
 end
 
 -->filters out the dead 
 function validateUnitTable(T)
-	TVeryMuchAlive={}
-	
-	for i=#T,1, -1 do
-		boolUnitDead = Spring.GetUnitIsDead(T[i])
-		if boolUnitDead and boolUnitDead==false then
-			TVeryMuchAlive[#TVeryMuchAlive+1]=T[i]
-		end
-	end
-	
-	return TVeryMuchAlive or {}
+    TVeryMuchAlive = {}
+
+    for i = #T, 1, -1 do
+        boolUnitDead = Spring.GetUnitIsDead(T[i])
+        if boolUnitDead and boolUnitDead == false then
+            TVeryMuchAlive[#TVeryMuchAlive + 1] = T[i]
+        end
+    end
+
+    return TVeryMuchAlive or {}
 end
 
 -->adds a num Table to a num Table
-function TAddT(OrgT,T)
-	for i=1,#T do
-		OrgT[#OrgT+i]=T[i]
-	end
-	return OrgT
+function TAddT(OrgT, T)
+    for i = 1, #T do
+        OrgT[#OrgT + i] = T[i]
+    end
+    return OrgT
 end
 
 --> shuffles a Table 
 function shuffleT(Table)
-	size=#Table
-	local shuT={}
-	for i=1, size do 
-		rIndexStart=math.random(1,size)
-		boolFoundSomething=false
-		for k=rIndexStart, size do
-			if Table[k]then
-				shuT[i]=Table[k]
-				Table[k]=nil
-				boolFoundSomething = true
-			end
-		end
-		if boolFoundSomething == false then
-			for k=1, rIndexStart do
-				if Table[k]then
-					shuT[i]=Table[k]
-					Table[k]=nil
-					boolFoundSomething = true
-				end
-			end
-		end
-	end
-	
-	return shuT
+    size = #Table
+    local shuT = {}
+    for i = 1, size do
+        rIndexStart = math.random(1, size)
+        boolFoundSomething = false
+        for k = rIndexStart, size do
+            if Table[k] then
+                shuT[i] = Table[k]
+                Table[k] = nil
+                boolFoundSomething = true
+            end
+        end
+        if boolFoundSomething == false then
+            for k = 1, rIndexStart do
+                if Table[k] then
+                    shuT[i] = Table[k]
+                    Table[k] = nil
+                    boolFoundSomething = true
+                end
+            end
+        end
+    end
+
+    return shuT
 end
+
 --======================================================================================
 --Distance Measurement
 --======================================================================================
 
 -->returns the absolute distance
 function absDistance(valA, valB)
-	if sigNum(valA) == signNum(valB) then
-		return math.abs(valA)-math.abs(valB)
-	else
-		return math.abs(valA) + math.abs(valB)
-	end
+    if sigNum(valA) == signNum(valB) then
+        return math.abs(valA) - math.abs(valB)
+    else
+        return math.abs(valA) + math.abs(valB)
+    end
 end
 
 --functions
 -->returns the Negated Axis
 function mirror(value)
-	value=-1*value
-	return value
+    value = -1 * value
+    return value
 end
 
 -->returns the 2 norm of a vector
-function distance(x,y,z,xa,ya,za)
-	if xa ~= nil and ya ~= nil and za ~= nil then
-		return math.sqrt((x-xa)^2+(y-ya)^2+(z-za)^2)
-	elseif x ~= nil and y ~= nil and z ~= nil then
-		return math.sqrt(x*x+y*y+z*z)
-	else
-		return math.sqrt((x-y)^2)
-	end
+function distance(x, y, z, xa, ya, za)
+    if xa ~= nil and ya ~= nil and za ~= nil then
+        return math.sqrt((x - xa) ^ 2 + (y - ya) ^ 2 + (z - za) ^ 2)
+    elseif x ~= nil and y ~= nil and z ~= nil then
+        return math.sqrt(x * x + y * y + z * z)
+    else
+        return math.sqrt((x - y) ^ 2)
+    end
 end
 
 --> get two unit distVector
 function vectorUnitToUnit(idA, idB)
-	x,y,z =Spring.GetUnitPosition(idA)
-	xb,yb,zb=Spring.GetUnitPosition(idB)
-	
-	return Vector:new(x-xb, y-yb, z-zb)
+    x, y, z = Spring.GetUnitPosition(idA)
+    xb, yb, zb = Spring.GetUnitPosition(idB)
+
+    return Vector:new(x - xb, y - yb, z - zb)
 end
 
 -->returns the Distance between two units
 function distanceUnitToUnit(idA, idB)
-	if lib_boolDebug == true then
-		if(not idA or type(idA)~= "number" ) then echo("Not existing idA or not a number"); return ; end
-		if(not idB or type(idB)~= "number" ) then echo("Not existing idB or not a number"); return ; end
-		if Spring.ValidUnitID(idA)==false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return end
-		if Spring.ValidUnitID(idB)==false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return ; end
-		
-	end
-	x,y,z =Spring.GetUnitPosition(idA)
-	xb,yb,zb=Spring.GetUnitPosition(idB)
-	
-	if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return end
-	assert(x)
-	return distance(x,y,z,xb,yb,zb)
+    if lib_boolDebug == true then
+        if (not idA or type(idA) ~= "number") then echo("Not existing idA or not a number"); return; end
+        if (not idB or type(idB) ~= "number") then echo("Not existing idB or not a number"); return; end
+        if Spring.ValidUnitID(idA) == false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return end
+        if Spring.ValidUnitID(idB) == false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return; end
+    end
+    x, y, z = Spring.GetUnitPosition(idA)
+    xb, yb, zb = Spring.GetUnitPosition(idB)
+
+    if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return end
+    assert(x)
+    return distance(x, y, z, xb, yb, zb)
 end
 
 
 
 --> gives a close hunch at the distance and avoids expensive sqrt math by using herons Algo
-function approxDist(x,y,z, digitsPrecision)
-	resultSoFar=x*x+y*y+z*z
-	lastResult=resultSoFar
-	for i=1,digitsPrecision do
-		lastResult=(lastResult+resultSoFar/lastResult)/2
-	end
-	return lastResult
+function approxDist(x, y, z, digitsPrecision)
+    resultSoFar = x * x + y * y + z * z
+    lastResult = resultSoFar
+    for i = 1, digitsPrecision do
+        lastResult = (lastResult + resultSoFar / lastResult) / 2
+    end
+    return lastResult
 end
 
 --======================================================================================
 --String Operations
 --======================================================================================
 --> creates a table of pieces with name
-function makeTableOfNames(name,startnr,endnr)
-	T={}
-	for i=startnr, endnr, 1 do
-		T[#T+1]=name..i	
-	end
-	return T
+function makeTableOfNames(name, startnr, endnr)
+    T = {}
+    for i = startnr, endnr, 1 do
+        T[#T + 1] = name .. i
+    end
+    return T
 end
 
 
@@ -281,248 +282,248 @@ end
 
 -->Returns randomized Boolean
 function maRa()
-	return math.random(0,1)==1 
+    return math.random(0, 1) == 1
 end
 
 -->Returns not nil if random
 function raNil()
-	if math.random(0,1)==1 then return maRa() else return end
+    if math.random(0, 1) == 1 then return maRa() else return end
 end
 
 --> checks wether a value is nan
 function isNaN(value)
-	return (value ~= value) 
+    return (value ~= value)
 end
 
 
 function assertBool(val)
-	assert(type(val)=="boolean")
+    assert(type(val) == "boolean")
 end
 
 function assertStr(val)
-	assert(type(val)=="string")
+    assert(type(val) == "string")
 end
 
 function assertNum(val)
-	assert(type(val)=="number")
+    assert(type(val) == "number")
 end
+
 function assertTable(Table)
-	for k,v in pairs(Table) do
-		if not v then echo("asserTable has key "..k.." without a value") 
-		else
-			typeV=type(v)
-			if typeV== "table" then echo("<SubTable>");asserTable(v);echo("</SubTable>")end			
-		end
-	end
+    for k, v in pairs(Table) do
+        if not v then echo("asserTable has key " .. k .. " without a value")
+        else
+            typeV = type(v)
+            if typeV == "table" then echo("<SubTable>"); asserTable(v); echo("</SubTable>") end
+        end
+    end
 end
+
 --expects dimensions and a comperator function or value/string/object={membername= expectedtype}--expects dimensions and a comperator function or value/string/object={membername= expectedtype}
-function assertT(Table, ... )
-	local arg = arg
-	if (not arg) then arg = {...}; arg.n = #arg end
-	
-	
-	
-	if type(arg) =="number" then echo("assertT:: Not a valid table- recived number "..arg);return false end
-	dimensions={}
-	dimensionsIndex=0
-	comperator={}
-	boolNeedDimension=true
-	accessString="Table"
-	
-	function buildAccesString(currIndex, dimensions)
-		accessString="Table"
-		coordTable={}
-		for i=1, #currIndex, 1 do
-			accessString=accessString.."["..currIndex[i].."]"
-			coordTable[i]=currIndex[i]
-		end
-		
-		return accessString, coordTable
-	end
-	
-	
-	function echoCoordinates(Tables)
-		if not Tables then return end
-		echoString="Assert Table:Table"
-		for i=1,#Tables do
-			echoString=echoString.."["..Tables[i].."]"
-		end
-		Spring.Echo(echoString)
-	end
-	
-	boolComperatorFound=false
-	if not arg then echo("Assertion failed, this is not a Argument- is a Contradiction"); return false end
-	for k,v in pairs(arg) do
-		
-		if type(v)=="number" and boolComperatorFound== false then
-			
-			dimensionsIndex=dimensionsIndex+1
-			dimensions[dimensionsIndex] = v
-			
-			
-		elseif type(v)== "function" then
-			boolComperatorFound=true
-			comperator = v
-			break
-		elseif type(v)== "string" then
-			boolComperatorFound=true
-			
-			if v== "number" and boolComperatorFound == false then
-				comperator= function (value, coordTable)
-					if type(value)=="number" then
-						return true
-					else
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: Number expected, recived "..type(value).." = "..value.." instead")
-						return false
-					end;
-				end
-				break
-			end
-			
-			if v== "string" then
-				comperator = 	function (value, coordTable)
-					if type(value)~="string" then
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: String expected, recived "..type(value).." = "..value.." instead")
-						return false
-					end
-					
-					if value== v then
-						return true
-					else
-						echoCoordinates(coordTable)
-						Sring.Echo("Assert Table failed:: String is "..value.." expected was "..v )
-						return false
-					end;
-				end
-				break
-			end
-			
-			if v== "true" then
-				comperator = 	function (value, coordTable)
-					if type(value)~="boolean" then
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: Boolean expected, recived "..type(value).." = "..value.." instead")
-						return false
-					end
-					
-					if value== true then
-						return true
-					else
-						echoCoordinates(coordTable)
-						Sring.Echo("Assert Table failed:: Boolean value is not true" )
-						return false
-					end;
-				end
-				break
-			end
-			
-			if v== "false" then
-				comperator = 	function (value, coordTable)
-					if type(value)~="boolean" then
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: Boolean expected, recived "..type(value).." = "..value.." instead")
-						return false
-					end
-					
-					
-					if value== false then
-						return true
-					else
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: Boolean value is not false" )
-						return false
-					end;
-				end
-				break
-			end
-			
-		elseif type(v)== "table" then
-			boolComperatorFound=true
-			comperator = 	function (object, coordTable)
-				boolEqual=true
-				
-				for key,value in pairs(v) do
-					Spring.Echo(key,value)
-					if not object[key] then
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: Expected key "..key.." not in object" )
-					end
-					
-					if type(object[key])~= value then
-						
-						echoCoordinates(coordTable)
-						Spring.Echo("Assert Table failed:: Expected key.. "..key.." value is not of type "..value..".Got "..type(object[key]).." with value: "..object[key].." instead")
-						--echoT(object)
-						boolEqual=false
-					end
-				end
-				return boolEqual
-			end
-		end
-		
-		
-		
-	end
-	
-	
-	currIndex={}
-	function indexMaxedOut(currIndex, dimensions)
-		for i=1,#currIndex, 1 do
-			if currIndex[i] < dimensions[i] then return false end
-		end
-		return true
-	end
-	
-	function incIndex(currIndex, dimensions)
-		for i=#currIndex, 1, -1 do
-			if currIndex[i] < dimensions[i] then
-				currIndex[i]=currIndex[i]+1
-				for k=i+1, #currIndex do
-					currIndex[k]=1
-				end
-				
-				return currIndex
-			end
-		end
-		return currIndex
-	end
-	
-	for i=1, #dimensions do currIndex[i]=1 end
-	
-	while indexMaxedOut(currIndex, dimensions)== false do
-		accessString, coordTable = buildAccesString(currIndex, dimensions)
-		compare= loadstring("return function (Table,comperator,coordTable) return comperator("..accessString..", coordTable) end")
-		comp= compare()
-		if ( comp(Table, comperator,coordTable)== false) then return false end
-		currIndex= incIndex(currIndex, dimensions)
-	end
-	return true
+function assertT(Table, ...)
+    local arg = arg
+    if (not arg) then arg = { ... }; arg.n = #arg end
+
+
+
+    if type(arg) == "number" then echo("assertT:: Not a valid table- recived number " .. arg); return false end
+    dimensions = {}
+    dimensionsIndex = 0
+    comperator = {}
+    boolNeedDimension = true
+    accessString = "Table"
+
+    function buildAccesString(currIndex, dimensions)
+        accessString = "Table"
+        coordTable = {}
+        for i = 1, #currIndex, 1 do
+            accessString = accessString .. "[" .. currIndex[i] .. "]"
+            coordTable[i] = currIndex[i]
+        end
+
+        return accessString, coordTable
+    end
+
+
+    function echoCoordinates(Tables)
+        if not Tables then return end
+        echoString = "Assert Table:Table"
+        for i = 1, #Tables do
+            echoString = echoString .. "[" .. Tables[i] .. "]"
+        end
+        Spring.Echo(echoString)
+    end
+
+    boolComperatorFound = false
+    if not arg then echo("Assertion failed, this is not a Argument- is a Contradiction"); return false end
+    for k, v in pairs(arg) do
+
+        if type(v) == "number" and boolComperatorFound == false then
+
+            dimensionsIndex = dimensionsIndex + 1
+            dimensions[dimensionsIndex] = v
+
+
+        elseif type(v) == "function" then
+            boolComperatorFound = true
+            comperator = v
+            break
+        elseif type(v) == "string" then
+            boolComperatorFound = true
+
+            if v == "number" and boolComperatorFound == false then
+                comperator = function(value, coordTable)
+                    if type(value) == "number" then
+                        return true
+                    else
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: Number expected, recived " .. type(value) .. " = " .. value .. " instead")
+                        return false
+                    end;
+                end
+                break
+            end
+
+            if v == "string" then
+                comperator = function(value, coordTable)
+                    if type(value) ~= "string" then
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: String expected, recived " .. type(value) .. " = " .. value .. " instead")
+                        return false
+                    end
+
+                    if value == v then
+                        return true
+                    else
+                        echoCoordinates(coordTable)
+                        Sring.Echo("Assert Table failed:: String is " .. value .. " expected was " .. v)
+                        return false
+                    end;
+                end
+                break
+            end
+
+            if v == "true" then
+                comperator = function(value, coordTable)
+                    if type(value) ~= "boolean" then
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: Boolean expected, recived " .. type(value) .. " = " .. value .. " instead")
+                        return false
+                    end
+
+                    if value == true then
+                        return true
+                    else
+                        echoCoordinates(coordTable)
+                        Sring.Echo("Assert Table failed:: Boolean value is not true")
+                        return false
+                    end;
+                end
+                break
+            end
+
+            if v == "false" then
+                comperator = function(value, coordTable)
+                    if type(value) ~= "boolean" then
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: Boolean expected, recived " .. type(value) .. " = " .. value .. " instead")
+                        return false
+                    end
+
+
+                    if value == false then
+                        return true
+                    else
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: Boolean value is not false")
+                        return false
+                    end;
+                end
+                break
+            end
+
+        elseif type(v) == "table" then
+            boolComperatorFound = true
+            comperator = function(object, coordTable)
+                boolEqual = true
+
+                for key, value in pairs(v) do
+                    Spring.Echo(key, value)
+                    if not object[key] then
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: Expected key " .. key .. " not in object")
+                    end
+
+                    if type(object[key]) ~= value then
+
+                        echoCoordinates(coordTable)
+                        Spring.Echo("Assert Table failed:: Expected key.. " .. key .. " value is not of type " .. value .. ".Got " .. type(object[key]) .. " with value: " .. object[key] .. " instead")
+                        --echoT(object)
+                        boolEqual = false
+                    end
+                end
+                return boolEqual
+            end
+        end
+    end
+
+
+    currIndex = {}
+    function indexMaxedOut(currIndex, dimensions)
+        for i = 1, #currIndex, 1 do
+            if currIndex[i] < dimensions[i] then return false end
+        end
+        return true
+    end
+
+    function incIndex(currIndex, dimensions)
+        for i = #currIndex, 1, -1 do
+            if currIndex[i] < dimensions[i] then
+                currIndex[i] = currIndex[i] + 1
+                for k = i + 1, #currIndex do
+                    currIndex[k] = 1
+                end
+
+                return currIndex
+            end
+        end
+        return currIndex
+    end
+
+    for i = 1, #dimensions do currIndex[i] = 1 end
+
+    while indexMaxedOut(currIndex, dimensions) == false do
+        accessString, coordTable = buildAccesString(currIndex, dimensions)
+        compare = loadstring("return function (Table,comperator,coordTable) return comperator(" .. accessString .. ", coordTable) end")
+        comp = compare()
+        if (comp(Table, comperator, coordTable) == false) then return false end
+        currIndex = incIndex(currIndex, dimensions)
+    end
+    return true
 end
+
 --======================================================================================
 --Math perations
 --======================================================================================
 
 --> Converts to points, to a degree in Radians
-function convPointsToDeg(ox,oz,bx,bz)
-	if not bx then --orgin cleaned point
-		return math.atan2(ox,oz)
-	else
-		bx=bx-ox
-		bz=bz-oz
-		return math.atan2(bx,bz)
-	end
+function convPointsToDeg(ox, oz, bx, bz)
+    if not bx then --orgin cleaned point
+        return math.atan2(ox, oz)
+    else
+        bx = bx - ox
+        bz = bz - oz
+        return math.atan2(bx, bz)
+    end
 end
 
 --> clamp Disregarding Signum
-function clampMaxSign(value,Max)
-	if math.abs(value) > Max then 
-		signum=math.abs(value)/value
-		return Max*signum
-	else
-		return value
-	end	
+function clampMaxSign(value, Max)
+    if math.abs(value) > Max then
+        signum = math.abs(value) / value
+        return Max * signum
+    else
+        return value
+    end
 end
 
 --======================================================================================
@@ -530,72 +531,72 @@ end
 --======================================================================================
 
 function randVec(boolStayPositive)
-	
-	if boolStayPositive and boolStayPositive == true then 
-		return {x= math.random(0,1000)/1000,y=math.random(0,1000)/1000,z=math.random(0,1000)/1000}
-	else
-		return {x= math.random(-1000,1000)/1000,y=math.random(-1000,1000)/1000,z=math.random(-1000,1000)/1000}
-	end
+
+    if boolStayPositive and boolStayPositive == true then
+        return { x = math.random(0, 1000) / 1000, y = math.random(0, 1000) / 1000, z = math.random(0, 1000) / 1000 }
+    else
+        return { x = math.random(-1000, 1000) / 1000, y = math.random(-1000, 1000) / 1000, z = math.random(-1000, 1000) / 1000 }
+    end
 end
 
 --> old Vector constructor- deprecated - use lib_types vector type instead
-function makeVector(x,y,z)
-	return {x=x,y=y,z=z}
+function makeVector(x, y, z)
+    return { x = x, y = y, z = z }
 end
+
 --======================================================================================
 --Sfx Operations
 --======================================================================================
 --> creates a ceg, that traverses following its behavioural function
-function cegDevil(cegname, x,y,z,rate, lifetimefunc, endofLifeFunc,boolStrobo, range, damage, behaviour)
-	
-	knallfrosch=function(x,y,z,counter,v)
-		if counter % 120 < 60 then -- aufwärts
-			if v then
-				return x*v.x,y*v.y,z*v.z, v
-			else
-				return x,y,z, {x=(math.random(10,14)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
-			end
-		elseif Spring.GetGroundHeight(x,z) -y < 10 then --rest
-			return x,y,z
-		else --fall down
-			if v and v.y < 0 then
-				return x*v.x,y*v.y,z*v.z, v
-			else
-				return x,y,z, {x=(math.random(10,11)/10)*randSign(),y=math.random(1,2),z=(math.random(10,14)/10)*randSign()}
-			end
-			
-		end
-	end
-	functionbehaviour=behaviour or knallfrosch
-	Time=0			
-	local SpawnCeg=Spring.SpawnCEG
-	v= makeVector(0,0,0)
-	
-	while lifetimefunc(Time)==true do
-		x,y,z,v=functionbehaviour(x,y,z,Time,v)
-		
-		if boolStrobo==true then
-			d=randVec()
-			SpawnCeg(cegname,x,y,z,d.x,d.y,d.z,range,damage)
-		else
-			SpawnCeg(cegname,x,y,z,0,1,0,range,damage)
-		end
-		
-		Time=Time+rate
-		Sleep(rate)
-	end
-	
-	endofLifeFunc(x,y,z)
+function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrobo, range, damage, behaviour)
+
+    knallfrosch = function(x, y, z, counter, v)
+        if counter % 120 < 60 then -- aufwärts
+            if v then
+                return x * v.x, y * v.y, z * v.z, v
+            else
+                return x, y, z, { x = (math.random(10, 14) / 10) * randSign(), y = math.random(1, 2), z = (math.random(10, 14) / 10) * randSign() }
+            end
+        elseif Spring.GetGroundHeight(x, z) - y < 10 then --rest
+            return x, y, z
+        else --fall down
+            if v and v.y < 0 then
+                return x * v.x, y * v.y, z * v.z, v
+            else
+                return x, y, z, { x = (math.random(10, 11) / 10) * randSign(), y = math.random(1, 2), z = (math.random(10, 14) / 10) * randSign() }
+            end
+        end
+    end
+    functionbehaviour = behaviour or knallfrosch
+    Time = 0
+    local SpawnCeg = Spring.SpawnCEG
+    v = makeVector(0, 0, 0)
+
+    while lifetimefunc(Time) == true do
+        x, y, z, v = functionbehaviour(x, y, z, Time, v)
+
+        if boolStrobo == true then
+            d = randVec()
+            SpawnCeg(cegname, x, y, z, d.x, d.y, d.z, range, damage)
+        else
+            SpawnCeg(cegname, x, y, z, 0, 1, 0, range, damage)
+        end
+
+        Time = Time + rate
+        Sleep(rate)
+    end
+
+    endofLifeFunc(x, y, z)
 end
 
 
 -->PieceDebug loop
-function PieceLight(unitID, piecename,cegname)
-	while true do
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
-		Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
-		Sleep(250)
-	end
+function PieceLight(unitID, piecename, cegname)
+    while true do
+        x, y, z = Spring.GetUnitPiecePosDir(unitID, piecename)
+        Spring.SpawnCEG(cegname, x, y + 10, z, 0, 1, 0, 50, 0)
+        Sleep(250)
+    end
 end
 
 -->SortPoint
@@ -604,592 +605,596 @@ end
 
 
 function makePiecePoint(piece)
-	x,y,z=Spring.GetUnitPiecePosDir(unitID,piece)
-	return {x=x, y= y, z= z}
+    x, y, z = Spring.GetUnitPiecePosDir(unitID, piece)
+    return { x = x, y = y, z = z }
 end
 
 function makePieceMap(unitID)
-	List=Spring.GetUnitPieceMap(unitID)
-	return List or {}
+    List = Spring.GetUnitPieceMap(unitID)
+    return List or {}
 end
 
 function hideAllPieces(unitID)
-	List = Spring.GetUnitPieceMap(unitID)
-	
-	for k,v in pairs(List) do
-		Hide(v)
-	end
+    List = Spring.GetUnitPieceMap(unitID)
+
+    for k, v in pairs(List) do
+        Hide(v)
+    end
 end
 
 --> Attaches a Unit to a Piece near a Impact side
-function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID,px,py,pz, range)
-	T=getAllInCircle(px,pz,range)
-	boolFirstMatch=false
-	process(T,
-	function(id)
-		if Spring.GetUnitLastAttacker(id)== AttackerID then
-			return id
-		end
-	end,
-	function(id)
-		if boolFirstMatch==true then return end
-		
-		lastAttackedPiece=Spring.GetUnitLastAttackedPiece(id)
-		if lastAttackedPiece then
-			boolFirstMatch=true
-			Spring.UnitAttach(id,toAttachUnitID, lastAttackedPiece)
-		end		
-	end		
-	)
+function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID, px, py, pz, range)
+    T = getAllInCircle(px, pz, range)
+    boolFirstMatch = false
+    process(T,
+        function(id)
+            if Spring.GetUnitLastAttacker(id) == AttackerID then
+                return id
+            end
+        end,
+        function(id)
+            if boolFirstMatch == true then return end
+
+            lastAttackedPiece = Spring.GetUnitLastAttackedPiece(id)
+            if lastAttackedPiece then
+                boolFirstMatch = true
+                Spring.UnitAttach(id, toAttachUnitID, lastAttackedPiece)
+            end
+        end)
 end
 
 
-function getTeamSide(teamid)	
-	teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier=Spring.GetTeamInfo(teamid)
-	return side, teamID, leader, isDead, isAiTeam, allyTeam, customTeamKeys, incomeMultiplier
+function getTeamSide(teamid)
+    teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier = Spring.GetTeamInfo(teamid)
+    return side, teamID, leader, isDead, isAiTeam, allyTeam, customTeamKeys, incomeMultiplier
 end
 
 function getUnitSide(unitID)
-	teamid=Spring.GetUnitTeam(unitID)
-	return getTeamSide(teamid)
+    teamid = Spring.GetUnitTeam(unitID)
+    return getTeamSide(teamid)
 end
 
-function echo(stringToEcho,...)
-	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-	
-	Spring.Echo(stringToEcho)
-	if arg then
-		counter=0
-		for k,v in ipairs(arg) do
-			if k and v then
-				if type(v)== "table" then 
-					echoT(v)
-				else 
-					Spring.Echo(k.." "..v) 
-				end
-			elseif k then
-				Spring.Echo(k)
-			end
-		end
-	end
+function echo(stringToEcho, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+
+    Spring.Echo(stringToEcho)
+    if arg then
+        counter = 0
+        for k, v in ipairs(arg) do
+            if k and v then
+                if type(v) == "table" then
+                    echoT(v)
+                else
+                    Spring.Echo(k .. " " .. v)
+                end
+            elseif k then
+                Spring.Echo(k)
+            end
+        end
+    end
 end
 
-function echo2DMap(tmap,squareSideDimension, valueSignMap)
-	map={}
-	local map=tmap
-	step=8
-	
-	valueSignMap= valueSignMap or {
-		[0]= " 0 ",
-		[false]=" € ",
-		[true]= " T "									
-	}
-	
-	if squareSideDimension~= nil and squareSideDimension < 128 then step=1 end
-	
-	for x=2,#map,step do
-		StringToConcat=""
-		for z=2,#map,step do					
-			if not map[x][z] then 
-				StringToConcat=StringToConcat.." "
-			elseif 		valueSignMap[map[x][z]] then
-				StringToConcat=StringToConcat..valueSignMap[map[x][z]]
-			else 
-				StringToConcat=StringToConcat..printFloat(map[x][z],3).." "
-			end							
-		end	
-		Spring.Echo(StringToConcat)
-	end			
+function echo2DMap(tmap, squareSideDimension, valueSignMap)
+    map = {}
+    local map = tmap
+    step = 8
+
+    valueSignMap = valueSignMap or {
+        [0] = " 0 ",
+        [false] = " € ",
+        [true] = " T "
+    }
+
+    if squareSideDimension ~= nil and squareSideDimension < 128 then step = 1 end
+
+    for x = 2, #map, step do
+        StringToConcat = ""
+        for z = 2, #map, step do
+            if not map[x][z] then
+                StringToConcat = StringToConcat .. " "
+            elseif valueSignMap[map[x][z]] then
+                StringToConcat = StringToConcat .. valueSignMap[map[x][z]]
+            else
+                StringToConcat = StringToConcat .. printFloat(map[x][z], 3) .. " "
+            end
+        end
+        Spring.Echo(StringToConcat)
+    end
 end
 
 function printFloat(anyNumber, charsToPrint)
-	stringifyFloat=""..anyNumber
-	return string.sub(stringifyFloat,1,charsToPrint)
+    stringifyFloat = "" .. anyNumber
+    return string.sub(stringifyFloat, 1, charsToPrint)
 end
 
-function distanceVec(v1,v2)
-	return distance(v1.x,v1.y,v1.z,v2.x,v2.y,v2.z)
+function distanceVec(v1, v2)
+    return distance(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
 end
 
-function VDotProduct(V1,V2)
-	if not V1 or not V2 then return nil end
-	return DotProduct(V1.x,V1.y,V1.z,V2.x,V2.y,V2.z)
+function VDotProduct(V1, V2)
+    if not V1 or not V2 then return nil end
+    return DotProduct(V1.x, V1.y, V1.z, V2.x, V2.y, V2.z)
 end
 
 function Vabs(Vectors)
-	return distance(Vectors.x,Vectors.y,Vectors.z)
-end
-function Vcross(V1,V2)
-	if not V1 or not V2 then return nil end
-	
-	return (V1.y*V2.z-V1.z*V2.y)-(V1.x*V2.z-V1.z*V2.x)-(V1.x*V2.y-V1.y*V2.x)
+    return distance(Vectors.x, Vectors.y, Vectors.z)
 end
 
-function DotProduct(x,y,z,ax,ay,az)
-	return x*ax +y*ay + az*z
+function Vcross(V1, V2)
+    if not V1 or not V2 then return nil end
+
+    return (V1.y * V2.z - V1.z * V2.y) - (V1.x * V2.z - V1.z * V2.x) - (V1.x * V2.y - V1.y * V2.x)
 end
 
-
--->
-function clamp(val,low,up)
-	if val > up 	then return up end
-	if val < low 	then return low end
-	return val
+function DotProduct(x, y, z, ax, ay, az)
+    return x * ax + y * ay + az * z
 end
+
 
 -->
-function clampMod(val,low,up)
-	if val > up 	then return (val%up)+1 end
-	if val < low 	then return low end
-	return val
+function clamp(val, low, up)
+    if val > up then return up end
+    if val < low then return low end
+    return val
+end
+
+-->
+function clampMod(val, low, up)
+    if val > up then return (val % up) + 1 end
+    if val < low then return low end
+    return val
 end
 
 
 
 
 --> Destroys A Table of Units
-function DestroyTable(T, boolSelfd, boolReclaimed, condFunction,unitID)
-	if T then 
-		for i=1,#T, 1 do
-			if condFunction(T[i])==true then
-				Spring.DestroyUnit(T[i],boolSelfd,boolReclaimed, unitID)
-			end
-		end
-	end
+function DestroyTable(T, boolSelfd, boolReclaimed, condFunction, unitID)
+    if T then
+        for i = 1, #T, 1 do
+            if condFunction(T[i]) == true then
+                Spring.DestroyUnit(T[i], boolSelfd, boolReclaimed, unitID)
+            end
+        end
+    end
 end
 
 function explodeT(TableOfPieces, Conditions, StepSize)
-	lStepSize=StepSize or 1
-	for i=1,#TableOfPieces, lStepSize do
-		Explode(TableOfPieces[i],Conditions)
-	end
+    lStepSize = StepSize or 1
+    for i = 1, #TableOfPieces, lStepSize do
+        Explode(TableOfPieces[i], Conditions)
+    end
 end
 
 function hideTWrap(piecenr)
-	for k,v in pairs(piecenr) do
-		HideWrap(k)
-	end
-	
+    for k, v in pairs(piecenr) do
+        HideWrap(k)
+    end
 end
 
 function showTWrap(piecenr)
-	for k,v in pairs(piecenr) do
-		ShowWrap(k)
-	end
-	
+    for k, v in pairs(piecenr) do
+        ShowWrap(k)
+    end
 end
 
 
 -->idle Animation Loop
 function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, Time, boolNoDown)
-	
-	Turn(Body,axis, math.rad(degree),speed)
-	for i=1, #FrontLeg, 1 do
-		Turn(FrontLeg[i].Up,axis, math.rad(-degree ), speed)
-		if boolNoDown == false then
-			Turn(FrontLeg[i].Down,axis, math.rad(0 ), speed)
-		end
-	end
-	
-	for i=1, #RearLeg, 1 do
-		Turn(RearLeg[i].Up,axis, math.rad(-degree ), speed)
-		if boolNoDown == false then
-			Turn(RearLeg[i].Down,axis, math.rad(0), speed)
-		end
-	end
-	
-	for i=1, #FrontLeg, 1 do
-		WaitForTurns(FrontLeg[i].Up)
-		if boolNoDown == false then
-			WaitForTurns(FrontLeg[i].Down)
-		end
-	end
-	
-	for i=1, #RearLeg, 1 do
-		WaitForTurns(RearLeg[i].Up)
-		if boolNoDown == false then
-			WaitForTurns(RearLeg[i].Down)
-		end
-	end
-	WaitForTurn(Body,axis)
-	Sleep(Time)
-	
-	Turn(Body,axis, math.rad(BodyBackDeg),speed)
-	for i=1, #FrontLeg, 1 do
-		Turn(FrontLeg[i].Up,axis, math.rad( -BodyBackDeg), speed)
-		if boolNoDown == false then
-			Turn(FrontLeg[i].Down,axis, math.rad( 0 ), speed)
-		end
-	end
-	
-	for i=1, #RearLeg, 1 do
-		Turn(RearLeg[i].Up,axis, math.rad(-BodyBackDeg), speed)
-		if boolNoDown == false then
-			Turn(RearLeg[i].Down,axis, math.rad(0), speed)
-		end
-	end
-	for i=1, #FrontLeg, 1 do
-		WaitForTurns(FrontLeg[i].Up)
-		if boolNoDown == false then
-			WaitForTurns(FrontLeg[i].Down)
-		end
-	end
-	
-	for i=1, #RearLeg, 1 do
-		WaitForTurns(RearLeg[i].Up)
-		if boolNoDown == false then
-			WaitForTurns(RearLeg[i].Down)
-		end		
-	end		
-	WaitForTurn(Body,axis)
-	Sleep(Time)
+
+    Turn(Body, axis, math.rad(degree), speed)
+    for i = 1, #FrontLeg, 1 do
+        Turn(FrontLeg[i].Up, axis, math.rad(-degree), speed)
+        if boolNoDown == false then
+            Turn(FrontLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        Turn(RearLeg[i].Up, axis, math.rad(-degree), speed)
+        if boolNoDown == false then
+            Turn(RearLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+
+    for i = 1, #FrontLeg, 1 do
+        WaitForTurns(FrontLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(FrontLeg[i].Down)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        WaitForTurns(RearLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(RearLeg[i].Down)
+        end
+    end
+    WaitForTurn(Body, axis)
+    Sleep(Time)
+
+    Turn(Body, axis, math.rad(BodyBackDeg), speed)
+    for i = 1, #FrontLeg, 1 do
+        Turn(FrontLeg[i].Up, axis, math.rad(-BodyBackDeg), speed)
+        if boolNoDown == false then
+            Turn(FrontLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        Turn(RearLeg[i].Up, axis, math.rad(-BodyBackDeg), speed)
+        if boolNoDown == false then
+            Turn(RearLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+    for i = 1, #FrontLeg, 1 do
+        WaitForTurns(FrontLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(FrontLeg[i].Down)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        WaitForTurns(RearLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(RearLeg[i].Down)
+        end
+    end
+    WaitForTurn(Body, axis)
+    Sleep(Time)
 end
 
 function HideWrap(piecenr)
-	if lib_boolDebug==true then
-		if type(piecenr)=="string" then 
-			Spring.Echo("Hide did get a string.."..piecenr);assert(true==false); 
-		end
-		if type(piecenr)=="table" then 
-			Spring.Echo("PieceNr in hide is a table");
-			--echoT(piecenr)
-			assert(true==false);
-		end
-		
-		if type(piecenr)=="number" then
-			PieceMap=Spring.GetUnitPieceList(unitID)
-			if not PieceMap[piecenr] then
-				Spring.Echo("Piece not a valid Nr"..piecenr)
-				return
-			end
-			Hide(piecenr)
-		end
-	else
-		Hide(piecenr)
-	end
+    if lib_boolDebug == true then
+        if type(piecenr) == "string" then
+            Spring.Echo("Hide did get a string.." .. piecenr); assert(true == false);
+        end
+        if type(piecenr) == "table" then
+            Spring.Echo("PieceNr in hide is a table");
+            --echoT(piecenr)
+            assert(true == false);
+        end
+
+        if type(piecenr) == "number" then
+            PieceMap = Spring.GetUnitPieceList(unitID)
+            if not PieceMap[piecenr] then
+                Spring.Echo("Piece not a valid Nr" .. piecenr)
+                return
+            end
+            Hide(piecenr)
+        end
+    else
+        Hide(piecenr)
+    end
 end
 
 function getUnitName(UnitDef, UnitDefID)
-	for name,def in pairs(UnitDef) do
-		if def.id==UnitDefID then
-			return name
-		end
-	end
-	return "UnitName not found in UnitDefID:: UnitParsing Errors"
+    for name, def in pairs(UnitDef) do
+        if def.id == UnitDefID then
+            return name
+        end
+    end
+    return "UnitName not found in UnitDefID:: UnitParsing Errors"
 end
 
 function ShowWrap(piecenr)
-	if lib_boolDebug==true then
-		if type(piecenr)=="string" then 
-			Spring.Echo("Hide did get a string.."..piecenr);assert(true==false); 
-		end
-		if type(piecenr)=="table" then 
-			Spring.Echo("PieceNr in hide is a table");
-			--echoT(piecenr)
-			assert(true==false);
-		end
-		
-		if type(piecenr)=="number" then
-			PieceMap=Spring.GetUnitPieceList(unitID)
-			if not PieceMap[piecenr] then
-				Spring.Echo("Piece not a valid Nr"..piecenr)
-				return
-			end
-			Hide(piecenr)
-		end
-	else
-		Hide(piecenr)
-	end
+    if lib_boolDebug == true then
+        if type(piecenr) == "string" then
+            Spring.Echo("Hide did get a string.." .. piecenr); assert(true == false);
+        end
+        if type(piecenr) == "table" then
+            Spring.Echo("PieceNr in hide is a table");
+            --echoT(piecenr)
+            assert(true == false);
+        end
+
+        if type(piecenr) == "number" then
+            PieceMap = Spring.GetUnitPieceList(unitID)
+            if not PieceMap[piecenr] then
+                Spring.Echo("Piece not a valid Nr" .. piecenr)
+                return
+            end
+            Hide(piecenr)
+        end
+    else
+        Hide(piecenr)
+    end
 end
 
 
 -->Copys a table
 function tableCopy(orig)
-	local orig_type=type(orig)
-	local copy
-	if orig_type=='table' then
-		copy={}
-		for orig_key,orig_value in next, orig, nil do
-			copy[tableCopy(orig_key)]=tableCopy(orig_value)
-		end
-		setmetatable(copy,tableCopy(getmetatable(orig)))
-	else
-		copy=orig
-	end
-	return copy
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[tableCopy(orig_key)] = tableCopy(orig_value)
+        end
+        setmetatable(copy, tableCopy(getmetatable(orig)))
+    else
+        copy = orig
+    end
+    return copy
 end
 
 
 function ANHINEG(value)
-	if value <0 then
-		value=M(value)
-	end
-	return value
+    if value < 0 then
+        value = M(value)
+    end
+    return value
 end
 
 function PP(value)
-	value=value+1
-	return value
+    value = value + 1
+    return value
 end
+
 --Bit Operators -Great Toys for the BigBoys
-function SR(value,shift)
-	reSulTan=math.bit_bits(value,shift)
-	return reSulTan
-end 
-
-function SL(value,shift)
-	reSulTan=math.bit_bits(value,M(shift))
-	return reSulTan
+function SR(value, shift)
+    reSulTan = math.bit_bits(value, shift)
+    return reSulTan
 end
 
-function AND(value1,value2)
-	reSulTan=math.bit_and(value1,value2)
-	return reSulTan
+function SL(value, shift)
+    reSulTan = math.bit_bits(value, M(shift))
+    return reSulTan
 end
 
-function OR(value1,value2)
-	reSulTan=math.bit_or(value1,value2)
-	return reSulTan
+function AND(value1, value2)
+    reSulTan = math.bit_and(value1, value2)
+    return reSulTan
 end
 
-function XOR(value1,value2)
-	reSulTan=math.bit_xor(value1,value2)
-	return reSulTan
+function OR(value1, value2)
+    reSulTan = math.bit_or(value1, value2)
+    return reSulTan
+end
+
+function XOR(value1, value2)
+    reSulTan = math.bit_xor(value1, value2)
+    return reSulTan
 end
 
 
 function INV(value)
-	reSulTanane=math.bit_inv(value)
-	return value
+    reSulTanane = math.bit_inv(value)
+    return value
 end
 
 -->Get the Ground Normal, uses a handed over function and returns a corresponding Table
 function getGroundMapTable(Resolution, HandedInFunction)
-	ReT={}
-	local spGetGroundNormal=Spring.GetGroundNormal
-	for x=1, Game.mapSizeX, Resolution do
-		ReT[x]={}
-		for y=1, Game.mapSizeY, Resolution do
-			dx,dy,dz=spGetGroundNormal(x,y)
-			ReT[x][y]=Helperfunction(dx,dy,dz)
-		end
-	end
-	return ReT
+    ReT = {}
+    local spGetGroundNormal = Spring.GetGroundNormal
+    for x = 1, Game.mapSizeX, Resolution do
+        ReT[x] = {}
+        for y = 1, Game.mapSizeY, Resolution do
+            dx, dy, dz = spGetGroundNormal(x, y)
+            ReT[x][y] = Helperfunction(dx, dy, dz)
+        end
+    end
+    return ReT
 end
 
 -->Generalized map processing Function
 -->Get the Ground Normal, uses all handed over functions for processing and returns a corresponding Table
-function doForMapPos(Resolution,...)
-	local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-	
-	for k,v in pairs(arg) do if type(v)~="function" then return Spring.Echo(" Argument is not a processing function") end end
-	
-	ReT={}
-	for x=1, Game.mapSizeX, Resolution do
-		ReT[x]={}
-		for y=1, Game.mapSizeY, Resolution do
-			res={}
-			for k,v in pairs(arg) do
-				res=arg(x,y,res) 
-			end
-			ReT[x][y]=res 
-		end
-	end
-	return ReT
+function doForMapPos(Resolution, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+
+    for k, v in pairs(arg) do if type(v) ~= "function" then return Spring.Echo(" Argument is not a processing function") end end
+
+    ReT = {}
+    for x = 1, Game.mapSizeX, Resolution do
+        ReT[x] = {}
+        for y = 1, Game.mapSizeY, Resolution do
+            res = {}
+            for k, v in pairs(arg) do
+                res = arg(x, y, res)
+            end
+            ReT[x][y] = res
+        end
+    end
+    return ReT
 end
 
 -->Rotates a point around another Point
-function drehMatrix (x, y, zx, zy, degInRad)
-	x= x-zx
-	y= y-zy
-	tempX=(math.cos(degInRad)*x)+ ((-1.0 *math.sin(degInRad))*y)
-	y=(math.sin(degInRad)*x+ (math.cos(degInRad))*y)
-	
-	
-	x=tempX+zx
-	y=y+zy
-	return x,y
+function drehMatrix(x, y, zx, zy, degInRad)
+    x = x - zx
+    y = y - zy
+    tempX = (math.cos(degInRad) * x) + ((-1.0 * math.sin(degInRad)) * y)
+    y = (math.sin(degInRad) * x + (math.cos(degInRad)) * y)
+
+
+    x = tempX + zx
+    y = y + zy
+    return x, y
 end
 
 -->Checks wether a point is within a triangle
-function pointWithinTriangle(x1,y1,x2,y2,x3,y3,xt,yt)
-	
-	--triAngleDeterminates
-	x1x2=0.5*(x1*y2-x2*y1)
-	x2x3=0.5*(x2*y3-x3*y2)
-	x3x1=0.5*(x3*y1-x1*y3)
-	--pointAngleDeterminates
-	x1xt=0.5*(x1*yt+xt*y1)
-	x2xt=0.5*(x2*yt+xt*y2)
-	x3xt=0.5*(x3*yt+xt*y3)
-	
-	det1=x1x2+x1xt+x2xt--x1x2xt
-	det2=x2xt+x3xt+x2x3--x3x2xt
-	det1=x3xt+x3x1+x1xt--x1x3xt
-	detSum=det1+det2+det3
-	if detSum<0 then
-		--Point is outside of triAngle
-		return true
-	end
-	
-	if detSum >= 0 then
-		--Point is inside of triAngle
-		return false
-	end
-	
-end
--->Sanitizing RandomIntervall -cause brando has electrolytes
-function cbrandoVal(LowLimit,UpLimit)
-	upLim=UpLimit or LowLimit+1
-	if LowLimit >= upLim then LowLimit=upLim-1 end
-	return math.ceil(math.random(LowLimit,UpLimit))
+function pointWithinTriangle(x1, y1, x2, y2, x3, y3, xt, yt)
+
+    --triAngleDeterminates
+    x1x2 = 0.5 * (x1 * y2 - x2 * y1)
+    x2x3 = 0.5 * (x2 * y3 - x3 * y2)
+    x3x1 = 0.5 * (x3 * y1 - x1 * y3)
+    --pointAngleDeterminates
+    x1xt = 0.5 * (x1 * yt + xt * y1)
+    x2xt = 0.5 * (x2 * yt + xt * y2)
+    x3xt = 0.5 * (x3 * yt + xt * y3)
+
+    det1 = x1x2 + x1xt + x2xt --x1x2xt
+    det2 = x2xt + x3xt + x2x3 --x3x2xt
+    det1 = x3xt + x3x1 + x1xt --x1x3xt
+    detSum = det1 + det2 + det3
+    if detSum < 0 then
+        --Point is outside of triAngle
+        return true
+    end
+
+    if detSum >= 0 then
+        --Point is inside of triAngle
+        return false
+    end
 end
 
 -->Sanitizing RandomIntervall -cause brando has electrolytes
-function brandoVal(LowLimit,UpLimit)
-	upLim=UpLimit or LowLimit+1
-	if LowLimit >= upLim then LowLimit=upLim-1 end
-	return math.random(LowLimit,UpLimit)
+function cbrandoVal(LowLimit, UpLimit)
+    upLim = UpLimit or LowLimit + 1
+    if LowLimit >= upLim then LowLimit = upLim - 1 end
+    return math.ceil(math.random(LowLimit, UpLimit))
+end
+
+-->Sanitizing RandomIntervall -cause brando has electrolytes
+function brandoVal(LowLimit, UpLimit)
+    upLim = UpLimit or LowLimit + 1
+    if LowLimit >= upLim then LowLimit = upLim - 1 end
+    return math.random(LowLimit, UpLimit)
 end
 
 -->Function estimates the relative Position of a Piece to another by comparing ther Coordinates
-function PieceStarCoordPiece(myPos,PiecePos,cubicsize)
-	
-	--[1]=--front
-	--[2]=--rear
-	--[3]=--side left
-	--[4]=	--side right
-	--[5]=	--up
-	--[6]=	--low
-	
-	
-	if withinRange(myPos.y,PiecePos.y, cubicsize) ==true then 
-		
-		if withinRange(myPos.x,PiecPos.x,cubicsize)==true then -- Piece is on the side
-			if myPos.z > piecePos.z then return 3 else return 4 end		
-		else -- Piece is either in front or behind
-			if myPos.x > piecePos.x then return 2 else return 1 end
-		end
-	else -- pos is either above or below the layer 
-		if myPos.y > PiecePos.y then return 6 else return 5 end
-	end
-	
+function PieceStarCoordPiece(myPos, PiecePos, cubicsize)
+
+    --[1]=--front
+    --[2]=--rear
+    --[3]=--side left
+    --[4]=	--side right
+    --[5]=	--up
+    --[6]=	--low
+
+
+    if withinRange(myPos.y, PiecePos.y, cubicsize) == true then
+
+        if withinRange(myPos.x, PiecPos.x, cubicsize) == true then -- Piece is on the side
+            if myPos.z > piecePos.z then return 3 else return 4 end
+        else -- Piece is either in front or behind
+            if myPos.x > piecePos.x then return 2 else return 1 end
+        end
+    else -- pos is either above or below the layer 
+        if myPos.y > PiecePos.y then return 6 else return 5 end
+    end
 end
 
 --> checks wether a value with teshold is within range of a second value
-function withinRange(value1,value2, treShold)
-	if value1*treShold > value2 or value1*(1-treShold) <treShold then
-		return true
-	else
-		return false
-	end
+function withinRange(value1, value2, treShold)
+    if value1 * treShold > value2 or value1 * (1 - treShold) < treShold then
+        return true
+    else
+        return false
+    end
 end
 
-function valComPair(value1,treShold)
-	if value1 <0 then
-		value1=M(value1)
-	end
-	
-	if value1 < value1*treShold and value1 > value1*(1-treShold) then
-		return true
-	else
-		return false
-	end
+function valComPair(value1, treShold)
+    if value1 < 0 then
+        value1 = M(value1)
+    end
+
+    if value1 < value1 * treShold and value1 > value1 * (1 - treShold) then
+        return true
+    else
+        return false
+    end
 end
 
 --> Checks wether a Point is within a six sided polygon
-function sixPointInsideDetAlgo (x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6,xPoint,yPoint)
-	boolInside=true
-	detSum=0
-	for i=0, 6, 1 do
-		tempdet=0.5*((x((i+1)%7))* (y((i+2)%7))+(x((i+2)%7))*(y((i+1)%7)))
-		detSum=detSum+tempdet
-	end
-	
-	if detSum>=0 then 
-		boolInside=false
-	end
-	
-	return boolInside
+function sixPointInsideDetAlgo(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, xPoint, yPoint)
+    boolInside = true
+    detSum = 0
+    for i = 0, 6, 1 do
+        tempdet = 0.5 * ((x((i + 1) % 7)) * (y((i + 2) % 7)) + (x((i + 2) % 7)) * (y((i + 1) % 7)))
+        detSum = detSum + tempdet
+    end
+
+    if detSum >= 0 then
+        boolInside = false
+    end
+
+    return boolInside
 end
+
 -->Gets the Height of a Unit
 function getunitHeight(UnitId)
-	_,y,_=Spring.GetUnitPosition(unitID)
-	return y
+    _, y, _ = Spring.GetUnitPosition(unitID)
+    return y
 end
 
 -->multiplies a 3x1 Vector with a 3x3 Matrice
-function vec3MulMatrice3x3(vec,Matrice)
-	return {x=Matrice[1][1]*vec.x+Matrice[1][2]*vec.y,Matrice[1][3]*vec.z,
-		y=Matrice[2][1]*vec.x+Matrice[2][2]*vec.y,Matrice[2][3]*vec.z,
-		z=Matrice[3][1]*vec.x+Matrice[3][2]*vec.y,Matrice[3][3]*vec.z,
-	}
+function vec3MulMatrice3x3(vec, Matrice)
+    return {
+        x = Matrice[1][1] * vec.x + Matrice[1][2] * vec.y, Matrice[1][3] * vec.z,
+        y = Matrice[2][1] * vec.x + Matrice[2][2] * vec.y, Matrice[2][3] * vec.z,
+        z = Matrice[3][1] * vec.x + Matrice[3][2] * vec.y, Matrice[3][3] * vec.z,
+    }
 end
+
 --RawMatrice
 -- {
-	-- [1]={[1]=,[2]=,[3]=,},
-	-- [2]={[1]=,[2]=,[3]=,},
-	-- [3]={[1]=,[2]=,[3]=,}
+-- [1]={[1]=,[2]=,[3]=,},
+-- [2]={[1]=,[2]=,[3]=,},
+-- [3]={[1]=,[2]=,[3]=,}
 -- }
 function YRotationMatrice(Deg)
-	return {
-		[1]={[1]=math.cos(Deg),		[2]=0,		[3]=math.sin(Deg)*-1,},
-		[2]={[1]=0,					[2]=1,		[3]=0},
-		[3]={[1]=math.sin(Deg),		[2]=0,		[3]=math.cos(Deg),	}
-	}
+    return {
+        [1] = { [1] = math.cos(Deg), [2] = 0, [3] = math.sin(Deg) * -1, },
+        [2] = { [1] = 0, [2] = 1, [3] = 0 },
+        [3] = { [1] = math.sin(Deg), [2] = 0, [3] = math.cos(Deg), }
+    }
 end
 
 function XRotationMatrice(Deg)
-	return {
-		[1]={[1]=1,				[2]=0,				[3]=0				},
-		[2]={[1]=0,				[2]=math.cos(Deg),	[3]=math.sin(Deg)*-1},
-		[3]={[1]=0,				[2]=math.sin(Deg),	[3]=math.cos(Deg)	}
-	}
+    return {
+        [1] = { [1] = 1, [2] = 0, [3] = 0 },
+        [2] = { [1] = 0, [2] = math.cos(Deg), [3] = math.sin(Deg) * -1 },
+        [3] = { [1] = 0, [2] = math.sin(Deg), [3] = math.cos(Deg) }
+    }
 end
+
 function ZRotationMatrice(Deg)
-	return {
-		[1]={[1]=math.cos(Deg),	[2]=math.sin(Deg)*-1,	[3]=0,},
-		[2]={[1]=math.sin(Deg),	[2]=math.cos(Deg),		[3]=0,},
-		[3]={[1]=0,				[2]=0,					[3]=1,}
-	}
+    return {
+        [1] = { [1] = math.cos(Deg), [2] = math.sin(Deg) * -1, [3] = 0, },
+        [2] = { [1] = math.sin(Deg), [2] = math.cos(Deg), [3] = 0, },
+        [3] = { [1] = 0, [2] = 0, [3] = 1, }
+    }
 end
-function rotateUnitAroundUnit(centerID,rotatedUnit, degree)
-	ax,ay,az=Spring.GetUnitPosition(centerID)
-	bx,by,bz=Spring.GetUnitPosition(rotatedUnit)
-	vx,vz= bx-ax,bz-az
-	vx,vz= RotationMatrice(vx,vz, math.rad(degree))
-	
-	Spring.SetUnitPosition(rotatedUnit,ax+vx,az+vz)
+
+function rotateUnitAroundUnit(centerID, rotatedUnit, degree)
+    ax, ay, az = Spring.GetUnitPosition(centerID)
+    bx, by, bz = Spring.GetUnitPosition(rotatedUnit)
+    vx, vz = bx - ax, bz - az
+    vx, vz = RotationMatrice(vx, vz, math.rad(degree))
+
+    Spring.SetUnitPosition(rotatedUnit, ax + vx, az + vz)
 end
 
 function rotateVecDegX(vec, DegX)
-	tempDegRotY=math.asin(vec.x/(math.sqrt(vec.x^2+vec.z^2)))
-	
-	-- y-axis
-	vec=vec3MulMatrice3x3(vec,YRotationMatrice(tempDegRotY*-1))
-	
-	tempDegRotZ=math.asin(vec.y/math.sqrt(vec.x^2 +vec.z^2))
-	--z-axis
-	vec=vec3MulMatrice3x3(vec,YRotationMatrice(tempDegRotZ*-1))
-	--actual Rotation around the x-axis
-	vec=vec3MulMatrice3x3(vec,XRotationMatrice(DegX))
-	
-	--undo z-axis
-	vec=vec3MulMatrice3x3(vec,YRotationMatrice(tempDegRotZ))
-	
-	-- undo y-axis
-	vec=vec3MulMatrice3x3(vec,YRotationMatrice(tempDegRotY))
-	return vec	
+    tempDegRotY = math.asin(vec.x / (math.sqrt(vec.x ^ 2 + vec.z ^ 2)))
+
+    -- y-axis
+    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotY * -1))
+
+    tempDegRotZ = math.asin(vec.y / math.sqrt(vec.x ^ 2 + vec.z ^ 2))
+    --z-axis
+    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotZ * -1))
+    --actual Rotation around the x-axis
+    vec = vec3MulMatrice3x3(vec, XRotationMatrice(DegX))
+
+    --undo z-axis
+    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotZ))
+
+    -- undo y-axis
+    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotY))
+    return vec
 end
 
 
 
 -->gets the original Mapheight
 function getHistoricHeight(UnitId)
-	tempX,tempY,tempZ=Spring.GetUnitPosition(UnitId)
-	tempY=Spring.GetGroundOrigHeight(tempX,tempZ)
-	return tempY
+    tempX, tempY, tempZ = Spring.GetUnitPosition(UnitId)
+    tempY = Spring.GetGroundOrigHeight(tempX, tempZ)
+    return tempY
 end
+
 --> returns true if point is within range -returns false if it is on the outside
 local previousResult
 local previousCubic
@@ -1197,3679 +1202,3655 @@ local rangeOfOld = -1
 
 
 --> faster way of finding out wether a point is within a circle
-function isWithinCircle(circleRange,xCoord,zCoord)
-	newCubic=0
-	if rangeOfOld == circleRange then
-		newCubic=previousCubic
-	else
-		newCubic= 0.7071067811865475*circleRange
-		previousCubic=newCubic
-	end
-	
-	negCircleRange=-1*circleRange
-	
-	--checking the most comon cases |Coords Outside the Circlebox
-	if xCoord > circleRange or xCoord < negCircleRange then
-		return false
-	end
-	
-	if zCoord >circleRange or zCoord <negCircleRange then
-		return false
-	end
-	
-	negNewCubic=-1* newCubic
-	
-	
-	--checking everything within the circle box
-	if (xCoord < newCubic and xCoord > negNewCubic) and (zCoord < newCubic and zCoord > negNewCubic) then
-		return true
-	end
-	
-	
-	-- very few cases make it here.. to the classic, bad old range compare
-	if math.sqrt(xCoord^2 +zCoord^2) < circleRange then 
-		return true 
-	else 
-		return false
-	end
-	
+function isWithinCircle(circleRange, xCoord, zCoord)
+    newCubic = 0
+    if rangeOfOld == circleRange then
+        newCubic = previousCubic
+    else
+        newCubic = 0.7071067811865475 * circleRange
+        previousCubic = newCubic
+    end
+
+    negCircleRange = -1 * circleRange
+
+    --checking the most comon cases |Coords Outside the Circlebox
+    if xCoord > circleRange or xCoord < negCircleRange then
+        return false
+    end
+
+    if zCoord > circleRange or zCoord < negCircleRange then
+        return false
+    end
+
+    negNewCubic = -1 * newCubic
+
+
+    --checking everything within the circle box
+    if (xCoord < newCubic and xCoord > negNewCubic) and (zCoord < newCubic and zCoord > negNewCubic) then
+        return true
+    end
+
+
+    -- very few cases make it here.. to the classic, bad old range compare
+    if math.sqrt(xCoord ^ 2 + zCoord ^ 2) < circleRange then
+        return true
+    else
+        return false
+    end
 end
 
 
 
 -->Packs Values into Pairs
 function getPairs(values)
-	xyPairs = {}
-	for i=1,#values,2 do 
-		v = {x=values[i], y=values[i+i] }
-		table.insert(xyPair, v)
-	end
-	return xyPairs
+    xyPairs = {}
+    for i = 1, #values, 2 do
+        v = { x = values[i], y = values[i + i] }
+        table.insert(xyPair, v)
+    end
+    return xyPairs
 end
 
 
 -->generates a Pieces List Keyed to the PieceName
-function makeKeyPiecesTable(unitID,piecefunction)
-	
-	returnTable={}
-	piecesTable=Spring.GetUnitPieceList(unitID)
-	
-	if piecesTable ~= nil then
-		for i=1,#piecesTable,1 do
-			returnTable[piecesTable[i]]=piecefunction(piecesTable[i])
-			
-		end
-		
-	end
-	return returnTable
+function makeKeyPiecesTable(unitID, piecefunction)
+
+    returnTable = {}
+    piecesTable = Spring.GetUnitPieceList(unitID)
+
+    if piecesTable ~= nil then
+        for i = 1, #piecesTable, 1 do
+            returnTable[piecesTable[i]] = piecefunction(piecesTable[i])
+        end
+    end
+    return returnTable
 end
 
 
 function makePieceTable(unitID)
-	RetT={}
-	piecesTable=Spring.GetUnitPieceMap(unitID)
-	for k,v in pairs(piecesTable) do
-		RetT[#RetT+1]=v
-	end
-	return RetT
+    RetT = {}
+    piecesTable = Spring.GetUnitPieceMap(unitID)
+    for k, v in pairs(piecesTable) do
+        RetT[#RetT + 1] = v
+    end
+    return RetT
 end
 
 -->generates a Pieces List 
 function generatepiecesTableAndArrayCode(unitID, boolLoud)
-	bLoud = boolLoud or false
-	
-	if bLoud == true then 
-		Spring.Echo("")
-		Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
-		Spring.Echo("piecesTable={}")
-		piecesTable={}
-		piecesTable=Spring.GetUnitPieceList(unitID)
-		--Spring.Echo("local piecesTable={}")
-		if piecesTable ~= nil then
-			for i=1,#piecesTable,1 do
-				workingString=piecesTable[i]
-				Spring.Echo(""..piecesTable[i].." = piece(\""..piecesTable[i].."\")\n piecesTable[#piecesTable+1]= "..piecesTable[i])			
-			end
-			
-			
-		end
-		
-		Spring.Echo("PIECESLIST::END |>-----------------------------")
-	end
-	
-	
-	return makePieceTable(unitID)
+    bLoud = boolLoud or false
+
+    if bLoud == true then
+        Spring.Echo("")
+        Spring.Echo("--PIECESLIST::BEGIN |>----------------------------")
+        Spring.Echo("piecesTable={}")
+        piecesTable = {}
+        piecesTable = Spring.GetUnitPieceList(unitID)
+        --Spring.Echo("local piecesTable={}")
+        if piecesTable ~= nil then
+            for i = 1, #piecesTable, 1 do
+                workingString = piecesTable[i]
+                Spring.Echo("" .. piecesTable[i] .. " = piece(\"" .. piecesTable[i] .. "\")\n piecesTable[#piecesTable+1]= " .. piecesTable[i])
+            end
+        end
+
+        Spring.Echo("PIECESLIST::END |>-----------------------------")
+    end
+
+
+    return makePieceTable(unitID)
 end
 
 
 --> finds GenericNames and Creates Tables with them
-function makePiecesTablesByNameGroups(boolMakePiecesTable,boolSilent)
-	
-	boolSilentRun=boolSilent or false
-	pieceMap=Spring.GetUnitPieceMap(unitID)
-	piecesTable=Spring.GetUnitPieceList(unitID)
-	
-	TableByName={}
-	NameAndNumber={}
-	ReturnTable={}
-	
-	for i=1,#piecesTable,1 do
-		s=string.reverse(piecesTable[i])
-		
-		for w in string.gmatch(s,"%d+") do
-			if w then
-				s=string.sub(s,string.len(w),string.len(s))
-				NameAndNumber[i]={name=string.sub(piecesTable[i],1,string.len(piecesTable[i])-string.len(w)),
-					number=string.reverse(w)
-				}
-				
-				if TableByName[	NameAndNumber[i].name] then 
-					TableByName[NameAndNumber[i].name] =TableByName[NameAndNumber[i].name] +1 
-				else 
-					TableByName[NameAndNumber[i].name] =1 
-				end
-				break
-				
-			end
-		end
-		if not NameAndNumber[i] then NameAndNumber[i]={name=string.reverse(s)} end			
-	end
-	
-	
-	if boolSilentRun== false then
-		for k,v in pairs(TableByName) do
-			if v > 1 then
-				Spring.Echo(k.. " = {}")
-			end
-		end
-		
-		
-		for k,v in pairs(NameAndNumber) do
-			
-			if v and v.number then
-				Spring.Echo(v.name..v.number .." = piece\""..v.name..v.number.."\"")
-				Spring.Echo(v.name.."["..v.number.."]= "..v.name..v.number)
-			else
-				Spring.Echo(v.name.." = piece("..v.name..")")
-			end
-		end
-		
-		if boolMakePiecesTable and boolMakePiecesTable ==true then
-			generatepiecesTableAndArrayCode(unitID)
-		end
-		
-	else
-		
-		--pack the piecesTables in a UeberTable by Name
-		for tableName,_ in pairs (TableByName) do
-			local PackedAllNames={}
-			--Add the Pieces to the Table
-			for k,v in pairs(NameAndNumber) do
-				
-				if v and v.number and v.name == tableName then
-					piecename=v.name..v.number
-					if lib_boolDebug==true then
-						if lib_boolDebug==true and pieceMap[piecename] then 
-							Spring.Echo(v.name.."["..v.number.."] = "..piecename.. " Piecenumber: ".. pieceMap[piecename]	)
-						else
-							Spring.Echo("pieceMap contains no piece named "..piecename)
-						end
-					end
-					convertToNumber=tonumber(v.number)
-					PackedAllNames[convertToNumber]= pieceMap[piecename]					
-				end								
-			end
-			ReturnTable[tableName]=PackedAllNames 				
-		end
-		
-		return ReturnTable
-	end	
-	
+function makePiecesTablesByNameGroups(boolMakePiecesTable, boolSilent)
+
+    boolSilentRun = boolSilent or false
+    pieceMap = Spring.GetUnitPieceMap(unitID)
+    piecesTable = Spring.GetUnitPieceList(unitID)
+
+    TableByName = {}
+    NameAndNumber = {}
+    ReturnTable = {}
+
+    for i = 1, #piecesTable, 1 do
+        s = string.reverse(piecesTable[i])
+
+        for w in string.gmatch(s, "%d+") do
+            if w then
+                s = string.sub(s, string.len(w), string.len(s))
+                NameAndNumber[i] = {
+                    name = string.sub(piecesTable[i], 1, string.len(piecesTable[i]) - string.len(w)),
+                    number = string.reverse(w)
+                }
+
+                if TableByName[NameAndNumber[i].name] then
+                    TableByName[NameAndNumber[i].name] = TableByName[NameAndNumber[i].name] + 1
+                else
+                    TableByName[NameAndNumber[i].name] = 1
+                end
+                break
+            end
+        end
+        if not NameAndNumber[i] then NameAndNumber[i] = { name = string.reverse(s) } end
+    end
+
+
+    if boolSilentRun == false then
+        for k, v in pairs(TableByName) do
+            if v > 1 then
+                Spring.Echo(k .. " = {}")
+            end
+        end
+
+
+        for k, v in pairs(NameAndNumber) do
+
+            if v and v.number then
+                Spring.Echo(v.name .. v.number .. " = piece\"" .. v.name .. v.number .. "\"")
+                Spring.Echo(v.name .. "[" .. v.number .. "]= " .. v.name .. v.number)
+            else
+                Spring.Echo(v.name .. " = piece(" .. v.name .. ")")
+            end
+        end
+
+        if boolMakePiecesTable and boolMakePiecesTable == true then
+            generatepiecesTableAndArrayCode(unitID)
+        end
+
+    else
+
+        --pack the piecesTables in a UeberTable by Name
+        for tableName, _ in pairs(TableByName) do
+            local PackedAllNames = {}
+            --Add the Pieces to the Table
+            for k, v in pairs(NameAndNumber) do
+
+                if v and v.number and v.name == tableName then
+                    piecename = v.name .. v.number
+                    if lib_boolDebug == true then
+                        if lib_boolDebug == true and pieceMap[piecename] then
+                            Spring.Echo(v.name .. "[" .. v.number .. "] = " .. piecename .. " Piecenumber: " .. pieceMap[piecename])
+                        else
+                            Spring.Echo("pieceMap contains no piece named " .. piecename)
+                        end
+                    end
+                    convertToNumber = tonumber(v.number)
+                    PackedAllNames[convertToNumber] = pieceMap[piecename]
+                end
+            end
+            ReturnTable[tableName] = PackedAllNames
+        end
+
+        return ReturnTable
+    end
 end
 
 
 --> Transfers a World Position into Unit Space
-function worldPosToLocPos(owpX,owpY,owpZ,wpX,wpY,wpZ)
-	return wpX-owpX,wpY-owpY ,wpZ-owpZ
+function worldPosToLocPos(owpX, owpY, owpZ, wpX, wpY, wpZ)
+    return wpX - owpX, wpY - owpY, wpZ - owpZ
 end
 
 --> Flashes a Piece for debug purposes
-function flashPiece(pname,Time,rate)
-	r=rate
-	t=Time or 1000
-	if not rate then r=50 end
-	
-	for i=0,Time,2*r do
-		Sleep(r)
-		Show(pname)
-		Sleep(r)
-		Hide(pname)
-	end	
+function flashPiece(pname, Time, rate)
+    r = rate
+    t = Time or 1000
+    if not rate then r = 50 end
+
+    for i = 0, Time, 2 * r do
+        Sleep(r)
+        Show(pname)
+        Sleep(r)
+        Hide(pname)
+    end
 end
 
 -->allows for a script breakpoint via widget :TODO incomplete
 function stopScript(name)
-	lib_boolOnce=false
-	while true do
-		Sleep(3000)
-		if lib_boolOnce == false then
-			lib_boolOnce=true
-			Spring.Echo("Script "..name.." has stopped")
-		end
-	end
+    lib_boolOnce = false
+    while true do
+        Sleep(3000)
+        if lib_boolOnce == false then
+            lib_boolOnce = true
+            Spring.Echo("Script " .. name .. " has stopped")
+        end
+    end
 end
 
 --> Hides a PiecesTable, 
-function hideT(tablename,lowLimit,upLimit,delay)
-	if not tablename then return end
-	boolDebugActive= (lib_boolDebug==true and lowLimit and type(lowLimit) ~= "string")
-	
-	if lowLimit and upLimit then
-		for i=upLimit,lowLimit, -1 do
-			if tablename[i] then
-				Hide(tablename[i])
-			elseif boolDebugActive == true then
-				echo("In HideT, table ".. lowLimit .." contains a empty entry")
-			end
-			
-			if delay and delay > 0 then Sleep(delay) end
-		end
-		
-	else
-		for i=1,table.getn(tablename), 1 do
-			if tablename[i] then
-				Hide(tablename[i])
-			elseif boolDebugActive == true then
-				echo("In HideT, table ".. lowLimit .." contains a empty entry")
-			end
-		end
-	end
+function hideT(tablename, lowLimit, upLimit, delay)
+    if not tablename then return end
+    boolDebugActive = (lib_boolDebug == true and lowLimit and type(lowLimit) ~= "string")
+
+    if lowLimit and upLimit then
+        for i = upLimit, lowLimit, -1 do
+            if tablename[i] then
+                Hide(tablename[i])
+            elseif boolDebugActive == true then
+                echo("In HideT, table " .. lowLimit .. " contains a empty entry")
+            end
+
+            if delay and delay > 0 then Sleep(delay) end
+        end
+
+    else
+        for i = 1, table.getn(tablename), 1 do
+            if tablename[i] then
+                Hide(tablename[i])
+            elseif boolDebugActive == true then
+                echo("In HideT, table " .. lowLimit .. " contains a empty entry")
+            end
+        end
+    end
 end
 
 -->Shows a Pieces Table
-function showT(tablename,lowLimit,upLimit,delay)
-	if not tablename then Spring.Echo("No table given as argument for showT") return end
-	
-	if lowLimit and upLimit then
-		for i=lowLimit,upLimit, 1 do
-			if tablename[i] then
-				Show(tablename[i])
-			end
-			if delay and delay > 0 then Sleep(delay) end
-		end
-		
-	else
-		for i=1,table.getn(tablename), 1 do
-			if tablename[i] then
-				Show(tablename[i])
-			end
-		end
-	end
+function showT(tablename, lowLimit, upLimit, delay)
+    if not tablename then Spring.Echo("No table given as argument for showT") return end
+
+    if lowLimit and upLimit then
+        for i = lowLimit, upLimit, 1 do
+            if tablename[i] then
+                Show(tablename[i])
+            end
+            if delay and delay > 0 then Sleep(delay) end
+        end
+
+    else
+        for i = 1, table.getn(tablename), 1 do
+            if tablename[i] then
+                Show(tablename[i])
+            end
+        end
+    end
 end
 
 -->Validates that a table of UnitIds or a UnitID still exist
 function affirm(T)
-	if type(T)=="number" then t1=T; T={[1]=t1} end
-	resulT= process(T,
-	function(id)
-		if Spring.ValidUnitID(id)==true then return id end
-	end,
-	function (id)
-		isDead=Spring.GetUnitIsDead(id)
-		if isDead and isDead== false then return id end
-	end)
-	if resulT then
-		if #resulT > 1 then 
-		return resulT else
-			return resulT[1]
-		end
-	end
+    if type(T) == "number" then t1 = T; T = { [1] = t1 } end
+    resulT = process(T,
+        function(id)
+            if Spring.ValidUnitID(id) == true then return id end
+        end,
+        function(id)
+            isDead = Spring.GetUnitIsDead(id)
+            if isDead and isDead == false then return id end
+        end)
+    if resulT then
+        if #resulT > 1 then
+            return resulT else
+            return resulT[1]
+        end
+    end
 end
 
 --> This function process result of Spring.PathRequest() to say whether target is reachable or not
-function IsTargetReachable (moveID, ox,oy,oz,tx,ty,tz,radius)
-	local result,lastcoordinate, waypoints
-	local path = Spring.RequestPath( moveID,ox,oy,oz,tx,ty,tz, radius)
-	if path then
-		local waypoint = path:GetPathWayPoints() --get crude waypoint (low chance to hit a 10x10 box). NOTE; if waypoint don't hit the 'dot' is make reachable build queue look like really far away to the GetWorkFor() function.
-		local finalCoord = waypoint[#waypoint]
-		if finalCoord then --unknown why sometimes NIL
-			local dx, dz = finalCoord[1]-tx, finalCoord[3]-tz
-			local dist = math.sqrt(dx*dx + dz*dz)
-			if dist <= radius+20 then --is within radius?
-				result = true
-				lastcoordinate = finalCoord
-				waypoints = waypoint
-			else
-				result = false
-				lastcoordinate = finalCoord
-				waypoints = waypoint
-			end
-		end
-	else
-		result = true
-		lastcoordinate = nil
-		waypoints = nil
-	end
-	return result, lastcoordinate, waypoints
+function IsTargetReachable(moveID, ox, oy, oz, tx, ty, tz, radius)
+    local result, lastcoordinate, waypoints
+    local path = Spring.RequestPath(moveID, ox, oy, oz, tx, ty, tz, radius)
+    if path then
+        local waypoint = path:GetPathWayPoints() --get crude waypoint (low chance to hit a 10x10 box). NOTE; if waypoint don't hit the 'dot' is make reachable build queue look like really far away to the GetWorkFor() function.
+        local finalCoord = waypoint[#waypoint]
+        if finalCoord then --unknown why sometimes NIL
+            local dx, dz = finalCoord[1] - tx, finalCoord[3] - tz
+            local dist = math.sqrt(dx * dx + dz * dz)
+            if dist <= radius + 20 then --is within radius?
+                result = true
+                lastcoordinate = finalCoord
+                waypoints = waypoint
+            else
+                result = false
+                lastcoordinate = finalCoord
+                waypoints = waypoint
+            end
+        end
+    else
+        result = true
+        lastcoordinate = nil
+        waypoints = nil
+    end
+    return result, lastcoordinate, waypoints
 end
 
 
 --> takes a given position and the dir of a surface and calculates the vector by which the vector is reflectd,
 --if fall in angle == escape angle
-function mirrorAngle(nX,nY,nZ,dirX,dirY,dirZ)
-	max=math.max(dirX,math.max(dirY,dirZ))
-	dirX,dirY,dirZ=dirX/max,dirY/max,dirZ/max
-	max=math.max(nX,math.max(nY,nZ))
-	nX,nY,nZ=nX/max,nY/max,nZ/max
-	
-	
-	a=math.atan2(nY,nZ)--alpha	x_axis
-	b=math.atan2(nX,nY)--beta	z_axis
-	
-	ca=math.cos(a)
-	cma=math.cos(-1*a)
-	ncma=cma*-1
-	sa=math.sin(a)
-	sma=math.sin(-1*a)
-	nsma=sma*-1
-	
-	cb=math.cos(b)
-	cmb=math.cos(-1*b)
-	ncmb=cmb*-1
-	sb=math.sin(b)
-	smb=math.sin(-1*b)
-	nsmb=smb*-1
-	-- -c(a)*c(-a)+s(a)*s(-a)																		|-c(a)-s(-a)+ s(a)*c(-a)																	|0				|0
-	-- c(-b)*[(c(b)*s(a)*c(-a)+c(b)*c(a)*s(-a))]+-s(-b)*[(-s(a)*s(b)*c(-a))+(-s(b)*c(a)*s(-a))]		|c(-b)*[c(b)*s(a)*-s(-a) + c(b)*c(a)*c(-a) ]+-s(-b)*[-s(a)*s(b)*-s(-a)+(-s(b)*c(a)*c(-a)]	|-s(b)*s(-b)	|0
-	-- s(-b)*[c(b)*s(a)*c(-a)+c(b)*c(a)*s(-a)	]+ c(-b) *[ -s(a)*s(b)*c(-a) + (-s(b)*c(a)*s(-a)]	|s(-b)*[c(b)*s(a)*-s(-a) + c(b)*c(a)*c(-a) ]+c(-b)*[-s(a)*s(b)*-s(-a)+(-s(b)*c(a)*c(-a)]	|-c(b)*c(-b)	|0
-	
-	dirX=dirX*ncma*cma+sa*sma+dirY*ncma*-1*sma+ sa*cma		
-	dirY=dirX*cmb*((cb*sa*cma+cb*ca*sma))+-1*smb*((-1*sa*sb*cma)+(-1*sb*ca*sma))		+dirY*cmb*(cb*sa*-1*sma + cb*ca*cma )+ (-1*smb*-1*sa*sb*-1*sma+-1*sb*ca*cma)	+dirZ*-1*sb*smb
-	dirZ=dirX*smb*(cb*sa*cma+cb*ca*sma	)+ cmb *( -1*sa*sb*cma + (-1*sb*ca*sma))	+dirY*smb*(cb*sa*-1*sma + cb*ca*cma +cmb*-1*sa*sb*-1*sma+(-1*sb*ca*cma))	+dirZ* -1*cb*cmb
-	
-	return dirX,dirY,dirZ
+function mirrorAngle(nX, nY, nZ, dirX, dirY, dirZ)
+    max = math.max(dirX, math.max(dirY, dirZ))
+    dirX, dirY, dirZ = dirX / max, dirY / max, dirZ / max
+    max = math.max(nX, math.max(nY, nZ))
+    nX, nY, nZ = nX / max, nY / max, nZ / max
+
+
+    a = math.atan2(nY, nZ) --alpha	x_axis
+    b = math.atan2(nX, nY) --beta	z_axis
+
+    ca = math.cos(a)
+    cma = math.cos(-1 * a)
+    ncma = cma * -1
+    sa = math.sin(a)
+    sma = math.sin(-1 * a)
+    nsma = sma * -1
+
+    cb = math.cos(b)
+    cmb = math.cos(-1 * b)
+    ncmb = cmb * -1
+    sb = math.sin(b)
+    smb = math.sin(-1 * b)
+    nsmb = smb * -1
+    -- -c(a)*c(-a)+s(a)*s(-a)																		|-c(a)-s(-a)+ s(a)*c(-a)																	|0				|0
+    -- c(-b)*[(c(b)*s(a)*c(-a)+c(b)*c(a)*s(-a))]+-s(-b)*[(-s(a)*s(b)*c(-a))+(-s(b)*c(a)*s(-a))]		|c(-b)*[c(b)*s(a)*-s(-a) + c(b)*c(a)*c(-a) ]+-s(-b)*[-s(a)*s(b)*-s(-a)+(-s(b)*c(a)*c(-a)]	|-s(b)*s(-b)	|0
+    -- s(-b)*[c(b)*s(a)*c(-a)+c(b)*c(a)*s(-a)	]+ c(-b) *[ -s(a)*s(b)*c(-a) + (-s(b)*c(a)*s(-a)]	|s(-b)*[c(b)*s(a)*-s(-a) + c(b)*c(a)*c(-a) ]+c(-b)*[-s(a)*s(b)*-s(-a)+(-s(b)*c(a)*c(-a)]	|-c(b)*c(-b)	|0
+
+    dirX = dirX * ncma * cma + sa * sma + dirY * ncma * -1 * sma + sa * cma
+    dirY = dirX * cmb * ((cb * sa * cma + cb * ca * sma)) + -1 * smb * ((-1 * sa * sb * cma) + (-1 * sb * ca * sma)) + dirY * cmb * (cb * sa * -1 * sma + cb * ca * cma) + (-1 * smb * -1 * sa * sb * -1 * sma + -1 * sb * ca * cma) + dirZ * -1 * sb * smb
+    dirZ = dirX * smb * (cb * sa * cma + cb * ca * sma) + cmb * (-1 * sa * sb * cma + (-1 * sb * ca * sma)) + dirY * smb * (cb * sa * -1 * sma + cb * ca * cma + cmb * -1 * sa * sb * -1 * sma + (-1 * sb * ca * cma)) + dirZ * -1 * cb * cmb
+
+    return dirX, dirY, dirZ
 end
 
 -->RotationMatrice for allready Normalized Values
-function RotationMatrice(x,z,Rad)
-	
-	sinus=math.sin(Rad)
-	cosinus= math.cos(Rad)
-	
-	return x*cosinus + z*-sinus, x*sinus + z*cosinus
+function RotationMatrice(x, z, Rad)
+
+    sinus = math.sin(Rad)
+    cosinus = math.cos(Rad)
+
+    return x * cosinus + z * -sinus, x * sinus + z * cosinus
 end
 
 
 --forceFunctionTable Example
-function hitByExplosionAtCenter(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass,dirX,dirY,dirZ)
-	objX,objY,objZ=objX-worldX,objY-worldY,objZ-worldZ
-	distanceToCenter =(objX^2+objY^2+objZ^2)^0.5
-	blastRadius=350
-	Force=4000000000000 
-	factor=blastRadius/(2^distanceToCenter)
-	if distanceToCenter > blastRadius then factor=0 end
-	normalIsDasNicht=math.max(math.abs(objX),math.max(math.abs(objY),math.abs(objZ)))
-	
-	objX,objY,objZ=objX/normalIsDasNicht,objY/normalIsDasNicht,objZ/normalIsDasNicht
-	--density of Air in kg/m^3 -- area
-	airdrag=0.5*1.1455*((normalIsDasNicht*factor*Force)/mass)^2*15*0.47
-	
-	if math.abs(objX) == 1 then
-		return objX*factor*Force-airdrag,objY*factor*Force, objZ*factor*Force
-	elseif math.abs(objY)==1 then
-		
-		return objX*factor*Force,objY*factor*Forceairdrag, objZ*factor*Force
-	else
-		
-		return objX*factor*Force,objY*factor*Force, objZ*factor*Forceairdrag
-	end
-end
---> a Pseudo Physix Engien in Lua, very expensive, dont use extensive	--> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
-function PseudoPhysix(piecename,pearthTablePiece, nrOfCollissions, forceFunctionTable)
-	
-	
-	speed=math.random(1,4)
-	rand=math.random(10,89)
-	Turn(piecename,x_axis,math.rad(rand),speed)
-	dir=math.random(-90,90)
-	speed=math.random(1,3)
-	Turn(piecename,y_axis,math.rad(dir),speed)
-	
-	
-	--SpeedUps
-	local spGPos=Spring.GetUnitPiecePosDir
-	local spGGH=Spring.GetGroundHeight
-	local spGN=Spring.GetGroundNormal
-	local mirAng=mirrorAngle		
-	local spGUPP=Spring.GetUnitPiecePosition
-	local spGUP=Spring.GetUnitPosition
-	local ffT=forceFunctionTable			
-	posX,posY,posZ,dirX,dirY,dirZ=spGPos(unitID,pearthTablePiece)
-	ForceX,ForceY,ForceZ=0,0,0
-	oposX,oposY,oposZ=posX,posY,posZ
-	
-	
-	mass=600
-	simStep=75
-	gravity=-1*(Game.gravity) -- in Elmo/s^2 --> Erdbeschleunigung 
-	
-	--tV=-1* 
-	terminalVelocity=-1*(math.abs((2*mass*gravity))^0.5	)
-	ForceGravity=-1*(mass*Game.gravity) -- kgE/ms^2
-	
-	GH=spGGH(posX,posZ)		--GroundHeight
-	if oposY < GH then oposY=GH end
-	
-	
-	
-	VelocityX,VelocityY,VelocityZ=0,0,0
-	factor =(1/1000)*simStep
-	
-	
-	boolRestless=true
-	
-	while boolRestless==true do
-		
-		-- reset
-		ForceX,ForceY,ForceZ=0,0,0
-		
-		-- update
-		posX,posY,posZ,dirX,dirY,dirZ=spGPos(unitID,pearthTablePiece)	
-		_,_,_,dirX,dirY,dirZ=spGPos(unitID,piecename)	
-		
-		--normalizing
-		normalizer=math.max(math.max(dirX,dirY),dirZ)
-		if normalizer == nil or normalizer== 0 then normalizer=0.001 end
-		dirX,dirY,dirZ=dirX/normalizer,dirY/normalizer,dirZ/normalizer
-		
-		-- applying gravity and forces 
-		ForceY=ForceGravity
-		
-		if ffT ~= nil then --> forceHead(objX,objY,objZ,oDirX,oDirY,oDirZ,objectname,dx,dy,dz)
-			bx,by,bz=Spring.spGUP(unitID)
-			dx,dy,dz=spGUPP(unitID,piecename)
-			dmax=math.sqrt(dx^2+dy^2+dz^2)
-			dx,dy,dz=dx/dmax,dy/dmax,dz/dmax
-			
-			for i=1, #ffT, 1 do	
-				f2AddX,f2AddY,f2AddZ=ffT[i](posX,posY,posZ,bx,by,bz,piecename,mass,dx,dy,dz)
-				ForceX=ForceX+f2AddX
-				ForceY=ForceY+f2AddY
-				ForceZ=ForceZ+f2AddZ
-			end
-			
-			
-		end
-		
-		GH=spGGH(posX+VelocityX+(ForceX/mass)*factor,	posZ+VelocityZ+(ForceZ/mass)*factor)
-		boolCollide=false
-		
-		
-		--GROUNDcollission
-		
-		if (posY -GH-15) < 0 then
-			boolCollide=true
-			nrOfCollissions=nrOfCollissions-1
-			
-			
-			total=math.abs(VelocityX)+math.abs(VelocityY)+math.abs(VelocityZ)
-			--get Ground Normals
-			
-			nX,nY,nZ=spGN(posX,posZ)
-			max=math.max(nX,math.max(nY,nZ))
-			_,tnY,_=nX/max,nY/max,nZ/max
-			
-			--if still enough enough Force or stored kinetic energy
-			if total > 145.5 or nrOfCollissions > 0 or tnY < 0.5 then
-			else
-				--PhysixEndCase
-				boolRestless=false
-			end
-			
-			
-			VelocityX,VelocityY,VelocityZ=0,0,0
-			
-			
-			--could do the whole torque, but this prototype has fullfilled its purpose
-			--	up=math.max(math.max((total/mass)%5,4),1)+1
-			
-			dirX,dirY,dirZ=mirAng(nX,nY,nZ,dirX,dirY,dirZ)
-			speed=math.random(5,70)/10
-			Turn(piecename,x_axis,dirX,speed)
-			speed=math.random(5,60)/10
-			Turn(piecename,y_axis,dirY,speed)
-			speed=math.random(5,50)/10
-			Turn(piecename,z_axis,dirZ,speed)
-			
-			
-			
-			--we have the original force * constant inverted - Gravity and Ground channcel each other out
-			RepulsionForceTotal=((math.abs(ForceY)+math.abs(ForceZ)+math.abs(ForceX))*-0.65)
-			ForceY=ForceY+((dirY*RepulsionForceTotal))					
-			
-			ForceX=ForceX+((dirX*RepulsionForceTotal))
-			ForceZ=ForceZ+((dirZ*RepulsionForceTotal))
-			VelocityY=math.max(VelocityY+((ForceY/mass)*factor),terminalVelocity*factor)
-			
-		else
-			
-			--FreeFall		
-			
-			VelocityY=math.max(VelocityY+((ForceY/mass)*factor),terminalVelocity*factor)
-		end
-		
-		
-		
-		VelocityX=math.abs(VelocityX+(ForceX/mass)*factor)
-		VelocityZ=math.abs(VelocityZ+(ForceZ/mass)*factor)
-		
-		--Extract the Direction from the Force
-		xSig=ForceX/math.max(math.abs(ForceX),0.000001)
-		ySig=ForceY/math.max(math.abs(ForceY),0.000001)
-		zSig=ForceZ/math.max(math.abs(ForceZ),0.000001)
-		
-		-- FuturePositions
-		fX,fY,fZ=worldPosToLocPos(oposX,oposY,oposZ,posX+math.abs(VelocityX)*xSig, posY + math.abs(VelocityY)*ySig ,posZ+math.abs(VelocityZ)*zSig)
-		
-		if boolCollide== true or boolRestless== false or (fY -GH -12 < 0) then fY= -1*oposY+GH end
-		--Debugdatadrop
-		
-		--	Spring.Echo("ySig",ySig.."	Physix::ComendBonker::fY",fY.."VelocityY::",VelocityY .." 	ForceY::",ForceY .." 	POSVAL:", posY + VelocityY*ySig)
-		
-		Move(pearthTablePiece,x_axis,fX,VelocityX*1000/simStep+0.000000001)
-		Move(pearthTablePiece,y_axis,fY,VelocityY*1000/simStep)
-		Move(pearthTablePiece,z_axis,fZ,VelocityZ*1000/simStep+0.000000001)
-		
-		
-		
-		Sleep(simStep)
-	end
-	
-	
-	
+function hitByExplosionAtCenter(objX, objY, objZ, worldX, worldY, worldZ, objectname, mass, dirX, dirY, dirZ)
+    objX, objY, objZ = objX - worldX, objY - worldY, objZ - worldZ
+    distanceToCenter = (objX ^ 2 + objY ^ 2 + objZ ^ 2) ^ 0.5
+    blastRadius = 350
+    Force = 4000000000000
+    factor = blastRadius / (2 ^ distanceToCenter)
+    if distanceToCenter > blastRadius then factor = 0 end
+    normalIsDasNicht = math.max(math.abs(objX), math.max(math.abs(objY), math.abs(objZ)))
+
+    objX, objY, objZ = objX / normalIsDasNicht, objY / normalIsDasNicht, objZ / normalIsDasNicht
+    --density of Air in kg/m^3 -- area
+    airdrag = 0.5 * 1.1455 * ((normalIsDasNicht * factor * Force) / mass) ^ 2 * 15 * 0.47
+
+    if math.abs(objX) == 1 then
+        return objX * factor * Force - airdrag, objY * factor * Force, objZ * factor * Force
+    elseif math.abs(objY) == 1 then
+
+        return objX * factor * Force, objY * factor * Forceairdrag, objZ * factor * Force
+    else
+
+        return objX * factor * Force, objY * factor * Force, objZ * factor * Forceairdrag
+    end
 end
 
-function createMass(mass,PosX,PosY,PosZ,velX,velY,velZ,fx,fy,fz)
-	local retourTable={mass=mass or 1,
-		pos= Vector:new(PosX,PosY,PosZ),
-		vel= Vector:new(velX,velY,velZ),
-	force=Vector:new(fx,fy,fz)}
-	return retourTable
+--> a Pseudo Physix Engien in Lua, very expensive, dont use extensive	--> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
+function PseudoPhysix(piecename, pearthTablePiece, nrOfCollissions, forceFunctionTable)
+
+
+    speed = math.random(1, 4)
+    rand = math.random(10, 89)
+    Turn(piecename, x_axis, math.rad(rand), speed)
+    dir = math.random(-90, 90)
+    speed = math.random(1, 3)
+    Turn(piecename, y_axis, math.rad(dir), speed)
+
+
+    --SpeedUps
+    local spGPos = Spring.GetUnitPiecePosDir
+    local spGGH = Spring.GetGroundHeight
+    local spGN = Spring.GetGroundNormal
+    local mirAng = mirrorAngle
+    local spGUPP = Spring.GetUnitPiecePosition
+    local spGUP = Spring.GetUnitPosition
+    local ffT = forceFunctionTable
+    posX, posY, posZ, dirX, dirY, dirZ = spGPos(unitID, pearthTablePiece)
+    ForceX, ForceY, ForceZ = 0, 0, 0
+    oposX, oposY, oposZ = posX, posY, posZ
+
+
+    mass = 600
+    simStep = 75
+    gravity = -1 * (Game.gravity) -- in Elmo/s^2 --> Erdbeschleunigung 
+
+    --tV=-1* 
+    terminalVelocity = -1 * (math.abs((2 * mass * gravity)) ^ 0.5)
+    ForceGravity = -1 * (mass * Game.gravity) -- kgE/ms^2
+
+    GH = spGGH(posX, posZ) --GroundHeight
+    if oposY < GH then oposY = GH end
+
+
+
+    VelocityX, VelocityY, VelocityZ = 0, 0, 0
+    factor = (1 / 1000) * simStep
+
+
+    boolRestless = true
+
+    while boolRestless == true do
+
+        -- reset
+        ForceX, ForceY, ForceZ = 0, 0, 0
+
+        -- update
+        posX, posY, posZ, dirX, dirY, dirZ = spGPos(unitID, pearthTablePiece)
+        _, _, _, dirX, dirY, dirZ = spGPos(unitID, piecename)
+
+        --normalizing
+        normalizer = math.max(math.max(dirX, dirY), dirZ)
+        if normalizer == nil or normalizer == 0 then normalizer = 0.001 end
+        dirX, dirY, dirZ = dirX / normalizer, dirY / normalizer, dirZ / normalizer
+
+        -- applying gravity and forces 
+        ForceY = ForceGravity
+
+        if ffT ~= nil then --> forceHead(objX,objY,objZ,oDirX,oDirY,oDirZ,objectname,dx,dy,dz)
+            bx, by, bz = Spring.spGUP(unitID)
+            dx, dy, dz = spGUPP(unitID, piecename)
+            dmax = math.sqrt(dx ^ 2 + dy ^ 2 + dz ^ 2)
+            dx, dy, dz = dx / dmax, dy / dmax, dz / dmax
+
+            for i = 1, #ffT, 1 do
+                f2AddX, f2AddY, f2AddZ = ffT[i](posX, posY, posZ, bx, by, bz, piecename, mass, dx, dy, dz)
+                ForceX = ForceX + f2AddX
+                ForceY = ForceY + f2AddY
+                ForceZ = ForceZ + f2AddZ
+            end
+        end
+
+        GH = spGGH(posX + VelocityX + (ForceX / mass) * factor, posZ + VelocityZ + (ForceZ / mass) * factor)
+        boolCollide = false
+
+
+        --GROUNDcollission
+
+        if (posY - GH - 15) < 0 then
+            boolCollide = true
+            nrOfCollissions = nrOfCollissions - 1
+
+
+            total = math.abs(VelocityX) + math.abs(VelocityY) + math.abs(VelocityZ)
+            --get Ground Normals
+
+            nX, nY, nZ = spGN(posX, posZ)
+            max = math.max(nX, math.max(nY, nZ))
+            _, tnY, _ = nX / max, nY / max, nZ / max
+
+            --if still enough enough Force or stored kinetic energy
+            if total > 145.5 or nrOfCollissions > 0 or tnY < 0.5 then
+            else
+                --PhysixEndCase
+                boolRestless = false
+            end
+
+
+            VelocityX, VelocityY, VelocityZ = 0, 0, 0
+
+
+            --could do the whole torque, but this prototype has fullfilled its purpose
+            --	up=math.max(math.max((total/mass)%5,4),1)+1
+
+            dirX, dirY, dirZ = mirAng(nX, nY, nZ, dirX, dirY, dirZ)
+            speed = math.random(5, 70) / 10
+            Turn(piecename, x_axis, dirX, speed)
+            speed = math.random(5, 60) / 10
+            Turn(piecename, y_axis, dirY, speed)
+            speed = math.random(5, 50) / 10
+            Turn(piecename, z_axis, dirZ, speed)
+
+
+
+            --we have the original force * constant inverted - Gravity and Ground channcel each other out
+            RepulsionForceTotal = ((math.abs(ForceY) + math.abs(ForceZ) + math.abs(ForceX)) * -0.65)
+            ForceY = ForceY + ((dirY * RepulsionForceTotal))
+
+            ForceX = ForceX + ((dirX * RepulsionForceTotal))
+            ForceZ = ForceZ + ((dirZ * RepulsionForceTotal))
+            VelocityY = math.max(VelocityY + ((ForceY / mass) * factor), terminalVelocity * factor)
+
+        else
+
+            --FreeFall		
+
+            VelocityY = math.max(VelocityY + ((ForceY / mass) * factor), terminalVelocity * factor)
+        end
+
+
+
+        VelocityX = math.abs(VelocityX + (ForceX / mass) * factor)
+        VelocityZ = math.abs(VelocityZ + (ForceZ / mass) * factor)
+
+        --Extract the Direction from the Force
+        xSig = ForceX / math.max(math.abs(ForceX), 0.000001)
+        ySig = ForceY / math.max(math.abs(ForceY), 0.000001)
+        zSig = ForceZ / math.max(math.abs(ForceZ), 0.000001)
+
+        -- FuturePositions
+        fX, fY, fZ = worldPosToLocPos(oposX, oposY, oposZ, posX + math.abs(VelocityX) * xSig, posY + math.abs(VelocityY) * ySig, posZ + math.abs(VelocityZ) * zSig)
+
+        if boolCollide == true or boolRestless == false or (fY - GH - 12 < 0) then fY = -1 * oposY + GH end
+        --Debugdatadrop
+
+        --	Spring.Echo("ySig",ySig.."	Physix::ComendBonker::fY",fY.."VelocityY::",VelocityY .." 	ForceY::",ForceY .." 	POSVAL:", posY + VelocityY*ySig)
+
+        Move(pearthTablePiece, x_axis, fX, VelocityX * 1000 / simStep + 0.000000001)
+        Move(pearthTablePiece, y_axis, fY, VelocityY * 1000 / simStep)
+        Move(pearthTablePiece, z_axis, fZ, VelocityZ * 1000 / simStep + 0.000000001)
+
+
+
+        Sleep(simStep)
+    end
+end
+
+function createMass(mass, PosX, PosY, PosZ, velX, velY, velZ, fx, fy, fz)
+    local retourTable = {
+        mass = mass or 1,
+        pos = Vector:new(PosX, PosY, PosZ),
+        vel = Vector:new(velX, velY, velZ),
+        force = Vector:new(fx, fy, fz)
+    }
+    return retourTable
 end
 
 function debugDisplayPieceChain(Tables)
-	for i=1, #Tables, 1 do
-		x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,Tables[i])
-		Spring.SpawnCEG("redlight",x,y+10,z,0,1,0,50,0)
-	end
-	
+    for i = 1, #Tables, 1 do
+        x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, Tables[i])
+        Spring.SpawnCEG("redlight", x, y + 10, z, 0, 1, 0, 50, 0)
+    end
 end
 
-function iniT(size,val)
-	T={}
-	for i=1,size do
-		T[i]=val
-	end
-	return T
+function iniT(size, val)
+    T = {}
+    for i = 1, size do
+        T[i] = val
+    end
+    return T
 end
 
 
-local countConstAnt=0
-function mulVector(vl,value)
-	if not vl or not value then return nil end
-	countConstAnt=countConstAnt+1
-	--if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
-	
-	
-	if not vl.x and type(vl)== 'number' and type(value) == "number" then
-		return vl * value
-	end
-	
-	if value and type(value)=='number' then --Skalar
-		return {x = vl.x*value,
-			y=vl.y*value,
-		z=vl.z*value}
-	end
-	
-	if value.x and vl.x then
-		--		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
-		return {x = vl.x* value.x, y=	vl.y*value.y, z=	vl.z*value.z}
-	end
-	
-	return nil
+local countConstAnt = 0
+function mulVector(vl, value)
+    if not vl or not value then return nil end
+    countConstAnt = countConstAnt + 1
+    --if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
+
+
+    if not vl.x and type(vl) == 'number' and type(value) == "number" then
+        return vl * value
+    end
+
+    if value and type(value) == 'number' then --Skalar
+        return {
+            x = vl.x * value,
+            y = vl.y * value,
+            z = vl.z * value
+        }
+    end
+
+    if value.x and vl.x then
+        --		Spring.Echo("JW:lib_UnitScript:mulVector"..countConstAnt)
+        return { x = vl.x * value.x, y = vl.y * value.y, z = vl.z * value.z }
+    end
+
+    return nil
 end
 
-function norm2Vector(v1,v2)
-	if not v1 then return nil end
-	if not v1.x then return nil end
-	
-	v=subVector(v1,v2) or v1
-	return math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
+function norm2Vector(v1, v2)
+    if not v1 then return nil end
+    if not v1.x then return nil end
+
+    v = subVector(v1, v2) or v1
+    return math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
 end
 
 function divVector(v1, val)
-	if not v1 or not val then return nil end
-	if not v1.x or type(val) ~= "number" then return nil end
-	
-	if type(val)=="number" then
-		return {x=v1.x/val,y=v1.y/val,z=v1.z/val}
-	else
-		return {x=v1.x/val.x,y=v1.y/val.y,z=v1.z/val.y}
-	end
+    if not v1 or not val then return nil end
+    if not v1.x or type(val) ~= "number" then return nil end
+
+    if type(val) == "number" then
+        return { x = v1.x / val, y = v1.y / val, z = v1.z / val }
+    else
+        return { x = v1.x / val.x, y = v1.y / val.y, z = v1.z / val.y }
+    end
 end
 
-function addVector(v1,val)
-	if not v1 or not val then return nil end
-	
-	if type(val)== "table" then
-		return {x= v1.x+val.x, y= v1.y+val.y,z=v1.z+val.z}
-	else
-		return {x= v1.x+val, y= v1.y+val,z=v1.z+val}
-	end
+function addVector(v1, val)
+    if not v1 or not val then return nil end
+
+    if type(val) == "table" then
+        return { x = v1.x + val.x, y = v1.y + val.y, z = v1.z + val.z }
+    else
+        return { x = v1.x + val, y = v1.y + val, z = v1.z + val }
+    end
 end
 
-function subVector(v1,v2)
-	if not v1 or not v2 then return end
-	
-	if type(v1)=="number" then
-		Spring.Echo("lib_UnitScript::Error:: Cant substract a Vector from a value!")
-		return
-	end
-	
-	if type(v2)=="number" then
-		return {x=v1.x-v2,y=v1.y-v2,z=v1.z-v2}
-	else
-		return {x=v1.x-v2.x,y=v1.y-v2.y,z=v1.z-v2.z}
-	end
+function subVector(v1, v2)
+    if not v1 or not v2 then return end
+
+    if type(v1) == "number" then
+        Spring.Echo("lib_UnitScript::Error:: Cant substract a Vector from a value!")
+        return
+    end
+
+    if type(v2) == "number" then
+        return { x = v1.x - v2, y = v1.y - v2, z = v1.z - v2 }
+    else
+        return { x = v1.x - v2.x, y = v1.y - v2.y, z = v1.z - v2.z }
+    end
 end
 
-function applyForce(force,force2)
-	return addVector(force,force2)
+function applyForce(force, force2)
+    return addVector(force, force2)
 end
 
 function normVector(v)
-	l=math.sqrt(v.x*v.x +v.y*v.y +v.z*v.z)
-	return {x=v.x/l ,y=v.y/l,z=v.z/l}
+    l = math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+    return { x = v.x / l, y = v.y / l, z = v.z / l }
 end
 
 function sumNormVector(v)
-	sum= math.abs(v.x)+math.abs(v.y)+math.abs(v.z)
-	return {x=v.x/sum ,y=v.y/sum,z=v.z/sum}
+    sum = math.abs(v.x) + math.abs(v.y) + math.abs(v.z)
+    return { x = v.x / sum, y = v.y / sum, z = v.z / sum }
 end
 
-function blendVector(fac,vA,vB)
-	fac=math.min(1.0,math.max(0.0,fac))
-	return addVector(mulVector(vA,fac),mulVector(vB,1-fac))
+function blendVector(fac, vA, vB)
+    fac = math.min(1.0, math.max(0.0, fac))
+    return addVector(mulVector(vA, fac), mulVector(vB, 1 - fac))
 end
+
 function solveSpring(s, sucessor, frictionConstant)
-	
-	
-	springVector =subVector(s.mass1.pos,sucessor.mass1.pos) -- Vector Between The Two Masses
-	assert(springVector)
-	r = norm2Vector(springVector) -- Distance Between The Two Masses
-	
-	force={x=0,y=0,z=0} -- Force Initially Has A Zero Value
-	
-	if r ~= 0 then -- To Avoid A Division By Zero... Check If r Is Zero 
-		force = addVector(mulVector(mulVector(divVector(springVector, r),-1),((r - s.length) * s.springConstant)),force)
-	end
-	force = addVector(force, mulVector(subVector(s.mass1.vel, sucessor.mass1.vel),-1*frictionConstant)) -- The Friction Force Is Added To The force
-	-- With This Addition We Obtain The Net Force Of The Spring
-	s.mass1=addVector(s.mass1,force)			-- Force Is Applied To mass1
-	sucessor.mass1=addVector(sucessor.mass1,mulVector(force,-1))	-- The Opposite Of Force Is Applied To mass2	
-	return s,sucessor	
+
+
+    springVector = subVector(s.mass1.pos, sucessor.mass1.pos) -- Vector Between The Two Masses
+    assert(springVector)
+    r = norm2Vector(springVector) -- Distance Between The Two Masses
+
+    force = { x = 0, y = 0, z = 0 } -- Force Initially Has A Zero Value
+
+    if r ~= 0 then -- To Avoid A Division By Zero... Check If r Is Zero 
+        force = addVector(mulVector(mulVector(divVector(springVector, r), -1), ((r - s.length) * s.springConstant)), force)
+    end
+    force = addVector(force, mulVector(subVector(s.mass1.vel, sucessor.mass1.vel), -1 * frictionConstant)) -- The Friction Force Is Added To The force
+    -- With This Addition We Obtain The Net Force Of The Spring
+    s.mass1 = addVector(s.mass1, force) -- Force Is Applied To mass1
+    sucessor.mass1 = addVector(sucessor.mass1, mulVector(force, -1)) -- The Opposite Of Force Is Applied To mass2	
+    return s, sucessor
 end
 
-function stringOfLength(char,length)
-	strings=""
-	for i=1,length do strings=strings..char end
-	return strings
+function stringOfLength(char, length)
+    strings = ""
+    for i = 1, length do strings = strings .. char end
+    return strings
 end
 
 function echoPieceNameTable(unitID, T)
-	for k,v in pairs(T) do
-		retT=	Spring.GetUnitPieceInfo(unitID,v)
-		Spring.Echo("Piecename:"..k.." -> "..retT.name)
-	end
-	
+    for k, v in pairs(T) do
+        retT = Spring.GetUnitPieceInfo(unitID, v)
+        Spring.Echo("Piecename:" .. k .. " -> " .. retT.name)
+    end
 end
 
-function rEchoT(T,layer)
-	local l=layer or 0
-	if T then
-		if type(T)=='table' then
-			Spring.Echo(stringOfLength(" ",l).."T:")
-			for k,v in pairs(T) do
-				rEchoT(T[k],l+1)
-			end
-		else
-			Concated=stringOfLength(" ",math.max(1,l)-1).."|"
-			
-			typus= type(T)
-			if typus == "number" or typus == "string" then
-				Spring.Echo(Concated..T)
-			elseif typus=="boolean" then
-				Spring.Echo(Concated.."boolean"..((T==true) and "True"))
-			else
-				Spring.Echo(Concated.."function")
-			end
-		end
-		
-	end
+function rEchoT(T, layer)
+    local l = layer or 0
+    if T then
+        if type(T) == 'table' then
+            Spring.Echo(stringOfLength(" ", l) .. "T:")
+            for k, v in pairs(T) do
+                rEchoT(T[k], l + 1)
+            end
+        else
+            Concated = stringOfLength(" ", math.max(1, l) - 1) .. "|"
+
+            typus = type(T)
+            if typus == "number" or typus == "string" then
+                Spring.Echo(Concated .. T)
+            elseif typus == "boolean" then
+                Spring.Echo(Concated .. "boolean" .. ((T == true) and "True"))
+            else
+                Spring.Echo(Concated .. "function")
+            end
+        end
+    end
 end
 
 
 function vardump(value, depth, key)
-	local linePrefix = ""
-	local spaces = ""
-	
-	if key ~= nil then
-		linePrefix = "["..key.."] = "
-	end
-	
-	if depth == nil then
-		depth = 0
-	else
-		depth = depth + 1
-		for i=1, depth do spaces = spaces .. " " end
-	end
-	
-	if type(value) == 'table' then
-		mTable = getmetatable(value)
-		if mTable == nil then
-			Spring.Echo(spaces ..linePrefix.."(table) ")
-		else
-			Spring.Echo(spaces .."(metatable) ")
-			value = mTable
-		end		
-		for tableKey, tableValue in pairs(value) do
-			vardump(tableValue, depth, tableKey)
-		end
-	elseif type(value)	== 'function' or 
-		type(value)	== 'thread' or 
-		type(value)	== 'userdata' or
-		value		== nil
-		then
-			Spring.Echo(spaces..tostring(value))
-		else
-			Spring.Echo(spaces..linePrefix.."("..type(value)..") "..tostring(value))
-		end
-	end
-	
-	function echoT(T,boolAssertTable, name)
-		
-		lboolAssertTable=boolAssertTable or false
-		if not type(T)=="table" then Spring.Echo("Element is of Type:"..type(T)); return end
-		lname= name or "AnnonymTable"
-		if T.name then lname = T.name end
-		
-		
-		if lname then 
-			Spring.Echo("============================= "..lname .." ======================================")
-			Spring.Echo("|| ||")
-		else
-			Spring.Echo("============================= KeyValue Table=====================================")
-			Spring.Echo("|| ||")
-		end
-		
-		for k,v in pairs(T) do
-			typek=type(k)
-			typev=type(v)
-			
-			if typev== "table" then
-				rEchoT(typev,0)
-			end
-			nonprintableType={
-				["table"]=true,
-				["function"]=true,
-				["boolean"]=true,
-			}
-			if nonprintableType[typek] == nil then
-				if not nonprintableType[typev] then
-					Spring.Echo(" "..k.." 	---> 	"..v.." -> 	[ "..((assert(v))).." ] ")
-				elseif typev== table then				
-					echoT(v)
-				elseif typev=="boolean" then
-					Spring.Echo(" "..k.." 	---> 	"..(boolToString(v)).." ")
-				else			
-					Spring.Echo("Key "..k .." -> ".. " holds no value")
-				end
-			end		
-		end
-		
-		if lboolAssertTable ==true then
-			for k,v in pairs(T) do
-				assert(v)
-			end
-		end
-		
-		
-		Spring.Echo("================================================================================")
-		
-	end
-	
-	function boolToString(value)
-		if value== true then return "true" else return "false" end
-	end
-	
-	function stringBuilder(length, sign)
-		str=""
-		for i=1, length do
-			str=str..sign
-		end
-		return str
-		
-	end
-	
-	function printT(tab, size)
-		maxdigit=getDigits(tab[size/2][size/2])
-		step= size/12
-		Spring.Echo(stringBuilder(size,"_").."\n")
-		for i=1,size, step do
-			seperator="|"
-			str=""
-			
-			for j=1,size, step do
-				str=str.. seperator..math.floor(tab[math.ceil(i)][math.ceil(j)])
-				if getDigits(math.floor(tab[math.ceil(i)][math.ceil(j)])) < maxdigit then			
-					for i=1,maxdigit -getDigits(math.floor(tab[math.ceil(i)][math.ceil(j)])), 1 do
-						str=str.." "	
-					end
-				end
-			end
-			Spring.Echo(str)
-			
-		end
-		Spring.Echo(stringBuilder(size,"_").."\n")
-	end
-	
-	function getDigits(number)
-		digit=1
-		if number < 0 then digit =2 end
-		while math.abs(number)> 10 do
-			number=number/10
-			digit=digit+1
-		end
-		return digit
-	end
-	
-	function checkYourself()
-		return GG.SniperRope[unitID] or false
-	end
-	
-	function Limit(val,lmin,lmax)
-		if type(val)=="table" or type(lmin)=="table" or type(lmax)=="table" then return nil end --TODO Remove after debug
-		if val < lmin then return lmin end
-		if val > lmax then return lmax end
-		return val 
-	end
-	
-	-- This code is a adapted Version of the NeHe-Rope Tutorial. All Respect towards those guys.
-	-- RopePieceTable by Convention contains (SegmentBegin)----(SegmentEnd)(SegmentBegin)----(SegmentEnd) 
-	-- RopeConnectionPiece -->Piece,ContainsMass,ColRadius |
-	-- LoadPiece --> Piece,Contains Mass, ColRadius | 
-	-- ForceFunction --> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
-	
-	
-	function PseudoRopePhysix(RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength, forceFunctionTable,SpringConstant,boolDebug)
-		
-		--SpeedUps
-		assert(RopePieceTable 		,"RopePieceTable not provided")			
-		assert(RopeConnectionT 		,"RopeConnectionT not provided")			
-		assert(LoadPieceT 			,"LoadPieceT not provided")			
-		assert(Ropelength 			,"Ropelength not provided")			
-		assert(forceFunctionTable 	,"forceFunctionTable not provided")			
-		assert(SpringConstant 		,"SpringConstant not provided")					
-		
-		local spGPos=Spring.GetUnitPiecePosDir
-		local spGGH=Spring.GetGroundHeight
-		local spGN=Spring.GetGroundNormal	
-		local spGUPP=Spring.GetUnitPiecePosition
-		local spGUP=Spring.GetUnitPosition
-		local ffT=forceFunctionTable			
-		local groundHeight = function(piece) 
-			x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,piece)
-		return Spring.GetGroundHeight(x,z) end 
-		-- Each Particle Has A Weight Of 50 Grams
-		
-		
-		--SIMCONSTANTS -tweak them
-		local	SpringConstant=SpringConstant or 100000.0 
-		
-		local SpringInnerFriction= 0.2
-		local 	 RopeMass					= 0.1
-		local 	 groundRepulsionConstant 	= 100 -- A Constant To Represent How Much The Ground Shall Repel The Masses
-		local groundFrictionConstant 	= 0.35 -- A Constant Of Friction Applied To Masses By The Ground
-		local groundAbsorptionConstant	= 3 -- A Constant Of Absorption Friction Applied To Masses By The Ground
-		local airFrictionConstant 		= 0.5 
-		
-		--INIT
-		gravitation= Vector:new(0,-0.981,0)
-		ForcesTable={}
-		
-		rcx,rcy,rcz=Spring.GetUnitPiecePosDir(unitID,RopeConnectionT.Piece)
-		assert(rcx)
-		RopeConnection={
-			Pos= Vector:new(rcx,rcy,rcz),
-			vel= Vector:new(),
-			mass=1500, --unrealistic, yet you cant reach escape velocity 
-			Radius=RopeConnectionT.ColRadius
-		}
-		
-		ObjT={}
-		--contains the startpos, as the sensory piece
-		for i=1,#RopePieceTable, 1 do
-			px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,RopePieceTable[i])
-			
-			ObjT[#ObjT+1]={ 
-				piecename=RopePieceTable[i],
-				pos = Vector:new( px, py, pz),
-				dir = Vector:new( pdx, pdy, pdz),
-				mass1= createMass(RopeMass/2,px,py,pz,0,0,0,0,0,0),
-				vel= Vector:new(),
-				PrevPiece=(math.max(1,i-1)),
-				NextPiece=math.min(i+1,#RopePieceTable),
-				length=Ropelength,
-				springConstant=SpringConstant
-			}
-		end
-		--The pulled Object
-		px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,LoadPieceT.Piece)
-		ObjT[#ObjT+1]={ 
-			piecename=LoadPieceT.Piece,
-			pos = Vector:new( px, py, pz),
-			dir = Vector:new(pdx, pdy, pdz),
-			mass1= createMass(LoadPieceT.Mass,px,py,pz,0,0,0,0,0,0),
-			vel= Vector:new(),
-			PrevPiece=(#ObjT),
-			length=Ropelength,
-			springConstant=SpringConstant
-		}
-		--/INIT
-		local simStep=75
-		
-		while checkYourself() do
-			--init and reset
-			for i=1,#ObjT,1 do
-				ObjT[i].mass1.force=Vector:new()
-			end
-			
-			--applyForces
-			
-			for j=1,#ffT,1 do 
-				if ffT.pieceList then
-					for k in pairs(fft.piecelist) do
-						if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x,ObjT[k].posdir.y,ObjT[k].posdir.z) == true then
-							ObjT[k].mass1.force = ObjT[k].mass1.force + (ffT[j].acceleration * ObjT[k].mass1.mass)		 
-						end
-					end
-				else
-					for i=1,#ObjT, 1 do
-						ObjT[i].mass1.force=ObjT[i].mass1.force + (ffT[j].acceleration *ObjT[i].mass1.mass)		
-					end
-				end
-			end	
-			
-			--Lets SpringSimulation
-			for i=1,#ObjT, 2 do
-				ObjT[i], ObjT[Limit(i+1,1,#ObjT)] = solveSpring(ObjT[i],ObjT[Limit(i+1,1,#ObjT)],SpringInnerFriction)	
-			end		
-			
-			
-			--solve Objforces
-			for i=1,#ObjT-1, 2 do -- Start A Loop To Apply Forces Which Are Common For All Masses
-				
-				local Succesor=Limit(i,1,ObjT)
-				if not ObjT[i].mass1 then
-					px,py,pz,pdx,pdy,pdz=Spring.GetUnitPiecePosDir(unitID,RopePieceTable[math.max(math.min(i,#RopePieceTable),1)])
-					ObjT[i].mass1= createMass(RopeMass/2,px,py,pz,0,0,0,0,0,0)
-				end
-				
-				ObjT[i].mass1.force= ObjT[i].mass1.force + ( ObjT[i].mass1.mass * gravitation )
-				
-				-- masses[a]->applyForce(gravitation * masses[a]->m); -- The Gravitational Force
-				-- The air friction
-				ObjT[i].mass1.force= ObjT[i].mass1.force + (ObjT[i].vel * (airFrictionConstant*-1))
-				
-				-- masses[a]->applyForce(-masses[a]->vel * airFrictionConstant);
-				
-				
-				if 	ObjT[i].mass1.pos.y > groundHeight(ObjT[i].piecename) then
-					-- Forces From The Ground Are Applied If A Mass Collides With The Ground
-					
-					v1=Vector:new() -- A Temporary Vector3D
-					v2=Vector:new() -- A Temporary Vector3D
-					
-					v1= ObjT[i].mass1.vel
-					v2= ObjT[Succesor].mass2.vel -- Get The Velocity
-					
-					v1.y=0
-					v2.y=0
-					-- Omit The Velocity Component In Y-Direction
-					
-					-- The Velocity In Y-Direction Is Omited Because We Will Apply A Friction Force To Create
-					-- A Sliding Effect. Sliding Is Parallel To The Ground. Velocity In Y-Direction Will Be Used
-					-- In The Absorption Effect.
-					
-					-- Ground Friction Force Is Applied 
-					ObjT[i].mass1.force= ObjT[i].mass1.force + ((-v1 )* groundFrictionConstant)
-					ObjT[Succesor].mass1.force=ObjT[Succesor].mass1.force + ((-v2) * groundFrictionConstant)			
-					
-					
-					v1 =ObjT[i].mass1.vel -- Get The Velocity
-					v2 =ObjT[Succesor].mass1.vel -- Get The Velocity
-					
-					v1.x,v1.z=0,0
-					v2.x,v2.z=0,0
-					
-					-- Above, We Obtained A Velocity Which Is Vertical To The Ground And It Will Be Used In
-					-- The Absorption Force
-					
-					if (v1.y < 0) then 
-						ObjT[i].mass1.force=ObjT[i].mass1.force + (((-v1)*groundAbsorptionConstant)) 
-					end
-					
-					if ( v2.y < 0) then
-						ObjT[Succesor].mass1.force= ObjT[Succesor].mass1.force + ((-v2)*groundAbsorptionConstant)
-					end
-					
-					
-				else
-					x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,ObjT[i].piecename)
-					vx,vy,vz=Spring.GetGroundNormal(x,z)
-					vecGround = Vector:new(vx,vy,vz)
-					-- The Ground Shall Repel A Mass Like A Spring.
-					-- By "Vector3D(0, groundRepulsionConstant, 0)" We Create A Vector In The Plane Normal Direction
-					-- With A Magnitude Of groundRepulsionConstant.
-					-- By (groundHeight - masses[a]->pos.y) We Repel A Mass As Much As It Crashes Into The Ground.
-					gh=groundHeight(	ObjT[i].piecename)
-					f1=(vecGround*groundRepulsionConstant)* (gh-ObjT[i].mass1.pos.y)		
-					ObjT[i].mass1.force= ObjT[i].mass1.force+ f1		 -- The Ground Repulsion Force Is Applied
-				end
-				
-			end	 
-			--simulate
-			for i=1, #ObjT, 1 do
-				--vel += (force/mass)* dt
-				ObjT[i].mass1.vel= (ObjT[i].mass1.vel+ ((ObjT[i].mass1.force/ObjT[i].mass1.mass)* timeInMS))
-				
-				ObjT[i].mass1.pos=ObjT[i].mass1.pos + ((ObjT[i].mass1.dir * ObjT[i].mass1.vel) * timeInMS)
-			end
-			--TranslatePieces to new Positions
-			
-			Sleep(simStep)
-			if lib_boolDebug then
-				debugDisplayPieceChain(RopePieceTable)
-			end
-		end
-		
-		
-		
-		
-	end
-	
-	--add Operators to unitscript
-	
-	function eraNonArgMul(A,B)
-		if A== "0" or B=="0" or A== "" or B=="" then return "" 
-	else return "("..A.."*"..B..")" end
-	end
-	
-	function eraNonArgAdd(A,B)
-		if A== "0" or A== "" and B ~= "0" and B ~="" then return B end
-		if B== "0" or B== "" and A ~= "0" and A ~="" then return A end
-		return A.."+"..B
-		
-	end
-	--> used to calc shadder matrixes in lua.. fill in, calc, optimize, print out
-	function matrixLab()
-		mA={
-			[1]="cos(z)",	[2]="-sin(z)",	[3]="0",
-			[4]="sin(z)",	[5]="cos(z)",	[6]="0",
-			[7]="0",	[8]="0",	[9]="1",	
-		}
-		mB={
-			[1]="-1",	[2]="0",		[3]="0",
-			[4]="0",	[5]="cos(x)",	[6]="-sin(x)",
-			[7]="0",	[8]="sin(x)",	[9]="cos(x)",	
-		}
-		mC={
-			[1]="cos(y)",	[2]="0",	[3]="sin(y)",
-			[4]="0",		[5]="1",	[6]="0",
-			[7]="-sin(y)",	[8]="0",	[9]="cos(y)",	
-		}
-		
-		
-		mD=MatrixBuilder3x3(MatrixBuilder3x3(mA,mB),mC)
-		--echoT(mD)
-		
-		
-	end
-	
-	function mirrorMatriceXAxis(x,y,z)
-		--return 360-x,y,z*-1																																							
-		
-		x=((-1*math.cos(z))*math.cos(y))+((-1*math.sin(z)*-1*math.sin(x))*-1*math.sin(y))*x+((-1*math.sin(z)*math.cos(x)))*y+((-1*math.cos(z))*math.sin(y))+((-1*math.sin(z)*-1*math.sin(x))*math.cos(y))*z
-		
-		y=((-1*math.sin(z))*math.cos(y))+((math.cos(z)*-1*math.sin(x))*-1*math.sin(y))*x+((math.cos(z)*math.cos(x)))*y+((-1*math.sin(z))*math.sin(y))+((math.cos(z)*-1*math.sin(x))*math.cos(y))*z
-		
-		z=((math.cos(x))*-1*math.sin(y))*x+((math.sin(x)))*y+((math.cos(x))*math.cos(y))*z
-		return x,y,z
-	end
-	
-	function MatrixBuilder3x3(A, B)
-		return {
-			[1]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[1],B[1]),eraNonArgMul(A[2],B[4])),eraNonArgMul(A[3],B[7])),
-			[2]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[1],B[2]),eraNonArgMul(A[2],B[5])),eraNonArgMul(A[3],B[8])),
-			[3]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[1],B[3]),eraNonArgMul(A[2],B[6])),eraNonArgMul(A[3],B[9])),
-			[4]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[4],B[1]),eraNonArgMul(A[5],B[4])),eraNonArgMul(A[6],B[7])),
-			[5]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[4],B[2]),eraNonArgMul(A[5],B[5])),eraNonArgMul(A[6],B[8])),
-			[6]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[4],B[3]),eraNonArgMul(A[5],B[6])),eraNonArgMul(A[6],B[9])),
-			[7]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7],B[1]),eraNonArgMul(A[8],B[4])),eraNonArgMul(A[9],B[7])),
-			[8]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7],B[2]),eraNonArgMul(A[8],B[5])),eraNonArgMul(A[9],B[8])),
-			[9]=eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7],B[3]),eraNonArgMul(A[8],B[6])),eraNonArgMul(A[9],B[9])),
-		}
-	end
-	
-	
-	function iRand(start, fin)
-		if not fin or fin < start then fin= start+1 end
-		
-		return math.ceil(sanitizeRandom(start,fin))
-	end
-	
-	function midVector(PointA,PointB)
-		PointA.x,PointA.y,PointA.z=PointA.x+PointB.x,PointA.y+PointB.y,PointA.z+PointB.z
-		return divVector(PointA,2)
-	end
-	
-	
-	function checkCenterPastPoint(MidPoint,GatePoint,PrevGatePoint)
-		
-		OrgPoint=subVector(GatePoint,PrevGatePoint)
-		assert(OrgPoint)
-		MirrorPointV=mulVector(OrgPoint,-1)
-		
-		-- if distance to PrevGatePoint < then distance to mirrored Point
-		if norm2Vector(subVector(MirrorPointV,MidPoint)) >= norm2Vector(subVector(OrgPoint,MidPoint)) then
-			return true
-		else 
-			return false 
-		end
-	end
-	
-	function absVec(vec)
-		vec.x=math.abs(vec.x)
-		vec.y=math.abs(vec.y)
-		vec.z=math.abs(vec.z)
-		return vec
-	end
-	
-	function eqVec(vecA,vecB)
-		return vecA.x== vecB.x and vecA.y == vecB.y and vecA.z == vecB.z		
-	end
-	
-	function spawnCegAtPiece(unitID,pieceId,cegname,offset)
-		
-		boolAdd=offset or 10
-		
-		
-		if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-		if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-		if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-		x,y,z=Spring.GetUnitPiecePosDir(unitID,pieceId)
-		
-		if y then
-			y=y+boolAdd
-			Spring.SpawnCEG(cegname,x,y,z,0,1,0,0,0)
-		end
-	end
-	
-	function getPieceMap(id)
-		
-		dpiecesTable=Spring.GetUnitPieceMap(id)
-		ux,uy,uz=Spring.GetUnitPosition(id)
-		tpiecesTable={}
-		i=1
-		for k,v in pairs(dpiecesTable) do
-			x,y,z=Spring.GetUnitPiecePosDir(id,v)
-			tpiecesTable[i]={}
-			tpiecesTable[i].pid=v
-			tpiecesTable[i].x=x or ux
-			tpiecesTable[i].y=y or uy
-			tpiecesTable[i].z=z or uz
-			i=i+1
-		end
-		return tpiecesTable
-	end
-	
-	function getFrameDepUnqOff(limit)
-		if not GG.FrameDependentOffset then GG.FrameDependentOffset={val=0, frame=Spring.GetGameFrame() } end
-		if GG.FrameDependentOffset.frame ~=Spring.GetGameFrame() then GG.FrameDependentOffset.val =0; GG.FrameDependentOffset.frame =Spring.GetGameFrame() end
-		
-		GG.FrameDependentOffset.val=GG.FrameDependentOffset.val+1
-		sign=randSign()
-		return sign*math.random (0, (GG.FrameDependentOffset.frame * GG.FrameDependentOffset.val)% limit +1)
-	end
-	
-	--> Play a soundfile only by unittype
-	function PlaySoundByUnitDefID(unitdef, soundfile,loudness, Time, nrOfUnitsParallel,predelay)
-		if not unitdef then return false end
-		if predelay and predelay > 0 then Sleep(predelay) end
-		
-		loud=loudness or 1
-		if loud==0 then loud= 1 end
-		
-		if GG.UnitDefSoundLock == nil then GG.UnitDefSoundLock={} end
-		if GG.UnitDefSoundLock[unitdef] == nil then GG.UnitDefSoundLock[unitdef]=0 end
-		
-		if GG.UnitDefSoundLock[unitdef] < nrOfUnitsParallel then
-			GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]+1
-			Spring.PlaySoundFile(soundfile,loud)
-			if Time > 0 then 
-				Sleep(Time)
-			end
-			GG.UnitDefSoundLock[unitdef]=GG.UnitDefSoundLock[unitdef]-1
-			return true
-		end
-		return false
-	end
-	
-	--This Takes any LanguageString and 'translates' it meaning it replaces stringparts with the Sound
-	--This is deterministic, meaning for a person and LanguageTable it always produces the same sound
-	--SoundPerson is a Function that allows to convay additional params into the sound-
-	--e.g. Out of Breath, Angry, tired, sad, by changing loudness and choosen soundsnippet
-	--its call signature is SoundPerson(translatedSoundSnippet, position in sentence, translatedTable)
-	function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
-		
-		--translate the Text via the language Table
-		local lplaySoundFile=Spring.PlaySoundFile
-		local translatedTable={}
-		local lSoundPerson=SoundPerson or nil
-		
-		for i = 1, #Text do
-			c = str:sub(i,math.min(#Text,i+SymbolLenght))
-			hash=LanguageTable.Hash(c)
-			translatedTable[i]=LanguageTable[hash] or " "
-		end
-		
-		if lSoundPerson then
-			for it=1,#translatedTable do
-				choosenSound,loudness=lSoundPerson(translatedTable[it],it,translatedTable)
-				if SoundTable[choosenSound] then
-					lplaySoundFile(SoundTable[choosenSound], loudness)
-				end
-			end
-		else
-			lplaySoundFile(SoundTable[choosenSound], StandardLoud+math.random(LoudRange/10,LoudRange))
-		end
-	end
-	
-	function getLowestPointOfSet(Table,axis)
-		if #Table < 1 then return nil end
-		
-		index=1
-		y=math.huge
-		if axis=="y_axis" then
-			for i=1,#Table do
-				if Table[i].y < y then 
-					y=Table[i].y
-					index=i
-				end				
-			end
-		end
-		if axis=="z_axis" then
-			for i=1,#Table do
-				if Table[i].z < y then 
-					y=Table[i].z
-					index=i
-				end				
-			end
-		end
-		if axis=="x_axis" then
-			for i=1,#Table do
-				if Table[i].x < y then 
-					y=Table[i].x
-					index=i
-				end				
-			end
-		end		
-		return Table[index].x,Table[index].y,Table[index].z,index		
-	end
-	
-	function getHighestPointOfSet(Table,axis)
-		if type(Table) ~= "table" then 
-			echo("getHighestPointOfSet:not a table")
-			return nil
-		end
-		
-		if #Table < 1 or table.getn(Table) == 0 then 
-			echo("getHighestPointOfSet:table is empty")
-			return nil
-		end
-		
-		index=1
-		y=-math.huge
-		if axis=="y_axis" then
-			for i=1,#Table do
-				if Table[i].y > y then 
-					y=Table[i].y
-					index=i
-				end
-				
-			end
-		end
-		if axis=="z_axis" then
-			for i=1,#Table do
-				if Table[i].z > y then 
-					y=Table[i].z
-					index=i
-				end
-				
-			end
-		end
-		if axis=="x_axis" then
-			for i=1,#Table do
-				if Table[i].x > y then 
-					y=Table[i].x
-					index=i
-				end
-				
-			end
-		end
-		
-		
-		return Table[index].x,Table[index].y,Table[index].z,index
-	end
-	
-	function getNearestGroundEnemy(id, UnitDefs)
-		ed=Spring.GetUnitNearestEnemy(id)
-		if ed then
-			--early out
-			eType=Spring.GetUnitDefID(ed)
-			
-			if UnitDef[eType].isAirUnit == false then return ed end
-			eTeam=Spring.GetUnitTeam()
-			allUnitsOfTeam=Spring.GetTeamUnits(eTeam)
-			mindist=math.huge
-			foundUnit=nil
-			
-			process(allUnitsOfTeam,
-			function(ied)
-				if ied ~=ed and distanceUnitToUnit(id,ied) < mindist then
-					if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
-						mindist =distanceUnitToUnit(id,ied)
-						foundUnit=ied
-					end
-				end
-			end
-			)
-			if Spring.ValidUnitID(foundUnit)== true then return foundUnit end
-			
-		end
-		
-		
-		
-	end
-	
-	
-	function pieceToPoint(pieceNumber)
-		reTab={}
-		
-		reTab.x,reTab.y,reTab.z=Spring.GetUnitPiecePosition(unitID,pieceNumber)
-		return reTab
-		
-		
-	end
-	
-	function piec2Point(piecesTable)
-		if not piecesTable then 
-			echo("lib_UnitScript::piec2Point: No argument recived")
-			return
-		end
-		
-		if type(piecesTable)~="table" then
-			echo("lib_UnitScript::piec2Point: Not a valid table- got"..piecesTable.." of type "..type(piecesTable).." instead ")
-			return
-		end
-		
-		reTab={}
-		
-		for i=1,#piecesTable do
-			reTab[i]={}
-			reTab[i].Piece =piecesTable[i]
-			reTab[i].x,reTab[i].y,reTab[i].z=Spring.GetUnitPiecePosDir(unitID,piecesTable[i])
-			reTab[i].index=i
-		end
-		
-		return reTab
-		
-	end
-	
-	
-	
-	--> spawn a ceg on the map above ground
-	function markPosOnMap(x,y,z, colourname)
-		
-		
-		h=Spring.GetGroundHeight(x,z)
-		if h > y then y=h end
-		for i=1,5 do
-			Spring.SpawnCEG(colourname,x,y+10,z,0,1,0,50,0)
-			Sleep(200)
-		end
-	end
-	
-	--> Takes a Table of Locks and locks it if the lock is free 
-	function TestSetLock(Lock,number)
-		if TestLocks(number)==true then 
-			Lock[number]=true
-			return true
-		end 
-		return false
-	end
-	
-	-->Test a rows of locks 
-	function TestLocks(Lock, number)
-		for i=1,table.getn(Lock) do
-			if number ~=i and Lock[i]==true then return false end
-		end
-		return true
-	end
-	
-	function normTwo(...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		sum=0
-		for k,v in pairs(arg) do
-			sum=sum+ v*v
-		end
-		return math.sqrt(sum)
-	end
-	
-	--> Sets a Lock free
-	function ReleaseLock(Lock,number)
-		Lock[number]=false
-	end
-	
-	function filterOutTeam(TableOfUnits,teamid)
-		returnTable={}
-		for i=1,#TableOfUnits, 1 do
-			tid=Spring.GetUnitTeam(TableOfUnits[i])
-			if tid ~= teamid then returnTable[#returnTable+1]=TableOfUnits[i] end
-		end
-		return returnTable
-	end
-	
-	--> Grabs every Feature in a circle, filters out the featureID
-	function getAllFeatureNearUnit(unitID,Range)
-		px,py,pz=Spring.GetUnitPosition(unitID)
-		return Spring.GetFeaturesInCylinder(px,pz,Range)	
-	end	
-	
-	--> Grabs every Unit in a circle, filters out the unitid
-	function getAllNearPiece(unitID,Piece, Range)
-		px,py,pz=Spring.GetUnitPiecePosDir(unitID,Piece)
-		return 	getAllInCircle(px,pz,Range,unitID)	
-	end
-	
-	--> Grabs every Unit in a circle, filters out the unitid
-	function getAllNearUnit(unitID,Range)
-		px,py,pz=Spring.GetUnitPosition(unitID)
-		return 	getAllInCircle(px,pz,Range,unitID)	
-	end
-	
-	--> Grabs every Unit in a circle, filters out the unitid or teamid if given
-	function getAllInCircle(x,z,Range,unitID,teamid)
-		if not x or not z then 
-			return {} 
-		end
-		if not Range then assert(Range) end
-		
-		T={}
-		if teamid then
-			T=Spring.GetUnitsInCylinder(x,z,Range,teamid)
-		else
-			T=Spring.GetUnitsInCylinder(x,z,Range)
-		end
-		
-		if unitID and T and #T>1 and type(unitID)=='number' then
-			for num, id in ipairs(T) do
-				if id == unitID then 
-					table.remove(T,num)
-				end
-			end
-		end
-		return T
-	end 
-	
-	--> Grabs every Unit in a circle, filters out the unitid
-	function getInCircle(unitID,Range,teamid)
-		
-		T={}
-		x,_,z=Spring.GetUnitBasePosition(unitID)
-		if teamid then
-			T=Spring.GetUnitsInCylinder(x,z,Range,teamid)
-		else
-			T=Spring.GetUnitsInCylinder(x,z,Range)
-		end
-		
-		if T and #T>1 and type(unitID)=='number' then
-			table.remove(T,unitID)
-		end
-		return T
-	end 
-	
-	function filterTableByTable(T,T2,compareFunc)
-		reTable={}
-		for i=1,#T do
-			if compareFunc(T[i],T2)==true then reTable[#reTable+1]=T[i] end
-		end
-		return reTable
-	end
-	
-	function tableToKeyTable(T)
-		KT={}
-		for i=1, #T do
-			KT[T[i]] =T[i]
-		end
-		return KT
-	end
-	
-	function keyTableToTables(T)
-		counter= 1
-		TableKey={}
-		TableValue={}
-		counter= 1
-		for k,v in pairs(T) do
-			TableKey[counter]=k
-			TableValue[counter+1]=v
-			counter = counter +2
-		end
-		
-		return TableKey, TableValue		
-	end
-	
-	function insertKeysIntoTable(T,T2)
-		for i=1,#T do
-			if not T2[T[i]] then
-				T2[T[i]]=T[i]	
-			end
-		end	
-		return T2
-	end
-	
-	--itterates over a Keytable, executing a function 
-	function foreach(T,fooNction)
-		reTable={}
-		if type(fooNction)=="string" then
-			fooNction=loadstring("function(k,v)\n"..fooNction.. "\n end")
-			assert(type(fooNction)=="function", "string not a function in foreach(k,v) @ lib_UnitScript.lua")
-		end
-		
-		for k,v in pairs(T) do	
-			reTable[k]=fooNction(k,v)
-		end
-		
-		return reTable
-	end
-	
-	-->itterates over a table, executing a function 
-	function elementWise(T,fooNction,ArghT)
-		reTable={}
-		
-		for k,v in pairs(T) do
-			reTable[k]=fooNction(T[k],ArghT)		
-		end
-		
-		return reTable
-	end
-	
-	-->recursive itterates over a Keytable, executing a function 
-	function recElementWise(T,fooNction,ArghT)
-		reTable={}
-		
-		for k,v in pairs(T) do
-			if type(T[k]) ~= "table" then
-				reTable[k]=fooNction(T[k],ArghT)		
-			else
-				reTable[k]=recElementWise(T[k],fooNction,ArghT)
-			end
-		end
-		
-		return reTable
-	end
-	
-	function countT(T)
-		it=0
-		for k,v in pairs(T) do
-			it=it+1
-		end
-		return it
-	end
-	
-	
-	
-	
-	--> Join Operation on two tables
-	join = function(id,argT)
-		resulT={}
-		for num,idInTable in pairs(argT) do
-			resulT[#resulT+1]= {id=id, obj=idInTable}
-		end
-		return resulT
-	end
-	
-	--> Validator
-	validator=function(id)
-		deadOrAlive=Spring.GetUnitIsDead(id)
-		if deadOrAlive and deadOrAlive == false then 
-			return id
-		end				
-	end
-	
-	--> takes a Table, and executes ArgTable/Function,Functions on it
-	function process(Table, ...)
-		local arg={...}
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		T={}
-		if Table then 
-			T=Table 
-		else 
-			if lib_boolDebug == true then
-				echo("Lua:lib_UnitScript:Process: No Table handed over") 
-				return 
-			end
-		end
-		if not arg then echo("No args in process") return end
-		if type(arg)== "function" then return elementWise(T,arg) end
-		
-		
-		TempArg={}
-		TempFunc={}
-		--if not arg then return Table end
-		
-		for _, f in pairs(arg) do
-			if type(f)=="function" then				
-				T=elementWise(T,f,TempArg)				
-				TempArg={}			
-			else				
-				TempArg[#TempArg+1]=f
-			end			 
-		end
-		return T
-	end
-	
-	function recProcess(Table, ...)
-		local arg={...}
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		T={}
-		if Table then T=Table else echo("Lua:lib_UnitScript:Process: No Table handed over") return end
-		if not arg then echo("No args in process") return end
-		if type(arg)== "function" then return elementWise(T,arg) end
-		
-		
-		TempArg={}
-		TempFunc={}
-		--if not arg then return Table end
-		
-		for _, f in pairs(arg) do
-			if type(f)=="function" then				
-				T=recElementWise(T,f,TempArg)				
-				TempArg={}			
-			else				
-				TempArg[#TempArg+1]=f
-			end			 
-		end
-		return T
-	end
-	
-	--> Executes a random Function from a table of functions
-	function raFoo( ...)
-		local arg={...}
-		if not arg then return end
-		index= sanitizeRandom(1,#arg)
-		return arg[index]()	
-	end
-	
-	
-	
-	-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
-	function filterOutUnitsOfType(T, UnitTypeTable,Cache)
-		if type(UnitTypeTable) == "number" then 
-			copyOfType= UnitTypeTable;
-			UnitTypeTable= {}
-			UnitTypeTable[copyOfType]= true
-		end
-		
-		if Cache then
-			returnTable={}
-			for num,id in pairs(T) do 
-				if Cache[id] and Cache[id]==true or T[id]and not UnitTypeTable[Spring.GetUnitDefID(id)] then
-					Cache[id]=true
-					returnTable[#returnTable+1]=id
-				else
-					Cache[id]=false
-					
-				end
-			end
-			return returnTable,Cache
-			
-		else
-			local returnTable={}
-			for num,id in pairs(T) do 
-				defID = Spring.GetUnitDefID(id)
-				if not UnitTypeTable[defID] then
-					returnTable[#returnTable+1]=id
-				end				
-			end
-			return returnTable
-		end
-	end
-	
-	function filterOutUnarmed(T)
-		returnTable={} 
-		for num,id in pairs(T) do 
-			def=Spring.GetUnitDefID(id) 
-			if UnitDefs[def].canAttack or UnitDefs[def].canFight then
-				returnTable[#returnTable+1]= id
-			end
-		end
-		return returnTable		
-	end	
-	-->filters Out TransportUnits
-	function filterOutTransport		(T)
-		returnTable={} 
-		for num,id in pairs(T) do 
-			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isTransport then 
-			returnTable[#returnTable+1]=id end 
-		end 
-		return returnTable 
-	end 
-	
-	-->filters Out Immobile Units
-	function filterOutImmobile (T,UnitDefs, boolFilterOut)
-		returnTable={} 
-		boolFilterOut= boolFilterOut or true
-		for num,id in pairs(T) do 
-			def=Spring.GetUnitDefID(id) 
-			if not boolFilterOut == UnitDefs[def].isImmobile then 
-				returnTable[#returnTable+1]=id
-			end 
-		end 
-		return returnTable 
-	end
-	--> filters Out Buildings
-	function filterOutBuilding (T, UnitDefs, boolFilterOut)
+    local linePrefix = ""
+    local spaces = ""
 
-		returnTable={}
+    if key ~= nil then
+        linePrefix = "[" .. key .. "] = "
+    end
 
-		for num,id in pairs(T) do 
-			def=Spring.GetUnitDefID(id) 
-			if boolFilterOut == true  and UnitDefs[def] and UnitDefs[def].isBuilding ==  true then 
-				returnTable[#returnTable+1]=id 
-			end 
-			if boolFilterOut == false  and UnitDefs[def] and UnitDefs[def].isBuilding ==  false then 
-				returnTable[#returnTable+1]=id 
-			end 
-		end 	
-		return returnTable 
-	end
-	
-	--> filters Out Builders
-	function filterOutBuilder (T)
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isBuilder then 
-			returnTable[#returnTable+1]=id end 
-		end 
-		return returnTable 
-	end
-	
-	--> filters Out Mobile Builders
-	function filterOutMobileBuilder (T,boolCondi)
-		boolCond=boolCondi or false
-		
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(id) 
-			if boolCond== UnitDefs[def].isMobileBuilder then 
-			returnTable[#returnTable+1]=id end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutStaticBuilder (T)
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isStaticBuilder then 
-			returnTable[#returnTable+1]=id end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutFactory (T)
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isFactory then 
-			returnTable[#returnTable+1]=id end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutExtractor (T)
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(id) 
-			if false== UnitDefs[def].isExtractor then 
-			returnTable[#returnTable+1]=T[i] end 
-		end 
-		return returnTable 
-	end
-	
-	function filterForGroundUnit (T)
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(T[i]) 
-			if false== UnitDefs[def].isGroundUnit then 
-			returnTable[#returnTable+1]=T[i] end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutAirUnit (T, UnitDefs, lboolFilterOut)
-		
-		boolFilterOut=lboolFilterOut or false
-		returnTable={} 
-		for num,id in pairs(T) do
-			def=Spring.GetUnitDefID(id) 
-			if boolFilterOut == UnitDefs[def].isAirUnit then 
-			returnTable[#returnTable+1]=id end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutStrafingAirUnit(T)
-		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
-			if false== UnitDefs[def].isStrafingAirUnit then 
-			returnTable[#returnTable+1]=T[i] end 
-		end 
-		return returnTable 
-	end
-	function getNextKey(T,oldKey, boolFirst)
-	boolNext=false
-	
-	if boolFirst then for k,v in pairs(T)do return k,v; end end
-	
-		for key,value in pairs(T) do
-		if boolNext==true then
-			return key, value
-		end
-			if key== oldKey then 
-				boolNext=true
-			end
-		end
-	
-	end
-	function filterOutHoveringAirUnit(T)
-		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
-			if false== UnitDefs[def].isHoveringAirUnit then 
-			returnTable[#returnTable+1]=T[i] end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutFighterAirUnit (T)
-		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
-			if false== UnitDefs[def].isFighterAirUnit then 
-			returnTable[#returnTable+1]=T[i] end 
-		end 
-		return returnTable 
-	end
-	
-	function filterOutBomberAirUnit (T)
-		returnTable={} 
-		for i=1,#T do 
-			def=Spring.GetUnitDefID(T[i]) 
-			if false== UnitDefs[def].isBomberAirUnit then 
-				returnTable[#returnTable+1]=T[i]
-			end 
-		end 
-		return returnTable 
-	end
-	
-	-->Spawn CEG at unit
-	function spawnCEGatUnit(unitID,cegname,xoffset,yoffset,zoffset)
-		x,y,z=Spring.GetUnitPosition(unitID)
-		if xoffset then
-			Spring.SpawnCEG(cegname,x+xoffset,y+yoffset,z+zoffset,0,1,0,50,0)
-		else
-			Spring.SpawnCEG(cegname,x,y,z,0,1,0,50,0)
-		end
-	end
-	
-	function funcyMeta (T, ...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		for _, f in pairs(arg) do
-			T=f(T)
-		end
-		return T
-	end
-	
-	
-	--> Apply a function on a Table
-	function forTableUseFunction(Table,func,metafunc)
-		T={}
-		for i=1,#Table do
-			T[i]=func(Table[i])
-		end
-		if metafunc then
-			return metafunc(T)
-		else
-			return T
-		end
-	end
-	
-	
-	--> Apply a function to a unit Table 
-	function forTableUseFunction(T,boolFilterDead,...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		local arg={...}
-		TempT={}
-		for _, f in pairs(arg) do
-			
-			for i=1,#T do
-				TempT[i]=f(T[i])
-			end
-			T=TempT
-			TempT={}
-			--filter out the Dead
-			if boolFilterDead ==true then
-				for i=1,#T do
-					if Spring.GetUnitIsDead(T[i])==false then
-						TempT[i]=T[i]
-					end
-				end
-			end
-			
-			T=TempT
-		end
-		return T
-	end
-	
-	function getLowest(Table)
-		lowest=0
-		val=0
-		for k,v in pairs(Table) do
-			if v < val then 
-				val=v
-				lowest=k
-			end
-		end
-	end
-	
-	function sumTable(Table)
-		a=0
-		for i=1,#Table do
-			a=a+Table[i]
-		end
-		return a
-	end
-	
-	function sumTableKV(Table)
-		a=0
-		for k,v in pairs(Table) do
-			a=a+v
-		end
-		return a
-	end
-	
-	function PieceLight(unitID, piecename,cegname)
-		while true do
-			x,y,z=Spring.GetUnitPiecePosDir(unitID,piecename)
-			Spring.SpawnCEG(cegname,x,y+10,z,0,1,0,50,0)
-			Sleep(250)
-		end
-	end
-	
-	function TableToDict(T)
-		reT={}
-		if not T then return reT end
-		
-		for i=1,#T do
-			if T[i] then 
-				reT[T[i]]=T[i]
-			end
-		end
-		return reT
-	end
-	
-	function mergeTables(...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		Table={}
-		if not arg then return end
-		
-		for _,v in pairs(arg) do
-			if v and type(v)=="table" then
-				Table=TableMergeTable(Table,v)
-			end
-			
-		end
-		
-		return Table
-	end
-	
-	function TableMergeTable(TA,TB)
-		T={}
-		if #TA >= #TB then
-			T=TableToDict(TA)
-			
-			for i=1,#TB do
-				if not T[TB[i]] then
-					TA[#TA+1]=TB[i]
-				end
-			end
-			return TA
-		else
-			T=TableToDict(TB)
-			for i=1,#TA do
-				if not T[TA[i]] then
-					TB[#TB+1]=TA[i]
-				end
-			end
-			return TB
-		end
-		
-	end
-	
-	
-	function filterUnitTableforDefIDTable(unitIDT,KeyDefIDT)
-		Tid={}
-		for i=1,#unitIDT do 
-			a=Spring.GetUnitDefID(unitIDT[i])
-			if KeyDefIDT[a] then
-				Tid[#Tid+1]=unitIDT[i]
-			end
-		end
-		return Tid
-	end
-	
-	--> Forms a Tree from handed over Table
-	--	this function needs a global Itterator and but is threadsafe, as in only one per unit
-	--	it calls itself, waits for all other threads running parallel to reach the same recursion Depth
-	-- 	once hitting the UpperLimit it ends
-	function executeLindeMayerSystem( gramarTable,String, oldDeg, Degree , UpperLimit, recursionDepth,recursiveItterator,PredPiece)
-		
-		-- this keeps all recursive steps on the same level waiting for the last one - who releases the herd
-		gainLock(recursiveItterator)
-		
-		--we made it into the next step and get our piece
-		GlobalTotalItterator=GlobalTotalItterator+1
-		local hit=GlobalTotalItterator
-		
-		if not hit or TreePiece[hit] == nil or hit > UpperLimit then 
-			releaseLocalLock(recursiveItterator)
-			return 
-		end
-		
-		
-		--DebugInfo
-		--Spring.Echo("Level "..recursiveItterator.." Thread waiting for Level "..(recursiveItterator-1).. " to go from ".. GlobalInCurrentStep[recursiveItterator-1].." to zero so String:"..String.." can be processed")
-		
-		while GlobalInCurrentStep[recursiveItterator-1] > 0 do	
-			Sleep(50)
-		end
-		
-		--return clauses
-		if not String or String == "" or string.len(String) < 1 or recursiveItterator == recursionDepth then 
-			RecursionEnd[#RecursionEnd+1]=PredPiece
-			releaseLocalLock(recursiveItterator)
-			return 
-		end
-		
-		ox,oy,oz=Spring.GetUnitPiecePosition(unitID, PredPiece)
-		
-		--Move Piece to Position
-		
-		Show(TreePiece[hit])
-		
-		Move(TreePiece[hit],x_axis,ox,0)
-		Move(TreePiece[hit],y_axis,oy,0)
-		Move(TreePiece[hit],z_axis,oz ,0,true)
-		--DebugStoreInfo[#DebugStoreInfo+1]={"RecursionStep:"..hit.." ||RecursionDepth: "..recursiveItterator.." ||String"..String.." ||PredPiece: "..PredPiece.." || Moving Piece:"..TreePiece[hit].."to x:"..ox.." y:"..oy.." z:"..oz}
-		
-		--stores non-productive operators
-		OperationStorage={}
-		--stores Recursions and Operators
-		RecursiveStorage={}
-		
-		for i = 1, string.len(String) do
-			--extracting the next token form the current string and find out what type it is
-			token = string.sub(String,i,i)
-			typeOf=type(gramarTable.transitions[token])
-			
-			-- if the typeof is a function and a productive Element 
-			if typeOf == 'function' and gramarTable.productiveSymbols[token] then 	
-				--execute every operation so far pushed back into the operationStorage on the current piece
-				
-				for i=#OperationStorage,1, -1 do
-					gramarTable.transitions[OperationStorage[i]](oldDeg,Degree,TreePiece[hit],PredPiece,recursiveItterator,recursiveItterator==UpperLimit-1)
-				end
-				
-				WaitForTurn(TreePiece[hit],x_axis)
-				WaitForTurn(TreePiece[hit],y_axis)
-				WaitForTurn(TreePiece[hit],z_axis)
-				--renewOperationStorage
-				OperationStorage={}
-				
-				--This LindeMayerSystem has a go
-				StartThread(executeLindeMayerSystem,
-				
-				gramarTable,
-				gramarTable.transitions[token](oldDeg ,Degree ,TreePiece[hit],PredPiece,recursiveItterator,recursiveItterator==UpperLimit-1),												
-				oldDeg,
-				Degree,
-				UpperLimit,
-				recursionDepth,
-				recursiveItterator+1,
-				EndPiece[math.max(1,math.min(#EndPiece,hit))]
-				)
-				
-				--if we have a non productive function we push it back into the OperationStorage
-			elseif typeOf=="function" then --we execute the commands on the current itteration-- which i
-				OperationStorage[#OperationStorage+1]=token
-				
-				--recursionare pushed into the recursionstorage and executed after the current string has beenn pushed
-			elseif typeOf== "string" and token == gramarTable.transitions["RECURSIONSTART"] then							
-				--Here comes the trouble, we have to postpone the recurssion 
-				RecursiveStorage[#RecursiveStorage+1],recursionEnd=extractRecursion(String,i,gramarTable.transitions["RECURSIONSTART"],gramarTable.transitions["RECURSIONEND"])
-				i=math.min(recursionEnd+1,string.len(String))
-			end
-			
-		end
-		
-		--Recursions are itterated last but not least
-		if table.getn(RecursiveStorage) > 0 then
-			for i=1,#RecursiveStorage do		
-				
-				
-				StartThread(executeLindeMayerSystem,
-				
-				gramarTable,
-				RecursiveStorage[i],										
-				oldDeg,
-				Degree,
-				UpperLimit,
-				recursionDepth,
-				recursiveItterator+1,
-				EndPiece[math.max(1,math.min(#EndPiece,hit))]
-				)
-				
-			end
-		end
-		--Recursion Lock - the last one steps the Global Itteration a level up
-		
-		releaseLocalLock(recursiveItterator)
-		--Spring.Echo("Thread Level "..recursiveItterator.." signing off")
-		return
-	end
-	
-	function assertAllArgs(...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		if not arg then error("No arguments were given") return end
-		nr=1
-		for k,v in pairs(arg) do
-			if not v then error("Argument Nr"..nr.." is nil "); return false end
-			nr=1+nr
-		end
-		return true 
-	end
-	
-	-->prepares large speaches for the release to the world
-	function prepSpeach( Speach, Names,Limits, Alphas, DefaultSleepBylines)
-		--if only Speach 
-		if Speach and not Names and not Limits then 
-			
-		return {Speach=Speach} end
-		
-		Name 	=Names or "Dramatis Persona"
-		Limit 	= Limits or 42
-		Alpha 	= Alphas or 0.9
-		DefaultSleepByline	= DefaultSleepBylines or 750
-		
-		T={}
-		itterator=1
-		lineend=Limit
-		size=string.len(Speach) or #Speach or Limit
-		assert(size,"Size does matter")
-		assert(Speach and type(Speach)=="string","Speach not of type string", Speach)
-		assert(lineend and type(lineend)=="number","Limit not a number", Limit)
-		assert(size and type(size)=="number","Limit not a number", Limit)
-		
-		if string.len(Speach) < Limit then 
-			
-			subtable={line=Speach ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}	
-			retTable= {}
-			retTable[1]=subtable
-			return retTable
-		end
-		
-		
-		whitespace="%s"
-		while lineend < size do 
-			
-			lineend=string.find(Speach, whitespace, itterator+Limit) or string.len(Speach)
-			subString=string.sub(Speach,itterator,lineend)
-			Spring.Echo(subString)
-			if subString then
-				T[#T+1]={line= subString ,alpha=Alpha, name=Name, DelayByLine=DefaultSleepByline}
-			else
-				break
-			end
-			
-			if not lineend then 
-				break
-			else
-				itterator=Limit+1
-			end
-			assert(lineend)
-			assert(size)
-		end
-		
-		return T, true
-	end
-	
-	
-	--> Displays Text at UnitPos Thread
-	-->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
-	function say( LineNameTimeT, timeToShowMs, NameColour, TextColour,OptionString,UnitID)
-		assert(LineNameTimeT)
-		timeToShowFrames=math.ceil((timeToShowMs/1000)*30)
-		
-		px,py,pz=0,0,0
-		if not UnitID or Spring.ValidUnitID(UnitID)==false then
-			echo("Im out 1")
-			return 
-		end
-		
-		if type(LineNameTimeT)=="string" then 
-			Tables={}
-			Tables[1]={name="speaker", line=LineNameTimeT,DelayByLine =500 , Alpha= 1.0}
-			LineNameTimeT=Tables		
-		end
-		
-		--catching the case that there is not direct Unit speaking
-		if not UnitID or type(UnitID)=="string" then 
-			Spring.Echo(LineNameTimeT[1].name.. ": "..LineNameTimeT[i].line)
-			if not 	LineNameTimeT[2].line then return end
-			for i=1, #LineNameTimeT, 1 do			
-				for j=1, #LineNameTimeT[i], 1 do	
-					echo(LineNameTimeT[i][j].line)			
-				end
-			end
-			echo("Im out 2")
-			return
-		end
-		
-		local spGetUnitPosition=Spring.GetUnitPosition	
-		if not GG.Dialog then GG.Dialog ={} end
-		
-		lineBuilder=""
-		spaceString=stringOfLength(" ",string.len(LineNameTimeT[1].name..": " or 5))
-		
-		GG.Dialog[UnitID]={}
-		lineBuilder=lineBuilder..LineNameTimeT[1].name..": "..LineNameTimeT[1].line.."\n"
-		
-		for i=2, #LineNameTimeT, 1 do	
-			lineBuilder=spaceString..LineNameTimeT[i].line.."\n"
-		end
-		
-		
-		--Sleep Time till next line
-		_,unitheigth,_=Spring.GetUnitCollisionVolumeData(UnitID)
-		GG.Dialog[UnitID][#GG.Dialog[UnitID]+1]={
-			frames=timeToShowFrames,
-			line= lineBuilder,
-			lifetime= timeToShowFrames,			
-			unitheigth=unitheigth,
-			color= TextColour
-		}	
-		
-		
-		
-		
-		echo("Im out 3")
-	end
-	
-	function getUnitGroundHeigth(unitID)
-		px,py,pz=Spring.GetUnitPosition(unitID)
-		
-		if px then
-			h=Spring.GetGroundHeight(px,pz)
-			if h then 
-				return h
-			end
-		end
-		
-		
-	end
-	
-	--> creates a heightmap distortion table
-	function prepareHalfSphereTable(size,height)
-		if not size or not height then return nil end
-		cent=math.ceil(size/2)
-		T={}
-		for o=1,size,1 do
-			T[o]={}
-			for i=1,size,1 do
-				--default
-				T[o][i]=0
-				distcent=math.sqrt((cent-i)^2+(cent-o)^2)	
-				if distcent < cent-1 then
-					T[o][i]=(cent-distcent)*height
-				end
-			end
-		end
-		
-		return T	
-	end
-	
-	
-	--> creates a heightmap distortion table that averages the height 
-	function smoothGroundHeigthmap(size,x,z)
-		gh=Spring.GetGroundHeight(x,z)
-		if not size then return nil end
-		
-		T={}
-		for o=1,size,1 do
-			T[o]={}
-			for i=1,size,1 do
-				lgh=Spring.GetGroundHeight(x +((o-(size/2))*8), z +((i-(size/2))*8))
-				sign= -1
-				if lgh < gh then sign= 1 end
-				--default
-				T[o][i]= math.abs(gh-lgh)*sign				
-			end
-		end		
-		return T	
-	end
-	
-	function getGroundHeigthDistance(h1,h2)
-		return distance(h1,0,0,h2,0,0)
-	end
-	
-	function getGroundHeigthAtPiece(uID, pieceName)
-		px,py,pz=Spring.GetUnitPiecePosDir(uID,pieceName)
-		gh=Spring.GetGroundHeight(px,pz)
-		
-		return gh, py, py < gh
-	end
-	
-	
-	--> multiplies a deformation map with a factor
-	function multiplyHeigthmapByFactor(map,factor)
-		for o=1,#map,1 do
-			for i=1,#map[o],1 do
-				map[o][i]=map[o][i]*factor
-			end
-		end
-		return map
-	end
-	
-	--> blend Heigthmap
-	function blendToValueHeigthmap(map,dimension, blendStartRadius, blendEndRadius, ValueToBlend)
-		center={x=math.ceil(dimension/2),z=math.ceil(dimension/2)}
-		total=blendEndRadius- blendStartRadius
-		
-		for o=1,dimension,1 do
-			for i=1,dimension,1 do
-				ldist =distance(center.x,0,center.z,o,0,i)
-				if ldist > blendStartRadius and ldist < blendEndRadius then
-					factor= (ldist-blendStartRadius)/total
-					map[o][i]=map[o][i]* (1-factor)+ ValueToBlend*(factor)
-				end				
-			end
-		end
-		return map
-	end
-	
-	--> takes any given MapTable and nullifys the value outside and inside the circle
-	function circularClampHeigthmap(map,dimension, radius, boolInside, overWriteValue)
-		center={x=math.ceil(dimension/2),z=math.ceil(dimension/2)}
-		for o=1,dimension,1 do
-			for i=1,dimension,1 do
-				
-				if distance(center.x,0,center.z,o,0,i) > radius then -- we are Outside
-					if boolInside==false then
-						map[o][i]=overWriteValue
-					end
-				else
-					if boolInside==true then
-						map[o][i]=overWriteValue
-					end
-				end		
-			end
-		end		
-		return map
-	end
-	
-	
-	function consumeAvailableRessource(typeRessource, amount, teamID )
-		
-		if "m" == string.lower(typeRessource) or "metal" == string.lower(typeRessource) then
-			currentLevel= Spring.GetTeamResources(teamID,"metal")
-			if amount > currentLevel then
-				return false 
-			end	
-			
-			if Spring.UseTeamResource( teamID, "metal",amount) then return true end			
-		end
-		
-		if "energy" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
-			currentLevel= Spring.GetTeamResources(teamID,"energy")
-			if amount > currentLevel then
-				return false 
-			end	
-			
-			if Spring.UseTeamResource( teamID, "energy",amount) then return true end
-			
-		end
-		return false
-	end
-	
-	
-	-->samples over a given Array around Point x,y, with the samplefunction 
-	function sample(NumericIndex, x, y, sampleFunction, factor)
-		quadNumericIndex={}
-		if type(NumericIndex)== "number" then
-			for i=-1*NumericIndex, NumericIndex do
-				for j=-1*NumericIndex, NumericIndex do
-					
-					quadNumericIndex[i][j]={x=i*factor, z=j*factor}
-				end
-			end
-		else
-			quadNumericIndex = NumericIndex
-		end
-		
-		
-		
-		for i=1, #quadNumericIndex, 1 do
-			for j=1, #quadNumericIndex, 1 do
-				quadNumericIndex[i][j]= sampleFunction(x +quadNumericIndex[i][j].x ,y + (quadNumericIndex[i][j].z or quadNumericIndex[i][j].y))
-			end
-		end
-		return quadNumericIndex
-	end
-	
-	--> GetDistanceNearestEnemy
-	function GetDistanceNearestEnemy(id)
-		ed=Spring.GetUnitNearestEnemy(id)
-		return distanceUnitToUnit(id,ed)
-	end
-	
-	function holdsForAll(Var,fillterConditionString,...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		if arg then
-			for k,Val in pairs(arg) do
-				if loadstring("Var"..fillterConditionString.."Val")==false then return end
-			end
-			return true
-		else
-			return true
-		end
-	end
-	
-	function is(Var,fillterConditionString,...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		f=loadstring(fillterConditionString)
-		if type(f)=="function" then
-			for k,Val in pairs(arg) do
-				if( f(Var,Val)==true )then return true end
-			end
-			
-		else
-			
-			for k,Val in pairs(arg) do
-				if loadstring("Var"..fillterConditionString.."Val")==true then return true end
-			end
-			
-			return false
-		end
-	end
-	
-	
-	
-	function makeNewAffirmativeMatrice()
-		V={	[1]=1,	[2]=	0,	[3]=	0,[4]=	0,
-			[5]=0,	[6]=	1,	[7]=	0,[8]=	0,
-			[9]=0,	[10]=	0,	[11]=	1,[12]=	0,
-			[13]=0,	[14]=	0,	[15]=	0,[16]=	1	
-		}
-		function V.Mul(other)
-			V[1]	= 0;	V[2]	=	0;	V[3] 	=	0;V[4]		=0	;
-			V[5]	= 0;	V[6]	=	0;	V[7] 	=	0;V[8]		=0	;
-			V[9]	= 0;	V[10]	=	0;	V[11]	=	0;V[12]	=0	;
-			V[13]	= 0;	V[14]	=	0;	V[15]	=	0;V[16]	=0	
-		end	
-		--TODO
-		--http://springrts.com/phpbb/viewtopic.php?f=21&t=32246
-		return V
-	end
-	
-	
-	
-	function makeAffirmativeRotationMatrice(axis, deg)
-		V=makeNewAffirmativeMatrice()
-		if axis=="x_axis" then
-			V[6]=math.cos(-deg)	
-			V[7]=-1*math.sin(-deg)	
-			V[10]=math.sin(-deg)
-			V[11]=math.cos(-deg)	
-			
-		elseif axis== "y_axis" then
-			V[1]=math.cos(-deg)	
-			V[3]=math.sin(-deg)	
-			V[9]=-1*math.sin(-deg)
-			V[11]=math.cos(-deg)	
-		else
-			V[1]=math.cos(-deg)	
-			V[5]=math.sin(-deg)	
-			V[2]=-1*math.sin(-deg)
-			V[6]=math.cos(-deg)
-		end
-		return V	
-	end
-	
-	-->Returns a Unit from the Game without killing it
-	function removeFromWorld(unit,offx,offy,offz)
-		hideUnit(unit)
-		--TODO - keepStates in general and commandqueu
-		pox,poy,poz=Spring.GetUnitPosition(unit)
-		Spring.SetUnitAlwaysVisible(unit,false)
-		Spring.SetUnitBlocking(unit,false,false,false)
-		Spring.SetUnitNoSelect(unit,true)
-		Spring.MoveCtrl.Enable(unit,true)
-		if offx then
-			Spring.SetUnitPosition(unit,offx,offy,offz)
-		end
-	end
-	-->Removes a Unit from the Game without killing it
-	function returnToWorld(unit,px,py,pz)
-		showUnit(unit)
-		Spring.MoveCtrl.Disable(unit)
-		if pz then
-			Spring.SetUnitPosition(unit,px,py,pz)
-		end
-		Spring.SetUnitAlwaysVisible(unit,true)
-		Spring.SetUnitBlocking(unit,true,true,true)
-		Spring.SetUnitNoSelect(unit,false)
-	end
-	
-	function showUnit(unit)
-		Spring.SetUnitCloak(unit, false, 1)
-	end
-	
-	function hideUnit(unit)
-		Spring.SetUnitCloak(unit, true, 4)		
-	end
-	
-	--> kill All Units near Pieces Volume
-	function killAtPiece(unitID,piecename,selfd,reclaimed, sfxfunction)
-		px,py,pz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
-		tpx,tpy,tpz=Spring.GetUnitPiecePosDir(unitID,piecename)
-		if px and tpx then
-			size=square(px,py,pz)	
-			if size then
-				T=getAllInCircle( tpx,tpz,size/2, unitID)
-				
-				if T and #T > 0 then
-					
-					if sfxfunction then
-						for i=1,#T do
-							ux,uy,uz=Spring.GetUnitPosition(T[i])
-							sfxfunction(ux,uz,uz)
-							Spring.DestroyUnit(T[i],selfd,reclaimed)
-						end	
-						
-					else
-						for i=1,#T do
-							Spring.DestroyUnit(T[i],selfd,reclaimed)
-						end	
-					end
-				end
-			end
-		end
-	end
-	
-	function recursiveDoDamage(id,nrOfSteps,damage, damagefunction, nextFunction, preventTable)
-		if nrOfSteps== 0 then return end
-		
-		damage=damagefunction(damage)
-		Spring.AddUnitDamage(id, damage)
-		id=nextFunction(id,preventTable)
-		
-		nrOfSteps=nrOfSteps-1
-		return recursiveDoDamage(id,nrOfSteps,damage, damagefunction, nextFunction, preventTable)
-	end
-	
-	function SpinAlongSmallestAxis(unitID,piecename,degree, speed)
-		if not piecename then return end
-		vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
-		if vx and vy and vz then
-			areax,areay,areaz=vy*vz,vx*vz,vy*vx
-		end
-		
-		if holdsForAll(areax, " <= ", areay, areaz)then Spin(piecename,x_axis,math.rad(degree), speed) return end
-		if holdsForAll(areay, " <= ", areaz, areax)then Spin(piecename,y_axis,math.rad(degree), speed) return end
-		if holdsForAll(areaz, " <= ", areay, areax)then Spin(piecename,z_axis,math.rad(degree), speed) return end
-	end
-	
-	function LayFlatOnGround(unitID,piecename,speeds )
-		speed=speeds or 0
-		if not piecename then return end
-		vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
-		if vx and vy and vz then
-			areax,areay,areaz=vy*vz,vx*vz,vy*vx
-		end
-		
-		if holdsForAll(areax, " >= ", areay, areaz)then tP(piecename,0,90,90,speed ) return end
-		if holdsForAll(areay, " >= ", areaz, areax)then tP(piecename,90,0,90,speed ) return end
-		if holdsForAll(areaz, " >= ", areay, areax)then tP(piecename,0,0,0,speed ) return end
-	end
-	
-	-->Helperfunction of recursiveAddTable
-	function returnPieceChildrenTable(pieceNum,piecetable)
-		if not pieceNum then return end
-		T=Spring.GetUnitPieceInfo(unitID,pieceNum)
-		children=T.children
-		if children then
-			for i=1,#children do children[i]=piecetable[children[i]] end
-		end
-		return children, T.max
-	end
-	
-	function getRoot(unitID)
-		pieceMap=Spring.GetUnitPieceMap(unitID)
-		for name,number in pairs(pieceMap) do
-			infoTable=Spring.GetUnitPieceInfo(unitID,number)
-			if (infoTable.parent == "[null]") then return name,infoTable.children end
-		end
-		
-	end
-	
-	function getUniqueID()
-		if not GG.GUID then GG.GUID=0 end
-		GG.GUID=GG.GUID+ 0.1/math.pi
-		return GG.GUID
-	end
-	
-	function recPieceBelow(hierarchy, currentPiece, endPiece, reTable)
-		boolBelow=false
-		
-		if not hierarchy[currentPiece] then return nil end
-		for k, pieceNumber in pairs(hierarchy[currentPiece]) do
-			local retTable= reTable
-			
-			if pieceNumber == endPiece then
-				retTable[#retTable+1]=endPiece
-				return true, retTable
-			end
-			
-			retTable[#retTable+1]=pieceNumber
-			boolFound, T= recPieceBelow(hierarchy,pieceNumber,endPiece,retTable)
-			if boolFound == true then
-				return true, T
-			end
-		end
-		return false
-	end
-	
-	
-	
-	function getPieceChain(hierarchy, startPiece, endPiece)
-		pieceChain={}
-		pieceChain[1]=startPiece
-		boolBelow,pieceChain=recPieceBelow(hierarchy,startPiece,endPiece, pieceChain)			
-		return pieceChain
-	end
-	
-	--> creates a hierarchical table of pieces, descending from root
-	function getPieceHierarchy(unitID,pieceFunction)
-		
-		rootname,children=getRoot(unitID)
-		rootNumber=pieceFunction(rootname)
-		hierarchy={}
-		hierarchy[rootNumber]= {}
-		openTable={}
-		for k,pieceName in pairs(children) do
-			hierarchy[rootNumber][#hierarchy[rootNumber]+1] =pieceFunction(pieceName)
-			table.insert(openTable,pieceFunction(pieceName))
-		end
-		
-		while table.getn(openTable) > 0 do
-			for num,pieceNumber in pairs(openTable) do
-				tables=Spring.GetUnitPieceInfo(unitID,pieceNumber)
-				if not hierarchy[pieceNumber] then hierarchy[pieceNumber] ={} end
-				if tables and tables.children then
-					for num, pieceName in pairs(tables.children) do
-						newPieceNumber=pieceFunction(pieceName)						
-						hierarchy[pieceNumber][#hierarchy[pieceNumber]+1] =newPieceNumber
-						table.insert(openTable,pieceFunction(pieceName))
-					end
-					table.remove(openTable,num)
-				end
-			end
-		end
-		
-		
-		return hierarchy, rootname
-	end
-	
-	function recMapDown(Result,pieceMap,Name)
-		
-		if pieceMap[Name] then
-			for _, pieceNumber in pairs(pieceMap[Name]) do
-				info=Spring.GetUnitPieceInfo(unitID,pieceNumber)
-				Result[#Result+1]= pieceNumber
-				if info and pieceMap[info.name] and info.children then 
-					Result=recMapDown(Result, pieceMap, info.name)
-				end	
-			end
-		end		
-		return Result
-	end
-	
-	-->Returns all Pieces in a Hierarchy below the named point
-	function getPiecesBelow(unitID, PieceName, pieceFunction)
-		pieceMap=getPieceHierarchy(unitID,pieceFunction)
-		return recMapDown({},pieceMap,PieceName)
-	end
-	
-	--Hashmap of pieces --> with accumulated Weight in every Node
-	--> Every Node also holds a bendLimits which defaults to ux=-45 x=45, uy=-180 y=180,uz=-45 z=45
-	function recursiveAddTable(T,piecename,parent,piecetable)
-		if not piecename then return T, 0 end
-		
-		C, max=returnPieceChildrenTable(piecename,piecetable)
-		
-		
-		if not T[parent] then T[parent]={} end
-		
-		if C and #C > 0 then
-			for i=1,#C do
-				T,nr=recursiveAddTable(T,C[i],piecename,piecetable)
-			end
-			bendLimits=computateBendLimits(piecename,parent)
-			T[parent].bendLimits=bendLimits
-			T[parent].weight=max[1]*max[2]*max[3]
-			T[parent].nr=#C
-		else
-			
-			if not T[parent][piecename] then T[parent][piecename] ={} end
-			computateBendLimits(piecename,parent)
-			T[parent].bendLimits=bendLimits
-			T[parent][piecename].weight=1
-		end
-		return T
-	end
-	
-	--> finds the radian in a triangle where only the lenght of two sides are known
-	function triAngleTwoSided(LowerSide, OpposingSide)
-		norm= math.sqrt(LowerSide*LowerSide +OpposingSide*OpposingSide)
-		return math.atan2(LowerSide/norm,OpposingSide/norm)
-	end
-	
-	function getCubeSphereRad(x,y,z)
-		xy,xz,yz=x*y,x*z,y*z
-		
-		if xy > xz and xy > yz then return math.sqrt(x*x +y*y) end
-		
-		if xz > xy and xz > yz then return math.sqrt(x*x +z*z) end
-		
-		if yz > xy and yz > xz then return math.sqrt(y*y +z*z) end
-	end
-	
-	function computateBendLimits(piecename,parent)
-		paPosX,paPosY,paPosZ=Spring.GetUnitPiecePosition(unitID,parent)
-		cPosX,cPosY,cPosZ=Spring.GetUnitPiecePosition(unitID,piecename)
-		
-		--the offset of the piece in relation to its parentpiece
-		v={}
-		v.x,v.y,v.z=cPosX-paPosX,cPosY-paPosY,cPosZ-paPosZ
-		
-		pax,pay,paz=Spring.GetUnitPieceCollisionVolumeData(unitID,parent)
-		radOfParentSphere=getCubeSphereRad(pax,pay,paz)
-		cx,cy,cz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
-		radOfPieceSphere=getCubeSphereRad(cx,cy,cz)
-		-- rotate the vector so that it aligns with x,y,z origin vectors
-		-- computate the orthogonal 
-		-- computate the dead degree cube
-		wsize=triAngleTwoSided(v.x,v.y)
-		-- rotate the computated window inverse to the vector back
-		-- voila
-		
-		--Y-Axis 
-		-->TODO:RAGDOLL |_\ -- you approximate the motherpiece with a circle and then do a math.acos( circleradius/distance)
-		--defaulting to a maxturn
-		return {ux=-15 ,x=15, uy=-180, y=180,uz=-15, z=15}
-	end
-	
-	function square(...)
-		local arg = arg ; if (not arg) then arg = {...}; arg.n = #arg end
-		if not arg then return 0 end
-		sum=0
-		for k,v in pairs(arg) do
-			if v then
-				sum=sum+v^2
-			end
-		end
-		return math.sqrt(sum) 
-	end
-	
-	--> takes the average over a number of argument
-	function average(...)
-		local arg = table.pack(...)
-		if not arg then return nil end
-		sum=0
-		it=0
-		for k,v in pairs(arg) do
-			sum=sum+v
-			it=it+1
-		end
-		return sum/it
-	end
-	
-	-->Turns a piece towards its broadest side by Collissionvolume
-	function turnPieceToLongestSide(unitID,pic,Speed)
-		cv={}
-		x,y,z=Spring.GetUnitPieceCollisionVolumeData(unitID,centerPiece)
-		xy=x*y;yz=y*z;zx=z*x
-		signum=math.random(-1,1)
-		signum=signum/math.abs(signum)
-		if xy > yz and xy> zx then tP(pic, 90*signum, 0,0, Speed); return z/2 end
-		if yz > xy and yz> zx then tP(pic, 0, 0,90*signum, Speed); return x/2 end
-		if zx > xy and zx> yz then tP(pic, 0, math.random(-360,360),0, Speed);return y/2 end
-	end
-	
-	-->forges a hierachical ragdoll for the table of pieces for the given lifetime lets that ragdoll hit the floor
-	function ragDoll(tableOfPieces,centerPiece,fallSpeed,lifetime)
-		deltaMovement=1
-		cv={}
-		PiecesMap={}
-		FallSpeed=fallSpeed or 9.81
-		cv.x,cv.y,cv.z=Spring.GetUnitPieceCollisionVolumeData(unitID,centerPiece)
-		averageSize=average(cv.x,cv.y,cv.z)
-		boolOnce=false;boolGo=false
-		
-		while lifetime > 0 do
-			--we care for the centerPieceFalling
-			px,py,pz=Spring.GetUnitPiecePosition(unitID,centerPiece)
-			wpx,wpy,wpz=Spring.GetUnitPiecePosDir(unitID,centerPiece)
-			h=Spring.GetGroundHeight(wpx,wpz)
-			Dist= wpy-averageSize-FallSpeed/4;	if Dist < h then Dist =0; if boolGo== true then boolGo=false;boolOnce= true end end
-			if boolOnce==true then averageSize=turnPieceToLongestSide(unitID,centerPiece,9.81/6);boolOnce=false end
-			if py-h-averageSize/2 >0 then Move(centerPiece,y_axis,Dist,FallSpeed)end
-			
-			--and now we handle the other pieces going down
-			subsOfCenterPiece=tableOfPieces[centerPiece]
-			for _,v in pairs(subsOfCenterPiece) do
-				traversePiecesMapToGround(centerPiece,v, PiecesMap, 9.81, 250)
-			end
-			
-			Sleep(250)
-			lifetime=lifetime-250
-		end
-	end
-	
-	-->MovesAParentPiece
-	function movePieceToGround(parent, subPiece,Speed)
-		
-		local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
-		px,py,pz=spGetUnitPiecePosDir(unitID,subPiece)
-		gh=Spring.GetGroundHeight(px,pz)
-		--necessaryData
-		paX,paY,paZ=spGetUnitPiecePosDir(unitID,parent)
-		
-		--TargetCoordsToTurnTowards
-		TurnPieceTowardsPoint (subPiece, px,gh+3,pz,Speed)
-		
-	end
-	
-	
-	-->Traverses the PiecesMapDown recursively solving 
-	function traversePiecesMapToGround(parentPiece,currentPiece, PiecesMap, Gravity, UpdateCycleLength)
-		-- if the piece is underground it moves its parent to get itself above ground
-		cX,cY,cZ=Spring.GetUnitPiecePosDir(unitID,currentPiece)
-		if cY < Spring.GetGroundHeight(cX,cZ) then 
-			
-			-- if this Piece has subsidarys, it tryies to move itself to the ground, before calling for every children
-			
-			tP(currentPiece,tx,ty,tz,Gravity/(1000/UpdateCycleLength))
-			
-			for _,UnitPiece in pairs(PiecesMap[parentPiece]) do
-			end
-		end
-	end
-	
-	function stableConditon(legNr,q)
-		return GG.MovementOS_Table~= nil and 
-		GG.MovementOS_Table[unitID].stability > 0.5 and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,q),1)] > 0 or GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)] and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4,legNr%2),1)]>0 
-	end
-	
-	
-	--> Sets the Speed of a Unit
-	function setSpeedEnv(k, val)
-		val=math.max(0.000000001,math.min(val,1.0))
-		env=Spring.UnitScript.GetScriptEnv(k)
-		
-		if env then
-			udef=Spring.GetUnitDefID(k)	
-			Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed*val* 2184.53))		
-		end
-	end
-	
-	
-	--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
-	function feetThread(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,LegMax, WiggleFunc,ScriptEnviroment,SensorT)
-		LMax=LegMax or 5
-		oldHeading=0
-		Sleep(500)
-		
-		stabilize(
-		quadrant,
-		degOffSet,
-		turnDeg,
-		nr,
-		FirstAxisPoint,
-		KneeT,
-		SensorPoint,
-		Weight,
-		Force,
-		LiftFunction,
-		ScriptEnviroment,
-		SensorT
-		)
-		
-		while true do
-			while GG.MovementOS_Table[unitID].boolmoving == true do
-				echo("lib_UnitScript::adaptiveAnimation::MovingTrue")
-				--while GG.MovementOS_Table[unitID].boolmoving==true and stableConditon(nr,quadrant) do
-				
-				--feet go over knees if FeetLiftForce > totalWeight of Leg
-				
-				liftFeedForward(quadrant,
-				degOffSet,
-				turnDeg,
-				nr,
-				FirstAxisPoint,
-				KneeT,
-				SensorPoint,
-				Weight,
-				Force,
-				LiftFunction,
-				ScriptEnviroment
-				)
-				Sleep(100)
-				stabilize(quadrant,
-				degOffSet,
-				turnDeg,
-				nr,
-				FirstAxisPoint,
-				KneeT,
-				SensorPoint,
-				Weight,
-				Force,
-				LiftFunction,
-				SensorT
-				)
-				Sleep(100)
-				pushBody(quadrant,
-				degOffSet,
-				turnDeg,
-				nr,
-				FirstAxisPoint,
-				KneeT,
-				SensorPoint,
-				Weight,
-				Force,						
-				nr,
-				ScriptEnviroment)
-				
-				Sleep(100)
-				stabilize(quadrant,
-				degOffSet,
-				turnDeg,
-				nr,
-				FirstAxisPoint,
-				KneeT,
-				SensorPoint,
-				Weight,
-				Force,
-				LiftFunction,
-				ScriptEnviroment,
-				SensorT
-				)
-				Sleep(100)
-			end
-			
-			stabilize(quadrant,
-			degOffSet,
-			turnDeg,
-			nr,
-			FirstAxisPoint,
-			KneeT,
-			SensorPoint,
-			Weight,
-			Force,
-			LiftFunction,
-			ScriptEnviroment,
-			SensorT
-			)		
-			Sleep(100)
-			
-			
-			
-			
-			
-		end
-		
-		
-		
-	end
-	
-	--return Feet into origin position and push body above ground
-	function pushBody(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,nr, ScriptEnviroment)
-		if lib_boolDebug == true then	 Spring.Echo("lib_UnitScript::pushBody") end
-		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet),0.3)
-		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
-		dif=yp- Spring.GetGroundHeight(xp,zp)
-		
-		Time=0 
-		
-		WaitForTurn(FirstAxisPoint,y_axis)
-	end
-	
-	-->Uses the LiftAnimation Function to Lift the Feed
-	function	liftFeedForward(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction)
-		if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::liftFeedForward") end
-		GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]=GG.MovementOS_Table[unitID].quadrantMap[quadrant%4+1]-1
-		speed= clamp(Force/(#KneeT*Weight),0.15,0.25)
-		withOffset=sanitizeRandom(0,turnDeg)
-		if withOffset > 180 then withOffset=withOffset*-1 end
-		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet+withOffset), speed)
-		--lifts Feed from the ground 	
-		LiftFunction(KneeT,Force/(#KneeT*Weight))
-		
-		--Turn foot forward and upward
-		WaitForTurn(FirstAxisPoint,y_axis)	
-		Sleep(500)
-		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet	), speed)
-		for i=1,#KneeT,1 do 
-			Turn(KneeT[i],x_axis,math.rad(-2), speed)
-		end
-		WaitForTurn(FirstAxisPoint,y_axis)
-		
-	end
-	
-	
-	-->Stabilizes the Feet above ground and rest
-	function	stabilize(quadrant,degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force,LiftFunction,ScriptEnviroment,SensorT)
-		
-		xp,yp,zp=Spring.GetUnitPiecePosDir(unitID,SensorPoint)
-		dif=yp- Spring.GetGroundHeight(xp,zp)
-		degToGo=0
-		counter=0
-		olddif=0
-		WaitForTurn(FirstAxisPoint,y_axis)
-		Turn(FirstAxisPoint,y_axis,math.rad(degOffSet), 0.15)
-		assert(ScriptEnviroment.GetPieceRotation)
-		assert(SensorT)
-		
-		unitHeigth=GG.MovementOS_Table[unitID].stability*Height 
-		propagatedCounterChange=0
-		
-		for i=#KneeT,1, -1 do
-			measureIndex=clamp(i,1,#KneeT)
-			boolUnderground=true
-			
-			
-			x,y,z=Spring.GetUnitPiecePosDir(unitID,SensorT[measureIndex])
-			xdeg,y_deg,z_deg=ScriptEnviroment.GetPieceRotation(KneeT[i])
-			tDeg= math.deg(xdeg)
-			
-			GroundHeight=Spring.GetGroundHeight(x,z) 
-			--	if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::stabilize::PieceHeigth".. ( y -35 -unitHeigth ).." < "..GroundHeight.." ::GroundHeight") end
-			
-			
-			
-			
-			if y - GroundHeight > 20 then --Go down		
-				if y - GroundHeight < 5 then break end				
-				
-				tDeg=clamp( tDeg	+ 	0.25	+propagatedCounterChange	,-75, math.max((1/i)*75,25))	
-				tDeg= convertToNeg(tDeg)
-				propagatedCounterChange=propagatedCounterChange	-	0.25
-				Turn(KneeT[i],x_axis,math.rad(tDeg),0.0175)
-			else--Go up	faster					
-				boolUnderground=true
-				
-				tDeg=clamp(tDeg		- 	1.15 +propagatedCounterChange		,-75, math.max((1/i)*75,25))
-				tDeg= convertToNeg(tDeg)
-				propagatedCounterChange=propagatedCounterChange	+	1.15
-				Turn(KneeT[i],x_axis,math.rad(tDeg),0.135)	
-				
-			end					
-			
-		end		
-		WaitForTurns(KneeT)
-		
-		
-		
-		
-	end
-	
-	function convertToNeg(val)
-		if val < 0 then return 360 - (360+val) end
-		return val
-	end
-	
-	--expects a Table containing:
-	
-	
-	
-	function getADryWalkAbleSpot()
-		smin,smax=Spring.GetGroundExtremes()
-		if smax <=0 then return end
-		cond=function (i,j,chunkSizeX,chunkSizeZ)
-			h=Spring.GetGroundHeight(i*chunkSizeX,chunkSizeZ*j)
-			if h > 0 then 
-				v={}
-				v.x,v.y,v.z=Spring.GetGroundNormal(i*chunkSizeX,chunkSizeZ*j)
-				v=normVector(v)
-				if v.y < 0.3 or math.abs(v.x)> 0.7 or math.abs(v.z) < 0.3 then
-					return math.ceil(i*chunkSizeX), math.ceil(i*chunkSizeZ) 
-				end
-			end
-		end
-		return getPathFullfillingCondition(cond,64)
-	end
-	
-	-->gets Signum of a number
-	function sigNum(val)
-		return math.abs(val)/val
-	end
-	
-	-->Randomize a given Tables entrys
-	function randT(T)
-		resulT={}
-		
-		for i=1,#T do
-			
-			threeRandomAttempts= 0
-			index= sanitizeRandom(1,#T)
-			while threeRandomAttempts < 3 and resulT[index] do
-				index= sanitizeRandom(1,#T)	
-			end
-			while resulT[index] do
-				index= math.max(math.min(#T,(index+1)%#T),1)
-			end
-			resulT[index]=T[i]
-		end
-		return resulT
-	end
-	
-	--> returns a randomized Signum
-	function randSign()
-		if math.random(0,1)==1 then return 1 else return -1 end
-	end
-	
-	-->finds a spot on the map that is dry, and walkable
-	function getPathFullfillingCondition(condition,maxRes,filterTable, mapSizeX,mapSizeZ)
-		if type(condition)~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
-		local lcondition =condition
-		
-		probeResolution=4.0
-		local spGetGroundHeight=Spring.GetGroundHeight
-		assert(Game.mapSizeX)
-		assert(Game.mapSizeZ)
-		while true do
-			
-			chunkSizeX=(Game.mapSizeX-1)/probeResolution
-			chunkSizeZ=(Game.mapSizeZ-1)/probeResolution
-			xRand,zRand=math.floor(sanitizeRandom(1,probeResolution-1)),math.floor(sanitizeRandom(1,probeResolution-1))
-			
-			for i=xRand,probeResolution,1 do
-				for j=zRand,probeResolution,1 do
-					ax,ay,az=	lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
-					if ax then return ax,ay,az end
-				end
-			end
-			
-			
-			for i=1,xRand,1 do
-				for j=1,zRand,1 do
-					ax,ay,az=	lcondition(i,j,chunkSizeX,chunkSizeZ,filterTable)
-					if ax then return ax,ay,az end
-				end
-			end
-			
-			probeResolution=probeResolution*2
-			if probeResolution > maxRes then Spring.Echo("Aborting Due to High Probe Resolution"); return end
-		end
-	end
-	
-	-->ConditionFunctions
-	function GetSpot_condDeepSea(x,y,chunksizeX,chunksizeZ,filterTable)
-		h=Spring.GetGroundHeight(x*chunkSizeX,y*chunkSizeZ)
-		if h < filterTable.minBelow and h > filterTable.maxAbove then return x*chunkSizeX,y*chunkSizeZ end 
-		
-	end
-	
-	
-	
-	function binaryInsertTable(Table,Value,ToInsert,key)
-		i=math.floor(table.getn(Table)/2)
-		upLim,loLim=table.getn(Table),1
-		previousi=1
-		if key then ToInsert={value=ToInsert,key=key}
-			
-			while true do
-				if Value > Table[i] and Table[i+1] and Value > Table[i+1] then
-					previousi=i
-					i=i+ math.floor((upLim-loLim)/2)
-					loLim=previousi
-				elseif Value < Table[i] and Table[i-1] and Value < Table[i-1] then
-					previousi=i
-					i=i- math.floor((upLim-loLim)/2)
-					uplim=previousi
-				else 
-					table.insert(Table,ToInsert,i)
-					return Table,i
-				end
-			end
-		end
-	end
-	
-	--> increment a value
-	function inc(value)
-		return value+1
-	end
-	
-	--> decrement a value
-	function dec(value)
-		return value-1
-	end
-	
-	function sanitizeRandom(lowerBound,UpperBound)
-		if lowerBound >= UpperBound then return lowerBound end
-		
-		return math.random(lowerBound,UpperBound)
-	end
-	
-	function todoAssert(object, functionToPass, todoCheckNext)
-		if functionToPass(object)==true then return end
-		echo("Error:Todo:"..todoCheckNext)	
-	end
-	
-	-->Sanitizes a Variable for a table
-	function sanitizeItterator(Data,Min,Max)
-		return math.max(Min,math.min(Max,math.floor(Data)))
-	end
-	
-	-->Splits a Table into Two Pieces
-	function splitTable(T,breakP,breakEnd)
-		breakPoint=breakP or math.ceil(#T/2)
-		breakPoint=sanitizeItterator(breakPoint,1,table.getn(T))
-		local	T1={}
-		
-		for i=breakPoint,breakEnd,1 do
-			T1[#T1+1]=T[i]
-		end
-		
-		return T1
-		
-	end
-	
-	
-	
-	
-	
-	function getMidPoint(a,b)
-		ax,ay,az=a.x,a.y,a.z
-		bx,by,bz=b.x.b.y,b.z
-		return (ax-bx)/2+ax,(ay-by)/2+ay,(az-bz)/2+az
-	end
-	
-	function swingPointOutFromCenterByFrame(ax,ay,az,frame,swing,totalFrame)
-		extend=swing*math.sin(frame/totalFrame)*randSign()
-		return ax+math.random(math.min(extend,extend*-1),math.abs(extend)),
-		ay+math.random(math.min(extend,extend*-1),math.abs(extend)),
-		az+math.random(math.min(extend,extend*-1),math.abs(extend))
-	end
-	
-	--> make a CEG CLOUD
-	function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing,speedInFrames)
-		local spCEG=Spring.SpawnCEG
-		quarter=math.ceil(plifetime/4)
-		it=1
-		pT={}
-		for i=1,nr do
-			pT[i]={x=math.random(-size,size),y=math.random(-size,size)*0.5,z=math.random(-size,size)}
-		end
-		
-		while lifetime > 0 do
-			frame=Spring.GetGameFrame()
-			
-			for i=it,nr, it do
-				--between every particle that isnt first and last
-				if i ~= 1 and i ~= nr then
-					if i==1 then
-						fx,fy,fz=getMidPoint(pT[nr],pT[2])
-					else
-						fx,fy,fz=getMidPoint(pT[nr-1],pT[1])	
-					end
-					pT[i].x, pT[i].y, pT[i].z=swingPointOutFromCenterByFrame(fx,fy,fz,frame,swing,speedInFrames)
-				else
-					fx,fy,fz=getMidPoint(pT[i-1],pT[i+1])
-					pT[i].x, pT[i].y, pT[i].z=swingPointOutFromCenterByFrame(fx,fy,fz,frame,swing,speedInFrames)
-				end
-				spCEG(cegname,pT[i].x, pT[i].y, pT[i].z, math.random(0,1),math.random(0,1),math.random(0,1),0,0 )
-			end
-			it=(it%4)+1
-			lifetime=lifetime-quarter
-			Sleep(quarter)
-		end
-		
-		
-	end
-	
-	-->renames piecenames placeholders in a given s3o file 
-	-- replaced asciichars must be equal in digits	
-	function objectPieceRenamer(filename)
-		
-		
-		local file = io.open(filename,"r+b")
-		
-		
-		
-		if file then
-			
-			
-			-- Opens a file in append mode
-			lineTable={}
-			
-			keycount={}
-			keycount["aa"]={};
-			keycount["bb"]={};
-			keycount["cc"]={};
-			keycount["dd"]={};
-			keycount["ee"]={};
-			keycount["ff"]={};
-			keycount["gg"]={};
-			keycount["aa"].matchcounter=0
-			keycount["bb"].matchcounter=0
-			keycount["cc"].matchcounter=0
-			keycount["dd"].matchcounter=0
-			keycount["ee"].matchcounter=0
-			keycount["ff"].matchcounter=0
-			keycount["gg"].matchcounter=0
-			
-			local outputc = io.open("output.c", "wb")
-			
-			
-			keycount["aa"].nr=1;keycount["bb"].nr=2;keycount["cc"].nr=3;keycount["dd"].nr=4;keycount["ee"].nr=5;keycount["ff"].nr=6;keycount["gg"].nr=7
-			
-			
-			count=0
-			for line in file:lines() do
-				
-				copystring=line
-				for k,v in pairs(keycount) do
-					
-					matchCounter=v.matchcounter 
-					while string.find(copystring,"c"..k) or string.find(copystring,"E"..k) do
-						if string.find(copystring,"c"..k) then
-							copystring=string.gsub(copystring,"c"..k,"c".. v.nr,1)
-							matchCounter=matchCounter+1
-						end
-						if string.find(copystring,"E"..k) then 
-							copystring=string.gsub(copystring,"E"..k,"E".. v.nr,1)
-							matchCounter=matchCounter+1
-						end 
-						
-						if matchCounter==2 then
-							v.nr=v.nr+7
-							matchCounter=0
-						end
-					end
-					v.matchcounter =matchCounter 
-					
-				end
-				outputc.write(outputc,copystring.."\n")
-				
-			end
-			outputc:close()
-			
-		else
-			Spring.Echo(" could not open file")
-		end
-	end
-	
-	-->Inserts a Value only if it is not found
-	function TableInsertUnique(Table, Value)
-		for i=1,#Table do
-			if Table[i]==Value then return Table end	
-		end
-		table.insert(Table,Value)
-		return Table
-	end
-	
-	-->Generic Simple Commands
-	function Command(id, command, target,option)
-		options= option or {}
-		--abort previous command
-		
-		if command == "build" then 
-			x,y,z=Spring.GetUnitPosition(unitID)
-			x,y,z=x+50,y,z+50	
-			Spring.SetUnitMoveGoal(unitID,x,y,z)
-			Spring.GiveOrderToUnit(unitID, -1*target, {}, {})			
-		end	
-		
-		if command == "attack" then 
-			coords={target.x,target.y,target.z}
-			Spring.SelectUnitArray({[1]=id})
-			Spring.GiveOrder(CMD.FIGHT,coords, CMD.OPT_RIGHT + CMD.OPT_SHIFT)	
-		end
-		
-		if command == "repair" or command == "assist" then 
-			spGiveOrderToUnit(unitID, CMD_GUARD, { target }, { "" })
-		end
-		
-		if command == "go" 	 then
-			Spring.GiveOrderToUnit(id, CMD.MOVE , {target.x, target.y, target.z },options )--{"shift"}
-			return	 	
-		end
-		
-		if command == "stop" 	 then
-			Spring.GiveOrderToUnit(id, CMD.STOP,{}, {} )	
-			return	 	
-		end
-		
-		if command == "setactive" 	 then
-			Spring.SetUnitMoveGoal(id,target.x,target.y,target.z); return	 	
-		end
-	end
-	
-	-->Unit Verfication
-	function exists(unitid)
-		validUnit=Spring.GetUnitIsDead(unitid)
-		if validUnit and validUnit==true then return true end
-		
-		return false		
-	end	
-	
-	--> Gets a List of Geovents + Positions
-	function getGeoventList()
-		
-		features=Spring.GetAllFeatures()
-		GeoventList={}
-		for i=1,#features do
-			id =features[i]
-			defID=Spring.GetFeatureDefID(id)
-			if defID == FeatureDefNames["geovent"].id then
-				fx,fy,fz=Spring.GetFeaturePosition(id)
-				GeoventList[#GeoventList+1]={x=fx,y=fy,z=fz, id= id}	
-			end
-		end	
-		return GeoventList
-	end
-	
-	--> testUnit for existance - Debugfunction
-	function testUnit(unitid)
-		if not unitid then echo("TestUnit no unitid given to testUnit()"); return end
-		echo("UnitTested")
-		if type(unitid) ~= "number" then echo("unitid is not a number-type is "..type(unitid).." with value: "..unitid); return end
-		
-		validUnit=Spring.ValidUnitID(unitid)
-		if validUnit and validUnit==true then
-			echo("U"..unitid.." :unitid is valid")
-		else
-			echo("U"..unitid.." :unitid is invalid")
-			return 
-		end
-		isAlive= Spring.GetUnitIsDead(unitid)
-		if isAlive and isAlive==true then
-			echo("U"..unitid..":unitid is alive")
-		else
-			echo("U"..unitid..":unitid is dead")
-			return 
-		end
-		
-	end
-	
-	function GetUnitCanBuild(unitName)
-		unitDef=UnitDefNames[unitName]
-		T={}
-		if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
-			for index, unitname in ipairs(buildOptions) do
-				T[unitname]=unitname
-			end
-		end
-		return T
-	end
-	
-	
-	--> getUnitBuildAbleMap
-	--computates a map of all unittypes buildable by a unit
-	function getFactionTable(unitName, boolID)
-		Result={}
-		Result[unitName]={}
-		
-		openTable={}
-		closedTable={}
-		
-		while table.getn(openTable) > 0 do
-			CanBuildList=GetUnitCanBuild(unitName)
-			openTable= mergeTables(CanBuildList,openTable)
-			
-			subFunction= function(T_i_,ArghT)if ArghT[T_i_] then 
-				return 
-			else 
-				return T_i_ 
-			end
-		end
-		
-		openTable= process(openTable,closedTable,subFunction)
-		--for CanBuildList insert into
-		for k,v in ipairs(CanBuildList) do
-			Result[unitName]=TableInsertUnique(Result[unitName],k)
-		end
-		closedTable[unitName]=true
-		openTable[unitName]=nil
-		
-		unitName=openTable[#openTable]
-		
-	end
-	return Result
+    if depth == nil then
+        depth = 0
+    else
+        depth = depth + 1
+        for i = 1, depth do spaces = spaces .. " " end
+    end
+
+    if type(value) == 'table' then
+        mTable = getmetatable(value)
+        if mTable == nil then
+            Spring.Echo(spaces .. linePrefix .. "(table) ")
+        else
+            Spring.Echo(spaces .. "(metatable) ")
+            value = mTable
+        end
+        for tableKey, tableValue in pairs(value) do
+            vardump(tableValue, depth, tableKey)
+        end
+    elseif type(value) == 'function' or
+            type(value) == 'thread' or
+            type(value) == 'userdata' or
+            value == nil then
+        Spring.Echo(spaces .. tostring(value))
+    else
+        Spring.Echo(spaces .. linePrefix .. "(" .. type(value) .. ") " .. tostring(value))
+    end
+end
+
+function echoT(T, boolAssertTable, name)
+
+    lboolAssertTable = boolAssertTable or false
+    if not type(T) == "table" then Spring.Echo("Element is of Type:" .. type(T)); return end
+    lname = name or "AnnonymTable"
+    if T.name then lname = T.name end
+
+
+    if lname then
+        Spring.Echo("============================= " .. lname .. " ======================================")
+        Spring.Echo("|| ||")
+    else
+        Spring.Echo("============================= KeyValue Table=====================================")
+        Spring.Echo("|| ||")
+    end
+
+    for k, v in pairs(T) do
+        typek = type(k)
+        typev = type(v)
+
+        if typev == "table" then
+            rEchoT(typev, 0)
+        end
+        nonprintableType = {
+            ["table"] = true,
+            ["function"] = true,
+            ["boolean"] = true,
+        }
+        if nonprintableType[typek] == nil then
+            if not nonprintableType[typev] then
+                Spring.Echo(" " .. k .. " 	---> 	" .. v .. " -> 	[ " .. ((assert(v))) .. " ] ")
+            elseif typev == table then
+                echoT(v)
+            elseif typev == "boolean" then
+                Spring.Echo(" " .. k .. " 	---> 	" .. (boolToString(v)) .. " ")
+            else
+                Spring.Echo("Key " .. k .. " -> " .. " holds no value")
+            end
+        end
+    end
+
+    if lboolAssertTable == true then
+        for k, v in pairs(T) do
+            assert(v)
+        end
+    end
+
+
+    Spring.Echo("================================================================================")
+end
+
+function boolToString(value)
+    if value == true then return "true" else return "false" end
+end
+
+function stringBuilder(length, sign)
+    str = ""
+    for i = 1, length do
+        str = str .. sign
+    end
+    return str
+end
+
+function printT(tab, size)
+    maxdigit = getDigits(tab[size / 2][size / 2])
+    step = size / 12
+    Spring.Echo(stringBuilder(size, "_") .. "\n")
+    for i = 1, size, step do
+        seperator = "|"
+        str = ""
+
+        for j = 1, size, step do
+            str = str .. seperator .. math.floor(tab[math.ceil(i)][math.ceil(j)])
+            if getDigits(math.floor(tab[math.ceil(i)][math.ceil(j)])) < maxdigit then
+                for i = 1, maxdigit - getDigits(math.floor(tab[math.ceil(i)][math.ceil(j)])), 1 do
+                    str = str .. " "
+                end
+            end
+        end
+        Spring.Echo(str)
+    end
+    Spring.Echo(stringBuilder(size, "_") .. "\n")
+end
+
+function getDigits(number)
+    digit = 1
+    if number < 0 then digit = 2 end
+    while math.abs(number) > 10 do
+        number = number / 10
+        digit = digit + 1
+    end
+    return digit
+end
+
+function checkYourself()
+    return GG.SniperRope[unitID] or false
+end
+
+function Limit(val, lmin, lmax)
+    if type(val) == "table" or type(lmin) == "table" or type(lmax) == "table" then return nil end --TODO Remove after debug
+    if val < lmin then return lmin end
+    if val > lmax then return lmax end
+    return val
+end
+
+-- This code is a adapted Version of the NeHe-Rope Tutorial. All Respect towards those guys.
+-- RopePieceTable by Convention contains (SegmentBegin)----(SegmentEnd)(SegmentBegin)----(SegmentEnd) 
+-- RopeConnectionPiece -->Piece,ContainsMass,ColRadius |
+-- LoadPiece --> Piece,Contains Mass, ColRadius | 
+-- ForceFunction --> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
+
+
+function PseudoRopePhysix(RopePieceTable, RopeConnectionT, LoadPieceT, Ropelength, forceFunctionTable, SpringConstant, boolDebug)
+
+    --SpeedUps
+    assert(RopePieceTable, "RopePieceTable not provided")
+    assert(RopeConnectionT, "RopeConnectionT not provided")
+    assert(LoadPieceT, "LoadPieceT not provided")
+    assert(Ropelength, "Ropelength not provided")
+    assert(forceFunctionTable, "forceFunctionTable not provided")
+    assert(SpringConstant, "SpringConstant not provided")
+
+    local spGPos = Spring.GetUnitPiecePosDir
+    local spGGH = Spring.GetGroundHeight
+    local spGN = Spring.GetGroundNormal
+    local spGUPP = Spring.GetUnitPiecePosition
+    local spGUP = Spring.GetUnitPosition
+    local ffT = forceFunctionTable
+    local groundHeight = function(piece)
+        x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, piece)
+        return Spring.GetGroundHeight(x, z)
+    end
+    -- Each Particle Has A Weight Of 50 Grams
+
+
+    --SIMCONSTANTS -tweak them
+    local SpringConstant = SpringConstant or 100000.0
+
+    local SpringInnerFriction = 0.2
+    local RopeMass = 0.1
+    local groundRepulsionConstant = 100 -- A Constant To Represent How Much The Ground Shall Repel The Masses
+    local groundFrictionConstant = 0.35 -- A Constant Of Friction Applied To Masses By The Ground
+    local groundAbsorptionConstant = 3 -- A Constant Of Absorption Friction Applied To Masses By The Ground
+    local airFrictionConstant = 0.5
+
+    --INIT
+    gravitation = Vector:new(0, -0.981, 0)
+    ForcesTable = {}
+
+    rcx, rcy, rcz = Spring.GetUnitPiecePosDir(unitID, RopeConnectionT.Piece)
+    assert(rcx)
+    RopeConnection = {
+        Pos = Vector:new(rcx, rcy, rcz),
+        vel = Vector:new(),
+        mass = 1500, --unrealistic, yet you cant reach escape velocity 
+        Radius = RopeConnectionT.ColRadius
+    }
+
+    ObjT = {}
+    --contains the startpos, as the sensory piece
+    for i = 1, #RopePieceTable, 1 do
+        px, py, pz, pdx, pdy, pdz = Spring.GetUnitPiecePosDir(unitID, RopePieceTable[i])
+
+        ObjT[#ObjT + 1] = {
+            piecename = RopePieceTable[i],
+            pos = Vector:new(px, py, pz),
+            dir = Vector:new(pdx, pdy, pdz),
+            mass1 = createMass(RopeMass / 2, px, py, pz, 0, 0, 0, 0, 0, 0),
+            vel = Vector:new(),
+            PrevPiece = (math.max(1, i - 1)),
+            NextPiece = math.min(i + 1, #RopePieceTable),
+            length = Ropelength,
+            springConstant = SpringConstant
+        }
+    end
+    --The pulled Object
+    px, py, pz, pdx, pdy, pdz = Spring.GetUnitPiecePosDir(unitID, LoadPieceT.Piece)
+    ObjT[#ObjT + 1] = {
+        piecename = LoadPieceT.Piece,
+        pos = Vector:new(px, py, pz),
+        dir = Vector:new(pdx, pdy, pdz),
+        mass1 = createMass(LoadPieceT.Mass, px, py, pz, 0, 0, 0, 0, 0, 0),
+        vel = Vector:new(),
+        PrevPiece = (#ObjT),
+        length = Ropelength,
+        springConstant = SpringConstant
+    }
+    --/INIT
+    local simStep = 75
+
+    while checkYourself() do
+        --init and reset
+        for i = 1, #ObjT, 1 do
+            ObjT[i].mass1.force = Vector:new()
+        end
+
+        --applyForces
+
+        for j = 1, #ffT, 1 do
+            if ffT.pieceList then
+                for k in pairs(fft.piecelist) do
+                    if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x, ObjT[k].posdir.y, ObjT[k].posdir.z) == true then
+                        ObjT[k].mass1.force = ObjT[k].mass1.force + (ffT[j].acceleration * ObjT[k].mass1.mass)
+                    end
+                end
+            else
+                for i = 1, #ObjT, 1 do
+                    ObjT[i].mass1.force = ObjT[i].mass1.force + (ffT[j].acceleration * ObjT[i].mass1.mass)
+                end
+            end
+        end
+
+        --Lets SpringSimulation
+        for i = 1, #ObjT, 2 do
+            ObjT[i], ObjT[Limit(i + 1, 1, #ObjT)] = solveSpring(ObjT[i], ObjT[Limit(i + 1, 1, #ObjT)], SpringInnerFriction)
+        end
+
+
+        --solve Objforces
+        for i = 1, #ObjT - 1, 2 do -- Start A Loop To Apply Forces Which Are Common For All Masses
+
+            local Succesor = Limit(i, 1, ObjT)
+            if not ObjT[i].mass1 then
+                px, py, pz, pdx, pdy, pdz = Spring.GetUnitPiecePosDir(unitID, RopePieceTable[math.max(math.min(i, #RopePieceTable), 1)])
+                ObjT[i].mass1 = createMass(RopeMass / 2, px, py, pz, 0, 0, 0, 0, 0, 0)
+            end
+
+            ObjT[i].mass1.force = ObjT[i].mass1.force + (ObjT[i].mass1.mass * gravitation)
+
+            -- masses[a]->applyForce(gravitation * masses[a]->m); -- The Gravitational Force
+            -- The air friction
+            ObjT[i].mass1.force = ObjT[i].mass1.force + (ObjT[i].vel * (airFrictionConstant * -1))
+
+            -- masses[a]->applyForce(-masses[a]->vel * airFrictionConstant);
+
+
+            if ObjT[i].mass1.pos.y > groundHeight(ObjT[i].piecename) then
+                -- Forces From The Ground Are Applied If A Mass Collides With The Ground
+
+                v1 = Vector:new() -- A Temporary Vector3D
+                v2 = Vector:new() -- A Temporary Vector3D
+
+                v1 = ObjT[i].mass1.vel
+                v2 = ObjT[Succesor].mass2.vel -- Get The Velocity
+
+                v1.y = 0
+                v2.y = 0
+                -- Omit The Velocity Component In Y-Direction
+
+                -- The Velocity In Y-Direction Is Omited Because We Will Apply A Friction Force To Create
+                -- A Sliding Effect. Sliding Is Parallel To The Ground. Velocity In Y-Direction Will Be Used
+                -- In The Absorption Effect.
+
+                -- Ground Friction Force Is Applied 
+                ObjT[i].mass1.force = ObjT[i].mass1.force + ((-v1) * groundFrictionConstant)
+                ObjT[Succesor].mass1.force = ObjT[Succesor].mass1.force + ((-v2) * groundFrictionConstant)
+
+
+                v1 = ObjT[i].mass1.vel -- Get The Velocity
+                v2 = ObjT[Succesor].mass1.vel -- Get The Velocity
+
+                v1.x, v1.z = 0, 0
+                v2.x, v2.z = 0, 0
+
+                -- Above, We Obtained A Velocity Which Is Vertical To The Ground And It Will Be Used In
+                -- The Absorption Force
+
+                if (v1.y < 0) then
+                    ObjT[i].mass1.force = ObjT[i].mass1.force + (((-v1) * groundAbsorptionConstant))
+                end
+
+                if (v2.y < 0) then
+                    ObjT[Succesor].mass1.force = ObjT[Succesor].mass1.force + ((-v2) * groundAbsorptionConstant)
+                end
+
+
+            else
+                x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, ObjT[i].piecename)
+                vx, vy, vz = Spring.GetGroundNormal(x, z)
+                vecGround = Vector:new(vx, vy, vz)
+                -- The Ground Shall Repel A Mass Like A Spring.
+                -- By "Vector3D(0, groundRepulsionConstant, 0)" We Create A Vector In The Plane Normal Direction
+                -- With A Magnitude Of groundRepulsionConstant.
+                -- By (groundHeight - masses[a]->pos.y) We Repel A Mass As Much As It Crashes Into The Ground.
+                gh = groundHeight(ObjT[i].piecename)
+                f1 = (vecGround * groundRepulsionConstant) * (gh - ObjT[i].mass1.pos.y)
+                ObjT[i].mass1.force = ObjT[i].mass1.force + f1 -- The Ground Repulsion Force Is Applied
+            end
+        end
+        --simulate
+        for i = 1, #ObjT, 1 do
+            --vel += (force/mass)* dt
+            ObjT[i].mass1.vel = (ObjT[i].mass1.vel + ((ObjT[i].mass1.force / ObjT[i].mass1.mass) * timeInMS))
+
+            ObjT[i].mass1.pos = ObjT[i].mass1.pos + ((ObjT[i].mass1.dir * ObjT[i].mass1.vel) * timeInMS)
+        end
+        --TranslatePieces to new Positions
+
+        Sleep(simStep)
+        if lib_boolDebug then
+            debugDisplayPieceChain(RopePieceTable)
+        end
+    end
+end
+
+--add Operators to unitscript
+
+function eraNonArgMul(A, B)
+    if A == "0" or B == "0" or A == "" or B == "" then return ""
+    else return "(" .. A .. "*" .. B .. ")"
+    end
+end
+
+function eraNonArgAdd(A, B)
+    if A == "0" or A == "" and B ~= "0" and B ~= "" then return B end
+    if B == "0" or B == "" and A ~= "0" and A ~= "" then return A end
+    return A .. "+" .. B
+end
+
+--> used to calc shadder matrixes in lua.. fill in, calc, optimize, print out
+function matrixLab()
+    mA = {
+        [1] = "cos(z)",
+        [2] = "-sin(z)",
+        [3] = "0",
+        [4] = "sin(z)",
+        [5] = "cos(z)",
+        [6] = "0",
+        [7] = "0",
+        [8] = "0",
+        [9] = "1",
+    }
+    mB = {
+        [1] = "-1",
+        [2] = "0",
+        [3] = "0",
+        [4] = "0",
+        [5] = "cos(x)",
+        [6] = "-sin(x)",
+        [7] = "0",
+        [8] = "sin(x)",
+        [9] = "cos(x)",
+    }
+    mC = {
+        [1] = "cos(y)",
+        [2] = "0",
+        [3] = "sin(y)",
+        [4] = "0",
+        [5] = "1",
+        [6] = "0",
+        [7] = "-sin(y)",
+        [8] = "0",
+        [9] = "cos(y)",
+    }
+
+
+    mD = MatrixBuilder3x3(MatrixBuilder3x3(mA, mB), mC)
+    --echoT(mD)
+end
+
+function mirrorMatriceXAxis(x, y, z)
+    --return 360-x,y,z*-1																																							
+
+    x = ((-1 * math.cos(z)) * math.cos(y)) + ((-1 * math.sin(z) * -1 * math.sin(x)) * -1 * math.sin(y)) * x + ((-1 * math.sin(z) * math.cos(x))) * y + ((-1 * math.cos(z)) * math.sin(y)) + ((-1 * math.sin(z) * -1 * math.sin(x)) * math.cos(y)) * z
+
+    y = ((-1 * math.sin(z)) * math.cos(y)) + ((math.cos(z) * -1 * math.sin(x)) * -1 * math.sin(y)) * x + ((math.cos(z) * math.cos(x))) * y + ((-1 * math.sin(z)) * math.sin(y)) + ((math.cos(z) * -1 * math.sin(x)) * math.cos(y)) * z
+
+    z = ((math.cos(x)) * -1 * math.sin(y)) * x + ((math.sin(x))) * y + ((math.cos(x)) * math.cos(y)) * z
+    return x, y, z
+end
+
+function MatrixBuilder3x3(A, B)
+    return {
+        [1] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[1], B[1]), eraNonArgMul(A[2], B[4])), eraNonArgMul(A[3], B[7])),
+        [2] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[1], B[2]), eraNonArgMul(A[2], B[5])), eraNonArgMul(A[3], B[8])),
+        [3] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[1], B[3]), eraNonArgMul(A[2], B[6])), eraNonArgMul(A[3], B[9])),
+        [4] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[4], B[1]), eraNonArgMul(A[5], B[4])), eraNonArgMul(A[6], B[7])),
+        [5] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[4], B[2]), eraNonArgMul(A[5], B[5])), eraNonArgMul(A[6], B[8])),
+        [6] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[4], B[3]), eraNonArgMul(A[5], B[6])), eraNonArgMul(A[6], B[9])),
+        [7] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7], B[1]), eraNonArgMul(A[8], B[4])), eraNonArgMul(A[9], B[7])),
+        [8] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7], B[2]), eraNonArgMul(A[8], B[5])), eraNonArgMul(A[9], B[8])),
+        [9] = eraNonArgAdd(eraNonArgAdd(eraNonArgMul(A[7], B[3]), eraNonArgMul(A[8], B[6])), eraNonArgMul(A[9], B[9])),
+    }
+end
+
+
+function iRand(start, fin)
+    if not fin or fin < start then fin = start + 1 end
+
+    return math.ceil(sanitizeRandom(start, fin))
+end
+
+function midVector(PointA, PointB)
+    PointA.x, PointA.y, PointA.z = PointA.x + PointB.x, PointA.y + PointB.y, PointA.z + PointB.z
+    return divVector(PointA, 2)
+end
+
+
+function checkCenterPastPoint(MidPoint, GatePoint, PrevGatePoint)
+
+    OrgPoint = subVector(GatePoint, PrevGatePoint)
+    assert(OrgPoint)
+    MirrorPointV = mulVector(OrgPoint, -1)
+
+    -- if distance to PrevGatePoint < then distance to mirrored Point
+    if norm2Vector(subVector(MirrorPointV, MidPoint)) >= norm2Vector(subVector(OrgPoint, MidPoint)) then
+        return true
+    else
+        return false
+    end
+end
+
+function absVec(vec)
+    vec.x = math.abs(vec.x)
+    vec.y = math.abs(vec.y)
+    vec.z = math.abs(vec.z)
+    return vec
+end
+
+function eqVec(vecA, vecB)
+    return vecA.x == vecB.x and vecA.y == vecB.y and vecA.z == vecB.z
+end
+
+function spawnCegAtPiece(unitID, pieceId, cegname, offset)
+
+    boolAdd = offset or 10
+
+
+    if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+    if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+    if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+    x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
+
+    if y then
+        y = y + boolAdd
+        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 0, 0)
+    end
+end
+
+function getPieceMap(id)
+
+    dpiecesTable = Spring.GetUnitPieceMap(id)
+    ux, uy, uz = Spring.GetUnitPosition(id)
+    tpiecesTable = {}
+    i = 1
+    for k, v in pairs(dpiecesTable) do
+        x, y, z = Spring.GetUnitPiecePosDir(id, v)
+        tpiecesTable[i] = {}
+        tpiecesTable[i].pid = v
+        tpiecesTable[i].x = x or ux
+        tpiecesTable[i].y = y or uy
+        tpiecesTable[i].z = z or uz
+        i = i + 1
+    end
+    return tpiecesTable
+end
+
+function getFrameDepUnqOff(limit)
+    if not GG.FrameDependentOffset then GG.FrameDependentOffset = { val = 0, frame = Spring.GetGameFrame() } end
+    if GG.FrameDependentOffset.frame ~= Spring.GetGameFrame() then GG.FrameDependentOffset.val = 0; GG.FrameDependentOffset.frame = Spring.GetGameFrame() end
+
+    GG.FrameDependentOffset.val = GG.FrameDependentOffset.val + 1
+    sign = randSign()
+    return sign * math.random(0, (GG.FrameDependentOffset.frame * GG.FrameDependentOffset.val) % limit + 1)
+end
+
+--> Play a soundfile only by unittype
+function PlaySoundByUnitDefID(unitdef, soundfile, loudness, Time, nrOfUnitsParallel, predelay)
+    if not unitdef then return false end
+    if predelay and predelay > 0 then Sleep(predelay) end
+
+    loud = loudness or 1
+    if loud == 0 then loud = 1 end
+
+    if GG.UnitDefSoundLock == nil then GG.UnitDefSoundLock = {} end
+    if GG.UnitDefSoundLock[unitdef] == nil then GG.UnitDefSoundLock[unitdef] = 0 end
+
+    if GG.UnitDefSoundLock[unitdef] < nrOfUnitsParallel then
+        GG.UnitDefSoundLock[unitdef] = GG.UnitDefSoundLock[unitdef] + 1
+        Spring.PlaySoundFile(soundfile, loud)
+        if Time > 0 then
+            Sleep(Time)
+        end
+        GG.UnitDefSoundLock[unitdef] = GG.UnitDefSoundLock[unitdef] - 1
+        return true
+    end
+    return false
+end
+
+--This Takes any LanguageString and 'translates' it meaning it replaces stringparts with the Sound
+--This is deterministic, meaning for a person and LanguageTable it always produces the same sound
+--SoundPerson is a Function that allows to convay additional params into the sound-
+--e.g. Out of Breath, Angry, tired, sad, by changing loudness and choosen soundsnippet
+--its call signature is SoundPerson(translatedSoundSnippet, position in sentence, translatedTable)
+function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
+
+    --translate the Text via the language Table
+    local lplaySoundFile = Spring.PlaySoundFile
+    local translatedTable = {}
+    local lSoundPerson = SoundPerson or nil
+
+    for i = 1, #Text do
+        c = str:sub(i, math.min(#Text, i + SymbolLenght))
+        hash = LanguageTable.Hash(c)
+        translatedTable[i] = LanguageTable[hash] or " "
+    end
+
+    if lSoundPerson then
+        for it = 1, #translatedTable do
+            choosenSound, loudness = lSoundPerson(translatedTable[it], it, translatedTable)
+            if SoundTable[choosenSound] then
+                lplaySoundFile(SoundTable[choosenSound], loudness)
+            end
+        end
+    else
+        lplaySoundFile(SoundTable[choosenSound], StandardLoud + math.random(LoudRange / 10, LoudRange))
+    end
+end
+
+function getLowestPointOfSet(Table, axis)
+    if #Table < 1 then return nil end
+
+    index = 1
+    y = math.huge
+    if axis == "y_axis" then
+        for i = 1, #Table do
+            if Table[i].y < y then
+                y = Table[i].y
+                index = i
+            end
+        end
+    end
+    if axis == "z_axis" then
+        for i = 1, #Table do
+            if Table[i].z < y then
+                y = Table[i].z
+                index = i
+            end
+        end
+    end
+    if axis == "x_axis" then
+        for i = 1, #Table do
+            if Table[i].x < y then
+                y = Table[i].x
+                index = i
+            end
+        end
+    end
+    return Table[index].x, Table[index].y, Table[index].z, index
+end
+
+function getHighestPointOfSet(Table, axis)
+    if type(Table) ~= "table" then
+        echo("getHighestPointOfSet:not a table")
+        return nil
+    end
+
+    if #Table < 1 or table.getn(Table) == 0 then
+        echo("getHighestPointOfSet:table is empty")
+        return nil
+    end
+
+    index = 1
+    y = -math.huge
+    if axis == "y_axis" then
+        for i = 1, #Table do
+            if Table[i].y > y then
+                y = Table[i].y
+                index = i
+            end
+        end
+    end
+    if axis == "z_axis" then
+        for i = 1, #Table do
+            if Table[i].z > y then
+                y = Table[i].z
+                index = i
+            end
+        end
+    end
+    if axis == "x_axis" then
+        for i = 1, #Table do
+            if Table[i].x > y then
+                y = Table[i].x
+                index = i
+            end
+        end
+    end
+
+
+    return Table[index].x, Table[index].y, Table[index].z, index
+end
+
+function getNearestGroundEnemy(id, UnitDefs)
+    ed = Spring.GetUnitNearestEnemy(id)
+    if ed then
+        --early out
+        eType = Spring.GetUnitDefID(ed)
+
+        if UnitDef[eType].isAirUnit == false then return ed end
+        eTeam = Spring.GetUnitTeam()
+        allUnitsOfTeam = Spring.GetTeamUnits(eTeam)
+        mindist = math.huge
+        foundUnit = nil
+
+        process(allUnitsOfTeam,
+            function(ied)
+                if ied ~= ed and distanceUnitToUnit(id, ied) < mindist then
+                    if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
+                        mindist = distanceUnitToUnit(id, ied)
+                        foundUnit = ied
+                    end
+                end
+            end)
+        if Spring.ValidUnitID(foundUnit) == true then return foundUnit end
+    end
+end
+
+
+function pieceToPoint(pieceNumber)
+    reTab = {}
+
+    reTab.x, reTab.y, reTab.z = Spring.GetUnitPiecePosition(unitID, pieceNumber)
+    return reTab
+end
+
+function piec2Point(piecesTable)
+    if not piecesTable then
+        echo("lib_UnitScript::piec2Point: No argument recived")
+        return
+    end
+
+    if type(piecesTable) ~= "table" then
+        echo("lib_UnitScript::piec2Point: Not a valid table- got" .. piecesTable .. " of type " .. type(piecesTable) .. " instead ")
+        return
+    end
+
+    reTab = {}
+
+    for i = 1, #piecesTable do
+        reTab[i] = {}
+        reTab[i].Piece = piecesTable[i]
+        reTab[i].x, reTab[i].y, reTab[i].z = Spring.GetUnitPiecePosDir(unitID, piecesTable[i])
+        reTab[i].index = i
+    end
+
+    return reTab
+end
+
+
+
+--> spawn a ceg on the map above ground
+function markPosOnMap(x, y, z, colourname)
+
+
+    h = Spring.GetGroundHeight(x, z)
+    if h > y then y = h end
+    for i = 1, 5 do
+        Spring.SpawnCEG(colourname, x, y + 10, z, 0, 1, 0, 50, 0)
+        Sleep(200)
+    end
+end
+
+--> Takes a Table of Locks and locks it if the lock is free 
+function TestSetLock(Lock, number)
+    if TestLocks(number) == true then
+        Lock[number] = true
+        return true
+    end
+    return false
+end
+
+-->Test a rows of locks 
+function TestLocks(Lock, number)
+    for i = 1, table.getn(Lock) do
+        if number ~= i and Lock[i] == true then return false end
+    end
+    return true
+end
+
+function normTwo(...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    sum = 0
+    for k, v in pairs(arg) do
+        sum = sum + v * v
+    end
+    return math.sqrt(sum)
+end
+
+--> Sets a Lock free
+function ReleaseLock(Lock, number)
+    Lock[number] = false
+end
+
+function filterOutTeam(TableOfUnits, teamid)
+    returnTable = {}
+    for i = 1, #TableOfUnits, 1 do
+        tid = Spring.GetUnitTeam(TableOfUnits[i])
+        if tid ~= teamid then returnTable[#returnTable + 1] = TableOfUnits[i] end
+    end
+    return returnTable
+end
+
+--> Grabs every Feature in a circle, filters out the featureID
+function getAllFeatureNearUnit(unitID, Range)
+    px, py, pz = Spring.GetUnitPosition(unitID)
+    return Spring.GetFeaturesInCylinder(px, pz, Range)
+end
+
+--> Grabs every Unit in a circle, filters out the unitid
+function getAllNearPiece(unitID, Piece, Range)
+    px, py, pz = Spring.GetUnitPiecePosDir(unitID, Piece)
+    return getAllInCircle(px, pz, Range, unitID)
+end
+
+--> Grabs every Unit in a circle, filters out the unitid
+function getAllNearUnit(unitID, Range)
+    px, py, pz = Spring.GetUnitPosition(unitID)
+    return getAllInCircle(px, pz, Range, unitID)
+end
+
+--> Grabs every Unit in a circle, filters out the unitid or teamid if given
+function getAllInCircle(x, z, Range, unitID, teamid)
+    if not x or not z then
+        return {}
+    end
+    if not Range then assert(Range) end
+
+    T = {}
+    if teamid then
+        T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
+    else
+        T = Spring.GetUnitsInCylinder(x, z, Range)
+    end
+
+    if unitID and T and #T > 1 and type(unitID) == 'number' then
+        for num, id in ipairs(T) do
+            if id == unitID then
+                table.remove(T, num)
+            end
+        end
+    end
+    return T
+end
+
+--> Grabs every Unit in a circle, filters out the unitid
+function getInCircle(unitID, Range, teamid)
+
+    T = {}
+    x, _, z = Spring.GetUnitBasePosition(unitID)
+    if teamid then
+        T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
+    else
+        T = Spring.GetUnitsInCylinder(x, z, Range)
+    end
+
+    if T and #T > 1 and type(unitID) == 'number' then
+        table.remove(T, unitID)
+    end
+    return T
+end
+
+function filterTableByTable(T, T2, compareFunc)
+    reTable = {}
+    for i = 1, #T do
+        if compareFunc(T[i], T2) == true then reTable[#reTable + 1] = T[i] end
+    end
+    return reTable
+end
+
+function tableToKeyTable(T)
+    KT = {}
+    for i = 1, #T do
+        KT[T[i]] = T[i]
+    end
+    return KT
+end
+
+function keyTableToTables(T)
+    counter = 1
+    TableKey = {}
+    TableValue = {}
+    counter = 1
+    for k, v in pairs(T) do
+        TableKey[counter] = k
+        TableValue[counter + 1] = v
+        counter = counter + 2
+    end
+
+    return TableKey, TableValue
+end
+
+function insertKeysIntoTable(T, T2)
+    for i = 1, #T do
+        if not T2[T[i]] then
+            T2[T[i]] = T[i]
+        end
+    end
+    return T2
+end
+
+--itterates over a Keytable, executing a function 
+function foreach(T, fooNction)
+    reTable = {}
+    if type(fooNction) == "string" then
+        fooNction = loadstring("function(k,v)\n" .. fooNction .. "\n end")
+        assert(type(fooNction) == "function", "string not a function in foreach(k,v) @ lib_UnitScript.lua")
+    end
+
+    for k, v in pairs(T) do
+        reTable[k] = fooNction(k, v)
+    end
+
+    return reTable
+end
+
+-->itterates over a table, executing a function 
+function elementWise(T, fooNction, ArghT)
+    reTable = {}
+
+    for k, v in pairs(T) do
+        reTable[k] = fooNction(T[k], ArghT)
+    end
+
+    return reTable
+end
+
+-->recursive itterates over a Keytable, executing a function 
+function recElementWise(T, fooNction, ArghT)
+    reTable = {}
+
+    for k, v in pairs(T) do
+        if type(T[k]) ~= "table" then
+            reTable[k] = fooNction(T[k], ArghT)
+        else
+            reTable[k] = recElementWise(T[k], fooNction, ArghT)
+        end
+    end
+
+    return reTable
+end
+
+function countT(T)
+    it = 0
+    for k, v in pairs(T) do
+        it = it + 1
+    end
+    return it
+end
+
+
+
+
+--> Join Operation on two tables
+join = function(id, argT)
+    resulT = {}
+    for num, idInTable in pairs(argT) do
+        resulT[#resulT + 1] = { id = id, obj = idInTable }
+    end
+    return resulT
+end
+
+--> Validator
+validator = function(id)
+    deadOrAlive = Spring.GetUnitIsDead(id)
+    if deadOrAlive and deadOrAlive == false then
+        return id
+    end
+end
+
+--> takes a Table, and executes ArgTable/Function,Functions on it
+function process(Table, ...)
+    local arg = { ... }
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    T = {}
+    if Table then
+        T = Table
+    else
+        if lib_boolDebug == true then
+            echo("Lua:lib_UnitScript:Process: No Table handed over")
+            return
+        end
+    end
+    if not arg then echo("No args in process") return end
+    if type(arg) == "function" then return elementWise(T, arg) end
+
+
+    TempArg = {}
+    TempFunc = {}
+    --if not arg then return Table end
+
+    for _, f in pairs(arg) do
+        if type(f) == "function" then
+            T = elementWise(T, f, TempArg)
+            TempArg = {}
+        else
+            TempArg[#TempArg + 1] = f
+        end
+    end
+    return T
+end
+
+function recProcess(Table, ...)
+    local arg = { ... }
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    T = {}
+    if Table then T = Table else echo("Lua:lib_UnitScript:Process: No Table handed over") return end
+    if not arg then echo("No args in process") return end
+    if type(arg) == "function" then return elementWise(T, arg) end
+
+
+    TempArg = {}
+    TempFunc = {}
+    --if not arg then return Table end
+
+    for _, f in pairs(arg) do
+        if type(f) == "function" then
+            T = recElementWise(T, f, TempArg)
+            TempArg = {}
+        else
+            TempArg[#TempArg + 1] = f
+        end
+    end
+    return T
+end
+
+--> Executes a random Function from a table of functions
+function raFoo(...)
+    local arg = { ... }
+    if not arg then return end
+    index = sanitizeRandom(1, #arg)
+    return arg[index]()
+end
+
+
+
+-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
+function filterOutUnitsOfType(T, UnitTypeTable, Cache)
+    if type(UnitTypeTable) == "number" then
+        copyOfType = UnitTypeTable;
+        UnitTypeTable = {}
+        UnitTypeTable[copyOfType] = true
+    end
+
+    if Cache then
+        returnTable = {}
+        for num, id in pairs(T) do
+            if Cache[id] and Cache[id] == true or T[id] and not UnitTypeTable[Spring.GetUnitDefID(id)] then
+                Cache[id] = true
+                returnTable[#returnTable + 1] = id
+            else
+                Cache[id] = false
+            end
+        end
+        return returnTable, Cache
+
+    else
+        local returnTable = {}
+        for num, id in pairs(T) do
+            defID = Spring.GetUnitDefID(id)
+            if not UnitTypeTable[defID] then
+                returnTable[#returnTable + 1] = id
+            end
+        end
+        return returnTable
+    end
+end
+
+function filterOutUnarmed(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if UnitDefs[def].canAttack or UnitDefs[def].canFight then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+-->filters Out TransportUnits
+function filterOutTransport(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if false == UnitDefs[def].isTransport then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+-->filters Out Immobile Units
+function filterOutImmobile(T, UnitDefs, boolFilterOut)
+    returnTable = {}
+    boolFilterOut = boolFilterOut or true
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if not boolFilterOut == UnitDefs[def].isImmobile then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+--> filters Out Buildings
+function filterOutBuilding(T, UnitDefs, boolFilterOut)
+
+    returnTable = {}
+
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if boolFilterOut == true and UnitDefs[def] and UnitDefs[def].isBuilding == true then
+            returnTable[#returnTable + 1] = id
+        end
+        if boolFilterOut == false and UnitDefs[def] and UnitDefs[def].isBuilding == false then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+--> filters Out Builders
+function filterOutBuilder(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if false == UnitDefs[def].isBuilder then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+--> filters Out Mobile Builders
+function filterOutMobileBuilder(T, boolCondi)
+    boolCond = boolCondi or false
+
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if boolCond == UnitDefs[def].isMobileBuilder then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+function filterOutStaticBuilder(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if false == UnitDefs[def].isStaticBuilder then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+function filterOutFactory(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if false == UnitDefs[def].isFactory then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+function filterOutExtractor(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if false == UnitDefs[def].isExtractor then
+            returnTable[#returnTable + 1] = T[i]
+        end
+    end
+    return returnTable
+end
+
+function filterForGroundUnit(T)
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(T[i])
+        if false == UnitDefs[def].isGroundUnit then
+            returnTable[#returnTable + 1] = T[i]
+        end
+    end
+    return returnTable
+end
+
+function filterOutAirUnit(T, UnitDefs, lboolFilterOut)
+
+    boolFilterOut = lboolFilterOut or false
+    returnTable = {}
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if boolFilterOut == UnitDefs[def].isAirUnit then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+function filterOutStrafingAirUnit(T)
+    returnTable = {}
+    for i = 1, #T do
+        def = Spring.GetUnitDefID(T[i])
+        if false == UnitDefs[def].isStrafingAirUnit then
+            returnTable[#returnTable + 1] = T[i]
+        end
+    end
+    return returnTable
+end
+
+function getNextKey(T, oldKey, boolFirst)
+    boolNext = false
+
+    if boolFirst then for k, v in pairs(T) do return k, v; end end
+
+    for key, value in pairs(T) do
+        if boolNext == true then
+            return key, value
+        end
+        if key == oldKey then
+            boolNext = true
+        end
+    end
+end
+
+function filterOutHoveringAirUnit(T)
+    returnTable = {}
+    for i = 1, #T do
+        def = Spring.GetUnitDefID(T[i])
+        if false == UnitDefs[def].isHoveringAirUnit then
+            returnTable[#returnTable + 1] = T[i]
+        end
+    end
+    return returnTable
+end
+
+function filterOutFighterAirUnit(T)
+    returnTable = {}
+    for i = 1, #T do
+        def = Spring.GetUnitDefID(T[i])
+        if false == UnitDefs[def].isFighterAirUnit then
+            returnTable[#returnTable + 1] = T[i]
+        end
+    end
+    return returnTable
+end
+
+function filterOutBomberAirUnit(T)
+    returnTable = {}
+    for i = 1, #T do
+        def = Spring.GetUnitDefID(T[i])
+        if false == UnitDefs[def].isBomberAirUnit then
+            returnTable[#returnTable + 1] = T[i]
+        end
+    end
+    return returnTable
+end
+
+-->Spawn CEG at unit
+function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset)
+    x, y, z = Spring.GetUnitPosition(unitID)
+    if xoffset then
+        Spring.SpawnCEG(cegname, x + xoffset, y + yoffset, z + zoffset, 0, 1, 0, 50, 0)
+    else
+        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 50, 0)
+    end
+end
+
+function funcyMeta(T, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    for _, f in pairs(arg) do
+        T = f(T)
+    end
+    return T
+end
+
+
+--> Apply a function on a Table
+function forTableUseFunction(Table, func, metafunc)
+    T = {}
+    for i = 1, #Table do
+        T[i] = func(Table[i])
+    end
+    if metafunc then
+        return metafunc(T)
+    else
+        return T
+    end
+end
+
+
+--> Apply a function to a unit Table 
+function forTableUseFunction(T, boolFilterDead, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    local arg = { ... }
+    TempT = {}
+    for _, f in pairs(arg) do
+
+        for i = 1, #T do
+            TempT[i] = f(T[i])
+        end
+        T = TempT
+        TempT = {}
+        --filter out the Dead
+        if boolFilterDead == true then
+            for i = 1, #T do
+                if Spring.GetUnitIsDead(T[i]) == false then
+                    TempT[i] = T[i]
+                end
+            end
+        end
+
+        T = TempT
+    end
+    return T
+end
+
+function getLowest(Table)
+    lowest = 0
+    val = 0
+    for k, v in pairs(Table) do
+        if v < val then
+            val = v
+            lowest = k
+        end
+    end
+end
+
+function sumTable(Table)
+    a = 0
+    for i = 1, #Table do
+        a = a + Table[i]
+    end
+    return a
+end
+
+function sumTableKV(Table)
+    a = 0
+    for k, v in pairs(Table) do
+        a = a + v
+    end
+    return a
+end
+
+function PieceLight(unitID, piecename, cegname)
+    while true do
+        x, y, z = Spring.GetUnitPiecePosDir(unitID, piecename)
+        Spring.SpawnCEG(cegname, x, y + 10, z, 0, 1, 0, 50, 0)
+        Sleep(250)
+    end
+end
+
+function TableToDict(T)
+    reT = {}
+    if not T then return reT end
+
+    for i = 1, #T do
+        if T[i] then
+            reT[T[i]] = T[i]
+        end
+    end
+    return reT
+end
+
+function mergeTables(...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    Table = {}
+    if not arg then return end
+
+    for _, v in pairs(arg) do
+        if v and type(v) == "table" then
+            Table = TableMergeTable(Table, v)
+        end
+    end
+
+    return Table
+end
+
+function TableMergeTable(TA, TB)
+    T = {}
+    if #TA >= #TB then
+        T = TableToDict(TA)
+
+        for i = 1, #TB do
+            if not T[TB[i]] then
+                TA[#TA + 1] = TB[i]
+            end
+        end
+        return TA
+    else
+        T = TableToDict(TB)
+        for i = 1, #TA do
+            if not T[TA[i]] then
+                TB[#TB + 1] = TA[i]
+            end
+        end
+        return TB
+    end
+end
+
+
+function filterUnitTableforDefIDTable(unitIDT, KeyDefIDT)
+    Tid = {}
+    for i = 1, #unitIDT do
+        a = Spring.GetUnitDefID(unitIDT[i])
+        if KeyDefIDT[a] then
+            Tid[#Tid + 1] = unitIDT[i]
+        end
+    end
+    return Tid
+end
+
+--> Forms a Tree from handed over Table
+--	this function needs a global Itterator and but is threadsafe, as in only one per unit
+--	it calls itself, waits for all other threads running parallel to reach the same recursion Depth
+-- 	once hitting the UpperLimit it ends
+function executeLindeMayerSystem(gramarTable, String, oldDeg, Degree, UpperLimit, recursionDepth, recursiveItterator, PredPiece)
+
+    -- this keeps all recursive steps on the same level waiting for the last one - who releases the herd
+    gainLock(recursiveItterator)
+
+    --we made it into the next step and get our piece
+    GlobalTotalItterator = GlobalTotalItterator + 1
+    local hit = GlobalTotalItterator
+
+    if not hit or TreePiece[hit] == nil or hit > UpperLimit then
+        releaseLocalLock(recursiveItterator)
+        return
+    end
+
+
+    --DebugInfo
+    --Spring.Echo("Level "..recursiveItterator.." Thread waiting for Level "..(recursiveItterator-1).. " to go from ".. GlobalInCurrentStep[recursiveItterator-1].." to zero so String:"..String.." can be processed")
+
+    while GlobalInCurrentStep[recursiveItterator - 1] > 0 do
+        Sleep(50)
+    end
+
+    --return clauses
+    if not String or String == "" or string.len(String) < 1 or recursiveItterator == recursionDepth then
+        RecursionEnd[#RecursionEnd + 1] = PredPiece
+        releaseLocalLock(recursiveItterator)
+        return
+    end
+
+    ox, oy, oz = Spring.GetUnitPiecePosition(unitID, PredPiece)
+
+    --Move Piece to Position
+
+    Show(TreePiece[hit])
+
+    Move(TreePiece[hit], x_axis, ox, 0)
+    Move(TreePiece[hit], y_axis, oy, 0)
+    Move(TreePiece[hit], z_axis, oz, 0, true)
+    --DebugStoreInfo[#DebugStoreInfo+1]={"RecursionStep:"..hit.." ||RecursionDepth: "..recursiveItterator.." ||String"..String.." ||PredPiece: "..PredPiece.." || Moving Piece:"..TreePiece[hit].."to x:"..ox.." y:"..oy.." z:"..oz}
+
+    --stores non-productive operators
+    OperationStorage = {}
+    --stores Recursions and Operators
+    RecursiveStorage = {}
+
+    for i = 1, string.len(String) do
+        --extracting the next token form the current string and find out what type it is
+        token = string.sub(String, i, i)
+        typeOf = type(gramarTable.transitions[token])
+
+        -- if the typeof is a function and a productive Element 
+        if typeOf == 'function' and gramarTable.productiveSymbols[token] then
+            --execute every operation so far pushed back into the operationStorage on the current piece
+
+            for i = #OperationStorage, 1, -1 do
+                gramarTable.transitions[OperationStorage[i]](oldDeg, Degree, TreePiece[hit], PredPiece, recursiveItterator, recursiveItterator == UpperLimit - 1)
+            end
+
+            WaitForTurn(TreePiece[hit], x_axis)
+            WaitForTurn(TreePiece[hit], y_axis)
+            WaitForTurn(TreePiece[hit], z_axis)
+            --renewOperationStorage
+            OperationStorage = {}
+
+            --This LindeMayerSystem has a go
+            StartThread(executeLindeMayerSystem,
+
+                gramarTable,
+                gramarTable.transitions[token](oldDeg, Degree, TreePiece[hit], PredPiece, recursiveItterator, recursiveItterator == UpperLimit - 1),
+                oldDeg,
+                Degree,
+                UpperLimit,
+                recursionDepth,
+                recursiveItterator + 1,
+                EndPiece[math.max(1, math.min(#EndPiece, hit))])
+
+            --if we have a non productive function we push it back into the OperationStorage
+        elseif typeOf == "function" then --we execute the commands on the current itteration-- which i
+            OperationStorage[#OperationStorage + 1] = token
+
+            --recursionare pushed into the recursionstorage and executed after the current string has beenn pushed
+        elseif typeOf == "string" and token == gramarTable.transitions["RECURSIONSTART"] then
+            --Here comes the trouble, we have to postpone the recurssion 
+            RecursiveStorage[#RecursiveStorage + 1], recursionEnd = extractRecursion(String, i, gramarTable.transitions["RECURSIONSTART"], gramarTable.transitions["RECURSIONEND"])
+            i = math.min(recursionEnd + 1, string.len(String))
+        end
+    end
+
+    --Recursions are itterated last but not least
+    if table.getn(RecursiveStorage) > 0 then
+        for i = 1, #RecursiveStorage do
+
+
+            StartThread(executeLindeMayerSystem,
+
+                gramarTable,
+                RecursiveStorage[i],
+                oldDeg,
+                Degree,
+                UpperLimit,
+                recursionDepth,
+                recursiveItterator + 1,
+                EndPiece[math.max(1, math.min(#EndPiece, hit))])
+        end
+    end
+    --Recursion Lock - the last one steps the Global Itteration a level up
+
+    releaseLocalLock(recursiveItterator)
+    --Spring.Echo("Thread Level "..recursiveItterator.." signing off")
+    return
+end
+
+function assertAllArgs(...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    if not arg then error("No arguments were given") return end
+    nr = 1
+    for k, v in pairs(arg) do
+        if not v then error("Argument Nr" .. nr .. " is nil "); return false end
+        nr = 1 + nr
+    end
+    return true
+end
+
+-->prepares large speaches for the release to the world
+function prepSpeach(Speach, Names, Limits, Alphas, DefaultSleepBylines)
+    --if only Speach 
+    if Speach and not Names and not Limits then
+
+        return { Speach = Speach }
+    end
+
+    Name = Names or "Dramatis Persona"
+    Limit = Limits or 42
+    Alpha = Alphas or 0.9
+    DefaultSleepByline = DefaultSleepBylines or 750
+
+    T = {}
+    itterator = 1
+    lineend = Limit
+    size = string.len(Speach) or #Speach or Limit
+    assert(size, "Size does matter")
+    assert(Speach and type(Speach) == "string", "Speach not of type string", Speach)
+    assert(lineend and type(lineend) == "number", "Limit not a number", Limit)
+    assert(size and type(size) == "number", "Limit not a number", Limit)
+
+    if string.len(Speach) < Limit then
+
+        subtable = { line = Speach, alpha = Alpha, name = Name, DelayByLine = DefaultSleepByline }
+        retTable = {}
+        retTable[1] = subtable
+        return retTable
+    end
+
+
+    whitespace = "%s"
+    while lineend < size do
+
+        lineend = string.find(Speach, whitespace, itterator + Limit) or string.len(Speach)
+        subString = string.sub(Speach, itterator, lineend)
+        Spring.Echo(subString)
+        if subString then
+            T[#T + 1] = { line = subString, alpha = Alpha, name = Name, DelayByLine = DefaultSleepByline }
+        else
+            break
+        end
+
+        if not lineend then
+            break
+        else
+            itterator = Limit + 1
+        end
+        assert(lineend)
+        assert(size)
+    end
+
+    return T, true
+end
+
+
+--> Displays Text at UnitPos Thread
+-->> Expects a table with Line "Text", a speaker Name "Text", a DelayByLine "Numeric", a Alpha from wich it will start decaying "Numeric"
+function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, UnitID)
+    assert(LineNameTimeT)
+    timeToShowFrames = math.ceil((timeToShowMs / 1000) * 30)
+
+    px, py, pz = 0, 0, 0
+    if not UnitID or Spring.ValidUnitID(UnitID) == false then
+        echo("Im out 1")
+        return
+    end
+
+    if type(LineNameTimeT) == "string" then
+        Tables = {}
+        Tables[1] = { name = "speaker", line = LineNameTimeT, DelayByLine = 500, Alpha = 1.0 }
+        LineNameTimeT = Tables
+    end
+
+    --catching the case that there is not direct Unit speaking
+    if not UnitID or type(UnitID) == "string" then
+        Spring.Echo(LineNameTimeT[1].name .. ": " .. LineNameTimeT[i].line)
+        if not LineNameTimeT[2].line then return end
+        for i = 1, #LineNameTimeT, 1 do
+            for j = 1, #LineNameTimeT[i], 1 do
+                echo(LineNameTimeT[i][j].line)
+            end
+        end
+        echo("Im out 2")
+        return
+    end
+
+    local spGetUnitPosition = Spring.GetUnitPosition
+    if not GG.Dialog then GG.Dialog = {} end
+
+    lineBuilder = ""
+    spaceString = stringOfLength(" ", string.len(LineNameTimeT[1].name .. ": " or 5))
+
+    GG.Dialog[UnitID] = {}
+    lineBuilder = lineBuilder .. LineNameTimeT[1].name .. ": " .. LineNameTimeT[1].line .. "\n"
+
+    for i = 2, #LineNameTimeT, 1 do
+        lineBuilder = spaceString .. LineNameTimeT[i].line .. "\n"
+    end
+
+
+    --Sleep Time till next line
+    _, unitheigth, _ = Spring.GetUnitCollisionVolumeData(UnitID)
+    GG.Dialog[UnitID][#GG.Dialog[UnitID] + 1] = {
+        frames = timeToShowFrames,
+        line = lineBuilder,
+        lifetime = timeToShowFrames,
+        unitheigth = unitheigth,
+        color = TextColour
+    }
+
+
+
+
+    echo("Im out 3")
+end
+
+function getUnitGroundHeigth(unitID)
+    px, py, pz = Spring.GetUnitPosition(unitID)
+
+    if px then
+        h = Spring.GetGroundHeight(px, pz)
+        if h then
+            return h
+        end
+    end
+end
+
+--> creates a heightmap distortion table
+function prepareHalfSphereTable(size, height)
+    if not size or not height then return nil end
+    cent = math.ceil(size / 2)
+    T = {}
+    for o = 1, size, 1 do
+        T[o] = {}
+        for i = 1, size, 1 do
+            --default
+            T[o][i] = 0
+            distcent = math.sqrt((cent - i) ^ 2 + (cent - o) ^ 2)
+            if distcent < cent - 1 then
+                T[o][i] = (cent - distcent) * height
+            end
+        end
+    end
+
+    return T
+end
+
+
+--> creates a heightmap distortion table that averages the height 
+function smoothGroundHeigthmap(size, x, z)
+    gh = Spring.GetGroundHeight(x, z)
+    if not size then return nil end
+
+    T = {}
+    for o = 1, size, 1 do
+        T[o] = {}
+        for i = 1, size, 1 do
+            lgh = Spring.GetGroundHeight(x + ((o - (size / 2)) * 8), z + ((i - (size / 2)) * 8))
+            sign = -1
+            if lgh < gh then sign = 1 end
+            --default
+            T[o][i] = math.abs(gh - lgh) * sign
+        end
+    end
+    return T
+end
+
+function getGroundHeigthDistance(h1, h2)
+    return distance(h1, 0, 0, h2, 0, 0)
+end
+
+function getGroundHeigthAtPiece(uID, pieceName)
+    px, py, pz = Spring.GetUnitPiecePosDir(uID, pieceName)
+    gh = Spring.GetGroundHeight(px, pz)
+
+    return gh, py, py < gh
+end
+
+
+--> multiplies a deformation map with a factor
+function multiplyHeigthmapByFactor(map, factor)
+    for o = 1, #map, 1 do
+        for i = 1, #map[o], 1 do
+            map[o][i] = map[o][i] * factor
+        end
+    end
+    return map
+end
+
+--> blend Heigthmap
+function blendToValueHeigthmap(map, dimension, blendStartRadius, blendEndRadius, ValueToBlend)
+    center = { x = math.ceil(dimension / 2), z = math.ceil(dimension / 2) }
+    total = blendEndRadius - blendStartRadius
+
+    for o = 1, dimension, 1 do
+        for i = 1, dimension, 1 do
+            ldist = distance(center.x, 0, center.z, o, 0, i)
+            if ldist > blendStartRadius and ldist < blendEndRadius then
+                factor = (ldist - blendStartRadius) / total
+                map[o][i] = map[o][i] * (1 - factor) + ValueToBlend * (factor)
+            end
+        end
+    end
+    return map
+end
+
+--> takes any given MapTable and nullifys the value outside and inside the circle
+function circularClampHeigthmap(map, dimension, radius, boolInside, overWriteValue)
+    center = { x = math.ceil(dimension / 2), z = math.ceil(dimension / 2) }
+    for o = 1, dimension, 1 do
+        for i = 1, dimension, 1 do
+
+            if distance(center.x, 0, center.z, o, 0, i) > radius then -- we are Outside
+                if boolInside == false then
+                    map[o][i] = overWriteValue
+                end
+            else
+                if boolInside == true then
+                    map[o][i] = overWriteValue
+                end
+            end
+        end
+    end
+    return map
+end
+
+
+function consumeAvailableRessource(typeRessource, amount, teamID)
+
+    if "m" == string.lower(typeRessource) or "metal" == string.lower(typeRessource) then
+        currentLevel = Spring.GetTeamResources(teamID, "metal")
+        if amount > currentLevel then
+            return false
+        end
+
+        if Spring.UseTeamResource(teamID, "metal", amount) then return true end
+    end
+
+    if "energy" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
+        currentLevel = Spring.GetTeamResources(teamID, "energy")
+        if amount > currentLevel then
+            return false
+        end
+
+        if Spring.UseTeamResource(teamID, "energy", amount) then return true end
+    end
+    return false
+end
+
+
+-->samples over a given Array around Point x,y, with the samplefunction 
+function sample(NumericIndex, x, y, sampleFunction, factor)
+    quadNumericIndex = {}
+    if type(NumericIndex) == "number" then
+        for i = -1 * NumericIndex, NumericIndex do
+            for j = -1 * NumericIndex, NumericIndex do
+
+                quadNumericIndex[i][j] = { x = i * factor, z = j * factor }
+            end
+        end
+    else
+        quadNumericIndex = NumericIndex
+    end
+
+
+
+    for i = 1, #quadNumericIndex, 1 do
+        for j = 1, #quadNumericIndex, 1 do
+            quadNumericIndex[i][j] = sampleFunction(x + quadNumericIndex[i][j].x, y + (quadNumericIndex[i][j].z or quadNumericIndex[i][j].y))
+        end
+    end
+    return quadNumericIndex
+end
+
+--> GetDistanceNearestEnemy
+function GetDistanceNearestEnemy(id)
+    ed = Spring.GetUnitNearestEnemy(id)
+    return distanceUnitToUnit(id, ed)
+end
+
+function holdsForAll(Var, fillterConditionString, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    if arg then
+        for k, Val in pairs(arg) do
+            if loadstring("Var" .. fillterConditionString .. "Val") == false then return end
+        end
+        return true
+    else
+        return true
+    end
+end
+
+function is(Var, fillterConditionString, ...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    f = loadstring(fillterConditionString)
+    if type(f) == "function" then
+        for k, Val in pairs(arg) do
+            if (f(Var, Val) == true) then return true end
+        end
+
+    else
+
+        for k, Val in pairs(arg) do
+            if loadstring("Var" .. fillterConditionString .. "Val") == true then return true end
+        end
+
+        return false
+    end
+end
+
+
+
+function makeNewAffirmativeMatrice()
+    V = {
+        [1] = 1,
+        [2] = 0,
+        [3] = 0,
+        [4] = 0,
+        [5] = 0,
+        [6] = 1,
+        [7] = 0,
+        [8] = 0,
+        [9] = 0,
+        [10] = 0,
+        [11] = 1,
+        [12] = 0,
+        [13] = 0,
+        [14] = 0,
+        [15] = 0,
+        [16] = 1
+    }
+    function V.Mul(other)
+        V[1] = 0; V[2] = 0; V[3] = 0; V[4] = 0;
+        V[5] = 0; V[6] = 0; V[7] = 0; V[8] = 0;
+        V[9] = 0; V[10] = 0; V[11] = 0; V[12] = 0;
+        V[13] = 0; V[14] = 0; V[15] = 0; V[16] = 0
+    end
+
+    --TODO
+    --http://springrts.com/phpbb/viewtopic.php?f=21&t=32246
+    return V
+end
+
+
+
+function makeAffirmativeRotationMatrice(axis, deg)
+    V = makeNewAffirmativeMatrice()
+    if axis == "x_axis" then
+        V[6] = math.cos(-deg)
+        V[7] = -1 * math.sin(-deg)
+        V[10] = math.sin(-deg)
+        V[11] = math.cos(-deg)
+
+    elseif axis == "y_axis" then
+        V[1] = math.cos(-deg)
+        V[3] = math.sin(-deg)
+        V[9] = -1 * math.sin(-deg)
+        V[11] = math.cos(-deg)
+    else
+        V[1] = math.cos(-deg)
+        V[5] = math.sin(-deg)
+        V[2] = -1 * math.sin(-deg)
+        V[6] = math.cos(-deg)
+    end
+    return V
+end
+
+-->Returns a Unit from the Game without killing it
+function removeFromWorld(unit, offx, offy, offz)
+    hideUnit(unit)
+    --TODO - keepStates in general and commandqueu
+    pox, poy, poz = Spring.GetUnitPosition(unit)
+    Spring.SetUnitAlwaysVisible(unit, false)
+    Spring.SetUnitBlocking(unit, false, false, false)
+    Spring.SetUnitNoSelect(unit, true)
+    Spring.MoveCtrl.Enable(unit, true)
+    if offx then
+        Spring.SetUnitPosition(unit, offx, offy, offz)
+    end
+end
+
+-->Removes a Unit from the Game without killing it
+function returnToWorld(unit, px, py, pz)
+    showUnit(unit)
+    Spring.MoveCtrl.Disable(unit)
+    if pz then
+        Spring.SetUnitPosition(unit, px, py, pz)
+    end
+    Spring.SetUnitAlwaysVisible(unit, true)
+    Spring.SetUnitBlocking(unit, true, true, true)
+    Spring.SetUnitNoSelect(unit, false)
+end
+
+function showUnit(unit)
+    Spring.SetUnitCloak(unit, false, 1)
+end
+
+function hideUnit(unit)
+    Spring.SetUnitCloak(unit, true, 4)
+end
+
+--> kill All Units near Pieces Volume
+function killAtPiece(unitID, piecename, selfd, reclaimed, sfxfunction)
+    px, py, pz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
+    tpx, tpy, tpz = Spring.GetUnitPiecePosDir(unitID, piecename)
+    if px and tpx then
+        size = square(px, py, pz)
+        if size then
+            T = getAllInCircle(tpx, tpz, size / 2, unitID)
+
+            if T and #T > 0 then
+
+                if sfxfunction then
+                    for i = 1, #T do
+                        ux, uy, uz = Spring.GetUnitPosition(T[i])
+                        sfxfunction(ux, uz, uz)
+                        Spring.DestroyUnit(T[i], selfd, reclaimed)
+                    end
+
+                else
+                    for i = 1, #T do
+                        Spring.DestroyUnit(T[i], selfd, reclaimed)
+                    end
+                end
+            end
+        end
+    end
+end
+
+function recursiveDoDamage(id, nrOfSteps, damage, damagefunction, nextFunction, preventTable)
+    if nrOfSteps == 0 then return end
+
+    damage = damagefunction(damage)
+    Spring.AddUnitDamage(id, damage)
+    id = nextFunction(id, preventTable)
+
+    nrOfSteps = nrOfSteps - 1
+    return recursiveDoDamage(id, nrOfSteps, damage, damagefunction, nextFunction, preventTable)
+end
+
+function SpinAlongSmallestAxis(unitID, piecename, degree, speed)
+    if not piecename then return end
+    vx, vy, vz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
+    if vx and vy and vz then
+        areax, areay, areaz = vy * vz, vx * vz, vy * vx
+    end
+
+    if holdsForAll(areax, " <= ", areay, areaz) then Spin(piecename, x_axis, math.rad(degree), speed) return end
+    if holdsForAll(areay, " <= ", areaz, areax) then Spin(piecename, y_axis, math.rad(degree), speed) return end
+    if holdsForAll(areaz, " <= ", areay, areax) then Spin(piecename, z_axis, math.rad(degree), speed) return end
+end
+
+function LayFlatOnGround(unitID, piecename, speeds)
+    speed = speeds or 0
+    if not piecename then return end
+    vx, vy, vz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
+    if vx and vy and vz then
+        areax, areay, areaz = vy * vz, vx * vz, vy * vx
+    end
+
+    if holdsForAll(areax, " >= ", areay, areaz) then tP(piecename, 0, 90, 90, speed) return end
+    if holdsForAll(areay, " >= ", areaz, areax) then tP(piecename, 90, 0, 90, speed) return end
+    if holdsForAll(areaz, " >= ", areay, areax) then tP(piecename, 0, 0, 0, speed) return end
+end
+
+-->Helperfunction of recursiveAddTable
+function returnPieceChildrenTable(pieceNum, piecetable)
+    if not pieceNum then return end
+    T = Spring.GetUnitPieceInfo(unitID, pieceNum)
+    children = T.children
+    if children then
+        for i = 1, #children do children[i] = piecetable[children[i]] end
+    end
+    return children, T.max
+end
+
+function getRoot(unitID)
+    pieceMap = Spring.GetUnitPieceMap(unitID)
+    for name, number in pairs(pieceMap) do
+        infoTable = Spring.GetUnitPieceInfo(unitID, number)
+        if (infoTable.parent == "[null]") then return name, infoTable.children end
+    end
+end
+
+function getUniqueID()
+    if not GG.GUID then GG.GUID = 0 end
+    GG.GUID = GG.GUID + 0.1 / math.pi
+    return GG.GUID
+end
+
+function recPieceBelow(hierarchy, currentPiece, endPiece, reTable)
+    boolBelow = false
+
+    if not hierarchy[currentPiece] then return nil end
+    for k, pieceNumber in pairs(hierarchy[currentPiece]) do
+        local retTable = reTable
+
+        if pieceNumber == endPiece then
+            retTable[#retTable + 1] = endPiece
+            return true, retTable
+        end
+
+        retTable[#retTable + 1] = pieceNumber
+        boolFound, T = recPieceBelow(hierarchy, pieceNumber, endPiece, retTable)
+        if boolFound == true then
+            return true, T
+        end
+    end
+    return false
+end
+
+
+
+function getPieceChain(hierarchy, startPiece, endPiece)
+    pieceChain = {}
+    pieceChain[1] = startPiece
+    boolBelow, pieceChain = recPieceBelow(hierarchy, startPiece, endPiece, pieceChain)
+    return pieceChain
+end
+
+--> creates a hierarchical table of pieces, descending from root
+function getPieceHierarchy(unitID, pieceFunction)
+
+    rootname, children = getRoot(unitID)
+    rootNumber = pieceFunction(rootname)
+    hierarchy = {}
+    hierarchy[rootNumber] = {}
+    openTable = {}
+    for k, pieceName in pairs(children) do
+        hierarchy[rootNumber][#hierarchy[rootNumber] + 1] = pieceFunction(pieceName)
+        table.insert(openTable, pieceFunction(pieceName))
+    end
+
+    while table.getn(openTable) > 0 do
+        for num, pieceNumber in pairs(openTable) do
+            tables = Spring.GetUnitPieceInfo(unitID, pieceNumber)
+            if not hierarchy[pieceNumber] then hierarchy[pieceNumber] = {} end
+            if tables and tables.children then
+                for num, pieceName in pairs(tables.children) do
+                    newPieceNumber = pieceFunction(pieceName)
+                    hierarchy[pieceNumber][#hierarchy[pieceNumber] + 1] = newPieceNumber
+                    table.insert(openTable, pieceFunction(pieceName))
+                end
+                table.remove(openTable, num)
+            end
+        end
+    end
+
+
+    return hierarchy, rootname
+end
+
+function recMapDown(Result, pieceMap, Name)
+
+    if pieceMap[Name] then
+        for _, pieceNumber in pairs(pieceMap[Name]) do
+            info = Spring.GetUnitPieceInfo(unitID, pieceNumber)
+            Result[#Result + 1] = pieceNumber
+            if info and pieceMap[info.name] and info.children then
+                Result = recMapDown(Result, pieceMap, info.name)
+            end
+        end
+    end
+    return Result
+end
+
+-->Returns all Pieces in a Hierarchy below the named point
+function getPiecesBelow(unitID, PieceName, pieceFunction)
+    pieceMap = getPieceHierarchy(unitID, pieceFunction)
+    return recMapDown({}, pieceMap, PieceName)
+end
+
+--Hashmap of pieces --> with accumulated Weight in every Node
+--> Every Node also holds a bendLimits which defaults to ux=-45 x=45, uy=-180 y=180,uz=-45 z=45
+function recursiveAddTable(T, piecename, parent, piecetable)
+    if not piecename then return T, 0 end
+
+    C, max = returnPieceChildrenTable(piecename, piecetable)
+
+
+    if not T[parent] then T[parent] = {} end
+
+    if C and #C > 0 then
+        for i = 1, #C do
+            T, nr = recursiveAddTable(T, C[i], piecename, piecetable)
+        end
+        bendLimits = computateBendLimits(piecename, parent)
+        T[parent].bendLimits = bendLimits
+        T[parent].weight = max[1] * max[2] * max[3]
+        T[parent].nr = #C
+    else
+
+        if not T[parent][piecename] then T[parent][piecename] = {} end
+        computateBendLimits(piecename, parent)
+        T[parent].bendLimits = bendLimits
+        T[parent][piecename].weight = 1
+    end
+    return T
+end
+
+--> finds the radian in a triangle where only the lenght of two sides are known
+function triAngleTwoSided(LowerSide, OpposingSide)
+    norm = math.sqrt(LowerSide * LowerSide + OpposingSide * OpposingSide)
+    return math.atan2(LowerSide / norm, OpposingSide / norm)
+end
+
+function getCubeSphereRad(x, y, z)
+    xy, xz, yz = x * y, x * z, y * z
+
+    if xy > xz and xy > yz then return math.sqrt(x * x + y * y) end
+
+    if xz > xy and xz > yz then return math.sqrt(x * x + z * z) end
+
+    if yz > xy and yz > xz then return math.sqrt(y * y + z * z) end
+end
+
+function computateBendLimits(piecename, parent)
+    paPosX, paPosY, paPosZ = Spring.GetUnitPiecePosition(unitID, parent)
+    cPosX, cPosY, cPosZ = Spring.GetUnitPiecePosition(unitID, piecename)
+
+    --the offset of the piece in relation to its parentpiece
+    v = {}
+    v.x, v.y, v.z = cPosX - paPosX, cPosY - paPosY, cPosZ - paPosZ
+
+    pax, pay, paz = Spring.GetUnitPieceCollisionVolumeData(unitID, parent)
+    radOfParentSphere = getCubeSphereRad(pax, pay, paz)
+    cx, cy, cz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
+    radOfPieceSphere = getCubeSphereRad(cx, cy, cz)
+    -- rotate the vector so that it aligns with x,y,z origin vectors
+    -- computate the orthogonal 
+    -- computate the dead degree cube
+    wsize = triAngleTwoSided(v.x, v.y)
+    -- rotate the computated window inverse to the vector back
+    -- voila
+
+    --Y-Axis 
+    -->TODO:RAGDOLL |_\ -- you approximate the motherpiece with a circle and then do a math.acos( circleradius/distance)
+    --defaulting to a maxturn
+    return { ux = -15, x = 15, uy = -180, y = 180, uz = -15, z = 15 }
+end
+
+function square(...)
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+    if not arg then return 0 end
+    sum = 0
+    for k, v in pairs(arg) do
+        if v then
+            sum = sum + v ^ 2
+        end
+    end
+    return math.sqrt(sum)
+end
+
+--> takes the average over a number of argument
+function average(...)
+    local arg = table.pack(...)
+    if not arg then return nil end
+    sum = 0
+    it = 0
+    for k, v in pairs(arg) do
+        sum = sum + v
+        it = it + 1
+    end
+    return sum / it
+end
+
+-->Turns a piece towards its broadest side by Collissionvolume
+function turnPieceToLongestSide(unitID, pic, Speed)
+    cv = {}
+    x, y, z = Spring.GetUnitPieceCollisionVolumeData(unitID, centerPiece)
+    xy = x * y; yz = y * z; zx = z * x
+    signum = math.random(-1, 1)
+    signum = signum / math.abs(signum)
+    if xy > yz and xy > zx then tP(pic, 90 * signum, 0, 0, Speed); return z / 2 end
+    if yz > xy and yz > zx then tP(pic, 0, 0, 90 * signum, Speed); return x / 2 end
+    if zx > xy and zx > yz then tP(pic, 0, math.random(-360, 360), 0, Speed); return y / 2 end
+end
+
+-->forges a hierachical ragdoll for the table of pieces for the given lifetime lets that ragdoll hit the floor
+function ragDoll(tableOfPieces, centerPiece, fallSpeed, lifetime)
+    deltaMovement = 1
+    cv = {}
+    PiecesMap = {}
+    FallSpeed = fallSpeed or 9.81
+    cv.x, cv.y, cv.z = Spring.GetUnitPieceCollisionVolumeData(unitID, centerPiece)
+    averageSize = average(cv.x, cv.y, cv.z)
+    boolOnce = false; boolGo = false
+
+    while lifetime > 0 do
+        --we care for the centerPieceFalling
+        px, py, pz = Spring.GetUnitPiecePosition(unitID, centerPiece)
+        wpx, wpy, wpz = Spring.GetUnitPiecePosDir(unitID, centerPiece)
+        h = Spring.GetGroundHeight(wpx, wpz)
+        Dist = wpy - averageSize - FallSpeed / 4; if Dist < h then Dist = 0; if boolGo == true then boolGo = false; boolOnce = true end end
+        if boolOnce == true then averageSize = turnPieceToLongestSide(unitID, centerPiece, 9.81 / 6); boolOnce = false end
+        if py - h - averageSize / 2 > 0 then Move(centerPiece, y_axis, Dist, FallSpeed) end
+
+        --and now we handle the other pieces going down
+        subsOfCenterPiece = tableOfPieces[centerPiece]
+        for _, v in pairs(subsOfCenterPiece) do
+            traversePiecesMapToGround(centerPiece, v, PiecesMap, 9.81, 250)
+        end
+
+        Sleep(250)
+        lifetime = lifetime - 250
+    end
+end
+
+-->MovesAParentPiece
+function movePieceToGround(parent, subPiece, Speed)
+
+    local spGetUnitPiecePosDir = Spring.GetUnitPiecePosDir
+    px, py, pz = spGetUnitPiecePosDir(unitID, subPiece)
+    gh = Spring.GetGroundHeight(px, pz)
+    --necessaryData
+    paX, paY, paZ = spGetUnitPiecePosDir(unitID, parent)
+
+    --TargetCoordsToTurnTowards
+    TurnPieceTowardsPoint(subPiece, px, gh + 3, pz, Speed)
+end
+
+
+-->Traverses the PiecesMapDown recursively solving 
+function traversePiecesMapToGround(parentPiece, currentPiece, PiecesMap, Gravity, UpdateCycleLength)
+    -- if the piece is underground it moves its parent to get itself above ground
+    cX, cY, cZ = Spring.GetUnitPiecePosDir(unitID, currentPiece)
+    if cY < Spring.GetGroundHeight(cX, cZ) then
+
+        -- if this Piece has subsidarys, it tryies to move itself to the ground, before calling for every children
+
+        tP(currentPiece, tx, ty, tz, Gravity / (1000 / UpdateCycleLength))
+
+        for _, UnitPiece in pairs(PiecesMap[parentPiece]) do
+        end
+    end
+end
+
+function stableConditon(legNr, q)
+    return GG.MovementOS_Table ~= nil and
+            GG.MovementOS_Table[unitID].stability > 0.5 and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, q), 1)] > 0 or GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, legNr % 2), 1)] and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, legNr % 2), 1)] > 0
+end
+
+
+--> Sets the Speed of a Unit
+function setSpeedEnv(k, val)
+    val = math.max(0.000000001, math.min(val, 1.0))
+    env = Spring.UnitScript.GetScriptEnv(k)
+
+    if env then
+        udef = Spring.GetUnitDefID(k)
+        Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed * val * 2184.53))
+    end
+end
+
+
+--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
+function feetThread(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction, LegMax, WiggleFunc, ScriptEnviroment, SensorT)
+    LMax = LegMax or 5
+    oldHeading = 0
+    Sleep(500)
+
+    stabilize(quadrant,
+        degOffSet,
+        turnDeg,
+        nr,
+        FirstAxisPoint,
+        KneeT,
+        SensorPoint,
+        Weight,
+        Force,
+        LiftFunction,
+        ScriptEnviroment,
+        SensorT)
+
+    while true do
+        while GG.MovementOS_Table[unitID].boolmoving == true do
+            echo("lib_UnitScript::adaptiveAnimation::MovingTrue")
+            --while GG.MovementOS_Table[unitID].boolmoving==true and stableConditon(nr,quadrant) do
+
+            --feet go over knees if FeetLiftForce > totalWeight of Leg
+
+            liftFeedForward(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                LiftFunction,
+                ScriptEnviroment)
+            Sleep(100)
+            stabilize(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                LiftFunction,
+                SensorT)
+            Sleep(100)
+            pushBody(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                nr,
+                ScriptEnviroment)
+
+            Sleep(100)
+            stabilize(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                LiftFunction,
+                ScriptEnviroment,
+                SensorT)
+            Sleep(100)
+        end
+
+        stabilize(quadrant,
+            degOffSet,
+            turnDeg,
+            nr,
+            FirstAxisPoint,
+            KneeT,
+            SensorPoint,
+            Weight,
+            Force,
+            LiftFunction,
+            ScriptEnviroment,
+            SensorT)
+        Sleep(100)
+    end
+end
+
+--return Feet into origin position and push body above ground
+function pushBody(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, nr, ScriptEnviroment)
+    if lib_boolDebug == true then Spring.Echo("lib_UnitScript::pushBody") end
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet), 0.3)
+    xp, yp, zp = Spring.GetUnitPiecePosDir(unitID, SensorPoint)
+    dif = yp - Spring.GetGroundHeight(xp, zp)
+
+    Time = 0
+
+    WaitForTurn(FirstAxisPoint, y_axis)
+end
+
+-->Uses the LiftAnimation Function to Lift the Feed
+function liftFeedForward(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction)
+    if lib_boolDebug == true then Spring.Echo("lib_UnitScript::liftFeedForward") end
+    GG.MovementOS_Table[unitID].quadrantMap[quadrant % 4 + 1] = GG.MovementOS_Table[unitID].quadrantMap[quadrant % 4 + 1] - 1
+    speed = clamp(Force / (#KneeT * Weight), 0.15, 0.25)
+    withOffset = sanitizeRandom(0, turnDeg)
+    if withOffset > 180 then withOffset = withOffset * -1 end
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet + withOffset), speed)
+    --lifts Feed from the ground 	
+    LiftFunction(KneeT, Force / (#KneeT * Weight))
+
+    --Turn foot forward and upward
+    WaitForTurn(FirstAxisPoint, y_axis)
+    Sleep(500)
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet), speed)
+    for i = 1, #KneeT, 1 do
+        Turn(KneeT[i], x_axis, math.rad(-2), speed)
+    end
+    WaitForTurn(FirstAxisPoint, y_axis)
+end
+
+
+-->Stabilizes the Feet above ground and rest
+function stabilize(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction, ScriptEnviroment, SensorT)
+
+    xp, yp, zp = Spring.GetUnitPiecePosDir(unitID, SensorPoint)
+    dif = yp - Spring.GetGroundHeight(xp, zp)
+    degToGo = 0
+    counter = 0
+    olddif = 0
+    WaitForTurn(FirstAxisPoint, y_axis)
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet), 0.15)
+    assert(ScriptEnviroment.GetPieceRotation)
+    assert(SensorT)
+
+    unitHeigth = GG.MovementOS_Table[unitID].stability * Height
+    propagatedCounterChange = 0
+
+    for i = #KneeT, 1, -1 do
+        measureIndex = clamp(i, 1, #KneeT)
+        boolUnderground = true
+
+
+        x, y, z = Spring.GetUnitPiecePosDir(unitID, SensorT[measureIndex])
+        xdeg, y_deg, z_deg = ScriptEnviroment.GetPieceRotation(KneeT[i])
+        tDeg = math.deg(xdeg)
+
+        GroundHeight = Spring.GetGroundHeight(x, z)
+        --	if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::stabilize::PieceHeigth".. ( y -35 -unitHeigth ).." < "..GroundHeight.." ::GroundHeight") end
+
+        if y - GroundHeight > 20 then --Go down		
+            if y - GroundHeight < 5 then break end
+
+            tDeg = clamp(tDeg + 0.25 + propagatedCounterChange, -75, math.max((1 / i) * 75, 25))
+            tDeg = convertToNeg(tDeg)
+            propagatedCounterChange = propagatedCounterChange - 0.25
+            Turn(KneeT[i], x_axis, math.rad(tDeg), 0.0175)
+        else --Go up	faster					
+            boolUnderground = true
+
+            tDeg = clamp(tDeg - 1.15 + propagatedCounterChange, -75, math.max((1 / i) * 75, 25))
+            tDeg = convertToNeg(tDeg)
+            propagatedCounterChange = propagatedCounterChange + 1.15
+            Turn(KneeT[i], x_axis, math.rad(tDeg), 0.135)
+        end
+    end
+    WaitForTurns(KneeT)
+end
+
+function convertToNeg(val)
+    if val < 0 then return 360 - (360 + val) end
+    return val
+end
+
+--expects a Table containing:
+
+
+
+function getADryWalkAbleSpot()
+    smin, smax = Spring.GetGroundExtremes()
+    if smax <= 0 then return end
+    cond = function(i, j, chunkSizeX, chunkSizeZ)
+        h = Spring.GetGroundHeight(i * chunkSizeX, chunkSizeZ * j)
+        if h > 0 then
+            v = {}
+            v.x, v.y, v.z = Spring.GetGroundNormal(i * chunkSizeX, chunkSizeZ * j)
+            v = normVector(v)
+            if v.y < 0.3 or math.abs(v.x) > 0.7 or math.abs(v.z) < 0.3 then
+                return math.ceil(i * chunkSizeX), math.ceil(i * chunkSizeZ)
+            end
+        end
+    end
+    return getPathFullfillingCondition(cond, 64)
+end
+
+-->gets Signum of a number
+function sigNum(val)
+    return math.abs(val) / val
+end
+
+-->Randomize a given Tables entrys
+function randT(T)
+    resulT = {}
+
+    for i = 1, #T do
+
+        threeRandomAttempts = 0
+        index = sanitizeRandom(1, #T)
+        while threeRandomAttempts < 3 and resulT[index] do
+            index = sanitizeRandom(1, #T)
+        end
+        while resulT[index] do
+            index = math.max(math.min(#T, (index + 1) % #T), 1)
+        end
+        resulT[index] = T[i]
+    end
+    return resulT
+end
+
+--> returns a randomized Signum
+function randSign()
+    if math.random(0, 1) == 1 then return 1 else return -1 end
+end
+
+-->finds a spot on the map that is dry, and walkable
+function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, mapSizeZ)
+    if type(condition) ~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
+    local lcondition = condition
+
+    probeResolution = 4.0
+    local spGetGroundHeight = Spring.GetGroundHeight
+    assert(Game.mapSizeX)
+    assert(Game.mapSizeZ)
+    while true do
+
+        chunkSizeX = (Game.mapSizeX - 1) / probeResolution
+        chunkSizeZ = (Game.mapSizeZ - 1) / probeResolution
+        xRand, zRand = math.floor(sanitizeRandom(1, probeResolution - 1)), math.floor(sanitizeRandom(1, probeResolution - 1))
+
+        for i = xRand, probeResolution, 1 do
+            for j = zRand, probeResolution, 1 do
+                ax, ay, az = lcondition(i, j, chunkSizeX, chunkSizeZ, filterTable)
+                if ax then return ax, ay, az end
+            end
+        end
+
+
+        for i = 1, xRand, 1 do
+            for j = 1, zRand, 1 do
+                ax, ay, az = lcondition(i, j, chunkSizeX, chunkSizeZ, filterTable)
+                if ax then return ax, ay, az end
+            end
+        end
+
+        probeResolution = probeResolution * 2
+        if probeResolution > maxRes then Spring.Echo("Aborting Due to High Probe Resolution"); return end
+    end
+end
+
+-->ConditionFunctions
+function GetSpot_condDeepSea(x, y, chunksizeX, chunksizeZ, filterTable)
+    h = Spring.GetGroundHeight(x * chunkSizeX, y * chunkSizeZ)
+    if h < filterTable.minBelow and h > filterTable.maxAbove then return x * chunkSizeX, y * chunkSizeZ end
+end
+
+
+
+function binaryInsertTable(Table, Value, ToInsert, key)
+    i = math.floor(table.getn(Table) / 2)
+    upLim, loLim = table.getn(Table), 1
+    previousi = 1
+    if key then ToInsert = { value = ToInsert, key = key }
+
+        while true do
+            if Value > Table[i] and Table[i + 1] and Value > Table[i + 1] then
+                previousi = i
+                i = i + math.floor((upLim - loLim) / 2)
+                loLim = previousi
+            elseif Value < Table[i] and Table[i - 1] and Value < Table[i - 1] then
+                previousi = i
+                i = i - math.floor((upLim - loLim) / 2)
+                uplim = previousi
+            else
+                table.insert(Table, ToInsert, i)
+                return Table, i
+            end
+        end
+    end
+end
+
+--> increment a value
+function inc(value)
+    return value + 1
+end
+
+--> decrement a value
+function dec(value)
+    return value - 1
+end
+
+function sanitizeRandom(lowerBound, UpperBound)
+    if lowerBound >= UpperBound then return lowerBound end
+
+    return math.random(lowerBound, UpperBound)
+end
+
+function todoAssert(object, functionToPass, todoCheckNext)
+    if functionToPass(object) == true then return end
+    echo("Error:Todo:" .. todoCheckNext)
+end
+
+-->Sanitizes a Variable for a table
+function sanitizeItterator(Data, Min, Max)
+    return math.max(Min, math.min(Max, math.floor(Data)))
+end
+
+-->Splits a Table into Two Pieces
+function splitTable(T, breakP, breakEnd)
+    breakPoint = breakP or math.ceil(#T / 2)
+    breakPoint = sanitizeItterator(breakPoint, 1, table.getn(T))
+    local T1 = {}
+
+    for i = breakPoint, breakEnd, 1 do
+        T1[#T1 + 1] = T[i]
+    end
+
+    return T1
+end
+
+
+
+
+
+function getMidPoint(a, b)
+    ax, ay, az = a.x, a.y, a.z
+    bx, by, bz = b.x.b.y, b.z
+    return (ax - bx) / 2 + ax, (ay - by) / 2 + ay, (az - bz) / 2 + az
+end
+
+function swingPointOutFromCenterByFrame(ax, ay, az, frame, swing, totalFrame)
+    extend = swing * math.sin(frame / totalFrame) * randSign()
+    return ax + math.random(math.min(extend, extend * -1), math.abs(extend)),
+    ay + math.random(math.min(extend, extend * -1), math.abs(extend)),
+    az + math.random(math.min(extend, extend * -1), math.abs(extend))
+end
+
+--> make a CEG CLOUD
+function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing, speedInFrames)
+    local spCEG = Spring.SpawnCEG
+    quarter = math.ceil(plifetime / 4)
+    it = 1
+    pT = {}
+    for i = 1, nr do
+        pT[i] = { x = math.random(-size, size), y = math.random(-size, size) * 0.5, z = math.random(-size, size) }
+    end
+
+    while lifetime > 0 do
+        frame = Spring.GetGameFrame()
+
+        for i = it, nr, it do
+            --between every particle that isnt first and last
+            if i ~= 1 and i ~= nr then
+                if i == 1 then
+                    fx, fy, fz = getMidPoint(pT[nr], pT[2])
+                else
+                    fx, fy, fz = getMidPoint(pT[nr - 1], pT[1])
+                end
+                pT[i].x, pT[i].y, pT[i].z = swingPointOutFromCenterByFrame(fx, fy, fz, frame, swing, speedInFrames)
+            else
+                fx, fy, fz = getMidPoint(pT[i - 1], pT[i + 1])
+                pT[i].x, pT[i].y, pT[i].z = swingPointOutFromCenterByFrame(fx, fy, fz, frame, swing, speedInFrames)
+            end
+            spCEG(cegname, pT[i].x, pT[i].y, pT[i].z, math.random(0, 1), math.random(0, 1), math.random(0, 1), 0, 0)
+        end
+        it = (it % 4) + 1
+        lifetime = lifetime - quarter
+        Sleep(quarter)
+    end
+end
+
+-->renames piecenames placeholders in a given s3o file 
+-- replaced asciichars must be equal in digits	
+function objectPieceRenamer(filename)
+
+
+    local file = io.open(filename, "r+b")
+
+
+
+    if file then
+
+
+        -- Opens a file in append mode
+        lineTable = {}
+
+        keycount = {}
+        keycount["aa"] = {};
+        keycount["bb"] = {};
+        keycount["cc"] = {};
+        keycount["dd"] = {};
+        keycount["ee"] = {};
+        keycount["ff"] = {};
+        keycount["gg"] = {};
+        keycount["aa"].matchcounter = 0
+        keycount["bb"].matchcounter = 0
+        keycount["cc"].matchcounter = 0
+        keycount["dd"].matchcounter = 0
+        keycount["ee"].matchcounter = 0
+        keycount["ff"].matchcounter = 0
+        keycount["gg"].matchcounter = 0
+
+        local outputc = io.open("output.c", "wb")
+
+
+        keycount["aa"].nr = 1; keycount["bb"].nr = 2; keycount["cc"].nr = 3; keycount["dd"].nr = 4; keycount["ee"].nr = 5; keycount["ff"].nr = 6; keycount["gg"].nr = 7
+
+
+        count = 0
+        for line in file:lines() do
+
+            copystring = line
+            for k, v in pairs(keycount) do
+
+                matchCounter = v.matchcounter
+                while string.find(copystring, "c" .. k) or string.find(copystring, "E" .. k) do
+                    if string.find(copystring, "c" .. k) then
+                        copystring = string.gsub(copystring, "c" .. k, "c" .. v.nr, 1)
+                        matchCounter = matchCounter + 1
+                    end
+                    if string.find(copystring, "E" .. k) then
+                        copystring = string.gsub(copystring, "E" .. k, "E" .. v.nr, 1)
+                        matchCounter = matchCounter + 1
+                    end
+
+                    if matchCounter == 2 then
+                        v.nr = v.nr + 7
+                        matchCounter = 0
+                    end
+                end
+                v.matchcounter = matchCounter
+            end
+            outputc.write(outputc, copystring .. "\n")
+        end
+        outputc:close()
+
+    else
+        Spring.Echo(" could not open file")
+    end
+end
+
+-->Inserts a Value only if it is not found
+function TableInsertUnique(Table, Value)
+    for i = 1, #Table do
+        if Table[i] == Value then return Table end
+    end
+    table.insert(Table, Value)
+    return Table
+end
+
+-->Generic Simple Commands
+function Command(id, command, target, option)
+    options = option or {}
+    --abort previous command
+
+    if command == "build" then
+        x, y, z = Spring.GetUnitPosition(unitID)
+        x, y, z = x + 50, y, z + 50
+        Spring.SetUnitMoveGoal(unitID, x, y, z)
+        Spring.GiveOrderToUnit(unitID, -1 * target, {}, {})
+    end
+
+    if command == "attack" then
+        coords = { target.x, target.y, target.z }
+        Spring.SelectUnitArray({ [1] = id })
+        Spring.GiveOrder(CMD.FIGHT, coords, CMD.OPT_RIGHT + CMD.OPT_SHIFT)
+    end
+
+    if command == "repair" or command == "assist" then
+        spGiveOrderToUnit(unitID, CMD_GUARD, { target }, { "" })
+    end
+
+    if command == "go" then
+        Spring.GiveOrderToUnit(id, CMD.MOVE, { target.x, target.y, target.z }, options) --{"shift"}
+        return
+    end
+
+    if command == "stop" then
+        Spring.GiveOrderToUnit(id, CMD.STOP, {}, {})
+        return
+    end
+
+    if command == "setactive" then
+        Spring.SetUnitMoveGoal(id, target.x, target.y, target.z); return
+    end
+end
+
+-->Unit Verfication
+function exists(unitid)
+    validUnit = Spring.GetUnitIsDead(unitid)
+    if validUnit and validUnit == true then return true end
+
+    return false
+end
+
+--> Gets a List of Geovents + Positions
+function getGeoventList()
+
+    features = Spring.GetAllFeatures()
+    GeoventList = {}
+    for i = 1, #features do
+        id = features[i]
+        defID = Spring.GetFeatureDefID(id)
+        if defID == FeatureDefNames["geovent"].id then
+            fx, fy, fz = Spring.GetFeaturePosition(id)
+            GeoventList[#GeoventList + 1] = { x = fx, y = fy, z = fz, id = id }
+        end
+    end
+    return GeoventList
+end
+
+--> testUnit for existance - Debugfunction
+function testUnit(unitid)
+    if not unitid then echo("TestUnit no unitid given to testUnit()"); return end
+    echo("UnitTested")
+    if type(unitid) ~= "number" then echo("unitid is not a number-type is " .. type(unitid) .. " with value: " .. unitid); return end
+
+    validUnit = Spring.ValidUnitID(unitid)
+    if validUnit and validUnit == true then
+        echo("U" .. unitid .. " :unitid is valid")
+    else
+        echo("U" .. unitid .. " :unitid is invalid")
+        return
+    end
+    isAlive = Spring.GetUnitIsDead(unitid)
+    if isAlive and isAlive == true then
+        echo("U" .. unitid .. ":unitid is alive")
+    else
+        echo("U" .. unitid .. ":unitid is dead")
+        return
+    end
+end
+
+function GetUnitCanBuild(unitName)
+    unitDef = UnitDefNames[unitName]
+    T = {}
+    if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
+        for index, unitname in ipairs(buildOptions) do
+            T[unitname] = unitname
+        end
+    end
+    return T
+end
+
+
+--> getUnitBuildAbleMap
+--computates a map of all unittypes buildable by a unit
+function getFactionTable(unitName, boolID)
+    Result = {}
+    Result[unitName] = {}
+
+    openTable = {}
+    closedTable = {}
+
+    while table.getn(openTable) > 0 do
+        CanBuildList = GetUnitCanBuild(unitName)
+        openTable = mergeTables(CanBuildList, openTable)
+
+        subFunction = function(T_i_, ArghT) if ArghT[T_i_] then
+            return
+        else
+            return T_i_
+        end
+        end
+
+        openTable = process(openTable, closedTable, subFunction)
+        --for CanBuildList insert into
+        for k, v in ipairs(CanBuildList) do
+            Result[unitName] = TableInsertUnique(Result[unitName], k)
+        end
+        closedTable[unitName] = true
+        openTable[unitName] = nil
+
+        unitName = openTable[#openTable]
+    end
+    return Result
 end
 
 -->Stuns a Unit
 function stunUnit(k, factor)
-	hp=Spring.GetUnitHealth(k)
-	if hp then Spring.SetUnitHealth(k,{paralyze=hp*factor }) end
+    hp = Spring.GetUnitHealth(k)
+    if hp then Spring.SetUnitHealth(k, { paralyze = hp * factor }) end
 end
 
 --> Transfer UnitStats
-function transferUnitStatusToUnit(unitID,targetID)
-	exP=Spring.GetUnitExperience(unitID)
-	hp,maxHP,para, cap, bP = Spring.GetUnitHealth(unitID)
-	newhp,newmaxHP,_, _, _ = Spring.GetUnitHealth(unitID)
-	Spring.SetUnitExperience(targetID,exP)
-	
-	factor= 1/(hp/maxHP)
-	hp=math.ceil(newmaxHP*factor)
-	
-	Spring.SetUnitHealth(targetID,{health=hp, capture= cap, paralyze= para, build= bP})
+function transferUnitStatusToUnit(unitID, targetID)
+    exP = Spring.GetUnitExperience(unitID)
+    hp, maxHP, para, cap, bP = Spring.GetUnitHealth(unitID)
+    newhp, newmaxHP, _, _, _ = Spring.GetUnitHealth(unitID)
+    Spring.SetUnitExperience(targetID, exP)
+
+    factor = 1 / (hp / maxHP)
+    hp = math.ceil(newmaxHP * factor)
+
+    Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
 
 --> Transforms a selected unit into another type
 function transformUnitInto(unitID, unitType, setVel)
-	x,y,z=Spring.GetUnitPosition(unitID)
-	teamID = Spring.GetUnitTeam (unitID)	
-	vx,vy,vz,vl =Spring.GetUnitVelocity(unitID)
-	rotx,roty,rotz = Spring.GetUnitRotation(unitID)
-	currHp,oldMaxHp= Spring.GetUnitHealth(unitID)
-	
-	id= Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0,3)), teamID) 
-	if id and vx and rotx then
-		
-		Spring.SetUnitPosition(id, x,y,z)
-		if setVel then
-			Spring.SetUnitVelocity(id,	vx*vl,vy*vl,vz*vl)
-		end
-		Spring.SetUnitRotation(id,	rotx,roty,rotz)
-		
-		transferUnitStatusToUnit(unitID,id)
-		transferOrders(unitID, id)	
-		Spring.DestroyUnit(unitID, false,true)
-		return id
-	end	
-	Spring.DestroyUnit(unitID, false,true)
+    x, y, z = Spring.GetUnitPosition(unitID)
+    teamID = Spring.GetUnitTeam(unitID)
+    vx, vy, vz, vl = Spring.GetUnitVelocity(unitID)
+    rotx, roty, rotz = Spring.GetUnitRotation(unitID)
+    currHp, oldMaxHp = Spring.GetUnitHealth(unitID)
+
+    id = Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0, 3)), teamID)
+    if id and vx and rotx then
+
+        Spring.SetUnitPosition(id, x, y, z)
+        if setVel then
+            Spring.SetUnitVelocity(id, vx * vl, vy * vl, vz * vl)
+        end
+        Spring.SetUnitRotation(id, rotx, roty, rotz)
+
+        transferUnitStatusToUnit(unitID, id)
+        transferOrders(unitID, id)
+        Spring.DestroyUnit(unitID, false, true)
+        return id
+    end
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function echoUnitStats(id)
-	h,mh,pD,cP,bP= Spring.GetUnitHealth(id)	
-	echo(h,mh,pD,"Capture Progress:"..cP,"Build Progress:"..bP)
+    h, mh, pD, cP, bP = Spring.GetUnitHealth(id)
+    echo(h, mh, pD, "Capture Progress:" .. cP, "Build Progress:" .. bP)
 end
 
 --> Get Unit Target if a Move.Cmd was issued
 function getUnitMoveGoal(unitID)
-	cmds=Spring.GetCommandQueue(unitID,4)
-	for i=#cmds,1, -1 do
-		if cmds[i].id and cmds[i].id == CMD.MOVE and cmds[i].params then
-			return cmds[i].params[1],cmds[i].params[2],cmds[i].params[3]
-		end
-	end
+    cmds = Spring.GetCommandQueue(unitID, 4)
+    for i = #cmds, 1, -1 do
+        if cmds[i].id and cmds[i].id == CMD.MOVE and cmds[i].params then
+            return cmds[i].params[1], cmds[i].params[2], cmds[i].params[3]
+        end
+    end
 end
 
 function drawFunctionGenerator(sizeX, sizeY, typeName)
-	heightMapTable= makeTable({},sizeX,sizeY)
-	if typeName == "Cliff" then
-		--generate a Point rotate to random deg, at random offset add to opposing rotation a second and a third point
-		cliffstartpoint = Vector:new(0,sizeY/2)
-		startPointRad = math.random(-math.pi, math.pi)
-		cliffEndPointARad = startPointRad + math.pi +math.random(math.pi/8,math.pi/4)
-		cliffEndPointBRad = startPointRad + math.pi -math.random(math.pi/8,math.pi/4)
-		cliffEndPointA = Vector:new(0,sizeY/-2)
-		cliffEndPointB = Vector:new(0,sizeY/-2)
-		
-		--rotate cliffstartpoint by startPointRad
-		--rotate cliffEndPointA by cliffEndPointA
-		--rotate cliffEndPointB by cliffEndPointB
-		
-		
-		extrapolationFunction= function(value,maxValue, bLeftRight)
-			if bLeftRight == true then
-				return math.sin((value/maxValue)*math.pi*2) 
-			else
-				return math.cos((value/maxValue)*math.pi*3) 
-			end
-		end
-		
-		
-		
-		return heightMapTable
-	end
-	
+    heightMapTable = makeTable({}, sizeX, sizeY)
+    if typeName == "Cliff" then
+        --generate a Point rotate to random deg, at random offset add to opposing rotation a second and a third point
+        cliffstartpoint = Vector:new(0, sizeY / 2)
+        startPointRad = math.random(-math.pi, math.pi)
+        cliffEndPointARad = startPointRad + math.pi + math.random(math.pi / 8, math.pi / 4)
+        cliffEndPointBRad = startPointRad + math.pi - math.random(math.pi / 8, math.pi / 4)
+        cliffEndPointA = Vector:new(0, sizeY / -2)
+        cliffEndPointB = Vector:new(0, sizeY / -2)
+
+        --rotate cliffstartpoint by startPointRad
+        --rotate cliffEndPointA by cliffEndPointA
+        --rotate cliffEndPointB by cliffEndPointB
+
+
+        extrapolationFunction = function(value, maxValue, bLeftRight)
+            if bLeftRight == true then
+                return math.sin((value / maxValue) * math.pi * 2)
+            else
+                return math.cos((value / maxValue) * math.pi * 3)
+            end
+        end
+
+
+
+        return heightMapTable
+    end
 end
+
 --> Gets the MaxSpeed Of A unit
-function getMaxSpeed(unitID,UnitDefs)
-	uDefID=Spring.GetUnitDefID(unitID)	
-	return UnitDefs[uDefID].speed
+function getMaxSpeed(unitID, UnitDefs)
+    uDefID = Spring.GetUnitDefID(unitID)
+    return UnitDefs[uDefID].speed
 end
 
 --> Sets the Speed - Unitscript only
-function setSpeed(unitID,speedfactor, UnitDefs)
-	uDefID=Spring.GetUnitDefID(unitID)	
-	if speedfactor > 1 then echo("Error:setSpeed:Recived to big Value") return end
-	assert(Spring.UnitScript,"No UnitScript given")
-	Spring.UnitScript.SetUnitValue(unitID,COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed*speedfactor* 2184.53))
+function setSpeed(unitID, speedfactor, UnitDefs)
+    uDefID = Spring.GetUnitDefID(unitID)
+    if speedfactor > 1 then echo("Error:setSpeed:Recived to big Value") return end
+    assert(Spring.UnitScript, "No UnitScript given")
+    Spring.UnitScript.SetUnitValue(unitID, COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed * speedfactor * 2184.53))
 end
 
-function reSetSpeed(unitID,UnitDefs)
-	setSpeed(unitID,1.0, UnitDefs)
+function reSetSpeed(unitID, UnitDefs)
+    setSpeed(unitID, 1.0, UnitDefs)
 end
 
 
@@ -4878,127 +4859,129 @@ end
 -- both recive a List of allready in Pixel Placed Pieces and the relative Heigth they are at, 
 -- and gives back a piece, and its heigth, the Selector returns nil upon Complete 
 function createLandscapeFromFeaturePieces(pixelPieceTable, drawFunctionTable)
-	echo("TODO:createLandscapeFromFeaturePieces")
+    echo("TODO:createLandscapeFromFeaturePieces")
 end
 
 --> transfers Order from one Unit to another
-function transferOrders( originID, unitID)
-	
-	CommandTable=Spring.GetUnitCommands( originID)					
-	first=false
-	if CommandTable then
-		for _,cmd in pairs(CommandTable) do	
-			if #CommandTable ~= 0 then	
-				if first==false then
-					first=true									
-					if cmd.id == CMD.MOVE then	
-						Spring.GiveOrderToUnit(unitID,cmd.id,cmd.params,{})						
-					elseif cmd.id== CMD.STOP then
-						Spring.GiveOrderToUnit(unitID,CMD.STOP,{},{})
-					end						
-				else
-					Spring.GiveOrderToUnit(unitID,cmd.id,cmd.params,{"shift"})
-				end
-			else
-				Spring.GiveOrderToUnit(unitID,CMD.STOP,{},{})
-			end			
-		end			
-	end		
+function transferOrders(originID, unitID)
+
+    CommandTable = Spring.GetUnitCommands(originID)
+    first = false
+    if CommandTable then
+        for _, cmd in pairs(CommandTable) do
+            if #CommandTable ~= 0 then
+                if first == false then
+                    first = true
+                    if cmd.id == CMD.MOVE then
+                        Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, {})
+                    elseif cmd.id == CMD.STOP then
+                        Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+                    end
+                else
+                    Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, { "shift" })
+                end
+            else
+                Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+            end
+        end
+    end
 end
 
---> createAccessTable
-function createAccessTable(T, a, b ,c)
-	if a and not T[a] then T[a]={} end
-	if b and not T[a][b] then T[a][b]={} end
-	if c and not T[a][b][c] then T[a][b][c]={} end
-return T
-
+--> accessTable
+function accessTable(T, a, b, c)
+    if a and not T[a] then T[a] = {} end
+    if b and not T[a][b] then T[a][b] = {} end
+    if c and not T[a][b][c] then T[a][b][c] = {} end
+    return T
 end
 
 -->Generate a Description Text for a Unit
 function unitDescriptionGenerator(Unit, UnitDefNames)
-	local ud=UnitDefNames[Unit]
-	stringBuilder=""
-	lB="\n"
-	
-	
-	function unitDefToStr(ud)
-		str="normal"
-		if ud.reclaimable ==true then str=str..", reclaimable" end
-		if ud.capturable ==true then str=str..", capturable" end
-		if ud.repairable ==true then str=str..", repairable" end
-		return str
-	end
-	function trueStr(bool)
-		if bool==false then return "not" end
-		return " " 
-	end
-	function retStr(val,str1,str2)
-		if not val then return str1 end
-		return str2 or ""
-	end
-	
-	function cStr(bool, str)
-		if bool and bool==true then
-			return str 
-		else
-			return ""
-		end 
-	end
-	utype			= generateTypeString(ud)
-	name			=ud.name
-	description		=ud.description
-	maxDamage		=ud.maxDamage
-	autoHeal		=ud.autoHeal
-	idleAutoHeal	=ud.idleAutoHeal
-	idleTime		=ud.idleTime
-	buildCostMetal	=ud.buildCostMetal
-	buildCostEnergy	=ud.buildCostEnergy
-	ustatus			=generateStatusString(ud)
-	harvestStorage	=ud.harvestStorage
-	metalStorage	=ud.metalStorage
-	energyStorage	=ud.energyStorage
-	extractsMetal	=ud.extractsMetal
-	windGenerator	=ud.windGenerator
-	tidalGenerator	=ud.tidalGenerator 
-	metalUse		=ud.metalUse
-	metalUpkeep		=ud.metalUpkeep
-	energyUse 		=ud.energyUse 		 
-	metalMake 		=ud.metalMake 
-	energyMake 		=ud.energyMake 
-	
-	makesMetal 		=ud.makesMetal 
-	onOffable 		=ud.onOffable 
-	activateWhenBuilt =ud.activateWhenBuilt
-	sightDistance =ud.sightDistance 
-	airSightDistance =ud.airSightDistance 
-	losEmitHeight =ud.losEmitHeight 
-	radarEmitHeight =ud.radarEmitHeight 
-	radarDistance =ud.radarDistance 
-	radarDistanceJam =ud.radarDistanceJam 
-	sonarDistance =ud.sonarDistance 
-	sonarDistanceJam =ud.sonarDistanceJam 
-	stealth =ud.stealth 
-	
-	canCloak =ud.canCloak 
-	cloakCostMoving =ud.cloakCostMoving 
-	initCloaked =ud.initCloaked 
-	minCloakDistance =ud.minCloakDistance 
-	decloakOnFire =ud.decloakOnFire 
-	cloakTimeout =ud.cloakTimeout 
-	canMove =ud.canMove 
-	canAttack =ud.canAttack 
-	canFight =ud.canFight 
-	canRepeat =ud.canRepeat 
-	canPatrol =ud.canPatrol 
-	canGuard =ud.canGuard 
-	canCloak =ud.canCloak 
-	canSelfDestruct =ud.canSelfDestruct 
-	moveState =ud.moveState 
-	fireState =ud.fireState 
-	noAutoFire =ud.noAutoFire 
-	canManualFire =ud.canManualFire 
-	--[[
+    local ud = UnitDefNames[Unit]
+    stringBuilder = ""
+    lB = "\n"
+
+
+    function unitDefToStr(ud)
+        str = "normal"
+        if ud.reclaimable == true then str = str .. ", reclaimable" end
+        if ud.capturable == true then str = str .. ", capturable" end
+        if ud.repairable == true then str = str .. ", repairable" end
+        return str
+    end
+
+    function trueStr(bool)
+        if bool == false then return "not" end
+        return " "
+    end
+
+    function retStr(val, str1, str2)
+        if not val then return str1 end
+        return str2 or ""
+    end
+
+    function cStr(bool, str)
+        if bool and bool == true then
+            return str
+        else
+            return ""
+        end
+    end
+
+    utype = generateTypeString(ud)
+    name = ud.name
+    description = ud.description
+    maxDamage = ud.maxDamage
+    autoHeal = ud.autoHeal
+    idleAutoHeal = ud.idleAutoHeal
+    idleTime = ud.idleTime
+    buildCostMetal = ud.buildCostMetal
+    buildCostEnergy = ud.buildCostEnergy
+    ustatus = generateStatusString(ud)
+    harvestStorage = ud.harvestStorage
+    metalStorage = ud.metalStorage
+    energyStorage = ud.energyStorage
+    extractsMetal = ud.extractsMetal
+    windGenerator = ud.windGenerator
+    tidalGenerator = ud.tidalGenerator
+    metalUse = ud.metalUse
+    metalUpkeep = ud.metalUpkeep
+    energyUse = ud.energyUse
+    metalMake = ud.metalMake
+    energyMake = ud.energyMake
+
+    makesMetal = ud.makesMetal
+    onOffable = ud.onOffable
+    activateWhenBuilt = ud.activateWhenBuilt
+    sightDistance = ud.sightDistance
+    airSightDistance = ud.airSightDistance
+    losEmitHeight = ud.losEmitHeight
+    radarEmitHeight = ud.radarEmitHeight
+    radarDistance = ud.radarDistance
+    radarDistanceJam = ud.radarDistanceJam
+    sonarDistance = ud.sonarDistance
+    sonarDistanceJam = ud.sonarDistanceJam
+    stealth = ud.stealth
+
+    canCloak = ud.canCloak
+    cloakCostMoving = ud.cloakCostMoving
+    initCloaked = ud.initCloaked
+    minCloakDistance = ud.minCloakDistance
+    decloakOnFire = ud.decloakOnFire
+    cloakTimeout = ud.cloakTimeout
+    canMove = ud.canMove
+    canAttack = ud.canAttack
+    canFight = ud.canFight
+    canRepeat = ud.canRepeat
+    canPatrol = ud.canPatrol
+    canGuard = ud.canGuard
+    canCloak = ud.canCloak
+    canSelfDestruct = ud.canSelfDestruct
+    moveState = ud.moveState
+    fireState = ud.fireState
+    noAutoFire = ud.noAutoFire
+    canManualFire = ud.canManualFire
+    --[[
 	
 	stringBuilder=stringBuilder..
 	"=== Unit: "..name.." ==="..lB..
@@ -5010,8 +4993,10 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 	reStr(metalStorage, "The "..name.."s storage contributes ".. metalStorage.." to the teams metal storage.")..lB..
 	reStr(metalStorage, "The "..name.."s storage contributes ".. energyStorage.." to the teams energy storage.")
 ..lB..
-	reStr(extractsMetal, "The "..name.." extracts "..extractsMetal.." from the ground.")..lB..
-	reStr(windGenerator, "It is able to convert gas-currents into energy at a rate of "..windGenerator)..lB..
+	reStr(extractsMetal, "The "..name.." extracts "..extractsMetal.." from the ground.")
+..lB..
+	reStr(windGenerator, "It is able to convert gas-currents into energy at a rate of "..windGenerator)
+..lB..
 
 	reStr(tidalGenerator, "Tidal forces can be converted to energy up too "..tidalGenerator .. " per Unit.")
 ..lB..
@@ -5648,8 +5633,4 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 			echo("Unit: "..name)
 			echo("The "..name.." is a "utype
 			]]
-			
-			
-			
-	
 end

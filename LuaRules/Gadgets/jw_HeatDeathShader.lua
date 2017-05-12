@@ -1,31 +1,31 @@
 function gadget:GetInfo()
-  return {
-    name      = "HeatDeathShader",
-    desc      = "Dead Vehicles glow while dead",
-    author    = "me",
-    date      = "Sep. 20014",
-    license   = "GPL 3.141",
-    layer     = 0,
-    enabled   = false,
-  }
+    return {
+        name = "HeatDeathShader",
+        desc = "Dead Vehicles glow while dead",
+        author = "me",
+        date = "Sep. 20014",
+        license = "GPL 3.141",
+        layer = 0,
+        enabled = false,
+    }
 end
 
 if (gadgetHandler:IsSyncedCode()) then
-WreckageIs={
-			[UnitDefNames["gcvehiccorpsemini"].id]=true,
-			[UnitDefNames["gcvehiccorpse"].id]=true
-			}
+    WreckageIs = {
+        [UnitDefNames["gcvehiccorpsemini"].id] = true,
+        [UnitDefNames["gcvehiccorpse"].id] = true
+    }
 
-	function gadget:UnitCreated(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam) 
-			if WreckageIs[unitDefID] then	
-					SendToUnsynced("glowing_heatDeathShader_Start", unitID, Spring.GetGameFrame())
-			end
-	end
+    function gadget:UnitCreated(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+        if WreckageIs[unitDefID] then
+            SendToUnsynced("glowing_heatDeathShader_Start", unitID, Spring.GetGameFrame())
+        end
+    end
 
-else  --UNSYNCED
-	--shaderCode
-	---[[----------------------------------------------------------------------------
-	local fragmentShaderSource=[[
+else --UNSYNCED
+    --shaderCode
+    --- [[----------------------------------------------------------------------------
+    local fragmentShaderSource = [[
 varying float time;
 uniform vec2 resolution;
 varying vec3 fPosition;
@@ -89,8 +89,8 @@ currColor=(
 }
 
 ]]
-	
-	local vertexShaderSource=[[
+
+    local vertexShaderSource = [[
 
 //#define use_shadow
 	#define MaxDepth= 50
@@ -153,66 +153,63 @@ void main()
  
 }
     ]]
-	
-	
-	local shaderTable = {
-	vertex= vertexShaderSource,
-	 fragment = fragmentShaderSource,
-	-- uniformInt = uniformInt,
-	}
-	--]]--------------------------------------------------------------------------	
 
-	--variables for the task ahead	
-	local shaderProgram 	
-	local glUseShader 		= gl.UseShader
-	local glCopyToTexture 	= gl.CopyToTexture
-	local glTexture 		= gl.Texture
-	local glTexRect 		= gl.TexRect
-	local boolShaderWorking	= true
-	local vsx,vsy 
-	local screencopy
-	local boolWorking=true
-	local redHotUnits={}
-	glowTime=900
-	
-	--Transfers the Data to the shader
-	local function HeatDeath(callname,id, startframe)		
-	--Forge values in which to store the Holes Data
-					if gl.CreateShader then
-						Spring.Echo("HeatDeath::forging Shader")
-						if not redHotUnits[id] then 	redHotUnits[id]	=startframe+ glowTime end									
-						Spring.UnitRendering.SetUnitLuaDraw(id,true)						
-					else
-						Spring.Echo("<HeatDeath-Shader>: GLSL not supported.")
-					end
-	end
-	
 
-	
-	function gadget:GameFrame(frame)
-	
-		for k,v in pairs(redHotUnits) do
-			if k and v== frame then
-				redHotUnits[k]=nil
-			end
-		end
-	
-	end
-	
-	function gadget:Initialize()   
-		Spring.Echo("HeatDeath Initialised")
-			shaderProgram=gl.CreateShader(shaderTable)			
-      -- This associate the messages with the functions
-      -- So that when the synced sends a message "f" it calls the function f in unsynced
-		gadgetHandler:AddSyncAction("glowing_heatDeathShader_Start", HeatDeath)
+    local shaderTable = {
+        vertex = vertexShaderSource,
+        fragment = fragmentShaderSource,
+        -- uniformInt = uniformInt,
+    }
+    --]]--------------------------------------------------------------------------
 
-	end	  
-    
-	function gadget:DrawUnit(unitID, drawMode)
-		if redHotUnits[unitID] then				
-		glUseShader(shaderProgram)			
-		end	
-	end
+    --variables for the task ahead
+    local shaderProgram
+    local glUseShader = gl.UseShader
+    local glCopyToTexture = gl.CopyToTexture
+    local glTexture = gl.Texture
+    local glTexRect = gl.TexRect
+    local boolShaderWorking = true
+    local vsx, vsy
+    local screencopy
+    local boolWorking = true
+    local redHotUnits = {}
+    glowTime = 900
 
+    --Transfers the Data to the shader
+    local function HeatDeath(callname, id, startframe)
+        --Forge values in which to store the Holes Data
+        if gl.CreateShader then
+            Spring.Echo("HeatDeath::forging Shader")
+            if not redHotUnits[id] then redHotUnits[id] = startframe + glowTime end
+            Spring.UnitRendering.SetUnitLuaDraw(id, true)
+        else
+            Spring.Echo("<HeatDeath-Shader>: GLSL not supported.")
+        end
+    end
+
+
+
+    function gadget:GameFrame(frame)
+
+        for k, v in pairs(redHotUnits) do
+            if k and v == frame then
+                redHotUnits[k] = nil
+            end
+        end
+    end
+
+    function gadget:Initialize()
+        Spring.Echo("HeatDeath Initialised")
+        shaderProgram = gl.CreateShader(shaderTable)
+        -- This associate the messages with the functions
+        -- So that when the synced sends a message "f" it calls the function f in unsynced
+        gadgetHandler:AddSyncAction("glowing_heatDeathShader_Start", HeatDeath)
+    end
+
+    function gadget:DrawUnit(unitID, drawMode)
+        if redHotUnits[unitID] then
+            glUseShader(shaderProgram)
+        end
+    end
 end
 
