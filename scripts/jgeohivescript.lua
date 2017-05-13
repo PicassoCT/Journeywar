@@ -26,7 +26,7 @@ end
 
 
 function underground()
-    hideT(["root"])
+    hideT(TablesOfPiecesGroups["root"])
     WaitForMove(hivePiece, y_axis)
     showT(TablesOfPiecesGroups["root"])
     boolUndergroundCounter = 0

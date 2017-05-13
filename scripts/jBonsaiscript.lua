@@ -26,6 +26,7 @@ foamsphere3=piece"foamsphere3"
 spherespin= piece"spherespin"
 
 g_AddOnRate= 0.005
+roofPieceTable = {}
 
 rval = function () 
 	val= math.random(-35,35) 
@@ -158,27 +159,26 @@ bonsaiPieces={}
 endPieces={}
 baseShapeTable ={}
 Piece_EndPieceMap={}
+
 function script.Create()
+	echo("Creating recent Version of jBonsai")
 	allreadyInsertedPieces={}
 	--generatepiecesTableAndArrayCode(unitID)
 	TablesOfPiecesGroups=makePiecesTablesByNameGroups(false,true)
 	resetT(TablesOfPiecesGroups["bP"])
 	resetT(TablesOfPiecesGroups["Tree"])
 	hideT(TablesOfPiecesGroups["bP"])
-	showT(TablesOfPiecesGroups["bP"])
+	
 	Show(basinpillar)
 	reset(wheelPivot)
 	reset(FlucWheel)
 	
-	
-
 	for i=1, 9, 1 do
-		bonsaiPieces[i]={}
 		for k=1 , 10, 1 do
 			if (((i-1)*10)+k) < 98 then
 				pieceName= "bP"..(((i-1)*10)+k)
 				pieceName= piece(pieceName)
-				bonsaiPieces[math.max(math.min(3,i%3),1)][#bonsaiPieces[i]+k]={	Piece= pieceName }
+				bonsaiPieces[#bonsaiPieces + 1]={Piece= pieceName }
 				--EndPiece
 				endPieceName="E"..(((i-1)*10)+k)
 				endPieces[#endPieces+1]=piece(endPieceName)		
@@ -190,10 +190,9 @@ function script.Create()
 	end
 	StartThread(emitSound)
 	StartThread(addWaterLvl)
-	StartThread(buildLTree,Tree22, 7, "Bonsai", "B", 18)
+	
 	StartThread(waterWheel)
 	StartThread(showWaterWheels)
-	
 	
 	
 	sizeX, sizeY, sizeZ= 8,3,8
@@ -288,7 +287,6 @@ function checksides(baseShapeTable, x, z)
 	(baseShapeTable[x+1] and baseShapeTable[x+1][z-1] and baseShapeTable[x+1][z-1] == true)or 
 	(baseShapeTable[x] and baseShapeTable[x][z-1] and baseShapeTable[x][z-1] == true)or 
 	(baseShapeTable[x-1] and baseShapeTable[x-1][z-1] and baseShapeTable[x-1][z-1] == true) )
-	
 end
 
 function script.Killed(recentDamage,_)
@@ -325,74 +323,57 @@ end
 
 allreadyInsertedPieces={}
 function getBonsaiPiece(y, sizeY)
-	for num,subtable in pairs(bonsaiPieces) do
-		for j=1, #bonsaiPieces[num],1 do
-			v= bonsaiPieces[num][j]
-			if math.random(0,1) == 1 and not allreadyInsertedPieces[v.Piece] then
+
+		for j=1, #bonsaiPieces,1 do
+			v= bonsaiPieces[j]
+			if not allreadyInsertedPieces[v.Piece] then
 				allreadyInsertedPieces[v.Piece] =true
-				return v.Piece
+				_, height, _ =Spring.GetUnitPieceCollisionVolumeData(unitID, v.Piece)
+				return v.Piece, height/2
 			end
 		end
-	end	
+
 	return nil
 end
-function placeOtherLayers(x,z,y,boldHght,bx, bz)
+function placeLayerPiece(x,z,y,boldHght,bx, bz, heightGradient)
 	
 	--get the heightOffset
 	heightOffset= heightGradient[x] + cliffFactor*(math.random(-boldHght/4,boldHght/4))
-	P  = getBonsaiPiece(y, sizeY)
-		if not P then echo("JBonsai:No piece found"); return end
+	P, heigth = getBonsaiPiece(y, sizeY)
+	if not P then echo("JBonsai:No piece found"); return end
 	bonsaiTable[x][z][y]={Height=heightOffset	,BoolGround= true, Piece=P}
 	
 	predecessorTable=accessTable(predecessorTable,x,z,y)
 	predecessorTable[x][z][y]=Piece_EndPieceMap[P]	
-
-	Show(bonsaiTable[x][z][y].Piece)
 	
-	if baseShapeTable[x][z][y-1] == true then		
-	tpiece= bonsaiTable[x][z][y].Piece
-		tx,ty,tz=Spring.GetUnitPiecePosition(unitID, Piece_EndPieceMap[predecessorTable[x][z][y-1]])
-			Move(tpiece,x_axis,tx,0)
-			Move(tpiece,y_axis,ty,0)
-			Move(tpiece,z_axis,tz,0,true)
-		
-		Sleep(1)		
-	else
-		px,py,pz= 15 * x, y*25 + math.abs(bonsaiTable[x][z][y].Height), 15 * z
-	MovePieceToPos(bonsaiTable[x][z][y].Piece, px, py, pz, 0)
-		Sleep(1)
+	if  baseShapeTable[x][z][y ] == true and not baseShapeTable[x][z][y + 1] or baseShapeTable[x][z][y + 1] == false then
+		roofPieceTable[#roofPieceTable + 1] = Piece_EndPieceMap[P]	
 	end
 	
+	Show(P)
+	
+	if y == 1 then
+		tx,ty,tz= 15 * x, -10 + heigth, 15 * z
+	else
+		tx,ty,tz= 15 * x, y*25 + math.abs(heigth), 15 * z
+	end
+	
+	--has predecessor
+	if baseShapeTable[x][z][y-1] and predecessorTable[x][z][y-1] and  baseShapeTable[x][z][y-1] == true then		
+		tx,ty,tz=Spring.GetUnitPiecePosition(unitID,predecessorTable[x][z][y-1])
+	end
+	MovePieceToPos(P, tx, ty, tz, 0, true)
+
 	--place a bolder a the predecessorpiece 
 	dir, angular = getClosestDirection(directionTable,x,z) 
 	dir = dir + math.random(-15,15)
 	--Turn Boulder towards dir
-	Turn(bonsaiTable[x][z][y].Piece,y_axis,math.rad(dir), 0)
-	Turn(bonsaiTable[x][z][y].Piece,x_axis,math.rad(angular), 0, true)
+	Turn(P,y_axis,math.rad(dir), 0)
+	Turn(P,x_axis,math.rad(angular), 0, true)
+	WaitForTurns(P)
 end
 
-function placeFirstLayer(x,z,y, boldHght)
-	
-	--get the heightOffset
-	
-	heightOffset= heightGradient[z] + cliffFactor*(math.random(boldHght/-4,boldHght/4))
-	P  = getBonsaiPiece(y,  sizeY)
-		if not P then return end
-	bonsaiTable[x][z][1]={Height=heightOffset, BoolGround=true, Piece= P}
-	assert(type(bonsaiTable[x][z][1].Piece)=="number")
-	Show(bonsaiTable[x][z][1].Piece)
-	predecessorTable=accessTable(predecessorTable,x,z,1)
-	predecessorTable[x][z][1]= Piece_EndPieceMap[P]
-	
-	--place a bolder
-	px,py,pz= 15 * x, -10 + bonsaiTable[x][z][1].Height, 15 * z
-	MovePieceToPos(bonsaiTable[x][z][y].Piece, px, py, pz, 0)
-	
-	dir, angular = getClosestDirection(directionTable,x,z) 
-	dir = dir + math.random(-15,15)
-	--Turn Boulder towards dir
-	initPiece(bonsaiTable[x][z][1].Piece,angular,dir,0,0,0,0,0)	
-end
+
 
 function getCollissionOffset( piece)
 	vx,vy,vz=Spring.GetUnitPieceCollisionVolumeData(unitID,piece)
@@ -419,16 +400,6 @@ function initPiece(id,x,y,z,mx,my,mz,speed)
 	
 end
 
-function resetBonsai()
-	
-	WTurn(center,y_axis,0,0)
-	--This hides all the bonsaisPieces
-	for i=1,#bonsaiPieces, 1 do
-		for k=1,#bonsaiPieces[i] do
-			Hide(bonsaiPieces[i][k].Piece)
-		end
-	end
-end
 
 function makeDrectionTable()
 	directionTable ={}
@@ -438,6 +409,13 @@ function makeDrectionTable()
 		z=math.ceil(1,sizeZ), direction=math.random(0,360), angular=radoAnguVal}
 	end
 	return directionTable
+end
+
+function getPieceVolume(PieceID)
+	vx,vy,vz= Spring.GetUnitPieceCollisionVolumeData(unitID,PieceID)
+	sx,sy,sz= getCollissionOffset(PieceID)
+	bx, boldHght, bz = math.max(vx,sz)*0.75, math.abs(sy-vy) , math.abs(vz,sz)*0.75
+	return  bx, boldHght, bz
 end
 
 bonsaiTable={}
@@ -457,63 +435,56 @@ function buildBonsai( baseShapeTable, sizeX, sizeZ, sizeY)
 	
 	maxHeight = math.random(10,120)
 	heightGradient = getHeightGradient(sizeX, sizeZ, maxHeight)
-	assert(bonsaiPieces[1][1].Piece)
-	vx,vy,vz= Spring.GetUnitPieceCollisionVolumeData(unitID, bonsaiPieces[1][1].Piece)
-	sx,sy,sz= getCollissionOffset(bonsaiPieces[1][1].Piece)
-	bx, boldHght, bz = math.max(vx,sz)*0.75, math.abs(sy-vy) , math.abs(vz,sz)*0.75
-	
+
 	echo("JBonsai2")
 	for y=1,sizeY, 1 do
 		for x= 1, sizeX, 1 do
 			for z= 1, sizeZ, 1 do
-				if y==1 and baseShapeTable[x][z][1] == true then					
-					placeFirstLayer(x,z,y,boldHght)
-				end
-				
-				if y~=1 and baseShapeTable[x][z][y] == true then
-					placeOtherLayers(x,z,y,boldHght,bx, bz)
-				end
-				
+				if  baseShapeTable[x][z][1] == true then	
+					bx, boldHght, bz =  getPieceVolume(bonsaiPieces[1].Piece)				
+					placeLayerPiece(x,z,y,boldHght,bx, bz, heightGradient)
+				end				
 			end
 		end
 	end	
 	
-	
-	roofPieceTable={}
-	allreadyFoundTile=makeTable(false,sizeX,sizeZ)
-	echo("JBonsai3")
-	for y=sizeY, 1, -1 do
-		for x= 1, sizeX, 1 do
-			for z= 1, sizeZ, 1 do
-				if baseShapeTable[x][z][y] and baseShapeTable[x][z][y] == true and allreadyFoundTile[x][z] == false then
-					roofPieceTable[bonsaiTable[x][z][y].Piece]=bonsaiTable[x][z][y].Piece
-					allreadyFoundTile[x][z] = true			
-				end			
-			end
-		end
-	end	
 	echo("JBonsai4")
 	setTrees()
 	echo("JBonsai5")
---	setCenter()
+	setBonsai()
 	echo("JBonsai6")
+	setCenter()
+	echo("JBonsai7")
 end
-function setTrees()
-	for k,v in pairs (TablesOfPiecesGroups["Tree"]) do
-		for key,value in pairs(Piece_EndPieceMap)do
-			if value and type(value) == "number" and math.random(0,5) == 2 then
-				--place piece on top
+function setBonsai()
+	resetT(TablesOfPiecesGroups["B"],0)
+	WaitForTurns(TablesOfPiecesGroups["B"])
+	buildLTree(Tree22, 7, "Bonsai", "B")
+	if roofPieceTable[roofPieceToBonsai] then
+		movePieceToPiece(unitID,Tree22,roofPieceTable[roofPieceToBonsai], 0)
+	else
+		Move(Tree22, y_axis, 45, 0)
+	end
+		
+end
 
-				movePieceToPiece(unitID,v,value, 0)
-				Show(v)
-				roofPieceTable[key]= nil				
-			end
+function setTrees()
+	echo("roofPieceTableNr"..#roofPieceTable)
+	for i = #roofPieceTable, 1, -1 do 
+		for k,v in pairs (TablesOfPiecesGroups["Tree"]) do
+			if math.random(0,1)==1 then
+			movePieceToPiece(unitID,v,roofPieceTable[i], 0)
+			Show(v)
+			TablesOfPiecesGroups["Tree"][k] = nil
+			break				
 		end
-	end	
+		end
+	end
+	
 end
 
 function setCenter()
-	Move(center,y_axis, 500, 0)-- boldHght/-2,0)
+	
 	val=math.random(-360,360)
 	Turn(center,y_axis,math.rad(val),0)	
 end
@@ -557,9 +528,7 @@ function script.Activate()
 end
 
 
-function script.Deactivate()
-	
-	
+function script.Deactivate()	
 	boolWaterSpilling=false
 	return 0
 end

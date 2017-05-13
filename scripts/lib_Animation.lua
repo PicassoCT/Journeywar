@@ -444,11 +444,15 @@ function stopSpinT(Table, axis, speed)
 end
 
 -->Moves a UnitPiece to Position in Unitspace at speed
-function MovePieceToPos(piecename, X, Y, Z, speed)
+function MovePieceToPos(piecename, X, Y, Z, speed, boolWaitForIt)
 
     Move(piecename, x_axis, X, speed)
     Move(piecename, y_axis, Y, speed)
     Move(piecename, z_axis, Z, speed, true)
+	
+	if not boolWaitForIt or boolWaitForIt == true then
+		WaitForMoves(piecename)
+	end
 end
 
 -->Helperfunction of recursiveAddTable -> builds a bonesubsystem
