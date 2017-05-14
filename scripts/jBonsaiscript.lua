@@ -160,6 +160,8 @@ endPieces={}
 baseShapeTable ={}
 Piece_EndPieceMap={}
 
+
+
 function script.Create()
 	echo("Creating recent Version of jBonsai")
 	allreadyInsertedPieces={}
@@ -168,7 +170,7 @@ function script.Create()
 	resetT(TablesOfPiecesGroups["bP"])
 	resetT(TablesOfPiecesGroups["Tree"])
 	hideT(TablesOfPiecesGroups["bP"])
-	
+	Turn(center,y_axis,math.rad(0),0)
 	Show(basinpillar)
 	reset(wheelPivot)
 	reset(FlucWheel)
@@ -219,8 +221,7 @@ function createBaseShapeTable(sizeX, sizeY, sizeZ, piecenumber)
 			baseShapeTable[x][z][y]= true
 			if math.sqrt((x-sizeX/2)^2 + (z-sizeZ/2)^2) > radiusA then baseShapeTable[x][z][y]= false end
 			if distance(x,0,z,1,0,sizeZ) < radiusB then baseShapeTable[x][z][y]= false end
-			--if math.random(1,100)/100 > baseRotLikelikhoodMax then	baseShapeTable[x][z][y]= false	end
-			
+
 			if baseShapeTable[x][z][y]== true then
 				piecenumber=piecenumber-1
 			end
@@ -335,12 +336,16 @@ function getBonsaiPiece(y, sizeY)
 
 	return nil
 end
-function placeLayerPiece(x,z,y,boldHght,bx, bz, heightGradient)
+function placeLayerPiece(x,z,y, heightGradient)
 	
 	--get the heightOffset
-	heightOffset= heightGradient[x] + cliffFactor*(math.random(-boldHght/4,boldHght/4))
-	P, heigth = getBonsaiPiece(y, sizeY)
+
+	P, _ = getBonsaiPiece(y, sizeY)
 	if not P then echo("JBonsai:No piece found"); return end
+	
+	bx, boldHght, bz =  getPieceVolume(P)	
+	heightOffset= heightGradient[x] + cliffFactor*(math.random(-boldHght/4,boldHght/4))
+
 	bonsaiTable[x][z][y]={Height=heightOffset	,BoolGround= true, Piece=P}
 	
 	predecessorTable=accessTable(predecessorTable,x,z,y)
@@ -353,16 +358,16 @@ function placeLayerPiece(x,z,y,boldHght,bx, bz, heightGradient)
 	Show(P)
 	
 	if y == 1 then
-		tx,ty,tz= 15 * x, -10 + heigth, 15 * z
+		tx,ty,tz= 15 * x, -10 + heightOffset, 15 * z
 	else
-		tx,ty,tz= 15 * x, y*25 + math.abs(heigth), 15 * z
+		tx,ty,tz= 15 * x, y*25 + math.abs(heightOffset), 15 * z
 	end
 	
 	--has predecessor
 	if baseShapeTable[x][z][y-1] and predecessorTable[x][z][y-1] and  baseShapeTable[x][z][y-1] == true then		
 		tx,ty,tz=Spring.GetUnitPiecePosition(unitID,predecessorTable[x][z][y-1])
 	end
-	MovePieceToPos(P, tx, ty, tz, 0, true)
+	MovePieceToPos(P, -tx, ty, tz, 0, true)
 
 	--place a bolder a the predecessorpiece 
 	dir, angular = getClosestDirection(directionTable,x,z) 
@@ -441,8 +446,8 @@ function buildBonsai( baseShapeTable, sizeX, sizeZ, sizeY)
 		for x= 1, sizeX, 1 do
 			for z= 1, sizeZ, 1 do
 				if  baseShapeTable[x][z][1] == true then	
-					bx, boldHght, bz =  getPieceVolume(bonsaiPieces[1].Piece)				
-					placeLayerPiece(x,z,y,boldHght,bx, bz, heightGradient)
+					
+					placeLayerPiece(x,z,y, heightGradient)
 				end				
 			end
 		end
@@ -456,6 +461,8 @@ function buildBonsai( baseShapeTable, sizeX, sizeZ, sizeY)
 	setCenter()
 	echo("JBonsai7")
 end
+
+
 function setBonsai()
 	resetT(TablesOfPiecesGroups["B"],0)
 	WaitForTurns(TablesOfPiecesGroups["B"])
