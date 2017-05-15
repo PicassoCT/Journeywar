@@ -754,7 +754,7 @@ function setUp()
                 go,
                 false, --TurnInOrder
                 false, -- WaitForTurn
-                false --synced)
+                false )  --synced
         end
     end
 end

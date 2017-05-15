@@ -20,7 +20,7 @@ SIG_IDLE = 2
 SIG_AIM = 4
 SIG_WALK = 8
 SIG_LEG = 16
-
+boolTorchIt = false
 
 
 myDefID = Spring.GetUnitDefID(unitID)
@@ -278,6 +278,7 @@ function script.FireWeapon2()
 
     EmitSfx(flare02, 1026)
     EmitSfx(jet2, 1027)
+
     --lua_FlameShot(2)
 end
 
