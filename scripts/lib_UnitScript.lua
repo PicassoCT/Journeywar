@@ -168,33 +168,56 @@ function TAddT(OrgT, T)
     return OrgT
 end
 
---> shuffles a Table 
-function shuffleT(Table)
-    size = #Table
-    local shuT = {}
-    for i = 1, size do
-        rIndexStart = math.random(1, size)
-        boolFoundSomething = false
-        for k = rIndexStart, size do
-            if Table[k] then
-                shuT[i] = Table[k]
-                Table[k] = nil
-                boolFoundSomething = true
-            end
-        end
-        if boolFoundSomething == false then
-            for k = 1, rIndexStart do
-                if Table[k] then
-                    shuT[i] = Table[k]
-                    Table[k] = nil
-                    boolFoundSomething = true
-                end
-            end
-        end
-    end
-
-    return shuT
+function count(T)
+	index = 0
+	for k,v in pairs(T) do if v then index= index +1 end end
+	return index
 end
+
+function getNthElementT(T, nth)
+	index = 0
+	for k,v in pairs(T) do
+		if v then index= index +1 end 
+		if index== nth then 
+			return k, v1
+		end
+	end
+end
+
+
+
+function shuffleT(T)
+	randT= {}
+	size = count(T)
+	allreadyInserted={}
+	
+	for i = 1, size do
+		rIndexStart = math.random(1, size)
+		boolFoundSomething = false
+		for k = rIndexStart, size do
+			if not allreadyInserted[k] then
+				key,v = getNthElementT(T, k)
+				randT[i] = T[key] 
+				allreadyInserted[k]=true				
+				boolFoundSomething = true
+			end
+		end
+		
+		if boolFoundSomething == false then
+			for k = 1, rIndexStart do
+				if not allreadyInserted[k] then
+					key,v = getNthElementT(T, k)
+					randT[i] = T[key] 
+					allreadyInserted[k]=true
+				end
+			end
+		end
+	end
+	
+	return randT
+end
+
+
 
 --======================================================================================
 --Distance Measurement
@@ -1445,6 +1468,15 @@ function hideT(tablename, lowLimit, upLimit, delay)
     end
 end
 
+function delayedHide(piece, timeT)
+Sleep(timeT)
+Hide(piece)
+end
+
+function delayedShow(piece, timeT)
+Sleep(timeT)
+Show(piece)
+end
 -->Shows a Pieces Table
 function showT(tablename, lowLimit, upLimit, delay)
     if not tablename then Spring.Echo("No table given as argument for showT") return end

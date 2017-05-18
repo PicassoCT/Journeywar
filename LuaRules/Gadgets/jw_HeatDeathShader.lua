@@ -45,7 +45,7 @@ else --UNSYNCED
     local fragmentShaderSource = [[
 uniform float time;
 varying vec3 fNormal;
-vec3 fixedNormal;
+
 vec3 hit= vec3(1.0,0.8,0.3 );
 
 vec3 glowing= vec3(0.9,0.3,0.1);
@@ -95,50 +95,41 @@ void main()
 ]]
 
     local vertexShaderSource = [[
-
-
     uniform float time;
   	varying vec3  pos;
 
-      const vec4 centerPos = vec4(0.0,0.0,0.0,1.0);
-    attribute vec3 position;
-    attribute vec3 normal;
-    uniform mat3 normalMatrix;
-    uniform mat4 modelViewMatrix;
-    uniform mat4 projectionMatrix;
+    const vec4 centerPos = vec4(0.0,0.0,0.0,1.0);
+
     varying vec3 fNormal;
-
-
     varying float changeRate;
+
     float totalTime=1.0;
     float PI_HALF= 3.14159/2.0;
     float PI =3.14159;
 
-
-
-void main()
-{
-   fNormal = normalize(normalMatrix * normal);
+void main() {
+    fNormal = normalize(gl_NormalMatrix * gl_Normal);
 
     float sigNum=1.0;
-	time+=0.001;
+
     float relTime=abs(mod(time/totalTime,totalTime));
-    //melting process - a inverse cosinus rising 
-    float meltSpeed=abs(cos(relTime/(PI*2.0)));
+    //melting process - a inverse cosinus rising
     float molten = abs(1.0-cos((time/totalTime)*PI_HALF));
-    
+
     //percentage we scale the vector out or inwards
-    float percentage= (sqrt(abs(normal.y)/(abs(normal.x)+abs(normal.z) +0.01)))/50.0; // /50
-    
+    float percentage= (sqrt(abs(fNormal.y)/(abs(fNormal.x)+abs(fNormal.z) +0.01)))/50.0; // /50
+
     sigNum=(fNormal.y >= 0.0)  ? -1.41  : 1.0;
-  
-  //computate the total melting and end it at max where the molten metall gets hadr
-  //keep Constant Change
-  changeRate= relTime < 0.5*totalTime? mix(0.0,percentage*sigNum*molten,relTime/0.5*(totalTime)):percentage*sigNum*molten;
-  
-    
+
+    //computate the total melting and end it at max where the molten metall gets hadr
+    //keep Constant Change
+    changeRate= relTime < 0.5 * totalTime ?
+        mix(0.0, percentage * sigNum*molten, relTime / 0.5 *(totalTime)):
+        percentage* sigNum* molten;
+
+
     // move the position along the normal and transform it
-    vec3 newPosition = position + fNormal * changeRate;
+    vec3 newPosition = gl_Vertex + fNormal * changeRate;
     gl_Position =  gl_ModelViewProjectionMatrix * vec4( newPosition, 1.0  );
 
 }
@@ -147,6 +138,8 @@ void main()
     local shaderTable = {
         vertex = vertexShaderSource,
         fragment = fragmentShaderSource,
+        uniformInt = {
+        },
         uniform = {
             time = 0,
         },
@@ -156,8 +149,6 @@ void main()
     --variables for the task ahead
     local shaderProgram
     local glUseShader = gl.UseShader
-
-
 
     local redHotUnits = {}
     glowTime = 900
@@ -183,30 +174,33 @@ void main()
         Spring.UnitRendering.SetUnitLuaDraw(id, false)
     end
 
-
+    local timer = 0
 
     function gadget:Initialize()
 
         if gl.CreateShader then
 
             shaderProgram = gl.CreateShader(shaderTable)
+            if shaderProgram == nil then
+                Spring.Echo("HeatDeathShader" .. gl.GetShaderLog())
+            end
             -- This associate the messages with the functions
             -- So that when the synced sends a message "f" it calls the function f in unsynced
             gadgetHandler:AddSyncAction("glowing_heatDeathShader_Start", glowing_heatDeathShader_Start)
             gadgetHandler:AddSyncAction("glowing_heatDeathShader_End", glowing_heatDeathShader_End)
-            print("HeatDeathShader" .. gl.GetShaderLog())
+            timer = gl.GetUniformLocation(shaderProgram, 'time')
         else
             Spring.Echo("<HeatDeath-Shader>: GLSL not supported.")
         end
     end
 
-    function gadget:GameFrame(frame)
-        shaderTable.uniform.time = shaderTable.uniform.time + 0.001
-    end
 
     function gadget:DrawUnit(unitID, drawMode)
-        if redHotUnits[unitID] then
-            glUseShader(shaderProgram)
+        if shaderProgram then
+            if redHotUnits[unitID] then
+                glUseShader(shaderProgram)
+                gl.Uniform(timer, Spring.GetGameSeconds())
+
         end
     end
 

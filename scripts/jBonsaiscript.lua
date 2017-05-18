@@ -24,6 +24,7 @@ FlucWheel = piece "FlucWheel"
 foamsphere1 = piece "foamsphere1"
 foamsphere2 = piece "foamsphere2"
 foamsphere3 = piece "foamsphere3"
+rooftop = piece "rooftop"
 spherespin = piece "spherespin"
 
 g_AddOnRate = 0.005
@@ -121,6 +122,11 @@ function showWaterWheels()
     Hide(BasinFarnDry)
     Show(BasinFarn)
     Show(Basin)
+	 process(TablesOfPiecesGroups["Tree"],
+			function(id) 
+				StartThread(delayedShow, id, math.random(500, 3500))
+			end
+			)
     Sleep(500)
     Show(waterwheel)
     Show(WaterPlan0)
@@ -140,7 +146,11 @@ function hideWaterWheels()
     Hide(foamsphere1)
     Hide(foamsphere2)
     Hide(foamsphere3)
-
+	 process(TablesOfPiecesGroups["Tree"],
+			function(id) 
+				StartThread(delayedHide, id, math.random(500,3500))
+			end
+			)
     Hide(waterwheel)
     Hide(Basin)
     Show(DryBasin)
@@ -460,7 +470,8 @@ function buildBonsai(baseShapeTable, sizeX, sizeZ, sizeY)
 
     setBonsai()
 
-    setTrees()
+
+	 setTrees()
 
     setCenter()
 
@@ -479,13 +490,14 @@ function setBonsai()
 end
 
 function setTrees()
-
+	allreadyInserted={}
+	table.insert(roofPieceTable,rooftop)
     for i = #roofPieceTable, 1, -1 do
-        for k, v in pairs(TablesOfPiecesGroups["Tree"]) do
-            if math.random(0, 1) == 1 then
+        for k, v in pairs((TablesOfPiecesGroups["Tree"])) do
+            if math.random(0, 1) == 1 and not allreadyInserted[TablesOfPiecesGroups["Tree"][k]] then
                 movePieceToPiece(unitID, v, roofPieceTable[i], 0)
                 Show(v)
-                TablesOfPiecesGroups["Tree"][k] = nil
+					  allreadyInserted[TablesOfPiecesGroups["Tree"][k]]=true
                 break
             end
         end
