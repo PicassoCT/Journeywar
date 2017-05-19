@@ -18,7 +18,7 @@ if (gadgetHandler:IsSyncedCode()) then
     }
 
     burningUnits = {}
-    TIME_BURNING = 3000
+    TIME_BURNING = 900
 
     function gadget:UnitCreated(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
         if WreckageIs[unitDefID] then
@@ -103,7 +103,7 @@ void main()
     varying vec3 fNormal;
     varying float changeRate;
 
-    float totalTime=1.0;
+
     float PI_HALF= 3.14159/2.0;
     float PI =3.14159;
 
@@ -112,9 +112,8 @@ void main() {
 
     float sigNum=1.0;
 
-    float relTime=abs(mod(time/totalTime,totalTime));
     //melting process - a inverse cosinus rising
-    float molten = abs(1.0-cos((time/totalTime)*PI_HALF));
+    float molten = abs(1.0-cos((time)*PI_HALF));
 
     //percentage we scale the vector out or inwards
     float percentage= (sqrt(abs(fNormal.y)/(abs(fNormal.x)+abs(fNormal.z) +0.01)))/50.0; // /50
@@ -123,8 +122,8 @@ void main() {
 
     //computate the total melting and end it at max where the molten metall gets hadr
     //keep Constant Change
-    changeRate= relTime < 0.5 * totalTime ?
-        mix(0.0, percentage * sigNum*molten, relTime / 0.5 *(totalTime)):
+    changeRate= time < 0.5  ?
+        mix(0.0, percentage * sigNum*molten, time / 0.5 ):
         percentage* sigNum* molten;
 
 
@@ -138,8 +137,7 @@ void main() {
     local shaderTable = {
         vertex = vertexShaderSource,
         fragment = fragmentShaderSource,
-        uniformInt = {
-        },
+        uniformInt = {},
         uniform = {
             time = 0,
         },
@@ -159,7 +157,7 @@ void main() {
 
 
         if not redHotUnits[id] then
-            redHotUnits[id] = true
+            redHotUnits[id] = Spring.GetGameFrame()
         end
         Spring.UnitRendering.SetUnitLuaDraw(id, true)
     end
@@ -195,19 +193,25 @@ void main() {
     end
 
 
+    local function getTime(startFrame)
+        totalTime = Spring.GetGameFrame() - startFrame
+         times= math.min(0.95, math.max(totalTime / glowTime, 0.0001))
+        return times
+    end
+
     function gadget:DrawUnit(unitID, drawMode)
         if shaderProgram then
             if redHotUnits[unitID] then
                 glUseShader(shaderProgram)
-                gl.Uniform(timer, Spring.GetGameSeconds())
+                gl.Uniform(timer, getTime(redHotUnits[unitID]))
+            end
+        end
 
+        function gadget:Finalize()
+            if (gl.DeleteShader) then
+                gl.DeleteShader(shaderProgram)
+            end
         end
     end
 
-    function gadget:Finalize()
-        if (gl.DeleteShader) then
-            gl.DeleteShader(shaderProgram)
-        end
-    end
 end
-
