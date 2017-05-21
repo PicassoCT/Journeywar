@@ -250,6 +250,15 @@ function distance(x, y, z, xa, ya, za)
     end
 end
 
+function assertTableType(T, types)
+	for k,v in pairs(T) do
+		if type(v) ~= types then
+		Spring.Echo("assertTypeTable::Error: Key "..k.." not of type ".. types.. " got ".. type(v).. "instead")
+		assert(true==false)
+		end
+	end
+end
+
 --> get two unit distVector
 function vectorUnitToUnit(idA, idB)
     x, y, z = Spring.GetUnitPosition(idA)
@@ -1409,6 +1418,34 @@ function makePiecesTablesByNameGroups(boolMakePiecesTable, boolSilent)
     end
 end
 
+function getUnitPieceVolume(unit, Piece)
+vx, vy, vz = Spring.GetUnitPieceCollisionVolumeD
+	if vx then
+		return math.abs(vx*vy*vz) 
+	end
+return 0
+end
+
+
+function getUnitBiggestPiece(unit, cache)
+defID= Spring.GetUnitDefID(unit)
+if cache and cache[defID] then return cache[defID], cache end
+
+volumeMax = -math.huge
+biggestPieceSoFar= nil
+pieceMap= Spring.GetUnitPieceMap(unit)
+
+	for name,number in pairs(pieceMap) do
+		volume = getUnitPieceVolume(unit, number)
+			if volume > volumeMax then
+			biggestPieceSoFar= number
+			volumeMax = volume 
+			end
+	end
+	
+cache[defID] = biggestPieceSoFar
+return biggestPieceSoFar, cache
+end
 
 --> Transfers a World Position into Unit Space
 function worldPosToLocPos(owpX, owpY, owpZ, wpX, wpY, wpZ)

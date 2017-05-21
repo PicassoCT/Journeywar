@@ -1,86 +1,113 @@
 function gadget:GetInfo()
-	return {
-		name = "BulletHoleshader",
-		desc = "Fire in the hole- another word for yesterdays peperoni",
-		author = "me",
-		date = "Sep. 20014",
-		license = "Humilation License: If you use this comercially, the CEO of your company has to start everyday, by exlaiming in front of the employees: >> Im a worthless parasit, leaching on the creativity of those i would degrade in every other conversation. Im sorry for existing. <<",
-		layer = 0,
-		enabled = false,
-	}
+    return {
+        name = "BulletHoleshader",
+        desc = "Fire in the hole- another word for yesterdays peperoni",
+        author = "me",
+        date = "Sep. 20014",
+        license = "Humilation License: If you use this comercially, the CEO of your company has to start everyday, by exlaiming in front of the employees: >> Im a worthless parasit, leaching on the creativity of those i would degrade in every other conversation. Im sorry for existing. <<",
+        layer = 0,
+        enabled = true,
+    }
 end
 
 if (gadgetHandler:IsSyncedCode()) then
 
-VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
+    VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 
 
-	local HoleInOneT = {}
-	HoleInOneT[WeaponDefNames["comendsniper"].id] = { diameter = 64}
-	HoleInOneT[WeaponDefNames["sniperslavemelee"].id] = { diameter = 32}
-	local PIECE_VOLUMEMINFORHOLE = 420
-	local PIECE_INV = 1 / PIECE_VOLUMEMINFORHOLE
-	 = {}
+    local HoleInOneT = {}
+    HoleInOneT[WeaponDefNames["comendsniper"].id] = { diameter = 64 }
+    HoleInOneT[WeaponDefNames["sniperslavemelee"].id] = { diameter = 32 }
+    local PIECE_VOLUMEMINFORHOLE = 420
+    local PIECE_INV = 1 / PIECE_VOLUMEMINFORHOLE
 
-	--set the weapons registrated above on the watchlist
-	for k, _ in ipairs(HoleInOneT) do
-		Script.SetWatchWeapon(k, true)
-	end
-	--Sends Hole Data to unsynced
-	function TearANewOne(unitid, piecename, dirVec, WeaponType, boolJourney)
-			x,y,z =Spring.GetUnitPiecePosition(unitid, piecename)
-			
-			internalColour={r=0,g=0,b=0}
-			externalColour={r=0.5, g=0.5, b=0.5}
-			if boolJourney == true then
-			internalColour={r=1.0,g=0,b=0}
-			externalColour={r=0.95, g=0.2, b=0.2}
-			end
-			
-			
-				Hole = {
-					unitID = unitid,
-					piecename = piecename,
-					depth = HoleInOneT[WeaponType].diameter/2,
-					diameter = HoleInOneT[WeaponType].diameter,
-					pos = { x = x, y = y, z = z },
-					dirShot = dirVec,
-					teamColourInternal = internalColour
-					teamColurExternal = externalColour
-				}
+    --set the weapons registrated above on the watchlist
+    for k, _ in ipairs(HoleInOneT) do
+        Script.SetWatchWeapon(k, true)
+    end
+    --Sends Hole Data to unsynced
+    function TearANewOne(unitid, piecename, dirVec, diameter, boolJourney)
+        x, y, z = Spring.GetUnitPiecePosition(unitid, piecename)
 
-				SendToUnsynced("BulletHoleStart", Hole)
-	
- 
-	end
+        intCol = { r = 0, g = 0, b = 0 }
+        extCol = { r = 0.5, g = 0.5, b = 0.5 }
+        if boolJourney == true then
+            intCol = { r = 1.0, g = 0, b = 0 }
+            extCol = { r = 0.95, g = 0.2, b = 0.2 }
+        end
 
-	cache= {}
-	swissCheeseUnit={}
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
-		if HoleInOneT[weaponDefID] then
-			Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
-			vec= vectorUnitToUnit(unitID, attackerID)
-			if vec then
-			   vec = normVector(vec)
 
-				biggestPiece, cache = getUnitBiggestPiece(unitID, cache)
-				side = select(2, Spring.Spring.GetAIInfo(unitTeam))
-				TearANewOne(unitID, biggestPiece, vec, weaponDefID)
-				swissCheeseUnit[unitID] = true
-			end
-		end
-	end
-	
-	 function gadget:UnitDestroyed(unitID)
-	  if swissCheeseUnit[unitID] then
-		 endToUnsynced("BulletHoleEmd", unitID)
-	 end
-	 end
+        Hole = {
+            unitID = unitid,
+            piecename = piecename,
+            depth = diameter / 2,
+            diameter = diameter,
+            pos = { x = x, y = y, z = z },
+            dirShot = dirVec,
+            teamColourInternal = internalColour,
+            teamColurExternal = externalColour
+        }
+
+        SendToUnsynced("BulletHoleStart",
+            unitid,
+            piecename,
+            diameter,
+            x,
+            y,
+            z,
+            dirVec.x,
+            dirVec.y,
+            dirVec.z,
+            intCol.r,
+            intCol.g,
+            intCol.b,
+            extCol.r,
+            extCol.g,
+            extCol.b)
+    end
+
+    cache = {}
+    swissCheeseUnit = {}
+
+    function gadget:UnitCreated(unitID, unitDefID)
+        if unitDefID == UnitDefNames["cegtest"].id then
+
+            vec = { x = 1, y = 0, z = 0 }
+            if vec then
+                vec = randVec(true)
+
+                biggestPiece, cache = getUnitBiggestPiece(unitID, cache)
+                TearANewOne(unitID, biggestPiece, vec, 64, false)
+                swissCheeseUnit[unitID] = true
+            end
+        end
+    end
+
+    function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+        if HoleInOneT[weaponDefID] then
+            Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
+            vec = vectorUnitToUnit(unitID, attackerID)
+            if vec then
+                vec = normVector(vec)
+
+                biggestPiece, cache = getUnitBiggestPiece(unitID, cache)
+                side = select(2, Spring.Spring.GetAIInfo(unitTeam))
+                TearANewOne(unitID, biggestPiece, vec, weaponDefID)
+                swissCheeseUnit[unitID] = true
+            end
+        end
+    end
+
+    function gadget:UnitDestroyed(unitID)
+        if swissCheeseUnit[unitID] then
+            endToUnsynced("BulletHoleEmd", unitID)
+        end
+    end
 
 else --UNSYNCED
-	--shaderCode
-	--- [[----------------------------------------------------------------------------
-	local vertexShaderSource = [[
+    --shaderCode
+    --- [[----------------------------------------------------------------------------
+    local vertexShaderSource = [[
 varying vec3 fNormal;
 varying vec3 fPosition;
 
@@ -94,7 +121,7 @@ uniform float dirY 	;
 uniform float dirZ 	;
 uniform float tColInt1;
 uniform float tColInt2;
-uniform float tColInt2;
+uniform float tColInt3;
 uniform float tColExt1;
 uniform float tColExt2;
 uniform float tColExt3;
@@ -179,7 +206,7 @@ void mapUniformToStruct()
 }
 
 void main()
-{
+
     float dist;
     mapUniformToStruct();
 
@@ -188,10 +215,10 @@ void main()
     //computate the distance of vertext to bullethole
     dist= dist_Point_to_Segment(gl_Vertex, watHitIt.modPos+watHitIt.dir*2.0, watHitIt.modPos + watHitIt.dir * -2.0);
 
-    depthHole=dist;
     float factor= dist <   watHitIt.diameter ?   effectByDistance(dist/watHitIt.diameter): 0.0;
 
     vec3 newPosition = gl_Vertex + fNormal * factor/15.0;
+
     gl_Position = gl_ModelViewProjectionMatrix * vec4( newPosition, 1.0  );
 
 
@@ -200,7 +227,7 @@ void main()
 
 	]]
 
-	local fragmentShaderSource = [[
+    local fragmentShaderSource = [[
 
 uniform float depth 	;
 uniform float diameter;
@@ -212,7 +239,7 @@ uniform float dirY 	;
 uniform float dirZ 	;
 uniform float tColInt1;
 uniform float tColInt2;
-uniform float tColInt2;
+uniform float tColInt3;
 uniform float tColExt1;
 uniform float tColExt2;
 uniform float tColExt3;
@@ -250,154 +277,171 @@ void main()
 
     if (depth!= 0.0 && depth < holeMax+0.1)
         col= bulletColours(depth,col);
-    gl_FxragColor = vec4(col, 1.001);
-
+  //  gl_FragColor = vec4(col, 1.001);
+   gl_FragColor = vec4(1.0, 0.0, 0.0, 1);
   
 }
 	]]
-	local shaderTable = {
-		vertex = vertexShaderSource,
-		fragment = fragmentShaderSource,
-			 uniform = {
-				depth = 0,
-				diameter = 0,
-				posX = 0,
-				posY = 0,
-				posZ = 0,
-				dirX =0,
-				dirY =0,
-				dirZ = 0,
-				tColInt1 = 0,
-				tColInt2 = 0,
-				tColInt2 = 0,
-				tColExt1 = 0,
-				tColExt2 = 0,
-				tColExt3 = 0,
-		},
-	}
-	--]]--------------------------------------------------------------------------
+    local shaderTable = {
+        vertex = vertexShaderSource,
+        fragment = fragmentShaderSource,
+        uniform = {
+            depth = 0,
+            diameter = 0,
+            posX = 0,
+            posY = 0,
+            posZ = 0,
+            dirX = 0,
+            dirY = 0,
+            dirZ = 0,
+            tColInt1 = 0,
+            tColInt2 = 0,
+            tColInt3 = 0,
+            tColExt1 = 0,
+            tColExt2 = 0,
+            tColExt3 = 0,
+        },
+    }
+    --]]--------------------------------------------------------------------------
 
-	--variables for the task ahead
-	local shaderProgram
-	local glUseShader = gl.UseShader
-	local glCopyToTexture = gl.CopyToTexture
-	local glTexture = gl.Texture
-	local glTexRect = gl.TexRect
-	local boolShaderWorking = true
-	local vsx, vsy
-	local screencopy
-	local boolWorking = true
-	local PenetratedUnits = {}
-	
-				depth = 0 
-				diameter = 0 
-				posX = 0 
-				posY = 0 
-				posZ = 0 
-				dirX =0 
-				dirY =0 
-				dirZ = 0 
-				tColInt1 = 0 
-				tColInt2 = 0 
-				tColInt2 = 0 
-				tColExt1 = 0 
-				tColExt2 = 0 
-				tColExt3 = 0 
+    --variables for the task ahead
+    local shaderProgram
+    local glUseShader = gl.UseShader
+    local glCopyToTexture = gl.CopyToTexture
+    local glTexture = gl.Texture
+    local glTexRect = gl.TexRect
+    local boolShaderWorking = true
+    local vsx, vsy
+    local screencopy
+    local boolWorking = true
+    local PenetratedUnits = {}
 
-	--Transfers the Data to the shader
-	local function BulletHoleStart(callname, Hole)
-		--Forge values in which to store the Holes Data
-		if gl.CreateShader then
+    depth = 0
+    diameter = 0
+    posX = 0
+    posY = 0
+    posZ = 0
+    dirX = 0
+    dirY = 0
+    dirZ = 0
+    tColInt1 = 0
+    tColInt2 = 0
+    tColInt3 = 0
+    tColExt1 = 0
+    tColExt2 = 0
+    tColExt3 = 0
 
-			PenetratedUnits[Hole.unitID] = Hole
-				
-			
-			
-			Spring.UnitRendering.SetUnitLuaDraw(Hole.unitID, true)
-		else
-			Spring.Echo("<BulletHoleshader>: GLSL not supported.")
-		end
-	end
+    --Transfers the Data to the shader
+    local function BulletHoleStart(callname,
+    unitid,
+    piecename,
+    diameter,
+    x,
+    y,
+    z,
+    dirVecx,
+    dirVecy,
+    dirVecz,
+    intColr,
+    intColg,
+    intColb,
+    extColr,
+    extColg,
+    extColb)
+        --Forge values in which to store the Holes Data
+        if gl.CreateShader then
+            PenetratedUnits[unitid] =
+            {
+                unitID = unitid,
+                piecename = piecename,
+                depth = diameter / 2,
+                diameter = diameter,
+                pos = { x = x, y = y, z = z },
+                dirShot = { x = dirVecx, y = dirVecy, z = dirVecz },
+                teamColourInternal = {
+                    r = intColr,
+                    g = intColg,
+                    b = intColb
+                },
+                teamColourExternal = {
+                    r = extColr,
+                    g = extColg,
+                    b = extColb
+                }
+            }
+            Spring.UnitRendering.SetUnitLuaDraw(unitid, true)
+        else
+            Spring.Echo("<BulletHoleshader>: GLSL not supported.")
+        end
+    end
 
-	local function BulletHoleEnd(callname, unitID)
-		PenetratedUnits[unitID] = nil
-		Spring.UnitRendering.SetUnitLuaDraw(unitID, false)
-	end
-	
-	function gadget:Initialize()
- 
-		   shaderProgram = gl.CreateShader(shaderTable)
-			if shaderProgram then
-				depth 				= gl.GetUniformLocation(shaderProgram,"depth")			
-				diameter 			= gl.GetUniformLocation(shaderProgram,"diameter")			
-				posX 				= gl.GetUniformLocation(shaderProgram,"posX")			
-				posY 				= gl.GetUniformLocation(shaderProgram,"posY")			
-				posZ 				= gl.GetUniformLocation(shaderProgram,"posZ")			
-				dirX 				= gl.GetUniformLocation(shaderProgram,"dirX")			
-				dirY 				= gl.GetUniformLocation(shaderProgram,"dirY")			
-				dirZ 				= gl.GetUniformLocation(shaderProgram,"dirZ")			
-				tColInt1 			= gl.GetUniformLocation(shaderProgram,"tColInt1")			
-				tColInt2 			= gl.GetUniformLocation(shaderProgram,"tColInt2")			
-				tColInt2 			= gl.GetUniformLocation(shaderProgram,"tColInt2")			
-				tColExt1 			= gl.GetUniformLocation(shaderProgram,"tColExt1")			
-				tColExt2 			= gl.GetUniformLocation(shaderProgram,"tColExt2")			
-				tColExt3 			= gl.GetUniformLocation(shaderProgram,"tColExt3")	
-				
-				Spring.Echo("BulletHoleshader Initialised")
-			else
+    local function BulletHoleEnd(callname, unitID)
+        PenetratedUnits[unitID] = nil
+        Spring.UnitRendering.SetUnitLuaDraw(unitID, false)
+    end
 
-				Spring.Echo("=============Bullethole shader not created============")
-				Spring.Echo(gl.GetShaderLog())
-				Spring.Echo("======================================================")
-			end
-		
-		gadgetHandler:AddSyncAction("BulletHoleStart", BulletHoleStart)
-		gadgetHandler:AddSyncAction("BulletHoleEnd", BulletHoleEnd)
-	end
+    function gadget:Initialize()
 
-	function mapDataToUniforms(Hole)
-	
-	
-		unitID = unitid,
-					piecename = piecename,
-					depth = HoleInOneT[WeaponType].diameter/2,
-					diameter = HoleInOneT[WeaponType].diameter,
-					pos = { x = x, y = y, z = z },
-					dirShot = dirVec,
-					teamColourInternal = internalColour
-					teamColurExternal = externalColour
-					
-				depth 				= 	Hole.depth
-				diameter 			= 	Hole.diameter	
-				posX 				= 	Hole.pos.x
-				posY 				= 	Hole.pos.y
-				posZ 				= 	Hole.pos.z
-				dirX 				= 	Hole.dirShot.x
-				dirY 				= 	Hole.dirShot.y
-				dirZ 				= 	Hole.dirShot.z
-				tColInt1 			= 	Hole.teamColourInternal.r
-				tColInt2 			= 	Hole.teamColourInternal.g
-				tColInt2 			= 	Hole.teamColourInternal.b
-				tColExt1 			= 	Hole.teamColourExternal.r	
-				tColExt2 			= 	Hole.teamColourExternal.g	
-				tColExt3 			=   Hole.teamColourExternal.b
-	
-	end
-	
-	
-	function gadget:DrawUnit(unitID, drawMode)
-		if PenetratedUnits[unitID] then
-			mapDataToUniforms(PenetratedUnits[unitID])
-			glUseShader(shaderProgram)
-			PenetratedUnits[unitID] = nil
-		end
-	end
+        shaderProgram = gl.CreateShader(shaderTable)
+        if shaderProgram then
+            depth = gl.GetUniformLocation(shaderProgram, "depth")
+            diameter = gl.GetUniformLocation(shaderProgram, "diameter")
+            posX = gl.GetUniformLocation(shaderProgram, "posX")
+            posY = gl.GetUniformLocation(shaderProgram, "posY")
+            posZ = gl.GetUniformLocation(shaderProgram, "posZ")
+            dirX = gl.GetUniformLocation(shaderProgram, "dirX")
+            dirY = gl.GetUniformLocation(shaderProgram, "dirY")
+            dirZ = gl.GetUniformLocation(shaderProgram, "dirZ")
+            tColInt1 = gl.GetUniformLocation(shaderProgram, "tColInt1")
+            tColInt2 = gl.GetUniformLocation(shaderProgram, "tColInt2")
+            tColInt3 = gl.GetUniformLocation(shaderProgram, "tColInt3")
+            tColExt1 = gl.GetUniformLocation(shaderProgram, "tColExt1")
+            tColExt2 = gl.GetUniformLocation(shaderProgram, "tColExt2")
+            tColExt3 = gl.GetUniformLocation(shaderProgram, "tColExt3")
+
+            Spring.Echo("BulletHoleshader Initialised")
+        else
+
+            Spring.Echo("=============Bullethole shader not created============")
+            Spring.Echo(gl.GetShaderLog())
+            Spring.Echo("======================================================")
+        end
+
+        gadgetHandler:AddSyncAction("BulletHoleStart", BulletHoleStart)
+        gadgetHandler:AddSyncAction("BulletHoleEnd", BulletHoleEnd)
+    end
+
+    function mapDataToUniforms(Hole)
+
+        depth = Hole.depth
+        diameter = Hole.diameter
+        posX = Hole.pos.x
+        posY = Hole.pos.y
+        posZ = Hole.pos.z
+        dirX = Hole.dirShot.x
+        dirY = Hole.dirShot.y
+        dirZ = Hole.dirShot.z
+        tColInt1 = Hole.teamColourInternal.r
+        tColInt2 = Hole.teamColourInternal.g
+        tColInt3 = Hole.teamColourInternal.b
+        tColExt1 = Hole.teamColourExternal.r
+        tColExt2 = Hole.teamColourExternal.g
+        tColExt3 = Hole.teamColourExternal.b
+    end
 
 
-function gadget:Finalize()
-		if (gl.DeleteShader) then
-			gl.DeleteShader(shaderProgram)
-		end
-	end
-	
+    function gadget:DrawUnit(unitID, drawMode)
+        if PenetratedUnits[unitID] and shaderProgram then
+            mapDataToUniforms(PenetratedUnits[unitID])
+            glUseShader(shaderProgram)
+            PenetratedUnits[unitID] = nil
+        end
+    end
+
+
+    function gadget:Finalize()
+        if (gl.DeleteShader) then
+            gl.DeleteShader(shaderProgram)
+        end
+    end
 end

@@ -14,7 +14,7 @@ if (gadgetHandler:IsSyncedCode()) then
     WreckageIs = {
         [UnitDefNames["gcvehiccorpsemini"].id] = true,
         [UnitDefNames["gcvehiccorpse"].id] = true,
-        [UnitDefNames["cegtest"].id] = true
+
     }
 
     burningUnits = {}

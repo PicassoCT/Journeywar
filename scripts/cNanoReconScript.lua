@@ -6,7 +6,7 @@ include "lib_Build.lua"
 include "lib_jw.lua"
 ---
 
-NanoSubQuota = 42
+NanoSubQuota = 15
 PriceOfNewCitadell = 250000
 boolCreateCitadell = false
 
@@ -192,13 +192,15 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
             end
         end,
         function(element)
-            if not element then return end
+            if not element or type(element) =="number" then return end
             if element.swarm then
                 StartThread(swarmTurn, element, element.index)
             elseif element.eaters then
                 StartThread(wigglingEater, element, element.index)
             end
         end)
+		
+		return damage
 end
 
 SIG_HARVEST = 2
@@ -390,14 +392,18 @@ function harvestThoseNearby()
                     return id
                 end,
                 function(id)
-                    hp, maxhp = Spring.GetFeatureHealth(id)
-                    hp = hp - NanoSubQuota
+                    RemainingMetal,maxMetal, RemainingEnergy,  maxEnergy,  reclaimLeft= Spring.GetFeatureResources(id)
+						
+                    reclaimLeft = reclaimLeft - NanoSubQuota
                     PriceOfNewCitadell = PriceOfNewCitadell - NanoSubQuota
-                    Spring.SetFeatureHealth(id, hp)
-                    hp, maxhp = Spring.GetUnitHealth(unitID)
+                    Spring.SetFeatureReclaim(id, reclaimLeft)
+							hp,maxhp=Spring.GetUnitHealth(unitID)
                     Spring.SetUnitHealth(unitID, hp + NanoSubQuota, maxhp + NanoSubQuota / 2)
-                    return id
-                end)
+							if reclaimLeft <= 0 then 
+							Spring.DestroyFeature(id,true,true)
+							end
+                end
+						)
         end
 
         if PriceOfNewCitadell < 0 then
