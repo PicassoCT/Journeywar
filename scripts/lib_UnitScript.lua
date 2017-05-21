@@ -1301,6 +1301,34 @@ function generatepiecesTableAndArrayCode(unitID, boolLoud)
     return makePieceTable(unitID)
 end
 
+function getUnitPieceVolume(unit, Piece)
+vx, vy, vz = Spring.GetUnitPieceCollisionVolumeD
+	if vx then
+		return math.abs(vx*vy*vz) 
+	end
+return 0
+end
+
+
+function getUnitBiggestPiece(unit, cache)
+defID= Spring.GetUnitDefID(unit)
+if cache and cache[defID] then return cache[defID], cache end
+
+volumeMax = -math.huge
+biggestPieceSoFar= nil
+pieceMap= Spring.GetUnitPieceMap(unit)
+
+	for name,number in pairs(pieceMap) do
+		volume = getUnitPieceVolume(unit, number)
+			if volume > volumeMax then
+			biggestPieceSoFar= number
+			volumeMax = volume 
+			end
+	end
+	
+cache[defID] = biggestPieceSoFar
+return biggestPieceSoFar, cache
+end
 
 --> finds GenericNames and Creates Tables with them
 function makePiecesTablesByNameGroups(boolMakePiecesTable, boolSilent)
