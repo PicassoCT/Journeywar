@@ -138,7 +138,7 @@ function raiseAvatara()
     minMergeTimeComplete = frame + 2048
 
     indexP = 1
-    setSpeed(unitID, 0, UnitDefs)
+    setSpeedEnv(unitID, 0, UnitDefs)
     DistanceDown = -150
     Move(center, y_axis, DistanceDown, 0, true)
     while nrAdded < nrNeeded do
@@ -178,7 +178,7 @@ function raiseAvatara()
     boolBuildEnded = true
     Move(center, y_axis, 0, 12)
     showT(piecesTable)
-    setSpeed(unitID, 1, UnitDefs)
+    setSpeedEnv(unitID, 1, UnitDefs)
     StartThread(moveAble)
 end
 

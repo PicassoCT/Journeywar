@@ -91,7 +91,7 @@ if (gadgetHandler:IsSyncedCode()) then
                 vec = normVector(vec)
 
                 biggestPiece, cache = getUnitBiggestPiece(unitID, cache)
-                side = select(2, Spring.Spring.GetAIInfo(unitTeam))
+                side = select(2, Spring.GetAIInfo(unitTeam))
                 TearANewOne(unitID, biggestPiece, vec, weaponDefID)
                 swissCheeseUnit[unitID] = true
             end
@@ -100,7 +100,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
     function gadget:UnitDestroyed(unitID)
         if swissCheeseUnit[unitID] then
-            endToUnsynced("BulletHoleEmd", unitID)
+            SendToUnsynced("BulletHoleEmd", unitID)
         end
     end
 
@@ -205,7 +205,7 @@ void mapUniformToStruct()
 
 }
 
-void main()
+void main() {
 
     float dist;
     mapUniformToStruct();

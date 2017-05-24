@@ -1,5 +1,5 @@
 function waitForIt()
-    Sleep(500)
+    Sleep(1)
     Spring.DestroyUnit(unitID, true, true)
 end
 

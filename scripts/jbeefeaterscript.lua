@@ -1,3 +1,10 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+
+include "lib_Build.lua"
+
 local beefcenter = piece "beefcenter"
 local footleft = piece "footleft"
 local footright = piece "footright"
@@ -172,7 +179,7 @@ function hitManThread(poorFellowsID)
             --Sleep(1800)
             StartThread(retractTongue)
             --Sleep(2000)
-            Turn(Head, x_axis, math.rad(-96), 9.0)
+            Turn(Head, x_axis, math.rad(-96), 9)
             Turn(sayAAA, x_axis, math.rad(10), 9)
             WaitForTurn(Head, x_axis)
             --Sleep(200)
@@ -180,7 +187,7 @@ function hitManThread(poorFellowsID)
             WaitForMove(tonguetip, z_axis)
             WaitForTurn(Head, x_axis)
 
-            Turn(Head, x_axis, math.rad(0), 9.0)
+            Turn(Head, x_axis, math.rad(0), 9)
             Turn(sayAAA, x_axis, math.rad(0), 15)
             Turn(constTongue, x_axis, math.rad(0), 15)
             DropUnit(poorFellowsID)
@@ -205,7 +212,7 @@ function butIPoopFromThere()
         Sleep(1000)
         if poopStack > 50 then
 
-            x, y, z = Spring.GetUnitPosition(unitID)
+            x, y, z = Spring.GetUnitPosition(tailID)
             Spring.CreateFeature("shit", x, y, z)
             poopStack = 0
         end
@@ -352,12 +359,12 @@ end
 function headBang()
     SetSignalMask(SIG_BREATH)
     while (true) do
-        Turn(Head, x_axis, math.rad(2), 0.02)
-        Turn(sayAAA, x_axis, math.rad(2), 0.02)
+        Turn(Head, x_axis, math.rad(2), 0.2)
+        Turn(sayAAA, x_axis, math.rad(2), 0.2)
         WaitForTurn(Head, x_axis)
         WaitForTurn(sayAAA, x_axis)
-        Turn(Head, x_axis, math.rad(-2), 0.02)
-        Turn(sayAAA, x_axis, math.rad(-2), 0.02)
+        Turn(Head, x_axis, math.rad(-2), 0.2)
+        Turn(sayAAA, x_axis, math.rad(-2), 0.2)
         WaitForTurn(Head, x_axis)
         WaitForTurn(sayAAA, x_axis)
         Sleep(10)
@@ -379,7 +386,7 @@ function spawnATail(x, y, z)
 end
 
 function spawnAMiddle(x, y, z)
-    id, nr = getLastActiveTableIDinIntervalls(1, table.getn(SumOfParts))
+    id, nr = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
     x, y, z = Spring.GetUnitPosition(id)
     middleID = Spring.CreateUnit("jbeefeatermiddle", x, y, z, 0, teamID)
     Spring.SetUnitMoveGoal(middleID, x, y, z)
@@ -398,7 +405,7 @@ function instantRetract()
 end
 
 
-function getLastActiveTableIDinIntervalls(a, o)
+function getLastActiveTableIdInIntervalls(a, o)
 
 
     LastFoundActiveID = unitID
@@ -420,7 +427,7 @@ end
 function DistanceToPredecessor(i)
     currentX, currentY, currentZ = Spring.GetUnitPosition(SumOfParts[i][1])
 
-    predecssorID, nr = getLastActiveTableIDinIntervalls(1, i - 1)
+    predecssorID, nr = getLastActiveTableIdInIntervalls(1, i - 1)
     px, py, pz = Spring.GetUnitPosition(predecssorID)
     distance = math.sqrt(((currentX - (px)) ^ 2) + ((currentZ - (pz)) ^ 2))
     return distance
@@ -432,7 +439,7 @@ function setUnitStop(nr)
 end
 
 function getPredecessorPosition(i)
-    predecssorID, nr = getLastActiveTableIDinIntervalls(1, i - 1)
+    predecssorID, nr = getLastActiveTableIdInIntervalls(1, i - 1)
     x, y, z = Spring.GetUnitPosition(SumOfParts[nr][1])
     return x, y, z
 end
@@ -470,7 +477,7 @@ end
 
 function respawnUnit(nr)
     --get the active predecessor
-    id, nr = getLastActiveTableIDinIntervalls(1, nr - 1)
+    id, nr = getLastActiveTableIdInIntervalls(1, nr - 1)
     px, py, pz = Spring.GetUnitPosition(id)
     SumOfParts[nr] = {}
     middleManID, x, y, z = spawnAMiddle(px, py, pz)
@@ -502,7 +509,7 @@ end
 function expToLenghtConverter()
     while ((Spring.GetUnitExperience(unitID)) > table.getn(SumOfParts)) do
         --- -Spring.Echo("Spawning a additonal Tail")
-        leastActiveTableID, nr = getLastActiveTableIDinIntervalls(1, table.getn(SumOfParts))
+        leastActiveTableID, nr = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
         newBornID = spawnAMiddle(SumOfParts[nr][2], SumOfParts[nr][3], SumOfParts[nr][4])
         toTheMax = table.getn(SumOfParts) + 1
         SumOfParts[toTheMax] = {}
@@ -543,20 +550,21 @@ end
 
 
 function tailToLastActivePartDistance(tailID)
-    id = getLastActiveTableIDinIntervalls(1, table.getn(SumOfParts))
+    id = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
     x, y, z = Spring.GetUnitPosition(id)
     tx, ty, tz = Spring.GetUnitPosition(tailID)
     result = math.sqrt(((x - tx) ^ 2) + ((z - tz) ^ 2))
     return result
 end
 
+tailID= 0
 
 function tailLoop()
     Sleep(100)
     local counter = 30
 
     x, y, z = Spring.GetUnitPosition(unitID)
-    local tailID = spawnATail(x, y, z)
+    tailID = spawnATail(x, y, z)
 
     while (true) do
         Sleep(1000)
@@ -574,7 +582,7 @@ function tailLoop()
                 else
                     --- -Spring.Echo("MoreA")
                     ---- Spring.Echo(table.getn(SumOfParts))
-                    last, nr = getLastActiveTableIDinIntervalls(1, table.getn(SumOfParts))
+                    last, nr = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
                     tx, ty, tz = Spring.GetUnitPosition(last)
 
                     --- -Spring.Echo("MoreA")

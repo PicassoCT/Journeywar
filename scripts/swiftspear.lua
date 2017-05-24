@@ -473,9 +473,9 @@ function script.TransportPickup(passengerID)
     AttachUnit(friendwithbenefits, passengerID)
     --Spring.Echo("UnitIsFired 7")
     returnToJumpPoint()
-    setSpeed(unitID, 0.001, UnitDefs)
+    setSpeedEnv(unitID, 0.001, UnitDefs)
     rape()
-    setSpeed(unitID, 1.0, UnitDefs)
+    setSpeedEnv(unitID, 1.0, UnitDefs)
 
     if GG.Prego ~= nil then
         GG.Prego[table.getn(GG.Prego) + 1] = {}

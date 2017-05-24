@@ -1,3 +1,10 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+
+include "lib_Build.lua"
+
 local footleft = piece "footleft"
 local footright = piece "footright"
 local middleman01 = piece "middleman01"
