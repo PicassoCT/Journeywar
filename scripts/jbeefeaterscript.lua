@@ -6,8 +6,7 @@ include "lib_Animation.lua"
 include "lib_Build.lua"
 
 local beefcenter = piece "beefcenter"
-local footleft = piece "footleft"
-local footright = piece "footright"
+
 local tonguetip = piece "tonguetip"
 headingOfLastShot = 0
 pitchOfLastShot = 0
@@ -20,7 +19,7 @@ local dustemit2 = piece "dustemit2"
 local dustemit3 = piece "dustemit3"
 local Head = piece "Head"
 local sayAAA = piece "sayAAA"
-tonguespeed = 13.1
+tonguespeed = 73.1
 
 local SIG_MOVE = 1
 local SIG_WIGGLE = 2
@@ -39,6 +38,7 @@ local boolIsMoving = false
 DecreaSor = 1
 local AttachUnit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
+schuppe06 = piece("schuppe06")
 
 shells = {}
 for i = 1, 40, 1 do
@@ -114,6 +114,8 @@ end
 
 function retractTongue()
     Signal(SIG_IDLE)
+
+	
     for i = 1, 31, 1 do
         Move(tongue[i], z_axis, -28, tonguespeed)
         Turn(tongue[i], x_axis, math.rad(0), 0.5)
@@ -148,10 +150,11 @@ end
 boolAiming = false
 function hitManThread(poorFellowsID)
     likeAFreakTrainGoingNoWhere, _, _, _, _ = Spring.GetUnitHealth(poorFellowsID)
-
-    if Spring.ValidUnitID(poorFellowsID) == true and likeAFreakTrainGoingNoWhere < someRandomArbitraryHPLimit then
+		team= Spring.GetUnitTeam(poorFellowsID)
+    if Spring.ValidUnitID(poorFellowsID) == true and team ~= teamID then
         boolAiming = true
         SetUnitValue(COB.BUSY, 1)
+		
         local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
         local px2, py2, pz2 = Spring.GetUnitBasePosition(poorFellowsID)
         local dx, dy, dz = px2 - px1, py2 - py1, pz2 - pz1
@@ -161,9 +164,9 @@ function hitManThread(poorFellowsID)
         px, py, pz = Spring.GetUnitPosition(poorFellowsID)
         WTurn(beefcenter, y_axis, heading, 12)
         currPosX, currPosY, currPosZ = Spring.GetUnitPosition(unitID)
-        distance = math.sqrt(((px - currPosX) ^ 2) + ((pz - currPosZ) ^ 2))
+        distanceVal = distance(px1,py1,pz1,px2,py2,pz2)
 
-        if expandTongue(distance, math.deg(pitchOfLastShot), 196) == true then
+        if expandTongue(distanceVal, math.deg(pitchOfLastShot), 196.0) == true then
             --attach the poor fellow too the tongue tip
             AttachUnit(tonguetip, poorFellowsID)
 
@@ -212,7 +215,7 @@ function butIPoopFromThere()
         Sleep(1000)
         if poopStack > 50 then
 
-            x, y, z = Spring.GetUnitPosition(tailID)
+            x, y, z = Spring.GetUnitPosition(middleID)
             Spring.CreateFeature("shit", x, y, z)
             poopStack = 0
         end
@@ -266,95 +269,13 @@ function sound()
     end
 end
 
-function blinky()
-    Signal(SIG_MOVE)
-    Sleep(15)
-    Signal(SIG_IDLE)
-    Sleep(16)
-    Signal(SIG_BREATH)
-    Sleep(20)
 
-    Sleep(19)
-    Signal(SIG_AIM)
-    Sleep(18)
-    Signal(SIG_WIGGLE)
-    Sleep(17)
-    Signal(SIG_BLINK)
-
-    SetSignalMask(SIG_BLINK)
-    local ldice = dice
-    while (true) do
-        for i = 1, table.getn(blinkers), 1 do
-
-            if ldice() == true then
-                if ldice() == true then
-                    temp = blinkers[i]
-                    StartThread(showThis, temp)
-                end
-            else
-                temp = blinkers[i]
-                StartThread(hideThis, temp)
-            end
-            if i > 29 then
-                temp = shells[i]
-                StartThread(hideThis, temp)
-            end
-        end
-        for i = 1, table.getn(shells), 1 do
-            if ldice() == true then
-                temp = shells[i]
-                StartThread(showThis, temp)
-            else
-                temp = shells[i]
-                StartThread(hideThis, temp)
-            end
-            if i > 29 then
-                temp = shells[i]
-                StartThread(hideThis, temp)
-            end
-        end
-        Sleep(1050)
-    end
-end
 
 function reload()
     Sleep(12000)
     boolLoaded = true
 end
 
-function damageWatcher()
-    oldHP = 0
-    currentHP = 0
-
-    currentHP = Spring.GetUnitHealth(unitID)
-    oldHP = currentHP
-    while (true) do
-        currentHP = Spring.GetUnitHealth(unitID)
-        if currentHP < oldHP then
-            irgendwo = math.random(1, 38)
-
-            Explode(shells[irgendwo], SFX.NO_HEATCLOUD + SFX.FALL)
-            for i = 1, 15, 1 do
-
-                EmitSfx(shells[irgendwo], 1028)
-                EmitSfx(shells[irgendwo], 1028)
-                Sleep(67)
-            end
-        end
-        oldHP = currentHP
-
-        if currentHP < 20 then
-            if SumOfParts ~= nil and table.getn(SumOfParts) > 0 then
-                for i = 1, table.getn(SumOfParts), 1 do
-                    Spring.DestroyUnit(SumOfParts[i][1], true, false)
-                end
-            end
-            Spring.DestroyUnit(tailID, true, false)
-            Spring.DestroyUnit(unitID, true, false)
-        end
-        Sleep(150)
-    end
-end
 
 function headBang()
     SetSignalMask(SIG_BREATH)
@@ -378,19 +299,13 @@ local SumOfParts = {}
 --third entry subtable= exposZ
 -- entry subtable= counterVar
 
-function spawnATail(x, y, z)
-    middleID = Spring.CreateUnit("jbeefeatertail", x, y, z, 0, teamID)
-    Spring.SetUnitMoveGoal(middleID, x, y, z)
-    Spring.SetUnitNoSelect(middleID, true)
-    return middleID
-end
-
 function spawnAMiddle(x, y, z)
-    id, nr = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
-    x, y, z = Spring.GetUnitPosition(id)
+ teamID=Spring.GetUnitTeam(unitID)
+    x, y, z = Spring.GetUnitPosition(unitID)
     middleID = Spring.CreateUnit("jbeefeatermiddle", x, y, z, 0, teamID)
     Spring.SetUnitMoveGoal(middleID, x, y, z)
     Spring.SetUnitNoSelect(middleID, true)
+
     return middleID, x, y, z
 end
 
@@ -405,210 +320,63 @@ function instantRetract()
 end
 
 
-function getLastActiveTableIdInIntervalls(a, o)
-
-
-    LastFoundActiveID = unitID
-    nr = a
-    for i = a, o, 1 do
-        if Spring.ValidUnitID(SumOfParts[i][1]) == true then
-            LastFoundActiveID = SumOfParts[i][1]
-            nr = i
-        end
-    end
-
-
-    return LastFoundActiveID, nr
-end
-
 
 
 --------------------------------------------------
-function DistanceToPredecessor(i)
-    currentX, currentY, currentZ = Spring.GetUnitPosition(SumOfParts[i][1])
+function DistanceToPredecessor()
+    cuX, cuY, cuZ = Spring.GetUnitPiecePosDir(unitID, schuppe06)
+    cx, cy, cz = Spring.GetUnitPosition(middleID)    
 
-    predecssorID, nr = getLastActiveTableIdInIntervalls(1, i - 1)
-    px, py, pz = Spring.GetUnitPosition(predecssorID)
-    distance = math.sqrt(((currentX - (px)) ^ 2) + ((currentZ - (pz)) ^ 2))
-    return distance
+    return distance(cuX, cuY, cuZ,cx, cy, cz)
 end
 
-function setUnitStop(nr)
-    x, y, z = Spring.GetUnitPosition(SumOfParts[nr][1])
-    Spring.SetUnitMoveGoal(SumOfParts[nr][1], x, y, z)
+function setUnitStop()
+ Command(middleID, "stop", {})
 end
 
-function getPredecessorPosition(i)
-    predecssorID, nr = getLastActiveTableIdInIntervalls(1, i - 1)
-    x, y, z = Spring.GetUnitPosition(SumOfParts[nr][1])
-    return x, y, z
-end
-
-function updateUnitCurrentPosition(nr)
-    x, y, z = Spring.GetUnitPosition(nr)
-    SumOfParts[nr][2] = x
-    SumOfParts[nr][3] = y
-    SumOfParts[nr][4] = z
-end
-
-function setUnitInMotion(nr)
-    DistanceTP = (DistanceToPredecessor(nr))
-    boolValiDated = Spring.ValidUnitID((SumOfParts[nr][1]))
+function setUnitInMotion()
+    DistanceTP = (DistanceToPredecessor())
+    if  Spring.GetUnitIsDead(middleID) == true then return end
     --if the unit still exists and the distance to is predecessor is not to small
-    if DistanceTP <= predecessorMaxDist and boolValiDated == true then
+    if DistanceTP <= predecessorMaxDist then
         --- -Spring.Echo("SUM1")
-        setUnitStop(nr)
-        updateUnitCurrentPosition(nr)
+        setUnitStop()
+      
     else
-        --- -Spring.Echo("SUM2")
-        if nr ~= 1 and boolValiDated == true and DistanceTP > predecessorMaxDist then
-            --- -Spring.Echo("SUM3")
-            x, y, z = getPredecessorPosition(nr)
-            Spring.SetUnitMoveGoal(SumOfParts[nr][1], x, y, z)
-            updateUnitCurrentPosition(nr)
-        elseif nr == 1 and boolValiDated == true and DistanceTP > predecessorMaxDist then
-            --- -Spring.Echo("SUM4")
-            x, y, z = Spring.GetUnitPosition(unitID)
-            Spring.SetUnitMoveGoal(SumOfParts[nr][1], x, y, z)
-            updateUnitCurrentPosition(nr)
-        end
+        x, y, z = Spring.GetUnitPiecePosDir(unitID, schuppe06)
+		  Spring.SetUnitMoveGoal(middleID, x, y, z)
     end
 end
 
-function respawnUnit(nr)
+myMiddle= nil
+function respawnUnit()
+	 if not Spring.ValidUnitID(myMiddle) or Spring.GetUnitIsDead(myMiddle) == true then
     --get the active predecessor
-    id, nr = getLastActiveTableIdInIntervalls(1, nr - 1)
-    px, py, pz = Spring.GetUnitPosition(id)
-    SumOfParts[nr] = {}
-    middleManID, x, y, z = spawnAMiddle(px, py, pz)
-    SumOfParts[nr][1] = middleManID
-    SumOfParts[nr][2] = x
-    SumOfParts[nr][3] = y
-    SumOfParts[nr][4] = z
-    SumOfParts[nr][5] = middleCounterValue
-    Spring.SetUnitMoveGoal(SumOfParts[nr][1], px, py, pz)
-end
+    px, py, pz = Spring.GetUnitPosition(unitID)
+   
+    myMiddle, x, y, z = spawnAMiddle(px, py, pz)
 
-function counterStrike()
-    --function iterates through the counters and resets the validUnits, while decreasing the invalid ones. It also respawns deceased Tails
-    for i = 1, table.getn(SumOfParts), 1 do
-        if Spring.ValidUnitID((SumOfParts[i][1])) == true then
-            --reset the counterStrike
-            SumOfParts[i][5] = middleCounterValue
-        else
-            --decrease the counterStrike
-            SumOfParts[i][5] = SumOfParts[i][5] - DecreaSor
-            --check if the counter is below zero
-            if SumOfParts[i][5] < 0 then
-                respawnUnit(i)
-            end
-        end
-    end
-end
-
-function expToLenghtConverter()
-    while ((Spring.GetUnitExperience(unitID)) > table.getn(SumOfParts)) do
-        --- -Spring.Echo("Spawning a additonal Tail")
-        leastActiveTableID, nr = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
-        newBornID = spawnAMiddle(SumOfParts[nr][2], SumOfParts[nr][3], SumOfParts[nr][4])
-        toTheMax = table.getn(SumOfParts) + 1
-        SumOfParts[toTheMax] = {}
-        SumOfParts[toTheMax][1] = newBornID
-        x, y, z = Spring.GetUnitPosition(newBornID)
-        SumOfParts[toTheMax][2] = x
-        SumOfParts[toTheMax][3] = y
-        SumOfParts[toTheMax][4] = z
-        SumOfParts[toTheMax][5] = middleCounterValue
-    end
+    
+    Spring.SetUnitMoveGoal(myMiddle, px, py, pz)
+	end
 end
 
 
-function spawnHeadElement()
-    --spawnFirstHeadTailElement
-    x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, dustemit3)
-    SumOfParts[1] = {}
-    middleManID, x, y, z = spawnAMiddle(x, y, z)
-    SumOfParts[1][1] = middleManID
-    SumOfParts[1][2] = x
-    SumOfParts[1][3] = y
-    SumOfParts[1][4] = z
-    SumOfParts[1][5] = middleCounterValue
-end
 
 function OSLOOP()
     Sleep(100)
-    spawnHeadElement()
+
     while (true) do
         Sleep(1000)
-        expToLenghtConverter()
-        counterStrike()
-        for i = 1, table.getn(SumOfParts), 1 do
-            setUnitInMotion(i)
-        end
+			respawnUnit()
+
+            setUnitInMotion()
+       
     end
 end
 
 
-function tailToLastActivePartDistance(tailID)
-    id = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
-    x, y, z = Spring.GetUnitPosition(id)
-    tx, ty, tz = Spring.GetUnitPosition(tailID)
-    result = math.sqrt(((x - tx) ^ 2) + ((z - tz) ^ 2))
-    return result
-end
 
-tailID= 0
-
-function tailLoop()
-    Sleep(100)
-    local counter = 30
-
-    x, y, z = Spring.GetUnitPosition(unitID)
-    tailID = spawnATail(x, y, z)
-
-    while (true) do
-        Sleep(1000)
-
-
-
-        if Spring.ValidUnitID(tailID) == true then
-            --- -Spring.Echo("unitStillExists")
-
-            if tailToLastActivePartDistance(tailID) > tailDistance then
-                if (SumOfParts == nil or table.getn(SumOfParts) == 0) then
-                    x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, dustemit3)
-                    Spring.SetUnitMoveGoal(tailID, x, y, z)
-                    counter = 30
-                else
-                    --- -Spring.Echo("MoreA")
-                    ---- Spring.Echo(table.getn(SumOfParts))
-                    last, nr = getLastActiveTableIdInIntervalls(1, table.getn(SumOfParts))
-                    tx, ty, tz = Spring.GetUnitPosition(last)
-
-                    --- -Spring.Echo("MoreA")
-
-                    Spring.SetUnitMoveGoal(tailID, tx, ty, tz)
-                    counter = 30
-                end
-            else
-                x, y, z = Spring.GetUnitPosition(tailID)
-                Spring.SetUnitMoveGoal(tailID, x, y, z)
-            end
-        else
-            --- -Spring.Echo("B")
-            if counter > 0 then
-                --recreate Tail
-                counter = counter - 10
-            else
-                x, y, z = Spring.GetUnitPosition(unitID)
-                tailID = spawnATail(x, y, z)
-                counter = 30
-            end
-        end
-
-        --- -Spring.Echo("TailLoop Still alive")
-    end
-end
 
 
 
@@ -622,20 +390,21 @@ function script.QueryWeapon1()
     return constTongue
 end
 
+tongue31=piece"tongue31"
 boolLoaded = true
 function script.AimWeapon1(heading, pitch)
 
     SetSignalMask(SIG_AIM)
     if boolLoaded == true then
 
-        --Signal(SIG_MOVE)
+
         Sleep(10)
         Signal(SIG_IDLE)
-
+        Signal(SIG_MOVE)
         Turn(beefcenter, y_axis, heading, 4)
+        Turn(tongue31, x_axis, -pitch, 4)
         WaitForTurn(beefcenter, y_axis)
-        headingOfLastShot = heading
-        pitchOfLastShot = pitch
+  
         return true
     else
         return false
@@ -650,16 +419,14 @@ function script.FireWeapon1()
     StartThread(reload)
     return true
 end
-
+if not GG.BeeefeaterTable then GG.BeeefeaterTable = {} end
+if not GG.BeeefeaterTable[teamID] then GG.BeeefeaterTable[teamID] = {father={}} end
+if not GG.BeeefeaterTable[teamID][unitID] then  GG.BeeefeaterTable[teamID][unitID] = {middle ={}, tails={}} end
 function script.Create()
-    Hide(footleft)
-    Hide(footright)
-    StartThread(hitLoop)
     StartThread(sound)
-    StartThread(blinky)
-    StartThread(damageWatcher)
+
     StartThread(OSLOOP)
-    StartThread(tailLoop)
+
     StartThread(retractTongue)
     StartThread(butIPoopFromThere)
     instantRetract()
@@ -680,7 +447,7 @@ function randTimeDelayedDustEmit(piecenr)
         Sleep(350)
     end
     xi = math.random(0, 3)
-    if xi == 2 and dice() == true then
+    if xi == 2 and maRa() == true then
         Sleep(150)
         EmitSfx(piecenr, 1025)
     end
@@ -720,24 +487,24 @@ function wiggleTail()
         oldsecond = second
         Turn(dustemit1, y_axis, math.rad(first), 4)
         Turn(dustemit2, y_axis, math.rad(second), 4)
-        if dice() == true then
+        if maRa() == true then
             StartThread(randTimeDelayedDustEmit, dustemit1)
         end
-        if dice() == true then
+        if maRa() == true then
             StartThread(randTimeDelayedDustEmit, dustemit2)
         end
-        if dice() == true then
+        if maRa() == true then
             StartThread(randTimeDelayedDustEmit, dustemit3)
         end
         WaitForTurn(dustemit1, y_axis)
-        if dice() == true then
+        if maRa() == true then
             StartThread(randTimeDelayedDustEmit, dustemit1)
         end
         WaitForTurn(dustemit2, y_axis)
-        if dice() == true then
+        if maRa() == true then
             StartThread(randTimeDelayedDustEmit, dustemit2)
         end
-        if dice() == true then
+        if maRa() == true then
             StartThread(randTimeDelayedDustEmit, dustemit3)
         end
         Sleep(280)
@@ -751,11 +518,6 @@ function mightIdle()
         idleTongue()
         slerand = math.random(900, 1900)
         Sleep(slerand)
-        randdegree = math.random(-5, 5)
-        Turn(Head, y_axis, math.rad(randdegree), 7)
-        Turn(sayAAA, y_axis, math.rad(randdegree), 7)
-        Turn(constTongue, y_axis, math.rad(randdegree), 7)
-        WaitForTurn(Head, y_axis)
     end
 end
 
@@ -766,26 +528,21 @@ function moveIt()
         Speed = math.random(-1, 1)
         Turn(center, y_axis, math.rad(-11), 0.7)
 
-        -- Turn(footleft,y_axis,math.rad(75),5+Speed)
+
         Speed = math.random(-1, 1)
-        --Turn(footright,y_axis,math.rad(5),5+Speed)
-        --Turn(footright,x_axis,math.rad(-17),6)
+
         WaitForTurn(center, y_axis)
-        --WaitForTurn(footleft,y_axis)
-        --WaitForTurn(footright,y_axis)
-        --Turn(footright,x_axis,math.rad(0),12)
+
         Sleep(180)
         Speed = math.random(-1, 1)
         Turn(center, y_axis, math.rad(11), 0.7)
-        --Turn(footright,y_axis,math.rad(-75),5+Speed)
+
         Speed = math.random(-1, 1)
-        -- Turn(footleft,y_axis,math.rad(0),5+Speed)
+
         Speed = math.random(-1, 1)
-        -- Turn(footleft,x_axis,math.rad(-17),5+Speed)
-        --WaitForTurn(footleft,y_axis)
-        --WaitForTurn(footright,y_axis)
+      
         WaitForTurn(center, y_axis)
-        -- Turn(footleft,x_axis,math.rad(0),12)
+
         Sleep(180)
     end
 end
@@ -812,7 +569,7 @@ function script.StartMoving()
     if boolAiming == false then
         Turn(beefcenter, y_axis, math.rad(0), 14)
     end
-    StartThread(blinky)
+   
     StartThread(moveIt)
     boolIsMoving = true
     StartThread(wiggleTail)
@@ -825,16 +582,14 @@ function timedelayedLegsdown()
     Signal(SIG_BLINK)
     Signal(SIG_IDLE)
 
-    Signal(SIG_WIGGLE)
+
+		Signal(SIG_WIGGLE)
     Signal(SIG_LEGS)
     Sleep(500)
     boolIsMoving = false
     Sleep(500)
 
-    -- Turn(footleft,x_axis,math.rad(0),2)
-    --Turn(footright,x_axis,math.rad(0),2)
-    -- Turn(footleft,y_axis,math.rad(0),2)
-    --Turn(footright,y_axis,math.rad(0),2)
+
     hideThemAll()
 end
 

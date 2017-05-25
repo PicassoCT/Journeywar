@@ -134,8 +134,6 @@ inPieces = {}
 
 function script.Create()
 
-
-
     inPieces = Spring.GetUnitPieceMap(unitID)
     resetT(inPieces)
     for nr = 1, 5 do

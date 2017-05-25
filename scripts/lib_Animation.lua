@@ -1453,6 +1453,16 @@ function TurnPieceTowardsPiece(piecename, pieceB, speed)
     echo("Turntoards point")
     TurnPieceTowards(piecename, dx, dy, dz, speed)
 end
+function getRandomAxis()
+axis=math.random(0,3)
+return axis
+end
+
+function TurnPieceTowardsUnit(piecenam, unitToTurnToo, Speed)
+x,y,z=Spring.GetUnitPosition(unitToTurnToo)
+TurnPieceTowardsPoint(piecename, x, y, z, Speed)
+end
+
 
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
 function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz)

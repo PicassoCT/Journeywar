@@ -290,6 +290,15 @@ function getRecycleableUnitTypeTable()
     return TransportTable
 end
 
+function getRecycleableFeatureTypeTable()
+    TransportTable = {
+        [FeatureDefNames["shit"].id] = true,
+        [FeatureDefNames["bgcorpse"].id] = true
+    }
+
+    return TransportTable
+end
+
 function getGravityChaneReistantUnitTypeTable(UnitDefNames)
     TransportTable = {
         [UnitDefNames["jtree5"].id] = true,

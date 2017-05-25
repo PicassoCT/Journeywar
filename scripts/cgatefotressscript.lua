@@ -379,7 +379,7 @@ end
 
 function deployOnceComplete()
 	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-	while not buildProgress do
+	while not buildProgress and hp ~= mHp do
 	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
 	Sleep(500)
 	end

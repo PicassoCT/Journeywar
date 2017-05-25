@@ -3638,6 +3638,13 @@ function getGroundHeigthDistance(h1, h2)
     return distance(h1, 0, 0, h2, 0, 0)
 end
 
+function distancePieceUnit(piece, unit) 
+	x,y,z=Spring.GetUnitPiecePosDir(unitID, piece)
+	ux,uy,uz=Spring.GetUnitPosition(unit)
+	return distance (x,y,z,ux,uy,uz)
+
+end
+
 function getGroundHeigthAtPiece(uID, pieceName)
     px, py, pz = Spring.GetUnitPiecePosDir(uID, pieceName)
     gh = Spring.GetGroundHeight(px, pz)
@@ -4910,16 +4917,10 @@ function getMaxSpeed(unitID, UnitDefs)
     return UnitDefs[uDefID].speed
 end
 
---> Sets the Speed - Unitscript only
-function setSpeed(unitID, speedfactor, UnitDefs)
-    uDefID = Spring.GetUnitDefID(unitID)
-    if speedfactor > 1 then echo("Error:setSpeed:Recived to big Value") return end
-    assert(Spring.UnitScript, "No UnitScript given")
-    Spring.UnitScript.SetUnitValue(unitID, COB.MAX_SPEED, math.ceil(UnitDefs[uDefID].speed * speedfactor * 2184.53))
-end
+
 
 function reSetSpeed(unitID, UnitDefs)
-    setSpeed(unitID, 1.0, UnitDefs)
+    setSpeedEnv(unitID, 1.0)
 end
 
 
