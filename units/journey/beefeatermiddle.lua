@@ -17,7 +17,7 @@ local unitDef  =  {
     MaxDamage = 240,
     RadarDistance = 0,
     SightDistance = 500,
-    Upright = false,
+    Upright = true,
 	turnInPlace=true,
 	--floater             = true,    
 --Energy and metal related
