@@ -33,17 +33,15 @@ function script.TransportDrop(passengerID, x, y, z)
     if loaded == false then return end
 
     SetUnitValue(COB.BUSY, 1)
-
     Spring.SetUnitNoDraw(passengerID, false)
-
 
     DropUnit(passengerID)
     cargo = cargo - 1
-
+	
     if cargo <= 0 then
         loaded = false
     end
-
+	
     SetUnitValue(COB.BUSY, 0)
 end
 
@@ -635,7 +633,6 @@ end
 --function compares old speed and new speed, returns false if speed is out of tolerances or speed is zero
 local function speedCompare(speedOfOld, newSpeed, tolerance, boolInstReset)
 
-
     if newSpeed == 0 and speedOfOld == 0 then
         return true
     end
@@ -1188,47 +1185,6 @@ end
 
 --turn detection block
 
---funktion : compares the heading , returns true if the heading has changed, returns false if it is within the treshold
-local function compareHeading(currentHead, headingOld)
-
-    while (headingOfOld == nil) do
-        Sleep(90)
-        headingOfOld = Spring.GetUnitHeading(unitID)
-    end
-
-
-    while (currentHead == nil) do
-        currentHeading = Spring.GetUnitHeading(unitID)
-        Sleep(90)
-    end
-
-    --assert(currentHead)
-    --assert(headingOld)
-    --- -Spring.Echo("currentHead",currentHead)
-    ---- Spring.Echo("HeadingOfOld",headingOld)
-    -- unneg the value
-    headingOld = negZero(headingOld)
-    currentHead = negZero(currentHead)
-    --assert(currentHead)
-    --assert(headingOld)
-
-
-    headChange = currentHead - headingOld
-    --unneg the headChange
-
-    headChange = negZero(headChange)
-    --- -Spring.Echo(headChange.." "..headChangeTolerance)
-
-
-    if headChange > headChangeTolerance then --or currentHeading < headingOfOld*negativeTolerance
-        return true
-    else
-        return false
-    end
-    --Spring.Echo("Heading Detector doing strange Stuff-Error!")
-end
-
-
 --function: Sensor Loop detects turning Train
 local function turnDetector()
     --local headTolerance=1.00002
@@ -1250,14 +1206,14 @@ local function turnDetector()
         --	assert(currentHeading)
 
 
-        boolCompareOnce = lcompareHeading(currentHeading, headingOfOld)
+        boolCompareOnce = lcompareHeading(currentHeading, headingOfOld, 90, headChangeTolerance)
         if boolCompareOnce == true then
             headingOfOld = currentHeading
             Sleep(90)
             currentHeading = spGetUnitHeading(unitID)
 
 
-            boolCompareTwice = lcompareHeading(currentHeading, headingOfOld)
+            boolCompareTwice = lcompareHeading(currentHeading, headingOfOld, 90, headChangeTolerance)
             if boolCompareTwice == true then
                 --boolConstantTurn=true
                 lthreadSafety(2, true, 2)

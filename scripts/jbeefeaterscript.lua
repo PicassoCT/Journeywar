@@ -115,7 +115,7 @@ end
 function retractTongue()
     Signal(SIG_IDLE)
 
-	
+
     for i = 1, 31, 1 do
         Move(tongue[i], z_axis, -28, tonguespeed)
         Turn(tongue[i], x_axis, math.rad(0), 0.5)
@@ -150,11 +150,11 @@ end
 boolAiming = false
 function hitManThread(poorFellowsID)
     likeAFreakTrainGoingNoWhere, _, _, _, _ = Spring.GetUnitHealth(poorFellowsID)
-		team= Spring.GetUnitTeam(poorFellowsID)
+    team = Spring.GetUnitTeam(poorFellowsID)
     if Spring.ValidUnitID(poorFellowsID) == true and team ~= teamID then
         boolAiming = true
         SetUnitValue(COB.BUSY, 1)
-		
+
         local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
         local px2, py2, pz2 = Spring.GetUnitBasePosition(poorFellowsID)
         local dx, dy, dz = px2 - px1, py2 - py1, pz2 - pz1
@@ -164,7 +164,7 @@ function hitManThread(poorFellowsID)
         px, py, pz = Spring.GetUnitPosition(poorFellowsID)
         WTurn(beefcenter, y_axis, heading, 12)
         currPosX, currPosY, currPosZ = Spring.GetUnitPosition(unitID)
-        distanceVal = distance(px1,py1,pz1,px2,py2,pz2)
+        distanceVal = distance(px1, py1, pz1, px2, py2, pz2)
 
         if expandTongue(distanceVal, math.deg(pitchOfLastShot), 196.0) == true then
             --attach the poor fellow too the tongue tip
@@ -300,7 +300,7 @@ local SumOfParts = {}
 -- entry subtable= counterVar
 
 function spawnAMiddle(x, y, z)
- teamID=Spring.GetUnitTeam(unitID)
+    teamID = Spring.GetUnitTeam(unitID)
     x, y, z = Spring.GetUnitPosition(unitID)
     middleID = Spring.CreateUnit("jbeefeatermiddle", x, y, z, 0, teamID)
     Spring.SetUnitMoveGoal(middleID, x, y, z)
@@ -325,40 +325,40 @@ end
 --------------------------------------------------
 function DistanceToPredecessor()
     cuX, cuY, cuZ = Spring.GetUnitPiecePosDir(unitID, schuppe06)
-    cx, cy, cz = Spring.GetUnitPosition(middleID)    
+    cx, cy, cz = Spring.GetUnitPosition(middleID)
 
-    return distance(cuX, cuY, cuZ,cx, cy, cz)
+    return distance(cuX, cuY, cuZ, cx, cy, cz)
 end
 
 function setUnitStop()
- Command(middleID, "stop", {})
+    Command(middleID, "stop", {})
 end
 
 function setUnitInMotion()
     DistanceTP = (DistanceToPredecessor())
-    if  Spring.GetUnitIsDead(middleID) == true then return end
+    if Spring.GetUnitIsDead(middleID) == true then return end
     --if the unit still exists and the distance to is predecessor is not to small
     if DistanceTP <= predecessorMaxDist then
         --- -Spring.Echo("SUM1")
         setUnitStop()
-      
+
     else
         x, y, z = Spring.GetUnitPiecePosDir(unitID, schuppe06)
-		  Spring.SetUnitMoveGoal(middleID, x, y, z)
+        Spring.SetUnitMoveGoal(middleID, x, y, z)
     end
 end
 
-myMiddle= nil
+myMiddle = nil
 function respawnUnit()
-	 if not Spring.ValidUnitID(myMiddle) or Spring.GetUnitIsDead(myMiddle) == true then
-    --get the active predecessor
-    px, py, pz = Spring.GetUnitPosition(unitID)
-   
-    myMiddle, x, y, z = spawnAMiddle(px, py, pz)
+    if not Spring.ValidUnitID(myMiddle) or Spring.GetUnitIsDead(myMiddle) == true then
+        --get the active predecessor
+        px, py, pz = Spring.GetUnitPosition(unitID)
 
-    
-    Spring.SetUnitMoveGoal(myMiddle, px, py, pz)
-	end
+        myMiddle, x, y, z = spawnAMiddle(px, py, pz)
+
+
+        Spring.SetUnitMoveGoal(myMiddle, px, py, pz)
+    end
 end
 
 
@@ -368,10 +368,9 @@ function OSLOOP()
 
     while (true) do
         Sleep(1000)
-			respawnUnit()
+        respawnUnit()
 
-            setUnitInMotion()
-       
+        setUnitInMotion()
     end
 end
 
@@ -390,10 +389,13 @@ function script.QueryWeapon1()
     return constTongue
 end
 
-tongue31=piece"tongue31"
+tongue31 = piece "tongue31"
 boolLoaded = true
 function script.AimWeapon1(heading, pitch)
-
+	 Signal(SIG_AIM)
+	 Signal(SIG_MOVE)
+	 Signal(SIG_IDLE)
+	 Signal(SIG_BREATH)
     SetSignalMask(SIG_AIM)
     if boolLoaded == true then
 
@@ -401,10 +403,12 @@ function script.AimWeapon1(heading, pitch)
         Sleep(10)
         Signal(SIG_IDLE)
         Signal(SIG_MOVE)
+        Turn(Head, x_axis, math.rad(-37), 4)
+        Turn(sayAAA, x_axis, math.rad(14), 4)
         Turn(beefcenter, y_axis, heading, 4)
         Turn(tongue31, x_axis, -pitch, 4)
         WaitForTurn(beefcenter, y_axis)
-  
+
         return true
     else
         return false
@@ -419,14 +423,16 @@ function script.FireWeapon1()
     StartThread(reload)
     return true
 end
+
 if not GG.BeeefeaterTable then GG.BeeefeaterTable = {} end
-if not GG.BeeefeaterTable[teamID] then GG.BeeefeaterTable[teamID] = {father={}} end
-if not GG.BeeefeaterTable[teamID][unitID] then  GG.BeeefeaterTable[teamID][unitID] = {middle ={}, tails={}} end
+if not GG.BeeefeaterTable[teamID] then GG.BeeefeaterTable[teamID] = { father = {} } end
+if not GG.BeeefeaterTable[teamID][unitID] then GG.BeeefeaterTable[teamID][unitID] = { middle = {}, tails = {} } end
 function script.Create()
     StartThread(sound)
 
     StartThread(OSLOOP)
 
+    StartThread(hitLoop)
     StartThread(retractTongue)
     StartThread(butIPoopFromThere)
     instantRetract()
@@ -540,7 +546,7 @@ function moveIt()
         Speed = math.random(-1, 1)
 
         Speed = math.random(-1, 1)
-      
+
         WaitForTurn(center, y_axis)
 
         Sleep(180)
@@ -569,7 +575,7 @@ function script.StartMoving()
     if boolAiming == false then
         Turn(beefcenter, y_axis, math.rad(0), 14)
     end
-   
+
     StartThread(moveIt)
     boolIsMoving = true
     StartThread(wiggleTail)
@@ -583,7 +589,7 @@ function timedelayedLegsdown()
     Signal(SIG_IDLE)
 
 
-		Signal(SIG_WIGGLE)
+    Signal(SIG_WIGGLE)
     Signal(SIG_LEGS)
     Sleep(500)
     boolIsMoving = false

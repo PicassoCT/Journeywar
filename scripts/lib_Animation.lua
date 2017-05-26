@@ -1316,6 +1316,41 @@ function turnT(t, axis, deg, speed, boolInstantUpdate, boolWait)
     return
 end
 
+--> compares Heading
+ function compareHeading(currentHead, headingOld, waitTime, headChangeTolerance)
+ 
+	waitTime= waitTime or 100
+	headChangeTolerance = headChangeTolerance or 100
+	boolTurnLeft = false
+	
+    while (headingOfOld == nil) do
+        Sleep(waitTime)
+        headingOfOld = Spring.GetUnitHeading(unitID)
+    end
+
+    while (currentHead == nil) do
+        currentHeading = Spring.GetUnitHeading(unitID)
+        Sleep(waitTime)
+    end
+
+    headingOld = headingOld
+    currentHead = currentHead
+
+
+    headChange = math.abs(currentHead) - math.abs(headingOld)
+    --unneg the headChange
+
+    headChange = math.abs(headChange)
+
+    if headChange > headChangeTolerance then --or currentHeading < headingOfOld*negativeTolerance
+
+        return true,  currentHead - headingOld < 0
+    else
+        return false, boolTurnLeft
+    end
+
+end
+
 --unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
 --> Trys to create a animation using every piece there is as Legs.. 
 function adaptiveAnimation(configTable, inPeace, id, ScriptEnviroment)
