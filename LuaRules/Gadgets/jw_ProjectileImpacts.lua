@@ -668,15 +668,15 @@ if (gadgetHandler:IsSyncedCode()) then
         Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")
         --only if the unit is hitsphere wise big enough
         hp, maxhp = Spring.GetUnitHealth(unitID)
-        if hp / maxhp < 0.5 and hp < 300 then
-            sx, sy, sz = Spring.GetUnitCollisionVolumeData(unitID)
-            if math.sqrt(sx ^ 2 + sy ^ 2 + sz ^ 2) > 15 then
-                x, y, z = Spring.GetUnitPosition(unitID)
+        if hp / maxhp < 0.5 and hp > 300 then
+		 pieceID = getUnitBiggestPiece(unitID)
+            Spring.UnitAttach(unitID, slicerColum, pieceID)
+
                 slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
                 Spring.SetUnitNoSelect(slicerColum, true)
                 if not GG.SlicerTable then GG.SlicerTable = {} end
                 GG.SlicerTable[slicerColum] = unitID
-            end
+       
         end
     end
 

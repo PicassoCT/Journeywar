@@ -216,7 +216,8 @@ function butIPoopFromThere()
         if poopStack > 50 then
 
             x, y, z = Spring.GetUnitPosition(middleID)
-            Spring.CreateFeature("shit", x, y, z)
+			gaiaTeamID = Spring.GetGaiaTeamID()
+            Spring.CreateUnit("gExcrement", x, y, z, 1, gaiaTeamID)
             poopStack = 0
         end
     end

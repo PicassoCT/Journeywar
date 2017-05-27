@@ -7,19 +7,19 @@ Accuracy=2000,
 
 --Physic/flight path
 range=4095,
-reloadtime=3,
+reloadtime=1,
 weaponVelocity=1000,
-startVelocity=150,
+startVelocity=15,
 weaponAcceleration=250,
-flightTime=2.5,
+flightTime=6.5,
 BurnBlow=0,
 FixedLauncher=false,
-dance=1,
-wobble=4,
+dance=2,
+wobble=12,
 
 tolerance=16000,
 tracks=true,
-Turnrate=16000,
+Turnrate=8000,
 collideFriendly=true,
 
 ----APPEARANCE
@@ -50,8 +50,8 @@ lineOfSight=true,
 
 
 --sound
---soundHit="skinfantry/birdrockethit.wav",
---soundStart="skinfantry/birdrocketstart.wav",
+soundHit="skinfantry/birdrockethit.wav",
+soundStart="skinfantry/birdrocketstart.wav",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

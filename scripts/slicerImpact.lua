@@ -40,14 +40,9 @@ existenceCounter=0
 	if existenceCounter== 50 then Spring.DestroyUnit(unitID,false,true) end
 	
 	victimid= GG.SlicerTable[unitID]
-	Spring.MoveCtrl.Enable(victimid,true)
-	Spring.MoveCtrl.Enable(unitID,true)
-	Spring.SetUnitBlocking(unitID,false)
-	Spring.SetUnitNoSelect(unitID,true)
-	
+
 	Sleep(100)
 	x,y,z=Spring.GetUnitPosition(vicID)
-	Spring.MoveCtrl.SetPosition(unitID,x,y+50,z)
 	dx,dy,dz= getAttackVector(victimid)
 	Turn(rotaryCenter,y_axis,math.rad(dy),0)
 	Turn(rotaryCenter,x_axis,math.rad(dx),0)

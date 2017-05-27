@@ -550,7 +550,6 @@ function spawnCommander()
         if GG.ComEnders == nil then GG.ComEnders = {} end
         if GG.ComEnders[teamID] == nil then
             idEal = enterTheCommEnder(lteamID)
-            GG.ComEnders[teamID] = {}
             GG.ComEnders[teamID] = idEal
             Sleep(5000)
             for i = 1, #inAxTable, 1 do

@@ -7,15 +7,15 @@ Accuracy=2000,
 
 --Physic/flight path
 range=4095,
-reloadtime=0.001,
+reloadtime=1,
 weaponVelocity=1500,
-startVelocity=300,
+startVelocity=100,
 weaponAcceleration=250,
 flightTime=10.5,
 BurnBlow=2,
 FixedLauncher=false,
-dance=1,
-wobble=4,
+dance=5,
+wobble=14,
 
 tolerance=16000,
 tracks=false,
@@ -33,14 +33,14 @@ smokeTrail=true,
 	cylinderTargeting=55.0,
 	avoidFeature=true,
 	avoidFriendly=true,
-	burst=12,
+	burst=3,
 	burstrate=0.02,
 --commandfire=true,
 
 ----DAMAGE
 damage={
-default=150,
-heavyarmor=150,
+default=10,
+heavyarmor=15,
 },
 areaOfEffect=100,
 craterMult=0,
@@ -50,8 +50,8 @@ lineOfSight=true,
 
 
 --sound
---soundHit="skinfantry/birdrockethit.wav",
---soundStart="skinfantry/birdrocketstart.wav",
+soundHit="skinfantry/birdrockethit.wav",
+soundStart="skinfantry/birdrocketstart.wav",
 }
 
 return lowerkeys ({[weaponName]=weaponDef})

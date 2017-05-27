@@ -1271,10 +1271,10 @@ function showShotgun()
     Spin(bullets, z_axis, math.rad(24), 0.01)
 end
 
-function showSunburst()
-    if Weapons[eTractorGun][1] == 1 then Show(SunBurst1) end
-    if Weapons[eTractorGun][1] == 2 then Show(SunBurst2) end
-    if Weapons[eTractorGun][1] == 3 then Show(SunBurst3) end
+function showEater()
+    if Weapons[eEater][1] == 1 then Show(SunBurst1) end
+    if Weapons[eEater][1] == 2 then Show(SunBurst2) end
+    if Weapons[eEater][1] == 3 then Show(SunBurst3) end
 end
 
 function showGLauncher()
@@ -1283,9 +1283,6 @@ function showGLauncher()
     end
 end
 
-function showEater()
-    Show(Eater[1])
-end
 
 function showTangleGun()
     showT(tangleGunT)
@@ -1612,7 +1609,7 @@ Weapons[eGRocket][eShowFunc] = showGroundRocket
 Weapons[eGRocket][eAmmoCost] = 0.1 --AmmoCost
 Weapons[eGRocket][eStabCost] = 0.05 --StabilityCost
 Weapons[eGRocket][ePrioLevl] = 3 --PriorityLevel the bigger the more Priority it Got
-Weapons[eGRocket][eCoolDown] = 700 --Downtime
+Weapons[eGRocket][eCoolDown] = 6700 --Downtime
 Weapons[eGRocket][eRecoilMx] = 0 --RecoilMax
 Weapons[eGRocket][eCurrCool] = 0
 
@@ -1845,6 +1842,10 @@ function echoDebugInfo()
 end
 
 function script.Create()
+	teamID = Spring.GetUnitTeam(unitID)
+	if not  GG.ComEnders then  GG.ComEnders = {} end
+	if not  GG.ComEnders[teamID]  then GG.ComEnders[teamID] = unitID end
+	
     Spring.SetUnitExperience(unitID, 12)
     --	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
     setSpeedComEnder(100 - (50 / Stats[eProperty][eWalkSpeedLimit]) * Stats[eProperty][eWalkSpeed])
@@ -1979,6 +1980,8 @@ function theActualUpgrade(upgradeType)
         --SNIPER
         if upgradeType == "SNIPER" and Weapons[eSniper][1] ~= Weapons[eSniper][2] then
             Weapons[eSniper][1] = math.min(Weapons[eSniper][1] + 1, Weapons[eSniper][2])
+			Weapons[eSniper][eShowFunc]()
+			StartThread(countDownSniperTimer)
             spSetUnitExperience(unitID, XP - 1)
         end
         --"SHOTGUN"
@@ -2023,12 +2026,14 @@ function theActualUpgrade(upgradeType)
 
         if upgradeType == "AROCKET" and Weapons[eAARocket][1] ~= Weapons[eAARocket][2] then
             Weapons[eAARocket][1] = math.min(Weapons[eAARocket][1] + 1, Weapons[eAARocket][2])
+			Weapons[eAARocket][eCoolDown]= 6700/Weapons[eAARocket][1]
             Weapons[eAARocket][4]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
         if upgradeType == "GROCKET" and Weapons[eGRocket][1] ~= Weapons[eGRocket][2] then
             Weapons[eGRocket][1] = math.min(Weapons[eGRocket][1] + 1, Weapons[eGRocket][2])
+			Weapons[eGRocket][eCoolDown]= 6700/Weapons[eGRocket][1]
             Weapons[eGRocket][4]()
             spSetUnitExperience(unitID, XP - 1)
         end
@@ -2520,10 +2525,18 @@ function script.Killed(recentDamage, maxHealth)
 
         projID = Spring.SpawnProjectile(WeaponDefNames["lazarusrocket"].id, EjectProject)
     end
-
-    explodeT(piecesTable, SFX.FALL + SFX.FIRE, math.ceil(math.random(1, 3)))
-
+	
+	Move(testComEnder3DS,y_axis, 75, 150)
+	WTurn(testComEnder3DS,z_axis, math.rad(180), 150)
     createCorpseCUnitGeneric(recentDamage)
+	while GG.ComEnders[teamID] == unitID do
+		wiggle_leg()
+		randPiece= pieceTable[math.random(1,#pieceTable)]
+		Explode(randPiece, SFX.FALL + SFX.Fire + SFX.SHATTER)
+		val= math.random(750,3500)
+		Sleep(val)
+	end
+    explodeT(piecesTable, SFX.FALL + SFX.FIRE, math.ceil(math.random(1, 3)))
 
     return 1
 end
@@ -2535,21 +2548,21 @@ function totalReset(boolDelayed, Time)
     resetT(piecesTable, 12)
 end
 
+LegTable={LS08,LK08,LSK08,LF1,LS07,LK07,LSK07,LF07}
 function legs_down(boolDelayed, Time)
     if boolDelayed == true then Sleep(Time) end
-    ------ echo("Ccomender::8")
-    T(LS08, 0, 7, 0, 7, 0, 7)
-    T(LK08, 0, 7, 0, 7, 0, 7)
-    ------ echo("Ccomender::8b")
-    T(LSK08, 0, 7, 0, 7, 0, 7)
-    T(LF1, 0, 7, 0, 7, 0, 7)
-    ------ echo("Ccomender::8c")
+	for k,v in pairs(LegTable) do
+		 T(v, 0, 7, 0, 7, 0, 7)
+	end
 
-    T(LS07, 0, 7, 0, 7, 0, 7)
-    T(LK07, 0, 7, 0, 7, 0, 7)
-    ------ echo("Ccomender::8d")
-    T(LSK07, 0, 7, 0, 7, 0, 7)
-    T(LF07, 0, 7, 0, 7, 0, 7)
+end
+
+function wiggle_leg()
+	
+  
+	for k,v in pairs(LegTable) do
+		T(v, math.random(-25,25), 7, math.random(-25,25), 7, math.random(-25,25), 7)
+	end
 end
 
 function script.StartMoving()
@@ -2976,8 +2989,6 @@ function script.AimWeapon4(heading, pitch)
 
         echo("CComEnderScript:SniperAiming:2")
 
-        if Weapons[eSniper][1] > 0 then
-
             if boolSniperOnce == false then
                 boolSniperGetIntoPosition = true
                 boolSniperOnce = true
@@ -2985,7 +2996,7 @@ function script.AimWeapon4(heading, pitch)
             releasePriority(Weapons[eSniper][7])
             echo("CComEnderScript:SniperAiming:3")
             return boolSniperPermit == true and boolOutOfAmmo == false
-        end
+ 
     end
     echo("CComEnderScript:SniperAiming:4")
     return false
