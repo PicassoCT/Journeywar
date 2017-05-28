@@ -16,7 +16,7 @@ local unitDef = {
 	maxDamage =1950,
 	idleAutoHeal = 0,
 	--Movement
-	Acceleration = 1.9,
+	Acceleration = 0.5,
 	BrakeRate = 0.4,
 	FootprintX = 4,
 	FootprintZ = 4,
@@ -25,7 +25,7 @@ local unitDef = {
 	maneuverleashlength = 1380,
 	turnRadius		 	= 8,
 	dontLand		 	= false,
-	MaxVelocity = 2.0,
+	MaxVelocity = 2.5,
 	MaxWaterDepth = 20,
 	MovementClass = "Default2x2",
 	crashDrag = 0.02,
@@ -44,14 +44,14 @@ local unitDef = {
 	Canstop = true,--alt
 	upright = true,
 	airHoverFactor = 0.1,
-	cruiseAlt=75,
+	cruiseAlt=165,
 	CanFly = true,
 	CanLand = false,
 	canSubmerge = false,
-	ActivateWhenBuilt=1,
+
 	--maxBank=0.4,
 	myGravity =0.5,
-	mass = 1900,
+	mass = 1225,
 	canSubmerge = false,
 	
 	collide = true,
