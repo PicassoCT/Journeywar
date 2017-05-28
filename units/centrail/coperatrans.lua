@@ -23,44 +23,40 @@ local unitDef = {
 	TEDClass = [[VTOL]],
 	steeringmode = [[1]],
 	maneuverleashlength = 1380,
-	turnRadius		 	= 80,
+	turnRadius		 	= 8,
 	dontLand		 	= false,
 	MaxVelocity = 2.0,
 	MaxWaterDepth = 20,
 	MovementClass = "Default2x2",
+	crashDrag = 0.02,
+	canCrash=true,
 	TurnRate = 250,
 	nanocolor=[[0 0.9 0.9]],
 	sightDistance = 500,
-	
-	airstrafe=true,
-	factoryHeadingTakeoff =true,
+	bankingAllowed = true,
+	hoverAttack =true,
 	Builder = false,
-	--canHover=true,
+	canHover=true,
 	CanAttack = true,
 	CanGuard = true,
 	CanMove = true,
 	CanPatrol = true,
 	Canstop = true,--alt
-	LeaveTracks = false, 
-	
-	cruiseAlt=3,
+	upright = true,
+	airHoverFactor = 0.1,
+	cruiseAlt=75,
 	CanFly = true,
+	CanLand = false,
+	canSubmerge = false,
 	ActivateWhenBuilt=1,
 	--maxBank=0.4,
 	myGravity =0.5,
 	mass = 1900,
 	canSubmerge = false,
-	useSmoothMesh =	true,
-	collide = false,
-	crashDrag =0.1,
-	airHoverFactor=0,
-	airStrafe =true,
-	floater = false,
-	isHoveringAirUnit = true,
-	hoverAttack = true,
-	strafeToAttack=false,
-	--Transport
-
+	
+	collide = true,
+	
+	transportUnloadMethod = 0,
 	transportByEnemy = false,
 	transportCapacity = 5,
 	transportSize = 30000,
@@ -74,7 +70,7 @@ local unitDef = {
 	MakesMetal = 0, 
 	MetalMake = 0,	 
 	
-	Category = [[LAND]],
+	Category = [[LAND AIR]],
 	
 	explodeAs="citadelldrone",
 	selfDestructAs="cartdarkmat", 
@@ -83,7 +79,7 @@ local unitDef = {
 	CanReclaim=false,	
 	
 	customParams = {},
-		
+	
 	--Hitbox
 	collisionVolumeOffsets = "0 0 0",
 	collisionVolumeScales = "35 60 90",

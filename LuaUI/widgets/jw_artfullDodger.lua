@@ -12,7 +12,7 @@ function widget:GetInfo()
 	}
 end
 
-ARTFULLDOGERKEY= " "
+ARTFULLDOGERKEY= 32
 SPLASHRANGE= 128
 
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
@@ -40,9 +40,10 @@ function getAllInCircle(x, z, Range, unitID, teamid)
 end
 
  function widget:KeyPress(key, mods, isRepeat, label, unicode)
+
 	if key == ARTFULLDOGERKEY then
 		playerID=Spring.GetMyPlayerID()
-		selectedUnits =Spring.GetSelectedUnitsSorted(playerID)
+		selectedUnits =Spring.GetSelectedUnits(playerID)
 		
 		if selectedUnits then
 			T = {}
@@ -68,4 +69,5 @@ end
 			end
 		end
 	end
+	return false
  end

@@ -8,7 +8,8 @@ local weaponDef={
 	-- beamlaser=1,
 	-- WeaponAcceleration=0,
 	accuracy = 0,
-	
+	--cost
+	energyPerShot = 3,
 	laserflaresize = 3,--0.3
 	beamTtl= 0.15,--0.01
 	movingaccuracy=5000,

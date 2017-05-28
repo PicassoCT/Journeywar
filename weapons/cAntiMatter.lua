@@ -9,6 +9,8 @@ local weaponDef={
 
 	dance=5,
 	turnrate=30,
+	--cost
+	energyPerShot = 15,
 	tolerance=6000,
 	tracks=false,
 	collideFriendly=true,
