@@ -3526,6 +3526,30 @@ function getUnitGroundHeigth(unitID)
 end
 
 --> creates a heightmap distortion table
+function prepareCupTable(size, height, innerdiameter, percentage)
+    if not size or not height then return nil end
+    cent = math.ceil(size / 2)
+    T = {}
+    for o = 1, size, 1 do
+        T[o] = {}
+        for i = 1, size, 1 do
+            --default
+            T[o][i] = 0
+            distcent = math.sqrt((cent - i) ^ 2 + (cent - o) ^ 2)
+            if distcent < cent - 1 then
+                T[o][i] = (cent - distcent) * height
+				if distcent < innerdiameter then
+				  T[o][i] = (cent - distcent) * () height * percentage)
+				
+				end
+            end
+        end
+    end
+
+    return T
+end
+
+--> creates a heightmap distortion table
 function prepareHalfSphereTable(size, height)
     if not size or not height then return nil end
     cent = math.ceil(size / 2)
