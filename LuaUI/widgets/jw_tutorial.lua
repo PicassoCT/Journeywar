@@ -1,7 +1,7 @@
 
 function widget:GetInfo()
 	return {
-		name = "Tutorial",
+		name = "_Tutorial_",
 		desc = "Save the Noobs",
 		author = "A Noob to far",
 		version = "v1.1",
@@ -46,30 +46,32 @@ local spPlaySoundFile=Spring.PlaySoundFile
 tutorialSpeachInOrder={}
 silentPlaceHolder=""
 
-TutorialInfoTable=
-{
+TutorialInfoTable= {
 	--Centrail
 	
 	----BuildUnits
-	[UnitDefNames["contruck"].id] = {text =  "\a|Construction Truck\n Errects buildings if guarding a\n construction site using its own HP."},
-	[UnitDefNames["contrain"].id] = {text = "\a|Construction Train\n Realizes buildings and heals units nearby "},
-	[UnitDefNames["conair"].id] = {text = "\a|Construction Synth\n Realizes buildings and drops infantry"},
-	[UnitDefNames["mdigg"].id] = {text = "\a|Metalldiggester\nStripmines Material from metalspots"},
+	[UnitDefNames["contruck"].id] = {text =  "\a|Construction Truck\n Errects buildings if guarding a\n construction-site \nusing its own HP."},
+	[UnitDefNames["contrain"].id] = {text = "\a|Construction Train\n Realizes buildings and heals units nearby \nusing its own HP "},
+	[UnitDefNames["conair"].id] = {text = "\a|Airborne Construction Synth\n Realizes buildings and drops infantry\nusing its own HP"},
+	[UnitDefNames["mdigg"].id] = {text = "\a|Metalldiggester\nStripmines Material from metalspots.\nActivate to deploy."},
 	
 	--fclvlone
 	
 	[UnitDefNames["mtw"].id] = {text =  "\a|Manned Transport Wagon\nBuilds and deploys Infantry or Flamethrower Synths"},
 	[UnitDefNames["advisor"].id] = {text = "\a|Advisor\nExtracts Information from captured Units"},
-	[UnitDefNames["campro"].id] = {text = "\a|Antimatter Projector\nFires slow -deadly Anti-Matter projectiles"},
+	[UnitDefNames["campro"].id] = {text = "\a|Antimatter Projector\nFires energy expensive, slow -deadly Anti-Matter projectiles"},
 	[UnitDefNames["restrictor"].id] = {text = "\a|Restrictor Tank\nScout Tank with stationary Building Stunability"},
-	[UnitDefNames["csniper"].id] = {text = "\a|Sniper\n Longrange Hunter - Can drag Trophys to Industry."}
+	[UnitDefNames["csniper"].id] = {text = "\a|Sniper\n Longrange Hunter - Can drag Trophys to Industry."},
 	[UnitDefNames["css"].id] = {text = "\a|Combine Synth Soldiers\n Can torch flameable material"},
 	[UnitDefNames["bg"].id] = {text = "\a|Overwatch Infantry\nCan deploy tactical shields to reduce damage."},
 	[UnitDefNames["cgamagardener"].id] = {text = "\a|Gammagardener\n Sterilizes Exobiotics Fauna in area with radiation."},
 	[UnitDefNames["coffworldassemblyseed"].id] = {text = "\a|Offworld Assembly Seed\n Create a new Offworld Assembly of forbidden units."},
 	
 	--fclvl2
-	[UnitDefNames["coperatrans"].id] = {text = "\a|Transport Opera\n Transports Units. Provides Income with entertaiment, is costly while attacked. "},
+	[UnitDefNames["coperatrans"].id] = {text = "\a|Opera Transport \n"..
+												 " Transports Units or the spoils of war.\n"..
+												 " Provides Income for nearby entertaiment(battles).\n"..
+												 " Is costly while attacked. "},
 	[UnitDefNames["art"].id] = {text = "\a|Artillery\nShells the enemy with either headcrabs or darkmatter projectiles "},
 	[UnitDefNames["sentrynell"].id] = {text = "\a|Sentrynell\nExtreme Long Range Anti-Air. Deploys sentrys in view direction\n while standing still."},
 	[UnitDefNames["cwallbuilder"].id] = {text = "\a|Wallbuilder\n Errects Defense structures. Flatens Terrain and powers electric fences."},
@@ -77,7 +79,7 @@ TutorialInfoTable=
 	
 	--cairbase
 	
-	[UnitDefNames["chunterchopper"].id] = {text = "\a|Hunterchopper\n Multip role Airunit."},
+	[UnitDefNames["chunterchopper"].id] = {text = "\a|Hunterchopper\n Multi role Airunit."},
 	[UnitDefNames["csuborbital"].id] = {text = "\a|Suborbital Bombardment\n Launches to Orbit.\n Bomards Ground "},
 	[UnitDefNames["cgunship"].id] = {text = "\a|Gunship Synth\n Heavy Air-Ground Assault Unit."},
 	[UnitDefNames["callygator"].id] = {text = "\a|Allygator\n Snatches small ground Units with a portal.\n Devoured units become material income."},
@@ -85,8 +87,8 @@ TutorialInfoTable=
 	
 	----Buildings
 	
-	[UnitDefNames["citadell"].id] = {text = "\a|Citadell \n Holds baseplans, needs a Construction Depot to realize them"},
-	[UnitDefNames["condepot"].id] = {text =  "\a|Construction Depot\nCreates Construction Units\n(Should guard a citadel)"},
+	[UnitDefNames["citadell"].id] = {text = "\a|Citadell \n Plans your base.\n Needs a Construction Depot\n to realize them"},
+	[UnitDefNames["condepot"].id] = {text =  "\a|Construction Depot\n Creates Construction Units\n Should guard/support a citadel"},
 	[UnitDefNames["triggerzone"].id] = {text = "\a|Triggerzone\nTriggers the Actionzone it guards"},
 	[UnitDefNames["actionzone"].id] = {text = "\a|Actionzone\nStores commands - transfers comamnds on trigger to any guarding Reservoirezone"},
 	[UnitDefNames["reservoirzone"].id] = {text = "\a|Reservoirezone\nTransfers commands to guarding Units"},
@@ -117,15 +119,14 @@ TutorialInfoTable=
 	
 	----BuildUnits
 	
-	[UnitDefNames["conroach"].id] = {text = "\a|Roach\n Constructs buildings by sacrificing itself."},
-	[UnitDefNames["bigfoot"].id] = {text = "\a|Roach\n Constructs buildings by sacrificing itself."},
-	[UnitDefNames["bigfoot"].id] = {text = "\a|Roach\n Constructs buildings by sacrificing itself."},
+	[UnitDefNames["jconroach"].id] = {text = "\a|Roach\n Constructs buildings by sacrificing itself."},
+	[UnitDefNames["jconcaterpillar"].id] = {text = "\a|Roach\n Constructs buildings by sacrificing itself."},
 	[UnitDefNames["hc"].id] = {text = "\a|Headcrab\n Turn Infantry into zombies"},
 	[UnitDefNames["zombie"].id] = {text = "\a|Zombie\n Trying to eat the living"},
 	[UnitDefNames["skinfantry"].id]	 = {text = "\a|SkInfantry\n Able to Ambush.\n Reproduce with Experience by laying Eggs"},
 	[UnitDefNames["jskineggnogg"].id] = {text = "\a|SkInfantry Egg\n Grows into Skinfantry"},
-	[UnitDefNames["tiglil"].id] = {,text =  "\a|Tigerlily \n Close Combatcreature with poisoned Nailbladeclaws"},
-	[UnitDefNames["jtigeggnogg"].id] = {,text =  "\a|Tigerlily Egg\n Grows into a Tigerlily"},
+	[UnitDefNames["tiglil"].id] = {text =  "\a|Tigerlily \n Close Combatcreature with poisoned Nailbladeclaws"},
+	[UnitDefNames["jtigeggnogg"].id] = {text =  "\a|Tigerlily Egg\n Grows into a Tigerlily"},
 	[UnitDefNames["jmovingfac1"].id] = {text = "\a|Firstborn DNA-Weaver \n Gives birth to basic Units"},
 	[UnitDefNames["jbeherith"].id] = {text = "\a|Beherith \nAmphibious Island able to transport units and \ngo into a Amokstampede"},
 	[UnitDefNames["jeliah"].id] = {text = "\a|Eliah \n Born again Laserbutterfly"},
@@ -172,20 +173,20 @@ TutorialInfoTable=
 	[UnitDefNames["jjamforrest"].id] = {text = "\a|Fog Djungle \n Obstructing enemy detector units"},
 	--waterunits
 	[UnitDefNames["jfishswarm"].id] = {text = "\a|Fishswarm \n Attack Land and waterunits"},
-	[UnitDefNames["jgaltea"].id] = {text = "\a|Firegalatea \n Shoots gluemines at nearby landenemies."},
+	[UnitDefNames["jgalatea"].id] = {text = "\a|Firegalatea \n Shoots gluemines at nearby landenemies."}
 	
 }
 
-function preProcesTutorialInfoTable(T)
-	for k,v in pairs(T) do
-		if not v.active then v.active = false end
-		if not v.Time then v.Time = 100 end
-		if not v.speach then v.speach = silentPlaceHolder end
+function preProcesTutorialInfoTable()
+	for k,v in pairs(TutorialInfoTable) do
+		if not TutorialInfoTable[k].active then TutorialInfoTable[k].active = true end
+		if not TutorialInfoTable[k].Time then TutorialInfoTable[k].Time = 100 end
+		if not TutorialInfoTable[k].speach then TutorialInfoTable[k].speach = silentPlaceHolder end
 	end
 end
 
 function widget:GameStart()
-	TutorialInfoTable = preProcesTutorialInfoTable(TutorialInfoTable)
+	preProcesTutorialInfoTable()
 	val=Spring.GetConfigInt("jwfirststartup",1)	
 	Spring.SetConfigInt("jwfirststartup",val+1 )
 	
@@ -206,6 +207,7 @@ end
 
 function widget:Initialize()	
 	if Spring.GetGameFrame() > 0 then
+		preProcesTutorialInfoTable()
 		Spring.Echo("Reinitailizing tutorial")
 		Spring.SetConfigInt("jwfirststartup", 1 )
 	end
@@ -222,20 +224,21 @@ end
 boolTutorial=true
 
 
-function widget:MouseRelease(x,y,button)
-	playerID=Spring.GetMyPlayerID()
-	selectedUnits =getSelectedUnits(playerID)
-	
-	
-	for num, id in pairs(selectedUnits) do
-		defID= Spring.GetUnitDefID(id)
-		if TutorialInfoTable [defID].active == true then
-			PlaySoundAndMarkUnit(defID, id)
-			TutorialInfoTable [defID].active == false
+
+function widget:GameFrame(t)
+	if t% 5 == 0 then
+		selectedUnits =Spring.GetSelectedUnits()
+
+		for num, id in pairs(selectedUnits) do
+		defID =Spring.GetUnitDefID(id)
+		if defID then
+			if TutorialInfoTable[defID] and TutorialInfoTable[defID].active and TutorialInfoTable[defID].active == true then		
+				PlaySoundAndMarkUnit(defID, id)
+				TutorialInfoTable[defID].active = false
+			end
+			end	
 		end
-		
 	end
-	
 end
 
 
@@ -248,14 +251,5 @@ function PlaySoundAndMarkUnit(defID, exampleUnit)
 			Spring.PlaySoundFile(TutorialInfoTable[defID].speach,1)
 		end
 	end
-	TutorialInfoTable[defID] =nil
 end
 
-
---The idea is simple - for one of every kind, at first gamestart, add a description on the map..
-function widget:UnitCreated(unitID, unitDefID, unitTeamID, builderID)
-	if boolTutorial==true and TutorialInfoTable[unitDefID] then
-		TutorialInfoTable[unitDefID].active=true
-		TutorialInfoTable[unitDefID].unitid=unitID
-	end
-end
