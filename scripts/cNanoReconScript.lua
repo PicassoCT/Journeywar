@@ -346,7 +346,7 @@ function harvestThoseNearby()
         featureT = getAllFeatureNearUnit(unitID, 360)
         StartThread(PlaySoundByUnitDefID, unitdef, soundfile, 1.0, 10000, 1, 0)
         if victimT then
-            victimT, Cache = filterOutUnitsOfType(victimT, UnitTypeTable, Cache)
+            victimT, Cache = getUnitsOfTypeInT(victimT, UnitTypeTable, Cache)
         end
 
         if victimT then

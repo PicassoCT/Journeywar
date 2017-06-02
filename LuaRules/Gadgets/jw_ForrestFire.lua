@@ -250,8 +250,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
                 assert(MetaMapResDivider)
                 T = getAllInCircle(fireT[i].x, fireT[i].z, MetaMapResDivider)
-                T, ShitWasSoCache = filterOutUnitsOfType(T, ProofTypes, ShitWasSoCache)
-                T, ShitWasSoCache = filterOutUnitsOfType(T, AirTypes, ShitWasSoCache)
+                T, ShitWasSoCache = getUnitsOfTypeInT(T, ProofTypes, ShitWasSoCache)
+                T, ShitWasSoCache = getUnitsOfTypeInT(T, AirTypes, ShitWasSoCache)
                 if T and #T > 0 then
 
 
@@ -273,8 +273,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
                 spSpawnCEG("bigfoorestfire", bigFireTable[i].x + math.random(-16, 16), bigFireTable[i].y + math.random(1, 15), bigFireTable[i].z + math.random(-16, 16), math.random(0, 0.1), math.random(0.8, 1), math.random(0, 0.1))
                 T = getAllInCircle(bigFireTable[i].x, bigFireTable[i].z, 52)
-                T, ShitWasSoCache = filterOutUnitsOfType(T, ProofTypes, ShitWasSoCache)
-                T, ShitWasSoCache = filterOutUnitsOfType(T, AirTypes, ShitWasSoCache)
+                T, ShitWasSoCache = getUnitsOfTypeInT(T, ProofTypes, ShitWasSoCache)
+                T, ShitWasSoCache = getUnitsOfTypeInT(T, AirTypes, ShitWasSoCache)
                 if T and #T > 0 then
                     for k = 1, #T do
                         if Spring.ValidUnitID(T[k]) == true then Spring.AddUnitDamage(T[k], 10) end

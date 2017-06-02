@@ -37,7 +37,7 @@ function timeTillBoom()
 
     x, y, z = Spring.GetUnitPosition(unitID)
     T = getAllInCircle(x, z, 64, unitID)
-    T = filterOutUnitsOfType(T, unitdef)
+    T = getUnitsOfTypeInT(T, unitdef)
     process(T,
         function(id)
             Spring.AddUnitDamage(id, jHunterDartDamage)

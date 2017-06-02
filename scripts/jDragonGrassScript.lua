@@ -70,7 +70,7 @@ function ifSomeDayItMayHappenThatAVictimMustBeFound()
     T = Spring.GetUnitsInCylinder(ux, uz, DrugRange)
     table.remove(T, unitID)
     if #T > 1 then
-        T = filterOutBuilding(T, UnitDefs, false)
+        T = getBuildingInT(T, UnitDefs, false)
         if #T > 1 then
             for i = 1, #T do
                 if not AddictList[T[i]] then return T[i] end

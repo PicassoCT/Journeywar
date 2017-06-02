@@ -2864,6 +2864,7 @@ function recElementWise(T, fooNction, ArghT)
     return reTable
 end
 
+-->count Elements in a Dictionary
 function countT(T)
     it = 0
     for k, v in pairs(T) do
@@ -2871,8 +2872,6 @@ function countT(T)
     end
     return it
 end
-
-
 
 
 --> Join Operation on two tables
@@ -2924,6 +2923,7 @@ function process(Table, ...)
     return T
 end
 
+-->traverses tables and applys a function to them
 function recProcess(Table, ...)
     local arg = { ... }
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
@@ -2949,7 +2949,7 @@ function recProcess(Table, ...)
 end
 
 --> Executes a random Function from a table of functions
-function raFoo(...)
+function randFunc(...)
     local arg = { ... }
     if not arg then return end
     index = sanitizeRandom(1, #arg)
@@ -2959,7 +2959,7 @@ end
 
 
 -->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
-function filterOutUnitsOfType(T, UnitTypeTable, Cache)
+function getUnitsOfTypeInT(T, UnitTypeTable, Cache)
     if type(UnitTypeTable) == "number" then
         copyOfType = UnitTypeTable;
         UnitTypeTable = {}
@@ -2990,7 +2990,7 @@ function filterOutUnitsOfType(T, UnitTypeTable, Cache)
     end
 end
 
-function filterOutUnarmed(T)
+function getUnarmedInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
@@ -3002,7 +3002,7 @@ function filterOutUnarmed(T)
 end
 
 -->filters Out TransportUnits
-function filterOutTransport(T)
+function getTransportsInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
@@ -3014,7 +3014,7 @@ function filterOutTransport(T)
 end
 
 -->filters Out Immobile Units
-function filterOutImmobile(T, UnitDefs, boolFilterOut)
+function getImmobileInT(T, UnitDefs, boolFilterOut)
     returnTable = {}
     boolFilterOut = boolFilterOut or true
     for num, id in pairs(T) do
@@ -3027,7 +3027,7 @@ function filterOutImmobile(T, UnitDefs, boolFilterOut)
 end
 
 --> filters Out Buildings
-function filterOutBuilding(T, UnitDefs, boolFilterOut)
+function getBuildingInT(T, UnitDefs, boolFilterOut)
 
     returnTable = {}
 
@@ -3044,7 +3044,7 @@ function filterOutBuilding(T, UnitDefs, boolFilterOut)
 end
 
 --> filters Out Builders
-function filterOutBuilder(T)
+function getBuilderInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
@@ -3056,7 +3056,7 @@ function filterOutBuilder(T)
 end
 
 --> filters Out Mobile Builders
-function filterOutMobileBuilder(T, boolCondi)
+function getMobileBuildersInT(T, boolCondi)
     boolCond = boolCondi or false
 
     returnTable = {}
@@ -3069,7 +3069,7 @@ function filterOutMobileBuilder(T, boolCondi)
     return returnTable
 end
 
-function filterOutStaticBuilder(T)
+function getStaticBuildersInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
@@ -3080,7 +3080,7 @@ function filterOutStaticBuilder(T)
     return returnTable
 end
 
-function filterOutFactory(T)
+function getFactorysInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
@@ -3091,7 +3091,7 @@ function filterOutFactory(T)
     return returnTable
 end
 
-function filterOutExtractor(T)
+function getExtractorsInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
@@ -3102,7 +3102,7 @@ function filterOutExtractor(T)
     return returnTable
 end
 
-function filterForGroundUnit(T)
+function getGroundUnitsInT(T)
     returnTable = {}
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(T[i])
@@ -3113,7 +3113,7 @@ function filterForGroundUnit(T)
     return returnTable
 end
 
-function filterOutAirUnit(T, UnitDefs, lboolFilterOut)
+function getAirUnitsInT(T, UnitDefs, lboolFilterOut)
 
     boolFilterOut = lboolFilterOut or false
     returnTable = {}
@@ -3126,7 +3126,7 @@ function filterOutAirUnit(T, UnitDefs, lboolFilterOut)
     return returnTable
 end
 
-function filterOutStrafingAirUnit(T)
+function getStrafingAirUnitsInT(T)
     returnTable = {}
     for i = 1, #T do
         def = Spring.GetUnitDefID(T[i])
@@ -3152,7 +3152,7 @@ function getNextKey(T, oldKey, boolFirst)
     end
 end
 
-function filterOutHoveringAirUnit(T)
+function getHovringAirUnitsInT(T)
     returnTable = {}
     for i = 1, #T do
         def = Spring.GetUnitDefID(T[i])
@@ -3163,7 +3163,7 @@ function filterOutHoveringAirUnit(T)
     return returnTable
 end
 
-function filterOutFighterAirUnit(T)
+function getFighterAirUnitsInT(T)
     returnTable = {}
     for i = 1, #T do
         def = Spring.GetUnitDefID(T[i])
@@ -3174,7 +3174,7 @@ function filterOutFighterAirUnit(T)
     return returnTable
 end
 
-function filterOutBomberAirUnit(T)
+function getBomberAirUnitInT(T)
     returnTable = {}
     for i = 1, #T do
         def = Spring.GetUnitDefID(T[i])
@@ -3195,15 +3195,6 @@ function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset)
     end
 end
 
-function funcyMeta(T, ...)
-    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
-    for _, f in pairs(arg) do
-        T = f(T)
-    end
-    return T
-end
-
-
 --> Apply a function on a Table
 function forTableUseFunction(Table, func, metafunc)
     T = {}
@@ -3216,7 +3207,6 @@ function forTableUseFunction(Table, func, metafunc)
         return T
     end
 end
-
 
 --> Apply a function to a unit Table 
 function forTableUseFunction(T, boolFilterDead, ...)
@@ -3325,18 +3315,6 @@ function TableMergeTable(TA, TB)
         end
         return TB
     end
-end
-
-
-function filterUnitTableforDefIDTable(unitIDT, KeyDefIDT)
-    Tid = {}
-    for i = 1, #unitIDT do
-        a = Spring.GetUnitDefID(unitIDT[i])
-        if KeyDefIDT[a] then
-            Tid[#Tid + 1] = unitIDT[i]
-        end
-    end
-    return Tid
 end
 
 --> Forms a Tree from handed over Table
@@ -3455,16 +3433,7 @@ function executeLindeMayerSystem(gramarTable, String, oldDeg, Degree, UpperLimit
     return
 end
 
-function assertAllArgs(...)
-    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
-    if not arg then error("No arguments were given") return end
-    nr = 1
-    for k, v in pairs(arg) do
-        if not v then error("Argument Nr" .. nr .. " is nil "); return false end
-        nr = 1 + nr
-    end
-    return true
-end
+
 
 -->prepares large speaches for the release to the world
 function prepSpeach(Speach, Names, Limits, Alphas, DefaultSleepBylines)
@@ -3577,12 +3546,10 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
         color = TextColour
     }
 
-
-
-
     echo("Im out 3")
 end
 
+-->
 function getUnitGroundHeigth(unitID)
     px, py, pz = Spring.GetUnitPosition(unitID)
 
@@ -3634,24 +3601,20 @@ function smoothGroundHeigthmap(size, x, z)
     return T
 end
 
+--> returns the distance between two heigthvalues
 function getGroundHeigthDistance(h1, h2)
     return distance(h1, 0, 0, h2, 0, 0)
 end
 
-function distancePieceUnit(piece, unit) 
-	x,y,z=Spring.GetUnitPiecePosDir(unitID, piece)
-	ux,uy,uz=Spring.GetUnitPosition(unit)
-	return distance (x,y,z,ux,uy,uz)
 
-end
 
+--> returns the gh, the units heigth and wether the unit is underground
 function getGroundHeigthAtPiece(uID, pieceName)
     px, py, pz = Spring.GetUnitPiecePosDir(uID, pieceName)
     gh = Spring.GetGroundHeight(px, pz)
 
     return gh, py, py < gh
 end
-
 
 --> multiplies a deformation map with a factor
 function multiplyHeigthmapByFactor(map, factor)
@@ -3700,7 +3663,7 @@ function circularClampHeigthmap(map, dimension, radius, boolInside, overWriteVal
     return map
 end
 
-
+--> consumes a resource if available 
 function consumeAvailableRessource(typeRessource, amount, teamID)
 
     if "m" == string.lower(typeRessource) or "metal" == string.lower(typeRessource) then
@@ -3738,8 +3701,6 @@ function sample(NumericIndex, x, y, sampleFunction, factor)
         quadNumericIndex = NumericIndex
     end
 
-
-
     for i = 1, #quadNumericIndex, 1 do
         for j = 1, #quadNumericIndex, 1 do
             quadNumericIndex[i][j] = sampleFunction(x + quadNumericIndex[i][j].x, y + (quadNumericIndex[i][j].z or quadNumericIndex[i][j].y))
@@ -3766,6 +3727,7 @@ function holdsForAll(Var, fillterConditionString, ...)
     end
 end
 
+--> filters  out following a functionstring (deprecated)
 function is(Var, fillterConditionString, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     f = loadstring(fillterConditionString)
@@ -3809,7 +3771,7 @@ function makeNewAffirmativeMatrice()
         V[1] = 0; V[2] = 0; V[3] = 0; V[4] = 0;
         V[5] = 0; V[6] = 0; V[7] = 0; V[8] = 0;
         V[9] = 0; V[10] = 0; V[11] = 0; V[12] = 0;
-        V[13] = 0; V[14] = 0; V[15] = 0; V[16] = 0
+        V[13] = 0; V[14] = 0; V[15] = 0; V[16] = 1
     end
 
     --TODO
@@ -3818,25 +3780,25 @@ function makeNewAffirmativeMatrice()
 end
 
 
-
-function makeAffirmativeRotationMatrice(axis, deg)
+--> produces a  Rotation matrice around axis for a degree in affirmative Coordinates
+function makeAffirmativeRotationMatrice(axis, deg_)
     V = makeNewAffirmativeMatrice()
     if axis == "x_axis" then
-        V[6] = math.cos(-deg)
-        V[7] = -1 * math.sin(-deg)
-        V[10] = math.sin(-deg)
-        V[11] = math.cos(-deg)
+        V[6] = math.cos(-deg_)
+        V[7] = -1 * math.sin(-deg_)
+        V[10] = math.sin(-deg_)
+        V[11] = math.cos(-deg_)
 
     elseif axis == "y_axis" then
-        V[1] = math.cos(-deg)
-        V[3] = math.sin(-deg)
-        V[9] = -1 * math.sin(-deg)
-        V[11] = math.cos(-deg)
+        V[1] = math.cos(-deg_)
+        V[3] = math.sin(-deg_)
+        V[9] = -1 * math.sin(-deg_)
+        V[11] = math.cos(-deg_)
     else
-        V[1] = math.cos(-deg)
-        V[5] = math.sin(-deg)
-        V[2] = -1 * math.sin(-deg)
-        V[6] = math.cos(-deg)
+        V[1] = math.cos(-deg_)
+        V[5] = math.sin(-deg_)
+        V[2] = -1 * math.sin(-deg_)
+        V[6] = math.cos(-deg_)
     end
     return V
 end
@@ -3867,10 +3829,12 @@ function returnToWorld(unit, px, py, pz)
     Spring.SetUnitNoSelect(unit, false)
 end
 
+--> reveal a Unit 
 function showUnit(unit)
     Spring.SetUnitCloak(unit, false, 1)
 end
 
+--> hide a Unit
 function hideUnit(unit)
     Spring.SetUnitCloak(unit, true, 4)
 end
@@ -3903,17 +3867,8 @@ function killAtPiece(unitID, piecename, selfd, reclaimed, sfxfunction)
     end
 end
 
-function recursiveDoDamage(id, nrOfSteps, damage, damagefunction, nextFunction, preventTable)
-    if nrOfSteps == 0 then return end
 
-    damage = damagefunction(damage)
-    Spring.AddUnitDamage(id, damage)
-    id = nextFunction(id, preventTable)
-
-    nrOfSteps = nrOfSteps - 1
-    return recursiveDoDamage(id, nrOfSteps, damage, damagefunction, nextFunction, preventTable)
-end
-
+--> spins a units piece along its smallest axis
 function SpinAlongSmallestAxis(unitID, piecename, degree, speed)
     if not piecename then return end
     vx, vy, vz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
@@ -3950,6 +3905,7 @@ function returnPieceChildrenTable(pieceNum, piecetable)
     return children, T.max
 end
 
+--> returns the root Piece of a units skeletton
 function getRoot(unitID)
     pieceMap = Spring.GetUnitPieceMap(unitID)
     for name, number in pairs(pieceMap) do
@@ -3958,12 +3914,14 @@ function getRoot(unitID)
     end
 end
 
+--> returns a Unique ID - upper limit is 565939020162275221
 function getUniqueID()
     if not GG.GUID then GG.GUID = 0 end
     GG.GUID = GG.GUID + 0.1 / math.pi
     return GG.GUID
 end
 
+--> checks wether a piece is below another piece
 function recPieceBelow(hierarchy, currentPiece, endPiece, reTable)
     boolBelow = false
 
@@ -3985,8 +3943,7 @@ function recPieceBelow(hierarchy, currentPiece, endPiece, reTable)
     return false
 end
 
-
-
+-->returns a chain of pieces from startPiece to endPiece going over a hierarchy
 function getPieceChain(hierarchy, startPiece, endPiece)
     pieceChain = {}
     pieceChain[1] = startPiece
@@ -4026,6 +3983,7 @@ function getPieceHierarchy(unitID, pieceFunction)
     return hierarchy, rootname
 end
 
+--> returns  a skelett table via recursion (Expensive)
 function recMapDown(Result, pieceMap, Name)
 
     if pieceMap[Name] then
@@ -4777,6 +4735,7 @@ function testUnit(unitid)
     end
 end
 
+--> returns a table of all unitnames  a unit can build
 function GetUnitCanBuild(unitName)
     unitDef = UnitDefNames[unitName]
     T = {}
@@ -4866,6 +4825,7 @@ function transformUnitInto(unitID, unitType, setVel)
     Spring.DestroyUnit(unitID, false, true)
 end
 
+--> echos out a Units Properties
 function echoUnitStats(id)
     h, mh, pD, cP, bP = Spring.GetUnitHealth(id)
     echo(h, mh, pD, "Capture Progress:" .. cP, "Build Progress:" .. bP)
@@ -4880,6 +4840,7 @@ function getUnitMoveGoal(unitID)
         end
     end
 end
+
 
 function drawFunctionGenerator(sizeX, sizeY, typeName)
     heightMapTable = makeTable({}, sizeX, sizeY)
@@ -4918,7 +4879,7 @@ function getMaxSpeed(unitID, UnitDefs)
 end
 
 
-
+--> resets the speed of a unit
 function reSetSpeed(unitID, UnitDefs)
     setSpeedEnv(unitID, 1.0)
 end

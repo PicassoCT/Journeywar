@@ -57,7 +57,7 @@ function SideEffects()
         x, y, z = Spring.GetUnitPosition(unitID)
         T = getAllInCircle(x, z, 512, unitID)
         if #T then
-            T = filterUnitTableforDefIDTable(T, IdTable)
+            T = getUnitsOfTypeInT(T, IdTable)
             if #T then
 
                 for i = 1, #T do
