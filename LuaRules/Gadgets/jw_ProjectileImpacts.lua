@@ -88,7 +88,7 @@ if (gadgetHandler:IsSyncedCode()) then
     }
     RazorGrenadeTable = {}
 
-    Script.SetWatchWeapon(jacidants, true)
+    Script.SetWatchWeapon(jacidantsDefID, true)
     Script.SetWatchWeapon(cEfenceWeapondDefID, true)
     Script.SetWatchWeapon(cgaterailgunDefID, true)
     Script.SetWatchWeapon(jeliahbeamDefID, true)
@@ -156,16 +156,8 @@ if (gadgetHandler:IsSyncedCode()) then
         if GG.DynRefMap == nil then GG.DynRefMap = {} end
         GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / size, z = z / size, Size = size, blendType = "melt", filterType = "borderblur" }
         GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -1)
-    end 
-	
-	function accidAntsFX(x,y,z)
-	
-        size = 16
-        if GG.DynDefMap == nil then GG.DynDefMap = {} end
-        if GG.DynRefMap == nil then GG.DynRefMap = {} end
-        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / size, z = z / size, Size = size, blendType = "subtotal", filterType = "borderblur" }
-        GG.DynRefMap[#GG.DynRefMap + 1] = prepareCupTable(size, -1, size/3, 0.5)
     end
+
 
     function impulseAfterDelay(id, x, y, z)
         if Spring.GetUnitIsDead(id) == false then
@@ -191,6 +183,36 @@ if (gadgetHandler:IsSyncedCode()) then
             table.insert(OtherWaves[math.ceil(dist / speed)], myT)
         end
         GG.ShockWaves = OtherWaves
+    end
+
+    slowlyAccidBurnsAway = function(evtID, frame, persPack, startFrame)
+
+        --only apply if Unit is still alive
+        if Spring.GetUnitIsDead(persPack.victimID) == true then
+            return nil, persPack
+        end
+
+        if persPack.ImuneUnits then
+            defID = Spring.GetUnitDefID(persPack.victimID)
+            if persPack.ImuneUnits[defID] then
+                return nil, persPack
+            end
+        end
+
+        hp, maxHP = Spring.GetUnitHealth(persPack.victimID)
+        if not hp then
+            return nil, nil
+        end
+
+        if persPack.counter > persPack.counterMax then
+            return nil, nil
+        end
+
+
+        toSetHp =  hp - 10
+        Spring.SetUnitHealth(persPack.victimID, toSetHp)
+
+        return frame + 50, persPack
     end
 
     local explosionFunc = {
@@ -430,6 +452,32 @@ if (gadgetHandler:IsSyncedCode()) then
         [jSwiftSpearID] = function(weaponDefID, px, py, pz, AttackerID)
             if Spring.ValidUnitID(AttackerID) == true then Spring.SetUnitPosition(AttackerID, px, py, pz) end
         end,
+        [jacidantsDefID] = function(weaponDefID, px, py, pz, AttackerID)
+            Spring.SpawnCEG("jantseverywhere", px, py + 10, pz, 0, 1, 0, 60)
+
+            size = 16
+            if GG.DynDefMap == nil then GG.DynDefMap = {} end
+            if GG.DynRefMap == nil then GG.DynRefMap = {} end
+            GG.DynDefMap[#GG.DynDefMap + 1] = { x = px, z = pz, Size = size, blendType = "melt", filterType = "borderblur" }
+            GG.DynRefMap[#GG.DynRefMap + 1] = prepareCupTable(size, -0.125, size / 3, 0.5)
+
+
+
+            T = getAllInCircle(px, pz, 150)
+            if T then
+                process(T,
+                    function(id)
+                        if id ~= AttackerID then
+                            persPack = { victimID = id, ImuneUnits = lethalBuffExecption, counter = 0, counterMax = 25 }
+                            GG.EventStream:CreateEvent(slowlyAccidBurnsAway,
+                                persPack,
+                                Spring.GetGameFrame() + 1)
+                        end
+                    end)
+            end
+
+            return true
+        end,
         [jHiveHoundID] = function(weaponDefID, px, py, pz, AttackerID)
             if Spring.ValidUnitID(AttackerID) == true then Spring.SetUnitPosition(AttackerID, px, py, pz) end
         end,
@@ -514,8 +562,8 @@ if (gadgetHandler:IsSyncedCode()) then
         return 0
     end
 
- 
-	UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+
+    UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
         spawnCEGatUnit(unitID, "cefencesplash", 0, 10, 0)
         spawnCEGatUnit(attackerID, "cefencesplash", 0, 10, 0)
 
@@ -680,14 +728,13 @@ if (gadgetHandler:IsSyncedCode()) then
         --only if the unit is hitsphere wise big enough
         hp, maxhp = Spring.GetUnitHealth(unitID)
         if hp / maxhp < 0.5 and hp > 300 then
-		 pieceID = getUnitBiggestPiece(unitID)
+            pieceID = getUnitBiggestPiece(unitID)
             Spring.UnitAttach(unitID, slicerColum, pieceID)
 
-                slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
-                Spring.SetUnitNoSelect(slicerColum, true)
-                if not GG.SlicerTable then GG.SlicerTable = {} end
-                GG.SlicerTable[slicerColum] = unitID
-       
+            slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
+            Spring.SetUnitNoSelect(slicerColum, true)
+            if not GG.SlicerTable then GG.SlicerTable = {} end
+            GG.SlicerTable[slicerColum] = unitID
         end
     end
 

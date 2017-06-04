@@ -600,58 +600,51 @@ function moveExpPiece(piece, axis, targetPos, startPos, increaseval, startspeed,
     end
 end
 
--->Moves a UnitPiece to a UnitPiece at speed
-function movePieceToPieceAlt(piecename, pieceDest, speed, offset, forceUpdate)
+function relDist(org, goal)
+	boolGoalSmallerOrg = math.abs(goal) < math.abs(org)
+	boolOrgLZ= org < 0
+	boolGoalLZ= goal < 0
+	if boolOrgLZ and boolGoalLZ == true and boolGoalSmallerOrg == true  then return math.abs(goal)- math.abs(org) end
+	if boolOrgLZ and boolGoalLZ == true and not boolGoalSmallerOrg == true  then return -1*(math.abs(goal)- math.abs(org)) end
+	
+	if not boolOrgLZ == true and not boolGoalLZ and boolGoalSmallerOrg == true then return -1*(math.abs(org)- math.abs(goal)) end
+	if not boolOrgLZ == true and not boolGoalLZ and not boolGoalSmallerOrg then return (math.abs(org)- math.abs(goal)) end
 
+	
+	if boolOrgLZ == true  and not boolGoalLZ then return (math.abs(goal)+org)*-1 end
+	if not boolOrgLZ and boolGoalLZ == true  then return (math.abs(org)+goal) end
+end
+
+-->Moves a UnitPiece to a UnitPiece at speed without reset
+function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, forceUpdate)
+	speed = speed or 0
     if not pieceDest or not piecename then return end
+	
+    orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename)
+	 echo("piecepos:",orgx, orgy, orgz)
 
-    ox, oy, oz = Spring.GetUnitPiecePosition(unitID, pieceDest)
-    orx, ory, orz = Spring.GetUnitPiecePosition(unitID, piecename)
-
-    dirSignX, dirSignY, dirSignZ = 1, 1, 1
-    dirValX, dirValY, dirValZ = 1, 1, 1
-
-    if sigN(ox) < sigN(orx) then dirSignX = -1 end
-    if sigN(oy) < sigN(ory) then dirSignY = -1 end
-    if sigN(oz) < sigN(orz) then dirSignZ = -1 end
-
-    if sigN(ox) == sigN(orx) then
-        ox = math.abs(ox - orx) * dirSignX
-    else
-        ox = (math.abs(ox) + math.abs(orx)) * dirSignX
-    end
-
-    if sigN(oy) == sigN(ory) then
-        oy = math.abs(oy - ory) * dirSignY
-    else
-        oy = (math.abs(oy) + math.abs(ory)) * dirSignY
-    end
-
-    if sigN(oz) == sigN(orz) then
-        oz = math.abs(oz - orz) * dirSignZ
-    else
-        oz = (math.abs(oz) + math.abs(orz)) * dirSignZ
-    end
-
-    ox = ox * -1
-    if offset then
-        ox = ox + (offset.x)
-        oy = oy + offset.y
-        oz = oz + offset.z
-    end
+    gox, goy, goz = Spring.GetUnitPiecePosition(unitID, pieceDest)
+	 echo("PieceDestPos:", gox, goy, goz)
+	 diffx, diffy, diffz = relDist(orgx,gox), relDist(orgy,goy),relDist(orgz,goz)
+	 echo("Diff:",diffx, diffy, diffz)
+	
+		
 
     --	echoMove(piecename, ox,oy,oz)
-    Move(piecename, x_axis, ox, 0)
-    Move(piecename, y_axis, oy, 0)
-    Move(piecename, z_axis, oz, 0, forceUpdate or true)
+    Move(piecename, x_axis,  diffx , speed)
+    Move(piecename, y_axis,  diffy, speed)
+    Move(piecename, z_axis,  diffz*-1 , speed, forceUpdate or true)
 
 
-    WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
+    WaitForMoves(piecename)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
 function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpdate)
     reset(piecename, 0) --last changeset
+	
+	 speed= speed or 0
+		
     if not pieceDest or not piecename then return end
 
     ox, oy, oz = Spring.GetUnitPiecePosition(unitID, pieceDest)
@@ -668,9 +661,9 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
     end
 
     --	echoMove(piecename, ox,oy,oz)
-    Move(piecename, x_axis, ox, 0)
-    Move(piecename, y_axis, oy, 0)
-    Move(piecename, z_axis, oz, 0, forceUpdate or true)
+    Move(piecename, x_axis, ox, speed)
+    Move(piecename, y_axis, oy, speed)
+    Move(piecename, z_axis, oz, speed, forceUpdate or true)
 
 
     WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);

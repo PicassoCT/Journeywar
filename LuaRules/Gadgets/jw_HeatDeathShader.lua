@@ -6,7 +6,7 @@ function gadget:GetInfo()
         date = "Sep. 20014",
         license = "GPL 3.141",
         layer = 0,
-        enabled = true,
+        enabled = false, --until the problem of all units having the shader applied is fixed
     }
 end
 

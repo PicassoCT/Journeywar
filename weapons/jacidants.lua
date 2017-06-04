@@ -43,12 +43,12 @@ local weaponDef={
 	
 	
 	--commandfire=true,
-	explosionGenerator=[[custom:jantseverywhere]], 
+	--explosionGenerator=[[custom:jantseverywhere]], 
 	CegTag="jlessants",
 	----DAMAGE
 	damage={
-		default=250,
-		heavyarmor=50,
+		default=1,
+		heavyarmor=1,
 	},
 	areaOfEffect=30,
 	craterMult=0,
