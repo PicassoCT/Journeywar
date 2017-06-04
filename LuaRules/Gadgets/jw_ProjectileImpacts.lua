@@ -75,6 +75,7 @@ if (gadgetHandler:IsSyncedCode()) then
     cgaterailgunDefID = WeaponDefNames["cgaterailgun"].id
     cEfenceWeapondDefID = WeaponDefNames["cwefence1"].id
     poisonRaceDartDef = WeaponDefNames["jpoisondartw"].id
+    jacidantsDefID = WeaponDefNames["jacidants"].id
 
 
     ChainLightningTable = {}
@@ -87,6 +88,7 @@ if (gadgetHandler:IsSyncedCode()) then
     }
     RazorGrenadeTable = {}
 
+    Script.SetWatchWeapon(jacidants, true)
     Script.SetWatchWeapon(cEfenceWeapondDefID, true)
     Script.SetWatchWeapon(cgaterailgunDefID, true)
     Script.SetWatchWeapon(jeliahbeamDefID, true)
@@ -152,10 +154,18 @@ if (gadgetHandler:IsSyncedCode()) then
         size = 8
         if GG.DynDefMap == nil then GG.DynDefMap = {} end
         if GG.DynRefMap == nil then GG.DynRefMap = {} end
-        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
-        GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -0.25)
+        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / size, z = z / size, Size = size, blendType = "melt", filterType = "borderblur" }
+        GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -1)
+    end 
+	
+	function accidAntsFX(x,y,z)
+	
+        size = 16
+        if GG.DynDefMap == nil then GG.DynDefMap = {} end
+        if GG.DynRefMap == nil then GG.DynRefMap = {} end
+        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / size, z = z / size, Size = size, blendType = "subtotal", filterType = "borderblur" }
+        GG.DynRefMap[#GG.DynRefMap + 1] = prepareCupTable(size, -1, size/3, 0.5)
     end
-
 
     function impulseAfterDelay(id, x, y, z)
         if Spring.GetUnitIsDead(id) == false then
@@ -504,7 +514,8 @@ if (gadgetHandler:IsSyncedCode()) then
         return 0
     end
 
-    UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+ 
+	UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
         spawnCEGatUnit(unitID, "cefencesplash", 0, 10, 0)
         spawnCEGatUnit(attackerID, "cefencesplash", 0, 10, 0)
 
