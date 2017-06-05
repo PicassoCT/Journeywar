@@ -401,12 +401,12 @@ end
 
 --> Move a piece so that it arrives at the same times on all axis
 function syncMove(piecename, x_val, y_val, z_val, speed)
-    max = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
-    times = math.abs(max / speed)
+    maxs = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
+    times = math.abs(maxs / speed)
     --ratio = 1/(val/max)*times => max*times / val
-    Move(piecename, x_axis, (x_val), (max * times / x_val) * speed)
-    Move(piecename, y_axis, (y_val), (max * times / y_val) * speed)
-    Move(piecename, z_axis, (z_val), (max * times / z_val) * speed)
+    Move(piecename, x_axis, (x_val), (maxs * times / x_val) * speed)
+    Move(piecename, y_axis, (y_val), (maxs * times / y_val) * speed)
+    Move(piecename, z_axis, (z_val), (maxs * times / z_val) * speed)
 end
 
 
@@ -631,9 +631,7 @@ function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, fo
 		
 
     --	echoMove(piecename, ox,oy,oz)
-    Move(piecename, x_axis,  diffx , speed)
-    Move(piecename, y_axis,  diffy, speed)
-    Move(piecename, z_axis,  diffz*-1 , speed, forceUpdate or true)
+	syncMove(piecename,diffx,diffy,diffz*-1,speed)
 
 
     WaitForMoves(piecename)

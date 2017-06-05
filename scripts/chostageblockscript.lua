@@ -41,10 +41,11 @@ resetT(TablesOfPiecesGroups["PathB"])
 while true do
 reset(pieceName)
 	Show(pieceName)
-	for i=1,#TablesOfPiecesGroups["PathB"] do
-		movePieceToPieceNoReset(unitID, pieceName, TablesOfPiecesGroups["PathB"][i], 3)
-	end
-
+	-- for i=1,#TablesOfPiecesGroups["PathB"] do
+		-- movePieceToPieceNoReset(unitID, pieceName, TablesOfPiecesGroups["PathB"][i], 3)
+	-- end
+	 movePieceToPieceNoReset(unitID, pieceName, TablesOfPiecesGroups["PathB"][2], 3)
+	 movePieceToPieceNoReset(unitID, pieceName, TablesOfPiecesGroups["PathB"][3], 3)
 
 Sleep(6000)
 
