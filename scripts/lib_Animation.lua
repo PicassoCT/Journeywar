@@ -1736,5 +1736,16 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
     end
 end
 
+--> get a Piece to follow a Pace made of Pieces 
+function followPath(pieceName, pathTable)
+
+	for i=1,#pathTable do
+		movePieceToPieceNoReset(unitID, pieceName,pathTable[i], 5)
+		Sleep(250)
+	end
+
+end
+
+
 --================================================================================================================
 --================================================================================================================

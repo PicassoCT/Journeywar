@@ -19,134 +19,134 @@ buihobloc1 = piece"buihobloc1"
 buihoblock = piece"buihoblock"
 
 function script.Create()
-    generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
-	  hideT(TablesOfPiecesGroups["PathA"])
-	  hideT(TablesOfPiecesGroups["PathB"])
-	 StartThread(moveTestLoop,TablesOfPiecesGroups["Cell"][1])
+	generatepiecesTableAndArrayCode(unitID)
+	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+	hideT(TablesOfPiecesGroups["PathA"])
+	hideT(TablesOfPiecesGroups["PathB"])
+	StartThread(moveTestLoop,TablesOfPiecesGroups["Cell"][1])
 	-- StartThread(animationLoop)
-	 -- StartThread(letsfetz)
+	-- StartThread(letsfetz)
 end
 
 function moveTestLoop(pieceName)
-Hide(frame)
-Show(pieceName)
-Hide(ExecutedCell)
-Hide(hoblocks)
-Hide(Cubes)
-hideT(TablesOfPiecesGroups["Cell"])
-hideT(TablesOfPiecesGroups["PathA"])
-showT(TablesOfPiecesGroups["PathB"])
-resetT(TablesOfPiecesGroups["PathB"])
-while true do
-reset(pieceName)
+	Hide(frame)
 	Show(pieceName)
-	for i=1,#TablesOfPiecesGroups["PathB"] do
-		movePieceToPieceNoReset(unitID, pieceName, TablesOfPiecesGroups["PathB"][i], 3)
+	Hide(ExecutedCell)
+	Hide(hoblocks)
+	Hide(Cubes)
+	hideT(TablesOfPiecesGroups["Cell"])
+	hideT(TablesOfPiecesGroups["PathA"])
+	showT(TablesOfPiecesGroups["PathB"])
+	resetT(TablesOfPiecesGroups["PathB"])
+	while true do
+		reset(pieceName)
+		Show(pieceName)
+		for i=1,#TablesOfPiecesGroups["PathB"] do
+			movePieceToPieceNoReset(unitID, pieceName, TablesOfPiecesGroups["PathB"][i], 3)
+		end
+		
+		
+		Sleep(6000)
+		
 	end
-
-
-Sleep(6000)
-
-end
-
+	
 end
 
 function letsfetz()
 	while true do 
-	
-	val=math.random(-4,4)
-	Move(buihobloc1,x_axis,val,7)
-	val=math.random(-4,4)
-	Move(buihoblock,x_axis,val,7)
-	Sleep(600)
+		
+		val=math.random(-4,4)
+		Move(buihobloc1,x_axis,val,7)
+		val=math.random(-4,4)
+		Move(buihoblock,x_axis,val,7)
+		Sleep(600)
 	end
 end
 function moveNextCellGenerationUp()
-Hide(ExecutedCell)
-hideT(TablesOfPiecesGroups["Cell"])
-Show(Cubes)
-Show(hoblocks)
-
-WMove(hoblocks,y_axis, 10, 5)
-showT(TablesOfPiecesGroups["Cell"])
-WMove(hoblocks,y_axis, 0, 0)
-
-
+	Hide(ExecutedCell)
+	hideT(TablesOfPiecesGroups["Cell"])
+	Show(Cubes)
+	Show(hoblocks)
+	
+	WMove(hoblocks,y_axis, 10, 5)
+	showT(TablesOfPiecesGroups["Cell"])
+	WMove(hoblocks,y_axis, 0, 0)
+	
+	
 end
 function disolve()
-
+	
 end
 
 function followPath(pieceName, pathTable)
 	reset(pieceName)
 	Show(pieceName)
 	for i=1,#pathTable do
-	movePieceToPieceNoReset(unitID, pieceName,pathTable[i], 5)
-	Sleep(250)
+		movePieceToPieceNoReset(unitID, pieceName,pathTable[i], 5)
+		Sleep(250)
 	end
-
+	
 	Hide(pieceName)
 end
 
 
 function dissolveOrRetract()
 	for i=1, 6 do
-	currPiece=TablesOfPiecesGroups["Cell"][i]
+		currPiece=TablesOfPiecesGroups["Cell"][i]
 		if maRa()==true then
-		followPath(currPiece,TablesOfPiecesGroups["PathB"])
+			followPath(currPiece,TablesOfPiecesGroups["PathB"])
 		else
-
+			
 		end
-	Hide(currPiece)
+		Hide(currPiece)
 	end
-		for i=12,6, -1 do
-	currPiece=TablesOfPiecesGroups["Cell"][i]
+	for i=12,6, -1 do
+		currPiece=TablesOfPiecesGroups["Cell"][i]
 		if maRa()==true then
-		followPath(currPiece,TablesOfPiecesGroups["PathA"])
+			followPath(currPiece,TablesOfPiecesGroups["PathA"])
 		else
-
+			
 		end
-	Hide(currPiece)
+		Hide(currPiece)
 	end
-
+	
 	
 end
 function animationLoop()
-while true do
-	moveNextCellGenerationUp()
-	dissolveOrRetract()
-Sleep(1000)
-end
+	while true do
+		moveNextCellGenerationUp()
+		dissolveOrRetract()
+		Sleep(1000)
+	end
 end
 function script.Killed(recentDamage, _)
-
-    createCorpseCUnitGeneric(recentDamage)
-    return 1
+	
+	createCorpseCUnitGeneric(recentDamage)
+	return 1
 end
 
 
 --- -aimining & fire weapon
 function script.AimFromWeapon1()
-    return center
+	return center
 end
 
 
 
 function script.QueryWeapon1()
-    return center
+	return center
 end
 
 function script.AimWeapon1(Heading, pitch)
-    --aiming animation: instantly turn the gun towards the enemy
-
-    return true
+	--aiming animation: instantly turn the gun towards the enemy
+	
+	return true
 end
 
 
 function script.FireWeapon1()
-
-    return true
+	
+	return true
 end
 
 
@@ -158,18 +158,17 @@ function script.StopMoving()
 end
 
 function script.Activate()
-
-    return 1
+	
+	return 1
 end
 
 function script.Deactivate()
-
-    return 0
+	
+	return 0
 end
 
 function script.QueryBuildInfo()
-    return center
+	return center
 end
 
 Spring.SetUnitNanoPieces(unitID, { center })
-
