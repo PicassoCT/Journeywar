@@ -398,7 +398,7 @@ function handleHiveAttacks()
                 end
             end
         end
-        Sleep(500)
+        Sleep(2500)
     end
 end
 
@@ -417,8 +417,8 @@ function TargetOS()
     oldState = "RELAX"
     while (true) do
         handleHiveAttacks()
-        Sleep(2500)
-        times = times + 2500
+        Sleep(10000)
+        times = times + 10000
         AllUnitsUpdated = Spring.GetAllUnits()
 
         if monsterTable and table.getn(monsterTable) > 0 then
@@ -441,6 +441,7 @@ function TargetOS()
                         end
                     end
                 end
+				Sleep(10)
             end
         end
     end
