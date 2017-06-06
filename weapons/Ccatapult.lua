@@ -1,4 +1,4 @@
-slocal weaponName = "ccatapult"
+local weaponName = "ccatapult"
 local weaponDef = {
     weaponType = [[MissileLauncher]],
     name = "DarkMatter Catapult",

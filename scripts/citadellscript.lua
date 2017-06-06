@@ -1076,8 +1076,8 @@ function shieldDraw()
 
                 T = SubSetFromSet(T, N)
 
-                T = getBuildingInT(T, UnitDefs, true)
-                T = getImmobileInT(T, UnitDefs, true)
+                T = removeBuildingInT(T, UnitDefs)
+                T = removeImmobileInT(T, UnitDefs, true)
 
 
                 factor = 10

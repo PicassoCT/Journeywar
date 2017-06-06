@@ -335,7 +335,7 @@ function InWaterFeedingFrenzy()
 		
 		while y < 0 do
 			T=getAllInCircle(x,z, stunRange,unitID)
-			T,Cache=getUnitsOfTypeInT(T, {[UnitDefNames["jgalatea"].id]=true},Cache)
+			T,Cache= removeUnitsOfTypeInT(T, {[UnitDefNames["jgalatea"].id]=true},Cache)
 			T= process(T,
 			function(element)
 				ex,ey,ez=Spring.GetUnitPosition(element)

@@ -37,6 +37,7 @@ if (gadgetHandler:IsSyncedCode()) then
     local spGetGroundHeight = Spring.GetGroundHeight
     local spGetGroundNormal = Spring.GetGroundNormal
     local spSpawnCEG = Spring.SpawnCEG
+    local spGetUnitIsDead = Spring.GetUnitIsDead
     MetaMapResDivider = 48
     lMapX = Game.mapSizeX / MetaMapResDivider
     lMapZ = Game.mapSizeZ / MetaMapResDivider
@@ -230,7 +231,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
     ProofTypes = getPyroProofUnitTypeTable(UnitDefNames)
     AirTypes = getAirUnitTypeTable(UnitDefNames)
-
+	AbstractTypes = getAbstractTypes(UnitDefNames)
+	
     function drawFlames_AddDamage(delayMap, nr)
         boolOnce = false
         local dMap = delayMap
@@ -239,6 +241,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
                 if math.random(0, 3) ~= 1 then
                     boolOnce = true
+
                     spSpawnCEG("foorestfire", fireT[i].x + math.random(-16, 16), fireT[i].y + math.random(1, 5), fireT[i].z + math.random(-16, 16), math.random(0, 0.1), math.random(0.8, 1), math.random(0, 0.1), MetaMapResDivider, 20)
                 end
                 FT = Spring.GetFeaturesInCylinder(fireT[i].x, fireT[i].z, MetaMapResDivider)
@@ -248,15 +251,19 @@ if (gadgetHandler:IsSyncedCode()) then
                     end
                 end
 
-                assert(MetaMapResDivider)
+              --  assert(MetaMapResDivider)
                 T = getAllInCircle(fireT[i].x, fireT[i].z, MetaMapResDivider)
-                T, ShitWasSoCache = getUnitsOfTypeInT(T, ProofTypes, ShitWasSoCache)
-                T, ShitWasSoCache = getUnitsOfTypeInT(T, AirTypes, ShitWasSoCache)
+					
+                T, ShitWasSoCache = removeUnitsOfTypeInT(T, AbstractTypes, ShitWasSoCache)
+                T, ShitWasSoCache = removeUnitsOfTypeInT(T, ProofTypes, ShitWasSoCache)
+                T, ShitWasSoCache = removeUnitsOfTypeInT(T, AirTypes, ShitWasSoCache)
+				
+				-- echo("Units found in fire:",#T)
                 if T and #T > 0 then
-
-
                     for k = 1, #T do
-                        if Spring.ValidUnitID(T[k]) == true then Spring.AddUnitDamage(T[k], 10) end
+								if spGetUnitIsDead(T[k]) == false then
+								Spring.AddUnitDamage(T[k], 10) 
+								end
                     end
                 end
             end
@@ -270,16 +277,23 @@ if (gadgetHandler:IsSyncedCode()) then
         local dMap = delayMap
         for i = 1, #bigFireTable, 1 do
             if dMap[i] and dMap[i] % frame == 0 then
-
-                spSpawnCEG("bigfoorestfire", bigFireTable[i].x + math.random(-16, 16), bigFireTable[i].y + math.random(1, 15), bigFireTable[i].z + math.random(-16, 16), math.random(0, 0.1), math.random(0.8, 1), math.random(0, 0.1))
+                dx,dy,dz= spGetGroundNormal( bigFireTable[i].x + math.random(-16, 16), bigFireTable[i].z + math.random(-16, 16), true)
+                spSpawnCEG("bigfoorestfire", bigFireTable[i].x + math.random(-16, 16), bigFireTable[i].y + math.random(1, 15), bigFireTable[i].z + math.random(-16, 16),dx, dy, dz)
                 T = getAllInCircle(bigFireTable[i].x, bigFireTable[i].z, 52)
-                T, ShitWasSoCache = getUnitsOfTypeInT(T, ProofTypes, ShitWasSoCache)
-                T, ShitWasSoCache = getUnitsOfTypeInT(T, AirTypes, ShitWasSoCache)
+					 T, ShitWasSoCache = removeUnitsOfTypeInT(T, AbstractTypes, ShitWasSoCache)
+                T, ShitWasSoCache = removeUnitsOfTypeInT(T, ProofTypes, ShitWasSoCache)
+                T, ShitWasSoCache = removeUnitsOfTypeInT(T, AirTypes, ShitWasSoCache)
+					
                 if T and #T > 0 then
+					--	Spring.Echo("Units found to burn", T)
                     for k = 1, #T do
-                        if Spring.ValidUnitID(T[k]) == true then Spring.AddUnitDamage(T[k], 10) end
+                       if spGetUnitIsDead(T[k]) == false then
+									Spring.AddUnitDamage(T[k], 10) 
+								end
                     end
-                end
+                else
+				
+					end
             end
         end
     end

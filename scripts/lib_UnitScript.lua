@@ -2956,7 +2956,37 @@ function randFunc(...)
     return arg[index]()
 end
 
+-->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
+function removeUnitsOfTypeInT(T, UnitTypeTable, Cache)
+    if type(UnitTypeTable) == "number" then
+        copyOfType = UnitTypeTable;
+        UnitTypeTable = {}
+        UnitTypeTable[copyOfType] = true
+    end
 
+    if Cache then
+        returnTable = {}
+        for num, id in pairs(T) do
+            if (Cache[id] and Cache[id] == false) or   UnitTypeTable[Spring.GetUnitDefID(id)] == nil then
+                Cache[id] = false
+                returnTable[#returnTable + 1] = id
+            else
+                Cache[id] = true
+            end
+        end
+        return returnTable, Cache
+
+    else
+        local returnTable = {}
+        for num, id in pairs(T) do
+            defID = Spring.GetUnitDefID(id)
+            if not UnitTypeTable[defID] then
+                returnTable[#returnTable + 1] = id
+            end
+        end
+        return returnTable
+    end
+end
 
 -->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
 function getUnitsOfTypeInT(T, UnitTypeTable, Cache)
@@ -2969,7 +2999,7 @@ function getUnitsOfTypeInT(T, UnitTypeTable, Cache)
     if Cache then
         returnTable = {}
         for num, id in pairs(T) do
-            if Cache[id] and Cache[id] == true or T[id] and not UnitTypeTable[Spring.GetUnitDefID(id)] then
+            if Cache[id] and Cache[id] == true or T[id] and UnitTypeTable[Spring.GetUnitDefID(id)] then
                 Cache[id] = true
                 returnTable[#returnTable + 1] = id
             else
@@ -2982,7 +3012,7 @@ function getUnitsOfTypeInT(T, UnitTypeTable, Cache)
         local returnTable = {}
         for num, id in pairs(T) do
             defID = Spring.GetUnitDefID(id)
-            if not UnitTypeTable[defID] then
+            if UnitTypeTable[defID] then
                 returnTable[#returnTable + 1] = id
             end
         end
@@ -3014,31 +3044,56 @@ function getTransportsInT(T)
 end
 
 -->filters Out Immobile Units
-function getImmobileInT(T, UnitDefs, boolFilterOut)
+function getImmobileInT(T, UnitDefs)
     returnTable = {}
     boolFilterOut = boolFilterOut or true
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
-        if not boolFilterOut == UnitDefs[def].isImmobile then
+        if UnitDefs[def].isImmobile == true then
             returnTable[#returnTable + 1] = id
         end
     end
     return returnTable
 end
 
+-->filters Out Immobile Units
+function removeImmobileInT(T, UnitDefs)
+    returnTable = {}
+    boolFilterOut = boolFilterOut or true
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+        if UnitDefs[def].isImmobile == false then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+end
+
+function removeBuildingInT(T, UnitDefs)
+   returnTable = {}
+
+    for num, id in pairs(T) do
+        def = Spring.GetUnitDefID(id)
+    
+        if  UnitDefs[def] and UnitDefs[def].isBuilding == false then
+            returnTable[#returnTable + 1] = id
+        end
+    end
+    return returnTable
+
+end
+
 --> filters Out Buildings
-function getBuildingInT(T, UnitDefs, boolFilterOut)
+function getBuildingInT(T, UnitDefs)
 
     returnTable = {}
 
     for num, id in pairs(T) do
         def = Spring.GetUnitDefID(id)
-        if boolFilterOut == true and UnitDefs[def] and UnitDefs[def].isBuilding == true then
+        if  UnitDefs[def] and UnitDefs[def].isBuilding == true then
             returnTable[#returnTable + 1] = id
         end
-        if boolFilterOut == false and UnitDefs[def] and UnitDefs[def].isBuilding == false then
-            returnTable[#returnTable + 1] = id
-        end
+     
     end
     return returnTable
 end

@@ -277,6 +277,19 @@ function getCreeperTypeTable()
     return CreepTable
 end
 
+function getAbstractTypes(UnitDefNames)
+    AbstractTypes = {
+        [UnitDefNames["csuborexplo"].id] = true,
+        [UnitDefNames["actionzone"].id] = true,
+        [UnitDefNames["reservoirzone"].id] = true,
+        [UnitDefNames["triggerzone"].id] = true,
+		--TODO add all abstract types
+     }
+
+    return AbstractTypes
+
+end
+
 function getRecycleableUnitTypeTable()
     TransportTable = {
         [UnitDefNames["gjbigbiowaste"].id] = true,

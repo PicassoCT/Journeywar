@@ -171,7 +171,7 @@ function FeedMe()
             x, y, z = Spring.GetUnitPiecePosDir(unitID, sensorT[i])
             T = getAllInCircle(x, z, 80, unitID)
 
-            if T then getUnitsOfTypeInT(T, Seastars) end
+            if T then removeUnitsOfTypeInT(T, Seastars) end
             T = process(T,
                 function(id)
                     uDefid = Spring.GetUnitDefID(id)

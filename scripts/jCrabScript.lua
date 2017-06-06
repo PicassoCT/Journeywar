@@ -142,6 +142,7 @@ function behindLeg(nr, inverter)
 end
 
 function legs_down()
+	if boolDead== true then return end
     SetSignalMask(SIG_LEG)
     Sleep(550)
     Signal(SIG_WALK)
@@ -203,6 +204,7 @@ function legz()
 end
 
 function walk()
+	if boolDead== true then return end
     Sleep(50)
     Signal(SIG_LEG)
     SetSignalMask(SIG_WALK)
@@ -361,12 +363,15 @@ function script.FireWeapon1()
 end
 
 
-
+boolDead=false
 function script.Killed(recentDamage, _)
+		boolDead=true
+		Signal(SIG_LEG)
+		Signal(SIG_WALK)
     SetUnitValue(COB.MAX_SPEED, 0)
     Turn(Crabbase, x_axis, math.rad(180), 90)
     WaitForTurn(Crabbase, x_axis)
-    for i = 1, 15, 1 do
+    for i = 1, 7, 1 do
         EmitSfx(Crabbase, 1024)
         Sleep(26)
     end

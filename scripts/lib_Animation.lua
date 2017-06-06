@@ -407,11 +407,13 @@ function syncMove(piecename, x_val, y_val, z_val, speed)
 
     --ratio = 1/(val/max)*times => max*times / val
 		Spring.Echo("Speeds:"..(x_val / maxs) * speed.." / "..(y_val / maxs) * speed.." / "..(z_val / maxs) * speed)
-    
+   speedX = (x_val / maxs) * speed
+	speedY = (y_val / maxs) * speed
+	speedZ = (z_val / maxs) * speed
 	
-	 Move(piecename, x_axis, (x_val), (x_val / maxs) * speed)
-    Move(piecename, y_axis, (y_val), (y_val / maxs) * speed)
-    Move(piecename, z_axis, (z_val), (z_val / maxs) * speed)
+	 Move(piecename, x_axis, (x_val), speedX)
+    Move(piecename, y_axis, (y_val), speedY)
+    Move(piecename, z_axis, (z_val), speedZ)
 end
 
 
@@ -633,9 +635,11 @@ Spring.Echo("=============================================================")
 end
 
 
--->Moves a UnitPiece to a UnitPiece at speed without reset
-function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, forceUpdate)
+-->Moves a UnitPiece to a UnitPiece at speed
+function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, startPos, forceUpdate)
     speed = speed or 0
+
+	
     if not pieceDest or not piecename then return end
 	echoLine()
     orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename) --TODO rework
@@ -649,7 +653,8 @@ function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, fo
 
 
     --	echoMove(piecename, ox,oy,oz)
-    syncMove(piecename, diffx * -1, diffy, diffz, speed)
+   syncMove(piecename, diffx*-1, diffy, diffz, speed)
+  
 	echoLine()
 
     WaitForMoves(piecename)
@@ -1753,10 +1758,11 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
 end
 
 --> get a Piece to follow a Pace made of Pieces 
-function followPath(pieceName, pathTable, speed, delay)
+function followPath(unitID, pieceName, pathTable, speed, delay)
 
 
-	for num, pieceNum in pairs(pathTable) do
+	for i = 1, #pathTable do
+			pieceNum= pathTable[i]
         movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed)
         Sleep(delay)
     end

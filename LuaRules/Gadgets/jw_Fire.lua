@@ -18,12 +18,14 @@ if (gadgetHandler:IsSyncedCode()) then
     local spGetPosition = Spring.GetUnitPosition
     local spIsUnitDead = Spring.GetUnitIsDead
     local spAddUnitDamage = Spring.AddUnitDamage
+    local spGetGroundNormal =Spring.GetGroundNormal
     disDance = 7
     VFS.Include("scripts/lib_OS.lua", nil, VFSMODE)
     VFS.Include("scripts/lib_UnitScript.lua", nil, VFSMODE)
     VFS.Include("scripts/lib_Build.lua", nil, VFSMODE)
     VFS.Include("scripts/lib_jw.lua", nil, VFSMODE)
-
+    UnitID= 1
+    Heat = 2
 
 
 
@@ -38,36 +40,37 @@ if (gadgetHandler:IsSyncedCode()) then
             for i = 1, table.getn(GG.OnFire), 1 do
                 --check if not nil
                 if GG.OnFire[i] ~= nil then
-                    if GG.OnFire[i][1] then
-                        --- -Spring.Echo("gFire: UnitToBurnFound")
-                        if GG.OnFire[i][2] >= 0 then
-                            GG.OnFire[i][2] = GG.OnFire[i][2] - disDance
+                    if GG.OnFire[i][UnitID] then
+                        if GG.OnFire[i][Heat] >= 0 then
+                            GG.OnFire[i][Heat] = GG.OnFire[i][Heat] - disDance
 
-                            if not GG.OnFire[i].DontPanic then GG.OnFire[i].DontPanic = (isPanicAble[Spring.GetUnitDefID(GG.OnFire[i][1])] ~= nil) end
-                            if spIsUnitDead(GG.OnFire[i][1]) == false then
-
+                            if not GG.OnFire[i].DontPanic then GG.OnFire[i].DontPanic = (isPanicAble[Spring.GetUnitDefID(GG.OnFire[i][UnitID])] ~= nil) end
+                            if spIsUnitDead(GG.OnFire[i][UnitID]) == false then
 
 
-                                x, y, z = spGetPosition(GG.OnFire[i][1])
+
+                                x, y, z = spGetPosition(GG.OnFire[i][UnitID])
                                 if GG.OnFire[i].DontPanic == true then
-                                    Spring.SetUnitNoSelect(GG.OnFire[i][1], true)
-                                    Spring.SetUnitMoveGoal(GG.OnFire[i][1], x + math.random(-20, 20), y, z + math.random(-20, 20))
+                                    Spring.SetUnitNoSelect(GG.OnFire[i][UnitID], true)
+                                    Spring.SetUnitMoveGoal(GG.OnFire[i][UnitID], x + math.random(-20, 20), y, z + math.random(-20, 20))
                                 end
                                 additional = math.random(3, 9)
                                 addx = math.random(0, 4)
                                 addz = math.random(0, 4)
                                 xd = math.random(-1, 1)
                                 zd = math.random(-1, 1)
-                                spSpawnCEG("flames", x + addx * xd, y + additional, z + addz * zd, 0, 1, 0, 50, 0)
+
+                                dx,dy,dz= spGetGroundNormal(x + addx * xd, z + addz * zd, true)
+                                spSpawnCEG("flames", x + addx * xd, y + additional, z + addz * zd, dx, dy, dz, 50, 0)
                                 if frame % 3 == 0 then
                                     spSpawnCEG("vortflames", x + addx * xd, y + additional, z + addz * zd, 0, 1, 0, 50, 0)
                                 end
-                                spAddUnitDamage(GG.OnFire[i][1], 1)
+                                spAddUnitDamage(GG.OnFire[i][UnitID], 1)
                             end
 
                         else
-                            Spring.SetUnitNoSelect(GG.OnFire[i][1], false)
-                            GG.OnFire[i][1] = nil
+                            Spring.SetUnitNoSelect(GG.OnFire[i][UnitID], false)
+                            GG.OnFire[i][UnitID] = nil
                         end
                     end
                 end
@@ -79,7 +82,7 @@ if (gadgetHandler:IsSyncedCode()) then
             y = table.getn(GG.OnFire)
             countTen = 0
             for i = 1, y, 1 do
-                if GG.OnFire[i] ~= nil and GG.OnFire[i][1] ~= nil and i ~= 1 and y ~= 1 then
+                if GG.OnFire[i] ~= nil and GG.OnFire[i][UnitID] ~= nil and i ~= 1 and y ~= 1 then
                     table.remove(GG.OnFire, i)
                     i = i - 1
                     y = y - 1

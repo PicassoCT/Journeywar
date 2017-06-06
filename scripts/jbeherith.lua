@@ -657,7 +657,7 @@ function trampleTier()
     px, py, pz = Spring.GetUnitPiecePosDir(unitID, treeSpot)
     T = getAllInCircle(px, pz, 50, unitID)
     if T then
-        buildings = getBuildingInT(T, UnitDefs, true)
+        buildings = getBuildingInT(T, UnitDefs)
         if buildings then
             process(buildings,
                 function(id)
