@@ -1,57 +1,55 @@
-local weaponName="cHopper"
-local weaponDef={
-name="HopperMine",
-weaponType=[[MissileLauncher]],
+local weaponName = "cHopper"
+local weaponDef = {
+    name = "HopperMine",
+    weaponType = [[MissileLauncher]],
+    Accuracy = 2000,
 
-Accuracy=2000,
+    --Physic/flight path
+    range = 110,
+    reloadtime = 1.2,
+    weaponVelocity = 400,
+    startVelocity = 50,
+    weaponAcceleration = 50,
+    flightTime = 0.9,
+    BurnBlow = 0.3,
+    FixedLauncher = false,
+    dance = 1,
+    wobble = 1,
+    tolerance = 16000,
+    tracks = false,
+    Turnrate = 16000,
+    collideFriendly = true,
 
---Physic/flight path
-range=110,
-reloadtime=1.2,
-weaponVelocity=400,
-startVelocity=50,
-weaponAcceleration=50,
-flightTime=0.9,
-BurnBlow=0.3,
-FixedLauncher=false,
-dance=1,
-wobble=1,
+    --- -APPEARANCE
+    model = "cHopper.s3o",
+    smokeTrail = false,
+    --explosionGenerator="custom:redsmoke",
+    --CegTag="smoketrail",
 
-tolerance=16000,
-tracks=false,
-Turnrate=16000,
-collideFriendly=true,
-
-----APPEARANCE
-model="cHopper.s3o",
-smokeTrail=false,
---explosionGenerator="custom:redsmoke",
---CegTag="smoketrail",
-
-----TARGETING
-turret=true,
-cylinderTargeting=25.0,
-avoidFeature=true,
-avoidFriendly=true,
+    --- -TARGETING
+    turret = true,
+    cylinderTargeting = 25.0,
+    avoidFeature = true,
+    avoidFriendly = true,
 
 
---commandfire=true,
+    --commandfire=true,
 
-----DAMAGE
-damage={
-default=350,
-heavyarmor=150,
-},
-areaOfEffect=100,
-craterMult=0,
+    --- -DAMAGE
+    damage = {
+        default = 350,
+        heavyarmor = 150,
+    },
+    areaOfEffect = 100,
+    craterMult = 0,
 
---?FIXME***
-lineOfSight=true,
+    --?FIXME***
+    lineOfSight = true,
 
 
---sound
-soundHit="cHopper/detonation.wav",
-soundStart="cHopper/Launch.wav",
+    --sound
+    soundHit = "cHopper/detonation.wav",
+    soundStart = "cHopper/Launch.wav",
 }
 
-return lowerkeys ({[weaponName]=weaponDef})
+return lowerkeys({ [weaponName] = weaponDef })

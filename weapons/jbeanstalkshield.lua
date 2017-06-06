@@ -1,34 +1,29 @@
 local weaponName = "jbeanstalkshield"
 local weaponDef = {
-
-name = "beanstalkshield",
-damage = {
-default = 100,
-},
-weaponType="Shield",
-exteriorShield = false,
-
-shieldAlpha = 0.01,
-ShieldEnergyUse=150,
-ShieldForce=5.25,
- shieldBadColor = [[0.1 0.7 0.3]],
-shieldGoodColor = [[0.8 1 0.1]]  ,
-ShieldInterceptType =65533,
-ShieldMaxSpeed=400,
-ShieldPower=9999,
-ShieldPowerRegen =999,
-shieldpowerregenenergy=1000,
-shieldRadius=420,
-shieldRepulser =true, --true for journeys
-ShieldStartingPower =10000,
-SmartShield = false,
-VisibleShield = true,
-VisibleShieldHitFrames =45,
-VisibleShieldRepulse=true,
-
-texture1 = [[shield3mist]],
-weaponType = [[Shield]],
-
-
-	}
-return lowerkeys({[weaponName] = weaponDef})
+    name = "beanstalkshield",
+    damage = {
+        default = 100,
+    },
+    weaponType = "Shield",
+    exteriorShield = false,
+    shieldAlpha = 0.01,
+    ShieldEnergyUse = 150,
+    ShieldForce = 5.25,
+    shieldBadColor = [[0.1 0.7 0.3]],
+    shieldGoodColor = [[0.8 1 0.1]],
+    ShieldInterceptType = 65533,
+    ShieldMaxSpeed = 400,
+    ShieldPower = 9999,
+    ShieldPowerRegen = 999,
+    shieldpowerregenenergy = 1000,
+    shieldRadius = 420,
+    shieldRepulser = true, --true for journeys
+    ShieldStartingPower = 10000,
+    SmartShield = false,
+    VisibleShield = true,
+    VisibleShieldHitFrames = 45,
+    VisibleShieldRepulse = true,
+    texture1 = [[shield3mist]],
+    weaponType = [[Shield]],
+}
+return lowerkeys({ [weaponName] = weaponDef })

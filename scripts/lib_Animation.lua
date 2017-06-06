@@ -402,11 +402,16 @@ end
 --> Move a piece so that it arrives at the same times on all axis
 function syncMove(piecename, x_val, y_val, z_val, speed)
     maxs = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
-    times = math.abs(maxs / speed)
+    if maxs < 1  then maxs = 1 end
+
+
     --ratio = 1/(val/max)*times => max*times / val
-    Move(piecename, x_axis, (x_val), (maxs * times / x_val) * speed)
-    Move(piecename, y_axis, (y_val), (maxs * times / y_val) * speed)
-    Move(piecename, z_axis, (z_val), (maxs * times / z_val) * speed)
+		Spring.Echo("Speeds:"..(x_val / maxs) * speed.." / "..(y_val / maxs) * speed.." / "..(z_val / maxs) * speed)
+    
+	
+	 Move(piecename, x_axis, (x_val), (x_val / maxs) * speed)
+    Move(piecename, y_axis, (y_val), (y_val / maxs) * speed)
+    Move(piecename, z_axis, (z_val), (z_val / maxs) * speed)
 end
 
 
@@ -449,10 +454,10 @@ function MovePieceToPos(piecename, X, Y, Z, speed, boolWaitForIt)
     Move(piecename, x_axis, X, speed)
     Move(piecename, y_axis, Y, speed)
     Move(piecename, z_axis, Z, speed, true)
-	
-	if not boolWaitForIt or boolWaitForIt == true then
-		WaitForMoves(piecename)
-	end
+
+    if not boolWaitForIt or boolWaitForIt == true then
+        WaitForMoves(piecename)
+    end
 end
 
 -->Helperfunction of recursiveAddTable -> builds a bonesubsystem
@@ -600,39 +605,52 @@ function moveExpPiece(piece, axis, targetPos, startPos, increaseval, startspeed,
     end
 end
 
-function relDist(org, goal)
-	boolGoalSmallerOrg = math.abs(goal) < math.abs(org)
-	boolOrgLZ= org < 0
-	boolGoalLZ= goal < 0
-	if boolOrgLZ and boolGoalLZ == true and boolGoalSmallerOrg == true  then return math.abs(goal)- math.abs(org) end
-	if boolOrgLZ and boolGoalLZ == true and not boolGoalSmallerOrg == true  then return -1*(math.abs(goal)- math.abs(org)) end
-	
-	if not boolOrgLZ == true and not boolGoalLZ and boolGoalSmallerOrg == true then return -1*(math.abs(org)- math.abs(goal)) end
-	if not boolOrgLZ == true and not boolGoalLZ and not boolGoalSmallerOrg then return (math.abs(org)- math.abs(goal)) end
+function relDist(pos, target)
 
-	
-	if boolOrgLZ == true  and not boolGoalLZ then return (math.abs(goal)+org)*-1 end
-	if not boolOrgLZ and boolGoalLZ == true  then return (math.abs(org)+goal) end
+    rDist = math.abs(pos - target)
+
+    if (pos < 0 and target > 0) or (target < 0 and pos > 0) then rDist = math.abs(pos) + math.abs(target) end
+
+
+    if pos > target then
+        return rDist * -1
+    end
+
+
+    return rDist
 end
+
+function getOrgPosPiece(unitID, piecename)
+    orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename)
+    reset(piecename)
+    rorx, rory, rorz = Spring.GetUnitPiecePosition(unitID, piecename)
+    mP(piecename, orgx, orgy, orgz, 0)
+    return rorx, rory, rorz
+end
+
+function echoLine()
+Spring.Echo("=============================================================")
+end
+
 
 -->Moves a UnitPiece to a UnitPiece at speed without reset
 function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, forceUpdate)
-	speed = speed or 0
+    speed = speed or 0
     if not pieceDest or not piecename then return end
-	
-    orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename)
-	 echo("piecepos:",orgx, orgy, orgz)
+	echoLine()
+    orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename) --TODO rework
+    echo("piecepos:", orgx, orgy, orgz)
 
     gox, goy, goz = Spring.GetUnitPiecePosition(unitID, pieceDest)
-	 echo("PieceDestPos:", gox, goy, goz)
-	 diffx, diffy, diffz = relDist(orgx,gox), relDist(orgy,goy),relDist(orgz,goz)
-	 echo("Diff:",diffx, diffy, diffz)
-	
-		
+    echo("PieceDestPos:", gox, goy, goz)
+    diffx, diffy, diffz = relDist(orgx, gox), relDist(orgy, goy), relDist(orgz, goz)
+    echo("Diff:", diffx, diffy, diffz)
+
+
 
     --	echoMove(piecename, ox,oy,oz)
-	syncMove(piecename,diffx,diffy,diffz*-1,speed)
-
+    syncMove(piecename, diffx * -1, diffy, diffz, speed)
+	echoLine()
 
     WaitForMoves(piecename)
 end
@@ -640,9 +658,9 @@ end
 -->Moves a UnitPiece to a UnitPiece at speed
 function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpdate)
     reset(piecename, 0) --last changeset
-	
-	 speed= speed or 0
-		
+
+    speed = speed or 0
+
     if not pieceDest or not piecename then return end
 
     ox, oy, oz = Spring.GetUnitPiecePosition(unitID, pieceDest)
@@ -1308,12 +1326,12 @@ function turnT(t, axis, deg, speed, boolInstantUpdate, boolWait)
 end
 
 --> compares Heading
- function compareHeading(currentHead, headingOld, waitTime, headChangeTolerance)
- 
-	waitTime= waitTime or 100
-	headChangeTolerance = headChangeTolerance or 100
-	boolTurnLeft = false
-	
+function compareHeading(currentHead, headingOld, waitTime, headChangeTolerance)
+
+    waitTime = waitTime or 100
+    headChangeTolerance = headChangeTolerance or 100
+    boolTurnLeft = false
+
     while (headingOfOld == nil) do
         Sleep(waitTime)
         headingOfOld = Spring.GetUnitHeading(unitID)
@@ -1335,11 +1353,10 @@ end
 
     if headChange > headChangeTolerance then --or currentHeading < headingOfOld*negativeTolerance
 
-        return true,  currentHead - headingOld < 0
+        return true, currentHead - headingOld < 0
     else
         return false, boolTurnLeft
     end
-
 end
 
 --unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
@@ -1479,14 +1496,15 @@ function TurnPieceTowardsPiece(piecename, pieceB, speed)
     echo("Turntoards point")
     TurnPieceTowards(piecename, dx, dy, dz, speed)
 end
+
 function getRandomAxis()
-axis=math.random(0,3)
-return axis
+    axis = math.random(0, 3)
+    return axis
 end
 
 function TurnPieceTowardsUnit(piecenam, unitToTurnToo, Speed)
-x,y,z=Spring.GetUnitPosition(unitToTurnToo)
-TurnPieceTowardsPoint(piecename, x, y, z, Speed)
+    x, y, z = Spring.GetUnitPosition(unitToTurnToo)
+    TurnPieceTowardsPoint(piecename, x, y, z, Speed)
 end
 
 
@@ -1574,7 +1592,7 @@ end
 
 function reset(piecename, speed, boolWaitForIT, boolIstantUpdate)
     if not piecename then return end
-    if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename.." of type "..type(piecename).." instead"); assert(true == false); end
+    if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename .. " of type " .. type(piecename) .. " instead"); assert(true == false); end
     bIstantUpdate = boolIstantUpdate or true
     Turn(piecename, x_axis, 0, speed)
     Turn(piecename, y_axis, 0, speed)
@@ -1733,6 +1751,17 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
         return resulT
     end
 end
+
+--> get a Piece to follow a Pace made of Pieces 
+function followPath(pieceName, pathTable, speed, delay)
+
+
+	for num, pieceNum in pairs(pathTable) do
+        movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed)
+        Sleep(delay)
+    end
+end
+
 
 --================================================================================================================
 --================================================================================================================
