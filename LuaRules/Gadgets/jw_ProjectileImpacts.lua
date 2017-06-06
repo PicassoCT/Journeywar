@@ -209,7 +209,7 @@ if (gadgetHandler:IsSyncedCode()) then
         end
 
 
-        toSetHp =  hp - 10
+        toSetHp = hp - 10
         Spring.SetUnitHealth(persPack.victimID, toSetHp)
 
         return frame + 50, persPack
