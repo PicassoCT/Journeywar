@@ -581,7 +581,10 @@ end
 --======================================================================================
 --> creates a ceg, that traverses following its behavioural function
 function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrobo, range, damage, behaviour)
-
+	endofLifeFunc= endofLifeFunc or function(x,y,z) end
+	boolStrobo= boolStrobo or false
+	range = range or 20
+	damage = damage or 0
     knallfrosch = function(x, y, z, counter, v)
         if counter % 120 < 60 then -- aufwärts
             if v then
@@ -604,6 +607,7 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
     local SpawnCeg = Spring.SpawnCEG
     v = makeVector(0, 0, 0)
 
+
     while lifetimefunc(Time) == true do
         x, y, z, v = functionbehaviour(x, y, z, Time, v)
 
@@ -617,8 +621,9 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
         Time = Time + rate
         Sleep(rate)
     end
-
+	if endofLifeFunc then
     endofLifeFunc(x, y, z)
+	end
 end
 
 

@@ -23,38 +23,11 @@ function script.Create()
 	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
 	hideT(TablesOfPiecesGroups["PathA"])
 	hideT(TablesOfPiecesGroups["PathB"])
-	StartThread(moveTestLoop,TablesOfPiecesGroups["Cell"][1])
-	-- StartThread(animationLoop)
-	-- StartThread(letsfetz)
-end
-
-function moveTestLoop(pieceName)
-	Hide(frame)
-	
-	Hide(ExecutedCell)
-	Hide(hoblocks)
-	Hide(Cubes)
-	hideT(TablesOfPiecesGroups["Cell"])
-	hideT(TablesOfPiecesGroups["PathB"])
 	hideT(TablesOfPiecesGroups["PathC"])
-	hideT(TablesOfPiecesGroups["PathA"])
-	resetT(TablesOfPiecesGroups["PathB"])
-	Show(pieceName)
-	while true do
-		echoT(TablesOfPiecesGroups["PathD"])
-		followPath(unitID, pieceName,TablesOfPiecesGroups["PathD"],25,250)
-		Sleep(6000)
-		reset(pieceName)
-	
-	end
-
-	
-		
-		
-		
-	
-
-	
+	resetT(TablesOfPiecesGroups["Cell"])
+	Show(frame)
+	 StartThread(animationLoop)
+	StartThread(letsfetz)
 end
 
 function letsfetz()
@@ -71,45 +44,75 @@ function moveNextCellGenerationUp()
 	Hide(ExecutedCell)
 	hideT(TablesOfPiecesGroups["Cell"])
 	Show(Cubes)
-	Show(hoblocks)
-	
+	Show(hoblocks)	
 	WMove(hoblocks,y_axis, 10, 5)
 	showT(TablesOfPiecesGroups["Cell"])
+	resetT(TablesOfPiecesGroups["Cell"])
 	WMove(hoblocks,y_axis, 0, 0)
 	
 	
 end
-function disolve()
-	
+function disolve(PieceName)
+	followPath(unitID, PieceName,TablesOfPiecesGroups["PathC"],12, 250)
 end
 
 
 function dissolveOrRetract()
 	for i=1, 6 do
 		currPiece=TablesOfPiecesGroups["Cell"][i]
-		if maRa()==true then
-			reset(pieceName)
-			Show(pieceName)
-			followPath(currPiece,TablesOfPiecesGroups["PathB"],5, 250)
-			Hide(pieceName)
-		else
-			
-		end
+		if currPiece then
+			reset(currPiece)
+				Show(currPiece)
+			if  math.random(1,22) > 2  then
+				followPath(unitID, currPiece,TablesOfPiecesGroups["PathB"],12, 250)
+			else
+				disolve( currPiece)		
+				for i=1, 5 do 
+				spawnCegAtPiece(unitID, currPiece, "antimatter", math.random(-5,5), math.random(-5,5), math.random(-5,5))
+				end
+				getCegDevil(currPiece)
+			end
 		Hide(currPiece)
+		end		
 	end
+	
 	for i=12,6, -1 do
 		currPiece=TablesOfPiecesGroups["Cell"][i]
-		if maRa()==true then
-			followPath(currPiece,TablesOfPiecesGroups["PathA"],5, 250)
-		else
-			
-		end
+		if currPiece then
+			reset(currPiece)
+					Show(currPiece)
+			if math.random(1,22) > 2 then
+				followPath(unitID, currPiece,TablesOfPiecesGroups["PathA"],5, 250)
+			else
+				disolve(currPiece)
+				for i=1, 5 do 
+				spawnCegAtPiece(unitID, currPiece, "antimatter", math.random(-5,5), math.random(-5,5), math.random(-5,5))
+				end
+				getCegDevil(currPiece)
+			end
 		Hide(currPiece)
+		end
 	end
 	
 	
 end
+
+
+function getCegDevil(currPiece)
+x,y,z=Spring.GetUnitPiecePosDir(unitID,currPiece)
+				StartThread(cegDevil, "antimatter",x,y,z, 5,
+				function(times) 
+				if times > 1500 then 
+				return false 
+				else 
+				return true 
+				end
+				end
+				)
+
+end
 function animationLoop()
+
 	while true do
 		moveNextCellGenerationUp()
 		dissolveOrRetract()
