@@ -2879,28 +2879,53 @@ function script.FireWeapon3()
     return true
 end
 
+function armIdle(speed)
+	upUpArmValue= math.random(-50,-30)
+	upLowArmValue= math.random(-35,0)
+	lowUpArmValue= math.random(0,35)
+	lowLowArmValue= math.random(0,22)
+	upArmUp, upArmLow, lowArmUp, lowArmLow =  A32, AS04,A25, AS03
+	if maRa()==true then
+		upArmUp, upArmLow, lowArmUp, lowArmLow = A25, AS03, A32, AS04
+	end
+
+	Turn(upArmUp,x_axis, math.rad(upUpArmValue), speed)
+	Turn(upArmLow,x_axis, math.rad(upLowArmValue), speed)
+	Turn(lowArmUp,x_axis, math.rad(lowUpArmValue), speed)
+	Turn(lowArmLow,x_axis, math.rad(lowLowArmValue), speed)
+	WaitForTurns(A25, AS03, A32, AS04)
+end
+
+function armIdleChoice(speed, righVal, leftVal)
+
+	if maRa() == true  then 
+		StartThread(armIdle,speed * 2)
+		Turn(ARMR,x_axis,math.rad(0),speed)
+		Turn(ARML,x_axis,math.rad(0),speed)
+	else
+	   equiTurn(ARML, AS04, x_axis, righVal, speed)
+	   equiTurn(ARMR, AS03, x_axis, leftVal, speed)
+	end
+end
+
 function idle(speed)
-    Move(center, y_axis, -10, 3.6)
-    times = 5 / 3
-    rval = iRand(10, 44)
-    equiTurn(ARML, AS04, x_axis, rval, speed)
-    rval = iRand(10, 44)
-    equiTurn(ARMR, AS03, x_axis, rval, speed)
+	armIdleChoice(speed,iRand(10, 44), iRand(10, 44))
+   Move(center, y_axis, -10, 3.6)
+   times = 5 / 3
+  
+   equiTurn(LS08, LK08, x_axis, -20, speed)
+   equiTurn(LS07, LK07, x_axis, -20, speed)
+   rSign = randSign()
+   Turn(bb05, y_axis, math.rad(math.random(12, 22) * rSign), speed)
+   WaitForTurns(LS07, LK07, LS08, LK08, ARML, ARMR)
+   WMove(center, y_axis, -10, 3.6)
 
-    equiTurn(LS08, LK08, x_axis, -20, speed)
-    equiTurn(LS07, LK07, x_axis, -20, speed)
-    rSign = randSign()
-    Turn(bb05, y_axis, math.rad(math.random(12, 22) * rSign), speed)
-    WaitForTurns(LS07, LK07, LS08, LK08, ARML, ARMR)
-    WMove(center, y_axis, -10, 3.6)
-
-    equiTurn(LS08, LK08, x_axis, 0, speed)
-    equiTurn(LS07, LK07, x_axis, 0, speed)
-    equiTurn(ARML, AS04, x_axis, 0, speed)
-    equiTurn(ARMR, AS03, x_axis, 0, speed)
-    Turn(bb05, y_axis, math.rad(math.random(12, 22) * rSign * -1), speed)
-    WMove(center, y_axis, 0, 3.6)
-    WaitForTurns(LS07, LK07, LS08, LK08, ARML, ARMR)
+   equiTurn(LS08, LK08, x_axis, 0, speed)
+   equiTurn(LS07, LK07, x_axis, 0, speed)
+	armIdleChoice(speed, 0, 0)
+   Turn(bb05, y_axis, math.rad(math.random(12, 22) * rSign * -1), speed)
+   WMove(center, y_axis, 0, 3.6)
+   WaitForTurns(LS07, LK07, LS08, LK08, ARML, ARMR)
 end
 
 --<SNIPER>
@@ -3069,11 +3094,11 @@ function smgFireAnimation(pitch) --Aproximated Time of Execution: 0.9333 Seconds
     SetSignalMask(SIG_SMG)
 
 
-    for i = 1, 7, 1 do
-        Turn(ARML, x_axis, math.rad(2.4 * i), 39)
-        Turn(ARMR, x_axis, math.rad(2.4 * i), 39)
-        Turn(AS04, x_axis, math.rad(-2.4 * i) - pitch, 39)
-        Turn(AS03, x_axis, math.rad(-2.4 * i) - pitch, 39)
+    for i = 7, 1, -1 do
+        Turn(ARML, x_axis, math.rad(-2.4 * i), 80)
+        Turn(ARMR, x_axis, math.rad(-2.4 * i), 80)
+        Turn(AS04, x_axis, math.rad(2.4 * i) - pitch, 80)
+        Turn(AS03, x_axis, math.rad(2.4 * i) - pitch, 80)
 
 
         Move(SMG2B03, z_axis, 0, 45)
@@ -3108,7 +3133,7 @@ globalHipTurn = 0
 
 function script.AimWeapon5(heading, pitch)
 
-    if gotPriority(Weapons[eSubMG][7]) == true then
+    if gotPriority(Weapons[eSubMG][ePrioLevl]) == true then
 
         if boolSMGOnlyOnce == false then
             boolSMGOnlyOnce = true

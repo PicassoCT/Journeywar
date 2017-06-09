@@ -242,6 +242,8 @@ function FeedMe()
                 WaitForTurn(sensorT[Sensor], y_axis)
                 DropUnit(T[index])
                 Spring.DestroyUnit(T[index], true, true)
+					  hp= Spring.GetUnitHealth(unitID)
+					  Spring.SetUnitHealth(unitID, hp + 150)
             end
 
             StartThread(adaptiveAnimationThreadStarter, configTable, inPieces, 4, unitID)
