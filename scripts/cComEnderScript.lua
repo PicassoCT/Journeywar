@@ -1047,20 +1047,16 @@ tangleGunT[#tangleGunT + 1] = TangleRota
 
 
 cSniper = {}
-cSniper[#cSniper + 1] = {}
-cSniper[#cSniper] = sniper
-cSniper[#cSniper + 1] = {}
-cSniper[#cSniper] = drum
-cSniper[#cSniper + 1] = {}
-cSniper[#cSniper] = Bolt
-cSniper[#cSniper + 1] = {}
-cSniper[#cSniper] = pin
-cSniper[#cSniper + 1] = {}
-cSniper[#cSniper] = Case
+
+cSniper[#cSniper+1] = sniper
+cSniper[#cSniper+1] = drum
+cSniper[#cSniper+1] = Bolt
+cSniper[#cSniper+1] = pin
+cSniper[#cSniper+1] = Case
 
 
 sniperAmmoTable = {}
-sniperAmmoIterator = 1
+
 for i = 1, 12, 1 do
     name = "Ammo0" .. i
     x = piece(name)
@@ -1068,7 +1064,7 @@ for i = 1, 12, 1 do
     cSniper[#cSniper + 1] = x
     sniperAmmoTable[#sniperAmmoTable + 1] = x
 end
-
+sniperAmmoIterator = #sniperAmmoTable
 FlareGun = {}
 
 fieldscooper = piece "fieldscooper"
@@ -1298,6 +1294,7 @@ function showSniper()
     for i = 1, #cSniper, 1 do
         Show(cSniper[i])
     end
+
 end
 
 function showFlareGun()
@@ -1409,13 +1406,7 @@ end
 function showTime()
     while true do
         Sleep(250)
-        showLegs()
-        showArmor()
-        for i = 1, #Weapons, 1 do
-            if Weapons[i][1] > 0 then
-                d = Weapons[i][4]()
-            end
-        end
+        showLegs()  
     end
 end
 
@@ -1834,26 +1825,19 @@ function delayedSound(soundname, delay)
     spPlaySoundFile(soundname, 1.0)
 end
 
-function echoDebugInfo()
-    while true do
-        Sleep(5500)
-        Spring.Echo("CommenderAmmo:" .. Stats[eProperty][eAmmonition])
-    end
-end
 
 function script.Create()
 	teamID = Spring.GetUnitTeam(unitID)
 	if not  GG.ComEnders then  GG.ComEnders = {} end
 	if not  GG.ComEnders[teamID]  then GG.ComEnders[teamID] = unitID end
 	
-    Spring.SetUnitExperience(unitID, 12)
+    Spring.SetUnitExperience(unitID, 12) --TODO remove
     --	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
     setSpeedComEnder(100 - (50 / Stats[eProperty][eWalkSpeedLimit]) * Stats[eProperty][eWalkSpeed])
     sd = math.floor(math.random(1, 5))
     strings = "sounds/cComEnder/comEnder" .. sd .. ".wav"
     StartThread(delayedSound, strings, 7000)
-    StartThread(echoDebugInfo)
-    --generatepiecesTableAndArrayCode(unitID)
+     --generatepiecesTableAndArrayCode(unitID)
 
 
     resetT(piecesTable)
@@ -1889,12 +1873,14 @@ boolDoNotIdle = false
 
 function idleLoop()
     while true do
+		  if boolSniperPositioning== false then
         if boolWalking == false then
             Sleep(10)
             if boolWalking == false and boolDoNotIdle == false then
                 idle(0.15)
                 Turn(bb05, y_axis, math.rad(0), 0.25)
             end
+        end
         end
 
         Sleep(1000)
@@ -1969,25 +1955,30 @@ function theActualUpgrade(upgradeType)
             --identify Cost
             Weapons[eSubMG][1] = math.min(Weapons[eSubMG][1] + 1, Weapons[eSubMG][2])
             spSetUnitExperience(unitID, XP - 1)
+				Weapons[eSubMG][eShowFunc]()
         end
 
         --GRENADE
         if upgradeType == "GRENADE" and Weapons[eGLauncher][1] ~= Weapons[eGLauncher][2] then
             Weapons[eGLauncher][1] = math.min(Weapons[eGLauncher][1] + 1, Weapons[eGLauncher][2])
             spSetUnitExperience(unitID, XP - 1)
+				Weapons[eGLauncher][eShowFunc]()
         end
 
         --SNIPER
         if upgradeType == "SNIPER" and Weapons[eSniper][1] ~= Weapons[eSniper][2] then
-            Weapons[eSniper][1] = math.min(Weapons[eSniper][1] + 1, Weapons[eSniper][2])
-			Weapons[eSniper][eShowFunc]()
-			StartThread(countDownSniperTimer)
-            spSetUnitExperience(unitID, XP - 1)
+			echo("sniperUpgrade")
+         Weapons[eSniper][1] = math.min(Weapons[eSniper][1] + 1, Weapons[eSniper][2])
+	
+			Weapons[eSniper][eCurrCool] = 0
+         spSetUnitExperience(unitID, XP - 1)
+		 	Weapons[eSniper][eShowFunc]()
         end
         --"SHOTGUN"
         if upgradeType == "SHOTGUN" and Weapons[eTractorGun][1] ~= Weapons[eTractorGun][2] then
             Weapons[eTractorGun][1] = math.min(Weapons[eTractorGun][1] + 1, Weapons[eTractorGun][2])
             spSetUnitExperience(unitID, XP - 1)
+				Weapons[eTractorGun][eShowFunc]()
         end
 
         --"Eater"
@@ -1997,44 +1988,45 @@ function theActualUpgrade(upgradeType)
                 Show(Eater[i])
             end
             spSetUnitExperience(unitID, XP - 1)
+				Weapons[eEater][eShowFunc]()
         end
 
         --"FLAREGUN"
         if upgradeType == "FLARE" and Weapons[eFlareGun][1] ~= Weapons[eFlareGun][2] then
             Weapons[eFlareGun][1] = math.min(Weapons[eFlareGun][1] + 1, Weapons[eFlareGun][2])
-            Weapons[eFlareGun][4]()
+            Weapons[eFlareGun][eShowFunc]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
         if upgradeType == "SLICER" and Weapons[eSlicer][1] ~= Weapons[eSlicer][2] then
             Weapons[eSlicer][1] = math.min(Weapons[eSlicer][1] + 1, Weapons[eSlicer][2])
-            Weapons[eSlicer][4]()
+            Weapons[eSlicer][eShowFunc]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
         if upgradeType == "RAZOR" and Weapons[eRazorGrenade][1] ~= Weapons[eRazorGrenade][2] then
             Weapons[eRazorGrenade][1] = math.min(Weapons[eRazorGrenade][1] + 1, Weapons[eRazorGrenade][2])
-            Weapons[eRazorGrenade][4]()
+            Weapons[eRazorGrenade][eShowFunc]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
         if upgradeType == "TANGLE" and Weapons[eTangleGun][1] ~= Weapons[eTangleGun][2] then
             Weapons[eTangleGun][1] = math.min(Weapons[eTangleGun][1] + 1, Weapons[eTangleGun][2])
-            Weapons[eTangleGun][4]()
+            Weapons[eTangleGun][eShowFunc]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
         if upgradeType == "AROCKET" and Weapons[eAARocket][1] ~= Weapons[eAARocket][2] then
             Weapons[eAARocket][1] = math.min(Weapons[eAARocket][1] + 1, Weapons[eAARocket][2])
 			Weapons[eAARocket][eCoolDown]= 6700/Weapons[eAARocket][1]
-            Weapons[eAARocket][4]()
+            Weapons[eAARocket][eShowFunc]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
         if upgradeType == "GROCKET" and Weapons[eGRocket][1] ~= Weapons[eGRocket][2] then
             Weapons[eGRocket][1] = math.min(Weapons[eGRocket][1] + 1, Weapons[eGRocket][2])
 			Weapons[eGRocket][eCoolDown]= 6700/Weapons[eGRocket][1]
-            Weapons[eGRocket][4]()
+            Weapons[eGRocket][eShowFunc]()
             spSetUnitExperience(unitID, XP - 1)
         end
 
@@ -2202,10 +2194,10 @@ end
 function DT(piecename, piecename2, radx, spx, rady, spy, variance)
 
     if radx ~= nil then
-        var = math.random(-1 * variance, variance)
-        Turn(piecename, x_axis, math.rad(radx + var), spx)
-        var = math.random(-1 * variance, variance)
-        Turn(piecename2, x_axis, math.rad(radx + var), spx)
+        var = math.random(-1 * variance, variance) +radx
+        Turn(piecename, x_axis, math.rad( var), spx)
+        var = math.random(-1 * variance, variance)+ radx
+        Turn(piecename2, x_axis, math.rad(var), spx)
     end
     if rady ~= nil then
         Turn(piecename, y_axis, math.rad(rady), spy)
@@ -2226,273 +2218,275 @@ function walkTheDog()
     globalHipTurn = 0
     while (true) do
         Sleep(70)
-        while boolWalking == true do
-            local lwalkSpeed = Stats[eProperty][eWalkSpeed]
+		  if  boolSniperPositioning == false then
+			while boolWalking == true do
+				local lwalkSpeed = Stats[eProperty][eWalkSpeed]
 
-            Turn(testComEnder3DS, y_axis, math.rad(0), 0.05)
-            --	spPlaySoundFile("sounds/cComEnder/comEnderStep.wav")
-            --<!LEG>
-            Turn(bb05, x_axis, math.rad(3), 0.15)
+				Turn(testComEnder3DS, y_axis, math.rad(0), 0.05)
+				--	spPlaySoundFile("sounds/cComEnder/comEnderStep.wav")
+				--<!LEG>
+				Turn(bb05, x_axis, math.rad(3), 0.15)
 
-            --Turn(ARML,x_axis,math.rad(-3),0.16)
-            --Turn(ARMR,x_axis,math.rad(-3),0.16)
-            --<!LEG>
-            Move(LS10, z_axis, 0, walkSpeed)
-            Move(LS09, z_axis, 0, walkSpeed)
-            lDT(LS10, LS09, 15, 1.7 * lwalkSpeed, 0, walkspeed, 12) ------------------------------------------
-            lDT(LSK10, LSK09, -15, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
-            lDT(LK10, LK09, 0, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
-            lDT(LF3, LF09, 0, 1.7 * lwalkSpeed, nil, nil, 0) ------------------------------------------
+				--Turn(ARML,x_axis,math.rad(-3),0.16)
+				--Turn(ARMR,x_axis,math.rad(-3),0.16)
+				--<!LEG>
+				Move(LS10, z_axis, 0, walkSpeed)
+				Move(LS09, z_axis, 0, walkSpeed)
+				lDT(LS10, LS09, 15, 1.7 * lwalkSpeed, 0, walkspeed, 12) ------------------------------------------
+				lDT(LSK10, LSK09, -15, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
+				lDT(LK10, LK09, 0, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
+				lDT(LF3, LF09, 0, 1.7 * lwalkSpeed, nil, nil, 0) ------------------------------------------
 
-            --<BHLEG>
-            if lLegBoolean == false then
+				--<BHLEG>
+				if lLegBoolean == false then
 
-                lT(LS12, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil) -- added -
-                lT(LSK12, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+					lT(LS12, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil) -- added -
+					lT(LSK12, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
 
-                lT(LK11, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LS11, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-            else
-                lT(LS11, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+					lT(LK11, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LS11, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+				else
+					lT(LS11, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
 
-                lT(LK12, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LS12, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-            end
-            --</BHLEG>
+					lT(LK12, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LS12, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+				end
+				--</BHLEG>
 
-            ------ echo("Ccomender::1")
-            lT(LS08, -27, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK08, -2, lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK08, -21, 1.3 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF1, 49, 2.1 * walkSpeed, nil, nil, nil, nil)
-            ------ echo("Ccomender::2")
+				------ echo("Ccomender::1")
+				lT(LS08, -27, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK08, -2, lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK08, -21, 1.3 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF1, 49, 2.1 * walkSpeed, nil, nil, nil, nil)
+				------ echo("Ccomender::2")
 
-            lT(LS07, 26, 1.4 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK07, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            ------ echo("Ccomender::2a")
-            lT(LSK07, -49, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF07, 29, 2.1 * lwalkSpeed, nil, nil, nil, nil)
-            ------ echo("Ccomender::2b")
-            -- <WAIT>
-            Sleep(500)
-            EmitSfx(LF1, 1025)
-            spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.9)
-            lT(LS08, -5, 2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK08, -27, 3.6 * lwalkSpeed, nil, nil, nil, nil)
-            ------ echo("Ccomender::2c")
-            lT(LSK08, -19, 4 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF1, 49, 8.2 * lwalkSpeed, nil, nil, nil, nil)
-            ------ echo("Ccomender::2d")
-            lT(LS07, 60, 2.1 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK07, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            ------ echo("Ccomender::2e")
-            lT(LSK07, -49, 2.1 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF07, -5, 2.1 * lwalkSpeed, nil, nil, nil, nil)
-
-
-            lDT(LS10, LS09, 45, 1.7 * lwalkSpeed, nil, nil, 6) ------------------------------------------
-            lDT(LSK10, LSK09, -65, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
-            lDT(LK10, LK09, -15, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
-            lDT(LF3, LF09, 35, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
-
-            --<BHLEG>
-            if lLegBoolean == false then
-                lT(LS12, -45, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 5, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK12, 15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
-
-                lT(LS11, 55, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK11, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, -28, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-            else
-                lT(LS11, -45, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 5, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK11, 15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
-
-                lT(LS12, 55, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK12, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, -28, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-            end
-
-            --</BHLEG>
-            --<WAIT>
-            ------ echo("Ccomender::3")
-            Sleep(300)
-            lT(LS08, 26, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK08, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK08, -49, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF1, 29, 2.1 * lwalkSpeed, nil, nil, nil, nil)
-
-            lT(LS07, -2, 3.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK07, 4, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK07, -58, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF07, 59, 3.2 * lwalkSpeed, nil, nil, nil, nil)
-            --<WAIT>
-            --<BHLEG>
-            if lLegBoolean == false then
-                lT(LS12, -25, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 25, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK12, -35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
-
-                lT(LS11, 110, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK11, -90, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 30, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, -45, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-            else
-                lT(LS11, -25, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 25, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK11, -35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
-
-                lT(LS12, 110, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK12, -90, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 30, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, -45, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-            end
-            --</BHLEG>
-
-            lDT(LS10, LS09, 65, 2.7 * lwalkSpeed, nil, nil, 6) ------------------------------------------
-            lDT(LSK10, LSK09, -71, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
-            lDT(LK10, LK09, -25, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
-            lDT(LF3, LF09, 29, 2.7 * lwalkSpeed, nil, nil, 1) ------------------------------------------
-
-            ------ echo("Ccomender::4")
-            Sleep(400)
-            --<!LEG>
-            Turn(bb05, x_axis, math.rad(-1), 0.15)
-            --Turn(ARMR,x_axis,math.rad(1),0.16)
-            --Turn(ARML,x_axis,math.rad(1),0.16)
+				lT(LS07, 26, 1.4 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK07, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				------ echo("Ccomender::2a")
+				lT(LSK07, -49, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF07, 29, 2.1 * lwalkSpeed, nil, nil, nil, nil)
+				------ echo("Ccomender::2b")
+				-- <WAIT>
+				Sleep(500)
+				EmitSfx(LF1, 1025)
+				spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.9)
+				lT(LS08, -5, 2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK08, -27, 3.6 * lwalkSpeed, nil, nil, nil, nil)
+				------ echo("Ccomender::2c")
+				lT(LSK08, -19, 4 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF1, 49, 8.2 * lwalkSpeed, nil, nil, nil, nil)
+				------ echo("Ccomender::2d")
+				lT(LS07, 60, 2.1 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK07, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				------ echo("Ccomender::2e")
+				lT(LSK07, -49, 2.1 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF07, -5, 2.1 * lwalkSpeed, nil, nil, nil, nil)
 
 
-            --<!LEG>
-            lT(LS08, 60, 2.1 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK08, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK08, -49, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF1, -5, 2.1 * lwalkSpeed, nil, nil, nil, nil)
+				lDT(LS10, LS09, 45, 1.7 * lwalkSpeed, nil, nil, 6) ------------------------------------------
+				lDT(LSK10, LSK09, -65, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
+				lDT(LK10, LK09, -15, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
+				lDT(LF3, LF09, 35, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
 
-            lT(LS07, -27, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK07, -2, lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK07, -21, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF07, 49, 4.2 * lwalkSpeed, nil, nil, nil, nil)
+				--<BHLEG>
+				if lLegBoolean == false then
+					lT(LS12, -45, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 5, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK12, 15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
 
-            --<BHLEG>
-            if lLegBoolean == false then
-                lT(LS12, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK12, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+					lT(LS11, 55, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK11, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, -28, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+				else
+					lT(LS11, -45, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 5, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK11, 15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
 
-                lT(LS11, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK11, 15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, -36, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-            else
-                lT(LS11, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK11, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+					lT(LS12, 55, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK12, -10, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, -28, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+				end
 
-                lT(LS12, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK12, 15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, -36, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-            end
-            --</BHLEG>
+				--</BHLEG>
+				--<WAIT>
+				------ echo("Ccomender::3")
+				Sleep(300)
+				lT(LS08, 26, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK08, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK08, -49, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF1, 29, 2.1 * lwalkSpeed, nil, nil, nil, nil)
 
-            lDT(LS10, LS09, 115, 2.7 * lwalkSpeed, -18, walkSpeed, 6)
-            Move(LS10, z_axis, -1, walkSpeed)
-            Move(LS09, z_axis, -1, walkSpeed)
+				lT(LS07, -2, 3.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK07, 4, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK07, -58, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF07, 59, 3.2 * lwalkSpeed, nil, nil, nil, nil)
+				--<WAIT>
+				--<BHLEG>
+				if lLegBoolean == false then
+					lT(LS12, -25, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 25, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK12, -35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
 
-            lDT(LSK10, LSK09, -12, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
-            lDT(LK10, LK09, -80, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
-            lDT(LF3, LF09, -38, 2.7 * lwalkSpeed, nil, nil, 1) ------------------------------------------
+					lT(LS11, 110, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK11, -90, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 30, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, -45, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+				else
+					lT(LS11, -25, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 25, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK11, -35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
 
+					lT(LS12, 110, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK12, -90, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 30, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, -45, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+				end
+				--</BHLEG>
 
-            --<WAIT>
-            ------ echo("Ccomender::5")
+				lDT(LS10, LS09, 65, 2.7 * lwalkSpeed, nil, nil, 6) ------------------------------------------
+				lDT(LSK10, LSK09, -71, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
+				lDT(LK10, LK09, -25, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
+				lDT(LF3, LF09, 29, 2.7 * lwalkSpeed, nil, nil, 1) ------------------------------------------
 
-            Sleep(500)
-            EmitSfx(LF09, 1025)
-            spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.9)
-            lT(LS08, -2, 3.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK08, 4, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK08, -58, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF1, 59, 3.2 * lwalkSpeed, nil, nil, nil, nil)
-
-            lT(LS07, -5, 2.2 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LK07, -27, lwalkSpeed, nil, nil, nil, nil)
-            lT(LSK07, -19, 2.0 * lwalkSpeed, nil, nil, nil, nil)
-            lT(LF07, 49, 4.2 * lwalkSpeed, nil, nil, nil, nil)
-            --<WAIT>
-            ------ echo("Ccomender::6")
-            -- <BHLEG>
-            if lLegBoolean == false then
-                lT(LS12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
-
-                lT(LS11, 0, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK11, -15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 86, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 16, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lLegBoolean = true
-            else
-                lT(LS11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lT(LK11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-
-                lT(LS12, 0, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK12, -15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LSK12, 86, 2.7 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF12, 16, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
-                lLegBoolean = false
-            end
-            --</BHLEG>
-            lDT(LS10, LS09, 15, 3.7 * lwalkSpeed, -9, walkSpeed, 12)
-            lDT(LSK10, LSK09, -78, 3.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
-            lDT(LK10, LK09, 13, 4.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
-            lDT(LF3, LF09, 27, 3.7 * lwalkSpeed, nil, nil, 1)
-
-            Sleep(500)
-            if boolWalking == false then
-                lT(LS08, -5, 2 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LK08, -27, 3.6 * lwalkSpeed, nil, nil, nil, nil)
-                ------ echo("Ccomender::2c")
-                lT(LSK08, -19, 4 * lwalkSpeed, nil, nil, nil, nil)
-                lT(LF1, 49, 8.2 * lwalkSpeed, nil, nil, nil, nil)
-            end
-        end
+				------ echo("Ccomender::4")
+				Sleep(400)
+				--<!LEG>
+				Turn(bb05, x_axis, math.rad(-1), 0.15)
+				--Turn(ARMR,x_axis,math.rad(1),0.16)
+				--Turn(ARML,x_axis,math.rad(1),0.16)
 
 
-        spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.6)
-        spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.7)
-        spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.9)
-        llegs_down(false, 0)
-        if boolWalking == false then
-            resetT(Legg4)
-            resetT(Legg3)
-            resetT(Legg5)
-            resetT(Legg6)
-        end
-        while boolWalking == false do
-            Sleep(50)
-        end
+				--<!LEG>
+				lT(LS08, 60, 2.1 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK08, -9, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK08, -49, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF1, -5, 2.1 * lwalkSpeed, nil, nil, nil, nil)
+
+				lT(LS07, -27, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK07, -2, lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK07, -21, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF07, 49, 4.2 * lwalkSpeed, nil, nil, nil, nil)
+
+				--<BHLEG>
+				if lLegBoolean == false then
+					lT(LS12, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK12, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+
+					lT(LS11, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK11, 15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, -36, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+				else
+					lT(LS11, -15, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 35, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK11, -15, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+
+					lT(LS12, 35, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK12, 15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 35, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, -36, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+				end
+				--</BHLEG>
+
+				lDT(LS10, LS09, 115, 2.7 * lwalkSpeed, -18, walkSpeed, 6)
+				Move(LS10, z_axis, -1, walkSpeed)
+				Move(LS09, z_axis, -1, walkSpeed)
+
+				lDT(LSK10, LSK09, -12, 1.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
+				lDT(LK10, LK09, -80, 1.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
+				lDT(LF3, LF09, -38, 2.7 * lwalkSpeed, nil, nil, 1) ------------------------------------------
+
+
+				--<WAIT>
+				------ echo("Ccomender::5")
+
+				Sleep(500)
+				EmitSfx(LF09, 1025)
+				spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.9)
+				lT(LS08, -2, 3.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK08, 4, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK08, -58, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF1, 59, 3.2 * lwalkSpeed, nil, nil, nil, nil)
+
+				lT(LS07, -5, 2.2 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LK07, -27, lwalkSpeed, nil, nil, nil, nil)
+				lT(LSK07, -19, 2.0 * lwalkSpeed, nil, nil, nil, nil)
+				lT(LF07, 49, 4.2 * lwalkSpeed, nil, nil, nil, nil)
+				--<WAIT>
+				------ echo("Ccomender::6")
+				-- <BHLEG>
+				if lLegBoolean == false then
+					lT(LS12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK12, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, walkSpeed)
+
+					lT(LS11, 0, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK11, -15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 86, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 16, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lLegBoolean = true
+				else
+					lT(LS11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK11, 0, 1.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lT(LK11, 0, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+
+					lT(LS12, 0, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK12, -15, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LSK12, 86, 2.7 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF12, 16, 1.7 * lwalkSpeed, 0, lwalkSpeed, 0, lwalkSpeed)
+					lLegBoolean = false
+				end
+				--</BHLEG>
+				lDT(LS10, LS09, 15, 3.7 * lwalkSpeed, -9, walkSpeed, 12)
+				lDT(LSK10, LSK09, -78, 3.7 * lwalkSpeed, nil, nil, 5) ------------------------------------------
+				lDT(LK10, LK09, 13, 4.7 * lwalkSpeed, nil, nil, 2) ------------------------------------------
+				lDT(LF3, LF09, 27, 3.7 * lwalkSpeed, nil, nil, 1)
+
+				Sleep(500)
+				if boolWalking == false then
+					lT(LS08, -5, 2 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LK08, -27, 3.6 * lwalkSpeed, nil, nil, nil, nil)
+					------ echo("Ccomender::2c")
+					lT(LSK08, -19, 4 * lwalkSpeed, nil, nil, nil, nil)
+					lT(LF1, 49, 8.2 * lwalkSpeed, nil, nil, nil, nil)
+				end
+			end
+
+
+			spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.6)
+			spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.7)
+			spPlaySoundFile("sounds/cComEnder/comEnderStep.wav", 0.9)
+			llegs_down(false, 0)
+			if boolWalking == false then
+				resetT(Legg4)
+				resetT(Legg3)
+				resetT(Legg5)
+				resetT(Legg6)
+			end
+			while boolWalking == false do
+				Sleep(50)
+			end
+		end
     end
 end
 
@@ -2937,14 +2931,15 @@ function script.QueryWeapon4()
     return sniper
 end
 
+boolSniperPositioning=false
 function sniperKneeDown()
     while true do
 
-        if boolSniperGetIntoPosition == true then
+        if boolSniperGetIntoPosition == true and boolWalking == false then
             echo("JW_COMENDERSCRIPT::GetIntoPosition")
-            Turn(bb05, x_axis, -gSniperPitch, 5)
-            Turn(testComEnder3DS, y_axis, gSniperHeading, Stats[eProperty][eWalkSpeed])
-
+				boolWalking = true
+            WTurn(bb05, x_axis, -gSniperPitch, 5)
+            WTurn(testComEnder3DS, y_axis, gSniperHeading, 12)
 
             while (true == Spring.UnitScript.IsInTurn(testComEnder3DS, y_axis)) do
                 echo("JW_COMENDERSCRIPT::Aligning to fire")
@@ -2952,29 +2947,37 @@ function sniperKneeDown()
                 Sleep(500)
             end
             boolWalking = false
+				boolSniperPositioning=true
+
             legs_down()
             --setSpeedComEnder(0)
-            boolWalking = false
 
+				
             DT(LSK10, LSK09, 6, 1.7 * Stats[eProperty][eWalkSpeed], nil, nil, 5) ------------------------------------------
-            DT(LK10, LK09, -130, 1.7 * Stats[eProperty][eWalkSpeed], nil, nil, 2) ------------------------------------------
-            DT(LSK10, LSK09, -82, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, 1)
+            DT(LK10, LK09, 0, 1.7 * Stats[eProperty][eWalkSpeed], nil, nil, 2) ------------------------------------------
+            Turn(LS10, x_axis, math.rad(35), 2.7)
+            Turn(LS09, x_axis, math.rad(35), 2.7)
+			
+				DT(LSK10, LSK09, -36, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, 1)
             DT(LF3, LF09, 32, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, 1)
 
-            T(LS11, 110, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, nil, nil)
-            T(LK11, -90, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, nil, nil)
-            T(LSK11, 30, 1.7 * Stats[eProperty][eWalkSpeed], nil, nil, nil, nil)
-            T(LF11, -45, 1.7 * Stats[eProperty][eWalkSpeed], 0, Stats[eProperty][eWalkSpeed], 0, Stats[eProperty][eWalkSpeed])
+            tP(LS11, 110, 0, 0, 2.7 * Stats[eProperty][eWalkSpeed])
+            tP(LK11, -90,0, 0, 2.7 * Stats[eProperty][eWalkSpeed])
+            tP(LSK11, 30, 0, 0,1.7 * Stats[eProperty][eWalkSpeed])
+            tP(LF11, -45,0, 0, 1.7 * Stats[eProperty][eWalkSpeed])
 
-            T(LS12, 110, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, nil, nil)
-            T(LK12, -90, 2.7 * Stats[eProperty][eWalkSpeed], nil, nil, nil, nil)
-            T(LSK12, 30, 1.7 * Stats[eProperty][eWalkSpeed], nil, nil, nil, nil)
-            T(LF12, -45, 1.7 * Stats[eProperty][eWalkSpeed], 0, Stats[eProperty][eWalkSpeed], 0, Stats[eProperty][eWalkSpeed])
-            boolWalking = false
+            tP(LS12, 110, 0, 0, 2.7 * Stats[eProperty][eWalkSpeed])
+            tP(LK12, -90, 0, 0, 2.7 * Stats[eProperty][eWalkSpeed])
+            tP(LSK12, 30, 0, 0, 1.7 * Stats[eProperty][eWalkSpeed])
+            tP(LF12, -45, 0, 0, 1.7 * Stats[eProperty][eWalkSpeed])
+				Sleep(500)
+				WaitForTurns(DLSK10, LSK09, DLK10, LK09, DLSK10, LSK09, DLF3, LF09, LS11, LK11, LSK11, LF11, LS12, LK12, LSK12, LF12)
+
             boolSniperPermit = true
             while boolSniperPermit == true do
                 Sleep(50)
             end
+
             Turn(testComEnder3DS, y_axis, math.rad(0), 0.05)
 
             boolSniperGetIntoPosition = false
@@ -2988,6 +2991,7 @@ function countDownSniperTimer()
     Weapons[eSniper][eCurrCool] = Weapons[eSniper][eCoolDown] / Weapons[eSniper][1]
     Move(Bolt, z_axis, -40, 68)
     Move(pin, z_axis, -4.3, 19)
+	 boolSniperPositioning=false
     Show(Case)
     WaitForMove(Bolt, z_axis)
     Explode(Case, SFX.FALL + SFX.NO_HEATCLOUD)
@@ -2996,6 +3000,7 @@ function countDownSniperTimer()
     Turn(drum, z_axis, math.rad(sniperAmmoIterator * -13), 15)
     Move(Bolt, z_axis, 0, 68)
     Sleep(Weapons[eSniper][eCurrCool])
+
     Weapons[eSniper][eCurrCool] = 0
 end
 
@@ -3008,18 +3013,15 @@ gSniperPitch = 0
 function script.AimWeapon4(heading, pitch)
     gSniperHeading = heading
     gSniperPitch = pitch
-    echo("CComEnderScript:SniperAiming:1")
+
     if Weapons[eSniper][1] > 0 and Weapons[eSniper][eCurrCool] <= 0 and gotPriority(Weapons[eSniper][ePrioLevl]) == true then
         --Sniper Kneel Animation
-
-        echo("CComEnderScript:SniperAiming:2")
-
             if boolSniperOnce == false then
                 boolSniperGetIntoPosition = true
                 boolSniperOnce = true
             end
             releasePriority(Weapons[eSniper][7])
-            echo("CComEnderScript:SniperAiming:3")
+            echo("CComEnderScript:SniperAiming:3"..boolToString(boolSniperPermit).."/"..boolToString(boolOutOfAmmo))
             return boolSniperPermit == true and boolOutOfAmmo == false
  
     end
@@ -3034,11 +3036,12 @@ function script.FireWeapon4()
     WaitForMove(pin, z_axis)
 
     if math.random(0, 1) == 1 then spPlaySoundFile("sounds/cComEnder/Sniper/comEndSniper.wav", 0.7) else spPlaySoundFile("sounds/cComEnder/Sniper/comEndSniperV2.wav", 0.9) end
-    sniperAmmoIterator = ((sniperAmmoIterator) % 12) + 1
-    if sniperAmmoIterator == 11 then
+    sniperAmmoIterator = (sniperAmmoIterator) - 1
+    if sniperAmmoIterator == 1 then
         for i = 1, #sniperAmmoTable, 1 do
             Show(sniperAmmoTable[i])
         end
+		sniperAmmoIterator= #sniperAmmoTable
     end
     Hide(sniperAmmoTable[sniperAmmoIterator])
     _, _, _, recoilX, recoilY, recoilZ = spGetUnitPiecePosDir(unitID, sniper)
