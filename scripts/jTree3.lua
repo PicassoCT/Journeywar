@@ -74,11 +74,16 @@ function waterWays()
 	
 end
 
+function actualTrample()
+Sleep(500)
+Spring.DestroyUnit(unitID,false,true)
+
+end
 
 
 function TreeTrample()
 
-	Spring.DestroyUnit(unitID,false,true)
+	StartThread(actualTrample)
 end
 _,maxhp=Spring.GetUnitHealth(unitID)
 

@@ -31,19 +31,13 @@ sbranch1=piece"sbranch1"
 sbranch2=piece"sbranch2"
 sbranch3=piece"sbranch3"
 sbranch4=piece"sbranch4"
+function actualTrample()
+Sleep(500)
+Spring.DestroyUnit(unitID,false,true)
 
-function TrampledAnimation()
-	Turn(center,z_axis,math.rad(30),0.3)
-	WaitForTurn(center,z_axis)
-	Turn(center,z_axis,math.rad(60),1)
-	WaitForTurn(center,z_axis)
-	Turn(center,z_axis,math.rad(65),2.2)
-	WaitForTurn(center,z_axis)
-	Turn(center,z_axis,math.rad(89),6)
 end
 function TreeTrample()
-	StartThread(TrampledAnimation)
-	Spring.DestroyUnit(unitID,false)
+StartThread(actualTrample)
 end
 
 rotable[table.getn(rotable)+1]={}

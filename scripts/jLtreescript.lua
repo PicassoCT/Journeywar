@@ -43,9 +43,8 @@ function divcompare(it,val,pos)
 	
 end
 
-
-function TreeTrample()
-	
+function actualTrample()
+Sleep(500)
 	for i=1, NUMBEROFPIECES do
 		if maRa()==true then 
 			StartThread(DropPieceToGround,
@@ -59,7 +58,13 @@ function TreeTrample()
 		end
 	end
 	
-	Spring.DestroyUnit(unitID,true,false)
+Spring.DestroyUnit(unitID,false,true)
+
+end
+
+function TreeTrample()
+	StartThread(actualTrample)
+
 end
 
 RADOFPIECE=15
