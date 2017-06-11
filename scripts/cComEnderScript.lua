@@ -1410,11 +1410,6 @@ function showTime()
 		Sleep(250)
 		showLegs()
 		showArmor()
-		for i=1, #Weapons, 1 do
-			if Weapons[i][1] > 0 then
-				d=Weapons[i][4]()
-			end
-		end
 	end
 	
 end
@@ -1879,9 +1874,10 @@ function script.Create()
 	StartThread(ammoFacLoop)
 	StartThread(reactorThread)
 	StartThread(idleLoop)
-	
+
 	
 end
+
 
 function script.StopBuilding()
 	SetUnitValue(COB.INBUILDSTANCE, 0)
