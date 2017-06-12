@@ -31,6 +31,36 @@ local controllCommand_window
 VFS.Include("LuaUI/widgets/guiEnums.lua")
 VFS.Include("LuaUI/widgets/gui_helper.lua")
 
+---------------------------------------------------------------------------------------
+
+local function GetModKeys()
+	
+	local alt, ctrl, meta, shift =  Spring.GetModKeyState()
+	
+	if Spring.GetInvertQueueKey() then -- Shift inversion
+		shift = not shift
+	end
+	
+	return alt, ctrl, meta, shift
+end
+
+local function GetCmdOpts(alt, ctrl, meta, shift, right)
+	
+	local opts = { alt=alt, ctrl=ctrl, meta=meta, shift=shift, right=right }
+	local coded = 0
+	
+	if alt   then coded = coded + CMD_OPT_ALT   end
+	if ctrl  then coded = coded + CMD_OPT_CTRL  end
+	if meta  then coded = coded + CMD_OPT_META  end
+	if shift then coded = coded + CMD_OPT_SHIFT end
+	if right then coded = coded + CMD_OPT_RIGHT end
+	
+	opts.coded = coded
+	return opts
+end
+
+---------------------------------------------------------------------------------------
+
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 
@@ -101,7 +131,12 @@ extendedMenue[CMD.CLOAK] ={
 						{x= 0, y = 80}},
 	backgroundCol=backgroundColExtended,
 	caption= "CLOAK",
-	callbackFunction=function()Spring.Echo("Set Units to Cloak") end
+	callbackFunction=function()
+	alt, ctrl, meta, shift = GetModKeys()
+	options = GetCmdOpts(alt, ctrl, meta, shift, usingRMB)
+	Spring.GiveOrder(CMD.CLOAK, {0}, options)
+	echo("Cloak Command")
+	end
 }	
 
 extendedMenue[CMD.RESTORE] ={		
@@ -410,4 +445,36 @@ function widget:Initialize()
 			base_stack,			
 		},
 	}
+end
+
+			overriddenCmd = nil
+			overriddenTarget = nil
+			usingCmd = nil
+			usingRMB=false
+			
+function widget:MousePress(mx, my, mButton)
+	
+
+	-- Where did we click
+	inMinimap = Spring.IsAboveMiniMap(mx, my)
+	if inMinimap and not MiniMapFullProxy then return false end
+	
+	-- Get command that would've been issued
+	local _, activeCmdID = Spring.GetActiveCommand()
+	if activeCmdID then
+		if mButton ~= 1 then 
+			return false 
+		end
+		
+		usingCmd = activeCmdID
+		usingRMB = false
+	else
+		if mButton ~= 3 then 
+			return false 
+		end
+		
+		
+		usingRMB = true
+	end
+
 end

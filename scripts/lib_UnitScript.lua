@@ -1308,6 +1308,11 @@ function makePieceTable(unitID)
     return RetT
 end
 
+function resetAll()
+	pieceTable=  makePieceTable(unitID)
+	resetT(pieceTable)
+end
+
 -->generates a Pieces List 
 function generatepiecesTableAndArrayCode(unitID, boolLoud)
     bLoud = boolLoud or false

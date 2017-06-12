@@ -140,6 +140,7 @@ flowerRange = 180
 local oneShot = true
 --flying Animation for a seedpod
 function flySeed(nr)
+	
     Move(Seed[nr], y_axis, 0, 0)
     Move(Seed[nr], x_axis, 0, 0)
     Move(Seed[nr], z_axis, 0, 0)
@@ -161,19 +162,19 @@ function flySeed(nr)
     Move(Seed[nr], z_axis, wz * 122, 8)
     Move(Seed[nr], y_axis, 0, (randSpeed / 10) * 3)
     WaitForMove(Seed[nr], y_axis)
-
-    if boolAtLeatOne == false then
+	
+	if boolFullGrown == true and boolAtLeatOne == false then
 
         boolAtLeatOne = true
         px, py, pz = Spring.GetUnitPiecePosDir(unitID, Seed[nr])
         teamid = Spring.GetUnitTeam(unitID)
         GG.UnitsToSpawn:PushCreateUnit("jfireflower", px, py, pz, 0, teamid)
-        Sleep(12000)
-        delayedDestruction()
     end
+
 
     Hide(Seed[nr])
 end
+
 
 local lEmitSfx = EmitSfx
 --Emit the flameCegs registrated
@@ -192,7 +193,7 @@ end
 
 --Move Slowflames outwards
 function slowFlameMover()
-    while (true) do
+    while ( boolFullGrown == true) do
         randSpeed = math.random(0.1, 0.2)
         Move(fireFx1, x_axis, 50, randSpeed)
         Sleep(1000)
@@ -323,11 +324,10 @@ end
 
 --emit Fire inwards
 function cyclesOfFire()
-    --StartThread(slowFlameMover)
     Hide(fireFx1)
     Hide(fireFx2)
     Hide(fireFx3)
-    while (true) do
+    while ( boolFullGrown == true) do
         Spin(spiralCenter, y_axis, math.rad(42), 0.3)
         emitOneOfFour(fireFx1)
         emitOneOfFour(fireFx2)
@@ -340,7 +340,7 @@ end
 
 function centerFire()
     local splEmitSfx = EmitSfx
-    while (true) do
+    while(  boolFullGrown == true) do
         splEmitSfx(centerFireFx, 1033)
         Sleep(50)
     end
@@ -372,7 +372,7 @@ end
 --dust going inwards
 function dirtSuckedInwards()
     local splEmitSfx = EmitSfx
-    while (true) do
+    while ( boolFullGrown == true) do
         randAdditive = math.random(0, 120)
         for i = 1, 6, 1 do
             randDegree = math.random(-15, 15)
@@ -481,7 +481,7 @@ end
 function fireLight()
     deci = 1
     local splEmitSfx = EmitSfx
-    while (true) do
+    while(  boolFullGrown == true) do
         splEmitSfx(spiralCenter, 1027)
         randSleep = math.random(44, 78)
         Sleep(randSleep)
@@ -501,7 +501,7 @@ function suckInFire()
     done = 0
     local splEmitSfx = EmitSfx
     local lheigthTable = heigthTable
-    while (true) do
+    while(  boolFullGrown == true) do
         randy = math.random(-22, 22)
         it = 0
 
@@ -536,7 +536,7 @@ function haveSoundArround()
     local spPlaySoundFile = Spring.PlaySoundFile
     spPlaySoundFile("sounds/jfireflower/fireflowgrowth.wav")
     Sleep(5000)
-    while (true) do
+    while(  boolFullGrown == true) do
         di = math.random(0, 1)
         if di == 1 then
 
@@ -612,7 +612,7 @@ function theBigFireStorm()
     StartThread(haveSoundArround)
     Spin(spiralCenter, y_axis, math.rad(42), 0.5)
     Sleep(3200)
-    while (true) do
+
         --EmitBubbles
         for i = 1, 11, 1 do
             for a = 1, internalAffairs[i], 1 do
@@ -655,18 +655,16 @@ function theBigFireStorm()
         EmitSfx(spiralCenter, 1025)
         Spring.PlaySoundFile("sounds/jfireflower/ignite.wav")
         StartThread(fireLight)
-
-
-        while boolAtLeatOne == false do
+	
+		for i= 1, 45 , 1 do 
             goTooKillThemAllPicaMon()
             Sleep(1000)
         end
-        while true do
-            goTooKillThemAllPicaMon()
-            Sleep(1000)
-        end
+		Turn(ffrotator, y_axis, math.rad(0), 0.72)
+		WMove(ffrotator, y_axis, -166, 0.92)
+		
         Sleep(1000)
-    end
+		initialization()
 end
 
 function reSeed()
@@ -686,7 +684,7 @@ function seedToBeFeed()
     Hide(Pod)
     Hide(ClosedPod)
     Sleep(4000)
-    boolFullGrown = false
+
     --Move Pod up
     Move(Pod, y_axis, -80, 0)
     Show(ClosedPod)
@@ -749,7 +747,10 @@ function getSfxHeigth()
     return (maxGroundheigth - baseHeigth) + constOffset
 end
 
-function script.Create()
+function initialization()
+	boolFullGrown = false
+	boolAtLeatOne = false
+	resetAll()
     hideT(piecesTable)
     Move(ffrotator, y_axis, -166, 0)
     Move(ffmain01, y_axis, -200, 0)
@@ -766,15 +767,15 @@ function script.Create()
 
     x360 = math.random(0, 360)
     Turn(center, y_axis, math.rad(x360), 0)
-    StartThread(seedToBeFeed)
+	
+	StartThread(seedToBeFeed)
 end
 
---What have i done?
-function SacrificeToTheDevs(goat)
-    if goat == nil then
-        os.exit()
-    end
+
+function script.Create()
+	initialization()
 end
+
 
 aimspot = piece "aimspot"
 --- AIMING & SHOOTING---
@@ -810,10 +811,7 @@ function imOnFire(burningManID)
     Spring.DestroyUnit(burningManID, true, false)
 end
 
-function delayedDestruction()
-    Sleep(9000)
-    Spring.DestroyUnit(unitID, false, true)
-end
+
 
 function script.FireWeapon1()
 
@@ -823,6 +821,7 @@ function script.FireWeapon1()
     StartThread(theBigFireStorm)
 
     StartThread(unfoldFlowers)
+	return true
 end
 
 
@@ -831,5 +830,12 @@ function script.Killed(recentDamage, maxHealth)
     x, y, z = Spring.GetUnitPosition(unitID)
     if not GG.AddFire then GG.AddFire = {} end
     GG.AddFire[#GG.AddFire + 1] = { x = x, y = y, z = z }
+	
+	size = 10
+    if GG.DynDefMap == nil then GG.DynDefMap = {} end
+    if GG.DynRefMap == nil then GG.DynRefMap = {} end
+    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(siz, -4)
+	
     return 1
 end

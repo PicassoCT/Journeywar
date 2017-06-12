@@ -82,6 +82,7 @@ end
 
 --resets all the Pieces involved in the Units Animation (visible and invisible)
 function resetAllUnitPieces(speed)
+	speed = speed or 0
     stopSpinT(locT, y_axis, 0)
     stopSpinT(locM, y_axis, 0)
     stopSpinT(locPtW, y_axis, 0)
