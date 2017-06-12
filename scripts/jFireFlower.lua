@@ -734,7 +734,7 @@ function getSfxHeigth()
     maxGroundheigth = baseHeigth
 
     for i = 1, 360, 1 do
-        ox, oz = RotationMatrice(0, 270, math.rad(i))
+        ox, oz = Rotate(0, 270, math.rad(i))
 
         gh = Spring.GetGroundHeight(bx + ox, bz + oz)
         if gh > baseHeigth then

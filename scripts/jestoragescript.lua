@@ -234,7 +234,7 @@ function relativeUpRight(bodyVec)
     bodyVec.y = bodyVec.y
     bodyVec.z = bodyVec.z * -1
     return bodyVec
-    --return vec3MulMatrice3x3(bodyVec,YRotationMatrice(180))
+    --return vec3MulMatrice3x3(bodyVec,YRotate(180))
 end
 
 --controlls the "fluid" moving around in the jestorage

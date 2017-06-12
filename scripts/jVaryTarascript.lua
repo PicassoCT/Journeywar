@@ -87,7 +87,7 @@ function buildMoma(varyFooos)
                     StartThread(partOfShipPartOfCrew, AttachPoints[indexP], varyFooos[i])
 
                 else
-                    ox, oz = RotationMatrice(0, 50 + (varyFooos[i] % 120), ((varyFooos[i] * 150) % 3000) + frame / 64)
+                    ox, oz = Rotate(0, 50 + (varyFooos[i] % 120), ((varyFooos[i] * 150) % 3000) + frame / 64)
                     Spring.SetUnitMoveGoal(varyFooos[i], x + ox, y, z + oz)
                 end
             end

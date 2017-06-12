@@ -728,6 +728,7 @@ if (gadgetHandler:IsSyncedCode()) then
         --only if the unit is hitsphere wise big enough
         hp, maxhp = Spring.GetUnitHealth(unitID)
         if hp / maxhp < 0.5 and hp > 300 then
+			if maRa() then
             pieceID = getUnitBiggestPiece(unitID)
             Spring.UnitAttach(unitID, slicerColum, pieceID)
 
@@ -735,6 +736,22 @@ if (gadgetHandler:IsSyncedCode()) then
             Spring.SetUnitNoSelect(slicerColum, true)
             if not GG.SlicerTable then GG.SlicerTable = {} end
             GG.SlicerTable[slicerColum] = unitID
+			else
+				rootPiece= Spring.GetUnitLastAttackedPiece(unitID)
+				px, py ,pz = Spring.GetUnitPosition(unitID)
+				ax, ay, az = Spring.GetUnitPosition(attackerID)
+				if attackerID then
+				
+				func = function (persPack)
+						unitRipAPieceOut(persPack.unitID, persPack.rootPiece, persPack.shootvec, 150, false)
+					return true, persPack
+				end
+				persPack = { unitID = unitID, rootPiece = rootPiece, shootvec= {x = ax -px, y =ay-py, z= az-pz}}
+				createStreamEvent(unitID, func, 3, persPack)
+				
+				
+				end
+			end
         end
     end
 

@@ -1597,6 +1597,48 @@ function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate)
     end
 end
 
+--> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
+function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
+	shotVector= shotVector*-1
+	echo("unitRipAPieceOut called")
+	-- LimbMap= getPiecesBelow(unitID, rootPiece)
+	-- stunUnit(unitID, 64)
+	-- env = Spring.UnitScript.GetScriptEnv(unitID)
+	
+	-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
+	-- spinTime= 0
+	-- parabelFactor=0.5
+	-- env.Spin(rootPiece,x_axis, math.rad(55),0)
+
+		-- movePieceInParabel(unitID, pieceName, vector, factor, parabelLength)
+	
+		-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
+	
+	-- if groundHeigth < 0 then
+		-- stunUnit(unitID, 0)
+		-- if boolSurvivorHeCanTakeIt == true then
+			-- hideT(LimbMap)
+		-- else
+			-- Spring.DestroyUnit(unitID, false, false)
+		-- end 
+	-- end 
+	
+end
+
+function movePieceInParabel(unitID, pieceName, yDegreeOffset, xDegreeOffset, valueToGo, valueStart, offsetY, steepness, env, speed)
+	px, py, pz=Spring.GetUnitPiecePosDir(unitID, pieceName)
+	
+	y = -1* (steepness * math.min(valueStart, valueToGo)^2 ) + offSetY
+	y = Rotate(0, y, xDegreeOffset) 	
+	x = Rotate(0, valueToGo, yDegreeOffset)
+	
+	env.MovePieceToPos(unitID, pieceName, x, y, z, )
+	
+	--TODO rotation matric on result Values
+	return px, py + y, pz
+end
+
+
 -->Recursively Resets Tables
 function recResetT(Table, speed)
     if type(Table) == "table" then
@@ -1608,6 +1650,7 @@ function recResetT(Table, speed)
     end
 end
 
+--> Resets a piece
 function reset(piecename, speed, boolWaitForIT, boolIstantUpdate)
     if not piecename then return end
     if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename .. " of type " .. type(piecename) .. " instead"); assert(true == false); end

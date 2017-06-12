@@ -721,3 +721,41 @@ function getDayTime()
     seconds = 60 - ((24 * 60 * 60 - (hours * 60 * 60) - (minutes * 60)) % 60)
     return hours, minutes, seconds
 end
+
+--> Creates a Eventstream Event
+function createStreamEvent(unitID, func, framerate, persPack)
+	persPack.unitID = unitID
+	persPack.startFrame = Spring.GetGameFrame()
+	persPack.functionToCall = func
+	
+	eventFunction = function(id, frame, persPack)
+                nextFrame = frame + framerate
+                if persPack then
+                    if persPack.unitID then
+                        --check
+                        boolDead = Spring.GetUnitIsDead(persPack.unitID)
+
+                        if boolDead and boolDead == true then
+                            return nil, nil
+                        end
+
+                        if not persPack.startFrame then
+                            persPack.startFrame = frame
+                        end
+
+                        if persPack.startFrame then
+                            nextFrame = persPack.startFrame + framerate
+							persPack.startFrame = nil
+                        end                     
+                    end
+                end
+			
+			boolDoneFor, persPack = functionToCall(persPack)
+			if boolDoneFor then
+				return nil 
+			end
+				
+                return nextFrame, persPack
+            end
+
+            GG.EventStream:CreateEvent(eventFunction, persPack, Spring.GetGameFrame() + 1)

@@ -11,6 +11,7 @@ function widget:GetInfo()
 		hidden= true,
 	}
 end
+
 --Shared Data
 local Chili
 local Button
@@ -38,6 +39,7 @@ local spGetSelectedUnits = Spring.GetSelectedUnits
 if not WG.SelectedCommand then WG.SelectedCommand ={} end
 playerID= Spring.GetMyPlayerID()
 if not WG.SelectedCommand[playerID] then WG.SelectedCommand[playerID] ={} end
+boolQueueOverride = false
 
 BaseCol={0.1,0.8,0.8,1}
 WeapCol={0.3,0.6,0.8,1}
@@ -67,10 +69,10 @@ extendedMenue[CMD.RECLAIM] ={
 	callbackFunction=function()
 		selectedUnits=spGetSelectedUnits();
 		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable()
+			commandTable= getCommandTable(boolQueueOverride)
 			typeParam, param = getCommandTarget()
 			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i],CMD.RECLAIM, param, commandTable)
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.RECLAIM, param, commandTable)
 			end
 		end
 	end
@@ -82,7 +84,16 @@ extendedMenue[CMD.LOAD_UNITS] ={
 	{x= 0, y = 40}	},
 	backgroundCol=backgroundColExtended,
 	caption=	"LOAD",
-	callbackFunction=function() Spring.Echo("Switch to Drop at MouseLocation")end
+		callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.LOAD_UNITS, param, commandTable)
+			end
+		end
+	end
 }
 extendedMenue[CMD.UNLOAD_UNITS] ={
 	triStrip={
@@ -92,7 +103,16 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 	{x= 0, y = 40}	},
 	backgroundCol=backgroundColExtended,
 	caption=	"DROP",
-	callbackFunction=function() Spring.Echo("Switch to Drop at MouseLocation")end
+	callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.UNLOAD_UNITS, param, commandTable)
+			end
+		end
+	end
 }
 
 extendedMenue[CMD.CLOAK] ={
@@ -101,7 +121,16 @@ extendedMenue[CMD.CLOAK] ={
 						{x= 0, y = 80}},
 	backgroundCol=backgroundColExtended,
 	caption= "CLOAK",
-	callbackFunction=function()Spring.Echo("Set Units to Cloak") end
+	callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, param, commandTable)
+			end
+		end
+	end
 }	
 
 extendedMenue[CMD.RESTORE] ={		
@@ -110,8 +139,17 @@ extendedMenue[CMD.RESTORE] ={
 					{x= 0	, y = 40}},
 	backgroundCol=backgroundColExtended,
 	caption= "RESTORE",
-	callbackFunction=function()Spring.Echo("Set Unit to Ground Restore") end
-}	
+	callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.RESTORE, param, commandTable)
+			end
+		end
+	end
+	}	
 extendedMenue[CMD.OPT_SHIFT] ={
 	triStrip={	{x= 0, y = 0},			
 	{x= 100, y = 30},
@@ -119,7 +157,10 @@ extendedMenue[CMD.OPT_SHIFT] ={
 	{x= 100, y = 80}},
 	backgroundCol=backgroundColExtended,
 	caption= "QUEUE",
-	callbackFunction=function(self,...) self.backgroundCol ={163/255, 229/255, 243/255, 0.75} Spring.Echo("Hi QUEUE")end
+	callbackFunction=function(self,...)
+		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		boolQueueOverride = not boolQueueOverride
+		end
 }
 
 MainMenue={
@@ -410,4 +451,35 @@ function widget:Initialize()
 			base_stack,			
 		},
 	}
+end
+
+
+function widgetHandler:MouseRelease(x, y, button)
+	local mo = self.mouseOwner
+	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+	if (not (lmb or mmb or rmb)) then
+		return false
+	end
+	
+	if rmb and rmb == true then
+		if WG.SelectedCommand[mo] then
+			for command, active in pairs(WG.SelectedCommand[mo]) do
+			if active == true then
+				selectedUnits=Spring.GetSelectedUnits();
+				if selectedUnits and #selectedUnits > 0 then
+					commandTable= getCommandTable(boolQueueOverride)
+					typeParam, param = getCommandTarget()
+					for i=1,#selectedUnits do
+						Spring.GiveOrderToUnit(selectedUnits[i], command, param, commandTable)
+					end
+					
+					WG.SelectedCommand[mo][command] = not active
+					break
+				end
+			end
+			end
+		end
+		
+	return true
+	end
 end

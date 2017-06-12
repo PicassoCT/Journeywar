@@ -320,7 +320,7 @@ function keepFeetRelative(targPoint, center, sensor, Signal, upLeg, Leg, lowLeg,
         deg = (orgHeading - currentHeading)
 
         -- we turn the MoveVector by
-        tx, tz = RotationMatrice(tx, tz, math.rad(currentHeading + deg)) --rad
+        tx, tz = Rotate(tx, tz, math.rad(currentHeading + deg)) --rad
 
 
         --Velocity comes as elmos per frame

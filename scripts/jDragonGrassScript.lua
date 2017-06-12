@@ -52,7 +52,7 @@ function putDrugPieceInPlace(nr)
     degree = 360 * (nr / #DrugPieceList) + math.sin(Spring.GetGameFrame() / 3000)
 
 
-    px, pz = RotationMatrice(0, DrugRange, math.rad(degree) * nr)
+    px, pz = Rotate(0, DrugRange, math.rad(degree) * nr)
     moveUnitPieceToRelativeWorldPos(unitID, footneedle, px, pz, 22)
 
     WaitForMove(footneedle, y_axis)
