@@ -626,8 +626,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
     UnitDamageFuncT[greenSeerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 
-        hitPoints = Spring.GetUnitHealth(unitID)
-        if damage / hitPoints > 0.3 then
+        hitPoints, maxHP = Spring.GetUnitHealth(unitID)
+        if hitPoints - damage <= 0 and maxHP > 450 then
             x, y, z = Spring.GetUnitPosition(unitID)
             Spring.DestroyUnit(unitID)
             Spring.CreateUnit("jtree1", x, y, z, 1, attackerTeam)
