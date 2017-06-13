@@ -1044,7 +1044,7 @@ function LoopBirthEggs()
         index = index % 8 + 1
 
         Move(EggT[index], y_axis, 15, 0)
-        offx, offy = RotationMatrice(0, -8, math.rad(degToTurn))
+        offx, offy = Rotate(0, -8, math.rad(degToTurn))
         Move(EggT[index], x_axis, offx, 0)
         Move(EggT[index], z_axis, offy, 0)
         Sleep(10)

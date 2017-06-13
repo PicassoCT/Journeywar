@@ -11,6 +11,7 @@ function widget:GetInfo()
 		hidden= true,
 	}
 end
+
 --Shared Data
 local Chili
 local Button
@@ -35,7 +36,7 @@ VFS.Include("LuaUI/widgets/gui_helper.lua")
 
 local function GetModKeys()
 	
-	local alt, ctrl, meta, shift =  Spring.GetModKeyState()
+	local alt, ctrl, meta, shift = Spring.GetModKeyState()
 	
 	if Spring.GetInvertQueueKey() then -- Shift inversion
 		shift = not shift
@@ -49,9 +50,9 @@ local function GetCmdOpts(alt, ctrl, meta, shift, right)
 	local opts = { alt=alt, ctrl=ctrl, meta=meta, shift=shift, right=right }
 	local coded = 0
 	
-	if alt   then coded = coded + CMD_OPT_ALT   end
-	if ctrl  then coded = coded + CMD_OPT_CTRL  end
-	if meta  then coded = coded + CMD_OPT_META  end
+	if alt then coded = coded + CMD_OPT_ALT end
+	if ctrl then coded = coded + CMD_OPT_CTRL end
+	if meta then coded = coded + CMD_OPT_META end
 	if shift then coded = coded + CMD_OPT_SHIFT end
 	if right then coded = coded + CMD_OPT_RIGHT end
 	
@@ -68,6 +69,7 @@ local spGetSelectedUnits = Spring.GetSelectedUnits
 if not WG.SelectedCommand then WG.SelectedCommand ={} end
 playerID= Spring.GetMyPlayerID()
 if not WG.SelectedCommand[playerID] then WG.SelectedCommand[playerID] ={} end
+boolQueueOverride = false
 
 BaseCol={0.1,0.8,0.8,1}
 WeapCol={0.3,0.6,0.8,1}
@@ -97,10 +99,10 @@ extendedMenue[CMD.RECLAIM] ={
 	callbackFunction=function()
 		selectedUnits=spGetSelectedUnits();
 		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable()
+			commandTable= getCommandTable(boolQueueOverride)
 			typeParam, param = getCommandTarget()
 			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i],CMD.RECLAIM, param, commandTable)
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.RECLAIM, param, commandTable)
 			end
 		end
 	end
@@ -112,7 +114,16 @@ extendedMenue[CMD.LOAD_UNITS] ={
 	{x= 0, y = 40}	},
 	backgroundCol=backgroundColExtended,
 	caption=	"LOAD",
-	callbackFunction=function() Spring.Echo("Switch to Drop at MouseLocation")end
+	callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.LOAD_UNITS, param, commandTable)
+			end
+		end
+	end
 }
 extendedMenue[CMD.UNLOAD_UNITS] ={
 	triStrip={
@@ -122,39 +133,71 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 	{x= 0, y = 40}	},
 	backgroundCol=backgroundColExtended,
 	caption=	"DROP",
-	callbackFunction=function() Spring.Echo("Switch to Drop at MouseLocation")end
+	callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.UNLOAD_UNITS, param, commandTable)
+			end
+		end
+	end
 }
 
 extendedMenue[CMD.CLOAK] ={
 		triStrip={	{x= 0, y = 0},			
-						{x= 160, y = 40},
-						{x= 0, y = 80}},
+		{x= 160, y = 40},
+	{x= 0, y = 80}},
 	backgroundCol=backgroundColExtended,
 	caption= "CLOAK",
 	callbackFunction=function()
-	alt, ctrl, meta, shift = GetModKeys()
-	options = GetCmdOpts(alt, ctrl, meta, shift, usingRMB)
-	Spring.GiveOrder(CMD.CLOAK, {0}, options)
-	echo("Cloak Command")
+		<<<<<<< HEAD
+		alt, ctrl, meta, shift = GetModKeys()
+		options = GetCmdOpts(alt, ctrl, meta, shift, usingRMB)
+		Spring.GiveOrder(CMD.CLOAK, {0}, options)
+		echo("Cloak Command")
+		=======
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, param, commandTable)
+			end
+		end
+		
 	end
 }	
 
 extendedMenue[CMD.RESTORE] ={		
 		triStrip={	{x= 100	, y = 15},
-					{x= 100	, y = 70},			
-					{x= 0	, y = 40}},
+		{x= 100	, y = 70},			
+	{x= 0	, y = 40}},
 	backgroundCol=backgroundColExtended,
 	caption= "RESTORE",
-	callbackFunction=function()Spring.Echo("Set Unit to Ground Restore") end
+	callbackFunction=function()
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)
+			typeParam, param = getCommandTarget()
+			for i=1,#selectedUnits do
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.RESTORE, param, commandTable)
+			end
+		end
+	end
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
-	triStrip={	{x= 0, y = 0},			
-	{x= 100, y = 30},
-	{x= 0, y = 80},
+		triStrip={	{x= 0, y = 0},			
+		{x= 100, y = 30},
+		{x= 0, y = 80},
 	{x= 100, y = 80}},
 	backgroundCol=backgroundColExtended,
 	caption= "QUEUE",
-	callbackFunction=function(self,...) self.backgroundCol ={163/255, 229/255, 243/255, 0.75} Spring.Echo("Hi QUEUE")end
+	callbackFunction=function(self,...)
+		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		boolQueueOverride = not boolQueueOverride
+	end
 }
 
 MainMenue={
@@ -175,10 +218,10 @@ function getCommandTarget()
 end
 
 MainMenue[CMD.ATTACK] ={		
-triStrip={{x= 80, y = 0},			
-	{x= 0, y = 0},
-	{x= 80, y = 70},						
-	{x= 0, y = 70},
+		triStrip={{x= 80, y = 0},			
+		{x= 0, y = 0},
+		{x= 80, y = 70},						
+		{x= 0, y = 70},
 	{x= 0, y = 100}}	,
 	backgroundCol={163/255, 229/255, 243/255, 0.75},
 	caption=	"|ATTAC",
@@ -447,34 +490,35 @@ function widget:Initialize()
 	}
 end
 
-			overriddenCmd = nil
-			overriddenTarget = nil
-			usingCmd = nil
-			usingRMB=false
-			
-function widget:MousePress(mx, my, mButton)
-	
 
-	-- Where did we click
-	inMinimap = Spring.IsAboveMiniMap(mx, my)
-	if inMinimap and not MiniMapFullProxy then return false end
-	
-	-- Get command that would've been issued
-	local _, activeCmdID = Spring.GetActiveCommand()
-	if activeCmdID then
-		if mButton ~= 1 then 
-			return false 
-		end
-		
-		usingCmd = activeCmdID
-		usingRMB = false
-	else
-		if mButton ~= 3 then 
-			return false 
-		end
-		
-		
-		usingRMB = true
+
+function widgetHandler:MouseRelease(x, y, button)
+	local mo = self.mouseOwner
+	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+	if (not (lmb or mmb or rmb)) then
+		return false
 	end
-
+	
+	if rmb and rmb == true then
+		if WG.SelectedCommand[mo] then
+			for command, active in pairs(WG.SelectedCommand[mo]) do
+				if active == true then
+					selectedUnits=Spring.GetSelectedUnits();
+					if selectedUnits and #selectedUnits > 0 then
+						commandTable= getCommandTable(boolQueueOverride)
+						typeParam, param = getCommandTarget()
+						for i=1,#selectedUnits do
+							Spring.GiveOrderToUnit(selectedUnits[i], command, param, commandTable)
+						end
+						
+						WG.SelectedCommand[mo][command] = not active
+						break
+					end
+				end
+			end
+		end
+		
+		return true
+	end
+	
 end

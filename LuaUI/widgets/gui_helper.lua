@@ -1,10 +1,10 @@
-function getCommandTable()
+function getCommandTable(boolQueueOverride)
 	returnT={}
 	local alt, ctrl, shift, right = Spring.GetModKeyState()
 	
 	if alt then table.insert(returnT,"alt")end
 	if ctrl then table.insert(returnT,"ctrl")end
-	if shift then table.insert(returnT,"shift")end
+	if shift or (boolQueueOverride and boolQueueOverride ==true )then table.insert(returnT,"shift")end
 	if right then table.insert(returnT,"right")end
 	return returnT
 end

@@ -100,7 +100,7 @@ function getTowersDartPoisonDartIfThereIsNone()
     x, y, z = Spring.GetUnitPosition(unitID)
     team = Spring.GetUnitTeam(unitID)
 
-    offx, offz = RotationMatrice(0, 35, math.rad(math.random(-360, 360)))
+    offx, offz = Rotate(0, 35, math.rad(math.random(-360, 360)))
     dartID = Spring.CreateUnit("jpoisonracedart", x + offx, y, z + offz, 0, team)
     soundStart = "sounds/jPoisondart/jPoisonDartLaunch.ogg"
     Spring.PlaySoundFile(soundStart, 1.0)

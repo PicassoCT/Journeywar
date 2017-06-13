@@ -399,6 +399,10 @@ function syncMoveInTime(piecename, x_val, y_val, z_val, times)
     Move(piecename, 3, z_val, math.abs(z_val / times))
 end
 
+function unZero(val)
+if val== 0 then return 0.00001 end
+return val
+end
 --> Move a piece so that it arrives at the same times on all axis
 function syncMove(piecename, x_val, y_val, z_val, speed)
     maxs = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
@@ -406,14 +410,13 @@ function syncMove(piecename, x_val, y_val, z_val, speed)
 
 
     --ratio = 1/(val/max)*times => max*times / val
-		Spring.Echo("Speeds:"..(x_val / maxs) * speed.." / "..(y_val / maxs) * speed.." / "..(z_val / maxs) * speed)
-   speedX = (x_val / maxs) * speed
-	speedY = (y_val / maxs) * speed
-	speedZ = (z_val / maxs) * speed
+   speedX = ( maxs/unZero(x_val) ) * speed
+	speedY = ( maxs/unZero(y_val) ) * speed
+	speedZ = ( maxs/unZero(z_val) ) * speed
 	
-	 Move(piecename, x_axis, (x_val), speedX)
-    Move(piecename, y_axis, (y_val), speedY)
-    Move(piecename, z_axis, (z_val), speedZ)
+	 Move(piecename, x_axis, (x_val), math.abs(speedX))
+    Move(piecename, y_axis, (y_val), math.abs(speedY))
+    Move(piecename, z_axis, (z_val), math.abs(speedZ))
 end
 
 
@@ -608,56 +611,64 @@ function moveExpPiece(piece, axis, targetPos, startPos, increaseval, startspeed,
 end
 
 function relDist(pos, target)
-
-    rDist = math.abs(pos - target)
-
-    if (pos < 0 and target > 0) or (target < 0 and pos > 0) then rDist = math.abs(pos) + math.abs(target) end
-
-
-    if pos > target then
-        return rDist * -1
-    end
-
+	rDist = 0 
+	-- pos + target +
+	if pos > 0 and target > 0 then
+	--pos > target
+	rDist = math.abs(target - pos)
+	if pos > target then rDist = rDist*-1 end
+	end
+ 
+	-- pos - target -
+ 	if pos < 0 and target < 0 then
+	--pos > target
+	rDist = math.abs(math.abs(target) - math.abs(pos))
+	if pos < target then rDist = rDist*-1 end
+	end
+	
+	-- pos - target +
+	if pos < 0 and target > 0 then
+   rDist= math.abs(pos)+target
+   end
+   
+   -- pos - target +
+	if pos > 0 and target < 0 then
+   rDist= (math.abs(target)+pos)*-1
+   end   
 
     return rDist
 end
 
-function getOrgPosPiece(unitID, piecename)
-    orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename)
-    reset(piecename)
-    rorx, rory, rorz = Spring.GetUnitPiecePosition(unitID, piecename)
-    mP(piecename, orgx, orgy, orgz, 0)
-    return rorx, rory, rorz
-end
+
 
 function echoLine()
 Spring.Echo("=============================================================")
 end
 
+function getOrgPosPiece(unitID, pieceName)
+	resultTable= Spring.GetUnitPieceInfo(unitID,pieceName)
+	
+	return resultTable.offset[1],resultTable.offset[2],resultTable.offset[3]
+end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset, startPos, forceUpdate)
+function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed)
     speed = speed or 0
 
 	
     if not pieceDest or not piecename then return end
-	echoLine()
-    orgx, orgy, orgz = Spring.GetUnitPiecePosition(unitID, piecename) --TODO rework
-    echo("piecepos:", orgx, orgy, orgz)
+    orgx, orgy, orgz = getOrgPosPiece(unitID, piecename) --TODO rework
+   -- echo("piecepos:", orgx, orgy, orgz)
 
     gox, goy, goz = Spring.GetUnitPiecePosition(unitID, pieceDest)
-    echo("PieceDestPos:", gox, goy, goz)
+  --  echo("PieceDestPos:", gox, goy, goz)
     diffx, diffy, diffz = relDist(orgx, gox), relDist(orgy, goy), relDist(orgz, goz)
-    echo("Diff:", diffx, diffy, diffz)
+   -- echo("Diff:", -1*diffx,  diffy, diffz)
 
 
+   syncMove(piecename, -1* diffx,  diffy,  diffz, speed)
 
-    --	echoMove(piecename, ox,oy,oz)
-   syncMove(piecename, diffx*-1, diffy, diffz, speed)
-  
-	echoLine()
-
-    WaitForMoves(piecename)
+   WaitForMoves(piecename)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
@@ -689,6 +700,8 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
 
     WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
 end
+
+
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function moveUnitPieceToGroundPos(unitID, piecename, X, Z, speed, offset)
@@ -1584,6 +1597,48 @@ function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate)
     end
 end
 
+--> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
+function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
+	shotVector= shotVector*-1
+	echo("unitRipAPieceOut called")
+	-- LimbMap= getPiecesBelow(unitID, rootPiece)
+	-- stunUnit(unitID, 64)
+	-- env = Spring.UnitScript.GetScriptEnv(unitID)
+	
+	-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
+	-- spinTime= 0
+	-- parabelFactor=0.5
+	-- env.Spin(rootPiece,x_axis, math.rad(55),0)
+
+		-- movePieceInParabel(unitID, pieceName, vector, factor, parabelLength)
+	
+		-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
+	
+	-- if groundHeigth < 0 then
+		-- stunUnit(unitID, 0)
+		-- if boolSurvivorHeCanTakeIt == true then
+			-- hideT(LimbMap)
+		-- else
+			-- Spring.DestroyUnit(unitID, false, false)
+		-- end 
+	-- end 
+	
+end
+
+function movePieceInParabel(unitID, pieceName, yDegreeOffset, xDegreeOffset, valueToGo, valueStart, offsetY, steepness, env, speed)
+	px, py, pz=Spring.GetUnitPiecePosDir(unitID, pieceName)
+	
+	y = -1* (steepness * math.min(valueStart, valueToGo)^2 ) + offSetY
+	y = Rotate(0, y, xDegreeOffset) 	
+	x = Rotate(0, valueToGo, yDegreeOffset)
+	
+	env.MovePieceToPos(unitID, pieceName, x, y, z, )
+	
+	--TODO rotation matric on result Values
+	return px, py + y, pz
+end
+
+
 -->Recursively Resets Tables
 function recResetT(Table, speed)
     if type(Table) == "table" then
@@ -1595,6 +1650,7 @@ function recResetT(Table, speed)
     end
 end
 
+--> Resets a piece
 function reset(piecename, speed, boolWaitForIT, boolIstantUpdate)
     if not piecename then return end
     if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename .. " of type " .. type(piecename) .. " instead"); assert(true == false); end

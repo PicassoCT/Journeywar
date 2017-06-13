@@ -581,7 +581,10 @@ end
 --======================================================================================
 --> creates a ceg, that traverses following its behavioural function
 function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrobo, range, damage, behaviour)
-
+	endofLifeFunc= endofLifeFunc or function(x,y,z) end
+	boolStrobo= boolStrobo or false
+	range = range or 20
+	damage = damage or 0
     knallfrosch = function(x, y, z, counter, v)
         if counter % 120 < 60 then -- aufwärts
             if v then
@@ -604,6 +607,7 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
     local SpawnCeg = Spring.SpawnCEG
     v = makeVector(0, 0, 0)
 
+
     while lifetimefunc(Time) == true do
         x, y, z, v = functionbehaviour(x, y, z, Time, v)
 
@@ -617,8 +621,9 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
         Time = Time + rate
         Sleep(rate)
     end
-
+	if endofLifeFunc then
     endofLifeFunc(x, y, z)
+	end
 end
 
 
@@ -1165,7 +1170,7 @@ end
 -- [2]={[1]=,[2]=,[3]=,},
 -- [3]={[1]=,[2]=,[3]=,}
 -- }
-function YRotationMatrice(Deg)
+function YRotate(Deg)
     return {
         [1] = { [1] = math.cos(Deg), [2] = 0, [3] = math.sin(Deg) * -1, },
         [2] = { [1] = 0, [2] = 1, [3] = 0 },
@@ -1173,7 +1178,7 @@ function YRotationMatrice(Deg)
     }
 end
 
-function XRotationMatrice(Deg)
+function XRotate(Deg)
     return {
         [1] = { [1] = 1, [2] = 0, [3] = 0 },
         [2] = { [1] = 0, [2] = math.cos(Deg), [3] = math.sin(Deg) * -1 },
@@ -1181,7 +1186,7 @@ function XRotationMatrice(Deg)
     }
 end
 
-function ZRotationMatrice(Deg)
+function ZRotate(Deg)
     return {
         [1] = { [1] = math.cos(Deg), [2] = math.sin(Deg) * -1, [3] = 0, },
         [2] = { [1] = math.sin(Deg), [2] = math.cos(Deg), [3] = 0, },
@@ -1193,7 +1198,7 @@ function rotateUnitAroundUnit(centerID, rotatedUnit, degree)
     ax, ay, az = Spring.GetUnitPosition(centerID)
     bx, by, bz = Spring.GetUnitPosition(rotatedUnit)
     vx, vz = bx - ax, bz - az
-    vx, vz = RotationMatrice(vx, vz, math.rad(degree))
+    vx, vz = Rotate(vx, vz, math.rad(degree))
 
     Spring.SetUnitPosition(rotatedUnit, ax + vx, az + vz)
 end
@@ -1202,19 +1207,19 @@ function rotateVecDegX(vec, DegX)
     tempDegRotY = math.asin(vec.x / (math.sqrt(vec.x ^ 2 + vec.z ^ 2)))
 
     -- y-axis
-    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotY * -1))
+    vec = vec3MulMatrice3x3(vec, YRotate(tempDegRotY * -1))
 
     tempDegRotZ = math.asin(vec.y / math.sqrt(vec.x ^ 2 + vec.z ^ 2))
     --z-axis
-    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotZ * -1))
+    vec = vec3MulMatrice3x3(vec, YRotate(tempDegRotZ * -1))
     --actual Rotation around the x-axis
-    vec = vec3MulMatrice3x3(vec, XRotationMatrice(DegX))
+    vec = vec3MulMatrice3x3(vec, XRotate(DegX))
 
     --undo z-axis
-    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotZ))
+    vec = vec3MulMatrice3x3(vec, YRotate(tempDegRotZ))
 
     -- undo y-axis
-    vec = vec3MulMatrice3x3(vec, YRotationMatrice(tempDegRotY))
+    vec = vec3MulMatrice3x3(vec, YRotate(tempDegRotY))
     return vec
 end
 
@@ -1540,7 +1545,8 @@ function showT(tablename, lowLimit, upLimit, delay)
     end
 end
 
--->Validates that a table of UnitIds or a UnitID still exist
+-->Validates that a table of UnitIds or a UnitID still exist and is alive
+-->Non existant ids are silently filtered out
 function affirm(T)
     if type(T) == "number" then t1 = T; T = { [1] = t1 } end
     resulT = process(T,
@@ -1584,9 +1590,9 @@ function IsTargetReachable(moveID, ox, oy, oz, tx, ty, tz, radius)
         lastcoordinate = nil
         waypoints = nil
     end
+	
     return result, lastcoordinate, waypoints
 end
-
 
 --> takes a given position and the dir of a surface and calculates the vector by which the vector is reflectd,
 --if fall in angle == escape angle
@@ -1625,7 +1631,7 @@ function mirrorAngle(nX, nY, nZ, dirX, dirY, dirZ)
 end
 
 -->RotationMatrice for allready Normalized Values
-function RotationMatrice(x, z, Rad)
+function Rotate(x, z, Rad)
 
     sinus = math.sin(Rad)
     cosinus = math.cos(Rad)
@@ -3865,7 +3871,7 @@ end
 
 
 --> produces a  Rotation matrice around axis for a degree in affirmative Coordinates
-function makeAffirmativeRotationMatrice(axis, deg_)
+function makeAffirmativeRotate(axis, deg_)
     V = makeNewAffirmativeMatrice()
     if axis == "x_axis" then
         V[6] = math.cos(-deg_)
@@ -4067,8 +4073,16 @@ function getPieceHierarchy(unitID, pieceFunction)
     return hierarchy, rootname
 end
 
+function getUnitPieceNameFromNumber(Name)
+	--TODO
+	
+end
+
 --> returns  a skelett table via recursion (Expensive)
 function recMapDown(Result, pieceMap, Name)
+	if type(Name) == "number" then
+		Name = getUnitPieceNameFromNumber(Name)
+	end
 
     if pieceMap[Name] then
         for _, pieceNumber in pairs(pieceMap[Name]) do

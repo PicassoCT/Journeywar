@@ -31,7 +31,7 @@ function createRandTable()
 		else
 			radius= ((half-(i-half))/half)*maxs+math.random(2,12)
 		end
-		vx,vz=RotationMatrice(0,radius, i*(360/half))
+		vx,vz=Rotate(0,radius, i*(360/half))
 		spiralTable[#spiralTable+1]={x=ux+vx, z=uz+vz}
 		spiralTable[#spiralTable].y=Spring.GetGroundHeight(spiralTable[#spiralTable].x,spiralTable[#spiralTable].z)+15
 		dx,dy,dz=Spring.GetGroundNormal(spiralTable[#spiralTable].x,spiralTable[#spiralTable].z)

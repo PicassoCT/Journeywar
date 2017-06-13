@@ -2,7 +2,7 @@
 function widget:GetInfo()
 	return {
 		name      = "Artfull dodger",
-		desc      = "Everyone steps away from the doomed one",
+		desc      = "Everyone steps away from splash damage dangered units",
 		author    = "Picasso",
 		version   = "v1.0",
 		date      = "Jul 18, 2009",
@@ -22,12 +22,7 @@ function getAllInCircle(x, z, Range, unitID, teamid)
     end
     if not Range then assert(Range) end
 
-    T = {}
-    if teamid then
-        T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
-    else
-        T = Spring.GetUnitsInCylinder(x, z, Range)
-    end
+    T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
 
     if unitID and T and #T > 1 and type(unitID) == 'number' then
         for num, id in ipairs(T) do
@@ -64,8 +59,9 @@ end
 			factor= SPLASHRANGE/distance
 			pdx,pdz= (pdx *factor) + ux, (pdz*factor)+uz
 			
-			--give a move command
-			Spring.GiveOrderToUnit(id, CMD.MOVE, { pdx, py, pdz }, {"shift"})
+			--insert  a move command
+			--TODO save commands, insert command,restore commands
+			Spring.GiveOrderToUnit(id, CMD.MOVE, { pdx, py, pdz }, {})
 			end
 		end
 	end

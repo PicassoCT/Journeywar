@@ -25,7 +25,7 @@ function BuildAvatara(units, allreadyExistingAvatara)
         frame = Spring.GetGameFrame()
         for i = 1, #units do
             if i < varyFooNeeded + 5 then
-                ox, oz = RotationMatrice(0, 50 + (units[i] % 120), ((units[i] * 150) % 3000) + frame / 64)
+                ox, oz = Rotate(0, 50 + (units[i] % 120), ((units[i] * 150) % 3000) + frame / 64)
                 Spring.SetUnitMoveGoal(units[i], tx + ox, ty, tz + oz)
             end
         end

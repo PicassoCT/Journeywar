@@ -20,6 +20,7 @@ function checkYourself()
     end
 
     if boolShowTrueColours == true and spUnitIsNotDead(tID) == true then
+		spawnCEGatUnit(unitID, "jtyrion", 0, 25, 0)
         Spring.TransferUnit(tID, teamID, false)
     end
 

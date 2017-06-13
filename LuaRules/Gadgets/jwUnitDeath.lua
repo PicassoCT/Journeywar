@@ -152,7 +152,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	conAirDefID=UnitDefNames["conair"].id
 	
 	function inRandomRange(x,z,Range)
-		offx,offz= RotationMatrice(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
+		offx,offz= Rotate(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
 		return x+offx,z+offz
 	end
 	
