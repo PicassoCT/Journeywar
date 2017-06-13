@@ -1,4 +1,5 @@
 include "createCorpse.lua"
+include "lib_jw.lua"
 --<pieces>
 
 
@@ -333,8 +334,7 @@ function script.Killed(recentDamage, _)
     --spawnARewarder
     spx, spy, spz = Spring.GetUnitPosition(unitID)
 
-    heapID = Spring.CreateUnit("cRewarder", spx, spy, spz, math.max(teamID, -1))
-
+    createRewardEvent(teamid, 125, 125)
     createCorpseCBuilding(unitID, recentDamage)
 
 

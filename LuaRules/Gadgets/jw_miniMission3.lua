@@ -318,7 +318,7 @@ function Mission3City(frame)
             cout("City Destroyed. Journeys Win!")
             if GG.LastAttackingJourney ~= nil then
                 for i = 1, 3, 1 do
-                    GG.UnitsToSpawn:PushCreateUnit("crewarder", 1, 1, 1, 1, GG.LastAttackingJourney)
+					createRewardEvent( GG.LastAttackingJourney, 100, 100)
                 end
             end
             GG.UnitsToSpawn:PushCreateUnit("jvictory", Game.mapSizeX / 2, 1, Game.mapSizeZ / 2, 1, getTheCentrailTeam())
@@ -329,21 +329,13 @@ function Mission3City(frame)
 
     if MissionFunctionTable[3][3] == 2 then
         if getTheCentrailTeam() then
-            for i = 1, 3, 1 do
-                GG.UnitsToSpawn:PushCreateUnit("crewarder", 1, 1, 1, 1, getTheCentrailTeam())
-            end
+				createRewardEvent( getTheCentrailTeam(), 300, 300)
+
         end
         GG.UnitsToSpawn:PushCreateUnit("cvictory", Game.mapSizeX / 2, 1, Game.mapSizeZ / 2, 1, getTheCentrailTeam())
         cout("City Saved. Combine win!")
         return true
     end
-
-
-
-
-
-
-
 
     return false
 end
