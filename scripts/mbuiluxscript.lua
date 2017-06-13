@@ -74,28 +74,39 @@ function windStoss(delaytime, StartVal, StrengthInDegree, StrenghtOfWind, length
     end
 
 
-    for i = 1, length, 1 do
-        if boolFlipFlop == false then boolFlipFlop = true else boolFlipFlop = false end
+	for i = 1, length, 1 do
+		boolFlipFlop = not boolFlipFlop
+	
+		MaxDegree = (math.random(85, 100))*negset
+		times = times + 0.05
+		currentDegree = 0
+		
+			if boolFlipFlop == true then
+				relativeDegree = math.ceil((math.cos(times +  constOffset) * 25.0))
+				Turn(curtain[StartVal], x_axis, math.rad(MaxDegree  + relativeDegree - currentDegree), relativeDegree/10)
+				currentDegree = currentDegree + relativeDegree
+				
+				for i = 1, #snakeTable do
+					relativeDegree = math.ceil((math.cos(times + i * constOffset) * 65.0) - currentDegree)
+					currentDegree = currentDegree + relativeDegree
+					Turn(curtain[StartVal + i],x_axis, math.rad(relativeDegree), relativeDegree/10)
+				end	
+			else
+				relativeDegree = math.ceil((math.sin(times +  constOffset) * 25.0))
+				Turn(curtain[StartVal], x_axis, math.rad(MaxDegree  + relativeDegree - currentDegree), relativeDegree/10)
+				currentDegree = currentDegree + relativeDegree
+				
+				for i = 1, #snakeTable do
+					relativeDegree = math.ceil((math.sin(times + i * constOffset) * 65.0) - currentDegree)
+					currentDegree = currentDegree + relativeDegree
+					Turn(curtain[StartVal + i],x_axis, math.rad(relativeDegree),relativeDegree/10)
+				end	
+			
+			end
+	
+		WaitForTurns(curtain)
+	end
 
-        MaxDegree = (math.random(42, 62))
-
-
-        if boolFlipFlop == true then
-            Turn(curtain[StartVal], x_axis, math.rad(MaxDegree * negset - 12), 0.65)
-            for i = 1, 4 do
-                val = (math.cos(i * pifourth) * -25 * negset)
-                Turn(curtain[StartVal + i], x_axis, math.rad(val), 0.34)
-            end
-        else
-            Turn(curtain[StartVal], x_axis, math.rad(MaxDegree * negset + 12), 0.85)
-            for i = 1, 4 do
-                val = (math.sin(i * pifourth) * -25 * negset)
-                Turn(curtain[StartVal + i], x_axis, math.rad(val), 0.57)
-            end
-        end
-
-        WaitForTurn(curtain[StartVal], x_axis)
-    end
 
     Sleep(250) --Return down
 
