@@ -759,3 +759,47 @@ function createStreamEvent(unitID, func, framerate, persPack)
             end
 
             GG.EventStream:CreateEvent(eventFunction, persPack, Spring.GetGameFrame() + 1)
+end
+
+
+function createRewardEvent(teamid, returnOfInvestmentM, returnOfInvestmentE)
+
+returnOfInvestmentM = returnOfInvestmentM or 100
+returnOfInvestmentE = returnOfInvestmentE or 100
+
+
+function rewarderProcess(evtID, frame, persPack, startFrame)
+
+	
+        Spring.AddTeamResource(	persPack.teamId, 
+								"metal",  
+								persPack.returnOfInvestmentM/persPack.rewardCycles)
+        Spring.AddTeamResource(persPack.teamId, 
+								"energy", 
+								persPack.returnOfInvestmentE/persPack.rewardCycles)
+
+	persPack.rewardCycleIndex= persPack.rewardCycleIndex +1
+	if persPack.rewardCycleIndex > persPack.rewardCycles then 
+		return nil, nil
+	end	
+
+return frame + 1000, persPack
+end
+
+            persPack = { 
+						teamId= teamid,
+						returnOfInvestmentM= returnOfInvestmentM,
+						returnOfInvestmentE= returnOfInvestmentE,
+						id = unitID,
+						rewardCycles= 25, 
+						rewardCycleIndex= 0 
+						}
+						
+            GG.EventStream:CreateEvent(
+							rewarderProcess,
+							persPack,
+							Spring.GetGameFrame() + 1)
+
+end
+			
+			

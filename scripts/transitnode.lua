@@ -8,29 +8,26 @@ Low2 = piece "Low2"
 LED = {}
 for i = 1, 14 do
     LED[#LED + 1] = {}
-    piecename = ""
-    if i < 10 then
-        piecename = "LED0" .. i
-    else
-        piecename = "LED" .. i
-    end
+
+    piecename = "LED" .. i
+
     LED[#LED] = piece(piecename)
     Hide(LED[i])
 end
 
 DecoderArray = {}
 
-DecoderArray[0] = { 0, 1, 1, 1, 1, 1, 1, 0 }
-DecoderArray[1] = { 0, 0, 1, 1, 0, 0, 0, 0 }
-DecoderArray[2] = { 0, 1, 1, 0, 1, 1, 0, 1 }
-DecoderArray[3] = { 0, 1, 1, 1, 1, 0, 0, 1 }
-DecoderArray[4] = { 0, 0, 1, 1, 0, 0, 1, 1 }
-DecoderArray[5] = { 0, 1, 0, 1, 1, 0, 1, 1 }
-DecoderArray[6] = { 0, 1, 0, 1, 1, 1, 1, 1 }
-DecoderArray[7] = { 0, 1, 1, 1, 0, 0, 0, 0 }
-DecoderArray[8] = { 0, 1, 1, 1, 1, 1, 1, 1 }
-DecoderArray[9] = { 0, 1, 1, 1, 1, 0, 1, 1 }
 
+DecoderArray[0] = {	1, 	1	,1	,1	,1	,1	,0}
+DecoderArray[1] = {	0, 	1 	,1 	,0 	,0 	,0 	,0}
+DecoderArray[2] = {	1, 	1 	,0 	,1 	,1 	,0 	,1}
+DecoderArray[3] = {	1, 	1 	,1 	,1 	,0 	,0 	,1}
+DecoderArray[4] = {	0, 	1 	,1 	,0 	,0 	,1 	,1}
+DecoderArray[5] = {	1, 	0 	,1 	,1 	,0 	,1 	,1}
+DecoderArray[6] = {	1, 	0 	,1 	,1 	,1 	,1 	,1}
+DecoderArray[7] = {	1, 	1 	,1 	,0 	,0 	,0 	,0}
+DecoderArray[8] = {	1, 	1 	,1 	,1 	,1 	,1 	,1}
+DecoderArray[9] = {	1, 	1 	,1 	,1 	,0 	,1 	,1}
 
 
 function binary(num)
@@ -46,15 +43,9 @@ end
 
 teamID = Spring.GetUnitTeam(unitID)
 
-function displayNumber()
-    if GG.TransitHubNumber == nil then
-        GG.TransitHubNumber = {}
-        GG.TransitHubNumber[#GG.TransitHubNumber + 1] = unitID
-    else
-        GG.TransitHubNumber[#GG.TransitHubNumber + 1] = unitID
-    end
 
-    number = table.getn(GG.TransitHubNumber)
+function display7DigitNumber(number)
+
     firstDigit = number % 11
     if firstDigit == 10 then firstDigit = 0 end
     secondDigit = math.floor(number / 10)
@@ -72,19 +63,7 @@ function displayNumber()
     end
 end
 
-function transferPosTablee(TableOne, Position, TableTwo)
-    TableTwo[#TableTwo + 1] = {}
-    TableTwo[#TableTwo] = TableOne[Position]
-    return TableTwo
-end
 
--- nicht Mengenm?ssiges addieren
-function transfTable2Table(t1, t2)
-    for i = 1, table.getn(t1), 1 do
-        t2[#t2 + 1] = t1[i]
-    end
-    return t2
-end
 
 ArrivedA = {}
 ArrivedB = {}
@@ -227,6 +206,8 @@ function getBuildID()
     if guildID ~= nil and Spring.ValidUnitID(guildID) == true and Spring.GetUnitDefID(guildID) == UnitDefNames["ctransithubb"].id then
         --Spring.Echo("Found a Builded Unit")
         buildID = guildID
+		
+		GG.TransitHubNumber[buildID] = GG.TransitHubNumber[unitID]
     end
 end
 
@@ -255,7 +236,15 @@ function script.Create()
     StartThread(main)
     Spin(Wheel1, z_axis, math.rad(-70), 0)
     Spin(Wheel2, z_axis, math.rad(70), 0)
-    displayNumber()
+	
+	if GG.TransitHubNumber == nil then
+        GG.TransitHubNumber = {index= 1}
+    end
+	
+	GG.TransitHubNumber[unitID] =  GG.TransitHubNumber.index
+    GG.TransitHubNumber.index = GG.TransitHubNumber.index +1
+	
+    display7DigitNumber(GG.TransitHubNumber[unitID])
 end
 
 function script.Killed(recentDamage, _)

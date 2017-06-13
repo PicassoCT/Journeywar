@@ -1512,15 +1512,14 @@ function SideEffects()
         --get builux nearby
         x, y, z = Spring.GetUnitPosition(unitID)
         T = getAllInCircle(x, z, 512, unitID)
-        if #T then
-            T = getUnitsOfTypeInT(T, IdTable)
-            if #T then
+        T = getUnitsOfTypeInT(T, IdTable)
+		process(T,
+		function (id)
+            GG.BuiLuxUpgrade[id] = true
+		end
+		)
+		   
 
-                for i = 1, #T do
-                    GG.BuiLuxUpgrade[T[i]] = true
-                end
-            end
-        end
         Sleep(1000)
     end
 end

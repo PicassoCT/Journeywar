@@ -72,12 +72,25 @@ function makeTableFromString(FormatString, assignedValue, ...)
     return loadstring(Appendix .. "==" .. asignedValue)
 end
 
+
 --> Creates a Table and initalizazes it with default value
-function makeTable(default, xDimension, yDimension, zDimension)
+function makeTable(default, xDimension, yDimension, zDimension, boolNegativeMirror)
+	boolNegativeMirror= boolNegativeMirror or false	
+
+	xStartIndex = 1
+	yStartIndex = 1
+	zStartIndex = 1
+	
+	if boolNegativeMirror == true then
+		xStartIndex = -xDimension
+		yStartIndex = -yDimension
+		zStartIndex = -zDimension
+	end
+	
     local RetTable = {}
     if not xDimension then return default end
 
-    for x = 1, xDimension, 1 do
+    for x = xStartIndex, xDimension, 1 do
         if yDimension then
             RetTable[x] = {}
         elseif xDimension then
@@ -87,7 +100,7 @@ function makeTable(default, xDimension, yDimension, zDimension)
         end
 
         if yDimension then
-            for y = 1, yDimension, 1 do
+            for y = yStartIndex, yDimension, 1 do
                 if zDimension then
                     RetTable[x][y] = {}
                 else
@@ -95,7 +108,7 @@ function makeTable(default, xDimension, yDimension, zDimension)
                 end
 
                 if zDimension then
-                    for z = 1, zDimension, 1 do
+                    for z = zStartIndex, zDimension, 1 do
                         RetTable[x][y][z] = default
                     end
                 end
@@ -1592,6 +1605,17 @@ function IsTargetReachable(moveID, ox, oy, oz, tx, ty, tz, radius)
     end
 	
     return result, lastcoordinate, waypoints
+end
+
+--> increments in a ring
+function ringcrement(index, upValue, LowValue)
+	
+	if index + 1 > upValue, then 
+		index= LowValue; 
+		return index 
+	end
+	
+return index +1
 end
 
 --> takes a given position and the dir of a surface and calculates the vector by which the vector is reflectd,

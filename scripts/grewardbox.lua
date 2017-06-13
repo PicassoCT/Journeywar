@@ -1,4 +1,5 @@
 include "createCorpse.lua"
+include "lib_jw.lua"
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
 function PositionChecked()
@@ -32,8 +33,9 @@ function PositionChecked()
 end
 
 function dissolveAndReward(teamd)
-    x, y, z = Spring.GetUnitPosition(unitID)
-    Spring.CreateUnit("crewarder", x, y, z, 0, teamd)
+
+	createRewardEvent(teamd)
+
     Spring.DestroyUnit(unitID, true, true)
 end
 
