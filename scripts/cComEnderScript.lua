@@ -513,8 +513,6 @@ Leg2[#Leg2]= piece"shieldb17"
 
 Arms={}
 
-
-
 overArmour[4]={arms=Arms, leg1=Leg1,leg2=Leg2,leg3=Leg3,leg4=Leg4,leg5=Leg5,leg6=Leg6}
 
 
@@ -3408,10 +3406,8 @@ function script.FireWeapon11()
 	return true
 end
 
-
 --</RazorGrenade>
 --<TangleGun>
-
 function script.AimFromWeapon12() 
 	return You 
 end
@@ -3419,7 +3415,6 @@ end
 function script.QueryWeapon12() 
 	return Weapons[eTangleGun][eAimPiece]
 end
-
 
 function reloadTangleGun()
 	Weapons[eTangleGun][eCurrCool]=Weapons[eTangleGun][eCoolDown]
@@ -3429,11 +3424,11 @@ function reloadTangleGun()
 	WTurn(TangleGun,y_axis,math.rad(-15), 5)
 	WTurn(TangleGun,y_axis,math.rad(15), 5)
 	WTurn(TangleGun,y_axis,math.rad(0), 5)
-	
+
+	Sleep(Weapons[eTangleGun][eCurrCool])
 	Spin(TangleRota,y_axis,math.rad(-512),0.5)
 	Spin(TangleRota,x_axis,math.rad(-12),0.5)
-	Sleep(Weapons[eTangleGun][eCurrCool])
-	Weapons[eTangleGun][eCurrCool]=0
+	Weapons[eTangleGun][eCurrCool] = 0
 end
 
 function script.AimWeapon12( heading ,pitch)	
@@ -3444,7 +3439,6 @@ function script.AimWeapon12( heading ,pitch)
 		
 		return Weapons[eTangleGun][eCurrCool] <= 0 and boolOutOfAmmo == false
 	else
-		
 		return false
 	end
 end
@@ -3458,9 +3452,7 @@ function script.FireWeapon12()
 	StopSpin(TangleRota,x_axis,0.5)
 	
 	TangleCounter= 	TangleCounter+1
-	
-	
-	
+		
 	if TangleCounter > 3* Weapons[eTangleGun][1] then --tangling ended
 		Weapons[eTangleGun][eCurrCool] = Weapons[eTangleGun][eCoolDown]
 		
