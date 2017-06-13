@@ -39,6 +39,10 @@ previouslyAttackingTeam = nil
 boolDamaged = false
 teamID = Spring.GetUnitTeam(unitID)
 
+neonCenter = piece"neonCenter"
+
+
+
 
 
 function nothingEverHappend(datTeamID)
@@ -128,20 +132,74 @@ function peaceLoop()
     end
 end
 
+function createNewNeonSign()
+_,_,_,volumeX,volumeY,volumeZ = Spring.GetUnitPieceInfo(unitID, TableOfPieceGroups["neonSign"][1])
+maxSize=math.max(math.abs(volumeX),math.abs(volumeY))
+hideT(TableOfPieceGroups["neonSign"])
+exploreTable= makeTable(false, 8, 8, 0, true)
 
+	index = {x = 0,y = 0}
+
+	for num, Piece in pairs(TableOfPieceGroups["neonSign"]) do
+	if maRa()==true then Show(Piece) else Hide(Piece) end
+	
+	Move(Piece,x_axis,index.x*maxSize,0)
+	Move(Piece,y_axis,index.y*maxSize,0)
+	exploreTable[index.x][index.y] = true
+	
+		yOffset= randSign()
+		xOffset= randSign()
+		
+		if false == exploreTable[index.x + xOffset][index.y+yOffset] then
+			index.x, index.y =index.x + xOffset,index.y+yOffset
+		else
+			while(true == exploreTable[index.x][index.y])do
+				index.y =  ringcrement(index.y, 8, -8)
+
+				if index.y== 8 then 
+					index.x = ringcrement(index.x, 8, -8)
+				end
+			end
+		end	
+	end
+	
+
+	
+	
+end
+
+function floatNeonSign()
+	while true do 
+		createNewNeonSign()
+		xR,zR= math.random(-500,500), math.random(-500,500)
+		yR= math.random( 200,400)
+		Move(neonCenter,x_axis,xR,0)
+		Move(neonCenter,z_axis,zR,0)
+		Move(neonCenter, y_axis,yR,0 )
+			--Movement and Spin
+		
+	T =  shuffleT({x_axis, z_axis})
+	Move(neonCenter, y_axis, yR + math.random(-200,200), 12)
+	Move(neonCenter, T[1], math.random(-100,100),12)
+	Spin(neonCenter,y_axis, math.rad(math.random(-3,3)*5),4)
+	WaitForMoves(neonCenter)
+	hideT(TableOfPieceGroups["neonSign"])
+	Sleep(500)
+	end
+
+end
 
 function script.Killed(recentDamage)
 
-    x, y, z = Spring.GetUnitPosition(unitID)
     teamID = Spring.GetUnitTeam(unitID)
-    Spring.CreateUnit("crewarder", math.random(1, x), y + 500, math.random(1, z), 0, teamID)
-    if lastAttackingTeamID ~= nil then
+	createRewardEvent(teamID)
+
+ if lastAttackingTeamID ~= nil then
         boolGotIt = Spring.UseTeamResource(lastAttackingTeamID, "metal", 3900)
         boolGotIt2 = Spring.UseTeamResource(lastAttackingTeamID, "energy", 3900)
         if boolGotIt == false or boolGotIt2 == false then
-
-            Spring.CreateUnit("crewarder", x, y + 500, z, 0, teamID)
-        end
+			createRewardEvent(teamID)
+	    end
     end
 
     xrand = math.random(-2, 2)
