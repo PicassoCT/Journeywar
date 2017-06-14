@@ -41,10 +41,6 @@ teamID = Spring.GetUnitTeam(unitID)
 
 neonCenter = piece"neonCenter"
 
-
-
-
-
 function nothingEverHappend(datTeamID)
     if datTeamID ~= teamID then boolDamaged = true end
     previouslyAttackingTeam = lastAttackingTeamID
@@ -136,21 +132,36 @@ function createNewNeonSign()
 _,_,_,volumeX,volumeY,volumeZ = Spring.GetUnitPieceInfo(unitID, TableOfPieceGroups["neonSign"][1])
 maxSize=math.max(math.abs(volumeX),math.abs(volumeY))
 hideT(TableOfPieceGroups["neonSign"])
-exploreTable= makeTable(false, 8, 8, 0, true)
+zero = 0
+exploreTable= makeTable(zero, 8, 8, 0, true)
 
 	index = {x = 0,y = 0}
-
+	boolAccumY = maRa()
+	yAccumulated = 0 
+	signMax= math.random(1,3)
+	
+	TableOfPieceGroups["neonSign"] = shuffleT(TableOfPieceGroups["neonSign"])
 	for num, Piece in pairs(TableOfPieceGroups["neonSign"]) do
+	
+	--Show/Hide Piece
 	if maRa()==true then Show(Piece) else Hide(Piece) end
 	
 	Move(Piece,x_axis,index.x*maxSize,0)
 	Move(Piece,y_axis,index.y*maxSize,0)
-	exploreTable[index.x][index.y] = true
+	exploreTable[index.x][index.y] = exploreTable[index.x][index.y] + 1
 	
-		yOffset= randSign()
-		xOffset= randSign()
-		
-		if false == exploreTable[index.x + xOffset][index.y+yOffset] then
+	--Turn Piece 
+	Turn(Piece, y_axis, math.rad(yAccumulated), 0)
+	if boolAccumY == true then yAccumulated = yAccumulated + 5 end
+	Turn(Piece, x_axis, math.rad(math.random(0,360)%15),0)
+	
+
+	
+	if exploreTable[index.x ][index.y]  >= signMax then
+		-- index increment
+	yOffset= randSign()
+	xOffset= randSign()
+		if  signMax > exploreTable[index.x + xOffset][index.y+yOffset] then
 			index.x, index.y =index.x + xOffset,index.y+yOffset
 		else
 			while(true == exploreTable[index.x][index.y])do
@@ -162,10 +173,7 @@ exploreTable= makeTable(false, 8, 8, 0, true)
 			end
 		end	
 	end
-	
-
-	
-	
+	end
 end
 
 function floatNeonSign()
