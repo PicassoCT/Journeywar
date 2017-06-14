@@ -279,7 +279,7 @@ end
 
 function getAbstractTypes(UnitDefNames)
     AbstractTypes = {
-        [UnitDefNames["csuborexplo"].id] = true,
+        [UnitDefNames["csuborbexplo"].id] = true,
         [UnitDefNames["actionzone"].id] = true,
         [UnitDefNames["reservoirzone"].id] = true,
         [UnitDefNames["triggerzone"].id] = true,
@@ -722,7 +722,7 @@ function getDayTime()
     return hours, minutes, seconds
 end
 
---> Creates a Eventstream Event
+--> Creates a Eventstream Event bound to a Unit
 function createStreamEvent(unitID, func, framerate, persPack)
 	persPack.unitID = unitID
 	persPack.startFrame = Spring.GetGameFrame()

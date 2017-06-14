@@ -1632,7 +1632,7 @@ function movePieceInParabel(unitID, pieceName, yDegreeOffset, xDegreeOffset, val
 	y = Rotate(0, y, xDegreeOffset) 	
 	x = Rotate(0, valueToGo, yDegreeOffset)
 	
-	env.MovePieceToPos(unitID, pieceName, x, y, z, )
+	env.MovePieceToPos(unitID, pieceName, x, y, z)
 	
 	--TODO rotation matric on result Values
 	return px, py + y, pz

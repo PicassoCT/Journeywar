@@ -152,12 +152,7 @@ extendedMenue[CMD.CLOAK] ={
 	backgroundCol=backgroundColExtended,
 	caption= "CLOAK",
 	callbackFunction=function()
-		<<<<<<< HEAD
-		alt, ctrl, meta, shift = GetModKeys()
-		options = GetCmdOpts(alt, ctrl, meta, shift, usingRMB)
-		Spring.GiveOrder(CMD.CLOAK, {0}, options)
-		echo("Cloak Command")
-		=======
+	
 		selectedUnits=spGetSelectedUnits();
 		if selectedUnits and #selectedUnits > 0 then
 			commandTable= getCommandTable(boolQueueOverride)

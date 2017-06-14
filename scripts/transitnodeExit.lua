@@ -7,14 +7,7 @@ Low2 = piece "Low2"
 
 
 LED = {}
-for i = 1, 14 do
-    LED[#LED + 1] = {}
 
-    piecename = "LED" .. i
-
-    LED[#LED] = piece(piecename)
-    Hide(LED[i])
-end
 
 DecoderArray = {}
 
@@ -90,6 +83,10 @@ end
 
 
 function script.Create()
+	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+	LED = TablesOfPiecesGroups["LED"]
+	hideT(LED)
+
     StartThread(sound)
     StartThread(littleCarsGoingBackAndForth)
 

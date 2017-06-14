@@ -1610,7 +1610,7 @@ end
 --> increments in a ring
 function ringcrement(index, upValue, LowValue)
 	
-	if index + 1 > upValue, then 
+	if index + 1 > upValue then 
 		index= LowValue; 
 		return index 
 	end
