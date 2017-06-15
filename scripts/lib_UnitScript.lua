@@ -4813,7 +4813,7 @@ function Command(id, command, target, option)
 		return
     end
 	
-	    if command == "clock" then
+	    if command == "cloak" then
 		currentState GetUnitValue(COB.ACTIVATION)
 		if currentState == 0 then currentState = 1 else currentState = 0 end
 		
