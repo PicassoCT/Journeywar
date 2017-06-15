@@ -571,7 +571,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			tangledTable[attackerID] = {first = unitID, others={}}
 			
 			cegEventStream = function (persPack)
-				spawnCEGatUnit(unitID, "antimatter", 0, 10, 0) --TODO 
+			
+				spawnCEGatUnit(unitID, "tangledceg", 0, 10, 0) --TODO 
 				persPack.counter = persPack.counter + 1
 				return Spring.GetUnitIsDead(unitID) and persPack.counter < persPack, persPack
 			end
@@ -922,12 +923,9 @@ if (gadgetHandler:IsSyncedCode()) then
 
             projectileID = Spring.SpawnProjectile(ChainLightningDefID, ChaingProjParams)
 
-
-
         elseif ChainLightningTable[attackerID] and ChainLightningTable[attackerID] <= 0 then
             ChainLightningTable[attackerID] = nil
         end
-
 
         if UnitDamageFuncT[weaponDefID] then
             resultDamage = UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
@@ -1002,7 +1000,6 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end
 
-
         if frame % everyNthFrame == 0 then
             --handling the Poison Darted
             if GG.Poisoned then
@@ -1036,8 +1033,6 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end
     end
-
-
 
     local TableOfAllreadySearchedComender = {}
     function GetWeaponDirection(attackerID)
