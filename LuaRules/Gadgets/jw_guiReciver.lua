@@ -30,11 +30,11 @@ if (gadgetHandler:IsSyncedCode()) then
 
     function gadget:RecvLuaMsg(msg, playerID)
         if msg then
-            sub = string.sub(msg, 1, 3)
+            ident = string.sub(msg, 1, 3)
             --Spring.Echo(msg)
 
-            sub = string.lower(sub)
-            if sub == "upg" then
+            ident = string.lower(sub)
+            if ident == "upg" then
                 name, active, spectator, teamID, allyTeamID, pingTime, cpuUsage, country, rank, _ = Spring.GetPlayerInfo(playerID)
 
                 if GG.ComEnders ~= nil and GG.ComEnders[teamID] ~= nil then
@@ -42,13 +42,13 @@ if (gadgetHandler:IsSyncedCode()) then
 
                     local env = Spring.UnitScript.GetScriptEnv(id)
                     if env then
-                        --- -Spring.Echo("Upgrade "..string.sub(msg,5,string.len(msg)).." i choose You")
+                        --- -Spring.Echo("Upgrade "..string.ident(msg,5,string.len(msg)).." i choose You")
                         env.theActualUpgrade(string.sub(msg, 5, string.len(msg)))
                     end
                 end
             end
 
-            if sub == "dea" then
+            if ident == "dea" then
                 name, active, spectator, teamID, allyTeamID, pingTime, cpuUsage, country, rank, _ = Spring.GetPlayerInfo(playerID)
                 --TODO coordx|coordz| type of Zone
 
@@ -60,10 +60,6 @@ if (gadgetHandler:IsSyncedCode()) then
                 typeOfZone = string.lower(string.sub(msg, firstStop + 1, secondStop - 1))
                 coordx = string.sub(msg, secondStop + 1, thirdStop - 1)
                 coordz = string.sub(msg, thirdStop + 1, string.len(msg))
-
-
-                --Spring.Echo(typeOfZone.."_"..coordx.."_"..coordz)
-
 
 
                 if typeOfZone == "tz" then
