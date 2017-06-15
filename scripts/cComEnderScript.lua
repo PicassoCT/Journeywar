@@ -1063,7 +1063,6 @@ for i=1,12, 1 do
 	name="Ammo0"..i
 	x = piece(name)
 	piecesTable[#piecesTable+1]= x
-	cSniper[#cSniper+1]=x
 	sniperAmmoTable[#sniperAmmoTable+1]=x
 end
 
@@ -1294,6 +1293,10 @@ function showSniper()
 	for i=1,#cSniper,1 do
 		Show(cSniper[i])
 	end	
+	
+	for i=1,12 -sniperAmmoIterator, 1 do
+		Show(sniperAmmoTable[i])
+	end
 end
 function showFlareGun()
 	
@@ -1360,8 +1363,7 @@ function showArmor()
 			showT(overArmour[i].leg4)
 			showT(overArmour[i].leg5)
 			showT(overArmour[i].leg6)
-		end
-		
+		end		
 	end
 	
 end
@@ -1408,10 +1410,11 @@ function showTime()
 	while true do
 		Sleep(250)
 		showLegs()
-		showArmor()
+	for i=1, #WeaponsTable do
+		Weapons[i][eShowFunc]()
 	end
-	
 end
+
 --</ONUPGRADESHOW>
 eWeapnLvl=1
 eWeapnMax=2
@@ -1923,6 +1926,7 @@ end
 function theActualUpgrade(upgradeType)
 	echo("ComEnder::",upgradeType)
 	XP=Spring.GetUnitExperience(unitID) 
+	
 	if XP >= 1 then
 		if upgradeType == "SPEED" and Stats[eProperty][eWalkSpeed] <= Stats[eProperty][eWalkSpeedLimit]then
 			Stats[eProperty][eWalkSpeed]=Stats[eProperty][eWalkSpeed]+1
