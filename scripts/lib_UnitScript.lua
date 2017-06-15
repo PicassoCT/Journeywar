@@ -4807,7 +4807,19 @@ function Command(id, command, target, option)
     end
 
     if command == "setactive" then
-        Spring.SetUnitMoveGoal(id, target.x, target.y, target.z); return
+		currentState GetUnitValue(COB.ACTIVATION)
+		if currentState == 0 then currentState = 1 else currentState = 0 end
+		SetUnitValue(COB.ACTIVATION, currentState)
+		return
+    end
+	
+	    if command == "clock" then
+		currentState GetUnitValue(COB.ACTIVATION)
+		if currentState == 0 then currentState = 1 else currentState = 0 end
+		
+		Spring.UnitScript.SetUnitValue(COB.CLOAKED, currentState)
+
+		return
     end
 end
 
