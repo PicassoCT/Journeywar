@@ -12,10 +12,6 @@ function gadget:GetInfo()
 end
 
 ----------------------------------------------------------
-
-
--- modified the script: only corpses with the customParam "featuredecaytime" will disappear
-
 if (gadgetHandler:IsSyncedCode()) then
 
     function gadget:GameFrame(frame)
