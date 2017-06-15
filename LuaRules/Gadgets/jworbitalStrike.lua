@@ -28,13 +28,16 @@ if (gadgetHandler:IsSyncedCode()) then
             return target[1], target[2], target[3]
         end
         if targetTypeInt == string.byte('u') then
-            return Spring.GetUnitPosition(target)
+			ux,uy,uz = Spring.GetUnitPosition(target)
+            return ux,uy,uz
         end
         if targetTypeInt == string.byte('f') then
-            return Spring.GetFeaturePosition(target)
+			fx,fy,fz = Spring.GetFeaturePosition(target)
+            return fx, fy, fz
         end
         if targetTypeInt == string.byte('p') then
-            return Spring.GetProjectilePosition(target)
+			px,py,pz = Spring.GetProjectilePosition(target)
+            return px,py,pz
         end
     end
 
@@ -49,8 +52,6 @@ if (gadgetHandler:IsSyncedCode()) then
 
     function gadget:ProjectileCreated(proID, proOwnerID, weaponID)
         if weapons[weaponID] then
-
-
             tx, ty, tz = getProjectileTargetXYZ(proID)
             projectiles[proID] = { id = proOwnerID, x = tx, y = ty, z = tz };
         end
@@ -70,7 +71,6 @@ if (gadgetHandler:IsSyncedCode()) then
                 norm = math.sqrt(x * x + z * z)
 
                 orthom = { z = x / norm, x = -1 * (z / norm) }
-
 
                 subOrbTable[AttackerID] = { x = px, z = pz, scalar = 0, vec = orthom, team = teamid, heading = head }
                 id = Spring.CreateUnit("csuborbexplo", px, py, pz, 0, teamid)
