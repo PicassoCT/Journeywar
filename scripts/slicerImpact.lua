@@ -23,17 +23,19 @@ function script.Killed(recentDamage,_)
 end
 
 function getAttackVector(victimid)
-dx,dy,dz=math.random(-160,-95),math.random(-360,360),0
-attacker=Spring.GetUnitLastAttacker(victimid)
-if attacker then
-attackVector=vectorUnitToUnit(victimid,attacker)
-
-end
+	dx,dy,dz=math.random(-100,100)/100, math.random(-100,100)/100, math.random(-100,100)/100
+	attacker=Spring.GetUnitLastAttacker(victimid)
+	
+	if attacker then
+		attackVector=vectorUnitToUnit(victimid,attacker)*-1
+		return attackVector.x,attackVector.y,attackVector.z
+	end
+	return dx,dy,dz
 end
 
 function ThreadStarter()
 existenceCounter=0
-	while not GG.SlicerTable[unitID] and existenceCounter < 50 do
+	while (not GG.SlicerTable or not GG.SlicerTable[unitID]) and existenceCounter < 50 do
 		existenceCounter=existenceCounter+1
 		Sleep(100)
 	end

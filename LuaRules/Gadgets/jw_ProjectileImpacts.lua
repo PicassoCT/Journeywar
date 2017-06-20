@@ -768,12 +768,11 @@ if (gadgetHandler:IsSyncedCode()) then
         if hp / maxhp < 0.5 and hp > 300 then
 			if maRa() then
             pieceID = getUnitBiggestPiece(unitID)
-            Spring.UnitAttach(unitID, slicerColum, pieceID)
-
             slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
-            Spring.SetUnitNoSelect(slicerColum, true)
+            Spring.UnitAttach(unitID, slicerColum, pieceID)          
+			Spring.SetUnitNoSelect(slicerColum, true)
             if not GG.SlicerTable then GG.SlicerTable = {} end
-            GG.SlicerTable[slicerColum] = unitID
+				GG.SlicerTable[slicerColum] = unitID
 			else
 				rootPiece= Spring.GetUnitLastAttackedPiece(unitID)
 				px, py ,pz = Spring.GetUnitPosition(unitID)
