@@ -23,23 +23,22 @@ function script.Killed(recentDamage,_)
 end
 
 function getAttackVector(victimid)
-	dx,dy,dz=math.random(-100,100)/100, math.random(-100,100)/100, math.random(-100,100)/100
-	attacker=Spring.GetUnitLastAttacker(victimid)
 	
+	attacker=Spring.GetUnitLastAttacker(victimid)	
 	if attacker then
 		attackVector=vectorUnitToUnit(victimid,attacker)*-1
 		return attackVector.x,attackVector.y,attackVector.z
 	end
-	return dx,dy,dz
+	return math.random(-100,100)/100, math.random(-100,100)/100, math.random(-100,100)/100
 end
 
 function ThreadStarter()
-existenceCounter=0
+	existenceCounter = 0
 	while (not GG.SlicerTable or not GG.SlicerTable[unitID]) and existenceCounter < 50 do
 		existenceCounter=existenceCounter+1
 		Sleep(100)
 	end
-	if existenceCounter== 50 then Spring.DestroyUnit(unitID,false,true) end
+	if existenceCounter == 50 then Spring.DestroyUnit(unitID,false,true) end
 	
 	victimid= GG.SlicerTable[unitID]
 
