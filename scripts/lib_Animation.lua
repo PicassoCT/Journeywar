@@ -1578,13 +1578,15 @@ end
 
 
 -->Reset a Table of Pieces at speed
-function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate)
+function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate, interValStart, interValEnd)
     lboolWait = boolWait or false
     lspeed = speed or 0
+	interValStart= interValStart or 1
+	interValEnd = interValEnd or #tableName
 
     assert(tableName, "libAnimation::resetT: No valid Table")
 
-    for i = 1, #tableName do
+    for i = interValStart, interValEnd do
 
         reset(tableName[i], lspeed, false, boolIstantUpdate)
         if ShowAll and tableName[i] then
@@ -1625,6 +1627,15 @@ function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, 
 	
 end
 
+function rippleHide(array,startIndex, endIndex)
+	for i= startIndex,endIndex do
+	Hide(array[i])
+	Sleep(600)
+		if array[i-1] then
+			Show(array[i-1])
+		end
+	end
+end
 function movePieceInParabel(unitID, pieceName, yDegreeOffset, xDegreeOffset, valueToGo, valueStart, offsetY, steepness, env, speed)
 	px, py, pz=Spring.GetUnitPiecePosDir(unitID, pieceName)
 	

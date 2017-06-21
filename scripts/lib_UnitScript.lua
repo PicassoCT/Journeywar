@@ -200,7 +200,7 @@ end
 
 
 function shuffleT(T)
-	randT= {}
+local	randT= {}
 	size = count(T)
 	allreadyInserted={}
 	
@@ -4807,14 +4807,14 @@ function Command(id, command, target, option)
     end
 
     if command == "setactive" then
-		currentState GetUnitValue(COB.ACTIVATION)
+		currentState = GetUnitValue(COB.ACTIVATION)
 		if currentState == 0 then currentState = 1 else currentState = 0 end
 		SetUnitValue(COB.ACTIVATION, currentState)
 		return
     end
 	
 	    if command == "cloak" then
-		currentState GetUnitValue(COB.ACTIVATION)
+		currentState = GetUnitValue(COB.ACTIVATION)
 		if currentState == 0 then currentState = 1 else currentState = 0 end
 		
 		Spring.UnitScript.SetUnitValue(COB.CLOAKED, currentState)
