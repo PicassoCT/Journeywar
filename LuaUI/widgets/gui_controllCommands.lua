@@ -26,7 +26,7 @@ local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
 local controllCommand_window
-
+local activeCommand = 0
 
 
 VFS.Include("LuaUI/widgets/guiEnums.lua")
@@ -115,14 +115,12 @@ extendedMenue[CMD.LOAD_UNITS] ={
 	backgroundCol=backgroundColExtended,
 	caption=	"LOAD",
 	callbackFunction=function()
-		selectedUnits=spGetSelectedUnits();
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)
-			typeParam, param = getCommandTarget()
-			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.LOAD_UNITS, param, commandTable)
-			end
+		if activeCommand == CMD.LOAD_UNITS then
+			activeCommand = nil
+		else
+			activeCommand = CMD.LOAD_UNITS
 		end
+			
 	end
 }
 extendedMenue[CMD.UNLOAD_UNITS] ={
@@ -134,14 +132,11 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 	backgroundCol=backgroundColExtended,
 	caption=	"DROP",
 	callbackFunction=function()
-		selectedUnits=spGetSelectedUnits();
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)
-			typeParam, param = getCommandTarget()
-			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.UNLOAD_UNITS, param, commandTable)
-			end
-		end
+		if activeCommand == CMD.UNLOAD_UNITS then
+			activeCommand = nil
+		else
+			activeCommand = UNLOAD_UNITS
+		end	
 	end
 }
 
@@ -152,16 +147,17 @@ extendedMenue[CMD.CLOAK] ={
 	backgroundCol=backgroundColExtended,
 	caption= "CLOAK",
 	callbackFunction=function()
-	
+		Spring.Echo("Cloaking")
 		selectedUnits=spGetSelectedUnits();
 		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)
-			typeParam, param = getCommandTarget()
+				commandTable= getCommandTable(boolQueueOverride)			
 			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, param, commandTable)
+				state = Spring.GetUnitStates(selectedUnits[i])
+				paramTable={}
+				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
 			end
-		end
-		
+		end		
 	end
 }	
 
