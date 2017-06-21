@@ -1413,6 +1413,7 @@ function showTime()
 	for i=1, #WeaponsTable do
 		Weapons[i][eShowFunc]()
 	end
+	end
 end
 
 --</ONUPGRADESHOW>
