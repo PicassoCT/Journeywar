@@ -786,7 +786,7 @@ x,y,z= Spring.GetUnitBasePosition(unitID)
 					if not (Spring.GetUnitTeam(id)==teamID) then
 						return id 
 					end
-				end
+				end,
 				function(id) 	
 				--remove allready processQueued
 					if not processQueued[id] then 
@@ -808,9 +808,9 @@ x,y,z= Spring.GetUnitBasePosition(unitID)
 				end,
 				function(id)
 				--remove still attached Units
-				if not Spring.GetUnitTransporter(id) then 
-				return id
-				end
+					if not Spring.GetUnitTransporter(id) then 
+						return id
+					end
 				end,
 				function(id)
 				--add to ProcessQueue
@@ -849,7 +849,7 @@ end
 
 function moveCadaversToRalleyPoint(id)
 --TODO cargolifter
-boolArrived==false
+boolArrived=false
 while(boolArrived== false) do
     local tx, ty, tz, _, _, _ = Spring.GetUnitPiecePosDir(unitID, ralleypoint)
 
