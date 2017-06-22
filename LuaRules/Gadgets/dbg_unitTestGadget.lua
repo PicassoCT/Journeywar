@@ -22,8 +22,8 @@ if gadgetHandler:IsSyncedCode() then
     boolRunUnitTest = false
     function gadget:RecvLuaMsg(msg, playerID)
         if msg then
-            ident = string.sub(msg, 1, 3)
-            if ident and ident == "TST" then
+            ident = string.low(string.sub(msg, 1, 3))
+            if ident and ident == "tst" then
                 playerTeamID = tonumber(string.sub(msg, 5, string.len(msg)))
                 boolRunUnitTest = true
             end
@@ -73,5 +73,5 @@ else --Unsynced
         Spring.SendLuaRulesMsg("TST|" .. tID)
     end
 
-    gadgetHandler.actionHandler.AddChatAction(gadget, 'run Unittest', sendUnitTestStartMessage, "")
+    gadgetHandler.actionHandler.AddChatAction(gadget, 'unittest run', sendUnitTestStartMessage, "")
 end

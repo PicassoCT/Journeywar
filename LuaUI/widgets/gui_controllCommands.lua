@@ -97,14 +97,9 @@ extendedMenue[CMD.RECLAIM] ={
 	backgroundCol=backgroundColExtended,
 	caption="RECLAIM",
 	callbackFunction=function()
-		selectedUnits=spGetSelectedUnits();
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)
-			typeParam, param = getCommandTarget()
-			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.RECLAIM, param, commandTable)
-			end
-		end
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.RECLAIM] = not WG.SelectedCommand[player][CMD.RECLAIM] or true
+	
 	end
 }
 
@@ -115,11 +110,10 @@ extendedMenue[CMD.LOAD_UNITS] ={
 	backgroundCol=backgroundColExtended,
 	caption=	"LOAD",
 	callbackFunction=function()
-		if activeCommand == CMD.LOAD_UNITS then
-			activeCommand = nil
-		else
-			activeCommand = CMD.LOAD_UNITS
-		end
+			player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.LOAD_UNITS] = not WG.SelectedCommand[player][CMD.LOAD_UNITS] or true
+	
+
 			
 	end
 }
@@ -132,11 +126,8 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 	backgroundCol=backgroundColExtended,
 	caption=	"DROP",
 	callbackFunction=function()
-		if activeCommand == CMD.UNLOAD_UNITS then
-			activeCommand = nil
-		else
-			activeCommand = UNLOAD_UNITS
-		end	
+	player= Spring.GetMyPlayerID()
+	WG.SelectedCommand[player][CMD.UNLOAD_UNITS] = not WG.SelectedCommand[player][CMD.UNLOAD_UNITS] or true
 	end
 }
 
@@ -168,14 +159,8 @@ extendedMenue[CMD.RESTORE] ={
 	backgroundCol=backgroundColExtended,
 	caption= "RESTORE",
 	callbackFunction=function()
-		selectedUnits=spGetSelectedUnits();
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)
-			typeParam, param = getCommandTarget()
-			for i=1,#selectedUnits do
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.RESTORE, param, commandTable)
-			end
-		end
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.RESTORE] = not WG.SelectedCommand[player][CMD.RESTORE] or true
 	end
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
@@ -296,15 +281,45 @@ MainMenue[CMD.GUARD] ={
 	caption="|GUARD",
 }	
 
-MainMenue[CMD.ATTACK].callbackFunction= function() WG.SelectedCommand[playerID][CMD.ATTACK ]=true; end
-MainMenue[CMD.STOP].callbackFunction= function() WG.SelectedCommand[playerID][CMD.STOP]=true ; end
-MainMenue[CMD.MOVE].callbackFunction= function() WG.SelectedCommand[playerID][CMD.MOVE]=true ; Spring.Echo("Move Selected");end
-MainMenue[CMD.FIRE_STATE].callbackFunction= function() WG.SelectedCommand[playerID][CMD.FIRE_STATE]=true ; end
-MainMenue[CMD.REPEAT].callbackFunction= function() WG.SelectedCommand[playerID][CMD.REPEAT]=true ; end
-MainMenue[CMD.MOVE_STATE].callbackFunction= function() WG.SelectedCommand[playerID][CMD.MOVE_STATE]=true ; end
-MainMenue[CMD.REPAIR].callbackFunction= function() WG.SelectedCommand[playerID][CMD.REPAIR]=true ; end
-MainMenue[CMD.GUARD].callbackFunction= function() WG.SelectedCommand[playerID][CMD.GUARD]=true; end
-MainMenue[CMD.PATROL].callbackFunction= function() WG.SelectedCommand[playerID][CMD.PATROL]=true ; end
+MainMenue[CMD.ATTACK].callbackFunction= function()
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.ATTACK] = not WG.SelectedCommand[player][CMD.ATTACK] or true
+end
+MainMenue[CMD.STOP].callbackFunction= function()
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.STOP] = not WG.SelectedCommand[player][CMD.STOP] or true 
+
+end
+MainMenue[CMD.MOVE].callbackFunction= function() 
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.MOVE] = not WG.SelectedCommand[player][CMD.MOVE] or true 
+end
+MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
+		--TODO set Firestate
+		Spring.Echo("Set Firestate")
+end
+MainMenue[CMD.REPEAT].callbackFunction= function() 
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.REPEAT] = not WG.SelectedCommand[player][CMD.REPEAT] or true 
+end
+
+MainMenue[CMD.MOVE_STATE].callbackFunction= function()
+		--TODO set Firestate
+		Spring.Echo("TODO Set MoveState")
+ end
+MainMenue[CMD.REPAIR].callbackFunction= function() 
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.REPAIR] = not WG.SelectedCommand[player][CMD.REPAIR] or true 
+end
+MainMenue[CMD.GUARD].callbackFunction= function() 		
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.GUARD] = not WG.SelectedCommand[player][CMD.GUARD] or true 
+end
+
+MainMenue[CMD.PATROL].callbackFunction= function() 		
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player][CMD.PATROL] = not WG.SelectedCommand[player][CMD.PATROL] or true 
+end
 
 
 
