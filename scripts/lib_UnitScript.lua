@@ -4774,6 +4774,23 @@ function TableInsertUnique(Table, Value)
     return Table
 end
 
+function delayedCommand(id, command, target, option, framesToDelay)
+
+persPack={}
+	function delayedOrder(evtID, frame, persPack, startFrame)
+		if frame >= startFrame +framesToDelay then
+		 Command(id, command, target, option)
+		 return nil, persPack
+		end
+		
+		return frame+10, persPack
+	end
+
+    GG.EventStream:CreateEvent(delayedCommand,
+             persPack,
+             Spring.GetGameFrame() + framesToDelay)
+
+end
 -->Generic Simple Commands
 function Command(id, command, target, option)
     options = option or {}
