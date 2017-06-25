@@ -4777,7 +4777,7 @@ end
 function delayedCommand(id, command, target, option, framesToDelay)
 
 persPack={}
-	function delayedOrder(evtID, frame, persPack, startFrame)
+	function delay(evtID, frame, persPack, startFrame)
 		if frame >= startFrame +framesToDelay then
 		 Command(id, command, target, option)
 		 return nil, persPack

@@ -29,9 +29,10 @@ if gadgetHandler:IsSyncedCode() then
 			if ident then
 				testmode= "generic"
 				if ident == "tct" then testmode ="custom" end
-				playerTeamID = tonumber(string.sub(msg, 5, string.len(msg)))
-				unitTest(playerTeamID, testmode)
-				
+					if ident == "tct" or ident == "tgt" then
+						playerTeamID = tonumber(string.sub(msg, 5, string.len(msg)))
+						unitTest(playerTeamID, testmode)			
+					end
 			end
 		end
 	end
@@ -87,13 +88,15 @@ if gadgetHandler:IsSyncedCode() then
 	end
 	
 	function executeTests(Tets)
+		i=1
 		for num,Test in pairs(Tests) do
+		i=i +1
 			persPackage={}
 			persPackage= Test.preparation(persPackage)			
 
          GG.EventStream:CreateEvent(Test.fullfilled,
              persPackage,
-             Spring.GetGameFrame() + 1)
+             Spring.GetGameFrame() + i)
 		end
 	end
 	
