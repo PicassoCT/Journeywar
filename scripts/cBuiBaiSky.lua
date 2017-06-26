@@ -325,7 +325,12 @@ function script.Create()
     StartThread(SideEffects)
     StartThread(floatNeonSign, neonCenter1, 1, 20)
     StartThread(floatNeonSign, neonCenter2, 21,40)
-    Spring.AddUnitDamage(unitID, 10)
+	
+	dramatisPersona3D = initFlyingCars(15)
+	StartThread(littleFlyingCars, dramatisPersona3D)
 end
 
 --------BUILDING---------
+
+
+------------------- globallos -------------------------------
