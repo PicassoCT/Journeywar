@@ -26,8 +26,9 @@ local weaponDef = {
     SweepFire = 1,
     --apperance
     rgbColor = [[0.12 0.9 0.9]],
-    size = 0.45,
-    stages = 20,
+	alphaDecay = 0.35,
+    size = 1.45,
+    stages = 4,
     separation = 1,
 }
 
