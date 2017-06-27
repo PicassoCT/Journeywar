@@ -1837,4 +1837,206 @@ end
 
 
 --================================================================================================================
+--====================================Little Flying Cars  Clockworkanimation======================================
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+function stillMoving(personNr)
+    if (true == Spring.UnitScript.IsInMove(dramatisPersona3d[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona3d[personNr][1], y_axis)) then
+        return true
+
+    else
+        return false
+    end
+end
+
+
+
+
+function typeDependedDriveAnimation(personNr)
+    --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
+
+    while stillMoving(personNr) == true do
+        Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(0.5), 0.02)
+        WaitForTurn(dramatisPersona3d[personNr][2], x_axis)
+        Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(-0.25), 0.02)
+        WaitForTurn(dramatisPersona3d[personNr][2], x_axis)
+    end
+    Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(0), 2)
+
+end
+
+
+function carSenderJobFunc(dramatisPersona3d, personNr)
+
+    targetDist = 500
+    NtargetDist = -500
+    targetdegree = 90
+    Ntargetdegree = 0
+    targetHeight = 120
+    luckOne = 0
+    if math.random(0, 1) == 1 then
+        luckOne = math.random(12, 50)/10
+    end
+    tempDirAction = 1
+    tempSpeed = dramatisPersona3d[personNr][10]
+    --if car views inside
+    if dramatisPersona3d[personNr][6] == 1 then
+        --move it through the center move along center axis -lower Axis
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(0), 4)
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+
+        dramatisPersona3d[personNr][5] = targetDist
+
+        Move(dramatisPersona3d[personNr][2], z_axis, targetDist, (tempSpeed * 6) + luckOne)
+        tempDirAction = 8
+
+
+    elseif dramatisPersona3d[personNr][6] == 2 then
+        --if car views outside beeing high, turn right, turn along radiant via SwingCenter - +down
+
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(270), 4) --FixMe90
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+
+        dramatisPersona3d[personNr][4] = targetdegree
+        Move(dramatisPersona3d[personNr][2], y_axis, 0, tempSpeed * 1.4)
+        dramatisPersona3d[personNr][13] = 0
+        Turn(dramatisPersona3d[personNr][1], y_axis, math.rad(targetdegree), ((dramatisPersona3d[personNr][10]) / 100) + 0.1) --0.3
+        tempDirAction = 1
+
+    elseif dramatisPersona3d[personNr][6] == 4 then
+
+        --if car turned right nach innen drehen, move along the uper axis
+
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(180), 4)
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+        dramatisPersona3d[personNr][5] = NtargetDist
+        Move(dramatisPersona3d[personNr][2], z_axis, NtargetDist, (tempSpeed * 6) + luckOne)
+        tempDirAction = 2
+    elseif dramatisPersona3d[personNr][6] == 8 then
+
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(-90), 4) --FixMe270
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+        dramatisPersona3d[personNr][4] = Ntargetdegree
+        Move(dramatisPersona3d[personNr][2], y_axis, targetHeight, tempSpeed * 1.4)
+        dramatisPersona3d[personNr][13] = targetHeight
+        Turn(dramatisPersona3d[personNr][1], y_axis, math.rad(Ntargetdegree), ((dramatisPersona3d[personNr][10]) / 100) + 0.1) --0.3
+        tempDirAction = 4
+    end
+
+    dramatisPersona3d[personNr][6] = tempDirAction
+    Sleep(1000)
+    --if car views outside beeing beeing low turn turn left
+
+    --Enum: inside is 1,
+    --		outside is 2,
+    --		clockwise is 4,
+    -- counterclockwise its 8
+    --Person turned into the direction it is going to walk
+
+    --send the person on its way.
+    typeDependedDriveAnimation(personNr)
+
+    --now we update the current position
+
+    if personNr ~= 11 and personNr ~= 1 and personNr ~= 2 and personNr ~= 3 then
+        dramatisPersona3d[personNr][10] = math.random(7.9, 22)
+    end
+
+    -- we turn the persona into a random direction
+    --randomTurn=math.random(0,360)
+    --Turn(dramatisPersona3d[personNr][1],y_axis,math.rad(randomTurn),dramatisPersona3d[personNr][10])
+
+    -- now we need a Time, and a idleanimation so the person arriving at the ways end, doesent just stands around
+
+    -- we return the random direction
+
+    --finally we set the unit back into jobless mode, so the partymanager can grab it again, and send it on its way
+    dramatisPersona3d[personNr][9] = false
+end
+
+function carStarterKid(dramatisPersona3d)
+    for i = 1, #dramatisPersona3d, 1 do
+        dramatisPersona3d[i][9] = false
+        sleeper = math.random(2000, 25000)
+        Sleep(sleeper)
+        Show((dramatisPersona3d[i][2]))
+    end
+end
+
+--This is the PartyManager - this function decides were everyone goes
+function littleFlyingCars(nrOfCars)
+dramatisPersona3d = initFlyingCars(nrOfCars)
+
+    for i = 1, nrOfCars, 1 do
+        dramatisPersona3d[i][9] = true
+        Hide((dramatisPersona3d[i][2]))
+    end
+
+    --FixMe
+    StartThread(carStarterKid,dramatisPersona3d)
+
+
+    while (true) do
+        for i = 1, nrOfCars, 1 do
+
+            if dramatisPersona3d[i][9] == false then --else the piece is a standaloner on the neverending party allready busy
+                dramatisPersona3d[i][9] = true
+
+                moveInOut = 1
+                degreeRand = 2 --0*360 in 45 degree Steps
+
+                StartThread(carSenderJobFunc, dramatisPersona3d, i)
+            end
+        end
+
+        Sleep(120)
+    end
+end
+
+function initFlyingCars(numberOfActors)
+numberOfActors = numberOfActors or 15
+dramatisPersona3d = {}
+
+
+for i=1, numberOfActors do
+	--personObjects
+	person = {}
+
+	--traditional pieces hiearchy, swingCenter beeing the Center
+	centerString= "swingCenter"..i
+	person[1] = piece centerString --swingCenter always atfirstPlace 1
+	pieceString= "car"..i
+
+	person[2] = piece pieceString
+	-- a person is defined by the following values: 
+	-- its position in degree and distance 
+
+	person[4] = 0--degree
+	person[5] = 0--dist
+	person[6] = 2
+
+
+	person[7] = false
+
+	-- the type of char (a intvalue that represents the diffrent purposes 
+	--Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, aircar= 7, airtruck=8
+	person[8] = 7
+	--boolean on its way (has a thread, even if it is just to idle 
+	person[9] = false
+	-- speedvalue of the the person
+
+	person[10] =  math.random(1.9, 8)
+	--numberOfPieces
+	person[11] = 1
+	person[12] = 1
+	--its height in the 3dmatrixgrid
+	person[13] = 0
+
+	dramatisPersona3d[#dramatisPersona3d+1] = person
+
+end
+return dramatisPersona3d
+end
+--================================================================================================================
 --================================================================================================================

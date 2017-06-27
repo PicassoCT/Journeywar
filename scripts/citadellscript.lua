@@ -158,6 +158,11 @@ signOffset = {
     { x = -60, z = 0 },
     { x = 0, z = -60 }
 }
+function delayedSendBG(bgID, dropPx, dropPy,dropPz, nr, delay)
+	Sleep(nr*delay)
+	ox,oz = get2DSquareFormationPosition(nr,25,4)
+	Command(bgID, "go",{ x= dropPx + 100+ox, y= dropPy + 100, z= dropPz + 100+oz },{"shift"})					
+end
 --arrive every 1:30 secs -> to forwards that hollywood action curve, in which every 3 min something is blown up- 
 function reInforCements()
     Sleep(65000)
@@ -195,9 +200,10 @@ function reInforCements()
                 spCreateUnit("contruck", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
                 for k = 1, 3 do
                     index = (index % #signOffset) + 1
-                    spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
-                end
+							bgID=  spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+							StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
                 Sleep(50)
+					end
             end
 
 
@@ -210,16 +216,17 @@ function reInforCements()
             spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 250, 0 + i, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-                spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
-            end
+               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
+				end
             Sleep(50)
             spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 340 + i, 0, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-                spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
-            end
-            Sleep(50)
-            Sleep(50)
+               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
+				end
+            Sleep(100)
         end
     end
 end

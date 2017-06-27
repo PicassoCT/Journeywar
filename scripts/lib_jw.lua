@@ -154,38 +154,6 @@ function getTreeTypeTable(UnitDefNames)
     return FactoryTypes
 end
 
-function getPokerTypeTable(UnitDefNames)
-    BattleTypes = {}
-    BattleTypes[UnitDefNames["art"].id] = true
-    BattleTypes[UnitDefNames["cadvisor"].id] = true
-    BattleTypes[UnitDefNames["campro"].id] = true
-    BattleTypes[UnitDefNames["csniper"].id] = truer
-    BattleTypes[UnitDefNames["cgunship"].id] = true
-    BattleTypes[UnitDefNames["cichneumonidae"].id] = true
-    BattleTypes[UnitDefNames["strider"].id] = true
-    BattleTypes[UnitDefNames["coperatrans"].id] = true
-    BattleTypes[UnitDefNames["mtw"].id] = true
-    BattleTypes[UnitDefNames["res"].id] = true
-    BattleTypes[UnitDefNames["zombie"].id] = true
-    BattleTypes[UnitDefNames["gfreeman"].id] = true
-
-    BattleTypes[UnitDefNames["jbeefeater"].id] = true
-    BattleTypes[UnitDefNames["jglowworm"].id] = true
-    BattleTypes[UnitDefNames["jbugcreeper"].id] = true
-    BattleTypes[UnitDefNames["jeliah"].id] = true
-    BattleTypes[UnitDefNames["jcrabcreeper"].id] = true
-    BattleTypes[UnitDefNames["jgalatea"].id] = true
-    BattleTypes[UnitDefNames["jghostdancer"].id] = true
-
-    BattleTypes[UnitDefNames["jhivehound"].id] = true
-    BattleTypes[UnitDefNames["jresistancewarrior"].id] = true
-    BattleTypes[UnitDefNames["jswiftspear"].id] = true
-    BattleTypes[UnitDefNames["jviciouscycler"].id] = true
-    BattleTypes[UnitDefNames["jwatchbird"].id] = true
-    BattleTypes[UnitDefNames["tiglil"].id] = true
-    BattleTypes[UnitDefNames["vort"].id] = true
-    return BattleTypes
-end
 
 function getInfantryTypeTable()
     Infantry = {}

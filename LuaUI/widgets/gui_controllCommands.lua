@@ -28,10 +28,8 @@ local selectedUnits = {}
 local controllCommand_window
 local activeCommand = 0
 
-
 VFS.Include("LuaUI/widgets/guiEnums.lua")
 VFS.Include("LuaUI/widgets/gui_helper.lua")
-
 ---------------------------------------------------------------------------------------
 
 local function GetModKeys()
@@ -513,9 +511,7 @@ function widgetHandler:MouseRelease(x, y, button)
 					if selectedUnits and #selectedUnits > 0 then
 						commandTable= getCommandTable(boolQueueOverride)
 						typeParam, param = getCommandTarget()
-						for i=1,#selectedUnits do
-							Spring.GiveOrderToUnit(selectedUnits[i], command, param, commandTable)
-						end
+						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
 						
 						WG.SelectedCommand[mo][command] = not active
 						break

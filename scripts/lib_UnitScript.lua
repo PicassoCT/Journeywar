@@ -3023,6 +3023,14 @@ function removeUnitsOfTypeInT(T, UnitTypeTable, Cache)
     end
 end
 
+--> Execute Random Function in Table
+function randTableFunc(Table)
+	Table=shuffleT(Table)
+	randElement=math.random(1,table.getn(Table))
+	return Table[randElement]()
+end
+
+
 -->filtersOutUnitsOfType. Uses a Cache, if handed one to return allready Identified Units
 function getUnitsOfTypeInT(T, UnitTypeTable, Cache)
     if type(UnitTypeTable) == "number" then
@@ -4774,6 +4782,23 @@ function TableInsertUnique(Table, Value)
     return Table
 end
 
+function delayedCommand(id, command, target, option, framesToDelay)
+
+persPack={}
+	function delay(evtID, frame, persPack, startFrame)
+		if frame >= startFrame +framesToDelay then
+		 Command(id, command, target, option)
+		 return nil, persPack
+		end
+		
+		return frame+10, persPack
+	end
+
+    GG.EventStream:CreateEvent(delayedCommand,
+             persPack,
+             Spring.GetGameFrame() + framesToDelay)
+
+end
 -->Generic Simple Commands
 function Command(id, command, target, option)
     options = option or {}
@@ -4975,6 +5000,12 @@ function getUnitMoveGoal(unitID)
     end
 end
 
+function get2DSquareFormationPosition(nr, size, unitsInRow)
+
+	row = math.floor(nr/unitsInRow)
+	place = nr % unitsInRow 
+	return row*size, place*size
+end
 
 function drawFunctionGenerator(sizeX, sizeY, typeName)
     heightMapTable = makeTable({}, sizeX, sizeY)
