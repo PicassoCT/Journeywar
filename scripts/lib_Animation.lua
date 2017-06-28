@@ -1602,10 +1602,13 @@ end
 --> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
 function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
 	shotVector= shotVector*-1
-	echo("unitRipAPieceOut called")
-	-- LimbMap= getPiecesBelow(unitID, rootPiece)
-	-- stunUnit(unitID, 64)
-	-- env = Spring.UnitScript.GetScriptEnv(unitID)
+	echo("TODO unitRipAPieceOut called")
+	env = 
+	LimbMap= getPiecesBelow(unitID, rootPiece)
+	stunUnit(unitID, 64)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	env.Hide(rootPiece)
+	env.Explode(rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
 	
 	-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
 	-- spinTime= 0
