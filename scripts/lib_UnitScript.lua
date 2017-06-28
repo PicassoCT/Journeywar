@@ -2161,7 +2161,7 @@ function Limit(val, lmin, lmax)
     return val
 end
 
-function inheritFrom( childClass, parent)
+function inherit(childClass, parent)
     local orig_type = type(parent)
 	local copy = parentClass or {}
   
