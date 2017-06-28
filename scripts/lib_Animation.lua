@@ -1850,9 +1850,6 @@ function stillMoving(personNr)
     end
 end
 
-
-
-
 function typeDependedDriveAnimation(personNr)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
 
@@ -1865,7 +1862,6 @@ function typeDependedDriveAnimation(personNr)
     Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(0), 2)
 
 end
-
 
 function carSenderJobFunc(dramatisPersona3d, personNr)
 
