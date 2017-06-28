@@ -1,5 +1,4 @@
-include "AniMatrix.lua"
-include "NeverEndingParty.lua"
+include "wildPartySystem.lua"
 include "createCorpse.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
@@ -28,6 +27,32 @@ for i = 1, 5, 1 do
     sloth[i] = piece(slot)
 end
 
+
+--forbidden Zones
+forbZone = {}
+nrOfforbZones = 2
+
+forbZone[1] = updegree
+forbZone[2] = lowdegree
+forbZone[3] = updist
+forbZone[4] = dowdist
+
+forbMap[1] = forbZone
+
+forbZone2 = {}
+
+updegree = 145
+lowdegree = 42
+updist = 13
+dowdist = 2
+
+
+forbZone2[1] = updegree
+forbZone2[2] = lowdegree
+forbZone2[3] = updist
+forbZone2[4] = dowdist
+
+forbMap[2] = forbZone2
 
 local base = piece "operatrans"
 local opcrane = piece "opcrane"

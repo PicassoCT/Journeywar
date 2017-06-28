@@ -838,6 +838,8 @@ function recycleCircle(id)
 		IndustrySemaphore = IndustrySemaphore + 1
 		if IndustrySemaphore > 1 then 
 			IndustrySemaphore = IndustrySemaphore -1
+		else
+			break
 		end
 	Sleep(50)
 	end 
@@ -852,36 +854,24 @@ theProcess(id)
 IndustrySemaphore = IndustrySemaphore -1
 end
 
+cargoLifter = piece"cargoLifter"
 function moveCadaversToRalleyPoint(id)
 --TODO cargolifter
-boolArrived=false
-while(boolArrived== false) do
-    local tx, ty, tz, _, _, _ = Spring.GetUnitPiecePosDir(unitID, ralleypoint)
-
-                    Spring.MoveCtrl.Enable(id)
-                    x, y, z = Spring.GetUnitPosition(id)
-                    if (distance(x, tx) > 12 and distance(x, tx) < 250) and distance(z, tz) > 250 then
-                        --move it in on the
-                        newX = math.ceil((7 * x + tx) / 8)
-                        newZ = z
-                        Spring.MoveCtrl.SetPosition(id, newX, y, newZ)
-                    elseif distance(z, tz) <= 250 and distance(z, tz) > 12 then
-                        newZ = math.floor((7 * z + tz) / 8)
-                        newX = x
-                        Spring.MoveCtrl.SetPosition(id, newX, y, newZ)
-                    else
-                        newX = math.ceil((7 * x + tx) / 8)
-                        newZ = math.floor((7 * z + tz) / 8)
-                        Spring.MoveCtrl.SetPosition(id, newX, y, newZ)
-                        --Spring.Echo(math.sqrt(( x-tx)^2 +(z-tz)^2))
-                        if math.sqrt((x - tx) ^ 2 + (z - tz) ^ 2) <= 12 then
-                         boolArrived = true
-                        end
-					end
-            
-        
-        Sleep(500)
+boolArrived = false
+	while (boolArrived == false) do
+		x, y, z = Spring.GetUnitPosition(id)
+		MovePieceToPos(cargoLifter, x, y, z, 7.5)
+		WaitForMoves(cargoLifter)
+		Spring.UnitScript.AttachUnit(cargoLifter, id)
+		MovePieceToPiece(cargoLifter,ralleypoint, 2.5)
+		WaitForMoves(cargoLifter)
+		Spring.UnitScript.DettachUnit(cargoLifter, id)
+		reset(cargoLifter,7.5)
+		WaitForMoves(cargoLifter)	
+		Sleep(500)
     end
+	
+	Spring.MoveCtrl.Enable(id)
 end
 
 

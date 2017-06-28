@@ -1,12 +1,11 @@
---Globallos
+----Globallos
+include "neverEndingPartyAnimation.lua"
 --General Public License goes in all fields
+
 testCenter = piece "testCenter"
 
 numberOfActors = 10
 dramatisPersona = {}
-
-
-
 
 --This is the neverending Party Script
 
@@ -19,14 +18,9 @@ maxDist = 13
 minIdle = 4000
 maxIdle = 19000
 
-
-
-
 ----------------------------------------------------
 forbMap = {}
---forbidden Zones
-forbZone = {}
-nrOfforbZones = 2
+
 --a forbidden Zone consists at its most basic established of 4 values - two degrees (upper and lower bound) - and two distancevalues (upper and lower bound)
 updegree = 273
 lowdegree = 225
@@ -34,34 +28,11 @@ updist = 9
 dowdist = 2
 boolunitDead = false
 
-forbZone[1] = updegree
-forbZone[2] = lowdegree
-forbZone[3] = updist
-forbZone[4] = dowdist
-
-forbMap[1] = forbZone
-
-forbZone2 = {}
-
-updegree = 145
-lowdegree = 42
-updist = 13
-dowdist = 2
-
-
-forbZone2[1] = updegree
-forbZone2[2] = lowdegree
-forbZone2[3] = updist
-forbZone2[4] = dowdist
-
-forbMap[2] = forbZone2
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 
 --personObjects
-
-
 
 person = {}
 --traditional pieces hiearchy, swingCenter beeing the Center
@@ -72,29 +43,16 @@ abTusM1 = piece "abTusM1" -- the persons centerpiece 2
 table.insert(person, 2, abTusM1)
 
 piecetable = {} --contains the remaining pieces 3
-abTUarR1 = piece "abTUarR1"
-piecetable[#piecetable + 1] = abTUarR1
-abTLarR1 = piece "abTLarR1"
-piecetable[#piecetable + 1] = abTLarR1
-abTUarL1 = piece "abTUarL1"
-piecetable[#piecetable + 1] = abTUarL1
-abTLarL1 = piece "abTLarL1"
-piecetable[#piecetable + 1] = abTLarL1
-glasprop1 = piece "glasprop1"
-piecetable[#piecetable + 1] = glasprop1
-abTULeg1 = piece "abTULeg1"
-piecetable[#piecetable + 1] = abTULeg1
-abTLLegL1 = piece "abTLLegL1"
-piecetable[#piecetable + 1] = abTLLegL1
-abTLLegR1 = piece "abTLLegR1"
-piecetable[#piecetable + 1] = abTLLegR1
-abTHead1 = piece "abTHead1"
-piecetable[#piecetable + 1] = abTHead1
-
-
-
-
-
+piecetable[#piecetable + 1] = piece "abTUarR1"
+piecetable[#piecetable + 1] = piece"abTUarR1"
+piecetable[#piecetable + 1] = piece"abTLarR1"
+piecetable[#piecetable + 1] = piece"abTUarL1"
+piecetable[#piecetable + 1] = piece"abTLarL1"
+piecetable[#piecetable + 1] = piece"glasprop1"
+piecetable[#piecetable + 1] = piece"abTULeg1"
+piecetable[#piecetable + 1] = piece"abTLLegL1"
+piecetable[#piecetable + 1] = piece"abTLLegR1"
+piecetable[#piecetable + 1] = piece"abTHead1"
 
 
 table.insert(person, 3, piecetable)
@@ -146,11 +104,9 @@ table.insert(person, 2, abAdvmain2)
 
 piecetable = {} --contains the remaining pieces 3
 
-abadvarmR2 = piece "abadvarmR2"
-abadvarmL2 = piece "abadvarmL2"
 
-piecetable[#piecetable + 1] = abadvarmR2
-piecetable[#piecetable + 1] = abadvarmL2
+piecetable[#piecetable + 1] =  piece "abadvarmR2"
+piecetable[#piecetable + 1] = piece "abadvarmL2"
 
 
 table.insert(person, 3, piecetable)
@@ -206,24 +162,16 @@ table.insert(person, 2, abTusM3)
 
 piecetable = {} --contains the remaining pieces 3
 
-abTUarR3 = piece "abTUarR3"
-piecetable[#piecetable + 1] = abTUarR3
-abTLarR3 = piece "abTLarR3"
-piecetable[#piecetable + 1] = abTLarR3
-abTUarL3 = piece "abTUarL3"
-piecetable[#piecetable + 1] = abTUarL3
-abTLarL3 = piece "abTLarL3"
-piecetable[#piecetable + 1] = abTLarL3
-glasprop3 = piece "glasprop3"
-piecetable[#piecetable + 1] = glasprop3
-abTULegL3 = piece "abTULegL3"
-piecetable[#piecetable + 1] = abTULegL3
-abTLLegL3 = piece "abTLLegL3"
-piecetable[#piecetable + 1] = abTLLegL3
-abTLLegR3 = piece "abTLLegR3"
-piecetable[#piecetable + 1] = abTLLegR3
-abTHead3 = piece "abTHead3"
-piecetable[#piecetable + 1] = abTHead3
+piecetable[#piecetable + 1] = piece "abTUarR3"
+piecetable[#piecetable + 1] = piece "abTLarR3"
+piecetable[#piecetable + 1] = piece "abTUarL3"
+piecetable[#piecetable + 1] = piece "abTLarL3"
+piecetable[#piecetable + 1] = piece "glasprop3"
+piecetable[#piecetable + 1] = piece "abTULegL3"
+piecetable[#piecetable + 1] = piece "abTLLegL3"
+piecetable[#piecetable + 1] = piece "abTLLegR3"
+piecetable[#piecetable + 1] = piece "abTHead3"
+
 
 
 table.insert(person, 3, piecetable)
@@ -279,28 +227,18 @@ table.insert(person, 2, abTMmain4)
 piecetable = {} --contains the remaining pieces 3
 
 
-abTMhandL = piece "abTMhandL"
-piecetable[#piecetable + 1] = abTMhandL
-abTMarmL = piece "abTMarmL"
-piecetable[#piecetable + 1] = abTMarmL
-Plate = piece "Plate"
-piecetable[#piecetable + 1] = Plate
-abTMarmR = piece "abTMarmR"
-piecetable[#piecetable + 1] = abTMarmR
-abTMhandR = piece "abTMhandR"
-piecetable[#piecetable + 1] = abTMhandR
-abTMuplR = piece "abTMuplR"
-piecetable[#piecetable + 1] = abTMuplR
-abTMlowR = piece "abTMlowR"
-piecetable[#piecetable + 1] = abTMlowR
-abTMFeedR = piece "abTMFeedR"
-piecetable[#piecetable + 1] = abTMFeedR
-abTMuplL = piece "abTMuplL"
-piecetable[#piecetable + 1] = abTMuplL
-abTMlowL = piece "abTMlowL"
-piecetable[#piecetable + 1] = abTMlowL
-abTMFeedL = piece "abTMFeedL"
-piecetable[#piecetable + 1] = abTMFeedL
+piecetable[#piecetable + 1] = piece "abTMhandL"
+piecetable[#piecetable + 1] = piece "abTMarmL"
+piecetable[#piecetable + 1] = piece "Plate"
+piecetable[#piecetable + 1] = piece "abTMarmR"
+piecetable[#piecetable + 1] = piece "abTMhandR"
+piecetable[#piecetable + 1] = piece "abTMuplR"
+piecetable[#piecetable + 1] = piece "abTMlowR"
+piecetable[#piecetable + 1] = piece "abTMFeedR"
+piecetable[#piecetable + 1] = piece "abTMuplL"
+piecetable[#piecetable + 1] = piece "abTMlowL"
+piecetable[#piecetable + 1] = piece "abTMFeedL"
+
 
 table.insert(person, 3, piecetable)
 
@@ -354,26 +292,16 @@ table.insert(person, 2, abTusM5)
 piecetable = {} --contains the remaining pieces 3
 
 
-abTUarR5 = piece "abTUarR5"
-abTLarR5 = piece "abTLarR5"
-glasprop5 = piece "glasprop5"
-abTusHead5 = piece "abTusHead5"
-abTULegR5 = piece "abTULegR5"
-abTLLegR5 = piece "abTLLegR5"
-abTULegL5 = piece "abTULegL5"
-abTLLegL5 = piece "abTLLegL5"
-abTUarL5 = piece "abTUarL5"
-abTLarL5 = piece "abTLarL5"
-piecetable[#piecetable + 1] = abTUarR5
-piecetable[#piecetable + 1] = abTLarR5
-piecetable[#piecetable + 1] = glasprop5
-piecetable[#piecetable + 1] = abTusHead5
-piecetable[#piecetable + 1] = abTULegR5
-piecetable[#piecetable + 1] = abTLLegR5
-piecetable[#piecetable + 1] = abTULegL5
-piecetable[#piecetable + 1] = abTLLegL5
-piecetable[#piecetable + 1] = abTUarL5
-piecetable[#piecetable + 1] = abTLarL5
+piecetable[#piecetable + 1]  = piece "abTUarR5"
+piecetable[#piecetable + 1]  = piece "abTLarR5"
+piecetable[#piecetable + 1] = piece "glasprop5"
+piecetable[#piecetable + 1]  = piece "abTusHead5"
+piecetable[#piecetable + 1] = piece "abTULegR5"
+piecetable[#piecetable + 1] = piece "abTLLegR5"
+piecetable[#piecetable + 1]  = piece "abTULegL5"
+piecetable[#piecetable + 1] = piece "abTLLegL5"
+piecetable[#piecetable + 1] = piece "abTUarL5"
+piecetable[#piecetable + 1] = piece "abTLarL5"
 
 
 
@@ -487,18 +415,13 @@ table.insert(person, 2, abTusM7)
 
 piecetable = {} --contains the remaining pieces 3
 
-abTUarL7 = piece "abTUarL7"
-abTLarL7 = piece "abTLarL7"
-abTHead7 = piece "abTHead7"
-abTUarR7 = piece "abTUarR7"
-abTLarR7 = piece "abTLarR7"
-glasprop7 = piece "glasprop7"
-piecetable[#piecetable + 1] = abTUarL7
-piecetable[#piecetable + 1] = abTLarL7
-piecetable[#piecetable + 1] = abTHead7
-piecetable[#piecetable + 1] = abTUarR7
-piecetable[#piecetable + 1] = abTLarR7
-piecetable[#piecetable + 1] = glasprop7
+piecetable[#piecetable + 1] = piece "abTUarL7"
+piecetable[#piecetable + 1] = piece "abTLarL7"
+piecetable[#piecetable + 1] = piece "abTHead7"
+piecetable[#piecetable + 1] = piece "abTUarR7"
+piecetable[#piecetable + 1] = piece "abTLarR7"
+piecetable[#piecetable + 1]  = piece "glasprop7"
+
 
 
 
@@ -554,16 +477,12 @@ table.insert(person, 2, abBuMain)
 
 piecetable = {} --contains the remaining pieces 3
 
-abBuArmR = piece "abBuArmR"
-abBuLegR = piece "abBuLegR"
-abBuLegL = piece "abBuLegL"
-abBuArmL = piece "abBuArmL"
-glasprop8 = piece "glasprop8"
-piecetable[#piecetable + 1] = abBuArmR
-piecetable[#piecetable + 1] = abBuLegR
-piecetable[#piecetable + 1] = abBuLegL
-piecetable[#piecetable + 1] = abBuArmL
-piecetable[#piecetable + 1] = glasprop8
+piecetable[#piecetable + 1]= piece "abBuArmR"
+piecetable[#piecetable + 1]= piece "abBuLegR"
+piecetable[#piecetable + 1]= piece "abBuLegL"
+piecetable[#piecetable + 1]= piece "abBuArmL"
+piecetable[#piecetable + 1] = piece "glasprop8"
+
 
 table.insert(person, 3, piecetable)
 
@@ -617,37 +536,23 @@ table.insert(person, 2, fucAbuTop)
 piecetable = {} --contains the remaining pieces 3
 
 
-fucAbuAL = piece "fucAbuAL"
-fucAbuR = piece "fucAbuR"
-fucAbuM = piece "fucAbuM"
-fucAbuLR = piece "fucAbuLR"
-fucAbuLL = piece "fucAbuLL"
-abTusM9 = piece "abTusM9"
-abTHead9 = piece "abTHead9"
-abTUarR9 = piece "abTUarR9"
-abTLarR9 = piece "abTLarR9"
-abTULegR9 = piece "abTULegR9"
-abTLLegR9 = piece "abTLLegR9"
-abTULegL9 = piece "abTULegL9"
-abTLLegL9 = piece "abTLLegL9"
-abTUarL9 = piece "abTUarL9"
-abTLarL9 = piece "abTLarL9"
+piecetable[#piecetable + 1] = piece "fucAbuAL"
+piecetable[#piecetable + 1] = piece "fucAbuR"
+piecetable[#piecetable + 1] = piece "fucAbuM"
+piecetable[#piecetable + 1] = piece "fucAbuLR"
+piecetable[#piecetable + 1]  = piece "fucAbuLL"
+piecetable[#piecetable + 1]  = piece "abTusM9"
+piecetable[#piecetable + 1]  = piece "abTHead9"
+piecetable[#piecetable + 1] = piece "abTUarR9"
+piecetable[#piecetable + 1]  = piece "abTLarR9"
+piecetable[#piecetable + 1] = piece "abTULegR9"
+piecetable[#piecetable + 1] = piece "abTLLegR9"
+piecetable[#piecetable + 1] = piece "abTULegL9"
+piecetable[#piecetable + 1]  = piece "abTLLegL9"
+piecetable[#piecetable + 1] = piece "abTUarL9"
+ piecetable[#piecetable + 1] = piece "abTLarL9"
 
 
-piecetable[#piecetable + 1] = fucAbuAL
-piecetable[#piecetable + 1] = fucAbuR
-piecetable[#piecetable + 1] = fucAbuM
-piecetable[#piecetable + 1] = abBuArmL
-piecetable[#piecetable + 1] = fucAbuLR
-piecetable[#piecetable + 1] = fucAbuLL
-piecetable[#piecetable + 1] = abTusM9
-piecetable[#piecetable + 1] = abTHead9
-piecetable[#piecetable + 1] = abTUarR9
-piecetable[#piecetable + 1] = abTULegR9
-piecetable[#piecetable + 1] = abTLLegR9
-piecetable[#piecetable + 1] = abTLLegL9
-piecetable[#piecetable + 1] = abTUarL9
-piecetable[#piecetable + 1] = abTLarL9
 
 
 table.insert(person, 3, piecetable)
@@ -699,16 +604,12 @@ table.insert(person, 2, abBuMain10)
 
 piecetable = {} --contains the remaining pieces 3
 
-abBuArmR10 = piece "abBuArmR10"
-abBuLegR10 = piece "abBuLegR10"
-abBuLegL10 = piece "abBuLegL10"
-abBuArmL10 = piece "abBuArmL10"
-glasprop10 = piece "glasprop10"
-piecetable[#piecetable + 1] = abBuArmR10
-piecetable[#piecetable + 1] = abBuLegR10
-piecetable[#piecetable + 1] = abBuLegL10
-piecetable[#piecetable + 1] = abBuArmL10
-piecetable[#piecetable + 1] = glasprop10
+piecetable[#piecetable + 1] =piece "abBuArmR10"
+piecetable[#piecetable + 1] =piece "abBuLegR10"
+piecetable[#piecetable + 1] =piece "abBuLegL10"
+piecetable[#piecetable + 1] =piece "abBuArmL10"
+piecetable[#piecetable + 1] =piece "glasprop10"
+
 
 table.insert(person, 3, piecetable)
 
@@ -846,20 +747,20 @@ function PartyManager()
                 end
 
                 --check if new position is within forbidden Territory
-                if (myAuthoritaeRespectIt(i, degreeRand, moveInOut) == true or dramatisPersona[i][8] == 4) then
+                if (PartyMyAuthoritaeRespectIt(i, degreeRand, moveInOut) == true or dramatisPersona[i][8] == 4) then
                     ------ Spring.Echo(i.."PersonNr Made it this far")
 
                     --check (if not advisor) or way is free
                     if (dramatisPersona[i][8] == 4 or isWayfree(degreeRand, moveInOut, dramatisPersona[i][4], dramatisPersona[i][5], dramatisPersona[i][6]) == true) then --FixMe
                         dramatisPersona[i][9] = true
-                        StartThread(senderJobFunc, i, degreeRand, moveInOut)
+                        StartThread(PartySenderJobFunc, i, degreeRand, moveInOut)
 
                         --Start SenderThread(+roll jobtoFullFill when arriving)
                     end
 
                 elseif dramatisPersona[i][9] == false then
                     dramatisPersona[i][9] = true
-                    StartThread(idleFunc, i)
+                    StartThread(PartyIdleFunc, i)
 
                     --Start a IdleSender
                 end
@@ -874,29 +775,7 @@ end
 
 
 
---This function tests for critical Hits to the Unit/Building blowing the Party Up if some heavy damage is inflicted
-function CriticalHitDetector(boolunitDead)
-    hitPointsOfOld = Spring.GetUnitHealth(unitID)
-    hpPercentage = hitPointsOfOld / 15
-    Sleep(800)
-    hitPoints = Spring.GetUnitHealth(unitID)
-    counter = 1
-    while (true) do
-        if (hitPoints < hitPointsOfOld - hpPercentage or boolunitDead == true) and counter < 8 then
-            --Exploding Ragdolls, hiding the Abstracts code goes here
-            Explode(Ragdolls[counter], SFX.FIRE + SFX.FALL)
-            Hide(dramatisPersona[counter][2])
-            for i = 1, dramatisPersona[counter][11], 1 do
-                Hide(dramatisPersona[counter][3])
-            end
-            counter = counter + 1
-        end
 
-        hitPoints = Spring.GetUnitHealth(unitID)
-        Sleep(800)
-        hitPointsOfOld = hitPoints
-    end
-end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -910,7 +789,7 @@ end
 --a forbidden Zone cons
 
 --function returns true if the targetzone is free
-function myAuthoritaeRespectIt(personNr, degreeRand, moveInOut)
+function PartyMyAuthoritaeRespectIt(personNr, degreeRand, moveInOut)
 
     --if the person faces in or out we have to check the way from current pers pos to the move in or move out position
     if dramatisPersona[personNr][5] == 1 or dramatisPersona[personNr][5] == 2 then --the person moves in or out
@@ -966,7 +845,7 @@ function withinBoundaries(boundarie1, boundarie2, checkvalue)
 end
 
 --function returns true if the way doesent lead through a forbidden Zone					
-function wayCheckerInsideOutside(orgDistance, moveInOut, orgDegree)
+function PartyWayCheckerInsideOutside(orgDistance, moveInOut, orgDegree)
     for i = 1, nrOfforbZones, 1 do
         --check if the Zone is within the orgDegree - if yes proceed - else continue with another zone
         if withinBoundaries(forbMap[i][1], forbMap[i][2], orgDegree) == true then
@@ -984,7 +863,7 @@ end
 
 
 --function: checks if the way leads to any forbidden Zone
-function wayCheckerClockWise(orgDegree, moveInOut, orgDistance)
+function PartyWayCheckerClockWise(orgDegree, moveInOut, orgDistance)
     for i = 1, nrOfforbZones, 1 do
         --check if the Zone is within the orgDegree - if yes proceed - else continue with another zone
         if withinBoundaries(forbMap[i][3], forbMap[i][4], orgDistance) == true then
@@ -1001,7 +880,7 @@ function wayCheckerClockWise(orgDegree, moveInOut, orgDistance)
 end
 
 --function checks if the way leads through any forbidden zone - warning, this checks all the zones.		
-function isWayfree(degreeRand, moveInOut, orgDegree, orgDistance, FaceIng)
+function PartyisWayfree(degreeRand, moveInOut, orgDegree, orgDistance, FaceIng)
     --Enum: inside is 1,
     --		outside is 2,
     --		clockwise is 4,
@@ -1009,26 +888,26 @@ function isWayfree(degreeRand, moveInOut, orgDegree, orgDistance, FaceIng)
 
 
     if FaceIng == 1 then -- we want to check the way inside fromt he current
-        return wayCheckerInsideOutside(orgDistance, moveInOut, orgDegree)
+        return PartyWayCheckerInsideOutside(orgDistance, moveInOut, orgDegree)
     end
 
     if FaceIng == 2 then -- we want to check the way inside fromt he current
-        return wayCheckerInsideOutside(orgDistance, moveInOut, orgDegree)
+        return PartyWayCheckerInsideOutside(orgDistance, moveInOut, orgDegree)
     end
 
     if FaceIng == 4 then -- we want to check the way inside fromt he current
-        return wayCheckerClockWise(orgDegree, moveInOut, orgDistance)
+        return PartyWayCheckerInsideOutside(orgDegree, moveInOut, orgDistance)
     end
 
     if FaceIng == 8 then -- we want to check the way inside fromt he current
-        return wayCheckerClockWise(orgDegree, moveInOut, orgDistance)
+        return PartyWayCheckerClockWise(orgDegree, moveInOut, orgDistance)
     end
 
     return true
 end
 
 
-function senderJobFunc(personNr, targetdegree, targetDist)
+function PartySenderJobFunc(personNr, targetdegree, targetDist)
     --Enum: inside is 1,
     --		outside is 2,
     --		clockwise is 4,
@@ -1079,7 +958,7 @@ function senderJobFunc(personNr, targetdegree, targetDist)
     idleTime = math.random(minIdle, maxIdle)
     spendTime = 0
     while (spendTime < idleTime) do
-        typeDependedIdleAnimation(personNr, dramatisPersona[personNr][8])
+        PartyTypeDependedWalkAnimation(personNr, dramatisPersona[personNr][8])
         spendTime = spendTime + 4000
         Sleep(50)
     end
@@ -1089,7 +968,7 @@ function senderJobFunc(personNr, targetdegree, targetDist)
     dramatisPersona[personNr][9] = false
 end
 
-function stillMoving(personNr)
+function PartyStillMoving(personNr)
     if (true == Spring.UnitScript.IsInMove(dramatisPersona[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona[personNr][1], y_axis)) then
         return true
     else
@@ -1097,7 +976,7 @@ function stillMoving(personNr)
     end
 end
 
-function typeDependedWalkAnimation(personNr, personTypeNr)
+function PartyTypeDependedWalkAnimation(personNr, personTypeNr)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
 
     if personTypeNr == 1 then
@@ -1137,17 +1016,15 @@ function typeDependedWalkAnimation(personNr, personTypeNr)
     end
 end
 
-function typeDependedIdleAnimation(personNr, personTypeNr)
+function PartyTypeDependedIdleAnimation(personNr, personTypeNr)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7,
 
     if personTypeNr == 1 then
         idleAnimation1(personNr)
         return
-
     elseif personTypeNr == 2 then
         idleAnimation2(personNr)
         return
-
     elseif personTypeNr == 3 then
         idleAnimation3(personNr)
         return
@@ -1167,8 +1044,6 @@ function typeDependedIdleAnimation(personNr, personTypeNr)
     elseif personTypeNr == 7 then
         idleAnimation7(personNr)
         return
-
-
     else
         ------ Spring.Echo("Error in the typeDependedWalkAnimation")
         return
@@ -1179,7 +1054,7 @@ end
 
 
 
-function idleFunc(personNr)
+function partyIdleFunc(personNr)
     ------ Spring.Echo("Idling in the function")
     Sleep(4000)
     dramatisPersona[personNr][9] = false
