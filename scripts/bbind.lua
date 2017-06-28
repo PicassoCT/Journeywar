@@ -132,7 +132,12 @@ function simpleTransform()
         Turn(Pipes[i], y_axis, math.rad(dy), 0)
         Turn(Pipes[i], z_axis, math.rad(dz), 0)
     end
-end
+
+	hideT(TablesOfPiecesGroups["tank"] )
+	for i=1,#TablesOfPiecesGroups["tank"] do
+		Show(TablesOfPiecesGroups["tank"])
+	end
+	end
 
 
 CoordX = 1
@@ -1020,6 +1025,8 @@ function script.StopBuilding()
     Hide(lightning)
 end
 
+ TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+ 
 function script.Create()
     simpleTransform()
     StartThread(moveDrumEmit)
