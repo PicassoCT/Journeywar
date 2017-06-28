@@ -399,19 +399,18 @@ function assertT(Table, ...)
     end
 
     boolComperatorFound = false
-    if not arg then echo("Assertion failed, this is not a Argument- is a Contradiction"); return false end
+    if not arg then echo("Assertion failed, with no Argument"); return false end
     for k, v in pairs(arg) do
 
         if type(v) == "number" and boolComperatorFound == false then
-
             dimensionsIndex = dimensionsIndex + 1
             dimensions[dimensionsIndex] = v
-
 
         elseif type(v) == "function" then
             boolComperatorFound = true
             comperator = v
             break
+			
         elseif type(v) == "string" then
             boolComperatorFound = true
 
@@ -2162,20 +2161,31 @@ function Limit(val, lmin, lmax)
     return val
 end
 
+function inheritFrom( childClass, parent)
+    local orig_type = type(parent)
+	local copy = parentClass or {}
+  
+        for orig_key, orig_value in next, parent, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(parent)))
+
+    return copy
+end
+
 -- This code is a adapted Version of the NeHe-Rope Tutorial. All Respect towards those guys.
 -- RopePieceTable by Convention contains (SegmentBegin)----(SegmentEnd)(SegmentBegin)----(SegmentEnd) 
--- RopeConnectionPiece -->Piece,ContainsMass,ColRadius |
--- LoadPiece --> Piece,Contains Mass, ColRadius | 
+-- RopeConnectionPiece PieceID-->ContainsMass,ColRadius |
+ 
 -- ForceFunction --> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
 
 
-function PseudoRopePhysix(RopePieceTable, RopeConnectionT, LoadPieceT, Ropelength, forceFunctionTable, SpringConstant, boolDebug)
+function ropePhysix(RopePieceTable, MassLengthPerPiece, forceFunctionTable, SpringConstant, boolDebug)
 
     --SpeedUps
     assert(RopePieceTable, "RopePieceTable not provided")
-    assert(RopeConnectionT, "RopeConnectionT not provided")
-    assert(LoadPieceT, "LoadPieceT not provided")
-    assert(Ropelength, "Ropelength not provided")
+    assert(MassLengthPerPiece, "MassLengthPerPiece not provided")
+
     assert(forceFunctionTable, "forceFunctionTable not provided")
     assert(SpringConstant, "SpringConstant not provided")
 
@@ -2190,176 +2200,10 @@ function PseudoRopePhysix(RopePieceTable, RopeConnectionT, LoadPieceT, Ropelengt
         return Spring.GetGroundHeight(x, z)
     end
     -- Each Particle Has A Weight Of 50 Grams
+	
+	
+	
 
-
-    --SIMCONSTANTS -tweak them
-    local SpringConstant = SpringConstant or 100000.0
-
-    local SpringInnerFriction = 0.2
-    local RopeMass = 0.1
-    local groundRepulsionConstant = 100 -- A Constant To Represent How Much The Ground Shall Repel The Masses
-    local groundFrictionConstant = 0.35 -- A Constant Of Friction Applied To Masses By The Ground
-    local groundAbsorptionConstant = 3 -- A Constant Of Absorption Friction Applied To Masses By The Ground
-    local airFrictionConstant = 0.5
-
-    --INIT
-    gravitation = Vector:new(0, -0.981, 0)
-    ForcesTable = {}
-
-    rcx, rcy, rcz = Spring.GetUnitPiecePosDir(unitID, RopeConnectionT.Piece)
-    assert(rcx)
-    RopeConnection = {
-        Pos = Vector:new(rcx, rcy, rcz),
-        vel = Vector:new(),
-        mass = 1500, --unrealistic, yet you cant reach escape velocity 
-        Radius = RopeConnectionT.ColRadius
-    }
-
-    ObjT = {}
-    --contains the startpos, as the sensory piece
-    for i = 1, #RopePieceTable, 1 do
-        px, py, pz, pdx, pdy, pdz = Spring.GetUnitPiecePosDir(unitID, RopePieceTable[i])
-
-        ObjT[#ObjT + 1] = {
-            piecename = RopePieceTable[i],
-            pos = Vector:new(px, py, pz),
-            dir = Vector:new(pdx, pdy, pdz),
-            mass1 = createMass(RopeMass / 2, px, py, pz, 0, 0, 0, 0, 0, 0),
-            vel = Vector:new(),
-            PrevPiece = (math.max(1, i - 1)),
-            NextPiece = math.min(i + 1, #RopePieceTable),
-            length = Ropelength,
-            springConstant = SpringConstant
-        }
-    end
-    --The pulled Object
-    px, py, pz, pdx, pdy, pdz = Spring.GetUnitPiecePosDir(unitID, LoadPieceT.Piece)
-    ObjT[#ObjT + 1] = {
-        piecename = LoadPieceT.Piece,
-        pos = Vector:new(px, py, pz),
-        dir = Vector:new(pdx, pdy, pdz),
-        mass1 = createMass(LoadPieceT.Mass, px, py, pz, 0, 0, 0, 0, 0, 0),
-        vel = Vector:new(),
-        PrevPiece = (#ObjT),
-        length = Ropelength,
-        springConstant = SpringConstant
-    }
-    --/INIT
-    local simStep = 75
-
-    while checkYourself() do
-        --init and reset
-        for i = 1, #ObjT, 1 do
-            ObjT[i].mass1.force = Vector:new()
-        end
-
-        --applyForces
-
-        for j = 1, #ffT, 1 do
-            if ffT.pieceList then
-                for k in pairs(fft.piecelist) do
-                    if not ffT[j].geometryfunction or ffT[j].geometryfunction(ObjT[k].posdir.x, ObjT[k].posdir.y, ObjT[k].posdir.z) == true then
-                        ObjT[k].mass1.force = ObjT[k].mass1.force + (ffT[j].acceleration * ObjT[k].mass1.mass)
-                    end
-                end
-            else
-                for i = 1, #ObjT, 1 do
-                    ObjT[i].mass1.force = ObjT[i].mass1.force + (ffT[j].acceleration * ObjT[i].mass1.mass)
-                end
-            end
-        end
-
-        --Lets SpringSimulation
-        for i = 1, #ObjT, 2 do
-            ObjT[i], ObjT[Limit(i + 1, 1, #ObjT)] = solveSpring(ObjT[i], ObjT[Limit(i + 1, 1, #ObjT)], SpringInnerFriction)
-        end
-
-
-        --solve Objforces
-        for i = 1, #ObjT - 1, 2 do -- Start A Loop To Apply Forces Which Are Common For All Masses
-
-            local Succesor = Limit(i, 1, ObjT)
-            if not ObjT[i].mass1 then
-                px, py, pz, pdx, pdy, pdz = Spring.GetUnitPiecePosDir(unitID, RopePieceTable[math.max(math.min(i, #RopePieceTable), 1)])
-                ObjT[i].mass1 = createMass(RopeMass / 2, px, py, pz, 0, 0, 0, 0, 0, 0)
-            end
-
-            ObjT[i].mass1.force = ObjT[i].mass1.force + (ObjT[i].mass1.mass * gravitation)
-
-            -- masses[a]->applyForce(gravitation * masses[a]->m); -- The Gravitational Force
-            -- The air friction
-            ObjT[i].mass1.force = ObjT[i].mass1.force + (ObjT[i].vel * (airFrictionConstant * -1))
-
-            -- masses[a]->applyForce(-masses[a]->vel * airFrictionConstant);
-
-
-            if ObjT[i].mass1.pos.y > groundHeight(ObjT[i].piecename) then
-                -- Forces From The Ground Are Applied If A Mass Collides With The Ground
-
-                v1 = Vector:new() -- A Temporary Vector3D
-                v2 = Vector:new() -- A Temporary Vector3D
-
-                v1 = ObjT[i].mass1.vel
-                v2 = ObjT[Succesor].mass2.vel -- Get The Velocity
-
-                v1.y = 0
-                v2.y = 0
-                -- Omit The Velocity Component In Y-Direction
-
-                -- The Velocity In Y-Direction Is Omited Because We Will Apply A Friction Force To Create
-                -- A Sliding Effect. Sliding Is Parallel To The Ground. Velocity In Y-Direction Will Be Used
-                -- In The Absorption Effect.
-
-                -- Ground Friction Force Is Applied 
-                ObjT[i].mass1.force = ObjT[i].mass1.force + ((-v1) * groundFrictionConstant)
-                ObjT[Succesor].mass1.force = ObjT[Succesor].mass1.force + ((-v2) * groundFrictionConstant)
-
-
-                v1 = ObjT[i].mass1.vel -- Get The Velocity
-                v2 = ObjT[Succesor].mass1.vel -- Get The Velocity
-
-                v1.x, v1.z = 0, 0
-                v2.x, v2.z = 0, 0
-
-                -- Above, We Obtained A Velocity Which Is Vertical To The Ground And It Will Be Used In
-                -- The Absorption Force
-
-                if (v1.y < 0) then
-                    ObjT[i].mass1.force = ObjT[i].mass1.force + (((-v1) * groundAbsorptionConstant))
-                end
-
-                if (v2.y < 0) then
-                    ObjT[Succesor].mass1.force = ObjT[Succesor].mass1.force + ((-v2) * groundAbsorptionConstant)
-                end
-
-
-            else
-                x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, ObjT[i].piecename)
-                vx, vy, vz = Spring.GetGroundNormal(x, z)
-                vecGround = Vector:new(vx, vy, vz)
-                -- The Ground Shall Repel A Mass Like A Spring.
-                -- By "Vector3D(0, groundRepulsionConstant, 0)" We Create A Vector In The Plane Normal Direction
-                -- With A Magnitude Of groundRepulsionConstant.
-                -- By (groundHeight - masses[a]->pos.y) We Repel A Mass As Much As It Crashes Into The Ground.
-                gh = groundHeight(ObjT[i].piecename)
-                f1 = (vecGround * groundRepulsionConstant) * (gh - ObjT[i].mass1.pos.y)
-                ObjT[i].mass1.force = ObjT[i].mass1.force + f1 -- The Ground Repulsion Force Is Applied
-            end
-        end
-        --simulate
-        for i = 1, #ObjT, 1 do
-            --vel += (force/mass)* dt
-            ObjT[i].mass1.vel = (ObjT[i].mass1.vel + ((ObjT[i].mass1.force / ObjT[i].mass1.mass) * timeInMS))
-
-            ObjT[i].mass1.pos = ObjT[i].mass1.pos + ((ObjT[i].mass1.dir * ObjT[i].mass1.vel) * timeInMS)
-        end
-        --TranslatePieces to new Positions
-
-        Sleep(simStep)
-        if lib_boolDebug then
-            debugDisplayPieceChain(RopePieceTable)
-        end
-    end
 end
 
 --add Operators to unitscript
