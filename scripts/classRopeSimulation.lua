@@ -64,11 +64,11 @@ end
 
 setmetatable(Simulation, { __call = function(_, ...) return Simulation.new(...) end })
 
---[[   	Forceapplication	]]
-MassSpring = {}
-MassSpring.__index = MassSpring
+--[[   	ApplyForce	]]
+ApplyForce = {}
+ApplyForce.__index = ApplyForce
 
-function ForceApplication.new(springConstant, vecConnectionPos)
+function ApplyForce.new(springConstant, vecConnectionPos)
 	metaTable = {
             springConstant = springConstant,
 			connectionPos = vecConnectionPos,
@@ -78,10 +78,10 @@ function ForceApplication.new(springConstant, vecConnectionPos)
 		
 	metaTable = inherit(metaTable, Simulation: new(1, 1.0))
 
-	return setmetatable(metaTable, ForceApplication)
+	return setmetatable(metaTable, ApplyForce)
 end
 
-function ForceApplication:spring()
+function ApplyForce:spring()
     for i = 1, numOfMasses do
 		springVector = masses[i].pos - connectionPos;			--find a vector from the position of the mass to the connectionPos
 		masses[i].applyForce(-springVector * springConstant);	
@@ -89,7 +89,7 @@ function ForceApplication:spring()
 end
 
 
-function ForceApplication:solve(forceList)
+function ApplyForce:solve(forceList)
 	for f=1,#forceList do
 		for i=1, numOfMasses do
 			springVector = masses[i].pos - connectionPos;			--find a vector from the position of the mass to the connectionPos
@@ -98,7 +98,7 @@ function ForceApplication:solve(forceList)
 	end
 end
 
-setmetatable(ForceApplication, { __call = function(_, ...) return ForceApplication.new(...) end })
+setmetatable(ApplyForce, { __call = function(_, ...) return ApplyForce.new(...) end })
 
 --[[   	Mass Connected with Spring	]]
 SpringSystem = {}
@@ -160,15 +160,76 @@ function RopeSimulation:new(
 		for i=1, numOfMasses do 
 			metaTable.masses[i].pos = vector:new(lengthOfElementT[i], 0, 0)
 			if i < numOfMasses then
-			metaTable.springs[i] = SpringSystem:new(metaTable.masses[i],
-			metaTable.masses[i+1],
-			springConstant,
-			lengthOfElementT[i],
-			springFrictionConstant)
+				metaTable.springs[i] = SpringSystem:new(metaTable.masses[i],
+				metaTable.masses[i+1],
+				springConstant,
+				lengthOfElementT[i],
+				springFrictionConstant)
 			end
-		end
-		
-
-		
+		end	
+return setmetatable(metaTable, RopeSimulation)		
 end
 
+function RopeSimulation:solve()
+	for i=1, #springs do
+		springs[i].solve()
+	end
+
+	for a=1, numOfMasses do
+
+			masses[a].applyForce(gravitation * masses[a].m);				--The gravitational force
+			
+			masses[a].applyForce((-1*masses[a].vel) * airFrictionConstant);	--The air friction
+
+			if (masses[a].pos.y < groundHeight)	then	--Forces from the ground are applied if a mass collides with the ground
+			
+				 v = vector:new(0,0,0)							--A temporary Vector3D
+
+				v = masses[a].vel;						--get the velocity
+				v.y = 0;								--omit the velocity component in y direction
+
+				--The velocity in y direction is omited because we will apply a friction force to create 
+				--a sliding effect. Sliding is parallel to the ground. Velocity in y direction will be used
+				--in the absorption effect.
+				masses[a].applyForce(-v * groundFrictionConstant);		--ground friction force is applied
+
+				v = masses[a].vel;						--get the velocity
+				v.x = 0;								--omit the x and z components of the velocity
+				v.z = 0;								--we will use v in the absorption effect
+				
+				--above, we obtained a velocity which is vertical to the ground and it will be used in 
+				--the absorption force
+
+				if (v.y < 0)	then						--let's absorb energy only when a mass collides towards the ground
+					masses[a].applyForce(-1*v * groundAbsorptionConstant);		--the absorption force is applied
+				
+				--The ground shall repel a mass like a spring. 
+				--By "Vector3D(0, groundRepulsionConstant, 0)" we create a vector in the plane normal direction 
+				--with a magnitude of groundRepulsionConstant.
+				--By (groundHeight - masses[a]->pos.y) we repel a mass as much as it crashes into the ground.
+				 force = vector:new(0, groundRepulsionConstant, 0) * (groundHeight - masses[a].pos.y);
+
+				masses[a].applyForce(force);			--The ground repulsion force is applied
+				end
+			end	
+		end	
+		
+	
+end
+
+function RopeSimulation:Simulate(dt)
+	simulate(dt)
+	
+	ropeConnectionPos = ropeConnectionPos + ropeConnectionVel * dt
+	
+	if (ropeConnectionPos.y < groundHeight) then
+			ropeConnectionPos.y = groundHeight;
+			ropeConnectionVel.y = 0;
+	end
+
+	masses[0].pos = ropeConnectionPos
+	
+	masses[0].vel = ropeConnectionVel;	
+end
+
+function RopeSimulation:setRopeConnectionVel
