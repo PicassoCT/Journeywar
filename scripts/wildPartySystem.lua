@@ -1,5 +1,7 @@
 ----Globallos
+include "neverEndingPartyAnimation.lua"
 --General Public License goes in all fields
+
 testCenter = piece "testCenter"
 
 numberOfActors = 10
@@ -18,9 +20,7 @@ maxIdle = 19000
 
 ----------------------------------------------------
 forbMap = {}
---forbidden Zones
-forbZone = {}
-nrOfforbZones = 2
+
 --a forbidden Zone consists at its most basic established of 4 values - two degrees (upper and lower bound) - and two distancevalues (upper and lower bound)
 updegree = 273
 lowdegree = 225
@@ -28,27 +28,6 @@ updist = 9
 dowdist = 2
 boolunitDead = false
 
-forbZone[1] = updegree
-forbZone[2] = lowdegree
-forbZone[3] = updist
-forbZone[4] = dowdist
-
-forbMap[1] = forbZone
-
-forbZone2 = {}
-
-updegree = 145
-lowdegree = 42
-updist = 13
-dowdist = 2
-
-
-forbZone2[1] = updegree
-forbZone2[2] = lowdegree
-forbZone2[3] = updist
-forbZone2[4] = dowdist
-
-forbMap[2] = forbZone2
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -768,20 +747,20 @@ function PartyManager()
                 end
 
                 --check if new position is within forbidden Territory
-                if (myAuthoritaeRespectIt(i, degreeRand, moveInOut) == true or dramatisPersona[i][8] == 4) then
+                if (PartyMyAuthoritaeRespectIt(i, degreeRand, moveInOut) == true or dramatisPersona[i][8] == 4) then
                     ------ Spring.Echo(i.."PersonNr Made it this far")
 
                     --check (if not advisor) or way is free
                     if (dramatisPersona[i][8] == 4 or isWayfree(degreeRand, moveInOut, dramatisPersona[i][4], dramatisPersona[i][5], dramatisPersona[i][6]) == true) then --FixMe
                         dramatisPersona[i][9] = true
-                        StartThread(senderJobFunc, i, degreeRand, moveInOut)
+                        StartThread(PartySenderJobFunc, i, degreeRand, moveInOut)
 
                         --Start SenderThread(+roll jobtoFullFill when arriving)
                     end
 
                 elseif dramatisPersona[i][9] == false then
                     dramatisPersona[i][9] = true
-                    StartThread(idleFunc, i)
+                    StartThread(PartyIdleFunc, i)
 
                     --Start a IdleSender
                 end
@@ -1037,17 +1016,15 @@ function PartyTypeDependedWalkAnimation(personNr, personTypeNr)
     end
 end
 
-function tPartyTypeDependedIdleAnimation(personNr, personTypeNr)
+function PartyTypeDependedIdleAnimation(personNr, personTypeNr)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7,
 
     if personTypeNr == 1 then
         idleAnimation1(personNr)
         return
-
     elseif personTypeNr == 2 then
         idleAnimation2(personNr)
         return
-
     elseif personTypeNr == 3 then
         idleAnimation3(personNr)
         return
@@ -1067,8 +1044,6 @@ function tPartyTypeDependedIdleAnimation(personNr, personTypeNr)
     elseif personTypeNr == 7 then
         idleAnimation7(personNr)
         return
-
-
     else
         ------ Spring.Echo("Error in the typeDependedWalkAnimation")
         return
