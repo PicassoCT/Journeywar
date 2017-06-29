@@ -254,6 +254,10 @@ end
 
 -->returns the 2 norm of a vector
 function distance(x, y, z, xa, ya, za)
+	if x.x and y.x then
+		return distance(x.x, x.y, x.z, y.x, y.y, y.z)
+	end
+
     if xa ~= nil and ya ~= nil and za ~= nil then
         return math.sqrt((x - xa) ^ 2 + (y - ya) ^ 2 + (z - za) ^ 2)
     elseif x ~= nil and y ~= nil and z ~= nil then
@@ -756,9 +760,7 @@ function printFloat(anyNumber, charsToPrint)
     return string.sub(stringifyFloat, 1, charsToPrint)
 end
 
-function distanceVec(v1, v2)
-    return distance(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
-end
+
 
 function VDotProduct(V1, V2)
     if not V1 or not V2 then return nil end
@@ -1959,29 +1961,15 @@ function sumNormVector(v)
     return { x = v.x / sum, y = v.y / sum, z = v.z / sum }
 end
 
-function blendVector(fac, vA, vB)
+function mix(fac, vA, vB)
+	if type(vA) == "number" and type(vB) == "number" then
+		return (fac * vA +(1-fac) * vB)
+	end
+	
     fac = math.min(1.0, math.max(0.0, fac))
     return addVector(mulVector(vA, fac), mulVector(vB, 1 - fac))
 end
 
-function solveSpring(s, sucessor, frictionConstant)
-
-
-    springVector = subVector(s.mass1.pos, sucessor.mass1.pos) -- Vector Between The Two Masses
-    assert(springVector)
-    r = norm2Vector(springVector) -- Distance Between The Two Masses
-
-    force = { x = 0, y = 0, z = 0 } -- Force Initially Has A Zero Value
-
-    if r ~= 0 then -- To Avoid A Division By Zero... Check If r Is Zero 
-        force = addVector(mulVector(mulVector(divVector(springVector, r), -1), ((r - s.length) * s.springConstant)), force)
-    end
-    force = addVector(force, mulVector(subVector(s.mass1.vel, sucessor.mass1.vel), -1 * frictionConstant)) -- The Friction Force Is Added To The force
-    -- With This Addition We Obtain The Net Force Of The Spring
-    s.mass1 = addVector(s.mass1, force) -- Force Is Applied To mass1
-    sucessor.mass1 = addVector(sucessor.mass1, mulVector(force, -1)) -- The Opposite Of Force Is Applied To mass2	
-    return s, sucessor
-end
 
 function stringOfLength(char, length)
     strings = ""
