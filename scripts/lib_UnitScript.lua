@@ -3116,14 +3116,19 @@ function getBomberAirUnitInT(T)
 end
 
 -->Spawn CEG at unit
-function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset)
+function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
+	if not dx then
+		dx, dy ,dz = 0, 1, 0
+	end
+	
     x, y, z = Spring.GetUnitPosition(unitID)
     if xoffset then
-        Spring.SpawnCEG(cegname, x + xoffset, y + yoffset, z + zoffset, 0, 1, 0, 50, 0)
+        Spring.SpawnCEG(cegname, x + xoffset, y + yoffset, z + zoffset, dx,dy,dz, 50, 0)
     else
-        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 50, 0)
+        Spring.SpawnCEG(cegname, x, y, z, dx,dy,dz, 50, 0)
     end
 end
+
 
 --> Apply a function on a Table
 function forTableUseFunction(Table, func, metafunc)
