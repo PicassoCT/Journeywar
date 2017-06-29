@@ -625,27 +625,25 @@ function script.AimWeapon1(heading, pitch)
 
 
     --Spring.PlaySoundFile("sounds/headcrab/hc.wav")
-    if boolJumpLoaded == true and boolInTheMiddleOfSomething == false then
+    if boolJumpLoaded == true and boolOnlyOnceAminute == true and boolInTheMiddleOfSomething == false then
         Turn(center, y_axis, heading, 3.141)
         getReadyJump()
-
-
-
         return true
     else
         return false
     end
 end
 
+ux, uy, uz = Spring.GetUnitPosition(unitID)
 function HideMeWhileNotThere()
-    x, y, z = Spring.GetUnitPosition(unitID)
+    ux, uy, uz = Spring.GetUnitPosition(unitID)
     xt, yt, zt = Spring.GetUnitPosition(unitID)
     Spring.SetUnitNoDraw(unitID, true)
 
     Spring.SetUnitNoSelect(unitID, true)
     Spring.SetUnitBlocking(unitID, false, false, false)
 
-    while (x == xt and y == yt and z == zt) do
+    while (absDistance(ux,xt) < 3 and absDistance(uy,yt) < 3 and absDistance(uz,zt)	< 3) do
         Sleep(100)
         xt, yt, zt = Spring.GetUnitPosition(unitID)
     end
@@ -653,7 +651,7 @@ function HideMeWhileNotThere()
     Spring.SetUnitNoDraw(unitID, false)
     Spring.SetUnitNoSelect(unitID, false)
     Spring.SetUnitBlocking(unitID, true, true, true)
-    for i = 1, 15, 1 do
+    for i = 1, 5, 1 do
         EmitSfx(center, 1024)
         Sleep(15)
     end
@@ -677,13 +675,10 @@ function script.FireWeapon1()
     StartThread(jumpReloader)
     StartThread(HideMeWhileNotThere)
     EmitSfx(center, 1024)
-
-    -- dec=math.random(0,1)
-    -- if dec==1 then
-    -- Spring.PlaySoundFile("sounds/headcrab/hc2.wav")
-    -- else
-    -- Spring.PlaySoundFile("sounds/headcrab/hc6.wav")
-    -- end
+	dx,dy,dz = Spring.GetUnitDirection(unitID)
+	spawnCEGatUnit("jswspout",unitID, 0 ,10 ,0, dx,dy,dz)
+	
+	return true
 end
 
 ----------------------------------------- WEAPON TWO ----------------------------
@@ -697,29 +692,53 @@ function findInTable(namet, searchKey)
     return nil
 end
 
+boolWaitForVictim = true
+victim = nil
+function IfSomedayItMightHappenThatAVictimMustBeFound(victimID)
+	if not unitsStompedLately[victimID]then
+	unitsStompedLately[victimID] = victimID
+	victim = victimID
+	end
+end
 function getUnitFiredUpon()
+	while (boolWaitForVictim == true) do	
+		Sleep(50)
+	end
+ --- -Spring.Echo("UnitIsFired - Not following genderneutral companyguidlines")
 
-    Sleep(600)
-    upx, upy, upz = Spring.GetUnitPosition(unitID)
-    unitsInCircle = Spring.GetUnitsInCylinder(upx, upz, checkRange)
-    table.remove(unitsInCircle, unitID)
-    --- -Spring.Echo("UnitIsFired - Not following genderneutral companyguidlines")
-    if unitsInCircle ~= nil then
-
-        for i = 1, table.getn(unitsInCircle), 1 do
-            lastAttackerID = Spring.GetUnitLastAttacker(unitsInCircle[i])
-            if lastAttackerID == unitID and findInTable(unitsStompedLately, unitsInCircle[i]) == nil then
-
-                table.insert(unitsStompedLately, unitsInCircle[i])
-            end
-        end
-    end
     --- -Spring.Echo("UnitIsFired - Touching other employees way more then necessary")
-    if unitsStompedLately ~= nil and table.getn(unitsStompedLately) ~= 0 then
+		StartThread(retreatToPreviousLocation)
+	if unitsStompedLately ~= nil and table.getn(unitsStompedLately) ~= 0 then
         --lucky luv..
         --- -Spring.Echo("UnitIsFired - Raping the CEO is not okay. Not one bit.")
-        script.TransportPickup(unitsStompedLately[#unitsStompedLately])
+        TransportPickup(unitsStompedLately[#unitsStompedLately])
     end
+end
+
+maxSpeedPerSecond = 200
+
+function retreatToPreviousLocation()
+	Sleep(250)
+		px,px,px =Spring.GetUnitPosition(unitID)
+		pVec= vector:new(ux-px,uy-py,uz-pz).normalized()
+		spawnCEGatUnit("jswspin",unitID, 0 ,10 ,0, pVec.x, pVec.y, pVec.z)
+	
+	--going back
+	Spring.MoveCtrl.Enable(unitID)
+	factor = 0
+	unitVec = vector:new(ux,uy,uz)
+	orgVec = vector:new(px,py,pz)
+	totalDistance = distance(unitVec,orgVec)
+	speedFactor = (totalDistance/maxSpeedPerSecond)/1000
+	
+	while factor < 1 do
+		tVec = mix(factor, orgVec, unitVec)
+		Spring.MoveCtrl.SetPosition(unitID, tVec.x, tVec.y + math.sin(factor*math.pi)*55, tVec.z)
+		Sleep(1)
+		factor = factor + speedFactor
+	end
+	Spring.MoveCtrl.Disable(unitID)			
+
 end
 
 function script.AimFromWeapon2()
@@ -752,6 +771,7 @@ boolOnlyOnceAminute = false
 function script.FireWeapon2()
     boolOnlyOnceAminute = false
     StartThread(takeyourtime)
+	boolWaitForVictim= true
     StartThread(getUnitFiredUpon)
 end
 

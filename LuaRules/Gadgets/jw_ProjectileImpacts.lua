@@ -68,6 +68,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	greenSeerWeaponDefID = WeaponDefNames["greenseer"].id
 	jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
     jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
+    jSwiftMarkWeaponDefID = WeaponDefNames["jswiftrapemark"].id
     jghostDancerWeaponDefID = WeaponDefNames["jgdjump"].id
 	jhunterDartDefID = WeaponDefNames["jdartgun"].id
 	jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
@@ -120,6 +121,7 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(jhunterDartDefID, true)
     Script.SetWatchWeapon(jHiveHoundID, true)
     Script.SetWatchWeapon(jSwiftSpearID, true)
+    Script.SetWatchWeapon(jSwiftMarkWeaponDefID, true)
     Script.SetWatchWeapon(jghostDancerWeaponDefID, true)
     Script.SetWatchWeapon(crabShelWDefID, true)
     Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
@@ -451,7 +453,12 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end,
         [jSwiftSpearID] = function(weaponDefID, px, py, pz, AttackerID)
-            if Spring.ValidUnitID(AttackerID) == true then Spring.SetUnitPosition(AttackerID, px, py, pz) end
+		
+            if Spring.ValidUnitID(AttackerID) == true and Spring.GetUnitIsDead(AttackerID) == false then
+				--spawn retreating string CEG
+			
+				Spring.SetUnitPosition(AttackerID, px, py, pz) 
+			end
         end,
         [jacidantsDefID] = function(weaponDefID, px, py, pz, AttackerID)
             Spring.SpawnCEG("jantseverywhere", px, py + 10, pz, 0, 1, 0, 60)
@@ -679,6 +686,13 @@ if (gadgetHandler:IsSyncedCode()) then
         --wait a second thats my ass
         GG.ProjectileOrigin[attackerID] = { boolHitGround = false, id = unitID, lastAttackedPiece = Spring.GetUnitLastAttackedPiece(unitID) }
         --AaaahaaAaaaaAaaaahahaAAAAaaaaaaah
+    end
+ 
+	UnitDamageFuncT[jSwiftMarkWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		env = Spring.UnitScript.GetScriptEnv(attackerID)
+		if env then
+		  Spring.UnitScript.CallAsUnit(attackerID, env.IfSomedayItMightHappenThatAVictimMustBeFound, unitID)
+		end	
     end
 
     --perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
