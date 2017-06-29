@@ -68,7 +68,7 @@ function storeOldPositions()
             vo = {}
             vo.x, vo.y, vo.z = Spring.GetUnitPosition(unitID)
 
-            if distanceVec(vo, oldPos[#oldPos]) > 30 then
+            if distance(vo, oldPos[#oldPos]) > 30 then
                 for i = 1, trackMax - 1 do
                     oldPos[i].x = oldPos[i + 1].x
                     oldPos[i].y = oldPos[i + 1].y
