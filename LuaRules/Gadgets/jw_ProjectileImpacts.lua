@@ -1080,9 +1080,14 @@ if (gadgetHandler:IsSyncedCode()) then
                 Spring.AddUnitImpulse(unitID, v.x, v.y, v.z)
 
                 T = getAllInCircle(ux, uz, 120, unitID)
+				T = randFairT(T, 1, 3)
+				
                 --SplashDamage
-                foreach(T,
-                    function(id) if math.random(0, 1) == 1 then Spring.AddUnitDamage(id, 75) end end)
+                process(T,
+                    function(id) 
+					Spring.AddUnitDamage(id, 75) 
+					end)
+					
                 Spring.AddUnitDamage(unitID, 10)
 
             else

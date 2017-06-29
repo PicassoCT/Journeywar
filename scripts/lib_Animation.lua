@@ -1821,7 +1821,7 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
         end
     end
     if boolRandomize == true then
-        return randT(resulT)
+        return shuffleT(resulT)
     else
         return resulT
     end
@@ -2037,5 +2037,11 @@ for i=1, numberOfActors do
 end
 return dramatisPersona3d
 end
+
+function resetAll()
+	pieceTable=  makePieceTable(unitID)
+	resetT(pieceTable)
+end
+
 --================================================================================================================
 --================================================================================================================

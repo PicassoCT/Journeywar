@@ -241,7 +241,7 @@ function resolveKinematics(x, y, z, tPx, tPy, tPz, lorgx, lorgy, lorgz, number, 
     --uplegyaw=smoothVal(math.rad(180)-(math.rad(currentHeading)+math.rad(-90)+yaw),1)
     uplegyaw = smoothVal(math.rad(180) - (math.rad(currentHeading) + math.rad(-90) + yaw), number, 1)
     --Spring.Echo(uplegyaw)
-    --	if Limit(uplegyaw,-90,90)== false then return stillInRange, errorInterpolation end
+    --	if clamp(uplegyaw,-90,90)== false then return stillInRange, errorInterpolation end
     Turn(StriTable[number].UpLeg, y_axis, uplegyaw, turnSpeed)
 
     --first lets get the rad for the upper leg
@@ -249,7 +249,7 @@ function resolveKinematics(x, y, z, tPx, tPy, tPz, lorgx, lorgy, lorgz, number, 
     alpha = math.atan2(zvx, zvy) + beta
 
     uplegval = smoothVal(PI + alpha, number, 2) % PI2
-    if Limit(uplegval, math.rad(-42), math.rad(42)) == false then return stillInRange, errorInterpolation end
+    if clamp(uplegval, math.rad(-42), math.rad(42)) == false then return stillInRange, errorInterpolation end
 
     --	Spring.Echo("Strider_upval"..uplegval)
     Turn(StriTable[number].UpLeg, x_axis, uplegval, turnSpeed)
@@ -259,13 +259,13 @@ function resolveKinematics(x, y, z, tPx, tPy, tPz, lorgx, lorgy, lorgz, number, 
     -- Spring.Echo("JW_STRIDER.."..gama.." ->"..optgama)
 
     optgama = smoothVal(optgama, number, 3)
-    if Limit(optgama, math.rad(-85), math.rad(25)) == false then return stillInRange, errorInterpolation end
+    if clamp(optgama, math.rad(-85), math.rad(25)) == false then return stillInRange, errorInterpolation end
     Turn(StriTable[number].Leg, x_axis, optgama, turnSpeed, true)
 
     lowoptgame = smoothVal(-1 * (3.14159 + alpha) - optgama, number, 4)
 
     --if math.abs(lowoptgame) > 3.14159/2 then return false end
-    if Limit(lowoptgame, math.rad(-45), math.rad(45)) == false then return stillInRange, errorInterpolation end
+    if clamp(lowoptgame, math.rad(-45), math.rad(45)) == false then return stillInRange, errorInterpolation end
     Turn(StriTable[number].LowLeg, x_axis, lowoptgame, turnSpeed, true)
 
     --Turn Leg

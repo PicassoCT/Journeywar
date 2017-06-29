@@ -323,7 +323,8 @@ function genericOS(unitID, dataTable, jobFunctionTable, checkFunctionTable, rest
     local spGetUnitPosition = Spring.GetUnitPosition
 
     x, y, z = spGetUnitPosition(unitID)
-    outcomeTable = iniT(#jobFunctionT, false)
+
+	outcomeTable = makeTable(false,#jobFunctionT)
     boolAtLeastOneNotDone = true
     while boolAtLeastOneNotDone == true do
         x, y, z = spGetUnitPosition(unitID)
