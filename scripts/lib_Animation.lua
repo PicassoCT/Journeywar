@@ -1603,7 +1603,7 @@ end
 function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
 	shotVector= shotVector*-1
 	echo("TODO unitRipAPieceOut called")
-	env = 
+
 	LimbMap= getPiecesBelow(unitID, rootPiece)
 	stunUnit(unitID, 64)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
@@ -2004,10 +2004,10 @@ for i=1, numberOfActors do
 
 	--traditional pieces hiearchy, swingCenter beeing the Center
 	centerString= "swingCenter"..i
-	person[1] = piece centerString --swingCenter always atfirstPlace 1
+	person[1] = piece(centerString) --swingCenter always atfirstPlace 1
 	pieceString= "car"..i
 
-	person[2] = piece pieceString
+	person[2] = piece(pieceString)
 	-- a person is defined by the following values: 
 	-- its position in degree and distance 
 

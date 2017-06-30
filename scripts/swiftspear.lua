@@ -720,14 +720,14 @@ maxSpeedPerSecond = 200
 function retreatToPreviousLocation()
 	Sleep(250)
 		px,px,px =Spring.GetUnitPosition(unitID)
-		pVec= vector:new(ux-px,uy-py,uz-pz).normalized()
+		pVec= Vector:new(ux-px,uy-py,uz-pz).normalized()
 		spawnCEGatUnit("jswspin",unitID, 0 ,10 ,0, pVec.x, pVec.y, pVec.z)
 	
 	--going back
 	Spring.MoveCtrl.Enable(unitID)
 	factor = 0
-	unitVec = vector:new(ux,uy,uz)
-	orgVec = vector:new(px,py,pz)
+	unitVec = Vector:new(ux,uy,uz)
+	orgVec = Vector:new(px,py,pz)
 	totalDistance = distance(unitVec,orgVec)
 	speedFactor = (totalDistance/maxSpeedPerSecond)/1000
 	

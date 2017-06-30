@@ -168,7 +168,7 @@ function reInforCements()
     Sleep(65000)
     Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav")
     Sleep(180000)
-    dropPx, dropPy, dropZ = Spring.GetUnitPosition(unitID)
+    dropPx, dropPy, dropPz = Spring.GetUnitPosition(unitID)
     for i = 1, nrOfReinforcements, 1 do
 
         for thee = 1, 600, 1 do
@@ -197,10 +197,10 @@ function reInforCements()
         if i == 1 then
             for indHex = 1, 3 do
                 index = 1
-                spCreateUnit("contruck", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+                spCreateUnit("contruck", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
                 for k = 1, 3 do
                     index = (index % #signOffset) + 1
-							bgID=  spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+							bgID=  spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
 							StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
                 Sleep(50)
 					end
@@ -210,20 +210,20 @@ function reInforCements()
         else
 
             index = 1
-            spCreateUnit("contrain", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 340 + i, 0, teamID)
+            spCreateUnit("contrain", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 340 + i, 0, teamID)
             Sleep(50)
 
-            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 250, 0 + i, teamID)
+            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 250, 0 + i, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
 					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
 				end
             Sleep(50)
-            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 340 + i, 0, teamID)
+            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 340 + i, 0, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
 					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
 				end
             Sleep(100)

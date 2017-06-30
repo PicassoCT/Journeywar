@@ -6,9 +6,9 @@ Mass.__index = Mass
 
 function Mass:new(mass)
 	metaTable = {
-		pos = vector:new(0,0,0),
-		vel = vector:new(0,0,0),
-		force = vector:new(0,0,0)
+		pos = Vector:new(0,0,0),
+		vel = Vector:new(0,0,0),
+		force = Vector:new(0,0,0)
 		m= mass
         }
 		
@@ -20,7 +20,7 @@ function Mass:applyForce(applyForce)
 end
 
 function Mass:init()
-	force = vector:new(0,0,0)
+	force = Vector:new(0,0,0)
 end
 
 function Mass:simulate(dt)
@@ -72,8 +72,8 @@ function ApplyForce.new(springConstant, vecConnectionPos)
 	metaTable = {
             springConstant = springConstant,
 			connectionPos = vecConnectionPos,
-			masses[0].pos = connectionPos + vector:new(10.0,0.0,0.0),
-			masses[0].vel =  vector:new(0.0, 0.0, 0.0)
+			masses[0].pos = connectionPos + Vector:new(10.0,0.0,0.0),
+			masses[0].vel =  Vector:new(0.0, 0.0, 0.0)
         }
 		
 	metaTable = inherit(metaTable, Simulation: new(1, 1.0))
@@ -117,7 +117,7 @@ end
 function SpringSystem:solve()
 	springVector=  mass1.pos - mass2.pos
 	r = springVector.length()
-	force = vector:new()
+	force = Vector:new()
 	
 	if (r ~= 0) then
 		force = force + (springVector / r) * (r - springLength) * (-springConstant)
@@ -158,7 +158,7 @@ function RopeSimulation:new(
 		metaTable = inherit(metaTable, Simulation: new(numOfMasses, massWeightT))
 		
 		for i=1, numOfMasses do 
-			metaTable.masses[i].pos = vector:new(lengthOfElementT[i], 0, 0)
+			metaTable.masses[i].pos = Vector:new(lengthOfElementT[i], 0, 0)
 			if i < numOfMasses then
 				metaTable.springs[i] = SpringSystem:new(metaTable.masses[i],
 				metaTable.masses[i+1],
@@ -183,7 +183,7 @@ function RopeSimulation:solve()
 
 			if (masses[a].pos.y < groundHeight)	then	--Forces from the ground are applied if a mass collides with the ground
 			
-				 v = vector:new(0,0,0)							--A temporary Vector3D
+				 v = Vector:new(0,0,0)							--A temporary Vector3D
 
 				v = masses[a].vel;						--get the velocity
 				v.y = 0;								--omit the velocity component in y direction
@@ -207,7 +207,7 @@ function RopeSimulation:solve()
 				--By "Vector3D(0, groundRepulsionConstant, 0)" we create a vector in the plane normal direction 
 				--with a magnitude of groundRepulsionConstant.
 				--By (groundHeight - masses[a]->pos.y) we repel a mass as much as it crashes into the ground.
-				 force = vector:new(0, groundRepulsionConstant, 0) * (groundHeight - masses[a].pos.y);
+				 force = Vector:new(0, groundRepulsionConstant, 0) * (groundHeight - masses[a].pos.y);
 
 				masses[a].applyForce(force);			--The ground repulsion force is applied
 				end

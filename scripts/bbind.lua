@@ -135,7 +135,8 @@ function simpleTransform()
 
 	hideT(TablesOfPiecesGroups["tank"] )
 	for i=1,#TablesOfPiecesGroups["tank"] do
-		Show(TablesOfPiecesGroups["tank"])
+		
+		--Show(TablesOfPiecesGroups["tank"][i])
 	end
 	end
 

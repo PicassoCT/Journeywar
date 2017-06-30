@@ -612,7 +612,7 @@ end
 
 -->returns the 2 norm of a vector
 function distance(x, y, z, xa, ya, za)
-	if x.x and y.x then
+	if type(x)== "table" then
 		return distance(x.x, x.y, x.z, y.x, y.y, y.z)
 	end
 
@@ -1530,7 +1530,7 @@ end
 
 --> old Vector constructor- uses lib_type constructor
 function makeVector(x, y, z)
-    return vector:new(x,y,z)
+    return Vector:new(x,y,z)
 end
 
 --======================================================================================

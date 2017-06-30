@@ -9,6 +9,7 @@ function widget:GetInfo()
 		layer = 253,
 		enabled = false,
 		hidden= true,
+		da()
 	}
 end
 
