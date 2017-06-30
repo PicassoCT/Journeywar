@@ -323,12 +323,12 @@ function rEchoT(T, layer)
     local l = layer or 0
     if T then
         if type(T) == 'table' then
-            Spring.Echo(stringOfLength(" ", l) .. "T:")
+            Spring.Echo(stringBuilder(" ", l) .. "T:")
             for k, v in pairs(T) do
                 rEchoT(T[k], l + 1)
             end
         else
-            Concated = stringOfLength(" ", math.max(1, l) - 1) .. "|"
+            Concated = stringBuilder(" ", math.max(1, l) - 1) .. "|"
 
             typus = type(T)
             if typus == "number" or typus == "string" then
@@ -659,6 +659,16 @@ function approxDist(x, y, z, digitsPrecision)
     return lastResult
 end
 
+--> increment a value
+function inc(value)
+    return value + 1
+end
+
+--> decrement a value
+function dec(value)
+    return value - 1
+end
+
 --======================================================================================
 --String Operations
 --======================================================================================
@@ -670,6 +680,17 @@ function makeTableOfNames(name, startnr, endnr)
     end
     return T
 end
+
+--> chreates from a examplestring a string of length
+
+function stringBuilder(length, sign)
+    str = ""
+    for i = 1, length do
+        str = str .. sign
+    end
+    return str
+end
+
 
 --======================================================================================
 --Debug Tools 
@@ -1082,8 +1103,6 @@ function randTableFunc(Table)
 	return Table[randElement]()
 end
 
-
-
 -->a Fairer random Function that selects of a table everyNthElement at least candidatesInInterval Number many elements
 function randFairT(T, candidatesInInterval, everyNthElement)
 	tagYourIt={}
@@ -1103,6 +1122,11 @@ end
 
 function randChance(likeLihoodInPercent)
 return math.random(1,100) <= likeLihoodInPercent
+end
+
+--> returns a randomized Signum
+function randSign()
+    if math.random(0, 1) == 1 then return 1 else return -1 end
 end
 
 -->Returns randomized Boolean
@@ -1801,6 +1825,22 @@ end
 --======================================================================================
 --Sfx Operations
 --======================================================================================
+function spawnCegAtPiece(unitID, pieceId, cegname, offset)
+
+    boolAdd = offset or 10
+
+
+    if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+    if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+    if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+    x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
+
+    if y then
+        y = y + boolAdd
+        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 0, 0)
+    end
+end
+
 --> creates a ceg, that traverses following its behavioural function
 function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrobo, range, damage, behaviour)
 	endofLifeFunc= endofLifeFunc or function(x,y,z) end
@@ -1847,9 +1887,11 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
     endofLifeFunc(x, y, z)
 	end
 end
+
 --//////////////////////////////////////////////////////////////////////////////
+--////////////////////////         Wild West Begin          ////////////////////
 --//////////////////////////////////////////////////////////////////////////////
---//////////////////////////////////////////////////////////////////////////////
+
 -->PieceDebug loop
 function PieceLight(unitID, piecename, cegname)
     while true do
@@ -2332,11 +2374,7 @@ function affirm(T)
     if type(T) == "number" then t1 = T; T = { [1] = t1 } end
     resulT = process(T,
         function(id)
-            if Spring.ValidUnitID(id) == true then return id end
-        end,
-        function(id)
-            isDead = Spring.GetUnitIsDead(id)
-            if isDead and isDead == false then return id end
+            if exists(id) == true then return id end
         end)
     if resulT then
         if #resulT > 1 then
@@ -2344,6 +2382,14 @@ function affirm(T)
             return resulT[1]
         end
     end
+end
+
+-->Unit Verfication
+function exists(unitid)
+    validUnit = Spring.GetUnitIsDead(unitid)
+    if validUnit and validUnit == true then return true end
+
+    return false
 end
 
 --> This function process result of Spring.PathRequest() to say whether target is reachable or not
@@ -2561,64 +2607,6 @@ function PseudoPhysix(piecename, pearthTablePiece, nrOfCollissions, forceFunctio
 end
 
 
-
-
-function stringOfLength(char, length)
-    strings = ""
-    for i = 1, length do strings = strings .. char end
-    return strings
-end
-
-function echoPieceNameTable(unitID, T)
-    for k, v in pairs(T) do
-        retT = Spring.GetUnitPieceInfo(unitID, v)
-        Spring.Echo("Piecename:" .. k .. " -> " .. retT.name)
-    end
-end
-
-function vardump(value, depth, key)
-    local linePrefix = ""
-    local spaces = ""
-
-    if key ~= nil then
-        linePrefix = "[" .. key .. "] = "
-    end
-
-    if depth == nil then
-        depth = 0
-    else
-        depth = depth + 1
-        for i = 1, depth do spaces = spaces .. " " end
-    end
-
-    if type(value) == 'table' then
-        mTable = getmetatable(value)
-        if mTable == nil then
-            Spring.Echo(spaces .. linePrefix .. "(table) ")
-        else
-            Spring.Echo(spaces .. "(metatable) ")
-            value = mTable
-        end
-        for tableKey, tableValue in pairs(value) do
-            vardump(tableValue, depth, tableKey)
-        end
-    elseif type(value) == 'function' or
-            type(value) == 'thread' or
-            type(value) == 'userdata' or
-            value == nil then
-        Spring.Echo(spaces .. tostring(value))
-    else
-        Spring.Echo(spaces .. linePrefix .. "(" .. type(value) .. ") " .. tostring(value))
-    end
-end
-
-function stringBuilder(length, sign)
-    str = ""
-    for i = 1, length do
-        str = str .. sign
-    end
-    return str
-end
 
 
 
@@ -3440,7 +3428,7 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
     if not GG.Dialog then GG.Dialog = {} end
 
     lineBuilder = ""
-    spaceString = stringOfLength(" ", string.len(LineNameTimeT[1].name .. ": " or 5))
+    spaceString = stringBuilder(" ", string.len(LineNameTimeT[1].name .. ": " or 5))
 
     GG.Dialog[UnitID] = {}
     lineBuilder = lineBuilder .. LineNameTimeT[1].name .. ": " .. LineNameTimeT[1].line .. "\n"
@@ -3833,7 +3821,7 @@ function LayFlatOnGround(unitID, piecename, speeds)
 end
 
 -->Helperfunction of recursiveAddTable
-function returnPieceChildrenTable(pieceNum, piecetable)
+function getPieceChildrenTable(pieceNum, piecetable)
     if not pieceNum then return end
     T = Spring.GetUnitPieceInfo(unitID, pieceNum)
     children = T.children
@@ -3955,8 +3943,7 @@ end
 function recursiveAddTable(T, piecename, parent, piecetable)
     if not piecename then return T, 0 end
 
-    C, max = returnPieceChildrenTable(piecename, piecetable)
-
+    C, max = getPieceChildrenTable(piecename, piecetable)
 
     if not T[parent] then T[parent] = {} end
 
@@ -4323,11 +4310,6 @@ function getADryWalkAbleSpot()
 end
 
 
---> returns a randomized Signum
-function randSign()
-    if math.random(0, 1) == 1 then return 1 else return -1 end
-end
-
 -->finds a spot on the map that is dry, and walkable
 function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, mapSizeZ)
     if type(condition) ~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
@@ -4394,15 +4376,6 @@ function binaryInsertTable(Table, Value, ToInsert, key)
     end
 end
 
---> increment a value
-function inc(value)
-    return value + 1
-end
-
---> decrement a value
-function dec(value)
-    return value - 1
-end
 
 function sanitizeRandom(lowerBound, UpperBound)
     if lowerBound >= UpperBound then return lowerBound end
@@ -4629,13 +4602,7 @@ function Command(id, command, target, option)
     end
 end
 
--->Unit Verfication
-function exists(unitid)
-    validUnit = Spring.GetUnitIsDead(unitid)
-    if validUnit and validUnit == true then return true end
 
-    return false
-end
 
 --> Gets a List of Geovents + Positions
 function getGeoventList()
