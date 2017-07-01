@@ -1804,28 +1804,104 @@ function idleReset()
 	boolDoNotIdle=false
 end
 
-function script.HitByWeapon ( x, z, weaponDefID, damage )
-	
-	
-	StartThread(idleReset)
-	
-	if damage > 40 and math.random(0,6)== 1 then
-		loud=math.random(0.8,1)
+function playDamageSound(damage,hp,maxHP)
+
+		volume =	math.max(0.3,(maxHp-hp)/maxHp) --increases with reducing health
 		if math.random(0,1)==1 then
-			spPlaySoundFile("sounds/cComEnder/comanderHit.wav",loud)	
-			
+			spPlaySoundFile("sounds/cComEnder/comanderHit.wav",volume)				
 		else
-			spPlaySoundFile("sounds/cComEnder/comanderHitScratch.wav",loud)	
+			spPlaySoundFile("sounds/cComEnder/comanderHitScratch.wav",volume)	
 		end
-	end
+end
+
+function displayShieldDamage(damage) 
 	shielddegree=math.atan2(x,z)
 	shielddamage=damage
 	if Stats[eProperty][eAmor]== Stats[eProperty][eAmorMax]then
 		boolFlickerThreadStart=true
 	end
+end
+
+LazarusLastFrameActive= Spring.GetGameFrame()
+RechargeTimeLazarusDevice= 150
+function jumpJetOnCritical(damage, hp,maxHP)
+	if damage > 5 and LazarusDevice > 0 then
+	if hp-damage <  maxHp * (1/LazarusDevice) and (LazarusLastFrameActive < Spring.GetGameFrame() - RechargeTimeLazarusDevice) then
+		LazarusLastFrameActive = Spring.GetGameFrame()
+		StartThread(jumpJet, baseRange*LazarusDevice)
+	end
+	end
+end
+
+function getTargetPosition()
+    cmds = Spring.GetCommandQueue(unitID, 4)
+    for i = #cmds, 1, -1 do
+        if cmds[i].id and cmds[i].id == CMD.MOVE and cmds[i].params then
+            tx, ty, tz = cmds[i].params[1], cmds[i].params[2], cmds[i].params[3]
+         return tx, ty, tz  
+        end
+    end
+	ox,oy,oz= Spring.GetUnitPosition(unitID)
+	return ox + math.random(-512,512),oy, oz + math.random(-512,512)
+end
+
+
+percentageJumpFunctions ={
+[1]= {st = 0, ed = 15, func = function(percent, maxheight,st,ed) 
+								return	math.sin((math.pi/2)* percent/ed)*maxheight
+							end},
+[2]= {st = 16, ed = 75, func = function(percent, maxheight,st,ed) 
+								return	maxheight + math.cos((math.pi*4)* (percent-st)/(ed-st))*(maxheight*0.15)
+							end},
+[3]= {st = 76, ed = 100, func = function(percent, maxheight,st,ed) 
+								return	math.sin(math.pi/2+ (math.pi/2)* ((percent-st)/(ed-st)))*maxheight
+							end}
+
+}
+
+function getPercentageJumpFunction(percent, maxheight)
+	for i=1,#percentageJumpFunctions do
+	element= percentageJumpFunctions[i]
+		if percent >= element.st and percent <= element.ed then
+			return element.func(percent,maxheight, element.st, elment.ed)
+		end
+	end
+end
+
+
+jumpTime = 7000
+peakJump= 256
+function jumpJet(range)
+oPos = getUnitPositionV(unitID)
+tx,ty,tz= getTargetPosition()
+tPos= Vector:new(tx,ty,tz)
+minHeigth= math.max(Spring.GetGroundHeigth(oPos.x,oPos.z), Spring.GetGroundHeigth(tx,tz))
+
+
+	Spring.MoveCtrl.Enable(unitID)
+	while (times < jumpTime) do
+		cPos= mix(oPos,tPos, times/jumpTime)
+		cPos.y = minHeigth +getPercentageJumpFunction(times/jumpTime, peakJump)
+		Spring.MoveCtrl.SetUnitPosition(unitID,cPos.x, cPos.y, cPos.z)
+		times = times + 1
+		Sleep(1)
+	end
+	Spring.MoveCtrl.Disable(unitID)
+
+end
+
+function script.HitByWeapon ( x, z, weaponDefID, damage )
+	StartThread(idleReset)
+	hp,maxHP= Spring.GetUnitHealth(unitID)
+	if damage > 40 and math.random(0,6)== 1 then
+		playDamageSound(damage,hp,maxHP)
+	end
+	jumpJetOnCritical(damage,hp,maxHP)
+	displayShieldDamage(damage)
 	
-	Weapons[eShotGun][10]= 	Weapons[eShotGun][10]+damage
+	Weapons[eShotGun][10]= 	Weapons[eShotGun][10]+ damage
 	if Weapons[eShotGun][eWeapnLvl] ~= 0 and 	Weapons[eShotGun][10] > 50 then Show(bullets) else Hide(bullets) end
+	
 	return damage
 end
 
@@ -1915,7 +1991,7 @@ function reactorThread()
 	
 	while true do
 		boolUnitCloaked=Spring.GetUnitIsCloaked(unitID)
-		if boolUnitCloaked == true then
+		if boolUnitCloaked == false then
 			addValueEnergy= math.ceil(math.abs((cloakCost*1.5)/3 * StealthEffectiveness))
 			Spring.AddUnitResource(unitID,"e",addValueEnergy)
 		end
