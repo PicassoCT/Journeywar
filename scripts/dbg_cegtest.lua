@@ -11,12 +11,14 @@ end
 
 center = piece "center"
 Quader04 = piece "Quader04"
+Quader08 = piece "Quader08"
 Quader01 = piece "Quader01"
 
 function script.Create()
     --generatepiecesTableAndArrayCode(unitID)
     StartThread(emitSFX)
-    --	StartThread(saySay)
+    StartThread(testTurnInTime)
+
 end
 
 function script.Killed(recentDamage, _)
@@ -26,15 +28,15 @@ function script.Killed(recentDamage, _)
 end
 
 function testTurnInTime()
-
-    syncTurnInTime(Quader01, 0, -45, 0, 300, 0, 0, 0)
     while true do
-        syncTurnInTime(Quader01, 0, 0, 0, 3000, 0, -45, 0)
-        WaitForTurn(Quader01, y_axis)
-        Sleep(3000)
-        syncTurnInTime(Quader01, 0, -45, 0, 3000, 0, 0, 0)
-        WaitForTurn(Quader01, y_axis)
-        Sleep(3000)
+		ox, oz = math.random(-250,250),  math.random(-250,250)
+		MovePieceToPos(Quader04,ox,120,oz,7.5)
+		sentence = "Moving to "..ox.." / "..oz.."  "
+
+		WaitForMoves(Quader04)
+		movePieceToPieceNoReset(unitID,Quader01,Quader08,15)
+		WaitForMoves(Quader08)
+		Sleep(100)
     end
 end
 

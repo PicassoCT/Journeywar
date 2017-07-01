@@ -132,13 +132,20 @@ function simpleTransform()
         Turn(Pipes[i], y_axis, math.rad(dy), 0)
         Turn(Pipes[i], z_axis, math.rad(dz), 0)
     end
+	resetT(TablesOfPiecesGroups["tank"])
+	hideT(TablesOfPiecesGroups["tank"])
 
-	hideT(TablesOfPiecesGroups["tank"] )
-	for i=1,#TablesOfPiecesGroups["tank"] do
-		
-		--Show(TablesOfPiecesGroups["tank"][i])
-	end
-	end
+		for i=1,#TablesOfPiecesGroups["tank"] do
+			 movePieceToPieceNoReset(unitID, TablesOfPiecesGroups["tank"][i],Pipes[math.random(25,105)], 0)
+				
+			turnPieceRandDirStep(TablesOfPiecesGroups["tank"][i],0,90)
+			if maRa()==true then
+			Show(TablesOfPiecesGroups["tank"][i])
+			else
+			Hide(TablesOfPiecesGroups["tank"][i])
+			end
+		end
+end
 
 
 CoordX = 1
@@ -864,7 +871,7 @@ boolArrived = false
 		MovePieceToPos(cargoLifter, x, y, z, 7.5)
 		WaitForMoves(cargoLifter)
 		Spring.UnitScript.AttachUnit(cargoLifter, id)
-		MovePieceToPiece(cargoLifter,ralleypoint, 2.5)
+		movePieceToPieceNoReset(unitID, cargoLifter,ralleypoint, 2.5)
 		WaitForMoves(cargoLifter)
 		Spring.UnitScript.DettachUnit(cargoLifter, id)
 		reset(cargoLifter,7.5)

@@ -104,6 +104,16 @@ function turnPieceRandDir(piecename, speed, LIMUPX, LIMLOWX, LIMUPY, LIMLOWY, LI
     end
 end
 
+
+function turnPieceRandDirStep(piecename, speed, stepsize)
+	parts= 360/stepsize
+	
+        Turn(piecename, x_axis, math.rad(math.random(1,parts)*stepsize), speed)
+        Turn(piecename, y_axis, math.rad(math.random(1,parts)*stepsize), speed)
+        Turn(piecename, z_axis, math.rad(math.random(1,parts)*stepsize), speed)
+ 
+end
+
 -->Move a piece towards a random direction
 function movePieceRandDir(piecename, speed, LIMUPX, LIMLOWX, LIMUPY, LIMLOWY, LIMUPZ, LIMLOWZ)
     if not LIMUPX then
@@ -1184,7 +1194,6 @@ function unfoldAnimation(ListOfPieces, specialeffectsfunction, unitID, maxSpeed)
 
     ClosedTable = {}
     AllreadyVisiblePieces[SizeSortedTable[#SizeSortedTable].key] = PieceIDSizeTable[SizeSortedTable[#SizeSortedTable].key]
-    MovePieceoPieceUnitSpace(AllreadyVisiblePieces[1], 0, 0, 0, 0)
     Show(AllreadyVisiblePieces[1])
     ClosedTable[AllreadyVisiblePieces[1]] = true
     local StartPiece = AllreadyVisiblePieces[1]
@@ -1477,7 +1486,8 @@ end
 
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceoPieceUnitSpace(unitID, piecename, piecenameB, speed, waitForIt)
+function MovePieceToPiece(unitID, piecename, piecenameB, speed, waitForIt)
+
     if not piecenameB or not piecename then return end
     bx, by, bz = Spring.GetUnitPiecePosition(unitID, piecenameB)
     bx = -1 * bx

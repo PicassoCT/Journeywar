@@ -384,7 +384,7 @@ FixFunctionTabel[6] = function()
         WaitForMove(TreePiece[i + 1], x_axis)
         WaitForMove(TreePiece[i + 1], y_axis)
         WaitForMove(TreePiece[i + 1], z_axis)
-        --MovePieceoPieceUnitSpace(unitID, TreePiece[i+1],PrevPiece,0,true)
+        --MovePieceToPiece(unitID, TreePiece[i+1],PrevPiece,0,true)
         Sleep(1)
     end
 
