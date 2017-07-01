@@ -1227,13 +1227,24 @@ function clamp(val, low, up)
     return val
 end
 
--->clamps between a lower value and modulu operates on the upper value
+--> clamps between a lower value and modulu operates on the upper value
 function clampMod(val, low, up)
     if val > up then return (val % up) + 1 end
     if val < low then return low end
     return val
 end
 
+--> inverted parrabel from 1 to 0
+function Parabel(x, A, B, yOffset, xShift, invert)
+	invSign= -1 
+	xShift = xShift or 0
+	
+		if invert == false then 
+			invSign = 1
+		end
+
+	return	invSign * ( A * ((x + xShift)^2) + B )  + yOffset
+end
 
 
 function ANHINEG(value)
@@ -1411,7 +1422,7 @@ end
 -- Deprecated VectorOperations 
 -- for more recent implementations see lib_type
 
-function mix(fac, vA, vB)
+function mix(vA, vB, fac)
 	if type(vA) == "number" and type(vB) == "number" then
 		return (fac * vA +(1-fac) * vB)
 	end
@@ -1533,6 +1544,17 @@ function makeVector(x, y, z)
     return Vector:new(x,y,z)
 end
 
+
+function getUnitPositionV(id)
+	ix,iy,iz = Spring.GetUnitPosition(id)
+	return Vector:new(ix,iy,iz)
+end
+
+function rangeClampVector(vector,range)
+	vector= vector.normalized()
+	vector= vector * range
+	return vector
+end
 --======================================================================================
 --Filter Functions
 --======================================================================================

@@ -324,7 +324,7 @@ function BUILDUP(monsterID, enemyID, Time, mteam, factor)
 
     waveFactor = factor + math.sin(factor * math.pi * 8) / 5
     limitedFactor = math.max(0.25, math.min(0.55, waveFactor))
-    vBlend = mix(limitedFactor, makeVector(ex, ey, ez), makeVector(mx, my, mz))
+    vBlend = mix( makeVector(ex, ey, ez), makeVector(mx, my, mz),limitedFactor)
     randVal = math.random(96, 256)
     rx, rz = drehMatrix(0, randVal, 0, 0, math.sin(factor * 5 * math.pi) * 2 * math.pi + monsterID % (math.pi / 3))
     vBlend.x, vBlend.z = vBlend.x + rx, vBlend.z + rz

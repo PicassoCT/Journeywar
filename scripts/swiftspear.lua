@@ -732,7 +732,8 @@ function retreatToPreviousLocation()
 	speedFactor = (totalDistance/maxSpeedPerSecond)/1000
 	
 	while factor < 1 do
-		tVec = mix(factor, orgVec, unitVec)
+		tVec = mix( orgVec, unitVec, factor)
+		tVec.y=  tVec.y
 		Spring.MoveCtrl.SetPosition(unitID, tVec.x, tVec.y + math.sin(factor*math.pi)*55, tVec.z)
 		Sleep(1)
 		factor = factor + speedFactor
