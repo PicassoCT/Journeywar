@@ -22,7 +22,8 @@ if gadgetHandler:IsSyncedCode() then
 	--It also consists of a testFunction, which returns the testCompletness and the persistancepackage
 	Tests={}
 	-- CONFIG --
-
+	boolUnitTestInProgress= false
+	testedUnitTypeIDs= {}
 	function gadget:RecvLuaMsg(msg, playerID)
 		if msg then
 			ident = string.lower(string.sub(msg, 1, 3))
@@ -31,9 +32,28 @@ if gadgetHandler:IsSyncedCode() then
 				if ident == "tct" then testmode ="custom" end
 					if ident == "tct" or ident == "tgt" then
 						playerTeamID = tonumber(string.sub(msg, 5, string.len(msg)))
-						unitTest(playerTeamID, testmode)			
+						boolUnitTestInProgress= true
+						testedUnitTypeIDs = {}
+		
 					end
 			end
+		end
+	end
+	
+	function getNonAIAkaPlayer(List)
+		for i=1,#List do
+		   teamID, leader, isDead,isAiTeam,side,allyTeam,customTeamKeys,incomeMultiplier =	Spring.GetTeamInfo(List[i])
+			if isAiTeam and isAiTeam == false then 
+				return List[i]
+			end
+		end
+	return List[math.random(1,#List)]
+	end
+	
+	function gadget:GameFrame(n)
+		if n > 1 and n % 900 == 0 then		
+			teamList = Spring.GetTeamList()			
+			unitTest(getNonAIAkaPlayer(teamList), "generic")	
 		end
 	end
 	
@@ -52,31 +72,29 @@ if gadgetHandler:IsSyncedCode() then
 
 		
 		for k, v in pairs(UnitDefNames) do
-		GenericUnitTests[#GenericUnitTests+1] ={} 
+		GenericUnitTests[#GenericUnitTests+1] ={persPackage = {id = v.id}} 
 			x = ringcrement(x, mapSizeX, 1)
 			if x == mapSizeX then
 				z = ringcrement(z, mapSizeZ, 1)
 			end
 		
-		GenericUnitTests[#GenericUnitTests].preparation= function (persPackage)
-			id = Spring.CreateUnit(v.id, x, 0, z, 1, teamID)
-			Command(id, "stop", {}, { "shift" })
-			-- Command(id, "cloak", {}, { "shift" })
-			-- Command(id, "cloak", {}, { "shift" })
-			Command(id, "move", { x = x, y = 0, z = z + 25 }, { "shift" })
-			-- Command(id, "setactive", {}, { "shift" })
-			-- Command(id, "setactive", {}, { "shift" })
-			Command(id, "attack", { x = x, y = 0, z = z + 25 }, { "shift" })
-			-- Command(id, "setactive", {}, { "shift" })
-			Command(id, "attack", { x = x, y = 0, z = z - 25 }, { "shift" })
-			persPackage.id = id
+		persPackage.x,persPackage.z = x,z
+		
+		GenericUnitTests[#GenericUnitTests].preparation = function (persPackage)
+				id = Spring.CreateUnit(persPackage.id, x, 0, z, 1, teamID)
+				Command(id, "stop", {}, { "shift" })
+				Command(id, "move", { x = persPackage.x, y = 0, z = persPackage.z + 25 }, { "shift" })
+				Command(id, "attack", { x = persPackage.x, y = 0, z = persPackage.z + 25 }, { "shift" })
+				Command(id, "move", { x = persPackage.x, y = 0, z = persPackage.z - 25 }, { "shift" })
+				Command(id, "attack", { x = persPackage.x, y = 0, z = persPackage.z - 25 }, { "shift" })
+				persPackage.unitID = id
 			return persPackage
 			end
 		
 			GenericUnitTests[#GenericUnitTests].fullfilled =    function(evtID, frame, persPack, startFrame)
                 --Spring.Echo("EventStream Poisoned by active for"..persPack.victimID)
                 --only apply if Unit is still alive
-                if Spring.GetUnitIsDead(persPack.id) == true then
+                if Spring.GetUnitIsDead(persPackage.unitID) == true then
                     return nil, persPack
                 end      
 
@@ -88,15 +106,12 @@ if gadgetHandler:IsSyncedCode() then
 	end
 	
 	function executeTests(Tets)
-		i=1
-		for num,Test in pairs(Tests) do
-		i=i +1
-			persPackage={}
-			persPackage= Test.preparation(persPackage)			
+		for num, Test in pairs(Tests) do
+			persPackage= Test.preparation(Test.persPackage)			
 
-         GG.EventStream:CreateEvent(Test.fullfilled,
+			GG.EventStream:CreateEvent(Test.fullfilled,
              persPackage,
-             Spring.GetGameFrame() + i)
+             Spring.GetGameFrame() + num * 5)
 		end
 	end
 	
