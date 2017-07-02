@@ -2048,6 +2048,11 @@ end
 return dramatisPersona3d
 end
 
+function tentacleTowardsUnit(tentacleTable, myCorpse, waveCycleTime, nrOfWaves, Time)
+
+
+end
+
 function resetAll()
 	pieceTable=  makePieceTable(unitID)
 	resetT(pieceTable)
