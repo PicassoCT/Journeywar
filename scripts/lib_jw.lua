@@ -48,6 +48,7 @@ function getFactoryTypeTable(UnitDefNames, IWant)
     return FactoryTypes
 end
 
+--> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}
     retTab[UnitDefNames["jstealthdrone"].id] = true
@@ -202,7 +203,8 @@ end
 
 function getCorpseTypeTable()
     CorpseTable = getJourneyCorpseTypeTable()
-    for key, v in pairs(getCentrailCorpseTypeTable()) do
+	CentCorpseTable= getCentrailCorpseTypeTable()
+    for key, v in pairs(CentCorpseTable) do
         CorpseTable[key] = true
     end
     return CorpseTable
