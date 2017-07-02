@@ -1547,7 +1547,7 @@ end
 
 function getUnitPositionV(id)
 	ix,iy,iz = Spring.GetUnitPosition(id)
-	return Vector:new(ix,iy,iz)
+	return Vector:new(ix, iy, iz)
 end
 
 function rangeClampVector(vector,range)
