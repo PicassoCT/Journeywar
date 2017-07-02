@@ -36,7 +36,7 @@ Builder = true,
   buildoptions = 
 	{
 	"jtigeggnogg",
-	"jskineggnogg",
+	"jdevoureregg",
 	"jsungodcattle",
 	"hc",
 	"jinfector",
