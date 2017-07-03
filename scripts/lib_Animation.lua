@@ -849,10 +849,58 @@ function DropPieceToGround(unitID, piecename, speed, boolWait, boolHide, Explode
     if ExplodeFunction then ExplodeFunction(piecename, SFXCOMBO) end
 end
 
+function relativeZeroPieceChainAtPiece(Chain,  EndIndex, PieceIndex, speed, zeroPos, boolSynced)
+zeroPos = zeroPos or Vector:new(0,0,0)
+boolSynced = boolSynced or 
 
+
+
+end
+
+
+function generateSknakeOnAPlaneDefaults(cPceDescLst)
+  for iNumerated, arm in ipairs(PceDescLst) do
+
+        if not arm.Piece then echo("libAnimation::snakeOnAPlane - No Valid Piece in Arm"); return end
+
+        armTcX, _, armTcZ,  armTdX, _,armTdZ = Spring.GetUnitPiecePosDir(unitID, arm.Piece)
+        --initialise the arm direction
+        if not arm.cx then arm.cX, arm.cZ = armTcX, armTcZ; end
+        if not arm.dirX then arm.dirX, arm.dirZ = armTdX, armTdZ end
+
+        --length of the piece
+        successorPiece = FirstSensor
+        if PceDescLst[iNumerated + 1] and PceDescLst[iNumerated + 1].Piece then successorPiece = PceDescLst[iNumerated + 1].Piece end
+
+        sucTcX, _, sucTcZ = Spring.GetUnitPiecePosDir(unitID, successorPiece)
+
+        --default arm length per piece
+        if not arm.lx then
+            arm.lx, arm.lz= absDistance(armTcX, sucTcX), absDistance(armTcX, sucTcZ)
+        end
+
+        --set default axis
+        if not arm.ax then
+            if iNumerated ~= 1 then
+                arm.ax, arm.az = true, false
+            else
+                arm.ax, arm.az  = false, true
+            end
+        end
+
+        if not arm.piecelength then
+            if arm.ax == true then arm.piecelength = arm.lx end
+            if arm.az == true then arm.piecelength = arm.lz end
+        end
+
+
+        if not arm.lastPointIndex then arm.lastPointIndex = 0 end
+    end
+return cPceDescLst
+end
 -->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
 -- ListPiece={
---ArmCenterOffset={ox = 0, oy=0, oz=0}
+--ArmCenterOffset={ox = 0, oy=0}
 --[1]={ 
 -- Piece = pieceName,			
 --CenterPoint - used for a Offset of the Arm to UnitCenter
@@ -863,11 +911,11 @@ end
 -- length of piece 
 -- lX = 25,
 -- lY = 25,
--- lZ = 25,
+
 
 -- dirX,
 -- dirY,
--- dirZ,
+
 --active axis
 -- ax =false, 
 -- ay=true,
@@ -879,68 +927,34 @@ end
 
 -- }
 
--- SnakePoint={ x,y,z -- Worldspace Coordinates
--- vx,vy,vz --VoluminaCube
+-- Window={ x,y -- Worldspace Coordinates
+-- vx,vy --VoluminaCube
 
 -- }
---> solves a kinetic system snaking through goal windows of limited size
+--> solves a kinetic 2D system snaking through goal windows of limited size
 function snakeOnAPlane(unitID, cPceDescLst, FirstSensor, WindowDescriptorList, axis, speed, tolerance, boolPartStepExecution, boolWait)
-    local PceDescLst = cPceDescLst --Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
+    local PceDescLst = cPceDescLst --{Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_}List
 
     --early error out
-    if not PceDescLst then echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return end
-    if WindowDescriptorList == nil then echo("libAnimation::snakeOnAPlane - No Valid Goals to move"); return end
-
+    if not PceDescLst then 
+		echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return 
+	end
+	
+    if WindowDescriptorList == nil then 
+		echo("libAnimation::snakeOnAPlane - No Valid Goals to move"); return 
+	end
 
     --Working Defaults
-
     --if not defined ArmCenter - define Arm as centered in UnitSpace
-    if not PceDescLst.ArmCenterOffset then PceDescLst.ArmCenterOffset = { ox = 0, oy = 0, oz = 0 } end
+    if not PceDescLst.ArmCenterOffset then PceDescLst.ArmCenterOffset = { ox = 0, oz = 0 } end
 
     for iNumerated, arm in ipairs(PceDescLst) do
         --TODO
     end
     --total Length arm
     --Preparations and Default Initialisations
-    for iNumerated, arm in ipairs(PceDescLst) do
-
-        if not arm.Piece then echo("libAnimation::snakeOnAPlane - No Valid Piece in Arm"); return end
-
-        armTcX, armTcY, armTcZ, armTdX, armTdY, armTdZ = Spring.GetUnitPiecePosDir(unitID, arm.Piece)
-        --initialise the arm direction
-        if not arm.cx then arm.cX, arm.cY, arm.cZ = armTcX, armTcY, armTcZ; end
-        if not arm.dirX then arm.dirX, arm.dirY, arm.dirZ = armTdX, armTdY, armTdZ; end
-
-        --length of the piece
-        successorPiece = FirstSensor
-        if PceDescLst[iNumerated + 1] and PceDescLst[iNumerated + 1].Piece then successorPiece = PceDescLst[iNumerated + 1].Piece end
-
-        sucTcX, sucTcY, sucTcZ = Spring.GetUnitPiecePosDir(unitID, successorPiece)
-
-        --default arm length per piece
-        if not arm.lx then
-            arm.lx, arm.ly, arm.lz = absDistance(armTcX, sucTcX), absDistance(armTcY, sucTcY), absDistance(armTcZ, sucTcZ)
-        end
-
-        --set default axis
-        if not arm.ax then
-            if iNumerated ~= 1 then
-                arm.ax, arm.ay, arm.az = true, false, false
-            else
-                arm.ax, arm.ay, arm.az = false, true, false
-            end
-        end
-
-        if not arm.piecelength then
-            if arm.ax == true then arm.piecelength = arm.lx end
-            if arm.ay == true then arm.piecelength = arm.ly end
-            if arm.ay == true then arm.piecelength = arm.lz end
-        end
-
-
-        if not arm.lastPointIndex then arm.lastPointIndex = 0 end
-    end
-
+	PceDescLst = generateSknakeOnAPlaneDefaults(PceDescLst)
+	
     --local copy of the ArmTable
     local ArmTable = {}
     for i = 1, #PceDescLst do ArmTable[i] = PceDescLst[i].Piece end
@@ -953,15 +967,17 @@ function snakeOnAPlane(unitID, cPceDescLst, FirstSensor, WindowDescriptorList, a
     Sensor = FirstSensor
 
     vOrg = {};
-    vOrg.x, vOrg.y, vOrg.z = Spring.GetUnitPiecePosition(unitID, PceDescLst[#PceDescLst].Piece)
+    vOrg.x, vOrg.y, vOrg.z = WindowDescriptorList[1].vx, 0, WindowDescriptorList[1].vz
     echoT(PceDescLst)
+	
     for i = 1, #WindowDescriptorList do
+		
     end
     --func
 
     --Preparations Completed
 
-
+	
 
 
     --Turn the axis towards the goal
@@ -976,9 +992,7 @@ function snakeOnAPlane(unitID, cPceDescLst, FirstSensor, WindowDescriptorList, a
         boolAlgoRun = false
         while boolAlgoRun == false do
             hypoModel = PceDescLst
-            GlobalIndex = #PceDescLst
-
-
+            GlobalIndex = #PceDescLst   
 
             for Index = #PceDescLst, 1, -1 do
 
@@ -1534,7 +1548,11 @@ function TurnPieceTowardsUnit(piecenam, unitToTurnToo, Speed)
     x, y, z = Spring.GetUnitPosition(unitToTurnToo)
     TurnPieceTowardsPoint(piecename, x, y, z, Speed)
 end
+--> movePiece to Vector
 
+function mPV(piecename, vector, speed, boolWait)
+mP(piecename, vector.x, vector.y, vecter.z, speed, boolWait)
+end
 
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
 function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz)
@@ -2053,7 +2071,6 @@ function tentacleTowardsUnit(tentacleTable, myCorpse, waveCycleTime, nrOfWaves, 
 
 end
 
-function resetAll()
 	pieceTable=  makePieceTable(unitID)
 	resetT(pieceTable)
 end

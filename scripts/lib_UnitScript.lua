@@ -1538,6 +1538,17 @@ function DotProduct(x, y, z, ax, ay, az)
 end
 
 --======================================================================================
+--> gets a Vector from a Piece
+function getVectorPieceRelPos(unitID, piece)
+	 ex,ey,ez = Spring.GetUnitPiecePosition(unitID, piece)
+	 return Vector:new(ex,ey,ez)
+end
+--> gets a Vector from a Piece
+function getVectorPieceAbsPos(unitID, piece)
+	 ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, piece)
+	 return Vector:new(ex,ey,ez)
+end
+
 
 --> old Vector constructor- uses lib_type constructor
 function makeVector(x, y, z)

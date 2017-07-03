@@ -4,7 +4,7 @@ local unitDef = {
 name = "Egg",
 Description = "Devours a nearby Corpse to grow a Eggball",
 
-	objectName = "skinEggNogg.s3o",
+	objectName = "jDevourerEgg.s3o",
 	script = "jdevourereggskript.lua",
 	buildPic = "skinfantry.png",
 
