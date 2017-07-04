@@ -346,7 +346,6 @@ function turnInTime(piecename, taxis, degree, timeInMs, x_deg, y_deg, z_deg, boo
         --Spring.Echo("to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in times "..timeInMs.. " seconds"	)
     end
 
-
     if absoluteDeg <= 180 then
 
         Turn(piecename, taxis, math.rad(degree), Speed)
@@ -383,21 +382,27 @@ function OverTurnDirection(piecename, axis, degree, speed)
     Turn(piecename, axis, math.rad(degree), Speed)
     WaitForTurn(piecename, axis)
 end
-
-function tSyncIn(piecename, x_val, y_val, z_val, times, UnitScript)
-    x_deg, y_deg, z_deg = UnitScript.GetPieceRotation(piecename)
-    syncTurnInTime(piecename, x_val, y_val, z_val, times, x_deg, y_deg, z_deg)
+--> turns sync in time no matter what kind of orientation the piece currently holds
+function tSyncIn(piecename, x_val, y_val, z_val, timeMS, UnitScript)
+    x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(piecename)
+    syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
 end
 
 -->Turns a piece on every axis in times 
-function syncTurnInTime(piecename, x_val, y_val, z_val, times, x_deg, y_deg, z_deg)
+function syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, x_deg, y_deg, z_deg)
     if lib_boolDebug == true then
         --Spring.Echo("times for syncTurnInTime:"..times)
     end
 
-    turnInTime(piecename, 1, (x_val), times, x_deg, y_deg, z_deg, false) -- -28 3000
-    turnInTime(piecename, 2, (y_val), times, x_deg, y_deg, z_deg, false)
-    turnInTime(piecename, 3, (z_val), times, x_deg, y_deg, z_deg, false)
+	if x_val ~= x_deg then
+		turnInTime(piecename, 1, (x_val), timeMS, x_deg, y_deg, z_deg, false) -- -28 3000
+	end
+	if y_val ~= y_deg then
+		turnInTime(piecename, 2, (y_val), timeMS, x_deg, y_deg, z_deg, false)
+	end
+	if z_val ~= z_deg then
+		turnInTime(piecename, 3, (z_val), timeMS, x_deg, y_deg, z_deg, false)
+	end
 end
 
 --> Move a piece so that it arrives at all axis on the given times
@@ -1544,9 +1549,9 @@ function getRandomAxis()
     return axis
 end
 
-function TurnPieceTowardsUnit(piecenam, unitToTurnToo, Speed)
+function TurnPieceTowardsUnit(piecenam, unitToTurnToo, Speed, overrideVec)
     x, y, z = Spring.GetUnitPosition(unitToTurnToo)
-    TurnPieceTowardsPoint(piecename, x, y, z, Speed)
+    TurnPieceTowardsPoint(piecename, x, y, z, Speed, overrideVec.x, overrideVec.y, overrideVec.z)
 end
 --> movePiece to Vector
 
@@ -1805,7 +1810,6 @@ function waveATable(Table, axis, lfoonction, lsignum, lspeed, lfuncscale, ltotal
 
     if type(Table) ~= "table" then return end
 
-
     func = lfoonction or function(x) return x end
     signum = lsignum or 1
     speed = lspeed or 1
@@ -1855,13 +1859,17 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
     end
 end
 
---> get a Piece to follow a Pace made of Pieces 
-function followPath(unitID, pieceName, pathTable, speed, delay)
-
-
+--> get a Piece to follow a Path made of Pieces 
+function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove)
+	boolWaitForMove = boolWaitForMove or false
+	
 	for i = 1, #pathTable do
-			pieceNum= pathTable[i]
+		pieceNum= pathTable[i]
         movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed)
+		
+		if boolWaitForMove == true then
+			WaitForMoves(pieceName)
+		end
         Sleep(delay)
     end
 end

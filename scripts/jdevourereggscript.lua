@@ -33,6 +33,22 @@ function attachToCorpse()
 	return oneTrueCorpse 
 end
 
+function retractTentacle()
+	waveValue= 0
+	fullCircle= math.pi * 2
+	speed= 14
+	
+	for i=#TablesOfPiecesGroups["tentac"], 1 do
+		waveValue= waveValue + math.pi/8
+		retractPiece=  TablesOfPiecesGroups["tentac"][i]
+			for k=i, 1 do
+				tP(TablesOfPiecesGroups["tentac"][k],math.cos(waveValue*k)* fullCircle, 0 ,0 , speed/10)
+			end
+		reset(retractPiece, speed)
+		WaitForTurns(retractPiece)
+	end
+end
+
 function tryToGetCorpse()
 	myCorpse = attachToCorpse()
 	
@@ -43,6 +59,7 @@ function tryToGetCorpse()
 	end
 	
 	if not myCorpse then 
+		retractTentacle()
 		Spring.DestroyUnit(unitID,true,true) 
 	end
 	
@@ -51,45 +68,80 @@ function tryToGetCorpse()
 	spoolOut(TablesOfPiecesGroups["tentac"],degTable, myCorpsePos, startOffset)
 end
 
-function spoolOut(T, axis, degTable, myCorpsePos, startOffset, randFunc)
+function spoolOut(T, axis, degTable, myCorpsePos, startOffset, randFunc, myCorpseID)
 	resetT(T,0)
 	mpV(T[#T],-1 * startOffset, 0)
 	offSetIndex= 0
+	seconds = 0
+	constOffset = (math.pi * 2) 
 	
 	while distance(myCorpsePos, getVectorPieceRelPos(unitID, T[1])) > 15  do
-		offSetIndex= offSetIndex + 1
+		offSetIndex= math.min(offSetIndex + 1, #degTable)
 		mpV(T[#T],-1 * startOffset + Vector:new(0,offSetIndex * length,0), 5)
 		
-		currentDegree = 0
+		currentDegreeX = 0
+		currentDegreeZ = 0
 		rIndex = 0
-		for i = offSetIndex, 1, -1 do
-			rIndex= rIndex+1
-			relativeDegree= 0
-			
+
+		for i = offSetIndex, math.max(1,offSetIndex - degTable), -1 do
+			rIndex= rIndex + 1
+			relativeDegreeX = 0
+
 			if degTable[rIndex] then 
-				relativeDegree= degTable[rIndex] - currentDegree + randFunc()
+				relativeDegreeX= degTable[rIndex] - currentDegreeX + randFunc()
 			end
 			
-			currentDegree = currentDegree + relativeDegree 
-			Turn(T[i], axis, math.rad(relativeDegree),speed)
+			currentDegreeX = currentDegreeX + relativeDegreeX 
+			
+			relativeDegreeZ = math.ceil((math.sin(seconds + i * constOffset/offSetIndex) * 25.0) - currentDegreeZ)
+			currentDegreeZ = currentDegreeZ + relativeDegreeZ 
+			tSyncIn(T[i], relativeDegreeX, 0, relativeDegreeZ, 50, UnitScript)
+		end		
+
+		freeRoot = math.max(1,offSetIndex - degTable)
+		for i= freeRoot, 1, - 1 do
+			--Turn towards Unit specified if last table
+				if (i == freeRoot) then
+					ax, ay ,az = math.rad(-currentDegreeX), 0, math.rad(currentDegreeZ)
+					tSyncIn(T[i], ax, ay, az, 50, UnitScript)
+					TurnPieceTowardsUnit(T[i], myCorpseID, 0.5, Vector:new(ax,ay,az))
+				else -- zero
+					relativeDegreeZ = math.ceil((math.sin(seconds + i * constOffset/offSetIndex) * 25.0) - currentDegreeZ)
+					currentDegreeZ = currentDegreeZ + relativeDegreeZ 
+				
+					tSyncIn(T[i], math.random(-5,5), 0, relativeDegreeZ, 50, UnitScript)
+				end
 		end
+		WaitForTurns(T)	
 		
-		WaitForTurns(T)
 		Sleep(50)
+		seconds= seconds + 50/1000
+	end
+	
+	StartThread(buildAnimation)
+end
+
+BUILD_TIME = 22000
+function buildAnimation ()
+spendTime = BUILD_TIME
+RESTTIME = 3000
+milliSecondsInSecond= 1000
+
+	while spendTime > 0 do
+		GlobIndex= inc(GlobIndex)
+		StartThread(followPath,
+					unitID, 
+					TablesOfPiecesGroups["travelling"][(GlobIndex%3)+1]			, 
+					pathTable, 
+					(10 * #TablesOfPiecesGroups["tentac"])/(RESTTIME * #TablesOfPiecesGroups["travelling"])/milliSecondsInSecond,
+					0,
+					true)
+					
+		showT(TablesOfPiecesGroups["FPod"],1,(spendTime/BUILD_TIME)*(#TablesOfPiecesGroups["FPod"]))
+		Sleep(RESTTIME)
 	end
 end
 
-
- -- currentDegree = 0
-        -- for i = 1, 6 do
-		-- relativeDegree= 0
-				-- if k % 2 == 0 then
-				-- relativeDegree = math.ceil((math.cos(seconds + i * constOffset) * 25.0) - currentDegree)
-				-- else
-					-- relativeDegree = math.ceil((math.sin(seconds + i * constOffset) * 25.0) - currentDegree)
-				-- end
-				-- currentDegree = currentDegree + relativeDegree   
-            -- Turn(Knees[k][i], y_axis, math.rad(relativeDegree), math.abs(relativeDegree/3))
 
 TablesOfPiecesGroups
 function script.Killed()
