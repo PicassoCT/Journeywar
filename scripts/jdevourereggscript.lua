@@ -39,6 +39,7 @@ function retractTentacle()
 	speed= 14
 	
 	for i=#TablesOfPiecesGroups["tentac"], 1 do
+	Move(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]],y_axis,)
 		waveValue= waveValue + math.pi/8
 		retractPiece=  TablesOfPiecesGroups["tentac"][i]
 			for k=i, 1 do

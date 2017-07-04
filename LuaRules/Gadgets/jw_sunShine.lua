@@ -217,9 +217,9 @@ if gadgetHandler:IsSyncedCode() then
         -- if GG.SunConfig and GG.SunConfig[1] then
         -- config= GG.SunConfig[1]
         -- GG.SunConfig[1].lifeTime= GG.SunConfig[1].lifeTime-32
-        -- if GG.SunConfig[1].lifeTime <= 0 then
-        -- GG.SunConfig[1]= nil
-        -- end
+			-- if GG.SunConfig[1].lifeTime <= 0 then
+			-- GG.SunConfig[1]= nil
+			-- end
         -- else
 
         rgba = getgroundAmbientColor(percent)

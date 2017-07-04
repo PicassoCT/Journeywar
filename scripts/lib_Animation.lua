@@ -854,13 +854,7 @@ function DropPieceToGround(unitID, piecename, speed, boolWait, boolHide, Explode
     if ExplodeFunction then ExplodeFunction(piecename, SFXCOMBO) end
 end
 
-function relativeZeroPieceChainAtPiece(Chain,  EndIndex, PieceIndex, speed, zeroPos, boolSynced)
-zeroPos = zeroPos or Vector:new(0,0,0)
-boolSynced = boolSynced or 
 
-
-
-end
 
 
 function generateSknakeOnAPlaneDefaults(cPceDescLst)
@@ -2074,14 +2068,7 @@ end
 return dramatisPersona3d
 end
 
-function tentacleTowardsUnit(tentacleTable, myCorpse, waveCycleTime, nrOfWaves, Time)
 
-
-end
-
-	pieceTable=  makePieceTable(unitID)
-	resetT(pieceTable)
-end
 
 --================================================================================================================
 --================================================================================================================

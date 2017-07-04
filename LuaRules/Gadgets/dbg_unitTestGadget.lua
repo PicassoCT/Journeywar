@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL spam v3.0 or later",
 		layer = math.huge,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
