@@ -449,6 +449,24 @@ function randomRotate(Piecename, axis, speed, rangeStart, rangeEnd)
     end
 end
 
+function wiggleOS(piecename,xDown, xUp, yDown, yUp, zDown, zUp, speed)
+	while true do
+		  tP(piecename,
+						math.random(xDown,xUp), math.random(yDown,yUp), math.random(zDown,zUp), speed)
+			WaitForTurns(piecename)
+	end
+
+end
+
+function shiverOS(piecename,xDown, xUp, yDown, yUp, zDown, zUp, speed)
+	while true do
+		  mP(piecename,
+						math.random(xDown,xUp), math.random(yDown,yUp), math.random(zDown,zUp), speed)
+			WaitForMove(piecename)
+	end
+
+end
+
 --> breath 
 function breathOS(body, lowDist, upDist, LegTable, LegNumber, degree, speed, count)
     leglength = upDist / 2

@@ -93,7 +93,7 @@ function windStoss(delaytime, StartVal, StrengthInDegree, StrenghtOfWind, length
 				Turn(curtain[StartVal], x_axis, math.rad(MaxDegree  + relativeDegree - currentDegree), relativeDegree/10)
 				currentDegree = currentDegree + relativeDegree
 				
-				for i = 1, #snakeTable do
+				for i = 1, 4 do
 					relativeDegree = math.ceil((math.cos(times + i * constOffset) * 65.0) - currentDegree)
 					currentDegree = currentDegree + relativeDegree
 					Turn(curtain[StartVal + i],x_axis, math.rad(relativeDegree), relativeDegree/10)
@@ -103,7 +103,7 @@ function windStoss(delaytime, StartVal, StrengthInDegree, StrenghtOfWind, length
 				Turn(curtain[StartVal], x_axis, math.rad(MaxDegree  + relativeDegree - currentDegree), relativeDegree/10)
 				currentDegree = currentDegree + relativeDegree
 				
-				for i = 1, #snakeTable do
+				for i = 1, 4 do
 					relativeDegree = math.ceil((math.sin(times + i * constOffset) * 65.0) - currentDegree)
 					currentDegree = currentDegree + relativeDegree
 					Turn(curtain[StartVal + i],x_axis, math.rad(relativeDegree),relativeDegree/10)

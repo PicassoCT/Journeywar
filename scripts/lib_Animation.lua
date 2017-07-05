@@ -446,6 +446,8 @@ end
 
 -->Spins a Table
 function spinT(Table, axis, speed, rdeg, degup)
+	if type(Table) == "number" then val = math.random(rdeg,rdeg+degup);Spin(Table,axis,math.rad(val),speed) end
+
     if not degup then
         for k, v in pairs(Table) do
             if v then
@@ -1550,7 +1552,7 @@ end
 --> movePiece to Vector
 
 function mPV(piecename, vector, speed, boolWait)
-mP(piecename, vector.x, vector.y, vecter.z, speed, boolWait)
+mP(piecename, vector.x, vector.y, vector.z, speed, boolWait)
 end
 
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
@@ -1603,8 +1605,13 @@ function GetSpeed(timeInSeconds, degree)
     return (degRad / timeInSeconds)
 end
 
-
+function resetAll(unitID)
+	pieceList= Spring.GetUnitPieceList(unitID)
+	pieceList = makeKeyPiecesTable(unitID, piece)
+	resetT(pieceList)
+end
 -->Reset a Table of Pieces at speed
+
 function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate, interValStart, interValEnd)
     lboolWait = boolWait or false
     lspeed = speed or 0
@@ -1694,8 +1701,15 @@ end
 --> Resets a piece
 function reset(piecename, speed, boolWaitForIT, boolIstantUpdate)
     if not piecename then return end
-    if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename .. " of type " .. type(piecename) .. " instead"); assert(true == false); end
+    if type(piecename) ~= "number" then 
+		Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename .. " of type " .. type(piecename) .. " instead"); 
+		assert(true == false); 
+		end
     bIstantUpdate = boolIstantUpdate or true
+    StopSpin(piecename, x_axis, 0, speed)
+    StopSpin(piecename, y_axis, 0, speed)
+    StopSpin(piecename, z_axis, 0, speed)
+	
     Turn(piecename, x_axis, 0, speed)
     Turn(piecename, y_axis, 0, speed)
     Turn(piecename, z_axis, 0, speed)

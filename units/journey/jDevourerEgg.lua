@@ -1,11 +1,11 @@
 local unitName = "jdevoureregg"
 
 local unitDef = {
-name = "Egg",
-Description = "Devours a nearby Corpse to grow a Eggball",
+name = "Devourer Egg",
+Description = "Devours a nearby Corpse to grow a Skinfantry-Eggball",
 
 	objectName = "jDevourerEgg.s3o",
-	script = "jdevourereggskript.lua",
+	script = "jdevourereggscript.lua",
 	buildPic = "skinfantry.png",
 
 

@@ -1405,7 +1405,7 @@ end
 
 --> old Vector constructor- uses lib_type constructor
 function makeVector(x, y, z)
-    return Vector:new(x,y,z)
+    return {x = x, y = y, z = z}
 end
 
 

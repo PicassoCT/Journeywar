@@ -138,6 +138,7 @@ function widget:Initialize()
 		
 		if onOffButton then
 			ButtonsTable["defaultOnOff"]=onOffButton
+						
 			onOffButton:Hide()
 		end
 	end
@@ -398,13 +399,14 @@ function widget:GameFrame(f)
 	
 	
 	function ShowOnOffButton(typeString)
-		if not ButtonsTable[typeString] then typeString = "defaultOnOff" end
-		
+		if  not ButtonsTable[typeString] then typeString = "defaultOnOff" end
+				Spring.Echo("Pre Error")
 		ButtonsTable[typeString]:Show()
 		activeElements[typeString]=ButtonsTable[typeString]
 	end
 	
 	local function ShowSpecialAbilityButton()
+
 		ButtonsTable["ability"]:Show()
 		activeElements["ability"]=ButtonsTable["ability"]
 	end
