@@ -594,7 +594,7 @@ function pointWithinTriangle(x1, y1, x2, y2, x3, y3, xt, yt)
     end
 end
 
--->returns the absolute distance
+-->returns the absolute distance on negative and positive values
 function absDistance(valA, valB)
     if sigNum(valA) == signNum(valB) then
         return math.abs(valA) - math.abs(valB)
@@ -623,6 +623,12 @@ function distance(x, y, z, xa, ya, za)
     else
         return math.sqrt((x - y) ^ 2)
     end
+end
+
+function distancePieceToUnit(unitID, Piece, targetID)
+	ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, Piece)
+	tx,ty,tz = Spring.GetUnitPosition(targetID)
+	return distance(ex,ey, ez, tx,ty,tz)
 end
 
 --> get two unit distVector
@@ -782,6 +788,30 @@ function isNaN(value)
     return (value ~= value)
 end
 
+function assertUnit(id)
+	if (Spring.ValidUnitID(id) == true) then
+		return 
+	else
+		assert(true==false)
+	end
+end
+
+function assertAxis(axis)
+axisT = {
+		[1] = true,
+		[2] = true,
+		[3] = true
+		}
+if axisT[axis] then return else assert(true==false)end		
+end
+
+function assertAlive(id)
+	if (Spring.GetUnitIsDead(id) == false) then
+		return 
+	else
+		assert(true==false)
+	end
+end
 function assertBool(val)
     assert(type(val) == "boolean")
 end
@@ -1411,7 +1441,13 @@ end
 
 function getUnitPositionV(id)
 	ix,iy,iz = Spring.GetUnitPosition(id)
-	return Vector:new(ix, iy, iz)
+	if ix then
+	local v = Vector:new(ix, iy, iz)
+		return v
+	else
+			local v =  Vector:new(0,0,0)
+			return v
+	end
 end
 
 function rangeClampVector(vector,range)
@@ -2233,13 +2269,13 @@ function worldPosToLocPos(owpX, owpY, owpZ, wpX, wpY, wpZ)
 end
 
 -->allows for a script breakpoint via widget :TODO incomplete
-function stopScript(name)
+function stop(name)
     lib_boolOnce = false
     while true do
         Sleep(3000)
         if lib_boolOnce == false then
             lib_boolOnce = true
-            Spring.Echo("Script " .. name .. " has stopped")
+            Spring.Echo("Script at " .. name .. " has stopped")
         end
     end
 end
@@ -3522,7 +3558,7 @@ function sample(NumericIndex, x, y, sampleFunction, factor)
 end
 
 --> GetDistanceNearestEnemy
-function GetDistanceNearestEnemy(id)
+function distanceNearestEnemy(id)
     ed = Spring.GetUnitNearestEnemy(id)
     return distanceUnitToUnit(id, ed)
 end

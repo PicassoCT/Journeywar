@@ -7,7 +7,7 @@ function gadget:GetInfo()
         version = "v0.1",
         license = "GPL v3.0 or later",
         layer = -1,
-        enabled = true,
+        enabled = (Spring.SetSunLighting ~= nil),
     }
 end
 

@@ -21,6 +21,7 @@ MA 02110-1301, USA.
 --================================================================================================================
 -->CombinedWaitForMove
 function WMove(lib_piece, lib_axis, lib_distance, lib_speed)
+	assertAxis(lib_axis)
     Move(lib_piece, lib_axis, lib_distance, lib_speed)
     WaitForMove(lib_piece, lib_axis)
 end
@@ -203,9 +204,9 @@ function reset(piecename, lspeed, boolWaitForIT)
     Move(piecename, y_axis, 0, speed)
     Move(piecename, z_axis, 0, speed, true)
     if boolWaitForIT and boolWaitForIT == true then
-        WaitForTurn(piecename, 1)
-        WaitForTurn(piecename, 2)
-        WaitForTurn(piecename, 3)
+        WaitForTurn(piecename, x_axis)
+        WaitForTurn(piecename, y_axis)
+        WaitForTurn(piecename, z_axis)
     end
 end
 
@@ -395,7 +396,7 @@ function syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, x_deg, y_deg, z_
     end
 
 	if x_val ~= x_deg then
-		turnInTime(piecename, 1, (x_val), timeMS, x_deg, y_deg, z_deg, false) -- -28 3000
+		turnInTime(piecename, 1, (x_val), timeMS, x_deg, y_deg, z_deg, false)
 	end
 	if y_val ~= y_deg then
 		turnInTime(piecename, 2, (y_val), timeMS, x_deg, y_deg, z_deg, false)
@@ -1545,7 +1546,7 @@ function getRandomAxis()
     return axis
 end
 
-function TurnPieceTowardsUnit(piecenam, unitToTurnToo, Speed, overrideVec)
+function TurnPieceTowardsUnit(piecename, unitToTurnToo, Speed, overrideVec)
     x, y, z = Spring.GetUnitPosition(unitToTurnToo)
     TurnPieceTowardsPoint(piecename, x, y, z, Speed, overrideVec.x, overrideVec.y, overrideVec.z)
 end
