@@ -173,6 +173,32 @@ function makeTable(default, xDimension, yDimension, zDimension, boolNegativeMirr
     return RetTable
 end
 
+--> rotate zero Centric Table
+function rotateMap(Map, sizeX,sizeZ, degreeRotation, default)
+local rotateCopy= makeTable(default, sizeX, sizeZ, nil, true )
+	for x=-sizeX,sizeX do
+		for z=-sizeZ,sizeZ do
+			if Map[x][z] ~= default then
+			rx, rz= Rotate(x, z, math.rad(degreeRotation))
+			rotateCopy[rx][rz]= Map[x][z]
+			end
+		end
+	end
+return rotateCopy
+end
+ 
+--> shifts a 2d Map by a vector, replaces empty values with default
+function shiftMap(Map, sizeX,sizeZ, offX, offZ, default)
+local shiftedMap = makeTable(default, sizeX, sizeZ, nil, true )
+for x=-sizeX, sizeX do
+		for z=-sizeZ, sizeZ do
+			if Map[x][z] ~= default and shiftedMap[x+offX] and shiftedMap[x+offX][z+offZ] then
+			shiftedMap[x+offX][z+offZ]= Map[x][z]
+			end
+		end
+	end
+return shiftedMap
+end
 -->Creates basically a table of piecenamed enumerated strings
 function makeTableOfPieceNames(name, nr, startnr, piecefoonction)
     T = {}
@@ -596,7 +622,7 @@ end
 
 -->returns the absolute distance on negative and positive values
 function absDistance(valA, valB)
-    if sigNum(valA) == signNum(valB) then
+    if Signum(valA) == Signum(valB) then
         return math.abs(valA) - math.abs(valB)
     else
         return math.abs(valA) + math.abs(valB)
@@ -1065,7 +1091,7 @@ end
 --======================================================================================
 
 -->gets Signum of a number
-function sigNum(val)
+function Signum(val)
     return math.abs(val) / val
 end
 

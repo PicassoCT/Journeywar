@@ -32,16 +32,17 @@ function WTurn(lib_piece, lib_axis, lib_distance, lib_speed)
     WaitForTurn(lib_piece, lib_axis)
 end
 
+  function pack(...)
+      return { ... }, select("#", ...)
+    end 
+
 -->Waits for anyTurnToComplete
 function WaitForTurns(...)
-    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	local arg = arg
+	if (not arg) then arg = {...}; arg.n = #arg end
+   if not arg then echo("No arguments for WaitForTurns");   return   end
 
-    local arg = { ... }
-    if not arg then
-        return
-    end
-
-    typeArg = type(arg)
+   typeArg = type(arg)
 
     if typeArg == "table" then
 
@@ -62,14 +63,11 @@ end
 
 -->Waits for anyTurnToComplete
 function WaitForMoves(...)
-    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	local arg = arg
+	if (not arg) then arg = {...}; arg.n = #arg end
+   if not arg then  echo("No arguments for WaitForMoves");   return   end
 
-    local arg = { ... }
-    if not arg then
-        return
-    end
-
-    typeArg = type(arg)
+   typeArg = type(arg)
 
     if typeArg == "table" then
 
@@ -268,7 +266,6 @@ end
 function turnSyncInTimeT(Table, times, x_deg, y_deg, z_deg)
 
     for piece, v in pairs(Table) do
-
         turnInTime(v.piecenr, v.axis, math.rad(v.deg), times, x_deg, y_deg, z_deg, false)
     end
 end
@@ -294,15 +291,8 @@ end
 
 
 -->clamps rotationonal values
-function absoluteRotation(piecename, axis, finalRotation, x_deg, y_deg, z_deg)
-
-    if axis == x_axis then
-        return math.abs(x_deg - finalRotation) % 180
-    elseif axis == y_axis then
-        return math.abs(y_deg - finalRotation) % 180
-    else
-        return math.abs(z_deg - finalRotation) % 180
-    end
+function absoluteRotation(piecename,  goal, start)
+   
 end
 
 -->Turns a Piece on all given axis, snychronously
@@ -313,14 +303,15 @@ function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
         return
     end
 
+	
 
-    tx = absoluteRotation(piecename, x_axis, x, x_deg, y_deg, z_deg) + 0.01
-    ty = absoluteRotation(piecename, y_axis, y, x_deg, y_deg, z_deg) + 0.01
-    tz = absoluteRotation(piecename, z_axis, z, x_deg, y_deg, z_deg) + 0.01
+    tx = (absDistance(x, x_deg) + 0.01 )% 180
+    ty = (absDistance(y, y_deg) + 0.01 )% 180
+    tz = (absDistance(z, z_deg) + 0.01 )% 180
 
-    xtime = math.abs(tx) / speed
-    ytime = math.abs(ty) / speed
-    ztime = math.abs(tz) / speed
+    xtime = tx / speed
+    ytime = ty / speed
+    ztime = tz / speed
     maxtime = math.max(xtime, math.max(ytime, ztime))
     if maxtime == 0 then maxtime = 0.1 end
 
@@ -331,78 +322,79 @@ end
 
 
 -->Turns a piece in the speed necessary to arrive after x Milliseconds - overrirdes the spring shortes path turns
-function turnInTime(piecename, taxis, degree, timeInMs, x_deg, y_deg, z_deg, boolWait)
+function turnInTime(piecename, taxis, goalDeg, timeInMs, x_deg, y_deg, z_deg, boolWait)
     assert(z_deg)
 
     --Gets the absolute Biggest Rotation
-    absoluteDeg = absoluteRotation(piecename, taxis, degree, x_deg, y_deg, z_deg)
-
+	 currDegVal= selectAxisValue( taxis, x_deg, y_deg, z_deg)
+    absoluteDeg = absDistance(goalDeg, currDegVal)
+	 
     timeInMs = (timeInMs + 1) / 1000
     Speed = (math.abs(math.rad(absoluteDeg)) / math.pi) / (math.abs(timeInMs)) --9.3
-
+	 echo("Rel Deg:"..goalDeg.."|| Absolute Deg:"..absoluteDeg.. " -> in Speed "..Speed)
     if absoluteDeg < 0.0001 then return end
 
     if lib_boolDebug == true then
         --Spring.Echo(" TurnInTime for"..piecename.." Speed:"..Speed)
-        --Spring.Echo("to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in times "..timeInMs.. " seconds"	)
+        --Spring.Echo("to reach Degree:"..goalDeg.."with abs deg to go:"..absoluteDeg.. " in times "..timeInMs.. " seconds"	)
     end
 
     if absoluteDeg <= 180 then
 
-        Turn(piecename, taxis, math.rad(degree), Speed)
-
+        Turn(piecename, taxis, math.rad(goalDeg), Speed)
         if boolWait and boolWait == true then WaitForTurn(piecename, taxis) end
 
     else
-        OverTurnDirection(piecename, taxis, degree, Speed)
+        OverTurnDirection(piecename, taxis, goalDeg, Speed,  currDegVal, proportionToSignum(currDegVal, goalDeg))
         if boolWait and boolWait == true then Sleep(10); WaitForTurn(piecename, taxis) end
     end
 end
+function selectAxisValue( taxis, x_deg, y_deg, z_deg)
+	if taxis == 1 then return x_deg end
+	if taxis == 2 then return y_deg end
+	return z_deg
+end
+function proportionToSignum(start,goal)
+	if goal >= start then return -1 end
+	
+	return 1 
+end
 
 -->Turns along a direction, ignoring the spring shortest way implementation
-function OverTurnDirection(piecename, axis, degree, speed)
-    x_deg, y_deg, z_deg = Spring.GetPieceRotation(piecename)
+function OverTurnDirection(piecename, axis, goalDeg, speed,  startDeg, dirSign)
 
-    curdeg = 0;
-    if axis == x_axis then
-        curdeg = x_deg
-    elseif axis == y_axis then
-        curdeg = y_deg
-    else curdeg = z_deg
-    end
-    curdeg = math.rad(curdeg)
 
-    dir = 1
-
-    if curdeg + 360 < degree + 360 then
-        dir = -1
-    end
-
-    Turn(piecename, axis, math.rad(curdeg + 179 * dir), speed)
-    WaitForTurn(piecename, axis)
-    Turn(piecename, axis, math.rad(degree), Speed)
-    WaitForTurn(piecename, axis)
+	
+	asyncTurn = function()
+					Turn(piecename, axis, math.rad(startDeg + 180 * dirSign), speed)
+					WaitForTurn(piecename, axis)
+					Turn(piecename, axis, math.rad(goalDeg), speed)
+					WaitForTurn(piecename, axis)
+				end
+	 StartThread(asyncTurn)
 end
+
 --> turns sync in time no matter what kind of orientation the piece currently holds
 function tSyncIn(piecename, x_val, y_val, z_val, timeMS, UnitScript)
     x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(piecename)
+		
     syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
 end
 
 -->Turns a piece on every axis in times 
-function syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, x_deg, y_deg, z_deg)
+function syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, x_curdeg, y_curdeg, z_curdeg)
     if lib_boolDebug == true then
         --Spring.Echo("times for syncTurnInTime:"..times)
     end
 
-	if x_val ~= x_deg then
-		turnInTime(piecename, 1, (x_val), timeMS, x_deg, y_deg, z_deg, false)
+	if x_val ~= x_curdeg then
+		turnInTime(piecename, 1, (x_val), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
 	end
-	if y_val ~= y_deg then
-		turnInTime(piecename, 2, (y_val), timeMS, x_deg, y_deg, z_deg, false)
+	if y_val ~= y_curdeg then
+		turnInTime(piecename, 2, (y_val), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
 	end
-	if z_val ~= z_deg then
-		turnInTime(piecename, 3, (z_val), timeMS, x_deg, y_deg, z_deg, false)
+	if z_val ~= z_curdeg then
+		turnInTime(piecename, 3, (z_val), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
 	end
 end
 
@@ -1287,8 +1279,8 @@ function dropPieceTillStop(unitID, piece, speedPerSecond, VspeedMax, lbounceNr, 
         mP(piece, vec.x, vec.y, vec.z, factorT * speed)
 
         --shrink vec with sqrt as a approximation for air resistance
-        vec.vx = clampMaxSign(math.sqrt((math.abs(vec.vx) ^ 1.414)) * sigNum(vec.vx), 1)
-        vec.vz = clampMaxSign(math.sqrt((math.abs(vec.vz) ^ 1.414)) * sigNum(vec.vz), 1)
+        vec.vx = clampMaxSign(math.sqrt((math.abs(vec.vx) ^ 1.414)) * Signum(vec.vx), 1)
+        vec.vz = clampMaxSign(math.sqrt((math.abs(vec.vz) ^ 1.414)) * Signum(vec.vz), 1)
 
         --apply a approximation for the decay of movement
         vec.vy = clampMaxSign(1 - (1 / (force + 0.0001)) * (vec.vy), 1)
