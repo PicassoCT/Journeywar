@@ -82,12 +82,15 @@ function tryToGetCorpse()
 		return 
 	end
 	
-	degTable = { 0, -15, 35, 15, -40, -30, -10, -10, -15, 25 ,-35}
+
 	degTable={}
-	for i=1,8 do
-		degTable[i] = 360/8
+	for i=1,3 do
+		degTable[i] = -90/3
 	end
-	
+	for i=4, 12 do
+		degTable[i] = 180/8
+	end
+
 	
 	spoolOut(TablesOfPiecesGroups["tentac"], x_axis, degTable, LENGTHOFPIECE*#TablesOfPiecesGroups["tentac"], myCorpse,degTable )
 end
@@ -107,22 +110,22 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 	constOffset = (math.pi * 2)
 	
 	echo("Distance:"..distancePieceToUnit (unitID, T[1], myCorpseID) )
-	boolDone=false
-	while distancePieceToUnit (unitID, T[1], myCorpseID) > 15 and boolDone == false do
+
+	while distancePieceToUnit (unitID, T[1], myCorpseID) > 15  do
 		offSetIndex = math.min(offSetIndex + 1, #T-1)
-		if offSetIndex == #T-#degTable then offSetIndex =1; resetT(T,0); WaitForTurns(T) end--delMe Debug
+		if offSetIndex == #T then offSetIndex =1; resetT(T,0); WaitForTurns(T) end--delMe Debug
 		
 		position= Vector:new(0, 0, 0)
-		position.y= -1 * startOffset + (offSetIndex + #debugTable)*LENGTHOFPIECE
-		syncMoveInTime(T[#T], position.x,position.y,position.z, 500)
+		position.y= -1 * startOffset + (offSetIndex + #degTable)*LENGTHOFPIECE
+		--syncMoveInTime(T[#T], position.x,position.y,position.z, 500)
 		
 		currentDegreeX = 0
 		currentDegreeZ = 0
 		rIndex = 0
 		
 		indexStart = math.min(offSetIndex,#T)
-		indexEnd = 1
-		showT(T, indexEnd, indexStart)
+		indexEnd = math.max(1,indexStart - #degTable)
+		showT(T, 1, indexStart)
 		
 		for i = indexStart, indexEnd, -1 do
 			
@@ -132,14 +135,15 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 				relativeDegreeX = degTable[ rIndex] - currentDegreeX 
 			end
 			
-			if rIndex == #degTable then
+			if rIndex >= #degTable then
 				currentDegreeX = 0
+				relativeDegreeX = 0
 			end 
 			
 			--relativeDegreeZ = math.ceil((math.sin(seconds + i * constOffset / offSetIndex) * 25.0) - currentDegreeZ)
 			relativeDegreeZ = 0
 			currentDegreeZ = currentDegreeZ + relativeDegreeZ
-			tSyncIn(T[i], relativeDegreeX, 0, relativeDegreeZ, 500, UnitScript)
+			tSyncIn(T[i], relativeDegreeX, 0, relativeDegreeZ, 500, Spring.UnitScript)
 		end
 		
 		-- freeRoot = math.max(1, offSetIndex - #degTable)
@@ -157,8 +161,8 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 		-- end
 		-- end
 		WaitForTurns(T)
-		
-		Sleep(500)
+		Sleep(3000)
+
 		seconds = seconds + 500 / 1000
 	end
 	
