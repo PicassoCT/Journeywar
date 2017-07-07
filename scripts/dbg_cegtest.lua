@@ -26,17 +26,16 @@ function script.Killed(recentDamage, _)
     createCorpseCUnitGeneric(recentDamage)
     return 1
 end
-
+Quader02 = piece"Quader02"
 function testTurnInTime()
+	
     while true do
-		ox, oz = math.random(-250,250),  math.random(-250,250)
-		MovePieceToPos(Quader04,ox,120,oz,7.5)
-		sentence = "Moving to "..ox.." / "..oz.."  "
-
-		WaitForMoves(Quader04)
-		movePieceToPieceNoReset(unitID,Quader01,Quader08,15)
-		WaitForMoves(Quader08)
-		Sleep(100)
+		reset(Quader02)
+		Sleep(1000)
+		turnInTime(Quader02, y_axis, 360, 5000, 0,0,0, false)
+		WaitForTurns(Quader02)	
+			turnInTime(Quader02, y_axis, -360, 5000, 0,360,0, false)
+		WaitForTurns(Quader02)	
     end
 end
 
