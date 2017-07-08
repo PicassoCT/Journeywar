@@ -290,10 +290,6 @@ function mP(piecename, x_val, y_val, z_val, speed, boolWait)
 end
 
 
--->clamps rotationonal values
-function absoluteRotation(piecename,  goal, start)
-   
-end
 
 -->Turns a Piece on all given axis, snychronously
 function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
@@ -302,8 +298,6 @@ function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
         tP(piecename, x, y, z, speed)
         return
     end
-
-	
 
     tx = (absDistance(x, x_deg) + 0.01 )% 180
     ty = (absDistance(y, y_deg) + 0.01 )% 180
@@ -320,26 +314,37 @@ function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
     Turn(piecename, z_axis, math.rad(z), (ztime / maxtime) * speed)
 end
 
-function minimalAbsoluteDistance(goalDeg, currDegVal)
-biggestValue=math.max(math.abs(goalDeg),math.abs(currDegVal))
-return absDistance(goalDeg+biggestValue,currDegVal+biggestValue)
+
+function minimalAbsoluteDistance(goalDeg, startDeg)
+	local gDeg, sDeg = goalDeg, startDeg
+
+	modulatedGoalValue= (gDeg % 360.0) + 360.0 -- 330
+	modulatedStartValue= (sDeg % 360.0) + 360.0 --382,5
+
+	absDist =  absDistance(modulatedGoalValue,modulatedStartValue)
+	
+	if absDist > 180 then return 360 - absDist end
+	
+	return absDist
 end
 -->Turns a piece in the speed necessary to arrive after x Milliseconds - overrirdes the spring shortes path turns
-function turnInTime(piecename, taxis, goalDeg, timeInMs, x_deg, y_deg, z_deg, boolWait)
-    assert(z_deg)
+function turnInTime(piecename, taxis, goalDeg, timeInMs, x_startdeg, y_startdeg, z_startdeg, boolWait)
+    assert(z_startdeg)
 
     --Gets the absolute Biggest Rotation
-	 currDegVal= selectAxisValue( taxis, x_deg, y_deg, z_deg)
-    absoluteDeg = minimalAbsoluteDistance(goalDeg, currDegVal)
+	 startDeg= math.ceil(selectAxisValue( taxis, x_startdeg, y_startdeg, z_startdeg))
+	
+    absoluteDeg = math.ceil(minimalAbsoluteDistance(goalDeg, startDeg))
 	 
     timeInMs = (timeInMs + 1) / 1000
     Speed = (math.abs(math.rad(absoluteDeg)) / math.pi) / (math.abs(timeInMs)) --9.3
-	 echo("Rel Deg:"..goalDeg.."|| Absolute Deg:"..absoluteDeg.. " -> in Speed "..Speed)
+
     if absoluteDeg < 0.0001 then return end
 
     if lib_boolDebug == true then
-        --Spring.Echo(" TurnInTime for"..piecename.." Speed:"..Speed)
-        --Spring.Echo("to reach Degree:"..goalDeg.."with abs deg to go:"..absoluteDeg.. " in times "..timeInMs.. " seconds"	)
+		echo("turn in Time:: start Deg: "..startDeg)
+		echo("turn in Time:: goal Deg:"..goalDeg)
+		echo("turn in Time::  absolute distance:"..absoluteDeg.. " -> in Speed "..Speed)
     end
 
     if absoluteDeg <= 180 then
@@ -348,14 +353,15 @@ function turnInTime(piecename, taxis, goalDeg, timeInMs, x_deg, y_deg, z_deg, bo
         if boolWait and boolWait == true then WaitForTurn(piecename, taxis) end
 
     else
-        OverTurnDirection(piecename, taxis, goalDeg, Speed,  currDegVal)
+        OverTurnDirection(piecename, taxis, goalDeg, Speed,  startDeg)
         if boolWait and boolWait == true then Sleep(10); WaitForTurn(piecename, taxis) end
     end
 end
 function selectAxisValue( taxis, x_deg, y_deg, z_deg)
-	if taxis == 1 then return x_deg end
-	if taxis == 2 then return y_deg end
-	return z_deg
+	if taxis == x_axis then return x_deg end
+	if taxis == y_axis  then return y_deg end
+	if taxis == z_axis  then return z_deg end
+	echo("Error: selectAxisValue - Axis not defined")
 end
 function proportionToSignum(start,goal)
 	if goal >= start then return -1 end
@@ -391,7 +397,7 @@ function syncTurnInTime(piecename, x_goaldeg, y_goaldeg, z_goaldeg, timeMS, x_cu
     if lib_boolDebug == true then
         --Spring.Echo("times for syncTurnInTime:"..times)
     end
-
+	
 	if x_goaldeg ~= x_curdeg then
 		turnInTime(piecename, 1, (x_goaldeg), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
 	end
@@ -401,6 +407,8 @@ function syncTurnInTime(piecename, x_goaldeg, y_goaldeg, z_goaldeg, timeMS, x_cu
 	if z_goaldeg ~= z_curdeg then
 		turnInTime(piecename, 3, (z_goaldeg), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
 	end
+	
+	
 end
 
 --> Move a piece so that it arrives at all axis on the given times

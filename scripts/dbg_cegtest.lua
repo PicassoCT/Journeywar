@@ -16,9 +16,12 @@ Quader01 = piece "Quader01"
 
 function script.Create()
     --generatepiecesTableAndArrayCode(unitID)
-    StartThread(emitSFX)
-    StartThread(testTurnInTime)
-
+   --  StartThread(emitSFX)
+   -- StartThread(testTurnInTime)
+	echo(minimalAbsoluteDistance(15,-15))
+	echo(minimalAbsoluteDistance(-15,-15))
+	echo(minimalAbsoluteDistance(-15,15))
+	echo(minimalAbsoluteDistance(360,-270))
 end
 
 function script.Killed(recentDamage, _)

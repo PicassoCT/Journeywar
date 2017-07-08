@@ -621,9 +621,10 @@ function pointWithinTriangle(x1, y1, x2, y2, x3, y3, xt, yt)
 end
 
 -->returns the absolute distance on negative and positive values
-function absDistance(valA, valB)
+function absDistance(valA, valB) 
+
     if Signum(valA) == Signum(valB) then
-        return math.abs(valA) - math.abs(valB)
+        return math.abs(math.abs(valA) - math.abs(valB))
     else
         return math.abs(valA) + math.abs(valB)
     end

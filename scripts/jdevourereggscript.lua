@@ -144,6 +144,7 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 			relativeDegreeZ = 0
 			currentDegreeZ = currentDegreeZ + relativeDegreeZ
 			tSyncIn(T[i], relativeDegreeX, 0, relativeDegreeZ, 500, Spring.UnitScript)
+
 		end
 		
 		-- freeRoot = math.max(1, offSetIndex - #degTable)
@@ -161,7 +162,7 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 		-- end
 		-- end
 		WaitForTurns(T)
-		Sleep(3000)
+		Sleep(1)
 
 		seconds = seconds + 500 / 1000
 	end
