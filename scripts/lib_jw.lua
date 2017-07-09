@@ -84,6 +84,16 @@ function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 
     return retTab
 end
+function getEggTypeTable(UnitDefNames)
+  retTab =  {
+        [UnitDefNames["jskineggnogg"].id]=true,
+        [UnitDefNames["jtigeggnogg"].id ]=true,
+        [UnitDefNames["jdevoureregg"].id]=true,
+        [UnitDefNames["jdevoureregg"].id]=true,
+        [UnitDefNames["jsuneggnogg"].id]=true
+		}
+return retTab
+end
 
 function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     retTab = {
@@ -178,7 +188,7 @@ function getNeutralTypeTable()
 end
 
 
-function getCorpseTypeTable()
+function getZombieTypeTable()
     Creep = {}
     Creep[UnitDefNames["gzombiehorse"].id] = true
     Creep[UnitDefNames["zombie"].id] = true

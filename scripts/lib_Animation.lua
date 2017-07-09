@@ -61,6 +61,15 @@ function WaitForTurns(...)
     end
 end
 
+function WaitForTurnT(T)
+        for k, v in pairs(T) do
+            if type(v) == "number" then
+                WaitForTurn(v, x_axis)
+                WaitForTurn(v, y_axis)
+                WaitForTurn(v, z_axis)
+            end
+        end
+end
 -->Waits for anyTurnToComplete
 function WaitForMoves(...)
 	local arg = arg
@@ -87,6 +96,15 @@ function WaitForMoves(...)
         WaitForMove(arg, y_axis)
         WaitForMove(arg, z_axis)
     end
+end
+
+-->Waits for anyTurnToComplete
+function WaitForMovevAxis(arg)
+	
+        WaitForMove(arg, x_axis)
+        WaitForMove(arg, y_axis)
+        WaitForMove(arg, z_axis)
+ 
 end
 
 -->Turn a piece towards a random direction
@@ -413,7 +431,7 @@ end
 
 --> Move a piece so that it arrives at all axis on the given times
 function syncMoveInTime(piecename, x_val, y_val, z_val, times)
-    times = times / 1000
+    times = (math.abs(times)+1 / 1000)
     --ratio = 1/(val/max)*times => max*times / val
     Move(piecename, 1, x_val, math.abs(x_val / times))
     Move(piecename, 2, y_val, math.abs(y_val / times))
@@ -675,9 +693,9 @@ function getOrgPosPiece(unitID, pieceName)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed)
+function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset)
     speed = speed or 0
-
+	 offset = offset or {x= 0, y= 0, z= 0}
 	
     if not pieceDest or not piecename then return end
     orgx, orgy, orgz = getOrgPosPiece(unitID, piecename) --TODO rework
@@ -689,7 +707,7 @@ function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed)
    -- echo("Diff:", -1*diffx,  diffy, diffz)
 
 
-   syncMove(piecename, -1* diffx,  diffy,  diffz, speed)
+   syncMove(piecename, -1* diffx +offset.x,  diffy + offset.y,  diffz+ offset.z, speed)
 
    WaitForMoves(piecename)
 end
@@ -1562,12 +1580,13 @@ mP(piecename, vector.x, vector.y, vector.z, speed, boolWait)
 end
 
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
-function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz)
+function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz, limVec)
     pvec = { x = 0, y = 0, z = 0 }
     lox = lox or 0
     loy = loy or 0
     loz = loz or 0
     ox, oy, oz = math.rad(loy), math.rad(lox), math.rad(loz)
+	  limVec = limVec or {x=1, y=1, z=1} --limit or identity
 
 
     px, py, pz, pvec.x, pvec.y, pvec.z = Spring.GetUnitPiecePosDir(unitID, piecename)
@@ -1579,7 +1598,10 @@ function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz)
     vec = subVector(vec, pvec)
     vec = normVector(vec)
 
-    tPrad(piecename, math.atan2(vec.y, vec.z) + ox, math.atan2(vec.x, vec.z) + oy, math.atan2(vec.x, vec.y) + oz, Speed)
+    tPrad(piecename,  limVec.x * (math.atan2(vec.y, vec.z) + ox), 
+						limVec.y * (math.atan2(vec.x, vec.z) + oy), 
+						limVec.z * (math.atan2(vec.x, vec.y) + oz),
+						Speed)
 end
 
 function tPVector(piece, vec, speed)
@@ -1874,13 +1896,20 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
 end
 
 --> get a Piece to follow a Path made of Pieces 
-function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove)
+function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove, boolDirectional, offset)
 	boolWaitForMove = boolWaitForMove or false
+	boolDirectional = boolDirectional or false
+	
+	offset = offset or {x=0,y=0,z=0}
 	
 	for i = 1, #pathTable do
 		pieceNum= pathTable[i]
-        movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed)
-		
+			if boolDirectional == true then
+				dx,dy,dz=  UnitScript.GetPieceRotation(pieceNum)		
+				tP(pieceName,dx,dy,dz, speed)		
+			end
+        movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed, offset)
+			
 		if boolWaitForMove == true then
 			WaitForMoves(pieceName)
 		end

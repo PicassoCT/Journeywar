@@ -2308,13 +2308,13 @@ function stop(name)
 end
 
 function delayedHide(piece, timeT)
-Sleep(timeT)
-Hide(piece)
+	Sleep(timeT)
+	Hide(piece)
 end
 
 function delayedShow(piece, timeT)
-Sleep(timeT)
-Show(piece)
+	Sleep(timeT)
+	Show(piece)
 end
 
 -->Validates that a table of UnitIds or a UnitID still exist and is alive
@@ -4635,6 +4635,11 @@ function transferUnitStatusToUnit(unitID, targetID)
     Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
 
+function createUnitAtPiece(unitID, typeID, Piece)
+ x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(unitID, Piece)
+ teamID= Spring.GetUnitTeam(unitID)
+ return Spring.CreateUnit(typeID, x, y, z, math.ceil(math.random(0, 3)), teamID)
+end
 --> Transforms a selected unit into another type
 function transformUnitInto(unitID, unitType, setVel)
     x, y, z = Spring.GetUnitPosition(unitID)

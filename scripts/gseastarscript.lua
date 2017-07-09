@@ -176,6 +176,8 @@ infantryTable = getInfantryTypeTable()
 creeperTypeTable = getCreeperTypeTable()
 corpseTypeTable = getCorpseTypeTable()
 neutralTypeTable = getNeutralTypeTable()
+eggTyeTable = getEggTypeTable(UnitDefNames)
+
 function FeedMe()
     Sleep(13000)
     while true do
@@ -191,7 +193,7 @@ function FeedMe()
             T = process(T,
                 function(id)
                     uDefid = Spring.GetUnitDefID(id)
-                    if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] then
+                    if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTyeTable[uDefid]then
                         return id
                     end
                 end,
