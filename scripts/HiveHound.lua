@@ -882,11 +882,10 @@ function bigMoma()
                 else
                     --else respawn the unit and set the coords accordingly
                     HiveHoundTable[i] = {}
-                    HiveHoundTable[i][1] = {}
-                    HiveHoundTable[i][2] = {}
                     HiveHoundTable[i][1] = spCreaUnit("jhivehound", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
                     HiveHoundTable[i][2] = UnitDefNames["jhivehound"].id
                     spSetUnitMoveGoal(HiveHoundTable[i][1], ex, ey, ez)
+					setParent(unitID, HiveHoundTable[i][1)
                 end
             end
         else
@@ -918,27 +917,14 @@ function bigMoma()
                             --unit is dead, spawn a new HiveHound
                             HiveHoundTable[i][1] = Spring.CreateUnit("jhivehound", ux, uy, uz, 0, teamID)
                             HiveHoundTable[i][2] = UnitDefNames["jhivehound"].id
+							setParent(unitID, HiveHoundTable[i][1])
                         end
                         Spring.SetUnitMoveGoal(HiveHoundTable[i][1], mx, my, mz)
                     end
                     --	--Spring.Echo("B")
                     -- Send them towards meat
 
-                    for i = 1, table.getn(HiveHoundTable), 1 do
-                        --	--Spring.Echo("SendInTheHiveHounds")
-                        if spIsUnitIDValid(HiveHoundTable[i][1]) == true and isHiveHoundInMeatRange(HiveHoundTable[i][1], mx, my, mz) == true then
-                            -- if Hivehounds are in MeatRange... respawn as MeatHoldingHiveHound at that to the table
-                            ax, ay, az = Spring.GetUnitPosition(HiveHoundTable[i][1])
-
-                            Spring.DestroyUnit(HiveHoundTable[i][1], false, false)
-                            StartThread(tearingOffSomeFlash, IsItMeat[dice])
-                            HiveHoundTable[i][1] = Spring.CreateUnit("jmeathivehound", ax, ay, az, 0, teamID)
-                            HiveHoundTable[i][2] = UnitDefNames["jmeathivehound"].id
-                            -- send MeatHivehound home
-
-                            Spring.SetUnitMoveGoal(HiveHoundTable[i][1], ux, uy, uz) --TODO replace home with the updated move coordinates
-                        end
-                    end
+                   --ReAdd Converted MeathHiveHounds to the HiveHoundTable ___TODO
                 end
 
                 checkForHiveHoundsToDissolve()
