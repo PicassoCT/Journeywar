@@ -4,6 +4,7 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua" 
 include "lib_type.lua" 
+include "classRopeSimulation.lua"
 
 
 
@@ -346,6 +347,15 @@ function checkSnipers()
 	return boolAltered
 end
 
+ROPE_SIM_MAX = 5
+function isRopeSimFeasable()
+	if not GG.SniperRopeSim then GG.SniperRopeSim = 0 end
+	if GG.SniperRopeSim > ROPE_SIM_MAX then return false end
+	
+	return true
+end
+
+boolIHaveSimActive = false
 function ourOnlyRope (passengerID)
 
 	--Spring.Echo("Script did it!")
@@ -362,57 +372,57 @@ function ourOnlyRope (passengerID)
 	StartThread(draggingSound)
 	StartThread(ropeRelativeResting)
 
+	boolFullRopeSim = isRopeSimFeasable()
+
+	if boolFullRopeSim == true then
+	GG.SniperRopeSim = inc(GG.SniperRopeSim)
+	boolIHaveSimActive= true
 	
-	if not GG.SniperRope then GG.SniperRope={} end
-	GG.SniperRope[unitID]=true
+	runRopeSim(passengerID)
 	
-	--To limit the usage of ropePhysix a alternative is needed aka pulling the object near the sniper and thats it..
-	if not GG.GlobalSniperRopeSimTable then
-	GG.GlobalSniperRopeSimTable={number = 0, Ids={}} 
-	end
-	--[[
-	if GG.GlobalSniperRopeSimTable.number < 5 or checkSnipers()==true then
-		
-		GG.GlobalSniperRopeSimTable.number=GG.GlobalSniperRopeSimTable.number+1
-		table.insert(GG.GlobalSniperRopeSimTable.Ids,unitID)
-		-- This code is a adapted Version of the NeHe-Rope Tutorial. All Respect towards those guys.
-		-- RopePieceTable by Convention contains (SegmentBegin)----(SegmentEnd)(SegmentBegin)----(SegmentEnd) 
-		-- RopeConnectionPiece -->Piece,ContainsMass,ColRadius |
-		-- LoadPiece --> Piece,Contains Mass, ColRadius | 
-		-- ForceFunction --> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
-		
-		
-		--function PseudoRopePhysix(RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength, forceFunctionTable,SpringConstant)
-	vec=Vector.new(0,-9.81,0)
-	forceFunctionTable={
-				[1]={	acceleration	=	vec, 
-				geometryfunction	=	function(x,y,z) return true end
-			}
-		}
-		Ropelength=20
-		LoadPieceT={Piece=bloodemt, Mass=9000, ColRadius=42}
-		RopeConnectionT={Piece=csniper, Mass=9000, ColRadius=42}
-		RopePieceTable={}
-		
-		for i=1,12,1 do
-			RopePieceTable[#RopePieceTable+1]=rope[i]
-			RopePieceTable[#RopePieceTable+1]=sensors[i]		
-		end
-		--StartThread(PseudoRopePhysix,RopePieceTable,RopeConnectionT,LoadPieceT, Ropelength,forceFunctionTable ,100000.0)
-		
-		
+	
+	boolIHaveSimActive= false
+	GG.SniperRopeSim = dec(GG.SniperRopeSim)	
 	else -- not RopeSimAlternative
 		retractRope()
 	end
-	]]
+
 	
 	while(loaded==true) do
 		Sleep(50)
 	end
 	
-	GG.SniperRope[unitID] = false
 	Turn(bloodemt,y_axis,math.rad(0),0)
 	
+end
+
+--> Runs a RopeSimulation and turns the 
+function runRopeSim(passengerID)
+TODO(config)
+
+RopeSim = RopeSimulation:new(
+		numOfMasses,								--1. the number of masses
+		massWeightT,								--2. weight of each mass
+		springConstant,								--3. how stiff the springs are
+		lengthOfElementT,							--4. the length that a spring does not exert any force
+		springFrictionConstant,						--5. inner friction constant of spring
+		gravitation,								--6. gravitational acceleration
+		airFrictionConstant,						--7. air friction constant
+		groundRepulsionConstant,					--8. ground repulsion constant
+		groundFrictionConstant,						--9. ground friction constant
+		groundAbsorptionConstant,					--10. ground absorption constant
+		groundHeight)
+		
+		while Spring.GetUnitTransporter(passengerID) == unitID do
+			mapRopeSimToPieces(passengerID, RopeSim)
+			Sleep(50)
+		end
+
+end
+
+function mapRopeSimToPieces()
+
+
 end
 
 transportableDefIds= getRecycleableUnitTypeTable()
@@ -887,6 +897,9 @@ function script.Create()
 end
 
 function script.Killed(recentDamage,_)
+	if boolIHaveSimActive== true then
+		GG.SniperRopeSim = dec(GG.SniperRopeSim)
+	end
 	Signal(SIG_SPAM)
 	Signal(SIG_FOLD)
 	Signal(SIG_UNFOLD)
