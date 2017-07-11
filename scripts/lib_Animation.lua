@@ -61,6 +61,7 @@ function WaitForTurns(...)
     end
 end
 
+-->Wait for a Table of Pieces to finnish theire Turns
 function WaitForTurnT(T)
         for k, v in pairs(T) do
             if type(v) == "number" then
@@ -70,6 +71,7 @@ function WaitForTurnT(T)
             end
         end
 end
+
 -->Waits for anyTurnToComplete
 function WaitForMoves(...)
 	local arg = arg
@@ -99,7 +101,7 @@ function WaitForMoves(...)
 end
 
 -->Waits for anyTurnToComplete
-function WaitForMovevAxis(arg)
+function WaitForMoveAllAxis(arg)
 	
         WaitForMove(arg, x_axis)
         WaitForMove(arg, y_axis)
@@ -333,6 +335,7 @@ function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
 end
 
 
+--returns the minimum absolute Distance to traverse to get to another degree
 function minimalAbsoluteDistance(goalDeg, startDeg)
 	local gDeg, sDeg = goalDeg, startDeg
 
@@ -345,7 +348,9 @@ function minimalAbsoluteDistance(goalDeg, startDeg)
 	
 	return absDist
 end
--->Turns a piece in the speed necessary to arrive after x Milliseconds - overrirdes the spring shortes path turns
+
+-->Turns a piece in the speed necessary to arrive after x Milliseconds 
+--> overrirdes the spring shortes path turns
 function turnInTime(piecename, taxis, goalDeg, timeInMs, x_startdeg, y_startdeg, z_startdeg, boolWait)
     assert(z_startdeg)
 
@@ -439,7 +444,7 @@ function syncMoveInTime(piecename, x_val, y_val, z_val, times)
 end
 
 function unZero(val)
-if val== 0 then return 0.00001 end
+	if val== 0 then return 0.00001 end
 return val
 end
 --> Move a piece so that it arrives at the same times on all axis
@@ -447,13 +452,12 @@ function syncMove(piecename, x_val, y_val, z_val, speed)
     maxs = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
     if maxs < 1  then maxs = 1 end
 
-
     --ratio = 1/(val/max)*times => max*times / val
-   speedX = ( maxs/unZero(x_val) ) * speed
+	speedX = ( maxs/unZero(x_val) ) * speed
 	speedY = ( maxs/unZero(y_val) ) * speed
 	speedZ = ( maxs/unZero(z_val) ) * speed
 	
-	 Move(piecename, x_axis, (x_val), math.abs(speedX))
+	Move(piecename, x_axis, (x_val), math.abs(speedX))
     Move(piecename, y_axis, (y_val), math.abs(speedY))
     Move(piecename, z_axis, (z_val), math.abs(speedZ))
 end
@@ -492,6 +496,13 @@ function stopSpinT(Table, axis, speed)
     for i = 1, #Table do
         StopSpin(Table[i], axis, speed)
     end
+end
+
+--> Stops Spinning Table
+function stopSpins(arg,speed)
+        StopSpin(arg, 1, speed)
+        StopSpin(arg, 2, speed)
+        StopSpin(arg, 3, speed)
 end
 
 -->Moves a UnitPiece to Position in Unitspace at speed

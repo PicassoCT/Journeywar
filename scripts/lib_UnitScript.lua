@@ -2556,9 +2556,6 @@ function PseudoPhysix(piecename, pearthTablePiece, nrOfCollissions, forceFunctio
 end
 
 
-
-
-
 function getDigits(number)
     digit = 1
     if number < 0 then digit = 2 end
