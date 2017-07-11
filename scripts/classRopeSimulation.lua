@@ -1,3 +1,4 @@
+include "lib_type.lua"
 --[[   
 	Mass
 ]]
@@ -104,6 +105,7 @@ setmetatable(ApplyForce, { __call = function(_, ...) return ApplyForce.new(...) 
 SpringSystem = {}
 SpringSystem.__index = SpringSystem
 
+--> Create a new mass
 function SpringSystem:new(Mass1, Mass2, springConstant, springLength, frictionConstant)
 		return setmetatable({
 			mass1 = Mass1, 
