@@ -104,11 +104,15 @@ local SIG_IDLE = 16
 local SIG_HUNGRY = 32
 
 --var
-local HiveHoundTable = {}
+local teamID = Spring.GetUnitTeam(unitID)
+if not GG.HiveHoundTable then GG.HiveHoundTable = {}end
+if not GG.HiveHoundTable[teamID] then GG.HiveHoundTable[teamID] = {}end
+if not GG.HiveHoundTable[teamID][unitID] then GG.HiveHoundTable[teamID][unitID] = {}end
+
 --Definition HiveHoundTable [1]=UnitID
 --Definition HiveHoundTable [2]=UnitDefID
 local hiveHoundMax = 5
-local teamID = Spring.GetUnitTeam(unitID)
+
 
 local ex, ey, ez = 0
 local ux, uy, uz = Spring.GetUnitPosition(unitID)
@@ -783,8 +787,8 @@ function tearingOffSomeFlash(meatId)
 end
 
 function findHoundInHiveHOundTable(houndID)
-    for i = 1, table.getn(HiveHoundTable), 1 do
-        if HiveHoundTable[i][1] == houndID then return true end
+    for i = 1, table.getn(GG.HiveHoundTable[teamID][unitID]), 1 do
+        if GG.HiveHoundTable[teamID][unitID][i][1] == houndID then return true end
     end
     return false
 end
@@ -863,7 +867,7 @@ function bigMoma()
     local spCreaUnit = Spring.CreateUnit
     local spGetUnitHealth = Spring.GetUnitHealth
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
-    HiveHoundTable = {}
+
     --Spring.SetUnitMoveGoal(monsterTable[i],ex,ey,ez)
     while (true) do
         --warmode
@@ -875,78 +879,23 @@ function bigMoma()
 
             for i = 1, hiveHoundMax, 1 do
                 --if the UnitStillExists, set it towards the enemysCoords
-                if HiveHoundTable[i] ~= nil and Spring.GetUnitIsDead(HiveHoundTable[i][1]) == false then
-                    if spIsValidUnitID(HiveHoundTable[i][1]) == true then
-                        spSetUnitMoveGoal(HiveHoundTable[i][1], ex, ey, ez)
+                if GG.HiveHoundTable[teamID][unitID][i] ~= nil and Spring.GetUnitIsDead(GG.HiveHoundTable[teamID][unitID][i][1]) == false then
+                    if spIsValidUnitID(GG.HiveHoundTable[teamID][unitID][i][1]) == true then
+                        spSetUnitMoveGoal(GG.HiveHoundTable[teamID][unitID][i][1], ex, ey, ez)
                     end
                 else
                     --else respawn the unit and set the coords accordingly
-                    HiveHoundTable[i] = {}
-                    HiveHoundTable[i][1] = spCreaUnit("jhivehound", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
-                    HiveHoundTable[i][2] = UnitDefNames["jhivehound"].id
-                    spSetUnitMoveGoal(HiveHoundTable[i][1], ex, ey, ez)
-					setParent(unitID, HiveHoundTable[i][1)
+                    GG.HiveHoundTable[teamID][unitID][i] = {}
+                    GG.HiveHoundTable[teamID][unitID][i][1] = spCreaUnit("jhivehound", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
+                    GG.HiveHoundTable[teamID][unitID][i][2] = UnitDefNames["jhivehound"].id
+                    spSetUnitMoveGoal(GG.HiveHoundTable[teamID][unitID][i][1], ex, ey, ez)
+					setParent(unitID, GG.HiveHoundTable[teamID][unitID][i][1)
                 end
             end
-        else
-
-            --dostojewskimode no john Lockemode, life is short and bruthis, thus the wulf is a wulf to the wulf
-            if spGetUnitHealth(unitID) < fullHealth then
-                -- --Spring.Echo("DamagedCaseReached 1")
-                IsItMeat = {}
-
-
-                IsItMeat = spGetUnitsInCylinder(ux, uz, MeatRange)
-                --- -Spring.Echo("MeatHowMany:",table.getn(IsItMeat))
-                IsItMeat = vegetarianDiscrimination(IsItMeat)
-                local spGetUPosition = Spring.GetUnitPosition
-                local spIsUnitIDValid = Spring.ValidUnitID
-
-                if IsItMeat ~= nil and table.getn(IsItMeat) ~= 0 then
-                    --	--Spring.Echo("MeatFound")
-                    dice = 1
-
-                    if table.getn(IsItMeat) > 2 then dice = math.ceil(math.random(1, table.getn(IsItMeat) - 1)) end
-
-                    mx, my, mz = Spring.GetUnitPosition(IsItMeat[dice])
-                    --	--Spring.Echo("A")
-                    --spawn every active HiveHound
-                    --Iterate through all active HiveHounds Activate every Unit in HiveHoundTable
-                    for i = 1, table.getn(HiveHoundTable), 1 do
-                        if spIsUnitIDValid(HiveHoundTable[i][1]) == false then
-                            --unit is dead, spawn a new HiveHound
-                            HiveHoundTable[i][1] = Spring.CreateUnit("jhivehound", ux, uy, uz, 0, teamID)
-                            HiveHoundTable[i][2] = UnitDefNames["jhivehound"].id
-							setParent(unitID, HiveHoundTable[i][1])
-                        end
-                        Spring.SetUnitMoveGoal(HiveHoundTable[i][1], mx, my, mz)
-                    end
-                    --	--Spring.Echo("B")
-                    -- Send them towards meat
-
-                   --ReAdd Converted MeathHiveHounds to the HiveHoundTable ___TODO
-                end
-
-                checkForHiveHoundsToDissolve()
-            end
-            if spGetUnitHealth(unitID) >= fullHealth then
-                --check For MeatHive
-
-                --case unit has full health or no meat in reach
-                --piecemode
-                --itterate over the HiveHoundTable
-                --if a id is found still valid, then send it towards the momas coordinates
-                --call checkForHiveHoundsToDissolve
-                for i = 1, hiveHoundMax, 1 do
-                    --if the UnitStillExists, set it towards wulf muma
-
-                    if HiveHoundTable[i] ~= nil and HiveHoundTable[i][1] ~= nil and spIsValidUnitID(HiveHoundTable[i][1]) == true then
-                        spSetUnitMoveGoal(HiveHoundTable[i][1], ux, uy, uz)
-                    end
-                end
-                checkForHiveHoundsToDissolve()
-            end
+        else           
+           checkForHiveHoundsToDissolve()
         end
+      
         Sleep(650)
     end
 end
