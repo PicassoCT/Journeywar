@@ -652,6 +652,15 @@ function distance(x, y, z, xa, ya, za)
     end
 end
 
+function setParent(unitID, child)
+
+ env = Spring.UnitScript.GetScriptEnv(child)
+
+    if env then
+		env.parent= unitID
+    end
+end
+
 function distancePieceToUnit(unitID, Piece, targetID)
 	ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, Piece)
 	tx,ty,tz = Spring.GetUnitPosition(targetID)
@@ -4548,7 +4557,12 @@ function Command(id, command, target, option)
     end
 end
 
-
+function isPieceAboveGround(unitID,pieceName)
+x,y,z =Spring.GetUnitPiecePosDir(unitID,pieceName)
+gh= Spring.GetGroundHeight(x,z)
+if gh >  0 then return true end
+return false
+end
 
 --> Gets a List of Geovents + Positions
 function getGeoventList()
