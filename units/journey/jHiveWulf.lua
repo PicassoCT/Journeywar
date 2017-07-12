@@ -1,12 +1,11 @@
-local unitName = "jMeatHiveHound"
+local unitName = "jHiveWulf"
 local unitDef = {
-  objectName="jMeatHiveHound.s3o",
+  objectName="jHiveHound.s3o",
 
-  name               = "Hivehound",
-  Description 		 ="carrys Meat back to the hive",
-
-  script 			 = "beefBringer.lua",
-  maxDamage = 2550, 
+  name               = "Hivewulf",
+  Description 		 = "Bites anything that comes close to the hive",
+  script 			 = "jHiveWulfScript.lua",
+  maxDamage = 450, 
 
   MovementClass = "Default2x2",
   buildCostMetal =30,
@@ -23,12 +22,12 @@ local unitDef = {
   noAutoFire =false,
   footprintX=2,
   footprintZ =2,
-     mass=1200,
+     mass=800,
   upright =false,
   pushResistant =true,
-  maxVelocity =1.2,
-  acceleration =0.1,
-  turnRate =365,
+  maxVelocity =3.6,
+  acceleration =1.2,
+  turnRate =965,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
 
@@ -45,8 +44,7 @@ local unitDef = {
   	sightdistance=	50,
 	radardistance=50,
 	radardistancejam=0,
-  
-  	mass=2550,
+
 
 	
   
@@ -61,18 +59,21 @@ local unitDef = {
 	 customParams = {},
  sfxtypes = {
 				explosiongenerators = {
-				    "custom:bloodspray",
-				
+				    
+				    "custom:dirt",
+					"custom:bloodspray",
 				 
 				},
 				},
 				
 weapons = {
-[1]={name  = "jBugCloseCombat",
+[1]={name  = "jHiveHoundRocket",
 	onlyTargetCategory = [[LAND]],
 	},
-				
+[2]={name  = "jHiveCloseCombat",
+	onlyTargetCategory = [[LAND]],
+	},				
 	},		
-	Category = [[LAND]],	
+		Category = [[LAND]],
 }
 return lowerkeys({ [unitName] = unitDef })

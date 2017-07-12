@@ -172,7 +172,7 @@ function getInfantryTypeTable()
     Infantry[UnitDefNames["bg2"].id] = true
     Infantry[UnitDefNames["tiglil"].id] = true
     Infantry[UnitDefNames["skinfantry"].id] = true
-    Infantry[UnitDefNames["jhivehound"].id] = true
+    Infantry[UnitDefNames["jhivewulf"].id] = true
     Infantry[UnitDefNames["vort"].id] = true
     Infantry[UnitDefNames["css"].id] = true
     return Infantry
