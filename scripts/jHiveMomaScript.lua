@@ -803,10 +803,10 @@ function checkForHiveHoundsToDissolve()
     table.remove(tableToCheck, unitID)
     if tableToCheck ~= nil and table.getn(tableToCheck) ~= 0 then
         for i = 1, #tableToCheck, 1 do
-            boolCheckson = (spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivehound"].id)
-            if ffHH(tableToCheck[i]) == true or spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivehound"].id then
+            boolCheckson = (spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivewulf"].id)
+            if ffHH(tableToCheck[i]) == true or spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivewulf"].id then
 
-                if spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivehound"].id then
+                if spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivewulf"].id then
                     tempH, _, _, _, _, _ = Spring.GetUnitHealth(unitID)
                     Spring.SetUnitHealth(unitID, tempH + 256)
                 end
@@ -867,6 +867,7 @@ function bigMoma()
     local spCreaUnit = Spring.CreateUnit
     local spGetUnitHealth = Spring.GetUnitHealth
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
+	local spGetUnitIsDead = Spring.GetUnitIsDead
 
     --Spring.SetUnitMoveGoal(monsterTable[i],ex,ey,ez)
     while (true) do
@@ -886,13 +887,14 @@ function bigMoma()
                 else
                     --else respawn the unit and set the coords accordingly
                     GG.HiveHoundTable[teamID][unitID][i] = {}
-                    GG.HiveHoundTable[teamID][unitID][i][1] = spCreaUnit("jhivehound", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
-                    GG.HiveHoundTable[teamID][unitID][i][2] = UnitDefNames["jhivehound"].id
+                    GG.HiveHoundTable[teamID][unitID][i][1] = spCreaUnit("jhivewulf", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
+                    GG.HiveHoundTable[teamID][unitID][i][2] = UnitDefNames["jhivewulf"].id
                     spSetUnitMoveGoal(GG.HiveHoundTable[teamID][unitID][i][1], ex, ey, ez)
-					setParent(unitID, GG.HiveHoundTable[teamID][unitID][i][1)
+
                 end
             end
-        else           
+        else 
+			gather()		
            checkForHiveHoundsToDissolve()
         end
       
@@ -900,6 +902,17 @@ function bigMoma()
     end
 end
 
+function gather()
+	ux, uy, uz = spGetUnitPosition(unitID)
+	process(GG.HiveHoundTable[teamID][unitID],
+					function(tab)
+						if spGetUnitIsDead(tab[1])==false then return tab[1] end
+					end,
+					function(id)
+						spSetUnitMoveGoal(id, ux, uy , uz)
+					end
+					)
+end
 
 
 function script.Create()
@@ -918,26 +931,14 @@ end
 
 
 function turnTail(pieceNr, axis, Value, speed)
-
-
     if pieceNr < 4 or (pieceNr > 6 and pieceNr < 10) then
-
         Turn(Dangle[pieceNr][14], axis, math.rad(Value), speed)
-
     else
-
-
-
         for i = 15, 16, 1 do --turns the tails into the opposite direction
-
             Turn(Dangle[pieceNr][i], axis, math.rad(Value), speed)
         end
     end
 end
-
-
-
-
 
 
 function howAreTheyHangingBabe(val)
@@ -991,10 +992,7 @@ function danglinDangle()
                 Turn(Dangle[i][13], z_axis, math.rad(inertiaSwingZ * 0.75 * signBit), inertiaSwingSpeedZ)
                 turnTail(i, z_axis, inertiaSwingZ * -0.75 * signBit, inertiaSwingSpeedZ)
             end
-            --if inertiaSwing is near Zero take the normal and piece is no longer in turn -- take counter degree *-0.75 with standardspeed
-            -- if spPieceInTurn(Dangle[i][1],x_axis)==false and wiLim(inertiaSwingX,12)==true then turnDown(i,6,x_axis,inertiaSwingSpeedX) end
-            -- if spPieceInTurn(Dangle[i][1],y_axis)==false and wiLim(inertiaSwingY,12)==true then turnDown(i,7,y_axis,inertiaSwingSpeedY) end
-            -- if spPieceInTurn(Dangle[i][1],z_axis)==false and wiLim(inertiaSwingZ,12)==true then turnDown(i,8,z_axis,inertiaSwingSpeedZ) end
+            
 
             -- if the orgdegree is below treshold turn it towards zero
         end
@@ -1003,12 +1001,6 @@ function danglinDangle()
         Sleep(150)
     end
 end
-
-function showThemTooMe()
-    --TODO
-end
-
-
 
 columpointLeft = piece "columpointLeft"
 columpointRight = piece "columpointRight"
@@ -1073,8 +1065,6 @@ function expandUpTits()
     WaitForMove(GTits[6], z_axis)
     WaitForMove(GTits[6], y_axis)
 
-
-
     Turn(columpointLeft, z_axis, math.rad(0), 0)
     Turn(columpointRight, z_axis, math.rad(0), 0)
     for i = 4, 6 do
@@ -1130,7 +1120,6 @@ function showAndAgePuppy()
             Move(GTits[i], x_axis, 0, 0.3)
             Move(GTits[i], y_axis, 0, 0.33)
             Move(GTits[i], z_axis, 0, 0.33)
-
             --downBelowWulfs
         end
 
@@ -1149,8 +1138,6 @@ function showAndAgePuppy()
             Sleep(randoVal)
         end
 
-
-
         for i = 1, 6, 1 do
             x = i
             if i > 3 then x = i + 3 end
@@ -1164,7 +1151,6 @@ function showAndAgePuppy()
 
         WaitForTurn(columpointLeft, z_axis)
         WaitForTurn(columpointRight, z_axis)
-
 
         expandUpTits()
 
@@ -1183,8 +1169,9 @@ end
 
 
 function script.Killed(recentDamage, maxHealth)
+	gather()
     Turn(deathpivot, z_axis, math.rad(75), 37)
-
+	
     for i = 1, 24, 1 do
         EmitSfx(jaw, 1024)
         Sleep(250)

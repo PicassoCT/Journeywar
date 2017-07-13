@@ -318,19 +318,31 @@ function biteLoop()
 				reset(shakeSpot,25)
 				Spring.UnitDetach(unitID)
 				Spring.AddUnitDamage(biteVictim,RIP_DAMAGE)
-				--replace oneself with a jmeathivehound
-				--setParentInJMeathivehound
+				--replace oneself with a jmeathivewulf
+				--setParentInjmeathivewulf
 				x,y,z = Spring.GetUnitPosition(unitID)
 				teamID = Spring.GetUnitTeam(unitID)
-				jhiveHoundMeatID = Spring.CreateUnit("jmeathivehound",x,y,z, 0,teamID)
+				jhiveHoundMeatID = Spring.CreateUnit("jmeathivewulf",x,y,z, 0,teamID)
+				setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
 				transferUnitStatusToUnit(unitID, jhiveHoundMeatID)
-				setParent(parent, jhiveHoundMeatID)
 				Spring.DestroyUnit(unitID, true, true)
 			end
 			
 			boolNewVictim = false
 		end 
 		Sleep(50)
+	end
+end
+
+function setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
+myTeam=Spring.GetUnitTeam(unitID)
+	for mom, data in pairs( GG.HiveHoundTable[myTeam]) do
+		for i=1,#data do
+			if data[i][1] == unitID then
+			GG.HiveHoundTable[myTeam][mom] = jhiveHoundMeatID
+			end
+		end
+
 	end
 end
 
