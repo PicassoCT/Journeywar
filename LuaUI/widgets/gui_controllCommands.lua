@@ -97,7 +97,7 @@ extendedMenue[CMD.RECLAIM] ={
 	caption="RECLAIM",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.RECLAIM] = not WG.SelectedCommand[player][CMD.RECLAIM] or true
+		WG.SelectedCommand[player]  =  CMD.RECLAIM 
 	
 	end
 }
@@ -110,7 +110,7 @@ extendedMenue[CMD.LOAD_UNITS] ={
 	caption=	"LOAD",
 	callbackFunction=function()
 			player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.LOAD_UNITS] = not WG.SelectedCommand[player][CMD.LOAD_UNITS] or true
+		WG.SelectedCommand[player] = CMD.LOAD_UNITS 
 	
 
 			
@@ -126,7 +126,7 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 	caption=	"DROP",
 	callbackFunction=function()
 	player= Spring.GetMyPlayerID()
-	WG.SelectedCommand[player][CMD.UNLOAD_UNITS] = not WG.SelectedCommand[player][CMD.UNLOAD_UNITS] or true
+	WG.SelectedCommand[player]  =  CMD.UNLOAD_UNITS 
 	end
 }
 
@@ -159,7 +159,7 @@ extendedMenue[CMD.RESTORE] ={
 	caption= "RESTORE",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.RESTORE] = not WG.SelectedCommand[player][CMD.RESTORE] or true
+		WG.SelectedCommand[player] =  CMD.RESTORE 
 	end
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
@@ -282,16 +282,15 @@ MainMenue[CMD.GUARD] ={
 
 MainMenue[CMD.ATTACK].callbackFunction= function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.ATTACK] = not WG.SelectedCommand[player][CMD.ATTACK] or true
+		WG.SelectedCommand[player] =  CMD.ATTACK 
 end
 MainMenue[CMD.STOP].callbackFunction= function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.STOP] = not WG.SelectedCommand[player][CMD.STOP] or true 
-
+		WG.SelectedCommand[player]   =  CMD.STOP 
 end
 MainMenue[CMD.MOVE].callbackFunction= function() 
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.MOVE] = not WG.SelectedCommand[player][CMD.MOVE] or true 
+		WG.SelectedCommand[player] =  CMD.MOVE 
 end
 MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
 		--TODO set Firestate
@@ -299,7 +298,7 @@ MainMenue[CMD.FIRE_STATE].callbackFunction= function()
 end
 MainMenue[CMD.REPEAT].callbackFunction= function() 
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.REPEAT] = not WG.SelectedCommand[player][CMD.REPEAT] or true 
+		WG.SelectedCommand[player] =  CMD.REPEAT 
 end
 
 MainMenue[CMD.MOVE_STATE].callbackFunction= function()
@@ -308,16 +307,16 @@ MainMenue[CMD.MOVE_STATE].callbackFunction= function()
  end
 MainMenue[CMD.REPAIR].callbackFunction= function() 
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.REPAIR] = not WG.SelectedCommand[player][CMD.REPAIR] or true 
+		WG.SelectedCommand[player]  =  CMD.REPAIR 
 end
 MainMenue[CMD.GUARD].callbackFunction= function() 		
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.GUARD] = not WG.SelectedCommand[player][CMD.GUARD] or true 
+		WG.SelectedCommand[player] = CMD.GUARD
 end
 
 MainMenue[CMD.PATROL].callbackFunction= function() 		
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player][CMD.PATROL] = not WG.SelectedCommand[player][CMD.PATROL] or true 
+		WG.SelectedCommand[player] = CMD.PATROL
 end
 
 
@@ -504,6 +503,11 @@ function widgetHandler:MouseRelease(x, y, button)
 		return false
 	end
 	
+	if lmb then
+			alt, ctrl, meta, shift =GetModKeys()
+			local _, _, left, _, right = Spring.GetMouseState()
+			Spring.SetActiveCommand(WG.SelectedCommand[mo], 1, left, right, alt, ctrl, meta, shift)
+	end
 	if rmb and rmb == true then
 		if WG.SelectedCommand[mo] then
 			for command, active in pairs(WG.SelectedCommand[mo]) do
@@ -514,7 +518,7 @@ function widgetHandler:MouseRelease(x, y, button)
 						typeParam, param = getCommandTarget()
 						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
 						
-						WG.SelectedCommand[mo][command] = not active
+						WG.SelectedCommand[mo] = nil
 						break
 					end
 				end

@@ -10,8 +10,6 @@ function gadget:GetInfo()
     }
 end
 
---this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
-
 if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_OS.lua")
     VFS.Include("scripts/lib_UnitScript.lua")
