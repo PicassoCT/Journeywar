@@ -33,31 +33,6 @@ VFS.Include("LuaUI/widgets/guiEnums.lua")
 VFS.Include("LuaUI/widgets/gui_helper.lua")
 ---------------------------------------------------------------------------------------
 
-local function GetModKeys()
-	
-	local alt, ctrl, meta, shift = Spring.GetModKeyState()
-	
-	if Spring.GetInvertQueueKey() then -- Shift inversion
-		shift = not shift
-	end
-	
-	return alt, ctrl, meta, shift
-end
-
-local function GetCmdOpts(alt, ctrl, meta, shift, right)
-	
-	local opts = { alt=alt, ctrl=ctrl, meta=meta, shift=shift, right=right }
-	local coded = 0
-	
-	if alt then coded = coded + CMD_OPT_ALT end
-	if ctrl then coded = coded + CMD_OPT_CTRL end
-	if meta then coded = coded + CMD_OPT_META end
-	if shift then coded = coded + CMD_OPT_SHIFT end
-	if right then coded = coded + CMD_OPT_RIGHT end
-	
-	opts.coded = coded
-	return opts
-end
 
 ---------------------------------------------------------------------------------------
 
@@ -97,8 +72,7 @@ extendedMenue[CMD.RECLAIM] ={
 	caption="RECLAIM",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player]  =  CMD.RECLAIM 
-	
+		WG.SelectedCommand[player]  =  CMD.RECLAIM 	
 	end
 }
 
@@ -110,10 +84,7 @@ extendedMenue[CMD.LOAD_UNITS] ={
 	caption=	"LOAD",
 	callbackFunction=function()
 			player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.LOAD_UNITS 
-	
-
-			
+		WG.SelectedCommand[player] = CMD.LOAD_UNITS 			
 	end
 }
 extendedMenue[CMD.UNLOAD_UNITS] ={
@@ -293,17 +264,26 @@ MainMenue[CMD.MOVE].callbackFunction= function()
 		WG.SelectedCommand[player] =  CMD.MOVE 
 end
 MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
-		--TODO set Firestate
-		Spring.Echo("Set Firestate")
+		selectedUnits =Spring.GetSelectedUnits()
+		if selectedUnits then
+		states = Spring.GetUnitStates(selectedUnits[1])
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
+		end
 end
 MainMenue[CMD.REPEAT].callbackFunction= function() 
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] =  CMD.REPEAT 
+		selectedUnits =Spring.GetSelectedUnits()
+		if selectedUnits then
+		states = Spring.GetUnitStates(selectedUnits[1])
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {not states.repeat}, {})
+		end
 end
 
 MainMenue[CMD.MOVE_STATE].callbackFunction= function()
-		--TODO set Firestate
-		Spring.Echo("TODO Set MoveState")
+	selectedUnits =Spring.GetSelectedUnits()
+		if selectedUnits then
+		states = Spring.GetUnitStates(selectedUnits[1])
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
+		end
  end
 MainMenue[CMD.REPAIR].callbackFunction= function() 
 		player= Spring.GetMyPlayerID()		
@@ -423,8 +403,7 @@ function widget:Initialize()
 			extendedCommands[CMD.CLOAK],
 			extendedCommands[CMD.RESTORE],
 			extendedCommands[CMD.OPT_SHIFT]
-		},
-		
+		},		
 	}
 	
 	extendedCommand_window:AddChild(extendedCommand_Grid)
