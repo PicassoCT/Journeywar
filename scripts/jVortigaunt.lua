@@ -310,23 +310,31 @@ function TelePortation()
     return
 end
 
-boolCharged = false
-TIMETOCHARGE = 42000
+Charged = 0
+ChargeMax = 
 Timer = TIMETOCHARGE
 Experience = 1
 
-function TelePortationLoop()
-    while true do
-        if Timer > 0 then
-            Timer = Timer - 300 * math.max(1, Experience)
-        else
-            Timer = TIMETOCHARGE
-            Experience = Spring.GetUnitExperience(unitID)
-            boolCharged = true
-        end
+function reactor()
+	while true do
 
-        if boolCharged == true and boolMove == true then
+		if Charged <=  Spring.GetUnitExperience(unitID) + 1 then
+		Sleep(TIMETOCHARGE)
+		Charged= inc(Charged)
+		end
+	Sleep(50)
+	end
+end
+
+function TelePortationLoop()
+StartThread(reactor)
+    while true do
+
+
+        if Charged > 0 and boolMove == true then
+			Charged= dec(Charged)
             StartThread(TelePortation)
+			Sleep(1000)
         end
         Sleep(300)
     end

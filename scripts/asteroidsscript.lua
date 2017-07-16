@@ -51,7 +51,7 @@ function collideComparer()
                     Spin(idA, z_axis, math.rad(rVal), 0.1)
                     Spin(idB, z_axis, math.rad(rVal * -1), 0.1)
                     rVec = randVec()
-                    Spring.Echo("CometCollission _y:" .. rVec.y * 100 .. " / CometCollission _x:" .. rVec.x * 30)
+
                     Move(cometA.pieceID, x_axis, cometA.x + rVec.x * 30, 12.5)
                     Move(cometA.pieceID, y_axis, cometA.y + rVec.y * 100, 12.5)
                     Move(cometB.pieceID, x_axis, cometB.x + rVec.x * -30, 12.5)
@@ -59,7 +59,6 @@ function collideComparer()
                     WaitForMove(cometA.pieceID, x_axis); WaitForMove(cometA.pieceID, y_axis)
                     WaitForMove(cometB.pieceID, x_axis); WaitForMove(cometB.pieceID, y_axis)
 
-                    echo("Collission Completed")
                 end
             end
         end

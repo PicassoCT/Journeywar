@@ -158,12 +158,17 @@ signOffset = {
     { x = -60, z = 0 },
     { x = 0, z = -60 }
 }
+function delayedSendBG(bgID, dropPx, dropPy,dropPz, nr, delay)
+	Sleep(nr*delay)
+	ox,oz = get2DSquareFormationPosition(nr,25,4)
+	Command(bgID, "go",{ x= dropPx + 100+ox, y= dropPy + 100, z= dropPz + 100+oz },{"shift"})					
+end
 --arrive every 1:30 secs -> to forwards that hollywood action curve, in which every 3 min something is blown up- 
 function reInforCements()
     Sleep(65000)
     Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav")
     Sleep(180000)
-    dropPx, dropPy, dropZ = Spring.GetUnitPosition(unitID)
+    dropPx, dropPy, dropPz = Spring.GetUnitPosition(unitID)
     for i = 1, nrOfReinforcements, 1 do
 
         for thee = 1, 600, 1 do
@@ -192,34 +197,36 @@ function reInforCements()
         if i == 1 then
             for indHex = 1, 3 do
                 index = 1
-                spCreateUnit("contruck", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
+                spCreateUnit("contruck", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
                 for k = 1, 3 do
                     index = (index % #signOffset) + 1
-                    spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
-                end
+							bgID=  spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
+							StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
                 Sleep(50)
+					end
             end
 
 
         else
 
             index = 1
-            spCreateUnit("contrain", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 340 + i, 0, teamID)
+            spCreateUnit("contrain", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 340 + i, 0, teamID)
             Sleep(50)
 
-            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 250, 0 + i, teamID)
+            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 250, 0 + i, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-                spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
-            end
+               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
+					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
+				end
             Sleep(50)
-            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropZ + 340 + i, 0, teamID)
+            spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 340 + i, 0, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-                spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropZ + signOffset[index].z, 0, teamID)
-            end
-            Sleep(50)
-            Sleep(50)
+               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
+					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
+				end
+            Sleep(100)
         end
     end
 end
@@ -1076,8 +1083,8 @@ function shieldDraw()
 
                 T = SubSetFromSet(T, N)
 
-                T = filterOutBuilding(T, UnitDefs, true)
-                T = filterOutImmobile(T, UnitDefs, true)
+                T = removeBuildingInT(T, UnitDefs)
+                T = removeImmobileInT(T, UnitDefs, true)
 
 
                 factor = 10

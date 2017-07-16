@@ -26,7 +26,7 @@ end
 
 
 function underground()
-    hideT(["root"])
+    hideT(TablesOfPiecesGroups["root"])
     WaitForMove(hivePiece, y_axis)
     showT(TablesOfPiecesGroups["root"])
     boolUndergroundCounter = 0
@@ -324,7 +324,7 @@ function BUILDUP(monsterID, enemyID, Time, mteam, factor)
 
     waveFactor = factor + math.sin(factor * math.pi * 8) / 5
     limitedFactor = math.max(0.25, math.min(0.55, waveFactor))
-    vBlend = blendVector(limitedFactor, makeVector(ex, ey, ez), makeVector(mx, my, mz))
+    vBlend = mix( makeVector(ex, ey, ez), makeVector(mx, my, mz),limitedFactor)
     randVal = math.random(96, 256)
     rx, rz = drehMatrix(0, randVal, 0, 0, math.sin(factor * 5 * math.pi) * 2 * math.pi + monsterID % (math.pi / 3))
     vBlend.x, vBlend.z = vBlend.x + rx, vBlend.z + rz
@@ -398,7 +398,7 @@ function handleHiveAttacks()
                 end
             end
         end
-        Sleep(500)
+        Sleep(2500)
     end
 end
 
@@ -417,8 +417,8 @@ function TargetOS()
     oldState = "RELAX"
     while (true) do
         handleHiveAttacks()
-        Sleep(2500)
-        times = times + 2500
+        Sleep(10000)
+        times = times + 10000
         AllUnitsUpdated = Spring.GetAllUnits()
 
         if monsterTable and table.getn(monsterTable) > 0 then
@@ -441,6 +441,7 @@ function TargetOS()
                         end
                     end
                 end
+				Sleep(10)
             end
         end
     end

@@ -23,31 +23,27 @@ function script.Killed(recentDamage,_)
 end
 
 function getAttackVector(victimid)
-dx,dy,dz=math.random(-160,-95),math.random(-360,360),0
-attacker=Spring.GetUnitLastAttacker(victimid)
-if attacker then
-attackVector=vectorUnitToUnit(victimid,attacker)
-
-end
+	
+	attacker=Spring.GetUnitLastAttacker(victimid)	
+	if attacker then
+		attackVector=vectorUnitToUnit(victimid,attacker)*-1
+		return attackVector.x,attackVector.y,attackVector.z
+	end
+	return math.random(-100,100)/100, math.random(-100,100)/100, math.random(-100,100)/100
 end
 
 function ThreadStarter()
-existenceCounter=0
-	while not GG.SlicerTable[unitID] and existenceCounter < 50 do
+	existenceCounter = 0
+	while (not GG.SlicerTable or not GG.SlicerTable[unitID]) and existenceCounter < 50 do
 		existenceCounter=existenceCounter+1
 		Sleep(100)
 	end
-	if existenceCounter== 50 then Spring.DestroyUnit(unitID,false,true) end
+	if existenceCounter == 50 then Spring.DestroyUnit(unitID,false,true) end
 	
 	victimid= GG.SlicerTable[unitID]
-	Spring.MoveCtrl.Enable(victimid,true)
-	Spring.MoveCtrl.Enable(unitID,true)
-	Spring.SetUnitBlocking(unitID,false)
-	Spring.SetUnitNoSelect(unitID,true)
-	
+
 	Sleep(100)
 	x,y,z=Spring.GetUnitPosition(vicID)
-	Spring.MoveCtrl.SetPosition(unitID,x,y+50,z)
 	dx,dy,dz= getAttackVector(victimid)
 	Turn(rotaryCenter,y_axis,math.rad(dy),0)
 	Turn(rotaryCenter,x_axis,math.rad(dx),0)

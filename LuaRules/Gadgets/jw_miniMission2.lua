@@ -526,8 +526,8 @@ function daVinciAmok(frame)
 
             teamID = spGetUnitTeam(MissionFunctionTable[2][10])
             x, y, z = spGetUnitPos(MissionFunctionTable[2][10])
-            GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
-            GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
+			createRewardEvent(teamID)
+			createRewardEvent(teamID)
 
             MissionFunctionTable[2][3] = MissionFunctionTable[2][3] + 1
             return false
@@ -634,9 +634,8 @@ function daVinciAmok(frame)
                 Spring.SetUnitNoDraw(xAmb, true)
                 teamID = spGetUnitTeam(xAmb)
                 x, y, z = spGetUnitPos(xAmb)
-                GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
-                GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
-                GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
+                		createRewardEvent(teamID, 300, 300)
+
                 Spring.DestroyUnit(xAmb, false, true)
             end
 
@@ -648,9 +647,7 @@ function daVinciAmok(frame)
 
             teamID = spGetUnitTeam(MissionFunctionTable[2][10])
             x, y, z = spGetUnitPos(MissionFunctionTable[2][10])
-            GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
-            GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
-            GG.UnitsToSpawn:PushCreateUnit("cRewarder", x, y, z, 1, teamID)
+			createRewardEvent(teamid, 300, 300)
             GG.UnitsToSpawn:PushCreateUnit("jvictory", Game.mapSizeX / 2, 1, Game.mapSizeZ / 2, 1, teamID)
 
             cout("Journeys Won")

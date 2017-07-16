@@ -323,7 +323,8 @@ function genericOS(unitID, dataTable, jobFunctionTable, checkFunctionTable, rest
     local spGetUnitPosition = Spring.GetUnitPosition
 
     x, y, z = spGetUnitPosition(unitID)
-    outcomeTable = iniT(#jobFunctionT, false)
+
+	outcomeTable = makeTable(false,#jobFunctionT)
     boolAtLeastOneNotDone = true
     while boolAtLeastOneNotDone == true do
         x, y, z = spGetUnitPosition(unitID)
@@ -446,6 +447,24 @@ function randomRotate(Piecename, axis, speed, rangeStart, rangeEnd)
         WaitForTurn(Piecename, axis)
         Sleep(1000)
     end
+end
+
+function wiggleOS(piecename,xDown, xUp, yDown, yUp, zDown, zUp, speed)
+	while true do
+		  tP(piecename,
+						math.random(xDown,xUp), math.random(yDown,yUp), math.random(zDown,zUp), speed)
+			WaitForTurns(piecename)
+	end
+
+end
+
+function shiverOS(piecename,xDown, xUp, yDown, yUp, zDown, zUp, speed)
+	while true do
+		  mP(piecename,
+						math.random(xDown,xUp), math.random(yDown,yUp), math.random(zDown,zUp), speed)
+			WaitForMove(piecename)
+	end
+
 end
 
 --> breath 

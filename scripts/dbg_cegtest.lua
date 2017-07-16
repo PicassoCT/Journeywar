@@ -11,12 +11,17 @@ end
 
 center = piece "center"
 Quader04 = piece "Quader04"
+Quader08 = piece "Quader08"
 Quader01 = piece "Quader01"
 
 function script.Create()
     --generatepiecesTableAndArrayCode(unitID)
-    StartThread(emitSFX)
-    --	StartThread(saySay)
+   --  StartThread(emitSFX)
+   -- StartThread(testTurnInTime)
+	echo(minimalAbsoluteDistance(15,-15))
+	echo(minimalAbsoluteDistance(-15,-15))
+	echo(minimalAbsoluteDistance(-15,15))
+	echo(minimalAbsoluteDistance(360,-270))
 end
 
 function script.Killed(recentDamage, _)
@@ -24,17 +29,16 @@ function script.Killed(recentDamage, _)
     createCorpseCUnitGeneric(recentDamage)
     return 1
 end
-
+Quader02 = piece"Quader02"
 function testTurnInTime()
-
-    syncTurnInTime(Quader01, 0, -45, 0, 300, 0, 0, 0)
+	
     while true do
-        syncTurnInTime(Quader01, 0, 0, 0, 3000, 0, -45, 0)
-        WaitForTurn(Quader01, y_axis)
-        Sleep(3000)
-        syncTurnInTime(Quader01, 0, -45, 0, 3000, 0, 0, 0)
-        WaitForTurn(Quader01, y_axis)
-        Sleep(3000)
+		reset(Quader02)
+		Sleep(1000)
+		turnInTime(Quader02, y_axis, 360, 5000, 0,0,0, false)
+		WaitForTurns(Quader02)	
+			turnInTime(Quader02, y_axis, -360, 5000, 0,360,0, false)
+		WaitForTurns(Quader02)	
     end
 end
 
@@ -59,7 +63,7 @@ function emitSFX()
 
 
 
-        Spring.SpawnCEG("gluebuff", x + 50, y + 75, z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
+        Spring.SpawnCEG("tangeldceg", x + 50, y + 75, z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
         Sleep(4000)
         --Spring.SpawnCEG("jsupernova",x,y+400,z, math.random(-1,1),math.random(0.1,1), math.random(-1,1),60)
 

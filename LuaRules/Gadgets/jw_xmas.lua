@@ -15,8 +15,9 @@ end
 
 -- synced only
 if (gadgetHandler:IsSyncedCode()) then
+	
 
-    boolActive = (os.date('*t').month == 12) and (os.date('*t').day == 24)
+    boolActive = ((os.date('*t').month == 12) and (os.date('*t').day == 24)) or false
     UPDATE_FREQUNECY = 30 * 12 * 60
     --------------------------------------------------------------------------------
     --------------------------------------------------------------------------------

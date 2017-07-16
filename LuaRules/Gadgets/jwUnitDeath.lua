@@ -41,7 +41,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	distanceTable={}
 	for k,kuid in ipairs(sTable)do
 		for i, iuid in ipairs(sTable) do
-		if i~=k then
+		if i~=k and Spring.GetUnitIsDead(sTable[k]) == false and Spring.GetUnitIsDead(sTable[i]) == false then
 			distance=distanceUnitToUnit(sTable[k],sTable[i])
 			if  sTable[k] and sTable[i] and distance < ELIAHMERGEDISTANCE then
 					if not distanceTable[sTable[k]] then  distanceTable[sTable[k]] = 0 end
@@ -93,14 +93,14 @@ if (gadgetHandler:IsSyncedCode()) then
 			if id then
 				Spring.SetUnitExperience(id, GoneForGood[jDeadEliahIndex].stats.exp)
 			end
-			for index, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
+			
+		end
+			
+		for index, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
 				if Spring.GetUnitIsDead(id)==false then 
 					Spring.DestroyUnit(id,false,true)
 				end
 			end
-		end
-			
-	
 	
 		--Lets get this out of here before it starts to rot
 	end
@@ -152,7 +152,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	conAirDefID=UnitDefNames["conair"].id
 	
 	function inRandomRange(x,z,Range)
-		offx,offz= RotationMatrice(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
+		offx,offz= Rotate(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
 		return x+offx,z+offz
 	end
 	

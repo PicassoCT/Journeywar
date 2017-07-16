@@ -1,11 +1,11 @@
-local unitName = "jHiveHoundMoma"
+local unitName = "jHiveWulfMoma"
 local unitDef = {
 	objectName="jHiveHoundMoma.s3o",
 	
 	name               = "Wulfhive",
 	Description 		 ="Ranged Ground-Assault Unit ",
 	
-	script 			 = "HiveHound.lua",
+	script 			 = "jHiveMomaScript.lua",
 	maxDamage = 2550, 
 	
 	MovementClass = "Default2x2",

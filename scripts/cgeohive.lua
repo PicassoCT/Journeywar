@@ -1,5 +1,5 @@
 --<pieces>
-
+include "lib_jw.lua"
 
 repcoords = {}
 replicPoints = {}
@@ -153,7 +153,9 @@ function script.Killed(recentDamage, _)
     --spawnARewarder
     teamID = Spring.GetUnitTeam(unitID)
     spx, spy, spz = Spring.GetUnitPosition(unitID)
-    heapID = Spring.CreateUnit("cRewarder", spx, spy, spz, teamID)
+	
+	createRewardEvent(teamID)
+
     --<RubbleScript>
     if recentDamage > 1 then
         --This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function

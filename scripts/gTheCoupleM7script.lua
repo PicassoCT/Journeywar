@@ -13,19 +13,19 @@ Animations['fightAnimation'] = VFS.Include("Scripts/animations/m7couple/fight.lu
 --------------------------------------------------------------------------------
 -- funcs
 --------------------------------------------------------------------------------
-function constructSkeleton(unit, piece, offset)
+function constructSkeleton(unit, piecen, offset)
     if (offset == nil) then
         offset = { 0, 0, 0 };
     end
 
     local bones = {};
-    local info = Spring.GetUnitPieceInfo(unit, piece);
+    local info = Spring.GetUnitPieceInfo(unit, piecen);
 
     for i = 1, 3 do
         info.offset[i] = offset[i] + info.offset[i];
     end
 
-    bones[piece] = info.offset;
+    bones[piecen] = info.offset;
     local map = Spring.GetUnitPieceMap(unit);
     local children = info.children;
 

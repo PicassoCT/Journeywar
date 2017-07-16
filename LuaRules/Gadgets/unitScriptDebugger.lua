@@ -9,14 +9,12 @@ function gadget:GetInfo()
         license = "Free",
         layer = 109,
         version = 1,
-        enabled = true
+        enabled = false
     }
 end
 
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
-
 if (gadgetHandler:IsSyncedCode()) then
-
 
     function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
         Spring.Echo(Spring.GetGameFrame() .. " -> " .. UnitDefs[unitDefID].name .. " destroyed")

@@ -7,7 +7,7 @@ function gadget:GetInfo()
         version = "v0.1",
         license = "GPL v3.0 or later",
         layer = -1,
-        enabled = true,
+        enabled = (Spring.SetSunLighting ~= nil),
     }
 end
 
@@ -199,27 +199,27 @@ if gadgetHandler:IsSyncedCode() then
         Spring.SetAtmosphere({ sunColor = { c.sunColor[1], c.sunColor[2], c.sunColor[3], c.sunColor[4] } }) --c.sunColor[4]
         Spring.SetAtmosphere({ skyColor = { c.skyColor[1], c.skyColor[2], c.skyColor[3], c.skyColor[4] } })
         Spring.SetAtmosphere({ cloudColor = { c.cloudColor[1], c.cloudColor[2], c.cloudColor[3], c.cloudColor[4] } })
-        --Spring.SetAtmosphere ({fogStart = c.fogStart, fogEnd =c.fogEnd, fogColor = {c.fogColor[1], c.fogColor[2], c.fogColor[3], c.fogColor[4]}})
+       -- Spring.SetAtmosphere ({fogStart = c.fogStart, fogEnd =c.fogEnd, fogColor = {c.fogColor[1], c.fogColor[2], c.fogColor[3], c.fogColor[4]}})
     end
 
     --Creates a DayString
     function getDayTime(now, total)
-        hours = math.floor((now / total) * 24)
-        minutes = math.ceil((((now / total) * 24) - hours) * 60)
+        hours = math.floor((now / total) * 24) 
+        minutes = math.ceil((((now / total) * 24) - hours) * 60) 
         return hours .. ":" .. minutes
     end
 
     --gets a config and sets the time of day as sun
     function aDay(timeFrame, WholeDay)
-
+			--echo(getDayTime(timeFrame%WholeDay, WholeDay))
         percent = ((timeFrame % (WholeDay)) / (WholeDay))
         config = getDefaultConfg({ r = 0.5, g = 0.5, b = 0.5, a = 0.5 })
         -- if GG.SunConfig and GG.SunConfig[1] then
         -- config= GG.SunConfig[1]
         -- GG.SunConfig[1].lifeTime= GG.SunConfig[1].lifeTime-32
-        -- if GG.SunConfig[1].lifeTime <= 0 then
-        -- GG.SunConfig[1]= nil
-        -- end
+			-- if GG.SunConfig[1].lifeTime <= 0 then
+			-- GG.SunConfig[1]= nil
+			-- end
         -- else
 
         rgba = getgroundAmbientColor(percent)
@@ -257,7 +257,7 @@ if gadgetHandler:IsSyncedCode() then
     --set the sun
     function gadget:GameFrame(n)
         if n % 32 == 0 then
-            aDay(n + DAYLENGTH / 2, DAYLENGTH)
+            aDay(n + DAYLENGTH/2, DAYLENGTH)
         end
         if n % DAYLENGTH == 0 then
             setSunArc()

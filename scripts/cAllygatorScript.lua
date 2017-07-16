@@ -366,9 +366,9 @@ function swallowAnimation(victimID)
                     pStart = { x = Radius, y = Radius + 35, z = 0 }
                     animationFactor = (AnimationRunning_ms / totalAnimationTime)
                     animationOffset = (math.pi / -4)
-                    pStart.x, pStart.y = RotationMatrice(pStart.x, pStart.y, animationOffset + -math.pi * animationFactor)
+                    pStart.x, pStart.y = Rotate(pStart.x, pStart.y, animationOffset + -math.pi * animationFactor)
                     --rotation Matrice at UnitDeg
-                    pStart.x, pStart.z = RotationMatrice(pStart.x, pStart.z, orgAllgygatorRotationRad)
+                    pStart.x, pStart.z = Rotate(pStart.x, pStart.z, orgAllgygatorRotationRad)
                     --Position Check & Clamp
                     pTargetX, pTargetY, pTargetZ = pVx + pStart.x, pVy + pStart.y + Radius, pVz + pStart.z
                     GroundY = Spring.GetGroundHeight(pTargetX, pTargetZ)

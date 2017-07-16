@@ -48,6 +48,7 @@ function getFactoryTypeTable(UnitDefNames, IWant)
     return FactoryTypes
 end
 
+--> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}
     retTab[UnitDefNames["jstealthdrone"].id] = true
@@ -82,6 +83,16 @@ function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
     }
 
     return retTab
+end
+function getEggTypeTable(UnitDefNames)
+  retTab =  {
+        [UnitDefNames["jskineggnogg"].id]=true,
+        [UnitDefNames["jtigeggnogg"].id ]=true,
+        [UnitDefNames["jdevoureregg"].id]=true,
+        [UnitDefNames["jdevoureregg"].id]=true,
+        [UnitDefNames["jsuneggnogg"].id]=true
+		}
+return retTab
 end
 
 function getDreamTreeTransformUnitTypeTable(UnitDefNames)
@@ -154,38 +165,6 @@ function getTreeTypeTable(UnitDefNames)
     return FactoryTypes
 end
 
-function getPokerTypeTable(UnitDefNames)
-    BattleTypes = {}
-    BattleTypes[UnitDefNames["art"].id] = true
-    BattleTypes[UnitDefNames["cadvisor"].id] = true
-    BattleTypes[UnitDefNames["campro"].id] = true
-    BattleTypes[UnitDefNames["csniper"].id] = truer
-    BattleTypes[UnitDefNames["cgunship"].id] = true
-    BattleTypes[UnitDefNames["cichneumonidae"].id] = true
-    BattleTypes[UnitDefNames["strider"].id] = true
-    BattleTypes[UnitDefNames["coperatrans"].id] = true
-    BattleTypes[UnitDefNames["mtw"].id] = true
-    BattleTypes[UnitDefNames["res"].id] = true
-    BattleTypes[UnitDefNames["zombie"].id] = true
-    BattleTypes[UnitDefNames["gfreeman"].id] = true
-
-    BattleTypes[UnitDefNames["jbeefeater"].id] = true
-    BattleTypes[UnitDefNames["jglowworm"].id] = true
-    BattleTypes[UnitDefNames["jbugcreeper"].id] = true
-    BattleTypes[UnitDefNames["jeliah"].id] = true
-    BattleTypes[UnitDefNames["jcrabcreeper"].id] = true
-    BattleTypes[UnitDefNames["jgalatea"].id] = true
-    BattleTypes[UnitDefNames["jghostdancer"].id] = true
-
-    BattleTypes[UnitDefNames["jhivehound"].id] = true
-    BattleTypes[UnitDefNames["jresistancewarrior"].id] = true
-    BattleTypes[UnitDefNames["jswiftspear"].id] = true
-    BattleTypes[UnitDefNames["jviciouscycler"].id] = true
-    BattleTypes[UnitDefNames["jwatchbird"].id] = true
-    BattleTypes[UnitDefNames["tiglil"].id] = true
-    BattleTypes[UnitDefNames["vort"].id] = true
-    return BattleTypes
-end
 
 function getInfantryTypeTable()
     Infantry = {}
@@ -193,7 +172,7 @@ function getInfantryTypeTable()
     Infantry[UnitDefNames["bg2"].id] = true
     Infantry[UnitDefNames["tiglil"].id] = true
     Infantry[UnitDefNames["skinfantry"].id] = true
-    Infantry[UnitDefNames["jhivehound"].id] = true
+    Infantry[UnitDefNames["jhivewulf"].id] = true
     Infantry[UnitDefNames["vort"].id] = true
     Infantry[UnitDefNames["css"].id] = true
     return Infantry
@@ -209,7 +188,7 @@ function getNeutralTypeTable()
 end
 
 
-function getCorpseTypeTable()
+function getZombieTypeTable()
     Creep = {}
     Creep[UnitDefNames["gzombiehorse"].id] = true
     Creep[UnitDefNames["zombie"].id] = true
@@ -234,7 +213,8 @@ end
 
 function getCorpseTypeTable()
     CorpseTable = getJourneyCorpseTypeTable()
-    for key, v in pairs(getCentrailCorpseTypeTable()) do
+	CentCorpseTable= getCentrailCorpseTypeTable()
+    for key, v in pairs(CentCorpseTable) do
         CorpseTable[key] = true
     end
     return CorpseTable
@@ -277,6 +257,19 @@ function getCreeperTypeTable()
     return CreepTable
 end
 
+function getAbstractTypes(UnitDefNames)
+    AbstractTypes = {
+        [UnitDefNames["csuborbexplo"].id] = true,
+        [UnitDefNames["actionzone"].id] = true,
+        [UnitDefNames["reservoirzone"].id] = true,
+        [UnitDefNames["triggerzone"].id] = true,
+		--TODO add all abstract types
+     }
+
+    return AbstractTypes
+
+end
+
 function getRecycleableUnitTypeTable()
     TransportTable = {
         [UnitDefNames["gjbigbiowaste"].id] = true,
@@ -284,11 +277,15 @@ function getRecycleableUnitTypeTable()
         [UnitDefNames["gcvehiccorpse"].id] = true,
         [UnitDefNames["gcvehiccorpsemini"].id] = true,
         [UnitDefNames["gjmeatballs"].id] = true,
-        [UnitDefNames["gseastar"].id] = true
+        [UnitDefNames["zombie"].id] = true,
+        [UnitDefNames["gseastar"].id] = true,
+        [UnitDefNames["gshit"].id] = true
     }
 
     return TransportTable
 end
+
+
 
 function getGravityChaneReistantUnitTypeTable(UnitDefNames)
     TransportTable = {
@@ -704,3 +701,85 @@ function getDayTime()
     seconds = 60 - ((24 * 60 * 60 - (hours * 60 * 60) - (minutes * 60)) % 60)
     return hours, minutes, seconds
 end
+
+--> Creates a Eventstream Event bound to a Unit
+function createStreamEvent(unitID, func, framerate, persPack)
+	persPack.unitID = unitID
+	persPack.startFrame = Spring.GetGameFrame()
+	persPack.functionToCall = func
+	
+	eventFunction = function(id, frame, persPack)
+                nextFrame = frame + framerate
+                if persPack then
+                    if persPack.unitID then
+                        --check
+                        boolDead = Spring.GetUnitIsDead(persPack.unitID)
+
+                        if boolDead and boolDead == true then
+                            return nil, nil
+                        end
+
+                        if not persPack.startFrame then
+                            persPack.startFrame = frame
+                        end
+
+                        if persPack.startFrame then
+                            nextFrame = persPack.startFrame + framerate
+							persPack.startFrame = nil
+                        end                     
+                    end
+                end
+			
+			boolDoneFor, persPack = functionToCall(persPack)
+			if boolDoneFor then
+				return nil 
+			end
+				
+                return nextFrame, persPack
+            end
+
+            GG.EventStream:CreateEvent(eventFunction, persPack, Spring.GetGameFrame() + 1)
+end
+
+
+function createRewardEvent(teamid, returnOfInvestmentM, returnOfInvestmentE)
+
+returnOfInvestmentM = returnOfInvestmentM or 100
+returnOfInvestmentE = returnOfInvestmentE or 100
+
+
+function rewarderProcess(evtID, frame, persPack, startFrame)
+
+	
+        Spring.AddTeamResource(	persPack.teamId, 
+								"metal",  
+								persPack.returnOfInvestmentM/persPack.rewardCycles)
+        Spring.AddTeamResource(persPack.teamId, 
+								"energy", 
+								persPack.returnOfInvestmentE/persPack.rewardCycles)
+
+	persPack.rewardCycleIndex= persPack.rewardCycleIndex +1
+	if persPack.rewardCycleIndex > persPack.rewardCycles then 
+		return nil, nil
+	end	
+
+return frame + 1000, persPack
+end
+
+            persPack = { 
+						teamId= teamid,
+						returnOfInvestmentM= returnOfInvestmentM,
+						returnOfInvestmentE= returnOfInvestmentE,
+						id = unitID,
+						rewardCycles= 25, 
+						rewardCycleIndex= 0 
+						}
+						
+            GG.EventStream:CreateEvent(
+							rewarderProcess,
+							persPack,
+							Spring.GetGameFrame() + 1)
+
+end
+			
+			

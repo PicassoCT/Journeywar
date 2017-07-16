@@ -64,7 +64,7 @@ function IkChain:solveIK(self, frames)
     --  last is making sure the iteration gets a better solution than the last iteration,
     --  otherwise revert changes
     local goal_point = self.goalPoint
-    local current_point = vector:new(0, 0, 0)
+    local current_point = Vector:new(0, 0, 0)
     prev_err, curr_err, last_err = math.huge, math.huge, math.huge
     max_iterations = 200;
     ItterationCount = 0;

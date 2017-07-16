@@ -14,13 +14,14 @@ end
 
 if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_UnitScript.lua")
+    VFS.Include("scripts/lib_jw.lua")
 
     gaiaTeam = Spring.GetGaiaTeamID()
     teamTable = {}
     meridianTable = {}
     spawnUnits = {
         ["journeyman"] = { [1] = "jgeohive", [2] = "jbeehive", [3] = "jghostdancer", [4] = "jpoisonhive" },
-        ["centrail"] = { [1] = "goildrum", [2] = "gzombspa", [3] = "coverworldgate", [4] = "crewarder" }
+        ["centrail"] = { [1] = "goildrum", [2] = "gzombspa", [3] = "coverworldgate" }
     }
 
     teamHiveTable = {}

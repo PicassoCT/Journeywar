@@ -1087,7 +1087,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
         end
     end
 
-    if boolTeleportCharged == true and GetDistanceNearestEnemy(unitID) < maxDist then
+    if boolTeleportCharged == true and distanceNearestEnemy(unitID) < maxDist then
         boolTeleportCharged = false
         StartThread(TeleportCharge)
     end

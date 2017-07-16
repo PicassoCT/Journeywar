@@ -45,6 +45,7 @@ local SIG_SOUND = 4
 local SIG_POS = 8
 local SIG_ANIM = 16
 local SIG_HAUL = 32
+INDUSTRY_RANGE = 420
 sparkEmitters = {}
 for i = 1, 4, 1 do
     sparkEmitters[i] = {}
@@ -131,6 +132,19 @@ function simpleTransform()
         Turn(Pipes[i], y_axis, math.rad(dy), 0)
         Turn(Pipes[i], z_axis, math.rad(dz), 0)
     end
+	resetT(TablesOfPiecesGroups["tank"])
+	hideT(TablesOfPiecesGroups["tank"])
+
+		for i=1,#TablesOfPiecesGroups["tank"] do
+			 movePieceToPieceNoReset(unitID, TablesOfPiecesGroups["tank"][i],Pipes[math.random(25,105)], 0)
+				
+			turnPieceRandDirStep(TablesOfPiecesGroups["tank"][i],0,90)
+			if maRa()==true then
+			Show(TablesOfPiecesGroups["tank"][i])
+			else
+			Hide(TablesOfPiecesGroups["tank"][i])
+			end
+		end
 end
 
 
@@ -319,18 +333,17 @@ function citizencrane()
 end
 
 recycleAble = getRecycleableUnitTypeTable()
-
-function unitTest(handedOverId)
+infantryTypeTable = getInfantryTypeTable()
+function isUnitRecycleable(handedOverId)
     if handedOverId == nil then return false end
     if Spring.ValidUnitID(handedOverId) == false then return false end
+	if Spring.GetUnitIsDead(handedOverId)==true then return false end
     if handedOverId == unitID then return false end
 
     local passengerDefID = Spring.GetUnitDefID(handedOverId)
     if passengerDefID == nil then return false end
-    if passengerDefID == UnitDefNames["tiglil"].id or passengerDefID == UnitDefNames["skinfantry"].id or passengerDefID == UnitDefNames["vort"].id then return true end
-    if recycleAble[passengerDefID] then
-        return true
-    end
+    if infantryTypeTable[passengerDefID] then return true end
+    if recycleAble[passengerDefID] then     return true  end
     return false
 end
 
@@ -607,17 +620,16 @@ function buildanimOverhead()
 end
 
 function cleanArrived()
-    targ = table.getn(arrived)
-    for i = 1, targ, 1 do
-        if arrived[i] == nil or Spring.ValidUnitID(arrived[i]) == false then
-            table.remove(arrived, i)
-            targ = targ - 1
-            i = i - 1
-        end
-    end
+   arrived= process(arrived,
+					function(id)
+						if id and Spring.ValidUnitID(id) == true then
+							return id
+						end
+					end
+					)
 end
 
-function earlyWhileEmit(boolIsBio)
+function firstStageEmitParticles(boolIsBio)
 
     if boolIsBio == true then
         EmitSfx(attaemit, 1029)
@@ -648,7 +660,7 @@ function earlyWhileEmit(boolIsBio)
     end
 end
 
-function lateWhileEmit(boolIsBio)
+function secondStageEmitParticles(boolIsBio)
     if boolIsBio == true then
         EmitSfx(attaemit, 1029)
         EmitSfx(attaemit, 1029)
@@ -671,7 +683,7 @@ function lateWhileEmit(boolIsBio)
     end
 end
 
-function checkForOtherFactories(id)
+function validateNoOtherFactoriesInvolved(id)
     teamID = Spring.GetUnitTeam(unitID)
     if not GG.cBBindustryVictims then GG.cBBindustryVictims = {} end
     if not GG.cBBindustryVictims[teamID] then GG.cBBindustryVictims[teamID] = {} end
@@ -692,9 +704,9 @@ end
 function theProcess(id)
     Signal(SIG_HAUL)
     Signal(SIG_ANIM)
-    if checkForOtherFactories(id) == true then return end
     StartThread(buildanimOverhead)
-
+	boolIsBio = isBio(id)
+  
     Spin(hax1, z_axis, math.rad(690), 0.01)
     Spin(hax4, z_axis, math.rad(390), 0.05)
     Spin(hax2, z_axis, math.rad(-690), 0.01)
@@ -703,7 +715,7 @@ function theProcess(id)
     Move(attachpoint, x_axis, 0, 0)
     Move(attachpoint, z_axis, 0, 0)
     Move(attachpoint, y_axis, 0, 0)
-    boolIsBio = isBio(id)
+  
     StartThread(unitPositioner, id)
     StartThread(haulers)
     StartThread(maschineLoop)
@@ -724,7 +736,7 @@ function theProcess(id)
             Spring.PlaySoundFile("sounds/cbbind/bbindmetal.wav")
         end
 
-        earlyWhileEmit(boolIsBio)
+        firstStageEmitParticles(boolIsBio)
 
         dax = dax + 50
         Sleep(50)
@@ -752,7 +764,7 @@ function theProcess(id)
             Spring.PlaySoundFile("sounds/cbbind/bbindmetal.wav")
         end
 
-        lateWhileEmit(boolIsBio)
+        secondStageEmitParticles(boolIsBio)
 
 
         dax = dax + 50
@@ -768,108 +780,108 @@ function theProcess(id)
     Hide(lightning)
 end
 
-
-function unitIsNotPartOfArrived(id)
-    if id == nil then return true end
-    if arrived[id] then return false
-    else
-        return true
-    end
+function unitNotInArrivedGroup(id)
+    if not id then return true end
+    if arrived[id] then return false end
+    
+    return true
 end
 
-function likeCattle()
-    while (true) do
-        Sleep(2500)
-        --Spring.Echo("Units in Arrived",table.getn(arrived))
-        if arrived ~= nil and table.getn(arrived) ~= 0 then
-            for i = 1, table.getn(arrived), 1 do
-                if arrived[i] ~= nil and unitTest(arrived[i]) == true then
-                    table.remove(unitTable, arrived[i])
-                    table.remove(allUnitsEverConcerned, arrived[i])
-                    theProcess(arrived[i])
-                end
-            end
-            cleanArrived()
-        end
-    end
+UPDATE_RATE = 3000
+processQueued={}
+function recycleProcess()
+x,y,z= Spring.GetUnitBasePosition(unitID)
+	while (true) do
+	T = getAllInCircle(x,z, INDUSTRY_RANGE, unitID)
+	teamID= Spring.GetUnitTeam(unitID)
+	T = process(T,
+				function(id)
+					if not (Spring.GetUnitTeam(id)==teamID) then
+						return id 
+					end
+				end,
+				function(id) 	
+				--remove allready processQueued
+					if not processQueued[id] then 
+						processQueued[id] = id
+						return id
+					end 
+				end,
+				function(id)
+				if validateNoOtherFactoriesInvolved(id)== true then
+					return id
+				end
+				--remove units handled by other factories
+				end,
+				function(id)
+				--remove all off wrong type
+					if isUnitRecycleable(id) == true then
+						return id 
+					end
+				end,
+				function(id)
+				--remove still attached Units
+					if not Spring.GetUnitTransporter(id) then 
+						return id
+					end
+				end,
+				function(id)
+				--add to ProcessQueue
+					if id then
+						StartThread(recycleCircle, id)
+					end
+				end
+				)
+
+	Sleep(UPDATE_RATE)
+	end
 end
 
 
-function moveCadaversToRalleyPoint()
-    local tx, ty, tz, _, _, _ = Spring.GetUnitPiecePosDir(unitID, ralleypoint)
+IndustrySemaphore = 0
 
-    while (true) do
-        if allUnitsEverConcerned ~= nil and table.getn(allUnitsEverConcerned) ~= 0 then
-            for i = 1, table.getn(allUnitsEverConcerned), 1 do
-                if allUnitsEverConcerned[i] ~= nil and unitTest(allUnitsEverConcerned[i]) == true and unitIsNotPartOfArrived(allUnitsEverConcerned[i]) == true then
-                    Spring.MoveCtrl.Enable(allUnitsEverConcerned[i])
-                    x, y, z = Spring.GetUnitPosition(allUnitsEverConcerned[i])
-                    if (distance(x, tx) > 12 and distance(x, tx) < 250) and distance(z, tz) > 250 then
-                        --move it in on the
-                        newX = math.ceil((7 * x + tx) / 8)
-                        newZ = z
-                        Spring.MoveCtrl.SetPosition(allUnitsEverConcerned[i], newX, y, newZ)
-                    elseif distance(z, tz) <= 250 and distance(z, tz) > 12 then
-                        newZ = math.floor((7 * z + tz) / 8)
-                        newX = x
-                        Spring.MoveCtrl.SetPosition(allUnitsEverConcerned[i], newX, y, newZ)
-                    else
-                        newX = math.ceil((7 * x + tx) / 8)
-                        newZ = math.floor((7 * z + tz) / 8)
-                        Spring.MoveCtrl.SetPosition(allUnitsEverConcerned[i], newX, y, newZ)
-                        --Spring.Echo(math.sqrt(( x-tx)^2 +(z-tz)^2))
-                        if math.sqrt((x - tx) ^ 2 + (z - tz) ^ 2) <= 12 then
-                            arrived[(table.getn(arrived) + 1)] = {}
-                            arrived[(table.getn(arrived) + 1)] = allUnitsEverConcerned[i]
-                            allUnitsEverConcerned[i] = nil
-                        end
-                    end
-                else
-                    table.remove(allUnitsEverConcerned, i)
-                end
-            end
-        end
-        Sleep(500)
-    end
+function recycleCircle(id)
+--GetIndustrial Semaphore
+	while IndustrySemaphore > 0 do
+		IndustrySemaphore = IndustrySemaphore + 1
+		if IndustrySemaphore > 1 then 
+			IndustrySemaphore = IndustrySemaphore -1
+		else
+			break
+		end
+	Sleep(50)
+	end 
+
+--move In
+moveCadaversToRalleyPoint(id)
+
+--determinate Type
+theProcess(id)
+
+--call function by type
+IndustrySemaphore = IndustrySemaphore -1
 end
 
-unitTable = {}
-function bringThemIn()
-    local x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, center)
-
-    while (true) do
-        unitTable = {}
-        unitTable = Spring.GetUnitsInCylinder(x, z, 420)
-        table.remove(unitTable, unitID)
-        if unitTable ~= nil and table.getn(unitTable) ~= 0 then
-            --check Units in Circle- if scrap, StartThreads moving them Towards the loadpoint
-            for i = 1, table.getn(unitTable), 1 do
-                --Spring.Echo(unitTable[i])
-                if unitTable[i] ~= nil and unitTest(unitTable[i]) == true and unitIsNotPartOfArrived(unitTable[i]) == true then
-                else
-                    table.remove(unitTable, unitTable[i])
-                end
-            end
-            --add it to the longterm
-            if unitTable ~= nil and table.getn(unitTable) ~= 0 then
-                for i = 1, table.getn(unitTable), 1 do
-                    if unitTable[i] ~= nil then
-                        if allUnitsEverConcerned[(unitTable[i])] or arrived[(unitTable[i])] then
-                        else
-                            allUnitsEverConcerned[#allUnitsEverConcerned + 1] = {}
-                            allUnitsEverConcerned[#allUnitsEverConcerned] = unitTable[i]
-                        end
-                    end
-                end
-            end
-        end
-        --if a unit moves into the load point
-
-        --process it
-
-        Sleep(3000)
+cargoLifter = piece"cargoLifter"
+function moveCadaversToRalleyPoint(id)
+--TODO cargolifter
+boolArrived = false
+	while (boolArrived == false) do
+		x, y, z = Spring.GetUnitPosition(id)
+		MovePieceToPos(cargoLifter, x, y, z, 7.5)
+		WaitForMoves(cargoLifter)
+		Spring.UnitScript.AttachUnit(cargoLifter, id)
+		movePieceToPieceNoReset(unitID, cargoLifter,ralleypoint, 2.5)
+		WaitForMoves(cargoLifter)
+		Spring.UnitScript.DettachUnit(cargoLifter, id)
+		reset(cargoLifter,7.5)
+		WaitForMoves(cargoLifter)	
+		Sleep(500)
     end
+	
+	Spring.MoveCtrl.Enable(id)
 end
+
 
 function constFlame(upperLimit)
     for ro = 1, upperLimit, 1 do
@@ -1011,10 +1023,10 @@ function script.StopBuilding()
     Hide(lightning)
 end
 
+ TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+ 
 function script.Create()
     simpleTransform()
-    --exploreMatrice(1,42)
-    --exploreMatrice(43,84)
     StartThread(moveDrumEmit)
     --<buildanimationscript>
     _, _, _, x, y, z = Spring.GetUnitPosition(unitID, true)
@@ -1024,10 +1036,8 @@ function script.Create()
         GG.UnitsToSpawn:PushCreateUnit("cbuildanimation", x, y, z, 0, teamID)
     end
     --</buildanimationscript>
-    StartThread(bringThemIn)
-    StartThread(moveCadaversToRalleyPoint)
-    StartThread(likeCattle)
-    --StartThread(getScrap)
+	StartThread(recycleProcess)    
+	--StartThread(getScrap)
     Spring.UnitScript.Hide(flare)
     Spring.UnitScript.Hide(lightning)
     StartThread(idle)

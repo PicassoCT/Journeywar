@@ -1,10 +1,9 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
 include "lib_Build.lua"
-
 include "createCorpse.lua"
+
 local builux = piece "builux"
 local bldoor1 = piece "bldoor1"
 local bldoor2 = piece "bldoor2"
@@ -13,6 +12,7 @@ local builuxcenter = piece "builuxcenter"
 local SIG_Activate = 2
 local SIG_InActivate = 4
 local SIG_AC = 8
+
 boolUpgradeReady = true
 upgradetime = math.floor(60000 * math.random(6, 9))
 boolUpgradeTime = false
@@ -75,48 +75,46 @@ function windStoss(delaytime, StartVal, StrengthInDegree, StrenghtOfWind, length
     boolFlipFlop = false
     local pieight = 3.145159 / 8
     local pifourth = 3.145159 / 4
+	
+	-- Flapping in the wind
 
-    --Tongue rolled
-    if math.random(0, 1) == 1 then
-        Turn(curtain[StartVal], x_axis, math.rad(35 * negset), 1.89)
-        WaitForTurn(curtain[StartVal], x_axis)
-        for i = 1, 4 do
-            val = -60 * negset
-            Turn(curtain[StartVal + i], x_axis, math.rad(val), 1.26)
-        end
-        Turn(curtain[StartVal], x_axis, math.rad(90 * negset), 1.89)
-        WaitForTurn(curtain[StartVal], x_axis)
-        for i = 1, 4 do
-            Turn(curtain[StartVal + i], x_axis, math.rad(0), 2.26)
-            if i % 2 == 0 then Sleep(450) end
-        end
-    end
+	constOffset= math.random(-math.pi, math.pi)
+	times = 0	
+	
+	for i = 1, length, 1 do
+		boolFlipFlop = not boolFlipFlop
+	
+		MaxDegree = (math.random(85, 100))*negset
+		times = times + 0.05
+		currentDegree = 0
+		
+			if boolFlipFlop == true then
+				relativeDegree = math.ceil((math.cos(times +  constOffset) * 25.0))
+				Turn(curtain[StartVal], x_axis, math.rad(MaxDegree  + relativeDegree - currentDegree), relativeDegree/10)
+				currentDegree = currentDegree + relativeDegree
+				
+				for i = 1, 4 do
+					relativeDegree = math.ceil((math.cos(times + i * constOffset) * 65.0) - currentDegree)
+					currentDegree = currentDegree + relativeDegree
+					Turn(curtain[StartVal + i],x_axis, math.rad(relativeDegree), relativeDegree/10)
+				end	
+			else
+				relativeDegree = math.ceil((math.sin(times +  constOffset) * 25.0))
+				Turn(curtain[StartVal], x_axis, math.rad(MaxDegree  + relativeDegree - currentDegree), relativeDegree/10)
+				currentDegree = currentDegree + relativeDegree
+				
+				for i = 1, 4 do
+					relativeDegree = math.ceil((math.sin(times + i * constOffset) * 65.0) - currentDegree)
+					currentDegree = currentDegree + relativeDegree
+					Turn(curtain[StartVal + i],x_axis, math.rad(relativeDegree),relativeDegree/10)
+				end	
+			
+			end
+	
+		WaitForTurns(curtain)
+	end
 
 
-    for i = 1, length, 1 do
-        if boolFlipFlop == false then boolFlipFlop = true else boolFlipFlop = false end
-
-        MaxDegree = (math.random(85, 110))
-
-
-        if boolFlipFlop == true then
-            Turn(curtain[StartVal], x_axis, math.rad(MaxDegree * negset - 12), 0.65)
-            for i = 1, 4 do
-                val = (math.cos(i * pifourth) * -25 * negset)
-                Turn(curtain[StartVal + i], x_axis, math.rad(val), 0.34)
-            end
-        else
-            Turn(curtain[StartVal], x_axis, math.rad(MaxDegree * negset + 12), 0.85)
-            for i = 1, 4 do
-                val = (math.sin(i * pifourth) * -25 * negset)
-                Turn(curtain[StartVal + i], x_axis, math.rad(val), 0.57)
-            end
-        end
-
-        WaitForTurn(curtain[StartVal], x_axis)
-    end
-
-    Sleep(250) --Return down
 
     Turn(curtain[StartVal], x_axis, math.rad(20), 0.85)
     for i = 1, 4 do

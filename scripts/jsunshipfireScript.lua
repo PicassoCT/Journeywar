@@ -162,7 +162,7 @@ function damageDealer()
         filterOutTypeTable = { [unitDefID] = true }
 
         allUnits = getAllInCircle(ux, uz, cCircleRange, unitID)
-        allUnits = filterOutUnitsOfType(allUnits, filterOutTypeTable)
+        allUnits = getUnitsOfTypeInT(allUnits, filterOutTypeTable)
 
         if allUnits then
             for i = 1, table.getn(allUnits) do
@@ -172,7 +172,7 @@ function damageDealer()
             end
 
             allUnitsEvaporating = getAllInCircle(ux, uz, cCircleRange / 2, unitID)
-            allUnitsEvaporating = filterOutUnitsOfType(allUnitsEvaporating, filterOutTypeTable)
+            allUnitsEvaporating = getUnitsOfTypeInT(allUnitsEvaporating, filterOutTypeTable)
             for i = 1, table.getn(allUnitsEvaporating) do
                 if allUnitsEvaporating[i] == unitID then
                     allUnitsEvaporating[i] = nil

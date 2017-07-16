@@ -3,7 +3,7 @@ local unitDef  =  {
 --Internal settings
     BuildPic = "filename.bmp",
     ObjectName = "jbeefeatermiddle.s3o",
-    name = "Middle",
+    name = "tale of a tail",
     Side = "Journeyman",
 
     script = "jbeefeatermiddle.lua",
@@ -17,8 +17,8 @@ local unitDef  =  {
     MaxDamage = 240,
     RadarDistance = 0,
     SightDistance = 500,
-    Upright = false,
-	turnInPlace=false,
+    Upright = true,
+	turnInPlace=true,
 	--floater             = true,    
 --Energy and metal related
     BuildCostEnergy = 400,
@@ -26,7 +26,7 @@ local unitDef  =  {
     
 --Pathfinding and related
 --	holdSteady          = true,
-    Acceleration = 0.15,
+    Acceleration = 0.25,
     BrakeRate = 0.1,
     FootprintX = 4,
     FootprintZ = 4,
@@ -34,7 +34,7 @@ local unitDef  =  {
     MaxVelocity = 3,
     MaxWaterDepth = 40,
     MovementClass = "Default2x2",
-    TurnRate = 450,
+    TurnRate = 50,
     mass                = 3750,
 	
 nanocolor=[[0.3 0.5 0.6]],

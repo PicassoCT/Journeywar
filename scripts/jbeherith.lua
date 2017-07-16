@@ -657,7 +657,7 @@ function trampleTier()
     px, py, pz = Spring.GetUnitPiecePosDir(unitID, treeSpot)
     T = getAllInCircle(px, pz, 50, unitID)
     if T then
-        buildings = filterOutBuilding(T, UnitDefs, true)
+        buildings = getBuildingInT(T, UnitDefs)
         if buildings then
             process(buildings,
                 function(id)
@@ -1594,7 +1594,7 @@ function treeTrample()
             x, _, z = Spring.GetUnitPiecePosDir(unitID, treeSpot)
             T = getAllInCircle(x, z, 15, unitID, teamID)
             if T then
-                T = filterUnitTableforDefIDTable(T, treeTypeTable)
+                T = getUnitsOfTypeInT(T, treeTypeTable)
 
                 if T and #T > 0 then
                     GG.TreesTrampled = true

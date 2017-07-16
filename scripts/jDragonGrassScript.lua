@@ -52,7 +52,7 @@ function putDrugPieceInPlace(nr)
     degree = 360 * (nr / #DrugPieceList) + math.sin(Spring.GetGameFrame() / 3000)
 
 
-    px, pz = RotationMatrice(0, DrugRange, math.rad(degree) * nr)
+    px, pz = Rotate(0, DrugRange, math.rad(degree) * nr)
     moveUnitPieceToRelativeWorldPos(unitID, footneedle, px, pz, 22)
 
     WaitForMove(footneedle, y_axis)
@@ -70,7 +70,7 @@ function ifSomeDayItMayHappenThatAVictimMustBeFound()
     T = Spring.GetUnitsInCylinder(ux, uz, DrugRange)
     table.remove(T, unitID)
     if #T > 1 then
-        T = filterOutBuilding(T, UnitDefs, false)
+        T = getBuildingInT(T, UnitDefs, false)
         if #T > 1 then
             for i = 1, #T do
                 if not AddictList[T[i]] then return T[i] end

@@ -40,7 +40,6 @@ boolDamaged = false
 teamID = Spring.GetUnitTeam(unitID)
 
 
-
 function nothingEverHappend(datTeamID)
     if datTeamID ~= teamID then boolDamaged = true end
     previouslyAttackingTeam = lastAttackingTeamID
@@ -57,7 +56,7 @@ function SideEffects()
         x, y, z = Spring.GetUnitPosition(unitID)
         T = getAllInCircle(x, z, 512, unitID)
         if #T then
-            T = filterUnitTableforDefIDTable(T, IdTable)
+            T = getUnitsOfTypeInT(T, IdTable)
             if #T then
 
                 for i = 1, #T do
@@ -128,20 +127,115 @@ function peaceLoop()
     end
 end
 
+function createNewNeonSign(startIndex,endIndex)
+	T= Spring.GetUnitPieceInfo(unitID, TableOfPieceGroups["Sign"][1])
+	maxSize= 18
+	hideT(TableOfPieceGroups["Sign"])
+	zero = 0
+	exploreTable= makeTable(zero, 8, 8, 0, true)
 
+	arrIndx = {x = 0,y = 0, z= 0}
+	boolAccumY = maRa()
+	yAccumulated = 0 
+	signMax= 2
+
+--	TableOfPieceGroups["Sign"] = shuffleT(TableOfPieceGroups["Sign"])
+	intervalStart=math.random(startIndex, startIndex+((endIndex-startIndex)/2))
+	intervalEnd = math.random(intervalStart, endIndex)
+	for i=intervalStart,intervalEnd do
+	name= TableOfPieceGroups["Sign"][i]
+	--Show/Hide Piece
+	if i > intervalStart and i < intervalEnd then Show(name) end
+	
+	Move(name,x_axis,arrIndx.x*maxSize,0)
+	Move(name,y_axis,arrIndx.y*maxSize,0)
+	exploreTable[arrIndx.x][arrIndx.y][arrIndx.z] = exploreTable[arrIndx.x][arrIndx.y][arrIndx.z] + 1
+	
+	--Turn Piece 
+	Spin(name, y_axis, math.rad(yAccumulated), 0)
+	Turn(name, y_axis, math.rad(yAccumulated*randSign()), 0)
+	if boolAccumY == true then yAccumulated = yAccumulated + 5 end
+	
+rval= math.random(0,8)*45 + math.random(-15,15)
+	Turn(name, z_axis, math.rad(rval),0)
+	
+	if exploreTable[arrIndx.x ][arrIndx.y][arrIndx.z]  >= signMax then
+		if exploreTable[arrIndx.x ][arrIndx.y + 1] and exploreTable[arrIndx.x ][arrIndx.y + 1][arrIndx.z]  < signMax then
+			arrIndx.y = arrIndx.y + 1
+		else
+				-- arrIndx increment
+			yOffset= randSign()
+			xOffset= randSign()
+				if  exploreTable[arrIndx.x + xOffset] and exploreTable[arrIndx.x + xOffset][arrIndx.y+yOffset] and exploreTable[arrIndx.x + xOffset][arrIndx.y+yOffset][arrIndx.z] and signMax > exploreTable[arrIndx.x + xOffset][arrIndx.y+yOffset][arrIndx.z] then
+					arrIndx.x, arrIndx.y =arrIndx.x + xOffset,arrIndx.y+yOffset
+				else
+					while(signMax < exploreTable[arrIndx.x][arrIndx.y][arrIndx.z])do
+						arrIndx.y =  ringcrement(arrIndx.y, 8, -8)
+
+						if arrIndx.y== 8 then 
+							arrIndx.x = ringcrement(arrIndx.x, 8, -8)
+						end
+					end
+				end	
+			end
+		end
+	end
+return intervalStart, intervalEnd
+end    
+
+function floatNeonSign(signCenter,startIndex,endIndex )
+	rDelay= math.ceil(math.random(100,4000))
+	Sleep(rDelay)
+	while true do 
+		startShowIndex,endShowIndex= createNewNeonSign(startIndex,endIndex)
+		xR,zR= math.random(70,80)*randSign(),math.random(70,80)*randSign()
+		if maRa()==true then
+			Move(signCenter,x_axis,xR,0)
+			Move(signCenter,z_axis,math.random(-100,100),0)
+		else
+			Move(signCenter,z_axis,zR,0)
+			Move(signCenter,x_axis,math.random(-100,100),0)
+		end
+
+		yR= math.random( 50,200)	
+		Move(signCenter, y_axis,yR,0 )
+			--Movement and Spin
+		WaitForMoves(signCenter)
+
+
+	Move(signCenter, y_axis, yR + math.random(100,300), 12)
+	
+	valspin= math.random(-1,1)*15
+	Spin(signCenter,y_axis, math.rad(valspin),4)
+	WaitForMoves(signCenter)	
+	if maRa()==true then
+		staticTime=math.random(3000,25000)
+		Sleep(staticTime)
+		rippleHide(TableOfPieceGroups["Sign"],startShowIndex,endShowIndex)
+	end	
+	
+	for i=startIndex,endIndex do
+		reset(TableOfPieceGroups["Sign"][i])
+		Hide(TableOfPieceGroups["Sign"][i])
+	end
+
+	reset(signCenter)
+	Sleep(500)
+	end
+
+end
 
 function script.Killed(recentDamage)
 
-    x, y, z = Spring.GetUnitPosition(unitID)
     teamID = Spring.GetUnitTeam(unitID)
-    Spring.CreateUnit("crewarder", math.random(1, x), y + 500, math.random(1, z), 0, teamID)
-    if lastAttackingTeamID ~= nil then
+	createRewardEvent(teamID)
+
+ if lastAttackingTeamID ~= nil then
         boolGotIt = Spring.UseTeamResource(lastAttackingTeamID, "metal", 3900)
         boolGotIt2 = Spring.UseTeamResource(lastAttackingTeamID, "energy", 3900)
         if boolGotIt == false or boolGotIt2 == false then
-
-            Spring.CreateUnit("crewarder", x, y + 500, z, 0, teamID)
-        end
+			createRewardEvent(teamID)
+	    end
     end
 
     xrand = math.random(-2, 2)
@@ -209,6 +303,8 @@ function buildIt()
 end
 
 TableOfPieceGroups = {}
+neonCenter1 = piece"neonCenter1"
+neonCenter2 = piece"neonCenter2"
 function script.Create()
 
 
@@ -227,7 +323,14 @@ function script.Create()
     StartThread(peaceLoop)
     StartThread(investMent)
     StartThread(SideEffects)
-    Spring.AddUnitDamage(unitID, 10)
+    StartThread(floatNeonSign, neonCenter1, 1, 20)
+    StartThread(floatNeonSign, neonCenter2, 21,40)
+	
+	dramatisPersona3D = initFlyingCars(15)
+	StartThread(littleFlyingCars, dramatisPersona3D)
 end
 
 --------BUILDING---------
+
+
+------------------- globallos -------------------------------

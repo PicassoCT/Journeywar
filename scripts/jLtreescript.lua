@@ -384,7 +384,7 @@ FixFunctionTabel[6] = function()
         WaitForMove(TreePiece[i + 1], x_axis)
         WaitForMove(TreePiece[i + 1], y_axis)
         WaitForMove(TreePiece[i + 1], z_axis)
-        --MovePieceoPieceUnitSpace(unitID, TreePiece[i+1],PrevPiece,0,true)
+        --MovePieceToPiece(unitID, TreePiece[i+1],PrevPiece,0,true)
         Sleep(1)
     end
 
@@ -1064,7 +1064,7 @@ FixFunctionTabel[21] = function()
     ContinusDeg = { defDegX = math.random(-15, 15), defDegY = math.random(0, 360), defDegZ = math.random(-15, 15) }
     for i = 1, PiecesPerLayer, 1 do
 
-        x, y = RotationMatrice(0, Radius, i * DegStep)
+        x, y = Rotate(0, Radius, i * DegStep)
         moveUnitPieceToGroundPos(unitID, TreePiece[i], x, y, 0, 0)
         ContinuosRing[i] = EndPiece[i]
         Show(TreePiece[i])

@@ -651,19 +651,15 @@ end
 TIGLILDAMAGE = 325
 bgID = UnitDefNames["bg"].id
 function script.Killed(recentDamage, maxHealth)
-    setSpeed(unitID, 0, UnitDefs)
-    Signal(SIG_AIM)
-    Signal(SIG_IDLE)
-    Signal(SIG_COUNTER)
-    Signal(SIG_KNEE)
-    Signal(SIG_FIRE)
-    killinTime(recentDamage, maxHealth)
+     setSpeedEnv(unitID, 0, UnitDefs)
 
-    if math.random(0, 12) == 7 then
-        PlaySoundByUnitDefID(bgdefID, killedSounds[math.floor(math.random(1, #killedSounds))], 0.5, 2000, 1, 0)
-    end
+     killinTime(recentDamage, maxHealth)
 
-    return 1
+     if math.random(0, 12) == 7 then
+         PlaySoundByUnitDefID(bgdefID, killedSounds[math.floor(math.random(1, #killedSounds))], 0.5, 2000, 1, 0)
+     end
+
+	return 1
 end
 
 --]]

@@ -72,16 +72,22 @@ end
 
 --wiggles the feet, and applies motion if turning
 function wiggleFeet(FirstPoint, NaturalDeg)
-
+	  constOffset = (math.pi * 3) /6
+	   seconds = Spring.GetGameSeconds()
+	   seconds = seconds/30
+	  
+	   
     for k = 1, 5 do
-        frame = Spring.GetGameFrame()
-        frame = frame / 300
-        piEight = 3.1415 / math.floor(math.random(4, 12))
-        dice = math.random(-25, 25)
+	 currentDegree = 0
         for i = 1, 6 do
-            sperd = math.random(1, 5) / 100
-            val = math.sin(frame + piEight * i) * dice
-            Turn(Knees[k][i], y_axis, math.rad(val), sperd)
+		relativeDegree= 0
+				if k % 2 == 0 then
+				relativeDegree = math.ceil((math.cos(seconds + i * constOffset) * 25.0) - currentDegree)
+				else
+					relativeDegree = math.ceil((math.sin(seconds + i * constOffset) * 25.0) - currentDegree)
+				end
+				currentDegree = currentDegree + relativeDegree   
+            Turn(Knees[k][i], y_axis, math.rad(relativeDegree), math.abs(relativeDegree/3))
         end
     end
 
@@ -134,15 +140,23 @@ inPieces = {}
 
 function script.Create()
 
-
-
     inPieces = Spring.GetUnitPieceMap(unitID)
     resetT(inPieces)
     for nr = 1, 5 do
         Turn(firstAxis[nr], y_axis, math.rad(-190 + (65) * nr), 0)
     end
 
-    configTable = { id = unitID, centerNode = center, nr = 5, feetTable = { firstAxis = firstAxis, Knees = Knees }, sensorTable = sensorT, ElementWeight = 5, FeetLiftForce = 3, LiftFunction = LiftF, Height = 32, WiggleFunc = wiggleFeet, tipTable = SensorTable }
+    configTable = { id = unitID,
+	centerNode = center, 
+	nr = 5, 
+	feetTable = { firstAxis = firstAxis, Knees = Knees }, 
+	sensorTable = sensorT, 
+	ElementWeight = 5, 
+	FeetLiftForce = 3, 
+	LiftFunction = LiftF,
+	Height = 32, 
+	WiggleFunc = wiggleFeet, 
+	tipTable = SensorTable }
     StartThread(adaptiveAnimationThreadStarter, configTable, inPieces, 4, unitID)
     StartThread(deathTimer)
     StartThread(FeedMe)
@@ -162,6 +176,8 @@ infantryTable = getInfantryTypeTable()
 creeperTypeTable = getCreeperTypeTable()
 corpseTypeTable = getCorpseTypeTable()
 neutralTypeTable = getNeutralTypeTable()
+eggTyeTable = getEggTypeTable(UnitDefNames)
+
 function FeedMe()
     Sleep(13000)
     while true do
@@ -173,11 +189,11 @@ function FeedMe()
             x, y, z = Spring.GetUnitPiecePosDir(unitID, sensorT[i])
             T = getAllInCircle(x, z, 80, unitID)
 
-            if T then filterOutUnitsOfType(T, Seastars) end
+            if T then removeUnitsOfTypeInT(T, Seastars) end
             T = process(T,
                 function(id)
                     uDefid = Spring.GetUnitDefID(id)
-                    if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] then
+                    if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTyeTable[uDefid]then
                         return id
                     end
                 end,
@@ -228,6 +244,8 @@ function FeedMe()
                 WaitForTurn(sensorT[Sensor], y_axis)
                 DropUnit(T[index])
                 Spring.DestroyUnit(T[index], true, true)
+					  hp= Spring.GetUnitHealth(unitID)
+					  Spring.SetUnitHealth(unitID, hp + 150)
             end
 
             StartThread(adaptiveAnimationThreadStarter, configTable, inPieces, 4, unitID)

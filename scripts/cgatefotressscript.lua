@@ -340,8 +340,8 @@ function gunFloater()
     end
 end
 
-function script.Create()
-    Hide(flare02)
+function createProcess()
+  Hide(flare02)
     TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
     Feed = TablesOfPiecesGroups["Feed"]
     hideT(SeedTable)
@@ -370,10 +370,19 @@ function script.Create()
     StartThread(waitForTheWatcher)
     StartThread(turretReseter)
     StartThread(gunFloater)
-    --StartThread(AnimTest)
+end
+
+function script.Create()
+  
+    StartThread(createProcess)
 end
 
 function deployOnceComplete()
+	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+	while not buildProgress and hp ~= mHp do
+	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+	Sleep(500)
+	end
     hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
     while buildProgress and buildProgress < 0 do
         echo(buildProgress)

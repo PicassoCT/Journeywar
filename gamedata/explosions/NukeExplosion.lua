@@ -52,7 +52,7 @@ return {
       ground             = true,
       water              = true,
       properties = {
-	  emitvector = [[0, 1, 0]],
+
         alwaysvisible      = true,
         heat               = 10,
         heatfalloff        = 0.1,
@@ -71,7 +71,7 @@ return {
       ground             = true,
       water              = true,
       properties = {
-	  emitvector = [[0, 1, 0]],
+
         alwaysvisible      = true,
         heat               = 10,
         heatfalloff        = 0.3,

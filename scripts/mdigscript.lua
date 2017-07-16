@@ -285,7 +285,7 @@ function treeTrample()
             x, _, z = Spring.GetUnitPiecePosDir(unitID, treeSpot)
             T = getAllInCircle(x, z, 50, unitID, teamID)
             if T then
-                T = filterUnitTableforDefIDTable(T, treeTypeTable)
+                T = getUnitsOfTypeInT(T, treeTypeTable)
 
                 if T and #T > 0 then
                     GG.TreesTrampled = true

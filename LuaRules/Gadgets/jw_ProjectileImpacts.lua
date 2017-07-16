@@ -10,8 +10,6 @@ function gadget:GetInfo()
     }
 end
 
---this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
-
 if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_OS.lua")
     VFS.Include("scripts/lib_UnitScript.lua")
@@ -20,7 +18,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
     local UnitDamageFuncT = {}
     local StunnedUnitsTable = {}
-    nrOfUnits = 0
+	tangledTable = {}
     --1 unitid
     --2 counter
     --3 orgBuildSpeed
@@ -31,52 +29,59 @@ if (gadgetHandler:IsSyncedCode()) then
     GHOSTLIFETIME = 450
     jEthiefStealingQuota = 5
     local HARDCODED_RETREATDISTANCE = 420
+	tangledDisconnectDistance = 1024
 
+
+	--Centrail Weapons
     cRestrictorThumperID = WeaponDefNames["crestrictorthumper"].id
     crabShelWDefID = WeaponDefNames["crabshell"].id
     cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
     bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
-    jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
-    jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
-    jghostDancerWeaponDefID = WeaponDefNames["jgdjump"].id
     glavaWeaponID = WeaponDefNames["glavaweapon"].id
     gVolcanoWeaponID = WeaponDefNames["lavabomb"].id
     cFlareGun = WeaponDefNames["flaregun"].id
     cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
-    jhunterDartDefID = WeaponDefNames["jdartgun"].id
     lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
     slicergunDefID = WeaponDefNames["slicergun"].id
-    jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
     cCssFlameT = WeaponDefNames["cflamethrower"].id
     cUniverseGun = WeaponDefNames["cuniversegun"].id
     nukeLvl2WeaponDefID = WeaponDefNames["cnukegrenadelvl2"].id
     nukeLvl3WeaponDefID = WeaponDefNames["cnukegrenadelvl3"].id
-    weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
-    tiglilWeaponDefID = WeaponDefNames["tiglilclosecombat"].id
     striderWeaponDefID = WeaponDefNames["warpcannon"].id
     highExLineGunDefID = WeaponDefNames["cexplochaingun"].id
-    jvaryjumpDefID = WeaponDefNames["jvaryjump"].id
     crazorgrenadeDefID = WeaponDefNames["crazorgrenade"].id
-    jgluegunDefID = WeaponDefNames["jgluegun"].id
-    glueMineWeaponDefID = WeaponDefNames["gluemineweapon"].id
-    greenSeerWeaponDefID = WeaponDefNames["greenseer"].id
     celetrochainWeaponDefID = WeaponDefNames["celetrochain"].id
     ChainLightningDefID = WeaponDefNames["cchainlightning"].id
-    jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
     chcprojectileDefID = WeaponDefNames["hcprojectile"].id
     cAllyGatorMarkerDefID = WeaponDefNames["callygatormarker"].id
     CEaterRocketDefID = WeaponDefNames["ceater"].id
-    jethiefweaponDefID = WeaponDefNames["jethiefweapon"].id
-    jethiefretweaponDefID = WeaponDefNames["jethiefretweapon"].id
     cHarvestRocketDefID = WeaponDefNames["charvest"].id
     cAntiMatterDefID = WeaponDefNames["cantimatter"].id
     catapultDefID = WeaponDefNames["ccatapult"].id
-    jeliahbeamDefID = WeaponDefNames["jeliahbeam"].id
     cgaterailgunDefID = WeaponDefNames["cgaterailgun"].id
     cEfenceWeapondDefID = WeaponDefNames["cwefence1"].id
+    tangleGunDefID = WeaponDefNames["ctanglegun"].id
+	
+	--Journeyweapon
+	greenSeerWeaponDefID = WeaponDefNames["greenseer"].id
+	jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
+    jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
+    jSwiftMarkWeaponDefID = WeaponDefNames["jswiftrapemark"].id
+    jghostDancerWeaponDefID = WeaponDefNames["jgdjump"].id
+	jhunterDartDefID = WeaponDefNames["jdartgun"].id
+	jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
+	weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
+    tiglilWeaponDefID = WeaponDefNames["tiglilclosecombat"].id
+	jvaryjumpDefID = WeaponDefNames["jvaryjump"].id
+	jgluegunDefID = WeaponDefNames["jgluegun"].id
+    glueMineWeaponDefID = WeaponDefNames["gluemineweapon"].id
     poisonRaceDartDef = WeaponDefNames["jpoisondartw"].id
-
-
+    jacidantsDefID = WeaponDefNames["jacidants"].id
+    jeliahbeamDefID = WeaponDefNames["jeliahbeam"].id
+    jethiefweaponDefID = WeaponDefNames["jethiefweapon"].id
+    jethiefretweaponDefID = WeaponDefNames["jethiefretweapon"].id
+    jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
+	
     ChainLightningTable = {}
     local FireWeapons = {
         [gVolcanoWeaponID] = true,
@@ -87,6 +92,7 @@ if (gadgetHandler:IsSyncedCode()) then
     }
     RazorGrenadeTable = {}
 
+    Script.SetWatchWeapon(jacidantsDefID, true)
     Script.SetWatchWeapon(cEfenceWeapondDefID, true)
     Script.SetWatchWeapon(cgaterailgunDefID, true)
     Script.SetWatchWeapon(jeliahbeamDefID, true)
@@ -113,6 +119,7 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(jhunterDartDefID, true)
     Script.SetWatchWeapon(jHiveHoundID, true)
     Script.SetWatchWeapon(jSwiftSpearID, true)
+    Script.SetWatchWeapon(jSwiftMarkWeaponDefID, true)
     Script.SetWatchWeapon(jghostDancerWeaponDefID, true)
     Script.SetWatchWeapon(crabShelWDefID, true)
     Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
@@ -127,11 +134,10 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(jgluegunDefID, true)
     Script.SetWatchWeapon(cAllyGatorMarkerDefID, true)
     Script.SetWatchWeapon(poisonRaceDartDef, true)
+    Script.SetWatchWeapon(tangleGunDefID, true)
 
     --units To be exempted from instantly lethal force
     local lethalBuffExecption = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
-
-
     local gaiaTeamID = Spring.GetGaiaTeamID()
     local skySraperDefID = UnitDefNames["buibaicity1"].id
     local cssDefID = UnitDefNames["css"].id
@@ -152,10 +158,9 @@ if (gadgetHandler:IsSyncedCode()) then
         size = 8
         if GG.DynDefMap == nil then GG.DynDefMap = {} end
         if GG.DynRefMap == nil then GG.DynRefMap = {} end
-        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
-        GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -0.25)
+        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / size, z = z / size, Size = size, blendType = "melt", filterType = "borderblur" }
+        GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -1)
     end
-
 
     function impulseAfterDelay(id, x, y, z)
         if Spring.GetUnitIsDead(id) == false then
@@ -181,6 +186,36 @@ if (gadgetHandler:IsSyncedCode()) then
             table.insert(OtherWaves[math.ceil(dist / speed)], myT)
         end
         GG.ShockWaves = OtherWaves
+    end
+
+    slowlyAccidBurnsAway = function(evtID, frame, persPack, startFrame)
+
+        --only apply if Unit is still alive
+        if Spring.GetUnitIsDead(persPack.victimID) == true then
+            return nil, persPack
+        end
+
+        if persPack.ImuneUnits then
+            defID = Spring.GetUnitDefID(persPack.victimID)
+            if persPack.ImuneUnits[defID] then
+                return nil, persPack
+            end
+        end
+
+        hp, maxHP = Spring.GetUnitHealth(persPack.victimID)
+        if not hp then
+            return nil, nil
+        end
+
+        if persPack.counter > persPack.counterMax then
+            return nil, nil
+        end
+
+
+        toSetHp = hp - 10
+        Spring.SetUnitHealth(persPack.victimID, toSetHp)
+
+        return frame + 50, persPack
     end
 
     local explosionFunc = {
@@ -276,8 +311,6 @@ if (gadgetHandler:IsSyncedCode()) then
                         v = makeVector(px - gx, py - gy, pz - gz)
                         v = normVector(v)
                         v = mulVector(v, -1)
-
-
 
                         local ChaingProjParams = {
                             pos = { px, py + 20, pz },
@@ -418,7 +451,38 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end,
         [jSwiftSpearID] = function(weaponDefID, px, py, pz, AttackerID)
-            if Spring.ValidUnitID(AttackerID) == true then Spring.SetUnitPosition(AttackerID, px, py, pz) end
+		
+            if Spring.ValidUnitID(AttackerID) == true and Spring.GetUnitIsDead(AttackerID) == false then
+				--spawn retreating string CEG
+			
+				Spring.SetUnitPosition(AttackerID, px, py, pz) 
+			end
+        end,
+        [jacidantsDefID] = function(weaponDefID, px, py, pz, AttackerID)
+            Spring.SpawnCEG("jantseverywhere", px, py + 10, pz, 0, 1, 0, 60)
+
+            size = 16
+            if GG.DynDefMap == nil then GG.DynDefMap = {} end
+            if GG.DynRefMap == nil then GG.DynRefMap = {} end
+            GG.DynDefMap[#GG.DynDefMap + 1] = { x = px, z = pz, Size = size, blendType = "melt", filterType = "borderblur" }
+            GG.DynRefMap[#GG.DynRefMap + 1] = prepareCupTable(size, -0.125, size / 3, 0.5)
+
+
+
+            T = getAllInCircle(px, pz, 150)
+            if T then
+                process(T,
+                    function(id)
+                        if id ~= AttackerID then
+                            persPack = { victimID = id, ImuneUnits = lethalBuffExecption, counter = 0, counterMax = 25 }
+                            GG.EventStream:CreateEvent(slowlyAccidBurnsAway,
+                                persPack,
+                                Spring.GetGameFrame() + 1)
+                        end
+                    end)
+            end
+
+            return true
         end,
         [jHiveHoundID] = function(weaponDefID, px, py, pz, AttackerID)
             if Spring.ValidUnitID(AttackerID) == true then Spring.SetUnitPosition(AttackerID, px, py, pz) end
@@ -503,6 +567,44 @@ if (gadgetHandler:IsSyncedCode()) then
         end
         return 0
     end
+	
+    UnitDamageFuncT[tangleGunDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		if 	not tangledTable[attackerID] or 
+			distanceOfUnitTo(attackerID,tangledTable[attackerID].first) > tangledDisconnectDistance or
+			table.getn(tangledTable[attackerID].others) > 5
+		then 
+			tangledTable[attackerID] = {first = unitID, others={}}
+			
+			cegEventStream = function (persPack)
+			
+				spawnCEGatUnit(unitID, "tangledceg", 0, 10, 0) --TODO 
+				persPack.counter = persPack.counter + 1
+				return Spring.GetUnitIsDead(unitID) and persPack.counter < persPack, persPack
+			end
+			
+			createStreamEvent(unitID, cegEventStream, 15, {counter = 0})
+		elseif not tangledTable[attackerID].others[unitID] then		
+		tangledTable[attackerID].others[unitID] = true
+		
+		tangledEventStream = function(persPack)
+			if persPack.counter > 25 then return false else  persPack.counter = persPack.counter + 1 end
+			hp, maxHP= Spring.GetUnitHealth(persPack.first)
+			nowPercent= hp/maxHP
+
+			_, maxHP = Spring.GetUnitHealth(persPack.unitID)
+			Spring.SetUnitHealth(persPack.unitID, maxHP * nowPercent )			
+				
+			return true, persPack
+		end
+		
+		createStreamEvent(unitID, tangledEventStream, 25, {
+		first =tangledTable[attackerID].first, 
+		counter = 0})
+		end
+		
+        return 0
+    end
+
 
     UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
         spawnCEGatUnit(unitID, "cefencesplash", 0, 10, 0)
@@ -567,8 +669,8 @@ if (gadgetHandler:IsSyncedCode()) then
 
     UnitDamageFuncT[greenSeerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 
-        hitPoints = Spring.GetUnitHealth(unitID)
-        if damage / hitPoints > 0.3 then
+        hitPoints, maxHP = Spring.GetUnitHealth(unitID)
+        if hitPoints - damage <= 0 and maxHP > 450 then
             x, y, z = Spring.GetUnitPosition(unitID)
             Spring.DestroyUnit(unitID)
             Spring.CreateUnit("jtree1", x, y, z, 1, attackerTeam)
@@ -582,6 +684,13 @@ if (gadgetHandler:IsSyncedCode()) then
         --wait a second thats my ass
         GG.ProjectileOrigin[attackerID] = { boolHitGround = false, id = unitID, lastAttackedPiece = Spring.GetUnitLastAttackedPiece(unitID) }
         --AaaahaaAaaaaAaaaahahaAAAAaaaaaaah
+    end
+ 
+	UnitDamageFuncT[jSwiftMarkWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		env = Spring.UnitScript.GetScriptEnv(attackerID)
+		if env then
+		  Spring.UnitScript.CallAsUnit(attackerID, env.IfSomedayItMightHappenThatAVictimMustBeFound, unitID)
+		end	
     end
 
     --perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
@@ -668,15 +777,30 @@ if (gadgetHandler:IsSyncedCode()) then
         Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")
         --only if the unit is hitsphere wise big enough
         hp, maxhp = Spring.GetUnitHealth(unitID)
-        if hp / maxhp < 0.5 and hp < 300 then
-            sx, sy, sz = Spring.GetUnitCollisionVolumeData(unitID)
-            if math.sqrt(sx ^ 2 + sy ^ 2 + sz ^ 2) > 15 then
-                x, y, z = Spring.GetUnitPosition(unitID)
-                slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
-                Spring.SetUnitNoSelect(slicerColum, true)
-                if not GG.SlicerTable then GG.SlicerTable = {} end
-                GG.SlicerTable[slicerColum] = unitID
-            end
+        if hp / maxhp < 0.5 and hp > 300 then
+			if maRa() then
+            pieceID = getUnitBiggestPiece(unitID)
+            slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
+            Spring.UnitAttach(unitID, slicerColum, pieceID)          
+			Spring.SetUnitNoSelect(slicerColum, true)
+            if not GG.SlicerTable then GG.SlicerTable = {} end
+				GG.SlicerTable[slicerColum] = unitID
+			else
+				rootPiece= Spring.GetUnitLastAttackedPiece(unitID)
+				px, py ,pz = Spring.GetUnitPosition(unitID)
+				ax, ay, az = Spring.GetUnitPosition(attackerID)
+				if attackerID then
+				
+				func = function (persPack)
+						unitRipAPieceOut(persPack.unitID, persPack.rootPiece, persPack.shootvec, 150, false)
+					return true, persPack
+				end
+				persPack = { unitID = unitID, rootPiece = rootPiece, shootvec= {x = ax -px, y =ay-py, z= az-pz}}
+				createStreamEvent(unitID, func, 3, persPack)
+				
+				
+				end
+			end
         end
     end
 
@@ -810,12 +934,9 @@ if (gadgetHandler:IsSyncedCode()) then
 
             projectileID = Spring.SpawnProjectile(ChainLightningDefID, ChaingProjParams)
 
-
-
         elseif ChainLightningTable[attackerID] and ChainLightningTable[attackerID] <= 0 then
             ChainLightningTable[attackerID] = nil
         end
-
 
         if UnitDamageFuncT[weaponDefID] then
             resultDamage = UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
@@ -890,7 +1011,6 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end
 
-
         if frame % everyNthFrame == 0 then
             --handling the Poison Darted
             if GG.Poisoned then
@@ -925,8 +1045,6 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 
-
-
     local TableOfAllreadySearchedComender = {}
     function GetWeaponDirection(attackerID)
         if TableOfAllreadySearchedComender[attackerID] then
@@ -960,9 +1078,14 @@ if (gadgetHandler:IsSyncedCode()) then
                 Spring.AddUnitImpulse(unitID, v.x, v.y, v.z)
 
                 T = getAllInCircle(ux, uz, 120, unitID)
+				T = randFairT(T, 1, 3)
+				
                 --SplashDamage
-                foreach(T,
-                    function(id) if math.random(0, 1) == 1 then Spring.AddUnitDamage(id, 75) end end)
+                process(T,
+                    function(id) 
+					Spring.AddUnitDamage(id, 75) 
+					end)
+					
                 Spring.AddUnitDamage(unitID, 10)
 
             else

@@ -97,14 +97,6 @@ function HumpingTheGround()
     end
 end
 
-function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset)
-    x, y, z = Spring.GetUnitPosition(unitID)
-    if xoffset then
-        Spring.SpawnCEG(cegname, x + xoffset, y + yoffset, z + zoffset, 0, 1, 0, 50, 0)
-    else
-        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 50, 0)
-    end
-end
 
 function script.Create()
     TablesOfPiecesGroups = makePieceMap(unitID)

@@ -335,7 +335,7 @@ function InWaterFeedingFrenzy()
 		
 		while y < 0 do
 			T=getAllInCircle(x,z, stunRange,unitID)
-			T,Cache=filterOutUnitsOfType(T, {[UnitDefNames["jgalatea"].id]=true},Cache)
+			T,Cache= removeUnitsOfTypeInT(T, {[UnitDefNames["jgalatea"].id]=true},Cache)
 			T= process(T,
 			function(element)
 				ex,ey,ez=Spring.GetUnitPosition(element)
@@ -345,7 +345,7 @@ function InWaterFeedingFrenzy()
 			if T and #T > 0 then
 				
 				for i=1, #T do 
-					theLuckOne=affirm(T[i])
+					theLuckOne=affirmUnitsExisting(T[i])
 						if theLuckOne then
 						hp=Spring.GetUnitHealth(theLuckOne)
 						myHP,maxHP=Spring.GetUnitHealth(unitID)

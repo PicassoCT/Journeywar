@@ -21,6 +21,7 @@ MA 02110-1301, USA.
 --================================================================================================================
 -->CombinedWaitForMove
 function WMove(lib_piece, lib_axis, lib_distance, lib_speed)
+	assertAxis(lib_axis)
     Move(lib_piece, lib_axis, lib_distance, lib_speed)
     WaitForMove(lib_piece, lib_axis)
 end
@@ -31,16 +32,17 @@ function WTurn(lib_piece, lib_axis, lib_distance, lib_speed)
     WaitForTurn(lib_piece, lib_axis)
 end
 
+  function pack(...)
+      return { ... }, select("#", ...)
+    end 
+
 -->Waits for anyTurnToComplete
 function WaitForTurns(...)
-    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	local arg = arg
+	if (not arg) then arg = {...}; arg.n = #arg end
+   if not arg then echo("No arguments for WaitForTurns");   return   end
 
-    local arg = { ... }
-    if not arg then
-        return
-    end
-
-    typeArg = type(arg)
+   typeArg = type(arg)
 
     if typeArg == "table" then
 
@@ -59,16 +61,24 @@ function WaitForTurns(...)
     end
 end
 
+-->Wait for a Table of Pieces to finnish theire Turns
+function WaitForTurnT(T)
+        for k, v in pairs(T) do
+            if type(v) == "number" then
+                WaitForTurn(v, x_axis)
+                WaitForTurn(v, y_axis)
+                WaitForTurn(v, z_axis)
+            end
+        end
+end
+
 -->Waits for anyTurnToComplete
 function WaitForMoves(...)
-    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	local arg = arg
+	if (not arg) then arg = {...}; arg.n = #arg end
+   if not arg then  echo("No arguments for WaitForMoves");   return   end
 
-    local arg = { ... }
-    if not arg then
-        return
-    end
-
-    typeArg = type(arg)
+   typeArg = type(arg)
 
     if typeArg == "table" then
 
@@ -90,6 +100,15 @@ function WaitForMoves(...)
     end
 end
 
+-->Waits for anyTurnToComplete
+function WaitForMoveAllAxis(arg)
+	
+        WaitForMove(arg, x_axis)
+        WaitForMove(arg, y_axis)
+        WaitForMove(arg, z_axis)
+ 
+end
+
 -->Turn a piece towards a random direction
 function turnPieceRandDir(piecename, speed, LIMUPX, LIMLOWX, LIMUPY, LIMLOWY, LIMUPZ, LIMLOWZ)
     if not LIMUPX then
@@ -102,6 +121,16 @@ function turnPieceRandDir(piecename, speed, LIMUPX, LIMLOWX, LIMUPY, LIMLOWY, LI
         Turn(piecename, y_axis, math.rad(math.random(LIMLOWY, LIMUPY)), speed)
         Turn(piecename, z_axis, math.rad(math.random(LIMLOWZ, LIMUPZ)), speed)
     end
+end
+
+
+function turnPieceRandDirStep(piecename, speed, stepsize)
+	parts= 360/stepsize
+	
+        Turn(piecename, x_axis, math.rad(math.random(1,parts)*stepsize), speed)
+        Turn(piecename, y_axis, math.rad(math.random(1,parts)*stepsize), speed)
+        Turn(piecename, z_axis, math.rad(math.random(1,parts)*stepsize), speed)
+ 
 end
 
 -->Move a piece towards a random direction
@@ -193,9 +222,9 @@ function reset(piecename, lspeed, boolWaitForIT)
     Move(piecename, y_axis, 0, speed)
     Move(piecename, z_axis, 0, speed, true)
     if boolWaitForIT and boolWaitForIT == true then
-        WaitForTurn(piecename, 1)
-        WaitForTurn(piecename, 2)
-        WaitForTurn(piecename, 3)
+        WaitForTurn(piecename, x_axis)
+        WaitForTurn(piecename, y_axis)
+        WaitForTurn(piecename, z_axis)
     end
 end
 
@@ -257,8 +286,7 @@ end
 function turnSyncInTimeT(Table, times, x_deg, y_deg, z_deg)
 
     for piece, v in pairs(Table) do
-
-        turnInTime(v.piecenr, v.axis, math.rad(v.deg), times, x_deg, y_deg, z_deg, false)
+        turnInTime(v.piecenr, v.axis, v.deg, times, x_deg, y_deg, z_deg, false)
     end
 end
 
@@ -282,17 +310,6 @@ function mP(piecename, x_val, y_val, z_val, speed, boolWait)
 end
 
 
--->clamps rotationonal values
-function absoluteRotation(piecename, axis, finalRotation, x_deg, y_deg, z_deg)
-
-    if axis == x_axis then
-        return math.abs(x_deg - finalRotation) % 180
-    elseif axis == y_axis then
-        return math.abs(y_deg - finalRotation) % 180
-    else
-        return math.abs(z_deg - finalRotation) % 180
-    end
-end
 
 -->Turns a Piece on all given axis, snychronously
 function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
@@ -302,14 +319,13 @@ function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
         return
     end
 
+    tx = (absDistance(x, x_deg) + 0.01 )% 180
+    ty = (absDistance(y, y_deg) + 0.01 )% 180
+    tz = (absDistance(z, z_deg) + 0.01 )% 180
 
-    tx = absoluteRotation(piecename, x_axis, x, x_deg, y_deg, z_deg) + 0.01
-    ty = absoluteRotation(piecename, y_axis, y, x_deg, y_deg, z_deg) + 0.01
-    tz = absoluteRotation(piecename, z_axis, z, x_deg, y_deg, z_deg) + 0.01
-
-    xtime = math.abs(tx) / speed
-    ytime = math.abs(ty) / speed
-    ztime = math.abs(tz) / speed
+    xtime = tx / speed
+    ytime = ty / speed
+    ztime = tz / speed
     maxtime = math.max(xtime, math.max(ytime, ztime))
     if maxtime == 0 then maxtime = 0.1 end
 
@@ -319,94 +335,131 @@ function turnSyncInSpeed(piecename, x, y, z, speed, x_deg, y_deg, z_deg)
 end
 
 
--->Turns a piece in the speed necessary to arrive after x Milliseconds - overrirdes the spring shortes path turns
-function turnInTime(piecename, taxis, degree, timeInMs, x_deg, y_deg, z_deg, boolWait)
-    assert(z_deg)
+--returns the minimum absolute Distance to traverse to get to another degree
+function minimalAbsoluteDistance(goalDeg, startDeg)
+	local gDeg, sDeg = goalDeg, startDeg
+
+	modulatedGoalValue= (gDeg % 360.0) + 360.0 -- 330
+	modulatedStartValue= (sDeg % 360.0) + 360.0 --382,5
+
+	absDist =  absDistance(modulatedGoalValue,modulatedStartValue)
+	
+	if absDist > 180 then return 360 - absDist end
+	
+	return absDist
+end
+
+-->Turns a piece in the speed necessary to arrive after x Milliseconds 
+--> overrirdes the spring shortes path turns
+function turnInTime(piecename, taxis, goalDeg, timeInMs, x_startdeg, y_startdeg, z_startdeg, boolWait)
+    assert(z_startdeg)
 
     --Gets the absolute Biggest Rotation
-    absoluteDeg = absoluteRotation(piecename, taxis, degree, x_deg, y_deg, z_deg)
-
+	 startDeg= math.ceil(selectAxisValue( taxis, x_startdeg, y_startdeg, z_startdeg))
+	
+    absoluteDeg = math.ceil(minimalAbsoluteDistance(goalDeg, startDeg))
+	 
     timeInMs = (timeInMs + 1) / 1000
     Speed = (math.abs(math.rad(absoluteDeg)) / math.pi) / (math.abs(timeInMs)) --9.3
 
     if absoluteDeg < 0.0001 then return end
 
     if lib_boolDebug == true then
-        --Spring.Echo(" TurnInTime for"..piecename.." Speed:"..Speed)
-        --Spring.Echo("to reach Degree:"..degree.."with abs deg to go:"..absoluteDeg.. " in times "..timeInMs.. " seconds"	)
+		echo("turn in Time:: start Deg: "..startDeg)
+		echo("turn in Time:: goal Deg:"..goalDeg)
+		echo("turn in Time::  absolute distance:"..absoluteDeg.. " -> in Speed "..Speed)
     end
-
 
     if absoluteDeg <= 180 then
 
-        Turn(piecename, taxis, math.rad(degree), Speed)
-
+        Turn(piecename, taxis, math.rad(goalDeg), Speed)
         if boolWait and boolWait == true then WaitForTurn(piecename, taxis) end
 
     else
-        OverTurnDirection(piecename, taxis, degree, Speed)
+        OverTurnDirection(piecename, taxis, goalDeg, Speed,  startDeg)
         if boolWait and boolWait == true then Sleep(10); WaitForTurn(piecename, taxis) end
     end
 end
-
--->Turns along a direction, ignoring the spring shortest way implementation
-function OverTurnDirection(piecename, axis, degree, speed)
-    x_deg, y_deg, z_deg = Spring.GetPieceRotation(piecename)
-
-    curdeg = 0;
-    if axis == x_axis then
-        curdeg = x_deg
-    elseif axis == y_axis then
-        curdeg = y_deg
-    else curdeg = z_deg
-    end
-    curdeg = math.rad(curdeg)
-
-    dir = 1
-
-    if curdeg + 360 < degree + 360 then
-        dir = -1
-    end
-
-    Turn(piecename, axis, math.rad(curdeg + 179 * dir), speed)
-    WaitForTurn(piecename, axis)
-    Turn(piecename, axis, math.rad(degree), Speed)
-    WaitForTurn(piecename, axis)
+function selectAxisValue( taxis, x_deg, y_deg, z_deg)
+	if taxis == x_axis then return x_deg end
+	if taxis == y_axis  then return y_deg end
+	if taxis == z_axis  then return z_deg end
+	echo("Error: selectAxisValue - Axis not defined")
+end
+function proportionToSignum(start,goal)
+	if goal >= start then return -1 end
+	
+	return 1 
 end
 
-function tSyncIn(piecename, x_val, y_val, z_val, times, UnitScript)
-    x_deg, y_deg, z_deg = UnitScript.GetPieceRotation(piecename)
-    syncTurnInTime(piecename, x_val, y_val, z_val, times, x_deg, y_deg, z_deg)
+-->Turns along a direction, ignoring the spring shortest way implementation
+function OverTurnDirection(piecename, axis, goalDeg, speed,  startDeg)
+	dirSign = proportionToSignum(startDeg, goalDeg)
+
+	
+	asyncTurn = function()
+					value = startDeg + 180 * dirSign
+					Turn(piecename, axis, math.rad(value), speed)
+					WaitForTurn(piecename, axis)
+					echo("Turn 180 °")
+					Turn(piecename, axis, math.rad(goalDeg), speed)
+					WaitForTurn(piecename, axis)
+					echo("Turn Final")
+				end
+	 StartThread(asyncTurn)
+end
+
+--> turns sync in time no matter what kind of orientation the piece currently holds
+function tSyncIn(piecename, x_val, y_val, z_val, timeMS, UnitScript)
+    x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(piecename)		
+    syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
 end
 
 -->Turns a piece on every axis in times 
-function syncTurnInTime(piecename, x_val, y_val, z_val, times, x_deg, y_deg, z_deg)
+function syncTurnInTime(piecename, x_goaldeg, y_goaldeg, z_goaldeg, timeMS, x_curdeg, y_curdeg, z_curdeg)
     if lib_boolDebug == true then
         --Spring.Echo("times for syncTurnInTime:"..times)
     end
-
-    turnInTime(piecename, 1, (x_val), times, x_deg, y_deg, z_deg, false) -- -28 3000
-    turnInTime(piecename, 2, (y_val), times, x_deg, y_deg, z_deg, false)
-    turnInTime(piecename, 3, (z_val), times, x_deg, y_deg, z_deg, false)
+	
+	if x_goaldeg ~= x_curdeg then
+		turnInTime(piecename, 1, (x_goaldeg), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
+	end
+	if y_goaldeg ~= y_curdeg then
+		turnInTime(piecename, 2, (y_goaldeg), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
+	end
+	if z_goaldeg ~= z_curdeg then
+		turnInTime(piecename, 3, (z_goaldeg), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
+	end
+	
+	
 end
 
 --> Move a piece so that it arrives at all axis on the given times
 function syncMoveInTime(piecename, x_val, y_val, z_val, times)
-    times = times / 1000
+    times = (math.abs(times)+1 / 1000)
     --ratio = 1/(val/max)*times => max*times / val
     Move(piecename, 1, x_val, math.abs(x_val / times))
     Move(piecename, 2, y_val, math.abs(y_val / times))
     Move(piecename, 3, z_val, math.abs(z_val / times))
 end
 
+function unZero(val)
+	if val== 0 then return 0.00001 end
+return val
+end
 --> Move a piece so that it arrives at the same times on all axis
 function syncMove(piecename, x_val, y_val, z_val, speed)
-    max = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
-    times = math.abs(max / speed)
+    maxs = math.max(math.abs(x_val), math.max(math.abs(z_val), math.abs(y_val)))
+    if maxs < 1  then maxs = 1 end
+
     --ratio = 1/(val/max)*times => max*times / val
-    Move(piecename, x_axis, (x_val), (max * times / x_val) * speed)
-    Move(piecename, y_axis, (y_val), (max * times / y_val) * speed)
-    Move(piecename, z_axis, (z_val), (max * times / z_val) * speed)
+	speedX = ( maxs/unZero(x_val) ) * speed
+	speedY = ( maxs/unZero(y_val) ) * speed
+	speedZ = ( maxs/unZero(z_val) ) * speed
+	
+	Move(piecename, x_axis, (x_val), math.abs(speedX))
+    Move(piecename, y_axis, (y_val), math.abs(speedY))
+    Move(piecename, z_axis, (z_val), math.abs(speedZ))
 end
 
 
@@ -421,6 +474,8 @@ end
 
 -->Spins a Table
 function spinT(Table, axis, speed, rdeg, degup)
+	if type(Table) == "number" then val = math.random(rdeg,rdeg+degup);Spin(Table,axis,math.rad(val),speed) end
+
     if not degup then
         for k, v in pairs(Table) do
             if v then
@@ -443,12 +498,23 @@ function stopSpinT(Table, axis, speed)
     end
 end
 
+--> Stops Spinning Table
+function stopSpins(arg,speed)
+        StopSpin(arg, 1, speed)
+        StopSpin(arg, 2, speed)
+        StopSpin(arg, 3, speed)
+end
+
 -->Moves a UnitPiece to Position in Unitspace at speed
-function MovePieceToPos(piecename, X, Y, Z, speed)
+function MovePieceToPos(piecename, X, Y, Z, speed, boolWaitForIt)
 
     Move(piecename, x_axis, X, speed)
     Move(piecename, y_axis, Y, speed)
     Move(piecename, z_axis, Z, speed, true)
+
+    if not boolWaitForIt or boolWaitForIt == true then
+        WaitForMoves(piecename)
+    end
 end
 
 -->Helperfunction of recursiveAddTable -> builds a bonesubsystem
@@ -596,58 +662,73 @@ function moveExpPiece(piece, axis, targetPos, startPos, increaseval, startspeed,
     end
 end
 
+function relDist(pos, target)
+	rDist = 0 
+	-- pos + target +
+	if pos > 0 and target > 0 then
+	--pos > target
+	rDist = math.abs(target - pos)
+	if pos > target then rDist = rDist*-1 end
+	end
+ 
+	-- pos - target -
+ 	if pos < 0 and target < 0 then
+	--pos > target
+	rDist = math.abs(math.abs(target) - math.abs(pos))
+	if pos < target then rDist = rDist*-1 end
+	end
+	
+	-- pos - target +
+	if pos < 0 and target > 0 then
+   rDist= math.abs(pos)+target
+   end
+   
+   -- pos - target +
+	if pos > 0 and target < 0 then
+   rDist= (math.abs(target)+pos)*-1
+   end   
+
+    return rDist
+end
+
+
+
+function echoLine()
+Spring.Echo("=============================================================")
+end
+
+function getOrgPosPiece(unitID, pieceName)
+	resultTable= Spring.GetUnitPieceInfo(unitID,pieceName)
+	
+	return resultTable.offset[1],resultTable.offset[2],resultTable.offset[3]
+end
+
 -->Moves a UnitPiece to a UnitPiece at speed
-function movePieceToPieceAlt(piecename, pieceDest, speed, offset, forceUpdate)
-
+function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset)
+    speed = speed or 0
+	 offset = offset or {x= 0, y= 0, z= 0}
+	
     if not pieceDest or not piecename then return end
+    orgx, orgy, orgz = getOrgPosPiece(unitID, piecename) --TODO rework
+   -- echo("piecepos:", orgx, orgy, orgz)
 
-    ox, oy, oz = Spring.GetUnitPiecePosition(unitID, pieceDest)
-    orx, ory, orz = Spring.GetUnitPiecePosition(unitID, piecename)
-
-    dirSignX, dirSignY, dirSignZ = 1, 1, 1
-    dirValX, dirValY, dirValZ = 1, 1, 1
-
-    if sigN(ox) < sigN(orx) then dirSignX = -1 end
-    if sigN(oy) < sigN(ory) then dirSignY = -1 end
-    if sigN(oz) < sigN(orz) then dirSignZ = -1 end
-
-    if sigN(ox) == sigN(orx) then
-        ox = math.abs(ox - orx) * dirSignX
-    else
-        ox = (math.abs(ox) + math.abs(orx)) * dirSignX
-    end
-
-    if sigN(oy) == sigN(ory) then
-        oy = math.abs(oy - ory) * dirSignY
-    else
-        oy = (math.abs(oy) + math.abs(ory)) * dirSignY
-    end
-
-    if sigN(oz) == sigN(orz) then
-        oz = math.abs(oz - orz) * dirSignZ
-    else
-        oz = (math.abs(oz) + math.abs(orz)) * dirSignZ
-    end
-
-    ox = ox * -1
-    if offset then
-        ox = ox + (offset.x)
-        oy = oy + offset.y
-        oz = oz + offset.z
-    end
-
-    --	echoMove(piecename, ox,oy,oz)
-    Move(piecename, x_axis, ox, 0)
-    Move(piecename, y_axis, oy, 0)
-    Move(piecename, z_axis, oz, 0, forceUpdate or true)
+    gox, goy, goz = Spring.GetUnitPiecePosition(unitID, pieceDest)
+  --  echo("PieceDestPos:", gox, goy, goz)
+    diffx, diffy, diffz = relDist(orgx, gox), relDist(orgy, goy), relDist(orgz, goz)
+   -- echo("Diff:", -1*diffx,  diffy, diffz)
 
 
-    WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
+   syncMove(piecename, -1* diffx +offset.x,  diffy + offset.y,  diffz+ offset.z, speed)
+
+   WaitForMoves(piecename)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
 function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpdate)
     reset(piecename, 0) --last changeset
+
+    speed = speed or 0
+
     if not pieceDest or not piecename then return end
 
     ox, oy, oz = Spring.GetUnitPiecePosition(unitID, pieceDest)
@@ -664,13 +745,15 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
     end
 
     --	echoMove(piecename, ox,oy,oz)
-    Move(piecename, x_axis, ox, 0)
-    Move(piecename, y_axis, oy, 0)
-    Move(piecename, z_axis, oz, 0, forceUpdate or true)
+    Move(piecename, x_axis, ox, speed)
+    Move(piecename, y_axis, oy, speed)
+    Move(piecename, z_axis, oz, speed, forceUpdate or true)
 
 
     WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
 end
+
+
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function moveUnitPieceToGroundPos(unitID, piecename, X, Z, speed, offset)
@@ -809,9 +892,51 @@ function DropPieceToGround(unitID, piecename, speed, boolWait, boolHide, Explode
 end
 
 
+
+
+function generateSknakeOnAPlaneDefaults(cPceDescLst)
+  for iNumerated, arm in ipairs(PceDescLst) do
+
+        if not arm.Piece then echo("libAnimation::snakeOnAPlane - No Valid Piece in Arm"); return end
+
+        armTcX, _, armTcZ,  armTdX, _,armTdZ = Spring.GetUnitPiecePosDir(unitID, arm.Piece)
+        --initialise the arm direction
+        if not arm.cx then arm.cX, arm.cZ = armTcX, armTcZ; end
+        if not arm.dirX then arm.dirX, arm.dirZ = armTdX, armTdZ end
+
+        --length of the piece
+        successorPiece = FirstSensor
+        if PceDescLst[iNumerated + 1] and PceDescLst[iNumerated + 1].Piece then successorPiece = PceDescLst[iNumerated + 1].Piece end
+
+        sucTcX, _, sucTcZ = Spring.GetUnitPiecePosDir(unitID, successorPiece)
+
+        --default arm length per piece
+        if not arm.lx then
+            arm.lx, arm.lz= absDistance(armTcX, sucTcX), absDistance(armTcX, sucTcZ)
+        end
+
+        --set default axis
+        if not arm.ax then
+            if iNumerated ~= 1 then
+                arm.ax, arm.az = true, false
+            else
+                arm.ax, arm.az  = false, true
+            end
+        end
+
+        if not arm.piecelength then
+            if arm.ax == true then arm.piecelength = arm.lx end
+            if arm.az == true then arm.piecelength = arm.lz end
+        end
+
+
+        if not arm.lastPointIndex then arm.lastPointIndex = 0 end
+    end
+return cPceDescLst
+end
 -->Takes a List of Pieces forming a kinematik System and guides them through points on a Plane
 -- ListPiece={
---ArmCenterOffset={ox = 0, oy=0, oz=0}
+--ArmCenterOffset={ox = 0, oy=0}
 --[1]={ 
 -- Piece = pieceName,			
 --CenterPoint - used for a Offset of the Arm to UnitCenter
@@ -822,11 +947,11 @@ end
 -- length of piece 
 -- lX = 25,
 -- lY = 25,
--- lZ = 25,
+
 
 -- dirX,
 -- dirY,
--- dirZ,
+
 --active axis
 -- ax =false, 
 -- ay=true,
@@ -838,68 +963,34 @@ end
 
 -- }
 
--- SnakePoint={ x,y,z -- Worldspace Coordinates
--- vx,vy,vz --VoluminaCube
+-- Window={ x,y -- Worldspace Coordinates
+-- vx,vy --VoluminaCube
 
 -- }
---> solves a kinetic system snaking through goal windows of limited size
+--> solves a kinetic 2D system snaking through goal windows of limited size
 function snakeOnAPlane(unitID, cPceDescLst, FirstSensor, WindowDescriptorList, axis, speed, tolerance, boolPartStepExecution, boolWait)
-    local PceDescLst = cPceDescLst --Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_List
+    local PceDescLst = cPceDescLst --{Piece_Pos_Deg_Length_PointIndex_boolGateCrossed_}List
 
     --early error out
-    if not PceDescLst then echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return end
-    if WindowDescriptorList == nil then echo("libAnimation::snakeOnAPlane - No Valid Goals to move"); return end
-
+    if not PceDescLst then 
+		echo("libAnimation::snakeOnAPlane - No Valid PieceCegTable"); return 
+	end
+	
+    if WindowDescriptorList == nil then 
+		echo("libAnimation::snakeOnAPlane - No Valid Goals to move"); return 
+	end
 
     --Working Defaults
-
     --if not defined ArmCenter - define Arm as centered in UnitSpace
-    if not PceDescLst.ArmCenterOffset then PceDescLst.ArmCenterOffset = { ox = 0, oy = 0, oz = 0 } end
+    if not PceDescLst.ArmCenterOffset then PceDescLst.ArmCenterOffset = { ox = 0, oz = 0 } end
 
     for iNumerated, arm in ipairs(PceDescLst) do
         --TODO
     end
     --total Length arm
     --Preparations and Default Initialisations
-    for iNumerated, arm in ipairs(PceDescLst) do
-
-        if not arm.Piece then echo("libAnimation::snakeOnAPlane - No Valid Piece in Arm"); return end
-
-        armTcX, armTcY, armTcZ, armTdX, armTdY, armTdZ = Spring.GetUnitPiecePosDir(unitID, arm.Piece)
-        --initialise the arm direction
-        if not arm.cx then arm.cX, arm.cY, arm.cZ = armTcX, armTcY, armTcZ; end
-        if not arm.dirX then arm.dirX, arm.dirY, arm.dirZ = armTdX, armTdY, armTdZ; end
-
-        --length of the piece
-        successorPiece = FirstSensor
-        if PceDescLst[iNumerated + 1] and PceDescLst[iNumerated + 1].Piece then successorPiece = PceDescLst[iNumerated + 1].Piece end
-
-        sucTcX, sucTcY, sucTcZ = Spring.GetUnitPiecePosDir(unitID, successorPiece)
-
-        --default arm length per piece
-        if not arm.lx then
-            arm.lx, arm.ly, arm.lz = absDistance(armTcX, sucTcX), absDistance(armTcY, sucTcY), absDistance(armTcZ, sucTcZ)
-        end
-
-        --set default axis
-        if not arm.ax then
-            if iNumerated ~= 1 then
-                arm.ax, arm.ay, arm.az = true, false, false
-            else
-                arm.ax, arm.ay, arm.az = false, true, false
-            end
-        end
-
-        if not arm.piecelength then
-            if arm.ax == true then arm.piecelength = arm.lx end
-            if arm.ay == true then arm.piecelength = arm.ly end
-            if arm.ay == true then arm.piecelength = arm.lz end
-        end
-
-
-        if not arm.lastPointIndex then arm.lastPointIndex = 0 end
-    end
-
+	PceDescLst = generateSknakeOnAPlaneDefaults(PceDescLst)
+	
     --local copy of the ArmTable
     local ArmTable = {}
     for i = 1, #PceDescLst do ArmTable[i] = PceDescLst[i].Piece end
@@ -912,15 +1003,17 @@ function snakeOnAPlane(unitID, cPceDescLst, FirstSensor, WindowDescriptorList, a
     Sensor = FirstSensor
 
     vOrg = {};
-    vOrg.x, vOrg.y, vOrg.z = Spring.GetUnitPiecePosition(unitID, PceDescLst[#PceDescLst].Piece)
+    vOrg.x, vOrg.y, vOrg.z = WindowDescriptorList[1].vx, 0, WindowDescriptorList[1].vz
     echoT(PceDescLst)
+	
     for i = 1, #WindowDescriptorList do
+		
     end
     --func
 
     --Preparations Completed
 
-
+	
 
 
     --Turn the axis towards the goal
@@ -935,9 +1028,7 @@ function snakeOnAPlane(unitID, cPceDescLst, FirstSensor, WindowDescriptorList, a
         boolAlgoRun = false
         while boolAlgoRun == false do
             hypoModel = PceDescLst
-            GlobalIndex = #PceDescLst
-
-
+            GlobalIndex = #PceDescLst   
 
             for Index = #PceDescLst, 1, -1 do
 
@@ -1153,7 +1244,6 @@ function unfoldAnimation(ListOfPieces, specialeffectsfunction, unitID, maxSpeed)
 
     ClosedTable = {}
     AllreadyVisiblePieces[SizeSortedTable[#SizeSortedTable].key] = PieceIDSizeTable[SizeSortedTable[#SizeSortedTable].key]
-    MovePieceoPieceUnitSpace(AllreadyVisiblePieces[1], 0, 0, 0, 0)
     Show(AllreadyVisiblePieces[1])
     ClosedTable[AllreadyVisiblePieces[1]] = true
     local StartPiece = AllreadyVisiblePieces[1]
@@ -1231,8 +1321,8 @@ function dropPieceTillStop(unitID, piece, speedPerSecond, VspeedMax, lbounceNr, 
         mP(piece, vec.x, vec.y, vec.z, factorT * speed)
 
         --shrink vec with sqrt as a approximation for air resistance
-        vec.vx = clampMaxSign(math.sqrt((math.abs(vec.vx) ^ 1.414)) * sigNum(vec.vx), 1)
-        vec.vz = clampMaxSign(math.sqrt((math.abs(vec.vz) ^ 1.414)) * sigNum(vec.vz), 1)
+        vec.vx = clampMaxSign(math.sqrt((math.abs(vec.vx) ^ 1.414)) * Signum(vec.vx), 1)
+        vec.vz = clampMaxSign(math.sqrt((math.abs(vec.vz) ^ 1.414)) * Signum(vec.vz), 1)
 
         --apply a approximation for the decay of movement
         vec.vy = clampMaxSign(1 - (1 / (force + 0.0001)) * (vec.vy), 1)
@@ -1310,6 +1400,40 @@ function turnT(t, axis, deg, speed, boolInstantUpdate, boolWait)
         if boolWait then for i = 1, #t, 1 do WaitForTurn(t[i], axis) end end
     end
     return
+end
+
+--> compares Heading
+function compareHeading(currentHead, headingOld, waitTime, headChangeTolerance)
+
+    waitTime = waitTime or 100
+    headChangeTolerance = headChangeTolerance or 100
+    boolTurnLeft = false
+
+    while (headingOfOld == nil) do
+        Sleep(waitTime)
+        headingOfOld = Spring.GetUnitHeading(unitID)
+    end
+
+    while (currentHead == nil) do
+        currentHeading = Spring.GetUnitHeading(unitID)
+        Sleep(waitTime)
+    end
+
+    headingOld = headingOld
+    currentHead = currentHead
+
+
+    headChange = math.abs(currentHead) - math.abs(headingOld)
+    --unneg the headChange
+
+    headChange = math.abs(headChange)
+
+    if headChange > headChangeTolerance then --or currentHeading < headingOfOld*negativeTolerance
+
+        return true, currentHead - headingOld < 0
+    else
+        return false, boolTurnLeft
+    end
 end
 
 --unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
@@ -1412,7 +1536,8 @@ end
 
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function MovePieceoPieceUnitSpace(unitID, piecename, piecenameB, speed, waitForIt)
+function MovePieceToPiece(unitID, piecename, piecenameB, speed, waitForIt)
+
     if not piecenameB or not piecename then return end
     bx, by, bz = Spring.GetUnitPiecePosition(unitID, piecenameB)
     bx = -1 * bx
@@ -1450,13 +1575,29 @@ function TurnPieceTowardsPiece(piecename, pieceB, speed)
     TurnPieceTowards(piecename, dx, dy, dz, speed)
 end
 
+function getRandomAxis()
+    axis = math.random(0, 3)
+    return axis
+end
+
+function TurnPieceTowardsUnit(piecename, unitToTurnToo, Speed, overrideVec)
+    x, y, z = Spring.GetUnitPosition(unitToTurnToo)
+    TurnPieceTowardsPoint(piecename, x, y, z, Speed, overrideVec.x, overrideVec.y, overrideVec.z)
+end
+--> movePiece to Vector
+
+function mPV(piecename, vector, speed, boolWait)
+mP(piecename, vector.x, vector.y, vector.z, speed, boolWait)
+end
+
 --> Turns a Piece into the Direction of the coords given (can take allready existing piececoords for a speedup
-function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz)
+function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz, limVec)
     pvec = { x = 0, y = 0, z = 0 }
     lox = lox or 0
     loy = loy or 0
     loz = loz or 0
     ox, oy, oz = math.rad(loy), math.rad(lox), math.rad(loz)
+	  limVec = limVec or {x=1, y=1, z=1} --limit or identity
 
 
     px, py, pz, pvec.x, pvec.y, pvec.z = Spring.GetUnitPiecePosDir(unitID, piecename)
@@ -1468,7 +1609,10 @@ function TurnPieceTowardsPoint(piecename, x, y, z, Speed, lox, loy, loz)
     vec = subVector(vec, pvec)
     vec = normVector(vec)
 
-    tPrad(piecename, math.atan2(vec.y, vec.z) + ox, math.atan2(vec.x, vec.z) + oy, math.atan2(vec.x, vec.y) + oz, Speed)
+    tPrad(piecename,  limVec.x * (math.atan2(vec.y, vec.z) + ox), 
+						limVec.y * (math.atan2(vec.x, vec.z) + oy), 
+						limVec.z * (math.atan2(vec.x, vec.y) + oz),
+						Speed)
 end
 
 function tPVector(piece, vec, speed)
@@ -1500,15 +1644,22 @@ function GetSpeed(timeInSeconds, degree)
     return (degRad / timeInSeconds)
 end
 
-
+function resetAll(unitID)
+	pieceList= Spring.GetUnitPieceList(unitID)
+	pieceList = makeKeyPiecesTable(unitID, piece)
+	resetT(pieceList)
+end
 -->Reset a Table of Pieces at speed
-function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate)
+
+function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate, interValStart, interValEnd)
     lboolWait = boolWait or false
     lspeed = speed or 0
+	interValStart= interValStart or 1
+	interValEnd = interValEnd or #tableName
 
     assert(tableName, "libAnimation::resetT: No valid Table")
 
-    for i = 1, #tableName do
+    for i = interValStart, interValEnd do
 
         reset(tableName[i], lspeed, false, boolIstantUpdate)
         if ShowAll and tableName[i] then
@@ -1521,6 +1672,60 @@ function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate)
     end
 end
 
+--> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
+function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
+	shotVector= shotVector*-1
+	echo("TODO unitRipAPieceOut called")
+
+	LimbMap= getPiecesBelow(unitID, rootPiece)
+	stunUnit(unitID, 64)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	env.Hide(rootPiece)
+	env.Explode(rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
+	
+	-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
+	-- spinTime= 0
+	-- parabelFactor=0.5
+	-- env.Spin(rootPiece,x_axis, math.rad(55),0)
+
+		-- movePieceInParabel(unitID, pieceName, vector, factor, parabelLength)
+	
+		-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
+	
+	-- if groundHeigth < 0 then
+		-- stunUnit(unitID, 0)
+		-- if boolSurvivorHeCanTakeIt == true then
+			-- hideT(LimbMap)
+		-- else
+			-- Spring.DestroyUnit(unitID, false, false)
+		-- end 
+	-- end 
+	
+end
+
+function rippleHide(array,startIndex, endIndex)
+	for i= startIndex,endIndex do
+	Hide(array[i])
+	Sleep(600)
+		if array[i-1] then
+			Show(array[i-1])
+		end
+	end
+end
+function movePieceInParabel(unitID, pieceName, yDegreeOffset, xDegreeOffset, valueToGo, valueStart, offsetY, steepness, env, speed)
+	px, py, pz=Spring.GetUnitPiecePosDir(unitID, pieceName)
+	
+	y = -1* (steepness * math.min(valueStart, valueToGo)^2 ) + offSetY
+	y = Rotate(0, y, xDegreeOffset) 	
+	x = Rotate(0, valueToGo, yDegreeOffset)
+	
+	env.MovePieceToPos(unitID, pieceName, x, y, z)
+	
+	--TODO rotation matric on result Values
+	return px, py + y, pz
+end
+
+
 -->Recursively Resets Tables
 function recResetT(Table, speed)
     if type(Table) == "table" then
@@ -1532,10 +1737,18 @@ function recResetT(Table, speed)
     end
 end
 
+--> Resets a piece
 function reset(piecename, speed, boolWaitForIT, boolIstantUpdate)
     if not piecename then return end
-    if type(piecename) ~= "number" then Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename); assert(true == false); end
+    if type(piecename) ~= "number" then 
+		Spring.Echo("libAnimation::reset:Invalid piecename-got " .. piecename .. " of type " .. type(piecename) .. " instead"); 
+		assert(true == false); 
+		end
     bIstantUpdate = boolIstantUpdate or true
+    StopSpin(piecename, x_axis, 0, speed)
+    StopSpin(piecename, y_axis, 0, speed)
+    StopSpin(piecename, z_axis, 0, speed)
+	
     Turn(piecename, x_axis, 0, speed)
     Turn(piecename, y_axis, 0, speed)
     Turn(piecename, z_axis, 0, speed)
@@ -1644,7 +1857,6 @@ function waveATable(Table, axis, lfoonction, lsignum, lspeed, lfuncscale, ltotal
 
     if type(Table) ~= "table" then return end
 
-
     func = lfoonction or function(x) return x end
     signum = lsignum or 1
     speed = lspeed or 1
@@ -1688,11 +1900,235 @@ function getTableAccessor(xDepth, zDepth, boolRandomize)
         end
     end
     if boolRandomize == true then
-        return randT(resulT)
+        return shuffleT(resulT)
     else
         return resulT
     end
 end
+
+--> get a Piece to follow a Path made of Pieces 
+function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove, boolDirectional, offset)
+	boolWaitForMove = boolWaitForMove or false
+	boolDirectional = boolDirectional or false
+	
+	offset = offset or {x=0,y=0,z=0}
+	
+	for i = 1, #pathTable do
+		pieceNum= pathTable[i]
+			if boolDirectional == true then
+				dx,dy,dz=  UnitScript.GetPieceRotation(pieceNum)		
+				tP(pieceName,dx,dy,dz, speed)		
+			end
+        movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed, offset)
+			
+		if boolWaitForMove == true then
+			WaitForMoves(pieceName)
+		end
+        Sleep(delay)
+    end
+end
+
+
+--================================================================================================================
+--====================================Little Flying Cars  Clockworkanimation======================================
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+function stillMoving(personNr)
+    if (true == Spring.UnitScript.IsInMove(dramatisPersona3d[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona3d[personNr][1], y_axis)) then
+        return true
+
+    else
+        return false
+    end
+end
+
+function typeDependedDriveAnimation(personNr)
+    --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
+
+    while stillMoving(personNr) == true do
+        Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(0.5), 0.02)
+        WaitForTurn(dramatisPersona3d[personNr][2], x_axis)
+        Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(-0.25), 0.02)
+        WaitForTurn(dramatisPersona3d[personNr][2], x_axis)
+    end
+    Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(0), 2)
+
+end
+
+function carSenderJobFunc(dramatisPersona3d, personNr)
+
+    targetDist = 500
+    NtargetDist = -500
+    targetdegree = 90
+    Ntargetdegree = 0
+    targetHeight = 120
+    luckOne = 0
+    if math.random(0, 1) == 1 then
+        luckOne = math.random(12, 50)/10
+    end
+    tempDirAction = 1
+    tempSpeed = dramatisPersona3d[personNr][10]
+    --if car views inside
+    if dramatisPersona3d[personNr][6] == 1 then
+        --move it through the center move along center axis -lower Axis
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(0), 4)
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+
+        dramatisPersona3d[personNr][5] = targetDist
+
+        Move(dramatisPersona3d[personNr][2], z_axis, targetDist, (tempSpeed * 6) + luckOne)
+        tempDirAction = 8
+
+
+    elseif dramatisPersona3d[personNr][6] == 2 then
+        --if car views outside beeing high, turn right, turn along radiant via SwingCenter - +down
+
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(270), 4) --FixMe90
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+
+        dramatisPersona3d[personNr][4] = targetdegree
+        Move(dramatisPersona3d[personNr][2], y_axis, 0, tempSpeed * 1.4)
+        dramatisPersona3d[personNr][13] = 0
+        Turn(dramatisPersona3d[personNr][1], y_axis, math.rad(targetdegree), ((dramatisPersona3d[personNr][10]) / 100) + 0.1) --0.3
+        tempDirAction = 1
+
+    elseif dramatisPersona3d[personNr][6] == 4 then
+
+        --if car turned right nach innen drehen, move along the uper axis
+
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(180), 4)
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+        dramatisPersona3d[personNr][5] = NtargetDist
+        Move(dramatisPersona3d[personNr][2], z_axis, NtargetDist, (tempSpeed * 6) + luckOne)
+        tempDirAction = 2
+    elseif dramatisPersona3d[personNr][6] == 8 then
+
+        Turn(dramatisPersona3d[personNr][2], y_axis, math.rad(-90), 4) --FixMe270
+        WaitForTurn(dramatisPersona3d[personNr][2], y_axis)
+        dramatisPersona3d[personNr][4] = Ntargetdegree
+        Move(dramatisPersona3d[personNr][2], y_axis, targetHeight, tempSpeed * 1.4)
+        dramatisPersona3d[personNr][13] = targetHeight
+        Turn(dramatisPersona3d[personNr][1], y_axis, math.rad(Ntargetdegree), ((dramatisPersona3d[personNr][10]) / 100) + 0.1) --0.3
+        tempDirAction = 4
+    end
+
+    dramatisPersona3d[personNr][6] = tempDirAction
+    Sleep(1000)
+    --if car views outside beeing beeing low turn turn left
+
+    --Enum: inside is 1,
+    --		outside is 2,
+    --		clockwise is 4,
+    -- counterclockwise its 8
+    --Person turned into the direction it is going to walk
+
+    --send the person on its way.
+    typeDependedDriveAnimation(personNr)
+
+    --now we update the current position
+
+    if personNr ~= 11 and personNr ~= 1 and personNr ~= 2 and personNr ~= 3 then
+        dramatisPersona3d[personNr][10] = math.random(7.9, 22)
+    end
+
+    -- we turn the persona into a random direction
+    --randomTurn=math.random(0,360)
+    --Turn(dramatisPersona3d[personNr][1],y_axis,math.rad(randomTurn),dramatisPersona3d[personNr][10])
+
+    -- now we need a Time, and a idleanimation so the person arriving at the ways end, doesent just stands around
+
+    -- we return the random direction
+
+    --finally we set the unit back into jobless mode, so the partymanager can grab it again, and send it on its way
+    dramatisPersona3d[personNr][9] = false
+end
+
+function carStarterKid(dramatisPersona3d)
+    for i = 1, #dramatisPersona3d, 1 do
+        dramatisPersona3d[i][9] = false
+        sleeper = math.random(2000, 25000)
+        Sleep(sleeper)
+        Show((dramatisPersona3d[i][2]))
+    end
+end
+
+--This is the PartyManager - this function decides were everyone goes
+function littleFlyingCars(nrOfCars)
+dramatisPersona3d = initFlyingCars(nrOfCars)
+
+    for i = 1, nrOfCars, 1 do
+        dramatisPersona3d[i][9] = true
+        Hide((dramatisPersona3d[i][2]))
+    end
+
+    --FixMe
+    StartThread(carStarterKid,dramatisPersona3d)
+
+
+    while (true) do
+        for i = 1, nrOfCars, 1 do
+
+            if dramatisPersona3d[i][9] == false then --else the piece is a standaloner on the neverending party allready busy
+                dramatisPersona3d[i][9] = true
+
+                moveInOut = 1
+                degreeRand = 2 --0*360 in 45 degree Steps
+
+                StartThread(carSenderJobFunc, dramatisPersona3d, i)
+            end
+        end
+
+        Sleep(120)
+    end
+end
+
+function initFlyingCars(numberOfActors)
+numberOfActors = numberOfActors or 15
+dramatisPersona3d = {}
+
+
+for i=1, numberOfActors do
+	--personObjects
+	person = {}
+
+	--traditional pieces hiearchy, swingCenter beeing the Center
+	centerString= "swingCenter"..i
+	person[1] = piece(centerString) --swingCenter always atfirstPlace 1
+	pieceString= "car"..i
+
+	person[2] = piece(pieceString)
+	-- a person is defined by the following values: 
+	-- its position in degree and distance 
+
+	person[4] = 0--degree
+	person[5] = 0--dist
+	person[6] = 2
+
+
+	person[7] = false
+
+	-- the type of char (a intvalue that represents the diffrent purposes 
+	--Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, aircar= 7, airtruck=8
+	person[8] = 7
+	--boolean on its way (has a thread, even if it is just to idle 
+	person[9] = false
+	-- speedvalue of the the person
+
+	person[10] =  math.random(1.9, 8)
+	--numberOfPieces
+	person[11] = 1
+	person[12] = 1
+	--its height in the 3dmatrixgrid
+	person[13] = 0
+
+	dramatisPersona3d[#dramatisPersona3d+1] = person
+
+end
+return dramatisPersona3d
+end
+
+
 
 --================================================================================================================
 --================================================================================================================
