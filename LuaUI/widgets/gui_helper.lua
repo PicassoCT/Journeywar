@@ -16,3 +16,29 @@ function upByRow(str,num)
 	end
 	return str
 end
+
+ function GetModKeys()
+	
+	local alt, ctrl, meta, shift = Spring.GetModKeyState()
+	
+	if Spring.GetInvertQueueKey() then -- Shift inversion
+		shift = not shift
+	end
+	
+	return alt, ctrl, meta, shift
+end
+
+ function GetCmdOpts(alt, ctrl, meta, shift, right)
+	
+	local opts = { alt=alt, ctrl=ctrl, meta=meta, shift=shift, right=right }
+	local coded = 0
+	
+	if alt then coded = coded + CMD_OPT_ALT end
+	if ctrl then coded = coded + CMD_OPT_CTRL end
+	if meta then coded = coded + CMD_OPT_META end
+	if shift then coded = coded + CMD_OPT_SHIFT end
+	if right then coded = coded + CMD_OPT_RIGHT end
+	
+	opts.coded = coded
+	return opts
+end

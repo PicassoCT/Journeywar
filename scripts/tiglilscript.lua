@@ -10256,7 +10256,7 @@ function AmbushCounterThread()
     boolAmbushCharged = true
     Spring.Echo("AmbushReady")
 end
-
+oldStates = Spring.GetUnitStates(unitID)
 boolCloaked = false
 function cloakCheckAndAmbushLoad()
     local boolPrevCloaked = false
@@ -10272,6 +10272,7 @@ function cloakCheckAndAmbushLoad()
             SIGNAL(SIG_IDLE)
             if boolPeacefull == true then
                 StartThread(AmbushCounterThread)
+						oldStates = Spring.GetUnitStates(unitID)
                 GiveOrderToUnit(unitID, CMD.FIRE_STATE, { 0 }, {})
                 GiveOrderToUnit(unitID, CMD.MOVE_STATE, { 0 }, {})
                 boolPrevCloaked = true
@@ -10289,8 +10290,8 @@ function cloakCheckAndAmbushLoad()
             SetUnitValue(COB.WANT_CLOAK, 0)
             SetUnitValue(COB.CLOAKED, 0)
             boolPrevCloaked = false
-            GiveOrderToUnit(unitID, CMD.FIRE_STATE, { 2 }, {})
-            GiveOrderToUnit(unitID, CMD.MOVE_STATE, { 1 }, {})
+			Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {oldStates.firestate}, {}) 
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {oldStates.movestate}, {})
             Signal(SIG_AMBUSH)
             if boolAmbushCharged == true then
                 StartThread(AmbushinProgressThread)

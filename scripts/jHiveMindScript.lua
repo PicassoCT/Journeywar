@@ -12,7 +12,7 @@ IntegrationRadius= 150
 
 center = piece "center"
 aimpiece = piece "aimpiece"
-
+TIME_MAX = 1000 *10
 teamID = Spring.GetUnitTeam(unitID)
 function instanciate()
 	if not GG.HiveMind then GG. HiveMind = {} end
@@ -25,6 +25,7 @@ function script.Create()
     generatepiecesTableAndArrayCode(unitID)
     TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
 	StartThread(integrateNewMembers)
+	StartThread(showState)
 end
 
 function script.Killed(recentDamage, _)
@@ -41,7 +42,7 @@ function integrateNewMembers()
 	process(InCircle,
 			function(id)
 				defID = Spring.GetUnitDefID(id)
-				if integrateAbleUnits[defID] then
+				if integrateAbleUnits[defID] and GG.HiveMind[teamID][unitID].rewindMilliSeconds  < TIME_MAX then
 					GG.HiveMind[teamID][unitID].rewindMilliSeconds = GG.HiveMind[teamID][unitID].rewindMilliSeconds + 100
 					Spring.DestroyUnit(id, true, true)
 				end
@@ -52,17 +53,25 @@ function integrateNewMembers()
 
 end
 
+heigthPagode=15
+function showState()
+	while true do
+	level = math.ceil(GG.HiveMind[teamID][unitID].rewindMilliSeconds / 1000)
+	WMove(center, y_axis, level * heigthPagode, 5)
+	Sleep(100)
+	end
+end
 
+SIG_SLOWMO = 2
 function slowMo()
+	SetSignalMask(SIG_SLOWMO)
 	GG.HiveMind[teamID][unitID].boolActive = true
 
-	Spring.TodoHiveMindSound
 	while GG.HiveMind[teamID][unitID].rewindMilliSeconds > 0 do
 	Sleep(100)
-	GG.HiveMind[teamID][unitID].rewindMilliSeconds =GG.HiveMind[teamID][unitID].rewindMilliSeconds - 100
+	GG.HiveMind[teamID][unitID].rewindMilliSeconds =math.max(0,GG.HiveMind[teamID][unitID].rewindMilliSeconds - 100)
 	end
 
-	Spring.TODOUptoSpeedSound
 	GG.HiveMind[teamID][unitID].boolActive = false
 
 end
@@ -98,13 +107,11 @@ function script.Activate()
 end
 
 function script.Deactivate()
-
+	Signal(SIG_SLOWMO)
+	GG.HiveMind[teamID][unitID].boolActive = false
+	
     return 0
 end
 
-function script.QueryBuildInfo()
-    return center
-end
 
-Spring.SetUnitNanoPieces(unitID, { center })
 
