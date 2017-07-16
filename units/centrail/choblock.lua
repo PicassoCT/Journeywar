@@ -19,9 +19,18 @@ maxdamage=150,
 	MakesMetal = 5, 
 	MetalMake = 0,	
 nanocolor=[[0 0.9 0.9]],
-
+	canattack=true,
 	explodeAs="citadelldrone",
 	selfDestructAs="cartdarkmat", 
+		
+	weapons = {
+		[1]={name = "ccitadelltur",
+			onlyTargetCategory = [[LAND AIR]],
+		},
+		[2]={name = "ccitadelltur",
+			onlyTargetCategory = [[LAND AIR]],
+		}
+		},
 }
 
 return lowerkeys({ [unitName] = unitDef })
