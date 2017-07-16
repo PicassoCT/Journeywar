@@ -26,6 +26,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				if data.boolActive == true then
 				tableTeamsActive[team]=unit
 				boolActive =true
+				end
 			end
 		end
 		
