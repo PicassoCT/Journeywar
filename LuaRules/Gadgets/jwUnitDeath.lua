@@ -158,7 +158,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	blooddecals={"blooddecalfactory","blooddecalfactory1","blooddecalfactory2","blooddecalfactory3","blooddecalfactory4"}
 	local spGetUnitPosition=Spring.GetUnitPosition
-	local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","advisor","zombie","bg2","jhivehoundmoma"})
+	local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","advisor","zombie","bg2","jhivewulfmoma"})
 	local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","jcrabcreeper","jconroach","vort","jvaryfoo"})
 	
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)

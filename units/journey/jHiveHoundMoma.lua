@@ -1,6 +1,6 @@
 local unitName = "jHiveWulfMoma"
 local unitDef = {
-	objectName="jHiveHoundMoma.s3o",
+	objectName="HiveHoundMoma.s3o"
 	
 	name               = "Wulfhive",
 	Description 		 ="Ranged Ground-Assault Unit ",

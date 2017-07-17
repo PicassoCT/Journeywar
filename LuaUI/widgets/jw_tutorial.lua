@@ -131,7 +131,7 @@ TutorialInfoTable= {
 	[UnitDefNames["jbeherith"].id] = {text = "\a|Beherith \nAmphibious Island able to transport units and \ngo into a Amokstampede"},
 	[UnitDefNames["jeliah"].id] = {text = "\a|Eliah \n Born again Laserbutterfly"},
 	[UnitDefNames["jghostdancer"].id] = {text = "\a|Ghostdancer \n Scout and harassing unit.\n Backtracks on damage"},
-	[UnitDefNames["jhivehoundmoma"].id] = {text = "\a|Hivehounds \n Ground harass unit"},
+	[UnitDefNames["jhivewulfmoma"].id] = {text = "\a|Hivehounds \n Ground swarm unit"},
 	[UnitDefNames["vort"].id] = {text = "\a|Vortigaunt \n Teleporting Alien warrior"},
 	[UnitDefNames["jantart"].id] = {text = "\a|Firt Anthill \n Artillery firing ant-weddings"},
 	[UnitDefNames["jhunter"].id] = {text = "\a|Huntersynth \n Strike and Retreat unit."},

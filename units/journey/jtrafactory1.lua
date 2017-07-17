@@ -48,7 +48,7 @@ local unitDef = {
 	buildoptions = 
 	{
 		"jtigeggnogg","jskineggnogg","jghostdancer",
-		"jhivehoundmoma","vort", "jantart",
+		"jhivewulfmoma","vort", "jantart",
 		"jhunter","jupgradefactory1"
 	},
 	
