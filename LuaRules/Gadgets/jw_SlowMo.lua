@@ -16,6 +16,7 @@ if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_UnitScript.lua")
     VFS.Include("scripts/lib_Build.lua")
     VFS.Include("scripts/lib_jw.lua")
+	VFS.Include("luaui/widgets/gui_lib/gui_helper.lua")
 
 	--check for active HiveMinds and AI Nodes
 	function areHiveMindsActive()
@@ -140,7 +141,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 else --Unsynced
-	VFS.Include("LuaUI/widgets/gui_lib/gui_helper.lua")
 
 	formerCommandTable={}
 	alt, ctrl, meta, shift,left,right =0,0,0,0

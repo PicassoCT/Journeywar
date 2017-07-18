@@ -17,7 +17,9 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 
     function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
-        Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name .. " destroyed by "..UnitDefs[attackerDefID].name)
+		if UnitDefs[unitDefID] then
+			Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name )
+		end
     end
 
     function gadget:UnitCreated(unitID, unitDefID)

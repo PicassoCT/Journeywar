@@ -1,5 +1,7 @@
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
+if not Spring.Utilities then Spring.Utilities = {} end
+
 --deep not safe with circular tables! defaults To false
 function Spring.Utilities.CopyTable(tableToCopy, deep)
   local copy = {}

@@ -17,7 +17,7 @@ local weaponDef = {
     sizeGrowth = 0.25,
     fallOffRate = 1,
     fireStarter = 100,
-    Texture0 = "",
+
     --	cegTag = [[fireStarter]],
     -- soundstart = "flamethrower.wav",
     FireSubmersed = false,
