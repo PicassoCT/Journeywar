@@ -30,7 +30,7 @@ local controllCommand_window
 local activeCommand = 0
 
 VFS.Include("LuaUI/widgets/guiEnums.lua")
-VFS.Include("LuaUI/widgets/gui_helper.lua")
+VFS.Include("LuaUI/widgets/gui_lib/gui_helper.lua")
 ---------------------------------------------------------------------------------------
 
 
