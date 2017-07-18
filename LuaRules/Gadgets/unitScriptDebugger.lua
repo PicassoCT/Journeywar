@@ -9,7 +9,7 @@ function gadget:GetInfo()
         license = "Free",
         layer = 109,
         version = 1,
-        enabled = false
+        enabled = true
     }
 end
 
@@ -17,10 +17,10 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 
     function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
-        Spring.Echo(Spring.GetGameFrame() .. " -> " .. UnitDefs[unitDefID].name .. " destroyed")
+        Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name .. " destroyed by "..UnitDefs[attackerDefID].name)
     end
 
     function gadget:UnitCreated(unitID, unitDefID)
-        Spring.Echo(Spring.GetGameFrame() .. " -> " .. UnitDefs[unitDefID].name .. " created")
+        Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name .. " created")
     end
 end
