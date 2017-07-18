@@ -36,7 +36,7 @@ local weaponDef = {
     soundStart = "strider/striderwarpfired",
     soundHit = "strider/striderwarpexplo",
     soundtrigger = 1,
-    startsmoke = 1,
+
     coreThickness = 0.3,
     thickness = 2.5,
     rgbColor = [[0.27 0.3 1]],

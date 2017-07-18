@@ -311,9 +311,8 @@ function TelePortation()
 end
 
 Charged = 0
-ChargeMax = 
-Timer = TIMETOCHARGE
-Experience = 1
+
+TIMETOCHARGE = 15000
 
 function reactor()
 	while true do

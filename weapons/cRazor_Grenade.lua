@@ -2,7 +2,6 @@ local weaponName = "crazorgrenade"
 local weaponDef = {
     name = "crazorgrenade",
     weaponType = [[Cannon]],
-    description = "Grenade",
     highTrajectory = 1,
 
 
