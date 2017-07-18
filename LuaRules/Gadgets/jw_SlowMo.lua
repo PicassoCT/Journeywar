@@ -3,10 +3,11 @@ function gadget:GetInfo()
         name = "SlowMotion",
         desc = "This gadget coordinates gamespeed sets by hiveMinds and AI-Nodes",
         author = "PicassoCT",
-        date = "Sep. 2008",
+        date = "Juli. 2017",
         license = "GNU GPL, v2 or later",
-        layer = 0,
-        enabled = true,
+		layer = math.huge,
+		handler = true,
+        enabled = true
     }
 end
 
@@ -65,7 +66,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 		if frame == startFrame then
 		oldGameSpeed = Game.Gamespeed
-		Spring.PlaySound("sounds/hivemind/slowMoStart.ogg",1.0)
+		Spring.PlaySoundFile("sounds/hivemind/slowMoStart.ogg",1.0)
 		end
 		
 		--SlowMoPhase
@@ -139,7 +140,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 else --Unsynced
-	VFS.Include("LuaUI/widgets/gui_helper.lua")
+	VFS.Include("LuaUI/widgets/gui_lib/gui_helper.lua")
 
 	formerCommandTable={}
 	alt, ctrl, meta, shift,left,right =0,0,0,0
