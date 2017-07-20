@@ -3,7 +3,7 @@ local unitName = "jhivemind"
 local unitDef = {
 	name = "Hivemind",
 	Description = " allows for the rewinding into another branch of history",
-	objectName = "placeholder.s3o",
+	objectName = "jHiveMind.s3o",
 	script = "jHiveMindScript.lua",
 	buildPic = "jdragongrass.png",
 	--cost

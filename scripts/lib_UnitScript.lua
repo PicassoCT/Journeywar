@@ -1039,14 +1039,9 @@ function randFairT(T, candidatesInInterval, everyNthElement)
 	return tagYourIt
 end
 
-function gamblersDice(Size)
-GG.GamblersFalacyDice
-
-
-end
 
 function randChance(likeLihoodInPercent)
-return math.random(1,100) <= likeLihoodInPercent
+	return (math.random(1,100) <= likeLihoodInPercent)
 end
 
 --> returns a randomized Signum
