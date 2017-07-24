@@ -474,6 +474,7 @@ function widget:GameFrame(f)
 		
 		local udid = Spring.GetUnitDefID(unitID)
 		local ud = UnitDefs[udid]
+		if not ud then Spring.Echo("No Unitdef for Unit: "..unitID); return end
 		--update Unit Experience
 		xp= Spring.GetUnitExperience(unitID)
 		if xp then

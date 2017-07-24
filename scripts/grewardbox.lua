@@ -10,6 +10,7 @@ function PositionChecked()
         tx, ty, tz = Spring.GetUnitPosition(unitID)
 
         if math.abs(x - tx) + math.abs(z - tz) > 120 then boolMeasure = false end
+	Sleep(100)
     end
 
     oldx, oldy, oldz = 0, 0, 0
@@ -27,8 +28,9 @@ function PositionChecked()
                 end
             end
         end
-        Sleep(100)
+
         oldx, oldy, oldz = x, y, z
+      Sleep(100)	
     end
 end
 

@@ -901,6 +901,7 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 					return true
 				end		
 		else
+			valueType= type(value)
 			echo("Assert Table Error: Table did not contain a value of type "..valueType.." for key :"..key)
 			assert(true==false)
 		end
@@ -4648,9 +4649,9 @@ function transferUnitStatusToUnit(unitID, targetID)
     Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
 
-function createUnitAtPiece(unitID, typeID, Piece)
+function createUnitAtPiece(unitID, typeID, Piece, team)
  x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(unitID, Piece)
- teamID= Spring.GetUnitTeam(unitID)
+ teamID= team or Spring.GetUnitTeam(unitID)
  return Spring.CreateUnit(typeID, x, y, z, math.ceil(math.random(0, 3)), teamID)
 end
 --> Transforms a selected unit into another type

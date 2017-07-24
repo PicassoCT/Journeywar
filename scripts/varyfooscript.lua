@@ -1160,12 +1160,15 @@ function eatThemAliveWhenNotWalking()
             function(id)
                 if id and type(id) == "number" then
                     defIDid = Spring.GetUnitDefID(id)
-                    if not tabooTable[defIDid] then return id end
+                    if not tabooTable[defIDid] then 
+							return id 
+							end
                 end
             end)
 
         if T and #T > 0 then
             for i = 1, #T do
+				if T[i] and type(T[i]) == "number" then
                 defID = spGetUnitDefID(T[i])
                 if GG.jAbyss_Moma and GG.jAbyss_Moma[unitID] and isInfantry[defID] then
                     MomaWillBeSoProud(T[i], GG.jAbyss_Moma[unitID])
@@ -1197,6 +1200,7 @@ function eatThemAliveWhenNotWalking()
                     end
                 end
             end
+        end
         end
         Sleep(500)
     end

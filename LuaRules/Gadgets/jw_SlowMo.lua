@@ -5,10 +5,10 @@ function gadget:GetInfo()
         author = "PicassoCT",
         date = "Juli. 2017",
         license = "GNU GPL, v2 or later",
-        layer = math.huge,
+        layer = 966,
         handler = true,
-        enabled = true,
-        hidden = true
+        enabled = true
+
     }
 end
 
@@ -17,7 +17,7 @@ if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_UnitScript.lua")
     VFS.Include("scripts/lib_Build.lua")
     VFS.Include("scripts/lib_jw.lua")
-    VFS.Include("LuaUI/widgets/gui_libs/gui_helper.lua")
+    
 
     --check for active HiveMinds and AI Nodes
     function areHiveMindsActive()
@@ -25,16 +25,16 @@ if (gadgetHandler:IsSyncedCode()) then
         tableTeamsActive = {}
         boolActive = false
         for team, uTab in pairs(GG.HiveMind) do
-			if uTab then
-            for unit, data in pairs(uTab) do
-					if type(data) ~="boolean" then
-						if data.boolActive == true then
-                    tableTeamsActive[team] = unit
-                    boolActive = true
-						end
-               end
+            if uTab then
+                for unit, data in pairs(uTab) do
+                    if type(data) ~= "boolean" then
+                        if data.boolActive == true then
+                            tableTeamsActive[team] = unit
+                            boolActive = true
+                        end
+                    end
+                end
             end
-			end
         end
 
         return boolActive, tableTeamsActive
@@ -63,57 +63,57 @@ if (gadgetHandler:IsSyncedCode()) then
 
     oldGameSpeed = 1.0
     effectOffset = 30 * 4
-	DurationInSeconds = 30 * 10	
+    DurationInSeconds = 30 * 10
     --set SlowMotion effect
 
-    function slowMotion( frame, startFrame, endFrame)
-			currentSpeed = 0
+    function slowMotion(frame, startFrame, endFrame)
+        currentSpeed = 0
 
-	
+
         if frame == startFrame then
             Spring.PlaySoundFile("sounds/HiveMind/StartLoop.ogg", 1.0)
-			return 
+            return
         end
 
-		--Slow Down
-		 if frame > startFrame and frame < startFrame +effectOffset then
-			factor = math.ceil( 10*((frame - startFrame) / effectOffset))/10
-		
-			currentSpeed = mix(0.1, 1.0, factor)
-			if Game.gameSpeed > currentSpeed then
-				echo("slowdown to "..factor)
-				Spring.SendCommands("slowdown")	
-			end
-		return
-		end
+        --Slow Down
+        if frame > startFrame and frame < startFrame + effectOffset then
+            factor = math.ceil(10 * ((frame - startFrame) / effectOffset)) / 10
+
+            currentSpeed = mix(0.1, 1.0, factor)
+            if Game.gameSpeed > currentSpeed then
+                echo("slowdown to " .. factor)
+                Spring.SendCommands("slowdown")
+            end
+            return
+        end
 
         --SlowMoPhase
-        if frame >= startFrame+ effectOffset and frame < endFrame then
-    
-				if Game.gameSpeed > 0.1 then
-					Spring.SendCommands("slowdown")	
-				end
+        if frame >= startFrame + effectOffset and frame < endFrame then
 
-				if frame - startFrame % 210 == 0 then
-				   Spring.PlaySoundFile("sounds/HiveMind/journeyloop.ogg", 1.0)
-				end
-			return
+            if Game.gameSpeed > 0.1 then
+                Spring.SendCommands("slowdown")
+            end
+
+            if frame - startFrame % 210 == 0 then
+                Spring.PlaySoundFile("sounds/HiveMind/journeyloop.ogg", 1.0)
+            end
+            return
         end
 
         --Speed up phase
         if frame == endFrame then
             Spring.PlaySoundFile("sounds/HiveMind/EndLoop.ogg", 1.0)
-			return
+            return
         end
 
         if frame >= endFrame and frame <= endFrame + effectOffset and Game.gameSpeed < 1.0 then
             factor = (frame - endFrame) / effectOffset
-				currentSpeed = mix(oldGameSpeed, 0.1, factor)
-				if Game.gameSpeed < currentSpeed then
-					echo("speedup to "..factor)
-					Spring.SendCommands("speedup ")
-				end
-			return 
+            currentSpeed = mix(oldGameSpeed, 0.1, factor)
+            if Game.gameSpeed < currentSpeed then
+                echo("speedup to " .. factor)
+                Spring.SendCommands("speedup ")
+            end
+            return
         end
     end
 
@@ -150,7 +150,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
         boolActive, activeHiveMinds = areHiveMindsActive()
         if boolActive == true then
-		
+
             if boolPreviouslyActive == false then
                 boolPreviouslyActive = true
                 startFrame = n
@@ -161,12 +161,11 @@ if (gadgetHandler:IsSyncedCode()) then
 
             endFrame = n + DurationInSeconds
         elseif boolActive == false and endFrame == n then
-            restoreCursorNonActiveTeams(activeHiveMinds)	
-				boolPreviouslyActive = false
-			end
+            restoreCursorNonActiveTeams(activeHiveMinds)
+            boolPreviouslyActive = false
+        end
 
-        slowMotion( n, startFrame, endFrame)
-	
+        slowMotion(n, startFrame, endFrame)
     end
 
 

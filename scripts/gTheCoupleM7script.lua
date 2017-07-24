@@ -14,6 +14,7 @@ Animations['fightAnimation'] = VFS.Include("Scripts/animations/m7couple/fight.lu
 -- funcs
 --------------------------------------------------------------------------------
 function constructSkeleton(unit, piecen, offset)
+	 if not piecen then  return {} end
     if (offset == nil) then
         offset = { 0, 0, 0 };
     end

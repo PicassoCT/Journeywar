@@ -47,12 +47,7 @@ local unitDef = {
 	
 	Category=[[LAND BUILDING]],	
 	
-	weapons = {
-		[1]={name = "jfungiforrestmarker",
-			onlyTargetCategory = [[ LAND AIR]],
-		},
-		
-	},
+	
 	
 	
 }
