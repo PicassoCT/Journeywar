@@ -30,7 +30,7 @@ local controllCommand_window
 local activeCommand = 0
 
 VFS.Include("LuaUI/widgets/guiEnums.lua")
-VFS.Include("LuaUI/widgets/gui_lib/gui_helper.lua")
+VFS.Include("LuaUI/widgets/gui_libs/gui_helper.lua")
 ---------------------------------------------------------------------------------------
 
 
@@ -274,7 +274,7 @@ MainMenue[CMD.REPEAT].callbackFunction= function()
 		selectedUnits =Spring.GetSelectedUnits()
 		if selectedUnits then
 		states = Spring.GetUnitStates(selectedUnits[1])
-		boolRepeatActive = not states.repeat
+		boolRepeatActive = not states["repeat"]
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {boolRepeatActive}, {})
 		end
 end

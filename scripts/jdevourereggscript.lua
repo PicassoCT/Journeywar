@@ -36,6 +36,8 @@ function attachToCorpse()
 end
 
 function turnTowardsVictim()
+	if not myCorpseID or myCorpseID == -math.huge then return end
+	
 	cx,cy,cz= Spring.GetUnitPosition(myCorpseID)
 	ux,uy,uz= Spring.GetUnitPosition(unitID)
 	cx,cy,cz = ux- cx, uy-cy, uz-cz
@@ -66,7 +68,7 @@ function moveCoreUpAndDown()
 
     while true do
         WMove(Core, y_axis, math.random(0, 1), 3)
-
+			Sleep(10)
         WMove(Core, y_axis, math.random(-4, -2), 3)
     end
 end
@@ -91,9 +93,9 @@ while true do
         lifetime = lifetime + 1000
         myCorpseID = attachToCorpse()
 
-    until lifetime > LIFE_TIME_LIMITED or Spring.ValidUnitID(myCorpseID)
+    until lifetime > LIFE_TIME_LIMITED or Spring.ValidUnitID(myCorpseID) == true 
 
-    if lifetime > LIFE_TIME_LIMITED  then
+    if lifetime > LIFE_TIME_LIMITED or  Spring.ValidUnitID(myCorpseID) == false  then
         retractTentacle()
         Spring.DestroyUnit(unitID, true, true)
     end
@@ -106,7 +108,8 @@ while true do
 			buildAndDeployTroops()
 			Spring.DestroyUnit(unitID, true, true)
 		else
-		    retractTentacle()
+				retractTentacle()
+				initialPose()
 		end
 	end
 
@@ -132,12 +135,11 @@ function buildAndDeployTroops()
 end
 
 function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
-    assertUnit(myCorpseID)
-    assertAlive(myCorpseID)
+	 if Spring.ValidUnitID(myCorpseID) == false or Spring.GetUnitIsDead(myCorpseID) == true then return end
     showT(TablesOfPiecesGroups["tentac"]) --delMe
 
     resetT(T, 0)
-    WMove(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]], y_axis, startOffset * -1, 0)
+    WaitForMoveAllAxis(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]], y_axis, startOffset * -1, 0)
     hideT(TablesOfPiecesGroups["tentac"])
 
     Show(T[1])
@@ -261,8 +263,8 @@ function script.Killed()
     return 0
 end
 
-function initialization()
-    resetAll(unitID)
+function initialPose()
+ resetAll(unitID)
     TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
     hideT(TablesOfPiecesGroups["travelling"])
     hideT(TablesOfPiecesGroups["tentac"])
@@ -271,7 +273,7 @@ function initialization()
     showT(TablesOfPiecesGroups["Pod"])
 
     for i = 1, #TablesOfPiecesGroups["corRing"] do
-        StartThread(shiverOS, TablesOfPiecesGroups["corRing"][i], 0, 2, 0, 2, 0, 2, 1)
+		StartThread(shiverOS, TablesOfPiecesGroups["corRing"][i], 0, 2, 0, 2, 0, 2, 1)
     end
     spinT(TablesOfPiecesGroups["corRing"], z_axis, 5, 12, 25)
     spinT(TablesOfPiecesGroups["corRing"], x_axis, 2, 6, 12)
@@ -279,6 +281,11 @@ function initialization()
     Spin(Core, y_axis, math.rad(15), 65)
     Spin(Core, z_axis, math.rad(42), 65)
 
+
+end
+
+function initialization()
+	 initialPose()
     for i = 1, #TablesOfPiecesGroups["FPod"] do
         StartThread(wiggleOS, TablesOfPiecesGroups["FPod"][i], 3, 6, 3, 6, 3, 6, 5)
     end

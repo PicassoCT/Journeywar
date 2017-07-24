@@ -176,6 +176,8 @@ function widget:Update(dt)
 	if gameOver then
 		return
 	end
+
+
 	if not initialized then
 		math.randomseed(os.clock()* 100)
 		initialized=true

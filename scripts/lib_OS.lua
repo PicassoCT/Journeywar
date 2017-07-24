@@ -462,7 +462,7 @@ function shiverOS(piecename,xDown, xUp, yDown, yUp, zDown, zUp, speed)
 	while true do
 		  mP(piecename,
 						math.random(xDown,xUp), math.random(yDown,yUp), math.random(zDown,zUp), speed)
-			WaitForMove(piecename)
+			WaitForMoves(piecename)
 	end
 
 end

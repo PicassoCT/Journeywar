@@ -316,6 +316,7 @@ heightTable={}
 nPrevDegTable={}
 
 --Keep the ropebase physicaly Resting
+rotationOffset = 0 
 function ropeRelativeResting()
 
 	while true do	
@@ -398,10 +399,20 @@ end
 
 --> Runs a RopeSimulation and turns the 
 function runRopeSim(passengerID)
-TODO(config)
-
+numOfSemgents = 12
+massWeightT = makeTable(10,11)
+springConstant = 0.50
+lengthOfElementT = makeTable(10, 11)
+springFrictionConstant= 0.50
+gravitation = 0.981
+airFrictionConstant = 0.2				
+groundRepulsionConstant =	0.8	
+groundFrictionConstant = 0.3			
+groundAbsorptionConstant =	0.5	
+groundHeight = 10
+		
 RopeSim = RopeSimulation:new(
-		numOfMasses,								--1. the number of masses
+		numOfSemgents ,											--1. the number of masses
 		massWeightT,								--2. weight of each mass
 		springConstant,								--3. how stiff the springs are
 		lengthOfElementT,							--4. the length that a spring does not exert any force
@@ -584,20 +595,6 @@ function TargetInScope()
 	
 end
 
-function constLazzorsEmit()
-	SetSignalMask(SIG_LAS)
-	Sleep(1500)
-	local lEmitSfx=EmitSfx
-	while(boolEmit==true) do
-		
-		Turn(flare,x_axis,math.rad(0),0)
-		Turn(flare,y_axis,math.rad(0),0)
-		Turn(flare,z_axis,math.rad(0),0)
-		lEmitSfx(flare, 2049)
-		--EmitSfx by force
-		Sleep(65)		
-	end
-end
 
 boolMoving= false
 function updateRopeHeading()
@@ -769,8 +766,7 @@ function script.AimWeapon1(heading ,pitch)
 	
 	if boolFireLock== false then
 		boolStillAiming=true	
-		boolEmit=true	
-		StartThread(constLazzorsEmit)
+		
 		--aiming animation: instantly turn the gun towards the enemy
 		Turn(sstowf, y_axis, heading,0.95)
 		Turn(turret2, x_axis, -pitch,0.65)
@@ -785,7 +781,7 @@ function script.AimWeapon1(heading ,pitch)
 end
 
 function script.AimFromWeapon1() 
-	boolEmit=true	
+
 	return turret2 
 end
 
@@ -799,9 +795,14 @@ function script.FireWeapon1()
 	Spring.PlaySoundFile("sounds/csniper/csniper.wav") 
 	boolStillAiming = false
 	boolEmit = false	
+	StartThread(delayedReactivation)
 	return true
 end
 
+function delayedReactivation()
+Sleep(5000)
+boolEmit=true	
+end
 function TargetInScope()
 	SetSignalMask(SIG_SCOPE)
 	Sleep(20000)
@@ -810,16 +811,16 @@ function TargetInScope()
 end
 
 function constLazzorsEmit()
-	SetSignalMask(SIG_LAS)
 	Sleep(1500)
-	
-	while(boolEmit==true) do
+	local lEmitSfx = EmitSfx
+	while(true) do
 		
-		Turn(flare,x_axis,math.rad(0),0)
-		Turn(flare,y_axis,math.rad(0),0)
-		Turn(flare,z_axis,math.rad(0),0)
-		EmitSfx(flare, 2049)
-		
+		if boolEmit == true then
+			Turn(flare,x_axis,math.rad(0),0)
+			Turn(flare,y_axis,math.rad(0),0)
+			Turn(flare,z_axis,math.rad(0),0)
+			lEmitSfx(flare, 2049)
+		end
 		--EmitSfx by force
 		Sleep(65)
 		
@@ -893,7 +894,7 @@ function script.Create()
 	for i=1, #rope do
 		Hide(rope[i])
 	end
-
+	StartThread(constLazzorsEmit)
 end
 
 function script.Killed(recentDamage,_)
@@ -956,7 +957,7 @@ function script.StartMoving()
 		StartThread(spamFilter)	
 		boolFilterActive=true
 	end
-	
+	boolEmit=false	
 	spamfilterSTOP = false
 	spamfilterSTART=true
 	

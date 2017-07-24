@@ -43,4 +43,5 @@ return {
   ["jtree48"]= {active="Deny \n Energy", passive="Sucked\ndry"},
   ["jtree49"]= {active="Deny \n Energy", passive="Sucked\ndry"},
   ["jtyrion"]= {active="Turn\n coat", passive="Traitor"},
+  ["jhivemind"]= {active="Activate\n Hivemind", passive="\n Sacrifes"}
 }

@@ -2,7 +2,7 @@ local unitName = "jhivemind"
 
 local unitDef = {
 	name = "Hivemind",
-	Description = " allows for the rewinding into another branch of history",
+	Description = " sacrifices individuals for a godlike intellect",
 	objectName = "jHiveMind.s3o",
 	script = "jHiveMindScript.lua",
 	buildPic = "jdragongrass.png",
@@ -25,7 +25,8 @@ local unitDef = {
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
 	
-	
+	onoffable=true,
+	ActivateWhenBuilt= false,
 	CanAttack = true,
 	CanGuard = true,
 	
@@ -47,12 +48,7 @@ local unitDef = {
 	
 	Category=[[LAND BUILDING]],	
 	
-	weapons = {
-		[1]={name = "jfungiforrestmarker",
-			onlyTargetCategory = [[ LAND AIR]],
-		},
-		
-	},
+
 	
 	
 }

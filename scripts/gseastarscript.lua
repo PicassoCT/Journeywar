@@ -139,6 +139,16 @@ LowerF = LowerFunction
 inPieces = {}
 
 function script.Create()
+	if not GG.GaiaSeaStarRegistry then GG.GaiaSeaStarRegistry ={} end
+	GG.GaiaSeaStarRegistry[#GG.GaiaSeaStarRegistry +1] = unitID
+	if #GG.GaiaSeaStarRegistry > 20 then 
+		for i=1, #GG.GaiaSeaStarRegistry do
+			if GG.GaiaSeaStarRegistry[i] == unitID then
+			table.remove(GG.GaiaSeaStarRegistry, i)
+			end
+		end
+	GG.UnitsToKill:PushKillUnit(unitID)
+	end
 
     inPieces = Spring.GetUnitPieceMap(unitID)
     resetT(inPieces)
@@ -193,7 +203,7 @@ function FeedMe()
             T = process(T,
                 function(id)
                     uDefid = Spring.GetUnitDefID(id)
-                    if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTyeTable[uDefid]then
+                    if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTyeTable[uDefid ]then
                         return id
                     end
                 end,
@@ -258,7 +268,11 @@ function FeedMe()
 end
 
 function script.Killed(recentDamage, _)
-
+		for i=1, #GG.GaiaSeaStarRegistry do
+			if GG.GaiaSeaStarRegistry[i] == unitID then
+			table.remove(GG.GaiaSeaStarRegistry, i)
+			end
+		end
     createCorpseJUnitGeneric(recentdamage)
     return 1
 end

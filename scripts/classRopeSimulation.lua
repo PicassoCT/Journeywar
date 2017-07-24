@@ -9,7 +9,7 @@ function Mass:new(mass)
 	metaTable = {
 		pos = Vector:new(0,0,0),
 		vel = Vector:new(0,0,0),
-		force = Vector:new(0,0,0)
+		force = Vector:new(0,0,0),
 		m= mass
         }
 		
@@ -25,8 +25,8 @@ function Mass:init()
 end
 
 function Mass:simulate(dt)
-	vel+= (force/m)*dt
-	pos += vel*dt 
+	vel= vel + (force/m)*dt
+	pos = pos + vel*dt 
 end
 
 --[[   	Simulation	]]
@@ -234,4 +234,3 @@ function RopeSimulation:Simulate(dt)
 	masses[0].vel = ropeConnectionVel;	
 end
 
-function RopeSimulation:setRopeConnectionVel

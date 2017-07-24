@@ -67,7 +67,8 @@ local unitDef = {
 		"cdistrictnone","buibaicity2","buibaicity1",
 		"crailgun","sentry","bonker",
 		"cdefusermine",	"chopper","cwatchpost",
-		"efence","comendbonker","ctransithub"
+		"efence","comendbonker","ctransithub",
+		"jhivemind"
 	},
 	
 	sounds = {

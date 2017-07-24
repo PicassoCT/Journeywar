@@ -20,12 +20,9 @@ allTheOtherKidsWithThePumpedUpKicks = {}
 for i = 1, 5, 1 do
 
     allTheOtherKidsWithThePumpedUpKicks[i] = {}
-    allTheOtherKidsWithThePumpedUpKicks[i][1] = {}
-    allTheOtherKidsWithThePumpedUpKicks[i][2] = {}
     temPiece = "exTendril" .. i
     allTheOtherKidsWithThePumpedUpKicks[i][1] = piece(temPiece)
     allTheOtherKidsWithThePumpedUpKicks[i][2] = true
-    Hide(allTheOtherKidsWithThePumpedUpKicks[i][1])
 end
 MaxDistance = 7.6
 teamID = Spring.GetUnitTeam(unitID)
@@ -142,7 +139,7 @@ function growInStages()
     --Show ThirdEgg (Pulsating) + Spin +InsideKicks into X/Z if skinfantry
     while (napple > 0) do
         start = math.random(1, 5)
-        for nr = 1, table.getn(allTheOtherKidsWithThePumpedUpKicks), 1 do
+        for nr = 1, 5, 1 do
             if allTheOtherKidsWithThePumpedUpKicks[nr][2] == true then
                 speedRand = math.random(5, 10)
                 StartThread(exTend, speedRand, 100, 0, start)
@@ -167,6 +164,11 @@ end
 
 
 function script.Create()
+		for i=1, #allTheOtherKidsWithThePumpedUpKicks do
+			if allTheOtherKidsWithThePumpedUpKicks[i][1] then
+			Hide(allTheOtherKidsWithThePumpedUpKicks[i][1])
+			end
+		end
     StartThread(getToWaterLevelPlusBouncing)
     StartThread(growInStages)
 end

@@ -9,7 +9,7 @@ function gadget:GetInfo()
         license = "Free",
         layer = 109,
         version = 1,
-        enabled = true
+        enabled = false
     }
 end
 

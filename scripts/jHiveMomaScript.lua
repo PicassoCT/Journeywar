@@ -902,6 +902,10 @@ function bigMoma()
     end
 end
 
+local spGetUnitPosition = Spring.GetUnitPosition
+local spGetUnitIsDead = Spring.GetUnitIsDead
+local spSetUnitMoveGoal = Spring.SetUnitMoveGoal
+
 function gather()
 	ux, uy, uz = spGetUnitPosition(unitID)
 	process(GG.HiveHoundTable[teamID][unitID],

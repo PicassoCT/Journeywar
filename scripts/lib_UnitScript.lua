@@ -1354,7 +1354,7 @@ end
 
 local countConstAnt = 0
 function mulVector(vl, value)
-	if not type(vl) == "table" then return nil end
+	if not vl  then return nil end
 
     countConstAnt = countConstAnt + 1
     --if not value or type(value)~='number' and #value == 0 then Spring.Echo("JW::RopePhysix::"..countConstAnt)end 
