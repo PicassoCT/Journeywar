@@ -21,23 +21,23 @@ function rewardTheFaithFull()
         x, y, z = Spring.GetUnitPosition(unitID)
         T = getAllInCircle(x, z, 60, unitID, teamid)
         if T and #T > 0 then
-            finderT = Spring.GetUnitTeam(T[1])
-            Spring.AddTeamResource(finderT, "metall", reward)
-            Spring.DestroyUnit(unitID, true, false)
-            break
+				process(T,
+					function(id)
+					defID = Spring.GetUnitDefID(id)
+					if id ~= unitID and defID ~= UnitDefNames["cconaircontainer"].id and defID ~= UnitDefNames["conair"].id  then
+						finderT = Spring.GetUnitTeam(id)
+						Spring.AddTeamResource(finderT, "metall", reward)
+						Spring.DestroyUnit(unitID, true, false)
+					end
+					end
+					)
         end
         timer = timer - 500
         Sleep(500)
     end
     Move(center, y_axis, -50, 2.5)
     WaitForMove(center, y_axis)
-    x, y, z = Spring.GetUnitPosition(unitID)
-    T = getAllInCircle(x, z, 60, unitID, teamid)
-    if T and #T > 0 then
-        finderT = Spring.GetUnitTeam(T[1])
-        Spring.AddTeamResource(finderT, "metall", reward)
-        Spring.DestroyUnit(unitID, true, false)
-    end
+   
 
     Spring.DestroyUnit(unitID, true, false)
 end

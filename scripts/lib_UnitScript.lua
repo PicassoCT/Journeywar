@@ -349,25 +349,33 @@ function rEchoT(T, layer)
     local l = layer or 0
     if T then
         if type(T) == 'table' then
-            Spring.Echo(stringBuilder(" ", l) .. "T:")
+            Spring.Echo(stringBuilder( l, " ") .. "T:")
             for k, v in pairs(T) do
+					Spring.Echo(stringBuilder( l, " ").."Key "..k)					
                 rEchoT(T[k], l + 1)
             end
         else
-            Concated = stringBuilder(" ", math.max(1, l) - 1) .. "|"
+            Concated = stringBuilder( math.max(1, l) - 1, " ") .. "|"
 
             typus = type(T)
             if typus == "number" or typus == "string" then
                 Spring.Echo(Concated .. T)
             elseif typus == "boolean" then
                 Spring.Echo(Concated .. "boolean" .. ((T == true) and "True"))
-            else
-                Spring.Echo(Concated .. "function")
+            elseif typus == "function" then
+                Spring.Echo(Concated .. "function: Result")
+					  rEchoT(T(),layer)
             end
         end
     end
 end
 
+function ringModulu(value, inc,  ringCap , Sign)
+value = value +1* Sign
+if value < 0 or value == ringCap then return value, Sign*-1 end
+ return value, Sign
+
+end
 
 function echoT(T, boolAssertTable, name)
 
@@ -3386,7 +3394,7 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
     if not GG.Dialog then GG.Dialog = {} end
 
     lineBuilder = ""
-    spaceString = stringBuilder(" ", string.len(LineNameTimeT[1].name .. ": " or 5))
+    spaceString = stringBuilder( string.len(LineNameTimeT[1].name .. ": " or 5)," ")
 
     GG.Dialog[UnitID] = {}
     lineBuilder = lineBuilder .. LineNameTimeT[1].name .. ": " .. LineNameTimeT[1].line .. "\n"

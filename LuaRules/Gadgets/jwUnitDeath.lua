@@ -161,7 +161,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","advisor","zombie","bg2","jhivewulfmoma"})
 	local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","jcrabcreeper","jconroach","vort","jvaryfoo"})
 	
-	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
+	function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+
 		if c_infantryTypeTable[unitDefID] then
 			x,y,z=spGetUnitPosition(unitID)
 			name="blooddecal".."factory"
@@ -181,15 +182,21 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end
 		
-		if unitDefID== conAirDefID and attackerID and teamID ~= attackerTeamID then
-			x,y,z=Spring.GetUnitPosition(unitID)
-			vx,vy,vz,vl=Spring.GetUnitVelocity(unitID)
+		if unitDefID == conAirDefID  then
+		
+		 attackerID = Spring.GetUnitLastAttacker(unitID)
+		 if attackerID then
+			attackerTeamID = Spring.GetUnitTeam(attackerID)
+				if attackerTeamID ~= teamID then
+					x,y,z=Spring.GetUnitPosition(unitID)
+					vx,vy,vz,vl=Spring.GetUnitVelocity(unitID)
+					
+					id=Spring.CreateUnit("cconaircontainer",x,y,z,0,teamID)
+					Spring.SetUnitNeutral(id,true)
 			
-			id=Spring.CreateUnit("cconaircontainer",x,y,z,0,teamID)
-			Spring.SetUnitVelocity(id,vx,vy,vz)
-			Spring.SetUnitNeutral(id,true)
-			Spring.SetUnitNoSelect(id,true)
-			
+					
+				end
+			end
 		end
 		
 		if unitDefID== eliahDefID then

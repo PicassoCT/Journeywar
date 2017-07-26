@@ -1024,11 +1024,7 @@ function script.Killed(recentDamage)
 		Hide(condepot)
 	end
 	
-	if buildHealth == 0 then
-		gaia =Spring.GetGaiaTeamID()
-		createUnitAtPiece(unitID, UnitDefNames["grewardbox"].id, condepot, gaia)
-	end
-	
+
 	return 0
 end
 

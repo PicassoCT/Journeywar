@@ -79,7 +79,7 @@ if gadgetHandler:IsSyncedCode() then
     index = 1
     function gadget:GameFrame(n)
   
-        if n > 400 and n % 60 == 0  then
+        if n > 400 and n % 120 == 0  then
 				if #UnitTest == 0 then initialize() end
 				if  UnitTest[index] then
             UnitTest[index]()
