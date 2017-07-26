@@ -36,11 +36,10 @@ fooNction = piece
 piecesTable = makeKeyPiecesTable(unitID, fooNction)
 
 function LiftFunction(KneeT, Speed)
-	Move(center,y_axis, 100,0)
-	while true do
+
 		constOffset = 0
 		seconds = Spring.GetGameSeconds() 
-		piPercent= ((seconds%30)/30)*math.pi
+		piPercent= (((seconds)%300)/300)*math.pi
 		
 		
 		
@@ -51,15 +50,15 @@ function LiftFunction(KneeT, Speed)
 			for i = 1, 5 do
 				relativeDegree= 0
 				
-				relativeDegree = math.ceil((math.sin((seconds)+ i * piPercent) * 15.0) - currentDegree)
+				relativeDegree = math.ceil((math.abs(math.sin((seconds)+ i * piPercent)) * 15.0) - currentDegree)
 				
 				currentDegree = currentDegree + relativeDegree 
 				Turn(Knees[k][i], x_axis, math.rad(relativeDegree), 10)
 			end
 		end
 		WaitForTurnT(TableOfPieceGroups["Feet"])
-		Sleep(1)
-	end
+	
+
 end
 
 function deathTimer()
@@ -186,13 +185,12 @@ function script.Create()
 		sensorTable = sensorT, 
 		ElementWeight = 5, 
 		FeetLiftForce = 3, 
-		LiftFunction = LiftFunction,
+		LiftFunction = LiftF,
 		Height = 32, 
 		WiggleFunc = wiggleFeet, 
 	tipTable = SensorTable }
-	-- StartThread(adaptiveAnimationThreadStarter, configTable, inPieces, 4, unitID)
-	
-	StartThread(LiftFunction)
+	 StartThread(adaptiveAnimationThreadStarter, configTable, inPieces, 4, unitID)
+
 	StartThread(deathTimer)
 	StartThread(FeedMe)
 end
