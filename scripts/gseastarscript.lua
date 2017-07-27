@@ -36,7 +36,7 @@ fooNction = piece
 piecesTable = makeKeyPiecesTable(unitID, fooNction)
 
 function LiftFunction(KneeT, Speed)
-
+while true do
 		constOffset = 0
 		seconds = Spring.GetGameSeconds() 
 		piPercent= (((seconds)%300)/300)*math.pi
@@ -45,9 +45,10 @@ function LiftFunction(KneeT, Speed)
 		
 		
 		for k = 1, 5 do
-			currentDegree = 0
-			Turn(Knees[k][6], x_axis, math.rad(0), 10)
-			for i = 1, 5 do
+			currentDegree = -50
+			Turn(Knees[k][6], x_axis, math.rad(50), 10)
+			Turn(Knees[k][5], x_axis, math.rad(0), 10)
+			for i = 4, 1, -1 do
 				relativeDegree= 0
 				
 				relativeDegree = math.ceil((math.abs(math.sin((seconds)+ i * piPercent)) * 15.0) - currentDegree)
@@ -57,8 +58,9 @@ function LiftFunction(KneeT, Speed)
 			end
 		end
 		WaitForTurnT(TableOfPieceGroups["Feet"])
-	
+	Sleep(1)
 
+end
 end
 
 function deathTimer()
