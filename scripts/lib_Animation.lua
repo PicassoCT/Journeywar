@@ -281,6 +281,20 @@ function syncTurn(unitID, piecename, x_val, y_val, z_val, speed)
     Turn(piecename, z_axis, math.rad(z_val), (times / z_val) * speed)
 end
 
+
+function swing(Table, axis, value,reducefactor, endfactor)
+factor= 1.0
+	while (factor > endfactor) do
+	turnT(Table,axis, factor*value, (factor*value)/10)
+	WaitForTurnT(Table)
+	value= value*reducefactor
+	turnT(Table,axis, factor*value*-1, (factor*value)/10)
+	WaitForTurnT(Table)
+	Sleep(1)
+	end
+
+
+end
 -----------------------------------------
 -- >turns a Piece syncInTime working with a Table of Move Commands
 function turnSyncInTimeT(Table, times, x_deg, y_deg, z_deg)

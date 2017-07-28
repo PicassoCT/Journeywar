@@ -43,7 +43,7 @@ if gadgetHandler:IsSyncedCode() then
         while pow2 < UnitsTotal do pow2 = pow2 * 2 end
 
         mapSizeX, mapSizeZ = 4096 , 4096 
-			shardX, shardZ =mapSizeX / (pow2 / 2), mapSizeZ / (pow2 / 2)
+			shardX, shardZ =mapSizeX / math.sqrt(pow2), mapSizeZ / math.sqrt(pow2)
         x, z = 1, 1
         teamID = teamList[math.random(1, #teamList)]
 
@@ -60,7 +60,7 @@ if gadgetHandler:IsSyncedCode() then
             local pos = { x = math.ceil(x), z = math.ceil(z)}
 
             UnitTest[#UnitTest + 1] = function()
-						Spring.Echo("Creating Unit: "..v.name)
+						Spring.Echo("Creating Test Unit: "..v.name)
                 id = Spring.CreateUnit(defID, pos.x, 0, pos.z, 1, teamID)
                 Command(id, "stop", {}, { "shift" })
                 Command(id, "move", { x = pos.x, y = 0, z = pos.z + 25 }, { "shift" })
@@ -78,8 +78,9 @@ if gadgetHandler:IsSyncedCode() then
 
     index = 1
     function gadget:GameFrame(n)
-  
-        if n > 400 and n % 120 == 0  then
+			if n % 400 == 0 then Spring.Echo("Starting Test") end
+			
+        if n > 400 and n % 30 == 0  then
 				if #UnitTest == 0 then initialize() end
 				if  UnitTest[index] then
             UnitTest[index]()
