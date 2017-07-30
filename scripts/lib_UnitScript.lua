@@ -4607,7 +4607,7 @@ end
 
 --> getUnitBuildAbleMap
 --computates a map of all unittypes buildable by a unit
-function getFactionTable(unitName, boolID)
+function getFactionCanBuild(unitName, boolID)
     Result = {}
     Result[unitName] = {}
 

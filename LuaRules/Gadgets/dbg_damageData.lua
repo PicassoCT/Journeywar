@@ -17,17 +17,22 @@ end
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 if (gadgetHandler:IsSyncedCode()) then
 	EncounterData ={}
-
-
+	EncounterCounter = 0
+	
     function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
 	
 		if UnitDefs[unitDefID] 
 			attacker = Spring.GetUnitLastAttacker(unitID)
 				if attacker then
+				
+				uexp = Spring.GetUnitExperience(unitID)
+				aexp = 	Spring.GetUnitExperience(unitID)		
+						
 				attackerDefID = Spring.GetUnitDefID(attacker)
 				if not EncounterData[attackerDefID] then  EncounterData[attackerDefID] = {} end
 				if not EncounterData[attackerDefID][unitDefID] then  EncounterData[attackerDefID] [unitDefID] = 0 end
 				EncounterData[attackerDefID][unitDefID] = EncounterData[attackerDefID][unitDefID] + 1
+				EncounterCounter = EncounterCounter + 1
 			end
 		end
     end
@@ -44,7 +49,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		selftypeName = UnitDefs[k].name
 			for victimType, number in pairs(v) do
 			vicitmTypeName = UnitDefs[victimType].name
-			Spring.Echo("Unit "..selftypeName.." defeated  "..number.." Units of Type "..vicitmTypeName)
+			Spring.Echo("Unit "..selftypeName.." destroyed  "..number.." Units of Type "..vicitmTypeName .. " making up ".. number/EncounterCounter.." %  of all encounters")
 			end
 		end
 	end

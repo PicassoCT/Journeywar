@@ -1,7 +1,7 @@
 function gadget:GetInfo()
     return {
         name = "jw_unit-test",
-        desc = "Spawns one of every type of unit, issues commands of every type to that unit",
+        desc = "Create eternal warfare",
         author = "Picasso",
         date = "SPAM/SPAM/SPAM/LOVELYSPAM",
         version = "v0.1.ham.and.jam.and...",
@@ -27,33 +27,39 @@ if gadgetHandler:IsSyncedCode() then
 
     function getNonAIPlayer(List)
         PlayerList = {}
+		
         for i = 1, #List do
             teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier = Spring.GetTeamInfo(List[i])
             if isAiTeam and isAiTeam == false then
-                return List[i]
+                PlayerList[#PlayerList+1] = List[i]
             end
         end
+		
+		if #PlayerList > 0 then return PlayerList end
+		
         return List
     end
 
     function generateGenericTests()
 	UnitsTotal = 0 
-		for k,v in pairs (UnitDefNames) do
-			UnitsTotal= inc(UnitsTotal)
-		end
-
-        pow2 = 2
+	journeyUnits = getFactionCanBuild("beanstalk")
+	centrailUnits = getFactionCanBuild("citadell")
+	UnitsTotal = count(journeyUnits) + count(centrailUnits)
+	selectedUnits = mergeDict(selectUnitDefs(journeyUnits,UnitDefNames),selectUnitDefs(centrailUnits, UnitDefNames))
+    pow2 = math.ceil(math.sqrt(UnitsTotal*2))^2
 		
-        while pow2 < UnitsTotal do pow2 = pow2 * 2 end
-
-        mapSizeX, mapSizeZ = 4096 , 4096 
+  
+		gaiaTeamID = Spring.GetGaiaTeamID()
+      x,z= spawnUnitsForTeam(teamList[math.random(1, #teamList)],1,1,selectedUnits)
+      spawnUnitsForTeam(gaiaTeamID,x,z,selectedUnits)
+    end
+	
+	function spawnUnitsForTeam(teamID  x, z, selectedUnits)
+	  mapSizeX, mapSizeZ = Game.mapSizeX , Game.mapSizeZ 
 		shardX, shardZ =mapSizeX / math.sqrt(pow2), mapSizeZ / math.sqrt(pow2)
 		echo("Shard Size Debug Units: "..shardX, shardZ)
-        x, z = 1, 1
-        teamID = teamList[math.random(1, #teamList)]
-
-
-        for k, v in pairs(UnitDefNames) do
+      
+        for k, v in pairs(selectedUnits) do
 
             x = (x + shardX) % mapSizeX
             if x > mapSizeX then
@@ -71,10 +77,11 @@ if gadgetHandler:IsSyncedCode() then
                 Command(id, "move", { x = pos.x, y = 0, z = pos.z + 25 }, { "shift" })
                 Command(id, "attack", { x = pos.x, y = 0, z = pos.z + 25 }, { "shift" })
                 Command(id, "move", { x = pos.x, y = 0, z = pos.z - 25 }, { "shift" })
-                Command(id, "attack", { x = pos.x, y = 0, z = pos.z - 25 }, { "shift" })
             end
         end
-    end
+	
+	return x, z
+	end
 
     function initialize()
         teamList = getNonAIPlayer(Spring.GetTeamList())
