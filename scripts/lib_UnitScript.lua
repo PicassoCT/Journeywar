@@ -25,6 +25,31 @@ lib_boolDebug = false --GG.BoolDebug or false
 --======================================================================================
 --Chapter: Tableoperations
 --======================================================================================
+--merges two Dictionary Tables with the first having precedence
+function mergeDict(dA, dB)
+	for k,v in pairs(dA) do
+		dB[k] = v
+	end
+return dB
+end
+
+function selectUnitDefs(names, UnitDefNames)
+local retT={}
+
+	for number, name in pairs(names) do
+
+		retT[UnitDefNames[name].id]= UnitDefNames[name]	
+	end
+return retT
+end
+
+function UnitDefToUnitDefNames(UnitDef)
+local retT = UnitDef
+	for defID, T in pairs(UnitDef) do
+		retT[T.name] = T
+	end
+return retT
+end
 
 --> Hides a PiecesTable, 
 function hideT(tablename, lowLimit, upLimit, delay)
@@ -263,6 +288,7 @@ function TAddT(OrgT, T)
 end
 
 function count(T)
+	if not T then return 0 end
 	index = 0
 	for k,v in pairs(T) do if v then index= index +1 end end
 	return index
@@ -4604,37 +4630,42 @@ function GetUnitCanBuild(unitName)
     return T
 end
 
+function removeDictFromDict(dA, dB)
+for k, v in pairs(dA) do
+dB[k] = nil
+end
+return dB
+end
+
+function unitCanBuild(unitDefID)
+	assert(UnitDefs)
+	return UnitDefs[unitDefID].buildOptions 
+end
 
 --> getUnitBuildAbleMap
 --computates a map of all unittypes buildable by a unit
-function getFactionCanBuild(unitName, boolID)
+function getUnitCanBuildList(unitDefID)
     Result = {}
-    Result[unitName] = {}
+    Result[#Result +1] = unitDefID
 
-    openTable = {}
+    openTable = unitCanBuild(unitDefID)
+		assert(#openTable > 0)
     closedTable = {}
 
-    while table.getn(openTable) > 0 do
-        CanBuildList = GetUnitCanBuild(unitName)
-        openTable = mergeTables(CanBuildList, openTable)
+    repeat
+			for num, typeDefID in pairs (openTable) do
+			 CanBuildList = unitCanBuild(typeDefID)
+				for i = 1, #CanBuildList do
+					 if not closedTable[CanBuildList[i]] then 
+						openTable[#openTable + 1] = CanBuildList[i]
+						closedTable[CanBuildList[i]] = true
+						Result[#Result +1] = CanBuildList[i]
+					 end
+				end
+				table.remove(openTable, num)
+			end
+		until count(openTable) == 0 
 
-        subFunction = function(T_i_, ArghT) if ArghT[T_i_] then
-            return
-        else
-            return T_i_
-        end
-        end
-
-        openTable = process(openTable, closedTable, subFunction)
-        --for CanBuildList insert into
-        for k, v in ipairs(CanBuildList) do
-            Result[unitName] = TableInsertUnique(Result[unitName], k)
-        end
-        closedTable[unitName] = true
-        openTable[unitName] = nil
-
-        unitName = openTable[#openTable]
-    end
     return Result
 end
 

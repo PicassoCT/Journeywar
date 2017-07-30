@@ -126,7 +126,7 @@ if (gadgetHandler:IsSyncedCode()) then
             function(team)
                 if not tableTeamsActive[team] then
                     deactivatedTeams[team] = true
-                    SendToUnsynced("hideCursor", team)
+                --    SendToUnsynced("hideCursor", team)
                 end
             end)
     end
@@ -137,7 +137,7 @@ if (gadgetHandler:IsSyncedCode()) then
         process(allTeams,
             function(team)
                 if not tableTeamsActive[team] then
-                    SendToUnsynced("restoreCursor", team)
+                  --  SendToUnsynced("restoreCursor", team)
                 end
             end)
     end
@@ -168,40 +168,41 @@ if (gadgetHandler:IsSyncedCode()) then
         slowMotion(n, startFrame, endFrame)
     end
 
-
-else --Unsynced
-
-    formerCommandTable = {}
-    alt, ctrl, meta, shift, left, right = 0, 0, 0, 0
-
-    --deactivate mouse icon
-    boolLameDuck = false
-    local function restoreCursor(_, team)
-        myTeam = Spring.GetMyTeamID()
-        if myTeam == team then
-            boolLameDuck = true
-            oldCommand = Spring.GetAct iveCommand()
-            formerCommandTable[team] = oldCommand
-
-            alt, ctrl, meta, shift = GetModKeys()
-            local _, _, left, _, right = Spring.GetMouseState()
-        end
-    end
-
-    function gadget:GameFrame(n)
-        if boolLameDuck == true then
-            Spring.SetActiveCommand(CMD.WAIT, 1, left, right, alt, ctrl, meta, shift)
-        end
-    end
-
-    local function hideCursor(_, team)
-        myTeam = Spring.GetMyTeamID()
-        if myTeam == team then
-            boolLameDuck = false
-            Spring.SetActiveCommand(formerCommandTable[team], 1, left, right, alt, ctrl, meta, shift)
-        end
-    end
-
-    gadgetHandler:AddSyncAction("restoreCursor", restoreCursor)
-    gadgetHandler:AddSyncAction("hideCursor", hideCursor)
 end
+
+-- else --Unsynced
+
+    -- formerCommandTable = {}
+    -- alt, ctrl, meta, shift, left, right = 0, 0, 0, 0
+
+   ---- deactivate mouse icon
+    -- boolLameDuck = false
+    -- local function restoreCursor(_, team)
+        -- myTeam = Spring.GetMyTeamID()
+        -- if myTeam == team then
+            -- boolLameDuck = true
+            -- oldCommand = Spring.GetAct iveCommand()
+            -- formerCommandTable[team] = oldCommand
+
+            -- alt, ctrl, meta, shift = GetModKeys()
+            -- local _, _, left, _, right = Spring.GetMouseState()
+        -- end
+    -- end
+
+    -- function gadget:GameFrame(n)
+        -- if boolLameDuck == true then
+            -- Spring.SetActiveCommand(CMD.WAIT, 1, left, right, alt, ctrl, meta, shift)
+        -- end
+    -- end
+
+    -- local function hideCursor(_, team)
+        -- myTeam = Spring.GetMyTeamID()
+        -- if myTeam == team then
+            -- boolLameDuck = false
+            -- Spring.SetActiveCommand(formerCommandTable[team], 1, left, right, alt, ctrl, meta, shift)
+        -- end
+    -- end
+
+    -- gadgetHandler:AddSyncAction("restoreCursor", restoreCursor)
+    -- gadgetHandler:AddSyncAction("hideCursor", hideCursor)
+-- end

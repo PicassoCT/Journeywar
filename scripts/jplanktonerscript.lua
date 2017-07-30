@@ -101,7 +101,7 @@ function script.Create()
     locM = TablesOfPiecesGroups["locM"]
     pieceTable = TablesOfPiecesGroups["pT"]
     locPtW = TablesOfPiecesGroups["pTw"]
-    recReseT(TablesOfPiecesGroups)
+    recResetT(TablesOfPiecesGroups)
 
     --pieces Intialization finnished
 

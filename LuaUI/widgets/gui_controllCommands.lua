@@ -6,10 +6,9 @@ function widget:GetInfo()
 		author = "PicassoCT",
 		date = "2016-6-2",
 		license = "GNU GPL, v2 or later",
-		layer = 253,
+		layer = 0,
 		enabled = true,
-		hidden= true,
-
+		hidden= false,
 	}
 end
 
@@ -252,14 +251,18 @@ MainMenue[CMD.GUARD] ={
 }	
 
 MainMenue[CMD.ATTACK].callbackFunction= function()
+		Spring.Echo("Selected Attack")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] =  CMD.ATTACK 
+
 end
 MainMenue[CMD.STOP].callbackFunction= function()
+		Spring.Echo("Selected STOP")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player]   =  CMD.STOP 
 end
 MainMenue[CMD.MOVE].callbackFunction= function() 
+		Spring.Echo("Selected Move")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] =  CMD.MOVE 
 end
@@ -272,7 +275,7 @@ MainMenue[CMD.FIRE_STATE].callbackFunction= function()
 end
 MainMenue[CMD.REPEAT].callbackFunction= function() 
 		selectedUnits =Spring.GetSelectedUnits()
-		if selectedUnits then
+		if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
 		states = Spring.GetUnitStates(selectedUnits[1])
 		boolRepeatActive = not states["repeat"]
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {boolRepeatActive}, {})
@@ -287,15 +290,18 @@ MainMenue[CMD.MOVE_STATE].callbackFunction= function()
 		end
  end
 MainMenue[CMD.REPAIR].callbackFunction= function() 
+		Spring.Echo("Selected Repair")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player]  =  CMD.REPAIR 
 end
-MainMenue[CMD.GUARD].callbackFunction= function() 		
+MainMenue[CMD.GUARD].callbackFunction= function() 	
+		Spring.Echo("Selected Guard")	
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] = CMD.GUARD
 end
 
-MainMenue[CMD.PATROL].callbackFunction= function() 		
+MainMenue[CMD.PATROL].callbackFunction= function() 	
+		Spring.Echo("Selected Patrol")	
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] = CMD.PATROL
 end
@@ -479,15 +485,19 @@ end
 function widgetHandler:MouseRelease(x, y, button)
 	local mo = self.mouseOwner
 	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+			Spring.Echo("MouseRelease active")
 	if (not (lmb or mmb or rmb)) then
 		return false
 	end
-	
+
 	if lmb then
 			alt, ctrl, meta, shift =GetModKeys()
 			local _, _, left, _, right = Spring.GetMouseState()
+			Spring.Echo("Command active")
 			Spring.SetActiveCommand(WG.SelectedCommand[mo], 1, left, right, alt, ctrl, meta, shift)
+			return true
 	end
+	
 	if rmb and rmb == true then
 		if WG.SelectedCommand[mo] then
 			for command, active in pairs(WG.SelectedCommand[mo]) do
@@ -496,6 +506,7 @@ function widgetHandler:MouseRelease(x, y, button)
 					if selectedUnits and #selectedUnits > 0 then
 						commandTable= getCommandTable(boolQueueOverride)
 						typeParam, param = getCommandTarget()
+						Spring.Echo("Giving Command " .. command)
 						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
 						
 						WG.SelectedCommand[mo] = nil
@@ -508,4 +519,5 @@ function widgetHandler:MouseRelease(x, y, button)
 		return true
 	end
 	
+	return -1
 end

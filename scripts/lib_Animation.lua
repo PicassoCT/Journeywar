@@ -786,7 +786,7 @@ function moveUnitPieceToGroundPos(unitID, piecename, X, Z, speed, offset)
 end
 
 -->Moves a Piece to WaterLevel on the Ground in UnitSpace
-function keepPieceAfloat(unitID, piecename, speed, randoValLow, randoValUp)
+function KeepPieceAfloat(unitID, piecename, speed, randoValLow, randoValUp)
     if not piecename then return error("No piecename given") end
     randoVal = math.random(randoValLow or -1, randoValUp or 0)
 
