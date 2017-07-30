@@ -15,12 +15,25 @@ end
 
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 if (gadgetHandler:IsSyncedCode()) then
+	EncounterData ={}
+
 
     function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
-		if UnitDefs[unitDefID] then
-			Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name )
+	
+		if UnitDefs[unitDefID] 
+			attacker = Spring.GetUnitLastAttacker(unitID)
+				if attacker then
+				attackerDefID = Spring.GetUnitDefID(attacker)
+				
+				Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name.." destroyed by ".. UnitDefs[attackerDefID].name)
+			else
+				Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name.." destroyed ")
+
+			end
 		end
     end
+	
+	
 
     function gadget:UnitCreated(unitID, unitDefID)
         Spring.Echo(Spring.GetGameFrame() .. " | "..unitID.." | " .. UnitDefs[unitDefID].name .. " created")

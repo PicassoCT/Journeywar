@@ -37,20 +37,25 @@ if gadgetHandler:IsSyncedCode() then
     end
 
     function generateGenericTests()
-        UnitsTotal = table.getn(UnitDefNames)
+	UnitsTotal = 0 
+		for k,v in pairs (UnitDefNames) do
+			UnitsTotal= inc(UnitsTotal)
+		end
+
         pow2 = 2
 		
         while pow2 < UnitsTotal do pow2 = pow2 * 2 end
 
         mapSizeX, mapSizeZ = 4096 , 4096 
-			shardX, shardZ =mapSizeX / math.sqrt(pow2), mapSizeZ / math.sqrt(pow2)
+		shardX, shardZ =mapSizeX / math.sqrt(pow2), mapSizeZ / math.sqrt(pow2)
+		echo("Shard Size Debug Units: "..shardX, shardZ)
         x, z = 1, 1
         teamID = teamList[math.random(1, #teamList)]
 
 
         for k, v in pairs(UnitDefNames) do
 
-            x = x + shardX % mapSizeX
+            x = (x + shardX) % mapSizeX
             if x > mapSizeX then
                 z = z + shardZ % mapSizeZ, shardZ)
             end
