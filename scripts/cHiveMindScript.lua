@@ -114,6 +114,9 @@ function slowMo()
 	
 	GG.HiveMind[teamID][unitID].boolActive = true
 	modulator= 0
+	x,y,z=Spring.GetUnitPosition(unitID)
+	team = Spring.GetUnitTeam(unitID)
+	Spring.CreateUnit("gcorpsedecalfactory",x,y,z,0,team)
 	while GG.HiveMind[teamID][unitID].rewindMilliSeconds > 0 do
 		Sleep(100)
 		modulator = inc(modulator)

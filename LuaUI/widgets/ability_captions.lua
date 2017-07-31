@@ -20,6 +20,7 @@ return {
   ["cpaxcentrail"]= {active="", passive="Enforce\nCompliance\n via\nHostageblock"},
   ["comendbonker"]= {active="Conset&\nConfirm", passive="Repeat\nConfirmation"},
   ["sentrynell"]= {active="Activate\n Motionsensor", passive="Deactivate\n Motionsensor"},
+  ["chivemind"]= {active="Hyper\n A.I.ctivity", passive="AI-Node\n Ready"},
 
 --journeyman
   ["jabyss"]= {active="End this\nWorld", passive="World Ends"},
@@ -43,5 +44,5 @@ return {
   ["jtree48"]= {active="Deny \n Energy", passive="Sucked\ndry"},
   ["jtree49"]= {active="Deny \n Energy", passive="Sucked\ndry"},
   ["jtyrion"]= {active="Turn\n coat", passive="Traitor"},
-  ["jhivemind"]= {active="Activate\n Hivemind", passive="\n Sacrifes"}
+  ["jhivemind"]= {active="Hivemind\n Uebertactics", passive="Minds Linked\n Sleeping"}
 }
