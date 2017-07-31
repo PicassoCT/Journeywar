@@ -88,6 +88,11 @@ function slowMo()
 	SetSignalMask(SIG_SLOWMO)
 	GG.HiveMind[teamID][unitID].boolActive = true
 	modulator= 0
+	
+	x,y,z=Spring.GetUnitPosition(unitID)
+	team = Spring.GetUnitTeam(unitID)
+	Spring.CreateUnit("gcorpsedecalfactory",x,y,z,0,team)
+	
 	while GG.HiveMind[teamID][unitID].rewindMilliSeconds > 0 do
 		Sleep(100)
 		modulator = inc(modulator)
@@ -99,7 +104,7 @@ function slowMo()
 		Explode(selectbody,SFX.FALL +SFX.NO_HEATCLOUD + SFX.EXPLODE_ON_HIT) end
 		GG.HiveMind[teamID][unitID].rewindMilliSeconds =math.max(0,GG.HiveMind[teamID][unitID].rewindMilliSeconds - 100)
 	end
-	
+	jw_AddTerrainDeformation(x,z, 44, 0.75)
 	GG.HiveMind[teamID][unitID].boolActive = false
 	
 end

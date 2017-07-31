@@ -1168,9 +1168,11 @@ function PlanetNameGenerator(llenght, lNamingSamples, lBreakers, lLetterTable,lB
 end
 
 -->add a Terraindeformation to the LandLord
-function jw_AddTerrainDeformation(x,z, size, shapeFunction, ldepth, lblendType,lfilterType)
+function jw_AddTerrainDeformation(x,z, size, ldepth, shapeFunction lblendType,lfilterType)
 	blendType=lblendType or "melt"
 	filterType=lfilterType or "borderblur"
+	shapeFunction = shapeFunction or prepareHalfSphereTable
+	assert(ldepth)
 	depth=ldepth or 4
 	
 	if GG.DynDefMap == nil then GG.DynDefMap={} end
