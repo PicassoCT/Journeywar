@@ -56,27 +56,25 @@ if gadgetHandler:IsSyncedCode() then
 		spawnUnitsForTeam(gaiaTeamID,selectedUnits)
 	end
 	
+	function getRotatedPosition(index, x, z, mx, mz)	
+		x,z = Rotate(x,z, index*10)
+		return mx + x, mz + z
+	end
+	
 	function spawnUnitsForTeam(teamID, selectedUnits)
-		mapSizeX, mapSizeZ = Game.mapX / 8, Game.mapY/ 8
-		if not GG.DebugIndex then GG.DebugIndex = {x= 128, z= 128}end
+		if not GG.DebugIndex then GG.DebugIndex = 0 end
 
-		shardX  = (mapSizeX / math.sqrt(pow2)) 
-		shardZ = (mapSizeZ / math.sqrt(pow2))
 		for k, v in pairs(selectedUnits) do			
-
-				 GG.DebugIndex.x = GG.DebugIndex.x +  shardX
-				if GG.DebugIndex.x >= math.max(mapSizeX,8192) then
-					GG.DebugIndex.x= shardX
-					GG.DebugIndex.z= GG.DebugIndex.z + shardZ
-					if GG.DebugIndex.z > math.max(mapSizeZ, 8192) then GG.DebugIndex.z = shardZ end
-				end
+		GG.DebugIndex = GG.DebugIndex  + 1
+		
+		x,z = getRotatedPosition(GG.DebugIndex * 10, 0, GG.DebugIndex*125, 4096, 4096 )
 
 			
 			UnitTest[#UnitTest + 1] = function()
-
-				id = Spring.CreateUnit(v.id, math.ceil( GG.DebugIndex.z), 0, math.ceil( GG.DebugIndex.z), 1, teamID)
+				
+				id = Spring.CreateUnit(v.id, x, 0,z, 1, teamID)
+				Command(id, "move", { x =4096 y = 0, z = 4096 }, { "shift" })
 				Command(id, "stop", {}, { "shift" })
-				Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
 			end
 		end
 

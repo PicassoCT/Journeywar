@@ -480,7 +480,9 @@ function widget:Initialize()
 	}
 end
 
-
+function widget:MousePress()
+	Spring.Echo("MousePress activated")
+end
 
 function widgetHandler:MouseRelease(x, y, button)
 	local mo = self.mouseOwner
