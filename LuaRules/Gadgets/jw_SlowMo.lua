@@ -18,6 +18,10 @@ if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_Build.lua")
     VFS.Include("scripts/lib_jw.lua")
     
+	
+	function gadget:Initialize()
+		SendToUnsynced("Initialize")
+	end
 
     --check for active HiveMinds and AI Nodes
     function areHiveMindsActive()
@@ -68,7 +72,6 @@ if (gadgetHandler:IsSyncedCode()) then
 
     function slowMotion(frame, startFrame, endFrame)
         currentSpeed = 0
-
 
         if frame == startFrame then
             Spring.PlaySoundFile("sounds/HiveMind/StartLoop.ogg", 1.0)
@@ -126,7 +129,7 @@ if (gadgetHandler:IsSyncedCode()) then
             function(team)
                 if not tableTeamsActive[team] then
                     deactivatedTeams[team] = true
-                --    SendToUnsynced("hideCursor", team)
+					SendToUnsynced("hideCursor", team)
                 end
             end)
     end
@@ -137,7 +140,7 @@ if (gadgetHandler:IsSyncedCode()) then
         process(allTeams,
             function(team)
                 if not tableTeamsActive[team] then
-                  --  SendToUnsynced("restoreCursor", team)
+					SendToUnsynced("restoreCursor", team)
                 end
             end)
     end
@@ -150,8 +153,9 @@ if (gadgetHandler:IsSyncedCode()) then
 
         boolActive, activeHiveMinds = areHiveMindsActive()
         if boolActive == true then
-
+		    
             if boolPreviouslyActive == false then
+				SendToUnsynced("ActivateSlowMoShadder", true)
                 boolPreviouslyActive = true
                 startFrame = n
             end
@@ -161,6 +165,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
             endFrame = n + DurationInSeconds
         elseif boolActive == false and endFrame == n then
+			SendToUnsynced("ActivateSlowMoShadder", false)
             restoreCursorNonActiveTeams(activeHiveMinds)
             boolPreviouslyActive = false
         end
@@ -168,41 +173,54 @@ if (gadgetHandler:IsSyncedCode()) then
         slowMotion(n, startFrame, endFrame)
     end
 
+
+
+else --Unsynced
+
+
+
+    formerCommandTable = {}
+    alt, ctrl, meta, shift, left, right = 0, 0, 0, 0
+
+
+   -- deactivate mouse icon
+    boolLameDuck = false
+	boolDraw = false
+	
+    local function restoreCursor(_, team)
+        myTeam = Spring.GetMyTeamID()
+        if myTeam == team then
+            boolLameDuck = true
+            oldCommand = Spring.GetActiveCommand()
+            formerCommandTable[team] = oldCommand
+
+            alt, ctrl, meta, shift = GetModKeys()
+            local _, _, left, _, right = Spring.GetMouseState()
+        end
+    end
+
+    function gadget:GameFrame(n)
+        if boolLameDuck == true then
+            Spring.SetActiveCommand(Spring.GetCmdDescIndex(CMD.WAIT), 1, left, right, alt, ctrl, meta, shift)
+        end
+    end
+
+    local function hideCursor(_, team)
+        myTeam = Spring.GetMyTeamID()
+        if myTeam == team then
+            boolLameDuck = false
+            Spring.SetActiveCommand(formerCommandTable[team], 1, left, right, alt, ctrl, meta, shift)
+        end
+    end   
+
+	local function ActivateSlowMoShadder(_, boolActivate)
+		WG.boolDrawSlowMoVision = boolActivate;
+    end
+
+
+	
+    gadgetHandler:AddSyncAction("Initialize", Initialize)
+    gadgetHandler:AddSyncAction("ActivateSlowMoShadder", ActivateSlowMoShadder)
+    gadgetHandler:AddSyncAction("restoreCursor", restoreCursor)
+    gadgetHandler:AddSyncAction("hideCursor", hideCursor)
 end
-
--- else --Unsynced
-
-    -- formerCommandTable = {}
-    -- alt, ctrl, meta, shift, left, right = 0, 0, 0, 0
-
-   ---- deactivate mouse icon
-    -- boolLameDuck = false
-    -- local function restoreCursor(_, team)
-        -- myTeam = Spring.GetMyTeamID()
-        -- if myTeam == team then
-            -- boolLameDuck = true
-            -- oldCommand = Spring.GetAct iveCommand()
-            -- formerCommandTable[team] = oldCommand
-
-            -- alt, ctrl, meta, shift = GetModKeys()
-            -- local _, _, left, _, right = Spring.GetMouseState()
-        -- end
-    -- end
-
-    -- function gadget:GameFrame(n)
-        -- if boolLameDuck == true then
-            -- Spring.SetActiveCommand(CMD.WAIT, 1, left, right, alt, ctrl, meta, shift)
-        -- end
-    -- end
-
-    -- local function hideCursor(_, team)
-        -- myTeam = Spring.GetMyTeamID()
-        -- if myTeam == team then
-            -- boolLameDuck = false
-            -- Spring.SetActiveCommand(formerCommandTable[team], 1, left, right, alt, ctrl, meta, shift)
-        -- end
-    -- end
-
-    -- gadgetHandler:AddSyncAction("restoreCursor", restoreCursor)
-    -- gadgetHandler:AddSyncAction("hideCursor", hideCursor)
--- end
