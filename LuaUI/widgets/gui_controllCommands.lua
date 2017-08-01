@@ -277,8 +277,10 @@ MainMenue[CMD.REPEAT].callbackFunction= function()
 		selectedUnits =Spring.GetSelectedUnits()
 		if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
 		states = Spring.GetUnitStates(selectedUnits[1])
-		boolRepeatActive = not states["repeat"]
-		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {boolRepeatActive}, {})
+		boolRepeatActive =  0 
+		if not states["repeat"] then boolRepeatActive = 1 end
+		
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
 		end
 end
 

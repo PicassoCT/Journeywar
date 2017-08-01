@@ -11,7 +11,7 @@ function widget:GetInfo()
 		hidden= true,
 	}
 end
-include("LuaUI/widgets/guiEnums.lua")
+include("ressoures/guiEnums.lua")
 
 --Localisations
 local spGetUnitTeam =	Spring.GetUnitTeam
