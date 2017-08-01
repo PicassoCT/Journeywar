@@ -48,6 +48,23 @@ function getFactoryTypeTable(UnitDefNames, IWant)
     return FactoryTypes
 end
 
+function getDefenseBuildingTypeTable(UnitDefNames)
+	typeTable={
+		"sentry",
+		"crailgun",
+		"bonker",
+		"chopper",
+		"jfireflower",
+		"jbonsai",
+		"jdragongrass",
+		"jbeehive",
+		"jrefugeetrap",
+		"ggluemine",
+		"jpoisonhive"
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+end
+
 --> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}

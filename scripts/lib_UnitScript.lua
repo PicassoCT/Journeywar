@@ -4646,25 +4646,29 @@ end
 --computates a map of all unittypes buildable by a unit
 function getUnitCanBuildList(unitDefID)
     Result = {}
-    Result[#Result +1] = unitDefID
+    Result[unitDefID] = true
 
     openTable = unitCanBuild(unitDefID)
-		assert(#openTable > 0)
+	assert(#openTable > 0)
     closedTable = {}
 
     repeat
+			local tempOpenTable={}
 			for num, typeDefID in pairs (openTable) do
-			 CanBuildList = unitCanBuild(typeDefID)
-				for i = 1, #CanBuildList do
-					 if not closedTable[CanBuildList[i]] then 
-						openTable[#openTable + 1] = CanBuildList[i]
-						closedTable[CanBuildList[i]] = true
-						Result[#Result +1] = CanBuildList[i]
-					 end
+				if num and typeDefID then
+				 CanBuildList = unitCanBuild(typeDefID)
+					for i = 1, #CanBuildList do
+						 if closedTable[CanBuildList[i]] == nil  then 
+							tempOpenTable[#tempOpenTable + 1] = CanBuildList[i]
+							closedTable[CanBuildList[i]] = true
+							Result[CanBuildList[i]] = true
+						 end
+					end	
 				end
-				table.remove(openTable, num)
 			end
-		until count(openTable) == 0 
+			openTable = tempOpenTable
+			
+	until count(openTable) == 0 
 
     return Result
 end

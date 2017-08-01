@@ -16,6 +16,7 @@ if gadgetHandler:IsSyncedCode() then
 	-------------------------------------
 	-- Includes
 	VFS.Include('scripts/lib_UnitScript.lua')
+	VFS.Include('scripts/lib_jw.lua')
 	
 	---------------- SYNCED---------------
 	-- Every Tests consists of a preparation function, called once and returning the handed over persistancepackage
@@ -41,19 +42,26 @@ if gadgetHandler:IsSyncedCode() then
 		return List
 	end
 	
-	function generateGenericTests()
-		UnitsTotal = 0 
-		
+	function buildUnitsToTestList ()	
 		journeyUnitList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
-		centrailUnitList= getUnitCanBuildList(UnitDefNames["citadell"].id)
-		UnitsTotal = count(journeyUnitList) + count(centrailUnits)
+		centrailUnitList= getUnitCanBuildList(UnitDefNames["citadell"].id)		
+		allUnits= mergeDict(selectUnitDefs(journeyUnitList,UnitDefs),selectUnitDefs(centrailUnitList, UnitDefs))
+		allUnits = removeImmobileInT(allUnits, UnitDefs)
+		allUnits[UnitDefNames["crewardrer"].id] = true
 		
-		selectedUnits = mergeDict(selectUnitDefs(journeyUnitList,UnitDefs),selectUnitDefs(centrailUnitList, UnitDefs))
-		pow2 = math.ceil(math.sqrt(UnitsTotal*2))* math.ceil(math.sqrt(UnitsTotal*2))
+		defenseBuildings = getDefenseBuildingTypeTable(UnitDefNames)
+		return mergeDict(allUnits, defenseBuildings)	
+	end
+	
+	
+	function generateGenericTests()
+	
+		selectedUnits = buildUnitsToTestList
+		UnitsTotal = count( selectedUnits) or 0
 				
 		gaiaTeamID = Spring.GetGaiaTeamID()
-	spawnUnitsForTeam(teamList[math.random(1, #teamList)],selectedUnits)
-		spawnUnitsForTeam(gaiaTeamID,selectedUnits)
+		spawnUnitsForTeam(teamList[math.random(1, #teamList)], selectedUnits)
+		spawnUnitsForTeam(gaiaTeamID, selectedUnits)
 	end
 	
 	function getRotatedPosition(index, x, z, mx, mz)	
@@ -64,17 +72,18 @@ if gadgetHandler:IsSyncedCode() then
 	function spawnUnitsForTeam(teamID, selectedUnits)
 		if not GG.DebugIndex then GG.DebugIndex = 0 end
 
-		for k, v in pairs(selectedUnits) do			
+		for i=1, #selectedUnits do		
+		local id = selectedUnits[i]
 		GG.DebugIndex = GG.DebugIndex  + 1
 		
-		x,z = getRotatedPosition(GG.DebugIndex * 10, 0, GG.DebugIndex*125, 4096, 4096 )
+		x,z = getRotatedPosition(GG.DebugIndex * 10, 0, GG.DebugIndex*75, 4096, 4096 )
 
 			
 			UnitTest[#UnitTest + 1] = function()
 				
-				id = Spring.CreateUnit(v.id, x, 0,z, 1, teamID)
+				id = Spring.CreateUnit(id, x, 0,z, 1, teamID)
 				Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
-				Command(id, "stop", {}, { "shift" })
+				Command(id, "move", { x = x, y = 0, z = z }, { "shift" })
 			end
 		end
 
@@ -96,7 +105,7 @@ if gadgetHandler:IsSyncedCode() then
 				index = inc(index)
 			end
 		end
-		if index % 8000 == 0 then
+		if n % 1000 == 0 then
 		index= 1
 		end
 	end
