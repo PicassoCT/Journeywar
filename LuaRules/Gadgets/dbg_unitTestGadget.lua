@@ -73,7 +73,7 @@ if gadgetHandler:IsSyncedCode() then
 			UnitTest[#UnitTest + 1] = function()
 				
 				id = Spring.CreateUnit(v.id, x, 0,z, 1, teamID)
-				Command(id, "move", { x =4096 y = 0, z = 4096 }, { "shift" })
+				Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
 				Command(id, "stop", {}, { "shift" })
 			end
 		end
@@ -95,6 +95,9 @@ if gadgetHandler:IsSyncedCode() then
 				UnitTest[index]()
 				index = inc(index)
 			end
+		end
+		if index % 8000 == 0 then
+		index= 1
 		end
 	end
 end
