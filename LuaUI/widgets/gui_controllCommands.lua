@@ -496,10 +496,14 @@ function widgetHandler:MouseRelease(x, y, button)
 
 	if lmb then
 			alt, ctrl, meta, shift =GetModKeys()
-			local _, _, left, _, right = Spring.GetMouseState()
-			Spring.Echo("Command active")
-			Spring.SetActiveCommand(WG.SelectedCommand[mo], 1, left, right, alt, ctrl, meta, shift)
-			return true
+			local x, y, lmb, mmb, rmb, outsideSpring  = Spring.GetMouseState()
+			command = 1
+			if not WG.SelectedCommand[mo] == nil then
+				command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
+			end
+			Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
+			
+		return true
 	end
 	
 	if rmb and rmb == true then
@@ -512,7 +516,7 @@ function widgetHandler:MouseRelease(x, y, button)
 						typeParam, param = getCommandTarget()
 						Spring.Echo("Giving Command " .. command)
 						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
-						
+			
 						WG.SelectedCommand[mo] = nil
 						break
 					end
@@ -523,5 +527,5 @@ function widgetHandler:MouseRelease(x, y, button)
 		return true
 	end
 	
-	return -1
+	return true
 end
