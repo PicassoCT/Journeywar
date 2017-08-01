@@ -304,6 +304,23 @@ function getNthElementT(T, nth)
 	end
 end
 
+function randDict(Dict)
+totalElements = count(Dict)
+randElement = math.random(1,totalElements)
+index= 1
+anyElement=1
+for k,v in pairs (Dict) do
+anyElement = k
+	if index ==randElement then 
+	return k,v
+	end
+index=inc(index)
+end
+return anyElement
+
+
+end
+
 --> randomizes Table Entrys
 function shuffleT(T)
 local	randT= {}
