@@ -5621,30 +5621,40 @@ function idle_stance15()
 
     askingForARamjob = math.random(9, 22)
     factor = 17 / 22
+	 mP(tigLil, 0, -7, -0.8, 12)
+        tP(tigLil, 0, 0, 0, 22)
+		  tP(tllegUp, -44,0,0, 22)
+        tP(tllegLow, 129, 0, 0, 22)
+        tP(tllegUpR, -44, 0, 0, 22)
+        tP(tllegLowR, 129, 0, 0, 22)		
+		WaitForMoves(tigLil)
     for i = 1, askingForARamjob do
         mP(tigLil, 0, -7, -0.8, factor * i * 7)
         tP(tigLil, 0, 0, 0, factor * i)
         tP(tlHead, 30, 0, 0, factor * i)
-        tP(tlhairup, -96, 0, 0, factor * i * 2)
-        tP(tlhairdown, -21, 0, 0, factor * i * 2)
-        tP(tlarm, -176, 91, 16, factor * i)
-        tP(tlarmr, -179, -93, -22, factor * i)
-        tP(tllegUp, -44,0,0, factor * i)
-        tP(tllegLow, 129, 0, 0, factor * i)
-        tP(tllegUpR, -44, 0, 0, factor * i)
-        tP(tllegLowR, 129, 0, 0, factor * i)
+        tP(tlhairup, 16, 0, 0, factor * i * 2)
+        tP(tlhairdown, 21, 0, 0, factor * i * 2)
+        tP(tlarm, -50, 0, 90, factor * i)
+        tP(tlarmr, -50, 0, -90, factor * i)
+        tP(tllegUp, -44,0,0, 3*factor * i)
+        tP(tllegLow, 129, 0, 0,2* factor * i)
+        tP(tllegUpR, -44, 0, 0,3* factor * i)
+        tP(tllegLowR, 129, 0, 0, 2*factor * i)
+		WaitForTurns(tlhairup,tlhairdown)
+		 tP(tlhairup, -86, 0, 0, factor * i * 2)
+        tP(tlhairdown, -30, 0, 0, factor * i * 2)
         Sleep(1300 - (i * 50))
         mP(tigLil, 0, -5, 4.8, factor * i * 7)
         tP(tigLil, -25, 0, 0, factor * i)
         tP(tlHead, 5, 0, 0, factor * i)
-        tP(tlhairup, 78, 0, 0, factor * i * 2)
-        tP(tlhairdown, 74, 0, 0, factor * i * 2)
-        tP(tlarm, -176, 91, 73, factor * i)
-        tP(tlarmr, -175, -92, -79, factor * i)
-        tP(tllegUp, 35, 0, 0, factor * i)
-        tP(tllegLow, 79, 0, 0, factor * i)
-        tP(tllegUpR, 35, 0, 0, factor * i)
-        tP(tllegLowR, 78, 0, 0, factor * i)
+        tP(tlhairup, -76, 0, 0, factor * i * 2)
+        tP(tlhairdown, 21, 0, 0, factor * i * 2)
+         tP(tlarm, -10, 0, 90, factor * i)
+        tP(tlarmr, -10, 0, -90, factor * i)
+        tP(tllegUp, 35, 0, 0, 3*factor * i)
+        tP(tllegLow, 79, 0, 0,2* factor * i)
+        tP(tllegUpR, 35, 0, 0, 3*factor * i)
+        tP(tllegLowR, 78, 0, 0,2* factor * i)
         Sleep(1300 - (i * 50))
     end
     legs_down()
@@ -9195,57 +9205,58 @@ local SIG_BALL =8192
 boolBallAttached = false
 
 function attachBallToPiece(hand)
-if boolBallAttached== true then Signal(SIG_BALL); boolBallAttached=false end
-SetSignalMask(SIG_BALL)
+	if boolBallAttached== true then 
+	Signal(SIG_BALL); 
+	boolBallAttached=false 
+	end
+	SetSignalMask(SIG_BALL)
+	
 	reset(MoveBall)
 	reset(TurnBall)
-boolBallAttached=true
-	while boolBallAttached== true do
+	boolBallAttached=true
+	while boolBallAttached == true do
 		movePieceToPiece(unitID, Ball, hand, 10 )
 		Sleep(10)
 	end
-
 end
-function moveBallToPieceInArc(arclength, Piecename,speed)
---Move Ball to piece height
-px,py,pz =Spring.GetUnitPiecePosDir(unitID,Piecename)
---Move Ball arclength out
-Move(MoveBall,x_axis,arclength+px,0)
-Move(MoveBall,y_axis,py,0)
-Turn(TurnBall,x_axis,math.rad(90),0)
-Show(Ball)
-WTurn(TurnBall,x_axis,math.rad(0),0)
 
+function moveBallToPieceInArc(arclength, Piecename,speed)
+	--Move Ball to piece height
+	px,py,pz =Spring.GetUnitPiecePosDir(unitID,Piecename)
+	--Move Ball arclength out
+	Move(MoveBall,x_axis,arclength+px,0)
+	Move(MoveBall,y_axis,py,0)
+	Turn(TurnBall,x_axis,math.rad(90),0)
+	Show(Ball)
+	WTurn(TurnBall,x_axis,math.rad(0),0)
 end
 
 ballIdleFunctions = {
-[1] = function recive()-- recive
-	tP(tllegUp,0,0,11,11/4)
-	tP(tllegUpR,0,0,-9,9/4)
-	tP(tlHead,-36,0,0,36/4)
-	tP(tlarm,0,-88,-35,88/4)
-	tP(tlarm,7,85,40,85/4)
-	moveBallToPieceInArc(120,handr, 10)
+[1] = function()-- recive
+	tP(tllegUp,0, 0, 11, 11/4)
+	tP(tllegUpR, 0, 0, -9, 9/4)
+	tP(tlHead, -36, 0, 0, 36/4)
+	tP(tlarm,0, -88, -35, 88/4)
+	tP(tlarm, 7, 85, 40, 85/4)
+	moveBallToPieceInArc(120, handr, 10)
 
-	StartThread(attachBallToPiece,handr)
+	StartThread(attachBallToPiece, handr)
 	Sleep(1000)
 
-end,
-[2] = function serve()-- serve
+	end,
+[2] = function()-- serve
 	Show(Ball)
-	StartThread(attachBallToPiece,handr)
-	
+	StartThread(attachBallToPiece, handr)	
+	end,
+[3] = function()--dribble
 end,
-
-[3] = function dribble       ()
+[4] = function()--arcBall   
 end,
-[4] = function arc ball      ()
+[5] = function()--soccer
 end,
-[5] = function soccer        ()
+[6] = function()--volley
 end,
-[6] = function volley ()
-end,
-[7] = function retBall		()
+[7] = function()--retBall
 end,
 
 }
@@ -9307,8 +9318,8 @@ function script.Create()
     Hide(tlflute)
     Hide(tldancedru)
     Hide(ball)
-    Hide(Handr)
-    Hide(Handl)
+    Hide(handr)
+    Hide(handl)
     StartThread(ReloadCountDown)
 end
 
@@ -9904,7 +9915,7 @@ function idle()
 
         --changebookmark
         Sleep(285)
-        Sleeper = math.random(0, 16)
+        Sleeper = 14--math.random(0, 16)
 
         tempsleep = math.random(512, 4096)
         if (Sleeper == 0) then

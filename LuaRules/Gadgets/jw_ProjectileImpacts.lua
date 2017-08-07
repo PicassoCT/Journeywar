@@ -993,7 +993,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	watchedProjectilesTable={
-	[cAntiMatterDefID] =function disolveAntimatter(projectileID, proOwnerID)
+	[cAntiMatterDefID] = function (projectileID, proOwnerID)
 		
 			x,y,z = Spring.GetProjectilePosition(projectileID)
 			if x then
@@ -1018,7 +1018,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	constantWatchedProjectiles = {}
 	constantWatchedProjectilesCounter=0
 	
-	function constantWatchedProjectiles(frame)
+	function constantWatchProjectile(frame)
 	if constantWatchedProjectilesCounter == 0 then return end
 	
 		for proID, data in pairs(constantWatchedProjectiles) do 
@@ -1065,7 +1065,7 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end
 		if frame % 3 == 0 then
-			constantWatchedProjectiles(frame)
+			constantWatchProjectile(frame)
 		end
 		
         if frame % everyNthFrame == 0 then

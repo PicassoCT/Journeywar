@@ -19,7 +19,7 @@ MA 02110-1301, USA.
 ]] --
 -------------- DEBUG HEADER
 -- Central Debug Header Controlled in UnitScript
-lib_boolDebug = false --GG.BoolDebug or false
+lib_boolDebug = true --GG.BoolDebug or false
 -------------- DEBUG HEADER
 
 --======================================================================================
@@ -290,7 +290,11 @@ end
 function count(T)
 	if not T then return 0 end
 	index = 0
-	for k,v in pairs(T) do if v then index= index +1 end end
+	for k,v in pairs(T) do 
+		if v then 
+		index= index +1 
+		end 
+	end
 	return index
 end
 
@@ -305,6 +309,9 @@ function getNthElementT(T, nth)
 end
 
 function randDict(Dict)
+if lib_boolDebug == true then
+assert(type(Dict)=="table")
+end
 totalElements = count(Dict)
 randElement = math.random(1,totalElements)
 index= 1

@@ -56,7 +56,7 @@ if gadgetHandler:IsSyncedCode() then
 	
 	function generateGenericTests()
 	
-		selectedUnits = buildUnitsToTestList
+		selectedUnits = buildUnitsToTestList()
 		UnitsTotal = count( selectedUnits) or 0
 				
 		gaiaTeamID = Spring.GetGaiaTeamID()
