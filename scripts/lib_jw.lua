@@ -48,6 +48,23 @@ function getFactoryTypeTable(UnitDefNames, IWant)
     return FactoryTypes
 end
 
+function getDefenseBuildingTypeTable(UnitDefNames)
+	typeTable={
+		"sentry",
+		"crailgun",
+		"bonker",
+		"chopper",
+		"jfireflower",
+		"jbonsai",
+		"jdragongrass",
+		"jbeehive",
+		"jrefugeetrap",
+		"ggluemine",
+		"jpoisonhive"
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+end
+
 --> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}
@@ -142,6 +159,7 @@ function getPyroProofUnitTypeTable(UnitDefNames)
     FireProofTypes[UnitDefNames["jfireflower"].id] = true
     FireProofTypes[UnitDefNames["citadell"].id] = true
     FireProofTypes[UnitDefNames["beanstalk"].id] = true
+    FireProofTypes[UnitDefNames["jsungodcattle"].id] = true
     FireProofTypes[UnitDefNames["jtree3"].id] = true
     return FireProofTypes
 end

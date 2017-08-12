@@ -42,7 +42,7 @@ function terraformingFunction(x, z)
 
     --Replace with a Terraforming GadgetCall of your choice
     size = math.ceil(math.random(3, 5)) * 4
-    jw_AddTerrainDeformation(x, z, size, prepareHalfSphereTable, 4, "melt", "borderblur")
+    jw_AddTerrainDeformation(x, z, size,  4,prepareHalfSphereTable, "melt", "borderblur")
 end
 
 
@@ -180,7 +180,7 @@ function script.Killed(recentDamage, _)
     teamid = Spring.GetUnitTeam(unitID)
     Spring.CreateUnit(defID, x, y, z, 0, teamid)
 
-    jw_AddTerrainDeformation(x, z, 22, prepareHalfSphereTable, 2, "melt", "borderblur")
+    jw_AddTerrainDeformation(x, z, 22,  2, prepareHalfSphereTable, "melt", "borderblur")
     return 1
 end
 

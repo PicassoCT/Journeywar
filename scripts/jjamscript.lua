@@ -1,9 +1,15 @@
 --a wild function appears
 include "createCorpse.lua"
+include "lib_UnitScript.lua"
+include "lib_type.lua"
 
 flare1 =piece"flare1"
 rotator=piece"rotator"
+TablesOfPiecesGroups = {}
+
 function script.Create()
+    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+
 	Hide(flare1)
 	StartThread(emitFog)
 	StartThread(emitSound)
@@ -14,6 +20,58 @@ function script.Create()
 	else
 		GG.UnitsToSpawn:PushCreateUnit("gtreeplate2",x,y,z,0,teamID)
 	end
+	
+	StartThread(buildWindingPlant)
+end
+
+currentDegreeT= {}
+function buildWindingPlant()
+
+xCurrentDegree = 0
+yCurrentDegree = 0
+xOffsetSpan= 5
+yOffsetSpan = 10
+
+				
+process(TablesOfPiecesGroups["Leaf"],
+		function(id)
+		xOffset= math.random(1,xOffsetSpan)
+		yOffset= math.random(1,yOffsetSpan)
+		xrelativeDegree = xOffset - xCurrentDegree
+		yrelativeDegree = yOffset - yCurrentDegree
+		Turn(id,x_axis,math.rad(xrelativeDegree),0)
+		Turn(id,y_axis,math.rad(yrelativeDegree),0)		
+		xCurrentDegree= xCurrentDegree + xrelativeDegree
+		yCurrentDegree= yCurrentDegree + yrelativeDegree
+		
+		currentDegreeT[id] = {x = xOffset}
+		end
+		)
+
+		swayInWind()
+
+end
+
+function swayInWind()
+	while true do
+	shiftindex= shiftindex + math.pi*0.3
+	partIndex= 0
+process(TablesOfPiecesGroups["Leaf"],
+		function(id)
+		partIndex= partIndex+1
+		xOffset= currentDegreeT[id].x + math.cos(shiftindex+ (math.pi/6)*partIndex)
+		xrelativeDegree = xOffset - xCurrentDegree
+		yrelativeDegree = yOffset - yCurrentDegree
+		Turn(id,x_axis,math.rad(xrelativeDegree),0)
+		Turn(id,y_axis,math.rad(yrelativeDegree),0)		
+		xCurrentDegree= xCurrentDegree + xrelativeDegree
+		yCurrentDegree= yCurrentDegree + yrelativeDegree
+
+		end
+		)
+		Sleep(100)
+	end
+
 end
 
 function createRandTable()

@@ -526,7 +526,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
     ghostShadowEffectedUnits = {}
 
-    blowUpTable = {}
+    exploAmmoBlowTable = {}
     local timeTillBlowUp = 3500
     local jShadowDefID = UnitDefNames["jshadow"].id
 
@@ -706,9 +706,9 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 
     UnitDamageFuncT[highExLineGunDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-        if blowUpTable[unitID] then blowUpTable[unitID].number = blowUpTable[unitID].number + 1
+        if exploAmmoBlowTable[unitID] then exploAmmoBlowTable[unitID].number = exploAmmoBlowTable[unitID].number + 4
         else
-            blowUpTable[unitID] = { number = 1, time = timeTillBlowUp, timeSinceBoom = 0 }
+            exploAmmoBlowTable[unitID] = { number = 4, times = timeTillBlowUp, timeSinceBoom = 0 }
         end
     end
 
@@ -990,6 +990,60 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 
+	
+	
+	watchedProjectilesTable={
+	[cAntiMatterDefID] = function (projectileID, proOwnerID)
+		
+			x,y,z = Spring.GetProjectilePosition(projectileID)
+			if x then
+			
+				T= getAllInCircle(x,z, 25)
+				process(T,
+				function(id)
+				defID = Spring.GetUnitDefID(id)
+					if not lethalBuffExecption[defID] then
+						unitVannishAntimatterSFX(id)
+					end				
+				end
+				)				
+				return projectileID
+			else
+				return nil
+			end
+		end
+	
+	}
+	
+	constantWatchedProjectiles = {}
+	constantWatchedProjectilesCounter=0
+	
+	function constantWatchProjectile(frame)
+	if constantWatchedProjectilesCounter == 0 then return end
+	
+		for proID, data in pairs(constantWatchedProjectiles) do 
+		projectileID = watchedProjectilesTable[data.weaponDefID](proID, data.proOwnerID)
+			if not projectileID then 
+				constantWatchedProjectiles[proID] = nil
+				constantWatchedProjectilesCounter= dec(constantWatchedProjectilesCounter)
+			end
+		end
+	end
+	
+	function gadget:ProjectileCreated(proID, proOwnerID)
+		projWeaponDefID = Spring.GetProjectileDefID(proID)
+		if cAntiMatterDefID == projWeaponDefID then
+			constantWatchedProjectiles[proID] = {proOwnerID = proOwnerID, weaponDefID= projWeaponDefID}
+			constantWatchedProjectilesCounter = inc(constantWatchedProjectilesCounter)
+		end
+	end
+		
+	function gadget:ProjectileDestroyed(proID, proOwnerID)
+		if constantWatchedProjectiles[proID] then
+			constantWatchedProjectiles[proID]  = nil
+			constantWatchedProjectilesCounter= dec(constantWatchedProjectilesCounter)
+		end
+	end
 
     local everyNthFrame = 30
     local poisonDamage = 15
@@ -1010,41 +1064,52 @@ if (gadgetHandler:IsSyncedCode()) then
                 GG.ShockWaves = ShockW
             end
         end
-
+		if frame % 3 == 0 then
+			constantWatchProjectile(frame)
+		end
+		
         if frame % everyNthFrame == 0 then
             --handling the Poison Darted
-            if GG.Poisoned then
-                for k, v in pairs(GG.Poisoned) do
-                    GG.Poisoned[k] = GG.Poisoned[k] - everyNthFrame
-                    uh = Spring.GetUnitHealth(k)
-                    if uh then
-                        Spring.SetUnitHealth(k, uh - poisonDamage)
-                    end
-                end
-
-                for k, v in pairs(GG.Poisoned) do
-                    if v < 0 then
-                        table.remove(GG.Poisoned, k)
-                        table.remove(GG.Poisoned, k)
-                    end
-                end
+			poisonDarted(frame)
                 -- handling explosive Ammo
-                --{number=1, time=timeTillBlowUp, timeSinceBoom=0}
-                for unit, values in pairs(blowUpTable) do
-                    values.time = values.time - 30
-                    values.timeSinceBoom = values.timeSinceBoom + 30
-
-                    if values.timeSinceBoom > values.time / values.number then
-                        blowItUp(unit)
-                        values.number = values.number - 1
-                    end
-
-                    if values.number == 0 then blowUpTable[unit] = nil end
-                end
+			explosivAmmo(frame)
             end
-        end
+      
     end
+	
+	function explosivAmmo(frame)
+	     for unit, values in pairs(exploAmmoBlowTable) do
+            values.times = values.times - 30
+            values.timeSinceBoom = values.timeSinceBoom + 30
 
+            if values.timeSinceBoom > math.random(50,70) then
+                blowItUp(unit)
+                values.number = values.number - 1
+            end
+				
+			exploAmmoBlowTable[unit] = values
+			if values.number == 0 then exploAmmoBlowTable[unit] = nil end
+		end
+	end
+
+	function poisonDarted(frame)
+		if GG.Poisoned then
+			for k, v in pairs(GG.Poisoned) do
+				GG.Poisoned[k] = GG.Poisoned[k] - everyNthFrame
+				uh = Spring.GetUnitHealth(k)
+				if uh then
+					Spring.SetUnitHealth(k, uh - poisonDamage)
+				end
+			end
+	
+			for k, v in pairs(GG.Poisoned) do
+				if v < 0 then
+					table.remove(GG.Poisoned, k)
+				end
+			end
+		end		
+	end
+	
     local TableOfAllreadySearchedComender = {}
     function GetWeaponDirection(attackerID)
         if TableOfAllreadySearchedComender[attackerID] then
@@ -1056,11 +1121,12 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 
-    function blowItUp(unitID, piece, vectordamage)
+    function blowItUp(unitID)
         stillAlive = Spring.ValidUnitID(unitID)
         if stillAlive and stillAlive == true then
             --explosion
-            ux, uy, uz = Spring.GetUnitPosition(unitID, true)
+			pieceMap = Spring.GetUnitPieceMap(unitID)
+			piece = randDict(pieceMap)
             if ux then
                 _, _, _, x, y, z = Spring.GetUnitPiecePosDir(unitID, piece)
                 Spring.SpawnCEG("chiexploammo", x + math.random(-5, 5), y + 10, z + math.random(-5, 5), 0, 1, 0, 50)

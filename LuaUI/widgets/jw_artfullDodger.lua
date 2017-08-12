@@ -63,6 +63,8 @@ end
 			--TODO save commands, insert command,restore commands
 			Spring.GiveOrderToUnit(id, CMD.MOVE, { pdx, py, pdz }, {})
 			end
+			Spring.Echo("Key _space_ handled")
+		return true
 		end
 	end
 	return false

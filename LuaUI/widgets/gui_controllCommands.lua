@@ -6,10 +6,9 @@ function widget:GetInfo()
 		author = "PicassoCT",
 		date = "2016-6-2",
 		license = "GNU GPL, v2 or later",
-		layer = 253,
+		layer = 0,
 		enabled = true,
-		hidden= true,
-
+		hidden= false,
 	}
 end
 
@@ -29,8 +28,8 @@ local selectedUnits = {}
 local controllCommand_window
 local activeCommand = 0
 
-VFS.Include("LuaUI/widgets/guiEnums.lua")
-VFS.Include("LuaUI/widgets/gui_libs/gui_helper.lua")
+VFS.Include("ressources/guiEnums.lua",nil, VFSMODE)
+VFS.Include("ressources/gui_helper.lua", nil, VFSMODE)
 ---------------------------------------------------------------------------------------
 
 
@@ -252,14 +251,18 @@ MainMenue[CMD.GUARD] ={
 }	
 
 MainMenue[CMD.ATTACK].callbackFunction= function()
+		Spring.Echo("Selected Attack")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] =  CMD.ATTACK 
+
 end
 MainMenue[CMD.STOP].callbackFunction= function()
+		Spring.Echo("Selected STOP")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player]   =  CMD.STOP 
 end
 MainMenue[CMD.MOVE].callbackFunction= function() 
+		Spring.Echo("Selected Move")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] =  CMD.MOVE 
 end
@@ -272,10 +275,12 @@ MainMenue[CMD.FIRE_STATE].callbackFunction= function()
 end
 MainMenue[CMD.REPEAT].callbackFunction= function() 
 		selectedUnits =Spring.GetSelectedUnits()
-		if selectedUnits then
+		if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
 		states = Spring.GetUnitStates(selectedUnits[1])
-		boolRepeatActive = not states["repeat"]
-		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {boolRepeatActive}, {})
+		boolRepeatActive =  0 
+		if not states["repeat"] then boolRepeatActive = 1 end
+		
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
 		end
 end
 
@@ -287,15 +292,18 @@ MainMenue[CMD.MOVE_STATE].callbackFunction= function()
 		end
  end
 MainMenue[CMD.REPAIR].callbackFunction= function() 
+		Spring.Echo("Selected Repair")
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player]  =  CMD.REPAIR 
 end
-MainMenue[CMD.GUARD].callbackFunction= function() 		
+MainMenue[CMD.GUARD].callbackFunction= function() 	
+		Spring.Echo("Selected Guard")	
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] = CMD.GUARD
 end
 
-MainMenue[CMD.PATROL].callbackFunction= function() 		
+MainMenue[CMD.PATROL].callbackFunction= function() 	
+		Spring.Echo("Selected Patrol")	
 		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] = CMD.PATROL
 end
@@ -474,20 +482,32 @@ function widget:Initialize()
 	}
 end
 
-
+function widget:MousePress()
+	Spring.Echo("MousePress activated")
+end
 
 function widgetHandler:MouseRelease(x, y, button)
 	local mo = self.mouseOwner
+	Spring.Echo("Mouse Owner: "..mo)
+	
 	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+			Spring.Echo("MouseRelease active")
 	if (not (lmb or mmb or rmb)) then
 		return false
 	end
-	
+
 	if lmb then
 			alt, ctrl, meta, shift =GetModKeys()
-			local _, _, left, _, right = Spring.GetMouseState()
-			Spring.SetActiveCommand(WG.SelectedCommand[mo], 1, left, right, alt, ctrl, meta, shift)
+			local x, y, lmb, mmb, rmb, outsideSpring  = Spring.GetMouseState()
+			command = 1
+			if  WG.SelectedCommand[mo] then
+				command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
+			end
+			Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
+			
+		return true
 	end
+	
 	if rmb and rmb == true then
 		if WG.SelectedCommand[mo] then
 			for command, active in pairs(WG.SelectedCommand[mo]) do
@@ -496,8 +516,8 @@ function widgetHandler:MouseRelease(x, y, button)
 					if selectedUnits and #selectedUnits > 0 then
 						commandTable= getCommandTable(boolQueueOverride)
 						typeParam, param = getCommandTarget()
+						Spring.Echo("Giving Command " .. command)
 						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
-						
 						WG.SelectedCommand[mo] = nil
 						break
 					end
@@ -508,4 +528,5 @@ function widgetHandler:MouseRelease(x, y, button)
 		return true
 	end
 	
+	return true
 end

@@ -28,6 +28,11 @@ local tlpole = piece "tlpole"
 local tlharp = piece "tlharp"
 local tlflute = piece "tlflute"
 local tldancedru = piece "tldancedru"
+MoveBall = piece "MoveBall"
+TurnBall = piece "TurnBall"
+handr = piece "handr"
+handl = piece "handl"
+ball = piece "ball"
 
 local AMBUSHLOADTIME = 30000
 local AMBUSHTIME = 9000
@@ -2192,7 +2197,10 @@ function legs_down()
     Turn(tlflute, x_axis, math.rad(0), 45)
     Turn(tlflute, y_axis, math.rad(0), 45)
     Turn(tlflute, z_axis, math.rad(0), 45)
-
+	reset(MoveBall)
+	reset(TurnBall)
+	Hide(ball)
+	
     StopSpin(tigLil, y_axis)
     StopSpin(tigLil, z_axis)
     StopSpin(tigLil, x_axis)
@@ -5574,11 +5582,12 @@ function idle_stance_12()
     legs_down()
 end
 
+--allmost like sex
 function idle_stance13()
 
-    rammed = math.random(9, 22)
+    ramming = math.random(9, 22)
     factor = 17 / 22
-    for i = 1, rammed do
+    for i = 1, ramming do
         mP(tigLil, 0, -7, -0.8, factor * i * 7)
         tP(tigLil, 74, 0, 0, factor * i)
         tP(tlHead, -35, 0, 0, factor * i)
@@ -5602,6 +5611,50 @@ function idle_stance13()
         tP(tllegLow, 54, 0, 0, factor * i)
         tP(tllegUpR, -64, 23, 0, factor * i)
         tP(tllegLowR, 59, 0, 0, factor * i)
+        Sleep(1300 - (i * 50))
+    end
+    legs_down()
+end
+
+--giving it to here
+function idle_stance15()
+
+    askingForARamjob = math.random(9, 22)
+    factor = 17 / 22
+	 mP(tigLil, 0, -7, -0.8, 12)
+        tP(tigLil, 0, 0, 0, 22)
+		  tP(tllegUp, -44,0,0, 22)
+        tP(tllegLow, 129, 0, 0, 22)
+        tP(tllegUpR, -44, 0, 0, 22)
+        tP(tllegLowR, 129, 0, 0, 22)		
+		WaitForMoves(tigLil)
+    for i = 1, askingForARamjob do
+        mP(tigLil, 0, -7, -0.8, factor * i * 7)
+        tP(tigLil, 0, 0, 0, factor * i)
+        tP(tlHead, 30, 0, 0, factor * i)
+        tP(tlhairup, 16, 0, 0, factor * i * 2)
+        tP(tlhairdown, 21, 0, 0, factor * i * 2)
+        tP(tlarm, -50, 0, 90, factor * i)
+        tP(tlarmr, -50, 0, -90, factor * i)
+        tP(tllegUp, -44,0,0, 3*factor * i)
+        tP(tllegLow, 129, 0, 0,2* factor * i)
+        tP(tllegUpR, -44, 0, 0,3* factor * i)
+        tP(tllegLowR, 129, 0, 0, 2*factor * i)
+		WaitForTurns(tlhairup,tlhairdown)
+		 tP(tlhairup, -86, 0, 0, factor * i * 2)
+        tP(tlhairdown, -30, 0, 0, factor * i * 2)
+        Sleep(1300 - (i * 50))
+        mP(tigLil, 0, -5, 4.8, factor * i * 7)
+        tP(tigLil, -25, 0, 0, factor * i)
+        tP(tlHead, 5, 0, 0, factor * i)
+        tP(tlhairup, -76, 0, 0, factor * i * 2)
+        tP(tlhairdown, 21, 0, 0, factor * i * 2)
+         tP(tlarm, -10, 0, 90, factor * i)
+        tP(tlarmr, -10, 0, -90, factor * i)
+        tP(tllegUp, 35, 0, 0, 3*factor * i)
+        tP(tllegLow, 79, 0, 0,2* factor * i)
+        tP(tllegUpR, 35, 0, 0, 3*factor * i)
+        tP(tllegLowR, 78, 0, 0,2* factor * i)
         Sleep(1300 - (i * 50))
     end
     legs_down()
@@ -9148,6 +9201,115 @@ local function idle_stance11()
     Hide(tlharp)
 end
 
+local SIG_BALL =8192
+boolBallAttached = false
+
+function attachBallToPiece(hand)
+	if boolBallAttached== true then 
+	Signal(SIG_BALL); 
+	boolBallAttached=false 
+	end
+	SetSignalMask(SIG_BALL)
+	
+	reset(MoveBall)
+	reset(TurnBall)
+	boolBallAttached=true
+	while boolBallAttached == true do
+		movePieceToPiece(unitID, Ball, hand, 10 )
+		Sleep(10)
+	end
+end
+
+function moveBallToPieceInArc(arclength, Piecename,speed)
+	--Move Ball to piece height
+	px,py,pz =Spring.GetUnitPiecePosDir(unitID,Piecename)
+	--Move Ball arclength out
+	Move(MoveBall,x_axis,arclength+px,0)
+	Move(MoveBall,y_axis,py,0)
+	Turn(TurnBall,x_axis,math.rad(90),0)
+	Show(Ball)
+	WTurn(TurnBall,x_axis,math.rad(0),0)
+end
+
+ballIdleFunctions = {
+[1] = function()-- recive
+	tP(tllegUp,0, 0, 11, 11/4)
+	tP(tllegUpR, 0, 0, -9, 9/4)
+	tP(tlHead, -36, 0, 0, 36/4)
+	tP(tlarm,0, -88, -35, 88/4)
+	tP(tlarm, 7, 85, 40, 85/4)
+	moveBallToPieceInArc(120, handr, 10)
+	StartThread(attachBallToPiece, handr)
+	Sleep(1000)
+
+	end,
+[2] = function()-- serve
+	Show(Ball)
+	StartThread(attachBallToPiece, handr)	
+	tP(tlarmr,-45,16,90,12)
+	tP(tlarm,-25,16,-90,12)
+	WaitForTurns(tlarm,tlarmr)
+	
+	end,
+[3] = function()--hoopsdribblen
+	
+end,
+[4] = function()--arcBall   
+
+end,
+[5] = function()--soccer
+	Show(Ball)
+	StartThread(attachBallToPiece, tllegLowR)	
+	boolBallAttached = false
+	tP(tllegUpR,-45,0,0,7)
+	WaitForTurns(tllegUpR)	
+	tP(tllegUpR,0,0,0,17)
+	WaitForTurns(tllegUpR)
+	StartThread(attachBallToPiece, tllegLowR)	
+	tP(tllegUpR,15,0,0,17)
+	WaitForTurns(tllegUpR)
+	boolBallAttached = false	
+	mP(MoveBall,250,15,0,36)
+	tP(tllegUpR,0,0,0,17)
+	WaitForTurns(tllegUpR)
+	WaitForMoves(Ball)
+end,
+[6] = function()--volley
+	tP(tlarm,-45,8,90,12)
+	tP(tlarm,-45,8,-90,12)
+	WaitForTurns(tlarm,tlarmr)
+	movePieceToPiece(unitID,MoveBall, handr,0)
+	x,y,z= math.random(-20,20), math.random(0,100), math.random(-20,20)
+	mP(ball,x,y,z,0)
+	Show(ball)
+	Move(ball,x_axis,0,x/4)
+	Move(ball,y_axis,0,y/4)
+	Move(ball,z_axis,0,z/4)
+	WaitForMoves(ball)
+	StartThread(attachBallToPiece, handr)		
+	tP(tlarm,0,8,90,12)
+	tP(tlarm,0,8,-90,12)
+	boolBallAttached = false
+	Move(ball,x_axis,-1*x,x/4)
+	Move(ball,y_axis,y,y/4)
+	Move(ball,z_axis,z,-1*z/4)
+	WaitForMoves(ball)
+	Hide(ball)
+	
+	end,
+[7] = function()--retBall
+end,
+
+}
+
+
+local function idle_playBall()
+ballDice = math.random(1,6)
+ballIdleFunctions[ballDice]()
+legs_down()
+	boolBallAttached=false
+	
+end
 --eggspawn --tigLil and SkinFantry
 
 experienceSoFar = Spring.GetUnitExperience(unitID)
@@ -9198,6 +9360,9 @@ function script.Create()
     Hide(tlharp)
     Hide(tlflute)
     Hide(tldancedru)
+    Hide(ball)
+    Hide(handr)
+    Hide(handl)
     StartThread(ReloadCountDown)
 end
 
@@ -9702,6 +9867,7 @@ local lidle_stance11 = idle_stance11
 local lidle_stance12 = idle_stance_12
 local lidle_stance13 = idle_stance13
 local lidle_stance14 = idle_stance14
+local lidle_stance15 = idle_stance15
 -- Idling
 function idle()
     Signal(SIG_HAIRWIND)
@@ -9792,7 +9958,7 @@ function idle()
 
         --changebookmark
         Sleep(285)
-        Sleeper = math.random(0, 16)
+        Sleeper = 14--math.random(0, 16)
 
         tempsleep = math.random(512, 4096)
         if (Sleeper == 0) then
@@ -9847,10 +10013,18 @@ function idle()
             Sleep(tempsleep)
             lidle_stance13()
         end
-        if (Sleeper >= 13) then
+        if (Sleeper == 13) then
             Sleep(tempsleep)
             lidle_stance14()
         end
+		if (Sleeper == 14) then
+			Sleep(tempsleep)
+			lidle_stance15()
+		end
+		if (Sleeper >= 15) then
+			Sleep(tempsleep)
+			idle_playBall()
+		end
     end
 end
 

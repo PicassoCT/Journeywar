@@ -552,7 +552,6 @@ end
 
 local sparedUnits = getPyroProofUnitTypeTable(UnitDefNames)
 
-
 function spawnFire(times, enemyID)
     temp = 0
     x, y, z = 0
@@ -576,7 +575,7 @@ function spawnFire(times, enemyID)
         spSpawnCEG("disolvefire", x, y, z, 0, 1, 0, 50, 0)
         Sleep(50)
         spSpawnCEG("disolvefire", x, y, z, 0, 1, 0, 50, 0)
-    end
+    end	
 end
 
 function goTooKillThemAllPicaMon()
@@ -594,15 +593,19 @@ function goTooKillThemAllPicaMon()
 
     local spGetUnitPosition = Spring.GetUnitPosition
     if proChoice ~= nil then
+	
+	process(proChoice,
+			function(id)
+				uX,uY,uZ= Spring.GetUnitPosition(id)
+				dist = math.sqrt((uX-piecePosX)^2 + (uY-piecePosY)^2 + (uZ-piecePosZ)^2)
+				if dist < 175 then 
+					StartThread(spawnFire, 782,id)
+				else
+					setUnitOnFire(id, math.random(500, 1500))
+				end
+			)
 
-        --Kill the Unit
-        for i = 1, table.getn(proChoice), 1 do
-            if proChoice[i] ~= unitID then
-                x, y, z = spGetUnitPosition(proChoice[i])
-                StartThread(spawnFire, 782, proChoice[i])
-                --leave no wreck
-            end
-        end
+
     end
 end
 
@@ -799,17 +802,9 @@ function script.AimWeapon1(heading, pitch)
     end
 end
 
-function fireAnimation()
-end
 
-function extendFireAnimation()
-end
 
-function imOnFire(burningManID)
 
-    Sleep(1200)
-    Spring.DestroyUnit(burningManID, true, false)
-end
 
 
 
