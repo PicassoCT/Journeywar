@@ -2,7 +2,7 @@ function gadget:GetInfo()
     function isPlanetFlammeable()
         Spring.Echo(Game.mapHardness, Game.windMin, Game.gravity, Game.waterDamage)
         if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 30 then
-            badwordsTable = { "cold", "ice", "frost", "dessert", "sand", "dune", "moon", "comet", "red", "planet" }
+            badwordsTable = { "cold", "ice", "frost", "dessert", "sand", "dune", "moon", "comet", "red", "planet", "space","tundra"}
             for i = 1, #badwordsTable, 1 do
                 if string.find(Game.mapName, badwordsTable[i]) then
                     return false;
@@ -335,6 +335,11 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 
     local teamGaia = Spring.GetGaiaTeamID()
+	
+	if not GG.getLandscapeOnFire then GG.getLandscapeOnFire = function (x,z) 
+		x,z = math.ceil(x/MetaMapResDivider),math.ceil(z/MetaMapResDivider)
+		return GG.LandScapeT[x][z].boolBurning	
+	end
 
     function updateFire()
         local LandScapeT = GG.LandScapeT

@@ -2199,7 +2199,7 @@ function legs_down()
     Turn(tlflute, z_axis, math.rad(0), 45)
 	reset(MoveBall)
 	reset(TurnBall)
-	Hide(Ball)
+	Hide(ball)
 	
     StopSpin(tigLil, y_axis)
     StopSpin(tigLil, z_axis)
@@ -9239,7 +9239,6 @@ ballIdleFunctions = {
 	tP(tlarm,0, -88, -35, 88/4)
 	tP(tlarm, 7, 85, 40, 85/4)
 	moveBallToPieceInArc(120, handr, 10)
-
 	StartThread(attachBallToPiece, handr)
 	Sleep(1000)
 
@@ -9247,15 +9246,57 @@ ballIdleFunctions = {
 [2] = function()-- serve
 	Show(Ball)
 	StartThread(attachBallToPiece, handr)	
+	tP(tlarmr,-45,16,90,12)
+	tP(tlarm,-25,16,-90,12)
+	WaitForTurns(tlarm,tlarmr)
+	
 	end,
-[3] = function()--dribble
+[3] = function()--hoopsdribblen
+	
 end,
 [4] = function()--arcBall   
+
 end,
 [5] = function()--soccer
+	Show(Ball)
+	StartThread(attachBallToPiece, tllegLowR)	
+	boolBallAttached = false
+	tP(tllegUpR,-45,0,0,7)
+	WaitForTurns(tllegUpR)	
+	tP(tllegUpR,0,0,0,17)
+	WaitForTurns(tllegUpR)
+	StartThread(attachBallToPiece, tllegLowR)	
+	tP(tllegUpR,15,0,0,17)
+	WaitForTurns(tllegUpR)
+	boolBallAttached = false	
+	mP(MoveBall,250,15,0,36)
+	tP(tllegUpR,0,0,0,17)
+	WaitForTurns(tllegUpR)
+	WaitForMoves(Ball)
 end,
 [6] = function()--volley
-end,
+	tP(tlarm,-45,8,90,12)
+	tP(tlarm,-45,8,-90,12)
+	WaitForTurns(tlarm,tlarmr)
+	movePieceToPiece(unitID,MoveBall, handr,0)
+	x,y,z= math.random(-20,20), math.random(0,100), math.random(-20,20)
+	mP(ball,x,y,z,0)
+	Show(ball)
+	Move(ball,x_axis,0,x/4)
+	Move(ball,y_axis,0,y/4)
+	Move(ball,z_axis,0,z/4)
+	WaitForMoves(ball)
+	StartThread(attachBallToPiece, handr)		
+	tP(tlarm,0,8,90,12)
+	tP(tlarm,0,8,-90,12)
+	boolBallAttached = false
+	Move(ball,x_axis,-1*x,x/4)
+	Move(ball,y_axis,y,y/4)
+	Move(ball,z_axis,z,-1*z/4)
+	WaitForMoves(ball)
+	Hide(ball)
+	
+	end,
 [7] = function()--retBall
 end,
 
@@ -9266,6 +9307,8 @@ local function idle_playBall()
 ballDice = math.random(1,6)
 ballIdleFunctions[ballDice]()
 legs_down()
+	boolBallAttached=false
+	
 end
 --eggspawn --tigLil and SkinFantry
 
