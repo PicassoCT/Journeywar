@@ -101,7 +101,7 @@ end
 
 function script.Killed(recentDamage, _)
     for k, v in pairs(AddictList) do
-        if k then Spring.DestroyUnit(k, true, false) end
+        if k and k ~= unitID then Spring.DestroyUnit(k, true, false) end
     end
     createCorpseJBuilding(unitID, recentDamage)
     return 1

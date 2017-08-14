@@ -1064,7 +1064,7 @@ FixFunctionTabel[21] = function()
     ContinusDeg = { defDegX = math.random(-15, 15), defDegY = math.random(0, 360), defDegZ = math.random(-15, 15) }
     for i = 1, PiecesPerLayer, 1 do
 
-        x, y = Rotate(0, Radius, i * DegStep)
+        x, y = Rotate(0, Radius, math.rad(i * DegStep))
         moveUnitPieceToGroundPos(unitID, TreePiece[i], x, y, 0, 0)
         ContinuosRing[i] = EndPiece[i]
         Show(TreePiece[i])

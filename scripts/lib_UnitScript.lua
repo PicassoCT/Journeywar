@@ -19,26 +19,29 @@ MA 02110-1301, USA.
 ]] --
 -------------- DEBUG HEADER
 -- Central Debug Header Controlled in UnitScript
-lib_boolDebug = true --GG.BoolDebug or false
+lib_boolDebug = false --GG.BoolDebug or false
 -------------- DEBUG HEADER
 
 --======================================================================================
 --Chapter: Tableoperations
 --======================================================================================
 --merges two Dictionary Tables with the first having precedence
-function mergeDict(dA, dB)
+function mergeDict(dA, xdB)
+if dA and not xdB then return dA end
+if xdB and not dA then return xdB end
+local dB = xdB
 	for k,v in pairs(dA) do
 		dB[k] = v
 	end
 return dB
 end
 
-function selectUnitDefs(names, UnitDefNames)
+function selectUnitDefs(names)
 local retT={}
 
-	for number, name in pairs(names) do
+	for num, uDefID in pairs(names) do
 
-		retT[UnitDefNames[name].id]= UnitDefNames[name]	
+		retT[uDefID]= UnitDefs[uDefID]	
 	end
 return retT
 end
@@ -51,6 +54,13 @@ local retT = UnitDef
 return retT
 end
 
+
+function echoUnitDefT(defT)
+
+	for k,v in pairs(defT) do 
+		echo(UnitDefs[v].name)
+	end
+end
 --> Hides a PiecesTable, 
 function hideT(tablename, lowLimit, upLimit, delay)
     if not tablename then return end
@@ -458,7 +468,7 @@ function echoT(T, boolAssertTable, name)
         if nonprintableType[typek] == nil then
             if not nonprintableType[typev] then
                 Spring.Echo(" " .. k .. " 	---> 	" .. v .. " -> 	[ " .. ((assert(v))) .. " ] ")
-            elseif typev == table then
+            elseif typev == "table" then
                 echoT(v)
             elseif typev == "boolean" then
                 Spring.Echo(" " .. k .. " 	---> 	" .. (boolToString(v)) .. " ")
@@ -3024,15 +3034,17 @@ function piec2Point(piecesTable)
 end
 
 --> spawn a ceg on the map above ground
-function markPosOnMap(x, y, z, colourname)
+function markPosOnMap(x, y, z, colourname, boolGadget)
 
 
     h = Spring.GetGroundHeight(x, z)
     if h > y then y = h end
     for i = 1, 5 do
         Spring.SpawnCEG(colourname, x, y + 10, z, 0, 1, 0, 50, 0)
-        Sleep(200)
-    end
+			if not boolGadget then
+				Sleep(200)
+			end
+	end
 end
 
 --> Takes a Table of Locks and locks it if the lock is free 
@@ -4663,38 +4675,47 @@ end
 
 function unitCanBuild(unitDefID)
 	assert(UnitDefs)
-	return UnitDefs[unitDefID].buildOptions 
+
+	if unitDefID and UnitDefs[unitDefID]  then		
+		return UnitDefs[unitDefID].buildOptions 
+	else
+			return {}
+	end
 end
 
+--computates a map of all unittypes buildable by a unit (detects loops)
 --> getUnitBuildAbleMap
---computates a map of all unittypes buildable by a unit
-function getUnitCanBuildList(unitDefID)
+function getUnitCanBuildList(unitDefID, closedTableExtern)
     Result = {}
-    Result[unitDefID] = true
 
-    openTable = unitCanBuild(unitDefID)
-	assert(#openTable > 0)
-    closedTable = {}
+    openTable = unitCanBuild(unitDefID) or {}
+	if lib_boolDebug == true then	
+		echo("Unit "..UnitDefs[unitDefID].name.." can built:")
+	end
+   closedTable = closedTableExtern or {}
+   closedTable[unitDefID] = true  
+	CanBuildList = unitCanBuild(unitDefID)
+	
 
-    repeat
-			local tempOpenTable={}
-			for num, typeDefID in pairs (openTable) do
-				if num and typeDefID then
-				 CanBuildList = unitCanBuild(typeDefID)
-					for i = 1, #CanBuildList do
-						 if closedTable[CanBuildList[i]] == nil  then 
-							tempOpenTable[#tempOpenTable + 1] = CanBuildList[i]
-							closedTable[CanBuildList[i]] = true
-							Result[CanBuildList[i]] = true
-						 end
-					end	
+   for num, defID in pairs(CanBuildList) do
+
+		
+		if defID and not closedTable[defID] then
+			Result[defID] =defID		
+			unitsToIntegrate, closedTable = getUnitCanBuildList(defID, closedTable)
+			if unitsToIntegrate then
+				for k=1,#unitsToIntegrate do
+					if lib_boolDebug == true then	
+						echo("Unit "..UnitDefs[unitDefID].name)
+					end
+					
+				Result[unitsToIntegrate[k]] = unitsToIntegrate[k]
 				end
 			end
-			openTable = tempOpenTable
-			
-	until count(openTable) == 0 
+		end
+   end
 
-    return Result
+    return Result,closedTable
 end
 
 -->Stuns a Unit

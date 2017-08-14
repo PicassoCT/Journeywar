@@ -26,10 +26,7 @@ function gadget:GetInfo()
     }
 end
 
-
-
 if (gadgetHandler:IsSyncedCode()) then
-
     VFS.Include("scripts/lib_OS.lua")
     VFS.Include("scripts/lib_UnitScript.lua")
     VFS.Include("scripts/lib_jw.lua")
@@ -128,9 +125,6 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 
-
-
-
     --Food
     --AccumulatedHeat
 
@@ -153,9 +147,6 @@ if (gadgetHandler:IsSyncedCode()) then
 
     _, extrema = Spring.GetGroundExtremes()
     MaxFood = 150
-
-
-
     --SETUP
     function addRareSFX()
         --adds sfx that are expensive eyecatchers to ordinary fire extremas
@@ -187,7 +178,6 @@ if (gadgetHandler:IsSyncedCode()) then
         fireCounter = fireCounter - 8
     end
 
-
     function removeFromFireTable(T)
         KeyX = {}
         KeyZ = {}
@@ -199,7 +189,6 @@ if (gadgetHandler:IsSyncedCode()) then
             end
         end
     end
-
 
     function addFiresFromGG()
         if not GG.LandScapeT then initLandScapeTable() end
@@ -226,8 +215,6 @@ if (gadgetHandler:IsSyncedCode()) then
         GG.AddFire = emptyTable
         GG.LandScapeT = LandScapeT
     end
-
-
 
     ProofTypes = getPyroProofUnitTypeTable(UnitDefNames)
     AirTypes = getAirUnitTypeTable(UnitDefNames)
@@ -336,9 +323,11 @@ if (gadgetHandler:IsSyncedCode()) then
 
     local teamGaia = Spring.GetGaiaTeamID()
 	
-	if not GG.getLandscapeOnFire then GG.getLandscapeOnFire = function (x,z) 
-		x,z = math.ceil(x/MetaMapResDivider),math.ceil(z/MetaMapResDivider)
-		return GG.LandScapeT[x][z].boolBurning	
+	if not GG.getLandscapeOnFire then 
+		GG.getLandscapeOnFire = 	function (x,z) 
+			x,z = math.ceil(x/MetaMapResDivider),math.ceil(z/MetaMapResDivider)
+			return GG.LandScapeT[x][z].boolBurning	
+		end
 	end
 
     function updateFire()

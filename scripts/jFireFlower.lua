@@ -592,8 +592,7 @@ function goTooKillThemAllPicaMon()
     proChoice = Spring.GetUnitsInCylinder(piecePosX, piecePosZ, selectRange) --no idea why 2.9 but satan told me so
 
     local spGetUnitPosition = Spring.GetUnitPosition
-    if proChoice ~= nil then
-	
+
 	process(proChoice,
 			function(id)
 				uX,uY,uZ= Spring.GetUnitPosition(id)
@@ -603,10 +602,8 @@ function goTooKillThemAllPicaMon()
 				else
 					setUnitOnFire(id, math.random(500, 1500))
 				end
-			)
-
-
-    end
+			end
+			)   
 end
 
 function theBigFireStorm()

@@ -43,50 +43,67 @@ if gadgetHandler:IsSyncedCode() then
 	end
 	
 	function buildUnitsToTestList ()	
-		journeyUnitList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
-		centrailUnitList= getUnitCanBuildList(UnitDefNames["citadell"].id)		
-		allUnits= mergeDict(selectUnitDefs(journeyUnitList,UnitDefs),selectUnitDefs(centrailUnitList, UnitDefs))
-		allUnits = removeImmobileInT(allUnits, UnitDefs)
-		allUnits[UnitDefNames["crewardrer"].id] = true
+		local journeyUnitList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
+		--echoUnitDefT(journeyUnitList)
+		local centrailUnitList= getUnitCanBuildList(UnitDefNames["citadell"].id)	
 		
-		defenseBuildings = getDefenseBuildingTypeTable(UnitDefNames)
-		return mergeDict(allUnits, defenseBuildings)	
+		
+		allUnitTypes= mergeDict(selectUnitDefs(journeyUnitList),selectUnitDefs(centrailUnitList))
+		
+		mobileUnits={}
+		process(allUnitTypes,
+		function(defID)
+			if defID and UnitDefs[defID].isImmobile == true then 
+				mobileUnits[defID] =defID
+			end
+		end		
+		)
+		
+		
+		
+
+		return mobileUnits --mergeDict(mobileUnits, defBuildings)	
 	end
 	
 	
 	function generateGenericTests()
-	
+		
 		selectedUnits = buildUnitsToTestList()
 		UnitsTotal = count( selectedUnits) or 0
-				
+		
 		gaiaTeamID = Spring.GetGaiaTeamID()
+		
 		spawnUnitsForTeam(teamList[math.random(1, #teamList)], selectedUnits)
 		spawnUnitsForTeam(gaiaTeamID, selectedUnits)
 	end
 	
 	function getRotatedPosition(index, x, z, mx, mz)	
-		x,z = Rotate(x,z, index*10)
+		x,z = Rotate(x,z, math.rad(index*5))
 		return mx + x, mz + z
 	end
 	
+	
+	
 	function spawnUnitsForTeam(teamID, selectedUnits)
 		if not GG.DebugIndex then GG.DebugIndex = 0 end
-
-		for i=1, #selectedUnits do		
-		local id = selectedUnits[i]
-		GG.DebugIndex = GG.DebugIndex  + 1
-		
-		x,z = getRotatedPosition(GG.DebugIndex * 10, 0, GG.DebugIndex*75, 4096, 4096 )
-
-			
-			UnitTest[#UnitTest + 1] = function()
+			for defID, _defID in pairs(selectedUnits) do	
+			if   _defID then
+				x,y,z=0,0,0
 				
-				id = Spring.CreateUnit(id, x, 0,z, 1, teamID)
-				Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
-				Command(id, "move", { x = x, y = 0, z = z }, { "shift" })
-			end
-		end
-
+						GG.DebugIndex = GG.DebugIndex + 1							
+							x,z = getRotatedPosition(GG.DebugIndex, 0, GG.DebugIndex*75, 4096, 4096 )
+							y= Spring.GetGroundHeight(x,z) 
+					
+							
+							UnitTest[#UnitTest + 1] = function()
+								--echo(type(id))
+								id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
+								Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
+								Command(id, "move", { x = x, y = 0, z = z }, { "shift" })
+							end
+				end		
+				end		
+	
 	end
 	
 	function initialize()
@@ -106,7 +123,7 @@ if gadgetHandler:IsSyncedCode() then
 			end
 		end
 		if n % 1000 == 0 then
-		index= 1
+			index= 1
 		end
 	end
 end

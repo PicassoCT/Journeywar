@@ -75,7 +75,7 @@ ColourTable={
 	
 	function triMix(val,t1,t2)
 		cval= 1-val
-		return t1.r*val + t2.r* cval, t1.g*val + t1.g* cval, t1.b*val + t1.b* cval, 
+		return t1.r*val + t2.r* cval, t1.g*val + t1.g* cval, t1.b*val + t1.b* cval 
 	end
 	
 	
@@ -173,7 +173,7 @@ ColourTable={
 			}
 		  }
 		}
-	]],
+	]]
 
 	local uniformInt = {
 	  screencopy = 0,

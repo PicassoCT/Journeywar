@@ -268,7 +268,7 @@ MainMenue[CMD.MOVE].callbackFunction= function()
 end
 MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
 		selectedUnits =Spring.GetSelectedUnits()
-		if selectedUnits then
+		if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
 		states = Spring.GetUnitStates(selectedUnits[1])
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
 		end
