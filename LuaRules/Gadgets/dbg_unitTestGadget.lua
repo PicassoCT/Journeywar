@@ -26,21 +26,36 @@ if gadgetHandler:IsSyncedCode() then
 	UnitTest = {}
 	teamList = {}
 	
-	function getNonAIPlayer()
+	UnitNames = {"bg","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor","cart","coperatrans",
+		"chunter","chunterchopper","cnanorecon","conair","csuborbital",	"paxcentrail","cgatefort","cnanorecon",
+		"strider","ccrabsynth", "chunter","sentry","bonker","crailgun",
+		"jdragongrass", "jhivewulfmoma","beefeater","hc","zombie", "jantart","jatlantai","jbeehive","jhoneypot",
+		"jglowworms","jbeherith","jeliah",
+		"jshroudshrike","jswiftspear", 	"jviralfac", "jhoneypot","jtigeggnogg","jskineggnogg","jghostdancer",
+		"jhivewulfmoma","vort", "jantart",
+		"jhunter", "jvaryfoo"
+	}
+	
+	function getAIPlayer()
 		List = Spring.GetTeamList()
 		PlayerList = {}
+		AiList = {}
 		
 		for i = 1, #List do
 			teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier = Spring.GetTeamInfo(List[i])
 			if isAiTeam and isAiTeam == false then
 				PlayerList[#PlayerList+1] = List[i]
+			else
+				AiList[#AiList+1] = List[i]
+				
 			end
 		end
 		
-		if #PlayerList > 0 then return PlayerList end
 		
-		return List
+		return PlayerList,AiList
 	end
+	
+	
 	
 	function buildUnitsToTestList ()	
 		local journeyUnitList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
@@ -61,7 +76,7 @@ if gadgetHandler:IsSyncedCode() then
 		
 		
 		
-
+		
 		return mobileUnits --mergeDict(mobileUnits, defBuildings)	
 	end
 	
@@ -71,58 +86,73 @@ if gadgetHandler:IsSyncedCode() then
 		selectedUnits = buildUnitsToTestList()
 		UnitsTotal = count( selectedUnits) or 0
 		
-		gaiaTeamID = Spring.GetGaiaTeamID()
+		teamList, aiList = getAIPlayer()
+		-- ind= 1
+		-- if #teamList > 1 then ind =math.random(1, #teamList)end
+		spawnUnitsForTeam(1)
+		-- ind= 1
+		-- if #aiList > 1 then ind =math.random(1, #aiList)end
+		spawnUnitsForTeam(2)
 		
-		spawnUnitsForTeam(teamList[math.random(1, #teamList)], selectedUnits)
-		spawnUnitsForTeam(gaiaTeamID, selectedUnits)
 	end
 	
 	function getRotatedPosition(index, x, z, mx, mz)	
-		x,z = Rotate(x,z, math.rad(index*5))
-		return mx + x, mz + z
+		x,z = Rotate(x,z, math.rad(index*15))
+		return math.ceil(mx + x), math.ceil(mz + z)
 	end
 	
 	
-	
-	function spawnUnitsForTeam(teamID, selectedUnits)
-		if not GG.DebugIndex then GG.DebugIndex = 0 end
-			for defID, _defID in pairs(selectedUnits) do	
-			if   _defID then
-				x,y,z=0,0,0
-				
-						GG.DebugIndex = GG.DebugIndex + 1							
-							x,z = getRotatedPosition(GG.DebugIndex, 0, GG.DebugIndex*75, 4096, 4096 )
-							y= Spring.GetGroundHeight(x,z) 
+	GG.DebugIndex = 0
+	function spawnUnitsForTeam(teamID)
+		local teamID = teamID
+		for i=1, #UnitNames do	
+			name = UnitNames[i]
+			if UnitDefNames[name]then 
+				local _defID = UnitDefNames[name].id
+				if _defID then
+					x,y,z=0,0,0
 					
-							
-							UnitTest[#UnitTest + 1] = function()
-								--echo(type(id))
-								id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
-								Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
-								Command(id, "move", { x = x, y = 0, z = z }, { "shift" })
-							end
+					GG.DebugIndex = GG.DebugIndex + 1		
+					local valueIndex= GG.DebugIndex
+					local circleFraction= math.ceil(GG.DebugIndex/#UnitNames)
+
+					
+					
+					local x,z = getRotatedPosition(valueIndex, circleFraction*100, valueIndex *25, 4096, 4096 )
+					y= Spring.GetGroundHeight(x,z) 
+					
+					
+					UnitTest[#UnitTest + 1] = function()
+						--echo(type(id))
+						id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
+						Spring.SetUnitMoveGoal(id,4096,0,4096)
+						Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
+					end
 				end		
-				end		
-	
+			end		
+		end		
+		
 	end
 	
 	function initialize()
-		teamList = getNonAIPlayer()
 		generateGenericTests()
 	end
 	
-	index = 1
+	local index = 1
+	boolInitialized = false
 	function gadget:GameFrame(n)
 		if n % 400 == 0 then Spring.Echo("Starting Test") end
-		
+		if boolInitialized == false then
+		initialize()
+		boolInitialized = true
+		end
 		if n > 400 and n % 30 == 0 then
-			if #UnitTest == 0 then initialize() end
 			if UnitTest[index] then
 				UnitTest[index]()
 				index = inc(index)
 			end
 		end
-		if n % 1000 == 0 then
+		if index >= #UnitTest then
 			index= 1
 		end
 	end

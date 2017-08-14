@@ -100,8 +100,8 @@ function DragonGrassGrowth()
 end
 
 function script.Killed(recentDamage, _)
-    for k, v in pairs(AddictList) do
-        if k and k ~= unitID then Spring.DestroyUnit(k, true, false) end
+    for k, v in pairs(AddictList) do		 
+		if k and k ~= unitID then  GG.UnitsToKill:PushKillUnit(k) end
     end
     createCorpseJBuilding(unitID, recentDamage)
     return 1
