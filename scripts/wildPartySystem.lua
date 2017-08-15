@@ -751,7 +751,7 @@ function PartyManager()
                     ------ Spring.Echo(i.."PersonNr Made it this far")
 
                     --check (if not advisor) or way is free
-                    if (dramatisPersona[i][8] == 4 or isWayfree(degreeRand, moveInOut, dramatisPersona[i][4], dramatisPersona[i][5], dramatisPersona[i][6]) == true) then --FixMe
+                    if (dramatisPersona[i][8] == 4 or PartyisWayfree(degreeRand, moveInOut, dramatisPersona[i][4], dramatisPersona[i][5], dramatisPersona[i][6]) == true) then --FixMe
                         dramatisPersona[i][9] = true
                         StartThread(PartySenderJobFunc, i, degreeRand, moveInOut)
 

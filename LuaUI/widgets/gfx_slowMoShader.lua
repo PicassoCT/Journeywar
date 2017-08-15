@@ -176,12 +176,12 @@ ColourTable={
 	]]
 
 	local uniformInt = {
-	  screencopy = 0,
+	  screencopy = 0
 	}
 
 	local shaderTable = {
 	  fragment = "",
-	  uniformInt = uniformInt,
+	  uniformInt = uniformInt
 	}
 
 function widget:Initialize()
@@ -194,9 +194,9 @@ function widget:Initialize()
 	local _,_,_,_, side, _                                      = Spring_GetTeamInfo(tteam)
 
 	if side== "journeyman" then
-	shaderTable.fragment= 	nightvision,
+	shaderTable.fragment= 	nightvision
 	else
-	shaderTable.fragment=  tacVision,	
+	shaderTable.fragment=  tacVision
 	end
 	
 	

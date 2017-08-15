@@ -216,11 +216,11 @@ function leachExpLoop()
 
         if boolFlowDirectionTowardsTeam == true then
             collectExpFromTeamsToUnit(unitID, Range, amount, { [teamid] = true })
-            giveExpFromUnitToTeam(unitID, Range, amount, { [teamid] = true })
+            giveExpFromUnitToTeam( Range, amount, { [teamid] = true })
 
         else
             collectExpFromTeamsToUnit(unitID, Range, amount, { [teamid] = true })
-            giveExpFromUnitToTeam(unitID, Range, amount, { [teamid] = true })
+            giveExpFromUnitToTeam( Range, amount, { [teamid] = true })
         end
 
         Sleep(1000)

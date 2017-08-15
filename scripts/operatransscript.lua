@@ -94,7 +94,6 @@ function script.Create()
     Hide(flare3)
     Hide(flare4)
     StartThread(PartyManager)
-    StartThread(CriticalHitDetector)
     StartThread(costlyUnderAttack)
 end
 

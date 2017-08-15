@@ -868,7 +868,7 @@ function bigMoma()
     local spGetUnitHealth = Spring.GetUnitHealth
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
 	local spGetUnitIsDead = Spring.GetUnitIsDead
-
+	
     --Spring.SetUnitMoveGoal(monsterTable[i],ex,ey,ez)
     while (true) do
         --warmode
@@ -920,6 +920,10 @@ end
 
 
 function script.Create()
+StartThread(delayedThreadStart)
+end
+
+function delayedThreadStart()
     StartThread(main)
     StartThread(bigMoma)
     StartThread(danglinDangle)

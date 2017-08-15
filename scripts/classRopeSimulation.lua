@@ -75,8 +75,8 @@ function ApplyForce.new(springConstant, vecConnectionPos)
 	metaTable = {
             springConstant = springConstant,
 			connectionPos = vecConnectionPos,
-			masses[0].pos = vecConnectionPos + Vector:new(10.0,0.0,0.0),
-			masses[0].vel =  Vector:new(0.0, 0.0, 0.0)
+			masses[0].pos = Vector:new(10.0,0.0,0.0) + vecConnectionPos,
+			masses[0].vel = Vector:new(0.0, 0.0, 0.0)
         }
 		
 	metaTable = inherit(metaTable, Simulation: new(1, 1.0))
