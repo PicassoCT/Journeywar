@@ -65,8 +65,8 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
     if NearestAlly then
         x, y, z = Spring.GetUnitPosition(NearestAlly)
         if x then
-            distance = math.sqrt(x * x + z * z)
-            if distance < SHIELDRANGE then
+            dist = math.sqrt(x * x + z * z)
+            if dist < SHIELDRANGE then
                 return 0
             end
         end

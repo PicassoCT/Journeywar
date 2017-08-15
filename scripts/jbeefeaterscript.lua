@@ -75,9 +75,9 @@ function obsticleTest()
 end
 
 --function: this. expands the tongue, while constantly checking if the the tonguetip passes through terrain
-function expandTongue(distance, totalpitchDown, tspeed)
+function expandTongue(dist, totalpitchDown, tspeed)
     --Signal(SIG_IDLE)
-    if distance > (900) or totalpitchDown > 90 then
+    if dist > (900) or totalpitchDown > 90 then
         return false
     end
     Show(tonguetip)
@@ -88,7 +88,7 @@ function expandTongue(distance, totalpitchDown, tspeed)
     Turn(sayAAA, x_axis, math.rad(6), 7.5)
     Turn(Head, x_axis, math.rad(-8), 4.5)
     WaitForTurn(Head, x_axis)
-    piecesNeeded = (distance / 28)
+    piecesNeeded = (dist / 28)
     degreePerPiece = (totalpitchDown / piecesNeeded) * -1
     boolObsticleDiscovered = false
     pieceWorkedOn = 1

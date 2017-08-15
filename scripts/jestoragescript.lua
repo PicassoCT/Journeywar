@@ -292,7 +292,7 @@ function dropIn()
     local ldropReal = dropRealistic
 
     while true do
-        distance = -27
+        dist = -27
         amount = math.random(10, 52)
         cosDiv = 3.14159 / (amount)
         cosStart = 3.14159 / -2

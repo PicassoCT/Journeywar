@@ -334,25 +334,25 @@ end
 -- inertiaSwingZ=0 --7
 -- inertiaSwingY=0 --8
 
-function MoveBody(axis, distance, speed, boolwait)
-    Move(body, axis, distance, speed)
+function MoveBody(axis, dist, speed, boolwait)
+    Move(body, axis, dist, speed)
 
     singleMultiplikator = 1
-    if distance < 0 then singleMultiplikator = -1 end
+    if dist < 0 then singleMultiplikator = -1 end
 
 
     if axis == x_axis then
-        inertiaSwingZ = inertiaSwingZ + math.sqrt(distance * speed)
+        inertiaSwingZ = inertiaSwingZ + math.sqrt(dist * speed)
         -- inertiaSwingSpeedX=inertiaSwingSpeedX+singleMultiplikator*speed
 
     elseif axis == z_axis then
-        inertiaSwingZ = inertiaSwingZ + math.sqrt(distance * speed)
+        inertiaSwingZ = inertiaSwingZ + math.sqrt(dist * speed)
 
         --inertiaSwingSpeedZ=inertiaSwingSpeedZ+singleMultiplikator*speed
     else -- if y_axis then
 
         --inertiaSwingSpeedY=inertiaSwingSpeedY+singleMultiplikator*speed
-        inertiaSwingY = inertiaSwingY + math.sqrt(distance * speed)
+        inertiaSwingY = inertiaSwingY + math.sqrt(dist * speed)
     end
 
     if boolwait == true then WaitForMove(body, axis) end
@@ -868,7 +868,7 @@ function bigMoma()
     local spGetUnitHealth = Spring.GetUnitHealth
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
 	local spGetUnitIsDead = Spring.GetUnitIsDead
-	
+	Sleep(100)
     --Spring.SetUnitMoveGoal(monsterTable[i],ex,ey,ez)
     while (true) do
         --warmode
@@ -910,7 +910,7 @@ function gather()
 	ux, uy, uz = spGetUnitPosition(unitID)
 	process(GG.HiveHoundTable[teamID][unitID],
 					function(tab)
-						if spGetUnitIsDead(tab[1])==false then return tab[1] end
+						if tab and Spring.GetValidUnitID(tab[1])== true and spGetUnitIsDead(tab[1])==false then return tab[1] end
 					end,
 					function(id)
 						spSetUnitMoveGoal(id, ux, uy , uz)

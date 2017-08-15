@@ -280,7 +280,7 @@ end
 function detDegree(preInterVallStart,interVallStart,interVallEnd)
 	if preInterVallStart== interVallStart or interVallStart== interVallEnd then return -1*nPrevDegTable[13-interVallStart] end
 	if interVallStart~=1 then
-		local	distance=((interVallEnd-interVallStart))*15.4
+		local	dist=((interVallEnd-interVallStart))*15.4
 		sx,sy,sz,_,_,_=Spring.GetUnitPiecePosDir(unitID,ropestarts[13-interVallStart])
 		--sy=Spring.GetGroundHeight(sx,sz)
 		ex,ey,ez,_,_,_=Spring.GetUnitPiecePosDir(unitID,sensors[13-interVallEnd])
@@ -289,12 +289,12 @@ function detDegree(preInterVallStart,interVallStart,interVallEnd)
 		--Sum of All Previous Degrees -negated, so that whatever we turn is relative zero.
 		
 		-- nPrevDegTable[13-interVallStart]=reSlut
-		reSlut= -1*	nPrevDegTable[13-interVallStart+1] + (math.atan2(opposite,distance)*(180/pi))
+		reSlut= -1*	nPrevDegTable[13-interVallStart+1] + (math.atan2(opposite,dist)*(180/pi))
 		
 		return reSlut
 	else
 		
-		local	distance=((interVallEnd-interVallStart))*15.4
+		local	dist=((interVallEnd-interVallStart))*15.4
 		--Spring.Echo("distance",distance)
 		sx,sy,sz,_,_,_=Spring.GetUnitPiecePosDir(unitID,ropestarts[12])
 		sy=Spring.GetGroundHeight(sx,sz)
@@ -302,7 +302,7 @@ function detDegree(preInterVallStart,interVallStart,interVallEnd)
 		groundheight=Spring.GetGroundHeight(ex,ez)
 		local	opposite=sy-groundheight
 		--Sum of All Previous Degrees -negated, so that whatever we turn is relative zero.
-		reSlut= acquireVehicleDegree() + (math.atan2(opposite,distance)*(180/pi))
+		reSlut= acquireVehicleDegree() + (math.atan2(opposite,dist)*(180/pi))
 		-- nPrevDegTable[13-interVallStart]=reSlut
 		return reSlut
 	end

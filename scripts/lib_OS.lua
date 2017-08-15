@@ -482,11 +482,11 @@ function breathOS(body, lowDist, upDist, LegTable, LegNumber, degree, speed, cou
 
     while bLoop == true or lcount > 0 do
 
-        distance = math.random(lowDist, upDist)
-        percentage = distance / upDist
-        Time = distance / (math.abs(speed) + 0.001)
+        dist = math.random(lowDist, upDist)
+        percentage = dist / upDist
+        Time = dist / (math.abs(speed) + 0.001)
         degreeC = percentage * degree
-        --downDeg=math.asin(leglength*distance)
+        --downDeg=math.asin(leglength*dist)
         --upDeg= math.asin()
 
 
@@ -496,7 +496,7 @@ function breathOS(body, lowDist, upDist, LegTable, LegNumber, degree, speed, cou
         degHalfMins = degHalf * -1.3
         degreeMinus = degreeC * -1.7
 
-        Move(body, y_axis, -distance, speed)
+        Move(body, y_axis, -dist, speed)
         for i = 1, LegNumber, 1 do
             Turn(LegTable[i].up, x_axis, math.rad(degreeC), speedDeg)
             Turn(LegTable[i].down, x_axis, math.rad(degreeMinus), 2 * speedDeg)

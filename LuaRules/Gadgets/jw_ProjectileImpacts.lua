@@ -624,13 +624,24 @@ if (gadgetHandler:IsSyncedCode()) then
         return 0
     end
 
-    UnitDamageFuncT[CEaterRocketDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackID, attackerDefID, attackerTeam)
-
-        attackerID = attackID
-        valid = Spring.ValidUnitID(attackerID)
-        if not attackerID or (not valid) or valid == false then
-            attackID = Spring.GetUnitLastAttacker(unitID)
-        end
+	function UnitExists(attackerID)
+	    valid = Spring.ValidUnitID(attackerID)
+		if not valid or valid == false then return false end
+		alive = Spring.GetUnitIsDead(attackerID)
+        if not alive or alive == false then return false end
+		return true	
+	end
+	
+    UnitDamageFuncT[CEaterRocketDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		
+		if not attackerID or UnitExists(attackerID) == false then
+		    attackerID = Spring.GetUnitLastAttacker(unitID)
+		end
+		
+		
+		if not attackerID or UnitExists(attackerID) == false then
+		    return
+		end
         metalRes, energyRes = UnitDefs[unitDefID].metalCost, UnitDefs[unitDefID].energyCost
 
         gx, gy, gz = Spring.GetUnitPosition(unitID)

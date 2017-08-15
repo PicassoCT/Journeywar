@@ -334,16 +334,16 @@ function aGift(ed)
 end
 
 function aChainExplosion(ed)
-    distance = 0
+    dist = 0
     pos = vectorUnitToUnit(unitID, ed)
 
-    while distance < 32 do
+    while dist < 32 do
         wed = Spring.GetUnitNearesAlly(ed)
         if wed then
             assertNum(wed)
             osv = vectorUnitToUnit(UnitID, wed)
             a, b, c = pos.x - osv.x, pos.y - osv.y, pos.z - osv.z
-            distance = math.sqrt(a * a + b * b + c * c)
+            dist = math.sqrt(a * a + b * b + c * c)
             Spring.DestroyUnit(ed)
             pos.x, pos.y, pos.z = osv.x, osv.y, osv.z
             ed = wed

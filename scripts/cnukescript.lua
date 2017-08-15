@@ -281,8 +281,8 @@ function damageFunction()
                 setUnitOnFire(proChoice[i], 900)
 
                 x, y, z = Spring.GetUnitPosition(proChoice[i])
-                distance = math.sqrt((piecePosX - x) * (piecePosX - x) + (piecePosY - y) * (piecePosY - y) + (piecePosZ - z) * (piecePosZ - z))
-                Spring.AddUnitDamage(proChoice[i], fixDamage + math.ceil(10000 / distance))
+                ldistance = math.sqrt((piecePosX - x) * (piecePosX - x) + (piecePosY - y) * (piecePosY - y) + (piecePosZ - z) * (piecePosZ - z))
+                Spring.AddUnitDamage(proChoice[i], fixDamage + math.ceil(10000 / ldistance))
                 --leave no wreck
             end
         end

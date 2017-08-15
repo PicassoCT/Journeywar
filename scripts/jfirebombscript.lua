@@ -16,11 +16,11 @@ function explodeAfterTimeAndDistance()
 
     x, y, z = Spring.GetUnitPosition(unitID)
     nx, ny, nz = Spring.GetUnitPosition(unitID)
-    distance = math.sqrt((nx - x) * (nx - x) + (nz - z) * (nz - z))
-    while Time < Maxtime and distance < Maxdistance do
+    dist = math.sqrt((nx - x) * (nx - x) + (nz - z) * (nz - z))
+    while Time < Maxtime and dist < Maxdistance do
         nx, ny, nz = Spring.GetUnitPosition(unitID)
         nx, nz = x - nx, z - nz
-        distance = math.sqrt(nx * nx + nz * nz)
+        dist = math.sqrt(nx * nx + nz * nz)
         Time = Time + 100
         Sleep(100)
         EmitSfx(center, 1024)

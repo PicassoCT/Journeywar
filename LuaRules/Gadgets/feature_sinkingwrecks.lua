@@ -92,7 +92,7 @@ if (gadgetHandler:IsSyncedCode()) then
                 local spDestroyFeature = Spring.DestroyFeature
 
                 for i = 1, #WreckList, 1 do
-                    if WreckList[i].sinkTime < SinkEndTime and spValidFeatureID(WreckList[i].id) == true then
+                    if WreckList[i] and WreckList[i].sinkTime < SinkEndTime and spValidFeatureID(WreckList[i].id) == true then
                         spDestroyFeature(WreckList[i].id)
                     end
                 end

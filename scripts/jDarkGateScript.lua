@@ -83,10 +83,10 @@ function GetDistanceToHole(vicID, x, y, z)
     end
 end
 
-function getEaten(victimID, distance, unitID, x, z)
+function getEaten(victimID, dist, unitID, x, z)
     local spSetPosition = Spring.SetUnitPosition --Todo SetUnitPosition
     local spValidUnitID = Spring.ValidUnitID
-    factor = 1 / distance
+    factor = 1 / dist
     tx, ty, tz = x, 0, z
     while gx ~= cx and gz ~= cz and spValidUnitID(id) == true do
         tx = (gx * factor + cx * (1 - factor))

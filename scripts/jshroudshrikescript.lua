@@ -171,6 +171,8 @@ function giveExpFromUnitToTeam(unitID, Range, filterTeams)
     x, y, z = Spring.GetUnitPosition(unitID)
 
     exP = Spring.GetUnitExperience(unitID)
+    if not exP then return end
+   
     if exP > 0 then -- reDistribute
 
 

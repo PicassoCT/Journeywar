@@ -939,7 +939,7 @@ function PartySenderJobFunc(personNr, targetdegree, targetDist)
     end
     Sleep(2)
     --send the person on its way.
-    typeDependedWalkAnimation(personNr, dramatisPersona[personNr][8])
+    PartyTypeDependedWalkAnimation(personNr, dramatisPersona[personNr][8])
 
     --now we update the current position
     if dramatisPersona[personNr][6] == 1 or dramatisPersona[personNr][6] == 2 then

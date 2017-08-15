@@ -1176,9 +1176,9 @@ FixFunctionTabel[22] = function()
     left = 0
     right = 3.14159
     for i = 1, #TreePiece, 2 do
-        distance = 7 * i
-        Move(TreePiece[i], y_axis, distance, 0)
-        Move(TreePiece[i + 1], y_axis, distance, 0)
+        dist = 7 * i
+        Move(TreePiece[i], y_axis, dist, 0)
+        Move(TreePiece[i + 1], y_axis, dist, 0)
 
         Turn(TreePiece[i], x_axis, math.rad(90), 0)
         Turn(TreePiece[i + 1], x_axis, math.rad(90), 0)
