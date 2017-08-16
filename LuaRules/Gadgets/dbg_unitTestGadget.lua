@@ -26,14 +26,18 @@ if gadgetHandler:IsSyncedCode() then
 	UnitTest = {}
 	teamList = {}
 	
-	UnitNames = {"bg","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor","cart","coperatrans",
-		"chunter","chunterchopper","cnanorecon","conair","csuborbital",	"paxcentrail","cgatefort","cnanorecon",
-		"strider","ccrabsynth", "chunter","sentry","bonker","crailgun",
-		"jdragongrass", "jhivewulfmoma","beefeater","hc","zombie", "jantart","jatlantai","jbeehive","jhoneypot",
-		"jglowworms","jbeherith","jeliah",
-		"jshroudshrike","jswiftspear", 	"jviralfac", "jhoneypot","jtigeggnogg","jskineggnogg","jghostdancer",
-		"jhivewulfmoma","vort", "jantart",
-		"jhunter", "jvaryfoo"
+	UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+				"coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+				"chunterchopper","conair","csuborbital","cgunship","callygator"
+				"paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
+				"sentry","bonker","crailgun","chopper",
+				"jhivewulfmoma","beefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
+				"jglowworms","jbeherith","jeliah",
+				"jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
+				"jhivewulfmoma","vort", "jantart",	"jviralfac", "jhoneypot",
+				"jhunter", "jvaryfoo",
+				"jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
+				"ggluemine","jtree", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler"
 	}
 	
 	function getAIPlayer()
@@ -46,8 +50,7 @@ if gadgetHandler:IsSyncedCode() then
 			if isAiTeam and isAiTeam == false then
 				PlayerList[#PlayerList+1] = List[i]
 			else
-				AiList[#AiList+1] = List[i]
-				
+				AiList[#AiList+1] = List[i]				
 			end
 		end
 		
@@ -127,6 +130,7 @@ if gadgetHandler:IsSyncedCode() then
 						id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
 						Spring.SetUnitMoveGoal(id,4096,0,4096)
 						Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
+						Command(id, "move", { x =x, y = 0, z = z }, { "shift" })
 					end
 				end		
 			end		
