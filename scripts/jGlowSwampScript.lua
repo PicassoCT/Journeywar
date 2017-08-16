@@ -233,14 +233,17 @@ function TargetOS()
     Spring.SetUnitBlocking(unitID, false)
     UnitTable = {}
     UnitTable = spGetUnitsInCylinder(x, z, 120)
-    for i = 1, #UnitTable, 1 do
-        defid = spGetUnitDefID(UnitTable[i])
-        if defid == UnitDefNames["jglowworms"].id then
-            mumID = UnitTable[i]
-            i = #UnitTable + 1
-            break
+	process(UnitTable,
+		function (id) 
+		  defid = spGetUnitDefID(id)
+        if defid == UnitDefNames["jglowworms"].id and  id == Spring.GetUnitExperience(id) then
+            mumID = id
+			Spring.SetUnitExperience(id, 0)
         end
-    end
+		
+		end
+	)
+
 
     local spPlaySoundFile = Spring.PlaySoundFile
 
