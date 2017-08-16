@@ -692,7 +692,13 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
     if damage > 15 and math.random(0, 42) == 22 then
         StartThread(PlaySoundByUnitDefID, bgdefID, attackedSounds[math.floor(math.random(1, #attackedSounds))], 0.5, 2000, 1, 0)
     end
-    return damage
+	
+	if not GG.RiotShieldTable then GG.RiotShieldTable = {} end
+	if GG.RiotShieldTable[unitID]== true then
+		return math.ceil(damage * 0.3)
+	else
+		return damage
+	end
 end
 
 function showShield()

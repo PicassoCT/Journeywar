@@ -184,9 +184,9 @@ function script.Deactivate()
 end
 
 
-
 function swamp()
     local OnTheMove = DontMove
+	local storedExp =Spring.GetUnitExperience(unitID)
 
     teamID = Spring.GetUnitTeam(unitID)
     while boolOnlyOnce == false do
@@ -195,7 +195,12 @@ function swamp()
     end
 
     GG.UnitsToSpawn:PushCreateUnit("jswamp", lx, ly, lz, 0, teamID)
-
+	Spring.SetUnitExperience(unitID, unitID)
+	while unitID == Spring.GetUnitExperience(unitID) do
+	   OnTheMove()
+		Sleep(100)
+	end
+	Spring.SetUnitExperience(storedExp)
     while true do
         OnTheMove()
         Sleep(500)
