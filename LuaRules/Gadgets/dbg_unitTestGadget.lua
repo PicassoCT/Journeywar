@@ -28,7 +28,7 @@ if gadgetHandler:IsSyncedCode() then
 	
 	UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
 				"coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
-				"chunterchopper","conair","csuborbital","cgunship","callygator"
+				"chunterchopper","conair","csuborbital","cgunship","callygator",
 				"paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
 				"sentry","bonker","crailgun","chopper",
 				"jhivewulfmoma","beefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
