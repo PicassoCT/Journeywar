@@ -827,6 +827,16 @@ function testUnit(unitid)
     end
 end
 
+	function UnitExists(id)
+	    valid = Spring.ValidUnitID(id)
+		if not valid or valid == false then return false end
+		alive = Spring.GetUnitIsDead(id)
+        if not alive or alive == false then return false end
+		return true	
+	end
+	
+
+
 function HideWrap(piecenr)
     if lib_boolDebug == true then
         if type(piecenr) == "string" then
@@ -3054,13 +3064,24 @@ function piec2Point(piecesTable)
     for i = 1, #piecesTable do
         reTab[i] = {}
         reTab[i].Piece = piecesTable[i]
-        reTab[i].x, reTab[i].y, reTab[i].z = Spring.GetUnitPiecePosDir(unitID, piecesTable[i])
+		x,y,z = Spring.GetUnitPiecePosDir(unitID, piecesTable[i])
+		assert(z, "Z not defined for piece"..piecesTable[i].." aka ".. getUnitPieceName(unitID,piecesTable[i]))
+		assert(y, "Y not defined for piece"..piecesTable[i].." aka ".. getUnitPieceName(unitID,piecesTable[i]))
+		assert(z, "Z not defined for piece"..piecesTable[i].." aka ".. getUnitPieceName(unitID,piecesTable[i]))
+	
+        reTab[i].x, reTab[i].y, reTab[i].z = x,y,z
         reTab[i].index = i
     end
 
     return reTab
 end
 
+
+function getUnitPieceName(unitID,pieceNum)
+
+	pieceList= Spring.GetUnitPieceList(unitID)
+	return pieceList[pieceNum]
+end
 --> spawn a ceg on the map above ground
 function markPosOnMap(x, y, z, colourname, boolGadget)
 
@@ -3178,6 +3199,9 @@ end
 
 -->Spawn CEG at unit
 function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
+
+	if UnitExists(unitID) ==false then return end
+	
 	if not dx then
 		dx, dy ,dz = 0, 1, 0
 	end

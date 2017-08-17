@@ -1,10 +1,10 @@
 ----------------------------------------------------------------------------------------------------
---                                          TACTICAL GRID                                         --
---                         Widget display tactical grid and border fade.                          --
+--                                          Slow Motion Shader                                         --
+--                         Displays the Slow Motion Shader.                          --
 ----------------------------------------------------------------------------------------------------
 function widget:GetInfo()
         return {
-                name      = "TacticalGrid",
+                name      = "SlowMo Shader",
                 desc      = "Tactical Grid Tool",
                 author    = "a1983",
                 date      = "21 12 2012",

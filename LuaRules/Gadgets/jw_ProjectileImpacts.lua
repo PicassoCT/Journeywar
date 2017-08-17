@@ -624,14 +624,7 @@ if (gadgetHandler:IsSyncedCode()) then
         return 0
     end
 
-	function UnitExists(attackerID)
-	    valid = Spring.ValidUnitID(attackerID)
-		if not valid or valid == false then return false end
-		alive = Spring.GetUnitIsDead(attackerID)
-        if not alive or alive == false then return false end
-		return true	
-	end
-	
+
     UnitDamageFuncT[CEaterRocketDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		if not attackerID or UnitExists(attackerID) == false then
