@@ -1659,9 +1659,7 @@ function GetSpeed(timeInSeconds, degree)
 end
 
 function resetAll(unitID)
-	pieceList= Spring.GetUnitPieceList(unitID)
-	pieceList = makeKeyPiecesTable(unitID, piece)
-	resetT(pieceList)
+	resetT(makeKeyPiecesTable(unitID, piece))
 end
 -->Reset a Table of Pieces at speed
 
@@ -1948,7 +1946,7 @@ end
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
-function stillMoving(personNr)
+function stillMoving(personNr,dramatisPersona3d)
     if (true == Spring.UnitScript.IsInMove(dramatisPersona3d[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona3d[personNr][1], y_axis)) then
         return true
 
@@ -1957,10 +1955,10 @@ function stillMoving(personNr)
     end
 end
 
-function typeDependedDriveAnimation(personNr)
+function typeDependedDriveAnimation(personNr, dramatisPersona3d)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
 
-    while stillMoving(personNr) == true do
+    while stillMoving(personNr, dramatisPersona3d) == true do
         Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(0.5), 0.02)
         WaitForTurn(dramatisPersona3d[personNr][2], x_axis)
         Turn(dramatisPersona3d[personNr][2], x_axis, math.rad(-0.25), 0.02)
@@ -2038,7 +2036,7 @@ function carSenderJobFunc(dramatisPersona3d, personNr)
     --Person turned into the direction it is going to walk
 
     --send the person on its way.
-    typeDependedDriveAnimation(personNr)
+    typeDependedDriveAnimation(personNr, dramatisPersona3d)
 
     --now we update the current position
 

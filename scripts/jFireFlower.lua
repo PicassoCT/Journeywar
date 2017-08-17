@@ -750,7 +750,7 @@ end
 function initialization()
 	boolFullGrown = false
 	boolAtLeatOne = false
-	resetAll()
+	resetAll(unitID)
     hideT(piecesTable)
     Move(ffrotator, y_axis, -166, 0)
     Move(ffmain01, y_axis, -200, 0)

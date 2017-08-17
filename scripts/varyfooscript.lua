@@ -693,7 +693,7 @@ function buildAVaryFoo()
         while decoCounter < DecoMax and decoNum < decodice and existsParts(HeadPieces) == true do
 
             if linConLimit < sanitizeRandom(1, Max) then
-                Spring.Echo("jvaryfoo::Linear_decoration")
+                Spring.Echo("jvaryfoo::Linear_decoration 1")
                 decoNum = decoNum + LinearExpandDeco(offSetX)
             else
                 --Check if on of them is existing twice
@@ -703,7 +703,7 @@ function buildAVaryFoo()
                     decoNum = decoNum + SymmetricExpandDeco(pieceA, pieceB, offSetX)
                     Spring.Echo("jvaryfoo::Sym_decoration")
                 else
-                    Spring.Echo("jvaryfoo::Linear_decoration")
+                    Spring.Echo("jvaryfoo::Linear_decoration" 2)
                     decoNum = decoNum + LinearExpandDeco(offSetX)
                 end
             end
@@ -781,9 +781,6 @@ function LinearExpandDeco(offSet)
     Deco = DecoPieces[DecoDice]
 
     Socket = LinFindDecoCon()
-
-
-
 
     if AllReadyUsed[Socket] == nil then
         Spring.Echo("Socket allready used")

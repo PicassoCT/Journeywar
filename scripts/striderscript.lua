@@ -75,7 +75,7 @@ SIG_AIM = 2 --signal for the weapon aiming thread
 SIG_F1 = 4
 SIG_F2 = 8
 SIG_F3 = 16
-SIG_ORG = 32
+
 SIG_WARP = 128
 SIG_IDLE = 256
 
@@ -672,8 +672,8 @@ end
 
 
 function script.StartMoving()
-    Spring.Echo("starting to walk!")
-    Signal(SIG_ORG)
+   -- Spring.Echo("starting to walk!")
+ 
     Signal(SIG_WARP)
     idleEnd = true
 

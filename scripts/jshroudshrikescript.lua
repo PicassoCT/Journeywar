@@ -213,7 +213,7 @@ function leachExpLoop()
 
     while true do
 
-        Range = math.max(minRange, maxRange * (exP / maxStore))
+        Range = math.max(minRange, maxRange * (Spring.GetUnitExperience(unitID) / maxStore))
         amount = maxLeachQuote
 
         if boolFlowDirectionTowardsTeam == true then

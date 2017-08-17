@@ -306,7 +306,11 @@ if (gadgetHandler:IsSyncedCode()) then
 
         for o = startx, endx, 1 do
             for i = startz, endz, 1 do
-                orgTerrainMap[o][i] = orgTerrainMap[o][i] + tempTable[math.max(1, o - startx)][math.max(1, i - startz)]
+				if  tempTable[math.max(1, o - startx)] and  tempTable[math.max(1, o - startx)][math.max(1, i - startz)] then
+					orgTerrainMap[o][i] = orgTerrainMap[o][i] + tempTable[math.max(1, o - startx)][math.max(1, i - startz)]
+				else
+					assert(true==false,"No terrain defined in dynampic Map for x:"..math.max(1, o - startx).." and z: "..math.max(1, i - startz))
+				end
             end
         end
     end

@@ -910,7 +910,7 @@ function gather()
 	ux, uy, uz = spGetUnitPosition(unitID)
 	process(GG.HiveHoundTable[teamID][unitID],
 					function(tab)
-						if tab and Spring.GetValidUnitID(tab[1])== true and spGetUnitIsDead(tab[1])==false then return tab[1] end
+						if tab and Spring.ValidUnitID(tab[1])== true and spGetUnitIsDead(tab[1])==false then return tab[1] end
 					end,
 					function(id)
 						spSetUnitMoveGoal(id, ux, uy , uz)

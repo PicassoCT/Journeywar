@@ -37,7 +37,7 @@ if gadgetHandler:IsSyncedCode() then
 				"jhivewulfmoma","vort", "jantart",	"jviralfac", "jhoneypot",
 				"jhunter", "jvaryfoo",
 				"jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
-				"ggluemine","jtree", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler"
+				"ggluemine","jtree", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	}
 	
 	function getAIPlayer()

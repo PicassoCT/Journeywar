@@ -42,8 +42,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	for k,kuid in ipairs(sTable)do
 		for i, iuid in ipairs(sTable) do
 		if i~=k and Spring.GetUnitIsDead(sTable[k]) == false and Spring.GetUnitIsDead(sTable[i]) == false then
-			distance=distanceUnitToUnit(sTable[k],sTable[i])
-			if  sTable[k] and sTable[i] and distance < ELIAHMERGEDISTANCE then
+			distances=distanceUnitToUnit(sTable[k],sTable[i])
+			if  sTable[k] and sTable[i] and distances < ELIAHMERGEDISTANCE then
 					if not distanceTable[sTable[k]] then  distanceTable[sTable[k]] = 0 end
 				distanceTable[sTable[k]] = distanceTable[sTable[k]] +1
 				if distanceTable[sTable[k]] > 2 then
