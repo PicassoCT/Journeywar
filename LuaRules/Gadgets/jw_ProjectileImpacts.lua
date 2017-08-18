@@ -624,7 +624,6 @@ if (gadgetHandler:IsSyncedCode()) then
         return 0
     end
 
-
     UnitDamageFuncT[CEaterRocketDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
 		if not attackerID or UnitExists(attackerID) == false then
