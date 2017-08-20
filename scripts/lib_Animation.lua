@@ -766,7 +766,7 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
 
     WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
 end
-
+ 
 
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
