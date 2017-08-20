@@ -73,7 +73,7 @@ ApplyForce.__index = ApplyForce
 
 function ApplyForce.new(springConstant, vecConnectionPos)
 
-	metaTable = {
+	metaTable = {}
 	metaTable = inherit(metaTable, Simulation: new(1, 1.0))
 	
 	metaTable.springConstant = springConstant

@@ -582,7 +582,7 @@ function resPos(piece, center, speed, number, SIG)
 end
 
 function legs_down(WaitForIt)
-    echo("Legs Down")
+   -- echo("Legs Down")
     resPos(relPos1, center1, 5, 1, SIG_F1)
     resPos(relPos2, center2, 5, 2, SIG_F2)
     resPos(relPos3, center3, 5, 3, SIG_F3)
@@ -857,7 +857,7 @@ end
 
 
 function script.StopMoving()
-    Spring.Echo("stopped walking!")
+    --echo("stopped walking!")
 
     Signal(SIG_F1)
     Signal(SIG_F2)
