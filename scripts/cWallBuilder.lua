@@ -315,7 +315,7 @@ end
 function constTerraFormin()
     T = {}
     flatsize = 64
-    hillsize = 16
+    hillsize = 18
     local T = prepareHalfSphereTable(size)
     local spGetUnitPosition = Spring.GetUnitPosition
     local spGetUnitPiecePosDir = Spring.GetUnitPiecePosDir
@@ -337,7 +337,7 @@ function constTerraFormin()
                     Spring.Echo("Terraform Loop Walking")
                     if GG.DynDefMap == nil then GG.DynDefMap = {} end
                     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-                    GG.DynDefMap[#GG.DynDefMap + 1] = {
+                    GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name,
                         x = x / 8,
                         z = z / 8,
                         Size = hillsize,
@@ -352,7 +352,7 @@ function constTerraFormin()
                     if boolWalking == false then
                         if GG.DynDefMap == nil then GG.DynDefMap = {} end
                         if GG.DynRefMap == nil then GG.DynRefMap = {} end
-                        GG.DynDefMap[#GG.DynDefMap + 1] = {
+                        GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name,
                             x = x / 8,
                             z = z / 8,
                             Size = flatsize,

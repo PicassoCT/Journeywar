@@ -48,7 +48,7 @@ function script.Create()
     size = 20
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
     GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(20, -8)
     GG.boolForceLandLordUpdate = true
 
@@ -68,7 +68,7 @@ function comeOnDown()
     size = 32
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = { creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
     GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, 4)
     GG.boolForceLandLordUpdate = true
     Spring.DestroyUnit(unitID, true, true)
@@ -80,7 +80,7 @@ function script.Killed(recentDamage, _)
     size = 32
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
     GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, 4)
     GG.boolForceLandLordUpdate = true
 

@@ -9958,7 +9958,7 @@ function idle()
 
         --changebookmark
         Sleep(285)
-        Sleeper = 14--math.random(0, 16)
+        Sleeper = 15--math.random(0, 16)
 
         tempsleep = math.random(512, 4096)
         if (Sleeper == 0) then

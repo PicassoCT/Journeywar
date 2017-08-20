@@ -1947,6 +1947,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 function stillMoving(personNr,dramatisPersona3d)
+		assert(dramatisPersona3d)
     if (true == Spring.UnitScript.IsInMove(dramatisPersona3d[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona3d[personNr][1], y_axis)) then
         return true
 

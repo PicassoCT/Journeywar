@@ -126,7 +126,7 @@ function script.Killed(recentDamage, maxHealth)
     size = 8
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
     GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -1)
 
     Sleep(450)

@@ -54,6 +54,22 @@ local retT = UnitDef
 return retT
 end
 
+function capShow(Num)
+	assert(type(Num)=="number")
+	Show(Num)
+end
+
+function capHide(Num)
+	assert(type(Num)=="number")
+	Hide(Num)
+end
+
+function capHideT(T)
+	for k,v in pairs(T) do
+		assertNum(v, v)
+	end
+	hideT(T)
+end
 
 function echoUnitDefT(defT)
 
@@ -835,6 +851,8 @@ end
 		return true	
 	end
 	
+	
+	
 
 
 function HideWrap(piecenr)
@@ -926,16 +944,16 @@ function assertAlive(id)
 		assert(true==false)
 	end
 end
-function assertBool(val)
-    assert(type(val) == "boolean")
+function assertBool(val,message)
+    assert(type(val) == "boolean",message)
 end
 
-function assertStr(val)
-    assert(type(val) == "string")
+function assertStr(val,message)
+    assert(type(val) == "string",message)
 end
 
-function assertNum(val)
-    assert(type(val) == "number")
+function assertNum(val, message)
+    assert(type(val) == "number",message)
 end
 
 function assertTableNotNil(Table)
@@ -2430,6 +2448,10 @@ function exists(unitid)
 
     return false
 end
+
+function confirmUnit(id)
+	if UnitExists(id)== true then return id end
+	end
 
 --> This function process result of Spring.PathRequest() to say whether target is reachable or not
 function IsTargetReachable(moveID, ox, oy, oz, tx, ty, tz, radius)

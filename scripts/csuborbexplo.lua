@@ -227,7 +227,7 @@ function justWaitAndSee()
     x, y, z = Spring.GetUnitPosition(unitID)
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "sub", filterType = "borderblur" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = { creator=UnitDefs[Spring.GetUnitDefID(unitID)].name,x = x / 8, z = z / 8, Size = size, blendType = "sub", filterType = "borderblur" }
     GG.DynRefMap[#GG.DynRefMap + 1] = prepareDeformTable(240, -2)
     GG.boolForceLandLordUpdate = true
 

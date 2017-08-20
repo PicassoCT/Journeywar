@@ -27,7 +27,7 @@ pseudoRandom = {
     3, 4, 4, 1, 2, 3, 4, 1, 2, 3, 4, 2
 }
 -----
-piecesTable = {}
+tableOfPieces = {}
 internalAffairs = {}
 internalAffairs[1] = 2
 internalAffairs[2] = 3
@@ -43,10 +43,9 @@ internalAffairs[11] = 1
 internalAffairs[12] = 1
 petal = {}
 for i = 1, 24, 1 do
-    petal[i] = {}
     temp = "petal0" .. i
     petal[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = petal[i]
+    tableOfPieces[#tableOfPieces + 1] = petal[i]
 end
 
 Bubbles = {}
@@ -59,11 +58,11 @@ for i = 1, 11, 1 do
         Bubbles[i][a] = {}
         temp = "bub" .. i .. a
         Bubbles[i][a] = piece(temp)
-        piecesTable[#piecesTable + 1] = Bubbles[i][a]
+        tableOfPieces[#tableOfPieces + 1] = Bubbles[i][a]
         Oil[i][a] = {}
         temp = "oil" .. i .. a
         Oil[i][a] = piece(temp)
-        piecesTable[#piecesTable + 1] = Oil[i][a]
+        tableOfPieces[#tableOfPieces + 1] = Oil[i][a]
     end
 end
 
@@ -73,7 +72,7 @@ for i = 1, 13, 1 do
     Hold[i] = {}
     temp = "hold0" .. i
     Hold[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = Hold[i]
+    tableOfPieces[#tableOfPieces + 1] = Hold[i]
 end
 
 -----
@@ -81,10 +80,9 @@ end
 
 WindP = {}
 for i = 1, 9, 1 do
-    WindP[i] = {}
     temp = "windp0" .. i
     WindP[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = WindP[i]
+    tableOfPieces[#tableOfPieces + 1] = WindP[i]
 end
 
 
@@ -92,47 +90,42 @@ end
 Leaves = {}
 
 for i = 1, 20, 1 do
-    Leaves[i] = {}
     temp = "Leaves0" .. i
     Leaves[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = Leaves[i]
+    tableOfPieces[#tableOfPieces + 1] = Leaves[i]
 end
 
 -----
 Roots = {}
 
 for i = 1, 10, 1 do
-    Roots[i] = {}
     temp = "Root0" .. i
     Roots[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = Roots[i]
+    tableOfPieces[#tableOfPieces + 1] = Roots[i]
 end
 --- -
 Seed = {}
 
 for i = 1, 17, 1 do
-    Seed[i] = {}
     temp = "Seed0" .. i
     Seed[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = Seed[i]
+    tableOfPieces[#tableOfPieces + 1] = Seed[i]
 end
 --- -
 Astrotatoren = {}
 
 for i = 1, 6, 1 do
-    Astrotatoren[i] = {}
     temp = "sRo0" .. i
     Astrotatoren[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = Astrotatoren[i]
+    tableOfPieces[#tableOfPieces + 1] = Astrotatoren[i]
 end
 
 --
 Blueten = {}
 for i = 1, 6, 1 do
-    Blueten[i] = {}
     temp = "windp0" .. i
     Blueten[i] = piece(temp)
-    piecesTable[#piecesTable + 1] = Blueten[i]
+    tableOfPieces[#tableOfPieces + 1] = Blueten[i]
 end
 --
 
@@ -668,16 +661,15 @@ function theBigFireStorm()
 end
 
 function reSeed()
-
     for i = 1, 9, 1 do
         StartThread(flyP, i)
     end
 end
 
 boolFullGrown = false
-Pod = piece "Pod"
-ClosedPod = piece "ClosedPot"
-piecesTable[#piecesTable + 1] = Pod
+Pod = piece("Pod")
+ClosedPod = piece("ClosedPot")
+tableOfPieces[#tableOfPieces + 1] = Pod
 
 function seedToBeFeed()
     delayTillComplete(unitID)
@@ -692,7 +684,7 @@ function seedToBeFeed()
     WaitForMove(Pod, y_axis)
     Show(Pod)
     Hide(ClosedPod)
-    Spring.PlaySound("sounds/jfireflower/popup.ogg", 0.8)
+    Spring.PlaySoundFile("sounds/jfireflower/popup.ogg", 0.8)
     --unfold Pod
     --Feed Me
     x, y, z = Spring.GetUnitPosition(unitID)
@@ -751,22 +743,22 @@ function initialization()
 	boolFullGrown = false
 	boolAtLeatOne = false
 	resetAll(unitID)
-    hideT(piecesTable)
-    Move(ffrotator, y_axis, -166, 0)
-    Move(ffmain01, y_axis, -200, 0)
-    Turn(ffrotator, y_axis, math.rad(-122), 0)
-    Hide(fireEmitor)
-    Hide(centerFireFx)
-    Hide(fireFx1)
-    Hide(fireFx2)
-    Hide(fireFx3)
-    Hide(shockwaveemit)
-    for i = 1, table.getn(WindP), 1 do
-        Hide(WindP[i])
-    end
+   hideT(tableOfPieces)
+   Move(ffrotator, y_axis, -166, 0)
+   Move(ffmain01, y_axis, -200, 0)
+   Turn(ffrotator, y_axis, math.rad(-122), 0)
+   Hide(fireEmitor)
+   Hide(centerFireFx)
+   Hide(fireFx1)
+   Hide(fireFx2)
+   Hide(fireFx3)
+   Hide(shockwaveemit)
+   for i = 1, table.getn(WindP), 1 do
+      Hide(WindP[i])
+   end
 
-    x360 = math.random(0, 360)
-    Turn(center, y_axis, math.rad(x360), 0)
+   x360 = math.random(0, 360)
+	Turn(center, y_axis, math.rad(x360), 0)
 	
 	StartThread(seedToBeFeed)
 end
@@ -826,7 +818,7 @@ function script.Killed(recentDamage, maxHealth)
 	size = 10
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
     GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(siz, -4)
 	
     return 1
