@@ -358,7 +358,7 @@ function script.Killed(recentDamage, _)
 
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
-    GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "sub", filterType = "none" }
+    GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "sub", filterType = "none" }
     GG.DynRefMap[#GG.DynRefMap + 1] = GetHeightMap(size, TableOfPoints)
     val = aWildBlackHoleAppears()
     x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, Singularity)

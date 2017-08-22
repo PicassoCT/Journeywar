@@ -284,7 +284,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
             if x - halfSize > 0 and x + halfSize < MSX and z - halfSize > 0 and z + halfSize < MSZ then
                 --	Spring.Echo("JW::LandLord::insertDynamicDeformationMaps-2")
-                withinBounds(x, z, key, halfSize, blendFunction, filterFunction)
+                withinBounds(x, z, key, halfSize, blendFunction, filterFunction, value.creator or "")
             else
                 --Spring.Echo("JW::LandLord::insertDynamicDeformationMaps-3")
                 debugVAL = withoutBounds(x, z, key, halfSize, blendFunction, filterFunction)
@@ -295,21 +295,23 @@ if (gadgetHandler:IsSyncedCode()) then
         GG.DynRefMap = nil
     end
 
-    function withinBounds(x, z, Nr, halfSize, blendFunction, filterFunction)
-
+    function withinBounds(x, z, Nr, halfSize, blendFunction, filterFunction, creator)
+			boolOnce=false
         startx, endx = x - halfSize, x + halfSize
         startz, endz = z - halfSize, z + halfSize
         --assert(GG.DynRefMap[Nr],"JW:WhatTheHell"..Nr)
         tempTable = filterFunction(true, GG.DynRefMap[Nr], 3, startx, startz)
-
+			if not tempTable then echo("LandLord:Error: No deform Table given after filterfunction"); return end
         tempTable = blendFunction(tempTable, x, z, startx, startz)
-
+			if not tempTable then echo("LandLord:Error: No deform Table given after blendfunction"); return end
         for o = startx, endx, 1 do
             for i = startz, endz, 1 do
 				if  tempTable[math.max(1, o - startx)] and  tempTable[math.max(1, o - startx)][math.max(1, i - startz)] then
 					orgTerrainMap[o][i] = orgTerrainMap[o][i] + tempTable[math.max(1, o - startx)][math.max(1, i - startz)]
-				else
-					assert(true==false,"No terrain defined in dynampic Map for x:"..math.max(1, o - startx).." and z: "..math.max(1, i - startz))
+				elseif boolOnce == false then
+					boolOnce = true
+					
+					echo("LandLord: No terrain defined in dynampic Map for "..creator.." at x:"..math.max(1, o - startx).." and z: "..math.max(1, i - startz))
 				end
             end
         end
@@ -322,7 +324,7 @@ if (gadgetHandler:IsSyncedCode()) then
         startz, endz = z - halfSize, z + halfSize
         --boundCheck
         tempTable = filterFunction(false, GG.DynRefMap[Nr], 3, startx, startz)
-        assert(tempTable, "JW_LANDLORD::WithinBOunds::filterFunction flawed")
+        assert(tempTable, "JW_LANDLORD::Without bounds::filterFunction flawed")
         tempTable = blendFunction(tempTable, x, z, startx, startz)
 
 

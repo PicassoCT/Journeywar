@@ -766,7 +766,7 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
 
     WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
 end
-
+ 
 
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
@@ -1947,6 +1947,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 function stillMoving(personNr,dramatisPersona3d)
+		assert(dramatisPersona3d)
     if (true == Spring.UnitScript.IsInMove(dramatisPersona3d[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona3d[personNr][1], y_axis)) then
         return true
 

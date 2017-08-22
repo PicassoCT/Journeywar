@@ -402,7 +402,7 @@ function senderJobFunc(personNr, targetdegree, targetDist)
     end
     Sleep(2)
     --send the person on its way.
-    typeDependedWalkAnimation(personNr, dramatisPersona[personNr][8])
+    typeDependedWalkAnimation(personNr, dramatisPersona[personNr][8],dramatisPersona3d)
 
     --now we update the current position
     if dramatisPersona[personNr][6] == 1 or dramatisPersona[personNr][6] == 2 then
@@ -431,7 +431,7 @@ function senderJobFunc(personNr, targetdegree, targetDist)
     dramatisPersona[personNr][9] = false
 end
 
-function stillMoving(personNr)
+function stillMoving(personNr, dramatisPersona3d)
     if (true == Spring.UnitScript.IsInMove(dramatisPersona[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona[personNr][1], y_axis)) then
         return true
     else
@@ -439,39 +439,39 @@ function stillMoving(personNr)
     end
 end
 
-function typeDependedWalkAnimation(personNr, personTypeNr)
+function typeDependedWalkAnimation(personNr, personTypeNr,dramatisPersona3d)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
 
     if personTypeNr == 1 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation1(personNr)
         end
     elseif personTypeNr == 2 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation2(personNr)
         end
     elseif personTypeNr == 3 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation3(personNr)
         end
     elseif personTypeNr == 4 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation4(personNr)
         end
     elseif personTypeNr == 5 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation5(personNr)
         end
     elseif personTypeNr == 6 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation6(personNr)
         end
     elseif personTypeNr == 7 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation7(personNr)
         end
     elseif personTypeNr == 8 then
-        while (stillMoving(personNr)) do
+        while (stillMoving(personNr, dramatisPersona3d)) do
             walkAnimation8(personNr)
         end
     else

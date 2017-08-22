@@ -320,7 +320,7 @@ function meltLandscape(x, y, z, timeCounter)
             if GG.DynDefMap == nil then GG.DynDefMap = {} end
             if GG.DynRefMap == nil then GG.DynRefMap = {} end
             size = 160
-            GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "j" }
+            GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "j" }
             GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -0.1)
             --printT(GG.DynRefMap[#GG.DynRefMap],size)
             GG.boolForceLandLordUpdate = true

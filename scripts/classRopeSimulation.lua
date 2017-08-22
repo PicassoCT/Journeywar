@@ -73,7 +73,7 @@ ApplyForce.__index = ApplyForce
 
 function ApplyForce.new(springConstant, vecConnectionPos)
 
-	metaTable = {
+	metaTable = {}
 	metaTable = inherit(metaTable, Simulation: new(1, 1.0))
 	
 	metaTable.springConstant = springConstant
@@ -127,7 +127,7 @@ function SpringSystem:solve()
 		force = force + (springVector / r) * (r - springLength) * (-springConstant)
 	end
 	
-	force = force -(mass1.vel - mass2,vel) * frictionConstant;	
+	force = force -(mass1.vel - mass2.vel) * frictionConstant;	
 	mass1.applyForce(force)
 	mass2.applyForce(-force)		
 end
@@ -150,13 +150,13 @@ function RopeSimulation:new(
 		groundHeight)
 		
 	metaTable = {
-           gravitation = gravitation,
+         gravitation = gravitation,
 		   airFrictionConstant = airFrictionConstant,
 		   groundFrictionConstant = groundFrictionConstant,
 		   groundRepulsionConstant = groundRepulsionConstant,
 		   groundAbsorptionConstant = groundAbsorptionConstant,
-		   groundHeight = groundHeight
-		   masses={}
+		   groundHeight = groundHeight,
+		   masses={},
 		   springs={}
         }
 		metaTable = inherit(metaTable, Simulation: new(numOfMasses, massWeightT))

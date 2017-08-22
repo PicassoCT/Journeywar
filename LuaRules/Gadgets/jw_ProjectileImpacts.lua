@@ -158,7 +158,7 @@ if (gadgetHandler:IsSyncedCode()) then
         size = 8
         if GG.DynDefMap == nil then GG.DynDefMap = {} end
         if GG.DynRefMap == nil then GG.DynRefMap = {} end
-        GG.DynDefMap[#GG.DynDefMap + 1] = { x = x / size, z = z / size, Size = size, blendType = "melt", filterType = "borderblur" }
+        GG.DynDefMap[#GG.DynDefMap + 1] = {creater ="campro", x = x / size, z = z / size, Size = size, blendType = "melt", filterType = "borderblur" }
         GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, -1)
     end
 
@@ -464,7 +464,7 @@ if (gadgetHandler:IsSyncedCode()) then
             size = 16
             if GG.DynDefMap == nil then GG.DynDefMap = {} end
             if GG.DynRefMap == nil then GG.DynRefMap = {} end
-            GG.DynDefMap[#GG.DynDefMap + 1] = { x = px, z = pz, Size = size, blendType = "melt", filterType = "borderblur" }
+            GG.DynDefMap[#GG.DynDefMap + 1] = { creator = "jacidants", x = px, z = pz, Size = size, blendType = "melt", filterType = "borderblur" }
             GG.DynRefMap[#GG.DynRefMap + 1] = prepareCupTable(size, -0.125, size / 3, 0.5)
 
 

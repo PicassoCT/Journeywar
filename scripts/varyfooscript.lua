@@ -703,7 +703,7 @@ function buildAVaryFoo()
                     decoNum = decoNum + SymmetricExpandDeco(pieceA, pieceB, offSetX)
                     Spring.Echo("jvaryfoo::Sym_decoration")
                 else
-                    Spring.Echo("jvaryfoo::Linear_decoration" 2)
+                    Spring.Echo("jvaryfoo::Linear_decoration" )
                     decoNum = decoNum + LinearExpandDeco(offSetX)
                 end
             end

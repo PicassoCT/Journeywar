@@ -1105,7 +1105,7 @@ function senderJobFunc(personNr, targetdegree, targetDist)
     --Person turned into the direction it is going to walk
 
     --send the person on its way.
-    typeDependedWalkAnimation(personNr, dramatisPersona3d[personNr][8])
+    typeDependedWalkAnimation(personNr, dramatisPersona3d[personNr][8],dramatisPersona3d)
 
     --now we update the current position
 
@@ -1124,7 +1124,7 @@ function senderJobFunc(personNr, targetdegree, targetDist)
     dramatisPersona3d[personNr][9] = false
 end
 
-function stillMoving(personNr)
+function stillMoving(personNr,dramatisPersona3d)
     --Spring.Echo("Move0")
     piece2 = dramatisPersona3d[personNr][2]
     assert(piece2)
@@ -1144,10 +1144,10 @@ end
 
 
 
-function typeDependedWalkAnimation(personNr, personTypeNr)
+function typeDependedWalkAnimation(personNr, personTypeNr,dramatisPersona3d)
 --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
 --Spring.Echo("Enter")
-while stillMoving(personNr) do
+while stillMoving(personNr, dramatisPersona3d) do
 Turn(dramatisPersona3d[personNr][2], x_axis, math. rad(5), 2)
 WaitForTurn(dramatisPersona3d[personNr][2], x_axis)
 Turn(dramatisPersona3d[personNr][2], x_axis, math. rad(2), 2)

@@ -651,7 +651,7 @@ table.insert(person, 11, numberOfPieces)
 table.insert(dramatisPersona, 10, person)
 
 
-function faceValue2Degree(personNr)
+function faceValue2Degree(personNr, dramatisPersona)
     if dramatisPersona[personNr][6] == 1 then
         return 0
     elseif dramatisPersona[personNr][6] == 2 then
@@ -665,7 +665,7 @@ function faceValue2Degree(personNr)
     end
 end
 
-function degreeCompare(targetdegree, PersonNr)
+function degreeCompare(targetdegree, personNr, dramatisPersona)
     destinationdegree = dramatisPersona[PersonNr][4]
     if destinationdegree - targetdegree == 180 then
         return false
@@ -968,81 +968,74 @@ function PartySenderJobFunc(personNr, targetdegree, targetDist)
     dramatisPersona[personNr][9] = false
 end
 
-function PartyStillMoving(personNr)
-    if (true == Spring.UnitScript.IsInMove(dramatisPersona[personNr][2], z_axis) or true == Spring.UnitScript.IsInTurn(dramatisPersona[personNr][1], y_axis)) then
-        return true
-    else
-        return false
-    end
-end
 
 function PartyTypeDependedWalkAnimation(personNr, personTypeNr)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7, testbrick=8
 
     if personTypeNr == 1 then
-        while (stillMoving(personNr)) do
-            walkAnimation1(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation1(personNr, dramatisPersona)
         end
     elseif personTypeNr == 2 then
-        while (stillMoving(personNr)) do
-            walkAnimation2(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation2(personNr, dramatisPersona)
         end
     elseif personTypeNr == 3 then
-        while (stillMoving(personNr)) do
-            walkAnimation3(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation3(personNr, dramatisPersona)
         end
     elseif personTypeNr == 4 then
-        while (stillMoving(personNr)) do
-            walkAnimation4(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation4(personNr, dramatisPersona)
         end
     elseif personTypeNr == 5 then
-        while (stillMoving(personNr)) do
-            walkAnimation5(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation5(personNr, dramatisPersona)
         end
     elseif personTypeNr == 6 then
-        while (stillMoving(personNr)) do
-            walkAnimation6(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation6(personNr, dramatisPersona)
         end
     elseif personTypeNr == 7 then
-        while (stillMoving(personNr)) do
-            walkAnimation7(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation7(personNr, dramatisPersona)
         end
     elseif personTypeNr == 8 then
-        while (stillMoving(personNr)) do
-            walkAnimation8(personNr)
+        while (stillMoving(personNr, dramatisPersona)) do
+            walkAnimation8(personNr, dramatisPersona)
         end
     else
         ------ Spring.Echo("Error in the typeDependedWalkAnimation")
     end
 end
 
-function PartyTypeDependedIdleAnimation(personNr, personTypeNr)
+function PartyTypeDependedIdleAnimation(personNr, personTypeNr,dramatisPersona)
     --Enum: Woman(NoSkirt)=1, woman(Skirt)=2, woman(halfSkirt)=3, advisor=4, thinman=5, man=6, womanwithfuckdoll= 7,
 
     if personTypeNr == 1 then
-        idleAnimation1(personNr)
+        idleAnimation1(personNr, dramatisPersona)
         return
     elseif personTypeNr == 2 then
-        idleAnimation2(personNr)
+        idleAnimation2(personNr, dramatisPersona)
         return
     elseif personTypeNr == 3 then
-        idleAnimation3(personNr)
+        idleAnimation3(personNr, dramatisPersona)
         return
 
     elseif personTypeNr == 4 then
-        idleAnimation4(personNr)
+        idleAnimation4(personNr, dramatisPersona)
         return
 
     elseif personTypeNr == 5 then
-        idleAnimation5(personNr)
+        idleAnimation5(personNr, dramatisPersona)
         return
 
     elseif personTypeNr == 6 then
-        idleAnimation6(personNr)
+        idleAnimation6(personNr, dramatisPersona)
         return
 
     elseif personTypeNr == 7 then
-        idleAnimation7(personNr)
+        idleAnimation7(personNr, dramatisPersona)
         return
     else
         ------ Spring.Echo("Error in the typeDependedWalkAnimation")
@@ -1054,7 +1047,7 @@ end
 
 
 
-function partyIdleFunc(personNr)
+function partyIdleFunc(personNr,dramatisPersona)
     ------ Spring.Echo("Idling in the function")
     Sleep(4000)
     dramatisPersona[personNr][9] = false
