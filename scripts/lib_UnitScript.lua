@@ -2942,35 +2942,36 @@ function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, Screen
 end
 
 function getLowestPointOfSet(Table, axis)
+
     if #Table < 1 then return nil end
 
-    index = 1
+   local lowIndex = 1
     y = math.huge
     if axis == "y_axis" then
         for i = 1, #Table do
             if Table[i].y < y then
                 y = Table[i].y
-                index = i
+                lowIndex = i
             end
         end
     end
     if axis == "z_axis" then
         for i = 1, #Table do
-            if Table[i].z < y then
-                y = Table[i].z
-                index = i
+            if Table[i].z < z then
+                z = Table[i].z
+                lowIndex = i
             end
         end
     end
     if axis == "x_axis" then
         for i = 1, #Table do
-            if Table[i].x < y then
-                y = Table[i].x
-                index = i
+            if Table[i].x < x then
+                x = Table[i].x
+                lowIndex = i
             end
         end
     end
-    return Table[index].x, Table[index].y, Table[index].z, index
+    return Table[lowIndex].x, Table[lowIndex].y, Table[lowIndex].z, index
 end
 
 function getHighestPointOfSet(Table, axis)
@@ -3199,7 +3200,6 @@ end
 
 -->Spawn CEG at unit
 function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
-
 	if UnitExists(unitID) ==false then return end
 	
 	if not dx then
