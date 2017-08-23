@@ -3000,8 +3000,9 @@ function getHighestPointOfSet(Table, axis)
         echo("getHighestPointOfSet:not a table")
         return nil
     end
+	
 
-    if #Table < 1 or table.getn(Table) == 0 then
+    if count(Table) == 0 then
         echo("getHighestPointOfSet:table is empty")
         return nil
     end

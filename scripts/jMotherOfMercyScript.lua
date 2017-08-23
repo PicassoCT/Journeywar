@@ -446,8 +446,9 @@ ROCKDISTANCE = 2000
 function IsRockStillInRange()
     x, y, z = Spring.GetUnitPosition(unitID)
     ux, uy, uz = Spring.GetUnitPosition(thisIsMyRockID)
+		if not ux then return false,false end
     x, y, z = x - ux, y - uy, z - uz
-    return math.sqrt(x * x + y * y + z * z) < ROCKDISTANCE
+    return math.sqrt(x * x + y * y + z * z) < ROCKDISTANCE, true
 end
 
 function aimOS()
@@ -459,7 +460,8 @@ function aimOS()
             trainEffectors(thisIsMyRockID)
             StartThread(emitTractorSFX)
             -- if there is a rock is it still in range
-            if IsRockStillInRange() == false then
+			rockInRange, stillAlive= IsRockStillInRange()
+            if rockInRange == false and stillAlive == true then
                 Spring.DestroyUnit(thisIsMyRockID, false, true)
                 boolCanFire = true
             end

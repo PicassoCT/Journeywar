@@ -316,7 +316,11 @@ function spawnAUnit()
         if disDance() == true then
             deployedID = Spring.CreateUnit("bg", sx, sy, sz, 0, teamID)
         else
-            deployedID = Spring.CreateUnit("bg2", sx, sy, sz, 0, teamID)
+				if maRa()==true then
+					deployedID = Spring.CreateUnit("bg2", sx, sy, sz, 0, teamID)
+				else
+				deployedID = Spring.CreateUnit("bg3", sx, sy, sz, 0, teamID)
+				end
         end
         table.insert(deployedIDList, deployedID)
         unitsStored = unitsStored - 1

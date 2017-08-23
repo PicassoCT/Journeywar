@@ -88,9 +88,35 @@ function bodyBuilder()
             Hide(riotshield2)
         end
     end
+	
+	if defID == UnitDefNames["bg3"].id then
+		StartThread(HideStandingStill)
+	end
 end
 
+function HideStandingStill()
+TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+Antenna = piece"Antenna"
+while true do
+	Sleep(1500)
+	if boolMoveOrderd == true then
+			showT(TablesOfPiecesGroups)
+			Hide(LArm)
+			Hide(RArm)
+			Hide(Gun)
+	else
+		hideT(TablesOfPiecesGroups)
+		Show(Antenna)
+		Show(Gun)
+		Show(depshield)
+		Show(bglowleg)
+		Show(bglowlegr)
+	end
+	Sleep(1500)
 
+end
+
+end
 
 
 local function legs_down()
@@ -146,7 +172,7 @@ function kneeDown(Time)
     Turn(bglowleg, x_axis, math.rad(0), 28)
     Turn(bglowlegr, x_axis, math.rad(0), 28)
 
-    if throwDice == 45 then
+    if math.random(0,100) == 45 then
         local x, y, z = Spring.GetUnitPosition(unitID)
         local teamID = Spring.GetUnitTeam(unitID)
         Spring.CreateUnit("cFirePlace", x + 15, y, z + 15, 0, teamID)

@@ -14,6 +14,7 @@ function anybodyNearby()
         local CompTable = {
             [UnitDefNames["bg"].id] = true,
             [UnitDefNames["bg2"].id] = true,
+            [UnitDefNames["bg3"].id] = true,
             [UnitDefNames["css"].id] = true
         }
         count = 0

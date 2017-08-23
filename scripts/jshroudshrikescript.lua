@@ -207,11 +207,11 @@ maxStore = 4
 boolFlowDirectionTowardsTeam = true
 
 function leachExpLoop()
-   teamid = Spring.GetUnitTeam(unitID)
+  local tid = 0
 	repeat
-		teamid = Spring.GetUnitTeam(unitID)
+		tid = Spring.GetUnitTeam(unitID)
 	  Sleep(100)
-	until  teamid 
+	until  tid ~= nil
 	  
 	
 
@@ -220,7 +220,8 @@ function leachExpLoop()
 
         Range = math.max(minRange, maxRange * (Spring.GetUnitExperience(unitID) / maxStore))
         amount = maxLeachQuote
-			teamIDTable= 	{ [teamid] = true }
+			teamIDTable= 	{ }
+			teamIDTable[tid] = true
 			
         if boolFlowDirectionTowardsTeam == true then	
 			

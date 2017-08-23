@@ -1207,6 +1207,7 @@ end
 isInfantry = getTypeTable(UnitDefNames, {
     "bg",
     "bg2",
+    "bg3",
     "vort",
     "skinfantry",
     "css",

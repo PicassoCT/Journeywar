@@ -345,7 +345,8 @@ function InWaterFeedingFrenzy()
 			if T and #T > 0 then
 				
 				for i=1, #T do 
-					theLuckOne=affirmUnitsExisting(T[i])
+					
+					theLuckOne=confirmUnit(T[i])
 						if theLuckOne then
 						hp=Spring.GetUnitHealth(theLuckOne)
 						myHP,maxHP=Spring.GetUnitHealth(unitID)

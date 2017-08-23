@@ -43,7 +43,7 @@ local sentryID4
 local sentryID5
 local face = 0
 
-
+LenghtOfSoundfile = 1500
 local spamfilterSTART = true
 local spamfilterSTOP = false
 

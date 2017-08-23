@@ -651,7 +651,7 @@ table.insert(person, 11, numberOfPieces)
 table.insert(dramatisPersona, 10, person)
 
 
-function faceValue2Degree(personNr, dramatisPersona)
+function faceValue2Degree(personNr )
     if dramatisPersona[personNr][6] == 1 then
         return 0
     elseif dramatisPersona[personNr][6] == 2 then
@@ -665,8 +665,8 @@ function faceValue2Degree(personNr, dramatisPersona)
     end
 end
 
-function degreeCompare(targetdegree, personNr, dramatisPersona)
-    destinationdegree = dramatisPersona[PersonNr][4]
+function degreeCompare(targetdegree, personNr)
+    destinationdegree = dramatisPersona[personNr][4]
     if destinationdegree - targetdegree == 180 then
         return false
     end
@@ -707,7 +707,7 @@ function PartyManager()
         Hide(Ragdolls[i])
     end
 
-
+	local dramatisPersona = dramatisPersona
 
 
 
@@ -736,7 +736,7 @@ function PartyManager()
                     end
                 else --moves along the circle
 
-                    if degreeCompare(degreeRand, i) == true then --move counterclockwise
+                    if degreeCompare(degreeRand, i,dramatisPersona) == true then --move counterclockwise
 
                         dramatisPersona[i][6] = 8 --bringing faceValue uptodate
                         --- -Spring.Echo("Counterclockwise")
@@ -1047,7 +1047,7 @@ end
 
 
 
-function partyIdleFunc(personNr,dramatisPersona)
+function partyIdleFunc(personNr)
     ------ Spring.Echo("Idling in the function")
     Sleep(4000)
     dramatisPersona[personNr][9] = false
