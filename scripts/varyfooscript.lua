@@ -731,17 +731,9 @@ boolFoundSomething = false
 function LinFindDecoCon()
     --we find a startpoint by finding start and endpoint and choosing the lowest
     poinTable = piec2Point(LinBodyCon) --DeBug:
-    todoAssert(poinTable,
-        function(obj)
-            if type(obj) == "table" and #obj > 0 then
-                return true
-            else
-                return false
-            end
-        end,
-        "poinTable is not a table")
 
     if not poinTable then return end
+	assertT({x = "number", y = "number", z = "number"}, poinTable)
 
     if linDecP.x == nil or boolFoundSomething == false then
         linDecP.x, linDecP.y, linDecP.z, linDecP.index = getLowestPointOfSet(poinTable, "z_axis")
