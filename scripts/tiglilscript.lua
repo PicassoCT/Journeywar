@@ -9205,36 +9205,36 @@ end
 function idle_stance18()
 
   for i=1,22 do
-   tP(tlHead,0,0,0,12)
-  mP(tigLil,0,-11,0,12)
-  tP(tigLil,-102,0,0,12)
-  tP(tlhairup,0,89,-111,12)
-  tP(tlhairdown,-22,0,0,12)
-  --legss
-  tP(tllegUp,-24, math.random(-20,30) , -1* math.random(5,21), 5)
-  tP(tllegLow,114 + math.random(-5,5),0,0, 5)
-  tP(tllegUpR,-24, math.random(-20,30) , -1* math.random(-5,40), 5)
-  tP(tllegLowR,114 + math.random(-5,5),0,0, 5)
-  --arms
-  tP(tlarm,44,72, 68, 15)
-  tP(tlarmr,4 ,193,-1* math.random(70,75), 15)
-
-  WaitForTurns(tigLil,tlarmr,tlarm, tllegUp, tllegLow, tllegUpR, tllegLow )
-  
-	--up she goes
-  mP(tigLil,0,-9,0,12)
-  tP(tlHead,32,0,0,12)
-  tP(tigLil,-119,0,0,12)
-  tP(tlhairup,0,89,-111,12)
-  tP(tlhairdown,-22,0,0,12)
-  --legss
-  tP(tllegUp,-1, math.random(-20,3) , -1* math.random(64), 5)
-  tP(tllegLow,114 + math.random(-5,5),0,0, 5)
-  tP(tllegUpR,-1, math.random(-20,27) ,  -1* math.random(-55,-39), 5)
-  tP(tllegLowR,114 + math.random(0,20),0,0, 5)
-  --arms
-  tP(tlarm,20 ,-28,0, 15)
-  tP(tlarmr,4 ,193,-1* math.random(70,75), 15)
+	tP(tlHead,0,0,0,12)
+	mP(tigLil,0,-11,0,12)
+	tP(tigLil,-102,0,0,12)
+	tP(tlhairup,0,89,-111,12)
+	tP(tlhairdown,-22,0,0,12)
+	--legss
+	tP(tllegUp,-24, math.random(-20,30) , -1* math.random(5,21), 5)
+	tP(tllegLow,114 + math.random(-5,5),0,0, 5)
+	tP(tllegUpR,-24, math.random(-20,30) , -1* math.random(-5,40), 5)
+	tP(tllegLowR,114 + math.random(-5,5),0,0, 5)
+	--arms
+	tP(tlarm,44,72, 68, 15)
+	tP(tlarmr,4 ,193,-1* math.random(70,75), 15)
+	
+	WaitForTurns(tigLil,tlarmr,tlarm, tllegUp, tllegLow, tllegUpR, tllegLow )
+	
+		--up she goes
+	mP(tigLil,0,-9,0,12)
+	tP(tlHead,32,0,0,12)
+	tP(tigLil,-119,0,0,12)
+	tP(tlhairup,0,89,-111,12)
+	tP(tlhairdown,-22,0,0,12)
+	--legss
+	tP(tllegUp,-1, math.random(-20,3) , -1* math.random(64), 5)
+	tP(tllegLow,114 + math.random(-5,5),0,0, 5)
+	tP(tllegUpR,-1, math.random(-20,27) ,  -1* math.random(-55,-39), 5)
+	tP(tllegLowR,114 + math.random(0,20),0,0, 5)
+	--arms
+	tP(tlarm,20 ,-28,0, 15)
+	tP(tlarmr,4 ,193,-1* math.random(70,75), 15)
 	WaitForTurns(tigLil,tlarmr,tlarm, tllegUp, tllegLow, tllegUpR, tllegLow )
   end
 	Sleep(500)
@@ -9255,16 +9255,20 @@ function idle_stance18()
 
 		  WaitForTurns(tigLil,tlarmr,tlarm, tllegUp, tllegLow, tllegUpR, tllegLow )
   end
-end
+	--legss
+  tP(tllegUp,-1, math.random(-20,3) , -1* math.random(64), 5)
+  tP(tllegLow,114 + math.random(-5,5),0,0, 5)
+  tP(tllegUpR,-1, math.random(-20,27) ,  -1* math.random(-55,-39), 5)
+  tP(tllegLowR,114 + math.random(0,20),0,0, 5)
+  Sleep(2500)
+  
+  end
 
 local SIG_BALL =8192
 boolBallAttached = false
 
 function attachBallToPiece(hand)
-	if boolBallAttached== true then 
-	Signal(SIG_BALL); 
-	boolBallAttached=false 
-	end
+
 	SetSignalMask(SIG_BALL)
 	
 	reset(MoveBall)
@@ -9292,12 +9296,12 @@ function moveBallToPieceInArc(arclength, Piecename,speed)
 end
 
 ballIdleFunctions = {
-[1] = function()-- recive
+[1] = function()-- dribble
 Show(ball)
 StartThread(attachBallToPiece, handr)
 while true do
 Sleep(100)
-tP(tlarmr, 0, math.random(10,25), 40 +180, 85/4)
+	tP(tlarmr, 0, 88, math.random(-20, 10) +180, 85/4)
 end
 
 	tP(tllegUp,0, 0, 11, 11/4)
@@ -9305,7 +9309,7 @@ end
 	tP(tlHead, -36, 0, 0, 36/4)
 	tP(tlarm,0, -88, -35 +180, 88/4)
 	tP(tlarmr, 0, 88, 40 +180, 85/4)
-	WaitForTurns(tllegUp,tllegUpR,tlHead, tlarm)
+	WaitForTurns(tllegUp,tllegUpR,tlHead, tlarm,tlarmr)
 	reset(TurnBall)
 	reset(MoveBall)
 	reset(ball)
@@ -10029,7 +10033,7 @@ function idle()
 
         --changebookmark 
         Sleep(285)
-        Sleeper = math.random(0, 16)
+        Sleeper = 15 --math.random(0, 16)
 
         tempsleep = math.random(512, 4096)
         if (Sleeper == 0) then
@@ -10092,16 +10096,16 @@ function idle()
 			Sleep(tempsleep)
 			lidle_stance15()
 		end
-	
+		if (Sleeper == 15) then
+		   Sleep(tempsleep)
+		   idle_playBall()
+		end
 		
-		if (Sleeper >= 15) then
+		
+		if (Sleeper >= 16) then
 			Sleep(tempsleep)
 			idle_stance18()
 		end
-			-- if (Sleeper == 15) then
-			-- Sleep(tempsleep)
-			-- idle_playBall()
-		-- end
 		
     end
 end

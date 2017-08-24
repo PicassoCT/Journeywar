@@ -770,9 +770,13 @@ function distanceUnitToUnit(idA, idB)
     x, y, z = Spring.GetUnitPosition(idA)
     xb, yb, zb = Spring.GetUnitPosition(idB)
 
-    if not x or not xb then echo("distanceToUnit::Invalid Unit - no position recived") return end
-    assert(x)
-    return distance(x, y, z, xb, yb, zb)
+    if not x  then echo("distanceToUnit::Invalid Unit "..UnitDefs[Spring.GetUnitDefID(idA)].name.." - no position recived") 
+	return 
+	end
+	if not xb  then echo("distanceToUnit::Invalid Unit "..UnitDefs[Spring.GetUnitDefID(idB)].name.." - no position recived") 
+	return 
+	end
+	return distance(x, y, z, xb, yb, zb)
 end
 
 --> gives a close hunch at the distance and avoids expensive sqrt math by using herons Algo
