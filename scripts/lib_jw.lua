@@ -116,6 +116,7 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     retTab = {
         [UnitDefNames["bg"].id] = UnitDefNames["jskineggnogg"].id,
         [UnitDefNames["bg2"].id] = UnitDefNames["jtigeggnogg"].id,
+        [UnitDefNames["bg3"].id] = UnitDefNames["jtigeggnogg"].id,
         [UnitDefNames["ccrabsynth"].id] = UnitDefNames["jcrabcreeper"].id,
         [UnitDefNames["cgunship"].id] = UnitDefNames["jwatchbird"].id,
         [UnitDefNames["css"].id] = UnitDefNames["jfiredancer"].id,
@@ -766,7 +767,7 @@ returnOfInvestmentM = returnOfInvestmentM or 100
 returnOfInvestmentE = returnOfInvestmentE or 100
 
 
-function rewarderProcess(evtID, frame, persPack, startFrame)
+rewarderProcess = function (evtID, frame, persPack, startFrame)
 
 	
         Spring.AddTeamResource(	persPack.teamId, 

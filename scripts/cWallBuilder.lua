@@ -329,12 +329,12 @@ function constTerraFormin()
         if boolIsActive == true then
             -- Spring.Echo("Terraform Loop Active")
             if Spring.UseTeamResource(teamID, 'energy', 50) then
-                Spring.Echo("Terraform Loop Resource Active")
+              --  Spring.Echo("Terraform Loop Resource Active")
                 x, y, z = spGetUnitPosition(unitID)
 
 
                 if boolWalking == true then
-                    Spring.Echo("Terraform Loop Walking")
+                   -- Spring.Echo("Terraform Loop Walking")
                     if GG.DynDefMap == nil then GG.DynDefMap = {} end
                     if GG.DynRefMap == nil then GG.DynRefMap = {} end
                     GG.DynDefMap[#GG.DynDefMap + 1] = {creator=UnitDefs[Spring.GetUnitDefID(unitID)].name,

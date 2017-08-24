@@ -1,12 +1,9 @@
 #GET TESTWORTHY
 
 Units needing MiniGame
---> Crab Bejewelled Weapon
---> Sempre Sequoi - slow closing in weapon
---> Speed Debugging - Thread Monitoring
+
 
 Debug ComEnderWeapons
-Debug Hedgehog
 Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most of them)
 
 FIX:

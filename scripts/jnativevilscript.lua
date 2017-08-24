@@ -36,7 +36,7 @@ end
 
 
 function script.Create()
-    StartThread(PartyManager)
+    StartThread(NativePartyManager)
     if math.random(0, 1) == 1 then Hide(totem) end
     decision = math.random(0, 2)
     if decision == 1 then

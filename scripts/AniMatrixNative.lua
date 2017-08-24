@@ -168,7 +168,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 -- This is the PartyManager - this function decides were everyone goes
-function PartyManager()
+function NativePartyManager()
 
 
 

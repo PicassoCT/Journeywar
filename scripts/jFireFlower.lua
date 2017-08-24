@@ -593,6 +593,7 @@ function goTooKillThemAllPicaMon()
 				if dist < 175 then 
 					StartThread(spawnFire, 782,id)
 				else
+					Spring.AddUnitDamage(id,35)
 					setUnitOnFire(id, math.random(500, 1500))
 				end
 			end

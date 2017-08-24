@@ -883,7 +883,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 						decoNum=decoNum+bd_SymmetricExpandDeco(pieceA,pieceB,offSetX)	
 						Spring.Echo("libbuild::Sym_decoration")
 					else 			
-						Spring.Echo("libbuild::Linear_decoration")
+						Spring.Echo("libbuild::Linear_decoration2")
 						decoNum=decoNum+bd_LinearExpandDeco(offSetX)			
 					end
 				end

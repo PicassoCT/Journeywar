@@ -1,5 +1,5 @@
 ----Globallos
-include "neverEndingPartyAnimation.lua"
+
 --General Public License goes in all fields
 
 testCenter = piece "testCenter"
@@ -693,7 +693,7 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 -- This is the PartyManager - this function decides were everyone goes
-function PartyManager()
+function WildPartyManager()
     Ragdolls = {}
     for i = 1, 8, 1 do
         Ragdolls[i] = {}
@@ -760,7 +760,7 @@ function PartyManager()
 
                 elseif dramatisPersona[i][9] == false then
                     dramatisPersona[i][9] = true
-                    StartThread(PartyIdleFunc, i)
+                    StartThread(partyIdleFunc, i)
 
                     --Start a IdleSender
                 end
@@ -1002,7 +1002,7 @@ function PartyTypeDependedWalkAnimation(personNr, personTypeNr)
         end
     elseif personTypeNr == 8 then
         while (stillMoving(personNr, dramatisPersona)) do
-            walkAnimation8(personNr, dramatisPersona)
+            --walkAnimation8(personNr, dramatisPersona)
         end
     else
         ------ Spring.Echo("Error in the typeDependedWalkAnimation")

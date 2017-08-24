@@ -190,8 +190,8 @@ function widget:Initialize()
   
 	if gl.CreateShader then
 	playerID = Spring.GetMyPlayerID()
-	tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring_GetPlayerInfo(playerID)
-	local _,_,_,_, side, _                                      = Spring_GetTeamInfo(tteam)
+	tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring.GetPlayerInfo(playerID)
+	local _,_,_,_, side, _                                      = Spring.GetTeamInfo(tteam)
 
 	if side== "journeyman" then
 	shaderTable.fragment= 	nightvision

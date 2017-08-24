@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL spam v3.0 or later",
 		layer = 699,
 		handler = true,
-		enabled = false
+		enabled = true
 	}
 end
 
@@ -31,15 +31,28 @@ if gadgetHandler:IsSyncedCode() then
 				"chunterchopper","conair","csuborbital","cgunship","callygator",
 				"paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
 				"sentry","bonker","crailgun","chopper",
-				"jhivewulfmoma","beefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
-				"jglowworms","jbeherith","jeliah",
+				"jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
+				"jglowworms","jbeherith","jeliah","tiglil","skinfantry",
 				"jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
-				"jhivewulfmoma","vort", "jantart",	"jviralfac", "jhoneypot",
+				"vort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
 				"jhunter", "jvaryfoo",
 				"jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
-				"ggluemine","jtree", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
+				"ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	}
-	
+		UnitAmount = {
+				["bg"]=5,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
+				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
+				["chunterchopper"]=1,["conair"]=1,["csuborbital"]=1,["cgunship"]=1,["callygator"]=1,
+				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["strider"]=1,["ccrabsynth"]=1,["chunter"]=3,
+				["sentry"]=4,["bonker"]=1,["crailgun"]=1,["chopper"]=1,
+				["jhivewulfmoma"]=2,["jbeefeater"]=1,["hc"]=1,["zombie"]=1, ["jantart"]=1,["jatlantai"]=1,["jhoneypot"]=1,
+				["jglowworms"]=1,["jbeherith"]=1,["jeliah"]=1,["tiglil"]=5,["skinfantry"]=5,
+				["jshroudshrike"]=1,["jswiftspear"]=1, ["jtigeggnogg"]=1,["jskineggnogg"]=1,["jghostdancer"]=1,
+				["vort"]=3, ["jantart"]=2,	["jviralfac"]=1, ["jhoneypot"]=1,
+				["jhunter"]=3, ["jvaryfoo"]=1,["jfiredancer"]=4,
+				["jfireflower"]=1, ["jdragongrass"]=1, ["jbeehive"]=1, ["jswamp"]=1, ["jpoisonhive"]=1,	
+				["ggluemine"]=1,["jtree1"]=1, ["jgalatea"]=1,["jmotherofmercy"]=1,["jsempresequoia"]=1,["jrecycler"]=1,["jresistancewarrior"]=1,["jmadmax"]=1
+	}
 	function getAIPlayer()
 		List = Spring.GetTeamList()
 		PlayerList = {}
@@ -126,11 +139,13 @@ if gadgetHandler:IsSyncedCode() then
 					
 					
 					UnitTest[#UnitTest + 1] = function()
-						--echo(type(id))
-						id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
-						Spring.SetUnitMoveGoal(id,4096,0,4096)
-						Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
-						Command(id, "move", { x =x, y = 0, z = z }, { "shift" })
+						for k=1, UnitAmount[name] do
+							--echo(type(id))
+							id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
+							Spring.SetUnitMoveGoal(id,4096+k,0,4096)
+							Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
+							Command(id, "move", { x =x, y = 0, z = z }, { "shift" })
+						end
 					end
 				end		
 			end		

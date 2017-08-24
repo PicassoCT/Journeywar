@@ -19,8 +19,8 @@ MA 02110-1301, USA.
 ]] --
 -------------- DEBUG HEADER
 -- Central Debug Header Controlled in UnitScript
-lib_boolDebug = false --GG.BoolDebug or false
 -------------- DEBUG HEADER
+lib_boolDebug = false --GG.BoolDebug or false
 
 --======================================================================================
 --Chapter: Tableoperations
@@ -821,7 +821,6 @@ function stringBuilder(length, sign)
     return str
 end
 
-
 --======================================================================================
 --Debug Tools 
 --======================================================================================
@@ -847,7 +846,7 @@ function testUnit(unitid)
     end
 end
 
-	function UnitExists(id)
+function UnitExists(id)
 	    valid = Spring.ValidUnitID(id)
 		if not valid or valid == false then return false end
 		alive = Spring.GetUnitIsDead(id)
@@ -855,10 +854,6 @@ end
 		return true	
 	end
 	
-	
-	
-
-
 function HideWrap(piecenr)
     if lib_boolDebug == true then
         if type(piecenr) == "string" then
@@ -1006,6 +1001,23 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 			assert(true==false)
 		end
 	end
+end
+
+function getRandomElementRing(T)
+	dice = sanitizeRandom(1, #T)
+	for i=dice,#T do
+		if T[i] then 
+			return T[i] 
+		end
+	end
+
+	for i=1,dice do
+		if T[i] then 
+			return T[i]
+		end
+	end
+	echo("getRandomElementRing: No elements in table")
+	assert(true==false)
 end
 
 -->prints a table in steps

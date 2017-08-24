@@ -88,7 +88,7 @@ function script.AimWeapon1(Heading, pitch)
     end
     for i = 1, 2 do
         x, y, z = Spring.GetUnitPosition(unitID)
-         StartThread(cegDevil, "gluesfx", x, y, z, 300,
+         StartThread(cegDevil, "sfxglue", x, y, z, 300,
             function(Time) return Time < 5000 end,
             endofLifeFunc, true, 250, 0)
     end

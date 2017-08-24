@@ -730,16 +730,17 @@ local linDecP = {}
 boolFoundSomething = false
 function LinFindDecoCon()
     --we find a startpoint by finding start and endpoint and choosing the lowest
-    poinTable = piec2Point(LinBodyCon) --DeBug:
+	 SocketDice = sanitizeRandom(1, table.getn(LinBodyCon))
+    poinTable = piec2Point(LinBodyCon[SocketDice]) --DeBug:
 
     if not poinTable then return end
-	assertT({x = "number", y = "number", z = "number"}, poinTable)
+		--assertT({x = "number", y = "number", z = "number"}, poinTable)
 
     if linDecP.x == nil or boolFoundSomething == false then
         linDecP.x, linDecP.y, linDecP.z, linDecP.index = getLowestPointOfSet(poinTable, "z_axis")
         temp = {}
-        assert(poinTable[1])
-        assert(poinTable[1].x)
+      --  assert(poinTable[1])
+      --  assert(poinTable[1].x)
         assertT({ Piece = "number", x = "number", y = "number", z = "number", index = "number" }, poinTable)
         temp.x, temp.y, temp.z, temp.index = getHighestPointOfSet(poinTable, "z_axis")
 
@@ -769,8 +770,8 @@ function LinFindDecoCon()
 end
 
 function LinearExpandDeco(offSet)
-    DecoDice = sanitizeRandom(1, table.getn(DecoPieces))
-    Deco = DecoPieces[DecoDice]
+
+    Deco = getRandomElementRing(DecoPieces)
 
     Socket = LinFindDecoCon()
 
@@ -1255,7 +1256,7 @@ function biteAnimation(victimID)
 
     for i = 1, 3 do
         if math.random(0, 1) == 1 then
-            spSpawnCEG("bloodsplat", vx + math.random(-25, 25), vy + math.random(0, 75), vz + math.random(-25, 25), 0, 1, 0, 25)
+            spSpawnCEG("bloodspray", vx + math.random(-25, 25), vy + math.random(0, 75), vz + math.random(-25, 25), 0, 1, 0, 25)
         end
     end
     Spring.AddUnitDamage(victimID, 5)
