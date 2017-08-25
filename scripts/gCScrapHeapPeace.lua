@@ -292,6 +292,7 @@ end
 function script.Create()
 
     hideAndSeek()
+		Spring.SetUnitNeutral(unitID,true)
 
     x = math.random(0, 360)
     EmitSfx(emitfire, 1024)

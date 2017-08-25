@@ -9297,12 +9297,8 @@ end
 
 ballIdleFunctions = {
 [1] = function()-- dribble
-Show(ball)
-StartThread(attachBallToPiece, handr)
-while true do
-Sleep(100)
-	tP(tlarmr, 0, 88, math.random(-20, 10) +180, 85/4)
-end
+	Show(ball)
+
 
 	tP(tllegUp,0, 0, 11, 11/4)
 	tP(tllegUpR, 0, 0, -9, 9/4)
@@ -9314,7 +9310,7 @@ end
 	reset(MoveBall)
 	reset(ball)
 	moveBallToPieceInArc(120, handr, 10)
-	--StartThread(attachBallToPiece, handr)
+	StartThread(attachBallToPiece, handr)
 	Sleep(7000)
 
 	end,
@@ -10096,16 +10092,16 @@ function idle()
 			Sleep(tempsleep)
 			lidle_stance15()
 		end
-		if (Sleeper == 15) then
+		if (Sleeper >= 15) then
 		   Sleep(tempsleep)
-		   idle_playBall()
+		   idle_stance18()	
 		end
 		
 		
-		if (Sleeper >= 16) then
-			Sleep(tempsleep)
-			idle_stance18()
-		end
+		-- if (Sleeper >= 16) then
+			-- Sleep(tempsleep)
+			-- idle_playBall()
+		-- end
 		
     end
 end

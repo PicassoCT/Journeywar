@@ -65,6 +65,7 @@ function comeOnDown()
 
     DropAnimation()
     takeVictimsToAnotherDimension()
+	
     size = 32
     if GG.DynDefMap == nil then GG.DynDefMap = {} end
     if GG.DynRefMap == nil then GG.DynRefMap = {} end
@@ -126,6 +127,7 @@ end
 
 local unitdef = Spring.GetUnitDefID(unitID)
 local soundfile = "sounds/jMom/jMountain.ogg"
+boolDoneRising = false
 function riseAnimation()
     PlaySoundByUnitDefID(unitdef, soundfile, 0.9, 2000, 1)
     downUnderVal = -200
@@ -153,11 +155,12 @@ function riseAnimation()
             PlaySoundByUnitDefID(unitdef, soundfile, 0.9, 2000, 1)
         end
     end
+boolDoneRising = true
 end
 
 function DropAnimation()
 
-    x, y, z = Spring.GetUnitPiecePosDir(unitID, center)
+    px, py, pz = Spring.GetUnitPiecePosDir(unitID, center)
     local speed = 4
     local gravity = Game.gravity
     local spMovCtrlSetPos = Spring.MoveCtrl.SetPosition
@@ -167,11 +170,11 @@ function DropAnimation()
 
 
     while (y > -50) do
-        x, y, z = Spring.GetUnitPiecePosDir(unitID, center)
+       px, py, pz = Spring.GetUnitPiecePosDir(unitID, center)
 
         speed = math.min(speed + speed, gravity)
         dist = speed / 10
-        spMovCtrlSetPos(unitID, x, y - dist, z)
+        spMovCtrlSetPos(unitID, px, py - dist, pz)
 
         Sleep(100)
     end
@@ -238,6 +241,8 @@ end
 
 
 function script.FireWeapon1()
+	 if boolDoneRising == false then return false end
+	 
     boolOnce = false
     StartThread(comeOnDown)
     return true

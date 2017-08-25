@@ -16,7 +16,7 @@ local weaponDef={
 	weaponVelocity=400,
 	startVelocity=250,
 	weaponAcceleration=200,
-	flightTime=12.5,
+	flightTime=30.5,
 	BurnBlow=0,
 	FixedLauncher=true,
 	dance=0,
@@ -27,7 +27,7 @@ local weaponDef={
 	tracks=false,
 	Turnrate=16000,
 	collideFriendly=true,
-	
+
 	----APPEARANCE
 	model="fatman.s3o",
 	smokeTrail=true,

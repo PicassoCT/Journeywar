@@ -36,8 +36,8 @@ function createCorpseCBuilding(unitID, recentDamage)
             spx, spy, spz = Spring.GetUnitPosition(unitID)
             teamID = Spring.GetGaiaTeamID()
             x = math.random(0, 3)
-            heapID = Spring.CreateUnit("gCScrapHeapPeace", spx, spy, spz, x, teamID)
-            Spring.SetUnitNeutral(heapID, true)
+            GG.UnitsToSpawn:PushCreateUnit("gCScrapHeapPeace", spx, spy, spz, x, teamID)
+
         end
         --</RubbleScript>
     end
@@ -53,9 +53,8 @@ function createCorpseCUnitSmall(recentDamage)
         --dirx,diry,dirz=Spring.GetUnitDirection(unitID)
 
 
-        heapID = Spring.CreateUnit("gCVehicCorpseMini", spx, spy, spz, 1, teamID)
-        --Spring.SetUnitDirection(heapID,dirx,diry,dirz)
-        Spring.SetUnitNeutral(heapID, true)
+       GG.UnitsToSpawn:PushCreateUnit("gCVehicCorpseMini", spx, spy, spz, 1, teamID)
+
     end
 end
 
@@ -71,7 +70,7 @@ function createCorpseCUnitGeneric(recentDamage)
         --dirx,diry,dirz=Spring.GetUnitDirection(unitID)
 
 
-        heapID = Spring.CreateUnit("gCVehicCorpse", spx, spy, spz, 1, teamID)
+        GG.UnitsToSpawn:PushCreateUnit("gCVehicCorpse", spx, spy, spz, 1, teamID)
         --Spring.SetUnitDirection(heapID,dirx,diry,dirz)
         Spring.SetUnitNeutral(heapID, true)
     end
@@ -91,7 +90,7 @@ function createCorpseJUnitBig(recentDamage)
 
         Spring.SetUnitDirection(heapID, dx, dy, dz)
         --Spring.SetUnitDirection(heapID,dirx,diry,dirz)
-        Spring.SetUnitNeutral(heapID, true)
+
     end
 end
 
@@ -105,11 +104,11 @@ function createCorpseJUnitGeneric(recentDamage)
         --dirx,diry,dirz=Spring.GetUnitDirection(unitID)
         dx, dy, dz = Spring.GetUnitDirection(unitID)
         heading = Spring.GetUnitHeading(unitID)
-        heapID = Spring.CreateUnit("gJMeatBalls", spx, spy, spz, 1, teamID)
+        GG.UnitsToSpawn:PushCreateUnit("gJMeatBalls", spx, spy, spz, 1, teamID)
 
-        Spring.SetUnitDirection(heapID, dx, dy, dz)
+
         --Spring.SetUnitDirection(heapID,dirx,diry,dirz)
-        Spring.SetUnitNeutral(heapID, true)
+
     end
 end
 
@@ -124,7 +123,6 @@ function createCorpseJUnitSmall(recentDamage)
         dx, dy, dz = Spring.GetUnitDirection(unitID)
         heading = Spring.GetUnitHeading(unitID)
         heapID = Spring.CreateUnit("gjmedbiogwaste", spx, spy, spz, 1, teamID)
-
         Spring.SetUnitDirection(heapID, dirx, diry, dirz)
         Spring.SetUnitNeutral(heapID, true)
     end

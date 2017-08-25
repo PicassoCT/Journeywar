@@ -167,7 +167,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			x,y,z=spGetUnitPosition(unitID)
 			name="blooddecal".."factory"
 			if x then
-				Spring.CreateUnit(blooddecals[math.random(1,#blooddecals)],x,y,z,0,teamID)
+				 GG.UnitsToSpawn:PushCreateUnit(blooddecals[math.random(1,#blooddecals)],x,y,z,0,teamID)
 			end
 		end
 		
@@ -175,9 +175,9 @@ if (gadgetHandler:IsSyncedCode()) then
 			x,y,z=spGetUnitPosition(unitID)
 			if x then
 				if math.random(0,1)==1 then
-					Spring.CreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
+					GG.UnitsToSpawn:PushCreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
 				else
-					Spring.CreateUnit("blueblooddecalfactory2",x,y,z,0,teamID)
+					GG.UnitsToSpawn:PushCreateUnit("blueblooddecalfactory2",x,y,z,0,teamID)
 				end
 			end
 		end

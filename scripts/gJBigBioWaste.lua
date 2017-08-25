@@ -660,6 +660,7 @@ end
 
 
 function script.Create()
+	Spring.SetUnitNeutral(unitID, true)
 	dx=math.random(0,1)
 	if dx== 1 then
 		boolCrawler=true

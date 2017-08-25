@@ -1410,7 +1410,7 @@ function showTime()
 	while true do
 		Sleep(250)
 		showLegs()
-	for i=1, #WeaponsTable do
+	for i=1, #Weapons do
 		Weapons[i][eShowFunc]()
 	end
 	end

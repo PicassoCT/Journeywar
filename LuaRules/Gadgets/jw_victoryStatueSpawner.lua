@@ -34,19 +34,19 @@ if (gadgetHandler:IsSyncedCode()) then
 
                 distancex = math.ceil(math.random(100, 150)) + x
                 distancez = math.ceil(math.random(100, 150)) + z
-                Spring.CreateUnit("cvictory", distancex, y, distancez, 0, gteamID)
+                  GG.UnitsToSpawn:PushCreateUnit("cvictory", distancex, y, distancez, 0, gteamID)
 
             else
                 gteamID = Spring.GetGaiaTeamID()
                 distancex = math.ceil(math.random(100, 150)) + x
                 distancez = math.ceil(math.random(100, 150)) + z
 
-                Spring.CreateUnit("jvictory", distancex, y, distancez, 0, gteamID)
+                   GG.UnitsToSpawn:PushCreateUnit("jvictory", distancex, y, distancez, 0, gteamID)
 
 
                 distancex = math.ceil(math.random(100, 150)) + x
                 distancez = math.ceil(math.random(100, 150)) + z
-                Spring.CreateUnit("grecforrest", distancex, y, distancez, 0, gteamID)
+                   GG.UnitsToSpawn:PushCreateUnit("grecforrest", distancex, y, distancez, 0, gteamID)
             end
         end
     end

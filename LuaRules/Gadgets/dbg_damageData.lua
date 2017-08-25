@@ -18,7 +18,7 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 	EncounterData ={}
 	EncounterCounter = 0
-	
+	VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
 		
 		if UnitDefs[unitDefID] then

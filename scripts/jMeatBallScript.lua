@@ -9,6 +9,7 @@ center = piece "center"
 
 
 function script.Create()
+	 Spring.SetUnitNeutral(unitID, true)
     generatepiecesTableAndArrayCode(unitID)
     TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
     Meat = TablesOfPiecesGroups["Meat"]

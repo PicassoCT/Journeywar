@@ -346,7 +346,7 @@ end
 
 
 function script.Create()
-
+		Spring.SetUnitNeutral(unitID, true)
     if getUnitGroundHeigth(unitID) > -5 then
         if math.random(0, 1) == 1 then
 
