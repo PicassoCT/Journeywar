@@ -761,16 +761,18 @@ end
 
 -->returns the Distance between two units
 function distanceUnitToUnit(idA, idB)
-    if lib_boolDebug == true then
-        if (not idA or type(idA) ~= "number") then echo("Not existing idA or not a number"); return; end
-        if (not idB or type(idB) ~= "number") then echo("Not existing idB or not a number"); return; end
-        if Spring.ValidUnitID(idA) == false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return end
-        if Spring.ValidUnitID(idB) == false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return; end
-    end
+
+	if lib_boolDebug == true then
+        if (not idA or type(idA) ~= "number") then echo("Not existing idA or not a number"); return nil; end
+        if (not idB or type(idB) ~= "number") then echo("Not existing idB or not a number"); return nil; end
+        if Spring.ValidUnitID(idA) == false then echo("distanceUnitToUnit::idA Not a valid UnitID"); return nil; end
+        if Spring.ValidUnitID(idB) == false then echo("distanceUnitToUnit::idB Not a valid UnitID"); return nil; end
+	end
+	
     x, y, z = Spring.GetUnitPosition(idA)
     xb, yb, zb = Spring.GetUnitPosition(idB)
 
-    if not x  then echo("distanceToUnit::Invalid Unit "..UnitDefs[Spring.GetUnitDefID(idA)].name.." - no position recived") 
+    if not x  then def = Spring.GetUnitDefID(idA); echo("distanceToUnit::Invalid Unit "..UnitDefs[def].name.." - no position recived") 
 	return 
 	end
 	if not xb  then echo("distanceToUnit::Invalid Unit "..UnitDefs[Spring.GetUnitDefID(idB)].name.." - no position recived") 
@@ -3066,14 +3068,18 @@ function getNearestGroundEnemy(id, UnitDefs)
         allUnitsOfTeam = Spring.GetTeamUnits(eTeam)
         mindist = math.huge
         foundUnit = nil
-
+		  if Spring.GetUnitIsDead(id) == true  or Spring.GetUnitIsDead(ied) == true then return nil end 
+			
         process(allUnitsOfTeam,
-            function(ied)
-                if ied ~= ed and distanceUnitToUnit(id, ied) < mindist then
-                    if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
-                        mindist = distanceUnitToUnit(id, ied)
-                        foundUnit = ied
-                    end
+            function(ied)					
+                if ied ~= ed then
+						distUnit = distanceUnitToUnit(id, ied)
+						if distUnit and distUnit < mindist then
+							if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
+								mindist = distUnit
+								foundUnit = ied
+							end
+						end
                 end
             end)
         if Spring.ValidUnitID(foundUnit) == true then return foundUnit end

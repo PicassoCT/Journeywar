@@ -120,7 +120,7 @@ ColourTable={
 		  float intensity = getIntensity(origColor);
 
 		  intensity = intensity * 1.5;
-		  intensity = (intensity > 1 ? 1: intensity);
+		  intensity = (intensity > 1.0 ? 1.0 : intensity);
 		  int    IntTensity =  int(intensity*100.0);
 		  
 		switch (IntTensity) { ]]

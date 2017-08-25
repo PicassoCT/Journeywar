@@ -72,7 +72,7 @@ function createCorpseCUnitGeneric(recentDamage)
 
         GG.UnitsToSpawn:PushCreateUnit("gCVehicCorpse", spx, spy, spz, 1, teamID)
         --Spring.SetUnitDirection(heapID,dirx,diry,dirz)
-        Spring.SetUnitNeutral(heapID, true)
+       -- Spring.SetUnitNeutral(heapID, true)
     end
 end
 

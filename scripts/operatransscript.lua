@@ -365,7 +365,7 @@ function costlyUnderAttack()
         end
 
         --Add Reward with Battles in Sight
-        if id and oldhp and hp and oldhp > hp then
+        if id and Spring.GetUnitIsDead(id) == false and oldhp and hp and oldhp > hp then
             distanced = distanceUnitToUnit(id, uniID)
             if exists(id) == true and distanced < SIGHT_DISTANCE then
                 Spring.AddUnitResource(unitID, "m", 10)

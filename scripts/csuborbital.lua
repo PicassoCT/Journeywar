@@ -1,3 +1,10 @@
+
+include "createCorpse.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+
+
+
 climb = {}
 for i = 1, 40, 1 do
     climb[i] = {}
@@ -99,8 +106,8 @@ boolCountDownRunning = false
 function readyNessIndicator()
     while true do
         Sleep(500)
-        if boolCountDownRunning == true and boolMoving == false and boolLaunched == false then
-            Show(upgoer5)
+		 if boolCountDownRunning == true and boolMoving == false and boolReady == false then
+		      Show(upgoer5)
             Move(upgoer5, y_axis, 35, 40)
             WaitForMove(upgoer5, y_axis)
             Move(upgoer5, y_axis, 55, 60)
@@ -110,6 +117,14 @@ function readyNessIndicator()
             Hide(upgoer5)
             Move(upgoer5, y_axis, 0, 0)
             Sleep(200)
+		 end
+		 
+        if boolCountDownRunning == true and boolMoving == false and boolLaunched == false then
+			Spring.MoveCtrl.Enable(unitID, true)
+			x,y,z=Spring.GetUnitPosition(unitID)
+			Spring.MoveCtrl.SetPosition(unitID, x, y +50, z)
+			StartThread(launched)
+			boolLaunched= true
         end
     end
 end
@@ -117,24 +132,14 @@ end
 function script.Activate()
     --activates the secondary weapon
 
-
-    if boolSwitchedState > 0 and boolLaunched == false and boolReady == false and boolMoving == false then
-        boolCountDownRunning = true
-        Signal(SIG_COUNT)
-        Spring.Echo("Starting Countdown")
-        StartThread(countdown)
-
-    else
-        boolCountDownRunning = false
-    end
-    boolSwitchedState = boolSwitchedState + 1
+	boolCountDownRunning = true
+ 
     return 1
 end
 
 function script.Deactivate()
     --deactivates the secondary weapon
-    boolSwitchedState = boolSwitchedState + 1
-
+   boolCountDownRunning = false
     return 0
 end
 
@@ -221,7 +226,6 @@ end
 
 
 function script.AimWeapon1(heading, pitch)
-
     if boolReady == true and impactorcounter > 0 then
         return true
     elseif impactorcounter == 0 then
@@ -235,6 +239,6 @@ end
 
 
 function script.FireWeapon1()
-    impactorcounter = impactorcounter - 1
-    Hide(impact[impactorcounter + 1])
+    impactorcounter = impactorcounter - 3
+	 hideT(impact, impactorcounter+1, impactorcounter + 3)
 end

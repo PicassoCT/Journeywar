@@ -48,25 +48,24 @@ process(TablesOfPiecesGroups["Leaf"],
 		end
 		)
 
-		swayInWind()
+		swayInWind(TablesOfPiecesGroups["Leaf"])
 
 end
 
-function swayInWind()
+function swayInWind(tables)
 	while true do
 	shiftindex= shiftindex + math.pi*0.3
 	partIndex= 0
-process(TablesOfPiecesGroups["Leaf"],
+		process(tables,
 		function(id)
-		partIndex= partIndex+1
-		xOffset= currentDegreeT[id].x + math.cos(shiftindex+ (math.pi/6)*partIndex)
-		xrelativeDegree = xOffset - xCurrentDegree
-		yrelativeDegree = yOffset - yCurrentDegree
-		Turn(id,x_axis,math.rad(xrelativeDegree),0)
-		Turn(id,y_axis,math.rad(yrelativeDegree),0)		
-		xCurrentDegree= xCurrentDegree + xrelativeDegree
-		yCurrentDegree= yCurrentDegree + yrelativeDegree
-
+			partIndex= partIndex+1
+			xOffset= currentDegreeT[id].x + math.cos(shiftindex+ (math.pi/6)*partIndex)
+			xrelativeDegree = xOffset - xCurrentDegree
+			yrelativeDegree = yOffset - yCurrentDegree
+			Turn(id,x_axis,math.rad(xrelativeDegree),0)
+			Turn(id,y_axis,math.rad(yrelativeDegree),0)		
+			xCurrentDegree= xCurrentDegree + xrelativeDegree
+			yCurrentDegree= yCurrentDegree + yrelativeDegree
 		end
 		)
 		Sleep(100)

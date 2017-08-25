@@ -45,7 +45,7 @@ if gadgetHandler:IsSyncedCode() then
     sunCol[#sunCol + 1] = makeVector(41, 72, 120)
     sunCol[#sunCol + 1] = makeVector(27, 37, 100)
     sunCol[#sunCol + 1] = makeVector(24, 50, 80)
-    sunCol[#sunCol + 1] = makeVector(50, 20, 30)
+    sunCol[#sunCol + 1] = makeVector(27, 37, 80) --sunCol[#sunCol + 1] = makeVector(50, 20, 30)
     sunCol[#sunCol + 1] = makeVector(75, 18, 25)
     --sunrise
     sunCol[#sunCol + 1] = makeVector(88, 28, 0)

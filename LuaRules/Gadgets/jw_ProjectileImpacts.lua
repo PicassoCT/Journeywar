@@ -29,59 +29,64 @@ if (gadgetHandler:IsSyncedCode()) then
     GHOSTLIFETIME = 450
     jEthiefStealingQuota = 5
     local HARDCODED_RETREATDISTANCE = 420
-	tangledDisconnectDistance = 1024
-
+		tangledDisconnectDistance = 1024
+	 --targetTypes	
+	 FEATURE = 102
+	 GROUND = 103
+	 UNIT = 117
+	 PROJECTILE = 112
 
 	--Centrail Weapons
-    cRestrictorThumperID = WeaponDefNames["crestrictorthumper"].id
-    crabShelWDefID = WeaponDefNames["crabshell"].id
-    cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
-    bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
-    glavaWeaponID = WeaponDefNames["glavaweapon"].id
-    gVolcanoWeaponID = WeaponDefNames["lavabomb"].id
-    cFlareGun = WeaponDefNames["flaregun"].id
-    cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
-    lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
-    slicergunDefID = WeaponDefNames["slicergun"].id
-    cCssFlameT = WeaponDefNames["cflamethrower"].id
-    cUniverseGun = WeaponDefNames["cuniversegun"].id
-    nukeLvl2WeaponDefID = WeaponDefNames["cnukegrenadelvl2"].id
-    nukeLvl3WeaponDefID = WeaponDefNames["cnukegrenadelvl3"].id
-    striderWeaponDefID = WeaponDefNames["warpcannon"].id
-    highExLineGunDefID = WeaponDefNames["cexplochaingun"].id
-    crazorgrenadeDefID = WeaponDefNames["crazorgrenade"].id
-    celetrochainWeaponDefID = WeaponDefNames["celetrochain"].id
-    ChainLightningDefID = WeaponDefNames["cchainlightning"].id
-    chcprojectileDefID = WeaponDefNames["hcprojectile"].id
-    cAllyGatorMarkerDefID = WeaponDefNames["callygatormarker"].id
-    CEaterRocketDefID = WeaponDefNames["ceater"].id
-    cHarvestRocketDefID = WeaponDefNames["charvest"].id
-    cAntiMatterDefID = WeaponDefNames["cantimatter"].id
-    catapultDefID = WeaponDefNames["ccatapult"].id
-    cgaterailgunDefID = WeaponDefNames["cgaterailgun"].id
-    cEfenceWeapondDefID = WeaponDefNames["cwefence1"].id
-    tangleGunDefID = WeaponDefNames["ctanglegun"].id
+		cRestrictorThumperID = WeaponDefNames["crestrictorthumper"].id
+		crabShelWDefID = WeaponDefNames["crabshell"].id
+		cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
+		bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
+		glavaWeaponID = WeaponDefNames["glavaweapon"].id
+		gVolcanoWeaponID = WeaponDefNames["lavabomb"].id
+		cFlareGun = WeaponDefNames["flaregun"].id
+		cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
+		lazarusDeviceDefID = WeaponDefNames["lazarusrocket"].id
+		slicergunDefID = WeaponDefNames["slicergun"].id
+		cCssFlameT = WeaponDefNames["cflamethrower"].id
+		cUniverseGun = WeaponDefNames["cuniversegun"].id
+		nukeLvl2WeaponDefID = WeaponDefNames["cnukegrenadelvl2"].id
+		nukeLvl3WeaponDefID = WeaponDefNames["cnukegrenadelvl3"].id
+		striderWeaponDefID = WeaponDefNames["warpcannon"].id
+		highExLineGunDefID = WeaponDefNames["cexplochaingun"].id
+		crazorgrenadeDefID = WeaponDefNames["crazorgrenade"].id
+		celetrochainWeaponDefID = WeaponDefNames["celetrochain"].id
+		ChainLightningDefID = WeaponDefNames["cchainlightning"].id
+		chcprojectileDefID = WeaponDefNames["hcprojectile"].id
+		cAllyGatorMarkerDefID = WeaponDefNames["callygatormarker"].id
+		CEaterRocketDefID = WeaponDefNames["ceater"].id
+		cHarvestRocketDefID = WeaponDefNames["charvest"].id
+		cAntiMatterDefID = WeaponDefNames["cantimatter"].id
+		csubOrbDefID = WeaponDefNames["csuborbitalstrike"].id
+		catapultDefID = WeaponDefNames["ccatapult"].id
+		cgaterailgunDefID = WeaponDefNames["cgaterailgun"].id
+		cEfenceWeapondDefID = WeaponDefNames["cwefence1"].id
+		tangleGunDefID = WeaponDefNames["ctanglegun"].id
 	
 	--Journeyweapon
-	greenSeerWeaponDefID = WeaponDefNames["greenseer"].id
-	jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
-    jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
-    jSwiftMarkWeaponDefID = WeaponDefNames["jswiftrapemark"].id
-    jghostDancerWeaponDefID = WeaponDefNames["jgdjump"].id
-	jhunterDartDefID = WeaponDefNames["jdartgun"].id
-	jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
-	weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
-    tiglilWeaponDefID = WeaponDefNames["tiglilclosecombat"].id
-	jvaryjumpDefID = WeaponDefNames["jvaryjump"].id
-	jgluegunDefID = WeaponDefNames["jgluegun"].id
-    glueMineWeaponDefID = WeaponDefNames["gluemineweapon"].id
-    poisonRaceDartDef = WeaponDefNames["jpoisondartw"].id
-    jacidantsDefID = WeaponDefNames["jacidants"].id
-    jeliahbeamDefID = WeaponDefNames["jeliahbeam"].id
-    jethiefweaponDefID = WeaponDefNames["jethiefweapon"].id
-    jethiefretweaponDefID = WeaponDefNames["jethiefretweapon"].id
-    jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
-	
+		greenSeerWeaponDefID = WeaponDefNames["greenseer"].id
+		jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
+		jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
+		jSwiftMarkWeaponDefID = WeaponDefNames["jswiftrapemark"].id
+		jghostDancerWeaponDefID = WeaponDefNames["jgdjump"].id
+		jhunterDartDefID = WeaponDefNames["jdartgun"].id
+		jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
+		weaponDefIDjmotherofmercy = WeaponDefNames["jmomtractor"].id
+		tiglilWeaponDefID = WeaponDefNames["tiglilclosecombat"].id
+		jvaryjumpDefID = WeaponDefNames["jvaryjump"].id
+		jgluegunDefID = WeaponDefNames["jgluegun"].id
+		glueMineWeaponDefID = WeaponDefNames["gluemineweapon"].id
+		poisonRaceDartDef = WeaponDefNames["jpoisondartw"].id
+		jacidantsDefID = WeaponDefNames["jacidants"].id
+		jeliahbeamDefID = WeaponDefNames["jeliahbeam"].id
+		jethiefweaponDefID = WeaponDefNames["jethiefweapon"].id
+		jethiefretweaponDefID = WeaponDefNames["jethiefretweapon"].id
+		jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
+
     ChainLightningTable = {}
     local FireWeapons = {
         [gVolcanoWeaponID] = true,
@@ -91,6 +96,7 @@ if (gadgetHandler:IsSyncedCode()) then
         [cFlareGun] = true
     }
     RazorGrenadeTable = {}
+	
 
     Script.SetWatchWeapon(jacidantsDefID, true)
     Script.SetWatchWeapon(cEfenceWeapondDefID, true)
@@ -135,7 +141,8 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(cAllyGatorMarkerDefID, true)
     Script.SetWatchWeapon(poisonRaceDartDef, true)
     Script.SetWatchWeapon(tangleGunDefID, true)
-
+    Script.SetWatchWeapon(csubOrbDefID, true)
+	
     --units To be exempted from instantly lethal force
     local lethalBuffExecption = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
     local gaiaTeamID = Spring.GetGaiaTeamID()
@@ -996,8 +1003,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	watchedProjectilesTable={
-	[cAntiMatterDefID] = function (projectileID, proOwnerID)
-		
+	[cAntiMatterDefID] = function (projectileID)
+			proOwnerID = Spring.GetProjectileOwnerID (projectileID)
 			x,y,z = Spring.GetProjectilePosition(projectileID)
 			if x then
 			
@@ -1014,9 +1021,38 @@ if (gadgetHandler:IsSyncedCode()) then
 			else
 				return nil
 			end
-		end
+		end	
+	}
+	
+	deathWatchProjectileList={}
+	watchedOnDeathProjectiles={
+	[csubOrbDefID] =  function (proID)
+				tx, ty, tz = Spring.GetProjectilePosition(proID)
+				ownerID = Spring.GetProjectileOwnerID (proID)
+				
+				if Spring.GetUnitIsDead(ownerID)==true then return end
+				
+				     teamid = Spring.GetUnitTeam(ownerID)
+                ox, oy, oz = Spring.GetUnitPosition(ownerID)
+
+                vx, vz = ox - tx, oz - tz
+                head = math.atan2(vx, vz)
+                norm = math.sqrt(vx * vx + +vz * vz)
+
+                oz = vx / norm
+					  ox = -1 * (vz / norm) 
+				
+				for i=1, 3 do 
+						echo("Createing SuborbExplosion")
+                id = Spring.CreateUnit("csuborbexplo", tx + ox* i*20 , ty, tz +oz* i*20, 0, teamid)
+                Spring.SetUnitRotation(id, 0, head, 0)
+                Spring.SetUnitAlwaysVisible(id, true)
+				end
+			end
 	
 	}
+	
+	
 	
 	constantWatchedProjectiles = {}
 	constantWatchedProjectilesCounter=0
@@ -1033,19 +1069,44 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	function gadget:ProjectileCreated(proID, proOwnerID)
-		projWeaponDefID = Spring.GetProjectileDefID(proID)
-		if cAntiMatterDefID == projWeaponDefID then
+	function gadget:ProjectileCreated(proID, proOwnerID, projWeaponDefID)
+
+		if not projWeaponDefID then
+			projWeaponDefID = Spring.GetProjectileDefID(proID)
+		end
+		
+		if jvaryjumpDefID == projWeaponDefID then
+			if GG.AddCodeByType and GG.AddCodeByType[projWeaponDefID] then 
+				GG.AddCodeByType[projWeaponDefID](proID, proOwnerID)
+			end
+		end
+		
+		if watchedOnDeathProjectiles[projWeaponDefID] then
+					echo("Suboribtal Projectile fired")
+			deathWatchProjectileList[proID]= projWeaponDefID
+		end
+		
+		if watchedProjectilesTable[projWeaponDefID] then
 			constantWatchedProjectiles[proID] = {proOwnerID = proOwnerID, weaponDefID= projWeaponDefID}
 			constantWatchedProjectilesCounter = inc(constantWatchedProjectilesCounter)
 		end
 	end
 		
 	function gadget:ProjectileDestroyed(proID, proOwnerID)
+
 		if constantWatchedProjectiles[proID] then
 			constantWatchedProjectiles[proID]  = nil
 			constantWatchedProjectilesCounter= dec(constantWatchedProjectilesCounter)
 		end
+
+		if deathWatchProjectileList[proID] then
+				echo("Suboribtal Projectile consumed")
+				projWeaponDefID = Spring.GetProjectileDefID(proID)
+				watchedOnDeathProjectiles[projWeaponDefID](proID)
+				deathWatchProjectileList[proID] = nil
+		end
+		
+		
 	end
 
     local everyNthFrame = 30
@@ -1163,4 +1224,38 @@ if (gadgetHandler:IsSyncedCode()) then
             return true
         end
     end
+	
+		function getTargetTable(proID)
+			local targetTable = {}
+			local targetTypeInt, target = Spring.GetProjectileTarget(proID)
+			if targetTypeInt == string.byte('g') then --target is position on ground
+				targetTable = { targetType = targetTypeInt, targetX = target[1], targetY = target[2], targetZ = target[3], }
+			else --target is unit,feature or projectile
+				targetTable = { targetType = targetTypeInt, targetID = target, }
+			end
+			return targetTable
+		end
+	
+	
+	    function getProjectileTargetXYZ(proID)
+        targetTypeInt, target = Spring.GetProjectileTarget(proID)
+
+        if targetTypeInt == GROUND then
+				echo("ProjectileTarget:",target[1], target[2], target[3])
+            return target[1], target[2], target[3]
+        end
+        if targetTypeInt == UNIT then
+				ux,uy,uz = Spring.GetUnitPosition(target)
+            return ux,uy,uz
+        end
+        if targetTypeInt == FEATURE then
+				fx,fy,fz = Spring.GetFeaturePosition(target)
+            return fx, fy, fz
+        end
+        if targetTypeInt == PROJECTILE then
+			px,py,pz = Spring.GetProjectilePosition(target)
+            return px,py,pz
+        end
+    end
+
 end

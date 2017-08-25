@@ -14,6 +14,7 @@ return {
   ["bg"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},
   ["bg2"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},
   ["bg3"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},
+  ["csuborbital"]= {active="Reach\nOrbit" , passive="Abort\nLaunch"},
   ["cwaterextractor"]= {active="Harvest\nWater", passive="Stop\nHarvest"},
   ["mdigg"]= {active="Start\nMining", passive="Stop\nMining"},
   ["mdiggmex"]= {active="Stop\nMining", passive="Start\nMining"},

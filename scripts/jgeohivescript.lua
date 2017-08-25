@@ -104,12 +104,12 @@ function spawner()
         Sleep(spawnCycleRestTime)
         enemyID = Spring.GetUnitNearestEnemy(unitID)
 
-        if enemyID ~= nil then
+        if enemyID  then
             --EmitSfx(jgeohive,1024)
             ex, ey, ez = spGetUnitPosition(enemyID)
             if math.random(0, 1) == 1 then
                 eteam = Spring.GetUnitTeam(enemyID)
-                ex, ey, ez, boolValidStartPos = Spring.GetTeamStartPosition(eteam)
+                esx, esy, esz, boolValidStartPos = Spring.GetTeamStartPosition(eteam)
             end
             Spring.SetUnitBlocking(unitID, false)
             for i = 1, howManyUnitsPerSpawnCycle, 1 do
@@ -143,7 +143,7 @@ function spawner()
 
                 if spawnedUnit and Spring.ValidUnitID(spawnedUnit) == true then
                     spSetUnitNoSelect(spawnedUnit, true)
-                    if boolValidStartPos == true then
+                    if boolValidStartPos == true and ex and ey and ez then
                         spSetUnitMoveGoal(spawnedUnit, ex, ey, ez)
                     end
                     table.insert(monsterTable, spawnedUnit)
@@ -274,12 +274,22 @@ end
 
 PEAKFADEHALF = PEAKFADETIME / 4
 
+function UnitsExist()
+	if not monsterID or not enemyID then return false end
+	monsterDead, enemyDead = Spring.GetUnitIsDead(monsterID),Spring.GetUnitIsDead(enemyID)
+	if (not monsterDead or monsterDead == true) or (not enemyDead or enemyDead == true) then	return false	end	
+	
+	return true
+end
+
 function PEAKFADE(monsterID, enemyID, Time, mteam, factor)
     if monsterID % math.random(12, 27) == 0 then
         ex, ey, ez = Spring.GetUnitPosition(enemyID)
         ex, ey, ez = sanitizeCoords(ex, ey, ez)
         return ex, ey, ez
     end
+	
+	  if UnitsExist(monsterID, enemyID) == false then return nil end
 
     if distanceUnitToUnit(monsterID, enemyID) < 1024 then
         ex, ey, ez = Spring.GetUnitPosition(enemyID)
@@ -312,6 +322,8 @@ function BUILDUP(monsterID, enemyID, Time, mteam, factor)
         return ex, ey, ez
     end
 
+	if UnitsExist(monsterID, enemyID) == false then return nil end
+	
     if distanceUnitToUnit(monsterID, enemyID) < 768 then
         return ex, ey, ez
     end
@@ -367,13 +379,14 @@ function getNearestEnemy(idID)
     local spGetUnitTeam = Spring.GetUnitTeam
     for _, id in ipairs(AllUnitsUpdated) do
         edTeam = spGetUnitTeam(id)
-        if edTeam ~= teamID and edTeam ~= gaiaTeamID and id ~= idID then
-            dist = distanceUnitToUnit(id, idID)
-
-            if dist and id and dist + math.random(0, 30) < minDist then
-                minDistID = id
-                minDist = dist + math.random(0, 30)
-            end
+        if edTeam ~= teamID and edTeam ~= gaiaTeamID and id ~= idID then			
+				if UnitsExist(id, idID) == true then 
+					dist = distanceUnitToUnit(id, idID)
+					if dist and id and dist + math.random(0, 30) < minDist then
+						minDistID = id
+						minDist = dist + math.random(0, 30)
+					end
+				 end
         end
     end
 
