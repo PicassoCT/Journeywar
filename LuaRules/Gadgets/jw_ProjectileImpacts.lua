@@ -1217,7 +1217,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					end)
 					
                 Spring.AddUnitDamage(unitID, 10)
-
+ 
             else
                 return false
             end
