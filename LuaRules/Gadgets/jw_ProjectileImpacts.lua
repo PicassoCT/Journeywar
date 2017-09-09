@@ -1044,7 +1044,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				for i=1, 3 do 
 
-                id = Spring.CreateUnit("csuborbexplo", tx + ox* i* 80 , ty, tz +oz* i* 80, 0, teamid)
+                id = Spring.CreateUnit("csuborbexplo", tx + ox* i* 80 *-1^i , ty, tz +oz* i* 80*-1^i, 0, teamid)
                 Spring.SetUnitRotation(id, 0, head, 0)
                 Spring.SetUnitAlwaysVisible(id, true)
 				end
