@@ -1037,14 +1037,14 @@ if (gadgetHandler:IsSyncedCode()) then
 
                 vx, vz = ox - tx, oz - tz
                 head = math.atan2(vx, vz)
-                norm = math.sqrt(vx * vx + +vz * vz)
+                norm = math.sqrt(vx * vx  + vz * vz)
 
                 oz = vx / norm
 					  ox = -1 * (vz / norm) 
 				
 				for i=1, 3 do 
-						echo("Createing SuborbExplosion")
-                id = Spring.CreateUnit("csuborbexplo", tx + ox* i*20 , ty, tz +oz* i*20, 0, teamid)
+
+                id = Spring.CreateUnit("csuborbexplo", tx + ox* i* 80 , ty, tz +oz* i* 80, 0, teamid)
                 Spring.SetUnitRotation(id, 0, head, 0)
                 Spring.SetUnitAlwaysVisible(id, true)
 				end

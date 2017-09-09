@@ -1,3 +1,7 @@
+include "createCorpse.lua"
+include "lib_UnitScript.lua"
+include "lib_jw.lua"
+
 center = piece "center"
 rotatecenter = piece "rotatecenter"
 impactor = piece "impactor"
@@ -108,13 +112,13 @@ function spawnFire(Time, x, y, z)
     end
 end
 
+immuneType = getTypeTable(UnitDefNames, {"csuborbexplo","ccomender","jabyss"})
 function goTooKillThemAllPicaMon()
 
     selectRange = 260
     piecePosX, piecePosY, piecePosZ = Spring.GetUnitPosition(unitID)
     --- -Spring.Echo("PiecePosX:",piecePosX.." | PiecePosZ:",piecePosZ)
     -- get Piece Position
-    proChoice = {}
     proChoice = Spring.GetUnitsInCylinder(piecePosX, piecePosZ, selectRange) --no idea why 2.9 but satan told me so
 
     if proChoice ~= nil then
@@ -122,10 +126,12 @@ function goTooKillThemAllPicaMon()
         --Kill the Unit
         for i = 1, table.getn(proChoice), 1 do
             if proChoice[i] ~= unitID then
+				 if not immuneType[Spring.GetUnitDefID(proChoice[i])] then
                 x, y, z = Spring.GetUnitPosition(proChoice[i])
                 StartThread(spawnFire, 82, x, y, z)
                 Spring.SetUnitNoDraw(proChoice[i], false)
                 Spring.DestroyUnit(proChoice[i], false, false) --leave no wreck
+            end
             end
         end
     end
