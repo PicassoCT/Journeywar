@@ -112,7 +112,7 @@ function spawnFire(Time, x, y, z)
     end
 end
 
-immuneType = getTypeTable(UnitDefNames, {"csuborbexplo","ccomender","jabyss"})
+local abstractUnit = getAbstractTypes(UnitDefNames)
 function goTooKillThemAllPicaMon()
 
     selectRange = 260
@@ -126,7 +126,7 @@ function goTooKillThemAllPicaMon()
         --Kill the Unit
         for i = 1, table.getn(proChoice), 1 do
             if proChoice[i] ~= unitID then
-				 if not immuneType[Spring.GetUnitDefID(proChoice[i])] then
+				 if not abstractUnit[Spring.GetUnitDefID(proChoice[i])] then
                 x, y, z = Spring.GetUnitPosition(proChoice[i])
                 StartThread(spawnFire, 82, x, y, z)
                 Spring.SetUnitNoDraw(proChoice[i], false)
@@ -220,7 +220,8 @@ function justWaitAndSee()
     Spring.SetUnitNoSelect(unitID, true)
     Spring.SetUnitNeutral(unitID, true)
     Spring.SetUnitBlocking(unitID, false)
-
+	delay= math.random(0,500)
+	Sleep(delay)
     --set the unit to be ignored
     Show(impactor)
     StartThread(blinkFire)
