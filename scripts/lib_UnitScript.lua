@@ -25,107 +25,114 @@ lib_boolDebug = false --GG.BoolDebug or false
 --======================================================================================
 --Chapter: Tableoperations
 --======================================================================================
---merges two Dictionary Tables with the first having precedence
-function mergeDict(dA, xdB)
-if dA and not xdB then return dA end
-if xdB and not dA then return xdB end
-local dB = xdB
-	for k,v in pairs(dA) do
-		dB[k] = v
+--> merges two Dictionary Tables with the first having precedence
+function mergeDict(l_dA, l_xdB) 
+if l_dA and not l_xdB then return l_dA end
+if l_xdB and not l_dA then return l_xdB end
+local l_dB = l_xdB
+	for k,v in pairs(l_dA) do
+		l_dB[k] = v
 	end
-return dB
+return l_dB
 end
 
-function selectUnitDefs(names)
-local retT={}
+--> returns a subset of Unitdefs by UnitdefID
+function selectUnitDefs(l_names)
+local l_retT={}
 
-	for num, uDefID in pairs(names) do
+	for num, uDefID in pairs(l_names) do
 
-		retT[uDefID]= UnitDefs[uDefID]	
+		l_retT[uDefID]= UnitDefs[uDefID]	
 	end
-return retT
+return l_retT
 end
 
+--> returns a subset of Unitdefs by name as string 
 function UnitDefToUnitDefNames(UnitDef)
-local retT = UnitDef
+local l_retT = UnitDef
 	for defID, T in pairs(UnitDef) do
-		retT[T.name] = T
+		l_retT[T.name] = T
 	end
-return retT
+return l_retT
 end
 
-function capShow(Num)
-	assert(type(Num)=="number")
-	Show(Num)
+--> Encapsulates the Show function for easier debugging
+function capShow(l_Num)
+	assert(type(l_Num)=="number")
+	Show(l_Num)
 end
 
-function capHide(Num)
-	assert(type(Num)=="number")
-	Hide(Num)
+--> Encapsulates the Hide function for easier debugging
+function capHide(l_Num)
+	assert(type(l_Num)=="number")
+	Hide(l_Num)
 end
 
-function capHideT(T)
-	for k,v in pairs(T) do
+--> Encapsulates the hide Table function
+function capHideT(l_T)
+	for k,v in pairs(l_T) do
 		assertNum(v, v)
 	end
-	hideT(T)
+	hideT(l_T)
 end
 
-function echoUnitDefT(defT)
-
-	for k,v in pairs(defT) do 
+--> Echos out all the elements of a unitdef Table
+function echoUnitDefT(l_defT)
+	for k,v in pairs(l_defT) do 
 		echo(UnitDefs[v].name)
 	end
 end
+
 --> Hides a PiecesTable, 
-function hideT(tablename, lowLimit, upLimit, delay)
-    if not tablename then return end
-    boolDebugActive = (lib_boolDebug == true and lowLimit and type(lowLimit) ~= "string")
+function hideT(l_tableName, l_lowLimit, l_upLimit, l_delay)
+    if not l_tableName then return end
+    boolDebugActive = (lib_boolDebug == true and l_lowLimit and type(l_lowLimit) ~= "string")
 
-    if lowLimit and upLimit then
-        for i = upLimit, lowLimit, -1 do
-            if tablename[i] then
-                Hide(tablename[i])
+    if l_lowLimit and l_upLimit then
+        for i = l_upLimit, l_lowLimit, -1 do
+            if l_tableName[i] then
+                Hide(l_tableName[i])
             elseif boolDebugActive == true then
-                echo("In HideT, table " .. lowLimit .. " contains a empty entry")
+                echo("In HideT, table " .. l_lowLimit .. " contains a empty entry")
             end
 
-            if delay and delay > 0 then Sleep(delay) end
+            if l_delay and l_delay > 0 then Sleep(l_delay) end
         end
 
     else
-        for i = 1, table.getn(tablename), 1 do
-            if tablename[i] then
-                Hide(tablename[i])
+        for i = 1, table.getn(l_tableName), 1 do
+            if l_tableName[i] then
+                Hide(l_tableName[i])
             elseif boolDebugActive == true then
-                echo("In HideT, table " .. lowLimit .. " contains a empty entry")
+                echo("In HideT, table " .. l_lowLimit .. " contains a empty entry")
             end
         end
     end
 end
+
 -->Shows a Pieces Table
-function showT(tablename, lowLimit, upLimit, delay)
-    if not tablename then Spring.Echo("No table given as argument for showT") return end
+function showT(l_tableName, l_lowLimit, l_upLimit, l_delay)
+    if not l_tableName then Spring.Echo("No table given as argument for showT") return end
 
-    if lowLimit and upLimit then
-        for i = lowLimit, upLimit, 1 do
-            if tablename[i] then
-                Show(tablename[i])
+    if l_lowLimit and l_upLimit then
+        for i = l_lowLimit, l_upLimit, 1 do
+            if l_tableName[i] then
+                Show(l_tableName[i])
             end
-            if delay and delay > 0 then Sleep(delay) end
+            if l_delay and l_delay > 0 then Sleep(l_delay) end
         end
 
     else
-        for i = 1, table.getn(tablename), 1 do
-            if tablename[i] then
-                Show(tablename[i])
+        for i = 1, table.getn(l_tableName), 1 do
+            if l_tableName[i] then
+                Show(l_tableName[i])
             end
         end
     end
 end
 
---> accessTable a table three layers deep on any key/index
-function accessTable(T, a, b, c)
+--> safeAccessTable a table three layers deep on any key/index
+function safeAccessTable(T, a, b, c)
     if a and not T[a] then T[a] = {} end
     if b and not T[a][b] then T[a][b] = {} end
     if c and not T[a][b][c] then T[a][b][c] = {} end
@@ -134,26 +141,27 @@ end
 
 -->make a GlobalTableHierarchy From a Set of Arguments - String= Tables, Numbers= Params
 -->Example: "TableContaining[key].TableReamining[key].valueName" or [nr] , value
-function split(div, str)
-    if (div == '') then return false end
-    local pos, arr = 0, {}
+function split(l_div, l_str)
+    if (l_div == '') then return false end
+    local l_pos, arr = 0, {}
     -- for each divider found
-    for st, sp in function() return string.find(str, div, pos, true) end do
-        table.insert(arr, string.sub(str, pos, st - 1)) -- Attach chars left of current divider
-        pos = sp + 1 -- Jump past current divider
+    for st, sp in function() return string.find(str, l_div, pos, true) end do
+        table.insert(arr, string.sub(l_str, l_pos, st - 1)) -- Attach chars left of current divider
+        l_pos = sp + 1 -- Jump past current divider
     end
-    table.insert(arr, string.sub(str, pos)) -- Attach chars right of last divider
+    table.insert(arr, string.sub(l_str, l_pos)) -- Attach chars right of last divider
     return arr
 end
 
-function makeTableFromString(FormatString, assignedValue, ...)
+--> 
+function createGlobalTableFromAcessString(FormatString, assignedValue, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     if loadstring(FormatString) ~= nil then FormatString = FormatString .. "=" .. assignedValue; loadstring(FormatString) return end
     --SplitByDot
-    SubTables = {}
+    local SubTables = {}
     --split that string
-    SubT = string.split(FormatString, ".")
-    Appendix = "GG."
+    local SubT = string.split(FormatString, ".")
+    local Appendix = "GG."
     boolAvoidFutureChecks = false
     for i = 1, #SubT do
         if not SubT[i] == "GG" then
@@ -179,7 +187,7 @@ function makeTableFromString(FormatString, assignedValue, ...)
     return loadstring(Appendix .. "==" .. asignedValue)
 end
 
---> Creates a Table and initalizazes it with default value
+--> Creates a Table and initializes it with default value
 function makeTable(default, xDimension, yDimension, zDimension, boolNegativeMirror)
 	boolNegativeMirror= boolNegativeMirror or false	
 
@@ -235,6 +243,7 @@ local rotateCopy= makeTable(default, sizeX, sizeZ, nil, true )
 			end
 		end
 	end
+	
 return rotateCopy
 end
  
@@ -250,19 +259,19 @@ for x=-sizeX, sizeX do
 	end
 return shiftedMap
 end
--->Creates basically a table of piecenamed enumerated strings
-function makeTableOfPieceNames(name, nr, startnr, piecefoonction)
-    T = {}
-    start = startnr or 1
+-->Creates a table of piecenamed enumerated strings
+function makeTableOfPieceNames(l_name, l_nr, l_startnr, l_piecefoonction)
+    local T = {}
+    l_start = l_startnr or 1
 
-    for i = start, nr do
-        namecopy = name
+    for i = l_start, l_nr do
+        namecopy = l_name
         namecopy = namecopy .. i
         T[i] = namecopy
     end
-    if piecefoonction then
-        for i = start, nr do
-            T[i] = piecefoonction(T[i])
+    if l_piecefoonction then
+        for i = l_start, l_nr do
+            T[i] = l_piecefoonction(T[i])
         end
     end
     return T
@@ -276,8 +285,7 @@ function addTableTables(T, ...)
     if arg then
         for k, v in ipairs(arg) do
             String = String .. "[" .. v .. "]"
-            Spring.Echo(String)
-
+			
             if boolOneTimeNil == false then
                 if loadstring(String) ~= nil then
                 else
@@ -305,7 +313,7 @@ function validateUnitTable(T)
     return TVeryMuchAlive or {}
 end
 
--->adds a num Table to a num Table
+-->adds a numeric Table to a numeric Table
 function TAddT(OrgT, T)
     for i = 1, #T do
         OrgT[#OrgT + i] = T[i]
@@ -313,9 +321,10 @@ function TAddT(OrgT, T)
     return OrgT
 end
 
+--> Counts the number of elements in a dictionary
 function count(T)
 	if not T then return 0 end
-	index = 0
+	local index = 0
 	for k,v in pairs(T) do 
 		if v then 
 		index= index +1 
@@ -324,8 +333,9 @@ function count(T)
 	return index
 end
 
+
 function getNthElementT(T, nth)
-	index = 0
+	local index = 0
 	for k,v in pairs(T) do
 		if v then index= index +1 end 
 		if index== nth then 
@@ -334,24 +344,23 @@ function getNthElementT(T, nth)
 	end
 end
 
+-->Retrieves a random element from a Dictionary
 function randDict(Dict)
-if lib_boolDebug == true then
-assert(type(Dict)=="table")
-end
-totalElements = count(Dict)
-randElement = math.random(1,totalElements)
-index= 1
-anyElement=1
-for k,v in pairs (Dict) do
-anyElement = k
-	if index ==randElement then 
-	return k,v
+	if lib_boolDebug == true then
+	assert(type(Dict)=="table")
 	end
-index=inc(index)
-end
-return anyElement
 
-
+	randElement = math.random(1,count(Dict))
+	index= 1
+	anyElement=1
+		for k,v in pairs (Dict) do
+		anyElement = k
+			if index ==randElement then 
+			return k,v
+			end
+		index=inc(index)
+		end
+	return anyElement
 end
 
 --> randomizes Table Entrys
@@ -413,6 +422,7 @@ function DestroyTable(T, boolSelfd, boolReclaimed, condFunction, unitID)
     end
 end
 
+--> Explodes a Table of Pieces 
 function explodeT(TableOfPieces, Conditions, StepSize)
     lStepSize = StepSize or 1
     for i = 1, #TableOfPieces, lStepSize do
@@ -446,12 +456,6 @@ function rEchoT(T, layer)
     end
 end
 
-function ringModulu(value, inc,  ringCap , Sign)
-value = value +1* Sign
-if value < 0 or value == ringCap then return value, Sign*-1 end
- return value, Sign
-
-end
 
 function echoT(T, boolAssertTable, name)
 
@@ -504,6 +508,7 @@ function echoT(T, boolAssertTable, name)
     Spring.Echo("================================================================================")
 end
 
+--> Converts a boolean to a string value
 function boolToString(value)
     if value == true then return "true" else return "false" end
 end
@@ -517,13 +522,7 @@ function filterTableByTable(T, T2, compareFunc)
     return reTable
 end
 
-function tableToKeyTable(T)
-    KT = {}
-    for i = 1, #T do
-        KT[T[i]] = T[i]
-    end
-    return KT
-end
+
 
 function keyTableToTables(T)
     counter = 1
@@ -3201,6 +3200,79 @@ function getAllNearUnit(unitID, Range)
     return getAllInCircle(px, pz, Range, unitID)
 end
 
+function addAscii(str)
+local l_Result = 0 
+	for i = 1, #str do
+		l_Result = add(l_Result,string.byte(str,i))
+	end
+return l_Result
+end
+
+function addInput(...)
+	l_result = 0
+
+	local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+
+    if not arg then return l_result end
+
+    for _, v in pairs(arg) do
+		l_argType= type(v)
+
+		if l_argType== "number" then l_result = add(l_result,v) end
+		if l_argType== "table" then l_result =  l_result + addInput(v) end
+		if l_argType== "boolean" then 
+				if v== true then l_result = add(l_result,1); 
+				else l_result = add(l_result,-1); 
+				end 
+		end
+		if l_argType== "string" then l_result = add(l_result,addAscii(v)) end
+	end
+ 
+return l_result
+
+end
+--> computes the result of the middleSqreWeylSequence
+function middleSquareWeylSequence(itterations)
+
+s = 0xb5ad4ece
+x =0
+w= 0
+
+	for i=1,itterations do
+
+
+	   x =x* x; 
+	   w= w + s;
+	   x = x + w;
+	   x = math.bit_or((x / 2^5), (x * 2 ^5));
+
+	end
+
+end
+
+--> Seed random
+function seedRandom()
+seed = 0
+	l_playerList = Spring.GetPlayerList()
+	for i=1,#l_playerList do
+		name,active,spectator,teamID,allyTeamID,pingTime,cpuUsage,country,rank,customPlayerKeys= Spring.GetPlayerInfo(l_playerList[i])
+	end
+	seed = math.bit_xor(seed,addInput(name,active,spectator,teamID,allyTeamID,pingTime,cpuUsage,country,rank,customPlayerKeys))
+
+	teamList = Spring.GetTeamList()
+	for i=1,#teamList do
+		x,y,z=	Spring.GetTeamStartPosition(teamList[i])
+		seed= math.bit_xor(seed, x,y,z)
+	end
+
+	dirX,  dirY,  dirZ,   strength,   normDirX,  normDirY,  normDirZ = Spring.GetWind()
+	seed = math.bit_xor(seed,addInput(  dirX,  dirY,  dirZ,   strength,   normDirX,  normDirY,  normDirZ ))
+	seed = math.bit_xor(seed,middleSquareWeylSequence(seed))
+  
+   math.randomseed(seed)
+
+end
+
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
     if not x or not z then
@@ -3259,8 +3331,7 @@ function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
     end
 end
 
-
-
+-->Get the lowest Value in a table
 function getLowest(Table)
     lowest = 0
     val = 0
@@ -3272,6 +3343,7 @@ function getLowest(Table)
     end
 end
 
+--> Sums up all values in a table
 function sumTable(Table)
     a = 0
     for i = 1, #Table do
@@ -3280,7 +3352,7 @@ function sumTable(Table)
     return a
 end
 
-function sumTableKV(Table)
+function sumDict(Table)
     a = 0
     for k, v in pairs(Table) do
         a = a + v
@@ -3296,7 +3368,7 @@ function PieceLight(unitID, piecename, cegname)
     end
 end
 
-function TableToDict(T)
+function tableToDict(T)
     reT = {}
     if not T then return reT end
 
@@ -3325,7 +3397,7 @@ end
 function TableMergeTable(TA, TB)
     T = {}
     if #TA >= #TB then
-        T = TableToDict(TA)
+        T = tableToDict(TA)
 
         for i = 1, #TB do
             if not T[TB[i]] then
@@ -3334,7 +3406,7 @@ function TableMergeTable(TA, TB)
         end
         return TA
     else
-        T = TableToDict(TB)
+        T = tableToDict(TB)
         for i = 1, #TA do
             if not T[TA[i]] then
                 TB[#TB + 1] = TA[i]
@@ -3576,7 +3648,7 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
     echo("Im out 3")
 end
 
--->
+--> get the Groundheigth at a Units position
 function getUnitGroundHeigth(unitID)
     px, py, pz = Spring.GetUnitPosition(unitID)
 

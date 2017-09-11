@@ -1875,7 +1875,7 @@ function jumpJet(range)
 oPos = getUnitPositionV(unitID)
 tx,ty,tz= getTargetPosition()
 tPos= Vector:new(tx,ty,tz)
-minHeigth= math.max(Spring.GetGroundHeigth(oPos.x,oPos.z), Spring.GetGroundHeigth(tx,tz))
+minHeigth= math.max(Spring.GetGroundHeight(oPos.x,oPos.z), Spring.GetGroundHeight(tx,tz))
 
 
 	Spring.MoveCtrl.Enable(unitID)

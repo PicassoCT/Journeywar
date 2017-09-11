@@ -181,7 +181,7 @@ function damageDealer()
 
             if GG.OnFire == nil then GG.OnFire = {} end
             -- Units taking Firdamage
-            dict = TableToDict(allUnits)
+            dict = tableToDict(allUnits)
             groupOnFire(dict)
 
             --Units evaporating

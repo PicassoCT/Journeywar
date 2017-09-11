@@ -360,7 +360,7 @@ function placeLayerPiece(x, z, y, heightGradient)
 
     bonsaiTable[x][z][y] = { Height = heightOffset, BoolGround = true, Piece = P }
 
-    predecessorTable = accessTable(predecessorTable, x, z, y)
+    predecessorTable = safeAccessTable(predecessorTable, x, z, y)
     predecessorTable[x][z][y] = Piece_EndPieceMap[P]
 
     if baseShapeTable[x][z][y] == true and (not baseShapeTable[x][z][y + 1] or baseShapeTable[x][z][y + 1] == false) and Piece_EndPieceMap[P] then

@@ -189,6 +189,7 @@ function getInfantryTypeTable()
     Infantry = {}
     Infantry[UnitDefNames["bg"].id] = true
     Infantry[UnitDefNames["bg2"].id] = true
+    Infantry[UnitDefNames["bg3"].id] = true
     Infantry[UnitDefNames["tiglil"].id] = true
     Infantry[UnitDefNames["skinfantry"].id] = true
     Infantry[UnitDefNames["jhivewulf"].id] = true
@@ -283,7 +284,9 @@ function getAbstractTypes(UnitDefNames)
         [UnitDefNames["reservoirzone"].id] = true,
         [UnitDefNames["triggerzone"].id] = true,
         [UnitDefNames["ccomendernuke"].id] = true,
+        [UnitDefNames["cnukegrenadelvl2"].id] = true,
         [UnitDefNames["ccomendernukelvl3"].id] = true,
+        [UnitDefNames["cawilduniverseappears"].id] = true,
 		--TODO add all abstract types
      }
 

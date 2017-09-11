@@ -574,7 +574,7 @@ end
 function goTooKillThemAllPicaMon()
     T = getAllInCircle(x, z, 350, unitID)
     if T then
-        Tdict = TableToDict(T)
+        Tdict = tableToDict(T)
         groupOnFire(Tdict)
     end
     selectRange = 250

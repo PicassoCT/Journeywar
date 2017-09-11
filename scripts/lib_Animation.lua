@@ -535,7 +535,7 @@ end
 function buildBone(parent, piecetable)
 
     PieceInfo = Spring.GetUnitPieceInfo(unitID, parent)
-    children = tableToKeyTable(PieceInfo.children)
+    children = tableToDict(PieceInfo.children)
 
     SubBoneTables = {}
     if children then

@@ -3,12 +3,13 @@ eStateGoingDown = eStateStart + 1
 eStateCrashed = eStateGoingDown + 1
 
 eStateSaveUs = eStateCrashed + 1
-eInsurgentStatementCentrail = eStateSaveUs + 1
-eInsurgentStatementJourney = eInsurgentStatementCentrail + 1
-eInsurgenCounterUpdate = eInsurgentStatementJourney + 1
+
+eInsurgency = eStateSaveUs + 1
+
 --InsurgencyEnd
-eStateSavedCentrail = eInsurgenCounterUpdate + 1
+eStateSavedCentrail = eInsurgency + 1
 eStateSavedJourney = eStateSavedCentrail + 1
+
 eStatsCureQuest = eStateSavedJourney + 1
 eStateFoundCure = eStatsCureQuest + 1
 eStateCureRetrieved = eStateFoundCure + 1
@@ -20,6 +21,8 @@ eBlackHoleRayPlanetSinger = eStatePlanetsEndTerraformingStart + 1
 
 eStateMissionFailed = math.huge
 startTime = 180000
+
+CitadellConqueredFactor= 0.0
 
 exampleDialogue = {
     index = 1,
@@ -88,9 +91,9 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 
     callForHelp = {
         index = 1,
-        [1] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "I know, the Centrail wont allow for it, but Help me, to help her. She has the exobiotics Change upon her and i can barely stall it.." },
-        [2] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "He loved my old once, when i was not part of the choire, and will do anything, to prevent the butterflys completition. Help me, to end this, help him to see what is free. " },
-        [3] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Centrail: Communication Containment breached, the Adminstration is deemed infected and must be disposed. Cauterization in progress.." },
+        [1] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "I should no call, you im sure - im a traitor by now. Oh, how the mighty have fallen. I was like you once, had a citadell of my own, keeping the lions, tigers and bears at bay. Now, all has crumbled to dust- and - even the love of my life withers away, with the Journeymans ailment upon her. I can arrest it for the time beeing, but i can not cure it- i need your help. Help me, to save her- i beg you." , },
+        [2] = { Time = 6000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "He loved my old self, when i was not part of the choire, and will do anything, to prevent the butterflys completition. Help me, to end this, help him to see what is freedom. Release me from this shell and end the suffering. " },
+        [3] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Centrail: Communication Containment breached, the Adminstration of this sector is deemed infected and must be disposed. Cauterization in progress.." },
         [4] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Loyalists: We do not reveal ourselves, usually- but we all have lost ones, and preseving those is a worthy endavour. We shall fight the Exobiotics- and the Centrail Confederates in the Citadell.." },
         [5] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Journeys: Who are we, if we do not fight for live to be free of the datadragon, the metall disease, the undead." },
         [6] = { Time = 3000, Sound = "sounds/Missions/missionBriefing.ogg", Text = "Journeys: Who are we, to seperate lovers, to divide and destroy, and call the ashes conquered? Becoming like the abomination, that we shall have no part in that." },
@@ -110,12 +113,38 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 
         return missionOngoing(conditionlessOngoing)
     end
-
+	
 
 
     if missionStepAndTime(frame, eStateSaveUs) then
-
-        --check Civil War Status
+	
+	civilWarIsOver = function (frame, citadelID)
+		infantryType= getInfantryTypeTable()
+		teamID = Spring.GetUnitTeam(citadelID)
+		x,y,z= Spring.GetUnitPosition(citadelID)
+		
+		CitadellConqueredFactor= CitadellConqueredFactor + 0.001
+		if CitadellConqueredFactor >= 1.0 then return true end
+		
+		if frame % 10 then spawnCEGatUnit(citadelID, "AR2Projectile", 0, 100 *CitadellConqueredFactor, 0, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10) end --sfx
+		
+		process( getAllInCircle(x,z, 125,citadelID, teamID),
+				function(id)
+					if infantryType[Spring.GetUnitDefID(id)] and CitadellConqueredFactor > 0 then
+						Spring.DestroyUnit(id,true,false)
+						CitadellConqueredFactor= math.max(0,CitadellConqueredFactor - 0.002)
+					end
+				end
+				)
+		
+		if stillAlive(MissionFunctionTable[7][11]) == false then return true end
+		
+		return false
+	end
+		--check Civil War Status
+		
+		
+		-- EndConditions
         if civilWarIsOver(frame) == true then
 
             return missionOngoing(gameOver)
@@ -123,15 +152,22 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 
         --check for the couple reaching the citadell
         if unitReached(MissionFunctionTable[7][11], "citadell", 50) == true then
+			nextStep(eStateSavedCentrail)
         end
         if unitReached(MissionFunctionTable[7][11], "beanstalk", 50) == true then
+			nextStep(eStateSavedCentrail)
 
-            nextStep(eState)
         end
 
 
         return stillAlive(MissionFunctionTable[7][11]) == false
     end
+	
+	if missionStepAndTime(frame, eStateSavedCentrail) then
+		--[23:15:04] <Pica> The Carryr, sets out to search for a cure, by finding a example of the "forbidden" fruit.
+	
+	end
+	
     --[[
 
 [22:25:46] <Pica>  and the centrial player gets news, that a citadell too <direction> has fallen
@@ -152,7 +188,7 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 [23:13:36] <Pica> Fruits fall from the sky, and if you eat them- you will change
 [23:14:05] <Pica> the biotech will make you one of them- part of the cyclic collective.
 [23:14:16] <Pica> Like a Choir of Jazzsolists
-[23:15:04] <Pica> The Carryr, sets out to search for a cure, by finding a example of the "forbidden" fruit.
+
 [23:15:05] <Pica> He relates the planets inhabitants story. "They where quite advanced mamals, almost made it to the fusion."
 [23:15:05] <Pica> "They where divided into several mental subcastes, they concluded at the onset of the surplus where mental illnesses."
 [23:15:05] <Pica> "They had one they used to uphold there sex for food trade contracts for life."
@@ -188,16 +224,6 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 [23:43:16] <Pica> Journeylive grows around the blackhole, and dies off- a dry dead, dysonsphere of twigs...
 [23:43:22] <Pica> The end
     ]]
-    if MissionFunctionTable[7][3] > 12 then
 
-        CentrailSpeech =
-        "Gone are the barbarians- now true civilization can start."
-        T = prepSpeach(CentrailSpeech, Name, charPerLine, Alpha, DefaultSleepByline)
-        say(T, 25000, NameColour, TextColour, OptionString, UnitID)
-        spPlaySound("sounds/Missions/missionBriefing.ogg", 1)
-        return true
-    end
-
-    return false
 end
 	

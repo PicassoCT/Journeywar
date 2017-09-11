@@ -584,7 +584,7 @@ end
 function assemble(center, unitid, udefSub, CubeLenghtSub, nrNeeded, range, AttachPoints)
     --Move UnderGround
 
-    makeTableFromString("InfoTable[" .. unitid "].boolBuildEnded", true)
+    createGlobalTableFromAcessString("InfoTable[" .. unitid "].boolBuildEnded", true)
 
     piecesTable = Spring.GetUnitPieceList(unitid)
     for i = 1, #piecesTable do
@@ -602,7 +602,7 @@ function assemble(center, unitid, udefSub, CubeLenghtSub, nrNeeded, range, Attac
     DistanceDown = base - hy
     Move(center, y_axis, DistanceDown, 0)
 
-    makeTableFromString("BoundToThee")
+    createGlobalTableFromAcessString("BoundToThee")
 
     oldHP = Spring.GetUnitHealth(unitid)
     newHP = oldHP
