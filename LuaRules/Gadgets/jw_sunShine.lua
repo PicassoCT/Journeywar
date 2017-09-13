@@ -20,7 +20,7 @@ if gadgetHandler:IsSyncedCode() then
     --==========================WhereTheSunDontShines============================
     --Initialses the sun control and sets the inital arc
     function gadget:GameStart()
-        Spring.SetSunManualControl(true)
+        --Spring.SetSunManualControl(true)
         setSunArc()
     end
 
@@ -167,9 +167,9 @@ if gadgetHandler:IsSyncedCode() then
         return factor(getsunColor(percent), 0.3)
     end
 
-    function setSunArc()
-        local resultVec = makeVector(0.5, 0.4, 0.3)
-        Spring.SetSunParameters(resultVec.x, resultVec.y, resultVec.z, 250, 0, 32400)
+    function setSunArc(frame)
+        local resultVec = makeVector(0.5, math.abs(math.cos((frame % DAYLENGTH)/DAYLENGTH)), 0.3)
+		Spring.SetSunDirection(resultVec.x, resultVec.y, resultVec.z)
     end
 
     -- calculates a fog curve with peak at midnight and zero at dawn and dusk
@@ -182,11 +182,6 @@ if gadgetHandler:IsSyncedCode() then
 
     --sets the sunconfiguration given to it
     function setSun(c, totalPercent)
-
-
-
-
-
 
         Spring.SetSunLighting({ groundAmbientColor = { c.groundAmbientColor[1], c.groundAmbientColor[2], c.groundAmbientColor[3], c.groundAmbientColor[4] } })
         Spring.SetSunLighting({ groundDiffuseColor = { c.groundDiffuseColor[1], c.groundDiffuseColor[2], c.groundDiffuseColor[3], c.groundDiffuseColor[4] } })
@@ -259,8 +254,6 @@ if gadgetHandler:IsSyncedCode() then
         if n % 32 == 0 then
             aDay(n + DAYLENGTH/2, DAYLENGTH)
         end
-        if n % DAYLENGTH == 0 then
             setSunArc()
-        end
     end
 end

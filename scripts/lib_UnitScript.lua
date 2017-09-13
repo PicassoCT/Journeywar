@@ -1462,7 +1462,16 @@ function mix(vA, vB, fac)
 	end
 	
     fac = math.min(1.0, math.max(0.0, fac))
-    return addVector(mulVector(vA, fac), mulVector(vB, 1 - fac))
+	return mixTable(vA,vB,fac)
+end
+
+function mixTable(TA, TB, factor)
+local T={}
+	for k,v in pairs(TA) do
+		T[k]= v*factor + TB[k]* (1-factor)
+	end
+return T
+
 end
 
 
@@ -3056,6 +3065,18 @@ function getHighestPointOfSet(Table, axis)
     return Table[index].x, Table[index].y, Table[index].z, index
 end
 
+--> Gets one Unit of one Type
+function getTeamUnitOfType(teamID, typeID)
+        allUnitsOfTeam = Spring.GetTeamUnits(eTeam)
+local	spGetUnitDefID = Spring.GetUnitDefID
+	for i=1, #allUnitsOfTeam do
+		if spGetUnitDefID(allUnitsOfTeam[i]) == typeID then
+			return allUnitsOfTeam[i]
+		end
+	end
+
+end
+
 function getNearestGroundEnemy(id, UnitDefs)
     ed = Spring.GetUnitNearestEnemy(id)
     if ed then
@@ -3087,7 +3108,7 @@ end
 
 
 function pieceToPoint(pieceNumber)
-    reTab = {}
+	local  reTab = {}
 
     reTab.x, reTab.y, reTab.z = Spring.GetUnitPiecePosition(unitID, pieceNumber)
     return reTab
@@ -3163,6 +3184,7 @@ function ReleaseLock(Lock, number)
     Lock[number] = false
 end
 
+--> Builds the second norm Squareroot over x arguments
 function normTwo(...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     sum = 0
@@ -3208,6 +3230,7 @@ local l_Result = 0
 return l_Result
 end
 
+
 function addInput(...)
 	l_result = 0
 
@@ -3218,11 +3241,11 @@ function addInput(...)
     for _, v in pairs(arg) do
 		l_argType= type(v)
 
-		if l_argType== "number" then l_result = add(l_result,v) end
-		if l_argType== "table" then l_result =  l_result + addInput(v) end
+		if l_argType== "number" then l_result = math.bit_xor(l_result,v) end
+		if l_argType== "table" then l_result =  math.bit_xor(l_result,v) end
 		if l_argType== "boolean" then 
-				if v== true then l_result = add(l_result,1); 
-				else l_result = add(l_result,-1); 
+				if v== true then l_result = math.bit_xor(l_result,1); 
+				else l_result = math.bit_xor(l_result,-1); 
 				end 
 		end
 		if l_argType== "string" then l_result = add(l_result,addAscii(v)) end
@@ -3300,18 +3323,9 @@ end
 --> Grabs every Unit in a circle, filters out the unitid
 function getInCircle(unitID, Range, teamid)
 
-    T = {}
     x, _, z = Spring.GetUnitBasePosition(unitID)
-    if teamid then
-        T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
-    else
-        T = Spring.GetUnitsInCylinder(x, z, Range)
-    end
-
-    if T and #T > 1 and type(unitID) == 'number' then
-        table.remove(T, unitID)
-    end
-    return T
+	return getAllInCircle(x,z, Range, unitID, teamid)
+	
 end
 
 

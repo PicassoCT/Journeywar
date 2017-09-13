@@ -1,3 +1,5 @@
+--Apocalypso
+
 function spawnResistance(nrOfCellPairs)
 		sizeX=Game.mapSizeX
 		sizeZ=Game.mapSizeZ
@@ -20,7 +22,7 @@ function spawnResistance(nrOfCellPairs)
 	end
 	
 	
-	function Misson6ResistaceIsFutile(frame)
+	function Misson6ResistanceIsFutile(frame)
 		
 		--S-etUp
 		if MissionFunctionTable[6][2]== nil then MissionFunctionTable[6][2]=frame end

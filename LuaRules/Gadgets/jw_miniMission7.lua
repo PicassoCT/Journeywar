@@ -62,6 +62,26 @@ function missionOngoing(fooNction)
     return fooNction()
 end
 
+function endOfTheWorld(startframe, frame)
+offset = frame -startframe
+colourTable= {
+			[1]= {frame=10000,r=0,g=0,b=0,flux={r=50,g=50,b=50}},--red
+			[2]= {frame=15000,r=0,g=0,b=0,flux={r=50,g=50,b=50}},--orange
+			[3]= {frame=35000, r=0,g=0,b=0,flux={r=50,g=50,b=50}},--dark
+			[4]= {frame=64000, r=0,g=0,b=0 , flux={r=50,g=50,b=50}} -- lila
+			}
+			
+lastInstance=colourTable[1]
+
+for i=1,#colourTable do
+	local colTab=colourTable[i]
+	if offset < colTab.frame then
+		--setSunCol mix(colTab,lastInstance, math.max(0.0,math.min(1.0,(frame-lastInstance.frame)/(colTab.frame-lastInstance.frame))
+	end
+end	
+		
+end
+
 stillAlive = function(id) return Spring.GetUnitIsDead(id) == false; end
 conditionlessOngoing = function() return false; end
 gameOver = function() return true; end
@@ -69,16 +89,16 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 
     if not MissionFunctionTable[7][2] then MissionFunctionTable[7][2] = frame end
     if not MissionFunctionTable[7][3] then MissionFunctionTable[7][3] = eStateStart end
+	if not MissionFunctionTable[7].teamID then MissionFunctionTable[7].teamID =   getCombinePlayer() end
+	if not MissionFunctionTable[7].mainBuilding then MissionFunctionTable[7].mainBuilding = getTeamUnitOfType(MissionFunctionTable[7].teamID, UnitDefNames["citadell"].id) end
 
     --send the transport crashing
     if missionStepAndTime(frame, eStateStart, startTime) then
-        teamID = getCombinePlayer()
         x, y, z = getOrthoLocation()
-        id = Spring.CreateUnit("cconair", x, y, z, teamID, 1, 0)
+        id = Spring.CreateUnit("cconair", x, y, z,  MissionFunctionTable[7].teamID, 1, 0)
         if id then
             Spring.SetUnitCrashing(id, true)
-            MissionFunctionTable[7][10] = teamID
-            MissionFunctionTable[7][12] = id
+            MissionFunctionTable[7].conair = id
             MissionFunctionTable[7][9] = { x = x, y = y, z = z }
 
             nextStep(eStateGoingDown)
@@ -100,10 +120,14 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
     }
 
     if missionStepAndTime(frame, eStateGoingDown) then
-        if Spring.GetUnitIsDead(MissionFunctionTable[7][12]) == true then
-            if not MissionFunctionTable[7][11] then
-                MissionFunctionTable[7][11] = Spring.CreateUnit("thecouple", MissionFunctionTable[7][9].x, MissionFunctionTable[7][9].y, MissionFunctionTable[7][9].z, MissionFunctionTable[7][10], 1)
-                process(callForHelp, function(Table) Table.id = MissionFunctionTable[7][11]; return Table; end)
+        if Spring.GetUnitIsDead(MissionFunctionTable[7].conair) == true then
+            if not MissionFunctionTable[7].he then
+                MissionFunctionTable[7].he  = Spring.CreateUnit("thecouple", MissionFunctionTable[7][9].x, MissionFunctionTable[7][9].y, MissionFunctionTable[7][9].z,  MissionFunctionTable[7].teamID , 1)
+                process(callForHelp, function(Table)
+											Table.id = MissionFunctionTable[7].he
+											return Table; 
+										end
+										)
             end
             boolDialgoueDone, callForHelp = speakDialogue(callForHelp)
             if boolDialgoueDone == true then
@@ -114,11 +138,13 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
         return missionOngoing(conditionlessOngoing)
     end
 	
-
-
     if missionStepAndTime(frame, eStateSaveUs) then
 	
 	civilWarIsOver = function (frame, citadelID)
+	
+		if stillAlive(citadelID) == false then return true end
+		if stillAlive(MissionFunctionTable[7].he) == false then return true end
+	
 		infantryType= getInfantryTypeTable()
 		teamID = Spring.GetUnitTeam(citadelID)
 		x,y,z= Spring.GetUnitPosition(citadelID)
@@ -136,75 +162,86 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 					end
 				end
 				)
-		
-		if stillAlive(MissionFunctionTable[7][11]) == false then return true end
-		
+				
 		return false
 	end
 		--check Civil War Status
 		
-		
 		-- EndConditions
-        if civilWarIsOver(frame) == true then
-
+        if civilWarIsOver(frame,  MissionFunctionTable[7].mainBuilding) == true then
             return missionOngoing(gameOver)
         end
 
         --check for the couple reaching the citadell
-        if unitReached(MissionFunctionTable[7][11], "citadell", 50) == true then
+        if unitReached(MissionFunctionTable[7].he, "citadell", 50) == true or  unitReached(MissionFunctionTable[7].he, "beanstalk", 50) == true  then
 			nextStep(eStateSavedCentrail)
         end
-        if unitReached(MissionFunctionTable[7][11], "beanstalk", 50) == true then
-			nextStep(eStateSavedCentrail)
 
-        end
-
-
-        return stillAlive(MissionFunctionTable[7][11]) == false
+        return stillAlive(MissionFunctionTable[7].he) == false
     end
 	
 	if missionStepAndTime(frame, eStateSavedCentrail) then
-		--[23:15:04] <Pica> The Carryr, sets out to search for a cure, by finding a example of the "forbidden" fruit.
+		Spring.Echo("She is still sick, but in stasis. I need a piece of those gaudy trees near radiation to cure her.")
+		Spring.DestroyUnit(MissionFunctionTable[7].he, true, false)
+		x,y,z= Spring.GetUnitPosition(MissionFunctionTable[7].mainBuilding)
+		MissionFunctionTable[7].he= Spring.CreateUnit("thecouplehealone", x,y,z,  MissionFunctionTable[7].teamID , 1)
+		nextStep(eStatsCureQuest)
+	end
+	
+	if missionStepAndTime(frame, eStatsCureQuest) then
+		if stillAlive(MissionFunctionTable[7].he) == false then return true end
+	
+		if  unitReached(MissionFunctionTable[7].he, "jtree2", 50) then
+			nextStep(eStateCureRetrieved)
+		
+		end
+	end  
+	
+	sentence= "I have the fruit, im analyzing it now, transfering the data. To be them, so strange- like a fever dream. They where mamals once, divided into castes by neuron-patterns. One to uphold sexual contracts, one for war, one paranoid to encapsulate groups. The irony - these trees- they once where a cure to wishfull thinking."
+	
+	if missionStepAndTime(frame, eStateCureRetrieved) then
+		say(sentence, 3000, NameColour, TextColour, OptionString, 15)
+		TransferUnit(MissionFunctionTable[7].he, Spring.GetGaiaTeamID())
+		MissionFunctionTable[7].frame = Spring.GetGameFrame()
+		nextStep(eStatePlanetDeclaredDefunct)
+	end
+	
+	
+	if missionStepAndTime(frame, eStatePlanetDeclaredDefunct,MissionFunctionTable[7].frame + 7000) then
+		thisIsTheEnd = " Dimension "..string.byte(TODOMapname).." Planet "..PlanetNameGenerator().. " was brought into the exobiotic reference frame three local weeks ago. It presented with a hidden initial infestation, which upon discovery quickly contaminated 0.67 of the total population. After several treatments, and containment breaches, colony survival is unlikely. Two hours ago, a artificial singularity was inserted into the primary solar of the system. Radiation and Novasurges will sterlize the system. Portals and communication will be one way until the system is sterile."	
+		MissionFunctionTable[7].frame= Spring.GetGameFrame()		
+		say(thisIsTheEnd, 3000, NameColour, TextColour, OptionString, 15)
+		x,y,z=Spring.GetUnitPosition(MissionFunctionTable[7].mainBuilding )
+		MissionFunctionTable[7].she = MissionFunctionTable[7].he= Spring.CreateUnit("thecoupleshealone", x,y,z,  MissionFunctionTable[7].teamID , 1)
+		nextStep(eStateSheVenturesOutToSafeHime)
+	end
+	
+	if missionStepAndTime(frame, eStateSheVenturesOutToSafeHime)then
+		sheSaid = "honey, i had the most strangest dream. You where in it, stealing apples from dragons as old as the redest sun. Honey?"
+		say(sheSaid, 3000, NameColour, TextColour, OptionString, 15)
+		MissionFunctionTable[7].frame = Spring.GetGameFrame()		
+		nextStep(eStateSearchingForHim)
+	end
+	
+	if missionStepAndTime(frame, eStateSearchingForHim) then
+		x,y,z= math.random(0,Game.mapSizeX),0, math.random(0,Game.mapSizeZ)
+		Spring.SetUnitMoveGoal(MissionFunctionTable[7].he, x, y, z)
+	
+		if distanceUnitToUnit(MissionFunctionTable[7].she, MissionFunctionTable[7].he) < 50 then
+			Spring.TransferUnit(MissionFunctionTable[7].he,Spring.GetUnitTeam(MissionFunctionTable[7].she))
+			nextStep(eStateBringThemHome)		
+		end
+		
+		if endOfTheWorld89
+		
 	
 	end
 	
-    --[[
-
-[22:25:46] <Pica>  and the centrial player gets news, that a citadell too <direction> has fallen
-[22:26:14] <Pica> One final decal "She is infected. Please!"
-[22:26:25] <Pica> inb4 sc2 copycat
-[22:27:42] <Pica> Enter the story as game-mechanic- the centrail player can now command the Carrying guy. But he is weak. He needs many movecommands to make some steps. And he is loosing health, with every step.
-[22:27:52] <Pica> Resting, regains a part of that health- slowly.
-[22:28:07] <Pica> The Journeyman, has the target to capture them - and bring them too the beanstalk.
-[22:36:55] ** Code_Man hat den the channel verlassen (Connection timed out).
-[22:47:36] <Pica> Journeyman  Victory is Mision Win Journeyman
-[23:00:42] <Pica> the couple makes it to the first ring of base defense 
-[23:01:18] <Pica> And the Centrail Forces have a shism..
-[23:01:44] <Pica> The Inner Circle, around the citadell turns against the loyal outer circle-
-[23:02:38] <Pica> The Outercircle must hurry, to regularly bring infantry towards the citadell.. to prevent the besieged administrator (The Player) in the building from beeing killed
-[23:12:35] <Pica> To halt the transformation for a time- the couple must reach a research station, holding a neutrino free cage. Only this can prevent the bio-nanotech of the journey entangling and completing the transformation.
-[23:13:01] <Nightwatch> <DeinFreund> wat
-[23:13:24] <Pica> If the Journeys arrive on a planet- strange things start to happen.
-[23:13:36] <Pica> Fruits fall from the sky, and if you eat them- you will change
-[23:14:05] <Pica> the biotech will make you one of them- part of the cyclic collective.
-[23:14:16] <Pica> Like a Choir of Jazzsolists
-
-[23:15:05] <Pica> He relates the planets inhabitants story. "They where quite advanced mamals, almost made it to the fusion."
-[23:15:05] <Pica> "They where divided into several mental subcastes, they concluded at the onset of the surplus where mental illnesses."
-[23:15:05] <Pica> "They had one they used to uphold there sex for food trade contracts for life."
-[23:15:05] <Pica> "They had one that allowed them to overcome the plagues that ravaged there civilisation- creating paranoid groups and spreading resistant populations."
-[23:15:05] <Pica> "They had a murderous caste of bloodlust"
---When all ressources where used up, there by the surplus held back nature returned, and spiraled them into a devolution, they returned into ever tighter loops
---nature had all the time in the world to develop counter-measures against civilisation-
---there world become a hostile wasteland of evolutionary developed counter measures
---and became animals again- a much less energy intensive state to follow your 
---its the comon end of species across the 
--- Having the journeys come to this locked in dead world is a mercy.
+	
+	
+	--[[
 
 
-[23:15:44] <Pica> The Centrial Loyalists are defeated, by the Adminstration loyalists.
-[23:15:52] <Pica> And thus the final act begins.
-[23:16:45] <Pica> Presuming the Centrail troops infected, and the system to be a lost cause, the Centrail ups the game, and injects a blackhole into one of the two suns of the twin star system.
 [23:27:42] <Pica> Chaos ensues.. as the sun is devoured from the inside out..  some citizens turn towards the Journeyman for saving, some flee towards the closed gates...
 [23:28:28] <[SPM]spymort> huh?
 [23:28:50] <Pica> Farcaster gates- centrial Uits.. civilians.. neutral unit.
