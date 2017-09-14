@@ -254,6 +254,6 @@ if gadgetHandler:IsSyncedCode() then
         if n % 32 == 0 then
             aDay(n + DAYLENGTH/2, DAYLENGTH)
         end
-            setSunArc()
+            setSunArc(n)
     end
 end

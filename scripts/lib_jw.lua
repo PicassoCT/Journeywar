@@ -284,7 +284,6 @@ function getAbstractTypes(UnitDefNames)
         [UnitDefNames["reservoirzone"].id] = true,
         [UnitDefNames["triggerzone"].id] = true,
         [UnitDefNames["ccomendernuke"].id] = true,
-        [UnitDefNames["cnukegrenadelvl2"].id] = true,
         [UnitDefNames["ccomendernukelvl3"].id] = true,
         [UnitDefNames["cawilduniverseappears"].id] = true,
 		--TODO add all abstract types

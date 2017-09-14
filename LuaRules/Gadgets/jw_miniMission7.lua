@@ -212,7 +212,7 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 		MissionFunctionTable[7].frame= Spring.GetGameFrame()		
 		say(thisIsTheEnd, 3000, NameColour, TextColour, OptionString, 15)
 		x,y,z=Spring.GetUnitPosition(MissionFunctionTable[7].mainBuilding )
-		MissionFunctionTable[7].she = MissionFunctionTable[7].he= Spring.CreateUnit("thecoupleshealone", x,y,z,  MissionFunctionTable[7].teamID , 1)
+		MissionFunctionTable[7].she =Spring.CreateUnit("thecoupleshealone", x,y,z,  MissionFunctionTable[7].teamID , 1)
 		nextStep(eStateSheVenturesOutToSafeHime)
 	end
 	

@@ -46,7 +46,7 @@ local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 updateCommandsSoon = false
 
-defaultCaptionByUnitType = VFS.Include('ressources/ability_captions.lua', nil, VFSMODE)
+defaultCaptionByUnitType = VFS.Include('LuaUI/ressources/ability_captions.lua')
 
 
 ability_window_height = "23%"--180

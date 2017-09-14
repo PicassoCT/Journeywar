@@ -1,5 +1,4 @@
-
-targetCommands={
+return  {
 [CMD.STOP            ]=true,
 [CMD.WAIT            ]=true,
 [CMD.TIMEWAIT        ]=true,

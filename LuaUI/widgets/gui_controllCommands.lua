@@ -28,8 +28,8 @@ local selectedUnits = {}
 local controllCommand_window
 local activeCommand = 0
 
-VFS.Include("ressources/guiEnums.lua",nil, VFSMODE)
-VFS.Include("ressources/gui_helper.lua", nil, VFSMODE)
+targetCommands = VFS.Include("LuaUI/ressources/guiEnums.lua")
+VFS.Include("LuaUI/ressources/gui_helper.lua")
 ---------------------------------------------------------------------------------------
 
 
