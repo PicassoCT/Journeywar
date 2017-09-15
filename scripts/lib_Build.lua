@@ -706,18 +706,18 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 		
 		--DEBUG DELME
-			bd_LinearExpandPiece(1)
-			bd_LinearExpandPiece(2)
-			bd_LinearExpandPiece(3)
-			bd_LinearExpandPiece(4)
+			-- bd_LinearExpandPiece(1)
+			-- bd_LinearExpandPiece(2)
+			-- bd_LinearExpandPiece(3)
+			-- bd_LinearExpandPiece(4)
 		-- DEBUG DELME 
 		attempts=0
-		--[[
+		
 		while bodyNum < bodydice and bd_existsParts(BodyPieces)==true and attempts < bodydice do
 			Sleep(100)
 			-- while there exist BodyParts2 and numberOfBodyPiecesUsed < bodydice
 				echo(LinConCoordLimit,math.random(1,Max))
-			if LinConCoordLimit < math.random(1,Max) then
+			if  LinConCoordLimit < math.random(1,Max) then
 				--FindPiece -FindSocket -- bd_LinAddPieceSocketsToPool
 				bodyNum=bodyNum + (bd_LinearExpandPiece(bodyNum) or 0)
 			else
@@ -736,7 +736,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			
 			attempts=attempts+1
 		end
-		
+		--[[
 				
 		--Arm
 		Armdice=math.ceil(math.random(3,ArmMax))
