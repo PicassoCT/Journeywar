@@ -4,11 +4,6 @@ local weaponDef = {
     name = "jbeefeatermarker",
     weaponType = [[Cannon]],
 
-    -- soundHit           = "null",
-    --soundStart         = "null",
-
-
-
     areaOfEffect = 164,
     --physics
     weaponVelocity = 4950,
@@ -26,11 +21,6 @@ local weaponDef = {
     rgbColor = [[0.05 0.05 0.05]],
     size = 0.002,
 
-
-
-    ---------------------------------------------------------------
-
-    ----------------------------------------------------------------
     ImpulseBoost = 2.8,
     impulseFactor = 10,
     damage = {

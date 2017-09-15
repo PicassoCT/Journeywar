@@ -48,7 +48,7 @@ local weaponDef = {
 
 
     --sound
-    soundHit = "sounds/jfishswarm/jFishSwarmAttack.wav",
+    soundHit = "sounds/jfishswarm/jFishSwarmAttack.ogg",
     soundStart = "sounds/jfishswarm/jFishSwarmFlyingAttack.wav",
 }
 

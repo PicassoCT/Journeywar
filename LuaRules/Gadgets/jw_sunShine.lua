@@ -21,7 +21,7 @@ if gadgetHandler:IsSyncedCode() then
     --Initialses the sun control and sets the inital arc
     function gadget:GameStart()
         --Spring.SetSunManualControl(true)
-        setSunArc()
+        setSunArc(1)
     end
 
     --multiplies all members of a table by a factor

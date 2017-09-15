@@ -561,7 +561,7 @@ if (gadgetHandler:IsSyncedCode()) then
         health = Spring.GetUnitHealth(unitID)
         Spring.SetUnitHealth(unitID, { paralyze = health * 1.5 })
         Spring.SetUnitArmored(unitID, 3)
-        Spring.AddUnitImpulse(unitID, math.random(-1, 1) / 10, 0, math.random(-1, 1) / 10)
+        Spring.AddUnitImpulse(unitID, math.random(-10, 10) , 0, math.random(-10, 10) )
     end
 
     UnitDamageFuncT[cHarvestRocketDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)

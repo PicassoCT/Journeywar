@@ -2806,6 +2806,13 @@ function matrixLab()
     --echoT(mD)
 end
 
+function getCircleIndex(index)
+	if index==1 then return -1,0 end
+	if index==2 then return 0,1 end
+	if index==3 then return 1,0 end
+	if index==4 then return 0,-1 end
+end
+
 function mirrorMatriceXAxis(x, y, z)
     --return 360-x,y,z*-1																																							
 

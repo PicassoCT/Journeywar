@@ -36,9 +36,7 @@ return  {
 [CMD.AUTOREPAIRLEVEL ]=true,
 [CMD.LOOPBACKATTACK  ]=true,
 [CMD.IDLEMODE		 ]=true,
-}
-
-nonTargetCommands={
+}, nonTargetCommands={
 [CMD.STOP            ]=true,
 [CMD.WAIT            ]=true,
 [CMD.TIMEWAIT        ]=true,

@@ -232,8 +232,8 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 			nextStep(eStateBringThemHome)		
 		end
 		
-		if endOfTheWorld89
-		
+		if endOfTheWorld() then
+		end
 	
 	end
 	

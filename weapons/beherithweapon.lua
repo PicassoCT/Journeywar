@@ -11,11 +11,6 @@ local weaponDef = {
     areaOfEffect = 28,
     --physics
     weaponVelocity = 4500,
-    --   soundHit           = "null",
-    -- --soundStart         = "null",
-
-
-
 
     --physics
 

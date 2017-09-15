@@ -1035,10 +1035,22 @@ end
 
 
 local SIG_DELAYSTOP = 4
+local SIG_HOP= 8
+
+function delayedHop()
+	Signal(SIG_HOP)
+	SetSignalMask(SIG_HOP)
+	delay= math.random(100,1700)
+	Sleep(delay)
+	strength= math.random(1,15)
+	Spring.AddUnitImpulse(unitID, 0, strength, 0)
+end
+
 
 function script.StartMoving()
     boolWalk = true
     Signal(SIG_DELAYSTOP)
+	StartThread(delayedHop)
 end
 
 function delayedStop()

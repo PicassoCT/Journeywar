@@ -6,7 +6,7 @@ include "lib_Build.lua"
 
 center = piece "center"
 pieceTable = generatepiecesTableAndArrayCode(unitID, false)
-
+pieceNameTable = {}
 local SIG_DELAYSTOP = 4
 
 function script.StartMoving()
@@ -30,22 +30,21 @@ local boolAttack = false
 ------------------------------------------------------------------------------------ UNITCODE
 function confVehicle()
     resetT(pieceTable)
+	--	hideT(pieceNameTable)
     Sleep(100)
-    StartThread(buildVehicle, center, AMax, LMax, DMax, HMax, DecoM, DecoD, BMax, symDegFilterFunction, linDegFilterFunction)
+    StartThread(buildVehicle, center, 0, 7, 28, 4, 36, 0, 28 )	
 end
 
 function script.Create()
-
+	pieceNameTable = makePiecesTablesByNameGroups(false, true)
 
     --DEBUG
     ux, uy, uz = Spring.GetUnitPosition(unitID)
-    Spring.MoveCtrl.Enable(unitID)
-    Spring.MoveCtrl.SetPosition(unitID, ux, uy + 90, uz)
-    --DEBUG
-
-
-    --center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, Deco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction)
-    StartThread(confVehicle)
+	Spring.MoveCtrl.Enable(unitID,true)
+	Spring.MoveCtrl.SetPosition(unitID, ux, uy+70, uz)
+	
+	
+	StartThread(confVehicle)
 end
 
 
@@ -58,7 +57,7 @@ function script.QueryWeapon1()
     return center
 end
 
-function script.AimWeapon1(CockPiting, pitch)
+function script.AimWeapon1(heading, pitch)
 
     return true
 end

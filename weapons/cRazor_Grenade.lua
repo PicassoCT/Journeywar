@@ -52,9 +52,6 @@ local weaponDef = {
     lineOfSight = false,
 
 
-    --sound
-    --soundHit="null",
-    --soundStart="null",
 }
 
 return lowerkeys({ [weaponName] = weaponDef })

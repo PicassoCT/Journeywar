@@ -193,10 +193,10 @@ function widget:Initialize()
 	tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring.GetPlayerInfo(playerID)
 	local _,_,_,_, side, _                                      = Spring.GetTeamInfo(tteam)
 
-	if side== "journeyman" then
-	shaderTable.fragment= 	nightvision
+	if side == "journeyman" then
+		shaderTable.fragment= 	nightvision
 	else
-	shaderTable.fragment=  tacVision
+		shaderTable.fragment=  tacVision
 	end
 	
 	
@@ -205,7 +205,7 @@ function widget:Initialize()
 		Spring.Echo("<Night Vision Shader>: GLSL not supported.")
 	end
   
-	if not shaderProgram then
+	if not shaderProgram and gl and gl.GetShaderLog then
     Spring.Log(widget:GetInfo().name, LOG.ERROR, gl.GetShaderLog())
     widgetHandler:RemoveWidget()
 	end	
