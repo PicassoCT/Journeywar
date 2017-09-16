@@ -594,63 +594,60 @@ function buildSkeleton(rootpiecename, keyPieceNrtable)
     end
 end
 
+
+--> Ripped from Zero-k
+function GetPitchYawRoll(front, top) --This allow compatibility with Spring 91
+	--NOTE:
+	--angle measurement and direction setting is based on right-hand coordinate system, but Spring might rely on left-hand coordinate system.
+	--So, input for math.sin and math.cos, or positive/negative sign, or math.atan2 might be swapped with respect to the usual whenever convenient.
+
+	--1) Processing FRONT's vector to get Pitch and Yaw
+	local x, y, z = front[1], front[2], front[3]
+	local xz = math.sqrt(x*x + z*z) --hypothenus
+	local yaw = math.atan2 (x/xz, z/xz) --So facing south is 0-radian, and west is negative radian, and east is positive radian
+	local pitch = math.atan2 (y, xz) --So facing upward is positive radian, and downward is negative radian
+	
+	--2) Processing TOP's vector to get Roll
+	x, y, z = top[1], top[2], top[3]
+	--rotate coordinate around Y-axis until Yaw value is 0 (a reset) 
+	local newX = x* math.cos (-yaw) + z*  math.sin (-yaw)
+	local newY = y
+	local newZ = z* math.cos (-yaw) - x* math.sin (-yaw)
+	x, y, z = newX, newY, newZ
+	--rotate coordinate around X-axis until Pitch value is 0 (a reset) 
+	newX = x 
+	newY = y* math.cos (-pitch) + z* math.sin (-pitch)
+	newZ = z* math.cos (-pitch) - y* math.sin (-pitch)
+	x, y, z = newX, newY, newZ
+	local roll =  math.atan2 (x, y) --So lifting right wing is positive radian, and lowering right wing is negative radian
+	
+	return pitch, yaw, roll
+end
+
 -->Moves a UnitPiece to a UnitPiece at speed
-function AlignPieceToPiece(pieceToAlign, PieceToAlignTo, speed, boolWaitForIt, boolDebug, GlowPoints)
+function AlignPieceToPiece(unitID, pieceToAlign, PieceToAlignTo, speed, boolWaitForIt, boolDebug, GlowPoints)
 
     if not pieceToAlign or not PieceToAlignTo then return end
 
     --We use existing function to move the piece to the other pieces center
     movePieceToPiece(unitID, pieceToAlign, PieceToAlignTo, 0)
+	WaitForMoves(pieceToAlign)
 
-    WaitForMove(pieceToAlign, x_axis)
-    WaitForMove(pieceToAlign, y_axis)
-    WaitForMove(pieceToAlign, z_axis)
 
     --Get the Data of the Piece we want to align to
-    _, _, _, vx, vy, vz = Spring.GetUnitPiecePosDir(unitID, PieceToAlignTo)
-    norm = distance(vx, vy, vz) + 0.00001
-
-    vx = vx / norm
-    vy = vy / norm
-    vz = vz / norm
-    -----------------------------------------------------------------
-
-    OrientVec = {
-        x = vy * -1,
-        y = vx,
-        z = 0
-    }
-
-    DirectionV = { x = vx, y = vy, z = vz }
-
-    assert(OrientVec)
-    assert(DirectionV)
-    assert(type(OrientVec) == "table")
-    assert(type(DirectionV) == "table")
-    assert(OrientVec.x)
-    assert(DirectionV.x)
-    OrientUpVec = mulVector(OrientVec, DirectionV)
-
-    UpVec = { x = 0, y = 1, z = 0 }
-    assert(OrientUpVec)
-    assert(UpVec)
-
-    angleX = math.atan2(VDotProduct(OrientVec, UpVec), VDotProduct(OrientUpVec, UpVec) / Vabs(OrientVec) * Vabs(OrientUpVec))
-
-    --Turn the Piece to the Vector of the PieceToAlignTo
-    Turn(pieceToAlign, x_axis, angleX, speed)
-    Turn(pieceToAlign, y_axis, math.atan2(vy, vx), speed)
-    Turn(pieceToAlign, z_axis, math.asin(vz), speed, true)
-
-    if not boolWaitForIt or boolWaitForIt == true then
-        WaitForTurn(pieceToAlign, x_axis)
-        WaitForTurn(pieceToAlign, y_axis)
-        WaitForTurn(pieceToAlign, z_axis)
-    end
-
-    if boolDebug and boolDebug == true then
-        debugDisplayPieceChain(GlowPoints)
-    end
+    _, _, _, pdx,pdy,pdz = Spring.GetUnitPiecePosDir(unitID, PieceToAlignTo)
+    
+	--front, top, right = Spring.GetUnitVectors(unitID)	
+	front = Vector:new(pdx,pdy,pdz)
+	side= Vector:new(0,0,-1)
+	top = front:cross(side)
+	Front = {front.x,front.y,front.z}
+	Top = {top.x,top.y,top.z}
+	pitch, yaw, roll = GetPitchYawRoll(Front, Top)
+	
+	tP(pieceToAlign,pitch,yaw,roll,0)
+	WaitForTurns(pieceToAlign)
+	
 end
 
 function sigN(num)

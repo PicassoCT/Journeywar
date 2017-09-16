@@ -269,7 +269,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	function getSocketsAsPoints(part, sympart)
 		getLinCoords= function (piecename)
-			AlignPieceToPiece(ConCenter,piecename,0,true,true,AllDynamicSockets)
+			AlignPieceToPiece(unitID, ConCenter,piecename,0,true,true,AllDynamicSockets)
 			retTable={}
 			
 			table.insert(retTable,bd_makePointFromPiece(ConLinPiece[1]))
@@ -281,7 +281,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 		
 		getSynCoords= function(piecename)
-			AlignPieceToPiece(ConCenter,piecename,0)
+			AlignPieceToPiece(unitID, ConCenter,piecename,0)
 			retTable={}
 			
 			table.insert(retTable,bd_makePointFromPiece(ConSynPiece[1]))
@@ -317,11 +317,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	--Continue here TODO
 	function bd_LinAddPieceSocketsToPool(partnr,boolAddSymetrics)
 		--> we move the conCenter to the piece
-		AlignPieceToPiece(ConCenter,BodyPieces[partnr],0)
-		assert(ConSynPiece)
-		assert(ConSynPiece[1])
-		assert(ConLinPiece)
-		assert(ConLinPiece[1])
+		AlignPieceToPiece(unitID, ConCenter, BodyPieces[partnr], 0)
+		--movePieceToPiece(unitID, ConCenter, BodyPieces[partnr], 0)
+
+		--WaitForMoves(ConCenter)
+
 		if not ConPieces[partnr] then ConPieces[partnr] = {Symetric ={},Linear ={}} end
 		
 		ConPieces[partnr].Symetric = {[1] = bd_makePointFromPiece(ConSynPiece[1]),
@@ -330,15 +330,24 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		ConPieces[partnr].Linear ={
 									[1]=bd_makePointFromPiece(ConLinPiece[1]),
 									[2]=bd_makePointFromPiece(ConLinPiece[2]),
-									[3]=bd_makePointFromPiece(ConLinPiece[3]),
-									[4]=bd_makePointFromPiece(ConLinPiece[4])
+									[4]=bd_makePointFromPiece(ConLinPiece[4]) -- one/2
 									}
-		--Add the Linear connction spots
-		--add the point from ConLinPiece
+									
 		LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[1]
 		LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[2]
-		LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[3]
-		LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[4]
+	
+		
+		if math.random(1,8) == 4 then	
+			ConPieces[partnr].Linear[#ConPieces[partnr].Linear+1] =	bd_makePointFromPiece(ConLinPiece[3])
+				LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[3]
+		end
+		
+		if math.random(1,4)== 4 then 
+			ConPieces[partnr].Linear[#ConPieces[partnr].Linear+1] =	bd_makePointFromPiece(ConLinPiece[4])
+			LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[4]
+		end
+		--Add the Linear connction spots
+		--add the point from ConLinPiece
 		
 		--> Add the Symmetric connectionspots
 		if (not boolAddSymetrics and boolAddSymetrics == true) then
@@ -432,8 +441,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		if not AllReadyUsedPieces[BodyPiece] and not AllReadyUsedCoords[Socket.Piece] then
 			randomVec=bd_makeDirVecFromDeg(180, 180, 0, 0, 0, 0)
-			Show(BodyPiece)
-						echo("Bodypiece added linear"..getUnitPieceName(unitID, BodyPiece))
+
+			echo("Bodypiece added linear"..getUnitPieceName(unitID, BodyPiece))
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket, BodyPiece, randomVec)
 			bd_LinAddPieceSocketsToPool(BodyDice, true)	
@@ -458,7 +467,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		--Spring.Echo("JW:VaryFoo:SymetricExpanding_1 >>"..table.getn(SymBodyConCoords))
 		--rEchoT(SymBodyConCoords)
 		-->Align Piece A -- add all pieces as symmetrics
-		AlignPieceToPiece(ConCenter, pieceA, 0)
+		AlignPieceToPiece(unitID, ConCenter, pieceA, 0)
 		--> Align PiecB --add all pieces as symmetrics
 		echo("jw_Build:A")
 		if SymBodyConCoords and table.getn(SymBodyConCoords) > 0 then
@@ -706,13 +715,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 		
 		--DEBUG DELME
-			-- bd_LinearExpandPiece(1)
-			-- bd_LinearExpandPiece(2)
-			-- bd_LinearExpandPiece(3)
-			-- bd_LinearExpandPiece(4)
+
 		-- DEBUG DELME 
 		attempts=0
-		
+
 		while bodyNum < bodydice and bd_existsParts(BodyPieces)==true and attempts < bodydice do
 			Sleep(100)
 			-- while there exist BodyParts2 and numberOfBodyPiecesUsed < bodydice
@@ -728,7 +734,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 							
 				if pieceA and pieceB and SymConCoordLimit < math.random(1,Max) then
 				echo("Bodypiece expand symmetric:"..getUnitPieceName(unitID,pieceA).." /"..getUnitPieceName(unitID,pieceB))
-					bodyNum=bodyNum+bd_SymmetricExpand(pieceA,pieceB)	
+					bodyNum=bodyNum+ (bd_SymmetricExpand(pieceA,pieceB) or 0)	
 				else -- apply remainging BodyParts linear			
 					bodyNum=bodyNum+ (bd_LinearExpandPiece(bodyNum) or 0)	
 				end
@@ -847,7 +853,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		bd_processAddedArms()	
 		--]]
 		
-	end		
+	end	  	
 	
 	function bd_getSymDecoCon()
 	
