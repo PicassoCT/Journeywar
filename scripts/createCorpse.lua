@@ -154,3 +154,4 @@ function createCorpseJBuilding(unitID, recentDamage)
         Spring.SetUnitNeutral(heapID, true)
     end
 end
+

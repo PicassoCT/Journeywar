@@ -344,7 +344,7 @@ function getRewardTable()
             mreward = 1000
         },
         [UnitDefNames["vort"].id] = {},
-        [UnitDefNames["gtreetrunk"].id] = {},
+        [UnitDefNames["jscrapheap_tree"].id] = {},
         [UnitDefNames["gcvehiccorpsemini"].id] = {
             mreward = 1000,
             ereward = 500

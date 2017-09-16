@@ -296,8 +296,7 @@ function checksides(baseShapeTable, x, z)
 end
 
 function script.Killed(recentDamage, _)
-
-    createCorpseJBuilding(recentDamage)
+    createCorpseJBuilding(unitID, recentDamage)
     return 1
 end
 

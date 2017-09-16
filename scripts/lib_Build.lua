@@ -431,19 +431,18 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	--FindPiece -FindSocket -- bd_LinAddPieceSocketsToPool
 	function bd_LinearExpandPiece(bodyNumber)
-		boolFirstOfPair = bodyNumber % 2 == 0
-		BodyDice	= math.ceil(math.random(bodyNumber, math.min((bodyNumber +2),table.getn(BodyPieces))))
-		BodyPiece	= BodyPieces[BodyDice]
+		boolFirstOfPair = (bodyNumber % 2 == 0)
+		local BodyDice	= math.ceil(math.random(bodyNumber, math.min((bodyNumber +2),table.getn(BodyPieces))))
+		local BodyPiece	= BodyPieces[BodyDice]
 		if table.getn(LinBodyConCoords) < 1 then echo("bd_linearexpandPiece_EarlyOut");return end
-		SocketDice	= math.random(1, table.getn(LinBodyConCoords))
-		Socket 	 	= LinBodyConCoords[SocketDice]
-
+		local SocketDice	= math.random(1, table.getn(LinBodyConCoords))
+		local Socket 	 	= LinBodyConCoords[SocketDice]
+		Show(BodyPiece)
 		
 		if not AllReadyUsedPieces[BodyPiece] and not AllReadyUsedCoords[Socket.Piece] then
 			randomVec=bd_makeDirVecFromDeg(180, 180, 0, 0, 0, 0)
-
 			echo("Bodypiece added linear"..getUnitPieceName(unitID, BodyPiece))
-			assert(type(Socket)=="table")
+
 			bd_conPieceCon2Socket(Socket, BodyPiece, randomVec)
 			bd_LinAddPieceSocketsToPool(BodyDice, true)	
 			
@@ -712,13 +711,17 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		SymConCoordLimit=bd_rollDice(Max/2)
 
 		--AddFirstSockets
-
+		for i=1,12 do
+			bd_LinearExpandPiece(i)
+		end
 		
 		--DEBUG DELME
 
 		-- DEBUG DELME 
 		attempts=0
 
+		--[[
+				
 		while bodyNum < bodydice and bd_existsParts(BodyPieces)==true and attempts < bodydice do
 			Sleep(100)
 			-- while there exist BodyParts2 and numberOfBodyPiecesUsed < bodydice
@@ -742,8 +745,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			
 			attempts=attempts+1
 		end
-		--[[
-				
 		--Arm
 		Armdice=math.ceil(math.random(3,ArmMax))
 		ArmNum=0
@@ -3298,7 +3299,6 @@ fixFunctionTabel[19]= function (NUMBEROFPIECES)
 	
 	return true	
 end
-
 
 -- Helix tree
 fixFunctionTabel[22]=	function (NUMBEROFPIECES)
