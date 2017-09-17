@@ -25,6 +25,7 @@ end
 		Sleep(500)
 		turnPieceRandDir(randRotate,0,360,-360,360,-360,360,-360)
 		AlignPieceToPiece(unitID, toalign,randRotate,0,true)
+		Move(toalign,y_axis,50,0)
 		Sleep(3000)
 		end
 	end

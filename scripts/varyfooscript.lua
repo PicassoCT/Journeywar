@@ -358,7 +358,7 @@ end
 
 function SymmetricExpand(pieceA, pieceB, dirVec)
     --Spring.Echo("JW:VaryFoo:SymetricExpanding_1 >>"..table.getn(SymBodyCon))
-    --rEchoT(SymBodyCon)
+    --echoT(SymBodyCon)
     --TODO
     if SymBodyCon and table.getn(SymBodyCon) > 0 then
         --Spring.Echo("JW:SymetricExpand_1.5")
@@ -840,7 +840,7 @@ end
 
 function alignLegsToGround()
     if #ArmTable > 0 then
-        --rEchoT(ArmTable)
+        --echoT(ArmTable)
         local spGetUnitPiecePos = Spring.GetUnitPiecePosition
         oldMaxDif = 99999
         smallestIntervallSoFar = 1

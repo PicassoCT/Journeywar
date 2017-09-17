@@ -431,17 +431,17 @@ function explodeT(TableOfPieces, Conditions, StepSize)
 end
 
 --> Recursively Echo a Table out
-function rEchoT(T, layer)
+function echoT(T, layer)
     local l = layer or 0
     if T then
         if type(T) == 'table' then
-            Spring.Echo(stringBuilder( l, " ") .. "T:")
+            Spring.Echo(stringBuilder( l, "-") .. "[]T:")
             for k, v in pairs(T) do
-					Spring.Echo(stringBuilder( l, " ").."Key "..k)					
-                rEchoT(T[k], l + 1)
+					Spring.Echo(stringBuilder( l, " ").."Key [\""..k.."\"]")					
+					echoT(T[k], l + 1)
             end
         else
-            Concated = stringBuilder( math.max(1, l) - 1, " ") .. "|"
+            Concated = stringBuilder( math.max(1, l) - 1, " ") .. "|->"
 
             typus = type(T)
             if typus == "number" or typus == "string" then
@@ -450,62 +450,10 @@ function rEchoT(T, layer)
                 Spring.Echo(Concated .. "boolean" .. ((T == true) and "True"))
             elseif typus == "function" then
                 Spring.Echo(Concated .. "function: Result")
-					  rEchoT(T(),layer)
+					  echoT(T(),layer)
             end
         end
     end
-end
-
-
-function echoT(T, boolAssertTable, name)
-
-    lboolAssertTable = boolAssertTable or false
-    if not type(T) == "table" then Spring.Echo("Element is of Type:" .. type(T)); return end
-    lname = name or "AnnonymTable"
-    if T.name then lname = T.name end
-
-
-    if lname then
-        Spring.Echo("============================= " .. lname .. " ======================================")
-        Spring.Echo("|| ||")
-    else
-        Spring.Echo("============================= KeyValue Table=====================================")
-        Spring.Echo("|| ||")
-    end
-
-    for k, v in pairs(T) do
-        typek = type(k)
-        typev = type(v)
-
-        if typev == "table" then
-            rEchoT(typev, 0)
-        end
-        nonprintableType = {
-            ["table"] = true,
-            ["function"] = true,
-            ["boolean"] = true,
-        }
-        if nonprintableType[typek] == nil then
-            if not nonprintableType[typev] then
-                Spring.Echo(" " .. k .. " 	---> 	" .. v .. " -> 	[ " .. ((assert(v))) .. " ] ")
-            elseif typev == "table" then
-                echoT(v)
-            elseif typev == "boolean" then
-                Spring.Echo(" " .. k .. " 	---> 	" .. (boolToString(v)) .. " ")
-            else
-                Spring.Echo("Key " .. k .. " -> " .. " holds no value")
-            end
-        end
-    end
-
-    if lboolAssertTable == true then
-        for k, v in pairs(T) do
-            assert(v)
-        end
-    end
-
-
-    Spring.Echo("================================================================================")
 end
 
 --> Converts a boolean to a string value

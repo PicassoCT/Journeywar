@@ -630,22 +630,15 @@ function AlignPieceToPiece(unitID, pieceToAlign, PieceToAlignTo, speed, boolWait
     if not pieceToAlign or not PieceToAlignTo then return end
 
     --We use existing function to move the piece to the other pieces center
-    movePieceToPiece(unitID, pieceToAlign, PieceToAlignTo, 0)
+    movePieceToPiece(unitID, pieceToAlign, PieceToAlignTo, speed)
 	WaitForMoves(pieceToAlign)
 
-
     --Get the Data of the Piece we want to align to
-    _, _, _, pdx,pdy,pdz = Spring.GetUnitPiecePosDir(unitID, PieceToAlignTo)
-    
-	--front, top, right = Spring.GetUnitVectors(unitID)	
-	front = Vector:new(pdx,pdy,pdz)
-	side= Vector:new(0,0,-1)
-	top = front:cross(side)
-	Front = {front.x,front.y,front.z}
-	Top = {top.x,top.y,top.z}
-	pitch, yaw, roll = GetPitchYawRoll(Front, Top)
+
+    dx,dy,dz = Spring.UnitScript.GetPieceRotation(PieceToAlignTo)
+
 	
-	tP(pieceToAlign,pitch,yaw,roll,0)
+	tP(pieceToAlign,math.deg(dx),math.deg(dy),math.deg(dz),speed)
 	WaitForTurns(pieceToAlign)
 	
 end

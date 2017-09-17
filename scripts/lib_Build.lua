@@ -26,6 +26,7 @@ end
 -->In absence of symmetric pieces, the buildpieces are paired with one example of connection sockets on exploration to add the 3d point
 function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Max, DecoD,Body_Max, symDegFilterFunction, linDegFilterFunction,lexpandWeightTable, lMinPieces)
 	ConCenter=piece("ConCenter")
+	Hide(ConCenter)
 	ConLinPiece={}
 	ConSynPiece={}
 	--Debug 
@@ -51,12 +52,15 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	for i=1,4 do
 		dynString="LinCon"..i
 		ConLinPiece[i]=piece(dynString)
+		Hide(ConLinPiece[i])
 		LinConCoord[i]=bd_makePointFromPiece(ConLinPiece[i])
 	end	
 	ConSynPiece[1]= piece"SymCon1"
 	assert(ConSynPiece[1])
 	ConSynPiece[2]= piece"SymCon2"
 	assert(ConSynPiece[2])
+	Hide(ConSynPiece[1])
+	Hide(ConSynPiece[2])
 	
 	SymConCoord[1]=bd_makePointFromPiece(	ConSynPiece[1])
 	SymConCoord[2]=bd_makePointFromPiece(	ConSynPiece[2])
@@ -69,12 +73,12 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	--BODY
 	--all the yet unused BodyPieces
 	BodyPieces={}
-	ConPieces={}
+	ConCoords={}
 	
 	DoubleBodyPieces={}
 	BodyID=1
 	--Define the max numbers of each Piece Category
-	DoubleMax=Body_Double_Max or 16
+	DoubleMax=Body_Double_Max 
 	BodyMax=Body_Max or 22
 	ArmMax= Arm_Max or 8
 	ArmDouble=Leg_Max or 4 --arms that can be used for linear expansion
@@ -92,7 +96,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		BodyPieces[#BodyPieces+1]=piece(bodyPieceName)		-- 2 is the symmetric second piece 
 	
 		if i < DoubleMax and i %2 ==0 then
-			DoubleBodyPieces[#DoubleBodyPieces+1]={k=BodyPieces[i-1],v=BodyPieces[i]}									
+			DoubleBodyPieces[#DoubleBodyPieces+1]={k=BodyPieces[i-1],
+												   v=BodyPieces[i]}									
 		end
 	end
 
@@ -322,49 +327,50 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 		--WaitForMoves(ConCenter)
 
-		if not ConPieces[partnr] then ConPieces[partnr] = {Symetric ={},Linear ={}} end
+		if not ConCoords[partnr] then ConCoords[partnr] = {Symetric ={},Linear ={}} end
 		
-		ConPieces[partnr].Symetric = {[1] = bd_makePointFromPiece(ConSynPiece[1]),
+		ConCoords[partnr].Symetric = {[1] = bd_makePointFromPiece(ConSynPiece[1]),
 									  [2] = bd_makePointFromPiece(ConSynPiece[2])}
+
 		
-		ConPieces[partnr].Linear ={
+		ConCoords[partnr].Linear ={
 									[1]=bd_makePointFromPiece(ConLinPiece[1]),
 									[2]=bd_makePointFromPiece(ConLinPiece[2]),
-									[4]=bd_makePointFromPiece(ConLinPiece[4]) -- one/2
 									}
 									
-		LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[1]
-		LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[2]
+		LinBodyConCoords[#LinBodyConCoords+1]= ConCoords[partnr].Linear[1]
+		LinBodyConCoords[#LinBodyConCoords+1]= ConCoords[partnr].Linear[2]
 	
 		
 		if math.random(1,8) == 4 then	
-			ConPieces[partnr].Linear[#ConPieces[partnr].Linear+1] =	bd_makePointFromPiece(ConLinPiece[3])
-				LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[3]
+			ConCoords[partnr].Linear[#ConCoords[partnr].Linear+1] =	bd_makePointFromPiece(ConLinPiece[3])
+			LinBodyConCoords[#LinBodyConCoords+1]= ConCoords[partnr].Linear[3]
 		end
 		
 		if math.random(1,4)== 4 then 
-			ConPieces[partnr].Linear[#ConPieces[partnr].Linear+1] =	bd_makePointFromPiece(ConLinPiece[4])
-			LinBodyConCoords[#LinBodyConCoords+1]= ConPieces[partnr].Linear[4]
+			ConCoords[partnr].Linear[#ConCoords[partnr].Linear+1] =	bd_makePointFromPiece(ConLinPiece[4])
+			LinBodyConCoords[#LinBodyConCoords+1]= ConCoords[partnr].Linear[4]
 		end
 		--Add the Linear connction spots
 		--add the point from ConLinPiece
 		
 		--> Add the Symmetric connectionspots
-		if (not boolAddSymetrics and boolAddSymetrics == true) then
-			SymBodyConCoords[#SymBodyConCoords+1][1]= bd_makePointFromPiece(ConPieces[partnr].Symetric[1])
-			SymBodyConCoords[#SymBodyConCoords][2]= bd_makePointFromPiece(ConPieces[partnr].Symetric[2])	
+		if ( boolAddSymetrics and boolAddSymetrics == true) then
+			SymBodyConCoords[#SymBodyConCoords+1] = {}
+			SymBodyConCoords[#SymBodyConCoords][1]= ConCoords[partnr].Symetric[1]
+			SymBodyConCoords[#SymBodyConCoords][2]= ConCoords[partnr].Symetric[2]	
 		end
 	end
 	
 	function bd_SymAddPieceSocketsToPool(part,sympiece)
 		--we add the points into the table for symmmetric expansion
 		--all the sockects are to be replaced by points--> implicating that 
-		ConPieces[part].Linear,ConPieces[part].Symetric,	ConPieces[sympiece].Linear,	ConPieces[sympiece].Symetric=	getSocketsAsPoints(part,sympiece)
+		ConCoords[part].Linear,ConCoords[part].Symetric,	ConCoords[sympiece].Linear,	ConCoords[sympiece].Symetric=	getSocketsAsPoints(part,sympiece)
 		
-		local LinearCon=ConPieces[part].Linear
-		local LinearConS=ConPieces[sympiece].Linear
-		local SymConCoord=ConPieces[part].Symetric
-		local SymConCoordS=ConPieces[sympiece].Symetric
+		local LinearCon=ConCoords[part].Linear
+		local LinearConS=ConCoords[sympiece].Linear
+		local SymConCoord=ConCoords[part].Symetric
+		local SymConCoordS=ConCoords[sympiece].Symetric
 		
 		if LinearCon then
 			for i=1,#LinearCon, 1 do
@@ -407,17 +413,20 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	function bd_DoubleCheckPiece(tablename)
-		echo("Doublecheck")
 		--Rewrite
-		local SymPairedPieces= tablename
-		for i=1,  #SymPairedPieces,  1 do
-			if SymPairedPieces[i] then
-				k, v=SymPairedPieces[i].k ,  SymPairedPieces[i].v
+		
+		local pieceA = 0
+		local pieceB = 0
 				
-				if k and v and not AllReadyUsedPieces[k] and not AllReadyUsedPieces[v] then
-					retA, retB= SymPairedPieces[i].k,  SymPairedPieces[i].v
-					SymPairedPieces[i]=nil
-					return retA, retB
+		for num, entry in pairs(tablename) do
+			if entry then
+				 pieceA	= entry.k
+				 pieceB = entry.v
+		
+				if pieceA and pieceB and (not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB]) then		
+					tablename[num] = nil
+
+					return pieceA, pieceB
 				end
 			end
 		end
@@ -462,9 +471,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 	end
 	
-	function bd_SymmetricExpand(pieceA, pieceB, dirVec)
+	function bd_SymmetricExpand(pieceA, pieceB)
 		--Spring.Echo("JW:VaryFoo:SymetricExpanding_1 >>"..table.getn(SymBodyConCoords))
-		--rEchoT(SymBodyConCoords)
+		echoT(SymBodyConCoords)
 		-->Align Piece A -- add all pieces as symmetrics
 		AlignPieceToPiece(unitID, ConCenter, pieceA, 0)
 		--> Align PiecB --add all pieces as symmetrics
@@ -708,43 +717,43 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		Max=math.random(4,#BodyPieces)
 		
 		LinConCoordLimit=bd_rollDice(Max)
-		SymConCoordLimit=bd_rollDice(Max/2)
+		SymConCoordLimit=bd_rollDice(Max)
 
 		--AddFirstSockets
-		for i=1,12 do
-			bd_LinearExpandPiece(i)
-		end
+
 		
 		--DEBUG DELME
 
 		-- DEBUG DELME 
 		attempts=0
 
-		--[[
+	
 				
 		while bodyNum < bodydice and bd_existsParts(BodyPieces)==true and attempts < bodydice do
-			Sleep(100)
+			Sleep(10)
 			-- while there exist BodyParts2 and numberOfBodyPiecesUsed < bodydice
-				echo(LinConCoordLimit,math.random(1,Max))
-			if  LinConCoordLimit < math.random(1,Max) then
+				echo("LinCoorLimit"..LinConCoordLimit)
+			if  false == true and LinConCoordLimit < math.random(1,Max) then
 				--FindPiece -FindSocket -- bd_LinAddPieceSocketsToPool
 				bodyNum=bodyNum + (bd_LinearExpandPiece(bodyNum) or 0)
 			else
 				--Check if on of them is existing twice
 				-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
-				pieceA, pieceB= bd_DoubleCheckPiece(DoubleBodyPieces)
-				
+				pieceA, pieceB = bd_DoubleCheckPiece(DoubleBodyPieces)
+
 							
-				if pieceA and pieceB and SymConCoordLimit < math.random(1,Max) then
+				if pieceA and pieceB then -- and SymConCoordLimit < math.random(1,Max) 
 				echo("Bodypiece expand symmetric:"..getUnitPieceName(unitID,pieceA).." /"..getUnitPieceName(unitID,pieceB))
 					bodyNum=bodyNum+ (bd_SymmetricExpand(pieceA,pieceB) or 0)	
-				else -- apply remainging BodyParts linear			
-					bodyNum=bodyNum+ (bd_LinearExpandPiece(bodyNum) or 0)	
+			--	else -- apply remainging BodyParts linear			
+				--	bodyNum=bodyNum+ (bd_LinearExpandPiece(bodyNum) or 0)	
 				end
 			end
 			
 			attempts=attempts+1
 		end
+		
+			--[[
 		--Arm
 		Armdice=math.ceil(math.random(3,ArmMax))
 		ArmNum=0
@@ -971,7 +980,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	function bd_alignLegsToGround()
 		if #ArmTable > 0 then
-			--rEchoT(ArmTable)
+			--echoT(ArmTable)
 			local spGetUnitPiecePos=Spring.GetUnitPiecePosition
 			oldMaxDif=99999
 			smallestIntervallSoFar=1	
