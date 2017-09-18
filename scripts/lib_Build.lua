@@ -365,27 +365,27 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	function bd_SymAddPieceSocketsToPool(part,sympiece)
 		--we add the points into the table for symmmetric expansion
 		--all the sockects are to be replaced by points--> implicating that 
-		ConCoords[part].Linear,ConCoords[part].Symetric,	ConCoords[sympiece].Linear,	ConCoords[sympiece].Symetric=	getSocketsAsPoints(part,sympiece)
+
+		FirstLinCon, FirstSymCon,SecondLinCon, SecondSymCon =	getSocketsAsPoints(part,sympiece)
+		local FirstLinCon = {}
+		local FirstSymCon = {}
+		local SecondLinCon = {}
+		local SecondSymCon = {}
 		
-		local LinearCon=ConCoords[part].Linear
-		local LinearConS=ConCoords[sympiece].Linear
-		local SymConCoord=ConCoords[part].Symetric
-		local SymConCoordS=ConCoords[sympiece].Symetric
-		
-		if LinearCon then
-			for i=1,#LinearCon, 1 do
-				SymBodyConCoords[#SymBodyConCoords+1]=	{
-					[1]=LinearCon[i],
-					[2]=LinearConS[i]	
+		if FirstLinCon then
+			for i=1,#FirstLinCon, 1 do
+				SymBodyConCoords[#SymBodyConCoords + 1]=	{
+					[1]=FirstLinCon[i],
+					[2]=SecondLinCon[i]	
 				}
 			end
 		end
 		
-		if SymConCoord then
-			for i=1,#SymConCoord, 1 do
-				SymBodyConCoords[#SymBodyConCoords+1]=	{
-					[1]=SymConCoord[i],
-					[2]=SymConCoordS[i]	
+		if FirstSymCon then
+			for i=1,#FirstSymCon, 1 do
+				SymBodyConCoords[#SymBodyConCoords + 1] =	{
+					[1]=FirstSymCon[i],
+					[2]=SecondSymCon[i]	
 				}
 			end
 		end
@@ -426,7 +426,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 				if pieceA and pieceB and (not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB]) then		
 					tablename[num] = nil
 
-					return pieceA, pieceB
+					return pieceA, pieceB, num
 				end
 			end
 		end
@@ -739,12 +739,12 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			else
 				--Check if on of them is existing twice
 				-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
-				pieceA, pieceB = bd_DoubleCheckPiece(DoubleBodyPieces)
+				pieceA, pieceB ,number = bd_DoubleCheckPiece(DoubleBodyPieces)
 
 							
 				if pieceA and pieceB then -- and SymConCoordLimit < math.random(1,Max) 
 				echo("Bodypiece expand symmetric:"..getUnitPieceName(unitID,pieceA).." /"..getUnitPieceName(unitID,pieceB))
-					bodyNum=bodyNum+ (bd_SymmetricExpand(pieceA,pieceB) or 0)	
+					bodyNum=bodyNum+ (bd_SymmetricExpand(pieceA,pieceB, number) or 0)	
 			--	else -- apply remainging BodyParts linear			
 				--	bodyNum=bodyNum+ (bd_LinearExpandPiece(bodyNum) or 0)	
 				end
@@ -1358,11 +1358,9 @@ function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
 							
 							return i, freeSpotList[i] 
 						end
-					end
-					
+					end					
 				end
-			end
-			
+			end			
 		end
 		
 		Spring.Echo("buildInfernalMachine:getFreeSpotFunction- Error "..elementIndex.." no index found")
@@ -1383,8 +1381,6 @@ function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
 	gItteratorFunction = function (index) 
 		return index
 	end
-	
-	
 	
 	buildRandomizedBuilding(pieceTable ,1, gridTable, freeSpotList, 16, getFreeSpotFunction, gItteratorFunction, postProc)		
 	
@@ -3432,4 +3428,60 @@ function buildLTree(center, NUMBEROFPIECES,Treename,Sensoryname,fixedFuncNumber)
 	globalInCurrentStep={}
 	TreePiece={}
 	EndPiece={}
+end
+
+-- Plan is a 3dimensional boolean table
+function piecesLego(Plan, Pieces, sizeT)
+xDim,yDim,zDim = table.getn(Plan),table.getn(Plan[1]),table.getn(Plan[1][1])
+
+goal = shiftT(Plan, 
+		makeTable({},math.ceil(xDim/2),math.ceil(yDim/2),math.ceil(zDim/2),true),
+		{x=-math.ceil(xDim/2),y=-math.ceil(yDim/2),z = -math.ceil(zDim/2)}
+		)
+		
+piecesIndex= table.getn(Pieces)
+
+	for x = -math.ceil(xDim/2), math.ceil(xDim/2), 1 do
+		for y = -math.ceil(yDim/2), math.ceil(yDim/2), 1 do
+			for z = -math.ceil(zDim/2), math.ceil(zDim/2), 1 do
+			MovePieceToPos(Pieces[piecesIndex], x*sizeT.x, y*sizeT.y, z*sizeT.z, 0)
+			piecesIndex= piecesIndex+1
+			end
+		end
+	end
+end
+
+--> Gets Shifty with a 3dimensional Table by a Vector
+function translateT(Org, Targ, Vec)
+	for x=1, #Org do
+		for y=1, #Org[x] do
+			for z=1, #Org[x][y] do
+				Targ[x+Vec.x][y +Vec.y][z+Vec.z] = Org[x][y][z]
+			end
+		end
+	end
+	return Targ
+end
+
+function unify(TA, TB)
+	for x=1, #TB do
+		for y=1, #TB[x] do
+			for z=1, #TB[x][y] do
+				TA[x][y][z] = (TA[x][y][z] and TB[x][y][z])
+			end
+		end
+	end
+	return TA
+end
+ 
+function rotateT(T,pivot, axis, degRee)
+
+end
+
+function scaleT(T, factor)
+
+end
+
+function createBaseShape(T, shapeType, pivot, point)
+
 end

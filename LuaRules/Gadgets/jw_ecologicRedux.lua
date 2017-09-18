@@ -1,6 +1,5 @@
 function gadget:GetInfo()
     function isPlanetFlammeable()
-        Spring.Echo(Game.mapHardness, Game.windMin, Game.gravity, Game.waterDamage)
         if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 30 then
             badwordsTable = { "cold", "ice", "frost", "dessert", "sand", "dune", "snow", "moon", "glacier", "comet", "red", "planet" }
             for i = 1, #badwordsTable, 1 do
@@ -8,10 +7,10 @@ function gadget:GetInfo()
                     return false;
                 end
             end
-            Spring.Echo("ForrestFire:Gadget is activated")
+            --Spring.Echo("ForrestFire:Gadget is activated")
             return true
         end
-        Spring.Echo("ForrestFire:Gadget is deactivated")
+      --  Spring.Echo("ForrestFire:Gadget is deactivated")
         return false
     end
 
