@@ -1,8 +1,7 @@
 function gadget:GetInfo()
     function isPlanetFlammeable()
-        Spring.Echo(Game.mapHardness, Game.windMin, Game.gravity, Game.waterDamage)
         if Game.mapHardness > 0 and Game.windMin > 0 and Game.gravity > 30 then
-            badwordsTable = { "cold", "ice", "frost", "dessert", "sand", "dune", "moon", "comet", "red", "planet", "space","tundra"}
+            badwordsTable = { "cold", "ice", "frost", "dust","dessert", "sand", "dune", "moon", "comet", "red", "planet", "space","tundra"}
             for i = 1, #badwordsTable, 1 do
                 if string.find(Game.mapName, badwordsTable[i]) then
                     return false;
