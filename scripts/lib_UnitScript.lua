@@ -247,19 +247,7 @@ local rotateCopy= makeTable(default, sizeX, sizeZ, nil, true )
 return rotateCopy
 end
 
---> Shifts a 3dimensional Table by a Vector
-function shiftT(Org, Targ, Vec)
 
-	for x=1, #Org do
-		for y=1, #Org[x] do
-			for z=1, #Org[x][y] do
-				Targ[x+Vec.x][y +Vec.y][z+Vec.z] = Org[x][y][z)
-			end
-		end
-	end
-return Targ
-end
- 
 --> shifts a 2d Map by a vector, replaces empty values with default
 function shiftMap(Map, sizeX,sizeZ, offX, offZ, default)
 local shiftedMap = makeTable(default, sizeX, sizeZ, nil, true )
