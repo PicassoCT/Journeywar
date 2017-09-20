@@ -171,6 +171,7 @@ function RopeSimulation:new(
 				springFrictionConstant)
 			end
 		end	
+		
 return setmetatable(metaTable, RopeSimulation)		
 end
 

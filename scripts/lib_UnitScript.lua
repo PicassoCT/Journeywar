@@ -496,6 +496,15 @@ function insertKeysIntoTable(T, T2)
     return T2
 end
 
+function itterate2D(func, T )
+	for x= 1, #T do
+		for y= 1, #T[1] do
+			T[x][y]= func(T[x][y],x,y)
+		end
+	end
+return T
+end
+
 
 -->itterates over a table, executing a function with a argumentTable
 function elementWise(T, fooNction, ArghT)
@@ -3181,7 +3190,7 @@ end
 function addAscii(str)
 local l_Result = 0 
 	for i = 1, #str do
-		l_Result = add(l_Result,string.byte(str,i))
+		l_Result = inc(l_Result,string.byte(str,i))
 	end
 return l_Result
 end
@@ -3204,7 +3213,7 @@ function addInput(...)
 				else l_result = math.bit_xor(l_result,-1); 
 				end 
 		end
-		if l_argType== "string" then l_result = add(l_result,addAscii(v)) end
+		if l_argType== "string" then l_result = inc(l_result,addAscii(v)) end
 	end
  
 return l_result

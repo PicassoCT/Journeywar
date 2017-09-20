@@ -32,7 +32,6 @@ SIG_FOLD = 2^2
 SIG_UNFOLD = 2^3
 SIG_SPAM = 2^4
 SIG_SCOPE = 2^5
-SIG_LAS = 2^6
 SIG_ROPE =  2^7
 SIG_MOVEIN = 2^8
 SIG_MOVEOUT = 2^9
@@ -57,14 +56,12 @@ local maxSpeed=math.ceil( 2.5 * 65533)
 
 local AttachUnit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
-local loaded = false
+local boolUnitLoaded = false
 local ropestarts={}
 local sensors={}
 rope={}
 for i=1,12,1 do
-	ropestarts[i]={}
-	rope[i]={}
-	sensors[i]={}
+
 	doop="rs"..i
 	temp="sensor"..i
 	aNewRope="rope0"..i
@@ -72,7 +69,7 @@ for i=1,12,1 do
 	ropestarts[i]=piece(doop)
 	rope[i]=piece(aNewRope)
 end
-local pi=3.14159
+local pi=math.pi
 
 
 
@@ -239,7 +236,6 @@ end
 function echoNPreveDegTable()
 	for i=1,table.getn(nPrevDegTable),1 do
 		--Spring.Echo("Piece Nr:",13-i.. " has ",nPrevDegTable[13-i])
-		
 	end
 end
 
@@ -358,20 +354,18 @@ end
 
 boolIHaveSimActive = false
 function ourOnlyRope (passengerID)
-
-	--Spring.Echo("Script did it!")
 	SetSignalMask(SIG_ROPE)
 	local 	passengerDefID=Spring.GetUnitDefID(passengerID)
 	
 	
 	boolBioUnit = false
-	if isInfantry(passengerDefID)==true or passengerDefID == UnitDefNames["gjbigbiowaste"].id or passengerDefID == UnitDefNames["gjmedbiogwaste"].id then
+	if isInfantry(passengerDefID)==true or passengerDefID == UnitDefNames["gjbigbiowaste"].id or 	passengerDefID == UnitDefNames["gjmedbiogwaste"].id then
 		boolBioUnit=true
 	end
 	Turn(bloodemt,y_axis,math.rad(-90),0.03)
 	StartThread(dustEmit,boolBioUnit)
 	StartThread(draggingSound)
-	StartThread(ropeRelativeResting)
+
 
 	boolFullRopeSim = isRopeSimFeasable()
 
@@ -389,7 +383,7 @@ function ourOnlyRope (passengerID)
 	end
 
 	
-	while(loaded==true) do
+	while(boolUnitLoaded==true) do
 		Sleep(50)
 	end
 	
@@ -399,42 +393,72 @@ end
 
 --> Runs a RopeSimulation and turns the 
 function runRopeSim(passengerID)
-numOfSemgents = 12
-massWeightT = makeTable(10,11)
-springConstant = 0.50
-lengthOfElementT = makeTable(10, 11)
-springFrictionConstant= 0.50
-gravitation = 0.981
-airFrictionConstant = 0.2				
-groundRepulsionConstant =	0.8	
-groundFrictionConstant = 0.3			
-groundAbsorptionConstant =	0.5	
-groundHeight = 10
-		
-RopeSim = RopeSimulation:new(
-		numOfSemgents ,											--1. the number of masses
-		massWeightT,								--2. weight of each mass
-		springConstant,								--3. how stiff the springs are
-		lengthOfElementT,							--4. the length that a spring does not exert any force
-		springFrictionConstant,						--5. inner friction constant of spring
-		gravitation,								--6. gravitational acceleration
-		airFrictionConstant,						--7. air friction constant
-		groundRepulsionConstant,					--8. ground repulsion constant
-		groundFrictionConstant,						--9. ground friction constant
-		groundAbsorptionConstant,					--10. ground absorption constant
-		groundHeight)
+
+	heightTable= makeTable(0,10,10)
+	numOfSemgents = nrOfPieces
+	massWeightT = makeTable(10,11)
+	springConstant = 0.50
+	lengthOfElementT = makeTable(10, 11)
+	springFrictionConstant= 0.50
+	gravitation = 0.981
+	airFrictionConstant = 0.2				
+	groundRepulsionConstant =	0.8	
+	groundFrictionConstant = 0.3			
+	groundAbsorptionConstant =	0.5	
+	groundHeight = heightTable
+			
+	RopeSim = RopeSimulation:new(
+			numOfSemgents ,								--1. the number of masses
+			massWeightT,								--2. weight of each mass
+			springConstant,								--3. how stiff the springs are
+			lengthOfElementT,							--4. the length that a spring does not exert any force
+			springFrictionConstant,						--5. inner friction constant of spring
+			gravitation,								--6. gravitational acceleration
+			airFrictionConstant,						--7. air friction constant
+			groundRepulsionConstant,					--8. ground repulsion constant
+			groundFrictionConstant,						--9. ground friction constant
+			groundAbsorptionConstant,					--10. ground absorption constant
+			groundHeight)
 		
 		while Spring.GetUnitTransporter(passengerID) == unitID do
 			mapRopeSimToPieces(passengerID, RopeSim)
+			mapTerrainToRopeSim(passengerID, RopeSim)
 			Sleep(50)
+			RopseSim:Simulate(50)
 		end
 
 end
 
-function mapRopeSimToPieces()
+function mapRopeSimToPieces(passengerID, RopeSim)
+	accumulatedOffset= Vector:new(0,0,0)
 
-
+	for i=1, #RopeSimulation.masses, 1 do
+		local mass = RopeSimulation.masses[i]
+		accumulatedOffset = accumulatedOffset + mass.pos
+		turnPieceTowards(rope[i],accumulatedOffset.x,accumulatedOffset.y,accumulatedOffset.z,0)
+	end
 end
+
+local fourPieces= {}
+	  fourPoints= {}
+for i=1,4 do
+	fourPieces[i]= piece("fp"..i)
+	fourPoints[i]= {}
+end
+
+function mapTerrainToRopeSim(passengerID, RopeSim)
+		for i=1,4 do fourPoints.x,fourPoints.y,fourPoints.z = Spring.GetUnitPosition(unitID,fourPieces[i] ) end
+
+		for x=1,10 do
+			for y=1,10 do
+			Xpoint =  mix(fourPoints[1],fourPoints[2], x/10)
+			X2point =  mix(fourPoints[3],fourPoints[4], x/10)
+			FinalPoint= mix(Xpoint,X2point, y/10)
+			heightTable[x][y] = Spring.GetGroundHeight(FinalPoint.x,FinalPoint.z)
+			end
+		end		
+end
+
 
 transportableDefIds= getRecycleableUnitTypeTable()
 
@@ -442,7 +466,7 @@ local transportedID=nil
 function script.TransportPickup(passengerID)
 	--Spring.Echo("TransportPickup")
 	local UnitedDefIDs=Spring.GetUnitDefID(passengerID)
-	if loaded == false and (transportableDefIds[UnitedDefIDs] or isInfantry(UnitedDefIDs)==true) then
+	if boolUnitLoaded == false and (transportableDefIds[UnitedDefIDs] or isInfantry(UnitedDefIDs)==true) then
 		SetUnitValue(COB.BUSY, 1)	
 		
 		local px1, py1, pz1 = Spring.GetUnitPosition(unitID)
@@ -454,12 +478,12 @@ function script.TransportPickup(passengerID)
 		
 		if dist > 200 then return end
 		
-		Turn(csniper,y_axis,heading ,12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
-		WaitForTurn(csniper,y_axis)
+		WTurn(csniper,y_axis,heading ,12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
+
 		expandRope()
 		transportedID=passengerID
 		AttachUnit(bloodemt, passengerID)
-		loaded=true
+		boolUnitLoaded=true
 		
 		StartThread(ourOnlyRope,passengerID)
 		
@@ -470,15 +494,15 @@ end
 
 function script.TransportDrop(passengerID, x, y, z)
 	Signal(SIG_ROPE)
-	--Spring.Echo("TransportDrop")
+	
 	retractRope() 
-	if loaded == false then return end
-	--if unit not loaded
+	if boolUnitLoaded == false then return end
+	--if unit not boolUnitLoaded
 	SetUnitValue(COB.BUSY, 1)
 	
 	DropUnit(transportedID)
 	transportedID=nil
-	loaded = false
+	boolUnitLoaded = false
 	
 	SetUnitValue(COB.BUSY, 0)
 end
@@ -597,21 +621,26 @@ end
 
 
 boolMoving= false
-function updateRopeHeading()
-	rotationOffset = math.rad(42)
-	Spring.Echo("Csniper:TODO updateRopeHeading")
+adaptionfactor=0.0
+function updateRopeHeadingOnTheMove()
+		adaptionfactor= math.min(1.0,math.max(0.0, adaptionfactor + 0.02))
+		restheading =   (Spring.GetUnitHeading(unitID))/ 32768*math.pi
+		rotationOffset = mix(rotationOffset, restheading, adaptionfactor)
 end
 
 function moveOutAndTurnInNewDirection()
 	Signal(SIG_MOVEOUT)
 	Signal(SIG_MOVEIN)
 	SetSignalMask(SIG_MOVEOUT)
-		factor= 1.0
+	factor= 1.0
+	adaptionfactor= 0.0
 	
 	while true do
-		factor= math.min((factor+factor),100)
-		expandRopePercent(factor, 15)
-		updateRopeHeading()
+		
+			factor= math.min((factor +factor),100)
+			expandRopePercent(factor, 15)
+			updateRopeHeadingOnTheMove()
+		
 		Sleep(50)
 	end
 end
@@ -756,59 +785,11 @@ function unfold()
 	
 end
 
-function script.AimWeapon1(heading ,pitch)	
-	Signal(SIG_AIM)
-	SetSignalMask(SIG_AIM)
-	Signal(SIG_LAS)
-	if boolFireLock==true then
-		return false
-	end
-	
-	if boolFireLock== false then
-		boolStillAiming=true	
-		
-		--aiming animation: instantly turn the gun towards the enemy
-		Turn(sstowf, y_axis, heading,0.95)
-		Turn(turret2, x_axis, -pitch,0.65)
-		WaitForTurn(sstowf,y_axis)
-		WaitForTurn(turret2,x_axis)
-		
-		return true
-	end
-	
-	
-	
-end
-
-function script.AimFromWeapon1() 
-
-	return turret2 
-end
-
-function script.QueryWeapon1() 
-	return flare
-end
-
-function script.FireWeapon1()
-	Signal(SIG_SCOPE)
-	boolTargetInScope=true	
-	Spring.PlaySoundFile("sounds/csniper/csniper.wav") 
-	boolStillAiming = false
-	boolEmit = false	
-	StartThread(delayedReactivation)
-	return true
-end
-
 function delayedReactivation()
 Sleep(5000)
 boolEmit=true	
 end
-function TargetInScope()
-	SetSignalMask(SIG_SCOPE)
-	Sleep(20000)
-	boolTargetInScope = false
-	
-end
+
 
 function constLazzorsEmit()
 	Sleep(1500)
@@ -969,13 +950,51 @@ function script.StopMoving()
 	spamfilterSTOP=true		
 end
 
-------------------------------------------------------------
-function script.AimWeapon2(heading,pitch)	
-	Turn(flare,y_axis,heading,0)
-	Turn(flare,x_axis,-pitch,0)
+function script.AimWeapon1(heading ,pitch)	
+	Signal(SIG_AIM)
+	SetSignalMask(SIG_AIM)
+	if boolFireLock==true then
+		return false
+	end
+	
+	if boolFireLock== false then
+		boolStillAiming=true	
+		
+		--aiming animation: instantly turn the gun towards the enemy
+		Turn(sstowf, y_axis, heading,0.95)
+		Turn(turret2, x_axis, -pitch,0.65)
+		WaitForTurn(sstowf,y_axis)
+		WaitForTurn(turret2,x_axis)
+		
+		return true
+	end
+	
+	
+	
+end
+
+function script.AimFromWeapon1() 
+
+	return turret2 
+end
+
+function script.QueryWeapon1() 
+	return flare
+end
+
+function script.FireWeapon1()
+	Signal(SIG_SCOPE)
+	boolTargetInScope=true	
+	Spring.PlaySoundFile("sounds/csniper/csniper.wav") 
+	boolStillAiming = false
+	boolEmit = false	
+	StartThread(delayedReactivation)
 	return true
-	
-	
+end
+
+------------------------------------------------------------
+function script.AimWeapon2()	
+	return true
 end
 
 function script.AimFromWeapon2() 
