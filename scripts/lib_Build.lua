@@ -167,45 +167,42 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	LinBodyConCoords={}
 	
 	--> Turns a Piece into a random Direction
-	function bd_turnPieceInRandDir(pie,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
-		x,y,z=0,0,0	
+	function bd_turnPieceInRandDir(linPiece,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
+	
+	--Definition linear Phase
+		xdir,ydir,zdir=0,0,0		
 		offSetX= dirVec.offSetX or 0
 		
-		if dirVec.boolFixedDegree and dirVec.boolFixedDegree ==true then
-			x,y,z=dirVec.x,dirVec.y,dirVec.z
+		linDegFilterFunction= llinDegFilterFunction or function(a,b,c) 
+																return a - (a%90), b- (b%90), c- (c%90)
+															end
+		symDegFilterFunction= lsymDegFilterFunction or function(a,b,c) 
+																return a - (a%45), b- (b%45), c- (c%45) 
+															end
+															
+		if dirVec.boolFixedDegree and dirVec.boolFixedDegree == true then
+			xdir,ydir,zdir = dirVec.x,dirVec.y,dirVec.z
 			
 		else --randomIntervall
 			minx,maxx,miny,maxy,minz,maxz=dirVec.minx,dirVec.maxx,dirVec.miny,dirVec.maxy,dirVec.minz,dirVec.maxz
-			x=randomFunc(minx,maxx)
-			z=randomFunc(minz,maxz)%180
-			y=randomFunc(miny,maxy)
-			
-			linDegFilterFunction= llinDegFilterFunction or function(a,b,c) 
-																return a - (a%90), b- (b%90), c- (c%90)
-															end
-			symDegFilterFunction= lsymDegFilterFunction or function(a,b,c) 
-																return a - (a%45), b- (b%45), c- (c%45) 
-															end
-			_,y,_= linDegFilterFunction(0,y,0) 
+			xdir =randomFunc(minx,maxx)
+			zdir =randomFunc(minz,maxz)%180
+			xdir, ydir, zdir = linDegFilterFunction(xdir,randomFunc(miny,maxy),zdir)
+
 		end
 		
-		Turn(pie,y_axis,math.rad(y),0,true)
-		
-		if symPiece == nil then
-			--Turn(pie,z_axis,math.rad(0),0,true)
-			x,_,_=linDegFilterFunction(x,0,0)
-		
-		else --if a Sympiece exists
+		--Apply linear phase
+		if not symPiece then
+			tP(linPiece, xdir,0, 0, 0)
+		else
+		-- Apply symetrical phase
+			tP(linPiece,xdir,ydir,zdir,0)
 			
-			val=y*-1
-			x,y,_=symDegFilterFunction(x,val,0)
-			Turn(symPiece,y_axis,math.rad(y),0,true)
-			Turn(pie,x_axis,math.rad(x+offSetX),0,true)
-			Turn(symPiece,x_axis,math.rad(x+offSetX),0,true)		
+			sxdir, sydir,szdir = symDegFilterFunction(xdir, ydir*-1, zdir)
+			tP(symPiece, sxdir,sydir,szdir,0 )
 		end
-		
-		
-		return x,y,z
+			
+		return xdir, ydir, zdir
 	end
 	
 	-->	Connects a lin Piece to a Socket Socket,ConectionSocket,BodyPiece
@@ -482,7 +479,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	function bd_getPairNrSymBodyConCoords()
-		nr = math.floor(randomFunc(1,math.max(1,table.getn(SymBodyConCoords)	)))
+		nr = math.floor(randomFunc(1,math.max(1,table.getn(SymBodyConCoords))))
+		
 		for i=nr,table.getn(SymBodyConCoords),1 do
 			if SymBodyConCoords[i] and not AllReadyUsedSymetricCoords[i]  then
 				return SymBodyConCoords[i][1],SymBodyConCoords[i][2], i
@@ -495,6 +493,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			end
 		end
 		
+		echo("► No symetric Connection Points found - AllReadyUsedSymetricCoords:")
+		echoT(AllReadyUsedSymetricCoords)
+		echo("► SymBodyConCoords:")
+		echoT(SymBodyConCoords)
 	end
 	
 	function bd_SymmetricExpand(pieceA, pieceB)
@@ -514,7 +516,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 					Show(pieceA)
 					Show(pieceB)	
 					
-					dirVec=bd_makeDirVecBoundsFromDeg(90, 45, 180, 90, 90, 35)
+					dirVec= bd_makeDirVecBoundsFromDeg(90, 45, 180, 90, 90, 35)
 					bd_turnPieceInRandDir(pieceA, dirVec, 1, linDegFilterFunction, symDegFilterFunction, pieceB)
 					bd_sconPieceCon2Socket(socketCoordsA, pieceA, dirVec, true)
 					
