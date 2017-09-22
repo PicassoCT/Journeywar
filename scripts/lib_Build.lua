@@ -216,8 +216,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		if boolLeftRight and boolLeftRight==true then
 			SymSideVal=-1
 		end
-		
-		Show(Pie)
+		assert(Pie)
+		capShow(Pie)
 		Move(Pie,x_axis,x,0,true)
 		Move(Pie,z_axis,z,0,true)
 		Move(Pie,y_axis,y,0,true)
@@ -232,7 +232,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		SymSideVal=1	
 		if boolLeftRight and boolLeftRight==true then SymSideVal=-1 end
 		
-		Show(PieceToBind)
+		assert(PieceToBind)
+		capShow(PieceToBind)
 		
 		Move(PieceToBind,x_axis,x,0,true)
 		Move(PieceToBind,z_axis,z,0,true)
@@ -406,7 +407,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		bd_turnPieceInRandDir(BodyPieces[1],bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0),1, linDegFilterFunction, symDegFilterFunction)
 		
 		-- Add Initial Piece
-		Show(BodyPieces[1])
+		assert(BodyPieces[1])
+		capShow(BodyPieces[1])
 		bd_LinAddPieceSocketsToPool(1, true)
 		bd_usedPiece(BodyPieces[1])
 	end
@@ -460,7 +462,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		local BodyPiece	= BodyPieces[BodyDice]
 		if table.getn(LinBodyConCoords) < 1 then echo("LinearCoordinates running out"); return end
 		local SocketDice, Socket = bd_getRandomLinearSocket()
-		Show(BodyPiece)
+		assert(BodyPiece)
+		capShow(BodyPiece)
 		
 		if not AllReadyUsedPieces[BodyPiece] and not AllReadyUsedCoords[SocketDice] then
 			randomVec=bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0)
@@ -468,8 +471,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 			bd_conPieceCon2Socket(Socket, BodyPiece, randomVec)
 			bd_LinAddPieceSocketsToPool(BodyDice, true)	
-			
-			Show(BodyPiece)
+
 			bd_usedPiece(BodyPiece)			
 			bd_usedCoordsNumber(SocketDice)
 			
@@ -516,8 +518,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 				
 				if not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB]  then
 					echo("jw_Build:D")
-					Show(pieceA)
-					Show(pieceB)	
+					assert(pieceB)
+					assert(pieceA)
+					capShow(pieceA)
+					capShow(pieceB)	
 					
 					dirVec= bd_makeDirVecBoundsFromDeg(90, 45, 180, 90, 90, 35)
 					bd_turnPieceInRandDir(pieceA, dirVec, 1, linDegFilterFunction, symDegFilterFunction, pieceB)
@@ -633,7 +637,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		if Head and Socket and not AllReadyUsedPieces[Head] and AllReadyUsedCoords[Socket.Piece]== nil then
 			randomVec=bd_makeDirVecBoundsFromDeg(0,25,0,0,0,0,offSetX)
-			Show(Head)
+			assert(Head)
+			capShow(Head)
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket,Head,randomVec)
 			bd_usedPiece(Head)
@@ -650,8 +655,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			socketA,socketB=bd_getSymHeadCon()			
 			
 			if socketA and AllReadyUsedPieces[pieceA] == nil and AllReadyUsedPieces[pieceB] == nil then
-				Show(pieceA)
-				Show(pieceB)	
+				assert(pieceA)
+				assert(pieceB)
+				capShow(pieceA)
+				capShow(pieceB)	
 				
 				dirVec=bd_makeDirVecBoundsFromDeg(0,25,90,45,0,0,offSetX)
 				
@@ -678,8 +685,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		if AllReadyUsedPieces[Arm] == nil and AllReadyUsedCoords[SocketDice] == nil then
 			randomVec=bd_makeDirVecBoundsFromDeg(0,0,0,0,0,0,0)
-			Show(Arm[1])
-			Show(Arm[2])
+			capShow(Arm[1])
+			capShow(Arm[2])
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket,Arm[1],randomVec)
 			bd_usedPiece(Arm[1])
@@ -698,8 +705,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			if socketACoords then 				
 				if AllReadyUsedPieces[ArmA] == nil and AllReadyUsedPieces[ArmB] == nil then
 
-					Show(ArmA)
-					Show(ArmB)
+					capShow(ArmA)
+					capShow(ArmB)
 
 					
 					dirVec=bd_makeDirVecBoundsFromDeg(0,0,0,0,0,0)
@@ -912,7 +919,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		if AllReadyUsedPieces[Deco] == nil and AllReadyUsedCoords[Socket.Piece] == nil then
 			
 			randomVec=bd_makeDirVecBoundsFromDeg(90,45,0,0,0,0,offSet)
-			Show(Deco)
+			capShow(Deco)
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket.Piece,Deco,randomVec)
 			bd_usedPiece(Deco)
@@ -930,8 +937,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			socketA,socketB=getSymDecoCon()
 			
 			if socketA and AllReadyUsedPieces[pieceA] == nil and AllReadyUsedPieces[pieceB] == nil then
-				Show(pieceA)
-				Show(pieceB)	
+				assert(pieceA)
+				assert(pieceB)
+				capShow(pieceA)
+				capShow(pieceB)	
 				
 				dirVec=bd_makeDirVecBoundsFromDeg(180,180,180,180,180,180)
 				
@@ -1187,7 +1196,7 @@ function moveBlockAddPod(x,y,z, block)--nrFreeSpot,nrBlok,bloks)
 	MovePieceToPos(block,x,y,z,0)
 	d=math.floor(math.random(0,3))*90
 	Turn(block,y_axis,math.rad(d),0)
-	Show(block)
+	capShow(block)
 	
 end
 
@@ -1228,7 +1237,7 @@ function buildRandomizedBuilding(lBlocks, gridOffsetY,gridTable,freeSpotList, bl
 		if pieceToMove then 
 			
 			--Show the block
-			Show(Blocks[i])	
+			capShow(Blocks[i])	
 			boolNotPlace=true		
 			
 			
@@ -1250,7 +1259,7 @@ function buildRandomizedBuilding(lBlocks, gridOffsetY,gridTable,freeSpotList, bl
 					freeSpotList[randIndex].z * blocksize ,
 					pieceToMove
 					)
-					Show(pieceToMove)
+					capShow(pieceToMove)
 					--PostProcessPosition
 					posPostProcessFunc(pieceToMove,freeSpotList[randIndex].x,freeSpotList[randIndex].y,freeSpotList[randIndex].z)
 					gridTable[index.x][index.z][index.y]= false
@@ -2053,7 +2062,7 @@ function executeLindeMayerSystem( gramarTable,String, oldDeg, Degree , UpperLimi
 	
 	--Move Piece to Position
 	
-	Show(TreePiece[hit])
+	capShow(TreePiece[hit])
 	
 	Move(TreePiece[hit],x_axis,ox,0)
 	Move(TreePiece[hit],y_axis,oy,0)
@@ -2200,7 +2209,7 @@ function placeFollowUps(TreePiece, X,Z,sizeOfPlant,maxDist,i)
 		
 		--Move Piece to Position
 		
-		Show(TreePiece[ok])
+		capShow(TreePiece[ok])
 		
 		Move(TreePiece[ok],x_axis,ox,0)
 		Move(TreePiece[ok],y_axis,oy,0)
@@ -2259,7 +2268,7 @@ fixFunctionTabel[2]= function (NUMBEROFPIECES)
 	
 	
 	for i=1,#TreePiece-sizeOfPlant,sizeOfPlant do
-		Show(TreePiece[i])
+		capShow(TreePiece[i])
 		mx,mz=0,0 		
 		if math.random(1,4)==2 then
 			mx,mz=math.random(-1*maxDist,maxDist),math.random(-1*maxDist,maxDist)
@@ -2341,7 +2350,7 @@ fixFunctionTabel[4]= function (NUMBEROFPIECES)
 	
 	
 	for i=1,#TreePiece-sizeOfPlant,sizeOfPlant do
-		Show(TreePiece[i])
+		capShow(TreePiece[i])
 		mx,mz=math.random(-35,35),math.random(-34,34)
 		if not TreePiece[math.min(i,#TreePiece)] then return end
 		moveUnitPieceToGroundPos(unitID,TreePiece[math.min(i,#TreePiece)],mx,mz,0,5)		
@@ -2407,7 +2416,7 @@ fixFunctionTabel[5]= function (NUMBEROFPIECES)
 	while relativeIndex > 1 do
 		for i=1, relativeIndex,1 do
 			if TreePiece[totalIndex+i] then
-				Show(TreePiece[totalIndex+i])
+				capShow(TreePiece[totalIndex+i])
 				Move(TreePiece[totalIndex+i],x_axis,PrevPosTable[i].x,0)
 				Move(TreePiece[totalIndex+i],y_axis,PrevPosTable[i].y,0)
 				Move(TreePiece[totalIndex+i],z_axis,PrevPosTable[i].z,0,true)
@@ -3255,7 +3264,7 @@ fixFunctionTabel[21]= function (NUMBEROFPIECES)
 		x,y= RotationMatrice (0,Radius, i*DegStep)
 		moveUnitPieceToGroundPos(unitID,TreePiece[i],x,y,0,0)
 		ContinuosRing[i]=EndPiece[i]
-		Show(TreePiece[i])
+		capShow(TreePiece[i])
 	end
 	
 	for i=PiecesPerLayer+1, #TreePiece,1 do
@@ -3356,7 +3365,7 @@ function buildLTree(center, NUMBEROFPIECES,Treename,Sensoryname,fixedFuncNumber)
 		end
 		globalStep=1
 		
-		Show(TreePiece[1])
+		capShow(TreePiece[1])
 		executeLindeMayerSystem( 
 		gramarTable[dice],
 		gramarTable[dice].startElement,									
