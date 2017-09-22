@@ -501,6 +501,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	bd_SymmetricExpand = function (pieceA, pieceB)
+		assert(pieceB)
+		assert(pieceA)
 		-->Align Piece A -- add all pieces as symmetrics
 		AlignPieceToPiece(unitID, ConCenter, pieceA, 0)
 		--> Align PiecB --add all pieces as symmetrics
@@ -689,30 +691,28 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return -1		
 	end
 	
-	bd_SymetricExpandArm= function (ArmTableA,ArmTableB )		
+	bd_SymetricExpandArm= function (ArmA,ArmB )		
 		if SymBodyConCoords and table.getn(SymBodyConCoords) > 0 then
 		socketACoords, socketBCoords, socketSymNr =bd_getPairNrSymBodyConCoords()
 			
 			if socketACoords then 				
-				if AllReadyUsedPieces[ArmTableA[1]] == nil and AllReadyUsedPieces[ArmTableB[1]] == nil then
+				if AllReadyUsedPieces[ArmA] == nil and AllReadyUsedPieces[ArmB] == nil then
 
-					Show(ArmTableA[1])
-					Show(ArmTableA[2])
-					Show(ArmTableB[1])	
-					Show(ArmTableB[2])	
+					Show(ArmA)
+					Show(ArmB)
+
 					
 					dirVec=bd_makeDirVecBoundsFromDeg(0,0,0,0,0,0)
 					
-					bd_sconPieceCon2Socket(socketA,ArmTableA[1], dirVec, true)
-					bd_sconPieceCon2Socket(socketB,ArmTableB[1], dirVec, false)
-					
-					bd_turnPieceInRandDir(ArmTableA[1],dirVec,1,linDegFilterFunction,symDegFilterFunction,ArmTableB[1])
+					bd_sconPieceCon2Socket(socketACoords,ArmA, dirVec, true)
+					bd_sconPieceCon2Socket(socketBCoords,ArmB, dirVec, true)
+
+					bd_turnPieceInRandDir(ArmA,dirVec,1,linDegFilterFunction,symDegFilterFunction,ArmB)
 					bd_usedCoordsNumber(socketSymNr, true)
 
-					bd_usedPiece(ArmTableA[1])
-					bd_usedPiece(ArmTableA[2])
-					bd_usedPiece(ArmTableB[1])
-					bd_usedPiece(ArmTableB[2])
+					bd_usedPiece(ArmA)
+					bd_usedPiece(ArmB)
+
 					
 					return ArmTableA,ArmTableB
 				end
@@ -726,9 +726,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			attempts = 0
 			LocalMax = randomFunc(math.max(1,config.Min), config.Max)
 			SymLimit = randomFunc(1,LocalMax)
-			LinLimit = randomFunc(1,LocalMax)					
+			LinLimit = randomFunc(1,LocalMax)
+	
 			
-			while pieceNum < dice and bd_existsParts(Pieces) and attempts < pieceNum do
+			while pieceNum < diceUpperBound and bd_existsParts(Pieces) and attempts < pieceNum do
 				Sleep(1)
 				-- while there exist BodyParts2 and numberOfBodyPiecesUsed < bodydice
 				if   LinLimit < randomFunc(1,LocalMax) then
