@@ -1,4 +1,4 @@
-
+--> mirrors a coordinate pair on the maps center
 function mirrorMapCenter(x,y,z)
 	mx,mz=Game.mapSizeX,Game.mapSizeZ
 	mx,mz= mx/2,mz/2
@@ -6,7 +6,8 @@ function mirrorMapCenter(x,y,z)
 	return x-1*(x-mx), y, z-1*(z-mz)
 end
 
-	function sanitizeRandom(lowerBound,UpperBound)
+--> hardened random, checking input values
+function sanitizeRandom(lowerBound,UpperBound)
 	if lowerBound >= UpperBound then return lowerBound end
 	
 	return math.random(lowerBound,UpperBound)
@@ -35,7 +36,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	--Debug 
 	local randomFunc = lrandomFunction or math.random
 
-	function bd_makePointFromPiece(piecename)
+	bd_makePointFromPiece = function (piecename)
 		if not piecename then return nil end
 		ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecename)
 		return{x=ox*-1,y=oy,z=oz, Piece=piecename }
@@ -167,7 +168,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	LinBodyConCoords={}
 	
 	--> Turns a Piece into a random Direction
-	function bd_turnPieceInRandDir(linPiece,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
+	bd_turnPieceInRandDir = function (linPiece,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
 	
 	--Definition linear Phase
 		xdir,ydir,zdir=0,0,0		
@@ -206,7 +207,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	-->	Connects a lin Piece to a Socket Socket,ConectionSocket,BodyPiece
-	function bd_conPieceCon2Socket(Socket,Pie,dirVec, boolLeftRight)	
+	bd_conPieceCon2Socket = function (Socket,Pie,dirVec, boolLeftRight)	
 		
 		x,y,z=Socket.x*-1,Socket.y,Socket.z
 		--Spring.Echo("Socket Coordinates Relative (X):"..Socket.x .." (Y):"..Socket.y.." (Z):"..Socket.z)
@@ -226,7 +227,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end		
 	end
 	--> Connects a symmetric Piecepair to sockets
-	function bd_sconPieceCon2Socket(Socket,PieceToBind,dirVec, boolLeftRight)
+	bd_sconPieceCon2Socket = function (Socket,PieceToBind,dirVec, boolLeftRight)
 		x,y,z=Socket.x,Socket.y,Socket.z
 		SymSideVal=1	
 		if boolLeftRight and boolLeftRight==true then SymSideVal=-1 end
@@ -244,7 +245,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	---------------------------
 	
-	function bd_initVehicleCreation()
+	bd_initVehicleCreation = function ()
 		
 		for i=1,ArmMax,1 do
 			Hide(ArmPieces[i][1])
@@ -259,17 +260,17 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		bd_init()	
 	end
 	
-	function bd_existsParts(tablename)
+	bd_existsParts = function (tablename)
 		return table.getn(tablename)~= 0
 	end
 	
-	function makeVecFromPoint(piecess)
+	makeVecFromPoint = function (piecess)
 		ox,oy,oz=Spring.GetUnitPiecePosition(unitID,piecess)
 		l=math.sqrt(ox* ox + oy*oy + oz *oz)
 		return {x=ox/l ,y=oy/l,z=oz/l}		
 	end
 	
-	function getSocketsAsPoints(part, sympart)
+	getSocketsAsPoints = function (part, sympart)
 		getLinCoords= function (piecename)
 			AlignPieceToPiece(unitID, ConCenter,piecename,0,true,true,AllDynamicSockets)
 			retTable={}
@@ -317,7 +318,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 
-	function bd_LinAddPieceSocketsToPool(partnr,boolAddSymetrics)
+	bd_LinAddPieceSocketsToPool = function (partnr,boolAddSymetrics)
 		--> we move the conCenter to the piece
 		AlignPieceToPiece(unitID, ConCenter, BodyPieces[partnr], 0)
 		--movePieceToPiece(unitID, ConCenter, BodyPieces[partnr], 0)
@@ -359,7 +360,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 	end
 	
-	function bd_SymAddPieceSocketsToPool(part,sympiece)
+	bd_SymAddPieceSocketsToPool = function (part,sympiece)
 		--we add the points into the table for symmmetric expansion
 		--all the sockects are to be replaced by points--> implicating that 
 
@@ -388,7 +389,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 	end
 	
-	function bd_makeDirVecBoundsFromDeg(degx, valx, degy, valy, degz, valz, offSetX)
+	bd_makeDirVecBoundsFromDeg = function (degx, valx, degy, valy, degz, valz, offSetX)
 			dirVec={}
 			dirVec.minx, dirVec.maxx=degx-valx, degx+valx
 			dirVec.miny, dirVec.maxy=degy-valy, degy+valy
@@ -397,7 +398,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return dirVec
 	end
 	
-	function bd_init()
+	bd_init = function ()
 		hideAllPieces(unitID)
 		Move(BodyPieces[1],x_axis, 0, 0, true)	
 		Move(BodyPieces[1],y_axis, 0, 0, true)	
@@ -410,7 +411,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		bd_usedPiece(BodyPieces[1])
 	end
 	
-	function bd_DoubleCheckPiece(tablename)
+	bd_DoubleCheckPiece = function (tablename)
 		--Rewrite
 		
 		local pieceA = 0
@@ -431,11 +432,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		--exists a symetric pair- and a symetric socket pair
 	end
 	
-	function bd_rollDice(maxs)
+	bd_rollDice = function (maxs)
 		return randomFunc(1, maxs),randomFunc(1, maxs)
 	end
 
-	function bd_getRandomLinearSocket()
+	bd_getRandomLinearSocket = function ()
 	
 		local SocketDice	= randomFunc(1, table.getn(LinBodyConCoords))
 		
@@ -453,7 +454,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	--FindPiece -FindSocket -- bd_LinAddPieceSocketsToPool
-	function bd_LinearExpandPiece(bodyNumber)
+	bd_LinearExpandPiece = function (bodyNumber)
 		boolFirstOfPair = (bodyNumber % 2 == 0)
 		local BodyDice	= math.ceil(randomFunc(bodyNumber, math.min((bodyNumber +2),table.getn(BodyPieces))))
 		local BodyPiece	= BodyPieces[BodyDice]
@@ -478,7 +479,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return 0
 	end
 	
-	function bd_getPairNrSymBodyConCoords()
+	bd_getPairNrSymBodyConCoords = function ()
 		nr = math.floor(randomFunc(1,math.max(1,table.getn(SymBodyConCoords))))
 		
 		for i=nr,table.getn(SymBodyConCoords),1 do
@@ -499,7 +500,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		echoT(SymBodyConCoords)
 	end
 	
-	function bd_SymmetricExpand(pieceA, pieceB)
+	bd_SymmetricExpand = function (pieceA, pieceB)
 		-->Align Piece A -- add all pieces as symmetrics
 		AlignPieceToPiece(unitID, ConCenter, pieceA, 0)
 		--> Align PiecB --add all pieces as symmetrics
@@ -533,7 +534,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return 0
 	end
 	
-	function bd_findInSymBodyConCoords(point)
+	bd_findInSymBodyConCoords = function (point)
 		for i=1, table.getn(SymBodyConCoords),1 do
 			if SymBodyConCoords[i][1]==point or SymBodyConCoords[i][2]==point then
 				return i
@@ -541,11 +542,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 	end
 	
-	function bd_usedPiece(piecename)
+	bd_usedPiece = function (piecename)
 		AllReadyUsedPieces[piecename]=true
 	end
 	
-	function bd_usedCoordsNumber(number, boolSymetric)
+	bd_usedCoordsNumber = function (number, boolSymetric)
 		if boolSymetric and boolSymetric == true then
 			AllReadyUsedSymetricCoords[number]= true
 		else
@@ -556,18 +557,18 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	local PiecePositionCache={}
 	
-	function bd_accessCache(key)
+	bd_accessCache = function (key)
 		if PiecePositionCache[key] then
 			return PiecePositionCache[key].x,  PiecePositionCache[key].y,  PiecePositionCache[key].z, PiecePositionCache[key].piecename
 		end
 	end
 	
-	function bd_insertCache(key, x, y, z)
+	bd_insertCache = function (key, x, y, z)
 		PiecePositionCache[key]={x=x, y=y, z=z, piecename=key}
 		return true
 	end
 	
-	function bd_LinFindFrontCon()
+	bd_LinFindFrontCon = function ()
 		X=-math.huge
 		
 		ShorTerMem=LinBodyConCoords[#LinBodyConCoords]
@@ -593,7 +594,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return ShorTerMem
 	end
 	
-	function bd_getSymHeadCon()
+	bd_getSymHeadCon = function ()
 		Spring.Echo("TODO: bd_getSymHeadCon")
 		highestZ= {value= -math.huge, instance={}}
 		_2ndHighestZ= {value= -math.huge, instance={}}	
@@ -612,7 +613,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	return highestZ.instance, _2ndHighestZ.instance
 	end
 	
-	function bd_DeBugPieceLight(vecT)
+	bd_DeBugPieceLight= function (vecT)
 		while true do
 			for i=1,#vecT do
 				Spring.SpawnCEG("greenlight",vecT[i].x,vecT[i].y,vecT[i].z,0,1,0)
@@ -622,7 +623,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	--attaches a Alienhead linear to the body
-	function bd_LinearExpandHead(offSetX)
+	bd_LinearExpandHead= function (offSetX)
 		HeadDice=randomFunc(1,table.getn(HeadPieces))
 		Head=HeadPieces[HeadDice]
 		
@@ -641,7 +642,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return 0
 	end
 	
-	function bd_SymmetricExpandHead(pieceA,pieceB,offSetX)
+	bd_SymmetricExpandHead = function (pieceA,pieceB,offSetX)
 		if SymBodyConCoords and table.getn(SymBodyConCoords) > 0 then
 			
 			socketA,socketB=bd_getSymHeadCon()			
@@ -666,7 +667,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return 0
 	end
 	
-	function bd_LinearExpandArm()
+	bd_LinearExpandArm = function ()
 		ArmDice=randomFunc(1,ArmDouble)
 		Arm=ArmPieces[ArmDice]
 		if table.getn(LinBodyConCoords) <1 then return  end
@@ -688,7 +689,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		return -1		
 	end
 	
-	function bd_SymetricExpandArm(ArmTableA,ArmTableB )		
+	bd_SymetricExpandArm= function (ArmTableA,ArmTableB )		
 		if SymBodyConCoords and table.getn(SymBodyConCoords) > 0 then
 		socketACoords, socketBCoords, socketSymNr =bd_getPairNrSymBodyConCoords()
 			
@@ -719,7 +720,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end		
 	end
 	
-	function bd_genericExpandLoop(config, Pieces, DoublePieces, linExpandFunc, doubleCheckFunc,symetricExpandFunc)
+	bd_genericExpandLoop = function (config, Pieces, DoublePieces, linExpandFunc, doubleCheckFunc,symetricExpandFunc)
 			diceUpperBound = math.ceil(randomFunc(config.Min, #Pieces))
 			pieceNum = config.StartNum or 1
 			attempts = 0
@@ -748,8 +749,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			end
 			
 	end
-	--DEBUG DODO
-	function bd_buildRandomizedVehicle()
+
+	
+	bd_buildRandomizedVehicle = function ()
 		--Nr of Pieces Used to build this VaryFoo
 		bodydice=randomFunc(#BodyPieces/2,#BodyPieces)
 		teamID=Spring.GetUnitTeam(unitID)
@@ -775,19 +777,19 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 
 		--AddFirstSockets
 		-- DEBUG DELME 
-		pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
-		bd_SymmetricExpand(pieceA,pieceB) 
+		-- pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
+		-- bd_SymmetricExpand(pieceA,pieceB) 
 		
-		pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
-		bd_SymmetricExpand(pieceA,pieceB) 
+		-- pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
+		-- bd_SymmetricExpand(pieceA,pieceB) 
 		
-		pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
-		bd_SymmetricExpand(pieceA,pieceB) 
+		-- pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
+		-- bd_SymmetricExpand(pieceA,pieceB) 
 		
-		pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
-		bd_SymmetricExpand(pieceA,pieceB) 
+		-- pieceA, pieceB  = bd_DoubleCheckPiece(DoubleBodyPieces)
+		-- bd_SymmetricExpand(pieceA,pieceB) 
 		
-		if true then return end
+		--if true then return end
 		--DEBUG DELME		
 		
 		local config = {Min = 4, -- Minimum number of pieces
@@ -796,8 +798,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 					 }		 
 		bd_genericExpandLoop(config, BodyPieces, DoubleBodyPieces, bd_LinearExpandPiece, bd_DoubleCheckPiece,bd_SymmetricExpand)
 	
-		--Arm
-		
+		--Arm	
 		--Add at least one symetric Pair
 		pieceA,pieceB=bd_DoubleCheckPiece(DoubleArmPieces)		
 		ArmA,ArmB=bd_SymetricExpandArm(pieceA,pieceB)	
@@ -816,8 +817,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 				StartNum=0
 			 }		 
 		bd_genericExpandLoop(config, HeadPieces, DoubleHeadPieces, bd_LinearExpandHead, bd_DoubleCheckPiece,bd_SymmetricExpandHead)
-		
-		
 		
 		--Not every Vehicle needs deco	
 		if randomFunc(0,1)==1 then
@@ -857,7 +856,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		bd_processAddedArms()	
 	end	  	
 	
-	function bd_getSymDecoCoords()
+	bd_getSymDecoCoords = function ()
 	
 		if SymBodyConCoords and table.getn(SymBodyConCoords) > 0 then
 				socketA,socketB, socketSymNr = bd_getPairNrSymBodyConCoords()
@@ -1268,13 +1267,13 @@ function buildRandomizedBuilding(lBlocks, gridOffsetY,gridTable,freeSpotList, bl
 	end
 end
 --]]
-
+--> Check wether a value is within a limit
 function inLimits(value, llim,uplim)
 	if value >= llim and value <= uplim then return true end
 	return false
 end
 
-
+--> Creates a structure from regular shaped blocks
 function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
 	
 	
@@ -1383,8 +1382,8 @@ TreePiece={}
 EndPiece={}
 
 
-function slightVariation(deg,value)
-	return math.random(deg-value,value+deg)
+function slightVariation(degs,value)
+	return math.random(degs-value,value+degs)
 end
 
 detTurnStoreTable={}
@@ -2019,7 +2018,7 @@ gramarTable={
 	}		
 }
 
-
+--> Executes a Lindemeyer system and generates a random gramar tree
 function executeLindeMayerSystem( gramarTable,String, oldDeg, Degree , UpperLimit, recursionDepth,recursiveItterator,PredPiece)
 	
 	-- this keeps all recursive steps on the same level waiting for the last one - who releases the herd
@@ -2281,7 +2280,6 @@ fixFunctionTabel[2]= function (NUMBEROFPIECES)
 	return false
 end
 
-
 --Arcs
 fixFunctionTabel[3]= function (NUMBEROFPIECES)
 	Spring.Echo("fixFunctionTabel::FruitArcs")
@@ -2508,7 +2506,6 @@ fixFunctionTabel[6]=	function (NUMBEROFPIECES)
 	return false
 end
 
-
 -- Turn the whole plant into a Ground Ball Weed(s)
 fixFunctionTabel[7]=	function (NUMBEROFPIECES)
 	Spring.Echo("fixFunctionTabel::GroundBallWheed")
@@ -2536,9 +2533,7 @@ fixFunctionTabel[7]=	function (NUMBEROFPIECES)
 	return true
 end
 
-
-
--- RingWeed
+--RingWeed
 fixFunctionTabel[8]=	function (NUMBEROFPIECES)
 	Spring.Echo("fixFunctionTabel::RingWeed")
 	resetT(TreePiece)
@@ -2644,7 +2639,6 @@ fixFunctionTabel[10]=	function (NUMBEROFPIECES)
 	return true
 end
 
-
 --SpiralTree
 fixFunctionTabel[11]= function (NUMBEROFPIECES)
 	Spring.Echo("fixFunctionTabel::Spiraltree")
@@ -2702,7 +2696,6 @@ fixFunctionTabel[11]= function (NUMBEROFPIECES)
 	return true	
 end
 
-
 fixFunctionTabel[12]= function (NUMBEROFPIECES)
 	Spring.Echo("fixFunctionTabel::CircleTree")
 	showT(TreePiece)
@@ -2746,8 +2739,6 @@ fixFunctionTabel[12]= function (NUMBEROFPIECES)
 	
 	return true	
 end
-
-
 
 EndPointReservoir={}
 --free Form Function function
@@ -3127,6 +3118,65 @@ fixFunctionTabel[18]= function (NUMBEROFPIECES)
 	return false
 end
 
+--Float
+fixFunctionTabel[19]= function (NUMBEROFPIECES)
+	Spring.Echo("fixFunctionTabel::Floater")
+	
+	showT(TreePiece)
+	showT(EndPiece)
+	resetT(TreePiece)
+	
+	Deg={x=0,y=0,z=0}
+	
+	floaterStem=math.ceil(math.random(5,10))
+	for i=2,floaterStem do
+		movePieceToPiece(unitID,TreePiece[i],EndPiece[i-1],0)
+		Turn(TreePiece[i],x_axis,math.rad(Deg.x),0)
+		Turn(TreePiece[i],y_axis,math.rad(Deg.y),0)
+		Turn(TreePiece[i],z_axis,math.rad(Deg.z),0,true)
+		Deg.z=Deg.z+math.random(-5,5)
+	end
+	
+	--buildfloater
+	halfWay= ((#TreePiece -1+floaterStem )/2 )+floaterStem
+	half= ((#TreePiece -1+floaterStem )/2 )
+	for i=1+floaterStem,#TreePiece do
+		
+		ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[floaterStem])
+		ox=ox*-1
+		sanitizedI=i-floaterStem
+		if i > halfWay then sanitizedI =sanitizedI-halfWay end
+		
+		if i <= halfWay then
+			oz=oz+( i-floaterStem)*4
+		else
+			oz=oz+( i-floaterStem -half)*-4
+		end
+		
+		if i <= halfWay then
+			ox=ox+ 1.12^( i-floaterStem)
+			oy=oy+sanitizedI*3
+		else
+			ox=ox-(1.17^( i-floaterStem -half))		
+			oy=oy+sanitizedI*-3					
+		end
+		
+		Move(TreePiece[i],x_axis,ox,0)
+		Move(TreePiece[i],y_axis,oy,0)
+		Move(TreePiece[i],z_axis,oz,0,true)
+		
+		val=(i-floaterStem)/(half*2) *(360)
+		
+		
+		Turn(TreePiece[i],z_axis,(val),0)
+		
+		Deg.z=Deg.z+math.random(-5,5)
+	end
+	
+	
+	return true	
+end
+
 --Airroot
 fixFunctionTabel[20]= function (NUMBEROFPIECES)
 	Spring.Echo("fixFunctionTabel::Airroot")
@@ -3233,65 +3283,6 @@ fixFunctionTabel[21]= function (NUMBEROFPIECES)
 	end
 	
 	return false	
-end
-
---Float
-fixFunctionTabel[19]= function (NUMBEROFPIECES)
-	Spring.Echo("fixFunctionTabel::Floater")
-	
-	showT(TreePiece)
-	showT(EndPiece)
-	resetT(TreePiece)
-	
-	Deg={x=0,y=0,z=0}
-	
-	floaterStem=math.ceil(math.random(5,10))
-	for i=2,floaterStem do
-		movePieceToPiece(unitID,TreePiece[i],EndPiece[i-1],0)
-		Turn(TreePiece[i],x_axis,math.rad(Deg.x),0)
-		Turn(TreePiece[i],y_axis,math.rad(Deg.y),0)
-		Turn(TreePiece[i],z_axis,math.rad(Deg.z),0,true)
-		Deg.z=Deg.z+math.random(-5,5)
-	end
-	
-	--buildfloater
-	halfWay= ((#TreePiece -1+floaterStem )/2 )+floaterStem
-	half= ((#TreePiece -1+floaterStem )/2 )
-	for i=1+floaterStem,#TreePiece do
-		
-		ox,oy,oz=Spring.GetUnitPiecePosition(unitID,EndPiece[floaterStem])
-		ox=ox*-1
-		sanitizedI=i-floaterStem
-		if i > halfWay then sanitizedI =sanitizedI-halfWay end
-		
-		if i <= halfWay then
-			oz=oz+( i-floaterStem)*4
-		else
-			oz=oz+( i-floaterStem -half)*-4
-		end
-		
-		if i <= halfWay then
-			ox=ox+ 1.12^( i-floaterStem)
-			oy=oy+sanitizedI*3
-		else
-			ox=ox-(1.17^( i-floaterStem -half))		
-			oy=oy+sanitizedI*-3					
-		end
-		
-		Move(TreePiece[i],x_axis,ox,0)
-		Move(TreePiece[i],y_axis,oy,0)
-		Move(TreePiece[i],z_axis,oz,0,true)
-		
-		val=(i-floaterStem)/(half*2) *(360)
-		
-		
-		Turn(TreePiece[i],z_axis,(val),0)
-		
-		Deg.z=Deg.z+math.random(-5,5)
-	end
-	
-	
-	return true	
 end
 
 -- Helix tree
@@ -3419,7 +3410,8 @@ function buildLTree(center, NUMBEROFPIECES,Treename,Sensoryname,fixedFuncNumber)
 	EndPiece={}
 end
 
--- Plan is a 3dimensional boolean table
+--> Creates Voxelbuildings from a List of Pieces,
+--  Plan is a 3dimensional boolean table
 function piecesLego(Plan, Pieces, sizeT)
 xDim,yDim,zDim = table.getn(Plan),table.getn(Plan[1]),table.getn(Plan[1][1])
 

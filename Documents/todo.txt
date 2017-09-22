@@ -6,22 +6,14 @@ Zufallsbewegung - zurücksetzen in defaultposition
 
 DEBUG_JW:
 
-Debug ComEnderWeapons
-Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most of them)
-
-FIX:
+Debug ComEnderWeapons (Slicer, Shotgun, Throwgun, Tanglegun)
+Debug csniper->Ropephysix/Aim (also drastic reduce usage by pulling rope in for most of them)
 <> Fix Minimissions
-<> Comender fix Weapons:Slicer
 <> Strider extrapolate Kinematic Turns, Speed, Clamp Movement
 <> GUI
-<> CLvl3UnitFactory
-<> Fix Deny
-<> Add Rotting Tree - Decaying all Sides slightly entering the forrest
+
 
 >-> Spring Modifications
-
->>Test Feature Shader
-
 Tutorial on using Anarchids 
 exchanged z - y axis
 inverted rotations for y_axis

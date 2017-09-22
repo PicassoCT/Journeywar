@@ -442,7 +442,7 @@ function echoT(T, layer)
 					echoT(T[k], l + 1)
             end
         else
-            Concated = stringBuilder( math.max(1, l) - 1, " ") .. "|->"
+            Concated = stringBuilder( math.max(1, l) - 1, " ") .. "|-►"
 
             typus = type(T)
             if typus == "number" or typus == "string" then
@@ -495,16 +495,6 @@ function insertKeysIntoTable(T, T2)
     end
     return T2
 end
-
-function itterate2D(func, T )
-	for x= 1, #T do
-		for y= 1, #T[1] do
-			T[x][y]= func(T[x][y],x,y)
-		end
-	end
-return T
-end
-
 
 -->itterates over a table, executing a function with a argumentTable
 function elementWise(T, fooNction, ArghT)

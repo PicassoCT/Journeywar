@@ -1511,16 +1511,16 @@ Weapons[eFlareGun][ePrioLevl]= 5					-- Priority
 --ShotGun
 eShotGun=7
 Weapons[eShotGun]={}
-Weapons[eShotGun][eWeapnLvl]=0 				 --WeaponLevel 
-Weapons[eShotGun][eWeapnMax]=3 				 --WeaponMax 
-Weapons[eShotGun][eAimPiece]=cMagneto 
-Weapons[eShotGun][eShowFunc]=showShotgun 		 
-Weapons[eShotGun][eAmmoCost]= 1 	 			--AmmoCost 
-Weapons[eShotGun][eStabCost]= 0.35 		 --StabilityCost	 
-Weapons[eShotGun][ePrioLevl]= 4 		 	 --PriorityLevel the bigger the more Priority it Got
-Weapons[eShotGun][eCoolDown]= 2000 		 --Downtime
-Weapons[eShotGun][eRecoilMx]= 0.2 		 	 --RecoilMax	
-Weapons[eShotGun][10]= 0 		 	 --ScrapAmmonition 	
+Weapons[eShotGun][eWeapnLvl] = 0 				 --WeaponLevel 
+Weapons[eShotGun][eWeapnMax] = 3 				 --WeaponMax 
+Weapons[eShotGun][eAimPiece] = cMagneto 
+Weapons[eShotGun][eShowFunc] = showShotgun 		 
+Weapons[eShotGun][eAmmoCost] = 1 	 			--AmmoCost 
+Weapons[eShotGun][eStabCost] = 0.35 		 --StabilityCost	 
+Weapons[eShotGun][ePrioLevl] = 4 		 	 --PriorityLevel the bigger the more Priority it Got
+Weapons[eShotGun][eCoolDown] = 2000 		 --Downtime
+Weapons[eShotGun][eRecoilMx] = 0.2 		 	 --RecoilMax	
+Weapons[eShotGun][10] = 0 		 	 --ScrapAmmonition 	
 
 --<ShotTractorGun>--Markerweapon
 boolTractorWeaponActivated=false
@@ -3319,7 +3319,7 @@ end
 function script.AimWeapon7( heading ,pitch)	
 	
 	if Weapons[eShotGun][1]>0 and Weapons[eShotGun][10] > 0 and gotPriority(Weapons[eShotGun][7])==true then
-		releasePriority(Weapons[eShotGun][7])
+		releasePriority(Weapons[eShotGun][ePrioLevl])
 		return true
 	else
 		return false
