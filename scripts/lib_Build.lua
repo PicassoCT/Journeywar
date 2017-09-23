@@ -459,20 +459,22 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	bd_LinearExpandPiece = function (bodyNumber)
 		boolFirstOfPair = (bodyNumber % 2 == 0)
 		local BodyDice	= math.ceil(randomFunc(bodyNumber, math.min((bodyNumber +2),table.getn(BodyPieces))))
-		local BodyPiece	= BodyPieces[BodyDice]
 		if table.getn(LinBodyConCoords) < 1 then echo("LinearCoordinates running out"); return end
 		local SocketDice, Socket = bd_getRandomLinearSocket()
-		assert(BodyPiece)
-		capShow(BodyPiece)
-		
-		if not AllReadyUsedPieces[BodyPiece] and not AllReadyUsedCoords[SocketDice] then
-			randomVec=bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0)
-			echo("Bodypiece added linear"..getUnitPieceName(unitID, BodyPiece))
+		bodyPiece	= BodyPieces[BodyDice]
+		assert(bodyPiece~= nil)
 
-			bd_conPieceCon2Socket(Socket, BodyPiece, randomVec)
+		
+		if not AllReadyUsedPieces[bodyPiece] and not AllReadyUsedCoords[SocketDice] then
+			assert(bodyPiece)
+			capShow(bodyPiece)
+			randomVec=bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0)
+			echo("Bodypiece added linear"..getUnitPieceName(unitID, bodyPiece))
+
+			bd_conPieceCon2Socket(Socket, bodyPiece, randomVec)
 			bd_LinAddPieceSocketsToPool(BodyDice, true)	
 
-			bd_usedPiece(BodyPiece)			
+			bd_usedPiece(bodyPiece)			
 			bd_usedCoordsNumber(SocketDice)
 			
 			if boolFirstOfPair == true then return 2 else return 1 end
@@ -503,24 +505,20 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	bd_SymmetricExpand = function (pieceA, pieceB)
-		assert(pieceB)
-		assert(pieceA)
+
 		-->Align Piece A -- add all pieces as symmetrics
 		AlignPieceToPiece(unitID, ConCenter, pieceA, 0)
 		--> Align PiecB --add all pieces as symmetrics
-		echo("jw_Build:A")
 		if table.getn(SymBodyConCoords) > 0 then
 			--Spring.Echo("JW:SymetricExpand_1.5")
-			echo("jw_Build:B")
+			
 			socketCoordsA, socketCoordsB, socketSymNr = bd_getPairNrSymBodyConCoords()
 			if socketCoordsA then 
-			echo("jw_Build:C")
-				
 				if not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB]  then
-					echo("jw_Build:D")
-					assert(pieceB)
+					echo("Bodypiece added symmetrically"..getUnitPieceName(unitID, pieceA).."<->"..getUnitPieceName(unitID, pieceB))
 					assert(pieceA)
 					capShow(pieceA)
+					assert(pieceB)
 					capShow(pieceB)	
 					
 					dirVec= bd_makeDirVecBoundsFromDeg(90, 45, 180, 90, 90, 35)
@@ -685,7 +683,10 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		if AllReadyUsedPieces[Arm] == nil and AllReadyUsedCoords[SocketDice] == nil then
 			randomVec=bd_makeDirVecBoundsFromDeg(0,0,0,0,0,0,0)
+			
+			assert(Arm[1])
 			capShow(Arm[1])
+			assert(Arm[2])
 			capShow(Arm[2])
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket,Arm[1],randomVec)
@@ -727,7 +728,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end		
 	end
 	
-	bd_genericExpandLoop = function (config, Pieces, DoublePieces, linExpandFunc, doubleCheckFunc,symetricExpandFunc)
+	bd_genericExpandLoop = function (config, Pieces, DoublePieces, linExpandFunc, doubleCheckFunc,symetricExpandFunc, name)
+			echo ("Entering bd_genericExpandLoop:"..(name))
 			diceUpperBound = math.ceil(randomFunc(config.Min, #Pieces))
 			pieceNum = config.StartNum or 1
 			attempts = 0
@@ -804,7 +806,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 						Max = GG.VehiclePieceMax[teamID] or #BodyPieces , -- Maximum number of pieces
 						StartNum=1
 					 }		 
-		bd_genericExpandLoop(config, BodyPieces, DoubleBodyPieces, bd_LinearExpandPiece, bd_DoubleCheckPiece,bd_SymmetricExpand)
+		bd_genericExpandLoop(config, BodyPieces, DoubleBodyPieces, bd_LinearExpandPiece, bd_DoubleCheckPiece,bd_SymmetricExpand, "BodyPieces")
 	
 		--Arm	
 		--Add at least one symetric Pair
@@ -817,14 +819,14 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 						Max = #ArmPieces , -- Maximum number of pieces
 						StartNum=2
 					 }		 
-		bd_genericExpandLoop(config, ArmPieces, DoubleArmPieces, bd_LinearExpandArm, bd_DoubleCheckPiece,bd_SymetricExpandArm)
+		bd_genericExpandLoop(config, ArmPieces, DoubleArmPieces, bd_LinearExpandArm, bd_DoubleCheckPiece,bd_SymetricExpandArm, "Arms")
 		
 		--HEAD
 		local config = {Min = 1, -- Minimum number of pieces
 				Max = HeadMax , -- Maximum number of pieces
 				StartNum=0
 			 }		 
-		bd_genericExpandLoop(config, HeadPieces, DoubleHeadPieces, bd_LinearExpandHead, bd_DoubleCheckPiece,bd_SymmetricExpandHead)
+		bd_genericExpandLoop(config, HeadPieces, DoubleHeadPieces, bd_LinearExpandHead, bd_DoubleCheckPiece,bd_SymmetricExpandHead, "Heads")
 		
 		--Not every Vehicle needs deco	
 		if randomFunc(0,1)==1 then
@@ -919,6 +921,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		if AllReadyUsedPieces[Deco] == nil and AllReadyUsedCoords[Socket.Piece] == nil then
 			
 			randomVec=bd_makeDirVecBoundsFromDeg(90,45,0,0,0,0,offSet)
+			assert(Deco)
 			capShow(Deco)
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket.Piece,Deco,randomVec)
@@ -1192,7 +1195,7 @@ end
 
 
 function moveBlockAddPod(x,y,z, block)--nrFreeSpot,nrBlok,bloks)
-	assert(block)
+
 	MovePieceToPos(block,x,y,z,0)
 	d=math.floor(math.random(0,3))*90
 	Turn(block,y_axis,math.rad(d),0)
@@ -1237,7 +1240,7 @@ function buildRandomizedBuilding(lBlocks, gridOffsetY,gridTable,freeSpotList, bl
 		if pieceToMove then 
 			
 			--Show the block
-			capShow(Blocks[i])	
+			Show(Blocks[i])	
 			boolNotPlace=true		
 			
 			
@@ -1254,12 +1257,12 @@ function buildRandomizedBuilding(lBlocks, gridOffsetY,gridTable,freeSpotList, bl
 					
 					
 					moveBlockAddPod(	
-					freeSpotList[randIndex].x * blocksize ,
-					freeSpotList[randIndex].y * blocksize + orgOffSetY ,
-					freeSpotList[randIndex].z * blocksize ,
-					pieceToMove
-					)
-					capShow(pieceToMove)
+									freeSpotList[randIndex].x * blocksize ,
+									freeSpotList[randIndex].y * blocksize + orgOffSetY ,
+									freeSpotList[randIndex].z * blocksize ,
+									pieceToMove
+									)
+					Show(pieceToMove)
 					--PostProcessPosition
 					posPostProcessFunc(pieceToMove,freeSpotList[randIndex].x,freeSpotList[randIndex].y,freeSpotList[randIndex].z)
 					gridTable[index.x][index.z][index.y]= false

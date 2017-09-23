@@ -58,7 +58,9 @@ end
 
 --> Encapsulates the Show function for easier debugging
 function capShow(l_Num)
-	assert(type(l_Num)=="number")
+	assert(l_Num)
+	assertNum(l_Num)
+
 	Show(l_Num)
 end
 
