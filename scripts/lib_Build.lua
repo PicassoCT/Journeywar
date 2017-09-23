@@ -459,20 +459,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		if table.getn(LinBodyConCoords) < 1 then echo("LinearCoordinates running out"); return end
 		local SocketDice, Socket = bd_getRandomLinearSocket()
 		bodyPiece	= BodyPieces[BodyDice]
-<<<<<<< fa3cc6bc35b920487a8758d1ef2de47b0970e2e2
-		assert(bodyPiece~= nil)
 
-		
-		if not AllReadyUsedPieces[bodyPiece] and not AllReadyUsedCoords[SocketDice] then
-			assert(bodyPiece)
-			capShow(bodyPiece)
-			randomVec=bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0)
-			echo("Bodypiece added linear"..getUnitPieceName(unitID, bodyPiece))
-
-=======
-		assert(SocketDice)
-
-		
 		if bodyPiece and SocketDice and Socket and not AllReadyUsedPieces[bodyPiece] and not AllReadyUsedCoords[SocketDice] then
 			echo("Bodypiece added linear "..getUnitPieceName(unitID, bodyPiece))
 		
@@ -480,7 +467,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			capShow(bodyPiece)
 			randomVec=bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0)
 			
->>>>>>> Version{118.0}
 			bd_conPieceCon2Socket(Socket, bodyPiece, randomVec)
 			bd_LinAddPieceSocketsToPool(BodyDice, true)	
 
@@ -691,21 +677,13 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		local SocketDice, Socket = bd_getRandomLinearSocket()
 		
-<<<<<<< fa3cc6bc35b920487a8758d1ef2de47b0970e2e2
-		if AllReadyUsedPieces[Arm] == nil and AllReadyUsedCoords[SocketDice] == nil then
-			randomVec=bd_makeDirVecBoundsFromDeg(0,0,0,0,0,0,0)
-			
-			assert(Arm[1])
-			capShow(Arm[1])
-			assert(Arm[2])
-			capShow(Arm[2])
-=======
+
 		if AllReadyUsedPieces[Arm[1]] == nil and AllReadyUsedCoords[SocketDice] == nil then
 			randomVec=bd_makeDirVecBoundsFromDeg(0,0,0,0,0,0,0)			
 			assert(Arm[1])
 			showT(ArmShowTable[Arm[1]])
 		
->>>>>>> Version{118.0}
+
 			assert(type(Socket)=="table")
 			bd_conPieceCon2Socket(Socket,Arm[1],randomVec)
 			bd_usedPiece(Arm[1])
@@ -747,11 +725,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end		
 	end
 	
-<<<<<<< fa3cc6bc35b920487a8758d1ef2de47b0970e2e2
-	bd_genericExpandLoop = function (config, Pieces, DoublePieces, linExpandFunc, doubleCheckFunc,symetricExpandFunc, name)
-=======
+
 	bd_genericExpandLoop = function (config, Pieces, DoublePieces, linExpandFunc, doubleCheckFunc,symetricExpandFunc, name, skipAddFun)
->>>>>>> Version{118.0}
+
 			echo ("Entering bd_genericExpandLoop:"..(name))
 			diceUpperBound = math.ceil(randomFunc(config.Min, #Pieces))
 			pieceNum = config.StartNum or 1
@@ -817,11 +793,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 						Limit = SymConCoordLimit
 					 }		 
 		bd_genericExpandLoop(config, BodyPieces, DoubleBodyPieces, bd_LinearExpandPiece, bd_DoubleCheckPiece,bd_SymmetricExpand, "BodyPieces")
-<<<<<<< fa3cc6bc35b920487a8758d1ef2de47b0970e2e2
-	
-=======
 
->>>>>>> Version{118.0}
 		--Arm	
 		--Add at least one symetric Pair
 		echoT(DoubleArmPieces)
@@ -832,17 +804,14 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 						StartNum= bd_SymetricExpandArm(pieceA, pieceB),
 						Limit = SymConCoordLimit
 					 }		 
-<<<<<<< fa3cc6bc35b920487a8758d1ef2de47b0970e2e2
-		bd_genericExpandLoop(config, ArmPieces, DoubleArmPieces, bd_LinearExpandArm, bd_DoubleCheckPiece,bd_SymetricExpandArm, "Arms")
-=======
-					 
+
+				 
 
 		armPieces = subSetT(ArmPieces,1)	
 		skipArmFunction = function() return math.random(0,1) end
 					 
 		bd_genericExpandLoop(config, armPieces, DoubleArmPieces, bd_LinearExpandArm, bd_DoubleCheckPiece,bd_SymetricExpandArm, "Arms", skipArmFunction)
->>>>>>> Version{118.0}
-		
+
 	
 		--HEAD
 		local config = {Min = 1, -- Minimum number of pieces
