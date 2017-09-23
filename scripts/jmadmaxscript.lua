@@ -32,16 +32,15 @@ function confVehicle()
     resetT(pieceTable)
 	--	hideT(pieceNameTable)
     Sleep(100)
-    StartThread(buildVehicle, center, 0, 7, 28, 4, 36, 0, 28 )	
+    buildVehicle( center, 8, 8, 28, 4, 36, 16, 28 )	
+	 Move(center,y_axis,50,0)
 end
 
 function script.Create()
 	pieceNameTable = makePiecesTablesByNameGroups(false, true)
 
     --DEBUG
-    ux, uy, uz = Spring.GetUnitPosition(unitID)
-	Spring.MoveCtrl.Enable(unitID,true)
-	Spring.MoveCtrl.SetPosition(unitID, ux, uy+70, uz)
+
 	
 	
 	StartThread(confVehicle)

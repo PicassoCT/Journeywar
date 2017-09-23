@@ -117,8 +117,6 @@ else
         end
     end
 
-
-
     function gadget:Initialize()
         gadgetHandler:AddSyncAction("lupsProjectiles_AddProjectile", AddProjectile)
         gadgetHandler:AddSyncAction("lupsProjectiles_RemoveProjectile", RemoveProjectile)
@@ -129,7 +127,6 @@ else
         gadgetHandler:RemoveSyncAction("lupsProjectiles_AddProjectile")
         gadgetHandler:RemoveSyncAction("lupsProjectiles_RemoveProjectile")
     end
-
     --------------------------------------------------------------------------------
     --------------------------------------------------------------------------------
 end

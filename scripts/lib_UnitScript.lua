@@ -133,6 +133,15 @@ function showT(l_tableName, l_lowLimit, l_upLimit, l_delay)
     end
 end
 
+function subSetT(T, elementToSelect)
+reT= {}
+
+	for i=1, #T do
+		reT[#reT+1] = T[i][elementToSelect]
+	end
+return reT
+end
+
 --> safeAccessTable a table three layers deep on any key/index
 function safeAccessTable(T, a, b, c)
     if a and not T[a] then T[a] = {} end
