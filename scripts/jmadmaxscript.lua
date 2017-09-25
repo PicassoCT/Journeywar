@@ -28,20 +28,23 @@ end
 local boolWalk = false
 local boolAttack = false
 ------------------------------------------------------------------------------------ UNITCODE
+
+			
 function confVehicle()
-    resetT(pieceTable)
-	--	hideT(pieceNameTable)
-    Sleep(100)
-    buildVehicle( center, 8, 8, 28, 4, 36, 16, 28 )	
-	 Move(center,y_axis,50,0)
+	while true do
+		resetT(pieceTable)
+		--	hideT(pieceNameTable)
+		Sleep(100)
+		weaponSloT =   buildVehicle( center, 8, 8, 28, 4, 36, 16, 28 )	
+		Move(center,y_axis,50,0)
+
+		Sleep(250000 + math.random(100,1000))
+		Move(center,y_axis,0,0)
+	end
 end
 
 function script.Create()
 	pieceNameTable = makePiecesTablesByNameGroups(false, true)
-
-    --DEBUG
-
-	
 	
 	StartThread(confVehicle)
 end
