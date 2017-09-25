@@ -542,6 +542,45 @@ function countT(T)
     return it
 end
 
+function sortDictKeysNumeric(T)
+	local sorT={}
+
+	for k,v in pairs(T) do
+		for i=1,#sorT do
+			if k > sorT[i] then
+			table.insert(sortT,i, k)
+			break
+			end
+		end
+	end
+	return sortT
+end
+
+
+--> find in intervallTable, returns the lower, upper Entry,  a fractionnumber of upper and lower entry
+function findInIntervall(T, discreteValue)
+
+numericSortedKeys = sortDictKeysNumeric(T)
+upperVal= T[numericSortedKeys[#numericSortedKeys]]
+lowerVal= T[numericSortedKeys[1]]
+
+	for i=1,#numericSortedKeys do
+		key, _ = numericSortedKeys[i], T[numericSortedKeys[i]]
+		
+	if discreteValue <= key  then
+		upperVal = key
+	end
+	
+		if discreteValue > key then -- search is done
+			lowerVal= key
+			disLow, disUp= discreteValue - lowerVal, upperVal - discreteValue
+			fraction = disLow/(disLow + disUp)
+			return T[lowerVal], T[upperVal], mix( T[lowerVal], T[upperVal], fraction)
+		end
+	end
+end
+
+
 
 --> Join Operation on two tables
 join = function(id, argT)
@@ -980,7 +1019,7 @@ function getRandomElementRing(T)
 	assert(true==false)
 end
 
--->prints a table in steps
+-->prints a numeric table in steps
 function printT(tab, size, step)
     maxdigit = getDigits(tab[size / 2][size / 2])
     step = step or (size / 12)
@@ -1029,9 +1068,9 @@ function echo2DMap(tmap, squareSideDimension, valueSignMap)
     step = 8
 
     valueSignMap = valueSignMap or {
-        [0] = " 0 ",
-        [false] = " � ",
-        [true] = " T "
+        [0] = " ҉ ",
+        [false] = " ● ",
+        [true] = "   "
     }
 
     if squareSideDimension ~= nil and squareSideDimension < 128 then step = 1 end
