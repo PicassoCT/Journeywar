@@ -31,12 +31,29 @@ function sanitizeRandom(lowerBound,UpperBound)
 -- for example head/cockpit parts search for front/topmost sockets
 -- 
 function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Max, DecoD,Body_Max, lsymDegFilterFunction, llinDegFilterFunction, lMinPieces, lrandomFunction, Def_Max,lsymDegDecoFilterFunction, llinDegDecoFilterFunction)
+	
+	--Settings
 	SYMMETRIC = true
 	LINEAR = false
+	totalAttemptsMax= 20	
+	
+	--Define the max numbers of each Piece Category
+	DoubleMax=Body_Double_Max 
+	BodyMax=Body_Max or 22
+	ArmMax= Arm_Max or 8
+	ArmDouble=Leg_Max or 4 --arms that can be used for linear expansion
+	MinPieces=lMinPieces or 10
+	HeadMax= Head_Max or 4
+	DefMax = Def_Max or 10
+	DecoMax= lDeco_Max or 10
+	DecoDouble= DecoD or 29
+	
 	ConCenter=piece("ConCenter")
-	Hide(ConCenter)
+
 	ConLinPiece={}
 	ConSynPiece={}
+	
+	-- Function to Register built in Weapons
 	RegFunc =  function()end
 
 	--Can be via lrandom Function replaced with a  determinstic function
@@ -51,10 +68,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	--Contains enumerated the points of a piece
 	SymConCoord={}
 	LinConCoord={}
+	
 	SymPairArms={}
 	LinArms={}
 	AllDynamicSockets={}
-	reset(ConCenter)
+
 	
 	for i=1,4 do
 		dynString="LinCon"..i
@@ -63,9 +81,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		LinConCoord[i]=bd_makePointFromPiece(ConLinPiece[i])
 	end	
 	ConSynPiece[1]= piece"SymCon1"
-	assert(ConSynPiece[1])
 	ConSynPiece[2]= piece"SymCon2"
-	assert(ConSynPiece[2])
 	Hide(ConSynPiece[1])
 	Hide(ConSynPiece[2])
 	
@@ -81,20 +97,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	--all the yet unused BodyPieces
 	BodyPieces={}
 	DoubleBodyPieces={}
-	
 	ConCoords={}
-	
-	--Define the max numbers of each Piece Category
-	DoubleMax=Body_Double_Max 
-	BodyMax=Body_Max or 22
-	ArmMax= Arm_Max or 8
-	ArmDouble=Leg_Max or 4 --arms that can be used for linear expansion
-	MinPieces=lMinPieces or 10
-	HeadMax= Head_Max or 4
-	DefMax = Def_Max or 10
-	DecoMax= lDeco_Max or 35
-	DecoDouble= DecoD or 29
-	
+	SymBodyConCoords={}
+	LinBodyConCoords={}
 	
 	--Connection pieces for linear Connections only
 	for i=1,BodyMax,1 do	
@@ -139,7 +144,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	--HEAD
 	HeadPieces={}
-	
 	DoubleHeadPieces={}
 	
 	for i=1,HeadMax,1 do
@@ -204,8 +208,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	-------------------------------------------------------------------EndOfPieceDelcarations-----------
 	--Contains all Connections exposed by allready used BodyParts 
 	--every added Symetric ConnectionPoint is parallel such as [1] <-> [2] form a symetric pair
-	SymBodyConCoords={}
-	LinBodyConCoords={}
 	
 	--> Turns a Piece into a random Direction
 	bd_turnPieceInRandDir = function (linPiece,dirVec,SymSideVal,llinDegFilterFunction,lsymDegFilterFunction,symPiece)
@@ -261,7 +263,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			SymSideVal=-1
 		end
 		assert(Pie)
-		capShow(Pie)
+		Show(Pie)
 		Move(Pie,x_axis,x,0,true)
 		Move(Pie,z_axis,z,0,true)
 		Move(Pie,y_axis,y,0,true)
@@ -277,7 +279,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		if boolLeftRight and boolLeftRight==true then SymSideVal=-1 end
 		
 		assert(PieceToBind)
-		capShow(PieceToBind)
+		Show(PieceToBind)
 		
 		Move(PieceToBind,x_axis,x,0,true)
 		Move(PieceToBind,z_axis,z,0,true)
@@ -442,6 +444,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	bd_init = function ()
+		Hide(ConCenter)
+		reset(ConCenter)
+		
 		hideAllPieces(unitID)
 		Move(BodyPieces[1],x_axis, 0, 0, true)	
 		Move(BodyPieces[1],y_axis, 0, 0, true)	
@@ -449,7 +454,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		bd_turnPieceInRandDir(BodyPieces[1],bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0),1, linDegFilterFunction, symDegFilterFunction)
 		
 		-- Add Initial Piece
-		capShow(BodyPieces[1])
+		Show(BodyPieces[1])
 		bd_LinAddPieceSocketsToPool(1, true)
 		bd_usedPiece(BodyPieces[1])
 	end
@@ -506,7 +511,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			echo("Bodypiece added linear "..getUnitPieceName(unitID, bodyPiece))
 		
 			assert(bodyPiece)
-			capShow(bodyPiece)
+			Show(bodyPiece)
 			randomVec=bd_makeDirVecBoundsFromDeg(180, 180, 0, 0, 0, 0)
 			
 			bd_conPieceCon2Socket(Socket, bodyPiece, randomVec)
@@ -553,8 +558,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			socketCoordsA, socketCoordsB, socketSymNr = bd_getPairNrSymBodyConCoords()
 			if socketCoordsA then 
 				if not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB]  then
-					capShow(pieceA)
-					capShow(pieceB)	
+					Show(pieceA)
+					Show(pieceB)	
 					
 					dirVec= bd_makeDirVecBoundsFromDeg(90, 45, 180, 90, 90, 35)
 					bd_turnPieceInRandDir(pieceA, dirVec, 1, linDegFilterFunction, symDegFilterFunction, pieceB)
@@ -620,17 +625,18 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	bd_getSymHeadCon = function ()
 
-		highFrontMost = makeVector(-math.huge,-math.huge,-math.huge)
-		highFrontMostSym = highFrontMost
+		highFrontMost = SymBodyConCoords[1][1]
+		highFrontMostSym = SymBodyConCoords[1][2]
 		number= 1
 		boolFoundSomething = false 
 		
 		for i=1, #SymBodyConCoords do
 			if not AllReadyUsedSymetricCoords[i] then 
 				local firstPair = SymBodyConCoords[i][1]
-				if firstPair.z > highFrontMost.value and firstPair.z > highest then
-					highFrontMost = firstPair[1]
-					highFrontMostSym = firstPair[2]
+				
+				if firstPair.z > highFrontMost.z and firstPair.y > highFrontMost.y then
+					highFrontMost = firstPair
+					highFrontMostSym = SymBodyConCoords[i][2]
 					number = i
 					boolFoundSomething = true
 				end
@@ -650,7 +656,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			randomVec=bd_makeDirVecBoundsFromDeg(0,25,0,0,0,0,offSetX)
 			assert(Head)
 			if DependentShowTable[Head] then showT(DependentShowTable[Head]) end
-			capShow(Head)
+			Show(Head)
 			bd_conPieceCon2Socket(Socket,Head,randomVec)
 			bd_usedPiece(Head)
 			bd_usedCoordsNumber(nr, LINEAR)
@@ -667,9 +673,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			socketA,socketB, nr =bd_getSymHeadCon()			
 			
 			if socketA and socketB and not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB] then
-				capShow(pieceA)
+				Show(pieceA)
 				if DependentShowTable[pieceA] then showT(DependentShowTable[pieceA]) end
-				capShow(pieceB)	
+				Show(pieceB)	
 				if DependentShowTable[pieceB] then showT(DependentShowTable[pieceB]) end
 				
 				dirVec=bd_makeDirVecBoundsFromDeg(0,25,90,45,0,0,0)
@@ -760,10 +766,9 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			SymLimit = randomFunc(1,LocalMax)
 			LinLimit = randomFunc(1,LocalMax)
 			skipAddFunc = skipAddFun or function() return 0 end
-			function delMeBoolToString(bool) if bool==true then return "true"; else return "false"; end ;end
-			echo("	while "..pieceNum.." < "..diceUpperBound .." and ".. delMeBoolToString( bd_existsParts(Pieces)) .." and "..attempts .." < "..(diceUpperBound ).. "do")
-			
-			while pieceNum < diceUpperBound and bd_existsParts(Pieces) and attempts < diceUpperBound  do
+	
+			--Debug("while pieceNum < diceUpperBound and bd_existsParts(Pieces) and attempts < totalAttemptsMax  do")
+			while pieceNum < diceUpperBound and bd_existsParts(Pieces) and attempts < totalAttemptsMax  do
 				Sleep(1)
 				valueToAdd = 0
 				-- while there exist BodyParts2 and numberOfBodyPiecesUsed < bodydice
@@ -777,7 +782,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 					-- if true then roll a dice for linear or symetric expansion (-maybe add linear rings later)
 					pieceA, pieceB = doubleCheckFunc(DoublePieces)
 					
-					if pieceA and pieceB and config.Limit < randomFunc(1,LocalMax)  then -- 
+					if pieceA and pieceB and  randomFunc(1,LocalMax) > LocalMax/2 then -- 
 						pieceNum = inc(pieceNum, symetricExpandFunc(pieceA, pieceB, registerFun) or 0)
 						echo((config.name).." added symmetrically "..getUnitPieceName(unitID, pieceA).."<->"..getUnitPieceName(unitID, pieceB))
 					else -- apply remainging BodyParts linear
@@ -791,7 +796,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			
 	end
 	
-	bd_buildRandomizedVehicle = function ()
+	bd_marshallVehicleGeneration = function ()
 		--Nr of Pieces Used to build this VaryFoo
 		bodydice=randomFunc(#BodyPieces/2,#BodyPieces)
 		teamID=Spring.GetUnitTeam(unitID)
@@ -815,8 +820,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		
 		LinConCoordLimit,SymConCoordLimit = bd_rollDice(Max)
 
-		
-		
 		local config = {Min = 4, -- Minimum number of pieces
 						Max = GG.VehiclePieceMax[teamID] or #BodyPieces , -- Maximum number of pieces
 						StartNum=1,
@@ -838,14 +841,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 						name= "Arms"
 					 }		 
 
-				 
-
 		armPieces = subSetT(ArmPieces,1)	
 		skipArmFunction = function() return math.random(0,1) end
 					 
 		bd_genericExpandLoop(config, armPieces, DoubleArmPieces, bd_LinearExpandArm, bd_DoubleCheckPiece,bd_SymetricExpandArm, skipArmFunction, RegFunc)
 
-	
 		--HEAD
 		local config = {Min = 2, -- Minimum number of pieces
 				Max = HeadMax , -- Maximum number of pieces
@@ -874,6 +874,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 		
 			decodice=math.ceil(randomFunc(1,DecoMax))
+			intanceMaxDeco= math.random(2,DecoMax/2)
 			decoNum=0
 			oldDecoNum=0
 			decoCounter=0
@@ -882,7 +883,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			
 			LinConCoordLimit,SymConCoordLimit=bd_rollDice(Max)
 			
-			while decoCounter < DecoMax and decoNum < decodice and bd_existsParts(HeadPieces)==true do
+			while decoCounter < intanceMaxDeco and decoNum < decodice and bd_existsParts(HeadPieces)==true do
 				
 				if LinConCoordLimit < randomFunc(1,Max) then
 					Spring.Echo("libbuild::Linear_decoration")
@@ -903,9 +904,6 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 				oldDecoNum=decoNum
 			end		
 	
-		
-		bd_alignLegsToGround()
-		bd_processAddedArms()	
 	end	  	
 	
 	bd_getSymDecoCoords = function ()
@@ -960,7 +958,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		if AllReadyUsedPieces[Deco] == nil and AllReadyUsedCoords[SocketNr] == nil then
 			
 			randomVec=bd_makeDirVecBoundsFromDeg(90,45,0,0,0,0,offSet)
-			capShow(Deco)
+			Show(Deco)
 			if DependentShowTable[Deco] then showT(DependentShowTable[Deco])end
 
 			bd_conPieceCon2Socket(Socket,Deco,randomVec)
@@ -980,8 +978,8 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			
 			if socketA and socketB and not AllReadyUsedPieces[pieceA] and not AllReadyUsedPieces[pieceB] then
 
-				capShow(pieceA)
-				capShow(pieceB)	
+				Show(pieceA)
+				Show(pieceB)	
 				
 				dirVec = bd_makeDirVecBoundsFromDeg(180,180,180,180,180,180)
 				
@@ -1098,7 +1096,11 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	bd_initVehicleCreation()
 	
-	bd_buildRandomizedVehicle()	
+	bd_marshallVehicleGeneration()
+	
+	bd_alignLegsToGround()
+	
+	bd_processAddedArms()		
 	
 	return ActualActiveWeapons
 end
@@ -1234,7 +1236,7 @@ function moveBlockAddPod(x,y,z, block)--nrFreeSpot,nrBlok,bloks)
 	MovePieceToPos(block,x,y,z,0)
 	d=math.floor(math.random(0,3))*90
 	Turn(block,y_axis,math.rad(d),0)
-	capShow(block)
+	Show(block)
 	
 end
 
@@ -2100,7 +2102,7 @@ function executeLindeMayerSystem( gramarTable,String, oldDeg, Degree , UpperLimi
 	
 	--Move Piece to Position
 	
-	capShow(TreePiece[hit])
+	Show(TreePiece[hit])
 	
 	Move(TreePiece[hit],x_axis,ox,0)
 	Move(TreePiece[hit],y_axis,oy,0)
@@ -2247,7 +2249,7 @@ function placeFollowUps(TreePiece, X,Z,sizeOfPlant,maxDist,i)
 		
 		--Move Piece to Position
 		
-		capShow(TreePiece[ok])
+		Show(TreePiece[ok])
 		
 		Move(TreePiece[ok],x_axis,ox,0)
 		Move(TreePiece[ok],y_axis,oy,0)
@@ -2306,7 +2308,7 @@ fixFunctionTabel[2]= function (NUMBEROFPIECES)
 	
 	
 	for i=1,#TreePiece-sizeOfPlant,sizeOfPlant do
-		capShow(TreePiece[i])
+		Show(TreePiece[i])
 		mx,mz=0,0 		
 		if math.random(1,4)==2 then
 			mx,mz=math.random(-1*maxDist,maxDist),math.random(-1*maxDist,maxDist)
@@ -2388,7 +2390,7 @@ fixFunctionTabel[4]= function (NUMBEROFPIECES)
 	
 	
 	for i=1,#TreePiece-sizeOfPlant,sizeOfPlant do
-		capShow(TreePiece[i])
+		Show(TreePiece[i])
 		mx,mz=math.random(-35,35),math.random(-34,34)
 		if not TreePiece[math.min(i,#TreePiece)] then return end
 		moveUnitPieceToGroundPos(unitID,TreePiece[math.min(i,#TreePiece)],mx,mz,0,5)		
@@ -2454,7 +2456,7 @@ fixFunctionTabel[5]= function (NUMBEROFPIECES)
 	while relativeIndex > 1 do
 		for i=1, relativeIndex,1 do
 			if TreePiece[totalIndex+i] then
-				capShow(TreePiece[totalIndex+i])
+				Show(TreePiece[totalIndex+i])
 				Move(TreePiece[totalIndex+i],x_axis,PrevPosTable[i].x,0)
 				Move(TreePiece[totalIndex+i],y_axis,PrevPosTable[i].y,0)
 				Move(TreePiece[totalIndex+i],z_axis,PrevPosTable[i].z,0,true)
@@ -3302,7 +3304,7 @@ fixFunctionTabel[21]= function (NUMBEROFPIECES)
 		x,y= RotationMatrice (0,Radius, i*DegStep)
 		moveUnitPieceToGroundPos(unitID,TreePiece[i],x,y,0,0)
 		ContinuosRing[i]=EndPiece[i]
-		capShow(TreePiece[i])
+		Show(TreePiece[i])
 	end
 	
 	for i=PiecesPerLayer+1, #TreePiece,1 do
@@ -3403,7 +3405,7 @@ function buildLTree(center, NUMBEROFPIECES,Treename,Sensoryname,fixedFuncNumber)
 		end
 		globalStep=1
 		
-		capShow(TreePiece[1])
+		Show(TreePiece[1])
 		executeLindeMayerSystem( 
 		gramarTable[dice],
 		gramarTable[dice].startElement,									

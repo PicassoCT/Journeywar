@@ -1,7 +1,38 @@
+initializeRaiderWeapons = function ()
+	local T= {}
+		
+	for i=1, 11 do
+		if i ==3 or i== 4 then
+			T[i] = {
+				name = "raiderarrow",
+				onlyTargetCategory = [[ LAND ]],
+			}
+		
+		elseif i == 8 or i==9 then
+			T[i] = {
+				name = "raiderflak",
+				onlyTargetCategory = [[ AIR ]],
+			}
+			elseif i >9  then
+			T[i] = {
+				name = "raidercannon",
+				onlyTargetCategory = [[ LAND ]],
+			}
+		
+		else
+		T[i] = {
+				name = "raidermg",
+				onlyTargetCategory = [[ LAND ]],
+			}		
+		end
+	end
+		return T
+end
+
 local unitName = "jmadmax"
 local unitDef = {
-	name = "Rebells",
-	Description = " bad to the bone",
+	name = "Rebellraiders",
+	Description = " rowdily ravaging in Revenge",
 	objectName = "jmadMax.s3o",
 	script = "jmadmaxscript.lua",
 	buildPic = "placeholderj.png",
@@ -13,12 +44,13 @@ local unitDef = {
 	maxDamage = 50,
 	idleAutoHeal = 2,
 	--Movement
-	Acceleration = 3,
+	Acceleration = 1,
 	BrakeRate = 0.3,
 	FootprintX = 1,
 	FootprintZ = 1,
 	MaxSlope = 15,
-	MaxVelocity = 1.4,
+	
+	MaxVelocity = 4.4,
 	MaxWaterDepth = 2000,
 	MovementClass = "Default2x2",
 	TurnRate = 450,
@@ -33,19 +65,18 @@ local unitDef = {
 	CanStop = true,
 	LeaveTracks = false, 
 
+
 	   
-		weapons = {
-			[1]={name  = "jvaryfoomark",
-		onlyTargetCategory = [[ LAND ]],
-		},
+		weapons = initializeRaiderWeapons(),
 		
-	},
+		
 
 	Category = [[LAND]],
 	  customParams = {},
 	 sfxtypes = {
 		explosiongenerators = {
 				"custom:bloodspray",
+				"custom:dirt",
 							  },
 		
 					},

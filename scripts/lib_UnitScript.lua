@@ -164,38 +164,76 @@ function split(l_div, l_str)
     return arr
 end
 
---> 
+function stringSplit(String, Seperator)
+  if Seperator == nil then  sep = "%s"    end
+        local t={} ; i=1
+        for str in string.gmatch(String, "([^"..sep.."]+)") do
+                t[i] = str
+                i = i + 1
+        end
+        return t
+end
+
+--> Creates Global Tables from a access string e.g. GG.MyGlobalTable.HasASubTable.WithA[Key].ThatHoldsATable
 function createGlobalTableFromAcessString(FormatString, assignedValue, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
-    if loadstring(FormatString) ~= nil then FormatString = FormatString .. "=" .. assignedValue; loadstring(FormatString) return end
+    local PreFix = "GG."
+	local formatStringFunction = loadstring(PreFix..FormatString)
+	
+	-- test for allread existing table
+	boolAccessSuccessfull = false
+	boolTestDone=false
+	attempts= 0
+	
+	StartThread(function ()	
+					if formatStringFunction()  then
+						loadstring(PreFix..FormatString.." = "..toString(assignedValue))(); 
+						boolAccessSuccessfull= true 
+					end
+				boolTestDone= false
+				end
+				)
+				
+	repeat
+		Sleep(1)
+		attempts= inc(attempts)
+	until boolTestDone == true or attempts > 3
+	
+	if boolAccessSuccessfull == true then return end
+	
+	
+	
+
     --SplitByDot
-    local SubTables = {}
-    --split that string
-    local SubT = string.split(FormatString, ".")
-    local Appendix = "GG."
+
+    local SubTables = stringSplit(FormatString, ".")
+
     boolAvoidFutureChecks = false
     for i = 1, #SubT do
-        if not SubT[i] == "GG" then
-            SubT = string.gsub(SubT, ".")
-            ExtracedIndex = string.match(SubT, "[", "]")
-            ExtractedTable = string.gsub(SubT, ExtracedIndex, "")
+		local subTableString = SubT[i]
+        if SubT[i] ~= "GG" then
+            SubT[i] = string.gsub(SubT[i], ".")
+            ExtracedIndex = string.match(SubT[i], "[", "]")
+            ExtractedTable = string.gsub(SubT[i], ExtracedIndex, "")
             Terminator = "."
             if ExtractedTable then
-                if boolAvoidFutureChecks == true or not loadstring(Appendix .. ExtractedTable) then
-                    loadstring(Appendix .. ExtractedTable .. "= {}")
+                if boolAvoidFutureChecks == true or not loadstring(PreFix .. ExtractedTable)() then
+                    loadstring(PreFix .. ExtractedTable .. "= {}")
                     boolAvoidFutureChecks = true
                 end
             else ExtractedTable = ""; Terminator = ""
             end
-            if boolAvoidFutureChecks == true or ExtracedIndex and not loadstring(Appendix .. ExtractedTable .. ExtracedIndex) then
-                loadstring(Appendix .. ExtractedTable .. ExtracedIndex .. "={}")
+            if boolAvoidFutureChecks == true or ExtracedIndex and not loadstring(PreFix .. ExtractedTable .. ExtracedIndex)() then
+                loadstring(PreFix .. ExtractedTable .. ExtracedIndex .. "={}")()
             end
 
-            Appendix = Appendix .. ExtractedTable .. ExtracedIndex .. Terminator
+            PreFix = PreFix .. ExtractedTable .. ExtracedIndex .. Terminator
         end
     end
-    loadstring(Appendix .. "=" .. assignedValue)
-    return loadstring(Appendix .. "==" .. asignedValue)
+	
+	
+    loadstring(PreFix .. "=" .. assignedValue)()
+    return loadstring(PreFix .. "==" .. asignedValue)()
 end
 
 --> Creates a Table and initializes it with default value
@@ -466,6 +504,29 @@ function echoT(T, layer)
             end
         end
     end
+end
+
+-->Generic to String
+function toString(element)
+typeE = type(element)
+
+if typeE == "boolean" then return boolToString(element) end
+if typeE == "number" then return ""..element end
+if typeE == "string" then return element end
+if typeE == "table" then return tableToString(element) end
+
+
+end
+
+function tableToString(tab)
+PostFix = "}"
+PreFix = "{"
+conCat=""..PreFix
+	for key, value in pairs(tab) do
+		conCat= conCat.."["..toString(key).."] ="..toString(value)..","
+	end
+
+return conCat..PostFix
 end
 
 --> Converts a boolean to a string value
@@ -1039,6 +1100,62 @@ function printT(tab, size, step)
         Spring.Echo(str)
     end
     Spring.Echo(stringBuilder(size, "_") .. "\n")
+end
+
+--> Takes a line of code and displays it with values
+function Debug(LineOfCode)
+tokkens = stringSplit(LineOfCode)
+conCatResult = ""
+local langKeyWords ={	["and"]=true, 
+				["break"]=true,  
+				["do"]=true, 
+				["else"]=true,  
+				["elseif"]=true,
+				["end"]=true, 
+				["false"]=true,  
+				["for"]=true,  
+				["function"]=true,
+				["if"]=true,
+				["in"]=true,
+				["local"]=true, 
+				["nil"]=true,
+				["not"]=true,
+				["or"]=true,
+				["repeat"]=true,
+				["return"]=true, 
+				["then"]=true,
+				["true"]=true,
+				["until"]=true, 
+				["while"]=true,
+				[">"]=true,
+				["<"]=true,
+				[">="]=true,
+				["<="]=true,
+				["=="]=true,
+				["=~"]=true,
+				["+"]=true,
+				["-"]=true,
+				["/"]=true,
+				["*"]=true,
+				["%"]=true,
+				["]"]=true,
+				["["]=true,
+				[")"]=true,
+				["("]=true,
+}
+
+	for i=1, #tokkens do
+		local tokken = tokkens[i]
+		if langKeyWords[tokken] then
+			conCatResult= conCatResult.." "..tokken 
+		else
+			local evaluateTokkenFunction = loadstring(tokken)
+			if evaluateTokkenFunction then
+				conCatResult= conCatResult.." "..tokken..":"..evaluateTokkenFunction()
+			end
+		end
+	end
+echo(conCatResult)
 end
 
 --> echos out strings
@@ -3861,7 +3978,7 @@ function holdsForAll(Var, fillterConditionString, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     if arg then
         for k, Val in pairs(arg) do
-            if loadstring("Var" .. fillterConditionString .. "Val") == false then return end
+            if (loadstring("Var" .. fillterConditionString .. "Val"))() == false then return end
         end
         return true
     else
@@ -3873,7 +3990,7 @@ end
 function is(Var, fillterConditionString, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     f = loadstring(fillterConditionString)
-    if type(f) == "function" then
+    if f then
         for k, Val in pairs(arg) do
             if (f(Var, Val) == true) then return true end
         end
@@ -3881,7 +3998,7 @@ function is(Var, fillterConditionString, ...)
     else
 
         for k, Val in pairs(arg) do
-            if loadstring("Var" .. fillterConditionString .. "Val") == true then return true end
+            if (loadstring("Var" .. fillterConditionString .. "Val")()) == true then return true end
         end
 
         return false

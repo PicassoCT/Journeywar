@@ -28,7 +28,7 @@ end
 local boolWalk = false
 local boolAttack = false
 ------------------------------------------------------------------------------------ UNITCODE
-
+weaponSloT={}
 			
 function confVehicle()
 	while true do
@@ -51,19 +51,39 @@ end
 
 
 --- -aimining & fire weapon
-function script.AimFromWeapon1()
-    return center
+function script.AimFromWeapon(weaponID)
+    if weaponSloT[weaponID] then
+        return weaponSloT[weaponID].aim
+    end
+		return center
 end
 
-function script.QueryWeapon1()
-    return center
+function script.QueryWeapon(weaponID)
+    if weaponSloT[weaponID] then
+        return weaponSloT[weaponID].firepiece
+    end
+		return center
 end
 
-function script.AimWeapon1(heading, pitch)
 
-    return true
+
+function script.AimWeapon(weaponID, heading, pitch)
+	if weaponSloT[weaponID] then
+		Turn(weaponSloT[weaponID].turret,y_axis,heading, 16)
+		Turn(weaponSloT[weaponID].turret,x_axis,-pitch, 16)
+		WaitForTurns(weaponSloT[weaponID].turret)
+		return true  
+	else
+		return false 
+	end
 end
 
-function script.FireWeapon1()
-    return true
+
+function script.FireWeapon(weaponID)
+    --Spring.Echo("FireWeapon")
+    if weaponSloT[weaponID] then 
+		return true 
+	end
+	 
+	 return false
 end
