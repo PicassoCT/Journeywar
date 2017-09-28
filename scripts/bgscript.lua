@@ -47,6 +47,7 @@ LArm = piece "LArm"
 RArm = piece "RArm"
 Head = piece "Head"
 Gun = piece "Gun"
+DecoGun = piece "DecoGun"
 Neck = piece "Neck"
 attackedSounds = {}
 for i = 1, 14, 1 do
@@ -94,8 +95,6 @@ function bodyBuilder()
 	end
 end
 
-Spring.
-
 function HideStandingStill()
 TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
 Antenna = piece"Antenna"
@@ -108,9 +107,9 @@ while true do
 			Hide(Gun)
 	else
 		hideT(TablesOfPiecesGroups)
-		Show(Antenna)
+		--Show(Antenna)
 		Show(Gun)
-		Show(depshield)
+		--Show(depshield)
 		Show(bglowleg)
 		Show(bglowlegr)
 	end
@@ -190,6 +189,7 @@ function kneeDown(Time)
 end
 
 function script.Create()
+	Hide(DecoGun)
     Hide(depshield)
     Hide(flare01)
     Hide(flare02)
@@ -197,35 +197,9 @@ function script.Create()
     bodyBuilder()
     StartThread(soundStart)
 end
+idleFunc= {}
 
-
-
-function idle()
-    Signal(SIG_IDLE)
-    sleeper = math.random(1024, 8192)
-    signum = -1
-    SetSignalMask(SIG_IDLE)
-    while (true) do
-        Sleep(sleeper)
-        signum = signum * -1
-        if boolCityTrooper == true then
-            Turn(Head, y_axis, math.rad(math.random(35 * signum, 45 * signum * signum)), 2)
-        end
-        aynRandValue = math.random(0, 12)
-        if aynRandValue == 8 then
-            Move(bgbase, y_axis, -4, 10)
-            Turn(bglegr, x_axis, math.rad(-90), 18)
-            Turn(bglowlegr, x_axis, math.rad(90), 28)
-            Turn(bglowleg, x_axis, math.rad(101), 28)
-        end
-        if aynRandValue == 3 then
-            Move(bgbase, y_axis, -4, 12)
-            Turn(bgleg, x_axis, math.rad(-90), 18)
-            Turn(bglowleg, x_axis, math.rad(90), 28)
-            Turn(bglowlegr, x_axis, math.rad(101), 28)
-        end
-
-
+idleFunc[#idleFunc+1] = function (boolLeftRight)--lookAround
         Turn(bgtorso, y_axis, math.rad(35), 1)
 
         Turn(bgarm, x_axis, math.rad(-24), 3)
@@ -259,6 +233,68 @@ function idle()
         Turn(bglowlegr, x_axis, math.rad(0), 28)
         Turn(bglowleg, x_axis, math.rad(0), 28)
         Sleep(250)
+
+end
+
+idleFunc[#idleFunc+1] =  function (boolLeftRight) --kneeLeftRight
+	if boolLeftRight == true then
+				Move(bgbase, y_axis, -4, 10)
+				Turn(bglegr, x_axis, math.rad(-90), 18)
+				Turn(bglowlegr, x_axis, math.rad(90), 28)
+				Turn(bglowleg, x_axis, math.rad(101), 28)
+	else
+				Move(bgbase, y_axis, -4, 12)
+				Turn(bgleg, x_axis, math.rad(-90), 18)
+				Turn(bglowleg, x_axis, math.rad(90), 28)
+				Turn(bglowlegr, x_axis, math.rad(101), 28)
+	end
+end
+
+
+
+idleFunc[#idleFunc+1] =  function (boolLeftRight) --rest
+	Sleep(5000)
+	speed= 10
+	angle = math.random(-5,15)
+	 Move(bgbase,y_axis, -5, speed)
+	 Turn(bgtorso,x_axis,math.rad(angle),speed)
+	 Turn(bglegr,x_axis,math.rad(-90+angle),speed)
+	 Sleep(15000)
+	 legs_down()
+end
+
+function showArms()
+	Show(DecoGun)
+	Show(RArm)
+	Show(LArm)
+	Hide(bgarm)
+end
+function showBattleArms()
+
+	Hide(DecoGun)
+	Hide(RArm)
+	Hide(LArm)
+	Show(bgarm)
+end
+
+idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
+	if boolCityTrooper == false then
+	showArms()
+	
+	Sleep(10000)
+	echo("GunIdling")
+	
+	showBattleArms()		 
+	end
+end
+
+function idle()
+    Signal(SIG_IDLE)
+    SetSignalMask(SIG_IDLE)
+    while (true) do
+	    sleeper = math.random(1024, 8192)
+        Sleep(sleeper)
+       idleFunc[math.random(1,#idleFunc)](math.random(0,1)==1)
     end
 end
 
