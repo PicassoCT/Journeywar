@@ -8,8 +8,17 @@ function gadget:GetInfo()
 		license = "GPL spam v3.0 or later",
 		layer = 699,
 		handler = true,
-		enabled = false
+		enabled = true
 	}
+end
+
+	boolStartTest= true
+	
+ function StartUnitTest()
+Spring.Echo("Unittest activated")
+	boolStartTest= true
+  
+    return true
 end
 
 if gadgetHandler:IsSyncedCode() then
@@ -153,26 +162,36 @@ if gadgetHandler:IsSyncedCode() then
 		
 	end
 	
+	function gadget:Initialize()
+	  gadgetHandler.actionHandler.AddChatAction(gadget, 'unittest', StartUnitTest, " : starts a unittest session")
+   
+	
+	end
+	
 	function initialize()
 		generateGenericTests()
 	end
 	
 	local index = 1
 	boolInitialized = false
+
 	function gadget:GameFrame(n)
-		if n % 400 == 0 then Spring.Echo("Starting Test") end
-		if boolInitialized == false then
-		initialize()
-		boolInitialized = true
-		end
-		if n > 400 and n % 30 == 0 then
-			if UnitTest[index] then
-				UnitTest[index]()
-				index = inc(index)
+		if boolStartTest == true then
+			if n % 400 == 0 then Spring.Echo("Starting Test") end
+			if boolInitialized == false then
+			initialize()
+			boolInitialized = true
 			end
-		end
-		if index >= #UnitTest then
-			index= 1
+			if n > 400 and n % 30 == 0 then
+				if UnitTest[index] then
+					UnitTest[index]()
+					index = inc(index)
+				end
+			end
+			if index >= #UnitTest then
+				boolStartTest= false
+				index= 1
+			end
 		end
 	end
 end

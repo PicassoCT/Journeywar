@@ -1490,7 +1490,7 @@ end
 
 -->RotationMatrice for allready Normalized Values
 function Rotate(x, z, Rad)
-
+		if not Rad then return end
     sinus = math.sin(Rad)
     cosinus = math.cos(Rad)
 

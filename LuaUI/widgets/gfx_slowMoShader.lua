@@ -126,7 +126,11 @@ ColourTable={
 		switch (IntTensity) { ]]
 		
 		for i=1, 100, 1 do
-			tacVision = tacVision.. "case ".. i.." : gl_FragColor = vec4(intensity *"..getRGB("R", i).." , intensity *"..getRGB("G", i).." , intensity *"..getRGB("B", i)..",0.9);\n"	
+			r,g,b = getRGB("R", i).."",getRGB("G", i).."",getRGB("B", i)..""
+			if not string.find(r,".") then r=r..".0" end
+			if not string.find(g,".") then g=g..".0" end
+			if not string.find(b,".") then b=b..".0" end
+			tacVision = tacVision.. "case ".. i.." : gl_FragColor = vec4("..r.." , "..g.." ,"..b..",0.9/intensity)* intensity;\n"	
 		end
 		
 		tacVision = tacVision .. [[

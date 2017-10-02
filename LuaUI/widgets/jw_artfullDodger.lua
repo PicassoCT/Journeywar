@@ -12,8 +12,10 @@ function widget:GetInfo()
 	}
 end
 
-ARTFULLDOGERKEY= 32
+ARTFULLDOGERKEY= 68
+artfulldogerkey= 100
 SPLASHRANGE= 128
+framesToReroute = 75
 
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
@@ -22,7 +24,7 @@ function getAllInCircle(x, z, Range, unitID, teamid)
     end
     if not Range then assert(Range) end
 
-    T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
+   local T = Spring.GetUnitsInCylinder(x, z, Range, teamid)
 
     if unitID and T and #T > 1 and type(unitID) == 'number' then
         for num, id in ipairs(T) do
@@ -34,38 +36,63 @@ function getAllInCircle(x, z, Range, unitID, teamid)
     return T
 end
 
- function widget:KeyPress(key, mods, isRepeat, label, unicode)
+local playerID= Spring.GetMyPlayerID()
+local teamID = 1
 
-	if key == ARTFULLDOGERKEY then
+function widget:Initialize()
 		playerID=Spring.GetMyPlayerID()
-		selectedUnits =Spring.GetSelectedUnits(playerID)
-		
-		if selectedUnits then
-			T = {}
-			ux,uy,uz=0,0,0
-			for num, id in pairs(selectedUnits) do
-				ux,_,uz = Spring.GetUnitPosition(id)
-				T = getAllInCircle(x,z, SPLASHRANGE, id)
-				break
-			end
+_,_,_,teamID = Spring.GetPlayerInfo(playerID)
+end
+
+allReroutedUnits= {}
+function rerootAroundUnits()
+	for id,t in pairs(allReroutedUnits) do
+		if id then
+			allReroutedUnits[id].frames = allReroutedUnits[id].frames -1
 			
-			for num, id in pairs(T) do
-			--calculate the offsetVector
-			px,py,pz=Spring.GetUnitPosition(id)
+			rerootUnit(id, t.swingById,t.range)
+			if allReroutedUnits[id].frames <= 0 then
+				allReroutedUnits[id] = nil
+			end
+		end
+	end
+end
+
+function rerootUnit(Id, swingById, range)
+--calculate the offsetVector
+			ux,uy,uz = Spring.GetUnitPosition(swingById)
+			px,py,pz=Spring.GetUnitPosition(Id)
 			pdx,pdz = px-ux, pz- uz
 			
 			--multiply the offsetVector with a rangefactor
 			distance = (pdx^2 + pdz^2)^0.5
-			factor= SPLASHRANGE/distance
+			factor= range/distance
 			pdx,pdz= (pdx *factor) + ux, (pdz*factor)+uz
-			
-			--insert  a move command
-			--TODO save commands, insert command,restore commands
-			Spring.GiveOrderToUnit(id, CMD.MOVE, { pdx, py, pdz }, {})
+ 		  Spring.GiveOrderToUnit (Id, CMD.INSERT, {0, CMD.MOVE, 0, pdx, py, pdz}, {"alt"})
+end
+
+
+ function widget:KeyPress(key, mods, isRepeat, label, unicode)
+
+	if key == ARTFULLDOGERKEY or key == artfulldogerkey then
+	local T = {}
+		
+		selectedUnits =Spring.GetSelectedUnits()
+		if selectedUnits then
+			for num,swingById in pairs(selectedUnits) do
+			ux,uy,uz= Spring.GetUnitPosition(swingById)
+				T = getAllInCircle(ux,uz, SPLASHRANGE, teamID)
+				for i=1,#T do
+					allReroutedUnits[T[i]] = {frames=framesToReroute, swingById = swingById, range =SPLASHRANGE }
+				end
 			end
-			Spring.Echo("Key _space_ handled")
 		return true
 		end
 	end
-	return false
  end
+ 
+ function widget:GameFrame(f)
+	rerootAroundUnits()
+ 
+ end
+ 
