@@ -35,6 +35,7 @@ local SIG_FIRE = 16
 local SIG_ROB = 32
 local SIG_AIMRESET = 64
 local SIG_ATTACK = 128
+local SIG_UNDERFIRE= 256
 local leg_movespeed = 12 + math.random(-1, 1)
 local leg_movedistance = 10
 defID = Spring.GetUnitDefID(unitID)
@@ -276,6 +277,35 @@ function showBattleArms()
 	Hide(LArm)
 	Show(bgarm)
 end
+
+thoughts="Thinking: "
+homePlanet= PlanetNameGenerator()
+homeTown =  CityNameGenerator()
+Thoughts = {
+function() return end
+}
+
+UnderFireThink = {
+function() return end
+}
+
+function thoughBuilder()
+if boolUnderFire == false then
+return thoughts..Thoughts[math.random(1,#Thoughts)]()
+else
+return thoughts..UnderFireThink[math.random(1,#UnderFireThink)]()
+end
+end 
+
+function mindReader()
+
+	while true do
+	Spring.SetUnitTooltip(thoughBuilder())
+	restPeriod= math.ceil(math.random(6000,12000))
+	Sleep(restPeriod)
+	end
+end
+
 
 idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
 	if boolCityTrooper == false then
@@ -752,7 +782,16 @@ function soundStart()
     end
 end
 
+function underFireReset()
+Signal(SIG_UNDERFIRE)
+SetSignalMask(SIG_UNDERFIRE)
+Sleep(3000)
+boolUnderFire = false
+end
+
 function script.HitByWeapon(x, z, weaponDefID, damage)
+	boolUnderFire= true
+	StartThread(underFireReset)
     if damage > 15 and math.random(0, 42) == 22 then
         StartThread(PlaySoundByUnitDefID, bgdefID, attackedSounds[math.floor(math.random(1, #attackedSounds))], 0.5, 2000, 1, 0)
     end

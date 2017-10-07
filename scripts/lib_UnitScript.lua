@@ -1239,7 +1239,6 @@ function echoUnitStats(id)
     echo(h, mh, pD, "Capture Progress:" .. cP, "Build Progress:" .. bP)
 end
 
-
 --======================================================================================
 --Random Operations
 --======================================================================================
@@ -3865,8 +3864,6 @@ function getGroundHeigthDistance(h1, h2)
     return distance(h1, 0, 0, h2, 0, 0)
 end
 
-
-
 --> returns the gh, the units heigth and wether the unit is underground
 function getGroundHeigthAtPiece(uID, pieceName)
     px, py, pz = Spring.GetUnitPiecePosDir(uID, pieceName)
@@ -3986,7 +3983,7 @@ function holdsForAll(Var, fillterConditionString, ...)
     end
 end
 
---> filters  out following a functionstring (deprecated)
+--> (deprecated) filters  out following a functionstring
 function is(Var, fillterConditionString, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     f = loadstring(fillterConditionString)
@@ -4005,7 +4002,50 @@ function is(Var, fillterConditionString, ...)
     end
 end
 
+--> convert Unit to Heightmap
+function UnitToHeightMap(unitID)
+bx,by,bz = Spring.GetUnitBasePosition(unitID)
+unitPieceList= Spring.GetUnitPieceMap(unitID)
+processedPieces = {}
+--TODO add Unit rotation, add Piecerotation
+process(unitPieceList,
+			function(pieceNumber)
 
+			resulT= Spring.GetUnitPieceInfo(unitID,pieceNumber)
+			px,py,pz= Spring.GetUnitPiecePosition(unitID,pieceNumber)
+			size = {
+					x =resulT.max[1],
+					y =resulT.max[2],
+					z =resulT.max[3]								
+					}
+			
+			processedPieces[pieceNumber] = {
+							pos = {x= px,y= py,z= pz},
+							p1 = vector:new(size.x,py,size.y)  ,
+							p2 = vector:new(-size.x,py,size.y) ,
+							p3 = vector:new(-size.x,py,-size.y),
+							p4 = vector:new(size.x,py,-size.y) ,
+
+
+							}
+			end
+			)
+end
+
+function topsideRayTrace(pWorldx,pWorldy, Objects)
+default = -math.huge
+
+	for _,obj in pairs(Objects) do
+		if isPointInSquare(obj.pos, obj.p1,obj.p2,obj.p3, obj.p4) == true then return obj.pos.py end
+
+	end
+
+	return default
+end
+
+function isPointInSquare(P, s1, s2, s3, s4)
+	return pointWithinTriangle(s1.x,s1.y,s2.x,s2.y,s3.x,s3.y,P.x,P.y) or pointWithinTriangle(s3.x,s3.y,s4.x,s4.y,s1.x,s1.y,P.x,P.y)
+end
 
 function makeNewAffirmativeMatrice()
     V = {
@@ -4242,15 +4282,11 @@ function getPieceHierarchy(unitID, pieceFunction)
     return hierarchy, rootname
 end
 
-function getUnitPieceNameFromNumber(Name)
-	--TODO
-	
-end
 
 --> returns  a skelett table via recursion (Expensive)
-function recMapDown(Result, pieceMap, Name)
+function recMapDown(unitID, Result, pieceMap, Name)
 	if type(Name) == "number" then
-		Name = getUnitPieceNameFromNumber(Name)
+		Name = getUnitPieceName(unitID, Name)
 	end
 
     if pieceMap[Name] then
@@ -4258,7 +4294,7 @@ function recMapDown(Result, pieceMap, Name)
             info = Spring.GetUnitPieceInfo(unitID, pieceNumber)
             Result[#Result + 1] = pieceNumber
             if info and pieceMap[info.name] and info.children then
-                Result = recMapDown(Result, pieceMap, info.name)
+                Result = recMapDown(unitID, Result, pieceMap, info.name)
             end
         end
     end
@@ -4268,7 +4304,7 @@ end
 -->Returns all Pieces in a Hierarchy below the named point
 function getPiecesBelow(unitID, PieceName, pieceFunction)
     pieceMap = getPieceHierarchy(unitID, pieceFunction)
-    return recMapDown({}, pieceMap, PieceName)
+    return recMapDown(unitID, {}, pieceMap, PieceName)
 end
 
 --Hashmap of pieces --> with accumulated Weight in every Node
@@ -4427,19 +4463,6 @@ function stableConditon(legNr, q)
     return GG.MovementOS_Table ~= nil and
             GG.MovementOS_Table[unitID].stability > 0.5 and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, q), 1)] > 0 or GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, legNr % 2), 1)] and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, legNr % 2), 1)] > 0
 end
-
-
---> Sets the Speed of a Unit
-function setSpeedEnv(k, val)
-    val = math.max(0.000000001, math.min(val, 1.0))
-    env = Spring.UnitScript.GetScriptEnv(k)
-
-    if env then
-        udef = Spring.GetUnitDefID(k)
-        Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed * val * 2184.53))
-    end
-end
-
 
 --Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
 function feetThread(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction, LegMax, WiggleFunc, ScriptEnviroment, SensorT)
@@ -4742,7 +4765,7 @@ end
 
 
 
-
+--> returns the Midpoint of two given points
 function getMidPoint(a, b)
     ax, ay, az = a.x, a.y, a.z
     bx, by, bz = b.x.b.y, b.z
@@ -4958,7 +4981,6 @@ function getGeoventList()
     return GeoventList
 end
 
-
 --> returns a table of all unitnames  a unit can build
 function GetUnitCanBuild(unitName)
     unitDef = UnitDefNames[unitName]
@@ -5072,7 +5094,6 @@ function transformUnitInto(unitID, unitType, setVel)
     Spring.DestroyUnit(unitID, false, true)
 end
 
-
 --> Get Unit Target if a Move.Cmd was issued
 function getUnitMoveGoal(unitID)
     cmds = Spring.GetCommandQueue(unitID, 4)
@@ -5126,13 +5147,21 @@ function getMaxSpeed(unitID, UnitDefs)
     return UnitDefs[uDefID].speed
 end
 
-
 --> resets the speed of a unit
 function reSetSpeed(unitID, UnitDefs)
     setSpeedEnv(unitID, 1.0)
 end
 
+--> Sets the Speed of a Unit
+function setSpeedEnv(k, val)
+    val = math.max(0.000000001, math.min(val, 1.0))
+    env = Spring.UnitScript.GetScriptEnv(k)
 
+    if env then
+        udef = Spring.GetUnitDefID(k)
+        Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed * val * 2184.53))
+    end
+end
 
 --> every PixelPiecetable consists of a List of Pieces, a selectFunction and a PlaceFunction
 -- both recive a List of allready in Pixel Placed Pieces and the relative Heigth they are at, 
@@ -5165,7 +5194,6 @@ function transferOrders(originID, unitID)
         end
     end
 end
-
 
 -->Generate a Description Text for a Unit
 function unitDescriptionGenerator(Unit, UnitDefNames)

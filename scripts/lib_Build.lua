@@ -1104,6 +1104,27 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	
 	return ActualActiveWeapons
 end
+CityPreFix={"new","old","los","", "holy","mt.","st.", "cpt.", "el", "al", "pre","post"}
+CityMiddle ={}
+CityPostFix = {"town", "ville","city","burg","port","home"}
+function CityNameGenerator()
+
+Name= ""
+--prefix
+if maRa()==true then
+	Name= Name..CityPreFix[math.random(1,#CityPostFix)]
+en
+dice= math.random(1,#CityMiddle)
+firstHalf=string.sub(CityMiddle[dice],1,#CityMiddle[dice]/2)
+dice= math.random(1,#CityMiddle)
+secondHalf = string.sub(CityMiddle[dice],#CityMiddle[dice]/2, #CityMiddle)
+Name = Name.." "..firstHalf..secondHalf
+if maRa()==true then
+	Name= Name..CityPostFix[math.random(1,#CityPostFix)]
+
+end
+return Name
+end
 
 -->Creates a fictional Planet Name
 function PlanetNameGenerator(llenght, lNamingSamples, lBreakers, lLetterTable,lBoolPrecursor, lBoolPostPoner)
