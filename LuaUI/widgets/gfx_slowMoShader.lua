@@ -134,7 +134,8 @@ ColourTable={
 		end
 		
 		tacVision = tacVision .. [[
-		default:
+		default: \n
+		break;\n
 		};\n
 		}\n
 		]]

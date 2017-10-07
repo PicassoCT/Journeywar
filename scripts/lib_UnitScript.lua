@@ -4657,7 +4657,7 @@ function getADryWalkAbleSpot()
             v = {}
             v.x, v.y, v.z = Spring.GetGroundNormal(i * chunkSizeX, chunkSizeZ * j)
             v = normVector(v)
-            if v.y < 0.3 or math.abs(v.x) > 0.7 or math.abs(v.z) < 0.3 then
+            if v.y < 0.3 or math.abs(v.x) > 0.5 or math.abs(v.z) < 0.3 then
                 return math.ceil(i * chunkSizeX), math.ceil(i * chunkSizeZ)
             end
         end
@@ -4669,7 +4669,7 @@ end
 -->finds a spot on the map that is dry, and walkable
 function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, mapSizeZ)
     if type(condition) ~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
-    local lcondition = condition
+ 
 
     probeResolution = 4.0
     local spGetGroundHeight = Spring.GetGroundHeight
@@ -4677,13 +4677,13 @@ function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, m
     assert(Game.mapSizeZ)
     while true do
 
-        chunkSizeX = (Game.mapSizeX - 1) / probeResolution
-        chunkSizeZ = (Game.mapSizeZ - 1) / probeResolution
+        local chunkSizeX = (Game.mapSizeX - 1) / probeResolution
+        local chunkSizeZ = (Game.mapSizeZ - 1) / probeResolution
         xRand, zRand = math.floor(sanitizeRandom(1, probeResolution - 1)), math.floor(sanitizeRandom(1, probeResolution - 1))
 
         for i = xRand, probeResolution, 1 do
             for j = zRand, probeResolution, 1 do
-                ax, ay, az = lcondition(i, j, chunkSizeX, chunkSizeZ, filterTable)
+                ax, ay, az = condition(i, j, chunkSizeX, chunkSizeZ, filterTable)
                 if ax then return ax, ay, az end
             end
         end
@@ -4691,7 +4691,7 @@ function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, m
 
         for i = 1, xRand, 1 do
             for j = 1, zRand, 1 do
-                ax, ay, az = lcondition(i, j, chunkSizeX, chunkSizeZ, filterTable)
+                ax, ay, az = condition(i, j, chunkSizeX, chunkSizeZ, filterTable)
                 if ax then return ax, ay, az end
             end
         end
@@ -4702,7 +4702,7 @@ function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, m
 end
 
 -->ConditionFunctions
-function GetSpot_condDeepSea(x, y, chunksizeX, chunksizeZ, filterTable)
+function GetSpot_condDeepSea(x, y, chunkSizeX, chunkSizeZ, filterTable)
     h = Spring.GetGroundHeight(x * chunkSizeX, y * chunkSizeZ)
     if h < filterTable.minBelow and h > filterTable.maxAbove then return x * chunkSizeX, y * chunkSizeZ end
 end

@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL spam v3.0 or later",
 		layer = 699,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -161,6 +161,7 @@ if gadgetHandler:IsSyncedCode() then
 		end		
 		
 	end
+
 	
 	function gadget:Initialize()
 	  gadgetHandler.actionHandler.AddChatAction(gadget, 'unittest', StartUnitTest, " : starts a unittest session")

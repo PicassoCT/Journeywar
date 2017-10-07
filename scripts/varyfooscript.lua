@@ -168,6 +168,7 @@ end
 
 --								Socket,ConectionSocket,BodyPiece
 function conPieceCon2Socket(Con, Pie, dirVec, boolLeftRight)
+	
     x, y, z = Spring.GetUnitPiecePosition(unitID, Con)
 
     SymSideVal = 1
@@ -336,7 +337,7 @@ function LinearExpandPiece()
     if not AllReadyUsed[BodyPiece] and not AllReadyUsed[Socket] then
         randomVec = makeDirVecFromDeg(180, 180, 0, 0, 0, 0)
         Show(BodyPiece)
-
+			assert(Socket)
         conPieceCon2Socket(Socket, BodyPiece, randomVec)
         LinAddPieceSocketsToPool(BodyPiece, true)
 
@@ -468,7 +469,7 @@ function LinearExpandHead(offSetX)
     if AllReadyUsed[Head] == nil and AllReadyUsed[Socket] == nil then
         randomVec = makeDirVecFromDeg(0, 25, 0, 0, 0, 0, offSetX)
         Show(Head)
-
+			assert(Socket)
         conPieceCon2Socket(Socket, Head, randomVec)
         usedPiece(Head)
         usedPiece(Socket)
@@ -515,7 +516,7 @@ function LinearExpandArm()
         randomVec = makeDirVecFromDeg(0, 0, 0, 0, 0, 0, 0)
         Show(Arm[1])
         Show(Arm[2])
-
+			assert(Socket)
         conPieceCon2Socket(Socket, Arm[1], randomVec)
         usedPiece(Arm[1])
         usedPiece(Arm[2])
@@ -783,7 +784,7 @@ function LinearExpandDeco(offSet)
 
         randomVec = makeDirVecFromDeg(90, 45, 0, 0, 0, 0, offSet)
         Show(Deco)
-
+			assert(Socket)
         conPieceCon2Socket(Socket, Deco, randomVec)
         usedPiece(Deco)
         usedPiece(Socket)
