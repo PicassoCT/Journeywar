@@ -805,4 +805,22 @@ end
 
 end
 			
-			
+function getBlackGuardThougth(homePlanet, homeTown, name)
+pStrings={
+"My Name is "..name.." and i regret leaving ".. homeTown.." on "..homePlanet
+}
+return pStrings[math.random(1,#pStrings)]
+end
+
+function getBlackGuardUnderFireThought(homePlanet, homeTown, name)
+pStrings={
+"Join the army they said"
+
+
+
+
+}
+return pStrings[math.random(1,#pStrings)]
+
+
+end

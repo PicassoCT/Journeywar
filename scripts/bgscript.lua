@@ -1,3 +1,4 @@
+include "lib_jw.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
@@ -281,17 +282,14 @@ end
 thoughts="Thinking: "
 homePlanet= PlanetNameGenerator()
 homeTown =  CityNameGenerator()
-Thoughts = {
-function() return end
-}
+name = "John Doe"
 
-UnderFireThink = {
-function() return end
-}
+NormalThink = getBlackGuardThougth()
+UnderFireThink = getBlackGuardUnderFireThought()
 
 function thoughBuilder()
 if boolUnderFire == false then
-return thoughts..Thoughts[math.random(1,#Thoughts)]()
+return thoughts..NormalThink[math.random(1,#NormalThink)]()
 else
 return thoughts..UnderFireThink[math.random(1,#UnderFireThink)]()
 end
