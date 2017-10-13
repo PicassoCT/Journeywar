@@ -11809,9 +11809,9 @@ function PlanetNameGenerator(llenght, lNamingSamples, lBreakers, lLetterTable,lB
 		end
 		ending=math.random(1,#NameEndingTable)
 		Name=Name..NameEndingTable[ending]..PostPoner
-		Spring.Echo(Name)
+		return Name
 	end
-	
+return ""
 end
 
 -->add a Terraindeformation to the LandLord

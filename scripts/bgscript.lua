@@ -149,44 +149,38 @@ local function legs_down()
     Turn(deathpivot, x_axis, math.rad(0), 9)
     val = math.random(-10, 45)
     Turn(bgarm, x_axis, math.rad(val), 8)
-
+	--assert(type(idle)=="function")
     StartThread(idle)
     return
 end
 
 boolCanMove = true
-function kneeDown(Time)
-    boolCanMove = false
-    SetUnitValue(COB.MAX_SPEED, math.floor(15))
-    Move(bgbase, y_axis, -4, 12)
-    Turn(bgleg, x_axis, math.rad(-90), 18)
-    Turn(bglowleg, x_axis, math.rad(90), 28)
-    Turn(bglowlegr, x_axis, math.rad(101), 28)
-    Time = math.floor(math.random(100, Time))
-    while (Time > 0 and boolFiredRecently == true) do
-        o = math.max(math.floor(Time - 120), 120)
+function kneeDown()
+	Time= math.random(12000,22000)
 
-        Sleep(o)
-        Time = Time - o
-    end
-    Move(bgbase, y_axis, 0, 12)
-    Turn(bgleg, x_axis, math.rad(0), 18)
-    Turn(bglowleg, x_axis, math.rad(0), 28)
-    Turn(bglowlegr, x_axis, math.rad(0), 28)
-
-    if math.random(0,100) == 45 then
+    Move(bgbase, y_axis, -8, 12)
+    Turn(bgleg, x_axis, math.rad(-135), 18)
+    Turn(bglegr, x_axis, math.rad(-135), 18)
+    Turn(bglowleg, x_axis, math.rad(70), 28)
+    Turn(bglowlegr, x_axis, math.rad(70), 28)
+   
+	if math.random(0,1000) == 450 then
         local x, y, z = Spring.GetUnitPosition(unitID)
         local teamID = Spring.GetUnitTeam(unitID)
         Spring.CreateUnit("cFirePlace", x + 15, y, z + 15, 0, teamID)
     end
 
+        Sleep(Time)
 
-    SetUnitValue(COB.MAX_SPEED, math.floor(65533 * 8))
-    boolCanMove = true
-    if boolMoveOrderd == true then
-        Signal(SIG_WALK)
-        StartThread(walk)
-    end
+    Move(bgbase, y_axis, 0, 12)
+    Turn(bgleg, x_axis, math.rad(0), 18)
+    Turn(bglegr, x_axis, math.rad(0), 18)
+    Turn(bglowleg, x_axis, math.rad(0), 28)
+    Turn(bglowlegr, x_axis, math.rad(0), 28)
+
+
+
+   
 end
 
 function script.Create()
@@ -196,11 +190,15 @@ function script.Create()
     Hide(flare02)
     Hide(deathpivot)
     bodyBuilder()
+	--assert(type(soundStart)=="function")
+
     StartThread(soundStart)
 end
 idleFunc= {}
 
-idleFunc[#idleFunc+1] = function (boolLeftRight)--lookAround
+idleFunc[#idleFunc+1] = function (boolLeftRight)
+echo("idle look around")
+--lookAround
         Turn(bgtorso, y_axis, math.rad(35), 1)
 
         Turn(bgarm, x_axis, math.rad(-24), 3)
@@ -238,6 +236,7 @@ idleFunc[#idleFunc+1] = function (boolLeftRight)--lookAround
 end
 
 idleFunc[#idleFunc+1] =  function (boolLeftRight) --kneeLeftRight
+echo("idle kneeLeftRight")
 	if boolLeftRight == true then
 				Move(bgbase, y_axis, -4, 10)
 				Turn(bglegr, x_axis, math.rad(-90), 18)
@@ -251,17 +250,31 @@ idleFunc[#idleFunc+1] =  function (boolLeftRight) --kneeLeftRight
 	end
 end
 
-
+idleFunc[#idleFunc+1] =  kneeDown
 
 idleFunc[#idleFunc+1] =  function (boolLeftRight) --rest
+echo("idle rest")
 	Sleep(5000)
 	speed= 10
-	angle = math.random(-5,15)
+	angle= math.random(-45,15)
 	 Move(bgbase,y_axis, -5, speed)
-	 Turn(bgtorso,x_axis,math.rad(angle),speed)
-	 Turn(bglegr,x_axis,math.rad(-90+angle),speed)
+	 Turn(bgbase,y_axis, math.rad(angle), speed)
+
+	 Turn(bglegr,x_axis,math.rad(-angle-58),speed)
+	 Turn(bgleg,x_axis,math.rad(-angle-58),speed)
+	 Turn(bglowlegr,x_axis,math.rad(130),speed)
+	 Turn(bglowleg,x_axis,math.rad(130),speed)
+	 Turn(bgarm,x_axis,math.rad(15),speed)
 	 Sleep(15000)
-	 legs_down()
+
+	 Move(bgbase,y_axis,0, speed)
+	 Turn(bgbase,y_axis, math.rad(0), speed)
+	 Turn(bglegr,x_axis,math.rad(0),speed)
+	 Turn(bgleg,x_axis,math.rad(0),speed)
+	 Turn(bglowlegr,x_axis,math.rad(0),speed)
+	 Turn(bglowleg,x_axis,math.rad(0),speed)
+	 Turn(bgarm,x_axis,math.rad(0),speed)
+
 end
 
 function showArms()
@@ -324,7 +337,9 @@ function idle()
     while (true) do
 	    sleeper = math.random(1024, 8192)
         Sleep(sleeper)
+		if boolUnderFire == false then
        idleFunc[math.random(1,#idleFunc)](math.random(0,1)==1)
+		end
     end
 end
 
@@ -343,7 +358,7 @@ function walk()
         SetSignalMask(SIG_WALK)
         Turn(bgtorso, x_axis, math.rad(22), 14)
         WaitForTurn(bgtorso, x_axis)
-
+					--assert(type(reduceTimeSinceLastChatter)=="function")
 
         if timeSinceLastChatter == 0 and math.random(0, 800) == 100 then
             dec = math.random(0, 2) == 1
@@ -412,7 +427,7 @@ function walk()
     end
 end
 
-function counter()
+function counterTerrorIsm()
     SetSignalMask(SIG_COUNTER)
     napTime = math.ceil(math.random(900, 12800))
     Sleep(napTime)
@@ -437,11 +452,12 @@ function script.StartMoving()
         Move(bgbase, y_axis, 0, 12)
         Turn(bgtorso, y_axis, 0, 4)
 
-
+		--assert(type(walk)=="function")
         StartThread(walk)
 
+		--assert(type(counter)=="function")
 
-        StartThread(counter)
+        StartThread(counterTerrorIsm)
     end
     boolMoveOrderd = true
 end
@@ -494,6 +510,7 @@ end
 
 function script.AimWeapon1(heading, pitch)
     Signal(SIG_AIMRESET)
+	--assert(type(aimReseter)=="function")
     StartThread(aimReseter)
     boolNotAiming = false
 
@@ -511,12 +528,9 @@ function script.AimWeapon1(heading, pitch)
     WaitForTurn(bgtorso, y_axis)
     WaitForTurn(bgarm, x_axis)
 
-
-
-
-
-
     Signal(SIG_FIRE)
+	--assert(type(OnceInAWhileReseter)=="function")
+	
     StartThread(OnceInAWhileReseter)
     return true
 end
@@ -533,7 +547,7 @@ boolFiredRecently = false
 function script.FireWeapon1()
     if boolOnceInAWhile == true then
         boolOnceInAWhile = false
-        --StartThread(kneeDown,2000)
+
     end
 
     boolFiredRecently = true
@@ -791,6 +805,8 @@ end
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
 	boolUnderFire= true
+
+
 	StartThread(underFireReset)
     if damage > 15 and math.random(0, 42) == 22 then
         StartThread(PlaySoundByUnitDefID, bgdefID, attackedSounds[math.floor(math.random(1, #attackedSounds))], 0.5, 2000, 1, 0)

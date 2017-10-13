@@ -2045,7 +2045,7 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
 	range = range or 20
 	damage = damage or 0
     knallfrosch = function(x, y, z, counter, v)
-        if counter % 120 < 60 then -- aufwärts
+        if counter % 120 < 60 then -- aufwï¿½rts
             if v then
                 return x * v.x, y * v.y, z * v.z, v
             else
@@ -5194,6 +5194,16 @@ function transferOrders(originID, unitID)
         end
     end
 end
+
+	function assertFunction(name)
+		assert(type(name)=="function", "value of type "..type(name).." is not a function" )
+	end
+	
+	function wrapThreadStart(func)
+		assertFunction(func)
+		StartThread(func)
+	
+	end
 
 -->Generate a Description Text for a Unit
 function unitDescriptionGenerator(Unit, UnitDefNames)
