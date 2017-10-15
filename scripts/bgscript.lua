@@ -197,7 +197,7 @@ end
 idleFunc= {}
 
 idleFunc[#idleFunc+1] = function (boolLeftRight)
-echo("idle look around")
+--echo("idle look around")
 --lookAround
         Turn(bgtorso, y_axis, math.rad(35), 1)
 
@@ -236,7 +236,7 @@ echo("idle look around")
 end
 
 idleFunc[#idleFunc+1] =  function (boolLeftRight) --kneeLeftRight
-echo("idle kneeLeftRight")
+--echo("idle kneeLeftRight")
 	if boolLeftRight == true then
 				Move(bgbase, y_axis, -4, 10)
 				Turn(bglegr, x_axis, math.rad(-90), 18)
@@ -253,7 +253,7 @@ end
 idleFunc[#idleFunc+1] =  kneeDown
 
 idleFunc[#idleFunc+1] =  function (boolLeftRight) --rest
-echo("idle rest")
+--echo("idle rest")
 	Sleep(5000)
 	speed= 10
 	angle= math.random(-45,15)
@@ -325,7 +325,7 @@ idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
 	showArms()
 	
 	Sleep(10000)
-	echo("GunIdling")
+	--echo("GunIdling")
 	
 	showBattleArms()		 
 	end
@@ -469,7 +469,7 @@ function script.StopMoving()
     Signal(SIG_COUNTER)
 
     Turn(bgtorso, x_axis, math.rad(0), 14)
-    -- --Spring.Echo ("stopped walking!")
+    -- --Spring.--echo ("stopped walking!")
     Signal(SIG_WALK)
     if boolCanMove == true then
         legs_down()
@@ -489,7 +489,12 @@ function script.AimFromWeapon1()
 
     return bgarm
 end
-
+function script.AimFromWeapon2()
+    return bgarm
+end
+function script.QueryWeapon2()
+	  return flare01
+end
 function script.QueryWeapon1()
     return flare01
 end
@@ -535,6 +540,27 @@ function script.AimWeapon1(heading, pitch)
     return true
 end
 
+lastActiveFrame = Spring.GetGameFrame()
+GRENADE_RELOAD= 25 * 30
+modulator= 0
+UPDATE_REDUCDER = 25
+randoInterVal=  math.random(15,75)
+
+function script.AimWeapon2(heading, pitch)
+	
+	modulator = modulator + 1
+	if modulator == UPDATE_REDUCDER then
+		modulator= 0
+		currentFrame = Spring.GetGameFrame()
+	end
+	
+	if boolDefStance == true and lastActiveFrame + GRENADE_RELOAD - randoInterVal < currentFrame  then
+		lastActiveFrame = currentFrame 
+		return true
+	end
+	return false 
+end
+
 
 function shootFiredReseter()
     SetSignalMask(SIG_ATTACK)
@@ -559,6 +585,10 @@ function script.FireWeapon1()
         Sleep(142)
         Turn(bgarm, y_axis, math.rad((5 / 7) * i - 1), 33)
     end
+end
+
+function script.FireWeapon2()
+	return true
 end
 
 function headexplode(Time, intervall)
@@ -797,10 +827,10 @@ function soundStart()
 end
 
 function underFireReset()
-Signal(SIG_UNDERFIRE)
-SetSignalMask(SIG_UNDERFIRE)
-Sleep(3000)
-boolUnderFire = false
+	Signal(SIG_UNDERFIRE)
+	SetSignalMask(SIG_UNDERFIRE)
+	Sleep(3000)
+	boolUnderFire = false
 end
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
@@ -857,8 +887,8 @@ function script.Activate()
 end
 
 function script.Deactivate()
-    boolreVert = false
 
+	boolDefStance = false
     SetUnitValue(COB.MAX_SPEED, maxspeed) --sets the speed to 5,2 *65533
 
     hideShield()

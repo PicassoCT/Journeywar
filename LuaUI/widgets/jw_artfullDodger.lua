@@ -45,7 +45,8 @@ _,_,_,teamID = Spring.GetPlayerInfo(playerID)
 end
 
 allReroutedUnits= {}
-function rerootAroundUnits()
+function rerootAroundUnits(frame)
+	if frame % 8 == 0 then
 	for id,t in pairs(allReroutedUnits) do
 		if id then
 			allReroutedUnits[id].frames = allReroutedUnits[id].frames -1
@@ -55,6 +56,7 @@ function rerootAroundUnits()
 				allReroutedUnits[id] = nil
 			end
 		end
+	end
 	end
 end
 
@@ -92,7 +94,7 @@ end
  end
  
  function widget:GameFrame(f)
-	rerootAroundUnits()
+	rerootAroundUnits(f)
  
  end
  
