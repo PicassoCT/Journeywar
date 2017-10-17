@@ -287,12 +287,34 @@ name = "John Doe"
 NormalThink = getBlackGuardThougth()
 UnderFireThink = getBlackGuardUnderFireThought()
 
+coherentThought ={}
+coherentThoughtIndex=1
+boolCoherentThought= false
+
 function thoughBuilder()
-if boolUnderFire == false then
-return thoughts..NormalThink[math.random(1,#NormalThink)]()
-else
-return thoughts..UnderFireThink[math.random(1,#UnderFireThink)]()
-end
+	if boolUnderFire == false then
+	
+		if boolCoherentThought == true then
+			coherentThoughtIndex = coherentThoughtIndex + 1
+			if coherentThought[coherentThoughtIndex] then
+				return thoughts..coherentThought[coherentThoughtIndex]
+			end
+			boolCoherentThought = false
+		end
+		
+		ThinkSentences = NormalThink[math.random(1,#NormalThink)]()
+		
+		if type(ThinkSentences) == "string" then
+			return thoughts..ThinkSentences
+		else
+			coherentThought= ThinkSentences
+			coherentThoughtIndex=1
+			boolCoherentThought= true
+			return  thoughts..coherentThought[1]		
+		end
+	else
+		return thoughts..UnderFireThink[math.random(1,#UnderFireThink)]()
+	end
 end 
 
 function mindReader()
@@ -310,7 +332,6 @@ idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
 	showArms()
 	
 	Sleep(10000)
-	echo("GunIdling")
 	
 	showBattleArms()		 
 	end

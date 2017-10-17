@@ -5220,16 +5220,19 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
         return str2 or ""
     end
 
-    function cStr(bool, str)
+    function cStr(bool, str, alt )
+		alt = alt or ""
         if bool and bool == true then
             return str
         else
-            return ""
+            return alt 
         end
     end
 
     utype = generateTypeString(ud)
     name = ud.name
+	Uname = trim(string.lower(name))
+	Uname = string.upper(string.sub(Uname,1,2))..string.sub(Uname,2,#Uname)
     description = ud.description
     maxDamage = ud.maxDamage
     autoHeal = ud.autoHeal
@@ -5281,8 +5284,7 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
     fireState = ud.fireState
     noAutoFire = ud.noAutoFire
     canManualFire = ud.canManualFire
-    --[[
-	
+
 	stringBuilder=stringBuilder..
 	"=== Unit: "..name.." ==="..lB..
 	"The unit "..name.." is a "..utype.." unit."..
@@ -5367,118 +5369,49 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 	cStr(canReclaim, " relcaim")..
 	cStr(canResurrect," and ressurect ")..
 	cStr(canCapture, " or capture. ")).."other units."..
+	"The "..name.." can built up to a distance of "..cStr(buildDistance).." away "..cStr(buildRange3D, "in 3D").."." 
+..lB..  
+	cStr(workerTime> 0, " A busy little beaver,the "..name.." has a workerTime of: "..workerTime.." .")
+..lB..
+	cStr(repairSpeed> 0, Uname.." can repair its companions with a rate of "..repairSpeed.." .")
+..lB..
+	cStr(reclaimSpeed > 0, "Hungry as a "..name.." as they say, this unit can consume at a rate of "..reclaimSpeed.. " what remained of the maimed.")
+..lB..
+	cStr(resurrectSpeed > 0, "With a resurectionSpeed of ".. resurrectSpeed .." the "..name.." is a great pal to be around, when disaster strikes.")
+..lB..	
+	cStr(captureSpeed > 0, "With a capture Speed of ".. captureSpeed .." the "..name.." is able to turn envitorys.")
+..lB..	
+	cStr(terraformSpeed > 0, Uname.."s are great scapers of land with a terraformSpeed of ".. terraformSpeed..".")
+..lB..	
+	cStr(canAssist , Uname.."s will help guarded units to archieve there build targets.")
+..lB..	
+	cStr(canBeAssisted , Uname.."s can accept help from other builders.")
+..lB..
+	cStr(canSelfRepair , "Help thyself, so good shall help, seems to be "..Uname.."s family motto.")
+..lB..
+	cStr(showNanoSpray , "During the buildprocess- nanospray might be visible.")
+..lB..
+	cStr(levelGround, "To start construction, the ground has to be leveld for a "..name..".")
+..lB..
+	cStr(fullHealthFactory, Uname.." is a full health factory, nothing leaves Nanos-kitchen, before it is not 100 % fit.", Uname.." is a normal factory shipping in various stages of disrepair.")
+..lB..
+	cStr(isAirbase, Uname.." In Addition serves as a airbase for air Units.")
+..lB..
+	cStr(isAirbase, Uname.." In Addition serves as a airbase for air Units.")
+..lB..
+	"The "..Uname.." has a Footprint of "..footprX.." in X and "..footprZ.." in Z."
+..lB..
+	"The "..Uname.." is of the following movement class :"..movementClass..". "
+..lB..
+	cStr(canHover, Uname.."s can hover.")
+..lB..
+	cStr(floater , Uname.."s is floating on the surface.", Uname.."s craw along the seafloor." )
+..lB..
+	cStr(upright , Uname.."s is a upright walker with a maxslope of "..maxSlope, Uname.." is a ground hugger with a maxslope of "..maxSlope )
+..lB..		
+		
+		
 	
-	
-	
-
-	
-	buildDistance default: 128.0 
-	
-	How far away from itself the unit can build, measured to the centre of the unit being built. The minimum value is 38.0. 
-	
-	buildRange3D default: false 
-	
-	Does the builders buildDistance apply in all 3 dimensions or only 2? 
-	
-	workerTime default: 0.0 lua: buildSpeed 
-	
-	How fast the builder builds, used in conjunction with the buildTime of the unit being built. Effectively, Time to build = buildTime / workerTime. If this value is <= 0.0 then builder is set to false. 
-		
-		repairSpeed default: workerTime 
-		
-		How fast the builder can repair other units. 
-		
-		reclaimSpeed default: workerTime 
-		
-		How fast the builder can reclaim other units and features. 
-		
-		resurrectSpeed default: workerTime 
-		
-		How fast the builder can resurrect corpse features back o living units. 
-		
-		captureSpeed default: workerTime 
-		
-		How fast the builder can capture other units. 
-		
-		terraformSpeed default: workerTime 
-		
-		How fast the builder levels and restores terrain. 
-		
-		canAssist default: builder 
-		
-		Can the builder assist other constructions? 
-		
-		canBeAssisted default: true 
-		
-		Can the builder be assisted by other builders? 
-		
-		canSelfRepair default: false 
-		
-		Can the builder repair itself? 
-		
-		showNanoSpray default: true 
-		
-		Does the builder emit OTA-style nanospray whilst constructing? 
-		
-		[3] nanoColor default: {0.2, 0.7, 0.2} aka green 
-		
-		The RGB colour of a builders' emitted nano particles if showNanoSpray = true. Also controls the RBG colour of a unit's own nanoframe if showNanoFrame = true. 
-		
-		fullHealthFactory default: ? 
-		
-		If true, units are repaired before they are allowed to leave the factory i.e. units from this factory will be healed back to 100% health if they are damaged during construction. 
-		
-		isAirbase default: false Removed in 101.0 in favour of more flexible lua custom commands
-		
-		Is this unit an airbase? Aircraft may land and repair on units which are airbases. 
-		
-		Movement & Placement
-		
-		footprX default: 1 
-		
-		How wide the unit is in footpr units, left to right. 1 footpr unit = 16 elmos. Cannot be below 1. For mobile units this should be the same as the footprX of its movementClass. Also used for obstacle avoidance. 
-		
-		footprZ default: 1 
-		
-		How wide the unit is in footpr units, top to bottom. 1 footpr unit = 16 elmos. Cannot be below 1. For mobile units this should be the same as the footprZ of its movementClass. Also used for obstacle avoidance. 
-		
-		string yardmap default: "" 
-		
-		Used to determine a structure from a mobile unit. A string of characters which defines in detail each 'footpr square' of the structure. Each footpr square may be:
-		
-		y - 'Yard' - Always open, unblocking, 
-		c - 'Construction' - Open and unblocking only while constructing (for factories, controlled via COB.YARD_OPEN see Animation-LuaCallouts#Other), 
-		i - 'Inversed Construction' - Closed and blocking only while constructing (for factories, controlled via COB.YARD_OPEN see Animation-LuaCallouts#Other) (New in version 89.0), 
-		g - 'Geothermal' - Flags that the unit must be placed over a geoThermal feature, does not actually count as a square, 
-		h - 'High Resolution' - Indicates that the yardmap will use double resolution with four times as many characters. Must be the first character, and does not count as a square itself (New in version 93.0), 
-		o - 'Obstacle' - Always closed, blocking, all other chars are treated the same way. 
-		
-		Tip: 'Draw' out the yardmap over multiple lines. As of 89.0 all whitespace characters are ignored, including newlines. 
-		
-		levelGround default: false 
-		
-		For structures. Does the constructor have to level the ground underneath the build area before beginning to build the structure? 
-		
-		string movementClass default: "" lua: moveDef.name 
-		
-		The name of the movement type a mobile, non aircraft, unit should use. See Movedefs.lua. 
-		
-		canHover default: false Removed in 95.0
-		
-		Is the unit a hovercraft? Hovercraft can cross water of any depth without a speed penalty. Hover's must also have HOVER within the name of their movementClass (see Movedefs.lua). 
-		
-		er default: true if waterline = true, false otherwise 
-		
-		When a mobile unit is crossing water, or a structure is placed on water, does it on top of the water or crawl / lay on the sea bed? 
-		
-		upright default: false 
-		
-		Does the unit follow the terrain or always remain upright? Generally used for walkers. 
-		
-		maxSlope default: 0.0 lua: maxHeightDif 
-		
-		The maximum slope a building can be placed on. Mobile unit's use the maxSlope set in their movementClass. The value is in degrees and is clamped between 0.0 and 89.0. This value is converted to a "maximum allowed height difference" (call it M), which involves a hard-coded constant. When a building gets placed, the height of each of its footpr squares is compared to a reference height (calculated for the build position). If the difference exceeds M for any square, that build position is rejected. The value readable from lua has been changed from that in the unitdef and reflects the ernal engine value. 
-		
 		minWaterDepth default: -10e6 
 		
 		The minimum depth of water a building can be placed on. Mobile unit's use the minWaterDepth set in their movementClass. 
@@ -5932,5 +5865,5 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 			
 			echo("Unit: "..name)
 			echo("The "..name.." is a "utype
-			]]
+			--]]
 end

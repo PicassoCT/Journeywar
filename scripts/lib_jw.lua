@@ -807,14 +807,29 @@ end
 			
 function getBlackGuardThougth(homePlanet, homeTown, name)
 pStrings={
-"My Name is "..name.." and i regret leaving ".. homeTown.." on "..homePlanet
+--Topics: 
+--Food
+--Sex
+--Tourism
+--Social with locals
+--Soldiersocialising among themselves
+--banned thoughts
+--CityVacation
+--Multiple Personalitys
+--Implant Errors
+-- Sleeping (philosophical zombie)
+
+
 }
 return pStrings[math.random(1,#pStrings)]
 end
 
 function getBlackGuardUnderFireThought(homePlanet, homeTown, name)
 pStrings={
-"Join the army they said"
+"Join the army they said",
+"If you find me, my name was "..name.." and i regret leaving ".. homeTown.." on "..homePlanet,
+"Fuck, fuck, fuck!"
+
 
 
 
