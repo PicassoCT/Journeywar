@@ -5204,7 +5204,7 @@ end
 		StartThread(func)
 	
 	end
-
+--[[
 -->Generate a Description Text for a Unit
 function unitDescriptionGenerator(Unit, UnitDefNames)
     local ud = UnitDefNames[Unit]
@@ -5322,15 +5322,15 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 	reStr(energyMake," Further the "..name.. " is constantly generating "..energyMake.." of energy.")..lB..
 	reStr(makesMetal," In Addition the "..name.. " cpmverts "..makesMetal.." units of energy into metal.")..lB..
 	"==== Unit Stats ===="..lB.. 
-	reStr(onOffable,"A "..name.. " special abilitys can "..trueStr(onOffable).." be toggled via GUI. By default the special Ability is "..trueStr(activateWhenBuilt).." active."
+	reStr(onOffable,"A "..name.. " special abilitys can "..trueStr(onOffable).." be toggled via GUI. By default the special Ability is "..trueStr(activateWhenBuilt).." active.")
 ..lB.. 
-	reStr(sightDistance,"The "..name.. " can, depending on terrain, see as far as "..sightDistance.." at day and night."
+	reStr(sightDistance,"The "..name.. " can, depending on terrain, see as far as "..sightDistance.." at day and night.")
 ..lB.. 
 	reStr(airSightDistance,"The "..name.. " can set Air Units as far as "..airSightDistance..".")
 ..lB.. 
 	reStr(losEmitHeight,""..name.. " viewpoint is "..losEmitHeight.." over ground.")
 ..lB.. 
-	reStr(radarEmitHeight," Radar is emitted at "..radarEmitHeight.." over ground with a distance of "..radarDistance.."by the "..name..)
+	reStr(radarEmitHeight," Radar is emitted at "..radarEmitHeight.." over ground with a distance of "..radarDistance.."by the "..name)
 ..lB.. 
 	reStr(radarDistanceJam," Radar is jammed in a range of "..radarDistanceJam.." elmos.")
 ..lB.. 
@@ -5875,5 +5875,6 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 			
 			echo("Unit: "..name)
 			echo("The "..name.." is a "utype
-			--]]
+		
 end
+	--]]
