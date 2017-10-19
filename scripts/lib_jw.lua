@@ -804,38 +804,52 @@ end
 							Spring.GetGameFrame() + 1)
 
 end
-			
+		
 function getBlackGuardThougth(homePlanet, homeTown, name)
-pStrings={
---Topics: 
---Food
---Sex
---Tourism
---Social with locals
---Soldiersocialising among themselves
---banned thoughts
---CityVacation
---Multiple Personalitys
---Implant Errors
--- Sleeping (philosophical zombie)
-
-
-}
-return pStrings[math.random(1,#pStrings)]
+	homePlanet = homePlanet or "Todoine"
+	homeTown = homeTown or "Lazytown"
+	name = name or "John Doe"
+	
+	pStrings={
+		--Topics: 
+		--Food
+		"I hate saline solution so much, i wish i could eat a steak. A real steak. But cows are gone, like my stomache and my mouth-",
+		--Sex
+		"Wow, that - Thing has a hot ass. Would plow that like a seismic post!",
+		--Tourism
+		"Definatly worth a visit, the suns remind me so much of "..homePlanet.." moon.",
+		--Social with locals
+		"Yeah, assholes stop you assholes from going bannana! Watcha gonna do about it, Vort?",
+		--Soldiersocialising among themselves
+		"Fifth corps is totally loosing it. With that attitude they get the worst assignments.",
+		--banned thoughts
+		"One day, we should get rid of that mach< CENSORED> < Thought readjustment in progress > ",
+		--CityVacation
+		"Trooper is currently on extended City shoreleave. Zombie-OS on duty.",
+		--Multiple Personalitys
+		--Implant Errors
+		" Its the damn implant i tell you, everytime i think %'Stooge%' I get a orgasm!",
+		-- Sleeping (philosophical zombie)
+		"Overwatch soldier is currently resting. Zombie-OS on duty."
+	}
+	return pStrings[math.random(1,#pStrings)]
 end
 
 function getBlackGuardUnderFireThought(homePlanet, homeTown, name)
-pStrings={
-"Join the army they said",
-"If you find me, my name was "..name.." and i regret leaving ".. homeTown.." on "..homePlanet,
-"Fuck, fuck, fuck!"
-
-
-
-
-
-}
-return pStrings[math.random(1,#pStrings)]
-
-
+	homePlanet = homePlanet or "Todoine"
+	homeTown = homeTown or "Lazytown"
+	name = name or "John Doe"
+	
+	pStrings={
+		"Join the army they said",
+		"If you find me, my name was "..name.." and i regret leaving ".. homeTown.." on "..homePlanet,
+		"Fuck, fuck, fuck!",
+		"Not today cocksuckers. Im going to see "..homeTown.." again.",
+		"Eat high-v darkmatter, its rich in Vitamin h,o,l and e!",
+		"Grenade"
+		
+	}
+	return pStrings[math.random(1,#pStrings)]
+	
+	
 end
