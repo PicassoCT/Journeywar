@@ -21,6 +21,7 @@ idleAutoHeal = 0,
 	airstrafe=1,
 	strafe=1,
 	hoverattack=0,
+	factoryHeadingTakeoff = false
 	canHover=1,
 	canCrash=0,
 	canFly=1,

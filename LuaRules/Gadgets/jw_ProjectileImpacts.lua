@@ -149,7 +149,8 @@ if (gadgetHandler:IsSyncedCode()) then
     local skySraperDefID = UnitDefNames["buibaicity1"].id
     local cssDefID = UnitDefNames["css"].id
     local gvolcanoDefID = UnitDefNames["gvolcano"].id
-
+	
+--===========Explosion Functions ====================================================
     function unitVannishAntimatterSFX(id)
 
         Spring.SetUnitNoSelect(id, true)
@@ -530,9 +531,10 @@ if (gadgetHandler:IsSyncedCode()) then
         if explosionFunc[weaponDefID] then explosionFunc[weaponDefID](weaponDefID, px, py, pz, AttackerID) end
         return true
     end
+	
+--===========UnitDamaged Functions ====================================================
 
     ghostShadowEffectedUnits = {}
-
     exploAmmoBlowTable = {}
     local timeTillBlowUp = 3500
     local jShadowDefID = UnitDefNames["jshadow"].id
@@ -787,13 +789,18 @@ if (gadgetHandler:IsSyncedCode()) then
         Spring.Echo("jw_projectileimpacts:: FieldScoooper HIt found")
         --only if the unit is hitsphere wise big enough
         hp, maxhp = Spring.GetUnitHealth(unitID)
-        if hp / maxhp < 0.5 and hp > 300 then
-			if maRa() then
-            pieceID = getUnitBiggestPiece(unitID)
-            slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
-            Spring.UnitAttach(unitID, slicerColum, pieceID)          
-			Spring.SetUnitNoSelect(slicerColum, true)
-            if not GG.SlicerTable then GG.SlicerTable = {} end
+        if hp / maxhp < 0.5 and maxhp > 300 then
+				pieceID = getUnitBiggestPiece(unitID)
+				side = getUnitSide(unitID)
+				slicerColum = -1 
+				if side == "centrail" then
+					slicerColum = Spring.CreateUnit("cmeatcolumn", x, y, z, 1, unitTeam)
+				else					
+					slicerColum = Spring.CreateUnit("jmeatcolumn", x, y, z, 1, unitTeam)
+				end
+				Spring.UnitAttach(unitID, slicerColum, pieceID)          
+				Spring.SetUnitNoSelect(slicerColum, true)
+				if not GG.SlicerTable then GG.SlicerTable = {} end
 				GG.SlicerTable[slicerColum] = unitID
 			else
 				rootPiece= Spring.GetUnitLastAttackedPiece(unitID)
@@ -812,7 +819,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 			end
         end
-    end
+  
 
     UnitDamageFuncT[jethiefweaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
         --only if the unit is hitsphere wise big enough
@@ -1000,7 +1007,7 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 
-	
+--===========Projectile Persistence Functions ====================================================
 	
 	watchedProjectilesTable={
 	[cAntiMatterDefID] = function (projectileID)
@@ -1051,8 +1058,6 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 	
 	}
-	
-	
 	
 	constantWatchedProjectiles = {}
 	constantWatchedProjectilesCounter=0
@@ -1225,7 +1230,7 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 	
-		function getTargetTable(proID)
+	function getTargetTable(proID)
 			local targetTable = {}
 			local targetTypeInt, target = Spring.GetProjectileTarget(proID)
 			if targetTypeInt == string.byte('g') then --target is position on ground
@@ -1235,9 +1240,8 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 			return targetTable
 		end
-	
-	
-	    function getProjectileTargetXYZ(proID)
+		
+	function getProjectileTargetXYZ(proID)
         targetTypeInt, target = Spring.GetProjectileTarget(proID)
 
         if targetTypeInt == GROUND then

@@ -55,6 +55,7 @@ collide             = true,
 --airHoverFactor=0.1,
 airStrafe =true,
 hoverAttack  = true,
+factoryHeadingTakeoff = false,
 strafeToAttack=true,
 
 

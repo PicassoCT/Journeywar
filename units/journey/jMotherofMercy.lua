@@ -34,7 +34,7 @@ local unitDef = {
 	sightDistance = 500,
 	CanFly = true,
 	showNanoFrame=false,
-	
+
 	
 	Builder = false,
 	--canHover=true,

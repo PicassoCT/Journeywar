@@ -5010,6 +5010,16 @@ function unitCanBuild(unitDefID)
 	end
 end
 
+CentrailUnitTypeList = getUnitCanBuildList(UnitDefNames["citadell"].id)
+JourneyUnitTypeList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
+
+function getUnitSide(unitID)
+defID= Spring.GetUnitDefID(unitID)
+if CentrailUnitTypeList[defID] then return "centrail"end
+if JourneyUnitTypeList[defID] then return "journeyman"end
+return "gaia"
+end
+
 --computates a map of all unittypes buildable by a unit (detects loops)
 --> getUnitBuildAbleMap
 function getUnitCanBuildList(unitDefID, closedTableExtern)
@@ -5023,10 +5033,7 @@ function getUnitCanBuildList(unitDefID, closedTableExtern)
    closedTable[unitDefID] = true  
 	CanBuildList = unitCanBuild(unitDefID)
 	
-
-   for num, defID in pairs(CanBuildList) do
-
-		
+   for num, defID in pairs(CanBuildList) do		
 		if defID and not closedTable[defID] then
 			Result[defID] =defID		
 			unitsToIntegrate, closedTable = getUnitCanBuildList(defID, closedTable)
@@ -5135,8 +5142,6 @@ function drawFunctionGenerator(sizeX, sizeY, typeName)
             end
         end
 
-
-
         return heightMapTable
     end
 end
@@ -5210,7 +5215,10 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
     local ud = UnitDefNames[Unit]
     stringBuilder = ""
     lB = "\n"
-
+	
+	function sel(index, t)
+		return t[index]
+	end
 
     function unitDefToStr(ud)
         str = "normal"
@@ -5411,7 +5419,7 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 ..lB..
 	"The "..Uname.." has a Footprint of "..footprX.." in X and "..footprZ.." in Z."
 ..lB..
-	"The "..Uname.." is of the following movement class :"..movementClass..". "
+	cStr(movementClass, "The "..Uname.." is of the following movement class :"..movementClass..". ")
 ..lB..
 	cStr(canHover, Uname.."s can hover.")
 ..lB..
@@ -5419,125 +5427,59 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 ..lB..
 	cStr(upright , Uname.."s is a upright walker with a maxslope of "..maxSlope, Uname.." is a ground hugger with a maxslope of "..maxSlope )
 ..lB..		
-		
-		
-	
-		minWaterDepth default: -10e6 
-		
-		The minimum depth of water a building can be placed on. Mobile unit's use the minWaterDepth set in their movementClass. 
-		
-		maxWaterDepth default: 10e6 
-		
-		The maximum depth of water a building can be placed on. Mobile unit's use the maxWaterDepth set in their movementClass. 
-		
-		waterline default: 0.0 
-		
-		How low in the water does a ship sit? Higher values means the ship is lower in the water. 
-		
-		minCollisionSpeed default: 1.0 
-		
-		The minimum net impact speed that will cause a unit to be damaged by collisions with another unit. 
-		
-		pushResistant default: false 
-		
-		Can the unit be pushed around by other units? Turning it on doesn't remove all pushing but is a marked improvement. 
-		
-		maxVelocity default: 0.0 lua: speed 
-		
-		The maximum speed attainable by the unit in elmos per frame. If the value is -ve, the absolute value is used. 
-		
-		maxReverseVelocity default: 0.0 lua: rSpeed New in version 99.0
-		
-		The maximum speed attainable by the unit in reverse in elmos per frame. If the value is -ve, the absolute value is used. 
-		
-		acceleration default: 0.5 lua: maxAcc 
-		
-		The acceleration of the unit, in elmos per frame2. If the value is -ve, the absolute value is used. 
-		
-		brakeRate default: acceleration lua: maxDec 
-		
-		The deceleration of the unit, in elmos per frame2. If the value is -ve, the absolute value is used. For units with canFly = true this is multiplied by 0.1. Prior to 95.0 this was scaled by 0.1 for aircraft and the default was 3x acceleration. 
-		
-		myGravity default: 0.4 
-		
-		As Spring aircraft are slower than real aircraft this tag allows to lower gravity to compensate. Multiplies against map gravity for aircraft, replaces map gravity for ground vehicles if non-zero. 
-		
-		turnRate default: 0.0 
-		
-		How fast the unit can turn. degrees per seconds = 0.16 * turnRate. 
-		
-		turnInPlace default: true 
-		
-		Does the unit turn on the spot (like a person or tank) or must it be moving forwards to turn (like a car). 
-		
-		turnInPlaceSpeedLimit default: A complex formula based on turnRate and maxVelocity 
-		
-		For units with turnInPlace = false, this defines the minimum speed it will slow down to (the speed at which the turn is actually performed can be higher depending on the angular difference and turnRate). 
-		
-		turnInPlaceAngleLimit default: 0.0 New in version 86.0
-		
-		For units with turnInPlace = true, defines the maximum angle (in degrees) of a turn above which it starts to brake. 
-		
-		blocking default: true 
-		
-		Does the unit block the movement of other units? (Mines, i.e. non-mobile units with the kamikaze tag default to false). 
-		
-		crushResistance default: mass New in version 85.0
-		
-		How resistant is the unit to being crushed? Any MoveClass with a crushStrength greater than this will crush the unit - IFF this has been enabled via Spring.SetUnitBlocking and the collider impulse exceeds that of the colidee. 
-		
-		Flanking
-		
-		flankingBonusMode default: flankingBonus.defaultMode set in Modrules.lua 
-		
-		The mode of operation of Spring's inbuilt flanking system. Can be 0 - No flanking bonus. Mode 1 builds up the ability to move over time, and swings to face attacks, but does not respect the way the unit is facing. Mode 2 also can swing, but moves with the unit as it turns. Mode 3 stays with the unit as it turns and otherwise doesn't move, the ideal mode to simulate something such as tank armour. 
-		
-		[3] flankingBonusDir default: {0.0, 0.0, 1.0} 
-		
-		This is the direction vector where the armour is facing; i.e. where the least damage is applied. The default is straight forwards. 
-		
-		flankingBonusMax default: 1.9 
-		
-		The maximum multiplier to the damage dealt, when a unit is hit from the opposite direction to flankingBonusDir. 
-		
-		flankingBonusMin default: 0.9 
-		
-		The minimum multiplier to the damage dealt, when a unit is hit from the same direction as flankingBonusDir. 
-		
-		flankingBonusMobilityAdd default: 0.01 
-		
-		This defines the ability of flankingBonusDir to move over time. Its value is added to the mobility every SlowUpdate. When the unit is attacked, the build up mobility value is multiplied by a vector facing the attack, which is added to flankingBonusDir. 
-		
-		Aircraft
-		
-		canFly default: false 
-		
-		Can the unit fly, i.e. is it an aircraft? 
-		
-		canSubmerge default: false 
-		
-		Can the aircraft land underwater? 
-		
-		factoryHeadingTakeoff default: true 
-		
-	Controls the take-off behaviour of aircraft with hoverAttack = true. true means planes start matching their heading right after taking off from the pad, false means they maain the heading of the pad until reaching cruiseAlt. 
-	
-	collide default: true 
-	
-	Does the unit collide with other aircraft, or can it occupy the same space? 
-	
-	hoverAttack default: false 
-	
-	Controls whether the aircraft flys and attacks like a fighter/bomber or a helicopter/gunship. 
-	
-	airStrafe default: true 
-	
-	For aircraft with hoverAttack = true, controls if the unit strafes side to side while attacking or remains stationary. 
-	
-	cruiseAlt default: 0.0 lua: wantedHeight 
-	
-	The altitude in elmos which the unit attempts to fly at while cruising. 
-	
+	cStr(minWaterDepth , "The "..Uname.." needs at least a waterdepth of "..minWaterDepth..".")
+..lB..		
+			cStr(maxWaterDepth , "The "..Uname.." needs at least a waterdepth of "..minWaterDepth..".")
+..lB..		
+	cStr(waterline > 0.0, "A "..name.." is "..waterline.." submerged beneath the waves.")		
+..lB..		
+	cStr(minCollisionSpeed, "When at ".. minCollisionSpeed.." the "..name.." will suffer damage on collission.")
+..lB..
+	cStr(pushResistant, "This unit is pushed around.","This unit is push resistant.")
+..lB..
+	cStr(maxVelocity> 0.0, Uname.."s maximum speed is "..maxVelocity.." attained at "..	cStr(acceleration> 0, acceleration")..".")
+..lB..
+	cStr(maxReverseVelocity> 0.0, "The reverse velocity is".. maxReverseVelocity)
+..lB..
+	cStr(brakeRate, "The "..name.." brakes with a rate of "..brakeRate..".")
+..lB..
+	cStr(myGravity, "As a aircraft-unit the "..name.." has a custom gravity of "..myGravity)
+..lB..
+	cStr(turnRate, Uname.." turns "..cStr(turnInPlace," in place ").."with a speed of "..turnRate.. " degrees per second")
+..lB..
+	cStr(turnInPlaceSpeedLimit, "When turning in place the "..name.." is bound by a speedlimit of "..turnInPlaceSpeedLimit..".")
+..lB..
+	cStr(turnInPlaceAngleLimit, "It can bank during turn by "..turnInPlaceAngleLimit.." degrees".)
+..lB..
+	cStr(blocking, "The "..Uname.." blocks the movement of other Units.")
+..lB..
+	cStr(crushResistance, "Crush resistant up to".. curshResistance..".")
+..lB..
+	cStr(myGravity, "As a aircraft-unit the "..name.." has a custom gravity of "..myGravity)
+..lB..		
+	cStr(blocking, "The "..Uname.." blocks the movement of other Units.")
+..lB..
+	cStr(Flanking, "When Flanking the "..name.."s bonus is "..sel(Flanking, {"no flanking bonus","a build up of the ability to move over time, and swings to face attacks","also can swing, but moves with the unit as it turns", "stays with the unit as it turns and otherwise doesn't move"}))
+..lB..
+	cStr(flankingBonusMax, "The Bonus applied to the armour main direction is "..flankingBonusMax)
+..lB..
+	cStr(flankingBonusMin, "The Bonus applied to the armour minimal directions is "..flankingBonusMin)
+..lB..
+	cStr(canFly, Uname.." is a aircraft.")
+..lB..
+	cStr(canSubmerge, Uname.." can submerge itself beneath water.")
+..lB..
+	cStr(factoryHeadingTakeoff, Uname.." will lift off from a runway.",Uname.." will lift off straigth up - VTOL style.")
+..lB..
+	cStr(collide,"The "..name.." will collide with air-units.", "The "..name.." has collission turned off." )
+..lB..
+	cStr(hoverAttack,"Enemys will be attacked while attacked hovering in place by "..name..".", "Enemys will be attacked with approach and flight over by "..name..".",  )
+..lB..
+	cStr(airStrafe and hoverAttack, "Enemy fire is avoided with strafing motion" )
+..lB..
+	cStr(cruiseAlt, "Default cruise height is "..cruiseAlt.." in elmos for the "..name..".")
+..lB..
+
 	airHoverFactor default: -1.0 lua: dlHoverFactor 
 	
 	For aircraft with hoverAttack = true, less then 0 means it can land and >= 0 indicates how much the unit will move during hovering on the spot. 

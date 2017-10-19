@@ -41,20 +41,21 @@ local unitDef = {
 	
 	Category = [[AIR]],
 	
-	
+
 	cruiseAlt=165,
 	CanFly = true,
 	
 	maxBank=0.1,
 	myGravity =0.5,
 	mass = 1225,
-	canSubmerge = false,
+	canSubmerge = true,
 	useSmoothMesh =false,
 	crashDrag =0.1,
 	collide =true,
 	airHoverFactor =0,
 	dontLand		 	= true,
-	HoverAttack=1,
+	HoverAttack=true,
+	factoryHeadingTakeoff =false,
 	MovementClass = "Default2x2",
 	MaxWaterDepth=15,
 	-------------------------------

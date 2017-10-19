@@ -1677,7 +1677,6 @@ end
 --> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
 function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
 	shotVector= shotVector*-1
-	echo("TODO unitRipAPieceOut called")
 
 	LimbMap= getPiecesBelow(unitID, rootPiece)
 	stunUnit(unitID, 64)
@@ -1685,30 +1684,17 @@ function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, 
 	env.Hide(rootPiece)
 	env.Explode(rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
 	
-	-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
-	-- spinTime= 0
-	-- parabelFactor=0.5
-	-- env.Spin(rootPiece,x_axis, math.rad(55),0)
-
-		-- movePieceInParabel(unitID, pieceName, vector, factor, parabelLength)
-	
-		-- groundHeigth = Spring.GetUnitPiecePosDir(unitID, rootPiece)
-	
-	-- if groundHeigth < 0 then
-		-- stunUnit(unitID, 0)
-		-- if boolSurvivorHeCanTakeIt == true then
-			-- hideT(LimbMap)
-		-- else
-			-- Spring.DestroyUnit(unitID, false, false)
-		-- end 
-	-- end 
+	for k,piecenumber in pairs(LimbMap) do
+		env.Hide(piecenumber)	
+	end
 	
 end
-
-function rippleHide(array,startIndex, endIndex)
+-- riplpling show and Hide effect
+function rippleHide(array,startIndex, endIndex, Sleeptime)
+	Sleeptime= Sleeptime or 600
 	for i= startIndex,endIndex do
 	Hide(array[i])
-	Sleep(600)
+	Sleep(Sleeptime)
 		if array[i-1] then
 			Show(array[i-1])
 		end
