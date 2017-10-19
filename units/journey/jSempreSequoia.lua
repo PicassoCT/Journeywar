@@ -55,6 +55,7 @@ local unitDef = {
 	airHoverFactor =0,
 	dontLand		 	= true,
 	HoverAttack=true,
+	verticalSpeed= 1,
 	factoryHeadingTakeoff =false,
 	MovementClass = "Default2x2",
 	MaxWaterDepth=15,

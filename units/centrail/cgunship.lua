@@ -55,6 +55,7 @@ local unitDef = {
 	--airHoverFactor=0.1,
 	airStrafe =true,
 	hoverAttack = true,
+	verticalSpeed= 5.0,
 	factoryHeadingTakeoff =false,
 	strafeToAttack=true,
 	

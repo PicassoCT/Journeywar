@@ -28,6 +28,7 @@ local unitDef = {
 	
 	airStrafe =false,
 	hoverAttack = true,
+	verticalSpeed= 3.5,
 	factoryHeadingTakeoff  = false,
 	strafeToAttack=true, 	
 	steeringmode = [[1]],

@@ -35,6 +35,7 @@ local unitDef = {
 	sightDistance = 500,
 	bankingAllowed = true,
 	hoverAttack =true,
+	verticalSpeed=1.0,
 	factoryHeadingTakeoff = true,
 	Builder = false,
 	canHover=true,
