@@ -5010,15 +5010,6 @@ function unitCanBuild(unitDefID)
 	end
 end
 
-CentrailUnitTypeList = getUnitCanBuildList(UnitDefNames["citadell"].id)
-JourneyUnitTypeList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
-
-function getUnitSide(unitID)
-defID= Spring.GetUnitDefID(unitID)
-if CentrailUnitTypeList[defID] then return "centrail"end
-if JourneyUnitTypeList[defID] then return "journeyman"end
-return "gaia"
-end
 
 --computates a map of all unittypes buildable by a unit (detects loops)
 --> getUnitBuildAbleMap
@@ -5050,6 +5041,17 @@ function getUnitCanBuildList(unitDefID, closedTableExtern)
    end
 
     return Result,closedTable
+end
+
+
+CentrailUnitTypeList = getUnitCanBuildList(UnitDefNames["citadell"].id)
+JourneyUnitTypeList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
+
+function getUnitSide(unitID)
+defID= Spring.GetUnitDefID(unitID)
+if CentrailUnitTypeList[defID] then return "centrail"end
+if JourneyUnitTypeList[defID] then return "journeyman"end
+return "gaia"
 end
 
 -->Stuns a Unit
@@ -5250,6 +5252,7 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
         else
             return alt 
         end
+		return ""
     end
 
     utype = generateTypeString(ud)
@@ -5265,21 +5268,20 @@ stringBuilder=stringBuilder..
 	"Internally also described as "..ud.description..", the "..ud.name.." has "..ud.maxDamage.." Hitpoints."..
 	"To build a "..ud.name.." costs "..ud.buildCostMetal.." metal and "..ud.buildCostEnergy.." energy."..
 	"The "..ud.name.." is a "..ud.ustatus.. " unit."..
-	reStr(ud.harvestStorage, "This harvester can store "..ud.harvestStorage.." in internal holds.")
-reStr(ud.metalStorage, "The "..ud.name.."s storage contributes "..ud. metalStorage.." to the teams metal storage.")
-reStr(ud.metalStorage, "The "..ud.name.."s storage contributes "..ud. energyStorage.." to the teams energy storage.")
-reStr(ud.extractsMetal, "The "..ud.name.." extracts "..ud.extractsMetal.." from the ground.")
-reStr(ud.windGenerator, "It is able to convert gas-currents into energy at a rate of "..ud.windGenerator)
-reStr(ud.tidalGenerator, "Tidal forces can be converted to energy up too "..ud.tidalGenerator .. " per Unit.")
-reStr(ud.metalUse, "The unit uses up to "..ud.metalUse .. " metal.")
-reStr(ud.metalUpkeep,metalUpkeep.. " is used once the"..ud.name.. " is activated.")
-reStr(ud.energyUse,energyUse.. " units of energy are used once the"..ud.name.. " is activated.")reStr(ud.metalMake," The "..ud.name.. " generates "..ud.metalMake.." uncoditionally every gametick.")
-reStr(ud.energyMake," Further the "..ud.name.. " is constantly generating "..ud.energyMake.." of energy.")
-reStr(ud.makesMetal," In Addition the "..ud.name.. " cpmverts "..ud.makesMetal.." units of energy into metal.")
-..lB..
-	"==== Unit Stats ===="
-..reStr(ud.onOffable,"A "..ud.name.. " special abilitys can "..ud.trueStr(onOffable).." be toggled via GUI. By default the special Ability is "..ud.trueStr(activateWhenBuilt).." active.")
-..reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far as "..ud.sightDistance.." at day and night.")
+	reStr(ud.harvestStorage, "This harvester can store "..ud.harvestStorage.." in internal holds.")..
+reStr(ud.metalStorage, "The "..ud.name.."s storage contributes "..ud. metalStorage.." to the teams metal storage.")..
+reStr(ud.metalStorage, "The "..ud.name.."s storage contributes "..ud. energyStorage.." to the teams energy storage.")..
+reStr(ud.extractsMetal, "The "..ud.name.." extracts "..ud.extractsMetal.." from the ground.")..
+reStr(ud.windGenerator, "It is able to convert gas-currents into energy at a rate of "..ud.windGenerator)..
+reStr(ud.tidalGenerator, "Tidal forces can be converted to energy up too "..ud.tidalGenerator .. " per Unit.")..
+reStr(ud.metalUse, "The unit uses up to "..ud.metalUse .. " metal.")..
+reStr(ud.metalUpkeep,metalUpkeep.. " is used once the"..ud.name.. " is activated.")..
+reStr(ud.energyUse,energyUse.. " units of energy are used once the"..ud.name.. " is activated.")..
+reStr(ud.metalMake," The "..ud.name.. " generates "..ud.metalMake.." uncoditionally every gametick.")..
+reStr(ud.energyMake," Further the "..ud.name.. " is constantly generating "..ud.energyMake.." of energy.")..
+reStr(ud.makesMetal," In Addition the "..ud.name.. " cpmverts "..ud.makesMetal.." units of energy into metal.")..
+reStr(ud.onOffable,"A "..ud.name.. " special abilitys can "..trueStr(onOffable).." be toggled via GUI. By default the special Ability is "..trueStr(activateWhenBuilt).." active.")..
+reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far as "..ud.sightDistance.." at day and night.")
 ..reStr(ud.airSightDistance,"The "..ud.name.. " can set Air Units as far as "..ud.airSightDistance..".")
 ..reStr(ud.losEmitHeight,""..ud.name.. " viewpoint is "..ud.losEmitHeight.." over ground.")
 ..reStr(ud.radarEmitHeight," Radar is emitted at "..ud.radarEmitHeight.." over ground with a distance of "..ud.radarDistance.."by the "..ud.name)
@@ -5290,33 +5292,31 @@ reStr(ud.makesMetal," In Addition the "..ud.name.. " cpmverts "..ud.makesMetal..
 ..reStr(ud.sonarStealth,"Capable of hidding from Sonarunits.")
 ..reStr(ud.seismicDistance,"And able to detect enemys via seismic Signatures at a distance of "..ud.seismicDistance.." .")
 ..reStr(ud.seismicSignature ,"The "..ud.name.." itself emits a seismic signature detectable up to "..ud.seismicSignature *15 .." elmos.")
-..reStr(ud.canCloak,"The "..ud.name.." is clokable with costs of "..ud.cloakCost.." per second to uphold and "..ud.reStr(ud.cloakCostMoving," and additional costs of "..ud.cloakCostMoving.. " while moving."..ud.reStr(ud.initCloaked, " The "..ud.name.." is cloaked from the start.")))
-..reStr(ud.canCloak,"The "..ud.name.." is clokable with costs of "..ud.cloakCost.." per second to uphold and "..ud.reStr(ud.cloakCostMoving," and additional costs of "..ud.cloakCostMoving.. " while moving."..ud.reStr(ud.initCloaked, " The "..ud.name.." is cloaked from the start.")))
-..reStr(ud.minCloakDistance,"The "..ud.name.." will be unveiled when a enemy comes closer as "..ud.minCloakDistance.." in a "( reStr(ud.decloakSpherical, "sphere.", "circle.")or " it.")
-..reStr(ud.decloakOnFire,"If the "..ud.name.." fires its weapon, it will "..ud.trueStr(decloakOnFire)decloaked.." decloak."
-..reStr(ud.cloakTimeout,"To recloak the "..ud.name.." will have to wait for "..ud.cloakTimeout.." seconds.") 
-reStr(ud.cloakTimeout,"Among the commands for the Unit are"..
+..reStr(ud.canCloak,"The "..ud.name.." is clokable with costs of "..ud.cloakCost.." per second to uphold and "..reStr(ud.cloakCostMoving," and additional costs of "..ud.cloakCostMoving.. " while moving."..reStr(ud.initCloaked, " The "..ud.name.." is cloaked from the start.")))
+..reStr(ud.canCloak,"The "..ud.name.." is clokable with costs of "..ud.cloakCost.." per second to uphold and "..reStr(ud.cloakCostMoving," and additional costs of "..ud.cloakCostMoving.. " while moving."..reStr(ud.initCloaked, " The "..ud.name.." is cloaked from the start.")))
+..reStr(ud.decloakOnFire,"If the "..ud.name.." fires its weapon, it will "..trueStr(ud.decloakOnFire).."decloak.")
+..reStr(ud.cloakTimeout,"To recloak the "..ud.name.." will have to wait for "..ud.cloakTimeout.." seconds.")
+.."Among the commands for the Unit are"..
 	cStr(ud.canMove," move,")..
 	cStr(ud.canAttack, " attack,")..
 	cStr(ud.canFight, " fight,")..
 	cStr(ud.canPatrol, " patrol,")..
 	cStr(ud.canGuard, " guard,")..
-	cStr(ud.canCloak, " cloak,").." and "
-	cStr(ud.canRepeat, " repeat ").."."
-	.."In Addition the "..ud.name.." can be orders to "..
+	cStr(ud.canCloak, " cloak,").." and "..
+	cStr(ud.canRepeat, " repeat ").."."..
+	"In Addition the "..ud.name.." can be orders to "..
 	cStr(ud.canSelfDestruct, " selfdestruct,")..
 	cStr(ud.moveState ~= -1, " switch between move states,")..
 	cStr(ud.noAutoFire, " switch between the fire state,")..
 	cStr(ud.fireState ~= -1, " with "..ud.fireState.." as default ")..
-	cStr(ud.canManualFire, " and the order to manfual fire ").."."..
-	
-	cStr(ud.builder, name.." is a builder that can be orders to "..
+	cStr(ud.canManualFire, " and the order to manfual fire ").."."..	
+	cStr(ud.builder, name.." is a builder that can be orders to ")..
 	cStr(ud.canRestore, " restore ")..
 	cStr(ud.canRepair, " repair ")..
 	cStr(ud.canReclaim, " relcaim")..
 	cStr(ud.canResurrect," and ressurect ")..
-	cStr(ud.canCapture, " or capture. ")).."other units."..
-	"The "..ud.name.." can built up to a distance of "..ud.cStr(ud.buildDistance).." away "..ud.cStr(ud.buildRange3D, "in 3D").."." 
+	cStr(ud.canCapture, " or capture. ").."other units."..
+	"The "..ud.name.." can built up to a distance of "..cStr(ud.buildDistance).." away "..cStr(ud.buildRange3D, "in 3D").."." 
 ..cStr(ud.workerTime> 0, " A busy little beaver,the "..ud.name.." has a workerTime of: "..ud.workerTime.." .")
 ..cStr(ud.repairSpeed> 0, ud.Uname.." can repair its companions with a rate of "..ud.repairSpeed.." .")
 ..cStr(ud.reclaimSpeed > 0, "Hungry as a "..ud.name.." as they say, this unit can consume at a rate of "..ud.reclaimSpeed.. " what remained of the maimed.")
@@ -5341,13 +5341,13 @@ reStr(ud.cloakTimeout,"Among the commands for the Unit are"..
 ..cStr(ud.waterline > 0.0, "A "..ud.name.." is "..ud.waterline.." submerged beneath the waves.")		
 ..cStr(ud.minCollisionSpeed, "When at "..ud. minCollisionSpeed.." the "..ud.name.." will suffer damage on collission.")
 ..cStr(ud.pushResistant, "This unit is pushed around.","This unit is push resistant.")
-..cStr(ud.maxVelocity> 0.0, ud.Uname.."s maximum speed is "..ud.maxVelocity.." attained at "..ud.	cStr(ud.acceleration> 0, acceleration")..".")
+..cStr(ud.maxVelocity> 0.0, ud.Uname.."s maximum speed is "..ud.maxVelocity.." attained at "..cStr(ud.acceleration> 0, acceleration))
 ..cStr(ud.maxReverseVelocity> 0.0, "The reverse velocity is"..ud. maxReverseVelocity)
 ..cStr(ud.brakeRate, "The "..ud.name.." brakes with a rate of "..ud.brakeRate..".")
 ..cStr(ud.myGravity, "As a aircraft-unit the "..ud.name.." has a custom gravity of "..ud.myGravity)
-..cStr(ud.turnRate, ud.Uname.." turns "..ud.cStr(ud.turnInPlace," in place ").."with a speed of "..ud.turnRate.. " degrees per second")
+..cStr(ud.turnRate, ud.Uname.." turns "..cStr(ud.turnInPlace," in place ").."with a speed of "..ud.turnRate.. " degrees per second")
 ..cStr(ud.turnInPlaceSpeedLimit, "When turning in place the "..ud.name.." is bound by a speedlimit of "..ud.turnInPlaceSpeedLimit..".")
-..cStr(ud.turnInPlaceAngleLimit, "It can bank during turn by "..ud.turnInPlaceAngleLimit.." degrees".)
+..cStr(ud.turnInPlaceAngleLimit, "It can bank during turn by "..ud.turnInPlaceAngleLimit.." degrees.")
 ..cStr(ud.blocking, "The "..ud.Uname.." blocks the movement of other Units.")
 ..cStr(ud.crushResistance, "Crush resistant up to"..ud. curshResistance..".")
 ..cStr(ud.myGravity, "As a aircraft-unit the "..ud.name.." has a custom gravity of "..ud.myGravity)
@@ -5359,7 +5359,7 @@ reStr(ud.cloakTimeout,"Among the commands for the Unit are"..
 ..cStr(ud.canSubmerge, ud.Uname.." can submerge itself beneath water.")
 ..cStr(ud.factoryHeadingTakeoff, ud.Uname.." will lift off from a runway.",Uname.." will lift off straigth up - VTOL style.")
 ..cStr(ud.collide,"The "..ud.name.." will collide with air-units.", "The "..ud.name.." has collission turned off." )
-..cStr(ud.hoverAttack,"Enemys will be attacked while attacked hovering in place by "..ud.name..".", "Enemys will be attacked with approach and flight over by "..ud.name..".",  )
+..cStr(ud.hoverAttack,"Enemys will be attacked while attacked hovering in place by "..ud.name..".", "Enemys will be attacked with approach and flight over by "..ud.name.."."  )
 ..cStr(ud.airStrafe and ud.hoverAttack, "Enemy fire is avoided with strafing motion" )
 ..cStr(ud.cruiseAlt, "Default cruise height is "..ud.cruiseAlt.." in elmos for the "..ud.name..".")
 ..cStr(ud.airHoverFactor < 0, "It is capable of landing.", "It will hover  on the spot moving about "..ud.airHoverFactor..".")
@@ -5380,16 +5380,16 @@ reStr(ud.cloakTimeout,"Among the commands for the Unit are"..
 ..cStr(ud.maxElevator, "Y-Axis turnspeed maximum of a "..ud.name.." is "..ud.maxAileron..".")
 ..cStr(ud.maxRudder, "X-Axis turnspeed maximum of a "..ud.name.." is "..ud.maxAileron..".")
 ..cStr(ud.maxAcc, "The maximum Acceleration of a "..ud.name.." aircraft.")
-..cStr(ud.Flares, "Under fire by rockets, the "..ud.name.." drops flares".)
+..cStr(ud.Flares, "Under fire by rockets, the "..ud.name.." drops flares.")
 ..cStr(ud.flareReload, "Reloading these flares costs "..ud.flareReload.." seconds time.")
 ..cStr(ud.flareDelay, " Fired flares are delayed by a factor of "..ud.flareDelay.." * random(1,16)." )
 ..cStr(ud.flareEfficiency, " Enemy missiles will be distracted by the flare with a chance of "..ud.flareEfficiency..".")
-..cStr(ud.lifetime, " A dropped flare will burn for "..ud.(flareTime/30).." seconds.")
+..cStr(ud.lifetime, " A dropped flare will burn for "..(ud.flareTime/30).." seconds.")
 ..cStr(ud.flareSalvoSize, " One salvo contains "..ud.flareSalvoSize.." flares.")
-..cStr(ud.flareSalvoDelay, " Each flare of a salvo is delayed by "..ud.(flareSalvoDelay/30).." seconds.")	
+..cStr(ud.flareSalvoDelay, " Each flare of a salvo is delayed by "..(ud.flareSalvoDelay/30).." seconds.")	
 ..cStr(ud.transportSize>0, ud.Uname.." can carry up to "..ud.transportSize.." passengers.")
-..cStr(ud.mransportSize and ud.transportCapacity, "Any picked up unit, must be between "..ud.mransportSize.." and "..ud.transportCapacity/transportSize.." )
-..cStr(ud.mransportMass and ud.transportMass, "Any picked up mass, must be between "..ud.mransportMass.." and "..ud.transportMass.." )
+..cStr(ud.mransportSize and ud.transportCapacity, "Any picked up unit, must be between "..ud.mransportSize.." and "..ud.transportCapacity/ud.transportSize )
+..cStr(ud.mransportMass and ud.transportMass, "Any picked up mass, must be between "..ud.mransportMass.." and "..ud.transportMass )
 ..cStr(ud.loadingRadius, "A "..ud.name.." will load in a radius of "..ud.loadingRadius.." around itself.")
 ..cStr(ud.unloadSpread, "When the passengers are unloaded a distance of"..ud. unloadSpread.." times passengersize is kept."  )
 ..cStr(ud.isFirePlatform, " All loaded units can fire on there designated targets from there docking position.")
@@ -5579,3 +5579,6 @@ end
 		
 end
 	--]]
+	
+	
+	

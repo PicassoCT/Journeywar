@@ -73,6 +73,12 @@ weapons = {
 	maxAngleDif        = 120,--nerfed
 	
 	},
+		[2]={name = "cbgrenade",
+			onlyTargetCategory = [[ LAND ]],
+			mainDir=[[0 0 1]],--nerfed
+			maxAngleDif = 90,--nerfed
+			
+		},
 },
 
 
