@@ -822,11 +822,13 @@ function getBlackGuardThougth(homePlanet, homeTown, name)
 		"Yeah, assholes stop you assholes from going bannana! Watcha gonna do about it, Vort?",
 		--Soldiersocialising among themselves
 		"Fifth corps is totally loosing it. With that attitude they get the worst assignments.",
+		"Overwatch commander, eh! The next time, we have contact, you better watch out-",
 		--banned thoughts
 		"One day, we should get rid of that mach< CENSORED> < Thought readjustment in progress > ",
 		--CityVacation
 		"Trooper is currently on extended City shoreleave. Zombie-OS on duty.",
 		--Multiple Personalitys
+		"Charlie, take the right eye, Liasane your left - watch your sectors. On pattern match, do a distance scan- and report. YeYse,Sir!"
 		--Implant Errors
 		" Its the damn implant i tell you, everytime i think %'Stooge%' I get a orgasm!",
 		-- Sleeping (philosophical zombie)
@@ -844,6 +846,8 @@ function getBlackGuardUnderFireThought(homePlanet, homeTown, name)
 		"Join the army they said",
 		"If you find me, my name was "..name.." and i regret leaving ".. homeTown.." on "..homePlanet,
 		"Fuck, fuck, fuck!",
+		"Open Up! Give it all you got!",
+		"One step forward, 500 Steps/Second back, asshole!"
 		"Not today cocksuckers. Im going to see "..homeTown.." again.",
 		"Eat high-v darkmatter, its rich in Vitamin h,o,l and e!",
 		"Grenade"
