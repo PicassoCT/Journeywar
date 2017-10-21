@@ -50,7 +50,6 @@ local unitDef = {
 	trackOffset =0,
 	turnInPlace =true,
 	onoffable=true, --used for turning the electricity on/off
-	
 	Builder = true,
 	ShowNanoSpray = true,
 	CanBeAssisted = false,

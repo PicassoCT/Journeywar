@@ -5201,6 +5201,12 @@ function transferOrders(originID, unitID)
         end
     end
 end
+	-->selects a element from a table
+	function sel(index, t)
+		if not t[index] then return "" end
+		
+		return toString(t[index])
+	end
 
 	function assertFunction(name)
 		assert(type(name)=="function", "value of type "..type(name).." is not a function" )
@@ -5218,9 +5224,7 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
     stringBuilder = ""
     lB = "\n"
 	
-	function sel(index, t)
-		return t[index]
-	end
+
 
     function unitDefToStr(ud)
         str = "normal"
@@ -5397,188 +5401,33 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.releaseHeld, "On death the "..ud.name .." releases its transported units.","On death the "..ud.name .." makes the final ferryman for its passengers.")
 ..cStr(ud.transportByEnemy, ud.Uname.."s regularly are refused transportation service for non-discrimination reasons.")
 ..cStr(ud.cantBeTransported, ud.Uname.."s can be taken for a ride by enemy transport.")
+..sel(ud.transportUnloadMethod,{[0 ] =" Land to unload individually", [1] = "Flyover drop (i.e. Parachute)", [2] = "Land and flood unload all passengers."})
+..cStr(ud.fallSpeed, "Deployed Paratroopers will fall with a speed of "..ud.fallSpeed)
+..cStr(ud.category, "The "..ud.name.." belongs to the following categories:"..ud.category)
+..cStr(ud.noChaseCategory, "It will not chase targets of category: "..ud.noChaseCategory..".")
+..cStr(ud.leaveTracks, "Recognizeable tracks called "..ud.trackType.." show wherever " ..ud.name.." went." )
+..cStr(ud.trackWidth and ud.trackOffset, "Said tracks are "..ud.trackWidth.." in width and "..ud.trackOffset.." in length.")
+..cStr(ud.trackStrength, "Tracks will be ".. ud.trackStrength.." persistent and visible.")
+..cStr(ud.useBuildingGroundDecal ~= nil and ud.buildingGroundDecalType ~= nil, Uname.."s have a Grounddecal called: "..ud.buildingGroundDecalType)
+..cStr(ud.buildingGroundDecalSizeX, "This Grounddecal is "..ud.buildingGroundDecalSizeX.." x "..ud.buildingGroundDecalSizeY.." in size and decays with a factor of "..ud.buildingGroundDecalDecaySpeed)
+..cStr(ud.highTrajectory, "Trajectory weapons are fired in ".. sel(ud.highTrajectory, {[0]="a high trajectory.",[1] = " a low trajectory.", [2]= "in the user selected mode (high/low)."}))
+..cStr(ud.kamikaze," Good to know is also, that "..ud.name.."is a kamikaze unit, sacrificing it all for the greater good.")
+..cStr(ud.kamikazeDistance, "To get to heaven, a "..ud.name.." needs to get as close as "..ud.kamikazeDistance.." virgins, side by side.")
+..cStr(ud.kamikaze,cStr(ud.kamikazeUseLOS, "Only eye-contact prevents a kamikaze attack from beeing perceived as impersonal.", "Shrapnell contact for a first kamikaze impression is close enough."))
+..cStr(ud.strafeToAttack, "When not finding the target in range, a "..ud.name.." will move until it is.")
+..cStr(ud.selfDestructCountdown, ud.selfDestructCountdown.." seconds is all it takes before a "..ud.name.." self-destructs once the command has been issued.")
+..cStr(ud.decoyFor, Uname.." is a decoy for "..UnitDefs[ud.decoyFor].name..".")
+..cSTr(ud.damageModifier, "Should the "..ud.name.." raise its amour, a modifier of "..ud.damageModifier.." is applied to all recived damage.")
+..cStr(ud.isTargetingUpgrade, ud.Uname.." is a targetting facility, enhancing other units out-of-los accuracy.")
+..cStr(ud.isFeature, " This unit turns into a feature upon creation." )
+..cStr(ud.hideDamage," Damage a "..ud.name.." recives is hidden from the enemys eyes.")
+..cStr(ud.showPlayerName,"The "..ud.name.." is the players avatara.")
+..cStr(ud.showNanoFrame," During the buildprocess a classic OTA Nanoframe is shown")
+..cStr(ud.unitRestricted," The Unit "..ud.name.." is restricted to maximal .."ud.unitRestricted.." total.")
+..cStr(ud.power, ud.Uname..": This unit relative power is "..ud.power..".")
 end
 
---[[
 
-
-		
-		
-		
-		transportByEnemy default: true 
-		
-		Controls if a unit can be transported by an enemy transport. i.e. can it be kidnapped. 
-		
-		transportUnloadMethod default: 0 
-		
-		For air transports. Can be 0 - Land to unload individually, 1 - Flyover drop (i.e. Parachute), or 2 - Land and flood unload all passengers. Can be used on ground transports with mixed results. 
-		
-		fallSpeed default: 0.2 
-		
-		For air transports with transportUnloadMethod = 1. The speed in elmos per second which units will fall at when released from the transport. 
-		
-		unitFallSpeed default: 0.0 
-		
-		Allows you to override fallSpeed for an individual passenger. 
-		
-		Categories
-		
-		string category default: "" 
-		
-		The category tag is a string of separate words, each representing a category of units. There is a maximum of 32 categories. The primary purpose of categories is weapon targeting (See #weapons). 
-		
-		string noChaseCategory default: "" 
-		
-		The unit will still target enemies with a matching category, but will not chase after it if it moves out of weapon range. 
-		
-		Decals
-		
-		leaveTracks default: false 
-		
-		Does the unit leave a track mark decal behind it when it moves? For mobile units. 
-		
-		string trackType default: "stdTank" 
-		
-		The filename of the image, without extension, assumed to be in Bitmaps/Tracks/, to be used as the track decal. The red channel of the image controls the brightness and the green channel the alpha (how visible it is) of the track. Blue channel is unused. 
-		
-		trackWidth default: 32.0 
-		
-		The width of the track decal left on the ground, in elmos. 
-		
-		trackOffset default: 0.0 
-		
-		How far back in elmos the track should be drawn from the centre of the unit. 
-		
-		trackStrength default: 32.0 
-		
-		How visible or 'deep' the track mark should be. Also used to determine how long the decal should last. 
-		
-		trackStretch default: 1.0 
-		
-		How much the track is stretched in the forward direction compared to the sides (i.e. used to change aspect ratio). 
-		
-		useBuildingGroundDecal default: false 
-		
-		For structures, do they display a ground decal on the terrain under their model? 
-			
-			string buildingGroundDecalType default: "" 
-			
-			The filename of the image to be used as ground decal. Assumed to be in Unittextures/. 
-			
-			buildingGroundDecalSizeX default: 4 
-			
-			How wide the decal is left to right, in footpr units. 
-			
-			buildingGroundDecalSizeY default: 4 
-			
-			How wide the decal is top to bottom, in footpr units. 
-			
-			buildingGroundDecalDecaySpeed default: 0.1 
-			
-		A measure of how quickly the decal should fade out if the structure dies. Essentially this value is multiplied by the time since death and subtracted from the original alpha until the decal is fully transparent. 
-		
-		Collision Volumes
-		
-		For a deeper explanation of these tags, see Gamedev:CollisionVolumes. Note that all collision checks first do a pre-check with the unit radius before doing the colvol checks. Ergo the unit radius must be larger or equal to the colvol! [3] modelCenterOffset default: {0.0, 0.0, 0.0} Removed in 89.0 (Now set via lua)
-			
-			How far from the model's defined centre should the centre of the unit be? 
-			
-			usePieceCollisionVolumes default: false lua: collisionVolume.defaultToPieceTree 
-			
-			When turned on the model and UnitDef collision volumes are ignored and Spring generates a bounding box volume for each piece of the unit model. These volumes can be manipulated or replaced by Spring.SetUnitPieceCollisionVolumeData. Increases the performance cost of collision calculations. 
-			
-			string collisionVolumeType default: "ellipsoid" lua: collisionVolume.type 
-			
-			What shape should the unit's collision volume be? Can be box, ellipsoid or a cylinder aligned to an axis; cylX, cylY, cylZ. 
-			
-			[3] collisionVolumeScales default: {0.0, 0.0, 0.0} lua: collisionVolume.scale{X|Y|Z} 
-			
-			The lengths of the collision volume in each of the three axes. Note that non-spherical ellipsoids and elliptical cylinders are not supported. 
-			
-			[3] collisionVolumeOffsets default: {0.0, 0.0, 0.0} lua: collisionVolume.offset{X|Y|Z} 
-			
-			The offset from the unit centre to the hit volume centre in each axis. 
-			
-			useFootPrCollisionVolume default: false lua: .collisionVolume.defaultToFootpr New in version 92.0
-			
-			Replaces any defined collision volume with a box with dimensions equal to the object's footpr (this also overrides any custom scaling and/or offsets). 
-			
-			collisionVolumeTest default: 0 Removed in 90.0 (Now always continuous)
-			
-			The type of test used to detect collisions. Can be 0 (discrete) or 1 (continuous). Use the latter for catching high speed projectiles which may otherwise 'skip through' small collision volumes, but beware of the increased performance cost. 
-			
-			Attack Behaviours
-			
-			highTrajectory default: 0 lua: highTrajectoryType 
-			
-			Can the unit fire it's (ballistic) weapons in a high trajectory arc? Can be 0 - Low trajectory only, 1 - High trajectory only, or 2 - Toggle button. 
-			
-			kamikaze default: false lua: canKamikaze 
-			
-			Does the unit attack its target by blowing itself up? 
-			
-			kamikazeDistance default: 0.0 lua: kamikazeDist 
-			
-			How close to the target, in elmos, the unit must get before detonating. Measured in 3D, not 2D. 
-			
-			kamikazeUseLOS default: false 
-			
-			Does the target unit have to be in LOS when detonating or only within kamikazeDistance. 
-			
-			strafeToAttack default: false 
-			
-			Should the unit move sideways when it can't shoot? 
-			
-			Other
-			
-			string decoyFor default: "" 
-			
-			The UnitDef name (not human name) which this unit is a decoy for. 
-			
-			selfDestructCountdown default: 5 lua: selfDCountdown 
-			
-			The length in seconds taken between issuing self destruct order and the unit exploding. 
-			
-			damageModifier default: 1.0 lua: armoredMultiple 
-			
-			The multiplier applied to weapon damage when the units ARMORED status (See Lua_ConstCOB) is turned on. 
-			
-			isTargetingUpgrade default: false lua: targFac 
-			
-			Does the unit upgrade the targeting so that units shoot accurately at enemy units which are in radar but not in LOS. 
-			
-			isFeature default: false 
-			
-			Does the unit immediately die o it's corpse feature when built? Used mainly for making walls. 
-			
-			hideDamage default: false 
-			
-			Should the units current health be invisible to enemy players? 
-			
-			showPlayerName default: false 
-			
-			Should the unit display it's controlling player as its name instead of name. Generally used for commander or hero units. 
-			
-			showNanoFrame default: true 
-			
-			Does the unit show an OTA-style nanoframe whilst being constructed? 
-			
-			unitRestricted default: MAX_UNITS lua: maxThisUnit 
-			
-			How many of this unit type may a player control at once? Defaults to being the maximum amount of units controllable. Is overridden by lobby unit restrictions. 
-			
-			power default: buildCostMetal + (buildCostEnergy / 60.0) 
-			
-			The relative power of the unit. Used in weapon targeting priority and experience gain calculations. 
-			
-			
-			
-			
-			echo("Unit: "..name)
-			echo("The "..name.." is a "utype
-		
-end
-	--]]
 	
 	
 	

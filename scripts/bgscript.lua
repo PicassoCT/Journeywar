@@ -555,11 +555,12 @@ function script.AimWeapon1(heading, pitch)
     return true
 end
 
-lastActiveFrame = Spring.GetGameFrame()
+lastActiveFrame = Spring.GetGameFrame() or 1
 GRENADE_RELOAD= 25 * 30
 modulator= 0
 UPDATE_REDUCDER = 25
 randoInterVal=  math.random(15,75)
+currentFrame = lastActiveFrame
 
 function script.AimWeapon2(heading, pitch)
 	
