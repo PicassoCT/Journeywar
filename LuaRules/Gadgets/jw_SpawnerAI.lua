@@ -116,7 +116,7 @@ if (gadgetHandler:IsSyncedCode()) then
                 typeAI = Spring.GetTeamLuaAI(teamID)
             end
 
-            Spring.Echo("SpawnerAI::TeamInfo::" .. teamID, typeAI, leader, isDead, isAI, side)
+            --Spring.Echo("SpawnerAI::TeamInfo::" .. teamID, typeAI, leader, isDead, isAI, side)
 
             if isAI and isAI == true and typeAI == "spawner" then
                 spawnerAI[teamID] = side
