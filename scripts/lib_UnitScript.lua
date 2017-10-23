@@ -3972,6 +3972,7 @@ function distanceNearestEnemy(id)
 end
 
 function holdsForAll(Var, fillterConditionString, ...)
+	assert(fillterConditionString)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     if arg then
         for k, Val in pairs(arg) do
@@ -5265,8 +5266,9 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 	ud.Uname = string.upper(string.sub(Uname,1,2))..string.sub(Uname,2,#Uname)
 	ud.lB = lB
 	ud.ustatus =   generateStatusString(ud)
+	stringBuilder= {}
 	
-stringBuilder=stringBuilder..
+stringBuilder[#stringBuilder+1]=""..
 	"=== Unit: "..ud.name.." ==="..ud.lB..
 	"The unit "..ud.name.." is a "..ud.utype.." unit."..
 	"Internally also described as "..ud.description..", the "..ud.name.." has "..ud.maxDamage.." Hitpoints."..
@@ -5284,8 +5286,8 @@ reStr(ud.energyUse,energyUse.. " units of energy are used once the"..ud.name.. "
 reStr(ud.metalMake," The "..ud.name.. " generates "..ud.metalMake.." uncoditionally every gametick.")..
 reStr(ud.energyMake," Further the "..ud.name.. " is constantly generating "..ud.energyMake.." of energy.")..
 reStr(ud.makesMetal," In Addition the "..ud.name.. " cpmverts "..ud.makesMetal.." units of energy into metal.")..
-reStr(ud.onOffable,"A "..ud.name.. " special abilitys can "..trueStr(onOffable).." be toggled via GUI. By default the special Ability is "..trueStr(activateWhenBuilt).." active.")..
-reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far as "..ud.sightDistance.." at day and night.")
+reStr(ud.onOffable,"A "..ud.name.. " special abilitys can "..trueStr(onOffable).." be toggled via GUI. By default the special Ability is "..trueStr(activateWhenBuilt).." active.")
+stringBuilder[#stringBuilder+1]=""..reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far as "..ud.sightDistance.." at day and night.")
 ..reStr(ud.airSightDistance,"The "..ud.name.. " can set Air Units as far as "..ud.airSightDistance..".")
 ..reStr(ud.losEmitHeight,""..ud.name.. " viewpoint is "..ud.losEmitHeight.." over ground.")
 ..reStr(ud.radarEmitHeight," Radar is emitted at "..ud.radarEmitHeight.." over ground with a distance of "..ud.radarDistance.."by the "..ud.name)
@@ -5299,7 +5301,7 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..reStr(ud.canCloak,"The "..ud.name.." is clokable with costs of "..ud.cloakCost.." per second to uphold and "..reStr(ud.cloakCostMoving," and additional costs of "..ud.cloakCostMoving.. " while moving."..reStr(ud.initCloaked, " The "..ud.name.." is cloaked from the start.")))
 ..reStr(ud.canCloak,"The "..ud.name.." is clokable with costs of "..ud.cloakCost.." per second to uphold and "..reStr(ud.cloakCostMoving," and additional costs of "..ud.cloakCostMoving.. " while moving."..reStr(ud.initCloaked, " The "..ud.name.." is cloaked from the start.")))
 ..reStr(ud.decloakOnFire,"If the "..ud.name.." fires its weapon, it will "..trueStr(ud.decloakOnFire).."decloak.")
-..reStr(ud.cloakTimeout,"To recloak the "..ud.name.." will have to wait for "..ud.cloakTimeout.." seconds.")
+stringBuilder[#stringBuilder+1]=""..reStr(ud.cloakTimeout,"To recloak the "..ud.name.." will have to wait for "..ud.cloakTimeout.." seconds.")
 .."Among the commands for the Unit are"..
 	cStr(ud.canMove," move,")..
 	cStr(ud.canAttack, " attack,")..
@@ -5327,7 +5329,7 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.resurrectSpeed > 0, "With a resurectionSpeed of "..ud. resurrectSpeed .." the "..ud.name.." is a great pal to be around, when disaster strikes.")
 ..cStr(ud.captureSpeed > 0, "With a capture Speed of "..ud. captureSpeed .." the "..ud.name.." is able to turn envitorys.")
 ..cStr(ud.terraformSpeed > 0, ud.Uname.."s are great scapers of land with a terraformSpeed of "..ud. terraformSpeed..".")
-..cStr(ud.canAssist , ud.Uname.."s will help guarded units to archieve there build targets.")
+stringBuilder[#stringBuilder+1]=""..cStr(ud.canAssist , ud.Uname.."s will help guarded units to archieve there build targets.")
 ..cStr(ud.canBeAssisted , ud.Uname.."s can accept help from other builders.")
 ..cStr(ud.canSelfRepair , "Help thyself, so good shall help, seems to be "..ud.Uname.."s family motto.")
 ..cStr(ud.showNanoSpray , "During the buildprocess- nanospray might be visible.")
@@ -5345,7 +5347,7 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.waterline > 0.0, "A "..ud.name.." is "..ud.waterline.." submerged beneath the waves.")		
 ..cStr(ud.minCollisionSpeed, "When at "..ud. minCollisionSpeed.." the "..ud.name.." will suffer damage on collission.")
 ..cStr(ud.pushResistant, "This unit is pushed around.","This unit is push resistant.")
-..cStr(ud.maxVelocity> 0.0, ud.Uname.."s maximum speed is "..ud.maxVelocity.." attained at "..cStr(ud.acceleration> 0, acceleration))
+stringBuilder[#stringBuilder+1]=""..cStr(ud.maxVelocity> 0.0, ud.Uname.."s maximum speed is "..ud.maxVelocity.." attained at "..cStr(ud.acceleration> 0, acceleration))
 ..cStr(ud.maxReverseVelocity> 0.0, "The reverse velocity is"..ud. maxReverseVelocity)
 ..cStr(ud.brakeRate, "The "..ud.name.." brakes with a rate of "..ud.brakeRate..".")
 ..cStr(ud.myGravity, "As a aircraft-unit the "..ud.name.." has a custom gravity of "..ud.myGravity)
@@ -5365,7 +5367,7 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.collide,"The "..ud.name.." will collide with air-units.", "The "..ud.name.." has collission turned off." )
 ..cStr(ud.hoverAttack,"Enemys will be attacked while attacked hovering in place by "..ud.name..".", "Enemys will be attacked with approach and flight over by "..ud.name.."."  )
 ..cStr(ud.airStrafe and ud.hoverAttack, "Enemy fire is avoided with strafing motion" )
-..cStr(ud.cruiseAlt, "Default cruise height is "..ud.cruiseAlt.." in elmos for the "..ud.name..".")
+stringBuilder[#stringBuilder+1]=""..cStr(ud.cruiseAlt, "Default cruise height is "..ud.cruiseAlt.." in elmos for the "..ud.name..".")
 ..cStr(ud.airHoverFactor < 0, "It is capable of landing.", "It will hover  on the spot moving about "..ud.airHoverFactor..".")
 ..cStr(ud.bankingAllowed, "When turning the unit banks.", "It cant bank worth a damn.")
 ..cStr(ud.maxBank, "At max the "..ud.name.." will bank by "..ud.maxBank )
@@ -5388,7 +5390,7 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.flareReload, "Reloading these flares costs "..ud.flareReload.." seconds time.")
 ..cStr(ud.flareDelay, " Fired flares are delayed by a factor of "..ud.flareDelay.." * random(1,16)." )
 ..cStr(ud.flareEfficiency, " Enemy missiles will be distracted by the flare with a chance of "..ud.flareEfficiency..".")
-..cStr(ud.lifetime, " A dropped flare will burn for "..(ud.flareTime/30).." seconds.")
+stringBuilder[#stringBuilder+1]=""..cStr(ud.lifetime, " A dropped flare will burn for "..(ud.flareTime/30).." seconds.")
 ..cStr(ud.flareSalvoSize, " One salvo contains "..ud.flareSalvoSize.." flares.")
 ..cStr(ud.flareSalvoDelay, " Each flare of a salvo is delayed by "..(ud.flareSalvoDelay/30).." seconds.")	
 ..cStr(ud.transportSize>0, ud.Uname.." can carry up to "..ud.transportSize.." passengers.")
@@ -5410,7 +5412,7 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.trackStrength, "Tracks will be ".. ud.trackStrength.." persistent and visible.")
 ..cStr(ud.useBuildingGroundDecal ~= nil and ud.buildingGroundDecalType ~= nil, Uname.."s have a Grounddecal called: "..ud.buildingGroundDecalType)
 ..cStr(ud.buildingGroundDecalSizeX, "This Grounddecal is "..ud.buildingGroundDecalSizeX.." x "..ud.buildingGroundDecalSizeY.." in size and decays with a factor of "..ud.buildingGroundDecalDecaySpeed)
-..cStr(ud.highTrajectory, "Trajectory weapons are fired in ".. sel(ud.highTrajectory, {[0]="a high trajectory.",[1] = " a low trajectory.", [2]= "in the user selected mode (high/low)."}))
+stringBuilder[#stringBuilder+1]=""..cStr(ud.highTrajectory, "Trajectory weapons are fired in ".. sel(ud.highTrajectory, {[0]="a high trajectory.",[1] = " a low trajectory.", [2]= "in the user selected mode (high/low)."}))
 ..cStr(ud.kamikaze," Good to know is also, that "..ud.name.."is a kamikaze unit, sacrificing it all for the greater good.")
 ..cStr(ud.kamikazeDistance, "To get to heaven, a "..ud.name.." needs to get as close as "..ud.kamikazeDistance.." virgins, side by side.")
 ..cStr(ud.kamikaze,cStr(ud.kamikazeUseLOS, "Only eye-contact prevents a kamikaze attack from beeing perceived as impersonal.", "Shrapnell contact for a first kamikaze impression is close enough."))
@@ -5423,8 +5425,14 @@ reStr(ud.sightDistance,"The "..ud.name.. " can, depending on terrain, see as far
 ..cStr(ud.hideDamage," Damage a "..ud.name.." recives is hidden from the enemys eyes.")
 ..cStr(ud.showPlayerName,"The "..ud.name.." is the players avatara.")
 ..cStr(ud.showNanoFrame," During the buildprocess a classic OTA Nanoframe is shown")
-..cStr(ud.unitRestricted," The Unit "..ud.name.." is restricted to maximal .."ud.unitRestricted.." total.")
+..cStr(ud.unitRestricted," The Unit "..ud.name.." is restricted to maximal "..ud.unitRestricted.." total.")
 ..cStr(ud.power, ud.Uname..": This unit relative power is "..ud.power..".")
+OfTheString=""
+for i=1,#stringBuilder do
+OfTheString= OfTheString..stringBuilder[i]
+end
+
+return OfTheString
 end
 
 

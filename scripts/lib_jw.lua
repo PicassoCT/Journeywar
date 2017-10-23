@@ -828,7 +828,7 @@ function getBlackGuardThougth(homePlanet, homeTown, name)
 		--CityVacation
 		"Trooper is currently on extended City shoreleave. Zombie-OS on duty.",
 		--Multiple Personalitys
-		"Charlie, take the right eye, Liasane your left - watch your sectors. On pattern match, do a distance scan- and report. YeYse,Sir!"
+		"Charlie, take the right eye, Liasane your left - watch your sectors. On pattern match, do a distance scan- and report. Yes,Sir!Yes,Sir!Yes,Sir!",
 		--Implant Errors
 		" Its the damn implant i tell you, everytime i think %'Stooge%' I get a orgasm!",
 		-- Sleeping (philosophical zombie)
@@ -846,10 +846,12 @@ function getBlackGuardUnderFireThought(homePlanet, homeTown, name)
 		"Join the army they said",
 		"If you find me, my name was "..name.." and i regret leaving ".. homeTown.." on "..homePlanet,
 		"Fuck, fuck, fuck!",
-		"Open Up! Give it all you got!",
-		"One step forward, 500 Steps/Second back, asshole!"
+		"Open Up!",
+		"Give it all you got!",
+		"One giant heap for mankind!",
+		"One step forward, 500 Steps/Second back, asshole!",
 		"Not today cocksuckers. Im going to see "..homeTown.." again.",
-		"Eat high-v darkmatter, its rich in Vitamin h,o,l and e!",
+		"Eat high-v darkmatter, its rich in Vitamin H,O,L and E!",
 		"Grenade"
 		
 	}
