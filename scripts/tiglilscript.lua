@@ -60,7 +60,7 @@ Heading = 0
 boolANewAttack = true
 howlong = 1
 --- Signals to be spread
-costPerEgg = 0.15
+costPerEgg = 0.42
 --------------------- IdleStance10-Fucntions-------
 function drumClapOverhead()
 
@@ -10029,71 +10029,57 @@ function idle()
 
         --changebookmark 
         Sleep(285)
-        Sleeper = 15 --math.random(0, 16)
+        Sleeper = math.random(0, 15)
 
         tempsleep = math.random(512, 4096)
+			Sleep(tempsleep)
         if (Sleeper == 0) then
-            Sleep(tempsleep)
+           
             lidle_stance()
         end
         if (Sleeper == 1) then
-            Sleep(tempsleep)
             lidle_stance2()
         end
         if (Sleeper == 2) then
-            Sleep(tempsleep)
             lidle_stance3()
         end
         if (Sleeper == 3) then
-            Sleep(tempsleep)
             lidle_stance4()
         end
         if (Sleeper == 4) then
-            Sleep(tempsleep)
             lidle_stance5()
         end
         if (Sleeper == 5) then
-            Sleep(tempsleep)
             lidle_stance6()
         end
         if (Sleeper == 6) then
-            Sleep(tempsleep)
             lidle_stance7()
         end
         if (Sleeper == 7) then
-            Sleep(tempsleep)
             lidle_stance8()
         end
         if (Sleeper == 8) then
-            Sleep(tempsleep)
             lidle_stance9()
         end
         if (Sleeper == 9) then
-            Sleep(tempsleep)
             lidle_stance_10()
         end
         if (Sleeper == 10) then
-            Sleep(tempsleep)
             lidle_stance11()
         end
         if (Sleeper == 11) then
-            Sleep(tempsleep)
             lidle_stance12()
         end
         if (Sleeper == 12) then
-            Sleep(tempsleep)
             lidle_stance13()
         end
         if (Sleeper == 13) then
-            Sleep(tempsleep)
             lidle_stance14()
         end
 		if (Sleeper == 14) then
-			Sleep(tempsleep)
 			lidle_stance15()
 		end
-		if (Sleeper >= 15) then
-		   Sleep(tempsleep)
+		if (Sleeper == 15) then
 		   idle_stance18()	
 		end
 		
