@@ -5,8 +5,8 @@ function gadget:GetInfo()
         author = "me",
         date = "Sep. 20014",
         license = "GPL 3.141",
-        layer = 0,
-        enabled = false, --until the problem of all units having the shader applied is fixed
+        layer = 256,
+        enabled = true, --until the problem of all units having the shader applied is fixed
     }
 end
 
@@ -204,14 +204,16 @@ void main() {
             if redHotUnits[unitID] then
                 glUseShader(shaderProgram)
                 gl.Uniform(timer, getTime(redHotUnits[unitID]))
-            end
+					 glUseShader(0)        
+				end
         end
+     end
 
         function gadget:Finalize()
             if (gl.DeleteShader) then
                 gl.DeleteShader(shaderProgram)
             end
         end
-    end
+  
 
 end
