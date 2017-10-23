@@ -158,7 +158,7 @@ else  --UNSYNCED
         DeformedUnits[unitID].shader= gl.CreateShader(DeformedUnits[unitID].ShaderProgram) or DeformedUnits[unitID].shader
       end
     
-		
+		glUseShader(0)	
 		end
 	end 
 	
