@@ -508,10 +508,10 @@ function script.AimFromWeapon1()
     return bgarm
 end
 function script.AimFromWeapon2()
-    return bgarm
+    return bgbase
 end
 function script.QueryWeapon2()
-	  return flare01
+	  return bgbase
 end
 function script.QueryWeapon1()
     return flare01
@@ -558,20 +558,21 @@ end
 lastActiveFrame = Spring.GetGameFrame() or 1
 GRENADE_RELOAD= 25 * 30
 modulator= 0
-UPDATE_REDUCDER = 25
+UPDATE_REDUCER = 25
 randoInterVal=  math.random(15,75)
 currentFrame = lastActiveFrame
 
 function script.AimWeapon2(heading, pitch)
 	
 	modulator = modulator + 1
-	if modulator == UPDATE_REDUCDER then
+	if modulator > UPDATE_REDUCER then
 		modulator= 0
 		currentFrame = Spring.GetGameFrame()
 	end
 	
-	if boolDefStance == true and lastActiveFrame + GRENADE_RELOAD - randoInterVal < currentFrame  then
-		lastActiveFrame = currentFrame 
+	if  boolDefStance == true and 
+	lastActiveFrame + GRENADE_RELOAD - randoInterVal < currentFrame  then
+
 		return true
 	end
 	return false 
@@ -604,6 +605,7 @@ function script.FireWeapon1()
 end
 
 function script.FireWeapon2()
+		lastActiveFrame = currentFrame 
 	return true
 end
 

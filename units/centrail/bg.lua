@@ -2,7 +2,7 @@ local unitName = "bg"
 
 local unitDef = {
 	name = "Ground Trooper",
-Description = "enhanced Soldier, carrying a Tatical Shield",
+	Description = "enhanced Soldier, carrying a Tatical Shield",
 	objectName = "bg.s3o",
 	script = "bgscript.lua",
 	buildPic = "cbg.png",
@@ -68,10 +68,10 @@ Description = "enhanced Soldier, carrying a Tatical Shield",
 			maxAngleDif = 120,--nerfed
 			
 		},
-			[2]={name = "cbgrenade",
+		[2]={name = "cbgrenade",
 			onlyTargetCategory = [[ LAND ]],
-			mainDir=[[0 0 1]],--nerfed
-			maxAngleDif = 90,--nerfed
+			turret = true,
+			cameraShake = 0.5
 			
 		},
 	},
