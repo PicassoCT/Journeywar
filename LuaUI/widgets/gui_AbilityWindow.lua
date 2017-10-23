@@ -400,7 +400,9 @@ function widget:GameFrame(f)
 	
 	function ShowOnOffButton(typeString)
 		if  not ButtonsTable[typeString] then typeString = "defaultOnOff" end
-				Spring.Echo("Pre Error")
+		if  not ButtonsTable[typeString] then return end
+		
+		Spring.Echo("Pre Error")
 		ButtonsTable[typeString]:Show()
 		activeElements[typeString]=ButtonsTable[typeString]
 	end
