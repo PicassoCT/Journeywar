@@ -59,7 +59,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	function printUnitCreatedData()
 		for team, unitTable in pairs(UnitCreatedData) do
 			for unitdefName, number in pairs(unitTable) do
-				Spring.Echo("Team "..team.." Unit "..UnitDefs["unitdefName"].id..(number/ UnitCreatedCount[team]).." % ")
+				Spring.Echo("Team "..team.." Unit "..UnitDefs[unitdefName].name.." "..(number/ UnitCreatedCount[team]).." % ")
 			end
 		end	
 	end
