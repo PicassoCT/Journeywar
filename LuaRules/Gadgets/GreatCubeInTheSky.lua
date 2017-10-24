@@ -144,7 +144,7 @@ if not gadgetHandler:IsSyncedCode() then
 		local x, y, z = Spring.GetCameraPosition()
 		local d = 1.8 * math.max(Game.mapSizeX, Game.mapSizeZ, y)
 		local f = 9001 + Spring.GetGameFrame()
-		if boolSkyboxActive == true then
+		if boolSkyboxActive == false then
 			gl.PushMatrix()
 			gl.Translate(x, y, z)
 			gl.Scale(d, d, d)
@@ -152,7 +152,7 @@ if not gadgetHandler:IsSyncedCode() then
 			gl.Rotate(f / 2, f / 2, 0, 1) -- Angle, then axis of rotation
 			gl.CallList(Cube)
 			gl.PopMatrix()			
-		end
+		
 		
 		gl.PushMatrix()
 		gl.Translate(x, y, z)
@@ -160,6 +160,7 @@ if not gadgetHandler:IsSyncedCode() then
 		gl.Rotate(1, 1, 1, 1) -- Angle, then axis of rotation
 		gl.CallList(HoloTable)
 		gl.PopMatrix()
+		end
 	end
 	
 	function gadget:Shutdown()
