@@ -73,8 +73,7 @@ for i = 1, 8, 1 do
 end
 
 function bodyBuilder()
-    Hide(LArm)
-    Hide(RArm)
+	hideDecoArms()
     Hide(Gun)
     if defID == bgID then
 
@@ -92,30 +91,59 @@ function bodyBuilder()
         end
     end
 	
-	if defID == UnitDefNames["bg3"].id then
+	if defID ==bg3defid then
 		StartThread(HideStandingStill)
 	end
+end
+
+function hideDecoArms()
+			Hide(LArm)
+			Hide(RArm)
+			Hide(DecoGun)
+end
+function showDecoArms()
+			Show(LArm)
+			Show(RArm)
+			Show(DecoGun)
+end
+
+function randomShowHide(piecename)
+if maRa()== true then Show(piecename) else Hide(piecename) end
+end
+
+function slowlyFlickeringInvisible(TableOfPieces)
+if maRa()== true then Hide(TableOfPieces[math.random(1,#TableOfPieces)])end
+
+if math.random(1,22)== 12 then Show(TableOfPieces[math.random(1,#TableOfPieces)])end
+end
+function showActiveBody()
+			Show(bglegr)
+			Show(bgleg)
+			Show(bgtorso)
+			Show(bgbase)
+			Show(bglowleg)
+			Show(bglowlegr)
 end
 
 function HideStandingStill()
 TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
 Antenna = piece"Antenna"
 while true do
-	Sleep(1500)
+
 	if boolMoveOrderd == true then
 			showT(TablesOfPiecesGroups)
-			Hide(LArm)
-			Hide(RArm)
-			Hide(Gun)
+			hideDecoArms()
+			showBattleArms()
+			showActiveBody()
+		
 	else
-		hideT(TablesOfPiecesGroups)
-		--Show(Antenna)
-		Show(Gun)
-		--Show(depshield)
-		Show(bglowleg)
-		Show(bglowlegr)
+		showDecoArms()
+		hideBattleArms()
+		slowlyFlickeringInvisible({bgtorso, bgbase, bglegr,bgleg, LArm, RArm, bglowleg,bglowlegr,depshield})
+		slowlyFlickeringInvisible({ LArm, RArm})
 	end
-	Sleep(1500)
+	interval=math.random(300,1500)
+	Sleep(interval)
 
 end
 
@@ -278,17 +306,11 @@ idleFunc[#idleFunc+1] =  function (boolLeftRight) --rest
 
 end
 
-function showArms()
-	Show(DecoGun)
-	Show(RArm)
-	Show(LArm)
+
+function hideBattleArms()
 	Hide(bgarm)
 end
 function showBattleArms()
-
-	Hide(DecoGun)
-	Hide(RArm)
-	Hide(LArm)
 	Show(bgarm)
 end
 
@@ -342,13 +364,14 @@ end
 
 idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
 	if boolCityTrooper == false then
-	showArms()
-	
-	Sleep(10000)
-	
-	showBattleArms()		 
+		hideBattleArms()
+		showDecoArms()
+		--TODO Weaponscheck
+		Sleep(10000)	
+		showBattleArms()		 
 	end
 end
+bg3defid = UnitDefNames["bg3"].id
 
 function idle()
     Signal(SIG_IDLE)
@@ -356,7 +379,7 @@ function idle()
     while (true) do
 	    sleeper = math.random(1024, 8192)
         Sleep(sleeper)
-		if boolUnderFire == false then
+		if boolUnderFire == false   then
        idleFunc[math.random(1,#idleFunc)](math.random(0,1)==1)
 		end
     end
@@ -588,6 +611,7 @@ end
 boolFiredRecently = false
 --called after the weapon has fired
 function script.FireWeapon1()
+	showActiveBody()
     if boolOnceInAWhile == true then
         boolOnceInAWhile = false
 
@@ -605,6 +629,7 @@ function script.FireWeapon1()
 end
 
 function script.FireWeapon2()
+		showActiveBody()
 		lastActiveFrame = currentFrame 
 	return true
 end
