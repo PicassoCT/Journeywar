@@ -4172,9 +4172,12 @@ end
 function SpinAlongSmallestAxis(unitID, piecename, degree, speed)
     if not piecename then return end
     vx, vy, vz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
+	 areax, areay, areaz= 0,0,0
     if vx and vy and vz then
         areax, areay, areaz = vy * vz, vx * vz, vy * vx
-    end
+    else
+		return
+	end
 
     if holdsForAll(areax, " <= ", areay, areaz) then Spin(piecename, x_axis, math.rad(degree), speed) return end
     if holdsForAll(areay, " <= ", areaz, areax) then Spin(piecename, y_axis, math.rad(degree), speed) return end
@@ -4185,6 +4188,7 @@ function LayFlatOnGround(unitID, piecename, speeds)
     speed = speeds or 0
     if not piecename then return end
     vx, vy, vz = Spring.GetUnitPieceCollisionVolumeData(unitID, piecename)
+	 areax, areay, areaz= 0,0,0
     if vx and vy and vz then
         areax, areay, areaz = vy * vz, vx * vz, vy * vx
     end

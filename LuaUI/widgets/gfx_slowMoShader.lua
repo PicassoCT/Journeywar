@@ -82,7 +82,6 @@ ColourTable={
 		return (t2.r*cval) + (t1.r* val), (t2.g*cval) + (t1.g* val), (t2.b*cval ) + ( t1.b* val)
 	end
 
-
 	function getRGB(Type, index)
 		lastFoundIndex=1
 		upperIndex=1
@@ -100,11 +99,9 @@ ColourTable={
 				if index < i then
 				upperIndex = math.min(100,math.max(1,i))
 
-
 					if  false== true and (ColourTable[lastFoundIndex].bGradient == false and ColourTable[upperIndex].bGradient == false)then
 						return colourSelector(Type,ColourTable[lastFoundIndex].r,ColourTable[lastFoundIndex].g,ColourTable[lastFoundIndex].b)
 					end
-
 
 					factor= (index-lastFoundIndex)/(upperIndex - lastFoundIndex)
 					factor =  math.min(1.0,math.max(0.0,factor))
@@ -135,10 +132,12 @@ ColourTable={
 		fintensity= fintensity*1.2;
 		  if (fintensity > 1.0) {fintensity = 1.0;}
 		
+
+		
 	 	fintensity = floor(fintensity *100.0);
 
 		IntTensity =  int(fintensity);
-	
+		
 
 		 ]]
 		
@@ -213,7 +212,7 @@ function widget:Initialize()
 	if gl.CreateShader then
 	playerID = Spring.GetMyPlayerID()
 	tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring.GetPlayerInfo(playerID)
-	local _,_,_,_, side, _                                      = Spring.GetTeamInfo(tteam)
+	local _,_,_,_, side, _                               = Spring.GetTeamInfo(tteam)
 
 	if  side == "centrail" then
 		shaderTable.fragment= 	nightvision
@@ -228,7 +227,7 @@ function widget:Initialize()
 	end
   
 	if not shaderProgram and gl and gl.GetShaderLog then
-	Spring.Echo(tacVision)
+	 Spring.Echo(tacVision)
     Spring.Log(widget:GetInfo().name, LOG.ERROR, gl.GetShaderLog())
     widgetHandler:RemoveWidget()
 	end	
