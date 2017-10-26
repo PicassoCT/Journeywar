@@ -177,8 +177,10 @@ if (gadgetHandler:IsSyncedCode()) then
 
 else --Unsynced
 
-
-
+		if 	Script.LuaUI('ActivateSlowMoShader') then
+				Script.LuaUI.ActivateSlowMoShader(false)
+		end
+		
     formerCommandTable = {}
     alt, ctrl, meta, shift, left, right = 0, 0, 0, 0
 
@@ -214,7 +216,9 @@ else --Unsynced
     end   
 
 	local function ActivateSlowMoShadder(_, boolActivate)
-		WG.boolDrawSlowMoVision = boolActivate;
+		if 	Script.LuaUI('ActivateSlowMoShader') then
+				Script.LuaUI.ActivateSlowMoShader(boolActivate)
+		end
     end
 
 

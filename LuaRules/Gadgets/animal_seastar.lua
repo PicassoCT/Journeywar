@@ -10,8 +10,8 @@ gaiaTeamID = Spring.GetGaiaTeamID()
 
 function handleSeaStars(frame, seastarcounter)
     if frame > 9000 and frame % 300 == 0 and seastarcounter < 5 then
-        x, z = getPathFullfillingCondition(GetSpot_condDeepSea, 32, { minBelow = -25, maxAbove = -120 })
-        tx, tz = getPathFullfillingCondition(GetSpot_condDeepSea, 32, { minBelow = 0, maxAbove = -24 })
+        x, z = getPathFullfillingCondition(GetSpot_condDeepSea, 32, { minBelow = -10, maxAbove = -120 })
+        tx, tz = getPathFullfillingCondition(GetSpot_condDeepSea, 32, { minBelow = -1, maxAbove = -24 })
 
         if x and z and tx and tz then
             id = Spring.CreateUnit("gseastar", x, -50, z, 1, gaiaTeamID)
