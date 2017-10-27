@@ -174,6 +174,22 @@ local function SpawnStartUnit(teamID)
     end
 end
 
+function noStartUnitsNeeded(teams)
+if #Spring.GetAllUnits() == 0 then return false end
+
+  for i = 1, #teams do
+		local teamID = teams[i]
+
+        if (teamID ~= gaiaTeamID) then
+				--Get all team Units
+           T= Spring.GetTeamUnitsSorted(teamID)
+				if not T[UnitDefNames["citadell"].id] and not T[UnitDefNames["beanstalk"].id] then 
+					return false
+				end		   
+        end
+  end
+  return true
+end
 
 function gadget:GameStart()
     --creates a Tech Tree in GG
@@ -181,7 +197,7 @@ function gadget:GameStart()
     createTechTree(teams)
 
     -- only activate if engine didn't already spawn units (compatibility)
-    if (#Spring.GetAllUnits() > 0) then
+    if (noStartUnitsNeeded(teams)==true) then
         return
     end
 

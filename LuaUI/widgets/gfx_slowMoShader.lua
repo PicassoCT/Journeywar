@@ -214,10 +214,10 @@ function widget:Initialize()
 	tname,_, tspec, tteam, tallyteam, tping, tcpu, tcountry, trank = Spring.GetPlayerInfo(playerID)
 	local _,_,_,_, side, _                               = Spring.GetTeamInfo(tteam)
 
-	if  side == "centrail" then
-		shaderTable.fragment= 	nightvision
+	if  side and side == "journeyman" then
+			shaderTable.fragment=  tacVision
 	else
-		shaderTable.fragment=  tacVision
+		shaderTable.fragment= 	nightvision
 	end
 	
 	

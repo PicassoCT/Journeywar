@@ -44,11 +44,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	-- if active ones, find others that could be active
 	function activateOtherHiveminds(tableTeamsActive)
+		hiveMindMaxTime= DurationInSeconds * 1000
 		if not GG.HiveMind then GG.HiveMind = {} end
 		
 		for team, uTab in pairs(GG.HiveMind) do
 			if not tableTeamsActive[team] then
 				for unit, data in pairs(uTab) do
+					hiveMindMaxTime= math.max(hiveMindMaxTime,data.rewindMilliSeconds)
 					if data.rewindMilliSeconds > 0 then
 						env = Spring.UnitScript.GetScriptEnv(unit)
 						if env then
@@ -60,28 +62,28 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 			end
 		end
-	return tableTeamsActive
+	return tableTeamsActive, hiveMindMaxTime
 	end
 	
 	oldGameSpeed = 1.0
 	targetSlowMoSpeed= 0.4
-	DurationInSeconds = 30 * 60
+	DurationInSeconds = 30 * 40
 	--set SlowMotion effect
 	
 	currentSpeed= 1.0
 	
 	function slowMotion(frame, boolActive, startFrame, endFrame)
-	if frame % 50 == 0 then Spring.Echo("Gamespeed:"..currentSpeed.." Frame:"..frame.." endFrame:"..endFrame) end
+	GG.GameSpeed= currentSpeed
 	if boolActivate== false or frame > endFrame then
 			if frame % 10 == 0 and currentSpeed < oldGameSpeed - 0.1 then
-				Spring.Echo("speedup to " .. oldGameSpeed)
+				Spring.Echo("speedup to " .. (currentGameSpeed + 0.1))
 				Spring.SendCommands("speedup ")
 			end
 	end
 	
 	--Slow Down
 	if frame > startFrame and frame < endFrame then			
-		if currentSpeed > targetSlowMoSpeed -0.11 then
+		if currentSpeed > targetSlowMoSpeed - 0.11 then
 			Spring.Echo("slowdown to " .. currentSpeed)
 			Spring.SendCommands("slowdown")
 		end		
@@ -141,8 +143,7 @@ end
 	startFrame = 0
 	
 	function gadget:GameFrame(n)
-		--if n % 60 ==0 then	Spring.Echo("Synced:GameFrame:"..n) end
-	
+
 		boolActive, activeHiveMinds = areHiveMindsActive()
 		if boolActive == true then
 			
@@ -152,10 +153,10 @@ end
 				startFrame = n
 			end
 			
-			activeHiveMinds = activateOtherHiveminds(activeHiveMinds)
+			activeHiveMinds, MaxTimeInMs = activateOtherHiveminds(activeHiveMinds)
 			deactivateCursorForNormalTeams(activeHiveMinds)
 			
-			endFrame = n + DurationInSeconds
+			endFrame = (n + math.ceil(MaxTimeInMs/1000) * 30)
 		elseif boolActive == false and endFrame == n then
 			SendToUnsynced("ActivateSlowMoShadder", false)
 			restoreCursorNonActiveTeams(activeHiveMinds)

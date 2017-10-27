@@ -347,6 +347,7 @@ function swallowAnimation(victimID)
                 if not pVx then return end
                 pUx, pUy, pUz = Spring.GetUnitPosition(unitID)
                 Radius = math.max(math.abs(pVy - pUy), 250)
+						if not Radius then return end
                 AnimationRunning_ms = 0
 
                 boolIsDeadYet = false
@@ -363,6 +364,7 @@ function swallowAnimation(victimID)
                     end
                     --orgRotationDeg =50
                     --calculate position on the arc
+
                     pStart = { x = Radius, y = Radius + 35, z = 0 }
                     animationFactor = (AnimationRunning_ms / totalAnimationTime)
                     animationOffset = (math.pi / -4)

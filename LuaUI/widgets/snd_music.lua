@@ -156,6 +156,15 @@ local function StopTrack(noContinue)
 	end
 end
 
+function ActivateSlowMoShader(boolActive)
+	if boolActive == true then
+		WG.music_volume = 0.0
+	else
+		WG.music_volume = 0.5
+	end
+end
+
+
 local function SetWarThreshold(num)
 	if num and num >= 0 then
 		warThreshold = num

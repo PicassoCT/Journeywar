@@ -130,7 +130,7 @@ end
 coilSpeed = math.pi / 50
 function moveIt()
     Sleep(350)
-    echo("Move it started")
+   -- echo("Move it started")
     Signal(SIG_MOVE)
     SetSignalMask(SIG_MOVE)
     StartThread(keepAboveGround)

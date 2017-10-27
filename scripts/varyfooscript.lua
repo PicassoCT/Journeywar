@@ -766,7 +766,7 @@ function LinFindDecoCon()
         end
     end
     linDecP.x, linDecP.y, linDecP.z, linDecP.index = tx, ty, tz, index
-
+	 assert(LinBodyCon[index],echoT(LinBodyCon),index)
     return LinBodyCon[index]
 end
 
@@ -784,7 +784,7 @@ function LinearExpandDeco(offSet)
 
         randomVec = makeDirVecFromDeg(90, 45, 0, 0, 0, 0, offSet)
         Show(Deco)
-			assert(Socket)
+		
         conPieceCon2Socket(Socket, Deco, randomVec)
         usedPiece(Deco)
         usedPiece(Socket)
