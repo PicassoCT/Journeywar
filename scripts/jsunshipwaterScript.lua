@@ -31,7 +31,7 @@ end
 
 --Create Function 
 function script.Create()
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     init()
     StartThread(releaseTimer)
     hideAllNonVitalPieces(TablesOfPiecesGroups)

@@ -388,7 +388,7 @@ pieceTable = generatepiecesTableAndArrayCode(unitID, false)
 TableOfPieceGroups = {}
 root = {}
 function script.Create()
-    TableOfPieceGroups = makePiecesTablesByNameGroups(false, true)
+    TableOfPieceGroups = getPieceTableByNameGroups(false, true)
     resetT(TableOfPieceGroups)
     root = TableOfPieceGroups["Root"]
 

@@ -224,7 +224,7 @@ function sound()
 end
 
 function script.Create()
-	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+	TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 	LED = TablesOfPiecesGroups["LED"]
 	hideT(LED)
     StartThread(sound)

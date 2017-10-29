@@ -155,7 +155,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
         Spring.SetUnitNoSelect(id, true)
         boolIsBuilding = UnitDefs[Spring.GetUnitDefID(id)].id
-        tpiecesTable = getPieceMap(id)
+        tpiecesTable = getPiecePositionMap(id)
 
         for i = 1, table.getn(tpiecesTable) do
             spawnCegAtPiece(id, tpiecesTable[i].pid, "antimatter", 10)
@@ -635,12 +635,12 @@ if (gadgetHandler:IsSyncedCode()) then
 
     UnitDamageFuncT[CEaterRocketDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		
-		if not attackerID or UnitExists(attackerID) == false then
+		if not attackerID or doesUnitExistAlive(attackerID) == false then
 		    attackerID = Spring.GetUnitLastAttacker(unitID)
 		end
 		
 		
-		if not attackerID or UnitExists(attackerID) == false then
+		if not attackerID or doesUnitExistAlive(attackerID) == false then
 		    return
 		end
         metalRes, energyRes = UnitDefs[unitDefID].metalCost, UnitDefs[unitDefID].energyCost

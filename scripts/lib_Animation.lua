@@ -228,6 +228,72 @@ function reset(piecename, lspeed, boolWaitForIT)
     end
 end
 
+
+-->idle Animation Loop
+function idleLoop(Body, axis, FrontLeg, RearLeg, degree, BodyBackDeg, speed, Time, boolNoDown)
+
+    Turn(Body, axis, math.rad(degree), speed)
+    for i = 1, #FrontLeg, 1 do
+        Turn(FrontLeg[i].Up, axis, math.rad(-degree), speed)
+        if boolNoDown == false then
+            Turn(FrontLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        Turn(RearLeg[i].Up, axis, math.rad(-degree), speed)
+        if boolNoDown == false then
+            Turn(RearLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+
+    for i = 1, #FrontLeg, 1 do
+        WaitForTurns(FrontLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(FrontLeg[i].Down)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        WaitForTurns(RearLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(RearLeg[i].Down)
+        end
+    end
+    WaitForTurn(Body, axis)
+    Sleep(Time)
+
+    Turn(Body, axis, math.rad(BodyBackDeg), speed)
+    for i = 1, #FrontLeg, 1 do
+        Turn(FrontLeg[i].Up, axis, math.rad(-BodyBackDeg), speed)
+        if boolNoDown == false then
+            Turn(FrontLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        Turn(RearLeg[i].Up, axis, math.rad(-BodyBackDeg), speed)
+        if boolNoDown == false then
+            Turn(RearLeg[i].Down, axis, math.rad(0), speed)
+        end
+    end
+    for i = 1, #FrontLeg, 1 do
+        WaitForTurns(FrontLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(FrontLeg[i].Down)
+        end
+    end
+
+    for i = 1, #RearLeg, 1 do
+        WaitForTurns(RearLeg[i].Up)
+        if boolNoDown == false then
+            WaitForTurns(RearLeg[i].Down)
+        end
+    end
+    WaitForTurn(Body, axis)
+    Sleep(Time)
+end
+
 -->counterturns a piece pair
 function equiTurn(p1, p2, axis, degv, speed)
     Turn(p1, axis, math.rad(degv), speed)
@@ -796,6 +862,195 @@ function KeepPieceAfloat(unitID, piecename, speed, randoValLow, randoValUp)
     px, py, pz, _, _, _ = Spring.GetUnitPiecePosition(unitID, piecename)
     x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, piecename)
 end
+
+
+
+function stableConditon(legNr, q)
+    return GG.MovementOS_Table ~= nil and
+            GG.MovementOS_Table[unitID].stability > 0.5 and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, q), 1)] > 0 or GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, legNr % 2), 1)] and GG.MovementOS_Table[unitID].quadrantMap[math.max(math.min(4, legNr % 2), 1)] > 0
+end
+
+--Controlls One Feet- Relies on a Central Thread running and regular updates of each feet on his status
+function feetThread(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction, LegMax, WiggleFunc, ScriptEnviroment, SensorT)
+    LMax = LegMax or 5
+    oldHeading = 0
+    Sleep(500)
+
+    stabilize(quadrant,
+        degOffSet,
+        turnDeg,
+        nr,
+        FirstAxisPoint,
+        KneeT,
+        SensorPoint,
+        Weight,
+        Force,
+        LiftFunction,
+        ScriptEnviroment,
+        SensorT)
+
+    while true do
+        while GG.MovementOS_Table[unitID].boolmoving == true do
+            echo("lib_UnitScript::adaptiveAnimation::MovingTrue")
+            --while GG.MovementOS_Table[unitID].boolmoving==true and stableConditon(nr,quadrant) do
+
+            --feet go over knees if FeetLiftForce > totalWeight of Leg
+
+            liftFeedForward(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                LiftFunction,
+                ScriptEnviroment)
+            Sleep(100)
+            stabilize(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                LiftFunction,
+                SensorT)
+            Sleep(100)
+            pushBody(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                nr,
+                ScriptEnviroment)
+
+            Sleep(100)
+            stabilize(quadrant,
+                degOffSet,
+                turnDeg,
+                nr,
+                FirstAxisPoint,
+                KneeT,
+                SensorPoint,
+                Weight,
+                Force,
+                LiftFunction,
+                ScriptEnviroment,
+                SensorT)
+            Sleep(100)
+        end
+
+        stabilize(quadrant,
+            degOffSet,
+            turnDeg,
+            nr,
+            FirstAxisPoint,
+            KneeT,
+            SensorPoint,
+            Weight,
+            Force,
+            LiftFunction,
+            ScriptEnviroment,
+            SensorT)
+        Sleep(100)
+    end
+end
+
+--return Feet into origin position and push body above ground
+function pushBody(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, nr, ScriptEnviroment)
+    if lib_boolDebug == true then Spring.Echo("lib_UnitScript::pushBody") end
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet), 0.3)
+    xp, yp, zp = Spring.GetUnitPiecePosDir(unitID, SensorPoint)
+    dif = yp - Spring.GetGroundHeight(xp, zp)
+
+    Time = 0
+
+    WaitForTurn(FirstAxisPoint, y_axis)
+end
+
+-->Uses the LiftAnimation Function to Lift the Feed
+function liftFeedForward(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction)
+    if lib_boolDebug == true then Spring.Echo("lib_UnitScript::liftFeedForward") end
+    GG.MovementOS_Table[unitID].quadrantMap[quadrant % 4 + 1] = GG.MovementOS_Table[unitID].quadrantMap[quadrant % 4 + 1] - 1
+    speed = clamp(Force / (#KneeT * Weight), 0.15, 0.25)
+    withOffset = sanitizeRandom(0, turnDeg)
+    if withOffset > 180 then withOffset = withOffset * -1 end
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet + withOffset), speed)
+    --lifts Feed from the ground 	
+    LiftFunction(KneeT, Force / (#KneeT * Weight))
+
+    --Turn foot forward and upward
+    WaitForTurn(FirstAxisPoint, y_axis)
+    Sleep(500)
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet), speed)
+    for i = 1, #KneeT, 1 do
+        Turn(KneeT[i], x_axis, math.rad(-2), speed)
+    end
+    WaitForTurn(FirstAxisPoint, y_axis)
+end
+
+
+function convertToNeg(val)
+    if val < 0 then return 360 - (360 + val) end
+    return val
+end
+
+
+-->Stabilizes the Feet above ground and rest
+function stabilize(quadrant, degOffSet, turnDeg, nr, FirstAxisPoint, KneeT, SensorPoint, Weight, Force, LiftFunction, ScriptEnviroment, SensorT)
+
+    xp, yp, zp = Spring.GetUnitPiecePosDir(unitID, SensorPoint)
+    dif = yp - Spring.GetGroundHeight(xp, zp)
+    degToGo = 0
+    counter = 0
+    olddif = 0
+    WaitForTurn(FirstAxisPoint, y_axis)
+    Turn(FirstAxisPoint, y_axis, math.rad(degOffSet), 0.15)
+    assert(ScriptEnviroment.GetPieceRotation)
+    assert(SensorT)
+
+    unitHeigth = GG.MovementOS_Table[unitID].stability * Height
+    propagatedCounterChange = 0
+
+    for i = #KneeT, 1, -1 do
+        measureIndex = clamp(i, 1, #KneeT)
+        boolUnderground = true
+
+
+        x, y, z = Spring.GetUnitPiecePosDir(unitID, SensorT[measureIndex])
+        xdeg, y_deg, z_deg = ScriptEnviroment.GetPieceRotation(KneeT[i])
+        tDeg = math.deg(xdeg)
+
+        GroundHeight = Spring.GetGroundHeight(x, z)
+        --	if lib_boolDebug == true then	Spring.Echo("lib_UnitScript::stabilize::PieceHeigth".. ( y -35 -unitHeigth ).." < "..GroundHeight.." ::GroundHeight") end
+
+        if y - GroundHeight > 20 then --Go down		
+            if y - GroundHeight < 5 then break end
+
+            tDeg = clamp(tDeg + 0.25 + propagatedCounterChange, -75, math.max((1 / i) * 75, 25))
+            tDeg = convertToNeg(tDeg)
+            propagatedCounterChange = propagatedCounterChange - 0.25
+            Turn(KneeT[i], x_axis, math.rad(tDeg), 0.0175)
+        else --Go up	faster					
+            boolUnderground = true
+
+            tDeg = clamp(tDeg - 1.15 + propagatedCounterChange, -75, math.max((1 / i) * 75, 25))
+            tDeg = convertToNeg(tDeg)
+            propagatedCounterChange = propagatedCounterChange + 1.15
+            Turn(KneeT[i], x_axis, math.rad(tDeg), 0.135)
+        end
+    end
+    WaitForTurns(KneeT)
+end
+
 
 -->Paint a Piece Pattern 
 function paintPatternPieces(ListOfPieces, ListOfCoords, sx, sy, sz)
@@ -1649,7 +1904,7 @@ function GetSpeed(timeInSeconds, degree)
 end
 
 function resetAll(unitID)
-	resetT(makeKeyPiecesTable(unitID, piece))
+	resetT(getNamePieceNumDict(unitID, piece))
 end
 -->Reset a Table of Pieces at speed
 
@@ -1751,6 +2006,21 @@ function reset(piecename, speed, boolWaitForIT, boolIstantUpdate)
     end
 end
 
+function showAllPieces(unitID)
+    List = Spring.GetUnitPieceMap(unitID)
+
+    for k, v in pairs(List) do
+        Show(v)
+    end
+end
+
+function hideAllPieces(unitID)
+    List = Spring.GetUnitPieceMap(unitID)
+
+    for k, v in pairs(List) do
+        Hide(v)
+    end
+end
 
 -->Shows a Pieces Table
 function showT(tablename, lowLimit, upLimit, delay)

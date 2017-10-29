@@ -732,7 +732,7 @@ boolFoundSomething = false
 function LinFindDecoCon()
     --we find a startpoint by finding start and endpoint and choosing the lowest
 	 SocketDice = sanitizeRandom(1, table.getn(LinBodyCon))
-    poinTable = piec2Point(LinBodyCon[SocketDice]) --DeBug:
+    poinTable = pieceToPointT(LinBodyCon[SocketDice]) --DeBug:
 
     if not poinTable then return end
 		--assertT({x = "number", y = "number", z = "number"}, poinTable)

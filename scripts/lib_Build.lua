@@ -11749,6 +11749,64 @@ end
 return Name
 end
 
+--This Takes any LanguageString and 'translates' it meaning it replaces stringparts with the Sound
+--This is deterministic, meaning for a person and LanguageTable it always produces the same sound
+--SoundPerson is a Function that allows to convay additional params into the sound-
+--e.g. Out of Breath, Angry, tired, sad, by changing loudness and choosen soundsnippet
+--its call signature is SoundPerson(translatedSoundSnippet, position in sentence, translatedTable)
+function speakMorkDorkUruk(LanguageTable, SymbolLenght, SoundTable, Text, ScreenPos, StandardLoud, LoudRange, SoundPerson)
+	LanguageTable = LanguageTable or {
+	emptyString="  ",
+	[1] = "Ur"  ,
+	[2] = "dor" ,
+	[3] = "gor" ,
+	[4] = "bor" ,
+	[5] = " '"  ,
+	[6] = "mor" ,
+	[7] = "hur" ,
+	[8] = "  "	,
+	Hash = function (stringToHash)
+		totalValue= 0
+		for i = 1, string.len(stringToHash) do
+		local c = stringToHash:sub(i,i)
+		totalValue= totalValue + string.byte(c,1)
+		end
+		return (totalValue % #LanguageTable) +1
+	end
+	}
+	SymbolLenght= SymbolLenght or 2
+	SoundTable = SoundTable or {}
+	
+    --translate the Text via the language Table
+    local lplaySoundFile = Spring.PlaySoundFile
+    local translatedTable = {}
+    local lSoundPerson = SoundPerson or nil
+
+ 
+    for i = 1, #Text do
+	local line = Text[i]
+		for k=1, string.len(line) ,SymbolLenght do
+        c = line:sub(k, math.min(string.len(line), k + SymbolLenght))
+		local hash = LanguageTable.Hash(c)
+        translatedTable[#translatedTable + 1] = string.low(LanguageTable[hash]) or LanguageTable.emptyString
+			if translatedTable[#translatedTable] == LanguageTable.emptyString then
+			
+			end
+		end
+    end
+
+    if lSoundPerson then
+        for it = 1, #translatedTable do
+            choosenSound, loudness = lSoundPerson(translatedTable[it], it, translatedTable)
+            if SoundTable[choosenSound] then
+                lplaySoundFile(SoundTable[choosenSound], loudness)
+            end
+        end
+    else
+        lplaySoundFile(SoundTable[choosenSound], StandardLoud + math.random(LoudRange / 10, LoudRange))
+    end
+end
+
 -->Creates a fictional Planet Name
 function PlanetNameGenerator(llenght, lNamingSamples, lBreakers, lLetterTable,lBoolPrecursor, lBoolPostPoner)
 	function PreCurse() return math.random(0,1)==1 end

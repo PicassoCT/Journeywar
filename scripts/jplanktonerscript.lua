@@ -96,7 +96,7 @@ end
 
 
 function script.Create()
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     locT = TablesOfPiecesGroups["locT"]
     locM = TablesOfPiecesGroups["locM"]
     pieceTable = TablesOfPiecesGroups["pT"]

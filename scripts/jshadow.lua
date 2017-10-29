@@ -383,7 +383,7 @@ function reSetPiece(piecename)
     Turn(piecename, z_axis, math.rad(0), 3.5)
 end
 
-pieceTable = makePieceTable(unitID)
+pieceTable = getPieceTable(unitID)
 local function legs_down()
     reSetPiece(center)
     resetT(pieceTable, 3)

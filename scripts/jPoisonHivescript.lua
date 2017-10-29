@@ -15,7 +15,7 @@ SIGHT_RANGE = 2500
 LOAD_TIME = 21000
 function script.Create()
 
-    PiecesGroups = makePiecesTablesByNameGroups(false, true)
+    PiecesGroups = getPieceTableByNameGroups(false, true)
     hideT(PiecesGroups["Spire"])
     hideT(PiecesGroups["eggStage"])
     hideT(PiecesGroups["egg"])

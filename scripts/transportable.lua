@@ -36,7 +36,7 @@ end
 
 function script.Create()
 Turn(center,y_axis,math.rad(math.random(-360,360)),0)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 	boolShowAtLeastOne= false
 	numberOfOneFound=nil
 	for name,tab in pairs(TablesOfPiecesGroups) do

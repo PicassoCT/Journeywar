@@ -14,7 +14,7 @@ aimpiece = piece "aimpiece"
 
 function script.Create()
     generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 end
 
 function script.Killed(recentDamage, _)

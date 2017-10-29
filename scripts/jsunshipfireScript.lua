@@ -43,7 +43,7 @@ function script.Create()
     Hide(Main)
 
 
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     for k, v in pairs(TablesOfPiecesGroups) do
         resetT(v)
         hideT(v)

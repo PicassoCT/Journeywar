@@ -85,7 +85,7 @@ end
 function script.Create()
 	if not GG.TransitHubNumber then Spring.DestroyUnit(unitID,true,true) end
 	
-	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+	TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 	LED = TablesOfPiecesGroups["LED"]
 	hideT(LED)
 

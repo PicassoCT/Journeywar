@@ -129,7 +129,7 @@ end
 
 VaryFooDefID = UnitDefNames["jvaryfoo"].id
 
-nameGroupT = makePiecesTablesByNameGroups(false, true)
+nameGroupT = getPieceTableByNameGroups(false, true)
 function raiseAvatara()
     StartThread(spinTentacles)
 
