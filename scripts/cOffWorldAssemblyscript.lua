@@ -630,7 +630,7 @@ function script.Create()
 
     resetT(pieceTable_)
 
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     WindowTable = TablesOfPiecesGroups["Window"]
 	  local transferTable= {}
 	 for k,v in pairs( TablesOfPiecesGroups["Op"]) do

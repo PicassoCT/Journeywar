@@ -3,6 +3,7 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua"
+
 local AttachUnit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
 SIG_WALK = 2
@@ -33,7 +34,7 @@ end
 
 center = piece "center"
 fooNction = piece
-piecesTable = makeKeyPiecesTable(unitID, fooNction)
+piecesTable = getNamePieceNumDict(unitID, fooNction)
 
 function LiftFunction(KneeT, Speed)
 while true do
@@ -161,7 +162,7 @@ LowerF = LowerFunction
 inPieces = {}
 TableOfPieceGroups = {}
 function script.Create()
-	TableOfPieceGroups = makePiecesTablesByNameGroups(false, true)
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
 	if not GG.GaiaSeaStarRegistry then GG.GaiaSeaStarRegistry ={} end
 	GG.GaiaSeaStarRegistry[#GG.GaiaSeaStarRegistry +1] = unitID
 	if #GG.GaiaSeaStarRegistry > 20 then 

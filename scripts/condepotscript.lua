@@ -58,7 +58,7 @@ function script.Create()
     StartThread(lightThread)
     --<buildanimationscript>
     x, y, z = Spring.GetUnitPosition(unitID)
-    TableOfPieceGroups = makePiecesTablesByNameGroups(false, true)
+    TableOfPieceGroups = getPieceTableByNameGroups(false, true)
     GG.UnitsToSpawn:PushCreateUnit("cbuildanimation", x, y, z, 0, teamID)
     hideT(TableOfPieceGroups["cdcontain"])
     --</buildanimationscript>

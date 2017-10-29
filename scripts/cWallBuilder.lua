@@ -120,7 +120,7 @@ end
 
 TablesOfPiecesGroups = {}
 function script.Create()
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     StartThread(constTerraFormin)
     StartThread(emitLight)
     StartThread(motionDetector)

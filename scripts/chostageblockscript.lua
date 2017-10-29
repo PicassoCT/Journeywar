@@ -20,7 +20,7 @@ buihoblock = piece"buihoblock"
 
 function script.Create()
 	generatepiecesTableAndArrayCode(unitID)
-	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+	TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 	hideT(TablesOfPiecesGroups["PathA"])
 	hideT(TablesOfPiecesGroups["PathB"])
 	hideT(TablesOfPiecesGroups["PathC"])

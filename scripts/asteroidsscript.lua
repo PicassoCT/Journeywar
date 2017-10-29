@@ -18,7 +18,7 @@ function script.Create()
     Spring.SetUnitAlwaysVisible(unitID, true)
     Spring.SetUnitNeutral(unitID, true)
 
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Spring.MoveCtrl.Enable(unitID, true)
     x, y, z = Spring.GetUnitPosition(unitID)
     Spring.MoveCtrl.SetPosition(unitID, x, heightOfAsteroidsOverMap + math.random(600, 750), z)

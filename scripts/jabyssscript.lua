@@ -71,7 +71,7 @@ Water2 = WT[2]
 local boolBirth = false
 
 local teamid = Spring.GetUnitTeam(unitID)
-nameGroupT = makePiecesTablesByNameGroups(false, true)
+nameGroupT = getPieceTableByNameGroups(false, true)
 
 function water()
     Hide(FooSphere1)

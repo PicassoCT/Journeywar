@@ -308,7 +308,7 @@ neonCenter2 = piece"neonCenter2"
 function script.Create()
 
 
-    TableOfPieceGroups = makePiecesTablesByNameGroups(false, true)
+    TableOfPieceGroups = getPieceTableByNameGroups(false, true)
     Blocks = TableOfPieceGroups["Block"]
     StartThread(buildIt)
     --<buildanimationscript>

@@ -1023,7 +1023,7 @@ function script.StopBuilding()
     Hide(lightning)
 end
 
- TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+ TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
  
 function script.Create()
     simpleTransform()

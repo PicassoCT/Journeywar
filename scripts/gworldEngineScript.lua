@@ -18,10 +18,7 @@ center = piece "center"
 body = piece "body"
 DeathStick = piece "DeathStick"
 
-function makePieceMap(unitID)
-    List = Spring.GetUnitPieceMap(unitID)
-    return List or {}
-end
+
 
 function OrbitalDrop()
     Turn(center, x_axis, math.rad(19), 0)
@@ -99,7 +96,7 @@ end
 
 
 function script.Create()
-    TablesOfPiecesGroups = makePieceMap(unitID)
+    TablesOfPiecesGroups = getPieceMap(unitID)
     hideT(TablesOfPiecesGroups)
     resetT(TablesOfPiecesGroups, 0)
     Turn(Leg3, y_axis, math.rad(120), 0)

@@ -301,7 +301,7 @@ function upgraDDe()
 end
 
 function script.Create()
-    PieceGroups = makePiecesTablesByNameGroups(false, true)
+    PieceGroups = getPieceTableByNameGroups(false, true)
     buildSlum()
     --<buildanimationscript>
     x, y, z = Spring.GetUnitPosition(unitID)

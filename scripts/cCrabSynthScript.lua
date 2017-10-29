@@ -8,7 +8,7 @@ include "lib_Animation.lua"
 
 include "lib_Build.lua"
 
-KpiecesTable = makeKeyPiecesTable(unitID, piece)
+KpiecesTable = getNamePieceNumDict(unitID, piece)
 piecesTable = {}
 piecesTable[#piecesTable + 1] = piece("center")
 piecesTable[#piecesTable + 1] = piece("Body")

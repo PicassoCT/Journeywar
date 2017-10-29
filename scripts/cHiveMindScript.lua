@@ -24,7 +24,7 @@ function script.Create()
 	reset(center)
 	
 	generatepiecesTableAndArrayCode(unitID)
-	TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+	TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 	
 	StartThread(integrateNewMembers)
 	StartThread(showState)

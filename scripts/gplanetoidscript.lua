@@ -16,7 +16,7 @@ function script.Create()
     Spring.SetUnitAlwaysVisible(unitID, true)
     Spring.SetUnitNeutral(unitID, true)
 
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Spring.MoveCtrl.Enable(unitID, true)
     x, y, z = Spring.GetUnitPosition(unitID)
     Spring.MoveCtrl.SetPosition(unitID, x, heightOverMap, z)
@@ -37,7 +37,7 @@ function script.Create()
 
     dirAction = randSign()
 
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     process(TablesOfPiecesGroups["ring"],
         function(id)
             Spin(id, y_axis, math.rad((math.random(10, 40) / 10) * dirAction), 0)

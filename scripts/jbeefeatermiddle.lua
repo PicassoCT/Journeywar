@@ -40,7 +40,7 @@ function randTimeDelayedDustEmit(piecenr)
 end
 
 snakeTable = {}
-TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 snakeTable = TablesOfPiecesGroups["snake"]
 
 

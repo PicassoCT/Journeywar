@@ -40,7 +40,7 @@ local SIG_UNDERFIRE= 256
 local leg_movespeed = 12 + math.random(-1, 1)
 local leg_movedistance = 10
 defID = Spring.GetUnitDefID(unitID)
-PiecesTable = makePieceTable(unitID)
+PiecesTable = getPieceTable(unitID)
 
 bgdefID = UnitDefNames["bg"].id
 boolCityTrooper = (defID == UnitDefNames["bg"].id)
@@ -126,7 +126,7 @@ function showActiveBody()
 end
 
 function HideStandingStill()
-TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 Antenna = piece"Antenna"
 while true do
 

@@ -15,7 +15,7 @@ toalign= piece "toalign"
 
 function script.Create()
     generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 Hide(center)
 StartThread(testAlignment)
 end

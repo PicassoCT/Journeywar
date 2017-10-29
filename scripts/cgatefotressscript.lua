@@ -288,7 +288,7 @@ TableOfPieces[#TableOfPieces + 1] = InLoopCenter
 flare02 = piece "flare02"
 
 
-TablesOfPiecesGroups = {} --=makePiecesTablesByNameGroups(false,true)
+TablesOfPiecesGroups = {} --=getPieceTableByNameGroups(false,true)
 UpTable = {}
 SeedTable = {}
 genSignal = 1
@@ -342,7 +342,7 @@ end
 
 function createProcess()
   Hide(flare02)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Feed = TablesOfPiecesGroups["Feed"]
     hideT(SeedTable)
     OuterLoopTable = TablesOfPiecesGroups["OuterLoop"]

@@ -154,7 +154,7 @@ function script.Create()
     Signal(SIG_IDLE)
     Signal(SIG_LEG)
     Signal(SIG_moveStatemachine)
-    PiecesGroups = makePiecesTablesByNameGroups(false, true)
+    PiecesGroups = getPieceTableByNameGroups(false, true)
     --- -Spring.Echo "This was a Triumph! Im making a note here huge Success!"
     -- Spring.UnitScript.Play("centerdeploy")
 end
