@@ -11,7 +11,7 @@ center = piece "center"
 function script.Create()
 	 Spring.SetUnitNeutral(unitID, true)
     generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Meat = TablesOfPiecesGroups["Meat"]
     for i = 1, #Meat do
         moveUnitPieceToGroundPos(unitID, Meat[i], math.random(-40, 40), math.random(-40, 40), 6, math.random(0, 10))

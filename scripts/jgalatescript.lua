@@ -33,7 +33,7 @@ for i=1,#LegLs do
 end
 
 
-pieces=makeKeyPiecesTable(unitID,piece)
+pieces=getNamePieceNumDict(unitID,piece)
 pieces["wholeBodyCenter"]=piece("wholeBodyCenter")
 pieces["fireGalate"]=fireGalate
 pieces.pumps=Pumps
@@ -379,7 +379,7 @@ tail3=piece("tail3")
 tail4=piece("tail4")
 
 function script.Create()
-	PieceGroups=	makePiecesTablesByNameGroups(false,true)
+	PieceGroups=	getPieceTableByNameGroups(false,true)
 	resetT(PieceGroups,0)
 	hideT(Tails)
 	hideT(Pumps)

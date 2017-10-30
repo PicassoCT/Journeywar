@@ -44,7 +44,7 @@ function confVehicle()
 end
 
 function script.Create()
-	pieceNameTable = makePiecesTablesByNameGroups(false, true)
+	pieceNameTable = getPieceTableByNameGroups(false, true)
 	
 	StartThread(confVehicle)
 end

@@ -98,6 +98,27 @@ end
 --Section:  Unit Information Getters/Setters 
 --======================================================================================
 
+--> Attaches a Unit to a Piece near a Impact side
+function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID, px, py, pz, range)
+    T = getAllInCircle(px, pz, range)
+    boolFirstMatch = false
+    process(T,
+        function(id)
+            if Spring.GetUnitLastAttacker(id) == AttackerID then
+                return id
+            end
+        end,
+        function(id)
+            if boolFirstMatch == true then return end
+
+            lastAttackedPiece = Spring.GetUnitLastAttackedPiece(id)
+            if lastAttackedPiece then
+                boolFirstMatch = true
+                Spring.UnitAttach(id, toAttachUnitID, lastAttackedPiece)
+            end
+        end)
+end
+
 function isPieceAboveGround(unitID,pieceName)
 x,y,z =Spring.GetUnitPiecePosDir(unitID,pieceName)
 gh= Spring.GetGroundHeight(x,z)
@@ -1487,13 +1508,13 @@ end
 
 
 function pieceToPointT(piecesTable)
+
+	if not piecesTable[1] then
+		return pieceToPoint(piecesTable)
+	end	
+
     if not piecesTable then
         echo("lib_UnitScript::pieceToPointT: No argument recived")
-        return
-    end
-
-    if type(piecesTable) ~= "table" then
-        echo("lib_UnitScript::pieceToPointT: Not a valid table- got" .. piecesTable .. " of type " .. type(piecesTable) .. " instead ")
         return
     end
 

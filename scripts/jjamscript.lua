@@ -8,7 +8,7 @@ rotator=piece"rotator"
 TablesOfPiecesGroups = {}
 
 function script.Create()
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 
 	Hide(flare1)
 	StartThread(emitFog)

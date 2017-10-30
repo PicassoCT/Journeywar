@@ -19,7 +19,7 @@ Egg5 = piece "Egg5"
 buildspot = center
 PiecesGroups = {}
 function script.Create()
-    PiecesGroups = makePiecesTablesByNameGroups(false, true)
+    PiecesGroups = getPieceTableByNameGroups(false, true)
     recResetT(PiecesGroups, 0)
     Spring.SetUnitHealth(unitID, 1)
     StartThread(wiggleAndUnfold)

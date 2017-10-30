@@ -34,7 +34,7 @@ SIG_CONTDAMAGE = 4
 teamID = Spring.GetUnitTeam(unitID)
 boolOnlyOnce = false
 fullHealthOfAShadow = 0
-piecesTable = makePieceTable(unitID)
+piecesTable = getPieceTable(unitID)
 
 unitTable = {}
 local JSHADOWCOST = 120

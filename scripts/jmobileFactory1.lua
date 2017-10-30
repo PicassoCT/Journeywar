@@ -36,11 +36,6 @@ AllPiecesArray = {
     blakblade4 = piece "blakblader4"
 }
 
-function HideAllPieces()
-    for k in pairs(AllPiecesArray) do
-        Hide(k)
-    end
-end
 
 SIG_FOLD = 2
 SIG_MOVE = 4
@@ -193,7 +188,7 @@ function LaunchSkywards()
     end
 
 
-    HideAllPieces()
+    hideAllPieces(unitID)
 end
 
 function updateBoolisBuilding()

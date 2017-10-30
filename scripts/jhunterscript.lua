@@ -124,7 +124,7 @@ end
 
 function script.Create()
     generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     hideByUnitType()
     StartThread(moveStatemachine)
     StartThread(letsWalkAndTalk)

@@ -265,7 +265,7 @@ end
 
 function initialPose()
  resetAll(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     hideT(TablesOfPiecesGroups["travelling"])
     hideT(TablesOfPiecesGroups["tentac"])
     showT(TablesOfPiecesGroups["FPod"])

@@ -12,14 +12,8 @@ function gadget:GetInfo()
 	}
 end
 
-	boolStartTest= true
+
 	
- function StartUnitTest()
-Spring.Echo("Unittest activated")
-	boolStartTest= true
-  
-    return true
-end
 
 if gadgetHandler:IsSyncedCode() then
 	-------------------------------------
@@ -62,6 +56,7 @@ if gadgetHandler:IsSyncedCode() then
 				["jfireflower"]=1, ["jdragongrass"]=1, ["jbeehive"]=1, ["jswamp"]=1, ["jpoisonhive"]=1,	
 				["ggluemine"]=1,["jtree1"]=1, ["jgalatea"]=1,["jmotherofmercy"]=1,["jsempresequoia"]=1,["jrecycler"]=1,["jresistancewarrior"]=1,["jmadmax"]=1
 	}
+		boolStartTest= false
 	function getAIPlayer()
 		List = Spring.GetTeamList()
 		PlayerList = {}
@@ -80,7 +75,13 @@ if gadgetHandler:IsSyncedCode() then
 		return PlayerList,AiList
 	end
 	
-	
+	 function gadget:RecvLuaMsg(msg, playerID)
+	 
+		start,ends= string.find(msg,"DBG:UNITTEST:Start")
+		if ends then
+			boolStartTest = true
+		end
+	 end
 	
 	function buildUnitsToTestList ()	
 		local journeyUnitList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
@@ -164,9 +165,7 @@ if gadgetHandler:IsSyncedCode() then
 
 	
 	function gadget:Initialize()
-	  gadgetHandler.actionHandler.AddChatAction(gadget, 'unittest', StartUnitTest, " : starts a unittest session")
-   
-	
+	  gadgetHandler.actionHandler.AddChatAction(gadget, 'unittest start', StartUnitTest, " : starts a unittest session")
 	end
 	
 	function initialize()
@@ -195,4 +194,13 @@ if gadgetHandler:IsSyncedCode() then
 			end
 		end
 	end
+else
+
+	local function StartUnitTest()
+		Spring.SendLuaRulesMsg("DBG:UNITTEST:Start")
+	  
+		
+	end
+
+
 end

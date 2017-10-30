@@ -784,7 +784,7 @@ function LinearExpandDeco(offSet)
 
         randomVec = makeDirVecFromDeg(90, 45, 0, 0, 0, 0, offSet)
         Show(Deco)
-		
+		assert(Socket)-- if not Socket then why
         conPieceCon2Socket(Socket, Deco, randomVec)
         usedPiece(Deco)
         usedPiece(Socket)

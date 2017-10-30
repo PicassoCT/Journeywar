@@ -7,7 +7,7 @@ myDefID = Spring.GetUnitDefID(unitID)
 jGeoHiveID = UnitDefNames["jgeohive"].id
 gaiaTeamID = Spring.GetGaiaTeamID()
 
-TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 SIG_HIVE = 2
 
 boolHiveAttacked = false

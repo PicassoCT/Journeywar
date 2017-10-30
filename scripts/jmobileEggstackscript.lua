@@ -235,7 +235,7 @@ function LaunchSkywards()
 	end
 	
 	
-	HideAllPieces()
+	hideAllPieces(unitID)
 end
 
 

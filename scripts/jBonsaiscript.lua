@@ -174,7 +174,7 @@ Piece_EndPieceMap = {}
 function script.Create()
     allreadyInsertedPieces = {}
     --generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     resetT(TablesOfPiecesGroups["bP"])
     resetT(TablesOfPiecesGroups["Tree"])
     hideT(TablesOfPiecesGroups["bP"])

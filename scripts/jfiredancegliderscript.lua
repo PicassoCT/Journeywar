@@ -14,7 +14,7 @@ aimpiece = piece "Glider"
 
 function script.Create()
     generatepiecesTableAndArrayCode(unitID)
-    TablesOfPiecesGroups = makePiecesTablesByNameGroups(false, true)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Spring.SetUnitNoSelect(unitID, true)
     Spring.SetUnitCOBValue(unitID, COB.ACTIVATION, 1)
     StartThread(flightstartDetector)

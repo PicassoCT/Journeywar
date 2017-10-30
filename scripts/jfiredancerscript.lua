@@ -6,25 +6,6 @@ include "lib_Animation.lua"
 include "lib_Build.lua"
 
 
-function TestSetLock(Lock, number)
-    if TestLocks(Lock, number) == true then
-        Lock[number] = true
-        return true
-    end
-    return false
-end
-
-function TestLocks(Lock, number)
-    for i = 1, table.getn(Lock) do
-        if number ~= i and Lock[i] == true then return false end
-    end
-    return true
-end
-
-
-function ReleaseLock(Lock, number)
-    Lock[number] = false
-end
 
 
 --Define the pieces of the weapon
@@ -111,6 +92,7 @@ end
 
 
 function script.Create()
+	Hide(staff)
     StartThread(wizzardOfOS)
     StartThread(sound)
     StartThread(downHillGlideDetector)
