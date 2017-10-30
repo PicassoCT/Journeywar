@@ -136,6 +136,7 @@ function script.Create()
 
 
     StartThread(delayedUpgrade)
+    StartThread(easeGentlyDown)
     --<buildanimationscript>
     x, y, z = Spring.GetUnitPosition(unitID)
     teamID = Spring.GetUnitTeam(unitID)
@@ -293,9 +294,10 @@ function sFx(gateitterator)
     boolOnlyOnce = false
 end
 
+setdownpoint = piece "setdownpoint"
 boolOnlyOnce = false
 function script.StartBuilding(heading, pitch)
-
+	boolCheckOnUnits= true
 
     gateitterator = gateitterator % 4
     gateitterator = gateitterator + 1
@@ -303,6 +305,31 @@ function script.StartBuilding(heading, pitch)
         boolOnlyOnce = true
         StartThread(sFx, gateitterator)
     end
+end
+allreadyStartedT= {}
+boolCheckOnUnits= false
+
+function easeGentlyDown()
+	while true do
+		if boolCheckOnUnits== true then
+			id = Spring.GetUnitIsBuilding(unitID)
+			if not id then echo("Abort 1"); return end
+			if allreadyStartedT[id] then echo("Abort 2"); return end
+			
+			bP =0.0
+			allreadyStartedT[id]= true
+			while id and Spring.GetUnitIsDead(id)==false and bP < 1.0 do
+				health, maxHealth, paralyzeDamage, captureProgress, bP = Spring.GetUnitHealth(id)
+				Sleep(100)
+			end
+			if Spring.ValidUnitID(id)== false or Spring.GetUnitIsDead(id)== true  then echo("Abort 3"); return end
+			
+			px,py,pz= Spring.GetUnitPiecePosDir(unitID, setdownpoint )
+			MoveUnit(id, px,py,pz, 5)
+			boolCheckOnUnits= false 
+		end
+		Sleep(100)
+	end
 end
 	
 

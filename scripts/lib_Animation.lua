@@ -19,6 +19,28 @@ MA 02110-1301, USA.
 --================================================================================================================
 -- Animation Functions
 --================================================================================================================
+-->Move Unit to Position
+function MoveUnit(id, px,py,pz, speed )
+Spring.MoveCtrl.Enable(id,true)
+u={}
+p={x=px,y=py,z=pz}
+u.x,u.y,u.z = Spring.GetUnitPosition(id)
+
+dist= distance(p,u)
+timeInMsSecond = dist/speed
+timeInto = 0
+while distance(p,u) > 0.1 do
+
+	u.x,u.y,u.z = Spring.GetUnitPosition(id)
+	v= mix(p,u,timeInto/timeInMsSecond)
+	Spring.MoveCtrl.SetPosition(id, v.x, v.y, v.z)
+	timeInto= math.min(timeInMsSecond,timeInto+1)
+	Sleep(1)
+end
+
+Spring.MoveCtrl.Disable(id,true)
+end
+
 -->CombinedWaitForMove
 function WMove(lib_piece, lib_axis, lib_distance, lib_speed)
 	assertAxis(lib_axis)

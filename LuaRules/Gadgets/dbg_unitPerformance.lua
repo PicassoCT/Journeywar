@@ -5,15 +5,12 @@ function gadget:GetInfo()
 		author = "Picasso",
 		date = "12.02.1983",
 		version = "the one we lost and found before garry came around",
-		license = "Reuse only on sexual favours to author license",
-		layer = 699,
-		enabled = true
+		license = "(F.O.C.K.U.) Favours  for sexual favours to Original Creator  license ",
+		layer = 666,
+		handler = true,
+		enabled = false
 	}
 end
-
-
-	
-	
 
 if gadgetHandler:IsSyncedCode() then
 	boolStartPerfMeasurement= false
@@ -81,46 +78,32 @@ if gadgetHandler:IsSyncedCode() then
 		--give orders to attack
 		if frame == ATTACK_FRAME then
 			for i=1, number do
-								ox,oz= et2DSquareFormationPosition(i, 50,32)
-								Command(id, "attack", { x =x +ox, y = 0, z = z+oz }, { "shift" })
-								Spring.SetUnitMoveGoal(CreatedT[i],x+ ox ,z + oz,4096)
+				ox,oz= et2DSquareFormationPosition(i, 50,32)
+				Spring.SetUnitMoveGoal(CreatedT[i],x+ ox ,0, z + oz)
+				Command(id, "attack", { x =x +ox, y = 0, z = z+oz }, { "shift" })
+				
 			end
 				performanceMeasurmentEnd("Attack")
 				return CreatedT
 		end
 			
 		--give orders to attack
-		if frame == DESTURCTION_FRAME then
+		if frame == DESTRUCTION_FRAME then
 			for i=1, number do
 					Spring.DestroyUnit(CreatedT[i],true,true)
 			end
 				performanceMeasurmentEnd("Destruction")
 				return CreatedT
-		 end
-		
-		
+		 end		
 		
 		
 	end
 
 	
-	function gadget:Initialize()
-	  gadgetHandler.actionHandler.AddChatAction(gadget, 'performancetest start', StartPerformanceTest, " : starts a performance")
-	end
-	
-
-
-	function gadget:GameFrame(n)
-		
-	
-	end
-else
-
-	local function StartPerformanceTest()
-		Spring.SendLuaRulesMsg("DBG:PERFORMANCE:Start")
-	  
+	function gadget:GameFrame(n)	
 		
 	end
+	
 
 
 end

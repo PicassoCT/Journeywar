@@ -8,6 +8,7 @@ include "lib_Build.lua"
 
 --a walking animation using threads
 --smoothly aiming the weapon, also using threads
+local center = piece "center"
 local depshield = piece "depshield"
 local bgbase = piece "bgbase"
 local bgtorso = piece "bgtorso"
@@ -152,30 +153,7 @@ end
 
 local function legs_down()
 
-    Turn(bgleg, x_axis, 0, leg_movespeed)
-    Turn(bglegr, x_axis, 0, leg_movespeed)
-    Turn(bglowlegr, x_axis, math.rad(0), leg_movespeed)
-    Turn(bglowleg, x_axis, math.rad(0), leg_movespeed)
-    Turn(bglegr, x_axis, math.rad(0), 9)
-    Turn(bglegr, y_axis, math.rad(0), 13)
-    Turn(bglegr, z_axis, math.rad(0), 9)
-
-    Turn(bglowlegr, x_axis, math.rad(0), 9)
-    Turn(bglowlegr, y_axis, math.rad(0), 13)
-    Turn(bglowlegr, z_axis, math.rad(0), 9)
-    Turn(deathpivot, x_axis, math.rad(0), 9)
-    Turn(deathpivot, y_axis, math.rad(0), 13)
-    Turn(deathpivot, z_axis, math.rad(0), 9)
-
-    Turn(bgleg, x_axis, math.rad(0), 9)
-    Turn(bgleg, y_axis, math.rad(0), 15)
-    Turn(bgleg, z_axis, math.rad(0), 9)
-
-    Turn(bglowleg, x_axis, math.rad(0), 14)
-    Turn(bglowleg, y_axis, math.rad(0), 13)
-    Turn(bglowleg, z_axis, math.rad(0), 9)
-    Turn(deathpivot, y_axis, math.rad(0), 8)
-    Turn(deathpivot, x_axis, math.rad(0), 9)
+		resetLegs()
     val = math.random(-10, 45)
     Turn(bgarm, x_axis, math.rad(val), 8)
 	--assert(type(idle)=="function")
@@ -371,6 +349,57 @@ idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
 		showBattleArms()		 
 	end
 end
+
+function resetLegs()
+     Turn(bgleg, x_axis, 0, leg_movespeed)
+    Turn(bglegr, x_axis, 0, leg_movespeed)
+    Turn(bglowlegr, x_axis, math.rad(0), leg_movespeed)
+    Turn(bglowleg, x_axis, math.rad(0), leg_movespeed)
+    Turn(bglegr, x_axis, math.rad(0), 9)
+    Turn(bglegr, y_axis, math.rad(0), 13)
+    Turn(bglegr, z_axis, math.rad(0), 9)
+
+    Turn(bglowlegr, x_axis, math.rad(0), 9)
+    Turn(bglowlegr, y_axis, math.rad(0), 13)
+    Turn(bglowlegr, z_axis, math.rad(0), 9)
+    Turn(deathpivot, x_axis, math.rad(0), 9)
+    Turn(deathpivot, y_axis, math.rad(0), 13)
+    Turn(deathpivot, z_axis, math.rad(0), 9)
+
+    Turn(bgleg, x_axis, math.rad(0), 9)
+    Turn(bgleg, y_axis, math.rad(0), 15)
+    Turn(bgleg, z_axis, math.rad(0), 9)
+
+    Turn(bglowleg, x_axis, math.rad(0), 14)
+    Turn(bglowleg, y_axis, math.rad(0), 13)
+    Turn(bglowleg, z_axis, math.rad(0), 9)
+    Turn(deathpivot, y_axis, math.rad(0), 8)
+    Turn(deathpivot, x_axis, math.rad(0), 9)
+	
+    val = math.random(-10, 45)
+    Turn(bgarm, x_axis, math.rad(val), 8)
+	
+end
+
+idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
+	resetLegs()
+	signum= randSign() or 1
+	TurnTotal=math.random(1,12)
+	for i=1, TurnTotal do
+		valueToTurn= i*40*signum
+		Turn(center,y_axis, math.rad(valueToTurn),5)
+		StartThread(walk)
+		WaitForTurn(center,y_axis)
+		Signal(SIG_WALK)
+		resetLegs()
+		times=math.random(200,3000)
+		Sleep(times)
+	end
+		Turn(center,y_axis, math.rad(0),5)
+		StartThread(walk)
+		WaitForTurn(center,y_axis)
+		Signal(SIG_WALK)
+end
 bg3defid = UnitDefNames["bg3"].id
 
 function idle()
@@ -536,6 +565,7 @@ end
 function script.QueryWeapon2()
 	  return bgbase
 end
+
 function script.QueryWeapon1()
     return flare01
 end
@@ -614,7 +644,6 @@ function script.FireWeapon1()
 	showActiveBody()
     if boolOnceInAWhile == true then
         boolOnceInAWhile = false
-
     end
 
     boolFiredRecently = true

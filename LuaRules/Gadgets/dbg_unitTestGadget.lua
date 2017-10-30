@@ -56,7 +56,10 @@ if gadgetHandler:IsSyncedCode() then
 				["jfireflower"]=1, ["jdragongrass"]=1, ["jbeehive"]=1, ["jswamp"]=1, ["jpoisonhive"]=1,	
 				["ggluemine"]=1,["jtree1"]=1, ["jgalatea"]=1,["jmotherofmercy"]=1,["jsempresequoia"]=1,["jrecycler"]=1,["jresistancewarrior"]=1,["jmadmax"]=1
 	}
-		boolStartTest= false
+	
+	boolStartTest= false
+	HALF_MAP = math.ceil((Game.mapSizeZ/2 + Game.mapSizeX/2)/2)
+		
 	function getAIPlayer()
 		List = Spring.GetTeamList()
 		PlayerList = {}
@@ -144,7 +147,7 @@ if gadgetHandler:IsSyncedCode() then
 
 					
 					
-					local x,z = getRotatedPosition(valueIndex, circleFraction*100, valueIndex *25, 4096, 4096 )
+					local x,z = getRotatedPosition(valueIndex, circleFraction*100, valueIndex *25, HALF_MAP, HALF_MAP )
 					y= Spring.GetGroundHeight(x,z) 
 					
 					
@@ -152,8 +155,8 @@ if gadgetHandler:IsSyncedCode() then
 						for k=1, UnitAmount[name] do
 							--echo(type(id))
 							id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
-							Spring.SetUnitMoveGoal(id,4096+k,0,4096)
-							Command(id, "move", { x =4096, y = 0, z = 4096 }, { "shift" })
+							Spring.SetUnitMoveGoal(id,HALF_MAP+k,0,HALF_MAP)
+							Command(id, "move", { x =HALF_MAP, y = 0, z = HALF_MAP }, { "shift" })
 							Command(id, "move", { x =x, y = 0, z = z }, { "shift" })
 						end
 					end
@@ -165,7 +168,7 @@ if gadgetHandler:IsSyncedCode() then
 
 	
 	function gadget:Initialize()
-	  gadgetHandler.actionHandler.AddChatAction(gadget, 'unittest start', StartUnitTest, " : starts a unittest session")
+	  gadgetHandler.actionHandler.AddChatAction(gadget, "unittest", StartUnitTest, " : starts a unittest session")
 	end
 	
 	function initialize()
@@ -195,12 +198,13 @@ if gadgetHandler:IsSyncedCode() then
 		end
 	end
 else
-
+	
 	local function StartUnitTest()
-		Spring.SendLuaRulesMsg("DBG:UNITTEST:Start")
-	  
-		
+		Spring.SendLuaRulesMsg("DBG:UNITTEST:Start")		
 	end
-
+	
+	function gadget:Initialize()
+	  gadgetHandler.actionHandler.AddChatAction(gadget, "unittest", StartUnitTest, " : starts a unittest session")
+	end
 
 end
