@@ -1509,7 +1509,7 @@ end
 
 function pieceToPointT(piecesTable)
 
-	if not piecesTable[1] then
+	if type(piecesTable) == "number" then
 		return pieceToPoint(piecesTable)
 	end	
 
@@ -2333,7 +2333,30 @@ end
 --======================================================================================
 --Section: Geometry/Math functions
 --======================================================================================
-
+function computateBendLimits(piecename,parent)
+		paPosX,paPosY,paPosZ=Spring.GetUnitPiecePosition(unitID,parent)
+		cPosX,cPosY,cPosZ=Spring.GetUnitPiecePosition(unitID,piecename)
+		
+		--the offset of the piece in relation to its parentpiece
+		v={}
+		v.x,v.y,v.z=cPosX-paPosX,cPosY-paPosY,cPosZ-paPosZ
+		
+		pax,pay,paz=Spring.GetUnitPieceCollisionVolumeData(unitID,parent)
+		radOfParentSphere=getCubeSphereRad(pax,pay,paz)
+		cx,cy,cz=Spring.GetUnitPieceCollisionVolumeData(unitID,piecename)
+		radOfPieceSphere=getCubeSphereRad(cx,cy,cz)
+		-- rotate the vector so that it aligns with x,y,z origin vectors
+		-- computate the orthogonal 
+		-- computate the dead degree cube
+		wsize=triAngleTwoSided(v.x,v.y)
+		-- rotate the computated window inverse to the vector back
+		-- voila
+		
+		--Y-Axis 
+		-->TODO:RAGDOLL |_\ -- you approximate the motherpiece with a circle and then do a math.acos( circleradius/distance)
+		--defaulting to a maxturn
+		return {ux=-15 ,x=15, uy=-180, y=180,uz=-15, z=15}
+	end
 function get2DSquareFormationPosition(nr, size, unitsInRow)
 
 	row = math.floor(nr/unitsInRow)
@@ -2431,7 +2454,7 @@ function holdsForAll(Var, fillterConditionString, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     if arg then
         for k, Val in pairs(arg) do
-            if (loadstring("Var" .. fillterConditionString .. "Val"))() == false then return end
+            if (loadstring(""..VaR .. fillterConditionString .. Val))() == false then return end
         end
         return true
     else

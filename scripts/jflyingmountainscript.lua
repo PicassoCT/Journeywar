@@ -7,6 +7,7 @@ include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
+motherattach = piece"motherattach"
 center = piece("center")
 peebleSpinCenter = piece("peebleSpinCenter")
 mountainSpinCenter = piece("mountainSpinCenter")
@@ -59,8 +60,16 @@ function script.Create()
     showOneOfTheMountains()
     StartThread(spinUpStones)
     StartThread(riseAnimation)
+	
+	StartThread(delayedAttachParent)
 end
 
+function delayedAttachParent()
+	Sleep(100)
+	if GG.ParentTable[unitID] then
+	Spring.UnitAttach(unitID,GG.ParentTable[unitID],motherattach)
+	end
+end
 function comeOnDown()
 
     DropAnimation()
@@ -76,6 +85,9 @@ function comeOnDown()
 end
 
 function script.Killed(recentDamage, _)
+	if GG.ParentTable[unitID] then
+		Spring.UnitDetach( GG.ParentTable[unitID])
+	end
     DropAnimation()
     takeVictimsToAnotherDimension()
     size = 32
@@ -169,7 +181,7 @@ function DropAnimation()
     Spring.MoveCtrl.Enable(unitID, true)
 
 
-    while (y > -50) do
+    while (py > -50) do
        px, py, pz = Spring.GetUnitPiecePosDir(unitID, center)
 
         speed = math.min(speed + speed, gravity)
@@ -191,6 +203,7 @@ function takeVictimsToAnotherDimension()
     x, y, z = Spring.GetUnitPosition(unitID)
     T = Spring.GetUnitsInCylinder(x, z, DamageRadius)
     table.remove(T, unitID)
+		if GG.ParentTable[unitID] then   table.remove(T, GG.ParentTable[unitID]) end
     if T and #T > 0 then
         for i = 1, #T, 1 do
             def = Spring.GetUnitDefID(T[i])

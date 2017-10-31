@@ -460,7 +460,7 @@ function aimOS()
             trainEffectors(thisIsMyRockID)
             StartThread(emitTractorSFX)
             -- if there is a rock is it still in range
-			rockInRange, stillAlive= IsRockStillInRange()
+				rockInRange, stillAlive= IsRockStillInRange()
             if rockInRange == false and stillAlive == true then
                 Spring.DestroyUnit(thisIsMyRockID, false, true)
                 boolCanFire = true
@@ -483,9 +483,14 @@ end
 local teamID = Spring.GetUnitTeam(unitID)
 function ripARock(x, y, z)
     if doesRockStillExist() == false then
-        thisIsMyRockID = Spring.CreateUnit("flyingmountain", x, y, z, 0, teamID)
-        Spring.SetUnitMoveGoal(unitID, x, y, z)
-    end
+			if math.random(0,1)== 1 then
+				thisIsMyRockID = Spring.CreateUnit("flyingmountain", x, y, z, 0, teamID, false, false,nil, unitID)
+			else
+	        thisIsMyRockID = Spring.CreateUnit("flyingmountainb", x, y, z, 0, teamID, false, false,nil, unitID)
+			end
+			if not GG.ParentTable then GG.ParentTable = {} end
+		 GG.ParentTable[thisIsMyRockID] = unitID
+	end
 end
 
 function retractEffectors()

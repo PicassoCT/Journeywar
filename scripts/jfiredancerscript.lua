@@ -322,13 +322,12 @@ function script.QueryWeapon1()
     return staff
 end
 
-local lReleaseLock = ReleaseLock
-local lTestSetLock = TestSetLock
-
+boolFiring=false
 function script.AimWeapon1(Heading, pitch)
     --aiming animation: instantly turn the gun towards the enemy
     Signal(SIG_IDLE)
-    if lTestSetLock(HaveLock, 1) == true then
+	if boolFiring==false then
+	boolFiring=true
         Signal(SIG_AIM2)
         SetSignalMask(SIG_AIM2)
 
@@ -352,22 +351,20 @@ function script.AimWeapon1(Heading, pitch)
         Turn(center, y_axis, Heading, 15)
 
         WaitForTurn(center, y_axis)
-        return true
-    else
-
+	
+			return true
+	else	
         return false
     end
 end
 
 teamID = Spring.GetUnitTeam(unitID)
 function script.FireWeapon1()
-    lReleaseLock(HaveLock, 1)
     for i = 1, 24, 1 do
         Sleep(i * 3)
         EmitSfx(body, 1024)
     end
-
-
+	boolFiring=false
     return true
 end
 

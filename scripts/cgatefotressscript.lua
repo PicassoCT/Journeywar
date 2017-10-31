@@ -394,6 +394,10 @@ function deployOnceComplete()
 end
 
 function script.Killed(recentDamage, _)
+	for i=1,#TableOfPieces do
+		Explode(TableOfPieces[i],SFX.FALL+SFX.NO_HEATCLOUD)
+		Explode(TableOfPieces[i],SFX.SHATTER)
+	end
     return 1
 end
 

@@ -6,7 +6,7 @@ include "lib_Animation.lua"
 include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-
+motherattach = piece"motherattach"
 center = piece("center")
 
 mountainSpinCenter = piece("center")
@@ -44,17 +44,26 @@ function script.Create()
     teamID = Spring.GetUnitTeam(unitID)
     x, y, z = Spring.GetUnitPosition(unitID)
     -- Show halfSphere - Dig Hole for halfSphere
-
-
-
-
-
+	
     Turn(mountainSpinCenter, y_axis, math.rad(math.random(-360, 360)), 0)
     Spin(mountainSpinCenter, y_axis, math.rad(math.random(-360, 360) / 100))
     showOneOfTheMountains()
+	
+	StartThread(delayedAttachParent)
+end
+
+function delayedAttachParent()
+	Sleep(100)
+	if GG.ParentTable[unitID] then
+	Spring.UnitAttach(unitID,GG.ParentTable[unitID],motherattach)
+	end
 end
 
 function script.Killed(recentDamage, _)
+
+		if GG.ParentTable[unitID] then
+			Spring.UnitDetach( GG.ParentTable[unitID])
+		end
     DropAnimation()
     takeVictimsToAnotherDimension()
     size = 32
@@ -111,6 +120,7 @@ function takeVictimsToAnotherDimension()
     x, y, z = Spring.GetUnitPosition(unitID)
     T = Spring.GetUnitsInCylinder(x, z, DamageRadius)
     table.remove(T, unitID)
+	if GG.ParentTable[unitID] then   table.remove(T, GG.ParentTable[unitID]) end
     if T and #T > 0 then
         for i = 1, #T, 1 do
             def = Spring.GetUnitDefID(T[i])
@@ -158,6 +168,19 @@ function script.AimWeapon1(heading, pitch)
     return boolOnce
 end
 
+function comeOnDown()
+
+    DropAnimation()
+    takeVictimsToAnotherDimension()
+	
+    size = 32
+    if GG.DynDefMap == nil then GG.DynDefMap = {} end
+    if GG.DynRefMap == nil then GG.DynRefMap = {} end
+    GG.DynDefMap[#GG.DynDefMap + 1] = { creator=UnitDefs[Spring.GetUnitDefID(unitID)].name, x = x / 8, z = z / 8, Size = size, blendType = "melt", filterType = "borderblur" }
+    GG.DynRefMap[#GG.DynRefMap + 1] = prepareHalfSphereTable(size, 4)
+    GG.boolForceLandLordUpdate = true
+    Spring.DestroyUnit(unitID, true, true)
+end
 
 function script.FireWeapon1()
     boolOnce = false

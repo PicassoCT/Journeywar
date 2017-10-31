@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL spam v3.0 or later",
 		layer = 699,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -43,7 +43,7 @@ if gadgetHandler:IsSyncedCode() then
 				"ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	}
 		UnitAmount = {
-				["bg"]=5,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
+				["bg"]=50,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
 				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
 				["chunterchopper"]=1,["conair"]=1,["csuborbital"]=1,["cgunship"]=1,["callygator"]=1,
 				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["strider"]=1,["ccrabsynth"]=1,["chunter"]=3,
@@ -57,7 +57,7 @@ if gadgetHandler:IsSyncedCode() then
 				["ggluemine"]=1,["jtree1"]=1, ["jgalatea"]=1,["jmotherofmercy"]=1,["jsempresequoia"]=1,["jrecycler"]=1,["jresistancewarrior"]=1,["jmadmax"]=1
 	}
 	
-	boolStartTest= false
+	boolStartTest= true
 	HALF_MAP = math.ceil((Game.mapSizeZ/2 + Game.mapSizeX/2)/2)
 		
 	function getAIPlayer()
