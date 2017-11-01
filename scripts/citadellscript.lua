@@ -133,6 +133,8 @@ boolFireCloud = false
 boolBloodyVirginMary = true
 
 local spGetUnitPiecePosition = Spring.GetUnitPiecePosition
+ANOUNCE_LOUDNESS = 1.0
+PORTAL_LOUDNESS = 0.06125
 
 function darkEnergyReactor()
     times = 0
@@ -166,7 +168,7 @@ end
 --arrive every 1:30 secs -> to forwards that hollywood action curve, in which every 3 min something is blown up- 
 function reInforCements()
     Sleep(65000)
-    Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav")
+    Spring.PlaySoundFile("sounds/citadell/citadellJourney.wav", ANOUNCE_LOUDNESS)
     Sleep(180000)
     dropPx, dropPy, dropPz = Spring.GetUnitPosition(unitID)
     for i = 1, nrOfReinforcements, 1 do
@@ -174,7 +176,7 @@ function reInforCements()
         for thee = 1, 600, 1 do
             Sleep(100)
         end
-        Spring.PlaySoundFile("sounds/citadell/reinforcements.wav")
+        Spring.PlaySoundFile("sounds/citadell/reinforcements.wav",ANOUNCE_LOUDNESS)
 
         local spCreateUnit = Spring.CreateUnit
         Show(cishadersp)
@@ -339,11 +341,12 @@ function SpawnCloud()
         String = "sounds/vort/zap" .. x
         String = String .. ".wav"
 
-        Spring.PlaySoundFile(String, 0.3)
+        Spring.PlaySoundFile(String, PORTAL_LOUDNESS)
 
         Sleep(sleePhe)
     end
 end
+
 
 function CriticalHitDetector()
     local hitPointsOfOld = Spring.GetUnitHealth(unitID)
@@ -353,7 +356,7 @@ function CriticalHitDetector()
     counter = 1
     while (true) do
         if (hitPoints < hitPointsOfOld - hpPercentage) then
-            Spring.PlaySoundFile("sounds/citadell/citadellAlarm.wav")
+            Spring.PlaySoundFile("sounds/citadell/citadellAlarm.wav",ANOUNCE_LOUDNESS)
             Sleep(5000)
         end
 
@@ -526,7 +529,7 @@ local function WarpEntry()
     StartThread(hideAndThrowRocks, 63, 71)
 
     themRocks(1, 5, 120, 168)
-    Spring.PlaySoundFile("sounds/citadell/portal.wav", 0.5)
+    Spring.PlaySoundFile("sounds/citadell/portal.wav", PORTAL_LOUDNESS)
     SemitX, SemitY, SemitZ = spGetUnitPiecePosition(unitID, sparkcloudemit)
     unitX, unitY, unitZ = Spring.GetUnitPosition(unitID)
 
@@ -604,7 +607,7 @@ end
 
 function HideShield()
     boolShield = false
-    Spring.PlaySoundFile("sounds/citadell/shield_powerdown.ogg", 1.0)
+    Spring.PlaySoundFile("sounds/citadell/shield_powerdown.ogg", ANOUNCE_LOUDNESS)
     Spring.SetUnitShieldState(unitID, SHIELDNUMBER, true)
     WaitForMove(shield, y_axis)
     for i = 1, 12, 1 do
@@ -615,7 +618,7 @@ end
 
 boolTwice = false
 function script.Activate()
-    Spring.PlaySoundFile("sounds/citadell/shield_powerup.ogg", 1.0)
+    Spring.PlaySoundFile("sounds/citadell/shield_powerup.ogg", ANOUNCE_LOUDNESS)
     boolShield = true
     Spring.SetUnitShieldState(unitID, SHIELDNUMBER, true)
     Move(shield, y_axis, 1400, 0)
