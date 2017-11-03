@@ -1757,8 +1757,7 @@ function bladewhirl_thread()
             Sleep(189)
 
             --Jump
-            rand = math.random(0, 1)
-            if rand == 1 then
+            if math.random(0, 1) == 1 then
                 Turn(tigLil, y_axis, math.rad(360), 48) --i
             end
             Turn(deathpivot, x_axis, math.rad(41), 12)
@@ -1981,7 +1980,7 @@ function bladewhirl_thread()
             WaitForMove(tigLil, y_axis)
             Turn(tigLil, x_axis, math.rad(0), 36)
         end
-        if (Sleeper == 2 or Sleeper == 4 or Sleeper == 6 or Sleeper == 8 or Sleeper == 9) then
+        if (Sleeper %2 == 0 ) then
 
             Turn(tllegLowR, x_axis, math.rad(0), 8)
             Turn(tllegLow, x_axis, math.rad(0), 8)
@@ -2022,39 +2021,7 @@ function bladewhirl_thread()
 
             Turn(tllegLowR, x_axis, math.rad(38), 4)
 
-            --[[
-			WaitForTurn(tlhairdown,x_axis)
-
-			WaitForTurn(tlHead,y_axis)
-			WaitForTurn(tlHead,z_axis)
-			WaitForTurn(tlhairup,x_axis)
-
-			WaitForTurn(tlhairup,y_axis)
-
-
-			WaitForTurn(tlarm,x_axis)
-			WaitForTurn(tlarm,y_axis)
-			WaitForTurn(tlarm,z_axis)
-
-			WaitForTurn(tlarmr,x_axis)
-			WaitForTurn(tlarmr,y_axis)
-			WaitForTurn(tlarmr,z_axis)
-
-			WaitForTurn(tllegUp,x_axis)
-			WaitForTurn(tllegUp ,y_axis)
-			WaitForTurn(tllegUp ,z_axis)
-
-			WaitForTurn(tllegUpR,x_axis)
-			WaitForTurn(tllegUpR,y_axis)
-			WaitForTurn(tllegUpR,z_axis)
-			WaitForTurn(tllegLowR,x_axis)
-			WaitForTurn(deathpivot,x_axis)
-			WaitForTurn(deathpivot,y_axis)
-
-			WaitForTurn(tlhairup,x_axis)
-			WaitForTurn(tlhairdown,x_axis)
-			WaitForTurn(deathpivot,x_axis)
-			WaitForTurn(deathpivot,y_axis)]]
+    
             Sleep(450)
             Turn(deathpivot, x_axis, math.rad(-12), 2)
             Turn(deathpivot, y_axis, math.rad(360), 8)
@@ -2074,7 +2041,7 @@ function bladewhirl_thread()
 
 
 
-        if (Sleeper == 0 or Sleeper == 3 or Sleeper == 5 or Sleeper == 7 or Sleeper == 10) then
+        if (Sleeper % 2 == 1) then
 
             Turn(deathpivot, x_axis, math.rad(-10), 1)
             Turn(deathpivot, y_axis, math.rad(-180), 18)
@@ -2240,34 +2207,7 @@ function legs_down()
     Turn(tllegLowR, y_axis, math.rad(0), 2)
     Turn(tllegLowR, z_axis, math.rad(0), 2)
     Sleep(75)
-    --[[WaitForMove(tigLil,y_axis)
-	WaitForMove(tigLil,x_axis)
-	WaitForMove(tigLil,z_axis)
-	WaitForTurn(deathpivot,x_axis)
-	WaitForTurn(deathpivot,y_axis)
-	WaitForTurn(deathpivot,z_axis)
-	WaitForTurn(tigLil,x_axis)
-	WaitForTurn(tigLil,y_axis)
-	WaitForTurn(tigLil,z_axis)
-	WaitForTurn(tlHead,x_axis)
-	WaitForTurn(tlHead,y_axis)
-	WaitForTurn(tlHead,z_axis)
-	WaitForTurn(tlhairup,x_axis)
-	WaitForTurn(tlhairup,y_axis)
-	WaitForTurn(tlhairup,z_axis)
-	WaitForTurn(tlhairdown,x_axis)
-	WaitForTurn(tllegUp,x_axis)
-	WaitForTurn(tllegUp,y_axis)
-	WaitForTurn(tllegUp,z_axis)
-	WaitForTurn(tllegLow,x_axis)
-	WaitForTurn(tllegLow,y_axis)
-	WaitForTurn(tllegLow,z_axis)
-	WaitForTurn(tllegUpR,x_axis)
-	WaitForTurn(tllegUpR,y_axis)
-	WaitForTurn(tllegUpR,z_axis)
-	WaitForTurn(tllegLowR,x_axis)
-	WaitForTurn(tllegLowR,y_axis)
-	WaitForTurn(tllegLowR,z_axis) ]] --
+ 
 end
 
 
@@ -2530,7 +2470,7 @@ function idle_stance5()
     legs_down()
 end
 
---like a bitch over trouble water (expandable)
+--like a bitch over troubled water (expandable)
 function idle_stance4()
 
     Turn(tlarm, z_axis, math.rad(-90), 3)
@@ -5131,8 +5071,6 @@ function idle_stance8()
     Turn(tlarm, z_axis, math.rad(-52), 3)
     Hide(tldrum)
 end
-
-
 
 --clapstance
 function idle_stance9()
@@ -9829,8 +9767,6 @@ function walk()
     Signal(SIG_ONTHEMOVE)
     Signal(SIG_INCIRCLE)
     if (Sleeper == 1 or Sleeper == 8) then
-
-
         StartThread(armswing)
     end
 
@@ -10031,8 +9967,8 @@ function idle()
         Sleep(285)
         Sleeper = math.random(0, 15)
 
-        tempsleep = math.random(512, 4096)
-			Sleep(tempsleep)
+        rest = math.random(512, 4096)
+			Sleep(rest)
         if (Sleeper == 0) then
            
             lidle_stance()
@@ -10494,6 +10430,7 @@ function AmbushCounterThread()
     boolAmbushCharged = true
     Spring.Echo("AmbushReady")
 end
+
 oldStates = Spring.GetUnitStates(unitID)
 boolCloaked = false
 function cloakCheckAndAmbushLoad()
