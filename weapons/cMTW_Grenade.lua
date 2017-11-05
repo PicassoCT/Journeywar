@@ -3,10 +3,7 @@ local weaponDef = {
     weaponType = [[Cannon]],
     name = "Grenade",
     highTrajectory = 1,
-
-
     --
-
     weapontimer = 12,
     --
     --Physic/flight path

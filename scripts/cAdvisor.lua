@@ -397,6 +397,28 @@ function script.FireWeapon1()
 end
 
 
+function script.QueryWeapon2()
+    return spinMeRightRound
+end
+
+function script.AimFromWeapon2()
+
+    return spinMeRightRound
+end
+
+
+function script.AimWeapon2(heading, pitch)
+return true
+end
+
+
+function script.FireWeapon2()
+
+end
+
+
+
+
 --[[
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -425,6 +447,7 @@ include "lib_Build.lua"
 CurrentlyControlledProjectiles = {}
 Counter = 0
 TimeTillDestroy = 22000
+myTeamID = Spring.GetUnitTeam(unitID)
 
 function bulletOS()
 
@@ -444,7 +467,15 @@ function catchProjectiles(ux, uy, uz)
     T = {}
 
     T = Spring.GetProjectilesInRectangle(ux - 100, uz - 100, ux + 100, uz + 100)
-
+	
+	T= process( function(id)
+	team = Spring.GetProjectileTeamID (id)
+		if team ~= myTeamID then 
+			return id 
+		end
+	end
+	)
+	
     for i = 1, #T, 1 do
         if Counter < 5 then
             Spring.SetProjectileMoveControl(T[i], true)

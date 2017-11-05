@@ -203,9 +203,10 @@ void main() {
         if shaderProgram then
             if redHotUnits[unitID] then
                 glUseShader(shaderProgram)
+				--Spring.Echo("Shader active for:"..unitID)
                 gl.Uniform(timer, getTime(redHotUnits[unitID]))
-					 glUseShader(0)        
-				end
+				glUseShader(0)       
+			end
         end
      end
 

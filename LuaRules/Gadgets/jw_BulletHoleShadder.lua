@@ -4,7 +4,8 @@ function gadget:GetInfo()
         desc = "Fire in the hole- another word for yesterdays peperoni",
         author = "me",
         date = "Sep. 20014",
-        license = "Humilation License: If you use this comercially, the CEO of your company has to start everyday, by exlaiming in front of the employees: >> Im a worthless parasit, leaching on the creativity of those i would degrade in every other conversation. Im sorry for existing. <<",
+        license = "Humilation License: If you use this comercially, the CEO of your company has to start everyday, by exlaiming in front of the employees: >> "..
+		"Im a worthless parasit, leaching on the creativity of those i would degrade in every other conversation. Im sorry for existing. <<",
         layer = 0,
         enabled = false,
     }
@@ -435,6 +436,7 @@ void main()
             mapDataToUniforms(PenetratedUnits[unitID])
             glUseShader(shaderProgram)
             PenetratedUnits[unitID] = nil
+			glUseShader(0)
         end
     end
 

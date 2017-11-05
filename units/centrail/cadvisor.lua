@@ -46,6 +46,9 @@ weapons = {
 [1]={name  = "advisorPsiRay",
 	onlyTargetCategory = [[LAND TRAITOR]],
 	},
+[2]={name  = "cadvisoraa",
+	onlyTargetCategory = [[AIR]],
+	},
 },
 
  customParams = {},

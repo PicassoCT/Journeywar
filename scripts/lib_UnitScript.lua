@@ -2454,7 +2454,9 @@ function holdsForAll(Var, fillterConditionString, ...)
     local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
     if arg then
         for k, Val in pairs(arg) do
-            if (loadstring(""..VaR .. fillterConditionString .. Val))() == false then return end
+			if Var and Val then
+            if (loadstring(""..Var .. fillterConditionString .. Val))() == false then return end
+			end
         end
         return true
     else

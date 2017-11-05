@@ -227,7 +227,7 @@ function createBaseShapeTable(sizeX, sizeY, sizeZ, piecenumber)
 
             baseShapeTable[x][z][y] = true
             if math.sqrt((x - sizeX / 2) ^ 2 + (z - sizeZ / 2) ^ 2) > radiusA then baseShapeTable[x][z][y] = false end
-            if dist(x, 0, z, 1, 0, sizeZ) < radiusB then baseShapeTable[x][z][y] = false end
+            if distance(x, 0, z, 1, 0, sizeZ) < radiusB then baseShapeTable[x][z][y] = false end
 
             if baseShapeTable[x][z][y] == true then
                 piecenumber = piecenumber - 1
@@ -305,7 +305,7 @@ function getClosestDirection(directionTable, i, j)
     lastDist = math.huge
     for i = 1, #directionTable do
         local dx = directionTable[i]
-        if dist(i, dx.x, j, dx.z) < lastDist then dirIndex = i; lastDist = dist(i, dx.x, j, dx.z) end
+        if distance(i, dx.x, j, dx.z) < lastDist then dirIndex = i; lastDist = distance(i, dx.x, j, dx.z) end
     end
 
     return directionTable[dirIndex].direction, directionTable[dirIndex].angular
