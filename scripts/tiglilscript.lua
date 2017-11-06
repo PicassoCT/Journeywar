@@ -9216,11 +9216,12 @@ function attachBallToPiece(hand)
 end
 
 --> Moves the ball swingcenter away from the directionrotator
-function setupBallArc(distanceToGo, directionInRad)
+function setupBallArc(distanceToGo, directionInRad,speed)
+speed= speed or 0
 Move(BallArcPoint,x_axis, distanceToGo,0)
 Move(Ball,x_axis, -distanceToGo,0)
 Turn(DirectionArcPoint,y_axis, math.rad(directionInRad),0)
-Turn(BallArcPoint,x_axis, math.rad(directionInRad),0)
+Turn(BallArcPoint,x_axis, math.rad(directionInRad),speed)
 
 
 end
@@ -9291,29 +9292,11 @@ end,
 end,
 [6] = function()--volley
 	Show(ball)
-	setupBallArc(math.random(10,150), math.random(-180,180))
+	value=math.random(10,150)
+	setupBallArc(value, math.random(-180,180))
 	WTurn(BallArcPoint,x_axis, math.rad(0),9.81)
-
-	-- tP(tlarm,-45,8,90,12)
-	-- tP(tlarm,-45,8,-90,12)
-	-- WaitForTurns(tlarm,tlarmr)
-	-- movePieceToPiece(unitID,MoveBall, handr,0)
-	-- x,y,z= math.random(-20,20), math.random(0,100), math.random(-20,20)
-	-- mP(ball,x,y,z,0)
-	-- Show(ball)
-	-- Move(ball,x_axis,0,x/4)
-	-- Move(ball,y_axis,0,y/4)
-	-- Move(ball,z_axis,0,z/4)
-	-- WaitForMoves(ball)
-	-- StartThread(attachBallToPiece, handr)		
-	-- tP(tlarm,0,8,90,12)
-	-- tP(tlarm,0,8,-90,12)
-	-- boolBallAttached = false
-	-- Move(ball,x_axis,-1*x,x/4)
-	-- Move(ball,y_axis,y,y/4)
-	-- Move(ball,z_axis,z,-1*z/4)
-	-- WaitForMoves(ball)
-	-- Hide(ball)
+	setupBallArc(value, math.random(-180,180), 7)
+	
 	
 	end,
 [7] = function()--retBall
