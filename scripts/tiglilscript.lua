@@ -28,8 +28,8 @@ local tlpole = piece "tlpole"
 local tlharp = piece "tlharp"
 local tlflute = piece "tlflute"
 local tldancedru = piece "tldancedru"
-MoveBall = piece "MoveBall"
-TurnBall = piece "TurnBall"
+DirectionArcPoint = piece "DirectionArcPoint"
+BallArcPoint = piece "BallArcPoint"
 handr = piece "handr"
 handl = piece "handl"
 ball = piece "ball"
@@ -1682,7 +1682,6 @@ function creaRandomValue(lowLimit, upLimit)
 end
 
 
-
 function hair_inwind()
 
     SetSignalMask(SIG_HAIRWIND)
@@ -2136,7 +2135,6 @@ function bladewhirl_thread()
     StartThread(walk)
 end
 
-
 function legs_down()
     Hide(tlpole)
     Hide(tldrum)
@@ -2165,7 +2163,7 @@ function legs_down()
     Turn(tlflute, y_axis, math.rad(0), 45)
     Turn(tlflute, z_axis, math.rad(0), 45)
 	reset(MoveBall)
-	reset(TurnBall)
+	reset(BallArcPoint)
 	Hide(ball)
 	
     StopSpin(tigLil, y_axis)
@@ -9198,25 +9196,33 @@ function idle_stance18()
   tP(tllegLow,114 + math.random(-5,5),0,0, 5)
   tP(tllegUpR,-1, math.random(-20,27) ,  -1* math.random(-55,-39), 5)
   tP(tllegLowR,114 + math.random(0,20),0,0, 5)
-  Sleep(2500)
-  
-  end
+  Sleep(2500)  
+end
 
 local SIG_BALL =8192
 boolBallAttached = false
 
 function attachBallToPiece(hand)
-
 	SetSignalMask(SIG_BALL)
 	
 	reset(MoveBall)
-	reset(TurnBall)
+	reset(BallArcPoint)
 	reset(ball)
 	boolBallAttached=true
 	while boolBallAttached == true do
 		movePieceToPiece(unitID, MoveBall, hand, 10 )
 		Sleep(10)
 	end
+end
+
+--> Moves the ball swingcenter away from the directionrotator
+function setupBallArc(distanceToGo, directionInRad)
+Move(BallArcPoint,x_axis, distanceToGo,0)
+Move(Ball,x_axis, -distanceToGo,0)
+Turn(DirectionArcPoint,y_axis, math.rad(directionInRad),0)
+Turn(BallArcPoint,x_axis, math.rad(directionInRad),0)
+
+
 end
 
 function moveBallToPieceInArc(arclength, Piecename,speed)
@@ -9228,9 +9234,9 @@ function moveBallToPieceInArc(arclength, Piecename,speed)
 	Move(ball,x_axis,-1*(arclength-px),0)
 	Move(MoveBall,y_axis,-py,0)
 	Move(MoveBall,z_axis,-pz,0)
-	Turn(TurnBall,x_axis,math.rad(90),0)
+	Turn(BallArcPoint,x_axis,math.rad(90),0)
 	Show(ball)
-	WTurn(TurnBall,x_axis,math.rad(0),0)
+	WTurn(BallArcPoint,x_axis,math.rad(0),0)
 end
 
 ballIdleFunctions = {
@@ -9244,7 +9250,7 @@ ballIdleFunctions = {
 	tP(tlarm,0, -88, -35 +180, 88/4)
 	tP(tlarmr, 0, 88, 40 +180, 85/4)
 	WaitForTurns(tllegUp,tllegUpR,tlHead, tlarm,tlarmr)
-	reset(TurnBall)
+	reset(BallArcPoint)
 	reset(MoveBall)
 	reset(ball)
 	moveBallToPieceInArc(120, handr, 10)
@@ -9284,26 +9290,30 @@ end,
 	WaitForMoves(ball)
 end,
 [6] = function()--volley
-	tP(tlarm,-45,8,90,12)
-	tP(tlarm,-45,8,-90,12)
-	WaitForTurns(tlarm,tlarmr)
-	movePieceToPiece(unitID,MoveBall, handr,0)
-	x,y,z= math.random(-20,20), math.random(0,100), math.random(-20,20)
-	mP(ball,x,y,z,0)
 	Show(ball)
-	Move(ball,x_axis,0,x/4)
-	Move(ball,y_axis,0,y/4)
-	Move(ball,z_axis,0,z/4)
-	WaitForMoves(ball)
-	StartThread(attachBallToPiece, handr)		
-	tP(tlarm,0,8,90,12)
-	tP(tlarm,0,8,-90,12)
-	boolBallAttached = false
-	Move(ball,x_axis,-1*x,x/4)
-	Move(ball,y_axis,y,y/4)
-	Move(ball,z_axis,z,-1*z/4)
-	WaitForMoves(ball)
-	Hide(ball)
+	setupBallArc(math.random(10,150), math.random(-180,180))
+	WTurn(BallArcPoint,x_axis, math.rad(0),9.81)
+
+	-- tP(tlarm,-45,8,90,12)
+	-- tP(tlarm,-45,8,-90,12)
+	-- WaitForTurns(tlarm,tlarmr)
+	-- movePieceToPiece(unitID,MoveBall, handr,0)
+	-- x,y,z= math.random(-20,20), math.random(0,100), math.random(-20,20)
+	-- mP(ball,x,y,z,0)
+	-- Show(ball)
+	-- Move(ball,x_axis,0,x/4)
+	-- Move(ball,y_axis,0,y/4)
+	-- Move(ball,z_axis,0,z/4)
+	-- WaitForMoves(ball)
+	-- StartThread(attachBallToPiece, handr)		
+	-- tP(tlarm,0,8,90,12)
+	-- tP(tlarm,0,8,-90,12)
+	-- boolBallAttached = false
+	-- Move(ball,x_axis,-1*x,x/4)
+	-- Move(ball,y_axis,y,y/4)
+	-- Move(ball,z_axis,z,-1*z/4)
+	-- WaitForMoves(ball)
+	-- Hide(ball)
 	
 	end,
 [7] = function()--retBall
@@ -9314,7 +9324,7 @@ end,
 
 local function idle_playBall()
 ballDice = math.random(1,6)
-ballIdleFunctions[1]()
+ballIdleFunctions[6]()
 legs_down()
 	boolBallAttached=false
 	Hide(ball)
@@ -9965,7 +9975,7 @@ function idle()
 
         --changebookmark 
         Sleep(285)
-        Sleeper = math.random(0, 15)
+        Sleeper = math.random(0, 16)
 
         rest = math.random(512, 4096)
 			Sleep(rest)
@@ -10018,12 +10028,10 @@ function idle()
 		if (Sleeper == 15) then
 		   idle_stance18()	
 		end
-		
-		
-		-- if (Sleeper >= 16) then
-			-- Sleep(tempsleep)
-			-- idle_playBall()
-		-- end
+				
+		if (Sleeper >= 16) then
+			idle_playBall()
+		end
 		
     end
 end

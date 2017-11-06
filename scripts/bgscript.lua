@@ -333,8 +333,8 @@ end
 function mindReader()
 
 	while true do
-	Spring.SetUnitTooltip(thoughBuilder())
-	restPeriod= math.ceil(math.random(6000,12000))
+	Spring.SetUnitTooltip(unitID, thoughBuilder())
+	restPeriod= math.ceil(math.random(1000,12000))
 	Sleep(restPeriod)
 	end
 end
