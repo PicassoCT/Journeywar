@@ -137,6 +137,12 @@ function reSetSpeed(unitID, UnitDefs)
     setSpeedEnv(unitID, 1.0)
 end
 
+function getUnitCost(id)
+defID= Spring.GetUnitDefID(id)
+
+return 	UnitDefs[defID].buildCostMetal,UnitDefs[defID].buildCostEnergy
+end
+
 --> Sets the Speed of a Unit
 function setSpeedEnv(k, val)
     val = math.max(0.000000001, math.min(val, 1.0))

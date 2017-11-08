@@ -9216,32 +9216,22 @@ function attachBallToPiece(hand)
 end
 
 --> Moves the ball swingcenter away from the directionrotator
-function setupBallArc(distanceToGo, directionInRad,speed)
-speed= speed or 0
-Move(BallArcPoint,x_axis, distanceToGo,0)
-Move(Ball,x_axis, -distanceToGo,0)
-Turn(DirectionArcPoint,y_axis, math.rad(directionInRad),0)
-Turn(BallArcPoint,x_axis, math.rad(directionInRad),speed)
-
-
+function setupBallArc(distanceToGo, directionInDeg, startArcInDeg, speed)
+--default resets
+	distanceToGo= distanceToGo or 0
+	directionInDeg = directionInDeg or 0
+	startArcInDeg = startArcInDeg or 0
+	speed= speed or 0
+	Move(BallArcPoint,x_axis, distanceToGo,0)
+	Move(Ball,x_axis, -distanceToGo,0)
+	Turn(DirectionArcPoint,y_axis, math.rad(directionInDeg),0)
+	Turn(BallArcPoint,x_axis, math.rad(startArcInDeg),speed)
 end
 
-function moveBallToPieceInArc(arclength, Piecename,speed)
-	Move(deathpivot,y_axis, 100, 0)
-	--Move Ball to piece height
-	px,py,pz =Spring.GetUnitPiecePosDir(unitID,Piecename)
-	--Move Ball arclength out
-	Move(MoveBall,x_axis,arclength-px,0)
-	Move(ball,x_axis,-1*(arclength-px),0)
-	Move(MoveBall,y_axis,-py,0)
-	Move(MoveBall,z_axis,-pz,0)
-	Turn(BallArcPoint,x_axis,math.rad(90),0)
-	Show(ball)
-	WTurn(BallArcPoint,x_axis,math.rad(0),0)
-end
+
 
 ballIdleFunctions = {
-[1] = function()-- dribble
+[#ballIdleFunctions+1] = function()-- dribble
 	Show(ball)
 
 
@@ -9259,7 +9249,7 @@ ballIdleFunctions = {
 	Sleep(7000)
 
 	end,
-[2] = function()-- serve
+[#ballIdleFunctions+12] = function()-- serve
 	Show(ball)
 	StartThread(attachBallToPiece, handr)	
 	tP(tlarmr,-45,16,90,12)
@@ -9267,16 +9257,9 @@ ballIdleFunctions = {
 	WaitForTurns(tlarm,tlarmr)
 	
 	end,
-[3] = function()--hoopsdribblen
-	
-end,
-[4] = function()--arcBall   
-
-end,
-[5] = function()--soccer
+[#ballIdleFunctions+1] = function()--kick it
+	setupBallArc(0,0, 170, 0)
 	Show(ball)
-	StartThread(attachBallToPiece, tllegLowR)	
-	boolBallAttached = false
 	tP(tllegUpR,-45,0,0,7)
 	WaitForTurns(tllegUpR)	
 	tP(tllegUpR,0,0,0,17)
@@ -9284,24 +9267,22 @@ end,
 	StartThread(attachBallToPiece, tllegLowR)	
 	tP(tllegUpR,15,0,0,17)
 	WaitForTurns(tllegUpR)
-	boolBallAttached = false	
+	Move(ball,x_axis, 250, 22)
 	mP(MoveBall,250,15,0,36)
 	tP(tllegUpR,0,0,0,17)
 	WaitForTurns(tllegUpR)
 	WaitForMoves(ball)
+	Hide(ball)
 end,
-[6] = function()--volley
+[#ballIdleFunctions+1] = function()--volley
 	Show(ball)
 	value=math.random(10,150)
-	setupBallArc(value, math.random(-180,180))
+	arcDir=math.random(70,120)
+	setupBallArc(value, math.random(-180,180), arcDir))
 	WTurn(BallArcPoint,x_axis, math.rad(0),9.81)
-	setupBallArc(value, math.random(-180,180), 7)
-	
-	
-	end,
-[7] = function()--retBall
-end,
-
+	setupBallArc(value, math.random(-180,180),math.rad(180 -, 7)
+		
+	end
 }
 
 

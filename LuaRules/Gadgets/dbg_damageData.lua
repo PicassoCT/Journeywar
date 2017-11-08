@@ -3,7 +3,7 @@
 function gadget:GetInfo()
 	return {
 		name = "Unit Data Collection",
-		desc = "Collects Engagment Data and Displays it at game end",
+		desc = "Collects Engagment Data and Displays it at exit of person",
 		author = "pica",
 		date = "Anno Domini 2017",
 		license = "Comrade Stallmans License",
@@ -18,16 +18,22 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 	EncounterData ={}
 	EncounterCounter = 0
-	VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
+	AccumulatedTotalDamage= 0
+	
+	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+	if weaponDefID and damage then
+		if not WeaponCostEffectiveness[weaponDefID] then WeaponCostEffectiveness[weaponDefID]  = 0 end
+		WeaponCostEffectiveness[weaponDefID] = WeaponCostEffectiveness[weaponDefID] + damage	
+		AccumulatedTotalDamage= AccumulatedTotalDamage+damage
+	end
+	end
+	
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
 		
 		if UnitDefs[unitDefID] then
 			attacker = Spring.GetUnitLastAttacker(unitID)
 			if attacker then
-				
-				uexp = Spring.GetUnitExperience(unitID)
-				aexp = 	Spring.GetUnitExperience(unitID)		
-				
+								
 				attackerDefID = Spring.GetUnitDefID(attacker)
 				if not EncounterData[attackerDefID] then EncounterData[attackerDefID] = {} end
 				if not EncounterData[attackerDefID][unitDefID] then EncounterData[attackerDefID] [unitDefID] = 0 end
@@ -37,13 +43,47 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	function gadget:GameOver()
+	function printAllStatistics()
 		echo("===========================DamageData====================================")
-		printEncounterData()
-		printUnitCreatedData()
+			printEncounterData()
+		echo("===========================UnitCreatedData===============================")
+			printUnitCreatedData()
+		echo("===========================WeaponDamageData==============================")
+			printWDefData()
 		echo("=========================================================================")
 	end
 	
+	function gadget:PlayerRemoved(playerID, reason)
+		printAllStatistics()
+	end
+	
+	function printWDefData()
+		NormalizedWeaponDefs={}
+		biggestValue=-math.huge
+		for weaponDefID, Data in pairs(WeaponCostEffectiveness) do
+			weaponName = WeaponDefs[weaponDefID].name
+			totalPercentDamage= Data/AccumulatedTotalDamage
+			biggestValue= math.max(biggestValue, Data)			
+			echo("Weapon "..weaponName.." has inflichted "..totalPercentDamage.." percent of all damage dealt.")
+		end
+		
+		for weaponDefID, Data in pairs(WeaponCostEffectiveness) do
+			NormalizedWeaponDefs[weaponDefID] = Data/ biggestValue
+		end
+		
+	end
+
+	--How much proportional economic damage did the unittype inflict
+	function calcCostEffectiveness(Unit, EncountersWon, TotalEncounters, Enemy)
+		uMetall,uEnergy = getUnitCost(Unit)
+		eMetall,eEnergy = getUnitCost(Enemy)
+		uCost = uMetall + uEnergy
+		eCost = eMetall + eEnergy
+	
+	EncountersLost = TotalEncounters - EncountersWon
+	
+		return (uCost*EncountersWon)/ (eCost*EncountersLost)	
+	end
 	
 	function printEncounterData()
 		
@@ -63,7 +103,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end	
 	end
-	
+	WeaponCostEffectiveness= {}
 	UnitCreatedData={}
 	UnitCreatedCount={}
 	
