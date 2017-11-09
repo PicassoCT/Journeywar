@@ -20,6 +20,7 @@ local weaponDef = {
     craterMult = 0,
     burst = 8,
     burstrate = 0.2,
+	cegTag = "machinegunproj",
     --soundStart         = "maschinegun",
     explosionGenerator = "custom:Ricochet",
     soundtrigger = 1,
