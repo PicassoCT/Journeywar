@@ -813,7 +813,7 @@ function getBlackGuardThougth(homePlanet, homeTown, name)
 	pStrings={
 		--Topics: 
 		--Food
-		"I hate saline solution so much, i wish i could eat a steak. A real steak. But cows are gone, like my stomache and my mouth-",
+		"I hate saline solution, wish i could eat a steak. A real steak. But cows are gone, like my stomache and my mouth-",
 		--Sex
 		"Wow, that - Thing has a hot ass. Would plow that like a seismic post!",
 		--Tourism

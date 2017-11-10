@@ -10,7 +10,7 @@ local weaponDef = {
     areaOfEffect = 8,
     -- explosionGenerator="custom:chelicopterimpact",
     --  cegTag="AR2Projectile",
-    texture1 = "empty",
+    texture1 = "bulletzip",
     model = "cExploAmmo.s3o",
     --physics
     weaponVelocity = 850,

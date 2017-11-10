@@ -50,18 +50,11 @@ local unitDef = {
 	 sfxtypes = {
 		explosiongenerators = {
 		  "custom:cbonkerplasma",
-		   
-		   
-		   
-		   
-							  },
-		
+							  },		
 				},
-
-	 
 	 
 	Category = [[LAND]],
-
+	
 	weapons = {
 	[1]={name  = "cexplochaingun",
 		onlyTargetCategory = [[LAND]],

@@ -718,12 +718,53 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 
     UnitDamageFuncT[highExLineGunDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-        if exploAmmoBlowTable[unitID] then exploAmmoBlowTable[unitID].number = exploAmmoBlowTable[unitID].number + 4
-        else
-            exploAmmoBlowTable[unitID] = { number = 4, times = timeTillBlowUp, timeSinceBoom = 0 }
-        end
+		addChainExplosion(unitID, damage, highExLineGunDefID, cegName, 5, 150,750 )
     end
+	
+	function addChainExplosion(unitID, damage, weaponDefID, cegName, NumberOfExplosions, delayMin, delayMax )
+		if not exploAmmoBlowTable[unitID] then 
+			exploAmmoBlowTable[unitID] = {number=0,id= nil} 
+		end
+		exploAmmoBlowTable[unitID].number = exploAmmoBlowTable[unitID].number + NumberOfExplosions
+		
+		persPack = {}
+		for i=1,NumberOfExplosions do
+			persPack[#persPack + 1] = math.random(delayMin, delayMax)
+		end
 
+		--Start Chain Explosion EventStream
+            eventFunction = function(id, frame, persPack)
+                nextFrame = frame + 1
+                if persPack then
+                    if persPack.unitID then
+                        --check
+						TODO
+                        boolDead = Spring.GetUnitIsDead(persPack.unitID)
+
+                        if boolDead and boolDead == true then
+                            Spring.MoveCtrl.Disable(persPack.unitID)
+                        end
+
+                        if not persPack.startFrame then
+                            persPack.startFrame = frame
+                        end
+
+                        if persPack.startFrame then
+                            nextFrame = persPack.startFrame + JPLANKTONER_AA_STUNTIME
+                        end
+
+                        if frame >= nextFrame then
+                            Spring.MoveCtrl.Disable(persPack.unitID)
+                            return
+                        end
+                    end
+                end
+                return nextFrame, persPack
+            end
+            persPack = { unitID = unitID, totalTime = JPLANKTONER_AA_STUNTIME }
+            GG.EventStream:CreateEvent(eventFunction, persPack, Spring.GetGameFrame() + 1)
+	end
+	
     --poisonedDart
     UnitDamageFuncT[tiglilWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 
@@ -1141,25 +1182,11 @@ if (gadgetHandler:IsSyncedCode()) then
             --handling the Poison Darted
 			poisonDarted(frame)
                 -- handling explosive Ammo
-			explosivAmmo(frame)
             end
       
     end
 	
-	function explosivAmmo(frame)
-	     for unit, values in pairs(exploAmmoBlowTable) do
-            values.times = values.times - 30
-            values.timeSinceBoom = values.timeSinceBoom + 30
-
-            if values.timeSinceBoom > math.random(50,70) then
-                blowItUp(unit)
-                values.number = values.number - 1
-            end
-				
-			exploAmmoBlowTable[unit] = values
-			if values.number == 0 then exploAmmoBlowTable[unit] = nil end
-		end
-	end
+	
 
 	function poisonDarted(frame)
 		if GG.Poisoned then

@@ -24,7 +24,7 @@ return {
         particlesizespread = 1,
         particlespeed      = 0.1,
         particlespeedspread = 0,
-        pos                = [[0, 0, 0]],
+        pos                = [[0r-0.15r0.15, 0r-0.15r0.15, 0r-0.15r0.15]],
         sizegrowth         = [[0.6 r.35]],
         sizemod            = 1.0,
         texture            = [[pulseshot]],--pulseshot
