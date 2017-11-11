@@ -4498,7 +4498,16 @@ end
 --======================================================================================
 --Section:  Physics 
 --======================================================================================
-
+--> jerks a unitPiece to a diffrent rotation Value, slowly returning it to its old Position
+function shakeUnitPieceRelative(id, pieceName, axis, offset, speed)
+env =  Spring.UnitScript.GetScriptEnv(id)
+DirT= {}
+DirT[1],DirT[2],DirT[3] = env.GetPieceRotation(pieceName)
+ValueToReturn= select(axis,DirT)
+	env.Turn(pieceName,axis,ValueToReturn+ math.rad(offset),0,true)
+	env.Turn(pieceName,axis,ValueToReturn ,speed,true)
+	
+	end
 --> spins a units piece along its smallest axis
 function SpinAlongSmallestAxis(unitID, piecename, degree, speed)
     if not piecename then return end

@@ -535,7 +535,7 @@ if (gadgetHandler:IsSyncedCode()) then
 --===========UnitDamaged Functions ====================================================
 
     ghostShadowEffectedUnits = {}
-    exploAmmoBlowTable = {}
+    GG.exploAmmoBlowTable = {}
     local timeTillBlowUp = 3500
     local jShadowDefID = UnitDefNames["jshadow"].id
 
@@ -722,15 +722,17 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 	
 	function addChainExplosion(unitID, damage, weaponDefID, cegName, NumberOfExplosions, delayMin, delayMax )
-		if not exploAmmoBlowTable[unitID] then 
-			exploAmmoBlowTable[unitID] = {number=0,id= nil} 
+		if not GG.exploAmmoBlowTable[unitID] then 
+			GG.exploAmmoBlowTable[unitID] = {number=0,id= unitID} 
 		end
-		exploAmmoBlowTable[unitID].number = exploAmmoBlowTable[unitID].number + NumberOfExplosions
 		
-		persPack = {}
+		GG.exploAmmoBlowTable[unitID].number = GG.exploAmmoBlowTable[unitID].number + NumberOfExplosions
+		
+		persPack = {startFrame = Spring.GetGameFrame()}
 		for i=1,NumberOfExplosions do
 			persPack[#persPack + 1] = math.random(delayMin, delayMax)
 		end
+		persPack.ListOfPieces=  getPieceTable(unitID)
 
 		--Start Chain Explosion EventStream
             eventFunction = function(id, frame, persPack)
@@ -738,30 +740,34 @@ if (gadgetHandler:IsSyncedCode()) then
                 if persPack then
                     if persPack.unitID then
                         --check
-						TODO
-                        boolDead = Spring.GetUnitIsDead(persPack.unitID)
+				            boolDead = Spring.GetUnitIsDead(persPack.unitID)
 
                         if boolDead and boolDead == true then
-                            Spring.MoveCtrl.Disable(persPack.unitID)
+                           return
                         end
 
                         if not persPack.startFrame then
                             persPack.startFrame = frame
                         end
-
+								
+								 if not  persPack[1] then 
+									return 
+								 end
+									
                         if persPack.startFrame then
-                            nextFrame = persPack.startFrame + JPLANKTONER_AA_STUNTIME
+                            nextFrame = persPack.startFrame + persPack[1]
+									 table.remove(persPack,1)
                         end
-
-                        if frame >= nextFrame then
-                            Spring.MoveCtrl.Disable(persPack.unitID)
-                            return
-                        end
+							val= math.random(1,#persPack.ListOfPieces)
+							shakeUnitPieceRelative(persPack.unitID, persPack.ListOfPieces[val],math.random(-25,25),50 )
+							spawnCegAtPiece(persPack.unitID,  persPack.ListOfPieces[val] ,"internalexplosion")
+							Spring.PlaySoundFile("sounds/cPaxCentrail/LineGunExplosion.ogg",1.0)
+							Spring.Echo("jw_projectileimpacts::LineGun ChainExplosion")
                     end
                 end
                 return nextFrame, persPack
             end
-            persPack = { unitID = unitID, totalTime = JPLANKTONER_AA_STUNTIME }
+
             GG.EventStream:CreateEvent(eventFunction, persPack, Spring.GetGameFrame() + 1)
 	end
 	

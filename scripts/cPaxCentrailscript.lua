@@ -143,6 +143,7 @@ end
 
 
 function script.Create()
+	 resetAll(unitID)
     Spring.PlaySoundFile("sounds/cPaxCentrail/PaxCentrailSound.wav", 1.0)
     local map = Spring.GetUnitPieceMap(unitID)
     local offsets = constructSkeleton(unitID, deathpivot, { 0, 0, 0 })
@@ -162,27 +163,12 @@ function script.Create()
     end
 
     StartThread(cExpReloader)
-    StartThread(moveStarter)
+    StartThread(move)
     StartThread(underPressure)
 end
 
-function animTest()
 
 
-    while true do
-        pack()
-        Sleep(10000)
-        PlayAnimation("pax_unpack")
-        Sleep(2000)
-    end
-end
-
-function moveStarter()
-    PlayAnimation("pax_unpack")
-    Sleep(500)
-    Signal(SIG_IDLE)
-    StartThread(move)
-end
 
 local animCmd = { ['turn'] = Turn, ['move'] = Move };
 
@@ -237,17 +223,19 @@ function script.Killed(recentDamage, _)
     createCorpseCUnitGeneric(recentDamage)
     return 0
 end
-
+boolUnpackedOnce= false
 boolMoving = false
 function move()
     Signal(SIG_IDLE)
     boolMoving = false
-    PlayAnimation("pack")
-    while boolMoving == false do
-        Sleep(100)
-    end
-
-    PlayAnimation("pax_unpack")
+	if boolUnpackedOnce== false then
+		PlayAnimation("pack")
+		while boolMoving == false do
+			Sleep(100)
+		end
+		PlayAnimation("pax_unpack")
+		boolUnpackedOnce= true
+	end
 
     while true do
         if boolMoving == true then
@@ -304,10 +292,6 @@ function retractclaw(boolleft)
 end
 
 gheading, gpitch = 0, 0
-
-
-
-
 
 --tur(axis,bodyt,uarml,uarmr,arml,armr,--[[]] uplegl,uplegr,lowlegl,lowlegr,speedt)
 ThreeInArow = 3
@@ -394,8 +378,11 @@ end
 
 function delayedStop()
     SetSignalMask(SIG_STOP)
+	 oldx,oldy,oldz= Spring.GetUnitPosition(unitID)
+		
     Sleep(1000)
-    if math.abs(Spring.GetUnitHeading(unitID) - startHeading) < 25 then
+	nx,ny,nz = Spring.GetUnitPosition(unitID)
+    if distance(oldx,oldy,oldz,nx,ny,nz) < 5 or math.abs(Spring.GetUnitHeading(unitID) - startHeading) < 25 then
         boolMoving = false
     end
 end
@@ -484,6 +471,30 @@ aimWeapFunc = function(Heading, pitch, nr)
     end
 end
 
+
+boolReloadPeriodAllreadyRunning= false
+function delayedReload()
+boolReloadPeriodAllreadyRunning= true
+ FireSound = 5000
+			
+				while FireSound > 0 do
+						if FireSound > 1128 then
+							StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/singleShotExponential.ogg", 1, 500, 2, 0)
+						elseif FireSound <= 1128 and FireSound > 978 then
+							StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/TenShotsPerSecond.ogg", 1, 1100, 2, 0)
+						elseif FireSound <= 978 and FireSound > 512 then
+							StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/TwenShotsPerSecond.ogg", 1, 2400, 2, 0)
+						elseif FireSound <= 512 and FireSound > 0 then
+							StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/MaxShotsPerSecond.ogg", 1, 2400, 2, 0)
+						end
+					FireSound= FireSound -50
+					Sleep(50)
+				end
+boolReloadPeriodAllreadyRunning= false
+boolExponentialGunReloaded= false
+end
+
+
 WeaponTable = {
     [1] = {
         AimFromqpiece = podturret2,
@@ -491,8 +502,8 @@ WeaponTable = {
         fireweapon = function() return true
         end,
         aimweapon = function(Heading, pitch, nr)
-            Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
-            Turn(WeaponTable[nr].qpiece, x_axis, pitch, 8)
+            Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
+            Turn(WeaponTable[nr].qpiece, x_axis, -pitch, 8)
             WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
             WaitForTurn(WeaponTable[nr].qpiece, x_axis)
             return true
@@ -501,19 +512,18 @@ WeaponTable = {
     [2] = {
         AimFromqpiece = podturret4,
         qpiece = Weapon4,
-        fireweapon = function() return true
+        fireweapon = function() 
+		if boolReloadPeriodAllreadyRunning== false then	StartThread(delayedReload) end
+		return true
         end,
         aimweapon = function(Heading, pitch, nr)
-            Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
-            Turn(WeaponTable[nr].qpiece, x_axis, pitch, 8)
+            Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
+            Turn(WeaponTable[nr].qpiece, x_axis, -pitch, 8)
             WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
             WaitForTurn(WeaponTable[nr].qpiece, x_axis)
-            if boolExponentialGunReloaded == true then
-                boolExponentialGunReloaded = false
-                return true
-            else
-                return false
-            end
+              
+                return boolExponentialGunReloaded
+          
         end
     },
     [3] = {
@@ -523,8 +533,8 @@ WeaponTable = {
         end,
         aimweapon = function(Heading, pitch, nr)
             globalHeading = Heading
-            Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
-            Turn(WeaponTable[nr].qpiece, x_axis, pitch, 8)
+            Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
+            Turn(WeaponTable[nr].qpiece, x_axis, -pitch, 8)
             WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
             WaitForTurn(WeaponTable[nr].qpiece, x_axis)
             return true
@@ -533,19 +543,16 @@ WeaponTable = {
     [4] = {
         AimFromqpiece = podturret1,
         qpiece = Weapon3,
-        fireweapon = function() return true
+        fireweapon = function() 
+	if boolReloadPeriodAllreadyRunning== false then	StartThread(delayedReload) end
+				return true
         end,
         aimweapon = function(Heading, pitch, nr)
-            Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
-            Turn(WeaponTable[nr].qpiece, x_axis, pitch, 8)
+            Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
+            Turn(WeaponTable[nr].qpiece, x_axis, -pitch, 8)
             WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
             WaitForTurn(WeaponTable[nr].qpiece, x_axis)
-            if boolExponentialGunReloaded == true then
-                boolExponentialGunReloaded = false
-                return true
-            else
-                return false
-            end
+            return boolExponentialGunReloaded 
         end
     },
     [5] = {
@@ -555,8 +562,8 @@ WeaponTable = {
             return true
         end,
         aimweapon = function(Heading, pitch, nr)
-            Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
-            Turn(WeaponTable[nr].qpiece, x_axis, pitch, 8)
+            Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
+            Turn(WeaponTable[nr].qpiece, x_axis, -pitch, 8)
             WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
             WaitForTurn(WeaponTable[nr].qpiece, x_axis)
             return true
@@ -569,8 +576,8 @@ WeaponTable = {
         end,
         aimweapon = function(Heading, pitch, nr)
             globalHeading = Heading
-            Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
-            Turn(WeaponTable[nr].qpiece, x_axis, pitch, 8)
+            Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
+            Turn(WeaponTable[nr].qpiece, x_axis, -pitch, 8)
             WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
             WaitForTurn(WeaponTable[nr].qpiece, x_axis)
             return true
@@ -583,50 +590,38 @@ WeaponTable = {
             return true
         end,
         aimweapon = function(Heading, pitch, nr)
-            if math.abs(Heading) < 3.141 / 2 then
-                Turn(WeaponTable[nr].AimFromqpiece, y_axis, -Heading, 8)
+
+                Turn(WeaponTable[nr].AimFromqpiece, y_axis, Heading, 8)
                 WaitForTurn(WeaponTable[nr].AimFromqpiece, y_axis)
-            end
+
             return true
         end
     }
 }
 --Weapon1
 
-local boolExponentialGunReloaded = false
-local boolExponentialGunFired = false
-local CoolDownTime = 3000
+local boolExponentialGunReloaded = true
+
+local CoolDownTime = 15000
 local Exponent = 0
-local ReloadTime = 2049
+local FireSound = 2049
 
 function cExpReloader()
-    coolDownTimer = CoolDownTime
+ 
     while true do
-        ReloadTime = math.max(1, 2049 - (2 ^ Exponent))
+
         --if not reloaded
         if boolExponentialGunReloaded == false then
-
-            if ReloadTime > 1128 then
-                StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/singleShotExponential.ogg", 1, 500, 2, 0)
-            elseif ReloadTime <= 1128 and ReloadTime > 978 then
-                StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/TenShotsPerSecond.ogg", 1, 1100, 2, 0)
-            elseif ReloadTime <= 978 and ReloadTime > 512 then
-                StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/TwenShotsPerSecond.ogg", 1, 2400, 2, 0)
-            elseif ReloadTime <= 512 and ReloadTime > 0 then
-                StartThread(PlaySoundByUnitDefID, unitdefID, "sounds/cPaxCentrail/MaxShotsPerSecond.ogg", 1, 2400, 2, 0)
-            end
-            Sleep(ReloadTime)
-            Exponent = Exponent + 1
-            coolDownTimer = CoolDownTime - ReloadTime
+		  
+            Sleep(CoolDownTime)           
             boolExponentialGunReloaded = true
+		   end
+			  Sleep(5)
         end
-        Sleep(5)
-        coolDownTimer = coolDownTimer - 5
-        if coolDownTimer <= 0 then
-            Exponent = 0
-        end
+      
+      
     end
-end
+
 
 
 
@@ -642,7 +637,7 @@ end
 
 
 function script.AimWeapon1(Heading, pitch)
-    return WeaponTable[1].aimweapon(Heading, pitch, 1) and boolUnderPressure == true
+    return WeaponTable[1].aimweapon(Heading , pitch, 1) and boolUnderPressure == true
 end
 
 
@@ -687,7 +682,7 @@ end
 
 
 function script.AimWeapon3(Heading, pitch)
-    return WeaponTable[3].aimweapon(Heading, pitch, 3) and boolUnderPressure == true
+    return WeaponTable[3].aimweapon(Heading , pitch, 3) and boolUnderPressure == true
 end
 
 
@@ -3745,9 +3740,6 @@ Animations['pax_alt_walk'] = {
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 0.016176, ['s'] = 0.030795 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = z_axis, ['t'] = 0.008003, ['s'] = 0.025691 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1.361738, ['s'] = 0.262059 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 3.614267, ['s'] = 0.000047 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = z_axis, ['t'] = -1.188023, ['s'] = 0.000074 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = y_axis, ['t'] = 0.376384, ['s'] = 0.000144 },
             { ['c'] = 'turn', ['p'] = Shield8, ['a'] = x_axis, ['t'] = 0.003235, ['s'] = 0.016521 },
             { ['c'] = 'turn', ['p'] = Shield8, ['a'] = z_axis, ['t'] = -0.023488, ['s'] = 0.016463 },
             { ['c'] = 'turn', ['p'] = Shield8, ['a'] = y_axis, ['t'] = -1 * 1.220757, ['s'] = 0.133714 },
@@ -3981,9 +3973,6 @@ Animations['pax_alt_walk'] = {
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = x_axis, ['t'] = -0.000368, ['s'] = 0.019090 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = z_axis, ['t'] = 0.005067, ['s'] = 0.003388 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -0.001143, ['s'] = 1.569916 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 3.614287, ['s'] = 0.000023 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = z_axis, ['t'] = -1.187992, ['s'] = 0.000036 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = y_axis, ['t'] = 0.376445, ['s'] = 0.000070 },
         }
     },
     {
@@ -4295,9 +4284,6 @@ Animations['paxcentrail_walk'] = {
             { ['c'] = 'turn', ['p'] = LL, ['a'] = x_axis, ['t'] = 0.476582, ['s'] = 1.250391 },
             { ['c'] = 'turn', ['p'] = LL, ['a'] = z_axis, ['t'] = -0.061423, ['s'] = 0.117998 },
             { ['c'] = 'turn', ['p'] = LL, ['a'] = y_axis, ['t'] = -1 * -0.039334, ['s'] = 0.155113 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 3.612007, ['s'] = 0.000332 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = z_axis, ['t'] = -1.188691, ['s'] = 0.000078 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1 * 0.372597, ['s'] = 0.000000 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 0.000208, ['s'] = 0.000064 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = z_axis, ['t'] = 0.000886, ['s'] = 0.000271 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1 * -0.000713, ['s'] = 0.000218 },
@@ -5816,9 +5802,6 @@ Animations['paxcentrail_stomp'] = {
             { ['c'] = 'turn', ['p'] = LL, ['a'] = x_axis, ['t'] = -0.464269, ['s'] = 0.846299 },
             { ['c'] = 'turn', ['p'] = LL, ['a'] = z_axis, ['t'] = -0.034629, ['s'] = 0.002683 },
             { ['c'] = 'turn', ['p'] = LL, ['a'] = y_axis, ['t'] = -1 * 0.004919, ['s'] = 0.011575 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 3.612007, ['s'] = 0.000405 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = z_axis, ['t'] = -1.188691, ['s'] = 0.000136 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1 * 0.372597, ['s'] = 0.000177 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 0.000208, ['s'] = 0.000154 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = z_axis, ['t'] = 0.000886, ['s'] = 0.000136 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1 * -0.000713, ['s'] = 0.000024 },
@@ -6497,9 +6480,6 @@ Animations['paxcentrail_stomp'] = {
             { ['c'] = 'turn', ['p'] = Weapon8, ['a'] = x_axis, ['t'] = 0.000229, ['s'] = 0.000631 },
             { ['c'] = 'turn', ['p'] = Weapon8, ['a'] = z_axis, ['t'] = -0.001673, ['s'] = 0.076767 },
             { ['c'] = 'turn', ['p'] = Weapon8, ['a'] = y_axis, ['t'] = -1 * -0.000227, ['s'] = 0.014600 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 3.616915, ['s'] = 0.147243 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = z_axis, ['t'] = -1.188519, ['s'] = 0.005150 },
-            { ['c'] = 'move', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1 * 0.371409, ['s'] = 0.035619 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = x_axis, ['t'] = 0.000288, ['s'] = 0.002395 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = z_axis, ['t'] = -0.001718, ['s'] = 0.078092 },
             { ['c'] = 'turn', ['p'] = Shield7, ['a'] = y_axis, ['t'] = -1 * -0.000767, ['s'] = 0.001629 },
