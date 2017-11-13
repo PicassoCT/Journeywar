@@ -207,9 +207,11 @@ end
 
 function identifyNearestEnemyAir()
     ed = Spring.GetUnitNearestEnemy(unitID)
-    ex, ey, ez = Spring.GetUnitPosition(ed)
-    h = Spring.GetGroundHeight(ex, ez)
-    return ey - math.abs(h) > 100
+	if not ed then return false end
+	defID= Spring.GetUnitDefID(ed)
+	if not  UnitDef[defID].isAirUnit then return false end
+	
+	return true
 end
 
 function script.Killed(recentDamage, _)
@@ -225,6 +227,7 @@ function script.Killed(recentDamage, _)
 end
 boolUnpackedOnce= false
 boolMoving = false
+
 function move()
     Signal(SIG_IDLE)
     boolMoving = false
@@ -300,7 +303,7 @@ stomp = piece "stomp"
 local spGetNearestEnemy = Spring.GetNearestEnemy
 local spGetUnitPosition = Spring.GetUnitPosition
 local globalHeading = 0
-
+feetPiece = piece"feetPiece"
 function moveAnimation()
     if boolBattle == false then
         if ThreeInArow > 0 then ThreeInArow = ThreeInArow - 1 else ThreeInArow = 3; Dec = Dec == false end
@@ -311,17 +314,19 @@ function moveAnimation()
             PlayAnimation("paxcentrail_walk")
         end
     else
-        ed = spGetNearestEnemy()
-
-        ex, _, ez = spGetUnitPosition(ed)
-        ux, _, uz = Spring.GetUnitPiecePosition(unitID, stomp)
-        ex, ez = ex - ux, ez - uz
-
-        if ed and ex and math.sqrt(ex ^ 2 + ez ^ 2) < 60 then
-            Turn(deathpivot, y_axis, -globalHeading, 33)
+		PositionOfFeet={}
+		PositionOfFeet.x,PositionOfFeet.y,PositionOfFeet.z = Spring.GetUnitPiecePosition(unitID, feetPiece)
+		T= getAllInCircle(PositionOfFeet.x,PositionOfFeet.y,75)
+		--get Unit Near Foot Piece
+		T=	removeUnitsOfTeam(T,Spring.GetUnitTeam(unitID))
+		if T then    
+			dice=math.random(1,#T)
+		
+			--filter out special Units
             PlayAnimation("paxcentrail_stomp")
-            WaitForTurn(deathpivot, y_axis)
-            Turn(deathpivot, y_axis, 0, 12)
+			--Destroy T
+			Spring.DestroyUnit(T[dice],true,true)
+           
         else
             PlayAnimation("pax_attack")
         end
