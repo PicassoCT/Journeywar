@@ -59,7 +59,7 @@ function emitSFX()
 	i = 0
 	while true do
 		
-		Spring.SpawnCEG("blue_missile_explosion", x +50 , y+ 5 , z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
+		Spring.SpawnCEG("internalexplosion", x +50 , y+ 50 , z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
 		Sleep(1000)
 		
 	end

@@ -10,9 +10,10 @@ local weaponDef = {
     },
     areaOfEffect = 1,
     -- explosionGenerator="custom:chelicopterimpact",
+
     cegTag="explosiveproj",
     texture1 = "bulletzip",
-    model = "cExploAmmo.s3o",
+
     --physics
     weaponVelocity = 850,
     reloadtime = 5.35,
@@ -32,7 +33,6 @@ local weaponDef = {
     rgbColor = [[0.5 0.95 0.85]],
     size = 1.2,
     stages = 1,
-    separation = 0.2,
+    separation = 0.2
 }
-
 return lowerkeys({ [weaponName] = weaponDef })
