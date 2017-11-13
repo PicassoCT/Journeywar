@@ -867,7 +867,6 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 			end
         end
-  
 
     UnitDamageFuncT[jethiefweaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
         --only if the unit is hitsphere wise big enough
@@ -1194,7 +1193,6 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 	
 	
-
 	function poisonDarted(frame)
 		if GG.Poisoned then
 			for k, v in pairs(GG.Poisoned) do
