@@ -142,7 +142,7 @@ function battleReseter()
 end
 
 
-function script.Create()
+function script.Create() 
 	 resetAll(unitID)
     Spring.PlaySoundFile("sounds/cPaxCentrail/PaxCentrailSound.wav", 1.0)
     local map = Spring.GetUnitPieceMap(unitID)
@@ -303,7 +303,7 @@ stomp = piece "stomp"
 local spGetNearestEnemy = Spring.GetNearestEnemy
 local spGetUnitPosition = Spring.GetUnitPosition
 local globalHeading = 0
-feetPiece = piece"feetPiece"
+
 function moveAnimation()
     if boolBattle == false then
         if ThreeInArow > 0 then ThreeInArow = ThreeInArow - 1 else ThreeInArow = 3; Dec = Dec == false end
@@ -315,7 +315,7 @@ function moveAnimation()
         end
     else
 		PositionOfFeet={}
-		PositionOfFeet.x,PositionOfFeet.y,PositionOfFeet.z = Spring.GetUnitPiecePosition(unitID, feetPiece)
+		PositionOfFeet.x,PositionOfFeet.y,PositionOfFeet.z = Spring.GetUnitPiecePosition(unitID, stomp)
 		T= getAllInCircle(PositionOfFeet.x,PositionOfFeet.y,75)
 		--get Unit Near Foot Piece
 		T=	removeUnitsOfTeam(T,Spring.GetUnitTeam(unitID))
@@ -374,7 +374,11 @@ SIG_IDLE = 8
 
 function idle()
     SetSignalMask(SIG_IDLE)
+	if math.random(0,12) < 11 then
     PlayAnimation("pax_defensive")
+	else
+	 PlayAnimation("pax_depressed")
+	end
 end
 
 function script.StartMoving()

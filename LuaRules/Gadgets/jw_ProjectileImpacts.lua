@@ -725,7 +725,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if not GG.exploAmmoBlowTable[unitID] then 
 			GG.exploAmmoBlowTable[unitID] = {number=0,id= unitID} 
 		end
-		
+							Spring.Echo("jw_projectileimpacts::LineGun ChainExplosion:KickOff")
 		GG.exploAmmoBlowTable[unitID].number = GG.exploAmmoBlowTable[unitID].number + NumberOfExplosions
 		
 		persPack = {startFrame = Spring.GetGameFrame()}
@@ -761,6 +761,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							val= math.random(1,#persPack.ListOfPieces)
 							shakeUnitPieceRelative(persPack.unitID, persPack.ListOfPieces[val],math.random(-25,25),50 )
 							spawnCegAtPiece(persPack.unitID,  persPack.ListOfPieces[val] ,"internalexplosion")
+							Spring.AddUnitDamage(persPack.unitID, 15)
 							Spring.PlaySoundFile("sounds/cPaxCentrail/LineGunExplosion.ogg",1.0)
 							Spring.Echo("jw_projectileimpacts::LineGun ChainExplosion")
                     end
