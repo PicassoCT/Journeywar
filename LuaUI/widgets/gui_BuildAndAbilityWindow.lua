@@ -175,10 +175,21 @@ function widget:Initialize()
 		return button
 	end
 
+	function unitCanBuild(unitDefID)
+	assert(UnitDefs)
+
+		if unitDefID and UnitDefs[unitDefID]  then		
+			return UnitDefs[unitDefID].buildOptions 
+		else
+				return {}
+		end
+	end
+
+	
 	function addTypeDependentBuildOptions(defID)
 	buildOptions = getUnitCanBuild(defID)
 	local T={}
-		for defID,v in pairs(buildOptions) do
+		for num,defID in pairs(buildOptions) do
 			name = UnitDefs[defID].name
 			T[#T+1]	= createNewBuildButton(100,100, BaseCol, texCol, name, defID)
 		end

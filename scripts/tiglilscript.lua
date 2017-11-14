@@ -9278,9 +9278,9 @@ end,
 	Show(ball)
 	value=math.random(10,150)
 	arcDir=math.random(70,120)
-	setupBallArc(value, math.random(-180,180), arcDir))
+	setupBallArc(value, math.random(-180,180), arcDir)
 	WTurn(BallArcPoint,x_axis, math.rad(0),9.81)
-	setupBallArc(value, math.random(-180,180),math.rad(180 -, 7)
+	setupBallArc(value, math.random(-180,180),math.rad(180), - 7)
 		
 	end
 }
