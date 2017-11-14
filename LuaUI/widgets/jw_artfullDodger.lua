@@ -12,8 +12,8 @@ function widget:GetInfo()
 	}
 end
 
-ARTFULLDOGERKEY= 68
-artfulldogerkey= 100
+
+artfulldogerkey= string.byte(" ")
 SPLASHRANGE= 128
 framesToReroute = 75
 
@@ -76,7 +76,7 @@ end
 
  function widget:KeyPress(key, mods, isRepeat, label, unicode)
 
-	if key == ARTFULLDOGERKEY or key == artfulldogerkey then
+	if mods["ctrl"] == true and key == artfulldogerkey then
 	local T = {}
 		
 		selectedUnits =Spring.GetSelectedUnits()

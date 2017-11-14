@@ -1,8 +1,8 @@
 
 function widget:GetInfo()
 	return {
-		name = "gui_ability_window",
-		desc = "Displays Special Abilitys",
+		name = "Abilitys, Upgrade & Build Gui",
+		desc = "Displays Special Abilitys & Buildoptions",
 		author = "PicassoCT",
 		date = "2011-6-2",
 		license = "GNU GPL, v2 or later",
@@ -34,7 +34,8 @@ local AmmoBar = {}
 local ExpBar = {}
 local stack_main = {}
 local ButtonsTable = {}
-local activeElements={}
+local activeAbilityElements={}
+local activeBuildElements={}
 local exp_bar= {}
 local ammo_bar	= {}
 
@@ -144,6 +145,108 @@ function widget:Initialize()
 	end
 	indexVarVal=1
 	
+	function createNewBuildButton(buttonwidth,buttonheigth,BaseCol, texCol, name, uDID)
+		buttonwidth= buttonwidth..'%'
+		buttonheigth=buttonheigth..'%'
+		
+	local cmd ={id = -uDID}
+    local unitDef = UnitDefs[uDID] 
+    local name = unitDef.name
+    
+    local image = Chili.Image:New{
+        name   = "unitImage_" .. name,
+        height = '100%', 
+        width = '100%',
+        file   = '#'..unitDef.id,
+        -- flip = false,
+    }
+    local button = Chili.Button:New{
+        name = "unitButton_" .. name,
+        cmdID = cmd.id,
+        caption = "",
+        children = {image},
+        padding = {0,0,0,0},
+        margin = {0,0,0,0},
+        OnMouseUp = {ActionCommand},
+		width=buttonwidth,
+		height = buttonheigth, 
+		}	
+		
+		return button
+	end
+
+	function addTypeDependentBuildOptions(defID)
+	buildOptions = getUnitCanBuild(defID)
+	local T={}
+		for defID,v in pairs(buildOptions) do
+			name = UnitDefs[defID].name
+			T[#T+1]	= createNewBuildButton(100,100, BaseCol, texCol, name, defID)
+		end
+		
+	return T
+	end
+	
+	function CreateBuildMenue (defID)
+		
+		build_window = Window:New{
+			padding = {3,3,3,3,},
+			dockable = true,
+			textColor = {0.9,1,1,0.7},
+			name = "build_window",
+			x = upgrade_window_positionX, 
+			y = upgrade_window_positionY,
+			width = upgrade_window_width,
+			height = upgrade_window_height,
+			parent = screen0,
+			draggable = false,
+			tweakDraggable = false,
+			tweakResizable = false,
+			resizable = false,
+			dragUseGrip = false,
+			--minWidth = math.ceil(upgrade_window_width_numeric*0.75),
+			--minHeight = math.ceil(upgrade_window_height_numeric*0.75),
+			color = {0.1,0.7,0.85,0.42},
+			backgroundColor= {0.1,0.2,0.6,0.32},
+			children = {},
+		}
+		
+		BaseCol={0.1,0.8,0.8,1}
+		WeapCol={0.3,0.6,0.8,1}
+		UpgCol={0.1,0.5,0.6,1}
+		texCol={0.8,1,1,1}
+		build_grid = Grid:New{
+			x= 0,
+			y = 0,
+			padding = {5,5,5,5},
+			itemPadding = {0, 0, 0, 0},
+			itemMargin = {0, 0, 0, 0},
+			--autosize =true,
+			--weightedResize =true,
+			resizeItems = true,		
+			orientation = 'horizontal',
+			centerItems = true,
+			columns = 7,	
+			rows = 3,
+			name = 'build_grid',
+			width = 630,
+			height = 140,
+			
+			minItemHeight =	 '21%',
+			maxItemHeight =	 '32%',
+			
+			color = {0,0,0,1},
+			
+			children = addTypeDependentBuildOptions(defID)
+			
+				
+		}
+		build_window:AddChild(build_grid)
+		
+		if build_window then 
+			build_window:Hide()	
+		end
+	end
+
 	function createNewUpgradeButton(buttonwidth,buttonheigth,BaseCol, texCol, name)
 		buttonwidth= buttonwidth..'%'
 		buttonheigth=buttonheigth..'%'
@@ -274,7 +377,7 @@ function widget:Initialize()
 		if boolShowUpgrade == false then
 			boolShowUpgrade = true
 			upgrade_window:Show()
-			activeElements["ComEndUpgradeMenue"] = upgrade_window
+			activeAbilityElements["ComEndUpgradeMenue"] = upgrade_window
 			
 		else 
 			boolShowUpgrade = false
@@ -284,17 +387,25 @@ function widget:Initialize()
 		end
 	end
 	
-	function HideAllActiveElements()
-		for k,element in pairs(activeElements) do
+	function HideAllActiveBuildElements()
+		for k,element in pairs(activeBuildElements) do
 			element:Hide()
 		end
-		activeElements={}
+		activeBuildElements={}
+	end
+		
+	function HideAllActiveAbilityElements()
+		for k,element in pairs(activeAbilityElements) do
+			element:Hide()
+		end
+		activeAbilityElements={}
 	end
 	
 	function createAllButtons()
 		Create_OnOffButton()
 		Create_UpgradeButton()
 		CreateUpgradeMenue()
+		CreateBuildMenue()
 	end
 	
 	--Actual initialisatioin Code
@@ -404,13 +515,13 @@ function widget:GameFrame(f)
 		
 		Spring.Echo("Pre Error")
 		ButtonsTable[typeString]:Show()
-		activeElements[typeString]=ButtonsTable[typeString]
+		activeAbilityElements[typeString]=ButtonsTable[typeString]
 	end
 	
 	local function ShowSpecialAbilityButton()
 
 		ButtonsTable["ability"]:Show()
-		activeElements["ability"]=ButtonsTable["ability"]
+		activeAbilityElements["ability"]=ButtonsTable["ability"]
 	end
 	
 	local unitTypeButtonMap = {
@@ -427,7 +538,7 @@ function widget:GameFrame(f)
 		return false
 	end
 	
-	function resetElements()
+	function resetStatusbars()
 		exp_bar.caption="EXP: -"
 		exp_bar.value= 0	
 		ammo_bar.value= 0
@@ -438,22 +549,17 @@ function widget:GameFrame(f)
 		Total= math.ceil(xp - Relative)
 		
 		exp_bar.caption="EXP: "..Total
-		exp_bar.value= math.ceil(Relative*100)
-		
+		exp_bar.value= math.ceil(Relative*100)		
 	end
 	
 	function updateAmmonitionBar(unitID)
-		val=Spring.GetUnitRulesParams(unitID,"Ammonition")
-		
+		val=Spring.GetUnitRulesParams(unitID,"Ammonition")		
 	
 		if val and val.Ammonition then
-		ammo_bar.value = math.ceil(val.Ammonition)
+			ammo_bar.value = math.ceil(val.Ammonition)
 		else 
-		ammo_bar.value = 0
-		end
-		
-	
-		
+			ammo_bar.value = 0
+		end		
 	end
 	
 	function UpdateAbilitiesWindow()
@@ -461,16 +567,16 @@ function widget:GameFrame(f)
 		selectedUnits = spGetSelectedUnits()
 		
 		if not selectedUnits then 
-			HideAllActiveElements()
-			resetElements()
+			HideAllActiveAbilityElements()
+			resetStatusbars()
 			return 
 		end
 		
 		local unitID = selectedUnits[1]
 		if not unitID then 
 			onOffButton.caption = "ABILITY"
-			HideAllActiveElements()
-			resetElements()
+			HideAllActiveAbilityElements()
+			resetStatusbars()
 			return 
 		end
 		
@@ -509,12 +615,69 @@ function widget:GameFrame(f)
 			--Spring.Echo("Hide all Buttons")
 			--default no button
 			onOffButton.caption = "ABILITY"
-			HideAllActiveElements()
+			HideAllActiveAbilityElements()
+		end
+	end
+		
+	function UpdateBuildWindow()
+		
+		selectedUnits = spGetSelectedUnits()
+		
+		if not selectedUnits then 
+			HideAllActiveBuildElements()
+			resetStatusbars()
+			return 
+		end
+		
+		local unitID = selectedUnits[1]
+		if not unitID then 
+			HideAllActiveAbilityElements()
+			resetStatusbars()
+			return 
+		end
+		
+		local udid = Spring.GetUnitDefID(unitID)
+		local ud = UnitDefs[udid]
+		
+		--update Unit Experience
+		xp= Spring.GetUnitExperience(unitID)
+		if xp then
+			updateExperienceBar(xp)
+		end
+		
+		updateAmmonitionBar(unitID)
+		
+		
+		--adapt the button to unit
+		if unitTypeButtonMap[ud.name] then
+			--generate the Gui Specific by unittype
+			--Spring.Echo("Show typespeicific acitivty button")
+			unitTypeButtonMap[ud.name]()		
+			
+		elseif isUnitOnOffable(ud.name)== true then
+			--Spring.Echo("Show dfault acitivty button")
+			unitTypeButtonMap["default"]("default")
+			--Check for captionReplacement
+			if defaultCaptionByUnitType[ud.name] then
+				if onOffButton.caption== defaultCaptionByUnitType[ud.name].active then
+					onOffButton.caption = defaultCaptionByUnitType[ud.name].passive 
+				else
+					onOffButton.caption = defaultCaptionByUnitType[ud.name].active 
+				end
+			else
+				onOffButton.caption = "ABILITY"
+			end
+		else
+			--Spring.Echo("Hide all Buttons")
+			--default no button
+			onOffButton.caption = "ABILITY"
+			HideAllActiveAbilityElements()
 		end
 	end
 	
 	if updateCommandsSoon == true and (f % 16 == 0) then
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
+		UpdateBuildWindow()
 	end
 end

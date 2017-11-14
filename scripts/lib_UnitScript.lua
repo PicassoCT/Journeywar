@@ -657,8 +657,12 @@ function getPiecePositionMap(id)
 end
 
 --> returns a table of all unitnames  a unit can build
-function GetUnitCanBuild(unitName)
+function getUnitCanBuild(unitName)
     unitDef = UnitDefNames[unitName]
+	if not unitDef or type(unitName) == "number" then
+		unitDef = UnitDefs[unitName]
+	end
+	
     T = {}
     if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
         for index, unitname in ipairs(buildOptions) do
