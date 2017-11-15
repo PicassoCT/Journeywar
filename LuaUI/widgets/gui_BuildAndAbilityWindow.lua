@@ -49,20 +49,21 @@ updateCommandsSoon = false
 
 defaultCaptionByUnitType = VFS.Include('LuaUI/ressources/ability_captions.lua')
 
+local ability_window = {}
+local upgrade_window = {}
+ability_window.height = "23%"--180
+ability_window.height_numeric =180
+ability_window.width = "7%"--115
+ability_window.width_numeric = 115
+ability_window.positionX = "19%"
+ability_window.positionY = "77%"
 
-ability_window_height = "23%"--180
-ability_window_height_numeric =180
-ability_window_width = "7%"--115
-ability_window_width_numeric = 115
-ability_window_positionX = "19%"
-ability_window_positionY = "77%"
-
-upgrade_window_height= "25%"
-upgrade_window_height_numeric= 300
-upgrade_window_width= "40%"
-upgrade_window_width_numeric= 300
-upgrade_window_positionX = "36%"
-upgrade_window_positionY = "80%"
+upgrade_window.height= "25%"
+upgrade_window.height_numeric= 300
+upgrade_window.width= "40%"
+upgrade_window.width_numeric= 300
+upgrade_window.positionX = "36%"
+upgrade_window.positionY = "80%"
 
 
 --main Constructors
@@ -204,18 +205,18 @@ function widget:Initialize()
 			dockable = true,
 			textColor = {0.9,1,1,0.7},
 			name = "build_window",
-			x = upgrade_window_positionX, 
-			y = upgrade_window_positionY,
-			width = upgrade_window_width,
-			height = upgrade_window_height,
+			x = upgrade_window.positionX, 
+			y = upgrade_window.positionY,
+			width = upgrade_window.width,
+			height = upgrade_window.height,
 			parent = screen0,
 			draggable = false,
 			tweakDraggable = false,
 			tweakResizable = false,
 			resizable = false,
 			dragUseGrip = false,
-			--minWidth = math.ceil(upgrade_window_width_numeric*0.75),
-			--minHeight = math.ceil(upgrade_window_height_numeric*0.75),
+			--minWidth = math.ceil(upgrade_window.width_numeric*0.75),
+			--minHeight = math.ceil(upgrade_window.height_numeric*0.75),
 			color = {0.1,0.7,0.85,0.42},
 			backgroundColor= {0.1,0.2,0.6,0.32},
 			children = {},
@@ -279,18 +280,16 @@ function widget:Initialize()
 			dockable = true,
 			textColor = {0.9,1,1,0.7},
 			name = "upgrade_window",
-			x = upgrade_window_positionX, 
-			y = upgrade_window_positionY,
-			width = upgrade_window_width,
-			height = upgrade_window_height,
+			x = upgrade_window.positionX, 
+			y = upgrade_window.positionY,
+			width = upgrade_window.width,
+			height = upgrade_window.height,
 			parent = screen0,
 			draggable = false,
 			tweakDraggable = false,
 			tweakResizable = false,
 			resizable = false,
 			dragUseGrip = false,
-			--minWidth = math.ceil(upgrade_window_width_numeric*0.75),
-			--minHeight = math.ceil(upgrade_window_height_numeric*0.75),
 			color = {0.1,0.7,0.85,0.42},
 			backgroundColor= {0.1,0.2,0.6,0.32},
 			children = {},
@@ -488,10 +487,10 @@ function widget:Initialize()
 		caption = 'Abilities',
 		textColor = {0.9,1,1,0.7},
 		name = "facpanel",
-		x = ability_window_positionX, 
-		y = ability_window_positionY,
-		width = ability_window_width,
-		height = ability_window_height,
+		x = ability_window.positionX, 
+		y = ability_window.positionY,
+		width = ability_window.width,
+		height = ability_window.height,
 		parent = screen0,
 		draggable = false,
 		tweakDraggable = true,
