@@ -20,7 +20,7 @@ MA 02110-1301, USA.
 -------------- DEBUG HEADER
 -- Central Debug Header Controlled in UnitScript
 -------------- DEBUG HEADER
-lib_boolDebug = false --GG.BoolDebug or false
+lib_boolDebug = true --GG.BoolDebug or false
 
 --======================================================================================
 --Section:  Team Information Getters/Setters 
@@ -657,7 +657,7 @@ function getPiecePositionMap(id)
 end
 
 --> returns a table of all unitnames  a unit can build
-function getUnitCanBuild(unitName)
+function getUnitCanBuild(unitName,closedTable)
     unitDef = UnitDefNames[unitName]
 	if not unitDef or type(unitName) == "number" then
 		unitDef = UnitDefs[unitName]
@@ -666,52 +666,73 @@ function getUnitCanBuild(unitName)
     T = {}
     if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
         for index, unitname in ipairs(buildOptions) do
-            T[unitname] = unitname
+            T[index] = UnitDefNames[unitname].id
         end
     end
-    return T
+	closedTable[unitDef] = true
+    return T, closedTable
 end
 
 function unitCanBuild(unitDefID)
-	assert(UnitDefs)
 
 	if unitDefID and UnitDefs[unitDefID]  then		
-		return UnitDefs[unitDefID].buildOptions 
-	else
-			return {}
+		return UnitDefs[unitDefID].buildOptions 	
 	end
+	return {}
 end
 
+function getUnitDefIDFromName(name)
+	for i=1,#UnitDefs do
+		if name == UnitDefs[i].name then return UnitDefs[i].id end
+	end
+
+end
 
 --computates a map of all unittypes buildable by a unit (detects loops)
 --> getUnitBuildAbleMap
-function getUnitCanBuildList(unitDefID, closedTableExtern)
+function getUnitCanBuildList(unitDefID, closedTableExtern, root)
+	if not root then root = true end
     Result = {}
+	assert(type(unitDefID)=="number")
+	boolCanBuildSomething= false
 
-    openTable = unitCanBuild(unitDefID) or {}
+    local openTable = unitCanBuild(unitDefID) or {}
 	if lib_boolDebug == true then	
-		echo("Unit "..UnitDefs[unitDefID].name.." can built:")
+		assert(UnitDefs)
+		assert(unitDefID)
+		assert(UnitDefs[unitDefID],unitDefID)
+		assert(UnitDefs[unitDefID].name)		
 	end
-   closedTable = closedTableExtern or {}
-   closedTable[unitDefID] = true  
-	CanBuildList = unitCanBuild(unitDefID)
+	closedTable = closedTableExtern or {}
+  	local CanBuildList = unitCanBuild(unitDefID)
+	closedTable[unitDefID] = true  
+
+   for num, unitName in pairs(CanBuildList) do		
+	defID = getUnitDefIDFromName(unitName)
+	boolCanBuildSomething = true
 	
-   for num, defID in pairs(CanBuildList) do		
-		if defID and not closedTable[defID] then
-			Result[defID] =defID		
-			unitsToIntegrate, closedTable = getUnitCanBuildList(defID, closedTable)
+	if defID and not closedTable[defID] then
+			Result[defID] =defID	
+			
+			unitsToIntegrate, closedTable = getUnitCanBuildList(defID, closedTable, false)
 			if unitsToIntegrate then
-				for k=1,#unitsToIntegrate do
+				for id,_ in pairs(unitsToIntegrate) do
+			
 					if lib_boolDebug == true then	
-						echo("Unit "..UnitDefs[unitDefID].name)
+						Spring.Echo("+ "..UnitDefs[id].name)
 					end
 					
-				Result[unitsToIntegrate[k]] = unitsToIntegrate[k]
+				Result[id] = id
 				end
 			end
 		end
    end
-
+   if boolCanBuildSometing == true then
+		if root == true then
+		Spring.Echo("Unit "..UnitDefs[unitDefID].name.." can built:")
+		end
+   end
+ 
     return Result,closedTable
 end
 
@@ -2862,7 +2883,7 @@ end
 
 -->returns the Distance between two units
 function distanceUnitToUnit(idA, idB)
-
+	
 	if lib_boolDebug == true then
         if (not idA or type(idA) ~= "number") then echo("Not existing idA or not a number"); return nil; end
         if (not idB or type(idB) ~= "number") then echo("Not existing idB or not a number"); return nil; end

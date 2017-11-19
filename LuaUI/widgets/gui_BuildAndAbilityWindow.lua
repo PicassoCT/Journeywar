@@ -35,7 +35,6 @@ local ExpBar = {}
 local stack_main = {}
 local ButtonsTable = {}
 local activeAbilityElements={}
-local activeBuildElements={}
 local exp_bar= {}
 local ammo_bar	= {}
 
@@ -65,6 +64,12 @@ upgrade_window.width_numeric= 300
 upgrade_window.positionX = "36%"
 upgrade_window.positionY = "80%"
 
+local CentrailButtonBackground = {0.1,0.8,0.8,1}
+local CentrailTextColour = {0.8,1,1,1}
+local AbilityWindowTextColour = {0.9,1,1,0.7}
+
+local JourneyButtonBackground = {0.1,0.8,0.8,1}
+local JourneyTextColour = {0.8,1,1,1}
 
 --main Constructors
 function widget:Initialize()
@@ -92,8 +97,8 @@ function widget:Initialize()
 			caption = 'UPGRADE',
 			width = 100,
 			height = 60,
-			backgroundColor = {0.1,0.8,0.8,1}, 
-			textColor = {0.8,1,1,1},
+			backgroundColor = CentrailButtonBackground, 
+			textColor = CentrailTextColour,
 			OnClick = {
 				showComEndUpgradeMenue
 			},
@@ -107,7 +112,7 @@ function widget:Initialize()
 		
 	end
 	
-	function Create_OnOffButton()
+	function Create_OnOffButton(side)
 		local buttonsize = 80
 		
 		local onOffFunction = function()
@@ -119,22 +124,43 @@ function widget:Initialize()
 			end
 		end
 		
+		if not side or side == "centrail" then
 		
-		
-		onOffButton = Button:New{
+			onOffButton = Button:New{
 			name = "onOffButton",
 			--tooltip = tooltip,
 			x = 5,
 			y = 100,
 			width = 100,
-			height = 60,
-			caption = 'ABILITY',
-			
-			backgroundColor = {0.1,0.8,0.8,1}, 
-			textColor = {0.8,1,1,1},
+			height = 60,			
+			backgroundColor = CentrailButtonBackground, 
+			textColor = CentrailTextColour,
 			parent= stack_main,
 			OnClick = { onOffFunction },
 		}
+		else 
+			onOffButton = 	Chili.HabaneroButton:New{
+			triStrip= Chili.HabaneroButton:Spiral(
+			{x=20,y=5}, 
+			{x=2,y=5}, 
+			{x=0,y=0}, 
+			50, 
+			0.3,
+			32
+			)	,
+			x = 5,
+			y = 100,
+			width = 100,
+			height = 60,			
+			backgroundColor = JourneyButtonBackground,
+			textColor = JourneyTextColour, 
+			OnClick= { onOffFunction}
+			}	
+
+		end
+
+		onOffButton.name = "onOffButton"
+		onOffButton.caption = "ABILITY"
 		
 		stack_main:AddChild(onOffButton)
 		
@@ -146,119 +172,6 @@ function widget:Initialize()
 	end
 	indexVarVal=1
 	
-	function createNewBuildButton(buttonwidth,buttonheigth,BaseCol, texCol, name, uDID)
-		buttonwidth= buttonwidth..'%'
-		buttonheigth=buttonheigth..'%'
-		
-	local cmd ={id = -uDID}
-    local unitDef = UnitDefs[uDID] 
-    local name = unitDef.name
-    
-    local image = Chili.Image:New{
-        name   = "unitImage_" .. name,
-        height = '100%', 
-        width = '100%',
-        file   = '#'..unitDef.id,
-        -- flip = false,
-    }
-    local button = Chili.Button:New{
-        name = "unitButton_" .. name,
-        cmdID = cmd.id,
-        caption = "",
-        children = {image},
-        padding = {0,0,0,0},
-        margin = {0,0,0,0},
-        OnMouseUp = {ActionCommand},
-		width=buttonwidth,
-		height = buttonheigth, 
-		}	
-		
-		return button
-	end
-
-	function unitCanBuild(unitDefID)
-	assert(UnitDefs)
-
-		if unitDefID and UnitDefs[unitDefID]  then		
-			return UnitDefs[unitDefID].buildOptions 
-		else
-				return {}
-		end
-	end
-
-	
-	function addTypeDependentBuildOptions(defID)
-	buildOptions = getUnitCanBuild(defID)
-	local T={}
-		for num,defID in pairs(buildOptions) do
-			name = UnitDefs[defID].name
-			T[#T+1]	= createNewBuildButton(100,100, BaseCol, texCol, name, defID)
-		end
-		
-	return T
-	end
-	
-	function CreateBuildMenue (defID)
-		
-		build_window = Window:New{
-			padding = {3,3,3,3,},
-			dockable = true,
-			textColor = {0.9,1,1,0.7},
-			name = "build_window",
-			x = upgrade_window.positionX, 
-			y = upgrade_window.positionY,
-			width = upgrade_window.width,
-			height = upgrade_window.height,
-			parent = screen0,
-			draggable = false,
-			tweakDraggable = false,
-			tweakResizable = false,
-			resizable = false,
-			dragUseGrip = false,
-			--minWidth = math.ceil(upgrade_window.width_numeric*0.75),
-			--minHeight = math.ceil(upgrade_window.height_numeric*0.75),
-			color = {0.1,0.7,0.85,0.42},
-			backgroundColor= {0.1,0.2,0.6,0.32},
-			children = {},
-		}
-		
-		BaseCol={0.1,0.8,0.8,1}
-		WeapCol={0.3,0.6,0.8,1}
-		UpgCol={0.1,0.5,0.6,1}
-		texCol={0.8,1,1,1}
-		build_grid = Grid:New{
-			x= 0,
-			y = 0,
-			padding = {5,5,5,5},
-			itemPadding = {0, 0, 0, 0},
-			itemMargin = {0, 0, 0, 0},
-			--autosize =true,
-			--weightedResize =true,
-			resizeItems = true,		
-			orientation = 'horizontal',
-			centerItems = true,
-			columns = 7,	
-			rows = 3,
-			name = 'build_grid',
-			width = 630,
-			height = 140,
-			
-			minItemHeight =	 '21%',
-			maxItemHeight =	 '32%',
-			
-			color = {0,0,0,1},
-			
-			children = addTypeDependentBuildOptions(defID)
-			
-				
-		}
-		build_window:AddChild(build_grid)
-		
-		if build_window then 
-			build_window:Hide()	
-		end
-	end
-
 	function createNewUpgradeButton(buttonwidth,buttonheigth,BaseCol, texCol, name)
 		buttonwidth= buttonwidth..'%'
 		buttonheigth=buttonheigth..'%'
@@ -278,7 +191,7 @@ function widget:Initialize()
 		upgrade_window = Window:New{
 			padding = {3,3,3,3,},
 			dockable = true,
-			textColor = {0.9,1,1,0.7},
+			textColor = AbilityWindowTextColour,
 			name = "upgrade_window",
 			x = upgrade_window.positionX, 
 			y = upgrade_window.positionY,
@@ -295,10 +208,10 @@ function widget:Initialize()
 			children = {},
 		}
 		
-		BaseCol={0.1,0.8,0.8,1}
+		BaseCol=CentrailButtonBackground
 		WeapCol={0.3,0.6,0.8,1}
 		UpgCol={0.1,0.5,0.6,1}
-		texCol={0.8,1,1,1}
+		texCol=CentrailTextColour
 		upgrade_Grid = Grid:New{
 			x= 0,
 			y = 0,
@@ -360,7 +273,7 @@ function widget:Initialize()
 		upgradeButton = 	Chili.Window:New{
 			name = 'upgradeButton',
 			caption = "UPGRADES ",
-			textColor = {0.9,1,1,0.7},
+			textColor = AbilityWindowTextColour,
 			fontSize = 24,
 			fontShadow = false,
 			x = "65%",
@@ -397,12 +310,7 @@ function widget:Initialize()
 		end
 	end
 	
-	function HideAllActiveBuildElements()
-		for k,element in pairs(activeBuildElements) do
-			element:Hide()
-		end
-		activeBuildElements={}
-	end
+
 		
 	function HideAllActiveAbilityElements()
 		for k,element in pairs(activeAbilityElements) do
@@ -415,7 +323,7 @@ function widget:Initialize()
 		Create_OnOffButton()
 		Create_UpgradeButton()
 		CreateUpgradeMenue()
-		CreateBuildMenue()
+		
 	end
 	
 	--Actual initialisatioin Code
@@ -427,7 +335,7 @@ function widget:Initialize()
 		caption = "EXP:",
 		value =50,
 		color = {0.05,0.93,0.95,1},
-		backgroundColor = {0.1,0.8,0.8,1}, 
+		backgroundColor = CentrailButtonBackground, 
 	}
 	
 	ammo_bar	= Progressbar:New{
@@ -438,7 +346,7 @@ function widget:Initialize()
 		caption = "Ammonition",
 		value =0,
 		color = {0.2,0.85,0.85,0.5},
-		backgroundColor = {0.1,0.8,0.8,1}, 
+		backgroundColor = CentrailButtonBackground, 
 	}
 	
 	stack_main = Grid:New{
@@ -485,7 +393,7 @@ function widget:Initialize()
 		padding = {3,3,3,3,},
 		dockable = true,
 		caption = 'Abilities',
-		textColor = {0.9,1,1,0.7},
+		textColor = AbilityWindowTextColour,
 		name = "facpanel",
 		x = ability_window.positionX, 
 		y = ability_window.positionY,
@@ -629,65 +537,10 @@ function widget:GameFrame(f)
 		end
 	end
 		
-	function UpdateBuildWindow()
-		
-		selectedUnits = spGetSelectedUnits()
-		
-		if not selectedUnits then 
-			HideAllActiveBuildElements()
-			resetStatusbars()
-			return 
-		end
-		
-		local unitID = selectedUnits[1]
-		if not unitID then 
-			HideAllActiveAbilityElements()
-			resetStatusbars()
-			return 
-		end
-		
-		local udid = Spring.GetUnitDefID(unitID)
-		local ud = UnitDefs[udid]
-		
-		--update Unit Experience
-		xp= Spring.GetUnitExperience(unitID)
-		if xp then
-			updateExperienceBar(xp)
-		end
-		
-		updateAmmonitionBar(unitID)
-		
-		
-		--adapt the button to unit
-		if unitTypeButtonMap[ud.name] then
-			--generate the Gui Specific by unittype
-			--Spring.Echo("Show typespeicific acitivty button")
-			unitTypeButtonMap[ud.name]()		
-			
-		elseif isUnitOnOffable(ud.name)== true then
-			--Spring.Echo("Show dfault acitivty button")
-			unitTypeButtonMap["default"]("default")
-			--Check for captionReplacement
-			if defaultCaptionByUnitType[ud.name] then
-				if onOffButton.caption== defaultCaptionByUnitType[ud.name].active then
-					onOffButton.caption = defaultCaptionByUnitType[ud.name].passive 
-				else
-					onOffButton.caption = defaultCaptionByUnitType[ud.name].active 
-				end
-			else
-				onOffButton.caption = "ABILITY"
-			end
-		else
-			--Spring.Echo("Hide all Buttons")
-			--default no button
-			onOffButton.caption = "ABILITY"
-			HideAllActiveAbilityElements()
-		end
-	end
-	
+
 	if updateCommandsSoon == true and (f % 16 == 0) then
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
-		UpdateBuildWindow()
+
 	end
 end

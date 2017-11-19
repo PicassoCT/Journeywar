@@ -9215,15 +9215,22 @@ function attachBallToPiece(hand)
 	end
 end
 
+function resetBall()
+	reset(DirectionArcPoint)
+	reset(BallArcPoint)
+	reset(ball)
+
+end
+
 --> Moves the ball swingcenter away from the directionrotator
 function setupBallArc(distanceToGo, directionInDeg, startArcInDeg, speed)
 --default resets
 	distanceToGo= distanceToGo or 0
 	directionInDeg = directionInDeg or 0
-	startArcInDeg = startArcInDeg or 0
+	startArcInDeg =  startArcInDeg or 0
 	speed= speed or 0
-	Move(BallArcPoint,x_axis, distanceToGo,0)
-	Move(Ball,x_axis, -distanceToGo,0)
+	Move(BallArcPoint,z_axis, distanceToGo,0)
+	Move(ball,z_axis, -distanceToGo,0)
 	Turn(DirectionArcPoint,y_axis, math.rad(directionInDeg),0)
 	Turn(BallArcPoint,x_axis, math.rad(startArcInDeg),speed)
 end
@@ -9231,67 +9238,120 @@ end
 
 
 ballIdleFunctions = {
-[#ballIdleFunctions+1] = function()-- dribble
+[1] = function()-- catch and hold
+	resetBall()
 	Show(ball)
-
-
-	tP(tllegUp,0, 0, 11, 11/4)
-	tP(tllegUpR, 0, 0, -9, 9/4)
-	tP(tlHead, -36, 0, 0, 36/4)
-	tP(tlarm,0, -88, -35 +180, 88/4)
-	tP(tlarmr, 0, 88, 40 +180, 85/4)
-	WaitForTurns(tllegUp,tllegUpR,tlHead, tlarm,tlarmr)
-	reset(BallArcPoint)
-	reset(MoveBall)
-	reset(ball)
-	moveBallToPieceInArc(120, handr, 10)
-	StartThread(attachBallToPiece, handr)
-	Sleep(7000)
-
-	end,
-[#ballIdleFunctions+12] = function()-- serve
-	Show(ball)
-	StartThread(attachBallToPiece, handr)	
-	tP(tlarmr,-45,16,90,12)
-	tP(tlarm,-25,16,-90,12)
+	ballIdleFunctions[5]()
+	tP(tlarm,0,88,22,2)
+	tP(tlarmr,0,-92,-22,2)
 	WaitForTurns(tlarm,tlarmr)
-	
+	Sleep(3000)
+	Hide(ball)
+
 	end,
-[#ballIdleFunctions+1] = function()--kick it
-	setupBallArc(0,0, 170, 0)
-	Show(ball)
-	tP(tllegUpR,-45,0,0,7)
-	WaitForTurns(tllegUpR)	
-	tP(tllegUpR,0,0,0,17)
-	WaitForTurns(tllegUpR)
-	StartThread(attachBallToPiece, tllegLowR)	
-	tP(tllegUpR,15,0,0,17)
-	WaitForTurns(tllegUpR)
-	Move(ball,x_axis, 250, 22)
-	mP(MoveBall,250,15,0,36)
-	tP(tllegUpR,0,0,0,17)
-	WaitForTurns(tllegUpR)
-	WaitForMoves(ball)
+[2] = function()-- keep up
+--Einwurf
+		ballIdleFunctions[5]()
+	tP(tlarm,0,88,124,2)
+	tP(tlarmr,0,-92,-124,2)
+	for i=1, math.random(3,10) do
+	
+		if math.random(0,1)==1 then
+			tP(tllegUp,-82, 0, 0, 11)
+			tP(tllegLow,110, 0, 0, 11)
+			tP(tllegUpR, 0, 0, -9, 9)
+			tP(tllegLowR, 0, 0, -9, 9)
+		else
+			tP(tllegUpR,-82, 0, 0, 11)
+			tP(tllegLowR,110, 0, 0, 11)
+			tP(tllegUp, 0, 0, -9, 9)
+			tP(tllegLow, 0, 0, -9, 9)
+
+		end
+		Turn(tlHead,x_axis,math.rad(-25),5)
+		WaitForTurns(tllegUp,tllegLow,tllegUpR,tllegLowR)
+		tP(tllegUpR,0, 0, 0, 11/4)
+		tP(tllegLowR,0, 0, 0, 11/4)
+		tP(tllegUp, 0, 0, -9, 9/4)
+		tP(tllegLow, 0, 0, -9, 9/4)
+		Turn(tlHead,x_axis,math.rad(0),0.05)
+		ballIdleFunctions[7]()
+	end
+
+	WaitForTurns(tllegUp,tllegLow,tllegUpR,tllegLowR)
+	Move(DirectionArcPoint,y_axis, -5,0)
+	ballIdleFunctions[6]()
+	end,
+[3] = function()--recive and kick it
+	resetBall()
+	--Einwurf	
+	Move(DirectionArcPoint,y_axis, -5,0)
+	ballIdleFunctions[5]()
+	--kick it
+	ballIdleFunctions[6]()
+
+	resetBall()
 	Hide(ball)
 end,
-[#ballIdleFunctions+1] = function()--volley
+[4] = function()--volley
+	resetBall()
+
+	value=math.random(10,90)
+	arcLength=math.random(45,180)
+	arcDir = math.random(-35,35)
+	setupBallArc(value, arcDir, arcLength)
 	Show(ball)
-	value=math.random(10,150)
-	arcDir=math.random(70,120)
-	setupBallArc(value, math.random(-180,180), arcDir)
-	WTurn(BallArcPoint,x_axis, math.rad(0),9.81)
-	setupBallArc(value, math.random(-180,180),math.rad(180), - 7)
-		
+	tP(tlarm,0,88,54,2)
+	tP(tlarmr,0,-92,-52,2)
+	WTurn(BallArcPoint,x_axis, math.rad(0),0.981)
+	tP(tlarm,0,88,-54,8)
+	tP(tlarmr,0,-92, 52,8)
+	setupBallArc(value, arcDir *-1, 0)
+	WTurn(BallArcPoint,x_axis, math.rad(arcLength),1.981)
+	resetBall()	
+	end,
+	[5] = function () --Einwurf
+		value=math.random(10,90)
+		arcLength=math.random(45,180)
+		arcDir = math.random(-35,35)
+		setupBallArc(value, arcDir, arcLength)
+		Show(ball)
+		WTurn(BallArcPoint,x_axis, math.rad(0),0.981)	
+	end,
+	[6] = function() -- kick ball
+		tP(tllegUpR,-45,0,0,4)
+		WaitForTurns(tllegUpR)	
+		tP(tllegUpR,0,0,0,10)
+		WaitForTurns(tllegUpR)
+		tP(tlarm,0,0,54,8)
+		tP(tlarmr,0,0, -52,8)
+		tP(tllegUpR,15,0,0,17)
+		WaitForTurns(tllegUpR)
+		tP(tllegUpR,0,0,0,17)
+		WMove(ball,z_axis, 80, 82)
+		WMove(ball,z_axis, 90, 42)
+		WMove(ball,z_axis, 100, 22)
+	end,
+	[7] = function() -- Move Ball Up
+		heigth= math.random(50,75)
+		for i=1, heigth do
+			WMove(ball,y_axis, i, 15 + 82/math.sqrt(i/4))
+		end
+		for i=heigth, 15, -1 do
+			WMove(ball,y_axis, i, math.max(0,math.min(81,i*6)))
+		end
+		Move(ball,y_axis, 0, 80)
 	end
+	
 }
 
 
 local function idle_playBall()
-ballDice = math.random(1,6)
-ballIdleFunctions[6]()
+ballDice = math.random(1,4)
+ballIdleFunctions[ballDice]()
 legs_down()
-	boolBallAttached=false
-	Hide(ball)
+resetBall()
+Hide(ball)
 end
 --eggspawn --tigLil and SkinFantry
 
@@ -9940,6 +10000,7 @@ function idle()
         --changebookmark 
         Sleep(285)
         Sleeper = math.random(0, 16)
+
 
         rest = math.random(512, 4096)
 			Sleep(rest)
