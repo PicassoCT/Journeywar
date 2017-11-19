@@ -50,21 +50,22 @@ function HabaneroButton:Spiral(startPointA, startPointB, CenterPoint, Degree, re
 local strip = {}
 totalReducePerStep= (1-reduceFactor)/Resolution
 degPerRes =Degree/Resolution
+
 	for i=1,Resolution do
-	--make a copy and 	--scale the new points
-	local copyPointA,copyPointB = startPointA, startPointB
-	copyPointA.x,copyPointA.y=(1-totalReducePerStep)* (copyPointA.x-CenterPoint.x),(1-totalReducePerStep)* (copyPointA.y-CenterPoint.y)
-	copyPointB.x,copyPointB.y=(1-totalReducePerStep)* (copyPointB.x-CenterPoint.x),(1-totalReducePerStep)* (copyPointB.y-CenterPoint.y)
-	-- rotate the Points 
-	copyPointA.x,copyPointA.y= Rotate(copyPointA.x,copyPointA.y,math.rad(degPerRes))
-	copyPointB.x,copyPointB.y= Rotate(copyPointB.x,copyPointB.y,math.rad(degPerRes))
-	-- move back into position
-	copyPointA.x,copyPointA.y=copyPointA.x +CenterPoint.x,copyPointA.y +CenterPoint.y
-	---draw two triangles into the strip
-	strip[#strip+1] = {x=startPointA.x ,y=startPointA.y}
-	strip[#strip+1] = {x=startPointB.x ,y=startPointB.y}
-	strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
-	strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
+		--make a copy and 	--scale the new points
+		local copyPointA,copyPointB = startPointA, startPointB
+		copyPointA.x,copyPointA.y=(1-totalReducePerStep)* (copyPointA.x-CenterPoint.x),(1-totalReducePerStep)* (copyPointA.y-CenterPoint.y)
+		copyPointB.x,copyPointB.y=(1-totalReducePerStep)* (copyPointB.x-CenterPoint.x),(1-totalReducePerStep)* (copyPointB.y-CenterPoint.y)
+		-- rotate the Points 
+		copyPointA.x,copyPointA.y= Rotate(copyPointA.x,copyPointA.y,math.rad(degPerRes))
+		copyPointB.x,copyPointB.y= Rotate(copyPointB.x,copyPointB.y,math.rad(degPerRes))
+		-- move back into position
+		copyPointA.x,copyPointA.y=copyPointA.x +CenterPoint.x,copyPointA.y +CenterPoint.y
+		---draw two triangles into the strip
+		strip[#strip+1] = {x=startPointA.x ,y=startPointA.y}
+		strip[#strip+1] = {x=startPointB.x ,y=startPointB.y}
+		strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
+		strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
 	end
 end
 --//=============================================================================

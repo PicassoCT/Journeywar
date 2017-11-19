@@ -181,9 +181,12 @@ nextState = {
     ["PEAK"] = "PEAKFADE",
     ["RELAX"] = "BUILDUP"
 }
+MaxMonsterAttack= 34
 
-function NextState(nState, times)
-
+function NextState(nState, times, MonsterZahl)
+	if MonsterZahl > MaxMonsterAttack then
+		return "PEAK", times, BuildUPTime
+	end
     --Spring.Echo("CurrentState:"..nState.." in "..(times-totalTable[nState]).." next State:"..nextState[nState] )
     if nState == "BUILDUP" and times > BuildUPTime then
         times = 0; --Spring.Echo("hivePiece::Peak") ;
@@ -241,6 +244,7 @@ function findBiggestCluster(team, times)
             end)
 
         for i = 1, #mapRepresentiv do
+		if mapRepresentiv[i] then
             for j = 1, #mapRepresentiv[i] do
                 if mapRepresentiv[i][j] > maxTuple.val then
                     maxTuple.val = mapRepresentiv[i][j]
@@ -248,6 +252,9 @@ function findBiggestCluster(team, times)
                     maxTuple.z = j
                 end
             end
+        else
+			echo("JGeohive:Cluster missing for "..i)
+		end
         end
     end
     return maxTuple.x * 8, maxTuple.z * 8
@@ -415,6 +422,17 @@ function handleHiveAttacks()
     end
 end
 
+function countMonsters()
+count=0
+for i=1,table.getn(monsterTable) do
+	if monsterTable[i] and Spring.GetUnitIsDead(monsterTable[i])== false then
+		count= count+1
+	end
+end
+
+return count
+end
+
 AllUnitsUpdated = {}
 State = "RELAX"
 function TargetOS()
@@ -433,10 +451,11 @@ function TargetOS()
         Sleep(10000)
         times = times + 10000
         AllUnitsUpdated = Spring.GetAllUnits()
+		AnzahlMonster =count(monsterTable)
+		
+        if monsterTable and AnzahlMonster > 0 then
 
-        if monsterTable and table.getn(monsterTable) > 0 then
-
-            State, times, percent = NextState(State, math.ceil(times))
+            State, times, percent = NextState(State, math.ceil(times), AnzahlMonster)
             if State ~= oldState then
                 --Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
                 oldState = State

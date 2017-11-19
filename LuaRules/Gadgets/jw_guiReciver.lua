@@ -31,8 +31,11 @@ if (gadgetHandler:IsSyncedCode()) then
     function gadget:RecvLuaMsg(msg, playerID)
         if msg then
             ident =  string.lower(string.sub(msg, 1, 3))
-            Spring.Echo(msg)
-
+			
+			if GG.BoolDebug and GG.BoolDebug == true then
+            Spring.Echo("RecvLuaMsg"..msg)
+			end
+			
             if ident == "upg" then
                 name, active, spectator, teamID, allyTeamID, pingTime, cpuUsage, country, rank, _ = Spring.GetPlayerInfo(playerID)
 

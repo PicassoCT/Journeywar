@@ -1295,11 +1295,11 @@ function showSniper()
 		Show(sniperAmmoTable[i])
 	end
 end
-function showFlareGun()
-	
+
+function showFlareGun()	
 	Show(AmmoFlareGunTurret)
-	
 end
+
 function showSMG() 
 	for i=1,#smg,1 do
 		Show(smg[i]) 
@@ -1908,15 +1908,15 @@ function delayedSound(soundname,delay)
 end
 
 function echoDebugInfo()
-while true do
-Sleep(5500)
-Spring.Echo("CommenderAmmo:"..Stats[eProperty][eAmmonition])
+	while true do
+	Sleep(5500)
+	Spring.Echo("CommenderAmmo:"..Stats[eProperty][eAmmonition])
 
-end
+	end
 end
 
 function script.Create()
-	Spring.SetUnitExperience(unitID,12)
+	
 	teamID = Spring.GetUnitTeam(unitID)
 	if not GG.ComEnders then GG.ComEnders = {} end
 	GG.ComEnders[teamID] = unitID
@@ -1925,7 +1925,10 @@ function script.Create()
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
-	StartThread(echoDebugInfo)
+	if GG.BoolDebug and GG.BoolDebug == true then
+		Spring.SetUnitExperience(unitID,12)
+		StartThread(echoDebugInfo)
+	end
 	--generatepiecesTableAndArrayCode(unitID)
 	
 	
@@ -1942,6 +1945,7 @@ function script.Create()
 	Spin(bullets,y_axis,math.rad(182),0.5)
 	Spin(bullets,x_axis,math.rad(-220),0.5)
 	StartThread(alwaysWatching)
+	StartThread(StabiliZer)
 	
 	StartThread(walkTheDog)
 	StartThread(updateProgressBar)
@@ -1977,11 +1981,10 @@ function idleLoop()
 	
 end
 
---[[ 	
-Stats[eProperty][eStabilityinternal]=stability=1.0
-Stats[eProperty][eStabilityRegeneratRate]=stabilityRegenerationRate=0.05
-Stats[eProperty][eStabilityMax]=stabilityMax=6.0 
-]]
+Stats[eProperty][eStabilityinternal]= 1.0
+Stats[eProperty][eStabilityRegeneratRate]=0.05
+Stats[eProperty][eStabilityMax]= 6.0 
+
 
 --> Energy produced by the comender
 function reactorThread()
@@ -1999,7 +2002,7 @@ end
 
 
 function theActualUpgrade(upgradeType)
-	echo("ComEnder::",upgradeType)
+	--echo("ComEnder::",upgradeType)
 	XP=Spring.GetUnitExperience(unitID) 
 	
 	if XP >= 1 then

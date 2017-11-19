@@ -20,7 +20,8 @@ MA 02110-1301, USA.
 -------------- DEBUG HEADER
 -- Central Debug Header Controlled in UnitScript
 -------------- DEBUG HEADER
-lib_boolDebug = true --GG.BoolDebug or false
+lib_boolDebug = false --
+GG.BoolDebug = lib_boolDebug
 
 --======================================================================================
 --Section:  Team Information Getters/Setters 
@@ -2486,13 +2487,13 @@ function holdsForAll(Var, fillterConditionString, ...)
     if arg then
         for k, Val in pairs(arg) do
 			if Var and Val then
-            if (loadstring(""..Var .. fillterConditionString .. Val))() == false then return end
+			condFunction = loadstring("return ("..Var .. fillterConditionString .. Val..")")
+            if not condFunction or condFunction() == false then return end
 			end
         end
         return true
-    else
-        return true
     end
+	return true
 end
 function makeNewAffirmativeMatrice()
     V = {
