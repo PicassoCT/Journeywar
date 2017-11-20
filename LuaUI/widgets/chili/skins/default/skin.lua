@@ -244,15 +244,27 @@ function _DrawBackground(obj)
   gl.Vertex(x+w, y+h)
 end
 
+function blend(a,b,factor)
+t={}
+for k,v in pairs(a) do
+t[k]= v*factor + b[k]*(1-factor)
+end
+return t
+end
+
 function _DrawHabaneroButtonBackground(obj)
   local triStrip =obj.triStrip
-  gl.Color(obj.backgroundColor)
   
 	for i=3, #triStrip, 1 do
-	 gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
-	 gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
-	 gl.Vertex(triStrip[i].x,  triStrip[i].y) 
-
+		if obj.startColour and obj.endColour then
+			factor =   math.max(0.0,math.min(1.0,i/#triStrip))
+			gl.Color(blend(obj.startColour,obj.endColour, factor))
+		else
+			  gl.Color(obj.backgroundColor)
+		end 
+				gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
+				gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
+				gl.Vertex(triStrip[i].x,  triStrip[i].y) 
 	end 
  end
 	 

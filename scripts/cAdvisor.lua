@@ -464,11 +464,13 @@ end
 
 
 function catchProjectiles(ux, uy, uz)
-    T = {}
+  
 
     T = Spring.GetProjectilesInRectangle(ux - 100, uz - 100, ux + 100, uz + 100)
+	if not T then return end
 	
-	T= process( function(id)
+	T= process(T,
+	function(id)
 	team = Spring.GetProjectileTeamID (id)
 		if team ~= myTeamID then 
 			return id 
@@ -476,6 +478,7 @@ function catchProjectiles(ux, uy, uz)
 	end
 	)
 	
+	if not T then return end
     for i = 1, #T, 1 do
         if Counter < 5 then
             Spring.SetProjectileMoveControl(T[i], true)

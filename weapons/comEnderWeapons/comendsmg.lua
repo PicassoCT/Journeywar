@@ -26,8 +26,9 @@ local weaponDef={
 		  soundtrigger=1,
 		  SweepFire=1,
 		  --apperance
-		  rgbColor                = [[0.12 0.9 0.9]],		  	      
-          size                    = 0.65,
+		  rgbColor                = [[0.12 0.9 0.9]],	
+		  cegTag = "machinegunproj",		  
+          size                    = 2.25,
 	      stages                  = 20,
 		  separation              = 3,
 

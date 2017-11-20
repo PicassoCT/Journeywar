@@ -924,9 +924,9 @@ SunBurst2 = piece"SunBurst2"
 piecesTable[#piecesTable+1]= SunBurst2
 SunBurst3 = piece"SunBurst3"
 piecesTable[#piecesTable+1]= SunBurst3
-
-
-
+piecesTable[#piecesTable+1]= RazorFactory
+RazorFactory = piece"RazorFactory"
+RazorDroneFactory={RazorFactory}
 
 MagneticSh = piece"MagneticSh"
 piecesTable[#piecesTable+1]= MagneticSh
@@ -952,27 +952,18 @@ bullets = piece"bullets"
 piecesTable[#piecesTable+1]= bullets
 
 
-cMagneto={}
+cMagneto={MagneticSh,
+spear       ,
+ShotArm02   ,
+ShotArm03   ,
+ShotArm05   ,
+ShotArm07   ,
+ShotArm09   ,
+shotgunEmit2,
+shotgunEmit1,
+shotgunEmit3
+}
 
-cMagneto[#cMagneto+1]= MagneticSh
-
-cMagneto[#cMagneto+1]= spear
-
-cMagneto[#cMagneto+1]= ShotArm02
-
-cMagneto[#cMagneto+1]= ShotArm03
-
-cMagneto[#cMagneto+1]= ShotArm05
-
-cMagneto[#cMagneto+1]= ShotArm07
-
-cMagneto[#cMagneto+1]= ShotArm09
-
-cMagneto[#cMagneto+1]= shotgunEmit2
-
-cMagneto[#cMagneto+1]= shotgunEmit1
-
-cMagneto[#cMagneto+1]= shotgunEmit3
 
 SunBurstTable={}
 
@@ -1067,6 +1058,7 @@ for i=1,12, 1 do
 end
 
 FlareGun={}
+FlareGun[#FlareGun+1]= AmmoFlareGunTurret
 
 fieldscooper = piece"fieldscooper"
 piecesTable[#piecesTable+1]= fieldscooper
@@ -1191,6 +1183,7 @@ Eater={}
 Eater[#Eater+1]=SunBurst1
 Eater[#Eater+1]=SunBurst2
 Eater[#Eater+1]=SunBurst3
+allWeaponsPieces={cMagneto, RazorDroneFactory, SunBurstTable, cSniper , Eater ,SliceGun, gLauncher ,tangleGunT, unguidedMissile, guidedMissile,FlareGun,cFieldScooper }
 
 --/changed
 
@@ -1260,10 +1253,11 @@ Stats[eProperty][eAmmonitionMax]=100
 teamID=Spring.GetUnitTeam(unitID)
 --</STATS>
 --<ONUPGRADESHOW>
+function showRazorDroneFactory()
+	showT(RazorDroneFactory)
+end
 function showShotgun()
-	for i=1,table.getn(cMagneto),1 do
-		Show(cMagneto[i])
-	end
+	showT(cMagneto)
 	Spin(bullets,y_axis,math.rad(-42),0.01)
 	Spin(bullets,x_axis,math.rad(42),0.01)
 	Spin(bullets,z_axis,math.rad(24),0.01)
@@ -1279,7 +1273,10 @@ function showGLauncher()
 	end 
 end 
 function showEater()
-	Show(Eater[1])
+	for i=1,Weapons[eEater][eWeapnLvl],1 do
+				Show(Eater[i])
+	end		
+
 end
 function showTangleGun()
 	showT(tangleGunT)
@@ -1298,11 +1295,11 @@ function showSniper()
 		Show(sniperAmmoTable[i])
 	end
 end
-function showFlareGun()
-	
+
+function showFlareGun()	
 	Show(AmmoFlareGunTurret)
-	
 end
+
 function showSMG() 
 	for i=1,#smg,1 do
 		Show(smg[i]) 
@@ -1406,13 +1403,18 @@ function showLegs()--The Basic Legs - No Armor
 	
 end
 --reason to commit
+threadT={}
 function showTime()
+
 	while true do
-		Sleep(250)
+		if table.getn(threadT) > 0 then
+			for i=1,table.getn(threadT) do
+				threadT[i]()
+			end
+		threadT={}
+		end
+			Sleep(250)
 		showLegs()
-	for i=1, #Weapons do
-		Weapons[i][eShowFunc]()
-	end
 	end
 end
 
@@ -1436,7 +1438,7 @@ Weapons[eSubMG]={}
 Weapons[eSubMG][eWeapnLvl]=1 				 --WeaponLevel 
 Weapons[eSubMG][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eSubMG][eAimPiece]=smg 
-Weapons[eSubMG][eShowFunc]= showSMG 
+Weapons[eSubMG][eShowFunc]= function() threadT[#threadT+1]=showSMG  end
 Weapons[eSubMG][eAmmoCost]= 0.1 		 --AmmoCost	 	 
 Weapons[eSubMG][eStabCost]= 0.1 		 --StabilityCost	 
 Weapons[eSubMG][ePrioLevl]= 1 		 --PriorityLevel the bigger the more Priority it Got	 --Priority 0 equals can fire at all times
@@ -1447,7 +1449,7 @@ Weapons[eSniper]={}
 Weapons[eSniper][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eSniper][eWeapnMax]=3 				 --WeaponMax
 Weapons[eSniper][eAimPiece]=cSniper 
-Weapons[eSniper][eShowFunc]= showSniper 
+Weapons[eSniper][eShowFunc]= function() threadT[#threadT+1]=showSniper end
 Weapons[eSniper][eAmmoCost]= 0.5 		 	--AmmoCost	 
 Weapons[eSniper][eStabCost]= 0.5 		 	--StabilityCost	 
 Weapons[eSniper][ePrioLevl]= 9 		 	--PriorityLevel the bigger the more Priority it Got 
@@ -1460,7 +1462,7 @@ Weapons[eGLauncher]={}
 Weapons[eGLauncher][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eGLauncher][eWeapnMax]=3 				 --WeaponMax
 Weapons[eGLauncher][eAimPiece]=gLauncher
-Weapons[eGLauncher][eShowFunc]=showGLauncher 		 
+Weapons[eGLauncher][eShowFunc]= function() threadT[#threadT+1]=showGLauncher end 		 
 Weapons[eGLauncher][eAmmoCost]=1 	--AmmoCost 
 Weapons[eGLauncher][eStabCost]= 0.35 		--StabilityCost	
 Weapons[eGLauncher][ePrioLevl]= 3 		 	--PriorityLevel the bigger the more Priority it Got
@@ -1472,7 +1474,7 @@ Weapons[eEater]={}
 Weapons[eEater][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eEater][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eEater][eAimPiece]=Eater 
-Weapons[eEater][eShowFunc]=showEater 		 
+Weapons[eEater][eShowFunc]=function() threadT[#threadT+1]= showEater 	end	 
 Weapons[eEater][eAmmoCost]=1 	 --AmmoCost 
 Weapons[eEater][eStabCost]= 0.25 		 --StabilityCost	 
 Weapons[eEater][ePrioLevl]= 9 		 	 --PriorityLevel the bigger the more Priority it Got
@@ -1484,7 +1486,7 @@ Weapons[eSlicer]={}
 Weapons[eSlicer][eWeapnLvl]=0 					--	WeaponLevel 
 Weapons[eSlicer][eWeapnMax]=3						-- WeaponMax 
 Weapons[eSlicer][eAimPiece]= cFieldScooper[1]					-- CurrentPiece 
-Weapons[eSlicer][eShowFunc]=showSliceGun				 
+Weapons[eSlicer][eShowFunc]=function() threadT[#threadT+1]=showSliceGun			 end	 
 Weapons[eSlicer][eAmmoCost]= 1					-- AmmoCos
 Weapons[eSlicer][eStabCost]=0.0 				-- StabilityCost
 Weapons[eSlicer][ePrioLevl]= 5 				--PriorityLevel 
@@ -1493,17 +1495,13 @@ Weapons[eSlicer][eRecoilMx]= 0.1 		 		 --RecoilMax
 Weapons[eSlicer][eCurrCool]= 0			-- fireReady
 
 
-
-
-
-
 --FlareGun
 eFlareGun=6
 Weapons[eFlareGun]={}
 Weapons[eFlareGun][eWeapnLvl]=0 					--	WeaponLevel 
 Weapons[eFlareGun][eWeapnMax]=3						-- WeaponMax 
 Weapons[eFlareGun][eAimPiece]= FlareGun					-- CurrentAmmo 
-Weapons[eFlareGun][eShowFunc]=showFlareGun				 
+Weapons[eFlareGun][eShowFunc]=function() threadT[#threadT+1]=showFlareGun	 end			 
 Weapons[eFlareGun][eAmmoCost]= 3					-- CurrentAmmo 
 Weapons[eFlareGun][eStabCost]= 0.1					-- Stability 
 Weapons[eFlareGun][ePrioLevl]= 5					-- Priority
@@ -1514,13 +1512,13 @@ Weapons[eShotGun]={}
 Weapons[eShotGun][eWeapnLvl] = 0 				 --WeaponLevel 
 Weapons[eShotGun][eWeapnMax] = 3 				 --WeaponMax 
 Weapons[eShotGun][eAimPiece] = cMagneto 
-Weapons[eShotGun][eShowFunc] = showShotgun 		 
+Weapons[eShotGun][eShowFunc] = function() threadT[#threadT+1]=showShotgun 	 end	 
 Weapons[eShotGun][eAmmoCost] = 1 	 			--AmmoCost 
 Weapons[eShotGun][eStabCost] = 0.35 		 --StabilityCost	 
 Weapons[eShotGun][ePrioLevl] = 4 		 	 --PriorityLevel the bigger the more Priority it Got
 Weapons[eShotGun][eCoolDown] = 2000 		 --Downtime
 Weapons[eShotGun][eRecoilMx] = 0.2 		 	 --RecoilMax	
-Weapons[eShotGun][10] = 0 		 	 --ScrapAmmonition 	
+Weapons[eShotGun][10] = 0 		 			 --ScrapAmmonition 	
 
 --<ShotTractorGun>--Markerweapon
 boolTractorWeaponActivated=false
@@ -1529,7 +1527,7 @@ Weapons[eTractorGun]={}
 Weapons[eTractorGun][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eTractorGun][eWeapnMax]=1 				 --WeaponMax 
 Weapons[eTractorGun][eAimPiece]=cMagneto 
-Weapons[eTractorGun][eShowFunc]=showShotgun 		 
+Weapons[eTractorGun][eShowFunc]=function() threadT[#threadT+1]=showShotgun 	 end	 
 Weapons[eTractorGun][eAmmoCost]= 0.1 	 --AmmoCost 
 Weapons[eTractorGun][eStabCost]= 0.25 		 --StabilityCost	 
 Weapons[eTractorGun][ePrioLevl]= 6 		 	 --PriorityLevel the bigger the more Priority it Got
@@ -1543,7 +1541,7 @@ Weapons[eTangleGun]={}
 Weapons[eTangleGun][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eTangleGun][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eTangleGun][eAimPiece]=TangleGun 
-Weapons[eTangleGun][eShowFunc]=showTangleGun 		 
+Weapons[eTangleGun][eShowFunc]=function() threadT[#threadT+1]=showTangleGun  end		 
 Weapons[eTangleGun][eAmmoCost]= 0.1 	 --AmmoCost 
 Weapons[eTangleGun][eStabCost]= 0.05 		 --StabilityCost	 
 Weapons[eTangleGun][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
@@ -1552,15 +1550,13 @@ Weapons[eTangleGun][eRecoilMx]= 0 		 	 --RecoilMax
 Weapons[eTangleGun][eCurrCool]= 0 		 	 --eCurrCool	
 
 --RazorGrenade
-function showRazorGrenade()
-	
-end
+
 eRazorGrenade=11
 Weapons[eRazorGrenade]={}
 Weapons[eRazorGrenade][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eRazorGrenade][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eRazorGrenade][eAimPiece]=You 
-Weapons[eRazorGrenade][eShowFunc]=showRazorGrenade 		 
+Weapons[eRazorGrenade][eShowFunc]=function() threadT[#threadT+1]=showRazorDroneFactory 	 end	 
 Weapons[eRazorGrenade][eAmmoCost]= 0.1 	 		--AmmoCost 
 Weapons[eRazorGrenade][eStabCost]= 0.05 		 --StabilityCost	 
 Weapons[eRazorGrenade][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
@@ -1580,7 +1576,7 @@ Weapons[eAARocket]={}
 Weapons[eAARocket][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eAARocket][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eAARocket][eAimPiece]=guidedMissile 
-Weapons[eAARocket][eShowFunc]=showARocket 		 
+Weapons[eAARocket][eShowFunc]=function() threadT[#threadT+1]= showARocket end		 
 Weapons[eAARocket][eAmmoCost]= 0.1 	 --AmmoCost 
 Weapons[eAARocket][eStabCost]= 0.05 		 --StabilityCost	 
 Weapons[eAARocket][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
@@ -1591,7 +1587,7 @@ Weapons[eAARocket][eCurrCool]= 0 		 	 --RecoilMax
 
 
 function showGroundRocket()
-	for i=1,Weapons[eGRocket][1], 1 do
+	for i=1,Weapons[eGRocket][eWeapnLvl], 1 do
 		Show(unguidedMissile[i])
 	end
 end
@@ -1601,7 +1597,7 @@ Weapons[eGRocket]={}
 Weapons[eGRocket][eWeapnLvl]=0 				 --WeaponLevel 
 Weapons[eGRocket][eWeapnMax]=3 				 --WeaponMax 
 Weapons[eGRocket][eAimPiece]=unguidedMissile 
-Weapons[eGRocket][eShowFunc]=showGroundRocket 		 
+Weapons[eGRocket][eShowFunc]=function() threadT[#threadT+1]= showGroundRocket end		 
 Weapons[eGRocket][eAmmoCost]= 0.1 	 --AmmoCost 
 Weapons[eGRocket][eStabCost]= 0.05 		 --StabilityCost	 
 Weapons[eGRocket][ePrioLevl]= 3 		 	 --PriorityLevel the bigger the more Priority it Got
@@ -1912,21 +1908,27 @@ function delayedSound(soundname,delay)
 end
 
 function echoDebugInfo()
-while true do
-Sleep(5500)
-Spring.Echo("CommenderAmmo:"..Stats[eProperty][eAmmonition])
+	while true do
+	Sleep(5500)
+	Spring.Echo("CommenderAmmo:"..Stats[eProperty][eAmmonition])
 
-end
+	end
 end
 
 function script.Create()
-	Spring.SetUnitExperience(unitID,12)
-	--	Spring.Echo("cComEnder::Startspeed -> "..(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed]))
+	
+	teamID = Spring.GetUnitTeam(unitID)
+	if not GG.ComEnders then GG.ComEnders = {} end
+	GG.ComEnders[teamID] = unitID
+	
 	setSpeedComEnder(100- (50/Stats[eProperty][eWalkSpeedLimit])*Stats[eProperty][eWalkSpeed])
 	sd=math.floor(math.random(1,5))
 	strings="sounds/cComEnder/comEnder"..sd..".wav"
 	StartThread(delayedSound,strings,7000)
-	StartThread(echoDebugInfo)
+	if GG.BoolDebug and GG.BoolDebug == true then
+		Spring.SetUnitExperience(unitID,12)
+		StartThread(echoDebugInfo)
+	end
 	--generatepiecesTableAndArrayCode(unitID)
 	
 	
@@ -1934,16 +1936,16 @@ function script.Create()
 	hideT(piecesTable)
 	
 	showT(basics)
-	hideT(cMagneto)
-	hideT(tangleGunT)
-	hideT(cFieldScooper)
-	hideT(guidedMissile)
-	hideT(unguidedMissile)
+	for i=1, #allWeaponsPieces do
+		hideT(allWeaponsPieces[i])
+	end
+
 	
 	
 	Spin(bullets,y_axis,math.rad(182),0.5)
 	Spin(bullets,x_axis,math.rad(-220),0.5)
 	StartThread(alwaysWatching)
+	StartThread(StabiliZer)
 	
 	StartThread(walkTheDog)
 	StartThread(updateProgressBar)
@@ -1979,11 +1981,10 @@ function idleLoop()
 	
 end
 
---[[ 	
-Stats[eProperty][eStabilityinternal]=stability=1.0
-Stats[eProperty][eStabilityRegeneratRate]=stabilityRegenerationRate=0.05
-Stats[eProperty][eStabilityMax]=stabilityMax=6.0 
-]]
+Stats[eProperty][eStabilityinternal]= 1.0
+Stats[eProperty][eStabilityRegeneratRate]=0.05
+Stats[eProperty][eStabilityMax]= 6.0 
+
 
 --> Energy produced by the comender
 function reactorThread()
@@ -2001,7 +2002,7 @@ end
 
 
 function theActualUpgrade(upgradeType)
-	echo("ComEnder::",upgradeType)
+	--echo("ComEnder::",upgradeType)
 	XP=Spring.GetUnitExperience(unitID) 
 	
 	if XP >= 1 then
@@ -2046,73 +2047,80 @@ function theActualUpgrade(upgradeType)
 		--SMG
 		if upgradeType =="SMG" and Weapons[eSubMG][1] ~= Weapons[eSubMG][2] then
 			--identify Cost
-			Weapons[eSubMG][1]=math.min(Weapons[eSubMG][1]+1,Weapons[eSubMG][2])
+			Weapons[eSubMG][eWeapnLvl]=math.min(Weapons[eSubMG][eWeapnLvl]+1,Weapons[eSubMG][2])
+			Weapons[eSubMG][eShowFunc](Weapons[eSubMG][eWeapnLvl])
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
 		--GRENADE
-		if upgradeType =="GRENADE" and 	Weapons[eGLauncher][1] ~= Weapons[eGLauncher][2] then
-			Weapons[eGLauncher][1]=math.min(Weapons[eGLauncher][1]+1,Weapons[eGLauncher][2])
+		if upgradeType =="GRENADE" and 	Weapons[eGLauncher][eWeapnLvl] ~= Weapons[eGLauncher][2] then
+			Weapons[eGLauncher][eWeapnLvl]=math.min(Weapons[eGLauncher][eWeapnLvl]+1,Weapons[eGLauncher][2])
+			Weapons[eGLauncher][eShowFunc](Weapons[eGLauncher][eWeapnLvl])
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
 		--SNIPER
-		if upgradeType =="SNIPER" and Weapons[eSniper][1] ~= Weapons[eSniper][2] then
-			Weapons[eSniper][1]=math.min(Weapons[eSniper][1]+1,Weapons[eSniper][2])
+		if upgradeType =="SNIPER" and Weapons[eSniper][eWeapnLvl] ~= Weapons[eSniper][2] then
+			Weapons[eSniper][eWeapnLvl]=math.min(Weapons[eSniper][eWeapnLvl]+1,Weapons[eSniper][2])
+			Weapons[eSniper][eShowFunc](Weapons[eSniper][eWeapnLvl])
 			spSetUnitExperience(unitID,XP -1)
 		end
 		--"SHOTGUN"
-		if upgradeType =="SHOTGUN" and Weapons[eTractorGun][1] ~= Weapons[eTractorGun][2] then
-			Weapons[eTractorGun][1]=math.min(Weapons[eTractorGun][1]+1,Weapons[eTractorGun][2])
+		if upgradeType =="SHOTGUN" and Weapons[eTractorGun][eWeapnLvl] ~= Weapons[eTractorGun][2] then
+			Weapons[eTractorGun][eWeapnLvl]=math.min(Weapons[eTractorGun][eWeapnLvl]+1,Weapons[eTractorGun][2])
+			Weapons[eTractorGun][eShowFunc](Weapons[eTractorGun][eWeapnLvl])
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
 		--"Eater"
-		if upgradeType =="EATER" and Weapons[eEater][1] ~= Weapons[eEater][2] then
-			Weapons[eEater][1]=math.min(Weapons[eEater][1]+1,Weapons[eEater][2])
-			for i=1,Weapons[eEater][1],1 do
-				Show(Eater[i])
-			end		
+		if upgradeType =="EATER" and Weapons[eEater][eWeapnLvl] ~= Weapons[eEater][2] then
+			Weapons[eEater][eWeapnLvl]=math.min(Weapons[eEater][eWeapnLvl]+1,Weapons[eEater][2])
+			Weapons[eEater][eShowFunc](Weapons[eEater][eWeapnLvl])
+			
+	
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
 		--"FLAREGUN"
-		if upgradeType =="FLARE" and Weapons[eFlareGun][1] ~= Weapons[eFlareGun][2] then
-			Weapons[eFlareGun][1]=math.min(Weapons[eFlareGun][1]+1,Weapons[eFlareGun][2])
-			Weapons[eFlareGun][4]()	
+		if upgradeType =="FLARE" and Weapons[eFlareGun][eWeapnLvl] ~= Weapons[eFlareGun][2] then
+			Weapons[eFlareGun][eWeapnLvl]=math.min(Weapons[eFlareGun][eWeapnLvl]+1,Weapons[eFlareGun][2])
+			Weapons[eFlareGun][eShowFunc](Weapons[eFlareGun][eWeapnLvl])
+
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
-		if upgradeType == "SLICER" and Weapons[eSlicer][1] ~= Weapons[eSlicer][2] then
-			Weapons[eSlicer][1]=math.min(Weapons[eSlicer][1]+1,Weapons[eSlicer][2])
-			Weapons[eSlicer][4]()	
+		if upgradeType == "SLICER" and Weapons[eSlicer][eWeapnLvl] ~= Weapons[eSlicer][2] then
+			Weapons[eSlicer][eWeapnLvl]=math.min(Weapons[eSlicer][eWeapnLvl]+1,Weapons[eSlicer][2])
+			Weapons[eSlicer][eShowFunc](Weapons[eSlicer][eWeapnLvl])
 			spSetUnitExperience(unitID,XP -1)
 		end		
 		
-		if upgradeType == "RAZOR" and Weapons[eRazorGrenade][1] ~= Weapons[eRazorGrenade][2] then
-			Weapons[eRazorGrenade][1]=math.min(Weapons[eRazorGrenade][1]+1,Weapons[eRazorGrenade][2])
-			Weapons[eRazorGrenade][4]()	
+		if upgradeType == "RAZOR" and Weapons[eRazorGrenade][eWeapnLvl] ~= Weapons[eRazorGrenade][2] then
+			Weapons[eRazorGrenade][eWeapnLvl]=math.min(Weapons[eRazorGrenade][eWeapnLvl]+1,Weapons[eRazorGrenade][2])
+			Weapons[eRazorGrenade][eShowFunc](Weapons[eRazorGrenade][eWeapnLvl])	
 			spSetUnitExperience(unitID,XP -1)
 		end	
 		
-		if upgradeType == "TANGLE" and Weapons[eTangleGun][1] ~= Weapons[eTangleGun][2] then
-			Weapons[eTangleGun][1]=math.min(Weapons[eTangleGun][1]+1,Weapons[eTangleGun][2])
-			Weapons[eTangleGun][4]()	
+		if upgradeType == "TANGLE" and Weapons[eTangleGun][eWeapnLvl] ~= Weapons[eTangleGun][2] then
+			Weapons[eTangleGun][eWeapnLvl]=math.min(Weapons[eTangleGun][eWeapnLvl]+1,Weapons[eTangleGun][2])
+			Weapons[eTangleGun][eShowFunc](Weapons[eTangleGun][eWeapnLvl])	
+	
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
-		if upgradeType == "AROCKET" and Weapons[eAARocket][1] ~= Weapons[eAARocket][2] then
-			Weapons[eAARocket][1]=math.min(Weapons[eAARocket][1]+1,Weapons[eAARocket][2])
-			Weapons[eAARocket][4]()	
+		if upgradeType == "AROCKET" and Weapons[eAARocket][eWeapnLvl] ~= Weapons[eAARocket][2] then
+			Weapons[eAARocket][eWeapnLvl]=math.min(Weapons[eAARocket][eWeapnLvl]+1,Weapons[eAARocket][2])
+			Weapons[eAARocket][eShowFunc](Weapons[eAARocket][eWeapnLvl])	
+	
 			spSetUnitExperience(unitID,XP -1)
 		end
 		
-		if upgradeType == "GROCKET" and Weapons[eGRocket][1] ~= Weapons[eGRocket][2] then
-			Weapons[eGRocket][1]=math.min(Weapons[eGRocket][1]+1,Weapons[eGRocket][2])
-			Weapons[eGRocket][4]()	
+		if upgradeType == "GROCKET" and Weapons[eGRocket][eWeapnLvl] ~= Weapons[eGRocket][2] then
+			Weapons[eGRocket][eWeapnLvl]=math.min(Weapons[eGRocket][eWeapnLvl]+1,Weapons[eGRocket][2])
+			Weapons[eGRocket][eShowFunc](Weapons[eGRocket][eWeapnLvl])	
 			spSetUnitExperience(unitID,XP -1)
 		end
-		
+		--<Passive Upgrades >
 		if upgradeType == "EJECTPOD" and LazarusDevice ~= LazarusDeviceMax then
 			LazarusDevice=math.min(LazarusDevice+1,LazarusDeviceMax)
 			spSetUnitExperience(unitID,XP -1)
@@ -3000,6 +3008,7 @@ function script.AimFromWeapon4()
 end
 
 function script.QueryWeapon4() 
+	assertNum(sniper)
 	return sniper
 	
 end
@@ -3075,11 +3084,11 @@ gSniperPitch=0
 function script.AimWeapon4( heading ,pitch)
 	gSniperHeading=heading
 	gSniperPitch=pitch
-	echo("CComEnderScript:SniperAiming:1")
+--	echo("CComEnderScript:SniperAiming:1")
 	if Weapons[eSniper][1] > 0 and Weapons[eSniper][eCurrCool] <= 0 and gotPriority(Weapons[eSniper][ePrioLevl])==true then
 		--Sniper Kneel Animation
 		
-		echo("CComEnderScript:SniperAiming:2")
+		--echo("CComEnderScript:SniperAiming:2")
 		
 		if Weapons[eSniper][1]> 0 then
 			
@@ -3088,11 +3097,11 @@ function script.AimWeapon4( heading ,pitch)
 				boolSniperOnce=true
 			end
 			releasePriority(Weapons[eSniper][7])	
-			echo("CComEnderScript:SniperAiming:3")
+		--	echo("CComEnderScript:SniperAiming:3")
 			return 	boolSniperPermit == true and boolOutOfAmmo ==false
 		end
 	end 
-	echo("CComEnderScript:SniperAiming:4")
+	--echo("CComEnderScript:SniperAiming:4")
 	return false
 end
 
@@ -3127,26 +3136,23 @@ end
 
 --</SNIPER>
 --<SMG>
-
+smgValue= bb05
 function script.AimFromWeapon5() 
 	SMGflipFlop=(SMGflipFlop+1)%4
-	if SMGflipFlop==0 then return SMG1B03 end
-	if SMGflipFlop==1 then return SMG1B04 end
-	if SMGflipFlop==2 then return SMG2B03 end
-	if SMGflipFlop==3 then return SMG2B04 end
-	return bb05
+	smgValue = bb05
+	if SMGflipFlop==0 then value = SMG1B03 end
+	if SMGflipFlop==1 then value = SMG1B04 end
+	if SMGflipFlop==2 then value = SMG2B03 end
+	if SMGflipFlop==3 then value = SMG2B04 end
+	return value
 end
 
 SMGflipFlop=1
 
 function script.QueryWeapon5() 
-	return bb05
-	-- SMGflipFlop=(SMGflipFlop+1)%4
-	-- if SMGflipFlop==0 then return SMG1B03 end
-	-- if SMGflipFlop==1 then return SMG1B04 end
-	-- if SMGflipFlop==2 then return SMG2B03 end
-	-- if SMGflipFlop==3 then return SMG2B04 end
-	-- return SMG1B03
+
+	return smgValue
+
 end
 
 boolCanSMGFire=false
@@ -3264,9 +3270,11 @@ end
 
 function script.QueryWeapon6() 
 	EaterflipFlop=(EaterflipFlop+1)%(math.max(1,Weapons[eEater][1]))
-	if EaterflipFlop==0 then return Eater[1] end
-	if EaterflipFlop==1 then return Eater[2] end
-	if EaterflipFlop==2 then return Eater[3] end
+	local EaterNumber= Eater[1]
+	if EaterflipFlop==0 then EaterNumber = Eater[1] end
+	if EaterflipFlop==1 then EaterNumber = Eater[2] end
+	if EaterflipFlop==2 then EaterNumber = Eater[3] end
+	return EaterNumber
 end
 
 function script.AimWeapon6( heading ,pitch)	
@@ -3345,12 +3353,10 @@ function script.AimFromWeapon8()
 end
 
 function script.QueryWeapon8() 
-	
+	return You
 end
 
 function script.AimWeapon8( heading ,pitch)	
-	
-	
 	return GG.NotifyBlockShot(unitID, 8) 
 end
 
@@ -3367,11 +3373,13 @@ end
 --<FlareGun>
 
 function script.AimFromWeapon9() 
-	return You 
+	return   AmmoFlareGunTurret
+
 end
 
 function script.QueryWeapon9() 
-	return You
+	return  AmmoFlareGunTurret
+
 end
 
 boolFlareGunReloadInProgress=false
@@ -3418,8 +3426,9 @@ function script.AimFromWeapon10()
 end
 
 
-function script.QueryWeapon10() 
-	return Weapons[eSlicer][eAimPiece]
+function script.QueryWeapon10()
+	weaponNumber =  Weapons[eSlicer][eAimPiece]
+	return weaponNumber
 end
 
 boolSliceGunReloadInProgress=false
