@@ -377,6 +377,17 @@ function getRewardTable()
     return Rewards
 end
 
+CentrailUnitTypeList = getUnitCanBuildList(UnitDefNames["citadell"].id)
+JourneyUnitTypeList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
+
+function getUnitSide(unitID)
+defID= Spring.GetUnitDefID(unitID)
+if CentrailUnitTypeList[defID] then return "centrail"end
+if JourneyUnitTypeList[defID] then return "journeyman"end
+return "gaia"
+end
+
+
 function setDenial(key)
     if not GG.jw_denyCommunication then GG.jw_denyCommunication = {} end
     if not GG.jw_denyCommunication[key] then GG.jw_denyCommunication[key] = true end

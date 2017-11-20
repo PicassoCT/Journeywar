@@ -716,15 +716,6 @@ function getUnitCanBuildList(unitDefID, closedTableExtern)
 end
 
 
-CentrailUnitTypeList = getUnitCanBuildList(UnitDefNames["citadell"].id)
-JourneyUnitTypeList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
-
-function getUnitSide(unitID)
-defID= Spring.GetUnitDefID(unitID)
-if CentrailUnitTypeList[defID] then return "centrail"end
-if JourneyUnitTypeList[defID] then return "journeyman"end
-return "gaia"
-end
 
 -->Stuns a Unit
 function stunUnit(k, factor)
