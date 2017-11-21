@@ -53,7 +53,7 @@ function spawnAmbassador()
         return id
     end
 end
-
+ spectratorlist= {}
 function spawnAGaiaVillage()
     boolHeightmapPlain = false
     powToo = 1
@@ -91,7 +91,7 @@ function spawnAGaiaVillage()
                 teamList = {}
                 teamList = Spring.GetTeamList()
                 for i = 1, #teamList, 1 do
-                    GG.UnitsToSpawn:PushCreateUnit("spectrator", x + i * 3, 0, z - i * 3, 0, teamList[i])
+                    spectratorlist+[#spectratorlist+1]= Spring.CreateUnit("spectrator", x + i * 3, 0, z - i * 3, 0, teamList[i])
                 end
 
                 for _ = 1, 5, 1 do
@@ -615,6 +615,11 @@ function daVinciAmok(frame)
 
 
     if MissionFunctionTable[2][3] == 15 then
+		process(spectratorlist,
+				function(id)
+					Spring.DestroyUnit(id,true,true)
+				end
+				)
         boolVillagePeopleDead = false
         for i = 1, table.getn(MissionFunctionTable[2][11]), 1 do
             if Spring.GetUnitIsDead(MissionFunctionTable[2][11][i]) == false then boolVillagePeopleDead = true end
