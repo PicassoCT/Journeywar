@@ -578,40 +578,45 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 	
     UnitDamageFuncT[tangleGunDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		if 	not tangledTable[attackerID] or 
-			distanceOfUnitTo(attackerID,tangledTable[attackerID].first) > tangledDisconnectDistance or
+		if 	not tangledTable[attackerID] then tangledTable[attackerID]  = {} end 
+		
+	if 	distanceUnitToUnit(attackerID,tangledTable[attackerID].first) > tangledDisconnectDistance or
 			table.getn(tangledTable[attackerID].others) > 5
 		then 
 			tangledTable[attackerID] = {first = unitID, others={}}
 			
 			cegEventStream = function (persPack)
 			
-				spawnCEGatUnit(unitID, "tangledceg", 0, 10, 0) --TODO 
+				spawnCEGatUnit(unitID, "tangledceg", 0, 10, 0) 
 				persPack.counter = persPack.counter + 1
 				return Spring.GetUnitIsDead(unitID) and persPack.counter < persPack, persPack
 			end
 			
 			createStreamEvent(unitID, cegEventStream, 15, {counter = 0})
-		elseif not tangledTable[attackerID].others[unitID] then		
-		tangledTable[attackerID].others[unitID] = true
-		
-		tangledEventStream = function(persPack)
-			if persPack.counter > 25 then return false else  persPack.counter = persPack.counter + 1 end
-			hp, maxHP= Spring.GetUnitHealth(persPack.first)
-			nowPercent= hp/maxHP
-
-			_, maxHP = Spring.GetUnitHealth(persPack.unitID)
-			Spring.SetUnitHealth(persPack.unitID, maxHP * nowPercent )			
+		else		
+			if not tangledTable[attackerID].others[unitID] then		
+			tangledTable[attackerID].others[unitID] = true
+			
+			tangledEventStream = function(persPack)
+				if persPack.counter > 25 or Spring.GetUnitIsDead(persPack.unitID)== true then 
+					return false 
+				end  
+				if Spring.GetUnitIsDead(persPack.first) == true then Spring.DestroyUnit(persPack.unitID,true, true) end
 				
-			return true, persPack
-		end
-		
-		createStreamEvent(unitID, tangledEventStream, 25, {
-		first =tangledTable[attackerID].first, 
-		counter = 0})
-		end
-		
-        return 0
+				persPack.counter = persPack.counter + 1 
+
+				transferUnitStatusToUnit(persPack.first, persPack.unitID)
+
+				return true, persPack
+			end
+			
+			createStreamEvent(unitID, tangledEventStream, 25, {
+			first =tangledTable[attackerID].first, 
+			counter = 0})
+			end			
+
+    end
+	return 0
     end
 
 
@@ -942,13 +947,7 @@ if (gadgetHandler:IsSyncedCode()) then
         end
     end
 
-    function distanceOfUnitTo(ud, x, y, z)
-        if not ud then return math.huge end
 
-        px, py, pz = Spring.GetUnitPosition(ud)
-        ux, uy, uz = px - x, py - y, pz - z
-        return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
-    end
 
 
     function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
@@ -962,8 +961,8 @@ if (gadgetHandler:IsSyncedCode()) then
             x, y, z = Spring.GetUnitPosition(unitID)
             ed, ad = Spring.GetUnitNearestEnemy(unitID), Spring.GetUnitNearestAlly(unitID)
 
-            distEnemy, ex, ey, ez = distanceOfUnitTo(ed, x, y, z)
-            distAlly, ax, ay, az = distanceOfUnitTo(ad, x, y, z)
+            distEnemy, ex, ey, ez = distanceUnitToPoint(ed, x, y, z)
+            distAlly, ax, ay, az = distanceUnitToPoint(ad, x, y, z)
 
             targetID = 0
             if distEnemy > distAlly then

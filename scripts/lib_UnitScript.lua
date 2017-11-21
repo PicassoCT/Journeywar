@@ -123,7 +123,9 @@ end
 function isPieceAboveGround(unitID,pieceName)
 x,y,z =Spring.GetUnitPiecePosDir(unitID,pieceName)
 gh= Spring.GetGroundHeight(x,z)
-if gh >  0 then return true end
+if gh >  0 then 
+	return true 
+end
 return false
 end
 
@@ -2808,6 +2810,17 @@ function vectorUnitToUnit(idA, idB)
 
     return Vector:new(x - xb, y - yb, z - zb)
 end
+
+    function distanceOfUnitToPoint(ud, x, y, z)
+		if not y and x.x then x,y,z = x.x,x.y,x.z end
+		
+        if not ud then return math.huge end
+
+        px, py, pz = Spring.GetUnitPosition(ud)
+        ux, uy, uz = px - x, py - y, pz - z
+        return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
+    end
+
 
 -->returns the Distance between two units
 function distanceUnitToUnit(idA, idB)

@@ -71,12 +71,12 @@ function spawnRavenholmCity17()
 
     teamList = {}
     teamList = Spring.GetTeamList()
-
+	spectratorlist={}
     for i = 1, 9, 1 do
         for j = 1, 9, 1 do
             if i % 3 == 1 and j % 3 == 1 then
                 for k = 1, #teamList, 1 do
-                    GG.UnitsToSpawn:PushCreateUnit("spectrator", x, 390, z, 0, teamList[k])
+                   spectratorlist[#spectratorlist+1]("spectrator", x, 390, z, 0, teamList[k])
                 end
             end
 
@@ -316,6 +316,11 @@ function Misson5WhackTheFreeman(frame)
         T = prepSpeach(CentrailSpeech, Name, charPerLine, Alpha, DefaultSleepByline)
         say(T, 25000, NameColour, TextColour, OptionString, UnitID)
         spPlaySound("sounds/Missions/missionBriefing.ogg", 1)
+		process(spectratorlist,
+				function(id)
+					Spring.DestroyUnit(id,true,true)
+				end
+				)
         return true
     end
 
