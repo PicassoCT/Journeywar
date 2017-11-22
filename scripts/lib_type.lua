@@ -1384,6 +1384,3 @@ end
 
 matrix.symbol = symbol
 
-
--- return matrix
-return matrix

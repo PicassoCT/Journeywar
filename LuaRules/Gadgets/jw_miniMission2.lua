@@ -91,7 +91,7 @@ function spawnAGaiaVillage()
                 teamList = {}
                 teamList = Spring.GetTeamList()
                 for i = 1, #teamList, 1 do
-                    spectratorlist+[#spectratorlist+1]= Spring.CreateUnit("spectrator", x + i * 3, 0, z - i * 3, 0, teamList[i])
+                    spectratorlist[#spectratorlist+1]= Spring.CreateUnit("spectrator", x + i * 3, 0, z - i * 3, 0, teamList[i])
                 end
 
                 for _ = 1, 5, 1 do

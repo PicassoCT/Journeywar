@@ -1016,18 +1016,18 @@ function getADryWalkAbleSpot()
             v = {}
             v.x, v.y, v.z = Spring.GetGroundNormal(i * chunkSizeX, chunkSizeZ * j)
             v = normVector(v)
-            if v.y < 0.3 or math.abs(v.x) > 0.5 or math.abs(v.z) < 0.3 then
+            if v.y > 0.3 or math.abs(v.x) < 0.3 or math.abs(v.z) < 0.3 then
                 return math.ceil(i * chunkSizeX), math.ceil(i * chunkSizeZ)
             end
         end
     end
-    return getPathFullfillingCondition(cond, 64)
+    return getPathPointFullfillingConditions(cond, 64)
 end
 
 
 -->finds a spot on the map that is dry, and walkable
-function getPathFullfillingCondition(condition, maxRes, filterTable, mapSizeX, mapSizeZ)
-    if type(condition) ~= "function" then echo("getPathFullfillingCondition recived not a valid function") end
+function getPathPointFullfillingConditions(condition, maxRes, filterTable, mapSizeX, mapSizeZ)
+    if type(condition) ~= "function" then echo("getPathPointFullfillingConditions recived not a valid function") end
  
 
     probeResolution = 4.0
