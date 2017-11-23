@@ -4006,6 +4006,15 @@ function rotateVecDegX(vec, DegX)
     return vec
 end
 
+-->RotationMatrice for allready Normalized Values
+function RotateAroundPoint(x, z, Rad, Px, Pz)
+	x,z= x- Px, z - Pz
+		if not Rad then return end
+    sinus = math.sin(Rad)
+    cosinus = math.cos(Rad)
+
+    return (x * cosinus + z * -sinus) + Px, (x * sinus + z * cosinus) + Pz
+end
 
 
 --======================================================================================

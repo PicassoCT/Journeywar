@@ -798,10 +798,6 @@ end
 
 
 
-function echoLine()
-Spring.Echo("=============================================================")
-end
-
 function getOrgPosPiece(unitID, pieceName)
 	resultTable= Spring.GetUnitPieceInfo(unitID,pieceName)
 	

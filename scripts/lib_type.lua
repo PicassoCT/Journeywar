@@ -1383,4 +1383,31 @@ function symbol_meta.__concat(a, b)
 end
 
 matrix.symbol = symbol
+--[[Iceberg = {
+			posX = 0,
+			posY = 0,
+			rot	= 0, --in Deg
+			pid=0
+		  }
+		  
+Iceberg: new = function(sizeX, sizeY, posX, posY)
 
+end
+
+
+Iceberg: move = function(tarX, targY, Time)
+
+end
+
+
+-- Icebergs (Heightmaps)
+	-Moveable
+	-rotatable
+	-CanCollide
+	-CanShrink
+
+-- water
+	-Can Freeze
+	-Can Thaw
+	-Can BeBroken
+	]]
