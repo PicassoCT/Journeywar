@@ -1383,31 +1383,84 @@ function symbol_meta.__concat(a, b)
 end
 
 matrix.symbol = symbol
---[[Iceberg = {
+
+MetaMapObject = {}
+MetaMapObject = {
 			posX = 0,
 			posY = 0,
 			rot	= 0, --in Deg
 			pid=0
+			OriginalHeightmap = {}
 		  }
 		  
-Iceberg: new = function(sizeX, sizeY, posX, posY)
+MetaMapObject: new = function(sizeX, sizeY, posX, posY)
 
 end
 
 
-Iceberg: move = function(tarX, targY, Time)
+MetaMapObject: move = function(tarX, targY, Time) end
+MetaMapObject: rotate = function(rotation,  Time) end
+MetaMapObject: Collide = function(other) end
+
+	
+	function MetaObject:Update(AllUnits, AllFeatures, TimeInFrames)
+
+AllUnits=process(AllUnits,
+                --filter out all in the Air
+                --filter out all AirUnits
+                )
+
+AllFeatures = process(AllFeatures,
+                --filter out all in the Air
+                )
+               
+
+local MovCorrect = {x=0,z=0}
+local Targetrot = {rot=0}
+local Pivot = Iceberg.Pos
+local spGetUnitPosition = Spring.GetUnitPosition
+local spGetFeaturePosition = Spring.GetFeaturePosition
+
+AllUnits = process(AllUnits,
+                 function(id)
+                 px,py,pz = spGetUnitPosition(id)
+                 tx,ty,tz= px + MovCorrect.x, py, pz + MovCorrect.z
+                 
+                     if px then
+                        --correct Position
+                        --correct Orientation relative to Island
+                        tx, tz = RotateAroundPoint(tx, tz,
+Targetrot.rot, Iceberg.pos.x,Iceberg.pos.z)
+                        --correct Position relative to Island
+                        Spring.SetUnitPosition(id, tx, ty, tz)
+                        --correct Unit Orientation
+                       
+                        --correct Unit Physics
+                     end
+                 end,
+
+                )
+
+AllFeatures = process(
+                AllFeatures,
+                function(id)
+                px,py,pz = spGetFeaturePosition(id)
+                    if px then
+                        --correct Orientation relative to Island
+                            px, pz = RotateAroundPoint(px, pz,
+Targetrot.rot, Iceberg.pos.x,Iceberg.pos.z)
+                            --correct Position relative to Island
+                            Spring.SetUnitPosition(id, px, py, pz)
+                            --correct Feature Direction
+                            --correct Feature Physics
+
+                    end
+                end
+                )
+
+
+-- Shift all Buildplans and Commands
+
+
 
 end
-
-
--- Icebergs (Heightmaps)
-	-Moveable
-	-rotatable
-	-CanCollide
-	-CanShrink
-
--- water
-	-Can Freeze
-	-Can Thaw
-	-Can BeBroken
-	]]
