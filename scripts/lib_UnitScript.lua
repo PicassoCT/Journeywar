@@ -3433,8 +3433,8 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 					return true
 				end		
 		else
-			valueType= type(value)
-			echo("Assert Table Error: Table did not contain a value of type "..valueType.." for key :"..key)
+		
+			echo("Assert Table Error: Table did not contain a value of type "..value.." for key :"..key)
 			assert(true==false)
 		end
 	end

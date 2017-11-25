@@ -1389,28 +1389,41 @@ MetaMapObject = {
 			posX = 0,
 			posY = 0,
 			rot	= 0, --in Deg
-			pid=0
+			
+			tX = 0,
+			tY = 0, 
+			moveFrames = 0,
+			rot	= 0, --in Deg
+			tRot= 0,
+			rotFrames = 0,
+			
+			pid=0,
 			OriginalHeightmap = {}
 		  }
 		  
-MetaMapObject: new = function(sizeX, sizeY, posX, posY)
-
+function MetaMapObject.new ( posX, posY, heightmap)
+	OriginalHeightmap = heightmap
+	posX= posX
+	posY= posY
 end
 
 
-MetaMapObject: move = function(tarX, targY, Time) end
-MetaMapObject: rotate = function(rotation,  Time) end
-MetaMapObject: Collide = function(other) end
+function MetaMapObject.move(tarX, targY, Time) end
+
+function MetaMapObject.rotate(rotation,  Time) end
+function MetaMapObject.Collide(other) end
 
 	
-	function MetaObject:Update(AllUnits, AllFeatures, TimeInFrames)
+function MetaMapObject.Update(AllUnitsOnObject, AllFeaturesOnObject, TimeInFrames)
 
-AllUnits=process(AllUnits,
+AllUnits=process(AllUnitsOnObject,
+					function(id) end
                 --filter out all in the Air
                 --filter out all AirUnits
                 )
 
-AllFeatures = process(AllFeatures,
+AllFeatures = process(AllFeaturesOnObject,
+					function(id) end
                 --filter out all in the Air
                 )
                
@@ -1429,15 +1442,14 @@ AllUnits = process(AllUnits,
                      if px then
                         --correct Position
                         --correct Orientation relative to Island
-                        tx, tz = RotateAroundPoint(tx, tz,
-Targetrot.rot, Iceberg.pos.x,Iceberg.pos.z)
+                        tx, tz = RotateAroundPoint(tx, tz, Targetrot.rot, Iceberg.pos.x,Iceberg.pos.z)
                         --correct Position relative to Island
                         Spring.SetUnitPosition(id, tx, ty, tz)
                         --correct Unit Orientation
                        
                         --correct Unit Physics
                      end
-                 end,
+                 end
 
                 )
 
@@ -1447,8 +1459,7 @@ AllFeatures = process(
                 px,py,pz = spGetFeaturePosition(id)
                     if px then
                         --correct Orientation relative to Island
-                            px, pz = RotateAroundPoint(px, pz,
-Targetrot.rot, Iceberg.pos.x,Iceberg.pos.z)
+                            px, pz = RotateAroundPoint(px, pz, Targetrot.rot, Iceberg.pos.x,Iceberg.pos.z)
                             --correct Position relative to Island
                             Spring.SetUnitPosition(id, px, py, pz)
                             --correct Feature Direction
