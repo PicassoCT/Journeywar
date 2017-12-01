@@ -28,20 +28,31 @@ if gadgetHandler:IsSyncedCode() then
 	-- CONFIG --
 	UnitTest = {}
 	teamList = {}
-	
-	UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
-				"coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
-				"chunterchopper","conair","csuborbital","cgunship","callygator",
-				"paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
-				"sentry","bonker","crailgun","chopper",
-				"jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
-				"jglowworms","jbeherith","jeliah","tiglil","skinfantry",
-				"jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
-				"vort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
-				"jhunter", "jvaryfoo",
-				"jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
-				"ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
-	}
+		 UnitNames = {"bg","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+				 "coperatrans","art","sentrynell","cheadlauncher",
+				 "chunterchopper","cgunship","callygator",
+				 "paxcentrail","chunter",	"strider","ccrabsynth", "chunter",
+				 "sentry","bonker","crailgun","chopper",
+				 "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai",
+				 "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
+				"jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
+				 "vort", "jantart",	"jviralfac", "jfiredancer",
+				 "jhunter", "jvaryfoo",
+				 "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
+	  }
+	-- UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+				-- "coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+				-- "chunterchopper","conair","csuborbital","cgunship","callygator",
+				-- "paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
+				-- "sentry","bonker","crailgun","chopper",
+				-- "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
+				-- "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
+				-- "jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
+				-- "vort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
+				-- "jhunter", "jvaryfoo",
+				-- "jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
+				-- "ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
+	-- }
 		UnitAmount = {
 				["bg"]=50,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
 				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
@@ -130,10 +141,15 @@ if gadgetHandler:IsSyncedCode() then
 		return math.ceil(mx + x), math.ceil(mz + z)
 	end
 	
-	
+	function randAmount()
+		for k,v in pairs(UnitAmount) do
+			UnitAmount[k]= math.random(0,7)
+		end
+	end
 	GG.DebugIndex = 0
 	function spawnUnitsForTeam(teamID)
 		local teamID = teamID
+		
 		for i=1, #UnitNames do	
 			name = UnitNames[i]
 			if UnitDefNames[name]then 
@@ -155,8 +171,10 @@ if gadgetHandler:IsSyncedCode() then
 						for k=1, UnitAmount[name] do
 							--echo(type(id))
 							id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
-							Spring.SetUnitMoveGoal(id,HALF_MAP+k,0,HALF_MAP)
-							Command(id, "move", { x =HALF_MAP, y = 0, z = HALF_MAP }, { "shift" })
+							
+							
+							Spring.SetUnitMoveGoal(id,randSign()*HALF_MAP+k,0,HALF_MAP)
+							Command(id, "move", { x =randSign()*HALF_MAP, y = 0, z = randSign()*HALF_MAP }, { "shift" })
 							Command(id, "move", { x =x, y = 0, z = z }, { "shift" })
 						end
 					end
@@ -180,6 +198,7 @@ if gadgetHandler:IsSyncedCode() then
 
 	function gadget:GameFrame(n)
 		if boolStartTest == true then
+			randAmount()
 			if n % 400 == 0 then Spring.Echo("Starting Test") end
 			if boolInitialized == false then
 			initialize()
@@ -192,7 +211,7 @@ if gadgetHandler:IsSyncedCode() then
 				end
 			end
 			if index >= #UnitTest then
-				boolStartTest= false
+				--boolStartTest= false
 				index= 1
 			end
 		end

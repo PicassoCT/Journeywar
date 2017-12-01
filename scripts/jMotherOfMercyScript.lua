@@ -17,13 +17,19 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
     return damage
 end
 
+reducedTenTacles = {}
 tenTacles = {}
 for i = 1, 5 do
     tenTacles[i] = {}
+    reducedTenTacles[i] = {}
     for j = 1, 9 do
+		
         val = (i - 1) * 9 + j
         piecename = "Tent" .. val
         tenTacles[i][j] = piece(piecename)
+		if j > 3 then
+		reducedTenTacles[i][#reducedTenTacles[i]+1] = piece(piecename)
+		end
     end
 end
 ETTable = {}
@@ -233,11 +239,11 @@ function script.StopMoving()
     boolMoving = false
 end
 
-
+TablesOfPiecesGroups={}
 
 
 function script.Create()
-
+	TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     StartThread(moveMent)
     StartThread(sfx)
     StartThread(TurnDetect)
@@ -358,51 +364,17 @@ function moveMent()
     zerofunc = function() return 0 end
     while true do
 
-        while boolMoving == true and boolTractor == false and boolTurning == false do
-
-            lwaveTable(tenTacles[1], x_axis, math.sin, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[1], y_axis, math.sin, -1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[2], x_axis, math.sin, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[2], y_axis, math.sin, 1, 0.14, pid, 8.5, false)
-
-            lwaveTable(tenTacles[3], x_axis, math.sin, 1, 0.14, pid, 8.5, false)
-
-            lwaveTable(tenTacles[4], x_axis, math.sin, -1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[4], y_axis, math.sin, -1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[5], x_axis, math.sin, -1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[5], y_axis, math.sin, 1, 0.14, pid, 8.5, false)
-            Sleep(900)
-            lwaveTable(tenTacles[1], x_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
-
-            lwaveTable(tenTacles[3], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
-            lwaveTable(tenTacles[1], y_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
-            lwaveTable(tenTacles[2], x_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
-            lwaveTable(tenTacles[2], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
-
-            lwaveTable(tenTacles[4], x_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
-            lwaveTable(tenTacles[4], y_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
-            lwaveTable(tenTacles[5], x_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
-            lwaveTable(tenTacles[5], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
-            Sleep(1500)
-
-            lwaveTable(tenTacles[1], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[1], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[2], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[2], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-
-            lwaveTable(tenTacles[3], x_axis, zerofunc, -1, 0.14, pid, 8.5, false)
-
-            lwaveTable(tenTacles[4], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[4], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[5], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            lwaveTable(tenTacles[5], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
-            Sleep(800)
+        while boolMoving == true and boolTractor == false and boolTurning == false and boolAttached == false do
+			movingMotion(tenTacles)
+         
         end
+		
         if boolTurning == true and boolTractor == false then
             TurnArms(boolTurnLeft)
         end
+		
         ridle = math.random(0, 1)
-        while boolTractor == false and boolTurning == false and boolMoving == false do
+        while boolTractor == false and boolTurning == false and boolMoving == false and boolAttached == false do
             if ridle == 1 then
                 lidle()
             else
@@ -412,11 +384,93 @@ function moveMent()
             end
             Sleep(900)
         end
-        Turn(center, x_axis, math.rad(0), 27)
-        Move(center, y_axis, 0, 96)
+		
+		while boolAttached== true do
+			claw()
+			Sleep(100)
+		end
+		
+		resetPosition()
 
         Sleep(250)
     end
+end
+
+function movingMotion(tenTacleTable)
+			lwaveTable(tenTacleTable[1], x_axis, math.sin, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[1], y_axis, math.sin, -1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[2], x_axis, math.sin, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[2], y_axis, math.sin, 1, 0.14, pid, 8.5, false)
+                       
+            lwaveTable(tenTacleTable[3], x_axis, math.sin, 1, 0.14, pid, 8.5, false)
+                       
+            lwaveTable(tenTacleTable[4], x_axis, math.sin, -1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[4], y_axis, math.sin, -1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[5], x_axis, math.sin, -1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[5], y_axis, math.sin, 1, 0.14, pid, 8.5, false)
+            Sleep(900) 
+            lwaveTable(tenTacleTable[1], x_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
+                       
+            lwaveTable(tenTacleTable[3], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
+            lwaveTable(tenTacleTable[1], y_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
+            lwaveTable(tenTacleTable[2], x_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
+            lwaveTable(tenTacleTable[2], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
+                       
+            lwaveTable(tenTacleTable[4], x_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
+            lwaveTable(tenTacleTable[4], y_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
+            lwaveTable(tenTacleTable[5], x_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
+            lwaveTable(tenTacleTable[5], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
+            Sleep(1500)tenTacleTable
+                       
+            lwaveTable(tenTacleTable[1], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[1], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[2], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[2], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+                       
+            lwaveTable(tenTacleTable[3], x_axis, zerofunc, -1, 0.14, pid, 8.5, false)
+                       
+            lwaveTable(tenTacleTable[4], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[4], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[5], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            lwaveTable(tenTacleTable[5], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)
+            Sleep(800)
+
+end
+
+function claw()
+	  Turn(center, x_axis, math.rad(-90), 27)
+	  for i=1, #TablesOfPiecesGroups["Tent"],1 do
+		mod = (i % 9)
+		  if mod < 4 then 
+			Turn(TablesOfPiecesGroups["Tent"][i],x_axis,math.rad(-1*doubleSeries(12.5,mod)),5)
+		  else
+			movingMotion(reducedTenTacles)
+		  end
+	  end
+
+end
+
+function doubleSeries(org,index)
+	for k=1,index do
+		org = 2*org
+	end
+
+return org
+end
+
+boolAttached = false
+function isTransported()
+	while true do
+	Sleep(100)
+	attachedTo= Spring.GetUnitTransporter(unitID)
+		if attachedTo then boolAttached = true else boolAttached = false end
+
+	end
+end
+function resetPosition()
+        Turn(center, x_axis, math.rad(0), 27)
+        Move(center, y_axis, 0, 96)
+
 end
 
 --- -aimining & fire weapon

@@ -3420,7 +3420,7 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 				end
 			end
 			
-				if type(checkTable[key]) ~= valueType then 
+				if checkTable[key] ~= valueType then 
 					echo("Error: Wrong Type found for key ".. key..". Type "..valueType.." expected, got ".. type(	checkTable[key]).." instead ")
 				else -- valid type - lets check the value for correctness
 					if checkFunctionTable[key] then
@@ -3434,7 +3434,7 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 				end		
 		else
 		
-			echo("Assert Table Error: Table did not contain a value of type "..value.." for key :"..key)
+			echo("Assert Table Error: Table did not contain a value for key :"..key)
 			assert(true==false)
 		end
 	end

@@ -5,7 +5,7 @@ name = "Crabsynth",
 Description = " firing chainlightning guns stationary.",
 objectName = "ccrabsynth.s3o",
 script = "cCrabSynthScript.lua",
-buildPic = "cbg.png",
+buildPic = "ccrabsynth.png",
 moveState =3,
  fireState=2,
 --cost
