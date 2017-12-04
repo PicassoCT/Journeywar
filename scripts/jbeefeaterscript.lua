@@ -166,7 +166,7 @@ function hitManThread(poorFellowsID)
         currPosX, currPosY, currPosZ = Spring.GetUnitPosition(unitID)
         distanceVal = distance(px1, py1, pz1, px2, py2, pz2)
 
-        if expandTongue(distanceVal, math.deg(pitchOfLastShot), 196.0) == true then
+        if expandTongue(distanceVal, math.deg(pitchOfLastShot), 196.0) == true and doesUnitExistAlive(poorFellowsID) then
             --attach the poor fellow too the tongue tip
             AttachUnit(tonguetip, poorFellowsID)
 
