@@ -11,13 +11,22 @@ function getTypeTable(UnitDefNames, StringTable)
     return retVal
 end
 
-function getJourneyBuildingTypeTable(UnitDefNames)
-    JourneyBuildingTypes = {}
-    for i = 1, #UnitDefNames["beanstalk"].buildOptions do
-        JourneyBuildingTypes[UnitDefNames["beanstalk"].buildOptions[i]] = true
-    end
+function getJourneyBuildingTypeTable()
+    JourneyBuildingTypes = getUnitCanBuild("beanstalk")
+  
     return JourneyBuildingTypes
 end
+
+function getCentrailBuildingTypeTable()
+    CentrailBuildingTypes = getUnitCanBuild("citadell")
+  
+    return CentrailBuildingTypes
+end
+
+function getAllBuildingTypes()
+	return mergeDict(getJourneyBuildingTypeTable(),getCentrailBuildingTypeTable())
+end
+
 
 --> JW specific function returning the factorys of the game
 function getFactoryTypeTable(UnitDefNames, IWant)
@@ -310,7 +319,7 @@ end
 
 
 
-function getGravityChaneReistantUnitTypeTable(UnitDefNames)
+function getGravityChangeReistantUnitTypeTable(UnitDefNames)
     TransportTable = {
         [UnitDefNames["jtree5"].id] = true,
         [UnitDefNames["vort"].id] = true,

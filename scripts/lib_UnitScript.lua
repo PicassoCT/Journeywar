@@ -660,9 +660,12 @@ function getPiecePositionMap(id)
 end
 
 --> returns a table of all unitnames  a unit can build
-function getUnitCanBuild(unitName,closedTable)
-    unitDef = UnitDefNames[unitName]
-	if not unitDef or type(unitName) == "number" then
+function getUnitCanBuild(unitName,closedT)
+	closedTable = closedT or {}
+	unitDef= {}
+	if type(unitName)=="string" and UnitDefNames then
+		unitDef = UnitDefNames[unitName]
+	else
 		unitDef = UnitDefs[unitName]
 	end
 	
@@ -1437,6 +1440,7 @@ function mergeTables(...)
     return Table
 end
 
+
 function TableMergeTable(TA, TB)
     T = {}
     if #TA >= #TB then
@@ -1471,7 +1475,7 @@ end
 function pieceToPointT(piecesTable)
 
 	if type(piecesTable) == "number" then
-		return pieceToPoint(piecesTable)
+		return {[1]=pieceToPoint(piecesTable)}
 	end	
 
     if not piecesTable then

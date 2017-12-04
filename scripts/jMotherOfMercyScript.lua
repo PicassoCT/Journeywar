@@ -355,10 +355,10 @@ local pi = 3.14159
 local pit = pi * 0.75
 local pih = pi / 2
 local pid = pi * 2
-
+ local lwaveTable = waveATable
 function moveMent()
 
-    local lwaveTable = waveATable
+   
     local lidle = idle
     local laltidle = altidle
     zerofunc = function() return 0 end
@@ -420,7 +420,7 @@ function movingMotion(tenTacleTable)
             lwaveTable(tenTacleTable[4], y_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
             lwaveTable(tenTacleTable[5], x_axis, math.sin, 1, 0.14, pid, 8.5, false, pih)
             lwaveTable(tenTacleTable[5], y_axis, math.sin, -1, 0.14, pid, 8.5, false, pih)
-            Sleep(1500)tenTacleTable
+            Sleep(1500)
                        
             lwaveTable(tenTacleTable[1], x_axis, zerofunc, 1, 0.14, pid, 8.5, false)
             lwaveTable(tenTacleTable[1], y_axis, zerofunc, 1, 0.14, pid, 8.5, false)

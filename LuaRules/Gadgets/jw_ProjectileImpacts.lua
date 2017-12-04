@@ -949,7 +949,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 
-
+	BuildingTypeTable = getAllBuildingTypes()
     function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
 
         --chain Lightning
@@ -1022,7 +1022,7 @@ if (gadgetHandler:IsSyncedCode()) then
         if unitDefID == jShadowDefID and not lethalBuffExecption[attackerDefID] and attackerTeam ~= unitTeam and type(attackerID) == "number" then
 
             boolUnitIsDead = Spring.GetUnitIsDead(attackerID)
-            boolUnitIsBuilding = UnitDefs[attackerDefID].isBuilding
+            boolUnitIsBuilding = (BuildingTypeTable[attackerDefID]  ~= nil)
             if boolUnitIsDead == false and boolUnitIsBuilding == false then
 
                 offx, offz = math.random(-25, 25), math.random(-25, 25)

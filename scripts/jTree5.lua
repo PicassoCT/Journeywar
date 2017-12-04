@@ -199,7 +199,7 @@ x, y, z = Spring.GetUnitPosition(unitID)
 function fallingOff()
     local spGetUnitPosition = Spring.GetUnitPosition
     exemptUnits = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
-    gravResistantUnits = getGravityChaneReistantUnitTypeTable(UnitDefNames)
+    gravResistantUnits = getGravityChangeReistantUnitTypeTable(UnitDefNames)
 
     T = getAllInCircle(x, z, RangeSkyHook, unitID)
 
