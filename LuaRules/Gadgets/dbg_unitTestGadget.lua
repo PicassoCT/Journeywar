@@ -54,7 +54,7 @@ if gadgetHandler:IsSyncedCode() then
 				-- "ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	-- }
 		UnitAmount = {
-				["bg"]=50,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
+				["bg"]=1,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
 				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
 				["chunterchopper"]=1,["conair"]=1,["csuborbital"]=1,["cgunship"]=1,["callygator"]=1,
 				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["strider"]=1,["ccrabsynth"]=1,["chunter"]=3,
@@ -141,9 +141,16 @@ if gadgetHandler:IsSyncedCode() then
 		return math.ceil(mx + x), math.ceil(mz + z)
 	end
 	
-	function randAmount()
+	function proportionalAmount()
+
+		total= 5000
 		for k,v in pairs(UnitAmount) do
-			UnitAmount[k]= math.random(0,7)
+			
+			if UnitDefNames[k] and UnitDefNames[k].id and  UnitDefs[UnitDefNames[k].id].maxdamage  then
+			 hitPoints= UnitDefs[UnitDefNames[k].id].maxdamage 
+			
+			UnitAmount[k]= math.ceil(hitPoints/total)
+			end
 		end
 	end
 	GG.DebugIndex = 0
@@ -168,6 +175,7 @@ if gadgetHandler:IsSyncedCode() then
 					
 					
 					UnitTest[#UnitTest + 1] = function()
+						Spring.Echo("Spawning "..name.." in "..Spring.GetGameFrame())
 						for k=1, UnitAmount[name] do
 							--echo(type(id))
 							id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
@@ -198,7 +206,7 @@ if gadgetHandler:IsSyncedCode() then
 
 	function gadget:GameFrame(n)
 		if boolStartTest == true then
-			randAmount()
+			proportionalAmount()
 			if n % 400 == 0 then Spring.Echo("Starting Test") end
 			if boolInitialized == false then
 			initialize()

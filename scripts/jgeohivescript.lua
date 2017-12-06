@@ -252,8 +252,6 @@ function findBiggestCluster(team, times)
                     maxTuple.z = j
                 end
             end
-        else
-			echo("JGeohive:Cluster missing for "..i)
 		end
         end
     end

@@ -174,11 +174,8 @@ function moveFoot(nr, speed, delay)
         Turn(feet[nr][2], z_axis, math.rad(0), speed)
         --turn down
         Turn(feet[nr][1], y_axis, math.rad(0), speed * 0.8)
-        --Turn(feet[nr][1],z_axis,math.rad(25*signed),speed)
-        --Turn(feet[nr][2],z_axis,math.rad(25*signed),speed)
         WaitForTurn(feet[nr][1], y_axis)
-        --WaitForTurn(feet[nr][1],z_axis)
-        --WaitForTurn(feet[nr][2],z_axis)
+       
         --turn midway, retract halfup
 
         --turn back-- turn down
@@ -206,7 +203,6 @@ function moveFoot(nr, speed, delay)
 
         Turn(feet[nr][1], z_axis, math.rad(54), speed)
         WaitForTurn(feet[nr][1], y_axis)
-        --WaitForTurn(feet[nr][1],z_axis)
         Turn(feet[nr][2], z_axis, math.rad(-108), speed)
         WaitForTurn(feet[nr][2], z_axis)
         --turn forward, expand
@@ -231,8 +227,6 @@ function moveFoot(nr, speed, delay)
         Turn(feet[nr][1], y_axis, math.rad(0), speed * 0.8)
 
         WaitForTurn(feet[nr][1], y_axis)
-        --WaitForTurn(feet[nr][1],z_axis)
-        --WaitForTurn(feet[nr][2],z_axis)
         --turn midway, retract halfup
 
         --turn back-- turn down
@@ -313,10 +307,6 @@ end
 
 function script.StopMoving()
 
-
-
-
-    --    --Spring.Echo ("stopped walking!")
     Signal(SIG_WALK)
     boolMoving = false
     StartThread(delayedLegsDown)

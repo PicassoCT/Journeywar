@@ -3,7 +3,7 @@ local unitDef = {
 name = "Headlauncher",
 Description = "provokes enemies into Melees. Withstands 3 enemies ",
 objectName = "hl.s3o",
-script = "jwHeadLaunchScript.lua",
+script = "cHeadLaunchScript.lua",
 buildPic = "placeholder.png",
 --cost
 buildCostMetal = 1100,

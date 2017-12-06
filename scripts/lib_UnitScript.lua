@@ -671,11 +671,11 @@ function getUnitCanBuild(unitName,closedT)
 	
     T = {}
     if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
-        for index, unitname in ipairs(buildOptions) do
+        for index, unitname in ipairs(unitDef.buildOptions) do
             T[index] = UnitDefNames[unitname].id
         end
     end
-	closedTable[unitDef] = true
+	closedTable[unitDef.id] = true
     return T, closedTable
 end
 
@@ -2514,6 +2514,7 @@ function pieceToPoint(pieceNumber)
 	local  reTab = {}
 
     reTab.x, reTab.y, reTab.z = Spring.GetUnitPiecePosition(unitID, pieceNumber)
+	reTab.index =1
     return reTab
 end
 
