@@ -114,7 +114,7 @@ function DropAnimation()
     end
 end
 
-local IsCommender = { [UnitDefNames["ccomender"].id] = true }
+ccomenderDefID =  UnitDefNames["ccomender"].id
 local DamageRadius = 500
 function takeVictimsToAnotherDimension()
     x, y, z = Spring.GetUnitPosition(unitID)
@@ -125,7 +125,8 @@ function takeVictimsToAnotherDimension()
         for i = 1, #T, 1 do
             def = Spring.GetUnitDefID(T[i])
             --if is airborne or is commender TODO
-            if IsCommender[def] == nil and UnitDefNames[def].isAirUnit == true then
+            if def ~= ccomenderDefID and 
+				 UnitDefs[def].isAirUnit == true then
                 Spring.DestroyUnit(T[i], false, true)
             end
         end

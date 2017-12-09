@@ -1711,275 +1711,119 @@ function bladewhirl_thread()
         Sleeper = Sleeper % 11
         AttackCounter = AttackCounter - 500
         if Sleeper == 1 then
+				jumpAttack()
+        end
+        if (Sleeper %2 == 0 ) then
+				rotateWhirl2()
+        end
 
+        if (Sleeper % 2 == 1) then
+				rotateWhirl()
+        end
+    end
 
-
+    StartThread(walk)
+end
+function jumpAttack()
+				--drawback
             Turn(deathpivot, x_axis, math.rad(25), 12)
             Turn(deathpivot, y_axis, Heading, 5) --i
             Turn(deathpivot, z_axis, math.rad(0), 4)
-
-            Move(deathpivot, y_axis, -6.5, 3)
-
-            Turn(tlHead, x_axis, math.rad(-23), 5)
-            Turn(tlHead, y_axis, math.rad(0), 2) --i
-            Turn(tlHead, z_axis, math.rad(0), 2)
-
-            Turn(tlhairup, x_axis, math.rad(19), 10)
-            Turn(tlhairup, y_axis, math.rad(0), 5) --i
-            Turn(tlhairup, z_axis, math.rad(0), 11)
-
-            Turn(tlhairdown, x_axis, math.rad(-14), 4)
-
-            Turn(tlarm, x_axis, math.rad(0), 6)
-            Turn(tlarm, y_axis, math.rad(0), 6) --i
-            Turn(tlarm, z_axis, math.rad(49), 14)
-            EmitSfx(tlHead, 1024)
-
-            Turn(tlarmr, x_axis, math.rad(10), 3)
-            Turn(tlarmr, y_axis, math.rad(0), 5) --i
-            Turn(tlarmr, z_axis, math.rad(-53), 14)
-
-
-            Turn(tllegUp, x_axis, math.rad(-87), 16)
-            Turn(tllegUp, y_axis, math.rad(0), 4) --i
-            Turn(tllegUp, z_axis, math.rad(0), 3)
-
-            Turn(tllegLow, x_axis, math.rad(122), 24)
-
-
-            Turn(tllegUpR, x_axis, math.rad(-82), 16)
-            Turn(tllegUpR, y_axis, math.rad(0), 3) --i
-            Turn(tllegUpR, z_axis, math.rad(0), 3)
-
-            Turn(tllegLowR, x_axis, math.rad(121), 24)
-
-            Sleep(189)
-
-            --Jump
-            if math.random(0, 1) == 1 then
-                Turn(tigLil, y_axis, math.rad(360), 48) --i
-            end
-            Turn(deathpivot, x_axis, math.rad(41), 12)
-
-            Turn(tllegUp, x_axis, math.rad(0), 36)
-            Turn(tllegUp, y_axis, math.rad(-19), 9) --i
-            Turn(tllegUp, z_axis, math.rad(5), 3)
-
-            Turn(tllegLow, x_axis, math.rad(0), 99)
-
-
-            Turn(tllegUpR, x_axis, math.rad(0), 26)
-            Turn(tllegUpR, y_axis, math.rad(16), 8) --i
-            Turn(tllegUpR, z_axis, math.rad(-10), 5)
-
-            Turn(tllegLowR, x_axis, math.rad(0), 110)
-
-
-            Turn(deathpivot, y_axis, math.rad(0), 5) --i
-            Turn(deathpivot, z_axis, math.rad(0), 4)
-
-            Move(tigLil, y_axis, 15, 40)
-
-            Turn(tlHead, x_axis, math.rad(-48), 25)
-            Turn(tlHead, y_axis, math.rad(0), 2) --i
-            Turn(tlHead, z_axis, math.rad(0), 2)
-
-            Turn(tlhairup, x_axis, math.rad(0), 10)
-            Turn(tlhairup, y_axis, math.rad(0), 5) --i
-            Turn(tlhairup, z_axis, math.rad(0), 11)
-
-            Turn(tlhairdown, x_axis, math.rad(-31), 4)
-
-            Turn(tlarm, x_axis, math.rad(0), 6)
-            Turn(tlarm, y_axis, math.rad(0), 6) --i
-            Turn(tlarm, z_axis, math.rad(83), 14)
-
-            Turn(tlarmr, x_axis, math.rad(10), 3)
-            Turn(tlarmr, y_axis, math.rad(0), 5) --i
-            Turn(tlarmr, z_axis, math.rad(-76), 14)
-
-
-            Sleep(50)
-            rand = math.random(0, 1)
-            if rand == 1 then
-                Turn(tlarm, x_axis, math.rad(0), 6)
-                Turn(tlarm, y_axis, math.rad(86), 24) --i
-                Turn(tlarm, z_axis, math.rad(-37), 24)
-
-                Turn(tlarmr, x_axis, math.rad(10), 3)
-                Turn(tlarmr, y_axis, math.rad(-82), 34) --i
-                Turn(tlarmr, z_axis, math.rad(37), 24)
-            end
-
-            if rand == 0 then
-                Turn(tlarm, x_axis, math.rad(0), 16)
-                Turn(tlarm, y_axis, math.rad(-109), 26) --i
-                Turn(tlarm, z_axis, math.rad(26), 9)
-
-                Turn(tlarmr, x_axis, math.rad(0), 2)
-                Turn(tlarmr, y_axis, math.rad(87), 8) --i
-                Turn(tlarmr, z_axis, math.rad(-60), 14)
-
-                Turn(tlarm, x_axis, math.rad(0), 6)
-                Turn(tlarm, y_axis, math.rad(-93), 16) --i
-                Turn(tlarm, z_axis, math.rad(-143), 24)
-
-                Turn(tlarmr, x_axis, math.rad(0), 3)
-                Turn(tlarmr, y_axis, math.rad(87), 9) --i
-                Turn(tlarmr, z_axis, math.rad(146), 14)
-            end
-            WaitForMove(tigLil, y_axis)
-            Sleep(240)
-            -- Bring
-            Turn(tlarm, x_axis, math.rad(0), 6)
-            Turn(tlarm, y_axis, math.rad(-93), 16) --i
-            Turn(tlarm, z_axis, math.rad(184), 90)
-
-            Turn(tlarmr, x_axis, math.rad(0), 3)
-            Turn(tlarmr, y_axis, math.rad(87), 9) --i
-            Turn(tlarmr, z_axis, math.rad(-169), 90)
-            ------
-
-
-            Turn(tigLil, x_axis, math.rad(-48), 12)
-
-            Turn(tlHead, x_axis, math.rad(17), 5)
-            Turn(tlHead, y_axis, math.rad(0), 2) --i
-            Turn(tlHead, z_axis, math.rad(0), 2)
-
-            Turn(tlhairup, x_axis, math.rad(0), 10)
-            Turn(tlhairup, y_axis, math.rad(0), 5) --i
-            Turn(tlhairup, z_axis, math.rad(0), 11)
-
-            Turn(tlhairdown, x_axis, math.rad(-31), 4)
-
-
-
-            Turn(tllegUp, x_axis, math.rad(-129), 21)
-            Turn(tllegUp, y_axis, math.rad(0), 4) --i
-            Turn(tllegUp, z_axis, math.rad(-5), 3)
-
-            Turn(tllegLow, x_axis, math.rad(52), 24)
-
-            rand = math.random(0, 1)
-            if rand == 1 then
-
-
-                Turn(tllegUpR, x_axis, math.rad(-126), 21)
-                Turn(tllegUpR, y_axis, math.rad(16), 3) --i
-                Turn(tllegUpR, z_axis, math.rad(10), 3)
-
-                Turn(tllegLowR, x_axis, math.rad(96), 24)
-            end
-
-            if rand == 0 then
-
-
-                Turn(tllegUpR, x_axis, math.rad(-31), 21)
-                Turn(tllegUpR, y_axis, math.rad(127), 23) --i
-                Turn(tllegUpR, z_axis, math.rad(97), 8)
-
-                Turn(tllegLowR, x_axis, math.rad(53), 14)
-            end
-
-            Sleep(275)
-            Turn(tigLil, x_axis, math.rad(28), 6)
-
-            Turn(tlHead, x_axis, math.rad(17), 5)
-            Turn(tlHead, y_axis, math.rad(0), 2) --i
-            Turn(tlHead, z_axis, math.rad(0), 2)
-
-            hairrand = math.random(-17, 26)
-            Turn(tlhairup, x_axis, math.rad(34), 10)
-            Turn(tlhairup, y_axis, math.rad(hairrand), 5) --i
-            Turn(tlhairup, z_axis, math.rad(0), 11)
-
-            Turn(tlhairdown, x_axis, math.rad(25), 4)
-
-            Turn(tlarm, x_axis, math.rad(0), 6)
-            Turn(tlarm, y_axis, math.rad(0), 6) --i
-            Turn(tlarm, z_axis, math.rad(-90), 14)
-
-            Turn(tlarmr, x_axis, math.rad(0), 3)
-            Turn(tlarmr, y_axis, math.rad(0), 5) --i
-            Turn(tlarmr, z_axis, math.rad(90), 14)
-
-
-            Turn(tllegUp, x_axis, math.rad(-156), 16)
-            Turn(tllegUp, y_axis, math.rad(0), 4) --i
-            Turn(tllegUp, z_axis, math.rad(21), 3)
-
-            Turn(tllegLow, x_axis, math.rad(0), 24)
-
-
-            Turn(tllegUpR, x_axis, math.rad(-129), 16)
-            Turn(tllegUpR, y_axis, math.rad(0), 3) --i
-            Turn(tllegUpR, z_axis, math.rad(0), 3)
-
-            Turn(tllegLowR, x_axis, math.rad(0), 24)
-
-            Sleep(140)
-
-            ---
-
-            Turn(tlarm, x_axis, math.rad(0), 6)
-            Turn(tlarm, y_axis, math.rad(0), 6) --i
-            Turn(tlarm, z_axis, math.rad(83), 14)
-
-            Turn(tlarmr, x_axis, math.rad(10), 3)
-            Turn(tlarmr, y_axis, math.rad(0), 5) --i
-            Turn(tlarmr, z_axis, math.rad(-76), 14)
-
-            Turn(tlhairup, x_axis, math.rad(-61), 10)
-            Turn(tlhairup, y_axis, math.rad(-17), 5) --i
-            Turn(tlhairup, z_axis, math.rad(0), 11)
-
-            Turn(tlhairdown, x_axis, math.rad(-43), 4)
-
-
-            Turn(tigLil, x_axis, math.rad(323), 3)
-
-            hairrand = math.random(-17, 26)
-            Turn(tlhairup, x_axis, math.rad(34), 10)
-            Turn(tlhairup, y_axis, math.rad(hairrand), 5) --i
-            Turn(tlhairup, z_axis, math.rad(0), 11)
-
-            Turn(tlhairdown, x_axis, math.rad(25), 4)
-
-
-            Turn(tlarm, x_axis, math.rad(0), 6)
-            Turn(tlarm, y_axis, math.rad(90), 6) --i
-            Turn(tlarm, z_axis, math.rad(0), 14)
-
-            Turn(tlarmr, x_axis, math.rad(0), 3)
-            Turn(tlarmr, y_axis, math.rad(-90), 5) --i
-            Turn(tlarmr, z_axis, math.rad(0), 14)
-
-
-            Turn(tllegUp, x_axis, math.rad(-91), 16)
-            Turn(tllegUp, y_axis, math.rad(0), 4) --i
-            Turn(tllegUp, z_axis, math.rad(-4), 3)
-
-            Turn(tllegLow, x_axis, math.rad(138), 24)
-
-
-            Turn(tllegUpR, x_axis, math.rad(-86), 16)
-            Turn(tllegUpR, y_axis, math.rad(0), 3) --i
-            Turn(tllegUpR, z_axis, math.rad(0), 3)
-
-            Turn(tllegLowR, x_axis, math.rad(128), 24)
-            Sleep(140)
-
-
-            Turn(tigLil, x_axis, math.rad(349), 16)
-            WaitForTurn(tigLil, x_axis)
-            Move(tigLil, y_axis, 2, 15)
-            Move(deathpivot, y_axis, 0, 3)
-            WaitForMove(deathpivot, y_axis)
-            WaitForMove(tigLil, y_axis)
-            Turn(tigLil, x_axis, math.rad(0), 36)
-        end
-        if (Sleeper %2 == 0 ) then
+				mP(tigLil,0,-5,-4,22)
+				tP(tigLil,14,0,0,22)
+				tP(tllegUp,-71,0,0,141)
+				tP(tllegLow,41,0,0,80)
+				tP(tllegUpR,-42,0,0,80)
+				tP(tllegLowR,93,0,0,180)
+				tP(tlarm,5,74,-19,140)
+				tP(tlarmr,0,-85,0,130)
+				tP(tlhairup,0,90,90,270)
+				tP(tlHead,0,10,-8,22)
+				tP(tlhairdown,-36,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				--crouch
+				mP(tigLil,0,-7,-4.5,22)
+				tP(tigLil,39,0,0,22)
+				tP(tllegUp,-126,0,0,22)
+				tP(tllegLow,81,0,0,22)
+				tP(tllegUpR,-81,0,0,22)
+				tP(tllegLowR,133,0,0,22)
+				tP(tlarm,15,74,-19,140)
+				tP(tlarmr,16,-85,-8,22)
+				tP(tlHead,-31,-18,-8,22)
+				tP(tlhairup,0,90,90,270)
+				tP(tlhairdown,-36,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				--sting
+				mP(tigLil,0,-6,4,22)
+				tP(tigLil,57,0,0,22)
+				tP(tllegUp,-96,0,0,22)
+				tP(tllegLow,96,0,0,22)
+				tP(tllegUpR,-11,0,0,22)
+				tP(tllegLowR,6,0,0,22)
+				tP(tlarm,0,119,48,140)
+				tP(tlarmr,3,-85,-56,22)
+				tP(tlHead,-46,-0,0,22)
+				tP(tlhairup,0,0,0,270)
+				tP(tlhairdown,0,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				--stuck
+				mP(tigLil,0,-6,4,22)
+				tP(tigLil,57,0,0,22)
+				tP(tllegUp,-108,0,0,22)
+				tP(tllegLow,0,0,0,22)
+				tP(tllegUpR,-133,0,0,22)
+				tP(tllegLowR,113,0,0,22)
+				tP(tlarm,0,119,48,140)
+				tP(tlarmr,3,-85,-56,22)
+				tP(tlHead,-2,17,0,22)
+				tP(tlhairup,106,0,0,270)
+				tP(tlhairdown,0,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				--stumble back
+				mP(tigLil,0,-6,0,22)
+				tP(tigLil,-51,0,0,22)
+				tP(tllegUp,-3,0,0,22)
+				tP(tllegLow,0,0,0,22)
+				tP(tllegUpR,4,0,0,22)
+				tP(tllegLowR,113,0,0,22)
+				tP(tlarm,-63,30,-42,140)
+				tP(tlarmr,-66,-30,47,22)
+				tP(tlHead,41,-10,0,22)
+				tP(tlhairup,-93,0,0,270)
+				tP(tlhairdown,-21,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				--stumble continues
+				mP(tigLil,0,-4,0,22)
+				tP(tigLil,-21,0,0,22)
+				tP(tllegUp,-29,0,0,22)
+				tP(tllegLow,4,0,0,22)
+				tP(tllegUpR,57,0,0,22)
+				tP(tllegLowR,27,0,0,22)
+				tP(tlarm,60,-12,-42,140)
+				tP(tlarmr,-66,77,47,22)
+				tP(tlHead,71,17,0,22)
+				tP(tlhairup,-93,0,0,270)
+				tP(tlhairdown,-21,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+			
+				--reset
+				mP(tigLil,0,0,0,22)
+				tP(tigLil,0,0,0,22)
+				tP(tllegUp,0,0,0,22)
+				tP(tllegLow,0,0,0,22)
+				tP(tllegUpR,0,0,0,22)
+				tP(tllegLowR,0,0,0,22)
+				tP(tlarm,0,0,0,140)
+				tP(tlarmr,0,0,0,22)
+				tP(tlHead,0,0,0,22)
+				tP(tlhairup,0,0,0,270)
+				tP(tlhairdown,0,0,0,270)
+				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+
+end
+
+function rotateWhirl2()
 
             Turn(tllegLowR, x_axis, math.rad(0), 8)
             Turn(tllegLow, x_axis, math.rad(0), 8)
@@ -2034,14 +1878,9 @@ function bladewhirl_thread()
             Sleep(75)
             WaitForTurn(deathpivot, x_axis)
             WaitForTurn(deathpivot, y_axis)
-        end
+end
 
-
-
-
-
-        if (Sleeper % 2 == 1) then
-
+function rotateWhirl()
             Turn(deathpivot, x_axis, math.rad(-10), 1)
             Turn(deathpivot, y_axis, math.rad(-180), 18)
             randomvalue = creaRandomValue(-52, -16)
@@ -2088,11 +1927,7 @@ function bladewhirl_thread()
             Turn(tlarm, y_axis, math.rad(11), 4)
             tempArm = math.random(-15, 22)
             Turn(tlarm, z_axis, math.rad(tempArm), 4)
-
-
-
-
-
+			
             Turn(tllegUp, x_axis, math.rad(-45), 3)
             Turn(tllegUp, y_axis, math.rad(11), 2)
             Turn(tllegUp, z_axis, math.rad(8), 2)
@@ -2129,10 +1964,6 @@ function bladewhirl_thread()
             Turn(tllegLowR, x_axis, math.rad(0), 7)
             Turn(tllegLow, x_axis, math.rad(0), 7)
             Sleep(150)
-        end
-    end
-
-    StartThread(walk)
 end
 
 function legs_down()

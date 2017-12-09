@@ -217,7 +217,7 @@ function butIPoopFromThere()
 
             x, y, z = Spring.GetUnitPosition(middleID)
 			gaiaTeamID = Spring.GetGaiaTeamID()
-            Spring.CreateUnit("gExcrement", x, y, z, 1, gaiaTeamID)
+            Spring.CreateUnit("gshit", x, y, z, 1, gaiaTeamID)
             poopStack = 0
         end
     end

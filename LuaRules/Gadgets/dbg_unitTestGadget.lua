@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL spam v3.0 or later",
 		layer = 699,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -29,16 +29,17 @@ if gadgetHandler:IsSyncedCode() then
 	UnitTest = {}
 	teamList = {}
 		 UnitNames = {"bg","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
-				 "coperatrans","art","sentrynell","cheadlauncher",
-				 "chunterchopper","cgunship","callygator",
-				 "paxcentrail","chunter",	"strider","ccrabsynth", "chunter",
+				 "coperatrans","art","sentrynell","cheadlauncher","chunter",
+				-- "chunterchopper","cgunship","callygator",
+				 "paxcentrail",	"strider","ccrabsynth", "chunter",
 				 "sentry","bonker","crailgun","chopper",
 				 "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai",
 				 "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
 				"jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
 				 "vort", "jantart",	"jviralfac", "jfiredancer",
 				 "jhunter", "jvaryfoo",
-				 "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
+				 "jgalatea",
+				 --"jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	  }
 	-- UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
 				-- "coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
@@ -54,7 +55,7 @@ if gadgetHandler:IsSyncedCode() then
 				-- "ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	-- }
 		UnitAmount = {
-				["bg"]=1,["ccontrain"]=1,["css"]=1,["mtw"]=4,["csniper"]=1,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
+				["bg"]=10,["ccontrain"]=1,["css"]=5,["mtw"]=5,["csniper"]=3,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
 				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
 				["chunterchopper"]=1,["conair"]=1,["csuborbital"]=1,["cgunship"]=1,["callygator"]=1,
 				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["strider"]=1,["ccrabsynth"]=1,["chunter"]=3,
