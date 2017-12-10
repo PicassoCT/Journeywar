@@ -484,7 +484,7 @@ local function legs_down()
 	
 	
 end
-local boolMoving=falseh
+local boolMoving=false
 function script.StartMoving()
 	
 	
@@ -591,12 +591,14 @@ end
 function script.Activate()
 	if boolPeacefull==true then
 		SetUnitValue(COB.WANT_CLOAK,1)
+		Spring.UnitScript.SetUnitValue(firestate, 0)
 	end
 	return 1
 end
 
 function script.Deactivate()
 	SetUnitValue(COB.WANT_CLOAK,0)
+	Spring.UnitScript.SetUnitValue(firestate, 2)
 	return 0
 end
 
