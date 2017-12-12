@@ -310,9 +310,9 @@ function damageWatcher()
 
 
             if math.random(0, 1) == 1 then
-                maRa = math.random(1, 8)
-                if replicPoints[maRa] and replicPoints[maRa][1] and replicPoints[maRa][2] then
-                    heapID = Spring.CreateUnit("gCiVillian", replicPoints[maRa][1], y, replicPoints[maRa][2], teamID)
+                rVal = math.random(1, 8)
+                if replicPoints[rVal] and replicPoints[rVal][1] and replicPoints[rVal][2] then
+                    heapID = Spring.CreateUnit("gCiVillian", replicPoints[rVal][1], y, replicPoints[rVal][2], teamID)
                 end
             end
         end
