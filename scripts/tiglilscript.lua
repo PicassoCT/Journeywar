@@ -1697,11 +1697,14 @@ function hair_inwind()
 end
 
 AttackCounter = 3000
+boolBladeWhirlStarted= false
 function bladewhirl_thread()
     --redo with sinking to knee
 
+	boolBladeWhirlStarted = true
 
 
+<<<<<<< HEAD
     Signal(SIG_WHIR)
     SetSignalMask(SIG_WHIR)
     while (AttackCounter > 0) do
@@ -1717,12 +1720,38 @@ function bladewhirl_thread()
 		rotateWhirl(15)
    
     end
+=======
+		Signal(SIG_WHIR)
+		SetSignalMask(SIG_WHIR)
+		while (AttackCounter > 0) do
+			Signal(SIG_WALK)
+			Signal(SIG_IDLE)
+			Sleeper = Sleeper + 1
+			Sleeper = Sleeper % 11
+			AttackCounter = AttackCounter - 500
+		
+			if  Sleeper  == 1 then
+				jumper= math.random(1,3)
+				for k=1,jumper do
+					jumpAttack()
+				end
+			end
+			
+			rotateWhirl(math.random(15,25))
+			
+		
+		end
 
-    StartThread(walk)
+	StartThread(walk)
+	boolBladeWhirlStarted= false
+
 end
+
+
+
 function jumpAttack()
 				--drawback
-            Turn(deathpivot, x_axis, math.rad(25), 12)
+            Turn(deathpivot, x_axis, math.rad(0), 12)
             Turn(deathpivot, y_axis, Heading, 5) --i
             Turn(deathpivot, z_axis, math.rad(0), 4)
 				mP(tigLil,0,-5,-4,22)
@@ -1737,6 +1766,7 @@ function jumpAttack()
 				tP(tlHead,0,10,-8,22)
 				tP(tlhairdown,-36,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				WaitForMoves(tigLil)
 				--crouch
 				mP(tigLil,0,-7,-4.5,22)
 				tP(tigLil,39,0,0,22)
@@ -1750,6 +1780,7 @@ function jumpAttack()
 				tP(tlhairup,0,90,90,270)
 				tP(tlhairdown,-36,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				WaitForMoves(tigLil)
 				--sting
 				mP(tigLil,0,-6,4,22)
 				tP(tigLil,57,0,0,22)
@@ -1757,54 +1788,57 @@ function jumpAttack()
 				tP(tllegLow,96,0,0,22)
 				tP(tllegUpR,-11,0,0,22)
 				tP(tllegLowR,6,0,0,22)
-				tP(tlarm,0,119,48,140)
-				tP(tlarmr,3,-85,-56,22)
+				tP(tlarm,0,119,-48,140)
+				tP(tlarmr,3,-85,56,22)
 				tP(tlHead,-46,-0,0,22)
 				tP(tlhairup,0,0,0,270)
 				tP(tlhairdown,0,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				WaitForMoves(tigLil)
 				--stuck
-				mP(tigLil,0,-6,4,22)
+				mP(tigLil,0,-6,4,44)
 				tP(tigLil,57,0,0,22)
 				tP(tllegUp,-108,0,0,22)
 				tP(tllegLow,0,0,0,22)
 				tP(tllegUpR,-133,0,0,22)
 				tP(tllegLowR,113,0,0,22)
-				tP(tlarm,0,119,48,140)
-				tP(tlarmr,3,-85,-56,22)
+				tP(tlarm,0,119,-48,140)
+				tP(tlarmr,3,-85,56,22)
 				tP(tlHead,-2,17,0,22)
 				tP(tlhairup,106,0,0,270)
 				tP(tlhairdown,0,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				WaitForMoves(tigLil)
 				--stumble back
-				mP(tigLil,0,-6,0,22)
+				mP(tigLil,0,-6,0,44)
 				tP(tigLil,-51,0,0,22)
 				tP(tllegUp,-3,0,0,22)
 				tP(tllegLow,0,0,0,22)
 				tP(tllegUpR,4,0,0,22)
 				tP(tllegLowR,113,0,0,22)
-				tP(tlarm,-63,30,-42,140)
-				tP(tlarmr,-66,-30,47,22)
+				tP(tlarm,-63,30,42,140)
+				tP(tlarmr,-66,-30,-47,22)
 				tP(tlHead,41,-10,0,22)
 				tP(tlhairup,-93,0,0,270)
 				tP(tlhairdown,-21,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+				WaitForMoves(tigLil)
 				--stumble continues
-				mP(tigLil,0,-4,0,22)
+				mP(tigLil,0,-4,0,44)
 				tP(tigLil,-21,0,0,22)
 				tP(tllegUp,-29,0,0,22)
 				tP(tllegLow,4,0,0,22)
 				tP(tllegUpR,57,0,0,22)
 				tP(tllegLowR,27,0,0,22)
-				tP(tlarm,60,-12,-42,140)
-				tP(tlarmr,-66,77,47,22)
+				tP(tlarm,60,-12,42,140)
+				tP(tlarmr,-66,77,-47,22)
 				tP(tlHead,71,17,0,22)
 				tP(tlhairup,-93,0,0,270)
 				tP(tlhairdown,-21,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
-			
+					WaitForMoves(tigLil)
 				--reset
-				mP(tigLil,0,0,0,22)
+				mP(tigLil,0,0,0,44)
 				tP(tigLil,0,0,0,22)
 				tP(tllegUp,0,0,0,22)
 				tP(tllegLow,0,0,0,22)
@@ -1816,7 +1850,7 @@ function jumpAttack()
 				tP(tlhairup,0,0,0,270)
 				tP(tlhairdown,0,0,0,270)
 				WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
-
+				WaitForMoves(tigLil)
 end
 
 
@@ -9554,10 +9588,11 @@ function walk()
     Hide(tlflute)
     Hide(tlharp)
     Hide(tldancedru)
-
+	boolBladeWhirlStarted= false
 
 
     legs_down()
+    Signal(SIG_WHIR)
     Signal(SIG_ONTHEMOVE)
     Signal(SIG_SWING)
     Signal(SIG_ONTHEMOVE)
@@ -9831,6 +9866,7 @@ function script.StartMoving()
     Signal(SIG_GESTE)
     Signal(SIG_TALKHEAD)
     Signal(SIG_WALK)
+	Turn(tigLil,x_axis,math.rad(0),5)
     StartThread(walk)
 
     Signal(SIG_IDLE)
@@ -9842,7 +9878,8 @@ end
 
 function script.StopMoving()
     boolMove = false
-
+	boolBladeWhirlStarted= false
+	Signal(SIG_WHIR)
     --Signal(SIG_HAIRWIND)
     -- Signal(SIG_SWING)
     --Signal(SIG_WALK)
@@ -9913,21 +9950,22 @@ function ReloadCountDown()
     RELOADTIME = 0
 end
 
+tigLilDefID = Spring.GetUnitDefID(unitID)
 -- called after the weapon has fired
 function script.FireWeapon1()
-    Signal(SIG_WHIR)
-    if boolAmbushInProgress == false then
 
+    if boolAmbushInProgress == false then
         StartThread(ReloadCountDown)
     end
-    AttackCounter = 3000
-    StartThread(bladewhirl_thread)
+    AttackCounter = 3000	
+	if boolBladeWhirlStarted == false then
+		StartThread(bladewhirl_thread)
+	end
     sound = math.random(0, 1)
     if sound == 0 then
-        Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav")
-
+		StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgswoard1.wav", 1.0, 2000, 1, 0)
     else
-        Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav")
+		StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgswoard2.wav", 1.0, 2000, 1, 0)
     end
 end
 
