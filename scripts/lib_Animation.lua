@@ -66,6 +66,7 @@ end
 function whileInTurn(pname,axis, functionToPerform, ...)
 	while true == Spring.UnitScript.IsInTurn(pname,axis) do
 		functionToPerform(...)
+		Sleep(1)
 	end
 
 end
@@ -74,6 +75,7 @@ end
 function whileInMove(pname,axis, functionToPerform, ...)
 	while true == Spring.UnitScript.IsInMove(pname,axis) do
 		functionToPerform(...)
+		Sleep(1)
 	end
 end
 -->CombinedWaitTurn

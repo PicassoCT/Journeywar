@@ -672,7 +672,7 @@ function getUnitCanBuild(unitName,closedT)
     T = {}
     if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then	
 		for i = 1, #unitDef.buildOptions do
-			local buildID = UnitDefs[ud.buildOptions[i]].id
+			local buildID = UnitDefs[unitDef.buildOptions[i]].id
 			T[#T+1] = buildID
 		end
 	end

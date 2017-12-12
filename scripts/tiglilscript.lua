@@ -1700,34 +1700,15 @@ AttackCounter = 3000
 boolBladeWhirlStarted= false
 function bladewhirl_thread()
     --redo with sinking to knee
-
+	dirSign= randSign()
 	boolBladeWhirlStarted = true
-
-
-<<<<<<< HEAD
-    Signal(SIG_WHIR)
-    SetSignalMask(SIG_WHIR)
-    while (AttackCounter > 0) do
-        Signal(SIG_WALK)
-        Signal(SIG_IDLE)
-        Sleeper = Sleeper + 1
-        Sleeper = Sleeper % 11
-        AttackCounter = AttackCounter - 500
-        if Sleeper == 1 then
-				jumpAttack()
-        end
-      
-		rotateWhirl(15)
-   
-    end
-=======
 		Signal(SIG_WHIR)
 		SetSignalMask(SIG_WHIR)
 		while (AttackCounter > 0) do
 			Signal(SIG_WALK)
 			Signal(SIG_IDLE)
-			Sleeper = Sleeper + 1
-			Sleeper = Sleeper % 11
+		
+			Sleeper = (Sleeper % 11) + 1
 			AttackCounter = AttackCounter - 500
 		
 			if  Sleeper  == 1 then
@@ -1736,10 +1717,16 @@ function bladewhirl_thread()
 					jumpAttack()
 				end
 			end
+			if Sleeper % 2 == 0 then
+				EmitSfx(tlHead, 1024)
+			end
+			rotateWhirl(dirSign)
 			
-			rotateWhirl(math.random(15,25))
+			if Sleeper == 10 then
+				backflip()
+			end
 			
-		
+			Sleep(1)
 		end
 
 	StartThread(walk)
@@ -1747,7 +1734,17 @@ function bladewhirl_thread()
 
 end
 
-
+function backflip()
+	--knee down
+	
+	-- jump up
+	
+	-- backflip
+	
+	--landing
+	
+	--rest
+end
 
 function jumpAttack()
 				--drawback
@@ -1854,84 +1851,126 @@ function jumpAttack()
 end
 
 
-function rotateWhirl(speed)
+function rotateWhirl( dirSign)
+	speed= 15
 	--Reset
 	WTurn(deathpivot,y_axis,math.rad(0),speed)
-	dirSign= randSign()
 	boolUp	= maRa()
-	angleTiglil(dirSign, boolUp, math.random(3,16) speed, maRa(),maRa())
+	boolAngleArms= maRa()
+	boolAngleExotic= maRa()
+	angle=  math.random(3,16)
+
+	
+	angle= angleTiglil(dirSign, boolUp, angle, speed, boolAngleArms,boolAngleExotic)
 	if not boolUp then  Move(tigLil,y_axis, -5, 12) else Move(tigLil,y_axis,0,12) end
 	
 	--Turn Motion
-	Turn(deathpivot,y_axis,math.rad(180+dirSign),speed)
-	whileInTurn(deathpivot, y_axis, whirlFeetAnimation, dirSign, boolUp,maRa(),5)
-	EmitSfx(tlHead, 1024)
-	Turn(deathpivot,y_axis,math.rad(360+dirSign),speed)
-	whileInTurn(deathpivot, y_axis, whirlFeetAnimation, dirSign, boolUp, maRa(),7)
+	if  boolAngleExotic == false or boolUp == false then
+		Turn(deathpivot,y_axis,math.rad((179*dirSign)),speed)
+		whileInTurn(deathpivot, y_axis, whirlFeetAnimation, dirSign, boolUp,boolAngleExotic,5,angle)
+
+		Turn(deathpivot,y_axis,math.rad(dirSign*(359)),speed)
+		whileInTurn(deathpivot, y_axis, whirlFeetAnimation, dirSign, boolUp, boolAngleExotic,7,angle)
+	else
+		Turn(tigLil,x_axis,math.rad((90*dirSign)),speed)
+		whileInTurn(tigLil, x_axis, whirlFeetAnimation, dirSign, boolUp,boolAngleExotic,5,angle)
+		Turn(tigLil,x_axis,math.rad((180*dirSign)),speed)
+		whileInTurn(tigLil, x_axis, whirlFeetAnimation, dirSign, boolUp,boolAngleExotic,5,angle)
+		Turn(tigLil,x_axis,math.rad((270*dirSign)),speed)
+		whileInTurn(tigLil, x_axis, whirlFeetAnimation, dirSign, boolUp,boolAngleExotic,5,angle)
+		Turn(tigLil,x_axis,math.rad(dirSign*(360)),speed)
+		whileInTurn(tigLil, x_axis, whirlFeetAnimation, dirSign, boolUp,boolAngleExotic,5,angle)
+	end
 end
 
 function angleTiglil(dirSign, boolUp,angle, speed, boolAngleArms, boolAngleExotic)
-if boolAngleExotic == true then
-	angle= math.random(50,80)
+if boolAngleExotic == false  or boolUp == false then
+
+		Turn(tigLil,z_axis,math.rad(angle* dirSign),speed)
+
+		Turn(tlHead,z_axis,math.rad(-angle* dirSign),speed)
+		Turn(tlhairup,y_axis,math.rad(90*dirSign*-1),speed)
+		Turn(tlhairup,z_axis,math.rad(90),speed)
+
+		hairval= math.random(25,35)*dirSign*-1
+		Turn(tlhairdown,x_axis,math.rad( hairval),speed)
+
+		
+	if boolAngleArms == true then
+			Turn(tlarm,z_axis,math.rad(-1* dirSign*angle),speed)
+			Turn(tlarmr,z_axis,math.rad(-1*dirSign* angle),speed)	
+	end
+else
+	angle= math.random(45,80)*dirSign
+	Turn(tigLil,z_axis,math.rad(angle),speed)
+	Turn(tlHead,z_axis,math.rad(-angle),speed)
+	Turn(tlhairup,y_axis,math.rad(90*-1),speed)
+	Turn(tlhairup,z_axis,math.rad(90),speed)
+
+	return angle
 end
-	Turn(tigLil,z_axis,math.rad(angle* dirSign),speed)
-	Turn(tlHead,z_axis,math.rad(-angle* dirSign),speed)
-
-	
-
-	
-if boolAngleArms == true then
-		Turn(tlarm,z_axis,math.rad(-dirSign*angle),speed)
-		Turn(tlarmr,z_axis,math.rad(dirSign* angle),speed)
-	
-end
-
 end
 
 turnCounter=0
-function whirlFeetAnimation(dirSign, boolUp, boolAngleExotic, tol)
+function whirlFeetAnimation(dirSign, boolUp, boolAngleExotic, tol, angleExotica)
 	upBend,lowBend, upStretch, lowStretch = 0,0,0,0,0
 	if boolUp == true then -- normal run animation values - x axis
-		upBend,lowBend, upStretch, lowStretch = 0+ math.random(0,tol),0- math.random(0,tol),0,0
+		upBend,lowBend, upStretch, lowStretch = -24+ math.random(0,tol),31 - math.random(0,tol),7,20
+		upAlt, lowAlt = 0,0
 	else  -- knee down animation
-		upBend,lowBend, upStretch, lowStretch = 0+ math.random(0,tol),0- math.random(0,tol),0,0
+		upBend,lowBend, upStretch, lowStretch = -70 + math.random(0,tol),122- math.random(0,tol),22,68
+		upAlt, lowAlt = -66,113
 	end
 	upLeg, lowLeg = 0,0
-	if dirSign > 0 then
+	altLeg,altLowLeg=0,0
+	if dirSign < 0 then
 		upLeg, lowLeg = tllegUpR,tllegLowR
+		altLeg,altLowLeg = tllegUp,tllegLow
 	else
 		upLeg, lowLeg = tllegUp,tllegLow
+		altLeg,altLowLeg= tllegUpR,tllegLowR
 	end
 	
 	if boolAngleExotic == false then
-		if turnCounter < 3 then --Turn Animation
-		Turn(upLeg, x_axis,math.rad(upBend),speed)
-		Turn(lowLeg,x_axis, math.rad(lowBend),speed)
-		WaitForTurns(upLeg,lowLeg)	
+			Turn(altLeg, x_axis,math.rad(upBend),speed)
+			Turn(altLowLeg,x_axis, math.rad(lowAlt),speed)
+		if turnCounter < 5 then --Turn Animation
 		
-		Turn(upLeg, x_axis,math.rad(upStretch),speed)
-		Turn(lowLeg,x_axis, math.rad(lowStretch),speed)
-		WaitForTurns(upLeg,lowLeg)	
-		turnCounter=turnCounter+1
+			Turn(upLeg, x_axis,math.rad(upBend),speed)
+			Turn(lowLeg,x_axis, math.rad(lowBend),speed)
+			WaitForTurns(upLeg,lowLeg)	
+			
+			Turn(upLeg, x_axis,math.rad(upStretch),speed)
+			Turn(lowLeg,x_axis, math.rad(lowStretch),speed)
+			WaitForTurns(upLeg,lowLeg)	
+			turnCounter=turnCounter+1
 		else -- Raised Leg
-		turnCounter= 0
-		Turn(upLeg, x_axis,math.rad(-49),speed)
-		Turn(lowLeg,x_axis, math.rad(136),speed)
-		WaitForTurns(upLeg,lowLeg)	
+			turnCounter=turnCounter+1
+	
+			Turn(upLeg, x_axis,math.rad(-49),speed)
+			Turn(lowLeg,x_axis, math.rad(136),speed)
+		if turnCounter > 8 then turnCounter = 0 end
 		end
 	else
-		exoticAngle= math.random(50,80)
-		Turn(upLeg, x_axis,math.rad(0),speed)
-		Turn(upLeg, z_axis,math.rad(exoticAngle*dirSign),speed)
-		Turn(lowLeg,x_axis, math.rad(0),speed)
-		WaitForTurns(upLeg,lowLeg)	
+
+		Turn(tllegUpR, z_axis,math.rad(85),speed)	
+
+		Turn(tllegUp,z_axis, math.rad(0),speed)
+
+	WaitForTurns(tllegUpR,tllegUp)	
+
+		Turn(tllegUp, z_axis,math.rad(-85),speed)	
+
+		Turn(tllegUpR,z_axis, math.rad(0),speed)
+		WaitForTurns(tllegUpR,tllegUp)	
+
 	end
 	             
-	
+	Sleep(1)
 end
 
 
-function legs_down()
+function  legs_down()
     Hide(tlpole)
     Hide(tldrum)
     Hide(tlflute)
