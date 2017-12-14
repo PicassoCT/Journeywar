@@ -1335,7 +1335,7 @@ function onTheMove()
     while (true) do
 
         if nCounter == 0 then
-            PlaySoundByUnitDefID(tiglildefid, "sounds/tiglil/tgdance.wav", 0.75, 1000, 2, 0)
+            PlaySoundByUnitDefID(tiglildefid, "sounds/tiglil/tgdance.wav", 0.75, 3000, 1, 0)
         elseif nCounter == 5 then
             nCounter = 0
         end
@@ -1728,8 +1728,11 @@ function bladewhirl_thread()
 			
 			Sleep(1)
 		end
-
-	StartThread(walk)
+	if boolMove == true then
+		StartThread(walk)
+	else
+		StartThread(idle)
+	 end
 	boolBladeWhirlStarted= false
 
 end
@@ -5384,6 +5387,7 @@ function idle_stance13()
         tP(tllegLowR, 59, 0, 0, factor * i)
         Sleep(1300 - (i * 50))
     end
+	Sleep(3000)
     legs_down()
 end
 
@@ -5428,6 +5432,7 @@ function idle_stance15()
         tP(tllegLowR, 78, 0, 0,2* factor * i)
         Sleep(1300 - (i * 50))
     end
+	Sleep(3000)
     legs_down()
 end
 
@@ -5446,7 +5451,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 95, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -46, 0, 0, 5 * 2)
         syncTurn(unitID, tllegLowR, 94, 0, 0, 5 * 2)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 2 then
         mP(tigLil, 0, -5, -1, 9)
@@ -5460,7 +5465,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 95, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -46, 76, -76, 5)
         syncTurn(unitID, tllegLowR, 118, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
 
     if yoga == 3 then
@@ -5475,7 +5480,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 0, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -146, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 0, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
 
     if yoga == 4 then
@@ -5490,7 +5495,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 0, 0, 0, 5)
         syncTurn(unitID, tllegUpR, 86, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 84, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 5 then
         mP(tigLil, 0, 0, -1, 9)
@@ -5504,7 +5509,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 0, 0, 0, 5)
         syncTurn(unitID, tllegUpR, 24, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 0, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 6 then
         mP(tigLil, 0, -11, 3, 9)
@@ -5519,7 +5524,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 0, 0, 0, 5)
         syncTurn(unitID, tllegUpR, 45, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 0, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 7 then
         mP(tigLil, 0, -10, 0, 9)
@@ -5533,7 +5538,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 150, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -138, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 150, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 8 then
         mP(tigLil, 0, -10, 0, 9)
@@ -5548,7 +5553,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 150, 0, 0, 5 * 3)
         syncTurn(unitID, tllegUpR, -138, 0, 0, 5 * 2)
         syncTurn(unitID, tllegLowR, 150, 0, 0, 5 * 2)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 9 then
         mP(tigLil, 0, -10, 0, 9)
@@ -5562,7 +5567,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 150, 0, 0, 5)
         syncTurn(unitID, tllegUpR, 29, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 150, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 10 then
         mP(tigLil, 0, -5.5, 1, 9)
@@ -5576,7 +5581,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 72, 0, 0, 5 * 3)
         syncTurn(unitID, tllegUpR, 74, 0, 0, 5 * 2)
         syncTurn(unitID, tllegLowR, 72, 0, 0, 5 * 2)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 11 then
         mP(tigLil, 0, -8, 1, 9)
@@ -5590,7 +5595,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 72, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -108, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 72, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 12 then
         mP(tigLil, 0, -9, 1, 9)
@@ -5604,7 +5609,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 127, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -128, 0, -8, 5)
         syncTurn(unitID, tllegLowR, 129, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 13 then
         mP(tigLil, 0, -3, 1, 9)
@@ -5618,7 +5623,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 0, 0, 0, 5)
         syncTurn(unitID, tllegUpR, -112, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 0, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 14 then
         mP(tigLil, 0, -10, 1, 9)
@@ -5632,7 +5637,7 @@ function idle_stance14()
         syncTurn(unitID, tllegLow, 0, 3, -150, 5)
         syncTurn(unitID, tllegUpR, 73, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 138, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     if yoga == 15 then
         mP(tigLil, 0, -2, -2, 9)
@@ -5646,7 +5651,7 @@ function idle_stance14()
         syncTurn(unitID, tllegUpR, -144, 16, 0, 5)
         syncTurn(unitID, tllegLow, 145, 0, 0, 5)
         syncTurn(unitID, tllegLowR, 150, 0, 0, 5)
-        Sleep(12000)
+        Sleep(64000)
     end
     legs_down()
 end
@@ -9972,9 +9977,9 @@ function script.AimWeapon1(heading, pitch)
 
         everyHundredTigLils = math.random(0, 25)
         if everyHundredTigLils == 9 then
-            Spring.PlaySoundFile("sounds/tiglil/tgAttac.wav")
+			StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgAttac.wav", 1.0, 2000, 1, 0)
         elseif everyHundredTigLils == 18 then
-            Spring.PlaySoundFile("sounds/tiglil/tgAttac2.wav")
+			StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgAttac2.wav", 1.0, 2000, 1, 0)
         end
     end
 
@@ -10000,8 +10005,8 @@ function script.FireWeapon1()
 	if boolBladeWhirlStarted == false then
 		StartThread(bladewhirl_thread)
 	end
-    sound = math.random(0, 1)
-    if sound == 0 then
+ 
+    if maRa()== true then
 		StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgswoard1.wav", 1.0, 2000, 1, 0)
     else
 		StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgswoard2.wav", 1.0, 2000, 1, 0)
