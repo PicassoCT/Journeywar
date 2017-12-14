@@ -670,11 +670,12 @@ function getUnitCanBuild(unitName,closedT)
 	end
 	
     T = {}
-    if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then
-        for index, unitname in ipairs(unitDef.buildOptions) do
-            T[index] = UnitDefNames[unitname].id
-        end
-    end
+    if unitDef.isFactory or unitDef.isBuilder and unitDef.buildOptions then	
+		for i = 1, #unitDef.buildOptions do
+			local buildID = UnitDefs[unitDef.buildOptions[i]].id
+			T[#T+1] = buildID
+		end
+	end
 	closedTable[unitDef.id] = true
     return T, closedTable
 end

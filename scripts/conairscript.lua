@@ -753,24 +753,25 @@ function ropeThread()
 			
 			--add a second for loop for the not weightfree elements
 			-------- Spring.Echo("BackswingMovement")
-			for i = 1, buildProgress, 1 do
-				
-				Turn(rope[i], x_axis, math.rad(changeX), speedyGonzo)
-				Turn(rope[i], z_axis, math.rad(changeZ), speedyGonzo)
-			end
-			--below smaller
-			local tempUsX = changeX * 0.8
-			local temppUsZ = changeZ * 0.8
-			if buildProgress < ropePieces_n then
-				for u = buildProgress, ropePieces_n, 1 do
-					Turn(rope[u], x_axis, math.rad(tempUsX), speedyGonzo)
-					Turn(rope[u], z_axis, math.rad(temppUsZ), speedyGonzo)
+			if buildProgress then
+				for i = 1, buildProgress, 1 do
+					
+					Turn(rope[i], x_axis, math.rad(changeX), speedyGonzo)
+					Turn(rope[i], z_axis, math.rad(changeZ), speedyGonzo)
 				end
+				--below smaller
+				local tempUsX = changeX * 0.8
+				local temppUsZ = changeZ * 0.8
+				if buildProgress < ropePieces_n then
+					for u = buildProgress, ropePieces_n, 1 do
+						Turn(rope[u], x_axis, math.rad(tempUsX), speedyGonzo)
+						Turn(rope[u], z_axis, math.rad(temppUsZ), speedyGonzo)
+					end
+				end
+				
+				buildProgress = updateBuildProgress()
+				moveThatTrooper(changeX, changeZ, 2, buildProgress)
 			end
-			
-			buildProgress = updateBuildProgress()
-			moveThatTrooper(changeX, changeZ, 2, buildProgress)
-			
 			
 			if flopFlip == 1 and changeX ~= 0 then
 				--Sleep(300)
@@ -797,7 +798,7 @@ function ropeThread()
 			end
 			--------------------------------------------------------
 			-------- Spring.Echo("changeX",changeX)
-		until changeX < 0.5 and changeX > -0.5 or boolRopeRelease == true -- or HellFreezesOver == true
+		until not buildProgress or changeX < 0.5 and changeX > -0.5 or boolRopeRelease == true -- or HellFreezesOver == true
 		
 		lastKnownPosX = unitPosX
 		lastKnownPosY = unitPosY

@@ -77,9 +77,19 @@ end
 
 
 -->Performs a Animation while a Piece Is in Turn
+function whileInTurn(pname,axis, functionToPerform, ...)
+	while true == Spring.UnitScript.IsInTurn(pname,axis) do
+		functionToPerform(...)
+		Sleep(1)
+	end
+
+end
+
+-->Performs a Animation while a Piece Is in Turn
 function whileInMove(pname,axis, functionToPerform, ...)
 	while true == Spring.UnitScript.IsInMove(pname,axis) do
 		functionToPerform(...)
+		Sleep(1)
 	end
 end
 
@@ -87,14 +97,6 @@ end
 function WTurn(lib_piece, lib_axis, lib_distance, lib_speed)
     Turn(lib_piece, lib_axis, lib_distance, lib_speed)
     WaitForTurn(lib_piece, lib_axis)
-end
-
--->Performs a Animation while a Piece Is in Turn
-function whileInTurn(pname,axis, functionToPerform, ...)
-	while true == Spring.UnitScript.IsInTurn(pname,axis) do
-		functionToPerform(...)
-	end
-
 end
 
   function pack(...)
