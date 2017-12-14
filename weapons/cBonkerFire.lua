@@ -1,5 +1,5 @@
 --- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
-local weaponName = "cbonkerfire" --this is the actually maschinegune of the blackguard
+local weaponName = "cbonkerfire" --this is the actually maschinegune of the inferno trooper
 local weaponDef = {
     name = "Deadly Darkmatter",
     weaponType = [[Cannon]],

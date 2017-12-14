@@ -1,7 +1,7 @@
 local unitName = "bg"
 
 local unitDef = {
-	name = "Ground Trooper",
+	name = "Inferno Trooper",
 	Description = "enhanced Soldier, carrying a Tatical Shield",
 	objectName = "bg.s3o",
 	script = "bgscript.lua",

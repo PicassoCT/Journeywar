@@ -19,9 +19,23 @@ MA 02110-1301, USA.
 --================================================================================================================
 -- Animation Functions
 --================================================================================================================
+-- aproximates a object having mass fand feathering after a turn to give the ilusion of physicality
+function turnHeavy(mass, pieceN, axis,  startdeg, targetdeg, speed, featherConst)
+if featherConst >= 1.0 then featherConst = 0.999999999 end
+WTurn(pieceN, axis, math.rad(targetdeg),speed)
+beschleunigung= mass/speed
+weg = (beschleunigung/1000)*featherConst
+while (math.abs(weg)> 0.001) do
+	WTurn(pieceN, axis, math.rad(targetdeg+weg),speed)
+	weg= weg*featherConst*-1
+end
+
+WTurn(pieceN, axis, math.rad(targetdeg),speed)
+end
+
 function MoveUnitToUnit(id, targetId, speed, ox,oy,oz)
-tx,ty,tz = Spring.GetUnitPosition(targetId)
-MoveUnit(id,tx,ty,tz,speed,ox,oy,oz)
+	tx,ty,tz = Spring.GetUnitPosition(targetId)
+	MoveUnit(id,tx,ty,tz,speed,ox,oy,oz)
 end
 
 
@@ -63,23 +77,24 @@ end
 
 
 -->Performs a Animation while a Piece Is in Turn
-function whileInTurn(pname,axis, functionToPerform, ...)
-	while true == Spring.UnitScript.IsInTurn(pname,axis) do
-		functionToPerform(...)
-	end
-
-end
-
--->Performs a Animation while a Piece Is in Turn
 function whileInMove(pname,axis, functionToPerform, ...)
 	while true == Spring.UnitScript.IsInMove(pname,axis) do
 		functionToPerform(...)
 	end
 end
+
 -->CombinedWaitTurn
 function WTurn(lib_piece, lib_axis, lib_distance, lib_speed)
     Turn(lib_piece, lib_axis, lib_distance, lib_speed)
     WaitForTurn(lib_piece, lib_axis)
+end
+
+-->Performs a Animation while a Piece Is in Turn
+function whileInTurn(pname,axis, functionToPerform, ...)
+	while true == Spring.UnitScript.IsInTurn(pname,axis) do
+		functionToPerform(...)
+	end
+
 end
 
   function pack(...)
@@ -406,7 +421,7 @@ factor= 1.0
 	value= value*reducefactor
 	turnT(Table,axis, factor*value*-1, (factor*value)/10)
 	WaitForTurnT(Table)
-	Sleep(1)
+	Sleep(1) --Safety Sleep
 	end
 
 

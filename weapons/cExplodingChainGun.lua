@@ -1,4 +1,4 @@
-local weaponName = "cexplochaingun" --this is the actually maschinegune of the blackguard
+local weaponName = "cexplochaingun" --this is the actually maschinegune of the inferno trooper
 local weaponDef = {
     name = "Explosive Ammo",
     weaponType = [[Cannon]],
