@@ -557,7 +557,9 @@ function OverTurnDirection(piecename, axis, goalDeg, speed,  startDeg)
 end
 
 --> turns sync in time no matter what kind of orientation the piece currently holds
-function tSyncIn(piecename, x_val, y_val, z_val, timeMS, UnitScript)
+function tSyncIn(piecename, x_val, y_val, z_val, timeMS, lUnitScript)
+	
+	if not UnitScript and lUnitScript then UnitScript = lUnitScript end
     x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(piecename)		
     syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
 end
@@ -567,6 +569,7 @@ function syncTurnInTime(piecename, x_goaldeg, y_goaldeg, z_goaldeg, timeMS, x_cu
     if lib_boolDebug == true then
         --Spring.Echo("times for syncTurnInTime:"..times)
     end
+	timeMS = math.ceil(timeMS)
 	
 	if x_goaldeg ~= x_curdeg then
 		turnInTime(piecename, 1, (x_goaldeg), timeMS, x_curdeg, y_curdeg, z_curdeg, false)
