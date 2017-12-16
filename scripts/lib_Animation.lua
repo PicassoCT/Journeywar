@@ -558,7 +558,7 @@ end
 
 --> turns sync in time no matter what kind of orientation the piece currently holds
 function tSyncIn(piecename, x_val, y_val, z_val, timeMS, lUnitScript)
-	
+	if  not timeMS then echo(x_val..","..y_val..","..z_val) end
 	if not UnitScript and lUnitScript then UnitScript = lUnitScript end
     x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(piecename)		
     syncTurnInTime(piecename, x_val, y_val, z_val, timeMS, math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
@@ -566,6 +566,7 @@ end
 
 -->Turns a piece on every axis in times 
 function syncTurnInTime(piecename, x_goaldeg, y_goaldeg, z_goaldeg, timeMS, x_curdeg, y_curdeg, z_curdeg)
+
     if lib_boolDebug == true then
         --Spring.Echo("times for syncTurnInTime:"..times)
     end
@@ -584,13 +585,19 @@ function syncTurnInTime(piecename, x_goaldeg, y_goaldeg, z_goaldeg, timeMS, x_cu
 	
 end
 
+--> shortCut for SyncMovIn
+function mSyncIn(piecename, x_val, y_val, z_val, times)
+	syncMoveInTime(piecename, x_val, y_val, z_val, times)
+end
 --> Move a piece so that it arrives at all axis on the given times
 function syncMoveInTime(piecename, x_val, y_val, z_val, times)
-    times = (math.abs(times)+1 / 1000)
-    --ratio = 1/(val/max)*times => max*times / val
-    Move(piecename, 1, x_val, math.abs(x_val / times))
-    Move(piecename, 2, y_val, math.abs(y_val / times))
-    Move(piecename, 3, z_val, math.abs(z_val / times))
+    times = (math.abs(times)+1)/1000 
+	mx,my,mz =  UnitScript.GetPieceTranslation(piecename)	
+	xd,yd,zd = absDistance(mx,x_val),absDistance(my,y_val),absDistance(mz,z_val)
+	
+    Move(piecename, 1, x_val, 	xd/times )
+    Move(piecename, 2, y_val,	 yd/times)
+    Move(piecename, 3, z_val,	zd/times)
 end
 
 function unZero(val)
