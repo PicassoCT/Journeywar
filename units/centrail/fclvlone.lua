@@ -73,7 +73,10 @@ local unitDef = {
 	workerTime = 0.54,
 	buildoptions = 
 	{
-		"genupgrade","upgradefactory","mtw","campro","advisor","restrictor","cgamagardener","csniper"
+		"genupgrade","upgradefactory","cgamagardener",
+		"mtw","bg","css",
+		"campro", "restrictor","csniper",
+		"advisor"
 	},
 	
 	customParams = {},
