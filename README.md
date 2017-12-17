@@ -1,19 +1,15 @@
 ![alt text](https://springrts.com/phpbb/download/file.php?mode=view&id=6195&sid=6c17b02899467752c524eb54a90f38cc)
 
-# JOURNEYWAR#
-
-Version 52.3
+A SciFi RTS Game in a HalfLife Universe Dimensional Fork.
 
 ##Centrail Confederacy vs Journeyman##
 
 Remember how geared up the Combine of the Half-Life Universe where? 
 
-You are about to find out what they were fighting and what was pushing them onwards. 
+You are about to find out what they were fighting and what was pushing them too such extreme measures as they took on earth. 
 
 Pick your side citizen -become either a Planetary Administrator - or go wild 
-and join the Journeyman, a transdimensional, biotech glider-gunsociety.
-
-
+and join the Attackers- the mysterious Journeyman, a transdimensional, biotech glider-gunsociety upgrading life throughout the universes.
 
 
 ###SETUP ###
