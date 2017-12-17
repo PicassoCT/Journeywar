@@ -14,6 +14,7 @@ and join the mysterious Journeyman, a transdimensional, biotech glider-gunsociet
 
 The darkness between the stars, is not empty- its a forrest of dark leaves, growing towards us.
 
+A life wasted for a way to clever RTS.
 
 SETUP 
 ================================================================================================================================
@@ -39,35 +40,35 @@ If you want to modify this Game and want a overview of the content.
 
 Here is what you have:
 
-Foldername:          Purpose:
-object3d                              The 3d-Files UnitGraphics are made off.
+ Foldername:                            Purpose:
+/object3d/                              The 3d-Files UnitGraphics are made off.
 
-scripts                               The lua-scripts that define unitbehaviour.
+/scripts  /                              The lua-scripts that define unitbehaviour.
 
-bitmaps                               The Pictures needed for Explosions, Sfx and Footprints
+/bitmaps  /                              The Pictures needed for Explosions, Sfx and Footprints
 
-Features                              Everything dead and unmoving on the battlefield is defined here
+/Features  /                               Everything dead and unmoving on the battlefield is defined here
 
-gamedata                              Contains the files that actually define the explosions behaviours
+/gamedata  /                               Contains the files that actually define the explosions behaviours
 
-LuaRules                              Contains small SoftwareTools that interact directly with the GameWorld, defining Rules and Behaviour
-LuaUI                                 Contains the files that define via the ChilliFrameWork the User Interface
+/LuaRules  /                              Contains small SoftwareTools that interact directly with the GameWorld, defining Rules and Behaviour
+/LuaUI    /                                Contains the files that define via the ChilliFrameWork the User Interface
 
-LUPS                                  Is yet another helper Library, allowing to use advanced special effects
+/LUPS       /                               Is yet another helper Library, allowing to use advanced special effects
 
-music                                 Contains the music files. No duh.
+/music      /                              Contains the music files. No duh.
 
-sidepics                              Contains the Sides Logos
+/sidepics   /                               Contains the Sides Logos
 
-unitpics                              Then Units little buildpictures
+/unitpics  /                              Then Units little buildpictures
 
-sounds                                All the units sounds
+/sounds     /                              All the units sounds
 
-weapons                               Contains the weapondefinitions
+/weapons    /                              Contains the weapondefinitions
 
-units                                 Contains the unitdefinitions. Go here to modify there values.
+/units      /                                Contains the unitdefinitions. Go here to modify there values.
 
-unittextures                          Contains the Textures for the 3d Models
+/unittextures  /                              Contains the Textures for the 3d Models
 
 
 Programs needed to open the source:
