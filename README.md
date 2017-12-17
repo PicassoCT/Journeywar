@@ -2,7 +2,8 @@
 
 A SciFi RTS Game in a HalfLife Universe Dimensional Fork.
 
-##Centrail Confederacy vs Journeyman##
+Centrail Confederacy vs Journeyman
+================================================================================================================================
 
 Remember how geared up the Combine of the Half-Life Universe where? 
 
@@ -12,7 +13,8 @@ Pick your side citizen -become either a Planetary Administrator - or go wild
 and join the Attackers- the mysterious Journeyman, a transdimensional, biotech glider-gunsociety upgrading life throughout the universes.
 
 
-###SETUP ###
+SETUP 
+================================================================================================================================
 1. Engine Installing
 You need the Spring-Engine. Get and install it at 
 http://springrts.com/Downloads
@@ -26,9 +28,11 @@ http://springrts.com/Downloads
 5. Enjoy your stay.
 
 If you have questions the author and other gamedevs can answer, contact us via IRC in moddev.
-======================================================================================
 
-###Repository Content###
+
+Repository Content
+================================================================================================================================
+
 If you want to modify this Game and want a overview of the content.
 
 Here is what you have:
