@@ -1,6 +1,6 @@
 ![alt text](https://springrts.com/phpbb/download/file.php?mode=view&id=6195&sid=6c17b02899467752c524eb54a90f38cc)
 
-A SciFi RTS Game in a HalfLife Universe Dimensional Fork.
+A SciFi RTS Game in a HalfLife Paralleluniverse
 
 Centrail Confederacy vs Journeyman
 ================================================================================================================================
