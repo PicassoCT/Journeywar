@@ -112,47 +112,28 @@ function resetPosture()
 	Hide(tent)
 	
 end
-
-function aimReset()
-	Turn (center, x_axis,math.rad(0), 15)	
-	Turn (center, y_axis,math.rad(0), 15)	
-	Turn (center, z_axis,math.rad(0), 15)
-	Hide(tent)
-end
-
-function idle()
-	
-	sleeper=math.random(1024,8192)
-	Signal(SIG_IDLE)
-	SetSignalMask(SIG_IDLE)
-	
-	while(boolCloaked==false)do
-		
-		Sleep(sleeper)
-		
-		rand=math.random(0,3)
-		if rand==3 then
-			Turn(center,x_axis,math.rad(85),6)
-			Turn(turret2,x_axis,math.rad(armoffset-170),7)
-			Turn(turret,x_axis,math.rad(armoffset-170),7)
-			tentShow=math.random(0,1)
-			if tentShow==1 then
-				Move(tent,y_axis,-10,0)
-				Show(tent)
-				Move(tent,y_axis,0,0.4)
-				WaitForMove(tent,y_axis)
+function skyFist()
+	arm1= turret2
+			arm2 = turret
+			total= math.random(18,29)
+			for i=1,total do
+				Turn(arm1,x_axis,math.rad(-90),5)
+				Turn(arm2,x_axis,math.rad(90),5)
+				Move(arm1,y_axis, -1.4,5)
+				Move(arm1,x_axis, -0.5,10)
+				WaitForMoves(arm1)
+				Sleep(150)
+				Move(arm1,y_axis, 0,5)
+				Move(arm1,x_axis, 0,5)
+				WaitForMoves(arm1)
+				Sleep(300-i*3)
 			end
-			sleepSnowWhite=math.random(4098,16344)
-			Sleep(sleepSnowWhite)
-			Move(tent,y_axis,-10,1.8)
-			Hide(tent)
-			Turn(turret,x_axis,math.rad(armoffset-175),7)
-			Turn(center,x_axis,math.rad(0),6)
-		end
-		if rand==1 then
-			Turn(center,x_axis,math.rad(69),4)
-			Turn(turret2,x_axis,math.rad(armoffset-90),7)
-			ringAlingADingDong=math.random(2,26)
+
+end
+function ringALingADingDong()
+	Turn(center,x_axis,math.rad(69),4)
+	Turn(turret2,x_axis,math.rad(armoffset-90),7)
+	ringAlingADingDong=math.random(2,26)
 			WaitForTurn(center,x_axis)
 			for i=0, ringAlingADingDong, 1 do
 				Turn(center,x_axis,math.rad(81),2)
@@ -163,11 +144,16 @@ function idle()
 				WaitForTurn(center,x_axis)
 				Sleep(120)
 			end
-			Turn(center,x_axis,math.rad(0),4)
-		end
-		
-		if rand==0 then
-			Turn(center,x_axis,math.rad(0),15)
+	Turn(center,x_axis,math.rad(0),4)
+end
+function aimReset()
+	Turn (center, x_axis,math.rad(0), 15)	
+	Turn (center, y_axis,math.rad(0), 15)	
+	Turn (center, z_axis,math.rad(0), 15)
+	Hide(tent)
+end
+function sport()
+	Turn(center,x_axis,math.rad(0),15)
 			Turn(turret,x_axis,math.rad(armoffset-90),7)
 			Turn(turret2,x_axis,math.rad(armoffset-90),7)
 			WaitForTurn(turret,x_axis)
@@ -214,11 +200,12 @@ function idle()
 				Sleep(fixFertig)
 			end
 			Turn(center,x_axis,math.rad(0),4)
-		end
-		if rand==2 then
-			Turn(center,x_axis,math.rad(0),15)
-			sitUps=math.random(4,28)
-			for i=0, sitUps, 1 do
+
+end
+function sitUps()
+	Turn(center,x_axis,math.rad(0),15)
+			sitUpss=math.random(4,28)
+			for i=0, sitUpss, 1 do
 				Move(center,y_axis,-9,9)
 				Turn(body,x_axis,math.rad(0),4)
 				Turn(turret2,x_axis,math.rad(armoffset -90),5)
@@ -243,13 +230,72 @@ function idle()
 				WaitForTurn(skinleg2,x_axis)
 				Sleep(150)
 			end
+
+end
+
+function rest()
+	Turn(center,x_axis,math.rad(-80),6)
+			Turn(turret2,x_axis,math.rad(-120),7)
+			Turn(turret,x_axis,math.rad(-120),7)
+			Turn(turret,y_axis,math.rad(-75),7)
+			Turn(turret2,y_axis,math.rad(75),7)
+			tentShow=math.random(0,1)
+			if tentShow==1 then
+				Move(tent,y_axis,-10,0)
+				Show(tent)
+				Move(tent,y_axis,0,0.4)
+				WaitForMove(tent,y_axis)
+			end		
+			
+			
+			sleepSnowWhite=math.random(4098,16344)
+			Sleep(sleepSnowWhite)
+			Move(tent,y_axis,-10,1.8)
+			Hide(tent)
+			Turn(turret,x_axis,math.rad(armoffset-175),7)
+			Turn(center,x_axis,math.rad(0),6)
+
+end
+function idle()
+	
+	sleeper=math.random(1024,8192)
+	Signal(SIG_IDLE)
+	SetSignalMask(SIG_IDLE)
+	
+	while (boolCloaked==false)do
+		
+		Sleep(sleeper)
+		
+		rand=math.random(0,4)
+		
+		if rand==4 then	
+			skyFist()
+		end
+		
+		if rand==1 then
+			ringALingADingDong()
+		end
+		
+		if rand==0 then
+			sport()
+		end
+		
+		if rand==2 then
+			sitUps()
+		end	
+		
+		if rand==3 then
+			rest()
+		end
+		Sleep(50)
+	
 			Turn(body,x_axis,math.rad(0),4)
 			resetT({[4]=center,[1]=body,[2]=skinleg,[3]=skinleg2},3)
-		end
 	end
-	
-	
 end
+	
+	
+
 
 local skinDef=Spring.GetUnitDefID(unitID)
 
@@ -470,6 +516,12 @@ local function legs_down()
 	Move (body,x_axis,0,12)
 	Move (body,y_axis,0,12)
 	Move (body,z_axis,0,12)
+
+	tP (turret2,0,0,0,12)
+	mP (turret2,0,0,0,12)
+	tP (turret,0,0,0,12)
+	Move (center,y_axis,0,12)
+	Move (center,z_axis,0,12)
 	Turn (torso, y_axis,math.rad(0), 15)	
 	Turn (center, x_axis,math.rad(0), 15)	
 	Turn (center, y_axis,math.rad(0), 15)	
@@ -591,14 +643,14 @@ end
 function script.Activate()
 	if boolPeacefull==true then
 		SetUnitValue(COB.WANT_CLOAK,1)
-		Spring.UnitScript.SetUnitValue(firestate, 0)
+		Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {}) 
 	end
 	return 1
 end
 
 function script.Deactivate()
 	SetUnitValue(COB.WANT_CLOAK,0)
-	Spring.UnitScript.SetUnitValue(firestate, 2)
+	Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {2}, {}) 
 	return 0
 end
 
