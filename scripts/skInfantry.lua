@@ -35,6 +35,7 @@ costPerEgg=0.5
 experienceSoFar=Spring.GetUnitExperience(unitID)
 eggEnemySpawnDistance = 700
 teamID=Spring.GetUnitTeam(unitID)
+defID = Spring.GetUnitDefID(unitID)
 
 function spawnAEgg(x,z)
 	randSleep=math.ceil(math.random(370,1200))
@@ -116,6 +117,14 @@ function skyFist()
 	arm1= turret2
 			arm2 = turret
 			total= math.random(18,29)
+			if not GG.SyncAnimT then GG.SyncAnimT = {} end
+			if not GG.SyncAnimT[defID] then GG.SyncAnimT[defID] = {} end
+			if GG.SyncAnimT[defID]  < 2 then 
+				GG.SyncAnimT[defID] = 256
+			end
+			Sleep(GG.SyncAnimT[defID]/2)
+			GG.SyncAnimT[defID]= GG.SyncAnimT[defID]/2
+			
 			for i=1,total do
 				Turn(arm1,x_axis,math.rad(-90),5)
 				Turn(arm2,x_axis,math.rad(90),5)
