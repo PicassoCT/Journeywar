@@ -56,6 +56,7 @@ local SIG_INCIRCLE = 128
 local SIG_TALKHEAD = 256
 local SIG_GESTE = 512
 local SIG_PEACE = 1024
+local SIG_HAIR = 2048
 Heading = 0
 boolANewAttack = true
 howlong = 1
@@ -5521,6 +5522,22 @@ function idle_stance15()
         tP(tllegLowR, 78, 0, 0,2* factor * i)
         Sleep(1300 - (i * 50))
     end
+	 for i = 1, 5 do
+	
+        mP(tigLil, 0, -5, 4.8, factor * i * 7)
+        tP(tigLil, -25, 0, 0, factor * i)
+        tP(tlHead, 5, 0, 0, factor * i)
+        tP(tlhairup, -76, 0, 0, factor * i * 2)
+        tP(tlhairdown, 21, 0, 0, factor * i * 2)
+        tP(tlarm, -10+ math.random(-5,5), 0, 90+ math.random(-5,5), factor * i)
+        tP(tlarmr, -10+ math.random(-5,5), 0, -90+ math.random(-5,5), factor * i)
+        tP(tllegUp, 35 , math.random(-5,5), math.random(-5,5), 3*factor * i)
+        tP(tllegLow, 79 , math.random(-5,5), math.random(-5,5), 2* factor * i)
+        tP(tllegUpR, 35 , math.random(-5,5), math.random(-5,5), 3*factor * i)
+        tP(tllegLowR, 78 , math.random(-5,5), math.random(-5,5),2* factor * i)
+			WaitForTurns(tigLil,tigLil,tlHead,tlhairup,tlhairdow,tlarm, tlarmr, tllegUp,tllegLow,tllegUpR,tllegLowR)
+	end
+	
 	Sleep(3000)
     legs_down()
 end
@@ -7826,7 +7843,7 @@ function idle()
 
         --changebookmark 
         Sleep(285)
-        Sleeper = math.random(0, 16)
+        Sleeper = math.random(0, 20)
 
 
         rest = math.random(512, 4096)
@@ -7894,23 +7911,88 @@ end
 
 local boolMove = false
 
-function hairInWind()
-	
+function hairInWind(offset)
+	Signal(SIG_HAIR)
+	SetSignalMask(SIG_HAIR)
+	auslenkung= math.random(20,35)
 	while true do
-		TurnTowardsWind(tlhairup, math.pi, 0)
-		sinA= (((Spring.GetGameFrame()/30)%60)/60)*math.pi
-		sinA,saint = math.sin(sinA)*60,math.sin(sinA+math.pi/4)*60
-		Turn(tlhairup,x_axis,math.rad(sinA), 50)
+		TurnTowardsWind(tlhairup, math.pi, 50)
+		sinA= (((Spring.GetGameFrame())%60)/60)* 2*math.pi
+	
+		sinA,saint = math.sin(sinA)*auslenkung,math.sin(sinA+math.pi/8)*auslenkung
+		Turn(tlhairup,x_axis,math.rad(sinA+offset), 50)
 		Turn(tlhairdown,x_axis,math.rad(saint), 50)
 		WaitForTurns(tlhairup,tlhairdown)
 		Sleep(1)
 	end
 end
+
+poseFunction={
+	function()
+		mSyncIn(tigLil,0,-6,0,550)
+		StartThread(hairInWind,-45)
+		tSyncIn(tlHead,45,0,0,550)
+		tSyncIn(tlarm,23,0,80,550)
+		tSyncIn(tlarmr,-34,0,-84,550)
+		tSyncIn(tllegUp,-79,0,0,550)
+		tSyncIn(tllegLow,94,0,0,550)
+		tSyncIn(tllegUpR,-21,0,0,550)
+		tSyncIn(tllegLowR,104,0,0,550)
+		WaitForMoves(tigLil)
+		WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+	end,	
+	function()
+		mSyncIn(tigLil,0,0,0,550)
+		StartThread(hairInWind,0)
+		tSyncIn(tlHead,0,0,0,550)
+		tSyncIn(tlarm,28,0,101,550)
+		tSyncIn(tlarmr,29,0,-98,550)
+		tSyncIn(tllegUp,0,0,0,550)
+		tSyncIn(tllegLow,0,0,0,550)
+		tSyncIn(tllegUpR,-12,0,0,550)
+		tSyncIn(tllegLowR,24,0,0,550)
+		WaitForMoves(tigLil)
+		WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+	end,	
+	function()
+		mSyncIn(tigLil,0,-11,0,550)
+		StartThread(hairInWind,28)
+		tSyncIn(tigLil,40,0,0,550)
+		tSyncIn(tlHead,-28,0,0,550)
+		tSyncIn(tlarm,-128,0,101,550)
+		tSyncIn(tlarmr,-127,0,-98,550)
+		tSyncIn(tllegUp,49,0,0,550)
+		tSyncIn(tllegLow,0,0,0,550)
+		tSyncIn(tllegUpR,49,0,0,550)
+		tSyncIn(tllegLowR,0,0,0,550)
+		WaitForMoves(tigLil)
+		WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+	end,	
+	function()
+		mSyncIn(tigLil,0,-10.5,0,550)
+		StartThread(hairInWind,-7)
+		tSyncIn(tigLil,11,0,0,550)
+		tSyncIn(tlHead,7,0,0,550)
+		tSyncIn(tlarm,176,98,-19,550)
+		tSyncIn(tlarmr,177,-96,21,550)
+		tSyncIn(tllegUp,-138,0,6,550)
+		tSyncIn(tllegLow,107,0,0,550)
+		tSyncIn(tllegUpR,-138,0,-13,550)
+		tSyncIn(tllegLowR,107,0,0,550)
+		WaitForMoves(tigLil)
+		WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
+	end,
+	
+}
+
+
 function strikeAPose()
-	StartThread(hairInWind)
-	poseSelector=math.random(1,7)
-	--TODO Posing
+
+	poseSelector=math.random(1,#poseFunction)
+	poseFunction[poseSelector]()
+
 	Sleep(42000)
+	Signal(SIG_HAIR)
 end
 
 function script.StartMoving()
