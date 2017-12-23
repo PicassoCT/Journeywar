@@ -7881,16 +7881,37 @@ function idle()
 		   idle_stance18()	
 		end
 				
-		if (Sleeper >= 16) then
+		if (Sleeper == 16) then
 			lidle_stance14()
+		end	
+		
+		if (Sleeper > 16) then
+			strikeAPose()
 		end
 		
     end
 end
 
-
 local boolMove = false
 
+function hairInWind()
+	
+	while true do
+		TurnTowardsWind(tlhairup, math.pi, 0)
+		sinA= (((Spring.GetGameFrame()/30)%60)/60)*math.pi
+		sinA,saint = math.sin(sinA)*60,math.sin(sinA+math.pi/4)*60
+		Turn(tlhairup,x_axis,math.rad(sinA), 50)
+		Turn(tlhairdown,x_axis,math.rad(saint), 50)
+		WaitForTurns(tlhairup,tlhairdown)
+		Sleep(1)
+	end
+end
+function strikeAPose()
+	StartThread(hairInWind)
+	poseSelector=math.random(1,7)
+	--TODO Posing
+	Sleep(42000)
+end
 
 function script.StartMoving()
     Signal(SIG_GESTE)
