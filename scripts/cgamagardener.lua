@@ -64,7 +64,7 @@ function gamaDamage()
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
     local spGetUnitPosition = Spring.GetUnitPosition
     local ltransformTree = transFormTree
-
+	radResistant= getRadiationResistantUnitTypeTable()
     while (true) do
 
         piecePosX, piecePosY, piecePosZ = spGetUnitPosition(unitID)
@@ -81,7 +81,7 @@ function gamaDamage()
                     tempDefid = spGetUnitDefID(proChoice[i])
                     tempHP = spGetUnitHealth(proChoice[i])
                     boolSteam = true
-                    if tempDefid ~= UnitDefNames["jtree2"].id and tempDefid ~= UnitDefNames["jtree2activate"].id then
+                    if not radResistant[tempDefid] then
 
                         tempHP = tempHP - HitPointsReduce
                     else

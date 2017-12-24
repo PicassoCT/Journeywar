@@ -34,7 +34,7 @@ function diceNewDeg(saveKey, upValue, margin)
         temp = math.random(margin, -1 * margin)
     end
     oldDeg[saveKey] = oldDeg[saveKey] + (upValue + temp)
-    echo("j5Tree" .. oldDeg[saveKey])
+ --   echo("j5Tree" .. oldDeg[saveKey])
     return oldDeg[saveKey]
 end
 
@@ -208,7 +208,7 @@ function fallingOff()
             idDefID = Spring.GetUnitDefID(id)
 
             --filter out imobile Units
-            if flyingUnits[idDefID] then return nil end
+            if flyingUnits[id] then return nil end
             if UnitDefs[idDefID].isImmobile == true then return nil end
             if UnitDefs[idDefID].isAirUnit == true then return nil end
             if gravResistantUnits[idDefID] then return nil end
@@ -226,15 +226,19 @@ end
 --flyingProjectiles
 
 maxHeigth = 950
-function nearUnit()
-end
+
 
 function flyingUnit(id)
     ox, oy, oz = Spring.GetUnitPosition(unitID)
     flyingUnits[id] = id
+	 orgX, _, orgZ = Spring.GetUnitPosition(id) --math.random(-100,100)/100, math.random(-100,100)/100
+	 Sleep(50)
+	 dorgX, _, dorgZ = Spring.GetUnitPosition(id) --math.random(-100,100)/100, math.random(-100,100)/100
+	 orgX,orgZ= dorgX-orgX,dorgZ-orgZ
+	 
     Spring.MoveCtrl.Enable(id)
     Spring.MoveCtrl.SetNoBlocking(id, true)
-    orgX, _, orgZ = Spring.GetUnitDirection(id)
+   
     speed = 0
     cosvalue = math.random(1, 150) / 1000
     personalOffset = math.random(0, 50)
@@ -250,7 +254,7 @@ function flyingUnit(id)
             boolNearUnit = math.sqrt((ox - ux) ^ 2 + (oz - uz) ^ 2) < RangeSkyHook
             gh = Spring.GetGroundHeight(ux, uz)
             uy = uy + speed
-            Spring.MoveCtrl.SetPosition(id, ux + orgX * 5, uy + personalOffset, uz + orgZ * 5)
+            Spring.MoveCtrl.SetPosition(id, ux + orgX * 0.0015, uy + personalOffset, uz + orgZ * 0.0015)
             rx, ry, rz = Spring.GetUnitRotation(id)
             Spring.MoveCtrl.SetRotation(id, math.cos(-cosdex), math.sin(sindex), math.cos(cosdex))
             ssindex = sindex + 0.001
@@ -329,7 +333,7 @@ function invertGravityLoop()
 
         if boolGravityOff == true then
             StartThread(dropLianes, true, 4.2)
-            while boolGravityOff == true do
+            while boolGravityOff == true and buildCompleted == true do
                 if consumeEnergy() == true then
                     fallingOff()
                 end
@@ -383,6 +387,18 @@ function buildATree()
     randoMarlo = math.random(0, 360)
     Turn(center, y_axis, math.rad(randoMarlo))
 end
+buildCompleted = false
+function buildComplete()
+bP = 0
+
+	while buildCompleted == false do
+	hp, mHp, par, cap, bP = Spring.GetUnitHealth(unitID)
+
+	buildCompleted = hp == mHp and bP and bP == 1.0
+	Sleep(250)
+	end
+
+end
 
 pieceTable = generatepiecesTableAndArrayCode(unitID, false)
 TableOfPieceGroups = {}
@@ -401,6 +417,7 @@ function script.Create()
     end
 
 
+    StartThread(buildComplete)
     StartThread(buildATree)
     StartThread(invertGravityLoop)
     StartThread(invertGravitySoundLoop)

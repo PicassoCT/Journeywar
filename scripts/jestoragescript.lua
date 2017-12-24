@@ -298,7 +298,7 @@ function dropIn()
         cosStart = 3.14159 / -2
         if boolDrippIn == false then
             for i = 1, amount, 1 do
-                Move(DropLet, y_axis, distance, 0)
+                Move(DropLet, y_axis, -29, 0)
                 ldropReal(-25, 0, 18.1, 42, 10, DropLet)
                 cosStart = cosStart + cosDiv
                 Time = math.ceil(500 * math.cos(cosStart))

@@ -36,6 +36,7 @@ Sleep(500)
 Spring.DestroyUnit(unitID,false,true)
 
 end
+DNASpiral = piece "DNASpiral"
 function TreeTrample()
 StartThread(actualTrample)
 end
@@ -139,135 +140,157 @@ local isInfantry={
 local spGetUnitDefID=Spring.GetUnitDefID
 local teamid=Spring.GetUnitTeam(unitID)
 function fallingFruit(nr)
+	mP(fruits[nr][1],0,0,0,0)
 	x,y,z,_,_,_=Spring.GetUnitPiecePosDir(unitID,fruits[nr][1])
 	y2=Spring.GetGroundHeight(x,z)
 	distance=math.abs(y-y2)
 	
 	fruits[nr][2]=true
 	speed=1
+	mSyncIn(fruits[nr][1],0,-distance,0,5000)
+	WaitForMoves(fruits[nr][1])
 	
-	for i=1,distance,1 do
-		Move(fruits[nr][1],y_axis, -i,speed)
-		WaitForMove(fruits[nr][1],y_axis)
-		speed=math.min(speed*i*speed, 120)
-		
-		Sleep(2500)
-	end
-	StartThread(fieldsOfFruit,nr) 
 	
 end
 maxtime=90000
 
-function fieldsOfFruit(nr)
-	--convert infantry
-	restTime=math.ceil(math.random(2500,maxtime))
-	Sleep(restTime)
-	
-	t=Spring.GetUnitsInCylinder(x,z,200)
-	table.remove(t,unitID)
-	if t and #t > 0 then
-		for i=1,#t do
-			defid=spGetUnitDefID(t[i])
-			if math.random(0,1)==1 and isInfantry[defid] then
-				replaceUnit(t[i], "tiglil")
-			end
-		end
-	end
-	
-	Hide(fruits[nr][1])
-	Move(fruits[nr][1],y_axis, 0,0)
-	rest=maxtime-restTime
-	Sleep(rest)
-	Show(fruits[nr][1])
-	fruits[nr][2]=false
-end
-
-
-function replaceUnit(id,typeName)
-	x,y,z=Spring.GetUnitPosition(id)
-	if x and GG.UnitsToSpawn then
-		GG.UnitsToSpawn:PushCreateUnit(typeName,x,y,z, 0, teamid)
-	end
-	Spring.DestroyUnit(id,true,true)
-end
-
 function fruitLoop()
-	while(true) and boolJustOnceDeny ==true do
+	
+	while(true)  do
 		
 		rest=math.ceil(math.random(4900,62000))
 		Sleep(rest)
 		deci=math.ceil(math.random(0,table.getn(fruits)))
-		if deci~=2 and deci~=7 and deci~=8 then
+
 			if fruits[deci] and fruits[deci][2] and fruits[deci][2]==false then
 				StartThread(fallingFruit,deci)
 			end
-		end
+
 	end
+end
+
+
+
+TransformTable = getDreamTreeTransformUnitTypeTable(UnitDefNames)
+TransformRange=200
+function convertInfantryNearby()
+
+    myTeam = Spring.GetUnitTeam(unitID)
+
+    while true do
+        px, py, pz = Spring.GetUnitPosition(unitID)
+        T = getAllInCircle(px, pz, TransformRange, unitID)
+
+        process(T,
+            function(id)
+                defID = Spring.GetUnitDefID(id)
+                if id ~= unitID and TransformTable[defID] then
+                    return id
+                end
+            end,
+            function(id)
+                unitTeam = Spring.GetUnitTeam(id)
+                typeToTransferInto = TransformTable[Spring.GetUnitDefID(id)]
+                if typeToTransferInto then
+                    resultID = transformUnitInto(id, typeToTransferInto)
+                    return resultID
+                end
+            end,
+            function(id)
+                if id then
+
+                    Spring.TransferUnit(id, myTeam, false)
+                    ux, uy, uz = Spring.GetUnitPosition(id)
+                    Spring.SpawnCEG("jtree2trans", ux, uy + 15, uz, 0, 1, 0, 60)
+                end
+            end)
+
+
+        Sleep(350)
+    end
+end
+
+function dnaspiralloop()
+    Show(DNASpiral)
+    while true do
+        Spin(DNASpiral, y_axis, math.rad(-12), 0.001)
+        WMove(DNASpiral, y_axis, -10, 1)
+        StopSpin(DNASpiral, y_axis, 0.001)
+        Sleep(1000)
+        Spin(DNASpiral, y_axis, math.rad(12), 0.001)
+        WMove(DNASpiral, y_axis, 0, 1)
+        StopSpin(DNASpiral, y_axis, 0.001)
+        Sleep(4000)
+    end
 end
 
 
 rootTurnDeg=0
+TableOfPieceGroups = {}
+rootTurnDeg = 0
 function script.Create()
-	StartThread(delayedActivation)
-	Spin(centRot,y_axis,math.rad(4),0.001)
-	Spin(rot1,y_axis,math.rad(4),0.001)
-	Spin(rot2,y_axis,math.rad(-8),0.001)
-	--centerturn
-	randoMarlo=math.random(0,360)
-	Turn(center,y_axis,math.rad(randoMarlo))
-	
-	tempTypeDefID=Spring.GetUnitDefID(unitID)
-	
-	--the roots turning
-	selector=aListOfRandom(table.getn(root))
-	for i=1,table.getn(root),1 do
-		Turn((root[selector[i]]),y_axis,rootTurnDeg)
-		rootTurnDeg=diceNewDeg(rootTurnDeg,75,25)
-	end
-	
-	
-	add=0
-	for i=1,table.getn(leaves),1 do
-		this=math.random(0,360)
-		Turn(leaves[i],y_axis,math.rad(this),0)
-	end
-	
-	
-	--if a tree is drunk in the woods and falls down
-	randoValX=math.random(-5,5)
-	randoValZ=math.random(-5,5)
-	randoValY=math.random(0,360)
-	Turn(center,x_axis,math.rad(randoValX),0)
-	Turn(center,y_axis,math.rad(randoValY),0)
-	Turn(center,z_axis,math.rad(randoValZ),0)
-	-- getting the baumkrone straighted
-	
-	--liane?
-	
-	--the treetop randomizing
-	
-	--the roots turning
-	astTurndeg=0
-	selector=aListOfRandom(table.getn(rotable))
-	for i=1,table.getn(rotable),1 do
-		Turn((rotable[selector[i]]),y_axis,astTurndeg)
-		astTurndeg=diceNewDeg(astTurndeg,51,15)
-	end
-	StartThread(randomizedSpin)
-	tempDEFID=Spring.GetUnitDefID(unitID)
-	if tempDEFID==UnitDefNames["jtree2"].id then
-		for i=1, table.getn(fruits),1 do
-			Hide(fruits[i][1])
-		end
-	else
-		
-		StartThread(fruitLoop)
-	end
-	
-	StartThread(deactivateAndReturnCosts,unitID,UnitDefs,0.45)
+    TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+    StartThread(delayedActivation)
+    Spin(centRot, y_axis, math.rad(4), 0.001)
+    Spin(rot1, y_axis, math.rad(4), 0.001)
+    Spin(rot2, y_axis, math.rad(-8), 0.001)
+
+    --centerturn
+    randoMarlo = math.random(0, 360)
+    Turn(center, y_axis, math.rad(randoMarlo))
+
+    tempTypeDefID = Spring.GetUnitDefID(unitID)
+
+    --the roots turning
+    selector = aListOfRandom(table.getn(root))
+    for i = 1, table.getn(root), 1 do
+        Turn((root[selector[i]]), y_axis, rootTurnDeg)
+        rootTurnDeg = diceNewDeg(rootTurnDeg, 75, 25)
+    end
+
+    resetT(TableOfPieceGroups["fruit"], 0)
+    add = 0
+    for i = 1, table.getn(leaves), 1 do
+        this = math.random(0, 360)
+        Turn(leaves[i], y_axis, math.rad(this), 0)
+    end
+    Hide(DNASpiral)
+
+    --if a tree is drunk in the woods and falls down
+    randoValX = math.random(-5, 5)
+    randoValZ = math.random(-5, 5)
+    randoValY = math.random(0, 360)
+    Turn(center, x_axis, math.rad(randoValX), 0)
+    Turn(center, y_axis, math.rad(randoValY), 0)
+    Turn(center, z_axis, math.rad(randoValZ), 0)
+    -- getting the baumkrone straighted
+
+    --liane?
+
+    --the treetop randomizing
+
+    --the roots turning
+    astTurndeg = 0
+    selector = aListOfRandom(table.getn(rotable))
+    for i = 1, table.getn(rotable), 1 do
+        Turn((rotable[selector[i]]), y_axis, astTurndeg)
+        astTurndeg = diceNewDeg(astTurndeg, 51, 15)
+    end
+    StartThread(randomizedSpin)
+
+    if Spring.GetUnitDefID(unitID) == UnitDefNames["jtree2"].id then
+        for i = 1, table.getn(fruits), 1 do
+            Hide(fruits[i][1])
+        end
+    else
+
+        StartThread(fruitLoop)
+        StartThread(convertInfantryNearby)
+        StartThread(dnaspiralloop)
+    end
+
+    StartThread(deactivateAndReturnCosts, unitID, UnitDefs, 0.45)
 end
-
-
 
 function script.Killed(recentdamage,_)
 	Spring.PlaySoundFile("sounds/jEtree/tree.wav")

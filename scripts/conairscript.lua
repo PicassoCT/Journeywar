@@ -938,7 +938,7 @@ function workInProgress()
 		actualHealth = Spring.GetUnitHealth(unitID)
 		
 		
-		if actualHealth == 1 then
+		if actualHealth <= 1 then
 			boolIwantToGoHome = true
 			Hide(condepot)
 			Spring.SetUnitNoSelect(unitID, true)

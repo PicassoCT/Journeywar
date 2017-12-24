@@ -899,7 +899,7 @@ end
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function moveUnitPieceToGroundPos(unitID, piecename, X, Z, speed, offset)
-    if not piecename then return error("No piecename given") end
+    if not piecename then  error("No piecename given by "..UnitDefNames[Spring.GetUnitDefID(unitID)].name); return end
     if not X or not Z then return end
     loffset = offset or 0
     x, globalHeightUnit, z = Spring.GetUnitPosition(unitID)
