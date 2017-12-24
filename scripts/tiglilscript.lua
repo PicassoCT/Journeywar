@@ -1336,7 +1336,7 @@ function onTheMove()
     while (true) do
 
         if nCounter == 0 then
-            PlaySoundByUnitDefID(tiglildefid, "sounds/tiglil/tgdance.wav", 0.75, 3000, 1, 0)
+            StartThread(PlaySoundByUnitDefID,tiglildefid, "sounds/tiglil/tgdance.wav", 0.75, 3000, 1, 0)
         elseif nCounter == 5 then
             nCounter = 0
         end

@@ -13,7 +13,7 @@ local unitDef = {
 	buildCostEnergy = 900,
 	BuildTime = 82,
 	--Health
-	maxDamage =1950,
+	maxDamage =3950,
 	idleAutoHeal = 0,
 	--Movement
 	Acceleration = 0.5,
@@ -48,7 +48,7 @@ local unitDef = {
 	airHoverFactor = 0.1,
 	cruiseAlt=65,--165,
 	CanFly = true,
-	CanLand = false,
+	CanLand = true,
 	canSubmerge = false,
 
 	--maxBank=0.4,

@@ -115,15 +115,16 @@ function resetPosture()
 end
 function skyFist()
 	arm1= turret2
-			arm2 = turret
-			total= math.random(18,29)
+	arm2 = turret
+	
+			total= math.random(26,126)
 			if not GG.SyncAnimT then GG.SyncAnimT = {} end
-			if not GG.SyncAnimT[defID] then GG.SyncAnimT[defID] = {} end
+			if not GG.SyncAnimT[defID] then GG.SyncAnimT[defID] = 256 end
 			if GG.SyncAnimT[defID]  < 2 then 
 				GG.SyncAnimT[defID] = 256
 			end
-			Sleep(GG.SyncAnimT[defID]/2)
-			GG.SyncAnimT[defID]= GG.SyncAnimT[defID]/2
+			Sleep(math.ceil(GG.SyncAnimT[defID]/2))
+			GG.SyncAnimT[defID]= math.ceil(GG.SyncAnimT[defID]/2)
 			
 			for i=1,total do
 				Turn(arm1,x_axis,math.rad(-90),5)
@@ -267,7 +268,7 @@ function rest()
 end
 function idle()
 	
-	sleeper=math.random(1024,8192)
+	sleeper=math.random(8024,42292)
 	Signal(SIG_IDLE)
 	SetSignalMask(SIG_IDLE)
 	

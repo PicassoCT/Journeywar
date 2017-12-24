@@ -37,7 +37,7 @@ local teamDeathMode = modOptions.teamdeathmode or "teamzerounits"
 local sharedDynamicAllianceVictory = tonumber(modOptions.shareddynamicalliancevictory) or 0
 
 -- ignoreGaia is a C-like bool
-local ignoreGaia = 1 or tonumber(modOptions.ignoregaiawinner)
+local ignoreGaia = true
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ end
 
 local function IsCandidateWinner(allyTeamID)
     local isAlive = (killedAllyTeams[allyTeamID] ~= true)
-    local gaiaCheck = (ignoreGaia == 0) or (allyTeamID ~= gaiaAllyTeamID)
+    local gaiaCheck = ignoreGaia or (allyTeamID ~= gaiaAllyTeamID)
     return isAlive and gaiaCheck
 end
 
@@ -253,6 +253,31 @@ function sendInfantryToFuckTheSky(infantryTable, EscapeTable)
     end
 end
 
+function sendUnitsToLaunchables(teamID)
+				filterTable = {}
+                filterTable[UnitDefNames["beanstalk"].id] = true
+                filterTable[UnitDefNames["jmovingfac1"].id] = true
+                filterTable[UnitDefNames["jmovingfac2"].id] = true
+                filterTable[UnitDefNames["jmovingeggstack"].id] = true
+                return getAllWalkTowards(teamID, filterTable)
+
+end
+
+function launchLaunchables(teamID, EscapeTable)
+filterTable = {}
+                filterTable[UnitDefNames["jmovingfac1"].id] = true
+                filterTable[UnitDefNames["jmovingfac2"].id] = true
+                filterTable[UnitDefNames["jmovingeggstack"].id] = true
+					  return getAllUnitOfType(teamID, filterTable, EscapeTable)
+end
+function evacuateInfantry()
+               filterTable = {}
+                filterTable[UnitDefNames["tiglil"].id] = true
+                filterTable[UnitDefNames["skinfantry"].id] = true
+                infantryTable = getAllUnitOfType(teamID, filterTable)
+                sendInfantryToFuckTheSky(infantryTable, EscapeTable)
+end
+
 function gadget:TeamDied(teamID)
     teamsUnitCount[teamID] = nil
     local allyTeamID = teamToAllyTeam[teamID]
@@ -261,29 +286,14 @@ function gadget:TeamDied(teamID)
         aliveTeamCount = aliveTeamCount - 1
         allyTeamAliveTeamsCount[allyTeamID] = aliveTeamCount
         if aliveAllyTeamCount == 1 then
-            local side = select(5, spGetTeamInfo(teamID))
-            if side == nil then side = "journeyman" end
-            if side and side == "journeyman" then
-
-                Spring.Echo("JWGAMENDGADET::TeamDeath::LastManStanding is Journey")
-                filterTable = {}
-                filterTable[UnitDefNames["beanstalk"].id] = true
-                filterTable[UnitDefNames["jmovingfac1"].id] = true
-                filterTable[UnitDefNames["jmovingfac2"].id] = true
-                filterTable[UnitDefNames["jmovingeggstack"].id] = true
-                EscapeTable = getAllWalkTowards(teamID, filterTable)
-
-                filterTable = {}
-                filterTable[UnitDefNames["jmovingfac1"].id] = true
-                filterTable[UnitDefNames["jmovingfac2"].id] = true
-                filterTable[UnitDefNames["jmovingeggstack"].id] = true
-                launchAbleTable = getAllUnitOfType(teamID, filterTable, EscapeTable)
+            local side = select(5, spGetTeamInfo(teamID)) or "journeyman" 
+            if side == "journeyman" then
+						EscapeTable = sendUnitsToLaunchables(teamID)
+            
+						 launchAbleTable = launchLaunchables(teamID, EscapeTable)
+                
                 --Send all infantry to the beanstalk
-                filterTable = {}
-                filterTable[UnitDefNames["tiglil"].id] = true
-                filterTable[UnitDefNames["skinfantry"].id] = true
-                infantryTable = getAllUnitOfType(teamID, filterTable)
-                sendInfantryToFuckTheSky(infantryTable, EscapeTable)
+						evacuateInfantry(EscapeTable)
 
                 --issue time delayed launch order to all buildBuildings
                 for i = 1, #launchAbleTable, 1 do
@@ -314,6 +324,7 @@ end
 
 function gadget:Initialize()
     if teamDeathMode == "none" then
+			Spring.Echo("GameEndGadget: No teamDeathMode specified")
         gadgetHandler:RemoveGadget()
     end
 

@@ -98,6 +98,7 @@ function script.Create()
 end
 
 function script.StartMoving()
+
 end
 
 function script.StopMoving()
@@ -218,7 +219,7 @@ function closeBaydoors()
     Move(operadoor2, z_axis, 0, 2)
 end
 
-function script.TransportPickup(passengerID)
+function script.BeginTransport(passengerID)
     -- no napping!
     local passengerTeam = Spring.GetUnitTeam(passengerID)
     local ourTeam = Spring.GetUnitTeam(unitID)
@@ -263,7 +264,7 @@ function script.TransportPickup(passengerID)
     cargo = cargo + 1
     WaitForMove(opcrane, z_axis)
     AttachUnit(sloth[cargo], passengerID)
-    Spring.SetUnitNoDraw(passengerID, true)
+   -- Spring.SetUnitNoDraw(passengerID, true)
     Turn(base, y_axis, math.rad(0), 19)
     loaded = true
     SetUnitValue(COB.BUSY, 0)
@@ -271,28 +272,22 @@ function script.TransportPickup(passengerID)
 end
 
 
-function script.TransportDrop(passengerID, x, y, z)
-    if loaded == false then return end
+function script.EndTransport()
+		x, y, z = Spring.GetUnitPosition(unitID)
+		x= x +15
+    if table.getn(passengertable) <= 0 then return end
     --if unit not loaded
-    notloaded = true
-    for i = 1, cargo, 1 do
-        if passengertable[i] == passengerID then
-            notloaded = false
-        end
-    end
-
-    if notloaded == true then return end
 
     SetUnitValue(COB.BUSY, 1)
     Signal(SIG_BAY)
 
-    y = y - Spring.GetUnitHeight(passengerID) - 10
-    local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
-    local dx, dy, dz = x - px1, y - py1, z - pz1
-    local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID)) / 32768 * math.pi
-    local dist = (dx ^ 2 + dy ^ 2) ^ 0.5
-    local angleV = math.atan(dy / dist)
-    dist = dist / math.cos(angleV) -- convert 2d distance (adjacent) to 3d dist (hypotenuse)
+    --y = y - Spring.GetUnitHeight(passengerID) - 10
+    -- local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
+		-- local dx, dy, dz = x - px1, y - py1, z - pz1
+    -- local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID)) / 32768 * math.pi
+    -- local dist = (dx ^ 2 + dy ^ 2) ^ 0.5
+    -- local angleV = math.atan(dy / dist)
+    -- dist = dist / math.cos(angleV) -- convert 2d distance (adjacent) to 3d dist (hypotenuse)
 
 
     Move(operadoor1, x_axis, -12, 2)
@@ -307,17 +302,14 @@ function script.TransportDrop(passengerID, x, y, z)
     Move(opcrane, z_axis, 0, 15)
     WaitForMove(opcrane, z_axis)
 
-    AttachUnit(opAttachP, passengerID)
-    Spring.SetUnitNoDraw(passengerID, false)
+
     Move(opcrane, z_axis, 50, 15)
     WaitForMove(opcrane, z_axis)
 
-    DropUnit(passengerID)
+
     cargo = cargo - 1
 
-    if cargo <= 0 then
-        loaded = false
-    end
+	  passengertable = {}
 
     Move(opcrane, z_axis, 0, 15)
     WaitForMove(opcrane, z_axis)
@@ -334,7 +326,7 @@ operaDefID = Spring.GetUnitDefID(unitID)
 
 function playOperaSound()
     path = "sounds/cOperaT/opera" .. enumerate .. ".ogg"
-    succesfull = PlaySoundByUnitDefID(operaDefID, path, 0.5, 10000, 1, 0)
+    succesfull = PlaySoundByUnitDefID(operaDefID, path, 1, 10000, 1, 0)
     if succesfull == true then
         enumerate = enumerate % 6 + 1
     end
@@ -342,10 +334,9 @@ end
 
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
-
-    if damage > maxHP / 20 then
-        StartThread(playOperaSound)
-    end
+	if damage > 25 then
+	   StartThread(playOperaSound)
+	end
 
 
     LastDamage = damage

@@ -18,7 +18,7 @@ local weaponDef = {
     --physics
 
     weaponVelocity = 550,
-    reloadtime = 0.42,
+    reloadtime = 3.42,
     range = 330,
     sprayAngle = 1000,
     accuracy = 0.2,
@@ -28,7 +28,7 @@ local weaponDef = {
     groundbounce = true,
     WaterBounce = false,
     flighttime = 20,
-    NumBounce = 1,
+    NumBounce = 0,
     collideFriendly = true,
     soundStart = "",
     soundHit = "",

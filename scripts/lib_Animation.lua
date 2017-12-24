@@ -897,7 +897,6 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
 end
  
 
-
 -->Moves a Piece to a Position on the Ground in UnitSpace
 function moveUnitPieceToGroundPos(unitID, piecename, X, Z, speed, offset)
     if not piecename then return error("No piecename given") end

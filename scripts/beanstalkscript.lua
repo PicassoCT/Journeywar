@@ -411,9 +411,8 @@ function swayBeanstalk()
 end
 
 function greatEntry()
-    Show(bean1)
-    Show(bean2)
-    Show(bean3)
+
+  
     for i = 1, table.getn(greenSleaves), 1 do
         Hide(greenSleaves[i])
     end
@@ -427,12 +426,13 @@ function greatEntry()
     Move(bean1, y_axis, -2700, 0)
     Move(bean2, y_axis, -2700, 0)
     Move(bean3, y_axis, -2700, 0)
-
+	
     Spin(rootgrow, y_axis, math.rad(15), 0.4)
     Spin(rootgrow, x_axis, math.rad(7), 0.4)
     Spin(rootgrow, z_axis, math.rad(2), 0.4)
 
     Move(beans, y_axis, -700, 0)
+	
     Move(rootRotate, y_axis, -128, 0)
 
     Spin(rootRotate, y_axis, math.rad(-32), 0.4)
@@ -443,7 +443,7 @@ function greatEntry()
     Spin(spindl2, x_axis, math.rad(57), 0.4)
     Spin(spindl3, x_axis, math.rad(-57), 0.4)
 
-
+	
     Spin(rootgrow, y_axis, math.rad(-9), 0.4)
 
 
@@ -456,6 +456,7 @@ function greatEntry()
 
     Spin(bsfetas, y_axis, math.rad(3.2), 0.2)
     Spin(bshelix, y_axis, math.rad(4.2), 0.2)
+	 Show(seed)
     Turn(seed, x_axis, math.rad(64), 0)
     dir = math.random(0, 360)
     StartThread(flameEmitEntry)
@@ -478,15 +479,19 @@ function greatEntry()
     EmitSfx(center, 1025)
     EmitSfx(center, 1026)
     EmitSfx(center, 1027)
+	  Show(bean3)
+	    Show(rootgrow)
     Move(bean3, y_axis, 0, 92)
     Show(spindl)
     Show(spindl2)
     Show(spindl3)
     Sleep(500)
+	Show(bean1)
     Move(bean1, y_axis, 0, 110)
     Sleep(2000)
+	Show(bean2)
     Move(bean2, y_axis, 0, 95)
-
+	 showT(wurzelballen)
     Move(rootRotate, y_axis, 0, 7.4285714285714285714285714285714)
     Sleep(9000)
     StartThread(unfoldLeaves)
@@ -502,9 +507,12 @@ function greatEntry()
     teamID = Spring.GetUnitTeam(unitID)
     x, y, z = Spring.GetUnitPosition(unitID)
     GG.UnitsToSpawn:PushCreateUnit("jbeanstalkplate", x, y, z, 0, teamID)
+	Show(bsholo)
+	Show(beanstalk)
     Move(bean3, y_axis, -2450, 675)
     Move(beans, y_axis, 0, 0)
     Sleep(4000)
+
     Hide(bean1)
     SpinArrest(bean1)
     Hide(bean2)
@@ -532,6 +540,15 @@ function greatEntry()
         SpinArrest(wurzelballen[i])
     end
 
+		for i=1, #TablesOfPiecesGroups["bspumbase"] do
+			moveUnitPieceToGroundPos(unitID,TablesOfPiecesGroups["bspumbase"][i],0,0,0,0 )		
+		end
+
+		for i=1, #TablesOfPiecesGroups["bspipe"] do
+			if TablesOfPiecesGroups["bspipe"][i] then
+			moveUnitPieceToGroundPos(unitID,TablesOfPiecesGroups["bspipe"][i],0,0,0,0 )		
+			end
+		end
 
     Hide(rootgrow)
     SpinArrest(rootgrow)
@@ -539,6 +556,10 @@ function greatEntry()
     SpinArrest(rootRotate)
 
 
+	showT(pumps)
+	showT(pumpbase)
+	showT(pipePieces)
+	showT(TablesOfPiecesGroups["bspipe"])
     Signal(SIG_DIRT)
     boolEntryOver = true
 end
@@ -643,20 +664,15 @@ function reEntry()
     hideT(wurzelballen)
     boolEntryOver = true
 end
-
+TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 defID = Spring.GetUnitDefID(unitID)
 function script.Create()
     StartThread(soundSleeper)
     StartThread(darkEnergyReactor)
+	resetAll(unitID)
 
     Turn(bsholo, y_axis, math.rad(-90), 0)
-    Hide(unRooted)
-    Hide(spindl)
-    Hide(spindl2)
-    Hide(spindl3)
-    Hide(fireFx1)
-    Hide(fireFx2)
-    Hide(fireFx3)
+	 hideAllPieces(unitID)
     if defID == UnitDefNames["beanstalk"].id then
         greatEntry()
     elseif defid == UnitDefNames["dbeanstalk"].id then
@@ -672,8 +688,19 @@ function script.Create()
 end
 
 function script.Killed(recentDamage, maxHealth)
+	  Explode(bean1, SFX.SHATTER + SFX.NO_HEATCLOUD)
+	  Explode(bean2, SFX.SHATTER + SFX.NO_HEATCLOUD)
+	  showT(wurzelballen)
+	  hideT(pipePieces)
+		hideT(pumpbase)
+		mP(beanstalk,500,2000,50,100)
 
-
+		process(greenSleaves,
+				function(pieceID)
+				 Explode(pieceID, SFX.FALL+ SFX.SHATTER + SFX.NO_HEATCLOUD)
+				end
+				)
+	 WaitForMoves(beanstalk)
     createCorpseJBuilding(unitID, recentDamage)
     return 0
 end
