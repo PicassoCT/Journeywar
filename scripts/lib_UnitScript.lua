@@ -2106,6 +2106,12 @@ conCat=""..PreFix
 return conCat..PostFix
 end
 
+--> Converts a stringserialized table back into a data table
+function stringToTable(stringT)
+	foonction = "function() return "..stringT.." end"
+	return loadstring(foonction)
+end
+
 --> Converts a boolean to a string value
 function boolToString(value)
     if value == true then return "true" else return "false" end

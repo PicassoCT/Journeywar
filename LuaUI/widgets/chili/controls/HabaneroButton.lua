@@ -75,31 +75,73 @@ function HabaneroButton:DrawControl()
 end
 
 --//=============================================================================
+
+function HabaneroButton:initFromPercenTageStringTriStrip(totalPixelsX, totalPixelsY, ParentPercentX,ParentPercentY) 
+	--TODO: Test
+	totalPixelsX = totalPixelsX * ParentPercentX
+	totalPixelsY= totalPixelsY * ParentPercentY
+	
+	xMinLoc,xMaxLoc=0,0
+	yMinLoc,yMaxLoc=0,0		
+		
+		--computate the preBox
+		for i=1,table.getn(this.triStrip) do
+			point= triStrip[i]		
+			point.x=tonumber(string.gsub(string.gsub(point.x,"%%","")," ",""),10)
+			point.y=tonumber(string.gsub(string.gsub(point.y,"%%","")," ",""),10)
+			-- limit
+			point.x =math.abs(math.max(0,math.min(100.0,point.x))/100)
+			point.y =math.abs(math.max(0,math.min(100.0,point.y))/100)
+			
+			point.x = point.x *totalPixelsX
+			point.y = point.y *totalPixelsY			
+			
+			if point.x < xMinLoc then xMinLoc= point.x end
+			if point.x > xMaxLoc then xMaxLoc= point.x end
+			if point.y < yMinLoc then yMinLoc= point.y end
+			if point.y > yMaxLoc then yMaxLoc= point.y end
+		end	
+		
+		xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
+		yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
+		
+		xMax=xMaxLoc
+		xMin =xMinLoc
+		yMax=yMaxLoc
+		yMin =yMinLoc
+		
+		defaultWidth = xWidth
+		defaultHeight =yHeigth
+
+end
+
 function HabaneroButton:Init()
 	xMinLoc,xMaxLoc=0,0
-	yMinLoc,yMaxLoc=0,0
+		yMinLoc,yMaxLoc=0,0
+		
+		
+		
+		--computate the preBox
+		for i=1,table.getn(this.triStrip) do
+			point= triStrip[i]		
+			if point.x < xMinLoc then xMinLoc= point.x end
+			if point.x > xMaxLoc then xMaxLoc= point.x end
+			if point.y < yMinLoc then yMinLoc= point.y end
+			if point.y > yMaxLoc then yMaxLoc= point.y end
+		end	
+		
+		xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
+		yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
+		
+		xMax=xMaxLoc
+		xMin =xMinLoc
+		yMax=yMaxLoc
+		yMin =yMinLoc
+		
+		defaultWidth = xWidth
+		defaultHeight =yHeigth
+		
 	
-	
-	
-	--computate the preBox
-	for i=1,table.getn(this.triStrip) do
-		point= triStrip[i]		
-		if point.x < xMinLoc then xMinLoc= point.x end
-		if point.x > xMaxLoc then xMaxLoc= point.x end
-		if point.y < yMinLoc then yMinLoc= point.y end
-		if point.y > yMaxLoc then yMaxLoc= point.y end
-	end	
-	
-	xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
-	yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-	
-	xMax=xMaxLoc
-	xMin =xMinLoc
-	yMax=yMaxLoc
-	yMin =yMinLoc
-	
-	defaultWidth = xWidth
-	defaultHeight =yHeigth
 	
 	
 end

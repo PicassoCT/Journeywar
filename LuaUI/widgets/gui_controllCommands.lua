@@ -71,18 +71,18 @@ extendedMenue[CMD.RECLAIM] ={
 	caption="RECLAIM",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player]  =  CMD.RECLAIM 	
+		WG.SelectedCommand[player] = CMD.RECLAIM 	
 	end
 }
 
 extendedMenue[CMD.LOAD_UNITS] ={
-		triStrip={{x= 160, y = 0},
-		{x= 160, y = 80},			
-	{x= 0, y = 40}	},
+		triStrip={	{x= 160, y = 0},
+					{x= 160, y = 80},			
+					{x= 0, y = 40}	},
 	backgroundCol=backgroundColExtended,
 	caption=	"LOAD",
 	callbackFunction=function()
-			player= Spring.GetMyPlayerID()		
+		player= Spring.GetMyPlayerID()		
 		WG.SelectedCommand[player] = CMD.LOAD_UNITS 			
 	end
 }
@@ -95,8 +95,8 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 	backgroundCol=backgroundColExtended,
 	caption=	"DROP",
 	callbackFunction=function()
-	player= Spring.GetMyPlayerID()
-	WG.SelectedCommand[player]  =  CMD.UNLOAD_UNITS 
+		player= Spring.GetMyPlayerID()
+		WG.SelectedCommand[player] = CMD.UNLOAD_UNITS 
 	end
 }
 
@@ -110,7 +110,7 @@ extendedMenue[CMD.CLOAK] ={
 		Spring.Echo("Cloaking")
 		selectedUnits=spGetSelectedUnits();
 		if selectedUnits and #selectedUnits > 0 then
-				commandTable= getCommandTable(boolQueueOverride)			
+			commandTable= getCommandTable(boolQueueOverride)			
 			for i=1,#selectedUnits do
 				state = Spring.GetUnitStates(selectedUnits[i])
 				paramTable={}
@@ -124,19 +124,19 @@ extendedMenue[CMD.CLOAK] ={
 extendedMenue[CMD.RESTORE] ={		
 		triStrip={	{x= 100	, y = 15},
 		{x= 100	, y = 70},			
-	{x= 0	, y = 40}},
+		{x= 0	, y = 40}},
 	backgroundCol=backgroundColExtended,
 	caption= "RESTORE",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] =  CMD.RESTORE 
+		WG.SelectedCommand[player] = CMD.RESTORE 
 	end
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
-		triStrip={	{x= 0, y = 0},			
-		{x= 100, y = 30},
-		{x= 0, y = 80},
-	{x= 100, y = 80}},
+	triStrip={	{x= 0, y = 0},			
+				{x= 100, y = 30},
+				{x= 0, y = 80},
+				{x= 100, y = 80}},
 	backgroundCol=backgroundColExtended,
 	caption= "QUEUE",
 	callbackFunction=function(self,...)
@@ -251,61 +251,61 @@ MainMenue[CMD.GUARD] ={
 }	
 
 MainMenue[CMD.ATTACK].callbackFunction= function()
-		Spring.Echo("Selected Attack")
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] =  CMD.ATTACK 
-
+	Spring.Echo("Selected Attack")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.ATTACK 
+	
 end
 MainMenue[CMD.STOP].callbackFunction= function()
-		Spring.Echo("Selected STOP")
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player]   =  CMD.STOP 
+	Spring.Echo("Selected STOP")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.STOP 
 end
 MainMenue[CMD.MOVE].callbackFunction= function() 
-		Spring.Echo("Selected Move")
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] =  CMD.MOVE 
+	Spring.Echo("Selected Move")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.MOVE 
 end
 MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
-		selectedUnits =Spring.GetSelectedUnits()
-		if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
+	selectedUnits =Spring.GetSelectedUnits()
+	if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
 		states = Spring.GetUnitStates(selectedUnits[1])
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
-		end
+	end
 end
 MainMenue[CMD.REPEAT].callbackFunction= function() 
-		selectedUnits =Spring.GetSelectedUnits()
-		if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
+	selectedUnits =Spring.GetSelectedUnits()
+	if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
 		states = Spring.GetUnitStates(selectedUnits[1])
-		boolRepeatActive =  0 
+		boolRepeatActive = 0 
 		if not states["repeat"] then boolRepeatActive = 1 end
 		
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
-		end
+	end
 end
 
 MainMenue[CMD.MOVE_STATE].callbackFunction= function()
 	selectedUnits =Spring.GetSelectedUnits()
-		if selectedUnits then
+	if selectedUnits then
 		states = Spring.GetUnitStates(selectedUnits[1])
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
-		end
- end
+	end
+end
 MainMenue[CMD.REPAIR].callbackFunction= function() 
-		Spring.Echo("Selected Repair")
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player]  =  CMD.REPAIR 
+	Spring.Echo("Selected Repair")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.REPAIR 
 end
 MainMenue[CMD.GUARD].callbackFunction= function() 	
-		Spring.Echo("Selected Guard")	
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.GUARD
+	Spring.Echo("Selected Guard")	
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.GUARD
 end
 
 MainMenue[CMD.PATROL].callbackFunction= function() 	
-		Spring.Echo("Selected Patrol")	
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.PATROL
+	Spring.Echo("Selected Patrol")	
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.PATROL
 end
 
 
@@ -483,7 +483,7 @@ function widget:Initialize()
 end
 
 function widget:MousePress()
-	Spring.Echo("MousePress activated")
+--	Spring.Echo("MousePress activated")
 end
 
 function widgetHandler:MouseRelease(x, y, button)
@@ -491,20 +491,20 @@ function widgetHandler:MouseRelease(x, y, button)
 	Spring.Echo("Mouse Owner: "..mo)
 	
 	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
-			Spring.Echo("MouseRelease active")
+	Spring.Echo("MouseRelease active")
 	if (not (lmb or mmb or rmb)) then
 		return false
 	end
-
+	
 	if lmb then
-			alt, ctrl, meta, shift =GetModKeys()
-			local x, y, lmb, mmb, rmb, outsideSpring  = Spring.GetMouseState()
-			command = 1
-			if  WG.SelectedCommand[mo] then
-				command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
-			end
-			Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
-			
+		alt, ctrl, meta, shift =GetModKeys()
+		local x, y, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
+		command = 1
+		if WG.SelectedCommand[mo] then
+			command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
+		end
+		Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
+		
 		return true
 	end
 	

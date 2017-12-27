@@ -162,11 +162,14 @@ function widget:Initialize()
 		onOffButton.name = "onOffButton"
 		onOffButton.caption = "ABILITY"
 		
-		stack_main:AddChild(onOffButton)
+		if stack_main.children[onOffButton] then 
+			stack_main.children[onOffButton] = onOffButton 
+		else
+			stack_main:AddChild(onOffButton)
+		end
 		
 		if onOffButton then
-			ButtonsTable["defaultOnOff"]=onOffButton
-						
+			ButtonsTable["defaultOnOff"]=onOffButton						
 			onOffButton:Hide()
 		end
 	end
