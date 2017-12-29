@@ -41,19 +41,19 @@ end
 
 --//=============================================================================
 function Rotate(x, z, Rad)
-		if not Rad then return end
-    sinus = math.sin(Rad)
-    cosinus = math.cos(Rad)
-
-    return x * cosinus + z * -sinus, x * sinus + z * cosinus
+	if not Rad then return end
+	sinus = math.sin(Rad)
+	cosinus = math.cos(Rad)
+	
+	return x * cosinus + z * -sinus, x * sinus + z * cosinus
 end
 
 
 function HabaneroButton:Spiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
-local strip = {}
-totalReducePerStep= (1-reduceFactor)/Resolution
-degPerRes =Degree/Resolution
-
+	local strip = {}
+	totalReducePerStep= (1-reduceFactor)/Resolution
+	degPerRes =Degree/Resolution
+	
 	for i=1,Resolution do
 		--make a copy and 	--scale the new points
 		local copyPointA,copyPointB = startPointA, startPointB
@@ -78,7 +78,12 @@ function HabaneroButton:DrawControl()
 end
 
 --//=============================================================================
+--> gets the parents of the handed objects absolut size in pixel
 function getParentSize(self)
+
+	--debugging
+		Spring.Echo("HabaneroButton:Screen0Size"..Chili.Screen0.width.." / "..Chili.Screen0.heigth	)
+		
 	--no parent
 	if not self.parent then error("No parent existing for HabaneroButton "..self.caption) end
 	
@@ -87,15 +92,15 @@ function getParentSize(self)
 		return Chili.Screen0.width, Chili.Screen0.heigth	
 	end
 	if self.width and self.heigth then
-	
+		Spring.Echo("HabaneroButton:Selfsize"..self.caption..":"..self.width.." / "..self.heigth	)
 		typeX,typeY=type(self.width),type(self.heigth)
-	
-	--self width exists as pixel value
+		
+		--self width exists as pixel value
 		if typeX == "number" and typeY == "number" then 
 			return self.width, self.heigth 
 		end
-	
-	--self width exists as percentage  value
+		
+		--self width exists as percentage value
 		if typeX == "string" and typeY == "string" then 
 			dx,dy= getParentSize(self.parent)
 			fx,fy= stringPercentToScale(self.width), stringPercentToScale(self.heigth)
@@ -105,77 +110,73 @@ function getParentSize(self)
 	end	
 end
 
-
+--> converts a string percentage value into a number
 function stringPercentToScale(percent)
 	return	math.min(100.0,math.max(0.0,tonumber(string.gsub(string.gsub(percent,"%%","")," ",""),10)))/100
 end
 
-function HabaneroButton:Init()
-
-		if self.triStrip[1] and type(self.triStrip[1].x)== "number" then
-		xMinLoc,xMaxLoc=0,0
-		yMinLoc,yMaxLoc=0,0
-		
-		
-		
-		--computate the preBox
-		for i=1,table.getn(self.triStrip) do
-			point= self.triStrip[i]		
-			if point.x < xMinLoc then xMinLoc= point.x end
-			if point.x > xMaxLoc then xMaxLoc= point.x end
-			if point.y < yMinLoc then yMinLoc= point.y end
-			if point.y > yMaxLoc then yMaxLoc= point.y end
-		end	
-		
-		xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
-		yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-		
-		xMax=xMaxLoc
-		xMin =xMinLoc
-		yMax=yMaxLoc
-		yMin =yMinLoc
-		
-		defaultWidth = xWidth
-		defaultHeight =yHeigth
-		
-		else
-		
-			Spring.Echo("intialising from string")
-			--calculating totalPixels of the the Icon
-			assert(this.parent)
-			totalPixelsX,totalPixelsY= getParentSize(this.parent) 
-		
-			xMinLoc,xMaxLoc=0,0
-			yMinLoc,yMaxLoc=0,0		
-			
-			--computate the preBox
-			for i=1,table.getn(this.triStrip) do
-				point= triStrip[i]		
-				point.x=stringPercentToScale(point.x)
-				point.y=stringPercentToScale(point.y)
-				-- limit
+--> generates a trianglestrip from a outline
+function convertOutlineToTriStrip(outline)
+	midPoint={x=0,y=0}
+	for i=1,#outline do
+		midPoint.x,midPoint.y = midPoint.x + outline[i].x,midPoint.y + outline[i].y
+	end
+	midPoint.x,midPoint.y= midPoint.x/#outline , midPoint.y/#outline
 	
-				
-				point.x = point.x *totalPixelsX
-				point.y = point.y *totalPixelsY			
-				
-				if point.x < xMinLoc then xMinLoc= point.x end
-				if point.x > xMaxLoc then xMaxLoc= point.x end
-				if point.y < yMinLoc then yMinLoc= point.y end
-				if point.y > yMaxLoc then yMaxLoc= point.y end
-			end	
+	ltriStrip={}
+	for i=1,#outline do
+		ltriStrip[3*(i-1)+1] = {x=outline[i].x,y=outline[i].y}
+		ltriStrip[3*(i-1)+2]= {x=midPoint.x, y=midPoint.y}
+		ltriStrip[3*(i-1)+3]= {x=outline[i+1].x,y=outline[i+1].y}		
+	end
+		--close the triangle strip
+		ltriStrip[#ltriStrip+1] = {x=outline[#outline].x,y=outline[#outline].y}
+		ltriStrip[#ltriStrip+1]= {x=midPoint.x, y=midPoint.y}
+		ltriStrip[#ltriStrip+1]= {x=outline[1].x,y=outline[1].y}		
+end
+
+function HabaneroButton:Init()
+	--Handle outline
+	if self.outline then
+		self.triStrip = convertOutlineToTriStrip(self.outline)		
+	end
+	
+	boolAbsoluteSize = (self.triStrip[1] and type(self.triStrip[1].x)== "number")
+	
+	self.xMin ,self.xMax =0,1
+	self.yMin ,self.yMax =0,1	
+	totalPixelsX,totalPixelsY= getParentSize(this.parent) 
+	
+	if boolAbsoluteSize == false then	
+	
+		
+		for i=1,table.getn(self.triStrip) do
+			local point= self.triStrip[i]		
+			point.x=stringPercentToScale(point.x)
+			point.y=stringPercentToScale(point.y)
+			-- limit	
 			
-			xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
-			yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-			
-			xMax=xMaxLoc
-			xMin =xMinLoc
-			yMax=yMaxLoc
-			yMin =yMinLoc
-			
-			defaultWidth = xWidth
-			defaultHeight =yHeigth
+			point.x = point.x *totalPixelsX
+			point.y = point.y *totalPixelsY	
+			self.triStrip[i] = point		
 		end
+	end
+	
+	--computate the early out box
+	for i=1,table.getn(self.triStrip) do
+		local point= self.triStrip[i]		
+		self.xMin = math.min(self.xMin ,point.x)
+		self.xMax = math.max(self.xMax ,point.x)
+		self.yMin = math.min(self.yMin ,point.y)
+		self.yMax = math.max(self.yMax ,point.y)
+	end		
+	
+	xWidth = math.abs( self.xMax )+ math.abs(self.xMin )
+	yHeigth = math.abs(self.yMax )+ math.abs(self.yMin )	
+	
+	defaultWidth = xWidth
+	defaultHeight =yHeigth
+	
 end
 --//=============================================================================
 --//=============================================================================
