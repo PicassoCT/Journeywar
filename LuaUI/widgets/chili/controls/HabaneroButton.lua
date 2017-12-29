@@ -19,6 +19,8 @@ HabaneroButton = Control:Inherit{
 	xMax = 1,
 	yMin = 0,
 	yMax = 1,
+	midPointX=0,
+	midPointY=0,
 	
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
@@ -78,22 +80,30 @@ function HabaneroButton:DrawControl()
 end
 
 --//=============================================================================
+function getZeroScreen(self)
+while self.parent do
+self = self.parent
+end
+return self
+end
+
 --> gets the parents of the handed objects absolut size in pixel
 function getParentSize(self)
-
+	assert(self.parent,"Parent "..self.name.." has no parent")
 	--debugging
-		Spring.Echo("HabaneroButton:Screen0Size"..Chili.Screen0.width.." / "..Chili.Screen0.heigth	)
+	zeroScreen = getZeroScreen(self)
+	--	Spring.Echo("HabaneroButton:Screen0Size"..zeroScreen.width.." / "..zeroScreen.height	)
 		
 	--no parent
 	if not self.parent then error("No parent existing for HabaneroButton "..self.caption) end
 	
 	--self is root
-	if self == Chili.Screen0 then
-		return Chili.Screen0.width, Chili.Screen0.heigth	
+	if self == zeroScreen then
+		return zeroScreen.width, zeroScreen.height	
 	end
 	if self.width and self.heigth then
-		Spring.Echo("HabaneroButton:Selfsize"..self.caption..":"..self.width.." / "..self.heigth	)
-		typeX,typeY=type(self.width),type(self.heigth)
+		Spring.Echo("HabaneroButton:Selfsize"..self.caption..":"..self.width.." / "..self.height	)
+		typeX,typeY=type(self.width),type(self.height)
 		
 		--self width exists as pixel value
 		if typeX == "number" and typeY == "number" then 
@@ -145,7 +155,7 @@ function HabaneroButton:Init()
 	
 	self.xMin ,self.xMax =0,1
 	self.yMin ,self.yMax =0,1	
-	totalPixelsX,totalPixelsY= getParentSize(this.parent) 
+	totalPixelsX,totalPixelsY= getParentSize(self.parent) 
 	
 	if boolAbsoluteSize == false then	
 	
@@ -169,7 +179,11 @@ function HabaneroButton:Init()
 		self.xMax = math.max(self.xMax ,point.x)
 		self.yMin = math.min(self.yMin ,point.y)
 		self.yMax = math.max(self.yMax ,point.y)
+		self.midPointX= self.midPointX + point.x
+		self.midPointY= self.midPointY + point.y
 	end		
+	self.midPointX= self.midPointX/ #self.triStrip
+	self.midPointY= self.midPointY/ #self.triStrip
 	
 	xWidth = math.abs( self.xMax )+ math.abs(self.xMin )
 	yHeigth = math.abs(self.yMax )+ math.abs(self.yMin )	

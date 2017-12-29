@@ -1,6 +1,6 @@
 function widget:GetInfo()
   return {
-    name      = "Hides the default interface",
+    name      = "Hide default interface",
     desc      = "",
     author    = "gajop, Bluestone",
     date      = "",
@@ -17,7 +17,7 @@ function widget:Initialize()
   widgetHandler:RegisterGlobal("LayoutButtons", DummyLayoutHandler)
 
 	--Spring.SendCommands("hideinterface  1")
-  Spring.SendCommands("Console 0")
+  --Spring.SendCommands("Console 0")
   Spring.SendCommands("ResBar 0")
   Spring.SendCommands("ToolTip 0")
   Spring.SendCommands("Clock 0")

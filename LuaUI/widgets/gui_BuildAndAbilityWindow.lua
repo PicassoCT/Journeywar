@@ -236,7 +236,7 @@ function widget:Initialize()
 			maxItemHeight =	 '32%',
 			
 			color = {0,0,0,1},
-			
+			parent= upgrade_window,
 			children = {
 				createNewUpgradeButton(100,90, BaseCol, texCol, "SPEED"),
 				createNewUpgradeButton(100,90, BaseCol, texCol, "ARMOR"),

@@ -367,43 +367,6 @@ function widget:Initialize()
 			OnClick= { functionOnClick}
 		}
 	end
-	extendedCommand_Grid = Grid:New{
-		x= 0,
-		y = 0,
-		padding = {5,5,5,5},
-		itemPadding = {0, 0, 0, 0},
-		itemMargin = {0, 0, 0, 0},
-		--autosize =true,
-		--weightedResize =true,
-		resizeItems = true,		
-		orientation = 'horizontal',
-		centerItems = false,
-		columns = 1,	
-		rows = 6,
-		name = 'UpgradeGrid',
-		width = '100%',
-		height = '100%',
-		
-		minItemHeight =	 '21%',
-		maxItemHeight =	 '32%',
-		
-		color = {0,0,0,1},
-		
-		children = {
-		},		
-	}
-	
-	for commandID,Option in pairs(extendedMenue) do
-		extendedCommands[commandID] = createHabanero(
-		Option.triStrip,
-		Option.caption,
-		Option.backgroundCol,
-		extHoloTexCol,
-		Option.callbackFunction,
-		extendedCommand_Grid
-		)		
-		extendedCommands[commandID]:Init()
-	end
 	
 	extendedCommand_window = Window:New{
 		padding = {3,3,3,3,},
@@ -427,6 +390,46 @@ function widget:Initialize()
 			
 		},
 	}	
+	
+	extendedCommand_Grid = Grid:New{
+		x= 0,
+		y = 0,
+		padding = {5,5,5,5},
+		itemPadding = {0, 0, 0, 0},
+		itemMargin = {0, 0, 0, 0},
+		--autosize =true,
+		--weightedResize =true,
+		resizeItems = true,		
+		orientation = 'horizontal',
+		centerItems = false,
+		columns = 1,	
+		rows = 6,
+		name = 'extended Comand Grid',
+		width = '100%',
+		height = '100%',
+		parent =extendedCommand_window,
+		minItemHeight =	 '21%',
+		maxItemHeight =	 '32%',
+		
+		color = {0,0,0,1},
+		
+		children = {
+		},		
+	}
+	
+	for commandID,Option in pairs(extendedMenue) do
+		extendedCommands[commandID] = createHabanero(
+		Option.triStrip,
+		Option.caption,
+		Option.backgroundCol,
+		extHoloTexCol,
+		Option.callbackFunction,
+		extendedCommand_Grid
+		)		
+		extendedCommands[commandID]:Init()
+	end
+	
+
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.LOAD_UNITS])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.UNLOAD_UNITS])
@@ -437,6 +440,32 @@ function widget:Initialize()
 	extendedCommand_window:AddChild(extendedCommand_Grid)
 	
 	Habaneros={ }
+	
+		controllCommand_window = Window:New{
+		padding = {3,3,3,3,},
+		dockable = true,
+		caption = '',
+		textColor = {0.9,1,1,0.7},
+		name = "controllCommand_window",
+		x = controllCommand_window_positionX, 
+		y = controllCommand_window_positionY,
+		width = controllCommand_window_width,
+		height = controllCommand_window_height,
+		parent = screen0,
+		draggable = true,
+		tweakDraggable = true,
+		tweakResizable = true,
+		resizable = true,
+		dragUseGrip = true,
+		dockable = true,
+		--minWidth = 50,
+		--minHeight = 50,
+		color = {0,0,0,1},
+		
+		children = {			
+		},
+	}
+	
 local	base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
@@ -450,6 +479,7 @@ local	base_stack = Grid:New{
 		centerItems = false,
 		columns = 3,
 		rows= 3,
+		parent =controllCommand_window,
 		children={
 			Habaneros[CMD.ATTACK],
 			Habaneros[CMD.STOP],
@@ -485,31 +515,9 @@ local	base_stack = Grid:New{
 	base_stack:AddChild(Habaneros[CMD.PATROL])
 	base_stack:AddChild(Habaneros[CMD.GUARD])
 	
-	controllCommand_window = Window:New{
-		padding = {3,3,3,3,},
-		dockable = true,
-		caption = '',
-		textColor = {0.9,1,1,0.7},
-		name = "controllCommand_window",
-		x = controllCommand_window_positionX, 
-		y = controllCommand_window_positionY,
-		width = controllCommand_window_width,
-		height = controllCommand_window_height,
-		parent = screen0,
-		draggable = true,
-		tweakDraggable = true,
-		tweakResizable = true,
-		resizable = true,
-		dragUseGrip = true,
-		dockable = true,
-		--minWidth = 50,
-		--minHeight = 50,
-		color = {0,0,0,1},
-		
-		children = {			
-			base_stack,			
-		},
-	}
+
+	controllCommand_window:AddChild(controllCommand_window)
+	
 end
 
 function widget:MousePress()
