@@ -938,7 +938,8 @@ function workInProgress()
 		actualHealth = Spring.GetUnitHealth(unitID)
 		
 		
-		if actualHealth <= 1 then
+
+		if actualHealth <= 2 then
 			boolIwantToGoHome = true
 			Hide(condepot)
 			Spring.SetUnitNoSelect(unitID, true)
@@ -946,6 +947,8 @@ function workInProgress()
 			while (math.abs(x - xorg) < 25 and math.abs(z - zorg) < 25) == false do
 				x, y, z = home()
 			end
+			teamID= Spring.GetUnitTeam(unitID)
+			Spring.AddTeamRessource(teamID,"metal", 50)
 			Spring.DestroyUnit(unitID, false, true)
 			
 			--makes the Unit go home, to the place it was born- west Virginia

@@ -68,7 +68,6 @@ function drumClapOverhead()
 
 
     Turn(tigLil, x_axis, math.rad(-18), 4)
-    Turn(tigLil, y_axis, math.rad(0), 4)
     Turn(tigLil, z_axis, math.rad(0), 4)
 
 
@@ -113,7 +112,6 @@ function drumClapOverhead()
 
 
     WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
     WaitForTurn(tigLil, z_axis)
 
 
@@ -160,7 +158,6 @@ function drumClapOverhead()
 
 
     Turn(tigLil, x_axis, math.rad(-12), 4)
-    Turn(tigLil, y_axis, math.rad(0), 4)
     Turn(tigLil, z_axis, math.rad(0), 4)
 
 
@@ -209,7 +206,6 @@ function drumClapOverhead()
 
 
     WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
     WaitForTurn(tigLil, z_axis)
 
 
@@ -261,7 +257,6 @@ function drumClapOverhead()
 
 
     Turn(tigLil, x_axis, math.rad(-18), 4)
-    Turn(tigLil, y_axis, math.rad(0), 4)
     Turn(tigLil, z_axis, math.rad(0), 4)
 
 
@@ -305,7 +300,6 @@ function drumClapOverhead()
     Turn(tllegLowR, z_axis, math.rad(0), 4)
 
     WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
     WaitForTurn(tigLil, z_axis)
 
 
@@ -354,7 +348,6 @@ function drumClapFront()
 
 
     Turn(tigLil, x_axis, math.rad(25), 3)
-    Turn(tigLil, y_axis, math.rad(0), 4)
     Turn(tigLil, z_axis, math.rad(0), 4)
 
 
@@ -403,7 +396,6 @@ function drumClapFront()
 
 
     WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
     WaitForTurn(tigLil, z_axis)
 
 
@@ -450,7 +442,6 @@ function drumClapFront()
     --------------- UnClap---------------
 
     Turn(tigLil, x_axis, math.rad(15), 4)
-    Turn(tigLil, y_axis, math.rad(0), 4)
     Turn(tigLil, z_axis, math.rad(0), 4)
 
 
@@ -494,7 +485,6 @@ function drumClapFront()
 
 
     WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
     WaitForTurn(tigLil, z_axis)
 
 
@@ -541,7 +531,6 @@ function drumClapFront()
 
 
     Turn(tigLil, x_axis, math.rad(25), 4)
-    Turn(tigLil, y_axis, math.rad(0), 4)
     Turn(tigLil, z_axis, math.rad(0), 4)
 
 
@@ -592,7 +581,6 @@ function drumClapFront()
 
 
     WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
     WaitForTurn(tigLil, z_axis)
 
 
@@ -1330,27 +1318,20 @@ end
 
 tiglildefid = Spring.GetUnitDefID(unitID)
 function onTheMove()
-    Signal(SIG_ONTHEMOVE)
-    SetSignalMask(SIG_ONTHEMOVE)
-    nCounter = 0
-    while (true) do
+	for k=1, 5 do
 
-        if nCounter == 0 then
+        if k==1 then
             StartThread(PlaySoundByUnitDefID,tiglildefid, "sounds/tiglil/tgdance.wav", 0.75, 3000, 1, 0)
-        elseif nCounter == 5 then
-            nCounter = 0
         end
 
-        flipFlop = math.random(0, 1)
-        if flipFlop == 1 then
+        if math.random(0, 1) ==1 then
             drumClapOverhead()
-        end
+        else
 
-        if flipFlop == 0 then
             drumClapFront()
         end
 
-        nCounter = nCounter + 1
+        
     end
 end
 
@@ -1395,41 +1376,8 @@ function spagat()
 
     Turn(tllegLowR, x_axis, math.rad(0), 3)
     WaitForMove(tigLil, y_axis)
-    WaitForTurn(tigLil, x_axis)
-    WaitForTurn(tigLil, y_axis)
-    WaitForTurn(tigLil, z_axis)
+	WaitForTurns(tigLil,tlhairdown,tlhairup, tlHead,tlarm,tlarmr,tllegUp,tllegLow,tllegUpR,tllegLowR)
 
-
-    WaitForTurn(tlHead, x_axis)
-    WaitForTurn(tlHead, y_axis)
-    WaitForTurn(tlHead, z_axis)
-
-    WaitForTurn(tlhairup, x_axis)
-    WaitForTurn(tlhairup, y_axis)
-    WaitForTurn(tlhairup, z_axis)
-
-    WaitForTurn(tlhairdown, x_axis)
-
-    WaitForTurn(tlarm, x_axis)
-    WaitForTurn(tlarm, y_axis)
-    WaitForTurn(tlarm, z_axis)
-
-    WaitForTurn(tlarmr, x_axis)
-    WaitForTurn(tlarmr, y_axis)
-    WaitForTurn(tlarmr, z_axis)
-
-
-    WaitForTurn(tllegUp, x_axis)
-    WaitForTurn(tllegUp, y_axis)
-    WaitForTurn(tllegUp, z_axis)
-    WaitForTurn(tllegLow, x_axis)
-
-
-    WaitForTurn(tllegUpR, x_axis)
-    WaitForTurn(tllegUpR, y_axis)
-    WaitForTurn(tllegUpR, z_axis)
-
-    WaitForTurn(tllegLowR, x_axis)
     Sleep(750)
 
     Turn(tlarm, z_axis, math.rad(23), 9) --i
@@ -1448,6 +1396,7 @@ function spagat()
 
     Move(tigLil, y_axis, 0, 38)
     WaitForMove(tigLil, y_axis)
+	WaitForTurns(tigLil,tlhairdown,tlhairup, tlHead,tlarm,tlarmr,tllegUp,tllegLow,tllegUpR,tllegLowR)
 end
 
 --[[
@@ -5292,10 +5241,28 @@ function idle_stance9()
     Sleep(250)
 end
 
+function danceInCircle()
+		flopFlip = math.random(0, 1)
+		Turn(tigLil, y_axis, math.rad(0), 0)
 
+        if flopFlip == 1 then
+            Turn(tigLil, y_axis, math.rad(-179), 7)
+            StartThread(danceTurnRight)
+			WaitForTurn(tigLil,y_axis)
+			 Turn(tigLil, y_axis, math.rad(-359), 7)
+        else
+            Turn(tigLil, y_axis, math.rad(179), 7)
+            StartThread(danceTurnLeft)
+			WaitForTurn(tigLil,y_axis)
+			Turn(tigLil, y_axis, math.rad(359), 7)
+        end
+        WaitForTurn(tigLil, y_axis)
+		Signal(SIG_INCIRCLE)
+
+end
 --dancestance
 function idle_stance_10()
-    for i = 0, 4, 1 do
+
         --------------------------------------- Preparations--------------------------
         Turn(tlarm, x_axis, math.rad(0), 4)
         Turn(tlarm, y_axis, math.rad(0), 4)
@@ -5312,88 +5279,42 @@ function idle_stance_10()
         Turn(tigLil, y_axis, math.rad(180), 18)
         WaitForTurn(tigLil, y_axis)
         --------------------------------------- Preparations--------------------------
-        -- searchmebookmark
+    for i = 0, 4, 1 do     
+	 -- searchmebookmark
         -- do
         tempTurnRandA = math.random(75, 105)
-        Turn(dancepivot, y_axis, math.rad(tempTurnRandA), 0.35)
+        Turn(dancepivot, y_axis, math.rad(tempTurnRandA), 0.35)       
+        whileInTurn(dancepivot,y_axis,onTheMove)
 
-        Signal(SIG_ONTHEMOVE)
-        StartThread(onTheMove)
-        WaitForTurn(dancepivot, y_axis)
-        Signal(SIG_ONTHEMOVE)
-        flopFlip = math.random(0, 1)
-        Signal(SIG_INCIRCLE)
-        if flopFlip == 1 then
-            Turn(tigLil, y_axis, math.rad(-360), 7)
-            StartThread(danceTurnRight)
-        end
-        if flopFlip == 0 then
-            Turn(tigLil, y_axis, math.rad(360), 7)
-            StartThread(danceTurnLeft)
-        end
-        WaitForTurn(tigLil, y_axis)
-        Signal(SIG_INCIRCLE)
-
+		danceInCircle()
+		
 
         tempTurnRandB = math.random(160, 190)
         Turn(dancepivot, y_axis, math.rad(tempTurnRandB), 0.35)
+        whileInTurn(dancepivot,y_axis,onTheMove)
 
-        Signal(SIG_ONTHEMOVE)
-        StartThread(onTheMove)
-        WaitForTurn(dancepivot, y_axis)
-        Signal(SIG_ONTHEMOVE)
-        Signal(SIG_INCIRCLE)
-        if flopFlip == 1 then
-            Turn(tigLil, y_axis, math.rad(-360), 7)
-            StartThread(danceTurnRight)
-        end
-        if flopFlip == 0 then
-            Turn(tigLil, y_axis, math.rad(360), 7)
-            StartThread(danceTurnLeft)
-        end
-        WaitForTurn(tigLil, y_axis)
-        Signal(SIG_INCIRCLE)
+		
+   
+        danceInCircle()
+
+     
 
         tempTurnRandC = math.random(245, 290)
         Turn(dancepivot, y_axis, math.rad(tempTurnRandC), 0.35)
+        whileInTurn(dancepivot,y_axis,onTheMove)
 
-        Signal(SIG_ONTHEMOVE)
-        StartThread(onTheMove)
-        WaitForTurn(dancepivot, y_axis)
-        Signal(SIG_ONTHEMOVE)
-        Signal(SIG_INCIRCLE)
-        if flopFlip == 1 then
-            Turn(tigLil, y_axis, math.rad(-360), 7)
-            StartThread(danceTurnRight)
-        end
-        if flopFlip == 0 then
-            Turn(tigLil, y_axis, math.rad(360), 7)
-            StartThread(danceTurnLeft)
-        end
-        WaitForTurn(tigLil, y_axis)
-        Signal(SIG_INCIRCLE)
+ 
+ 
+		danceInCircle()
 
-        WaitForTurn(dancepivot, y_axis)
-        Turn(dancepivot, y_axis, math.rad(360), 0.35)
+		
+        Turn(dancepivot, y_axis, math.rad(360), 0.35)      
+        whileInTurn(dancepivot,y_axis,onTheMove)
 
-        Signal(SIG_ONTHEMOVE)
-        StartThread(onTheMove)
-        WaitForTurn(dancepivot, y_axis)
-        Signal(SIG_ONTHEMOVE)
-        Signal(SIG_INCIRCLE)
-        if flopFlip == 1 then
-            Turn(tigLil, y_axis, math.rad(-360), 7)
-            StartThread(danceTurnRight)
-        end
-        if flopFlip == 0 then
-            Turn(tigLil, y_axis, math.rad(360), 7)
-            StartThread(danceTurnLeft)
-        end
-        WaitForTurn(tigLil, y_axis)
-        Signal(SIG_INCIRCLE)
 
-        Turn(tigLil, y_axis, math.rad(0), 8)
-        WaitForTurn(dancepivot, y_axis)
+       danceInCircle()
+		Turn(dancepivot, y_axis, math.rad(0), 0)      
+        Turn(tigLil, y_axis, math.rad(0), 0,true)
     end
     Signal(SIG_ONTHEMOVE)
     Signal(SIG_INCIRCLE)
@@ -5477,6 +5398,33 @@ function idle_stance13()
         tP(tllegLowR, 59, 0, 0, factor * i)
         Sleep(1300 - (i * 50))
     end
+	 for i = 1, 6 do
+	
+		mP(tigLil, 0, -8, -0.8, factor * i * 7)
+		poseshift=math.random(-i,i)
+        tP(tigLil, 119+poseshift, 0, 0, factor * i)
+        tP(tlHead, -25, -94, -26, factor * i)
+        tP(tlhairup, 33,-15,-112, factor * i * 2)
+        tP(tlhairdown, 0, 0, 0, factor * i * 2)
+        tP(tlarm,-37, math.random(-13,0),105, factor * i)
+        tP(tlarmr, -31,math.random(0,12),-106, factor * i)
+        tP(tllegUp, -85+poseshift,math.random(3,5), math.random(3,5), factor * i)
+        tP(tllegLow, 50, math.random(3,5), math.random(3,5), factor * i)
+        tP(tllegUpR, -85+poseshift,math.random(3,5), math.random(3,5), factor * i)
+        tP(tllegLowR, 50, math.random(3,5), math.random(3,5), factor * i)
+        Sleep(1300 - (i * 50))
+       
+	end
+	
+	Sleep(3000)
+    legs_down()
+end
+--strike a pose
+function idle_stance16()
+	pose = 1
+	if pose ==1 then
+	
+	end
 	Sleep(3000)
     legs_down()
 end
@@ -5950,7 +5898,7 @@ end
 local function drumPose(mspeed, tspeed, addUp)
     randyPro = math.random(2, 8)
      addUp1 = addUp - 10.5 --7
-	 
+	 mSyncIn(tigLil,	0, addUp1, 0, 250)
     for i = 0, randyPro, 1 do
 		tSyncIn(tigLil,	-104, 0 ,0, 250)	
 		mSyncIn(tigLil,	0, addUp1, 0, 250)
@@ -5990,8 +5938,6 @@ local function drumPose(mspeed, tspeed, addUp)
 		tSyncIn(tllegLowR, 	90,0,0,250)
 		WaitForTurns(deathpivot,tigLil,tllegUp,tllegLow,tllegUpR,tllegLow,tlarm,tlarmr,tlHead,tlhairup,tlhairdown)
 		WaitForMoves(tigLil)   
-
-
     end
 		tSyncIn(tigLil,		0, 0 ,0, 250)	
 		mSyncIn(tigLil,	0, addUp, 0, 100)
