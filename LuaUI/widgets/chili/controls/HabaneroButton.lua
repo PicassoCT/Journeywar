@@ -12,11 +12,14 @@ HabaneroButton = Control:Inherit{
 	caption = 'HabaneroButton', 
 	--local Coordinates
 	defaultWidth = 70,
+	width= 0,
 	defaultHeight = 20,
+	heigth = 0,
 	xMin= 0,
 	xMax = 1,
 	yMin = 0,
 	yMax = 1,
+	
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
@@ -75,55 +78,49 @@ function HabaneroButton:DrawControl()
 end
 
 --//=============================================================================
-
-function HabaneroButton:initFromPercenTageStringTriStrip(totalPixelsX, totalPixelsY, ParentPercentX,ParentPercentY) 
-	--TODO: Test
-	totalPixelsX = totalPixelsX * ParentPercentX
-	totalPixelsY= totalPixelsY * ParentPercentY
+function getParentSize(self)
+	--no parent
+	if not self.parent then error("No parent existing for HabaneroButton "..self.caption) end
 	
-	xMinLoc,xMaxLoc=0,0
-	yMinLoc,yMaxLoc=0,0		
-		
-		--computate the preBox
-		for i=1,table.getn(this.triStrip) do
-			point= triStrip[i]		
-			point.x=tonumber(string.gsub(string.gsub(point.x,"%%","")," ",""),10)
-			point.y=tonumber(string.gsub(string.gsub(point.y,"%%","")," ",""),10)
-			-- limit
-			point.x =math.abs(math.max(0,math.min(100.0,point.x))/100)
-			point.y =math.abs(math.max(0,math.min(100.0,point.y))/100)
+	--self is root
+	if self == Chili.Screen0 then
+		return Chili.Screen0.width, Chili.Screen0.heigth	
+	end
+	if self.width and self.heigth then
+	
+		typeX,typeY=type(self.width),type(self.heigth)
+	
+	--self width exists as pixel value
+		if typeX == "number" and typeY == "number" then 
+			return self.width, self.heigth 
+		end
+	
+	--self width exists as percentage  value
+		if typeX == "string" and typeY == "string" then 
+			dx,dy= getParentSize(self.parent)
+			fx,fy= stringPercentToScale(self.width), stringPercentToScale(self.heigth)
 			
-			point.x = point.x *totalPixelsX
-			point.y = point.y *totalPixelsY			
-			
-			if point.x < xMinLoc then xMinLoc= point.x end
-			if point.x > xMaxLoc then xMaxLoc= point.x end
-			if point.y < yMinLoc then yMinLoc= point.y end
-			if point.y > yMaxLoc then yMaxLoc= point.y end
-		end	
-		
-		xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
-		yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-		
-		xMax=xMaxLoc
-		xMin =xMinLoc
-		yMax=yMaxLoc
-		yMin =yMinLoc
-		
-		defaultWidth = xWidth
-		defaultHeight =yHeigth
+			return dx*fx,dy*fy
+		end
+	end	
+end
 
+
+function stringPercentToScale(percent)
+	return	math.min(100.0,math.max(0.0,tonumber(string.gsub(string.gsub(percent,"%%","")," ",""),10)))/100
 end
 
 function HabaneroButton:Init()
-	xMinLoc,xMaxLoc=0,0
+
+		if self.triStrip[1] and type(self.triStrip[1].x)== "number" then
+		xMinLoc,xMaxLoc=0,0
 		yMinLoc,yMaxLoc=0,0
 		
 		
 		
 		--computate the preBox
-		for i=1,table.getn(this.triStrip) do
-			point= triStrip[i]		
+		for i=1,table.getn(self.triStrip) do
+			point= self.triStrip[i]		
 			if point.x < xMinLoc then xMinLoc= point.x end
 			if point.x > xMaxLoc then xMaxLoc= point.x end
 			if point.y < yMinLoc then yMinLoc= point.y end
@@ -141,9 +138,44 @@ function HabaneroButton:Init()
 		defaultWidth = xWidth
 		defaultHeight =yHeigth
 		
+		else
+		
+			Spring.Echo("intialising from string")
+			--calculating totalPixels of the the Icon
+			assert(this.parent)
+			totalPixelsX,totalPixelsY= getParentSize(this.parent) 
+		
+			xMinLoc,xMaxLoc=0,0
+			yMinLoc,yMaxLoc=0,0		
+			
+			--computate the preBox
+			for i=1,table.getn(this.triStrip) do
+				point= triStrip[i]		
+				point.x=stringPercentToScale(point.x)
+				point.y=stringPercentToScale(point.y)
+				-- limit
 	
-	
-	
+				
+				point.x = point.x *totalPixelsX
+				point.y = point.y *totalPixelsY			
+				
+				if point.x < xMinLoc then xMinLoc= point.x end
+				if point.x > xMaxLoc then xMaxLoc= point.x end
+				if point.y < yMinLoc then yMinLoc= point.y end
+				if point.y > yMaxLoc then yMaxLoc= point.y end
+			end	
+			
+			xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
+			yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
+			
+			xMax=xMaxLoc
+			xMin =xMinLoc
+			yMax=yMaxLoc
+			yMin =yMinLoc
+			
+			defaultWidth = xWidth
+			defaultHeight =yHeigth
+		end
 end
 --//=============================================================================
 --//=============================================================================

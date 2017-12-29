@@ -20,7 +20,7 @@ function gadget:GetInfo()
         date = "7 b.Creation",
         license = "GNU GPL, v2 its goes in all fields",
         layer = 0,
-        enabled = true -- loaded by default?
+        enabled = false -- loaded by default?
     }
 end
 
@@ -65,9 +65,10 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 		
 		end
 		
-	function stackPushing(unitID,func, name)
+	function stackPushing(unitID,unitDefID, func, name)
 					if not GG.UnitStack[unitID][#GG.UnitStack[unitID]] then GG.UnitStack[unitID][#GG.UnitStack[unitID]] = "[Context]" end
-					local stackname = GG.UnitStack[unitID][table.getn(GG.UnitStack[unitID])]
+					stackname = "[Context]"
+					if GG.UnitStack[unitID][#GG.UnitStack[unitID]] then stackname = GG.UnitStack[unitID][#GG.UnitStack[unitID]]  end
 					local stackIndex= #GG.UnitStack[unitID] or 1
 					if not GG.FlameGraph[unitDefID][name].calledFrom[stackname] then GG.FlameGraph[unitDefID][name].calledFrom[stackname]= 0 end
 					GG.FlameGraph[unitDefID][name].calledFrom[stackname]=GG.FlameGraph[unitDefID][name].calledFrom[stackname] + 1 
@@ -76,23 +77,23 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 	end	
 		
 	function wrapFunction(unitID, unitDefID, func, name)
-		if not name then name = "nil" end
-		
+	if name then
 		local Function = func
-		Spring.Echo("Wrapping function "..name)
-		return function(...)
+	--	Spring.Echo("Wrapping function "..name)
+		local retFunc= function(...)
+	
 				if not GG.UnitStack[unitID] then GG.UnitStack[unitID] ={[1]="[Context]"}end
 				index = #GG.UnitStack[unitID]
-				Spring.Echo("Wrapped Function called:"..GG.UnitStack[unitID][index].."::"..name)
+				Spring.Echo("Wrapped Function called:"..GG.UnitStack[unitID][index].."::"..Name)
 				local arguments = {...}
 					--measure time
 					--register call 
 					GG.FlameGraph[unitDefID][name].boolCallLeft= false
 					GG.FlameGraph[unitDefID][name].boolCallEntered= true
 					--Stack pushed
-					stackIndex= stackPushing(unitID, func, name)
+					stackIndex= stackPushing(unitID, unitDefID, func, name)
 					--hand down arguments and actual call					
-					retArguments = table.pack(Function(table.unpack(arguments)))
+					retArguments = table.pack(Function(unpack(arguments)))
 					
 					--Stack popped
 					if GG.UnitStack[unitID][#GG.UnitStack[unitID]] and stackIndex > 1 then
@@ -108,6 +109,10 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 
 				return unpack(retArguments)
 				end
+		return retFunc
+	else 
+		return func
+	end	
 	end	
 	
 	function driveHooksIntoUnitsEnv(unitID,unitDefID)
@@ -122,7 +127,9 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 				if typeV == "function" then
 					checkInit(unitDefID, v, k)
 					if not k then echo("dbg_FlameGraph::Unit "..UnitDefs[unitDefID].name.." has a nil keyed function") end
-					env[k]= wrapFunction(unitID, unitDefID, v,k)
+					if k then
+						env[k]= wrapFunction(unitID, unitDefID, v,k )
+					end
 				end
 				
 				if typeV == "table" then

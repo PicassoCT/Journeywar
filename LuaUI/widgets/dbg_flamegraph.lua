@@ -27,19 +27,16 @@ local windowImageList
 local window1
 local window2
 local window3
+local selection
 
 function widget:Initialize()
 	Chili = WG.Chili
 
 	-- we need a container that supports margin if the control inside uses margins
+	
+local	selection = Chili.ComboBox:New{items = { "opt1", "opt2", "opt3", "opt4", "opt5", "opt6", "opt7", "opt8", "opt9", "opt10", "opt11", "opt12", }}
 
-local	selection = 	--Button:New{width = 410, height = 400, anchors = {top=true,left=true,bottom=true,right=true}},
-			Chili.ComboBox:New{
-					items={
-					Chili.Button:New{caption = "Various Units1"},
-					Chili.Button:New{caption = "Various Units2"}
-					}
-			}
+			
 		
 local	flameGraph = Chili.Window:New{
 		parent = selectGridAndDisplay,
@@ -88,6 +85,7 @@ end --Initialize
 
 function widget:Update()
 	--	widgetHandler:RemoveCallIn("Update")
+	
 end
 
 
