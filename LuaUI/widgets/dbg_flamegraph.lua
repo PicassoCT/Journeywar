@@ -13,7 +13,6 @@ function widget:GetInfo()
   }
 end
 
-
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
@@ -21,20 +20,15 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 -- gui elements
 local flameGraphWindow
 local window01
-local gridWindow0
-local gridWindow1
-local windowImageList
-local window1
-local window2
-local window3
 local selection
+local DataTable ={}
 
 function widget:Initialize()
 	Chili = WG.Chili
 
 	-- we need a container that supports margin if the control inside uses margins
 	
-local	selection = Chili.ComboBox:New{items = { "opt1", "opt2", "opt3", "opt4", "opt5", "opt6", "opt7", "opt8", "opt9", "opt10", "opt11", "opt12", }}
+	selection = Chili.ComboBox:New{items = { "opt1", "opt2", "opt3", "opt4", "opt5", "opt6", "opt7", "opt8", "opt9", "opt10", "opt11", "opt12", }}
 
 			
 		
@@ -85,7 +79,14 @@ end --Initialize
 
 function widget:Update()
 	--	widgetHandler:RemoveCallIn("Update")
-	
+dataString= Spring.GetUnitLuaCommand(0)
+DataTable	=StringToTable(dataString)
+--update Selection
+selection.items= {}
+for k,v in pairs(DataTable) do
+	selection.items[#selection.items+1]=UnitDefs[k].name
+end
+
 end
 
 
