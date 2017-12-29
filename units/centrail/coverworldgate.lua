@@ -33,7 +33,7 @@ local unitDef = {
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
 	
-	maxSlope = 255,
+	maxSlope = 50,
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = false,

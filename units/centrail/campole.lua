@@ -10,6 +10,7 @@ local unitDef = {
 	SightDistance = 800,
 	FootprintX = 3,
 	FootprintZ = 3,
+	MaxSlope = 50,
 	buildtime=50,
 	EnergyStorage = 0,
 	EnergyUse = 0,

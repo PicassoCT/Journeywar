@@ -20,7 +20,7 @@ idletime=3000,
 
 	FootprintX = 3,
 	FootprintZ = 3,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 sightDistance = 600,
 nanocolor=[[0 0.9 0.9]],
 

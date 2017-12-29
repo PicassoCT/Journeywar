@@ -29,7 +29,7 @@ local unitDef = {
 	selfDestructAs="cartdarkmat",
 	FootprintX = 5,
 	FootprintZ = 8,
-	MaxSlope = 20,
+	MaxSlope = 50,
 	
 	MaxWaterDepth = 0,
 	MovementClass = "Default2x2",
@@ -62,7 +62,7 @@ local unitDef = {
 	-- Pathfinding and related
 	FootprintX = 5,
 	FootprintZ = 5,
-	MaxSlope = 10,	
+
 	YardMap ="ooooo occco occco occco occco",
 	
 	-- Building	

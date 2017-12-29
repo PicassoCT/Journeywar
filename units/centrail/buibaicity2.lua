@@ -12,7 +12,7 @@ local unitDef = {
 	buildTime = 182,
 	FootprintX = 9,
 	FootprintZ = 9,
-	MaxSlope = 10,
+	MaxSlope = 50,
 	idleAutoHeal = 0,
   nanocolor=[[0 0.9 0.9]],
   

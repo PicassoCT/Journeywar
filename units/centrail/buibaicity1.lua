@@ -14,7 +14,7 @@ local unitDef = {
 	
 	FootprintX = 6,
 	FootprintZ = 6,
-	MaxSlope = 20,
+	MaxSlope = 50,
 	buildtime=240,
 	
 	explodeAs="citadelldrone",

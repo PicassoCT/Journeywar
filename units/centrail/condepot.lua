@@ -43,7 +43,7 @@ Category=[[LAND BUILDING]],
 -- Pathfinding and related
 	FootprintX = 11,
 	FootprintZ = 8,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 	YardMap ="ooocccccooo occccccccco occccccccco ccccccccccc  ccccccccccc occccccccco occccccccco ooocccccooo",
 
 --------------------------------------	

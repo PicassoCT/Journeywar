@@ -66,7 +66,7 @@ local unitDef = {
 	-- Pathfinding and related
 	FootprintX = 8,
 	FootprintZ = 8,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 	YardMap ="oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo",
 	
 	-- Building	

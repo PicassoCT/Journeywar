@@ -18,7 +18,7 @@ local unitDef = {
 	--Movement
 	FootprintX = 18,
 	FootprintZ = 18,
-	MaxSlope = 5,
+	MaxSlope = 50,
 	--MaxVelocity = 0.5,
 	MaxWaterDepth =0,
 	blocking=false,
@@ -45,7 +45,7 @@ local unitDef = {
 		"ctransithubb"
 	},
 	
-	maxSlope = 255,
+
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = true,

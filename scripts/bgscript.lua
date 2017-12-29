@@ -155,6 +155,7 @@ local function legs_down()
 
 		resetLegs()
     val = math.random(-10, 45)
+	Turn(center,y_axis, math.rad(0),5)
     Turn(bgarm, x_axis, math.rad(val), 8)
 	--assert(type(idle)=="function")
     StartThread(idle)

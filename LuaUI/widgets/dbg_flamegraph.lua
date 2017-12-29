@@ -32,20 +32,14 @@ function widget:Initialize()
 
 			
 		
-local	flameGraph = Chili.Window:New{
+local	flameGraph = Chili.Grid:New{
 		parent = selectGridAndDisplay,
 		x = 450,
 		y = 450,
 		clientWidth = 200,
 		clientHeight = 200,
 		children = {
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"}
+			
 		},
 	}	
 	
@@ -54,7 +48,7 @@ local	flameGraph = Chili.Window:New{
 		width = '100%',
 		height = '100%',
 		children = {			
-		--	selection,
+			selection,
 			flameGraph
 
 			}
@@ -79,13 +73,13 @@ end --Initialize
 
 function widget:Update()
 	--	widgetHandler:RemoveCallIn("Update")
-dataString= Spring.GetUnitLuaCommand(0)
-DataTable	=StringToTable(dataString)
+dataString= Spring.GetGameRulesParam("SerializedFlameGraphTable")
+DataTable	= stringToTable(dataString)
 --update Selection
 selection.items= {}
-for k,v in pairs(DataTable) do
-	selection.items[#selection.items+1]=UnitDefs[k].name
-end
+	for k,v in pairs(DataTable) do
+		selection.items[#selection.items+1]=UnitDefs[k].name
+	end
 
 end
 

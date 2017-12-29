@@ -15,7 +15,7 @@ local unitDef = {
 	--Movement
 	FootprintX = 8,
 	FootprintZ = 8,
-	MaxSlope = 20,
+	MaxSlope = 50,
 	MaxWaterDepth = 20,
 	TurnRate = 500,
 	-- explodeAs = "csuborbitalstrike",

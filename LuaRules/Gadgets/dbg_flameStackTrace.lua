@@ -60,7 +60,8 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 												name= name,
 												calledFrom={},
 												source = string.dump(func)
-				} end
+				}
+				end
 
 		
 		end
@@ -174,7 +175,7 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 
 	--Send To Unsynced Display Widget
 	function serializeFlamegraph()
-		Spring.SetUnitRulesParam(0, "SerializedFlameGraphTable", toString(GG.FlameGraph))	
+		Spring.SetGameRulesParam("SerializedFlameGraphTable", toString(GG.FlameGraph))	
 	end
 	
 end

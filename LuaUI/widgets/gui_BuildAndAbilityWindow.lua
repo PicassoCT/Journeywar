@@ -281,8 +281,8 @@ function widget:Initialize()
 			fontShadow = false,
 			x = "65%",
 			y = "25%",
-			resizable = false,
-			draggable = false,
+			resizable = true,
+			draggable = true,
 			parent = stack_main,
 			clientWidth = 430,
 			clientHeight = 320,
@@ -392,7 +392,7 @@ function widget:Initialize()
 	
 	
 	
-	ability_window = Window:New{
+	ability_window =  {
 		padding = {3,3,3,3,},
 		dockable = true,
 		caption = 'Abilities',
@@ -403,11 +403,11 @@ function widget:Initialize()
 		width = ability_window.width,
 		height = ability_window.height,
 		parent = screen0,
-		draggable = false,
+		draggable = true,
 		tweakDraggable = true,
 		tweakResizable = true,
-		resizable = false,
-		dragUseGrip = false,
+		resizable = true,
+		dragUseGrip = true,
 		--minWidth = 50,
 		--minHeight = 50,
 		color = {0,0,0,1},
