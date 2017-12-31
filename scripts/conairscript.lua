@@ -948,7 +948,7 @@ function workInProgress()
 				x, y, z = home()
 			end
 			teamID= Spring.GetUnitTeam(unitID)
-			Spring.AddTeamRessource(teamID,"metal", 50)
+			Spring.AddTeamResource(teamID,"metal", 50)
 			Spring.DestroyUnit(unitID, false, true)
 			
 			--makes the Unit go home, to the place it was born- west Virginia

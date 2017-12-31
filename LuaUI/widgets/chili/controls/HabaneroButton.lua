@@ -21,11 +21,11 @@ HabaneroButton = Control:Inherit{
 	yMax = 1,
 	midPointX=0,
 	midPointY=0,
-	
+
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
-	triStrip ={},	
+	triStrip ={}
 }
 
 local this = HabaneroButton
@@ -89,11 +89,9 @@ end
 
 --> gets the parents of the handed objects absolut size in pixel
 function getParentSize(self)
-	assert(self.parent,"Parent "..self.name.." has no parent")
 	--debugging
 	zeroScreen = getZeroScreen(self)
-	--	Spring.Echo("HabaneroButton:Screen0Size"..zeroScreen.width.." / "..zeroScreen.height	)
-		
+
 	--no parent
 	if not self.parent then error("No parent existing for HabaneroButton "..self.caption) end
 	
@@ -101,13 +99,13 @@ function getParentSize(self)
 	if self == zeroScreen then
 		return zeroScreen.width, zeroScreen.height	
 	end
-	if self.width and self.heigth then
-		Spring.Echo("HabaneroButton:Selfsize"..self.caption..":"..self.width.." / "..self.height	)
+	if self.width and self.height then
+		Spring.Echo("HabaneroButton:Selfsize"..self.name..":"..self.width.." / "..self.height	)
 		typeX,typeY=type(self.width),type(self.height)
 		
 		--self width exists as pixel value
 		if typeX == "number" and typeY == "number" then 
-			return self.width, self.heigth 
+			return self.width, self.height 
 		end
 		
 		--self width exists as percentage value
@@ -115,7 +113,7 @@ function getParentSize(self)
 			dx,dy= getParentSize(self.parent)
 			fx,fy= stringPercentToScale(self.width), stringPercentToScale(self.heigth)
 			
-			return dx*fx,dy*fy
+			return dx*fx, dy*fy
 		end
 	end	
 end
@@ -145,8 +143,13 @@ function convertOutlineToTriStrip(outline)
 		ltriStrip[#ltriStrip+1]= {x=outline[1].x,y=outline[1].y}		
 end
 
+function getParentPercentage(self, dimX, dimZ)
+	return dimX/#self.parent.children, dimZ/#self.parent.children
+end
+
 function HabaneroButton:Init()
 	--Handle outline
+
 	if self.outline then
 		self.triStrip = convertOutlineToTriStrip(self.outline)		
 	end
@@ -155,11 +158,15 @@ function HabaneroButton:Init()
 	
 	self.xMin ,self.xMax =0,1
 	self.yMin ,self.yMax =0,1	
+	
 	totalPixelsX,totalPixelsY= getParentSize(self.parent) 
 	
 	if boolAbsoluteSize == false then	
-	
+	Spring.Echo("HabaneroButton:AbsoluteSize:"..totalPixelsX.." / "..totalPixelsY)
 		
+		totalPixelsX,totalPixelsY=	getParentPercentage(self, totalPixelsX,totalPixelsY)
+	Spring.Echo("HabaneroButton:Buttonsize:"..totalPixelsX.." / "..totalPixelsY)
+	
 		for i=1,table.getn(self.triStrip) do
 			local point= self.triStrip[i]		
 			point.x=stringPercentToScale(point.x)
@@ -188,8 +195,8 @@ function HabaneroButton:Init()
 	xWidth = math.abs( self.xMax )+ math.abs(self.xMin )
 	yHeigth = math.abs(self.yMax )+ math.abs(self.yMin )	
 	
-	defaultWidth = xWidth
-	defaultHeight =yHeigth
+	self.defaultWidth = xWidth
+	self.defaultHeight =yHeigth
 	
 end
 --//=============================================================================

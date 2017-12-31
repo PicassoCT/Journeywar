@@ -7,7 +7,7 @@ function widget:GetInfo()
     author    = "jK",
     date      = "Jul 11, 2007",
     license   = "GNU GPL, v2 or later",
-    layer     = 1,
+    layer     = 0,
     enabled   = true  --  loaded by default?
   }
 end
@@ -35,7 +35,7 @@ local bar_side         = 1     --left:0,top:2,right:1,bottom:3
 local bar_horizontal   = false --(not saved) if sides==top v bottom -> horizontal:=true  else-> horizontal:=false
 local bar_offset       = 0    --relative offset side middle (i.e., bar_pos := vsx*0.5+bar_offset
 local bar_align        = -1     --aligns icons to bar_pos: center=0; left/top=+1; right/bottom=-1
-local bar_iconSizeBase = 55    --iconSize o_O
+local bar_iconSizeBase = 24    --iconSize o_O
 local bar_openByClick  = false --needs a click to open the buildmenu or is a hover enough?
 local bar_autoclose    = true  --autoclose buildmenu on mouseleave?
 

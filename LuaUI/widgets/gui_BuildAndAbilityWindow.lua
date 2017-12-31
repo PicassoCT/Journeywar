@@ -384,15 +384,11 @@ function widget:Initialize()
 		rows= 3,
 		children={stack_main,
 			ammo_bar,
-			exp_bar,
-			
-		}
-		
+			exp_bar			
+		}		
 	}
 	
-	
-	
-	ability_window =  {
+	ability_window =  Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
 		caption = 'Abilities',

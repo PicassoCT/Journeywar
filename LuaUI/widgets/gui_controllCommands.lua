@@ -55,7 +55,8 @@ holoTextCol={200/255, 239/255, 253/255, 1}
 backgroundColExtended={58/255, 172/255, 226/255, 0.75}	
 
 extendedCommands={}
-	extendedMenue={[CMD.RECLAIM] ={},
+	extendedMenue={
+	[CMD.RECLAIM] ={},
 	[CMD.LOAD_UNITS]={},
 	[CMD.UNLOAD_UNITS]={},
 	[CMD.CLOAK]={},
@@ -360,6 +361,7 @@ function widget:Initialize()
 		
 		return 	Chili.HabaneroButton:New{
 			triStrip=triStrip	,
+			name= caption,
 			caption=caption,
 			parent= Parent,
 			backgroundColor = basCol,
@@ -480,16 +482,7 @@ local	base_stack = Grid:New{
 		columns = 3,
 		rows= 3,
 		parent =controllCommand_window,
-		children={
-			Habaneros[CMD.ATTACK],
-			Habaneros[CMD.STOP],
-			Habaneros[CMD.MOVE],
-			Habaneros[CMD.FIRE_STATE],
-			Habaneros[CMD.REPEAT],
-			Habaneros[CMD.MOVE_STATE	],
-			Habaneros[CMD.REPAIR],
-			Habaneros[CMD.PATROL],
-			Habaneros[CMD.GUARD]			
+		children={			
 		}
 	}
 	
