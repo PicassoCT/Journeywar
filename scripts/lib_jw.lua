@@ -27,7 +27,12 @@ function getAllBuildingTypes()
 	return mergeDict(getJourneyBuildingTypeTable(),getCentrailBuildingTypeTable())
 end
 
-
+function getMainBuildingTypeTable()
+return {
+[UnitDefNames["citadell"].id] = true,
+[UnitDefNames["beanstalk"].id] = true
+}
+end
 --> JW specific function returning the factorys of the game
 function getFactoryTypeTable(UnitDefNames, IWant)
     FactoryTypes = {}

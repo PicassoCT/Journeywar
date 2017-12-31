@@ -21,8 +21,9 @@ MA 02110-1301, USA.
 -- Central Debug Header Controlled in UnitScript
 -------------- DEBUG HEADER
 lib_boolDebug = false --
-GG.BoolDebug = lib_boolDebug
-
+if GG then
+	GG.BoolDebug = lib_boolDebug
+end
 --======================================================================================
 --Section:  Team Information Getters/Setters 
 --======================================================================================

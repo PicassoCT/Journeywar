@@ -79,6 +79,7 @@ local sound_click     = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_click.WAV'
 local sound_hover     = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_hover.wav'
 local sound_queue_add = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_add.wav'
 local sound_queue_rem = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_rem.wav'
+VFS.Include('scripts/lib_jw.lua', nil, VFSMODE)
 
 -------------------------------------------------------------------------------
 -- SOME THINGS NEEDED IN DRAWINMINIMAP
@@ -182,6 +183,7 @@ function widget:Initialize()
 
   local viewSizeX, viewSizeY = widgetHandler:GetViewSizes()
   self:ViewResize(viewSizeX, viewSizeY)
+	Spring.Echo("BuilderBar Initialization completed")
 end
 
 function widget:GetConfigData()
@@ -633,16 +635,18 @@ end
 -------------------------------------------------------------------------------
 -- UNIT INITIALIZTION FUNCTIONS
 -------------------------------------------------------------------------------
+
+local mainBuildings=  getMainBuildingTypeTable()
 function UpdateFactoryList()
   facs = {}
-
+	Spring.Echo("BuildBar:Update Factory List")
   local teamUnits = Spring.GetTeamUnits(myTeamID)
   local totalUnits = table.getn(teamUnits)
 
   for num = 1, totalUnits do
     local unitID = teamUnits[num]
     local unitDefID = GetUnitDefID(unitID)
-    if UnitDefs[unitDefID].isFactory then
+    if UnitDefs[unitDefID].isFactory or mainBuildings[unitDefID] then
       push(facs,{ unitID=unitID, unitDefID=unitDefID, buildList=UnitDefs[unitDefID].buildOptions })
       local _, _, _, _, buildProgress = GetUnitHealth(unitID)
       if (buildProgress)and(buildProgress<1) then
@@ -660,7 +664,7 @@ function widget:UnitCreated(unitID, unitDefID, unitTeam)
     return
   end
 
-  if UnitDefs[unitDefID].isFactory and unitDefID ~= efenceDefID then
+  if UnitDefs[unitDefID].isFactory or mainBuildings[unitDefID] then
     push(facs,{ unitID=unitID, unitDefID=unitDefID, buildList=UnitDefs[unitDefID].buildOptions })
   end
   unfinished_facs[unitID] = true
@@ -697,9 +701,11 @@ function widget:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
 end
 
 function widget:Update()
+Spring.Echo("BuilderBar Update")
   if myTeamID~=Spring.GetMyTeamID() then
     myTeamID = Spring.GetMyTeamID()
     UpdateFactoryList()
+	 Spring.Echo("BuilderBar Update")
   end
   inTweak = widgetHandler:InTweakMode()
 end

@@ -41,7 +41,7 @@ local ammo_bar	= {}
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
-local ability_window
+
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 updateCommandsSoon = false
@@ -49,7 +49,7 @@ updateCommandsSoon = false
 defaultCaptionByUnitType = VFS.Include('LuaUI/ressources/ability_captions.lua')
 
 local ability_window = {}
-local upgrade_window = {}
+
 ability_window.height = "23%"--180
 ability_window.height_numeric =180
 ability_window.width = "7%"--115

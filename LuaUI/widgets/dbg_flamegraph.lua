@@ -28,7 +28,7 @@ function widget:Initialize()
 
 	-- we need a container that supports margin if the control inside uses margins
 	
-	selection = Chili.ComboBox:New{items = { "opt1", "opt2", "opt3", "opt4", "opt5", "opt6", "opt7", "opt8", "opt9", "opt10", "opt11", "opt12", }}
+	selection = Chili.ComboBox:New{items = {  }}
 
 			
 		
@@ -74,15 +74,15 @@ end --Initialize
 function widget:Update()
 	--	widgetHandler:RemoveCallIn("Update")
 dataString= Spring.GetGameRulesParam("SerializedFlameGraphTable")
-DataTable	= stringToTable(dataString)
---update Selection
-selection.items= {}
-	for k,v in pairs(DataTable) do
-		selection.items[#selection.items+1]=UnitDefs[k].name
+	if dataString then
+	DataTable	= stringToTable(dataString)
+	--update Selection
+	selection.items= {}
+		for k,v in pairs(DataTable) do
+			selection.items[#selection.items+1]=UnitDefs[k].name
+		end
 	end
-
 end
-
 
 function widget:Shutdown()
 

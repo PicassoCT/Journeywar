@@ -21,7 +21,7 @@ function widget:Initialize()
   Spring.SendCommands("ResBar 0")
   Spring.SendCommands("ToolTip 0")
   Spring.SendCommands("Clock 0")
-  Spring.SendCommands("Info 0")
+ -- Spring.SendCommands("Info 0")
   Spring.SendCommands("Fps 0")
   
  -- gl.SlaveMiniMap(true)

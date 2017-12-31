@@ -5,11 +5,11 @@ include "lib_type.lua"
 
 flare1 =piece"flare1"
 rotator=piece"rotator"
-TablesOfPiecesGroups = {}
+TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 
 function script.Create()
-    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
-
+    
+	Spring.Echo("Create JJam reached")
 	Hide(flare1)
 	StartThread(emitFog)
 	StartThread(emitSound)
@@ -31,44 +31,44 @@ xCurrentDegree = 0
 yCurrentDegree = 0
 xOffsetSpan= 5
 yOffsetSpan = 10
+count=0
+yOffset= math.random(5,yOffsetSpan)		
 
-				
 process(TablesOfPiecesGroups["Leaf"],
 		function(id)
+		count=count+1
 		xOffset= math.random(1,xOffsetSpan)
-		yOffset= math.random(1,yOffsetSpan)
-		xrelativeDegree = xOffset - xCurrentDegree
-		yrelativeDegree = yOffset - yCurrentDegree
-		Turn(id,x_axis,math.rad(xrelativeDegree),0)
-		Turn(id,y_axis,math.rad(yrelativeDegree),0)		
-		xCurrentDegree= xCurrentDegree + xrelativeDegree
-		yCurrentDegree= yCurrentDegree + yrelativeDegree
 		
-		currentDegreeT[id] = {x = xOffset}
+		xrelativeDegree = xOffset - xCurrentDegree
+	
+		Turn(id,x_axis,math.rad(xrelativeDegree),0)
+		Turn(id,y_axis,math.rad(count*yOffset),0)		
+		xCurrentDegree= xCurrentDegree + xrelativeDegree
+	
+		
+		currentDegreeT[id] = {x = xOffset,y=count*yOffset }
 		end
 		)
 
-		swayInWind(TablesOfPiecesGroups["Leaf"])
+		StartThread(swayInWind,TablesOfPiecesGroups["Leaf"])
 
 end
 
 function swayInWind(tables)
+shiftindex= 0
 	while true do
-	shiftindex= shiftindex + math.pi*0.3
+	shiftindex=Spring.GetGameFrame()/300
 	partIndex= 0
 		process(tables,
 		function(id)
 			partIndex= partIndex+1
-			xOffset= currentDegreeT[id].x + math.cos(shiftindex+ (math.pi/6)*partIndex)
-			xrelativeDegree = xOffset - xCurrentDegree
-			yrelativeDegree = yOffset - yCurrentDegree
-			Turn(id,x_axis,math.rad(xrelativeDegree),0)
-			Turn(id,y_axis,math.rad(yrelativeDegree),0)		
-			xCurrentDegree= xCurrentDegree + xrelativeDegree
-			yCurrentDegree= yCurrentDegree + yrelativeDegree
+			xOffset=  math.cos(shiftindex+ (math.pi/6)*partIndex)*10		+math.sin(shiftindex - (math.pi/6)*partIndex)*5		
+			Turn(id,x_axis,math.rad(xOffset),0.5)
+
 		end
 		)
-		Sleep(100)
+		WaitForTurns(TablesOfPiecesGroups["Leaf"])
+		Sleep(1)
 	end
 
 end
