@@ -2,7 +2,7 @@ local unitName = "jpoisonracedart"
 
 local unitDef = {
 	name = "Poisonous Race Dart",
-	Description = "Poisons full recovering Units",
+	Description = "Poisons full recovering Units <Temporary Buff>",
 	objectName = "jPoisonRacedart.s3o",
 	script = "jracedartscript.lua",
 	buildPic = "jplaceholder.png",

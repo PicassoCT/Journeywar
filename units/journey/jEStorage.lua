@@ -1,7 +1,7 @@
 local unitName = "jestorage"
 local unitDef = {
 name = "Light Depositorio",
-Description = " stores Energy, explodes violently.",
+Description = " stores Energy, explodes violently. <Energy Storage>",
 objectName = "jEstorage.s3o",
 script = "jestoragescript.lua",
 buildPic = "jmestorage.png",

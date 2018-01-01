@@ -2,7 +2,7 @@ local unitName = "jshadow"
 
 local unitDef = {
 	name = "Nightmares shadow",
-	Description = " swaps Position and reduces Speed if fired upon",
+	Description = " swaps Position and reduces Speed if fired upon <Buff>",
 	objectName = "jShadow.s3o",
 	script = "jshadow.lua",
 	buildPic = "placeholderj.png",

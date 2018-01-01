@@ -3,7 +3,7 @@ local unitDef  =  {
 --Internal settings
     BuildPic = "filename.bmp",
     ObjectName = "jbeefeatermiddle.s3o",
-    name = "tale of a tail",
+    name = "tale of a tail <End of Sniper Unit>",
     Side = "Journeyman",
 
     script = "jbeefeatermiddle.lua",

@@ -2,7 +2,7 @@ local unitName = "art"
 
 local unitDef = {
 name = "Dark Matter Artillery",
-Description = "shells the (Head)crab out of the enemy",
+Description = "shells the (Head)crab out of the enemy <Long Range Artillery>",
 objectName = "art.s3o",
 script = "artscript.lua",
 buildPic = "cart.dds",

@@ -1,7 +1,7 @@
 local unitName = "jharbour"
 local unitDef = {
 	name = "Harbour Cliffcolony",
-	Description = "geonosis for Water and Water-Air Units",
+	Description = "geonosis for Water and Water-Air Units <Water Unit Factory>",
 	
 	
 	objectName = "jharbour.s3o",

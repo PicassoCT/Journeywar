@@ -1,8 +1,8 @@
 local unitName = "bg3"
 
 local unitDef = {
-	name = "Ground Trooper",
-	Description = "full, involuntary enhanced, carrying a Tatical Shield",
+	name = "Inferno Trooper",
+	Description = "full, involuntary enhanced, carrying a Tatical Shield <Assault Ground Unit>",
 	objectName = "bg3.s3o",
 	script = "bgscript.lua",
 	buildPic = "cbg.png",

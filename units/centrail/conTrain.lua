@@ -2,7 +2,7 @@ local unitName = "contrain"
 
 local unitDef = {
 	name = "Construction Train",
-	Description = "supports construction & heals units, using up its Payload.",
+	Description = "supports construction & heals units, using up its Hitpoints. <Construction Unit>",
 	objectName = "conTrain.s3o",
 	script = "cConTrain.lua",
 	buildPic = "ccontrain.dds",

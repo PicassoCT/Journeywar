@@ -1,7 +1,7 @@
 local unitName = "jmeggstack"
 local unitDef = {
 	name = "Eggstack",
-	Description = "grows construction Units from limitted amount of Eggs.",
+	Description = "grows construction Units from limitted amount of Eggs. <Construction Unit Factory>",
 	objectName = "jeggstack.s3o",
 	script = "jmobileEggstackscript.lua",
 	buildPic = "eggstack.png",

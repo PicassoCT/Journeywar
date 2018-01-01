@@ -2,7 +2,7 @@ local unitName = "fclvl2"
 
 local unitDef = {
 	name = "Offworld Transfergate",
-	Description = "orders Advcanced Units Offworld",
+	Description = "orders Advcanced Units Offworld <Ground Unit Factory>",
 	TEDClass = "PLANT",
 	
 	

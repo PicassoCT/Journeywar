@@ -2,7 +2,7 @@ local unitName = "chedgehog"
 
 local unitDef = {
 	name = "Hedgehog Experimental",
-	Description = "massive Landdestroyer firing miniature Universes",
+	Description = "massive Landdestroyer firing miniature Universes <Heavy Assault Unit>",
 	objectName = "chedgehog.s3o",
 	script = "cHedgeHog.lua",
 	buildPic = "crestrictor.dds",

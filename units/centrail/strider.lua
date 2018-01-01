@@ -2,7 +2,7 @@ local unitName = "strider"
 
 local unitDef = {
 name = "Strider",
-Description = "heavy Synth Tripod",
+Description = "heavy Synth Tripod <Tank Unit>",
 objectName = "strider.s3o",
 script = "striderscript.lua",
 buildPic = "placeholder.png",

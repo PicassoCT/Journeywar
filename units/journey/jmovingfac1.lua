@@ -1,7 +1,7 @@
 local unitName = "jmovingfac1"
 local unitDef = {
 	name = "Firstborn Unituterus",
-	Description = "Transports the TraFactory, provides visuals",
+	Description = "Transports the TraFactory, provides visuals <Factory>",
 	objectName = "jFirstBorn.s3o",
 	script = "jmobileFactory1.lua",
 	buildPic = "placeholderj.png",

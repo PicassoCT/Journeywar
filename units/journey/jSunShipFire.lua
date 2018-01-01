@@ -2,7 +2,7 @@ local unitName = "jsunshipfire"
 
 local unitDef = {
 	name = "Sun",
-	Description = "burns its way over the planets surface.",
+	Description = "burns its way over the planets surface.<Super Weapon>",
 	objectName = "jSunShip.s3o",
 	script = "jsunshipfireScript.lua",
 	buildPic = "placeholderj.png",

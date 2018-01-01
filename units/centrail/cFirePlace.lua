@@ -2,7 +2,7 @@ local unitName = "cfireplace"
 
 local unitDef = {
 name = "Camp",
-Description = "Stay in the light",
+Description = "Stay in the light <Healing Kit>",
 objectName = "cFirePlace.s3o",
 script = "cFirePlace.lua",
 buildPic = "placeholder.png",

@@ -2,7 +2,7 @@ local unitName = "jgalatea"
 
 local unitDef = {
 	name = "Galatea Manowar",
-	Description = "amphibious Unit, doing Waterareadamage and laying Landeggs",
+	Description = "amphibious Unit, doing Waterareadamage and laying Landeggs <Water Land Buff Unit>",
 	objectName = "jgalatea.s3o",
 	script = "jgalatescript.lua",
 	buildPic = "placeholder.png",

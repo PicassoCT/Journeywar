@@ -928,8 +928,10 @@ local function spawnRetractPillar()
     local posX, posY, posZ, _, _, _ = Spring.GetUnitPiecePosDir(unitID, piece "cPilar6")
     local heading = Spring.GetUnitHeading(unitID)
     local u = Spring.CreateUnit("conTrainPillar", posX, posY, posZ, -heading * math.pi / 32768, unitTeam)
-    Spring.SetUnitBlocking(u, false)
-    Spring.SetUnitRotation(u, 0, -heading * math.pi / 32768, 0)
+	  if u then
+		Spring.SetUnitBlocking(u, false)
+		Spring.SetUnitRotation(u, 0, -heading * math.pi / 32768, 0)
+		end
     return
 end
 

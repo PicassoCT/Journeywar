@@ -2,7 +2,7 @@ local unitName = "jpeeble"
 
 local unitDef = {
 name = "Rock",
-Description = "very newtonion views ",
+Description = "very newtonion views <Decoration>",
 objectName = "jpeeble.s3o",
 script = "jpeeble.lua",
 buildPic = "placeholderj.png",

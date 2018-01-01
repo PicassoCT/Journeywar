@@ -1,7 +1,7 @@
 local unitName = "chunterdart"
 local unitDef = {
 name = "dart",
-Description = " 3.. 2... 1",
+Description = " 3.. 2... 1 <Projectile>",
 objectName = "cHunterdart.s3o",
 script = "jhunterdart_script.lua",
 buildPic = "placeholder.dds",

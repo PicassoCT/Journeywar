@@ -3,7 +3,7 @@ local unitDef = {
   objectName="jHeliosCattle.s3o",
 
   name               = "Sun God Cattle",
-  Description 		 ="needs enemy fire for survival, spawns race Darts.",
+  Description 		 ="needs enemy fire for survival, spawns race Darts. <Tank>",
 	buildPic = "jsungodcattle.png",
   script 			 = "jsungodcattlescript.lua",
   maxDamage = 6000, 

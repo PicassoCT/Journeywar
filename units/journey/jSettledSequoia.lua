@@ -2,7 +2,7 @@ local unitName = "jsettledsequoia"
 
 local unitDef = {
 name = "Sequoia ",
-Description = " landed, regenerating Treeship",
+Description = " landed, regenerating Treeship <Energy>",
 objectName = "jsequoia.s3o",
 script = "sequoiarestingscript.lua",
 buildPic = "placeholderj.png",

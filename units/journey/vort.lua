@@ -2,7 +2,7 @@ local unitName = "vort"
 
 local unitDef = {
 name = "Vortigaunt",
-Description = " stunning and teleporting Vortexwarrior",
+Description = " stunning and teleporting Vortexwarrior <Assault>",
 objectName = "vort.s3o",
 script = "jVortigaunt.lua",
 buildPic = "placeholderj.png",

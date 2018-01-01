@@ -2,7 +2,7 @@ local unitName = "campro"
 
 local unitDef = {
 	name = "Antimatter Projector",
-	Description = "fires slow Blasts of Antimatter towards enemies.",
+	Description = "fires slow Blasts of Antimatter towards enemies. <Miderange Assault Unit>",
 	objectName = "ampro.s3o",
 	script = "campro.lua",
 	buildPic = "campro.png",

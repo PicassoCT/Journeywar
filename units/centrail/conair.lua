@@ -2,7 +2,7 @@ local unitName = "conair"
 
 local unitDef = {
 	name = "Construction Aircraft",
-	Description = "builds buildings using its Payload",
+	Description = "builds buildings using its Hitpoints <Construction Air Unit>",
 	objectName = "conair.s3o",
 	script = "conairscript.lua",
 	buildPic = "conair.dds",

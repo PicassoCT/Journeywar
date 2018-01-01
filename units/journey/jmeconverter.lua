@@ -1,7 +1,7 @@
 local unitName = "jmeconverter"
 local unitDef = {
 name = "Greenhouse Accelerator",
-Description = "converts Light to Matter.",
+Description = "converts Light to Matter. <Matter Energy Conversion>",
 
 
 objectName = "jmeconverter.s3o",

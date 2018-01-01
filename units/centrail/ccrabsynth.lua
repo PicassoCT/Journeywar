@@ -2,7 +2,7 @@ local unitName = "ccrabsynth"
 
 local unitDef = {
 name = "Crabsynth",
-Description = " firing chainlightning guns stationary.",
+Description = " firing chainlightning guns stationary.<Area Assault Tank>",
 objectName = "ccrabsynth.s3o",
 script = "cCrabSynthScript.lua",
 buildPic = "ccrabsynth.png",

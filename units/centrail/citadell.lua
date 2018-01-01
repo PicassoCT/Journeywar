@@ -1,7 +1,7 @@
 local unitName = "citadell"
 local unitDef = {
 	name = "Citadell",
-	Description = "Center of Operations, plans and coordinates",
+	Description = "Center of Operations, plans and coordinates <Main Building>",
 	objectName = "citadell.s3o",
 	script = "citadellscript.lua",
 	buildPic = "citadell.dds",
@@ -27,9 +27,9 @@ local unitDef = {
 	collisionVolumeTest	 	= 1,
 	collisionVolumeType	 	= [[box]],
 	
-	EnergyStorage = 200,
+	EnergyStorage = 3000,
 	EnergyUse = 0,
-	MetalStorage = 200,
+	MetalStorage = 3000,
 	EnergyMake = 0, 
 	MakesMetal = 5, 
 	MetalMake = 5,	

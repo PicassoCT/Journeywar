@@ -2,7 +2,7 @@ local unitName = "cconaircontainer"
 
 local unitDef = {
 	name = "Container",
-	Description = "drive over to collect",
+	Description = "drive over to collect <Collectable>",
 	objectName = "cConTainer.s3o",
 	script = "cconaircontainer_script.lua",
 	buildPic = "placeholder.png",

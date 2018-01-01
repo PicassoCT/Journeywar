@@ -2,7 +2,7 @@ local unitName = "jbeherith"
 
 local unitDef = {
 name = "Beherith",
-Description = "giant Amphibious Behemoth able to transport Infantry",
+Description = "giant Amphibious Behemoth able to transport Infantry <Tank Transport>",
 objectName = "beherith.s3o",
 script = "jbeherith.lua",
 buildPic = "placeholderj.png",

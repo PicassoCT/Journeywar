@@ -2,7 +2,7 @@ local unitName = "jbutterfly"
 
 local unitDef = {
 	name = "el 'Iah",
-	Description = " respawns the Eliah after enough time has passed",
+	Description = " respawns the Eliah after enough time has passed <Assault>",
 	objectName = "jbutterfly.s3o",
 	script = "jbutterfly.lua",
 	buildPic = "placeholderj.png",

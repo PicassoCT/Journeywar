@@ -1,8 +1,8 @@
 local unitName = "jhunter"
 
 local unitDef = {
-	name = "SunGods Shepard",
-	Description = "Small Tripod",
+	name = "Sungods Shepard",
+	Description = "Small Tripod <Assault>",
 	objectName = "jHunter.s3o",
 	script = "jhunterscript.lua",
 	buildPic = "placeholder.png",

@@ -3,7 +3,7 @@ local unitDef = {
 	objectName="jcrab.s3o",
 	
 	name = "Crustacian Creeper",
-	Description 		 ="slow, steady, deadly Crab Creeper ",
+	Description 		 ="slow, steady, deadly Crab Creeper <Tank Creeper>",
 	
 	script 			 = "jCrabScript.lua",
 	maxDamage = 2550, 

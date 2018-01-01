@@ -2,7 +2,7 @@ local unitName = "jresistanceoutpost"
 
 local unitDef = {
 name = "Resistance Outpost",
-Description = "invisible to the enemy. Depends on the Enemy Building its attached to.",
+Description = "invisible to the enemy. Depends on the Enemy Building its attached to.<Stealth Factory>",
 
 objectName = "jResistanceOut.s3o",
 script = "jResistanceOutpost.lua",

@@ -3,7 +3,7 @@ local unitDef = {
 	objectName="jbug.s3o",
 	
 	name = "Ka'rell bug",
-	Description 		 ="fast, deadly Exobiotic Creeper ",
+	Description 		 ="fast, deadly Exobiotic Creeper <Scout Creeper> ",
 	
 	script 			 = "jgeobugscript.lua",
 	maxDamage = 250, 

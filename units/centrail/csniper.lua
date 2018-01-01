@@ -2,7 +2,7 @@ local unitName = "csniper"
 
 local unitDef = {
 	name = "Safarisniper",
-	Description = "deployed Sharpshooter - can drag harpooned trophys to base",
+	Description = "deployed Sharpshooter - can drag harpooned trophys to base <Long Range Ground Unit/ Recycleable Transporter>",
 	objectName = "csniper.s3o",
 	script = "csniper.lua",
 	buildPic = "csniper.dds",

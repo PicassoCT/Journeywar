@@ -2,7 +2,7 @@ local unitName = "jfiredancebomb"
 
 local unitDef = {
 name = "Flaming Firebomb",
-Description = "growing towards the enemy",
+Description = "growing towards the enemy <Anti Building Unit>",
 objectName = "emptyObjectIsEmpty.s3o",
 script = "jfirebombscript.lua",
 buildPic = "placeholderj.png",

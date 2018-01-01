@@ -2,7 +2,7 @@ local unitName = "ctransithub"
 
 local unitDef = {
 	name = "Transit Hub :",
-	Description = "Transports Unit to its counterpart",
+	Description = "Transports Unit to its counterpart <Teleportation Building>",
 	objectName = "ctransitnode.s3o",
 	script = "transitnode.lua",
 	buildPic = "Transithub.dds",

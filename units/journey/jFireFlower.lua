@@ -2,7 +2,7 @@ local unitName = "jfireflower"
 
 local unitDef = {
   name               = "Fireflowers",
-  description =" will bloom into a blazing Inferno if enemys nearby",
+  description =" will bloom into a blazing Inferno if enemys nearby <Area Trap>",
   objectName         = "jFireFlower.s3o",
   script ="jFireFlower.lua",
   buildPic = "jfireflower.png",

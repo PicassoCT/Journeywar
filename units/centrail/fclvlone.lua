@@ -2,7 +2,7 @@ local unitName = "fclvlone"
 
 local unitDef = {
 	name = "Farcaster",
-	Description = "orders first Level Units from a higher Dimension",
+	Description = "orders first Level Units from a higher Dimension <Ground Unit Factory>",
 	
 	
 	buildPic = "cfc1.dds",

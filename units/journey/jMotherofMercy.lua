@@ -2,7 +2,7 @@ local unitName = "jmotherofmercy"
 
 local unitDef = {
 	name = "Mother of Mercy",
-	Description = "Shepards asteroid gardens",
+	Description = "Shepards asteroid gardens <Air Tank>",
 	objectName = "jMotherOfMercy.s3o",
 	script = "jMotherOfMercyScript.lua",
 	buildPic = "jmotherofmercy.png",

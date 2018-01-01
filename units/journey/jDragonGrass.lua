@@ -2,7 +2,7 @@ local unitName = "jdragongrass"
 
 local unitDef = {
 	name = "Dragongrass",
-	Description = " hooks enemy Units on a addictive drug",
+	Description = " hooks enemy Units on a addictive drug <Sabotage Trap>",
 	objectName = "jDragonGrass.s3o",
 	script = "jDragonGrassScript.lua",
 	buildPic = "jdragongrass.png",

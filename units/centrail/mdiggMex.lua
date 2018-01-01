@@ -2,7 +2,7 @@ local unitName = "mdiggMex"
 
 local unitDef = {
 	name = "Metalldiggester",
-	Description = "mines the ground for Material down to the watertable",
+	Description = "mines the ground for Material down to the watertable <Matter Production Building>",
 	objectName = "mdigg.s3o",
 	script = "mdiggMexscript.lua",
 	buildPic = "placeholder.png",

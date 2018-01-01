@@ -2,7 +2,7 @@ local unitName = "jbeehive"
 
 local unitDef = {
 	name = "Hornethive",
-	Description = " horryfing Hornets harassing hungry Honeythieves",
+	Description = " horryfing Hornets harassing hungry Honeythieves <Defense Building>",
 	objectName = "jhornethive.s3o",
 	script = "jbeehive.lua",
 	buildPic = "jbeehive.png",

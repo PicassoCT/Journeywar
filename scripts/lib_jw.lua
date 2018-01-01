@@ -145,7 +145,8 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     return retTab
 end
 
-function getAirUnitTypeTable(UnitDefNames)
+function getAirUnitTypeTable(UnitDefNamesContext)
+	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
     local retTab = {}
     retTab[UnitDefNames["callygator"].id] = true
     retTab[UnitDefNames["conair"].id] = true
@@ -291,7 +292,8 @@ function getCreeperTypeTable()
     return CreepTable
 end
 
-function getAbstractTypes(UnitDefNames)
+function getAbstractTypes(UnitDefNamesContext)
+	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
     AbstractTypes = {
         [UnitDefNames["csuborbexplo"].id] = true,
         [UnitDefNames["actionzone"].id] = true,

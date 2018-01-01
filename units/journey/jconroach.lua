@@ -1,7 +1,7 @@
 local unitName = "jconroach"
 local unitDef = {
 	name = "Conroach",
-	Description = " Construction Exobiotic, using lifeforce to construct.",
+	Description = " Construction Exobiotic, using lifeforce to construct. <Construction Unit>",
 	objectName = "conRoach.s3o",
 	script = "jconroach.lua",
 	buildPic = "conroach.png",

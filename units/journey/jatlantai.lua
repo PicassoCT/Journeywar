@@ -2,7 +2,7 @@ local unitName = "jatlantai"
 
 local unitDef = {
 	name = "lan'Tai ",
-	Description = "drawing energy from Attacked Units Team",
+	Description = "drawing energy from Attacked Units Team <Energy Sabotage Air Unit>",
 	objectName = "jEthief.s3o",
 	script = "jethiefscript.lua",
 	--script = "pieceMaker.lua",

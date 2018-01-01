@@ -2,7 +2,7 @@ local unitName = "cairbase"
 
 local unitDef = {
 	name = "Airbase",
-	Description = "builds, grows and repairs Aircrafts",
+	Description = "builds, grows and repairs Aircrafts <Air Unit Factory>",
 
 	
 	objectName = "cAirBase.s3o",

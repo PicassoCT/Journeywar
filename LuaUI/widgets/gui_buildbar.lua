@@ -31,11 +31,12 @@ OrangeStr  = "\255\255\190\128"
 local vsx, vsy   = widgetHandler:GetViewSizes()
 
 -- saved values
+IconSize= 24
 local bar_side         = 1     --left:0,top:2,right:1,bottom:3
 local bar_horizontal   = false --(not saved) if sides==top v bottom -> horizontal:=true  else-> horizontal:=false
 local bar_offset       = 0    --relative offset side middle (i.e., bar_pos := vsx*0.5+bar_offset
 local bar_align        = -1     --aligns icons to bar_pos: center=0; left/top=+1; right/bottom=-1
-local bar_iconSizeBase = 24    --iconSize o_O
+local bar_iconSizeBase = IconSize    --iconSize o_O
 local bar_openByClick  = false --needs a click to open the buildmenu or is a hover enough?
 local bar_autoclose    = true  --autoclose buildmenu on mouseleave?
 
@@ -183,7 +184,7 @@ function widget:Initialize()
 
   local viewSizeX, viewSizeY = widgetHandler:GetViewSizes()
   self:ViewResize(viewSizeX, viewSizeY)
-	Spring.Echo("BuilderBar Initialization completed")
+--	Spring.Echo("BuilderBar Initialization completed")
 end
 
 function widget:GetConfigData()
@@ -204,7 +205,7 @@ function widget:SetConfigData(data)
   bar_side         = data.side         or 2
   bar_offset       = bar_offset
   bar_align        = data.align        or 0
-  bar_iconSizeBase = data.iconSizeBase or 65
+  bar_iconSizeBase = data.iconSizeBase or IconSize
   bar_openByClick  = data.openByClick  or false
   bar_autoclose    = data.autoclose    or (not bar_openByClick)
 
@@ -701,7 +702,7 @@ function widget:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
 end
 
 function widget:Update()
-Spring.Echo("BuilderBar Update")
+--Spring.Echo("BuilderBar Update")
   if myTeamID~=Spring.GetMyTeamID() then
     myTeamID = Spring.GetMyTeamID()
     UpdateFactoryList()
@@ -832,7 +833,15 @@ function BuildHandler(button)
   if shift then push(opt,"shift") end
 
   if button==1 then
-    Spring.GiveOrderToUnit(facs[openedMenu+1].unitID, -(facs[openedMenu+1].buildList[pressedBOpt+1]),{},opt)
+	 builderDefID= Spring.GetUnitDefID(facs[openedMenu+1].unitID)
+	 if builderDefID and UnitDefs[builderDefID].isFactory then
+		Spring.GiveOrderToUnit(facs[openedMenu+1].unitID, -(facs[openedMenu+1].buildList[pressedBOpt+1]),{},opt)
+	 else --select building and select build
+		Spring.SelectUnitArray({[1]=facs[openedMenu+1].unitID})
+		Spring.Echo("BuildBar:TODO:SetBuildingPlacement")
+	--	local _, _, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
+	--	Spring.SetActiveCommand(-(facs[openedMenu+1].buildList[pressedBOpt+1]),1, lmb, rmb, alt,  ctrl,  meta,  shift)
+	 end
     Spring.PlaySoundFile(sound_queue_add, 0.95)
   elseif button==3 then
     push(opt,"right")

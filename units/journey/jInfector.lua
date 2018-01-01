@@ -2,7 +2,7 @@ local unitName = "jinfector"
 
 local unitDef = {
 name = "Infector ",
-Description = "turns all enemys produced nearby into possible traitors.",
+Description = "turns all enemys produced nearby into possible traitors. <Sabotage Building>",
 objectName = "jinfector.s3o",
 script = "jInfectorScript.lua",
 buildPic = "jinfector.png",

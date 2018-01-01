@@ -28,7 +28,6 @@ end
 --Section:  Team Information Getters/Setters 
 --======================================================================================
 
-
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
     if not x or not z then
@@ -4798,6 +4797,30 @@ function consumeAvailableRessource(typeRessource, amount, teamID)
     return false
 end
 
+--> consumes a resource if available 
+function consumeAvailableRessourceUnit(unitID, typeRessource, amount)
+	teamID= Spring.GetUnitTeam(unitID)
+	 typeRessource=string.lower(typeRessource)
+    if "m" == typeRessource or "metal" == typeRessource then
+        currentLevel = Spring.GetTeamResources(teamID, "metal")
+        if amount > currentLevel then
+            return false
+        end
+
+        if Spring.UseUnitResource(unitID, "m", amount) then return true end
+    end
+
+    if "energy" == typeRessource or "e" == typeRessource then
+        currentLevel = Spring.GetTeamResources(teamID, "energy")
+        if amount > currentLevel then
+            return false
+        end
+
+          if Spring.UseUnitResource(unitID, "e", amount) then return true end
+    end
+    return false
+end
+
 --======================================================================================
 --Section:  Unit Commands
 --======================================================================================
@@ -4849,10 +4872,10 @@ function Command(id, command, target, option)
     --abort previous command
 
     if command == "build" then
-        x, y, z = Spring.GetUnitPosition(unitID)
+        x, y, z = Spring.GetUnitPosition(id)
         x, y, z = x + 50, y, z + 50
-        Spring.SetUnitMoveGoal(unitID, x, y, z)
-        Spring.GiveOrderToUnit(unitID, -1 * target, {}, {})
+        Spring.SetUnitMoveGoal(id, x, y, z)
+        Spring.GiveOrderToUnit(id, -1 * target, {}, {})
     end
 
     if command == "attack" then
@@ -4862,7 +4885,7 @@ function Command(id, command, target, option)
     end
 
     if command == "repair" or command == "assist" then
-        spGiveOrderToUnit(unitID, CMD_GUARD, { target }, { "" })
+        Spring.GiveOrder(id, CMD_GUARD, { target }, { "" })
     end
 
     if command == "go" then

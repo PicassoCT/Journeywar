@@ -2,7 +2,7 @@ local unitName = "coverworldgate"
 
 local unitDef = {
 	name = "Overworld Gate",
-	Description = "spawns A.I. controlled Creepers who autoattack",
+	Description = "spawns A.I. controlled Creepers who autoattack <Creeper Unit Factory>",
 	objectName = "cOverWorldTeleport.s3o",
 	script = "coverworldgatescript.lua",
 	buildPic = "portals.dds",

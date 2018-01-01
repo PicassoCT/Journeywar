@@ -2,7 +2,7 @@ local unitName = "jhivemind"
 
 local unitDef = {
 	name = "Hivemind",
-	Description = " sacrifices individuals for a godlike intellect",
+	Description = " sacrifices individuals for a godlike intellect <Buff Building>",
 	objectName = "jHiveMind.s3o",
 	script = "jHiveMindScript.lua",
 	buildPic = "jdragongrass.png",

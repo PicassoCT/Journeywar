@@ -4,7 +4,8 @@ include "lib_Animation.lua"
 
 include "lib_Build.lua"
 
-
+EnergyUsed= 48
+MetallCreated= 2
 
 function script.Create()
 
@@ -48,9 +49,9 @@ end
 
 function resourceConverterLoop()
     while true do
-        if Spring.UseUnitResource(unitID, "energy", 48 * 1.5) == true then
+        if consumeAvailableRessourceUnit(unitID, "e", EnergyUsed ) == true then
             boolRessourceConverting = true
-            Spring.AddUnitResource(unitID, "m", 2)
+            Spring.AddUnitResource(unitID, "m", MetallCreated)
         else
             boolRessourceConverting = false
         end

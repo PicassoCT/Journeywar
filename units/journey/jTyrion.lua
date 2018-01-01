@@ -2,7 +2,7 @@ local unitName = "jtyrion"
 
 local unitDef = {
 name = "Traitor",
-Description = "turns its Allegiance upon Activation. All is allowed in love and war",
+Description = "turns its Allegiance to your team upon Activation. <Sabotage>",
 objectName = "emptyObjectIsEmpty.s3o",
 script = "jytrion.lua",
 buildPic = "placeholderj.png",

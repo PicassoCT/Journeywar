@@ -2,7 +2,7 @@ local unitName = "jghostdancer"
 
 local unitDef = {
 	name = "Ghost Dancer",
-	Description = "backtracks to alternative Timelines on Damage",
+	Description = "backtracks to alternative Timelines on Damage <Scout Harass>",
 	objectName = "ghostdancer.s3o",
 	script = "jghostdancer.lua",
 	buildPic = "placeholderj.png",

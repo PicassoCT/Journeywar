@@ -2,7 +2,7 @@ local unitName = "cnanorecon"
 
 local unitDef = {
 	name = "Swarming Nano Bots",
-	Description = "harvest Ressources to call a new Citadell through a Portal",
+	Description = "harvest Ressources to call a new Citadell through a Portal <Sabotage Harass Reconquisita Unit>",
 	objectName = "cNanoRecon.s3o",
 	script = "cNanoReconScript.lua",
 	buildPic = "cbg.png",

@@ -2,7 +2,7 @@ local unitName = "jtree1"
 
 local unitDef = {
 	name = "Rainforrest Tree ",
-	Description = "harvesting Light",
+	Description = "harvesting Light <Energy>",
 	objectName = "jETree1.s3o",
 	script = "jTree1.lua",
 	buildPic = "jtree.png",
