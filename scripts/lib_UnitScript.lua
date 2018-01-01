@@ -804,9 +804,8 @@ function getUnitBiggestPiece(unit, cache)
 				volumeMax = volume 
 				end
 		end
-		
-	cache[defID] = biggestPieceSoFar
-	return biggestPieceSoFar, cache
+	if cache then 	cache[defID] = biggestPieceSoFar end
+	return biggestPieceSoFar, cache or {}
 end
 
 function getUnitPieceVolume(unit, Piece)

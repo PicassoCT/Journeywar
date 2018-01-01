@@ -583,6 +583,14 @@ camproDefID = UnitDefNames["campro"].id
         end
     end
 
+    UnitDamageFuncT[jHiveHoundID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		if attackerID ~= unitID and attackerTeam ~= unitTeam then
+			env = Spring.UnitScript.GetScriptEnv(attackerID)
+        if env then
+            Spring.UnitScript.CallAsUnit(attackerID, env.takeABite, unitID)
+        end	
+      end	
+	end
     UnitDamageFuncT[catapultDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 
         health = Spring.GetUnitHealth(unitID)
