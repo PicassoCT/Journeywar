@@ -246,10 +246,11 @@ function landing()
 	legsDown()
 end
 
-
+boolBiting = false
 function script.AimWeapon1( Heading, pitch )
+if true then return true end
 	SetSignalMask(SIG_AIM)
-	if boolCloseCombat==false then
+	if boolCloseCombat==false and boolBiting== false then
 		Turn(body,y_axis,-Heading,12)
 		WaitForTurn(body,y_axis)
 		getReadyJump() 
@@ -263,10 +264,11 @@ oldVictim= nil
 biteVictim= nil
 boolNewVictim = false
 function takeABite(victim)
-	oldVictim= biteVictim
-		
-	biteVictim= victim
-	boolNewVictim = true
+	if boolCloseCombat == false then
+		oldVictim= biteVictim		
+		biteVictim= victim
+		boolNewVictim = true
+	end
 end
 shakeSpot = piece"shakeSpot"
 
@@ -288,10 +290,11 @@ function biteLoop()
 			--find biggestPiece
 			--Attach to Victim
 			validExVictim= Spring.ValidUnitID(oldVictim)
-			if validExVictim and validExVictim == true then Spring.UnitDetach(unitID) end
+			if validExVictim and validExVictim == true then Spring.UnitDetach(unitID); boolBiting= false end
 			pieceBig = getUnitBiggestPiece(biteVictim)
 			echo("TODO jhiveHoundMeatID")
 			Spring.UnitAttach(biteVictim, unitID, pieceBig)
+			boolBiting= true
 			--Shake Piece Out
 			mP(shakeSpot,3.5, -11,-25, 55)
 			
@@ -299,23 +302,23 @@ function biteLoop()
 			xDegree=0
 			victimIsDead=false
 			for i=1, RIP_TIME, 750 do
-				Turn(shakeSpot,y_axis,math.rad(-25*dirAction),15)
+				tSyncIn(shakeSpot,xDegree, -25*dirAction,0,150)
 				if isPieceAboveGround(unitID,Tail) == true then
 					xDegree = clamp(xDegree -10, -90,90)
 				else
 					xDegree = clamp(xDegree +10, -90,90)
 				end
-				Turn(shakeSpot,x_axis,math.rad(xDegree),15)
-				
+			
 				dirAction= dirAction*-1
-				Sleep(750)
+				WaitForTurns(shakeSpot,Tail)
 				
-				victimIsDead = detachOnDeath(victim)
-				if victimIsDead == true then break end
+				victimIsDead = detachOnDeath(biteVictim)
+				reset(shakeSpot,25)
+				if victimIsDead == true then boolBiting= false; break end
 			end
 			
 			if victimIsDead == false then
-				reset(shakeSpot,25)
+				boolBiting= false
 				Spring.UnitDetach(unitID)
 				Spring.AddUnitDamage(biteVictim,RIP_DAMAGE)
 				--replace oneself with a jmeathivewulf
@@ -323,9 +326,11 @@ function biteLoop()
 				x,y,z = Spring.GetUnitPosition(unitID)
 				teamID = Spring.GetUnitTeam(unitID)
 				jhiveHoundMeatID = Spring.CreateUnit("jmeathivewulf",x,y,z, 0,teamID)
-				setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
-				transferUnitStatusToUnit(unitID, jhiveHoundMeatID)
-				Spring.DestroyUnit(unitID, true, true)
+				if jhiveHoundMeatID then
+					transferUnitStatusToUnit(unitID, jhiveHoundMeatID)
+					setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
+					Spring.DestroyUnit(unitID, true, true)
+				end
 			end
 			
 			boolNewVictim = false
@@ -338,8 +343,8 @@ function setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
 myTeam=Spring.GetUnitTeam(unitID)
 	for mom, data in pairs( GG.HiveHoundTable[myTeam]) do
 		for i=1,#data do
-			if data[i][1] == unitID then
-			GG.HiveHoundTable[myTeam][mom] = jhiveHoundMeatID
+			if type(data)=="table" and data[i][1] == unitID then
+			GG.HiveHoundTable[myTeam][mom][i][1] = jhiveHoundMeatID
 			end
 		end
 
@@ -443,8 +448,8 @@ end
 
 
 function script.AimWeapon2( Heading, pitch )
-	boolCloseCombat=true
-	return true
+
+	return not boolBiting
 end
 
 function biteMe()
@@ -521,6 +526,7 @@ end
 function script.FireWeapon2()
 	Signal(SIG_IDLE)
 	Signal(SIG_RESET)
+	boolCloseCombat=true
 	StartThread(timeDelayedCloseCombatDeActivate)
 	StartThread(closeCombatMotion)
 	
@@ -533,6 +539,7 @@ function script.FireWeapon2()
 end
 
 function script.Create()
+	Spring.UnitDetach(unitID)
 	StartThread(biteLoop)
 
 end

@@ -888,7 +888,6 @@ function bigMoma()
                     --else respawn the unit and set the coords accordingly
                     GG.HiveHoundTable[teamID][unitID][i] = {}
                     GG.HiveHoundTable[teamID][unitID][i][1] = spCreaUnit("jhivewulf", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
-                    GG.HiveHoundTable[teamID][unitID][i][2] = UnitDefNames["jhivewulf"].id
                     spSetUnitMoveGoal(GG.HiveHoundTable[teamID][unitID][i][1], ex, ey, ez)
 
                 end
