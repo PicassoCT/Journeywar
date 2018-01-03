@@ -826,6 +826,7 @@ end
 
 function BuildHandler(button)
   local alt, ctrl, meta, shift = Spring.GetModKeyState()
+  local _, _, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
   local opt = {}
   if alt   then push(opt,"alt")   end
   if ctrl  then push(opt,"ctrl")  end
@@ -838,9 +839,10 @@ function BuildHandler(button)
 		Spring.GiveOrderToUnit(facs[openedMenu+1].unitID, -(facs[openedMenu+1].buildList[pressedBOpt+1]),{},opt)
 	 else --select building and select build
 		Spring.SelectUnitArray({[1]=facs[openedMenu+1].unitID})
-		Spring.Echo("BuildBar:TODO:SetBuildingPlacement")
-	--	local _, _, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
-	--	Spring.SetActiveCommand(-(facs[openedMenu+1].buildList[pressedBOpt+1]),1, lmb, rmb, alt,  ctrl,  meta,  shift)
+		Spring.Echo("TODO:gui_buildbar:SetBuildingCommand")
+		--Spring.SetActiveCommand(-(facs[openedMenu+1].buildList[pressedBOpt+1]))
+		-- Spring.GiveOrderToUnit(facs[openedMenu+1].unitID,  -facs[openedMenu+1].buildList[pressedBOpt+1], {},  opt)
+		
 	 end
     Spring.PlaySoundFile(sound_queue_add, 0.95)
   elseif button==3 then
