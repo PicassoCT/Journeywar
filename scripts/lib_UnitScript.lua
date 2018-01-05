@@ -560,6 +560,19 @@ function returnToWorld(unit, px, py, pz)
     Spring.SetUnitNoSelect(unit, false)
 end
 
+function showAll()
+ pieceMap = Spring.GetUnitPieceMap(unitID)
+ for k,v in pairs(pieceMap) do
+	Show(v)
+ end
+end
+
+function hideAll()
+ pieceMap = Spring.GetUnitPieceMap(unitID)
+ for k,v in pairs(pieceMap) do
+	Hide(v)
+ end
+end
 --> reveal a Unit 
 function showUnit(unit)
     Spring.SetUnitCloak(unit, false, 1)

@@ -12,14 +12,12 @@ function getTypeTable(UnitDefNames, StringTable)
 end
 
 function getJourneyBuildingTypeTable()
-    JourneyBuildingTypes = getUnitCanBuild("beanstalk")
-  
+    JourneyBuildingTypes = tableToDict(getUnitCanBuild("beanstalk"))
     return JourneyBuildingTypes
 end
 
 function getCentrailBuildingTypeTable()
-    CentrailBuildingTypes = getUnitCanBuild("citadell")
-  
+    CentrailBuildingTypes = tableToDict(getUnitCanBuild("citadell"))
     return CentrailBuildingTypes
 end
 

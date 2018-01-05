@@ -38,12 +38,12 @@ local unitDef = {
 	explodeAs = [[NOWEAPON]],
 	selfDestructAs= [[NOWEAPON]],
 	
-	YardMap ="yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy",
+	--YardMap ="yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy",
 	
 	-- Building	
 	ShowNanoSpray = false,
 	CanBeAssisted = true,	
-	workerTime = 1,
+	--workerTime = 1,
 	-- buildoptions = 
 	-- {
 		-- "ccontruck"

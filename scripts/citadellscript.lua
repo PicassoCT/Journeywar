@@ -21,9 +21,9 @@ fireflake = piece "fireflake"
 debris1 = piece "debris1"
 debris2 = piece "debris2"
 debris3 = piece "debris3"
-
 debris4 = piece "debris4"
 debris5 = piece "debris5"
+cloudspin = piece "cloudspin"
 sparks = {}
 for i = 1, 27, 1 do
     sparks[i] = {}
@@ -644,6 +644,7 @@ function script.Deactivate()
 end
 
 function script.Create()
+	 Move(cloudspin,y_axis,1500,0,true)
     Move(sparkcloudemit, y_axis, 0, 0)
     Move(PortalEmit, y_axis, 0, 0, true)
     --StartThread(spawnCommander)

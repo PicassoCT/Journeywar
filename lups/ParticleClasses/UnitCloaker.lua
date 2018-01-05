@@ -106,6 +106,7 @@ function UnitCloaker:EndDraw()
 end
 
 function UnitCloaker:Draw()
+
   local udid = 0
   if (self.isS3o) then
     udid = self.unitDefID
@@ -259,6 +260,7 @@ end
 
 function UnitCloaker:CreateParticle()
   local name = UnitDefs[self.unitDefID].model.name
+  if not name then Spring.Echo("Unit "..UnitDefs[self.unitDefID].name.." has no modelname"); return end
   self.isS3o = ((name:lower():find("s3o") or name:lower():find("obj")) and true)
   self.firstGameFrame = thisGameFrame
   self.dieGameFrame   = self.firstGameFrame + self.life

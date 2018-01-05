@@ -37,15 +37,15 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
-	YardMap ="yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+	-- YardMap ="yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
 	
 	-- Building	
 	ShowNanoSpray = false,
 	CanBeAssisted = true,	
-	workerTime = 1,
-	buildoptions = 
-	{
-	},
+	-- workerTime = 1,
+	-- buildoptions = 
+	-- {
+	-- },
 	
 	
 	usebuildinggrounddecal = true,

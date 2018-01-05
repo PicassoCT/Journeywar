@@ -14,27 +14,10 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 
     JBUILDANIM = "NOTYPE"
-
+	 VFS.Include("scripts/lib_UnitScript.lua")
+	 VFS.Include("scripts/lib_jw.lua")
     --all units that are buildings
-    jBuilding = {
-        [UnitDefNames["jmovingfac1"].id] = true,
-        [UnitDefNames["jdrilltree"].id] = true,
-        [UnitDefNames["jmeggstack"].id] = true,
-        [UnitDefNames["jtree1"].id] = true,
-        [UnitDefNames["jtree2"].id] = true,
-        [UnitDefNames["jtree3"].id] = true,
-        [UnitDefNames["jgeohive"].id] = true,
-        [UnitDefNames["jwatergate"].id] = true,
-        [UnitDefNames["jfireflower"].id] = true,
-        [UnitDefNames["jbeehive"].id] = true,
-        [UnitDefNames["jfungiforrest"].id] = true,
-        [UnitDefNames["jnativevil"].id] = true,
-        [UnitDefNames["jtreel"].id] = true,
-        [UnitDefNames["jabyss"].id] = true,
-        [UnitDefNames["jpoisonhive"].id] = true
-    }
-
-
+    jBuilding = getJourneyBuildingTypeTable()
 
     DefTypeTable = {
         [UnitDefNames["jswiftspear"].id] = true,
@@ -111,7 +94,7 @@ if (gadgetHandler:IsSyncedCode()) then
         end
         --if journeybuild animation
         if jBuilding[unitDefID] then
-            --Spring.Echo("JourneyBuilding Inserted")
+            Spring.Echo("JourneyBuilding Inserted")
 
             x, y, z = Spring.GetUnitPosition(unitID)
             GG.UnitsToSpawn:PushCreateUnit("jbuildanim", x, y, z + 4, 0, unitTeam)
@@ -276,15 +259,11 @@ else -- unsynced
     local UnsyncedScaleTable = {} -- Table that contains the scale of units to be scaled
 
     local function SetScale(callname, scale, unitID)
-        --		Spring.Echo("jw_ScaleUPGadget::GameFrame::SetScale")
-        --Spring.Echoqq("JW_ScaleUpGadget_"..unitID.." |"..scale)
         UnsyncedScaleTable[unitID] = scale
         Spring.UnitRendering.SetUnitLuaDraw(unitID, true)
     end
 
     local function UnsetScale(callname, unitID)
-
-        --	 Spring.Echo("jw_ScaleUPGadget::GameFrame::UnSetScale")
         UnsyncedScaleTable[unitID] = nil
         Spring.UnitRendering.SetUnitLuaDraw(unitID, false)
     end
@@ -301,8 +280,6 @@ else -- unsynced
     function gadget:DrawUnit(unitID)
         if UnsyncedScaleTable[unitID] then
             local scale = UnsyncedScaleTable[unitID]
-
-
             gl.Scale(scale, scale, scale)
 
             gl.UnitRaw(unitID, true)

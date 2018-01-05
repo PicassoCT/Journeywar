@@ -28,7 +28,7 @@ local weaponDef = {
     --CylinderTargetting=true,
     avoidFeature = true,
     avoidFriendly = true,
-
+	 targetable=1,
 
     --- -DAMAGE
     damage = {

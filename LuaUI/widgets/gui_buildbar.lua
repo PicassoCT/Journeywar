@@ -57,7 +57,9 @@ local facRect  = {-1,-1,-1,-1}
 
 -- build options rectangle
 local boptRect = {-1,-1,-1,-1}
-
+local boptMetaRect = {-1,-1,-1,-1}
+local iconRow = 10
+local totalRectIcons= 0
 -- the following vars make it very easy to use the same code to render the menus, whatever side they are
 -- cause we simple take topleft_startcorner and add recursivly *_inext to it to access they next icon pos
 local fac_inext  = {0,0}
@@ -393,7 +395,7 @@ function widget:DrawScreen()
 
     local unitBuildDefID = -1
     local unitBuildID    = -1
-
+	 totalRectIcons = 0
     -- determine options -------------------------------------------------------------------
      -- building?
       unitBuildID      = GetUnitIsBuilding(facInfo.unitID)
@@ -425,13 +427,15 @@ function widget:DrawScreen()
 
     -- draw build list
     if i==openedMenu+1 then
+
       -- draw buildoptions
       local bopt_rec = RectWH(fac_rec[1]+bopt_inext[1], fac_rec[2]+bopt_inext[2],iconSizeX,iconSizeY)
-
+		
       local buildList   = facInfo.buildList
       local buildQueue  = GetBuildQueue(facInfo.unitID)
 
       for j,unitDefID in ipairs(buildList) do
+		
         local unitDefID = unitDefID
         local options   = {}
         -- determine options -------------------------------------------------------------------
@@ -451,7 +455,21 @@ function widget:DrawScreen()
         DrawButton(bopt_rec,unitDefID,options)
 
         -- setup next icon pos
-        OffsetRect(bopt_rec, bopt_inext[1],bopt_inext[2])
+	
+			totalRectIcons=totalRectIcons+1
+			if j% 	iconRow  == 0 then	 
+				yOffset= math.floor(j/iconRow ) 
+				bopt_rec= RectWH(fac_rec[1]+bopt_inext[1], fac_rec[2]+bopt_inext[2] + yOffset*iconSizeY,iconSizeX,iconSizeY)
+			else		
+				OffsetRect(bopt_rec, bopt_inext[1],bopt_inext[2])
+			end
+			
+			--updateMetaRectangle
+			boptMetaRect[1]= math.max(bopt_rec[1],boptMetaRect[1])
+			boptMetaRect[2]= math.max(bopt_rec[2],boptMetaRect[2])
+			boptMetaRect[3]= math.max(bopt_rec[3],boptMetaRect[3])
+			boptMetaRect[4]= math.max(bopt_rec[4],boptMetaRect[4])
+			
 
         --if j % 3==0 then
         --  xmin_,xmax_ = xmin   + bopt_inext[1],xmin_ + iconSizeX 
@@ -839,10 +857,10 @@ function BuildHandler(button)
 		Spring.GiveOrderToUnit(facs[openedMenu+1].unitID, -(facs[openedMenu+1].buildList[pressedBOpt+1]),{},opt)
 	 else --select building and select build
 		Spring.SelectUnitArray({[1]=facs[openedMenu+1].unitID})
-		Spring.Echo("TODO:gui_buildbar:SetBuildingCommand")
-		--Spring.SetActiveCommand(-(facs[openedMenu+1].buildList[pressedBOpt+1]))
-		-- Spring.GiveOrderToUnit(facs[openedMenu+1].unitID,  -facs[openedMenu+1].buildList[pressedBOpt+1], {},  opt)
-		
+		local index = Spring.GetCmdDescIndex(-facs[openedMenu+1].buildList[pressedBOpt+1])
+		if index then
+			Spring.SetActiveCommand(index, button or 1, lmb, rmb, alt, ctrl, meta, shift)
+		end		
 	 end
     Spring.PlaySoundFile(sound_queue_add, 0.95)
   elseif button==3 then
@@ -915,13 +933,22 @@ function MouseOverSubIcon(x,y)
      (x >= boptRect[1]) and (x <= boptRect[3])and
      (y >= boptRect[4]) and (y <= boptRect[2])
   then
+c  Spring.Echo("Mouse over icon"..bar_side)
     local icon  
     if bar_side==0 then
       icon = math.floor((x - boptRect[1]) / bopt_inext[1])
     elseif bar_side==2 then
       icon = math.floor((y - boptRect[2]) / bopt_inext[2])
     elseif bar_side==1 then
-      icon = math.floor((x - boptRect[3]) / bopt_inext[1])
+		   icon = math.floor((y - boptRect[1]) / bopt_inext[3])
+		      Spring.Echo("Over Icon:"..x.."/"..y.." Icon:"..icon)
+		 --  iconMaxX,iconMaxY = iconRow * iconSizeX, iconSizeY * math.floor(totalRectIcons/iconRow)  
+		   icon = 	math.floor(y/iconSizeY)*iconRow + --[[rowtimes many icons	]]
+						math.floor(x/(iconSizeX*iconRow))   
+		   Spring.Echo("Over Icon:"..x.."/"..y.." Icon:"..icon)
+
+		--TODO: Get gui to work on layered Icons
+      --icon = math.floor((x - boptMetaRect[3]) / bopt_inext[1])+math.floor((y - boptMetaRect[4])/ iconSizeY)*iconRow
     else --bar_side==3
       icon = math.floor((y - boptRect[4]) / bopt_inext[2])
     end

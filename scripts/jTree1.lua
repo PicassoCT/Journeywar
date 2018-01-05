@@ -179,6 +179,7 @@ end
 
 rootTurnDeg = 0
 function script.Create()
+	 showAll()
     StartThread(delayedActivation)
     teamID = Spring.GetUnitTeam(unitID)
     x, y, z = Spring.GetUnitPosition(unitID)
