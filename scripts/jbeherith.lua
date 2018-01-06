@@ -588,12 +588,19 @@ function setUp()
         spin = math.random(-10, -5)
         Spin(fishCenters[i], y_axis, math.rad(spin), 0.5)
     end
-
+    Hide(jBeGuBig)
+    Hide(jBeGuSmal0)
+    Hide(jBeGuSmall)
 
     Spin(gullcircle, y_axis, math.rad(0.2), 0.5)
     Spin(jBeGuBig, y_axis, math.rad(10), 0.5)
     Spin(jBeGuSmal0, y_axis, math.rad(-10), 0.5)
     Spin(jBeGuSmall, y_axis, math.rad(10), 0.5)
+    while boolUnitBuildComplete == false do Sleep(100) end
+    Sleep(5*60*1000)
+     Show(jBeGuBig)
+    Show(jBeGuSmal0)
+    Show(jBeGuSmall)
 end
 
 
@@ -694,20 +701,32 @@ function script.Activate()
     return 1
 end
 
+boolUnitBuildCompleted= false
+
+functioon buildCompleted()
+Sleep(100)
+while select(5,Spring.GetUnitHealth(unitID)) < 1 do
+    Sleep(100)
+ end
+Sleep(1000)
+boolUnitBuildCompleted= true
+
+end
+
 function script.Deactivate()
     --set the MovementSpeed back to the original speed
     --boolAmok Code
-    --SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
-    --if boolAmok== false then
-    --boolAmok=true
-    --SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
-    --Hide(gullcircle)
-    --
-    --Hide(jBeGuBig)
-    --Hide(jBeGuSmal0)
-    --StartThread(tickTockTackle)
-    --
-    --end
+
+    if boolAmok== false and boolUnitBuildCompleted== true then
+        boolAmok=true
+       reSetSpeed(unitID,UnitDefs)
+        Explode(jBeGuBig,SFX.FALL+SFX.SHATTER)
+        Hide(gullcircle)
+        Hide(jBeGuBig)
+        Hide(jBeGuSmal0)
+        StartThread(tickTockTackle)
+
+    end
     return 0
 end
 
@@ -1559,10 +1578,13 @@ end
 
 
 function script.Create()
+    udef= Spring.GetUnitDefID(unitID)
+    SetUnitValue(COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed* 0.1* 2184.53))
+    StartThread(buildCompleted)
     StartThread(treeTrample)
     StartThread(mONmoNmoN)
     beheBodyBuilder()
-    setUp()
+    StartThread(setUp)
     StartThread(damageWatcher)
     StartThread(waterDetect)
     StartThread(FloraPhysixLoop)
@@ -1574,20 +1596,9 @@ end
 
 
 boolMoving = false
-
+treeTypeTable= getTreeTypeTable(UnitDefNames)
 function treeTrample()
-    treeTypeTable = getTypeTable(UnitDefNames, {
-        "jtree1",
-        "jtree2",
-        "jtree3",
-        "jtree41",
-        "jtree42",
-        "jtree43",
-        "jtree44",
-        "jtree45",
-        "jtree46",
-        "jtree47"
-    })
+
     while true do
 
         while boolMoving == true do
@@ -1797,7 +1808,6 @@ function getUnitFiredUponAttachAndImpulse(apendixTable, nr, heading)
 
         if table.getn(unitsStompedLately) ~= 0 then
 
-
             throwingDwarfs = math.floor(math.random(1, table.getn(unitsStompedLately)))
             temp = {}
             temp = unitsStompedLately[throwingDwarfs]
@@ -1925,9 +1935,6 @@ function script.AimWeapon4(heading, pitch)
 end
 
 function script.AimFromWeapon4()
-
-
-
     return appendixTable4[1]
 end
 
@@ -1959,9 +1966,6 @@ function script.AimWeapon5(heading, pitch)
 end
 
 function script.AimFromWeapon5()
-
-
-
     return appendixTable5[1]
 end
 
@@ -1993,9 +1997,6 @@ end
 -- end
 --weapon 6
 function script.AimFromWeapon6()
-
-
-
     return body
 end
 
