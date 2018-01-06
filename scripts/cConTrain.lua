@@ -984,7 +984,7 @@ function healWhileStandingStill()
                         for i = 1, #T do
                             if T[i] then
                                 defID = Spring.GetUnitDefID(T[i])
-                                if defID and ud[defID].isBuilding == false and not conTypeTable[defID] then
+                                if defID and (not ud[defID].isBuilding or ud[defID].isBuilding == false) and not conTypeTable[defID] then
                                     p, maxhp, _, bP = Spring.GetUnitHealth(T[i])
 
                                     if bP and bP >= 1.0 and p and p < maxhp and maxhp > 400 then

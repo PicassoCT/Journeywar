@@ -12,7 +12,7 @@
 			underwater = false,
 			water = true,
 			properties = {
-				colormap = [[ 0.1 0.1 0 0.01 	 0.5 0.1 0.1 0.1 	0.7 0.1 0 0.1 	1 0.9 0 0.1	]],
+				colormap = [[ 0.1 0.1 0 0.01 	 0.5 0.1 0.1 0.05 	0.7 0.1 0 0.05 	1 0.2 0 0.05	]],
 				dir = [[0,1,0]],
 				frontoffset = 0.5,
 				fronttexture = [[cross]],

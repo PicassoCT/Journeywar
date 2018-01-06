@@ -136,7 +136,6 @@ function sexualHealing()
                                         sx, sy, sz = Spring.GetUnitPosition(T[i])
                                         Spring.SpawnCEG("jhealjourney", sx, sy + 25, sz, 0, 1, 0, 0)
                                         if hpcopy - hp < 0 then
-                                            boolYouBroughtThisOnYourself = true
                                             Spring.DestroyUnit(unitID, false, true)
                                         else
                                             Spring.AddUnitDamage(unitID, hp)
