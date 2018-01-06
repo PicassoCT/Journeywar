@@ -34,7 +34,8 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = true,
 	CanStop = true,
-	
+	onOffAble= true,
+	ActivateWhenBuilt=0,
 	ShowNanoSpray = false,
 	CanBeAssisted = true,
 	CanReclaim=true,	
@@ -54,6 +55,9 @@ local unitDef = {
 	Category = [[LAND]],
 	leaveTracks =true,
 	trackType ="cTrain",
+	trackStrength=8,
+	trackWidth =16,
+	trackOffset =0,
 	
 	
 	customParams = {},

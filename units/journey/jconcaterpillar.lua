@@ -23,7 +23,8 @@ local unitDef = {
 	MaxSlope = 20,
 	MaxVelocity = 7.2,
 	mass=2048,
-	
+	onOffAble= true,
+	ActivateWhenBuilt=0,
 	MovementClass = "Default2x2",
 	TurnRate = 220,
 	
@@ -42,12 +43,17 @@ local unitDef = {
 	collisionVolumeScales		= [[42 32 162]],
 	collisionVolumeOffsets	= [[0 -8 -10]],
 	collisionVolumeTest	 = 1,
+	leaveTracks =true,
+	trackType ="jpillar",
+	trackStrength=32,
+	trackWidth =64,
+	trackOffset =0,
 	
 	CanGuard = true,
 	CanMove = true,
 	canassist=true,
 	CanStop = true,
-	LeaveTracks = false, 
+
 	nanocolor=[[0.2 0.9 0.5]],
 	Category = [[LAND]],
 	

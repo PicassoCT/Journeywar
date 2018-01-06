@@ -17,33 +17,6 @@ include "lib_Build.lua"
 
 ctgoresub = {}
 
-cargo = 0
-passengertable = {}
-
-function script.TransportDrop(passengerID, x, y, z)
-    if loaded == false then return end
-    --if unit not loaded
-    loaded = false
-    for i = 1, cargo, 1 do
-        if passengertable[i] == passengerID then
-            loaded = true
-        end
-    end
-
-    if loaded == false then return end
-
-    SetUnitValue(COB.BUSY, 1)
-    Spring.SetUnitNoDraw(passengerID, false)
-
-    DropUnit(passengerID)
-    cargo = cargo - 1
-	
-    if cargo <= 0 then
-        loaded = false
-    end
-	
-    SetUnitValue(COB.BUSY, 0)
-end
 
 eatItAlive = {
     [UnitDefNames["gcivillian"].id] = true,
@@ -976,13 +949,15 @@ function initScript()
     end
 end
 
-boolSelfRepairedToDeath = false
+
 myTeamID = Spring.GetUnitTeam(unitID)
 function healWhileStandingStill()
-    Sleep(3000)
+
+    while select(5,Spring.GetUnitHealth(unitID)) < 1 do Sleep(100) end
+
 
     teamid = Spring.GetUnitTeam(unitID)
-    conTypeTable = getTypeTable(UnitDefNames, { "contrain", "contruck", "conair", "citadell" })
+    conTypeTable = getConstructionUnitTypeTable()
     local ud = UnitDefs
 
     while true do
@@ -1507,16 +1482,23 @@ local function positionComPair(oldPosX, newPosX, oldPosZ, newPosZ, inTolerAnceLv
 end
 
 
+function script.Activate()
+    boolHealingActive = true
+    return 1
+end
 
-
-
-boolHealingActive = true
-function script.StartMoving()
+function script.Deactivate()
     boolHealingActive = false
+    return 0
+end
+
+
+boolHealingActive = false
+function script.StartMoving()
+
 end
 
 function script.StopMoving()
-    boolHealingActive = true
 end
 
 

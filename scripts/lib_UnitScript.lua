@@ -535,7 +535,7 @@ function killAtPiece(unitID, piecename, selfd, reclaimed, sfxfunction)
 end
 
 -->Returns a Unit from the Game without killing it
-function removeFromWorld(unit, offx, offy, offz)
+function removeFromWorld(unit, offx, offy, offz)	 
     hideUnit(unit)
     --TODO - keepStates in general and commandqueu
     pox, poy, poz = Spring.GetUnitPosition(unit)
@@ -2210,6 +2210,11 @@ function sortDictKeysNumeric(T)
 		end
 	end
 	return sortT
+end
+
+function inLimit(lowLimit,value,upLimit)
+if value < lowLimit or value > upLimit then return false end
+return true
 end
 
 

@@ -220,6 +220,19 @@ function getNeutralTypeTable()
     return TypeTable
 end
 
+function getConstructionUnitTypeTable()
+return  getTypeTable(UnitDefNames, { 
+				"contrain", 
+				"contruck",
+				"conair", 
+				"citadell",
+				"jconroach",
+				"jconcaterpillar",
+				"jstealthdrone",
+				"beanstalk"				
+				})
+
+end
 
 function getZombieTypeTable()
     Creep = {}
