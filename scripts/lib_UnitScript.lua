@@ -560,6 +560,8 @@ function returnToWorld(unit, px, py, pz)
     Spring.SetUnitNoSelect(unit, false)
 end
 
+
+
 function showAll()
  pieceMap = Spring.GetUnitPieceMap(unitID)
  for k,v in pairs(pieceMap) do

@@ -1976,7 +1976,12 @@ function GetSpeed(timeInSeconds, degree)
 end
 
 function resetAll(unitID)
-	resetT(getNamePieceNumDict(unitID, piece))
+ pieceMap = Spring.GetUnitPieceMap(unitID)
+ for k,v in pairs(pieceMap) do
+	reset(v)
+	WaitForTurns(v)
+	WaitForMoves(v)
+ end
 end
 -->Reset a Table of Pieces at speed
 
@@ -1990,7 +1995,7 @@ function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate, interValS
 
     for i = interValStart, interValEnd do
 
-        reset(tableName[i], lspeed, false, boolIstantUpdate)
+        reset(tableName[i], lspeed, false, boolIstantUpdate or true)
         if ShowAll and tableName[i] then
             Show(tableName[i])
         end
