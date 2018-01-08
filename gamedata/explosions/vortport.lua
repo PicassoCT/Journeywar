@@ -97,7 +97,26 @@ return {
         texture            = [[laserendgreen]],
       },
     },
-  
+	
+   spray = {
+          air                = true,
+          class              = [[CBitmapMuzzleFlame]],
+          count              = 1,
+          ground             = true,
+          underwater         = 1,
+          water              = true,
+          properties = {
+			colormap           = [[ 0.7 0.9 0.1 0.01	 0.7 0.9 0.1 0.01	0.0 0.0 0.0 0.01]],
+             dir                = [[-1 r2 ,1 r-0.5, -1 r2]],
+            frontoffset        = 0,
+            fronttexture       = [[WarpBubbles]],--redexplo
+            length             = 7,
+            sidetexture        = [[WarpBubbles]],
+            size               = 7,
+            sizegrowth         = 1,
+            ttl                = 36,
+          },
+        },
   
   
   },

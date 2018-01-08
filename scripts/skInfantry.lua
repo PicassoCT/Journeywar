@@ -427,6 +427,7 @@ function killedAnimation()
 	leg_movespeed=12
 	stepsBack=math.ceil(math.random(2,4))
 	boodyShake=19
+	 spawnCegAtPiece(unitID, head , "blueblood", 0)
 	for i=1, stepsBack,1 do
 		--Armrand
 		xrand=math.random(80,90)
