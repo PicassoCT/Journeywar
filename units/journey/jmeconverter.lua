@@ -50,7 +50,12 @@ corpse             = "bgcorpse",
 -- Building	
 MaxVelocity = 1.5,
 	ActivateWhenBuilt=1,
-
+	
+	leaveTracks =true,
+	trackType ="jBuilding",
+	trackStrength=6,
+	trackWidth =92,
+	trackOffset =0,
 
  	usebuildinggrounddecal = false,
 

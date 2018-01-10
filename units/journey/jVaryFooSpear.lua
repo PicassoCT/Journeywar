@@ -24,6 +24,11 @@ local unitDef = {
 	TurnRate = 450,
 	mass=1050,
 	
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
 	
 	sightDistance = 500,
 	upright=true,
@@ -31,7 +36,7 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = false,
 	CanStop = true,
-	LeaveTracks = false, 
+
 	
 	
 	weapons = {

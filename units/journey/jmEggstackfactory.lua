@@ -40,6 +40,11 @@ local unitDef = {
 	LeaveTracks = true, 
 	
 	Category = [[LAND]],
+		leaveTracks =true,
+	trackType ="jBuilding",
+	trackStrength=6,
+	trackWidth =92,
+	trackOffset =0,
 	
 	EnergyStorage = 0,
 	EnergyUse = 15,

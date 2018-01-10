@@ -48,7 +48,11 @@ local unitDef = {
 	
 	mass=950,
 	
-	
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
 	
 	corpse="bug",
 	

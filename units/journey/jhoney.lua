@@ -47,7 +47,11 @@ local unitDef = {
 	radardistancejam=0,
   
   	mass=550,
-
+	LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=3,
+	trackWidth =16,
+	trackOffset =0,
 	
 corpse="honeypot",
   

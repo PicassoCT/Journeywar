@@ -27,7 +27,11 @@ local unitDef = {
 
 	sightDistance = 500,
 	nanocolor=[[0 0.9 0.9]],
-
+	LeaveTracks = true, 
+	trackType ="cwheel",
+	trackStrength=4,
+	trackWidth =32,
+	trackOffset =0,
 
 	CanAttack = true,
 	CanGuard = true,
@@ -35,8 +39,7 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = true,
 	CanStop = true,
-	LeaveTracks = true, 
-	trackType ="BIGFoot",
+
 	explodeAs="cantimatter",
 	selfDestructAs="cantimatter", 
 

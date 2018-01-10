@@ -53,6 +53,12 @@ local unitDef = {
 	loadingRadius =500, 
 	Category = [[LAND]],
 	
+	 LeaveTracks = true, 
+	trackType ="jBeherith",
+	trackStrength=8,
+	trackWidth =64,
+	trackOffset =0,
+	
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {

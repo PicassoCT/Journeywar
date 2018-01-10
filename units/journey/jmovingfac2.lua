@@ -35,7 +35,13 @@ CanGuard = false,
 CanMove = true,
 CanPatrol = false,
 CanStop = true,
-LeaveTracks = true, 
+
+	 LeaveTracks = true, 
+	trackType ="jBuilding",
+	 trackStrength=4,
+	trackWidth =64,
+	trackOffset =0,
+
 
 Category = [[LAND]],
 

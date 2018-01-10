@@ -56,7 +56,11 @@ local unitDef = {
 	showNanoFrame =false,
 	energyStorage = 750,
 	
-	
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=2,
+	trackWidth =32,
+	trackOffset =0,
 	
 	customParams = {},
 	sfxtypes = {

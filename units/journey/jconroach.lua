@@ -44,6 +44,12 @@ local unitDef = {
 	nanocolor=[[0.2 0.9 0.5]],
 	Category = [[LAND]],
 	
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=4,
+	trackWidth =32,
+	trackOffset =0,
+	
 	sfxtypes = {
 		explosiongenerators = {
 		"custom:jconroach_heal",

@@ -3057,8 +3057,7 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
         color = TextColour
     }
 
-    echo("Im out 3")
-end
+    end
 
 -->prepares large speaches for the release to the world
 function prepSpeach(Speach, Names, Limits, Alphas, DefaultSleepBylines)

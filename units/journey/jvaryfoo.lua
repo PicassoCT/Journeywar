@@ -31,8 +31,12 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = false,
 	CanStop = true,
-	LeaveTracks = false, 
-	
+
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=4,
+	trackWidth =32,
+	trackOffset =0,
 	
 	weapons = {
 		[1]={name = "jvaryfoomark",

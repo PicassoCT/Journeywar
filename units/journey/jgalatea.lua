@@ -46,6 +46,12 @@ local unitDef = {
 	canhover=true,
 	turnInPlace=false,
 	
+	 LeaveTracks = true, 
+	trackType ="jGalatea",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
+	
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {

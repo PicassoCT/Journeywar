@@ -50,6 +50,12 @@ LeaveTracks = false,
 nanocolor=[[0.2 0.9 0.5]],
 Category = [[LAND]],
 
+	 LeaveTracks = true, 
+	trackType ="jBuilding",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
+	
 
 }
 

@@ -35,6 +35,12 @@ local unitDef = {
 	CanStop = true,
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
+		
+	LeaveTracks = true, 
+	trackType ="jGhost",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
 	
 	
 	onOffable=true,

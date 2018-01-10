@@ -60,7 +60,7 @@ function emitSFX()
 	i = 0
 	while true do
 		
-		Spring.SpawnCEG("greenbloodspray", x +50 , y+ 50 , z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
+		Spring.SpawnCEG("nanofirestart", x +50 , y+ 50 , z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
 		Sleep(5000)
 		
 	end

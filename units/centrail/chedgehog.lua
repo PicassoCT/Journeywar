@@ -32,14 +32,15 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = true,
 	CanStop = true,
-	LeaveTracks = true, 
+
 	turnInPlace =false,
 	onOffable=true,
 	Category = [[LAND]],
 	
+	LeaveTracks = true, 
 	trackType ="cRes",
-	trackStrength=12,
-	trackWidth =80,
+	trackStrength=8,
+	trackWidth =92,
 	
 	
 	explodeAs="citadelldrone",

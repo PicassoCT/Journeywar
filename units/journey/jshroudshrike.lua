@@ -40,7 +40,10 @@ local unitDef = {
 	CanStop = true,
 	LeaveTracks = true,
 	trackType ="shroudshrike",
-	trackStrength=33,
+	trackStrength=6,
+	trackWidth =32,
+	trackOffset =0,
+	
 	Reclaimable = 0,
 	
 	

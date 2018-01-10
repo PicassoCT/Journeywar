@@ -36,8 +36,11 @@ CanGuard = true,
 CanMove = true,
 CanPatrol = true,
 CanStop = true,
-LeaveTracks = false, 
-
+	LeaveTracks = true, 
+	trackType ="cart",
+	 trackStrength=4,
+	trackWidth =48,
+	trackOffset =0,
 Category = [[LAND]],
 
 

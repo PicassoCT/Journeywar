@@ -40,6 +40,13 @@ local unitDef = {
 	MakesMetal = 0,
 	MetalMake = 0,
 	customParams = {},
+	
+	 LeaveTracks = true, 
+	trackType ="jBuilding",
+	 trackStrength=4,
+	trackWidth =64,
+	trackOffset =0,
+	
 	sfxtypes = {				
 		explosiongenerators = {				 
 			"custom:dirt",

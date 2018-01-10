@@ -39,8 +39,10 @@ CanMove = true,
 CanPatrol = true,
 CanStop = true,
 LeaveTracks = true, 
-  trackType ="BIGFoot",
-
+	trackType ="BIGFoot",
+	 trackStrength=4,
+	trackWidth =16,
+	trackOffset =0,
 
 	  customParams = {},
  sfxtypes = {

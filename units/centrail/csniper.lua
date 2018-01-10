@@ -41,7 +41,10 @@ local unitDef = {
 	CanPatrol = true,
 	CanStop = true,
 	LeaveTracks = true, 
-
+	trackType ="BIGFoot",
+	 trackStrength=4,
+	trackWidth =48,
+	trackOffset =0,
 	isFirePlatform=false,
 	holdSteady =true,
 	releaseHeld =true,
@@ -49,9 +52,7 @@ local unitDef = {
 	transportSize       = 90000,
 	  
 	  
-	trackType ="BIGFoot",
-	  trackStrength=4,
-
+	
 		  sfxtypes            = {	
 			explosiongenerators = {
 			"custom:smallblueburn",

@@ -2,8 +2,8 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
 include "lib_Build.lua"
+
 
 
 
@@ -277,7 +277,7 @@ function walk()
     --Turn(center, y_axis, math.rad(0), 34)
     Turn(body, x_axis, math.rad(0), 34)
     WaitForTurn(body, x_axis)
-    leg_movespeed = 1.5
+    leg_movespeed = 3
     times = 0
     step = math.pi / 4
     while (true) do
@@ -319,7 +319,7 @@ function script.AimFromWeapon1()
 end
 
 function script.QueryWeapon1()
-    return staff
+    return Head
 end
 
 boolFiring=false
@@ -330,46 +330,63 @@ function script.AimWeapon1(Heading, pitch)
 	boolFiring=true
         Signal(SIG_AIM2)
         SetSignalMask(SIG_AIM2)
+		x,y,z=Spring.GetUnitPosition(unitID)
+		Spring.SpawnCEG( "nanofirestart",x,y+50,z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10)
+        Spring.CreateUnit("jfiredancedecal", x, y, z, math.ceil(math.random(0, 3)), teamID)
 
-
-        Turn(ArmR, x_axis, math.rad(-187), 12)
+        Turn(ArmR, x_axis, math.rad(-160), 12)
         Turn(ArmR, y_axis, math.rad(0), 12)
-        Turn(ArmR, z_axis, math.rad(-3), 12)
-        Turn(ArmL, x_axis, math.rad(-178), 12)
+        Turn(ArmR, z_axis, math.rad(30), 12)
+		
+        Turn(ArmL, x_axis, math.rad(-160), 12)
         Turn(ArmL, y_axis, math.rad(0), 12)
-        Turn(ArmL, z_axis, math.rad(5), 12)
-        Turn(staff, x_axis, math.rad(6), 3)
-        Turn(staff, y_axis, math.rad(79), 13)
-        Turn(staff, z_axis, math.rad(-10), 3)
-
-        Turn(LegL, z_axis, math.rad(-13), 3)
+        Turn(ArmL, z_axis, math.rad(-30), 12)
+		
+		Turn(LegL, z_axis, math.rad(-13), 3)
         Turn(LegR, z_axis, math.rad(20), 3)
         Turn(LLegL, z_axis, math.rad(5), 3)
         Turn(LLegR, z_axis, math.rad(-11), 3)
+		
+		WaitForTurns(ArmR,ArmL)
+        Turn(ArmR, x_axis, math.rad(-160), 12)
+        Turn(ArmR, y_axis, math.rad(0), 12)
+        Turn(ArmR, z_axis, math.rad(-40), 12)
+		
+        Turn(ArmL, x_axis, math.rad(-160), 12)
+        Turn(ArmL, y_axis, math.rad(0), 12)
+        Turn(ArmL, z_axis, math.rad(40), 12)
+		
+		Turn(LegR, z_axis, math.rad(-13), 3)
+        Turn(LegL, z_axis, math.rad(20), 3)
+        Turn(LLegR, z_axis, math.rad(5), 3)
+        Turn(LLegL, z_axis, math.rad(-11), 3)
 
-        WaitForTurn(ArmR, x_axis)
+
+        WaitForTurns(ArmR,ArmL)
         Turn(center, y_axis, Heading, 15)
 
         WaitForTurn(center, y_axis)
-	
-			return true
+
+		return true
 	else	
         return false
     end
 end
 
+function delayedReload()
+Sleep(4000)
+boolFiring=false
+end
+
 teamID = Spring.GetUnitTeam(unitID)
 function script.FireWeapon1()
-    for i = 1, 24, 1 do
-        Sleep(i * 3)
-        EmitSfx(body, 1024)
-    end
-	boolFiring=false
+StartThread(delayedReload)
+	
     return true
 end
 
 function script.Killed(recentDamage, maxHealth)
-
+	setSpeedEnv(unitID,0.0)
     Signal(SIG_WALK)
     Signal(SIG_IDLE)
 
