@@ -41,7 +41,6 @@ if (gadgetHandler:IsSyncedCode()) then
 		crabShelWDefID = WeaponDefNames["crabshell"].id
 		cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
 		bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
-		glavaWeaponID = WeaponDefNames["glavaweapon"].id
 		gVolcanoWeaponID = WeaponDefNames["lavabomb"].id
 		cFlareGun = WeaponDefNames["flaregun"].id
 		cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
@@ -90,7 +89,6 @@ if (gadgetHandler:IsSyncedCode()) then
     ChainLightningTable = {}
     local FireWeapons = {
         [gVolcanoWeaponID] = true,
-        [glavaWeaponID] = true,
         [bunkerPlasmaDefID] = true,
         [cCssFlameT] = true,
         [cFlareGun] = true
@@ -133,7 +131,6 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(cCssFlameT, true)
     Script.SetWatchWeapon(glavaWeaponID, true)
     Script.SetWatchWeapon(gVolcanoWeaponID, true)
-    Script.SetWatchWeapon(nukeLvl2WeaponDefID, true)
     Script.SetWatchWeapon(nukeLvl3WeaponDefID, true)
     Script.SetWatchWeapon(highExLineGunDefID, true)
     Script.SetWatchWeapon(jvaryfoospearDefID, true)
