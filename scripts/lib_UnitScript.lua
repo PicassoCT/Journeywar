@@ -1455,6 +1455,19 @@ function mergeTables(...)
     return Table
 end
 
+function dictToTable(dict)
+num=1
+T= {}
+for k,v in pairs(dict) do
+if v then
+T[num]= k
+num= num +1
+end
+end
+return T
+
+end
+
 
 function TableMergeTable(TA, TB)
     T = {}

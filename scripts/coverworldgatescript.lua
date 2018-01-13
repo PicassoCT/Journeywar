@@ -50,7 +50,7 @@ function rumpelStiltSkin()
     end
 end
 
-naptime = 90000
+rechargeTime = 1*60*1000
 thatMuchMoreExpensive = 1.5
 teamID = Spring.GetUnitTeam(unitID)
 monsterTable = {}
@@ -74,24 +74,25 @@ function LoadAnimation()
     hideT(buildIconTable)
 end
 
-function powerUp()
+function powerUp(speedFactor)
     Move(outergate, y_axis, -359, 0)
-    Move(shaft1, y_axis, -17, 0.3)
-    Move(shaft2, y_axis, -35, 0.3)
+    Move(shaft1, y_axis, -17, 0.3*speedFactor)
+    Move(shaft2, y_axis, -35, 0.3*speedFactor)
     if totalTime ~= 0 then StartThread(LoadAnimation) end
     if boolReady == false then StartThread(estimateTotalTime) end
     WaitForMove(shaft1, y_axis)
     WaitForMove(shaft2, y_axis)
-    Spin(outergate, y_axis, math.rad(42), 0.01)
+    Spin(outergate, y_axis, math.rad(42), 0.01*speedFactor)
     for i = 1, table.getn(ringTable), 1 do
         val = math.random(-80, 80)
-        Spin(ringTable[i], y_axis, val, 0.05 * i)
+        Spin(ringTable[i], y_axis, val, 0.05 * i*speedFactor)
     end
-    Move(shaft1, y_axis, 0, 9)
-    Move(shaft2, y_axis, 0, 15)
-    Sleep(13000)
+    Move(shaft1, y_axis, 0, 9*speedFactor)
+    Move(shaft2, y_axis, 0, 15*speedFactor)
+     WaitForMove(shaft1, y_axis)
+    WaitForMove(shaft2, y_axis)
     boolReady = true
-    Move(outergate, y_axis, 0, 32)
+    Move(outergate, y_axis, 0, 32*speedFactor)
     Show(outergate)
     Spring.PlaySoundFile("sounds/cOverWorldGate/coverworldgateOpen.wav")
     for i = 1, 3, 1 do
@@ -131,7 +132,7 @@ px, py, pz = Spring.GetUnitPiecePosDir(unitID, buildSpot)
 
 
 function createUnitFunction(unitTypeString)
-    if boolPoweredUp == false then powerUp() end
+    
     spawnedID = Spring.CreateUnit(unitTypeString, px, py, pz, 0, teamID)
     --Add impulse depending upon building direction..
     if spawnedID ~= nil then
@@ -147,8 +148,20 @@ function createUnitFunction(unitTypeString)
     return spawnedID
 end
 
+boolActive = false
 
+function getUnitAvgCost(TypeTable)
+sum=0
+numberUnits= 0
+	for k,defID in pairs(TypeTable) do
+		cost= (UnitDefs[defID].metalCost + UnitDefs[defID].energyCost)*thatMuchMoreExpensive
+		sum= sum +cost
+		numberUnits= numberUnits +1
+	end
+return sum/numberUnits
+end
 
+unitTypeIndex= 0
 function spawner()
 
     local spGetUnitNearestEnemy = Spring.GetUnitNearestEnemy
@@ -162,17 +175,10 @@ function spawner()
     local x, y, z = Spring.GetUnitPosition(unitID)
 
 
+	creeperTypeTable= dictToTable(getCreeperUnitTypeTable())
+    averageUnitCost = getUnitAvgCost(creeperTypeTable)
 
 
-    averageUnitCost = 0
-
-    amProCost = (UnitDefNames["campro"].metalCost + UnitDefNames["campro"].energyCost) * 0.5
-    mtwCost = (UnitDefNames["mtw"].metalCost + UnitDefNames["mtw"].energyCost) * 0.5
-    artCost = (UnitDefNames["bg"].metalCost + UnitDefNames["bg"].energyCost) * 0.5
-    resCost = (UnitDefNames["restrictor"].metalCost + UnitDefNames["restrictor"].energyCost) * 0.5
-    bgCost = (UnitDefNames["csniper"].metalCost + UnitDefNames["csniper"].energyCost) * 0.5
-    cssCost = (UnitDefNames["css"].metalCost + UnitDefNames["css"].energyCost) * 0.5
-    sum = ((amProCost + mtwCost + artCost + resCost + bgCost + cssCost) / 6) * thatMuchMoreExpensive
 
     enemyID = spGetUnitNearestEnemy(unitID)
     ox, oy, oz = Game.mapSizeX / 2, 0, Game.mapSizeZ / 2
@@ -180,67 +186,62 @@ function spawner()
 
     while (true) do
         --- -Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
-        Sleep(naptime)
-        enemyID = spGetUnitNearestEnemy(unitID)
 
-        if enemyID ~= nil then
-            spawnPortalEffect()
+		while boolActive= true do
+        Sleep(rechargeTime)
+			enemyID = spGetUnitNearestEnemy(unitID)
 
-            ex, ey, ez = spGetUnitPosition(enemyID) -- this should allow the unit to follow a friend closest to a foe
-            if math.abs(ex - ox + ey - oy + ez - oz) < 5 then
-                eteamid = Spring.GetUnitTeam(enemyID)
-                ex, ey, ez = Spring.GetTeamStartPosition(eteamid)
-            end
-            ox, oy, oz = ex, ey, ez
-            -- acquire ressources
-            intervall = math.ceil(math.random(5, 10))
+			if enemyID ~= nil then
+				if boolPoweredUp == false then powerUp(5) end
+				spawnPortalEffect()
 
-            metallTeam, _, _, _, _, _, _, _ = Spring.GetTeamResources(teamID, "metal")
-            energyTeam, _, _, _, _, _, _, _ = Spring.GetTeamResources(teamID, "energy")
-
-            boolThisCanWorkOut = false
-            while (boolThisCanWorkOut == false and intervall > 0) do
-                if metallTeam - (intervall * (sum / 2)) > 0 and energyTeam - (intervall * (sum / 2)) > 0 then
-                    boolThisCanWorkOut = true
-                else
-                    intervall = intervall - 1
-                end
-            end
-            Spring.UseTeamResource(teamID, "metal", math.ceil(intervall * (sum / 2)))
-            Spring.UseTeamResource(teamID, "energy", math.ceil(intervall * (sum / 2)))
+				ex, ey, ez = spGetUnitPosition(enemyID) -- this should allow the unit to follow a friend closest to a foe
+				if math.abs(ex - ox + ey - oy + ez - oz) < 5 then
+					eteamid = Spring.GetUnitTeam(enemyID)
+					ex, ey, ez = Spring.GetTeamStartPosition(eteamid)
+				end
+				ox, oy, oz = ex, ey, ez
+				-- acquire ressources
+				intervall = math.ceil(math.random(5, 10))
 
 
+				boolThisCanWorkOut = false
+				for i=intervall, 0, -1  do
+					boolThisCanWorkOut = consumeAvailableRessourceUnit(unitID, "metal", math.ceil(i * (averageUnitCost)))			
+					if boolThisCanWorkOut == true then break end
+				end
 
-            --randomRessourceDistribution
-            -- mtw
-            -- restrictor
-            -- art
-            -- ampro
-            for i = 1, intervall, 1 do
-                dice = math.random(1, 5)
-                Unittype = ""
-                if dice == 1 then Unittype = "css"
-                elseif dice == 2 then Unittype = "mtw"
-                elseif dice == 3 then Unittype = "restrictor"
-                elseif dice == 4 then Unittype = "csniper"
-                else Unittype = "campro"
-                end
+				if  intervall == 0 then 
+					showPlayerBroke()
+				end
+
+					for i = 1, intervall, 1 do
+						unitTypeIndex= (unitTypeIndex % #spawnedUnitTable) +1
+						Unittype = spawnedUnitTable[unitTypeIndex]
 
 
-
-                spawnedUnit = lCreateUnitFunction(Unittype)
-                if spawnedUnit ~= nil then
-                    --spSetUnitNoSelect(spawnedUnit,true)
-                    spawnPortalEffect()
-                    Sleep(1550)
-                    spSetUnitMoveGoal(spawnedUnit, ex, ey, ez)
-                    table.insert(monsterTable, spawnedUnit)
-                end
-            end
-            Sleep(4000)
-            powerDown()
-        end
+						spawnedUnit = lCreateUnitFunction(Unittype)
+						if spawnedUnit ~= nil then
+							--spSetUnitNoSelect(spawnedUnit,true)
+							spawnPortalEffect()
+							Sleep(1550)
+							spSetUnitMoveGoal(spawnedUnit, ex, ey, ez)
+							table.insert(monsterTable, spawnedUnit)
+						end
+					end
+				Sleep(4000)
+				powerDown()
+				
+			end
+		Sleep(100)
+		end
+	Sleep(100)	
     end
+end
+
+function showPlayerBroke()
+
+
 end
 
 function spawnPortalEffect()
@@ -295,6 +296,15 @@ function script.Create()
     StartThread(spawner)
     StartThread(TargetOS)
     StartThread(powerDown)
+end
+
+function script.Activate()
+ boolActive= true
+	return 1
+end
+function script.Deactivate()
+boolActive = false
+	return 1
 end
 
 

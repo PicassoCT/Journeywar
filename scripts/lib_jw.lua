@@ -77,6 +77,21 @@ function getDefenseBuildingTypeTable(UnitDefNames)
 	return getTypeTable(UnitDefNames, typeTable)
 end
 
+function getCentrailCreeperUnitTypeTable()
+	typeTable={
+		"css",
+		"bg3",
+		"campro",
+		"mtw",
+		"csniper",
+		"restrictor",
+		"chunter",
+		
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+
+end
+
 --> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}
