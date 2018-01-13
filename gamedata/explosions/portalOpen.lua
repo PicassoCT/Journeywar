@@ -3,7 +3,7 @@
 return {
 	["portable"] = {
 		
-		lowPortal = {
+	lowPortal = {
 			air = true,
 			class = [[CBitmapMuzzleFlame]],
 			count = 1,
@@ -28,12 +28,68 @@ return {
 			},
 		},
 		
-		
+	explosionsphere1 = {
+      air                = true,
+      class              = [[CSpherePartSpawner]],
+      count              = 1,
+      ground             = true,
+      properties = {
+        alpha              = 3.0,
+        alwaysvisible      = true,
+			pos = [[0 , 65, 0 ]],
+        color              = [[0.5, 0.25, 0]],
+        expansionspeed     = [[0.8]],
+        ttl                = 50,
+      },
+    },	
+	explosionsphere2 = {
+      air                = true,
+      class              = [[CSpherePartSpawner]],
+      count              = 1,
+      ground             = true,
+      properties = {
+        alpha              = 3.0,
+        alwaysvisible      = true,
+			pos = [[0 , 100, 0 ]],
+        color              = [[0.5, 0.25, 0]],
+        expansionspeed     = [[0.8]],
+        ttl                = 60,
+      },
+    },
+	explosionsphere3 = {
+      air                = true,
+      class              = [[CSpherePartSpawner]],
+      count              = 1,
+      ground             = true,
+      properties = {
+        alpha              = 3.0,
+        alwaysvisible      = true,
+				pos = [[0 , 150, 0 ]],
+        color              = [[0.5, 0.25, 0]],
+        expansionspeed     = [[0.9]],
+        ttl                = 70,
+      },
+    },
+	explosionsphere4 = {
+      air                = true,
+      class              = [[CSpherePartSpawner]],
+      count              = 1,
+      ground             = true,
+      properties = {
+        alpha              = 3.0,
+        alwaysvisible      = true,
+				pos = [[0 , 200, 0 ]],
+        color              = [[0.5, 0.25, 0]],
+        expansionspeed     = [[0.9]],
+        ttl                = 85,
+      },
+    },
 		
 		
 		
 		
 		
 	},
+	
 	
 }

@@ -59,9 +59,10 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-		
-		Spring.SpawnCEG("nanofirestart", x +50 , y+ 50 , z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
-		Sleep(5000)
+		   Spring.SpawnCEG("portable", x, y + 70, z, 0, 1, 0, 60)
+    Spring.SpawnCEG("holeinthesky", x, y + 320, z, 0, 1, 0, 60)
+	
+		Sleep(9000)
 		
 	end
 end

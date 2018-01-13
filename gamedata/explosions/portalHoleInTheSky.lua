@@ -3,7 +3,22 @@
 return {
 	["holeinthesky"] = {
 		
-
+explosionspikes = {
+      air                = true,
+      class              = [[explspike]],
+      count              = 7,
+      ground             = true,
+      water              = true,
+      properties = {
+        alpha              = 1,
+        alphadecay         = 0.09,
+        alwaysvisible      = true,
+        color              = [[0.5, 0.25, 0 ]],
+        dir                = [[-45 r90,-45 r90,-45 r90]],
+        length             =8.4,
+        width              = 4,
+      },
+    },
 
 HoleInTheSky = {
 			air = true,
@@ -28,6 +43,7 @@ HoleInTheSky = {
 				sizegrowth = 1,
 				ttl = 120,
 			},
+			
 		},
 		
 		

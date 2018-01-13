@@ -1,3 +1,11 @@
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_jw.lua"
+
+include "lib_Build.lua"
+
+
 --We could have avoid this missery.. if we had deform-animations- and neural implants.
 LAltF = piece "LAltF"
 LAltW = piece "LAltW"
@@ -222,7 +230,7 @@ end
 
 
 
-function LavaBoilingUp()
+function LavaBoilingUp(multiply)
     Signal(SIG_PRO)
     StartThread(procreateEmit)
     Show(LavaExpWSm)
@@ -297,19 +305,19 @@ function LavaBoilingUp()
     rotaRandom = math.random(0, 360)
     Turn(center, y_axis, math.rad(rotaRandom), 0)
 
-    Move(LavaExpWSm, y_axis, -1, 0.2)
-    Move(LavaExpWSm, x_axis, 5, 0.06)
+    Move(LavaExpWSm, y_axis, -1, 0.2*multiply)
+    Move(LavaExpWSm, x_axis, 5, 0.06*multiply)
     WaitForMove(LavaExpWSm, y_axis)
     StartThread(emitFire, LavaExpHa, 5, 100)
-    Move(LavaExpWMe, y_axis, -2.5, 0.2)
+    Move(LavaExpWMe, y_axis, -2.5, 0.2*multiply)
     WaitForMove(LavaExpWMe, y_axis)
 
-    Move(LavaExpWSm, x_axis, 13, 0.08)
-    Move(LavaExpWMe, x_axis, 7, 0.09)
+    Move(LavaExpWSm, x_axis, 13, 0.08*multiply)
+    Move(LavaExpWMe, x_axis, 7, 0.09 *multiply)
 
     WaitForMove(LavaExpWMe, x_axis)
-    Move(LavaStream, y_axis, -3, 0.2)
-    Move(LavaStream, x_axis, 5, 0.09)
+    Move(LavaStream, y_axis, -3, 0.2*multiply)
+    Move(LavaStream, x_axis, 5, 0.09*multiply)
     WaitForMove(LavaStream, y_axis)
 
     WaitForMove(LavaStream, x_axis)
@@ -321,18 +329,18 @@ function LavaBoilingUp()
 
     if boolAlternative == false then
         Turn(LavaWheelB, z_axis, math.rad(-158), 0)
-        Move(LavaWheelB, y_axis, -16, 0.3)
+        Move(LavaWheelB, y_axis, -16, 0.3*multiply)
         WaitForMove(LavaWheelB, y_axis)
 
-        Move(LavaExpWSm, x_axis, 15, 0.6)
-        Move(LavaExpWMe, x_axis, 22, 0.9)
-        Move(LavaWheelB, y_axis, -2, 0.3)
+        Move(LavaExpWSm, x_axis, 15, 0.6*multiply)
+        Move(LavaExpWMe, x_axis, 22, 0.9*multiply)
+        Move(LavaWheelB, y_axis, -2, 0.3*multiply)
         Turn(LavaWheelB, z_axis, math.rad(-77), 0.05)
         WaitForMove(LavaWheelB, y_axis)
         WaitForTurn(LavaWheelB, z_axis)
-        Move(LavaExpWSm, x_axis, 0, 0.06)
-        Move(LavaExpWMe, x_axis, 0, 0.09)
-        Move(LavaWheelB, y_axis, 0, 0.09)
+        Move(LavaExpWSm, x_axis, 0, 0.06*multiply)
+        Move(LavaExpWMe, x_axis, 0, 0.09*multiply)
+        Move(LavaWheelB, y_axis, 0, 0.09*multiply)
         Turn(LavaWheelB, z_axis, math.rad(12), 0.05)
         WaitForMove(LavaExpWSm, x_axis)
         WaitForMove(LavaExpWMe, x_axis)
@@ -632,7 +640,7 @@ function lavaMain()
     --startSound
     StartThread(lavaSound)
     prepStage()
-    LavaBoilingUp()
+    LavaBoilingUp(4)
 
     --idling
 
@@ -670,14 +678,22 @@ end
 ResistantUnits= mergeDict(getAbstractTypes(),getExemptFromLethalEffectsUnitTypeTable(UnitDefNames))
 ResistantUnits= mergeDict(ResistantUnits, getPyroProofUnitTypeTable())
 LAVA_RANGE= 60
-LavaDamageSecond= 120
+LavaDamageSecond= 320
 function lavaDamage()
+x,_,z = Spring.GetUnitPosition(unitID)
+removeGrass(x-64,z-64,x+64,z+64)
+
 while true do
 T= getAllNearUnit(unitID, LAVA_RANGE)
 process(T,
+		function (id)
+			if distanceUnitToUnit(unitID,id) < LAVA_RANGE then
+				return id 		
+			end
+		end,
 		function(id)
-			if not ResistantUnits[Spring.GetUnitDefID(id)] then
-				Spring.AddUnitDamage(id,LavaDamageSecond/300)
+			if id ~= unitID and  not ResistantUnits[Spring.GetUnitDefID(id)] then
+				Spring.AddUnitDamage(id,math.ceil(LavaDamageSecond/300))
 				   setUnitOnFire(id, math.random(190, 1500))
 			end
 		end
@@ -690,7 +706,7 @@ end
 
 
 function script.Create()
-
+	Spring.SetUnitNoSelect(unitID, true)
     StartThread(emitit)
     oneThird = math.random(0, 2)
     if oneThird == 1 then

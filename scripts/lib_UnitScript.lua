@@ -1007,6 +1007,15 @@ function createLandscapeFromFeaturePieces(pixelPieceTable, drawFunctionTable)
     echo("TODO:createLandscapeFromFeaturePieces")
 end
 
+--> Does not remove the grass
+function removeGrass(startX,endX,startY,endY)
+
+	for x = startX, endX, 16 do
+		for z = startY, endY, 16 do
+			Spring.RemoveGrass(x, z)
+		end
+	end
+end
 --> Gets a List of Geovents + Positions
 function getGeoventList()
 

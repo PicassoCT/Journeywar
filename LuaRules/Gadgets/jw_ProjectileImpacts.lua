@@ -129,7 +129,6 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
     Script.SetWatchWeapon(bunkerPlasmaDefID, true)
     Script.SetWatchWeapon(cCssFlameT, true)
-    Script.SetWatchWeapon(glavaWeaponID, true)
     Script.SetWatchWeapon(gVolcanoWeaponID, true)
     Script.SetWatchWeapon(nukeLvl3WeaponDefID, true)
     Script.SetWatchWeapon(highExLineGunDefID, true)

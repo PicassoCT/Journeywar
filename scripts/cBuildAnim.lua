@@ -1408,7 +1408,7 @@ function wizzardryOfOSLoop()
                     endZ = z + masterTable[masterTableKey][4]
                     for i = startX, endX, 1 do
                         for o = startZ, endZ, 1 do
-                            spRemoveGrass(i, y, o)
+                            spRemoveGrass(i, o)
                         end
                     end
                 end
