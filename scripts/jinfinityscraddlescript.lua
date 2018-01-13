@@ -213,7 +213,7 @@ function keepAtSeaLevel()
     end
 end
 
-function createConcon(buildspot)
+function createEgg(buildspot)
     --Animation
     teamid = Spring.GetUnitTeam(unitID)
     x, y, z = Spring.GetUnitPiecePosDir(unitID, buildspot)
@@ -225,17 +225,17 @@ end
 function build(buildID)
 
     health, maxHealth, paralyzeDamage, captureProgress, buildProgress = Spring.GetUnitHealth(buildID)
-    concoonID = createConcon(buildspot)
+    eggID = createEgg(buildspot)
     Spring.SetUnitAlwaysVisible(buildID, false)
 
     while Spring.ValidUnitID(buildID) == true and Spring.GetUnitIsDead(buildID) == false and buildProgress < 1.0 do
         health, maxHealth, paralyzeDamage, captureProgress, buildProgress = Spring.GetUnitHealth(buildID)
 
         hp = math.max(1, math.ceil(buildProgress * 100))
-        if Spring.GetUnitIsDead(concoonID) == true then
-            concoonID = createConcon(buildspot)
+        if Spring.GetUnitIsDead(eggID) == true then
+            eggID = createConcon(buildspot)
         end
-        Spring.SetUnitHealth(concoonID, hp)
+        Spring.SetUnitHealth(eggID, hp)
 
 
         Sleep(100)

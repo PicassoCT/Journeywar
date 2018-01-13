@@ -1,6 +1,7 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
+include "lib_jw.lua"
 
 include "lib_Build.lua"
 
@@ -9,7 +10,10 @@ include "lib_Build.lua"
 Pieces = {}
 
 
-local ExcludeDefIDs = {}
+local ExcludeDefIDs = getAbstractTypes(UnitDefNames)
+
+ExcludeDefIDs[UnitDefNames["jmovingfac1"].id] = true
+ExcludeDefIDs[UnitDefNames["jmovingfac2"].id] = true
 ExcludeDefIDs[UnitDefNames["jvaryavatara"].id] = true
 ExcludeDefIDs[UnitDefNames["ccomender"].id] = true
 ExcludeDefIDs[UnitDefNames["jabyss"].id] = true

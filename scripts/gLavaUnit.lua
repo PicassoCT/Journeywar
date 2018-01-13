@@ -667,29 +667,26 @@ function script.Killed()
 end
 
 --flameThrowerWeapon
+ResistantUnits= mergeDict(getAbstractTypes(),getExemptFromLethalEffectsUnitTypeTable(UnitDefNames))
+ResistantUnits= mergeDict(ResistantUnits, getPyroProofUnitTypeTable())
+LAVA_RANGE= 60
+LavaDamageSecond= 120
+function lavaDamage()
+while true do
+T= getAllNearUnit(unitID, LAVA_RANGE)
+process(T,
+		function(id)
+			if not ResistantUnits[Spring.GetUnitDefID(id)] then
+				Spring.AddUnitDamage(id,LavaDamageSecond/300)
+				   setUnitOnFire(id, math.random(190, 1500))
+			end
+		end
+		)
 
-function script.QueryWeapon1() return
-flameTurret
+Sleep(300)
 end
 
-function script.AimFromWeapon1()
-
-    return flameTurret
 end
-
-function script.AimWeapon1(heading, pitch)
-
-    Turn(flameTurret, y_axis, heading, 2)
-    Turn(flameTurret, x_axis, -pitch, 2)
-    WaitForTurn(flameTurret, y_axis)
-    WaitForTurn(flameTurret, x_axis)
-    return true
-end
-
-
-function script.FireWeapon1()
-end
-
 
 
 function script.Create()
@@ -711,6 +708,7 @@ function script.Create()
     else
         StartThread(altMain)
     end
+	StartThread(lavaDamage)
     StartThread(decalFactoryEmit)
 end
 

@@ -117,7 +117,8 @@ function getFungiImuneUnitTypeTable(UnitDefNames)
 end
 
 
-function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
+function getExemptFromLethalEffectsUnitTypeTable(UnitDefNamesL)
+if not UnitDefNames then UnitDefNames = UnitDefNamesL end
     retTab = {
         [UnitDefNames["ccomender"].id] = true,
         [UnitDefNames["beanstalk"].id] = true,
@@ -180,7 +181,9 @@ function getAirUnitTypeTable(UnitDefNamesContext)
     return retTab
 end
 
-function getPyroProofUnitTypeTable(UnitDefNames)
+function getPyroProofUnitTypeTable(UnitDefNamesContext)
+	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
+
     local FireProofTypes = {}
     FireProofTypes[UnitDefNames["jfiredancebomb"].id] = true
     FireProofTypes[UnitDefNames["jsunshipfire"].id] = true
@@ -328,6 +331,8 @@ function getAbstractTypes(UnitDefNamesContext)
         [UnitDefNames["ccomendernuke"].id] = true,
         [UnitDefNames["ccomendernukelvl3"].id] = true,
         [UnitDefNames["cawilduniverseappears"].id] = true,
+        [UnitDefNames["jtrafactory"].id] = true,
+        [UnitDefNames["jtrafactory2"].id] = true,
 		--TODO add all abstract types
      }
 
