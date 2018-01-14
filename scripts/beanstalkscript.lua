@@ -410,6 +410,24 @@ function swayBeanstalk()
 	end
 end
 
+function moveBeansToOrbit()
+	mP(bean1,0,4000,0,320)
+	mP(bean2,0,4000,0,320)
+	mP(bean3,0,4000,0,320)
+	WaitForMoves(bean1,bean2,bean3)
+	Hide(bean1)
+	SpinArrest(bean1)
+	Hide(bean2)
+	SpinArrest(bean2)
+	Hide(bean3)
+	SpinArrest(bean3)
+	reset(bean3)
+	reset(bean2)
+	reset(bean1)
+
+end
+
+
 function greatEntry()
 	
 	
@@ -456,6 +474,7 @@ function greatEntry()
 	
 	Spin(bsfetas, y_axis, math.rad(3.2), 0.2)
 	Spin(bshelix, y_axis, math.rad(4.2), 0.2)
+	Show(bshelix)
 	Show(seed)
 	Turn(seed, x_axis, math.rad(64), 0)
 	dir = math.random(0, 360)
@@ -473,6 +492,7 @@ function greatEntry()
 	
 	--Impact --35 secs
 	StartThread(emitDirt)
+	StartThread(sproutLoop)
 	EmitSfx(center, 1024)
 	EmitSfx(center, 1026)
 	EmitSfx(center, 1027)
@@ -509,16 +529,11 @@ function greatEntry()
 	GG.UnitsToSpawn:PushCreateUnit("jbeanstalkplate", x, y, z, 0, teamID)
 	Show(bsholo)
 	Show(beanstalk)
-	Move(bean3, y_axis, -2450, 675)
+	StartThread(moveBeansToOrbit)
 	Move(beans, y_axis, 0, 0)
 	Sleep(4000)
 	
-	Hide(bean1)
-	SpinArrest(bean1)
-	Hide(bean2)
-	SpinArrest(bean2)
-	Hide(bean3)
-	SpinArrest(bean3)
+	
 	Hide(spindl)
 	SpinArrest(spindl)
 	Hide(spindl2)
@@ -554,7 +569,7 @@ function greatEntry()
 	SpinArrest(rootgrow)
 	Hide(rootRotate)
 	SpinArrest(rootRotate)
-	
+	Spring.SetUnitNoSelect(unitID,false)
 	
 	showT(pumps)
 	showT(pumpbase)
@@ -660,7 +675,7 @@ function reEntry()
 	for i = 1, 14, 1 do
 		Hide(greenSleaves[i])
 	end
-	
+	Spring.SetUnitNoSelect(unitID,true)
 	hideT(wurzelballen)
 	boolEntryOver = true
 end
@@ -673,6 +688,7 @@ function script.Create()
 	
 	Turn(bsholo, y_axis, math.rad(-90), 0)
 	hideAllPieces(unitID)
+	Spring.SetUnitNoSelect(unitID,true)
 	if defID == UnitDefNames["beanstalk"].id then
 		greatEntry()
 	elseif defid == UnitDefNames["dbeanstalk"].id then
@@ -783,4 +799,43 @@ function script.FireWeapon1()
 	
 	
 	return true
+end
+
+currentlyBusy={}
+function growAndWither(id)
+if currentlyBusy[id] == true then return end
+	currentlyBusy[id]= true
+	randDelay=  math.ceil(math.random(10000,55000))
+	Sleep(randDelay)
+	ux,uy,uz= Spring.GetUnitPosition(unitID)
+	randX,randZ= math.random(80,450)*randSign(), math.random(80,450)*randSign()
+	mP(id,randX,-400,randZ,0)
+	Spin(id,y_axis,math.rad(-30),0)
+	Show(id)
+	randSpeed= math.random(2,5)
+	roffset=math.random(-50,0)
+	moveUnitPieceToGroundPos(unitID,id,randX,randZ,randSpeed,roffset )	
+	WaitForMoves(id)
+	StopSpin(id,y_axis,0.03)
+	timeToWait= math.ceil(math.random(15000,30000))
+	Sleep(timeToWait)
+	Spin(id,y_axis,math.rad(30),0)
+	mP(id,randX,-400,randZ,2)
+	WaitForMoves(id)
+	Hide(id)
+	Sleep(32000)
+	currentlyBusy[id]= false
+end
+
+
+function sproutLoop()
+Sleep(100)
+hideT(TablesOfPiecesGroups["Sprout"])
+	while true do
+		for i=1,#TablesOfPiecesGroups["Sprout"] do
+			StartThread(growAndWither,TablesOfPiecesGroups["Sprout"][i])
+		end
+
+	Sleep(100)
+	end
 end

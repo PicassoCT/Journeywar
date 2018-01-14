@@ -1,4 +1,3 @@
-VFS.Include("LuaRules/Utilities/tablefunctions.lua", nil, VFS.DEF_MODE)
 
 local MergeTable = Spring.Utilities.MergeTable
 

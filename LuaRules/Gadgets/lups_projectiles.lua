@@ -1,20 +1,21 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 function gadget:GetInfo()
-    return {
-        name = "Projectile Lups",
-        desc = "Attaches Lups FX to projectiles",
-        author = "KingRaptor (L.J. Lim)",
-        date = "2013-06-28",
-        license = "GNU GPL, v2 or later",
-        layer = 1,
-        enabled = false
-    }
+	return {
+		name = "Projectile Lups",
+		desc = "Attaches Lups FX to projectiles",
+		author = "KingRaptor (L.J. Lim)",
+		date = "2013-06-28",
+		license = "GNU GPL, v2 or later",
+		layer = 1,
+		enabled = false
+	}
 end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-local weapons = include("luarules/Configs/lups_projectile_fxs.lua") --{}
+local weapons = include("LuaRules/Configs/lups_projectile_fxs.lua")	--{}
+
 --[[
 for i=1,#WeaponDefs do
 	local wd = WeaponDefs[i]

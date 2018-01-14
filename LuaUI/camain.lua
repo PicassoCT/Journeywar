@@ -12,26 +12,6 @@
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
---
--- 0.75b2 compatibilty
---
-if (Spring.GetTeamColor == nil) then
-  local getTeamInfo = Spring.GetTeamInfo
-  Spring.GetTeamColor = function(teamID)
-    local _,_,_,_,_,_,r,g,b,a = getTeamInfo(teamID)
-    return r, g, b, a
-  end
-  Spring.GetTeamInfo = function(teamID)
-    local id, leader, active, isDead, isAi, side,
-          r, g, b, a, allyTeam = getTeamInfo(teamID)
-    return id, leader, active, isDead, isAi, side, allyTeam
-  end
-end
-
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-
 Spring.SendCommands({"ctrlpanel " .. LUAUI_DIRNAME .. "ctrlpanel.txt"})
 
 VFS.Include(LUAUI_DIRNAME .. 'utils.lua', utilFile)
@@ -137,6 +117,10 @@ function KeyRelease(key, mods)
   return widgetHandler:KeyRelease(key, mods)
 end
 
+function TextInput(utf8, ...)
+  return widgetHandler:TextInput(utf8, ...)
+end
+
 function MouseMove(x, y, dx, dy, button)
   return widgetHandler:MouseMove(x, y, dx, dy, button)
 end
@@ -165,6 +149,18 @@ function GroupChanged(groupID)
   return widgetHandler:GroupChanged(groupID)
 end
 
+local allModOptions = Spring.GetModOptions()
+function Spring.GetModOption(s,bool,default)
+  if (bool) then
+    local modOption = allModOptions[s]
+    if (modOption==nil) then modOption = (default and "1") end
+    return (modOption=="1")
+  else
+    local modOption = allModOptions[s]
+    if (modOption==nil) then modOption = default end
+    return modOption
+  end
+end
 
 --
 -- The unit (and some of the Draw) call-ins are handled

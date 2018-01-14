@@ -60,7 +60,7 @@ JitterParticles2.Default = {
 
   size           = 0,
   sizeSpread     = 0,
-  sizeGrowth      = 0,
+  sizeGrowth     = 0,
   sizeExp        = 1, --// >1 : first decrease slow, then fast;  <1 : decrease fast, then slow;  <0 : invert x-axis (start large become smaller)
 
   texture        = 'bitmaps/GPL/Lups/mynoise.png',
@@ -149,7 +149,7 @@ function JitterParticles2:CreateParticleAttributes(up, right, forward, partpos,n
   delay     = rand() * self.delaySpread
 
   sizeStart = self.size + rand() * self.sizeSpread
-  sizeEnd   = sizeStart + self.sizeGrowth  * life
+  sizeEnd   = sizeStart + self.sizeGrowth * life
 
   if (partpos) then
     local part = { speed=speed, velocity=Vlength(speed), life=life, delay=delay, i=n }
@@ -291,7 +291,7 @@ function JitterParticles2:Initialize()
          gl_FragColor = vec4(noiseVec,length(noiseVec)*heat,gl_FragCoord.z);
       }
     ]],
-    uniform = {
+    uniformInt = {
       noiseMap = 0,
     },
   })
@@ -393,22 +393,30 @@ function JitterParticles2:Visible()
   local losState
   if (self.unit and not self.worldspace) then
     local ux,uy,uz = spGetUnitViewPosition(self.unit)
+    if not ux then
+      return false
+    end
+    radius = radius + (spGetUnitRadius(self.unit) or 0)
+    if self.noIconDraw then
+      if not Spring.IsUnitVisible(self.unit, radius, self.noIconDraw) then
+        return false
+      end
+    end
     posX,posY,posZ = posX+ux,posY+uy,posZ+uz
-    radius = radius + spGetUnitRadius(self.unit)
-    losState = spGetUnitLosState(self.unit, LocalAllyTeamID)
+    losState = GetUnitLosState(self.unit)
   elseif (self.projectile and not self.worldspace) then
     local px,py,pz = spGetProjectilePosition(self.projectile)
     posX,posY,posZ = posX+px,posY+py,posZ+pz
   end
   if (losState==nil) then
     if (self.radar) then
-      losState = IsPosInRadar(posX,posY,posZ, LocalAllyTeamID)
+      losState = IsPosInRadar(posX,posY,posZ)
     end
     if ((not losState) and self.airLos) then
-      losState = IsPosInAirLos(posX,posY,posZ, LocalAllyTeamID)
+      losState = IsPosInAirLos(posX,posY,posZ)
     end
     if ((not losState) and self.los) then
-      losState = IsPosInLos(posX,posY,posZ, LocalAllyTeamID)
+      losState = IsPosInLos(posX,posY,posZ)
     end
   end
   return (losState)and(spIsSphereInView(posX,posY,posZ,radius))

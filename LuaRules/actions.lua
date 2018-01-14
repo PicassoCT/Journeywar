@@ -48,7 +48,7 @@ local function InsertCallInfo(callInfoList, gadget, func, help)
   local layer = gadget.ghInfo.layer
   local index = 1
   for i,ci in ipairs(callInfoList) do
-    local g = ci[1]
+    local g = ci[2]
     if (g == gadget) then
       return false  --  already in the table
     end
@@ -80,7 +80,7 @@ end
 local function RemoveCallInfo(callInfoList, gadget)
   local count = 0
   for i,callInfo in ipairs(callInfoList) do
-    local g = callInfo[1]
+    local g = callInfo[2]
     if (g == gadget) then
       table.remove(callInfoList, i)
       count = count + 1

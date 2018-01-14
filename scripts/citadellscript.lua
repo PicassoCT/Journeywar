@@ -577,7 +577,7 @@ local function WarpEntry()
         SpinArrest(rocks[r])
     end
 
-
+	Spring.SetUnitNoSelect(unitID,false)
     Spring.PlaySoundFile("sounds/citadell/landing.wav")
     unitx, unity, unitz = Spring.GetUnitBasePosition(unitID)
     spSpawnCEG("factory_explosion", unitx, unity, unitz, 0, 1, 0, 50, 0)
@@ -644,6 +644,7 @@ function script.Deactivate()
 end
 
 function script.Create()
+	Spring.SetUnitNoSelect(unitID,true)
 	 Move(cloudspin,y_axis,1500,0,true)
     Move(sparkcloudemit, y_axis, 0, 0)
     Move(PortalEmit, y_axis, 0, 0, true)
