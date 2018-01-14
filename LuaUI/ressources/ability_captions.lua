@@ -18,6 +18,7 @@ return {
   ["cwaterextractor"]= {active="Harvest\nWater", passive="Stop\nHarvest"},
   ["mdigg"]= {active="Start\nMining", passive="Stop\nMining"},
   ["mdiggmex"]= {active="Stop\nMining", passive="Start\nMining"},
+  ["coverworldgate"]= {active="Order\nAI-Creeps", passive="Cease\nCreepsproduction"},
   ["citadell"]= {active="Raise\nShield", passive="Lower\nShield"},
   ["contrain"]= {active="Heal\nUnits", passive="Stop\nHealing"},
   ["cpaxcentrail"]= {active="", passive="Enforce\nCompliance\n via\nHostageblock"},

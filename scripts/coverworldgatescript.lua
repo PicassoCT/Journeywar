@@ -1,6 +1,7 @@
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
+include "lib_jw.lua"
 include "lib_Build.lua"
 include "createCorpse.lua"
 
@@ -171,7 +172,7 @@ function spawner()
     local x, y, z = Spring.GetUnitPosition(unitID)
 
 
-	creeperTypeTable= dictToTable(getCreeperUnitTypeTable())
+	creeperTypeTable= dictToTable(getCentrailOverworldGateUnitTypeTable())
     averageUnitCost = getUnitAvgCost(creeperTypeTable)
 
 
@@ -183,7 +184,7 @@ function spawner()
     while (true) do
         --- -Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
 
-		while boolActive= true do
+		while boolActive== true do
         Sleep(rechargeTime)
 			enemyID = spGetUnitNearestEnemy(unitID)
 
@@ -209,11 +210,11 @@ function spawner()
 
 				if  intervall == 0 then 
 					showPlayerBroke()
-				end
+				else
 
 					for i = 1, intervall, 1 do
-						unitTypeIndex= (unitTypeIndex % #spawnedUnitTable) +1
-						Unittype = spawnedUnitTable[unitTypeIndex]
+						unitTypeIndex= (unitTypeIndex % #creeperTypeTable) +1
+						Unittype = creeperTypeTable[unitTypeIndex]
 
 
 						spawnedUnit = lCreateUnitFunction(Unittype)
@@ -225,6 +226,7 @@ function spawner()
 							table.insert(monsterTable, spawnedUnit)
 						end
 					end
+				end
 				Sleep(4000)
 				powerDown()
 				

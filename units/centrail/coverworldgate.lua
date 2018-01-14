@@ -32,7 +32,9 @@ local unitDef = {
 	corpse = "bgcorpse",
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
-	
+	onoffable=true,
+	activateWhenBuilt=true,
+
 	maxSlope = 50,
 	CanMove = false,
 	CanPatrol = false,

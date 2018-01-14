@@ -77,7 +77,7 @@ function getDefenseBuildingTypeTable(UnitDefNames)
 	return getTypeTable(UnitDefNames, typeTable)
 end
 
-function getCentrailCreeperUnitTypeTable()
+function getCentrailOverworldGateUnitTypeTable()
 	typeTable={
 		"css",
 		"bg3",
@@ -314,13 +314,7 @@ function getCentrailCreeperTypeTable()
 end
 
 function getCreeperTypeTable()
-    CreepTable = getJourneyCreeperTypeTable()
-
-    for key, v in pairs(getCentrailCreeperTypeTable()) do
-        CreepTable[key] = true
-    end
-
-    return CreepTable
+    return mergeDict( getJourneyCreeperTypeTable(),getCentrailCreeperTypeTable())
 end
 
 function getAbstractTypes(UnitDefNamesContext)
