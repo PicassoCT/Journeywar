@@ -361,7 +361,7 @@ function getGravityChangeReistantUnitTypeTable(UnitDefNames)
         [UnitDefNames["jghostdancer"].id] = true
     }
 
-    return TransportTable
+    return mergeDict(TransportTable,getAbstractTypes())
 end
 
 function getRewardTable()

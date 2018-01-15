@@ -93,7 +93,18 @@ returnFreeSpot = nil
 function OS_LOOP()
     StartThread(timing)
     Sleep(50)
-
+	baitType = getTypeTable(UnitDefs,  {
+				"bonker",
+				"chopper",
+				"crailgun",
+				"cwatchpost",
+				"cDistrictNone",
+				"buibaicity1",
+				"buibaicity2",
+				"factoryspawndecorator"	
+				})
+	randRobin= math.random(1,#baitType)
+				
     while (true) do
         boolCharged = ischarged()
 
@@ -109,32 +120,14 @@ function OS_LOOP()
                 returnFreeSpot = getFreeSpot()
 
                 if returnFreeSpot ~= nil then
-
-
-
-                    dice = math.random(0, 3)
-                    if dice == 0 then
-                        boolBuildItBob = true
-                        Spring.CreateUnit("cDistrictNone", repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
-                    elseif dice == 1 then
-                        boolBuildItBob = true
-                        Spring.CreateUnit("buibaicity1", repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
-                    elseif dice == 2 then
-                        boolBuildItBob = true
-                        Spring.CreateUnit("buibaicity2", repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
-                    elseif dice == 3 then
-                        boolBuildItBob = true
-                        Spring.CreateUnit("factoryspawndecorator", repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
-                    end
-                    --Spring.Echo("Still alive")
+                    randRobin= randRobin % baitType + 1
+					    boolBuildItBob = true
+                        Spring.CreateUnit(baitType[randRobin], repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
                 end
                 Sleep(100)
-                --Spring.Echo(1)
             end
             returnFreeSpot = nil
-            --Spring.Echo(2)
         end
-        --Spring.Echo(3)
         Sleep(1000)
     end
 end

@@ -52,6 +52,7 @@ function getAllInCircle(x, z, Range, unitID, teamid)
     return T
 end
 
+--> Removes Units of a Team from a table
 function removeUnitsOfTeam(TableOfUnits, teamid)
     returnTable = {}
     for i = 1, #TableOfUnits, 1 do
@@ -120,6 +121,7 @@ function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID, px, py, pz, ran
         end)
 end
 
+--> is a Unit Piece above ground
 function isPieceAboveGround(unitID,pieceName)
 x,y,z =Spring.GetUnitPiecePosDir(unitID,pieceName)
 gh= Spring.GetGroundHeight(x,z)
@@ -140,6 +142,7 @@ function reSetSpeed(unitID, UnitDefs)
     setSpeedEnv(unitID, 1.0)
 end
 
+--> returns a Units metal and energycosts
 function getUnitCost(id)
 defID= Spring.GetUnitDefID(id)
 
@@ -561,15 +564,18 @@ function returnToWorld(unit, px, py, pz)
 end
 
 
-
-function showAll()
+--> Shows all Pieces of a a Unit in 
+function showAll(id)
+if not unitID then unitID = id end
  pieceMap = Spring.GetUnitPieceMap(unitID)
  for k,v in pairs(pieceMap) do
 	Show(v)
  end
 end
+--> Hide all Pieces of a Unit
+function hideAll(id)
+if not unitID then unitID = id end
 
-function hideAll()
  pieceMap = Spring.GetUnitPieceMap(unitID)
  for k,v in pairs(pieceMap) do
 	Hide(v)
@@ -619,6 +625,7 @@ function getInCircle(unitID, Range, teamid)
 	
 end
 
+--> Returns the nearest Enemy 
 function getNearestGroundEnemy(id, UnitDefs)
     ed = Spring.GetUnitNearestEnemy(id)
     if ed then
@@ -648,7 +655,7 @@ function getNearestGroundEnemy(id, UnitDefs)
     end
 end
 
-
+--> return the Name of a UnitPiece as String
 function getUnitPieceName(unitID,pieceNum)
 
 	pieceList= Spring.GetUnitPieceList(unitID)
@@ -714,7 +721,7 @@ function transferUnitStatusToUnit(unitID, targetID)
 
     Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
-
+--> Create a Unit at Piece of another Unit
 function createUnitAtPiece(unitID, typeID, Piece, team)
  x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(unitID, Piece)
  teamID= team or Spring.GetUnitTeam(unitID)

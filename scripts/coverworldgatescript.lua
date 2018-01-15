@@ -199,16 +199,16 @@ function spawner()
 				end
 				ox, oy, oz = ex, ey, ez
 				-- acquire ressources
-				intervall = math.ceil(math.random(5, 10))
-
+				intervall = 6
 
 				boolThisCanWorkOut = false
 				for i=intervall, 0, -1  do
 					boolThisCanWorkOut = consumeAvailableRessourceUnit(unitID, "metal", math.ceil(i * (averageUnitCost)))			
 					if boolThisCanWorkOut == true then break end
 				end
-
-				if  intervall == 0 then 
+				
+				intervall = math.max(2,intervall)
+				if  intervall == 2 then 
 					showPlayerBroke()
 				else
 
