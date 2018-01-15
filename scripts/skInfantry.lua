@@ -266,6 +266,37 @@ function rest()
 			Turn(center,x_axis,math.rad(0),6)
 
 end
+
+function restPose()
+	armDoneTable={}
+	turnArmRand = function(arm, counter)
+					
+					armDoneTable[arm]=false;
+					sig= -1
+					while counter > 0 do
+						counter= counter -1
+						sig=sig*-1
+						if sig < 0 then
+							lval= math.random(-40,-10) 
+						else
+							lval=math.random(50,80)
+						end 
+						Turn(arm,x_axis,math.rad(lval),1);
+						WaitForTurns(arm);
+						Sleep(10)
+					end
+					armDoneTable[arm]=true;
+				end
+				val= math.random(10,30)
+	StartThread(turnArmRand, turret,val) 
+	val= math.random(10,30)	
+	StartThread(turnArmRand, turret2,val)			
+
+	Sleep(50000)
+	
+	end
+
+
 function idle()
 	
 	sleeper=math.random(8024,42292)
@@ -276,8 +307,12 @@ function idle()
 		
 		Sleep(sleeper)
 		
-		rand=math.random(0,4)
+		rand=math.random(0,8)
+		if rand > 4 then
+			restPose()
 		
+		end
+	
 		if rand==4 then	
 			skyFist()
 		end
@@ -528,9 +563,11 @@ local function legs_down()
 	Move (body,y_axis,0,12)
 	Move (body,z_axis,0,12)
 
-	tP (turret2,0,0,0,12)
+	rval,lval=math.random(50,110),math.random(50,110)
+
 	mP (turret2,0,0,0,12)
-	tP (turret,0,0,0,12)
+	tP (turret2,rval,0,0,12)
+	tP (turret,lval,0,0,12)
 	Move (center,y_axis,0,12)
 	Move (center,z_axis,0,12)
 	Turn (torso, y_axis,math.rad(0), 15)	
