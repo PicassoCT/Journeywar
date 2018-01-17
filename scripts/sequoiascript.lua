@@ -11,7 +11,7 @@ turret2 = piece "turret2"
 turret3 = piece "turret3"
 turret4 = piece "turret4"
 Ground = {}
-CHARGE_TOTAL = 4200
+CHARGE_TOTAL = UnitDefNames["jtree1"].metalCost + UnitDefNames["jtree1"].energyCost or 4200
 ChargeUp = 0
 
 for i = 1, 6, 1 do
@@ -57,11 +57,11 @@ function script.Deactivate()
 end
 
 function destroyedUnit(dUIDefID)
-    MetallCost = 250 --TODO getUnitType dependant costs
-    EnergyCost = 250 --TODO getUnitType dependant costs
+    MetallCost = UnitDefs[dUIDefID].metalCost  or 250 --TODO getUnitType dependant costs
+    EnergyCost = UnitDefs[dUIDefID].energyCost or 250 --TODO getUnitType dependant costs
     Show(energyorb)
-    Total = (MetallCost + EnergyCost) ^ 0.5
-    ChargeUp = ChargeUp + 0.5
+    Total = (MetallCost + EnergyCost) 
+    ChargeUp = ChargeUp + Total
 end
 
 function emitLight()

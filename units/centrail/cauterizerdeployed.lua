@@ -1,18 +1,18 @@
-local unitName = "cgunship"
+local unitName = "cauterizerdeployed"
 
 local unitDef = {
-	name = "Gunshipsynth",
-	Description = "heavy air-ground Gunship <Air Ground Tank Unit>",
-	objectName = "cGunShip.s3o",
-	script = "cGunShipScript.lua",
-	buildPic = "chunterchopper.dds",
+	name = "Cauterizer(deployed)",
+	Description = "Combat Drone <Areal Denial Unit>",
+	objectName = "placeholder.s3o",
+	script = "cauterizerdeployedscript.lua",
+	buildPic = "placeholder.dds",
 	
 	--cost
 	buildCostMetal = 1500,
 	buildCostEnergy = 800,
 	buildTime = 26,
 	--Health
-	maxDamage =3500,
+	maxDamage =1950,
 	idleAutoHeal = 0,
 	--Movement
 	Acceleration = 1.9,
@@ -58,7 +58,6 @@ local unitDef = {
 	factoryHeadingTakeoff =false,
 	strafeToAttack=true,
 	
-	
 	Category = [[AIR]],
 	
 	explodeAs="citadelldrone",
@@ -74,30 +73,25 @@ local unitDef = {
 			"custom:choppermuzzle",
 			"custom:flyinggrass",
 			"custom:blackerthensmoke",--1027
-			"custom:330rlexplode",--1028
-			
-			
-			
-			
-		},
-		
+			"custom:330rlexplode",--1028		
+		},		
 	},
-	
-	
+		
 	weapons = {
 		[1]={name = "cgunshipmg",
 			onlyTargetCategory = [[ LAND]],
-			MainDir = [[0 0 1]],
-			MaxAngleDif = 90,
+			MainDir = [[0 -1 0]],
+			MaxAngleDif = 10,
+			turret = false,
 			
 		},
 		
-		
-		
-		
-	},
-	
-	
+		[2]={name = "suicidestarburst",
+			onlyTargetCategory = [[ LAND]],
+			MainDir = [[0 1 0]],
+			MaxAngleDif = 50,			
+		},		
+	},	
 }
 
 return lowerkeys({ [unitName] = unitDef })

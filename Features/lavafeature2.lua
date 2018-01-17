@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "lavafeature2",
    blocking       = true,
-   category       = "gCorpse",
+   category       = "GCORPSE",
    damage            = 3000,
    description       = "Cooled out Lava",
    energy            = 12,

@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "bug",
    blocking       = false,
-   category       = "jCorpse",
+   category       = "JCORPSE",
    damage            = 3000,
    description       = "its no more, its a feature",
    energy            = 12,
