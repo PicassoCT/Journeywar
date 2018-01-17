@@ -1348,7 +1348,7 @@ end
 function isUnitValid()
     --Destroys the BuildAnimation Unit should the building cease to exist
     if Spring.ValidUnitID(buildID) == false then
-        Spring.DestroyUnit(unitID, false, false)
+        Spring.DestroyUnit(unitID, false, true)
     end
 end
 
@@ -1389,7 +1389,7 @@ function wizzardryOfOSLoop()
                 masterTableKey, boolUnitIsUnidentified, buildID = identifyUnit()
                 geigercounter = geigercounter + 1
                 if geigercounter == 10 then
-                    Spring.DestroyUnit(unitID, true, true)
+                    Spring.DestroyUnit(unitID, false, true)
                 end
 
             else

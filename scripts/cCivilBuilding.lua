@@ -116,7 +116,7 @@ function script.Create()
                 px, py, pz = Spring.GetUnitPosition(unitID)
                 myTeamID = Spring.GetUnitTeam(unitID)
                 GG.UnitsToSpawn:PushCreateUnit("gcivbuildjourn", px, py, pz, 0, myTeamID)
-                Spring.DestroyUnit(unitID, true, true)
+                Spring.DestroyUnit(unitID, false, true)
             end
         end
     end

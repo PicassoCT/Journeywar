@@ -282,7 +282,7 @@ function TimeOfMyLife()
     Sleep(240000)
     Move(center, y_axis, -30, 3)
     WaitForMove(center, y_axis)
-    Spring.DestroyUnit(unitID, false, false)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Killed()

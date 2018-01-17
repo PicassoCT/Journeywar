@@ -194,7 +194,7 @@ function hitManThread(poorFellowsID)
             Turn(sayAAA, x_axis, math.rad(0), 15)
             Turn(constTongue, x_axis, math.rad(0), 15)
             DropUnit(poorFellowsID)
-            Spring.DestroyUnit(poorFellowsID, true, true)
+            Spring.DestroyUnit(poorFellowsID, false, true)
             poopStack = poopStack + 10
 
         else

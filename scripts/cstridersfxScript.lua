@@ -5,7 +5,7 @@ function DelayedSelfKill()
     Spring.MoveCtrl.Enable(unitID, true)
     Spring.SetUnitAlwaysVisible(unitID, false)
     Sleep(2000)
-    Spring.DestroyUnit(unitID, true, true)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Create()

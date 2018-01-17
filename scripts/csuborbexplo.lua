@@ -130,7 +130,7 @@ function goTooKillThemAllPicaMon()
                 x, y, z = Spring.GetUnitPosition(proChoice[i])
                 StartThread(spawnFire, 82, x, y, z)
                 Spring.SetUnitNoDraw(proChoice[i], false)
-                Spring.DestroyUnit(proChoice[i], false, false) --leave no wreck
+                Spring.DestroyUnit(proChoice[i], false, true) --leave no wreck
             end
             end
         end
@@ -272,7 +272,7 @@ function justWaitAndSee()
     StartThread(randomFires)
     Sleep(20000)
 
-    Spring.DestroyUnit(unitID, true, true)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Create()

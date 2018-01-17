@@ -76,7 +76,7 @@ end
 
 function actualTrample()
 Sleep(500)
-Spring.DestroyUnit(unitID,false,true)
+Spring.DestroyUnit(unitID,true,false)
 
 end
 

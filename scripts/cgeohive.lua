@@ -95,13 +95,13 @@ function OS_LOOP()
     Sleep(50)
 	baitType = getTypeTable(UnitDefs,  {
 				"bonker",
-				"chopper",
-				"crailgun",
-				"cwatchpost",
 				"cDistrictNone",
 				"buibaicity1",
+				"cwatchpost",
 				"buibaicity2",
+				"crailgun",
 				"factoryspawndecorator"	
+				"chopper",
 				})
 	randRobin= math.random(1,#baitType)
 				
@@ -109,30 +109,20 @@ function OS_LOOP()
         boolCharged = ischarged()
 
         if boolCharged == true then
-
-
-            --ey, Yo, reSettin but neva forgettin
-
-            --checking out the neighbourhood
-            boolBuildItBob = false
-            while (boolBuildItBob == false) do
-                --checkthe Freespots for freedom
-                returnFreeSpot = getFreeSpot()
-
-                if returnFreeSpot ~= nil then
-                    randRobin= randRobin % baitType + 1
-					    boolBuildItBob = true
-                        Spring.CreateUnit(baitType[randRobin], repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
-                end
-                Sleep(100)
-            end
-            returnFreeSpot = nil
+			if boolBuildDrones== false then
+				spawnBuilding()
+			else
+				spawnDefenseDrone()
+			end
         end
         Sleep(1000)
     end
 end
 
+function spawnDefenseDrone()
 
+
+end
 
 
 function script.Create()
@@ -182,6 +172,31 @@ function script.Killed(recentDamage, _)
     return 1
 end
 
+function spawnBuilding()
+            --ey, Yo, reSettin but neva forgettin
+
+            --checking out the neighbourhood
+            boolBuildItBob = false
+            while (boolBuildItBob == false) do
+                --checkthe Freespots for freedom
+                returnFreeSpot = getFreeSpot()
+
+                if returnFreeSpot ~= nil then
+                    randRobin= randRobin % baitType + 1
+					    boolBuildItBob = true
+                        Spring.CreateUnit(baitType[randRobin], repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
+                end
+                Sleep(100)
+            end
+            returnFreeSpot = nil
+end
+
+function script.Activate()
 
 
+end
 
+function script.Deactivate()
+
+
+end

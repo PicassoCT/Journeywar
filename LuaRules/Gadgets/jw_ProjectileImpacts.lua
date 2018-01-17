@@ -630,7 +630,7 @@ camproDefID = UnitDefNames["campro"].id
 				if persPack.counter > 25 or Spring.GetUnitIsDead(persPack.unitID)== true then 
 					return false 
 				end  
-				if Spring.GetUnitIsDead(persPack.first) == true then Spring.DestroyUnit(persPack.unitID,true, true) end
+				if Spring.GetUnitIsDead(persPack.first) == true then Spring.DestroyUnit(persPack.unitID,true, false) end
 				
 				persPack.counter = persPack.counter + 1 
 
@@ -718,7 +718,7 @@ camproDefID = UnitDefNames["campro"].id
         hitPoints, maxHP = Spring.GetUnitHealth(unitID)
         if hitPoints - damage <= 0 and maxHP > 450 then
             x, y, z = Spring.GetUnitPosition(unitID)
-            Spring.DestroyUnit(unitID)
+            Spring.DestroyUnit(unitID,false, true)
             Spring.CreateUnit("jtree1", x, y, z, 1, attackerTeam)
         end
     end

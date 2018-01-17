@@ -497,7 +497,7 @@ function spawnCitadell()
     for i = 400, 800, 50 do
         WMove(PortalPillar, y_axis, i, i)
     end
-    Spring.DestroyUnit(unitID, true, true)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 

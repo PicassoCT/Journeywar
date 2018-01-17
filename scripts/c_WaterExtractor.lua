@@ -177,7 +177,7 @@ function killMeSoftly()
         if y > 0 then
             Spin(center, y_axis, math.rad(192), 0.01)
             Sleep(9000)
-            Spring.DestroyUnit(unitID, false, false)
+            Spring.DestroyUnit(unitID, true, false)
         end
         Sleep(3141)
     end

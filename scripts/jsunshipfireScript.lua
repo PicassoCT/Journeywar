@@ -86,7 +86,7 @@ function constDistanceDrag()
 
                         if idID == UnitDefNames["jdarkgate"].id and distanceUnitToUnit(id, unitID) < 100 then
                             Spring.DestroyUnit(id, true, false)
-                            Spring.DestroyUnit(unitID, true, false)
+                            Spring.DestroyUnit(unitID, false, true)
                         end
 
                         if id ~= unitID and idID ~= UnitDefNames["jsunshipfire"].id then
@@ -216,7 +216,7 @@ function damageDealer()
                         end)
 
 
-                    Spring.DestroyUnit(id, true, true);
+                    Spring.DestroyUnit(id, false, true);
                     return id;
                 end)
 
@@ -374,7 +374,7 @@ function sunLifeTimeControll()
     Spring.SpawnCEG("jsupernovaprep", x, y + 10, z, 0, 1, 0)
     Sleep(4000)
     Spring.SpawnCEG("jsupernova", x, y + 10, z, 0, 1, 0)
-    Spring.DestroyUnit(unitID, true, true)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Killed(recentDamage, _)

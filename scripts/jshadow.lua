@@ -190,7 +190,7 @@ function prozent()
         if percentage > 1 then
             percentage = percentage - 1
         else
-            Spring.DestroyUnit(unitID, false, false)
+            Spring.DestroyUnit(unitID, false, true)
         end
     end
 end
@@ -427,7 +427,7 @@ function delayedSelfDestruction()
                 function(id)
                     Spring.AddUnitDamage(id, 25)
                 end)
-            Spring.DestroyUnit(unitID, true, true)
+            Spring.DestroyUnit(unitID, false, true)
         end
     end
 end

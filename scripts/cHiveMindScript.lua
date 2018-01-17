@@ -57,7 +57,7 @@ function integrateNewMembers()
 				StartThread(ragDoll)
 				GG.HiveMind[teamID][unitID].rewindMilliSeconds = GG.HiveMind[teamID][unitID].rewindMilliSeconds + 100
 				Spring.SetUnitPosition(id,px,py,pz)
-				Spring.DestroyUnit(id, true, true)
+				Spring.DestroyUnit(id, false, true)
 			end
 		end
 		)

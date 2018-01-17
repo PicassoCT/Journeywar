@@ -30,7 +30,7 @@ function explodeAfterTimeAndDistance()
     if not GG.AddFire then GG.AddFire = {} end
     GG.AddFire[#GG.AddFire + 1] = { x = x, y = y, z = z }
 
-    Spring.DestroyUnit(unitID, false, false)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Activate()

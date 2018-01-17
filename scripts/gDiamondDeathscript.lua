@@ -40,7 +40,7 @@ end
 function Impact()
     x, y, z = Spring.GetUnitPosition(unitID)
     T = getAllInCircle(x, z, 75, unitID)
-    process(T, function(element) Spring.DestroyUnit(element) end)
+    process(T, function(element) Spring.DestroyUnit(element,true,false) end)
 end
 
 

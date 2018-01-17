@@ -28,9 +28,9 @@ function script.Create()
 end
 
 function timeDelayedDestroy()
-    Time = 30000 * math.ceil(math.random(0, 4))
+    Time = 30000 * math.ceil(math.random(1, 4))
     Sleep(Time)
-    Move(center, y_axis, -100, 0.01)
+    Move(center, y_axis, -100, 0.1)
     WaitForMove(center, y_axis)
     Spring.DestroyUnit(unitID, false, true)
 end

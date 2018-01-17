@@ -1,5 +1,5 @@
 function script.Create()
-    Spring.DestroyUnit(unitID, true, false)
+    Spring.DestroyUnit(unitID, false,true)
 end
 
 function script.Killed()
