@@ -25,6 +25,7 @@ return {
   ["comendbonker"]= {active="Conset&\nConfirm", passive="Repeat\nConfirmation"},
   ["sentrynell"]= {active="Activate\n Motionsensor", passive="Deactivate\n Motionsensor"},
   ["chivemind"]= {active="Hyper\n A.I.ctivity", passive="AI-Node\n Ready"},
+  ["cgeohive"]= {active="Build\n Bait- \n buildings", passive="Spawn\n Cauterizer \n Drones"},
 
 --journeyman
   ["jabyss"]= {active="End this\nWorld", passive="World Ends"},

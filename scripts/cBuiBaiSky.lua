@@ -326,8 +326,8 @@ function script.Create()
     StartThread(floatNeonSign, neonCenter1, 1, 20)
     StartThread(floatNeonSign, neonCenter2, 21,40)
 	
-	dramatisPersona3D = initFlyingCars(15)
-	StartThread(littleFlyingCars, dramatisPersona3D)
+	--dramatisPersona3D = initFlyingCars(15)
+	--StartThread(littleFlyingCars, dramatisPersona3D)
 end
 
 --------BUILDING---------

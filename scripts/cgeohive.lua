@@ -1,4 +1,12 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+
+
 --<pieces>
+include "lib_UnitScript.lua"
 include "lib_jw.lua"
 
 repcoords = {}
@@ -100,8 +108,8 @@ function OS_LOOP()
 				"cwatchpost",
 				"buibaicity2",
 				"crailgun",
-				"factoryspawndecorator"	
-				"chopper",
+				"factoryspawndecorator",
+				"chopper"
 				})
 	randRobin= math.random(1,#baitType)
 				
@@ -124,12 +132,36 @@ function spawnDefenseDrone()
 
 end
 
-
+TablesOfPiecesGroups = {}
 function script.Create()
+    generatepiecesTableAndArrayCode(unitID)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Spring.SetUnitBlocking(unitID, true)
-
-
+	for i=1,30, 1 do
+		StartThread(littleCars, i)
+	end
     StartThread(OS_LOOP)
+end
+
+function littleCars(idx)
+	local car = TablesOfPiecesGroups["Car"][idx]
+	local pivot = TablesOfPiecesGroups["Pivot"][idx]
+	randDelay=math.ceil(math.random(0,19000))
+	Sleep(randDelay)
+
+	if not car then return end
+	reset(car)
+	while true do
+		local dir = randSign()
+		local roadDir= math.random(1,6) * 60
+		if dir < 0 then 	 Turn(car,y_axis,math.rad(180),0,true) else  Turn(car,y_axis,math.rad(0),0,true) end
+		Turn(pivot,y_axis,math.rad(roadDir),0)
+		Move(car,x_axis,45*dir,0,true)
+		Move(car,x_axis,-45*dir,math.random(1,4))
+		WaitForMoves(car)
+		Sleep(100)
+	end
+
 end
 
 function script.Killed(recentDamage, _)
