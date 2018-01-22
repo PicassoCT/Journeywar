@@ -15,10 +15,10 @@ aimpiece = piece "aimpiece"
 function script.Create()
     generatepiecesTableAndArrayCode(unitID)
     TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
+	StartThread(playDeployAnimation)
 end
 
 function script.Killed(recentDamage, _)
-
     createCorpseCUnitGeneric(recentDamage)
     return 1
 end
@@ -34,11 +34,16 @@ end
 function script.QueryWeapon1()
     return aimpiece
 end
+function playDeployAnimation()
+boolFireReady = false
 
+boolFireReady= true
+end
+boolFireReady = false
 function script.AimWeapon1(Heading, pitch)
     --aiming animation: instantly turn the gun towards the enemy
 
-    return AMMUNITION > 0
+    return boolFireReady ==true and AMMUNITION > 0
 end
 
 
