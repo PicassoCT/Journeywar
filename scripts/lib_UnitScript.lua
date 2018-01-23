@@ -997,6 +997,12 @@ end
 --======================================================================================
 --Section:  Initializing Functions
 --======================================================================================
+function lifeTime (unitID, lifeTime, boolReclaimed, boolSelfdestroyed,finalizeFunction)
+boolReclaimed, boolSelfdestroyed = boolReclaimed or false, boolSelfdestroyed  or false
+Sleep(lifeTime)
+if finalizeFunction then finalizeFunction()end
+Spring.DestroyUnit(unitID, boolReclaimed, boolSelfdestroyed)
+end
 
 function getPieceMap(unitID)
     List = Spring.GetUnitPieceMap(unitID)
@@ -2857,6 +2863,7 @@ function setParent(unitID, child)
     end
 end
 
+--> distance from a UnitPiece to another Units Center
 function distancePieceToUnit(unitID, Piece, targetID)
 	ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, Piece)
 	tx,ty,tz = Spring.GetUnitPosition(targetID)
@@ -2871,15 +2878,15 @@ function vectorUnitToUnit(idA, idB)
     return Vector:new(x - xb, y - yb, z - zb)
 end
 
-    function distanceOfUnitToPoint(ud, x, y, z)
-		if not y and x.x then x,y,z = x.x,x.y,x.z end
-		
-        if not ud then return math.huge end
+function distanceOfUnitToPoint(ud, x, y, z)
+	if not y and x.x then x,y,z = x.x,x.y,x.z end
 
-        px, py, pz = Spring.GetUnitPosition(ud)
-        ux, uy, uz = px - x, py - y, pz - z
-        return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
-    end
+    if not ud then return math.huge end
+
+    px, py, pz = Spring.GetUnitPosition(ud)
+    ux, uy, uz = px - x, py - y, pz - z
+    return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
+end
 
 
 -->returns the Distance between two units
@@ -2914,14 +2921,18 @@ function approxDist(x, y, z, digitsPrecision)
     return lastResult
 end
 
---> increment a value
+--> increment a value by ref
 function inc(value)
     return value + 1
 end
 
---> decrement a value
+--> decrement a value by ref
 function dec(value)
     return value - 1
+end
+
+function equal(valA, valB, treshold)
+return valA  > valB - treshold and valA < valB + treshold
 end
 --======================================================================================
 --Section : Code Generation 
@@ -5000,20 +5011,26 @@ function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing, 
     end
 end
 
-
-function spawnCegAtPiece(unitID, pieceId, cegname, offset)
-
+--> create a CEG at the given Piece with direction or piecedirectional Vector
+function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDirectional)
+	if not dx then --default to upvector 
+		dx,y,dz = 0, 1,0
+	end
+	
     boolAdd = offset or 10
 
 
     if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-    x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
-
+    x, y, z,mx,my,mz = Spring.GetUnitPiecePosDir(unitID, pieceId)
+	if boolPieceDirectional and boolPieceDirectional== true then
+		dx,y,dz = mx,my,mz
+	end
+	
     if y then
         y = y + boolAdd
-        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 0, 0)
+        Spring.SpawnCEG(cegname, x, y, z, dx, dy, dz, 0, 0)
     end
 end
 

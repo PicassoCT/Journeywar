@@ -15,14 +15,41 @@ aimpiece = piece "aimpiece"
 function script.Create()
     generatepiecesTableAndArrayCode(unitID)
     TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
+	StartThread(soundBarrierDetection)
 end
 
+speedOfSound= 30--elmo/s
+myDefID= Spring.GetUnitDefID(unitID)
+function soundBarrierDetection()
+	ox,oy,oz=Spring.GetUnitPosition(unitID)
+	Sleep(300)
+	timer= 0
+	while true do
+	x,y,z = Spring.GetUnitPosition(unitID)
+		if equal(distance(ox,oy,oz,x,y,z), speedOfSound, 3) and timer <= 0then
+			StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cauterizer/sonicboom.wav", 1, 2000, 1, 0)
+			spawnCEGAtPiece(unitID, cegemit, "supersonic",0,0,0,0,true)
+			 timer= 9000
+		end
+		timer= timer-300
+	Sleep(300)
+	ox,oy,oz=x,y,z
+	end
+
+end
 function script.Killed(recentDamage, _)
 
     createCorpseCUnitGeneric(recentDamage)
     return 1
 end
+--- -aimining & fire weapon 
+function script.StartMoving()
+    return true
+end
 
+function script.StopMoving()
+    return true
+end
 
 --- -aimining & fire weapon 
 function script.AimFromWeapon1()
@@ -49,16 +76,7 @@ boolOnlyOnce = false
 boolTransformComplete= false
 function transformIntoAttackState()
 if boolOnlyOnce == false then boolOnlyOnce = true else return end
-Sleep(9000)
+Sleep(100)
 while nil == transformUnitInto(unitID,"cauterizerdeployed") do Sleep(100) end
 
 end
-
-function script.Activate()
-    return 1
-end
-
-function script.Deactivate()
-    return 0
-end
-

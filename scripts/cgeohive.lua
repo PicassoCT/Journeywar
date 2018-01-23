@@ -1,5 +1,15 @@
 --<pieces>
 include "lib_jw.lua"
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+
+reloadTime= 29000
+SIGHT_RANGE= 45000
+Droneemit = piece"Droneemit"
+DroneemitDistance= 10
 
 repcoords = {}
 replicPoints = {}
@@ -57,16 +67,9 @@ function getFreeSpot()
     unitTable = {}
     pointsTable = {}
 
-
-
-
     for i = 1, table.getn(replicPoints), 1 do
 
         unitTable = Spring.GetUnitsInCylinder(repcoords[i][1], repcoords[i][2], range)
-
-
-        --	giveSignal(repcoords[i][1], repcoords[i][2])
-        --	giveSignal((repcoords[i][1])+range, repcoords[i][2])
 
         if unitTable == nil or table.getn(unitTable) == 0 then
             table.insert(pointsTable, i)
@@ -87,8 +90,7 @@ function getFreeSpot()
 end
 
 
-
-
+boolBuildDrones = false
 returnFreeSpot = nil
 function OS_LOOP()
     StartThread(timing)
@@ -110,8 +112,10 @@ function OS_LOOP()
 
         if boolCharged == true then
 			if boolBuildDrones== false then
+				WMove(Droneemit,y_axis,0,1)
 				spawnBuilding()
 			else
+				WMove(Droneemit,y_axis,DroneemitDistance,1)
 				spawnDefenseDrone()
 			end
         end
@@ -119,16 +123,37 @@ function OS_LOOP()
     end
 end
 
+myDrone=nil
+function createCauterizerDroneIfThereIsNone()
+boolDroneExists= Spring.GetUnitIsDead(myDrone) 
+	if not myDrone or not boolDroneExists or boolDroneExists ==false then
+		return createUnitAtPiece(unitID, UnitDefNames["cauterizer"].id, Droneemit, Spring.GetUnitTeam(unitID))
+	end
+end
+
 function spawnDefenseDrone()
+ enemyID = Spring.GetUnitNearestEnemy(unitID, SIGHT_RANGE)
+        if enemyID then
+			 Sleep(reloadTime)
+			while not myDart do
+				myDart = createCauterizerDroneIfThereIsNone()
+				Sleep(100)
+			end
+	       ex, ey, ez = Spring.GetUnitPosition(enemyID)
+           Command(myDart, "go", { x = ex, y = ey, z = ez }, { "shift" })
 
-
+            boolNotDeadYet = Spring.GetUnitIsDead(myDart)
+            while boolNotDeadYet and boolNotDeadYet == false do
+                Sleep(200)
+                boolNotDeadYet = Spring.GetUnitIsDead(myDart)
+            end
+        end
+		Sleep(100)
 end
 
 
 function script.Create()
     Spring.SetUnitBlocking(unitID, true)
-
-
     StartThread(OS_LOOP)
 end
 
@@ -151,7 +176,7 @@ function script.Killed(recentDamage, _)
         --<ciVillian>
 
         teamID = Spring.GetGaiaTeamID()
-        x = math.random(3, 7)
+        x = 3
         for i = 1, x, 1 do
             maRa = math.random(1, 9)
             heapID = Spring.CreateUnit("gCiVillian", replicPoints[maRa][1], y, replicPoints[maRa][2], teamID)
@@ -173,8 +198,6 @@ function script.Killed(recentDamage, _)
 end
 
 function spawnBuilding()
-            --ey, Yo, reSettin but neva forgettin
-
             --checking out the neighbourhood
             boolBuildItBob = false
             while (boolBuildItBob == false) do
@@ -182,7 +205,7 @@ function spawnBuilding()
                 returnFreeSpot = getFreeSpot()
 
                 if returnFreeSpot ~= nil then
-                    randRobin= randRobin % baitType + 1
+                    randRobin= (randRobin % #baitType) + 1
 					    boolBuildItBob = true
                         Spring.CreateUnit(baitType[randRobin], repcoords[returnFreeSpot][1], y, repcoords[returnFreeSpot][2], 0, teamID)
                 end
@@ -192,11 +215,11 @@ function spawnBuilding()
 end
 
 function script.Activate()
-
+	boolBuildDrones = true
 
 end
 
 function script.Deactivate()
-
+	boolBuildDrones = false
 
 end

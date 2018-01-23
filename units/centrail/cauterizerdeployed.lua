@@ -69,19 +69,19 @@ local unitDef = {
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {
-			"custom:chopperdirt",
+			"custom:chopperdirt", --1024
 			"custom:choppermuzzle",
 			"custom:flyinggrass",
 			"custom:blackerthensmoke",--1027
-			"custom:330rlexplode",--1028		
+			"custom:330rlexplode",--1028	
+			"custom:dronedrivemuzzle"
 		},		
 	},
 		
 	weapons = {
-		[1]={name = "cgunshipmg",
+		[1]={name = "mtwMachineGun",
+			MainDir = [[0 -1  0]],
 			onlyTargetCategory = [[ LAND]],
-			MainDir = [[0 -1 0]],
-			MaxAngleDif = 10,
 			turret = false,
 			
 		},
