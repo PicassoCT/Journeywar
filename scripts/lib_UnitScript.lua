@@ -406,6 +406,12 @@ function getPieceChain(hierarchy, startPiece, endPiece)
     return pieceChain
 end
 
+function getPiecePosDir(unitID, Piece)
+px,py,pz, dx,dy,dz= Spring.GetUnitPiecePosDir(unitID, Piece)
+return Vector:new(px,py,pz), Vector:new(dx,dy,dz)
+
+end
+
 --> creates a hierarchical table of pieces, descending from root
 function getPieceHierarchy(unitID, pieceFunction)
 
@@ -1320,6 +1326,19 @@ end
 --======================================================================================
 --Section:  Syntax additions and Tableoperations
 --======================================================================================
+
+function axToKey(axis)
+if axis == 1 then return "x" end
+if axis == 2 then return "y" end
+if axis == 3 then return "z" end
+end
+
+function selectExecute(selector, ...)
+
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	if arg[selector] then return selector() end
+	
+end
 	-->selects a element from a table
 	function selStr(index, t)
 		if not t[index] then return "" end

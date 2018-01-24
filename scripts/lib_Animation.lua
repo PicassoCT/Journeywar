@@ -2263,7 +2263,36 @@ function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove,
     end
 end
 
+function hoverSegway(PivotPiece, PowerPiece,  HoverPoint, PowerDir, Resolution, rotOffsetPiece,rotOffsetCounterPiece, axis, rotationValueFunction, activeFunction, speed)
+PivotPos = getPiecePosDir(unitID, PivotPiece)
+PowerPos =  getPiecePosDir(unitID, PowerPiece)
 
+	while activeFunction()== true do
+	--update PiecePosition (asuming )
+	Diff= PivotPos - PowerPos
+		gravityOfSituation= 1
+		while math.abs(Diff.x) > 5 or math.abs(Diff.y) > 5 or  PivotPos.y <=  PowerPiece.y do  -- not PivotPiece  over PowerPiece
+		CounnterTurn = 0
+		--Turn 
+		factor= math.min(math.abs(10/Diff[axToKey(axis)]),1)
+		sign= Diff[axToKey(axis)]/math.abs(Diff[axToKey(axis)])
+		rotValue = rotationValueFunction(axis)
+		Turn(PivotPiece,axis,math.rad(rotOffsetPiece + rotValue+ *sign),speed)
+		Turn(PowerPiece,axis,math.rad(rotOffsetCounterPiece + 90*factor*sign),speed*3)
+		
+		--fall 
+		gravityOfSituation = gravityOfSituation *1.5
+	
+		Move(PivotPiece, axis, PivotPiece[axToKey(axis)] - gravityOfSituation, (speed/1000)*Resolution )
+						
+		Sleep(Resolution)
+		end
+			Move(PivotPiece, axis,math.min(PivotPiece.x+ (speed/1000)*Resolution,HoverPoint.x),speed)
+
+	Sleep(Resolution)
+
+	end
+end
 --================================================================================================================
 --====================================Little Flying Cars  Clockworkanimation======================================
 
