@@ -107,6 +107,32 @@ function pulsateMovement(unitID, Maxtime, curveFunction, resolution)
     return true
 end
 
+function luaAttach(transporteeID, transporterID,offx,offy,offz, resolution)
+ux,uy,uz= Spring.GetUnitPosition(transporterID)
+tx,ty,tz= Spring.GetUnitPosition(transporteeID)
+tx,ty,tz= tx-ux,ty-uz,tz-uz 
+tx,ty,tz= tx+ox,ty+oy,tz+oz
+rX,rY,rZ = Spring.GetUnitDirection(transporterID)
+Spring.MoveCtrl.Enable(transporteeID,true)
+
+
+	while (Spring.GetUnitIsDead(transporteeID) == false and Spring.GetUnitIsDead(transporterID)== false) do
+	--Transformation
+	ox,oy,oz= Spring.GetUnitPosition(transporterID)
+	ox,oy,oz= ux-ox,uy-oy,uz-oz 
+	NewPosition = {tx+ox,ty+oy,tz+oz}
+	
+	--Rotation
+	nX,nY,nZ = Spring.GetUnitDirection(transporterID)
+	dX,dY,dZ = rX-nX,rY-nZ,rZ-nZ
+	Spring.Echo("TODO- Apply Rotation")
+	MoveCtrl.SetPosition(transporteeID,NewPosition.x + offx, NewPosition.y + offy, NewPosition.z + offz)
+	--
+	Sleep(resolution)
+	end
+
+Spring.MoveCtrl.Disable(transporteeID,true)
+end
 
 function delayTillComplete(unitID)
     _, _, _, _, bP = Spring.GetUnitHealth(unitID)

@@ -2,7 +2,7 @@ local unitName = "flyingmountain"
 
 local unitDef = {
 name = "Flying Mountain",
-Description = "get in the shade",
+Description = "get in the shade <Projectile>",
 objectName = "jMotherOfMercyMountain.s3o",
 script = "jflyingmountainscript.lua",
 buildPic = "placeholderj.png",

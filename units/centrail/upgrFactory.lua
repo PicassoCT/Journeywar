@@ -2,7 +2,7 @@ local unitName = "upgradefactory"
 
 local unitDef = {
 name = "Upgrade Factory",
-Description = "upgrades the Factory by turning it into a Nanoforge",
+Description = "upgrades the Factory by turning it into a Nanoforge <Upgrade Building>",
 objectName = "emptyObjectIsEmpty.s3o",
 script = "not_implemented_yet.lua",
 buildPic = "nanoupgrade.dds",

@@ -2,7 +2,7 @@ local unitName = "ctransithubb"
 
 local unitDef = {
 	name = "Transit Hub Exit:",
-	Description = "Transports Hubbuildings Counterpart",
+	Description = "Transports Hubbuildings Counterpart <Teleportation Building>",
 	objectName = "ctransitnode.s3o",
 	script = "transitnodeExit.lua",
 	buildPic = "Transithub.dds",
@@ -18,7 +18,7 @@ local unitDef = {
 	--Movement
 	FootprintX = 12,
 	FootprintZ = 12,
-	MaxSlope = 5,
+	MaxSlope = 50,
 	--MaxVelocity = 0.5,
 	MaxWaterDepth =0,
 	blocking=false,
@@ -33,8 +33,7 @@ local unitDef = {
 	CanGuard = true,
 	
 	mass = 49999,
-	
-	maxSlope = 255,
+
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = true,

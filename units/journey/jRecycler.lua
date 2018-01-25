@@ -2,7 +2,7 @@ local unitName = "jrecycler"
 
 local unitDef = {
 	name = "Cycleship",
-	Description = "recycles enemy Units and remains from afar",
+	Description = "recycles enemy Units and remains from afar <Energy Sniper>",
 	objectName = "jRecycler.s3o",
 	script = "jrecyclerscript.lua",
 	buildPic = "jmotherofmercy.png",

@@ -5,6 +5,24 @@ function script.Killed()
 
     return 0
 end
+function healingRest()
+while true do
+	if boolUnderAttack== false  then
+		T= getAllNearUnit(unitID, 200)
+		process(T,
+				function(id)
+				defID= Spring.GetUnitDefID(id)
+					if defID and isInfantry[defID] then return id end
+				end,
+				function(id)
+					hp= Spring.GetUnitHealth(id)
+					Spring.SetUnitHealth(hp+5)
+				end
+				)
+	Sleep(1000)
+	end
+end
+
 
 function anybodyNearby()
     teamid = Spring.GetUnitTeam(unitID)
@@ -48,6 +66,7 @@ function script.Create()
 
     StartThread(dinnerIsReady)
     StartThread(FireTales)
+    StartThread(healingRest)
 end
 
 function FireTales()

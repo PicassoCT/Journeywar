@@ -33,7 +33,7 @@ sbranch3=piece"sbranch3"
 sbranch4=piece"sbranch4"
 function actualTrample()
 Sleep(500)
-Spring.DestroyUnit(unitID,false,true)
+Spring.DestroyUnit(unitID,true,false)
 
 end
 DNASpiral = piece "DNASpiral"

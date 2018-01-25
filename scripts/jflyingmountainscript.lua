@@ -1,12 +1,11 @@
 include "createCorpse.lua"
-include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
+include "lib_OS.lua"
 include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-
+UnitRadius = 110
 motherattach = piece"motherattach"
 center = piece("center")
 peebleSpinCenter = piece("peebleSpinCenter")
@@ -58,10 +57,21 @@ function script.Create()
     Turn(mountainSpinCenter, y_axis, math.rad(math.random(-360, 360)), 0)
     Spin(mountainSpinCenter, y_axis, math.rad(math.random(-0.360, 0.360)))
     showOneOfTheMountains()
+    StartThread(attachUnitsAbove)
     StartThread(spinUpStones)
     StartThread(riseAnimation)
 	
 	StartThread(delayedAttachParent)
+end
+
+function attachUnitsAbove()
+Sleep(10)
+T= getAllNearUnit(unitID,UnitRadius)
+process(T,
+		function(id)
+		StartThread(luaAttach,id, unitID,0,0,0)
+		end
+		)
 end
 
 function delayedAttachParent()

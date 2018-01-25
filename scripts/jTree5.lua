@@ -321,6 +321,10 @@ end
 
 function invertGravityLoop()
     Sleep(1500)
+	 while select(5,Spring.GetUnitHealth(unitID))< 1 do
+		Sleep(100)
+	 end
+	 Sleep(1000)
     while true do
         if boolGravityOff == false then
             StartThread(dropLianes, false, 4.2)
@@ -333,7 +337,7 @@ function invertGravityLoop()
 
         if boolGravityOff == true then
             StartThread(dropLianes, true, 4.2)
-            while boolGravityOff == true and buildCompleted == true do
+            while boolGravityOff == true and boolBuildCompleted == true do
                 if consumeEnergy() == true then
                     fallingOff()
                 end
@@ -387,18 +391,8 @@ function buildATree()
     randoMarlo = math.random(0, 360)
     Turn(center, y_axis, math.rad(randoMarlo))
 end
-buildCompleted = false
-function buildComplete()
-bP = 0
+boolBuildCompleted = false
 
-	while buildCompleted == false do
-	hp, mHp, par, cap, bP = Spring.GetUnitHealth(unitID)
-
-	buildCompleted = hp == mHp and bP and bP == 1.0
-	Sleep(250)
-	end
-
-end
 
 pieceTable = generatepiecesTableAndArrayCode(unitID, false)
 TableOfPieceGroups = {}
@@ -420,6 +414,7 @@ function script.Create()
     StartThread(buildComplete)
     StartThread(buildATree)
     StartThread(invertGravityLoop)
+    StartThread(invertGravitySoundLoop)
     StartThread(invertGravitySoundLoop)
 end
 
@@ -542,14 +537,22 @@ end
 
 
 boolGravityOff = false
-
+function buildComplete()
+	while   select(5,Spring.GetUnitHealth(unitID)) < 1 do
+	Sleep(100)
+	end
+boolBuildCompleted =true
+end
 function script.Activate()
-    boolGravityOff = true
+	 if select(5,Spring.GetUnitHealth(unitID)) >= 1 and boolBuildCompleted == true then
+		boolGravityOff = true
+    end
     return 1
 end
 
 function script.Deactivate()
-    boolGravityOff = false
-
+	if select(5,Spring.GetUnitHealth(unitID)) >= 1 and boolBuildCompleted == true then
+		boolGravityOff = false
+	end
     return 0
 end

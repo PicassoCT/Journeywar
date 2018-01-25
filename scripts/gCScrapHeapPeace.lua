@@ -310,5 +310,5 @@ function waitForAnEnd()
     Sleep(Time)
     Move(center, y_axis, -67, 0.02)
     WaitForMove(center, y_axis)
-    Spring.DestroyUnit(unitID, true, false)
+    Spring.DestroyUnit(unitID, false,true)
 end

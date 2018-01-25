@@ -76,7 +76,7 @@ if (gadgetHandler:IsSyncedCode()) then
                         for i = 1, #TableOfUnits do
                             id = Spring.GetUnitDefID(TableOfUnits[i])
                             if id and ZoneDefs[id] then
-                                Spring.DestroyUnit(TableOfUnits[i], true, true)
+                                Spring.DestroyUnit(TableOfUnits[i], false, true)
                             end
                         end
                     end

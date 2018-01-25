@@ -30,7 +30,7 @@ function lifeTime()
     Sleep(2000)
     boolArmed = true
     Sleep(LIFETIME)
-    Spring.DestroyUnit(unitID, true, true)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Create()

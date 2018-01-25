@@ -2,7 +2,7 @@ local unitName = "cairbase"
 
 local unitDef = {
 	name = "Airbase",
-	Description = "builds, grows and repairs Aircrafts",
+	Description = "builds, grows and repairs Aircrafts <Air Unit Factory>",
 
 	
 	objectName = "cAirBase.s3o",
@@ -66,7 +66,7 @@ local unitDef = {
 	-- Pathfinding and related
 	FootprintX = 8,
 	FootprintZ = 8,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 	YardMap ="oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo",
 	
 	-- Building	

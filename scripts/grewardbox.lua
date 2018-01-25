@@ -38,7 +38,7 @@ function dissolveAndReward(teamd)
 
 	createRewardEvent(teamd)
 
-    Spring.DestroyUnit(unitID, true, true)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Create()

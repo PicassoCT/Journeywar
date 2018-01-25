@@ -87,12 +87,11 @@ function delayedUpgrade()
                 x, y, z = Spring.GetUnitPosition(unitID)
                 if y < -5 then
                     defIDChild = Spring.GetUnitDefID(id)
-
-                    if GG.UnitsToSpawn == nil then GG.UnitsToSpawn = {} end
+					
                     x, y, z = Spring.GetUnitPosition(unitID)
 
                     GG.UnitsToSpawn:PushCreateUnit("jfactorylvl1transform", x, y, z, 0, teamID)
-                    Sleep(9000)
+                    Sleep(100)
                     Spring.DestroyUnit(GG.JFactorys[unitID][1], false, true)
                     Spring.DestroyUnit(unitID, false, true)
 

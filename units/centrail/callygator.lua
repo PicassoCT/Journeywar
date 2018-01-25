@@ -2,7 +2,7 @@ local unitName = "callygator"
 
 local unitDef = {
 	name = "Allygator",
-	Description = "swallows small Units alive with a Portal",
+	Description = "swallows small Units alive with a Portal <Anti Infantry Air Unit>",
 	objectName = "cAllygator.s3o",
 	script = "cAllygatorScript.lua",
 	buildPic = "conair.dds",

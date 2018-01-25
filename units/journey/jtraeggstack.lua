@@ -2,7 +2,7 @@ local unitName = "jtransportedeggstack"
 local unitDef = {
 	
 	name = "Eggstack",
-	Description = "gives birth to worker Drones",
+	Description = "gives birth to worker Drones <Builder Factory>",
 	
 	objectName = "placeholder.s3o",
 	script = "jtransportedeggstackscript.lua",

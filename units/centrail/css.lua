@@ -2,7 +2,7 @@ local unitName = "css"
 
 local unitDef = {
 	name = "Centrail Synth Soldier",
-	Description = "flamethrower wielding Synth",
+	Description = "flamethrower wielding Synth <Assault Unit>",
 	objectName = "css.s3o",
 	script = "css.lua",
 	buildPic = "placeholder.png",

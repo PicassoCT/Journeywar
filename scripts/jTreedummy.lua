@@ -20,7 +20,7 @@ end
 	Turn(center,z_axis,math.rad(65),2.2)
 	WaitForTurn(center,z_axis)
 	Turn(center,z_axis,math.rad(89),6)
-	Spring.DestroyUnit(unitID,false)
+	Spring.DestroyUnit(unitID,false,true)
 	end
 
 	function TreeTrample()

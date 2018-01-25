@@ -2,7 +2,7 @@ local unitName = "jracedart"
 
 	local unitDef = {
 	name = "Race Dart",
-	Description = "Shielded suicidal Anti-Building Unit",
+	Description = "Shielded suicidal Anti-Building Unit <Anti Building>",
 	objectName = "jracedart.s3o",
 	script = "jracedartscript.lua",
 	buildPic = "jplaceholder.png",

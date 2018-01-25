@@ -2,7 +2,7 @@ local unitName = "art"
 
 local unitDef = {
 name = "Dark Matter Artillery",
-Description = "shells the (Head)crab out of the enemy",
+Description = "shells the (Head)crab out of the enemy <Long Range Artillery>",
 objectName = "art.s3o",
 script = "artscript.lua",
 buildPic = "cart.dds",
@@ -36,8 +36,11 @@ CanGuard = true,
 CanMove = true,
 CanPatrol = true,
 CanStop = true,
-LeaveTracks = false, 
-
+	LeaveTracks = true, 
+	trackType ="cart",
+	 trackStrength=4,
+	trackWidth =48,
+	trackOffset =0,
 Category = [[LAND]],
 
 

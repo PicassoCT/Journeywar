@@ -32,7 +32,7 @@ end
 local unitName = "jmadmax"
 local unitDef = {
 	name = "Rebellraiders",
-	Description = " rowdily ravaging in Revenge",
+	Description = " rowdily ravaging in Revenge <Assault Harass Unit>",
 	objectName = "jmadMax.s3o",
 	script = "jmadmaxscript.lua",
 	buildPic = "placeholderj.png",

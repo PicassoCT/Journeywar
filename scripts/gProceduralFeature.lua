@@ -344,7 +344,7 @@ function aChainExplosion(ed)
             osv = vectorUnitToUnit(UnitID, wed)
             a, b, c = pos.x - osv.x, pos.y - osv.y, pos.z - osv.z
             dist = math.sqrt(a * a + b * b + c * c)
-            Spring.DestroyUnit(ed)
+            Spring.DestroyUnit(ed,true,false)
             pos.x, pos.y, pos.z = osv.x, osv.y, osv.z
             ed = wed
         end

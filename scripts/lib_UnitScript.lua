@@ -21,12 +21,12 @@ MA 02110-1301, USA.
 -- Central Debug Header Controlled in UnitScript
 -------------- DEBUG HEADER
 lib_boolDebug = false --
-GG.BoolDebug = lib_boolDebug
-
+if GG then
+	GG.BoolDebug = lib_boolDebug
+end
 --======================================================================================
 --Section:  Team Information Getters/Setters 
 --======================================================================================
-
 
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
@@ -52,6 +52,7 @@ function getAllInCircle(x, z, Range, unitID, teamid)
     return T
 end
 
+--> Removes Units of a Team from a table
 function removeUnitsOfTeam(TableOfUnits, teamid)
     returnTable = {}
     for i = 1, #TableOfUnits, 1 do
@@ -120,6 +121,7 @@ function AttachUnitToPieceNearImpact(toAttachUnitID, AttackerID, px, py, pz, ran
         end)
 end
 
+--> is a Unit Piece above ground
 function isPieceAboveGround(unitID,pieceName)
 x,y,z =Spring.GetUnitPiecePosDir(unitID,pieceName)
 gh= Spring.GetGroundHeight(x,z)
@@ -140,6 +142,7 @@ function reSetSpeed(unitID, UnitDefs)
     setSpeedEnv(unitID, 1.0)
 end
 
+--> returns a Units metal and energycosts
 function getUnitCost(id)
 defID= Spring.GetUnitDefID(id)
 
@@ -403,6 +406,12 @@ function getPieceChain(hierarchy, startPiece, endPiece)
     return pieceChain
 end
 
+function getPiecePosDir(unitID, Piece)
+px,py,pz, dx,dy,dz= Spring.GetUnitPiecePosDir(unitID, Piece)
+return Vector:new(px,py,pz), Vector:new(dx,dy,dz)
+
+end
+
 --> creates a hierarchical table of pieces, descending from root
 function getPieceHierarchy(unitID, pieceFunction)
 
@@ -535,7 +544,7 @@ function killAtPiece(unitID, piecename, selfd, reclaimed, sfxfunction)
 end
 
 -->Returns a Unit from the Game without killing it
-function removeFromWorld(unit, offx, offy, offz)
+function removeFromWorld(unit, offx, offy, offz)	 
     hideUnit(unit)
     --TODO - keepStates in general and commandqueu
     pox, poy, poz = Spring.GetUnitPosition(unit)
@@ -560,6 +569,24 @@ function returnToWorld(unit, px, py, pz)
     Spring.SetUnitNoSelect(unit, false)
 end
 
+
+--> Shows all Pieces of a a Unit in 
+function showAll(id)
+if not unitID then unitID = id end
+ pieceMap = Spring.GetUnitPieceMap(unitID)
+ for k,v in pairs(pieceMap) do
+	Show(v)
+ end
+end
+--> Hide all Pieces of a Unit
+function hideAll(id)
+if not unitID then unitID = id end
+
+ pieceMap = Spring.GetUnitPieceMap(unitID)
+ for k,v in pairs(pieceMap) do
+	Hide(v)
+ end
+end
 --> reveal a Unit 
 function showUnit(unit)
     Spring.SetUnitCloak(unit, false, 1)
@@ -604,6 +631,7 @@ function getInCircle(unitID, Range, teamid)
 	
 end
 
+--> Returns the nearest Enemy 
 function getNearestGroundEnemy(id, UnitDefs)
     ed = Spring.GetUnitNearestEnemy(id)
     if ed then
@@ -633,7 +661,7 @@ function getNearestGroundEnemy(id, UnitDefs)
     end
 end
 
-
+--> return the Name of a UnitPiece as String
 function getUnitPieceName(unitID,pieceNum)
 
 	pieceList= Spring.GetUnitPieceList(unitID)
@@ -699,7 +727,7 @@ function transferUnitStatusToUnit(unitID, targetID)
 
     Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
-
+--> Create a Unit at Piece of another Unit
 function createUnitAtPiece(unitID, typeID, Piece, team)
  x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(unitID, Piece)
  teamID= team or Spring.GetUnitTeam(unitID)
@@ -804,9 +832,8 @@ function getUnitBiggestPiece(unit, cache)
 				volumeMax = volume 
 				end
 		end
-		
-	cache[defID] = biggestPieceSoFar
-	return biggestPieceSoFar, cache
+	if cache then 	cache[defID] = biggestPieceSoFar end
+	return biggestPieceSoFar, cache or {}
 end
 
 function getUnitPieceVolume(unit, Piece)
@@ -976,6 +1003,12 @@ end
 --======================================================================================
 --Section:  Initializing Functions
 --======================================================================================
+function lifeTime (unitID, lifeTime, boolReclaimed, boolSelfdestroyed,finalizeFunction)
+boolReclaimed, boolSelfdestroyed = boolReclaimed or false, boolSelfdestroyed  or false
+Sleep(lifeTime)
+if finalizeFunction then finalizeFunction()end
+Spring.DestroyUnit(unitID, boolReclaimed, boolSelfdestroyed)
+end
 
 function getPieceMap(unitID)
     List = Spring.GetUnitPieceMap(unitID)
@@ -993,6 +1026,15 @@ function createLandscapeFromFeaturePieces(pixelPieceTable, drawFunctionTable)
     echo("TODO:createLandscapeFromFeaturePieces")
 end
 
+--> Does not remove the grass
+function removeGrass(startX,endX,startY,endY)
+
+	for x = startX, endX, 16 do
+		for z = startY, endY, 16 do
+			Spring.RemoveGrass(x, z)
+		end
+	end
+end
 --> Gets a List of Geovents + Positions
 function getGeoventList()
 
@@ -1284,6 +1326,19 @@ end
 --======================================================================================
 --Section:  Syntax additions and Tableoperations
 --======================================================================================
+
+function axToKey(axis)
+if axis == 1 then return "x" end
+if axis == 2 then return "y" end
+if axis == 3 then return "z" end
+end
+
+function selectExecute(selector, ...)
+
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	if arg[selector] then return selector() end
+	
+end
 	-->selects a element from a table
 	function selStr(index, t)
 		if not t[index] then return "" end
@@ -1439,6 +1494,19 @@ function mergeTables(...)
     end
 
     return Table
+end
+
+function dictToTable(dict)
+num=1
+T= {}
+for k,v in pairs(dict) do
+if v then
+T[num]= k
+num= num +1
+end
+end
+return T
+
 end
 
 
@@ -2200,6 +2268,11 @@ function sortDictKeysNumeric(T)
 	return sortT
 end
 
+function inLimit(lowLimit,value,upLimit)
+if value < lowLimit or value > upLimit then return false end
+return true
+end
+
 
 --> find in intervallTable, returns the lower, upper Entry,  a fractionnumber of upper and lower entry
 function findInIntervall(T, discreteValue)
@@ -2809,6 +2882,7 @@ function setParent(unitID, child)
     end
 end
 
+--> distance from a UnitPiece to another Units Center
 function distancePieceToUnit(unitID, Piece, targetID)
 	ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, Piece)
 	tx,ty,tz = Spring.GetUnitPosition(targetID)
@@ -2823,15 +2897,15 @@ function vectorUnitToUnit(idA, idB)
     return Vector:new(x - xb, y - yb, z - zb)
 end
 
-    function distanceOfUnitToPoint(ud, x, y, z)
-		if not y and x.x then x,y,z = x.x,x.y,x.z end
-		
-        if not ud then return math.huge end
+function distanceOfUnitToPoint(ud, x, y, z)
+	if not y and x.x then x,y,z = x.x,x.y,x.z end
 
-        px, py, pz = Spring.GetUnitPosition(ud)
-        ux, uy, uz = px - x, py - y, pz - z
-        return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
-    end
+    if not ud then return math.huge end
+
+    px, py, pz = Spring.GetUnitPosition(ud)
+    ux, uy, uz = px - x, py - y, pz - z
+    return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
+end
 
 
 -->returns the Distance between two units
@@ -2866,14 +2940,18 @@ function approxDist(x, y, z, digitsPrecision)
     return lastResult
 end
 
---> increment a value
+--> increment a value by ref
 function inc(value)
     return value + 1
 end
 
---> decrement a value
+--> decrement a value by ref
 function dec(value)
     return value - 1
+end
+
+function equal(valA, valB, treshold)
+return valA  > valB - treshold and valA < valB + treshold
 end
 --======================================================================================
 --Section : Code Generation 
@@ -3038,8 +3116,7 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
         color = TextColour
     }
 
-    echo("Im out 3")
-end
+    end
 
 -->prepares large speaches for the release to the world
 function prepSpeach(Speach, Names, Limits, Alphas, DefaultSleepBylines)
@@ -4797,6 +4874,30 @@ function consumeAvailableRessource(typeRessource, amount, teamID)
     return false
 end
 
+--> consumes a resource if available 
+function consumeAvailableRessourceUnit(unitID, typeRessource, amount)
+	teamID= Spring.GetUnitTeam(unitID)
+	 typeRessource=string.lower(typeRessource)
+    if "m" == typeRessource or "metal" == typeRessource then
+        currentLevel = Spring.GetTeamResources(teamID, "metal")
+        if amount > currentLevel then
+            return false
+        end
+
+        if Spring.UseUnitResource(unitID, "m", amount) then return true end
+    end
+
+    if "energy" == typeRessource or "e" == typeRessource then
+        currentLevel = Spring.GetTeamResources(teamID, "energy")
+        if amount > currentLevel then
+            return false
+        end
+
+          if Spring.UseUnitResource(unitID, "e", amount) then return true end
+    end
+    return false
+end
+
 --======================================================================================
 --Section:  Unit Commands
 --======================================================================================
@@ -4848,10 +4949,10 @@ function Command(id, command, target, option)
     --abort previous command
 
     if command == "build" then
-        x, y, z = Spring.GetUnitPosition(unitID)
+        x, y, z = Spring.GetUnitPosition(id)
         x, y, z = x + 50, y, z + 50
-        Spring.SetUnitMoveGoal(unitID, x, y, z)
-        Spring.GiveOrderToUnit(unitID, -1 * target, {}, {})
+        Spring.SetUnitMoveGoal(id, x, y, z)
+        Spring.GiveOrderToUnit(id, -1 * target, {}, {})
     end
 
     if command == "attack" then
@@ -4861,7 +4962,7 @@ function Command(id, command, target, option)
     end
 
     if command == "repair" or command == "assist" then
-        spGiveOrderToUnit(unitID, CMD_GUARD, { target }, { "" })
+        Spring.GiveOrder(id, CMD_GUARD, { target }, { "" })
     end
 
     if command == "go" then
@@ -4929,20 +5030,26 @@ function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing, 
     end
 end
 
-
-function spawnCegAtPiece(unitID, pieceId, cegname, offset)
-
+--> create a CEG at the given Piece with direction or piecedirectional Vector
+function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDirectional)
+	if not dx then --default to upvector 
+		dx,y,dz = 0, 1,0
+	end
+	
     boolAdd = offset or 10
 
 
     if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-    x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
-
+    x, y, z,mx,my,mz = Spring.GetUnitPiecePosDir(unitID, pieceId)
+	if boolPieceDirectional and boolPieceDirectional== true then
+		dx,y,dz = mx,my,mz
+	end
+	
     if y then
         y = y + boolAdd
-        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 0, 0)
+        Spring.SpawnCEG(cegname, x, y, z, dx, dy, dz, 0, 0)
     end
 end
 

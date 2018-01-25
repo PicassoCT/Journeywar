@@ -111,6 +111,9 @@ end
 function checkSpawn()
     reloadTime = LOAD_TIME
     Sleep(100)
+	while select(5,Spring.GetUnitHealth(unitID))< 1 do
+		Sleep(100)
+	end
     while true do
 
         enemyID = Spring.GetUnitNearestEnemy(unitID, SIGHT_RANGE)

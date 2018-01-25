@@ -2,7 +2,7 @@ local unitName = "jrefugeetrap"
 
 local unitDef = {
   name               = "Researchstation",
-  description =" rebells rowdily once reached by Refugees running",
+  description =" rebells rowdily once reached by Refugees running <Trap>",
   objectName         = "jRefuggeTrap.s3o",
   script ="jrefugeetrapscript.lua",
   buildPic = "jplaceholder.png",

@@ -2,7 +2,7 @@ local unitName = "cVictory"
 
 local unitDef = {
 name = "Victory Statue",
-Description = "TriumphantStatue",
+Description = "TriumphantStatue <Decoration>",
 objectName = "cVictoryStat.s3o",
 script = "cVictoryStatue.lua",
 buildPic = "placeholder.png",

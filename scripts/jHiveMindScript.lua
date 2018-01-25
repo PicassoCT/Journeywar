@@ -50,7 +50,7 @@ function integrateNewMembers()
 			if integrateAbleUnits[defID] and GG.HiveMind[teamID][unitID].rewindMilliSeconds < TIME_MAX then
 				GG.HiveMind[teamID][unitID].rewindMilliSeconds = GG.HiveMind[teamID][unitID].rewindMilliSeconds + 100
 				Spring.SetUnitPosition(id,px,py,pz)
-				Spring.DestroyUnit(id, true, true)
+				Spring.DestroyUnit(id, false, true)
 			end
 		end
 		)

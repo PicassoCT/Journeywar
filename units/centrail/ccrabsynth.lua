@@ -2,7 +2,7 @@ local unitName = "ccrabsynth"
 
 local unitDef = {
 name = "Crabsynth",
-Description = " firing chainlightning guns stationary.",
+Description = " firing chainlightning guns stationary.<Area Assault Tank>",
 objectName = "ccrabsynth.s3o",
 script = "cCrabSynthScript.lua",
 buildPic = "ccrabsynth.png",
@@ -38,11 +38,16 @@ CanGuard = true,
 CanMove = true,
 CanPatrol = true,
 CanStop = true,
-LeaveTracks = false, 
+
 strafeToAttack=false,
 shownanoframe=0,
 turnInPlace =true,
- 
+ LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=4,
+	trackWidth =64,
+	trackOffset =0,
+
 	explodeAs = [[NOWEAPON]],
 	selfDestructAs= [[NOWEAPON]], 
  

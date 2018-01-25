@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------
-if not Spring.Utilities then Spring.Utilities = {} end
+if not Spring.Utilities then Spring.Utilities = {}end
 
 --deep not safe with circular tables! defaults To false
 function Spring.Utilities.CopyTable(tableToCopy, deep)
@@ -33,46 +33,43 @@ function Spring.Utilities.MergeTable(primary, secondary, deep)
     return new
 end
 
-function Spring.Utilities.TableToString(data)
-	 local str = ""
-
-    if(indent == nil) then
-        indent = 0
-    end
-	local indenter = "    "
-    -- Check the type
-    if(type(data) == "string") then
-        str = str .. (indenter):rep(indent) .. data .. "\n"
-    elseif(type(data) == "number") then
-        str = str .. (indenter):rep(indent) .. data .. "\n"
-    elseif(type(data) == "boolean") then
-        if(data == true) then
-            str = str .. "true"
-        else
-            str = str .. "false"
-        end
-    elseif(type(data) == "table") then
-        local i, v
-        for i, v in pairs(data) do
-            -- Check for a table in a table
-            if(type(v) == "table") then
-                str = str .. (indenter):rep(indent) .. i .. ":\n"
-                str = str .. Spring.Utilities.TableToString(v, indent + 2)
-            else
-                str = str .. (indenter):rep(indent) .. i .. ": " .. Spring.Utilities.TableToString(v, 0)
-            end
-        end
-	elseif(type(data) == "function") then
-		str = str .. (indenter):rep(indent) .. 'function' .. "\n"
-    else
-        echo(1, "Error: unknown data type: %s", type(data))
-    end
-
-    return str
+function Spring.Utilities.TableToString(data, key)
+	 local dataType = type(data)
+	-- Check the type
+	if key then
+		if type(key) == "number" then
+			key = "[" .. key .. "]"
+		end
+	end
+	if dataType == "string" then
+		return key .. [[="]] .. data .. [["]] 
+	elseif dataType == "number" then
+		return key .. "=" .. data 
+	elseif dataType == "boolean" then
+		return key .. "=" .. ((data and "true") or "false")
+	elseif dataType == "table" then
+		local str
+		if key then
+			str = key ..  "={"
+		else
+			str = "{"
+		end
+		for k, v in pairs(data) do
+			str = str .. Spring.Utilities.TableToString(v, k) .. ","
+		end
+		return str .. "}"
+	else
+		Spring.Echo("TableToString Error: unknown data type", dataType)
+	end
+	return ""
 end
 
 -- need this because SYNCED.tables are merely proxies, not real tables
-local function MakeRealTable(proxy)
+local function MakeRealTable(proxy, debugTag)
+	if proxy == nil then
+		Spring.Log("Table Utilities", LOG.ERROR, "Proxy table is nil: " .. (debugTag or "unknown table"))
+		return
+	end
 	local proxyLocal = proxy
 	local ret = {}
 	for i,v in spairs(proxyLocal) do
@@ -84,6 +81,8 @@ local function MakeRealTable(proxy)
 	end
 	return ret
 end
+
+Spring.Utilities.MakeRealTable = MakeRealTable
 
 local function TableEcho(data, name, indent, tableChecked)
 	name = name or "TableEcho"
@@ -109,4 +108,48 @@ local function TableEcho(data, name, indent, tableChecked)
 	Spring.Echo(indent .. "},")
 end
 
+function Spring.Utilities.ExplodeString(div,str)
+	if (div == '') then 
+		return false 
+	end
+	local pos, arr = 0, {}
+	-- for each divider found
+	for st, sp in function() return string.find(str, div, pos, true) end do
+		table.insert(arr, string.sub(str, pos, st - 1)) -- Attach chars left of current divider
+		pos = sp + 1 -- Jump past current divider
+	end
+	table.insert(arr, string.sub(str,pos)) -- Attach chars right of last divider
+	return arr
+end
+
 Spring.Utilities.TableEcho = TableEcho
+
+function Spring.Utilities.CustomKeyToUsefulTable(dataRaw)
+	if not dataRaw then
+		return
+	end
+	if not (dataRaw and type(dataRaw) == 'string') then
+		if dataRaw then
+			Spring.Echo("Customkey data error for team", teamID)
+		end
+	else
+		dataRaw = string.gsub(dataRaw, '_', '=')
+		dataRaw = Spring.Utilities.Base64Decode(dataRaw)
+		local dataFunc, err = loadstring("return " .. dataRaw)
+		if dataFunc then 
+			local success, usefulTable = pcall(dataFunc)
+			if success then
+				if collectgarbage then
+					collectgarbage("collect")
+				end
+				return usefulTable
+			end
+		end
+		if err then
+			Spring.Echo("Customkey error", err)
+		end
+	end
+	if collectgarbage then
+		collectgarbage("collect")
+	end
+end

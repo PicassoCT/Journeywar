@@ -27,7 +27,7 @@ Down = -208
 --Hide(Egg)
 function script.Create()
     Spring.SetUnitBlocking(unitID, false)
-    Spring.SetUnitAlwaysVisible(unitID, true)
+  --  Spring.SetUnitAlwaysVisible(unitID, true)
     hideT(piecesTable)
     StartThread(osLoop)
     StartThread(destroyOnTimeOut)
@@ -40,21 +40,23 @@ function identifyUnit()
     x, y, z = Spring.GetUnitPosition(unitID)
     TableTop = {}
     TableTop = Spring.GetUnitsInCylinder(x, z, searchRange)
-    table.remove(TableTop, unitID)
-    --itterate throught table, searching a familiar building
-    if not TableTop or #TableTop == 0 then return end
 
+	for i=1,#TableTop do if TableTop[i]== unitID then table.remove(TableTop,i) end end
+    --itterate throught table, searching a familiar building
+
+    if not TableTop or table.getn(TableTop) == 0 then return end
 
     for i = 1, table.getn(TableTop), 1 do
-        if Spring.ValidUnitID(TableTop[i]) and Spring.GetUnitIsDead(TableTop[i]) == false and TableTop[i] ~= unitID then
-            _, _, _, _, buildProgress = Spring.GetUnitHealth(TableTop[i])
-            if buildProgress and buildProgress < 1 and buildProgress > 0 then
-                if buildingTypes[Spring.GetUnitDefID(TableTop[i])] then
+            hp, maxhp, paDmg, capProg, buildProgress = Spring.GetUnitHealth(TableTop[i])
+            if buildProgress then
+				defID= Spring.GetUnitDefID(TableTop[i])
+                if buildingTypes[defID] then
+							
                     return TableTop[i]
-                end
+					  end
             end
         end
-    end
+
 end
 
 function assureUnitExists(id)
@@ -67,10 +69,10 @@ function assureUnitExists(id)
     return true
 end
 
-buildID = unitID
 
+constBuildID= unitID
 constUp = 0
-function updateBP()
+function updateBP(buildID)
 
     if Spring.GetUnitIsDead(buildID) == false then
         h, mh, pD, cP, bP = Spring.GetUnitHealth(buildID)
@@ -84,14 +86,15 @@ end
 
 function script.Killed(recentDamage, _)
 
-    if buildID and buildID ~= unitID and Spring.ValidUnitID(buildID) == true then
-        Spring.SetUnitAlwaysVisible(buildID, true)
+    if constBuildID and constBuildID ~= unitID and Spring.ValidUnitID(constBuildID) == true then
+        Spring.SetUnitAlwaysVisible(constBuildID, true)
     end
     return 1
 end
 
 function buildAnimation(buildID)
-
+	Signal(SIG_DESTROY)
+	 constBuildID= buildID
     Spring.SetUnitAlwaysVisible(buildID, false)
     StartThread(randomRotate, Egg, y_axis, 0.03, -5, 5)
     StartThread(randomRotate, Egg, x_axis, 0.03, -15, 15)
@@ -100,12 +103,13 @@ function buildAnimation(buildID)
     hideUnit(unitID)
     Show(Egg)
     Show(Base)
-    local BUILDPROGRESS = updateBP()
+    local BUILDPROGRESS = updateBP(buildID)
     signum = -1
     currently = 1
 
     while assureUnitExists(buildID) == true and BUILDPROGRESS and BUILDPROGRESS < 1 do
-        BUILDPROGRESS = updateBP()
+		--	Spring.Echo("BUILDPROGRESS:"..BUILDPROGRESS)
+        BUILDPROGRESS = updateBP(buildID)
         Sleep(150)
 
         if BUILDPROGRESS < 0.02 then
@@ -129,8 +133,20 @@ function buildAnimation(buildID)
     Spring.SetUnitAlwaysVisible(buildID, true)
 end
 
+function finalAnimation()
+	Move(Base, y_axis, -50, 3)
+    Explode(Egg, SFX.SHATTER)
+    Explode(Egg, SFX.SHATTER)
+    Move(Egg, y_axis, Down, 150, true)
+    Sleep(3000)
+
+    WaitForMove(Base, y_axis)
+    Hide(Base)
+
+end
+
 SIG_BUILD = 2
-timeOutMax = 3 * 60 * 1000
+timeOutMax = 3 * 60 * 1000 --3minutes
 function osLoop()
 
     buildID = unitID
@@ -142,22 +158,18 @@ function osLoop()
     end
 
     if timeout < timeOutMax and buildID then
+		--Spring.Echo("Starting BuildAnimation")
         buildAnimation(buildID)
     end
-    Move(Base, y_axis, -50, 3)
-    Explode(Egg, SFX.SHATTER)
-    Explode(Egg, SFX.SHATTER)
-    Move(Egg, y_axis, Down, 150, true)
-    Sleep(3000)
-
-    WaitForMove(Base, y_axis)
-    Hide(Base)
-
+   
+    finalAnimation()
     Spring.DestroyUnit(unitID, false, true)
 end
 
 MaxTime = 9 * 60 * 1000
+SIG_DESTROY= 8
 function destroyOnTimeOut()
+	SetSignalMask(SIG_DESTROY)
     Sleep(MaxTime)
     Spring.DestroyUnit(unitID, false, true)
 end

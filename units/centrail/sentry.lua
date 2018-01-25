@@ -1,7 +1,7 @@
 local unitName = "sentry"
 local unitDef = {
 name = "Sentry",
-Description = "close Combat Defense turret",
+Description = "close Combat Defense turret <Ground Defense>",
 objectName = "sentry.s3o",
 script = "sentryscript.lua",
 buildPic = "sentry.dds",

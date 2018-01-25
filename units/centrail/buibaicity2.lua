@@ -3,7 +3,7 @@ local unitName = "buibaicity2"
 local unitDef = {
   name               = "Arcology",
   objectName         = "buibaicity2.s3o",
-  description="repays invested Insurrance Money if set on fire by a enemy",
+  description="repays invested Insurrance Money if set on fire by a enemy <Econ Trap Building>",
   script ="cbuibaiCityArco.lua",
   buildPic = "carcology.dds",
   maxdamage=1400,
@@ -12,7 +12,7 @@ local unitDef = {
 	buildTime = 182,
 	FootprintX = 9,
 	FootprintZ = 9,
-	MaxSlope = 10,
+	MaxSlope = 50,
 	idleAutoHeal = 0,
   nanocolor=[[0 0.9 0.9]],
   

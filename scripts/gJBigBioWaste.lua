@@ -653,7 +653,7 @@ function tillDeathDoAsPart()
 	Sleep(300000)
 	Move(center,y_axis,-100,0.25)
 	WaitForMove(center,y_axis)
-	Spring.DestroyUnit(unitID,true,true)
+	Spring.DestroyUnit(unitID,false,true)
 end
 
 

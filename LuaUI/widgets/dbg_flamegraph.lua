@@ -9,10 +9,9 @@ function widget:GetInfo()
     date      = "Year of the Stallman 2017",
     license   = "GPL",
     layer     = 1,
-    enabled   = true  --  loaded by default?
+    enabled   = false  --  loaded by default?
   }
 end
-
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -21,40 +20,26 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 -- gui elements
 local flameGraphWindow
 local window01
-local gridWindow0
-local gridWindow1
-local windowImageList
-local window1
-local window2
-local window3
+local selection
+local DataTable ={}
 
 function widget:Initialize()
 	Chili = WG.Chili
 
 	-- we need a container that supports margin if the control inside uses margins
+	
+	selection = Chili.ComboBox:New{items = {  }}
 
-local	selection = 	--Button:New{width = 410, height = 400, anchors = {top=true,left=true,bottom=true,right=true}},
-			Chili.ComboBox:New{
-					items={
-					Chili.Button:New{caption = "Various Units1"},
-					Chili.Button:New{caption = "Various Units2"}
-					}
-			}
+			
 		
-local	flameGraph = Chili.Window:New{
+local	flameGraph = Chili.Grid:New{
 		parent = selectGridAndDisplay,
 		x = 450,
 		y = 450,
 		clientWidth = 200,
 		clientHeight = 200,
 		children = {
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"},
-				Chili.Button:New{caption = "Flamegraph"}
+			
 		},
 	}	
 	
@@ -63,7 +48,7 @@ local	flameGraph = Chili.Window:New{
 		width = '100%',
 		height = '100%',
 		children = {			
-		--	selection,
+			selection,
 			flameGraph
 
 			}
@@ -88,8 +73,16 @@ end --Initialize
 
 function widget:Update()
 	--	widgetHandler:RemoveCallIn("Update")
+dataString= Spring.GetGameRulesParam("SerializedFlameGraphTable")
+	if dataString then
+	DataTable	= stringToTable(dataString)
+	--update Selection
+	selection.items= {}
+		for k,v in pairs(DataTable) do
+			selection.items[#selection.items+1]=UnitDefs[k].name
+		end
+	end
 end
-
 
 function widget:Shutdown()
 

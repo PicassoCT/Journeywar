@@ -2,7 +2,7 @@ local unitName = "jtree44"
 
 local unitDef = {
 	name = "Accid Tree ",
-	Description = " stores and returns Matter. Corrodes Units nearby.",
+	Description = " stores and returns Matter. Corrodes Units nearby. <Energy Storage>",
 	objectName = "jLtree4.s3o",
 	script = "jLtreescript.lua",
 	buildPic = "jtree.png",

@@ -2,7 +2,7 @@ local unitName = "sentrynell"
 
 local unitDef = {
 name = "Sentrynell",
-Description = "heavy Anti Air Defense Unit. Deploys sentry once stopped.",
+Description = "heavy Anti Air Defense Unit. Deploys sentry once stopped. <Anti Air Defense Unit>",
 objectName = "sentrynell.s3o",
 script = "sentrynellscript.lua",
 buildPic = "sentrynell.dds",
@@ -11,8 +11,8 @@ buildCostMetal = 750,
 buildCostEnergy = 350,
 buildTime = 25,
 --Health
-maxDamage = 650,
-idleAutoHeal = 0,
+maxDamage = 3500,
+idleAutoHeal = 5,
 --Movement
 Acceleration = 0.25,
 BrakeRate = 0.3,

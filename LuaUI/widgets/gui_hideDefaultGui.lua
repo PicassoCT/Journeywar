@@ -1,6 +1,6 @@
 function widget:GetInfo()
   return {
-    name      = "Hides the default interface",
+    name      = "Hide default interface",
     desc      = "",
     author    = "gajop, Bluestone",
     date      = "",
@@ -8,7 +8,7 @@ function widget:GetInfo()
     layer     = math.huge;
     enabled   = true,
     
-    hidden    = true; -- don't show in the widget selector
+    hidden    = true, -- don't show in the widget selector
     api       = true; -- load before all others?
   }
 end
@@ -16,14 +16,16 @@ end
 function widget:Initialize()
   widgetHandler:RegisterGlobal("LayoutButtons", DummyLayoutHandler)
 
+  --Spring.SendCommands("hideinterface  1")
   --Spring.SendCommands("Console 0")
-  --Spring.SendCommands("ToolTip 0")
+  Spring.SendCommands("ResBar 0")
+ -- Spring.SendCommands("ToolTip 0")
   Spring.SendCommands("Clock 0")
   Spring.SendCommands("Info 0")
   Spring.SendCommands("Fps 0")
-
-  gl.SlaveMiniMap(true)
-  gl.ConfigMiniMap(-1,-1,-1,-1)
+  
+ -- gl.SlaveMiniMap(true)
+ -- gl.ConfigMiniMap(-1,-1,-1,-1)
 end
 
 local function DummyLayoutHandler(xIcons, yIcons, cmdCount, commands)

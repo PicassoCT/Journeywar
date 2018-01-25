@@ -54,7 +54,7 @@ end
 function dropDead()
     Move(center, y_axis, -22, 12)
     Sleep(2000)
-    Spring.DestroyUnit(unitID, true)
+    Spring.DestroyUnit(unitID, false,true)
 end
 
 

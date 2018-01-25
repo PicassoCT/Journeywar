@@ -2,7 +2,7 @@ local unitName = "jdevoureregg"
 
 local unitDef = {
 name = "Devourer Egg",
-Description = "Devours a nearby Corpse to grow a Skinfantry-Eggball",
+Description = "Devours a nearby Corpse to grow a Skinfantry-Eggball <Recycle Unit>",
 
 	objectName = "jDevourerEgg.s3o",
 	script = "jdevourereggscript.lua",

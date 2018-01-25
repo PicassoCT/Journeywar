@@ -5,6 +5,13 @@ Debug ComEnderWeapons
 Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most of them)
 
 FIX:
+--> Where does the security drain come from - CentrAIl
+-- Why do drilltrees dig down on a map beeing flooded
+-- Citadell and beanstalk more storage
+-- Show energy usage wherever it occurs in script per unit
+-- It also seems like it takes a long time to build stuff
+
+
 <> Fix Minimissions
 <> Fix IK
 <> Comender fix Weapons:Slicer

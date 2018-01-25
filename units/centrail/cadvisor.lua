@@ -2,7 +2,7 @@ local unitName = "advisor"
 
 local unitDef = {
 name = "Advisor",
-Description = "extracts Information from captured Enemys using PSI",
+Description = "extracts Information from captured Enemys using PSI <Long Range Radar Unit>",
 objectName = "advisor.s3o",
 script = "cAdvisor.lua",
 buildPic = "advstalker.png",

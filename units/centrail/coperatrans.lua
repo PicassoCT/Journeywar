@@ -4,7 +4,7 @@ local unitDef = {
 	BuildPic = "filename.bmp",
 	ObjectName = "operatrans.s3o",
 	name = "Operatransport",
-	Description= "Its not over before the fat lady sings.",
+	Description= "Its not over before the fat lady sings. <Security Producing Tank Unit>",
 	Side = "CentrAIl",
 	script = "operatransscript.lua",
 	

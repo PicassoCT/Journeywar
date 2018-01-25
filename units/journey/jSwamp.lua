@@ -2,7 +2,7 @@ local unitName = "jswamp"
 
 local unitDef = {
 name = "Deadly Swamp",
-Description = "swallows Units. For every Unit the creating glowworm is revived once.",
+Description = "swallows Units. For every Unit the creating glowworm is revived once. <Trap>",
 objectName = "jGlowSwamp.s3o",
 script = "jGlowSwampScript.lua",
 buildPic = "placeholderj.png",

@@ -2,7 +2,7 @@ local unitName = "ccomendernuke"
 
 local unitDef = {
 	name = "Explosions",
-	Description = "We will meet again, dont know where dont know when, but we all go together when we go.",
+	Description = "We will meet again, dont know where dont know when, but we all go together when we go.<Projectile>",
 	objectName = "cComENuke.s3o",
 	script = "cnukescript.lua",
 	buildPic = "placeholder.png",

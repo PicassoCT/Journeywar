@@ -41,7 +41,7 @@ local ammo_bar	= {}
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
-local ability_window
+
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
 updateCommandsSoon = false
@@ -49,7 +49,7 @@ updateCommandsSoon = false
 defaultCaptionByUnitType = VFS.Include('LuaUI/ressources/ability_captions.lua')
 
 local ability_window = {}
-local upgrade_window = {}
+
 ability_window.height = "23%"--180
 ability_window.height_numeric =180
 ability_window.width = "7%"--115
@@ -236,7 +236,7 @@ function widget:Initialize()
 			maxItemHeight =	 '32%',
 			
 			color = {0,0,0,1},
-			
+			parent= upgrade_window,
 			children = {
 				createNewUpgradeButton(100,90, BaseCol, texCol, "SPEED"),
 				createNewUpgradeButton(100,90, BaseCol, texCol, "ARMOR"),
@@ -281,8 +281,8 @@ function widget:Initialize()
 			fontShadow = false,
 			x = "65%",
 			y = "25%",
-			resizable = false,
-			draggable = false,
+			resizable = true,
+			draggable = true,
 			parent = stack_main,
 			clientWidth = 430,
 			clientHeight = 320,
@@ -384,15 +384,11 @@ function widget:Initialize()
 		rows= 3,
 		children={stack_main,
 			ammo_bar,
-			exp_bar,
-			
-		}
-		
+			exp_bar			
+		}		
 	}
 	
-	
-	
-	ability_window = Window:New{
+	ability_window =  Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
 		caption = 'Abilities',
@@ -403,11 +399,11 @@ function widget:Initialize()
 		width = ability_window.width,
 		height = ability_window.height,
 		parent = screen0,
-		draggable = false,
+		draggable = true,
 		tweakDraggable = true,
 		tweakResizable = true,
-		resizable = false,
-		dragUseGrip = false,
+		resizable = true,
+		dragUseGrip = true,
 		--minWidth = 50,
 		--minHeight = 50,
 		color = {0,0,0,1},

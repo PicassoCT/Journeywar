@@ -2,7 +2,7 @@ local unitName = "restrictor"
 
 local unitDef = {
 name = "Restrictor",
-Description = "fast Scout. Stuns Enemy Buildings with Groundconcussion.",
+Description = "fast Scout. Stuns Enemy Buildings with Groundconcussion. <Scout Buff Unit>",
 objectName = "res.s3o",
 script = "cres.lua",
 buildPic = "crestrictor.dds",

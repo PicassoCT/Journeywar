@@ -388,9 +388,10 @@ end
 function updateProgressBar(status)
     orgString = "Contains: "
     passengerString = ""
+	Description= "<Unit Producing Unit>"
     for i = 1, unitsStored, 1 do
         if passengerList[i] == "BG" then
-            passengerString = passengerString .. " BG "
+            passengerString = passengerString .. " IT "
         else
             passengerString = passengerString .. "CSS "
         end
@@ -413,7 +414,7 @@ function updateProgressBar(status)
     end
 
 
-    orgString = orgString .. passengerString
+    orgString = orgString .. passengerString..Description
 
 
     Spring.SetUnitTooltip(unitID, orgString)

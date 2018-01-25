@@ -2,7 +2,7 @@ local unitName = "dbeanstalk"
 
 local unitDef = {
 	name = "Beanstalk",
-	Description = " Unrootable Mainbuilding. Constructs all other buildings.",
+	Description = " Unrootable Mainbuilding. Constructs all other buildings.<Mainbuilding>",
 	objectName = "beanstalk.s3o",
 	script = "beanstalkscript.lua",
 	buildPic = "beanstalk.png",

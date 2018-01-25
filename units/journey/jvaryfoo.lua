@@ -1,7 +1,7 @@
 local unitName = "jvaryfoo"
 local unitDef = {
 	name = "Varyfoo",
-	Description = " hungry, always so hungry, nibblin at the hoops",
+	Description = " hungry, always so hungry, nibblin at the hoops <Assault>",
 	objectName = "varyFoo.s3o",
 	script = "varyfooscript.lua",
 	buildPic = "placeholderj.png",
@@ -31,8 +31,12 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = false,
 	CanStop = true,
-	LeaveTracks = false, 
-	
+
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=4,
+	trackWidth =32,
+	trackOffset =0,
 	
 	weapons = {
 		[1]={name = "jvaryfoomark",

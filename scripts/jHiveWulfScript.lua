@@ -140,9 +140,6 @@ function walk()
 		factor= math.sin(Time/3500)
 		bodyfactor= 3*factor
 		invBFac = bodyfactor *-1
-		Turn(body,x_axis,math.rad(bodyfactor),0.25)
-		
-		Turn(body,y_axis,math.rad(-3),0.25)
 		rand=math.random(-22,-16)
 		Turn(fUpR,x_axis,math.rad(invBFac + rand),3.5)
 		Turn(ffootR,x_axis,math.rad(-rand),3.5)
@@ -155,7 +152,6 @@ function walk()
 		Turn(bfootR,x_axis,math.rad(rand),3.5)
 		WaitForTurn(bfootR,x_axis)
 		Sleep(350)
-		Turn(body,y_axis,math.rad(0),0.25)
 		rand=math.random(-22,-16)
 		Turn(fUpL,x_axis,math.rad(invBFac + rand),3.5)
 		Turn(ffootL,x_axis,math.rad(-rand),3.5)
@@ -250,10 +246,11 @@ function landing()
 	legsDown()
 end
 
-
+boolBiting = false
 function script.AimWeapon1( Heading, pitch )
+if true then return true end
 	SetSignalMask(SIG_AIM)
-	if boolCloseCombat==false then
+	if boolCloseCombat==false and boolBiting== false then
 		Turn(body,y_axis,-Heading,12)
 		WaitForTurn(body,y_axis)
 		getReadyJump() 
@@ -263,12 +260,15 @@ function script.AimWeapon1( Heading, pitch )
 	end
 	
 end
-
+oldVictim= nil
 biteVictim= nil
 boolNewVictim = false
 function takeABite(victim)
-	biteVictim= victim
-	boolNewVictim = true
+	if boolCloseCombat == false then
+		oldVictim= biteVictim		
+		biteVictim= victim
+		boolNewVictim = true
+	end
 end
 shakeSpot = piece"shakeSpot"
 
@@ -289,33 +289,36 @@ function biteLoop()
 		if boolNewVictim == true then
 			--find biggestPiece
 			--Attach to Victim
+			validExVictim= Spring.ValidUnitID(oldVictim)
+			if validExVictim and validExVictim == true then Spring.UnitDetach(unitID); boolBiting= false end
 			pieceBig = getUnitBiggestPiece(biteVictim)
+			echo("TODO jhiveHoundMeatID")
 			Spring.UnitAttach(biteVictim, unitID, pieceBig)
-			
+			boolBiting= true
 			--Shake Piece Out
 			mP(shakeSpot,3.5, -11,-25, 55)
 			
 			dirAction= -1
 			xDegree=0
 			victimIsDead=false
-			for i=1, RipTime, 750 do
-				Turn(shakeSpot,y_axis,math.rad(-25*dirAction),15)
+			for i=1, RIP_TIME, 750 do
+				tSyncIn(shakeSpot,xDegree, -25*dirAction,0,150)
 				if isPieceAboveGround(unitID,Tail) == true then
 					xDegree = clamp(xDegree -10, -90,90)
 				else
 					xDegree = clamp(xDegree +10, -90,90)
 				end
-				Turn(shakeSpot,x_axis,math.rad(xDegree),15)
-				
+			
 				dirAction= dirAction*-1
-				Sleep(750)
+				WaitForTurns(shakeSpot,Tail)
 				
-				victimIsDead = detachOnDeath(victim)
-				if victimIsDead == true then break end
+				victimIsDead = detachOnDeath(biteVictim)
+				reset(shakeSpot,25)
+				if victimIsDead == true then boolBiting= false; break end
 			end
 			
 			if victimIsDead == false then
-				reset(shakeSpot,25)
+				boolBiting= false
 				Spring.UnitDetach(unitID)
 				Spring.AddUnitDamage(biteVictim,RIP_DAMAGE)
 				--replace oneself with a jmeathivewulf
@@ -323,9 +326,11 @@ function biteLoop()
 				x,y,z = Spring.GetUnitPosition(unitID)
 				teamID = Spring.GetUnitTeam(unitID)
 				jhiveHoundMeatID = Spring.CreateUnit("jmeathivewulf",x,y,z, 0,teamID)
-				setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
-				transferUnitStatusToUnit(unitID, jhiveHoundMeatID)
-				Spring.DestroyUnit(unitID, true, true)
+				if jhiveHoundMeatID then
+					transferUnitStatusToUnit(unitID, jhiveHoundMeatID)
+					setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
+					Spring.DestroyUnit(unitID, true, true)
+				end
 			end
 			
 			boolNewVictim = false
@@ -338,8 +343,8 @@ function setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
 myTeam=Spring.GetUnitTeam(unitID)
 	for mom, data in pairs( GG.HiveHoundTable[myTeam]) do
 		for i=1,#data do
-			if data[i][1] == unitID then
-			GG.HiveHoundTable[myTeam][mom] = jhiveHoundMeatID
+			if type(data)=="table" and data[i][1] == unitID then
+			GG.HiveHoundTable[myTeam][mom][i][1] = jhiveHoundMeatID
 			end
 		end
 
@@ -443,108 +448,69 @@ end
 
 
 function script.AimWeapon2( Heading, pitch )
-	boolCloseCombat=true
-	return true
+
+	return not boolBiting
 end
 
+function biteMe()
+	tSyncIn(jaw,36,0,0,150)		
+	WaitForTurns(jaw)
+	tSyncIn(jaw,0,0,0,50)
+	WaitForTurns(jaw)
+end
 boolOnlyOnce=false 
 function closeCombatMotion()
 	if boolOnlyOnce==false then
 		boolOnlyOnce=true
 		
-		
+		Signal(SIG_IDLE)
 		
 		
 		Turn(Tail,x_axis,math.rad(-25),19)
 		StartThread(walk)
 		Spin(littleWulf,y_axis,math.rad(3),3)
+		crotor=rotor
+		boolBody=true
+		tSyncIn(body,0,180,0,250)	
 		while(boolCloseCombat==true) do
-			Turn(rotor,y_axis,math.rad(90),3)
-			Turn(body,y_axis,math.rad(90),3)
+			if boolBody==true then
+				crotor= rotor
+				csign=-1
+				boolBody=false
+			else
+				crotor =rotor2
+				csign= 1
+				boolBody=true
+			end
+
+			StartThread(biteMe)
+			tSyncIn(crotor,0,90*csign,0,150)
+			tSyncIn(Head,-15,-22,-34,250)
+			WaitForTurns(crotor,body)
+
+			close=math.random(-12,12)
+			tSyncIn(crotor,0,180*csign,0,150)
+			tSyncIn(Head,close,-22,-34,150)
+			WaitForTurns(crotor,body)			
 			
-			Turn(Head,y_axis,math.rad(0),19)
-			Turn(Head,z_axis,math.rad(0),19)
-			WTurn(jaw,x_axis,math.rad(36),32)
-			Turn(jaw,x_axis,math.rad(0),180)
-			WaitForTurn(jaw,x_axis)
-			Turn(Head,x_axis,math.rad(-15),19)
-			Turn(Head,y_axis,math.rad(-22),19)
-			Turn(Head,z_axis,math.rad(-34),19)
-			WaitForTurn(Head,x_axis)
-			WaitForTurn(rotor,y_axis)
-			WaitForTurn(body,y_axis)
-			close=math.random(-12,12)
-			Turn(Head,x_axis,math.rad(close),25)
-			Turn(rotor,y_axis,math.rad(180),3)
-			Turn(body,y_axis,math.rad(180),3)
-			WaitForTurn(Head,x_axis)
-			WaitForTurn(rotor,y_axis)
-			WaitForTurn(body,y_axis)
+			StartThread(biteMe)
+			tSyncIn(Head,close,0,0,500)
 			
-			Turn(Head,y_axis,math.rad(0),19)
-			Turn(Head,z_axis,math.rad(0),19)
-			Turn(jaw,x_axis,math.rad(36),32)
-			WaitForTurn(jaw,x_axis)
-			Turn(jaw,x_axis,math.rad(0),180)
-			WaitForTurn(jaw,x_axis)
-			Turn(Head,x_axis,math.rad(-15),19)
-			Turn(Head,y_axis,math.rad(-22),19)
-			Turn(Head,z_axis,math.rad(-34),19)
-			Turn(rotor,y_axis,math.rad(359),3)
-			Turn(body,y_axis,math.rad(359),3)
-			WaitForTurn(Head,x_axis)
-			WaitForTurn(rotor,y_axis)
-			WaitForTurn(body,y_axis)
-			Turn(rotor,y_axis,math.rad(0),0)
-			Turn(body,y_axis,math.rad(0),0)
-			WaitForTurn(rotor,y_axis)
-			WaitForTurn(body,y_axis)
-			Turn(rotor2,y_axis,math.rad(-90),3)-- -
-			Turn(body,y_axis,math.rad(90),3)
-			close=math.random(-12,12)
-			Turn(Head,x_axis,math.rad(close),25)
-			Turn(Head,y_axis,math.rad(0),19)
-			Turn(Head,z_axis,math.rad(0),19)
-			Turn(jaw,x_axis,math.rad(36),32)
-			WaitForTurn(jaw,x_axis)
-			Turn(jaw,x_axis,math.rad(0),180)
-			WaitForTurn(jaw,x_axis)
-			Turn(Head,x_axis,math.rad(-15),19)
-			Turn(Head,y_axis,math.rad(-22),19)
-			Turn(Head,z_axis,math.rad(-34),19)
-			WaitForTurn(Head,x_axis)
-			WaitForTurn(rotor2,y_axis)
-			WaitForTurn(body,y_axis)
-			close=math.random(-12,12)
-			Turn(Head,x_axis,math.rad(close),25)
-			Turn(rotor2,y_axis,math.rad(-180),3)
-			Turn(body,y_axis,math.rad(179),3)
-			WaitForTurn(Head,x_axis)
-			WaitForTurn(rotor2,y_axis)
-			WaitForTurn(body,y_axis)
-			Turn(Head,y_axis,math.rad(0),19)
-			Turn(Head,z_axis,math.rad(0),19)
-			Turn(jaw,x_axis,math.rad(36),32)
-			WaitForTurn(jaw,x_axis)
-			Turn(jaw,x_axis,math.rad(0),180)
-			WaitForTurn(jaw,x_axis)
-			Turn(Head,x_axis,math.rad(-15),19)
-			Turn(Head,y_axis,math.rad(-22),19)
-			Turn(Head,z_axis,math.rad(-34),19)
-			Turn(rotor2,y_axis,math.rad(-359),3)
-			Turn(body,y_axis,math.rad(359),3)
-			WaitForTurn(Head,x_axis)
-			WaitForTurn(rotor2,y_axis)
-			WaitForTurn(body,y_axis)
-			Turn(rotor2,y_axis,math.rad(0),0)
-			Turn(body,y_axis,math.rad(0),0)
-			WaitForTurn(rotor2,y_axis)
-			WaitForTurn(body,y_axis)
+			tSyncIn(crotor,0,270*csign,0,150)
+			WaitForTurns(crotor,body)
+			
+			StartThread(biteMe)
+			tSyncIn(Head,-15,-22,-34,150)
+			tSyncIn(crotor,0,360*csign,0,150)
+			WaitForTurns(crotor,body)
+			Turn(crotor,y_axis,0,0)
+			WaitForTurns(crotor,body)
+			StartThread(biteMe)
+			
 		end
 		
-		StopSpin(rotor,y_axis)
+
 		StopSpin(littleWulf,y_axis)
-		StopSpin(rotor2,y_axis)
 		Turn(littleWulf,y_axis,math.rad(0),0)
 		Turn(rotor,x_axis,math.rad(0),0)
 		Turn(rotor,y_axis,math.rad(0),0)
@@ -560,6 +526,7 @@ end
 function script.FireWeapon2()
 	Signal(SIG_IDLE)
 	Signal(SIG_RESET)
+	boolCloseCombat=true
 	StartThread(timeDelayedCloseCombatDeActivate)
 	StartThread(closeCombatMotion)
 	
@@ -572,5 +539,7 @@ function script.FireWeapon2()
 end
 
 function script.Create()
+	Spring.UnitDetach(unitID)
 	StartThread(biteLoop)
+
 end

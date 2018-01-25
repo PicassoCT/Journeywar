@@ -1,7 +1,7 @@
 local unitName = "cmtwgrenade"
 local unitDef = {
 	name = "Grenade",
-	Description = " 3.. 2... 1",
+	Description = " 3.. 2... 1 <Projectile>",
 	objectName = "cmtwgrenade.s3o",
 	script = "cmtwgrenade_script.lua",
 	buildPic = "placeholder.dds",

@@ -2,7 +2,7 @@ local unitName = "jswiftspear"
 
 local unitDef = {
 	name = "Swiftspear",
-	Description = "rapes enemy units, impregnates them with little swiftspears",
+	Description = "rapes enemy units, impregnates them with little swiftspears <Assault>",
 	objectName = "swiftspear.s3o",
 	script = "swiftspear.lua",
 	buildPic = "placeholderj.png",

@@ -1,7 +1,7 @@
 local unitName = "jmovingfac2"
 local unitDef = {
 name = "Heighborn DNA Weaver ",
-Description = "gives birth to Level 2 Units ",
+Description = "gives birth to Level 2 Units <Factory> ",
 
 
 objectName = "jDNACraddle.s3o",
@@ -35,7 +35,13 @@ CanGuard = false,
 CanMove = true,
 CanPatrol = false,
 CanStop = true,
-LeaveTracks = true, 
+
+	 LeaveTracks = true, 
+	trackType ="jBuilding",
+	 trackStrength=4,
+	trackWidth =64,
+	trackOffset =0,
+
 
 Category = [[LAND]],
 

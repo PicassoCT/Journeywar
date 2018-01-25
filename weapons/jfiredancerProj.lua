@@ -30,7 +30,7 @@ local weaponDef = {
     turret = true,
     cylinderTargeting = 1.0,
     avoidFeature = true,
-    avoidFriendly = true,
+    avoidFriendly = false,
 
 
     --commandfire=true,
@@ -45,7 +45,7 @@ local weaponDef = {
 
     --?FIXME***
     lineOfSight = true,
-
+	noSelfDamage = true,
 
     --sound
     soundHit = "jfiredancer/impact.wav",

@@ -2,9 +2,9 @@ local unitName = "mbuilux"
 
 local unitDef = {
 maxdamage=1200,
-  name               = "Expanded Luxery Appartments",
+  name               = "Extended Luxery Appartments",
   objectName         = "mbuilux.s3o",
-  description = "allocates more Materialbudget to the Fullcitizens.",
+  description = "allocates more Materialbudget to the Fullcitizens.<Advanced Matter Production Building>",
   script = "mbuiluxscript.lua",
   buildPic = "builux.dds",
 	buildCostMetal =  2400,

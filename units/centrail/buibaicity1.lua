@@ -3,7 +3,7 @@ local unitName = "buibaicity1"
 local unitDef = {
   name               = "Skyskrapers",
   objectName         = "buibaicity.s3o",
-  description=" returns invested Money on Attack. Diverts Money from all but second-last Attacker. Upgrades Luxus Appartments nearby.",
+  description=" returns invested Money on Attack. Diverts Money from all but second-last Attacker. Upgrades Luxus Appartments nearby.<Economy Trap Building>",
   script ="cBuiBaiSky.lua",
   buildPic = "cskyscrape.dds",
 
@@ -14,7 +14,7 @@ local unitDef = {
 	
 	FootprintX = 6,
 	FootprintZ = 6,
-	MaxSlope = 20,
+	MaxSlope = 50,
 	buildtime=240,
 	
 	explodeAs="citadelldrone",

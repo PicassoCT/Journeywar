@@ -41,7 +41,6 @@ if (gadgetHandler:IsSyncedCode()) then
 		crabShelWDefID = WeaponDefNames["crabshell"].id
 		cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
 		bunkerPlasmaDefID = WeaponDefNames["cbonkerfire"].id
-		glavaWeaponID = WeaponDefNames["glavaweapon"].id
 		gVolcanoWeaponID = WeaponDefNames["lavabomb"].id
 		cFlareGun = WeaponDefNames["flaregun"].id
 		cmtwgrenade = WeaponDefNames["cmtwgrenade"].id
@@ -90,7 +89,6 @@ if (gadgetHandler:IsSyncedCode()) then
     ChainLightningTable = {}
     local FireWeapons = {
         [gVolcanoWeaponID] = true,
-        [glavaWeaponID] = true,
         [bunkerPlasmaDefID] = true,
         [cCssFlameT] = true,
         [cFlareGun] = true
@@ -131,9 +129,7 @@ if (gadgetHandler:IsSyncedCode()) then
     Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
     Script.SetWatchWeapon(bunkerPlasmaDefID, true)
     Script.SetWatchWeapon(cCssFlameT, true)
-    Script.SetWatchWeapon(glavaWeaponID, true)
     Script.SetWatchWeapon(gVolcanoWeaponID, true)
-    Script.SetWatchWeapon(nukeLvl2WeaponDefID, true)
     Script.SetWatchWeapon(nukeLvl3WeaponDefID, true)
     Script.SetWatchWeapon(highExLineGunDefID, true)
     Script.SetWatchWeapon(jvaryfoospearDefID, true)
@@ -151,10 +147,25 @@ if (gadgetHandler:IsSyncedCode()) then
     local gvolcanoDefID = UnitDefNames["gvolcano"].id
 	
 --===========Explosion Functions ====================================================
-    function unitVannishAntimatterSFX(id)
 
+airTypeTable= getAirUnitTypeTable()
+abstractTypeTable= getAbstractTypes()
+camproDefID = UnitDefNames["campro"].id
+
+    function unitVannishAntimatterSFX(id)
+			defID= Spring.GetUnitDefID(id)
+			--if unit is abstract early out
+			if abstractTypeTable[defID] or airTypeTable[defID] then return end
+			-- if its a building damage it then early out
+			if  defID == camproDefID then return end
+	
+			if UnitDefs[defID].isBuilding == true  then
+				Spring.AddUnitDamage(id, 25)
+				return
+			end
+
+			
         Spring.SetUnitNoSelect(id, true)
-        boolIsBuilding = UnitDefs[Spring.GetUnitDefID(id)].id
         tpiecesTable = getPiecePositionMap(id)
 
         for i = 1, table.getn(tpiecesTable) do
@@ -427,16 +438,26 @@ if (gadgetHandler:IsSyncedCode()) then
             end
 
             dartID = ""
+				teamid=  gaiaTeamID
             if Spring.GetUnitIsDead(AttackerID) == false then
-                teamid = Spring.GetUnitTeam(AttackerID)
+                teamid = Spring.GetUnitTeam(AttackerID) 
+				end
                 dartID = Spring.CreateUnit(unitChoice, px, py, pz, 1, teamid)
-                hx, hy, hz = Spring.GetUnitDirection(AttackerID)
-                Spring.SetUnitDirection(dartID, hx, hy, hz)
-            else
-                dartID = Spring.CreateUnit(unitChoice, px, py, pz, 1, gaiaTeamID)
-            end
-
-            AttachUnitToPieceNearImpact(dartID, AttackerID, px, py, pz, 10)
+						if dartID then
+							hx, hy, hz = Spring.GetUnitDirection(AttackerID)
+							Spring.SetUnitDirection(dartID, hx, hy, hz)
+							AttachUnitToPieceNearImpact(dartID, AttackerID, px, py, pz, 10)
+						else
+						    T = getAllInCircle(px, pz, 64)
+							 T = removeUnitsOfTypeInT(T, UnitDefNames[unitChoice].id)
+								process(T,
+									function(id)
+										Spring.AddUnitDamage(id, jHunterDartDamage)
+									end)
+							Spring.SpawnCEG("antimatter", px, py + 15, pz, 0, 1, 0, 50, 0)
+						end
+         
+			
         end,
         [cmtwgrenade] = function(weaponDefID, px, py, pz, AttackerID)
             if Spring.ValidUnitID(AttackerID) == true then
@@ -553,11 +574,19 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 
     UnitDamageFuncT[cAntiMatterDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-        if not lethalBuffExecption[unitDefID] then
+        if not lethalBuffExecption[unitDefID]  then
             unitVannishAntimatterSFX(unitID)
         end
     end
 
+    UnitDamageFuncT[jHiveHoundID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		if attackerID ~= unitID and attackerTeam ~= unitTeam then
+			env = Spring.UnitScript.GetScriptEnv(attackerID)
+        if env then
+            Spring.UnitScript.CallAsUnit(attackerID, env.takeABite, unitID)
+        end	
+      end	
+	end
     UnitDamageFuncT[catapultDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 
         health = Spring.GetUnitHealth(unitID)
@@ -601,7 +630,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				if persPack.counter > 25 or Spring.GetUnitIsDead(persPack.unitID)== true then 
 					return false 
 				end  
-				if Spring.GetUnitIsDead(persPack.first) == true then Spring.DestroyUnit(persPack.unitID,true, true) end
+				if Spring.GetUnitIsDead(persPack.first) == true then Spring.DestroyUnit(persPack.unitID,true, false) end
 				
 				persPack.counter = persPack.counter + 1 
 
@@ -689,7 +718,7 @@ if (gadgetHandler:IsSyncedCode()) then
         hitPoints, maxHP = Spring.GetUnitHealth(unitID)
         if hitPoints - damage <= 0 and maxHP > 450 then
             x, y, z = Spring.GetUnitPosition(unitID)
-            Spring.DestroyUnit(unitID)
+            Spring.DestroyUnit(unitID,false, true)
             Spring.CreateUnit("jtree1", x, y, z, 1, attackerTeam)
         end
     end
@@ -1065,7 +1094,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				process(T,
 				function(id)
 				defID = Spring.GetUnitDefID(id)
-					if not lethalBuffExecption[defID] then
+					if not lethalBuffExecption[defID] and defID ~= camproDefID then
 						unitVannishAntimatterSFX(id)
 					end				
 				end

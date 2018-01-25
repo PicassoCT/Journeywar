@@ -3,7 +3,7 @@ local unitDef = {
 	objectName="jHiveHoundMoma.s3o",
 	
 	name               = "Wulfhive",
-	Description 		 ="Ranged Ground-Assault Unit ",
+	Description 		 ="Ranged Ground-Assault Unit <Harass Carrier Unit>",
 	
 	script 			 = "jHiveMomaScript.lua",
 	maxDamage = 2550, 

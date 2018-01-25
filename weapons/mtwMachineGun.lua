@@ -1,5 +1,5 @@
 --- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
-local weaponName = "MachineGun"
+local weaponName = "mtwMachineGun"
 local weaponDef = {
     name = "Machine Gun",
     weaponType = [[Cannon]],

@@ -2,7 +2,7 @@ local unitName = "jspacebornembryo"
 
 local unitDef = {
 	name = "Spaceborn Emybro",
-	Description = "Behemoth Birth",
+	Description = "Behemoth Birth ",
 	objectName = "jSpaceBornEmbryo.s3o",
 	script = "jEmbryoScript.lua",
 	buildPic = "placeholderj.png",

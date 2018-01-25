@@ -4,7 +4,7 @@ local unitDef  =  {
     BuildPic = "filename.bmp",
     ObjectName = "jbeefeater.s3o",
 	buildPic = "jbeefeater.png",
-    name = "Beefeater",
+    name = "Beefeater <Begin of Sniper Unit>",
 
     script = "jbeefeaterscript.lua",
     

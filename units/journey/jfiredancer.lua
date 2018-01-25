@@ -2,7 +2,7 @@ local unitName = "jfiredancer"
 
 local unitDef = {
 name = "Firedancer",
-Description = "weaving Nanotics into AntiAir Fire. Creators of the CentrAIl",
+Description = "weaving Nanotics into AntiAir Fire. Creators of the CentrAIl <Anti Air Unit>",
 objectName = "jfiredancer.s3o",
 script = "jfiredancerscript.lua",
 buildPic = "placeholderj.png",
@@ -20,7 +20,7 @@ BrakeRate = 0.3,
 FootprintX = 1,
 FootprintZ = 1,
 MaxSlope =72,
-MaxVelocity = 1.5,
+MaxVelocity = 3,
 MaxWaterDepth = 20,
 MovementClass = "Default2x2",
 TurnRate = 1000,

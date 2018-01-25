@@ -2,7 +2,7 @@ local unitName = "jdrilltree"
 
 local unitDef = {
 	name = "Drill Tree ",
-	Description = "produces Matter. Slag is radioactive.",
+	Description = "produces Matter. Slag is radioactive. <Matter Producer>",
 	objectName = "jDrillTree.s3o",
 	script = "jDrillTree.lua",
 	buildPic = "DrillTree.png",
@@ -37,15 +37,15 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
-	YardMap ="yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+	-- YardMap ="yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
 	
 	-- Building	
 	ShowNanoSpray = false,
 	CanBeAssisted = true,	
-	workerTime = 1,
-	buildoptions = 
-	{
-	},
+	-- workerTime = 1,
+	-- buildoptions = 
+	-- {
+	-- },
 	
 	
 	usebuildinggrounddecal = true,

@@ -27,51 +27,29 @@ end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-function CopyTable(tableToCopy, deep)
-local copy = {}
-for key, value in pairs(tableToCopy) do
-if (deep and type(value) == "table") then
-copy[key] = Spring.Utilities.CopyTable(value, true)
-else
-copy[key] = value
-end
-end
-return copy
-end
 
 function MergeTable(table1,table2)
 
   local result = {}
-   if table2 or type(table2) ~= 'table' then result[#result+1]=table2 
-   else 
-	  for i,v in pairs(table2) do 
-		if (type(v)=='table' and #v > 0) then
-		  result[i] = MergeTable(v,{})
-		else
-		  result[i] = v
-		end
-	  end
+  for i,v in pairs(table2) do 
+    if (type(v)=='table') then
+      result[i] = MergeTable(v,{})
+    else
+      result[i] = v
+    end
   end
-  
-  if table1 and type(table1) ~= 'table' then result[#result+1]=table1 
-  else
-	  for i,v in pairs(table1) do 
-		if (result[i]==nil) then
-		  if (type(v)=='table') then
-			if (type(result[i])~='table') then result[i] = {} end
-			result[i] = MergeTable(v,result[i])
-		  else
-			result[i] = v
-		  end
-		end
-	  end
+  for i,v in pairs(table1) do 
+    if (result[i]==nil) then
+      if (type(v)=='table') then
+        if (type(result[i])~='table') then result[i] = {} end
+        result[i] = MergeTable(v,result[i])
+      else
+        result[i] = v
+      end
+    end
   end
   return result
 end
-
-if not Spring.Utilities then Spring.Utilities={} end
-if not Spring.Utilities.MergeTable then Spring.Utilities.MergeTable=MergeTable end
-if not Spring.Utilities.CopyTable then Spring.Utilities.CopyTable= CopyTable end
 
 include("Configs/lupsFXs.lua")
 include("Configs/lupsUnitFXs.lua")

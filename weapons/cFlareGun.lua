@@ -26,7 +26,7 @@ local weaponDef = {
     smokeTrail = true,
     --explosionGenerator="custom:redsmoke",
     CegTag = "flaregunsfx",
-
+	targetable=1,
     --- -TARGETING
     turret = true,
     CylinderTargeting = 1.0,

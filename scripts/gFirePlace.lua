@@ -1,3 +1,10 @@
+	include "createCorpse.lua"
+	include "lib_OS.lua"
+	include "lib_UnitScript.lua"
+	include "lib_Animation.lua"
+	include "lib_Build.lua"
+	include "lib_jw.lua"
+	
 spiess = piece "spiess"
 firePlace = piece "firePlace"
 emit = piece "emit"
@@ -7,6 +14,12 @@ STORYMAX = 4
 
 function script.Killed()
     return 1
+end
+boolUnderAttack=false
+
+function script.HitByWeapon()
+boolUnderAttack=true
+
 end
 
 function anybodyNearby()
@@ -37,10 +50,30 @@ function storyTime()
         Spring.PlaySoundFile(SoundName, 0.9)
     end
 end
-
+isInfantry = getInfantryTypeTable()
+function healingRest()
+	while true do
+		if boolUnderAttack== false  then
+			T= getAllNearUnit(unitID, 200)
+			process(T,
+					function(id)
+					defID= Spring.GetUnitDefID(id)
+						if defID and isInfantry[defID] then return id end
+					end,
+					function(id)
+						hp= Spring.GetUnitHealth(id)
+						Spring.SetUnitHealth(hp+5)
+					end
+					)
+		Sleep(1000)
+		end
+	end
+end
 function onFire()
     while (true) do
-        EmitSfx(emit, 1024)
+			if maRa()==true then
+				EmitSfx(emit, 1024)
+			end
         Sleep(60)
     end
 end
@@ -56,12 +89,14 @@ function script.Create()
     StartThread(onFire)
     StartThread(dinnerIsReady)
     StartThread(FireTales)
+    StartThread(healingRest)
 end
 
 function FireTales()
     if math.random(0, 1) == 1 then
         Time = math.ceil(math.random(42000, 60000))
         Sleep(Time)
+		  storyTime()
         -- Story One: ".. died over fifteen times, on the third star near the horizon. On a gas giants ice-covered moon.
         -- We were locked in a stalemate for 1.5 orbs. Icequakes, Glacierbridging, Shardartillery, you name it they threw it at as.
         -- And everywhere this thin film of frozzen carb,  which sends you instantly drifting if you dont hook.
@@ -97,7 +132,7 @@ function FireTales()
 
         -- Story Seven "- the place is called Xen. Floating Islands, strange creatures. But not during the autumn of that dimension. Then its all hauled in one titanic shardstorm at another
         -- Everything living there, has evolved to survive this one season. The only way for sentient live to stay, if that still can be called sentient,
-        -- is in a pool of patter amobeas. They will absorb you, when you get torn to shreds, and put you back together, when everything quiets down.
+        -- is in a pool of pattern amobeas. They will absorb you, when you get torn to shreds, and put you back together, when everything quiets down.
         -- But sometimes the amobeas make mistakes.
 
         -- Story Eight "- the whole scoutparty was huddled in one of the gardens of there secreted buildings. And suddenly this huge boulder of them was direclty above hanging in the sky.

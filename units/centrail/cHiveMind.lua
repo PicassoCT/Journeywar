@@ -2,7 +2,7 @@ local unitName = "chivemind"
 
 local unitDef = {
 	name = "Hivemind",
-	Description = " sacrifices individuals for a godlike intellect",
+	Description = " sacrifices individuals for a godlike intellect <Buff Building>",
 	objectName = "cHiveMind.s3o",
 	script = "cHiveMindScript.lua",
 	buildPic = "jdragongrass.png",
@@ -19,7 +19,7 @@ local unitDef = {
 	maxwaterdepth=5,
 	FootprintX = 2,
 	FootprintZ = 2,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 	sightDistance = 600,
 	nanocolor=[[0 0.9 0.9]],
 	selfDestructAs ="defaultweapon",

@@ -2,7 +2,7 @@ local unitName = "jscrapheap"
 
 local unitDef = {
 name = "Organic Remains",
-Description = " of a destroyed Journeymanstructure",
+Description = " of a destroyed Journeymanstructure <Recylable>",
 objectName = "jscrapheap.s3o",
 script = "jscrapheap_script.lua",
 buildPic = "jplaceholder.png",

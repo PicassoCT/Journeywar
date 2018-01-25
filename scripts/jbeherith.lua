@@ -1,4 +1,5 @@
 include "lib_UnitScript.lua"
+include "lib_jw.lua"
 include "jVitalFunctions.lua"
 include "createCorpse.lua"
 --Pieces
@@ -145,6 +146,12 @@ for i = 1, 121, 1 do
     tempiece = "obj" .. i
     optObjects[i] = piece(tempiece)
 end
+
+	optObjects[#optObjects+1]=piece"tail"
+	optObjects[#optObjects+1]=piece"jBball1"
+	optObjects[#optObjects+1]=piece"jBball2"
+	optObjects[#optObjects+1]=piece"jBpenis"
+
 
 HeGotLegAndKnowsHowToUseIt = {}
 for i = 1, 6, 1 do
@@ -324,7 +331,7 @@ function script.TransportPickup(passengerID)
     cargo = cargo + 1
     --get passengers defid
     passengerDefID = Spring.GetUnitDefID(passengerID)
-    if passengerDefID == UnitDefNames["bg"].id or passengerDefID == UnitDefNames["tiglil"].id or passengerDefID == UnitDefNames["skinfantry"].id or passengerDefID == UnitDefNames["vort"].id then
+    if Infantry[passengerDefID] then
         AttachUnit(sloth[cargo], passengerID)
     else
         AttachUnit(body, passengerID)
@@ -588,12 +595,19 @@ function setUp()
         spin = math.random(-10, -5)
         Spin(fishCenters[i], y_axis, math.rad(spin), 0.5)
     end
-
+    Hide(jBeGuBig)
+    Hide(jBeGuSmal0)
+    Hide(jBeGuSmall)
 
     Spin(gullcircle, y_axis, math.rad(0.2), 0.5)
     Spin(jBeGuBig, y_axis, math.rad(10), 0.5)
     Spin(jBeGuSmal0, y_axis, math.rad(-10), 0.5)
     Spin(jBeGuSmall, y_axis, math.rad(10), 0.5)
+    while boolUnitBuildComplete == false do Sleep(100) end
+    Sleep(5*60*1000)
+     Show(jBeGuBig)
+    Show(jBeGuSmal0)
+    Show(jBeGuSmall)
 end
 
 
@@ -694,20 +708,32 @@ function script.Activate()
     return 1
 end
 
+boolUnitBuildCompleted= false
+
+function buildCompleted()
+Sleep(100)
+while select(5,Spring.GetUnitHealth(unitID)) < 1 do
+    Sleep(100)
+ end
+Sleep(1000)
+boolUnitBuildCompleted= true
+
+end
+
 function script.Deactivate()
     --set the MovementSpeed back to the original speed
     --boolAmok Code
-    --SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
-    --if boolAmok== false then
-    --boolAmok=true
-    --SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
-    --Hide(gullcircle)
-    --
-    --Hide(jBeGuBig)
-    --Hide(jBeGuSmal0)
-    --StartThread(tickTockTackle)
-    --
-    --end
+
+    if boolAmok== false and boolUnitBuildCompleted== true then
+        boolAmok=true
+       reSetSpeed(unitID,UnitDefs)
+        Explode(jBeGuBig,SFX.FALL+SFX.SHATTER)
+        Hide(gullcircle)
+        Hide(jBeGuBig)
+        Hide(jBeGuSmal0)
+        StartThread(tickTockTackle)
+
+    end
     return 0
 end
 
@@ -849,12 +875,8 @@ end
 --Intertia is detected via synchronized Turns and MoveComands (Saves Engine Calls)
 --function:computes the Inertia resulting from the old Inertia and the new Inertia
 
-Infantry = {}
-Infantry[UnitDefNames["bg"].id] = true
-Infantry[UnitDefNames["tiglil"].id] = true
-Infantry[UnitDefNames["skinfantry"].id] = true
-Infantry[UnitDefNames["vort"].id] = true
-Infantry[UnitDefNames["css"].id] = true
+Infantry = getInfantryTypeTable(UnitDefNames)
+
 
 function isInfantry(passengerDefID)
     if Infantry[passengerDefID] then return true else return false end
@@ -1325,70 +1347,74 @@ function FloraPhysixLoop() --Programmed by Cubex - Warning: This function pseudo
 
     --Initialization
     --- -Spring.Echo("RING RING RING!!! BANANA PHONE!!!") --For knowing if unit script runs or it crashed :/
-    for i = 70, 90 do
+    for i = 1, #optObjects do
+		if inLimit(70,i,90) or inLimit(122,i,#optObjects) then
         local Piece = optObjects[i]
         --Show(Piece) --Used for looking all trees
         local px, _, pz = GetUnitPiecePos(unitID, Piece) --Actual Position
         TreePosition[i] = { px, pz } --update the last position with the actual
+		end
     end
 
     --Code
     while true do
-        for i = 70, 90 do
-            if i ~= 83 and i ~= 81 and i ~= 85 then
-                local Piece = optObjects[i]
-                local px, _, pz = GetUnitPiecePos(unitID, Piece) --Actual Position
-                local lx, lz = unpack(TreePosition[i]) --get the last position
-                TreePosition[i] = { px, pz } --update the last position with the actual
+       for i = 1, #optObjects do
+				if inLimit(70,i,90) or inLimit(122,i,#optObjects) then
+					if i ~= 83 and i ~= 81 and i ~= 85 then
+						local Piece = optObjects[i]
+						local px, _, pz = GetUnitPiecePos(unitID, Piece) --Actual Position
+						local lx, lz = unpack(TreePosition[i]) --get the last position
+						TreePosition[i] = { px, pz } --update the last position with the actual
 
-                --calculate the piece base traveled distance until the last update
-                px = (px - lx) -- * (random() + Randomness)
-                pz = (pz - lz) -- * (random() + Randomness)
-                px = px * Scale
-                pz = pz * Scale
+						--calculate the piece base traveled distance until the last update
+						px = (px - lx) -- * (random() + Randomness)
+						pz = (pz - lz) -- * (random() + Randomness)
+						px = px * Scale
+						pz = pz * Scale
 
-                if abs(px) > RotationLimit then
-                    if px < 0 then px = -RotationLimit
-                    else px = RotationLimit
-                    end
-                elseif abs(px) < MoveThreshold then
-                    px = 0
-                end
+						if abs(px) > RotationLimit then
+							if px < 0 then px = -RotationLimit
+							else px = RotationLimit
+							end
+						elseif abs(px) < MoveThreshold then
+							px = 0
+						end
 
-                if abs(pz) > RotationLimit then
-                    if pz < 0 then pz = -RotationLimit
-                    else pz = RotationLimit
-                    end
-                elseif abs(pz) < MoveThreshold then
-                    pz = 0
-                end
-                --in addition
-                local spx = Speed
-                if math.deg(px) < 4 and math.deg(px) > -4 then
-                    spx = negInvert((math.deg(px)) / 22)
-                end
+						if abs(pz) > RotationLimit then
+							if pz < 0 then pz = -RotationLimit
+							else pz = RotationLimit
+							end
+						elseif abs(pz) < MoveThreshold then
+							pz = 0
+						end
+						--in addition
+						local spx = Speed
+						if math.deg(px) < 4 and math.deg(px) > -4 then
+							spx = negInvert((math.deg(px)) / 22)
+						end
 
-                local spz = Speed
-                if math.deg(pz) < 4 and math.deg(pz) > -4 then
-                    spz = negInvert((math.deg(pz)) / 22)
-                end
+						local spz = Speed
+						if math.deg(pz) < 4 and math.deg(pz) > -4 then
+							spz = negInvert((math.deg(pz)) / 22)
+						end
 
-                if spx < 0.05 then spx = 0.05 end
-                if spz < 0.05 then spz = 0.05 end
+						if spx < 0.05 then spx = 0.05 end
+						if spz < 0.05 then spz = 0.05 end
 
 
 
-                Turn(Piece, x_axis, px, spx)
-                Turn(Piece, z_axis, pz, spz)
+						Turn(Piece, x_axis, px, spx)
+						Turn(Piece, z_axis, pz, spz)
 
-                if true == spIsInTurn(Piece, x_axis) or true == spIsInTurn(Piece, x_axis) then
-                else
-                    x, y, z = spGetPieceRotation(Piece)
-                    if math.deg(abs(x)) < 3 then Turn(Piece, x_axis, 0, spx) else Turn(Piece, x_axis, (x * -0.75), spx) end
-                    if math.deg(abs(z)) < 3 then Turn(Piece, z_axis, 0, spx) else Turn(Piece, z_axis, (z * -0.75), spz) end
-                end
-                --/in addition
-            end
+						if true == spIsInTurn(Piece, x_axis) or true == spIsInTurn(Piece, x_axis) then
+						else
+							x, y, z = spGetPieceRotation(Piece)
+							if math.deg(abs(x)) < 3 then Turn(Piece, x_axis, 0, spx) else Turn(Piece, x_axis, (x * -0.75), spx) end
+							if math.deg(abs(z)) < 3 then Turn(Piece, z_axis, 0, spx) else Turn(Piece, z_axis, (z * -0.75), spz) end
+						end
+						--/in addition
+					end
+				end
         end
         Sleep(RefreshInterval)
     end
@@ -1559,10 +1585,13 @@ end
 
 
 function script.Create()
+    udef= Spring.GetUnitDefID(unitID)
+    SetUnitValue(COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed* 0.1* 2184.53))
+    StartThread(buildCompleted)
     StartThread(treeTrample)
     StartThread(mONmoNmoN)
     beheBodyBuilder()
-    setUp()
+    StartThread(setUp)
     StartThread(damageWatcher)
     StartThread(waterDetect)
     StartThread(FloraPhysixLoop)
@@ -1574,20 +1603,9 @@ end
 
 
 boolMoving = false
-
+treeTypeTable= getTreeTypeTable(UnitDefNames)
 function treeTrample()
-    treeTypeTable = getTypeTable(UnitDefNames, {
-        "jtree1",
-        "jtree2",
-        "jtree3",
-        "jtree41",
-        "jtree42",
-        "jtree43",
-        "jtree44",
-        "jtree45",
-        "jtree46",
-        "jtree47"
-    })
+
     while true do
 
         while boolMoving == true do
@@ -1797,7 +1815,6 @@ function getUnitFiredUponAttachAndImpulse(apendixTable, nr, heading)
 
         if table.getn(unitsStompedLately) ~= 0 then
 
-
             throwingDwarfs = math.floor(math.random(1, table.getn(unitsStompedLately)))
             temp = {}
             temp = unitsStompedLately[throwingDwarfs]
@@ -1925,9 +1942,6 @@ function script.AimWeapon4(heading, pitch)
 end
 
 function script.AimFromWeapon4()
-
-
-
     return appendixTable4[1]
 end
 
@@ -1959,9 +1973,6 @@ function script.AimWeapon5(heading, pitch)
 end
 
 function script.AimFromWeapon5()
-
-
-
     return appendixTable5[1]
 end
 
@@ -1993,9 +2004,6 @@ end
 -- end
 --weapon 6
 function script.AimFromWeapon6()
-
-
-
     return body
 end
 

@@ -21,7 +21,7 @@ local weaponDef = {
     explosionGenerator = "custom:missile_explosion",
     soundHit = "sounds/cRes/resplasma.wav",
     soundStart = "sounds/cRes/plasmafire.ogg",
-
+	targetable=1,
     --apperance
     rgbColor = [[0.1 0.86 0.49]],
     size = 4,

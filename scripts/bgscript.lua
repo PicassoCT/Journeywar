@@ -155,6 +155,7 @@ local function legs_down()
 
 		resetLegs()
     val = math.random(-10, 45)
+	Turn(center,y_axis, math.rad(0),5)
     Turn(bgarm, x_axis, math.rad(val), 8)
 	--assert(type(idle)=="function")
     StartThread(idle)
@@ -200,6 +201,7 @@ function script.Create()
 	--assert(type(soundStart)=="function")
 
     StartThread(soundStart)
+ 
 end
 idleFunc= {}
 
@@ -708,29 +710,15 @@ function offOverHead()
     Turn(RArm, y_axis, math.rad(math.random(-20, 20)), 12)
 
     Turn(deathpivot, x_axis, math.rad(-90), 5)
-    Move(bgbase, y_axis, 0, 35)
+    --Move(bgbase, y_axis, 0, 35)
     Turn(bglowlegr, x_axis, math.rad(0), 12)
     Turn(bglowleg, x_axis, math.rad(0), 12)
     Sleep(2500)
 
     return 1
 end
+function kill_tumbleBackwards()
 
-
-function killinTime(recentDamage, maxHealth)
-    Turn(deathpivot, y_axis, math.rad(0), 1.40)
-    spawnCegAtPiece(unitID, bgtorso, "bghdexplode", 0)
-    dice = math.random(1, 3)
-    if dice == 1 then
-        if math.random(0, 1) == 1 then
-            StartThread(dropPieceTillStop, unitID, Gun, 9.81, 32, 5, true)
-            Show(Gun)
-        else
-            Explode(Gun, SFX.NO_HEATCLOUD + SFX.FALL)
-        end
-
-
-        if recentDamage / maxHealth > 0.3 and recentDamage > TIGLILDAMAGE then return offOverHead() end
 
         Hide(bgarm)
         Show(LArm)
@@ -765,8 +753,9 @@ function killinTime(recentDamage, maxHealth)
         syncTurn(unitID, LArm, 0, synVal, synValz, 284)
         syncTurn(unitID, RArm, 0, -90, synValz, 300)
         Sleep(550)
-        Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav")
-    elseif dice == 2 then
+end
+
+function kill_fallBackwards()
         Turn(bgarm, x_axis, math.rad(-29), 2 * 0.90)
         Turn(bglegr, x_axis, math.rad(-30), 2 * 0.45)
         Turn(bglowlegr, x_axis, math.rad(54), 2 * 0.32)
@@ -782,19 +771,17 @@ function killinTime(recentDamage, maxHealth)
         WaitForTurn(bgtorso, x_axis)
         Turn(bgleg, x_axis, math.rad(0), 2 * 0.15)
         Turn(bglegr, x_axis, math.rad(0), 2 * 0.15)
-        WaitForTurn(bgleg, x_axis)
-        WaitForTurn(bglegr, x_axis)
         Turn(bgarm, x_axis, math.rad(-90), 2 * 0.85)
         Turn(bgtorso, x_axis, math.rad(0), 3 * 0.84)
         Turn(deathpivot, x_axis, math.rad(-89), 2 * 0.75)
 
         WaitForTurn(deathpivot, x_axis)
         Sleep(150)
-        Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav")
+end
 
-    else
-        Turn(deathpivot, y_axis, math.rad(0), 2 * 0.12)
-        Turn(bglegr, x_axis, math.rad(25), 0.42)
+function kill_fall()
+      Signal(SIG_IDLE)
+		Turn(bglegr, x_axis, math.rad(25), 0.42)
         Turn(bgleg, x_axis, math.rad(-10), 0.42)
         Turn(bglowleg, x_axis, math.rad(0), 0.32)
         Turn(bglowlegr, x_axis, math.rad(-10), 0.32)
@@ -802,6 +789,7 @@ function killinTime(recentDamage, maxHealth)
 
         Sleep(650)
         Turn(bgbase, x_axis, math.rad(-20), 2 * 0.12)
+        Turn(deathpivot, y_axis, math.rad(0), 2 * 0.12)
         Turn(deathpivot, x_axis, math.rad(-10), 2 * 0.12)
         Turn(bglegr, x_axis, math.rad(10), 2 * 0.12)
         Turn(bgleg, x_axis, math.rad(10), 2 * 0.12)
@@ -834,7 +822,7 @@ function killinTime(recentDamage, maxHealth)
         syncTurn(unitID, LArm, 0, synVal, synValz, 284)
         syncTurn(unitID, RArm, 0, -90, synValz, 300)
         Sleep(420)
-        Signal(SIG_IDLE)
+  
         valr = math.random(0, 45)
         vall = math.random(-45, 0)
 
@@ -853,8 +841,102 @@ function killinTime(recentDamage, maxHealth)
         end
 
         Sleep(420)
-        Signal(SIG_IDLE)
-    end
+end
+
+function flailArms(times)
+	halfTimes=math.ceil(times*0.75)
+	tP(LArm,0,0,0,3)
+	tP(RArm,0,0,0,3)
+	quarter= math.ceil(times-halfTimes)
+	Sleep(quarter)
+	
+	rArmY,rArmX= math.random(30,60)*-1,math.random(-45,45)
+	lArmY,lArmX= math.random(30,60),math.random(-45,45)
+	tSyncIn(LArm,lArmX,lArmY,0,halfTimes,Spring.UnitScript)
+	tSyncIn(RArm,rArmX,rArmY,0,halfTimes,Spring.UnitScript)
+	Sleep(halfTimes)
+
+end
+
+function kill_tumble()
+		Hide(bgarm)
+        Show(LArm)
+        Show(RArm)
+	--Move Backward, Arms flailing
+		hits=math.random(1,4)
+		legsign=-1
+		for i=1, hits do
+		legsign=legsign*-1
+			mP(deathpivot,0,0,i*-3,0)
+			tP(deathpivot,0,math.random(-30,30),0,0)
+		--Steps backward
+		Turn(bgleg,x_axis,math.rad(15*legsign),60)
+		Turn(bglegr,x_axis,math.rad(-15*legsign),60)
+		
+		timeBetweenHits= math.ceil(math.random(200,300))
+		StartThread(flailArms,timeBetweenHits)
+		Sleep(timeBetweenHits)
+		end
+	-- kneel
+
+	--fall foward
+end
+
+
+
+function kill_Kneel(factor)
+	mSyncIn(deathpivot, 0,0,-8,1500*factor)
+	mSyncIn(bgbase, 0,-5,4,1500*factor)
+	kneeval=math.random(-30,0)
+	tSyncIn(bgleg,kneeval,0,0,750*factor)
+	tSyncIn(bglegr,kneeval,0,0,750*factor)
+	tSyncIn(bglowleg,90 +kneeval*-1,0,0,450*factor)
+	tSyncIn(bglowlegr,90 +kneeval*-1,0,0,450*factor)
+	Sleep(1500*factor)
+	tSyncIn(deathpivot,85,0,0,450*factor)
+	mSyncIn(bgbase, 0,0,0,700*factor)
+	tSyncIn(bgleg,0,0,0,350*factor)
+	tSyncIn(bglegr,0,0,0,350*factor)
+	tSyncIn(bglowleg,0,0,0,700*factor)
+	tSyncIn(bglowlegr,0,0,0,700*factor)
+	tP(RArm,math.random(-70,70),-93,0,500)
+	tP(LArm,math.random(-70,70),93,0,500)
+	Sleep(700*factor)
+end
+
+
+function killinTime(recentDamage, maxHealth)
+    Signal(SIG_IDLE)
+    Turn(deathpivot, y_axis, math.rad(0), 1.40)
+    spawnCegAtPiece(unitID, bgtorso, "bghdexplode", 0)
+    --gundrop
+
+	Hide(Gun)
+    Explode(Gun, SFX.NO_HEATCLOUD + SFX.FALL)
+     
+	if true or  maRa()==true then
+		kill_tumble()
+	end
+	--beheaded
+    
+	
+	dice = math.random(1, 4)
+
+    if recentDamage / maxHealth > 0.3 and lastHitDefID == WeaponDefNames["tiglilclosecombat"].id then
+			offOverHead() 
+	else
+		if	dice == 1 then
+			kill_tumbleBackwards()
+		elseif dice == 2 then
+			kill_fallBackwards()
+
+		elseif dice== 3 then
+			kill_fall()
+		elseif dice == 4 then
+			kill_Kneel(0.5)
+		end
+	end
+	 Spring.PlaySoundFile("sounds/bgmtw/bgDeath.wav")
 end
 
 --- -death animation: fall over & explode
@@ -904,8 +986,9 @@ function underFireReset()
 	Sleep(3000)
 	boolUnderFire = false
 end
-
+lastHitDefID= WeaponDefNames["ar2"].id
 function script.HitByWeapon(x, z, weaponDefID, damage)
+	lastHitDefID= weaponDefID
 	boolUnderFire= true
 
 

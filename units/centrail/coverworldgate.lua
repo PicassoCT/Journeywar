@@ -2,7 +2,7 @@ local unitName = "coverworldgate"
 
 local unitDef = {
 	name = "Overworld Gate",
-	Description = "spawns A.I. controlled Creepers who autoattack",
+	Description = "spawns A.I. controlled Creepers who autoattack <Creeper Unit Factory>",
 	objectName = "cOverWorldTeleport.s3o",
 	script = "coverworldgatescript.lua",
 	buildPic = "portals.dds",
@@ -32,8 +32,10 @@ local unitDef = {
 	corpse = "bgcorpse",
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
-	
-	maxSlope = 255,
+	onoffable=true,
+	activateWhenBuilt=true,
+
+	maxSlope = 50,
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = false,

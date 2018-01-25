@@ -7,7 +7,7 @@ function widget:GetInfo()
     author    = "jK",
     date      = "Jul 11, 2007",
     license   = "GNU GPL, v2 or later",
-    layer     = 1,
+    layer     = 0,
     enabled   = true  --  loaded by default?
   }
 end
@@ -31,13 +31,14 @@ OrangeStr  = "\255\255\190\128"
 local vsx, vsy   = widgetHandler:GetViewSizes()
 
 -- saved values
+IconSize= 24
 local bar_side         = 1     --left:0,top:2,right:1,bottom:3
 local bar_horizontal   = false --(not saved) if sides==top v bottom -> horizontal:=true  else-> horizontal:=false
 local bar_offset       = 0    --relative offset side middle (i.e., bar_pos := vsx*0.5+bar_offset
 local bar_align        = -1     --aligns icons to bar_pos: center=0; left/top=+1; right/bottom=-1
-local bar_iconSizeBase = 55    --iconSize o_O
-local bar_openByClick  = false --needs a click to open the buildmenu or is a hover enough?
-local bar_autoclose    = true  --autoclose buildmenu on mouseleave?
+local bar_iconSizeBase = IconSize    --iconSize o_O
+local bar_openByClick  = true --needs a click to open the buildmenu or is a hover enough?
+local bar_autoclose    = false  --autoclose buildmenu on mouseleave?
 
 -- list and interface vars
 local facs = {}
@@ -79,6 +80,7 @@ local sound_click     = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_click.WAV'
 local sound_hover     = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_hover.wav'
 local sound_queue_add = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_add.wav'
 local sound_queue_rem = LUAUI_DIRNAME .. 'Sounds/buildbar/buildbar_rem.wav'
+VFS.Include('scripts/lib_jw.lua', nil, VFSMODE)
 
 -------------------------------------------------------------------------------
 -- SOME THINGS NEEDED IN DRAWINMINIMAP
@@ -182,6 +184,7 @@ function widget:Initialize()
 
   local viewSizeX, viewSizeY = widgetHandler:GetViewSizes()
   self:ViewResize(viewSizeX, viewSizeY)
+--	Spring.Echo("BuilderBar Initialization completed")
 end
 
 function widget:GetConfigData()
@@ -202,7 +205,7 @@ function widget:SetConfigData(data)
   bar_side         = data.side         or 2
   bar_offset       = bar_offset
   bar_align        = data.align        or 0
-  bar_iconSizeBase = data.iconSizeBase or 65
+  bar_iconSizeBase =  IconSize
   bar_openByClick  = data.openByClick  or false
   bar_autoclose    = data.autoclose    or (not bar_openByClick)
 
@@ -422,13 +425,15 @@ function widget:DrawScreen()
 
     -- draw build list
     if i==openedMenu+1 then
+
       -- draw buildoptions
       local bopt_rec = RectWH(fac_rec[1]+bopt_inext[1], fac_rec[2]+bopt_inext[2],iconSizeX,iconSizeY)
-
+		
       local buildList   = facInfo.buildList
       local buildQueue  = GetBuildQueue(facInfo.unitID)
 
       for j,unitDefID in ipairs(buildList) do
+		
         local unitDefID = unitDefID
         local options   = {}
         -- determine options -------------------------------------------------------------------
@@ -448,7 +453,7 @@ function widget:DrawScreen()
         DrawButton(bopt_rec,unitDefID,options)
 
         -- setup next icon pos
-        OffsetRect(bopt_rec, bopt_inext[1],bopt_inext[2])
+				OffsetRect(bopt_rec, bopt_inext[1],bopt_inext[2])
 
         --if j % 3==0 then
         --  xmin_,xmax_ = xmin   + bopt_inext[1],xmin_ + iconSizeX 
@@ -633,16 +638,18 @@ end
 -------------------------------------------------------------------------------
 -- UNIT INITIALIZTION FUNCTIONS
 -------------------------------------------------------------------------------
+
+local mainBuildings=  getMainBuildingTypeTable()
 function UpdateFactoryList()
   facs = {}
-
+	Spring.Echo("BuildBar:Update Factory List")
   local teamUnits = Spring.GetTeamUnits(myTeamID)
   local totalUnits = table.getn(teamUnits)
 
   for num = 1, totalUnits do
     local unitID = teamUnits[num]
     local unitDefID = GetUnitDefID(unitID)
-    if UnitDefs[unitDefID].isFactory then
+    if UnitDefs[unitDefID].isFactory or mainBuildings[unitDefID] then
       push(facs,{ unitID=unitID, unitDefID=unitDefID, buildList=UnitDefs[unitDefID].buildOptions })
       local _, _, _, _, buildProgress = GetUnitHealth(unitID)
       if (buildProgress)and(buildProgress<1) then
@@ -660,7 +667,7 @@ function widget:UnitCreated(unitID, unitDefID, unitTeam)
     return
   end
 
-  if UnitDefs[unitDefID].isFactory and unitDefID ~= efenceDefID then
+  if UnitDefs[unitDefID].isFactory or mainBuildings[unitDefID] then
     push(facs,{ unitID=unitID, unitDefID=unitDefID, buildList=UnitDefs[unitDefID].buildOptions })
   end
   unfinished_facs[unitID] = true
@@ -697,9 +704,11 @@ function widget:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
 end
 
 function widget:Update()
+--Spring.Echo("BuilderBar Update")
   if myTeamID~=Spring.GetMyTeamID() then
     myTeamID = Spring.GetMyTeamID()
     UpdateFactoryList()
+	 Spring.Echo("BuilderBar Update")
   end
   inTweak = widgetHandler:InTweakMode()
 end
@@ -819,6 +828,7 @@ end
 
 function BuildHandler(button)
   local alt, ctrl, meta, shift = Spring.GetModKeyState()
+  local _, _, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
   local opt = {}
   if alt   then push(opt,"alt")   end
   if ctrl  then push(opt,"ctrl")  end
@@ -826,7 +836,16 @@ function BuildHandler(button)
   if shift then push(opt,"shift") end
 
   if button==1 then
-    Spring.GiveOrderToUnit(facs[openedMenu+1].unitID, -(facs[openedMenu+1].buildList[pressedBOpt+1]),{},opt)
+	 builderDefID= Spring.GetUnitDefID(facs[openedMenu+1].unitID)
+	 if builderDefID and UnitDefs[builderDefID].isFactory then
+		Spring.GiveOrderToUnit(facs[openedMenu+1].unitID, -(facs[openedMenu+1].buildList[pressedBOpt+1]),{},opt)
+	 else --select building and select build
+		Spring.SelectUnitArray({[1]=facs[openedMenu+1].unitID})
+		local index = Spring.GetCmdDescIndex(-facs[openedMenu+1].buildList[pressedBOpt+1])
+		if index then
+			Spring.SetActiveCommand(index, button or 1, lmb, rmb, alt, ctrl, meta, shift)
+		end		
+	 end
     Spring.PlaySoundFile(sound_queue_add, 0.95)
   elseif button==3 then
     push(opt,"right")

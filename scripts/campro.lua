@@ -6,7 +6,7 @@ include "lib_Animation.lua"
 include "lib_Build.lua"
 
 --Define the wheel pieces
-
+EnergyUsedPerShot= 15
 --Define the pieces of the weapon
 amturret = piece "amturret"
 SIG_FLARE = 1
@@ -28,8 +28,19 @@ end
 teamID = Spring.GetUnitTeam(unitID)
 
 function script.Create()
+StartThread(showNoEnergy)
 end
-
+function showNoEnergy()
+	while true do
+	teamID= Spring.GetUnitTeam(unitID)
+	teamEnergy = Spring.GetTeamResources(teamID,"energy")
+		if  teamEnergy < EnergyUsedPerShot then
+			x,y,z=Spring.GetUnitPosition(unitID)
+			Spring.SpawnCEG("noenergy", x  , y+ 50 , z, 0,1,0)
+		end
+	Sleep(10000)
+	end
+end
 maxspeed = math.ceil(UnitDefNames["campro"].speed * 65533)
 
 boolReadyFire = true

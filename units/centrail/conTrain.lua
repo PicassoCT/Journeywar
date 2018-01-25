@@ -2,7 +2,7 @@ local unitName = "contrain"
 
 local unitDef = {
 	name = "Construction Train",
-	Description = "supports construction & heals units, using up its Payload.",
+	Description = "supports construction & heals units, using up its Hitpoints. <Construction Unit>",
 	objectName = "conTrain.s3o",
 	script = "cConTrain.lua",
 	buildPic = "ccontrain.dds",
@@ -34,7 +34,8 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = true,
 	CanStop = true,
-	
+	onOffAble= true,
+	ActivateWhenBuilt=0,
 	ShowNanoSpray = false,
 	CanBeAssisted = true,
 	CanReclaim=true,	
@@ -54,6 +55,9 @@ local unitDef = {
 	Category = [[LAND]],
 	leaveTracks =true,
 	trackType ="cTrain",
+	trackStrength=8,
+	trackWidth =16,
+	trackOffset =0,
 	
 	
 	customParams = {},

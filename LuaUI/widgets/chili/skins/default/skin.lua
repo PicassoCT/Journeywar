@@ -325,10 +325,22 @@ function DrawHabaneroButton(obj)
   if (obj.caption) then
     local w = obj.width
     local h = obj.height
+	local bt= 2
 
-    obj.font:Print(obj.caption, w*0.5, h*0.5, "center", "center")
-  end
+		if obj.midPointX then
+			obj.font:Print(obj.caption, obj.midPointX, bt+obj.midPointY, "center", "center")
+		else
+			 obj.font:Print(obj.caption, w*0.5, h*0.5, "center", "center")
+		end
+	
+		-- if self.state.selected then
+			-- self.font:SetColor(oldColor)
+		-- end
+	end
 end
+	
+	
+
 
 function DrawButton(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBackground, obj, obj.state)

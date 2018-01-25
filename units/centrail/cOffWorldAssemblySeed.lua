@@ -2,7 +2,7 @@ local unitName = "coffworldassemblyseed"
 
 local unitDef = {
 name = "Constructionseed",
-Description = "errects a Offworld-Assembly building",
+Description = "errects a Offworld-Assembly building <Upgrade in Progress Building>",
 objectName = "cOffWorldAssemblySeed.s3o",
 script = "coffworldassemblyseed.lua",
 buildPic = "nanoupgrade.dds",

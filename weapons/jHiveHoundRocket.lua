@@ -25,7 +25,7 @@ local weaponDef = {
     smokeTrail = false,
     explosionGenerator = "custom:dirt",
     --CegTag="smoketrail",
-
+	 interceptor = 1,
     --- -TARGETING
     turret = true,
     avoidFeature = true,

@@ -2,7 +2,7 @@ local unitName = "csniper"
 
 local unitDef = {
 	name = "Safarisniper",
-	Description = "deployed Sharpshooter - can drag harpooned trophys to base",
+	Description = "deployed Sharpshooter - can drag harpooned trophys to base <Long Range Ground Unit/ Recycleable Transporter>",
 	objectName = "csniper.s3o",
 	script = "csniper.lua",
 	buildPic = "csniper.dds",
@@ -41,7 +41,10 @@ local unitDef = {
 	CanPatrol = true,
 	CanStop = true,
 	LeaveTracks = true, 
-
+	trackType ="BIGFoot",
+	 trackStrength=4,
+	trackWidth =48,
+	trackOffset =0,
 	isFirePlatform=false,
 	holdSteady =true,
 	releaseHeld =true,
@@ -49,9 +52,7 @@ local unitDef = {
 	transportSize       = 90000,
 	  
 	  
-	trackType ="BIGFoot",
-	  trackStrength=4,
-
+	
 		  sfxtypes            = {	
 			explosiongenerators = {
 			"custom:smallblueburn",

@@ -2,7 +2,7 @@ local unitName = "scumslum"
 
 local unitDef = {
   name               = "Scumslum",
-  Description = " adds Securitybudget to keep the new citizens in line",
+  Description = " adds Securitybudget to keep the new citizens in line <Security Production>",
   objectName         = "scumslum.s3o",
   	buildPic = "scumslum.dds",
   script= "cscumslum.lua",

@@ -2,7 +2,7 @@ local unitName = "jresistancecell"
 
 local unitDef = {
 name = "Resistance Cell",
-Description = "Can transform into a resistance outpost near a enemy civil building",
+Description = "Can transform into a resistance outpost near a enemy civil building <Sabotage>",
 objectName = "jResistanceCell.s3o",
 script = "jresistancecell.lua",
 buildPic = "placeholderj.png",

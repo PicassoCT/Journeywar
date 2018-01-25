@@ -2,7 +2,7 @@ local unitName = "jstealthdrone"
 
 local unitDef = {
 	name = "Gasgiant",
-	Description = "stealthy Construction Exobiotic, using lifeforce to construct.",
+	Description = "stealthy Construction Exobiotic, using lifeforce to construct.<Construction>",
 	objectName = "condrone.s3o",
 	script = "jcondronescript.lua",
 	buildPic = "conair.dds",

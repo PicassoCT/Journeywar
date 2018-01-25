@@ -1,7 +1,7 @@
 local unitName = "jmovingfac1"
 local unitDef = {
 	name = "Firstborn Unituterus",
-	Description = "Transports the TraFactory, provides visuals",
+	Description = "Transports the TraFactory, provides visuals <Factory>",
 	objectName = "jFirstBorn.s3o",
 	script = "jmobileFactory1.lua",
 	buildPic = "placeholderj.png",
@@ -40,6 +40,13 @@ local unitDef = {
 	MakesMetal = 0,
 	MetalMake = 0,
 	customParams = {},
+	
+	 LeaveTracks = true, 
+	trackType ="jBuilding",
+	 trackStrength=4,
+	trackWidth =64,
+	trackOffset =0,
+	
 	sfxtypes = {				
 		explosiongenerators = {				 
 			"custom:dirt",

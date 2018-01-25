@@ -7,8 +7,8 @@ function widget:GetInfo()
 		date = "2016-6-2",
 		license = "GNU GPL, v2 or later",
 		layer = 0,
-		enabled = true,
-		hidden= false,
+		enabled = false,
+		hidden = true
 	}
 end
 
@@ -55,7 +55,8 @@ holoTextCol={200/255, 239/255, 253/255, 1}
 backgroundColExtended={58/255, 172/255, 226/255, 0.75}	
 
 extendedCommands={}
-	extendedMenue={[CMD.RECLAIM] ={},
+	extendedMenue={
+	[CMD.RECLAIM] ={},
 	[CMD.LOAD_UNITS]={},
 	[CMD.UNLOAD_UNITS]={},
 	[CMD.CLOAK]={},
@@ -77,8 +78,8 @@ extendedMenue[CMD.RECLAIM] ={
 
 extendedMenue[CMD.LOAD_UNITS] ={
 		triStrip={	{x= 160, y = 0},
-					{x= 160, y = 80},			
-					{x= 0, y = 40}	},
+		{x= 160, y = 80},			
+	{x= 0, y = 40}	},
 	backgroundCol=backgroundColExtended,
 	caption=	"LOAD",
 	callbackFunction=function()
@@ -124,7 +125,7 @@ extendedMenue[CMD.CLOAK] ={
 extendedMenue[CMD.RESTORE] ={		
 		triStrip={	{x= 100	, y = 15},
 		{x= 100	, y = 70},			
-		{x= 0	, y = 40}},
+	{x= 0	, y = 40}},
 	backgroundCol=backgroundColExtended,
 	caption= "RESTORE",
 	callbackFunction=function()
@@ -133,10 +134,28 @@ extendedMenue[CMD.RESTORE] ={
 	end
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
-	triStrip={	{x= 0, y = 0},			
-				{x= 100, y = 30},
-				{x= 0, y = 80},
-				{x= 100, y = 80}},
+		triStrip={	{x= 0, y = 0},			
+		{x= 100, y = 30},
+		{x= 0, y = 80},
+	{x= 100, y = 80}},
+	backgroundCol=backgroundColExtended,
+	caption= "QUEUE",
+	callbackFunction=function(self,...)
+		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		boolQueueOverride = not boolQueueOverride
+	end
+}
+extendedMenue[CMD.OPT_SHIFT] ={
+		triStrip={
+		{x= 0, y = 0},			
+		{x= 100, y = 30},
+		{x= 0, y = 80},
+		{x= 100, y = 80}
+		},
+		 -- {x= "0%", y = "0%"},			
+		 -- {x= "100%", y = "30%"},
+		 -- {x= "0%", y = "80%"},
+		 -- {x= "100%", y = "80%"}},
 	backgroundCol=backgroundColExtended,
 	caption= "QUEUE",
 	callbackFunction=function(self,...)
@@ -337,28 +356,18 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
+	function createHabanero(triStrip, caption, basCol, textCol, functionOnClick, Parent )
 		functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
 		
 		return 	Chili.HabaneroButton:New{
 			triStrip=triStrip	,
+			name= caption,
 			caption=caption,
-			
+			parent= Parent,
 			backgroundColor = basCol,
 			textColor = textCol, 
 			OnClick= { functionOnClick}
 		}
-	end
-	
-	
-	for commandID,Option in pairs(extendedMenue) do
-		extendedCommands[commandID] = createHabanero(Option.triStrip,
-		Option.caption,
-		Option.backgroundCol,
-		extHoloTexCol,
-		Option.callbackFunction		
-		)		
-		extendedCommands[commandID].Init()
 	end
 	
 	extendedCommand_window = Window:New{
@@ -371,11 +380,12 @@ function widget:Initialize()
 		width = extendedCommand_window_width,
 		height =extendedCommand_window_height,
 		parent = screen0,
-		draggable = false,
-		tweakDraggable = false,
-		tweakResizable = false,
-		resizable = false,
-		dragUseGrip = false,
+		draggable = true,
+		tweakDraggable = true,
+		tweakResizable = true,
+		resizable = true,
+		dragUseGrip = true,
+		dockable = true,
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {
@@ -396,40 +406,69 @@ function widget:Initialize()
 		centerItems = false,
 		columns = 1,	
 		rows = 6,
-		name = 'UpgradeGrid',
+		name = 'extended Comand Grid',
 		width = '100%',
 		height = '100%',
-		
+		parent =extendedCommand_window,
 		minItemHeight =	 '21%',
 		maxItemHeight =	 '32%',
 		
 		color = {0,0,0,1},
 		
 		children = {
-			extendedCommands[CMD.RECLAIM],
-			extendedCommands[CMD.LOAD_UNITS],
-			extendedCommands[CMD.UNLOAD_UNITS],
-			extendedCommands[CMD.CLOAK],
-			extendedCommands[CMD.RESTORE],
-			extendedCommands[CMD.OPT_SHIFT]
 		},		
 	}
 	
+	for commandID,Option in pairs(extendedMenue) do
+		extendedCommands[commandID] = createHabanero(
+		Option.triStrip,
+		Option.caption,
+		Option.backgroundCol,
+		extHoloTexCol,
+		Option.callbackFunction,
+		extendedCommand_Grid
+		)		
+		extendedCommands[commandID]:Init()
+	end
+	
+
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.LOAD_UNITS])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.UNLOAD_UNITS])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.CLOAK])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.RESTORE])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.OPT_SHIFT])
+
 	extendedCommand_window:AddChild(extendedCommand_Grid)
 	
 	Habaneros={ }
 	
-	for comandID,MenueOption in pairs(MainMenue) do
-		Habaneros[comandID] = createHabanero(MenueOption.triStrip,
-		MenueOption.caption,
-		MenueOption.backgroundCol,
-		holoTextCol,
-		MenueOption.callbackFunction	
-		)		
-		Habaneros[comandID].Init()
-	end
+		controllCommand_window = Window:New{
+		padding = {3,3,3,3,},
+		dockable = true,
+		caption = '',
+		textColor = {0.9,1,1,0.7},
+		name = "controllCommand_window",
+		x = controllCommand_window_positionX, 
+		y = controllCommand_window_positionY,
+		width = controllCommand_window_width,
+		height = controllCommand_window_height,
+		parent = screen0,
+		draggable = true,
+		tweakDraggable = true,
+		tweakResizable = true,
+		resizable = true,
+		dragUseGrip = true,
+		dockable = true,
+		--minWidth = 50,
+		--minHeight = 50,
+		color = {0,0,0,1},
+		
+		children = {			
+		},
+	}
 	
-	base_stack = Grid:New{
+local	base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
 		itemPadding = {0, 0, 0, 0},
@@ -442,48 +481,40 @@ function widget:Initialize()
 		centerItems = false,
 		columns = 3,
 		rows= 3,
-		children={
-			Habaneros[CMD.ATTACK],
-			Habaneros[CMD.STOP],
-			Habaneros[CMD.MOVE],
-			Habaneros[CMD.FIRE_STATE],
-			Habaneros[CMD.REPEAT],
-			Habaneros[CMD.MOVE_STATE	],
-			Habaneros[CMD.REPAIR],
-			Habaneros[CMD.PATROL],
-			Habaneros[CMD.GUARD],
-			
+		parent =controllCommand_window,
+		children={			
 		}
 	}
 	
-	controllCommand_window = Window:New{
-		padding = {3,3,3,3,},
-		dockable = true,
-		caption = '',
-		textColor = {0.9,1,1,0.7},
-		name = "controllCommand_window",
-		x = controllCommand_window_positionX, 
-		y = controllCommand_window_positionY,
-		width = controllCommand_window_width,
-		height = controllCommand_window_height,
-		parent = screen0,
-		draggable = false,
-		tweakDraggable = true,
-		tweakResizable = true,
-		resizable = false,
-		dragUseGrip = false,
-		--minWidth = 50,
-		--minHeight = 50,
-		color = {0,0,0,1},
-		
-		children = {			
-			base_stack,			
-		},
-	}
+	for comandID,MenueOption in pairs(MainMenue) do
+		Habaneros[comandID] = createHabanero(
+		MenueOption.triStrip,
+		MenueOption.caption,
+		MenueOption.backgroundCol,
+		holoTextCol,
+		MenueOption.callbackFunction,
+		base_stack
+		)		
+		Habaneros[comandID]:Init()
+	end
+	
+	base_stack:AddChild(Habaneros[CMD.ATTACK])
+	base_stack:AddChild(Habaneros[CMD.STOP])
+	base_stack:AddChild(Habaneros[CMD.MOVE])
+	base_stack:AddChild(Habaneros[CMD.FIRE_STATE])
+	base_stack:AddChild(Habaneros[CMD.REPEAT])
+	base_stack:AddChild(Habaneros[CMD.MOVE_STATE])
+	base_stack:AddChild(Habaneros[CMD.REPAIR])
+	base_stack:AddChild(Habaneros[CMD.PATROL])
+	base_stack:AddChild(Habaneros[CMD.GUARD])
+	
+
+	controllCommand_window:AddChild(controllCommand_window)
+	
 end
 
 function widget:MousePress()
---	Spring.Echo("MousePress activated")
+	--	Spring.Echo("MousePress activated")
 end
 
 function widgetHandler:MouseRelease(x, y, button)

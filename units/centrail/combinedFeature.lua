@@ -2,7 +2,7 @@ local unitName = "cwatchpost"
 
 local unitDef = {
 	name = "Centrail Outwatchpost",
-	Description = " sterlizes the nearby Exobiotic fauna",
+	Description = " sterlizes the nearby Exobiotic fauna <Area Debuff Building>",
 	objectName = "cCombineOutPost.s3o",
 	script = "combinedFeatureScript.lua",
 	buildPic = "csniper.dds",

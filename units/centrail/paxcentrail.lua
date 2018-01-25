@@ -2,7 +2,7 @@ local unitName = "paxcentrail"
 
 local unitDef = {
 	name = "Pax Centrail",
-	Description = "Chaingang forced to fight by their families held hostage.",
+	Description = "Chaingang forced to fight by their families held hostage.<Ground Air Assault Unit>",
 	objectName = "cPaxCentrail.s3o",
 	script = "cPaxCentrailscript.lua",
 	buildPic = "placeholder.png",

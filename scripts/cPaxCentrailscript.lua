@@ -325,7 +325,7 @@ function moveAnimation()
 			--filter out special Units
             PlayAnimation("paxcentrail_stomp")
 			--Destroy T
-			Spring.DestroyUnit(T[dice],true,true)
+			Spring.DestroyUnit(T[dice],true,false)
            
         else
             PlayAnimation("pax_attack")

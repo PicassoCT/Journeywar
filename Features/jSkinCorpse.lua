@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "jskincorpse",
    blocking       = false,
-   category       = "jbiocorpse",
+   category       = "JCORPSE",
    damage            = 3000,
    description       = "M.I.A.",
    energy            = 12,

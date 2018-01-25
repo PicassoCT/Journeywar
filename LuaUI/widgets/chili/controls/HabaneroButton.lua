@@ -12,15 +12,20 @@ HabaneroButton = Control:Inherit{
 	caption = 'HabaneroButton', 
 	--local Coordinates
 	defaultWidth = 70,
+	width= 0,
 	defaultHeight = 20,
+	heigth = 0,
 	xMin= 0,
 	xMax = 1,
 	yMin = 0,
 	yMax = 1,
+	midPointX=0,
+	midPointY=0,
+
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
-	triStrip ={},	
+	triStrip ={}
 }
 
 local this = HabaneroButton
@@ -38,19 +43,19 @@ end
 
 --//=============================================================================
 function Rotate(x, z, Rad)
-		if not Rad then return end
-    sinus = math.sin(Rad)
-    cosinus = math.cos(Rad)
-
-    return x * cosinus + z * -sinus, x * sinus + z * cosinus
+	if not Rad then return end
+	sinus = math.sin(Rad)
+	cosinus = math.cos(Rad)
+	
+	return x * cosinus + z * -sinus, x * sinus + z * cosinus
 end
 
 
 function HabaneroButton:Spiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
-local strip = {}
-totalReducePerStep= (1-reduceFactor)/Resolution
-degPerRes =Degree/Resolution
-
+	local strip = {}
+	totalReducePerStep= (1-reduceFactor)/Resolution
+	degPerRes =Degree/Resolution
+	
 	for i=1,Resolution do
 		--make a copy and 	--scale the new points
 		local copyPointA,copyPointB = startPointA, startPointB
@@ -75,74 +80,123 @@ function HabaneroButton:DrawControl()
 end
 
 --//=============================================================================
+function getZeroScreen(self)
+while self.parent do
+self = self.parent
+end
+return self
+end
 
-function HabaneroButton:initFromPercenTageStringTriStrip(totalPixelsX, totalPixelsY, ParentPercentX,ParentPercentY) 
-	--TODO: Test
-	totalPixelsX = totalPixelsX * ParentPercentX
-	totalPixelsY= totalPixelsY * ParentPercentY
+--> gets the parents of the handed objects absolut size in pixel
+function getParentSize(self)
+	--debugging
+	zeroScreen = getZeroScreen(self)
+
+	--no parent
+	if not self.parent then error("No parent existing for HabaneroButton "..self.caption) end
 	
-	xMinLoc,xMaxLoc=0,0
-	yMinLoc,yMaxLoc=0,0		
+	--self is root
+	if self == zeroScreen then
+		return zeroScreen.width, zeroScreen.height	
+	end
+	if self.width and self.height then
+		Spring.Echo("HabaneroButton:Selfsize"..self.name..":"..self.width.." / "..self.height	)
+		typeX,typeY=type(self.width),type(self.height)
 		
-		--computate the preBox
-		for i=1,table.getn(this.triStrip) do
-			point= triStrip[i]		
-			point.x=tonumber(string.gsub(string.gsub(point.x,"%%","")," ",""),10)
-			point.y=tonumber(string.gsub(string.gsub(point.y,"%%","")," ",""),10)
-			-- limit
-			point.x =math.abs(math.max(0,math.min(100.0,point.x))/100)
-			point.y =math.abs(math.max(0,math.min(100.0,point.y))/100)
+		--self width exists as pixel value
+		if typeX == "number" and typeY == "number" then 
+			return self.width, self.height 
+		end
+		
+		--self width exists as percentage value
+		if typeX == "string" and typeY == "string" then 
+			dx,dy= getParentSize(self.parent)
+			fx,fy= stringPercentToScale(self.width), stringPercentToScale(self.heigth)
 			
-			point.x = point.x *totalPixelsX
-			point.y = point.y *totalPixelsY			
-			
-			if point.x < xMinLoc then xMinLoc= point.x end
-			if point.x > xMaxLoc then xMaxLoc= point.x end
-			if point.y < yMinLoc then yMinLoc= point.y end
-			if point.y > yMaxLoc then yMaxLoc= point.y end
-		end	
-		
-		xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
-		yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-		
-		xMax=xMaxLoc
-		xMin =xMinLoc
-		yMax=yMaxLoc
-		yMin =yMinLoc
-		
-		defaultWidth = xWidth
-		defaultHeight =yHeigth
+			return dx*fx, dy*fy
+		end
+	end	
+end
 
+--> converts a string percentage value into a number
+function stringPercentToScale(percent)
+	return	math.min(100.0,math.max(0.0,tonumber(string.gsub(string.gsub(percent,"%%","")," ",""),10)))/100
+end
+
+--> generates a trianglestrip from a outline
+function convertOutlineToTriStrip(outline)
+	midPoint={x=0,y=0}
+	for i=1,#outline do
+		midPoint.x,midPoint.y = midPoint.x + outline[i].x,midPoint.y + outline[i].y
+	end
+	midPoint.x,midPoint.y= midPoint.x/#outline , midPoint.y/#outline
+	
+	ltriStrip={}
+	for i=1,#outline do
+		ltriStrip[3*(i-1)+1] = {x=outline[i].x,y=outline[i].y}
+		ltriStrip[3*(i-1)+2]= {x=midPoint.x, y=midPoint.y}
+		ltriStrip[3*(i-1)+3]= {x=outline[i+1].x,y=outline[i+1].y}		
+	end
+		--close the triangle strip
+		ltriStrip[#ltriStrip+1] = {x=outline[#outline].x,y=outline[#outline].y}
+		ltriStrip[#ltriStrip+1]= {x=midPoint.x, y=midPoint.y}
+		ltriStrip[#ltriStrip+1]= {x=outline[1].x,y=outline[1].y}		
+end
+
+function getParentPercentage(self, dimX, dimZ)
+	return dimX/#self.parent.children, dimZ/#self.parent.children
 end
 
 function HabaneroButton:Init()
-	xMinLoc,xMaxLoc=0,0
-		yMinLoc,yMaxLoc=0,0
-		
-		
-		
-		--computate the preBox
-		for i=1,table.getn(this.triStrip) do
-			point= triStrip[i]		
-			if point.x < xMinLoc then xMinLoc= point.x end
-			if point.x > xMaxLoc then xMaxLoc= point.x end
-			if point.y < yMinLoc then yMinLoc= point.y end
-			if point.y > yMaxLoc then yMaxLoc= point.y end
-		end	
-		
-		xWidth = math.abs(xMaxLoc)+ math.abs(xMinLoc)
-		yHeigth = math.abs(yMaxLoc)+ math.abs(yMinLoc)	
-		
-		xMax=xMaxLoc
-		xMin =xMinLoc
-		yMax=yMaxLoc
-		yMin =yMinLoc
-		
-		defaultWidth = xWidth
-		defaultHeight =yHeigth
-		
+	--Handle outline
+
+	if self.outline then
+		self.triStrip = convertOutlineToTriStrip(self.outline)		
+	end
 	
+	boolAbsoluteSize = (self.triStrip[1] and type(self.triStrip[1].x)== "number")
 	
+	self.xMin ,self.xMax =0,1
+	self.yMin ,self.yMax =0,1	
+	
+	totalPixelsX,totalPixelsY= getParentSize(self.parent) 
+	
+	if boolAbsoluteSize == false then	
+	Spring.Echo("HabaneroButton:AbsoluteSize:"..totalPixelsX.." / "..totalPixelsY)
+		
+		totalPixelsX,totalPixelsY=	getParentPercentage(self, totalPixelsX,totalPixelsY)
+	Spring.Echo("HabaneroButton:Buttonsize:"..totalPixelsX.." / "..totalPixelsY)
+	
+		for i=1,table.getn(self.triStrip) do
+			local point= self.triStrip[i]		
+			point.x=stringPercentToScale(point.x)
+			point.y=stringPercentToScale(point.y)
+			-- limit	
+			
+			point.x = point.x *totalPixelsX
+			point.y = point.y *totalPixelsY	
+			self.triStrip[i] = point		
+		end
+	end
+	
+	--computate the early out box
+	for i=1,table.getn(self.triStrip) do
+		local point= self.triStrip[i]		
+		self.xMin = math.min(self.xMin ,point.x)
+		self.xMax = math.max(self.xMax ,point.x)
+		self.yMin = math.min(self.yMin ,point.y)
+		self.yMax = math.max(self.yMax ,point.y)
+		self.midPointX= self.midPointX + point.x
+		self.midPointY= self.midPointY + point.y
+	end		
+	self.midPointX= self.midPointX/ #self.triStrip
+	self.midPointY= self.midPointY/ #self.triStrip
+	
+	xWidth = math.abs( self.xMax )+ math.abs(self.xMin )
+	yHeigth = math.abs(self.yMax )+ math.abs(self.yMin )	
+	
+	self.defaultWidth = xWidth
+	self.defaultHeight =yHeigth
 	
 end
 --//=============================================================================

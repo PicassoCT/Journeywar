@@ -16,6 +16,7 @@ Quader01 = piece "Quader01"
 
 function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
+	StartThread(saySay)
 	StartThread(emitSFX)
 	-- StartThread(testTurnInTime)
 	echo(minimalAbsoluteDistance(15,-15))
@@ -58,9 +59,8 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-		
-		Spring.SpawnCEG("internalexplosion", x +50 , y+ 50 , z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10, 60)
-		Sleep(1000)
+	Spring.SpawnCEG("supersonic", x, y + 70, z, 0, 1, 0, 60)
+	Sleep(9000)
 		
 	end
 end

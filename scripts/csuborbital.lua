@@ -229,7 +229,7 @@ function script.AimWeapon1(heading, pitch)
     if boolReady == true and impactorcounter > 0 then
         return true
     elseif impactorcounter == 0 then
-        Spring.DestroyUnit(unitID, false, false)
+        Spring.DestroyUnit(unitID, false, true)
         return false
     else
         return false

@@ -2,7 +2,7 @@ local unitName = "flyingmountainb"
 
 local unitDef = {
 name = "Gardenasteroid",
-Description = "Orbital Oasis beneath a carbonfoam bubble",
+Description = "Orbital Oasis beneath a carbonfoam bubble <Projectile>",
 objectName = "jMotherOfMercyBubbled.s3o",
 script = "jflyingmountainbubbledscript.lua",
 buildPic = "placeholderj.png",

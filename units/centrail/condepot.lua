@@ -8,7 +8,7 @@ Category=[[LAND BUILDING]],
 	buildPic = "condepot.dds",
   name               = "Construction Unit Depot ",
   objectName         = "condepot.s3o",
-  	Description = "  builds Construction Units. Set to support the citadell.",
+  	Description = "  builds Construction Units. Set to support the citadell. <Construction Unit Factory>",
   MaxDamage = 1500,
 
 	 corpse             = "cInfantryCorpse",
@@ -43,7 +43,7 @@ Category=[[LAND BUILDING]],
 -- Pathfinding and related
 	FootprintX = 11,
 	FootprintZ = 8,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 	YardMap ="ooocccccooo occccccccco occccccccco ccccccccccc  ccccccccccc occccccccco occccccccco ooocccccooo",
 
 --------------------------------------	

@@ -12,14 +12,12 @@ function getTypeTable(UnitDefNames, StringTable)
 end
 
 function getJourneyBuildingTypeTable()
-    JourneyBuildingTypes = getUnitCanBuild("beanstalk")
-  
+    JourneyBuildingTypes = tableToDict(getUnitCanBuild("beanstalk"))
     return JourneyBuildingTypes
 end
 
 function getCentrailBuildingTypeTable()
-    CentrailBuildingTypes = getUnitCanBuild("citadell")
-  
+    CentrailBuildingTypes = tableToDict(getUnitCanBuild("citadell"))
     return CentrailBuildingTypes
 end
 
@@ -27,7 +25,12 @@ function getAllBuildingTypes()
 	return mergeDict(getJourneyBuildingTypeTable(),getCentrailBuildingTypeTable())
 end
 
-
+function getMainBuildingTypeTable()
+return {
+[UnitDefNames["citadell"].id] = true,
+[UnitDefNames["beanstalk"].id] = true
+}
+end
 --> JW specific function returning the factorys of the game
 function getFactoryTypeTable(UnitDefNames, IWant)
     FactoryTypes = {}
@@ -74,6 +77,21 @@ function getDefenseBuildingTypeTable(UnitDefNames)
 	return getTypeTable(UnitDefNames, typeTable)
 end
 
+function getCentrailOverworldGateUnitTypeTable()
+	typeTable={
+		"css",
+		"bg3",
+		"campro",
+		"mtw",
+		"csniper",
+		"restrictor",
+		"chunter",
+		
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+
+end
+
 --> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}
@@ -99,7 +117,8 @@ function getFungiImuneUnitTypeTable(UnitDefNames)
 end
 
 
-function getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
+function getExemptFromLethalEffectsUnitTypeTable(UnitDefNamesL)
+if not UnitDefNames then UnitDefNames = UnitDefNamesL end
     retTab = {
         [UnitDefNames["ccomender"].id] = true,
         [UnitDefNames["beanstalk"].id] = true,
@@ -140,7 +159,8 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     return retTab
 end
 
-function getAirUnitTypeTable(UnitDefNames)
+function getAirUnitTypeTable(UnitDefNamesContext)
+	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
     local retTab = {}
     retTab[UnitDefNames["callygator"].id] = true
     retTab[UnitDefNames["conair"].id] = true
@@ -161,7 +181,9 @@ function getAirUnitTypeTable(UnitDefNames)
     return retTab
 end
 
-function getPyroProofUnitTypeTable(UnitDefNames)
+function getPyroProofUnitTypeTable(UnitDefNamesContext)
+	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
+
     local FireProofTypes = {}
     FireProofTypes[UnitDefNames["jfiredancebomb"].id] = true
     FireProofTypes[UnitDefNames["jsunshipfire"].id] = true
@@ -171,6 +193,8 @@ function getPyroProofUnitTypeTable(UnitDefNames)
     FireProofTypes[UnitDefNames["beanstalk"].id] = true
     FireProofTypes[UnitDefNames["jsungodcattle"].id] = true
     FireProofTypes[UnitDefNames["jtree3"].id] = true
+    FireProofTypes[UnitDefNames["glava"].id] = true
+    FireProofTypes[UnitDefNames["gvolcano"].id] = true
     return FireProofTypes
 end
 
@@ -216,6 +240,19 @@ function getNeutralTypeTable()
     return TypeTable
 end
 
+function getConstructionUnitTypeTable()
+return  getTypeTable(UnitDefNames, { 
+				"contrain", 
+				"contruck",
+				"conair", 
+				"citadell",
+				"jconroach",
+				"jconcaterpillar",
+				"jstealthdrone",
+				"beanstalk"				
+				})
+
+end
 
 function getZombieTypeTable()
     Creep = {}
@@ -277,16 +314,11 @@ function getCentrailCreeperTypeTable()
 end
 
 function getCreeperTypeTable()
-    CreepTable = getJourneyCreeperTypeTable()
-
-    for key, v in pairs(getCentrailCreeperTypeTable()) do
-        CreepTable[key] = true
-    end
-
-    return CreepTable
+    return mergeDict( getJourneyCreeperTypeTable(),getCentrailCreeperTypeTable())
 end
 
-function getAbstractTypes(UnitDefNames)
+function getAbstractTypes(UnitDefNamesContext)
+	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
     AbstractTypes = {
         [UnitDefNames["csuborbexplo"].id] = true,
         [UnitDefNames["actionzone"].id] = true,
@@ -295,6 +327,8 @@ function getAbstractTypes(UnitDefNames)
         [UnitDefNames["ccomendernuke"].id] = true,
         [UnitDefNames["ccomendernukelvl3"].id] = true,
         [UnitDefNames["cawilduniverseappears"].id] = true,
+        [UnitDefNames["jtrafactory"].id] = true,
+        [UnitDefNames["jtrafactory2"].id] = true,
 		--TODO add all abstract types
      }
 
@@ -327,7 +361,7 @@ function getGravityChangeReistantUnitTypeTable(UnitDefNames)
         [UnitDefNames["jghostdancer"].id] = true
     }
 
-    return TransportTable
+    return mergeDict(TransportTable,getAbstractTypes())
 end
 
 function getRewardTable()

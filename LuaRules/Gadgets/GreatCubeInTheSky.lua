@@ -30,7 +30,7 @@ if not gadgetHandler:IsSyncedCode() then
 
 
 	--UNSYNCED
-	mapinfo =  VFS.Include("mapinfo.lua")
+	mapinfo =  VFS.Include('Map/MapInfo.lua', nil, VFSMODE) 
 	Spring.Echo("GreatCubeInTheSky::mapOptions")
 	echo(mapOptions)
 	

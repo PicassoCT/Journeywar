@@ -1,3 +1,11 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+
+
+
 boolShowTrueColours = false
  teamID = Spring.GetUnitTeam(tID)
 function checkYourself()

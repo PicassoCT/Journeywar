@@ -503,7 +503,7 @@ function actualExplosion()
     Sleep(13000)
     boolSmokeOnTheSlaughter = false
     Sleep(1500)
-    Spring.DestroyUnit(unitID, true, false)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function threadMill()
@@ -511,7 +511,7 @@ function threadMill()
         x, y, z = Spring.GetUnitPosition(unitID)
         Spring.SpawnCEG("nukebigland", x, y + 15, z, math.random(-1, 1), math.random(0.1, 1), math.random(-1, 1), 60)
         damageFunction()
-        Spring.DestroyUnit(unitID, true, true)
+        Spring.DestroyUnit(unitID, false, true)
     else
         StartThread(actualExplosion)
         StartThread(shroom)
