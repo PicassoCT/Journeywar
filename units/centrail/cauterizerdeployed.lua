@@ -3,7 +3,7 @@ local unitName = "cauterizerdeployed"
 local unitDef = {
 	name = "Cauterizer(deployed)",
 	Description = "Combat Drone <Areal Denial Unit>",
-	objectName = "placeholder.s3o",
+	objectName = "cauterizer.s3o",
 	script = "cauterizerdeployedscript.lua",
 	buildPic = "placeholder.dds",
 	
