@@ -29,7 +29,7 @@ local unitDef = {
 	TurnRate = 400,
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
-	
+	highTrajectory = 1,
 	
 	nanocolor=[[0 0.9 0.9]],
 	sightDistance = 500,

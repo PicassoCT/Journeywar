@@ -37,7 +37,7 @@ local moveDefs =
 		crushStrength = 25,
 	},
 	{
-		name = "truck",
+		name = "allterrain",
 		footprintX = 2,
 		maxWaterDepth = 20,
 		maxSlope = 35,

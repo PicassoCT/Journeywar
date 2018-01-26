@@ -463,12 +463,13 @@ function forward(number, speed, partNumber)
     TaskTable[number].FinnishedExecution = true
 end
 
---angleY 65
+
 function stabilize(number, speed, partNumber)
     TaskTable[number].FinnishedExecution = false
     signumYAxis = 1
     if number == Leg3 then signumYAxis = -1 end
-	x_deg, _, _ = Spring.UnitScript.GetPieceRotation(Leg53) 
+	x_deg, _, _ = Spring.UnitScript.GetPieceRotation(LegTable[number] ) 
+	angleY = math.random(110, 160)
  
     Turn(LegTable[number], y_axis, math.rad(-1 * angleY * signumYAxis), speed)
 	equiTurnAboveGround(LegTable[number], 
@@ -537,6 +538,7 @@ function walk()
                     [3] = stabilizeArc
                 }
             }
+			speed= 0.8
 
             TaskTable[Leg2] = {
                 CurrentFunctionIndex = 2,
@@ -562,17 +564,17 @@ function walk()
 
                 if TaskTable[Leg1].FinnishedExecution == true then
                     TaskTable[Leg1].CurrentFunctionIndex = (TaskTable[Leg1].CurrentFunctionIndex % 3) + 1
-                    StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, 1.41)
+                    StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, speed, 1)
                 end
 
                 if TaskTable[Leg2].FinnishedExecution == true then
                     TaskTable[Leg2].CurrentFunctionIndex = (TaskTable[Leg2].CurrentFunctionIndex % 3) + 1
-                    StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, 1.41)
+                    StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, speed, 2)
                 end
 
                 if TaskTable[Leg3].FinnishedExecution == true then
                     TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex % 3) + 1
-                    StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 1.41)
+                    StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, speed, 3)
                 end
 
                 Sleep(10)

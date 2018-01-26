@@ -29,6 +29,8 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
+	blocking = false,
+
 	Builder = true,
 	CanAttack = true,
 	CanRepair=false,

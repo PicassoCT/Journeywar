@@ -102,7 +102,7 @@ function OS_LOOP()
 				"cwatchpost",
 				"buibaicity2",
 				"crailgun",
-				"factoryspawndecorator"	
+				"factoryspawndecorator",	
 				"chopper",
 				})
 	randRobin= math.random(1,#baitType)

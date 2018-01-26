@@ -1,11 +1,11 @@
 local weaponName = "crabshell"
 local weaponDef = {
     name = "crabshell",
-    weaponType = [[Cannon]],
+    weaponType = [[MissileLauncher]],
     name = "HeadCrabShell",
 
 
-
+	highTrajectory =1,
     --
 
     --weapontimer=7,
@@ -32,7 +32,7 @@ local weaponDef = {
     model = "crabshell.s3o",
     smokeTrail = true,
     --explosionGenerator="xamelimpact",
-    CegTag="smoketrail",
+    --CegTag="smoketrail",
 
     --- -TARGETING
     turret = true,

@@ -26,7 +26,7 @@ function soundBarrierDetection()
 	timer= 0
 	while true do
 	x,y,z = Spring.GetUnitPosition(unitID)
-		if equal(distance(ox,oy,oz,x,y,z), speedOfSound, 3) and timer <= 0then
+		if equal(distance(ox,oy,oz,x,y,z), speedOfSound, 3) and timer <= 0	then
 			StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cauterizer/sonicboom.wav", 1, 2000, 1, 0)
 			spawnCEGAtPiece(unitID, cegemit, "supersonic",0,0,0,0,true)
 			 timer= 9000
