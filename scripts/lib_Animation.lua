@@ -2263,31 +2263,65 @@ function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove,
     end
 end
 
-function hoverSegway(PivotPiece, PowerPiece,  HoverPoint, PowerDir, Resolution, rotOffsetPiece,rotOffsetCounterPiece, axis, rotationValueFunction, activeFunction, speed)
+
+function equiTurnAboveGround(turnPiece, 
+							counterPiece, 
+							SensorPiece, 
+							targetY,
+							eqStart,
+							eqMin, 
+							eqMax, 
+							speed, 
+							resolution,
+							axis)
+Turn(turnPiece,y_axis,math.rad(targetY),speed)
+	while true == Spring.UnitScript.IsInTurn(turnPiece,y_axis) do
+		inc= -1
+		if isPieceAboveGround(unitID,SensorPiece) then inc= 1 end
+		eqStart= math.max(eqMin,math.min(eqMax,eqStart + inc))
+		equiTurn(turnPiece, counterPiece, axis, eqStart,speed )
+		Sleep(resolution)
+	end
+end
+--> Keeps a piece system hovering upright at a HoverPoint
+function hoverSegway(
+					 PivotPiece,
+					 PowerPiece, 
+					 HoverPoint,
+					 Resolution, 
+					 rotOffsetPivotPiece,
+					 rotOffsetPowerPiece,
+					 axis, 
+					 rotationValueFunction, 
+					 activeFunction, 
+					 speed,
+					 restoreSpeed)
+					 
 PivotPos = getPiecePosDir(unitID, PivotPiece)
 PowerPos =  getPiecePosDir(unitID, PowerPiece)
+speedPerMs=  (speed/1000)
+restoreSpeedPerMs=  (restoreSpeed/1000)
 
 	while activeFunction()== true do
 	--update PiecePosition (asuming )
 	Diff= PivotPos - PowerPos
 		gravityOfSituation= 1
-		while math.abs(Diff.x) > 5 or math.abs(Diff.y) > 5 or  PivotPos.y <=  PowerPiece.y do  -- not PivotPiece  over PowerPiece
+		while math.abs(Diff.x) > 2 or math.abs(Diff.y) > 2 or  PivotPos.y <=  PowerPiece.y do  -- not PivotPiece  over PowerPiece
 		CounnterTurn = 0
 		--Turn 
 		factor= math.min(math.abs(10/Diff[axToKey(axis)]),1)
 		sign= Diff[axToKey(axis)]/math.abs(Diff[axToKey(axis)])
 		rotValue = rotationValueFunction(axis)
-		Turn(PivotPiece,axis,math.rad(rotOffsetPiece + rotValue+ *sign),speed)
-		Turn(PowerPiece,axis,math.rad(rotOffsetCounterPiece + 90*factor*sign),speed*3)
+		Turn(PivotPiece,axis,math.rad(rotOffsetPivotPiece + rotValue+  speedPerMs*Resolution*sign),speed)
+		Turn(PowerPiece,axis,math.rad(rotOffsetPowerPiece + 90*factor*sign),speed*3)
 		
 		--fall 
-		gravityOfSituation = gravityOfSituation *1.5
-	
-		Move(PivotPiece, axis, PivotPiece[axToKey(axis)] - gravityOfSituation, (speed/1000)*Resolution )
+		gravityOfSituation = gravityOfSituation *1.5*Resolution 
 						
 		Sleep(Resolution)
 		end
-			Move(PivotPiece, axis,math.min(PivotPiece.x+ (speed/1000)*Resolution,HoverPoint.x),speed)
+			mP(PivotPiece,HoverPoint.x,HoverPoint.y,Hover.z, restoreSpeedPerMs )
+			Move(PivotPiece, axis,math.min(PivotPiece.x+ speedPerMs*Resolution,HoverPoint.x),speed)
 
 	Sleep(Resolution)
 

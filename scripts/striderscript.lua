@@ -54,19 +54,23 @@ local StriTable = {
         UpLeg = striderlegA3, --1
         Leg = striderlegB3,
         LowLeg = striderlegC3,
-        UpOrg = pOrg1
+        UpOrg = pOrg1,
+		Sensor = Sens1
+		
     },
     [2] = {
         UpLeg = striderlegA, --2
         Leg = striderlegB,
         LowLeg = striderlegC,
-        UpOrg = pOrg2
+        UpOrg = pOrg2,
+		Sensor = Sens2
     },
     [3] = {
         UpLeg = striderlegA2, --3
         Leg = striderlegB2,
         LowLeg = striderlegC2,
-        UpOrg = pOrg3
+        UpOrg = pOrg,
+		Sensor = Sens3
     }
 }
 
@@ -437,7 +441,7 @@ function deactiveAnim(number, signal)
     WaitForTurns(StriTable[number].Leg, StriTable[number].UpOrg)
 end
 
-function forward(number, speed)
+function forward(number, speed, partNumber)
     TaskTable[number].FinnishedExecution = false
 
     Turn(LegTable[number + 1], x_axis, math.rad(22), speed)
@@ -447,24 +451,37 @@ function forward(number, speed)
     Turn(LegTable[number], y_axis, math.rad(0), speed)
     WaitForTurns(LegTable[number])
     WaitForTurns(LegTable[number + 1])
-    Turn(LegTable[number], x_axis, math.rad(-29), speed)
-    Turn(LegTable[number + 1], x_axis, math.rad(29), speed)
-
-    WaitForTurns(LegTable[number], LegTable[number + 1])
+	
+	for i=-35, -15, -2 do
+		Turn(LegTable[number], x_axis, math.rad(i), speed)
+		Turn(LegTable[number + 1], x_axis, math.rad(-i), speed)
+		WaitForTurns(LegTable[number], LegTable[number + 1])
+			if isPieceAboveGround(unitID, StriTable[partNumber].Sensor)== false then
+				break
+			end
+	end
     TaskTable[number].FinnishedExecution = true
 end
 
 --angleY 65
-function stabilize(number, speed)
+function stabilize(number, speed, partNumber)
     TaskTable[number].FinnishedExecution = false
     signumYAxis = 1
     if number == Leg3 then signumYAxis = -1 end
-    angleY = math.random(110, 160)
-
-    Turn(LegTable[number], x_axis, math.rad(25), speed)
-    Turn(LegTable[number + 1], x_axis, math.rad(-25), speed)
+	x_deg, _, _ = Spring.UnitScript.GetPieceRotation(Leg53) 
+ 
     Turn(LegTable[number], y_axis, math.rad(-1 * angleY * signumYAxis), speed)
-
+	equiTurnAboveGround(LegTable[number], 
+							LegTable[number + 1], 
+							StriTable[partNumber].Sensor, 
+							-1 * angleY * signumYAxis,
+							x_deg,
+							10, 
+							-10, 
+							speed, 
+							250,
+							x_axis)
+	
     WaitForTurns(LegTable[number], LegTable[number + 1])
     TaskTable[number].FinnishedExecution = true
 end
