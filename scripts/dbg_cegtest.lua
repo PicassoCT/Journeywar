@@ -59,7 +59,7 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-	Spring.SpawnCEG("supersonic", x, y + 70, z, 0, 1, 0, 60)
+	Spring.SpawnCEG("supersonic", x, y + 70, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
 	Sleep(9000)
 		
 	end

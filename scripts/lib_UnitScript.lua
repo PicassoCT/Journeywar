@@ -2409,6 +2409,22 @@ function get2DSquareFormationPosition(nr, size, unitsInRow)
 	return row*size, place*size
 end
 
+function getAveragePosT(T)
+ax,ay,az= 0,0,0
+counter= 0
+process(T,
+		function(id)
+		ix,iy,iz= Spring.GetUnitPiecePosDir(unitID,id)
+			if ix then
+			ax,ay,az= ax +ix, ay +iy, az +iz
+			counter = counter+1
+			end
+		end
+		)
+return ax/counter,ay/counter,az/counter		
+
+end
+
 --> returns the Midpoint of two given points
 function getMidPoint(a, b)
     ax, ay, az = a.x, a.y, a.z
@@ -2940,12 +2956,12 @@ function approxDist(x, y, z, digitsPrecision)
     return lastResult
 end
 
---> increment a value by ref
+--> increment a value 
 function inc(value)
     return value + 1
 end
 
---> decrement a value by ref
+--> decrement a value 
 function dec(value)
     return value - 1
 end
@@ -5033,7 +5049,7 @@ end
 --> create a CEG at the given Piece with direction or piecedirectional Vector
 function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDirectional)
 	if not dx then --default to upvector 
-		dx,y,dz = 0, 1,0
+		dx,dy,dz = 0, 1,0
 	end
 	
     boolAdd = offset or 10
@@ -5044,7 +5060,7 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDir
     if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     x, y, z,mx,my,mz = Spring.GetUnitPiecePosDir(unitID, pieceId)
 	if boolPieceDirectional and boolPieceDirectional== true then
-		dx,y,dz = mx,my,mz
+		dx,dy,dz = mx,my,mz
 	end
 	
     if y then

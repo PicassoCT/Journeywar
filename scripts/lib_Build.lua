@@ -447,7 +447,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		Hide(ConCenter)
 		reset(ConCenter)
 		
-		hideAllPieces(unitID)
+		hideAll(unitID)
 		Move(BodyPieces[1],x_axis, 0, 0, true)	
 		Move(BodyPieces[1],y_axis, 0, 0, true)	
 		Move(BodyPieces[1],z_axis, 0, 0, true)	

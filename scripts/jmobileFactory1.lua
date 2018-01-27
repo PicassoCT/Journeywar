@@ -188,7 +188,7 @@ function LaunchSkywards()
     end
 
 
-    hideAllPieces(unitID)
+    hideAll(unitID)
 end
 
 function updateBoolisBuilding()

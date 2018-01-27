@@ -48,6 +48,14 @@ local unitDef = {
   turnRadius          = 30,
   workerTime          = 0,
   
+  	sfxtypes = {
+		explosiongenerators = {
+			"custom:supersonic",
+		},
+		
+	},
+	
+	
 	
 	weapons = {
 		[1]={name = "ccauterizermark",

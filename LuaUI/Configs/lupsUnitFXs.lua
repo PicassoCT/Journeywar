@@ -72,7 +72,7 @@ effectUnitDefs = {
 		
 		{class='ShieldSphere', options={life=math.huge, pos={0,496,0}, size=1000, onActive=true, colormap1 = {{0.2, 0.8, 0.9, 0.8}}, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,496,0}, size=1024,onActive=true, precision=22, strength = 0.042, repeatEffect=true}},
-		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,498,0}, size=5, precision=22, strength = 0.15, repeatEffect=true}},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,503,0}, size=5, precision=22, strength = 0.015, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,613,0}, size=100, precision=22, strength = 0.005, repeatEffect=true}},
 	},
 	

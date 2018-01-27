@@ -2091,13 +2091,6 @@ function showAllPieces(unitID)
     end
 end
 
-function hideAllPieces(unitID)
-    List = Spring.GetUnitPieceMap(unitID)
-
-    for k, v in pairs(List) do
-        Hide(v)
-    end
-end
 
 -->Shows a Pieces Table
 function showT(tablename, lowLimit, upLimit, delay)
@@ -2273,7 +2266,8 @@ function equiTurnAboveGround(turnPiece,
 							eqMax, 
 							speed, 
 							resolution,
-							axis)
+							axis
+							)
 Turn(turnPiece,y_axis,math.rad(targetY),speed)
 	while true == Spring.UnitScript.IsInTurn(turnPiece,y_axis) do
 		inc= -1

@@ -306,9 +306,10 @@ function torchAnimation()
         if boolTorchIt == true then
             sign = -1
             ShitWasSoCache = {}
-            x, y, z = Spring.GetUnitPosition(unitID)
+           
             getInFlamePose()
             while boolTorchIt == true do
+				x, y, z = Spring.GetUnitPosition(unitID)
                 flameSFX(x, y, z)
                 TorchUnits(x, y, z, range)
                 TorchFeatures(x, y, z, range)
