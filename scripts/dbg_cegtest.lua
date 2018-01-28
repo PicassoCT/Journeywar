@@ -18,11 +18,46 @@ function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(saySay)
 	StartThread(emitSFX)
+	StartThread(hovertest)
+	StartThread(switchMove)
 	-- StartThread(testTurnInTime)
 	echo(minimalAbsoluteDistance(15,-15))
 	echo(minimalAbsoluteDistance(-15,-15))
 	echo(minimalAbsoluteDistance(-15,15))
 	echo(minimalAbsoluteDistance(360,-270))
+end
+Body= piece"dronetest"
+InnerWing= piece"power"
+HoverPoint = piece"HoverPoint"
+boolMoving=false
+function switchMove()
+while true do
+
+Sleep(100000)
+boolMoving = true
+end
+
+end
+function hovertest()
+while true do
+	Turn(Body,x_axis,math.rad(math.random(-100,100)),0,true)
+	Sleep(1000)
+    hoverSegway(
+					  Body,
+					 InnerWing, 
+					 HoverPoint,
+					 50, 
+					 -90,
+					 90,
+					 x_axis, 
+					 function(axis) return select(axis,Spring.UnitScript.GetPieceRotation(Body)) end,
+					 function() return boolMoving end, 
+					 math.pi/10,
+					 math.pi
+					 )
+
+Sleep(1000)
+end
 end
 
 function script.Killed(recentDamage, _)

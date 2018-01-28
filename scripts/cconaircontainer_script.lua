@@ -19,7 +19,7 @@ function rewardTheFaithFull()
     timer = 42000
     while timer > 0 do
         x, y, z = Spring.GetUnitPosition(unitID)
-        T = getAllInCircle(x, z, 60, unitID, teamid)
+        T = getAllInCircle(x, z, 120, unitID, teamid)
         if T and #T > 0 then
 				process(T,
 					function(id)

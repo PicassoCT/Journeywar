@@ -9,36 +9,48 @@ TablesOfPiecesGroups = {}
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
 end
-bodyCenter = piece"bodyCenter"
-GattlingCenter = piece "GattlingCenter"
-GattlingDeploy = piece "GattlingDeploy"
-hoverPos = piece"hoverPos"
+center = piece"center"
+GRing = piece "GRing"
+GatRetract = piece "GatRetract"
+HoverPoint = piece"HoverPoint"
 center = piece "center"
-aimpiece = piece "aimpiece"
-cegemit= piece"cegemit"
+aimpiece = piece "eyes"
 
 --Out
-BodyO		= "BodyO"
-outerFinO = piece "outerFinO"
-innerFinO = piece "innerFinO"
+GatRetract= piece"GatRetract"
 
-OuterFinCenter 	= piece "OuterFinCenter"
-InnerFinCenter 	= piece "InnerFinCenter"
 --Firing
-BodyF		="BodyF"
-outerFinF 	= piece "outerFinF"
-innerFinF 	= piece "innerFinF"
+Body		=piece-----------------------------------------------"Body0"
 
-swingJet 	= piece "swingJet"
 
 lifeTimeInMinutes = 3
-AMMUNITION = 600
+AMMUNITION = 100
+
+function configure()
+resetT(TablesOfPiecesGroups)
+	
+	hideAll(unitID)
+	showT(TablesOfPiecesGroups["Antenna"])
+	Move(GatRetract,z_axis,0,7)
+	Show(TablesOfPiecesGroups["Glow"][1])
+	Show(aimpiece)
+	Show(TablesOfPiecesGroups["Cone"][2])
+	Show(TablesOfPiecesGroups["Body"][2])
+	Show(TablesOfPiecesGroups["InnerWing"][2])
+	Show(TablesOfPiecesGroups["Compress"][2])
+	Show(TablesOfPiecesGroups["OuterWing"][2])
+	for i=1,3 do		
+		Move(TablesOfPiecesGroups["Antenna"][i],z_axis,i*-
+		5, 0)
+	end
+end
+
 
 function script.Create()
   generatepiecesTableAndArrayCode(unitID)
   TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
-  resetT(TablesOfPiecesGroups)
-  StartThread(transformFromPlaneToDroneAnimation)
+
+  configure()
   StartThread(AnimationLoop)
 end
 
@@ -46,19 +58,31 @@ function script.Killed(recentDamage, _)
   createCorpseCUnitGeneric(recentDamage)
   return 1
 end
-
+boolAiming= false 
+boolMoving= false
 function AnimationLoop()
   StartThread(GattlingAnimation)
-  while boolFireReady == false do
-    Sleep(100)
-  end
-
+ 
   while true do		
     while boolAiming == false do
-      if boolMoving then
+      if boolMoving == true  then
+
         directionalHoveringAnimation()
       else
-        hoverInPlaceAnimation()
+	  Spring.Echo("Hovering Segway")
+        hoverSegway(
+					  Body,
+					 InnerWing, 
+					 HoverPoint,
+					 50, 
+					 -90,
+					 90,
+					 x_axis, 
+					 function(axis) return select(1,Spring.UnitScript.GetPieceRotation(Body)) end,
+					 function() return boolMoving end, 
+					 math.pi/10,
+					 math.pi
+					 )
       end
       Sleep(10)
     end
@@ -70,36 +94,40 @@ function AnimationLoop()
     Sleep(10)
   end
 end
+function directionalHoveringAnimation()
+Spring.Echo("TODO:directionalHoveringAnimation")
+end
+
+function compensateForBodyRotationAnimation()
+Turn(InnerWing,x_axis,-globalPitch,15)
+Turn(OuterWing,x_axis,globalPitch,15)
+
+end
+function finalizeFunction()
+--fire final starburst at last attacked enemy or last attacker
+end
 
 function GattlingAnimation()
-  while boolFireReady == false do Sleep(100 ) end
-  WMove(GattlingDeploy,x_axis, 3, 3)
-  glowLevelGattlingT = TablesOfPiecesGroups["GatGlowLvl"]
+
+  
+  glowLevelGattlingT = TablesOfPiecesGroups["Glow"]
   while AMMUNITION > 0 do
-    Counter= 0
 	glowIndex=1
+	Spin(GRing,z_axis, math.rad(142),12)
     while boolCeasedFiring == false do 
-      Spin(GattlingCenter,x_axis, math.rad(442),0.3)
-      Counter= Counter + 1
-	 glowIndex = math.max(1,math.min(math.ceil(glowIndex)+1, #glowLevelGattlingT))
-	 hideT(glowLevelGattlingT)
-	 Show(glowLevelGattlingT[glowIndex])
-      if Counter > 5 then
-        Hide(GattlingO)
-        Show(GattlingF)
-      else
-        Hide(GattlingF)
-        Show(GattlingO)
-      end
+		glowIndex = math.max(1,math.min(math.ceil(glowIndex+1), #glowLevelGattlingT))
+		hideT(glowLevelGattlingT)
+		Show(glowLevelGattlingT[glowIndex])
+		Sleep(1000)
     end
-    Spin(GattlingCenter,x_axis, math.rad(0),0.3)
-	glowIndex = math.max(1,glowIndex -0.1)
+    Spin(GRing,z_axis, math.rad(0),0.3)
+	glowIndex = math.max(1,glowIndex -0.01)
 	hideT(glowLevelGattlingT)
 	Show(glowLevelGattlingT[math.ceil(glowIndex)])
     Sleep(100)
   end
-  WMove(GattlingDeploy,x_axis,0,1)
-  StopSpin(GattlingCenter,x_axis,0.3)
+  WMove(GatRetract,x_axis,-5,1)
+  StopSpin(GRing,z_axis,0.3)
 end
 
 function showDroneExaust()
@@ -109,54 +137,24 @@ end
 
 --- -aimining & fire weapon Gattling
 function script.AimFromWeapon1()
-  return aimpiece
+  return GatRetract
 end
 
 function script.QueryWeapon1()
-  return aimpiece
-end
-function finalizeFunction()
---fire final starburst at last attacked enemy or last attacker
-end
-function transformFromPlaneToDroneAnimation()
-
-  boolFireReady = false
-  StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cauterizer/howling.wav", 1, 2000, 1, 0)
-	spawnCEGAtPiece(unitID, cegemit, "supersonic",0,0,0,0,true)
-  for i=5, 90,5 do
-    tSyncIn(swingJet,i,0,0,i*10)
-    WaitForTurns(swingJet)
-	if i > 45 then
-		Turn(OuterFinCenter,x_axis,0)
-		Turn(InnerFinCenter,x_axis,math.rad(90),3)
-	end
-  end
-  Turn(OuterFinCenter,x_axis,0)
-  Turn(InnerFinCenter,x_axis,math.rad(90),3)
-  Show(BodyO)
-  Hide(BodyF)
-  Hide(outerFinO)
-  Show(outerFinF)
-  StartThread(lifeTime ,unitID, lifeTimeInMinutes* 60 * 1000, false, true, finalizeFunction)
-  StartThread(showDroneExaust)
-  movePieceToPiece(bodyCenter, swingJet,5)
-  movePieceToPiece(swingJet, hoverPos,5)
-  WaitForMoves(bodyCenter,swingJet)
-  movePieceToPiece(swingJet, hoverPos,5)
-  WaitForMoves(bodyCenter,swingJet)
-
-  boolFireReady= true
+  return GatRetract
 end
 
-boolFireReady = false
+boolFireReady = true
 globalPitch= 0
 function script.AimWeapon1(Heading, pitch)
   if boolFireReady == true then
+	boolAiming=true
     Turn(center,y_axis,Heading,3)
     globalPitch= pitch
-    Turn(bodyCenter,x_axis,-pitch ,3)
+    Turn(center,x_axis,-pitch ,3)
     WaitForTurn(center,y_axis)
     WaitForTurn(center,x_axis)
+	
   end
   return boolFireReady ==true and AMMUNITION > 0
 end
@@ -170,8 +168,12 @@ function delayedDeactivationGun()
   boolCeasedFiring = true
 end
 
+myDefID = Spring.GetUnitDefID(unitID)
+
 function script.FireWeapon1()
-  StartThread(delayedDeactivationGun)
+	boolAiming=false
+	StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cauterizer/attack.ogg", 1, 1500 , 1, 0)
+	StartThread(delayedDeactivationGun)
   Spring.Echo("Cauterizer:: Ammunition ".. AMMUNITION)
   AMMUNITION = AMMUNITION -1
   return true
@@ -209,10 +211,21 @@ end
 
 
 function script.StartMoving()
+	boolMoving= true
   Turn(center,y_axis,0,0.5)
 end
 
+SIG_STOP = 2
+
+function delayedStop()
+Signal(SIG_STOP)
+SetSignalMask(SIG_STOP)
+Sleep(250)
+boolMoving = false
+end
+
 function script.StopMoving()
+StartThread(delayedStop)
 end
 
 function script.Activate()

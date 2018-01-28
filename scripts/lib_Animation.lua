@@ -2289,27 +2289,29 @@ function hoverSegway(
 					 rotationValueFunction, 
 					 activeFunction, 
 					 speed,
-					 restoreSpeed)
+					 restoreSpeed
+					 )
 					 
 PivotPos = getPiecePosDir(unitID, PivotPiece)
 PowerPos =  getPiecePosDir(unitID, PowerPiece)
 speedPerMs=  (speed/1000)
 restoreSpeedPerMs=  (restoreSpeed/1000)
-
-	while activeFunction()== true do
+oldDiff= Vector:new(0,0,0)
+	while true do
 	--update PiecePosition (asuming )
 	Diff= PivotPos - PowerPos
 		gravityOfSituation= 1
-		while math.abs(Diff.x) > 2 or math.abs(Diff.y) > 2 or  PivotPos.y <=  PowerPiece.y do  -- not PivotPiece  over PowerPiece
+		echo(Diff)
+		while math.abs(Diff.x) > 8 or math.abs(Diff.z) > 8 or  PivotPos.y <=  PowerPos.y do  -- not PivotPiece  over PowerPiece
 		CounnterTurn = 0
 		--Turn 
 		factor= math.min(math.abs(10/Diff[axToKey(axis)]),1)
 		sign= Diff[axToKey(axis)]/math.abs(Diff[axToKey(axis)])
 		rotValue = rotationValueFunction(axis)
 
-		Turn(PivotPiece,axis,math.rad(rotOffsetPivotPiece + rotValue+  speedPerMs*Resolution*sign),speed)
+		Turn(PivotPiece,axis,rotValue+ math.rad(rotOffsetPivotPiece +   speedPerMs*Resolution*sign),speed)
 		Turn(PowerPiece,axis,math.rad(rotOffsetPowerPiece + 90*factor*sign),speed*3)
-
+		mP(PivotPiece,HoverPoint.x,HoverPoint.y-falling,Hover.z, restoreSpeedPerMs )
 		
 		--fall 
 		gravityOfSituation = gravityOfSituation *1.5*Resolution 
@@ -2326,36 +2328,6 @@ end
 
 
 
-function hoverSegway(PivotPiece, PowerPiece,  HoverPoint, PowerDir, Resolution, rotOffsetPiece,rotOffsetCounterPiece, axis, rotationValueFunction, activeFunction, speed)
-PivotPos = getPiecePosDir(unitID, PivotPiece)
-PowerPos =  getPiecePosDir(unitID, PowerPiece)
-
-	while activeFunction()== true do
-	--update PiecePosition (asuming )
-	Diff= PivotPos - PowerPos
-		gravityOfSituation= 1
-		while math.abs(Diff.x) > 5 or math.abs(Diff.y) > 5 or  PivotPos.y <=  PowerPiece.y do  -- not PivotPiece  over PowerPiece
-		CounnterTurn = 0
-		--Turn 
-		factor= math.min(math.abs(10/Diff[axToKey(axis)]),1)
-		sign= Diff[axToKey(axis)]/math.abs(Diff[axToKey(axis)])
-		rotValue = rotationValueFunction(axis)
-		Turn(PivotPiece,axis,math.rad(rotOffsetPiece + rotValue*sign),speed)
-		Turn(PowerPiece,axis,math.rad(rotOffsetCounterPiece + 90*factor*sign),speed*3)
-		
-		--fall 
-		gravityOfSituation = gravityOfSituation *1.5
-	
-		Move(PivotPiece, axis, PivotPiece[axToKey(axis)] - gravityOfSituation, (speed/1000)*Resolution )
-						
-		Sleep(Resolution)
-		end
-			Move(PivotPiece, axis,math.min(PivotPiece.x+ (speed/1000)*Resolution,HoverPoint.x),speed)
-
-	Sleep(Resolution)
-
-	end
-end
 --================================================================================================================
 --====================================Little Flying Cars  Clockworkanimation======================================
 

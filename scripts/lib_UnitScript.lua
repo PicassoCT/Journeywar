@@ -406,8 +406,9 @@ function getPieceChain(hierarchy, startPiece, endPiece)
     return pieceChain
 end
 
-function getPiecePosDir(unitID, Piece)
-px,py,pz, dx,dy,dz= Spring.GetUnitPiecePosDir(unitID, Piece)
+function getPiecePosDir(unitID, P)
+
+px,py,pz, dx,dy,dz= Spring.GetUnitPiecePosDir(unitID, P)
 return Vector:new(px,py,pz), Vector:new(dx,dy,dz)
 
 end
