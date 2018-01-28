@@ -507,7 +507,7 @@ function turnInTime(piecename, taxis, goalDeg, timeInMs, x_startdeg, y_startdeg,
     absoluteDeg = math.ceil(minimalAbsoluteDistance(goalDeg, startDeg))
 	 
     timeInMs = (timeInMs + 1) / 1000
-    Speed = (math.abs(math.rad(absoluteDeg)) / math.pi) / (math.abs(timeInMs)) --9.3
+    Speed = math.rad(math.abs(absoluteDeg) / (math.abs(timeInMs))) --9.3
 
     if absoluteDeg < 0.0001 then return end
 

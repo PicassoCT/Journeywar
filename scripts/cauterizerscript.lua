@@ -20,12 +20,12 @@ function script.Create()
 	configure()
 	StartThread(soundBarrierDetection)
 	StartThread(delayedConditionUpdate)
+	StartThread(transformIntoAttackState)
 end
 
 function configure()
-
-	hideT(TablesOfPiecesGroups)
 	resetT(TablesOfPiecesGroups)
+	hideT(TablesOfPiecesGroups)
 	Turn(center,y_axis,math.rad(180),0)
 	Show(TablesOfPiecesGroups["Glow"][4])
 	Show(aimpiece)
@@ -59,7 +59,6 @@ function soundBarrierDetection()
 			
 			Norm= math.sqrt(dx^2+dy^2+dz^2)
 			EmitSfx(center, 1024)
-		--	spawnCegAtPiece(unitID, cegemit, "supersonic",0,dx/Norm,dy/Norm, dz/Norm, false)
 	
 			timer= 12000
 		end
@@ -112,14 +111,41 @@ function script.FireWeapon1()
 	--StartThread(transformIntoAttackState)
     return true
 end
+swing = piece"swing"
+InnerWing = piece"InnerWing0"
+OuterWing = piece"OuterWing0"
+function transformAnimation()
+tSyncIn(swing,90,0,0,4000)
+WaitForTurns(swing)
+Sleep(1000)
+tSyncIn(swing,0,0,0,4000)
+WaitForTurns(swing)
+Sleep(1000)
+-- tSyncIn(InnerWing,90,0,0, 3000)
+-- tSyncIn(OuterWing,-180,0,0, 3000)
+-- WaitForTurns(swing,InnerWing,OuterWing)
+-- EmitSfx(center, 1024)
+
+end
 
 boolOnlyOnce = false
 boolTransformComplete= false
 function transformIntoAttackState()
+	while true do
+		--resetT(TablesOfPiecesGroups)
+		configure()
+		Sleep(1000)
+		transformAnimation()
+		Sleep(1000)
+	end
+
 if boolOnlyOnce == false then
  boolOnlyOnce = true else return end
 Sleep(100)
 Spring.MoveCtrl.Enable(unitID,true)
+
+
+
 	while nil == transformUnitInto(unitID,"cauterizerdeployed") do
 	Sleep(100) 
 	end

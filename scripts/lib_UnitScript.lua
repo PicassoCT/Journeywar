@@ -2898,6 +2898,17 @@ function setParent(unitID, child)
     end
 end
 
+function distanceUnitToPoint(ed, x, y, z)
+ex,ey,ez = Spring.GetUnitPosition(ed)
+	if ex then 
+		return distance(ex,ey,ez,x,y,z)
+	else 
+		return 0
+	end
+
+end
+
+
 --> distance from a UnitPiece to another Units Center
 function distancePieceToUnit(unitID, Piece, targetID)
 	ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, Piece)
