@@ -50,7 +50,7 @@ while true do
 					 -90,
 					 90,
 					 x_axis, 
-					 function(axis) return select(axis,Spring.UnitScript.GetPieceRotation(Body)) end,
+					 function(axis, p) return select(axis,Spring.UnitScript.GetPieceRotation(p)) end,
 					 function() return boolMoving end, 
 					 math.pi/10,
 					 math.pi
@@ -94,7 +94,7 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-	Spring.SpawnCEG("supersonic", x, y + 70, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
+	Spring.SpawnCEG("infantrydissolve", x+100, y + 70, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
 	Sleep(9000)
 		
 	end
