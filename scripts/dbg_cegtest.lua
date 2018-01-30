@@ -42,7 +42,7 @@ function hovertest()
 while true do
 	Turn(Body,x_axis,math.rad(math.random(-100,100)),0,true)
 	Sleep(1000)
-    hoverSegway(
+    hoverSegway(      center,
 					  Body,
 					 InnerWing, 
 					 HoverPoint,

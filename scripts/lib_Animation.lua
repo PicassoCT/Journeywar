@@ -2278,7 +2278,7 @@ Turn(turnPiece,y_axis,math.rad(targetY),speed)
 	end
 end
 --> Keeps a piece system hovering upright at a HoverPoint
-function hoverSegway(
+function hoverSegway(SystemPiece,
 					 PivotPiece,
 					 PowerPiece, 
 					 HoverPiece,
@@ -2329,12 +2329,12 @@ restoreSpeedPerMs=  (restoreSpeed/1000)
 	
 		--fall 
 		gravityOfSituation = gravityOfSituation *1.5*Resolution 
-		mP(PivotPiece,HoverPoint.x,gravityOfSituation,HoverPoint.z, restoreSpeedPerMs*counter )		
+		mP(SystemPiece,HoverPoint.x, HoverPoint.y - gravityOfSituation,HoverPoint.z, restoreSpeedPerMs*counter )		
 		Sleep(Resolution)
 		OlDiff= Diff
 		end
 
-			mP(PivotPiece,HoverPoint.x,HoverPoint.y,Hover.z, restoreSpeedPerMs )
+			mP(SystemPiece,HoverPoint.x,HoverPoint.y,Hover.z, restoreSpeedPerMs )
 			Move(PivotPiece, axis,math.min(PivotPiece.x+ speedPerMs*Resolution,HoverPoint.x),speed)
 
 	Sleep(Resolution)
