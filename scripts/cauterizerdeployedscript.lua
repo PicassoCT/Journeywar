@@ -27,11 +27,11 @@ lifeTimeInMinutes = 3
 AMMUNITION = 100
 
 function configure()
-resetT(TablesOfPiecesGroups)
+	resetAll(unitID)
 	
 	hideAll(unitID)
 	showT(TablesOfPiecesGroups["Antenna"])
-	Move(GatRetract,z_axis,0,7)
+
 	Show(TablesOfPiecesGroups["Glow"][1])
 	Show(aimpiece)
 	Show(TablesOfPiecesGroups["Cone"][2])
@@ -69,7 +69,6 @@ function AnimationLoop()
 
         directionalHoveringAnimation()
       else
-	  Spring.Echo("Hovering Segway")
         hoverSegway(
 					  Body,
 					 InnerWing, 
@@ -78,7 +77,7 @@ function AnimationLoop()
 					 -90,
 					 90,
 					 x_axis, 
-					 function(axis) return select(1,Spring.UnitScript.GetPieceRotation(Body)) end,
+					 function(axis, p) return select(1,Spring.UnitScript.GetPieceRotation(p)) end,
 					 function() return boolMoving end, 
 					 math.pi/10,
 					 math.pi
@@ -193,7 +192,7 @@ boolOneShot = true
 function script.AimWeapon2(Heading, pitch)
   --aiming animation: instantly turn the gun towards the enemy
 
-  return AMMUNITION < 1 and boolOneShot == true
+  return AMMUNITION <= 1 and boolOneShot == true
 end
 
 function foldAnimation()

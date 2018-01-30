@@ -2281,7 +2281,7 @@ end
 function hoverSegway(
 					 PivotPiece,
 					 PowerPiece, 
-					 HoverPoint,
+					 HoverPiece,
 					 Resolution, 
 					 rotOffsetPivotPiece,
 					 rotOffsetPowerPiece,
@@ -2294,36 +2294,51 @@ function hoverSegway(
 					 
 PivotPos = getPiecePosDir(unitID, PivotPiece)
 PowerPos =  getPiecePosDir(unitID, PowerPiece)
+
+HoverPoint=getPiecePosDir(unitID,HoverPiece)
+
 speedPerMs=  (speed/1000)
 restoreSpeedPerMs=  (restoreSpeed/1000)
-oldDiff= Vector:new(0,0,0)
-	while true do
+
 	--update PiecePosition (asuming )
 	Diff= PivotPos - PowerPos
+	OlDiff= Diff
 		gravityOfSituation= 1
-		echo(Diff)
-		while math.abs(Diff.x) > 8 or math.abs(Diff.z) > 8 or  PivotPos.y <=  PowerPos.y do  -- not PivotPiece  over PowerPiece
-		CounnterTurn = 0
+
+		sign=1
+		maxY= Diff.y
+		newDiffY= Diff.y - 4
+		counter= 0
+		while math.abs(Diff.x) > 8 or math.abs(Diff.z) > 8 or  PivotPos.y <=  PowerPos.y do  -- not PivotPiece  over 
+		counter= inc(counter)
+		--update HoverPoint
+		HoverPoint=getPiecePosDir(unitID,HoverPiece)
+		PivotPos = getPiecePosDir(unitID, PivotPiece)
+		PowerPos =  getPiecePosDir(unitID, PowerPiece)
+		Diff= PivotPos - PowerPos
+		if OlDiff.y < Diff.y then sign= sign*-1 end
+		
 		--Turn 
 		factor= math.min(math.abs(10/Diff[axToKey(axis)]),1)
 		sign= Diff[axToKey(axis)]/math.abs(Diff[axToKey(axis)])
-		rotValue = rotationValueFunction(axis)
+		rotValue = rotationValueFunction(axis, Body)
 
-		Turn(PivotPiece,axis,rotValue+ math.rad(rotOffsetPivotPiece +   speedPerMs*Resolution*sign),speed)
+		Turn(PivotPiece,axis,rotValue,speed)
+	--	Turn(PivotPiece,axis,rotValue + math.rad(rotOffsetPivotPiece +   speedPerMs*Resolution*sign),speed)
 		Turn(PowerPiece,axis,math.rad(rotOffsetPowerPiece + 90*factor*sign),speed*3)
-		mP(PivotPiece,HoverPoint.x,HoverPoint.y-falling,Hover.z, restoreSpeedPerMs )
-		
+	
 		--fall 
 		gravityOfSituation = gravityOfSituation *1.5*Resolution 
-						
+		mP(PivotPiece,HoverPoint.x,gravityOfSituation,HoverPoint.z, restoreSpeedPerMs*counter )		
 		Sleep(Resolution)
+		OlDiff= Diff
 		end
+
 			mP(PivotPiece,HoverPoint.x,HoverPoint.y,Hover.z, restoreSpeedPerMs )
 			Move(PivotPiece, axis,math.min(PivotPiece.x+ speedPerMs*Resolution,HoverPoint.x),speed)
 
 	Sleep(Resolution)
 
-	end
 end
 
 
