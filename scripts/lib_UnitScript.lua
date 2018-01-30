@@ -2857,7 +2857,12 @@ function pointWithinTriangle(x1, y1, x2, y2, x3, y3, xt, yt)
         return false
     end
 end
+function distanceToLine(P1, P2, APos)
+return  math.abs((P2.y -P1.y)*APos.x  - (P2.x -P1.x)*APos.y +(P2.x *P1.y) - (P2.y*P1.x))/
+							math.sqrt( (P2.y -P1.y)*(P2.y -P1.y) +  (P2.x -P1.x)*(P2.x -P1.x));
+	
 
+end
 -->returns the absolute distance on negative and positive values
 function absDistance(valA, valB) 
 
