@@ -24,7 +24,7 @@ Body		=piece-----------------------------------------------"Body0"
 
 
 lifeTimeInMinutes = 3
-AMMUNITION = 100
+AMMUNITION = 50
 
 function configure()
 	resetAll(unitID)
@@ -52,30 +52,33 @@ function script.Create()
 
   configure()
   StartThread(AnimationLoop)
+  StartThread(muzzleHovering)
 end
 
 function script.Killed(recentDamage, _)
-  createCorpseCUnitGeneric(recentDamage)
   return 1
 end
-boolAiming= false 
 boolMoving= false
+xorg = piece"System"
+Body = piece"Body0"
+HoverPiece= piece"HoverPoint"
 function AnimationLoop()
   StartThread(GattlingAnimation)
  
   while true do		
-    while boolAiming == false do
+    while boolCeasedFiring ==true do
       if boolMoving == true  then
-
+	--	echo("Moving")
         directionalHoveringAnimation()
       else
-        hoverSegway(
+		--echo("Hovering")
+        hoverSegway( xorg,
 					  Body,
 					 InnerWing, 
-					 HoverPoint,
+					 HoverPiece,
 					 50, 
-					 -90,
 					 90,
+					 -90,
 					 x_axis, 
 					 function(axis, p) return select(1,Spring.UnitScript.GetPieceRotation(p)) end,
 					 function() return boolMoving end, 
@@ -86,24 +89,29 @@ function AnimationLoop()
       Sleep(10)
     end
 
-    while boolAiming == true do
-      compensateForBodyRotationAnimation()
-      Sleep(10)
-    end
+  
     Sleep(10)
   end
 end
+
+function muzzleHovering()
+
+	while true do
+	EmitSfx(InnerWing,1029)
+
+	Sleep(50)
+	end
+end
+
+
 function directionalHoveringAnimation()
-Spring.Echo("TODO:directionalHoveringAnimation")
+--Spring.Echo("TODO:directionalHoveringAnimation")
 end
 
-function compensateForBodyRotationAnimation()
-Turn(InnerWing,x_axis,-globalPitch,15)
-Turn(OuterWing,x_axis,globalPitch,15)
 
-end
 function finalizeFunction()
 --fire final starburst at last attacked enemy or last attacker
+Spring.DestroyUnit(unitID,true,false)
 end
 
 function GattlingAnimation()
@@ -125,14 +133,11 @@ function GattlingAnimation()
 	Show(glowLevelGattlingT[math.ceil(glowIndex)])
     Sleep(100)
   end
-  WMove(GatRetract,x_axis,-5,1)
+--  WMove(GatRetract,y_axis,-5,1)
   StopSpin(GRing,z_axis,0.3)
 end
 
-function showDroneExaust()
 
-
-end
 
 --- -aimining & fire weapon Gattling
 function script.AimFromWeapon1()
@@ -145,12 +150,16 @@ end
 
 boolFireReady = true
 globalPitch= 0
+InnerWing = piece"InnerWing0"
+OuterWing = piece"OuterWing0"
 function script.AimWeapon1(Heading, pitch)
   if boolFireReady == true then
-	boolAiming=true
+
     Turn(center,y_axis,Heading,3)
     globalPitch= pitch
-    Turn(center,x_axis,-pitch ,3)
+    Turn(Body,x_axis,-pitch ,3)
+	Turn(InnerWing,x_axis,math.rad(90)-pitch,3)
+	Turn(OuterWing,x_axis,math.rad(75)-pitch,3)
     WaitForTurn(center,y_axis)
     WaitForTurn(center,x_axis)
 	
@@ -165,46 +174,48 @@ function delayedDeactivationGun()
   SetSignalMask(SIG_STOPFIRING)
   Sleep(350)
   boolCeasedFiring = true
+
 end
 
 myDefID = Spring.GetUnitDefID(unitID)
 
 function script.FireWeapon1()
-	boolAiming=false
+
 	StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cauterizer/attack.ogg", 1, 1500 , 1, 0)
 	StartThread(delayedDeactivationGun)
-  Spring.Echo("Cauterizer:: Ammunition ".. AMMUNITION)
   AMMUNITION = AMMUNITION -1
   return true
 end
 
 --- -aimining & fire weapon Suicide Starburst
 function script.AimFromWeapon2()
-  return aimpiece
+  return Body
 end
 
 
 function script.QueryWeapon2()
-  return aimpiece
+  return Body
 end
 
-boolOneShot = true
 function script.AimWeapon2(Heading, pitch)
   --aiming animation: instantly turn the gun towards the enemy
 
-  return AMMUNITION <= 1 and boolOneShot == true
+  return AMMUNITION <= 1
 end
+
+
 
 function foldAnimation()
 
-  boolOneShot = false
   StartThread(finalizeFunction)
 end
 
 function script.FireWeapon2()	
-  foldAnimation()
 
-  return true
+		foldAnimation()
+	
+
+	return true
 end
 
 
