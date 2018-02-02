@@ -2450,8 +2450,8 @@ function carStarterKid(dramatisPersona3d)
 end
 
 --This is the PartyManager - this function decides were everyone goes
-function littleFlyingCars(nrOfCars)
-dramatisPersona3d = initFlyingCars(nrOfCars)
+function littleFlyingCars(nrOfCars, ldramatisPersona3d)
+dramatisPersona3d = ldramatisPersona3d or initFlyingCars(nrOfCars) 
 
     for i = 1, nrOfCars, 1 do
         dramatisPersona3d[i][9] = true
@@ -2480,7 +2480,6 @@ dramatisPersona3d = initFlyingCars(nrOfCars)
 end
 
 function initFlyingCars(numberOfActors)
-numberOfActors = numberOfActors or 15
 dramatisPersona3d = {}
 
 

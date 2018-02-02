@@ -16,7 +16,7 @@ include "lib_Build.lua"
 
 reloadTime= 29000
 SIGHT_RANGE= 45000
-Droneemit = piece"Droneemit"
+Droneemit = piece"DroneEmit1"
 DroneemitDistance= 10
 
 repcoords = {}
@@ -103,16 +103,16 @@ returnFreeSpot = nil
 function OS_LOOP()
     StartThread(timing)
     Sleep(50)
-	baitType = getTypeTable(UnitDefs,  {
-				"bonker",
-				"cDistrictNone",
-				"buibaicity1",
-				"cwatchpost",
-				"buibaicity2",
-				"crailgun",
-				"factoryspawndecorator",	
-				"chopper"
-				})
+	baitType = {
+				UnitDefNames["bonker"].id,
+				UnitDefNames["cdistrictnone"].id,
+				UnitDefNames["buibaicity1"].id,
+				UnitDefNames["cwatchpost"].id,
+				UnitDefNames["buibaicity2"].id,
+				UnitDefNames["crailgun"].id,
+				UnitDefNames["factoryspawndecorator"].id,	
+				UnitDefNames["chopper"			].id			
+				}
 	randRobin= math.random(1,#baitType)
 				
     while (true) do
@@ -120,10 +120,8 @@ function OS_LOOP()
 
         if boolCharged == true then
 			if boolBuildDrones== false then
-				WMove(Droneemit,y_axis,0,1)
 				spawnBuilding()
-			else
-				WMove(Droneemit,y_axis,DroneemitDistance,1)
+			else		
 				spawnDefenseDrone()
 			end
         end
@@ -133,7 +131,10 @@ end
 
 myDrone=nil
 function createCauterizerDroneIfThereIsNone()
+boolDroneExists= false
+if myDrone then
 boolDroneExists= Spring.GetUnitIsDead(myDrone) 
+end
 	if not myDrone or not boolDroneExists or boolDroneExists ==false then
 		return createUnitAtPiece(unitID, UnitDefNames["cauterizer"].id, Droneemit, Spring.GetUnitTeam(unitID))
 	end
@@ -148,7 +149,7 @@ function spawnDefenseDrone()
 				Sleep(100)
 			end
 	       ex, ey, ez = Spring.GetUnitPosition(enemyID)
-           Command(myDart, "go", { x = ex, y = ey, z = ez }, { "shift" })
+           Command(myDart, "attack", { x = ex, y = ey, z = ez }, { "shift" })
 
             boolNotDeadYet = Spring.GetUnitIsDead(myDart)
             while boolNotDeadYet and boolNotDeadYet == false do
@@ -251,10 +252,10 @@ end
 
 function script.Activate()
 	boolBuildDrones = true
-
+	Move(Droneemit,y_axis,DroneemitDistance,1)
 end
 
 function script.Deactivate()
 	boolBuildDrones = false
-
+Move(Droneemit,y_axis,0,1)
 end
