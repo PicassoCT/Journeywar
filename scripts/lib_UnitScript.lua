@@ -2804,7 +2804,6 @@ end
 
 --> Checks wether a Point is within a six sided polygon
 function sixPointInsideDetAlgo(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, xPoint, yPoint)
-    boolInside = true
     detSum = 0
     for i = 0, 6, 1 do
         tempdet = 0.5 * ((x((i + 1) % 7)) * (y((i + 2) % 7)) + (x((i + 2) % 7)) * (y((i + 1) % 7)))
@@ -2812,10 +2811,10 @@ function sixPointInsideDetAlgo(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x
     end
 
     if detSum >= 0 then
-        boolInside = false
+        return false
     end
 
-    return boolInside
+    return true
 end
 
 -->Rotates a point around another Point
@@ -2824,8 +2823,6 @@ function drehMatrix(x, y, zx, zy, degInRad)
     y = y - zy
     tempX = (math.cos(degInRad) * x) + ((-1.0 * math.sin(degInRad)) * y)
     y = (math.sin(degInRad) * x + (math.cos(degInRad)) * y)
-
-
     x = tempX + zx
     y = y + zy
     return x, y
