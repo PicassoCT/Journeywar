@@ -94,7 +94,7 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-	Spring.SpawnCEG("infantrydissolve", x+100, y + 70, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
+	Spring.SpawnCEG("dronedrivemuzzle", x+100,  170, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
 	Sleep(9000)
 		
 	end

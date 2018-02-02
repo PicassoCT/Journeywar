@@ -2291,52 +2291,33 @@ function hoverSegway(SystemPiece,
 					 speed,
 					 restoreSpeed
 					 )
-					 
+			 
+rotOffsetPivotPiece= math.rad(rotOffsetPivotPiece)
+rotOffsetPowerPiece= math.rad(rotOffsetPowerPiece)
+
 PivotPos = getPiecePosDir(unitID, PivotPiece)
 PowerPos =  getPiecePosDir(unitID, PowerPiece)
-
-HoverPoint=getPiecePosDir(unitID,HoverPiece)
+HoverPos =getPiecePosDir(unitID,HoverPiece)
 
 speedPerMs=  (speed/1000)
 restoreSpeedPerMs=  (restoreSpeed/1000)
-
+cx,cy,cz= Spring.UnitScript.GetPieceRotation(PivotPiece)
 	--update PiecePosition (asuming )
-	Diff= PivotPos - PowerPos
-	OlDiff= Diff
-		gravityOfSituation= 1
-
-		sign=1
-		maxY= Diff.y
-		newDiffY= Diff.y - 4
-		counter= 0
-		while math.abs(Diff.x) > 8 or math.abs(Diff.z) > 8 or  PivotPos.y <=  PowerPos.y do  -- not PivotPiece  over 
-		counter= inc(counter)
-		--update HoverPoint
-		HoverPoint=getPiecePosDir(unitID,HoverPiece)
-		PivotPos = getPiecePosDir(unitID, PivotPiece)
-		PowerPos =  getPiecePosDir(unitID, PowerPiece)
-		Diff= PivotPos - PowerPos
-		if OlDiff.y < Diff.y then sign= sign*-1 end
+	Diff= {x=PivotPos.x - PowerPos.x, y= PivotPos.y - PowerPos.y, z= PivotPos.z - PowerPos.z}
+	--echo("PowerPos",PowerPos.x)
+	--echo("PivotPos",PivotPos.y)
+	--echo("Diff",Diff)
+		if Diff.y > 1 then
 		
-		--Turn 
-		factor= math.min(math.abs(10/Diff[axToKey(axis)]),1)
-		sign= Diff[axToKey(axis)]/math.abs(Diff[axToKey(axis)])
-		rotValue = rotationValueFunction(axis, Body)
-
-		Turn(PivotPiece,axis,rotValue,speed)
-	--	Turn(PivotPiece,axis,rotValue + math.rad(rotOffsetPivotPiece +   speedPerMs*Resolution*sign),speed)
-		Turn(PowerPiece,axis,math.rad(rotOffsetPowerPiece + 90*factor*sign),speed*3)
-	
-		--fall 
-		gravityOfSituation = gravityOfSituation *1.5*Resolution 
-		mP(SystemPiece,HoverPoint.x, HoverPoint.y - gravityOfSituation,HoverPoint.z, restoreSpeedPerMs*counter )		
-		Sleep(Resolution)
-		OlDiff= Diff
+		Turn(PivotPiece,axis,select(axis,cx,cy,cz)  + 3 ,speed/2)
+		Turn(PowerPiece,axis,-rotOffsetPivotPiece -rotOffsetPowerPiece-math.random(5,12) ,speed/3)
+		--movePieceToPiece(SystemPiece,HoverPiece,speed)
+		else
+		Turn(PivotPiece,axis, select(axis,cx,cy,cz)  - 3 ,speed/2)
+		Turn(PowerPiece,axis, -rotOffsetPivotPiece - rotOffsetPowerPiece + math.random(5,12) ,speed/3)
+		--mP(SystemPiece,0,0,0,speed)
 		end
-
-			mP(SystemPiece,HoverPoint.x,HoverPoint.y,Hover.z, restoreSpeedPerMs )
-			Move(PivotPiece, axis,math.min(PivotPiece.x+ speedPerMs*Resolution,HoverPoint.x),speed)
-
+	
 	Sleep(Resolution)
 
 end

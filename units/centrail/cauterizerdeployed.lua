@@ -79,17 +79,15 @@ local unitDef = {
 	},
 		
 	weapons = {
-		[1]={name = "mtwMachineGun",
+		[1]={name = "cautmachinegun",
 			MainDir = [[0 -1  0]],
 			onlyTargetCategory = [[ LAND]],
 			turret = false,
 			
 		},
 		
-		[2]={name = "suicidestarburst",
-			onlyTargetCategory = [[ LAND]],
-			MainDir = [[0 1 0]],
-			MaxAngleDif = 50,			
+		[2]={name = "cautsuicide",
+			onlyTargetCategory = [[ LAND]],	
 		},		
 	},	
 }
