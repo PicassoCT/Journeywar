@@ -16,7 +16,7 @@ local unitDef = {
 	--Movement
 	Acceleration = 0.10,
 	
-	BrakeRate = 0.10,
+	BrakeRate = 0.30,
 	FootprintX = 5,
 	FootprintZ = 5,
 	MaxSlope = 20,

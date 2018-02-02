@@ -406,6 +406,13 @@ function getPieceChain(hierarchy, startPiece, endPiece)
     return pieceChain
 end
 
+function getPiecePosDir(unitID, Peace)
+
+px,py,pz, dx,dy,dz= Spring.GetUnitPiecePosDir(unitID, Peace)
+return {x=px,y=py,z=pz}, {x=dx,y=dy,z=dz}
+
+end
+
 --> creates a hierarchical table of pieces, descending from root
 function getPieceHierarchy(unitID, pieceFunction)
 
@@ -997,6 +1004,12 @@ end
 --======================================================================================
 --Section:  Initializing Functions
 --======================================================================================
+function lifeTime (unitID, lifeTime, boolReclaimed, boolSelfdestroyed,finalizeFunction)
+boolReclaimed, boolSelfdestroyed = boolReclaimed or false, boolSelfdestroyed  or false
+Sleep(lifeTime)
+if finalizeFunction then finalizeFunction()end
+Spring.DestroyUnit(unitID, boolReclaimed, boolSelfdestroyed)
+end
 
 function getPieceMap(unitID)
     List = Spring.GetUnitPieceMap(unitID)
@@ -1314,6 +1327,19 @@ end
 --======================================================================================
 --Section:  Syntax additions and Tableoperations
 --======================================================================================
+
+function axToKey(axis)
+if axis == 1 then return "x" end
+if axis == 2 then return "y" end
+if axis == 3 then return "z" end
+end
+
+function selectExecute(selector, ...)
+
+    local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	if arg[selector] then return selector() end
+	
+end
 	-->selects a element from a table
 	function selStr(index, t)
 		if not t[index] then return "" end
@@ -2384,6 +2410,22 @@ function get2DSquareFormationPosition(nr, size, unitsInRow)
 	return row*size, place*size
 end
 
+function getAveragePosT(T)
+ax,ay,az= 0,0,0
+counter= 0
+process(T,
+		function(id)
+		ix,iy,iz= Spring.GetUnitPiecePosDir(unitID,id)
+			if ix then
+			ax,ay,az= ax +ix, ay +iy, az +iz
+			counter = counter+1
+			end
+		end
+		)
+return ax/counter,ay/counter,az/counter		
+
+end
+
 --> returns the Midpoint of two given points
 function getMidPoint(a, b)
     ax, ay, az = a.x, a.y, a.z
@@ -2762,7 +2804,6 @@ end
 
 --> Checks wether a Point is within a six sided polygon
 function sixPointInsideDetAlgo(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, xPoint, yPoint)
-    boolInside = true
     detSum = 0
     for i = 0, 6, 1 do
         tempdet = 0.5 * ((x((i + 1) % 7)) * (y((i + 2) % 7)) + (x((i + 2) % 7)) * (y((i + 1) % 7)))
@@ -2770,10 +2811,10 @@ function sixPointInsideDetAlgo(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, x
     end
 
     if detSum >= 0 then
-        boolInside = false
+        return false
     end
 
-    return boolInside
+    return true
 end
 
 -->Rotates a point around another Point
@@ -2782,8 +2823,6 @@ function drehMatrix(x, y, zx, zy, degInRad)
     y = y - zy
     tempX = (math.cos(degInRad) * x) + ((-1.0 * math.sin(degInRad)) * y)
     y = (math.sin(degInRad) * x + (math.cos(degInRad)) * y)
-
-
     x = tempX + zx
     y = y + zy
     return x, y
@@ -2815,7 +2854,12 @@ function pointWithinTriangle(x1, y1, x2, y2, x3, y3, xt, yt)
         return false
     end
 end
+function distanceToLine(P1, P2, APos)
+return  math.abs((P2.y -P1.y)*APos.x  - (P2.x -P1.x)*APos.y +(P2.x *P1.y) - (P2.y*P1.x))/
+							math.sqrt( (P2.y -P1.y)*(P2.y -P1.y) +  (P2.x -P1.x)*(P2.x -P1.x));
+	
 
+end
 -->returns the absolute distance on negative and positive values
 function absDistance(valA, valB) 
 
@@ -2857,6 +2901,18 @@ function setParent(unitID, child)
     end
 end
 
+function distanceUnitToPoint(ed, x, y, z)
+ex,ey,ez = Spring.GetUnitPosition(ed)
+	if ex then 
+		return distance(ex,ey,ez,x,y,z)
+	else 
+		return 0
+	end
+
+end
+
+
+--> distance from a UnitPiece to another Units Center
 function distancePieceToUnit(unitID, Piece, targetID)
 	ex,ey,ez = Spring.GetUnitPiecePosDir(unitID, Piece)
 	tx,ty,tz = Spring.GetUnitPosition(targetID)
@@ -2871,15 +2927,15 @@ function vectorUnitToUnit(idA, idB)
     return Vector:new(x - xb, y - yb, z - zb)
 end
 
-    function distanceOfUnitToPoint(ud, x, y, z)
-		if not y and x.x then x,y,z = x.x,x.y,x.z end
-		
-        if not ud then return math.huge end
+function distanceOfUnitToPoint(ud, x, y, z)
+	if not y and x.x then x,y,z = x.x,x.y,x.z end
 
-        px, py, pz = Spring.GetUnitPosition(ud)
-        ux, uy, uz = px - x, py - y, pz - z
-        return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
-    end
+    if not ud then return math.huge end
+
+    px, py, pz = Spring.GetUnitPosition(ud)
+    ux, uy, uz = px - x, py - y, pz - z
+    return math.sqrt(ux ^ 2 + uy ^ 2 + uz ^ 2), px, py, pz
+end
 
 
 -->returns the Distance between two units
@@ -2914,14 +2970,18 @@ function approxDist(x, y, z, digitsPrecision)
     return lastResult
 end
 
---> increment a value
+--> increment a value 
 function inc(value)
     return value + 1
 end
 
---> decrement a value
+--> decrement a value 
 function dec(value)
     return value - 1
+end
+
+function equal(valA, valB, treshold)
+return valA  > valB - treshold and valA < valB + treshold
 end
 --======================================================================================
 --Section : Code Generation 
@@ -5000,20 +5060,26 @@ function CEG_CLOUD(cegname, size, pos, lifetime, nr, densits, plifetime, swing, 
     end
 end
 
-
-function spawnCegAtPiece(unitID, pieceId, cegname, offset)
-
+--> create a CEG at the given Piece with direction or piecedirectional Vector
+function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDirectional)
+	if not dx then --default to upvector 
+		dx,dy,dz = 0, 1,0
+	end
+	
     boolAdd = offset or 10
 
 
     if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
     if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-    x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
-
+    x, y, z,mx,my,mz = Spring.GetUnitPiecePosDir(unitID, pieceId)
+	if boolPieceDirectional and boolPieceDirectional== true then
+		dx,dy,dz = mx,my,mz
+	end
+	
     if y then
         y = y + boolAdd
-        Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 0, 0)
+        Spring.SpawnCEG(cegname, x, y, z, dx, dy, dz, 0, 0)
     end
 end
 

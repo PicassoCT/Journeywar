@@ -1,6 +1,15 @@
 --===================================================================================================================
 --Journeywar specific functions 
 --> creates a table from names to check unittypes against
+function getUnitDefNames(UnitDefs)
+local UnitDefNames = {}
+	for defID,v in pairs(UnitDefs) do
+		UnitDefNames[v.name]=v
+	end
+return UnitDefNames
+end
+
+
 function getTypeTable(UnitDefNames, StringTable)
     local Stringtable = StringTable
     retVal = {}
@@ -219,6 +228,7 @@ end
 
 
 function getInfantryTypeTable()
+	if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
     Infantry = {}
     Infantry[UnitDefNames["bg"].id] = true
     Infantry[UnitDefNames["bg2"].id] = true

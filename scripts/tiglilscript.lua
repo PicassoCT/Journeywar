@@ -7573,29 +7573,7 @@ function script.Killed(recentDamage, maxHealth)
     return 1
 end
 
-
-
---- WALKING -
-function walk()
-    Hide(tldrum)
-    Hide(tlflute)
-    Hide(tlharp)
-    Hide(tldancedru)
-	boolBladeWhirlStarted= false
-
-
-    legs_down()
-
-    Signal(SIG_ONTHEMOVE)
-    Signal(SIG_SWING)
-    Signal(SIG_ONTHEMOVE)
-    Signal(SIG_INCIRCLE)
-    if (Sleeper == 1 or Sleeper == 8) then
-        StartThread(armswing)
-    end
-
-    SetSignalMask(SIG_WALK)
-    while (true) do
+function tradWalk()
 
         -- Rightback
 
@@ -7670,6 +7648,62 @@ function walk()
         WaitForTurn(tllegLowR, y_axis)
         WaitForTurn(tllegLowR, z_axis)
 		Signal(SIG_WHIR)
+
+end
+
+function shakeWalk()
+
+        -- Rightback
+
+        tSyncIn(tlHead, 0,0,14,314)
+        tSyncIn(tllegUpR, -23,0,8,314)
+        tSyncIn(tllegLowR,6,0,0,314)
+        tSyncIn(tllegUp,7,0, 27,314)       
+        tSyncIn(tllegLow,12,0,0,314)
+        tSyncIn(tigLil,0,0,-18,314)
+		
+        boolMove = true
+        WaitForTurns(tigLil,tllegUp,tllegLow,tllegUpR,tllegLowR)
+		
+		tSyncIn(tlHead, 0,0,-16,314)
+        tSyncIn(tllegUpR, 19,0,-29,314)
+        tSyncIn(tllegLowR,6,0,0,314)
+        tSyncIn(tllegUp,-28,0, -13,314)       
+        tSyncIn(tllegLow,27,0,0,314)
+        tSyncIn(tigLil,0,0,17,314)
+        WaitForTurns(tigLil,tllegUp,tllegLow,tllegUpR,tllegLowR)
+
+		Signal(SIG_WHIR)
+
+end
+
+--- WALKING -
+function walk()
+    Hide(tldrum)
+    Hide(tlflute)
+    Hide(tlharp)
+    Hide(tldancedru)
+	boolBladeWhirlStarted= false
+	dice= math.random(0,40)
+
+    legs_down()
+
+    Signal(SIG_ONTHEMOVE)
+    Signal(SIG_SWING)
+    Signal(SIG_ONTHEMOVE)
+    Signal(SIG_INCIRCLE)
+    if (Sleeper == 1 or Sleeper == 8) then
+        StartThread(armswing)
+    end
+
+    SetSignalMask(SIG_WALK)
+    while (true) do
+	if dice < 30 then
+		tradWalk()
+	else
+		shakeWalk()
+	end
+
     end
 end
 

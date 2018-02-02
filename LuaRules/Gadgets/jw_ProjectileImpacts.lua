@@ -150,12 +150,20 @@ if (gadgetHandler:IsSyncedCode()) then
 
 airTypeTable= getAirUnitTypeTable()
 abstractTypeTable= getAbstractTypes()
+isInfantryTypeTable = getInfantryTypeTable()
 camproDefID = UnitDefNames["campro"].id
 
     function unitVannishAntimatterSFX(id)
 			defID= Spring.GetUnitDefID(id)
 			--if unit is abstract early out
 			if abstractTypeTable[defID] or airTypeTable[defID] then return end
+			
+			if isInfantryTypeTable[defID] then 
+				spawnCEGatUnit(id, "infantrydissolve", 0, 10,0)	
+				GG.UnitsToKill:PushKillUnit(id, true, true)
+				return 
+			end
+			
 			-- if its a building damage it then early out
 			if  defID == camproDefID then return end
 	

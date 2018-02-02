@@ -26,13 +26,14 @@ function Vector.new(ix, iy, iz)
             y = iy,
             z = iz
         }, Vector)
-    end
+    else
 
     return setmetatable({
         x = 0,
         y = 0,
         z = 0
     }, Vector)
+	end
 end
 
 

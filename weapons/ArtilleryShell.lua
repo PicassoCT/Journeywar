@@ -5,7 +5,7 @@ local weaponDef = {
     name = "HeadCrabShell",
 
 
-
+	highTrajectory =1,
     --
 
     --weapontimer=7,

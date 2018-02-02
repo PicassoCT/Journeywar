@@ -18,11 +18,46 @@ function script.Create()
 	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(saySay)
 	StartThread(emitSFX)
+	StartThread(hovertest)
+	StartThread(switchMove)
 	-- StartThread(testTurnInTime)
 	echo(minimalAbsoluteDistance(15,-15))
 	echo(minimalAbsoluteDistance(-15,-15))
 	echo(minimalAbsoluteDistance(-15,15))
 	echo(minimalAbsoluteDistance(360,-270))
+end
+Body= piece"dronetest"
+InnerWing= piece"power"
+HoverPoint = piece"HoverPoint"
+boolMoving=false
+function switchMove()
+while true do
+
+Sleep(100000)
+boolMoving = true
+end
+
+end
+function hovertest()
+while true do
+	Turn(Body,x_axis,math.rad(math.random(-100,100)),0,true)
+	Sleep(1000)
+    hoverSegway(      center,
+					  Body,
+					 InnerWing, 
+					 HoverPoint,
+					 50, 
+					 -90,
+					 90,
+					 x_axis, 
+					 function(axis, p) return select(axis,Spring.UnitScript.GetPieceRotation(p)) end,
+					 function() return boolMoving end, 
+					 math.pi/10,
+					 math.pi
+					 )
+
+Sleep(1000)
+end
 end
 
 function script.Killed(recentDamage, _)
@@ -59,10 +94,8 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-	Spring.SpawnCEG("portable", x, y + 70, z, 0, 1, 0, 60)
-    Spring.SpawnCEG("holeinthesky", x, y + 320, z, 0, 1, 0, 60)
-	
-		Sleep(9000)
+	Spring.SpawnCEG("dronedrivemuzzle", x+100,  170, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
+	Sleep(9000)
 		
 	end
 end

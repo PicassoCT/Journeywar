@@ -455,7 +455,7 @@ end
 
 conairDefID = Spring.GetUnitDefID(unitID)
 lastLoudness = 0.5
-valToAdd = 0.1
+valToAdd = 0
 function ropeThread()
 	-- Resets the Trooper
 	

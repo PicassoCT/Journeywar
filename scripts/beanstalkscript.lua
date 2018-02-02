@@ -687,7 +687,7 @@ function script.Create()
 	resetAll(unitID)
 	
 	Turn(bsholo, y_axis, math.rad(-90), 0)
-	hideAllPieces(unitID)
+	hideAll(unitID)
 	Spring.SetUnitNoSelect(unitID,true)
 	if defID == UnitDefNames["beanstalk"].id then
 		greatEntry()

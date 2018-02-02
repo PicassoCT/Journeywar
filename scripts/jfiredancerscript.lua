@@ -96,6 +96,7 @@ function script.Create()
     StartThread(wizzardOfOS)
     StartThread(sound)
     StartThread(downHillGlideDetector)
+    StartThread(reloadCycle)
 end
 
 local function idle()
@@ -322,6 +323,16 @@ function script.QueryWeapon1()
     return Head
 end
 
+function reloadCycle()
+while true do
+if boolFiring == true then
+Sleep(4000)
+boolFiring=false
+end
+Sleep(100)
+end
+end
+
 boolFiring=false
 function script.AimWeapon1(Heading, pitch)
     --aiming animation: instantly turn the gun towards the enemy
@@ -373,14 +384,11 @@ function script.AimWeapon1(Heading, pitch)
     end
 end
 
-function delayedReload()
-Sleep(4000)
-boolFiring=false
-end
+
 
 teamID = Spring.GetUnitTeam(unitID)
 function script.FireWeapon1()
-StartThread(delayedReload)
+
 	
     return true
 end

@@ -54,19 +54,23 @@ local StriTable = {
         UpLeg = striderlegA3, --1
         Leg = striderlegB3,
         LowLeg = striderlegC3,
-        UpOrg = pOrg1
+        UpOrg = pOrg1,
+		Sensor = Sens1
+		
     },
     [2] = {
         UpLeg = striderlegA, --2
         Leg = striderlegB,
         LowLeg = striderlegC,
-        UpOrg = pOrg2
+        UpOrg = pOrg2,
+		Sensor = Sens2
     },
     [3] = {
         UpLeg = striderlegA2, --3
         Leg = striderlegB2,
         LowLeg = striderlegC2,
-        UpOrg = pOrg3
+        UpOrg = pOrg,
+		Sensor = Sens3
     }
 }
 
@@ -102,14 +106,18 @@ LegTable[#LegTable + 1] = piece "striderle6"
 --nothing but Goons in drag await you here
 function script.Create()
 
-    Move(strider, y_axis, -110, 0)
-    tP(LegTable[Leg3], z_axis, math.rad(143), 0)
-    tP(LegTable[Leg3 + 1], z_axis, math.rad(-176), 0)
-    tP(LegTable[Leg2], z_axis, math.rad(-143), 0)
-    tP(LegTable[Leg2 + 1], z_axis, math.rad(176), 0)
-    tP(LegTable[Leg1], x_axis, math.rad(143), 0)
-    tP(LegTable[Leg1 + 1], x_axis, math.rad(-176), 0)
+    Move(strider, y_axis, -90, 0,true)
+    tP(LegTable[Leg3], 0,0, -143, 0)
+    tP(LegTable[Leg3+1], 0,0, 176, 0)
 
+	tP(LegTable[Leg2], 0,0, 143, 0)
+    tP(LegTable[Leg2+1], 0,0, -176, 0)  
+	
+	tP(LegTable[Leg1], 143,0, 0, 0)
+    tP(LegTable[Leg1+1], -176,0,0, 0)
+	Hide(center1)
+	Hide(center2)
+	Hide(center3)
     Hide(relPos1)
     Hide(relPos2)
     Hide(relPos3)
@@ -119,20 +127,17 @@ function script.Create()
     Hide(LegOrg1)
     Hide(LegOrg2)
     Hide(LegOrg3)
+	Hide(deathpivot)
 
-    for i = 1, #LegTable, 1 do
-        Turn(LegTable[i], x_axis, math.rad(0), 0)
-        Turn(LegTable[i], z_axis, math.rad(0), 0)
-        Turn(LegTable[i], y_axis, math.rad(0), 0)
-    end
     Hide(flare1)
     Hide(flare2)
     Hide(deathpivot)
-    StartThread(relativeTurnFeet)
-
-    StartThread(resetOrgHeading)
+   -- StartThread(relativeTurnFeet)
+   -- StartThread(resetOrgHeading)
     StartThread(walk)
 end
+
+
 
 function lenghtOfVectorSum(vx, vy, vz, tx, ty, tz)
     vx, vy, vz = vx + tx, vy + ty, vz + tz
@@ -205,7 +210,7 @@ function smoothVal(val, legnr, nr)
     return sum
 end
 
-
+--_______________________________________OLD CINEMATICS ATTEMPT_________________________________________
 --this function turns the legs handed over, to point at the x,y,z coordinates
 --unitPos --targetPoint --UpLeg
 outOfRange = false
@@ -417,7 +422,7 @@ function relativeTurnFeet()
         end
     end
 end
-
+--_______________________________________OLD IK_Attempt__________________________________________
 --- WALKING---
 function deactiveAnim(number, signal)
     Signal(signal)
@@ -437,7 +442,7 @@ function deactiveAnim(number, signal)
     WaitForTurns(StriTable[number].Leg, StriTable[number].UpOrg)
 end
 
-function forward(number, speed)
+function forward(number, speed, partNumber)
     TaskTable[number].FinnishedExecution = false
 
     Turn(LegTable[number + 1], x_axis, math.rad(22), speed)
@@ -447,24 +452,38 @@ function forward(number, speed)
     Turn(LegTable[number], y_axis, math.rad(0), speed)
     WaitForTurns(LegTable[number])
     WaitForTurns(LegTable[number + 1])
-    Turn(LegTable[number], x_axis, math.rad(-29), speed)
-    Turn(LegTable[number + 1], x_axis, math.rad(29), speed)
-
-    WaitForTurns(LegTable[number], LegTable[number + 1])
+	
+	for i=-65, -10, 2 do
+		Turn(LegTable[number], x_axis, math.rad(i), speed)
+		Turn(LegTable[number + 1], x_axis, math.rad(-1*i), speed)
+		WaitForTurns(LegTable[number], LegTable[number + 1])
+			if isPieceAboveGround(unitID, StriTable[partNumber].Sensor)== false then
+				break
+			end
+	end
     TaskTable[number].FinnishedExecution = true
 end
 
---angleY 65
-function stabilize(number, speed)
+
+function stabilize(number, speed, partNumber)
     TaskTable[number].FinnishedExecution = false
     signumYAxis = 1
     if number == Leg3 then signumYAxis = -1 end
-    angleY = math.random(110, 160)
-
-    Turn(LegTable[number], x_axis, math.rad(25), speed)
-    Turn(LegTable[number + 1], x_axis, math.rad(-25), speed)
+	x_rad, _, _ = Spring.UnitScript.GetPieceRotation(LegTable[number] ) 
+	angleY = math.random(110, 160)
+ 
     Turn(LegTable[number], y_axis, math.rad(-1 * angleY * signumYAxis), speed)
-
+	equiTurnAboveGround(LegTable[number], 
+							LegTable[number + 1], 
+							StriTable[partNumber].Sensor, 
+							-1 * angleY * signumYAxis,
+							math.deg(x_rad),
+							10, 
+							-10, 
+							speed*3, 
+							50,
+							x_axis)
+	
     WaitForTurns(LegTable[number], LegTable[number + 1])
     TaskTable[number].FinnishedExecution = true
 end
@@ -502,7 +521,15 @@ TaskTable = {}
 
 counter = 0
 function walk()
-    Move(strider, y_axis, 0, 16)
+	speed= 0.8
+    mSyncIn(strider, 0,-10, 0, 7000)
+	for i=1,#LegTable do
+		tSyncIn(LegTable[i],0,0,0,2000)
+	end
+	
+	WaitForTurns(Leg1,Leg2,Leg3)
+	WaitForMoves(strider)
+	StartThread(hoverInLimits,strider, speed*3, 50, -10)
     while true do
 
         --Analytical IK
@@ -520,7 +547,7 @@ function walk()
                     [3] = stabilizeArc
                 }
             }
-
+			
             TaskTable[Leg2] = {
                 CurrentFunctionIndex = 2,
                 FinnishedExecution = true,
@@ -545,17 +572,17 @@ function walk()
 
                 if TaskTable[Leg1].FinnishedExecution == true then
                     TaskTable[Leg1].CurrentFunctionIndex = (TaskTable[Leg1].CurrentFunctionIndex % 3) + 1
-                    StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, 1.41)
+                    StartThread(TaskTable[Leg1].functions[TaskTable[Leg1].CurrentFunctionIndex], Leg1, speed, 1)
                 end
 
                 if TaskTable[Leg2].FinnishedExecution == true then
                     TaskTable[Leg2].CurrentFunctionIndex = (TaskTable[Leg2].CurrentFunctionIndex % 3) + 1
-                    StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, 1.41)
+                    StartThread(TaskTable[Leg2].functions[TaskTable[Leg2].CurrentFunctionIndex], Leg2, speed, 2)
                 end
 
                 if TaskTable[Leg3].FinnishedExecution == true then
                     TaskTable[Leg3].CurrentFunctionIndex = (TaskTable[Leg3].CurrentFunctionIndex % 3) + 1
-                    StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, 1.41)
+                    StartThread(TaskTable[Leg3].functions[TaskTable[Leg3].CurrentFunctionIndex], Leg3, speed, 3)
                 end
 
                 Sleep(10)
@@ -855,6 +882,18 @@ function idle()
     legs_down(false)
 end
 
+function hoverInLimits(headPiece,speed, maximum, permaoffset)
+	while true do
+		while boolWalking == true and boolAiming == false  do
+			ax,ay,az = getAveragePosT({StriTable[1].Sensor,StriTable[2].Sensor,StriTable[3].Sensor})
+			bx,by,bz= Spring.GetUnitBasePosition(unitID)
+			DiffY = math.min(maximum,math.max(-maximum, ay-by)) + math.cos(((Spring.GetGameFrame()%90)/90)*math.pi*2)*5
+			WMove(headPiece,y_axis,-1*DiffY +permaoffset, speed)
+			Sleep(1)
+		end
+	Sleep(1)
+	end
+end
 
 function script.StopMoving()
     --echo("stopped walking!")

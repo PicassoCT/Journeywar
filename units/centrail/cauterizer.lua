@@ -38,16 +38,24 @@ local unitDef = {
   minCloakDistance    = 75,
   noAutoFire          = false,
   noChaseCategory     = [[NOTARGET]],
-  objectName          = [[placeholder.s3o]],
-  radarDistance       = 2400,
-  radarDistanceJam    = 700,
+  objectName          = [[cauterizer.s3o]],
+  radarDistance       = 300,
+  radarDistanceJam    = 0,
   script              = [[cauterizerscript.lua]],
   selfDestructAs      = [[GUNSHIPEX]],
-  sightDistance       = 1400,
-  sonarDistance       = 700,
+  sightDistance       = 600,
+  sonarDistance       = 0,
   turnRadius          = 30,
   workerTime          = 0,
   
+  	sfxtypes = {
+		explosiongenerators = {
+			"custom:supersonic",
+		},
+		
+	},
+	
+	
 	
 	weapons = {
 		[1]={name = "ccauterizermark",

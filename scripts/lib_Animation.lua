@@ -507,7 +507,7 @@ function turnInTime(piecename, taxis, goalDeg, timeInMs, x_startdeg, y_startdeg,
     absoluteDeg = math.ceil(minimalAbsoluteDistance(goalDeg, startDeg))
 	 
     timeInMs = (timeInMs + 1) / 1000
-    Speed = (math.abs(math.rad(absoluteDeg)) / math.pi) / (math.abs(timeInMs)) --9.3
+    Speed = math.rad(math.abs(absoluteDeg) / (math.abs(timeInMs))) --9.3
 
     if absoluteDeg < 0.0001 then return end
 
@@ -2091,13 +2091,6 @@ function showAllPieces(unitID)
     end
 end
 
-function hideAllPieces(unitID)
-    List = Spring.GetUnitPieceMap(unitID)
-
-    for k, v in pairs(List) do
-        Hide(v)
-    end
-end
 
 -->Shows a Pieces Table
 function showT(tablename, lowLimit, upLimit, delay)
@@ -2262,6 +2255,73 @@ function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove,
         Sleep(delay)
     end
 end
+
+
+function equiTurnAboveGround(turnPiece, 
+							counterPiece, 
+							SensorPiece, 
+							targetY,
+							eqStart,
+							eqMin, 
+							eqMax, 
+							speed, 
+							resolution,
+							axis
+							)
+Turn(turnPiece,y_axis,math.rad(targetY),speed)
+	while true == Spring.UnitScript.IsInTurn(turnPiece,y_axis) do
+		inc= -1
+		if isPieceAboveGround(unitID,SensorPiece) then inc= 1 end
+		eqStart= math.max(eqMin,math.min(eqMax,eqStart + inc))
+		equiTurn(turnPiece, counterPiece, axis, eqStart,speed )
+		Sleep(resolution)
+	end
+end
+--> Keeps a piece system hovering upright at a HoverPoint
+function hoverSegway(SystemPiece,
+					 PivotPiece,
+					 PowerPiece, 
+					 HoverPiece,
+					 Resolution, 
+					 rotOffsetPivotPiece,
+					 rotOffsetPowerPiece,
+					 axis, 
+					 rotationValueFunction, 
+					 activeFunction, 
+					 speed,
+					 restoreSpeed
+					 )
+			 
+rotOffsetPivotPiece= math.rad(rotOffsetPivotPiece)
+rotOffsetPowerPiece= math.rad(rotOffsetPowerPiece)
+
+PivotPos = getPiecePosDir(unitID, PivotPiece)
+PowerPos =  getPiecePosDir(unitID, PowerPiece)
+HoverPos =getPiecePosDir(unitID,HoverPiece)
+
+speedPerMs=  (speed/1000)
+restoreSpeedPerMs=  (restoreSpeed/1000)
+cx,cy,cz= Spring.UnitScript.GetPieceRotation(PivotPiece)
+	--update PiecePosition (asuming )
+	Diff= {x=PivotPos.x - PowerPos.x, y= PivotPos.y - PowerPos.y, z= PivotPos.z - PowerPos.z}
+	--echo("PowerPos",PowerPos.x)
+	--echo("PivotPos",PivotPos.y)
+	--echo("Diff",Diff)
+		if Diff.y > 1 then
+		
+		Turn(PivotPiece,axis,select(axis,cx,cy,cz)  + 3 ,speed/2)
+		Turn(PowerPiece,axis,-rotOffsetPivotPiece -rotOffsetPowerPiece-math.random(5,12) ,speed/3)
+		--movePieceToPiece(SystemPiece,HoverPiece,speed)
+		else
+		Turn(PivotPiece,axis, select(axis,cx,cy,cz)  - 3 ,speed/2)
+		Turn(PowerPiece,axis, -rotOffsetPivotPiece - rotOffsetPowerPiece + math.random(5,12) ,speed/3)
+		--mP(SystemPiece,0,0,0,speed)
+		end
+	
+	Sleep(Resolution)
+
+end
+
 
 
 --================================================================================================================

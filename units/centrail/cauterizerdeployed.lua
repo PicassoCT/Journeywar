@@ -3,7 +3,7 @@ local unitName = "cauterizerdeployed"
 local unitDef = {
 	name = "Cauterizer(deployed)",
 	Description = "Combat Drone <Areal Denial Unit>",
-	objectName = "placeholder.s3o",
+	objectName = "cauterizer.s3o",
 	script = "cauterizerdeployedscript.lua",
 	buildPic = "placeholder.dds",
 	
@@ -69,27 +69,25 @@ local unitDef = {
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {
-			"custom:chopperdirt",
+			"custom:chopperdirt", --1024
 			"custom:choppermuzzle",
 			"custom:flyinggrass",
 			"custom:blackerthensmoke",--1027
-			"custom:330rlexplode",--1028		
+			"custom:330rlexplode",--1028	
+			"custom:dronedrivemuzzle"
 		},		
 	},
 		
 	weapons = {
-		[1]={name = "cgunshipmg",
+		[1]={name = "cautmachinegun",
+			MainDir = [[0 -1  0]],
 			onlyTargetCategory = [[ LAND]],
-			MainDir = [[0 -1 0]],
-			MaxAngleDif = 10,
 			turret = false,
 			
 		},
 		
-		[2]={name = "suicidestarburst",
-			onlyTargetCategory = [[ LAND]],
-			MainDir = [[0 1 0]],
-			MaxAngleDif = 50,			
+		[2]={name = "cautsuicide",
+			onlyTargetCategory = [[ LAND]],	
 		},		
 	},	
 }

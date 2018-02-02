@@ -26,8 +26,6 @@ nanocolor=[[0 0.9 0.9]],
 radardistance=150,
 sightDistance = 700,
 
-	
-
 CanBeAssisted = false,	
 
 CanAttack = true,

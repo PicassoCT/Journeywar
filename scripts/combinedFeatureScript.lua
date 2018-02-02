@@ -368,133 +368,70 @@ function walkAnimation(orgDegY, factor)
     while true do
         --- -Spring.Echo("combinedFeatureScript::1")
         -- HeadBody
-        Turn(tlHead, y_axis, math.rad(17), 3 * factor)
-        Turn(tlHead, z_axis, math.rad(-8), 1.2 * factor)
-        Turn(tigLil, x_axis, math.rad(1.4), 1.2 * factor)
-        Turn(tigLil, z_axis, math.rad(0.5), 1 * factor)
+        tSyncIn(tlHead, 0, (17), (-8), 500)		
+        tSyncIn(tigLil, (1.4),(orgDegY - 5),0.5, 500)
+       
         --Legs
-        Turn(tigLil, y_axis, math.rad(orgDegY - 5), 0.5 * factor)
-        Turn(tllegUpR, x_axis, math.rad(20), 2.2 * factor)
-        Turn(tllegUpR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR, z_axis, math.rad(11), 1.8 * factor)
-
-        Turn(tllegLowR, x_axis, math.rad(-26), 0.3 * factor)
-        Turn(tllegLowR, y_axis, math.rad(-6), 0.3 * factor)
-        Turn(tllegLowR, z_axis, math.rad(0), 1.2 * factor)
-
-        Turn(tllegUpR01, x_axis, math.rad(-26), 1.3 * factor)
-        Turn(tllegUpR01, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR01, z_axis, math.rad(-6), 0.3 * factor)
-
-        Turn(tllegLowR0, x_axis, math.rad(-11), 1.2 * factor)
-        Turn(tllegLowR0, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR0, z_axis, math.rad(-14), 1.2 * factor)
+        
+        tSyncIn(tllegUpR, (20),0,11,500)
+        tSyncIn(tllegLowR,  (-26),(-6), 0, 500)
+        tSyncIn(tllegUpR01, (-26),0, -6, 500)
+        tSyncIn(tllegLowR0,(-11),0,-14,500)
 
         WaitForTurns(tllegLowR0, tllegUpR01, tllegLowR, tllegUpR, tlHead)
         --- -Spring.Echo("combinedFeatureScript::2")
         -- HeadBody
-        Turn(tlHead, x_axis, math.rad(-19), 1.2 * factor)
-        Turn(tlHead, y_axis, math.rad(-3), 1.2 * factor)
-        Turn(tlHead, z_axis, math.rad(1), 1.2 * factor)
-        Turn(tigLil, x_axis, math.rad(1.4), 0.3 * factor)
-        Turn(tigLil, z_axis, math.rad(1.4), 1.2 * factor)
-        --Legs
-        Turn(tigLil, y_axis, math.rad(orgDegY), 0.5 * factor)
-        Turn(tllegUpR, x_axis, math.rad(8), 1.3 * factor)
-        Turn(tllegUpR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR, z_axis, math.rad(11), 1.5 * factor)
+        tSyncIn(tlHead, (-19), -3 , 1, 500)
+		tSyncIn(tigLil, 1.4, orgDegY, 1.4, 500)
 
-        Turn(tllegLowR, x_axis, math.rad(-32), 1.6 * factor)
-        Turn(tllegLowR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR, z_axis, math.rad(3), 1.2 * factor)
-
-        Turn(tllegUpR01, x_axis, math.rad(17), 2.2 * factor)
-        Turn(tllegUpR01, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR01, z_axis, math.rad(-2), 1.2 * factor)
-
-        Turn(tllegLowR0, x_axis, math.rad(-41), 1.8 * factor)
-        Turn(tllegLowR0, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR0, z_axis, math.rad(20), 1.2 * factor)
+        tSyncIn(tllegUpR, (8),(0),(11), 500)
+        tSyncIn(tllegLowR, (-32),(0), (3),500)
+        tSyncIn(tllegUpR01, (17), (0), (-2), 500)
+        tSyncIn(tllegLowR0, (-41), 0, 20, 500)
         WaitForTurns(tllegLowR0, tllegUpR01, tllegLowR, tllegUpR, tlHead, tigLil)
         --- -Spring.Echo("combinedFeatureScript::3")
         -- HeadBody
-        Turn(tigLil, y_axis, math.rad(orgDegY + 5), 0.5 * factor)
-        Turn(tlHead, x_axis, math.rad(-7), 1.2 * factor)
-        Turn(tlHead, y_axis, math.rad(-19), 2.2 * factor)
-        Turn(tlHead, z_axis, math.rad(12), 1.2 * factor)
-        Turn(tigLil, x_axis, math.rad(0), 0.3 * factor)
-        Turn(tigLil, z_axis, math.rad(-1.4), 1.2 * factor)
+		 tSyncIn(tigLil,(0),(orgDegY + 5),  (-1.4), 500)
         --Legs
-        Turn(tllegUpR, x_axis, math.rad(-4), 2.2 * factor)
-        Turn(tllegUpR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR, z_axis, math.rad(3), 1.2 * factor)
+        tSyncIn(tlHead,  (-7), (-19), (12),500) 
+        tSyncIn(tllegUpR, (-4), (0), (3), 500)
 
-        Turn(tllegLowR, x_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR, z_axis, math.rad(0), 1.2 * factor)
+        tSyncIn(tllegLowR, (0), (0), (0),500)
 
-        Turn(tllegUpR01, x_axis, math.rad(20), 2.2 * factor)
-        Turn(tllegUpR01, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR01, z_axis, math.rad(-11), 1.2 * factor)
+        tSyncIn(tllegUpR01, (20),(0), (-11),500)
 
-        Turn(tllegLowR0, x_axis, math.rad(-26), 2.3 * factor)
-        Turn(tllegLowR0, y_axis, math.rad(-6), 1.3 * factor)
-        Turn(tllegLowR0, z_axis, math.rad(0), 1.2 * factor)
+        tSyncIn(tllegLowR0, (-26),(-6), (0), 500)
         WaitForTurns(tllegLowR0, tllegUpR01, tllegLowR, tllegUpR, tlHead, tigLil)
 
         --HeadBody
-        Turn(tlHead, x_axis, math.rad(0), 1.2 * factor)
-        Turn(tlHead, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tlHead, z_axis, math.rad(0), 1.2 * factor)
-        Turn(tigLil, x_axis, math.rad(-1.4), 0.3 * factor)
-        Turn(tigLil, z_axis, math.rad(0), 1.2 * factor)
-        --Legs
-        Turn(tigLil, y_axis, math.rad(orgDegY), 0.5 * factor)
-        Turn(tllegUpR, x_axis, math.rad(-26), 2.3 * factor)
-        Turn(tllegUpR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR, z_axis, math.rad(6), 0.3 * factor)
+        tSyncIn(tlHead, 0,0,0, 500)
+        tSyncIn(tigLil, (-1.4),(orgDegY),0,500)
+		
+        tSyncIn(tllegUpR, (-26), (0),(6), 500)
 
-        Turn(tllegLowR, x_axis, math.rad(-11), 1.2 * factor)
-        Turn(tllegLowR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR, z_axis, math.rad(14), 1.2 * factor)
+        tSyncIn(tllegLowR,(-11), (0), (14),500)
 
-        Turn(tllegUpR01, x_axis, math.rad(8), 2.2 * factor)
-        Turn(tllegUpR01, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR01, z_axis, math.rad(-11), 1.2 * factor)
+        tSyncIn(tllegUpR01, (8), (0),(-11),500)
 
-        Turn(tllegLowR0, x_axis, math.rad(-32), 2.2 * factor)
-        Turn(tllegLowR0, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR0, z_axis, math.rad(-3), 1.2 * factor)
+        tSyncIn(tllegLowR0, (-32), (0), (-3), 500)
         WaitForTurns(tllegLowR0, tllegUpR01, tllegLowR, tllegUpR, tlHead, tigLil)
 
         --- -Spring.Echo("combinedFeatureScript::4")
         -- HeadBody
-        Turn(tigLil, y_axis, math.rad(orgDegY - 5), 0.5 * factor)
-        Turn(tlHead, x_axis, math.rad(-1), 1.2 * factor)
-        Turn(tlHead, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tlHead, z_axis, math.rad(15), 1.2 * factor)
-        Turn(tigLil, x_axis, math.rad(0), 0.3 * factor)
-        Turn(tigLil, z_axis, math.rad(-2), 1.2 * factor)
+		tSyncIn(tigLil, (-1), (orgDegY - 5),  (-2),500)
+
+        tSyncIn(tlHead,0, (0),  (15),500)
         --Legs
-        Turn(tllegUpR, x_axis, math.rad(17), 2.2 * factor)
-        Turn(tllegUpR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR, z_axis, math.rad(2), 1.2 * factor)
+        tSyncIn(tllegUpR, (17), (0),(2), 500)
 
-        Turn(tllegLowR, x_axis, math.rad(-41), 1.5 * factor)
-        Turn(tllegLowR, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR, z_axis, math.rad(-20), 1.2 * factor)
+        tSyncIn(tllegLowR,  (-41),  (0), (-20), 500)
 
-        Turn(tllegUpR01, x_axis, math.rad(-4), 2.2 * factor)
-        Turn(tllegUpR01, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegUpR01, z_axis, math.rad(-3), 1.2 * factor)
+        tSyncIn(tllegUpR01,  (-4),  (0), (-3), 500)
 
-        Turn(tllegLowR0, x_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR0, y_axis, math.rad(0), 1.2 * factor)
-        Turn(tllegLowR0, z_axis, math.rad(0), 1.2 * factor)
+        tSyncIn(tllegLowR0, (0), (0), (0),500)
 
         WaitForTurns(tllegLowR0, tllegUpR01, tllegLowR, tllegUpR, tlHead, tigLil)
-        WaitForTurns(tllegLowR0, tllegUpR01, tllegLowR, tllegUpR, tlHead, tigLil)
-        Sleep(10)
+
     end
 end
 

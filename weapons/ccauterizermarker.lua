@@ -2,7 +2,7 @@
 local weaponName = "ccauterizermark"
 local weaponDef = {
     name = "targetreached",
-    weaponType = [[MELEE]],
+    weaponType = [[Melee]],
 
     areaOfEffect = 164,
     --physics
