@@ -177,7 +177,7 @@ function getFreeSpot()
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
 
 
-    for i = 1, table.getn(replicPoints), 1 do
+    for i = 1, table.getn(repcoords), 1 do
 
         unitTable = spGetUnitsInCylinder(repcoords[i][1], repcoords[i][2], range)
 
@@ -301,18 +301,15 @@ function damageWatcher()
 
     while (true) do
         currentHealth = spGetUnitHealth(unitID)
-
-
         if currentHealth < healthOfOld then
             Signal(SIG_DAMAGE)
             resUlt = (((currentHealth / (maxHealth)) * -1) + 1) * 4
             StartThread(damaged, resUlt)
-
-
+			
             if math.random(0, 1) == 1 then
                 rVal = math.random(1, 8)
-                if replicPoints[rVal] and replicPoints[rVal][1] and replicPoints[rVal][2] then
-                    heapID = Spring.CreateUnit("gCiVillian", replicPoints[rVal][1], y, replicPoints[rVal][2], teamID)
+                if repcoords[rVal] and repcoords[rVal][1] and repcoords[rVal][2] then
+                    heapID = Spring.CreateUnit("gCiVillian", repcoords[rVal][1], y, repcoords[rVal][2], teamID)
                 end
             end
         end

@@ -17,14 +17,14 @@ local weaponDef = {
     soundtrigger = true,
     collideFriendly = false,
     beamtime = 1, --0.01
-
+canAttackGround = false,
     FireSubmersed = 0,
     impulseFactor = 0.1,
     largeBeamLaser = true,
     lineOfSight = false,
 
     --explosiongenerator = "custom:smallblueburn",
-    targetMoveError = 0.5,
+    targetMoveError = 0.015,
     noSelfDamage = true,
     range = 2350,
     reloadtime = 2.0,
@@ -43,9 +43,9 @@ local weaponDef = {
     Intensity = 1.4, --test It
     scrollspeed = 0.3,
     explosionGenerator = "custom:sentrynellimpact",
-    tolerance = 1000,
+    tolerance = 250,
     damage = {
-        default = 350,
+        default = 450,
         HeavyArmor = 25,
     },
 }

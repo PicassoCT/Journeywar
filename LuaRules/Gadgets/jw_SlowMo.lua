@@ -76,7 +76,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	GG.GameSpeed= currentSpeed
 	if boolActivate== false or frame > endFrame then
 			if frame % 10 == 0 and currentSpeed < oldGameSpeed - 0.1 then
-				Spring.Echo("speedup to " .. (currentGameSpeed + 0.1))
 				Spring.SendCommands("speedup ")
 			end
 	end
@@ -201,7 +200,7 @@ else --Unsynced
 		end
 		
 		if n % 5 == 0 then
-		currentGameSpeed = Spring.GetGameSpeed()
+		currentGameSpeed = Spring.GetGameSpeed() or 1.0
 		Spring.SendLuaRulesMsg("CurrentGameSpeed:"..currentGameSpeed)
 		end
 	end

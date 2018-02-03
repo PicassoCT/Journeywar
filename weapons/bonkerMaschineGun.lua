@@ -15,11 +15,12 @@ local weaponDef = {
     texture1 = "empty",
 
     --physics
-    weaponVelocity = 450,
+    weaponVelocity = 1050,
     reloadtime = 0.25,
     range = 1250,
     sprayAngle = 800,
-    tolerance = 8000,
+    tolerance = 900,
+	 targetMoveError = 0.015,
     lineOfSight = true,
     turret = true,
     craterMult = 0,
