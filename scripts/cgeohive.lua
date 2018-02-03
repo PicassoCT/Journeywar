@@ -1,4 +1,12 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+
+
 --<pieces>
+include "lib_UnitScript.lua"
 include "lib_jw.lua"
 include "createCorpse.lua"
 include "lib_OS.lua"
@@ -8,7 +16,7 @@ include "lib_Build.lua"
 
 reloadTime= 29000
 SIGHT_RANGE= 45000
-Droneemit = piece"Droneemit"
+Droneemit = piece"DroneEmit1"
 DroneemitDistance= 10
 
 repcoords = {}
@@ -95,16 +103,16 @@ returnFreeSpot = nil
 function OS_LOOP()
     StartThread(timing)
     Sleep(50)
-	baitType = getTypeTable(UnitDefs,  {
-				"bonker",
-				"cDistrictNone",
-				"buibaicity1",
-				"cwatchpost",
-				"buibaicity2",
-				"crailgun",
-				"factoryspawndecorator",	
-				"chopper",
-				})
+	baitType = {
+				UnitDefNames["bonker"].id,
+				UnitDefNames["cdistrictnone"].id,
+				UnitDefNames["buibaicity1"].id,
+				UnitDefNames["cwatchpost"].id,
+				UnitDefNames["buibaicity2"].id,
+				UnitDefNames["crailgun"].id,
+				UnitDefNames["factoryspawndecorator"].id,	
+				UnitDefNames["chopper"			].id			
+				}
 	randRobin= math.random(1,#baitType)
 				
     while (true) do
@@ -112,10 +120,8 @@ function OS_LOOP()
 
         if boolCharged == true then
 			if boolBuildDrones== false then
-				WMove(Droneemit,y_axis,0,1)
 				spawnBuilding()
-			else
-				WMove(Droneemit,y_axis,DroneemitDistance,1)
+			else		
 				spawnDefenseDrone()
 			end
         end
@@ -125,7 +131,10 @@ end
 
 myDrone=nil
 function createCauterizerDroneIfThereIsNone()
+boolDroneExists= false
+if myDrone then
 boolDroneExists= Spring.GetUnitIsDead(myDrone) 
+end
 	if not myDrone or not boolDroneExists or boolDroneExists ==false then
 		return createUnitAtPiece(unitID, UnitDefNames["cauterizer"].id, Droneemit, Spring.GetUnitTeam(unitID))
 	end
@@ -140,7 +149,7 @@ function spawnDefenseDrone()
 				Sleep(100)
 			end
 	       ex, ey, ez = Spring.GetUnitPosition(enemyID)
-           Command(myDart, "go", { x = ex, y = ey, z = ez }, { "shift" })
+           Command(myDart, "attack", { x = ex, y = ey, z = ez }, { "shift" })
 
             boolNotDeadYet = Spring.GetUnitIsDead(myDart)
             while boolNotDeadYet and boolNotDeadYet == false do
@@ -151,10 +160,37 @@ function spawnDefenseDrone()
 		Sleep(100)
 end
 
-
+TablesOfPiecesGroups = {}
 function script.Create()
+    generatepiecesTableAndArrayCode(unitID)
+    TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
     Spring.SetUnitBlocking(unitID, true)
+
+	for i=1,30, 1 do
+		StartThread(littleCars, i)
+	end
     StartThread(OS_LOOP)
+end
+
+function littleCars(idx)
+	local car = TablesOfPiecesGroups["Car"][idx]
+	local pivot = TablesOfPiecesGroups["Pivot"][idx]
+	randDelay=math.ceil(math.random(0,19000))
+	Sleep(randDelay)
+
+	if not car then return end
+	reset(car)
+	while true do
+		local dir = randSign()
+		local roadDir= math.random(1,6) * 60
+		if dir < 0 then 	 Turn(car,y_axis,math.rad(180),0,true) else  Turn(car,y_axis,math.rad(0),0,true) end
+		Turn(pivot,y_axis,math.rad(roadDir),0)
+		Move(car,x_axis,45*dir,0,true)
+		Move(car,x_axis,-45*dir,math.random(1,4))
+		WaitForMoves(car)
+		Sleep(100)
+	end
+
 end
 
 function script.Killed(recentDamage, _)
@@ -216,10 +252,10 @@ end
 
 function script.Activate()
 	boolBuildDrones = true
-
+	Move(Droneemit,y_axis,DroneemitDistance,1)
 end
 
 function script.Deactivate()
 	boolBuildDrones = false
-
+Move(Droneemit,y_axis,0,1)
 end

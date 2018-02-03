@@ -26,7 +26,8 @@ local unitDef = {
 	MakesMetal = 0, 
 	MetalMake = 0,	
 	nanocolor=[[0 0.9 0.9]],
-
+	onoffable=true,
+	ActivateWhenBuilt=0,
 
 	explodeAs="cartdarkmat",
 	selfDestructAs= [[NOWEAPON]],

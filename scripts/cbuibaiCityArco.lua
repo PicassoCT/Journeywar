@@ -408,8 +408,8 @@ function script.Create()
     teamID = Spring.GetUnitTeam(unitID)
 	
 	buildIngs={arco2,arco3,buibaicity}
-	hideT(buildings)
-	index= math.random(1,table.get(buildings))
+	hideT(buildIngs)
+	index= math.random(1,#buildIngs)
 	Show(buildIngs[index])
 
 
@@ -420,10 +420,10 @@ function script.Create()
     end
 
     --</buildanimationscript>
-
+	
     StartThread(healthCheck)
-	dramatisPersona3d= initFlyingCars(numberOfActors)
-    StartThread(littleFlyingCars, dramatisPersona3d)
+	dramatisPersona3d= initFlyingCars(15)
+    StartThread(littleFlyingCars, 15,dramatisPersona3d)
     for i = 1, table.getn(AlarmOne), 1 do
         Hide(AlarmOne[i])
     end
