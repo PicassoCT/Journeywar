@@ -15,11 +15,7 @@ teamID = Spring.GetUnitTeam(unitID)
 SIG_STILT = 2
 
 buildIconTable = {}
-for i = 1, 20 do
-    strings = "troop" .. i
-    buildIconTable[#buildIconTable + 1] = piece(strings)
-end
-hideT(buildIconTable)
+
 
 ringTable = {}
 for i = 1, 5, 1 do
@@ -39,7 +35,6 @@ function rumpelStiltSkin()
         Move(innergate, z_axis, randz, 99)
         Sleep(125)
         calcUp = calcUp + 125
-        EmitSfx(innergate, 1024)
         if calcUp > 4500 then
             Spring.PlaySoundFile("sounds/cOverWorldGate/coverworldgateLoop.wav")
             calcUp = 0
@@ -63,11 +58,11 @@ function estimateTotalTime()
 end
 
 function LoadAnimation()
-    step = math.floor(totalTime / 20)
-    for i = 1, 20, 1 do
-        Show(buildIconTable[i])
-        Sleep(step)
-    end
+    -- step = math.floor(totalTime / 20)
+    -- for i = 1, 20, 1 do
+        -- Show(buildIconTable[i])
+        -- Sleep(step)
+    -- end
     hideT(buildIconTable)
 end
 
@@ -145,7 +140,7 @@ function createUnitFunction(unitTypeString)
     return spawnedID
 end
 
-boolActive = false
+boolActive = true
 
 function getUnitAvgCost(TypeTable)
 sum=0
@@ -156,6 +151,33 @@ numberUnits= 0
 		numberUnits= numberUnits +1
 	end
 return sum/numberUnits
+end
+
+function getSpawnPosition(enemyID)
+if not enemyID then return end
+	ex, ey, ez = Spring.GetUnitPosition(enemyID) -- this should allow the unit to follow a friend closest to a foe
+	if ex then
+				if math.abs(ex - ox + ey - oy + ez - oz) < 5 then
+					eteamid = Spring.GetUnitTeam(enemyID)
+					ex, ey, ez = Spring.GetTeamStartPosition(eteamid)
+				end
+	return ex,ey,ez
+	end
+end
+
+function theNeedOfTheMany()
+intervall = 6
+
+	boolThisCanWorkOut = false
+	for i=intervall, 0, -1  do
+		boolThisCanWorkOut = consumeAvailableRessourceUnit(unitID, "metal", math.ceil(i * (averageUnitCost)))			
+		if boolThisCanWorkOut == true then break end
+	end
+	
+	intervall = math.max(2,intervall)
+	if  intervall == 2 then showPlayerBroke()	end
+
+return intervall
 end
 
 unitTypeIndex= 0
@@ -185,48 +207,39 @@ function spawner()
         --- -Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
 
 		while boolActive== true do
-        Sleep(rechargeTime)
+		Sleep(rechargeTime)
+		for i=1,#buildIconTable do
+			partTime= math.ceil(rechargeTime/#buildIconTable)
+			Show(buildIconTable[i])
+			Sleep(partTime)
+		end
 			enemyID = spGetUnitNearestEnemy(unitID)
 
-			if enemyID ~= nil then
-				if boolPoweredUp == false then powerUp(5) end
+			if enemyID and type(enemyID)== "number" then
+				if boolPoweredUp == false then powerUp(15) end
 				spawnPortalEffect()
-
-				ex, ey, ez = spGetUnitPosition(enemyID) -- this should allow the unit to follow a friend closest to a foe
-				if math.abs(ex - ox + ey - oy + ez - oz) < 5 then
-					eteamid = Spring.GetUnitTeam(enemyID)
-					ex, ey, ez = Spring.GetTeamStartPosition(eteamid)
-				end
-				ox, oy, oz = ex, ey, ez
-				-- acquire ressources
-				intervall = 6
-
-				boolThisCanWorkOut = false
-				for i=intervall, 0, -1  do
-					boolThisCanWorkOut = consumeAvailableRessourceUnit(unitID, "metal", math.ceil(i * (averageUnitCost)))			
-					if boolThisCanWorkOut == true then break end
-				end
+				hideT(buildIconTable)
 				
-				intervall = math.max(2,intervall)
-				if  intervall == 2 then 
-					showPlayerBroke()
-				else
+				ex,ey,ez = getSpawnPosition(enemyID)
+				if ex then
+					ox, oy, oz = ex, ey, ez
+					-- acquire ressources
+					intervall=theNeedOfTheMany()
+						for i = 1, intervall, 1 do
+							unitTypeIndex= (unitTypeIndex % #creeperTypeTable) +1
+							Unittype = creeperTypeTable[unitTypeIndex]
 
-					for i = 1, intervall, 1 do
-						unitTypeIndex= (unitTypeIndex % #creeperTypeTable) +1
-						Unittype = creeperTypeTable[unitTypeIndex]
-
-
-						spawnedUnit = lCreateUnitFunction(Unittype)
-						if spawnedUnit ~= nil then
-							--spSetUnitNoSelect(spawnedUnit,true)
 							spawnPortalEffect()
-							Sleep(1550)
-							spSetUnitMoveGoal(spawnedUnit, ex, ey, ez)
-							table.insert(monsterTable, spawnedUnit)
-						end
+							spawnedUnit = lCreateUnitFunction(Unittype)
+							if spawnedUnit then
+								--spSetUnitNoSelect(spawnedUnit,true)							
+								Sleep(1550)
+								spSetUnitMoveGoal(spawnedUnit, ex, ey, ez)
+								table.insert(monsterTable, spawnedUnit)
+							end
 					end
 				end
+			
 				Sleep(4000)
 				powerDown()
 				
@@ -287,8 +300,13 @@ function TargetOS()
         end
     end
 end
-
+ TableOfPieceGroups = {}
+	
 function script.Create()
+    TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	buildIconTable= TableOfPieceGroups["troop"]
+    hideT(buildIconTable)
+
     Hide(innergate)
     Hide(outergate)
     StartThread(spawner)

@@ -59,7 +59,7 @@ while true do
 Sleep(1000)
 end
 end
-
+Kugel02 = piece"Kugel02"
 function script.Killed(recentDamage, _)
 	
 	createCorpseCUnitGeneric(recentDamage)
@@ -107,17 +107,18 @@ liftUpRange = 900
 
 --- -aimining & fire weapon
 function script.AimFromWeapon1()
-	return center
+	return Kugel02
 end
 
 
 
 function script.QueryWeapon1()
-	return center
+	return Kugel02
 end
 
 function script.AimWeapon1(Heading, pitch)
 	--aiming animation: instantly turn the gun towards the enemy
-	
+	WTurn(Kugel02,y_axis,Heading,0)
+	WTurn(Kugel02,x_axis,-pitch,0)
 	return true
 end
