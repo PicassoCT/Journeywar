@@ -1,7 +1,7 @@
 local weaponName = "slicergun"
 local weaponDef = {
     name = "slicer",
-    weaponType = [[MissileLauncher]],
+    weaponType = [[Cannon]],
     Accuracy = 1000,
 
     --Physic/flight path
@@ -16,7 +16,7 @@ local weaponDef = {
     dance = 0,
     wobble = 0,
     turnrate = 0,
-    tolerance = 200,
+    tolerance = 600,
     tracks = false,
     Turnrate = 0,
     collideFriendly = true,
@@ -28,8 +28,8 @@ local weaponDef = {
     CegTag = "slicegunsfx",
 
     --- -TARGETING
-    turret = false,
-    CylinderTargeting = 1.0,
+    turret = true,
+
     avoidFeature = false,
     avoidFriendly = false,
 
@@ -43,6 +43,9 @@ local weaponDef = {
     },
     areaOfEffect = 100,
     craterMult = 0,
+
+	 soundStart="ccomender/slicergun.wav",
+	 soundHit="ccomender/slicergun.wav",
 
     --?FIXME***
     lineOfSight = true,

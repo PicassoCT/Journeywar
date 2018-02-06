@@ -26,13 +26,14 @@ function getAttackVector(victimid)
 	
 	attacker=Spring.GetUnitLastAttacker(victimid)	
 	if attacker then
-		attackVector=vectorUnitToUnit(victimid,attacker)*-1
+		local attackVector=vectorUnitToUnit(victimid,attacker)*-1
 		return attackVector.x,attackVector.y,attackVector.z
 	end
 	return math.random(-100,100)/100, math.random(-100,100)/100, math.random(-100,100)/100
 end
 
 function ThreadStarter()
+	Spring.MoveCtrl.Enable(unitID)
 	existenceCounter = 0
 	while (not GG.SlicerTable or not GG.SlicerTable[unitID]) and existenceCounter < 50 do
 		existenceCounter=existenceCounter+1
@@ -43,12 +44,12 @@ function ThreadStarter()
 	victimid= GG.SlicerTable[unitID]
 
 	Sleep(100)
-	x,y,z=Spring.GetUnitPosition(vicID)
+	x,y,z=Spring.GetUnitPosition(victimid)
 	dx,dy,dz= getAttackVector(victimid)
-	Turn(rotaryCenter,y_axis,math.rad(dy),0)
-	Turn(rotaryCenter,x_axis,math.rad(dx),0)
+	tPVector(rotaryCenter, {x=dx,y=dy,z=dz}, 0)
+
 	Show(DropOut)
-	Show(SliceCylin)
+	--Show(SliceCylin)
 	Move(DropOut,y_axis,-35.5,12)
 	Hide(DropOut)
 	
@@ -56,9 +57,10 @@ function ThreadStarter()
 		EmitSfx(DropOut,1025)
 		Time=math.ceil(math.random(10,125))
 		Sleep(Time)
+
 	end
-		WaitForMove(DropOut,y_axis)
-	Spring.DestroyUnit(vicID,false,true)
+	 Explode(DropOut, SFX.SHATTER + SFX.NO_HEATCLOUD)
+	WaitForMove(DropOut,y_axis)
 	 GG.SlicerTable[unitID]=nil
 	Spring.DestroyUnit(unitID,false,true)
 	

@@ -18,11 +18,11 @@ return {
         dir                = [[dir]],
         frontoffset        = 0,
         fronttexture       = [[ReservoirZone]],
-        length             = 22,
-        sidetexture        = [[TriggerZone]],
+        length             = 6,
+        sidetexture        = [[flashside3alpha]],
         size               = 6,
         sizegrowth         = 0.18,
-        ttl                = 48,
+        ttl                = 24,
       }
     },
 	fieldforwards = {
@@ -38,12 +38,12 @@ return {
         colormap           = [[0.2 0.9 0.9 0.006  	0.2 0.9 0.9 0.003  	0.2 0.9 0.9 0.001 ]],
         dir                = [[dir]],
         frontoffset        = 0,
-        fronttexture       = [[empty]],
+        fronttexture       = [[ReservoirZone]],
         length             = -12,
-        sidetexture        = [[TriggerZone]],
+        sidetexture        = [[huntertrail]],
         size               = 6,
         sizegrowth         = 0.18,
-        ttl                = 48,
+        ttl                = 24,
       }
     },
 	

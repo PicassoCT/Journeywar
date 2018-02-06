@@ -281,7 +281,7 @@ function FeedMe()
 				DropUnit(T[index])
 				Spring.DestroyUnit(T[index], true, false)
 				hp= Spring.GetUnitHealth(unitID)
-				Spring.SetUnitHealth(unitID, hp + 150)
+				Spring.SetUnitHealth(unitID, hp + 750)
 			end
 			
 			StartThread(adaptiveAnimationThreadStarter, configTable, inPieces, 4, unitID)

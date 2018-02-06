@@ -880,6 +880,7 @@ camproDefID = UnitDefNames["campro"].id
         --only if the unit is hitsphere wise big enough
         hp, maxhp = Spring.GetUnitHealth(unitID)
         if hp / maxhp < 0.5 and maxhp > 300 then
+				x,y,z=Spring.GetUnitPosition(unitID)
 				pieceID = getUnitBiggestPiece(unitID)
 				side = getUnitSide(unitID)
 				slicerColum = -1 
@@ -896,7 +897,7 @@ camproDefID = UnitDefNames["campro"].id
 				rootPiece= Spring.GetUnitLastAttackedPiece(unitID)
 				px, py ,pz = Spring.GetUnitPosition(unitID)
 				ax, ay, az = Spring.GetUnitPosition(attackerID)
-				if attackerID then
+				if attackerID and px and ax then
 				
 				func = function (persPack)
 						unitRipAPieceOut(persPack.unitID, persPack.rootPiece, persPack.shootvec, 150, false)
