@@ -3373,6 +3373,14 @@ function wrapThreadStart(func)
 
 end
 
+--> Prints a 3dLine
+function printLine(PosA, PosB, length)
+	availableLengths= {32}
+		if not availableLengths[length] then length = availableLengths[1] end
+	x,y,z = PosA.x, PosA.y,Posa.z
+	dx,dy,dz=PosA.x -PosB.x, PosA.y - PosB.y,PosA.z- PosB.z
+	Spring.SpawnCeg("line"..length,x,y,z,dx,dy,dz)
+end
 
 -->allows for a script breakpoint via widget :TODO incomplete
 function stopScript(name)
