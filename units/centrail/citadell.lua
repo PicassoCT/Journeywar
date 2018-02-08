@@ -68,7 +68,7 @@ local unitDef = {
 		"crailgun","sentry","bonker",
 		"cdefusermine",	"chopper","cwatchpost",
 		"efence","comendbonker","ctransithub",
-		"chivemind"
+		"chivemind","cauterizer"
 	},
 	
 	sounds = {
