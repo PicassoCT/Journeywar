@@ -8431,14 +8431,14 @@ end
 function script.Activate()
     if boolPeacefull == true then
         SetUnitValue(COB.WANT_CLOAK, 1)
-		Spring.UnitScript.SetUnitValue(firestate, 0)
+		  Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {}) 
     end
     return 1
 end
 
 function script.Deactivate()
-    SetUnitValue(COB.WANT_CLOAK, 0)
-	Spring.UnitScript.SetUnitValue(firestate, 2)
+		SetUnitValue(COB.WANT_CLOAK, 0)
+		Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {2}, {}) 
     return 0
 end
 
