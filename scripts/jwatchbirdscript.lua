@@ -548,7 +548,7 @@ end
 
 function script.AimWeapon1(Heading, pitch)
 
-	return leftBirds > 1
+	return leftBirds > 1 and boolActivate == true 
 end
 
 function script.FireWeapon1()
@@ -562,4 +562,19 @@ function script.FireWeapon1()
 		end
     end
     return true
+end
+
+boolActivate= false
+function script.Activate()
+    boolActivate = true
+   
+    return 1
+end
+
+function script.Deactivate()
+
+	boolActivate = false
+
+
+    return 0
 end
