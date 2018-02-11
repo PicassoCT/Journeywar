@@ -4,10 +4,11 @@ include "lib_Animation.lua"
 
 include "lib_Build.lua"
 
-
 piecesTable = {}
 FlokCenter = piece "FlokCenter"
 piecesTable[#piecesTable + 1] = FlokCenter
+aimpiece= FlokCenter
+
 bigRot1 = piece "bigRot1"
 piecesTable[#piecesTable + 1] = bigRot1
 smallRot1 = piece "smallRot1"
@@ -83,7 +84,8 @@ piecesTable[#piecesTable + 1] = L42
 
 --Bird, Bird, Bird is the word
 local Birds = {}
-for i = 1, 4, 1 do
+local numberOfBirds = 7
+for i = 1, numberOfBirds, 1 do
     t = "Land" .. i
     LandPiece = piece(t)
     t = "L" .. i .. "1"
@@ -214,7 +216,7 @@ function posBools()
             boolStationary = false
         end
 
-        for i = 1, 4, 1 do
+        for i = 1, numberOfBirds, 1 do
             px, py, pz, _, _, _ = spGetUnitPiecePosDir(unitID, Birds[i].Air[1])
             h = Spring.GetGroundHeight(px, pz)
             if (py - h > 21) then
@@ -231,8 +233,8 @@ end
 
 
 _, baseHealth = Spring.GetUnitHealth(unitID)
-quater = baseHealth / 4
-half = baseHealth / 2
+quater = math.ceil(baseHealth / 4)
+half = math.ceil(baseHealth / (numberOfBirds/2))
 
 thirthyfour = baseHealth * 0.75
 aerodynamicHoles = baseHealth / 12
@@ -253,16 +255,18 @@ function BirdDropping(nr)
 end
 
 
-
+leftBirds= numberOfBirds
 function script.HitByWeapon(x, z, weaponDefID, damage)
-    hp = Spring.GetUnitHealth(unitID)
-    if hp and damage and nextBigBarrier and hp - damage < nextBigBarrier then
-        table.remove(Barriers, table.getn(Barriers))
-        nextBigBarrier = Barriers[math.max(1, table.getn(Barriers))]
-        if table.getn(Barriers) > 1 then
-            nr = math.max(2, table.getn(Barriers))
-        end
-        StartThread(BirdDropping, nr)
+    hp,maxHp = Spring.GetUnitHealth(unitID)
+	futureHP= hp - damage
+	futureHP= math.max((futureHP/maxHp)*numberOfBirds,2)
+	leftBirds= futureHP
+    if hp and damage and futureHP then
+		for hideIndex= numberOfBirds, futureHP do
+			if Birds[hideIndex].boolStillActive== true then
+		        StartThread(BirdDropping, hideIndex)
+			end
+		end
     end
 
     return damage
@@ -433,6 +437,25 @@ function idle(nr)
     end
 end
 
+function recoverInWater()
+	while true  do
+	Sleep(3000)
+		if boolFlying == false then
+		x,y,z= Spring.GetUnitPosition(unitID)
+
+			if y < 0 then 
+				for nr =1, numberOfBirds do
+				  if   Birds[nr].boolStillActive == false then
+					leftBirds=leftBirds+1
+					Birds[nr].boolStillActive = true 
+					showLand(nr)
+					break
+				  end  
+				end
+			end
+		end
+	end
+end
 
 
 function ReAlign(i, boolOnTheFly)
@@ -479,7 +502,8 @@ function script.Create()
 
     StartThread(posBools)
     StartThread(thisShitWontFly)
-    for i = 1, 4, 1 do
+    StartThread(recoverInWater)
+    for i = 1, numberOfBirds, 1 do
         StartThread(birdOS, i)
     end
 end
@@ -510,3 +534,32 @@ function script.Killed()
 end
 
 
+
+--- -aimining & fire weapon 
+function script.AimFromWeapon1()
+    return aimpiece
+end
+
+function script.QueryWeapon1()
+    return aimpiece
+end
+
+
+
+function script.AimWeapon1(Heading, pitch)
+
+	return leftBirds > 1
+end
+
+function script.FireWeapon1()
+
+	 for i = numberOfBirds, 2,-1 do
+		if birds[i].boolStillActive== true then
+			leftBirds= leftBirds-1
+			birds[i].boolStillActive=false
+			HideBird(i)
+			break
+		end
+    end
+    return true
+end

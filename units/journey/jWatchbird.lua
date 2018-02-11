@@ -70,7 +70,9 @@ local unitDef = {
 	
 	
 	weapons = {
-		
+		[1]={name = "jbeanstalkphoenix",
+			onlyTargetCategory = [[LAND]],
+		},	
 		
 	},	
 	
