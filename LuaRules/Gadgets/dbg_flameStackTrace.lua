@@ -40,6 +40,7 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 												-- callLeft (or no Arguments)
 												-- totalTimeSpend = 0,
 												-- numberOfCalls=0
+												--calledFrom = {}
 												-- name= "functionname"
 								-- }
 
@@ -79,7 +80,7 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 		
 	function wrapFunction(unitID, unitDefID, func, name)
 	if name then
-		local Function = func
+
 	--	Spring.Echo("Wrapping function "..name)
 		local retFunc= function(...)
 	
@@ -94,7 +95,7 @@ VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 					--Stack pushed
 					stackIndex= stackPushing(unitID, unitDefID, func, name)
 					--hand down arguments and actual call					
-					retArguments = table.pack(Function(unpack(arguments)))
+					retArguments = table.pack(func(unpack(arguments)))
 					
 					--Stack popped
 					if GG.UnitStack[unitID][#GG.UnitStack[unitID]] and stackIndex > 1 then
