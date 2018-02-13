@@ -64,7 +64,7 @@ local unitDef = {
 	Category = [[LAND]],
 	
 weapons = {
-	[1]={name  = "sniperslavemelee",
+	[1]={name  = "sniperweapon",
 		onlyTargetCategory = [[LAND]],
 		},
 	[2]={name  = "sniper",

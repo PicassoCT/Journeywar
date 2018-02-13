@@ -36,9 +36,8 @@ Simulation.__index = Simulation
 function Simulation:new(numOfMasses, massWeightT)
 	assert(massWeightT)
 	assert(numOfMasses)
-	metaTable = {
-			masses = {}          
-        }
+	metaTable = {}
+	metaTable.masses = {}
 		
 		for i=1, numOfMasses do
 			metaTable.masses[i] = Mass:new(massWeightT[i])

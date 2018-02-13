@@ -1,6 +1,23 @@
 VFS.Include("scripts/lib_type.lua", nil, VFS.DEF_MODE)
 
 --[[
+Section:  Team Information Getters/Setters 
+Section:  Unit Information Getters/Setters 
+Section:  Initializing Functions
+Section:  Landscape/Pathing Getter/Setters
+Section:  Syntax additions and Tableoperations
+Section: Geometry/Math functions
+Section : Code Generation 
+Section : String Operations
+Section:  Debug Tools 
+Section: Random 
+Section:  Physics 
+Section:  Sound
+Section:  Ressources
+Section:  Unit Commands
+Section:  Sfx Operations
+]]
+--[[
 This library is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or

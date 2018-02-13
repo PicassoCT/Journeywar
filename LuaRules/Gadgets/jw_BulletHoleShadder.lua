@@ -18,7 +18,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
     local HoleInOneT = {}
     HoleInOneT[WeaponDefNames["comendsniper"].id] = { diameter = 64 }
-    HoleInOneT[WeaponDefNames["sniperslavemelee"].id] = { diameter = 32 }
+    HoleInOneT[WeaponDefNames["sniperweapon"].id] = { diameter = 32 }
     local PIECE_VOLUMEMINFORHOLE = 420
     local PIECE_INV = 1 / PIECE_VOLUMEMINFORHOLE
 

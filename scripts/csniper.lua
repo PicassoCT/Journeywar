@@ -312,12 +312,19 @@ heightTable={}
 nPrevDegTable={}
 
 --Keep the ropebase physicaly Resting
-rotationOffset = 0 
+rotationOffset = math.rad(-90) 
+RopeRestPiece=rope[12]
 function ropeRelativeResting()
-
+	heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
 	while true do	
-		heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
-		Turn(rope[12],y_axis, -heading + rotationOffset, 120)
+	
+		if boolMoving == false then
+			heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
+			Turn(RopeRestPiece,y_axis, -heading + rotationOffset, 15)
+		else	
+			heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi		
+			Turn(RopeRestPiece,y_axis, 0, 1.5)
+		end
 		Sleep(10)
 	end
 
@@ -344,13 +351,6 @@ function checkSnipers()
 	return boolAltered
 end
 
-ROPE_SIM_MAX = 5
-function isRopeSimFeasable()
-	if not GG.SniperRopeSim then GG.SniperRopeSim = 0 end
-	if GG.SniperRopeSim > ROPE_SIM_MAX then return false end
-	
-	return true
-end
 
 boolIHaveSimActive = false
 function ourOnlyRope (passengerID)
@@ -367,20 +367,6 @@ function ourOnlyRope (passengerID)
 	StartThread(draggingSound)
 
 
-	boolFullRopeSim = isRopeSimFeasable()
-
-	if boolFullRopeSim == true then
-	GG.SniperRopeSim = inc(GG.SniperRopeSim)
-	boolIHaveSimActive= true
-	
-	runRopeSim(passengerID)
-	
-	
-	boolIHaveSimActive= false
-	GG.SniperRopeSim = dec(GG.SniperRopeSim)	
-	else -- not RopeSimAlternative
-		retractRope()
-	end
 
 	
 	while(boolUnitLoaded==true) do
@@ -391,72 +377,11 @@ function ourOnlyRope (passengerID)
 	
 end
 
---> Runs a RopeSimulation and turns the 
-function runRopeSim(passengerID)
-
-	heightTable= makeTable(0,10,10)
-	numOfSemgents = nrOfPieces
-	massWeightT = makeTable(10,11)
-	springConstant = 0.50
-	lengthOfElementT = makeTable(10, 11)
-	springFrictionConstant= 0.50
-	gravitation = 0.981
-	airFrictionConstant = 0.2				
-	groundRepulsionConstant =	0.8	
-	groundFrictionConstant = 0.3			
-	groundAbsorptionConstant =	0.5	
-	groundHeight = heightTable
-			
-	RopeSim = RopeSimulation:new(
-			numOfSemgents ,								--1. the number of masses
-			massWeightT,								--2. weight of each mass
-			springConstant,								--3. how stiff the springs are
-			lengthOfElementT,							--4. the length that a spring does not exert any force
-			springFrictionConstant,						--5. inner friction constant of spring
-			gravitation,								--6. gravitational acceleration
-			airFrictionConstant,						--7. air friction constant
-			groundRepulsionConstant,					--8. ground repulsion constant
-			groundFrictionConstant,						--9. ground friction constant
-			groundAbsorptionConstant,					--10. ground absorption constant
-			groundHeight)
-		
-		while Spring.GetUnitTransporter(passengerID) == unitID do
-			mapRopeSimToPieces(passengerID, RopeSim)
-			mapTerrainToRopeSim(passengerID, RopeSim)
-			Sleep(50)
-			RopseSim:Simulate(50)
-		end
-
-end
-
-function mapRopeSimToPieces(passengerID, RopeSim)
-	accumulatedOffset= Vector:new(0,0,0)
-
-	for i=1, #RopeSimulation.masses, 1 do
-		local mass = RopeSimulation.masses[i]
-		accumulatedOffset = accumulatedOffset + mass.pos
-		turnPieceTowards(rope[i],accumulatedOffset.x,accumulatedOffset.y,accumulatedOffset.z,0)
-	end
-end
-
 local fourPieces= {}
 	  fourPoints= {}
 for i=1,4 do
 	fourPieces[i]= piece("fp"..i)
 	fourPoints[i]= {}
-end
-
-function mapTerrainToRopeSim(passengerID, RopeSim)
-		for i=1,4 do fourPoints.x,fourPoints.y,fourPoints.z = Spring.GetUnitPosition(unitID,fourPieces[i] ) end
-
-		for x=1,10 do
-			for y=1,10 do
-			Xpoint =  mix(fourPoints[1],fourPoints[2], x/10)
-			X2point =  mix(fourPoints[3],fourPoints[4], x/10)
-			FinalPoint= mix(Xpoint,X2point, y/10)
-			heightTable[x][y] = Spring.GetGroundHeight(FinalPoint.x,FinalPoint.z)
-			end
-		end		
 end
 
 
@@ -476,15 +401,18 @@ function script.TransportPickup(passengerID)
 		heading = (65533 - Spring.GetHeadingFromVector(dx/norm, dz/norm)) - (Spring.GetUnitHeading(unitID))/(32768*math.pi)
 		local dist = (dx^2 + dz^2)^0.5
 		
-		if dist > 200 then return end
+
 		
 		WTurn(csniper,y_axis,heading ,12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
 
 		expandRope()
 		transportedID=passengerID
 		AttachUnit(bloodemt, passengerID)
+		retractRopePercent(60,15)
+		Turn(csniper,y_axis,0 ,0.2) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
 		boolUnitLoaded=true
 		
+		StartThread(ropeRelativeResting)
 		StartThread(ourOnlyRope,passengerID)
 		
 	
@@ -564,23 +492,24 @@ function fold()
 	SetSignalMask(SIG_FOLD)
 	----Spring.Echo("ThreadUnFold")
 	
-	Turn(turret,x_axis,math.rad(0),2.2)
-	Turn(turret,y_axis,math.rad(0),2.2)
-	Turn(turret,z_axis,math.rad(0),2.2)
+	Turn(turret,x_axis,math.rad(0),2.2*3)
+	Turn(turret,y_axis,math.rad(0),2.2*3)
+	Turn(turret,z_axis,math.rad(0),2.2*3)
 	WaitForTurn(turret,x_axis)
-	Turn(turret, x_axis,math.rad(0),1.85)
-	Turn(turret2, x_axis,math.rad(0),1.85)
-	Turn(sstowf2,y_axis,math.rad(180),4)
+	Turn(turret, x_axis,math.rad(0),1.85*3)
+	Turn(turret2, x_axis,math.rad(0),1.85*3)
+	Turn(sstowf2,y_axis,math.rad(180),4*3)
 	WaitForTurn(sstowf2,y_axis)
 	WaitForTurn(turret2, x_axis)
-	Move(sstowf,y_axis, -65,6)
+	Move(sstowf,y_axis, -65,165.0)
 	WaitForMove(sstowf,y_axis)
 	Sleep(50)
 	Hide(sstowf)
 	Hide(sstowf)
-	Turn(turret,y_axis,math.rad(0),2.2)
+	Turn(turret,y_axis,math.rad(0),2.2*3)
 	
 	while(true) do
+
 		Turn(turret,y_axis,math.rad(0),2.2)
 		Sleep(1024)
 	end
@@ -599,15 +528,7 @@ function unfold()
 	Move(sstowf,y_axis, 0,5)
 	WaitForMove(sstowf,y_axis)
 	boolFireLock = false
-	while(true) do
-		tempIdle=tempIdle+1
-		Sleep(1024)
-		if tempIdle%7==0 and boolTargetInScope == false then
-			diceThrow=math.random(-360,360)
-			Turn(sstowf2,y_axis,math.rad(diceThrow),4)
-			Sleep(512)
-		end
-	end
+	
 	
 	
 end
@@ -622,45 +543,22 @@ end
 
 boolMoving= false
 adaptionfactor=0.0
-function updateRopeHeadingOnTheMove()
-		adaptionfactor= math.min(1.0,math.max(0.0, adaptionfactor + 0.02))
-		restheading =   (Spring.GetUnitHeading(unitID))/ 32768*math.pi
-		rotationOffset = mix(rotationOffset, restheading, adaptionfactor)
-end
 
-function moveOutAndTurnInNewDirection()
-	Signal(SIG_MOVEOUT)
-	Signal(SIG_MOVEIN)
-	SetSignalMask(SIG_MOVEOUT)
-	factor= 1.0
-	adaptionfactor= 0.0
-	
+function moveDetector()
+ox,oy,oz= Spring.GetUnitPosition(unitID)
 	while true do
-		
-			factor= math.min((factor +factor),100)
-			expandRopePercent(factor, 15)
-			updateRopeHeadingOnTheMove()
-		
-		Sleep(50)
-	end
-end
-
-
-function moveCloserAndTurnInNewDirection()
-	Signal(SIG_MOVEOUT)
-	Signal(SIG_MOVEIN)
-	SetSignalMask(SIG_MOVEIN)
-	factor= 100.0
-	
-	while true do
-		factor= math.max((factor/2),1)
-		retractRopePercent(factor, 15)
-		Sleep(50)
+		lx,ly,lz= Spring.GetUnitPosition(unitID)
+		if distance(ox,oy,oz,lx,ly,lz)> 10 then
+			boolMoving = true
+		else
+			boolMoving=false
+		end
+		Sleep(350)
+		ox,oy,oz=lx,ly,lz
 	end
 end
 
 function script.StartMoving()
-	boolMoving= true
 	if boolFilterActive== false then
 		Signal(SIG_SPAM)
 		StartThread(spamFilter)
@@ -669,16 +567,13 @@ function script.StartMoving()
 	Turn(csniper, y_axis, math.rad(0),9)
 	spamfilterSTOP = false
 	spamfilterSTART=true
-	StartThread(moveOutAndTurnInNewDirection)
-	
 end
 
 function script.StopMoving()
-	boolMoving= false
 	-- ----Spring.Echo ("stopped walking!")
 	spamfilterSTART = false 
 	spamfilterSTOP=true 
-		StartThread(moveCloserAndTurnInNewDirection)
+
 end
 
 local function spamFilter()
@@ -772,14 +667,10 @@ function unfold()
 	Move(sstowf,y_axis, 1,5)
 	WaitForMove(sstowf,y_axis)
 	boolFireLock = false
+	Turn(sstowf2,y_axis,math.rad(0),4)
 	while(true) do
-		tempIdle=tempIdle+1
-		Sleep(1024)
-		if tempIdle%7==0 and boolTargetInScope == false then
-			diceThrow=math.random(-360,360)
-			Turn(sstowf2,y_axis,math.rad(diceThrow),4)
-			Sleep(512)
-		end
+		Sleep(512)
+
 	end
 	
 	
@@ -794,13 +685,12 @@ end
 function constLazzorsEmit()
 	Sleep(1500)
 	local lEmitSfx = EmitSfx
+
 	while(true) do
 		
 		if boolEmit == true then
-			Turn(flare,x_axis,math.rad(0),0)
-			Turn(flare,y_axis,math.rad(0),0)
-			Turn(flare,z_axis,math.rad(0),0)
-			lEmitSfx(flare, 2049)
+
+			lEmitSfx(flare,1028)
 		end
 		--EmitSfx by force
 		Sleep(65)
@@ -808,17 +698,22 @@ function constLazzorsEmit()
 	end	
 end
 
-function retractRopePercent(percent, speed)
-	percent = math.ceil((percent/100)*12)
-	tMinus=0
+function retractRopePercent(opercent, speed)
+	percent = math.ceil((opercent/100)*12)
+	Move(harpoonupmyass,z_axis,166*(opercent/100),speed)
+	RopeRestPiece=rope[percent]
 	for i=1, percent,1 do
 		tMinus= tMinus+14
 		Turn(rope[(13-i)],x_axis,math.rad(0),600)
 		Turn(rope[(13-i)],z_axis,math.rad(0),600)
 		Turn(rope[(13-i)],y_axis,math.rad(0),600)
-		Move(harpoonupmyass,z_axis,tMinus,speed)
-		Hide(rope[(13-i)])
+		Show(rope[(13-i)])
 		Sleep(10)
+	end
+	
+	for i=percent, 12,1 do
+
+		Hide(rope[(i)])
 	end
 end
 function expandRopePercent(percent, speed)
@@ -835,10 +730,12 @@ end
 
 --function retracts rope from any lenght
 function retractRope()
+
 	Spring.PlaySoundFile("sounds/csniper/harpoonretract.wav") 
 	Sleep(666)
 	Move(harpoonupmyass,z_axis,166,420)
 	Sleep(50)
+
 	for i=1, 12,1 do
 		Turn(rope[(13-i)],x_axis,math.rad(0),600)
 		Turn(rope[(13-i)],z_axis,math.rad(0),600)
@@ -870,12 +767,15 @@ function expandRope()
 end
 
 function script.Create()
+	Turn(csniper,y_axis,0 ,12)
+
 	Hide(flare)
 	Signal(SIG_SPAM)
 	for i=1, #rope do
 		Hide(rope[i])
 	end
 	StartThread(constLazzorsEmit)
+	StartThread(moveDetector)
 end
 
 function script.Killed(recentDamage,_)
@@ -961,9 +861,9 @@ function script.AimWeapon1(heading ,pitch)
 		boolStillAiming=true	
 		
 		--aiming animation: instantly turn the gun towards the enemy
-		Turn(sstowf, y_axis, heading,0.95)
+		Turn(sstowf2, y_axis, heading,0.95)
 		Turn(turret2, x_axis, -pitch,0.65)
-		WaitForTurn(sstowf,y_axis)
+		WaitForTurn(sstowf2,y_axis)
 		WaitForTurn(turret2,x_axis)
 		
 		return true
@@ -979,7 +879,7 @@ function script.AimFromWeapon1()
 end
 
 function script.QueryWeapon1() 
-	return flare
+	return turret2
 end
 
 function script.FireWeapon1()
@@ -992,19 +892,3 @@ function script.FireWeapon1()
 	return true
 end
 
-------------------------------------------------------------
-function script.AimWeapon2()	
-	return true
-end
-
-function script.AimFromWeapon2() 
-	return turret2
-end
-
-function script.QueryWeapon2() 
-	return flare 
-end
-
-function script.FireWeapon2()	
-	return true
-end

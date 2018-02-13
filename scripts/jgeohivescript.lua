@@ -97,7 +97,15 @@ function spawner()
 
     local x, y, z = Spring.GetUnitPosition(unitID)
 
-
+	jtypeTable={
+	"jhoneypot",
+	"jbugcreeper",
+	"jcrabcreeper"
+	}	
+	ctypeTable={
+	"gzombiehorse",
+	"zombie"
+	}
 
     while (true) do
         --- -Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
@@ -126,19 +134,16 @@ function spawner()
                 dice = math.random(1, 4)
                 spawnedUnit = 0
                 if myDefID == jGeoHiveID then
-                    if dice == 1 then
-                        spawnedUnit = spCreateUnit("jhoneypot", x + randoval, y, z + (randoval * sigNum), 0, teamID)
-                    elseif dice == 2 then
-                        spawnedUnit = spCreateUnit("jbugcreeper", x + randoval, y, z + (randoval * sigNum), 0, teamID)
-                    else --we addd the crab here
-                        spawnedUnit = spCreateUnit("jcrabcreeper", x + randoval, y, z + (randoval * sigNum), 0, teamID)
-                    end
+							if jtypeTable[dice] then
+								dice= 3
+							end
+                        spawnedUnit = spCreateUnit(jtypeTable[dice], x + randoval, y, z + (randoval * sigNum), 0, teamID)
+						
                 else
-                    if dice == 2 then
-                        spawnedUnit = spCreateUnit("gzombiehorse", x + randoval, y, z + (randoval * sigNum), 0, teamID)
-                    else
-                        spawnedUnit = spCreateUnit("zombie", x + randoval, y, z + (randoval * sigNum), 0, teamID)
-                    end
+							if ctypeTable[dice] then dice = 2 end
+							
+                        spawnedUnit = spCreateUnit(ctypeTable[dice], x + randoval, y, z + (randoval * sigNum), 0, teamID)
+
                 end
 
                 if spawnedUnit and Spring.ValidUnitID(spawnedUnit) == true then
@@ -400,6 +405,8 @@ function getNearestEnemy(idID)
     return minDistID
 end
 
+
+
 function handleHiveAttacks()
     boolStillAlive = true
     while boolHiveAttacked == true and boolStillAlive == true do
@@ -409,10 +416,10 @@ function handleHiveAttacks()
             boolStillAlive = Spring.GetUnitIsDead(lastAttacker)
             ex, ey, ez = Spring.GetUnitPosition(lastAttacker)
             for num, monsterid in pairs(monsterTable) do
-                if Spring.GetUnitIsDead(monsterid) == false then
+                if monsterTable[num] and monsterid and Spring.GetUnitIsDead(monsterid) == false then
                     Command(monsterid, "go", { x = ex + math.random(-25, 25), y = ey, z = ez + math.random(-25, 25) }, {})
                 else
-                    monsterTable[monsterid] = nil
+							table.remove(monsterTable,num)
                 end
             end
         end
@@ -420,16 +427,6 @@ function handleHiveAttacks()
     end
 end
 
-function countMonsters()
-count=0
-for i=1,table.getn(monsterTable) do
-	if monsterTable[i] and Spring.GetUnitIsDead(monsterTable[i])== false then
-		count= count+1
-	end
-end
-
-return count
-end
 
 AllUnitsUpdated = {}
 State = "RELAX"
@@ -446,8 +443,8 @@ function TargetOS()
     oldState = "RELAX"
     while (true) do
         handleHiveAttacks()
-        Sleep(10000)
-        times = times + 10000
+        Sleep(5000)
+        times = times + 5000
         AllUnitsUpdated = Spring.GetAllUnits()
 		AnzahlMonster =count(monsterTable)
 		

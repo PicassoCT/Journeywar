@@ -1,7 +1,7 @@
 --- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
-local weaponName = "sniperslavemelee"
+local weaponName = "sniperweapon"
 local weaponDef = {
-    name = "sniperslavemelee",
+    name = "sniperweapon",
     weaponType = [[Cannon]],
 
     -- --soundHit           = "null",
