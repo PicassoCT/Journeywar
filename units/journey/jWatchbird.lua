@@ -17,7 +17,7 @@ local unitDef = {
 	idleAutoHeal = 1,
 	--Movement
 	Acceleration = 0.5,
-	fireState=1,
+
 	BrakeRate = 1,
 	FootprintX = 3,
 	FootprintZ = 3,
@@ -27,7 +27,7 @@ local unitDef = {
 	turnRadius		 	= 8,
 	dontLand		 	= false,
 	MaxVelocity = 2.5,
-	MaxWaterDepth = 0,
+	MaxWaterDepth = 30,
 	MovementClass = "Default2x2",
 	TurnRate = 150,
 	nanocolor=[[0 0.9 0.9]],
@@ -35,16 +35,15 @@ local unitDef = {
 	CanFly = true,
 	
 	--canHover=true,
-	CanAttack = false,
+	CanAttack = true,
 	CanGuard = true,
 	CanMove = true,
 	CanPatrol = true,
-	Canstop = false,
-	onOffable = true,
+	Canstop = true,
+	
 	LeaveTracks = false, 
 	cruiseAlt=265,
 	
-	ActivateWhenBuilt=0,
 	maxBank=0.4,
 	myGravity =0.5,
 	mass = 1225,
@@ -59,9 +58,8 @@ local unitDef = {
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:flyingfeather",
-			"custom:bloodspray",
-			
-			
+			"custom:bloodspray",		
+			"custom:dirt",		
 			
 			
 		},
