@@ -56,13 +56,7 @@ end
 
 function script.Create()
 
-    for i = 1, 8, 1 do
-        Hide(Quad[i])
-    end
-
-    Hide(Kugel01)
-    Hide(Kugel02)
-    Hide(fireFx)
+	 hideAll(unitID)
     StartThread(transferCommands)
     StartThread(whileMyThreadGentlyWeeps)
 

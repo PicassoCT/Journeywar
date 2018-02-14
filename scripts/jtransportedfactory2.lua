@@ -49,12 +49,8 @@ function transferCommands()
 end
 
 function script.Create()
+hideAll(unitID)
 
-    for i = 1, 8, 1 do
-        Hide(Quad[i])
-    end
-    Hide(Kugel01)
-    Hide(Kugel02)
     StartThread(transferCommands)
     StartThread(whileMyThreadGentlyWeeps)
     StartThread(delayedUpgrade)
