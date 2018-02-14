@@ -353,6 +353,7 @@ function getRecycleableUnitTypeTable()
         [UnitDefNames["gcvehiccorpse"].id] = true,
         [UnitDefNames["gcvehiccorpsemini"].id] = true,
         [UnitDefNames["gjmeatballs"].id] = true,
+        [UnitDefNames["ghohymen"].id] = true,
         [UnitDefNames["zombie"].id] = true,
         [UnitDefNames["gseastar"].id] = true,
         [UnitDefNames["gshit"].id] = true
