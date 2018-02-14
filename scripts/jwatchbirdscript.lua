@@ -81,7 +81,7 @@ L41 = piece "L41"
 piecesTable[#piecesTable + 1] = L41
 L42 = piece "L42"
 piecesTable[#piecesTable + 1] = L42
-
+RengerateInterval= 25000
 --Bird, Bird, Bird is the word
 local Birds = {}
 local numberOfBirds = 7
@@ -316,15 +316,17 @@ function Fly(nr)
         Turn(Birds[nr].Air[3], z_axis, math.rad(0), 0.9)
         Sleep(900)
     end
-    --ReAlign(nr,false)
-end
 
+end
+boolOnTheFly = false
 
 
 function script.StartMoving()
+boolOnTheFly = true
 end
 
 function script.StopMoving()
+boolOnTheFly = false
 end
 
 
@@ -438,12 +440,13 @@ function idle(nr)
 end
 
 function recoverInWater()
+	regenRate= math.ceil(RengerateInterval/numberOfBirds)
 	while true  do
-	Sleep(3000)
+	Sleep(regenRate)
 		if boolFlying == false then
 		x,y,z= Spring.GetUnitPosition(unitID)
 
-			if y < 0 then 
+			if y < 10 then 
 				for nr =1, numberOfBirds do
 				  if   Birds[nr].boolStillActive == false then
 					leftBirds=leftBirds+1
@@ -458,7 +461,7 @@ function recoverInWater()
 end
 
 
-function ReAlign(i, boolOnTheFly)
+function ReAlign(i)
     StopSpin(Birds[i].bRot, y_axis)
     StopSpin(Birds[i].sRot, y_axis)
     Speed = 3.3
@@ -514,12 +517,11 @@ function thisShitWontFly()
     while true do
 
         while boolOnTheFly == true do
-            x, y, z = spGetUnitPos(unitID)
-            ed = spGetUnitNearestEnemy(unitID)
+           
+            ed = Spring.GetUnitNearestEnemy(unitID)
             if ed then
-                ex, ey, ez = spGetUnitPos(ed)
-                ex, ey, ez = ex - x, ey - y, ez - z
-                dist = math.sqrt(ex * ex + ey * ey + ez * ez)
+               
+                dist = distanceUnitToUnit(unitID,ed)
                 if dist < 1024 then PlaySoundByUnitDefID(defid, "sounds/jwatchbird/Falcon.wav", 1.0, 20000, 2) end
             end
             Sleep(1000)
@@ -548,33 +550,20 @@ end
 
 function script.AimWeapon1(Heading, pitch)
 
-	return leftBirds > 1 and boolActivate == true 
+	return leftBirds == numberOfBirds and boolOnTheFly == true 
 end
 
 function script.FireWeapon1()
 
 	 for i = numberOfBirds, 2,-1 do
-		if birds[i].boolStillActive== true then
+		if Birds[i].boolStillActive== true then
 			leftBirds= leftBirds-1
-			birds[i].boolStillActive=false
+			Birds[i].boolStillActive=false
 			HideBird(i)
-			break
+	
 		end
     end
     return true
 end
 
-boolActivate= false
-function script.Activate()
-    boolActivate = true
-   
-    return 1
-end
-
-function script.Deactivate()
-
-	boolActivate = false
-
-
-    return 0
-end
+boolFlying= false
