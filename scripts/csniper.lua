@@ -388,12 +388,12 @@ end
 
 
 transportableDefIds= getRecycleableUnitTypeTable()
-
+infantryTypeTable= getInfantryTypeTable()
 local transportedID=nil
 function script.TransportPickup(passengerID)
 	--Spring.Echo("TransportPickup")
 	local UnitedDefIDs=Spring.GetUnitDefID(passengerID)
-	if boolUnitLoaded == false and (transportableDefIds[UnitedDefIDs] or isInfantry(UnitedDefIDs)==true) then
+	if boolUnitLoaded == false and (transportableDefIds[UnitedDefIDs] or infantryTypeTable[UnitedDefIDs]) then
 		SetUnitValue(COB.BUSY, 1)	
 		
 		local px1, py1, pz1 = Spring.GetUnitPosition(unitID)
@@ -507,7 +507,6 @@ function fold()
 	
 	while(true) do
 
-		Turn(turret,y_axis,math.rad(0),2.2)
 		Sleep(1024)
 	end
 end
@@ -863,10 +862,7 @@ function script.AimWeapon1(heading ,pitch)
 		WaitForTurn(turret2,x_axis)
 		
 		return true
-	end
-	
-	
-	
+	end	
 end
 
 function script.AimFromWeapon1() 
@@ -884,6 +880,7 @@ function script.FireWeapon1()
 	Spring.PlaySoundFile("sounds/csniper/csniper.wav") 
 	boolStillAiming = false
 	boolEmit = false	
+	Turn(turret2, x_axis, math.rad(-5),35)
 	StartThread(delayedReactivation)
 	return true
 end

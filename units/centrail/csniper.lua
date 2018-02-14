@@ -23,7 +23,7 @@ local unitDef = {
 	MaxWaterDepth = 20,
 	MovementClass = "Default2x2",
 	TurnRate = 900,
-	moveState =1,
+
 	nanocolor=[[0 0.9 0.9]],
 	collisionvolumetype  = "box",
 	collisionvolumescales = "30 65 30",
@@ -31,7 +31,7 @@ local unitDef = {
 	 --collisionVolumeTest = 1;
 		explodeAs="citadelldrone",
 		selfDestructAs="cartdarkmat", 
-
+	moveState=0,
 	sightDistance = 650,
 
 	Builder = false,

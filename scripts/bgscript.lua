@@ -673,7 +673,7 @@ function headexplode(Time, intervall)
     end
 end
 
-bloodtable = { [1] = bgbase, [2] = Head, [3] = bgtorso }
+bloodtable = {  bgbase,Head,  bgtorso }
 function offOverHead()
     Move(bgbase, y_axis, -4.6, 10)
     Turn(bglowlegr, x_axis, math.rad(107), 45)

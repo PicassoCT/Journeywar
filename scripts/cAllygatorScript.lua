@@ -332,7 +332,6 @@ function swallowAnimation(victimID)
     victimType = Spring.GetUnitDefID(victimID)
     --unit is blacklisted?
 
-
     if victimType and not blackListCAllyGator[victimType] then
 
         -- Unit check by size
@@ -392,14 +391,14 @@ function swallowAnimation(victimID)
                         boolAteItAlive = true
                         boolAbortEating = false
                     end
-
+							
 
                     AnimationRunning_ms = AnimationRunning_ms + 30
                     Sleep(30)
                 end
 
                 Spring.MoveCtrl.Disable(unitID, true)
-
+					  addRessourcesAndHeal(victimType,victimID, unitID)
 
 
                 --flying Animatin towards the Unit
@@ -415,6 +414,10 @@ function swallowAnimation(victimID)
     if boolAbortEating == true then
         cleanUpAfterYou(victimID)
     end
+end
+
+function addRessourcesAndHeal(victimType,victimID, unitID)
+
 end
 
 function cleanUpAfterYou(victimID)

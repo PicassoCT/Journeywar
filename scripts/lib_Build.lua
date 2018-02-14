@@ -12103,7 +12103,7 @@ function buildInfernalMachine(center, pieceSize, pieceTable,limxz,limup)
 			end			
 		end
 		
-		Spring.Echo("buildInfernalMachine:getFreeSpotFunction- Error "..elementIndex.." no index found")
+	
 	end
 	
 	

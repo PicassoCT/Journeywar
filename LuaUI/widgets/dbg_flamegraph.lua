@@ -102,7 +102,7 @@ local	flameGraph = Chili.Grid:New{
 		for name,data in pairs(T) do
 			for i=1, #data.calledFrom do
 				callingFunction = data.calledFrom[i]
-				whoCalledWhoTable[callingFunction][name] = whoCalledWhoTable[callingFunction][name] or 0)
+				whoCalledWhoTable[callingFunction][name] = whoCalledWhoTable[callingFunction][name] or 0
 			end
 		end
 	end

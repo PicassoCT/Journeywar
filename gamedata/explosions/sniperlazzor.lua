@@ -15,7 +15,7 @@
         dir                = [[dir]],
         frontoffset        = 0.05,
         fronttexture       = [[0]],
-        length             = 400,
+        length             = 600,
         sidetexture        = [[TouchGround]],
         size               = 24,
         sizegrowth         = 0,
