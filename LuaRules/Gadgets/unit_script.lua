@@ -108,6 +108,8 @@ local sp_WaitForTurn = Spring.UnitScript.WaitForTurn
 local sp_SetPieceVisibility = Spring.UnitScript.SetPieceVisibility
 local sp_SetDeathScriptFinished = Spring.UnitScript.SetDeathScriptFinished
 
+local LUA_WEAPON_MIN_INDEX = 1
+local LUA_WEAPON_MAX_INDEX = LUA_WEAPON_MIN_INDEX + 3										  
 
 local UNITSCRIPT_DIR = (UNITSCRIPT_DIR or "scripts/"):lower()
 local VFSMODE = VFS.ZIP_ONLY
@@ -117,8 +119,7 @@ end
 
 -- needed here too, and gadget handler doesn't expose it
 
---VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
-VFS.Include('luagadgets/system.lua', nil, VFSMODE)
+VFS.Include('LuaRules/system.lua', nil, VFSMODE)
 VFS.Include('gamedata/VFSUtils.lua', nil, VFSMODE)
 
 --------------------------------------------------------------------------------
@@ -185,6 +186,7 @@ Format: {
 (inner tables are in order the calls to Sleep were made)
 --]]
 local sleepers = {}
+local section = 'unit_script.lua'
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -220,13 +222,13 @@ end
 
 -- Pcalls thread.onerror, if present.
 local function RunOnError(thread)
-        local fun = thread.onerror
-        if fun then
-                local good, err = pcall(fun, err)
-                if (not good) then
-                        Spring.Echo("unitscript.lua :: error in error handler: " .. err)
-                end
-        end
+	local fun = thread.onerror
+	if fun then
+		local good, err = pcall(fun, err)
+		if (not good) then
+			Spring.Log(section, LOG.ERROR, "error in error handler: " .. err)
+		end
+	end
 end
 
 -- Helper for AnimFinished, StartThread and gadget:GameFrame.
@@ -237,7 +239,7 @@ local function WakeUp(thread, ...)
         local good, err = co_resume(co, ...)
         if (not good) then
                 Spring.Log(gadget:GetInfo().name, LOG.ERROR, err)
-				Spring.Echo(err)
+
 				--  Spring.Log(gadget:GetInfo().name, LOG.ERROR, debug.traceback(co))
                 RunOnError(thread)
         end
@@ -371,50 +373,33 @@ function Spring.UnitScript.Sleep(milliseconds)
         co_yield()
 end
 
-local RunningThreadCounter={}
 
-
+		
 function Spring.UnitScript.StartThread(fun, ...)
-        local activeUnit = GetActiveUnit()
-		--DEBUG
-		if (not fun) then 
-			error("Error in UnitScript::Spring.UnitScript.StartThread - First Argument of StartThread is not a function ", 2) 		
-		end
-		if not RunningThreadCounter[activeUnit.unitID] then RunningThreadCounter[activeUnit.unitID] ={} end
-		 signal_mask = ((co_running() and activeUnit.threads[co_running()]) and activeUnit.threads[co_running()].signal_mask or 0)
-		if not RunningThreadCounter[activeUnit.unitID][signal_mask] then RunningThreadCounter[activeUnit.unitID][signal_mask] =0 end
-		RunningThreadCounter[activeUnit.unitID][signal_mask] =RunningThreadCounter[activeUnit.unitID][signal_mask] +1
+			--DEBUG
+	if (not fun) then 
+		error("Error in UnitScript::Spring.UnitScript.StartThread - First Argument of StartThread is not a function ", 2) 		
+	end
+	local activeUnit = GetActiveUnit()
+	local co = co_create(fun)
+	-- signal_mask is inherited from current thread, if any
+	local thd = co_running() and activeUnit.threads[co_running()]
+	local sigmask = thd and thd.signal_mask or 0
+	local thread = {
+		thread = co,
+		signal_mask = sigmask,
+		unitID = activeUnit.unitID,
+	}
 
-		if RunningThreadCounter[activeUnit.unitID][signal_mask] > 32 then
-		unitdefID=Spring.GetUnitDefID(activeUnit.unitID)
-		
-			for k,v in pairs (UnitDefNames) do
-				if v.id == unitDefID then
-				Spring.Echo("Unit number ".. activeUnit.unitID .." of type ".. k .. " has "..RunningThreadCounter[activeUnit.unitID][signal_mask] .." threads for mask "..signal_mask)
-				end
-	
-			end
-		end
-		
-        local co = co_create(fun)
-        local thread = {
-                thread = co,
-                -- signal_mask is inherited from current thread, if any
-                signal_mask = ((co_running() and activeUnit.threads[co_running()]) and activeUnit.threads[co_running()].signal_mask or 0),
-                unitID = activeUnit.unitID,
-				
-				
-        }
+	-- add the new thread to activeUnit's registry
+	activeUnit.threads[co] = thread
 
-        -- add the new thread to activeUnit's registry
-        activeUnit.threads[co] = thread
-
-        -- COB doesn't start thread immediately: it only sets up stack and
-        -- pushes parameters on it for first time the thread is scheduled.
-        -- Here it is easier however to start thread immediately, so we don't need
-        -- to remember the parameters for the first co_resume call somewhere.
-        -- I think in practice the difference in behavior isn't an issue.
-        return WakeUp(thread, ...)
+	-- COB doesn't start thread immediately: it only sets up stack and
+	-- pushes parameters on it for first time the thread is scheduled.
+	-- Here it is easier however to start thread immediately, so we don't need
+	-- to remember the parameters for the first co_resume call somewhere.
+	-- I think in practice the difference in behavior isn't an issue.
+	return WakeUp(thread, ...)
 end
 
 local function SetOnError(fun)
@@ -442,7 +427,6 @@ end
 function Spring.UnitScript.Signal(mask)
         local activeUnit = GetActiveUnit()
 
-		 RunningThreadCounter[activeUnit.unitID][signal_mask]=0
         -- beware, unsynced loop order
         -- (doesn't matter here as long as all threads get removed)
         if type(mask) == "number" then
@@ -496,7 +480,7 @@ end
 
 function Spring.UnitScript.GetLongestReloadTime(unitID)
         local longest = 0
-        for i=1,32 do
+        	for i = LUA_WEAPON_MIN_INDEX, LUA_WEAPON_MAX_INDEX do
                 local reloadTime = sp_GetUnitWeaponState(unitID, i, "reloadTime")
                 if (not reloadTime) then break end
                 if (reloadTime > longest) then longest = reloadTime end
@@ -624,8 +608,17 @@ local function Wrap_AimWeapon(unitID, callins)
         local AimWeapon = callins["AimWeapon"]
         if (not AimWeapon) then return end
 
+		
         -- SetUnitShieldState wants true or false, while
         -- SetUnitWeaponState wants 1.0 or 0.0, niiice =)
+	-- NOTE:
+	--   the LuaSynced* API functions all EXPECT 1-based arguments
+	--   the LuaUnitScript::*Weapon* callins all SUPPLY 1-based arguments
+	--
+	--   therefore on the Lua side all weapon indices are ASSUMED to be
+	--   1-based and if LuaConfig::LUA_WEAPON_BASE_INDEX is changed to 0
+	--   no Lua code should need to be updated  
+	
         local function AimWeaponThread(weaponNum, heading, pitch)
                 local bAimReady = AimWeapon(weaponNum, heading, pitch) or false
                 local fAimReady = (bAimReady and 1.0) or 0.0
@@ -642,7 +635,6 @@ end
 local function Wrap_AimShield(unitID, callins)
         local AimShield = callins["AimShield"]
         if (not AimShield) then return end
-
         -- SetUnitShieldState wants true or false, while
         -- SetUnitWeaponState wants 1 or 0, niiice =)
         local function AimShieldThread(weaponNum)
@@ -879,5 +871,4 @@ end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
--- return include("luagadgets/Gadgets/unit_script.lua")
 
