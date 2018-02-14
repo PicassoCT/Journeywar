@@ -2,10 +2,10 @@ local unitName = "chivemind"
 
 local unitDef = {
 	name = "Hivemind",
-	Description = " sacrifices individuals for a godlike intellect <Buff Building>",
+	Description = " sacrifices individuals for strategic thought speed <Buff Building>",
 	objectName = "cHiveMind.s3o",
 	script = "cHiveMindScript.lua",
-	buildPic = "jdragongrass.png",
+	buildPic = "chivemind.png",
 	--cost
 	buildCostMetal = 950,
 	buildCostEnergy = 750,

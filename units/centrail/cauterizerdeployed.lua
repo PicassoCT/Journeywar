@@ -5,8 +5,8 @@ local unitDef = {
 	Description = "Combat Drone <Areal Denial Unit>",
 	objectName = "cauterizer.s3o",
 	script = "cauterizerdeployedscript.lua",
-	buildPic = "placeholder.dds",
-	
+  buildPic            = [[cauterizer.png]],
+
 	--cost
 	buildCostMetal = 1500,
 	buildCostEnergy = 800,

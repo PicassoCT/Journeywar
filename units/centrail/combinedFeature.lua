@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " sterlizes the nearby Exobiotic fauna <Area Debuff Building>",
 	objectName = "cCombineOutPost.s3o",
 	script = "combinedFeatureScript.lua",
-	buildPic = "csniper.dds",
+	buildPic = "cwatchpost.png",
 	--cost
 	buildCostMetal = 600,
 	buildCostEnergy = 250,

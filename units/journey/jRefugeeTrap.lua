@@ -5,7 +5,7 @@ local unitDef = {
   description =" rebells rowdily once reached by Refugees running <Trap>",
   objectName         = "jRefuggeTrap.s3o",
   script ="jrefugeetrapscript.lua",
-  buildPic = "jplaceholder.png",
+  buildPic = "jrefugeetrap.png",
   	RadarDistance = 25,
 	SightDistance = 200,
   
