@@ -44,7 +44,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_Build.lua" 	)
 	
 	--Non Deterministic Randomness
-	FeatureTypeTable={"gproceduralfeature","gpillar"}
+	FeatureTypeTable={"gproceduralfeature","gpillar","ginfernalmachine"}
 	FeatureTypeMax=#FeatureTypeTable 	
 	boolFeatureType=math.ceil(math.random(1,FeatureTypeMax))
 	--Mission1-----------------------------------------------------------------------------------------
