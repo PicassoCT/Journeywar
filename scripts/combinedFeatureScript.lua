@@ -227,6 +227,22 @@ function script.AimWeapon1(heading, pitch)
     return true
 end
 
+boolEmit=false
+function constLazzorsEmit()
+	Sleep(1500)
+	local lEmitSfx = EmitSfx
+
+	while(true) do
+		
+		if boolEmit == true then
+
+			lEmitSfx(AimPiece2,1028)
+		end
+		--EmitSfx by force
+		Sleep(65)
+		
+	end	
+end
 
 
 function AimReseter()
@@ -244,8 +260,13 @@ function script.QueryWeapon1()
     return gun
 end
 
+function PauseEmit()
+boolEmit=true
+Sleep(1000)
+boolEmit=false
+end
 function script.FireWeapon1()
-
+	StartThread(PauseEmit)
 
     return true
 end
@@ -267,28 +288,6 @@ function reLoader()
 end
 
 ------------------------------------------------------------
-function script.AimWeapon2(heading, pitch)
-
-    Turn(AimPiece2, y_axis, math.rad(180), 0)
-
-    return boolLoaded
-end
-
-function script.AimFromWeapon2()
-    return tigLil
-end
-
-function script.QueryWeapon2()
-    return AimPiece2
-end
-
-function script.FireWeapon2()
-    boolLoaded = false
-    StartThread(reLoader)
-    Spring.PlaySoundFile("sounds/csniper/csniper.wav")
-
-    return true
-end
 
 boolAiming = false
 boolGuardWalking = false
@@ -642,6 +641,7 @@ function script.Create()
     StartThread(upLoop)
     StartThread(KillEggLoop)
     StartThread(fieldLoop)
+    StartThread(constLazzorsEmit)
 end
 
 

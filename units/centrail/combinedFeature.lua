@@ -59,6 +59,7 @@ local unitDef = {
 			"custom:bloodspray",
 			"custom:dirt",
 			"custom:greenlight",
+			"custom:sniperlazzor"
 		},	
 	},
 	Category = [[LAND]],
@@ -66,11 +67,7 @@ local unitDef = {
 weapons = {
 	[1]={name  = "sniperweapon",
 		onlyTargetCategory = [[LAND]],
-		},
-	[2]={name  = "sniper",
-		onlyTargetCategory = [[LAND]],
-		slaveTo=1,
-		},	
+		}
 	},
 }
 

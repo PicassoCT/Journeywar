@@ -11,7 +11,7 @@
       underwater         = 1,
       water              = true,
       properties = {
-        colormap           = [[0.4 0.8 1 0.004	0.4 0.8 1 0.004		0.4 0.8 1 0.0038]],
+        colormap           = [[0.1 0.2 0.5 0.004	0.1 0.2 0.5 0.004		0.1 0.2 0.5 0.0038]],
         dir                = [[dir]],
         frontoffset        = 0.05,
         fronttexture       = [[0]],

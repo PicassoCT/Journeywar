@@ -118,11 +118,12 @@ end
 
 local spEmitSfx=EmitSfx
 function dustEmit(boolIsABioUnit)
+	local lEmitSfx=EmitSfx
 	if boolIsABioUnit==true then
 		Spring.PlaySoundFile("sounds/csniper/harpimpflesh.wav") 
 		Sleep(150)
 		for i=1, 22, 1 do
-			spEmitSfx(emitblood,1025)
+			lEmitSfx(emitblood,1025)
 			nap=i*4+10
 			Sleep(nap)
 		end
@@ -312,7 +313,7 @@ heightTable={}
 nPrevDegTable={}
 
 --Keep the ropebase physicaly Resting
-rotationOffset = math.rad(-90) 
+rotationOffset =0
 RopeRestPiece=rope[12]
 function ropeRelativeResting()
 	heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
@@ -322,7 +323,8 @@ function ropeRelativeResting()
 			heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
 			Turn(RopeRestPiece,y_axis, -heading + rotationOffset, 15)
 		else	
-			heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi		
+			Turn(csniper,y_axis,0 ,2) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
+			rotationOffset =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi		
 			Turn(RopeRestPiece,y_axis, 0, 1.5)
 		end
 		Sleep(10)
@@ -398,18 +400,13 @@ function script.TransportPickup(passengerID)
 		local px2, py2, pz2 = Spring.GetUnitPosition(passengerID)
 		local dx, dy , dz = px2 - px1, py2 - py1, pz2 - pz1
 		norm= math.sqrt(dx^2 +dy^2 +dz^2)
-		heading = (65533 - Spring.GetHeadingFromVector(dx/norm, dz/norm)) - (Spring.GetUnitHeading(unitID))/(32768*math.pi)
-		local dist = (dx^2 + dz^2)^0.5
-		
-
-		
-		WTurn(csniper,y_axis,heading ,12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
+		sheading = (65533 - Spring.GetHeadingFromVector(dx/norm, dz/norm)) - (Spring.GetUnitHeading(unitID))/(32768*math.pi)
+		WTurn(csniper,y_axis,sheading ,12) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
 
 		expandRope()
 		transportedID=passengerID
 		AttachUnit(bloodemt, passengerID)
 		retractRopePercent(60,15)
-		Turn(csniper,y_axis,0 ,0.2) -- () -- (heading - 8192)*-1 | (-heading+(32768/2))
 		boolUnitLoaded=true
 		
 		StartThread(ropeRelativeResting)
@@ -700,9 +697,9 @@ end
 
 function retractRopePercent(opercent, speed)
 	percent = math.ceil((opercent/100)*12)
-	Move(harpoonupmyass,z_axis,166*(opercent/100),speed)
-	RopeRestPiece=rope[percent]
-	for i=1, percent,1 do
+	Move(harpoonupmyass,z_axis,(percent-1)*14,speed)
+	RopeRestPiece=rope[math.max(1,percent-2)]
+	for i=1, percent-2,1 do
 		tMinus= tMinus+14
 		Turn(rope[(13-i)],x_axis,math.rad(0),600)
 		Turn(rope[(13-i)],z_axis,math.rad(0),600)
@@ -711,8 +708,7 @@ function retractRopePercent(opercent, speed)
 		Sleep(10)
 	end
 	
-	for i=percent, 12,1 do
-
+	for i=percent-2, 12,1 do
 		Hide(rope[(i)])
 	end
 end
