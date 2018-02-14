@@ -15,13 +15,10 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function rebuildThread()
-
-    while true do
-
+			resetT(pieceTable)
         StartThread(buildInfernalMachine, center, 16, pieceTable)
         Sleep(10000)
-        resetT(pieceTable)
-    end
+
 end
 
 
