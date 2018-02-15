@@ -456,6 +456,7 @@ function script.Killed(recentDamage, maxHealth)
 	killedAnimation()
 	return 0
 end
+head= piece"head"
 
 function killedAnimation()
 	Move(center,x_axis,0,0)

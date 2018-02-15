@@ -838,47 +838,70 @@ x,y,z= Spring.GetUnitBasePosition(unitID)
 end
 
 
-IndustrySemaphore = 0
+
+boolNext=false
 
 function recycleCircle(id)
---GetIndustrial Semaphore
-	while IndustrySemaphore > 0 do
-		IndustrySemaphore = IndustrySemaphore + 1
-		if IndustrySemaphore > 1 then 
-			IndustrySemaphore = IndustrySemaphore -1
-		else
-			break
-		end
-	Sleep(50)
-	end 
 
 --move In
 moveCadaversToRalleyPoint(id)
+
+--GetIndustrial Semaphore
+
+repeat
+Sleep(50)
+until boolNext== false 
+if Spring.GetUnitIsDead(id)==true then return end
+boolNext=true
 
 --determinate Type
 theProcess(id)
 
 --call function by type
-IndustrySemaphore = IndustrySemaphore -1
+boolNext= false
 end
 
 cargoLifter = piece"cargoLifter"
+boolDroneBusy=false
 function moveCadaversToRalleyPoint(id)
+
+repeat
+	Sleep(100)
+until boolDroneBusy==false
+boolDroneBusy=true
+
 --TODO cargolifter
-boolArrived = false
-	while (boolArrived == false) do
+Hide(ralleypoint)
+
+
+	Spring.MoveCtrl.Disable(id)	
+
 		x, y, z = Spring.GetUnitPosition(id)
-		MovePieceToPos(cargoLifter, x, y, z, 7.5)
+		ox, oy, oz = Spring.GetUnitPosition(unitID)
+
+		mP(cargoLifter, 50, 200, -60, 100.5)
 		WaitForMoves(cargoLifter)
-		Spring.UnitScript.AttachUnit(cargoLifter, id)
-		movePieceToPieceNoReset(unitID, cargoLifter,ralleypoint, 2.5)
+		MovePieceToPos(cargoLifter, x-ox, y-oy+150, z-oz, 100.5)
 		WaitForMoves(cargoLifter)
-		Spring.UnitScript.DettachUnit(cargoLifter, id)
-		reset(cargoLifter,7.5)
+		MovePieceToPos(cargoLifter, x-ox, y-oy-55, z-oz, 100.5)		
+		WaitForMoves(cargoLifter)
+		Spring.UnitAttach(unitID,id, cargoLifter)
+		
+		px,py,pz=Spring.GetUnitPiecePosition(unitID, ralleypoint )
+		MovePieceToPos(cargoLifter, -1*px, y-py+100, pz, 75.5)		
+		WaitForMoves(cargoLifter)
+		Spring.UnitDetach(id)
+		mP(cargoLifter, 50, 200, -60, 100.5)
+		WaitForMoves(cargoLifter)	
+		
+		mP(cargoLifter, 50, 100, -60, 100.5)
+		WaitForMoves(cargoLifter)
+
 		WaitForMoves(cargoLifter)	
 		Sleep(500)
-    end
 	
+	boolDroneBusy= false
+
 	Spring.MoveCtrl.Enable(id)
 end
 
