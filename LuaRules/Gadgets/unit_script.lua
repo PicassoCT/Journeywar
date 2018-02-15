@@ -109,7 +109,7 @@ local sp_SetPieceVisibility = Spring.UnitScript.SetPieceVisibility
 local sp_SetDeathScriptFinished = Spring.UnitScript.SetDeathScriptFinished
 
 local LUA_WEAPON_MIN_INDEX = 1
-local LUA_WEAPON_MAX_INDEX = LUA_WEAPON_MIN_INDEX + 3										  
+local LUA_WEAPON_MAX_INDEX = LUA_WEAPON_MIN_INDEX + 31										  
 
 local UNITSCRIPT_DIR = (UNITSCRIPT_DIR or "scripts/"):lower()
 local VFSMODE = VFS.ZIP_ONLY
@@ -119,7 +119,7 @@ end
 
 -- needed here too, and gadget handler doesn't expose it
 
-VFS.Include('LuaRules/system.lua', nil, VFSMODE)
+VFS.Include('LuaGadgets/system.lua', nil, VFSMODE)
 VFS.Include('gamedata/VFSUtils.lua', nil, VFSMODE)
 
 --------------------------------------------------------------------------------
@@ -344,10 +344,9 @@ end
 
 function Spring.UnitScript.Sleep(milliseconds)
 		if not milliseconds then
-		local activeUnit = GetActiveUnit() or error("No active Unit with nil sleep",2)
+		local activeUnit = GetActiveUnit() or error("Active Unit with nil sleep",2)
 			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
-			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a nil  Sleep")     
-		
+			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has a nil  Sleep")     	
 		end
 		
         local n = floor(milliseconds / 33)
@@ -421,7 +420,6 @@ function Spring.UnitScript.SetSignalMask(mask)
             --    Spring.Log(gadget:GetInfo().name, LOG.WARNING, "@ Position: x= "..x.."  |  z= "..z)               
 	   end
         activeThread.signal_mask = mask
-        activeThread.signal_mask_set = true
 end
 
 function Spring.UnitScript.Signal(mask)
@@ -463,7 +461,7 @@ function Spring.UnitScript.Show(piece)
 			Spring.Echo("PieceNumber not a number " .. piece.. " - got "..type(piece).." with value ".. piece.." instead")
 		end
 		if bool_GadgetDebug==true and (not piece) then 
-		error("Error: Piece  not handed as argument", 2) 		
+			error("Error: Piece  not handed as argument", 2) 		
 		end
 		
         return sp_SetPieceVisibility(piece, true)
