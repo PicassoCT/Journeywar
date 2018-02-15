@@ -367,9 +367,6 @@ function ourOnlyRope (passengerID)
 	Turn(bloodemt,y_axis,math.rad(-90),0.03)
 	StartThread(dustEmit,boolBioUnit)
 	StartThread(draggingSound)
-
-
-
 	
 	while(boolUnitLoaded==true) do
 		Sleep(50)
