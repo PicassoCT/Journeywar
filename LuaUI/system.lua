@@ -1,8 +1,9 @@
+
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 --
 --  file:    system.lua
---  brief:   defines the global entries placed into a widget's table
+--  brief:   defines the global entries placed into a gadget's table
 --  author:  Dave Rodgers
 --
 --  Copyright (C) 2007.
@@ -15,34 +16,45 @@ if (System == nil) then
 
   System = {
     --
-    --  Custom LuaUI variables
-    --
-    Commands = Commands,
-    fontHandler = fontHandler,
-    LUAUI_DIRNAME = LUAUI_DIRNAME,
-
-    --
     --  Custom Spring tables
     --
-    VFS = VFS,
     Script = Script,
     Spring = Spring,
-    Engine = Engine,
-    Platform = Platform,
     Game = Game,
-    LuaLobby = LuaLobby,
     gl = gl,
     GL = GL,
     CMD = CMD,
     CMDTYPE = CMDTYPE,
+    COB = COB,
+    SFX = SFX,
+    VFS = VFS,
     LOG = LOG,
-    
+
     UnitDefs        = UnitDefs,
     UnitDefNames    = UnitDefNames,
     FeatureDefs     = FeatureDefs,
     FeatureDefNames = FeatureDefNames,
     WeaponDefs      = WeaponDefs,
     WeaponDefNames  = WeaponDefNames,
+
+    --
+    -- Custom Constants
+    --
+    COBSCALE = COBSCALE,
+
+    --
+    --  Synced Utilities
+    --
+    CallAsTeam = CallAsTeam,
+    SendToUnsynced = SendToUnsynced,
+
+    --
+    --  Unsynced Utilities
+    --
+    SYNCED  = SYNCED,
+    snext   = snext,
+    spairs  = spairs,
+    sipairs = sipairs,
 
     --
     --  Standard libraries
@@ -55,18 +67,15 @@ if (System == nil) then
     string = string,
     package = package,
     coroutine = coroutine,
-    
-    -- luasocket
-    socket          = socket,
 
-    --  
+    --
     --  Standard functions and variables
     --
     assert         = assert,
     error          = error,
 
     print          = print,
-    
+
     next           = next,
     pairs          = pairs,
     ipairs         = ipairs,
@@ -80,8 +89,6 @@ if (System == nil) then
 
     unpack         = unpack,
     select         = select,
-    newproxy       = newproxy,
-
     dofile         = dofile,
     loadfile       = loadfile,
     loadlib        = loadlib,
@@ -105,3 +112,5 @@ if (System == nil) then
   }
 
 end
+
+ 
