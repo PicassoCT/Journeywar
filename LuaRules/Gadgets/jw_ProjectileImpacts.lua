@@ -665,7 +665,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	UnitDamageFuncT[cAllyGatorMarkerDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		Spring.Echo("MarkedUnit:cAllyGatorMarkerDefID:"..unitID)
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
 		if env then
 			Spring.UnitScript.CallAsUnit(attackerID, env.tagYourIt, unitID)
@@ -1041,7 +1040,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		if UnitDamageFuncT[weaponDefID] then
-			resultDamage = UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+			resultDamage = UnitDamageFuncT[weaponDefID](unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  attackerID, attackerDefID, attackerTeam)
 			if resultDamage then return resultDamage end
 		end
 		

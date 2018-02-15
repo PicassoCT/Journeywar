@@ -1,4 +1,4 @@
--- [[
+
 -- TODO: fix parting Code for 16 pieces -- also distribute maploading over same period --integrate mapparts created
 
 

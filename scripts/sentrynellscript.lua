@@ -290,7 +290,7 @@ function getNearestMovingEnemyDistance(ux, uz)
 
                 --check wether the unit moved
                 locEl = MovingEnemysNearby[id]
-                if ex ~= locEl.x or ey ~= locEl.y or ez ~= locEl.z then
+                if math.abs(ex - locEl.x) > 5 or math.abs(ey - locEl.y)> 5 or math.abs(ez - locEl.z) > 5 then
                     MovingEnemysNearby[id].x, MovingEnemysNearby[id].y, MovingEnemysNearby[id].z = ex, ey, ez
                     MovingEnemysNearby[id].boolMoved = true
                 else
@@ -322,7 +322,7 @@ function getNearestMovingEnemyDistance(ux, uz)
     return biggestDistance
 end
 
-xu, yu, zu = Spring.GetUnitPosition(unitID)
+
 function motionTrack()
     MovingEnemysNearby = {}
     SetSignalMask(SIG_TRACK)

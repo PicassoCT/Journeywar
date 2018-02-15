@@ -107,7 +107,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 else --UNSYNCED
     --shaderCode
-    --- [[----------------------------------------------------------------------------
+    -------------------------------------------------------------------------------
     local vertexShaderSource = [[
 varying vec3 fNormal;
 varying vec3 fPosition;

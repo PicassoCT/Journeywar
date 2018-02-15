@@ -171,6 +171,7 @@ end
 function getAirUnitTypeTable(UnitDefNamesContext)
 	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
     local retTab = {}
+    retTab[UnitDefNames["cauterizer"].id] = true
     retTab[UnitDefNames["callygator"].id] = true
     retTab[UnitDefNames["conair"].id] = true
     retTab[UnitDefNames["chunterchopper"].id] = true

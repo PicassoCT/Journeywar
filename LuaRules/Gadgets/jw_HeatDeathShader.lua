@@ -41,7 +41,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 else --UNSYNCED
     --shaderCode
-    --- [[----------------------------------------------------------------------------
+    -------------------------------------------------------------------------------
     local fragmentShaderSource = [[
 uniform float time;
 varying vec3 fNormal;

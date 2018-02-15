@@ -1558,38 +1558,12 @@ function gadgetHandler:UnitPreDamaged(unitID, unitDefID, unitTeam,
 	return rDam, rImp
 end
 
--- [[ Old
-function gadgetHandler:UnitPreDamaged(unitID, unitDefID, unitTeam,
-                                   damage, paralyzer, weaponDefID,
-								   projectileID, attackerID, attackerDefID, attackerTeam)
-  
-  local rDam = damage
-  local rImp = 1.0
-
-  for _,g in ipairs(self.UnitPreDamagedList) do
-    dam, imp = g:UnitPreDamaged(unitID, unitDefID, unitTeam,
-                  rDam, paralyzer, weaponDefID,
-                  attackerID, attackerDefID, attackerTeam,
-				  projectileID)
-    if (dam ~= nil) then
-      rDam = dam
-    end
-    if (imp ~= nil) then
-      rImp = math.min(imp, rImp)
-    end
-  end
-
-  return rDam, rImp
-end
--- ]]
 
 local UnitDamaged_first = true
 local UnitDamaged_count = 0
 local UnitDamaged_gadgets = {}
 
-function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam,
-                                   damage, paralyzer, weaponID, projectileID, 
-                                   attackerID, attackerDefID, attackerTeam)
+function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 								   
 	if UnitDamaged_first then
 		for _,g in ipairs(self.UnitDamagedList) do
@@ -1603,25 +1577,11 @@ function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam,
 	for i = 1, UnitDamaged_count do
 		g = UnitDamaged_gadgets[i]
 		g:UnitDamaged(unitID, unitDefID, unitTeam,
-				damage, paralyzer, weaponID,
+				damage, paralyzer, weaponID, projectileID,
 				attackerID, attackerDefID, attackerTeam)
 	end
 	return
 end
-
--- [[ Old
-function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam,
-                                   damage, paralyzer, weaponID, projectileID, 
-                                   attackerID, attackerDefID, attackerTeam)
-  
-  for _,g in ipairs(self.UnitDamagedList) do
-    g:UnitDamaged(unitID, unitDefID, unitTeam,
-                  damage, paralyzer, weaponID,
-                  attackerID, attackerDefID, attackerTeam)
-  end
-  return
-end
--- ]]
 
 
 function gadgetHandler:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
@@ -2141,20 +2101,6 @@ function gadgetHandler:RecvFromSynced(cmd,...)
   return
 end
 
--- base
--- [[
-function gadgetHandler:RecvFromSynced(...)
-  if (actionHandler.RecvFromSynced(...)) then
-    return
-  end
-  for _,g in ipairs(self.RecvFromSyncedList) do
-    if (g:RecvFromSynced(...)) then
-      return
-    end
-  end
-  return
-end
--- ]]
 
 function gadgetHandler:GotChatMsg(msg, player)
 

@@ -3,8 +3,10 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua"
+include "lib_jw.lua"
 
-blackListCAllyGator = getTypeTable(UnitDefNames, { "ccomender", "beanstalk", "jhoneypot" })
+blackListCAllyGator = mergeDict(getAllBuildingTypes(),getExemptFromLethalEffectsUnitTypeTable())
+blackListCAllyGator= mergeDict(blackListCAllyGator, getAirUnitTypeTable() )
 
 TablesOfPiecesGroups = {}
 ucruiseAlt = 85 -- UnitDefNames["callygator"].cruiseAlt 
@@ -324,7 +326,45 @@ end
 -- end
 
 -- end
+function checkVictimSize(victimID)
+        vx, vy, vz = Spring.GetUnitCollisionVolumeData(victimID)
+        if vx then
+            if vx < 75 or vz < 75 and vy < 75 then
+					return true 
+				end
+			end
+return false
+end
+hopfactor= 0.1
+RewardMetall = 25
+RewardEnergy = 50
+function getRefundAndHealthOnVictim(victimType,victimID, unitID)
+	if victimID == unitID then return end
+	hp,maxHp = Spring.GetUnitHealth(victimID)
+	if hp and maxHp then
+	hp=Spring.GetUnitHealth(unitID)
+	Spring.SetUnitHealth(unitID,hp + math.ceil(hopfactor*maxHp))
+	Spring.AddTeamResource(teamID,"metal", RewardMetall)
+	Spring.AddTeamResource(teamID,"energy", RewardEnergy)
+	end
+end
 
+function snackOnTheWay(victimID)
+T= getAllNearPiece(unitID, Portal,45)
+teamID= Spring.GetUnitTeam(unitID)
+if not T then return end
+	process(T,
+		function(id)
+			if id == unitID or id == victimID then return end
+			victimType = Spring.GetUnitDefID(id)
+				if victimType and not blackListCAllyGator[victimType] then
+					 getRefundAndHealthOnVictim(victimType,id, unitID,teamID)
+					 Spring.DestroyUnit(id, true, true)
+					 end
+		end		
+		)
+
+end
 -- This is the actuall Animation
 function swallowAnimation(victimID)
     boolAbortEating = false
@@ -332,13 +372,9 @@ function swallowAnimation(victimID)
     victimType = Spring.GetUnitDefID(victimID)
     --unit is blacklisted?
 
-    if victimType and not blackListCAllyGator[victimType] then
+    if victimType and not blackListCAllyGator[victimType]  then
 
         -- Unit check by size
-        vx, vy, vz = Spring.GetUnitCollisionVolumeData(victimID)
-        if vx then
-            if vx < 50 or vz < 50 and vy < 50 then
-
 
                 -- congrats if you pass this you are going to be eaten
                 --paralyze victimID
@@ -354,8 +390,9 @@ function swallowAnimation(victimID)
                 totalAnimationTime = 8000
                 constOffsetGround = 15
                 boolAbortEating = true
-
-                while (AnimationRunning_ms < totalAnimationTime) do
+                orgAllgygatorRotationRad = convPointsToDeg(pVx, pVz, pUx, pUz)
+                
+						while (AnimationRunning_ms < totalAnimationTime) do
 
                     if Spring.GetUnitIsDead(victimID) == false then
                         pVx, pVy, pVz = Spring.GetUnitPosition(victimID)
@@ -392,32 +429,29 @@ function swallowAnimation(victimID)
                         boolAbortEating = false
                     end
 							
+							if boolAbortEating == false then
+								snackOnTheWay()
+							end
 
                     AnimationRunning_ms = AnimationRunning_ms + 30
                     Sleep(30)
                 end
 
                 Spring.MoveCtrl.Disable(unitID, true)
-					  addRessourcesAndHeal(victimType,victimID, unitID)
+					  getRefundAndHealthOnVictim(victimType,victimID, unitID)
 
 
                 --flying Animatin towards the Unit
                 boolAteItAlive = true
 
-            else boolAbortEating = true;
-            end
-        else boolAbortEating = true;
-        end
+           
+  
     else boolAbortEating = true;
     end
 
     if boolAbortEating == true then
         cleanUpAfterYou(victimID)
     end
-end
-
-function addRessourcesAndHeal(victimType,victimID, unitID)
-
 end
 
 function cleanUpAfterYou(victimID)

@@ -5094,9 +5094,9 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDir
 	boolAdd = offset or 10
 	
 	
-	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-	if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCegAtPiece") end
+	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCegAtPiece") end
+	if not cegname then error("lib_UnitScript::Not enough arguments to spawnCegAtPiece") end
 	x, y, z,mx,my,mz = Spring.GetUnitPiecePosDir(unitID, pieceId)
 	if boolPieceDirectional and boolPieceDirectional== true then
 		dx,dy,dz = mx,my,mz
