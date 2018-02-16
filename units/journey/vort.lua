@@ -38,9 +38,12 @@ LeaveTracks = false,
 Category = [[LAND]],
 
 weapons = {
-[1]={name  = "vortweapon",
-	onlyTargetCategory = [[LAND]],
-	},
+	[1]={name  = "vortweapon",
+		onlyTargetCategory = [[LAND]],
+		},
+	[2]={name  = "vortmarker",
+		onlyTargetCategory = [[BUILDING]],
+		},
 },
 
 

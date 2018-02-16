@@ -67,6 +67,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	tangleGunDefID = WeaponDefNames["ctanglegun"].id
 	
 	--Journeyweapon
+	vortMarkerWeaponDefID = WeaponDefNames["vortmarker"].id
 	greenSeerWeaponDefID = WeaponDefNames["greenseer"].id
 	jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
 	jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
@@ -96,6 +97,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	RazorGrenadeTable = {}
 	
 	
+	Script.SetWatchWeapon(vortMarkerWeaponDefID, true)
 	Script.SetWatchWeapon(jacidantsDefID, true)
 	Script.SetWatchWeapon(cEfenceWeapondDefID, true)
 	Script.SetWatchWeapon(cgaterailgunDefID, true)
@@ -571,6 +573,28 @@ if (gadgetHandler:IsSyncedCode()) then
 	HarvestRocketLoadTable = {}
 	JeliahBeamAccu = {}
 	JELIAHBEAMDAMAGEMULTIPLIERMAX = 24
+	vortwarpDecaySeconds= 5
+	
+	warpedBuildings= {}
+	UnitDamageFuncT[vortMarkerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		--Stun Building
+		stunUnit(unitID, 0.15)
+		gameFrame= Spring.GetGameFrame()
+		if not warpedBuildings[attackID] 
+		or warpedBuildings[attackID].target ~= unitID 
+		or gameFrame - warpedBuildings[attackID].last < vortwarpDecaySeconds *30 then
+			warpedBuildings[attackID] = {target =unitID, start= gameFrame, lastBlast = gameFrame}
+		elseif gameFrame - warpedBuildings[attackID].start >
+			--spawnCEGatUnit
+			spawnCEGatUnit(unitID, "vortportal", 0, 50, 0) 
+			Spring.DestroyUnit(unitID,false,true,false)
+		end
+		warpedBuildings[attackID].lastBlast = gameFrame
+		if gameFrame % 30 == 0 then
+			spawnCEGatUnit(unitID, "vortwarp", 0, 50, 0) 
+		end
+	end
+	
 	UnitDamageFuncT[jeliahbeamDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not JeliahBeamAccu[attackerID] or JeliahBeamAccu[attackerID].targetID ~= unitID then
 			newTarget = { targetID = unitID, accu = 1.0 }
@@ -726,7 +750,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		hitPoints, maxHP = Spring.GetUnitHealth(unitID)
 		if hitPoints - damage <= 0 and maxHP > 450 then
 			x, y, z = Spring.GetUnitPosition(unitID)
-			Spring.DestroyUnit(unitID,false, true)
+			Spring.DestroyUnit(unitID,true, false)
 			Spring.CreateUnit("jtree1", x, y, z, 1, attackerTeam)
 		end
 	end
