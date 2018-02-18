@@ -381,7 +381,7 @@ function swallowAnimation(victimID)
                 pVx, pVy, pVz = Spring.GetUnitPosition(victimID)
                 if not pVx then return end
                 pUx, pUy, pUz = Spring.GetUnitPosition(unitID)
-                Radius = math.max(math.abs(pVy - pUy), 250)
+                Radius = math.min(distanceUnitToUnit(victimID,unitID),250)
 						if not Radius then return end
                 AnimationRunning_ms = 0
 
@@ -406,7 +406,7 @@ function swallowAnimation(victimID)
                     animationOffset = (math.pi / -4)
                     pStart.x, pStart.y = Rotate(pStart.x, pStart.y, animationOffset + -math.pi * animationFactor)
                     --rotation Matrice at UnitDeg
-                    pStart.x, pStart.z = Rotate(pStart.x, pStart.z, orgAllgygatorRotationRad)
+                    pStart.x, pStart.z = Rotate(pStart.x, pStart.z, orgAllgygatorRotationRad+math.pi/2)
                     --Position Check & Clamp
                     pTargetX, pTargetY, pTargetZ = pVx + pStart.x, pVy + pStart.y + Radius, pVz + pStart.z
                     GroundY = Spring.GetGroundHeight(pTargetX, pTargetZ)

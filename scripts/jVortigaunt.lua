@@ -295,7 +295,7 @@ function script.StopMoving()
     StartThread(idle)
 end
 
-TELEPORTRANGE = 850
+TELEPORTRANGE = 8500
 
 function TelePortation()
     x, y, z = Spring.GetUnitPosition(unitID)
