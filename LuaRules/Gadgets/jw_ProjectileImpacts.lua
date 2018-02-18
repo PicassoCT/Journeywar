@@ -579,11 +579,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	warpedBuildings= {}
 	UnitDamageFuncT[vortMarkerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		--Stun Building
-		stunUnit(unitID, 0.15)
+
 		_, maxHP= Spring.GetUnitHealth(unitID)
 		gameFrame= Spring.GetGameFrame()
 		warpTimeFrames = math.max(5*30, maxHP) 
 		
+		boolStillAlive= true
 	
 		
 		if not warpedBuildings[attackerID] 
@@ -594,8 +595,13 @@ if (gadgetHandler:IsSyncedCode()) then
 			--spawnCEGatUnit
 			spawnCEGatUnit(unitID, "vbuildwarp", 0, 100, 0) 
 			Spring.DestroyUnit(unitID,false,true)
+			boolStillAlive = false
 		end
-		Spring.Echo("Time Till warp:"..(gameFrame - warpedBuildings[attackerID].start).." / "..warpTimeFrames)
+		if boolStillAlive== true then
+				vannishfactor=  math.max(0.0,math.min(1.0,(gameFrame - warpedBuildings[attackerID].start)/warpTimeFrames))
+				stunUnit(unitID, vannishfactor)
+		end
+--		Spring.Echo("Time Till warp:"..(gameFrame - warpedBuildings[attackerID].start).." / "..warpTimeFrames)
 		
 		warpedBuildings[attackerID].lastBlast = gameFrame
 		spawnCEGatUnit(unitID, "vortwarp", 0, 100, 0) 
@@ -700,7 +706,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if env then
 			Spring.UnitScript.CallAsUnit(attackerID, env.tagYourIt, unitID)
 		else
-			echo("Unit without ScriptEnvironment:"..unitID)
+			echo(UnitDefs[unitDefID].name.." without ScriptEnvironment:"..unitID)
 		end
 		
 		return 0
@@ -1202,7 +1208,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		if watchedOnDeathProjectiles[projWeaponDefID] then
-			echo("Suboribtal Projectile fired")
+			--echo("Suboribtal Projectile fired")
 			deathWatchProjectileList[proID]= projWeaponDefID
 		end
 		
@@ -1220,7 +1226,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 		if deathWatchProjectileList[proID] then
-			echo("Suboribtal Projectile consumed")
+			--echo("Suboribtal Projectile consumed")
 			projWeaponDefID = Spring.GetProjectileDefID(proID)
 			watchedOnDeathProjectiles[projWeaponDefID](proID)
 			deathWatchProjectileList[proID] = nil

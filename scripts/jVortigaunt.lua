@@ -21,6 +21,7 @@ local boolFlipFlop = 1
 SIG_WALK = 1 --signal for the walk animation thread
 SIG_AIM = 2 --signal for the weapon aiming thread
 SIG_IDLE = 4
+SIG_WAVE = 8
 
 local boolHasFired = false
 function script.Create()
@@ -162,8 +163,9 @@ function script.AimWeapon1(heading, pitch)
     Turn(vorthead, x_axis, pitch, 5)
     Turn(vort, y_axis, heading, 12)
     WaitForTurn(vort, y_axis)
+	 Signal(SIG_WAVE)
     ax, ay, az = Spring.GetUnitPosition(unitID)
-    Spring.SpawnCEG("vortcharge", ax, ay + 15, az, math.random(-1, 1), 1, math.random(-1, 1))
+    Spring.SpawnCEG("vortcharge", ax, ay + 15, az, math.random(-100, 100)/100, math.random(80,100)/100, math.random(-100, 100)/100)
     for i = 1, 2, 1 do
         random = math.random(1, 5)
         if random == 1 then
@@ -363,13 +365,33 @@ function script.QueryWeapon2()
 end
 
 function script.AimWeapon2(Heading, pitch)
-    --aiming animation: instantly turn the gun towards the enemy
-
     return true
 end
 
+function coolDown()
+Sleep(15000)
+Signal(SIG_WAVE)
+end
+function waving()
+Signal(SIG_WAVE)
+SetSignalMask(SIG_WAVE)
+		StartThread(coolDown)
+while true do
+		
+	  tSyncIn(vortarmr, 0,0,0,1500)
+	  tSyncIn(vortarml, 0,0,0,1500)
+	  WaitForTurns(vortarml,vortarmr)
+	  ax, ay, az = Spring.GetUnitPosition(unitID)
+     Spring.SpawnCEG("vortcharge", ax, ay + 15, az, math.random(-100, 100)/100, math.random(80,100)/100, math.random(-100, 100)/100)
+	  tSyncIn(vortarmr, -110,0,0, 1500)
+	  tSyncIn(vortarml, -110,0,0, 1500)
+	  	 WaitForTurns(vortarml,vortarmr)
+		Sleep(100)
+end
+end
 
 function script.FireWeapon2()
+		StartThread(waving)
 
     return true
 end
