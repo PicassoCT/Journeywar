@@ -2,7 +2,7 @@
 
 return {
   ["vbuildwarp"] = {
-  
+  alwaysvisible = true,
   		arcinwards = {
 			air = true,
 			class = [[CBitmapMuzzleFlame]],

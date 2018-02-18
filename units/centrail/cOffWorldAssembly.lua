@@ -93,6 +93,6 @@ terraformSpeed = 50,
 				},
 				},
 	
-Category = [[LAND]],
+Category = [[LAND BUILDING]],
 }
 return lowerkeys({ [unitName] = unitDef })

@@ -33,7 +33,7 @@ local unitDef = {
 	FootprintX = 25,
 	FootprintZ = 25,
 	MaxSlope = 20,
-	
+	category = [[LAND BUILDING]],
 	MaxWaterDepth = 20,
 	MovementClass = "Default2x2",
 	

@@ -31,7 +31,7 @@ local unitDef = {
 	
 	CanAttack = true,
 	CanGuard = true,
-	
+	category = [[LAND BUILDING]],
 	mass = 49999,
 
 	CanMove = false,

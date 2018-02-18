@@ -18,7 +18,7 @@ local unitDef = {
 
 
 	MaxWaterDepth = 5,
-	category=[[LAND]],
+	category=[[LAND BUILDING]],
 	nanocolor=[[0 0.9 0.9]],
 	radardistance=0,
 	sightDistance = 500,

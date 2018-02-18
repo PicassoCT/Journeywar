@@ -19,7 +19,7 @@ maxdamage=650,
 	buildCostEnergy = 900,
 	buildTime =82,
 	levelground=false,
-	
+	category = [[LAND BUILDING]],
 	explodeAs="cbonkerplasma",
 	selfDestructAs="cartdarkmat",
 	FootprintX = 6,

@@ -2,6 +2,7 @@
      
     return {
       ["vortwarp"] = {
+  alwaysvisible = true,
 	
 	    bitmapmuzzleflame = {	
       air                = true,
@@ -18,8 +19,8 @@
         length             = 50,
         sidetexture        = [[antimatertwo]],
         size               = 45,
-        sizegrowth         = 2,
-        ttl                = 50,
+        sizegrowth         = 0.66,
+        ttl                = 150,
       },
     },
 		warparcs = {
@@ -37,8 +38,8 @@
 				length = 24,
 				sidetexture = [[lightening]],
 				size = 2,
-				sizegrowth = 12.01,
-				ttl = 55,
+				sizegrowth = 4,
+				ttl = 165,
 			},
 		},
 
@@ -56,9 +57,9 @@
 				fronttexture = [[lensflareCenter]],
 				length = 160,
 				sidetexture = [[lightening]],
-				size = 40,
+				size = 120,
 				sizegrowth = 0.5,
-				ttl = 55,
+				ttl = 165,
 			},
 		},	
 	  

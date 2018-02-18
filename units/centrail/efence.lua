@@ -88,6 +88,7 @@ weapons = {
 	
 	
 	},
+category = [[LAND BUILDING]],
   customParams = {},
  sfxtypes = {
     explosiongenerators = {

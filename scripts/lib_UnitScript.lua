@@ -5110,12 +5110,9 @@ end
 
 -->Spawn CEG at unit
 function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
-	if doesUnitExistAlive(unitID) ==false then return end
-	
-	if not dx then
-		dx, dy ,dz = 0, 1, 0
-	end
-	
+	--if doesUnitExistAlive(unitID) ==false then return end
+	dx,dy,dz= dx or 0,dy or 1,dz or 0
+
 	x, y, z = Spring.GetUnitPosition(unitID)
 	if xoffset then
 		Spring.SpawnCEG(cegname, x + xoffset, y + yoffset, z + zoffset, dx,dy,dz, 50, 0)

@@ -13,7 +13,7 @@ local unitDef = {
 	FootprintX = 11,
 	FootprintZ = 11,
 	MaxSlope = 20,
-  category=[[LAND]],
+  category=[[LAND BUILDING]],
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
   

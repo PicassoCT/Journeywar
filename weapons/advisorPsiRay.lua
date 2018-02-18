@@ -10,6 +10,7 @@ local weaponDef = {
         default = 250,
         HeavyArmor = 70,
     },
+	beamTTL = 10,
     duration = 10,
     fireStarter = 110,
     impactOnly = true,

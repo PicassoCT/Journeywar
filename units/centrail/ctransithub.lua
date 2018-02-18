@@ -45,7 +45,7 @@ local unitDef = {
 		"ctransithubb"
 	},
 	
-
+category = [[LAND BUILDING]],
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = true,

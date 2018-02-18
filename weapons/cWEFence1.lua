@@ -12,6 +12,7 @@ local weaponDef = {
     damage = {
         default = 29,
     },
+	beamTTL = 10,
     duration = 0.0025,
     Accuracy = 110, --1500: damit trifft er dudes kaum --1100: war ganz gut als die 5 blitze noch nicht in fire arcs aufgeteilt waren.
     duration = 100,

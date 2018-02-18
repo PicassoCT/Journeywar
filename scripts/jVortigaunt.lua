@@ -1,5 +1,9 @@
---Define the wheel pieces
+
+include "createCorpse.lua"
+include "lib_OS.lua"
 include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
 --Define the pieces of the weapon
 
 --define other pieces
@@ -24,21 +28,8 @@ function script.Create()
     StartThread(TelePortationLoop)
 end
 
-function idle()
-    SetSignalMask(SIG_IDLE)
-    Sleep(500)
-    boolMove = false
-    moduLater = 1
-    while (true) do
-        moduLater = moduLater + 1
-        if moduLater % 4 == 0 then
-            sleepRAnd = math.random(5000, 22000)
-            Sleep(sleepRAnd)
-            moduLater = math.random(-1, 3)
-        else
-            Sleep(500)
-        end
-        xRand = math.random(-67, 6)
+function randomArmGesture()
+	xRand = math.random(-67, 6)
         zRand = math.random(7, 43)
         zRandR = math.random(-43, 7)
         yRand = math.random(0, 12)
@@ -53,7 +44,41 @@ function idle()
         Turn(vortarml, x_axis, math.rad(xRand), randSpeed)
         Turn(vortarml, z_axis, math.rad(zRand), randSpeed)
         Turn(vortarml, y_axis, math.rad(yRand), randSpeed)
+end
+
+function breathIn()
+tSyncIn(vort,9,0,0,600)
+tSyncIn(vortlegupl,-9,0,0,600)
+tSyncIn(vortlegupr,-9,0,0,600)
+
+end
+function breathOut()
+tSyncIn(vort,0,0,0,600)
+tSyncIn(vortlegupl,0,0,0,600)
+tSyncIn(vortlegupr,0,0,0,600)
+
+
+end
+
+function idle()
+    SetSignalMask(SIG_IDLE)
+    Sleep(500)
+    boolMove = false
+    moduLater = 1
+    while (true) do
+		
+        moduLater = moduLater + 1
+        if moduLater % 4 == 0 then
+            sleepRAnd = math.random(5000, 22000)
+            Sleep(sleepRAnd)
+            moduLater = math.random(-1, 3)
+        else
+            Sleep(500)
+        end
+		breathIn()
+			randomArmGesture()
         Sleep(450)
+		
         headTurnX = math.random(-5, 34)
         Turn(vorthead, x_axis, math.rad(headTurnX), 1.5)
         headTurnZ = math.random(-5, 5)
@@ -75,22 +100,8 @@ function idle()
             local teamID = Spring.GetUnitTeam(unitID)
             Spring.CreateUnit("jFirePlace", x + 15, y, z + 15, 0, teamID)
         end
-
-        xRand = math.random(-67, 6)
-        zRand = math.random(7, 43)
-        zRandR = math.random(-43, 7)
-        yRand = math.random(0, 12)
-        randSpeed = math.random(2, 5)
-        Turn(vortarmr, x_axis, math.rad(xRand), randSpeed)
-        Turn(vortarmr, z_axis, math.rad(zRandR), randSpeed)
-        Turn(vortarmr, y_axis, math.rad(yRand), randSpeed)
-        xRand = math.random(-67, 6)
-        zRand = math.random(7, 43)
-        yRand = math.random(5, 22)
-        randSpeed = math.random(2, 5)
-        Turn(vortarml, x_axis, math.rad(xRand), randSpeed)
-        Turn(vortarml, z_axis, math.rad(zRand), randSpeed)
-        Turn(vortarml, y_axis, math.rad(yRand), randSpeed)
+			randomArmGesture()
+			breathOut()
         Sleep(600)
     end
 end
@@ -100,38 +111,35 @@ local function walk()
 
 
     SetSignalMask(SIG_WALK)
-
+	leftStepTime =math.random(400,600)
+	rightstepTime = math.random(400,600)
     leg_movespeed = 6
     while (true) do
-        Turn(vort, x_axis, math.rad(10), 4)
-        Turn(vorthead, x_axis, math.rad(16), 2)
-        Turn(vort, y_axis, math.rad(7), 4)
-        Turn(vortarmr, x_axis, math.rad(-19), 6)
-        Turn(vortarml, x_axis, math.rad(32), 10)
-        --links vor
-        Turn(vortlegupl, x_axis, math.rad(-38), 10)
-        Turn(vortlfootl, x_axis, math.rad(32), 13)
+
+        tSyncIn(vort, 10,7,0, leftStepTime)
+        tSyncIn(vorthead, 16,0,0, leftStepTime)
+        tSyncIn(vortarmr, -19,0,0, leftStepTime)
+        tSyncIn(vortarml, 32,0,0, leftStepTime)
+        tSyncIn(vortlegupl, -60,0,0, leftStepTime)
+        tSyncIn(vortlfootl, 50,0,0, leftStepTime)
+
         --rechts hinten
-        Turn(vortlegupr, x_axis, math.rad(34), 10)
-        Turn(vortlfootr, x_axis, math.rad(12), 13)
-        WaitForTurn(vortlegupl, x_axis)
-        WaitForTurn(vortlegupr, x_axis)
+		tSyncIn(vortlegupr, 24,0,0, leftStepTime)
+		tSyncIn(vortlfootr, -34,0,0, leftStepTime)
+       	WaitForTurns(vort,vorthead,vortarmr,vortarml,vortlegupl,vortlfootl,vortlfootr,vortlegupr)
 
-        Sleep(30)
+        tSyncIn(vort, 5,-7,0, rightstepTime)
+        tSyncIn(vorthead, -8,0,0, rightstepTime)
+        tSyncIn(vortarmr, 32,0,0, rightstepTime)
+        tSyncIn(vortarml, -19,0,0, rightstepTime)
+        tSyncIn(vortlegupl, 24,0,0, rightstepTime)
+        tSyncIn(vortlfootl, -34,0,0, rightstepTime)
 
-        Turn(vort, x_axis, math.rad(-5), 3)
-        Turn(vorthead, x_axis, math.rad(-8), 3)
-        Turn(vort, y_axis, math.rad(-7), 4)
-        Turn(vortarml, x_axis, math.rad(-19), 6)
-        Turn(vortarmr, x_axis, math.rad(32), 10)
-        --rechts vor
-        Turn(vortlegupr, x_axis, math.rad(-38), 10)
-        Turn(vortlfootr, x_axis, math.rad(32), 13)
-        --links hinten
-        Turn(vortlegupl, x_axis, math.rad(34), 10)
-        Turn(vortlfootl, x_axis, math.rad(12), 13)
-        WaitForTurn(vortlegupl, x_axis)
-        WaitForTurn(vortlegupr, x_axis)
+        --rechts vorne
+		tSyncIn(vortlegupr, -60,0,0, rightstepTime)
+		tSyncIn(vortlfootr, 50,0,0, rightstepTime)
+       	WaitForTurns(vort,vorthead,vortarmr,vortarml,vortlegupl,vortlfootl,vortlfootr,vortlegupr)
+
     end
 end
 
@@ -148,7 +156,9 @@ end
 
 
 function script.AimWeapon1(heading, pitch)
-    if boolReloaded == false then return false end
+    if boolReloaded == false  then 
+		return false 
+	end
     Turn(vorthead, x_axis, pitch, 5)
     Turn(vort, y_axis, heading, 12)
     WaitForTurn(vort, y_axis)
@@ -195,9 +205,10 @@ end
 boolReloaded = true
 function reloader()
     boolReloaded = false
-    Sleep(2000)
+    Sleep(20000)
     boolReloaded = true
 end
+
 
 function script.FireWeapon1()
     StartThread(reloader)
@@ -337,4 +348,28 @@ StartThread(reactor)
         end
         Sleep(300)
     end
+end
+
+
+--- -aimining & fire weapon
+function script.AimFromWeapon2()
+    return vDisChar1
+end
+
+
+
+function script.QueryWeapon2()
+    return vDisChar1
+end
+
+function script.AimWeapon2(Heading, pitch)
+    --aiming animation: instantly turn the gun towards the enemy
+
+    return true
+end
+
+
+function script.FireWeapon2()
+
+    return true
 end

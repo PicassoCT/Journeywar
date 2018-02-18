@@ -8,7 +8,7 @@ include "lib_Build.lua"
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
 end
-
+cegname= "vortwarp"
 center = piece "center"
 Quader04 = piece "Quader04"
 Quader08 = piece "Quader08"
@@ -94,8 +94,8 @@ function emitSFX()
 	modHeight = 0
 	i = 0
 	while true do
-	Spring.SpawnCEG("sniperlazzor", x+100,  y+50, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
-	Sleep(9000)
+	Spring.SpawnCEG(cegname, x+100,  y+50, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
+	Sleep(12000)
 		
 	end
 end

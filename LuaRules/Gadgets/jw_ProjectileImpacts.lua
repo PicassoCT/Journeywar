@@ -575,24 +575,31 @@ if (gadgetHandler:IsSyncedCode()) then
 	JELIAHBEAMDAMAGEMULTIPLIERMAX = 24
 	vortwarpDecaySeconds= 5
 	
+	
 	warpedBuildings= {}
 	UnitDamageFuncT[vortMarkerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		--Stun Building
 		stunUnit(unitID, 0.15)
+		_, maxHP= Spring.GetUnitHealth(unitID)
 		gameFrame= Spring.GetGameFrame()
-		if not warpedBuildings[attackID] 
-		or warpedBuildings[attackID].target ~= unitID 
-		or gameFrame - warpedBuildings[attackID].last < vortwarpDecaySeconds *30 then
-			warpedBuildings[attackID] = {target =unitID, start= gameFrame, lastBlast = gameFrame}
-		elseif gameFrame - warpedBuildings[attackID].start >
+		warpTimeFrames = math.max(5*30, maxHP) 
+		
+	
+		
+		if not warpedBuildings[attackerID] 
+		or warpedBuildings[attackerID].target ~= unitID 
+		or gameFrame - warpedBuildings[attackerID].lastBlast > vortwarpDecaySeconds *30 then
+			warpedBuildings[attackerID] = {target =unitID, start= gameFrame, lastBlast = gameFrame}
+		elseif gameFrame - warpedBuildings[attackerID].start > warpTimeFrames then
 			--spawnCEGatUnit
-			spawnCEGatUnit(unitID, "vortportal", 0, 50, 0) 
-			Spring.DestroyUnit(unitID,false,true,false)
+			spawnCEGatUnit(unitID, "vbuildwarp", 0, 100, 0) 
+			Spring.DestroyUnit(unitID,false,true)
 		end
-		warpedBuildings[attackID].lastBlast = gameFrame
-		if gameFrame % 30 == 0 then
-			spawnCEGatUnit(unitID, "vortwarp", 0, 50, 0) 
-		end
+		Spring.Echo("Time Till warp:"..(gameFrame - warpedBuildings[attackerID].start).." / "..warpTimeFrames)
+		
+		warpedBuildings[attackerID].lastBlast = gameFrame
+		spawnCEGatUnit(unitID, "vortwarp", 0, 100, 0) 
+	
 	end
 	
 	UnitDamageFuncT[jeliahbeamDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)

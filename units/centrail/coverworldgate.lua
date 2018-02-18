@@ -39,7 +39,7 @@ local unitDef = {
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = false,
-	
+	category = [[BUILDING LAND]],
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {

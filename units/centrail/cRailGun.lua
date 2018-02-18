@@ -31,7 +31,7 @@ CanReclaim=false,
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
 
-
+category= [[LAND BUILDING]],
 
 Reclaimable = true,
 	
