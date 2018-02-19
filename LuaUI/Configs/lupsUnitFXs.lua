@@ -178,11 +178,6 @@ effectUnitDefs = {
 	
 	jsunshipfire= {
 		
-		
-		--	{class='UnitPieceLight', options={delay=0,life=math.huge, worldspace=true, piece= "sun1", colormap ={ {1,1,1,0}}, repeatEffect=true}},
-		
-		--{class='ShieldSphere', options={life=math.huge, pos={0,-1200,0}, size=2048, onActive=true, colormap1 = {{1, 0.75, 0.3, 0.8}}, repeatEffect=true}},
-		--{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,-1180,0}, size=1000, precision=22, strength = 0.05, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=1000, precision=22, strength = 0.005, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=225, precision=22, strength = 0.005, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=250, precision=22, strength = 0.029, repeatEffect=true}},
@@ -258,7 +253,12 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,18,44}, size=25, precision=22, strength = 0.015, repeatEffect=true}}, 
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,18,22}, size=25, precision=22, strength = 0.015, repeatEffect=true}}, 
 	},
-	
+	jsempresequoia =		{
+		{class='Ribbon', options={color={.4,.9,0.1,1},length=50, width=5.5, piece="truster1", onActive=false}},
+		{class='Ribbon', options={color={.4,.9,0.1,1},length=50, width=5.5, piece="truster2", onActive=false}},				
+		{class='Ribbon', options={color={.4,.9,0.1,1},length=50, width=5.5, piece="truster3", onActive=false}},				
+		{class='Ribbon', options={color={.4,.9,0.1,1},length=50, width=5.5, piece="truster4", onActive=false}}				
+	},		
 	
 	jbeefeatermiddle= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,37,57}, size=25, precision=22, strength = 0.015, repeatEffect=true}}, 

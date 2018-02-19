@@ -24,7 +24,7 @@ local weaponDef = {
     --explosiongenerator = "custom:smallblueburn",
     targetMoveError = 0.5,
     noSelfDamage = true,
-    range = 450,
+    range = 700,
     reloadtime = 2.0,
     renderType = 0,
     sweepfire = true,
@@ -33,7 +33,7 @@ local weaponDef = {
     --soundStart         = "null",
     FireStarter = 0,
     coreThickness = 0.3,
-    thickness = 2.5,
+    thickness = 3.14,
     --rgbColor  = [[1 0.4 0.25]],
     rgbColor = [[0.4 1 0]],
     rgbColor2 = [[0.3 0.7 0.1]],
@@ -46,7 +46,7 @@ local weaponDef = {
         default = 25,
         HeavyArmor = 45,
     },
-    areaOfEffect = 3,
+    areaOfEffect = 12,
 }
 
 return lowerkeys({ [weaponName] = weaponDef })

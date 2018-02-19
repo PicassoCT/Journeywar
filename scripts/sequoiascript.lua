@@ -1,3 +1,12 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+include "lib_jw.lua"
+
+
+
 turnerpoint = piece "turnerpoint"
 energyorb = piece "energyorb"
 truster1 = piece "truster1"
@@ -13,7 +22,7 @@ turret4 = piece "turret4"
 Ground = {}
 CHARGE_TOTAL = UnitDefNames["jtree1"].metalCost + UnitDefNames["jtree1"].energyCost or 4200
 ChargeUp = 0
-
+SIG_DELAY= 2
 for i = 1, 6, 1 do
     Ground[i] = {}
     name = "grd" .. i
@@ -85,6 +94,7 @@ end
 
 
 function script.Create()
+	 StartThread(rampUpSpeed)
     Hide(energyorb)
     Turn(turnerpoint, x_axis, math.rad(-91), 0)
     for i = 1, 6, 1 do
@@ -103,13 +113,42 @@ function script.Killed(recentdamage, _)
     return 1
 end
 
-function script.StartMoving()
+function rampUpSpeed()
+internalSpeed=0.1
+setSpeedEnv(unitID,internalSpeed)
+	while true do
+	oldHeading= Spring.GetUnitHeading(unitID)
+	Sleep(100)
+	newHeading= Spring.GetUnitHeading(unitID)
+	
+		while boolMoving==true and absDistance(oldHeading,newHeading) < 10 do
+			
+			newHeading= Spring.GetUnitHeading(unitID)
+			setSpeedEnv(unitID,internalSpeed)
+			internalSpeed=math.min(1,internalSpeed+0.1)
+			Sleep(100)
+		end
 
-    --Spring.Echo("Jseq_Starting to move")
+	internalSpeed=0.1
+	setSpeedEnv(unitID,internalSpeed)
+
+	end
 end
 
+boolMoving=false
+function script.StartMoving()
+boolMoving=true
+Signal(SIG_DELAY)
+    --Spring.Echo("Jseq_Starting to move")
+end
+function delayedStop()
+Signal(SIG_DELAY)
+SetSignalMask(SIG_DELAY)
+Sleep(300)
+boolMoving=false
+end
 function script.StopMoving()
-
+StartThread(delayedStop)
     --Spring.Echo("Jseq_STOP")
 end
 
@@ -214,6 +253,6 @@ end
 
 function script.FireWeapon5()
     Hide(energyorb)
-    ChargeUp = 0
+    ChargeUp = ChargeUp-1
     return true
 end

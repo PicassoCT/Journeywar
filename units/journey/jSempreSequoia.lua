@@ -18,7 +18,7 @@ local unitDef = {
 	FootprintX = 5,
 	FootprintZ = 5,
 	
-	MaxVelocity = 0.5,
+	MaxVelocity = 5,
 	MaxWaterDepth =15,
 	--MovementClass = "Default2x2",--
 	
@@ -26,7 +26,7 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
-	sightDistance = 25,
+	sightDistance = 525,
 	onOffable = true,
 	ActivateWhenBuilt=false,
 	reclaimable=true,
@@ -34,22 +34,22 @@ local unitDef = {
 	CanGuard = true,
 	CanMove = true,
 	CanPatrol = true,
-	CanStop = false,
-	TurnRate = 24,
+	CanStop = true,
+	TurnRate = 48,
 	LeaveTracks = false,
 	-- Building	
 	
 	Category = [[AIR]],
+	usePieceCollisionVolumes = true,
 	
-
 	cruiseAlt=165,
 	CanFly = true,
-	
+	hoverAttack =false,
 	maxBank=0.1,
 	myGravity =0.5,
 	mass = 1225,
 	canSubmerge = true,
-	useSmoothMesh =false,
+	useSmoothMesh =true,
 	crashDrag =0.1,
 	collide =true,
 	airHoverFactor =0,

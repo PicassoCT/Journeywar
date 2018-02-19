@@ -31,7 +31,7 @@ Builder = false,
 CanAttack = true,
 CanGuard = true,
 CanMove = true,
-CanPatrol = false,
+CanPatrol = true,
 CanStop = true,
 LeaveTracks = false, 
 

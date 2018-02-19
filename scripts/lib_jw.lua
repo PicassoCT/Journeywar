@@ -344,7 +344,6 @@ function getAbstractTypes(UnitDefNamesContext)
      }
 
     return AbstractTypes
-
 end
 
 function getRecycleableUnitTypeTable()
