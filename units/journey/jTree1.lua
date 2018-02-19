@@ -36,7 +36,7 @@ local unitDef = {
 	activateWhenBuilt = false,
 	onoffable = true,
 	canSelfDestruct=false,
-	
+
 	-- Building	
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",

@@ -29,8 +29,7 @@ local unitDef = {
 	TurnRate = 250,
 	nanocolor=[[0 0.9 0.9]],
 	sightDistance = 500,
-	
-	airstrafe=true,
+
 	factoryHeadingTakeoff =true,
 	Builder = false,
 	--canHover=true,

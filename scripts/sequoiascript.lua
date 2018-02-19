@@ -113,6 +113,11 @@ function script.Killed(recentdamage, _)
     return 1
 end
 
+function logUpToXInMSec(x,msec,targmsec)
+fact=math.max(0,math.min(1.718281828459045,msec/targmsec))
+return math.log(1+fact)*x
+end
+
 function rampUpSpeed()
 internalSpeed=0.1
 setSpeedEnv(unitID,internalSpeed)
@@ -120,13 +125,14 @@ setSpeedEnv(unitID,internalSpeed)
 	oldHeading= Spring.GetUnitHeading(unitID)
 	Sleep(100)
 	newHeading= Spring.GetUnitHeading(unitID)
-	
+	timeElapsed=0
 		while boolMoving==true and absDistance(oldHeading,newHeading) < 10 do
-			
 			newHeading= Spring.GetUnitHeading(unitID)
 			setSpeedEnv(unitID,internalSpeed)
-			internalSpeed=math.min(1,internalSpeed+0.1)
+			factor = logUpToXInMSec(0.025, timeElapsed,15000)
+			internalSpeed=math.min(1,internalSpeed+ factor)
 			Sleep(100)
+			timeElapsed=timeElapsed+100
 		end
 
 	internalSpeed=0.1

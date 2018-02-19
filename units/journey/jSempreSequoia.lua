@@ -18,14 +18,15 @@ local unitDef = {
 	FootprintX = 5,
 	FootprintZ = 5,
 	
-	MaxVelocity = 5,
+	MaxVelocity = 15,
 	MaxWaterDepth =15,
 	--MovementClass = "Default2x2",--
 	
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
-	
-	
+	airstrafe= true,
+	strafeToAttack=true,
+	TurnRate= 125,
 	sightDistance = 525,
 	onOffable = true,
 	ActivateWhenBuilt=false,
@@ -35,14 +36,13 @@ local unitDef = {
 	CanMove = true,
 	CanPatrol = true,
 	CanStop = true,
-	TurnRate = 48,
 	LeaveTracks = false,
 	-- Building	
-	
+		turnInPlace=true,
 	Category = [[AIR]],
 	usePieceCollisionVolumes = true,
 	
-	cruiseAlt=165,
+	cruiseAlt=170,
 	CanFly = true,
 	hoverAttack =false,
 	maxBank=0.1,
@@ -67,20 +67,11 @@ local unitDef = {
 	
 	RadarDistance=0,
 	SightDistance=800,
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	turnInPlace =true,
-	
+		steeringmode = [[1]],
+	maneuverleashlength = 1380,
+	turnRadius		 	= 16,
 	--------------------------------
 	Acceleration = 0.5,
-	maneuverleashlength = 1380,
 	--turnRadius		 	= 8,
 	
 	weapons = {
