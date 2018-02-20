@@ -3,7 +3,7 @@ local unitName = "campole"
 local unitDef = {
 	maxdamage=150,
 	name = "Propagandapole",
-	description = "Converts Material to Securitybudget < Matter Security Converter Building>",
+	description = "Converts Material to Securitybudget < Material Security Converter Building>",
 	objectName = "campole.s3o",
 	buildPic = "campole.dds",
 	script="campole.lua",
@@ -13,10 +13,11 @@ local unitDef = {
 	MaxSlope = 50,
 	buildtime=50,
 	EnergyStorage = 0,
-	EnergyUse = 0,
+	
+	MetalUse = 0,
 	MetalStorage = 0,
 	EnergyMake = 0, 
-	MakesMetal = 0, 
+
 	MetalMake = 0,	
 	nanocolor=[[0 0.9 0.9]],
 	explodeAs="citadelldrone",

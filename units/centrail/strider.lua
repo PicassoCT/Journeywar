@@ -5,7 +5,7 @@ name = "Strider",
 Description = "heavy Synth Tripod <Tank Unit>",
 objectName = "strider.s3o",
 script = "striderscript.lua",
-buildPic = "placeholder.png",
+buildPic = "strider.png",
 --cost
 buildCostMetal = 2500,
 buildCostEnergy = 1200,

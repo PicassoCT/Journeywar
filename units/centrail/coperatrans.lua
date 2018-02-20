@@ -1,13 +1,14 @@
 local unitName = "coperatrans"
 local unitDef = {
 	--Internal settings
-	BuildPic = "filename.bmp",
+
 	ObjectName = "operatrans.s3o",
 	name = "Operatransport",
 	Description= "Its not over before the fat lady sings. <Security Producing Tank Unit>",
 	Side = "CentrAIl",
 	script = "operatransscript.lua",
-	
+		buildPic = "coperatrans.png",
+
 	--cost
 	buildCostMetal = 1200,
 	buildCostEnergy = 900,

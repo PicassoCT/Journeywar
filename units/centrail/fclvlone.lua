@@ -1,4 +1,4 @@
-local unitName = "fclvlone"
+local unitName = "fclvl1"
 
 local unitDef = {
 	name = "Farcaster",

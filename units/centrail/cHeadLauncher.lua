@@ -2,9 +2,9 @@ local unitName = "cheadlauncher"
 local unitDef = {
 name = "Headlauncher",
 Description = "provokes enemies into Melees. Withstands 3 enemies <Ground Harass Tank>",
-objectName = "hl.s3o",
+objectName = "cheadlauncher.s3o",
 script = "cHeadLaunchScript.lua",
-buildPic = "placeholder.png",
+buildPic = "cheadlauncher.png",
 --cost
 buildCostMetal = 1100,
 buildCostEnergy = 560,

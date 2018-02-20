@@ -122,7 +122,8 @@ function gamaDamage()
     local spGetUnitHealth = Spring.GetUnitHealth
     local ltransformTree = transFormTree
     local lsteam = Steam
-    radiationResistantUnitTypes = getRadiationResistantUnitTypeTable(UnitDefNames)
+    radiationResistantUnitTypes = getRadiationResistantUnitTypeTable()
+
     while (true) do
 
         piecePosX, piecePosY, piecePosZ = spGetUnitPosition(unitID)

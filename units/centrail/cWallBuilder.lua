@@ -4,7 +4,7 @@ local unitDef = {
 	Description = "builds and charges mobile Wall Units <Defense Construction Unit>",
 	objectName = "cWallBuilder.s3o",
 	script = "cWallBuilder.lua",
-	buildPic = "placeholder.png",
+	buildPic = "cwallbuilder.png",
 	--cost
 	buildCostMetal = 1100,
 	buildCostEnergy = 560,

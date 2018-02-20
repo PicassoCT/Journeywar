@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "flamethrower wielding Synth <Assault Unit>",
 	objectName = "css.s3o",
 	script = "css.lua",
-	buildPic = "placeholder.png",
+	buildPic = "css.png",
 	--cost
 	buildCostMetal = 105,
 	buildCostEnergy = 200,

@@ -55,7 +55,7 @@ TutorialInfoTable= {
 	[UnitDefNames["conair"].id] = {text = "\a|Airborne Construction Synth\n Realizes buildings and drops infantry\nusing its own HP"},
 	[UnitDefNames["mdigg"].id] = {text = "\a|Metalldiggester\nStripmines Material from metalspots.\nActivate to deploy."},
 	
-	--fclvlone
+	--fclvl1
 	
 	[UnitDefNames["mtw"].id] = {text =  "\a|Manned Transport Wagon\nBuilds and deploys Infantry or Flamethrower Synths"},
 	[UnitDefNames["advisor"].id] = {text = "\a|Advisor\nExtracts Information from captured Units"},
@@ -99,7 +99,7 @@ TutorialInfoTable= {
 	[UnitDefNames["mestorage"].id] = {text = "\a|Ressourcedepot\n Stores Material and Security"},
 	[UnitDefNames["builux"].id] = {text = "\a|Luxery Appartment\n Fullcitizens provide a constant Materialincome"},
 	[UnitDefNames["ctransithub"].id] = {text = "\a|Transitnode\n Fast transfers Units between two Transitnodes"},
-	[UnitDefNames["fclvlone"].id] = {text = "\a|Worldgate\n Orders small units Offworld"},
+	[UnitDefNames["fclvl1"].id] = {text = "\a|Worldgate\n Orders small units Offworld"},
 	[UnitDefNames["fclvl2"].id] = {text = "\a|Coregate\n Orders advanced and experimental Units at the core world"},
 	[UnitDefNames["cairbase"].id] = {text = "\a|Airbase\n Builds & maintains Airforce"},
 	[UnitDefNames["cdistrictnone"].id] = {text = "\a|Slum\n Self replicating Investment return upon enemy destroying it"},

@@ -162,7 +162,6 @@ local function legs_down()
     return
 end
 
-boolCanMove = true
 function kneeDown()
 	Time= math.random(12000,22000)
 
@@ -425,11 +424,11 @@ end
 
 --- WALKING---
 function walk()
-    if boolCanMove == true then
         Signal(SIG_WALK)
         boolFiredRecently = false
         SetSignalMask(SIG_WALK)
         Turn(bgtorso, x_axis, math.rad(22), 14)
+			Turn(center,y_axis, math.rad(0),5)
         WaitForTurn(bgtorso, x_axis)
 
 
@@ -497,7 +496,6 @@ function walk()
             WaitForTurn(bglowleg, x_axis)
             Sleep(56)
         end
-    end
 end
 
 function counterTerrorIsm()
@@ -520,7 +518,7 @@ function script.StartMoving()
 
 
     Signal(SIG_IDLE)
-    if boolCanMove == true then
+
         Turn(Head, y_axis, math.rad(0), 12)
         Move(bgbase, y_axis, 0, 12)
         Turn(bgtorso, y_axis, 0, 4)
@@ -530,7 +528,7 @@ function script.StartMoving()
 
 
         StartThread(counterTerrorIsm)
-    end
+
     boolMoveOrderd = true
 end
 
@@ -543,9 +541,9 @@ function script.StopMoving()
     Turn(bgtorso, x_axis, math.rad(0), 14)
     -- --Spring.--echo ("stopped walking!")
     Signal(SIG_WALK)
-    if boolCanMove == true then
+
         legs_down()
-    end
+
 end
 
 function aimReseter()

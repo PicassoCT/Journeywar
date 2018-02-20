@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "swallows small Units alive with a Portal <Anti Infantry Air Unit>",
 	objectName = "cAllygator.s3o",
 	script = "cAllygatorScript.lua",
-	buildPic = "conair.dds",
+	buildPic = "callygator.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 760,
@@ -23,6 +23,7 @@ local unitDef = {
 	steeringmode = [[1]],
 	maneuverleashlength = 1380,
 	turnRadius		 	= 80,
+	usePieceCollisionVolumes = true,
 	dontLand		 	= false,
 	MaxVelocity = 2.1,
 	MaxWaterDepth = 50,

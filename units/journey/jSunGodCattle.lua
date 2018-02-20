@@ -64,7 +64,7 @@ Category = [[LAND]],
  sfxtypes = {
 				explosiongenerators = {
 				"custom:dirt",
-				"custom:gamagarden"				 
+				"custom:sungodbuff"				 
 				},
 				},
 				

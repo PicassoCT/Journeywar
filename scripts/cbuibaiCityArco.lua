@@ -123,8 +123,7 @@ end
 
 
 
-energyConsumedPerSecond = 15
-metallConsumedPerSecond = 15
+energyConsumedPerSecond = 140
 
 
 teamId = Spring.GetUnitTeam(unitID)
@@ -338,7 +337,7 @@ function healthCheck()
         --if unit doesent burn
         if boolBurning == false then
             --substract costs
-            boolMetallUsed = Spring.UseUnitResource(unitID, "m", metallConsumedPerSecond)
+
             boolEnergyUsed = Spring.UseUnitResource(unitID, "e", energyConsumedPerSecond)
 
             if boolEnergyUsed == true then
@@ -347,12 +346,7 @@ function healthCheck()
                 totalEnergyConsumed = totalEnergyConsumed - energyConsumedPerSecond
             end
 
-            if boolMetallUsed == true then
-                totalMetallConsumed = totalMetallConsumed + metallConsumedPerSecond
-            else
-                totalMetallConsumed = totalMetallConsumed - metallConsumedPerSecond
-            end
-
+        
 
             --if currentHitPoints has decreased --> Start a burning Thread
             if currentHitPoints < hitPointsASecondAgo and lastAttackerEnemyTeam() == true then

@@ -12,7 +12,11 @@ TablesOfPiecesGroups = {}
 ucruiseAlt = 85 -- UnitDefNames["callygator"].cruiseAlt 
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
-
+	lastHitPiece= Spring.GetUnitLastAttackedPiece(unitID)
+	if lastHitPiece and lastHitPiece == Front or lastHitPiece == Portal then
+		return 0
+	end
+	
     return damage
 end
 

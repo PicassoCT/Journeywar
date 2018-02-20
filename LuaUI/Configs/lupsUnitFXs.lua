@@ -84,7 +84,7 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength = 0.001, repeatEffect=true}},
 	},
 	
-	fclvlone= {
+	fclvl1= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,35,10}, size=42, precision=22, strength = 0.003, repeatEffect=true}},
 	},
 	cwaterextractor= {

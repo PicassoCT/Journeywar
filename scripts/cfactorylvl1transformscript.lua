@@ -154,7 +154,7 @@ fcvlvl2 = {
 }
 
 
-fclvlone = {
+fclvl1 = {
     false, true, true, true, true, true, false,
     false, true, true, true, true, true, false,
     false, true, true, true, true, true, false,
@@ -285,7 +285,7 @@ end
 function buildFactory()
 
     for i = 1, totalCubes, 1 do
-        if fclvlone[i] == true then
+        if fclvl1[i] == true then
             Show(cubes[i])
             Move(cubes[i], y_axis, 0, 0)
             Move(cubes[i], z_axis, 0, 0)
@@ -303,7 +303,7 @@ function buildFactory()
     end
 
     for i = 1, totalCubes, 1 do
-        if fclvlone[i] == true and fcvlvl2[i] == false then
+        if fclvl1[i] == true and fcvlvl2[i] == false then
             Show(cubes[i])
             Move(cubes[i], y_axis, -350, 60)
         end

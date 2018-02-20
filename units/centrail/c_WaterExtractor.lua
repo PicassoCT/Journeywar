@@ -60,7 +60,7 @@ buildoptions =
 	"builux","condepot","scumslum","campole",
 	"efence","mestorage","buihoblock","geohive",
 	"buibaislum","buibaicity","buibaicity2","mdigg","mbuilux",
-	"fclvlone","fclvl2","bbind","cHopper",
+	"fclvl1","fclvl2","bbind","cHopper",
 	},
 	
 sounds = {

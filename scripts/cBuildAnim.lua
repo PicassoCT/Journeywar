@@ -593,7 +593,7 @@ masterTable[9] = subTable
 -------------------------------------------------------------------------
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["fclvlone"].id
+subTable[1] = UnitDefNames["fclvl1"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, true, true, true, true, true, false,
@@ -652,7 +652,7 @@ subTable[3] = nil
 subTable[4] = 50
 subTable[5] = true
 subTable[6] = 52
-subTable[7] = "fclvlone" --testmessage
+subTable[7] = "fclvl1" --testmessage
 masterTable[10] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------

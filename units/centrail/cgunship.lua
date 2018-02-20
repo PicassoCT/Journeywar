@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "heavy air-ground Gunship <Air Ground Tank Unit>",
 	objectName = "cGunShip.s3o",
 	script = "cGunShipScript.lua",
-	buildPic = "chunterchopper.dds",
+	buildPic = "cgunship.png",
 	
 	--cost
 	buildCostMetal = 1500,

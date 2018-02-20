@@ -63,7 +63,7 @@ local unitDef = {
 		"scumslum","mdigg","cwaterextractor",
 		"campole","mestorage","citconair",
 		"builux","bbind","coverworldgate",
-		"condepot","fclvlone","cairbase",
+		"condepot","fclvl1","cairbase",
 		"cdistrictnone","buibaicity2","buibaicity1",
 		"crailgun","sentry","bonker",
 		"cdefusermine",	"chopper","cwatchpost",

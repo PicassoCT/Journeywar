@@ -46,7 +46,7 @@ function getFactoryTypeTable(UnitDefNames, IWant)
 
 
     if IWant == "c" then
-        FactoryTypes[UnitDefNames["fclvlone"].id] = true
+        FactoryTypes[UnitDefNames["fclvl1"].id] = true
         FactoryTypes[UnitDefNames["fclvl2"].id] = true
         FactoryTypes[UnitDefNames["condepot"].id] = true
         return FactoryTypes
@@ -63,7 +63,7 @@ function getFactoryTypeTable(UnitDefNames, IWant)
     FactoryTypes[UnitDefNames["jtrafactory"].id] = true
     FactoryTypes[UnitDefNames["jtransportedeggstack"].id] = true
     FactoryTypes[UnitDefNames["jmovingfac1"].id] = true
-    FactoryTypes[UnitDefNames["fclvlone"].id] = true
+    FactoryTypes[UnitDefNames["fclvl1"].id] = true
     FactoryTypes[UnitDefNames["fclvl2"].id] = true
     FactoryTypes[UnitDefNames["condepot"].id] = true
     return FactoryTypes
@@ -297,7 +297,8 @@ function getCorpseTypeTable()
     return CorpseTable
 end
 
-function getRadiationResistantUnitTypeTable(UnitDefNames)
+function getRadiationResistantUnitTypeTable(lUnitDefNames)
+	  UnitDefNames = UnitDefNames or lUnitDefNames
     Resistance = {}
     Resistance[UnitDefNames["jvaryfoo"].id] = true
     Resistance[UnitDefNames["jtree2"].id] = true

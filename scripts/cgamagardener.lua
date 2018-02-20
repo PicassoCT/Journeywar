@@ -1,3 +1,11 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+include "lib_jw.lua"
+
+
 gamaemit = piece "gamaemit"
 gama = piece "gama"
 
@@ -5,18 +13,20 @@ gama = piece "gama"
 SIG_GAMA = 1
 SIG_STEAM = 2
 teamID = Spring.GetUnitTeam(unitID)
-
+flare03 = piece"flare03"
 function script.Create()
+Hide(flare03)
 end
 
 function gamaSFX()
 
     SetSignalMask(SIG_GAMA)
-
+		
     while (true) do
+
         EmitSfx(gama, 1024)
 
-        Sleep(50)
+        Sleep(500)
     end
 end
 
@@ -55,7 +65,7 @@ function transFormTree(treeID)
 end
 
 function gamaDamage()
-    HitPointsReduce = 5
+    HitPointsReduce = 10
     selectRange = 260
     SetSignalMask(SIG_GAMA)
     local spGetUnitHealth = Spring.GetUnitHealth

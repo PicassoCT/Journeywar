@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Chaingang forced to fight by their families held hostage.<Ground Air Assault Unit>",
 	objectName = "cPaxCentrail.s3o",
 	script = "cPaxCentrailscript.lua",
-	buildPic = "placeholder.png",
+	buildPic = "cpaxcentrail.png",
 	moveState =2,
 	 fireState=2,
 	--cost
