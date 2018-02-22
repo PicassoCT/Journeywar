@@ -3,7 +3,7 @@ local unitName = "bbind"
 local unitDef = {
 
   name               = "Idustrial Complex",
-  description = "recycles Remains. Returns the other half, doubled upon Destruction by the enemie. <Scrap Recycling Building>",
+  description = "recycles retrieved Remains. <Scrap Recycling Building>",
   objectName         = "bbind.s3o",
   script = "bbind.lua",
   buildPic = "industry.dds",

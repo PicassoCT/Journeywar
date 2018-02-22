@@ -1,3 +1,9 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_Build.lua"
+
 flares = {}
 for i = 1, 8, 1 do
     flares[i] = {}
@@ -39,7 +45,42 @@ function script.Deactivate()
 end
 
 
-local function landed()
+idleAnim= piece"idleAnim"
+ function landed()
+		--	Hide(Contornado)
+			Hide(condrone)
+
+	while boolLongStop== true do
+		for i=1,#TableOfPieceGroups["Rest"],1 do
+			if TableOfPieceGroups["Rest"][i] then
+				Show(TableOfPieceGroups["Rest"][i] )
+			end
+			if TableOfPieceGroups["Rest"][i-1] then
+				Hide(TableOfPieceGroups["Rest"][i-1])
+			end
+		Sleep(200)
+		end
+		for i=#TableOfPieceGroups["Rest"],1,-1 do
+			if TableOfPieceGroups["Rest"][i] then
+				Show(TableOfPieceGroups["Rest"][i] )
+			end
+			if TableOfPieceGroups["Rest"][i+1] then
+				Hide(TableOfPieceGroups["Rest"][i+1])
+			end
+		Sleep(200)
+		end
+	Sleep(10)
+	end
+	for i=1,#TableOfPieceGroups["Rest"],1 do
+			if TableOfPieceGroups["Rest"][i] then
+				Show(TableOfPieceGroups["Rest"][i] )
+			end
+			if TableOfPieceGroups["Rest"][i-1] then
+				Hide(TableOfPieceGroups["Rest"][i-1])
+			end
+		Sleep(200)
+		end
+
 end
 
 
@@ -80,7 +121,7 @@ function createCorpseCBuilding(unitID)
     --WaitForMove(condrone,x_axis)
     --WaitForMove(condrone,z_axis)
 end
-
+boolLongStop= false
 function moveStateCheck()
     while (true) do
 
@@ -89,12 +130,14 @@ function moveStateCheck()
         if boolMoving == false and boolShortStop == false then
             Sleep(512)
             if boolShortStop == false then
-                boolRopeRelease = true
                 boolLongStop = true
-            end
+				end
         end
         if boolLongStop == true then
             landed()
+				Show(Contornado)
+				Show(condrone)
+				hideT(TableOfPieceGroups["Rest"])
         end
 
 
@@ -107,11 +150,10 @@ end
 function script.StartMoving()
 
     --windGet()
-    if boolOnlyOnce == true then
-        boolOnlyOnce = false
-        StartThread(moveStateCheck)
-    end
 
+      
+
+	 boolLongStop= false
     boolMoving = true
     boolShortStop = true
 end
@@ -153,9 +195,11 @@ local function workInProgress()
     end
     StopSpin(conspin, y_axis, 1)
 end
-
+	TableOfPieceGroups= {}
 function script.Create()
 
+	 TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	 hideT(TableOfPieceGroups["Rest"])
     Spin(Contornado, z_axis, math.rad(128), 0)
 
     birthX, birthY, birthZ = Spring.GetUnitPosition(unitID)
@@ -164,8 +208,8 @@ function script.Create()
         Hide(flares[i])
     end
 
-
-    landed()
+    StartThread(moveStateCheck)
+    StartThread(landed)
 end
 
 function script.Killed()
@@ -189,7 +233,7 @@ end
 
 function script.StartBuilding(heading, pitch)
 
-    boolRopeRelease = false
+
     Signal(SIG_HOVER)
     --Signal(SIG_CHECK)
     StartThread(workInProgress)

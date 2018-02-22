@@ -61,7 +61,7 @@ masterTable[1] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["buibaicity2"].id
+subTable[1] = UnitDefNames["smconverter"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     true, true, true, true, true, true, true,

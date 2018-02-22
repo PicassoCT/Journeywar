@@ -2,7 +2,7 @@ local unitName = "advisor"
 
 local unitDef = {
 	name = "Advisor",
-	Description = "extracts Information from captured Enemys using PSI <Long Range Radar Unit>",
+	Description = "extracts Information from captured Enemys using PSI <Long Range Radar Unit/ Anti Air>",
 	objectName = "advisor.s3o",
 	script = "cAdvisor.lua",
 	buildPic = "advstalker.png",
@@ -49,6 +49,8 @@ local unitDef = {
 		[2]={name = "cadvisoraa",
 			onlyTargetCategory = [[AIR]],
 		},
+		[3]={name = "advisor_shield"
+		}
 	},
 	
 	customParams = {},

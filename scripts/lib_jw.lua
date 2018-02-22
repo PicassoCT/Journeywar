@@ -88,14 +88,14 @@ end
 
 function getCentrailOverworldGateUnitTypeTable()
 	typeTable={
-		"css",
+		"cauterizer",
 		"bg3",
 		"campro",
 		"mtw",
 		"csniper",
 		"restrictor",
 		"chunter",
-		
+		"advisor"
 		}
 	return getTypeTable(UnitDefNames, typeTable)
 

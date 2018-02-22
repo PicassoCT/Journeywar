@@ -103,7 +103,7 @@ TutorialInfoTable= {
 	[UnitDefNames["fclvl2"].id] = {text = "\a|Coregate\n Orders advanced and experimental Units at the core world"},
 	[UnitDefNames["cairbase"].id] = {text = "\a|Airbase\n Builds & maintains Airforce"},
 	[UnitDefNames["cdistrictnone"].id] = {text = "\a|Slum\n Self replicating Investment return upon enemy destroying it"},
-	[UnitDefNames["buibaicity2"].id] = {text = "\a|Arcology\n Returns funds upon burning down in public"},
+	[UnitDefNames["smconverter"].id] = {text = "\a|Arcology\n Converts Security to Material\n Returns funds upon burning down in public."},
 	[UnitDefNames["buibaicity1"].id] = {text = "\a|Skyscraper\n Returns Insurance paid by the second last attacker"},
 	[UnitDefNames["crailgun"].id] = {text = "\a|Railgun\n Long range base defence"},
 	[UnitDefNames["sentry"].id] = {text = "\a|Sentry\n Rapid fire short range anti-infantry defence"},

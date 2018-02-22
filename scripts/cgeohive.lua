@@ -108,7 +108,7 @@ function OS_LOOP()
 				UnitDefNames["cdistrictnone"].id,
 				UnitDefNames["buibaicity1"].id,
 				UnitDefNames["cwatchpost"].id,
-				UnitDefNames["buibaicity2"].id,
+				UnitDefNames["smconverter"].id,
 				UnitDefNames["crailgun"].id,
 				UnitDefNames["factoryspawndecorator"].id,	
 				UnitDefNames["chopper"			].id			

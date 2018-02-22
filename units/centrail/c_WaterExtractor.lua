@@ -59,7 +59,7 @@ buildoptions =
 	{
 	"builux","condepot","scumslum","campole",
 	"efence","mestorage","buihoblock","geohive",
-	"buibaislum","buibaicity","buibaicity2","mdigg","mbuilux",
+	"buibaislum","buibaicity","smconverter","mdigg","mbuilux",
 	"fclvl1","fclvl2","bbind","cHopper",
 	},
 	

@@ -44,7 +44,20 @@ end
 --======================================================================================
 --Section: Team Information Getters/Setters 
 --======================================================================================
+--> get all EnemyTeams of a teamID 
+function getAllEnemyTeams(teamID, boolIncludeGaia)
+gaiaTeamID= Spring.GetGaiaTeamID()
 
+return process(Spring.GetTeamList(),
+			function(tid)
+				if Spring.AreTeamsAllied(tid,teamID)==false and
+				boolIncludeGaia == true or boolIncludeGaia == false and tid ~= gaiaTeamID then
+					return tid
+				end			
+			end
+			) or {}
+
+end
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
 	if not x or not z then
@@ -3699,6 +3712,7 @@ function echo(stringToEcho, ...)
 		end
 	end
 end
+
 --> prints a square 2dmap 
 function echo2DMap(tmap, squareSideDimension, valueSignMap)
 	map = {}

@@ -11,7 +11,6 @@ innergate = piece "innergate"
 outergate = piece "outergate"
 shaft1 = piece "shaft1"
 shaft2 = piece "shaft2"
-teamID = Spring.GetUnitTeam(unitID)
 SIG_STILT = 2
 
 buildIconTable = {}
@@ -154,7 +153,8 @@ return sum/numberUnits
 end
 
 function getSpawnPosition(enemyID)
-if not enemyID then return end
+if not enemyID then return math.cos((math.random(0,100)/100)*math.pi*2)*Game.mapSizeX,0, math.sin((math.random(0,100)/100)*math.pi*2)*Game.mapSizeZ end
+
 	ex, ey, ez = Spring.GetUnitPosition(enemyID) -- this should allow the unit to follow a friend closest to a foe
 	if ex then
 				if math.abs(ex - ox + ey - oy + ez - oz) < 5 then
@@ -193,7 +193,6 @@ function spawner()
 
     local x, y, z = Spring.GetUnitPosition(unitID)
 
-
 	creeperTypeTable= dictToTable(getCentrailOverworldGateUnitTypeTable())
     averageUnitCost = getUnitAvgCost(creeperTypeTable)
 
@@ -213,16 +212,11 @@ function spawner()
 			Show(buildIconTable[i])
 			Sleep(partTime)
 		end
-			enemyID = spGetUnitNearestEnemy(unitID)
 
-			if enemyID and type(enemyID)== "number" then
 				if boolPoweredUp == false then powerUp(15) end
 				spawnPortalEffect()
 				hideT(buildIconTable)
 				
-				ex,ey,ez = getSpawnPosition(enemyID)
-				if ex then
-					ox, oy, oz = ex, ey, ez
 					-- acquire ressources
 					intervall=theNeedOfTheMany()
 						for i = 1, intervall, 1 do
@@ -234,12 +228,9 @@ function spawner()
 							if spawnedUnit then
 								--spSetUnitNoSelect(spawnedUnit,true)							
 								Sleep(1550)
-								spSetUnitMoveGoal(spawnedUnit, ex, ey, ez)
 								table.insert(monsterTable, spawnedUnit)
 							end
-					end
-				end
-			
+							
 				Sleep(4000)
 				powerDown()
 				
@@ -261,41 +252,115 @@ function spawnPortalEffect()
     Spring.SpawnCEG("holeinthesky", x, y + 320, z, 0, 1, 0, 60)
 end
 
-function TargetOS()
+uPos={}
+function checkStuck(id)	
+	p={}
+	p.x,p.y,p.z= Spring.GetUnitPosition(id)
 
+	if not uPos[id] or distance(uPos[id],p) > 5 then
+		uPos[id]=p
+		return false
+	end
+	uPos[id]=p
+	
+return true
+end
+gaiaTeamID= Spring.GetGaiaTeamID()
+function getEnemy(id)
+				if GG.ComEnders and GG.ComEnders[teamID] then 
+					return GG.ComEnders[teamID]
+            else 
+				enemy= spGetUnitNearestEnemy(id)  
+				if enemy and Spring.GetUnitTeam(enemy) ~= gaiaTeamID and badEnemys[enemy] < 5 then
+					return enemy			
+            else
+					
+			
+            end
+            end
+end
+designatedCritter = unitID
+function getTargetCoordinates(id, boolStuck)
+  --default random coordinates
+  ex,ey,ez= math.cos((math.random(0,100)/100)*math.pi*2)*Game.mapSizeX,0, math.sin((math.random(0,100)/100)*math.pi*2)*Game.mapSizeZ
+  --early out 
+  
+  if not id then return ex,ey,ez end
+  
+  -- if team has a commender
+  if GG.ComEnders and GG.ComEnders[teamID] then 
+					ex,ey,ez = Spring.GetUnitPosition(GG.ComEnders[teamID]) 
+					return ex,ey,ez
+	end
+
+	nearestEnemyID = Spring.GetUnitNearestEnemy(id)
+	if nearestEnemyID and Spring.ValidUnitID(nearestEnemyID) then
+		if  not badEnemys[nearestEnemyID] then badEnemys[nearestEnemyID] =1 end
+		
+		 if boolStuck == true or Spring.GetUnitTeam(nearestEnemyID) == gaiaTeamID then 
+				badEnemys[nearestEnemyID]= badEnemys[nearestEnemyID]+ 2
+		 else
+				badEnemys[nearestEnemyID]= badEnemys[nearestEnemyID] -1
+		 end
+		--select for the 12 seconds one of a random list of enemys 
+		if onceAFrame ~= Spring.GetGameFrame() and badEnemys[nearestEnemyID] > 3 then 
+			onceAFrame= Spring.GetGameFrame()
+	 
+			T=process(getAllEnemyTeams(teamID, false),
+					function(ed)
+					  if Spring.GetUnitTeam(ed) ~= gaiaTeamID then
+						return
+						end
+					end,
+					--clustering
+					function(ed)
+						ad = Spring.GetUnitNearestAlly(ed)
+						if distanceUnitToUnit(ed,ad) < 200 then
+							return ed
+						else
+							return ad
+						end
+					end
+					)
+				if T and table.getn(T) >0 then	
+				designatedCritter = T[math.random(1, table.getn(T))]	
+					if designatedCritter and Spring.GetUnitIsDead(designatedCritter)== false then
+						ex,ey,ez =Spring.GetUnitPosition(designatedCritter)
+						return ex,ey,ez
+					end
+				end
+			end			
+	end
+	
+	return ex,ey,ez
+end
+
+badEnemys={}
+function TargetOS()
+	 
     local spValidUnitID = Spring.ValidUnitID
     local spGetUnitNearestEnemy = Spring.GetUnitNearestEnemy
 
     local spGetUnitPosition = Spring.GetUnitPosition
     local spSetUnitMoveGoal = Spring.SetUnitMoveGoal
-    local boolFlipFlop = true
+
     while (true) do
         Sleep(12000)
-        if monsterTable ~= nil and table.getn(monsterTable) > 0 then
-            enemyID = nil
 
+        if  monsterTable and table.getn(monsterTable) > 0 then        
 
-            if GG.ComEnders and GG.ComEnders[teamID] then enemyID = GG.ComEnders[teamID]
+            for i =  table.getn(monsterTable),1, -1 do
+				id = monsterTable[i]
+				if (spValidUnitID(id)) == true then
+
+					boolStuck= checkStuck(id)
+					tx,ty,tz= getTargetCoordinates(monsterTable[i], boolStuck)					
+				   if  boolStuck == true then 	Spring.SetUnitNoSelect(id,false) end
+					spSetUnitMoveGoal(id, tx,ty,tz)
+               
             else
-                if spValidUnitID(monsterTable[i]) == true then
-                    enemyID = spGetUnitNearestEnemy(monsterTable[i])
-                end
+					table.remove(monsterTable,i)
             end
-
-
-            for i = 1, table.getn(monsterTable), 1 do
-                if (spValidUnitID(monsterTable[i])) == true then
-
-                    if enemyID ~= nil then
-                        ex, ey, ez = spGetUnitPosition(enemyID)
-                        if math.random(0, 1) == 1 then
-                            eteam = Spring.GetUnitTeam(enemyID)
-                            ex, ey, ez = Spring.GetTeamStartPosition(eteam)
-                        end
-
-                        spSetUnitMoveGoal(monsterTable[i], ex, ey, ez)
-                    end
-                end
             end
         end
     end

@@ -76,7 +76,9 @@ local unitDef = {
 	workerTime = 1,
 	buildoptions = 
 	{
-		"genupgrade","coffworldassemblyseed","coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+		"genupgrade","coffworldassemblyseed","cwallbuilder",
+		"coperatrans",	"art","sentrynell",
+		"cheadlauncher",
 	},
 	
 	customParams = {},

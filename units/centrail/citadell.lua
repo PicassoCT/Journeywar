@@ -61,14 +61,14 @@ local unitDef = {
 	buildoptions = 
 	{
 		"scumslum","mdigg","cwaterextractor",
-		"campole","mestorage","citconair",
+		"campole","mestorage","smconverter",
 		"builux","bbind","coverworldgate",
 		"condepot","fclvl1","cairbase",
-		"cdistrictnone","buibaicity2","buibaicity1",
+		"cdistrictnone","ctransithub","buibaicity1",
 		"crailgun","sentry","bonker",
 		"cdefusermine",	"chopper","cwatchpost",
-		"efence","comendbonker","ctransithub",
-		"chivemind","cauterizer"
+		"efence","comendbonker","chivemind",
+		"cauterizer","citconair"
 	},
 	
 	sounds = {

@@ -40,7 +40,7 @@ local weaponDef = {
         default = 350,
         heavyarmor = 150,
     },
-    areaOfEffect = 100,
+    areaOfEffect = 300,
     craterMult = 0,
 
     --?FIXME***

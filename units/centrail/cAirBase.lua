@@ -77,7 +77,8 @@ local unitDef = {
 	
 	buildoptions = 
 	{
-		"genupgrade","chunterchopper","csuborbital","conair","cgunship","callygator"
+		"genupgrade","chunterchopper","csuborbital",
+		"cauterizer","cgunship","callygator"
 	},
 	
 	customParams = {},

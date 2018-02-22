@@ -1,4 +1,4 @@
-local unitName = "buibaicity2"
+local unitName = "smconverter"
 
 local unitDef = {
 	name = "Arcology",

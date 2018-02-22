@@ -219,7 +219,7 @@ function Mission3City(frame)
                                     spSetAlwaysVisible(did, true)
                                 end
                             elseif nid == 3 then
-                                did = spCreateUnit("buibaicity2", i * val, 0, j * val, dir, feamID)
+                                did = spCreateUnit("smconverter", i * val, 0, j * val, dir, feamID)
                                 if did then
                                     unitTable[#unitTable + 1] = did
                                     GG.Nodetable[i][j] = false

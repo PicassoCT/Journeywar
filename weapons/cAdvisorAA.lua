@@ -1,7 +1,7 @@
 --- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
 local weaponName = "cadvisoraa"
 local weaponDef = {
-    name = [[Superiority of Air]],
+    name = [[Not banging rocks together]],
     areaOfEffect = 8,
     craterBoost = 0,
     craterMult = 0,
@@ -12,7 +12,7 @@ local weaponDef = {
         subs = 22.5
     },
 	
-    explosionGenerator = "custom:burnteal",
+    explosionGenerator = "custom:advisorpsi",
     fireStarter = 70,
     flightTime = 5,
 
@@ -21,12 +21,12 @@ local weaponDef = {
     impulseFactor = 1.4,
     interceptedByShieldType = 2,
     lineOfSight = true,
-     CegTag = "advisorpsi",
+    CegTag = "custom:advisorpsi",
     model = "stone.s3o",
     noSelfDamage = true,
     range = 850,
-    reloadtime = 15.2,
-    renderType = 1,
+    reloadtime = 6,
+    renderType = 0,
     smokeTrail = false,
     --soundHit = [[jresistance/rocketfire1]],
     --soundStart = [[jresistance/rockimpact]],

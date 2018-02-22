@@ -26,7 +26,7 @@ TurnRate = 100,
 selfDestructAs= [[NOWEAPON]],
 explodeAs = [[NOWEAPON]],
 sightDistance = 800,
-
+moveState=0,
 
 CanAttack = true,
 CanGuard = true,
