@@ -27,7 +27,7 @@ local DropUnit = Spring.UnitScript.DropUnit
 local boolInTheMiddleOfSomething = false
 teamID = Spring.GetUnitTeam(unitID)
 local loaded = false
-
+faceDamagePerSecond= 75
 local llegs = {}
 local llow = {}
 local rlegs = {}
@@ -422,19 +422,21 @@ function returnToJumpPoint()
     Spring.SetUnitPosition(unitID, storedPosition.x, storedPosition.y + 15, storedPosition.z)
 end
 
+notMyTypeTable= getUnAttractiveTypesTable()
+
 function script.TransportPickup(passengerID)
     --Spring.Echo("UnitIsFired 5", table.getn(unitsStompedLately))
-    if unitsStompedLately == nil or findInTable(unitsStompedLately, passengerID) == nil then --Spring.Echo("EarlyExit")
+	typus= Spring.GetUnitDefID(passengerDefID)
+	if not 	GG.Fucked then 	GG.Fucked = {} end
+    if GG.Fucked[passengerID] or boolFullGrown == false or notMyTypeTable[typus] then --Spring.Echo("EarlyExit")
         return
     end
     abductedPosition.x, abductedPosition.y, abductedPosition.z = Spring.GetUnitPosition(passengerID)
-    boolNotFuckedYet = true
-    for i = 1, table.getn(GG.Prego), 1 do
-        if GG.Prego[i] ~= nil and passengerID == GG.Prego[i][1] then
-            boolNotFuckedYet = false
-        end
-    end
-    if boolNotFuckedYet == false then
+	
+    boolAllreadyFucked = false	
+	if 	GG.Fucked[passengerID] then boolAllreadyFucked = true end
+	
+    if boolAllreadyFucked == true then
         DropUnit(passengerID)
         Spring.SetUnitPosition(passengerID, abductedPosition.x, abductedPosition.y, abductedPosition.z)
         returnToJumpPoint()
@@ -477,25 +479,22 @@ function script.TransportPickup(passengerID)
     rape()
     setSpeedEnv(unitID, 1.0, UnitDefs)
 
-    if GG.Prego ~= nil then
+    if not GG.Prego then   GG.Prego = {} end
+    if not GG.Fucked then   GG.Fucked = {} end
+		
+		GG.Fucked[passengerID] = true
         GG.Prego[table.getn(GG.Prego) + 1] = {}
-        GG.Prego[table.getn(GG.Prego)][1] = {}
         GG.Prego[table.getn(GG.Prego)][1] = passengerID
-        GG.Prego[table.getn(GG.Prego)][2] = {}
         GG.Prego[table.getn(GG.Prego)][2] = teamID
 
-    else
-        GG.Prego = {}
-        GG.Prego[table.getn(GG.Prego) + 1] = {}
-        GG.Prego[table.getn(GG.Prego)][1] = passengerID
-        GG.Prego[table.getn(GG.Prego)][2] = teamID
-    end
+   
 
 
     SetUnitValue(COB.BUSY, 0)
     StartThread(potencyReloader)
     x, y, z = Spring.GetUnitPosition(unitID)
     script.TransportDrop(passengerID, x, y, z)
+	
     Spring.SetUnitPosition(passengerID, abductedPosition.x, abductedPosition.y, abductedPosition.z)
     Spring.SetUnitMoveGoal(passengerID, abductedPosition.x + math.random(-100, 100), abductedPosition.y, abductedPosition.z + math.random(-100, 100))
 end
@@ -622,7 +621,7 @@ end
 
 function script.AimWeapon1(heading, pitch)
     SetSignalMask(SIG_AIM)
-
+	if boolInside== true then return false end
 
     --Spring.PlaySoundFile("sounds/headcrab/hc.wav")
     if boolJumpLoaded == true and boolOnlyOnceAminute == true and boolInTheMiddleOfSomething == false then
@@ -676,7 +675,7 @@ function script.FireWeapon1()
     StartThread(HideMeWhileNotThere)
     EmitSfx(center, 1024)
 	dx,dy,dz = Spring.GetUnitDirection(unitID)
-	spawnCEGatUnit("jswspout",unitID, 0 ,10 ,0, dx,dy,dz)
+	spawnCEGatUnit(unitID, "jswspout", 0 ,10 ,0, dx,dy,dz)
 	
 	return true
 end
@@ -695,12 +694,18 @@ end
 boolWaitForVictim = true
 victim = nil
 function IfSomedayItMightHappenThatAVictimMustBeFound(victimID)
-	if not unitsStompedLately[victimID]then
-	unitsStompedLately[victimID] = victimID
+	if not GG.Fucked[victimID]then
+	boolWaitForVictim= false
 	victim = victimID
 	end
 end
-function getUnitFiredUpon()
+function polygAmour()
+	while (boolFullGrown == false) do	
+		Sleep(50)
+	end
+
+	while true do
+	
 	while (boolWaitForVictim == true) do	
 		Sleep(50)
 	end
@@ -708,10 +713,11 @@ function getUnitFiredUpon()
 
     --- -Spring.Echo("UnitIsFired - Touching other employees way more then necessary")
 		StartThread(retreatToPreviousLocation)
-	if unitsStompedLately ~= nil and table.getn(unitsStompedLately) ~= 0 then
-        --lucky luv..
-        --- -Spring.Echo("UnitIsFired - Raping the CEO is not okay. Not one bit.")
-        TransportPickup(unitsStompedLately[#unitsStompedLately])
+		if unitsStompedLately ~= nil and table.getn(unitsStompedLately) ~= 0 then
+			--lucky luv..
+			--- -Spring.Echo("UnitIsFired - Raping the CEO is not okay. Not one bit.")
+			TransportPickup(unitsStompedLately[#unitsStompedLately])
+		end
     end
 end
 
@@ -720,8 +726,8 @@ maxSpeedPerSecond = 200
 function retreatToPreviousLocation()
 	Sleep(250)
 		px,px,px =Spring.GetUnitPosition(unitID)
-		pVec= Vector:new(ux-px,uy-py,uz-pz).normalized()
-		spawnCEGatUnit("jswspin",unitID, 0 ,10 ,0, pVec.x, pVec.y, pVec.z)
+		local pVec= Vector:new(ux-px,uy-py,uz-pz).normalized()
+		spawnCEGatUnit(unitID, "jswspin", 0 ,10 ,0, pVec.x, pVec.y, pVec.z)
 	
 	--going back
 	Spring.MoveCtrl.Enable(unitID)
@@ -754,15 +760,14 @@ end
 
 function script.AimWeapon2(heading, pitch)
 
-    if boolOnlyOnceAminute == true then
-        return true
-    else
-        return false
-    end
+ 
+        return boolOnlyOnceAminute == true  and boolFullGrown == true and boolInside == false
+  
 end
 
-lookAtTheTime = 60000
+lookAtTheTime = 15000
 function takeyourtime()
+    boolOnlyOnceAminute = false
     Sleep(lookAtTheTime)
     boolOnlyOnceAminute = true
 end
@@ -770,15 +775,78 @@ end
 boolOnlyOnceAminute = false
 
 function script.FireWeapon2()
-    boolOnlyOnceAminute = false
+
     StartThread(takeyourtime)
 	boolWaitForVictim= true
-    StartThread(getUnitFiredUpon)
 end
 
 function script.Create()
     StartThread(takeyourtime)
     if GG.Prego == nil then GG.Prego = {} end
 
+    StartThread(growUP)
     StartThread(idleSound)
+    StartThread(polygAmour)
+    StartThread(hugToDeath)
 end
+
+function script.AimFromWeapon3()
+    return aimspot
+end
+
+function script.QueryWeapon3()
+    return aimspot
+end
+
+boolFullGrown=false
+growUpTime= 3*60*1000
+function growUP()
+	boolFullGrown=false
+	Sleep(growUpTime)
+	boolFullGrown=true
+end
+
+function script.AimWeapon3(heading, pitch)
+
+	return boolFullGrown == false and boolInside== false
+end
+
+boolInside= false
+faceFuckVictim= nil
+function faceFuck(faceFoock)
+	if boolInside== false then
+	faceFuckVictim= faceFoock
+	boolInside= true	
+	end
+end
+
+function hugToDeath()
+	local spGetUnitIsDead = Spring.GetUnitIsDead
+	
+	while boolFullGrown==false do
+		if boolInside==true then
+			poundedToDeath= spGetUnitIsDead(faceFuckVictim)
+			removeFromWorld(unitID,0,-9000,0)
+				
+			while poundedToDeath and poundedToDeath== false do		
+				hp=Spring.GetUnitHealth(faceFuckVictim)
+				if hp -faceDamagePerSecond <=0 then 
+					break 
+				else
+					Spring.SetUnitHealth(faceFuckVictim,hp  - faceDamagePerSecond)
+				end
+				Spring.AddUnitImpulse(faceFuckVictim,math.random(-3,3),math.random(0,3), math.random(-3,3))
+				Sleep(1000)
+				poundedToDeath= spGetUnitIsDead(faceFuckVictim)
+			end
+			
+			rx,ry,rz= Spring.GetUnitPosition(faceFuckVictim)
+			Spring.DestroyUnit(faceFuckVictim,false,true)
+			returnToWorld(unitID,rx,ry,rz)
+			boolInside=false
+		end
+		
+	Sleep(50)
+	end
+end
+

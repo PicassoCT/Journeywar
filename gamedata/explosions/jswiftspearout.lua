@@ -10,14 +10,20 @@ return {
       underwater         = 1,
       water              = true,
       properties = {
-        colormap           = [[0 0 0 0		0.9 0.9 0.9 0.01		0 0 0 0]],
+        colormap           = [[0 0 0 0	
+								0.9 0.9 0.9 0.01	
+								0.9 0.9 0.9 0.01	
+								0.9 0.9 0.9 0.02	
+								0.9 0.9 0.9 0.01	
+								0.9 0.9 0.9 0.01	
+								0 0 0 0]],
         dir                = [[dir]],
-        frontoffset        = 0.05,
-        fronttexture       = [[pulseshot]],
-        length             = 225,
-        sidetexture        = [[bluedot]],
-        size               = 7,
-        sizegrowth         = 1.125,
+        frontoffset        = 0,
+        fronttexture       = [[flake]],
+        length             = 75,
+        sidetexture        = [[spawnpointside]],
+        size               = 2,
+        sizegrowth         = 4,
         ttl                = 125,
       },
     },     

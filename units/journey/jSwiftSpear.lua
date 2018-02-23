@@ -2,7 +2,7 @@ local unitName = "jswiftspear"
 
 local unitDef = {
 	name = "Swiftspear",
-	Description = "rapes enemy units, impregnates them with little swiftspears <Assault>",
+	Description = "rapes enemy units, impregnates them with little swiftspears <Sabotage/Assault>",
 	objectName = "swiftspear.s3o",
 	script = "swiftspear.lua",
 	buildPic = "placeholderj.png",
@@ -70,6 +70,9 @@ weapons = {
 	onlyTargetCategory = [[LAND]],
 	},
 [2]={name  = "jswiftrapemark",
+	onlyTargetCategory = [[LAND]],
+	},	
+[3]={name  = "jfacehugger",
 	onlyTargetCategory = [[LAND]],
 	},	
 },

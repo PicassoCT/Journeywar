@@ -1,58 +1,58 @@
 local unitName = "vort"
 
 local unitDef = {
-name = "Vortigaunt",
-Description = " stunning and teleporting Vortexwarrior <Assault>",
-objectName = "vort.s3o",
-script = "jVortigaunt.lua",
-buildPic = "placeholderj.png",
---cost
-buildCostMetal = 100,
-buildCostEnergy = 450,
-buildTime = 6,
---Health
-maxDamage = 620,
-idleAutoHeal = 3,
---Movement
-Acceleration = 0.3,
-BrakeRate = 0.5,
-FootprintX = 1,
-FootprintZ = 1,
-MaxSlope = 60,
-MaxVelocity = 1.6,
-MaxWaterDepth = 20,
-MovementClass = "Default2x2",
-TurnRate = 950,
-corpse="jbiocorpse",
-sightDistance = 600,
-selfDestructAs= [[NOWEAPON]],
-explodeAs = [[NOWEAPON]],
-Builder = false,
-CanAttack = true,
-CanGuard = true,
-CanMove = true,
-CanPatrol = true,
-CanStop = true,
-LeaveTracks = false, 
+	name = "Vortigaunt",
+	Description = " stunning and teleporting Vortexwarrior <Assault>",
+	objectName = "vort.s3o",
+	script = "jVortigaunt.lua",
+	buildPic = "placeholderj.png",
+	--cost
+	buildCostMetal = 100,
+	buildCostEnergy = 450,
+	buildTime = 6,
+	--Health
+	maxDamage = 620,
+	idleAutoHeal = 3,
+	--Movement
+	Acceleration = 0.3,
+	BrakeRate = 0.5,
+	FootprintX = 1,
+	FootprintZ = 1,
+	MaxSlope = 60,
+	MaxVelocity = 1.6,
+	MaxWaterDepth = 20,
+	MovementClass = "Default2x2",
+	TurnRate = 950,
+	corpse="jbiocorpse",
+	sightDistance = 600,
+	selfDestructAs= [[NOWEAPON]],
+	explodeAs = [[NOWEAPON]],
+	Builder = false,
+	CanAttack = true,
+	CanGuard = true,
+	CanMove = true,
+	CanPatrol = true,
+	CanStop = true,
+	LeaveTracks = false, 
 
-Category = [[LAND]],
+	Category = [[LAND]],
 
-weapons = {
-	[1]={name  = "vortweapon",
-		onlyTargetCategory = [[LAND]],
+	weapons = {
+		[1]={name  = "vortweapon",
+			onlyTargetCategory = [[LAND]],
+			},
+		[2]={name  = "vortmarker",
+			onlyTargetCategory = [[BUILDING]],
+			},
+	},
+
+
+	  customParams = {},
+	 sfxtypes = {
+		explosiongenerators = {
+		 "custom:vortport"
 		},
-	[2]={name  = "vortmarker",
-		onlyTargetCategory = [[BUILDING]],
-		},
-},
-
-
-  customParams = {},
- sfxtypes = {
-    explosiongenerators = {
-     "custom:vortport"
-    },
-  }
+	  }
 
 }
 

@@ -72,6 +72,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	jHiveHoundID = WeaponDefNames["jhivehoundrocket"].id
 	jSwiftSpearID = WeaponDefNames["swiftprojectile"].id
 	jSwiftMarkWeaponDefID = WeaponDefNames["jswiftrapemark"].id
+	jFaceHuggerWeaponDefID = WeaponDefNames["jfacehugger"].id
 	jghostDancerWeaponDefID = WeaponDefNames["jgdjump"].id
 	jhunterDartDefID = WeaponDefNames["jdartgun"].id
 	jvaryfoospearDefID = WeaponDefNames["varyfoospear"].id
@@ -126,6 +127,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jHiveHoundID, true)
 	Script.SetWatchWeapon(jSwiftSpearID, true)
 	Script.SetWatchWeapon(jSwiftMarkWeaponDefID, true)
+	Script.SetWatchWeapon(jFaceHuggerWeaponDefID, true)
 	Script.SetWatchWeapon(jghostDancerWeaponDefID, true)
 	Script.SetWatchWeapon(crabShelWDefID, true)
 	Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
@@ -782,6 +784,20 @@ if (gadgetHandler:IsSyncedCode()) then
 		if env then
 			Spring.UnitScript.CallAsUnit(attackerID, env.IfSomedayItMightHappenThatAVictimMustBeFound, unitID)
 		end	
+	end	
+	
+	imuneToFaceFuck = getImuneToFaceFuckTypeTable(UnitDefs)
+	UnitDamageFuncT[jFaceHuggerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+	
+	if imuneToFaceFuck[unitDefID] then 
+		return damage 
+	end 
+	echo("facehuggerhit")
+		local env = Spring.UnitScript.GetScriptEnv(attackerID)
+		if env then
+			Spring.UnitScript.CallAsUnit(attackerID, env.faceFuck, unitID)
+		end	
+	
 	end
 	
 	--perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction

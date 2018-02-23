@@ -101,6 +101,29 @@ function getCentrailOverworldGateUnitTypeTable()
 
 end
 
+function getImuneToFaceFuckTypeTable(UnitDefs)
+local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
+
+	typeTable={
+		"ccomender",
+		"jswiftspear",
+		"jbeherith",
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+
+end
+
+function getUnAttractiveTypesTable()
+	typeTable={
+		"ccomender",
+		"jswiftspear",
+		"jbeherith",
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+
+
+end
+
 --> Units imune to deadly Fungi
 function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab = {}

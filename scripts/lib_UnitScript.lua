@@ -590,7 +590,7 @@ end
 function returnToWorld(unit, px, py, pz)
 	showUnit(unit)
 	Spring.MoveCtrl.Disable(unit)
-	if pz then
+	if px then
 		Spring.SetUnitPosition(unit, px, py, pz)
 	end
 	Spring.SetUnitAlwaysVisible(unit, true)
