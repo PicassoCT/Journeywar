@@ -17,11 +17,10 @@ local weaponDef = {
     beamtime = 1, --0.01
 
     FireSubmersed = 0,
-    impulseFactor = 0.1,
+    impulseFactor = 3,
     largeBeamLaser = true,
     lineOfSight = false,
 
-    --explosiongenerator = "custom:smallblueburn",
     targetMoveError = 0.5,
     noSelfDamage = true,
     range = 700,
@@ -29,8 +28,6 @@ local weaponDef = {
     renderType = 0,
     sweepfire = true,
     turret = true,
-    --soundHit           = "null",
-    --soundStart         = "null",
     FireStarter = 0,
     coreThickness = 0.3,
     thickness = 3.14,
@@ -43,7 +40,7 @@ local weaponDef = {
     explosionGenerator = "custom:green_electric_explosion",
     tolerance = 1000,
     damage = {
-        default = 25,
+        default = 50,
         HeavyArmor = 45,
     },
     areaOfEffect = 12,

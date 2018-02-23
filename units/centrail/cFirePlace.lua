@@ -4,7 +4,7 @@ local unitDef = {
 	name = "Camp",
 	Description = "Stay in the light <Healing Kit>",
 	objectName = "cFirePlace.s3o",
-	script = "cFirePlace.lua",
+	script = "cFirePlaceScript.lua",
 	buildPic = "placeholder.png",
 	--cost
 	buildCostMetal = 10,
@@ -43,30 +43,13 @@ local unitDef = {
 	MakesMetal = 0, 
 	MetalMake = 0,	
 	acceleration = 0,
-	
-		corpse = "bgcorpse",
-	
-	
 	levelGround = false,
 	mass = 100,
 	
-	
-	
-	
-	
-	
-	
-	-- TEDClass = [[METAL]],
-	
 	customParams = {},
 	sfxtypes = {
-		explosiongenerators = {
-			
-			"custom:vortflames",
-			
-			
-			--
-			--Bulletof The Cannon
+		explosiongenerators = {		
+			"custom:vortflames",		
 		},
 		
 	},

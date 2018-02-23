@@ -24,7 +24,10 @@ local unitDef = {
 	MovementClass = "Default2x2",
 	TurnRate = 950,
 	nanocolor=[[0 0.9 0.9]],
-	sightDistance = 600,
+	sightDistance = 200,
+	losEmitHeight = 40,
+	radarEmitHeight= 20,
+	radarDistance  =200,
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
 	
@@ -57,6 +60,7 @@ local unitDef = {
 	sfxtypes = {
 		explosiongenerators = {
 			"custom:advisorpsi",--28
+			"custom:bluebloodspray",--29
 		},
 		
 	},

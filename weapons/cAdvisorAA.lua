@@ -12,7 +12,7 @@ local weaponDef = {
         subs = 22.5
     },
 	
-    explosionGenerator = "custom:advisorpsi",
+    explosionGenerator = "custom:directionaldirt",
     fireStarter = 70,
     flightTime = 5,
 
@@ -21,7 +21,7 @@ local weaponDef = {
     impulseFactor = 1.4,
     interceptedByShieldType = 2,
     lineOfSight = true,
-    CegTag = "custom:advisorpsi",
+    CegTag = "cpsitail",
     model = "stone.s3o",
     noSelfDamage = true,
     range = 850,
@@ -30,7 +30,7 @@ local weaponDef = {
     smokeTrail = false,
     --soundHit = [[jresistance/rocketfire1]],
     --soundStart = [[jresistance/rockimpact]],
-    FireStarter = 75,
+    FireStarter = 0,
     startVelocity = 250,
     tolerance = 10000,
     tracks = true,
@@ -39,7 +39,7 @@ local weaponDef = {
     weaponAcceleration = 300,
     weaponTimer = 5,
     weaponType = [[MissileLauncher]],
-    weaponVelocity = 450,
+    weaponVelocity = 150,
 }
 
 

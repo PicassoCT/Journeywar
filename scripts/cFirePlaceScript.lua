@@ -1,24 +1,35 @@
+include "lib_jw.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+
+include "lib_Build.lua"
+
+
 STORYMAX = 4
 
-
+main= piece"center"
 function script.Killed()
-    	return 1
+	Explode(main, SFX.SHATTER)
+	return 1
 end
+
 function healingRest()
-while true do
-	if boolUnderAttack== false  then
-		T= getAllNearUnit(unitID, 200)
-		process(T,
-				function(id)
-				defID= Spring.GetUnitDefID(id)
-					if defID and isInfantry[defID] then return id end
-				end,
-				function(id)
-					hp= Spring.GetUnitHealth(id)
-					Spring.SetUnitHealth(hp+5)
-				end
-				)
-	Sleep(1000)
+	while true do
+		if boolUnderAttack== false  then
+			T= getAllNearUnit(unitID, 200)
+			process(T,
+					function(id)
+					defID= Spring.GetUnitDefID(id)
+						if defID and isInfantry[defID] then return id end
+					end,
+					function(id)
+						hp= Spring.GetUnitHealth(id)
+						Spring.SetUnitHealth(hp+5)
+					end
+					)
+		end
+		Sleep(1000)
 	end
 end
 

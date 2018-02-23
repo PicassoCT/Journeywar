@@ -91,7 +91,12 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,116,0}, size=25, precision=22, strength = 0.015, repeatEffect=true}},
 		
 	},
-	
+	advisor ={
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare1", onActive=false}}	,
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare2", onActive=false}}	,
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare3", onActive=false}}	,
+		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare4", onActive=false}}	,
+	},	
 	bbind= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,10,0}, size=96, precision=22, strength = 0.003, repeatEffect=true}},
 	},

@@ -119,68 +119,7 @@ Ring6 = piece "Ring6"
 Ring[6] = Ring6
 spin1 = piece "spin1"
 spin[1] = spin1
-Pillar1 = piece "Pillar1"
-Pillar[1] = Pillar1
-PillP2 = piece "PillP2"
-PillP[2] = PillP2
-PillP3 = piece "PillP3"
-PillP[3] = PillP3
-PillP4 = piece "PillP4"
-PillP[4] = PillP4
-Pillar2 = piece "Pillar2"
-Pillar[2] = Pillar2
-Pillar3 = piece "Pillar3"
-Pillar[3] = Pillar3
-Pillar4 = piece "Pillar4"
-Pillar[4] = Pillar4
-spin2 = piece "spin2"
-spin[2] = spin2
-Pillar5 = piece "Pillar5"
-Pillar[5] = Pillar5
-PillP6 = piece "PillP6"
-PillP[6] = PillP6
-PillP7 = piece "PillP7"
-PillP[7] = PillP7
-PillP8 = piece "PillP8"
-PillP[8] = PillP8
-Pillar6 = piece "Pillar6"
-Pillar[6] = Pillar6
-Pillar7 = piece "Pillar7"
-Pillar[7] = Pillar7
-Pillar8 = piece "Pillar8"
-Pillar[8] = Pillar8
-spin3 = piece "spin3"
-spin[3] = spin3
-Pillar13 = piece "Pillar13"
-Pillar[13] = Pillar13
-PillP14 = piece "PillP14"
-PillP[14] = PillP14
-PillP15 = piece "PillP15"
-PillP[15] = PillP15
-PillP16 = piece "PillP16"
-PillP[16] = PillP16
-Pillar14 = piece "Pillar14"
-Pillar[14] = Pillar14
-Pillar15 = piece "Pillar15"
-Pillar[15] = Pillar15
-Pillar16 = piece "Pillar16"
-Pillar[16] = Pillar16
-spin4 = piece "spin4"
-spin[4] = spin4
-Pillar9 = piece "Pillar9"
-Pillar[9] = Pillar9
-PillP10 = piece "PillP10"
-PillP[10] = PillP10
-PillP11 = piece "PillP11"
-PillP[11] = PillP11
-PillP12 = piece "PillP12"
-PillP[12] = PillP12
-Pillar10 = piece "Pillar10"
-Pillar[10] = Pillar10
-Pillar11 = piece "Pillar11"
-Pillar[11] = Pillar11
-Pillar12 = piece "Pillar12"
-Pillar[12] = Pillar12
+
 MortalFlesh = piece(MortalFlesh)
 Leg01 = piece "Leg01"
 Leg[1] = Leg01
@@ -306,68 +245,7 @@ Ring6 = piece "Ring6"
 piecesTable[#piecesTable + 1] = Ring6
 spin1 = piece "spin1"
 piecesTable[#piecesTable + 1] = spin1
-Pillar1 = piece "Pillar1"
-piecesTable[#piecesTable + 1] = Pillar1
-PillP2 = piece "PillP2"
-piecesTable[#piecesTable + 1] = PillP2
-PillP3 = piece "PillP3"
-piecesTable[#piecesTable + 1] = PillP3
-PillP4 = piece "PillP4"
-piecesTable[#piecesTable + 1] = PillP4
-Pillar2 = piece "Pillar2"
-piecesTable[#piecesTable + 1] = Pillar2
-Pillar3 = piece "Pillar3"
-piecesTable[#piecesTable + 1] = Pillar3
-Pillar4 = piece "Pillar4"
-piecesTable[#piecesTable + 1] = Pillar4
-spin2 = piece "spin2"
-piecesTable[#piecesTable + 1] = spin2
-Pillar5 = piece "Pillar5"
-piecesTable[#piecesTable + 1] = Pillar5
-PillP6 = piece "PillP6"
-piecesTable[#piecesTable + 1] = PillP6
-PillP7 = piece "PillP7"
-piecesTable[#piecesTable + 1] = PillP7
-PillP8 = piece "PillP8"
-piecesTable[#piecesTable + 1] = PillP8
-Pillar6 = piece "Pillar6"
-piecesTable[#piecesTable + 1] = Pillar6
-Pillar7 = piece "Pillar7"
-piecesTable[#piecesTable + 1] = Pillar7
-Pillar8 = piece "Pillar8"
-piecesTable[#piecesTable + 1] = Pillar8
-spin3 = piece "spin3"
-piecesTable[#piecesTable + 1] = spin3
-Pillar13 = piece "Pillar13"
-piecesTable[#piecesTable + 1] = Pillar13
-PillP14 = piece "PillP14"
-piecesTable[#piecesTable + 1] = PillP14
-PillP15 = piece "PillP15"
-piecesTable[#piecesTable + 1] = PillP15
-PillP16 = piece "PillP16"
-piecesTable[#piecesTable + 1] = PillP16
-Pillar14 = piece "Pillar14"
-piecesTable[#piecesTable + 1] = Pillar14
-Pillar15 = piece "Pillar15"
-piecesTable[#piecesTable + 1] = Pillar15
-Pillar16 = piece "Pillar16"
-piecesTable[#piecesTable + 1] = Pillar16
-spin4 = piece "spin4"
-piecesTable[#piecesTable + 1] = spin4
-Pillar9 = piece "Pillar9"
-piecesTable[#piecesTable + 1] = Pillar9
-PillP10 = piece "PillP10"
-piecesTable[#piecesTable + 1] = PillP10
-PillP11 = piece "PillP11"
-piecesTable[#piecesTable + 1] = PillP11
-PillP12 = piece "PillP12"
-piecesTable[#piecesTable + 1] = PillP12
-Pillar10 = piece "Pillar10"
-piecesTable[#piecesTable + 1] = Pillar10
-Pillar11 = piece "Pillar11"
-piecesTable[#piecesTable + 1] = Pillar11
-Pillar12 = piece "Pillar12"
-piecesTable[#piecesTable + 1] = Pillar12
+
 MortalFlesh = piece "MortalFlesh"
 piecesTable[#piecesTable + 1] = MortalFlesh
 Leg01 = piece "Leg01"
@@ -435,7 +313,7 @@ end
 
 
 function init()
-
+		Hide(FloodRing)
     if boolWeeImATree == true then
         hideT(piecesTable)
         Show(Transport[3])
@@ -486,13 +364,16 @@ function init()
             StartThread(Pump2)
         end
 
-        d = math.random(-45, 45)
-        dis = math.random(25, 45)
+       
+       
 
         for i = 1, #Ring do
+				d = math.random(10, 45)*randSign()
+				dis = math.random(25, 45)*randSign()
+				das = math.random(25, 45)*randSign()
             --echo("Ring"..i)
-            Turn(Ring[i], x_axis, math.rad(d), 0)
-            x, z = drehMatrix(dis, dis, 0, 0, i * (360 / #Ring))
+            tP(Ring[i], math.random(-45,45), math.rad(d),0, 0)
+            x, z = Rotate(dis, das,  i * (290 / #Ring))
             moveUnitPieceToGroundPos(unitID, Ring[i], x, z, 1.8, 3)
             Show(Ring[i])
         end
@@ -500,71 +381,69 @@ function init()
         StartThread(pillarHandling)
     end
 end
-
+empty= piece"empty"
 function pillarHandling()
     --echo("pillarHandling")
+	    boolPillarbreath = maRa()
+		 boolGap=maRa()
+	 if boolGap == true then
+	   gapVal=math.random(-20,30)
+	   for i=1, #Pillar do
+	 	 if i % 2 == 0 then
+	 		Move(Pillar[i],z_axis,gapVal,0)
+	 	end
+	   end
+	 end
+
     val = 360 - math.random(10, 150)
-    counter = 1
-    boolPillarbreath = maRa()
+    for i=1, #spin do
+		Turn(spin[i],y_axis,math.rad(val/#spin)*i,0)		
+		if maRa()==true then
+			Hide(Pillar[i]) 
+		else 
+			Show(Pillar[i])
+		end
+	 end
+
     if boolPillarbreath == false then
-        for j = 1, #spin, 1 do
-            v = counter * (val / #spin)
-            Turn(spin[j], y_axis, math.rad(v), 0)
-            Turn(spin[j], x_axis, math.rad(90) * randSign(), 1)
+			x,y,z=math.random(-70,70),math.random(-360,360),0
+        for i = 1, #Pillar, 1 do
+			tP(Pillar[i],x,y,z,0)
         end
-        WaitForTurns(spin)
-    end
-    for i = 1, #Pillar, 4 do
-        --echo("pillarHandling"..i)
-        Show(Pillar[i])
-        counter = counter + 1
-        if spin[i] then
-            Move(Pillar[i], z_axis, 90, 0, true)
-            Sleep(20)
-        end
-
-        for j = i + 1, math.min(i + 4, #Pillar), 1 do
-            --echo("pillarHandlingj"..j)
-            if maRa() == true then
-                Show(Pillar[j])
-                movePieceToPiece(unitID, Pillar[j], PillP[j])
-            end
-        end
-    end
-
-
-    if boolPillarbreath == true then
+	else
         --breath it
-        counter = 0
-        predecessor = Pillar[1]
-        for k, v in pairs(Pillar) do
-            counter = counter + 1
-            rand = math.random(-32, 32)
-            if counter % 2 == 0 then
-                StartThread(breath, predecessor, v, x_axis, rand, 0.5, 10, 0.4 / 10)
-            else
-                predecessor = v
-            end
-        end
+		rand = math.random(-60,60)
+       for i = 1, #Pillar, 1 do
+          StartThread(breath, empty, Pillar[i], x_axis, rand, 0.5, 5, 0.1 )        
+       end
     end
 
-    --stay upright and fall down
-
-
-    for i = 1, #Pipe do
-        StopSpin(Pipe[i], y_axis)
-        StopSpin(Pipe[i], x_axis)
-    end
 end
 
 function Ballsset(i)
-
-    Move(Balls[i], z_axis, math.random(-40, 40), 0)
-    Move(Balls[i], x_axis, math.random(-40, 40), 0)
-    Move(Balls[i], y_axis, math.random(25, 50), 0, true)
     Show(Balls[i])
-    PseudoPhysix(Balls[i], Balls[i], 6)
-    DropPieceToGround(unitID, Balls[i], 5, true, false)
+	 local x,y,z=math.random(30, 70)*randSign(), math.random(25, 35) , math.random(30, 70)*randSign()
+    mSyncIn(Balls[i],x,y,z,1000)
+	 WaitForMoves(Balls[i])
+
+	 mSyncIn(Balls[i],
+		 x ,
+		 groundHugDay(Balls[i]),
+		 z ,
+		 700)
+		EmitSfx(Balls[i],1025)
+	  wiggle(Balls[i], 70 ,30,70,15000, 900,1200, 0.005)
+	  EmitSfx(Balls[i],1025)
+end
+
+function groundHugDay(name)
+    sx, sy, sz = Spring.GetUnitPosition(unitID)
+    globalHeightUnit = Spring.GetGroundHeight(sx, sz)
+    x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, name)
+    myHeight = Spring.GetGroundHeight(x, z)
+    heightdifference = math.abs(globalHeightUnit - myHeight)
+    if myHeight < globalHeightUnit then heightdifference = -1*heightdifference end
+	 return heightdifference
 end
 
 function Huskset(i)
@@ -580,21 +459,58 @@ end
 
 function shieldset(i)
 
-    Move(Shield[i], z_axis, math.random(-120, 120), 0)
-    Move(Shield[i], x_axis, math.random(-120, 120), 0)
-    Move(Shield[i], y_axis, math.random(40, 182), 0, true)
     Show(Shield[i])
-    PseudoPhysix(Shield[i], Shield[i], 6)
-    DropPieceToGround(unitID, Shield[i], 5, true, false)
+	 spinRand(Shield[i], 10,42,5)
+	 local tx,ty,tz= math.random(-60, 60), math.random(40, 90) , math.random(-60, 60)
+    mSyncIn(Shield[i],tx,ty,tz,1000)
+	 WaitForMoves(Shield[i])
+	 local reducefactor= 1
+	 local t=700
+	 EmitSfx(Shield[i],1025)
+	 
+	 while reducefactor > 0.001 and t > 5 do
+		 mSyncIn(Shield[i],
+		 tx + tx*reducefactor,
+		 groundHugDay(Shield[i]),
+		 tz + tz*reducefactor,
+		 t)
+		 
+		 t= math.ceil((ty*reducefactor))*10
+	
+		 tx,tz=tx + tx*reducefactor,tz + tz*reducefactor
+		 reducefactor=reducefactor/math.pi
+		 WaitForMoves(Shield[i])
+		 spawnCegAtPiece(unitID,Shield[i],"dirt",5)
+		 
+		 mSyncIn(Shield[i],
+		 tx + tx*reducefactor,
+		 ty*reducefactor ,
+		 tz + tz*reducefactor,
+		 t)	
+		 
+		 tx,tz=tx + tx*reducefactor,tz + tz*reducefactor
+		 WaitForMoves(Shield[i])
+		 Sleep(1)
+	end
+	mSyncIn(Shield[i],
+		 tx + tx*reducefactor,
+		 groundHugDay(Shield[i]),
+		 tz + tz*reducefactor,
+		 t)
+	stopSpins(Shield[i])
+
+
 end
 
 function Pump1()
-
+	Show(FloodRing)
     Turn(Flood, y_axis, 0, 0)
     Show(Drip1)
-    moveUnitPieceToGroundPos(unitID, Drip1, math.random(-72, 72), math.random(-72, 72), 0)
-    Spin(Flood, z_axis, math.rad(-42), 1)
-
+    moveUnitPieceToGroundPos(unitID, Drip1, math.random(-72, 72), math.random(-72, 72), 0,-10)
+     
+	Spin(Flood, z_axis, math.rad(-42), 1)
+	rVal=math.random(-360,360)
+	Turn(Drip1,y_axis,math.rad(rVal),0)
     Show(Flood)
     Show(Soup)
 end
@@ -644,7 +560,11 @@ function flailingFlesh()
 
 
         for i = 1, #Leg do
-            turnPieceRandDir(Leg[i], speed, 120, -120, 180, -180, 8, -5)
+				if i % 2 == 0 then
+					tSyncIn(Leg[i],math.random(10,60)*-1,math.random(-10,10),30,3000)
+				else
+					tSyncIn(Leg[i],math.random(10,60),math.random(-10,10),30,2000)
+				end
         end
         val = iRand(-12, 12)
         valor = iRand(-12, 12)
@@ -789,8 +709,12 @@ end
 function script.Killed()
     return 1
 end
-
+TableOfPieceGroups= {}
 function script.Create()
+
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+		Pillar=TableOfPieceGroups["Pillar"]
+		spin=TableOfPieceGroups["spin"]
 
     init()
     if boolWeeImATree == false then

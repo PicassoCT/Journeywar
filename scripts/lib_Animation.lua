@@ -367,7 +367,7 @@ function equiTurn(p1, p2, axis, degv, speed)
     Turn(p2, axis, math.rad(-1 * degv), speed)
 end
 
-function breath(p1, p2, axis, degv, speed, itteration, speedreduce)
+function breath(p1, p2, axis, degv, speed, itteration, speedreduce,finalfunction)
     for i = 1, itteration do
         equiTurn(p1, p2, axis, degv, speed)
         WaitForTurns(p1, p2)
@@ -375,6 +375,9 @@ function breath(p1, p2, axis, degv, speed, itteration, speedreduce)
         WaitForTurns(p1, p2)
         speed = speed - speedreduce
     end
+	if finalfunction then
+		finalfunction(p1,p2)
+	end
 end
 
 --> Turns a piece in all 3 axis and waits for it
@@ -627,6 +630,13 @@ function TurnTowardsWind(piecename, speed, offset)
     headRad = math.atan2(dx, dz)
     Turn(piecename, y_axis, headRad + offSet, speed)
     return headRad
+end
+
+function spinRand(p, intervallLow,intervallUp,startspeed)
+	for i=1,3 do
+		val=math.random(intervallLow,intervallUp)
+		Spin(p,i,math.rad(val),startspeed or 0)
+	end
 end
 
 -->Spins a Table
@@ -1765,6 +1775,29 @@ function compareHeading(currentHead, headingOld, waitTime, headChangeTolerance)
     else
         return false, boolTurnLeft
     end
+end
+
+function wiggle(piecename, xval,yval,zval,timetotal, timeMin,timeMax, overshootfactor)
+
+
+	timeSnippet= math.random(timeMin,timeMax)
+	x,y,z=math.random(0,xval)*randSign(),math.random(0,yval)*randSign(),math.random(0,zval)*randSign()
+	tSyncIn(piecename,x,y,z,timeSnippet)
+	WaitForTurns(piecename)
+	timetotal=timetotal-timeSnippet
+
+	copy=overshootfactor
+	sigN= 1
+		for i=1,4 do
+			tSyncIn(piecename,x+x*copy,y+y*copy,z+z*copy,math.ceil(math.abs(timeSnippet)))
+				timetotal=timetotal-math.ceil(math.abs(timeSnippet))
+			WaitForTurns(piecename)
+			copy= math.abs(copy*copy)*sigN
+			sigN= sigN*-1
+		end
+
+
+
 end
 
 --unitID,centerNode,centerNodes, nrofLegs, FeetTable={firstAxisTable, KneeTable[nrOfLegs]},SensorTable,frameRate, FeetLiftForce
