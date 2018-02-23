@@ -436,15 +436,7 @@ function Ballsset(i)
 	  EmitSfx(Balls[i],1025)
 end
 
-function groundHugDay(name)
-    sx, sy, sz = Spring.GetUnitPosition(unitID)
-    globalHeightUnit = Spring.GetGroundHeight(sx, sz)
-    x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, name)
-    myHeight = Spring.GetGroundHeight(x, z)
-    heightdifference = math.abs(globalHeightUnit - myHeight)
-    if myHeight < globalHeightUnit then heightdifference = -1*heightdifference end
-	 return heightdifference
-end
+
 
 function Huskset(i)
 
@@ -469,9 +461,10 @@ function shieldset(i)
 	 EmitSfx(Shield[i],1025)
 	 
 	 while reducefactor > 0.001 and t > 5 do
+		 local groundHug = groundHugDay(Shield[i])
 		 mSyncIn(Shield[i],
 		 tx + tx*reducefactor,
-		 groundHugDay(Shield[i]),
+		 groundHug,
 		 tz + tz*reducefactor,
 		 t)
 		 
@@ -484,7 +477,7 @@ function shieldset(i)
 		 
 		 mSyncIn(Shield[i],
 		 tx + tx*reducefactor,
-		 ty*reducefactor ,
+		 math.min(ty*reducefactor, groundHug + ty*reducefactor),
 		 tz + tz*reducefactor,
 		 t)	
 		 
@@ -498,9 +491,8 @@ function shieldset(i)
 		 tz + tz*reducefactor,
 		 t)
 	stopSpins(Shield[i])
+	end
 
-
-end
 
 function Pump1()
 	Show(FloodRing)

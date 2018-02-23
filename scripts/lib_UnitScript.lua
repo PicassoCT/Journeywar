@@ -4731,7 +4731,7 @@ function hitByExplosionAtCenter(objX, objY, objZ, worldX, worldY, worldZ, object
 	end
 end
 
---> a Pseudo Physix Engien in Lua, very expensive, dont use extensive	--> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
+--> <Deprecated> a Pseudo Physix Engien in Lua, very expensive, dont use extensive	--> forceHead(objX,objY,objZ,worldX,worldY,worldZ,objectname,mass)
 function PseudoPhysix(piecename, pearthTablePiece, nrOfCollissions, forceFunctionTable)
 	
 	
@@ -4891,6 +4891,70 @@ function PseudoPhysix(piecename, pearthTablePiece, nrOfCollissions, forceFunctio
 	end
 end
 
+function groundHugDay(name)
+    sx, sy, sz = Spring.GetUnitPosition(unitID)
+    globalHeightUnit = Spring.GetGroundHeight(sx, sz)
+    x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, name)
+    myHeight = Spring.GetGroundHeight(x, z)
+    heightdifference = math.abs(globalHeightUnit - myHeight)
+    if myHeight < globalHeightUnit then heightdifference = -1*heightdifference end
+	 return heightdifference
+end
+
+function fallingPhysPieces(pName, ivec, ovec)
+
+    Show(pName)
+	 spinRand(pName, 10,42,5)
+	 local tx,ty,tz= math.random(-60, 60), math.random(40, 90) , math.random(-60, 60)
+	 local offVec={x=0,y=0,z=0}
+	 
+	 if ovec then
+		offVec = ovec
+	 end
+	 
+	 if ivec then 
+		tx,ty,tz = ivec.x,ivec.y,ivec.z
+	 end
+	 
+    mSyncIn(pName,tx,ty,tz,1000)
+	 WaitForMoves(pName)
+	 local reducefactor= 1
+	 local t=700
+	 spawnCegAtPiece(unitID, pName,"dirt")
+	 
+	 while reducefactor > 0.001 and t > 5 do
+		 local groundHug = groundHugDay(pName)
+		 mSyncIn(pName,
+		 tx + tx*reducefactor - offVec.x,
+		 groundHug - offVec.y,
+		 tz + tz*reducefactor - offVec.z,
+		 t)
+		 
+		 t= math.ceil((ty*reducefactor))*10
+	
+		 tx,tz=tx + tx*reducefactor,tz + tz*reducefactor
+		 reducefactor=reducefactor/math.pi
+		 WaitForMoves(pName)
+		 spawnCegAtPiece(unitID,pName,"dirt",5)
+		 
+		 mSyncIn(pName,
+		 tx + tx*reducefactor  - offVec.x,
+		 math.min(ty*reducefactor, groundHug + ty*reducefactor)  - offVec.y,
+		 tz + tz*reducefactor  - offVec.z,
+		 t)	
+		 
+		 tx,tz=tx + tx*reducefactor,tz + tz*reducefactor
+		 WaitForMoves(pName)
+		 Sleep(1)
+	end
+	
+	mSyncIn(pName,
+		 tx + tx*reducefactor - offVec.x,
+		 groundHugDay(pName) - offVec.y,
+		 tz + tz*reducefactor- offVec.z,
+		 t)
+	stopSpins(pName)
+	end
 --======================================================================================
 --Section: Sound
 --======================================================================================

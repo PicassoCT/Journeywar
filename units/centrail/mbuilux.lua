@@ -26,6 +26,9 @@ maxdamage=1200,
 	FootprintZ = 6,
 	MaxSlope = 10,	
 	 corpse             = "bgcorpse",
+	collisionvolumetype = "box",
+	collisionvolumescales = "110 300 110",
+	collisionvolumeoffsets = "0 0 0",
 	 
 	 
 nanocolor=[[0 0.9 0.9]],

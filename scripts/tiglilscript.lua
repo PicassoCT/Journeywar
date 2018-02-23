@@ -61,7 +61,7 @@ Heading = 0
 boolANewAttack = true
 howlong = 1
 --- Signals to be spread
-costPerEgg = 0.42
+costPerEgg = 1
 --------------------- IdleStance10-Fucntions-------
 function drumClapOverhead()
 
@@ -7164,14 +7164,13 @@ function EGG_LOOP()
         if temp > experienceSoFar + costPerEgg then --levelup
             --spawn numberofEggsToSpawn
             for i = experienceSoFar, temp, costPerEgg do
-                StartThread(spawnAEgg, x + math.random(-5, 5), z + math.random(-5, 5))
-                boolAtLeastOne = true
+                StartThread(spawnAEgg, x + math.random(15, 25)*randSign(), z + math.random(15, 25)*randSign())
                 experienceSoFar = experienceSoFar + costPerEgg
             end
-            --
+            --Veteran reward
             if temp > 10 then
                 for i = 1, temp / 5, 1 do
-                    StartThread(spawnAEgg, x + math.random(-5, 5), z + math.random(-5, 5))
+                    StartThread(spawnAEgg, x + math.random(15, 25)*randSign(), z + math.random(15, 25)*randSign())
                 end
             end
         end

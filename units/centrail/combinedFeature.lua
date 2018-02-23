@@ -24,9 +24,7 @@ local unitDef = {
 	--MovementClass = "Default2x2",
 	--TurnRate = 900,
 	nanocolor=[[0 0.9 0.9]],
-	collisionvolumetype = "box",
-	collisionvolumescales = "30 65 30",
-	collisionvolumeoffsets = "0 0 0",
+
 	--collisionVolumeTest = 1;
 	explodeAs="citadelldrone",
 	selfDestructAs="cartdarkmat", 
@@ -62,7 +60,7 @@ local unitDef = {
 			"custom:sniperlazzor"
 		},	
 	},
-	Category = [[LAND]],
+	Category = [[LAND BUILDING]],
 	
 weapons = {
 	[1]={name  = "sniperweapon",

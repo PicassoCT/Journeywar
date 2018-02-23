@@ -450,9 +450,15 @@ function showUP()
     for i = 1, 29, 1 do
 
         Sleep(20)
+		  
+		  ox,oy,oz= Spring.GetUnitPiecePosDir(unitID, EarthTable[i])
+	
 
-
-        StartThread(PseudoPhysix, EarthTable[i], PEarthTable[i], math.random(50, 90))
+        StartThread(fallingPhysPieces, 
+						EarthTable[i], 
+						{x=math.random(-100,100),y = math.random(-10,10), z= math.random(-100,100)},
+						{x=0,y=oy,z=0}
+						)
     end
 
     boolPieceArrived = true
