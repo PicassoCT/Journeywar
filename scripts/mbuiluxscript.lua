@@ -927,13 +927,14 @@ function script.Create()
 end
 
 
--- function script.Killed(recentDamage,_)
--- Explode(mbuilux,SFX.SHATTER)
--- Explode(bldoor1,SFX.FIRE)
--- Explode(bldoor2,SFX.FIRE)
--- createCorpseCBuilding(unitID,recentDamage)
--- return 0
--- end
+function script.Killed(recentDamage,_)
+	Explode(mbuilux,SFX.SHATTER)
+	Explode(mbuilux,SFX.SHATTER)
+	Explode(bldoor1,SFX.FIRE+SFX.FALL)
+	Explode(bldoor2,SFX.FIRE+SFX.FALL)
+	createCorpseCBuilding(unitID,recentDamage)
+return 0
+end
 
 
 

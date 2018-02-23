@@ -61,7 +61,7 @@ Heading = 0
 boolANewAttack = true
 howlong = 1
 --- Signals to be spread
-costPerEgg = 1
+costPerEgg = 0.75
 --------------------- IdleStance10-Fucntions-------
 function drumClapOverhead()
 

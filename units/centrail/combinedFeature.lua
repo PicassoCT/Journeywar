@@ -40,17 +40,7 @@ local unitDef = {
 	--CanPatrol = true,
 	CanStop = true,
 	--LeaveTracks = true, 
-	
-	--isFirePlatform=true,
-	--holdSteady =true,
-	--releaseHeld =true,
-	--transportCapacity = 1,
-	--transportSize = 90000,
-	
-	
-	--trackType ="BIGFoot",
-	-- trackStrength=4,
-	
+		
 	sfxtypes = {	
 		explosiongenerators = {
 			"custom:smallblueburn",
@@ -64,7 +54,7 @@ local unitDef = {
 	
 weapons = {
 	[1]={name  = "sniperweapon",
-		onlyTargetCategory = [[LAND]],
+		onlyTargetCategory = [[LAND BUILDING]],
 		}
 	},
 }
