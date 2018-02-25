@@ -30,11 +30,7 @@ end
 -- synced only
 if (gadgetHandler:IsSyncedCode()) then
 UPDATE_FREQUNECY=100
-local pregnanfortime=33000
-
-
-
-local unitsWhoAreStillGrowing={}
+local pregnanfortime=3*60*30
 local unitswhosTimeisComing={}
 
 function thisIsTheEndMyFriend(unitID,teamID)
@@ -45,9 +41,6 @@ function thisIsTheEndMyFriend(unitID,teamID)
 	Spring.DestroyUnit(unitID,true,false)
 	idx= Spring.CreateUnit("jswiftspear",x,y,z, 0, teamID)  
 	idx= Spring.CreateUnit("jswiftspear",x,y,z, 0, teamID)  
-
-				
-
 	end
 end
 
@@ -55,29 +48,29 @@ function gadget:GameFrame(f)
 
 	if f%(UPDATE_FREQUNECY) == 0 then
 	
-		if GG.Prego ~= nil then 
+		if GG.Prego then 
 				if table.getn(GG.Prego)~=0 then
 						for i=1, table.getn(GG.Prego),1 do
 							if GG.Prego[i] then
 								itt=table.getn(unitswhosTimeisComing)
-								unitswhosTimeisComing[#unitswhosTimeisComing+1]={}
-								unitswhosTimeisComing[#unitswhosTimeisComing][1]=GG.Prego[i][1]
-								unitswhosTimeisComing[#unitswhosTimeisComing][2]=pregnanfortime +math.ceil(math.random(-500,500))
-								unitswhosTimeisComing[#unitswhosTimeisComing][3]=GG.Prego[i][2]
-		
+								unitswhosTimeisComing[itt+1]={}
+								unitswhosTimeisComing[itt+1][1]=GG.Prego[i][1]
+								unitswhosTimeisComing[itt+1][2]=pregnanfortime + math.ceil(math.random(-500,500))
+								unitswhosTimeisComing[itt+1][3]=GG.Prego[i][2]		
 							 end	
 						GG.Prego[i][2]=nil
 						end
 				end
 		else
-		GG.Prego={} 
+			GG.Prego = {} 
 		end
+		
 		if unitswhosTimeisComing and table.getn(unitswhosTimeisComing) > 0 then
-		--Spring.Echo("jwswiftspear_gadget: Someones has in good hope!")
-			for i=1,table.getn(unitswhosTimeisComing),1 do
+	--	Spring.Echo("jwswiftspear_gadget: Someones has in good hope!")
+			for i=table.getn(unitswhosTimeisComing), 1,-1 do
 			unitswhosTimeisComing[i][2]=unitswhosTimeisComing[i][2]-UPDATE_FREQUNECY
-				if unitswhosTimeisComing[i][2] < 0 then
-				--Spring.Echo("jwswiftspear_gadget: Cograts it is a swiftspear")
+
+				if unitswhosTimeisComing[i][2] < 0 then	
 				thisIsTheEndMyFriend(unitswhosTimeisComing[i][1],unitswhosTimeisComing[i][3])
 				table.remove(unitswhosTimeisComing,i)
 				end

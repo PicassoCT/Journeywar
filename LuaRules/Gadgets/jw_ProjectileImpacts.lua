@@ -780,7 +780,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	UnitDamageFuncT[jSwiftMarkWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		local env = Spring.UnitScript.GetScriptEnv(attackerID)
+	if GG.Fucked and GG.Fucked[unitID] then return damage end
+	
+	local env = Spring.UnitScript.GetScriptEnv(attackerID)
 		if env then
 			Spring.UnitScript.CallAsUnit(attackerID, env.IfSomedayItMightHappenThatAVictimMustBeFound, unitID)
 		end	

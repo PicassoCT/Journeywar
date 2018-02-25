@@ -27,7 +27,7 @@ local SIG_SEX = 32
 local checkRange = 140
 local AttachUnit = Spring.UnitScript.AttachUnit
 local DropUnit = Spring.UnitScript.DropUnit
-local boolInTheMiddleOfSomething = true
+local boolInTheMiddleOfSomething = false
 teamID = Spring.GetUnitTeam(unitID)
 local loaded = false
 faceDamagePerSecond= 55
@@ -427,8 +427,8 @@ function rape( 	)
     Move(friendwithbenefits, z_axis, 5, 18)
     WaitForTurn(swpenis, x_axis)
 
-    fuckOnSpeed = 6
-    timeLimited = 45000
+    fuckOnSpeed = 12
+    timeLimited = 15000
     boolLookAtTheTime = true
     StartThread(ohYeah, timeLimited)
     while (timeLimited > 0) do
@@ -452,7 +452,7 @@ function rape( 	)
     Move(friendwithbenefits, z_axis, 5, 18)
     WaitForTurn(swpenis, x_axis)
     StartThread(jerkingOffForTests)
-    Sleep(9000)
+    Sleep(3000)
     --climaxing
     Turn(swpenis, x_axis, math.rad(3), 9)
     --drippinSperm
@@ -474,7 +474,7 @@ function idle()
     Signal(SIG_ROCK)
 end
 
-notMyTypeTable= getUnAttractiveTypesTable()
+notMyTypeTable= getUnAttractiveTypesTable() or {}
 
 function script.TransportPickup(passengerID)
     --Spring.Echo("UnitIsFired 5", table.getn(unitsStompedLately))
@@ -482,44 +482,44 @@ function script.TransportPickup(passengerID)
 	if not 	GG.Fucked then 	GG.Fucked = {} end
 	if not GG.Prego then GG.Prego = {} end
 	
-   marker(unitID.."swiftspear")
+   --marker(unitID.."swiftspear")
 	--can not be raped
 	typus= Spring.GetUnitDefID(passengerID)
-    if boolFullGrown == false or notMyTypeTable[typus] then 
-		StartThread(retreatToPreviousLocation,storedPosition,4000)
+    if boolFullGrown == false  then --- or notMyTypeTable[typus] then 
+		StartThread(retreatToPreviousLocation,storedPosition,1000)
         return
     end
 	
-   marker(unitID.."swiftspear")
+   --marker(unitID.."swiftspear")
 	--save Position
     abductedPosition.x, abductedPosition.y, abductedPosition.z = Spring.GetUnitPosition(passengerID)
     if GG.Fucked[passengerID] then
         DropUnit(passengerID)
 		victim= nil
-		StartThread(retreatToPreviousLocation,storedPosition,4000)
+		StartThread(retreatToPreviousLocation,storedPosition,1000)
         return
     end
 	
-   marker(unitID.."swiftspear")
+   --marker(unitID.."swiftspear")
    
 	--is allready transported
 	transporterID= Spring.GetUnitTransporter(passengerID)
 	if transporterID then
-		StartThread(retreatToPreviousLocation,storedPosition,4000)
+		StartThread(retreatToPreviousLocation,storedPosition,1000)
         return
     end
 	
-   marker(unitID.."swiftspear")
+   --marker(unitID.."swiftspear")
    
 	--on the wrong team --no team-mate incests
     passengerTeam = Spring.GetUnitTeam(passengerID)
     ourTeam = Spring.GetUnitTeam(unitID)
     if not passengerTeam or not ourTeam or Spring.AreTeamsAllied(passengerTeam, ourTeam) == true then
-		StartThread(retreatToPreviousLocation,storedPosition,4000)
+		StartThread(retreatToPreviousLocation,storedPosition,1000)
         return
     end
 
-   marker(unitID.."swiftspear")
+   --marker(unitID.."swiftspear")
 	--to big difference, yes, to big distance
 	local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
     local px2, py2, pz2 = Spring.GetUnitBasePosition(passengerID)
@@ -527,7 +527,7 @@ function script.TransportPickup(passengerID)
     local dist = (dx ^ 2 + dz ^ 2) ^ 0.5
 
     if dist > 80 then
-		StartThread(retreatToPreviousLocation,storedPosition,4000)
+		StartThread(retreatToPreviousLocation,storedPosition,1000)
         return
 	end
 	
@@ -539,13 +539,13 @@ function script.TransportPickup(passengerID)
   
     AttachUnit(friendwithbenefits, passengerID)
    GG.Fucked[passengerID] = true
-   marker(unitID.."swiftspear")
-	StartThread(retreatToPreviousLocation,storedPosition,4000)
-	   marker(unitID.."swiftspear")
+   --marker(unitID.."swiftspear")
+	StartThread(retreatToPreviousLocation,storedPosition,1000)
+	   --marker(unitID.."swiftspear")
     setSpeedEnv(unitID, 0.001, UnitDefs)
-	   marker(unitID.."swiftspear")
+	   --marker(unitID.."swiftspear")
     rape()
-	   marker(unitID.."swiftspear")
+	   --marker(unitID.."swiftspear")
     setSpeedEnv(unitID, 1.0, UnitDefs)
 
  
@@ -555,7 +555,7 @@ function script.TransportPickup(passengerID)
         GG.Prego[table.getn(GG.Prego)][1] = passengerID
         GG.Prego[table.getn(GG.Prego)][2] = teamID   
 
-    marker(unitID.."swiftspear")--5
+    --marker(unitID.."swiftspear")--5
 	StartThread(dropLoad,passengerID)
 end
 
@@ -598,10 +598,10 @@ function getReadyJump()
     storedPosition.x, storedPosition.y, storedPosition.z = Spring.GetUnitPosition(unitID)
 
 
-    Turn(swpenis, x_axis, math.rad(-179), 90)
+    Turn(swpenis, x_axis, math.rad(-150), 90)
     WaitForTurn(swpenis, x_axis)
-    Move(swiftspear, y_axis, -17, 22.5)
-    Turn(swpenis, x_axis, math.rad(-222), 60)
+    mSyncIn(swiftspear, 0, -17, 0, 500)
+    Turn(swpenis, x_axis, math.rad(-160), 60)
     Turn(swsplefta, x_axis, math.rad(62), 22)
     Turn(swsprighta, x_axis, math.rad(62), 22)
 
@@ -625,7 +625,7 @@ function getReadyJump()
     end
     WaitForTurn(center, y_axis)
     --jump
-    Move(swiftspear, y_axis, 17, 110)
+    mSyncIn(swiftspear, 0, 17,0, 1000)
     Turn(swpenis, x_axis, math.rad(-75), 80)
     for i = 1, 5, 1 do
         Turn(llegs[i], z_axis, math.rad(60), 9)
@@ -635,7 +635,7 @@ function getReadyJump()
         Turn(rlow[i], z_axis, math.rad(62), 11)
     end
     WaitForMove(swiftspear, y_axis)
-    Sleep(150)
+
 end
 
 function soundFromTimeToTime()
@@ -678,7 +678,9 @@ end
 
 function script.AimWeapon1(heading, pitch)
     SetSignalMask(SIG_AIM)
-	if boolInside== true or boolFullGrown == false  then return false end
+	if boolInside== true or boolFullGrown == false  then 
+	return false 
+	end
 
     --Spring.PlaySoundFile("sounds/headcrab/hc.wav")
 		if boolJumpLoaded == true 
@@ -697,10 +699,10 @@ boolJumpLoaded = false
 function script.FireWeapon1()
 
     StartThread(jumpReloader)
-    StartThread(HideMeWhileNotThere)
-    EmitSfx(center, 1024)
-	dx,dy,dz = Spring.GetUnitDirection(unitID)
-	spawnCEGatUnit(unitID, "jswspout", 0 ,10 ,0, -dx,-dy,-dz)
+		StartThread(HideMeWhileNotThere)
+		EmitSfx(center, 1024)
+		dx,dy,dz = Spring.GetUnitDirection(unitID)
+		spawnCEGatUnit(unitID, "jswspout", 0 ,10 ,0, -dx,-dy,-dz)
 	
 	return true
 end
@@ -765,7 +767,7 @@ end
 jl=1
 function jumpReloader()
     boolJumpLoaded = false
-	for jl=1,jumpReloadTimeInSec do
+	for jl=jumpReloadTimeInSec, 1, -1 do
 		if boolMoving == false then
 			tSyncIn(swpenis,-2*jl,0,0, 1000)
 		end
@@ -817,7 +819,6 @@ function polygAmour()
 	
 		if boolInTheMiddleOfSomething == false then
 			if victim and  not GG.Fucked[victim] then --cleanup
-				echo("Resume")
 				 boolInTheMiddleOfSomething = true
 				script.TransportPickup(victim)
 				 boolInTheMiddleOfSomething=false
@@ -837,6 +838,7 @@ maxSpeedPerSecond = 70
 function retreatToPreviousLocation(previousLocation,times)
 	tSyncIn(swpenis,25,0,0,350)
 	Sleep(250)
+	resolution= 10
 		px,py,pz =Spring.GetUnitPosition(unitID)
 		local pVec= {	x=previousLocation.x-px,
 						y=previousLocation.y-py,
@@ -853,12 +855,12 @@ function retreatToPreviousLocation(previousLocation,times)
 	totalDistance = distance(previousLocation.x,previousLocation.y,previousLocation.z,
 							orgVec.x,orgVec.y,orgVec.z)
 	elmoPerMs= totalDistance/times
-	increaseFactor = math.min(1.0, math.max(0.001,math.ceil(100*elmoPerMs)/totalDistance))
+	increaseFactor = math.min(1.0, math.max(0.001,math.ceil(resolution*elmoPerMs)/totalDistance))
 	
 	while factor < 1 do
-		tVec = mix( orgVec, previousLocation, factor)		
+		tVec = mix( previousLocation, orgVec, factor)		
 		Spring.MoveCtrl.SetPosition(unitID, tVec.x, tVec.y + math.sin(factor*math.pi)*55, tVec.z)
-		Sleep(100)
+		Sleep(resolution)
 		factor = math.max(0.0,math.min(1.0,factor + increaseFactor))
 	end
 	
@@ -876,11 +878,11 @@ end
 
 function script.AimWeapon2(heading, pitch)
 
- 
-        return 
-		boolFullGrown == true 
-		and boolInside == false 
-		and  boolPotencyRestored == true 
+				
+        return 	boolInTheMiddleOfSomething == false 
+				and boolFullGrown == true 
+				and boolInside == false 
+				and  boolPotencyRestored == true 
   
 end
 
@@ -900,19 +902,19 @@ function resetSwiftspear()
 
 
 end
-function statSpam()
-while true do
-	Sleep(3000)
-	stats("boolFullGrown", boolFullGrown,
-		   "boolInside", boolInside,
-		   "boolJumpLoaded", boolJumpLoaded,
-		   "boolPotencyRestored", boolPotencyRestored		   
-		)
+-- function statSpam()
+-- while true do
+	-- Sleep(3000)
+	-- stats("boolFullGrown", boolFullGrown,
+		   -- "boolInside", boolInside,
+		   -- "boolJumpLoaded", boolJumpLoaded,
+		   -- "boolPotencyRestored", boolPotencyRestored		   
+		-- )
 
 
-end
+-- end
 
-end
+-- end
 function script.Create()
 	resetSwiftspear()
  
@@ -922,6 +924,7 @@ function script.Create()
     StartThread(potencyReloader)
 	StartThread(polygAmour)
     StartThread(hugToDeath)
+    --StartThread(statSpam)
 end
 
 function script.AimFromWeapon3()

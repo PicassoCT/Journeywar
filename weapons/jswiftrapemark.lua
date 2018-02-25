@@ -2,7 +2,7 @@
 local weaponName = "jswiftrapemark"
 local weaponDef = {
     name = "Suprise",
-    weaponType = [[Melee]],
+    weaponType = [[Cannon]],
     --damage
     damage = {
         default = 1,
