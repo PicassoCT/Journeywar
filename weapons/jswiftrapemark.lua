@@ -2,7 +2,7 @@
 local weaponName = "jswiftrapemark"
 local weaponDef = {
     name = "Suprise",
-    weaponType = [[Cannon]],
+    weaponType = [[Melee]],
     --damage
     damage = {
         default = 1,
@@ -13,10 +13,6 @@ local weaponDef = {
     weaponVelocity = 4500,
     --   soundHit           = "null",
     -- --soundStart         = "null",
-
-
-
-
     --physics
 
     range = 60,
@@ -26,6 +22,9 @@ local weaponDef = {
     tolerance = 20,
     lineOfSight = false,
     turret = true,
+	avoidFeature = false,
+    avoidFriendly = false,
+	
     craterMult = 0,
     soundStart = "",
     soundtrigger = 1,

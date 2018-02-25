@@ -2907,6 +2907,11 @@ function mirror(value)
 	return value
 end
 
+function normalizeVec(pVec)
+	avg= math.sqrt(pVec.x^2+pVec.y^2+ pVec.z^2)
+	return {x=pVec.x/avg,y=pVec.y/avg,z=pVec.z/avg}
+end
+
 -->returns the 2 norm of a vector
 function distance(x, y, z, xa, ya, za)
 	if type(x)== "table" then
@@ -3378,6 +3383,19 @@ end
 --======================================================================================
 --Section: Debug Tools 
 --======================================================================================
+function marker(String)
+if not GG.MarkerEnumeration then GG.MarkerEnumeration = {} end
+if not GG.MarkerEnumeration[String] then GG.MarkerEnumeration[String] = 0 end
+GG.MarkerEnumeration[String]=GG.MarkerEnumeration[String]+1
+echo(String.."::"..GG.MarkerEnumeration[String])
+end
+
+function stats(...)
+	local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	for i=1,#arg,2 do
+		echo(arg[i].." is "..toString(arg[i+1]))
+	end
+end
 
 function todoAssert(object, functionToPass, todoCheckNext)
 	if functionToPass(object) == true then return end

@@ -792,7 +792,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	if imuneToFaceFuck[unitDefID] then 
 		return damage 
 	end 
-	echo("facehuggerhit")
+
 		local env = Spring.UnitScript.GetScriptEnv(attackerID)
 		if env then
 			Spring.UnitScript.CallAsUnit(attackerID, env.faceFuck, unitID)

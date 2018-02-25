@@ -21,7 +21,7 @@ return {
         frontoffset        = 0,
         fronttexture       = [[flake]],
         length             = 75,
-        sidetexture        = [[spawnpointside]],
+        sidetexture        = [[huntertrail]],
         size               = 2,
         sizegrowth         = 4,
         ttl                = 125,

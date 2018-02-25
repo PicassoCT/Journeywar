@@ -26,6 +26,10 @@ return {
         sizegrowth         = -4,
         ttl                = 125,
       },  
+      },  
+	  
+	  
+	  
 	  unfold = {
       air                = true,
       class              = [[CBitmapMuzzleFlame]],
@@ -51,5 +55,6 @@ return {
         ttl                = 125,
       },
 
+	}
 }
 }
