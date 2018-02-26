@@ -5143,6 +5143,32 @@ function Command(id, command, target, option)
 	end
 end
 
+function setFireState(unitID, fireStateStr)
+states={ 
+		["holdfire"]=1,
+		["returnfire"]=1,
+		["fireatwill"]=2,
+
+}
+state=states[string.lower(fireStateStr)] or 0
+
+	Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {state}, {}) 
+
+end
+
+function setMoveState(unitID, fireStateStr)
+states={ 
+		["holdposition"]=1,
+		["maneuver"]=1,
+		["roam"]=2,
+
+}
+state=states[string.lower(fireStateStr)] or 0
+
+	Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {state}, {}) 
+
+end
+
 --======================================================================================
 --Section: Sfx Operations
 --======================================================================================

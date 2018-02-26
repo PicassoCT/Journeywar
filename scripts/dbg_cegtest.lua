@@ -8,7 +8,7 @@ include "lib_Build.lua"
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
 end
-cegname= "jswspout"
+cegname= "jswspin"
 center = piece "center"
 Quader04 = piece "Quader04"
 Quader08 = piece "Quader08"

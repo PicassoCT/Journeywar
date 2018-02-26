@@ -4,7 +4,7 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua"
 
-boolFullGrown=true
+boolFullGrown=false
 growUpTime= 3*60*1000
 jumpReloadTimeInSec=35
 
@@ -301,6 +301,7 @@ function jerkingOffForTests()
 end
 
 function script.Killed()
+	setSpeedEnv(unitID,0)
 	transporteeID= Spring.GetUnitTransporting
 	if transporteeID then DropUnit(transporteeID) end
 	Signal(SIG_AIM)
@@ -431,6 +432,7 @@ function rape( 	)
     timeLimited = 15000
     boolLookAtTheTime = true
     StartThread(ohYeah, timeLimited)
+	setSpeedEnv(unitID, 0.01 , UnitDefs)
     while (timeLimited > 0) do
         Turn(swpenis, x_axis, math.rad(-90), fuckOnSpeed)
         Move(friendwithbenefits, z_axis, 0, 18)
@@ -456,7 +458,7 @@ function rape( 	)
     --climaxing
     Turn(swpenis, x_axis, math.rad(3), 9)
     --drippinSperm
-
+	setSpeedEnv(unitID, 1 , UnitDefs)
     --dazzed (sperm drip)
     Sleep(3000)
     Move(friendwithbenefits, z_axis, 0, 28)
@@ -474,15 +476,37 @@ function idle()
     Signal(SIG_ROCK)
 end
 
+function areEnemysNearMyLoveNest(passengerID)
+teamid= Spring.GetUnitTeam(unitID)
+T= getAllInCircle(previousLocation.x, previousLocation.z, 150, unitID, teamid)
+boolEnemyNearby=false
+if not T then return false end
+process(T,
+		function(id)
+		tid=Spring.GetUnitTeam(id)
+			if Spring.AreTeamsAllied(teamid,tid)== false then
+				boolNoEnemyNearby=true
+			end
+		end
+		)
+
+return boolEnemyNearby		
+end
+
+
 notMyTypeTable= getUnAttractiveTypesTable() or {}
 
 function script.TransportPickup(passengerID)
     --Spring.Echo("UnitIsFired 5", table.getn(unitsStompedLately))
+		
+	--can not do it with enemys near the retreat location
+	if areEnemysNearMyLoveNest(passengerID) == true then 
+		StartThread(retreatToPreviousLocation,storedPosition,1000)
+        return
+	end
 	
-	if not 	GG.Fucked then 	GG.Fucked = {} end
-	if not GG.Prego then GG.Prego = {} end
 	
-   --marker(unitID.."swiftspear")
+   marker(unitID.."swiftspear")
 	--can not be raped
 	typus= Spring.GetUnitDefID(passengerID)
     if boolFullGrown == false  then --- or notMyTypeTable[typus] then 
@@ -490,7 +514,7 @@ function script.TransportPickup(passengerID)
         return
     end
 	
-   --marker(unitID.."swiftspear")
+   marker(unitID.."swiftspear")
 	--save Position
     abductedPosition.x, abductedPosition.y, abductedPosition.z = Spring.GetUnitPosition(passengerID)
     if GG.Fucked[passengerID] then
@@ -500,7 +524,7 @@ function script.TransportPickup(passengerID)
         return
     end
 	
-   --marker(unitID.."swiftspear")
+   marker(unitID.."swiftspear")
    
 	--is allready transported
 	transporterID= Spring.GetUnitTransporter(passengerID)
@@ -509,7 +533,7 @@ function script.TransportPickup(passengerID)
         return
     end
 	
-   --marker(unitID.."swiftspear")
+   marker(unitID.."swiftspear")
    
 	--on the wrong team --no team-mate incests
     passengerTeam = Spring.GetUnitTeam(passengerID)
@@ -519,7 +543,7 @@ function script.TransportPickup(passengerID)
         return
     end
 
-   --marker(unitID.."swiftspear")
+   marker(unitID.."swiftspear")
 	--to big difference, yes, to big distance
 	local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
     local px2, py2, pz2 = Spring.GetUnitBasePosition(passengerID)
@@ -539,23 +563,20 @@ function script.TransportPickup(passengerID)
   
     AttachUnit(friendwithbenefits, passengerID)
    GG.Fucked[passengerID] = true
-   --marker(unitID.."swiftspear")
+   marker(unitID.."swiftspear")
 	StartThread(retreatToPreviousLocation,storedPosition,1000)
-	   --marker(unitID.."swiftspear")
-    setSpeedEnv(unitID, 0.001, UnitDefs)
-	   --marker(unitID.."swiftspear")
+	   marker(unitID.."swiftspear")
+   
+	   marker(unitID.."swiftspear")
     rape()
-	   --marker(unitID.."swiftspear")
-    setSpeedEnv(unitID, 1.0, UnitDefs)
-
- 
+	   marker(unitID.."swiftspear")
 		
 		
         GG.Prego[table.getn(GG.Prego) + 1] = {}
         GG.Prego[table.getn(GG.Prego)][1] = passengerID
         GG.Prego[table.getn(GG.Prego)][2] = teamID   
 
-    --marker(unitID.."swiftspear")--5
+    marker(unitID.."swiftspear")--5
 	StartThread(dropLoad,passengerID)
 end
 
@@ -575,8 +596,7 @@ function script.TransportDrop(passengerID, x, y, z)
 
     --post coital function is ankward
 
-
-    if Spring.GetUnitIsDead(passengerID) == true then return end
+	if not Spring.ValidUnitID(passengerID) or  Spring.GetUnitIsDead(passengerID) then return end
 
     SetUnitValue(COB.BUSY, 1)
 
@@ -845,7 +865,8 @@ function retreatToPreviousLocation(previousLocation,times)
 						z=previousLocation.z-pz}
 		pVec= normalizeVec(pVec)
 		
-		spawnCEGatUnit(unitID, "jswspin", 0 ,10 ,0, pVec.x, pVec.y, pVec.z)
+		Spring.SpawnCEG("jswspin", previousLocation.x,previousLocation.y,previousLocation.z, 
+		pVec.x*-1, pVec.y*-1, pVec.z *-1, 50,0)
 	
 	--going back
 	Spring.MoveCtrl.Enable(unitID)
@@ -894,7 +915,6 @@ end
 function resetSwiftspear()
 	transporteeID= Spring.GetUnitTransporting
 	if transporteeID then DropUnit(transporteeID) end
-	
 	if not 	GG.Fucked then 	GG.Fucked = {} end
 	if not GG.Prego then GG.Prego = {} end
 	Spring.MoveCtrl.Disable(unitID)
@@ -917,6 +937,8 @@ end
 -- end
 function script.Create()
 	resetSwiftspear()
+	setFireState(unitID, "FireAtWill")
+	setMoveState(unitID, "Roam")
  
     StartThread(growUP)
     StartThread(idleSound)
@@ -939,6 +961,8 @@ end
 function growUP()
 	Sleep(growUpTime)
 	boolFullGrown=true
+	setFireState(unitID, "FireAtWill")
+	setMoveState(unitID, "HoldPosition")
 end
 
 function script.AimWeapon3(heading, pitch)

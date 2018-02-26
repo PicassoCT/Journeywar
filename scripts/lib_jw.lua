@@ -908,7 +908,7 @@ function createStreamEvent(unitID, func, framerate, persPack)
                     end
                 end
 			
-			boolDoneFor, persPack = functionToCall(persPack)
+			boolDoneFor, persPack = persPack.functionToCall(persPack)
 			if boolDoneFor then
 				return nil 
 			end
