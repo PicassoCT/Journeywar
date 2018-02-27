@@ -16,7 +16,17 @@ local unitDef  =  {
     SightDistance = 500,
     Upright = false,
 	turnInPlace=false,
-	--floater             = true,    
+	canCloak =true,
+	
+	cloakCost=0,
+	cloakCostMoving = 10,
+	minCloakDistance = 110,
+	initCloaked =true,
+	decloakOnFire = true,
+	cloakTimeout = 30* 3,
+
+
+	 
 --Energy and metal related
     BuildCostEnergy = 400,
     BuildCostMetal = 1000,

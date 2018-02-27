@@ -7979,16 +7979,17 @@ function script.StartMoving()
     Signal(SIG_GESTE)
     Signal(SIG_TALKHEAD)
     Signal(SIG_WALK)
-  
-if boolBladeWhirlStarted == false then
-	Turn(tigLil,x_axis,math.rad(0),5)
-	  Signal(SIG_IDLE)
-    StartThread(walk)
+  	Spring.SetUnitCloak(unitID, false)
 
-    --Signal(SIG_WHIR)
+	if boolBladeWhirlStarted == false then
+		Turn(tigLil,x_axis,math.rad(0),5)
+		  Signal(SIG_IDLE)
+		StartThread(walk)
 
-    StartThread(hair_inwind)
-end
+		--Signal(SIG_WHIR)
+
+		StartThread(hair_inwind)
+	end
 end
 
 function script.StopMoving()

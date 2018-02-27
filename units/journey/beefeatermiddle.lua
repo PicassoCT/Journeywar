@@ -19,6 +19,12 @@ local unitDef  =  {
     SightDistance = 500,
     Upright = true,
 	turnInPlace=true,
+	canCloak =true,
+	cloakCost=0,
+	cloakCostMoving =0,
+	minCloakDistance =0,
+	initCloaked =true,
+	
 	--floater             = true,    
 --Energy and metal related
     BuildCostEnergy = 400,
@@ -50,7 +56,7 @@ nanocolor=[[0.3 0.5 0.6]],
     CanPatrol = 1,
     CanStop = 1,
       leaveTracks =true,
-  trackType ="jbeef",
+   trackType ="jbeef",
     Reclaimable = 0,
 	trackStrength=22,
     

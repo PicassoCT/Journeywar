@@ -56,9 +56,7 @@ local spGetUnitDefID = Spring.GetUnitDefID
 function grabTooKill()
 
     x, y, z = Spring.GetUnitPosition(unitID)
-    proChoice = {}
-    proChoice = Spring.GetUnitsInCylinder(x, z, 500)
-    proChoice = process(proChoice,
+    proChoice = process(Spring.GetUnitsInCylinder(x, z, 500) or {},
         function(id)
             if not fungiImuneTypeTable[Spring.GetUnitDefID(id)] then
                 return id
@@ -170,16 +168,13 @@ function circleOfLife()
 
     while true do
         Sleep(450)
+		 if not GG.Spore then GG.Spore = {} end
+		 if not GG.GoldSpore then GG.GoldSpore = {} end
         tables = grabTooKill()
         if tables ~= nil and table.getn(tables) > 0 then
-            for i = 1, table.getn(tables), 1 do
-                if GG.Spore == nil then GG.Spore = {} end
-
-                if math.random(1, 6) == 2 then
+            for i = 1, table.getn(tables), 1 do             
                     valLua = tables[i]
-                    GG.Spore[#GG.Spore + 1] = {}
-                    GG.Spore[#GG.Spore] = valLua
-                end
+                    GG.GoldSpore[#GG.GoldSpore + 1] =valLua
             end
         end
     end

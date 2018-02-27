@@ -3868,6 +3868,21 @@ function randTableFunc(Table)
 	return Table[randElement]()
 end
 
+function fairRandom(identifier, chance) --chance as factor 0.1 == 1 out of ten is a hit
+if not GG.FairRandom then  GG.FairRandom = {} end
+if not GG.FairRandom[identifier] then  GG.FairRandom[identifier] = { numberOfCalls=0, numberOfHits= 0} end
+
+GG.FairRandom[identifier].numberOfCalls=GG.FairRandom[identifier].numberOfCalls +1
+
+currentThrows= math.ceil(math.abs(GG.FairRandom[identifier].numberOfHits * chance*10) - (GG.FairRandom[identifier].numberOfCalls * (1-chance)*10))
+boolAHit= math.random(currentThrows,math.max(currentThrows,10)) < 10
+if boolAHit == true then
+GG.FairRandom[identifier].numberOfHits=GG.FairRandom[identifier].numberOfHits+1
+end
+return boolAHit
+end
+
+
 -->a Fairer random Function that selects of a table everyNthElement at least candidatesInInterval Number many elements
 function randFairT(T, candidatesInInterval, everyNthElement)
 	Ta={}

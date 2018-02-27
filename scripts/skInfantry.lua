@@ -591,7 +591,7 @@ function script.StartMoving()
 	
 	legs_down()
 	StartThread (walk)
-	
+	Spring.SetUnitCloak(unitID, false)
 end
 
 function script.StopMoving()

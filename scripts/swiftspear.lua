@@ -490,7 +490,7 @@ process(T,
 		end
 		)
 
-return boolEnemyNearby		
+return boolEnemyNearby 		
 end
 
 

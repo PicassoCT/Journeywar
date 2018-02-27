@@ -1,10 +1,23 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+
+include "lib_Build.lua"
+
 
 sporeRange=235
 attaPoint=piece"attaPoint"
 swingersClub=piece"swingersClub"
 local AttachUnits = Spring.UnitScript.AttachUnit
 local DropUnits = Spring.UnitScript.DropUnit
+boolImAGoldenSpore = (Spring.GetUnitDefID(unitID) = UnitDefNames["goldspore"].id)
 
+timeTillFirstSymptoms= math.random(6,12)*1000
+incubationStart= math.random(4,8)*1000
+totalGrowTime=5000
+teamID= Spring.GetUnitTeam(unitID)
+boolOutlier = fairRandom(teamID.."jFungiOutlier", 0.3)
 
 spores={}
 spheres={}
@@ -25,14 +38,11 @@ for o=1,9, 1 do
 end
 
 
-function randomizedTurn(piece)
+function randomizedTurn(p)
 	x=math.random(0,360)
 	y=math.random(0,360)
 	z=math.random(0,360)
-	Turn(piece,x_axis,math.rad(x),24)
-	Turn(piece,y_axis,math.rad(y),24)
-	Turn(piece,z_axis,math.rad(z),24)
-	
+	tSyncIn(p,x,y,z,500)	
 end
 
 local spGetUnitDefID=Spring.GetUnitDefID
@@ -126,38 +136,6 @@ function delayedSound(id)
 	
 end
 
-
-function instantReset()
-	StopSpin(swingersClub,y_axis,0)
-	StopSpin(attaPoint,y_axis,0)
-	Turn(attaPoint,y_axis,math.rad(0),0)
-	Turn(swingersClub,y_axis,math.rad(0),0)
-	
-	for o=1,9, 1 do
-		Turn(spheres[o],x_axis,math.rad(0),0)
-		Turn(spheres[o],y_axis,math.rad(0),0)
-		Turn(spheres[o],z_axis,math.rad(0),0)
-		Move(spheres[o],x_axis,0,0)
-		Move(spheres[o],y_axis,0,0)
-		Move(spheres[o],z_axis,0,0)
-		Show(spheres[o])
-		for i=1,3,1 do
-			Turn(spores[o][i],x_axis,math.rad(0),0)
-			Turn(spores[o][i],y_axis,math.rad(0),0)
-			Turn(spores[o][i],z_axis,math.rad(0),0)
-			
-			Move(spores[o][i],x_axis,0,0)	
-			Move(spores[o][i],y_axis,0,0)	
-			Move(spores[o][i],z_axis,0,0)	
-			
-		end
-		
-	end
-	
-	--Spring.Echo("Reset")
-	Sleep(100)
-	
-end
 SparedTable={}
 function catchingTheCold(handedOverUnitID)
 	dxsexLualOrientation,dy,dz=Spring.GetUnitDirection(handedOverUnitID)
@@ -180,7 +158,7 @@ function catchingTheCold(handedOverUnitID)
 	
 	
 	
-	if RottenToTheCore~= nil then
+	if RottenToTheCore then
 		Spring.SetUnitAlwaysVisible(RottenToTheCore,true)
 		x,y,z=Spring.GetUnitPosition(RottenToTheCore)
 		rand=math.random(-15,15)
