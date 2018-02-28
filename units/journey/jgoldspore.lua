@@ -1,4 +1,4 @@
-local unitName = "goldspore"
+local unitName = "jgoldspore"
 
 local unitDef = {
 name = "First Generation spore",

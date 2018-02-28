@@ -2,7 +2,7 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
+include "lib_jw.lua"
 include "lib_Build.lua"
 
 
@@ -11,13 +11,94 @@ attaPoint=piece"attaPoint"
 swingersClub=piece"swingersClub"
 local AttachUnits = Spring.UnitScript.AttachUnit
 local DropUnits = Spring.UnitScript.DropUnit
-boolImAGoldenSpore = (Spring.GetUnitDefID(unitID) = UnitDefNames["goldspore"].id)
+boolImAGoldenSpore = (Spring.GetUnitDefID(unitID) == UnitDefNames["jgoldspore"].id)
 
-timeTillFirstSymptoms= math.random(6,12)*1000
-incubationStart= math.random(4,8)*1000
-totalGrowTime=5000
+timeTillFirstSymptoms= math.random(6,12)*1000 --this is health dependant
+health1Second= 300
+
+incubationStart= math.random(-2,2)*1000 --start of infection 
+totalFungiGrowTime=5000
 teamID= Spring.GetUnitTeam(unitID)
 boolOutlier = fairRandom(teamID.."jFungiOutlier", 0.3)
+boolComeCloser= fairRandom(teamID.."jFungiComeCloser", 0.5)
+
+outLierTime= math.random(60,120)*1000
+
+
+function incubationThread(id,defID)
+	if boolOutlier== true then 
+		Sleep(outLierTime)
+	end
+	
+incubtionSleep= math.max(0,math.ceil(timeTillFirstSymptoms+incubationStart))
+Sleep(incubtionSleep)
+
+	while true do
+		x,y,z=Spring.GetUnitPosition(unitID)
+		T= getAllInCircle(x,z, sporeRange, unitID)
+		T= process(T,
+					function(id)
+						vicDefID= Spring.GetUnitDefID(id)
+							if not imuneUnitTypes[vicDefID] then
+								delayedSound(vicDefID)
+								if boolImAGoldenSpore == true then
+									return id
+								else
+									if vicDefID == defID then
+										return id
+									end
+								end
+							end
+						end,
+					function(id)
+						if not GG.Spore then GG.Spore={} end
+						
+						GG.Spore[#GG.Spore+1] ={}
+						GG.Spore[#GG.Spore] = id				
+					end
+						)
+						
+		
+	Sleep(50)
+	tx=(math.random(1,20)%8)+1
+	EmitSfx(spores[tx][3],1024) 
+
+	end
+end
+
+function symptomThread(id,defID)
+	if boolOutlier== true then 
+		Sleep(outLierTime)
+	end
+	Sleep(timeTillFirstSymptoms)
+	Spring.SetUnitNoSelect(id,true)
+	StartThread(comeCloser, boolComeCloser)
+
+--unfoldFungi while Unit still moves -- no select
+	StartThread( unfoldFungi,id,totalFungiGrowTime)
+	halfTime=math.ceil(totalFungiGrowTime/2)
+	Sleep(halfTime)
+--stunned
+	stunUnit(unitID, totalFungiGrowTime/2)
+	Sleep(halfTime)
+--death
+	Sleep(totalFungiGrowTime)
+	Spring.DestroyUnit(id,true,false)
+end
+
+-- wish to come close to others 
+function comeCloser(boolComeCloser)
+	if boolComeCloser == true then
+		ad=Spring.GetUnitNearestAlly(id)
+			if ad then
+			ax,ay,az=Spring.GetUnitPosition(ad)
+				if ax then
+					Spring.SetUnitMoveGoal(id,ax,ay,az)
+				end
+			end
+	end
+end
+
 
 spores={}
 spheres={}
@@ -38,113 +119,58 @@ for o=1,9, 1 do
 end
 
 
-function randomizedTurn(p)
+function randomizedTurn(p, timeInMs)
 	x=math.random(0,360)
 	y=math.random(0,360)
 	z=math.random(0,360)
-	tSyncIn(p,x,y,z,500)	
+	tSyncIn(p,x,y,z,timeInMs)	
 end
 
 local spGetUnitDefID=Spring.GetUnitDefID
 
-function filterForHostDefID(lunitTable)
-	local T={}
-	
-	if #lunitTable > 0 or boolThreadStart==false then
-		for i=1,#lunitTable do
-			id=spGetUnitDefID(lunitTable[i])
-			if id==hostDefID then 	T[#T+1]=lunitTable[i] end
-		end
-		return T
-	else 
-		return {}
-	end
-end
-
-function limrandomizedTurn(piece)
+function limrandomizedTurn(piece, timeInMs)
 	x=math.random(-15,15)
 	y=math.random(-15,15)
 	z=math.random(-15,15)
-	Turn(piece,x_axis,math.rad(x),0.03)
-	Turn(piece,y_axis,math.rad(y),0.03)
-	Turn(piece,z_axis,math.rad(z),0.03)
+	tSyncIn(piece,x,y,z, timeInMs)
 	
 end
-local jsporeid=UnitDefNames["jspore"].id
-local fungiforrestid=UnitDefNames["jfungiforrest"].id
 
-function grabTooKill(idOfOldenTimes)
-	if idOfOldenTimes== nil then idOfOldenTimes=unitID end
-	
-	x,y,z=Spring.GetUnitPosition(unitID)
-	proChoice={}
-	proChoice=Spring.GetUnitsInCylinder(x,z,sporeRange)
-	proChoice=filterForHostDefID(proChoice)
-	--proChoice if 
-	fixxedNumber=table.getn(proChoice)
-	--removing the fat from the table
-	for i=1, fixxedNumber,1 do
-		if proChoice[i]== unitID or proChoice[i]==idOfOldenTimes then 
-			table.remove(proChoice,i)
-			if i ~= 1 then i=i-1 end
-			fixxedNumber=fixxedNumber-1
-		end
-	end
-	n=table.getn(proChoice)
-	if proChoice == nil or n <= 1 then 
-		return nil 
+imuneUnitTypes= getFungiImuneUnitTypeTable(UnitDefNames)
+infantryTypeTable= getInfantryTypeTable()
+
+function delayedSound(tDefID)
+	if infantryTypeTable[tDefID] then
+		StartThread(PlaySoundByUnitDefID, "sounds/jfungiforrest/infantryfungi.wav",0.5, 3000, 2)
 	else
-		counter=0
-		while(counter < 4) do
-			dice=math.ceil(math.random(0,n))
-			
-			if proChoice[dice] ~= nil then
-				tempDefID=Spring.GetUnitDefID(proChoice[dice])
-				if tempDefID~= nil and tempDefID ~= jsporeid and tempDefID ~= fungiforrestid then return proChoice[dice] end
+		StartThread(PlaySoundByUnitDefID,"sounds/jfungiforrest/fungi.wav",0.5, 3000, 2)
+	end	
+end
+
+function unfoldAnimation(timeForMovement)
+Show(spheres[1])
+timeForMovement= math.ceil(timeForMovement/9)
+	for o=1,9, 1 do
+		randomizedTurn(spheres[o],timeForMovement)
+		Show(spheres[o])
+		for i=1,3,1 do
+			Show(spores[o][i])				
+			limrandomizedTurn(spores[o][i],math.ceil(timeForMovement/3))
+			if i > 1 then
+				speedySpeeSpeedySpoo=math.random(81,120)/100
+				mSyncIn(spores[o][i],0,0,4.2,math.ceil(timeForMovement/3))
 			end
-			
-			counter=counter+1
 		end
 		
 	end
 	
-	
-	return nil
-end
+		
 
-function isInfantry(id)
-	passengerDefID=Spring.GetUnitDefID(id)
-	if passengerDefID== UnitDefNames["bg"].id or passengerDefID== UnitDefNames["tiglil"].id or passengerDefID== UnitDefNames["skinfantry"].id or passengerDefID== UnitDefNames["vort"].id then
-		return true
-	else
-		return false
-	end
-end
-
-
-
-function delayedSound(id)
-	diceWouldBeNice=math.random(1,7)
-	if diceWouldBeNice == 4 then
-		if isInfantry(id) == true then
-			Spring.PlaySoundFile("sounds/jfungiforrest/infantryfungi.wav") 
-		else
-			Spring.PlaySoundFile("sounds/jfungiforrest/fungi.wav") 
-		end
-	end
-	
-	
 end
 
 SparedTable={}
-function catchingTheCold(handedOverUnitID)
-	dxsexLualOrientation,dy,dz=Spring.GetUnitDirection(handedOverUnitID)
-	Spring.SetUnitDirection(unitID,dxsexLualOrientation,dy,dz)
+function unfoldFungi(RottenToTheCore,timeForMovement)
 	
-	Spring.SetUnitNeutral(unitID,true)
-	Spring.SetUnitAlwaysVisible(unitID,true)
-	Spring.SetUnitBlocking(unitID,false)
-	Spring.SetUnitNoSelect (unitID, true)
 	
 	for o=1,9, 1 do
 		for i=1,3,1 do
@@ -152,101 +178,68 @@ function catchingTheCold(handedOverUnitID)
 		end
 		Hide(spheres[o])
 	end
+	Spring.SetUnitAlwaysVisible(RottenToTheCore,true)
+	x,y,z=Spring.GetUnitPosition(RottenToTheCore)
+	rand=math.random(-15,15)
+	Spin(swingersClub,y_axis,math.rad(rand),0.25)
+	Spin(attaPoint,y_axis,math.rad(-rand),0.25)
+	Spring.MoveCtrl.Enable(unitID,true)
 	
-	RottenToTheCore= handedOverUnitID
+	biggestPiece= getUnitBiggestPiece(RottenToTheCore)
+	StartThread(unfoldAnimation,timeForMovement)
 	
-	
-	
-	
-	if RottenToTheCore then
-		Spring.SetUnitAlwaysVisible(RottenToTheCore,true)
-		x,y,z=Spring.GetUnitPosition(RottenToTheCore)
-		rand=math.random(-15,15)
-		Spin(swingersClub,y_axis,math.rad(rand),0.25)
-		Spin(attaPoint,y_axis,math.rad(-rand),0.25)
-		Spring.SetUnitPosition(unitID,x,z)
-		AttachUnits(attaPoint,RottenToTheCore)
-		Show(spheres[1])
-		for o=1,9, 1 do
-			randomizedTurn(spheres[o])
-			Show(spheres[o])
-			for i=1,3,1 do
-				Show(spores[o][i])
-				if o==2 and i==1 then
-					
-					nextDeadGuy=grabTooKill(RottenToTheCore)
-					if nextDeadGuy then
-					
-					StartThread(delayedSound,nextDeadGuy)
-						if GG.Spore== nil then GG.Spore={} end
-						GG.Spore[#GG.Spore+1] ={}
-						GG.Spore[#GG.Spore] =nextDeadGuy						
-					
-					end
-				end
-				limrandomizedTurn(spores[o][i])
-				if i~= 1 then
-					speedySpeeSpeedySpoo=math.random(81,120)/100
-					Move(spores[o][i],z_axis,4.2,speedySpeeSpeedySpoo)
-					WaitForMove(spores[o][i],z_axis)
-				end
-			end
-			
+	while Spring.GetUnitIsDead(RottenToTheCore)  do
+		--Move Fungi to Biggest Piece
+		dx,dy,dz=0,0,0
+		if biggestPiece then
+			dx,dy,dz= Spring.GetUnitPiecePosDir(RottenToTheCore,biggestPiece)
+		else
+			dx,dy,dz=Spring.GetUnitPosition(RottenToTheCore)
+			dy=dy+25
 		end
-		
-		for i=1,40, 1 do
-			Sleep(100)
-			
-			x=(i%8)+1
-			EmitSfx(spores[x][3],1024) 
-		end
-		
-		Move(spheres[1],y_axis,-12,19)
-		--DropUnits(RottenToTheCore)
-		
-		Spring.DestroyUnit(RottenToTheCore,true,false)
-		
-		WaitForMove(spheres[1],y_axis)
-		
-		
-		
-		
+		rox,roy,roz=Spring.GetUnitRotation(RottenToTheCore)
+		Spring.MoveCtrl.SetRotation(unitID,-rox,-roy,-roz)
+		Spring.MoveCtrl.SetPosition(unitID,dx,dy,dz)
+		Sleep(10)	
 	end
-	for o=1,9, 1 do
-		for i=1,3,1 do
-			Hide(spores[o][i])
-		end
-		Hide(spheres[o])
-	end
-	-- instantReset()
-	
-	Spring.DestroyUnit(unitID,false,true)
-	
+		Spring.DestroyUnit(unitID,true,false)
 	
 end
+
 boolThreadStart=false
 local idHandle="NotAnID"
 local hostDefID= "NotAnDefID"
 
 function handsUpAhemDown(iCanHandleThis)
 	idHandle=iCanHandleThis
+	hp= Spring.GetUnitHealth(iCanHandleThis)
+	if hp then timeTillFirstSymptoms= math.ceil(hp/health1Second) end
 	boolThreadStart=true
 end
 
-function yoursTrully()
+function threadStartLoop()
 	while(true) do
 		if boolThreadStart==true then 
 			boolThreadStart=false 
-			StartThread(catchingTheCold,idHandle)
 			hostDefID=spGetUnitDefID(idHandle)
+			StartThread(incubationThread,idHandle,hostDefID)
+			StartThread(symptomThread,idHandle,hostDefID)
+
 		end
 		Sleep(100)
 	end
 	
 end
 
+TableOfPieceGroups={}
 function script.Create()
-	StartThread(yoursTrully)
+	Spring.SetUnitNeutral(unitID,true)
+	Spring.SetUnitAlwaysVisible(unitID,true)
+	Spring.SetUnitBlocking(unitID,false)
+	Spring.SetUnitNoSelect (unitID, true)
+	
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	StartThread(threadStartLoop)
 end
 
 function script.Killed()

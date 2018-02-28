@@ -141,6 +141,9 @@ function getFungiImuneUnitTypeTable(UnitDefNames)
     retTab[UnitDefNames["citadell"].id] = true
     retTab[UnitDefNames["ccomender"].id] = true
     retTab[UnitDefNames["jvaryfoo"].id] = true
+    retTab[UnitDefNames["jspore"].id] = true
+    retTab[UnitDefNames["jgoldspore"].id] = true
+	
     for i = 1, 9 do
         retTab[UnitDefNames["jtree4" .. i].id] = true
     end

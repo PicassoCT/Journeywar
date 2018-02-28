@@ -845,7 +845,7 @@ function delayedShow(piece, timeT)
 	Show(piece)
 end
 
-
+--> That thing, has a huge thing, and it its cumint towards you..
 function getUnitBiggestPiece(unit, cache)
 	defID= Spring.GetUnitDefID(unit)
 	if cache and cache[defID] then return cache[defID], cache end

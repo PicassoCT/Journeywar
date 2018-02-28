@@ -3,18 +3,10 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 
+include "lib_jw.lua"
 include "lib_Build.lua"
 
-local UnitsToSpare = {}
-UnitsToSpare[UnitDefNames["jtree47"].id] = true
-UnitsToSpare[UnitDefNames["jtree46"].id] = true
-UnitsToSpare[UnitDefNames["jtree45"].id] = true
-UnitsToSpare[UnitDefNames["jtree44"].id] = true
-UnitsToSpare[UnitDefNames["jtree43"].id] = true
-UnitsToSpare[UnitDefNames["jtree42"].id] = true
-UnitsToSpare[UnitDefNames["jtree41"].id] = true
-UnitsToSpare[UnitDefNames["jspore"].id] = true
-UnitsToSpare[UnitDefNames["jfungiforrest"].id] = true
+
 
 fungi1 = piece "fungi1"
 fungi2 = piece "fungi2"
@@ -22,7 +14,8 @@ fungi3 = piece "fungi3"
 fungi4 = piece "fungi4"
 emitPoint = piece "emitPoint"
 center = piece "center"
-
+fungiActiveDelayTime= 15000
+DeathRadius= 500
 
 function breathingDeath()
     local lEmitSfx = EmitSfx
@@ -56,34 +49,16 @@ local spGetUnitDefID = Spring.GetUnitDefID
 function grabTooKill()
 
     x, y, z = Spring.GetUnitPosition(unitID)
-    proChoice = process(Spring.GetUnitsInCylinder(x, z, 500) or {},
+	T= Spring.GetUnitsInCylinder(x, z, DeathRadius)
+    T = process( T,
         function(id)
-            if not fungiImuneTypeTable[Spring.GetUnitDefID(id)] then
-                return id
-            end
-        end)
-    --proChoice if
-    fixxedNumber = table.getn(proChoice)
-    --removing the fat from the table
-    for i = 1, fixxedNumber, 1 do
-        if proChoice[i] == unitID then
-            table.remove(proChoice, i)
-            if i ~= 1 then i = i - 1 end
-            fixxedNumber = fixxedNumber - 1
-        end
-    end
-    newTable = {}
-    if not proChoice or type(proChoice) ~= "table" or #proChoice <= 0 then return {} end
+			
+				if id ~= unitID and not fungiImuneTypeTable[Spring.GetUnitDefID(id)] then
+					return id
+				end
+			end)
 
-    for i = 1, #proChoice do
-        if proChoice[i] and type(proChoice[i]) == "number" then
-            defID = spGetUnitDefID(proChoice[i])
-            if not UnitsToSpare[defID] then
-                newTable[#newTable + 1] = proChoice[i]
-            end
-        end
-    end
-    return newTable
+    return T or {}
 end
 
 rotators = {}
@@ -102,10 +77,11 @@ end
 globalHeightUnit = 0
 dowNer = -75
 
-function delayedAppearance(piece)
-    times = math.ceil(math.random(60000, 300000))
+function delayedAppearance(piece, ki)
+    times = math.ceil(math.random(5000, 15000))
     Sleep(times)
-    Move(piece, x_axis, 500, 0)
+	sinOffset= math.sin(ki*((2*math.pi)/11))*10
+    Move(piece, x_axis, DeathRadius +sinOffset 		, 0)
     x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, piece)
     myHeight = Spring.GetGroundHeight(x, z)
     heightdifference = math.abs(globalHeightUnit - myHeight)
@@ -120,20 +96,23 @@ function delayedAppearance(piece)
     boolNotGrown = false
 end
 
+TableOfPieceGroups= 	{}
 
 function init()
+	
     x, y, z = Spring.GetUnitPosition(unitID)
     globalHeightUnit = Spring.GetGroundHeight(x, z)
     Move(fungi1, y_axis, -34, 0)
-    Move(fungi2, y_axis, -34, 0)
-    Move(fungi3, y_axis, -34, 0)
-    Move(fungi4, y_axis, -34, 0)
+    Move(fungi2, y_axis, -34*(1/0.7), 0)
+    Move(fungi3, y_axis, -34*(1/0.6), 0)
+    Move(fungi4, y_axis, -34*2, 0)
     Sleep(10)
     Show(fungi1)
     Show(fungi2)
     Show(fungi3)
     Show(fungi4)
 
+    delayTillComplete(unitID)
 
     RandRot = math.random(-360, 360)
     Turn(center, y_axis, math.rad(RandRot), 0)
@@ -142,34 +121,30 @@ function init()
         Move(swings[i], y_axis, dowNer, 0)
         RandRot = i * (360 / 11)
         Turn(rotators[i], y_axis, math.rad(RandRot), 0)
-        StartThread(delayedAppearance, swings[i])
+        StartThread(delayedAppearance, swings[i],i)
     end
 
-    Move(fungi1, y_axis, 0, 0.9)
-    Move(fungi2, y_axis, 0, 0.7)
-    Move(fungi3, y_axis, 0, 0.6)
-    Move(fungi4, y_axis, 0, 0.5)
+    mSyncIn(fungi1, 0, 0,0,fungiActiveDelayTime)
+    mSyncIn(fungi2, 0, 0,0,fungiActiveDelayTime)
+    mSyncIn(fungi3, 0, 0,0,fungiActiveDelayTime)
+    mSyncIn(fungi4, 0, 0,0,fungiActiveDelayTime)
+	Sleep(fungiActiveDelayTime)
 
-    WaitForMove(fungi4, y_axis)
-    delayTillComplete(unitID)
     StartThread(breathingDeath)
     StartThread(circleOfLife)
 end
-
-boolNotGrown = true
 
 function circleOfLife()
 
 
     tables = {}
-    while boolNotGrown == true do
-        Sleep(500)
-    end
+
 
     while true do
         Sleep(450)
 		 if not GG.Spore then GG.Spore = {} end
 		 if not GG.GoldSpore then GG.GoldSpore = {} end
+		 
         tables = grabTooKill()
         if tables ~= nil and table.getn(tables) > 0 then
             for i = 1, table.getn(tables), 1 do             
@@ -181,13 +156,12 @@ function circleOfLife()
 end
 
 function script.Create()
+	TableOfPieceGroups=  getPieceTableByNameGroups(false, true)
     x, y, z = Spring.GetUnitPosition(unitID)
     holsDerGaia = Spring.GetGaiaTeamID()
     Spring.CreateUnit("jfungiforrestdecalfactory", x, y, z, 0, holsDerGaia)
-    Hide(fungi1)
-    Hide(fungi2)
-    Hide(fungi3)
-    Hide(fungi4)
+hideT(TableOfPieceGroups["fungi"])
+hideT(TableOfPieceGroups["swings"])
     for i = 1, 11, 1 do
         Hide(swings[i])
     end

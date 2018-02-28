@@ -76,7 +76,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	function handleGoldSpores(frame)
-		if GG.Spore then
+		if GG.GoldSpore then
             max = table.getn(GG.GoldSpore)
            
             for i = 1, max, 1 do
@@ -100,13 +100,12 @@ if (gadgetHandler:IsSyncedCode()) then
                     end
 
                     if tempID  then
-					    doneFor[GG.Spore[i]] = tempID
-
+					    doneFor[GG.GoldSpore[i]] = tempID
                     end                   
                 end
             end
         end	
-		GG.Spore = {}	
+		GG.GoldSpore = {}	
 	end
 	
     function gadget:GameFrame(frame)

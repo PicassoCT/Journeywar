@@ -38,7 +38,7 @@ local unitDef = {
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {
-			"custom:orangespores",
+	
 		},
 		
 	},
