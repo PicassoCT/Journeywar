@@ -53,7 +53,7 @@ transportSize       = 90000,
 
 	  sfxtypes            = {	
 	    explosiongenerators = {
-				"custom:orangespores",
+
 		
 		},	
 		},

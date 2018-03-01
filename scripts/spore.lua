@@ -29,7 +29,7 @@ function incubationThread(id,defID)
 	if boolOutlier== true then 
 		Sleep(outLierTime)
 	end
-	
+	moduloCeg= (defID %6)+1
 incubtionSleep= math.max(0,math.ceil(timeTillFirstSymptoms+incubationStart))
 Sleep(incubtionSleep)
 
@@ -61,7 +61,11 @@ Sleep(incubtionSleep)
 		
 	Sleep(50)
 	tx=(math.random(1,20)%8)+1
-	EmitSfx(spores[tx][3],1024) 
+		if boolImAGoldenSpore== true then
+			spawnCegAtPiece(unitID, spores[tx][3],"orangespores")
+		else
+			spawnCegAtPiece(unitID, spores[tx][3],"spore"..moduloCeg)
+		end
 
 	end
 end
@@ -79,11 +83,12 @@ function symptomThread(id,defID)
 	halfTime=math.ceil(totalFungiGrowTime/2)
 	Sleep(halfTime)
 --stunned
-	stunUnit(unitID, totalFungiGrowTime/2)
+	stunUnit(id, totalFungiGrowTime/2)
 	Sleep(halfTime)
 --death
 	Sleep(totalFungiGrowTime)
 	Spring.DestroyUnit(id,true,false)
+	Spring.DestroyUnit(unitID,true,false)
 end
 
 -- wish to come close to others 
@@ -150,6 +155,8 @@ end
 function unfoldAnimation(timeForMovement)
 Show(spheres[1])
 timeForMovement= math.ceil(timeForMovement/9)
+edges= {}
+resetT(TableOfPieceGroups["fruit"])
 	for o=1,9, 1 do
 		randomizedTurn(spheres[o],timeForMovement)
 		Show(spheres[o])
@@ -159,11 +166,32 @@ timeForMovement= math.ceil(timeForMovement/9)
 			if i > 1 then
 				speedySpeeSpeedySpoo=math.random(81,120)/100
 				mSyncIn(spores[o][i],0,0,4.2,math.ceil(timeForMovement/3))
+				edges[#edges+1]=spores[o][i]
 			end
 		end
 		
 	end
-	
+	for o=1,9, 1 do
+		WaitForTurns(spheres[o])
+
+		for i=1,3,1 do
+			WaitForTurns(spores[o][i])
+			WaitForMoves(spores[o][i])		
+		end		
+	end
+	if maRa()== true then
+		bx,by,bz= Spring.GetUnitBasePosition(unitID)
+		for i=1,#TableOfPieceGroups["fruit"] do
+			ike=TableOfPieceGroups["fruit"][i]
+			target= edges[math.random(1,#edges)]
+			wx,wy,wz = Spring.GetUnitPiecePosDir(unitID,target)
+			MovePieceToPos(ike, -1*(bx-wx),-1*(by-wy)-15,-1*(bz-wz),0)
+			r=math.ceil(math.random(150,750))
+			Sleep(r)
+			Show(ike)
+			turnPieceRandDir(ike,0, 360, 0, 360,0, 360, 0)
+		end
+	end
 		
 
 end
@@ -188,7 +216,7 @@ function unfoldFungi(RottenToTheCore,timeForMovement)
 	biggestPiece= getUnitBiggestPiece(RottenToTheCore)
 	StartThread(unfoldAnimation,timeForMovement)
 	
-	while Spring.GetUnitIsDead(RottenToTheCore)  do
+	while Spring.GetUnitIsDead(RottenToTheCore)==false  do
 		--Move Fungi to Biggest Piece
 		dx,dy,dz=0,0,0
 		if biggestPiece then
@@ -210,6 +238,13 @@ boolThreadStart=false
 local idHandle="NotAnID"
 local hostDefID= "NotAnDefID"
 
+function lifeTimer()
+Sleep(3000)
+	if idHandle == "NotAnID" then
+	Spring.DestroyUnit(unitID,true,true)
+	end
+
+end
 function handsUpAhemDown(iCanHandleThis)
 	idHandle=iCanHandleThis
 	hp= Spring.GetUnitHealth(iCanHandleThis)
@@ -239,7 +274,10 @@ function script.Create()
 	Spring.SetUnitNoSelect (unitID, true)
 	
 	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	hideT(TableOfPieceGroups["fruit"])
 	StartThread(threadStartLoop)
+	StartThread(lifeTimer)
+
 end
 
 function script.Killed()

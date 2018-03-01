@@ -14,15 +14,9 @@ end
 -- modified the script: only corpses with the customParam "featuredecaytime" will disappear
 
 if (gadgetHandler:IsSyncedCode()) then
+	VFS.Include('scripts/lib_jw.lua')
     local doneFor = {}
 
-    function allreadyDoneFor(id)
-        if doneFor == nil or table.getn(doneFor) == 0 then return false end
-        for i = 1, #doneFor, 1 do
-            if doneFor[i] == id then return true end
-        end
-        return false
-    end
 
 
     -- Configuration:
@@ -33,86 +27,61 @@ if (gadgetHandler:IsSyncedCode()) then
 
     local spGetUnitDEFID = Spring.GetUnitDefID
     local teamID = Spring.GetGaiaTeamID()
-	sparedUnits= {
-	 [UnitDefNames["jgoldspore"].id]= true,
-	 [UnitDefNames["jspore"].id]= true,
-	 [UnitDefNames["jfungiforrest"].id]= true,
-	}
+	sparedUnits= getFungiImuneUnitTypeTable(getUnitDefNames(UnitDefs))
 	
 	
-	function handleNormalSpores(frame)
-		if GG.Spore then
-            max = table.getn(GG.Spore)
-
-
+	function handleSpores(frame, tableToItterate, sporeToSpawn)
+		if tableToItterate then
+            max = table.getn(tableToItterate)
+		
             for i = 1, max, 1 do
-                if GG.Spore[i]  then
+				id= tableToItterate[i]
+                if id  then
+					
                     --make sure the unit still exists
                     tempID = nil
-                    if spValidUnitID(GG.Spore[i]) == true and not doneFor[GG.Spore[i]] == false then
-                        -- get DefID to make sure i aint a spore
-                        tempDefID = spGetUnitDEFID(GG.Spore[i])
+					
+                    if spValidUnitID(id) == true and not doneFor[id] then
+					Spring.Echo("jw_plague:Unit".."1" )                
+				-- get DefID to make sure i aint a spore
+                        tempDefID = spGetUnitDEFID(id)
                         if tempDefID and not sparedUnits [tempDefID] then
+						Spring.Echo("jw_plague:Unit".."2" )  
                             --get location to spawn the jspore
-                            tx, ty, tz = spGetUnitPosition(GG.Spore[i])
+                            tx, ty, tz = spGetUnitPosition(id)
                             --spawn the spore nearby with the units team
-                            tempID = spCreateUnit("jspore", tx, ty, tz, 0, teamID)
+                            tempID = spCreateUnit(sporeToSpawn, tx, ty, tz, 0, teamID)
                             --now lets get the units Table
                             env = Spring.UnitScript.GetScriptEnv(tempID)
                             if env then
-                                Spring.UnitScript.CallAsUnit(tempID, env.handsUpAhemDown, GG.Spore[i])
+								Spring.Echo("jw_plague:Unit".."3" )  
+                                Spring.UnitScript.CallAsUnit(tempID, env.handsUpAhemDown, id)
                             end
                         end
                     end
 
                     if tempID  then
-					    doneFor[GG.Spore[i]] = tempID
-
+					    doneFor[id] = tempID
                     end                   
                 end
             end
         end	
-		GG.Spore = {}	
 	end
 	
-	function handleGoldSpores(frame)
-		if GG.GoldSpore then
-            max = table.getn(GG.GoldSpore)
-           
-            for i = 1, max, 1 do
-                if GG.GoldSpore[i]  then
-                    --make sure the unit still exists
-                    tempID = nil
-                    if spValidUnitID(GG.GoldSpore[i]) == true and not doneFor[GG.GoldSpore[i]] == false then
-                        -- get DefID to make sure i aint a spore
-                        tempDefID = spGetUnitDEFID(GG.GoldSpore[i])
-                        if tempDefID and not sparedUnits [tempDefID] then
-                            --get location to spawn the jspore
-                            tx, ty, tz = spGetUnitPosition(GG.GoldSpore[i])
-                            --spawn the spore nearby with the units team
-                            tempID = spCreateUnit("jgoldspore", tx, ty, tz, 0, teamID)
-                            --now lets get the units Table
-                            env = Spring.UnitScript.GetScriptEnv(tempID)
-                            if env then
-                                Spring.UnitScript.CallAsUnit(tempID, env.handsUpAhemDown, GG.GoldSpore[i])
-                            end
-                        end
-                    end
-
-                    if tempID  then
-					    doneFor[GG.GoldSpore[i]] = tempID
-                    end                   
-                end
-            end
-        end	
-		GG.GoldSpore = {}	
-	end
+	
 	
     function gadget:GameFrame(frame)
 
         if frame % 250 == 0 then
-				handleNormalSpores(frame)
-				handleGoldSpores(frame)
+			if GG.Spores then
+				handleSpores(frame, GG.Spores, "jspore")
+				GG.Spores={}
+			end
+			
+			if GG.GoldSpore then
+				handleSpores(frame, GG.GoldSpore, "jgoldspore")
+				GG.GoldSpores={}
+			end
         end
     end
 end

@@ -176,6 +176,13 @@ function WaitForMoveAllAxis(arg)
  
 end
 
+function movePieceToPieceWorld(unitID,name, pieceheigth, target, speed)
+bx,by,bz= Spring.GetUnitBasePosition(unitID)
+wx,wy,wz = Spring.GetUnitPiecePosDir(unitID,target)
+MovePieceToPos(ike, -1*(bx-wx),-1*(by-wy)-pieceheigth,-1*(bz-wz),0)
+
+end
+
 -->Turn a piece towards a random direction
 function turnPieceRandDir(piecename, speed, LIMUPX, LIMLOWX, LIMUPY, LIMLOWY, LIMUPZ, LIMLOWZ)
     if not LIMUPX then

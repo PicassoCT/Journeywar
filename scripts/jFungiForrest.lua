@@ -146,7 +146,7 @@ function circleOfLife()
 		 if not GG.GoldSpore then GG.GoldSpore = {} end
 		 
         tables = grabTooKill()
-        if tables ~= nil and table.getn(tables) > 0 then
+        if tables  and table.getn(tables) > 0 then
             for i = 1, table.getn(tables), 1 do             
                     valLua = tables[i]
                     GG.GoldSpore[#GG.GoldSpore + 1] =valLua

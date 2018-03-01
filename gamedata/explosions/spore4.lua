@@ -1,7 +1,7 @@
     -- trail_ar2
      
     return {
-      ["orangespores"] = {
+      ["spore4"] = {
 	  
  greenSparks = {
       air                = true,
@@ -19,8 +19,8 @@
 								0 0.225 0.225 0.025
 								0.45 0.225 0  0.025 
 								0 0.225 0.225 0.025
-								0 0.225 0.225 0.02			
-								0 0 0 0.03			
+								0 0.225 0.225 0.025
+			
 								]],
         directional        = true,
         emitrot            = 0,
@@ -30,14 +30,14 @@
         numparticles       = 1,
         particlelife       = 150,
         particlelifespread = 200,
-        particlesize       = 6,
-        particlesizespread = 18,
+        particlesize       = 4,
+        particlesizespread = 2,
         particlespeed      = 0.002,
         particlespeedspread = 1.005,
         pos                = [[0, 0, 0]],
         sizegrowth         = [[0.0 0.1]],
-        sizemod            = 1.0000009,
-        texture            = [[sparkcloud]],--bigExploSmoke
+        sizemod            = 1.000000001,
+        texture            = [[spore4]],--bigExploSmoke
         useairlos          = false,
       },
     },
