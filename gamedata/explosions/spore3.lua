@@ -6,7 +6,7 @@
  greenSparks = {
       air                = true,
       class              = [[CSimpleParticleSystem]],
-      count              = 2,
+      count              = 12,
       ground             = true,
       water              = false,
       properties = {
@@ -19,7 +19,7 @@
 								0 0.225 0.225 0.025
 								0.45 0.225 0  0.025 
 								0 0.225 0.225 0.025
-								0 0.225 0.225 0.025
+								0 0 0 0.025
 			
 								]],
         directional        = true,
@@ -30,14 +30,14 @@
         numparticles       = 1,
         particlelife       = 150,
         particlelifespread = 200,
-        particlesize       = 4,
+        particlesize       = 1,
         particlesizespread = 2,
         particlespeed      = 0.002,
         particlespeedspread = 1.005,
         pos                = [[0, 0, 0]],
-        sizegrowth         = [[0.0 0.1]],
-        sizemod            = 1.000000001,
-        texture            = [[spore3]],--bigExploSmoke
+      sizegrowth         = [[0.0 0.05]],
+          sizemod            = 0.9999995,
+        texture            = [[spore3]],
         useairlos          = false,
       },
     },

@@ -82,6 +82,8 @@ function getAllInCircle(x, z, Range, unitID, teamid)
 	return T
 end
 
+
+
 --> Removes Units of a Team from a table
 function removeUnitsOfTeam(TableOfUnits, teamid)
 	returnTable = {}
@@ -3525,6 +3527,11 @@ function assertTableType(T, Type)
 	end
 end
 
+function killYourselfIfUnitCeases(unitID, testID)
+	if doesUnitExistAlive(testID) then
+		Spring.DestroyUnit(unitID,true,true)
+	end
+end
 
 --> checks wether a number value is nan
 function isNaN(value)
@@ -3870,16 +3877,27 @@ end
 
 function fairRandom(identifier, chance) --chance as factor 0.1 == 1 out of ten is a hit
 if not GG.FairRandom then  GG.FairRandom = {} end
-if not GG.FairRandom[identifier] then  GG.FairRandom[identifier] = { numberOfCalls=0, numberOfHits= 0} end
+if not GG.FairRandom[identifier] then  GG.FairRandom[identifier] = { numberOfCalls=0, pattern = {}} end
 
-GG.FairRandom[identifier].numberOfCalls=GG.FairRandom[identifier].numberOfCalls +1
-
-currentThrows= math.ceil(math.abs(GG.FairRandom[identifier].numberOfHits * chance*10) - (GG.FairRandom[identifier].numberOfCalls * (1-chance)*10))
-boolAHit= math.random(currentThrows,math.max(currentThrows,10)) < 10
-if boolAHit == true then
-GG.FairRandom[identifier].numberOfHits=GG.FairRandom[identifier].numberOfHits+1
+if GG.FairRandom[identifier].numberOfCalls == 0 then
+	-- new pattern
+	GG.FairRandom[identifier].pattern={}
+	quota = math.ceil(chance*10)
+	index=1
+	while quota > 0 do
+		index= (index+3) % 10
+		if not GG.FairRandom[identifier].pattern[index] then GG.FairRandom[identifier].pattern[index]= false end
+		if math.random(0,1)==1 and GG.FairRandom[identifier].pattern[index]== false then
+		GG.FairRandom[identifier].pattern[index]= true
+		quota= quota -1
+		end
+	end
 end
-return boolAHit
+
+GG.FairRandom[identifier].numberOfCalls=(GG.FairRandom[identifier].numberOfCalls +1) % 10
+
+
+return  GG.FairRandom[identifier].pattern[(GG.FairRandom[identifier].numberOfCalls%10)]
 end
 
 

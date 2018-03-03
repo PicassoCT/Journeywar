@@ -73,14 +73,14 @@ if (gadgetHandler:IsSyncedCode()) then
     function gadget:GameFrame(frame)
 
         if frame % 250 == 0 then
-			if GG.Spores then
-				handleSpores(frame, GG.Spores, "jspore")
-				GG.Spores={}
+			if GG.Spore then
+				handleSpores(frame, GG.Spore, "jspore")
+				GG.Spore={}
 			end
 			
 			if GG.GoldSpore then
 				handleSpores(frame, GG.GoldSpore, "jgoldspore")
-				GG.GoldSpores={}
+				GG.GoldSpore={}
 			end
         end
     end

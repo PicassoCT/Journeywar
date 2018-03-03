@@ -714,7 +714,10 @@ function buildZombie()
     end
 end
 
+
+
 function script.Create()
+	
     StartPoints = Spring.GetUnitHealth(unitID)
     Hide(ztorso)
     Hide(zHead)

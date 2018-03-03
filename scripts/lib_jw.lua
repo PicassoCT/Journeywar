@@ -152,6 +152,7 @@ function getFungiImuneUnitTypeTable(UnitDefNames)
 end
 
 
+
 function getExemptFromLethalEffectsUnitTypeTable(UnitDefNamesL)
 if not UnitDefNames then UnitDefNames = UnitDefNamesL end
     retTab = {
