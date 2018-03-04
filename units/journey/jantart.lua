@@ -2,7 +2,7 @@ local unitName = "jantart"
 
 local unitDef = {
 	name = "Anthill Artillery",
-	Description = " fires Accid Ants Weddings at the Enemy <Long Range Artillery",
+	Description = " fires Accid Ants Weddings at the Enemy <Long Range Artillery>",
 	objectName = "jantart.s3o",
 	script = "jantart.lua",
 	buildPic = "anthill.png",
@@ -58,6 +58,9 @@ local unitDef = {
 	
 	weapons = {
 		[1]={name = "jacidants",
+			onlyTargetCategory = [[LAND]],
+		},
+		[2]={name = "jinfectants",
 			onlyTargetCategory = [[LAND]],
 		},
 		

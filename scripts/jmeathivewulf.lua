@@ -1,7 +1,12 @@
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_OS.lua"
+
 local boolCloseCombat = false
 local SIG_WALK = 1 --signal for the walk animation thread
 local SIG_AIM = 2 --signal for the weapon aiming thread
 local SIG_RESET = 4 --signal for the weapon aiming thread
+local SIG_TAIL = 8 
 pieces = {}
 rotor = piece "rotor"
 pieces[#pieces + 1] = {}
@@ -69,6 +74,7 @@ aimspot = piece "aimspot"
 pieces[#pieces + 1] = {}
 pieces[#pieces] = aimspot
 
+more10Ukch = piece"more10Ukch"
 --- - i know the api.. its all in my Head... brb, have to see doctor freeman
 -- throws the unit grabbed by the elephant appendix
 function legsDown()
@@ -79,6 +85,28 @@ function legsDown()
     end
 end
 
+function script.HitByWeapon(x, z, weaponDefID, damage)
+	if damage > 10 then
+		Explode(more10Ukch, SFX.FALL + SFX.NO_HEATCLOUD)		
+		transformUnitInto(unitID, "jhivewulf")
+	end
+return damage
+end
+
+
+
+function waveTail()
+Signal(SIG_TAIL)
+SetSignalMask(SIG_TAIL)
+	while true do
+	val=math.random(35,67)
+	tSyncIn(Tail, math.random(-10,10),val,0, 420)
+	Sleep(420)
+	tSyncIn(Tail, math.random(-10,10),val*-1,0, 420)
+	Sleep(420)
+
+	end
+end
 
 
 
@@ -128,6 +156,7 @@ end
 function script.StopMoving()
     Signal(SIG_WALK)
     StartThread(legsDown)
+    StartThread(waveTail)
 end
 
 --------------------------------------------------------------------------

@@ -107,7 +107,7 @@ function legsDown()
 	resetT(pieces)
 	
 	while true do
-		breathOS(body,1, 3, LegTable,4, 33, 3,iRand(12,22))
+		breathOS(body,1, 3, LegTable,4, 25, 900,iRand(12,22))
 		Sleep(500)
 		howl()
 	end
@@ -118,9 +118,8 @@ end
 function walk()
 	Signal(SIG_IDLE)
 	Turn(Tail,x_axis,math.rad(0),1)
-	Move(body,y_axis,0,12)
-	Move(body,z_axis,0,12)
-	Move(body,x_axis,0,12)
+	mP(body,0,0,0,12)
+	
 	orgHeading= Spring.GetUnitHeading(unitID)
 	newHeading= orgHeading
 	SetSignalMask(SIG_WALK)
@@ -260,6 +259,23 @@ if true then return true end
 	end
 	
 end
+
+function biteTest()
+while true do
+	Sleep(3000)
+	boolCloseCombat=true
+	closeCombatMotion()
+	-- ux,uy,uz=Spring.GetUnitPosition(unitID)
+	-- teamID = Spring.GetUnitTeam(unitID)
+	-- id=Spring.CreateUnit("contrain",ux,uy,uz, 0, teamID)
+	-- takeABite(id)
+		-- while Spring.GetUnitIsDead(id) == false do
+
+		-- Sleep(100)
+		-- end
+end
+end
+
 oldVictim= nil
 biteVictim= nil
 boolNewVictim = false
@@ -273,7 +289,7 @@ end
 shakeSpot = piece"shakeSpot"
 
 function detachOnDeath(victim)
-	if Spring.GetUnitIsDead(victim)==true then
+	if not victim or Spring.GetUnitIsDead(victim)==true then
 		Spring.UnitDetach(unitID)
 		return true
 		
@@ -294,6 +310,7 @@ function biteLoop()
 			pieceBig = getUnitBiggestPiece(biteVictim)
 			echo("TODO jhiveHoundMeatID")
 			Spring.UnitAttach(biteVictim, unitID, pieceBig)
+			setSpeedEnv(biteVictim,0.5)
 			boolBiting= true
 			--Shake Piece Out
 			mP(shakeSpot,3.5, -11,-25, 55)
@@ -301,25 +318,38 @@ function biteLoop()
 			dirAction= -1
 			xDegree=0
 			victimIsDead=false
+			
+			
+			Signal(SIG_WALK)
+		
+
 			for i=1, RIP_TIME, 750 do
-				tSyncIn(shakeSpot,xDegree, -25*dirAction,0,150)
+				tSyncIn(fUpR,-49, 0,0,250)
+				tSyncIn(fUpL,-49, 0,0,250)	
+				tSyncIn(bUpL,57, 0,0,250)
+				tSyncIn(bfootL,58, 0,0,250)
+				tSyncIn(bUpR,57, 0,0,250)
+				tSyncIn(bfootR,57, 0,0,250)
+				tSyncIn(shakeSpot,xDegree, -25*dirAction,0,math.random(250,600))
+				tSyncIn(Tail,0, 25*dirAction,0,math.random(250,600))
 				if isPieceAboveGround(unitID,Tail) == true then
-					xDegree = clamp(xDegree -10, -90,90)
+					xDegree = clamp(xDegree -5, -90,90)
 				else
-					xDegree = clamp(xDegree +10, -90,90)
+					xDegree = clamp(xDegree +5, -90,90)
 				end
 			
 				dirAction= dirAction*-1
 				WaitForTurns(shakeSpot,Tail)
 				
 				victimIsDead = detachOnDeath(biteVictim)
-				reset(shakeSpot,25)
+				
 				if victimIsDead == true then boolBiting= false; break end
 			end
-			
+			reset(shakeSpot,25)
 			if victimIsDead == false then
 				boolBiting= false
 				Spring.UnitDetach(unitID)
+				setSpeedEnv(biteVictim,1)
 				Spring.AddUnitDamage(biteVictim,RIP_DAMAGE)
 				--replace oneself with a jmeathivewulf
 				--setParentInjmeathivewulf
@@ -458,11 +488,9 @@ function biteMe()
 	tSyncIn(jaw,0,0,0,50)
 	WaitForTurns(jaw)
 end
-boolOnlyOnce=false 
+
 function closeCombatMotion()
-	if boolOnlyOnce==false then
-		boolOnlyOnce=true
-		
+
 		Signal(SIG_IDLE)
 		
 		
@@ -519,10 +547,8 @@ function closeCombatMotion()
 		WTurn(body,y_axis,math.rad(0),0)
 		WTurn(body,x_axis,math.rad(0),0)
 		legsDown()
-		boolOnlyOnce=false
-	else
-	end
 end
+
 function script.FireWeapon2()
 	Signal(SIG_IDLE)
 	Signal(SIG_RESET)
@@ -541,5 +567,6 @@ end
 function script.Create()
 	Spring.UnitDetach(unitID)
 	StartThread(biteLoop)
+	StartThread(biteTest)
 
 end

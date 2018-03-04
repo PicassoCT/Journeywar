@@ -28,6 +28,14 @@ if (gadgetHandler:IsSyncedCode()) then
     local spGetUnitDEFID = Spring.GetUnitDefID
     local teamID = Spring.GetGaiaTeamID()
 	sparedUnits= getFungiImuneUnitTypeTable(getUnitDefNames(UnitDefs))
+	transformableByFungiTypes= getTransformableByFungiTypesTable(UnitDefs)
+	
+	function transformByFungi(id)	
+		local env = Spring.UnitScript.GetScriptEnv(id)
+			if env and  env.envCallInfected then
+				Spring.UnitScript.CallAsUnit(id, env.envCallInfected)
+			end	
+	end	
 	
 	
 	function handleSpores(frame, tableToItterate, sporeToSpawn)
@@ -45,6 +53,11 @@ if (gadgetHandler:IsSyncedCode()) then
 					Spring.Echo("jw_plague:Unit".."1" )                
 				-- get DefID to make sure i aint a spore
                         tempDefID = spGetUnitDEFID(id)
+						if transformableByFungiTypes[tempDefID] then 
+							transformByFungi(id)
+						end
+						
+						
                         if tempDefID and not sparedUnits [tempDefID] then
 						Spring.Echo("jw_plague:Unit".."2" )  
                             --get location to spawn the jspore
@@ -72,7 +85,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
     function gadget:GameFrame(frame)
 
-        if frame % 250 == 0 then
+        if frame % 30 == 0 then
 			if GG.Spore then
 				handleSpores(frame, GG.Spore, "jspore")
 				GG.Spore={}

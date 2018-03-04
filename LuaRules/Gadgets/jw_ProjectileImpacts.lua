@@ -87,7 +87,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	jethiefweaponDefID = WeaponDefNames["jethiefweapon"].id
 	jethiefretweaponDefID = WeaponDefNames["jethiefretweapon"].id
 	jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
-	
+	jinfacidantsDefID = WeaponDefNames["jinfectants"].id
+
 	ChainLightningTable = {}
 	local FireWeapons = {
 		[gVolcanoWeaponID] = true,
@@ -142,7 +143,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(poisonRaceDartDef, true)
 	Script.SetWatchWeapon(tangleGunDefID, true)
 	Script.SetWatchWeapon(csubOrbDefID, true)
-	
+	Script.SetWatchWeapon(jinfacidantsDefID,true)
 	--units To be exempted from instantly lethal force
 	local lethalBuffExecption = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	local gaiaTeamID = Spring.GetGaiaTeamID()
@@ -150,6 +151,9 @@ if (gadgetHandler:IsSyncedCode()) then
 	local cssDefID = UnitDefNames["css"].id
 	local gvolcanoDefID = UnitDefNames["gvolcano"].id
 	
+	--===========Config Data      s ====================================================
+			JINFECTEDANTRADIUS=200
+			JACCIDDANTRADIUS=150
 	--===========Explosion Functions ====================================================
 	
 	airTypeTable= getAirUnitTypeTable()
@@ -498,6 +502,25 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 				Spring.SetUnitPosition(AttackerID, px, py, pz) 
 			end
+		end,
+		[jinfacidantsDefID] = function(weaponDefID, px, py, pz, AttackerID)
+			Spring.SpawnCEG("jinfectedants", px, py + 10, pz, 0, 1, 0, 60)
+				
+
+						
+			T = getAllInCircle(px, pz, JINFECTEDANTRADIUS)
+			if T then
+				if not GG.Spore then GG.Spore = {} end
+				
+				process(T,
+				function(id)
+					if id ~= AttackerID then
+						GG.Spore[#GG.Spore +1] = id
+					end
+				end)
+			end
+			
+			return true
 		end,
 		[jacidantsDefID] = function(weaponDefID, px, py, pz, AttackerID)
 			Spring.SpawnCEG("jantseverywhere", px, py + 10, pz, 0, 1, 0, 60)

@@ -12,7 +12,7 @@ return {
           underwater         = true,
           water              = true,
           properties = {
-        colormap           = [[0.1 0.1 0.7 .1   0.05 0.1 0.8 .1		0 0 0 0.0001  ]],
+        colormap           = [[0.3 0.3 0.9 .025   0.05 0.1 0.8 .025		0 0 0 0.0001  ]],
              dir                = [[-1 r2, -1 r2, -1 r2]],
             frontoffset        = 0,
             fronttexture       = [[bigexplosmoke]],--redexplo
@@ -31,7 +31,7 @@ return {
           underwater         = true,
           water              = true,
           properties = {
-        colormap           = [[0.1 0.1 0.7 .1   0.05 0.1 0.8 .1		0 0 0 0.0001  ]],
+        colormap           = [[0.3 0.3 0.9 .025   0.05 0.1 0.8 .025		0 0 0 0.0001  ]],
              dir                = [[-1 r2, -1 r2, -1 r2]],
             frontoffset        = 0,
             fronttexture       = [[dirt]],--redexplo
@@ -50,7 +50,7 @@ return {
           underwater         = 1,
           water              = true,
           properties = {
-        colormap           = [[0.1 0.1 0.7 .1   0.05 0.1 0.8 .1		0 0 0 0.0001  ]],
+        colormap           = [[0.3 0.3 0.9 .025   0.05 0.1 0.8 .025		0 0 0 0.0001  ]],
              dir                = [[-1 r2, 0.5 , -1 r2]],
             frontoffset        = 0,
             fronttexture       = [[bloodsplat]],--redexplo
@@ -70,7 +70,7 @@ return {
       water              = false,
       properties = {
         airdrag            = 1,
-        colormap           = [[0.1 0.1 0.7 .1   0.05 0.1 0.8 .1		0 0 0 0.0001  ]],
+        colormap           = [[0.3 0.3 0.9 .025   0.05 0.1 0.8 .025		0 0 0 0.0001  ]],
         directional        = true,
         emitrot            = 0,
         emitrotspread      = 5,

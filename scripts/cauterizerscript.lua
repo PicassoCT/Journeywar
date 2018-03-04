@@ -50,7 +50,7 @@ function soundBarrierDetection()
 
 		if mx and ox and equal(distance(ox,oy,oz,mx,my,mz), speedOfSound, 10) and timer <= 0	then
 		--	Spring.Echo("Cauterizer"..distance(ox,oy,oz,mx,my,mz))
-			decide=math.random(1,2)
+			decide=math.random(1,3)
 			StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cauterizer/sonicboom"..decide..".ogg", 1, 10000, 1, 0)
 			Sleep(4000)
 		

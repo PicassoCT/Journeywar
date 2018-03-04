@@ -11,17 +11,16 @@ attaPoint=piece"attaPoint"
 swingersClub=piece"swingersClub"
 local AttachUnits = Spring.UnitScript.AttachUnit
 local DropUnits = Spring.UnitScript.DropUnit
-boolImAGoldenSpore = true
-
-timeTillFirstSymptoms= math.random(6,12)*1000 --this is health dependant
+	myDefID = Spring.GetUnitDefID(unitID)
+	boolImAGoldenSpore =  (myDefID == UnitDefNames["jgoldspore"].id)
+timeTillFirstSymptoms= math.random(6,12)*1000 --this is victim health dependant
 health1Second= 300
 
 incubationStart= math.random(-2,2)*1000 --start of infection 
 totalFungiGrowTime=12000
 teamID= Spring.GetUnitTeam(unitID)
-boolOutlier = fairRandom(teamID.."jFungiOutlier", 0.3)
+boolOutlier = fairRandom(teamID.."jFungiOutlier", 0.3) and boolImAGoldenSpore == false
 boolComeCloser= fairRandom(teamID.."jFungiComeCloser", 0.5)
-
 outLierTime= math.random(60,120)*1000
 
 
@@ -109,20 +108,18 @@ end
 function comeCloser(boolComeCloser,id)
 	if boolComeCloser == true then
 		ad=Spring.GetUnitNearestAlly(id)
-			if ad then
+		if ad then
 			ax,ay,az=Spring.GetUnitPosition(ad)
 				if ax then
 					Spring.SetUnitMoveGoal(id,ax,ay,az)
 				end
-			end
+		end
 	end
 end
-
-
+ 
 spores={}
 spheres={}
-for o=1,9, 1 do
-	
+for o=1,9, 1 do	
 	spores[o]={}
 	for i=1,3,1 do
 		
@@ -199,7 +196,8 @@ resetT(TableOfPieceGroups["fruit"])
 			ike=TableOfPieceGroups["fruit"][i]
 			target= edges[math.random(1,#edges)]
 			wx,wy,wz = Spring.GetUnitPiecePosDir(unitID,target)
-			MovePieceToPos(ike, -1*(bx-wx),-1*(by-wy)-15,-1*(bz-wz),0)
+			mP(ike,math.random(-10,10),math.random(-10,10),math.random(-10,10),0)
+			--MovePieceToPos(ike, -1*(bx-wx),-1*(by-wy)-15,-1*(bz-wz),0)
 			r=math.ceil(math.random(150,750))
 			Sleep(r)
 
@@ -257,7 +255,7 @@ idHandle="NotAnID"
 hostDefID= "NotAnDefID"
 
 function lifeTimer()
-Sleep(3000)
+Sleep(1)
 	if idHandle == "NotAnID" then
 	Spring.DestroyUnit(unitID,true,true)
 	end
@@ -289,9 +287,9 @@ end
 
 TableOfPieceGroups={}
 function script.Create()
+	hideAll(unitID)
 	if not GG.Spore then GG.Spore={} end
-	myDefID = Spring.GetUnitDefID(unitID)
-	boolImAGoldenSpore =  (myDefID == UnitDefNames["jgoldspore"].id)
+
 	Spring.SetUnitNeutral(unitID,true)
 	Spring.SetUnitAlwaysVisible(unitID,true)
 	Spring.SetUnitBlocking(unitID,false)

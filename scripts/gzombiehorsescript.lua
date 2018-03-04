@@ -594,7 +594,7 @@ function resetPosition()
         dropDead()
     else
 
-        breathOS(kuttel, 5, 10, LegTable, 4, 66, 6)
+        breathOS(kuttel, 5, 10, LegTable, 4, 450, 6)
     end
 end
 

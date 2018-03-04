@@ -49,7 +49,7 @@ local weaponDef = {
 
     --sound
     soundHit = "jbeehive/sting.wav",
-    --soundStart="skinfantry/birdrocketstart.wav",
+    --soundStart="skinfantry/birdrocketstart.ogg",
 }
 
 return lowerkeys({ [weaponName] = weaponDef })

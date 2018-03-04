@@ -1,12 +1,12 @@
-local weaponName = "jacidants"
+local weaponName = "jinfectants"
 local weaponDef = {
-    name = "Acidic Ant Wedding: Hive Sweet Hive",
+    name = "Infected Acidic Ants",
     weaponType = [[Cannon]],
     --vlaunch=1,
 
 
     --Physic/flight path
-    range = 8000,
+    range = 4000,
     reloadtime = 9,
     weaponVelocity = 320,
     startVelocity = 50,

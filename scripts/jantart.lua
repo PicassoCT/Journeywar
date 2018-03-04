@@ -110,7 +110,7 @@ end
 function script.AimWeapon1(heading, pitch)
 
 
-    return true
+    return boolYouAreInfected== false
 end
 
 
@@ -119,6 +119,42 @@ end
 
 function script.FireWeapon1()
     boolAimFromWeaponFixxed = false
+    EmitSfx(flareOfchoice, 1025)
+    Sleep(150)
+    EmitSfx(flareOfchoice, 1025)
+    Sleep(150)
+    EmitSfx(flareOfchoice, 1025)
+    Sleep(150)
+    EmitSfx(flareOfchoice, 1025)
+end
+
+boolYouAreInfected=false
+function envCallInfected()
+boolYouAreInfected=true
+
+end
+
+function script.AimFromWeapon2()
+    return flareOfchoice
+end
+
+
+
+function script.QueryWeapon2()
+    return flareOfchoice
+end
+
+function script.AimWeapon2(heading, pitch)
+
+    return boolYouAreInfected== true 
+end
+
+
+
+
+
+function script.FireWeapon2()
+	chooseYourFlare()
     EmitSfx(flareOfchoice, 1025)
     Sleep(150)
     EmitSfx(flareOfchoice, 1025)

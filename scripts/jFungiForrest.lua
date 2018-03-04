@@ -15,7 +15,7 @@ fungi4 = piece "fungi4"
 emitPoint = piece "emitPoint"
 center = piece "center"
 fungiActiveDelayTime= 15000
-DeathRadius= 500
+DeathRadius= 450
 
 function breathingDeath()
     local lEmitSfx = EmitSfx
@@ -81,7 +81,7 @@ function delayedAppearance(piece, ki)
     times = math.ceil(math.random(5000, 15000))
     Sleep(times)
 	sinOffset= math.sin(ki*((2*math.pi)/11))*10
-    Move(piece, x_axis, DeathRadius +sinOffset 		, 0)
+    Move(piece, x_axis, 100 + DeathRadius +sinOffset 		, 0)
     x, y, z, _, _, _ = Spring.GetUnitPiecePosDir(unitID, piece)
     myHeight = Spring.GetGroundHeight(x, z)
     heightdifference = math.abs(globalHeightUnit - myHeight)

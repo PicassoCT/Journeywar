@@ -125,7 +125,9 @@ function getUnAttractiveTypesTable()
 end
 
 --> Units imune to deadly Fungi
-function getFungiImuneUnitTypeTable(UnitDefNames)
+function getFungiImuneUnitTypeTable()
+	local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
+
     retTab = {}
     retTab[UnitDefNames["jstealthdrone"].id] = true
     retTab[UnitDefNames["jconcaterpillar"].id] = true
@@ -149,6 +151,16 @@ function getFungiImuneUnitTypeTable(UnitDefNames)
     end
 
     return retTab
+end
+
+--> Units imune to deadly Fungi
+function getTransformableByFungiTypesTable(UnitDefs)
+	local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
+return {
+    [UnitDefNames["jantart"].id] = true
+   }
+
+     
 end
 
 

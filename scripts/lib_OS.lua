@@ -494,7 +494,7 @@ function shiverOS(piecename,xDown, xUp, yDown, yUp, zDown, zUp, speed)
 end
 
 --> breath 
-function breathOS(body, lowDist, upDist, LegTable, LegNumber, degree, speed, count)
+function breathOS(body, lowDist, upDist, LegTable, LegNumber, degree, Time, count)
     leglength = upDist / 2
 
     bLoop = true
@@ -510,31 +510,31 @@ function breathOS(body, lowDist, upDist, LegTable, LegNumber, degree, speed, cou
 
         dist = math.random(lowDist, upDist)
         percentage = dist / upDist
-        Time = dist / (math.abs(speed) + 0.001)
+      
         degreeC = percentage * degree
         --downDeg=math.asin(leglength*dist)
         --upDeg= math.asin()
 
 
-        speedDeg = frames / (degreeC * (Time)) + 0.0001
+       
         --speedDeg= 0.5
         degHalf = degreeC / 9 + 0.001
         degHalfMins = degHalf * -1.3
         degreeMinus = degreeC * -1.7
 
-        Move(body, y_axis, -dist, speed)
+        mSyncIn(body, 0, -dist,0,Time)
         for i = 1, LegNumber, 1 do
-            Turn(LegTable[i].up, x_axis, math.rad(degreeC), speedDeg)
-            Turn(LegTable[i].down, x_axis, math.rad(degreeMinus), 2 * speedDeg)
+			tSyncIn(LegTable[i].up,degreeC,0,0,Time)
+			tSyncIn(LegTable[i].down,degreeMinus,0,0,Time)
+   
         end
 
         WaitForMove(body, y_axis)
         Sleep(100)
-        Move(body, y_axis, 0, speed)
+        mSyncIn(body, 0, 0,0,Time)
         for i = 1, LegNumber do
-
-            Turn(LegTable[i].up, x_axis, math.rad(degHalf), speedDeg)
-            Turn(LegTable[i].down, x_axis, math.rad(degHalfMins), speedDeg)
+			tSyncIn(LegTable[i].up,degHalf,0,0,Time)
+			tSyncIn(LegTable[i].down,degHalfMins,0,0,Time)           
         end
         WaitForMove(body, y_axis)
         Sleep(100)
