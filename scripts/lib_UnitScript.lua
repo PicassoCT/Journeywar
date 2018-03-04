@@ -157,7 +157,7 @@ end
 function isPieceAboveGround(unitID,pieceName)
 	x,y,z =Spring.GetUnitPiecePosDir(unitID,pieceName)
 	gh= Spring.GetGroundHeight(x,z)
-	if gh > 0 then 
+	if gh < y then 
 		return true 
 	end
 	return false
@@ -766,7 +766,7 @@ function createUnitAtPiece(unitID, typeID, Piece, team)
 end
 
 --> Transforms a selected unit into another type
-function transformUnitInto(unitID, unitType, setVel)
+function transformUnitInto(unitID, unitType, setVel, boolKill)
 	x, y, z = Spring.GetUnitPosition(unitID)
 	teamID = Spring.GetUnitTeam(unitID)
 	vx, vy, vz, vl = Spring.GetUnitVelocity(unitID)
@@ -787,7 +787,10 @@ function transformUnitInto(unitID, unitType, setVel)
 		Spring.DestroyUnit(unitID, false, true)
 		return id
 	end
+	if not boolKill or boolKill == true then
 	Spring.DestroyUnit(unitID, false, true)
+	end
+	return id
 end
 
 --> Get Unit Target if a Move.Cmd was issued

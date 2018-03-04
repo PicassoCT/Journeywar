@@ -402,6 +402,20 @@ function getRecycleableUnitTypeTable()
     return TransportTable
 end
 
+function getDevourableUnitTypeTable()
+    TransportTable = {
+        [UnitDefNames["gjbigbiowaste"].id] = true,
+        [UnitDefNames["gjmedbiogwaste"].id] = true,
+        [UnitDefNames["gcvehiccorpse"].id] = true,
+        [UnitDefNames["gcvehiccorpsemini"].id] = true,
+        [UnitDefNames["gjmeatballs"].id] = true,
+        [UnitDefNames["gshit"].id] = true,
+        [UnitDefNames["jmeathivewulf"].id] = true
+    }
+
+    return TransportTable
+end
+
 
 
 function getGravityChangeReistantUnitTypeTable(UnitDefNames)

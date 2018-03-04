@@ -68,11 +68,8 @@ local unitDef = {
 				},
 				
 weapons = {
-[1]={name  = "jBugCloseCombat",
-	onlyTargetCategory = [[LAND]],
-	},
-				
-	},		
+	
 	Category = [[LAND]],	
+}
 }
 return lowerkeys({ [unitName] = unitDef })

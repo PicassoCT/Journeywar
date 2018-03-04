@@ -30,31 +30,19 @@ local unitDef = {
   turnRate =965,
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
-
-
-
  
 	maneuverleashlength=640,
 	shootme=true,
 	smoothanim=false,
 	steeringmode=true,
   
-  
-  
   	sightdistance=	50,
 	radardistance=50,
 	radardistancejam=0,
 
-
-	
-  
-  
-
   hideDamage =true,
   showNanoFrame =false,
   energyStorage = 750,
-
-
 
 	 customParams = {},
  sfxtypes = {
@@ -67,7 +55,7 @@ local unitDef = {
 				},
 				
 weapons = {
-[1]={name  = "jHiveHoundRocket",
+[1]={name  = "jhivehoundrocket",
 	onlyTargetCategory = [[LAND]],
 	},
 [2]={name  = "jHiveCloseCombat",

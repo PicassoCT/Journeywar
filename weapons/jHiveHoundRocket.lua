@@ -1,54 +1,55 @@
-local weaponName = "jHiveHoundRocket"
+local weaponName = "jhivehoundrocket"
 local weaponDef = {
-    name = "jump",
+    name = "Jump towards the Enemy",
     weaponType = [[MissileLauncher]],
     Accuracy = 2000,
 
     --Physic/flight path
-    range = 80,
-    reloadtime = 15,
-    weaponVelocity = 500,
-    startVelocity = 350,
-    weaponAcceleration = 100,
-    flightTime = 1,
+    range = 200,
+    reloadtime = 35,
+    weaponVelocity = 300,
+    startVelocity = 140,
+    weaponAcceleration = 50,
+    flightTime = 4.5,
     BurnBlow = 0,
     FixedLauncher = false,
     dance = 0,
     wobble = 0,
     tolerance = 16000,
-    tracks = false,
-    Turnrate = 16000,
-    collideFriendly = true,
+    tracks = true,
+    Turnrate = 1900,
+    collideFriendly = false,
 
     --- -APPEARANCE
     model = "jHiveHoundProj.s3o",
     smokeTrail = false,
-    explosionGenerator = "custom:dirt",
-    --CegTag="smoketrail",
-	 interceptor = 1,
+  --  explosionGenerator = "custom:jvaryfootrail",
+  --  CegTag = "jvaryfootrail",
+
     --- -TARGETING
     turret = true,
+    cylinderTargeting = 100,
     avoidFeature = true,
-    avoidFriendly = true,
+    avoidFriendly = false,
 
 
     --commandfire=true,
 
     --- -DAMAGE
     damage = {
-        default = 0,
-        heavyarmor = 0,
+        default = 15,
+        heavyarmor = 5,
     },
     areaOfEffect = 10,
     craterMult = 0,
 
     --?FIXME***
-    lineOfSight = false,
+    lineOfSight = true,
 
 
     --sound
-    soundHit = "",
-    soundStart = "",
+    --soundHit="skinfantry/birdrockethit.ogg",
+    --soundStart="skinfantry/birdrocketstart.ogg",
 }
 
 return lowerkeys({ [weaponName] = weaponDef })

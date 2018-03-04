@@ -1,5 +1,6 @@
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
+include "lib_jw.lua"
 
 --The Pack
 Pack = {}
@@ -118,10 +119,10 @@ local ex, ey, ez = 0
 local ux, uy, uz = Spring.GetUnitPosition(unitID)
 local AttackDistance = 400
 local AvoidDistance = 100
-local DissolveRange = 50
-
+local DissolveRange = 120
+healthBenefitEating = 250
 local fullHealth = Spring.GetUnitHealth(unitID)
-local MeatRange = 420
+
 --var
 nrOfDangle = 12
 currTur = 0
@@ -594,6 +595,7 @@ end
 boolMoving = false
 boolCircling = false
 function script.StartMoving()
+
     boolCircling = false
     boolMoving = true
     Turn(deathpivot, x_axis, math.rad(0), 35)
@@ -793,27 +795,63 @@ function findHoundInHiveHOundTable(houndID)
     return false
 end
 
+function devourMotion(px2, py2, pz2 )
+	
+	local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
+    local dx, dy, dz = px2 - px1, py2 - py1, pz2 - pz1
+    local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID)) / 32768 * math.pi
+
+    Turn(deathpivot, y_axis, heading, 9)
+	Spring.spawnCEG("bloodspray",px2,py2+15,pz2,0,1,0,50,0)
+
+	for i=1,6 do
+		tSynIn(Head,math.random(25,35),0,0,350)
+		tSynIn(jaw,math.random(35,45),0,0,350)
+		Sleep(350)
+		tSynIn(jaw,0,0,0,350)
+		EmitSfx(jaw,1024)
+		tSynIn(Head,math.random(0,15),0,0,350)
+		Sleep(200)
+		
+		for jew=1,3 do
+			tSynIn(jaw,math.random(5,10),0,0,150)
+			WaitForTurns(jaw)		
+			tSynIn(jaw,math.random(0,3),0,0,150)
+			WaitForTurns(jaw)		
+		end		
+	end
+end
+
+
+devourableTypes= getDevourableUnitTypeTable(UnitDefNames)
 function checkForHiveHoundsToDissolve()
     tableToCheck = {}
 
     local spGetUnitDefID = Spring.GetUnitDefID
     tableToCheck = Spring.GetUnitsInCylinder(ux, uz, DissolveRange, teamID)
     local ffHH = findHoundInHiveHOundTable
+	boolAteSomething= false
+	ox,oy,oz=0,0,0
+	process(tableToCheck,
+		function(id)
+			if id == unitID then return end
+			
+			defID= spGetUnitDefID(id)
+			if defID and devourableTypes[defID] then
+					hp, maxhp= Spring.GetUnitHealth(id)
+					tempH, _, _, _, _, _ = Spring.GetUnitHealth(unitID)
+                    Spring.SetUnitHealth(unitID, tempH + math.ceil(healthBenefitEating*(hp/maxhp)))
+					ox,oy,oz=SPring.GetUnitPosition(ox,oy,oz)
+					Spring.DestroyUnit(id, false, true)
+					boolAteSomething= true
+			end
+		end
+		)
+	if boolAteSomething== true then
+		devourMotion(ox,oy,oz)
+	end
+	
 
-    table.remove(tableToCheck, unitID)
-    if tableToCheck ~= nil and table.getn(tableToCheck) ~= 0 then
-        for i = 1, #tableToCheck, 1 do
-            boolCheckson = (spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivewulf"].id)
-            if ffHH(tableToCheck[i]) == true or spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivewulf"].id then
-
-                if spGetUnitDefID(tableToCheck[i]) == UnitDefNames["jmeathivewulf"].id then
-                    tempH, _, _, _, _, _ = Spring.GetUnitHealth(unitID)
-                    Spring.SetUnitHealth(unitID, tempH + 256)
-                end
-                Spring.DestroyUnit(tableToCheck[i], false, true)
-            end
-        end
-    end
 end
 
 

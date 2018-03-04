@@ -74,7 +74,7 @@ aimspot = piece "aimspot"
 pieces[#pieces + 1] = {}
 pieces[#pieces] = aimspot
 
-more10Ukch = piece"more10Ukch"
+flesh = piece"flesh"
 --- - i know the api.. its all in my Head... brb, have to see doctor freeman
 -- throws the unit grabbed by the elephant appendix
 function legsDown()
@@ -85,10 +85,24 @@ function legsDown()
     end
 end
 
+function setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
+myTeam=Spring.GetUnitTeam(unitID)
+	for mom, data in pairs( GG.HiveHoundTable[myTeam]) do
+		for i=1,#data do
+			if type(data)=="table" and data[i][1] == unitID then
+			GG.HiveHoundTable[myTeam][mom][i][1] = jhiveHoundMeatID
+			end
+		end
+
+	end
+end
+
 function script.HitByWeapon(x, z, weaponDefID, damage)
-	if damage > 10 then
-		Explode(more10Ukch, SFX.FALL + SFX.NO_HEATCLOUD)		
-		transformUnitInto(unitID, "jhivewulf")
+	hp,mp=Spring.GetUnitHealth(unitID)
+	if hp < mp*0.5 then
+		Explode(flesh, SFX.FALL +SFX.NO_HEATCLOUD)
+		jhiveHoundID=  transformUnitInto(unitID, "jHiveWulf")
+		setMeatHiveHoundParent(unitID, jhiveHoundID, nil, false)
 	end
 return damage
 end
@@ -147,11 +161,15 @@ function walk()
 end
 
 
+
+
 function script.StartMoving()
 
     Signal(SIG_WALK)
     StartThread(walk)
 end
+
+
 
 function script.StopMoving()
     Signal(SIG_WALK)
@@ -161,6 +179,7 @@ end
 
 --------------------------------------------------------------------------
 function script.Killed()
+	Explode(flesh, SFX.FALL + SFX.NO_HEATCLOUD)		
     Move(rotor, y_axis, math.rad(-25), 39)
     Spin(rotor, y_axis, math.rad(42), 17)
     for i = 1, 5 do
@@ -203,11 +222,9 @@ function script.QueryWeapon1()
 end
 
 function landing()
-
     Sleep(200)
     legsDown()
 end
-
 
 function inLimit(value, altVal, limit)
     if value < altVal - limit or value > altVal + limit then return false
@@ -229,8 +246,13 @@ function emitBlood()
     end
 end
 
+function dieAfterTime()
+Sleep(42000)
+Spring.DestroyUnit(unitID, false, true)
 
+end
 
 function script.Create()
+    StartThread(dieAfterTime)
     StartThread(emitBlood)
 end

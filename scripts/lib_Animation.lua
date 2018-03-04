@@ -372,6 +372,14 @@ end
 function equiTurn(p1, p2, axis, degv, speed)
     Turn(p1, axis, math.rad(degv), speed)
     Turn(p2, axis, math.rad(-1 * degv), speed)
+end-->counterturns a piece pair
+
+function equiTurnIn(p1, p2, axis, degv, times)
+    x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(p1)	
+	turnInTime(p1, axis, degv, times,math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
+	 x_rad, y_rad, z_rad = UnitScript.GetPieceRotation(p2)	
+	turnInTime(p2, axis, degv*-1, times,math.deg(x_rad), math.deg(y_rad), math.deg(z_rad))
+
 end
 
 function breath(p1, p2, axis, degv, speed, itteration, speedreduce,finalfunction)

@@ -3,11 +3,16 @@ include "lib_Animation.lua"
 
 include "lib_OS.lua"
 
-local boolCloseCombat=false
+
+RIP_DAMAGE= 350
+RIP_TIME = 12000
+
+local boolCommenceCloseCombat=false
 local SIG_WALK = 1 --Signal for the walk animation thread
 local SIG_AIM = 2 --Signal for the weapon aiming thread
 local SIG_RESET = 4 --Signal for the weapon aiming thread
 local SIG_IDLE = 8 --Signal for the weapon aiming thread
+local SIG_DEACTIVATE_CLOSE_COMBAT = 16 --Signal for the weapon aiming thread
 pieces={}
 rotor= piece"rotor"
 pieces[#pieces+1]={}
@@ -98,14 +103,22 @@ aimspot= piece"aimspot"
 pieces[#pieces+1]={}
 pieces[#pieces]=aimspot
 
+jumprotor = piece"jumprotor"
+pieces[#pieces+1] = piece"jumprotor"
+
 ---- i know the api.. its all in my Head... brb, have to see doctor freeman
 --throws the unit grabbed by the elephant appendix
+function delayedEndWalk()
+	Sleep(500)
+	Signal(SIG_WALK)
 
+end
 
 function legsDown()
-	SetSignalMask(SIG_IDLE)
-	resetT(pieces)
 	
+	SetSignalMask(SIG_IDLE)
+	
+
 	while true do
 		breathOS(body,1, 3, LegTable,4, 25, 900,iRand(12,22))
 		Sleep(500)
@@ -115,9 +128,10 @@ function legsDown()
 end
 
 
-function walk()
-	Signal(SIG_IDLE)
+function walkAnimation()
+
 	Turn(Tail,x_axis,math.rad(0),1)
+	tP(body,0,0,0,12)
 	mP(body,0,0,0,12)
 	
 	orgHeading= Spring.GetUnitHeading(unitID)
@@ -125,7 +139,7 @@ function walk()
 	SetSignalMask(SIG_WALK)
 	
 	Sleep(100)
-	boolCloseCombat= false
+
 	reset(rotor,2)
 	reset(rotor2,3)
 	
@@ -135,6 +149,7 @@ function walk()
 	Turn(bUpL,z_axis,math.rad(16),1)
 	Time= 0
 	while true do
+		Signal(SIG_IDLE)
 		Time = Time +350
 		factor= math.sin(Time/3500)
 		bodyfactor= 3*factor
@@ -181,17 +196,23 @@ function walk()
 	end
 end
 
+function delayedCloseCombatDeactivation()
+SetSignalMask(SIG_DEACTIVATE_CLOSE_COMBAT)
+	Sleep(1000)
+	boolCommenceCloseCombat= false
+end
 
 function script.StartMoving()
 	
-	Signal(SIG_WALK)
-	StartThread(walk) 
-	
+
+	StartThread(walkAnimation) 
+	StartThread(delayedCloseCombatDeactivation)
 end
 
 function script.StopMoving()
 	Turn(Tail,x_axis,math.rad(-25),1)
-	Signal(SIG_WALK)
+	Signal(SIG_DEACTIVATE_CLOSE_COMBAT)
+	StartThread(delayedEndWalk)
 	StartThread(legsDown)
 	
 end
@@ -230,57 +251,12 @@ function getReadyJump()
 end
 
 
------------------------------------------WEAPON ONE ----------------------------
-function script.AimFromWeapon1()
-	return aimspot
-end
-
-function script.QueryWeapon1()
-	return aimspot
-end
-
-function landing()
-	
-	Sleep(200)
-	legsDown()
-end
-
-boolBiting = false
-function script.AimWeapon1( Heading, pitch )
-if true then return true end
-	SetSignalMask(SIG_AIM)
-	if boolCloseCombat==false and boolBiting== false then
-		Turn(body,y_axis,-Heading,12)
-		WaitForTurn(body,y_axis)
-		getReadyJump() 
-		return true
-	else 
-		return false
-	end
-	
-end
-
-function biteTest()
-while true do
-	Sleep(3000)
-	boolCloseCombat=true
-	closeCombatMotion()
-	-- ux,uy,uz=Spring.GetUnitPosition(unitID)
-	-- teamID = Spring.GetUnitTeam(unitID)
-	-- id=Spring.CreateUnit("contrain",ux,uy,uz, 0, teamID)
-	-- takeABite(id)
-		-- while Spring.GetUnitIsDead(id) == false do
-
-		-- Sleep(100)
-		-- end
-end
-end
 
 oldVictim= nil
 biteVictim= nil
 boolNewVictim = false
 function takeABite(victim)
-	if boolCloseCombat == false then
+	if boolCommenceCloseCombat == false then
 		oldVictim= biteVictim		
 		biteVictim= victim
 		boolNewVictim = true
@@ -297,8 +273,14 @@ function detachOnDeath(victim)
 	return false
 end
 
-RIP_DAMAGE= 350
-RIP_TIME = 35000
+function setSpeedAttached(biteVictim)
+		attachedT= Spring.GetUnitIsTransporting( biteVictim)
+			numberOfAttached = 1
+			if attachedT then numberOfAttached= #attachedT  end		
+			setSpeedEnv(biteVictim,1/numberOfAttached)
+
+end
+
 function biteLoop()
 	while true do
 		
@@ -308,21 +290,21 @@ function biteLoop()
 			validExVictim= Spring.ValidUnitID(oldVictim)
 			if validExVictim and validExVictim == true then Spring.UnitDetach(unitID); boolBiting= false end
 			pieceBig = getUnitBiggestPiece(biteVictim)
-			echo("TODO jhiveHoundMeatID")
+
 			Spring.UnitAttach(biteVictim, unitID, pieceBig)
-			setSpeedEnv(biteVictim,0.5)
+			setSpeedAttached(biteVictim)
 			boolBiting= true
 			--Shake Piece Out
 			mP(shakeSpot,3.5, -11,-25, 55)
 			
 			dirAction= -1
 			xDegree=0
-			victimIsDead=false
-			
+			boolVictimIsDead=false
+			boolFullTime= true
 			
 			Signal(SIG_WALK)
 		
-
+			startHP= Spring.GetUnitHealth(unitID)
 			for i=1, RIP_TIME, 750 do
 				tSyncIn(fUpR,-49, 0,0,250)
 				tSyncIn(fUpL,-49, 0,0,250)	
@@ -332,27 +314,35 @@ function biteLoop()
 				tSyncIn(bfootR,57, 0,0,250)
 				tSyncIn(shakeSpot,xDegree, -25*dirAction,0,math.random(250,600))
 				tSyncIn(Tail,0, 25*dirAction,0,math.random(250,600))
+				px,py,pz= Spring.GetUnitPiecePosDir(unitID,Tail)
+				
 				if isPieceAboveGround(unitID,Tail) == true then
 					xDegree = clamp(xDegree -5, -90,90)
 				else
 					xDegree = clamp(xDegree +5, -90,90)
 				end
-			
+				Spring.AddUnitDamage(biteVictim,math.ceil(RIP_DAMAGE/(RIP_TIME/750)))
 				dirAction= dirAction*-1
 				WaitForTurns(shakeSpot,Tail)
+				nowHP= 	Spring.GetUnitHealth(unitID)
+				if nowHP < startHP then 
+					boolFullTime=false; break; end
+				end
+				boolVictimIsDead = detachOnDeath(biteVictim)
 				
-				victimIsDead = detachOnDeath(biteVictim)
-				
-				if victimIsDead == true then boolBiting= false; break end
+				if boolVictimIsDead == true then boolFullTime = false; break; end
 			end
 			reset(shakeSpot,25)
+			boolBiting= false
+			Spring.UnitDetach(unitID)
+				
 			if victimIsDead == false then
-				boolBiting= false
-				Spring.UnitDetach(unitID)
-				setSpeedEnv(biteVictim,1)
-				Spring.AddUnitDamage(biteVictim,RIP_DAMAGE)
-				--replace oneself with a jmeathivewulf
-				--setParentInjmeathivewulf
+				setSpeedAttached(biteVictim)
+			end
+			
+			--replace oneself with a jmeathivewulf
+			--setParentInjmeathivewulf
+			if boolFullTime== true then
 				x,y,z = Spring.GetUnitPosition(unitID)
 				teamID = Spring.GetUnitTeam(unitID)
 				jhiveHoundMeatID = Spring.CreateUnit("jmeathivewulf",x,y,z, 0,teamID)
@@ -433,7 +423,7 @@ function HideMeWhileNotThere()
 		Sleep(100)
 		xt,yt,zt=Spring.GetUnitPosition(unitID)
 	end
-	
+	boolFlying=false
 	Spring.SetUnitNoDraw(unitID,false)
 	Spring.SetUnitNoSelect(unitID,false)
 	Spring.SetUnitBlocking(unitID, true, true,true)
@@ -445,18 +435,44 @@ function HideMeWhileNotThere()
 	landing()
 end
 
-
-
-
-function timeDelayedCloseCombatDeActivate()
-	SetSignalMask(SIG_RESET)
-	Sleep(3500)
-	boolCloseCombat=false
+function landing()
+	
+	Sleep(200)
+	resetT(pieces)
+	
 end
 
 
-function script.FireWeapon1()
+-----------------------------------------WEAPON ONE ----------------------------
+function script.AimFromWeapon1()
+	return Head
+end
+
+function script.QueryWeapon1()
+	return Head
+end
+
+
+boolBiting = false
+function script.AimWeapon1( Heading, pitch )
+
+	if boolCloseCombatInProgress ==false and 
+	boolBiting== false and
+	boolFlying == false then
+		Turn(body,y_axis,-Heading,12)
+		WaitForTurn(body,y_axis)
+		getReadyJump() 
+		return true
+	else 
+		return false
+	end
 	
+end
+
+
+boolFlying=false
+function script.FireWeapon1()
+	boolFlying=true
 	Signal(SIG_IDLE)
 	StartThread(HideMeWhileNotThere)
 	Turn(body,y_axis,0,0)
@@ -475,98 +491,121 @@ function script.QueryWeapon2()
 	return aimspot
 end
 
-
-
 function script.AimWeapon2( Heading, pitch )
 
-	return not boolBiting
+	return  boolBiting == false
 end
 
 function biteMe()
-	tSyncIn(jaw,36,0,0,150)		
+	tSyncIn(jaw,36,0,0,100)		
 	WaitForTurns(jaw)
 	tSyncIn(jaw,0,0,0,50)
 	WaitForTurns(jaw)
 end
 
-function closeCombatMotion()
+function timeDelayedCloseCombatDeActivate()
+	SetSignalMask(SIG_RESET)
+	Sleep(3500)
+	boolCommenceCloseCombat=false
+end
 
-		Signal(SIG_IDLE)
-		
-		
+function jump()
+speed= 0.3/90
+Turn(jumprotor,x_axis,math.rad(90),14)
+Turn(body,x_axis,math.rad(90),14)
+Turn(Tail,x_axis,math.rad(-20),12)
+end
+function land()
+Turn(jumprotor,x_axis,math.rad(0),25)
+Turn(body,x_axis,math.rad(0),25)
+Turn(Tail,x_axis,math.rad(20),12)
+
+end
+
+boolCloseCombatInProgress=false
+function closeCombatMotion()
+		boolCloseCombatInProgress= true
+		resetAll(unitID)
 		Turn(Tail,x_axis,math.rad(-25),19)
-		StartThread(walk)
+		StartThread(walkAnimation)
 		Spin(littleWulf,y_axis,math.rad(3),3)
 		crotor=rotor
 		boolBody=true
 		tSyncIn(body,0,180,0,250)	
-		while(boolCloseCombat==true) do
-			if boolBody==true then
+		
+		while(boolCommenceCloseCombat==true ) do
+			echo("closeCombatMotion")
+			
+			Turn(crotor,y_axis,math.rad(0),0)
+			
+			if boolBody==true then	
+			Turn(body,y_axis,math.rad(180),0)			
 				crotor= rotor
 				csign=-1
 				boolBody=false
 			else
+			Turn(body,y_axis,math.rad(180),0)	
 				crotor =rotor2
 				csign= 1
 				boolBody=true
 			end
-
-			StartThread(biteMe)
+			WaitForTurns(crotor,body)
+			Turn(Tail,y_axis,math.rad(-37*csign),12)
 			tSyncIn(crotor,0,90*csign,0,150)
-			tSyncIn(Head,-15,-22,-34,250)
+	
+			tSyncIn(Head,-15,-22*csign,-34,150)
+			WaitForTurns(crotor,body)
+			
+			closer=math.random(-12,12)
+			tSyncIn(crotor,0,180*csign,0,150)
+			tSyncIn(Head,closer,-22*csign,-34,150)
 			WaitForTurns(crotor,body)
 
-			close=math.random(-12,12)
-			tSyncIn(crotor,0,180*csign,0,150)
-			tSyncIn(Head,close,-22,-34,150)
-			WaitForTurns(crotor,body)			
-			
-			StartThread(biteMe)
-			tSyncIn(Head,close,0,0,500)
-			
+			tSyncIn(Head,closer,0,0,500)
+			land()
 			tSyncIn(crotor,0,270*csign,0,150)
-			WaitForTurns(crotor,body)
+			WaitForTurns(crotor,body,jumprotor)
 			
 			StartThread(biteMe)
-			tSyncIn(Head,-15,-22,-34,150)
+			tSyncIn(Head,-15,-22*csign,-34,150)
 			tSyncIn(crotor,0,360*csign,0,150)
+			if maRa() == true then jump() end
 			WaitForTurns(crotor,body)
-			Turn(crotor,y_axis,0,0)
-			WaitForTurns(crotor,body)
+
 			StartThread(biteMe)
 			
 		end
 		
-
+		Signal(SIG_WALK)
 		StopSpin(littleWulf,y_axis)
 		Turn(littleWulf,y_axis,math.rad(0),0)
 		Turn(rotor,x_axis,math.rad(0),0)
-		Turn(rotor,y_axis,math.rad(0),0)
-		WTurn(rotor2,y_axis,math.rad(0),0)
-		WTurn(rotor2,x_axis,math.rad(0),0)
-		WTurn(body,y_axis,math.rad(0),0)
+		Turn(rotor,y_axis,math.rad(0),35)
+		WTurn(rotor2,y_axis,math.rad(0),35)
+		WTurn(body,y_axis,math.rad(0),35)
 		WTurn(body,x_axis,math.rad(0),0)
-		legsDown()
+		resetT(pieces)	
+		
+		boolCloseCombatInProgress= false
 end
 
 function script.FireWeapon2()
 	Signal(SIG_IDLE)
 	Signal(SIG_RESET)
-	boolCloseCombat=true
+	Signal(SIG_DEACTIVATE_CLOSE_COMBAT)
+	boolCommenceCloseCombat=true
 	StartThread(timeDelayedCloseCombatDeActivate)
-	StartThread(closeCombatMotion)
-	
-	-- dec=math.random(0,1)
-	-- if dec==1 then
-	-- Spring.PlaySoundFile("sounds/Headcrab/hc2.wav")
-	-- else
-	-- Spring.PlaySoundFile("sounds/Headcrab/hc6.wav")
-	-- end
+	if boolCloseCombatInProgress == false then
+		StartThread(closeCombatMotion)
+	end
+
 end
 
+
 function script.Create()
+	resetAll(unitID)
 	Spring.UnitDetach(unitID)
 	StartThread(biteLoop)
-	StartThread(biteTest)
+	--StartThread(biteTest)
 
 end
