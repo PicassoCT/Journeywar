@@ -3625,17 +3625,17 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 	end
 end
 typeSize={
-	["table"] = function(id) return
+	["table"] = function(id) 
 		accumulatedSize=0
 		for k,v in pairs(id) do
 			accumulatedSize= accumulatedSize + getSizeInByte(k) + getSizeInByte(v)	
 		end
 		return accumulatedSize
 	end,
-	["number"] = function(id) return 4 end,
+	["number"] = function(id) return 8 end,
 	["bool"] = function(id) return 1 end,
 	["string"] = function(id) return string.len(id) end,
-	["function"] = function(id) return string.len(string.dump(id)) end, --Problematic: Function as string is compactor in opcode and exists only once per name)
+	["function"] = function(id) return string.len(string.dump(id)) end --Problematic: Function as string is compactor in opcode and exists only once per name)
 }
 function getSizeInByte(Element)
 	return typeSize[type(Element)](Element)
@@ -3807,9 +3807,9 @@ function echStats(headerT, dataTable, maxlength, boolNumeric)
 	for i=1,#headerT do
 		cat=cat..headerT[i]..stringBuilder(" ",math.max(0,maxLength-string.len(headerT[i]))).."|"
 	end
-	echo(stringBuilder("=",string.len(cat))
+	echo(stringBuilder("=",string.len(cat)))
 	echo(cat)
-	echo(stringBuilder("_",string.len(cat))
+	echo(stringBuilder("_",string.len(cat)))
 	for i=1,#dataTable do
 	cat="|"
 		if not boolNumeric or boolNumeric == false then
@@ -3826,7 +3826,7 @@ function echStats(headerT, dataTable, maxlength, boolNumeric)
 			echo(cat)
 		end
 	end
-	echo(stringBuilder("=",string.len(cat))
+	echo(stringBuilder("=",string.len(cat)))
 
 	
 end

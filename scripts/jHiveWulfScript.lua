@@ -105,11 +105,15 @@ pieces[#pieces]=aimspot
 
 jumprotor = piece"jumprotor"
 pieces[#pieces+1] = piece"jumprotor"
-
+fold = piece"fold"
+pieces[#pieces+1] = piece"fold"
+unfold = piece"unfold"
+pieces[#pieces+1] = piece"unfold"
+ArmorFactor= 0.1
 --auto anti-area damage behaviour
 function script.HitByWeapon(damage)
-		if true == false then
- 		  Spring.GiveOrderToUnit (Id, CMD.INSERT, {0, CMD.MOVE, 0, pdx, py, pdz}, {"alt"})
+		if boolArmored== true then
+			return math.ceil(damage*ArmorFactor)
 		end
 return damage
 end
@@ -363,7 +367,7 @@ function biteLoop()
 			end
 			
 			boolNewVictim = false
-		end 
+	
 		Sleep(50)
 	end
 end
@@ -465,7 +469,8 @@ end
 boolBiting = false
 function script.AimWeapon1( Heading, pitch )
 
-	if boolCloseCombatInProgress ==false and 
+	if boolArmored== false and
+	boolCloseCombatInProgress ==false and 
 	boolBiting== false and
 	boolFlying == false then
 		Turn(body,y_axis,-Heading,12)
@@ -502,7 +507,7 @@ end
 
 function script.AimWeapon2( Heading, pitch )
 
-	return  boolBiting == false
+	return  boolBiting == false and boolArmored== false
 end
 
 function biteMe()
@@ -610,9 +615,26 @@ function script.FireWeapon2()
 
 end
 
+boolArmored=false
+function script.Activate()
+showAll(unitID)
+Hide(unfold)
+boolArmored=false
+setSpeedEnv(unitID,1.0)
+end
+
+function script.Deactivate()
+spawnCEGatUnit(unitID, "dirt", 0, 10, 0)
+hideAll(unitID)
+Show(Tail)
+Show(unfold)
+boolArmored=true
+setSpeedEnv(unitID,0.0)
+end
 
 function script.Create()
 	resetAll(unitID)
+	Hide(unfold)
 	Spring.UnitDetach(unitID)
 	StartThread(biteLoop)
 	--StartThread(biteTest)

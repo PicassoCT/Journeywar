@@ -35,6 +35,8 @@ local unitDef = {
 	shootme=true,
 	smoothanim=false,
 	steeringmode=true,
+  onOffable = true,
+  ActivateWhenBuilt=true,
   
   	sightdistance=	50,
 	radardistance=50,

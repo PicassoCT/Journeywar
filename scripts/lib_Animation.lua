@@ -2033,7 +2033,7 @@ function resetAll(unitID)
 end
 -->Reset a Table of Pieces at speed
 
-function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate, interValStart, interValEnd)
+function resetT(tableName, speed, boolShowAll, boolWait, boolIstantUpdate, interValStart, interValEnd)
     lboolWait = boolWait or false
     lspeed = speed or 0
 	interValStart= interValStart or 1
@@ -2044,7 +2044,7 @@ function resetT(tableName, speed, ShowAll, boolWait, boolIstantUpdate, interValS
     for i = interValStart, interValEnd do
 
         reset(tableName[i], lspeed, false, boolIstantUpdate or true)
-        if ShowAll and tableName[i] then
+        if boolShowAll and tableName[i] then
             Show(tableName[i])
         end
     end

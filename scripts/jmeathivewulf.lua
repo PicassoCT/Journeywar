@@ -233,6 +233,8 @@ function inLimit(value, altVal, limit)
 end
 
 
+
+
 function emitBlood()
     for i = 1, 12, 1 do
         rand = math.random(-25, -15)
