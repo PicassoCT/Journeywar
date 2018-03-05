@@ -3624,22 +3624,21 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 		end
 	end
 end
-
-function getRandomElementRing(T)
-	dice = sanitizeRandom(1, #T)
-	for i=dice,#T do
-		if T[i] then 
-			return T[i] 
+typeSize={
+	["table"] = function(id) return
+		accumulatedSize=0
+		for k,v in pairs(id) do
+			accumulatedSize= accumulatedSize + getSizeInByte(k) + getSizeInByte(v)	
 		end
-	end
-	
-	for i=1,dice do
-		if T[i] then 
-			return T[i]
-		end
-	end
-	echo("getRandomElementRing: No elements in table")
-	assert(true==false)
+		return accumulatedSize
+	end,
+	["number"] = function(id) return 4 end,
+	["bool"] = function(id) return 1 end,
+	["string"] = function(id) return string.len(id) end,
+	["function"] = function(id) return string.len(string.dump(id)) end, --Problematic: Function as string is compactor in opcode and exists only once per name)
+}
+function getSizeInByte(Element)
+	return typeSize[type(Element)](Element)
 end
 
 -->prints a numeric table in steps
@@ -3802,9 +3801,56 @@ function echoUnitStats(id)
 	echo(h, mh, pD, "Capture Progress:" .. cP, "Build Progress:" .. bP)
 end
 
+
+function echStats(headerT, dataTable, maxlength, boolNumeric)
+	cat="|"
+	for i=1,#headerT do
+		cat=cat..headerT[i]..stringBuilder(" ",math.max(0,maxLength-string.len(headerT[i]))).."|"
+	end
+	echo(stringBuilder("=",string.len(cat))
+	echo(cat)
+	echo(stringBuilder("_",string.len(cat))
+	for i=1,#dataTable do
+	cat="|"
+		if not boolNumeric or boolNumeric == false then
+			for k,v in pairs(headerT) do
+				token= dataTable[i][k]
+				cat= cat..token..stringBuilder(" ",math.max(0,maxLength-string.len(token))).."|"
+			end
+			echo(cat)
+		else
+			for j=1, #dataTable[i] do
+				token= dataTable[i][j]
+				cat= cat..token..stringBuilder(" ",math.max(0,maxLength-string.len(token))).."|"
+			end
+			echo(cat)
+		end
+	end
+	echo(stringBuilder("=",string.len(cat))
+
+	
+end
+
 --======================================================================================
 --Section: Random 
 --======================================================================================
+function getRandomElementRing(T)
+	dice = sanitizeRandom(1, #T)
+	for i=dice,#T do
+		if T[i] then 
+			return T[i] 
+		end
+	end
+	
+	for i=1,dice do
+		if T[i] then 
+			return T[i]
+		end
+	end
+	echo("getRandomElementRing: No elements in table")
+	assert(not true)
+end
+
 
 function sanitizeRandom(lowerBound, UpperBound)
 	if lowerBound >= UpperBound then return lowerBound end

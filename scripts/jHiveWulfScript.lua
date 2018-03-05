@@ -106,6 +106,15 @@ pieces[#pieces]=aimspot
 jumprotor = piece"jumprotor"
 pieces[#pieces+1] = piece"jumprotor"
 
+--auto anti-area damage behaviour
+function script.HitByWeapon(damage)
+		if true == false then
+ 		  Spring.GiveOrderToUnit (Id, CMD.INSERT, {0, CMD.MOVE, 0, pdx, py, pdz}, {"alt"})
+		end
+return damage
+end
+
+
 ---- i know the api.. its all in my Head... brb, have to see doctor freeman
 --throws the unit grabbed by the elephant appendix
 function delayedEndWalk()
