@@ -1,7 +1,9 @@
-include "lib_UnitScript.lua"
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-include "lib_jw.lua"
-
+include "lib_Build.lua" 
+include "lib_type.lua" 
 --The Pack
 Pack = {}
 for i = 1, 9, 1 do
@@ -215,24 +217,29 @@ function walkAnimations()
     end
 
     while boolMoving == true or boolCircling == true do
-        for i = 1, #Pack, 1 do
-            --even legs forward
-
-            TurnP(Pack[i][4], -2, 0, -4, 9)
-
-            TurnP(Pack[i][5], -14, 17, 6, 9)
-            TurnP(Pack[i][6], 14, 2, 7, 9)
-        end
-        Sleep(450)
-
-        for i = 1, #Pack, 1 do
-            --even legs forward
-            TurnP(Pack[i][4], 2, 0, 4, 9)
-            TurnP(Pack[i][6], -14, -14, 7, 9)
-            TurnP(Pack[i][5], 13, -5, 6, 9)
-        end
-        Sleep(450)
+		circleMovementPack()
     end
+end
+
+function circleMovementPack()
+
+        for i = 1, #Pack, 1 do
+            --even legs forward
+
+            TurnPiece(Pack[i][4], -2, 0, -4, 9)
+
+            TurnPiece(Pack[i][5], -14, 17, 6, 9)
+            TurnPiece(Pack[i][6], 14, 2, 7, 9)
+        end
+        Sleep(450)
+
+        for i = 1, #Pack, 1 do
+            --even legs forward
+            TurnPiece(Pack[i][4], 2, 0, 4, 9)
+            TurnPiece(Pack[i][6], -14, -14, 7, 9)
+            TurnPiece(Pack[i][5], 13, -5, 6, 9)
+        end
+        Sleep(450)
 end
 
 function PackInMotion()
@@ -244,8 +251,10 @@ function PackInMotion()
     local isPieceInTurn = Spring.UnitScript.IsInTurn
 
     while (true) do
+		  
         for i = 1, #Pack, 1 do --itterate over the Pack
             if isPieceInTurn(Pack[i][2], y_axis) == false then
+          
                 dego = math.random(Pack[i][1], Pack[i][1] + 179)
                 Turn(Pack[i][2], y_axis, math.rad(dego), 3)
                 Turn(Pack[i][3], y_axis, math.rad(-dego), 3)
@@ -550,6 +559,41 @@ function moveThing()
     end
 end
 
+function turnDetector()
+while true do
+	keepDogsRelativeResting(500) 
+
+
+end
+
+end
+
+function showPack(num)
+ Show(Pack[num][4]) 
+ Show(Pack[num][4+1]) 
+ Show(Pack[num][4+2]) 
+
+end
+
+function hidePack(num)
+ Hide(Pack[num][4]) 
+ Hide(Pack[num][4+1]) 
+ Hide(Pack[num][4+2]) 
+
+end
+packNumber=1
+function packHideAndShow()
+	while true do
+
+		for i=9,packNumber,-1 do
+		hidePack(i)
+		end
+		for i=1,packNumber,1 do
+		showPack(i)
+		end
+		Sleep(300)
+	end
+end
 
 function layDownIdle()
     Signal(SIG_PACK)
@@ -802,26 +846,37 @@ function devourMotion(px2, py2, pz2 )
     local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID)) / 32768 * math.pi
 
     Turn(deathpivot, y_axis, heading, 9)
-	Spring.spawnCEG("bloodspray",px2,py2+15,pz2,0,1,0,50,0)
+	Spring.SpawnCEG("bloodspray",px2,py2+15,pz2,0,1,0,50,0)
 
 	for i=1,6 do
-		tSynIn(Head,math.random(25,35),0,0,350)
-		tSynIn(jaw,math.random(35,45),0,0,350)
+		tSyncIn(Head,math.random(25,35),0,0,350)
+		tSyncIn(jaw,math.random(35,45),0,0,350)
 		Sleep(350)
-		tSynIn(jaw,0,0,0,350)
+		tSyncIn(jaw,0,0,0,350)
 		EmitSfx(jaw,1024)
-		tSynIn(Head,math.random(0,15),0,0,350)
+		tSyncIn(Head,math.random(0,15),0,0,350)
 		Sleep(200)
 		
 		for jew=1,3 do
-			tSynIn(jaw,math.random(5,10),0,0,150)
+			tSyncIn(jaw,math.random(5,10),0,0,150)
 			WaitForTurns(jaw)		
-			tSynIn(jaw,math.random(0,3),0,0,150)
+			tSyncIn(jaw,math.random(0,3),0,0,150)
 			WaitForTurns(jaw)		
 		end		
 	end
 end
 
+function keepDogsRelativeResting(times)
+heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
+	for i=1,times, 3 do			
+		heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
+		for k=1,#TableOfPieceGroups["wulfRotate"] do
+		Turn(TableOfPieceGroups["wulfRotate"][k],y_axis, -heading , 15)
+		Sleep(3)
+		end
+	end
+end
+hiveHoundDefID= UnitDefNames["jhivewulf"].id
 
 devourableTypes= getDevourableUnitTypeTable(UnitDefNames)
 function checkForHiveHoundsToDissolve()
@@ -837,11 +892,14 @@ function checkForHiveHoundsToDissolve()
 			if id == unitID then return end
 			
 			defID= spGetUnitDefID(id)
-			if defID and devourableTypes[defID] then
+			if defID and devourableTypes[defID] or  (
+			defID ==  hiveHoundDefID and
+			Spring.GetUnitExperience(id) > 0.2)
+			then
 					hp, maxhp= Spring.GetUnitHealth(id)
 					tempH, _, _, _, _, _ = Spring.GetUnitHealth(unitID)
                     Spring.SetUnitHealth(unitID, tempH + math.ceil(healthBenefitEating*(hp/maxhp)))
-					ox,oy,oz=SPring.GetUnitPosition(ox,oy,oz)
+					ox,oy,oz=Spring.GetUnitPosition(id)
 					Spring.DestroyUnit(id, false, true)
 					boolAteSomething= true
 			end
@@ -907,34 +965,40 @@ function bigMoma()
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
 	local spGetUnitIsDead = Spring.GetUnitIsDead
 	Sleep(100)
+	counter= 0
     --Spring.SetUnitMoveGoal(monsterTable[i],ex,ey,ez)
     while (true) do
         --warmode
+		counter=(counter+1%22)
+		activePuppys=0
         if boolAttackTargetDefined == true then
             -- itterate over the HiveHoundTable
             if boolOnlyOnce == false then
                 StartThread(huntSound)
             end
-
+		
             for i = 1, hiveHoundMax, 1 do
                 --if the UnitStillExists, set it towards the enemysCoords
                 if GG.HiveHoundTable[teamID][unitID][i] ~= nil and Spring.GetUnitIsDead(GG.HiveHoundTable[teamID][unitID][i][1]) == false then
                     if spIsValidUnitID(GG.HiveHoundTable[teamID][unitID][i][1]) == true then
                         spSetUnitMoveGoal(GG.HiveHoundTable[teamID][unitID][i][1], ex, ey, ez)
                     end
+					activePuppys=activePuppys+1
                 else
                     --else respawn the unit and set the coords accordingly
                     GG.HiveHoundTable[teamID][unitID][i] = {}
                     GG.HiveHoundTable[teamID][unitID][i][1] = spCreaUnit("jhivewulf", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
                     spSetUnitMoveGoal(GG.HiveHoundTable[teamID][unitID][i][1], ex, ey, ez)
-
+					activePuppys=activePuppys+1
                 end
             end
         else 
 			gather()		
            checkForHiveHoundsToDissolve()
         end
-      
+		if counter % 4 == 0 then
+			packNumber=math.max(math.min(packNumber+1,#Pack-activePuppys),1)
+		end
         Sleep(650)
     end
 end
@@ -955,8 +1019,9 @@ function gather()
 					)
 end
 
-
+TableOfPieceGroups={}
 function script.Create()
+ TableOfPieceGroups = getPieceTableByNameGroups(false, true)
 StartThread(delayedThreadStart)
 end
 
@@ -965,6 +1030,7 @@ function delayedThreadStart()
     StartThread(bigMoma)
     StartThread(danglinDangle)
     StartThread(showAndAgePuppy)
+    StartThread(packHideAndShow)
 end
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1215,12 +1281,49 @@ end
 
 function script.Killed(recentDamage, maxHealth)
 	gather()
-    Turn(deathpivot, z_axis, math.rad(75), 37)
-	
+	setSpeedEnv(unitID,0)
+	tP(fUpL,math.random(10,25),0,-24,37)
+	tP(fUpR,math.random(10,25),0, 24,37)	
+	tP(bUpL,math.random(-25,-10),0,-24,37)
+	tP(bUpR,math.random(-25,-10),0, 24,37)
     for i = 1, 24, 1 do
         EmitSfx(jaw, 1024)
+		tSyncIn(deathpivot, 0,0,((180/24)*i), 50)
+		mSyncIn(deathpivot,0,(39/24)*i,0, 50)
+		tP(fUpL,math.random(10,25),0,24,37)
+		tP(fUpR,math.random(10,25),0, -24,37)	
+		tP(bUpL,math.random(-25,-10),0,24,37)
+		tP(bUpR,math.random(-25,-10),0, -24,37)
+		WaitForTurns(deathpivot)
+		WaitForMoves(deathpivot)
+       
+    end
+	tP(BHip,0, math.random(-33,33),math.random(-20,20),6)
+	tP(FHip, math.random(-12,12),math.random(-53,53),0,6)
+    for i = 1, 4, 1 do
+        EmitSfx(jaw, 1024)
+		tP(fUpL,math.random(10,25),0,0,37)
+		tP(fUpR,math.random(10,25),0, 0,37)	
+		tP(bUpL,math.random(-25,-10),0,0,37)
+		tP(bUpR,math.random(-25,-10),0, 0,37)	
+
+		tP(ffootL,math.random(90,110),0,0,37)
+		tP(ffootL,math.random(90,110),0, 0,37)	
+		tP(bfootL,math.random(90,110),0,0,37)
+		tP(bfootR,math.random(90,110),0, 0,37)
         Sleep(250)
     end
-
+	tP(FHip,0,math.random(-53,53),0,6)
+	tSyncIn(deathpivot, 0,0, (75), 350)
+	tP(fUpL,math.random(10,25),0,-24,5)
+	tP(fUpR,math.random(10,25),0, 24,5)	
+	tP(bUpL,math.random(-25,-10),0,-24,5)
+	tP(bUpR,math.random(-25,-10),0, 24,5)
+	mSyncIn(deathpivot,29,0, 0, 350)
+	WaitForTurn(deathpivot,z_axis)
+	 Spring.CreateUnit("jhivewulf", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
+	 Spring.CreateUnit("jhivewulf", ux + math.ceil(math.random(-12, 12)), uy, uz + math.ceil(math.random(-12, 12)), 0, teamID)
+	Sleep(3000)
+	  createCorpseJUnitBig(recentDamage)
     return 0
 end

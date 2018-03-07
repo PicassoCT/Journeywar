@@ -1,4 +1,5 @@
 include "lib_UnitScript.lua"
+include "createCorpse.lua"
 
 --pieces
 lavawheel1 = piece "lavawheel1"

@@ -344,6 +344,7 @@ function biteLoop()
 				boolVictimIsDead = detachOnDeath(biteVictim)
 				
 				if boolVictimIsDead == true then boolFullTime = false; break; end
+				if boolArmored == true then boolFullTime=false; break; end
 			end
 			reset(shakeSpot,25)
 			boolBiting= false
@@ -364,8 +365,9 @@ function biteLoop()
 					setMeatHiveHoundParent(unitID, jhiveHoundMeatID)
 					Spring.DestroyUnit(unitID, true, true)
 				end
+		
 			end
-			
+				boolFullTime=false
 			boolNewVictim = false
 	
 		Sleep(50)
@@ -621,6 +623,7 @@ showAll(unitID)
 Hide(unfold)
 boolArmored=false
 setSpeedEnv(unitID,1.0)
+
 end
 
 function script.Deactivate()
@@ -630,6 +633,9 @@ Show(Tail)
 Show(unfold)
 boolArmored=true
 setSpeedEnv(unitID,0.0)
+boolCommenceCloseCombat=false
+Signal(SIG_IDLE)
+Signal(SIG_WALK)
 end
 
 function script.Create()

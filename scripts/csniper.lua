@@ -60,6 +60,7 @@ local boolUnitLoaded = false
 local ropestarts={}
 local sensors={}
 rope={}
+
 for i=1,12,1 do
 
 	doop="rs"..i
@@ -70,8 +71,6 @@ for i=1,12,1 do
 	rope[i]=piece(aNewRope)
 end
 local pi=math.pi
-
-
 
 local spGetUnitPiecePosDir=Spring.GetUnitPiecePosDir
 function acquireVehicleDegree()
@@ -174,7 +173,6 @@ function dustEmit(boolIsABioUnit)
 		Sleep(nap)
 	end
 end
-
 
 function Neg(val)
 	if val<=0 then return val end
@@ -306,9 +304,6 @@ function detDegree(preInterVallStart,interVallStart,interVallEnd)
 end
 
 tempVar=1
-
-
-
 heightTable={}
 nPrevDegTable={}
 
@@ -332,9 +327,6 @@ function ropeRelativeResting()
 
 end
 
-
-
-
 --limits ropephysix instances
 function checkSnipers()
 	local snipersTotal= GG.GlobalSniperRopeSimTable.Ids
@@ -353,13 +345,11 @@ function checkSnipers()
 	return boolAltered
 end
 
-
 boolIHaveSimActive = false
 function ourOnlyRope (passengerID)
 	SetSignalMask(SIG_ROPE)
 	local 	passengerDefID=Spring.GetUnitDefID(passengerID)
-	
-	
+		
 	boolBioUnit = false
 	if isInfantry(passengerDefID)==true or passengerDefID == UnitDefNames["gjbigbiowaste"].id or 	passengerDefID == UnitDefNames["gjmedbiogwaste"].id then
 		boolBioUnit=true
@@ -372,8 +362,7 @@ function ourOnlyRope (passengerID)
 		Sleep(50)
 	end
 	
-	Turn(bloodemt,y_axis,math.rad(0),0)
-	
+	Turn(bloodemt,y_axis,math.rad(0),0)	
 end
 
 local fourPieces= {}
@@ -382,7 +371,6 @@ for i=1,4 do
 	fourPieces[i]= piece("fp"..i)
 	fourPoints[i]= {}
 end
-
 
 transportableDefIds= getRecycleableUnitTypeTable()
 infantryTypeTable= getInfantryTypeTable()
@@ -428,9 +416,7 @@ function script.TransportDrop(passengerID, x, y, z)
 	
 	SetUnitValue(COB.BUSY, 0)
 end
-
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 local function spamFilter()
 	SetSignalMask(SIG_SPAM)
 	
@@ -532,7 +518,6 @@ function TargetInScope()
 	boolTargetInScope = false
 	
 end
-
 
 boolMoving= false
 adaptionfactor=0.0
@@ -674,7 +659,6 @@ Sleep(5000)
 boolEmit=true	
 end
 
-
 function constLazzorsEmit()
 	Sleep(1500)
 	local lEmitSfx = EmitSfx
@@ -708,6 +692,7 @@ function retractRopePercent(opercent, speed)
 		Hide(rope[(i)])
 	end
 end
+
 function expandRopePercent(percent, speed)
 	percent = math.ceil((percent/100)*12)
 	tMinus=166

@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL4 ",
 		layer = 1,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -29,7 +29,7 @@ if gadgetHandler:IsSyncedCode() then
 				
 			else
 				newSize= getSizeInByte(v)
-				growthRate[k].factor =  (newSize/growthRate[k]oldSize)-1
+				growthRate[k].factor =  (newSize/growthRate[k].oldSize)-1
 				growthRate[k].oldSize =  newSize			
 			end		
 		end	
@@ -45,7 +45,7 @@ if gadgetHandler:IsSyncedCode() then
 					growthRateEnv[k] = {oldSize= newSize, factor=1.0 }					
 				else
 					newSize= getSizeInByte(env)
-					growthRateEnv[k].factor =  (newSize/growthRateEnv[k]oldSize)-1
+					growthRateEnv[k].factor =  (newSize/growthRateEnv[k].oldSize)-1
 					growthRateEnv[k].oldSize =  newSize			
 				end		
 			end	
@@ -62,11 +62,12 @@ if gadgetHandler:IsSyncedCode() then
 		end
 	
 	
-	if frame % 900  == 0 and GG then
-		echStats({"GG.Key", "Increase Percent"}, growthRate, 24, false)
-	end
-	if frame % 900  == 0 and GG then
-		echStats({"Unit.id", "Increase Percent"}, growthRateEnv, 24, false)
+		if frame % 900  == 0 and GG then
+			echStats({"GG.Key", "Increase Percent"}, growthRate, 24, false)
+		end
+		if frame % 900  == 0 and GG then
+			echStats({"Unit.id", "Increase Percent"}, growthRateEnv, 24, false)
+		end
 	end
 
 

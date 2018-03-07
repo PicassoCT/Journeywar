@@ -411,6 +411,7 @@ function getDevourableUnitTypeTable()
         [UnitDefNames["gjmeatballs"].id] = true,
         [UnitDefNames["gshit"].id] = true,
         [UnitDefNames["jmeathivewulf"].id] = true
+       
     }
 
     return TransportTable
