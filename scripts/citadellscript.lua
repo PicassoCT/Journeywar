@@ -4,12 +4,12 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua"
 include "lib_jw.lua"
-
+maxDamageSuicide=1200
+maxDistanceSuicideDamage=512
 SHIELDRADIUS = 850
 SHIELDNUMBER = 6
 SHIELD_COST_REFLECT_UNIT = 5
 ENERGY_COST_REFLECT_UNIT = 35
-
 boolPressedButtonTwice = false
 PortalEmit = piece "PortalEmit"
 elCid = piece "elCid"
@@ -25,6 +25,7 @@ debris4 = piece "debris4"
 debris5 = piece "debris5"
 cloudspin = piece "cloudspin"
 sparks = {}
+local spCreateUnit = Spring.CreateUnit
 for i = 1, 27, 1 do
     sparks[i] = {}
     spark = "sparkOmotion" .. i
@@ -178,7 +179,7 @@ function reInforCements()
         end
         Spring.PlaySoundFile("sounds/citadell/reinforcements.wav",ANOUNCE_LOUDNESS)
 
-        local spCreateUnit = Spring.CreateUnit
+
         Show(cishadersp)
         Move(PortalEmit, y_axis, 1200, 0, true)
 
@@ -242,21 +243,21 @@ function FireCloud()
     unitX, unitY, unitZ = Spring.GetUnitPosition(unitID)
     local spSpawnCEG = Spring.SpawnCEG
     while (boolFireCloud == true) do
-        local CemitX, CemitY, CemitZ = spGetUnitPiecePosition(unitID, piece "ciPorCloud1")
-        spSpawnCEG("citadellfire", CemitX + unitX, CemitY + unitY - down, CemitZ + unitZ, 0, 1, 0, 50, 0)
-        sleePhe = math.random(70, 160)
-
-
-        local CemitX, CemitY, CemitZ = spGetUnitPiecePosition(unitID, piece "ciPorCloud2")
-        spSpawnCEG("citadellfire", CemitX + unitX, CemitY + unitY - down, CemitZ + unitZ, 0, 1, 0, 50, 0)
-        local CemitX, CemitY, CemitZ = spGetUnitPiecePosition(unitID, piece "ciPorCloud3")
-        spSpawnCEG("citadellfire", CemitX + unitX, CemitY + unitY - down, CemitZ + unitZ, 0, 1, 0, 50, 0)
-
-        local CemitX, CemitY, CemitZ = spGetUnitPiecePosition(unitID, piece "ciPorCloud3")
-        spSpawnCEG("citadellfire", CemitX + unitX, CemitY + unitY - down, CemitZ + unitZ, 0, 1, 0, 50, 0)
-        local CemitX, CemitY, CemitZ = spGetUnitPiecePosition(unitID, piece "ciPorCloud4")
-        spSpawnCEG("citadellfire", CemitX + unitX, CemitY + unitY - down, CemitZ + unitZ, 0, 1, 0, 50, 0)
-        Sleep(120)
+		b={}; v={}
+		b.x,b.y,b.z = Spring.GetUnitPiecePosDir(unitID, cifireclou)
+		b.x,b.z=unitX,unitY
+		
+		process(TableOfPieceGroups["ciPorCloud"],
+				function(pname)
+					v.x,v.y,v.z = Spring.GetUnitPiecePosDir(unitID, ciPorCloud1)
+					v.x,v.y,v.z = v.x - b.x,v.y-b.y,v.z -b.z
+					v= normVector(v)
+					local CemitX, CemitY, CemitZ = spGetUnitPiecePosition(unitID,pname)
+					spSpawnCEG("citadellfire", CemitX + unitX, CemitY + unitY - down, CemitZ + unitZ,v.x,v.y,v.z, 50, 0)
+					v={}
+				end
+				)
+		     Sleep(800)
     end
 end
 
@@ -642,8 +643,10 @@ function script.Deactivate()
     StartThread(HideShield)
     return 0
 end
-
+TableOfPieceGroups={}
 function script.Create()
+	Hide(citaim)
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
 	Spring.SetUnitNoSelect(unitID,true)
 	 Move(cloudspin,y_axis,1500,0,true)
     Move(sparkcloudemit, y_axis, 0, 0)
@@ -732,8 +735,8 @@ function fireflakeBurst()
 end
 
 function debrisBurst()
-    rand = math.random(12, 24)
-    for i = 0, rand, 1 do
+
+    for i = 0, math.random(12, 24), 1 do
 
         Show(debris1)
         Show(debris2)
@@ -755,37 +758,38 @@ function debrisBurst()
     end
 end
 
-function script.Killed(recentDamage, maxHealth)
-
-    StartThread(FireCloud)
-    if GG.LandScapeT then
-        GG.LandScapeT.setAreaEffect(cx, cz, SHIELDRADIUS, setAreaFireShielded)
-    end
-    StartThread(fireflakeBurst)
+function explodeArmor()
+	process(TableOfPieceGroups["AdArm"],
+				function(id)
+					Explode(id, SFX.FALL)
+				end
+				)
+end
+function dieingCitadel(recentDamage)
+	StartThread(FireCloud)
+	StartThread(fireflakeBurst)
     StartThread(debrisBurst)
+	explodeArmor()
+	x,y,z=Spring.GetUnitBasePosition(unitID)
+	 spCreateUnit("gforrestfiredecalfactory", x,y,z, 0, teamID)
+
+	jw_AddTerrainDeformation(x, z, 128, 16/128)
+	jw_AddTerrainDeformation(x, z, 64, -64/64)
     Spin(cifireclou, y_axis, math.rad(-72))
-    Spring.UnitScript.Show(cifireclou)
-
+    Show(cifireclou)
+	
     Spin(cifireclo0, y_axis, math.rad(-35))
-    Spring.UnitScript.Show(cifireclo0)
+    Show(cifireclo0)
     Spin(cifireclo1, y_axis, math.rad(-12))
-    Spring.UnitScript.Show(cifireclo1)
-
-
-
-    Spring.UnitScript.Show(shater)
+    Show(cifireclo1)
+    Show(shater)
     Explode(shater, SFX.SHATTER)
-    Turn(citadelcor, z_axis, math.rad(15), math.rad(4))
-    WaitForTurn(citadelcor, z_axis)
-    Turn(citadelcor, z_axis, math.rad(30), math.rad(10))
-    WaitForTurn(citadelcor, z_axis)
-    Turn(citadelcor, z_axis, math.rad(45), math.rad(14))
-    WaitForTurn(citadelcor, z_axis)
-    Turn(citadelcor, z_axis, math.rad(90), math.rad(16))
-    WaitForTurn(citadelcor, z_axis)
-    Spring.UnitScript.Show(cidustemit)
+	Sleep(12000)
+	boolFireCloud = false
+	  
+    Show(cidustemit)
     Explode(cidustemit, SFX.SHATTER)
-    Explode(citadel, SFX.SHATTER)
+	explodeArmor()
     Explode(citurret2, SFX.FIRE)
     Explode(citurret3, SFX.FIRE)
     Explode(citurret04, SFX.FIRE)
@@ -797,24 +801,67 @@ function script.Killed(recentDamage, maxHealth)
         EmitSfx(citadel, 1033)
         Sleep(math.ceil(500 / i))
     end
-    T = {}
-    T = getAllInCircle(cx, cz, 256, unitID, teamID)
-    DestroyTable(T,
-        false,
-        true,
+	 StartThread(portalStormWave, unitID)
+	 
+	 for i=1,15 do
+		spawnCEGatUnit(unitID, "citadellexplosion", 0, 10+ i, 0)
+		Sleep(150-(i*10))
+	 end
+	 explodeArmor()
+	cx,cy,cz=Spring.GetUnitPosition(unitID)
+    T = getAllInCircle(cx, cz, maxDistanceSuicideDamage, unitID, teamID)
+	process(T,
+		function(id)
+			dist= clamp(0,(distanceUnitToUnit(id,unitID))/maxDistanceSuicideDamage,1)
+			damageToDeal= math.ceil(dist * maxDamageSuicide)
+			Spring.AddUnitDamage(id, damageToDeal)
+		end			
+		)
+		
+	explodeArmor()  
 
-        function(id)
-            hp = Spring.GetUnitHealth(id)
-            if hp > 800 then
-                return false
-            else
-                return true
-            end
-        end,
-        unitID)
+end
 
-    boolFireCloud = false
-    -- --<RubbleScript>
+
+
+function crumblingCitadell(recentDamage)
+	for i=1,10,1 do
+		process(TableOfPieceGroups["AdArm"],
+				function(id)
+					Explode(id, SFX.FALL)
+				end
+				)
+			
+		percent= math.sin((math.pi/10)*i)
+		tdeg= percent*90
+		tSyncIn(citadelcor, 0,0, tdeg,math.ceil(1000*percent))
+		WaitForTurns(citadelcor)
+	end
+end
+
+function script.Killed(recentDamage, maxHealth)
+
+	boolSuicide = ( Spring.GetUnitHealth(unitID)-(recentDamage or 0) < 0) 
+	x,y,z=Spring.GetUnitBasePosition(unitID)
+	
+	if boolSuicide then 
+		dieingCitadel(recentDamage)
+	else
+		crumblingCitadell(recentDamage)
+	end
+	
+  
+    if GG.LandScapeT then
+        GG.LandScapeT.setAreaEffect(cx, cz, SHIELDRADIUS, setAreaFireUnShielded)
+    end
+   
+   rubbleScript(recentDamage)
+   
+    return 0
+end
+
+function rubbleScript(recentDamage)
+  -- --<RubbleScript>
     if recentDamage > 1 then
         --This script spawns the rubbleHeap. If you too drunk to understad, just copy and paste into the Killed function
         spx, spy, spz = Spring.GetUnitPosition(unitID)
@@ -826,7 +873,7 @@ function script.Killed(recentDamage, maxHealth)
         --<ciVillian>
         spx, spy, spz = Spring.GetUnitPosition(unitID)
         teamID = Spring.GetGaiaTeamID()
-        x = math.random(1, 5)
+        x = math.random(1, 3)
         for i = 1, x, 1 do
             maRa = math.random(-1, 1)
             heapID = Spring.CreateUnit("gCiVillian", spx + (150 * maRa), spy, spz + (150 * maRa), 1, teamID)
@@ -844,9 +891,7 @@ function script.Killed(recentDamage, maxHealth)
         Spring.SetUnitNeutral(heapID, true)
     end
     --</RubbleScript>
-    return 0
 end
-
 -------- BUILDING---------
 function script.StopBuilding()
     SetUnitValue(COB.INBUILDSTANCE, 0)
@@ -865,24 +910,16 @@ end
 Spring.SetUnitNanoPieces(unitID, { cinanoemit1 })
 
 function script.AimFromWeapon1()
-    return ciscanemi0
+    return citaim
 end
 
 function script.QueryWeapon1()
-    rand = math.random(0, 2)
-    if rand == 0 then
-        return cinanoemit1
-    end
-
-    if rand == 1 then
-        return cinanoemit2
-    end
-    if rand == 2 then
-        return cinanoemit3
-    end
+	return citaim
 end
 
+citaim=piece"citaim"
 function script.AimWeapon1(heading, pitch)
+	Turn(citaim,y_axis,heading,0)
     --aiming animation: instantly turn the gun towards the enemy
     --Turn(turret, y_axis, heading)
 

@@ -100,9 +100,7 @@ end
 function script.HitByWeapon(x, z, weaponDefID, damage)
 	hp,mp=Spring.GetUnitHealth(unitID)
 	if hp < mp*0.5 then
-		Explode(flesh, SFX.FALL +SFX.NO_HEATCLOUD)
-		jhiveHoundID=  transformUnitInto(unitID, "jHiveWulf")
-		setMeatHiveHoundParent(unitID, jhiveHoundID, nil, false)
+		Explode(flesh, SFX.FALL +SFX.NO_HEATCLOUD)		
 	end
 return damage
 end
