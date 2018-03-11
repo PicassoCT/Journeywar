@@ -304,8 +304,6 @@ local minSpeed = 0.43
 local headTolerance = 1.00002
 local headChangeTolerance = 40
 local negativeTolerance = 2 - headTolerance
-local boolIsTurning = false
---local boolConstantTurn=false
 local unitTeam = Spring.GetUnitTeam(unitID)
 --ThreadStarter
 virginBool = true
@@ -329,7 +327,7 @@ local SMove = 4 -- Situation Train is moving
 
 --SignalMaks
 SIG_MOVE = 2
-SIG_MDETEC = 4
+SIG_ADJUSTPILLARHEIGTH = 4
 SIG_PIL1 = 8
 SIG_PIL2 = 16
 SIG_PIL3 = 32
@@ -1039,7 +1037,7 @@ end
 
 --this OS-Loop gets the heightdifference, and moves the train up or down
 function AdjustPillarHeight()
-
+	SetSignalMask(SIG_ADJUSTPILLARHEIGTH)
 
     while (true) do
         --- -Spring.Echo("Pillar Loop Reportin In")
@@ -1119,9 +1117,6 @@ function movMent()
             while lgetConstantMove() == true and currentSpeed > 0.05 do -- added the currentSpeed compare to avoid it getting into Movement with zeroSpeed
 
                 newSpeed = speedTransForm(false, currentSpeed)
-
-
-
 
                 if boolFinnish == true or lspeedCompare(speedOfOld, newSpeed, speedCompareTolerance) == false then
                     --- -Spring.Echo("Firing Off New Pillar",boolFinnish)
@@ -1314,12 +1309,13 @@ function sitTurn(previousSituation)
         --therefore no Situation Alteration required
     end
 
-
+	
     while ((getConstantTurn() == true and getConstantMove() == false)) == true and currentSpeed < minSpeed do --as long as Turn detector doesent see a way out
         --- -Spring.Echo("SitTurn")
         Sleep(175)
         comonPillarSpeed = lspeedTransForm(true, 6, 1) --fixxedSpeed
     end
+	
 end
 
 --function: Object represents the MovementSituation and the Transition to it
@@ -1502,58 +1498,117 @@ function script.StopMoving()
 end
 
 
-function script.Killed()
-
-    if boolYouBroughtThisOnYourself == true then return 0 end
-
-    if getConstantMove() == true then
-        for i = 5, 12, 1 do
-            Hide(usul[1][i])
-            Hide(usul[5][i])
-        end
-        Turn(uCanTurnMeOn, z_axis, math.rad(-25), 17)
-        Turn(trainSpotThere, z_axis, math.rad(58), 27)
-        Show(cRailTurn)
-        Move(cCTrain0, z_axis, 92, 30)
-        for i = 5, 12, 1 do
-
-            Explode((usul[1][i]), SFX.FIRE)
-            Explode((usul[5][i]), SFX.FIRE)
-        end
-        for i = 1, 6, 1 do
+function deathAnimation()
+		leadTrain= TableOfPieceGroups["cCTrain"][0]
+		dex=math.random(2,6)
+        for i = 1, dex, 1 do
             for a = 2, 12, 1 do
-                Explode((usul[i][a]), SFX.FALL)
-                Sleep(120)
+                Explode((usul[i][a]), SFX.SHATTER)
             end
         end
-        WaitForMove(cCTrain0, z_axis)
-    else
-        for i = 5, 12, 1 do
-            Explode((usul[1][i]), SFX.FIRE)
-            Explode(usul[5][i], SFX.FIRE)
-        end
-        for i = 1, 6, 1 do
-            for a = 2, 12, 1 do
-                Explode((usul[i][a]), SFX.FALL)
-            end
-        end
+			for i = dex, 6, 1 do
+			foldPillar(i, SStop, true)
+		end
 
-        createCorpseCUnitGeneric(recentDamage)
-    end
-
-
-    Explode(center, SFX.FALL)
-    Explode(cCTrain0, SFX.FALL)
-    Explode(cCTrain01, SFX.FALL)
-    Explode(cCTrain02, SFX.FALL)
-    Explode(cCTrain03, SFX.FALL)
-    Explode(cRailTurn, SFX.FALL)
+		
+		process(TableOfPieceGroups["cCTrain"],
+				function(id)
+						if id ~= leadTrain then
+							tSyncIn(id, 0,-5,15,	1000)
+						end
+					end
+					)
+					
+					
+		movement=0
+		if getConstantMove() == true then
+		movement=10
+		end
+		tSyncIn(leadTrain,0,0,65, 1000)
+		mSyncIn(leadTrain,-15,-14, movement*5,1000)
+		    --fold all the pillars in
+	
+		
+		WaitForMoves(leadTrain)
+		
+		process(TableOfPieceGroups["cCTrain"],
+				function(id)
+						if id ~= leadTrain then
+							tSyncIn(id, 0,0,0,	1000)										
+						end
+					end
+					)
+					
+			tx,ty,tz=Spring.GetUnitPiecePosDir(unitID,leadTrain)
+	
+			gh=Spring.GetGroundHeight(tx,tz)
+			diffY= (ty-gh)+20
+			mSyncIn(leadTrain,-15,-diffY,movement*10,750)
+			tSyncIn(leadTrain,0,0,90, 1000)
+			WaitForMoves(leadTrain)
+			process(TableOfPieceGroups["cCTrain"],
+				function(id)spawnCegAtPiece(unitID,id,"dirt",15)end
+					)
+			WaitForMoves(leadTrain)
+			for i=1,5 do
+				mP(leadTrain,-15,-diffY,movement*10 +i*10+(i*10)-i*1.41,100)
+			process(TableOfPieceGroups["cCTrain"],
+				function(id)spawnCegAtPiece(unitID,id,"dirt",15)end
+					)
+				
+				Sleep(100)
+			end
+			
+			process(TableOfPieceGroups["cCTrain"],
+				function(id)
+					tx,ty,tz=Spring.GetUnitPiecePosDir(unitID,id)
+					gh=Spring.GetGroundHeight(tx,tz)
+					if ty - 5 > gh then
+						Hide(id)
+						Explode(id,SFX.FIRE+SFX.FALL)
+						spawnCegAtPiece(unitID,id,"dirt",15)end
+					end
+					)
+			
+		
+		
 end
 
+function killedAnimation()
+--TODO
+	Signal(SIG_ADJUSTPILLARHEIGTH)
+
+
+     deathAnimationStanding()
+  
+
+
+end
+function script.Killed()
+
+	killedAnimation()
+    createCorpseCUnitGeneric(recentDamage)
+
+end
+
+function deathAnimationTest()
+while true do
+Sleep(1000)
+showAll(unitID)
+resetAll(unitID)
+Sleep(1000)
+killedAnimation()
+Sleep(10000)
+end
+end
+
+TableOfPieceGroups = {}
 --create Script: called when the train is created/ similar to all other vehicels in Spring
 function script.Create()
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
     initPieces()
     StartThread(healWhileStandingStill)
+    StartThread(deathAnimationTest)
     Hide(cRailTurn) --hides the Piece of Railway that turns, when the train goes into turnmode
     for i = 1, 7, 1 do
         Hide(ctgoresub[i])
