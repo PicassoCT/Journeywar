@@ -1499,6 +1499,9 @@ end
 
 
 function deathAnimation()
+	
+	boolMoving= getConstantMove() == true
+	setSpeedEnv(unitID,0)
 		leadTrain= TableOfPieceGroups["cCTrain"][0]
 		dex=math.random(2,6)
         for i = 1, dex, 1 do
@@ -1521,8 +1524,8 @@ function deathAnimation()
 					
 					
 		movement=0
-		if getConstantMove() == true then
-		movement=10
+		if boolMoving==true then
+			movement=10
 		end
 		tSyncIn(leadTrain,0,0,65, 1000)
 		mSyncIn(leadTrain,-15,-14, movement*5,1000)
@@ -1534,7 +1537,7 @@ function deathAnimation()
 		process(TableOfPieceGroups["cCTrain"],
 				function(id)
 						if id ~= leadTrain then
-							tSyncIn(id, 0,0,0,	1000)										
+							tSyncIn(id, 0,5,-15,	1000)										
 						end
 					end
 					)
@@ -1550,24 +1553,29 @@ function deathAnimation()
 				function(id)spawnCegAtPiece(unitID,id,"dirt",15)end
 					)
 			WaitForMoves(leadTrain)
+			
+			if boolMoving == true then
 			for i=1,5 do
 				mP(leadTrain,-15,-diffY,movement*10 +i*10+(i*10)-i*1.41,100)
-			process(TableOfPieceGroups["cCTrain"],
-				function(id)
-					spawnCegAtPiece(unitID,id,"dirt",15)					
-				end
-					)
-			process(
-					getAllNearPiece(unitID,leadTrain,25),
+				
+				process(TableOfPieceGroups["cCTrain"],
 					function(id)
-						if unitID ~= id then
-							Spring.AddUnitDamage(id,450)
-								    for i = 1, 7, 1 do										
-										Explode(ctgoresub[i], SFX.FALL)
-										EmitSfx(ctgoresub[i], 1025)									
-									end
+						spawnCegAtPiece(unitID,id,"dirt",15)					
+					end
+						)
+					
+				process(
+						getAllNearPiece(unitID,leadTrain,25) or {},
+						function(id)
+							if unitID ~= id then
+								Spring.AddUnitDamage(id,100)
+										for k = 1, math.random(1,7), 1 do										
+											Explode(ctgoresub[k], SFX.FALL)
+											EmitSfx(ctgoresub[k], 1025)									
+										end
+							end
 						end
-					)
+						)
 					
 				
 				Sleep(100)
@@ -1580,12 +1588,13 @@ function deathAnimation()
 					if ty - 5 > gh then
 						Hide(id)
 						Explode(id,SFX.FIRE+SFX.FALL)
-						spawnCegAtPiece(unitID,id,"dirt",15)end
+						spawnCegAtPiece(unitID,id,"dirt",15)
+						end
 					end
 					)
-			
 		
-		
+		end
+		Sleep(10000)
 end
 
 function killedAnimation()
@@ -1593,27 +1602,17 @@ function killedAnimation()
 	Signal(SIG_ADJUSTPILLARHEIGTH)
 
 
-     deathAnimationStanding()
+     deathAnimation()
   
 
 
 end
+
 function script.Killed()
 
 	killedAnimation()
     createCorpseCUnitGeneric(recentDamage)
 
-end
-
-function deathAnimationTest()
-while true do
-Sleep(1000)
-showAll(unitID)
-resetAll(unitID)
-Sleep(1000)
-killedAnimation()
-Sleep(10000)
-end
 end
 
 TableOfPieceGroups = {}
@@ -1622,7 +1621,7 @@ function script.Create()
 	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
     initPieces()
     StartThread(healWhileStandingStill)
-    StartThread(deathAnimationTest)
+   
     Hide(cRailTurn) --hides the Piece of Railway that turns, when the train goes into turnmode
     for i = 1, 7, 1 do
         Hide(ctgoresub[i])
