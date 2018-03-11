@@ -1553,8 +1553,22 @@ function deathAnimation()
 			for i=1,5 do
 				mP(leadTrain,-15,-diffY,movement*10 +i*10+(i*10)-i*1.41,100)
 			process(TableOfPieceGroups["cCTrain"],
-				function(id)spawnCegAtPiece(unitID,id,"dirt",15)end
+				function(id)
+					spawnCegAtPiece(unitID,id,"dirt",15)					
+				end
 					)
+			process(
+					getAllNearPiece(unitID,leadTrain,25),
+					function(id)
+						if unitID ~= id then
+							Spring.AddUnitDamage(id,450)
+								    for i = 1, 7, 1 do										
+										Explode(ctgoresub[i], SFX.FALL)
+										EmitSfx(ctgoresub[i], 1025)									
+									end
+						end
+					)
+					
 				
 				Sleep(100)
 			end
