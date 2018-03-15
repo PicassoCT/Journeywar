@@ -63,7 +63,7 @@ local unitDef = {
 	
 	ActivateWhenBuilt=1;
 	BuildTime=51000;
-	Corpse="jbiocorpse",
+	Corpse="",
 	
 	RadarDistance=0,
 	SightDistance=800,

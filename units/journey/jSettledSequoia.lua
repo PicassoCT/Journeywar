@@ -38,7 +38,8 @@ CanStop = false,
 TurnRate = 200,
 LeaveTracks = false,
 -- Building	
-
+usePieceCollisionVolumes = true,
+	
 Category = [[LAND BUILDING]],
 
 EnergyStorage = 0,

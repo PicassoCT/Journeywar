@@ -31,6 +31,7 @@ function dirtEmit()
 end
 
 function startSequoia()
+	showT(Ground)
 	Move(turnerpoint,y_axis,25,6.3)
 	Spin(energyorb,y_axis,math.rad(42),12)
 	Spin(energyorb,z_axis,math.rad(22),12)
@@ -64,10 +65,7 @@ function startSequoia()
 	--now we replace it with a flyingSequoia
 	local x,y,z=Spring.GetUnitPosition (unitID)
 	local teamID = Spring.GetUnitTeam (unitID)
-	mexID= Spring.CreateUnit("jsempresequoia", x, y, z, 0, teamID) 
-	health=Spring.GetUnitHealth(unitID)
-	Spring.SetUnitHealth(mexID,health)	
-	Spring.DestroyUnit (unitID,false,true)
+	transformUnitInto(unitID, "jsempresequoia")
 	
 end
 
@@ -109,7 +107,7 @@ end
 
 function script.Create()
 	StartThread(TransformOS)
-	
+	hideT(Ground)
 end
 
 
