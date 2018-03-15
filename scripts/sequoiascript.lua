@@ -116,9 +116,9 @@ function script.Killed(recentdamage, _)
 	setSpeedEnv(unitID,0)
     Spring.PlaySoundFile("sounds/jEtree/tree.wav")
 	Spring.MoveCtrl.Enable(unitID,true)
-	x,y,z= Spring.GetPiecePosDir(unitID, center)
+	x,y,z= Spring.GetUnitPiecePosDir(unitID, center)
 	gh=Spring.GetGroundHeight(x,z)
-	teamID= Spring.GEtUnitTeam(unitID)
+	teamID= Spring.GetUnitTeam(unitID)
 	factor=0
 	while y > gh do
 		Spring.MoveCtrl.SetPosition(unitID,x, y*(1-factor) + gh*(factor),z)
