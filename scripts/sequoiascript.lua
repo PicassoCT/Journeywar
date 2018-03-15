@@ -20,7 +20,7 @@ turret2 = piece "turret2"
 turret3 = piece "turret3"
 turret4 = piece "turret4"
 Ground = {}
-CHARGE_TOTAL = (UnitDefNames["jtree1"].metalCost + UnitDefNames["jtree1"].energyCost) or 4200
+CHARGE_TOTAL =  4200
 ChargeUp = 0
 SIG_DELAY= 2
 for i = 1, 6, 1 do
@@ -278,7 +278,7 @@ end
 
 function script.FireWeapon5()
     Hide(energyorb)
-    ChargeUp = ChargeUp-1
+    ChargeUp = ChargeUp-CHARGE_TOTAL
     return true
 end
 -------------------------------------------------------------------------

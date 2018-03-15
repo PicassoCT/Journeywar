@@ -73,6 +73,10 @@ end
 
 function TransformOS()	
 	delayTillComplete(unitID)
+	while boolActive==true do
+		Sleep(100)
+	end
+	
 	
 	while boolActive==false do
 		Sleep(100)
