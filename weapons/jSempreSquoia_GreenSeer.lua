@@ -1,7 +1,7 @@
 --- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
 local weaponName = "greenseer"
 local weaponDef = {
-    name = [[Seed]],
+    name = [[Seed- covnerts a unit into a tree]],
     areaOfEffect = 8,
     craterBoost = 0,
     craterMult = 0,

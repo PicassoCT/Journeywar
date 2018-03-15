@@ -20,7 +20,7 @@ turret2 = piece "turret2"
 turret3 = piece "turret3"
 turret4 = piece "turret4"
 Ground = {}
-CHARGE_TOTAL = UnitDefNames["jtree1"].metalCost + UnitDefNames["jtree1"].energyCost or 4200
+CHARGE_TOTAL = (UnitDefNames["jtree1"].metalCost + UnitDefNames["jtree1"].energyCost) or 4200
 ChargeUp = 0
 SIG_DELAY= 2
 for i = 1, 6, 1 do
@@ -34,15 +34,10 @@ function landSequoia()
     Turn(turnerpoint, x_axis, math.rad(0), 3)
     --Move(center,y_axis,-165,2)
     WaitForTurn(turnerpoint, x_axis)
-    --WaitForMove(center,y_axis)
 
     local x, y, z = Spring.GetUnitPosition(unitID)
     local teamID = Spring.GetUnitTeam(unitID)
-    mexID = Spring.CreateUnit("jsettledsequoia", x, y, z, 0, teamID)
-    health = Spring.GetUnitHealth(unitID)
-    Spring.SetUnitHealth(mexID, health)
-    Spring.DestroyUnit(unitID, false, true)
-
+	transformUnitInto(unitID, "jsettledsequoia")
     --now we replace it with a flyingSequoia
 end
 
@@ -71,6 +66,17 @@ function destroyedUnit(dUIDefID)
     Show(energyorb)
     Total = (MetallCost + EnergyCost) 
     ChargeUp = ChargeUp + Total
+end
+
+
+function energyReactor()
+
+	while true do
+		Sleep(1000)
+		ChargeUp = ChargeUp + 10
+
+	end
+
 end
 
 function emitLight()
@@ -102,13 +108,25 @@ function script.Create()
     end
     StartThread(emitLight)
     StartThread(activator)
+    StartThread(energyReactor)
 end
 
 
 function script.Killed(recentdamage, _)
+	setSpeedEnv(unitID,0)
     Spring.PlaySoundFile("sounds/jEtree/tree.wav")
-    Sleep(2000)
-
+	Spring.MoveCtrl.Enable(unitID,true)
+	x,y,z= Spring.GetPiecePosDir(unitID, center)
+	gh=Spring.GetGroundHeight(x,z)
+	teamID= Spring.GEtUnitTeam(unitID)
+	factor=0
+	while y > gh do
+		Spring.MoveCtrl.SetPosition(unitID,x, y*(1-factor) + gh*(factor),z)
+		factor=clamp(0,factor+0.01,1)
+		Sleep(10)
+	end
+    heapID = Spring.CreateUnit("jscrapheap_tree", x, gh, z, 1, Spring.GetGaiaTeam())
+	
 
     return 1
 end
@@ -176,7 +194,7 @@ function script.AimWeapon1(heading, pitch)
     return true
 end
 
-function script.FireWeapon2()
+function script.FireWeapon1()
     return true
 end
 
@@ -242,6 +260,7 @@ end
 function script.FireWeapon4()
     return true
 end
+-------------------------------------------------------------------------
 
 
 function script.AimFromWeapon5()
@@ -262,3 +281,4 @@ function script.FireWeapon5()
     ChargeUp = ChargeUp-1
     return true
 end
+-------------------------------------------------------------------------

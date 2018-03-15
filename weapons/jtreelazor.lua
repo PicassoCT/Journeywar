@@ -13,7 +13,7 @@ local weaponDef = {
     predictBoost = 1.5,
     avoidFriendly = true,
     soundtrigger = true,
-    collideFriendly = false,
+    collideFriendly = true,
     beamtime = 1, --0.01
 
     FireSubmersed = 0,
@@ -40,7 +40,7 @@ local weaponDef = {
     explosionGenerator = "custom:green_electric_explosion",
     tolerance = 1000,
     damage = {
-        default = 50,
+        default = 50*30,
         HeavyArmor = 45,
     },
     areaOfEffect = 12,
