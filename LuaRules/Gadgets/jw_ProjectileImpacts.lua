@@ -88,6 +88,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	jethiefretweaponDefID = WeaponDefNames["jethiefretweapon"].id
 	jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
 	jinfacidantsDefID = WeaponDefNames["jinfectants"].id
+	jVarySpearDefID = WeaponDefNames["jvaryspear"].id
 
 	ChainLightningTable = {}
 	local FireWeapons = {
@@ -144,6 +145,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(tangleGunDefID, true)
 	Script.SetWatchWeapon(csubOrbDefID, true)
 	Script.SetWatchWeapon(jinfacidantsDefID,true)
+	Script.SetWatchWeapon(jVarySpearDefID,true)
+	
 	--units To be exempted from instantly lethal force
 	local lethalBuffExecption = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	local gaiaTeamID = Spring.GetGaiaTeamID()
@@ -601,7 +604,35 @@ if (gadgetHandler:IsSyncedCode()) then
 	vortwarpDecaySeconds= 5
 	
 	
-	warpedBuildings= {}
+	
+	UnitDamageFuncT[jVarySpearDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		--start Event Stream
+		persPack = { victimID = unitID, team= Spring.GetUnitTeam(attackerID) }
+	action = function(evtID, frame, persPack)
+						if frame >= persPack.startFrame + IncubationTimeVarySpearsInSeconds * 30  then
+							if Spring.GetUnitIsDead(persPack.victimID)== false then	
+								x,y,z= Spring.GetUnitPosition(persPack.victimID)
+									
+								for i=1,3 do
+									Spring.CreateUnit("jvaryfoospear", x,y,z, 1, team)
+								end		
+								Spring.DestroyUnit(persPack.victimID,true,false)
+								return 
+							end
+						end
+						return persPack.startFrame, persPack
+					end
+	
+
+
+								
+		GG.EventStream:CreateEvent(
+						action,
+						persPack,
+						Spring.GetGameFrame() + 1)	
+
+	end
+	
 	UnitDamageFuncT[vortMarkerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		--Stun Building
 

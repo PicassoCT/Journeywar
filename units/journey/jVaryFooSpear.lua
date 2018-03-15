@@ -2,8 +2,8 @@ local unitName = "jvaryfoospear"
 local unitDef = {
 	name = "Ahab",
 	Description = "From the bottom of hell i stab at thee",
-	objectName = "varyspearproj.s3o",
-	script = "varyfoospear_cript.lua",
+	objectName = "jvaryspear.s3o",
+	script = "varyfoospear_script.lua",
 	buildPic = "placeholderj.png",
 	--cost
 	buildCostMetal = 350,
@@ -40,7 +40,7 @@ local unitDef = {
 	
 	
 	weapons = {
-		[1]={name = "varyfoospear",
+		[1]={name = "jvaryspear",
 			onlyTargetCategory = [[ LAND ]],
 		},
 		

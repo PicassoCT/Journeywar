@@ -6,26 +6,26 @@ local weaponDef = {
 
     --Physic/flight path
     range = 800,
-    reloadtime = 8,
-    weaponVelocity = 1000,
+    reloadtime = 9000,
+    weaponVelocity = 1200,
     startVelocity = 750,
     weaponAcceleration = 250,
     flightTime = 2.5,
     BurnBlow = 1,
     FixedLauncher = false,
-    dance = 5, --1
-    wobble = 1, --4
+    dance = 0, --1
+    wobble = 0, --4
 
     tolerance = 2000,
-    tracks = false,
-    Turnrate = 32000,
-    collideFriendly = false,
+    tracks = true,
+    Turnrate = 0,
+    collideFriendly = true,
 
     --- -APPEARANCE
     model = "jvaryspearproj.s3o",
     smokeTrail = false,
     --explosionGenerator="custom:redsmoke",
-    CegTag = "jbirdtrail",
+    CegTag = "",
 
     --- -TARGETING
     turret = true,
@@ -33,17 +33,14 @@ local weaponDef = {
     avoidFeature = true,
     avoidFriendly = true,
 
-    --commandfire=true,
-
     --- -DAMAGE
     damage = {
-        default = 150,
-        heavyarmor = 150,
+        default = 1,
+        heavyarmor = 1,
     },
-    areaOfEffect = 100,
+    areaOfEffect = 1,
     craterMult = 0,
 
-    --?FIXME***
     lineOfSight = true
 }
 
