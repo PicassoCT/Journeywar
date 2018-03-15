@@ -1,0 +1,14 @@
+- fireflower
+- jhivewulf verhalten bei gegnertod - wenn festgebissen
+- jwulfmoma kein icon
++ jwulfmoma reintegriert
+- infernotrooper keine knüppelanimation
++ jbeherith schüsse treffen die reiter
++ jshroudshrike dies as building
+- jsempresquoia landing and starting
+- jatlanta- Augen überarbeiten
+- jgalatea im wasser gespawnt sind landbeine zu sehen
+- jdevoureregg funktioniert
+ - jsungodcattle wird nicht geheilt durch gammagardener
+- gshit wird nicht verarbeitet
+- jvarfoospear -> Viral (neue Spears geboren) -> alte Spear wird gefressen

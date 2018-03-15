@@ -215,11 +215,18 @@ SetSignalMask(SIG_DEACTIVATE_CLOSE_COMBAT)
 	boolCommenceCloseCombat= false
 end
 
+function delayedSoundOnConstantMoving()
+Sleep(1000)
+num=math.random(1,4)
+StartThread(PlaySoundByUnitDefID, myDefID,"sounds/tiglil/tiglil_move"..num..".ogg", 1, 3000, 1, 0)
+end
+
 function script.StartMoving()
 	
 
 	StartThread(walkAnimation) 
 	StartThread(delayedCloseCombatDeactivation)
+	StartThread(delayedSoundOnConstantMoving)
 end
 
 function script.StopMoving()
@@ -359,6 +366,7 @@ function biteLoop()
 			if boolFullTime== true then
 				x,y,z = Spring.GetUnitPosition(unitID)
 				teamID = Spring.GetUnitTeam(unitID)
+				StartThread(PlaySoundByUnitDefID, myDefID,"sounds/jhivehound/ripppingWulf.ogg", 1, 1000, 1, 0)
 				jhiveHoundMeatID = Spring.CreateUnit("jmeathivewulf",x,y,z, 0,teamID)
 				if jhiveHoundMeatID then
 					transferUnitStatusToUnit(unitID, jhiveHoundMeatID)
@@ -617,11 +625,14 @@ function script.FireWeapon2()
 
 end
 
+myDefID=Spring.GetUnitDefID(unitID)
 boolArmored=false
 function script.Activate()
 showAll(unitID)
 Hide(unfold)
+StartThread(PlaySoundByUnitDefID, myDefID,"sounds/jhivehound/shieldWulf.ogg", 1, 1000, 1, 0)
 boolArmored=false
+
 setSpeedEnv(unitID,1.0)
 
 end

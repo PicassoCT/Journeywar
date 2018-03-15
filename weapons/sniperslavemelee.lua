@@ -4,11 +4,6 @@ local weaponDef = {
     name = "sniperweapon",
     weaponType = [[Cannon]],
 
-    -- --soundHit           = "null",
-    -- --soundStart         = "null",
-
-
-
     areaOfEffect = 1,
     --physics
     weaponVelocity = 450,

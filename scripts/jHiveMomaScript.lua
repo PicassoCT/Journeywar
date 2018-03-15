@@ -462,8 +462,6 @@ function moveThing()
             TurnerP(FHip, 0, -8, 12, 2)
             TurnerP(BHip, -3, 6, 6, 2)
 
-
-
             del = math.random(11, 64)
             TurnerP(ffootR, del, 0, 0, GSpeed)
             TurnerP(fUpL, -4, 0, 0, GSpeed)
@@ -491,8 +489,6 @@ function moveThing()
             randTaily = math.random(-5, 5)
             randTailz = math.random(-5, 5)
             TurnerP(MomaT3, randTailx, randTaily, randTailz, 2)
-
-
 
             WaitForTurn(bUpR, x_axis)
             --MoveAnimation on Speed
@@ -607,7 +603,6 @@ function layDownIdle()
         TurnPiece(Pack[i][5], 0, 0, 0, 9)
         TurnPiece(Pack[i][6], 0, 0, 0, 9)
     end
-
 
     Sleep(1200)
     dice = math.random(1, 9)
@@ -808,23 +803,6 @@ function main()
     end
 end
 
-
-function devourMeat()
-end
-
-
-
-
-local arbitraryMeatMagicValue = 185
-function isHiveHoundInMeatRange(id, mx, my, mz)
-    hx, hy, hz = Spring.GetUnitPosition(id)
-    hx = math.abs(mx - hx)
-    --- -Spring.Echo(hx)
-    hz = math.abs(mz - hz)
-    --- -Spring.Echo(hz)
-    if hx < arbitraryMeatMagicValue or hz < arbitraryMeatMagicValue then return true else return false end
-end
-
 --sfx for the hungrys
 function tearingOffSomeFlash(meatId)
     x, y, z = Spring.GetUnitPosition(meatId)
@@ -878,6 +856,20 @@ heading =  (Spring.GetUnitHeading(unitID))/ 32768*math.pi
 end
 hiveHoundDefID= UnitDefNames["jhivewulf"].id
 
+oldPositions={}
+function checkWetherStationary(id)
+ix,iy,iz=Spring.GetUnitPosition(id)
+
+if not oldPositions[id] then 
+	oldPositions[id]={x=ix,y=iy,z=iz} 
+	return false
+else
+	return distance(oldPositions[id],{x=ix,y=iy,z=iz} ) < 10
+end
+
+end
+
+
 devourableTypes= getDevourableUnitTypeTable(UnitDefNames)
 function checkForHiveHoundsToDissolve()
     tableToCheck = {}
@@ -894,7 +886,7 @@ function checkForHiveHoundsToDissolve()
 			defID= spGetUnitDefID(id)
 			if defID and devourableTypes[defID] or  (
 			defID ==  hiveHoundDefID and
-			Spring.GetUnitExperience(id) > 0.2)
+			checkWetherStationary(id)==true
 			then
 					hp, maxhp= Spring.GetUnitHealth(id)
 					tempH, _, _, _, _, _ = Spring.GetUnitHealth(unitID)
@@ -948,7 +940,7 @@ function huntSound()
         Spring.PlaySoundFile("sounds/jhivehound/wulf2.wav")
     elseif dice == 3 then
         Spring.PlaySoundFile("sounds/jhivehound/wulf3.wav")
-    end
+      end
     Sleep(33000)
     Turn(Head, x_axis, math.rad(0), 19)
     Turn(jaw, x_axis, math.rad(0), 19)

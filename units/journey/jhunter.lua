@@ -5,7 +5,8 @@ local unitDef = {
 	Description = "Small Tripod <Assault>",
 	objectName = "jHunter.s3o",
 	script = "jhunterscript.lua",
-	buildPic = "placeholder.png",
+	buildPic = "jhunter.png",
+
 	--cost
 	buildCostMetal = 2500,
 	buildCostEnergy = 1200,

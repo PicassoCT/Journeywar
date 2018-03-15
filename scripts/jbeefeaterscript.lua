@@ -1,4 +1,5 @@
 include "createCorpse.lua"
+include "lib_jw.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
@@ -10,7 +11,7 @@ local beefcenter = piece "beefcenter"
 local tonguetip = piece "tonguetip"
 headingOfLastShot = 0
 pitchOfLastShot = 0
-
+TongueDamage=580	
 
 local neck = piece "neck"
 local center = piece "center"
@@ -103,13 +104,7 @@ function expandTongue(dist, totalpitchDown, tspeed)
         pieceWorkedOn = pieceWorkedOn + 1
     end
 
-
-    if boolObsticleDiscovered == false then
-
-        return true
-    else
-        return false
-    end
+	return true
 end
 
 function retractTongue()
@@ -130,12 +125,7 @@ function retractTongue()
     Hide(tonguetip)
 end
 
-Infantry = {}
-Infantry[UnitDefNames["bg"].id] = true
-Infantry[UnitDefNames["tiglil"].id] = true
-Infantry[UnitDefNames["skinfantry"].id] = true
-Infantry[UnitDefNames["vort"].id] = true
-Infantry[UnitDefNames["css"].id] = true
+Infantry = getInfantryTypeTable()
 
 function isInfantry(passengerDefID)
     if Infantry[passengerDefID] then return true else return false end
@@ -149,33 +139,39 @@ end
 
 boolAiming = false
 function hitManThread(poorFellowsID)
+
     likeAFreakTrainGoingNoWhere, _, _, _, _ = Spring.GetUnitHealth(poorFellowsID)
     team = Spring.GetUnitTeam(poorFellowsID)
     if Spring.ValidUnitID(poorFellowsID) == true and team ~= teamID then
         boolAiming = true
         SetUnitValue(COB.BUSY, 1)
-
         local px1, py1, pz1 = Spring.GetUnitBasePosition(unitID)
         local px2, py2, pz2 = Spring.GetUnitBasePosition(poorFellowsID)
         local dx, dy, dz = px2 - px1, py2 - py1, pz2 - pz1
         local heading = (Spring.GetHeadingFromVector(dx, dz) - Spring.GetUnitHeading(unitID)) / 32768 * math.pi
-
+		boolAttached=false
 
         px, py, pz = Spring.GetUnitPosition(poorFellowsID)
         WTurn(beefcenter, y_axis, heading, 12)
         currPosX, currPosY, currPosZ = Spring.GetUnitPosition(unitID)
         distanceVal = distance(px1, py1, pz1, px2, py2, pz2)
+		WTurn(center,y_axis,math.rad(headingOfLastShot),12)
+		boolUnitAlive= doesUnitExistAlive(poorFellowsID)
 
-        if expandTongue(distanceVal, math.deg(pitchOfLastShot), 196.0) == true and doesUnitExistAlive(poorFellowsID) then
+        if expandTongue(distanceVal, math.deg(pitchOfLastShot), 600) == true and boolUnitAlive == true then
             --attach the poor fellow too the tongue tip
-            AttachUnit(tonguetip, poorFellowsID)
-
+			hp=Spring.GetUnitHealth(poorFellowsID)
+			if hp and hp < TongueDamage then
+				boolAttached=true
+				AttachUnit(tonguetip, poorFellowsID)
+			else
+				Spring.AddUnitDamage(poorFellowsID,TongueDamage)
+				spawnCEGatUnit(poorFellowsID, "bloodspray", 0, 10, 0)
+			end
+			
             if isInfantry(poorFellowsID) == true then
-
                 Spring.PlaySoundFile("sounds/beafeater/beefeatersnatch.wav")
-                --play sound depending upon type
             else
-                --play roarsoundfile
                 StartThread(timedelaySound)
             end
 
@@ -193,8 +189,13 @@ function hitManThread(poorFellowsID)
             Turn(Head, x_axis, math.rad(0), 9)
             Turn(sayAAA, x_axis, math.rad(0), 15)
             Turn(constTongue, x_axis, math.rad(0), 15)
-            DropUnit(poorFellowsID)
-            Spring.DestroyUnit(poorFellowsID, false, true)
+			if boolAttached == true then
+				boolUnitAlive= doesUnitExistAlive(poorFellowsID)
+				if  boolUnitAlive== true then
+					DropUnit(poorFellowsID)
+					Spring.DestroyUnit(poorFellowsID, false, true)
+				end
+			end
             poopStack = poopStack + 10
 
         else
@@ -217,7 +218,8 @@ function butIPoopFromThere()
 
             x, y, z = Spring.GetUnitPosition(middleID)
 			gaiaTeamID = Spring.GetGaiaTeamID()
-            Spring.CreateUnit("gshit", x, y, z, 1, gaiaTeamID)
+            shitID= Spring.CreateUnit("gshit", x, y, z, 1, gaiaTeamID)
+			Spring.SetUnitBlocking(shitID, false)
             poopStack = 0
         end
     end
@@ -399,7 +401,8 @@ function script.AimWeapon1(heading, pitch)
 	 Signal(SIG_BREATH)
     SetSignalMask(SIG_AIM)
     if boolLoaded == true then
-
+		pitchOfLastShot=pitch
+		headingOfLastShot = heading
 
         Sleep(10)
         Signal(SIG_IDLE)

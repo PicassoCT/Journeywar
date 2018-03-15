@@ -30,7 +30,8 @@ local unitDef = {
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
 	
-	
+	cantBeTransported = false,
+	holdSteady = true,
 	transportByEnemy = false,
 	transportCapacity = 5,
 	transportSize = 7,

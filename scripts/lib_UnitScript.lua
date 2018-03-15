@@ -805,9 +805,17 @@ end
 
 function doesUnitExistAlive(id)
 	valid = Spring.ValidUnitID(id)
-	if not valid or valid == false then return false end
-	alive = Spring.GetUnitIsDead(id)
-	if not alive or alive == false then return false end
+	if valid == nil or valid == false then
+	echo("Invalid ID")
+	return false 
+	end
+	
+	dead = Spring.GetUnitIsDead(id)
+	if  dead == nil or dead == true then 
+	echo("Dead Unit")
+	return false 
+	end
+	
 	return true	
 end
 
