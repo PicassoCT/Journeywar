@@ -20,7 +20,7 @@ turret2 = piece "turret2"
 turret3 = piece "turret3"
 turret4 = piece "turret4"
 Ground = {}
-CHARGE_TOTAL = (UnitDefNames["jtree1"].metalCost + UnitDefNames["jtree1"].energyCost) or 4200
+CHARGE_TOTAL =  4200
 ChargeUp = 0
 SIG_DELAY= 2
 for i = 1, 6, 1 do
@@ -116,9 +116,9 @@ function script.Killed(recentdamage, _)
 	setSpeedEnv(unitID,0)
     Spring.PlaySoundFile("sounds/jEtree/tree.wav")
 	Spring.MoveCtrl.Enable(unitID,true)
-	x,y,z= Spring.GetPiecePosDir(unitID, center)
+	x,y,z= Spring.GetUnitPiecePosDir(unitID, center)
 	gh=Spring.GetGroundHeight(x,z)
-	teamID= Spring.GEtUnitTeam(unitID)
+	teamID= Spring.GetUnitTeam(unitID)
 	factor=0
 	while y > gh do
 		Spring.MoveCtrl.SetPosition(unitID,x, y*(1-factor) + gh*(factor),z)
@@ -278,7 +278,7 @@ end
 
 function script.FireWeapon5()
     Hide(energyorb)
-    ChargeUp = ChargeUp-1
+    ChargeUp = ChargeUp-CHARGE_TOTAL
     return true
 end
 -------------------------------------------------------------------------
