@@ -13,7 +13,8 @@ function gadget:GetInfo()
 end
 
 if gadgetHandler:IsSyncedCode() then
-	
+	TimeOfExecutionInMinutes= 25
+	TimeOfExecutionInFrames= 25*60*30
 	-------------------------------------
 	-- Includes
 	VFS.Include('scripts/lib_UnitScript.lua')
@@ -25,8 +26,7 @@ if gadgetHandler:IsSyncedCode() then
 		for k,v in pairs(GG) do
 			if not growthRate[k] then --first Time
 				newSize= getSizeInByte(v)
-				growthRate[k] = {oldSize= newSize, factor=1.0 }
-				
+				growthRate[k] = {oldSize= newSize, factor=1.0 }				
 			else
 				newSize= getSizeInByte(v)
 				growthRate[k].factor =  (newSize/growthRate[k].oldSize)-1
@@ -62,10 +62,8 @@ if gadgetHandler:IsSyncedCode() then
 		end
 	
 	
-		if frame % 900  == 0 and GG then
+		if frame % TimeOfExecutionInFrames  == 0 and GG then
 			echStats({"GG.Key", "Increase Percent"}, growthRate, 24, false)
-		end
-		if frame % 900  == 0 and GG then
 			echStats({"Unit.id", "Increase Percent"}, growthRateEnv, 24, false)
 		end
 	end

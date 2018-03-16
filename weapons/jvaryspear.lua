@@ -24,7 +24,6 @@ local weaponDef = {
     --- -APPEARANCE
     model = "jvaryspearproj.s3o",
     smokeTrail = false,
-    --explosionGenerator="custom:redsmoke",
     CegTag = "",
 
     --- -TARGETING
@@ -38,10 +37,11 @@ local weaponDef = {
         default = 1,
         heavyarmor = 1,
     },
+	
     areaOfEffect = 1,
     craterMult = 0,
-
     lineOfSight = true
+
 }
 
 return lowerkeys({ [weaponName] = weaponDef })
