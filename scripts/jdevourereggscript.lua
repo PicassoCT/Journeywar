@@ -49,18 +49,21 @@ end
 function retractTentacle()
     waveValue = 0
     fullCircle = math.pi * 2
-    speed = 14
+    speed = 6
 
-    for i = #TablesOfPiecesGroups["tentac"], 1 do
+    for i = offSetselector, 1,-1 do
 
         waveValue = waveValue + math.pi / 8
         retractPiece = TablesOfPiecesGroups["tentac"][i]
-        for k = i, 1 do
-            tP(TablesOfPiecesGroups["tentac"][k], math.cos(waveValue * k) * fullCircle, 0, 0, speed / 10)
+		tP(retractPiece,0,0,0,speed)
+        for k = i+1, 1,-1 do
+			if TablesOfPiecesGroups["tentac"][k] then
+            tP(TablesOfPiecesGroups["tentac"][k],  math.sin(waveValue * k) * fullCircle, math.cos(waveValue * k) * fullCircle, 0, speed )
+			end
         end
-        reset(retractPiece, speed)
-        WaitForTurns(retractPiece)
-        WMove(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]], y_axis, -1* LENGTHOFPIECE * i, 22)
+		mSyncIn(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]],0,-1* (#TablesOfPiecesGroups["tentac"]-i) * LENGTHOFPIECE,0, 1)		
+		WaitForTurns(TablesOfPiecesGroups["tentac"])
+		WaitForMoves(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]])
     end
 end
 
@@ -101,11 +104,11 @@ while true do
     end
 		
 	turnTowardsVictim()
-
    boolSuccesfullDeployed = spoolOut(TablesOfPiecesGroups["tentac"], x_axis, degTable, LENGTHOFPIECE * #TablesOfPiecesGroups["tentac"], myCorpseID, degTable)
 
 		if boolSuccesfullDeployed == true then
 			buildAndDeployTroops()
+			Spring.DestroyUnit(myCorpseID, true, true)
 			Spring.DestroyUnit(unitID, true, true)
 		else
 				retractTentacle()
@@ -133,20 +136,25 @@ function buildAndDeployTroops()
 	end
 
 end
-
+    offSetselector = 0
 function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
-	 if Spring.ValidUnitID(myCorpseID) == false or Spring.GetUnitIsDead(myCorpseID) == true then return end
+	 if type(myCorpseID)~= "number" or Spring.ValidUnitID(myCorpseID) == false or Spring.GetUnitIsDead(myCorpseID) == true then return end
     showT(TablesOfPiecesGroups["tentac"]) --delMe
 
     resetT(T, 0)
+
     WaitForMoveAllAxis(TablesOfPiecesGroups["tentac"][#TablesOfPiecesGroups["tentac"]], y_axis, startOffset * -1, 0)
     hideT(TablesOfPiecesGroups["tentac"])
 
     Show(T[1])
-    offSetselector = 0
+
     seconds = 0
     constOffset = (math.pi * 2)
     zWavefactor = 1
+    offSetselector = 0
+		
+	mP(T[#T], 0,  -1 * startOffset + (offSetselector) * LENGTHOFPIECE , 0, 0)
+	WaitForMoves(T[#T])
 
     while zWavefactor > 0.1 do
 			if Spring.GetUnitIsDead(myCorpseID) == true or distanceUnitToUnit(unitID, myCorpseID) > SUCKER_RANGE*0.75 then
@@ -159,13 +167,13 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 
 
         offSetselector = math.min(offSetselector + 1, #T - 1)
-        if offSetselector == #T then offSetselector = 1; resetT(T, 0); WaitForTurns(T) end --delMe Debug
 
-        position = Vector:new(0, 0, 0)
+		
+		
+      local  position = Vector:new(0, 0, 0)
         position.y = -1 * startOffset + (offSetselector) * LENGTHOFPIECE
-		  if zWavefactor == 1 then
-			syncMove(T[#T], position.x, position.y, position.z, 20)
-		  end
+		syncMove(T[#T], position.x, position.y, position.z, 20)
+		
         currentDegreeX = 0
         currentDegreeZ = 0
         rselector = 0
@@ -206,17 +214,18 @@ function spoolOut(T, axis, degTable, startOffset, myCorpseID, degTable)
 	index= inc(index)
     StartThread(buildAnimation, index, v)
 	end
+	  StartThread(PlaySoundByUnitDefID, Spring.GetUnitDefID(unitID), "sounds/jdevoureregg/suck.ogg", 0.5, 6000, 1, 0)
 		return true
 
 end
 progress= 0
-BUILD_TIME = 33000
+BUILD_TIME = 50000
 function buildAnimation(selector, pieceName)
 	 local selector = selector
     spendTime = BUILD_TIME
     RESTTIME = 3000
 
-    Sleep(selector * 3000)
+    Sleep((selector-1) * 3000 +1)
     while true do
         Hide(pieceName)
 
@@ -237,11 +246,12 @@ function buildAnimation(selector, pieceName)
         followPath(unitID,
             pieceName,
             TablesOfPiecesGroups["tentac"],
-            10,
+            25,
             5,
             true,
             true,
-            { x = -t.offset[1], y = -t.offset[2], z = -t.offset[3] })
+            { x = 0, y = 0, z = 0 })
+           -- { x = -t.offset[1], y = -t.offset[2], z = -t.offset[3] })
 
         WaitForMove(pieceName,x_axis)
         WaitForMove(pieceName,y_axis)
@@ -253,13 +263,15 @@ end
 
 TablesOfPiecesGroups = {}
 function script.Killed()
+	Signal(SIG_KILLED)
     teamID = Spring.GetUnitTeam(unitID)
     for id, host in pairs(GG.CorpseDevourer[teamID]) do
         if host == unitID then
             GG.CorpseDevourer[teamID][id] = nil
         end
     end
-
+	retractTentacle()
+	explodeT(TablesOfPiecesGroups["FPod"], SFX.FALL +SFX.SHATTER+SFX.NO_HEATCLOUD)
     return 0
 end
 
@@ -283,9 +295,11 @@ function initialPose()
 
 
 end
-
+SIG_KILLED= 4
 function initialization()
+	SetSignalMask(SIG_KILLED)
 	 initialPose()
+	delayTillComplete(unitID)
     for i = 1, #TablesOfPiecesGroups["FPod"] do
         StartThread(wiggleOS, TablesOfPiecesGroups["FPod"][i], 3, 6, 3, 6, 3, 6, 5)
     end

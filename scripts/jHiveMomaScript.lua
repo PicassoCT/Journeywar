@@ -886,7 +886,7 @@ function checkForHiveHoundsToDissolve()
 			defID= spGetUnitDefID(id)
 			if defID and devourableTypes[defID] or  (
 			defID ==  hiveHoundDefID and
-			checkWetherStationary(id)==true
+			checkWetherStationary(id)==true)
 			then
 					hp, maxhp= Spring.GetUnitHealth(id)
 					tempH, _, _, _, _, _ = Spring.GetUnitHealth(unitID)

@@ -20,7 +20,8 @@ ExcludeDefIDs[UnitDefNames["jabyss"].id] = true
 ExcludeDefIDs[UnitDefNames["citadell"].id] = true
 ExcludeDefIDs[UnitDefNames["beanstalk"].id] = true
 
-FoodNeededForTransform = 90000
+FoodNeededForTransform = 4000
+OrgFoodNeededForTransform= FoodNeededForTransform
 
 for i = 1, 8, 1 do
     name = "Kugel0" .. i
@@ -49,10 +50,9 @@ center = piece "center"
 
 function script.Create()
     Move(center, y_axis, -600, 0)
-    Move(center, y_axis, 0, 100)
-    Spin(center, y_axis, math.rad(42), 0)
-    WaitForMove(center, y_axis)
-    StopSpin(center, y_axis, 0)
+   	Move(center,y_axis, -80,0)
+    Spin(center, y_axis, math.rad(0.42), 0)
+
     StartThread(swayInWind)
     StartThread(FeedMe)
 end
@@ -76,7 +76,8 @@ function FeedMe()
 
                             hp = Spring.GetUnitHealth(t[i])
                             FoodNeededForTransform = FoodNeededForTransform - hp
-                            Spring.DestroyUnit(t[i], false, true)
+							Move(center,y_axis, -80*clamp(0,FoodNeededForTransform/OrgFoodNeededForTransform,1),15)
+	                            Spring.DestroyUnit(t[i], false, true)
                         end
                     end
                 end
@@ -88,7 +89,7 @@ function FeedMe()
     if GG.UnitsToSpawn then
         x, y, z = Spring.GetUnitPosition(unitID)
         teamID = Spring.GetUnitTeam(unitID)
-        GG.UnitsToSpawn:PushCreateUnit("jfactorylvl2transform", x, y, z, 0, teamID)
+        GG.UnitsToSpawn:PushCreateUnit("jmovingfac2", x, y, z, 0, teamID)
         Spring.DestroyUnit(unitID, false, true)
     end
 end

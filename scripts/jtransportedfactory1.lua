@@ -1,16 +1,16 @@
 --Define the wheel pieces
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "createCorpse.lua"
+include "lib_Build.lua"
 
 --Define the pieces of the weapon
 
 local SIG_RESET = 2
 local SIG_UPGRADE = 4
 teamID = Spring.GetUnitTeam(unitID)
-Quad = {}
-for i = 1, 8, 1 do
-    temp = "Quader0" .. i
-    Quad[i] = {}
-    Quad[i] = piece(temp)
-end
+
 Kugel01 = piece "Kugel01"
 Kugel02 = piece "Kugel02"
 
@@ -76,9 +76,10 @@ function delayedUpgrade()
         Sleep(2500)
         id = Spring.GetUnitIsBuilding(unitID)
 
-
+		
         if (id and Spring.ValidUnitID(id) == true) then
-            if defIDChild == upgradeDefID then
+		defIDChild= Spring.GetUnitDefID(id)
+            if defIDChild and defIDChild == upgradeDefID then
                 x, y, z = Spring.GetUnitPosition(unitID)
                 if y < -5 then
                     defIDChild = Spring.GetUnitDefID(id)
@@ -86,7 +87,6 @@ function delayedUpgrade()
                     x, y, z = Spring.GetUnitPosition(unitID)
 
                     GG.UnitsToSpawn:PushCreateUnit("jfactorylvl1transform", x, y, z, 0, teamID)
-                    Sleep(100)
                     Spring.DestroyUnit(GG.JFactorys[unitID][1], false, true)
                     Spring.DestroyUnit(unitID, false, true)
 

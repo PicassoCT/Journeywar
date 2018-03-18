@@ -236,7 +236,7 @@ end
 function fruitLoop()
     while (boolBuilding == true) do
         EmitSfx(lightEmit, 1027)
-        Sleep(150)
+        Sleep(800)
     end
 end
 
@@ -378,28 +378,9 @@ function circler()
     end
 end
 
---[[ function positionSetter(handedOverBuildprogress)
-boolOnlyOnce=false
-Move(buildMove,y_axis,-40,45)
-Move(buildMove,x_axis,-113,55)
-
-
-WaitForMove(buildMove,y_axis)
-WaitForMove(buildMove,x_axis)
-while handedOverBuildprogress > budProgress do
-	Sleep(50)
-end
-
-Move(buildMove,x_axis,0,0)
-Move(buildMove,y_axis,0,0)
-Sleep(10)
-boolOnlyOnce=true
-end ]]
 
 function limitComonValue(comonValue)
-    sign = comonValue / math.abs(comonValue)
-    --	Spring.Echo("JW_FIRSTBORN::Limit"..math.min(43,math.abs(comonValue))*sign)
-    return math.min(43, math.abs(comonValue)) * sign
+    return clamp(-43, comonValue, 43)
 end
 
 function sloppyTechLoop()
