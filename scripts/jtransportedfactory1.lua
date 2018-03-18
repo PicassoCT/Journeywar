@@ -70,7 +70,7 @@ local firstbornDefID = UnitDefNames["jtrafactory"].id
 local upgradeDefID = UnitDefNames["jupgradefactory1"].id
 
 function delayedUpgrade()
-
+	--new Testversion
 
     while true do
         Sleep(2500)
