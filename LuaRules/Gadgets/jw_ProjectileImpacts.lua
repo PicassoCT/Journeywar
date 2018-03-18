@@ -430,7 +430,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		[jvaryjumpDefID] = function(weaponDefID, px, py, pz, AttackerID)
 			if AttackerID then
 				Spring.SetUnitPosition(AttackerID, px, py + 35, pz)
-				env = Spring.UnitScriptEnv(AttackerID)
+				env =Spring.UnitScript.GetScriptEnv(AttackerID)
 				if env then
 					Spring.UnitScript.CallAsUnit(AttackerID, env.setInTransit, false)
 				end

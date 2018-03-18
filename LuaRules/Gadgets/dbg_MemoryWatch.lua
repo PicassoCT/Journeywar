@@ -38,7 +38,7 @@ if gadgetHandler:IsSyncedCode() then
 	function watchEnv()
 	AllUnits= Spring.GetAllUnits()
 		for k,v in pairs(AllUnits) do
-			env = Spring.UnitScriptEnv(v)
+			env = Spring.UnitScript.GetScriptEnv(v)
 			if env then					
 				if not growthRateEnv[k] then --first Time
 					newSize= getSizeInByte(env)
