@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " stunning and teleporting Vortexwarrior <Assault>",
 	objectName = "vort.s3o",
 	script = "jVortigaunt.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jvort.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 450,

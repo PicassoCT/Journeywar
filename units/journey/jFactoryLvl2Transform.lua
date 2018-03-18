@@ -4,7 +4,7 @@ name = "Cocoon",
 Description = "transforms if fed with units into a Infinitys Craddle <Upgrade Building>",
 objectName = "jConcon.s3o",
 script = "jfactorylvl2transformscript.lua",
-buildPic = "placeholderj.png",
+buildPic = "jupgrade.png",
 --cost
 	maxdamage=1050,
 nanocolor=[[0 0.9 0.9]],

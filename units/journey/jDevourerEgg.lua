@@ -6,7 +6,7 @@ Description = "Devours a nearby Corpse to grow a Skinfantry-Eggball <Recycle Uni
 
 	objectName = "jDevourerEgg.s3o",
 	script = "jdevourereggscript.lua",
-	buildPic = "skinfantry.png",
+	buildPic = "jdevoureregg.png",
 
 
 	RadarDistance = 0,

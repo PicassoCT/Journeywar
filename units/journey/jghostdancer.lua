@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "backtracks to alternative Timelines on Damage <Scout Harass>",
 	objectName = "ghostdancer.s3o",
 	script = "jghostdancer.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jghostdancer.png",
 	--cost
 	buildCostMetal = 280,
 	buildCostEnergy = 620,
