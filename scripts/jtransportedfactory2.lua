@@ -1,16 +1,16 @@
 --Define the wheel pieces
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "createCorpse.lua"
+include "lib_Build.lua"
 
 --Define the pieces of the weapon
 
 local SIG_RESET = 2
 local SIG_UPGRADE = 4
 teamID = Spring.GetUnitTeam(unitID)
-Quad = {}
-for i = 1, 8, 1 do
-    temp = "Quader0" .. i
-    Quad[i] = {}
-    Quad[i] = piece(temp)
-end
+
 Kugel01 = piece "Kugel01"
 Kugel02 = piece "Kugel02"
 

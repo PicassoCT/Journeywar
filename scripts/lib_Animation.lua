@@ -920,6 +920,42 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
 
     WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
 end
+
+-->Moves a UnitPiece to a UnitPiece at speed
+function movePieceFromPieceToPiece(unitID, piecename, pieceDest, pieceStart, speed, offset, forceUpdate)
+    reset(piecename, 0) --last changeset
+
+    speed = speed or 0
+
+    if not pieceDest or not piecename then return end
+
+    ox, oy, oz = Spring.GetUnitPiecePosition(unitID, pieceDest)
+    sx, sy, sz = Spring.GetUnitPiecePosition(unitID, pieceStart)
+	dx,dy,dz= ox-sx,oy-sy,oz-sz
+	
+    orx, ory, orz = Spring.GetUnitPiecePosition(unitID, piecename)
+
+    ox, oy, oz = ox - orx, oy - ory, oz - orz
+
+    ox = ox * -1
+    if offset then
+        ox = ox + (offset.x)
+        oy = oy + offset.y
+        oz = oz + offset.z
+    end
+    Move(piecename, x_axis, ox+dx, 0)
+    Move(piecename, y_axis, oy-dy, 0)
+    Move(piecename, z_axis, oz-dz, 0,  true)
+	WaitForMoves(piecename)
+	
+    --	echoMove(piecename, ox,oy,oz)
+    Move(piecename, x_axis, ox, speed)
+    Move(piecename, y_axis, oy, speed)
+    Move(piecename, z_axis, oz, speed, forceUpdate or true)
+
+
+    WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
+end
  
 
 -->Moves a Piece to a Position on the Ground in UnitSpace
@@ -2295,7 +2331,7 @@ function followPath(unitID, pieceName, pathTable, speed, delay, boolWaitForMove,
 				dx,dy,dz=  UnitScript.GetPieceRotation(pieceNum)		
 				tP(pieceName,dx,dy,dz, speed)		
 			end
-        movePieceToPieceNoReset(unitID, pieceName, pieceNum, speed, offset)
+        movePieceFromPieceToPiece(unitID, pieceName, pieceNum, pathTable[math.max(i-1,1)] , speed, offset)
 			
 		if boolWaitForMove == true then
 			WaitForMoves(pieceName)

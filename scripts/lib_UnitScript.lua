@@ -3632,21 +3632,29 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 		end
 	end
 end
+
+function getSizeInByte(Element, maxdepth)
+maxdepth= maxdepth or 12
+if maxdepth == 0 then return 1 end
+
 typeSize={
-	["table"] = function(id) 
+	["table"] = function(id,maxdep) 
 		accumulatedSize=0
 		for k,v in pairs(id) do
-			accumulatedSize= accumulatedSize + getSizeInByte(k) + getSizeInByte(v)	
+			accumulatedSize= accumulatedSize + getSizeInByte(k,maxdep) + getSizeInByte(v,maxdep)	
 		end
 		return accumulatedSize
 	end,
 	["number"] = function(id) return 8 end,
-	["bool"] = function(id) return 1 end,
+	["boolean"] = function(id) return 1 end,
 	["string"] = function(id) return string.len(id) end,
 	["function"] = function(id) return string.len(string.dump(id)) end --Problematic: Function as string is compactor in opcode and exists only once per name)
 }
-function getSizeInByte(Element)
-	return typeSize[type(Element)](Element)
+
+	if not Element then return 0 end
+	elementType=type(Element)
+	if not typeSize[elementType] then echo("Undefined type with"..elementType.." at ", Element); assert(true==false) end
+	return typeSize[elementType](Element,maxdepth-1)
 end
 
 -->prints a numeric table in steps
@@ -3739,10 +3747,10 @@ function echo(stringToEcho, ...)
 				if type(v) == "table" then
 					echoT(v)
 				else
-					Spring.Echo(k .. " " .. v)
+					Spring.Echo(toString(k) .. " " .. toString(v))
 				end
 			elseif k then
-				Spring.Echo(k)
+				Spring.Echo(toString(k))
 			end
 		end
 	end

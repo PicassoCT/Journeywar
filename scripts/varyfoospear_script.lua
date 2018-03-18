@@ -561,6 +561,36 @@ Animations['talk'] = {
         },
     }
 }
+
+
+function constructSkeleton(unit, piece, offset)
+    if (offset == nil) then
+        offset = { 0, 0, 0 };
+    end
+
+    local bones = {};
+    local info = Spring.GetUnitPieceInfo(unit, piece);
+
+    for i = 1, 3 do
+        info.offset[i] = offset[i] + info.offset[i];
+    end
+
+    bones[piece] = info.offset;
+    local map = Spring.GetUnitPieceMap(unit);
+    local children = info.children;
+
+    if (children) then
+        for i, childName in pairs(children) do
+            local childId = map[childName];
+            local childBones = constructSkeleton(unit, childId, info.offset);
+            for cid, cinfo in pairs(childBones) do
+                bones[cid] = cinfo;
+            end
+        end
+    end
+    return bones;
+end
+
 function script.Create()
     Move(center, y_axis, 44, 0)
     --generatepiecesTableAndArrayCode(unitID)
