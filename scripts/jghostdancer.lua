@@ -31,10 +31,11 @@ recoverTime = 90000
 SIG_WALK = 1
 SIG_IDLE = 2
 SIG_CONTDAMAGE = 4
+SIG_JUMP= 8
 teamID = Spring.GetUnitTeam(unitID)
 boolOnlyOnce = false
 fullHealthOfAShadow = 0
-piecesTable = getPieceTable(unitID)
+
 
 unitTable = {}
 local JSHADOWCOST = 120
@@ -323,7 +324,7 @@ function standingWave()
 end
 
 function pranceStance()
-    resetT(piecesTable, 42)
+    resetT(TableOfPieceGroups, 42)
     Move(ghostdance, y_axis, -2.5, 2.55)
     Turn(HeadRump, x_axis, math.rad(RumpOffset), math.abs(-18 - RumpOffset) / 10)
     Turn(Head, x_axis, math.rad(-17), 1.7)
@@ -346,17 +347,18 @@ function resetLegs()
 end
 
 function idle()
+	SetSignalMask(SIG_IDLE)
     boolIdle = true
     RumpOffset = 12
     resetT(tails)
-    resetT(piecesTable, 22)
+    resetT(TableOfPieceGroups, 22)
 
     while (boolIdle == true) do
         if maRa() == true then wiggle() end
         if maRa() == true then standingWave() end
         if maRa() == true then standingGuard() end
         if maRa() == true then pranceStance() end
-        resetT(piecesTable, 12)
+        resetT(TableOfPieceGroups, 12)
         Sleep(3000)
         resetLegs()
     end
@@ -365,23 +367,169 @@ function idle()
     Move(ghostdance, y_axis, 0, 0.5)
     WTurn(gdfrontleg, y_axis, math.rad(0), 1.8)
     WTurn(gdbhleg, y_axis, math.rad(-18), 1.8)
-    resetT(piecesTable, 42)
+    resetT(TableOfPieceGroups, 42)
 end
 
 
 
-
+TableOfPieceGroups = {}
 function script.Create()
+
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	hideT(TableOfPieceGroups["esc"])
+	hideT(TableOfPieceGroups["esct"])
     Hide(gdbhlegj)
     Hide(gdflegj)
     Show(gdfrontleg)
-    resetT(piecesTable)
-    StartThread(storeOldPositions)
-    StartThread(internalEnergyReactor)
-    StartThread(backTrack)
+    resetT(TableOfPieceGroups)
+   StartThread(storeOldPositions)
+   StartThread(internalEnergyReactor)
+   StartThread(backTrack)
+end
+warpRotor=piece"warpRotor"
+deathtime=0
+
+
+function deathAnimation()
+Spring.SetUnitNeutral(unitID,true)
+Spring.SetUnitNoSelect(unitID,true)
+Spring.SetUnitBlocking(unitID,false)
+resetT(TableOfPieceGroups)
+Sleep(1)
+	setSpeedEnv(unitID,0)
+	signalAll(16)
+	hideAll(unitID)
+	Show(Rump)
+	Show(HeadRump)
+	Show(Ass)
+	Show(gdflegj)
+	Show(gdbhlegj)
+	Show(Head)
+	showT(TableOfPieceGroups["Ear"])
+	showT(TableOfPieceGroups["Tail"])
+	Move(warpRotor,y_axis,14,3)
+	Turn(Rump,z_axis,math.rad(180), 15)
+	StartThread(PlaySoundByUnitDefID, Spring.GetUnitDefID(unitID), "sounds/jghostdancer/death.ogg", 1, 8000, 1, 0)
+	for k=0, 11/3 do
+	signUm=randSign()
+	Spin(deathpivot,y_axis,math.rad(42)*signUm,0.1)
+	Signal(SIG_JUMP)
+	StartThread(sleeperJump)
+	spawnCegAtPiece(unitID,warpRotor,"portalenter",0)
+		for i=1,360, 5 do
+		
+			deathtime=i/360
+			turnT(tails, x_axis,-15, (k+1)*160  )
+			turnT(tails, y_axis,math.cos((i/360)*math.pi*2)*10, (k+1)*160  )
+			Turn(warpRotor,x_axis,math.rad(i*-1),(k+1)*160)
+			WaitForTurns(warpRotor)
+		end
+	Move(ghostdance,y_axis,k*3,6)
+	end
+		StartThread(PlaySoundByUnitDefID, Spring.GetUnitDefID(unitID), "sounds/jghostdancer/death.ogg",0.5, 8000, 1, 0)
+
+signalAll(16)
+spinRand(warpRotor,22,88,5)
+Show(Head)
+resetT(TableOfPieceGroups["esct"])
+resetT(TableOfPieceGroups["esc"])
+for i=1,3,1 do
+	totaltime=i*1000
+	spawnCegAtPiece(unitID,warpRotor,"portalenter",0)
+	deathtime=0.4
+	StartThread(sleeperJump)
+	Sleep(1000)
+	
+	deathtime=1
+	Sleep(1000)
+	hideT(TableOfPieceGroups["esct"])
+	hideT(TableOfPieceGroups["esc"])
+	spawnCegAtPiece(unitID,warpRotor,"portalenter",0)
+	Sleep(totaltime)
+end
+delayedHideBody()
+spawnCegAtPiece(unitID,warpRotor,"portalenter",0)
+
+
+end
+function delayedHideBody()
+	for i=#TableOfPieceGroups["Tail"],1,-1 do
+		Hide(TableOfPieceGroups["Tail"][i])
+		EmitSfx(TableOfPieceGroups["Tail"][i], 1025)   
+		Sleep(150)
+	end
+Hide(Ass)
+spawnCegAtPiece(unitID,Ass,"portalenter",0)
+Hide(gdbhleg)
+Hide(gdbhlegj)
+Sleep(300)
+Hide(Rump)
+spawnCegAtPiece(unitID,Rump,"portalenter",0)
+Sleep(300)
+Hide(Head)
+Hide(HeadRump)
+spawnCegAtPiece(unitID,Head,"portalenter",0)
+Hide(gdflegj)
+Hide(gdfrontleg)
+hideT(TableOfPieceGroups["ear"])
+Sleep(300)
+
 end
 
+escapee=piece"escapee"
+function sleeperJump()
+Sleep(1)
+SetSignalMask(SIG_JUMP)
+hideT(TableOfPieceGroups["esct"])
+hideT(TableOfPieceGroups["esc"])
+resetT(TableOfPieceGroups["esct"])
+resetT(TableOfPieceGroups["esc"])
+
+Move(escapee,y_axis,20,0)
+Jumper= TableOfPieceGroups["esc"][6]
+
+rY,rX=math.random(0,360),math.random(-10,0)
+Move(Jumper,y_axis,20,0)
+tP(escapee,rX,rY,0,15)
+showT(TableOfPieceGroups["esct"])
+showT(TableOfPieceGroups["esc"])
+speed=math.random(250,450)
+gotoVal=10
+
+while deathtime < 0.5 do
+	speed=speed^0.92
+	gotoVal=gotoVal+gotoVal
+	Move(Jumper,z_axis,gotoVal,speed)
+	WaitForMove(Jumper,z_axis)
+
+end
+Turn(Jumper,x_axis,math.rad(-90),0)
+turnT(TableOfPieceGroups["esct"],x_axis,-20,5)
+speed=70
+
+
+
+spawnCegAtPiece(unitID,Jumper,"portalenter",0)
+hideT(TableOfPieceGroups["esct"])
+hideT(TableOfPieceGroups["esc"])
+Move(escapee,y_axis,50,50)
+while deathtime > 0.5  do	
+	Move(Jumper,y_axis,0,speed)
+
+	speed=speed^(1+deathtime)
+
+	 	EmitSfx(TableOfPieceGroups["esct"][6], 1025)   
+	 Sleep(100)
+end
+
+Move(escapee,x_axis,0,15)
+Move(escapee,z_axis,0,15)
+reset(Jumper,15)
+end
 function script.Killed(recentDamage, maxHealth)
+	deathAnimation()
+	
+	
     Spring.Echo("Jghostdancer:Killed")
     return 0
 end
@@ -415,7 +563,7 @@ function walk()
     boolIdle = false
 
     Turn(ears, x_axis, math.rad(-70), 35)
-    resetT(piecesTable, 22)
+    resetT(TableOfPieceGroups, 22)
     while (true) do
 
         --landing

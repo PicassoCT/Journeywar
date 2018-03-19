@@ -47,7 +47,7 @@ local unitDef = {
 		},	
 	},
 	
-	Category = [[LAND]],
+	Category = [[LAND DART]],
 	
 	weapons = {	
 			[1]={name = "jpoisondartw",

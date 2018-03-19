@@ -3633,6 +3633,13 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 	end
 end
 
+function signalAll(limitUpper)
+for i=0,limitUpper do
+	Signal(2^i)
+end
+
+end
+
 function getSizeInByte(Element, maxdepth)
 maxdepth= maxdepth or 12
 if maxdepth == 0 then return 1 end
