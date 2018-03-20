@@ -16,14 +16,14 @@ include "lib_Build.lua"
 --- Signals to be spread
 
 --------------------- IdleStance10-Fucntions-------
-aimpivot = piece "aimpivot"
-shadowemit = piece "shadowemit"
-gdbhleg = piece "gdbhleg"
-gdbhlegj = piece "gdbhlegj"
-gdflegj = piece "gdflegj"
-gdfrontleg = piece "gdfrontleg"
-ghostdance = piece "ghostdance"
-deathpivot = piece "deathpivot"
+aimpivot = piece"aimpivot"
+shadowemit = piece"shadowemit"
+gdbhleg = piece"gdbhleg"
+gdbhlegj = piece"gdbhlegj"
+gdflegj = piece"gdflegj"
+gdfrontleg = piece"gdfrontleg"
+ghostdance = piece"ghostdance"
+deathpivot = piece"deathpivot"
 boolActivated = true
 
 unitTableNr = 0
@@ -109,6 +109,9 @@ function backTrack()
         if boolContinousDamage == true then
             buildIt()
             backTrackindex = trackMax
+			index = math.random(1,2) or 1
+			StartThread(PlaySoundByUnitDefID, Spring.GetUnitDefID(unitID), "sounds/jghostdancer/Backtrack"..index..".ogg", 1, 4000, 1, 0)
+
             while boolContinousDamage == true and backTrackindex ~= 1 do
 
                 vec = oldPos[backTrackindex]
@@ -189,7 +192,7 @@ function script.Deactivate()
 end
 
 local function legs_down()
-
+	Turn(rotcenter, x_axis, math.rad(0), 30)
     Hide(gdbhlegj)
     Hide(gdflegj)
     Show(gdfrontleg)
@@ -287,12 +290,10 @@ function standingGuard()
         end
         WaitForTurns(tails)
         Sleep(200)
-        if math.random(1, 64) == 42 then
-            Sleep(5000)
-            Hide(gdflegj)
-            Show(gdfrontleg); break;
-        end
+  
     end
+	Turn(rotcenter, x_axis, math.rad(0), 70 / 1.5)
+
 end
 
 
@@ -339,12 +340,6 @@ function pranceStance()
     end
 end
 
-function resetLegs()
-    Hide(gdflegj)
-    Hide(gdbhlegj)
-    Show(gdfrontleg)
-    Show(gdbhleg)
-end
 
 function idle()
 	SetSignalMask(SIG_IDLE)
@@ -352,15 +347,15 @@ function idle()
     RumpOffset = 12
     resetT(tails)
     resetT(TableOfPieceGroups, 22)
-
-    while (boolIdle == true) do
+	Turn(rotcenter, x_axis, math.rad(0), 1.7)
+    while (boolIdle == true ) do
         if maRa() == true then wiggle() end
         if maRa() == true then standingWave() end
         if maRa() == true then standingGuard() end
         if maRa() == true then pranceStance() end
         resetT(TableOfPieceGroups, 12)
         Sleep(3000)
-        resetLegs()
+        showWalkLegs()
     end
     Turn(HeadRump, y_axis, math.rad(0), math.abs(-18 - RumpOffset) / 10)
     Turn(Head, y_axis, math.rad(0), 1.7)
@@ -368,6 +363,7 @@ function idle()
     WTurn(gdfrontleg, y_axis, math.rad(0), 1.8)
     WTurn(gdbhleg, y_axis, math.rad(-18), 1.8)
     resetT(TableOfPieceGroups, 42)
+	Turn(rotcenter, x_axis, math.rad(0), 1.7)
 end
 
 
@@ -386,9 +382,33 @@ function script.Create()
    StartThread(internalEnergyReactor)
    StartThread(backTrack)
 end
+
+function attackAnimation(heading)
+
+		Turn(deathpivot,y_axis,heading,70)
+		turnT(TableOfPieceGroups["Tail"],x_axis, math.random(10,20),40)
+		showJumpLegs()
+		Move(warpRotor,z_axis,60,180)
+		for i=360,0,-10 do
+			Turn(warpRotor,x_axis,math.rad(i), (i/360)* 90)
+			WaitForTurn(warpRotor,x_axis)
+			if i == 90 then
+				Move(warpRotor,z_axis,0,120)
+				 EmitSfx(Rump, 1024)
+				showWalkLegs()
+			end
+		end
+
+		Turn(warpRotor,x_axis,math.rad(0), 0)
+		showWalkLegs()
+		Turn(deathpivot,y_axis,0,5)
+		turnT(TableOfPieceGroups["Tail"],x_axis, math.random(-5,-2),40)
+	
+end
+
 warpRotor=piece"warpRotor"
 deathtime=0
-
+myDefID = Spring.GetUnitDefID(unitID)
 
 function deathAnimation()
 Spring.SetUnitNeutral(unitID,true)
@@ -426,7 +446,7 @@ Sleep(1)
 		end
 	Move(ghostdance,y_axis,k*3,6)
 	end
-		StartThread(PlaySoundByUnitDefID, Spring.GetUnitDefID(unitID), "sounds/jghostdancer/death.ogg",0.5, 8000, 1, 0)
+		StartThread(PlaySoundByUnitDefID, myDefID, "sounds/jghostdancer/death.ogg",0.5, 8000, 1, 0)
 
 signalAll(16)
 spinRand(warpRotor,22,88,5)
@@ -545,17 +565,27 @@ function glowTail()
     end
 end
 
-function threadedLegs(prevtime, Time)
-    Sleep(prevtime)
-    Show(gdbhlegj)
-    Show(gdflegj)
-    Hide(gdfrontleg)
-    Hide(gdbhleg)
-    Sleep(Time)
-    Hide(gdbhlegj)
+function showWalkLegs()
+	Hide(gdbhlegj)
     Hide(gdflegj)
     Show(gdfrontleg)
     Show(gdbhleg)
+
+end
+
+function showJumpLegs()
+	Show(gdbhlegj)
+    Show(gdflegj)
+    Hide(gdfrontleg)
+    Hide(gdbhleg)
+end
+
+
+function threadedLegs(prevtime, Time)
+    Sleep(prevtime)
+	showJumpLegs()
+    Sleep(Time)
+	showWalkLegs()
 end
 
 function walk()
@@ -564,6 +594,8 @@ function walk()
 
     Turn(ears, x_axis, math.rad(-70), 35)
     resetT(TableOfPieceGroups, 22)
+	reset(warpRotor, 30)
+	Turn(rotcenter, x_axis, math.rad(0), 30)
     while (true) do
 
         --landing
@@ -646,13 +678,19 @@ end
 
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 -- can be used delay the shooting until a "turn turret" animation is completed
+storedHeading=0
 function script.AimWeapon1(heading, pitch)
+	Signal(SIG_IDLE)
+	Turn(rotcenter, x_axis, math.rad(0), 1.7)
     boolIdle = false
+	storedHeading=heading
     return true
 end
 
 -- called after the weapon has fired
 function script.FireWeapon1()
+	StartThread(attackAnimation,storedHeading)
+	StartThread(PlaySoundByUnitDefID, myDefID, "sounds/jghostdancer/roar.ogg", 1, math.random(2000,9000), 1, 0)
     --Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav")
     return true
 end
@@ -668,12 +706,16 @@ end
 --must return true to allow the weapon to shot. return false denies the weapon from shooting
 -- can be used delay the shooting until a "turn turret" animation is completed
 function script.AimWeapon2(heading, pitch)
+	Signal(SIG_IDLE)
+	Turn(rotcenter, x_axis, math.rad(0), 1.7)
     boolIdle = false
     return true
 end
 
 -- called after the weapon has fired
 function script.FireWeapon2()
+	Signal(SIG_IDLE)
+	StartThread(PlaySoundByUnitDefID, myDefID, "sounds/jghostdancer/jghostdancermove.ogg", 1, math.random(8000,9000), 1, 0)
     --Spring.PlaySoundFile("sounds/tiglil/tgswoard1.wav")
     return true
 end

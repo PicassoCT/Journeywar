@@ -1,8 +1,9 @@
+include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
 include "lib_Build.lua"
+
 --a walking animation using threads
 --smoothly aiming the weapon, also using threads
 tempORary = piece "tempORary"
@@ -195,8 +196,27 @@ function prozent()
     end
 end
 
+function appear()
+	bx,by,bz=Spring.GetUnitBasePosition(unitID)
+	by=by+10
+   process(TableOfPieceGroups,
+			function(t)
+			for name,num in pairs(t) do
+				x,y,z=Spring.GetUnitPiecePosDir(unitID,num)
+				dx,dy,dz=x-bx,y-by,z-bz
+				mP(num,-dx,-dy,-dz,0,true)
+				mP(num,0,0,0,math.random(50,200)/math.pi)
+			end
+			end
+			)
+	
+
+  bodybuild()
+end
+	TableOfPieceGroups= {}
 function script.Create()
-    bodybuild()
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	StartThread(appear)
     StartThread(shakeThatTailFeather)
     StartThread(smokeEmit)
     StartThread(prozent)
@@ -412,6 +432,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
     end
     vx, vz = math.random(-5, 5), math.random(-5, 5)
     px, py, pz = Spring.GetUnitPosition(unitID)
+	StartThread(PlaySoundByUnitDefID, myDefID, "sounds/jghostdancer/shadowtele.ogg", 1, math.random(1000,2000), 1, 0)
     Spring.SetUnitPosition(unitID, px + vx, py, pz + vz)
     return damage
 end
@@ -434,7 +455,18 @@ end
 
 --- -death animation: fall over & explode
 function script.Killed(recentDamage, maxHealth)
-    for i = 1, #pieceTable do
-        Explode(pieceTable[i], SFX.FALL + SFX.SHATTER)
+	StartThread(PlaySoundByUnitDefID, myDefID, "sounds/jghostdancer/shadowdeath.ogg", 1, math.random(2000,9000), 1, 0)
+
+   process(TableOfPieceGroups,
+			function(t)
+			for name,num in pairs(t) do
+				mP(num,math.random(-35,35),math.random(-35,35),math.random(-35,35),90)
+			end
+			end
+			)
+	spawnCegAtPiece(unitID,center,"portalenter",10)
+    for i = 1, #koerperteile do
+        Explode(koerperteile[i], SFX.FALL +SFX.NO_HEATCLOUD)
     end
+	Sleep(500)
 end

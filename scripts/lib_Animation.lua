@@ -179,7 +179,7 @@ end
 function movePieceToPieceWorld(unitID,name, pieceheigth, target, speed)
 bx,by,bz= Spring.GetUnitBasePosition(unitID)
 wx,wy,wz = Spring.GetUnitPiecePosDir(unitID,target)
-MovePieceToPos(ike, -1*(bx-wx),-1*(by-wy)-pieceheigth,-1*(bz-wz),0)
+MovePieceToPos(name, -1*(bx-wx),-1*(by-wy)-pieceheigth,-1*(bz-wz),0)
 
 end
 
