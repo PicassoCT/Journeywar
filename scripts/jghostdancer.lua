@@ -39,6 +39,7 @@ fullHealthOfAShadow = 0
 
 unitTable = {}
 local JSHADOWCOST = 120
+DECOY_COST= 140
 
 function buildIt()
     for i = table.getn(unitTable), 1, -1 do
@@ -179,6 +180,30 @@ function internalEnergyReactor()
     end
 end
 
+decoyTypes= {
+	[1]="tiglildecoy",
+	[2]="skinfantrydecoy"
+	}
+function createDecoysLoop()
+	delayTillComplete(unitID)
+	
+while true do
+	if boolMoving== true and boolActivated == true and internalEnergy - DECOY_COST > 0 then
+		internalEnergy = internalEnergy - DECOY_COST
+		x, y, z = Spring.GetUnitPiecePosDir(unitID,TableOfPieceGroups["Tail"][#TableOfPieceGroups["Tail"]])
+		id= Spring.CreateUnit(decoyTypes[math.random(1,#decoyTypes)], x, y, z, 1, teamID)
+		tx,ty,tz= x,y,z 
+		spawnCegatUnit(id,"jghostdancerswitch")
+		ed=Spring.GetUnitNearestEnemy(unitID)
+		if ed then 
+			tx,ty,tz=Spring.GetUnitPosition(ed)
+		end
+		  Spring.GiveOrderToUnit(id, CMD.GUARD, { unitID }, { "shift" })
+
+	end
+	Sleep(500)
+end
+end
 
 function script.Activate()
     boolActivated = true
@@ -381,6 +406,7 @@ function script.Create()
    StartThread(storeOldPositions)
    StartThread(internalEnergyReactor)
    StartThread(backTrack)
+   StartThread(createDecoysLoop)
 end
 
 function attackAnimation(heading)
@@ -652,15 +678,16 @@ end
 
 
 
-
+boolMoving=false
 function script.StartMoving()
     Signal(SIG_IDLE)
-
+	boolMoving=true
     Signal(SIG_WALK)
     StartThread(walk)
 end
 
 function script.StopMoving()
+	boolMoving=false
     Signal(SIG_WALK)
     boolIdle = false
     Turn(ears, x_axis, math.rad(0), 35)

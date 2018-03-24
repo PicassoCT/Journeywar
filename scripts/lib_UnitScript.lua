@@ -5218,7 +5218,7 @@ function Command(id, command, target, option)
 	end
 	
 	if command == "repair" or command == "assist" then
-		Spring.GiveOrder(id, CMD_GUARD, { target }, { "" })
+		Spring.GiveOrder(id, CMD.GUARD, { target }, { "shift" })
 	end
 	
 	if command == "go" then
@@ -5336,7 +5336,7 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDir
 end
 
 -->Spawn CEG at unit
-function spawnCEGatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
+function spawnCegatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
 	--if doesUnitExistAlive(unitID) ==false then return end
 	dx,dy,dz= dx or 0,dy or 1,dz or 0
 
@@ -5368,9 +5368,9 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset)
 	boolAdd = offset or 10
 	
 	
-	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
-	if not cegname then error("lib_UnitScript::Not enough arguments to spawnCEGatUnit") end
+	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCegatUnit") end
+	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCegatUnit") end
+	if not cegname then error("lib_UnitScript::Not enough arguments to spawnCegatUnit") end
 	x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
 	
 	if y then

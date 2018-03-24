@@ -226,7 +226,6 @@ function script.StartMoving()
 
 	StartThread(walkAnimation) 
 	StartThread(delayedCloseCombatDeactivation)
-	StartThread(delayedSoundOnConstantMoving)
 end
 
 function script.StopMoving()
@@ -638,7 +637,7 @@ setSpeedEnv(unitID,1.0)
 end
 
 function script.Deactivate()
-spawnCEGatUnit(unitID, "dirt", 0, 10, 0)
+spawnCegatUnit(unitID, "dirt", 0, 10, 0)
 hideAll(unitID)
 Show(Tail)
 Show(unfold)

@@ -191,9 +191,9 @@ function waitingGame()
                 local x, y, z = Spring.GetUnitPosition(unitID)
                 local teamID = Spring.GetUnitTeam(unitID)
                 mexID = Spring.CreateUnit("dbeanstalk", x, y, z, 0, teamID)
+				transferUnitStatusToUnit(unitID, mexID)
                 GG.UnitsToSpawn:PushCreateUnit("jbeanstalkplate", x, y, z, 0, teamID)
-                health = Spring.GetUnitHealth(unitID)
-                Spring.SetUnitHealth(mexID, health)
+
                 Spring.DestroyUnit(unitID, false, true)
             end
         end

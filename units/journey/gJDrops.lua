@@ -58,7 +58,7 @@ useSmoothMesh = false,
 
  
  
-Category = [[LAND]],
+Category = [[NOTARGET]],
 
 
 

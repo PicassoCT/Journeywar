@@ -20,6 +20,16 @@ function getTypeTable(UnitDefNames, StringTable)
     return retVal
 end
 
+function getWeaponTypeTable(WeaponDefNames, StringTable)
+    local Stringtable = StringTable
+    retVal = {}
+    for i = 1, #Stringtable do
+        assert(WeaponDefNames[Stringtable[i]], "Error: Weapondef of Weapontype " .. Stringtable[i] .. " does not exists")
+        retVal[WeaponDefNames[Stringtable[i]].id] = true
+    end
+    return retVal
+end
+
 function getJourneyBuildingTypeTable()
     JourneyBuildingTypes = tableToDict(getUnitCanBuild("beanstalk"))
     return JourneyBuildingTypes
@@ -113,6 +123,66 @@ local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs)
 
 end
 
+function getArtilleryTypes(UnitDefs)
+local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
+
+	typeTable={
+		"art",
+		"jantart",
+		"ccomender",
+		"campro",
+		"jglowworms",
+		"csuborbital"
+		}
+	return getTypeTable(UnitDefNames, typeTable)
+end
+
+function getBeanstalkShieldConvertibleWeaponTypes()
+typeTable= {
+	"crabshell"
+	,"cadvisoraa"
+	,"cantimatter"
+	,"cartdarkmat"
+	,"cautsuicide"
+	,"cbgrenade"
+	,"cmtwgrenade"
+	,"cchoperrocke"
+	,"ceater"
+	,"comendsniper"
+	,"cnukegrenadelvl1"
+	,"cnukegrenadelvl2"
+	,"cnukegrenadelvl3"
+	,"crailgun"
+	,"slicergun"
+	,"csuborbitalstrike"
+	,"cwaterbombs"
+	,"glavaweapon"
+	,"gluemineweapon"
+	,"hcprojectile"
+	,"headlaunch"
+	,"jacidants"
+	,"jbeanstalkphoenix"
+	,"jfacehugger"
+	,"jfiredancerproj"
+	,"jflyingfish"
+	,"jglowproj"
+	,"jgluegun"
+	,"jinfectants"
+	,"jresrpg"
+	,"greenseer"
+	,"varyfoospear"
+	,"jvaryjump"
+	,"jvaryspear"
+	,"jplanktoneraa"
+	,"lavabomb"
+	,"razordrone"
+	,"birdrocket"
+	,"sniperweapon"
+}
+
+return getWeaponTypeTable(WeaponDefNames, typeTable)
+end
+
 function getUnAttractiveTypesTable()
 	typeTable={
 		"ccomender",
@@ -136,7 +206,6 @@ function getFungiImuneUnitTypeTable()
     retTab[UnitDefNames["jfungiforrest"].id] = true
     retTab[UnitDefNames["jtreel"].id] = true
     retTab[UnitDefNames["vort"].id] = true
-    retTab[UnitDefNames["jracedart"].id] = true
     retTab[UnitDefNames["jfiredancebomb"].id] = true
     retTab[UnitDefNames["cgamagardener"].id] = true
     retTab[UnitDefNames["beanstalk"].id] = true
@@ -172,7 +241,10 @@ if not UnitDefNames then UnitDefNames = UnitDefNamesL end
         [UnitDefNames["beanstalk"].id] = true,
         [UnitDefNames["citadell"].id] = true,
         [UnitDefNames["gvolcano"].id] = true,
-        [UnitDefNames["gproceduralfeature"].id] = true
+        [UnitDefNames["gproceduralfeature"].id] = true,
+        [UnitDefNames["jabyss"].id] = true,
+        [UnitDefNames["jvaryavatara"].id] = true
+		
     }
 
     return retTab
@@ -244,6 +316,7 @@ function getPyroProofUnitTypeTable(UnitDefNamesContext)
     FireProofTypes[UnitDefNames["jtree3"].id] = true
     FireProofTypes[UnitDefNames["glava"].id] = true
     FireProofTypes[UnitDefNames["gvolcano"].id] = true
+    FireProofTypes[UnitDefNames["jhoneypot"].id] = true
     return FireProofTypes
 end
 
@@ -367,6 +440,7 @@ end
 function getCreeperTypeTable()
     return mergeDict( getJourneyCreeperTypeTable(),getCentrailCreeperTypeTable())
 end
+
 
 function getAbstractTypes(UnitDefNamesContext)
 	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end

@@ -13,6 +13,7 @@ end
 if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_OS.lua")
 	VFS.Include("scripts/lib_UnitScript.lua")
+	VFS.Include("scripts/lib_Animation.lua")
 	VFS.Include("scripts/lib_Build.lua")
 	VFS.Include("scripts/lib_jw.lua")
 	
@@ -170,7 +171,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if abstractTypeTable[defID] or airTypeTable[defID] then return end
 		
 		if isInfantryTypeTable[defID] then 
-			spawnCEGatUnit(id, "infantrydissolve", 0, 10,0)	
+			spawnCegatUnit(id, "infantrydissolve", 0, 10,0)	
 			GG.UnitsToKill:PushKillUnit(id, true, true)
 			return 
 		end
@@ -648,8 +649,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		or gameFrame - warpedBuildings[attackerID].lastBlast > vortwarpDecaySeconds *30 then
 			warpedBuildings[attackerID] = {target =unitID, start= gameFrame, lastBlast = gameFrame}
 		elseif gameFrame - warpedBuildings[attackerID].start > warpTimeFrames then
-			--spawnCEGatUnit
-			spawnCEGatUnit(unitID, "vbuildwarp", 0, 100, 0) 
+			--spawnCegatUnit
+			spawnCegatUnit(unitID, "vbuildwarp", 0, 100, 0) 
 			Spring.DestroyUnit(unitID,false,true)
 			boolStillAlive = false
 		end
@@ -660,7 +661,7 @@ if (gadgetHandler:IsSyncedCode()) then
 --		Spring.Echo("Time Till warp:"..(gameFrame - warpedBuildings[attackerID].start).." / "..warpTimeFrames)
 		
 		warpedBuildings[attackerID].lastBlast = gameFrame
-		spawnCEGatUnit(unitID, "vortwarp", 0, 100, 0) 
+		spawnCegatUnit(unitID, "vortwarp", 0, 100, 0) 
 	
 	end
 	
@@ -717,7 +718,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			cegEventStream = function (persPack)
 				
-				spawnCEGatUnit(unitID, "tangledceg", 0, 10, 0) 
+				spawnCegatUnit(unitID, "tangledceg", 0, 10, 0) 
 				persPack.counter = persPack.counter + 1
 				return Spring.GetUnitIsDead(unitID) and persPack.counter < persPack, persPack
 			end
@@ -751,8 +752,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		spawnCEGatUnit(unitID, "cefencesplash", 0, 10, 0)
-		spawnCEGatUnit(attackerID, "cefencesplash", 0, 10, 0)
+		spawnCegatUnit(unitID, "cefencesplash", 0, 10, 0)
+		spawnCegatUnit(attackerID, "cefencesplash", 0, 10, 0)
 		
 		return damage
 	end
@@ -859,7 +860,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
 	UnitDamageFuncT[glueMineWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
-		spawnCEGatUnit(unitID, "gluebuff", 0, 30, 0)
+		spawnCegatUnit(unitID, "gluebuff", 0, 30, 0)
 		GG.GluedForLife[unitID] = GG.GluedForLife[unitID] * 0.9
 	end
 	UnitDamageFuncT[jgluegunDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
@@ -1337,8 +1338,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 		
 	end
-	
-	
+		
 	function poisonDarted(frame)
 		if GG.Poisoned then
 			for k, v in pairs(GG.Poisoned) do
@@ -1440,4 +1440,25 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
+	beanstalkDefID= UnitDefNames["beanstalk"].id
+	shieldHitFunctions={
+	[beanstalkDefID] = function(proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile)
+		
+			env =Spring.UnitScript.GetScriptEnv(shieldCarrierUnitID)
+			if env and env.beanstalkShieldHit then
+				Spring.UnitScript.CallAsUnit(shieldCarrierUnitID, env.beanstalkShieldHit, weaponDefID, proID, proOwnerID, shieldCarrierUnitID)
+			end		
+	
+		return false
+	end	
+	}
+	
+	function gadget:ShieldPreDamaged(proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile)
+	echo("Shield Hit")
+		shieldCarrierType= Spring.GetUnitDefID(shieldCarrierUnitID)
+		if shieldCarrierType and  shieldHitFunctions[shieldCarrierType]then
+			return shieldHitFunctions[shieldCarrierType](proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile)
+		end
+		return false
+	end
 end

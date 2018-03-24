@@ -181,7 +181,7 @@ function Mission3City(frame)
                         if math.random(0, 8) ~= 5 or #unitTable % 6 == 0 then
 
                             did = spCreateUnit("gcivilbuilding", i * val, 0, j * val, dir, feamID)
-                            if math.random(0, 3) == 2 then spCreateUnit("jdrops", i * val + math.random(-55, 55), 0, j * val + math.random(-55, 55), dir, feamID) end
+                            if math.random(0, 3) == 2 then spCreateUnit("jdrops", i * val + math.random(-55, 55), Spring.GetGroundHeigth(i * val,j*val)+math.random(500,1000), j * val + math.random(-55, 55), dir, feamID) end
 
                             if did then
                                 unitTable[#unitTable + 1] = did

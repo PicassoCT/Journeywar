@@ -38,6 +38,7 @@ local AMBUSHLOADTIME = 30000
 local AMBUSHTIME = 9000
 local RELOADTIME = 900
 local COOLDOWNTIMER = 0
+DECOY_LIFETIME=25000
 Sleeper = 6
 tempsleep = 0
 randomvalue = -1
@@ -1316,12 +1317,12 @@ function gestiKulieren()
     end
 end
 
-tiglildefid = Spring.GetUnitDefID(unitID)
+myDefID = Spring.GetUnitDefID(unitID)
 function onTheMove()
 	for k=1, 5 do
 
         if k==1 then
-            StartThread(PlaySoundByUnitDefID,tiglildefid, "sounds/tiglil/tgdance.wav", 0.75, 3000, 1, 0)
+            StartThread(PlaySoundByUnitDefID,myDefID, "sounds/tiglil/tgdance.wav", 0.75, 3000, 1, 0)
         end
 
         if math.random(0, 1) ==1 then
@@ -7265,10 +7266,12 @@ end
 experienceSoFar = Spring.GetUnitExperience(unitID)
 teamID = Spring.GetUnitTeam(unitID)
 function spawnAEgg(x, z)
+	if boolIsDecoy== false then
     randSleep = math.ceil(math.random(370, 1200))
     Sleep(randSleep)
     id = Spring.CreateUnit("jtigeggnogg", x, -10, z, 0, teamID)
     transferOrders(unitID, id)
+	end
 end
 
 function EGG_LOOP()
@@ -7296,10 +7299,21 @@ function EGG_LOOP()
         Sleep(1500)
     end
 end
+decoyDefID =UnitDefNames["tiglildecoy"].id 
+boolIsDecoy= (myDefID == decoyDefID)
+function lifeTimer()
+	if boolIsDecoy == true  then
+	Sleep(DECOY_LIFETIME)
+	spawnCegatUnit(unitID,"jghostdancerswitch")
+
+	Spring.DestroyUnit(unitID,false,true)
+	end
+end
 
 
 
 function script.Create()
+	StartThread(lifeTimer)
     StartThread(EGG_LOOP)
     Hide(tlpole)
     Hide(tlsparksemit)
@@ -8171,9 +8185,9 @@ function script.AimWeapon1(heading, pitch)
 
         everyHundredTigLils = math.random(0, 25)
         if everyHundredTigLils == 9 then
-			StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgAttac.wav", 1.0, 2000, 1, 0)
+			StartThread(PlaySoundByUnitDefID,myDefID, "sounds/tiglil/tgAttac.wav", 1.0, 2000, 1, 0)
         elseif everyHundredTigLils == 18 then
-			StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgAttac2.wav", 1.0, 2000, 1, 0)
+			StartThread(PlaySoundByUnitDefID,myDefID, "sounds/tiglil/tgAttac2.wav", 1.0, 2000, 1, 0)
         end
     end
 
@@ -8188,7 +8202,7 @@ function ReloadCountDown()
     RELOADTIME = 0
 end
 
-tigLilDefID = Spring.GetUnitDefID(unitID)
+myDefID = Spring.GetUnitDefID(unitID)
 -- called after the weapon has fired
 function script.FireWeapon1()
 
@@ -8201,9 +8215,9 @@ function script.FireWeapon1()
 	end
  
     if maRa()== true then
-		StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgswoard1.wav", 1.0, 2000, 1, 0)
+		StartThread(PlaySoundByUnitDefID,myDefID, "sounds/tiglil/tgswoard1.wav", 1.0, 2000, 1, 0)
     else
-		StartThread(PlaySoundByUnitDefID,tigLilDefID, "sounds/tiglil/tgswoard2.wav", 1.0, 2000, 1, 0)
+		StartThread(PlaySoundByUnitDefID,myDefID, "sounds/tiglil/tgswoard2.wav", 1.0, 2000, 1, 0)
     end
 end
 

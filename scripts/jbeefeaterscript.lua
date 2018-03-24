@@ -166,7 +166,7 @@ function hitManThread(poorFellowsID)
 				AttachUnit(tonguetip, poorFellowsID)
 			else
 				Spring.AddUnitDamage(poorFellowsID,TongueDamage)
-				spawnCEGatUnit(poorFellowsID, "bloodspray", 0, 10, 0)
+				spawnCegatUnit(poorFellowsID, "bloodspray", 0, 10, 0)
 			end
 			
             if isInfantry(poorFellowsID) == true then

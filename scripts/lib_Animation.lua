@@ -2062,7 +2062,7 @@ end
 function resetAll(unitID)
  pieceMap = Spring.GetUnitPieceMap(unitID)
  for k,v in pairs(pieceMap) do
-	echo("resetAll"..k.."/"..v)
+
 	reset(v)
 	WaitForTurns(v)
 	WaitForMoves(v)

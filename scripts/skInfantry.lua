@@ -31,18 +31,21 @@ local SIG_PEACE=32
 local AMBUSHLOADTIME=30000
 local AMBUSHTIME=9000
 piecePeriod=12500
+DECOY_LIFETIME=25000
+
 costPerEgg=0.5
 experienceSoFar=Spring.GetUnitExperience(unitID)
 eggEnemySpawnDistance = 700
 teamID=Spring.GetUnitTeam(unitID)
-defID = Spring.GetUnitDefID(unitID)
+myDefID = Spring.GetUnitDefID(unitID)
 
 function spawnAEgg(x,z)
+	if boolIsDecoy== false then
 	randSleep=math.ceil(math.random(370,1200))
 	Sleep(randSleep)
 	id= Spring.CreateUnit("jskineggnogg",x,-10,z, 0, teamID) 
 	transferOrders(unitID,id)
-	
+	end
 end
 boolPeacefull = true
 function EGG_LOOP()
@@ -83,7 +86,21 @@ function EGG_LOOP()
 end
 
 
+decoyDefID =  UnitDefNames["skinfantrydecoy"].id 
+boolIsDecoy = myDefID == decoyDefID
+function lifeTimer()
+	if boolIsDecoy== true  then
+	Sleep(DECOY_LIFETIME)
+	spawnCegatUnit(unitID,"jghostdancerswitch")
+
+	Spring.DestroyUnit(unitID,false,true)
+	end
+end
+
+
+
 function script.Create()
+	StartThread(lifeTimer)
 	StartThread(EGG_LOOP)
 	Spring.UnitScript.Hide ( flare01 ) 
 	Spring.UnitScript.Hide ( flare02 ) 
@@ -121,12 +138,12 @@ function skyFist()
 	
 			total= math.random(26,126)
 			if not GG.SyncAnimT then GG.SyncAnimT = {} end
-			if not GG.SyncAnimT[defID] then GG.SyncAnimT[defID] = 256 end
-			if GG.SyncAnimT[defID]  < 2 then 
-				GG.SyncAnimT[defID] = 256
+			if not GG.SyncAnimT[myDefID] then GG.SyncAnimT[myDefID] = 256 end
+			if GG.SyncAnimT[myDefID]  < 2 then 
+				GG.SyncAnimT[myDefID] = 256
 			end
-			Sleep(math.ceil(GG.SyncAnimT[defID]/2))
-			GG.SyncAnimT[defID]= math.ceil(GG.SyncAnimT[defID]/2)
+			Sleep(math.ceil(GG.SyncAnimT[myDefID]/2))
+			GG.SyncAnimT[myDefID]= math.ceil(GG.SyncAnimT[myDefID]/2)
 			
 			for i=1,total do
 				Turn(arm1,x_axis,math.rad(-90),5)

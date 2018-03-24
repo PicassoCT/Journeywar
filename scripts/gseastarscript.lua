@@ -278,8 +278,10 @@ function FeedMe()
 				end
 				Sleep(250)
 				WaitForTurn(sensorT[Sensor], y_axis)
-				DropUnit(T[index])
-				Spring.DestroyUnit(T[index], true, false)
+				if Spring.ValidUnitID(T[index]) then
+					DropUnit(T[index])
+					Spring.DestroyUnit(T[index], true, false)
+				end
 				hp= Spring.GetUnitHealth(unitID)
 				Spring.SetUnitHealth(unitID, hp + 750)
 			end

@@ -27,6 +27,9 @@ local SIG_SHIELD = 32
 teamID = Spring.GetUnitTeam(unitID)
 local currentpiece = piece "somemit1"
 buildemitcenter = piece "buildemitcenter"
+
+SHIELD_COST_CONVERTPROJ= 100
+
 emitIt = {}
 for i = 1, 6, 1 do
 	emitIt[i] = {}
@@ -639,12 +642,7 @@ function reEntry()
 	Spin(bshelix, y_axis, math.rad(4.2), 0.2)
 	tableOfPieces = {}
 	tableOfPieces = Spring.GetUnitPieceList(unitID)
-	
-	for i = 1, table.getn(tableOfPieces), 1 do
-		name = tableOfPieces[i]
-		x = piece(name)
-		Show(x)
-	end
+	showAll(unitid)
 	
 	for i = 1, 6, 1 do
 		Hide(dirt[i])
@@ -675,7 +673,7 @@ function reEntry()
 	for i = 1, 14, 1 do
 		Hide(greenSleaves[i])
 	end
-	Spring.SetUnitNoSelect(unitID,true)
+	Spring.SetUnitNoSelect(unitID,false)
 	hideT(wurzelballen)
 	boolEntryOver = true
 end
@@ -721,22 +719,23 @@ function script.Killed(recentDamage, maxHealth)
 	return 0
 end
 
-boolreVert = false
+boolShieldActive = false
 boolEntryOver = false
+UnrootComandDefID= UnitDefNames["jbeanstalkunroot"].id
 function waitingGame()
 	while boolEntryOver == false do Sleep(500) end
 	while (true) do
-		if boolreVert == true and (Spring.ValidUnitID(unitID)) then
-			Sleep(500)
-			if boolreVert == true and (Spring.ValidUnitID(unitID)) then
+		buid= Spring.GetUnitIsBuilding(unitID)
+		if buid then
+			buildingDefID= Spring.GetUnitDefID(buid)
+			if buildingDefID and buildingDefID == UnrootComandDefID then
 				local x, y, z = Spring.GetUnitPosition(unitID)
 				local teamID = Spring.GetUnitTeam(unitID)
 				mexID = Spring.CreateUnit("mbeanstalk", x, y, z, 0, teamID)
-				
-				
-				health = Spring.GetUnitHealth(unitID)
-				Spring.SetUnitHealth(mexID, health)
+				Spring.SetUnitNoBlocking(mexID,true)
+				transferUnitStatusToUnit(unitID, mexID)				
 				Spring.DestroyUnit(unitID, false, true)
+		
 			end
 		end
 	Sleep(1000)
@@ -744,19 +743,14 @@ function waitingGame()
 end
 
 function script.Activate()
-	boolreVert = false
-	
-	--boolUnDeployed=false
-	--boolSafetyFirst=true
+	boolShieldActive = false
+
 	return 1
 end
 
 function script.Deactivate()
-	boolreVert = true
-	--if boolSafetyFirst==true then
-	--boolUnDeployed=true
-	--end
-	--Place Unmorpher here
+	boolShieldActive = false
+
 	return 0
 end
 
@@ -838,4 +832,22 @@ hideT(TablesOfPiecesGroups["Sprout"])
 
 	Sleep(100)
 	end
+end
+
+convertibleWeaponTypes= getConvertibleWeaponTypes(UnitDefs)
+
+function beanstalkShieldHit(weaponDefID, proID, proOwnerID,shieldCarrierUnitID)
+		enabled, shieldpower = Spring.GetUnitShieldState(unitID, 1)
+                            
+        if convertibleWeaponTypes[weaponDefID] and boolShieldActive and shieldpower > SHIELD_COST_CONVERTPROJ then
+			Spring.SetUnitShieldState(unitID, 1, true, shieldpower - SHIELD_COST_CONVERTPROJ)		
+			x,y,z=Spring.GetProjectilePosition(proID)
+			weaponDefID = Spring.GetProjectileDefID(proID)
+			Spring.SpawnCEG("jbeanstalkshieldconvert",x,y,z,0, 60)
+			GG.UnitsToSpawn:PushCreateUnit("jdrops", x,y,z, 0, Spring.GetUnitTeam(shieldCarrierUnitID))
+
+			Spring.DeleteProjectile(proID)
+
+		end
+	echo("TODO: Implement Energy Reduction fro transforms beanstalk")
 end

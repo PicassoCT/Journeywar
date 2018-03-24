@@ -216,17 +216,30 @@ effectUnitDefs = {
 
 	
 	beanstalk= {
-		{class='ShieldSphere', options={life=math.huge, pos={0,25,0}, size=300, colormap1 = {{0.62, 0.9, 0.09, 0.8}}, repeatEffect=true}},
-		{class='ShieldSphere', options={life=math.huge, pos={0,150,0}, size=220, colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
-		{class='ShieldSphere', options={life=math.huge, pos={0,300,0}, size=150, colormap1 = {{0.42, 0.8, 0.1, 0.8}}, repeatEffect=true}},
-		{class='ShieldSphere', options={life=math.huge, pos={0,400,0}, size=140, colormap1 = {{0.40, 0.7, 0.1, 0.8}}, repeatEffect=true}},
-		{class='ShieldSphere', options={life=math.huge, pos={0,500,0}, size=130, colormap1 = {{0.3, 0.5, 0.12, 0.8}}, repeatEffect=true}},
+
+		{class='Ribbon', options={color={.7,1,0.1,1}, width=12.5, piece="seed"}},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength = 0.005, repeatEffect=true}},
+		--	outer ShieldSFX
+		{class='ShieldSphere', options={ onActive=true, life=math.huge, pos={0,30.1,0}, size=600, 
+		colormap1 = {{227/255, 227/255, 125/255, 0.15}},
+		colormap2 = {{227/255, 250/255, 125/255, 0.15}},
+		repeatEffect=true}},			
+		{class='ShieldSphere', options={ onActive=true, life=math.huge, pos={0,30.2,0}, size=605, 
+		colormap1 = {{125/255, 250/255, 125/255, 0.15}}, --g
+		colormap2 = {{125/255, 227/255, 125/255, 0.15}},  --gb
+		repeatEffect=true}},		
+		{class='ShieldSphere', options={ onActive=true, life=math.huge, pos={0,30.3,0}, size=615, 
+		colormap1 = {{125/255, 227/255, 225/255, 0.15}}, --gb
+		colormap2 = {{125/255, 125/255, 250/255, 0.15}},  --b
+		repeatEffect=true}},	
+		{class='ShieldSphere', 	options={ onActive=true,  life=math.huge, pos={0,30.4,0}, size=625, 
+		colormap1 = {{250/255, 125/255, 125/255, 0.25}}, --r
+		colormap2 = {{0.62, 0.9, 0.09,  0.45}},			--g
+		}, repeatEffect=true},
 		
-		{class='Ribbon', options={color={.7,1,0.1,1}, width=12.5, piece="seed", onActive=true}},
-		
-		
-		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength = 0.005, repeatEffect=true}} 
-	},
+		{class='ShieldJitter', options={ onActive=true, delay=0,life=math.huge, pos={0,25,0}, size=655, precision=0.1, strength = 0.0035, repeatEffect=true}},
+
+		},
 	
 	jestorage= {
 		{class='ShieldSphere', options={life=math.huge, pos={0,18,2.3}, size=13.57, colormap1 = {{0.9, 0.6, 0.09, 0.8}}, repeatEffect=true}}

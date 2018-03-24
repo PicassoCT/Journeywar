@@ -129,13 +129,7 @@ function aListOfRandom(nrOfElements)
 	return tempList
 end
 
-local isInfantry={ 
-	[UnitDefNames["bg"].id]=true,
-	[UnitDefNames["css"].id]=true,
-	[UnitDefNames["gcivillian"].id]=true,
-	[UnitDefNames["skinfantry"].id]=true,
-	[UnitDefNames["tiglil"].id]=true
-}
+
 
 local spGetUnitDefID=Spring.GetUnitDefID
 local teamid=Spring.GetUnitTeam(unitID)

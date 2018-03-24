@@ -17,7 +17,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "citadellfire"
+	return "jbeanstalkshieldconvert"
 end
 center = piece "center"
 Quader04 = piece "Quader04"
@@ -25,6 +25,9 @@ Quader08 = piece "Quader08"
 Quader01 = piece "Quader01"
 
 function script.Create()
+	Spring.MoveCtrl.Enable(unitID,true)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.MoveCtrl.SetPosition(unitID,x,y+150,z)
 	--generatepiecesTableAndArrayCode(unitID)
 	StartThread(saySay)
 	StartThread(emitSFX)
@@ -41,33 +44,34 @@ InnerWing= piece"power"
 HoverPoint = piece"HoverPoint"
 boolMoving=false
 function switchMove()
-while true do
+	while true do
 
-Sleep(100000)
-boolMoving = true
+	Sleep(100000)
+	boolMoving = true
+	end
+
 end
 
-end
 function hovertest()
-while true do
-	Turn(Body,x_axis,math.rad(math.random(-100,100)),0,true)
-	Sleep(1000)
-    hoverSegway(      center,
-					  Body,
-					 InnerWing, 
-					 HoverPoint,
-					 50, 
-					 -90,
-					 90,
-					 x_axis, 
-					 function(axis, p) return select(axis,Spring.UnitScript.GetPieceRotation(p)) end,
-					 function() return boolMoving end, 
-					 math.pi/10,
-					 math.pi
-					 )
+	while true do
+		Turn(Body,x_axis,math.rad(math.random(-100,100)),0,true)
+		Sleep(1000)
+		hoverSegway(      center,
+						  Body,
+						 InnerWing, 
+						 HoverPoint,
+						 50, 
+						 -90,
+						 90,
+						 x_axis, 
+						 function(axis, p) return select(axis,Spring.UnitScript.GetPieceRotation(p)) end,
+						 function() return boolMoving end, 
+						 math.pi/10,
+						 math.pi
+						 )
 
-Sleep(1000)
-end
+	Sleep(1000)
+	end
 end
 Kugel02 = piece"Kugel02"
 function script.Killed(recentDamage, _)

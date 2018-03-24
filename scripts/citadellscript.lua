@@ -609,7 +609,7 @@ end
 function HideShield()
     boolShield = false
     Spring.PlaySoundFile("sounds/citadell/shield_powerdown.ogg", ANOUNCE_LOUDNESS)
-    Spring.SetUnitShieldState(unitID, SHIELDNUMBER, true)
+    Spring.SetUnitShieldState(unitID, SHIELDNUMBER, false)
     WaitForMove(shield, y_axis)
     for i = 1, 12, 1 do
         Hide(shields[i])
@@ -804,7 +804,7 @@ function dieingCitadel(recentDamage)
 	 StartThread(portalStormWave, unitID)
 	 
 	 for i=1,15 do
-		spawnCEGatUnit(unitID, "citadellexplosion", 0, 10+ i, 0)
+		spawnCegatUnit(unitID, "citadellexplosion", 0, 10+ i, 0)
 		Sleep(150-(i*10))
 	 end
 	 explodeArmor()
@@ -1140,7 +1140,7 @@ function shieldDraw()
                             tx, ty, tz = tx / norm, ty / norm, tz / norm
 
                             if maRa() == true then
-                                spawnCEGatUnit(v, "cshieldsparks", math.random(-15, 15), math.random(5, 25), math.random(-15, 15))
+                                spawnCegatUnit(v, "cshieldsparks", math.random(-15, 15), math.random(5, 25), math.random(-15, 15))
                             end
 
                             dx, dy, dz = tx * impulsfactor, ty * impulsfactor, tz * impulsfactor

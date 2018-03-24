@@ -100,7 +100,8 @@ local unitDef = {
 		"jabyss",
 
 		"jdarkgate",	
-		"jhivemind"
+		"jhivemind",
+		"jbeanstalkunroot"
 	},
 	
 	Category = [[LAND BUILDING]],

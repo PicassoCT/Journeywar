@@ -66,7 +66,9 @@ local unitDef = {
 		[1]={name = "slicergun",
 			
 			onlyTargetCategory = [[LAND]],
-		}
+		},
+			[2]={name = "jbeanstalkshield",
+		},
 
 		
 	},

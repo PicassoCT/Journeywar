@@ -2,50 +2,87 @@ include "createCorpse.lua"
 include "lib_OS.lua"
  include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
-
+include "lib_jw.lua" 
  include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
-
+healFactor=50
 center=piece"center"
 MoveIt=piece"MoveIt"
 Para=piece"Para"
 fruit={}
 for i=1,19 do
-name="fruit"..i
-fruit[i]=piece(name)
+	name="fruit"..i
+	fruit[i]=piece(name)
 
 end
 
 function script.Create()
-for i=1,19 do
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.MoveCtrl.Enable(unitID,true)
 
-Hide(fruit[i])
+	for i=1,19 do
+		Hide(fruit[i])
+	end
+
+
+
+	Spin(MoveIt,y_axis,math.rad(math.random(1,22)),0)
+
+	StartThread(onTheMove,x,y,z)
+	StartThread(swingLow)
+	x=math.ceil(math.random(1,19))
+	Show(fruit[x])
+end
+
+function onTheMove(x,y,z)
+	Spring.SetUnitBlocking(unitID,false)
+	Spring.SetUnitNeutral(unitID,true)
+	SpeedPerSecond=4
+	gh = Spring.GetGroundHeight(x,z)
+
+	while y >  Spring.GetGroundHeight(x,z) do
+		y=y-(SpeedPerSecond/10)
+		Spring.MoveCtrl.SetUnitPosition(unitID,x,y,z)
+		Sleep(33)
+	end
+	Hide(Para)
+	StartThread(healthyFruit,x,z)
+	dice=math.ceil(math.random(10000,20000))
+	Sleep(dice)
+	Spring.DestroyUnit(unitID,true,true)
+end
+
+TransformTable = getDreamTreeTransformUnitTypeTable(UnitDefNames)
+myTeamID=Spring.GetUnitTeam(unitID)
+
+function healthyFruit(x,z)
+	while true do
+		process(getAllInCircle(x,z,50,unitID),
+			function(id)
+				if id and id ~= unitID then
+				team=Spring.GetUnitTeam(id)
+				if team == myTeamID then
+					hp=Spring.GetUnitHealth(id)
+					if hp then
+						Spring.SetUnitHealth(id,hp+healFactor)
+					end				
+				elseif TransformTable[Spring.GetUnitDefID(id)] then
+					transform(id)
+				end
+				Spring.DestroyUnit(unitID,true,true)
+
+				end
+			end
+			)
+		Sleep(400)
+	end
 end
 
 
-
-Spin(MoveIt,y_axis,math.rad(math.random(1,22)),0)
-
-StartThread(onTheMove)
-StartThread(swingLow)
-x=math.ceil(math.random(1,19))
-Show(fruit[x])
-
-end
-
-function onTheMove()
-Spring.SetUnitBlocking(unitID,false)
-
-Up=math.random(800,1200)
-
-Move(MoveIt,y_axis,Up,0,true)
-Move(MoveIt,y_axis,0,math.random(2,5))
-WaitForMove(MoveIt,y_axis)
-Hide(Para)
-dice=math.ceil(math.random(20000,50000))
-Sleep(dice)
-Spring.DestroyUnit(unitID,true,true)
+function transform(id)
+                typeToTransferInto = TransformTable[Spring.GetUnitDefID(id)]
+				resultID = transformUnitInto(id, typeToTransferInto)
 end
 
 function swingLow()
@@ -74,31 +111,5 @@ function swingLow()
 	end
 end
 
-function script.Killed(recentDamage,_)
 
-createCorpseCUnitGeneric(recentDamage)
-return 1
-end
-
-
-
-
-function script.StartMoving()
-
-end
-
-function script.StopMoving()
-		
-		
-end
-
-function script.Activate()
-
-return 1
-end
-
-function script.Deactivate()
-
-return 0
-end
 

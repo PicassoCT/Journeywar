@@ -34,7 +34,7 @@ function checkYourself()
     if boolShowTrueColours == true and spUnitIsNotDead(tID) == true then
 	process(FactoryHasBuilt,
 			function(id)
-				spawnCEGatUnit(id, "jtyrion", 0, 45, 0)
+				spawnCegatUnit(id, "jtyrion", 0, 45, 0)
 				Spring.TransferUnit(id, teamID, false)
 			end
 			)
@@ -42,7 +42,7 @@ function checkYourself()
     end
 	
 	for i=1,10 do 
-	spawnCEGatUnit(unitID, "jtyrion", 0, 25, 0)
+	spawnCegatUnit(unitID, "jtyrion", 0, 25, 0)
 	Sleep(150)
 	end
 
