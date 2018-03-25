@@ -91,7 +91,7 @@ boolIsDecoy = myDefID == decoyDefID
 function lifeTimer()
 	if boolIsDecoy== true  then
 	Sleep(DECOY_LIFETIME)
-	spawnCegatUnit(unitID,"jghostdancerswitch")
+	spawnCegAtUnit(unitID,"jghostdancerswitch")
 
 	Spring.DestroyUnit(unitID,false,true)
 	end

@@ -1,9 +1,9 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua" 
 include "lib_Animation.lua"
 include "lib_jw.lua" 
- include "lib_Build.lua" 
+include "lib_Build.lua" 
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 healFactor=50
@@ -14,19 +14,22 @@ fruit={}
 for i=1,19 do
 	name="fruit"..i
 	fruit[i]=piece(name)
-
 end
 
 function script.Create()
 	x,y,z=Spring.GetUnitPosition(unitID)
+	gh=Spring.GetGroundHeight(x,z)
+	
 	Spring.MoveCtrl.Enable(unitID,true)
-
+	if distance(gh,y) < 3 then
+		y= gh+ math.random(700,1000)
+	end
+	Spring.MoveCtrl.SetPosition(unitID,x,y,z)
+		
 	for i=1,19 do
 		Hide(fruit[i])
 	end
-
-
-
+	
 	Spin(MoveIt,y_axis,math.rad(math.random(1,22)),0)
 
 	StartThread(onTheMove,x,y,z)
@@ -36,6 +39,7 @@ function script.Create()
 end
 
 function onTheMove(x,y,z)
+	
 	Spring.SetUnitBlocking(unitID,false)
 	Spring.SetUnitNeutral(unitID,true)
 	SpeedPerSecond=4
@@ -43,11 +47,11 @@ function onTheMove(x,y,z)
 
 	while y >  Spring.GetGroundHeight(x,z) do
 		y=y-(SpeedPerSecond/10)
-		Spring.MoveCtrl.SetUnitPosition(unitID,x,y,z)
+		Spring.MoveCtrl.SetPosition(unitID,x,y,z)
 		Sleep(33)
 	end
 	Hide(Para)
-	StartThread(healthyFruit,x,z)
+	StartThread(healthyFruit,x,y,z)
 	dice=math.ceil(math.random(10000,20000))
 	Sleep(dice)
 	Spring.DestroyUnit(unitID,true,true)
@@ -56,9 +60,9 @@ end
 TransformTable = getDreamTreeTransformUnitTypeTable(UnitDefNames)
 myTeamID=Spring.GetUnitTeam(unitID)
 
-function healthyFruit(x,z)
+function healthyFruit(x,y, z)
 	while true do
-		process(getAllInCircle(x,z,50,unitID),
+		process(getAllInSphere(x,z,25,unitID),
 			function(id)
 				if id and id ~= unitID then
 				team=Spring.GetUnitTeam(id)

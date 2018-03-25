@@ -1,87 +1,58 @@
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+include "lib_jw.lua"
+
 local piecesTable = {}
 center = piece "center"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = center
+piecesTable[#piecesTable+1] = center
 turnerPoint = piece "turnerPoint"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = turnerPoint
+piecesTable[#piecesTable+1] = turnerPoint
 Main = piece "Main"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = Main
+piecesTable[#piecesTable+1] = Main
 
 Head = piece "Head"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = Head
-Eye1 = piece "Eye1"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = Eye1
-Eye2 = piece "Eye2"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = Eye2
-Kreis01 = piece "Kreis01"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = Kreis01
+piecesTable[#piecesTable+1] = Head
+
+
+EggCannon = piece "EggCannon"
+piecesTable[#piecesTable+1] = EggCannon
 upleg1 = piece "upleg1"
-piecesTable[#piecesTable + 1] = {}
-piecesTable[#piecesTable] = upleg1
-
+piecesTable[#piecesTable+1] = upleg1
+EggRotator=piece"EggRotator"
+LLegTable = {}
 LegTable = {}
-Leg1 = piece "Leg1"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Leg1
-LLeg1 = piece "LLeg1"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = LLeg1
-Leg2 = piece "Leg2"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Leg2
-LLeg2 = piece "LLeg2"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = LLeg2
-Leg3 = piece "Leg3"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Leg3
-LLeg3 = piece "LLeg3"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = LLeg3
-Leg4 = piece "Leg4"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Leg4
-LLeg4 = piece "LLeg4"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = LLeg4
-Leg5 = piece "Leg5"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Leg5
-LLeg5 = piece "LLeg5"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = LLeg5
 
+upLegTable={}
 Lupleg1 = piece "Lupleg1"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Lupleg1
+upLegTable[#upLegTable+1] = Lupleg1
 upleg2 = piece "upleg2"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = upleg2
+upLegTable[#upLegTable+1] = upleg2
 Lupleg2 = piece "Lupleg2"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Lupleg2
+upLegTable[#upLegTable+1] = Lupleg2
 upleg3 = piece "upleg3"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = upleg3
+upLegTable[#upLegTable+1] = upleg3
 Lupleg3 = piece "Lupleg3"
-LegTable[#LegTable + 1] = {}
-LegTable[#LegTable] = Lupleg3
+upLegTable[#upLegTable+1] = Lupleg3
 
 RateOfDecrease = 65
 ItterationsTillReSpawn = 0
 MAGICRESPAWNNUMBER = Spring.GetUnitHealth(unitID)
 MAGICRESPAWNNUMBER = MAGICRESPAWNNUMBER / 2
-
+GROWUPTIME= 3*60*1000
 SIG_MOVE = 1
 SIG_LAY = 2
+SIG_GET = 4
+myDefID= Spring.GetUnitDefID(unitID)
+teamID = Spring.GetUnitTeam(unitID)
 
--- Spring.PlaySoundFile("sounds/jFactory/Factory1.wav",(loudness+i/10)%1) 
+
+sounds={
+"sounds/jSunCattle/UrScream.wav",
+"sounds/jSunCattle/move.ogg",
+}
 
 function costlyWhileOnTheMove()
     local lSetUnitHealth = Spring.SetUnitHealth
@@ -89,26 +60,8 @@ function costlyWhileOnTheMove()
     while (true) do
 
         while boolMoving == true do
-
-            for i = 10, 15, 1 do
-                if i ~= 12 and i ~= 13 then
-                    Turn(LegTable[i], y_axis, math.rad(22), 7)
-                else
-                    Turn(LegTable[i], z_axis, math.rad(22), 7)
-                end
-            end
-            WaitForTurn(LegTable[15], y_axis)
-            Sleep(200)
-            for i = 10, 15, 1 do
-                if i ~= 12 and i ~= 13 then
-                    Turn(LegTable[i], y_axis, math.rad(-22), 3)
-                else
-                    Turn(LegTable[i], z_axis, math.rad(-22), 3)
-                end
-            end
-
-            WaitForTurn(LegTable[15], y_axis)
-            health = lGetUnitHealth(unitID)
+			Sleep(500)
+			health = lGetUnitHealth(unitID)
             lSetUnitHealth(unitID, health - RateOfDecrease * (0.05 * math.max(1, GG.SunGodCattleTable[teamID])))
         end
 
@@ -121,149 +74,134 @@ end
 
 function layDownYourWorryHead()
     SetSignalMask(SIG_LAY)
+	
     Sleep(900)
     boolMoving = false
 
-    Turn(center, y_axis, math.rad(math.random(-360, 360)), 0.25)
     Signal(SIG_GET)
-    Rand = math.ceil(math.random(3200, 19000))
-    Sleep(Rand)
+	legDown(8)
 
     Turn(turnerPoint, z_axis, math.rad(-45), 12)
     WaitForTurn(turnerPoint, z_axis)
 
-    Turn(turnerPoint, z_axis, math.rad(-85), 0.2)
+    Turn(turnerPoint, z_axis, math.rad(-85), 0.4)
     WaitForTurn(turnerPoint, z_axis)
+	spawnCegAtUnit(unitID,"dirt",0,10,0)
     Sleep(2000)
 
-    for i = 1, table.getn(LegTable), 1 do
-        deg = math.random(22, 40)
-        Turn(LegTable[i], x_axis, math.rad(deg), 0.1)
-        deg = math.random(22, 40)
-        Turn(LegTable[i], y_axis, math.rad(deg), 0.1)
-        deg = math.random(22, 40)
-        Turn(LegTable[i], z_axis, math.rad(-deg), 0.1)
+	while boolMoving == false do
+		for i = 1, #LegTable, 1 do
+			tSyncIn(LegTable[i],math.random(22, 40),math.random(22, 40),math.random(22, 40)*-1,1500)
+		end
+		
+		for i = 1, #TableOfPieceGroups["KLeg"], 1 do
+			pied= TableOfPieceGroups["KLeg"][i]
+			tSyncIn(pied,math.random(22, 40),math.random(22, 40),math.random(22, 50), 1500)
+			tSyncIn(TableOfPieceGroups["KLLeg"][i],math.random(22, 40),math.random(22, 40),math.random(22, 50), 1500)
+			
+		end
+		rest=math.random(1,16)
+		Sleep(1500*rest)
     end
 
 
     --lay DownAnimation
 end
 
-SIG_GET = 4
-function inProtest()
-    Sleeptime = math.ceil(math.random(1500, 5000))
-    Sleep(Sleeptime)
-    loudness = math.random(0.8, 1)
-    Spring.PlaySoundFile("sounds/jSunCattle/UrScream.wav", loudness)
-end
 
 
 function getUpAndMove()
     SetSignalMask(SIG_GET)
-    Turn(center, y_axis, math.rad(0), 5)
-    for i = 1, table.getn(LegTable), 1 do
-        Turn(LegTable[i], x_axis, math.rad(0), 0.22)
-        Turn(LegTable[i], y_axis, math.rad(0), 0.22)
-        Turn(LegTable[i], z_axis, math.rad(20), 0.22)
-    end
-
+    Turn(center, y_axis, math.rad(0), 0.85)
+	legDown(80)
+	WaitForTurns(LegTable)
     Turn(turnerPoint, z_axis, math.rad(0), 0.27)
+standUpFactor=1
+steps=400
+    while (true == Spring.UnitScript.IsInTurn(piecesTable[2], z_axis))  do
+		 tval= math.random(10,60)
+		 for i = 1, 3 do
+			tSyncIn(TableOfPieceGroups["KLeg"][i],math.random(-10,10),0, -tval, steps*2)
+			tSyncIn(TableOfPieceGroups["KLLeg"][i],math.random(-10,10),0, -2*tval, steps*2)
+		 end
+		 
+		standUpFactor=standUpFactor/2
+        for i = 1, #LegTable do
+			if i % 2 == 0 then
+			tSyncIn(LegTable[i],math.random(-10,10),0, 41*standUpFactor, steps)
+			tSyncIn(LLegTable[i],math.random(-10,10),0, 150,steps)
+			
+			else
+			tSyncIn(LegTable[i],math.random(-10,10),0, 0,steps)
+			tSyncIn(LLegTable[i],math.random(-10,10),0, 0,steps)
+			end			
+        end   
+   
+        Sleep(steps)     
 
-    while (true == Spring.UnitScript.IsInTurn(piecesTable[2], z_axis)) do
-        for i = 10, 15, 1 do
-            if i ~= 12 and i ~= 13 then
-                Turn(LegTable[i], y_axis, math.rad(22), 7)
-            else
-                Turn(LegTable[i], z_axis, math.rad(22), 7)
-            end
-        end
-        WaitForTurn(LegTable[15], y_axis)
-        Sleep(200)
-        for i = 10, 15, 1 do
-            if i ~= 12 and i ~= 13 then
-                Turn(LegTable[i], y_axis, math.rad(-22), 3)
-            else
-                Turn(LegTable[i], z_axis, math.rad(-22), 3)
-            end
-        end
-
-        WaitForTurn(LegTable[15], y_axis)
-        Sleep(200)
+		for i = 1, #LegTable do
+			if i % 2 == 0 then
+				tSyncIn(LegTable[i],math.random(-10,10),0, 41*standUpFactor,steps)
+				tSyncIn(LLegTable[i],math.random(-10,10),0, math.random(20,70)*standUpFactor,steps)			
+			else
+				tSyncIn(LegTable[i],math.random(-10,10),0, -71,steps)
+				tSyncIn(LLegTable[i],math.random(-10,10),0, 140,steps)
+			end			
+        end   
+	
+        Sleep(steps)
     end
+	resetT(LegTable,10)
+	resetT(LLegTable,10)
+	setSpeedEnv(unitID,1.0)
+	StartThread(swingAppendix)
+ StartThread(PlaySoundByUnitDefID, myDefID, sounds[math.random(1,#sounds)], 0.5, 2000, 1, 0)
+ 
+ while boolMoving == true do
+		 tval= math.random(10,60)
+		 for i = 1, 3 do
+			tSyncIn(TableOfPieceGroups["KLeg"][i],math.random(-35,35),0, -tval, 1600)
+			tSyncIn(TableOfPieceGroups["KLLeg"][i],math.random(-35,35),0, -2*tval, 1600)
+		 end
+		 		 
+		for i = 1, #LegTable do
+			if i % 2 == 0 then
+				tSyncIn(LegTable[i], -25+ math.random(-5,5),0, 0,800)
+				tSyncIn(LLegTable[i],25+ math.random(-5,5),0, 0,800)			
+			else
+				tSyncIn(LegTable[i],30 +math.random(-5,5),0, 0,800)
+				tSyncIn(LLegTable[i],-30 + math.random(-5,5),0, 0,800)
+			end			
+        end  	
+		Sleep(800)	
+		for i = 1, #LegTable do
+			if i % 2 == 1 then
+				tSyncIn(LegTable[i], -25+ math.random(-5,5),0, 0,800)
+				tSyncIn(LLegTable[i],25+ math.random(-5,5),0, 0,800)			
+			else
+				tSyncIn(LegTable[i],30 +math.random(-5,5),0, 0,800)
+				tSyncIn(LLegTable[i],-30 + math.random(-5,5),0, 0,800)
+			end			
+        end  	
+		Sleep(800)		
+	end
+	legDown()
+end
 
-    WaitForTurn(turnerPoint, z_axis)
-    for i = 1, table.getn(LegTable), 1 do
-        Turn(LegTable[i], x_axis, math.rad(0), 1)
-        Turn(LegTable[i], y_axis, math.rad(0), 1)
-        Turn(LegTable[i], z_axis, math.rad(0), 1)
-    end
+function swingAppendix()
+appMax= #TableOfPieceGroups["App"]
+while boolMoving== true do
+	Sleep(250)
+	factor = (Spring.GetGameFrame() %300/300)*math.pi*2
+	yval = math.random(-5,5)/5
+	
+	for i = 1,appMax do
+		tSyncIn(TableOfPieceGroups["App"][i],math.cos(factor+i*((math.pi)/appMax))*42,yval,0,250)
+	end
+	
+end
 
-    StartThread(inProtest)
-    Turn(turnerPoint, z_axis, math.rad(0), 1)
 
-    WaitForTurn(turnerPoint, z_axis)
-
-    local ra = math.random
-    local lLegTable = LegTable
-    modu = 1
-    while true do
-
-        if modu == 1 then
-            modu = 0
-            for i = 1, 11, 4 do
-                Turn(lLegTable[i], x_axis, math.rad(-44 - ra(-5, 15)), 0.8 + ra(0.1, 0.6))
-                Turn(lLegTable[i + 1], x_axis, math.rad(-6 - ra(7, 14)), 0.8 + ra(0.1, 0.6))
-            end
-
-            for i = 3, 11, 4 do
-                Turn(lLegTable[i], x_axis, math.rad(12 + ra(1, 12)), 0.8 + ra(0.1, 0.6))
-                Turn(lLegTable[i + 1], x_axis, math.rad(12 + ra(1, 12)), 0.8 + ra(0.1, 0.6))
-            end
-            d = ra(1, 3)
-            Turn(turnerPoint, x_axis, math.rad(d), d / 10)
-            d = ra(2, 6)
-            Turn(turnerPoint, z_axis, math.rad(d), d / 20)
-            d = ra(-7, 3)
-            Turn(Head, x_axis, math.rad(d), 0.4)
-            Move(Main, y_axis, -12, 2.5)
-            d = ra(0, 10)
-            Turn(Eye1, y_axis, math.rad(d), 3)
-            d = ra(30, 50)
-            Turn(Eye1, y_axis, math.rad(d), d / 10)
-            Turn(Main, x_axis, math.rad(4.2), 0.2)
-        else
-            for i = 3, 11, 4 do
-                Turn(lLegTable[i], x_axis, math.rad(-44 - ra(-5, 15)), 0.8 + ra(0.1, 0.6))
-                Turn(lLegTable[i + 1], x_axis, math.rad(-6 - ra(7, 14)), 0.8 + ra(0.1, 0.6))
-            end
-
-            for i = 1, 11, 4 do
-                Turn(lLegTable[i], x_axis, math.rad(12 + ra(1, 12)), 0.8 + ra(0.1, 0.6))
-                Turn(lLegTable[i + 1], x_axis, math.rad(12 + ra(1, 12)), 0.8 + ra(0.1, 0.6))
-            end
-
-            d = ra(2, 20)
-            Turn(Eye1, y_axis, math.rad(d), 3)
-            Turn(Eye2, y_axis, math.rad(-10), 3)
-            d = ra(-6, 0)
-            Move(Main, y_axis, d, 3.5)
-            Turn(Main, x_axis, math.rad(-4.2), 0.2)
-            Turn(turnerPoint, z_axis, math.rad(-5), 0.25)
-
-            modu = 1
-        end
-        EmitSfx(center, 1024)
-        EmitSfx(turnerPoint, 1024)
-        WaitForTurn(lLegTable[1], x_axis)
-        WaitForTurn(lLegTable[3], x_axis)
-        EmitSfx(center, 1024)
-        EmitSfx(turnerPoint, 1024)
-
-        if modu == 0 then
-            Turn(turnerPoint, x_axis, math.rad(-3), 0.5)
-            Turn(Head, x_axis, math.rad(5), 0.5)
-        end
-    end
 end
 
 boolMoving = false
@@ -277,12 +215,10 @@ function script.StartMoving()
     StartThread(getUpAndMove)
 end
 
-function legDown()
-    for i = 1, table.getn(LegTable), 1 do
-        Turn(LegTable[1], x_axis, math.rad(0), 3.25)
-        Turn(LegTable[1], y_axis, math.rad(0), 3.25)
-        Turn(LegTable[1], z_axis, math.rad(0), 3.25)
-    end
+function legDown(speed)
+	speed=speed or 3.25
+	
+	resetT(LegTable, speed)
 end
 
 function script.StopMoving()
@@ -293,12 +229,7 @@ function script.StopMoving()
     StartThread(layDownYourWorryHead)
 end
 
-teamID = Spring.GetUnitTeam(unitID)
 
-function timeDelayedMoveGoal(myYoung, x, y, z)
-    Sleep(2000)
-    Spring.SetUnitMoveGoal(myYoung, x, y, z)
-end
 
 boolDefBuffActive = true
 
@@ -321,7 +252,8 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
             Spring.SpawnCEG("greencross", x, y + 120, z, 0, 1, 0, 50, 0)
         end
         if ItterationsTillReSpawn > MAGICRESPAWNNUMBER then
-            boolThreadStart = true
+		    ItterationsTillReSpawn = ItterationsTillReSpawn - MAGICRESPAWNNUMBER
+            eggCounter = eggCounter +1
         end
 
         Spring.SetUnitHealth(unitID, originalHealth)
@@ -329,22 +261,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
     return 0
 end
 
-boolThreadStart = false
-function threadStartLoop()
-    while true do
-        Sleep(500)
-        if boolThreadStart == true then
-            boolThreadStart = false
-            ItterationsTillReSpawn = ItterationsTillReSpawn - MAGICRESPAWNNUMBER
-            x, y, z = Spring.GetUnitPosition(unitID)
-            GG.UnitsToSpawn:PushCreateUnit("jsuneggnogg", x, y + 15, z + 15, 0, teamID)
-            hp = Spring.GetUnitHealth(unitID)
-            Spring.SetUnitHealth(unitID, math.ceil(hp * 0.8))
-
-            --StartThread(timeDelayedMoveGoal,myYoung,x,y,z)
-        end
-    end
-end
+eggCounter = 0
 
 function script.Killed(damage, _)
     GG.SunGodCattleTable[teamID] = GG.SunGodCattleTable[teamID] - 1
@@ -352,8 +269,7 @@ function script.Killed(damage, _)
     return 0
 end
 
-maxHealth = Spring.GetUnitHealth(unitID)
-
+_,maxHealth = Spring.GetUnitHealth(unitID)
 --DeBuff Cycle
 local spGetUnitHealth = Spring.GetUnitHealth
 local spSpawnCEG = Spring.SpawnCEG
@@ -373,6 +289,7 @@ function applyDeBuff(T)
     end
 end
 
+Eye2=piece"Eye2"
 function DeBuff()
     local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
     local spGetUnitPosition = Spring.GetUnitPosition
@@ -384,7 +301,7 @@ function DeBuff()
             T = spGetUnitsInCylinder(x, z, RANGE)
             if T then T = filterAllUnitsForDeBuff(T) end
             if T then applyDeBuff(T) end
-            EmitSfx(1025, Eye1) -- Placeholder Sfx
+            EmitSfx(1025, Eye2) -- Placeholder Sfx
         end
         Sleep(500)
     end
@@ -404,26 +321,99 @@ end
 
 boolHitIt = false
 function threadStarter()
-    while boolHitIt == false do
-        Sleep(500)
-    end
-
-    if boolHitIt == true then
+		delayTillComplete(unitID)   				
         StartThread(costlyWhileOnTheMove)
+		Sleep(GROWUPTIME)
+
         StartThread(DeBuff)
-    end
+        StartThread(ReloadEggGun)
 end
 
-function threatenToStart()
-    Sleep(1500)
-    boolHitIt = true
-end
-
+TableOfPieceGroups={}
 function script.Create()
+	resetAll(unitID)
+	setSpeedEnv(unitID,1.0)
+	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
+	LegTable= TableOfPieceGroups["Leg"]
+	LLegTable= TableOfPieceGroups["LLeg"]
+	hideT(TableOfPieceGroups["Egg"])
     if not GG.SunGodCattleTable then GG.SunGodCattleTable = {} end
     if not GG.SunGodCattleTable[teamID] then GG.SunGodCattleTable[teamID] = 0 end
     GG.SunGodCattleTable[teamID] = GG.SunGodCattleTable[teamID] + 1
     StartThread(threadStarter)
-    StartThread(threatenToStart)
-    StartThread(threadStartLoop)
+end
+
+function script.AimFromWeapon1()
+    return EggCannon
+end
+
+function script.QueryWeapon1()
+    return EggCannon
+end
+
+function spreadLegs(counterPitch,speed)
+
+	Turn(TableOfPieceGroups["Leg"][1],z_axis,counterPitch+math.rad(38),speed)
+	Turn(TableOfPieceGroups["LLeg"][1],z_axis,-math.rad(38),speed)	
+	Turn(TableOfPieceGroups["Leg"][3],z_axis,counterPitch+math.rad(40),speed)
+	Turn(TableOfPieceGroups["LLeg"][3],z_axis,-math.rad(40),speed)	
+	Turn(TableOfPieceGroups["Leg"][3],z_axis,counterPitch+math.rad(40),speed)
+	Turn(TableOfPieceGroups["LLeg"][4],z_axis,-math.rad(40),speed)
+	
+	Turn(TableOfPieceGroups["Leg"][2],z_axis,-1*counterPitch+  math.rad(-25),speed)
+	Turn(TableOfPieceGroups["LLeg"][2],z_axis, -1*counterPitch + math.rad(-25),speed)	
+	Turn(TableOfPieceGroups["Leg"][5],z_axis,-1*counterPitch+  math.rad(-25),speed)
+	Turn(TableOfPieceGroups["LLeg"][5],z_axis, -1*counterPitch + math.rad(-25),speed)	
+end
+
+
+chargeUpTime= 3500
+function ReloadEggGun()
+	hideT(TableOfPieceGroups["Egg"])
+	Spin(EggRotator,x_axis,math.rad(720),0.015)
+	
+	for i=1,#TableOfPieceGroups["Egg"]-1, 1 do
+		StartThread(spreadLegs, storedPitch, 5)
+		if TableOfPieceGroups["Egg"][i-1] then Hide(TableOfPieceGroups["Egg"][i-1] ) end
+		if TableOfPieceGroups["Egg"][i] then Show(TableOfPieceGroups["Egg"][i] ) end
+		rest= math.ceil(chargeUpTime/#TableOfPieceGroups["Egg"])
+		Sleep(rest)
+	end
+	spawnCegAtPiece(unitID, EggCannon, "helioloadaurora", 0)	
+	boolReloaded=true
+	boolReloading=false
+end
+
+
+storedHeading =0
+storedPitch   =0
+
+boolReloading=false
+boolReloaded=false
+function script.AimWeapon1(heading, pitch)
+	Signal(SIG_LAY)
+	storedHeading =heading
+	storedPitch   =pitch
+
+	if boolReloaded == false and boolReloading== false  then
+			boolReloading= true
+			StartThread(ReloadEggGun)
+			return false
+	end
+
+	if boolReloading== true then return false end
+
+	if boolReloaded == true and eggCounter > 0 then
+		WTurn(center,y_axis, heading+math.rad(-90), 12)		
+		
+		return true
+	end	
+	
+	return false  
+end
+
+function script.FireWeapon1()
+	eggCounter=eggCounter -1
+	spawnCegAtPiece(unitID, EggCannon, "helioloadaurora", 0)
+return true
 end

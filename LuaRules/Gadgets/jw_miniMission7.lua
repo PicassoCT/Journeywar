@@ -152,7 +152,7 @@ function Misson7InFairAndLoveEverythingIsWar(frame)
 		CitadellConqueredFactor= CitadellConqueredFactor + 0.001
 		if CitadellConqueredFactor >= 1.0 then return true end
 		
-		if frame % 10 then spawnCegatUnit(citadelID, "AR2Projectile", 0, 100 *CitadellConqueredFactor, 0, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10) end --sfx
+		if frame % 10 then spawnCegAtUnit(citadelID, "AR2Projectile", 0, 100 *CitadellConqueredFactor, 0, math.random(-10,10)/10,math.random(0,10)/10,math.random(-10,10)/10) end --sfx
 		
 		process( getAllInCircle(x,z, 125,citadelID, teamID),
 				function(id)

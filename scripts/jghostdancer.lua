@@ -193,7 +193,7 @@ while true do
 		x, y, z = Spring.GetUnitPiecePosDir(unitID,TableOfPieceGroups["Tail"][#TableOfPieceGroups["Tail"]])
 		id= Spring.CreateUnit(decoyTypes[math.random(1,#decoyTypes)], x, y, z, 1, teamID)
 		tx,ty,tz= x,y,z 
-		spawnCegatUnit(id,"jghostdancerswitch")
+		spawnCegAtUnit(id,"jghostdancerswitch")
 		ed=Spring.GetUnitNearestEnemy(unitID)
 		if ed then 
 			tx,ty,tz=Spring.GetUnitPosition(ed)

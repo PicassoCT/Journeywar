@@ -1,7 +1,7 @@
 local unitName = "jbeanstalkunroot"
 local unitDef = {
-	name = "unroot",
-	Description = "transforms if fed with units into a Heighborn DNA-weaver <Upgrade>",
+	name = "Unroot Beanstalk",
+	Description = " the beanstalk rips its root out of the ground to travell along the surface. <Ability>",
 	objectName = "emptyObjectIsEmpty.s3o",
 	script = "placeholder.lua",
 	buildPic = "jupgrade.png",

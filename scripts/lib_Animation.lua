@@ -2093,7 +2093,9 @@ end
 
 --> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
 function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
-	shotVector= shotVector*-1
+	-- shotVector.x= shotVector.x*-1
+	-- shotVector.y= shotVector.y*-1
+	-- shotVector.z= shotVector.z*-1
 
 	LimbMap= getPiecesBelow(unitID, rootPiece)
 	stunUnit(unitID, 64)

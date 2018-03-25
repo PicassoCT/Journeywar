@@ -2,8 +2,8 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
 include "lib_Build.lua"
+include "lib_jw.lua"
 
 center = piece "center"
 beans = piece "beans"
@@ -834,15 +834,18 @@ hideT(TablesOfPiecesGroups["Sprout"])
 	end
 end
 
-convertibleWeaponTypes= getConvertibleWeaponTypes(UnitDefs)
+convertibleWeaponTypes= getBeanstalkShieldConvertibleWeaponTypes(UnitDefs)
 
-function beanstalkShieldHit(weaponDefID, proID, proOwnerID,shieldCarrierUnitID)
-		enabled, shieldpower = Spring.GetUnitShieldState(unitID, 1)
-                            
-        if convertibleWeaponTypes[weaponDefID] and boolShieldActive and shieldpower > SHIELD_COST_CONVERTPROJ then
-			Spring.SetUnitShieldState(unitID, 1, true, shieldpower - SHIELD_COST_CONVERTPROJ)		
+function beanstalkShieldHit(  proID, proOwnerdID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile,startx, starty, startz, hitx, hity, hitz)
+		enabled, shieldpower = Spring.GetUnitShieldState(unitID, 2)
+        weaponDefID = Spring.GetProjectileDefID(proID)  
+		
+        if convertibleWeaponTypes[weaponDefID] and 
+				shieldpower > SHIELD_COST_CONVERTPROJ then
+	
+			Spring.SetUnitShieldState(unitID, 2, true, shieldpower - SHIELD_COST_CONVERTPROJ)		
 			x,y,z=Spring.GetProjectilePosition(proID)
-			weaponDefID = Spring.GetProjectileDefID(proID)
+	
 			Spring.SpawnCEG("jbeanstalkshieldconvert",x,y,z,0, 60)
 			GG.UnitsToSpawn:PushCreateUnit("jdrops", x,y,z, 0, Spring.GetUnitTeam(shieldCarrierUnitID))
 

@@ -90,6 +90,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	jplanktoneraaDefID = WeaponDefNames["jplanktoneraa"].id
 	jinfacidantsDefID = WeaponDefNames["jinfectants"].id
 	jVarySpearDefID = WeaponDefNames["jvaryspear"].id
+	jsungodegggunDefID = WeaponDefNames["jsungodegggun"].id
 
 	ChainLightningTable = {}
 	local FireWeapons = {
@@ -101,6 +102,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	RazorGrenadeTable = {}
 	
 	
+	Script.SetWatchWeapon(jsungodegggunDefID, true)
 	Script.SetWatchWeapon(vortMarkerWeaponDefID, true)
 	Script.SetWatchWeapon(jacidantsDefID, true)
 	Script.SetWatchWeapon(cEfenceWeapondDefID, true)
@@ -171,7 +173,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		if abstractTypeTable[defID] or airTypeTable[defID] then return end
 		
 		if isInfantryTypeTable[defID] then 
-			spawnCegatUnit(id, "infantrydissolve", 0, 10,0)	
+			spawnCegAtUnit(id, "infantrydissolve", 0, 10,0)	
 			GG.UnitsToKill:PushKillUnit(id, true, true)
 			return 
 		end
@@ -323,6 +325,9 @@ if (gadgetHandler:IsSyncedCode()) then
 		end,
 		[catapultDefID] = function(weaponDefID, px, py, pz, AttackerID)
 			Spring.SpawnCEG("ccatapultexpl", px, py + 5, pz, 0, 1, 0, 10)
+		end,
+		[jsungodegggunDefID] = function(weaponDefID, px, py, pz, AttackerID)
+			GG.UnitsToSpawn:PushCreateUnit("jsuneggnogg", px,py,pz, 0, Spring.GetUnitTeam(AttackerID))	
 		end,
 		[cArtDarkMaterWDefID] = function(weaponDefID, px, py, pz, AttackerID)
 			if not GG.AddFire then GG.AddFire = {} end
@@ -649,8 +654,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		or gameFrame - warpedBuildings[attackerID].lastBlast > vortwarpDecaySeconds *30 then
 			warpedBuildings[attackerID] = {target =unitID, start= gameFrame, lastBlast = gameFrame}
 		elseif gameFrame - warpedBuildings[attackerID].start > warpTimeFrames then
-			--spawnCegatUnit
-			spawnCegatUnit(unitID, "vbuildwarp", 0, 100, 0) 
+			--spawnCegAtUnit
+			spawnCegAtUnit(unitID, "vbuildwarp", 0, 100, 0) 
 			Spring.DestroyUnit(unitID,false,true)
 			boolStillAlive = false
 		end
@@ -661,7 +666,7 @@ if (gadgetHandler:IsSyncedCode()) then
 --		Spring.Echo("Time Till warp:"..(gameFrame - warpedBuildings[attackerID].start).." / "..warpTimeFrames)
 		
 		warpedBuildings[attackerID].lastBlast = gameFrame
-		spawnCegatUnit(unitID, "vortwarp", 0, 100, 0) 
+		spawnCegAtUnit(unitID, "vortwarp", 0, 100, 0) 
 	
 	end
 	
@@ -718,7 +723,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			cegEventStream = function (persPack)
 				
-				spawnCegatUnit(unitID, "tangledceg", 0, 10, 0) 
+				spawnCegAtUnit(unitID, "tangledceg", 0, 10, 0) 
 				persPack.counter = persPack.counter + 1
 				return Spring.GetUnitIsDead(unitID) and persPack.counter < persPack, persPack
 			end
@@ -752,8 +757,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	
 	UnitDamageFuncT[cEfenceWeapondDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		spawnCegatUnit(unitID, "cefencesplash", 0, 10, 0)
-		spawnCegatUnit(attackerID, "cefencesplash", 0, 10, 0)
+		spawnCegAtUnit(unitID, "cefencesplash", 0, 10, 0)
+		spawnCegAtUnit(attackerID, "cefencesplash", 0, 10, 0)
 		
 		return damage
 	end
@@ -860,7 +865,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--perma speed reduction - glued to ground with lots of sucction, lacking any possible seduction
 	UnitDamageFuncT[glueMineWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if not GG.GluedForLife[unitID] then GG.GluedForLife[unitID] = 1000 end
-		spawnCegatUnit(unitID, "gluebuff", 0, 30, 0)
+		spawnCegAtUnit(unitID, "gluebuff", 0, 30, 0)
 		GG.GluedForLife[unitID] = GG.GluedForLife[unitID] * 0.9
 	end
 	UnitDamageFuncT[jgluegunDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
@@ -1442,22 +1447,21 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	beanstalkDefID= UnitDefNames["beanstalk"].id
 	shieldHitFunctions={
-	[beanstalkDefID] = function(proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile)
-		
+	[beanstalkDefID] = function(proID, proOwnerdID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile,startx, starty, startz, hitx, hity, hitz)
 			env =Spring.UnitScript.GetScriptEnv(shieldCarrierUnitID)
 			if env and env.beanstalkShieldHit then
-				Spring.UnitScript.CallAsUnit(shieldCarrierUnitID, env.beanstalkShieldHit, weaponDefID, proID, proOwnerID, shieldCarrierUnitID)
+				Spring.UnitScript.CallAsUnit(shieldCarrierUnitID, env.beanstalkShieldHit, proID, proOwnerdID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile,startx, starty, startz, hitx, hity, hitz)
 			end		
 	
-		return false
+		return true
 	end	
 	}
-	
-	function gadget:ShieldPreDamaged(proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile)
-	echo("Shield Hit")
-		shieldCarrierType= Spring.GetUnitDefID(shieldCarrierUnitID)
+
+	function gadget:ShieldPreDamaged(proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile,startx, starty, startz, hitx, hity, hitz)
+	shieldCarrierType= Spring.GetUnitDefID(shieldCarrierUnitID)
+		
 		if shieldCarrierType and  shieldHitFunctions[shieldCarrierType]then
-			return shieldHitFunctions[shieldCarrierType](proID, proOwnerID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile)
+			return shieldHitFunctions[shieldCarrierType](proID, proOwnerdID, shieldEmitterWeaponNum, shieldCarrierUnitID, bounceProjectile,startx, starty, startz, hitx, hity, hitz)
 		end
 		return false
 	end

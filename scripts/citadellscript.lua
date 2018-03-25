@@ -804,7 +804,7 @@ function dieingCitadel(recentDamage)
 	 StartThread(portalStormWave, unitID)
 	 
 	 for i=1,15 do
-		spawnCegatUnit(unitID, "citadellexplosion", 0, 10+ i, 0)
+		spawnCegAtUnit(unitID, "citadellexplosion", 0, 10+ i, 0)
 		Sleep(150-(i*10))
 	 end
 	 explodeArmor()
@@ -1140,7 +1140,7 @@ function shieldDraw()
                             tx, ty, tz = tx / norm, ty / norm, tz / norm
 
                             if maRa() == true then
-                                spawnCegatUnit(v, "cshieldsparks", math.random(-15, 15), math.random(5, 25), math.random(-15, 15))
+                                spawnCegAtUnit(v, "cshieldsparks", math.random(-15, 15), math.random(5, 25), math.random(-15, 15))
                             end
 
                             dx, dy, dz = tx * impulsfactor, ty * impulsfactor, tz * impulsfactor

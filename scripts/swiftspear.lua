@@ -722,7 +722,7 @@ function script.FireWeapon1()
 		StartThread(HideMeWhileNotThere)
 		EmitSfx(center, 1024)
 		dx,dy,dz = Spring.GetUnitDirection(unitID)
-		spawnCegatUnit(unitID, "jswspout", 0 ,10 ,0, -dx,-dy,-dz)
+		spawnCegAtUnit(unitID, "jswspout", 0 ,10 ,0, -dx,-dy,-dz)
 	
 	return true
 end

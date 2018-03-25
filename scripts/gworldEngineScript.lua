@@ -51,7 +51,7 @@ function OrbitalDrop()
     WaitForMove(body, y_axis)
     Move(DeathStick, y_axis, -75, 70)
     for i = 1, 6, 1 do
-        spawnCegatUnit(unitID, "factory_explosion", math.random(-120, 120), math.random(-120, 120), math.random(-120, 120))
+        spawnCegAtUnit(unitID, "factory_explosion", math.random(-120, 120), math.random(-120, 120), math.random(-120, 120))
     end
     HumpingTheGround()
 end

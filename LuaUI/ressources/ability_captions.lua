@@ -32,7 +32,7 @@ return {
   ["jbonsai"]= {active="Extract\n Corewater", passive="Stop\n Corewater"},
   ["jfiredancer"]= {active="Sacrifice", passive="Sacrifice"},
   ["jbeherith"]= {active="Suicidestampede", passive="Amok"},
-  ["jghostdancer"]= {active="Create Decoys", passive="Decoys Deactivated"},
+  ["jghostdancer"]= {active="Creating\nDecoys", passive="Decoys\nDeactivated"},
   ["beanstalk"]= {active="Grow\nShield", passive="Unveil"},
   ["jconcaterpillar"]= {active="Heal\nUnits", passive="Stop\nHealing"},
   ["skinfantry"]= {active="Ambush\nOn", passive="Ambush\nOff"},

@@ -17,7 +17,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "jbeanstalkshieldconvert"
+	return "helioloadaurora"
 end
 center = piece "center"
 Quader04 = piece "Quader04"
@@ -108,7 +108,7 @@ function emitSFX()
 	i = 0
 	while true do
 	cegFunction(x,y,z)
-	Sleep(12000)
+	Sleep(3000)
 		
 	end
 end

@@ -82,6 +82,30 @@ function getAllInCircle(x, z, Range, unitID, teamid)
 	return T
 end
 
+--> Grabs every Unit in a circle, filters out the unitid or teamid if given
+function getAllInSphere(x, y, z, Range, unitID, teamid)
+	if not x or not z then
+		return {}
+	end
+	if not Range then assert(Range) end
+	
+	T = {}
+	if teamid then
+		T = Spring.GetUnitsInSphere(x, y, z, Range, teamid)
+	else
+		T = Spring.GetUnitsInSphere(x, y, z, Range)
+	end
+	
+	if unitID and T and #T > 1 and type(unitID) == 'number' then
+		for num, id in ipairs(T) do
+			if id == unitID then
+				table.remove(T, num)
+			end
+		end
+	end
+	return T
+end
+
 
 
 --> Removes Units of a Team from a table
@@ -5336,7 +5360,7 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset,dx,dy,dz, boolPieceDir
 end
 
 -->Spawn CEG at unit
-function spawnCegatUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
+function spawnCegAtUnit(unitID, cegname, xoffset, yoffset, zoffset,dx,dy,dz)
 	--if doesUnitExistAlive(unitID) ==false then return end
 	dx,dy,dz= dx or 0,dy or 1,dz or 0
 
@@ -5368,9 +5392,9 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset)
 	boolAdd = offset or 10
 	
 	
-	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCegatUnit") end
-	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCegatUnit") end
-	if not cegname then error("lib_UnitScript::Not enough arguments to spawnCegatUnit") end
+	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCegAtUnit") end
+	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCegAtUnit") end
+	if not cegname then error("lib_UnitScript::Not enough arguments to spawnCegAtUnit") end
 	x, y, z = Spring.GetUnitPiecePosDir(unitID, pieceId)
 	
 	if y then

@@ -15,8 +15,8 @@ local unitDef = {
  idleAutoHeal=0,
   autoheal=0,
   pushResistant =true,
-  	canattack=false,
-	canguard=false,
+  	canattack=true,
+	canguard=true,
 	canmove=true,
 	canpatrol=true,
 	canstop=true,
@@ -67,10 +67,12 @@ Category = [[LAND]],
 				"custom:sungodbuff"				 
 				},
 				},
-				
-weapons = {
 
 				
+weapons = {
+		[1]={name = "jsungodegggun",
+			onlyTargetCategory = [[BUILDING]],
+		},		
 	},		
 		
 }

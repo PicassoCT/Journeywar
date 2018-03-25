@@ -146,7 +146,7 @@ typeTable= {
 	,"cautsuicide"
 	,"cbgrenade"
 	,"cmtwgrenade"
-	,"cchoperrocke"
+	,"cchoperrocket"
 	,"ceater"
 	,"comendsniper"
 	,"cnukegrenadelvl1"

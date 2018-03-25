@@ -637,7 +637,7 @@ setSpeedEnv(unitID,1.0)
 end
 
 function script.Deactivate()
-spawnCegatUnit(unitID, "dirt", 0, 10, 0)
+spawnCegAtUnit(unitID, "dirt", 0, 10, 0)
 hideAll(unitID)
 Show(Tail)
 Show(unfold)
