@@ -3658,9 +3658,9 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 end
 
 function signalAll(limitUpper)
-for i=0,limitUpper do
-	Signal(2^i)
-end
+	for i=0,limitUpper do
+		Signal(2^i)
+	end
 
 end
 

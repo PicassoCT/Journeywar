@@ -229,7 +229,7 @@ function FeedMe()
 			T = process(T,
 			function(id)
 				uDefid = Spring.GetUnitDefID(id)
-				if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTyeTable[uDefid ]then
+				if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTypeTable[uDefid ]then
 					return id
 				end
 			end,

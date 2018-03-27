@@ -34,7 +34,7 @@ local unitDef = {
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
 
-
+corpse="exconroach",
 
  
 --	maneuverleashlength=640,
