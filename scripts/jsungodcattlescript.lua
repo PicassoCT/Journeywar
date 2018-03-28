@@ -378,6 +378,7 @@ end
 
 TableOfPieceGroups={}
 function script.Create()
+	Spring.SetUnitBlocking(unitID,false)
 	resetAll(unitID)
 	setSpeedEnv(unitID,1.0)
 	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
@@ -422,7 +423,7 @@ chargeUpTime= 3500
 function ReloadEggGun()
 	if boolReloading== true or boolReloaded== true then return end	
 	boolReloading=true
-	while boolUpright==false do
+	while boolUpright==false or not TableOfPieceGroups do
 		Sleep(100)
 	end
 	hideT(TableOfPieceGroups["Egg"])
@@ -470,5 +471,6 @@ function script.FireWeapon1()
 	spawnCegAtPiece(unitID, EggCannon, "helioloadaurora", 0)
 	hideT( TableOfPieceGroups["Egg"])
 	StartThread(ReloadEggGun)
+	Turn(center,y_axis,math.rad(0),0.7)
 return true
 end

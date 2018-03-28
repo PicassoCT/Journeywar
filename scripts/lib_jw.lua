@@ -254,7 +254,6 @@ function getEggTypeTable(UnitDefNames)
         [UnitDefNames["jskineggnogg"].id]=true,
         [UnitDefNames["jtigeggnogg"].id ]=true,
         [UnitDefNames["jdevoureregg"].id]=true,
-        [UnitDefNames["jdevoureregg"].id]=true,
         [UnitDefNames["jsuneggnogg"].id]=true
 		}
 return retTab

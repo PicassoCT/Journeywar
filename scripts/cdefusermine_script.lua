@@ -2,7 +2,7 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
+include "lib_jw.lua"
 include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage
@@ -55,6 +55,13 @@ function script.Killed(recentDamage, _)
     return 1
 end
 
+lastVictimOfShot= unitID
+
+function setVictimOfLastShot(vicID)
+	if vicID then
+	lastVictimOfShot=vicID
+	end
+end
 
 --- -aimining & fire weapon
 function script.AimFromWeapon1()
@@ -71,15 +78,26 @@ function script.AimWeapon1(Heading, pitch)
     unFold()
     return true
 end
+function delayedSetMoveGoal(myID)
+Sleep(350)
+isDead= Spring.GetUnitIsDead(myID) 
+isDatDead= Spring.GetUnitIsDead(lastVictimOfShot) 
+if isDead and isDead == false and isDatDead and isDatDead == false then
+	x,y,z= Spring.GetUnitPosition(lastVictimOfShot)
+	command(myID, "go", { x = tx, y = gh, z = tz })
+end
+
+end
+
 
 teamid = Spring.GetUnitTeam(unitID)
 function script.FireWeapon1()
     x, y, z = Spring.GetUnitPiecePosDir(unitID, dart)
-    id = Spring.CreateUnit("cdefusordart", x, y, z, 0, teamid)
+	if consumeAvailableRessource("metal", 15, teamid)== true then
+		id = Spring.CreateUnit("cdefusordart", x, y, z, 0, teamid)
+		StartThread(delayedSetMoveGoal,id)
+	end
     Hide(dart)
-    ed = Spring.GetUnitNearestEnemy(id)
-    ex, ey, ez = Spring.GetUnitPosition(ed)
-    Spring.SetUnitMoveGoal(id, ex, ey, ez)
 
     retract()
 

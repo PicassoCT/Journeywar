@@ -2,7 +2,7 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
+include "lib_jw.lua"
 include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
@@ -11,8 +11,9 @@ center = piece "center"
 dart = piece "dart"
 
 function script.Create()
-
+	
     StartThread(uHave20Seconds)
+    StartThread(maxTime)
 end
 
 function uHave20Seconds()
@@ -20,10 +21,13 @@ function uHave20Seconds()
     dropDead()
 end
 
+function maxTime()
+    Sleep(80000)
+    dropDead()
+end
+
 
 function script.Killed(recentDamage, _)
-
-
     return 1
 end
 
@@ -41,13 +45,28 @@ end
 
 function script.AimWeapon1(Heading, pitch)
     --aiming animation: instantly turn the gun towards the enemy
-
     return true
 end
 
+typesAsStrings={
+"jsuneggnogg",
+"jracedart"
+}
+
+dartableTypeTable = getTypeTable(UnitDefNames, typesAsStrings)
 
 function script.FireWeapon1()
-
+	x,y,z=Spring.GetUnitPosition(unitID)
+	process(getAllInSphere(x,y,z,35),
+			function(id)
+				if dartableTypeTable[Spring.GetUnitDefID(id)]
+					Spring.DestroyUnit(id,true,false)
+					for i=1,4 do
+						Explode(dart,SFX.SHATTER + SFX.FIRE)			
+					end
+					Spring.DestroyUnit(unitID,true,false)
+				end
+			)
     return true
 end
 

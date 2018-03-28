@@ -212,7 +212,7 @@ infantryTable = getInfantryTypeTable()
 creeperTypeTable = getCreeperTypeTable()
 corpseTypeTable = getCorpseTypeTable()
 neutralTypeTable = getNeutralTypeTable()
-eggTyeTable = getEggTypeTable(UnitDefNames)
+eggTypeTable = getEggTypeTable(UnitDefNames)
 
 function FeedMe()
 	Sleep(13000)

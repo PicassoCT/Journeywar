@@ -38,6 +38,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	PROJECTILE = 112
 	
 	--Centrail Weapons
+	cdefusorminegunWeaponID = WeaponDefNames["cdefusorminegun"].id
 	cRestrictorThumperID = WeaponDefNames["crestrictorthumper"].id
 	crabShelWDefID = WeaponDefNames["crabshell"].id
 	cArtDarkMaterWDefID = WeaponDefNames["cartdarkmat"].id
@@ -134,6 +135,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	Script.SetWatchWeapon(jSwiftMarkWeaponDefID, true)
 	Script.SetWatchWeapon(jFaceHuggerWeaponDefID, true)
 	Script.SetWatchWeapon(jghostDancerWeaponDefID, true)
+	Script.SetWatchWeapon(cdefusorminegunWeaponID, true)
 	Script.SetWatchWeapon(crabShelWDefID, true)
 	Script.SetWatchWeapon(cArtDarkMaterWDefID, true)
 	Script.SetWatchWeapon(bunkerPlasmaDefID, true)
@@ -610,6 +612,21 @@ if (gadgetHandler:IsSyncedCode()) then
 	vortwarpDecaySeconds= 5
 	
 	
+	
+	UnitDamageFuncT[cdefusorminegunWeaponID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		
+		if Spring.ValidUnitID(attackerID)==true then
+				env =Spring.UnitScript.GetScriptEnv(attackerID)
+				if env then
+					Spring.UnitScript.CallAsUnit(attackerID, env.setVictimOfLastShot, unitID)
+				end
+			end
+		
+		
+		
+	
+	
+	end
 	
 	UnitDamageFuncT[jVarySpearDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		--start Event Stream

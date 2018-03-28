@@ -10,20 +10,15 @@ local weaponDef = {
     },
     areaOfEffect = 3,
     --physics
-    weaponVelocity = 450,
+    weaponVelocity = 99999,
     reloadtime = 20,
-    range = 50,
+    range = 2000,
     sprayAngle = 300,
     tolerance = 8000,
-    lineOfSight = true,
+    lineOfSight = false,
     turret = true,
     craterMult = 0,
-    soundStart = "",
-    soundtrigger = 1,
 
-    --apperance
-    rgbColor = [[0 0 0]],
-    size = 0.1,
 }
 
 return lowerkeys({ [weaponName] = weaponDef })

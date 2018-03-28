@@ -1,12 +1,12 @@
 local unitName = "cdefusermine"
 
 local unitDef = {
-name = "Defusedart Deployer",
-Description = "launches free Dartdefusors <Anti Projectile Defense>",
+	name = "Defusedart Deployer",
+	Description = "launches free Dartdefusors <Anti Projectile Defense>",
 
-objectName = "cdefusormine.s3o",
-script = "cdefusermine_script.lua",
-buildPic = "cdefuserdart.png",
+	objectName = "cdefusormine.s3o",
+	script = "cdefusermine_script.lua",
+	buildPic = "cdefuserdart.png",
 
 
 	RadarDistance = 0,
@@ -16,71 +16,71 @@ buildPic = "cdefuserdart.png",
 
 
 
---cost
-buildCostMetal = 100,
-buildCostEnergy = 12,
-buildTime = 5,
---Health
-maxDamage = 150,
-idleAutoHeal = 0,
---Movement
-  selfDestructAs ="defaultweapon",
-  explodeAs = "defaultweapon",
+	--cost
+	buildCostMetal = 100,
+	buildCostEnergy = 12,
+	buildTime = 5,
+	--Health
+	maxDamage = 150,
+	idleAutoHeal = 0,
+	--Movement
+	  selfDestructAs ="defaultweapon",
+	  explodeAs = "defaultweapon",
+
+	radarEmitHeight =250,
+	FootprintX = 1,
+	FootprintZ = 1,
+	MaxSlope = 20,
+
+	MaxWaterDepth = 90,
+	MovementClass = "Default2x2",
 
 
-FootprintX = 1,
-FootprintZ = 1,
-MaxSlope = 20,
+	radardistance=1024,
+	sightDistance = 350,
 
-MaxWaterDepth = 90,
-MovementClass = "Default2x2",
-
-
-radardistance=150,
-sightDistance = 700,
-
-EnergyStorage = 200,
+	EnergyStorage = 200,
 	EnergyUse = 15,
 	MetalStorage = 200,
 	EnergyMake = 0, 
 	MakesMetal = 0, 
 	MetalMake = 0,	
-nanocolor=[[1 0.2 0.05]],
+	nanocolor=[[1 0.2 0.05]],
 
-CanAttack = false,
-CanGuard = false,
-CanMove = false,
-CanPatrol = false,
-CanStop = false,
-LeaveTracks = false, 
+	CanAttack = false,
+	CanGuard = false,
+	CanMove = false,
+	CanPatrol = false,
+	CanStop = false,
+	LeaveTracks = false, 
 
-Builder = false,
-ShowNanoSpray = false,
-CanBeAssisted = false,
-CanReclaim=false,	
-workerTime = 1.00,
-buildDistance = 200,
-terraformSpeed = 50,
+	Builder = false,
+	ShowNanoSpray = false,
+	CanBeAssisted = false,
+	CanReclaim=false,	
+	workerTime = 1.00,
+	buildDistance = 200,
+	terraformSpeed = 50,
 
--- Pathfinding and related
+	-- Pathfinding and related
 
--- Weapon
+	-- Weapon
 
-weapons = {
-
-
-	[1]={name  = "cdefusorminegun",
-	onlyTargetCategory = [[DART]],
-	},
-	},	
+	weapons = {
 
 
-  customParams = {},
- sfxtypes = {
-    explosiongenerators = {},
-	},
+		[1]={name  = "cdefusorminegun",
+		onlyTargetCategory = [[DART]],
+		},
+		},	
 
-Category = [[LAND]],
+
+	  customParams = {},
+	 sfxtypes = {
+		explosiongenerators = {},
+		},
+
+	Category = [[LAND]],
 }
 
 return lowerkeys({ [unitName] = unitDef })
