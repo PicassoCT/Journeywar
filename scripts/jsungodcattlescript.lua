@@ -200,7 +200,7 @@ while boolMoving== true do
 	yval = math.random(-5,5)/5
 	
 	for i = 1,appMax do
-		tSyncIn(TableOfPieceGroups["App"][i],math.cos(factor+i*((math.pi)/appMax))*42,yval,0,250)
+		tSyncIn(TableOfPieceGroups["App"][i],math.cos(factor+i*((math.pi)/appMax))*42,yval,-zRotationMain,250)
 	end
 	
 end
