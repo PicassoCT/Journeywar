@@ -5,6 +5,18 @@ include "lib_Animation.lua"
 include "lib_Build.lua"
 include "lib_jw.lua"
 
+RateOfDecrease = 65
+_, MAGICRESPAWNNUMBER = Spring.GetUnitHealth(unitID)
+REPRODUCTION_DAMAGE= MAGICRESPAWNNUMBER *2 -- Damage necessary for the Unit to spawn a new SungGodsCattle
+MAGICRESPAWNNUMBER = MAGICRESPAWNNUMBER / 2
+ItterationsTillReSpawn = 0
+GROWUPTIME= 3*60*1000
+SIG_MOVE = 1
+SIG_LAY = 2
+SIG_GET = 4
+myDefID= Spring.GetUnitDefID(unitID)
+myTeamID = Spring.GetUnitTeam(unitID)
+
 local piecesTable = {}
 center = piece "center"
 piecesTable[#piecesTable+1] = center
@@ -37,61 +49,56 @@ upLegTable[#upLegTable+1] = upleg3
 Lupleg3 = piece "Lupleg3"
 upLegTable[#upLegTable+1] = Lupleg3
 
-RateOfDecrease = 65
 
-_, MAGICRESPAWNNUMBER = Spring.GetUnitHealth(unitID)
-MAGICRESPAWNNUMBER = MAGICRESPAWNNUMBER / 2
-ItterationsTillReSpawn = 0
-GROWUPTIME= 3*60*1000
-SIG_MOVE = 1
-SIG_LAY = 2
-SIG_GET = 4
-myDefID= Spring.GetUnitDefID(unitID)
-myTeamID = Spring.GetUnitTeam(unitID)
+
 
 
 sounds={
-"sounds/jSunCattle/UrScream.wav",
-"sounds/jSunCattle/move.ogg",
+	
+	"sounds/jSunCattle/move.ogg",
+}
+loadSounds={
+	"sounds/jSunCattle/Fire1.wav",
+	"sounds/jSunCattle/Fire2.wav"
 }
 
 function costlyWhileOnTheMove()
-    local lSetUnitHealth = Spring.SetUnitHealth
-    local lGetUnitHealth = Spring.GetUnitHealth
-    while (true) do
-
-        while boolMoving == true do
+	local lSetUnitHealth = Spring.SetUnitHealth
+	local lGetUnitHealth = Spring.GetUnitHealth
+	while (true) do
+		
+		while boolMoving == true do
 			Sleep(500)
 			health = lGetUnitHealth(unitID)
-            lSetUnitHealth(unitID, health - RateOfDecrease * (0.05 * math.max(1, GG.SunGodCattleTable[myTeamID])))
-        end
-
-        health = lGetUnitHealth(unitID)
-        lSetUnitHealth(unitID, health - 2 * (0.05 * math.max(1, GG.SunGodCattleTable[myTeamID])))
-
-        Sleep(1000)
-    end
+			lSetUnitHealth(unitID, health - RateOfDecrease * (0.05 * math.max(1, GG.SunGodCattleTable[myTeamID])))
+		end
+		
+		health = lGetUnitHealth(unitID)
+		lSetUnitHealth(unitID, health - 2 * (0.05 * math.max(1, GG.SunGodCattleTable[myTeamID])))
+		
+		Sleep(1000)
+	end
 end
 
 function layDownYourWorryHead()
-
-    SetSignalMask(SIG_LAY)
 	
-    Sleep(900)
-    boolMoving = false
+	SetSignalMask(SIG_LAY)
+	
+	Sleep(900)
+	boolMoving = false
 	boolUpright= false
-    Signal(SIG_GET)
+	Signal(SIG_GET)
 	legDown(8)
-
-    Turn(Main, z_axis, math.rad(0), 12)
-    Turn(turnerPoint, z_axis, math.rad(-45), 12)
-    WaitForTurn(turnerPoint, z_axis)
-
-    Turn(turnerPoint, z_axis, math.rad(-85), 0.4)
-    WaitForTurn(turnerPoint, z_axis)
+	
+	Turn(Main, z_axis, math.rad(0), 12)
+	Turn(turnerPoint, z_axis, math.rad(-45), 12)
+	WaitForTurn(turnerPoint, z_axis)
+	mP(Main,0,0,0,9.5)
+	Turn(turnerPoint, z_axis, math.rad(-85), 0.4)
+	WaitForTurn(turnerPoint, z_axis)
 	spawnCegAtUnit(unitID,"dirt",0,10,0)
-    Sleep(2000)
-
+	Sleep(2000)
+	
 	while boolMoving == false do
 		for i = 1, #LegTable, 1 do
 			tSyncIn(LegTable[i],math.random(22, 40),math.random(22, 40),math.random(22, 40)*-1,1500)
@@ -105,44 +112,45 @@ function layDownYourWorryHead()
 		end
 		rest=math.random(1,16)
 		Sleep(1500*rest)
-    end
-
-
-    --lay DownAnimation
+	end
+	
+	
+	--lay DownAnimation
 end
 
 
 
 function getUpAndMove()
-    SetSignalMask(SIG_GET)
-    Turn(center, y_axis, math.rad(0), 0.85)
+	SetSignalMask(SIG_GET)
+	Turn(center, y_axis, math.rad(0), 0.85)
 	legDown(80)
 	WaitForTurns(LegTable)
-    Turn(turnerPoint, z_axis, math.rad(0), 0.27)
-    Turn(Main, z_axis, math.rad(zRotationMain), 0.27)
-standUpFactor=1
-steps=400
-    while (true == Spring.UnitScript.IsInTurn(piecesTable[2], z_axis))  do
-		 tval= math.random(10,60)
-		 for i = 1, 3 do
+	Turn(turnerPoint, z_axis, math.rad(0), 0.27)
+	Turn(Main, z_axis, math.rad(zRotationMain), 0.27)
+	mP(Main,-20*percent,-20*percent,0,0.95)
+	standUpFactor=1
+	steps=400
+	while (true == Spring.UnitScript.IsInTurn(piecesTable[2], z_axis)) do
+		tval= math.random(10,60)
+		for i = 1, 3 do
 			tSyncIn(TableOfPieceGroups["KLeg"][i],math.random(-10,10),0, -tval, steps*2)
 			tSyncIn(TableOfPieceGroups["KLLeg"][i],math.random(-10,10),0, -2*tval, steps*2)
-		 end
-		 
+		end
+		
 		standUpFactor=standUpFactor/2
-        for i = 1, #LegTable do
+		for i = 1, #LegTable do
 			if i % 2 == 0 then
-			tSyncIn(LegTable[i],math.random(-10,10),0, 41*standUpFactor, steps)
-			tSyncIn(LLegTable[i],math.random(-10,10),0, 150,steps)
-			
+				tSyncIn(LegTable[i],math.random(-10,10),0, 41*standUpFactor, steps)
+				tSyncIn(LLegTable[i],math.random(-10,10),0, 150,steps)
+				
 			else
-			tSyncIn(LegTable[i],math.random(-10,10),0, 0,steps)
-			tSyncIn(LLegTable[i],math.random(-10,10),0, 0,steps)
+				tSyncIn(LegTable[i],math.random(-10,10),0, 0,steps)
+				tSyncIn(LLegTable[i],math.random(-10,10),0, 0,steps)
 			end			
-        end   
-   
-        Sleep(steps)     
-
+		end 
+		
+		Sleep(steps) 
+		
 		for i = 1, #LegTable do
 			if i % 2 == 0 then
 				tSyncIn(LegTable[i],math.random(-10,10),0, 41*standUpFactor,steps)
@@ -151,23 +159,23 @@ steps=400
 				tSyncIn(LegTable[i],math.random(-10,10),0, -71,steps)
 				tSyncIn(LLegTable[i],math.random(-10,10),0, 140,steps)
 			end			
-        end   
-	
-        Sleep(steps)
-    end
+		end 
+		
+		Sleep(steps)
+	end
 	resetT(LegTable,10)
 	resetT(LLegTable,10)
 	setSpeedEnv(unitID,1.0)
 	StartThread(swingAppendix)
- StartThread(PlaySoundByUnitDefID, myDefID, sounds[math.random(1,#sounds)], 0.5, 2000, 1, 0)
- boolUpright= true
- while boolMoving == true do
-		 tval= math.random(10,60)
-		 for i = 1, 3 do
+	StartThread(PlaySoundByUnitDefID, myDefID, sounds[1], 0.5, 2000, 1, 0)
+	boolUpright= true
+	while boolMoving == true do
+		tval= math.random(10,60)
+		for i = 1, 3 do
 			tSyncIn(TableOfPieceGroups["KLeg"][i],math.random(-35,35),0, -tval, 1600)
 			tSyncIn(TableOfPieceGroups["KLLeg"][i],math.random(-35,35),0, -2*tval, 1600)
-		 end
-		 		 
+		end
+		
 		for i = 1, #LegTable do
 			if i % 2 == 0 then
 				tSyncIn(LegTable[i], -25+ math.random(-5,5),0, -zRotationMain,800)
@@ -176,65 +184,81 @@ steps=400
 				tSyncIn(LegTable[i],30 +math.random(-5,5),0,-zRotationMain,800)
 				tSyncIn(LLegTable[i],-30 + math.random(-5,5),0, -zRotationMain,800)
 			end			
-        end  	
+		end 	
 		Sleep(800)	
 		for i = 1, #LegTable do
 			if i % 2 == 1 then
-				tSyncIn(LegTable[i], -25+ math.random(-5,5),0, 0,800)
-				tSyncIn(LLegTable[i],25+ math.random(-5,5),0, 0,800)			
+				tSyncIn(LegTable[i], -25+ math.random(-5,5),0, -zRotationMain,800)
+				tSyncIn(LLegTable[i],25+ math.random(-5,5),0, -zRotationMain,800)			
 			else
-				tSyncIn(LegTable[i],30 +math.random(-5,5),0, 0,800)
-				tSyncIn(LLegTable[i],-30 + math.random(-5,5),0, 0,800)
+				tSyncIn(LegTable[i],30 +math.random(-5,5),0, -zRotationMain,800)
+				tSyncIn(LLegTable[i],-30 + math.random(-5,5),0, -zRotationMain,800)
 			end			
-        end  	
+		end 	
 		Sleep(800)		
 	end
 	legDown()
 end
 
 function swingAppendix()
-appMax= #TableOfPieceGroups["App"]
-while boolMoving== true do
-	Sleep(250)
-	factor = (Spring.GetGameFrame() %300/300)*math.pi*2
-	yval = math.random(-5,5)/5
-	
-	for i = 1,appMax do
-		tSyncIn(TableOfPieceGroups["App"][i],math.cos(factor+i*((math.pi)/appMax))*42,yval,-zRotationMain,250)
+	appMax= #TableOfPieceGroups["App"]
+	while boolMoving== true do
+		Sleep(250)
+		factor = (Spring.GetGameFrame() %300/300)*math.pi*2
+		yval = math.random(-5,5)/5
+		
+		for i = 1,appMax do
+			tSyncIn(TableOfPieceGroups["App"][i],math.cos(factor+i*((math.pi)/appMax))*42,yval,-zRotationMain,250)
+		end
+		
 	end
 	
-end
-
-
+	
 end
 
 boolMoving = false
 _, originalHealth = Spring.GetUnitHealth(unitID)
 function script.StartMoving()
 	if boolDead== false then
-    Signal(SIG_MOVE)
-    Signal(SIG_LAY)
-    Signal(SIG_GET)
-    boolMoving = true
-
-    StartThread(getUpAndMove)
+		Signal(SIG_MOVE)
+		Signal(SIG_LAY)
+		Signal(SIG_GET)
+		boolMoving = true
+		
+		StartThread(getUpAndMove)
 	end
 end
 
 function legDown(speed)
 	speed=speed or 3.25
-	turnT(LegTable,0,0,-zRotationMain,speed)
+	turnT(LegTable,x_axis,0,speed)
+	turnT(LegTable,y_axis,0,speed)
+	turnT(LegTable,z_axis,-zRotationMain,speed)
 end
+
+
 
 function script.StopMoving()
 	if boolDead==false then
-
-    Signal(SIG_LAY)
-    legDown()
-    StartThread(layDownYourWorryHead)
+		
+		Signal(SIG_LAY)
+		legDown()
+		StartThread(layDownYourWorryHead)
 	end
 end
 
+Level=2
+function reproductionCycle()
+	while true do
+		Sleep(1000)	
+		if totalDamage> REPRODUCTION_DAMAGE^Level then
+			Level = Level+1
+			createUnitAtPiece(unitID,"jsungodcattle",Main,myTeamID)
+			Sleep(9000)
+		end	
+	end
+	
+end
 
 
 boolDefBuffActive = true
@@ -244,65 +268,92 @@ currentFrame = 0
 cegSpawnValue = 225
 boolFirstTime=false
 boolCurrentlyDrawing=false
+bloodrotator=piece"bloodrotator"
 function drawBlood(x,z)
-if boolCurrentlyDrawing== true then return end
-boolCurrentlyDrawing= true
-raddeg= (x/z)*2*math.pi
-firstBlood= TableOfPieceGroups["Blood"]
-turnPieceRandDir(firstBlood,0, 360,-360,360,-360,360,-360)
-Turn(firstBlood,y_axis,math.rad(raddeg),0)
-spinT(TableOfPieceGroups["Blood"],z_axis,5,-42,42)
-process(TableOfPieceGroups["Blood"],
-		function(id)
-			movePieceToPiece(unitID,id, firstBlood, 0)
-			WaitForMoves(id)
-			spinRand(id, -22,22, 0.02)
-			mSyncIn(id,0,0,0,1500)
-		
-		end
-		)
-		Sleep(1500)
-process(TableOfPieceGroups["Blood"],
-		function(id)
-			if id ~= firstBlood then
-				movePieceToPiece(unitID,id, firstBlood,3)		
+	
+	if boolCurrentlyDrawing== true then return end
+	boolCurrentlyDrawing= true
+	Sleep(100)
+	firstBlood= TableOfPieceGroups["Blood"][1]
+	raddeg= math.atan2(x,z)*2*math.pi
+	Turn(bloodrotator,y_axis,math.rad(raddeg),0,true)	
+	
+	WMove(firstBlood,z_axis,50,0)
+	mSyncIn(firstBlood,0,0,-50,1000)
+	
+	process(TableOfPieceGroups["Blood"],
+	function(id)
+		if id ~= firstBlood then
+			if maRa()== true or maRa()==true then
+				Show(id)
 			end
+			spinRand(id, -44,44, 0.4)	
 		end
-		)		
-		WaitForMoves(TableOfPieceGroups["Blood"])
-boolCurrentlyDrawing=false
+	end
+	)	
+	for k=6, #TableOfPieceGroups["Blood"] do
+		mSyncIn(TableOfPieceGroups["Blood"][k],math.random(-30,30),math.random(-30,30),math.random(-30,30),500)	
+	end
+	--Peak Spray Out
+	Sleep(500)
+	Show(firstBlood)
+	Sleep(1000)
+	
+	process(TableOfPieceGroups["Blood"],
+	function(id)
+		if id ~= firstBlood then
+			stopSpins(id,0.01)
+			tSyncIn(id,0,0,0,2500)
+			mSyncIn(id,0,0,0,2000)		
+		end
+	end
+	)	
+	
+	
+	mSyncIn(firstBlood,0,0,25,2000)		
+	Sleep(1000)
+	Hide(firstBlood)
+	Sleep(1500)
+	WaitForMoves(TableOfPieceGroups["Blood"])
+	hideT(TableOfPieceGroups["Blood"])
+	resetT(TableOfPieceGroups["Blood"])
+	boolCurrentlyDrawing=false
 end
 
+totalDamage=0
 function script.HitByWeapon(x, z, weaponDefID, damage)
+	
+	totalDamage= totalDamage+ damage
+	
 	if damage > 50 then
 		StartThread(drawBlood,x,z)
 	end
-
-    if damage then
-        boolDefBuffActive = false
-        Signal(SIG_MOVE)
-        degree = math.deg(math.atan2(x, z))
-        ItterationsTillReSpawn = ItterationsTillReSpawn + damage
-        currentFrame = Spring.GetGameFrame()
-        if currentFrame > oldFrame + 250 then
-            oldFrame = currentFrame
-            x, y, z = Spring.GetUnitPosition(unitID)
+	
+	if damage then
+		boolDefBuffActive = false
+		Signal(SIG_MOVE)
+		degree = math.deg(math.atan2(x, z))
+		ItterationsTillReSpawn = ItterationsTillReSpawn + damage
+		currentFrame = Spring.GetGameFrame()
+		if currentFrame > oldFrame + 250 then
+			oldFrame = currentFrame
+			x, y, z = Spring.GetUnitPosition(unitID)
 			Spring.SpawnCEG("greencross", x, y + 120, z, 0, 1, 0, 50, 0)
-        end
+		end
 		
-        if ItterationsTillReSpawn > MAGICRESPAWNNUMBER then
-		    ItterationsTillReSpawn = math.abs(ItterationsTillReSpawn - MAGICRESPAWNNUMBER)
-            eggCounter = eggCounter +1
-        end
+		if ItterationsTillReSpawn > MAGICRESPAWNNUMBER then
+			ItterationsTillReSpawn = math.abs(ItterationsTillReSpawn - MAGICRESPAWNNUMBER)
+			eggCounter = eggCounter +1
+		end
 		
 		if eggCounter > 1 and boolFirstTime==false then
 			StartThread(ReloadEggGun)
 			boolFirstTime=true
 		end
 		hp= Spring.GetUnitHealth(unitID)
-        Spring.SetUnitHealth(unitID, hp+ (1.41*damage))
-    end
-    return 0
+		Spring.SetUnitHealth(unitID, hp+ (1.41*damage))
+	end
+	return 0
 end
 
 eggCounter = 0
@@ -314,28 +365,28 @@ function deathAnimation()
 	tSyncIn(center,0,0,70,1000)
 	spawnCegAtPiece(unitID, Main , "blueblood", 0,30,0)
 	spawnCegAtUnit(unitID,"dirt",0,20,0)
-
-
+	
+	
 	Sleep(500)
 	spawnCegAtUnit(unitID,"helioloadaurora",0,20,0)
-
+	
 	turnT(TableOfPieceGroups["Leg"],z_axis,-1*math.random(-35,-25),35/1.5)
 	turnT(TableOfPieceGroups["LLeg"],z_axis,-1*math.random(-110,-80),90/1.5)
 	turnT(TableOfPieceGroups["KLeg"],z_axis,-1*math.random(25,35),40/1.5)
 	turnT(TableOfPieceGroups["KLLeg"],z_axis,-1*math.random(70,90),80/1.5)
 	Sleep(500)
-		spawnCegAtPiece(unitID, Main , "blueblood", 0,30,0)
+	spawnCegAtPiece(unitID, Main , "blueblood", 0,30,0)
 	Sleep(500)
-		spawnCegAtPiece(unitID, center , "blueblood",0,30,0)
+	spawnCegAtPiece(unitID, center , "blueblood",0,30,0)
 	Sleep(500)
 	x,y,z=Spring.GetUnitPosition(unitID)
-		for i=1,5 do
-			spawnCegAtPiece(unitID, center , "blueblood", math.random(-15,15),30,math.random(-15,15))
-			Spring.CreateUnit("jsuneggnogg", x + math.random(-15,15), y,  z + math.random(-15,15), 0, myTeamID)
-			Sleep(500)
-		end
-		WaitForTurns(Main,center)
-		WaitForMoves(Main,center)
+	for i=1,5 do
+		spawnCegAtPiece(unitID, center , "blueblood", math.random(-15,15),30,math.random(-15,15))
+		Spring.CreateUnit("jsuneggnogg", x + math.random(-15,15), y, z + math.random(-15,15), 0, myTeamID)
+		Sleep(500)
+	end
+	WaitForTurns(Main,center)
+	WaitForMoves(Main,center)
 	return 1
 end
 
@@ -343,10 +394,10 @@ function script.Killed(damage, _)
 	signalAll(16)
 	setSpeedEnv(unitID,0.0)
 	deathAnimation()
-
-    GG.SunGodCattleTable[myTeamID] = GG.SunGodCattleTable[myTeamID] - 1
-    --fallingDown Animation
-    return 0
+	
+	GG.SunGodCattleTable[myTeamID] = GG.SunGodCattleTable[myTeamID] - 1
+	--fallingDown Animation
+	return 0
 end
 
 _,maxHealth = Spring.GetUnitHealth(unitID)
@@ -355,84 +406,79 @@ local spGetUnitHealth = Spring.GetUnitHealth
 local spSpawnCEG = Spring.SpawnCEG
 UNITDEBUFFVAL = 25
 function applyDeBuff(T)
-    unithealth = Spring.GetUnitHealth(unitID)
-    local ratio = unithealth / maxHealth
-    for i = 1, #T, 1 do
-        hp = spGetUnitHealth(T[i])
-        if ratio < 0.3 then
-            Spring.AddTeamResource(myTeamID, "metal", 3)
-        end
-        Spring.SetUnitHealth(T[i], { paralyze = hp * (15 - (15 * ratio)) })
-        --sfx
-        x, y, z = Spring.GetUnitPosition(T[i])
-        spSpawnCEG("parallyzebuff", x, y + 10, z, 0, 1, 0, 50, 0)
-    end
+	unithealth = Spring.GetUnitHealth(unitID)
+	local ratio = unithealth / maxHealth
+	for i = 1, #T, 1 do
+		hp = spGetUnitHealth(T[i])
+		if ratio < 0.3 then
+			Spring.AddTeamResource(myTeamID, "metal", 3)
+		end
+		Spring.SetUnitHealth(T[i], { paralyze = hp * (15 - (15 * ratio)) })
+		--sfx
+		x, y, z = Spring.GetUnitPosition(T[i])
+		spSpawnCEG("parallyzebuff", x, y + 10, z, 0, 1, 0, 50, 0)
+	end
 end
 
 Eye2=piece"Eye2"
 function DeBuff()
-    local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
-    local spGetUnitPosition = Spring.GetUnitPosition
-    local RANGE = 600
-
-    while true do
-        x, y, z = spGetUnitPosition(unitID)
-        if boolDefBuffActive == true then
-            T = spGetUnitsInCylinder(x, z, RANGE)
-            if T then T = filterAllUnitsForDeBuff(T) end
-            if T then applyDeBuff(T) end
-            EmitSfx(1025, Eye2) -- Placeholder Sfx
-        end
-        Sleep(500)
-    end
+	local spGetUnitsInCylinder = Spring.GetUnitsInCylinder
+	local spGetUnitPosition = Spring.GetUnitPosition
+	local RANGE = 600
+	
+	while true do
+		x, y, z = spGetUnitPosition(unitID)
+		if boolDefBuffActive == true then
+			T = spGetUnitsInCylinder(x, z, RANGE)
+			if T then T = filterAllUnitsForDeBuff(T) end
+			if T then applyDeBuff(T) end
+			EmitSfx(1025, Eye2) -- Placeholder Sfx
+		end
+		Sleep(500)
+	end
 end
 
 local spGetUnitTeam = Spring.GetUnitTeam
 function filterAllUnitsForDeBuff(Table)
-    table.remove(Table, unitID)
-    if Table then
-        RT = {}
-        for i = 1, #Table, 1 do
-            if spGetUnitTeam(Table[i]) ~= myTeamID then RT[#RT + 1] = Table[i] end
-        end
-        if #RT > 0 then return RT end
-    end
+	table.remove(Table, unitID)
+	if Table then
+		RT = {}
+		for i = 1, #Table, 1 do
+			if spGetUnitTeam(Table[i]) ~= myTeamID then RT[#RT + 1] = Table[i] end
+		end
+		if #RT > 0 then return RT end
+	end
 end
 
 boolHitIt = false
 function threadStarter()
-		delayTillComplete(unitID)   				
-        StartThread(costlyWhileOnTheMove)
-		Sleep(GROWUPTIME)
-
-        StartThread(DeBuff)
-
+	delayTillComplete(unitID) 				
+	StartThread(costlyWhileOnTheMove)
+	Sleep(GROWUPTIME)
+	
+	StartThread(DeBuff)
+	
 end
 
 TableOfPieceGroups={}
-zRotationMain=math.random(0,50)
+zRotationMain=math.random(25,50)*-1
+percent= (math.abs(zRotationMain)+50)/100
 function buildUnit()
-
+	
 	for i=1, #TableOfPieceGroups["rRock"] do
 		indexPiece = TableOfPieceGroups["rRock"][i]
 		if maRa() then Show(indexPiece) end
 		turnPieceRandDir(indexPiece,0, 360,-360,360,-360,360,-360)
 	end
+	
+end
 
-end
-function testDrawBlood()
-	while true do
-		x,z= math.random(-100,100)/100,math.random(-100,100)/100
-		drawBlood(x,z)
-		Sleep(1000)
-	end
-end
 function script.Create()
 	Spring.SetUnitBlocking(unitID,false)
 	resetAll(unitID)
 	setSpeedEnv(unitID,1.0)
 	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
-	StartThread(testDrawBlood)
+	
 	hideT( TableOfPieceGroups["Egg"])
 	LegTable= TableOfPieceGroups["Leg"]
 	LLegTable= TableOfPieceGroups["LLeg"]
@@ -440,18 +486,20 @@ function script.Create()
 	hideT(TableOfPieceGroups["rRock"])
 	hideT(TableOfPieceGroups["Egg"])
 	buildUnit()
-    if not GG.SunGodCattleTable then GG.SunGodCattleTable = {} end
-    if not GG.SunGodCattleTable[myTeamID] then GG.SunGodCattleTable[myTeamID] = 0 end
-    GG.SunGodCattleTable[myTeamID] = GG.SunGodCattleTable[myTeamID] + 1
-    StartThread(threadStarter)
+	if not GG.SunGodCattleTable then GG.SunGodCattleTable = {} end
+	if not GG.SunGodCattleTable[myTeamID] then GG.SunGodCattleTable[myTeamID] = 0 end
+	GG.SunGodCattleTable[myTeamID] = GG.SunGodCattleTable[myTeamID] + 1
+	StartThread(threadStarter)
+	StartThread(reproductionCycle)
+	
 end
 
 function script.AimFromWeapon1()
-    return EggCannon
+	return EggCannon
 end
 
 function script.QueryWeapon1()
-    return EggCannon
+	return EggCannon
 end
 
 function spreadLegs(counterPitch,speed)
@@ -462,12 +510,12 @@ function spreadLegs(counterPitch,speed)
 	Turn(TableOfPieceGroups["Leg"][3],z_axis,counterPitch+math.rad(60),speed)
 	Turn(TableOfPieceGroups["LLeg"][4],z_axis,math.rad(-60),speed)
 	
-	Turn(TableOfPieceGroups["Leg"][2],z_axis,-counterPitch+  math.rad(-60),speed)
-	Turn(TableOfPieceGroups["LLeg"][2],z_axis,  math.rad(60),speed)	
-	Turn(TableOfPieceGroups["Leg"][5],z_axis,-counterPitch+  math.rad(-60),speed)
-	Turn(TableOfPieceGroups["LLeg"][5],z_axis,  math.rad(60),speed)	
-	Turn(TableOfPieceGroups["Leg"][6],z_axis,-counterPitch+  math.rad(-60),speed)
-	Turn(TableOfPieceGroups["LLeg"][6],z_axis,  math.rad(60),speed)	
+	Turn(TableOfPieceGroups["Leg"][2],z_axis,-counterPitch+ math.rad(-60),speed)
+	Turn(TableOfPieceGroups["LLeg"][2],z_axis, math.rad(60),speed)	
+	Turn(TableOfPieceGroups["Leg"][5],z_axis,-counterPitch+ math.rad(-60),speed)
+	Turn(TableOfPieceGroups["LLeg"][5],z_axis, math.rad(60),speed)	
+	Turn(TableOfPieceGroups["Leg"][6],z_axis,-counterPitch+ math.rad(-60),speed)
+	Turn(TableOfPieceGroups["LLeg"][6],z_axis, math.rad(60),speed)	
 	WaitForTurns(TableOfPieceGroups["LLeg"],TableOfPieceGroups["Leg"])
 end
 
@@ -476,12 +524,12 @@ chargeUpTime= 3500
 function ReloadEggGun()
 	if boolReloading== true or boolReloaded== true then return end	
 	boolReloading=true
-	while boolUpright==false or not TableOfPieceGroups do
+	while boolUpright==false or not TableOfPieceGroups or eggCounter < 1 do
 		Sleep(100)
 	end
 	hideT(TableOfPieceGroups["Egg"])
 	Spin(EggRotator,x_axis,math.rad(720),0.015)
-	
+	StartThread(PlaySoundByUnitDefID, myDefID, loadSounds[math.random(1,#loadSounds)], 0.5, 2000, 1, 0)
 	for i=1,#TableOfPieceGroups["Egg"]-1, 1 do		
 		if TableOfPieceGroups["Egg"][i-1] then Hide(TableOfPieceGroups["Egg"][i-1] ) end
 		if TableOfPieceGroups["Egg"][i] then Show(TableOfPieceGroups["Egg"][i] ) end
@@ -495,21 +543,21 @@ end
 
 
 storedHeading =0
-storedPitch   =0
+storedPitch =0
 boolUpright= true
 boolReloading=false
 boolReloaded=false
 function script.AimWeapon1(heading, pitch)
 	Signal(SIG_LAY)
 	storedHeading =heading
-	storedPitch   =pitch
-
-	if boolReloaded == false  then	
-			return false
-	end
-
+	storedPitch =pitch
 	
-
+	if boolReloaded == false then	
+		return false
+	end
+	
+	
+	
 	if boolUpright== true and boolReloaded == true and eggCounter > 0 then
 		Turn(Main,z_axis,math.rad(0),12)
 		Turn(center,y_axis, heading+math.rad(-90), 12)		
@@ -518,7 +566,7 @@ function script.AimWeapon1(heading, pitch)
 		return true
 	end	
 	
-	return false  
+	return false 
 end
 
 function script.FireWeapon1()
@@ -528,5 +576,5 @@ function script.FireWeapon1()
 	StartThread(ReloadEggGun)
 	Turn(Main,y_axis,math.rad(zRotationMain),0.7)
 	Turn(center,y_axis,math.rad(0),0.7)
-return true
+	return true
 end

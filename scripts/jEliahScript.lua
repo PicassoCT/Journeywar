@@ -1,5 +1,10 @@
 --Eliah
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
 
+include "lib_Build.lua"
 --Define the wheel pieces
 
 local boolSecondAiming = false
@@ -249,7 +254,9 @@ end
 
 
 function script.Killed(recentDamage, maxHealth)
-    --legs_down()
+    spawnCegAtUnit(unitID,"jeliadeath",0, 25,0)
+    spawnCegAtUnit(unitID,"jeliadeath",0, 25,0)
+    spawnCegAtUnit(unitID,"jeliadeath",0, 25,0)
 
 
     return 0

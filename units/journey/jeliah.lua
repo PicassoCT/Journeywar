@@ -45,7 +45,7 @@ local unitDef = {
 			onlyTargetCategory = [[ LAND ]],			
 		},		
 		[2]={name = "jeliahshield",
-			onlyTargetCategory = [[LAND AIR]],
+			onlyTargetCategory = [[LAND]],
 		},	
 	},
 	

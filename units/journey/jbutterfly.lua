@@ -14,7 +14,8 @@ local unitDef = {
 	buildTime = 6,
 	--Health
 	maxDamage = 350,
-	idleAutoHeal = 0,
+	idleAutoHeal = 10,
+	AutoHeal = 5,
 	--Movement
 	Acceleration = 0.1,
 	BrakeRate = 1,
@@ -25,8 +26,8 @@ local unitDef = {
 	maneuverleashlength = 1380,
 
 	turnRadius		 	= 8,
-	dontLand		 	= false,
-	MaxVelocity = 1,
+	dontLand		 	= true,
+	MaxVelocity = 3.141,
 	MaxWaterDepth = 0,
 	MovementClass = "Default2x2",
 	TurnRate = 150,
@@ -43,18 +44,20 @@ local unitDef = {
 	CanPatrol = true,
 	Canstop = false,
 	LeaveTracks = false, 
-	cruiseAlt=25,
+	CanLand= false,
+
 	CanFly = true,
 	ActivateWhenBuilt=1,
 	maxBank=0.4,
 	myGravity =0.5,
 	mass = 1225,
-	canSubmerge = true,
+	canSubmerge = false,
 	useSmoothMesh =false,
 	collide = true,
 	crashDrag =0.1,
-	
-	Category = [[AIR]],
+	airHoverFactor = 15,
+	cruiseAlt = 25,
+	Category = [[AIR LAND]],
 }
 
 return lowerkeys({ [unitName] = unitDef })

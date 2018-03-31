@@ -28,6 +28,10 @@ end
 
 
 function script.Killed(recentDamage, _)
+	mSyncIn(dart,0,-20,50, 500)
+	Sleep(250)
+	Explode(dart,SFX.FALL+SFX.FIRE)
+	
     return 1
 end
 
@@ -54,15 +58,16 @@ typesAsStrings={
 }
 
 dartableTypeTable = getTypeTable(UnitDefNames, typesAsStrings)
-
+myTeamID=Spring.GetUnitTeam(unitID)
 function script.FireWeapon1()
 	x,y,z=Spring.GetUnitPosition(unitID)
-	process(getAllInSphere(x,y,z,35),
+	T=getAllInSphere(x,y,z,45,unitID, myTeamID)
+	process(T,
 			function(id)
 				if dartableTypeTable[Spring.GetUnitDefID(id)]
 					Spring.DestroyUnit(id,true,false)
 					for i=1,4 do
-						Explode(dart,SFX.SHATTER + SFX.FIRE)			
+						Explode(dart,SFX.SHATTER )			
 					end
 					Spring.DestroyUnit(unitID,true,false)
 				end

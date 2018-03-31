@@ -687,6 +687,15 @@ function stopSpins(arg,speed)
         StopSpin(arg, 3, speed)
 end
 
+--> Stops Spinning Table
+function stopSpinsT(arg,speed)
+	for i=1,#arg do
+			StopSpin(arg[i], 1, speed)
+			StopSpin(arg[i], 2, speed)
+			StopSpin(arg[i], 3, speed)
+	end
+end
+
 -->Moves a UnitPiece to Position in Unitspace at speed
 function MovePieceToPos(piecename, X, Y, Z, speed, boolWaitForIt)
 

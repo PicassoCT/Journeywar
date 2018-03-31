@@ -24,6 +24,6 @@ local weaponDef = {
     VisibleShield = true,
     VisibleShieldHitFrames = 0,
     VisibleShieldRepulse = true,
-    texture1 = [[shield3mist]],
+    texture1 = [[shieldmist]],
 }
 return lowerkeys({ [weaponName] = weaponDef })

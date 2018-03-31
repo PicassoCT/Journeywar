@@ -5,9 +5,7 @@ include "lib_Animation.lua"
 
 include "lib_Build.lua"
 
-function cegFunction(x,y,z)
-
-	 
+function cegFunction(x,y,z) 
 
 	Spring.SpawnCEG(getCegName(), x+100,  y+50, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
 
@@ -17,7 +15,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "helioloadaurora"
+	return "jeliadeath"
 end
 center = piece "center"
 Quader04 = piece "Quader04"

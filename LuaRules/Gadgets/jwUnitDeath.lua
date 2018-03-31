@@ -24,8 +24,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	-- Configuration:
 	
 	numberOfButterflys=5
-	timeInMsTillRespawn=1500
-	circleRange=500
+	timeInMsTillRespawn=25000
+	circleRange=80
 	GoneForGood={}
 	--1 Counter
 	--2 FatherID
@@ -36,25 +36,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	jTree3RespawnTable={}
 	
-	function mergeButterflys(sTable)
-	
-	distanceTable={}
-	for k,kuid in ipairs(sTable)do
-		for i, iuid in ipairs(sTable) do
-		if i~=k and Spring.GetUnitIsDead(sTable[k]) == false and Spring.GetUnitIsDead(sTable[i]) == false then
-			distances=distanceUnitToUnit(sTable[k],sTable[i])
-			if  sTable[k] and sTable[i] and distances < ELIAHMERGEDISTANCE then
-					if not distanceTable[sTable[k]] then  distanceTable[sTable[k]] = 0 end
-				distanceTable[sTable[k]] = distanceTable[sTable[k]] +1
-				if distanceTable[sTable[k]] > 2 then
-					return sTable[k]
-				end
-			end
-		end
-		end
-	end
 
-	end
 	
 	function countSurvivors(jDeadEliahIndex)
 		local survivorCount=0			
@@ -77,14 +59,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		--respawn then eliah
 		--none of the butterflys is- nil entry	
 
-		survivorCount, survivors = countSurvivors(jDeadEliahIndex)
-		
-		if survivorCount < 2 then
-			table.remove(GoneForGood,jDeadEliahIndex)
-			return
-		end
-		
-		spawnPointOfEliah = mergeButterflys(survivors)
+		survivorCount, survivors = countSurvivors(jDeadEliahIndex)		
+		spawnPointOfEliah = survivors[1]
 
 		if spawnPointOfEliah and Spring.ValidUnitID(spawnPointOfEliah)== true  then
 			x,y,z = Spring.GetUnitPosition(spawnPointOfEliah)
@@ -92,8 +68,10 @@ if (gadgetHandler:IsSyncedCode()) then
 			id=Spring.CreateUnit("jeliah",x,y,z,0,likeHisFathersFather)
 			if id then
 				Spring.SetUnitExperience(id, GoneForGood[jDeadEliahIndex].stats.exp)
-			end
-			
+				healthPercent= clamp(0.125,#survivors/numberOfButterflys,1)
+				_,mhp=Spring.GetUnitHealth(id)
+				Spring.SetUnitHealth(id,mhp*healthPercent)
+			end			
 		end
 			
 		for index, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
@@ -125,7 +103,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			--decrease the time 
 			for i,val in ipairs(GoneForGood) do
 				if GoneForGood[i] and GoneForGood[i].stats then
-					GoneForGood[i].stats.ms=GoneForGood[i].stats.ms-intIntervall
+					GoneForGood[i].stats.ms=GoneForGood[i].stats.ms- (intIntervall*33)
 					--to avoid n² we do this onloop
 					if GoneForGood[i].stats.ms < 0 then
 						reIncarnateAfterTime(i)						
@@ -212,11 +190,13 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 			GoneForGood[newIndex].butterflys={}
+			
 			for i=1,numberOfButterflys,1 do
 				tx,tz=inRandomRange(x,z,circleRange)
 				ty=Spring.GetGroundHeight(tx,tz)
-				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",tx,ty,tz,0,teamID)
-				Spring.SetUnitMoveGoal(GoneForGood[newIndex].butterflys[i],x,y,z)				
+				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",tx,ty+150,tz,0,teamID)
+				Command(GoneForGood[newIndex].butterflys[i], "move", { x =x+math.random(250,512)*randSign(), y = y, z = z+math.random(250,512)*randSign() }, {})
+				Command(GoneForGood[newIndex].butterflys[i], "move", { x =x, y = y, z = z }, { "shift" })
 			end
 			
 			--spawnWithinCircle

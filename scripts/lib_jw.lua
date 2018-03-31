@@ -243,7 +243,8 @@ if not UnitDefNames then UnitDefNames = UnitDefNamesL end
         [UnitDefNames["gvolcano"].id] = true,
         [UnitDefNames["gproceduralfeature"].id] = true,
         [UnitDefNames["jabyss"].id] = true,
-        [UnitDefNames["jvaryavatara"].id] = true
+        [UnitDefNames["jvaryavatara"].id] = true,
+        [UnitDefNames["jsungodcattle"].id] = true
 		
     }
 
