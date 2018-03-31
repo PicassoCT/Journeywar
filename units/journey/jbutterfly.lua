@@ -14,8 +14,8 @@ local unitDef = {
 	buildTime = 6,
 	--Health
 	maxDamage = 350,
-	idleAutoHeal = 10,
-	AutoHeal = 5,
+	idleAutoHeal = 0,
+	AutoHeal = 0,
 	--Movement
 	Acceleration = 0.1,
 	BrakeRate = 1,
@@ -23,7 +23,7 @@ local unitDef = {
 	FootprintZ = 1,
 	TEDClass = [[VTOL]],
 	steeringmode = [[1]],
-	maneuverleashlength = 1380,
+	maneuverleashlength = 520,
 
 	turnRadius		 	= 8,
 	dontLand		 	= true,
@@ -47,7 +47,7 @@ local unitDef = {
 	CanLand= false,
 
 	CanFly = true,
-	ActivateWhenBuilt=1,
+	ActivateWhenBuilt=0,
 	maxBank=0.4,
 	myGravity =0.5,
 	mass = 1225,
@@ -55,9 +55,9 @@ local unitDef = {
 	useSmoothMesh =false,
 	collide = true,
 	crashDrag =0.1,
-	airHoverFactor = 15,
+	airHoverFactor = 5,
 	cruiseAlt = 25,
-	Category = [[AIR LAND]],
+	Category = [[AIR]],
 }
 
 return lowerkeys({ [unitName] = unitDef })

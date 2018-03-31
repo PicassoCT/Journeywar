@@ -6,7 +6,7 @@ local weaponDef = {
     },
     exteriorShield = true,
     weaponType = "Shield",
-    shieldAlpha = 0.5,
+    shieldAlpha = 0.2,
     ShieldEnergyUse = 0,
     ShieldForce = 5.25,
     shieldBadColor = [[0 0.4 0.6 1]], --[[0.1 0.7 0.3]]
@@ -16,7 +16,7 @@ local weaponDef = {
     ShieldPower = 3000,
     ShieldPowerRegen = 60,
     shieldpowerregenenergy = 25,
-    SHIELDRADIUS = 50,
+    shieldradius = 15,
     shieldrepulser = false, --true for journeys
     ShieldStartingPower = 3000,
     SmartShield = true,

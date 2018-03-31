@@ -1,106 +1,90 @@
 return {
-	["jeliadeath"] = {
+	["jeliahbirth"] = {
 		
-
-		rainbow = {
+		firstWave = {
 			air = true,
-			class = [[CSimpleParticleSystem]],
-			count = 15,
+			class = [[CBitmapMuzzleFlame]],
+			count = 12,
 			ground = true,
+			underwater = 1,
+			water = true,
 			properties = {
-				airdrag = 0.8,
-				alwaysvisible = true,
+			
 				colormap = [[
-				0.1 0.1 0.1 0.01
+				0.1 0.8 0.9 0.01
 				0.9 0.1 0.1 0.05
 				0.7 0.5 0.1 0.05
 				0.1 0.8 0.9 0.05
 				0.1 0.1 0.1 0.001]],
-				directional = true,
-				emitrot = 1,
-				emitrotspread = 1,
-					emitvector = [[r0.5r-1,0.3r0.7,r0.5r-1]],
-				gravity = [[r0.25r-0.25, r0.01r-0.005, r0.25r-0.25]],
-				numparticles = 1,
-				particlelife = 50,
-				particlelifespread = 150,
-				particlesize = 6,
-				particlesizespread = 12,
-				particlespeed = 10,
-				particlespeedspread = 5,
-				pos = [[0, 2, 0]],
-				sizegrowth = [[0.0 0.0000000000000000001]],
-				sizemod = 0.99999999,
-				texture = [[jeliahbutterfly]],
-				useairlos = false,
+				dir = [[r1r-1,r1,r1r-1]],
+				frontoffset = 2,
+				fronttexture = [[jeliahbutterfly]],
+				length = 50,
+				sidetexture = [[]],
+				size = 25,
+				sizegrowth = -0.75,
+				ttl = 100,
 			},
-		},
-		rainbow2 = {
+			alwaysvisible = true,
+			useairlos = true,
+		},	
+
+		secWave = {
 			air = true,
-			class = [[CSimpleParticleSystem]],
-			count = 15,
+			class = [[CBitmapMuzzleFlame]],
+			count = 12,
 			ground = true,
+			underwater = 1,
+			water = true,
 			properties = {
-				airdrag = 0.8,
-				alwaysvisible = true,
-				colormap = [[
-				0.1 0.1 0.1 0.01
+			
+						colormap = [[
+				0.9 0.1 0.1 0.01
 				0.1 0.1 0.9 0.05
 				0.5 0.3 0.5 0.05
 				0.9 0.1 0.1 0.05
 				0.1 0.1 0.1 0.001]],
-				directional = true,
-				emitrot = 1,
-				emitrotspread = 1,
-				emitvector = [[r0.5r-1,0.3r0.7,r0.5r-1]],
-				gravity = [[r0.25r-0.25, r0.01r-0.005, r0.25r-0.25]],
-				numparticles = 1,
-				particlelife = 50,
-				particlelifespread = 150,
-				particlesize = 6,
-				particlesizespread = 12,
-				particlespeed = 10,
-				particlespeedspread = 5,
-				pos = [[0, 2, 0]],
-				sizegrowth = [[0.0 0.0000000000000000001]],
-				sizemod = 0.99999999,
-				texture = [[jeliahbutterfly]],
-				useairlos = false,
+				dir = [[r1r-1,r0.5,r1r-1]],
+				frontoffset = 2.5,
+				fronttexture = [[jeliahbutterfly]],
+				length = 50,
+				sidetexture = [[]],
+				size = 32,
+				sizegrowth = -0.75,
+				ttl = 120,
 			},
-		},	
-		rainbow3 = {
+			alwaysvisible = true,
+			useairlos = true,
+		},
+		
+		thirdWave = {
 			air = true,
-			class = [[CSimpleParticleSystem]],
-			count = 15,
+			class = [[CBitmapMuzzleFlame]],
+			count = 12,
 			ground = true,
+			underwater = 1,
+			water = true,
 			properties = {
-				airdrag = 0.8,
-				alwaysvisible = true,
-				colormap = [[
-				0.1 0.1 0.1 0.01
+			
+						colormap = [[
+				0.9 0.1 0.1 0.01
 				0.1 0.6 0.9 0.05
 				0.7 0.5 0.1 0.05
 				0.9 0.1 0.1 0.05
 				0.1 0.1 0.1 0.001]],
-				directional = true,
-				emitrot = 1,
-				emitrotspread = 1,
-					emitvector = [[r0.5r-1,0.3r0.7,r0.5r-1]],
-				gravity = [[r0.25r-0.25, r0.01r-0.005, r0.25r-0.25]],
-				numparticles = 1,
-				particlelife = 50,
-				particlelifespread = 150,
-				particlesize = 6,
-				particlesizespread = 12,
-				particlespeed = 10,
-				particlespeedspread = 5,
-				pos = [[0, 2, 0]],
-				sizegrowth = [[0.0 0.0000000000000000001]],
-				sizemod = 0.99999999,
-				texture = [[jeliahbutterfly]],
-				useairlos = false,
+				dir = [[r1r-1,r0.5,r1r-1]],
+				frontoffset = 3.14,
+				fronttexture = [[jeliahbutterfly]],
+				length = 50,
+				sidetexture = [[]],
+				size = 64,
+				sizegrowth = -0.80,
+				ttl = 130,
 			},
+			alwaysvisible = true,
+			useairlos = true,
 		},
+		
 		
 		
 		

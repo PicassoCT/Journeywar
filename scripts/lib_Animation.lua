@@ -2100,22 +2100,33 @@ function resetT(tableName, speed, boolShowAll, boolWait, boolIstantUpdate, inter
     end
 end
 
+
+
 --> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
 function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
 	-- shotVector.x= shotVector.x*-1
 	-- shotVector.y= shotVector.y*-1
 	-- shotVector.z= shotVector.z*-1
+	pFunction= function(strName)
+		map= Spring.GetUnitPieceMap(unitID)
+		return map[strName]
+	end
 
-	LimbMap= getPiecesBelow(unitID, rootPiece)
+	
+	pieceFunction=piece or pFunction
+	LimbMap= getPiecesBelow(unitID, rootPiece, pieceFunction)
 	stunUnit(unitID, 64)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	env.Hide(rootPiece)
-	env.Explode(rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
-	
-	for k,piecenumber in pairs(LimbMap) do
-		env.Hide(piecenumber)	
+	if env then
+				Spring.UnitScript.CallAsUnit(unitID, env.script.Hide, rootPiece)
+				Spring.UnitScript.CallAsUnit(unitID, env.script.Explode, rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
+		
+			for k,piecenumber in pairs(LimbMap) do
+				Spring.UnitScript.CallAsUnit(unitID, env.script.Hide, piecenumber)
+
+			end
 	end
-	
+
 end
 -- riplpling show and Hide effect
 function rippleHide(array,startIndex, endIndex, Sleeptime)

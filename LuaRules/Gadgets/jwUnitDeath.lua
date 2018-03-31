@@ -67,6 +67,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			likeHisFathersFather=Spring.GetUnitTeam(spawnPointOfEliah)
 			id=Spring.CreateUnit("jeliah",x,y,z,0,likeHisFathersFather)
 			if id then
+				spawnCegAtUnit(id,"jeliahbirth",0, 0,0)
 				Spring.SetUnitExperience(id, GoneForGood[jDeadEliahIndex].stats.exp)
 				healthPercent= clamp(0.125,#survivors/numberOfButterflys,1)
 				_,mhp=Spring.GetUnitHealth(id)
@@ -192,11 +193,11 @@ if (gadgetHandler:IsSyncedCode()) then
 			GoneForGood[newIndex].butterflys={}
 			
 			for i=1,numberOfButterflys,1 do
-				tx,tz=inRandomRange(x,z,circleRange)
-				ty=Spring.GetGroundHeight(tx,tz)
-				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",tx,ty+150,tz,0,teamID)
-				Command(GoneForGood[newIndex].butterflys[i], "move", { x =x+math.random(250,512)*randSign(), y = y, z = z+math.random(250,512)*randSign() }, {})
-				Command(GoneForGood[newIndex].butterflys[i], "move", { x =x, y = y, z = z }, { "shift" })
+
+				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",x,y+75,z,0,teamID)
+				Spring.GiveOrderToUnit(GoneForGood[newIndex].butterflys[i], CMD.MOVE, {x+math.random(250,512)*randSign(), y, z+math.random(250,512)*randSign()}, {"shift"})
+				Spring.GiveOrderToUnit(GoneForGood[newIndex].butterflys[i], CMD.MOVE, {x,y,z}, {"shift"})
+
 			end
 			
 			--spawnWithinCircle

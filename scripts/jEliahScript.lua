@@ -3,7 +3,6 @@ include "createCorpse.lua"
 include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-
 include "lib_Build.lua"
 --Define the wheel pieces
 
@@ -80,10 +79,8 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function script.Create()
-	--Spring.Echo(math.tan(0.85))
-	--Spring.Echo(math.tan(0.65))
-	--Spring.Echo(math.deg(math.tan(0.85)))
-	--Spring.Echo(math.deg(math.tan(0.128)))
+StartThread(	PlaySoundByUnitDefID,Spring.GetUnitDefID(unitID), "sounds/jEliah/jEliahDeath.ogg", 0.5, 2000, 1, 0)
+
 end
 
 local function idle()
@@ -257,7 +254,7 @@ function script.Killed(recentDamage, maxHealth)
 	spawnCegAtUnit(unitID,"jeliadeath",0, 25,0)
 	spawnCegAtUnit(unitID,"jeliadeath",0, 25,0)
 	spawnCegAtUnit(unitID,"jeliadeath",0, 25,0)
-	
+	StartThread(PlaySoundByUnitDefID,Spring.GetUnitDefID(unitID), "sounds/jEliah/jEliahDeath.ogg", 0.5, 2000, 1, 0)
 	
 	return 0
 end
@@ -375,21 +372,40 @@ end
 
 
 
---weapon 3
+--weapon 2
 function script.AimFromWeapon2()
-	return weaponPoints[3]
+	return body
 end
 
 function script.QueryWeapon2()
-	return weaponPoints[3]
+	return body
 end
 
 
 function script.FireWeapon2()
-	return false
+	return true
 end
 
 
 function script.AimWeapon2(heading, pitch)
-	return false
+	return true
+end
+
+--weapon 3
+function script.AimFromWeapon3()
+	return body
+end
+
+function script.QueryWeapon3()
+	return body
+end
+
+
+function script.FireWeapon3()
+	return true
+end
+
+
+function script.AimWeapon3(heading, pitch)
+	return true
 end

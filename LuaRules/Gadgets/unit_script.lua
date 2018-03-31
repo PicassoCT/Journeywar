@@ -283,6 +283,7 @@ end
 -- overwrites engine's CallAsUnit
 function Spring.UnitScript.CallAsUnit(unitID, fun, ...)
         PushActiveUnitID(unitID)
+			assert(unitID)
         local ret = {sp_CallAsUnit(unitID, fun, ...)}
         PopActiveUnitID()
 

@@ -15,7 +15,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "jeliadeath"
+	return "jeliahbirth"
 end
 center = piece "center"
 Quader04 = piece "Quader04"
