@@ -2118,7 +2118,7 @@ function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, 
 	stunUnit(unitID, 64)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
 	if env then
-				Spring.UnitScript.CallAsUnit(unitID, env.script.Hide, rootPiece)
+				 Spring.UnitScript.CallAsUnit(unitID, env.script.Hide, rootPiece)
 				Spring.UnitScript.CallAsUnit(unitID, env.script.Explode, rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
 		
 			for k,piecenumber in pairs(LimbMap) do
