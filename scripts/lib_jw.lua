@@ -206,7 +206,6 @@ function getFungiImuneUnitTypeTable()
     retTab[UnitDefNames["jfungiforrest"].id] = true
     retTab[UnitDefNames["jtreel"].id] = true
     retTab[UnitDefNames["vort"].id] = true
-    retTab[UnitDefNames["jfiredancebomb"].id] = true
     retTab[UnitDefNames["cgamagardener"].id] = true
     retTab[UnitDefNames["beanstalk"].id] = true
     retTab[UnitDefNames["citadell"].id] = true
@@ -285,6 +284,7 @@ function getAirUnitTypeTable(UnitDefNamesContext)
     retTab[UnitDefNames["cauterizer"].id] = true
     retTab[UnitDefNames["callygator"].id] = true
     retTab[UnitDefNames["conair"].id] = true
+    retTab[UnitDefNames["citconair"].id] = true
     retTab[UnitDefNames["chunterchopper"].id] = true
     retTab[UnitDefNames["csuborbital"].id] = true
     retTab[UnitDefNames["cgunship"].id] = true
@@ -292,6 +292,7 @@ function getAirUnitTypeTable(UnitDefNamesContext)
     retTab[UnitDefNames["gnewsdrone"].id] = true
 
     retTab[UnitDefNames["jsunshipfire"].id] = true
+    retTab[UnitDefNames["jsunshipwater"].id] = true
     retTab[UnitDefNames["jmotherofmercy"].id] = true
     retTab[UnitDefNames["jsempresequoia"].id] = true
     retTab[UnitDefNames["jrecycler"].id] = true
@@ -306,7 +307,6 @@ function getPyroProofUnitTypeTable(UnitDefNamesContext)
 	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end
 
     local FireProofTypes = {}
-    FireProofTypes[UnitDefNames["jfiredancebomb"].id] = true
     FireProofTypes[UnitDefNames["jsunshipfire"].id] = true
     FireProofTypes[UnitDefNames["css"].id] = true
     FireProofTypes[UnitDefNames["jfireflower"].id] = true

@@ -23,7 +23,6 @@ UnitsImune[UnitDefNames["coperatrans"].id] = true
 UnitsImune[UnitDefNames["jsempresequoia"].id] = true
 UnitsImune[UnitDefNames["jbutterfly"].id] = true
 UnitsImune[UnitDefNames["jeliah"].id] = true
-UnitsImune[UnitDefNames["jfiredancebomb"].id] = true
 UnitsImune[UnitDefNames["jrecycler"].id] = true
 UnitsImune[UnitDefNames["jstealthdrone"].id] = true
 

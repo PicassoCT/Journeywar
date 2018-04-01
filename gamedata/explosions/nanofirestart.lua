@@ -12,7 +12,7 @@ return {
           underwater         = 1,
           water              = true,
           properties = {
-           colormap           = [[1 0.1 0.3  .05   0.9 0.05 0.2  .075		0.7 0.3 0.3 0.0001  ]],
+ 		colormap           = [[1 0.61 0.27 0.01 	1 0.61 0.27 0.01	0.97 0.23 0.13 0.01  0.97 0.23 0.13 0.01 	 0.64 0.10 0.17 0.01]],
              dir                = [[0, 1, 0]],
             frontoffset        = 0,
             fronttexture       = [[ActionZone]],--redexplo
@@ -32,7 +32,7 @@ return {
           underwater         = 1,
           water              = true,
           properties = {
-           colormap           = [[1 0.1 0.3  .05   0.9 0.05 0.2  .075		0.7 0.3 0.3 0.0001  ]],
+ 		colormap           = [[1 0.61 0.27 0.01 	1 0.61 0.27 0.01	0.97 0.23 0.13 0.01  0.97 0.23 0.13 0.01 	 0.64 0.10 0.17 0.01]],
              dir                = [[0.5r-0.5, r1, 0.5r-0.5]],
             frontoffset        = 0,
             fronttexture       = [[fireyexplo]],--redexplo
@@ -52,7 +52,7 @@ return {
           underwater         = 1,
           water              = true,
           properties = {
-           colormap           = [[1 0.1 0.3  .075   0.9 0.05 0.2  .075		0.7 0.3 0.3 0.01  ]],
+ 		colormap           = [[1 0.61 0.27 0.01 	1 0.61 0.27 0.01	0.97 0.23 0.13 0.01  0.97 0.23 0.13 0.01 	 0.64 0.10 0.17 0.01]],
              dir                = [[r1r-1, r1, r1r-1]],
             frontoffset        = 0,
             fronttexture       = [[fireyexplo]],--redexplo
@@ -71,10 +71,10 @@ return {
           underwater         = 1,
           water              = true,
           properties = {
-           colormap           = [[0.7 0.3 0.3 0.0001  1 0.1 0.3  .05   0.9 0.05 0.2  .05		0.7 0.3 0.3 0.0001  ]],
+ 		colormap           = [[1 0.61 0.27 0.01 	1 0.61 0.27 0.01	0.97 0.23 0.13 0.01  0.97 0.23 0.13 0.01 	 0.64 0.10 0.17 0.01]],
              dir                = [[r0.1r-0.1, 1, r0.1r-0.1]],
             frontoffset        = 0,
-            fronttexture       = [[firenovaexplo]],--redexplo
+            fronttexture       = [[crimsonnovaexplo]],--redexplo
             length             = 0,
             sidetexture        = [[]],
             size               = 300,
@@ -90,7 +90,7 @@ return {
           underwater         = 1,
           water              = true,
           properties = {
-           colormap           = [[0.7 0.3 0.3 0.001  1 0.1 0.3  .025   0.9 0.05 0.2  .025		0.7 0.3 0.3 0.0001  ]],
+ 		colormap           = [[1 0.61 0.27 0.01 	1 0.61 0.27 0.01	0.97 0.23 0.13 0.01  0.97 0.23 0.13 0.01 	 0.64 0.10 0.17 0.01]],
              dir                = [[r0.1r-0.1, r0.5r0.5, r0.1r-0.1]],
             frontoffset        = 0,
             fronttexture       = [[fireSparks]],--redexplo

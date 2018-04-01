@@ -28,10 +28,10 @@ return {
   ["cgeohive"]= {active="Build\n Bait- \n buildings", passive="Spawn\n Cauterizer \n Drones"},
 
 --journeyman
-  ["jabyss"]= {active="End this\nWorld", passive="World Ends"},
+  ["jabyss"]= {active="End this\nWorld", passive="Biocalypse"},
   ["jbonsai"]= {active="Extract\n Corewater", passive="Stop\n Corewater"},
-  ["jfiredancer"]= {active="Sacrifice", passive="Sacrifice"},
-  ["jbeherith"]= {active="Suicidestampede", passive="Amok"},
+  ["jfiredancer"]= {active="Sacrifice\nSalvo", passive="Sacrifice\nSalvo"},
+  ["jbeherith"]= {active="Suicide\nstampede", passive="Amok"},
   ["jghostdancer"]= {active="Creating\nDecoys", passive="Decoys\nDeactivated"},
   ["beanstalk"]= {active="Grow\nShield", passive="Unveil"},
   ["jconcaterpillar"]= {active="Heal\nUnits", passive="Stop\nHealing"},
