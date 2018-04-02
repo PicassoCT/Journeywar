@@ -51,7 +51,7 @@ LeaveTracks = false,
 		buildinggrounddecaldecayspeed = 0.08,
 		buildinggrounddecalsizex = 8,
 		buildinggrounddecalsizey = 8,
-		buildinggrounddecaltype = "jFireDanceDecal.dds",
+		buildinggrounddecaltype = "jFireDanceDecal.png",
 
 
 

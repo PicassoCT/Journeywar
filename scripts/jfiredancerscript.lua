@@ -78,31 +78,21 @@ function wizzardOfOS()
     end
 end
 
-function sound()
-    if GG.FireDance == nil then
+myDefID=Spring.GetUnitDefID(unitID)
+function playSound()
+    if not GG.FireDance then
         GG.FireDance = {}
         GG.FireDance[1] = math.floor(math.random(1, 6))
-        GG.FireDance[2] = math.floor(math.random(100000, 400000))
-        GG.FireDance[3] = unitID
     end
+	
     String = "sounds/jfiredancer/jfiredance"
     String2 = ".ogg"
+	 GG.FireDance[1]= (GG.FireDance[1]%6)+1
 
-    while true do
-        if GG.FireDance and GG.FireDance[2] == 0 and GG.FireDance[3] == unitID then
-            GG.FireDance[1] = math.floor(math.random(1, 6))
-            GG.FireDance[2] = math.floor(math.random(100000, 400000))
-            GG.FireDance[3] = unitID
-        end
-        Sleep(500)
-        randoVal = math.ceil(math.random(-50, 50))
-        res = GG.FireDance[2] + randoVal
-        Sleep(res)
-        Res = String .. (GG.FireDance[1]) .. String2
-        Spring.PlaySoundFile(Res, 1.0)
-        Sleep(250)
-    end
+	Res = String .. (GG.FireDance[1]) .. String2	
+	PlaySoundByUnitDefID(myDefID, bgdefID, Res, 1, GG.FireDance[2] , 1, 0)
 end
+
 
 function script.Activate()
     boolIcanFly = true
@@ -123,13 +113,13 @@ function script.Create()
 
 	Hide(staff)
     StartThread(wizzardOfOS)
-    StartThread(sound)
+
     StartThread(downHillGlideDetector)
     StartThread(reloadCycle)
 end
 
 idleFunctions= {
-function()
+[1]=function()
    Turn(center, x_axis, math.rad(69), 4)
             Turn(ArmL, x_axis, math.rad(-90), 7)
             Turn(ArmR, x_axis, math.rad(-90), 7)
@@ -151,7 +141,7 @@ function()
                 Sleep(120)
             end
 end,
-function()
+[2]=function()
  Turn(center, x_axis, math.rad(85), 6)
             Turn(ArmL, x_axis, math.rad(-170), 7)
             Turn(ArmR, x_axis, math.rad(-170), 7)
@@ -159,7 +149,7 @@ function()
 
             Turn(ArmR, x_axis, math.rad(-175), 7)
 end,
-function()
+[3]=function()
 			Move(center, y_axis, -7, 2)
             tP(Head, -24, 0, 0, 1)
             tP(ArmR, -91, -44, 0, 1)
@@ -181,7 +171,7 @@ function()
                 Sleep(12000)
             end
 end,
-function()
+[4]=function()
 
    tP(ArmL, 12, 0, -31, 5)
             tP(ArmR, -172, 0, 30, 5)
@@ -207,7 +197,7 @@ function()
             StopSpin(staff, y_axis, 1)
             reset(staff, 1)
 end,
-function()
+[5]=function()
     Turn(ArmR, x_axis, math.rad(-90), 7)
             Turn(ArmL, x_axis, math.rad(-90), 7)
             WaitForTurn(ArmR, x_axis)
@@ -261,6 +251,24 @@ function()
             Turn(ArmL, z_axis, math.rad(-77), 3)
             Sleep(14000)
 end
+[6]=function()
+	rArm= math.random(-2,0)
+	 Turn(ArmR, y_axis, math.rad(90), 7)
+	 Turn(ArmR, z_axis, math.rad(rArm*90), 7)
+
+	 lArm= math.random(-0,2)
+	 Turn(ArmL, y_axis, math.rad(90), 7)
+	 Turn(ArmL, z_axis, math.rad(lArm*90), 7)
+	--Katamotion
+	rBody = math.random(-1,1)
+	Turn(body,y_axis,math.rad(90*rBody),12)
+	tP(LegR,15,90*rBody*-1,0,12)
+	tP(LLegR,-15,0,0,12)
+	tP(LegL,-15,90*rBody*-1,0,12)
+	tP(LLegL,15,0,0,12)
+	
+end
+
 }
 
 local function idle()
@@ -288,6 +296,8 @@ local function idle()
         Sleep(sleeper)
 
 		idleFunctions[math.random(0,#idleFunctions)]()
+		Sleep(5000)
+		playSound()
     end
 end
 
