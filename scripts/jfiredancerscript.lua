@@ -330,21 +330,22 @@ function walk()
         tP(LLegR, 20, 0, 0, leg_movespeed)
         tP(LegL, 11, 0, 0, leg_movespeed)
         tP(LLegL, 15, 0, 0, leg_movespeed)
-
+		if boolAiming== false then
         tP(ArmL, -26, 0, 0, leg_movespeed)
         tP(ArmR, 37, 0, 0, leg_movespeed)
-        tP(staff, -37, 0, 0, leg_movespeed)
-
+		end
+		
         WaitForTurns(LLegR, LegR, LLegL, LegL, Head, center, ArmL, ArmR)
         times = times + step
         tP(LegL, -42, 0, 0, leg_movespeed)
         tP(LLegL, 20, 0, 0, leg_movespeed)
         tP(LegR, 11, 0, 0, leg_movespeed)
         tP(LLegR, 15, 0, 0, leg_movespeed)
-
+		if boolAiming== false then
         tP(ArmL, 37, 0, 0, leg_movespeed)
         tP(ArmR, -16, 0, 0, leg_movespeed)
-        tP(staff, 16, 0, 0, leg_movespeed)
+		end
+		
         --left leg up, right leg down
         tP(Head, -21, 0, 0, leg_movespeed)
         tP(center, 10, -math.pi * sway, 0, leg_movespeed)
@@ -374,7 +375,10 @@ end
 
 
 aimTime=Spring.GetGameFrame()
+boolAiming=false
 function aimAnimation(Heading,pitch)
+		Signal(SIG_IDLE)
+		boolAiming=true
 		x,y,z=Spring.GetUnitPosition(unitID)
 		factor= clamp(0, 1- (((Spring.GetGameFrame() - aimTime)))/(30*5),1)
 		tP(ArmL,-175,0,-90*factor, 	5)
@@ -388,16 +392,16 @@ function aimAnimation(Heading,pitch)
 		end
 		
 
-        WaitForTurns(ArmR,ArmL)
+        
 		if Heading then 
-        Turn(center, y_axis, Heading, 15)
+			Turn(center, y_axis, Heading, 15)
 		end
-        WaitForTurn(center, y_axis)
+        WaitForTurns(ArmR,ArmL,center)
 		if factor <= 0 then
 		--Spring.SpawnCEG( "nanofirestart",x,y+50,z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10)
         Spring.CreateUnit("jfiredancedecal", x, y, z, math.ceil(math.random(0, 3)), teamID)
-
-		Spring.SpawnCEG( "nanofirestart",x,y+10,z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10)
+		aimTime=Spring.GetGameFrame()
+		boolAiming=false
 		return true 
 		end
 	return false
@@ -419,12 +423,18 @@ function script.AimWeapon1(Heading, pitch)
     end
 end
 
-
+function delayedStop()
+setSpeedEnv(unitID,0.0)
+Sleep(1500)
+setSpeedEnv(unitID,1.0)
+end
 
 teamID = Spring.GetUnitTeam(unitID)
 function script.FireWeapon1()
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.SpawnCEG( "nanofirestart",x,y+10,z, math.random(-10, 10) / 10, math.random(0, 10) / 10, math.random(-10, 10) / 10)
 	spawnCegAtPiece(unitID,body,"firecolumn",1)
-	aimTime=Spring.GetGameFrame()
+	StartThread(delayedStop)
     return true
 end
 
@@ -494,18 +504,8 @@ local function legs_down()
     Turn(LegR, x_axis, math.rad(0), 15)
     Turn(LLegR, x_axis, math.rad(0), 32)
     Turn(LLegL, x_axis, math.rad(0), 32)
+	if boolAiming== false then
 
-    Turn(ArmL, x_axis, math.rad(0), 15)
-    Turn(ArmL, y_axis, math.rad(0), 15)
-    Turn(ArmL, z_axis, math.rad(0), 15)
-
-    Turn(ArmR, x_axis, math.rad(0), 15)
-    Turn(ArmR, y_axis, math.rad(0), 15)
-    Turn(ArmR, z_axis, math.rad(0), 15)
-
-    Turn(staff, x_axis, math.rad(0), 15)
-    Turn(staff, y_axis, math.rad(0), 15)
-    Turn(staff, z_axis, math.rad(0), 15)
 
     Turn(ArmR, x_axis, math.rad(0), 12)
     Turn(ArmR, y_axis, math.rad(0), 12)
@@ -513,6 +513,8 @@ local function legs_down()
     Turn(ArmL, x_axis, math.rad(0), 12)
     Turn(ArmL, y_axis, math.rad(0), 12)
     Turn(ArmL, z_axis, math.rad(0), 12)
+	end
+
     Turn(staff, x_axis, math.rad(0), 3)
     Turn(staff, y_axis, math.rad(0), 13)
     Turn(staff, z_axis, math.rad(0), 3)
