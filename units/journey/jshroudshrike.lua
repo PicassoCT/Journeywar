@@ -78,7 +78,7 @@ local unitDef = {
 	
 	smoothAnim = true,
 	
-	
+	unitRestricted = 2,
 	
 	
 	customParams = {},
@@ -88,5 +88,13 @@ local unitDef = {
 		},
 		
 	},
+	
+		weapons = {
+		[1]={name = "jmachineloyaltybeam",
+			onlyTargetCategory = [[ LAND ]],			
+		},		
+		
+	},
+	
 	
 }return lowerkeys({ [unitName] = unitDef })
