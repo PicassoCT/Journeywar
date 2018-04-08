@@ -22,7 +22,7 @@ local unitDef = {
 	MaxWaterDepth = 2000,
 	MovementClass = "jinfantry",
 	TurnRate = 450,
-	mass=9000,
+	mass=900,
 	
 	
 	sightDistance = 500,

@@ -1037,14 +1037,19 @@ end
 
 local SIG_DELAYSTOP = 4
 local SIG_HOP= 8
-
+myDefID=Spring.GetUnitDefID(unitID)
 function delayedHop()
 	Signal(SIG_HOP)
 	SetSignalMask(SIG_HOP)
-	delay= math.random(100,1700)
+	delay= math.random(1000,4500)
 	Sleep(delay)
-	strength= math.random(1,15)
-	Spring.AddUnitImpulse(unitID, 0, strength, 0)
+	_,orgPos= Spring.GetUnitPiecePosition(unitID,center)
+	
+	for i=1,60 do
+		mSyncIn(center,0, orgPos+ math.sin((i*math.pi)/60)*25, 0,33)
+		Sleep(33)
+	end
+
 end
 
 

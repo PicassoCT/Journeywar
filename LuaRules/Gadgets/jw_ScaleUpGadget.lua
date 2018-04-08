@@ -20,14 +20,14 @@ if (gadgetHandler:IsSyncedCode()) then
     jBuilding = getJourneyBuildingTypeTable()
 
     DefTypeTable = {
-        [UnitDefNames["jswiftspear"].id] = true,
-        [UnitDefNames["jbeherith"].id] = true,
-        [UnitDefNames["jsungodcattle"].id] = true,
-        [UnitDefNames["cawilduniverseappears"].id] = true,
-        [UnitDefNames["ghohymen"].id] = true,
-        [UnitDefNames["jvaryfoo"].id] = true,
-        [UnitDefNames["jspacebornembryo"].id] = true,
-        [UnitDefNames["gseastar"].id] = true
+        [UnitDefNames["jswiftspear"].id] =  0.002,
+        [UnitDefNames["jbeherith"].id] = 0.001,
+        [UnitDefNames["jsungodcattle"].id] = 0.0012,
+        [UnitDefNames["cawilduniverseappears"].id] = 0.05,
+        [UnitDefNames["ghohymen"].id] = 0.0005,
+        [UnitDefNames["jvaryfoo"].id] = 0.001,
+        [UnitDefNames["jspacebornembryo"].id] = 0,
+        [UnitDefNames["gseastar"].id] = 0.005
     }
 
     jBuildAnimDefID = UnitDefNames["jbuildanim"].id
@@ -46,13 +46,9 @@ if (gadgetHandler:IsSyncedCode()) then
             StartScale = 0.06
             --	if unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id then StartScale=0.52 end
 
-            ScaleFactorProFrame = 0.001
-
+            ScaleFactorProFrame = DefTypeTable[unitDefID] 
             ScaleUpLimit = 1
-            if unitDefID == UnitDefNames["gseastar"].id then ScaleFactorProFrame = 0.003 end --or unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id
-            if unitDefID == UnitDefNames["jswiftspear"].id then ScaleFactorProFrame = 0.001 end --or unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id
-            if unitDefID == UnitDefNames["jbeherith"].id then ScaleFactorProFrame = 0.0005 end
-            if unitDefID == UnitDefNames["jsungodcattle"].id then ScaleFactorProFrame = 0.0006 end
+
             if unitDefID == UnitDefNames["jspacebornembryo"].id then
                 ScaleFactorProFrame = 0
                 ScaleUpLimit = 1
@@ -60,18 +56,15 @@ if (gadgetHandler:IsSyncedCode()) then
             end
 
             if unitDefID == UnitDefNames["cawilduniverseappears"].id then
-                ScaleFactorProFrame = 0.05
-                ScaleUpLimit = 3.14159
+				ScaleUpLimit = 3.14159
             end
 
             if unitDefID == UnitDefNames["ghohymen"].id then
                 StartScale = 0.12
-                ScaleFactorProFrame = 0.0005
                 ScaleUpLimit = 2.14159
             end
 
             if unitDefID == UnitDefNames["jvaryfoo"].id then
-                ScaleFactorProFrame = 0.0005
                 ScaleUpLimit = 1 + (math.random(1, 7) / 10)
             end
 

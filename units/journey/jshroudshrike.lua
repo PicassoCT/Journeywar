@@ -90,7 +90,7 @@ local unitDef = {
 	},
 	
 		weapons = {
-		[1]={name = "jmachineloyaltybeam",
+		[1]={name = "jshroudtimerray",
 			onlyTargetCategory = [[ LAND ]],			
 		},		
 		

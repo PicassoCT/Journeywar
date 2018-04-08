@@ -182,7 +182,8 @@ effectUnitDefs = {
 	
 	
 	jsunshipfire= {
-		
+		{class='ShieldSphere', options={life=math.huge, pos={0,0,0},size=220,onActive=true,   colormap2 = {{0.9, 0.5, 0.01, 0.9}},colormap1 = {{0.95, 0.2, 0.01	, 0.9}}, repeatEffect=true}},
+	
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=1000, precision=22, strength = 0.005, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=225, precision=22, strength = 0.005, repeatEffect=true}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=250, precision=22, strength = 0.029, repeatEffect=true}},
@@ -193,6 +194,22 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,15,0}, size=90, precision=22, strength = 0.015, repeatEffect=true}}, 
 	},
 	
+
+	jmirrorbubble={
+	-- Sun	
+	{class='ShieldSphere', options={ onActive=true, life=math.huge, pos={math.random(-5,5),115,math.random(-5,5)}, size=math.random(30,35), colormap1 = {{0.2, 0.5, 0.9, 0.1}},colormap2 = {{0.2, 0.9, 0.3	, 0.6}},		repeatEffect=true}},			
+	-- Planets
+	{class='ShieldSphere', options={ onActive=true,life=math.huge, pos={math.random(-120,120),95, math.random(-120,120)}, size=math.random(2,10), colormap2 = {{0.2, 0.5, 0.9, 0.1}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}},		repeatEffect=true}},			
+	{class='ShieldSphere', options={ onActive=true,  life=math.huge, pos={math.random(-120,120),110, math.random(-120,120)}, size=math.random(5,8), colormap2 = {{0.2, 0.5, 0.9, 0.1}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}},		repeatEffect=true}},			
+	{class='ShieldSphere', options={ onActive=true,  life=math.huge, pos={math.random(-80,80),130, math.random(-80,80)}, size=math.random(2,10), 	colormap2 = {{0.2, 0.5, 0.9, 0.1}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}},		repeatEffect=true}},			
+	{class='ShieldSphere', options={ onActive=true,  life=math.huge, pos={math.random(-200,200),90, math.random(-200,200)}, size=math.random(5,15), colormap2 = {{0.2, 0.5, 0.9, 0.1}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}},		repeatEffect=true}},			
+	{class='ShieldSphere', options={ onActive=true,  life=math.huge, pos={math.random(-80,80),120, math.random(-80,80)}, size=math.random(5,15), 	colormap2 = {{0.2, 0.5, 0.9, 0.1}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}},		repeatEffect=true}},			
+	{class='ShieldSphere', options={ onActive=true,  life=math.huge, pos={math.random(180,250)*-1,115, math.random(180,250)*-1}, size=math.random(15,22), 	colormap2 = {{0.2, 0.5, 0.9, 0.1}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}},		repeatEffect=true}},			
+	
+	{class='ShieldSphere', options={life=math.huge, pos={0,0,0},size=750, onActive=true, colormap2 = {{0.2, 0.5, 0.9, 0.014}},colormap1 = {{0.2, 0.9, 0.3	, 0.3}}, repeatEffect=true}},
+	{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=780,  precision=22, strength = 0.00035, repeatEffect=true}},
+		},
+	
 	
 	gvolcano= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,70,0}, size=150, precision=22, strength = 0.01, repeatEffect=true}},
@@ -201,6 +218,7 @@ effectUnitDefs = {
 	}, 
 	
 	glava= {
+	
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength = 0.015, repeatEffect=true}},
 	},
 	

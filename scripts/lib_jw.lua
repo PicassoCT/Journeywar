@@ -454,6 +454,7 @@ function getAbstractTypes(UnitDefNamesContext)
         [UnitDefNames["cawilduniverseappears"].id] = true,
         [UnitDefNames["jtrafactory"].id] = true,
         [UnitDefNames["jtrafactory2"].id] = true,
+        [UnitDefNames["jmirrorbubble"].id] = true,
 		--TODO add all abstract types
      }
 

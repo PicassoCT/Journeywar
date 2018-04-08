@@ -3632,8 +3632,8 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 			
 			if valueType == "table" then 
 				if (assertT(value, checkTable[key], checkFunctionTable[key]) == false) then
-					echo("Assert Table Error: Table did not contain wellformed subtable for key "..key)
-					assert(true == false)
+					echo("Assert Table Error: Table "..value.." did not contain wellformed subtable for key "..key)
+					return false
 				end
 			end
 			
@@ -3651,8 +3651,8 @@ function assertT(ExampleTable, checkTable, checkFunctionTable)
 			end		
 		else
 			
-			echo("Assert Table Error: Table did not contain a value for key :"..key)
-			assert(true==false)
+			echo("Assert Table Error: Table "..value.." did not contain a value for key :"..key)
+			return false
 		end
 	end
 end

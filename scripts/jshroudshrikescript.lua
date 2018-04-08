@@ -80,7 +80,9 @@ function restartRoots()
         Turn(SpinT[i], z_axis, math.rad(-90), 0, true)
         Turn(SpinT[i], z_axis, math.rad(0), 0.3)
         Show(SpinT[i])
-        Spin(SpinT[i], y_axis, math.rad(math.random(22) * -12), 0.5)
+		val=(2^math.random(2,9)) * -12
+		speed= math.random(5,10)/10
+        Spin(SpinT[i], y_axis, math.rad(val),speed)
     end
 end
 
@@ -389,10 +391,37 @@ function sudoRootOnGroot()
     Move(Root[2], x_axis, math.rad(math.random(-26, 26), 0.3))
     Spin(rootspin1, y_axis, math.rad(math.random(-42, 42)), 0.3)
     Spin(rootspin2, y_axis, math.rad(math.random(-42, 42)), 0.3)
-    spinT(SpinT, y_axis, 4, math.random(22, 55) * -1)
+
     for i = 1, #SpinT do
+		val= (2^math.random(6, 9))*-1
+		Spin(SpinT[i],y_axis,math.rad(val),0)
         if maRa() == true then
             Move(SpinT[i], y_axis, math.rad(math.random(0, 55) * 2), 4.5)
         end
     end
 end
+
+
+--- -aimining & fire weapon
+function script.AimFromWeapon1()
+    return ArmR
+end
+
+function script.QueryWeapon1()
+    return Head
+end
+
+
+
+function script.AimWeapon1(Heading, pitch)
+
+		return true
+
+end
+
+
+function script.FireWeapon1()
+
+    return true
+end
+-- a bubble where you can rewind time by sacrificing a unit

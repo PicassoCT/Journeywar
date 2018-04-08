@@ -250,7 +250,7 @@ end,
             Turn(ArmR, z_axis, math.rad(77), 3)
             Turn(ArmL, z_axis, math.rad(-77), 3)
             Sleep(14000)
-end
+end,
 [6]=function()
 	rArm= math.random(-2,0)
 	 Turn(ArmR, y_axis, math.rad(90), 7)
