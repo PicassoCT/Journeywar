@@ -218,8 +218,11 @@ effectUnitDefs = {
 	}, 
 	
 	glava= {
-	
-		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength = 0.015, repeatEffect=true}},
+		{class='ShieldSphere', options={  life=math.huge, pos={0,-5 ,0}, size=35, 
+		colormap2 = {{0.9, 0.3, 0.0, 0.4}, {1, 0.3, 0, 0.0}},
+		colormap1 = {{0.5, 0.3, 0.0, 0.0}, {1, 0.3, 0, 0.0}},
+		repeatEffect=true}},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength = 0.007, repeatEffect=true}},
 	},
 	
 	
@@ -231,11 +234,16 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,35,0}, size=60, precision=28, strength = 0.007, repeatEffect=true}},
 	},
 	
-
+	cegtest= {
+		{class='ShieldSphere', options={  life=math.huge, pos={0,30.1,0}, size=50, 
+		colormap2 = {{0.9, 0.3, 0.0, 0.4}, {1, 0.3, 0, 0.0}},
+		colormap1 = {{0.5, 0.3, 0.0, 0.0}, {1, 0.3, 0, 0.0}},
+		repeatEffect=true}}	
+	},
 	
 	beanstalk= {
 
-		{class='Ribbon', options={color={.7,1,0.1,1}, width=12.5, piece="seed"}},
+		{class='Ribbon', options={color={.7,1,0.1,0.5}, width=12.5, piece="seed"}},
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,20,0}, size=55, precision=22, strength = 0.005, repeatEffect=true}},
 		--	outer ShieldSFX
 		{class='ShieldSphere', options={ onActive=true, life=math.huge, pos={0,30.1,0}, size=600, 

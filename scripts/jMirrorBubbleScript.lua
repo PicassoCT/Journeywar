@@ -24,13 +24,61 @@ function ReleaseAllInside()
 
 end
 
+function extractNewEntrys(T)
+return process(T,
+					function (id)
+						if inhabitants[id] then return end
+					
+					defID= Spring.GetUnitDefID(id)
+						if 	not inhabitants[id] and 
+							not nonRessurectabbleTypes[defID] and
+							not buildingTypes[defID]
+							then
+							x,y,z =Spring.GetUnitPosition(id)
+						inhabitants[id]={
+											ox=x,
+											oy=y,
+											oz=z,
+											defID= defID				
+										}
+							return id
+						end
+					end)
+end
+					
+function ContainsSeveralSides(T)
+Teams={}
+process(T,
+		function(id)
+		teamID= Spring.GetUnitTeam(id)
+		Teams[teamID]=true
+		end
+		)
+return count(Teams) > 1 
+end
+
+OrgRadius= 900
+Radius=OrgRadius
+inhabitants={}
+x,y,z=Spring.GetUnitPosition(unitID)
+nonRessurectabbleTypes= mergeDict( getAbstractTypes(UnitDefNames),getJourneyCorpseTypeTable(UnitDefNames))
+buildingTypes= getAllBuildingTypes(),
 function mirrorBubble()
-	while true do
-	Sleep(100)
+	Command(unitID,"setactive",{},{0})
+	T= getAllInSphere(x,y,z,Radius,unitID)
+	if ContainsSeveralSides(T) == false then
+	
+	end
+	--if none of my team- create mirror units
+
+	while ContainsSeveralSides()==true do
+	Radius= Radius+1/1000
+	Sleep(30)
+	
+	T= getAllInSphere(x,y,z,Radius,unitID)
+	newOnes= extractNewEntrys(T)
 	--Check for
 		
-		--Eine Mirrorbubble beginnt zu existieren, wenn das Shroudshrike 
-		--kontinuierlich auf eine Position in der Landschaft schießt
 		--Sie wächst langsam aber kontinuierlich, mit jedem darauf abgefeuerten Projektil (wirkt als Schild)
 		--Begeht eine Einheit Selbstmord in einer Mirrorbubble, so wird die Bubble zurückgesetzt, alle Einheiten werden wiederhergestellt und transformiert
 			-- Währendessen bildet die Bubble eine Skulptur
@@ -47,6 +95,7 @@ function mirrorBubble()
 
 	end
 end
+
 
 function watchCreator()
 while boolCreatorIdentifyied== false do Sleep(100) end
