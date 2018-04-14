@@ -4373,6 +4373,19 @@ function mulVector(vl, value)
 	return nil
 end
 
+function normN( ...)
+	local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
+	maxVal=-1*math.huge
+	for k, v in pairs(arg) do 
+		if math.abs(v) > maxVal then maxVal= math.abs(v) end
+	end
+
+	for k, v in pairs(arg) do 
+		arg[k]=v/maxVal
+	end
+return arg
+end
+
 function norm2Vector(v1, v2)
 	if not v1 then return nil end
 	if not v1.x then return nil end
