@@ -57,26 +57,85 @@ process(T,
 return count(Teams) > 1 
 end
 
+function filterOutMissing(newT, oldT)
+missingUnits={}
+process(oldT,
+		function(id)
+			if not newT[id] then
+			missingUnits[id]=id 
+			end
+		end
+		)
+return missingUnits
+end
+
+function getRecentSuicidees(T)
+
+
+
+
+return T
+end
+
+function resetEscapees(T)
+	process(T,
+			function(id)
+				boolUnitIsDead= Spring.GetUnitIsDead(id)
+					if boolUnitIsDead and boolUnitIsDead== false then
+						px,py,pz= Spring.GetUnitPosition(id)
+						px,py,pz= px-x,py-y,pz-z 
+						t= normN(px,py,pz)
+						Spring.SetUnitPosition(id, 
+						x+t[1]*Radius ,
+						y+t[2]*Radius ,
+						y+t[3]*Radius )
+					end
+				end
+			)
+end
+
 OrgRadius= 900
 Radius=OrgRadius
 inhabitants={}
 x,y,z=Spring.GetUnitPosition(unitID)
 nonRessurectabbleTypes= mergeDict( getAbstractTypes(UnitDefNames),getJourneyCorpseTypeTable(UnitDefNames))
-buildingTypes= getAllBuildingTypes(),
+buildingTypes= getAllBuildingTypes()
+
+
 function mirrorBubble()
 	Command(unitID,"setactive",{},{0})
 	T= getAllInSphere(x,y,z,Radius,unitID)
-	if ContainsSeveralSides(T) == false then
+	if not T then destroyMirrorBubble() end
+	mirroredUnits={}
 	
+	if ContainsSeveralSides(T) == false then
+		if fairRandom("jmirrorbubble"..Spring.GetUnitTeam(unitID), 0.5)==false then
+			createSoleSurvivor()
+		else
+			mirroredUnits=createMirroredTeam(T)
+		end
 	end
 	--if none of my team- create mirror units
-
-	while ContainsSeveralSides()==true do
-	Radius= Radius+1/1000
-	Sleep(30)
-	
 	T= getAllInSphere(x,y,z,Radius,unitID)
-	newOnes= extractNewEntrys(T)
+	OldT= T
+	while ContainsSeveralSides(T)==true do
+		Radius= Radius+1/1000
+		Sleep(30)
+	
+		T = getAllInSphere(x,y,z,Radius,unitID)
+		newOnes = extractNewEntrys(T)
+		missingOnes = filterOutMissing(T,OldT)
+		suicidalOnes= getRecentSuicidees(missingOnes)
+		resetEscapees(missingOnes)
+		
+		if #suicidalOnes > 0 then
+			-- reset whole bubble and build a sculpture for the time
+			
+			makeASculpture(T)
+			sendUnitsBackToStartPosition()
+		else
+			transferCommandsToMirroredUnits()
+		end
 	--Check for
 		
 		--Sie wächst langsam aber kontinuierlich, mit jedem darauf abgefeuerten Projektil (wirkt als Schild)
