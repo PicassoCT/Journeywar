@@ -18,6 +18,14 @@ CreatorID= creatorID
 
 end
 
+function addInhabitants(T)
+for k,v in pairs(T) do
+	inhabitants[k]={}
+	inhabitants[k].x,inhabitants[k].y,inhabitants[k].z = Spring.GetUnitPosition(v)
+end
+
+end
+
 function ReleaseAllInside()
 
 
@@ -96,11 +104,14 @@ end
 
 OrgRadius= 900
 Radius=OrgRadius
-inhabitants={}
+inhabitants={
+--[id] = {ox,oy,oz}
+
+}
 x,y,z=Spring.GetUnitPosition(unitID)
 nonRessurectabbleTypes= mergeDict( getAbstractTypes(UnitDefNames),getJourneyCorpseTypeTable(UnitDefNames))
 buildingTypes= getAllBuildingTypes()
-
+mirrorBubbleTransformationTable= getMirrorBubbleTransformationTable()
 
 function mirrorBubble()
 	Command(unitID,"setactive",{},{0})
@@ -124,6 +135,7 @@ function mirrorBubble()
 	
 		T = getAllInSphere(x,y,z,Radius,unitID)
 		newOnes = extractNewEntrys(T)
+		addInhabitants(newOnes)
 		missingOnes = filterOutMissing(T,OldT)
 		suicidalOnes= getRecentSuicidees(missingOnes)
 		resetEscapees(missingOnes)
@@ -132,14 +144,20 @@ function mirrorBubble()
 			-- reset whole bubble and build a sculpture for the time
 			
 			makeASculpture(T)
+			Sleep(20000)
 			sendUnitsBackToStartPosition()
+			process(T,
+					function(id)
+							transformUnitInto(id,
+											mirrorBubbleTransformationTable[Spring.GetUnitDefID(id)])
+					end
+					)
+			transformUnits(T)
 		else
 			transferCommandsToMirroredUnits()
 		end
 	--Check for
 		
-		--Sie wächst langsam aber kontinuierlich, mit jedem darauf abgefeuerten Projektil (wirkt als Schild)
-		--Begeht eine Einheit Selbstmord in einer Mirrorbubble, so wird die Bubble zurückgesetzt, alle Einheiten werden wiederhergestellt und transformiert
 			-- Währendessen bildet die Bubble eine Skulptur
 		
 		
