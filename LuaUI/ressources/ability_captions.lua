@@ -8,6 +8,7 @@ return {
   ["cgamagardener"]= {active="Activate\nRadiation", passive="Deactivate\nRadiation"},
   ["cnanorecon"]= {active="Call\n Citadell", passive="Portalstorm\n pending"},
   ["cgatefort"]= {active="GateRail\nOn", passive="GateRail\nOff"},
+  ["cheadlauncher"]= {active="Tortured \nHead\n Ammo", passive="Controll \nImplant\n Ammo"},
   ["cwallbuilder"]= {active="Terraform \nOn", passive="Terraform \nOff"},
   ["mtw"]= {active="Build\nTrooper ", passive="Build\nSynthsoldier"},
   ["css"]= {active="Torch\nEnvironment", passive="Cease\nFire"},

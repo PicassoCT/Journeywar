@@ -2068,6 +2068,16 @@ function GetSpeed(timeInSeconds, degree)
     return (degRad / timeInSeconds)
 end
 
+function spasm(id,speed, modfactor)
+pieceMap= Spring.GetUnitPieceMap(id)
+	
+	for name,number in pairs(pieceMap) do
+		if number % modfactor == 0 then
+			turnPieceRandDir(number, speed, 22, -22, 22, -22, 22, -22)	
+		end	
+	end
+end
+
 function resetAll(unitID)
  pieceMap = Spring.GetUnitPieceMap(unitID)
  for k,v in pairs(pieceMap) do

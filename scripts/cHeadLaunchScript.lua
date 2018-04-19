@@ -358,7 +358,7 @@ function script.AimWeapon1(heading, pitch)
     WaitForTurn(hlgun, y_axis)
     --make sure the aiming animation is only run once
 
-    if boolReadyToFire == true then
+    if boolReadyToFire == true and  boolActive==false then
         return true
     else
         return false
@@ -428,3 +428,45 @@ function script.Killed(recentDamage, maxHealth)
 
     return 0
 end
+
+boolActive=false
+
+
+
+
+--- -aimining & fire weapon
+function script.AimFromWeapon2()
+    return hlgun
+end
+
+
+
+function script.QueryWeapon2()
+    return hlgun
+end
+
+function script.AimWeapon2(Heading, pitch)
+    --aiming animation: instantly turn the gun towards the enemy
+
+    return boolActive == true 
+end
+
+
+function script.FireWeapon2()
+
+    return  boolActive == true
+end
+
+
+
+
+function script.Activate()
+boolActive=true
+    return 1
+end
+
+function script.Deactivate()
+boolActive= false
+    return 0
+end
+

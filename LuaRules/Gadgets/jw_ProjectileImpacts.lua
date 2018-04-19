@@ -67,6 +67,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	cgaterailgunDefID = WeaponDefNames["cgaterailgun"].id
 	cEfenceWeapondDefID = WeaponDefNames["cwefence1"].id
 	tangleGunDefID = WeaponDefNames["ctanglegun"].id
+	cimplantlaunchDefID = WeaponDefNames["cimplantlaunch"].id
 	
 	--Journeyweapon
 	vortMarkerWeaponDefID = WeaponDefNames["vortmarker"].id
@@ -103,6 +104,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	RazorGrenadeTable = {}
 	
 	
+	Script.SetWatchWeapon(cimplantlaunchDefID, true)
 	Script.SetWatchWeapon(jsungodegggunDefID, true)
 	Script.SetWatchWeapon(vortMarkerWeaponDefID, true)
 	Script.SetWatchWeapon(jacidantsDefID, true)
@@ -612,6 +614,34 @@ if (gadgetHandler:IsSyncedCode()) then
 	vortwarpDecaySeconds= 5
 	
 	
+	ImplantReduceFactor=0.5
+	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+		Spring.TransferUnit(unitID, attackerTeam)
+		hp,maxhp= Spring.GetUnitHealth(unitID)
+			Spring.SetUnitHealth(unitID, {
+			health = hp*ImplantReduceFactor,
+			paralyze =hp*1/ImplantReduceFactor
+			})
+
+		persPack = { victimID = unitID,startFrame= Spring.GetGameFrame()}
+	action = function(evtID, frame, persPack)
+						if frame >= persPack.startFrame + 30  then
+							if Spring.GetUnitIsDead(persPack.victimID)== false then	
+							env =Spring.UnitScript.GetScriptEnv(persPack.victimID)
+								if env and env.spasm then
+									Spring.UnitScript.CallAsUnit(persPack.victimID, env.spasm, persPack.victimID, 33, frame % 7)
+								end
+							end
+						end
+						return frame+30 , persPack
+					end
+								
+		GG.EventStream:CreateEvent(
+						action,
+						persPack,
+						Spring.GetGameFrame() + 1)	
+
+	end
 	
 	UnitDamageFuncT[cdefusorminegunWeaponID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		

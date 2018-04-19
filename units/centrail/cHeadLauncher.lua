@@ -13,6 +13,9 @@ buildTime = 46,
 maxDamage = 3500,
 idleAutoHeal = 2,
 --Movement
+onOffable = true,
+ActivateWhenBuilt=1,
+
 Acceleration = 0.25,
 BrakeRate = 0.3,
 FootprintX = 3,
@@ -60,6 +63,9 @@ CanReclaim=false,
 
 weapons = {
 [1]={name  = "headlaunch",
+	onlyTargetCategory = [[LAND]],
+	},
+[2]={name  = "cimplantlaunch",
 	onlyTargetCategory = [[LAND]],
 	},
 		},
