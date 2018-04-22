@@ -15,7 +15,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "firecolumn"
+	return "cheadlaunch"
 end
 center = piece "center"
 Quader04 = piece "Quader04"

@@ -81,7 +81,6 @@ end
 
 local spGetTimer = Spring.GetTimer
 local spDiffTimers = Spring.DiffTimers
-local spGetLuaMemUsage = Spring.GetLuaMemUsage
 
 local prefixedWnames = {}
 local function ConstructPrefixedName (ghInfo)
@@ -116,7 +115,7 @@ local function Hook(w,name) -- name is the callin
 
 	local helper_func = function(...)
 		local dt = spDiffTimers(spGetTimer(),t)    
-		local _,_,new_s,_ = spGetLuaMemUsage() 
+		local _,_,new_s,_ =  Spring.GetLuaMemUsage() 
 		local ds = new_s - s
 		c[1] = c[1] + dt
 		c[2] = c[2] + dt
@@ -133,7 +132,7 @@ local function Hook(w,name) -- name is the callin
 
 		inHook = true
 		t = spGetTimer()
-		local _,_,new_s,_ = spGetLuaMemUsage() 		
+		local _,_,new_s,_ =  Spring.GetLuaMemUsage() 		
 		s = new_s
 		--Spring.Echo(s, collectgarbage("count"))
 		return helper_func(realFunc(...))
@@ -369,7 +368,7 @@ function DrawWidgetList(list,name,x,y,j)
 	return x,j
 end
 
-local lm,_,gm,_ = spGetLuaMemUsage()
+local lm,_,gm,_ =  Spring.GetLuaMemUsage()
 
 function widget:DrawScreen()
 	if not (next(callinStats)) then
@@ -437,7 +436,7 @@ function widget:DrawScreen()
 			GetRedColourStrings(sortedList[i])
 		end
 
-		lm,_,gm,_ = spGetLuaMemUsage()
+		lm,_,gm,_ =  Spring.GetLuaMemUsage()
 	end
 
 	if (not sortedList[1]) then

@@ -5406,10 +5406,13 @@ function markPosOnMap(x, y, z, colourname, boolGadget)
 	end
 end
 --> Spawns a CEG at a piece - DUH
-function spawnCegAtPiece(unitID, pieceId, cegname, offset)
+function spawnCegAtPiece(unitID, pieceId, cegname, offset,vectors)
 	
 	boolAdd = offset or 10
-	
+	dirvec= vectors
+	if not dirvec or type(dirvec) == 'number'  then
+	dirvec= {x=0,y=1,z=0}
+	end
 	
 	if not unitID then error("lib_UnitScript::Not enough arguments to spawnCegAtUnit") end
 	if not pieceId then error("lib_UnitScript::Not enough arguments to spawnCegAtUnit") end
@@ -5418,7 +5421,7 @@ function spawnCegAtPiece(unitID, pieceId, cegname, offset)
 	
 	if y then
 		y = y + boolAdd
-		Spring.SpawnCEG(cegname, x, y, z, 0, 1, 0, 0, 0)
+		Spring.SpawnCEG(cegname, x, y, z, dirvec.x, dirvec.y, dirvec.z, 0, 0)
 	end
 end
 

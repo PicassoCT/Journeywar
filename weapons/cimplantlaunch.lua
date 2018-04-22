@@ -7,7 +7,7 @@ local weaponDef = {
     craterMult = 0,
     cylinderTargeting = 1,
     damage = {
-        default = 110,
+        default = 1,
     },
     explosionGenerator = [[custom:330rlexplode]],
     fireStarter = 0,
@@ -24,7 +24,7 @@ local weaponDef = {
     range = 850,
     reloadtime = 12,
     renderType = 1,
-    smokeTrail = true,
+    smokeTrail = false,
     --soundHit = [[cheadlauncher/hlimpact]],
     --soundStart = [[cheadlauncher/hlfired]],
     -- FireStarter   = 75,

@@ -9,7 +9,7 @@ local weaponDef = {
     damage = {
         default = 110,
     },
-    explosionGenerator = [[custom:330rlexplode]],
+    explosionGenerator = [[custom:bluebloodspray]],
     fireStarter = 0,
     flightTime = 5,
     --- -guidance                = false,
@@ -24,7 +24,7 @@ local weaponDef = {
     range = 850,
     reloadtime = 1.2,
     renderType = 1,
-    smokeTrail = true,
+    smokeTrail = false,
     soundHit = [[cheadlauncher/hlimpact]],
     soundStart = [[cheadlauncher/hlfired]],
     -- FireStarter   = 75,

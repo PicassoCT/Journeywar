@@ -556,11 +556,11 @@ function moveThing()
 end
 
 function turnDetector()
-while true do
-	keepDogsRelativeResting(500) 
+	while true do
+		keepDogsRelativeResting(500) 
 
 
-end
+	end
 
 end
 

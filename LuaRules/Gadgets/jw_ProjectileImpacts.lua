@@ -614,7 +614,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	vortwarpDecaySeconds= 5
 	
 	
-	ImplantReduceFactor=0.5
+	ImplantReduceFactor=0.9125
 	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		Spring.TransferUnit(unitID, attackerTeam)
 		hp,maxhp= Spring.GetUnitHealth(unitID)
@@ -629,7 +629,7 @@ if (gadgetHandler:IsSyncedCode()) then
 							if Spring.GetUnitIsDead(persPack.victimID)== false then	
 							env =Spring.UnitScript.GetScriptEnv(persPack.victimID)
 								if env and env.spasm then
-									Spring.UnitScript.CallAsUnit(persPack.victimID, env.spasm, persPack.victimID, 33, frame % 7)
+									Spring.UnitScript.CallAsUnit(persPack.victimID, env.spasm, persPack.victimID, 15, frame % 7)
 								end
 							end
 						end
