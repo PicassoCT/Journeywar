@@ -95,7 +95,23 @@ function getDefenseBuildingTypeTable(UnitDefNames)
 		}
 	return getTypeTable(UnitDefNames, typeTable)
 end
+function getCyberiziableUnitTypes()
 
+if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
+
+	typeTable={
+		"mtw",
+		"campro",
+		"csniper",
+		"restrictor",
+		"chunter",
+		"advisor"
+		
+		}
+		
+	return mergeDict(getTypeTable(UnitDefNames, typeTable),getInfantryTypeTable())
+
+end
 function getCentrailOverworldGateUnitTypeTable()
 	typeTable={
 		"cauterizer",

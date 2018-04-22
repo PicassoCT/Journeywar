@@ -613,10 +613,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	JELIAHBEAMDAMAGEMULTIPLIERMAX = 24
 	vortwarpDecaySeconds= 5
 	
-	
+	implantSuspectTypes= getCyberiziableUnitTypes()
 	ImplantReduceFactor=0.9125
 	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-		Spring.TransferUnit(unitID, attackerTeam)
+	if not implantSuspectTypes[unitDefID] then return damage end
+	
+	Spring.TransferUnit(unitID, attackerTeam)
 		hp,maxhp= Spring.GetUnitHealth(unitID)
 			Spring.SetUnitHealth(unitID, {
 			health = hp*ImplantReduceFactor,
