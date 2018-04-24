@@ -616,6 +616,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	implantSuspectTypes= getCyberiziableUnitTypes()
 	ImplantReduceFactor=0.9125
 	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
+
 	if not implantSuspectTypes[unitDefID] then return damage end
 	
 	Spring.TransferUnit(unitID, attackerTeam)
@@ -625,8 +626,10 @@ if (gadgetHandler:IsSyncedCode()) then
 			paralyze =hp*1/ImplantReduceFactor
 			})
 
+		setSpeedEnv(unitID, 0.5)
+		
 		persPack = { victimID = unitID,startFrame= Spring.GetGameFrame()}
-	action = function(evtID, frame, persPack)
+		action = function(evtID, frame, persPack)
 						if frame >= persPack.startFrame + 30  then
 							if Spring.GetUnitIsDead(persPack.victimID)== false then	
 							env =Spring.UnitScript.GetScriptEnv(persPack.victimID)

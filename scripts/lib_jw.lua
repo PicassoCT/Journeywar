@@ -105,8 +105,21 @@ if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
 		"csniper",
 		"restrictor",
 		"chunter",
-		"advisor"
-		
+		"advisor",
+		"strider",
+		"beherith",
+		"gseastar",
+		"zombie",
+		"gzombiehorse",
+		"jhivewulf",
+		"jhoneypot",
+		"jbugcreeper",
+		"jconcaterpillar",
+		"jconroach",
+		"jfiredancer",
+		"jsungodcattle",
+		"jswiftspear",
+		"jhunter"		
 		}
 		
 	return mergeDict(getTypeTable(UnitDefNames, typeTable),getInfantryTypeTable())
