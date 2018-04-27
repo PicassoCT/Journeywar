@@ -6,7 +6,7 @@
 
 local tracks = {
     war = {"war1"},
-    peace = {"peace1", "peace2"},
+    peace = {"peace1", "peace2", "peace3"},
     victory = {},
     briefing = {},
     defeat = {"defeat1"},

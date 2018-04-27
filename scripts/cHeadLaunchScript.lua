@@ -289,10 +289,13 @@ function moveFoot(nr, speed, delay)
     end
 end
 
+myDefID = Spring.GetUnitDefID(unitID)
 function walkAnimation()
 		for i = 1, 6, 1 do
             StartThread(moveFoot, i, 3, 0)
             StartThread(moveFoot, i + 6, 3, 0)
+			PlaySoundByUnitDefID(myDefID, "sounds/cheadlauncher/step2.wav", 1,250, 1, 0) --TODO 
+
             Sleep(180)
         end
         Turn(hdlmain, x_axis, math.rad(-3), 0.025)

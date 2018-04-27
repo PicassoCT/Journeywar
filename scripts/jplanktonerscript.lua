@@ -142,7 +142,7 @@ function acceleratorAnimation()
         distanceDown = Sign * 15 * (7 - j)
 
         for i = math.min(33, 2 ^ (j - 1)), math.min(33, 2 ^ j), 1 do
-            movePieceToPiece(unitID, locT[i], center, 22, { x = 0, y = distanceDown, z = 0 })
+            movePieceToPiece(unitID, locT[i], center, 22, { x = 0, y = distanceDown, z = 0 }, false, false)
 
 
             Move(locM[i], x_axis, distanceOut, 9)
@@ -200,7 +200,7 @@ function snakeAnimation(time_frame)
         for i = 1, #locT, 1 do
             timePerPiece = ((1 / #locT) * i + time_frame % 1.0)
             timePerPiece = (timePerPiece * 2) - 1
-            MovePieceToPos(locT[i], locTorgPos[i].x + (xMax * math.sin(timePerPiece * math.pi)), 0, 0, 12)
+            MovePieceToPos(locT[i], locTorgPos[i].x + (xMax * math.sin(timePerPiece * math.pi)), 0, 0, 12, false)
             Turn(locT[i], y_axis, math.cos(timePerPiece * math.pi), 0.42)
         end
         --this might take exactly so long that the animation never plays
@@ -268,8 +268,25 @@ function armedAndDangerous()
     end
 end
 
-function script.Killed(recentDamage, _)
 
+
+
+function KilledAnimation()
+	setSpeedEnv(unitID,0.0)
+	process(TablesOfPiecesGroups["locT"],
+	function(id)
+		mP(id,math.random(-10,10),-75,math.random(-10,10),math.random(8,22))
+		spinRand(id, -25,25, math.random(5,15))
+	end
+	)
+	
+	WaitForTurns(TablesOfPiecesGroups["locT"])
+Sleep(10000)
+
+end
+
+function script.Killed(recentDamage, _)
+	KilledAnimation()
     return 1
 end
 

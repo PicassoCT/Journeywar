@@ -95,9 +95,8 @@ function getDefenseBuildingTypeTable(UnitDefNames)
 		}
 	return getTypeTable(UnitDefNames, typeTable)
 end
-function getCyberiziableUnitTypes()
 
-if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
+function getCyberiziableUnitTypes()
 
 	typeTable={
 		"mtw",
@@ -121,8 +120,18 @@ if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
 		"jswiftspear",
 		"jhunter"		
 		}
+
+ImplantableUnits= {}
 		
-	return mergeDict(getTypeTable(UnitDefNames, typeTable),getInfantryTypeTable())
+		for k,v in pairs(typeTable) do
+			for i=1, #UnitDefs do
+				if UnitDef[i].name== v then
+					ImplantableUnits[UnitDef[i].id] = true
+				end
+			end
+		end
+		
+	return ImplantableUnits
 
 end
 function getCentrailOverworldGateUnitTypeTable()

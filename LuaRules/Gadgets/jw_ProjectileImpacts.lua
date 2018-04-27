@@ -613,12 +613,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	JELIAHBEAMDAMAGEMULTIPLIERMAX = 24
 	vortwarpDecaySeconds= 5
 	
-	implantSuspectTypes= getCyberiziableUnitTypes()
+	--implantSuspectTypes= getCyberiziableUnitTypes()
 	ImplantReduceFactor=0.9125
 	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-
-	if not implantSuspectTypes[unitDefID] then return damage end
+	Spring.Echo("TODO hit by implant")
+	--if not implantSuspectTypes[unitDefID] then return damage end
 	
+	spawnCegAtUnit(unitID,"cimplantimpact",0,10,0)
+	 Spring.PlaySoundFile( "sounds/cheadlauncher/cimplantimpact.wav", 1)
 	Spring.TransferUnit(unitID, attackerTeam)
 		hp,maxhp= Spring.GetUnitHealth(unitID)
 			Spring.SetUnitHealth(unitID, {

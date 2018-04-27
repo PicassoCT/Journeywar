@@ -703,7 +703,7 @@ function MovePieceToPos(piecename, X, Y, Z, speed, boolWaitForIt)
     Move(piecename, y_axis, Y, speed)
     Move(piecename, z_axis, Z, speed, true)
 
-    if not boolWaitForIt or boolWaitForIt == true then
+    if nil == boolWaitForIt or boolWaitForIt == true then
         WaitForMoves(piecename)
     end
 end
@@ -901,7 +901,7 @@ function movePieceToPieceNoReset(unitID, piecename, pieceDest, speed, offset)
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
-function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpdate)
+function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpdate, boolWaitForIT)
     reset(piecename, 0) --last changeset
 
     speed = speed or 0
@@ -926,8 +926,9 @@ function movePieceToPiece(unitID, piecename, pieceDest, speed, offset, forceUpda
     Move(piecename, y_axis, oy, speed)
     Move(piecename, z_axis, oz, speed, forceUpdate or true)
 
-
-    WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
+	if nil == boolWaitForIT or boolWaitForIT== true then
+		WaitForMove(piecename, x_axis); WaitForMove(piecename, z_axis); WaitForMove(piecename, y_axis);
+	end
 end
 
 -->Moves a UnitPiece to a UnitPiece at speed
