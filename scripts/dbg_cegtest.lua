@@ -13,7 +13,7 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "cimplantlaunch"
+	return "cawilduniverseappearsgalaxys"
 end
 center = piece "center"
 Quader04 = piece "Quader04"

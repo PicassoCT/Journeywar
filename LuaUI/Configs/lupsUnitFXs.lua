@@ -1,4 +1,17 @@
 -- note that the order of the MergeTable args matters for nested tables (such as colormaps)!
+function randSign()
+if math.random(0,1)==1 then return -1 else return 1 end
+end
+
+function randomStar(posmin,posmax, sizemin,sizemax)
+return	{class='ShieldSphere', options={life=math.huge, 
+pos={math.random(posmin,posmax)*randSign(),math.random(posmin,posmax),math.random(posmin,posmax)*randSign()},size=math.random(sizemin,sizemax), 
+colormap2 = {{0.9, 0.5, 0.01, 1}},
+  colormap1 = {{0.95, 0.2, 0.01	, 1}}, 
+  repeatEffect=true}}
+	
+
+end
 
 local presets = {
 	commandAuraRed = {
@@ -63,8 +76,9 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,600,0}, size=125, precision=22, strength = 0.25, repeatEffect=true}}
 	},
 	cawilduniverseappears= {
-		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=125, onActive=true, colormap1 = {{172/255, 116/255, 230/255, 0.8}}, repeatEffect=true}},
-		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=130, precision=22, strength = 0.013, repeatEffect=true}},
+	
+		{class='ShieldSphere', options={life=math.huge, pos={0,0,0}, size=103,  colormap1 = {{1/255, 1/255, 50/255, 1.0}},colormap2 = {{150/255, 125/255, 230/255, 0.5}}, repeatEffect=true}},
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=108, precision=22, strength = 0.013, repeatEffect=true}},
 	},
 	
 	

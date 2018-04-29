@@ -616,8 +616,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	--implantSuspectTypes= getCyberiziableUnitTypes()
 	ImplantReduceFactor=0.9125
 	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
-	Spring.Echo("TODO hit by implant")
 	--if not implantSuspectTypes[unitDefID] then return damage end
+	if lethalBuffExecption[unitDefID] then return end
 	
 	spawnCegAtUnit(unitID,"cimplantimpact",0,10,0)
 	 Spring.PlaySoundFile( "sounds/cheadlauncher/cimplantimpact.wav", 1)
