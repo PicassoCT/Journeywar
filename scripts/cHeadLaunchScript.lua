@@ -9,8 +9,6 @@ feet = {}
 for i = 1, 6, 1 do
     x = i - 1
     feet[i] = {}
-    feet[i][1] = {}
-    feet[i][2] = {}
     tempR = "rightleg" .. x
     tempD = "rightlegl" .. x
     feet[i][1] = piece(tempR)
@@ -23,8 +21,8 @@ for i = 1, 6, 1 do
     feet[i + 6] = {}
     feet[i + 6][1] = {}
     feet[i + 6][2] = {}
-    tempR = "leftleg" .. x
-    tempD = "leftleglo" .. x
+    tempR = "leftleg"..x
+    tempD = "leftleglo"..x
     feet[i + 6][1] = piece(tempR)
     feet[i + 6][2] = piece(tempD)
 end
@@ -38,7 +36,6 @@ for i = 1, 3, 1 do
     temp = "hWall" .. i
     walls[i][1] = piece(temp)
     Hide(walls[i][1])
-    Move(walls[i][1], y_axis, -20, 0)
 
     walls[i][2] = {}
     walls[i][3] = {} --interVallStart
@@ -50,11 +47,7 @@ for i = 1, 3, 1 do
 end
 
 eye = {}
-for i = 1, 6, 1 do
-    eye[i] = {}
-    tempPiece = "Eye" .. i
-    eye[i] = piece(tempPiece)
-end
+
 SIG_WALK = 2
 SIG_DELAY = 4
 SIG_DELAYL = 16
@@ -491,6 +484,12 @@ function script.Create()
 
     --leave()
 	TableOfPieceGroups=  getPieceTableByNameGroups(false, true)
+	eye= TableOfPieceGroups["Eye"]
+	hideT(TableOfPieceGroups["hWall"])
+	for i = 1, 3, 1 do
+		Move(walls[i][1], y_axis, -20, 0)
+	end
+   
     Hide(reloadProj)
     StartThread(eyeLoop)
     StartThread(turnDetector)

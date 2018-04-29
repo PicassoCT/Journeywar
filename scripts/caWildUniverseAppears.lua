@@ -416,19 +416,18 @@ end
 
 
 function emitSFX(totaltime)
+	 x,y,z=Spring.GetUnitPosition(unitID)
     --BigBang
     EmitSfx(Emitor, 1027)
     Sleep(totaltime / 4)
     for i = 1, 4, 1 do
         EmitSfx(Emitor, 1024)
     end
-    StartThread(sunSet, totaltime / 2)
-    Sleep(totaltime / 4)
-    for i = 1, 7, 1 do
-        val = math.random(0, 360)
-        Turn(Emitor, y_axis, math.rad(val), 0, true)
-        EmitSfx(Emitor, 1025)
+	 for i = 1, 7, 1 do
+			Spring.SpawnCEG("cawilduniverseappearsgalaxys",x+math.random(-10,10),y-25 ,z+math.random(-10,10),math.random(10,30)/100*randSign(), math.random(10,50)/100,math.random(10,30)/100*randSign(),1,0)
     end
+    Sleep(totaltime / 4)
+   
     Sleep(totaltime / 4)
 
     for i = 1, #SunTable, 1 do
@@ -440,20 +439,11 @@ function emitSFX(totaltime)
     Sleep(totaltime / 4)
 end
 
-function sunSet(Time)
-    local x = Time
-    while x > 0 do
-        for i = 1, #SunTable, 1 do
-            EmitSfx(SunTable[i], 1026)
-            EmitSfx(RedSunTable[i], 1026)
-        end
-        x = x - 5
-        Sleep(5)
-    end
-end
+
 
 
 function script.Create()
+
     StartThread(spawn, 12000)
     x, y, z = Spring.GetUnitPosition(unitID)
     Spring.MoveCtrl.Enable(unitID, true)
@@ -485,39 +475,19 @@ function script.Create()
     StartThread(emitSFX, 12000)
 
     StartThread(planetarium, 6)
-    StartThread(sunEmitSFx, 12000)
+  --  StartThread(sunEmitSFx, 12000)
 end
 
-function sunEmitSFx()
-    while true do
-        Sleep(50)
-        for i = 1, #SunTable, 1 do
-            emitCegAtPiece("sunfx", SunTable[i])
-        end
-    end
-end
+-- function sunEmitSFx()
+    -- while true do
+        -- Sleep(50)
+        -- for i = 1, #SunTable, 1 do
+				 -- px,py,pz=Spring.GetUnitPiecePosDir(unitID, SunTable[i])
+            -- Spring.SpawnCEG("sunfx", px,py,pz,0,1,0,1)
+        -- end
+    -- end
+-- end
 
-function particleTestThread(totalTime)
-    local spSpawnCEG = Spring.SpawnCEG
-    ax, ay, az = Spring.GetUnitPosition(unitID)
-    ay = ay + 200
-    totalTime = math.ceil(totalTime / 5)
-
-
-
-    Sleep(totalTime)
-    EmitSfx(Emitor, 1024)
-    Sleep(totalTime)
-    EmitSfx(Emitor, 1025)
-
-    Sleep(totalTime)
-
-    --DoDO test this
-
-    Sleep(totalTime)
-    EmitSfx(Emitor, 1027)
-    Sleep(totalTime)
-end
 
 function script.Killed()
 
