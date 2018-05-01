@@ -59,8 +59,8 @@ if (gadgetHandler:IsSyncedCode()) then
             end
 
             if unitDefID == UnitDefNames["cawilduniverseappears"].id then
-				ScaleUpLimit = 3.14159
-				pulseScale=3.14159
+				ScaleUpLimit = 1.6
+				pulseScale= 1.6
 				totalFrames= 30 * 60
 				boolPulse = true
             end
@@ -84,7 +84,7 @@ if (gadgetHandler:IsSyncedCode()) then
                 pulse = boolPulse,
 				frame= Spring.GetGameFrame(),
 				amplitude = pulseScale, --
-				pulseInFrames = totalFrames
+				pulseLengthInFrames = totalFrames
             }
 
 
@@ -216,8 +216,8 @@ if (gadgetHandler:IsSyncedCode()) then
             end
 		
 		else
-				 cosinusfactor=(((Spring.GetGameFrame() - scaleTable[unitID].frame)% scaleTable[unitID].totalFrames)/scaleTable[unitID].totalFrames)
-				 scaleTable[unitID].scale = scaleTable[unitID].scaleLimit + 	 math.cos(cosinusfactor	 *math.pi*2) * scaleTable[unitID].amplitude			
+				 cosinusfactor=(((Spring.GetGameFrame() - scaleTable[unitID].frame))/scaleTable[unitID].pulseLengthInFrames)%2
+				 scaleTable[unitID].scale = scaleTable[unitID].scaleLimit + 	 math.sin(cosinusfactor	 *math.pi) * scaleTable[unitID].amplitude		
 		end
 			
         end

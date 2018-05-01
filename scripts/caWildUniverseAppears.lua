@@ -254,33 +254,33 @@ function planetarium(timeInS)
 
     for i = 1, 5, 1 do
         val = math.random(-21, 21)
-        if math.random(0, 1) == 1 then Spin(SunTable[i], y_axis, math.rad(val), 0) else Spin(SunTable[i], y_axis, math.rad(val * -1), 0) end
-        if math.random(0, 1) == 1 then Spin(SunTable[i], x_axis, math.rad(val / 10), 0) else Spin(SunTable[i], z_axis, math.rad(val * -1 / 10), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["Sun"][i], y_axis, math.rad(val), 0) else Spin(TableOfPieceGroups["Sun"][i], y_axis, math.rad(val * -1), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["Sun"][i], x_axis, math.rad(val / 10), 0) else Spin(TableOfPieceGroups["Sun"][i], z_axis, math.rad(val * -1 / 10), 0) end
     end
 
 
     for i = 1, 5, 1 do
-        Hide(RedSunTable[i])
+        Hide(TableOfPieceGroups["RedSun"][i])
         val = math.random(-21, 21)
-        if math.random(0, 1) == 1 then Spin(RedSunTable[i], y_axis, math.rad(val), 0) else Spin(RedSunTable[i], y_axis, math.rad(val * -1), 0) end
-        if math.random(0, 1) == 1 then Spin(RedSunTable[i], x_axis, math.rad(val / 10), 0) else Spin(RedSunTable[i], z_axis, math.rad(val * -1 / 10), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["RedSun"][i], y_axis, math.rad(val), 0) else Spin(TableOfPieceGroups["RedSun"][i], y_axis, math.rad(val * -1), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["RedSun"][i], x_axis, math.rad(val / 10), 0) else Spin(TableOfPieceGroups["RedSun"][i], z_axis, math.rad(val * -1 / 10), 0) end
     end
 
     for i = 1, 21, 1 do
         val = math.random(-21, 21)
-        if math.random(0, 1) == 1 then Spin(PlanetTable[i], y_axis, math.rad(val), 0) else Spin(PlanetTable[i], y_axis, math.rad(val * -1), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["Planet"][i], y_axis, math.rad(val), 0) else Spin(TableOfPieceGroups["Planet"][i], y_axis, math.rad(val * -1), 0) end
     end
 
-    for i = 1, #RotTable, 1 do
+    for i = 1, #TableOfPieceGroups["Rot"], 1 do
         val = math.random(-21, 21)
-        if math.random(0, 1) == 1 then Spin(RotTable[i], y_axis, math.rad(val), 0) else Spin(RotTable[i], y_axis, math.rad(val * -1), 0) end
-        if math.random(0, 4) == 2 then Spin(RotTable[i], x_axis, math.rad(val / 10), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["Rot"][i], y_axis, math.rad(val), 0) else Spin(TableOfPieceGroups["Rot"][i], y_axis, math.rad(val * -1), 0) end
+        if math.random(0, 4) == 2 then Spin(TableOfPieceGroups["Rot"][i], x_axis, math.rad(val / 10), 0) end
     end
 
     for i = 1, 5, 1 do
         val = math.random(-21, 21)
-        if math.random(0, 1) == 1 then Spin(SunTable[i], y_axis, math.rad(val), 0) else Spin(SunTable[i], y_axis, math.rad(val * -1), 0) end
-        if math.random(0, 1) == 1 then Spin(SunTable[i], x_axis, math.rad(val / 10), 0) else Spin(SunTable[i], z_axis, math.rad(val * -1 / 10), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["Sun"][i], y_axis, math.rad(val), 0) else Spin(TableOfPieceGroups["Sun"][i], y_axis, math.rad(val * -1), 0) end
+        if math.random(0, 1) == 1 then Spin(TableOfPieceGroups["Sun"][i], x_axis, math.rad(val / 10), 0) else Spin(TableOfPieceGroups["Sun"][i], z_axis, math.rad(val * -1 / 10), 0) end
     end
 
     for i = 1, 5, 1 do
@@ -288,25 +288,23 @@ function planetarium(timeInS)
         valz = betweenVals(12, 17)
         valy = math.random(15, 17)
 
-        Move(SunTable[i], y_axis, -10, 0)
+        Move(TableOfPieceGroups["Sun"][i], y_axis, -10, 0)
 
         biggest = math.max(math.max(math.abs(valx), math.abs(valy)), math.abs(valz))
         speed = biggest / timeInS
-        Move(SunTable[i], x_axis, valx, speed, true)
-        Move(SunTable[i], z_axis, valz, speed, true)
-        Move(SunTable[i], y_axis, valy, speed, true)
+        Move(TableOfPieceGroups["Sun"][i], x_axis, valx, speed, true)
+        Move(TableOfPieceGroups["Sun"][i], z_axis, valz, speed, true)
+        Move(TableOfPieceGroups["Sun"][i], y_axis, valy, speed, true)
     end
 
     for i = 1, 5, 1 do
-        WaitForMove(SunTable[i], x_axis)
-        WaitForMove(SunTable[i], y_axis)
-        WaitForMove(SunTable[i], z_axis)
+        WaitForMoves(TableOfPieceGroups["Sun"][i])
     end
 
     for i = 1, 5, 1 do
-        Move(SunTable[i], x_axis, 0, 0.0001)
-        Move(SunTable[i], z_axis, 0, 0.0001)
-        Move(SunTable[i], y_axis, 0, 0.0001)
+        Move(TableOfPieceGroups["Sun"][i], x_axis, 0, 0.01)
+        Move(TableOfPieceGroups["Sun"][i], z_axis, 0, 0.01)
+        Move(TableOfPieceGroups["Sun"][i], y_axis, 0, 0.01)
     end
 end
 
@@ -341,41 +339,42 @@ function catchThem()
 
                 fx, fy, fz = Spring.GetFeaturePosition(id)
                 fy = math.max(5, fy)
-                Spring.SpawnCEG("blackspheredissolvefx", fx, fy + 10, fz, 0, 1, 0, 0)
+                Spring.SpawnCEG("blackspheredissolvefx", fx, fy + 45, fz, 0, 1, 0, 0)
                 Spring.DestroyFeature(id, true, true)
             end)
     end
 end
 
+function hideAndShow(showItem)
+ Hide(halfSphere)
+ Hide(flipSphere)
+ Hide(fullSphere)
+ Show(showItem)
+end
+
 function spawn(totalTime)
-
-
-
-    Hide(halfSphere)
-    Hide(flipSphere)
-    Show(fullSphere)
     StartThread(catchThem)
+
+	--  Show Black Sphere
+
+	Spin(halfSphere, y_axis, math.rad(42), 0.6)
+
+    hideAndShow(fullSphere)
     -- will be sucked in and then dissolved
-    Spin(halfSphere, y_axis, math.rad(42), 0.6)
-    val = math.random(-4.2, 4.2)
-    if math.random(0, 1) then
-        Spin(halfSphere, z_axis, math.rad(val), 0)
-    else
-        Spin(halfSphere, x_axis, math.rad(val), 0)
-    end
-    Sleep(totalTime / 6)
-    Show(flipSphere)
-    Hide(fullSphere)
-    Sleep(totalTime / 2)
-    Hide(flipSphere)
-    Show(halfSphere)
-    Sleep(totalTime * 2)
-	Show(fullSphere)
-    hideT(piecesTable)
-    hideT(RedSunTable)
-    hideT(SunTable)
-    hideT(PlanetTable)
-	Sleep(totalTime * 2)
+ 	
+    Sleep(math.ceil(totalTime / 4))
+    hideAndShow(flipSphere)
+
+    Sleep(math.ceil(totalTime / 4))
+	hideAndShow(halfSphere)
+	--
+	
+    Sleep(math.ceil(totalTime / 4))
+
+
+	hideAndShow(fullSphere)
+	Sleep(math.ceil(totalTime / 4))
+
 
     Spring.DestroyUnit(unitID, false, true)
 end
@@ -457,7 +456,7 @@ TableOfPieceGroups ={}
 
 function script.Create()
 TableOfPieceGroups = getPieceTableByNameGroups(false, true)
-    StartThread(spawn, 12000)
+    StartThread(spawn, 60*1000)
     x, y, z = Spring.GetUnitPosition(unitID)
     Spring.MoveCtrl.Enable(unitID, true)
     Spring.MoveCtrl.SetPosition(unitID, x, y + 25, z)
@@ -490,15 +489,7 @@ TableOfPieceGroups = getPieceTableByNameGroups(false, true)
   --  StartThread(sunEmitSFx, 12000)
 end
 
--- function sunEmitSFx()
-    -- while true do
-        -- Sleep(50)
-        -- for i = 1, #SunTable, 1 do
-				 -- px,py,pz=Spring.GetUnitPiecePosDir(unitID, SunTable[i])
-            -- Spring.SpawnCEG("sunfx", px,py,pz,0,1,0,1)
-        -- end
-    -- end
--- end
+
 
 
 function script.Killed()

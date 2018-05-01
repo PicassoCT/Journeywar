@@ -11,8 +11,7 @@ return {
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -46,8 +45,7 @@ colormap = [[ 1.0 1.0 1.0 0.002
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -82,13 +80,12 @@ colormap = [[ 1.0 1.0 1.0 0.002
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
 				1.0 0.1 0.0 	0.004 
-				0.4 0.0 0.1 	0.003 ]],					directional = false,
+				0.4 0.0 0.1 	0.003 ]],						directional = false,
 				emitrot = 0, 
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
@@ -115,13 +112,12 @@ colormap = [[ 1.0 1.0 1.0 0.002
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
 				1.0 0.1 0.0 	0.004 
-				0.4 0.0 0.1 	0.003 ]],						directional = false,
+				0.4 0.0 0.1 	0.003 ]],							directional = false,
 				emitrot = 0, 
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
@@ -148,8 +144,7 @@ colormap = [[ 1.0 1.0 1.0 0.002
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -180,8 +175,7 @@ colormap = [[ 1.0 1.0 1.0 0.002
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -213,8 +207,7 @@ colormap = [[ 1.0 1.0 1.0 0.002
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[ 1.0 1.0 1.0 0.002 
-				0.85 0.91 0.98 	0.004 
+colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
