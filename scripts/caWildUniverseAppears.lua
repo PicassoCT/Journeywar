@@ -369,11 +369,14 @@ function spawn(totalTime)
     Sleep(totalTime / 2)
     Hide(flipSphere)
     Show(halfSphere)
-    Sleep(totalTime * 4)
+    Sleep(totalTime * 2)
+	Show(fullSphere)
     hideT(piecesTable)
     hideT(RedSunTable)
     hideT(SunTable)
     hideT(PlanetTable)
+	Sleep(totalTime * 2)
+
     Spring.DestroyUnit(unitID, false, true)
 end
 
@@ -418,17 +421,24 @@ end
 function emitSFX(totaltime)
 	 x,y,z=Spring.GetUnitPosition(unitID)
     --BigBang
+	showT(TableOfPieceGroups["Sun"])
+	showT(TableOfPieceGroups["Planet"])
+
     EmitSfx(Emitor, 1027)
+	for i = 1, 7, 1 do
+		Spring.SpawnCEG("cawilduniverseappearsgalaxys",x+math.random(-10,10),y-50 ,z+math.random(-10,10),math.random(10,30)/100*randSign(), math.random(1,40)/100,math.random(10,30)/100*randSign(),1,0)
+    end
     Sleep(totaltime / 4)
+	   GG.UnitsToSpawn:PushCreateUnit("gdecbigbangscar", x, 0, z, 0, teamID)
+
     for i = 1, 4, 1 do
         EmitSfx(Emitor, 1024)
     end
-	 for i = 1, 7, 1 do
-			Spring.SpawnCEG("cawilduniverseappearsgalaxys",x+math.random(-10,10),y-25 ,z+math.random(-10,10),math.random(10,30)/100*randSign(), math.random(10,50)/100,math.random(10,30)/100*randSign(),1,0)
-    end
-    Sleep(totaltime / 4)
+
+    Sleep(totaltime / 2)
    
-    Sleep(totaltime / 4)
+	hideT(TableOfPieceGroups["Sun"])
+	showT(TableOfPieceGroups["RedSun"])
 
     for i = 1, #SunTable, 1 do
         Hide(SunTable[i])
@@ -437,13 +447,16 @@ function emitSFX(totaltime)
         Show(RedSunTable[i])
     end
     Sleep(totaltime / 4)
+	hideT(TableOfPieceGroups["Planet"])
+	hideT(TableOfPieceGroups["RedSun"])
 end
 
 
 
+TableOfPieceGroups ={}
 
 function script.Create()
-
+TableOfPieceGroups = getPieceTableByNameGroups(false, true)
     StartThread(spawn, 12000)
     x, y, z = Spring.GetUnitPosition(unitID)
     Spring.MoveCtrl.Enable(unitID, true)
@@ -451,7 +464,7 @@ function script.Create()
     Spring.SetUnitAlwaysVisible(unitID, true)
     Spring.SetUnitNoSelect(unitID, true)
     Spring.SetUnitBlocking(unitID, false)
-
+	spawnCegAtUnit(unitID,"cawilduniversecorona", 0,-75,0)
 
 
     teamID = Spring.GetUnitTeam(unitID)
@@ -468,7 +481,6 @@ function script.Create()
 
     --tempTable=prepareHalfSphereTable(size)
     --print2DMap(tempTable)
-    GG.UnitsToSpawn:PushCreateUnit("gdecbigbangscar", x, 0, z, 0, teamID)
     --</DIGHOLE>
 
     --</TERRAFORM>

@@ -43,7 +43,9 @@ if (gadgetHandler:IsSyncedCode()) then
     function gadget:UnitCreated(unitID, unitDefID, unitTeam)
         if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id or
             boolPulse = false
+			pulseScale = 0
             StartScale = 0.06
+			totalFrames = 0
             --	if unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id then StartScale=0.52 end
 
             ScaleFactorProFrame = DefTypeTable[unitDefID] 
@@ -53,10 +55,14 @@ if (gadgetHandler:IsSyncedCode()) then
                 ScaleFactorProFrame = 0
                 ScaleUpLimit = 1
                 boolPulse = true
+				pulseScale=0.25
             end
 
             if unitDefID == UnitDefNames["cawilduniverseappears"].id then
 				ScaleUpLimit = 3.14159
+				pulseScale=3.14159
+				totalFrames= 30 * 60
+				boolPulse = true
             end
 
             if unitDefID == UnitDefNames["ghohymen"].id then
@@ -74,7 +80,11 @@ if (gadgetHandler:IsSyncedCode()) then
                 utype = unitDefID,
                 uid = unitID,
                 scaleLimit = ScaleUpLimit,
-                pulse = boolPulse
+				
+                pulse = boolPulse,
+				frame= Spring.GetGameFrame(),
+				amplitude = pulseScale, --
+				pulseInFrames = totalFrames
             }
 
 
@@ -87,7 +97,6 @@ if (gadgetHandler:IsSyncedCode()) then
         end
         --if journeybuild animation
         if jBuilding[unitDefID] then
-            Spring.Echo("JourneyBuilding Inserted")
 
             x, y, z = Spring.GetUnitPosition(unitID)
             GG.UnitsToSpawn:PushCreateUnit("jbuildanim", x, y, z + 4, 0, unitTeam)
@@ -189,15 +198,13 @@ if (gadgetHandler:IsSyncedCode()) then
         for unitID, _ in pairs(scaleTable) do
             -- Here my scale is a sinusoid of time. So they grow and shrink smoothly and periodically
             -- Use your own formula obviously
-
+		if scaleTable[unitID].boolPulse == false then 
             if UnitsScalingUpConst[scaleTable[unitID].utype] then
                 temp = scaleTable[unitID].scale + scaleTable[unitID].factor
                 scaleTable[unitID].scale = temp
             end
             --if it is a sungodcattle
             if scaleTable[unitID].utype == SUNGODCATTLEDEFID and scaleTable[unitID].scale >= math.random(87, 100) / 100 then scaleTable[unitID] = nil end
-
-
 
             if scaleTable[unitID] and scaleTable[unitID].utype == EMBRYODEFID then
                 hp = spGetUnitHealth(unitID)
@@ -207,6 +214,12 @@ if (gadgetHandler:IsSyncedCode()) then
                     scaleTable[unitID].scale = 0.01
                 end
             end
+		
+		else
+				 cosinusfactor=(((Spring.GetGameFrame() - scaleTable[unitID].frame)% scaleTable[unitID].totalFrames)/scaleTable[unitID].totalFrames)
+				 scaleTable[unitID].scale = scaleTable[unitID].scaleLimit + 	 math.cos(cosinusfactor	 *math.pi*2) * scaleTable[unitID].amplitude			
+		end
+			
         end
 
 
@@ -222,7 +235,7 @@ if (gadgetHandler:IsSyncedCode()) then
         for unitID, _ in pairs(scaleTable) do
 
             --ending clause
-            if scaleTable[unitID] and scaleTable[unitID].scale >= scaleTable[unitID].scaleLimit then
+            if scaleTable[unitID] and scaleTable[unitID].scale >= scaleTable[unitID].scaleLimit and scaleTable[unitID].boolPulse == false then
                 scaleTable[unitID] = nil
             end
             --end
