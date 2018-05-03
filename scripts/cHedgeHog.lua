@@ -557,6 +557,7 @@ function fireATurret()
     Signal(SIG_EPICFLAIL)
     WaitForMove(antirecoil, z_axis)
     Move(antirecoil, z_axis, 0, 9)
+	 Spring.DestroyUnit(unitID,false,true)
 end
 
 
@@ -625,9 +626,6 @@ end
 
 -------------------------------------------------------------------------------
 function script.AimFromWeapon1()
-
-
-
     return turm3
 end
 

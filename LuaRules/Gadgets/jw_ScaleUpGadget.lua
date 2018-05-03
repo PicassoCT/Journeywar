@@ -61,7 +61,7 @@ if (gadgetHandler:IsSyncedCode()) then
             if unitDefID == UnitDefNames["cawilduniverseappears"].id then
 				ScaleUpLimit = 1.6
 				pulseScale= 1.6
-				totalFrames= 30 * 60
+				totalFrames= 30 * 30
 				boolPulse = true
             end
 

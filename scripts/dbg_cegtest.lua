@@ -6,14 +6,17 @@ include "lib_Animation.lua"
 include "lib_Build.lua"
 
 function cegFunction(x,y,z) 
+	cegname, sleeptime = getCegName()
 	Spring.SpawnCEG(getCegName(), x+100,  y+50, z, math.random(-1,1),  math.random(-1,0),  math.random(-1,1), 60)
+	Sleep(sleeptime)
 end
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function getCegName()
-	return "cawilduniversecorona"
+	echo("Cegspawn")
+	return "cawilduniverseappearsgalaxys", 30000
 end
 center = piece "center"
 Quader04 = piece "Quader04"
@@ -104,7 +107,6 @@ function emitSFX()
 	i = 0
 	while true do
 	cegFunction(x,y,z)
-	Sleep(9000)
 		
 	end
 end

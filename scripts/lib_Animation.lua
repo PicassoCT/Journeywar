@@ -2112,7 +2112,6 @@ function resetT(tableName, speed, boolShowAll, boolWait, boolIstantUpdate, inter
 end
 
 
-
 --> applys a physics function to a detached  Piece from a Unit @EventStreamFunction
 function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, boolSurvivorHeCanTakeIt)
 	-- shotVector.x= shotVector.x*-1
@@ -2128,7 +2127,7 @@ function unitRipAPieceOut(unitID, rootPiece, shotVector, factor, parabelLength, 
 	LimbMap= getPiecesBelow(unitID, rootPiece, pieceFunction)
 	stunUnit(unitID, 64)
 	env = Spring.UnitScript.GetScriptEnv(unitID)
-	if env then
+	if env and env.script.Explode and env.script.Hide  then
 				 Spring.UnitScript.CallAsUnit(unitID, env.script.Hide, rootPiece)
 				Spring.UnitScript.CallAsUnit(unitID, env.script.Explode, rootPiece, env.SFX.FALL + env.SFX.NO_HEATCLOUD)
 		

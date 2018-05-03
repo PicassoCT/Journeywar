@@ -11,7 +11,7 @@ return {
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -22,9 +22,9 @@ colormap = [[	0.85 0.91 0.98 	0.004
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
 				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],		
-				numparticles = 3,
-				particlelife = 1200,
-				particlelifespread = 400,
+				numparticles = 1,
+				particlelife = 30*20,
+				particlelifespread = 30*14,
 				particlesize = 12,
 				particlesizespread = 13,
 				particlespeed = 12,
@@ -45,7 +45,7 @@ colormap = [[	0.85 0.91 0.98 	0.004
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -56,10 +56,10 @@ colormap = [[	0.85 0.91 0.98 	0.004
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
 				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],	
-
-				numparticles = 3,
-				particlelife = 1200,
-				particlelifespread = 350,
+				
+				numparticles = 1,
+				particlelife = 30*20,
+				particlelifespread = 30*14,
 				particlesize = 6,
 				particlesizespread = 5,
 				particlespeed = 22,
@@ -80,18 +80,20 @@ colormap = [[	0.85 0.91 0.98 	0.004
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
 				1.0 0.1 0.0 	0.004 
-				0.4 0.0 0.1 	0.003 ]],						directional = false,
+				0.4 0.0 0.1 	0.003 ]],						
+				directional = false,
 				emitrot = 0, 
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
-				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],			numparticles = 3,
-				particlelife = 1200,
-				particlelifespread = 350,
+				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],			
+				numparticles = 1,
+				particlelife = 30*20,
+				particlelifespread = 30*14,
 				particlesize = 6,
 				particlesizespread = 9,
 				particlespeed = 22,
@@ -112,19 +114,20 @@ colormap = [[	0.85 0.91 0.98 	0.004
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
 				1.0 0.1 0.0 	0.004 
-				0.4 0.0 0.1 	0.003 ]],							directional = false,
+				0.4 0.0 0.1 	0.003 ]],							
+				directional = false,
 				emitrot = 0, 
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
 				gravity = [[r-0.01r0.01, r0.02, r-0.01r0.01]],
-				numparticles = 3,
-				particlelife = 1200,
-				particlelifespread = 350,
+				numparticles = 1,
+				particlelife = 30*20,
+				particlelifespread = 30*14,
 				particlesize = 12,
 				particlesizespread = 13,
 				particlespeed = 22,
@@ -139,12 +142,12 @@ colormap = [[	0.85 0.91 0.98 	0.004
 		stars = {
 			air = true,
 			class = [[CSimpleParticleSystem]],
-			count = 2,
+			count = 4,
 			ground = true,
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -153,9 +156,9 @@ colormap = [[	0.85 0.91 0.98 	0.004
 				emitrot = 0, 
 				emitrotspread =0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
-				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],			numparticles = 4,
-				particlelife = 1200,
-				particlelifespread = 350,
+				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],			numparticles = 1,
+				particlelife = 30*20,
+				particlelifespread = 30*14,
 				particlesize = 2,
 				particlesizespread = 3,
 				particlespeed = 22,
@@ -175,12 +178,13 @@ colormap = [[	0.85 0.91 0.98 	0.004
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
 				1.0 0.1 0.0 	0.004 
-				0.4 0.0 0.1 	0.003 ]],				directional = false,
+				0.4 0.0 0.1 	0.003 ]],			
+				directional = false,
 				emitrot = 0, 
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
@@ -207,7 +211,7 @@ colormap = [[	0.85 0.91 0.98 	0.004
 			properties = {
 				airdrag = 0.7,
 				alwaysvisible = true,
-colormap = [[	0.85 0.91 0.98 	0.004 
+				colormap = [[	0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004 
 				0.85 0.91 0.98 	0.004
 				0.85 0.7 0.6 	0.004 
@@ -218,7 +222,7 @@ colormap = [[	0.85 0.91 0.98 	0.004
 				emitrotspread = 0,
 				emitvector = [[r-1r1, r0.5, r-1r1]],
 				gravity = [[r-0.05r0.05,0.02 r0.03, r-0.05r0.05]],		
-				numparticles = 3,
+				numparticles = 1,
 				particlelife = 900,
 				particlelifespread = 900,
 				particlesize = 12,

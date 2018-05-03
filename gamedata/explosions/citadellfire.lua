@@ -171,7 +171,7 @@ cegtable={
 	  0 0 0 0
 	  0 0 0 0
 	  ]],
-        directional        = false,
+        directional        = true,
         emitrot            = 45,
         emitrotspread      = 32,
         emitvector         = [[0r1r-1, 1, 0r1r-1]],

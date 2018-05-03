@@ -543,6 +543,8 @@ function getGravityChangeReistantUnitTypeTable(UnitDefNames)
     return mergeDict(TransportTable,getAbstractTypes())
 end
 
+
+
 function getRewardTable()
     Rewards = {
         [UnitDefNames["gjmeatballs"].id] = {
