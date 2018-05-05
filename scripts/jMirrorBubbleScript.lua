@@ -11,7 +11,9 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 boolCreatorIdentifyied=false
-CreatorID
+CreatorID = {}
+
+
 function creatorIdentifyCall(creatorID)
 boolCreatorIdentifyied=true
 CreatorID= creatorID
@@ -112,6 +114,7 @@ x,y,z=Spring.GetUnitPosition(unitID)
 nonRessurectabbleTypes= mergeDict( getAbstractTypes(UnitDefNames),getJourneyCorpseTypeTable(UnitDefNames))
 buildingTypes= getAllBuildingTypes()
 mirrorBubbleTransformationTable= getMirrorBubbleTransformationTable()
+equivalentUnitTransformTypeTable= getEquivalentMirrorTransformTypeTable()
 
 function mirrorBubble()
 	Command(unitID,"setactive",{},{0})
@@ -152,9 +155,9 @@ function mirrorBubble()
 											mirrorBubbleTransformationTable[Spring.GetUnitDefID(id)])
 					end
 					)
-			transformUnits(T)
+
 		else
-			transferCommandsToMirroredUnits()
+			transferCommandsToMirroredUnits(mirroredUnits)
 		end
 	--Check for
 		
@@ -173,6 +176,8 @@ function mirrorBubble()
 	end
 end
 
+function  			transferCommandsToMirroredUnits(mirroredUnits)
+end
 
 function watchCreator()
 while boolCreatorIdentifyied== false do Sleep(100) end

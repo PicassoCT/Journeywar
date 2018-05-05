@@ -3,7 +3,7 @@ include "lib_OS.lua"
 include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua"
-include "jsunShipComonScript.lua"
+include "lib_jw.lua"
 
 --<CopyPasteTemplate for TerraFormingUnit>
 
@@ -11,17 +11,18 @@ include "jsunShipComonScript.lua"
 --global Infomartion
 boolUnitIsDigginDown = true
 perCentAgeDepleted = 0.0
-
+gameConfig= getGameConfig()
 --<CopyPasteTemplate for TerraFormingUnit>
 function stillAlive()
+	_,startheigth,_ = Spring.GetUnitPosition(unitID)
+	
     while (true) do
         x, y, z = Spring.GetUnitPosition(unitID)
         y = Spring.GetGroundHeight(x, z)
-        if y < 0 then
+        if y < 0 or y < startheigth - gameConfig.MaxDrillTreeHeigth then
             Spring.DestroyUnit(unitID, false, false)
         end
-        rest = math.random(1900, 5900)
-        Sleep(rest)
+        Sleep(2500)
     end
 end
 

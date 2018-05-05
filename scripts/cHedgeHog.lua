@@ -557,20 +557,17 @@ function fireATurret()
     Signal(SIG_EPICFLAIL)
     WaitForMove(antirecoil, z_axis)
     Move(antirecoil, z_axis, 0, 9)
-	 Spring.DestroyUnit(unitID,false,true)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	Spring.CreateUnit("cawilduniverseappears", x, y, z, 0, Spring.GetUnitTeam(unitID))
+	Spring.DestroyUnit(unitID,false,true)
 end
 
 
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
-    if math.random(0, 32) == 16 then
-        --you are dead, and you know it
-        x, y, z = Spring.GetUnitPosition(unitID)
-        teamID = Spring.GetUnitTeam(unitID)
-        Spring.CreateUnit("cawilduniverseappears", x, y, z, 0, teamID)
-    else
-        DamageATurret()
-    end
+
+			
+			return damage
 end
 
 
@@ -601,14 +598,12 @@ function script.Create()
     StartThread(torretManagment)
 end
 
-function script.Killed()
+function script.Killed(recentDamage)
 
-    x, y, z = Spring.GetUnitPosition(unitID)
-    teamID = Spring.GetUnitTeam(unitID)
-    Spring.CreateUnit("cawilduniverseappears", x, y, z, 0, teamID)
-
-
-    return 0
+	x, y, z = Spring.GetUnitPosition(unitID)
+	teamID = Spring.GetUnitTeam(unitID)
+	Spring.CreateUnit("cawilduniverseappears", x, y, z, 0, teamID)
+	return 0
 end
 
 

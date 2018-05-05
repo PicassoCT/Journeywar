@@ -1092,6 +1092,21 @@ function createLandscapeFromFeaturePieces(pixelPieceTable, drawFunctionTable)
 	echo("TODO:createLandscapeFromFeaturePieces")
 end
 
+function createExtrema()
+
+    emin, emax = Spring.GetGroundExtremes()
+    if emin and emax then
+			
+        if math.abs(emax) > math.abs(emin) then
+						GG.Extrema = emax
+						else
+						 GG.Extrema =emin
+						end
+    else
+        GG.Extrema = 250
+    end
+end
+
 --> Does not remove the grass
 function removeGrass(startX,endX,startY,endY)
 	

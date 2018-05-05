@@ -326,14 +326,14 @@ function constTerraFormin()
     averageTable = {}
     while true do
         -- Spring.Echo("Terraform Loop")
-        if boolIsActive == true then
+       
             -- Spring.Echo("Terraform Loop Active")
             if Spring.UseTeamResource(teamID, 'energy', 50) then
               --  Spring.Echo("Terraform Loop Resource Active")
                 x, y, z = spGetUnitPosition(unitID)
 
 
-                if boolWalking == true then
+                if boolIsActive == true then
                    -- Spring.Echo("Terraform Loop Walking")
                     if GG.DynDefMap == nil then GG.DynDefMap = {} end
                     if GG.DynRefMap == nil then GG.DynRefMap = {} end

@@ -9,7 +9,7 @@ return {
   ["cnanorecon"]= {active="Call\n Citadell", passive="Portalstorm\n pending"},
   ["cgatefort"]= {active="GateRail\nOn", passive="GateRail\nOff"},
   ["cheadlauncher"]= {active="Tortured \nHead\n Ammo", passive="Controll \nImplant\n Ammo"},
-  ["cwallbuilder"]= {active="Terraform \nOn", passive="Terraform \nOff"},
+  ["cwallbuilder"]= {active="Terraform \nWall", passive="Average \nTerrain"},
   ["mtw"]= {active="Build\nTrooper ", passive="Build\nSynthsoldier"},
   ["css"]= {active="Torch\nEnvironment", passive="Cease\nFire"},
   ["bg"]= {active="Ballistic\nShield", passive="ATAC\nMODE"},

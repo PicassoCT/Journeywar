@@ -37,8 +37,8 @@ local unitDef = {
 	sightDistance = 700,
 	isAirbase =true,
 	EnergyStorage = 200,
-	EnergyUse = 15,
-	MetalUse = 3,
+	EnergyUse = 0,
+	MetalUse = 0,
 	MetalStorage = 200,
 	EnergyMake = 0, 
 	MakesMetal = 0, 
@@ -74,7 +74,7 @@ local unitDef = {
 	Reclaimable = false,
 	ShowNanoSpray = true,
 	canBeAssisted =false,
-	
+
 	buildoptions = 
 	{
 		"genupgrade","chunterchopper","csuborbital",

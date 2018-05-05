@@ -4,7 +4,7 @@ include "lib_Animation.lua"
 include "lib_jw.lua"
 include "lib_Build.lua"
 
-
+Radius = 125
 --pieces
 RotTable = {}
 Rot11 = piece "1Rot1"
@@ -308,7 +308,7 @@ function catchThem()
 	while true do
 		Sleep(100)
 		x, y, z = Spring.GetUnitPosition(unitID)
-		killThemAllTable = getAllInSphere(x, y, z, 125, unitID)
+		killThemAllTable = getAllInSphere(x, y, z, Radius, unitID)
 		process(killThemAllTable,
 		function(id)
 			if id 
@@ -322,8 +322,8 @@ function catchThem()
 		end)
 		
 		--Features Evaporating
-		allFeatures = getAllFeatureNearUnit(unitID, 150)
-		if allFeatures then
+		allFeatures = getAllFeatureNearUnit(unitID, Radius)
+	
 			process(allFeatures,
 			function(id)
 				
@@ -332,7 +332,7 @@ function catchThem()
 				Spring.SpawnCEG("blackspheredissolvefx", fx, fy + 45, fz, 0, 1, 0, 0)
 				Spring.DestroyFeature(id, true, true)
 			end)
-		end
+		
 		
 	end
 end

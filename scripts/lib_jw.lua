@@ -1,4 +1,18 @@
 --===================================================================================================================
+-- Game Configuration
+function getGameConfig()
+return {
+MaxDrillTreeHeigth=420,
+
+
+
+}
+
+
+end
+
+
+--===================================================================================================================
 --Journeywar specific functions 
 --> creates a table from names to check unittypes against
 function getUnitDefNames(UnitDefs)
@@ -541,6 +555,26 @@ function getGravityChangeReistantUnitTypeTable(UnitDefNames)
     }
 
     return mergeDict(TransportTable,getAbstractTypes())
+end
+--> Units are Transformed in a circle of types in the same team
+function getMirrorBubbleTransformationTable(UnitDefNames)
+UnitCycleCentrail={}
+UnitCycleJourneyman={}
+return mergeDict(UnitCycleCentrail,UnitCycleJourneyman)
+end
+
+-->Units equivalent - if a opposite side must be created
+function getEquivalentMirrorTransformTypeTable(UnitDefNames)
+    TransformationTable = {
+        [UnitDefNames["bg"].id] = UnitDefNames["skinfantry"].id,
+        [UnitDefNames["bg2"].id] = UnitDefNames["skinfantry"].id,
+        [UnitDefNames["bg3"].id] = UnitDefNames["skinfantry"].id,
+        [UnitDefNames["css"].id] = UnitDefNames["tiglil"].id,
+        [UnitDefNames["advisor"].id] = UnitDefNames["tiglil"].id,
+      
+    }
+
+    return TransformationTable
 end
 
 

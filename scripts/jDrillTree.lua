@@ -157,49 +157,29 @@ end
 
 
 
-function createExtrema()
 
-    emin, emax = Spring.GetGroundExtremes()
-    if emin and emax then
-        GG.Extrema = (emax + math.abs(emin) + 100)
-    else
-        GG.Extrema = 250
-    end
-end
+gameConfig= getGameConfig()
 
 
 function thisIsTheEnd()
-    x = -9999
-    y = -9999
-    z = -9999
-
     Sleep(1000)
+	 x,startHeigth,z= Spring.GetUnitPosition(unitID)
 
     local spGetUnitPosition = Spring.GetUnitPosition
     local spGetGroundHeight = Spring.GetGroundHeight
+	
+   
 
-    x, y, z = Spring.GetUnitPosition(unitID)
-    --- -Spring.Echo("x:",x)
-    while y == nil do
-        Sleep(500)
-        x, y, z = Spring.GetUnitPosition(unitID)
-        --- -Spring.Echo("x:",x)
-    end
-
-    if GG.Extrema == nil then
+    if not GG.Extrema  then
         createExtrema()
     end
 
 
-    while ((not GG.Extrema or not y) or y < GG.Extrema) do
-        if x ~= nil and z ~= nil then
-            y = spGetGroundHeight(x, z)
-        else
-            x, y, z = spGetUnitPosition(unitID)
-        end
-        Sleep(3000)
-        if not GG.Extrema then createExtrema() end
-    end
+
+	while (Spring.GetGroundHeight(x,z) < startHeigth + gameConfig.MaxDrillTreeHeigth) do
+		Sleep(500)	
+	end
+	
     endOfTimes()
     overTime = math.random(1000, 50000)
     Sleep(overTime)

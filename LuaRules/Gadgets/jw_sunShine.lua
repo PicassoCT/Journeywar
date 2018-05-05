@@ -248,11 +248,11 @@ if gadgetHandler:IsSyncedCode() then
 
         setSun(config, percent)
     end
-
+	offset= DAYLENGTH/4
     --set the sun
     function gadget:GameFrame(n)
         if n % 32 == 0 then
-            aDay(n + DAYLENGTH/2, DAYLENGTH)
+            aDay(n + offset, DAYLENGTH)
         end
             setSunArc(n)
     end
