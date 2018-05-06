@@ -29,7 +29,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
-		
 		if UnitDefs[unitDefID] then
 			attacker = Spring.GetUnitLastAttacker(unitID)
 			if attacker then

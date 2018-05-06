@@ -115,6 +115,7 @@ nonRessurectabbleTypes= mergeDict( getAbstractTypes(UnitDefNames),getJourneyCorp
 buildingTypes= getAllBuildingTypes()
 mirrorBubbleTransformationTable= getMirrorBubbleTransformationTable()
 equivalentUnitTransformTypeTable= getEquivalentMirrorTransformTypeTable()
+boolRestStarted=false
 
 function mirrorBubble()
 	Command(unitID,"setactive",{},{0})
@@ -137,27 +138,21 @@ function mirrorBubble()
 		Sleep(30)
 	
 		T = getAllInSphere(x,y,z,Radius,unitID)
+		if not T or #T < 1 then
+			killMirrorBubble()
+		end
+		
 		newOnes = extractNewEntrys(T)
 		addInhabitants(newOnes)
-		missingOnes = filterOutMissing(T,OldT)
-		suicidalOnes= getRecentSuicidees(missingOnes)
+		missingOnes = filterOutMissing(T,OldT)		
 		resetEscapees(missingOnes)
 		
-		if #suicidalOnes > 0 then
-			-- reset whole bubble and build a sculpture for the time
-			
-			makeASculpture(T)
-			Sleep(20000)
-			sendUnitsBackToStartPosition()
-			process(T,
-					function(id)
-							transformUnitInto(id,
-											mirrorBubbleTransformationTable[Spring.GetUnitDefID(id)])
-					end
-					)
-
-		else
-			transferCommandsToMirroredUnits(mirroredUnits)
+		if #newOnes > 0 and boolResetStarted == false then
+			boolResetStarted=true
+			StartThread(startReset)
+			while boolResetStarted== true do
+				Sleep(1000)
+			end
 		end
 	--Check for
 		
@@ -175,11 +170,88 @@ function mirrorBubble()
 
 	end
 end
-
-function  			transferCommandsToMirroredUnits(mirroredUnits)
+TOTAL_SCULPTURE_TIME= 20000
+function startReset()
+	-- reset whole bubble and build a sculpture for the time		
+			restoreTheDeadExceptGaia(inhabitants)
+			restTime=TOTAL_SCULPTURE_TIME
+			makeASculpture(inhabitants)		
+			while restTime > 0 do
+				newOnes = extractNewEntrys(getAllInSphere(x,y,z,Radius,unitID))
+				addInhabitants(newOnes)
+				if #newOnes > 0 then
+					restTime = TOTAL_SCULPTURE_TIME
+					makeASculpture(newOnes)	
+				else
+					restTime=restTime-100				
+				end
+				Sleep(1000)
+			end			
+		
+				sendUnitsBackToStartPosition()
+				process(T,
+						function(id)
+								transformUnitInto(
+									id,
+									mirrorBubbleTransformationTable[Spring.GetUnitDefID(id)]
+									)
+						end
+						)
+			
+	boolResetStarted= false
 end
 
-function watchCreator()
+function cycleCenterReset(center, uID,  radius, startNumber, total,  speedInFramesForFullCircle, xOffset, ResetPosition)
+	Spring.MoveCtrl.Enable(uID)
+	startPos= {x=0,y=center.y,z=0}
+	startPos.x,startPos.z= drehMatrix(center.x+radius,center.y, (startNumber/total)*math.pi*2)
+	currPos=startPos
+	startFrame= Spring.GetGameFrame()
+
+	while boolResetStarted do
+		currentFrame= Spring.GetGameFrame()
+		currDegInRad=  ((((currentFrame-startFrame))%speedInFramesForFullCircle)/speedInFramesForFullCircle)*math.pi*2
+		currPos.x,currPos.z=	drehMatrix(startPos.x,startPos.z, currDegInRad)
+	   Spring.MoveCtrl.SetPosition(uID, currPos.x, currPos.y, currPos.z)
+		Sleep(33)
+	end
+	
+	Spring.MoveCtrl.SetPosition(uID, ResetPosition.x, ResetPosition.y, ResetPosition.z)
+	Spring.MoveCtrl.Disable(uID)
+end
+
+--> Forms a Ring like strucuture
+function formARing(center, members, distribution, x_offset )
+	for i=1, #members do
+		StartThread(cycleCenterReset,
+		{x=center.x+math.random(-50,50),y=center.y, z= =center.z + math.random(-50,50)},
+		members[i],
+		math.random(50,	350),
+		i,
+		#members,
+		math.random(15,40)* 30,
+		math.random(-10,10),
+		inhabitants[members[i]]
+		)
+	end
+
+
+end
+
+
+-- a sculpture consist of  rings of orbiting
+function makeASculpture(T)
+ringNumber = math.random(2,7)
+
+
+
+
+
+end
+
+function killMirrorBubble()
+
+endfunction watchCreator()
 while boolCreatorIdentifyied== false do Sleep(100) end
 
 	while Spring.GetUnitIsDead(CreatorID)== false do
