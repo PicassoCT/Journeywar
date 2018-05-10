@@ -223,8 +223,11 @@ end
 --> Forms a Ring like strucuture
 function formARing(center, members, distribution, x_offset )
 	for i=1, #members do
-		StartThread(cycleCenterReset,
-		{x=center.x+math.random(-50,50),y=center.y, z= =center.z + math.random(-50,50)},
+		StartThread(
+		cycleCenterReset,
+		{x=center.x+math.random(-50,50),
+		y=center.y, 
+		z=center.z + math.random(-50,50)},
 		members[i],
 		math.random(50,	350),
 		i,
@@ -251,7 +254,9 @@ end
 
 function killMirrorBubble()
 
-endfunction watchCreator()
+end
+
+function watchCreator()
 while boolCreatorIdentifyied== false do Sleep(100) end
 
 	while Spring.GetUnitIsDead(CreatorID)== false do
