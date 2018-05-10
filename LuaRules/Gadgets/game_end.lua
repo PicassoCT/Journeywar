@@ -65,7 +65,13 @@ local killedAllyTeams = {}
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+function gadget:GameStart()
+   -- remove ourself after successful game over
+    gadgetHandler:RemoveGadget()
+end
+
 function gadget:GameOver()
+
     -- remove ourself after successful game over
     gadgetHandler:RemoveGadget()
 end
