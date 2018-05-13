@@ -14,45 +14,102 @@ return {
 	version   = "2.0",
 	date      = "2018+",
 	license   = "GNU GPL, v2 or later",
-	layer     = -math.huge,
+	layer     = math.huge,
 	handler   = true,
 	enabled   = true  --  loaded by default?
 }
 end
 
-
+local Chili, Screen0
 local socket = socket
-
+local message =""
+local defaultWelcome=	"Welcome to Spring-AR!\n Please enter the IP displayed in the Spring AR-App:"
 local client
 local set
 local headersent
-
-local host = "192.168.122.15"
-local port = 80
+local defaulthost="192.168.178.20"
+local host = "192.168.178.20"
+local port = 467
 local file = "/ar/screentosend/screen.png"
 
 local screencopy
 local deviceData={
-	viewWidth=60,
-	viewHeigth= 70,
-	seperator= 30
+	deviceName = 	'Nexus',
+	viewWidth = 	60,
+	viewHeigth = 	70,
+	seperator = 	30
 }
+
+local getIPWindow
+local getIPLabel
+ 
+function widget:Initialize()	
+  if (not WG.Chili) then
+    -- don't run if we can't find Chili
+    widgetHandler:RemoveWidget()
+    return
+  end
+
+  -- Get ready to use Chili
+  Chili = WG.Chili
+  Screen0 = Chili.Screen0
+
+  -- Create the window
+  getIPWindow = Chili.Window:New{
+    parent = Screen0,
+    x = '5%',
+    y = '20%',
+    width  = '20%',
+    height = '20%',	
+  }	
+
+  -- Create some text inside the window
+  getIPLabel = Chili.Label:New{
+    parent = getIPWindow,
+    width  = '100%',
+    height = '50%',
+    caption = defaultWelcome,
+  }
+  
+  	 enterIPAdress = Chili.EditBox:New{
+		x = '0%',
+		y = '50%',
+		width  = '100%',
+		height = '50%',
+		parent = getIPWindow,
+		OnKeyPress = {
+			function(obj, key, mods, isRepeat, label, unicode, ...)
+			
+				if key == 13 then
+					if obj.text ~= ""then
+						host = obj.text
+					else
+						host = defaulthost
+					end
+					InitalizeSocket()
+				end
+			end,
+		}
+	}
+  
+end
 
 -->Generic to String
 function toString(element)
 	typeE = type(element)
 	
-	if typeE == "boolean" then return boolToString(element) end
+	if typeE == "boolean" then
+		if element == true then 
+			return "true"
+		else 
+			return "false"
+		end 
+	end
 	if typeE == "number" then return ""..element end
 	if typeE == "string" then return element end
 	if typeE == "table" then return tableToString(element) end
 	
 	
-end
-
---> Converts a boolean to a string value
-function boolToString(value)
-	if value == true then return "true" else return "false" end
 end
 
 function tableToString(tab)
@@ -145,10 +202,11 @@ local function SocketConnect(host, port)
 	end
 	set = newset()
 	set:insert(client)
+	getIPWindow:Hide()
 	return true
 end
 
-function widget:Initialize()
+function InitalizeSocket()
 	dumpConfig()
 	--Spring.Echo(socket.dns.toip("localhost"))
 	--FIXME dns-request seems to block
@@ -160,7 +218,7 @@ local tex=gl.CreateTexture(w, h, {fbo=true});
 
 -- called when data was received through a connection
 local function SocketDataReceived(sock, str)
-	updateARCamera(str)
+--	updateARCamera(str)
 	Spring.Echo(str)
 end
 
@@ -170,12 +228,15 @@ end
 
 local headersent
 -- called when data can be written to a socket
-local function SocketWriteAble(socket)
-	local scr=io.open("arImageBuffer.png","rb")
+local function SocketWriteAble(sock)
+---	local scr=io.open("arImageBuffer.png","rb")
 --	socket:send(scr:read("*a")); 
-	socket:send("test"); 
-
-	
+Spring.Echo("sending http request")
+if headersent==nil then
+		-- socket is writeable
+		headersent=1
+		sock:send("GET " .. file .. " HTTP/1.0\r\nHost: " .. host ..  " \r\n\r\n")
+end
 end
 
 -- called when a connection is closed
@@ -202,14 +263,18 @@ function widget:Update()
 		local s, status, partial = input:receive('*a') --try to read all data
 		if status == "timeout" or status == nil then
 			SocketDataReceived(input, s or partial)
-		elseif status == "closed" then
+			
+			elseif status == "closed" then
+			getIPWindow:Show()
+						getIPLabel.caption= "Connection closed. \n".. defaultWelcome
+
 			SocketClosed(input)
 			input:close()
 			set:remove(input)
 		end
 	end
 	
-	copyFrameToBuffer()
+	--copyFrameToBuffer()
 	
 	for __, output in ipairs(writeable) do
 
