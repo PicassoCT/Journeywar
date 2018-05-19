@@ -137,12 +137,12 @@ function spawner()
 							if jtypeTable[dice] then
 								dice= 3
 							end
-                        spawnedUnit = spCreateUnit(jtypeTable[dice], x + randoval, y, z + (randoval * sigNum), 0, teamID)
+                        spawnedUnit = spCreateUnit(jtypeTable[math.random(1,		#jtypeTable)], x + randoval, y, z + (randoval * sigNum), 0, teamID)
 						
                 else
 							if ctypeTable[dice] then dice = 2 end
 							
-                        spawnedUnit = spCreateUnit(ctypeTable[dice], x + randoval, y, z + (randoval * sigNum), 0, teamID)
+                        spawnedUnit = spCreateUnit(ctypeTable[math.random(1,		#ctypeTable)], x + randoval, y, z + (randoval * sigNum), 0, teamID)
 
                 end
 

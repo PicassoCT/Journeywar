@@ -101,6 +101,11 @@ end
 function script.Killed()
 	Spring.SetUnitNeutral(unitID,true)
 	Spring.SetUnitNoSelect(unitID,true)
+	for k,v in pairs(CurrentlyControlledProjectiles) do
+		Spring.SetProjectileMoveControl(k, false)
+	end
+	
+	setSpeedEnv(unitID, 0.0)
 	Signal(SIG_IDLE)
 	Signal(SIG_ICON)
 	Signal(SIG_VAMPIRE)
@@ -367,20 +372,21 @@ function vampireCycle(attachUnitID)
 	
 	boolLightMyFire = true
 	
-	while (boolUnitAttached == true and health > 0) do
+	while health and (boolUnitAttached == true and health > 0) do
 		
 		Sleep(250)
 		
 		currentSensorRad = currentSensorRad + addUpRad/4
 		health = Spring.GetUnitHealth(attachUnitID)
-		health = health - UnitHealthReduce/4
-		Spring.SetUnitHealth(attachUnitID, health)
-		--expand radarRange
-		Spring.SetUnitSensorRadius(unitID, "los", currentSensorRad+5)
-		Spring.SetUnitSensorRadius(unitID, "radar", currentSensorRad+5)
-		--update
-		iconRad = currentSensorRad
-		
+		if health then
+			health = health - UnitHealthReduce/4
+			Spring.SetUnitHealth(attachUnitID, health)
+			--expand radarRange
+			Spring.SetUnitSensorRadius(unitID, "los", currentSensorRad+5)
+			Spring.SetUnitSensorRadius(unitID, "radar", currentSensorRad+5)
+			--update
+			iconRad = currentSensorRad
+		end
 	end
 	
 	boolLightMyFire = false
@@ -534,7 +540,7 @@ function catchProjectiles(ux, uy, uz)
 	
 	if not T then return end
 	for i = 1, #T, 1 do
-		if Counter < 5 then
+		if T[i] and Counter < 5 then
 			Spring.SetProjectileMoveControl(T[i], true)
 			CurrentlyControlledProjectiles[T[i]] = TimeTillDestroy
 			Counter = Counter + 1

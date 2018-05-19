@@ -28,44 +28,35 @@ end
 
 rootspin1 = piece("rootspin1")
 rootspin2 = piece("rootspin2")
-
+Root = {}
 SpinT = {}
-for i = 1, 23 do
-    name = "Spin" .. i
-    SpinT[#SpinT + 1] = piece(name)
-end
+
 
 
 GMAN = piece("GMAN")
 standing = piece("standing")
 face = piece("face")
-Root = {}
+piecesTable = {}
 for i = 1, 3 do
     name = "Root" .. i
     Root[#Root + 1] = piece(name)
 end
-hideT(SpinT)
-hideT(Root)
-Hide(GMAN)
-Hide(standing)
-Hide(face)
+for i = 1, 23 do
+    name = "Spin" .. i
+    SpinT[#SpinT + 1] = piece(name)
+end
 
 SIG_RESET = 16
-
 local INFLUENCERADIUS = 120
 local NUMBEROFPIECES = 56
-piecesTable = {}
+
 center = piece("center")
 piecesTable[#piecesTable + 1] = center
 emitcenter = piece("emitcenter")
-
 piecesTable[#piecesTable + 1] = emitcenter
 emitor = piece("emitor")
-
 piecesTable[#piecesTable + 1] = emitor
-
 dice = piece("dice")
-
 piecesTable[#piecesTable + 1] = dice
 
 function restartRoots()
@@ -251,6 +242,11 @@ end
 function script.Create()
     Hide(fireFx)
 
+	hideT(SpinT)
+	hideT(Root)
+	Hide(GMAN)
+	Hide(standing)
+	Hide(face)
     StartThread(leachExpLoop)
     StartThread(animationLoop)
     --StartThread(upYourGame)

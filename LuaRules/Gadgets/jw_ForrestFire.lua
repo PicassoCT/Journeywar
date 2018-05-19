@@ -151,8 +151,6 @@ if (gadgetHandler:IsSyncedCode()) then
         --adds sfx that are expensive eyecatchers to ordinary fire extremas
     end
 
-    function gadget:Explosion(weaponID, px, py, pz, AttackerID)
-    end
 
     function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
     end

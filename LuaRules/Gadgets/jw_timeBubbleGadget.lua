@@ -27,10 +27,14 @@ if (gadgetHandler:IsSyncedCode()) then
 	--
 	
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
+
 		if weaponDefID == jshroudtimerrayWeaponDefID then
 			Spring.CreateUnit("jmirrorbubble",px,py,pz,1, Spring.GetUnitTeam(AttackerID))
+			return true
 		end
 	end
+	
+	
 	
 
 end

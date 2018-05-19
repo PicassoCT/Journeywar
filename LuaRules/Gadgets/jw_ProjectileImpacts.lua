@@ -597,8 +597,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
 		
-		if explosionFunc[weaponDefID] then explosionFunc[weaponDefID](weaponDefID, px, py, pz, AttackerID) end
-		return true
+		if explosionFunc[weaponDefID] then explosionFunc[weaponDefID](weaponDefID, px, py, pz, AttackerID) 
+			return true
+		end
+	
 	end
 	
 	--===========UnitDamaged Functions ====================================================
