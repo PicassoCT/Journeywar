@@ -187,7 +187,7 @@ function script.Create()
 	Move(Quader01,x_axis, 50, 0)
 	Spin(emptyNessy,y_axis,math.rad(42),0)
 	Spring.SetUnitNeutral(unitID,true)
-	Spring.SetUnitNoBlocking(unitID,true)
+	Spring.SetUnitBlocking(unitID,true)
 	Spring.MoveCtrl.Enable(unitID,true)
 	
 	StartThread(initStartThread)

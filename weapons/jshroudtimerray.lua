@@ -2,47 +2,35 @@
 local weaponName = "jshroudtimerray"
 local weaponDef = {
     name = "time bubble Ray",
-    weaponType = [[BeamLaser]],
-    beamweapon = 1,
-	
-    accuracy = 0,
-    laserflaresize = 3, --0.3
-    beamTtl = 0.05, --0.01
-    movingaccuracy = 5000,
-    predictBoost = 1.5,
-    areaOfEffect = 1,
-    avoidFriendly = true,
-    soundtrigger = false,
-    collideFriendly = true,
-    beamtime = 2, --0.01
-
-    FireSubmersed = 0,
-    --impulseFactor = 0.025,
-    largeBeamLaser = true,
-    lineOfSight = false,
-
-    targetMoveError = 0.5,
-    noSelfDamage = true,
-    range = 400,
-    reloadtime = 0.42,
-    renderType = 0,
-    turret = false,
-    -- soundHit = "sounds/jEliah/jEliahLaserLoop.ogg",
-    -- soundStart = "sounds/jEliah/jEliahLaserStart.ogg",
-    FireStarter = 0,
-    coreThickness = 1.3,
-    thickness = 9.5,
-    rgbColor = [[0.1 0.8 0.8]],
-    rgbColor2 = [[0.1 0.6 0.9]],
-    HardStop = 1, --test It
-    Intensity = 1.4, --test It
-    scrollspeed = 0.3,
-    SweepFire = 1,
-    explosionGenerator = "custom:smallblueburn",
-    tolerance = 1000,
+   weaponType = [[Cannon]],
+    --damage
     damage = {
         default = 10,
-        HeavyArmor = 20,
+        HeavyArmor = 1,
     },
+    areaOfEffect = 8,
+   -- explosionGenerator = "custom:AR2Impact",
+    --cegTag = "AR2Projectile",
+    texture1 = "innerswirl.png",
+
+    --physics
+    weaponVelocity = 850,
+    reloadtime = 60,
+    range = 1024,
+    sprayAngle = 300,
+    tolerance = 8000,
+    lineOfSight = true,
+    turret = true,
+    craterMult = 0,
+
+	
+    --apperance 
+    rgbColor = [[0.1 0.8 0.8]],
+    rgbColor2 = [[0.1 0.6 0.9]],
+	
+    size = 22.2,
+    stages = 20,
+    separation = 0.2,
 }
+
 return lowerkeys({ [weaponName] = weaponDef })

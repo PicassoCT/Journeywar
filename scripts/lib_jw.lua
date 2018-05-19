@@ -560,6 +560,7 @@ end
 
 -->Units equivalent - if a opposite side must be created
 function getEquivalentMirrorTransformTypeTable(UnitDefNames)
+local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
     TransformationTable = {
         [UnitDefNames["bg"].id] = UnitDefNames["skinfantry"].id,
         [UnitDefNames["bg2"].id] = UnitDefNames["skinfantry"].id,

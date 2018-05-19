@@ -190,15 +190,14 @@ if #Spring.GetAllUnits() == 0 then return false end
   end
   return true
 end
-VFS.Include("scripts/lib_jw.lua")
-	
+
 function gadget:GameStart()
 	gameConfig= getGameConfig()
 	Spring.Echo("Starting game Journywar Version "..gameConfig.Version)
- 
+
     --creates a Tech Tree in GG
     local teams = Spring.GetTeamList()
-    createTechTree(teams)
+
 
     -- only activate if engine didn't already spawn units (compatibility)
     if (noStartUnitsNeeded(teams)==true) then
@@ -217,3 +216,4 @@ function gadget:GameStart()
         end
     end
 end
+

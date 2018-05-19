@@ -404,17 +404,18 @@ end
 
 --- -aimining & fire weapon
 function script.AimFromWeapon1()
-    return ArmR
+    return face
 end
 
 function script.QueryWeapon1()
-    return Head
+    return face
 end
 
 
 
 function script.AimWeapon1(Heading, pitch)
-
+		Turn(face,y_axis,Heading,12)
+		WaitForTurn(face,y_axis)
 		return true
 
 end
