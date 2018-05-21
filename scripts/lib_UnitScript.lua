@@ -788,6 +788,12 @@ function createUnitAtPiece(unitID, typeID, Piece, team)
 	teamID= team or Spring.GetUnitTeam(unitID)
 	return Spring.CreateUnit(typeID, x, y, z, math.ceil(math.random(0, 3)), teamID)
 end
+--> Create a Unit at another Unit
+function createUnitAtUnit(teamID, typeID, otherID,ox,oy,oz)
+	x,y,z,_,_,_ =Spring.GetUnitPosition(otherID)
+	teamID=  Spring.GetUnitTeam(teamID)
+	return Spring.CreateUnit(typeID, x+ox, y+oy, z+oz, math.ceil(math.random(0, 3)), teamID)
+end
 
 --> Transforms a selected unit into another type
 function transformUnitInto(unitID, unitType, setVel, boolKill)

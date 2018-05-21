@@ -114,6 +114,7 @@ mirrorBubbleTransformationTable= getMirrorBubbleTransformationTable()
 boolRestStarted=false
 
 function mirrorBubble()
+	Sleep(500)
 	Command(unitID,"setactive",{},{0})
 	T= getAllInSphere(x,y,z,Radius,unitID)
 	if not T then destroyMirrorBubble() end
@@ -145,6 +146,7 @@ function mirrorBubble()
 	doubleMorphSurvivors(T)
 	Spring.DestroyUnit(unitID,true,true)
 end
+
 
 
 function doubleMorphSurvivors(T)
