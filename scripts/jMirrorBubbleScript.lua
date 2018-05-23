@@ -124,6 +124,7 @@ function mirrorBubble()
 		newInhabitants= mirrorAddUnits(T)
 		addInhabitants(newInhabitants)
 	end
+	
 	--if none of my team- create mirror units
 	T= getAllInSphere(x,y,z,Radius,unitID)
 	OldT= T

@@ -553,8 +553,71 @@ function getGravityChangeReistantUnitTypeTable(UnitDefNames)
 end
 --> Units are Transformed in a circle of types in the same team
 function getMirrorBubbleTransformationTable(UnitDefNames)
-UnitCycleCentrail={}
-UnitCycleJourneyman={}
+
+--the unitcycles are interleaving - meaning every tear2 can morph into 
+UnitCycleCentrail={
+
+--level 1 circle
+["cgamagardener"] = "mtw",
+["mtw"] = "bg3",
+["bg3"] = "css",
+["bg2"] = "bg3",
+["bg1"] = "bg3",
+["css"] = "campro",
+["campro"] = "restrictor",
+["restrictor"] = "csniper",
+["csniper"] = "advisor",
+["advisor"] = "tiglil",
+
+--level 2 circle
+["cwallbuilder"] = "coperatrans",
+["coperatrans"]	= "cwallbuilder", 
+["cwallbuilder"] = "art",	
+["art"] = "sentrynell",
+["sentrynell"] = "cheadlauncher",
+["cheadlauncher"] = "jhoneypot"
+
+--level 3 circle
+
+["paxcentrail"]=  "cgatefort",
+["cgatefort"]= "cnanorecon",
+["cnanorecon"]= "strider",
+["strider"] = "ccrabsynth",
+["ccrabsynth"] = "chunter",
+[ "chunter"] = "jmotherofmercy"
+}
+UnitCycleJourneyman={
+--level1 change cycle
+["tiglil"]="skinfantry",
+["skinfantry"]="tiglil",
+["jghostdancer"]="jhivewulfmoma",
+["jhivewulfmoma"]= "vort",
+["vort"]= "jantart", 
+["jantart"]="jhunter",
+["jhunter"]= "cgamagardener",
+
+		
+
+--level2 change cycle
+["jhoneypot"]= "jviralfac",	
+["jviralfac"]= "jglowworms", 
+["jglowworms"]= "jbeherith",
+["jbeherith"]= "jeliah",
+["jeliah"]= "jshroudshrike",
+["jshroudshrike"]= "jswiftspear",
+["jswiftspear"]="cwallbuilder",
+		
+--level 3
+
+[ "jmotherofmercy"]= "jsempresequoia",
+[ "jsempresequoia"]= "jrecycler",
+[ "jrecycler"]= "jsunshipwater",
+[ "jsunshipwater"]= "paxcentrail",
+
+
+
+
+}
 return mergeDict(UnitCycleCentrail,UnitCycleJourneyman)
 end
 
