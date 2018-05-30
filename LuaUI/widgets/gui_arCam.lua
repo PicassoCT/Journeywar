@@ -16,23 +16,23 @@ return {
 	license   = "GNU GPL, v2 or later",
 	layer     = math.huge,
 	handler   = true,
-	enabled   = true  --  loaded by default?
+	enabled   = false  --  loaded by default?
 }
 end
 
 local Chili, Screen0
 local socket = socket
 local message =""
-local defaultWelcome=	"Welcome to Spring-AR!\n Please enter the IP displayed in the Spring AR-App:"
+local defaultWelcome=	"Welcome to Spring-AR!\n Please enter the IP displayed upon Projectionposition Selection in the Spring AR-App:"
 local client
 local set
 local headersent
 local defaulthost="192.168.178.20"
 local host = "192.168.178.20"
 local port = 467
-local file = "/ar/screentosend/screen.png"
+local screenFileName = "arTextureFile.png"
+local filePath = "/ar/screentosend/"..screenFileName
 
-local screencopy
 local deviceData={
 	deviceName = 	'Nexus',
 	viewWidth = 	60,
@@ -57,10 +57,10 @@ function widget:Initialize()
   -- Create the window
   getIPWindow = Chili.Window:New{
     parent = Screen0,
-    x = '5%',
-    y = '20%',
+    x = '0%',
+    y = '80%',
     width  = '20%',
-    height = '20%',	
+    height = '10%',	
   }	
 
   -- Create some text inside the window
@@ -90,8 +90,7 @@ function widget:Initialize()
 				end
 			end,
 		}
-	}
-  
+	}  
 end
 
 -->Generic to String
@@ -128,9 +127,7 @@ local function dumpConfig()
 	for _, conf in ipairs({"TCPAllowConnect", "TCPAllowListen", "UDPAllowConnect", "UDPAllowListen"  }) do
 		Spring.Echo(conf .. " = " .. Spring.GetConfigString(conf, ""))
 	end
-
 end
-
 
 local function newset()
     local reverse = {}
@@ -155,42 +152,9 @@ local function newset()
         end
     }})
 end
---[[
- decode_uint8 = function(str, ofs)
-        ofs = ofs or 0
-        return string.byte(str, ofs + 1)
-    end
 
-    decode_uint16 = function(str, ofs)
-        ofs = ofs or 0
-        local a, b = string.byte(str, ofs + 1, ofs + 2)
-        return a + b * 0x100
-    end
+ 
 
-    decode_uint32 = function(str, ofs)
-        ofs = ofs or 0
-        local a, b, c, d = string.byte(str, ofs + 1, ofs + 4)
-        return a + b * 0x100 + c * 0x10000 + d * 0x1000000
-    end
-
-    encode_uint8 = function(int)
-        return string.char(int)
-    end
-
-    encode_uint16 = function(int)
-        local a, b = int % 0x100, int / 0x100
-        return string.char(a, b)
-    end
-
-    encode_uint32 = function(int)
-        local a, b, c, d = 
-            int % 0x100, 
-            int / 0x100 % 0x100, 
-            int / 0x10000 % 0x100, 
-            int / 0x1000000
-        return string.char(a, b, c, d)
-	end
-]]
 -- initiates a connection to host:port, returns true on success
 local function SocketConnect(host, port)
 	client=socket.tcp()
@@ -218,25 +182,28 @@ local tex=gl.CreateTexture(w, h, {fbo=true});
 
 -- called when data was received through a connection
 local function SocketDataReceived(sock, str)
---	updateARCamera(str)
+	if str:find("SPRING_AR_DATA_") then
+		updateARCamera(str)
+	end
 	Spring.Echo(str)
 end
 
-function textureToString(texture)
-	return texture
-end
+local co
 
-local headersent
 -- called when data can be written to a socket
 local function SocketWriteAble(sock)
 ---	local scr=io.open("arImageBuffer.png","rb")
 --	socket:send(scr:read("*a")); 
 Spring.Echo("sending http request")
-if headersent==nil then
-		-- socket is writeable
-		headersent=1
-		sock:send("GET " .. file .. " HTTP/1.0\r\nHost: " .. host ..  " \r\n\r\n")
-end
+	if not co or coroutine.status(co) == "dead" then
+			-- socket is writeable
+			
+			co=		coroutine.create(function()
+										sock:send( VFS.LoadFile(screenFileName))
+									end
+			)
+			 coroutine.resume(co)
+	end
 end
 
 -- called when a connection is closed
@@ -274,7 +241,7 @@ function widget:Update()
 		end
 	end
 	
-	--copyFrameToBuffer()
+	copyFrameToBuffer()
 	
 	for __, output in ipairs(writeable) do
 
@@ -282,13 +249,37 @@ function widget:Update()
 	end
 end
 
+function split(inputstr, sep)
+        if sep == nil then
+                sep = "%s"
+        end
+        local t={} ; i=1
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                t[i] = str
+                i = i + 1
+        end
+        return t
+end
+
 function updateARCamera(recievedData)
+mat4_4 = {}
+tempStr = split(recievedData, ";")
+boolCompleteCamMatrix= false
+	for i=1, 16 do
+		mat4_4[i] = tonumber(tempStr[i])
+		if i== 16 then boolCompleteCamMatrix= true ; end	
+	end
+	if boolCompleteCamMatrix == true then
+		Spring.SetCameraTarget()
+		Spring.SetCameraOffset()
+	
+	end
 end
 
 function copyFrameToBuffer()
 	w,h=  deviceData.viewWidth,	deviceData.viewHeigth  
 	gl.CopyToTexture(tex, 0, 0, 0, 0, w, h);
-	gl.RenderToTexture(tex, gl.SaveImage,0,0,w,h, "arImageBuffer.png"); 
+	gl.RenderToTexture(tex, gl.SaveImage,0,0,w,h, screenFileName); 
 	  
 end
 

@@ -7,6 +7,8 @@ include "lib_Build.lua"
 include "lib_jw.lua"
 
 ResetTime = 8000
+damagedToDeal=200
+
 function delayedReset()
     boolFlowDirectionTowardsTeam = false
     Signal(SIG_RESET)
@@ -22,8 +24,17 @@ function script.HitByWeapon(x, z, weaponDefID, damage)
     if totalDamage > 320 then
         totalDamage = 0
         StartThread(delayedReset)
+		x,y,z = Spring.GetUnitPosition(unitID)
         StartThread(portalStormWave, unitID)
+		process(
+			getAllInSphere(x,y,z, 128, unitID),
+			function (id)
+				Spring.AddUnitDamage(id,math.ceil(damagedToDeal/distanceUnitToUnit(unitID,id)))			
+			end		
+		)
     end
+	
+	return damage
 end
 
 rootspin1 = piece("rootspin1")
@@ -397,6 +408,10 @@ function sudoRootOnGroot()
     end
 end
 
+function bubbleHasDied()
+boolOldSphereCeasedToBe= true
+
+end
 
 --- -aimining & fire weapon
 function script.AimFromWeapon1()
@@ -407,18 +422,18 @@ function script.QueryWeapon1()
     return face
 end
 
-
+boolOldSphereCeasedToBe= true
 
 function script.AimWeapon1(Heading, pitch)
-		Turn(face,y_axis,Heading,12)
-		WaitForTurn(face,y_axis)
-		return true
+	Turn(face,y_axis,Heading,12)
+	WaitForTurn(face,y_axis)
+	return boolOldSphereCeasedToBe
 
 end
 
 
 function script.FireWeapon1()
-
+	boolOldSphereCeasedToBe = false
     return true
 end
 -- a bubble where you can rewind time by sacrificing a unit

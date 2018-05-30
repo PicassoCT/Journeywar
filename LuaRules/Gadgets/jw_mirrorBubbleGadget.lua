@@ -23,13 +23,24 @@ if (gadgetHandler:IsSyncedCode()) then
 
 	Script.SetWatchWeapon(jshroudtimerrayWeaponDefID, true)
 	--units To be exempted from instantly lethal force
-
+	function gadget:UnitDestroyed(unitID,unitDefID,teamID)
+			if mirrorBubbleParent[unitID] then
+			env = Spring.UnitScript.GetScriptEnv(mirrorBubbleParent[unitID])
+			if env then
+				Spring.UnitScript.CallAsUnit(mirrorBubbleParent[unitID], env.bubbleHasDied)
+				mirrorBubbleParent[unitID]= nil
+			end
+		end
+	end
 	--
-	
+	mirrorBubbleParent={}
 	function gadget:Explosion(weaponDefID, px, py, pz, AttackerID)
 
 		if weaponDefID == jshroudtimerrayWeaponDefID then
-			Spring.CreateUnit("jmirrorbubble",px,py,pz,1, Spring.GetUnitTeam(AttackerID))
+			id= Spring.CreateUnit("jmirrorbubble",px,py,pz,1, Spring.GetUnitTeam(AttackerID))
+				if id and AttackerID then 
+					mirrorBubbleParent[id] = AttackerID
+				end
 			return true
 		end
 	end

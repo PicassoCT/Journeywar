@@ -51,8 +51,6 @@ local weaponDef = {
     soundHit = "jfiredancer/impact.wav",
     soundStart = "jfiredancer/firedancefire2.ogg",
 }
-if math.random(1,42)==42 then
-	weaponDef.soundHit = "jfiredancer/impact_easteregg.wav"
-end
+
 
 return lowerkeys({ [weaponName] = weaponDef })

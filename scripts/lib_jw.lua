@@ -575,10 +575,9 @@ UnitCycleCentrail={
 ["cwallbuilder"] = "art",	
 ["art"] = "sentrynell",
 ["sentrynell"] = "cheadlauncher",
-["cheadlauncher"] = "jhoneypot"
+["cheadlauncher"] = "jhoneypot",
 
 --level 3 circle
-
 ["paxcentrail"]=  "cgatefort",
 ["cgatefort"]= "cnanorecon",
 ["cnanorecon"]= "strider",
@@ -586,7 +585,9 @@ UnitCycleCentrail={
 ["ccrabsynth"] = "chunter",
 [ "chunter"] = "jmotherofmercy"
 }
+
 UnitCycleJourneyman={
+
 --level1 change cycle
 ["tiglil"]="skinfantry",
 ["skinfantry"]="tiglil",
@@ -595,8 +596,6 @@ UnitCycleJourneyman={
 ["vort"]= "jantart", 
 ["jantart"]="jhunter",
 ["jhunter"]= "cgamagardener",
-
-		
 
 --level2 change cycle
 ["jhoneypot"]= "jviralfac",	
@@ -612,11 +611,7 @@ UnitCycleJourneyman={
 [ "jmotherofmercy"]= "jsempresequoia",
 [ "jsempresequoia"]= "jrecycler",
 [ "jrecycler"]= "jsunshipwater",
-[ "jsunshipwater"]= "paxcentrail",
-
-
-
-
+[ "jsunshipwater"]= "paxcentrail"
 }
 return mergeDict(UnitCycleCentrail,UnitCycleJourneyman)
 end

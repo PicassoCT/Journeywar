@@ -791,7 +791,6 @@ end
 --> Create a Unit at another Unit
 function createUnitAtUnit(teamID, typeID, otherID,ox,oy,oz)
 	x,y,z,_,_,_ =Spring.GetUnitPosition(otherID)
-	teamID=  Spring.GetUnitTeam(teamID)
 	return Spring.CreateUnit(typeID, x+ox, y+oy, z+oz, math.ceil(math.random(0, 3)), teamID)
 end
 
