@@ -23,7 +23,12 @@ end
 local Chili, Screen0
 local socket = socket
 local message =""
-local defaultWelcome=	"Welcome to Spring-AR!\n Please enter the IP displayed upon Projectionposition Selection in the Spring AR-App:"
+local defaultWelcome=	"Welcome to Spring Augmented Reality!\n "..
+						"Setup: \n "..
+						"0. Start the Spring-AR App \n"..
+						"1. Please position the projectionposition on your mobile device. \n"..
+						"2. Please Enter the IP displayed\n"
+
 local client
 local set
 local headersent
