@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------------
 
 if not (Spring.GetConfigInt("LuaSocketEnabled", 0) == 1) then
-	Spring.Echo("LuaSocketEnabled is disabled")
+	Spring.Echo("LuaSocketEnabled is configurationally challenged")
 	return false
 end
 
@@ -10,13 +10,13 @@ function widget:GetInfo()
 return {
 	name      = "Augmented Reality Camera",
 	desc      = "",
-	author    = "picasso",
+	author    = "PicassoCT",
 	version   = "2.0",
-	date      = "2018+",
+	date      = "YearOfTheGNU on a to hot morning between Dubai and Shanghai",
 	license   = "GNU GPL, v2 or later",
 	layer     = math.huge,
 	handler   = true,
-	enabled   = false  --  loaded by default?
+	enabled   = true  --  loaded by default?
 }
 end
 
@@ -29,21 +29,66 @@ local defaultWelcome=	"Welcome to Spring Augmented Reality!\n "..
 						"1. Please position the projectionposition on your mobile device. \n"..
 						"2. Please Enter the IP displayed\n"
 
+recievedCFGHeader = "SPRINGARREC;CFG="						
+recievedMSGHeader = "SPRINGARCAM;DATA="						
+sendMSGHeader 	= "SPRINGARSND;DATA="						
+						
 local client
 local set
 local headersent
 local defaulthost="192.168.178.20"
 local host = "192.168.178.20"
-local port = 467
-local screenFileName = "arTextureFile.png"
-local filePath = "/ar/screentosend/"..screenFileName
+local port = 8090 
+local fileBufferDesc = {} 
+
+fileBufferDesc[1] = {
+					filePathName = buffer1PathName = "luaui/ar/"..fileName.."1"..".png",
+					boolActive = false,	-- is currently a socket writing from this buffer?
+					boolNotValid = false	-- is currently a write Process activ on this buffer?
+
+					}
+fileBufferDesc[2] = {
+					filePathName = buffer1PathName = "luaui/ar/"..fileName.."2"..".png",
+					boolActive = false,	-- is currently a socket writing from this buffer?
+					boolNotValid = false	-- is currently a write Process activ on this buffer?
+
+					}
+
 
 local deviceData={
-	deviceName = 	'Nexus',
+	deviceName = 	'S8',
 	viewWidth = 	60,
 	viewHeigth = 	70,
 	seperator = 	30
 }
+local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
+
+
+function getActiveBuffer()
+	if fileBufferDesc[1].boolActive == true then return fileBufferDesc[1], 1 end
+	
+	return fileBufferDesc[2], 2
+end
+
+function getWriteableBuffer()
+	if fileBufferDesc[1].boolNotValid == true then return fileBufferDesc[1], 1 end
+
+	return fileBufferDesc[2], 2
+end
+
+--Handled by writing function once done- waiting for the sendeSemaphore to drop
+function switchWriteBuffer()
+	_, activeBufferNr = getActiveBuffer()
+	_, writeBufferNr = getWriteableBuffer()
+	while boolSendDataSemaphore == true do
+		Sleep(1)
+	end
+	fileBufferDesc[activeBufferNr].boolActive = false
+	fileBufferDesc[activeBufferNr].boolNotValid = true
+	
+	fileBufferDesc[writeBufferNr].boolActive = true
+	fileBufferDesc[writeBufferNr].boolNotValid = false
+end
 
 local getIPWindow
 local getIPLabel
@@ -96,9 +141,26 @@ function widget:Initialize()
 			end,
 		}
 	}  
+
+	-- load Logo into Buffer and set first Buffer active
+	--TODO
+fileBufferDesc[1].boolNotValid = false
+fileBufferDesc[1].Active = true
 end
 
--->Generic to String
+-->Generic to String Serialization/ Tools
+function split(inputstr, sep)
+        if sep == nil then
+                sep = "%s"
+        end
+        local t={} ; i=1
+        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+                t[i] = str
+                i = i + 1
+        end
+        return t
+end
+
 function toString(element)
 	typeE = type(element)
 	
@@ -127,6 +189,7 @@ function tableToString(tab)
 	return conCat..PostFix
 end
 
+-- Debugfunctions
 local function dumpConfig()
 	-- dump all luasocket related config settings to console
 	for _, conf in ipairs({"TCPAllowConnect", "TCPAllowListen", "UDPAllowConnect", "UDPAllowListen"  }) do
@@ -182,32 +245,36 @@ function InitalizeSocket()
 	SocketConnect(host, port)
 end
 
-w,h=  deviceData.viewWidth,	deviceData.viewHeigth  
-local tex=gl.CreateTexture(w, h, {fbo=true}); 
-
 -- called when data was received through a connection
 local function SocketDataReceived(sock, str)
-	if str:find("SPRING_AR_DATA_") then
+	-- Cellphoneconfiguration recieved
+	if str:find(recievedCFGHeader) then
+		configureARCamera(str)
+	end
+	-- Cameramatrice recieved
+	if str:find(recievedMSGHeader) then
 		updateARCamera(str)
 	end
-	Spring.Echo(str)
 end
 
-local co
-
+local coSendData 
+boolSendDataSemaphore = false
 -- called when data can be written to a socket
 local function SocketWriteAble(sock)
----	local scr=io.open("arImageBuffer.png","rb")
---	socket:send(scr:read("*a")); 
-Spring.Echo("sending http request")
-	if not co or coroutine.status(co) == "dead" then
+-- load image
+Spring.Echo("sending ar image to cellphone")
+	if not coSendData or coroutine.status(coSendData) == "dead" then
 			-- socket is writeable
 			
-			co=		coroutine.create(function()
-										sock:send( VFS.LoadFile(screenFileName))
+			coSendData=		coroutine.create(function()
+										boolSendDataSemaphore = true
+										sock:send( VFS.LoadFile(getActiveBuffer().filePathName))
+										boolSendDataSemaphore = false
 									end
 			)
-			 coroutine.resume(co)
+			if  not boolSendDataSemaphore then
+			 coroutine.resume(coSendData)
+			end
 	end
 end
 
@@ -231,6 +298,7 @@ function widget:Update()
 		end
 		Spring.Echo("Error in select: " .. error)
 	end
+	
 	for _, input in ipairs(readable) do
 		local s, status, partial = input:receive('*a') --try to read all data
 		if status == "timeout" or status == nil then
@@ -245,51 +313,65 @@ function widget:Update()
 			set:remove(input)
 		end
 	end
-	
-	copyFrameToBuffer()
+	--upate only on completed transfer
+	if boolSendDataSemaphore  = falsethen
+		copyFrameToBuffer()
+	end
 	
 	for __, output in ipairs(writeable) do
-
 		SocketWriteAble(output)
 	end
 end
 
-function split(inputstr, sep)
-        if sep == nil then
-                sep = "%s"
-        end
-        local t={} ; i=1
-        for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-                t[i] = str
-                i = i + 1
-        end
-        return t
+function configureARCamera(configStr)
+configStr= configStr:replace(recievedCFGHeader,'')
+arrayOfTokens = split(configStr,";")
+
+deviceData.deviceName = arrayOfTokens[1] or ""
+deviceData.viewWidth = tonumber(arrayOfTokens[2])
+deviceData.viewHeigth = tonumber(arrayOfTokens[3])
+deviceData.seperator = min(100,max(1,tonumber(arrayOfTokens[4])))
+
+tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
+
 end
 
+old_mat4_4 ={}
 function updateARCamera(recievedData)
-mat4_4 = {}
-tempStr = split(recievedData, ";")
+recievedData=recievedData:replace(recievedMSGHeader,'')
+mat4_4 = split(recievedData, ";")
 boolCompleteCamMatrix= false
 	for i=1, 16 do
-		mat4_4[i] = tonumber(tempStr[i])
+		mat4_4[i] = tonumber(mat4_4[i])
 		if i== 16 then boolCompleteCamMatrix= true ; end	
 	end
-	if boolCompleteCamMatrix == true then
-		Spring.SetCameraTarget()
-		Spring.SetCameraOffset()
 	
+	if boolCompleteCamMatrix == true then
+		old_mat4_4=mat4_4
 	end
+	Spring.SetCameraTarget(old_mat4_4)
+	Spring.SetCameraOffset(old_mat4_4)
+		
 end
+
+boolDataInBufferValid = false
+local coWriteBuffer
 
 function copyFrameToBuffer()
-	w,h=  deviceData.viewWidth,	deviceData.viewHeigth  
-	gl.CopyToTexture(tex, 0, 0, 0, 0, w, h);
-	gl.RenderToTexture(tex, gl.SaveImage,0,0,w,h, screenFileName); 
-	  
+	if not coWriteBuffer or coroutine.status(coWriteBuffer) == "dead" then
+				-- socket is writeable
+				
+				coWriteBuffer=		coroutine.create(function()
+											gl.CopyToTexture(tex, 0, 0, 0, 0, deviceData.viewWidth, deviceData.viewHeigth);
+											gl.RenderToTexture(tex, gl.SaveImage,0,0,deviceData.viewWidth,deviceData.viewHeigth, getWriteableBuffer().filePathName);
+											switchWriteBuffer()										
+										end
+				)
+				coroutine.resume(coWriteBuffer)
+		
+		
+	end
 end
-
-
-
 
 
 --------------------------------------------------------------------------------
