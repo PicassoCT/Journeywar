@@ -5491,3 +5491,23 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
 		endofLifeFunc(x, y, z)
 	end
 end
+
+function UnitThrowUnit(unitA, unitB, target,duration)
+dist= distanceUnitToPoint(unitA,target)
+posA= getUnitPositionV(unitA)
+midPoint= {
+			x= (posA.x+target.x)/2,
+			y= posA.y,
+			z= (posA.z+target.z)/2,			
+			}
+			
+while duration > 0 do
+
+
+Sleep(33)
+duration= duration -33
+end
+--TODO
+
+
+end
