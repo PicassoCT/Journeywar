@@ -373,11 +373,12 @@ end
 
 function moveTowardsStartPosition(tPos, timeInMs)
 	factor = 0
-	ox,oy,oz=Spring.GetUnitPosition(unitID)
-	oPos= {x=ox,y=oz,z=oz}
+	o={}
+	o.x,o.y,o.z=Spring.GetUnitPosition(unitID)
+	
 	addOn= 1 / math.max(0.00000000001,math.abs(timeInMs/30))
 	while factor < 1 do
-		rPos = mix(oPos,tPos, factor)
+		local rPos = mix(o,tPos, factor)
 		Spring.MoveCtrl.SetPosition(unitID, rPos.x, rPos.y, rPos.z)
 		Sleep(30)	
 		factor=factor+addOn
@@ -410,20 +411,22 @@ function swallowAnimation(victimID)
                 totalAnimationTime = 8000
                 constOffsetGround = 15
                 boolAbortEating = true
-                orgAllgygatorRotationRad = convPointsToDeg(pVx, pVz, pUx, pUz)
-						
-						pVx, pVy, pVz = Spring.GetUnitPosition(victimID)
-						pStart = { x = Radius, y = Radius + 35, z = 0 }
-						pStart.x, pStart.y = Rotate(pStart.x, pStart.y,  (math.pi / -4) )
-						pStart.x,pStart.y,pStart.z = pStart.x +pVx, pStart.y +pVy, pStart.z +pVz
-						
-						moveTowardsStartPosition(pStart ,2500)
+                orgAllgygatorRotationRad = convPointsToDeg(pUx, pUz, pVx, pVz)
+				
+						local v= {}
+						v.x,v.y,v.z = Spring.GetUnitPosition(victimID)
+						local u={}
+						u.x,u.y,u.z = Spring.GetUnitPosition(unitID)						
+						tPos = getNearestPositionOnCircle(v, Radius, u)
+						echo("uPos:", u)
+						echo("tPos:",tPos)
+						moveTowardsStartPosition(tPos ,2500)
                 
 						while (AnimationRunning_ms < totalAnimationTime) do
 
                     if Spring.GetUnitIsDead(victimID) == false then
                         pVx, pVy, pVz = Spring.GetUnitPosition(victimID)
-                        orgAllgygatorRotationRad = convPointsToDeg(pVx, pVz, pUx, pUz)
+									orgAllgygatorRotationRad = convPointsToDeg(pUx, pUz, pVx, pVz)
                     end
                     --orgRotationDeg =50
                     --calculate position on the arc
@@ -433,7 +436,7 @@ function swallowAnimation(victimID)
                     animationOffset = (math.pi / -4)
                     pStart.x, pStart.y = Rotate(pStart.x, pStart.y, animationOffset + -math.pi * animationFactor)
                     --rotation Matrice at UnitDeg
-                    pStart.x, pStart.z = Rotate(pStart.x, pStart.z, orgAllgygatorRotationRad+math.pi/2)
+                    pStart.x, pStart.z = Rotate(pStart.x, pStart.z, orgAllgygatorRotationRad + math.pi)--+math.pi/2
                     --Position Check & Clamp
                     pTargetX, pTargetY, pTargetZ = pVx + pStart.x, pVy + pStart.y + Radius, pVz + pStart.z
                     GroundY = Spring.GetGroundHeight(pTargetX, pTargetZ)
@@ -445,7 +448,7 @@ function swallowAnimation(victimID)
 
                     -- move Unit to the circle position
                     Spring.MoveCtrl.SetPosition(unitID, pTargetX, pTargetY, pTargetZ)
-                    Spring.SetUnitRotation(unitID, 0, orgAllgygatorRotationRad + math.pi*2 , 0)
+                    Spring.SetUnitRotation(unitID, 0, orgAllgygatorRotationRad + math.pi/2 , 0)
                     --
 
                     -- use rotation matrice to turn the arc to units position
