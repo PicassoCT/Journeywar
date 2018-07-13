@@ -146,6 +146,7 @@ function script.Create()
     --Hide(Portal)
     Spin(Portal, z_axis, math.rad(180), 0.01)
 
+    StartThread(testSwallowAnimation)
     StartThread(devourerLoop)
     StartThread(motionStateDetector)
     Turn(turbine1, y_axis, math.rad(-11), 0)
@@ -314,22 +315,22 @@ function devourerLoop()
     end
 end
 
--- teamKiller=Spring.GetUnitTeam(unitID)
--- function testSwallowAnimation()
+teamKiller=Spring.GetUnitTeam(unitID)
+function testSwallowAnimation()
 
--- while true do
--- px,py,pz=Spring.GetUnitPosition(unitID)
--- vicID= Spring.CreateUnit("css",px+math.random(-400,400),py,pz+math.random(-400,400),1,teamKiller)
+while true do
+px,py,pz=Spring.GetUnitPosition(unitID)
+vicID= Spring.CreateUnit("css",px+math.random(-400,400),py,pz+math.random(-400,400),1,teamKiller)
 
--- if vicID then
--- Spring.Echo("Spawned a critter")
--- swallowAnimation(vicID)
--- end
+if vicID then
+Spring.Echo("Spawned a critter")
+swallowAnimation(vicID)
+end
 
--- Sleep(15000)
--- end
+Sleep(15000)
+end
 
--- end
+end
 function checkVictimSize(victimID)
         vx, vy, vz = Spring.GetUnitCollisionVolumeData(victimID)
         if vx then
@@ -369,13 +370,28 @@ if not T then return end
 		)
 
 end
+
+function moveTowardsStartPosition(tPos, timeInMs)
+	factor = 0
+	ox,oy,oz=Spring.GetUnitPosition(unitID)
+	oPos= {x=ox,y=oz,z=oz}
+	addOn= 1 / math.max(0.00000000001,math.abs(timeInMs/30))
+	while factor < 1 do
+		rPos = mix(oPos,tPos, factor)
+		Spring.MoveCtrl.SetPosition(unitID, rPos.x, rPos.y, rPos.z)
+		Sleep(30)	
+		factor=factor+addOn
+	end
+
+
+end
 -- This is the actuall Animation
 function swallowAnimation(victimID)
     boolAbortEating = false
     StartThread(nomNomNom, victimID)
     victimType = Spring.GetUnitDefID(victimID)
     --unit is blacklisted?
-
+	ox,oy,oz= Spring.GetUnitPosition(unitID)
     if victimType and not blackListCAllyGator[victimType]  then
 
         -- Unit check by size
@@ -395,6 +411,12 @@ function swallowAnimation(victimID)
                 constOffsetGround = 15
                 boolAbortEating = true
                 orgAllgygatorRotationRad = convPointsToDeg(pVx, pVz, pUx, pUz)
+						
+						pVx, pVy, pVz = Spring.GetUnitPosition(victimID)
+						pStart = { x = Radius, y = Radius + 35, z = 0 }
+						pStart.x, pStart.y = Rotate(pStart.x, pStart.y,  (math.pi / -4) )
+						pStart.x,pStart.y,pStart.z = pStart.x +pVx, pStart.y +pVy, pStart.z +pVz
+						moveTowardsStartPosition(pStart ,2500)
                 
 						while (AnimationRunning_ms < totalAnimationTime) do
 
@@ -406,7 +428,7 @@ function swallowAnimation(victimID)
                     --calculate position on the arc
 
                     pStart = { x = Radius, y = Radius + 35, z = 0 }
-                    animationFactor = (AnimationRunning_ms / totalAnimationTime)
+                    animationFactor = 1-(AnimationRunning_ms / totalAnimationTime)
                     animationOffset = (math.pi / -4)
                     pStart.x, pStart.y = Rotate(pStart.x, pStart.y, animationOffset + -math.pi * animationFactor)
                     --rotation Matrice at UnitDeg
@@ -422,7 +444,7 @@ function swallowAnimation(victimID)
 
                     -- move Unit to the circle position
                     Spring.MoveCtrl.SetPosition(unitID, pTargetX, pTargetY, pTargetZ)
-                    Spring.SetUnitRotation(unitID, 0, orgAllgygatorRotationRad + math.pi / 2, 0)
+                    Spring.SetUnitRotation(unitID, 0, orgAllgygatorRotationRad + math.pi*2 , 0)
                     --
 
                     -- use rotation matrice to turn the arc to units position
@@ -456,6 +478,7 @@ function swallowAnimation(victimID)
     if boolAbortEating == true then
         cleanUpAfterYou(victimID)
     end
+	 Command(unitID, "go", {x=ox,y=oy,z=oz}, {"shift"})
 end
 
 function cleanUpAfterYou(victimID)

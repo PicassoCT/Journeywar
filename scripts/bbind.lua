@@ -335,14 +335,14 @@ end
 recycleAble = getRecycleableUnitTypeTable()
 infantryTypeTable = getInfantryTypeTable()
 function isUnitRecycleable(handedOverId)
-    if handedOverId == nil then return false end
+    if not handedOverId then return false end
     if Spring.ValidUnitID(handedOverId) == false then return false end
 	if Spring.GetUnitIsDead(handedOverId)==true then return false end
     if handedOverId == unitID then return false end
 
     local passengerDefID = Spring.GetUnitDefID(handedOverId)
     if passengerDefID == nil then return false end
-    if infantryTypeTable[passengerDefID] then return true end
+   -- if infantryTypeTable[passengerDefID] then return true end
     if recycleAble[passengerDefID] then     return true  end
     return false
 end
@@ -796,7 +796,7 @@ x,y,z= Spring.GetUnitBasePosition(unitID)
 	teamID= Spring.GetUnitTeam(unitID)
 	T = process(T,
 				function(id)
-					if not (Spring.GetUnitTeam(id)==teamID) then
+					if  (Spring.GetUnitTeam(id)==teamID) and  isUnitRecycleable(id) == true or isUnitRecycleable(id) == true then
 						return id 
 					end
 				end,
@@ -812,12 +812,6 @@ x,y,z= Spring.GetUnitBasePosition(unitID)
 					return id
 				end
 				--remove units handled by other factories
-				end,
-				function(id)
-				--remove all off wrong type
-					if isUnitRecycleable(id) == true then
-						return id 
-					end
 				end,
 				function(id)
 				--remove still attached Units

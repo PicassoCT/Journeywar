@@ -1137,7 +1137,26 @@ function getGeoventList()
 	return GeoventList
 end
 
+function getNearestPositionOnCircle(pCenter, Radius, pMyPos)
+rPos={x=0,y=0,z=0}
 
+--z = mx +b
+--m = (z2-z1) /(x2 -x1)
+m = (pCenter.z-pMyPos.z) /(pCenter.x -pMyPos.x)
+
+b = pCenter.z - m * pCenter.x
+--circle equation (x- pCenter.x)^2 + (z -pCenter.z)^2 = Radius
+--circle equation sqrt( -(x- pCenter.x)^2  + Radius) + pCenter.z =   rPos.z
+
+--circle equation solved for z: sqrt( -([(pCenter.z -b)/m]- pCenter.x)^2  + Radius) + pCenter.z =   rPos.z
+rPos.z =math.sqrt((((pCenter.z -b)/m)-pCenter.x)^2  + Radius) + pCenter.z
+
+--circle equation solved for x: x  = sqrt(Radius - (z -pCenter.z)^2) + 
+rPos.x = math.sqrt(Radius - (rPos.z - pCenter.z)^2)
+
+
+return rPos
+end
 
 function getADryWalkAbleSpot()
 	smin, smax = Spring.GetGroundExtremes()
@@ -1188,7 +1207,12 @@ function getPathPointFullfillingConditions(condition, maxRes, filterTable, mapSi
 		end
 		
 		probeResolution = probeResolution * 2
-		if probeResolution > maxRes then Spring.Echo("Aborting Due to High Probe Resolution"); return end
+		if probeResolution > maxRes then
+					if boolDebug == true then 
+						Spring.Echo("Aborting Due to High Probe Resolution"); 
+					end
+			return 
+		end
 	end
 end
 
