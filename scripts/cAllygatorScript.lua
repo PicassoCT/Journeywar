@@ -416,6 +416,7 @@ function swallowAnimation(victimID)
 						pStart = { x = Radius, y = Radius + 35, z = 0 }
 						pStart.x, pStart.y = Rotate(pStart.x, pStart.y,  (math.pi / -4) )
 						pStart.x,pStart.y,pStart.z = pStart.x +pVx, pStart.y +pVy, pStart.z +pVz
+						
 						moveTowardsStartPosition(pStart ,2500)
                 
 						while (AnimationRunning_ms < totalAnimationTime) do
