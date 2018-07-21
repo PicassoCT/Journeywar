@@ -30,17 +30,21 @@ local defaultWelcome=	"Welcome to Spring Augmented Reality!\n "..
 "1. Please position the projectionposition on your mobile device. \n"..
 "2. Please Enter the IP displayed\n"
 
-recievedCFGHeader = "SPRINGARREC;CFG="						
-recievedMSGHeader = "SPRINGARCAM;DATA="						
-sendMSGHeader 	= "SPRINGARSND;DATA="					
-recieveResetHeader = "SPRINGAR;RESET;"	
+local recievedCFGHeader = "SPRINGARREC;CFG;"						
+local recievedMSGHeader = "SPRINGARCAM;DATA;MATRICE="						
+local sendMSGHeader 	= "SPRINGARSND;DATA;"					
+local recieveResetHeader = "SPRINGARSND;RESET;IPADRRESS="	
 
 local client
 local set
 local headersent
-local defaulthost="192.168.178.20"
-local host = "192.168.178.20"
+local defaultARDeviceIpAddress="192.168.178.178"
+local ARDeviceIpAddress = "192.168.178.178"
+local hostIPAddress = "192.168.178.179"
+local TIME_FRAME_IN_MS = 30 
 local port = 8090 
+
+local boolInitialisationComplete = false
 local fileBufferDesc = {} 
 fileName= "ARBuffer"
 fileBufferDesc[1] = {
@@ -56,7 +60,6 @@ fileBufferDesc[2] = {
 	
 }
 
-
 local deviceData={
 	deviceName = 	'S8',
 	viewWidth = 	60,
@@ -64,7 +67,6 @@ local deviceData={
 	seperator = 	30
 }
 local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
-
 
 function getActiveBuffer()
 	if fileBufferDesc[1].boolActive == true then return fileBufferDesc[1], 1 end
@@ -136,9 +138,9 @@ function widget:Initialize()
 				
 				if key == 13 then
 					if obj.text ~= ""then
-						host = obj.text
+						ARDeviceIpAddress = obj.text
 					else
-						host = defaulthost
+						ARDeviceIpAddress = defaultARDeviceIpAddress
 					end
 					InitalizeSocket()
 				end
@@ -225,8 +227,6 @@ local function newset()
 	}})
 end
 
-
-
 -- initiates a connection to host:port, returns true on success
 local function SocketConnect(host, port)
 	client=socket.tcp()
@@ -246,18 +246,21 @@ function InitalizeSocket()
 	dumpConfig()
 	--Spring.Echo(socket.dns.toip("localhost"))
 	--FIXME dns-request seems to block
-	SocketConnect(host, port)
+	SocketConnect(ARDeviceIpAddress, port)
+	boolInitialisationComplete = false
 end
 
 -- called when data was received through a connection
 local function SocketDataReceived(sock, str)
 	-- Cellphoneconfiguration recieved
 	if str:find(recievedCFGHeader) then
-		configureARCamera(str)
+		RecieveConfigureARCameraMessage(str)
+		boolInitialisationComplete = true
 	end
 	-- Cameramatrice recieved
-	if str:find(recievedMSGHeader) then
-		updateARCamera(str)
+
+	if  boolInitialisationComplete and str:find(recievedMSGHeader) then
+		RecieveUpdateARCameraMessage(str)
 	end
 end
 
@@ -265,8 +268,12 @@ local coSendData
 boolSendDataSemaphore = false
 -- called when data can be written to a socket
 local function SocketWriteAble(sock)
+	if boolInitialisationComplete == false then
+		sock:send( GetResetARCameraMessage())
+	end
 	-- load image
 	Spring.Echo("sending ar image to cellphone")
+	sock:send( "Hello World")
 	if not coSendData or coroutine.status(coSendData) == "dead" then
 		-- socket is writeable
 		
@@ -318,17 +325,20 @@ function widget:Update()
 			set:remove(input)
 		end
 	end
-	--upate only on completed transfer
-	if boolSendDataSemaphore == false then
-		copyFrameToBuffer()
-	end
 	
-	for __, output in ipairs(writeable) do
-		SocketWriteAble(output)
+	if boolInitialisationComplete == true then
+	--upate only on completed transfer
+		if boolSendDataSemaphore == false then
+			copyFrameToBuffer()
+		end
+		
+		for __, output in ipairs(writeable) do
+			SocketWriteAble(output)
+		end
 	end
 end
 
-function configureARCamera(configStr)
+function RecieveConfigureARCameraMessage(configStr)
 	configStr= configStr:replace(recievedCFGHeader,'')
 	arrayOfTokens = split(configStr,";")
 	
@@ -342,7 +352,7 @@ function configureARCamera(configStr)
 end
 
 old_mat4_4 ={}
-function updateARCamera(recievedData)
+function RecieveUpdateARCameraMessage(recievedData)
 	recievedData=recievedData:replace(recievedMSGHeader,'')
 	mat4_4 = split(recievedData, ";")
 	boolCompleteCamMatrix= false
@@ -356,7 +366,10 @@ function updateARCamera(recievedData)
 	end
 	Spring.SetCameraTarget(old_mat4_4)
 	Spring.SetCameraOffset(old_mat4_4)
-	
+end
+
+function GetResetARCameraMessage()
+	return recieveResetHeader..hostIPAddress
 end
 
 boolDataInBufferValid = false
@@ -368,7 +381,14 @@ function copyFrameToBuffer()
 		
 		coWriteBuffer=		coroutine.create(function()
 			gl.CopyToTexture(tex, 0, 0, 0, 0, deviceData.viewWidth, deviceData.viewHeigth);
-			gl.RenderToTexture(tex, gl.SaveImage,0,0,deviceData.viewWidth,deviceData.viewHeigth, getWriteableBuffer().filePathName);
+			gl.RenderToTexture(	tex, 
+								gl.SaveImage,
+								0,
+								0,
+								deviceData.viewWidth,
+								deviceData.viewHeigth, 
+								getWriteableBuffer().filePathName);
+								
 			switchWriteBuffer()										
 		end
 		)
