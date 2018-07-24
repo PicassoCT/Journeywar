@@ -24,25 +24,20 @@ end
 local Chili, Screen0
 local socket = socket
 local message =""
-local defaultWelcome=	"Welcome to Spring Augmented Reality!\n "..
-"Setup: \n "..
-"0. Start the Spring-AR App \n"..
-"1. Please position the projectionposition on your mobile device. \n"..
-"2. Please Enter the IP displayed\n"
 
 local recievedCFGHeader = "SPRINGARREC;CFG;"						
 local recievedMSGHeader = "SPRINGARCAM;DATA;MATRICE="						
 local sendMSGHeader 	= "SPRINGARSND;DATA;"					
-local recieveResetHeader = "SPRINGARSND;RESET;IPADRRESS="	
+local recieveResetHeader = "SPRINGARSND;RESET;IPADDRRESS="	
+local recieveBroadcastHeader = "SPRINGAR;BROADCAST;IPADDRRESS="	
 
 local client
 local set
-local headersent
-local defaultARDeviceIpAddress="192.168.178.178"
-local ARDeviceIpAddress = "192.168.178.178"
+BroadcastIpAddress = "*"
+local ARDeviceIpAddress = ""
 local hostIPAddress = "192.168.178.179"
 local TIME_FRAME_IN_MS = 30 
-local port = 8090 
+local port = 8090 -- ASCII for SP
 
 local boolInitialisationComplete = false
 local fileBufferDesc = {} 
@@ -94,64 +89,16 @@ function switchWriteBuffer()
 	fileBufferDesc[writeBufferNr].boolNotValid = false
 end
 
-local getIPWindow
-local getIPLabel
 
 function widget:Initialize()	
-	if (not WG.Chili) then
-		-- don't run if we can't find Chili
-		widgetHandler:RemoveWidget()
-		return
-	end
 	
-	-- Get ready to use Chili
-	Chili = WG.Chili
-	Screen0 = Chili.Screen0
 	
-	-- Create the window
-	getIPWindow = Chili.Window:New{
-		parent = Screen0,
-		x = '0%',
-		y = '50%',
-		width = '30%',
-		height = '25%',	
-	}	
-	
-	-- Create some text inside the window
-	getIPLabel = Chili.Label:New{
-		parent = getIPWindow,
-		x = '0%',
-		y = '0%',
-		width = '100%',
-		height = '50%',
-		caption = defaultWelcome,
-	}
-	
-	enterIPAdress = Chili.EditBox:New{
-		x = '0%',
-		y = '50%',
-		width = '100%',
-		height = '50%',
-		parent = getIPWindow,
-		OnKeyPress = {
-			function(obj, key, mods, isRepeat, label, unicode, ...)
-				
-				if key == 13 then
-					if obj.text ~= ""then
-						ARDeviceIpAddress = obj.text
-					else
-						ARDeviceIpAddress = defaultARDeviceIpAddress
-					end
-					InitalizeSocket()
-				end
-			end,
-		}
-	} 
 	
 	-- load Logo into Buffer and set first Buffer active
 	--TODO
 	fileBufferDesc[1].boolNotValid = false
 	fileBufferDesc[1].Active = true
+	InitalizeSocket()
 end
 
 -->Generic to String Serialization/ Tools
@@ -225,20 +172,21 @@ local function newset()
 				end
 			end
 	}})
-end
-
+ end
+ 
 -- initiates a connection to host:port, returns true on success
-local function SocketConnect(host, port)
-	client=socket.tcp()
+local function SocketConnect(hostIP, port)
+	
+	client=socket.udp()
 	client:settimeout(0)
-	res, err = client:connect(host, port)
-	if not res and not res=="timeout" then
-		Spring.Echo("Error in connect: "..err)
-		return false
+	if hostIP == BroadcastIpAddress then
+		assert(client:setoption('broadcast', true))
 	end
+	
+	client:setsockname(hostIP, port)
 	set = newset()
 	set:insert(client)
-	getIPWindow:Hide()
+
 	return true
 end
 
@@ -246,30 +194,35 @@ function InitalizeSocket()
 	dumpConfig()
 	--Spring.Echo(socket.dns.toip("localhost"))
 	--FIXME dns-request seems to block
-	SocketConnect(ARDeviceIpAddress, port)
+	SocketConnect(BroadcastIpAddress, port)
 	boolInitialisationComplete = false
 end
 
 -- called when data was received through a connection
-local function SocketDataReceived(sock, str)
-	-- Cellphoneconfiguration recieved
-	if str:find(recievedCFGHeader) then
-		RecieveConfigureARCameraMessage(str)
-		boolInitialisationComplete = true
-	end
-	-- Cameramatrice recieved
+local function SocketDataReceived(sock, str, ip)
+		-- Cellphoneconfiguration recieved
+		if str:find(recievedCFGHeader) then
+			RecieveConfigureARCameraMessage(str)
+			boolInitialisationComplete = true
+		end
+		-- Cameramatrice recieved
 
-	if  boolInitialisationComplete and str:find(recievedMSGHeader) then
-		RecieveUpdateARCameraMessage(str)
-	end
+		if  boolInitialisationComplete and str:find(recievedMSGHeader) then
+			setCamMatriceFromMessage(str)
+		end
+	
 end
 
 local coSendData 
 boolSendDataSemaphore = false
 -- called when data can be written to a socket
-local function SocketWriteAble(sock)
+local function SocketWriteAble(sock, ip)
 	if boolInitialisationComplete == false then
-		sock:send( GetResetARCameraMessage())
+		local success, e_msg = udp:sendto(GetResetARCameraMessage(), ip, port)
+		if not success then
+			Spring.Echo("Failed to send message " .. command .. " to " ..ip)
+			Spring.Echo(e_msg)
+		end
 	end
 	-- load image
 	Spring.Echo("sending ar image to cellphone")
@@ -279,7 +232,11 @@ local function SocketWriteAble(sock)
 		
 		coSendData=		coroutine.create(function()
 			boolSendDataSemaphore = true
-			sock:send( VFS.LoadFile(getActiveBuffer().filePathName))
+			local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ip, port)
+				if not success then
+					Spring.Echo("Failed to send message " .. command .. " to " ..ip)
+					Spring.Echo(e_msg)
+				end
 			boolSendDataSemaphore = false
 		end
 		)
@@ -311,18 +268,16 @@ function widget:Update()
 	end
 	
 	for _, input in ipairs(readable) do
-		local s, status, partial = input:receive('*a') --try to read all data
-		Spring.Echo(s)
-		if status == "timeout" or status == nil then
-			SocketDataReceived(input, s or partial)
-			
-		elseif status == "closed" then
-			getIPWindow:Show()
-			getIPLabel.caption= "Connection closed. \n".. defaultWelcome
-			
-			SocketClosed(input)
-			input:close()
-			set:remove(input)
+		--local s, status, partial = input:receive('*a') --try to read all data
+		local b_pack, ip, b_port = input:receivefrom()
+		Spring.Echo("UdpServer:Recived:"..b_pack)
+		if b_pack then			
+			if  b_pack:find(recieveBroadcastHeader) then
+				ARDeviceIpAddress = b_ip
+				SocketConnect(b_ip, port)
+			else
+				SocketDataReceived(input,b_pack, ip)	
+			end
 		end
 	end
 	
@@ -333,7 +288,7 @@ function widget:Update()
 		end
 		
 		for __, output in ipairs(writeable) do
-			SocketWriteAble(output)
+			SocketWriteAble(output, ARDeviceIpAddress)
 		end
 	end
 end
@@ -352,7 +307,7 @@ function RecieveConfigureARCameraMessage(configStr)
 end
 
 old_mat4_4 ={}
-function RecieveUpdateARCameraMessage(recievedData)
+function setCamMatriceFromMessage(recievedData)
 	recievedData=recievedData:replace(recievedMSGHeader,'')
 	mat4_4 = split(recievedData, ";")
 	boolCompleteCamMatrix= false
