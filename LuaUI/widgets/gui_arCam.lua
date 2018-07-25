@@ -55,51 +55,7 @@ fileBufferDesc[2] = {
 	
 }
 
-local deviceData={
-	deviceName = 	'S8',
-	viewWidth = 	60,
-	viewHeigth = 	70,
-	seperator = 	30
-}
-local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
-
-function getActiveBuffer()
-	if fileBufferDesc[1].boolActive == true then return fileBufferDesc[1], 1 end
-	
-	return fileBufferDesc[2], 2
-end
-
-function getWriteableBuffer()
-	if fileBufferDesc[1].boolNotValid == true then return fileBufferDesc[1], 1 end
-	
-	return fileBufferDesc[2], 2
-end
-
---Handled by writing function once done- waiting for the sendeSemaphore to drop
-function switchWriteBuffer()
-	_, activeBufferNr = getActiveBuffer()
-	_, writeBufferNr = getWriteableBuffer()
-	while boolSendDataSemaphore == true do
-		Sleep(1)
-	end
-	fileBufferDesc[activeBufferNr].boolActive = false
-	fileBufferDesc[activeBufferNr].boolNotValid = true
-	
-	fileBufferDesc[writeBufferNr].boolActive = true
-	fileBufferDesc[writeBufferNr].boolNotValid = false
-end
-
-
-function widget:Initialize()	
-	
-	
-	
-	-- load Logo into Buffer and set first Buffer active
-	--TODO
-	fileBufferDesc[1].boolNotValid = false
-	fileBufferDesc[1].Active = true
-	InitalizeSocket()
-end
+------------------------------ String Tools ------------------------------------
 
 -->Generic to String Serialization/ Tools
 function split(inputstr, sep)
@@ -174,6 +130,58 @@ local function newset()
 	}})
  end
  
+
+--------------------- Data Transfer Logic for  Buffer---------------------------
+
+function getActiveBuffer()
+	if fileBufferDesc[1].boolActive == true then return fileBufferDesc[1], 1 end
+	
+	return fileBufferDesc[2], 2
+end
+
+function getWriteableBuffer()
+	if fileBufferDesc[1].boolNotValid == true then return fileBufferDesc[1], 1 end
+	
+	return fileBufferDesc[2], 2
+end
+
+--------------------------------------------------------------------------------
+
+local deviceData={
+	deviceName = 	'S8',
+	viewWidth = 	60,
+	viewHeigth = 	70,
+	seperator = 	30
+}
+local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
+
+--Handled by writing function once done- waiting for the sendeSemaphore to drop
+function switchWriteBuffer()
+	_, activeBufferNr = getActiveBuffer()
+	_, writeBufferNr = getWriteableBuffer()
+	while boolSendDataSemaphore == true do
+		Sleep(1)
+	end
+	fileBufferDesc[activeBufferNr].boolActive = false
+	fileBufferDesc[activeBufferNr].boolNotValid = true
+	
+	fileBufferDesc[writeBufferNr].boolActive = true
+	fileBufferDesc[writeBufferNr].boolNotValid = false
+end
+
+
+function widget:Initialize()	
+	
+	
+	
+	-- load Logo into Buffer and set first Buffer active
+	--TODO
+	fileBufferDesc[1].boolNotValid = false
+	fileBufferDesc[1].Active = true
+	InitalizeSocket()
+end
+
+
 -- initiates a connection to host:port, returns true on success
 local function SocketConnect(hostIP, port)
 	
@@ -221,12 +229,12 @@ local function SocketWriteAble(sock, ip)
 		local success, e_msg = udp:sendto(GetResetARCameraMessage(), ip, port)
 		if not success then
 			Spring.Echo("Failed to send message " .. command .. " to " ..ip)
-			Spring.Echo(e_msg)
 		end
+					Spring.Echo(e_msg)
 	end
 	-- load image
 	Spring.Echo("sending ar image to cellphone")
-	sock:send( "Hello World")
+	sock:sendto( "Hello World", ip, port)
 	if not coSendData or coroutine.status(coSendData) == "dead" then
 		-- socket is writeable
 		
@@ -353,6 +361,3 @@ function copyFrameToBuffer()
 	end
 end
 
-
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
