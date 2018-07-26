@@ -32,12 +32,11 @@ local recieveResetHeader = "SPRINGARSND;RESET;IPADDRRESS="
 local recieveBroadcastHeader = "SPRINGAR;BROADCAST;IPADDRRESS="	
 
 local client
-local set
-BroadcastIpAddress = "*"
+local BroadcastIpAddress = '*'
 local ARDeviceIpAddress = ""
 local hostIPAddress = "192.168.178.179"
 local TIME_FRAME_IN_MS = 30 
-local port = 8090 -- ASCII for SP
+local SP_port = 8090 -- ASCII for SP
 
 local boolInitialisationComplete = false
 local fileBufferDesc = {} 
@@ -106,29 +105,7 @@ local function dumpConfig()
 	end
 end
 
-local function newset()
-	local reverse = {}
-	local set = {}
-		return setmetatable(set, {__index = {
-			insert = function(set, value)
-				if not reverse[value] then
-					table.insert(set, value)
-					reverse[value] = table.getn(set)
-				end
-			end,
-			remove = function(set, value)
-				local index = reverse[value]
-				if index then
-					reverse[value] = nil
-					local top = table.remove(set)
-					if top ~= value then
-						reverse[top] = index
-						set[index] = top
-					end
-				end
-			end
-	}})
- end
+
  
 
 --------------------- Data Transfer Logic for  Buffer---------------------------
@@ -157,6 +134,7 @@ local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=t
 
 --Handled by writing function once done- waiting for the sendeSemaphore to drop
 function switchWriteBuffer()
+Spring.Echo("function switchWriteBuffer()")
 	_, activeBufferNr = getActiveBuffer()
 	_, writeBufferNr = getWriteableBuffer()
 	while boolSendDataSemaphore == true do
@@ -171,8 +149,7 @@ end
 
 
 function widget:Initialize()	
-	
-	
+		Spring.Echo("function widget:Initialize()")
 	
 	-- load Logo into Buffer and set first Buffer active
 	--TODO
@@ -184,39 +161,36 @@ end
 
 -- initiates a connection to host:port, returns true on success
 local function SocketConnect(hostIP, port)
+Spring.Echo("local function SocketConnect("..hostIP..",".. port..")")
 	
 	client=socket.udp()
 	client:settimeout(0)
-	if hostIP == BroadcastIpAddress then
-		assert(client:setoption('broadcast', true))
-	end
+	client:setsockname(hostIP, SP_port)
 	
-	client:setsockname(hostIP, port)
-	set = newset()
-	set:insert(client)
-
 	return true
 end
 
 function InitalizeSocket()
+Spring.Echo("function InitalizeSocket()")
 	dumpConfig()
 	--Spring.Echo(socket.dns.toip("localhost"))
 	--FIXME dns-request seems to block
-	SocketConnect(BroadcastIpAddress, port)
+	SocketConnect(BroadcastIpAddress, SP_port)
 	boolInitialisationComplete = false
 end
 
 -- called when data was received through a connection
-local function SocketDataReceived(sock, str, ip)
+local function SocketDataReceived(sock, data, ip)
+Spring.Echo("local function SocketDataReceived(sock, str, ip)")
 		-- Cellphoneconfiguration recieved
-		if str:find(recievedCFGHeader) then
-			RecieveConfigureARCameraMessage(str)
+		if data:find(recievedCFGHeader) then
+			RecieveConfigureARCameraMessage(data)
 			boolInitialisationComplete = true
 		end
 		-- Cameramatrice recieved
 
-		if  boolInitialisationComplete and str:find(recievedMSGHeader) then
-			setCamMatriceFromMessage(str)
+		if  boolInitialisationComplete == true and data:find(recievedMSGHeader) then
+			setCamMatriceFromMessage(data)
 		end
 	
 end
@@ -225,8 +199,9 @@ local coSendData
 boolSendDataSemaphore = false
 -- called when data can be written to a socket
 local function SocketWriteAble(sock, ip)
+Spring.Echo("local function SocketWriteAble(sock, ip)")
 	if boolInitialisationComplete == false then
-		local success, e_msg = udp:sendto(GetResetARCameraMessage(), ip, port)
+		local success, e_msg = sock:sendto(GetResetARCameraMessage(), ip, SP_port)
 		if not success then
 			Spring.Echo("Failed to send message " .. command .. " to " ..ip)
 		end
@@ -234,13 +209,13 @@ local function SocketWriteAble(sock, ip)
 	end
 	-- load image
 	Spring.Echo("sending ar image to cellphone")
-	sock:sendto( "Hello World", ip, port)
+	sock:sendto( "Hello World", ip, SP_port)
 	if not coSendData or coroutine.status(coSendData) == "dead" then
 		-- socket is writeable
 		
 		coSendData=		coroutine.create(function()
 			boolSendDataSemaphore = true
-			local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ip, port)
+			local success, e_msg = sock:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ip, SP_port)
 				if not success then
 					Spring.Echo("Failed to send message " .. command .. " to " ..ip)
 					Spring.Echo(e_msg)
@@ -256,38 +231,29 @@ end
 
 -- called when a connection is closed
 local function SocketClosed(sock)
+Spring.Echo("local function SocketClosed(sock)")
 	Spring.Echo("closed connection")
 end
 
 function widget:Update()
-	if set==nil or #set<=0 then
-		return
-	end
-	
-	-- get sockets ready for read
-	local readable, writeable, err = socket.select(set, set, 0)
-	if err~=nil then
-		-- some error happened in select
-		if err=="timeout" then
-			-- nothing to do, return
-			return
-		end
-		Spring.Echo("Error in select: " .. error)
-	end
-	
-	for _, input in ipairs(readable) do
+Spring.Echo("Update")
 		--local s, status, partial = input:receive('*a') --try to read all data
-		local b_pack, ip, b_port = input:receivefrom()
-		Spring.Echo("UdpServer:Recived:"..b_pack)
-		if b_pack then			
-			if  b_pack:find(recieveBroadcastHeader) then
-				ARDeviceIpAddress = b_ip
-				SocketConnect(b_ip, port)
+		local data, ip, port  = client:receivefrom()
+	
+
+		if data and port == SP_port then		
+		Spring.Echo("UdpServer:Recieved:"..data)		
+			if  data:find(recieveBroadcastHeader) then
+				ARDeviceIpAddress = ip				
+				SocketConnect(ARDeviceIpAddress, 
+							SP_port)
 			else
-				SocketDataReceived(input,b_pack, ip)	
+				SocketDataReceived(client, data, ip)	
 			end
+			
+			
 		end
-	end
+	
 	
 	if boolInitialisationComplete == true then
 	--upate only on completed transfer
@@ -295,13 +261,15 @@ function widget:Update()
 			copyFrameToBuffer()
 		end
 		
-		for __, output in ipairs(writeable) do
-			SocketWriteAble(output, ARDeviceIpAddress)
-		end
+	
+			SocketWriteAble(client, ARDeviceIpAddress)
+		
 	end
 end
 
+
 function RecieveConfigureARCameraMessage(configStr)
+Spring.Echo("RecieveConfigureARCameraMessage")
 	configStr= configStr:replace(recievedCFGHeader,'')
 	arrayOfTokens = split(configStr,";")
 	
@@ -315,7 +283,9 @@ function RecieveConfigureARCameraMessage(configStr)
 end
 
 old_mat4_4 ={}
+
 function setCamMatriceFromMessage(recievedData)
+Spring.Echo("function setCamMatriceFromMessage(recievedData)")
 	recievedData=recievedData:replace(recievedMSGHeader,'')
 	mat4_4 = split(recievedData, ";")
 	boolCompleteCamMatrix= false
@@ -332,6 +302,7 @@ function setCamMatriceFromMessage(recievedData)
 end
 
 function GetResetARCameraMessage()
+Spring.Echo("function GetResetARCameraMessage()")
 	return recieveResetHeader..hostIPAddress
 end
 
@@ -339,6 +310,7 @@ boolDataInBufferValid = false
 local coWriteBuffer
 
 function copyFrameToBuffer()
+Spring.Echo("function copyFrameToBuffer()")
 	if not coWriteBuffer or coroutine.status(coWriteBuffer) == "dead" then
 		-- socket is writeable
 		
