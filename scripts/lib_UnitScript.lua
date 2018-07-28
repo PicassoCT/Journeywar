@@ -229,7 +229,7 @@ function unitDescriptionGenerator(Unit, UnitDefNames)
 		return str
 	end
 	
-	function trueStr(bool)
+	function boolToString(bool)
 		if bool == false then return "not" end
 		return " "
 	end
@@ -3452,6 +3452,9 @@ function stringBuilder(length, sign)
 	return str
 end
 
+function trim(s)
+   return s:match'^()%s*$' and '' or s:match'^%s*(.*%S)'
+end
 --======================================================================================
 --Section: Debug Tools 
 --======================================================================================

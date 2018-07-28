@@ -25,18 +25,24 @@ local Chili, Screen0
 local socket = socket
 local message =""
 
-local recievedCFGHeader = "SPRINGARREC;CFG;"						
-local recievedMSGHeader = "SPRINGARCAM;DATA;MATRICE="						
-local sendMSGHeader 	= "SPRINGARSND;DATA;"					
-local recieveResetHeader = "SPRINGARSND;RESET;IPADDRRESS="	
 local recieveBroadcastHeader = "SPRINGAR;BROADCAST;IPADDRRESS="	
+local recieveResetHeader = "SPRINGAR;RESET;"	
+local recievedCFGHeader = "SPRINGAR;CFG;"						
+local recievedMSGHeader = "SPRINGAR;DATA;MATRICE="	
+local nextStateToGo = recieveBroadcastHeader		
+local sendMSGHeader 	= "SPRINGAR;DATA;"					
 
-local client
+local broadcast
+local udp
 local BroadcastIpAddress = '*'
 local ARDeviceIpAddress = ""
 local hostIPAddress = "192.168.178.179"
 local TIME_FRAME_IN_MS = 30 
-local SP_port = 8090 -- ASCII for SP
+local BR_port = 8090 
+local UDP_port = 8090 -- ASCII for SP
+local SP_port = 8090
+local watchdogGameFrame= Spring.GetGameFrame()
+local TIMEOUT_WATCHDOG = 30 * 20 --seconds
 
 local boolInitialisationComplete = false
 local fileBufferDesc = {} 
@@ -86,6 +92,10 @@ function toString(element)
 	
 end
 
+function trim(s)
+	return s:match'^()%s*$' and '' or s:match'^%s*(.*%S)'
+end
+
 function tableToString(tab)
 	PostFix = "}"
 	PreFix = "{"
@@ -106,9 +116,9 @@ local function dumpConfig()
 end
 
 
- 
 
---------------------- Data Transfer Logic for  Buffer---------------------------
+
+--------------------- Data Transfer Logic for Buffer---------------------------
 
 function getActiveBuffer()
 	if fileBufferDesc[1].boolActive == true then return fileBufferDesc[1], 1 end
@@ -134,7 +144,7 @@ local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=t
 
 --Handled by writing function once done- waiting for the sendeSemaphore to drop
 function switchWriteBuffer()
-Spring.Echo("function switchWriteBuffer()")
+	Spring.Echo("function switchWriteBuffer()")
 	_, activeBufferNr = getActiveBuffer()
 	_, writeBufferNr = getWriteableBuffer()
 	while boolSendDataSemaphore == true do
@@ -149,181 +159,182 @@ end
 
 
 function widget:Initialize()	
-		Spring.Echo("function widget:Initialize()")
+	Spring.Echo("function widget:Initialize()")
 	
 	-- load Logo into Buffer and set first Buffer active
 	--TODO
 	fileBufferDesc[1].boolNotValid = false
 	fileBufferDesc[1].Active = true
-	InitalizeSocket()
+	nextStateToGo = recieveBroadcastHeader
+	BroadcastConnect(BroadcastIpAddress)
+	
 end
 
 
 -- initiates a connection to host:port, returns true on success
-local function SocketConnect(hostIP, port)
-Spring.Echo("local function SocketConnect("..hostIP..",".. port..")")
-	
-	client=socket.udp()
-	client:settimeout(0)
-	client:setsockname(hostIP, SP_port)
-	
-	return true
+
+function BroadcastConnect(ip)
+			Spring.Echo("local function SocketConnect("..ip..",".. BR_port..")")
+
+			broadcast=socket.udp()
+			broadcast:settimeout(0)
+			broadcast:setsockname(ip, BR_port)
+			assert(broadcast:setoption('broadcast', true))
 end
-
-function InitalizeSocket()
-Spring.Echo("function InitalizeSocket()")
-	dumpConfig()
-	--Spring.Echo(socket.dns.toip("localhost"))
-	--FIXME dns-request seems to block
-	SocketConnect(BroadcastIpAddress, SP_port)
-	boolInitialisationComplete = false
+function BroadcastClose()
+	broadcast:close()
 end
+function UDPClose()
+	udp:close()
 
--- called when data was received through a connection
-local function SocketDataReceived(sock, data, ip)
-Spring.Echo("local function SocketDataReceived(sock, str, ip)")
-		-- Cellphoneconfiguration recieved
-		if data:find(recievedCFGHeader) then
-			RecieveConfigureARCameraMessage(data)
-			boolInitialisationComplete = true
-		end
-		-- Cameramatrice recieved
+end
+function UDPConnect(ip)
+			Spring.Echo("local function UDPSocketConnect("..ip..",".. UDP_port..")")
+				
+			udp=socket.udp()
+			udp:settimeout(0)
+			udp:setsockname(ip, UDP_port)
 
-		if  boolInitialisationComplete == true and data:find(recievedMSGHeader) then
-			setCamMatriceFromMessage(data)
-		end
-	
 end
 
 local coSendData 
 boolSendDataSemaphore = false
 -- called when data can be written to a socket
-local function SocketWriteAble(sock, ip)
-Spring.Echo("local function SocketWriteAble(sock, ip)")
-	if boolInitialisationComplete == false then
-		local success, e_msg = sock:sendto(GetResetARCameraMessage(), ip, SP_port)
-		if not success then
-			Spring.Echo("Failed to send message " .. command .. " to " ..ip)
-		end
-					Spring.Echo(e_msg)
-	end
+local function SocketWriteAble(ip)
+	
 	-- load image
-	Spring.Echo("sending ar image to cellphone")
-	sock:sendto( "Hello World", ip, SP_port)
-	if not coSendData or coroutine.status(coSendData) == "dead" then
-		-- socket is writeable
+	udp:sendto( "Testdatatransfer ", ARDeviceIpAddress, SP_port)
+	if nextStateToGo == recievedMSGHeader then
+		Spring.Echo("sending ar image to cellphone")
 		
-		coSendData=		coroutine.create(function()
-			boolSendDataSemaphore = true
-			local success, e_msg = sock:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ip, SP_port)
+		if not coSendData or coroutine.status(coSendData) == "dead" then
+			-- socket is writeable
+			
+			coSendData=		coroutine.create(function()
+				boolSendDataSemaphore = true
+				local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ARDeviceIpAddress, SP_port)
 				if not success then
-					Spring.Echo("Failed to send message " .. command .. " to " ..ip)
-					Spring.Echo(e_msg)
+					Spring.Echo("SocketWriteAble"..e_msg)
 				end
-			boolSendDataSemaphore = false
-		end
-		)
-		if not boolSendDataSemaphore then
-			coroutine.resume(coSendData)
+				boolSendDataSemaphore = false
+			end
+			)
+			if  boolSendDataSemaphore == false then
+				coroutine.resume(coSendData)
+			end
 		end
 	end
 end
 
--- called when a connection is closed
-local function SocketClosed(sock)
-Spring.Echo("local function SocketClosed(sock)")
-	Spring.Echo("closed connection")
+function whoWatchesTheWatchdog(boolNewData)
+	if nextStateToGo == recievedMSGHeader then
+		if watchdogGameFrame - Spring.GetGameFrame() > TIMEOUT_WATCHDOG then
+			nextStateToGo =recieveResetHeader
+			watchdogGameFrame = Spring.GetGameFrame()
+		end
+		
+		if boolNewData == true then 
+			watchdogGameFrame = Spring.GetGameFrame()
+		end
+	end
 end
 
 function widget:Update()
-Spring.Echo("Update")
-		--local s, status, partial = input:receive('*a') --try to read all data
-		local data, ip, port  = client:receivefrom()
+	Spring.Echo("Update Waits for:"..nextStateToGo)
 	
 
-		if data and port == SP_port then		
-		Spring.Echo("UdpServer:Recieved:"..data)		
-			if  data:find(recieveBroadcastHeader) then
-				ARDeviceIpAddress = ip				
-				SocketConnect(ARDeviceIpAddress, 
-							SP_port)
-			else
-				SocketDataReceived(client, data, ip)	
-			end
-			
-			
-		end
+	--local s, status, partial = input:receive('*a') --try to read all data
+	local data, ip, port 
+	
+	if nextStateToGo == recieveBroadcastHeader then 
+		data, ip, port = broadcast:receivefrom()
+	else
+		data, ip, port = udp:receivefrom()
+	end	
 	
 	
-	if boolInitialisationComplete == true then
-	--upate only on completed transfer
+	if data then
+		whoWatchesTheWatchdog(true)
+		Spring.Echo("Recieved text " .. data .. " from " .. ip)
+		if data:find(recieveResetHeader) then
+			nextStateToGo = recieveResetHeader
+		end	
+		communicationStateMachine[nextStateToGo](data,ip,port)
+	else
+		whoWatchesTheWatchdog(false)
+	end
+	
+	if nextStateToGo == recievedMSGHeader then
+		--upate only on completed transfer
 		if boolSendDataSemaphore == false then
 			copyFrameToBuffer()
 		end
-		
-	
-			SocketWriteAble(client, ARDeviceIpAddress)
-		
+		SocketWriteAble(ARDeviceIpAddress)
 	end
 end
 
 
 function RecieveConfigureARCameraMessage(configStr)
-Spring.Echo("RecieveConfigureARCameraMessage")
-	configStr= configStr:replace(recievedCFGHeader,'')
+	Spring.Echo("RecieveConfigureARCameraMessage:"..configStr)
+	configStr= configStr:gsub(recievedCFGHeader,"")
 	arrayOfTokens = split(configStr,";")
-	
-	deviceData.deviceName = arrayOfTokens[1] or ""
-	deviceData.viewWidth = tonumber(arrayOfTokens[2])
-	deviceData.viewHeigth = tonumber(arrayOfTokens[3])
-	deviceData.seperator = min(100,max(1,tonumber(arrayOfTokens[4])))
-	
-	tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
-	
+	Spring.Echo(arrayOfTokens)
+	if arrayOfTokens[4] then
+		deviceData.deviceName = arrayOfTokens[1]:gsub("MODEL","") or "No model Name recieved"
+		displayWidth= arrayOfTokens[2]:gsub("DISPLAYWIDTH=","")
+		deviceData.viewWidth = tonumber(displayWidth)
+		displayHeigth = arrayOfTokens[3]:gsub("DISPLAYHEIGTH=","")
+		deviceData.viewHeigth = tonumber(displayHeigth)
+		displayRatio = arrayOfTokens[4]:gsub("DISPLAYDIVIDE=","") 
+		deviceData.seperator = math.min(100,math.max(1,tonumber(displayRatio) or 50))
+		
+		Spring.Echo(deviceData.viewWidth,deviceData.viewHeigth)
+		tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
+		return true
+	end
+	return false
 end
 
 old_mat4_4 ={}
 
 function setCamMatriceFromMessage(recievedData)
-Spring.Echo("function setCamMatriceFromMessage(recievedData)")
-	recievedData=recievedData:replace(recievedMSGHeader,'')
-	mat4_4 = split(recievedData, ";")
-	boolCompleteCamMatrix= false
-	for i=1, 16 do
-		mat4_4[i] = tonumber(mat4_4[i])
-		if i== 16 then boolCompleteCamMatrix= true ; end	
+	Spring.Echo("function setCamMatriceFromMessage(recievedData)")
+	if recievedData:find(recievedMSGHeader) then
+		recievedData=recievedData:gsub(recievedMSGHeader,'')
+		mat4_4 = split(recievedData, ";")
+		boolCompleteCamMatrix= false
+		for i=1, 16 do
+			mat4_4[i] = tonumber(mat4_4[i])
+			if i== 16 then boolCompleteCamMatrix= true ; end	
+		end
+		
+		if boolCompleteCamMatrix == true then
+			old_mat4_4=mat4_4
+		end
+		Spring.SetCameraTarget(old_mat4_4[1],old_mat4_4[2],old_mat4_4[3])
+		Spring.SetCameraOffset(old_mat4_4[4],old_mat4_4[5],old_mat4_4[6])
 	end
-	
-	if boolCompleteCamMatrix == true then
-		old_mat4_4=mat4_4
-	end
-	Spring.SetCameraTarget(old_mat4_4)
-	Spring.SetCameraOffset(old_mat4_4)
 end
 
-function GetResetARCameraMessage()
-Spring.Echo("function GetResetARCameraMessage()")
-	return recieveResetHeader..hostIPAddress
-end
 
 boolDataInBufferValid = false
 local coWriteBuffer
 
 function copyFrameToBuffer()
-Spring.Echo("function copyFrameToBuffer()")
+	Spring.Echo("function copyFrameToBuffer()")
 	if not coWriteBuffer or coroutine.status(coWriteBuffer) == "dead" then
 		-- socket is writeable
 		
 		coWriteBuffer=		coroutine.create(function()
 			gl.CopyToTexture(tex, 0, 0, 0, 0, deviceData.viewWidth, deviceData.viewHeigth);
 			gl.RenderToTexture(	tex, 
-								gl.SaveImage,
-								0,
-								0,
-								deviceData.viewWidth,
-								deviceData.viewHeigth, 
-								getWriteableBuffer().filePathName);
-								
+			gl.SaveImage,
+			0,
+			0,
+			deviceData.viewWidth,
+			deviceData.viewHeigth, 
+			getWriteableBuffer().filePathName);
+			
 			switchWriteBuffer()										
 		end
 		)
@@ -333,3 +344,58 @@ Spring.Echo("function copyFrameToBuffer()")
 	end
 end
 
+function limitIncIP(ip)
+	if ip +1 == 255 then return ip -1 end
+	
+	return ip +1
+end
+
+communicationStateMachine= 
+{
+	[recieveBroadcastHeader] = function (data, ip, port)
+		if data and data:find(recieveBroadcastHeader) then
+			
+			ARDeviceIpAddress = data:gsub(recieveBroadcastHeader,"")
+			Spring.Echo("recieveBroadcastHeader:"..ARDeviceIpAddress)
+			hostIPAddressT	= split(ARDeviceIpAddress,".")
+			hostIPAddress=""
+			for i=1,3 do
+				hostIPAddress=hostIPAddress..hostIPAddressT[i].."."
+			end
+			hostIPAddress=hostIPAddress..limitIncIP(tonumber(hostIPAddressT[4]))
+			BroadcastClose()
+			UDPConnect(hostIPAddress, SP_port)
+			
+			
+			nextStateToGo = recievedCFGHeader 
+		end
+	end,
+	[recievedCFGHeader]= function (data, ip, port)
+		if data and data:find(recievedCFGHeader) then
+			if RecieveConfigureARCameraMessage(data) == true then		
+				nextStateToGo = recievedMSGHeader 
+			end
+		end							
+	end,							
+	
+	
+	[recieveResetHeader] = function (data, ip, port)
+		local success, e_msg = udp:sendto(GetResetARCameraMessage(), ARDeviceIpAddress, SP_port)
+		if success then
+			UDPClose()
+			BroadcastConnect(BroadcastIpAddress)
+			
+			nextStateToGo = recieveBroadcastHeader 
+		else
+			Spring.Echo("Failed to send message " .. command .. " to " ..ip)
+		end		
+	end,
+	
+	[recievedMSGHeader] = function (data, ip, port)
+		whoWatchesTheWatchdog(data ~= nil)
+		
+		if data then
+			setCamMatriceFromMessage(data:gsub(recievedMSGHeader,""))
+		end
+	end
+}
