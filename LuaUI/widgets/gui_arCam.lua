@@ -62,7 +62,7 @@ fileBufferDesc[2] = {
 
 ------------------------------ String Tools ------------------------------------
 
--->Generic to String Serialization/ Tools
+-->splits a string with seperators into a table of substrings
 function split(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
@@ -74,7 +74,19 @@ function split(inputstr, sep)
 	end
 	return t
 end
+--> serializes a whole table to string
+function tableToString(tab)
+	PostFix = "}"
+	PreFix = "{"
+	conCat=""..PreFix
+	for key, value in pairs(tab) do
+		conCat= conCat.."["..toString(key).."] ="..toString(value)..","
+	end
+	
+	return conCat..PostFix
+end
 
+--> converts a non-stringElement to String
 function toString(element)
 	typeE = type(element)
 	
@@ -88,26 +100,14 @@ function toString(element)
 	if typeE == "number" then return ""..element end
 	if typeE == "string" then return element end
 	if typeE == "table" then return tableToString(element) end
-	
-	
 end
 
+-->removes whitespacecharacters from a string
 function trim(s)
 	return s:match'^()%s*$' and '' or s:match'^%s*(.*%S)'
 end
 
-function tableToString(tab)
-	PostFix = "}"
-	PreFix = "{"
-	conCat=""..PreFix
-	for key, value in pairs(tab) do
-		conCat= conCat.."["..toString(key).."] ="..toString(value)..","
-	end
-	
-	return conCat..PostFix
-end
-
--- Debugfunctions
+--> Echos the spring connection related settings out
 local function dumpConfig()
 	-- dump all luasocket related config settings to console
 	for _, conf in ipairs({"TCPAllowConnect", "TCPAllowListen", "UDPAllowConnect", "UDPAllowListen" }) do
@@ -115,10 +115,16 @@ local function dumpConfig()
 	end
 end
 
-
-
-
 --------------------- Data Transfer Logic for Buffer---------------------------
+
+local deviceData={
+	deviceName = 	'S8',
+	viewWidth = 	60,
+	viewHeigth = 	70,
+	seperator = 	30
+}
+
+local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
 
 function getActiveBuffer()
 	if fileBufferDesc[1].boolActive == true then return fileBufferDesc[1], 1 end
@@ -132,17 +138,7 @@ function getWriteableBuffer()
 	return fileBufferDesc[2], 2
 end
 
---------------------------------------------------------------------------------
-
-local deviceData={
-	deviceName = 	'S8',
-	viewWidth = 	60,
-	viewHeigth = 	70,
-	seperator = 	30
-}
-local tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
-
---Handled by writing function once done- waiting for the sendeSemaphore to drop
+--> Handled by writing function once done- waiting for the sendeSemaphore to drop
 function switchWriteBuffer()
 	Spring.Echo("function switchWriteBuffer()")
 	_, activeBufferNr = getActiveBuffer()
@@ -157,55 +153,76 @@ function switchWriteBuffer()
 	fileBufferDesc[writeBufferNr].boolNotValid = false
 end
 
+boolDataInBufferValid = false
+local coWriteBuffer
 
-function widget:Initialize()	
-	Spring.Echo("function widget:Initialize()")
-	
-	-- load Logo into Buffer and set first Buffer active
-	--TODO
-	fileBufferDesc[1].boolNotValid = false
-	fileBufferDesc[1].Active = true
-	nextStateToGo = recieveBroadcastHeader
-	BroadcastConnect(BroadcastIpAddress)
-	
+--> Drops a screenshot to file in a coroutine
+function copyFrameToBuffer()
+	Spring.Echo("function copyFrameToBuffer()")
+	if not coWriteBuffer or coroutine.status(coWriteBuffer) == "dead" then
+		-- socket is writeable
+		
+		coWriteBuffer=		coroutine.create(function()
+			gl.CopyToTexture(tex, 0, 0, 0, 0, deviceData.viewWidth, deviceData.viewHeigth);
+			gl.RenderToTexture(	tex, 
+			gl.SaveImage,
+			0,
+			0,
+			deviceData.viewWidth,
+			deviceData.viewHeigth, 
+			getWriteableBuffer().filePathName);
+			
+			switchWriteBuffer()										
+		end
+		)
+		coroutine.resume(coWriteBuffer)
+		
+		
+	end
 end
+--------------------------------------------------------------------------------
 
-
--- initiates a connection to host:port, returns true on success
-
+-->Creates and returns an unconnected UDP object. Unconnected objects support the sendto, 
+-- receive, receivefrom, getsockname, setoption, settimeout, setpeername, setsockname, and close. 
+-- The setpeername is used to connect the object.
 function BroadcastConnect(ip)
 			Spring.Echo("local function SocketConnect("..ip..",".. BR_port..")")
 
 			broadcast=socket.udp()
 			broadcast:settimeout(0)
-			broadcast:setsockname(ip, BR_port)
+			success, errmsg =	broadcast:setsockname(ip, BR_port)
+			if not success then Spring.Echo(errmsg)end
 			assert(broadcast:setoption('broadcast', true))
 end
-function BroadcastClose()
-	broadcast:close()
-end
-function UDPClose()
-	udp:close()
-
-end
+--> opens a udpsocket
 function UDPConnect(ip)
 			Spring.Echo("local function UDPSocketConnect("..ip..",".. UDP_port..")")
 				
 			udp=socket.udp()
-			udp:settimeout(0)
+			udp:settimeout(1/33)
 			udp:setsockname(ip, UDP_port)
 
 end
 
+function widget:Initialize()	
+	Spring.Echo("function widget:Initialize()")
+
+	fileBufferDesc[1].boolNotValid = false
+	fileBufferDesc[1].Active = true
+	nextStateToGo = recieveBroadcastHeader
+	BroadcastConnect(BroadcastIpAddress)	
+end
+
+
 local coSendData 
 boolSendDataSemaphore = false
 -- called when data can be written to a socket
-local function SocketWriteAble(ip)
+local function transferDataToARDevice(ip)
 	
 	-- load image
 	udp:sendto( "Testdatatransfer ", ARDeviceIpAddress, SP_port)
 	if nextStateToGo == recievedMSGHeader then
-		Spring.Echo("sending ar image to cellphone")
+		
 		
 		if not coSendData or coroutine.status(coSendData) == "dead" then
 			-- socket is writeable
@@ -214,7 +231,7 @@ local function SocketWriteAble(ip)
 				boolSendDataSemaphore = true
 				local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ARDeviceIpAddress, SP_port)
 				if not success then
-					Spring.Echo("SocketWriteAble"..e_msg)
+					Spring.Echo("transferDataToARDevice"..e_msg)
 				end
 				boolSendDataSemaphore = false
 			end
@@ -238,41 +255,6 @@ function whoWatchesTheWatchdog(boolNewData)
 		end
 	end
 end
-
-function widget:Update()
-	Spring.Echo("Update Waits for:"..nextStateToGo)
-	
-
-	--local s, status, partial = input:receive('*a') --try to read all data
-	local data, ip, port 
-	
-	if nextStateToGo == recieveBroadcastHeader then 
-		data, ip, port = broadcast:receivefrom()
-	else
-		data, ip, port = udp:receivefrom()
-	end	
-	
-	
-	if data then
-		whoWatchesTheWatchdog(true)
-		Spring.Echo("Recieved text " .. data .. " from " .. ip)
-		if data:find(recieveResetHeader) then
-			nextStateToGo = recieveResetHeader
-		end	
-		communicationStateMachine[nextStateToGo](data,ip,port)
-	else
-		whoWatchesTheWatchdog(false)
-	end
-	
-	if nextStateToGo == recievedMSGHeader then
-		--upate only on completed transfer
-		if boolSendDataSemaphore == false then
-			copyFrameToBuffer()
-		end
-		SocketWriteAble(ARDeviceIpAddress)
-	end
-end
-
 
 function RecieveConfigureARCameraMessage(configStr)
 	Spring.Echo("RecieveConfigureARCameraMessage:"..configStr)
@@ -298,8 +280,8 @@ end
 old_mat4_4 ={}
 
 function setCamMatriceFromMessage(recievedData)
-	Spring.Echo("function setCamMatriceFromMessage(recievedData)")
-	if recievedData:find(recievedMSGHeader) then
+	Spring.Echo("function setCamMatriceFromMessage("..recievedData..")")
+	if recievedData then
 		recievedData=recievedData:gsub(recievedMSGHeader,'')
 		mat4_4 = split(recievedData, ";")
 		boolCompleteCamMatrix= false
@@ -317,39 +299,51 @@ function setCamMatriceFromMessage(recievedData)
 end
 
 
-boolDataInBufferValid = false
-local coWriteBuffer
 
-function copyFrameToBuffer()
-	Spring.Echo("function copyFrameToBuffer()")
-	if not coWriteBuffer or coroutine.status(coWriteBuffer) == "dead" then
-		-- socket is writeable
-		
-		coWriteBuffer=		coroutine.create(function()
-			gl.CopyToTexture(tex, 0, 0, 0, 0, deviceData.viewWidth, deviceData.viewHeigth);
-			gl.RenderToTexture(	tex, 
-			gl.SaveImage,
-			0,
-			0,
-			deviceData.viewWidth,
-			deviceData.viewHeigth, 
-			getWriteableBuffer().filePathName);
-			
-			switchWriteBuffer()										
-		end
-		)
-		coroutine.resume(coWriteBuffer)
-		
-		
-	end
+function GetResetARCameraMessage()
+	return "SPRINGAR;RESET_COMPLETE;"
 end
-
 function limitIncIP(ip)
 	if ip +1 == 255 then return ip -1 end
 	
 	return ip +1
 end
 
+function widget:Update()
+	Spring.Echo("Update Waits for:"..nextStateToGo)
+	
+
+	--local s, status, partial = input:receive('*a') --try to read all data
+	local data, ip, port 
+	
+	if nextStateToGo == recieveBroadcastHeader then 
+		data, ip, port = broadcast:receivefrom()
+	else
+		data, ip, port = udp:receive()
+	end	
+	
+	
+	if data then
+		whoWatchesTheWatchdog(true)
+		Spring.Echo("Recieved text " .. data .. " from " .. ip)
+		if data:find(recieveResetHeader) then
+			nextStateToGo = recieveResetHeader
+		end	
+		communicationStateMachine[nextStateToGo](data,ip,port)
+	else
+		whoWatchesTheWatchdog(false)
+	end
+	
+	if nextStateToGo == recievedMSGHeader then
+		--upate only on completed transfer
+		if boolSendDataSemaphore == false then
+			copyFrameToBuffer()
+		end
+		transferDataToARDevice(ARDeviceIpAddress)
+	end
+end
+
+--> Simple Statemachine in Table
 communicationStateMachine= 
 {
 	[recieveBroadcastHeader] = function (data, ip, port)
@@ -363,7 +357,7 @@ communicationStateMachine=
 				hostIPAddress=hostIPAddress..hostIPAddressT[i].."."
 			end
 			hostIPAddress=hostIPAddress..limitIncIP(tonumber(hostIPAddressT[4]))
-			BroadcastClose()
+			broadcast:close()
 			UDPConnect(hostIPAddress, SP_port)
 			
 			
@@ -382,7 +376,7 @@ communicationStateMachine=
 	[recieveResetHeader] = function (data, ip, port)
 		local success, e_msg = udp:sendto(GetResetARCameraMessage(), ARDeviceIpAddress, SP_port)
 		if success then
-			UDPClose()
+			udp:close()
 			BroadcastConnect(BroadcastIpAddress)
 			
 			nextStateToGo = recieveBroadcastHeader 
@@ -395,7 +389,7 @@ communicationStateMachine=
 		whoWatchesTheWatchdog(data ~= nil)
 		
 		if data then
-			setCamMatriceFromMessage(data:gsub(recievedMSGHeader,""))
+			setCamMatriceFromMessage(data)
 		end
 	end
 }
