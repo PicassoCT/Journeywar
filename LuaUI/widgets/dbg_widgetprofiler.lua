@@ -11,7 +11,7 @@ return {
 	license   = "GNU GPL, v2 or later",
 	layer     = -math.huge,
 	handler   = true,
-	enabled   = false  --  loaded by default?
+	enabled   = Spring.GetLuaMemUsage ~= nil and false  --  loaded by default?
 }
 end
 

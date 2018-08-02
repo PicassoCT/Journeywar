@@ -20,6 +20,10 @@ function widget:GetInfo()
 		enabled = true -- loaded by default?
 	}
 end
+-- ARDevice --> Broadcast 
+-- Host --> Broadcast his IP
+-- ARDevice --> Send CFG to HostIP
+-- HostWaits for Matrice DATA
 
 local Chili, Screen0
 local socket = socket
@@ -31,12 +35,13 @@ local recievedCFGHeader = "SPRINGAR;CFG;"
 local recievedMSGHeader = "SPRINGAR;DATA;MATRICE="	
 local nextStateToGo = recieveBroadcastHeader		
 local sendMSGHeader 	= "SPRINGAR;DATA;"					
+local sendHostmessage = "SPRINGAR;REPLY;HOSTIP="
 
 local broadcast
 local udp
 local BroadcastIpAddress = '*'
 local ARDeviceIpAddress = ""
-local hostIPAddress = "192.168.178.179"
+local hostIPAddress = "192.168.178.20"
 local TIME_FRAME_IN_MS = 30 
 local BR_port = 8090 
 local UDP_port = 8090 -- ASCII for SP
@@ -189,21 +194,29 @@ function BroadcastConnect(ip)
 			Spring.Echo("local function SocketConnect("..ip..",".. BR_port..")")
 
 			broadcast=socket.udp()
-			broadcast:settimeout(0)
+			assert(broadcast:settimeout(0))
 			success, errmsg =	broadcast:setsockname(ip, BR_port)
+			assert(success, errmsg)
 			if not success then Spring.Echo(errmsg)end
 			assert(broadcast:setoption('broadcast', true))
 end
 --> opens a udpsocket
-function UDPConnect(ip)
+function UDPConnect(ip, peername, peerport)
 			Spring.Echo("local function UDPSocketConnect("..ip..",".. UDP_port..")")
 				
 			udp=socket.udp()
-			udp:settimeout(1/33)
-			udp:setsockname(ip, UDP_port)
+			assert(udp:settimeout(1/33))
+			success, errmsg = udp:setsockname(ip, UDP_port)
+			assert(success, errmsg)
+			if peername then
+				assert(udp:setpeername(peername, UDP_port))
+			end
 
 end
-
+function widget:Shutdown()
+udp:close()
+broadcast:close()
+end
 function widget:Initialize()	
 	Spring.Echo("function widget:Initialize()")
 
@@ -269,6 +282,7 @@ function RecieveConfigureARCameraMessage(configStr)
 		deviceData.viewHeigth = tonumber(displayHeigth)
 		displayRatio = arrayOfTokens[4]:gsub("DISPLAYDIVIDE=","") 
 		deviceData.seperator = math.min(100,math.max(1,tonumber(displayRatio) or 50))
+		ARDeviceIpAddress = arrayOfTokens[5]:gsub("IPADDRRESS=","") 
 		
 		Spring.Echo(deviceData.viewWidth,deviceData.viewHeigth)
 		tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
@@ -319,17 +333,18 @@ function widget:Update()
 	if nextStateToGo == recieveBroadcastHeader then 
 		data, ip, port = broadcast:receivefrom()
 	else
-		data, ip, port = udp:receive()
+		data, ip, port = udp:receivefrom()
 	end	
 	
 	
-	if data then
+	if data and ip then
 		whoWatchesTheWatchdog(true)
-		Spring.Echo("Recieved text " .. data .. " from " .. ip)
+		Spring.Echo("Recieved text " .. data .. " from " ..ip)
 		if data:find(recieveResetHeader) then
 			nextStateToGo = recieveResetHeader
-		end	
-		communicationStateMachine[nextStateToGo](data,ip,port)
+		else
+			communicationStateMachine[nextStateToGo](data,ip,port)
+		end
 	else
 		whoWatchesTheWatchdog(false)
 	end
@@ -351,25 +366,26 @@ communicationStateMachine=
 			
 			ARDeviceIpAddress = data:gsub(recieveBroadcastHeader,"")
 			Spring.Echo("recieveBroadcastHeader:"..ARDeviceIpAddress)
-			hostIPAddressT	= split(ARDeviceIpAddress,".")
-			hostIPAddress=""
-			for i=1,3 do
-				hostIPAddress=hostIPAddress..hostIPAddressT[i].."."
-			end
-			hostIPAddress=hostIPAddress..limitIncIP(tonumber(hostIPAddressT[4]))
-			broadcast:close()
-			UDPConnect(hostIPAddress, SP_port)
 			
-			
-			nextStateToGo = recievedCFGHeader 
+
+			nextStateToGo = sendHostmessage 
 		end
 	end,
+	[sendHostmessage] = function (data,ip,port)
+				broadcast:sendto(Hostmessage..hostIPAddress, ARDeviceIpAddress, SP_port)
+				broadcast:close()
+				UDPConnect(hostIPAddress) --hostIPAddress
+				nextStateToGo=recievedCFGHeader
+			end,
+			
 	[recievedCFGHeader]= function (data, ip, port)
 		if data and data:find(recievedCFGHeader) then
 			if RecieveConfigureARCameraMessage(data) == true then		
 				nextStateToGo = recievedMSGHeader 
 			end
-		end							
+		else
+			
+		end		
 	end,							
 	
 	
@@ -387,7 +403,7 @@ communicationStateMachine=
 	
 	[recievedMSGHeader] = function (data, ip, port)
 		whoWatchesTheWatchdog(data ~= nil)
-		
+
 		if data then
 			setCamMatriceFromMessage(data)
 		end
