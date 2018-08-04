@@ -29,7 +29,7 @@ local Chili, Screen0
 local socket = socket
 local message =""
 
-local recieveBroadcastHeader = "SPRINGAR;BROADCAST;IPADDRRESS="	
+local recieveBroadcastHeader = "SPRINGAR;BROADCAST;ARDEVICE"	
 local recieveResetHeader = "SPRINGAR;RESET;"	
 local recievedCFGHeader = "SPRINGAR;CFG;"						
 local recievedMSGHeader = "SPRINGAR;DATA;MATRICE="	
@@ -214,8 +214,8 @@ function UDPConnect(ip, peername, peerport)
 
 end
 function widget:Shutdown()
-udp:close()
-broadcast:close()
+if udp then udp:close() end
+if broadcast then broadcast:close() end
 end
 function widget:Initialize()	
 	Spring.Echo("function widget:Initialize()")
@@ -330,11 +330,11 @@ function widget:Update()
 	--local s, status, partial = input:receive('*a') --try to read all data
 	local data, ip, port 
 	
-	if nextStateToGo == recieveBroadcastHeader then 
+	-- if nextStateToGo == recieveBroadcastHeader or nextStateToGo == sendHostmessage then 
 		data, ip, port = broadcast:receivefrom()
-	else
-		data, ip, port = udp:receivefrom()
-	end	
+	-- else
+		-- data, ip, port = udp:receivefrom()
+	-- end	
 	
 	
 	if data and ip then
@@ -342,9 +342,12 @@ function widget:Update()
 		Spring.Echo("Recieved text " .. data .. " from " ..ip)
 		if data:find(recieveResetHeader) then
 			nextStateToGo = recieveResetHeader
-		else
-			communicationStateMachine[nextStateToGo](data,ip,port)
 		end
+		if data:find(recieveBroadcastHeader) then
+			nextStateToGo = recieveBroadcastHeader
+		end
+		
+		communicationStateMachine[nextStateToGo](data,ip,port)
 	else
 		whoWatchesTheWatchdog(false)
 	end
@@ -363,18 +366,16 @@ communicationStateMachine=
 {
 	[recieveBroadcastHeader] = function (data, ip, port)
 		if data and data:find(recieveBroadcastHeader) then
-			
-			ARDeviceIpAddress = data:gsub(recieveBroadcastHeader,"")
-			Spring.Echo("recieveBroadcastHeader:"..ARDeviceIpAddress)
-			
-
+			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ARDeviceIpAddress)
+			ARDeviceIpAddress = ip
 			nextStateToGo = sendHostmessage 
 		end
 	end,
 	[sendHostmessage] = function (data,ip,port)
-				broadcast:sendto(Hostmessage..hostIPAddress, ARDeviceIpAddress, SP_port)
-				broadcast:close()
-				UDPConnect(hostIPAddress) --hostIPAddress
+				Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..SP_port)
+				broadcast:sendto(sendHostmessage..hostIPAddress, ARDeviceIpAddress, SP_port)
+				-- broadcast:close()
+				-- UDPConnect(hostIPAddress) --hostIPAddress
 				nextStateToGo=recievedCFGHeader
 			end,
 			
@@ -390,10 +391,10 @@ communicationStateMachine=
 	
 	
 	[recieveResetHeader] = function (data, ip, port)
-		local success, e_msg = udp:sendto(GetResetARCameraMessage(), ARDeviceIpAddress, SP_port)
+		local success, e_msg = broadcast:sendto(GetResetARCameraMessage(), ARDeviceIpAddress, SP_port)
 		if success then
-			udp:close()
-			BroadcastConnect(BroadcastIpAddress)
+			-- udp:close()
+			-- BroadcastConnect(BroadcastIpAddress)
 			
 			nextStateToGo = recieveBroadcastHeader 
 		else
