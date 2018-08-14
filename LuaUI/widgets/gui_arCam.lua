@@ -40,12 +40,13 @@ local sendHostmessage = "SPRINGAR;REPLY;HOSTIP="
 local broadcast
 local udp
 local BroadcastIpAddress = '*'
+local BroadcastSendFromAdress = "255.255.255.255"
 local ARDeviceIpAddress = ""
 local hostIPAddress = "192.168.178.20"
 local TIME_FRAME_IN_MS = 30 
-local BR_port = 8090 
+local BR_port = 9000 
 local UDP_port = 8090 -- ASCII for SP
-local SP_port = 8090
+
 local watchdogGameFrame= Spring.GetGameFrame()
 local TIMEOUT_WATCHDOG = 30 * 20 --seconds
 
@@ -190,29 +191,48 @@ end
 -->Creates and returns an unconnected UDP object. Unconnected objects support the sendto, 
 -- receive, receivefrom, getsockname, setoption, settimeout, setpeername, setsockname, and close. 
 -- The setpeername is used to connect the object.
-function BroadcastConnect(ip)
-			Spring.Echo("local function SocketConnect("..ip..",".. BR_port..")")
-
+function BroadcastConnect()
+			Spring.Echo(" Broadcast SocketConnect("..BroadcastIpAddress..",".. BR_port..")")
+			
 			broadcast=socket.udp()
 			assert(broadcast:settimeout(0))
 			assert(broadcast:setoption('broadcast', true))
-			success, errmsg =	broadcast:setsockname(ip, BR_port)
-			assert(success, errmsg)
-			if not success then Spring.Echo(errmsg)end
+			--assert(broadcast:setoption('dontroute', true))
+			success, errmsg =	broadcast:setsockname(BroadcastIpAddress, BR_port)
+			if not success then Spring.Echo(errmsg) end
+			
 end
+
 --> opens a udpsocket
 function UDPConnect(ip, peername, peerport)
-			Spring.Echo("local function UDPSocketConnect("..ip..",".. UDP_port..")")
+			Spring.Echo(" UDPSocketConnect("..ip..",".. UDP_port..")")
+			if not udp then
+				udp=socket.udp()
+				assert(udp:settimeout(0))
+				success, errmsg = udp:setsockname(ip, UDP_port)
+				assert(success, errmsg)
 				
-			udp=socket.udp()
-			assert(udp:settimeout(1/33))
-			success, errmsg = udp:setsockname(ip, UDP_port)
-			assert(success, errmsg)
-			if peername then
-				assert(udp:setpeername(peername, UDP_port))
+				if peername then -- changes a unconnected udp port into a connected udp-port
+					assert(udp:setpeername(peername, UDP_port))
+				end
 			end
 
 end
+
+function sendMessage(socket, ip, port, data)
+	assert(type(ip) == "string")
+	assert(type(port) == "string" or type(port) == "number")
+	assert(type(data) == "string")
+	Spring.Echo("Send message " .. data .. " to " .. ip)
+	if socket then
+		local success, e_msg = socket:sendto(data, ip, port)
+		if not success then
+			Spring.Echo("Failed to send message " .. data .. " to " ..ip.." with error "..e_msg)
+		end
+	end
+	return success, e_msg
+end
+
 function widget:Shutdown()
 if udp then udp:close() end
 if broadcast then broadcast:close() end
@@ -222,8 +242,10 @@ function widget:Initialize()
 
 	fileBufferDesc[1].boolNotValid = false
 	fileBufferDesc[1].Active = true
-	nextStateToGo = recieveBroadcastHeader
-	BroadcastConnect(BroadcastIpAddress)	
+	
+	BroadcastConnect()	
+	nextStateToGo = recieveResetHeader
+
 end
 
 
@@ -233,16 +255,18 @@ boolSendDataSemaphore = false
 local function transferDataToARDevice(ip)
 	
 	-- load image
-	udp:sendto( "Testdatatransfer ", ARDeviceIpAddress, SP_port)
-	if nextStateToGo == recievedMSGHeader then
-		
+	Spring.Echo("Sending test data to "..ARDeviceIpAddress)
+	sendMessage(udp, ARDeviceIpAddress, UDP_port, "Test")
+	 
+	if nextStateToGo == recievedMSGHeader then		
 		
 		if not coSendData or coroutine.status(coSendData) == "dead" then
 			-- socket is writeable
 			
 			coSendData=		coroutine.create(function()
+				--TODO Split into 8192 byte sized packages
 				boolSendDataSemaphore = true
-				local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ARDeviceIpAddress, SP_port)
+				local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ARDeviceIpAddress, UDP_port)
 				if not success then
 					Spring.Echo("transferDataToARDevice"..e_msg)
 				end
@@ -274,9 +298,10 @@ function RecieveConfigureARCameraMessage(configStr)
 	configStr= configStr:gsub(recievedCFGHeader,"")
 	arrayOfTokens = split(configStr,";")
 	Spring.Echo(arrayOfTokens)
-	if arrayOfTokens[4] then
+	if arrayOfTokens[5] then
 		deviceData.deviceName = arrayOfTokens[1]:gsub("MODEL","") or "No model Name recieved"
 		displayWidth= arrayOfTokens[2]:gsub("DISPLAYWIDTH=","")
+		
 		deviceData.viewWidth = tonumber(displayWidth)
 		displayHeigth = arrayOfTokens[3]:gsub("DISPLAYHEIGTH=","")
 		deviceData.viewHeigth = tonumber(displayHeigth)
@@ -355,15 +380,16 @@ communicationStateMachine=
 		if data and data:find(recieveBroadcastHeader) then
 			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
 			ARDeviceIpAddress = ip
+			
+
 			nextStateToGo = sendHostmessage 
 		end
 	end,
 	[sendHostmessage] = function (data,ip,port)
-				Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..SP_port)
-				broadcast:sendto(sendHostmessage..hostIPAddress, ARDeviceIpAddress, SP_port)
+				Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
+				sendMessage(broadcast, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)				
 				
-				-- broadcast:close()
-				-- UDPConnect(hostIPAddress) --hostIPAddress
+				UDPConnect(hostIPAddress) --hostIPAddress
 				nextStateToGo=recievedCFGHeader
 			end,
 			
@@ -375,20 +401,12 @@ communicationStateMachine=
 			end
 		end		
 	end,							
-	
-	
+		
 	[recieveResetHeader] = function (data, ip, port)
 		
-		local success, e_msg = broadcast:sendto(GetResetARCameraMessage(), ARDeviceIpAddress, SP_port)
+		local success, e_msg = sendMessage(broadcast, BroadcastSendFromAdress, BR_port, GetResetARCameraMessage())
 		if success then
-			-- udp:close()
-			-- BroadcastConnect(BroadcastIpAddress)
-			
-			nextStateToGo = recieveBroadcastHeader 
-		else
-			if ip then
-			Spring.Echo("Failed to send message " .. command .. " to " ..ip)
-			end		
+			nextStateToGo = recieveBroadcastHeader 	
 		end		
 	end,
 	
