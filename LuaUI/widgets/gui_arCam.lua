@@ -234,8 +234,8 @@ function sendMessage(socket, ip, port, data)
 end
 
 function widget:Shutdown()
-if udp then udp:close() end
-if broadcast then broadcast:close() end
+	if udp then udp:close() end
+	if broadcast then broadcast:close() end
 end
 function widget:Initialize()	
 	Spring.Echo("function widget:Initialize()")
@@ -256,7 +256,7 @@ local function transferDataToARDevice(ip)
 	
 	-- load image
 	Spring.Echo("Sending test data to "..ARDeviceIpAddress)
-	sendMessage(udp, ARDeviceIpAddress, UDP_port, "Test")
+	--sendMessage(udp, ARDeviceIpAddress, UDP_port, "Test")
 	 
 	if nextStateToGo == recievedMSGHeader then		
 		
@@ -304,10 +304,12 @@ function RecieveConfigureARCameraMessage(configStr)
 		
 		deviceData.viewWidth = tonumber(displayWidth)
 		displayHeigth = arrayOfTokens[3]:gsub("DISPLAYHEIGTH=","")
+		
 		deviceData.viewHeigth = tonumber(displayHeigth)
 		displayRatio = arrayOfTokens[4]:gsub("DISPLAYDIVIDE=","") 
-		deviceData.seperator = math.min(100,math.max(1,tonumber(displayRatio) or 50))
-		ARDeviceIpAddress = arrayOfTokens[5]:gsub("IPADDRRESS=","") 
+		
+		deviceData.seperator = math.min(100,math.max(1,tonumber(displayRatio)		or 50))
+		ARDeviceIpAddress = arrayOfTokens[5]:gsub("IPADDRESS=","") 
 		
 		Spring.Echo(deviceData.viewWidth,deviceData.viewHeigth)
 		tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
@@ -381,18 +383,12 @@ communicationStateMachine=
 			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
 			ARDeviceIpAddress = ip
 			
-
-			nextStateToGo = sendHostmessage 
+			Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
+			sendMessage(broadcast, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)					
+			UDPConnect("192.168.178.20") --hostIPAddress
+			nextStateToGo = recievedCFGHeader 
 		end
-	end,
-	[sendHostmessage] = function (data,ip,port)
-				Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
-				sendMessage(broadcast, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)				
-				
-				UDPConnect(hostIPAddress) --hostIPAddress
-				nextStateToGo=recievedCFGHeader
-			end,
-			
+	end,				
 	[recievedCFGHeader]= function (data, ip, port)
 		timeOutInFrame= timeOutInFrame-1
 		if data and data:find(recievedCFGHeader) then
@@ -400,8 +396,13 @@ communicationStateMachine=
 				nextStateToGo = recievedMSGHeader 
 			end
 		end		
-	end,							
-		
+	end,	
+	[recievedMSGHeader] = function (data, ip, port)
+	
+		if data then
+			setCamMatriceFromMessage(data)
+		end
+	end,
 	[recieveResetHeader] = function (data, ip, port)
 		
 		local success, e_msg = sendMessage(broadcast, BroadcastSendFromAdress, BR_port, GetResetARCameraMessage())
@@ -409,11 +410,4 @@ communicationStateMachine=
 			nextStateToGo = recieveBroadcastHeader 	
 		end		
 	end,
-	
-	[recievedMSGHeader] = function (data, ip, port)
-	
-		if data then
-			setCamMatriceFromMessage(data)
-		end
-	end
 }
