@@ -32,11 +32,13 @@ local message =""
 local recieveBroadcastHeader = "SPRINGAR;BROADCAST;ARDEVICE"	
 local recieveResetHeader = "SPRINGAR;RESET;"	
 local recievedCFGHeader = "SPRINGAR;CFG;"						
-local recievedMSGHeader = "SPRINGAR;DATA;MATRICE="	
+local recievedMatriceDataHeader = "SPRINGAR;DATA;MATRICE="	
 local nextStateToGo = recieveBroadcastHeader		
-local sendMSGHeader 	= "SPRINGAR;DATA;"					
+local sendMSGHeader 	= "SPRINGAR;DATA="					
 local sendHostmessage = "SPRINGAR;REPLY;HOSTIP="
-
+local sendResetCompleteMessage ="SPRINGAR;RESET_COMPLETE;"
+local sendCFGRecievedMsg = "SPRINGAR;CFG;RECIEVED;"
+local comSocket
 local broadcast
 local udp
 local BroadcastIpAddress = '*'
@@ -45,10 +47,10 @@ local ARDeviceIpAddress = ""
 local hostIPAddress = "192.168.178.20"
 local TIME_FRAME_IN_MS = 30 
 local BR_port = 9000 
-local UDP_port = 8090 -- ASCII for SP
 
+local segmentSize = 8000
 local watchdogGameFrame= Spring.GetGameFrame()
-local TIMEOUT_WATCHDOG = 30 * 20 --seconds
+local TIMEOUT_WATCHDOG = 30 * 60 --seconds
 
 local boolInitialisationComplete = false
 local fileBufferDesc = {} 
@@ -192,40 +194,40 @@ end
 -- receive, receivefrom, getsockname, setoption, settimeout, setpeername, setsockname, and close. 
 -- The setpeername is used to connect the object.
 function BroadcastConnect()
-			Spring.Echo(" Broadcast SocketConnect("..BroadcastIpAddress..",".. BR_port..")")
-			
-			broadcast=socket.udp()
-			assert(broadcast:settimeout(0))
-			assert(broadcast:setoption('broadcast', true))
-			--assert(broadcast:setoption('dontroute', true))
-			success, errmsg =	broadcast:setsockname(BroadcastIpAddress, BR_port)
-			if not success then Spring.Echo(errmsg) end
-			
+	Spring.Echo(" Broadcast SocketConnect("..BroadcastIpAddress..",".. BR_port..")")
+	
+	broadcast=socket.udp()
+	assert(broadcast:settimeout(0))
+	assert(broadcast:setoption('broadcast', true))
+	--assert(broadcast:setoption('dontroute', true))
+	success, errmsg =	broadcast:setsockname(BroadcastIpAddress, BR_port)
+	if not success then Spring.Echo(errmsg) end
+	return broadcast
 end
 
 --> opens a udpsocket
 function UDPConnect(ip, peername, peerport)
-			Spring.Echo(" UDPSocketConnect("..ip..",".. UDP_port..")")
-			if not udp then
-				udp=socket.udp()
-				assert(udp:settimeout(0))
-				success, errmsg = udp:setsockname(ip, UDP_port)
-				assert(success, errmsg)
-				
-				if peername then -- changes a unconnected udp port into a connected udp-port
-					assert(udp:setpeername(peername, UDP_port))
-				end
-			end
-
+	Spring.Echo(" UDPSocketConnect("..ip..",".. BR_port..")")
+	if not udp then
+		udp=socket.udp()
+		assert(udp:settimeout(0))
+		success, errmsg = udp:setsockname(ip, BR_port)
+		assert(success, errmsg)
+		
+		if peername then -- changes a unconnected udp port into a connected udp-port
+			assert(udp:setpeername(peername, BR_port))
+		end
+	end
+	return udp
 end
 
-function sendMessage(socket, ip, port, data)
+function sendMessage(Socket, ip, port, data)
 	assert(type(ip) == "string")
 	assert(type(port) == "string" or type(port) == "number")
 	assert(type(data) == "string")
 	Spring.Echo("Send message " .. data .. " to " .. ip)
-	if socket then
-		local success, e_msg = socket:sendto(data, ip, port)
+	if Socket then
+		local success, e_msg = Socket:sendto(data, ip, port)
 		if not success then
 			Spring.Echo("Failed to send message " .. data .. " to " ..ip.." with error "..e_msg)
 		end
@@ -239,13 +241,13 @@ function widget:Shutdown()
 end
 function widget:Initialize()	
 	Spring.Echo("function widget:Initialize()")
-
+	
 	fileBufferDesc[1].boolNotValid = false
 	fileBufferDesc[1].Active = true
 	
-	BroadcastConnect()	
+	comSocket = BroadcastConnect()	
 	nextStateToGo = recieveResetHeader
-
+	
 end
 
 
@@ -255,42 +257,59 @@ boolSendDataSemaphore = false
 local function transferDataToARDevice(ip)
 	
 	-- load image
-	Spring.Echo("Sending test data to "..ARDeviceIpAddress)
-	--sendMessage(udp, ARDeviceIpAddress, UDP_port, "Test")
-	 
-	if nextStateToGo == recievedMSGHeader then		
+	-- Spring.Echo("Sending test data to "..ARDeviceIpAddress)
+	
+	if nextStateToGo == recievedMatriceDataHeader then		
 		
 		if not coSendData or coroutine.status(coSendData) == "dead" then
 			-- socket is writeable
 			
 			coSendData=		coroutine.create(function()
-				--TODO Split into 8192 byte sized packages
+				
+				data = VFS.LoadFile(getActiveBuffer().filePathName)				
 				boolSendDataSemaphore = true
-				local success, e_msg = udp:sendto(VFS.LoadFile(getActiveBuffer().filePathName), ARDeviceIpAddress, UDP_port)
-				if not success then
-					Spring.Echo("transferDataToARDevice"..e_msg)
+				numberOfSegments = data:len()/segmentSize
+				
+				for i=0, i < numberOfSegments, 1 do
+					local segment = data:sub(i*segmentSize +1,(i+1)*segmentSize +1)
+					
+					local success, e_msg = nil, nil
+					if i+1 < numberOfSegments then
+						success, e_msg = udp:sendto(sendMSGHeader..i..";"..segment, ARDeviceIpAddress, BR_port)
+					else
+						success, e_msg = udp:sendto(sendMSGHeader.."LAST;"..segment, ARDeviceIpAddress, BR_port)
+					end
+					if not success then
+						Spring.Echo("transferDataToARDevice"..e_msg)
+					end
 				end
 				boolSendDataSemaphore = false
 			end
 			)
-			if  boolSendDataSemaphore == false then
+			if boolSendDataSemaphore == false then
 				coroutine.resume(coSendData)
 			end
 		end
 	end
 end
 
-function whoWatchesTheWatchdog(boolNewData)
-	if nextStateToGo == recievedMSGHeader then
-		if watchdogGameFrame - Spring.GetGameFrame() > TIMEOUT_WATCHDOG then
+oldState = nil
+function whoWatchesTheWatchdog(newState)
+	
+	if newState == oldState and newState ~= recievedMatriceDataHeader then 
+		
+		if Spring.GetGameFrame() - watchdogGameFrame > TIMEOUT_WATCHDOG then
 			nextStateToGo =recieveResetHeader
 			watchdogGameFrame = Spring.GetGameFrame()
-		end
-		
-		if boolNewData == true then 
-			watchdogGameFrame = Spring.GetGameFrame()
-		end
+		end	
 	end
+	
+	if newState ~= oldState then 
+		Spring.Echo("Statemachine: "..newState)
+		watchdogGameFrame = Spring.GetGameFrame()
+	end
+	
+	oldState = newState
 end
 
 function RecieveConfigureARCameraMessage(configStr)
@@ -311,7 +330,7 @@ function RecieveConfigureARCameraMessage(configStr)
 		deviceData.seperator = math.min(100,math.max(1,tonumber(displayRatio)		or 50))
 		ARDeviceIpAddress = arrayOfTokens[5]:gsub("IPADDRESS=","") 
 		
-		Spring.Echo(deviceData.viewWidth,deviceData.viewHeigth)
+		-- Spring.Echo(deviceData.viewWidth,deviceData.viewHeigth, ARDeviceIpAddress)
 		tex = gl.CreateTexture(deviceData.viewWidth, deviceData.viewHeigth, {fbo=true}); 
 		return true
 	end
@@ -323,7 +342,7 @@ old_mat4_4 ={}
 function setCamMatriceFromMessage(recievedData)
 	Spring.Echo("function setCamMatriceFromMessage("..recievedData..")")
 	if recievedData then
-		recievedData=recievedData:gsub(recievedMSGHeader,'')
+		recievedData=recievedData:gsub(recievedMatriceDataHeader,'')
 		mat4_4 = split(recievedData, ";")
 		boolCompleteCamMatrix= false
 		for i=1, 16 do
@@ -340,32 +359,22 @@ function setCamMatriceFromMessage(recievedData)
 end
 
 
-
-function GetResetARCameraMessage()
-	return "SPRINGAR;RESET_COMPLETE;"
-end
-function limitIncIP(ip)
-	if ip +1 == 255 then return ip -1 end
-	
-	return ip +1
-end
-
 function widget:Update()
-	Spring.Echo("Current state:"..nextStateToGo)
-
-		data, ip, port = broadcast:receivefrom()
-		
-		if data and ip then Spring.Echo("Recieved text " .. data .. " from " ..ip) end
-		if data and data:find(recieveResetHeader) then
-			nextStateToGo = recieveResetHeader
-		end	
-		
-		communicationStateMachine[nextStateToGo](data,ip,port)
-
-		whoWatchesTheWatchdog( data ~= nil)
 	
 	
-	if nextStateToGo == recievedMSGHeader then
+	data, ip, port = comSocket:receivefrom()
+	
+	if data and ip then Spring.Echo("Recieved text " .. data .. " from " ..ip) end
+	if data and data:find(recieveResetHeader) then
+		nextStateToGo = recieveResetHeader
+	end	
+	
+	communicationStateMachine[nextStateToGo](data,ip,port)
+	
+	whoWatchesTheWatchdog(nextStateToGo)
+	
+	
+	if nextStateToGo == recievedMatriceDataHeader then
 		--upate only on completed transfer
 		if boolSendDataSemaphore == false then
 			copyFrameToBuffer()
@@ -378,36 +387,41 @@ timeOutInFrame= 0
 --> Simple Statemachine in Table
 communicationStateMachine= 
 {
+	[recieveResetHeader] = function (data, ip, port)
+		comSocket = broadcast
+		local success, e_msg = sendMessage(comSocket, BroadcastSendFromAdress, BR_port, sendResetCompleteMessage )
+		if success then
+			nextStateToGo = recieveBroadcastHeader 	
+		end		
+	end,
+	
 	[recieveBroadcastHeader] = function (data, ip, port)
 		if data and data:find(recieveBroadcastHeader) then
 			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
 			ARDeviceIpAddress = ip
 			
 			Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
-			sendMessage(broadcast, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)					
-			UDPConnect("192.168.178.20") --hostIPAddress
+			sendMessage(comSocket, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)					
+			comSocket = UDPConnect("192.168.178.20") --hostIPAddress
 			nextStateToGo = recievedCFGHeader 
 		end
-	end,				
+	end,		
+	
 	[recievedCFGHeader]= function (data, ip, port)
-		timeOutInFrame= timeOutInFrame-1
+		
 		if data and data:find(recievedCFGHeader) then
-			if RecieveConfigureARCameraMessage(data) == true then		
-				nextStateToGo = recievedMSGHeader 
+			if RecieveConfigureARCameraMessage(data) == true then	
+				sendMessage(udp, ARDeviceIpAddress, BR_port, sendCFGRecievedMsg)						
+				nextStateToGo = recievedMatriceDataHeader 
 			end
 		end		
 	end,	
-	[recievedMSGHeader] = function (data, ip, port)
 	
+	[recievedMatriceDataHeader] = function (data, ip, port)
+		
 		if data then
 			setCamMatriceFromMessage(data)
 		end
 	end,
-	[recieveResetHeader] = function (data, ip, port)
-		
-		local success, e_msg = sendMessage(broadcast, BroadcastSendFromAdress, BR_port, GetResetARCameraMessage())
-		if success then
-			nextStateToGo = recieveBroadcastHeader 	
-		end		
-	end,
+	
 }
