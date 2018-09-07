@@ -368,7 +368,7 @@ function widget:Update()
 	if data and data:find(recieveResetHeader) then
 		nextStateToGo = recieveResetHeader
 	end	
-	
+	Spring.Echo("CurrentState:"..nextStateToGo)
 	communicationStateMachine[nextStateToGo](data,ip,port)
 	
 	whoWatchesTheWatchdog(nextStateToGo)
@@ -415,6 +415,7 @@ communicationStateMachine=
 				nextStateToGo = recievedMatriceDataHeader 
 			end
 		end		
+	
 	end,	
 	
 	[recievedMatriceDataHeader] = function (data, ip, port)

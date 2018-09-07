@@ -63,7 +63,7 @@ end
 
 local spGetTimer = Spring.GetTimer
 local spDiffTimers = Spring.DiffTimers
-local Spring.GetLuaMemUsage = Spring.GetLuaMemUsage
+local SpringGetLuaMemUsage = Spring.GetLuaMemUsage or function() return 0,0,0,0 end
 
 local Hook = function(g,name) return function(...) return g[name](...) end end -- placeholder
 
@@ -140,7 +140,7 @@ else
 
 		local helper_func = function(...)
 			local dt = spDiffTimers(spGetTimer(),t)    
-			local _,_,new_s,_ = Spring.GetLuaMemUsage() 
+			local _,_,new_s,_ = SpringGetLuaMemUsage() 
 			local ds = new_s - s
 			c[1] = c[1] + dt
 			c[2] = c[2] + dt
@@ -157,7 +157,7 @@ else
 
 			inHook = true
 			t = spGetTimer()
-			local _,_,new_s,_ = Spring.GetLuaMemUsage() 		
+			local _,_,new_s,_ = SpringGetLuaMemUsage() 		
 			s = new_s
 			--Spring.Echo(s, collectgarbage("count"))
 			return helper_func(realFunc(...))
@@ -267,14 +267,14 @@ end
 
 function SyncedCallinStarted(_,gname,cname)
 	timersSynced[#timersSynced+1] = spGetTimer() -- callins may call each other -> we need a FIFO queue 
-	local _,_,s,_ = Spring.GetLuaMemUsage() 
+	local _,_,s,_ = SpringGetLuaMemUsage() 
 	memUsage[#memUsage+1] = s
 end
 
 function SyncedCallinFinished(_,gname,cname)
 	local dt = spDiffTimers(spGetTimer(),timersSynced[#timersSynced])
 	timersSynced[#timersSynced] = nil
-	local _,_,new_s,_ = Spring.GetLuaMemUsage() 
+	local _,_,new_s,_ = SpringGetLuaMemUsage() 
 	local ds = new_s - memUsage[#memUsage] 
 	memUsage[#memUsage] = nil
 
@@ -468,7 +468,7 @@ local function DrawSortedList(list, name, x,y,j)
 	return x,j
 end
 
-local lm,_,gm,_ = Spring.GetLuaMemUsage()
+local lm,_,gm,_ = SpringGetLuaMemUsage()
 
 function gadget:DrawScreen_()
 	if not (startedProfiler and validated and show) then return end
@@ -485,7 +485,7 @@ function gadget:DrawScreen_()
 		sortedList = ProcessCallinStats(callinStats, timeLoadAverages, spaceLoadAverages, redStrength, deltaTime)
 		sortedListSYNCED = ProcessCallinStats(callinStatsSYNCED, timeLoadAveragesSYNCED, spaceLoadAveragesSYNCED, redStrengthSYNCED, deltaTime)		
 
-		lm,_,gm,_ = Spring.GetLuaMemUsage()
+		lm,_,gm,_ = SpringGetLuaMemUsage()
 	end
 
 	local vsx, vsy = gl.GetViewSizes()
