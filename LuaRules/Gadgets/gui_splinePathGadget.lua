@@ -47,12 +47,26 @@ if gadgetHandler:IsSyncedCode() then
 
 	function gadget:GameFrame(f)
 		if boolSplineActive == true and f % 5 == 0  then
-			if planeID then
+		  if planeID then
 			x,y,z= Spring.GetUnitPosition(planeID)
-			end
+			  if x then
+			    CurrentSpline[#CurrentSpline+1]={x,y,z}
+			  end
+		  end
+		boolSplineActive = checkIfStillInFirstPerson(planeID)
 		end
+		
+		
 	end
 	
+	function checkIfStillInFirstPerson(planeID)
+	  stillActive= true
+	  boolUnitIsDead= Spring.GetUnitIsDead(planeID)
+	  if not boolUnitIsDead or boolUnitIsDead == true then stillActive = false end
+	 	
+		
+	  return stillActive	
+	end
 	
 else --UNSYNCED
 	
