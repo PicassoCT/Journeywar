@@ -28,6 +28,24 @@ if gadgetHandler:IsSyncedCode() then
 		ground= Spring.GetGroundHeight(x,z)
 		_,_,_,teamID= Spring.GetPlayerInfo(playerID)
 		planeID = Spring.CreateUnit(planeDefID,x, ground + GROUND_OFFSET,z, math.random(0,3), teamID)
+		camState={ 	name= "fps",				
+				px = 0,
+				py = 0,
+				pz = 0,
+				
+				dx = 0,				
+				dy = 0,
+				dz = 0,
+				
+				ry  = 0,
+				rx  = 0,
+				rz  = 0,
+				mode= 0,
+				oldHeight = 0,
+			}
+		camTime = 9000
+		Spring.SetCameraState( camState,  camTime)
+		Spring.SelectUnitMap({unitID= planeID}) -- Here is to hoping that the observed unit is the currently selected one
 		end
 	
 	end
@@ -53,8 +71,19 @@ if gadgetHandler:IsSyncedCode() then
 			    CurrentSpline[#CurrentSpline+1]={x,y,z}
 			  end
 		  end
+		oldBoolSplineActive= boolSplineActive
 		boolSplineActive = checkIfStillInFirstPerson(planeID)
+		if oldBoolSplineActive == true and boolSplineActive== false then
+		  SendSplineToWidget(CurrentSpline)		
 		end
+		end
+		
+		
+	end
+	
+	function SendSplineToWidget(CurrentSpline)
+	 -- TODO Computate bicubic spline
+		-- TODO SendToUnsynced	
 		
 		
 	end
@@ -63,8 +92,11 @@ if gadgetHandler:IsSyncedCode() then
 	  stillActive= true
 	  boolUnitIsDead= Spring.GetUnitIsDead(planeID)
 	  if not boolUnitIsDead or boolUnitIsDead == true then stillActive = false end
-	 	
+	 
+	  camState, _ = Spring.GetCameraState( camState,  camTime)
+          if camState.name ~= "fps" then stillActive = false end
 		
+	  	
 	  return stillActive	
 	end
 	
