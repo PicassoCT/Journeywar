@@ -31,7 +31,8 @@ local message =""
 
 local recieveBroadcastHeader = "SPRINGAR;BROADCAST;ARDEVICE"	
 local recieveResetHeader = "SPRINGAR;RESET;"	
-local recievedCFGHeader = "SPRINGAR;CFG;"						
+local recievedCFGHeader = "SPRINGAR;CFG;"		
+local sendBroadCastRecievedMessage	 = "sendBroadCastRecievedMessage"			
 local recievedMatriceDataHeader = "SPRINGAR;DATA;MATRICE="	
 local nextStateToGo = recieveBroadcastHeader		
 local sendMSGHeader 	= "SPRINGAR;DATA="					
@@ -52,7 +53,6 @@ local segmentSize = 8000
 local watchdogGameFrame= Spring.GetGameFrame()
 local TIMEOUT_WATCHDOG = 30 * 60 --seconds
 
-local boolInitialisationComplete = false
 local fileBufferDesc = {} 
 fileName= "ARBuffer"
 fileBufferDesc[1] = {
@@ -195,7 +195,6 @@ end
 -- The setpeername is used to connect the object.
 function BroadcastConnect()
 	Spring.Echo(" Broadcast SocketConnect("..BroadcastIpAddress..",".. BR_port..")")
-	
 	broadcast=socket.udp()
 	assert(broadcast:settimeout(0))
 	assert(broadcast:setoption('broadcast', true))
@@ -210,12 +209,12 @@ function UDPConnect(ip, peername, peerport)
 	Spring.Echo(" UDPSocketConnect("..ip..",".. BR_port..")")
 	if not udp then
 		udp=socket.udp()
-		assert(udp:settimeout(0))
+		assert(udp:settimeout(1/66))
 		success, errmsg = udp:setsockname(ip, BR_port)
 		assert(success, errmsg)
 		
 		if peername then -- changes a unconnected udp port into a connected udp-port
-			assert(udp:setpeername(peername, BR_port))
+			assert(udp:setpeername(peername, peerport))
 		end
 	end
 	return udp
@@ -225,9 +224,11 @@ function sendMessage(Socket, ip, port, data)
 	assert(type(ip) == "string")
 	assert(type(port) == "string" or type(port) == "number")
 	assert(type(data) == "string")
-	Spring.Echo("Send message " .. data .. " to " .. ip)
+	Spring.Echo("gui_arCam::sendMessage:" .. data .. " to " .. ip)
 	if Socket then
-		local success, e_msg = Socket:sendto(data, ip, port)
+
+		local	 success, e_msg = Socket:sendto(data, ip, port)
+		
 		if not success then
 			Spring.Echo("Failed to send message " .. data .. " to " ..ip.." with error "..e_msg)
 		end
@@ -246,7 +247,7 @@ function widget:Initialize()
 	fileBufferDesc[1].Active = true
 	
 	comSocket = BroadcastConnect()	
-	nextStateToGo = recieveResetHeader
+	nextStateToGo = recieveBroadcastHeader
 	
 end
 
@@ -340,7 +341,7 @@ end
 old_mat4_4 ={}
 
 function setCamMatriceFromMessage(recievedData)
-	Spring.Echo("function setCamMatriceFromMessage("..recievedData..")")
+	--Spring.Echo("function setCamMatriceFromMessage("..recievedData..")")
 	if recievedData then
 		recievedData=recievedData:gsub(recievedMatriceDataHeader,'')
 		mat4_4 = split(recievedData, ";")
@@ -358,11 +359,11 @@ function setCamMatriceFromMessage(recievedData)
 	end
 end
 
-
 function widget:Update()
-	
-	
-	data, ip, port = comSocket:receivefrom()
+	data, ip, port = nil, nil, nil
+
+		data, ip, port = comSocket:receivefrom()
+
 	
 	if data and ip then Spring.Echo("Recieved text " .. data .. " from " ..ip) end
 	if data and data:find(recieveResetHeader) then
@@ -383,7 +384,7 @@ function widget:Update()
 	end
 end
 
-timeOutInFrame= 0
+delay = 0
 --> Simple Statemachine in Table
 communicationStateMachine= 
 {
@@ -400,27 +401,38 @@ communicationStateMachine=
 			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
 			ARDeviceIpAddress = ip
 			
-			Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
-			sendMessage(comSocket, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)					
-			comSocket = UDPConnect("192.168.178.20") --hostIPAddress
-			nextStateToGo = recievedCFGHeader 
+			--Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
+			nextStateToGo = sendBroadCastRecievedMessage 
+		  
 		end
 	end,		
 	
+	[sendBroadCastRecievedMessage] = function (data,ip, port)
+			local success, e_msg=	sendMessage(comSocket, BroadcastSendFromAdress, BR_port, sendHostmessage..hostIPAddress)			
+			if succes then
+				nextStateToGo = recievedCFGHeader 
+			end	
+	end,
+	
+	
 	[recievedCFGHeader]= function (data, ip, port)
-		
 		if data and data:find(recievedCFGHeader) then
+			comSocket = UDPConnect("192.168.178.20") --hostIPAddress
 			if RecieveConfigureARCameraMessage(data) == true then	
 				sendMessage(udp, ARDeviceIpAddress, BR_port, sendCFGRecievedMsg)						
 				nextStateToGo = recievedMatriceDataHeader 
 			end
-		end		
-	
+		end			
+		-- if the package got dropped repeat the message
+		if data and data:find(recieveBroadcastHeader) and delay > 500 then			 
+			sendMessage(comSocket, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)			
+		else
+			delay= (delay+1 ) %501
+		end
 	end,	
 	
-	[recievedMatriceDataHeader] = function (data, ip, port)
-		
-		if data then
+	[recievedMatriceDataHeader] = function (data, ip, port)		
+		if data and data:find(recievedMatriceDataHeader) then
 			setCamMatriceFromMessage(data)
 		end
 	end,
