@@ -1,0 +1,60 @@
+local unitName = "splinefppcursor"
+
+local unitDef = {
+  name                = "SplineFPPCursor",
+  description         = [[]],
+  brakerate           = 0.4,
+  buildCostMetal = 1500,
+  buildCostEnergy = 800,
+  builder             = false,
+  buildPic            = [[]],
+  canFly              = true,
+  canGuard            = true,
+  canMove             = true,
+  canPatrol           = true,
+  canSubmerge         = true,
+  category            = [[NOTARGET]],
+  collide             = false,
+  collisionVolumeOffsets = [[0 0 0]],
+  collisionVolumeScales  = [[12 12 5]],
+  collisionVolumeType    = [[box]],
+  cruiseAlt           = 5,
+
+
+  energyUse           = 1.5,
+  explodeAs           = [[]],
+  floater             = true,
+  footprintX          = 2,
+  footprintZ          = 2,
+  iconType            = [[]],
+  idleAutoHeal        = 5,
+  idleTime            = 1800,
+  maxAcc              = 0.5,
+  maxDamage           = 1950,
+  maxAileron          = 0.018,
+  maxElevator         = 0.02,
+  maxRudder           = 0.008,
+  maxVelocity         = 11,
+  minCloakDistance    = 75,
+  noAutoFire          = false,
+  noChaseCategory     = [[NOTARGET]],
+  objectName          = [[emptyObjectIsEmpty.s3o]],
+  radarDistance       = 300,
+  radarDistanceJam    = 0,
+  script              = [[placeholder.lua]],
+  selfDestructAs      = [[]],
+  sightDistance       = 600,
+  sonarDistance       = 0,
+  turnRadius          = 30,
+  workerTime          = 0,
+  
+  	sfxtypes = {
+		
+	},
+	
+	
+	
+	weapons = {
+		}
+}
+return lowerkeys({ [unitName] = unitDef })
