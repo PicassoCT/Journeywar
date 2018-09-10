@@ -394,27 +394,17 @@ communicationStateMachine=
 		if success then
 			nextStateToGo = recieveBroadcastHeader 	
 		end		
-	end,
-	
+	end,	
 	[recieveBroadcastHeader] = function (data, ip, port)
 		if data and data:find(recieveBroadcastHeader) then
 			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
 			ARDeviceIpAddress = ip
-			
+			local success, e_msg=	sendMessage(comSocket, BroadcastSendFromAdress, BR_port, sendHostmessage..hostIPAddress)	
 			--Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
-			nextStateToGo = sendBroadCastRecievedMessage 
+			nextStateToGo = recievedCFGHeader 
 		  
 		end
 	end,		
-	
-	[sendBroadCastRecievedMessage] = function (data,ip, port)
-			local success, e_msg=	sendMessage(comSocket, BroadcastSendFromAdress, BR_port, sendHostmessage..hostIPAddress)			
-			if succes then
-				nextStateToGo = recievedCFGHeader 
-			end	
-	end,
-	
-	
 	[recievedCFGHeader]= function (data, ip, port)
 		if data and data:find(recievedCFGHeader) then
 			comSocket = UDPConnect("192.168.178.20") --hostIPAddress
@@ -424,11 +414,11 @@ communicationStateMachine=
 			end
 		end			
 		-- if the package got dropped repeat the message
-		if data and data:find(recieveBroadcastHeader) and delay > 500 then			 
-			sendMessage(comSocket, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)			
-		else
-			delay= (delay+1 ) %501
-		end
+		-- if data and data:find(recieveBroadcastHeader) and delay > 500 then			 
+			-- sendMessage(comSocket, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)			
+		-- else
+			-- delay= (delay+1 ) %501
+		-- end
 	end,	
 	
 	[recievedMatriceDataHeader] = function (data, ip, port)		
