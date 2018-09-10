@@ -28,7 +28,7 @@ end
 local Chili, Screen0
 local socket = socket
 local message =""
-
+--test
 local recieveBroadcastHeader = "SPRINGAR;BROADCAST;ARDEVICE"	
 local recieveResetHeader = "SPRINGAR;RESET;"	
 local recievedCFGHeader = "SPRINGAR;CFG;"		
