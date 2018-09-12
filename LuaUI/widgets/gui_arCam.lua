@@ -52,6 +52,11 @@ local BR_port = 9000
 local segmentSize = 8000
 local watchdogGameFrame= Spring.GetGameFrame()
 local TIMEOUT_WATCHDOG = 30 * 60 --seconds
+local mapSizeX = Game.mapSizeX
+local mapSizeZ = Game.mapSizeZ
+
+local SIZE_SPRING_SQUARE = 2 -- meters, cause no english-american foolin around with cocklengths and gods-toes or other shennanigans
+
 
 local fileBufferDesc = {} 
 fileName= "ARBuffer"
@@ -68,6 +73,56 @@ fileBufferDesc[2] = {
 	
 }
 
+------------------------------ Matrice Tools ------------------------------------
+
+
+function multiplyMatrice(lhs, rhs)
+result={}
+	for i=1,4 do
+	result[i]={}
+		for j=1,4 do
+		result[i][j]=0
+			for k=1,4 do
+			result[i][j]= result[i][j] + rhs[i][k]*lhs[k][j]
+			end
+		end
+	end
+
+	return result
+end
+
+
+function scaleMatrice(matrice, sx,sy,sz)
+scale_mat = {}
+	for i=1,4 do
+		scale_mat[i]={}
+		for j=1,4 do
+		scale_mat[i][j] = 0
+		if i== j and i == 1 then scale_mat[i][j] = sx end
+		if i== j and i == 2 then scale_mat[i][j] = sy end
+		if i== j and i == 3 then scale_mat[i][j] = sz end
+		if i== j and i == 4 then scale_mat[i][j] = 1 end
+		end
+	end
+	
+return multiplyMatrice(scale_mat, matrice)
+end
+
+
+function setCamera(cam_mat)
+
+scaleFactor = ((1/SIZE_SPRING_SQUARE)* MAX_MAP_SIZE)
+--getDistanceToCenterObjectInMeters
+
+scaleMatrice= scaleMatrice(cam_mat, scaleFactor,scaleFactor,scaleFactor)
+
+--Apply Transformation Offset to map center
+
+--Extract from Matrice Camera Positon
+
+
+
+end
 ------------------------------ String Tools ------------------------------------
 
 -->splits a string with seperators into a table of substrings
@@ -397,7 +452,7 @@ communicationStateMachine=
 	end,	
 	[recieveBroadcastHeader] = function (data, ip, port)
 		if data and data:find(recieveBroadcastHeader) then
-			Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
+			--Spring.Echo("recieveBroadcastHeader:"..data.." from "..ip)
 			ARDeviceIpAddress = ip
 			local success, e_msg=	sendMessage(comSocket, BroadcastSendFromAdress, BR_port, sendHostmessage..hostIPAddress)	
 			--Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
