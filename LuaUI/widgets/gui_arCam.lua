@@ -34,6 +34,7 @@ local recieveResetHeader = "SPRINGAR;RESET;"
 local recievedCFGHeader = "SPRINGAR;CFG;"		
 local sendBroadCastRecievedMessage	 = "sendBroadCastRecievedMessage"			
 local recievedMatriceDataHeader = "SPRINGAR;DATA;MATRICE="	
+local QuaternionHeader = "ROTATION="	
 local nextStateToGo = recieveBroadcastHeader		
 local sendMSGHeader 	= "SPRINGAR;DATA="					
 local sendHostmessage = "SPRINGAR;REPLY;HOSTIP="
@@ -76,8 +77,8 @@ fileBufferDesc[2] = {
 ------------------------------ Matrice Tools ------------------------------------
 --[[
 API
-	
-	matrix function list:
+
+matrix function list:
 	matrix.add
 	matrix.columns
 	matrix.concath
@@ -119,7 +120,7 @@ API
 	matrix.tostring
 	matrix.transpose
 	matrix.type
---]]
+	--]]
 
 --////////////
 --// matrix //
@@ -164,7 +165,7 @@ function matrix:new( rows, columns, value )
 				end
 			end
 		end
-	-- build new matrix
+		-- build new matrix
 	else
 		for i = 1,rows do
 			mtx[i] = {}
@@ -247,7 +248,7 @@ function matrix.mul( m1, m2 )
 	return setmetatable( mtx, matrix_meta )
 end
 
---//  matrix.div ( m1, m2 )
+--// matrix.div ( m1, m2 )
 -- Divide two matrices; m1 columns must be equal to m2 rows
 -- m2 must be square, to be inverted,
 -- if that fails returns the rank of m2 as second argument
@@ -307,7 +308,7 @@ function matrix.pow( m1, num )
 	end
 	if num < 0 then
 		local rank; m1,rank = matrix.invert( m1 )
-      if not m1 then return m1, rank end -- singular
+		if not m1 then return m1, rank end -- singular
 		num = -num
 	end
 	local mtx = matrix.copy( m1 )
@@ -318,7 +319,7 @@ function matrix.pow( m1, num )
 end
 
 local function number_norm2(x)
-  return x * x
+	return x * x
 end
 
 --// matrix.det ( m1 )
@@ -332,7 +333,7 @@ end
 -- os that usually we have |mtx[i][j]/subdet| > 1 or mtx[i][j];
 -- with complex matrices we use the complex.abs function to check if it is bigger or smaller
 function matrix.det( m1 )
-
+	
 	-- check if matrix is quadratic
 	assert(#m1 == #m1[1], "matrix not square")
 	
@@ -348,14 +349,14 @@ function matrix.det( m1 )
 	
 	if size == 3 then
 		return ( m1[1][1]*m1[2][2]*m1[3][3] + m1[1][2]*m1[2][3]*m1[3][1] + m1[1][3]*m1[2][1]*m1[3][2]
-			- m1[1][3]*m1[2][2]*m1[3][1] - m1[1][1]*m1[2][3]*m1[3][2] - m1[1][2]*m1[2][1]*m1[3][3] )
+		- m1[1][3]*m1[2][2]*m1[3][1] - m1[1][1]*m1[2][3]*m1[3][2] - m1[1][2]*m1[2][1]*m1[3][3] )
 	end
 	
 	--// no symbolic matrix supported below here
 	local e = m1[1][1]
-	local zero  = type(e) == "table" and e.zero or 0
+	local zero = type(e) == "table" and e.zero or 0
 	local norm2 = type(e) == "table" and e.norm2 or number_norm2
-
+	
 	--// matrix is bigger than 3x3
 	-- get determinant
 	-- using Gauss elimination and Laplace
@@ -379,7 +380,7 @@ function matrix.det( m1 )
 					-- use element as new subdet
 					subdet,xrow = e,i
 				end
-			-- check for elements nearest to 1 or -1
+				-- check for elements nearest to 1 or -1
 			elseif e ~= zero and math.abs(norm2(e)-1) < math.abs(norm2(subdet)-1) then
 				subdet,xrow = e,i
 			end
@@ -440,15 +441,15 @@ local pivotOk = function( mtx,i,j,norm2 )
 		if norm > 0 and norm < normMin then
 			iMin = _i
 			normMin = norm
-			end
 		end
+	end
 	if iMin then
 		-- switch lines if not in position.
 		if iMin ~= i then
 			mtx[i],mtx[iMin] = mtx[iMin],mtx[i]
 		end
 		return true
-		end
+	end
 	return false
 end
 
@@ -461,9 +462,9 @@ end
 function matrix.dogauss( mtx )
 	local e = mtx[1][1]
 	local zero = type(e) == "table" and e.zero or 0
-	local one  = type(e) == "table" and e.one  or 1
+	local one = type(e) == "table" and e.one or 1
 	local norm2 = type(e) == "table" and e.norm2 or number_norm2
-
+	
 	local rows,columns = #mtx,#mtx[1]
 	-- stairs left -> right
 	for j = 1,rows do
@@ -526,8 +527,8 @@ function matrix.invert( m1 )
 	local mtx = matrix.copy( m1 )
 	local ident = setmetatable( {},matrix_meta )
 	local e = m1[1][1]
-    local zero = type(e) == "table" and e.zero or 0
-    local one  = type(e) == "table" and e.one  or 1
+	local zero = type(e) == "table" and e.zero or 0
+	local one = type(e) == "table" and e.one or 1
 	for i = 1,#m1 do
 		local identi = {}
 		ident[i] = identi
@@ -581,7 +582,7 @@ function matrix.sqrt( m1, iters )
 		-- calc square root
 		-- y, z = (1/2)*(y + z^-1), (1/2)*(z + y^-1)
 		y, z = matrix.divnum((matrix.add(y,matrix.invert(z))),2),
-				matrix.divnum((matrix.add(z,matrix.invert(y))),2)
+		matrix.divnum((matrix.add(z,matrix.invert(y))),2)
 		local dist1 = get_abs_avg(y,lasty)
 		if iters == math.huge then
 			if dist1 >= dist then
@@ -613,9 +614,9 @@ function matrix.root( m1, root, iters )
 		--	((((p-1)*my + mx^-1)/p)*my^-1)^(p-2) *
 		--	((p-1)*my + mx^-1)/p
 		mx,my = mx:mulnum(root-1):add(my:invert()):divnum(root),
-			my:mulnum(root-1):add(mx:invert()):divnum(root)
-				:mul(my:invert():pow(root-2)):mul(my:mulnum(root-1)
-				:add(mx:invert())):divnum(root)
+		my:mulnum(root-1):add(mx:invert()):divnum(root)
+		:mul(my:invert():pow(root-2)):mul(my:mulnum(root-1)
+		:add(mx:invert())):divnum(root)
 		local dist1 = get_abs_avg(mx,lastx)
 		if iters == math.huge then
 			if dist1 >= dist then
@@ -632,17 +633,17 @@ end
 
 --// matrix.normf ( mtx )
 -- calculates the Frobenius norm of the matrix.
---   ||mtx||_F = sqrt(SUM_{i,j} |a_{i,j}|^2)
+-- ||mtx||_F = sqrt(SUM_{i,j} |a_{i,j}|^2)
 -- http://en.wikipedia.org/wiki/Frobenius_norm#Frobenius_norm
 function matrix.normf(mtx)
 	local mtype = matrix.type(mtx)
 	local result = 0
 	for i = 1,#mtx do
-	for j = 1,#mtx[1] do
-		local e = mtx[i][j]
-		if mtype ~= "number" then e = e:abs() end
-		result = result + e^2
-	end
+		for j = 1,#mtx[1] do
+			local e = mtx[i][j]
+			if mtype ~= "number" then e = e:abs() end
+			result = result + e^2
+		end
 	end
 	local sqrt = (type(result) == "number") and math.sqrt or result.sqrt
 	return sqrt(result)
@@ -650,17 +651,17 @@ end
 
 --// matrix.normmax ( mtx )
 -- calculates the max norm of the matrix.
---   ||mtx||_{max} = max{|a_{i,j}|}
+-- ||mtx||_{max} = max{|a_{i,j}|}
 -- Does not work with symbolic matrices
 -- http://en.wikipedia.org/wiki/Frobenius_norm#Max_norm
 function matrix.normmax(mtx)
 	local abs = (matrix.type(mtx) == "number") and math.abs or mtx[1][1].abs
 	local result = 0
 	for i = 1,#mtx do
-	for j = 1,#mtx[1] do
-		local e = abs(mtx[i][j])
-		if e > result then result = e end
-	end
+		for j = 1,#mtx[1] do
+			local e = abs(mtx[i][j])
+			if e > result then result = e end
+		end
 	end
 	return result
 end
@@ -732,7 +733,7 @@ function matrix.type( mtx )
 	end
 	return "number"
 end
-	
+
 -- local functions to copy matrix values
 local num_copy = function( num )
 	return num
@@ -887,7 +888,7 @@ function matrix.tostring( mtx, formatstr )
 	local mtype = matrix.type( mtx )
 	local e = mtx[1][1]
 	local tostring = mtype == "tensor" and tensor_tostring or
-	      type(e) == "table" and e.tostring or number_tostring
+	type(e) == "table" and e.tostring or number_tostring
 	for i = 1,#mtx do
 		local tstr = {}
 		for j = 1,#mtx[1] do
@@ -943,7 +944,7 @@ function matrix.columns( mtx )
 	return #mtx[1]
 end
 
---//  matrix.size ( mtx )
+--// matrix.size ( mtx )
 -- get matrix size as string rows,columns
 function matrix.size( mtx )
 	if matrix.type( mtx ) == "tensor" then
@@ -998,7 +999,7 @@ end
 --// matrix.scalar ( m1, m2 )
 -- returns the Scalar Product of two 3x1 matrices (vectors)
 function matrix.scalar( m1, m2 )
-	return m1[1][1]*m2[1][1] + m1[2][1]*m2[2][1] +  m1[3][1]*m2[3][1]
+	return m1[1][1]*m2[1][1] + m1[2][1]*m2[2][1] + m1[3][1]*m2[3][1]
 end
 
 --// matrix.cross ( m1, m2 )
@@ -1104,16 +1105,16 @@ end
 
 -- Set power "^" behaviour
 -- if opt is any integer number will do mtx^opt
---   (returning nil if answer doesn't exist)
+-- (returning nil if answer doesn't exist)
 -- if opt is 'T' then it will return the transpose matrix
 -- only for complex:
---    if opt is '*' then it returns the complex conjugate matrix
-	local option = {
-		-- only for complex
-		["*"] = function( m1 ) return matrix.conjugate( m1 ) end,
-		-- for both
-		["T"] = function( m1 ) return matrix.transpose( m1 ) end,
-	}
+-- if opt is '*' then it returns the complex conjugate matrix
+local option = {
+	-- only for complex
+	["*"] = function( m1 ) return matrix.conjugate( m1 ) end,
+	-- for both
+	["T"] = function( m1 ) return matrix.transpose( m1 ) end,
+}
 matrix_meta.__pow = function( m1, opt )
 	return option[opt] and option[opt]( m1 ) or matrix.pow( m1,opt )
 end
@@ -1202,7 +1203,7 @@ function symbol_meta.makereplacer( ... )
 	local args = {...}
 	for i = 1,#args,2 do
 		tosub[args[i]] = args[i+1]
-    end
+	end
 	local function func( a ) return tosub[a] or a end
 	return function(sym)
 		return symbol.to( string.gsub( sym[1], "%a", func ) )
@@ -1253,67 +1254,94 @@ end
 
 matrix.symbol = symbol
 
+-----------------------> Library End
 
-function multiplyMatrice(lhs, rhs)
-return lhs*rhs
-result={}
-	for i=1,4 do
-	result[i]={}
-		for j=1,4 do
-		result[i][j]=0
-			for k=1,4 do
-			result[i][j]= result[i][j] + rhs[i][k]*lhs[k][j]
-			end
-		end
-	end
-
-	return result
-end
-
-
-function scaleMatrice(matrice, sx,sy,sz)
-scale_mat = matrix{{sx,0,0,0},
-					{0,sy,0,0},
-					{0,0,sz,0},
-					{0,0,0,1}}
-					
-return scale_mat* matrice
+function scaleMatrice(objInCamCoord_mat, sx,sy,sz)
+		scale_mat = matrix{{sx,0,0,0},
+		{0,sy,0,0},
+		{0,0,sz,0},
+	{0,0,0,1}}
+	
+	return scale_mat* objInCamCoord_mat
 end
 
 function getMinorMat(mat, row, col)
-sign= (-1)^(row+col)
-minor= matrix(#mat-1,#mat-1,0)
-for i=1,#minor do
-	for j=1,#minor do
-		ix,jx = i,j
-		if ix >= row then ix = ix+1 end
-		if jx >= col then jx = jx+1 end
-		minor[i][j] = sign*mat[ix][jx]
+	sign= (-1)^(row+col)
+	minor= matrix(#mat-1,#mat-1,0)
+	for i=1,#minor do
+		for j=1,#minor do
+			ix,jx = i,j
+			if ix >= row then ix = ix+1 end
+			if jx >= col then jx = jx+1 end
+			minor[i][j] = sign*mat[ix][jx]
+		end
 	end
+	
+	return minor
 end
 
-return minor
+function quaternionToEulerAngle( x, y, z, w)
+	
+	t0 = 2.0 * (w * x + y * z);
+	t1 = 1.0 - 2.0 * (x * x + y * y);
+	X = math.atan2(t0, t1);
+	
+	t2 = 2.0 * (w * y - z * x);
+	if(t2 > 1.0) then
+		t2 = 1.0;
+	elseif(t2 < -1.0)then
+		t2 = -1.0;
+	end
+	Y = math.asin(t2);
+	
+	t3 = 2.0 * (w * z + x * y);
+	t4 = 1.0 - 2.0 * (y * y + z * z);
+	Z = math.atan2(t3, t4);
+	
+	return X, Y, Z
 end
 
+function setCamera(cam_mat, rot_quat)
+	MAX_MAP_SIZE = math.max(mapSizeZ,mapSizeX)
+	--Scalefactor = OriginalScale(1m)/TotalSizeOfSquareInReality (e.g. 2m)* biggest map size in Elmo
+	scaleFactor = ((1/SIZE_SPRING_SQUARE)* MAX_MAP_SIZE)
+	i=0
+	Spring.Echo("Error Line"..i);i=i+1 --0
+	-- scale the matrice recieved from the phone from meters to elmo
+	world_mat= scaleMatrice(cam_mat, scaleFactor,scaleFactor,scaleFactor)
+	Spring.Echo("Error Line"..i);i=i+1	--1
+	--calculate the adjugate - the matrix of cofactors 
+	minor_mat= matrix(4,4,0)
+	for i=1,#minor_mat do
+		for j=1,#minor_mat do
+			-- Minor -- cofactor
+			minor_mat[i][j] = matrix.det(getMinorMat(world_mat,i,j)) * (-1^(i)*-1^(j))	
+		end
+	end
+	Spring.Echo("Error Line"..i);i=i+1 --2
+	--transpose the cofactor matrice into the adjunct
+	adjunct = matrix.transpose(minor_mat)
+	Spring.Echo("Error Line"..i);i=i+1 --3
+	--We computate the inverse matrix to get the coordinates of the camera relative to the object in world
+	inverse_mat = (1/matrix.det(world_mat))* adjunct
+	Spring.Echo("Error Line"..i);i=i+1 --4
+	--normalize the matrice
+	norm = 1/inverse_mat[4][4]
+	inverse_mat= inverse_mat * norm
+	Spring.Echo("Error Line"..i);i=i+1 --5
+	--Extract from inverse_mat Camera Positon
+	camState= Spring.GetCameraState()
+	camState.px= inverse_mat[1][4]
+	camState.pz= inverse_mat[3][4]
+	camState.py= inverse_mat[2][4]
+	
 
-function setCamera(cam_mat)
-
-scaleFactor = ((1/SIZE_SPRING_SQUARE)* MAX_MAP_SIZE)
---getDistanceToCenterObjectInMeters
-
-world_mat= scaleMatrice(cam_mat, scaleFactor,scaleFactor,scaleFactor)
-
-
-minor_mat ->
- cofactor_mat ->
-cofactor_mat = 
-
-adjunct = matrix.transpose(cofactor_mat)
---Apply Transformation Offset to map center
-inverse_mat = (1/matrix.det(world_mat))* adjunct(world_mat)
---Extract from Matrice Camera Positon
-
-
+	
+	--extract the rotation from the quaternion
+	--extract the rotation components as radiants
+	camState.rx, camState.rz,	camState.ry= quaternionToEulerAngle(rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4])
+	
+	Spring.SetCameraState(camState)
 end
 ------------------------------ String Tools ------------------------------------
 
@@ -1473,7 +1501,7 @@ function sendMessage(Socket, ip, port, data)
 	assert(type(data) == "string")
 	Spring.Echo("gui_arCam::sendMessage:" .. data .. " to " .. ip)
 	if Socket then
-
+		
 		local	 success, e_msg = Socket:sendto(data, ip, port)
 		
 		if not success then
@@ -1585,34 +1613,54 @@ function RecieveConfigureARCameraMessage(configStr)
 	return false
 end
 
-old_mat4_4 ={}
-
+local old_mat4_4 = matrix(4,4,0)
+local oldrot_quat= {0,0,0,0}
 function setCamMatriceFromMessage(recievedData)
-	--Spring.Echo("function setCamMatriceFromMessage("..recievedData..")")
-	if recievedData then
+		if recievedData then
 		recievedData=recievedData:gsub(recievedMatriceDataHeader,'')
-		mat4_4 = split(recievedData, ";")
-		boolCompleteCamMatrix= false
+		raw_data = split(recievedData, ";")
+		objInCamCoord_mat = matrix(4,4,0)
+		boolCompleteCamMatrix= true
+		
 		for i=1, 16 do
-			mat4_4[i] = tonumber(mat4_4[i])
-			if i== 16 then boolCompleteCamMatrix= true ; end	
+			mat_val = tonumber(raw_data[i])
+			if false == (type(mat_val)=="number") then 
+				boolCompleteCamMatrix = false
+				break
+			end
+			row= math.ceil(i/4)
+			column= (i % 4)
+			objInCamCoord_mat[row][column] = mat_val
+		end		
+		if boolCompleteCamMatrix == true then
+			old_mat4_4= objInCamCoord_mat
 		end
 		
-		if boolCompleteCamMatrix == true then
-			old_mat4_4=mat4_4
+		boolCompleteRotQuat = true
+		newrot_quat = {0,0,0,0}
+		for q=i+1, i+4 do
+			newrot_quat[q-i] = tonumber(raw_data[q])
+			if false == (type(newrot_quat[q-i]) == "number") then 
+				boolCompleteRotQuat = false
+				break
+			end
+		end	
+		
+		if boolCompleteRotQuat == true then
+			oldrot_quat= newrot_quat
 		end
-		Spring.SetCameraTarget(old_mat4_4[1],old_mat4_4[2],old_mat4_4[3])
-		Spring.SetCameraOffset(old_mat4_4[4],old_mat4_4[5],old_mat4_4[6])
+		
+		setCamera(old_mat4_4, oldrot_quat)
 	end
 end
 
 function widget:Update()
 	data, ip, port = nil, nil, nil
-
-		data, ip, port = comSocket:receivefrom()
-
+	
+	data, ip, port = comSocket:receivefrom()
 	
 	if data and ip then Spring.Echo("Recieved text " .. data .. " from " ..ip) end
+	
 	if data and data:find(recieveResetHeader) then
 		nextStateToGo = recieveResetHeader
 	end	
@@ -1649,7 +1697,7 @@ communicationStateMachine=
 			local success, e_msg=	sendMessage(comSocket, BroadcastSendFromAdress, BR_port, sendHostmessage..hostIPAddress)	
 			--Spring.Echo("sendHostmessage "..sendHostmessage..hostIPAddress.." -> "..ARDeviceIpAddress..":"..BR_port)
 			nextStateToGo = recievedCFGHeader 
-		  
+			
 		end
 	end,		
 	[recievedCFGHeader]= function (data, ip, port)
@@ -1660,12 +1708,6 @@ communicationStateMachine=
 				nextStateToGo = recievedMatriceDataHeader 
 			end
 		end			
-		-- if the package got dropped repeat the message
-		-- if data and data:find(recieveBroadcastHeader) and delay > 500 then			 
-			-- sendMessage(comSocket, ARDeviceIpAddress, BR_port, sendHostmessage..hostIPAddress)			
-		-- else
-			-- delay= (delay+1 ) %501
-		-- end
 	end,	
 	
 	[recievedMatriceDataHeader] = function (data, ip, port)		
