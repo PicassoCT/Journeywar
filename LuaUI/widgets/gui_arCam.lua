@@ -33,7 +33,7 @@ local recieveBroadcastHeader = "SPRINGAR;BROADCAST;ARDEVICE"
 local recieveResetHeader = "SPRINGAR;RESET;"	
 local recievedCFGHeader = "SPRINGAR;CFG;"		
 local sendBroadCastRecievedMessage	 = "sendBroadCastRecievedMessage"			
-local recievedMatriceDataHeader = "SPRINGAR;DATA;MATRICE="	
+local recievedMatriceDataHeader = "SPRINGAR;DATA;CAMERA="	
 local QuaternionHeader = "ROTATION="	
 local nextStateToGo = recieveBroadcastHeader		
 local sendMSGHeader 	= "SPRINGAR;DATA="					
@@ -1298,49 +1298,38 @@ function quaternionToEulerAngle( x, y, z, w)
 	t4 = 1.0 - 2.0 * (y * y + z * z);
 	Z = math.atan2(t3, t4);
 	
-	return X, Y, Z
+	return X*math.pi, Y*math.pi, Z*math.pi
 end
 
-function setCamera(cam_mat, rot_quat)
+function setCamera(camPos, rot_quat)
+	camState = Spring.GetCameraState()
+
 	MAX_MAP_SIZE = math.max(mapSizeZ,mapSizeX)
 	--Scalefactor = OriginalScale(1m)/TotalSizeOfSquareInReality (e.g. 2m)* biggest map size in Elmo
-	scaleFactor = ((1/SIZE_SPRING_SQUARE)* MAX_MAP_SIZE)
-	i=0
-	Spring.Echo("Error Line"..i);i=i+1 --0
-	-- scale the matrice recieved from the phone from meters to elmo
-	world_mat= scaleMatrice(cam_mat, scaleFactor,scaleFactor,scaleFactor)
-	Spring.Echo("Error Line"..i);i=i+1	--1
-	--calculate the adjugate - the matrix of cofactors 
-	minor_mat= matrix(4,4,0)
-	for i=1,#minor_mat do
-		for j=1,#minor_mat do
-			-- Minor -- cofactor
-			minor_mat[i][j] = matrix.det(getMinorMat(world_mat,i,j)) * (-1^(i)*-1^(j))	
-		end
-	end
-	Spring.Echo("Error Line"..i);i=i+1 --2
-	--transpose the cofactor matrice into the adjunct
-	adjunct = matrix.transpose(minor_mat)
-	Spring.Echo("Error Line"..i);i=i+1 --3
-	--We computate the inverse matrix to get the coordinates of the camera relative to the object in world
-	inverse_mat = (1/matrix.det(world_mat))* adjunct
-	Spring.Echo("Error Line"..i);i=i+1 --4
-	--normalize the matrice
-	norm = 1/inverse_mat[4][4]
-	inverse_mat= inverse_mat * norm
-	Spring.Echo("Error Line"..i);i=i+1 --5
-	--Extract from inverse_mat Camera Positon
-	camState= Spring.GetCameraState()
-	camState.px= inverse_mat[1][4]
-	camState.pz= inverse_mat[3][4]
-	camState.py= inverse_mat[2][4]
+	scaleFactor = (SIZE_SPRING_SQUARE * MAX_MAP_SIZE)
 	
+	for i=1,4 do
+		camPos[i]=camPos[i]*scaleFactor
+	end
+	
+	camPos[1] =camPos[1] + MAX_MAP_SIZE/2
+	camPos[2] =camPos[2] + MAX_MAP_SIZE/2	
 
+	camState.px= camPos[1]
+	camState.pz= camPos[2]
+	camState.py= camPos[3]
+	
+	x,y,z,w=rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4]
+		
+	camState.dx = 2.0 * (x * z - w * y)
+	camState.dy = 2.0 * (y * z + w * x)
+	camState.dz = 1.0 - 2.0 * (x * x + y * y)
+	
 	
 	--extract the rotation from the quaternion
+	--camState.dx, camState.dz,	camState.dy= quaternionToEulerAngle(rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4])
 	--extract the rotation components as radiants
-	camState.rx, camState.rz,	camState.ry= quaternionToEulerAngle(rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4])
-	
+	--camState.dx, camState.dz,	camState.dy= math.random(-10,10)/10, math.random(-10,10)/10, math.random(-10,10)/10
 	Spring.SetCameraState(camState)
 end
 ------------------------------ String Tools ------------------------------------
@@ -1613,27 +1602,27 @@ function RecieveConfigureARCameraMessage(configStr)
 	return false
 end
 
-local old_mat4_4 = matrix(4,4,0)
-local oldrot_quat= {0,0,0,0}
+old_camPos ={0,0,0,0}
+oldrot_quat= {0,0,0,0}
 function setCamMatriceFromMessage(recievedData)
+
 		if recievedData then
 		recievedData=recievedData:gsub(recievedMatriceDataHeader,'')
+		recievedData=recievedData:gsub(QuaternionHeader,'')
 		raw_data = split(recievedData, ";")
-		objInCamCoord_mat = matrix(4,4,0)
+
 		boolCompleteCamMatrix= true
-		
-		for i=1, 16 do
+		camPos ={0,0,0,0}
+		for i=1, 4 do
 			mat_val = tonumber(raw_data[i])
 			if false == (type(mat_val)=="number") then 
 				boolCompleteCamMatrix = false
 				break
 			end
-			row= math.ceil(i/4)
-			column= (i % 4)
-			objInCamCoord_mat[row][column] = mat_val
+			camPos[i]= mat_val		
 		end		
 		if boolCompleteCamMatrix == true then
-			old_mat4_4= objInCamCoord_mat
+			old_camPos= camPos
 		end
 		
 		boolCompleteRotQuat = true
@@ -1650,11 +1639,12 @@ function setCamMatriceFromMessage(recievedData)
 			oldrot_quat= newrot_quat
 		end
 		
-		setCamera(old_mat4_4, oldrot_quat)
+		setCamera(old_camPos, oldrot_quat)
 	end
 end
 
 function widget:Update()
+
 	data, ip, port = nil, nil, nil
 	
 	data, ip, port = comSocket:receivefrom()
@@ -1670,7 +1660,7 @@ function widget:Update()
 	whoWatchesTheWatchdog(nextStateToGo)
 	
 	
-	if nextStateToGo == recievedMatriceDataHeader then
+	if nextStateToGo == recievedMatriceDataHeader and true == false  then
 		--upate only on completed transfer
 		if boolSendDataSemaphore == false then
 			copyFrameToBuffer()
