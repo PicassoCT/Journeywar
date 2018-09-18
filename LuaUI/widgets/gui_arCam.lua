@@ -20,7 +20,7 @@ function widget:GetInfo()
 		enabled = true -- loaded by default?
 	}
 end
-include("scripts/lib_type.lua" ) 
+--include("scripts/lib_type.lua" ) 
 -- ARDevice --> Broadcast 
 -- Host --> Broadcast his IP
 -- ARDevice --> Send CFG to HostIP
