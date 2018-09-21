@@ -1305,6 +1305,7 @@ end
 function setCamera(camPos, rot_quat)
 	camState = Spring.GetCameraState()
 
+	--Camera.getDisplayOrientedPose() will return the world-space pose of the virtual camera. From this you can for example use getZAxis() to get the opposite of the look direction (OpenGL cameras look along their -Z axis).
 	MAX_MAP_SIZE = math.max(mapSizeZ,mapSizeX)
 	--Scalefactor = OriginalScale(1m)/TotalSizeOfSquareInReality (e.g. 2m)* biggest map size in Elmo
 	scaleFactor = (SIZE_SPRING_SQUARE * MAX_MAP_SIZE)
