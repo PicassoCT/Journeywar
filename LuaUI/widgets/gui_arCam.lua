@@ -1281,31 +1281,10 @@ function getMinorMat(mat, row, col)
 	return minor
 end
 
-function quaternionToEulerAngle( x, y, z, w)
-	
-	t0 = 2.0 * (w * x + y * z);
-	t1 = 1.0 - 2.0 * (x * x + y * y);
-	X = math.atan2(t0, t1);
-	
-	t2 = 2.0 * (w * y - z * x);
-	if(t2 > 1.0) then
-		t2 = 1.0;
-	elseif(t2 < -1.0)then
-		t2 = -1.0;
-	end
-	Y = math.asin(t2);
-	
-	t3 = 2.0 * (w * z + x * y);
-	t4 = 1.0 - 2.0 * (y * y + z * z);
-	Z = math.atan2(t3, t4);
-	
-	return X*math.pi, Y*math.pi, Z*math.pi
-end
 
-function setCamera(camPos, rot_quat)
+function setCamera(camPos, display_vector)
 	camState = Spring.GetCameraState()
 
-	--Camera.getDisplayOrientedPose() will return the world-space pose of the virtual camera. From this you can for example use getZAxis() to get the opposite of the look direction (OpenGL cameras look along their -Z axis).
 	MAX_MAP_SIZE = math.max(mapSizeZ,mapSizeX)
 	--Scalefactor = OriginalScale(1m)/TotalSizeOfSquareInReality (e.g. 2m)* biggest map size in Elmo
 	scaleFactor = (SIZE_SPRING_SQUARE * MAX_MAP_SIZE)
@@ -1320,12 +1299,10 @@ function setCamera(camPos, rot_quat)
 	camState.px= camPos[1]
 	camState.pz= camPos[2]
 	camState.py= camPos[3]
-	
-	x,y,z,w=rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4]
 		
-	camState.dx = 2.0 * (x * z - w * y)
-	camState.dy = 2.0 * (y * z + w * x)
-	camState.dz = 1.0 - 2.0 * (x * x + y * y)
+	camState.dx = display_vector[1]
+	camState.dy = display_vector[3]
+	camState.dz = display_vector[2]
 	
 	
 	--extract the rotation from the quaternion
@@ -1605,7 +1582,7 @@ function RecieveConfigureARCameraMessage(configStr)
 end
 
 old_camPos ={0,0,0,0}
-oldrot_quat= {0,0,0,0}
+oldrot_vec= {0,0,0}
 function setCamMatriceFromMessage(recievedData)
 
 		if recievedData then
@@ -1628,20 +1605,20 @@ function setCamMatriceFromMessage(recievedData)
 		end
 		
 		boolCompleteRotQuat = true
-		newrot_quat = {0,0,0,0}
-		for q=i+1, i+4 do
-			newrot_quat[q-i] = tonumber(raw_data[q])
-			if false == (type(newrot_quat[q-i]) == "number") then 
+		newrot_vec = {0,0,0}
+		for q=i+1, i+3 do
+			newrot_vec[q-i] = tonumber(raw_data[q])
+			if false == (type(newrot_vec[q-i]) == "number") then 
 				boolCompleteRotQuat = false
 				break
 			end
 		end	
 		
 		if boolCompleteRotQuat == true then
-			oldrot_quat= newrot_quat
+			oldrot_vec = newrot_vec
 		end
 		
-		setCamera(old_camPos, oldrot_quat)
+		setCamera(old_camPos, oldrot_vec)
 	end
 end
 
