@@ -1230,6 +1230,7 @@ function symbol_meta.__sub(a,b)
 end
 
 function symbol_meta.__mul(a,b)
+
 	return symbol.to("(" .. a .. ")*(" .. b .. ")")
 end
 
@@ -1281,6 +1282,7 @@ function getMinorMat(mat, row, col)
 	return minor
 end
 
+<<<<<<< HEAD
 
 
 cam_type_switch ={
@@ -1331,8 +1333,19 @@ cam_type_switch ={
 	return camState
 	end,
 }
-
+ARCAM_NAME= "ar"
+function setCameraType() 
+	Camstate={name ="" } 
+	
+	while(Camstate. Name ~= ARCAM_NAME) {
+	
+	    Camstate=Spring.GetCameraState()	
+	} 
+	
+end
+	
 function setCamera(camPos, rot_vec)
+
 	camState = Spring.GetCameraState()
 
 
@@ -1627,8 +1640,10 @@ function RecieveConfigureARCameraMessage(configStr)
 	return false
 end
 
+
 old_camPos ={0.0,0.0,0.0,0.0}
 local oldrot_vec= {0.0,1.0,0.0}
+
 function setCamMatriceFromMessage(recievedData)
 
 		if recievedData then
@@ -1649,7 +1664,7 @@ function setCamMatriceFromMessage(recievedData)
 		if boolCompleteCamMatrix == true then
 			old_camPos= camPos
 		end
-		
+
 		boolCompleteRotVec = true
 	local	newrot_vec = {0.0,0.0,0.0}
 		i=4
@@ -1658,11 +1673,12 @@ function setCamMatriceFromMessage(recievedData)
 
 			if false == (type(newrot_vec[q-i]) == "number") then 
 				boolCompleteRotVec = false
+
 				break
 			end
 			
 		end	
-		
+
 		if boolCompleteRotVec == true then
 			oldrot_vec= newrot_vec
 		end
