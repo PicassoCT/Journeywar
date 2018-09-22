@@ -1256,15 +1256,15 @@ end
 matrix.symbol = symbol
 
 -----------------------> Library End
+function vecToEuler( vec)
 
-function scaleMatrice(objInCamCoord_mat, sx,sy,sz)
-		scale_mat = matrix{{sx,0,0,0},
-		{0,sy,0,0},
-		{0,0,sz,0},
-	{0,0,0,1}}
-	
-	return scale_mat* objInCamCoord_mat
+ex = sqrt(vec[1]*vec[1] + vec[2]*vec[2] + vec[3]*vec[3])
+ey = arctan(vec[2]/vec[1])
+ez = arccos(vec[3]/ey)
+return {ex,ey,ez}
 end
+
+
 
 function getMinorMat(mat, row, col)
 	sign= (-1)^(row+col)
@@ -1281,29 +1281,60 @@ function getMinorMat(mat, row, col)
 	return minor
 end
 
-function quaternionToEulerAngle( x, y, z, w)
+
+
+cam_type_switch ={
+--TA Camera
+["ta"]=	function (camState, pos_vec, rot_vec)
+	camState.height = pos_vec[3]
 	
-	t0 = 2.0 * (w * x + y * z);
-	t1 = 1.0 - 2.0 * (x * x + y * y);
-	X = math.atan2(t0, t1);
+	camState.dx = rot_vec[1]
+	camState.dy = rot_vec[3]
+	camState.dz = rot_vec[2]
+	return camState
+	end,
+["spring"]=	function (camState, pos_vec, rot_vec)
+	camState.height = pos_vec[3]
 	
-	t2 = 2.0 * (w * y - z * x);
-	if(t2 > 1.0) then
-		t2 = 1.0;
-	elseif(t2 < -1.0)then
-		t2 = -1.0;
-	end
-	Y = math.asin(t2);
+	rot_euler = vecToEuler(rot_vec)
 	
-	t3 = 2.0 * (w * z + x * y);
-	t4 = 1.0 - 2.0 * (y * y + z * z);
-	Z = math.atan2(t3, t4);
+	camState.rx = rot_euler[1]
+	camState.rz = rot_euler[2]
+	camState.ry = rot_euler[3]
 	
-	return X*math.pi, Y*math.pi, Z*math.pi
-end
+	camState.dx = rot_vec[1]
+	camState.dz = rot_vec[2]
+	camState.dy = rot_vec[3]
+
+	
+	return camState
+	end,
+-- Spring Style Total War
+["rot"]=	function (camState, pos_vec, rot_vec)
+	camState.height = pos_vec[3]
+	
+	camState.dx = rot_vec[1]
+	camState.dz = rot_vec[2]
+	camState.dy = rot_vec[3]
+
+	
+	return camState
+	end,
+["fps"]=	function (camState, pos_vec, rot_vec)
+	camState.height = pos_vec[3]
+	
+	camState.dx = rot_vec[1]
+	camState.dz = rot_vec[2]
+	camState.dy = rot_vec[3]
+
+	
+	return camState
+	end,
+}
 
 function setCamera(camPos, rot_vec)
 	camState = Spring.GetCameraState()
+
 
 	MAX_MAP_SIZE = math.max(mapSizeZ,mapSizeX)
 	--Scalefactor = OriginalScale(1m)/TotalSizeOfSquareInReality (e.g. 2m)* biggest map size in Elmo
@@ -1315,21 +1346,15 @@ function setCamera(camPos, rot_vec)
 	
 	camPos[1] =camPos[1] + MAX_MAP_SIZE/2
 	camPos[2] =camPos[2] + MAX_MAP_SIZE/2	
+	
 
 	camState.px= camPos[1]
 	camState.pz= camPos[2]
 	camState.py= camPos[3]
 	
-
-
-	camState.dx = rot_vec[1]
-	camState.dy = rot_vec[3]
-	camState.dz = rot_vec[2]
+	camState = cam_type_switch[camState.name](camState, camPos, rot_vec)
 	
 	--extract the rotation from the quaternion
-	--camState.dx, camState.dz,	camState.dy= quaternionToEulerAngle(rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4])
-	--extract the rotation components as radiants
-	--camState.dx, camState.dz,	camState.dy= math.random(-10,10)/10, math.random(-10,10)/10, math.random(-10,10)/10
 	Spring.SetCameraState(camState)
 end
 ------------------------------ String Tools ------------------------------------
@@ -1648,6 +1673,7 @@ end
 
 function widget:Update()
 
+	
 	data, ip, port = nil, nil, nil
 	
 	data, ip, port = comSocket:receivefrom()
@@ -1657,7 +1683,7 @@ function widget:Update()
 	if data and data:find(recieveResetHeader) then
 		nextStateToGo = recieveResetHeader
 	end	
-	Spring.Echo("CurrentState:"..nextStateToGo)
+	--Spring.Echo("CurrentState:"..nextStateToGo)
 	communicationStateMachine[nextStateToGo](data,ip,port)
 	
 	whoWatchesTheWatchdog(nextStateToGo)
