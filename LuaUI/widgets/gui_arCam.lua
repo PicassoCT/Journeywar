@@ -1302,7 +1302,7 @@ function quaternionToEulerAngle( x, y, z, w)
 	return X*math.pi, Y*math.pi, Z*math.pi
 end
 
-function setCamera(camPos, rot_quat)
+function setCamera(camPos, rot_vec)
 	camState = Spring.GetCameraState()
 
 	MAX_MAP_SIZE = math.max(mapSizeZ,mapSizeX)
@@ -1320,12 +1320,11 @@ function setCamera(camPos, rot_quat)
 	camState.pz= camPos[2]
 	camState.py= camPos[3]
 	
-	x,y,z,w=rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4]
-		
-	camState.dx = 2.0 * (x * z - w * y)
-	camState.dy = 2.0 * (y * z + w * x)
-	camState.dz = 1.0 - 2.0 * (x * x + y * y)
-	
+
+
+	camState.dx = rot_vec[1]
+	camState.dy = rot_vec[3]
+	camState.dz = rot_vec[2]
 	
 	--extract the rotation from the quaternion
 	--camState.dx, camState.dz,	camState.dy= quaternionToEulerAngle(rot_quat[1],rot_quat[2],rot_quat[3],rot_quat[4])
@@ -1603,8 +1602,8 @@ function RecieveConfigureARCameraMessage(configStr)
 	return false
 end
 
-old_camPos ={0,0,0,0}
-oldrot_quat= {0,0,0,0}
+old_camPos ={0.0,0.0,0.0,0.0}
+local oldrot_vec= {0.0,1.0,0.0}
 function setCamMatriceFromMessage(recievedData)
 
 		if recievedData then
@@ -1626,21 +1625,24 @@ function setCamMatriceFromMessage(recievedData)
 			old_camPos= camPos
 		end
 		
-		boolCompleteRotQuat = true
-		newrot_quat = {0,0,0,0}
-		for q=i+1, i+4 do
-			newrot_quat[q-i] = tonumber(raw_data[q])
-			if false == (type(newrot_quat[q-i]) == "number") then 
-				boolCompleteRotQuat = false
+		boolCompleteRotVec = true
+	local	newrot_vec = {0.0,0.0,0.0}
+		i=4
+		for q=i+1, i+3 do
+			newrot_vec[q-i] = tonumber(raw_data[q])
+
+			if false == (type(newrot_vec[q-i]) == "number") then 
+				boolCompleteRotVec = false
 				break
 			end
+			
 		end	
 		
-		if boolCompleteRotQuat == true then
-			oldrot_quat= newrot_quat
+		if boolCompleteRotVec == true then
+			oldrot_vec= newrot_vec
 		end
 		
-		setCamera(old_camPos, oldrot_quat)
+		setCamera(old_camPos, oldrot_vec)
 	end
 end
 
