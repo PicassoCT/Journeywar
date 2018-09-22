@@ -1230,6 +1230,7 @@ function symbol_meta.__sub(a,b)
 end
 
 function symbol_meta.__mul(a,b)
+
 	return symbol.to("(" .. a .. ")*(" .. b .. ")")
 end
 
@@ -1281,6 +1282,15 @@ function getMinorMat(mat, row, col)
 	return minor
 end
 
+function setCameraType() 
+	Camstate={name ="" } 
+	
+	while(Camstate. Name ~= ARCAM_NAME) {
+	
+	    Camstate=Spring.GetCameraState()	
+	} 
+	
+	end
 
 function setCamera(camPos, display_vector)
 	camState = Spring.GetCameraState()
