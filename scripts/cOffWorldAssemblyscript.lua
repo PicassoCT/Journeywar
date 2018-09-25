@@ -4,7 +4,7 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 
 include "lib_Build.lua"
-
+myDefID =Spring.GetUnitDefID(unitID)
 --PIECES
 pieceTable_ = {}
 bodyBag = piece("bodyBag")
@@ -574,6 +574,8 @@ birthWater = piece("birthWater")
 pieceTable_[#pieceTable_ + 1] = birthWater
 bloodWater = piece("bloodWater")
 pieceTable_[#pieceTable_ + 1] = bloodWater
+ItKickedMe = piece("ItKickedMe")
+pieceTable_[#pieceTable_ + 1] = ItKickedMe
 
 GrowSpot = piece "GrowSpot"
 pieceTable_[#pieceTable_ + 1] = GrowSpot
@@ -627,6 +629,7 @@ function script.Create()
     Hide(Meat)
     Hide(Crate1)
     Hide(Crate1Open)
+    Hide(ItKickedMe)
 
     resetT(pieceTable_)
 
@@ -768,8 +771,10 @@ function setUp()
 end
 
 SIG_BUILD = 8
+SIG_FOLD =16
 function BuildingAnimation(buildID)
     SetSignalMask(SIG_BUILD)
+	 Signal(SIG_FOLD)
     Spring.SetUnitAlwaysVisible(buildID, false)
 
     --unfold
@@ -842,9 +847,10 @@ function foldAttrapp(boolDirection, speed)
     end
 end
 
+
 function fold(boolDirection, lspeed)
     speed = lspeed or math.max(1, buildProgress / 15)
-
+	  SetSignalMask(SIG_FOLD)
 
     if boolDirection == true then --unfold
         foldAttrapp(boolDirection, speed)
@@ -899,16 +905,22 @@ function fold(boolDirection, lspeed)
         Hide(SackWIP)
         Hide(GrowCapsule)
         Hide(BloodCapsule)
-        Hide(bodyBag)
-        Hide(fluidsack)
-        Hide(emptyCapsule)
-
+    
+      	Hide(ItKickedMe)
+			StartThread(delayedHideFluidSack)
        -- resetT(pieceTable_)
 
         return CurrentStat, Instate
     end
 end
 
+function delayedHideFluidSack()
+WMove(fluidsack,y_axis,-50,0.25)
+Hide(fluidsack)
+Hide(bodyBag)
+Hide(emptyCapsule)
+Move(fluidsack,y_axis,0,0)
+end
 function eggDeploy(speed)
 
     Arm = ArmsTable[18]
@@ -924,7 +936,7 @@ function eggDeploy(speed)
         Arm[5], 117, 0, 0, speed,
         Arm[6], 0, 0, 0, speed,
     }
-    echoT(go)
+  --  echoT(go)
     TurnPieceList(refUnitScript,
         go,
         false, --TurnInOrder
@@ -1470,6 +1482,8 @@ OpTool = 6
 function incisionWithArm(sideSign, nr, speed, predelay, postDelay, CutNumber, buildProgressLimit)
 
     Sleep(predelay)
+	 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/roboMove.ogg", math.random(1,10)/10, 2000, 3, 0)
+
     for i = 1, CutNumber, 1 do
         TurnPieceList(refUnitScript,
             {
@@ -1485,6 +1499,13 @@ function incisionWithArm(sideSign, nr, speed, predelay, postDelay, CutNumber, bu
             true ) --synced
         OperationMoves = math.ceil(math.random(5, 12))
 
+	if math.random(0,4)==2 then
+		if math.random(0,1)==1 then
+			 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/boneSaw.ogg", math.random(1,10)/10, 1000, 1, 0)
+		else
+			 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/skalpell.ogg", math.random(1,10)/10, 1000, 1, 0)
+		end
+	end
         for i = 1, OperationMoves, 1 do
             Sleep(1500)
             randoVal = math.random(85, 120)
@@ -1599,7 +1620,7 @@ function cutDeep(buildProgressLimit)
         Sleep(100)
     end
 end
-
+RandMoveKick=piece"RandMoveKick"
 SIG_WATER = 4
 function bloodyHell()
     Signal(SIG_WATER)
@@ -1613,8 +1634,18 @@ function bloodyHell()
     Hide(birthWater)
     while true do
         Spin(bloodWater, y_axis, math.random(-math.pi, math.pi), 0)
+			if math.random(0,12)==6 then
+				Show(ItKickedMe)
+				turnPieceRandDir(ItKickedMe, math.random(30,90))
+				movePieceRandDir(RandMoveKick, math.random(30,90), 15, -15, 5, -5, 15, -15)
+			end
         WMove(bloodWater, y_axis, math.random(-1, -0.25), math.random(0.5, 2))
         WMove(bloodWater, y_axis, 0, math.random(0.5, 2))
+		if math.random(1,4)==2 then
+			reset(RandMoveKick, 80)
+			reset(ItKickedMe,80, true)
+			Hide(ItKickedMe)
+		end
     end
 end
 
@@ -1667,8 +1698,6 @@ function showUnit(buildID)
     reset(SackWIP)
 end
 
-function insertArm(sideSign, nr)
-end
 
 function LoopimplantInsertion(nr)
 end
@@ -1696,11 +1725,46 @@ boolBuilding = false
 
 buildProgress = 0
 
+
+function showOnceComplete(evtID, frame, persPack, startFrame)
+
+				--Spring.Echo("EventStream Poisoned by active for"..persPack.victimID)
+				--only apply if Unit is still alive
+				if Spring.GetUnitIsDead(persPack.myID) == true or Spring.ValidUnitID(persPack.myID) == false then
+					return nil, persPack
+				end
+				
+
+				hp, maxHP, pd, cp, progress  = Spring.GetUnitHealth(persPack.myID)
+				
+				if not progress or progress >= 1 then
+						if progress then
+							returnToWorld(persPack.myID)
+						end
+					return nil, persPack
+				end
+				
+				
+				return frame + 5, persPack
+			
+
+end
+
+
 function buildOS()
     oldID = nil
     while true do
         buildID = Spring.GetUnitIsBuilding(unitID)
         if buildID and buildID ~= oldID then
+				removeFromWorld(buildID)
+				
+				persPack = { myID = buildID}
+					GG.EventStream:CreateEvent(
+					showOnceComplete,
+					persPack,
+					Spring.GetGameFrame() + 1)
+				
+				
             boolBuilding = true
             progress = 0
             buildProgress = 0
@@ -1712,7 +1776,7 @@ function buildOS()
 
             while Spring.ValidUnitID(buildID) and progress < 1 do
                 _, _, pd, cp, progress = Spring.GetUnitHealth(buildID)
-                Spring.Echo("BuildProgress:" .. progress)
+               -- Spring.Echo("BuildProgress:" .. progress)
                 buildProgress = progress or 0.01
                 Sleep(100)
             end
@@ -1767,6 +1831,9 @@ end
 
 function script.StopBuilding()
     SetUnitValue(COB.INBUILDSTANCE, 0)
+		Signal(SIG_BUILD)
+		Signal(SIG_FOLD)
+	   StartThread(fold,false, 1)
 end
 
 function script.StartBuilding(heading, pitch)
