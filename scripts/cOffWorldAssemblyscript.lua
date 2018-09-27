@@ -794,6 +794,35 @@ ImplanT = {}
 DesT = {}
 AttrapT = {}
 
+
+soundTable={
+{name= "roboMove1.ogg"  ,time_ =2000 },
+{name= "roboMove2.ogg"  ,time_ =1000 },
+{name= "roboMove3.ogg"  ,time_ =1000 },
+{name= "skalpell.ogg"  ,time_ =1000 },
+{name= "water.ogg"  ,time_ =8000 },
+{name= "bonesaw.ogg"  ,time_ =1000 }
+}
+
+for i=1,6 do
+soundTable[#soundTable+1] ={name= "pain"..i..".ogg"  ,time_ =3000 },
+end
+boolStillBuilding=false
+function soundTrack()
+	boolStillBuilding = true
+	while boolStillBuilding== true do
+
+	index= math.random(1,#soundTable)
+	 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/"..soundTable[index].name, math.random(5,10)/10, soundTable[index].time_, 1, 0)
+	 
+
+	Sleep(500)
+	end
+
+
+end
+
+
 function foldAttrapp(boolDirection, speed)
 
     if boolDirection == true then --unfold
@@ -1482,8 +1511,7 @@ OpTool = 6
 function incisionWithArm(sideSign, nr, speed, predelay, postDelay, CutNumber, buildProgressLimit)
 
     Sleep(predelay)
-	 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/roboMove.ogg", math.random(1,10)/10, 2000, 3, 0)
-
+	
     for i = 1, CutNumber, 1 do
         TurnPieceList(refUnitScript,
             {
@@ -1499,13 +1527,7 @@ function incisionWithArm(sideSign, nr, speed, predelay, postDelay, CutNumber, bu
             true ) --synced
         OperationMoves = math.ceil(math.random(5, 12))
 
-	if math.random(0,4)==2 then
-		if math.random(0,1)==1 then
-			 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/boneSaw.ogg", math.random(1,10)/10, 1000, 1, 0)
-		else
-			 StartThread(PlaySoundByUnitDefID, myDefID, "sounds/cOffworldAssembly/skalpell.ogg", math.random(1,10)/10, 1000, 1, 0)
-		end
-	end
+
         for i = 1, OperationMoves, 1 do
             Sleep(1500)
             randoVal = math.random(85, 120)
@@ -1630,7 +1652,7 @@ function bloodyHell()
     Hide(GrowCapsule)
     Show(BloodCapsule)
     Show(bloodWater)
-
+	StartThread(soundTrack)
     Hide(birthWater)
     while true do
         Spin(bloodWater, y_axis, math.random(-math.pi, math.pi), 0)
@@ -1677,8 +1699,10 @@ function operate(buildID)
     cutDeep(0.95)
 
     while buildProgress < 0.95 do Sleep(10) end
-    showUnit(buildID)
+		boolStillBuilding
     while buildProgress < 1 do Sleep(10) end
+	    showUnit(buildID)
+		boolStillBuilding= false
 end
 
 function showUnit(buildID)
