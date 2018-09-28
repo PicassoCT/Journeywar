@@ -30,7 +30,7 @@ local unitDef = {
 	CanReclaim=false,	
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
-	
+	showNanoFrame = false,
 	
 	
 	Reclaimable = true,

@@ -775,14 +775,14 @@ SIG_FOLD =16
 function BuildingAnimation(buildID)
     SetSignalMask(SIG_BUILD)
 	 Signal(SIG_FOLD)
-    Spring.SetUnitAlwaysVisible(buildID, false)
+
 
     --unfold
     fold(true, 1)
 
     eggDeploy(1.5)
     StartThread(LooppumpUp, getUniqueSignal())
-    while (buildProgress < 0.25) do Sleep(10) end
+    while (buildProgress < 0.15) do Sleep(10) end
     operate(buildID)
     fold(false, 1)
     while boolBuilding == true do Sleep(10) end
@@ -805,7 +805,7 @@ soundTable={
 }
 
 for i=1,6 do
-soundTable[#soundTable+1] ={name= "pain"..i..".ogg"  ,time_ =3000 },
+	soundTable[#soundTable+1] ={name= "pain"..i..".ogg"  ,time_ =3000 }
 end
 boolStillBuilding=false
 function soundTrack()
@@ -995,7 +995,7 @@ function eggDeploy(speed)
         false )--synced
 
     WaitForTurns(Arm)
-    Sleep(3000)
+    Sleep(1000)
 
 
 
@@ -1012,8 +1012,8 @@ function eggDeploy(speed)
         false, -- WaitForTurn
         true ) --synced
     WaitForTurns(Arm)
-    echo("Station2")
-    Sleep(5000)
+  
+    Sleep(1000)
 
     go = {
         Arm[1], 148, 0, 0, speed,
@@ -1029,7 +1029,7 @@ function eggDeploy(speed)
         true, --TurnInOrder
         true, -- WaitForTurn
         true ) --synced
-    Sleep(5000)
+    Sleep(3000)
     WaitForTurns(Arm)
     echo("Station3")
     Show(GrowCapsule)
@@ -1060,7 +1060,7 @@ function eggDeploy(speed)
         true, -- WaitForTurn
         true ) --synced
 
-    Sleep(5000)
+    Sleep(3000)
 
 
     resetT(Arm, 5, false, true)
@@ -1699,7 +1699,7 @@ function operate(buildID)
     cutDeep(0.95)
 
     while buildProgress < 0.95 do Sleep(10) end
-		boolStillBuilding
+	
     while buildProgress < 1 do Sleep(10) end
 	    showUnit(buildID)
 		boolStillBuilding= false
@@ -1716,7 +1716,6 @@ function showUnit(buildID)
     Show(emptyCapsule)
     Show(fluidsack)
     Show(bodyBug)
-    Spring.SetUnitAlwaysVisible(buildID, true)
     WMove(SackWIP, y_axis, -25, 100)
     Hide(SackWIP)
     reset(SackWIP)
@@ -1780,13 +1779,13 @@ function buildOS()
     while true do
         buildID = Spring.GetUnitIsBuilding(unitID)
         if buildID and buildID ~= oldID then
-				removeFromWorld(buildID)
+				--removeFromWorld(buildID)
 				
-				persPack = { myID = buildID}
-					GG.EventStream:CreateEvent(
-					showOnceComplete,
-					persPack,
-					Spring.GetGameFrame() + 1)
+				-- persPack = { myID = buildID}
+					-- GG.EventStream:CreateEvent(
+					-- showOnceComplete,
+					-- persPack,
+					-- Spring.GetGameFrame() + 1)
 				
 				
             boolBuilding = true
@@ -1796,7 +1795,7 @@ function buildOS()
             StartThread(BuildingAnimation, buildID, false)
 
             --building something
-            Spring.SetUnitAlwaysVisible(buildID, false)
+      
 
             while Spring.ValidUnitID(buildID) and progress < 1 do
                 _, _, pd, cp, progress = Spring.GetUnitHealth(buildID)
@@ -1810,9 +1809,7 @@ function buildOS()
                 fold(false, 7)
             end
 
-            if Spring.GetUnitIsDead(buildID) == false then
-                Spring.SetUnitAlwaysVisible(buildID, true)
-            end
+           boolStillBuilding= false
             boolBuilding = false
             oldID = buildID
         end
@@ -1889,5 +1886,5 @@ end
 
 
 function script.QueryBuildInfo()
-    return GrowSpot
+    return buildSpot
 end

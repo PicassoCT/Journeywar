@@ -40,7 +40,7 @@ local unitDef = {
 	CanStop = true,
 	LeaveTracks = false, 
 	strafeToAttack=true,
-	shownanoframe=0,
+	shownanoframe= false,
 	 corpse             = "bgcorpse",
 	 
 	 explodeAs = [[NOWEAPON]],

@@ -335,7 +335,8 @@ function Spring.UnitScript.WaitForMove(piece, axis)
 		if not piece then 
 			activeUnit	=GetActiveUnit()
 			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
-			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has error in a waitformove")               
+			Spring.Log(gadget:GetInfo().name, LOG.ERROR, "Unit " .. ud.name .." has error in a waitformove ")
+
 		end
 
         if sp_WaitForMove(piece, axis) then

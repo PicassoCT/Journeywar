@@ -522,9 +522,9 @@ TaskTable = {}
 counter = 0
 function walk()
 	speed= 0.8
-    mSyncIn(strider, 0,-10, 0, 7000)
+    mSyncIn(strider, 0,-10, 0, 500)
 	for i=1,#LegTable do
-		tSyncIn(LegTable[i],0,0,0,2000)
+		tSyncIn(LegTable[i],0,0,0,800)
 	end
 	
 	WaitForTurns(Leg1,Leg2,Leg3)
@@ -818,7 +818,7 @@ function kneelRiseAKnight() --SirLongLeg
     syncTurnInTime(striderlegB, 0, 0, -156, 1000, 0, 0, 0)
     syncTurnInTime(striderlegA3, 121, 0, 0, 1000, 0, 0, 0)
     syncTurnInTime(striderlegB3, -148, 0, 0, 1000, 0, 0, 0)
-    syncMoveInTime(strider, 0, -105, 0, 2000)
+    syncMoveInTime(strider, 0, -105, 0, 1000)
     WaitForMove(strider, y_axis)
     WaitForTurns(strider, striderlegA, striderlegA2, striderlegA3)
 
@@ -827,7 +827,7 @@ function kneelRiseAKnight() --SirLongLeg
         swayTime = cbrandoVal(1, 6)
         for i = 1, swayTime, 1 do
 
-            swayLeftRight(i % 2 == 0, math.random(10, 25), -105, 4000)
+            swayLeftRight(i % 2 == 0, math.random(10, 25), -105, math.random(2000,4000))
         end
     end
 
@@ -835,16 +835,17 @@ function kneelRiseAKnight() --SirLongLeg
     timeKneel = 0
     offSetswing = 5
     while timeKneel < 12000 do
-        syncTurnInTime(striderlegA2, 0, 0, -121 + offSetswing, 2000, 0, -121 + offSetswing * -1, 0)
-        syncTurnInTime(striderlegB2, 0, 0, 156 - offSetswing, 2000, 0, 156 - offSetswing * -1, 0)
-        syncTurnInTime(striderlegA, 0, 0, 121 - offSetswing, 2000, 0, 121 - offSetswing * -1, 0)
-        syncTurnInTime(striderlegB, 0, 0, -156 + offSetswing, 2000, 0, -156 + offSetswing * -1, 0)
-        syncTurnInTime(striderlegA3, 121 - offSetswing, 0, 0, 2000, 0, 121 - offSetswing * -1, 0)
-        syncTurnInTime(striderlegB3, -148 + offSetswing, 0, 0, 2000, 0, 148 + offSetswing * -1, 0)
+			timeShare= math.random(1500,2500)
+        syncTurnInTime(striderlegA2, 0, 0, -121 + offSetswing, timeShare, 0, -121 + offSetswing * -1, 0)
+        syncTurnInTime(striderlegB2, 0, 0, 156 - offSetswing, timeShare, 0, 156 - offSetswing * -1, 0)
+        syncTurnInTime(striderlegA, 0, 0, 121 - offSetswing, timeShare, 0, 121 - offSetswing * -1, 0)
+        syncTurnInTime(striderlegB, 0, 0, -156 + offSetswing, timeShare, 0, -156 + offSetswing * -1, 0)
+        syncTurnInTime(striderlegA3, 121 - offSetswing, 0, 0, timeShare, 0, 121 - offSetswing * -1, 0)
+        syncTurnInTime(striderlegB3, -148 + offSetswing, 0, 0, timeShare, 0, 148 + offSetswing * -1, 0)
         Move(strider, y_axis, -105 + offSetswing, 50)
-        Sleep(2000)
+        Sleep(timeShare)
         offSetswing = offSetswing * -1
-        timeKneel = timeKneel + 2000
+        timeKneel = timeKneel + timeShare
     end
     legs_down()
 end
