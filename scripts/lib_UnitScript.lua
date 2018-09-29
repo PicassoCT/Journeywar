@@ -58,6 +58,8 @@ return process(Spring.GetTeamList(),
 			) or {}
 
 end
+
+
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
 	if not x or not z then
@@ -1086,6 +1088,19 @@ function getPieceMap(unitID)
 	return List 
 end
 
+function waitTillComplete(unitID)
+	while not buildProgress and hp ~= mHp do
+	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+	Sleep(500)
+	end
+	
+	while buildProgress and buildProgress < 0 do
+        hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
+        Sleep(500)
+   end
+   
+	return bP ~=nil
+end
 --======================================================================================
 --Section: Landscape/Pathing Getter/Setters
 --======================================================================================
@@ -1135,18 +1150,6 @@ function getGeoventList()
 		end
 	end
 	return GeoventList
-end
-
-function getNearestPositionOnCircle(pCenter, Radius, pPos)
-local rPos={x=0,y=0,z=0}
-
-rPos.x = pCenter.x + Radius* ((pPos.x - pCenter.x)/ math.sqrt((pPos.x-pCenter.x)^2 + (pPos.z- pCenter.z)^2))
-rPos.z = pCenter.z + Radius* ((pPos.z- pCenter.z)/ math.sqrt((pPos.x-pCenter.x)^2 + (pPos.z- pCenter.z)^2))
---circle equation solved for z: sqrt( -([(pCenter.z -b)/m]- pCenter.x)^2  + Radius) + pCenter.z =   rPos.z
---circle equation solved for x: x  = sqrt(Radius - (z -pCenter.z)^2) + 
-
-
-return rPos
 end
 
 function getADryWalkAbleSpot()
@@ -2481,6 +2484,20 @@ end
 --======================================================================================
 --Section: Geometry/Math functions
 --======================================================================================
+
+function getNearestPositionOnCircle(pCenter, Radius, pPos)
+local rPos={x=0,y=0,z=0}
+
+rPos.x = pCenter.x + Radius* ((pPos.x - pCenter.x)/ math.sqrt((pPos.x-pCenter.x)^2 + (pPos.z- pCenter.z)^2))
+rPos.z = pCenter.z + Radius* ((pPos.z- pCenter.z)/ math.sqrt((pPos.x-pCenter.x)^2 + (pPos.z- pCenter.z)^2))
+--circle equation solved for z: sqrt( -([(pCenter.z -b)/m]- pCenter.x)^2  + Radius) + pCenter.z =   rPos.z
+--circle equation solved for x: x  = sqrt(Radius - (z -pCenter.z)^2) + 
+
+
+return rPos
+end
+
+
 function computateBendLimits(piecename,parent)
 	paPosX,paPosY,paPosZ=Spring.GetUnitPiecePosition(unitID,parent)
 	cPosX,cPosY,cPosZ=Spring.GetUnitPiecePosition(unitID,piecename)

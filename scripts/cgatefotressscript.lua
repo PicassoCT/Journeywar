@@ -356,6 +356,7 @@ function createProcess()
     CataHead = TablesOfPiecesGroups["CataHead"]
     DronePodTable = TablesOfPiecesGroups["DronePod"]
 
+	
 
     makeWeaponsTable()
     for i = 1, #Mag do
@@ -379,16 +380,11 @@ end
 
 function deployOnceComplete()
 	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-	while not buildProgress and hp ~= mHp do
-	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-	Sleep(500)
+	if buildProgress then
+		GateDeploy(true)
 	end
-    hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-    while buildProgress and buildProgress < 0 do
-        echo(buildProgress)
-        hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-        Sleep(1000)
-    end
+	waitTillComplete(unitID)
+
 
     unfoldAnimation()
 end
@@ -596,8 +592,6 @@ teamid = Spring.GetUnitTeam(unitID)
 
 
 function GateDeploy(boolUnfold)
-
-
     if boolUnfold == true then
         spawnCegAtPiece(unitID, GatePoint, "dirt", 15)
         Sleep(1000)
@@ -1472,7 +1466,7 @@ function timeDelayWeapon1()
             Sleep(1000)
         end
     end
-    echo("Gatefortress: RailGun: Ready")
+
     boolTimeDelayed = true
 end
 

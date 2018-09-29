@@ -205,6 +205,8 @@ end
 
 SIG_HARVEST = 2
 function DissolveOnMove()
+	 waitTillComplete(unitID)
+
     while true do
         while boolMoving == true do
             for i = 1, NumberOfSwingers, 1 do

@@ -784,8 +784,11 @@ function BuildingAnimation(buildID)
     StartThread(LooppumpUp, getUniqueSignal())
     while (buildProgress < 0.15) do Sleep(10) end
     operate(buildID)
-    fold(false, 1)
-    while boolBuilding == true do Sleep(10) end
+	  while boolBuilding == true do Sleep(10) end
+	  Sleep(1000)
+	  if boolBuilding == false then
+		fold(false, 1)
+		end
 end
 
 CrationismT = {}
@@ -1154,7 +1157,7 @@ end
 boolImplantImported = false
 function implantImplant(speed)
 
-    while true do
+    while boolBuilding== true do
 
         Sleep(100)
         if boolImplantImported == true then
@@ -1247,7 +1250,7 @@ end
 
 function importImplant(nr, speed)
     Arm = ArmsTable[4]
-    while true do
+    while boolBuilding == true do
         Sleep(100)
 
         if boolImplantImported == false then
@@ -1701,8 +1704,15 @@ function operate(buildID)
     while buildProgress < 0.95 do Sleep(10) end
 	
     while buildProgress < 1 do Sleep(10) end
-	    showUnit(buildID)
-		boolStillBuilding= false
+	 moveUnitOut(buildID)
+	 boolStillBuilding= false
+end
+
+function moveUnitOut(id)
+	Spring.UnitAttach(unitID, id, buildSpot)
+	WMove(buildSpot,x_axis,300,25)
+	Spring.UnitDetach ( id)
+
 end
 
 function showUnit(buildID)
