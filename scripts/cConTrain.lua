@@ -300,7 +300,7 @@ local boolIsMoving = false
 --local boolConstantMove=false
 local speedCompareTolerance = 1.1
 local minSpeed = 0.43
---TurnDetector
+--tDetector
 local headTolerance = 1.00002
 local headChangeTolerance = 40
 local negativeTolerance = 2 - headTolerance
@@ -1158,7 +1158,7 @@ end
 --turn detection block
 
 --function: Sensor Loop detects turning Train
-local function turnDetector()
+local function tDetector()
     --local headTolerance=1.00002
     local currentHeading = 0
     local headingOfOld = Spring.GetUnitHeading(unitID)
@@ -1172,7 +1172,7 @@ local function turnDetector()
     local lcompareHeading = compareHeading
 
     while (true) do
-        --- -Spring.Echo("TurnDetector still alive!")
+        --- -Spring.Echo("tDetector still alive!")
 
         currentHeading = spGetUnitHeading(unitID) --updates heading
         --	assert(currentHeading)
@@ -1209,7 +1209,7 @@ local function turnDetector()
         headingOfOld = currentHeading
         --assert(headingOfOld)
     end
-    --Spring.Echo("Im leaving the TurnDetector. You mad, Modfag?")
+    --Spring.Echo("Im leaving the tDetector. You mad, Modfag?")
 end
 
 -- this Situation Object bundles all the Actions necessary in the StopSituation and
@@ -1629,7 +1629,7 @@ function script.Create()
 
     StartThread(soundOSLoop)
     StartThread(speedUpdater)
-    StartThread(turnDetector) -- starts the turndetector SENSORIC
+    StartThread(tDetector) -- starts the tDetector SENSORIC
     StartThread(movMent) -- starts the MovMentThread (OS spawning the endPillars, moving the rail in movemode)
     StartThread(AdjustPillarHeight) --the general Height Adjustmentfunction
     StartThread(PillarManager) --the SituationManager OS that retracts and unfolds Pillars depending on the Situation and the previousSituation

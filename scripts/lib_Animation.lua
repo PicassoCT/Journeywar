@@ -1210,6 +1210,34 @@ function paintPatternPieces(ListOfPieces, ListOfCoords, sx, sy, sz)
     end
 end
 
+-->Detects a Turning
+function turnDetector(resolutinInMs)
+	 if not resolutinInMs then resolutinInMs =500 end
+    local spGetUnitHeading = Spring.GetUnitHeading
+    oldHeading = spGetUnitHeading(unitID)
+    Sleep(resolutinInMs)
+    newHeading = oldHeading
+
+    while true do
+        newHeading = spGetUnitHeading(unitID)
+
+        if math.abs(newHeading - oldHeading) > 1400 then
+            boolTurning = true
+            if newHeading - oldHeading < 0 then 
+				boolTurnLeft = true 
+			else 
+				boolTurnLeft = false 
+			end
+        else
+            boolTurning = false
+        end
+        Sleep(resolutinInMs)
+        oldHeading = newHeading
+    end
+end
+
+
+
 -->Moves a Piece to a Position on the Ground in Worldspace
 function moveUnitPieceToRelativeWorldPos(unitID, piecename, relX, relZ, speed, loffset)
     offset = loffset or 0

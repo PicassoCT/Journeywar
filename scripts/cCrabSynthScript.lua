@@ -128,6 +128,7 @@ end
 movsoundfile = "sounds/ccrabsynth/Moving.wav"
 deploysoundfile = "sounds/ccrabsynth/Deploy.ogg"
 
+
 crabunitdef = Spring.GetUnitDefID(unitID)
 function MoveAnimation()
     while true do
@@ -135,7 +136,7 @@ function MoveAnimation()
             StartThread(PlaySoundByUnitDefID, crabunitdef, movsoundfile, 1, 2500, 1)
             --Spring.Echo("WalkingState")
             while (boolMoving == true) and boolDeployed == false do
-                walkAnim(1500)
+                walkAnim(1000)
                 Sleep(300)
             end
 
@@ -150,7 +151,7 @@ function MoveAnimation()
         elseif (boolTurning == true) and boolDeployed == false then
             --Spring.Echo("turningState")
             while (boolTurning == true) and boolDeployed == false and boolMoving == false do
-                turnAnim(3000)
+                turnAnim(1500)
                 Sleep(300)
             end
 
@@ -160,7 +161,7 @@ function MoveAnimation()
                 foldWeapon(0)
                 idleAnim()
             else
-                resetT(piecesTable, 2.25, true)
+                resetT(piecesTable, 25, true)
             end
         end
         Sleep(100)
@@ -224,7 +225,8 @@ function UnDeployAnimation(Time)
 
     foldWeapon(1.5)
     echo("ccrabsynth/unDeploy")
-    SetUnitValue(COB.MAX_SPEED, maxspeed)
+		reSetSpeed(unitID, UnitDefs)
+   
     boolDeployed = false
 end
 
@@ -418,6 +420,7 @@ function walkAnim(Time)
 end
 
 
+
 cos = 0
 boolFlipFlop = 0
 function idleAnim()
@@ -497,6 +500,7 @@ function script.Create()
     StartThread(deployedDetector)
     StartThread(headingChangeDetector)
     StartThread(MoveAnimation)
+   
 end
 
 function script.Killed(recentDamage, _)
@@ -515,12 +519,18 @@ function turn_BackWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShe
     mod = 0.075115
     quadTime = math.ceil(Time * 0.2)
     halfTime = math.ceil(Time * 0.4)
+		if boolTurnLeft == true then		
+			yTurnValue= 15
+		else
+		  yTurnValue = -15
+		end
 
+	
     --MidPos
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, -51 + (-1 * centerTurnX), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, -51 + (-1 * centerTurnX), yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, 12, 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -21 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -21 + (-1 * centerTurnX) + math.random(-offset, offset), yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, 22 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, -41 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(Head); syncTurnInTime(Head, 1, 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
@@ -534,10 +544,10 @@ function turn_BackWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShe
     WaitForTurns(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3)
 
     --SetDown
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, -5 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, -5 + (-1 * centerTurnX) + math.random(-offset, offset), yTurnValue, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, 50 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -62 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -62 + (-1 * centerTurnX) + math.random(-offset, offset), yTurnValue, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, 22 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, -21 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(Head); syncTurnInTime(Head, -1, 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
@@ -554,12 +564,12 @@ function turn_BackWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShe
     WaitForTurns(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3)
 
     --Push Backwards
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 25 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 25 + (-1 * centerTurnX) + math.random(-offset, offset), -yTurnValue, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, -44 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -90 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -90 + (-1 * centerTurnX) + math.random(-offset, offset), -yTurnValue, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, -24 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, 85 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, 42 + math.random(-offset, offset), 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(Head); syncTurnInTime(Head, 1, 0, 0, halfTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     Sleep(halfTime)
     WaitForTurns(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3)
@@ -571,11 +581,18 @@ function turn_ForWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShea
     mod = 0.15115
     quadTime = math.ceil(Time * 0.25)
     halfTime = math.ceil(Time * 0.55)
+	 yTurnValue=0
+	if boolTurnLeft == true then		
+		yTurnValue= -15
+	else
+	  yTurnValue = 15
+	end
+	
     --MidPos
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 12 + (-1 * centerTurnX), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 12 + (-1 * centerTurnX), yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, -36, 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, 0 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, 0 + (-1 * centerTurnX) + math.random(-offset, offset), yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, -28 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, 0 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
@@ -590,10 +607,10 @@ function turn_ForWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShea
     WaitForTurns(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3)
 
     --SetDown
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 42 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 42 + (-1 * centerTurnX) + math.random(-offset, offset), yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, 19 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -38 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -38 + (-1 * centerTurnX) + math.random(-offset, offset), yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, 15 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, -23 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(Head); syncTurnInTime(Head, -1, 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
@@ -611,10 +628,10 @@ function turn_ForWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShea
 
     --Push Backwards
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 60 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 60 + (-1 * centerTurnX) + math.random(-offset, offset), -yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, 20 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -79 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -79 + (-1 * centerTurnX) + math.random(-offset, offset), -yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, 70 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, -23 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     Sleep(quadTime)
@@ -622,12 +639,12 @@ function turn_ForWards(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShea
 
 
     --Push Backwards
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 0 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg1); syncTurnInTime(fwLeg1, 0 + (-1 * centerTurnX) + math.random(-offset, offset), -yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(fwLeg2); syncTurnInTime(fwLeg2, -5 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
 
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -32 + (-1 * centerTurnX) + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg1); syncTurnInTime(opBLeg1, -32 + (-1 * centerTurnX) + math.random(-offset, offset), -yTurnValue, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg2); syncTurnInTime(opBLeg2, -6 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
-    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, -89 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
+    x_deg, y_deg, z_deg = Spring.UnitScript.GetPieceRotation(opBLeg3); syncTurnInTime(opBLeg3, -36 + math.random(-offset, offset), 0, 0, quadTime, math.deg(x_deg), math.deg(y_deg), math.deg(z_deg))
     Sleep(quadTime)
     WaitForTurns(fwLeg1, fwLeg2, opBLeg1, opBLeg2, opBLeg3, fShear1, fShear2, fShear3)
     bool_TurnForwardDone = true
@@ -639,17 +656,15 @@ function turnAnim(Time)
 
     bool_TurnForwardDone = false
     bool_TurnBackwardDone = false
-
+	
 
 
     centerTurnX = math.random(1, 2)
     Turn(Body, x_axis, math.rad(centerTurnX), 0.25)
     Turn(Body, z_axis, math.rad(2), 0.15)
-    --function turn_BackWards	(fwLeg1,fwLeg2, 	opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, 	offset,Time,signum)
     StartThread(turn_BackWards, Leg41, Leg42, Leg11, Leg12, Leg13, Leg61, Leg62, Leg63, 5, Time, -1)
 
-    --function turn_ForWards(		fwLeg1,fwLeg2, 	opBLeg1,opBLeg2,opBLeg3,fShear1,fShear2,fShear3, 	offset,Time,signum)
-    StartThread(turn_ForWards, Leg31, Leg32, Leg21, Leg22, Leg23, Leg51, Leg52, Leg53, 5, Time, 1)
+     StartThread(turn_ForWards, Leg31, Leg32, Leg21, Leg22, Leg23, Leg51, Leg52, Leg53, 5, Time, 1)
     WaitForTurn(Body, x_axis)
 
     Sleep(Time + Time / 2)
@@ -772,13 +787,14 @@ function script.StopMoving()
 end
 
 
-maxspeed = math.ceil(COB.MAX_SPEED * 65533)
+
 function script.Activate()
 
     --sets the speed to 5,2 *65533
 
     boolDeployWanted = true
-    SetUnitValue(COB.MAX_SPEED, 0)
+		setSpeedEnv(unitID,0)
+
     return 1
 end
 

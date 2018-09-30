@@ -105,7 +105,7 @@ end
 
 boolTurning = false
 boolTurnLeft = false
-function turnDetector()
+function tDetector()
     while true do
         Sleep(200)
         boolTurning, boolTurnLeft = compareHeading(nil, nil, 90, 40)
@@ -134,7 +134,7 @@ function moveIt()
     Signal(SIG_MOVE)
     SetSignalMask(SIG_MOVE)
     StartThread(keepAboveGround)
-    StartThread(turnDetector)
+    StartThread(tDetector)
     constOffset = (math.pi * 3) / #snakeTable
     times = 0
     relDegTable = {}

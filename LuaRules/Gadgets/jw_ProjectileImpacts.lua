@@ -619,8 +619,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	ImplantReduceFactor=0.9125
 	UnitDamageFuncT[cimplantlaunchDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 	--if not implantSuspectTypes[unitDefID] then return damage end
-	if lethalBuffExecption[unitDefID] then return end
-	
+	if lethalBuffExecption[unitDefID] or UnitDefs[unitDefID].isBuilding == true  then return end
+
 	spawnCegAtUnit(unitID,"cimplantimpact",0,10,0)
 	 Spring.PlaySoundFile( "sounds/cheadlauncher/cimplantimpact.wav", 1)
 	Spring.TransferUnit(unitID, attackerTeam)

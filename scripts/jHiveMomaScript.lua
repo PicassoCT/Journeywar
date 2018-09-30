@@ -555,7 +555,7 @@ function moveThing()
     end
 end
 
-function turnDetector()
+function restDogsRelative()
 	while true do
 		keepDogsRelativeResting(500) 
 

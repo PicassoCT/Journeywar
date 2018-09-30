@@ -32,18 +32,13 @@ hdlmain = piece "hdlaumain"
 walls = {}
 for i = 1, 3, 1 do
     walls[i] = {}
-    walls[i][1] = {}
     temp = "hWall" .. i
     walls[i][1] = piece(temp)
-    Hide(walls[i][1])
-
-    walls[i][2] = {}
-    walls[i][3] = {} --interVallStart
-    walls[i][4] = {} --interVallEnd
+	 walls[i][2] = false
 
     walls[i][3] = 0 --interVallStart
     walls[i][4] = 0 --interVallEnd
-    walls[i][2] = false
+   
 end
 
 eye = {}
@@ -95,13 +90,19 @@ function TurnShield(nr, degree)
     Show(walls[nr][1])
     Move(walls[nr][1], y_axis, 0, 66)
     WaitForMove(walls[nr][1], y_axis)
-    Turn(walls[nr][1], y_axis, math.rad(degree), 22)
-    WaitForTurn(walls[nr][1], y_axis)
+
     walls[nr][3] = degree - interVallHalf
     walls[nr][4] = degree + interVallHalf
-    countNumber = 2000
-
+    countNumber = 6000
+	
     while (boolMoving == false and countNumber > 0) do
+			Heading=    diffHeadingToStart -newHeading 
+			Heading=(Heading/32768)*3.14159
+			
+			diffHeadingToStart = 0
+
+			Turn(walls[nr][1], y_axis, math.rad(degree)+ Heading, 22)
+			
         Sleep(350)
         countNumber = countNumber - 350
     end
@@ -115,24 +116,27 @@ end
 
 function script.HitByWeapon(x, z, weaponDefID, damage)
 	lastAttackerID = Spring.GetUnitLastAttacker(unitID)
-	degree = math.huge
+	degree = 0
 	if lastAttackerID and Spring.GetUnitIsDead(lastAttackerID)==false then
 		x,_,z= Spring.GetUnitPosition(unitID)
 		ox,_,oz=  Spring.GetUnitPosition(lastAttackerID)
 		degree=	convPointsToDeg(x,z,ox,oz)
 	end
-	degree= math.rad(degree)
+	angleInDeg= math.deg(degree)
+
 
     --check Allready established Walls
     for i = 1, 3, 1 do
-        if walls[i][2] == true and degree > walls[i][3] and degree < walls[i][4] then
+        if walls[i][2] == true and angleInDeg > walls[i][3] and angleInDeg < walls[i][4] then
+				
             return 0
         end -- we have a Wall in Place, no damage taken
     end
-	w = getFreeWall()
-    if w and degree ~= math.huge then
+	
+	 w = getFreeWall()
+    if w and angleInDeg then
         --getFreeWall
-        StartThread(TurnShield, w, degree)
+        StartThread(TurnShield, w, angleInDeg)
         return 0
         --if not nil showWall, then StartThread Turn
     else
@@ -455,11 +459,16 @@ end
 
 boolTurning= false
 boolTurnLeft= false
-function turnDetector()
+diffHeadingToStart = 0
+newHeading= 0
+function tDetector()
     local spGetUnitHeading = Spring.GetUnitHeading
     oldHeading = spGetUnitHeading(unitID)
+	diffHeadingToStart= oldHeading
+
     Sleep(500)
     newHeading = oldHeading
+
 
     while true do
         newHeading = spGetUnitHeading(unitID)
@@ -479,6 +488,7 @@ function turnDetector()
     end
 end
 
+
 TableOfPieceGroups={}
 function script.Create()
 
@@ -487,6 +497,7 @@ function script.Create()
 	eye= TableOfPieceGroups["Eye"]
 	hideT(TableOfPieceGroups["hWall"])
 	for i = 1, 3, 1 do
+		Hide(walls[i][1])
 		Move(walls[i][1], y_axis, -20, 0)
 	end
    
@@ -503,6 +514,7 @@ function script.Create()
     Spin(hlamocirc2, y_axis, math.rad(-200), 0.5)
     StartThread(idleBreathLoop)
     StartThread(reloadAnimation)
+     StartThread(tDetector)
 end
 
 function reTurnGun()

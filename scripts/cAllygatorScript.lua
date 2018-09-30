@@ -84,7 +84,7 @@ function motionStateDetector()
     StartThread(movementDetector)
     while true do
         --Sensory Evaluation
-        boolImTurning = TurnDetector()
+        boolImTurning = tDetector()
         flightDetector()
 
 
@@ -214,7 +214,7 @@ oldHeading = newHeading
 
 
 --Function needs a delay when used, else there be no turning ever
-function TurnDetector()
+function tDetector()
     _, newHeading, _ = Spring.GetUnitRotation(unitID)
 
     if math.abs(math.abs(newHeading) - math.abs(oldHeading)) > 0.04 then

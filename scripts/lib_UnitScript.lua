@@ -217,6 +217,8 @@ function setSpeedEnv(k, val)
 		Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed * val * 2184.53))
 	end
 end
+
+
 -->Generate a Description Text for a Unit
 function unitDescriptionGenerator(Unit, UnitDefNames)
 	local ud = UnitDefNames[Unit]
