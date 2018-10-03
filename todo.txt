@@ -1,5 +1,3 @@
-#GET TESTWORTHY
-
 
 Debug ComEnderWeapons
 Debug csniper->Ropephysix (also drastic reduce usage by pulling rope in for most of them)

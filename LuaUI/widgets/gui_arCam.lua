@@ -17,7 +17,7 @@ function widget:GetInfo()
 		layer = math.huge,
 		hidden = false,
 		handler = true,
-		enabled = true -- loaded by default?
+		enabled = false -- loaded by default?
 	}
 end
 --include("scripts/lib_type.lua" ) 
