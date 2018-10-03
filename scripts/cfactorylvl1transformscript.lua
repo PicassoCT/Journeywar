@@ -6,6 +6,7 @@ include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
+local totalReppairs = 600000
 local repairsDone = 600000
 local timeTillDoneQuart = 450000
 cubes = {}
@@ -13,38 +14,65 @@ outerCubes = {}
 totalCubes = 588
 
 for i = 1, totalCubes, 1 do
-    cubes[i] = {}
-    outerCubes[i] = {}
     piecenameOne = "Cube" .. i
     piecenameTwo = "ShellC" .. i
     outerCubes[i] = piece(piecenameTwo)
     cubes[i] = piece(piecenameOne)
 end
 
+function showHideCube(i, bShow)
+
+
+if bShow == true then
+ if outerCubes[i] then Show(outerCubes[i]) end
+ if cubes[i] then Show(cubes[i]) end
+ 
+else
+ if outerCubes[i] then Hide(outerCubes[i]) end
+ if cubes[i] then Hide(cubes[i]) end
+
+end   
+end
+
 tentacleCounter = 0
+percentage = 0.0
 function upGradde()
     --getting the old hitpoints
     oldhp, maxhp = Spring.GetUnitHealth(unitID)
-
+  
     while repairsDone > 0 do
+			 buildingTentacles()
+			percentage= (repairsDone/totalReppairs)
+
         hp, maxhp = Spring.GetUnitHealth(unitID)
-        Sleep(1000)
-        if tentacleCounter < 3 then
-            tentacleCounter = tentacleCounter + 1
-            StartThread(buildingTentacles)
-        end
+       
         diff = hp - oldhp
 
         if diff > 0 then
             repairsDone = repairsDone - diff
         end
 
-        if hp > maxhp * 0.75 then
-            Spring.SetUnitHealth(unitID, math.ceil(maxhp * 0.75))
-            hp = math.ceil(maxhp * 0.75)
+        if hp > maxhp * 0.5 then
+            Spring.SetUnitHealth(unitID, math.ceil(maxhp * 0.5))
+            hp = math.ceil(maxhp * 0.5)
         end
 
         oldhp = hp
+	 Sleep(150)   	
+    end
+	
+	for i = 1, totalCubes, 1 do
+        if fcvlvl2[i] == true then
+            Show(cubes[i])
+            Move(cubes[i], y_axis, 0, 42)
+            Move(cubes[i], z_axis, 0, 42)
+            Move(cubes[i], x_axis, 0, 42)
+        else				
+				StartThread(mSyncIn,cubes[i], 0, math.random(-8000,-300), 0, math.ceil(math.random(10000,20000)))	
+				if outerCubes[i] then
+				StartThread(mSyncIn,outerCubes[i], 0, math.random(-8000,-300), 0, math.ceil(math.random(10000,30000)))			
+				end
+			end
     end
     --Congrats you survived growing up
     if GG.UnitsToSpawn then
@@ -53,7 +81,7 @@ function upGradde()
         GG.UnitsToSpawn:PushCreateUnit("cbuildanimation", x, y, z, 0, teamID)
         GG.UnitsToSpawn:PushCreateUnit("fclvl2", x, y, z, 0, teamID)
     end
-    Sleep(4000)
+    Sleep(30000)
     Spring.DestroyUnit(unitID, false, true)
 end
 
@@ -233,52 +261,73 @@ function nextIt(it)
     end
 end
 
+allreadyMoving={}
+
 function buildingTentacles()
-    dice = math.floor(math.random(1, 49))
-    if fcvlvl2[dice] and fcvlvl2[dice] == true then
-        it = dice + 49
-        itTable = {}
-        while it and fcvlvl2[it] == false and cubes[it] do
-            Move(cubes[it], y_axis, -260, 0)
-            if cubes[it] ~= nil then
-                table.insert(itTable, it)
 
-                Show(cubes[it])
-                Move(cubes[it], y_axis, 0, 25)
-                Move(cubes[it], x_axis, 0, 25)
-                Move(cubes[it], z_axis, 0, 25)
+	
+	 iLevel= math.ceil((1.0-percentage)* totalCubes)
+	 for i=1, 588, 7 do
+		for l=0, 7, 1 do
+		local k= i + l
+		boolTouched= false
+			
+	   -- if part of the blueprint
+			if fcvlvl2[k] == true  then 				
+				boolTouched= true
+				bCometogether = math.random(0,1)==1 
+					if bCometogether == false then
+						showHideCube(k, true)
+					end
+					
+				randMove=	function()
+						if not allreadyMoving[k] then allreadyMoving[k] = false end
+						if allreadyMoving[k] == true then return end
+						allreadyMoving[k] = true						
+					
+						movePieceRandDir(cubes[k], math.random(10,50), 25, -25,  25, -25,  -25, -200)
+						if outerCubes[k] then
+						movePieceRandDir(outerCubes[k], math.random(10,50), 25, -25,  25, -25,  -25, -200)
+						WaitForMoves(outerCubes[k])
+						end
+						
+						WaitForMoves(cubes[k])
+						showHideCube(k, true)
+						mSyncIn(cubes[k], 0, 0, 0, math.ceil(math.random(500,3000)))
+						if outerCubes[k] then
+						mSyncIn(outerCubes[k], 0, 0, 0, math.ceil(math.random(500,3000)))
+							WaitForMoves(outerCubes[k])
+						end						
+					
+						WaitForMoves(cubes[k])
+						allreadyMoving[k] = false
+					end
+					
+					
+				StartThread(randMove)
+			else
+		   --if part of the percentage display
+				if k < iLevel then 	
+					boolTouched= true
+					showHideCube(k, true)
+					if outerCubes[k] then 
+						StartThread(mSyncIn,outerCubes[k], math.random(-10,10),  math.random(-10,10),  math.random(-10,10), math.ceil(math.random(500,3000))) 
+					end
+					StartThread(mSyncIn,cubes[k], math.random(-10,10),  math.random(-10,10),  math.random(-10,10), math.ceil(math.random(500,3000))) 
 
-                WaitForMove(cubes[it], x_axis)
-                WaitForMove(cubes[it], z_axis)
-                WaitForMove(cubes[it], y_axis)
-                if cubes[it] ~= nil then
-                    x, y, z = Spring.GetUnitPiecePosition(unitID, cubes[it])
-
-                    it = nextIt(it)
-                    if cubes[it] ~= nil then
-                        Move(cubes[it], y_axis, 0, 0, true)
-                        px, py, pz = Spring.GetUnitPiecePosition(unitID, cubes[it])
-                        x, y, z = px - x, py - y, pz - z
-                        Move(cubes[it], y_axis, y, 0, true)
-                        Move(cubes[it], x_axis, x, 0, true)
-                        Move(cubes[it], z_axis, z, 0, true)
-                    end
-                end
-            end
-        end
-        Sleep(8000)
-
-        for i = 1, #itTable, 1 do
-            Move(cubes[itTable[i]], y_axis, -750, 125)
-            Move(cubes[itTable[i]], x_axis, 0, 25)
-            Move(cubes[itTable[i]], z_axis, 0, 25)
-        end
-        Sleep(9000)
-        for i = 1, #itTable, 1 do
-            Hide(cubes[itTable[i]])
-        end
-    end
-    tentacleCounter = tentacleCounter - 1
+			   end			   
+		   end	
+		   
+		     if k-7 == i or k == i+7 and (i % 49 == 0 or i % 49 == 1 or i % 49== 7 or i % 49 == 42) then
+						boolTouched= true
+						showHideCube(k, true)
+				   end		   
+		   
+		   
+			if boolTouched== false then showHideCube(k, false) end
+		end
+	 end
+   
 end
 
 
