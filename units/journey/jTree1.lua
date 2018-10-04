@@ -1,10 +1,10 @@
-local unitName = "jtree"
+local unitName = "jtree1"
 
 local unitDef = {
-	name = "Tree ",
-	Description = "Harvests Light",
+	name = "Rainforrest Tree ",
+	Description = "harvesting Light <Energy>",
 	objectName = "jETree1.s3o",
-	script = "jTree.lua",
+	script = "jTree1.lua",
 	buildPic = "jtree.png",
 	--cost
 	buildCostMetal = 100,
@@ -36,7 +36,7 @@ local unitDef = {
 	activateWhenBuilt = false,
 	onoffable = true,
 	canSelfDestruct=false,
-	
+
 	-- Building	
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",

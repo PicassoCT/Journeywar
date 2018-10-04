@@ -1,40 +1,38 @@
----http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
-local weaponName = "cexpgun" --this is the actually maschinegune of the blackguard
+--- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
+local weaponName = "cexpgun" --this is the actually maschinegune of the inferno trooper
 local weaponDef = {
-	      name                    = "Exponential Gun",
-	      weaponType              = [[Cannon]],
-	      --damage
-		  damage = {
-				default = 10,
-				HeavyArmor = 1,
-				},	      
-	      areaOfEffect            = 8,
-		  explosionGenerator="custom:AR2Impact",
-		  cegTag="cexpprojectile",
-		  texture1="empty",
-		
-		  --physics
-		  weaponVelocity          = 850,
-		  reloadtime              = 0.00001,
-		  range                   = 650,
-		  sprayAngle              = 300,
-	      tolerance               = 8000,
-		  lineOfSight             = true,	      
-	      turret                  = true,
-		  craterMult              = 0,	      
+    name = "Exponential Gun",
+    weaponType = [[Cannon]],
+    --damage
+    damage = {
+        default = 10,
+        HeavyArmor = 1,
+    },
+    areaOfEffect = 1,
+    -- explosionGenerator="custom:chelicopterimpact",
 
-		  soundStart         = "bgmtw/bgpulse2s",
-		  soundtrigger=1,
-		  SweepFire=1,
-		  --apperance
-		  rgbColor                = [[0.52 0.55 0.78]],		  	      
-          size                    = 0.6,
-			
-		
-		  
-	      stages                  = 0,
-		  separation              = 0,
-		 
-		  }
-		
-return lowerkeys({[weaponName] = weaponDef})
+    cegTag="explosiveproj",
+    texture1 = "bulletzip",
+
+    --physics
+    weaponVelocity = 850,
+    reloadtime = 5.35,
+    range = 1250,
+    sprayAngle = 400,
+    tolerance = 2000,
+    lineOfSight = true,
+    turret = true,
+    craterMult = 0,
+    burst = 7,
+    burstrate = 0.2,
+    --	soundStart         = "sounds/cHunterChopper/firelooper.wav",
+    --  soundHit="cHunterChopper/bulletimpact.wav",
+    soundtrigger = 1,
+    SweepFire = 1,
+    --apperance
+    rgbColor = [[0.5 0.95 0.85]],
+    size = 1.2,
+    stages = 1,
+    separation = 0.2
+}
+return lowerkeys({ [weaponName] = weaponDef })

@@ -1,7 +1,8 @@
 local unitName = "efence"
 
 local unitDef = {
-  name               = "Efence: Charged Powerfull Defense",
+  name               = "Efence",
+  Description= " chargeable electric Defensefence <Defense Trap>",
   objectName         = "efence.s3o",
   script ="cEfence.lua",
   buildPic = "efence.dds",
@@ -87,6 +88,7 @@ weapons = {
 	
 	
 	},
+category = [[LAND BUILDING]],
   customParams = {},
  sfxtypes = {
     explosiongenerators = {

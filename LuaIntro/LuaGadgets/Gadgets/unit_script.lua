@@ -335,7 +335,8 @@ function Spring.UnitScript.WaitForMove(piece, axis)
 		if not piece then 
 			activeUnit	=GetActiveUnit()
 			local ud = UnitDefs[Spring.GetUnitDefID(activeUnit.unitID)]
-			Spring.Log(gadget:GetInfo().name, LOG.WARNING, "UnitDef: " .. ud.name .."has error in a waitformove")               
+			Spring.Log(gadget:GetInfo().name, LOG.ERROR, "Unit " .. ud.name .." has error in a waitformove ")
+
 		end
 
         if sp_WaitForMove(piece, axis) then
@@ -500,9 +501,9 @@ end
 function Spring.UnitScript.GetScriptEnv(unitID)
         local unit = units[unitID]
         if unit then
-                return unit.env
+          return unit.env
         end
-        return nil
+   return nil
 end
 
 function Spring.UnitScript.GetLongestReloadTime(unitID)
@@ -758,7 +759,7 @@ function gadget:UnitCreated(unitID, unitDefID)
 		
                 local p = {}
                 for _,name in ipairs{...} do
-					--	if not pieces[name] then Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(UnitDefNames,unitDefID))end
+					--	if not pieces[name] then Spring.Echo("Piece "..name.." not found in unittype: "..getUnitName(unitDefID))end
                         p[#p+1] = pieces[name] or error("piece not found: " .. tostring(name), 2)
                 end
                 return unpack(p)

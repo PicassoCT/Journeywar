@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "exconroach",
    blocking       = false,
-   category       = "jCorpse",
+   category       = "JCORPSE",
    damage            = 3000,
    description       = "it used to work",
    energy            = 12,

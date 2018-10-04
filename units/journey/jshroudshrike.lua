@@ -1,7 +1,7 @@
 local unitName = "jshroudshrike"
 local unitDef = {
 	name = "Shroudshrike",
-	Description = "Transfers Experience",
+	Description = "transfers Experience into a variable Direction. <Buff>",
 	
 	
 	objectName = "jshroudshrike.s3o",
@@ -40,7 +40,10 @@ local unitDef = {
 	CanStop = true,
 	LeaveTracks = true,
 	trackType ="shroudshrike",
-	trackStrength=33,
+	trackStrength=6,
+	trackWidth =32,
+	trackOffset =0,
+	
 	Reclaimable = 0,
 	
 	
@@ -75,7 +78,7 @@ local unitDef = {
 	
 	smoothAnim = true,
 	
-	
+	unitRestricted = 2,
 	
 	
 	customParams = {},
@@ -85,5 +88,13 @@ local unitDef = {
 		},
 		
 	},
+	
+		weapons = {
+		[1]={name = "jshroudtimerray",
+			onlyTargetCategory = [[ LAND ]],			
+		},		
+		
+	},
+	
 	
 }return lowerkeys({ [unitName] = unitDef })

@@ -1,8 +1,8 @@
 local unitName = "jeliah"
 
 local unitDef = {
-	name = "eliah",
-	Description = "Infantry in BioMechSuit",
+	name = "Eliah",
+	Description = " close Combat Unit. Reborn from a Survivor on Destruction. <Assault Unit>",
 	objectName = "jeliah.s3o",
 	script = "jEliahScript.lua",
 	buildPic = "jeliah.png",
@@ -42,13 +42,13 @@ local unitDef = {
 	
 	weapons = {
 		[1]={name = "jeliahbeam",
-			onlyTargetCategory = [[ LAND ]],
-			
-		},
-		
-		
-		[3]={name = "jeliahshield",
+			onlyTargetCategory = [[ LAND ]],			
+		},		
+		[2]={name = "jeliahshield",
 			onlyTargetCategory = [[LAND AIR]],
+		},	
+		[3]={name = "jeliahwingflap",
+			onlyTargetCategory = [[LAND]],
 		},	
 	},
 	

@@ -37,8 +37,14 @@ for i=1, 7, 1 do
 	ast[i]=piece (asttemp)
 end
 
-function TreeTrample()
+function actualtrample()
+Sleep(500)
+
 	Spring.DestroyUnit(unitID,true,false)
+	
+end
+function TreeTrample()
+StartThread(actualtrample)
 end
 
 

@@ -2,8 +2,7 @@ local unitName = "jtransportedeggstack"
 local unitDef = {
 	
 	name = "Eggstack",
-	Description = "gives birth to worker Drones",
-	TEDClass = "PLANT",
+	Description = "gives birth to worker Drones <Builder Factory>",
 	
 	objectName = "placeholder.s3o",
 	script = "jtransportedeggstackscript.lua",
@@ -49,7 +48,7 @@ local unitDef = {
 	workerTime = 0.54,
 	buildoptions = 
 	{
-		"jconroach","conbigfoot","jstealthdrone"
+		"jconroach","jconcaterpillar","jstealthdrone"
 	},
 	
 	

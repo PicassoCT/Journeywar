@@ -1,16 +1,16 @@
 local unitName = "cgatefort"
 local unitDef = {
-	name = "Gatefotress",
-	Description = "Trainfortress travelling between Worlds",
+	name = "Gatefortress",
+	Description = "Fortress train travelling between Worlds <Heavy Defense Unit>",
 	objectName = "cGateFotress.s3o",
 	script = "cgatefotressscript.lua",
-	buildPic = "crailgun.dds",
+	buildPic = "cgatefortress.png",
 	RadarDistance = 25,
 	SightDistance = 200,
 	
 	buildCostMetal = 980,
 	buildCostEnergy = 1250,
-	buildTime = 54,
+	buildTime = 120,
 	
 	maxDamage = 19900,
 	idleAutoHeal = 12,
@@ -30,8 +30,8 @@ local unitDef = {
 	CanReclaim=false,	
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
-	
-	
+	showNanoFrame = false,
+
 	
 	Reclaimable = true,
 	
@@ -39,8 +39,8 @@ local unitDef = {
 	
 	-- Pathfinding and related
 	MaxWaterDepth=70,
-	FootprintX = 2,
-	FootprintZ = 2,
+	FootprintX = 4,
+	FootprintZ = 4,
 	MaxSlope = 500,	
 	
 	

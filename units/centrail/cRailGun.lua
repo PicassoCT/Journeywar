@@ -1,9 +1,9 @@
 local unitName = "cRailGun"
 
 local unitDef = {
-  name               = "RailGun",
+  name               = "Railgun",
   objectName         = "cRailGun.s3o",
-  description= "Powerfull Base Defenses",
+  description= "powerfull, longrange base Defenses.<Long Range Defense Building>",
   script ="cRailGund.lua",
   buildPic = "crailgun.dds",
   	RadarDistance = 25,
@@ -31,7 +31,7 @@ CanReclaim=false,
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat", 
 
-
+category= [[LAND BUILDING]],
 
 Reclaimable = true,
 	

@@ -69,7 +69,7 @@ function hammerHart()
 	
 end
 
-function script.Killed()
+function script.Killed(recentDamage)
 	local unitx,unity,unitz=Spring.GetUnitBasePosition(unitID)
 	Spring.SpawnCEG("330RLexplode",unitx,unity,unitz,0,1,0,50,0)
 	Explode(resturm, SFX.FIRE+ SFX.FALL)

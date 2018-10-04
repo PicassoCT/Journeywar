@@ -1,8 +1,8 @@
 local unitName = "jatlantai"
 
 local unitDef = {
-	name = "Stealer of Energys",
-	Description = "stealing energy from hit units",
+	name = "lan'Tai ",
+	Description = "drawing energy from Attacked Units Team <Energy Sabotage Air Unit>",
 	objectName = "jEthief.s3o",
 	script = "jethiefscript.lua",
 	--script = "pieceMaker.lua",
@@ -22,9 +22,14 @@ local unitDef = {
 	FootprintX = 3,
 	FootprintZ = 3,
 	TEDClass = [[VTOL]],
-	canSubmerge = true,
-	airStrafe =true,
+	canSubmerge = false,
+	floater = true,
+	waterline = 3,
+	
+	airStrafe =false,
 	hoverAttack = true,
+	verticalSpeed= 3.5,
+	factoryHeadingTakeoff  = false,
 	strafeToAttack=true, 	
 	steeringmode = [[1]],
 	maneuverleashlength = 1380,

@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "jInfantryCorpse",
    blocking       = false,
-   category       = "jInfantryCorpse",
+   category       = "JCORPSE",
    damage            = 3000,
    description       = "Not dead yet, just dropping a meal for the next wave.",
    energy            = 12,

@@ -1,8 +1,8 @@
 local unitName = "jpeeble"
 
 local unitDef = {
-name = "skInfantry",
-Description = "Infantry in BioMechSuit",
+name = "Rock",
+Description = "very newtonion views <Decoration>",
 objectName = "jpeeble.s3o",
 script = "jpeeble.lua",
 buildPic = "placeholderj.png",

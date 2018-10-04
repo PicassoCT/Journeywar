@@ -31,17 +31,21 @@ local SIG_PEACE=32
 local AMBUSHLOADTIME=30000
 local AMBUSHTIME=9000
 piecePeriod=12500
+DECOY_LIFETIME=25000
+
 costPerEgg=0.5
 experienceSoFar=Spring.GetUnitExperience(unitID)
 eggEnemySpawnDistance = 700
 teamID=Spring.GetUnitTeam(unitID)
+myDefID = Spring.GetUnitDefID(unitID)
 
 function spawnAEgg(x,z)
+	if boolIsDecoy== false then
 	randSleep=math.ceil(math.random(370,1200))
 	Sleep(randSleep)
 	id= Spring.CreateUnit("jskineggnogg",x,-10,z, 0, teamID) 
 	transferOrders(unitID,id)
-	
+	end
 end
 boolPeacefull = true
 function EGG_LOOP()
@@ -55,21 +59,25 @@ function EGG_LOOP()
 		if boolPeacefull== true then	
 			ed= Spring.GetUnitNearestEnemy(unitID)
 			if ed then
-			distanced = distanceUnitToUnit(unitID,ed) 
-			if  distanced > eggEnemySpawnDistance then
-		
-				-- if in Water check experience
-				temp=Spring.GetUnitExperience(unitID)
-				if temp > experienceSoFar+costPerEgg then
-					--spawn numberofEggsToSpawn
-					for i=experienceSoFar, temp,costPerEgg do
-						StartThread(spawnAEgg,x+math.random(-5,5),z+math.random(-5,5))
-						experienceSoFar=experienceSoFar+ costPerEgg
+				distanced = distanceUnitToUnit(unitID,ed) 
+				if distanced > eggEnemySpawnDistance then
+					
+					-- if in Water check experience
+					temp=Spring.GetUnitExperience(unitID)
+					if temp > experienceSoFar+costPerEgg then
+						--spawn numberofEggsToSpawn
+						for i=experienceSoFar, temp,costPerEgg do
+							StartThread(spawnAEgg,x+math.random(-5,5),z+math.random(-5,5))
+							experienceSoFar=experienceSoFar+ costPerEgg
+						end
+						--update experienceSoFar
+						if temp > 10 then
+							for i=1,temp/5, 1 do
+								StartThread(spawnAEgg,x+math.random(-5,5),z+math.random(-5,5))
+							end
+						end
 					end
-					--update experienceSoFar
-				
 				end
-			end
 			end
 		end
 		Sleep(2500)
@@ -78,7 +86,21 @@ function EGG_LOOP()
 end
 
 
+decoyDefID =  UnitDefNames["skinfantrydecoy"].id 
+boolIsDecoy = myDefID == decoyDefID
+function lifeTimer()
+	if boolIsDecoy== true  then
+	Sleep(DECOY_LIFETIME)
+	spawnCegAtUnit(unitID,"jghostdancerswitch")
+
+	Spring.DestroyUnit(unitID,false,true)
+	end
+end
+
+
+
 function script.Create()
+	StartThread(lifeTimer)
 	StartThread(EGG_LOOP)
 	Spring.UnitScript.Hide ( flare01 ) 
 	Spring.UnitScript.Hide ( flare02 ) 
@@ -86,69 +108,61 @@ function script.Create()
 	StartThread(cloakCheckAndAmbushLoad)
 	StartThread(coolDownTimer)
 
+	
 end
+
 
 function resetPosture()
-		Move (center,x_axis,0,12)
-		Move (center,y_axis,0,12)
-		Move (center,z_axis,0,12)
-		Move (body,x_axis,0,12)
-		Move (body,y_axis,0,12)
-		Move (body,z_axis,0,12)
-		Turn (center, x_axis,math.rad(0), 15)	
-		Turn (center, y_axis,math.rad(0), 15)	
-		Turn (center, z_axis,math.rad(0), 15)
-		Turn (body, x_axis,math.rad(0), 15)	
-		Turn (body, y_axis,math.rad(0), 15)	
-		Turn (body, z_axis,math.rad(0), 15)
-		Turn (skinleg2, x_axis,math.rad(0), 15)
-		Turn (skinleg, x_axis,math.rad(0), 15)
-		Turn(lowlegsk,x_axis,math.rad(0), 32)
-		Turn(lowlegsk02,x_axis,math.rad(0), 32)
-		Hide(tent)
-
-end
-
-function aimReset()
-		Turn (center, x_axis,math.rad(0), 15)	
-		Turn (center, y_axis,math.rad(0), 15)	
-		Turn (center, z_axis,math.rad(0), 15)
-		Hide(tent)
-end
-
-function idle()
+	Move (center,x_axis,0,12)
+	Move (center,y_axis,0,12)
+	Move (center,z_axis,0,12)
+	Move (body,x_axis,0,12)
+	Move (body,y_axis,0,12)
+	Move (body,z_axis,0,12)
+	Turn (center, x_axis,math.rad(0), 15)	
+	Turn (center, y_axis,math.rad(0), 15)	
+	Turn (center, z_axis,math.rad(0), 15)
+	Turn (body, x_axis,math.rad(0), 15)	
+	Turn (body, y_axis,math.rad(0), 15)	
+	Turn (body, z_axis,math.rad(0), 15)
+	Turn (skinleg2, x_axis,math.rad(0), 15)
+	Turn (skinleg, x_axis,math.rad(0), 15)
+	Turn(lowlegsk,x_axis,math.rad(0), 32)
+	Turn(lowlegsk02,x_axis,math.rad(0), 32)
+	Hide(tent)
 	
-	sleeper=math.random(1024,8192)
-	Signal(SIG_IDLE)
-	SetSignalMask(SIG_IDLE)
-
-	while(boolCloaked==false)do
-
-		Sleep(sleeper)
-		
-		rand=math.random(0,3)
-		if rand==3 then
-			Turn(center,x_axis,math.rad(85),6)
-			Turn(turret2,x_axis,math.rad(armoffset-170),7)
-			Turn(turret,x_axis,math.rad(armoffset-170),7)
-			tentShow=math.random(0,1)
-			if tentShow==1 then
-				Move(tent,y_axis,-10,0)
-				Show(tent)
-				Move(tent,y_axis,0,0.4)
-				WaitForMove(tent,y_axis)
+end
+function skyFist()
+	arm1= turret2
+	arm2 = turret
+	
+			total= math.random(26,126)
+			if not GG.SyncAnimT then GG.SyncAnimT = {} end
+			if not GG.SyncAnimT[myDefID] then GG.SyncAnimT[myDefID] = 256 end
+			if GG.SyncAnimT[myDefID]  < 2 then 
+				GG.SyncAnimT[myDefID] = 256
 			end
-			sleepSnowWhite=math.random(4098,16344)
-			Sleep(sleepSnowWhite)
-			Move(tent,y_axis,-10,1.8)
-			Hide(tent)
-			Turn(turret,x_axis,math.rad(armoffset-175),7)
-			Turn(center,x_axis,math.rad(0),6)
-		end
-		if rand==1 then
-			Turn(center,x_axis,math.rad(69),4)
-			Turn(turret2,x_axis,math.rad(armoffset-90),7)
-			ringAlingADingDong=math.random(2,26)
+			Sleep(math.ceil(GG.SyncAnimT[myDefID]/2))
+			GG.SyncAnimT[myDefID]= math.ceil(GG.SyncAnimT[myDefID]/2)
+			
+			for i=1,total do
+				Turn(arm1,x_axis,math.rad(-90),5)
+				Turn(arm2,x_axis,math.rad(90),5)
+				Move(arm1,y_axis, -1.4,5)
+				Move(arm1,x_axis, -0.5,10)
+				WaitForMoves(arm1)
+				Sleep(150)
+				Move(arm1,y_axis, 0,5)
+				Move(arm1,x_axis, 0,5)
+				WaitForMoves(arm1)
+				Sleep(300-i*3)
+			end
+
+end
+function ringALingADingDong()
+	Turn(center,x_axis,math.rad(69),4)
+	Turn(turret2,x_axis,math.rad(armoffset-90),7)
+	ringAlingADingDong=math.random(2,26)
 			WaitForTurn(center,x_axis)
 			for i=0, ringAlingADingDong, 1 do
 				Turn(center,x_axis,math.rad(81),2)
@@ -159,11 +173,16 @@ function idle()
 				WaitForTurn(center,x_axis)
 				Sleep(120)
 			end
-			Turn(center,x_axis,math.rad(0),4)
-		end
-		
-		if rand==0 then
-			Turn(center,x_axis,math.rad(0),15)
+	Turn(center,x_axis,math.rad(0),4)
+end
+function aimReset()
+	Turn (center, x_axis,math.rad(0), 15)	
+	Turn (center, y_axis,math.rad(0), 15)	
+	Turn (center, z_axis,math.rad(0), 15)
+	Hide(tent)
+end
+function sport()
+	Turn(center,x_axis,math.rad(0),15)
 			Turn(turret,x_axis,math.rad(armoffset-90),7)
 			Turn(turret2,x_axis,math.rad(armoffset-90),7)
 			WaitForTurn(turret,x_axis)
@@ -210,11 +229,12 @@ function idle()
 				Sleep(fixFertig)
 			end
 			Turn(center,x_axis,math.rad(0),4)
-		end
-		if rand==2 then
-			Turn(center,x_axis,math.rad(0),15)
-			sitUps=math.random(4,28)
-			for i=0, sitUps, 1 do
+
+end
+function sitUps()
+	Turn(center,x_axis,math.rad(0),15)
+			sitUpss=math.random(4,28)
+			for i=0, sitUpss, 1 do
 				Move(center,y_axis,-9,9)
 				Turn(body,x_axis,math.rad(0),4)
 				Turn(turret2,x_axis,math.rad(armoffset -90),5)
@@ -239,13 +259,107 @@ function idle()
 				WaitForTurn(skinleg2,x_axis)
 				Sleep(150)
 			end
+
+end
+
+function rest()
+	Turn(center,x_axis,math.rad(-80),6)
+			Turn(turret2,x_axis,math.rad(-120),7)
+			Turn(turret,x_axis,math.rad(-120),7)
+			Turn(turret,y_axis,math.rad(-75),7)
+			Turn(turret2,y_axis,math.rad(75),7)
+			tentShow=math.random(0,1)
+			if tentShow==1 then
+				Move(tent,y_axis,-10,0)
+				Show(tent)
+				Move(tent,y_axis,0,0.4)
+				WaitForMove(tent,y_axis)
+			end		
+			
+			
+			sleepSnowWhite=math.random(4098,16344)
+			Sleep(sleepSnowWhite)
+			Move(tent,y_axis,-10,1.8)
+			Hide(tent)
+			Turn(turret,x_axis,math.rad(armoffset-175),7)
+			Turn(center,x_axis,math.rad(0),6)
+
+end
+
+function restPose()
+	armDoneTable={}
+	turnArmRand = function(arm, counter)
+					
+					armDoneTable[arm]=false;
+					sig= -1
+					while counter > 0 do
+						counter= counter -1
+						sig=sig*-1
+						if sig < 0 then
+							lval= math.random(-40,-10) 
+						else
+							lval=math.random(50,80)
+						end 
+						Turn(arm,x_axis,math.rad(lval),1);
+						WaitForTurns(arm);
+						Sleep(10)
+					end
+					armDoneTable[arm]=true;
+				end
+				val= math.random(10,30)
+	StartThread(turnArmRand, turret,val) 
+	val= math.random(10,30)	
+	StartThread(turnArmRand, turret2,val)			
+
+	Sleep(50000)
+	
+	end
+
+
+function idle()
+	
+	sleeper=math.random(8024,42292)
+	Signal(SIG_IDLE)
+	SetSignalMask(SIG_IDLE)
+	
+	while (boolCloaked==false)do
+		
+		Sleep(sleeper)
+		
+		rand=math.random(0,8)
+		if rand > 4 then
+			restPose()
+		
+		end
+	
+		if rand==4 then	
+			skyFist()
+		end
+		
+		if rand==1 then
+			ringALingADingDong()
+		end
+		
+		if rand==0 then
+			sport()
+		end
+		
+		if rand==2 then
+			sitUps()
+		end	
+		
+		if rand==3 then
+			rest()
+		end
+		Sleep(50)
+	
 			Turn(body,x_axis,math.rad(0),4)
 			resetT({[4]=center,[1]=body,[2]=skinleg,[3]=skinleg2},3)
-		end
 	end
-	
-	
 end
+	
+	
+
 
 local skinDef=Spring.GetUnitDefID(unitID)
 
@@ -278,50 +392,50 @@ function walk()
 	end
 end
 
-
 function walkStep(leg_movespeed, footOffset, bDisregardArms)
-		Turn(skinleg, x_axis,math.rad(footOffset -26) ,12 )
-		Turn(lowlegsk,x_axis,math.rad(50), 24)
-		
-		Turn(skinleg2, x_axis, math.rad(12), leg_movespeed)
-			if bDisregardArms == true then Turn(turret2,x_axis,math.rad(armoffset + 14),8) end
-		WaitForTurn (skinleg, x_axis)
-		WaitForTurn (skinleg2, x_axis)	
-		WaitForTurn (lowlegsk02,x_axis)
-		
-			if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset -58),8) end
-		Turn(skinleg, x_axis,math.rad(footOffset -33) ,12 )
-		Turn(skinleg2, x_axis, math.rad(footOffset + 22), leg_movespeed)
-		Turn(lowlegsk02, x_axis, math.rad(24), leg_movespeed)
-		Turn(lowlegsk,x_axis,math.rad(50), 24)
-		
-		WaitForTurn (skinleg, x_axis)
-		WaitForTurn (lowlegsk02,x_axis)
-		WaitForTurn (skinleg2, x_axis)		
-		WaitForTurn (lowlegsk, x_axis)
-		randSleep=math.ceil(math.random(40,100))
-		Sleep (randSleep)
-		--left leg down, right leg up
-		
-		Turn(skinleg2, x_axis,math.rad(footOffset -26) ,12 )
-		Turn(lowlegsk02,x_axis,math.rad(50), 24)
-		
-		Turn(skinleg, x_axis, math.rad(footOffset + 12), leg_movespeed)
-			if bDisregardArms == true then  Turn(turret2,x_axis,math.rad(armoffset -58),8) end
-		WaitForTurn (skinleg2, x_axis)
-		WaitForTurn (skinleg, x_axis)	
-		WaitForTurn (lowlegsk,x_axis)
-		WaitForTurn (lowlegsk02, x_axis)
-		
-			if bDisregardArms == true then  Turn(turret,x_axis,math.rad(armoffset + 14),8) end
-		Turn(skinleg2, x_axis,math.rad(footOffset -33) ,19 )
-		Turn(lowlegsk, x_axis, math.rad(15), leg_movespeed)
-		Turn(lowlegsk02,x_axis,math.rad(78), 20)
-		
-		WaitForTurn ( skinleg2, x_axis)
-		WaitForTurn (lowlegsk,x_axis)
-		WaitForTurn (lowlegsk02, x_axis)
-		Sleep (80)
+	timeForStep=math.ceil(math.random(150,180))
+	tSyncIn(skinleg, (footOffset -26),0,0  ,timeForStep )
+	tSyncIn(lowlegsk, 50,0,0  ,timeForStep )
+	tSyncIn(skinleg2, 12,0,0  ,timeForStep )
+	tSyncIn(lowlegsk02, 12,0,0  ,timeForStep )
+
+	if bDisregardArms == true then Turn(turret2,x_axis,math.rad(armoffset + 14),8) end
+	WaitForTurns (skinleg,skinleg2,lowlegsk02,lowlegsk)
+	
+	
+	tSyncIn(skinleg, (footOffset -math.random(33,42)),0,0  ,timeForStep )
+	tSyncIn(lowlegsk, 33,0,0  ,timeForStep )
+	tSyncIn(skinleg2, 22,0,0  ,timeForStep )
+	tSyncIn(lowlegsk02, 24,0,0  ,timeForStep )
+	if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset -58),8) end
+	WaitForTurns (skinleg,skinleg2,lowlegsk02,lowlegsk)
+
+	--left leg down, right leg up
+	tSyncIn(skinleg, (footOffset -math.random(26,29)),0,0  ,timeForStep )
+	tSyncIn(lowlegsk, 23,0,0  ,timeForStep )
+	tSyncIn(skinleg2, math.random(29,33),0,0  ,timeForStep )
+	tSyncIn(lowlegsk02, math.random(-25,-18),0,0  ,timeForStep )
+	if bDisregardArms == true then Turn(turret2,x_axis,math.rad(armoffset -58),8) end
+	WaitForTurns (skinleg,skinleg2,lowlegsk02,lowlegsk)
+
+	tSyncIn(skinleg, (footOffset+ math.random(26,29)),0,0  ,timeForStep )
+	tSyncIn(lowlegsk, 10,0,0  ,timeForStep )
+	tSyncIn(skinleg2, math.random(-46,-35),0,0  ,timeForStep )
+	tSyncIn(lowlegsk02, 79,0,0  ,timeForStep )
+	if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset +14),8) end
+	WaitForTurns (skinleg,skinleg2,lowlegsk02,lowlegsk)
+
+	
+	tSyncIn(skinleg, (footOffset+ math.random(7,10)),0,0  ,timeForStep )
+	tSyncIn(lowlegsk, 50,0,0  ,timeForStep )
+	tSyncIn(skinleg2, math.random(-26,-22),0,0  ,timeForStep )
+	tSyncIn(lowlegsk02, 27,0,0  ,timeForStep )
+	if bDisregardArms == true then Turn(turret,x_axis,math.rad(armoffset +14),8) end
+	WaitForTurns (skinleg,skinleg2,lowlegsk02,lowlegsk)
+
+	
+	
+	Sleep (80)
 end
 ----aimining & fire weapon
 function script.AimFromWeapon1() 
@@ -334,7 +448,7 @@ end
 
 function script.AimWeapon1( heading ,pitch)	
 	Signal(SIG_IDLE)
-
+	
 	--aiming animation: instantly turn the gun towards the enemy
 	--Turn(turret, y_axis, heading)
 	if boolSecondAiming==true then
@@ -361,36 +475,72 @@ function script.Killed(recentDamage, maxHealth)
 	killedAnimation()
 	return 0
 end
+head= piece"head"
 
 function killedAnimation()
-Move(center,x_axis,0,0)
+	setSpeedEnv(unitID,0)
+	Move(center,x_axis,0,0)
 	leg_movespeed=12
+	spinRoundSign=randSign()
+	boolSpinRound= spinRoundSign == -1
 	stepsBack=math.ceil(math.random(2,4))
+
+	stepTime=550
 	boodyShake=19
+	dx,dy,dz=math.random(-5,5)/5,math.random(0,5)/5,math.random(-5,5)/5
+	
 	for i=1, stepsBack,1 do
+		StartThread(walkStep,6, 2* boodyShake*(-1^i), footfalse)
+		spawnCegAtPiece(unitID, head , "blueblood", dx,dy,dz)
 		--Armrand
 		xrand=math.random(80,90)
 		yrand=math.random(-10,70)
-		Turn(turret,y_axis,math.rad( -1*yrand * (-1)^i),130)
-		Turn(turret,x_axis,math.rad(armoffset+ -1*xrand),130)
+		tSyncIn(turret, (armoffset+ -1*xrand),   ( -1*yrand * (-1)^i),math.random(0,90)       ,stepTime)
 		xrand=math.random(80,90)
 		yrand=math.random(-10,70)
-		Turn(turret2,y_axis,math.rad( yrand *  (-1)^(i+1)),130)
-		Turn(turret2,x_axis,math.rad(armoffset + -1*xrand),130)
+		tSyncIn(turret2, (armoffset + -1*xrand),   ( yrand * (-1)^(i+1)),math.random(0,90)*-1       ,stepTime)
+
 		ddeg=math.random(-35,-10)
-		Turn(center,x_axis,math.rad(boodyShake*(-1^i)),29)
-		WaitForTurn(center,x_axis)
-		Move(center,z_axis,-4*i,20)
-		Turn(center,x_axis,math.rad(0),92)	
+		tSyncIn(center,(boodyShake*(-1^i)),0,0,stepTime)
+		mSyncIn(center,0,0,-4*i,stepTime)
+		tSyncIn(center,0,math.random(-10,10),0,stepTime)
+		startFrame=Spring.GetGameFrame()
 		
-		walkStep(6, 2* boodyShake*(-1^i), footfalse)
-		Sleep(50)
+		endFrame= Spring.GetGameFrame()
+		timePassedinMs= ((endFrame-startFrame)/30)*1000
+		restTime= math.ceil(math.max(stepTime-timePassedinMs,1))
+		Sleep(restTime)
 	end
 
-	Turn(turret2,y_axis,math.rad( 90*randSign()),130)
-	Turn(turret,x_axis,math.rad( 90*randSign()),130)
-	WTurn(center,x_axis,math.rad(-90),5)
-	
+	WaitForTurns(skinleg2,skinleg,lowlegsk,lowlegsk02)
+	tP(skinleg2, 0,0, math.random(5,25)*-1,15)
+	tP(skinleg, 0,0, math.random(5,25),15)
+	Turn(lowlegsk,x_axis,math.rad(0), 32)
+	Turn(lowlegsk02,x_axis,math.rad(0), 32)
+
+	if boolSpinRound == true then
+		tSyncIn(turret2,math.random(-70,70),90,190,300)
+		tSyncIn(turret,math.random(-70,70),-90,-190,300)
+		spawnCegAtPiece(unitID, head , "blueblood", dx,dy,dz)
+		tSyncIn(center,0,math.random(160,220),0,250)
+		Sleep(150)
+		spawnCegAtPiece(unitID, head , "blueblood", dx,dy,dz)
+		tSyncIn(center,-15*spinRoundSign,180,0,150)
+		Sleep(150)
+	end
+	tSyncIn(turret2,math.random(-70,70),90,-90,700)
+	tSyncIn(turret,math.random(-70,70),-90,90,700)
+	Turn(center,x_axis,math.rad(-80*spinRoundSign),5)
+	if maRa()==true then
+		WTurn(turret,z_axis,math.rad( 75),5)
+		Sleep(300)
+	end
+		tP(skinleg2, 0,0, math.random(5,25)*-1,15)
+		tP(skinleg, 0,0, math.random(5,25),15)
+		Turn(lowlegsk,x_axis,math.rad(0), 32)
+		Turn(lowlegsk02,x_axis,math.rad(0), 32)
+		WTurn(turret,z_axis,math.rad( 90),25)
+		Sleep(1000)
 end
 
 function script.AimFromWeapon2() 
@@ -402,14 +552,14 @@ function script.QueryWeapon2()
 end
 
 function script.AimWeapon2( heading ,pitch)	
-
+	
 	--aiming animation: instantly turn the gun towards the enemy
 	Signal(SIG_AIM)
 	SetSignalMask(SIG_AIM)	
 	boolSecondAiming=true
 	Turn(turret2, x_axis, math.rad(0),3)
 	Turn(torso, y_axis,heading,3)
-		Signal(SIG_IDLE)
+	Signal(SIG_IDLE)
 	WaitForTurn(turret2,x_axis)
 	WaitForTurn(torso,y_axis)
 	aimReset()
@@ -466,6 +616,14 @@ local function legs_down()
 	Move (body,x_axis,0,12)
 	Move (body,y_axis,0,12)
 	Move (body,z_axis,0,12)
+
+	rval,lval=math.random(50,110),math.random(50,110)
+
+	mP (turret2,0,0,0,12)
+	tP (turret2,rval,0,0,12)
+	tP (turret,lval,0,0,12)
+	Move (center,y_axis,0,12)
+	Move (center,z_axis,0,12)
 	Turn (torso, y_axis,math.rad(0), 15)	
 	Turn (center, x_axis,math.rad(0), 15)	
 	Turn (center, y_axis,math.rad(0), 15)	
@@ -480,19 +638,19 @@ local function legs_down()
 	
 	
 end
-local boolMoving=falseh
+local boolMoving=false
 function script.StartMoving()
 	
-
+	
 	legs_down()
 	StartThread (walk)
-	
+	Spring.SetUnitCloak(unitID, false)
 end
 
 function script.StopMoving()
 	
 	-- ----Spring.Echo ("stopped walking!")
-
+	
 	Signal(SIG_WALK)
 	legs_down()
 	StartThread(idle)
@@ -538,8 +696,10 @@ function AmbushCounterThread()
 	
 end
 boolCloaked=false
-function cloakCheckAndAmbushLoad()
-	 boolPrevCloaked=false
+		oldStates = Spring.GetUnitStates(unitID)
+ 
+ function cloakCheckAndAmbushLoad()
+	boolPrevCloaked=false
 	
 	
 	while true do
@@ -550,6 +710,8 @@ function cloakCheckAndAmbushLoad()
 			Signal(SIG_AMBUSH) 
 			if boolPeacefull==true then
 				StartThread(AmbushCounterThread)
+				oldStates = Spring.GetUnitStates(unitID)
+				
 				Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {})
 				Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {0}, {}) 
 				boolPrevCloaked=true 
@@ -566,8 +728,8 @@ function cloakCheckAndAmbushLoad()
 			SetUnitValue(COB.WANT_CLOAK, 0)
 			SetUnitValue(COB.CLOAKED, 0)
 			boolPrevCloaked=false
-			Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {2}, {}) 
-			Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {1}, {})
+			Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {oldStates.firestate}, {}) 
+			Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {oldStates.movestate}, {})
 			Signal(SIG_AMBUSH)
 			if boolAmbushCharged==true then
 				StartThread(AmbushinProgressThread)
@@ -583,12 +745,14 @@ end
 function script.Activate()
 	if boolPeacefull==true then
 		SetUnitValue(COB.WANT_CLOAK,1)
+		Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {0}, {}) 
 	end
 	return 1
 end
 
 function script.Deactivate()
 	SetUnitValue(COB.WANT_CLOAK,0)
+	Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {2}, {}) 
 	return 0
 end
 
@@ -602,7 +766,7 @@ function restorePeace()
 end
 
 function script.HitByWeapon ( x, z, weaponDefID, damage )
-
+	
 	StartThread(restorePeace)
 	return damage
 end

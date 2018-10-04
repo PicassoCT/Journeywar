@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "",
 	objectName = "emptyObjectIsEmpty.s3o",
 	script = "not_implemented_yet.lua",
-	buildPic = "nanoupgrade.dds",
+	buildPic = "jupgrade.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 0,

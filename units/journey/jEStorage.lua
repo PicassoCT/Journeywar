@@ -1,7 +1,7 @@
 local unitName = "jestorage"
 local unitDef = {
-name = "Light Storage",
-Description = " stores Energy",
+name = "Light Depositorio",
+Description = " stores Energy, explodes violently. <Energy Storage>",
 objectName = "jEstorage.s3o",
 script = "jestoragescript.lua",
 buildPic = "jmestorage.png",
@@ -50,6 +50,12 @@ LeaveTracks = false,
 nanocolor=[[0.2 0.9 0.5]],
 Category = [[LAND]],
 
+	 LeaveTracks = true, 
+	trackType ="jBuilding",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
+	
 
 }
 

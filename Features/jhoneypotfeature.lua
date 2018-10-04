@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "honeypot",
    blocking       = false,
-   category       = "jCorpse",
+   category       = "JCORPSE",
    damage            = 100,
    description       = "he came, went and blew",
    energy            = 12,

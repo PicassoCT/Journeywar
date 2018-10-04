@@ -2,7 +2,7 @@ local unitName = "mdigg"
 
 local unitDef = {
 	name = "Metalldiggester",
-	Description = "diggs for Material once deployed",
+	Description = "mobile to drive towards Matter Ressource Locations <Matter Production Unit>",
 	objectName = "mdigg.s3o",
 	script = "mdigscript.lua",
 	buildPic = "mdiggMex.dds",

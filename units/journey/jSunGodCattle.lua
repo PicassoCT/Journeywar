@@ -3,7 +3,7 @@ local unitDef = {
   objectName="jHeliosCattle.s3o",
 
   name               = "Sun God Cattle",
-  Description 		 ="needs energy to survive ",
+  Description 		 ="needs enemy fire for survival, spawns race Darts. <Tank>",
 	buildPic = "jsungodcattle.png",
   script 			 = "jsungodcattlescript.lua",
   maxDamage = 6000, 
@@ -15,8 +15,8 @@ local unitDef = {
  idleAutoHeal=0,
   autoheal=0,
   pushResistant =true,
-  	canattack=false,
-	canguard=false,
+  	canattack=true,
+	canguard=true,
 	canmove=true,
 	canpatrol=true,
 	canstop=true,
@@ -34,7 +34,7 @@ local unitDef = {
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
 
-
+corpse="exconroach",
 
  
 --	maneuverleashlength=640,
@@ -64,13 +64,15 @@ Category = [[LAND]],
  sfxtypes = {
 				explosiongenerators = {
 				"custom:dirt",
-				"custom:gamagarden"				 
+				"custom:sungodbuff"				 
 				},
 				},
-				
-weapons = {
 
 				
+weapons = {
+		[1]={name = "jsungodegggun",
+			onlyTargetCategory = [[BUILDING]],
+		},		
 	},		
 		
 }

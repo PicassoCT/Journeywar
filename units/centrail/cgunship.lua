@@ -1,11 +1,11 @@
 local unitName = "cgunship"
 
 local unitDef = {
-	name = "Gun Ship",
-	Description = "heavy air harassment",
+	name = "Gunshipsynth",
+	Description = "heavy air-ground Gunship <Air Ground Tank Unit>",
 	objectName = "cGunShip.s3o",
 	script = "cGunShipScript.lua",
-	buildPic = "chunterchopper.dds",
+	buildPic = "cgunship.png",
 	
 	--cost
 	buildCostMetal = 1500,
@@ -19,7 +19,6 @@ local unitDef = {
 	BrakeRate = 1,
 	FootprintX = 3,
 	FootprintZ = 3,
-	TEDClass = [[VTOL]],
 	steeringmode = [[1]],
 	maneuverleashlength = 1380,
 	turnRadius		 	= 16,
@@ -30,8 +29,7 @@ local unitDef = {
 	TurnRate = 250,
 	nanocolor=[[0 0.9 0.9]],
 	sightDistance = 500,
-	
-	airstrafe=true,
+
 	factoryHeadingTakeoff =true,
 	Builder = false,
 	--canHover=true,
@@ -55,6 +53,8 @@ local unitDef = {
 	--airHoverFactor=0.1,
 	airStrafe =true,
 	hoverAttack = true,
+	verticalSpeed= 5.0,
+	factoryHeadingTakeoff =false,
 	strafeToAttack=true,
 	
 	

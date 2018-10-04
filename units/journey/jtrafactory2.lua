@@ -43,21 +43,13 @@ local unitDef = {
 	CanBeAssisted = true,	
 	workerTime = 1,
 	buildoptions = 
-	{
+	{	"jupgradefactory2",	"jhoneypot",	"jviralfac", 
 		"jglowworms","jbeherith","jeliah",
-		"jshroudshrike","jswiftspear", 	"jviralfac", "jhoneypot",
-		"jupgradefactory2"
+		"jshroudshrike","jswiftspear", 
+	
 	},
-	
-	
+		
 	usebuildinggrounddecal = false,
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	Category = [[LAND BUILDING]],

@@ -1,139 +1,133 @@
 --Define the wheel pieces
-
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua" 
+include "lib_Animation.lua"
+include "lib_Build.lua"
 --Define the pieces of the weapon
 
-local SIG_RESET=2
+local SIG_RESET = 2
 
-teamID=Spring.GetUnitTeam(unitID)
-Quad={}
-for i=1,8, 1 do
-	temp="Quader0"..i
-	Quad[i]={}
-	Quad[i]=piece(temp)
+teamID = Spring.GetUnitTeam(unitID)
+Quad = {}
+for i = 1, 8, 1 do
+    temp = "Quader0" .. i
+    Quad[i] = {}
+    Quad[i] = piece(temp)
 end
-Kugel01=piece"Kugel01"
-Kugel02=piece"Kugel02"
-fireFx=piece"fireFx"
+Kugel01 = piece "Kugel01"
+Kugel02 = piece "Kugel02"
+fireFx = piece "fireFx"
 
-function getDistance(cmd,x,z)
-	val=((cmd.params[1]-x)^2 + (cmd.params[3]-z)^2)^0.5
-	
-	return val
+function getDistance(cmd, x, z)
+    val = ((cmd.params[1] - x) ^ 2 + (cmd.params[3] - z) ^ 2) ^ 0.5
+
+    return val
 end
 
 function transferCommands()
-	
-	while true do
-		if GG.JFactorys and GG.JFactorys[unitID] and GG.JFactorys[unitID][1] then
 
-			CommandTable=Spring.GetUnitCommands(unitID)					
-			first=false
-			
-			for _,cmd in pairs(CommandTable) do			
-				
-				if Spring.ValidUnitID(GG.JFactorys[unitID][1])==true then
-				if #CommandTable ~= 0 then			
-					if first==false then
-						first=true
-						x,y,z=Spring.GetUnitPosition(unitID)					
-							if cmd.id == CMD.MOVE and getDistance(cmd,x,z) > 160 then	
-								Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{})						
-							elseif cmd.id== CMD.STOP then
-								Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],CMD.STOP,{},{})
-							end						
-					else
-						Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],cmd.id,cmd.params,{"shift"})
-					end
-				else
-					Spring.GiveOrderToUnit(GG.JFactorys[unitID][1],CMD.STOP,{},{})
-				end			
-				end			
-			end			
-			
-			
-		end
-		Sleep(150)
-	end
-	
+    while true do
+        if GG.JFactorys and GG.JFactorys[unitID] and GG.JFactorys[unitID][1] then
+
+            CommandTable = Spring.GetUnitCommands(unitID)
+            first = false
+
+            for _, cmd in pairs(CommandTable) do
+
+                if Spring.ValidUnitID(GG.JFactorys[unitID][1]) == true then
+                    if #CommandTable ~= 0 then
+                        if first == false then
+                            first = true
+                            x, y, z = Spring.GetUnitPosition(unitID)
+                            if cmd.id == CMD.MOVE and getDistance(cmd, x, z) > 160 then
+                                Spring.GiveOrderToUnit(GG.JFactorys[unitID][1], cmd.id, cmd.params, {})
+                            elseif cmd.id == CMD.STOP then
+                                Spring.GiveOrderToUnit(GG.JFactorys[unitID][1], CMD.STOP, {}, {})
+                            end
+                        else
+                            Spring.GiveOrderToUnit(GG.JFactorys[unitID][1], cmd.id, cmd.params, { "shift" })
+                        end
+                    else
+                        Spring.GiveOrderToUnit(GG.JFactorys[unitID][1], CMD.STOP, {}, {})
+                    end
+                end
+            end
+        end
+        Sleep(150)
+    end
 end
 
 function script.Create()
-	
-	for i=1,8, 1 do
-		Hide(Quad[i])
-	end
 
-	Hide(Kugel01)
-	Hide(Kugel02)
-	Hide(fireFx)
-	StartThread(transferCommands)
-	StartThread(whileMyThreadGentlyWeeps)
+	 hideAll(unitID)
+    StartThread(transferCommands)
+    StartThread(whileMyThreadGentlyWeeps)
 
-	
-	if GG.JFactorys == nil then GG.JFactorys={} end
-	GG.JFactorys[unitID]={}
-	
+
+    if GG.JFactorys == nil then GG.JFactorys = {} end
+    GG.JFactorys[unitID] = {}
 end
 
 
-function script.QueryBuildInfo() 
-	return Kugel02 
+function script.QueryBuildInfo()
+    return Kugel02
 end
 
-Spring.SetUnitNanoPieces(unitID,{ Kugel01})
+Spring.SetUnitNanoPieces(unitID, { Kugel01 })
 
 
 function script.Activate()
-	SetUnitValue(COB.YARD_OPEN, 1)
-	SetUnitValue(COB.INBUILDSTANCE, 1)
-	SetUnitValue(COB.BUGGER_OFF, 1)
-	return 1
+    SetUnitValue(COB.YARD_OPEN, 1)
+    SetUnitValue(COB.INBUILDSTANCE, 1)
+    SetUnitValue(COB.BUGGER_OFF, 1)
+    return 1
 end
 
 
 function script.Deactivate()
-	Signal(SIG_UPGRADE)
-	SetUnitValue(COB.YARD_OPEN, 0)
-	SetUnitValue(COB.INBUILDSTANCE, 0)
-	SetUnitValue(COB.BUGGER_OFF, 0)
-	return 0
+    Signal(SIG_UPGRADE)
+    SetUnitValue(COB.YARD_OPEN, 0)
+    SetUnitValue(COB.INBUILDSTANCE, 0)
+    SetUnitValue(COB.BUGGER_OFF, 0)
+    return 0
 end
 
 
 function delayedBuildEnd()
-	SetSignalMask(SIG_RESET)
-	Sleep(1500)
-	if GG.JFactorys[unitID] then
-		GG.JFactorys[unitID][2]=false
-	end
+    SetSignalMask(SIG_RESET)
+    Sleep(1500)
+    if GG.JFactorys[unitID] then
+        GG.JFactorys[unitID][2] = false
+    end
 end
 
 
 function script.StartBuilding()
-	Spring.Echo("JW:TransportedEggFactory starting to build")
-	--animation
-	Signal(SIG_RESET)
-	if GG.JFactorys[unitID] then
-		GG.JFactorys[unitID][2]=true
-	end
+    Spring.Echo("JW:TransportedEggFactory starting to build")
+    --animation
+    Signal(SIG_RESET)
+    if GG.JFactorys[unitID] then
+        GG.JFactorys[unitID][2] = true
+    end
 end
 
-boolDoIt=false
+boolDoIt = false
 function whileMyThreadGentlyWeeps()
-	while true do
-		if boolDoIt==true then
-			boolDoIt=false
-			StartThread(delayedBuildEnd)
-		end
-		Sleep(150)
-	end
+    while true do
+        if boolDoIt == true then
+            boolDoIt = false
+            StartThread(delayedBuildEnd)
+        end
+        Sleep(150)
+    end
 end
 
 function script.StopBuilding()
-	boolDoIt=true
+    boolDoIt = true
 end
 
-function script.Killed(endh,_)
-	GG.JFactorys[unitID]=nil -- check for correct syntax
-	return 1
+function script.Killed(endh, _)
+    GG.JFactorys[unitID] = nil -- check for correct syntax
+    return 1
 end

@@ -2,7 +2,7 @@ local unitName = "mbeanstalk"
 
 local unitDef = {
 	name = "Mobile Beanstalk",
-	Description = " use Ability to resettle",
+	Description = " unrooted Beanstalk, hovering from the Larange Point <Mainbuilding>",
 	objectName = "beanstalk.s3o",
 	script = "mbeanstalkscript.lua",
 	buildPic = "placeholderj.png",

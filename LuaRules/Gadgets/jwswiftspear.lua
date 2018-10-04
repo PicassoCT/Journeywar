@@ -30,19 +30,7 @@ end
 -- synced only
 if (gadgetHandler:IsSyncedCode()) then
 UPDATE_FREQUNECY=100
-local pregnanfortime=33000
-
-function growItBack(unitID)
-	for it=0.1,0.9,0.1 do
-							
-								local f=(0.01+it)%1
-								
-								Sleep(500)
-							end
-
-	end
-
-local unitsWhoAreStillGrowing={}
+local pregnanfortime=3*60*30
 local unitswhosTimeisComing={}
 
 function thisIsTheEndMyFriend(unitID,teamID)
@@ -52,75 +40,44 @@ function thisIsTheEndMyFriend(unitID,teamID)
 	x,y,z=Spring.GetUnitPosition(unitID)
 	Spring.DestroyUnit(unitID,true,false)
 	idx= Spring.CreateUnit("jswiftspear",x,y,z, 0, teamID)  
-	--Spring.Echo("TODO_ CALL GLIDE SHRINK")
-								-- gl.PushMatrix()
-								-- gl.Unit(idx)
-								-- gl.Scale(0.1,0.1,0.1)
-								-- gl.PopMatrix()		
-		--[[ 	unitsWhoAreStillGrowing[#unitsWhoAreStillGrowing+1]={}								
-			unitsWhoAreStillGrowing[#unitsWhoAreStillGrowing][1]=idx								
-			unitsWhoAreStillGrowing[#unitsWhoAreStillGrowing][2]=0.1 ]]								
-				
-
+	idx= Spring.CreateUnit("jswiftspear",x,y,z, 0, teamID)  
 	end
 end
 
 function gadget:GameFrame(f)
 
 	if f%(UPDATE_FREQUNECY) == 0 then
-
 	
-		if GG.Prego ~= nil then 
+		if GG.Prego then 
 				if table.getn(GG.Prego)~=0 then
 						for i=1, table.getn(GG.Prego),1 do
-							if GG.Prego[i] ~= nil then
-							dice=math.random(0,99)
-							--there is a chance of 1 in 100 that you dont get pregnant
-								if dice~= 99 and GG.Prego[i][2] ~= nil then 
+							if GG.Prego[i] then
 								itt=table.getn(unitswhosTimeisComing)
 								unitswhosTimeisComing[itt+1]={}
-								itt=itt+1
-								unitswhosTimeisComing[itt][1]={}
-								unitswhosTimeisComing[itt][1]=GG.Prego[i][1]
-								unitswhosTimeisComing[itt][2]={}
-								unitswhosTimeisComing[itt][2]=pregnanfortime+ math.ceil(math.random(-2000,40000))
-								unitswhosTimeisComing[itt][3]={}
-								unitswhosTimeisComing[itt][3]=GG.Prego[i][2]
-								end
+								unitswhosTimeisComing[itt+1][1]=GG.Prego[i][1]
+								unitswhosTimeisComing[itt+1][2]=pregnanfortime + math.ceil(math.random(-500,500))
+								unitswhosTimeisComing[itt+1][3]=GG.Prego[i][2]		
 							 end	
 						GG.Prego[i][2]=nil
 						end
 				end
 		else
-		GG.Prego={} 
+			GG.Prego = {} 
 		end
-		if unitswhosTimeisComing~=nil and table.getn(unitswhosTimeisComing)~= 0 then
-		--Spring.Echo("jwswiftspear_gadget: Someones has in good hope!")
-			for i=1,table.getn(unitswhosTimeisComing),1 do
+		
+		if unitswhosTimeisComing and table.getn(unitswhosTimeisComing) > 0 then
+	--	Spring.Echo("jwswiftspear_gadget: Someones has in good hope!")
+			for i=table.getn(unitswhosTimeisComing), 1,-1 do
 			unitswhosTimeisComing[i][2]=unitswhosTimeisComing[i][2]-UPDATE_FREQUNECY
-				if unitswhosTimeisComing[i][2] < 0 then
-				--Spring.Echo("jwswiftspear_gadget: Cograts it is a swiftspear")
+
+				if unitswhosTimeisComing[i][2] < 0 then	
 				thisIsTheEndMyFriend(unitswhosTimeisComing[i][1],unitswhosTimeisComing[i][3])
 				table.remove(unitswhosTimeisComing,i)
 				end
 			end
 		end
 		
-			--[[ if unitsWhoAreStillGrowing~=nil and table.getn(unitsWhoAreStillGrowing)~= 0 then
-				for i=1,table.getn(unitsWhoAreStillGrowing),1 do
-					if unitsWhoAreStillGrowing[i][2]+0.1 < 1 then
-						--Spring.Echo("TODO_ CALL GLIDE slowGrowth")
-										-- gl.PushMatrix()
-										-- gl.Unit(idx)
-										-- gl.Scale(unitsWhoAreStillGrowing[i][2]+0.1,	unitsWhoAreStillGrowing[i][2]+0.1,unitsWhoAreStillGrowing[i][2]+0.1)
-										-- gl.PopMatrix()		
-					unitsWhoAreStillGrowing[i][2]=(unitsWhoAreStillGrowing[i][2]+0.1)%1
-					else
-					table.remove(unitsWhoAreStillGrowing,i)
-					end
-					
-				end
-			end ]]
+		
 		
 	end
 	

@@ -3,7 +3,7 @@ local unitName = "bbind"
 local unitDef = {
 
   name               = "Idustrial Complex",
-  description = "Recycles Wreckage -stores the Value, doubles this Insurrancemoney on destruction.",
+  description = "recycles retrieved Remains. <Scrap Recycling Building>",
   objectName         = "bbind.s3o",
   script = "bbind.lua",
   buildPic = "industry.dds",

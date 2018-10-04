@@ -17,7 +17,7 @@ return {
         directional        = true,
         emitrot            = 0,
         emitrotspread      = 40,
-        emitvector         = [[0,1,0]],
+        emitvector         = [[r1r-1, 1, r1r-1]],
         gravity            = [[0, -0.17, 0]],
         numparticles       = 6,
         particlelife       = 9,

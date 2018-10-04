@@ -4,20 +4,29 @@ local unitDef  =  {
     BuildPic = "filename.bmp",
     ObjectName = "jbeefeater.s3o",
 	buildPic = "jbeefeater.png",
-    name = "Sniper",
-    Side = "CentrAIl",
-    TEDClass = "HOVER",
+    name = "Beefeater <Begin of Sniper Unit>",
+
     script = "jbeefeaterscript.lua",
     
 --Unit limitations and properties
     BuildTime = 82,
-    Description = "- (Very hungry) : ",
+    Description = "sniper Reptile, growing longer with experience.",
     MaxDamage = 1240,
     RadarDistance = 0,
     SightDistance = 500,
     Upright = false,
 	turnInPlace=false,
-	--floater             = true,    
+	canCloak =true,
+	
+	cloakCost=0,
+	cloakCostMoving = 10,
+	minCloakDistance = 110,
+	initCloaked =true,
+	decloakOnFire = true,
+	cloakTimeout = 30* 3,
+
+
+	 
 --Energy and metal related
     BuildCostEnergy = 400,
     BuildCostMetal = 1000,

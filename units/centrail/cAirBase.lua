@@ -2,7 +2,7 @@ local unitName = "cairbase"
 
 local unitDef = {
 	name = "Airbase",
-	Description = "builds and repairs Aircrafts",
+	Description = "builds, grows and repairs Aircrafts <Air Unit Factory>",
 
 	
 	objectName = "cAirBase.s3o",
@@ -37,8 +37,8 @@ local unitDef = {
 	sightDistance = 700,
 	isAirbase =true,
 	EnergyStorage = 200,
-	EnergyUse = 15,
-	MetalUse = 3,
+	EnergyUse = 0,
+	MetalUse = 0,
 	MetalStorage = 200,
 	EnergyMake = 0, 
 	MakesMetal = 0, 
@@ -66,7 +66,7 @@ local unitDef = {
 	-- Pathfinding and related
 	FootprintX = 8,
 	FootprintZ = 8,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 	YardMap ="oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo oooooooo",
 	
 	-- Building	
@@ -74,10 +74,11 @@ local unitDef = {
 	Reclaimable = false,
 	ShowNanoSpray = true,
 	canBeAssisted =false,
-	
+
 	buildoptions = 
 	{
-		"genupgrade","chunterchopper","csuborbital","conair","cgunship","callygator"
+		"genupgrade","chunterchopper","csuborbital",
+		"cauterizer","cgunship","callygator"
 	},
 	
 	customParams = {},

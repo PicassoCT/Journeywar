@@ -1,7 +1,7 @@
 local unitName = "contruck"
 local unitDef = {
 name = "Construction Truck",
-Description = "builds your base using up his health",
+Description = "builds buildings using up its Hitpoints. <Construction Unit>",
 objectName = "contruck.s3o",
 script = "conTruck.lua",
 buildPic = "contruck.dds",

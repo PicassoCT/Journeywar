@@ -9,8 +9,8 @@ script = "jbuildanimscript.lua",
 buildPic = "placeholderj.png",
 
 
-	RadarDistance = 0,
-	SightDistance = 400,	
+
+
 	Upright = 1,	
 	levelground = 0,
 

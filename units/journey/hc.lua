@@ -2,7 +2,7 @@ local unitName = "hc"
 
 local unitDef = {
 	name = "Headcrab",
-	Description = "Revives Dead Units as Zombies",
+	Description = "revives dead Units as Zombies",
 	objectName = "hc.s3o",
 	script = "hcscript.lua",
 	buildPic = "hc.png",
@@ -29,6 +29,8 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
+	blocking = false,
+
 	Builder = true,
 	CanAttack = true,
 	CanRepair=false,

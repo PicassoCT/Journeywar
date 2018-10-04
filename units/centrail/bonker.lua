@@ -1,8 +1,8 @@
 local unitName = "bonker"
 
 local unitDef = {
-name = "Bonker :",
-Description = "Heavy Defense Outpost",
+name = "Bonker",
+Description = "heavily fortified Ground and Anti-Air Outpost <Anti Air/Ground Building>",
 objectName = "bonker.s3o",
 script = "bonker.lua",
 buildPic = "cbonker.dds",
@@ -20,7 +20,7 @@ idletime=3000,
 
 	FootprintX = 3,
 	FootprintZ = 3,
-	MaxSlope = 10,	
+	MaxSlope = 50,	
 sightDistance = 600,
 nanocolor=[[0 0.9 0.9]],
 

@@ -653,13 +653,14 @@ function tillDeathDoAsPart()
 	Sleep(300000)
 	Move(center,y_axis,-100,0.25)
 	WaitForMove(center,y_axis)
-	Spring.DestroyUnit(unitID,true,true)
+	Spring.DestroyUnit(unitID,false,true)
 end
 
 
 
 
 function script.Create()
+	Spring.SetUnitNeutral(unitID, true)
 	dx=math.random(0,1)
 	if dx== 1 then
 		boolCrawler=true

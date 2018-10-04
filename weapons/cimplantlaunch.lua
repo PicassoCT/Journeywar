@@ -1,0 +1,42 @@
+--- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
+local weaponName = "cimplantlaunch"
+local weaponDef = {
+    name = [[Implantat launcher]],
+    areaOfEffect = 1,
+    craterBoost = 0,
+    craterMult = 0,
+    cylinderTargeting = 1,
+    damage = {
+        default = 1,
+    },
+    explosionGenerator = [[custom:330rlexplode]],
+    fireStarter = 0,
+    flightTime = 5,
+    --- -guidance                = false,
+    impactOnly = true,
+    impulseBoost = 0,
+    impulseFactor = 0.4,
+    interceptedByShieldType = 2,
+    lineOfSight = true,
+    metalpershot = 0.1,
+    model = "cimplant.s3o",
+    noSelfDamage = true,
+    range = 850,
+    reloadtime = 12,
+    renderType = 1,
+    smokeTrail = false,
+    --soundHit = [[cheadlauncher/hlimpact]],
+    --soundStart = [[cheadlauncher/hlfired]],
+    -- FireStarter   = 75,
+    startVelocity = 500,
+    tolerance = 10000,
+    tracks = false,
+    turnRate = 60000,
+    turret = true,
+    weaponAcceleration = 300,
+    weaponTimer = 5,
+    weaponType = [[MissileLauncher]],
+    weaponVelocity = 450,
+}
+
+return lowerkeys({ [weaponName] = weaponDef })

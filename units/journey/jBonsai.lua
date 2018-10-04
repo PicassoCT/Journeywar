@@ -2,10 +2,10 @@ local unitName = "jbonsai"
 
 local unitDef = {
 	name = "Bonsai",
-	Description = " Wall Unit, raising the water level",
+	Description = "secrets a Mountainwall, in Addition raising the water level <Defense Terraform Building>",
 	objectName = "jBonsai.s3o",
 	script = "jBonsaiScript.lua",
-	buildPic = "jtree.png",
+	buildPic = "jbonsai.png",
 	--cost
 	buildCostMetal = 240,
 	buildCostEnergy = 10,

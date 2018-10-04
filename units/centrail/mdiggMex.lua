@@ -1,8 +1,8 @@
 local unitName = "mdiggMex"
 
 local unitDef = {
-	name = "Metalldiggester (Stationary)",
-	Description = "Mines into the ground till it hits water",
+	name = "Metalldiggester",
+	Description = "mines the ground for Material down to the watertable <Matter Production Building>",
 	objectName = "mdigg.s3o",
 	script = "mdiggMexscript.lua",
 	buildPic = "placeholder.png",
@@ -11,7 +11,7 @@ local unitDef = {
 	buildCostEnergy = 50,
 	buildTime =1,
 	--Health
-	maxDamage = 1200,
+	maxDamage = 2300,
 	idleAutoHeal = 0,
 	--Movement
 	
@@ -38,12 +38,12 @@ local unitDef = {
 	explodeAs = [[NOWEAPON]],
 	selfDestructAs= [[NOWEAPON]],
 	
-	YardMap ="yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy",
+	--YardMap ="yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy yyyyyy",
 	
 	-- Building	
 	ShowNanoSpray = false,
 	CanBeAssisted = true,	
-	workerTime = 1,
+	--workerTime = 1,
 	-- buildoptions = 
 	-- {
 		-- "ccontruck"

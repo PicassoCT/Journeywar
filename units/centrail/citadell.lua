@@ -1,7 +1,7 @@
 local unitName = "citadell"
 local unitDef = {
-	name = "Spearspire",
-	Description = "Center of Operations, plans and coordinates",
+	name = "Citadell",
+	Description = "Center of Operations, plans and coordinates <Main Building>",
 	objectName = "citadell.s3o",
 	script = "citadellscript.lua",
 	buildPic = "citadell.dds",
@@ -15,7 +15,7 @@ local unitDef = {
 	--Movement
 	FootprintX = 8,
 	FootprintZ = 8,
-	MaxSlope = 20,
+	MaxSlope = 50,
 	MaxWaterDepth = 20,
 	TurnRate = 500,
 	-- explodeAs = "csuborbitalstrike",
@@ -27,9 +27,9 @@ local unitDef = {
 	collisionVolumeTest	 	= 1,
 	collisionVolumeType	 	= [[box]],
 	
-	EnergyStorage = 200,
+	EnergyStorage = 3000,
 	EnergyUse = 0,
-	MetalStorage = 200,
+	MetalStorage = 3000,
 	EnergyMake = 0, 
 	MakesMetal = 5, 
 	MetalMake = 5,	
@@ -61,13 +61,14 @@ local unitDef = {
 	buildoptions = 
 	{
 		"scumslum","mdigg","cwaterextractor",
-		"campole","mestorage","citconair",
+		"campole","mestorage","smconverter",
 		"builux","bbind","coverworldgate",
-		"condepot","fclvlone","cairbase",
-		"cdistrictnone","buibaicity2","buibaicity1",
+		"condepot","fclvl1","cairbase",
+		"cdistrictnone","ctransithub","buibaicity1",
 		"crailgun","sentry","bonker",
-		"cdefusermine",	"chopper","combinedfeature",
-		"efence","comendbonker","ctransithub"
+		"cdefusermine",	"chopper","cwatchpost",
+		"efence","comendbonker","chivemind",
+		"citconair"
 	},
 	
 	sounds = {

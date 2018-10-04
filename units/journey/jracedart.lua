@@ -1,65 +1,58 @@
 local unitName = "jracedart"
 
-local unitDef = {
-name = "Race Dart",
-Description = "Shielded suicide Anti-Building Unit",
-objectName = "jracedart.s3o",
-script = "jracedartscript.lua",
-buildPic = "jplaceholder.png",
---cost
-buildCostMetal = 550,
-buildCostEnergy = 250,
-buildTime = 5,
---Health
-maxDamage = 3950,
-mass=1024,
-idleAutoHeal =1,
---Movement
-Acceleration = 4.5,
-BrakeRate = 0.0000000000000000003,
-FootprintX = 3,
-FootprintZ = 3,
-MaxSlope = 60,
-MaxVelocity = 4.5,
-MaxWaterDepth = 20,
-MovementClass = "Default2x2",
-TurnRate = 900,
+	local unitDef = {
+	name = "Race Dart",
+	Description = "Shielded suicidal Anti-Building Unit <Anti Building>",
+	objectName = "jracedart.s3o",
+	script = "jracedartscript.lua",
+	buildPic = "jplaceholder.png",
+	--cost
+	buildCostMetal = 550,
+	buildCostEnergy = 250,
+	buildTime = 5,
+	--Health
+	maxDamage = 3950,
+	mass=1024,
+	idleAutoHeal =1,
+	--Movement
+	Acceleration = 4.5,
+	BrakeRate = 0.0000000000000000003,
+	FootprintX = 3,
+	FootprintZ = 3,
+	MaxSlope = 60,
+	MaxVelocity = 4.5,
+	MaxWaterDepth = 20,
+	MovementClass = "Default2x2",
+	TurnRate = 900,
 
-sightDistance = 500,
-nanocolor=[[0 0.9 0.9]],
-  selfDestructCountdown =0,
-  hideDamage =true,
+	sightDistance = 500,
+	nanocolor=[[0 0.9 0.9]],
+	  selfDestructCountdown =0,
+	  hideDamage =true,
 
-CanAttack = true,
-CanGuard = true,
+	CanAttack = true,
+	CanGuard = true,
 
-CanMove = true,
-CanPatrol = true,
-CanStop = true,
+	CanMove = true,
+	CanPatrol = true,
+	CanStop = true,
 
-	explodeAs="cantimatter",
-	selfDestructAs="cantimatter", 
+		explodeAs="cantimatter",
+		selfDestructAs="cantimatter", 
 
-	  customParams = {},
- sfxtypes = {
-    explosiongenerators = {
-	   "custom:jdart",	   
-						  },
-	
-				},
-				
+		  customParams = {},
+	 sfxtypes = {
+		explosiongenerators = {
+							  },		
+					},		
 		
-	
-	
-Category = [[DART]],
+	Category = [[DART]],
 
-weapons = {
-[1]={name  = "jracedartgun",
-	onlyTargetCategory = [[BUILDING]],
+	weapons = {
+	[1]={name  = "jracedartgun",
+		onlyTargetCategory = [[BUILDING]],
+		},		
 	},
-
-	
-},
 }
 
 return lowerkeys({ [unitName] = unitDef })

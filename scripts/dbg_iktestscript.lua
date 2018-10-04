@@ -1,93 +1,47 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
-include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua"
 include "lib_Animation.lua"
-include "lib_Build.lua" 
+include "lib_Build.lua"
+include "lib_ik.lua"
 
 
-function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+function script.HitByWeapon(x, z, weaponDefID, damage)
 end
-center=piece"center"
 
-piecesTable={}
-pieceNameTable={}
-for i=1,6 do
-sting="bone"..i
-piecesTable[#piecesTable+1]=piece(sting)
+center = piece "center"
 
+piecesTable = {}
+pieceNameTable = {}
+for i = 1, 6 do
+    sting = "bone" .. i
+    piecesTable[#piecesTable + 1] = piece(sting)
 end
 
 function script.Create()
---generatepiecesTableAndArrayCode(unitID)
-StartThread(iktest)
+    --generatepiecesTableAndArrayCode(unitID)
+    StartThread(iktest)
 end
 
-function script.Killed(recentDamage,_)
+function script.Killed(recentDamage, _)
 
-createCorpseCUnitGeneric(recentDamage)
-return 1
+    createCorpseCUnitGeneric(recentDamage)
+    return 1
 end
 
 function echoPiecePosition(name, id)
-x,y,z= Spring.GetUnitPiecePosDir(unitID,id)
-Spring.Echo("Piece:"..name.." P(".. x.."/"..y.."/"..z)
+    x, y, z = Spring.GetUnitPiecePosDir(unitID, id)
+    Spring.Echo("Piece:" .. name .. " P(" .. x .. "/" .. y .. "/" .. z)
 end
 
 --FOOO load the new Version
 function iktest()
-	Sleep(100)
-		for i=1, 6 do
-		stringBuild= "bone"..i
-		Spring.Echo("PieceNumber for Piece"..i .." = "..(piece(stringBuild)))
-		echoPiecePosition(stringBuild, (piece(stringBuild)))
-		end
-	
-	Spring.Echo("Intialize the IK Chain")
-	ikID = Spring.CreateUnitIKChain(unitID,piecesTable[1],piecesTable[6])
-	Spring.Echo("UnitID".. unitID, "IkID"..ikID)
-	Spring.Echo("Set IK Chain active")
-	
-	Spring.SetUnitIKActive(unitID, ikID, true)
-	Spring.Echo("Set IK Chain is now active")
-	--I add this comment only to test something
-		-- static int CreateUnitIKChain(lua_State* L);
-		-- static int SetUnitIKActive(lua_State* L);
-		-- static int SetUnitIKGoal(lua_State* L);
-		-- static int SetUnitIKPieceLimits(lua_State* L);
-		--TODO adapt speed
-		-- static int SetUnitIKPieceSpeed(lua_State* L);
-	for i=1,#piecesTable do
-		Spring.SetUnitIKPieceSpeed(ikID,piecesTable[i],0.3,0.3,0.3)
-	end	
-	--Need a beetter IK-Test
-	testArray=	{
-				[1]={x=500,y=0,z=0},
-				[2]={x=0,y=0,z=500},
-				[3]={x=-500,y=0,z=0},
-				[4]={x=0,y=0,z=-500},
+    createIkChain(unitID, piecesTable[1], piecesTable[6])
 
-				}
-	
-	
-	
-		while true do
-			--Lol, i wrote the Api, and i dont remember it..
-			-- ikx= math.ceil( math.random(-50,50))
-			-- ikz= math.ceil( math.random(-50,50))
-			-- iky= math.ceil( math.random(0,50))
-			 ux,uy,uz=Spring.GetUnitPosition(unitID)
-			for i=1, #testArray do
-			Spring.Echo("Setting IK-Goal(X:"..testArray[i].x.."/Z:"..testArray[i].z)
 
-			StartThread(markPosOnMap,ux +testArray[i].x, testArray[i].y+10,uz+ testArray[i].z,"greenlight")		
-			Spring.SetUnitIKGoal(unitID,ikID,testArray[i].x,0,testArray[i].z)
-			for i=1, #piecesTable do
-			WaitForTurns(piecesTable[i])
-			end
-			
-			Sleep(5000)
-			end
-			Sleep(10000)
 
-		end
+    while true do
+        Spring.Echo("Iktest alive")
+        Sleep(10000)
+    end
 end

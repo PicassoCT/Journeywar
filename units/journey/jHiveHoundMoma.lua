@@ -1,17 +1,18 @@
-local unitName = "jHiveHoundMoma"
+local unitName = "jHiveWulfMoma"
 local unitDef = {
-  objectName="jHiveHoundMoma.s3o",
-
-  name               = "Wulfhive",
-  Description 		 ="Long Distance Harrasment ",
-
-  script 			 = "HiveHound.lua",
-  maxDamage = 2550, 
-
-  MovementClass = "Default2x2",
-  buildCostMetal =30,
-  buildCostEnergy =200,
-  buildTime=3,
+	objectName="jHiveHoundMoma.s3o",
+	
+	name               = "Wulfhive",
+	Description 	   = "Ranged Ground-Assault Unit <Harass Carrier Unit>",
+	
+	script 			 = "jHiveMomaScript.lua",
+	maxDamage = 2550, 
+	buildPic = "jhivewulfmoma.png",
+	
+	MovementClass = "Default2x2",
+	buildCostMetal =30,
+	buildCostEnergy =200,
+	buildTime=3,
  
   	canattack=true,
 	canguard=true,
@@ -19,29 +20,24 @@ local unitDef = {
 	canpatrol=true,
 	canstop=true,
 	
-  moveState =2,
-  noAutoFire =false,
-  footprintX=2,
-  footprintZ =2,
-     selfDestructAs ="defaultweapon",
-  explodeAs = "defaultweapon",
+	moveState =2,
+	noAutoFire =false,
+	footprintX=2,
+	footprintZ =2,
+	selfDestructAs ="defaultweapon",
+	explodeAs = "defaultweapon",
+	
+	upright =false,
+	pushResistant =true,
+	maxVelocity =5.2,
+	acceleration =0.1,
+	brakeRate=3.2,
+	turnRate =965,
 
-  
-  upright =false,
-  pushResistant =true,
-  maxVelocity =5.2,
-  acceleration =0.1,
-  brakeRate=3.2,
-  turnRate =965,
-  
-
- 
 	maneuverleashlength=640,
 	shootme=true,
 	smoothanim=true,
 	steeringmode=true,
-  
-  
   
   	sightdistance=	450,
 	radardistance=50,
@@ -49,31 +45,25 @@ local unitDef = {
   
   	mass=2550,
 
-	
-  
-  
-
-  hideDamage =true,
-  showNanoFrame =false,
-  energyStorage = 750,
+	hideDamage =true,
+	showNanoFrame =false,
+	energyStorage = 750,
 
 
 
-	 customParams = {},
- sfxtypes = {
+	customParams = {},
+	sfxtypes = {
 				explosiongenerators = {
-				    "custom:bloodspray",
-				
-				 
+				    "custom:bloodspray",				 
 				},
 				},
 				
-weapons = {
-[1]={name  = "jWulfJump",
-	onlyTargetCategory = [[LAND]],
-	},
-				
-	},		
+	weapons = {
+	[1]={name  = "jWulfJump",
+		onlyTargetCategory = [[LAND]],
+		},
+					
+		},		
 	Category = [[LAND]],	
 }
 return lowerkeys({ [unitName] = unitDef })

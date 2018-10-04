@@ -1,8 +1,8 @@
 local unitName = "beanstalk"
 
 local unitDef = {
-	name = "beanstalk",
-	Description = "CentrAIl Building, stores ConPlans, creates Units",
+	name = "Beanstalk",
+	Description = " Unrootable Mainbuilding. Constructs all other buildings.<Mainbuilding>",
 	objectName = "beanstalk.s3o",
 	script = "beanstalkscript.lua",
 	buildPic = "beanstalk.png",
@@ -31,9 +31,9 @@ local unitDef = {
 	explodeAs = "defaultweapon",
 	
 	
-	EnergyStorage = 200,
+	EnergyStorage = 3000,
 	EnergyUse = 0,
-	MetalStorage = 200,
+	MetalStorage = 3000,
 	EnergyMake = 0, 
 	MakesMetal = 5, 
 	MetalMake = 5,	
@@ -69,9 +69,16 @@ local unitDef = {
 		"jmeconverter",
 		"jestorage",
 		
-		"jtree",
+
+		"jnativevil",		
+		"jtree1",
 		"jtree2",
+	
 		"jtree3",
+		"jtreel",
+		"jtree5",
+
+			
 		--passive 		--defense
 		"jjamforrest",
 		"jbonsai",
@@ -83,14 +90,18 @@ local unitDef = {
 		"jbeehive",
 	
 		"jrefugeetrap",
-		"jgeohive",
-		"jnativevil",
+		"jpoisonhive",
+		"ggluemine",
 
-		--endgame
-		"jfungiforrest",
-		"jtreel",
-		"jabyss"
 		
+		--endgame	
+		"jfungiforrest",
+		"jgeohive",
+		"jabyss",
+
+		"jdarkgate",	
+		"jhivemind",
+		"jbeanstalkunroot"
 	},
 	
 	Category = [[LAND BUILDING]],

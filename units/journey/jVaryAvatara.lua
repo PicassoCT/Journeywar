@@ -3,7 +3,7 @@ local unitDef = {
   objectName="jvarytara.s3o",
 
   name               = "Antigenesis",
-  Description 		 =" the end of this world ",
+  Description 		 =" the end of this world. Combined from several Varyfoo. <Tank> ",
 
   script 			 = "jVaryTarascript.lua",
   maxDamage = 44550, 
@@ -67,7 +67,7 @@ local unitDef = {
  sfxtypes = {
 				explosiongenerators = {
 					"custom:dirt",--1024
-				},
+					},
 				},
 				
 	weapons = {		

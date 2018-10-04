@@ -1,8 +1,8 @@
 local unitName = "skinfantry"
 
 local unitDef = {
-	name = "skInfantry",
-	Description = "Infantry in BioMechSuit",
+	name = "Skinfantry",
+	Description = "Infantry in Biosuits, using Shardgun and Birdrockets <Assault>",
 	objectName = "skInfantry.s3o",
 	script = "skInfantry.lua",
 	buildPic = "skinfantry.png",
@@ -26,8 +26,8 @@ local unitDef = {
 	
 	--cloaking
 	canCloak =true,
-	cloakCost=0.01,
-	cloakCostMoving =999,
+	cloakCost= 0,
+	cloakCostMoving =0,
 	minCloakDistance =15,
 	
 	onoffable=true,

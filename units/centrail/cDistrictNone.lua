@@ -3,7 +3,7 @@ local unitName = "cDistrictNone"
 local unitDef = {
   name               = "Shantytown",
   objectName         = "buibaislum.s3o",
-  description="Returns your invested Securitybudget upon destruction. Replicates itself, if not walled in.",
+  description="Returns invested Securitybudget upon destruction. Replicates itself. <Econ Trap Building>",
   script ="cDistrictNone.lua",
   maxdamage=1400,
   idleAutoHeal=5,
@@ -13,7 +13,7 @@ local unitDef = {
 	FootprintX = 11,
 	FootprintZ = 11,
 	MaxSlope = 20,
-  category=[[LAND]],
+  category=[[LAND BUILDING]],
   selfDestructAs ="defaultweapon",
   explodeAs = "defaultweapon",
   

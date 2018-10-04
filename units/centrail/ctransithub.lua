@@ -2,7 +2,7 @@ local unitName = "ctransithub"
 
 local unitDef = {
 	name = "Transit Hub :",
-	Description = "Transports Unit to the counterpart it builds",
+	Description = "Transports Unit to its counterpart <Teleportation Building>",
 	objectName = "ctransitnode.s3o",
 	script = "transitnode.lua",
 	buildPic = "Transithub.dds",
@@ -18,7 +18,7 @@ local unitDef = {
 	--Movement
 	FootprintX = 18,
 	FootprintZ = 18,
-	MaxSlope = 5,
+	MaxSlope = 50,
 	--MaxVelocity = 0.5,
 	MaxWaterDepth =0,
 	blocking=false,
@@ -45,7 +45,7 @@ local unitDef = {
 		"ctransithubb"
 	},
 	
-	maxSlope = 255,
+category = [[LAND BUILDING]],
 	CanMove = false,
 	CanPatrol = false,
 	CanStop = true,

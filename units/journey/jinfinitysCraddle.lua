@@ -2,7 +2,7 @@ local unitName = "jinfinityscraddle"
 
 local unitDef = {
 	name = "Infinitys Craddle",
-	Description = "Gives birth to the Spaceborn",
+	Description = "gives birth to the Spaceborn <Air Unit Factory>",
 	objectName = "jinfinityscraddle.s3o",
 	script = "jinfinityscraddlescript.lua",
 	buildPic = "placeholderj.png",
@@ -33,7 +33,7 @@ local unitDef = {
 	CanStop = false,
 	LeaveTracks = false,
 	YardMap ="cccccc cccccc cccccc cccccc cccccc cccccc",
-	
+	showNanoFrame=false,
 	-- Building	
 	
 	ShowNanoSpray = true,

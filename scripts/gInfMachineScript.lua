@@ -1,38 +1,34 @@
 include "createCorpse.lua"
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua"
 include "lib_Animation.lua"
- include "lib_Build.lua" 
+include "lib_Build.lua"
 
- pieceTable={}
- for i=1, 80, 1 do
- name="p"..i
- pieceTable[#pieceTable+1]=piece(name) 
- end
-center=piece"center"
+pieceTable = {}
+for i = 1, 80, 1 do
+    name = "p" .. i
+    pieceTable[#pieceTable + 1] = piece(name)
+end
+center = piece "center"
 
-function script.HitByWeapon ( x, z, weaponDefID, damage ) 
+function script.HitByWeapon(x, z, weaponDefID, damage)
 end
 
 function rebuildThread()
-
-	while true do
-				
-	StartThread(buildInfernalMachine,center, 16, pieceTable)
-	Sleep(10000)
-	resetT(pieceTable)
-	end
+			resetT(pieceTable)
+        StartThread(buildInfernalMachine, center, 16, pieceTable)
+        Sleep(10000)
 
 end
 
 
 function script.Create()
-StartThread(rebuildThread)
+    StartThread(rebuildThread)
 end
 
-function script.Killed(recentDamage,_)
+function script.Killed(recentDamage, _)
 
-createCorpseCUnitGeneric(recentDamage)
-return 1
+    createCorpseCUnitGeneric(recentDamage)
+    return 1
 end
 

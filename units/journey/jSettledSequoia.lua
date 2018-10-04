@@ -2,7 +2,7 @@ local unitName = "jsettledsequoia"
 
 local unitDef = {
 name = "Sequoia ",
-Description = "Regenerates (Defenseless)",
+Description = " landed, regenerating Treeship <Energy>",
 objectName = "jsequoia.s3o",
 script = "sequoiarestingscript.lua",
 buildPic = "placeholderj.png",
@@ -38,7 +38,8 @@ CanStop = false,
 TurnRate = 200,
 LeaveTracks = false,
 -- Building	
-
+usePieceCollisionVolumes = true,
+	
 Category = [[LAND BUILDING]],
 
 EnergyStorage = 0,

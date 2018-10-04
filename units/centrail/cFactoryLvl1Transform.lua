@@ -1,7 +1,7 @@
 local unitName = "cfactorylvl1transform"
 local unitDef = {
 	name = "Nanoforge",
-	Description = "transforms if supplied in time into a Lvl2 Factory",
+	Description = "transforms if repaired into a Lvl2 Factory <Upgrade Building>",
 	objectName = "cUpgrBlox.s3o",
 	script = "cfactorylvl1transformscript.lua",
 	buildPic = "placeholder.png",

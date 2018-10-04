@@ -61,7 +61,7 @@ local SAFEWRAP = 2
 -- 2: always enabled
 
 
-local HANDLER_DIR = 'luarules/'
+local HANDLER_DIR = 'LuaGadgets/'
 local GADGETS_DIR = Script.GetName():gsub('US$', '') .. '/Gadgets/'
 local SCRIPT_DIR = Script.GetName() .. '/'
 
@@ -78,8 +78,8 @@ VFS.Include(SCRIPT_DIR .. 'utilities.lua', nil, VFSMODE)
 
 local actionHandler = VFS.Include(HANDLER_DIR .. 'actions.lua', nil, VFSMODE)
 
-local reverseCompat = (Game.version:find('91.0') == 1)
-----------------------------------------------------------------------------
+local reverseCompatAllowStartPosition = not Spring.Utilities.IsCurrentVersionNewerThan(103, 629)
+--------------------------------------------------------------------------------
 
 function pgl() -- (print gadget list)  FIXME: move this into a gadget
   for k,v in ipairs(gadgetHandler.gadgets) do
@@ -208,6 +208,7 @@ local callInLists = {
 	"DrawUnit",
 	"DrawFeature",
 	"DrawShield",
+	"DrawProjectile",
 	"RecvSkirmishAIMessage",
 
 	-- COB CallIn  (FIXME?)
@@ -223,6 +224,7 @@ local callInLists = {
 	"DrawWorldReflection",
 	"DrawWorldRefraction",
 	"DrawScreenEffects",
+	"DrawScreenPost",
 	"DrawScreen",
 	"DrawInMiniMap",
 	"RecvFromSynced",
@@ -1105,9 +1107,9 @@ end
  -- Game call-ins
 
 
-function gadgetHandler:GameOver()
+function gadgetHandler:GameOver(winners)
   for _,g in ipairs(self.GameOverList) do
-    g:GameOver()
+    g:GameOver(winners)
   end
   return
 end
@@ -1127,11 +1129,32 @@ function gadgetHandler:TeamDied(teamID)
   return
 end
 
+function gadgetHandler:PlayerAdded(playerID)
+  for _,g in ipairs(self.PlayerAddedList) do
+    g:PlayerAdded(playerID)
+  end
+  return
+end
 
-----------------------------------------------------------------------------
+function gadgetHandler:PlayerChanged(playerID)
+  for _,g in ipairs(self.PlayerChangedList) do
+    g:PlayerChanged(playerID)
+  end
+  return
+end
 
- -- LuaRules Game call-ins
+function gadgetHandler:PlayerRemoved(playerID, reason)
+  for _,g in ipairs(self.PlayerRemovedList) do
+    g:PlayerRemoved(playerID, reason)
+  end
+  return
+end
 
+
+--------------------------------------------------------------------------------
+--
+--  LuaRules Game call-ins
+--
 
 function gadgetHandler:DrawUnit(unitID, drawMode)
   for _,g in ipairs(self.DrawUnitList) do
@@ -1154,6 +1177,15 @@ end
 function gadgetHandler:DrawShield(unitID, weaponID, drawMode)
   for _,g in ipairs(self.DrawShieldList) do
     if (g:DrawShield(unitID, weaponID, drawMode)) then
+      return true
+    end
+  end
+  return false
+end
+
+function gadgetHandler:DrawProjectile(projectileID, drawMode)
+  for _,g in ipairs(self.DrawProjectileList) do
+    if (g:DrawProjectile(projectileID, drawMode)) then
       return true
     end
   end
@@ -1195,9 +1227,12 @@ function gadgetHandler:AllowCommand(unitID, unitDefID, unitTeam,
   return true
 end
 
-function gadgetHandler:AllowStartPosition(cx, cy, cz, playerID, readyState, rx, ry, rz)
+function gadgetHandler:AllowStartPosition(playerID, teamID, readyState, cx, cy, cz, rx, ry, rz)
+  if reverseCompatAllowStartPosition then
+    cx, cy, cz, playerID, readyState, rx, ry, rz = playerID, teamID, readyState, cx, cy, cz, rx, ry
+  end
   for _,g in ipairs(self.AllowStartPositionList) do
-    if (not g:AllowStartPosition(cx, cy, cz, playerID, readyState, rx, ry, rz)) then
+    if (not g:AllowStartPosition(playerID, teamID, readyState, cx, cy, cz, rx, ry, rz)) then
       return false
     end
   end
@@ -1370,15 +1405,29 @@ end
  -- Unit call-ins
 
 
+local inCreated = false
+local finishedDuringCreated = false -- assumes non-recursive create
 function gadgetHandler:UnitCreated(unitID, unitDefID, unitTeam, builderID)
+
+  finishedDuringCreated = false
+  inCreated = true
   for _,g in ipairs(self.UnitCreatedList) do
     g:UnitCreated(unitID, unitDefID, unitTeam, builderID)
   end
-  return
+  inCreated = false
+
+  if finishedDuringCreated then
+    finishedDuringCreated = false
+    gadgetHandler:UnitFinished(unitID, unitDefID, unitTeam)
+  end
 end
 
-
 function gadgetHandler:UnitFinished(unitID, unitDefID, unitTeam)
+  if inCreated then
+    finishedDuringCreated = true
+    return
+  end
+
   for _,g in ipairs(self.UnitFinishedList) do
     g:UnitFinished(unitID, unitDefID, unitTeam)
   end
@@ -1445,9 +1494,9 @@ function gadgetHandler:UnitIdle(unitID, unitDefID, unitTeam)
 end
 
 
-function gadgetHandler:UnitCmdDone(unitID, unitDefID, unitTeam, cmdID, cmdTag)
+function gadgetHandler:UnitCmdDone(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions, cmdTag)
   for _,g in ipairs(self.UnitCmdDoneList) do
-    g:UnitCmdDone(unitID, unitDefID, unitTeam, cmdID, cmdTag)
+    g:UnitCmdDone(unitID, unitDefID, unitTeam, cmdID, cmdParams, cmdOptions, cmdTag)
   end
   return
 end
@@ -1509,38 +1558,12 @@ function gadgetHandler:UnitPreDamaged(unitID, unitDefID, unitTeam,
 	return rDam, rImp
 end
 
--- [[ Old
-function gadgetHandler:UnitPreDamaged(unitID, unitDefID, unitTeam,
-                                   damage, paralyzer, weaponDefID,
-								   projectileID, attackerID, attackerDefID, attackerTeam)
-  
-  local rDam = damage
-  local rImp = 1.0
-
-  for _,g in ipairs(self.UnitPreDamagedList) do
-    dam, imp = g:UnitPreDamaged(unitID, unitDefID, unitTeam,
-                  rDam, paralyzer, weaponDefID,
-                  attackerID, attackerDefID, attackerTeam,
-				  projectileID)
-    if (dam ~= nil) then
-      rDam = dam
-    end
-    if (imp ~= nil) then
-      rImp = math.min(imp, rImp)
-    end
-  end
-
-  return rDam, rImp
-end
--- ]]
 
 local UnitDamaged_first = true
 local UnitDamaged_count = 0
 local UnitDamaged_gadgets = {}
 
-function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam,
-                                   damage, paralyzer, weaponID, projectileID, 
-                                   attackerID, attackerDefID, attackerTeam)
+function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponID, projectileID, attackerID, attackerDefID, attackerTeam)
 								   
 	if UnitDamaged_first then
 		for _,g in ipairs(self.UnitDamagedList) do
@@ -1554,25 +1577,11 @@ function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam,
 	for i = 1, UnitDamaged_count do
 		g = UnitDamaged_gadgets[i]
 		g:UnitDamaged(unitID, unitDefID, unitTeam,
-				damage, paralyzer, weaponID,
+				damage, paralyzer, weaponID, projectileID,
 				attackerID, attackerDefID, attackerTeam)
 	end
 	return
 end
-
--- [[ Old
-function gadgetHandler:UnitDamaged(unitID, unitDefID, unitTeam,
-                                   damage, paralyzer, weaponID, projectileID, 
-                                   attackerID, attackerDefID, attackerTeam)
-  
-  for _,g in ipairs(self.UnitDamagedList) do
-    g:UnitDamaged(unitID, unitDefID, unitTeam,
-                  damage, paralyzer, weaponID,
-                  attackerID, attackerDefID, attackerTeam)
-  end
-  return
-end
--- ]]
 
 
 function gadgetHandler:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
@@ -1762,7 +1771,7 @@ local Explosion_GadgetSingle = {}
 
 local Explosion_first = true
 
-function gadgetHandler:Explosion(weaponID, px, py, pz, ownerID)
+function gadgetHandler:Explosion(weaponID, px, py, pz, ownerID, proID)
 	if Explosion_first then
 		for _,g in ipairs(self.ExplosionList) do
 			local weaponDefs = (g.Explosion_GetWantedWeaponDef and g:Explosion_GetWantedWeaponDef()) or allWeaponDefs
@@ -1790,14 +1799,14 @@ function gadgetHandler:Explosion(weaponID, px, py, pz, ownerID)
 	local single = Explosion_GadgetSingle[weaponID]
 	local map = Explosion_GadgetMap[weaponID]
 	if single then
-		noGfx = single:Explosion(weaponID, px, py, pz, ownerID)
+		noGfx = single:Explosion(weaponID, px, py, pz, ownerID, proID)
 	elseif map then
 		local gadgets = map
 		local data = gadgets.data
 		local g
 		for i = 1, gadgets.count do
 			g = data[i]
-			noGfx = noGfx or g:Explosion(weaponID, px, py, pz, ownerID)
+			noGfx = noGfx or g:Explosion(weaponID, px, py, pz, ownerID, proID)
 		end
 	end
 	return noGfx or false
@@ -1826,9 +1835,9 @@ function gadgetHandler:Update()
 end
 
 
-function gadgetHandler:DefaultCommand(type, id)
+function gadgetHandler:DefaultCommand(type, id, engineCmd)
   for _,g in ipairs(self.DefaultCommandList) do
-    local id = g:DefaultCommand(type, id)
+    local id = g:DefaultCommand(type, id, engineCmd)
     if (id) then
       return id
     end
@@ -1888,6 +1897,13 @@ end
 function gadgetHandler:DrawScreenEffects(vsx, vsy)
   for _,g in ipairs(self.DrawScreenEffectsList) do
     g:DrawScreenEffects(vsx, vsy)
+  end
+  return
+end
+
+function gadgetHandler:DrawScreenPost(vsx, vsy)
+  for _,g in ipairs(self.DrawScreenPostList) do
+    g:DrawScreenPost(vsx, vsy)
   end
   return
 end
@@ -2085,20 +2101,6 @@ function gadgetHandler:RecvFromSynced(cmd,...)
   return
 end
 
--- base
--- [[
-function gadgetHandler:RecvFromSynced(...)
-  if (actionHandler.RecvFromSynced(...)) then
-    return
-  end
-  for _,g in ipairs(self.RecvFromSyncedList) do
-    if (g:RecvFromSynced(...)) then
-      return
-    end
-  end
-  return
-end
--- ]]
 
 function gadgetHandler:GotChatMsg(msg, player)
 
@@ -2134,10 +2136,6 @@ function gadgetHandler:GotChatMsg(msg, player)
     end
   end
 
-  if (reverseCompat and IsSyncedCode()) then
-    SendToUnsynced("proxy_ChatMsg", msg, player)	-- ours
-    -- SendToUnsynced(player, msg)	-- base
-  end
   return false
 end
 
@@ -2229,7 +2227,7 @@ function gadgetHandler:GameSetup(state, ready, playerStates)
   return false
 end
 
--- [[
+--[[
 -- makes available to gadgets with handler = true
 function gadgetHandler:AddSyncAction(gadget, cmd, func, help)
 	return actionHandler.AddSyncAction(gadget, cmd, func, help)

@@ -1,403 +1,449 @@
 function gadget:GetInfo()
-  return {
-    name      = "BulletHoleshader",
-    desc      = "Fire in the hole- another word for yesterdays peperoni",
-    author    = "me",
-    date      = "Sep. 20014",
-    license   = "The Exhibitionistic GPL- meaning if you use this, you have to talk a day and a hour to everyone you meet about journeywar",
-    layer     = 0,
-    enabled   = false,
-  }
+    return {
+        name = "BulletHoleshader",
+        desc = "Fire in the hole- another word for yesterdays peperoni",
+        author = "me",
+        date = "Sep. 20014",
+        license = "Humilation License: If you use this comercially, the CEO of your company has to start everyday, by exlaiming in front of the employees: >> "..
+		"Im a worthless parasit, leaching on the creativity of those i would degrade in every other conversation. Im sorry for existing. <<",
+        layer = 0,
+        enabled = false,
+    }
 end
 
 if (gadgetHandler:IsSyncedCode()) then
 
+    VFS.Include('scripts/lib_UnitScript.lua', nil, VFSMODE)
 
-   function GetWeaponIndex(weaponname,unitname)
-   if UnitDefNames[unitname] and UnitDefNames[unitname].weapons then
-		for i=1, table.getn(UnitDefNames[unitname].weapons),1 do
-			if UnitDefNames[unitname].weapons[i].name == weaponname then return i end
-		end
-	end
-   end
-   
-	local HoleInOneT={}
-	unitdefWeaponPos=GetWeaponIndex("comendsniper","ccomender")
-	HoleInOneT[WeaponDefNames["comendsniper"].id] = {diameter=45,pos=unitdefWeaponPos }	
-	unitdefWeaponPos=GetWeaponIndex("sniperslavemelee","csniper")	
-	HoleInOneT[WeaponDefNames["sniperslavemelee"].id] = {diameter=45, pos= 1}
-	local PIECE_VOLUMEMINFORHOLE = 420
-	local PIECE_INV = 1/PIECE_VOLUMEMINFORHOLE
 
-		--set the weapons registrated above on the watchlist
-		for k,_ in ipairs(HoleInOneT) do
-		Script.SetWatchWeapon(k , true)
-		end
-	--Sends Hole Data to unsynced
-	function TearANewOne(unitid, piecename, x,y,z, amountOfDamage, dirSX, dirSY, dirSZ,WeaponType)
-		sx,sy,sz,ox,oy,oz=Spring.GetUnitPieceCollisionVolumeData(unitid, piecename)
-		if ((sx*ox)*(sz*oz)*(sy*oy))*PIECE_INV > PIECE_VOLUMEMINFORHOLE then 
-		--find out if that shot makes a hole
-		_,max=Spring.GetUnitHealth(unitid)
-			if amountOfDamage > max/12 and (nx*dirSX+ny*dirSY+nz*dirSZ) > 1.5 then
-			Hole={	unitID=unitid,
-					piecename=piecename,
-					depth=amountOfDamage/max,
-					diameter=HoleInOneT[WeaponType].diameter,
-					pos={[1]=x,[2]=y,[3]=z}, 
-					dirShot={[1]=dirSX,[2]=dirSY,[3]=dirSZ},
-					teamColourInternal={ [1]=1.0,[2]=0.0,[3]=0.0,[4]=0.0},
-					teamColurExternal={[1]=0.0,[2]=1.0,[3]=0.0,[4]=0.0}
-					}
-					
-			SendToUnsynced("BulletHole", Hole)
-			end
-		end
-	end
+    local HoleInOneT = {}
+    HoleInOneT[WeaponDefNames["comendsniper"].id] = { diameter = 64 }
+    HoleInOneT[WeaponDefNames["sniperweapon"].id] = { diameter = 32 }
+    local PIECE_VOLUMEMINFORHOLE = 420
+    local PIECE_INV = 1 / PIECE_VOLUMEMINFORHOLE
 
-	function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID,  projectileID, attackerID, attackerDefID, attackerTeam) 
-			if HoleInOneT[weaponDefID] then	
-			Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
-			vx,vy,vz=Spring.GetUnitWeaponVectors(attackerID, HoleInOneT[weaponDefID].pos)
-				if vx then
-				norm=math.sqrt(vx*vx+vy*vy+vz*vz)*-1
-				vx,vy,vz=vx/norm,vy/norm,vz/norm
-			
-				piecename,frame=Spring.GetUnitLastAttackedPiece(unitID)
-				map=Spring.GetUnitPieceMap(unitID)
-					Spring.Echo(#map)
-					Spring.Echo(map)
-				Spring.Echo(map[piecename])
-			
-				TearANewOne(unitID,map[piecename], x,y,z, amountOfDamage, vx,vy,vz, weaponDefID)
-				else
-				Spring.Echo("JW_BULETHOLESHADER:: No viable WeaponVector found")
-				end
-			end
-	end
-	
-else  --UNSYNCED
-	--shaderCode
-	---[[----------------------------------------------------------------------------
-	local vertexShaderSource=[[
+    --set the weapons registrated above on the watchlist
+    for k, _ in ipairs(HoleInOneT) do
+        Script.SetWatchWeapon(k, true)
+    end
+    --Sends Hole Data to unsynced
+    function TearANewOne(unitid, piecename, dirVec, diameter, boolJourney)
+        x, y, z = Spring.GetUnitPiecePosition(unitid, piecename)
 
-//#define use_shadow
-	#define MaxDepth= 50
-    uniform mat4 camera;   //ViewMatrix (gl_ModelViewMatrix is ModelMatrix!)
-    uniform vec3 cameraPos;
-    uniform vec3 sunPos;
-    uniform vec3 sunDiffuse;
-    uniform vec3 sunAmbient;
-  #ifdef use_shadow
-    uniform mat4 shadowMatrix;
-    uniform vec4 shadowParams;
-  #endif
+        intCol = { r = 0, g = 0, b = 0 }
+        extCol = { r = 0.5, g = 0.5, b = 0.5 }
+        if boolJourney == true then
+            intCol = { r = 1.0, g = 0, b = 0 }
+            extCol = { r = 0.95, g = 0.2, b = 0.2 }
+        end
 
-	attribute vec3 position;
-attribute vec3 normal;
-uniform mat3 normalMatrix;
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
+
+        Hole = {
+            unitID = unitid,
+            piecename = piecename,
+            depth = diameter / 2,
+            diameter = diameter,
+            pos = { x = x, y = y, z = z },
+            dirShot = dirVec,
+            teamColourInternal = internalColour,
+            teamColurExternal = externalColour
+        }
+
+        SendToUnsynced("BulletHoleStart",
+            unitid,
+            piecename,
+            diameter,
+            x,
+            y,
+            z,
+            dirVec.x,
+            dirVec.y,
+            dirVec.z,
+            intCol.r,
+            intCol.g,
+            intCol.b,
+            extCol.r,
+            extCol.g,
+            extCol.b)
+    end
+
+    cache = {}
+    swissCheeseUnit = {}
+
+    function gadget:UnitCreated(unitID, unitDefID)
+        if unitDefID == UnitDefNames["cegtest"].id then
+
+            vec = { x = 1, y = 0, z = 0 }
+            if vec then
+                vec = randVec(true)
+
+                biggestPiece, cache = getUnitBiggestPiece(unitID, cache)
+                TearANewOne(unitID, biggestPiece, vec, 64, false)
+                swissCheeseUnit[unitID] = true
+            end
+        end
+    end
+
+    function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
+        if HoleInOneT[weaponDefID] then
+            Spring.Echo("JW_BULETHOLESHADER::YOU KNOW IT HIT HIM LIKE A HAMMER!")
+            vec = vectorUnitToUnit(unitID, attackerID)
+            if vec then
+                vec = normVector(vec)
+
+                biggestPiece, cache = getUnitBiggestPiece(unitID, cache)
+                side = select(2, Spring.GetAIInfo(unitTeam))
+                TearANewOne(unitID, biggestPiece, vec, weaponDefID)
+                swissCheeseUnit[unitID] = true
+            end
+        end
+    end
+
+    function gadget:UnitDestroyed(unitID)
+        if swissCheeseUnit[unitID] then
+            SendToUnsynced("BulletHoleEmd", unitID)
+        end
+    end
+
+else --UNSYNCED
+    --shaderCode
+    -------------------------------------------------------------------------------
+    local vertexShaderSource = [[
 varying vec3 fNormal;
 varying vec3 fPosition;
-uniform float time;
-varying float depthHole;
-varying float holeMax;
+
+uniform float depth 	;
+uniform float diameter;
+uniform float posX 	;
+uniform float posY 	;
+uniform float posZ 	;
+uniform float dirX 	;
+uniform float dirY 	;
+uniform float dirZ 	;
+uniform float tColInt1;
+uniform float tColInt2;
+uniform float tColInt3;
+uniform float tColExt1;
+uniform float tColExt2;
+uniform float tColExt3;
+
 float PI= 3.14159;
 float PI_2= 3.14159/2.0;
 struct hole
 {
-  vec3 dir;
-  vec3 modPos;
-  float diameter;
-  };
+    vec3 dir;
+    vec3 modPos;
+    float diameter;
+    float depth;
+};
 
 #define randO( co)  fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453)
 #define signEqual(  X, Y) (sign(X) == sign(Y))
 
- hole watHitIt;
+hole watHitIt;
 //TODO: Converter for world to modelholes -
 
 // dist_Point_to_Segment(): get the distance of a point to a segment
-//     Input:  a Point P and a Segment S (in any dimension)
-//     Return: the shortest distance from P to S
+//	 Input:  a Point P and a Segment S (in any dimension)
+//	 Return: the shortest distance from P to S
 float dist_Point_to_Segment( vec3 P, vec3 SP0, vec3 SP1)
 {
-     vec3 v = SP1 - SP0;
-     vec3 w = P - SP0;
+    vec3 v = SP1 - SP0;
+    vec3 w = P - SP0;
 
-     float c1 = dot(w,v);
-     if ( c1 <= 0.0 )
-          return distance(P, SP0);
+    float c1 = dot(w,v);
+    if ( c1 <= 0.0 )
+        return distance(P, SP0);
 
-     float c2 = dot(v,v);
-     if ( c2 <= c1 )
-          return distance(P, SP1);
+    float c2 = dot(v,v);
+    if ( c2 <= c1 )
+        return distance(P, SP1);
 
-     float b = c1 / c2;
-     vec3 Pb = SP0 + b * v;
-     return distance(P, Pb);
+    float b = c1 / c2;
+    vec3 Pb = SP0 + b * v;
+    return distance(P, Pb);
 }
 
 //calculate wether we are on the entry or exit point of the bullet
 bool vecDirEqNorm(vec3 Normal, vec3 dir )
 {
-  if( signEqual(Normal.x,dir.x) && signEqual(Normal.y, dir.y) && signEqual(Normal.z, dir.z)) return true;
-  
-  return false;
+    if( signEqual(Normal.x,dir.x) && signEqual(Normal.y, dir.y) && signEqual(Normal.z, dir.z)) return true;
+
+    return false;
 }
 
 
-/*                        zzzzz                                               */
-/*                       zz   z                                               */
-/*                       z    zzzzzzzz                                        */
-/*                       z                                                    */
-/*                       z                                                    */
-/*                      zz                                                    */
-/*                      z                                                     */
-/*                     zz                                                     */
-/*                 zzzzz                                                      */
-/*                                                                            */
-/*    The Deformation as  Cosin and sin                                        */
+/*						zzzzz											   */
+/*					   zz   z											   */
+/*					   z	zzzzzzzz										*/
+/*					   z													*/
+/*					   z													*/
+/*					  zz													*/
+/*					  z													 */
+/*					 zz													 */
+/*				 zzzzz													  */
+/*																			*/
+/*	The Deformation as  Cosin and sin										*/
 
 float effectByDistance(float distP)
 {
-  if (distP <= 0.4) return (-1.0 + (1.0-cos(distP*PI_2)))*2.125 ;
-  
-   if (distP <= 0.9) return (1.0 - cos( ((distP-0.40)/0.5)*PI_2)  )*2.0;
- 
-  return max( abs (1.0-cos(((distP-0.8)/0.2)*PI_2)),0.0) ;
- 
+    if (distP <= 0.4) return (-1.0 + (1.0-cos(distP*PI_2)))*2.125 ;
+
+    if (distP <= 0.9) return (1.0 - cos( ((distP-0.40)/0.5)*PI_2)  )*2.0;
+
+    return max( abs (1.0-cos(((distP-0.8)/0.2)*PI_2)),0.0) ;
+
 }
 
-void main()
+void mapUniformToStruct()
 {
-  fNormal = normalize(normalMatrix * normal);
-  fNormal= normal;
-  //vec4 pos = modelViewMatrix * vec4(position, 1.0);
-  float dist;
 
-  watHitIt.modPos=vec3(0.0,0.4,0.0);
-  watHitIt.dir= vec3(0.0,1.0,0.0);
-  watHitIt.diameter=0.5;
-  holeMax=watHitIt.diameter;
+    watHitIt.depth = depth 	;
+    watHitIt.diameter = diameter;
+    watHitIt.modPos= vec3(posX,posY,posZ);
 
-  //computate the distance of vertext to bullethole
-  dist=dist_Point_to_Segment(position, watHitIt.modPos+watHitIt.dir*2.0,watHitIt.modPos+watHitIt.dir*-2.0); 
-  //&& (vecDirEqNorm(fNormal,watHitIt.dir*-1.0))
-  depthHole=dist;
-  float factor= dist <   watHitIt.diameter ?   effectByDistance(dist/watHitIt.diameter): 0.0;
+    watHitIt.dir= vec3(dirX,dirY,dirZ);
 
-    vec3 newPosition = position + fNormal * factor/15.0;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0  );
+}
+
+void main() {
+
+    float dist;
+    mapUniformToStruct();
+
+    fNormal = normalize(gl_NormalMatrix * gl_Normal);
+
+    //computate the distance of vertext to bullethole
+    dist= dist_Point_to_Segment(gl_Vertex, watHitIt.modPos+watHitIt.dir*2.0, watHitIt.modPos + watHitIt.dir * -2.0);
+
+    float factor= dist <   watHitIt.diameter ?   effectByDistance(dist/watHitIt.diameter): 0.0;
+
+    vec3 newPosition = gl_Vertex + fNormal * factor/15.0;
+
+    gl_Position = gl_ModelViewProjectionMatrix * vec4( newPosition, 1.0  );
 
 
 }
-    ]]
-	
-	local  fragmentShaderSource =[[
-	precision highp float;
-uniform float time;
-uniform vec2 resolution;
-varying vec3 fPosition;
-varying vec3 fNormal;
-varying float depthHole;
-vec3 black=vec3(0.0,0.0,0.0);
-vec3 white=vec3(0.8,0.95,1.0);
+
+
+	]]
+
+    local fragmentShaderSource = [[
+
+uniform float depth 	;
+uniform float diameter;
+uniform float posX 	;
+uniform float posY 	;
+uniform float posZ 	;
+uniform float dirX 	;
+uniform float dirY 	;
+uniform float dirZ 	;
+uniform float tColInt1;
+uniform float tColInt2;
+uniform float tColInt3;
+uniform float tColExt1;
+uniform float tColExt2;
+uniform float tColExt3;
+
+
+
+
+vec3 inner=vec3(tColInt1,tColInt2,tColInt3);
+vec3 outer=vec3(tColExt1,tColExt2,tColExt3);
 varying float holeMax;
 
-vec3 bulletColours(float depth, vec3 orgcol)
+vec3 bulletColours(float depthh, vec3 orgcol)
 {
-  
-  if (depth < 0.2) return black;
-  
-  if (depth < 0.4)
-  { 
-    
-    float relDeth=( (depth- 0.2)/ 0.2);
-    
-    return ((1.0 -relDeth)*black+ (relDeth)*white);
+
+    if (depthh < 0.2) return inner;
+
+    if (depthh < 0.4)
+    {
+
+        float relDeth=( (depthh- 0.2)/ 0.2);
+
+        return ((1.0 -relDeth)*inner+ (relDeth)*outer);
     }
-  
-  float relDeth=( (depth- 0.4)/ 0.2);
-  return (1.0 - relDeth)*sqrt(black)+ (relDeth)*orgcol;
-  }
+
+    float relDeth=( (depth- 0.4)/ 0.2);
+    return (1.0 - relDeth)*sqrt(inner)+ (relDeth)*orgcol;
+}
 
 
 void main()
-{vec3 col;
+{
+    vec3 col;
 
-    col=normalize(fNormal);
-    
-  if (depthHole!= 0.0 && depthHole < holeMax+0.1)
-    col= bulletColours(depthHole,col);
-  gl_FragColor = vec4(col, 1.001);
+    col=normalize(gl_Normal);
+
+    if (depth!= 0.0 && depth < holeMax+0.1)
+        col= bulletColours(depth,col);
+  //  gl_FragColor = vec4(col, 1.001);
+   gl_FragColor = vec4(1.0, 0.0, 0.0, 1);
   
 }
 	]]
-	local shaderTable = {
-	vertex= vertexShaderSource,
-	fragment = fragmentShaderSource,
-	-- uniformInt = uniformInt,
-	}
-	--]]--------------------------------------------------------------------------	
+    local shaderTable = {
+        vertex = vertexShaderSource,
+        fragment = fragmentShaderSource,
+        uniform = {
+            depth = 0,
+            diameter = 0,
+            posX = 0,
+            posY = 0,
+            posZ = 0,
+            dirX = 0,
+            dirY = 0,
+            dirZ = 0,
+            tColInt1 = 0,
+            tColInt2 = 0,
+            tColInt3 = 0,
+            tColExt1 = 0,
+            tColExt2 = 0,
+            tColExt3 = 0,
+        },
+    }
+    --]]--------------------------------------------------------------------------
 
-	--variables for the task ahead	
-	local shaderProgram 	
-	local glUseShader 		= gl.UseShader
-	local glCopyToTexture 	= gl.CopyToTexture
-	local glTexture 		= gl.Texture
-	local glTexRect 		= gl.TexRect
-	local boolShaderWorking	= true
-	local vsx,vsy 
-	local screencopy
-	local boolWorking=true
-	local PenetratedUnits ={}
-	
-	
-	--Transfers the Data to the shader
-	local function BulletHole(callname,Hole)		
-	--Forge values in which to store the Holes Data
-					if gl.CreateShader then
-					Spring.Echo("JW_BULETHOLESHADER::forging Shader")
-					shaderTable.uniform={	depth=Hole.depth,
-											diameter=Hole.diameter, 
-											posX=Hole.pos[1],
-											posY=Hole.pos[2], 
-											posZ=Hole.pos[3], 
-											dirX=Hole.dirShot[1],
-											dirY=Hole.dirShot[2],
-											dirZ=Hole.dirShot[3],
-											tColInt1=Hole.teamColourInternal[1],
-											tColInt2=Hole.teamColourInternal[2],
-											tColInt2=Hole.teamColourInternal[3],
-											tColExt1=Hole.teamColurExternal[1],
-											tColExt2=Hole.teamColurExternal[2],
-											tColExt3=Hole.teamColurExternal[3],
-											}
-											
-											
-					shaderProgram=gl.CreateShader(shaderTable)			
-						if shaderProgram then 
-						PenetratedUnits[Hole.unitID]={shader=shaderProgram, piecename=Hole.piecename} 
-						else
-						Spring.Echo("shader not created")
-						Spring.Echo(gl.GetShaderLog())
-						end
-					Spring.UnitRendering.SetUnitLuaDraw(Hole.unitID,true)
-					else
-					Spring.Echo("<BulletHoleshader>: GLSL not supported.")
-					end
-	end
+    --variables for the task ahead
+    local shaderProgram
+    local glUseShader = gl.UseShader
+    local glCopyToTexture = gl.CopyToTexture
+    local glTexture = gl.Texture
+    local glTexRect = gl.TexRect
+    local boolShaderWorking = true
+    local vsx, vsy
+    local screencopy
+    local boolWorking = true
+    local PenetratedUnits = {}
 
-	function gadget:Initialize()   
-		Spring.Echo("BulletHoleshader Initialised")
-      -- This associate the messages with the functions
-      -- So that when the synced sends a message "f" it calls the function f in unsynced
-		gadgetHandler:AddSyncAction("BulletHole", BulletHole)
-	end	  
-    
-	function gadget:DrawUnit(unitID, drawMode)
-		if PenetratedUnits[unitID] then
-		-- DODO is that the shader works for the whole unit.. not only for the unitpiece
-		--Solutions, store the piecename in the shader and grab the piece-matrix
-		glUseShader(PenetratedUnits[unitID].shader)	
-		PenetratedUnits[unitID]=nil
-		end
-	end 
-	
-end 
+    depth = 0
+    diameter = 0
+    posX = 0
+    posY = 0
+    posZ = 0
+    dirX = 0
+    dirY = 0
+    dirZ = 0
+    tColInt1 = 0
+    tColInt2 = 0
+    tColInt3 = 0
+    tColExt1 = 0
+    tColExt2 = 0
+    tColExt3 = 0
 
---[[
-uniform vec2 mapSizePO2;     // (1.0 / pwr2map{x,z} * SQUARE_SIZE)
-uniform vec2 mapSize;        // (1.0 /     map{x,z} * SQUARE_SIZE)
+    --Transfers the Data to the shader
+    local function BulletHoleStart(callname,
+    unitid,
+    piecename,
+    diameter,
+    x,
+    y,
+    z,
+    dirVecx,
+    dirVecy,
+    dirVecz,
+    intColr,
+    intColg,
+    intColb,
+    extColr,
+    extColg,
+    extColb)
+        --Forge values in which to store the Holes Data
+        if gl.CreateShader then
+            PenetratedUnits[unitid] =
+            {
+                unitID = unitid,
+                piecename = piecename,
+                depth = diameter / 2,
+                diameter = diameter,
+                pos = { x = x, y = y, z = z },
+                dirShot = { x = dirVecx, y = dirVecy, z = dirVecz },
+                teamColourInternal = {
+                    r = intColr,
+                    g = intColg,
+                    b = intColb
+                },
+                teamColourExternal = {
+                    r = extColr,
+                    g = extColg,
+                    b = extColb
+                }
+            }
+            Spring.UnitRendering.SetUnitLuaDraw(unitid, true)
+        else
+            Spring.Echo("<BulletHoleshader>: GLSL not supported.")
+        end
+    end
 
-uniform mat4 shadowMatrix;
-uniform vec4 shadowParams;
+    local function BulletHoleEnd(callname, unitID)
+        PenetratedUnits[unitID] = nil
+        Spring.UnitRendering.SetUnitLuaDraw(unitID, false)
+    end
 
-uniform vec3 camPos;
+    function gadget:Initialize()
 
-uniform float simFrame;
-uniform vec3 windSpeed;
+        shaderProgram = gl.CreateShader(shaderTable)
+        if shaderProgram then
+            depth = gl.GetUniformLocation(shaderProgram, "depth")
+            diameter = gl.GetUniformLocation(shaderProgram, "diameter")
+            posX = gl.GetUniformLocation(shaderProgram, "posX")
+            posY = gl.GetUniformLocation(shaderProgram, "posY")
+            posZ = gl.GetUniformLocation(shaderProgram, "posZ")
+            dirX = gl.GetUniformLocation(shaderProgram, "dirX")
+            dirY = gl.GetUniformLocation(shaderProgram, "dirY")
+            dirZ = gl.GetUniformLocation(shaderProgram, "dirZ")
+            tColInt1 = gl.GetUniformLocation(shaderProgram, "tColInt1")
+            tColInt2 = gl.GetUniformLocation(shaderProgram, "tColInt2")
+            tColInt3 = gl.GetUniformLocation(shaderProgram, "tColInt3")
+            tColExt1 = gl.GetUniformLocation(shaderProgram, "tColExt1")
+            tColExt2 = gl.GetUniformLocation(shaderProgram, "tColExt2")
+            tColExt3 = gl.GetUniformLocation(shaderProgram, "tColExt3")
 
-const float PI = 3.14159265358979323846264;
+            Spring.Echo("BulletHoleshader Initialised")
+        else
 
-void main() {
-	vec2 texOffset = vec2(0.,0.);
+            Spring.Echo("=============Bullethole shader not created============")
+            Spring.Echo(gl.GetShaderLog())
+            Spring.Echo("======================================================")
+        end
 
-	#ifdef DISTANCE_NEAR
-		#ifdef SHADOW_GEN
-		vec4 vertexPos = gl_Vertex;
-		#else
-		vec4 vertexPos = gl_ModelViewMatrix * gl_Vertex;
-		#endif
-		#ifdef ANIMATION
-		vec2 windScale;
-		windScale.x = sin((simFrame + gl_MultiTexCoord0.s) * 5.0 / (10.0 + floor(gl_MultiTexCoord0.s))) * 0.01;
-		windScale.y = (1.0 + sin((vertexPos.x + vertexPos.z) / 45.0 + simFrame / 15.0)) * 0.025;
-		windScale *= gl_MultiTexCoord0.tt;
+        gadgetHandler:AddSyncAction("BulletHoleStart", BulletHoleStart)
+        gadgetHandler:AddSyncAction("BulletHoleEnd", BulletHoleEnd)
+    end
 
-		vertexPos.x += dot(windSpeed.zx, windScale);
-		vertexPos.z += dot(windSpeed.xz, windScale);
-		#endif
+    function mapDataToUniforms(Hole)
 
-	vec4 worldPos = vertexPos;
-	#endif
+        depth = Hole.depth
+        diameter = Hole.diameter
+        posX = Hole.pos.x
+        posY = Hole.pos.y
+        posZ = Hole.pos.z
+        dirX = Hole.dirShot.x
+        dirY = Hole.dirShot.y
+        dirZ = Hole.dirShot.z
+        tColInt1 = Hole.teamColourInternal.r
+        tColInt2 = Hole.teamColourInternal.g
+        tColInt3 = Hole.teamColourInternal.b
+        tColExt1 = Hole.teamColourExternal.r
+        tColExt2 = Hole.teamColourExternal.g
+        tColExt3 = Hole.teamColourExternal.b
+    end
 
-	#ifdef DISTANCE_FAR
-	vec4 worldPos = gl_Vertex;
-		vec3 billboardDirZ = normalize(gl_Vertex.xyz - camPos.xyz);
-		vec3 billboardDirX = normalize(cross(billboardDirZ, vec3(0.,1.,0.)));
-		vec3 billboardDirY = cross(billboardDirX, billboardDirZ);
-		float ang = acos(billboardDirZ.y);
-		texOffset.x = clamp(floor((ang + PI / 16.0 - PI / 2.0) / PI * 30.0), 0.0, 15.0) / 16.0;
 
-		#ifdef ANIMATION
-		float windScale =
-			0.005 * (1.0 + sin((worldPos.x + worldPos.z) / 45.0 + simFrame / 15.0)) *
-			gl_Normal.y * (1.0 - texOffset.x);
+    function gadget:DrawUnit(unitID, drawMode)
+        if PenetratedUnits[unitID] and shaderProgram then
+            mapDataToUniforms(PenetratedUnits[unitID])
+            glUseShader(shaderProgram)
+            PenetratedUnits[unitID] = nil
+			glUseShader(0)
+        end
+    end
 
-		 worldPos.xz += (windSpeed.xz * windScale);
-		#endif
 
-		worldPos.xyz += billboardDirX * gl_Normal.x * (1.0 + windScale);
-		worldPos.xyz += billboardDirY * gl_Normal.y * (1.0 + windScale);
-		worldPos.xyz += billboardDirZ;
-
-	vec4 vertexPos = gl_ModelViewMatrix * worldPos;
-	#endif
-
-	#if defined(HAVE_SHADOW) || defined(SHADOW_GEN)
-	vec2 p17 = vec2(shadowParams.z, shadowParams.z);
-	vec2 p18 = vec2(shadowParams.w, shadowParams.w);
-	#ifdef SHADOW_GEN
-	vec4 vertexShadowPos = gl_ModelViewMatrix * worldPos;
-	#else
-	vec4 vertexShadowPos = shadowMatrix * worldPos;
-	#endif
-		vertexShadowPos.st *= (inversesqrt(abs(vertexShadowPos.st) + p17) + p18);
-		vertexShadowPos.st += shadowParams.xy;
-
-	gl_TexCoord[1] = vertexShadowPos;
-	#endif
-
-	#ifdef SHADOW_GEN
-	{
-		gl_TexCoord[3].st = gl_MultiTexCoord0.st + texOffset;
-		gl_Position = gl_ProjectionMatrix * vertexShadowPos;
-		return;
-	}
-	#endif
-
-	gl_TexCoord[0].st = worldPos.xz * mapSizePO2;
-	gl_TexCoord[2].st = worldPos.xz * mapSize;
-	gl_TexCoord[3].st = gl_MultiTexCoord0.st + texOffset;
-
-	gl_FrontColor = gl_Color;
-	gl_Position = gl_ProjectionMatrix * vertexPos;
-
-	gl_FogFragCoord = distance(camPos, worldPos.xyz);
-	gl_FogFragCoord = (gl_Fog.end - gl_FogFragCoord) * gl_Fog.scale;
-	gl_FogFragCoord = clamp(gl_FogFragCoord, 0.0, 1.0);
-}
-]]
+    function gadget:Finalize()
+        if (gl.DeleteShader) then
+            gl.DeleteShader(shaderProgram)
+        end
+    end
+end

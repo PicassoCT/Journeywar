@@ -1,42 +1,41 @@
----http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
+--- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
 local weaponName = "jmountainmark"
 local weaponDef = {
- name                    = "mountianmark",
- weaponType              = [[Cannon]],
+    name = "mountianmark",
+    weaponType = [[Cannon]],
 
-		-- --soundHit           = "null",
-		-- --soundStart         = "null",
-
-
-   
-	      areaOfEffect            = 1,
-		  --physics
-		  weaponVelocity          = 450,
-		  reloadtime              = 800,
-		  range                   = 900,
-		  sprayAngle              = 0,
-	      tolerance               = 0,
-		  lineOfSight             = true,	      
-	      turret                  = true,
-		  craterMult              = 0,	      
-		  PredictBoost			  =0.6,
-		  soundtrigger=1,
-		
-		  --appearance
-		  rgbColor                = [[0.01 0.01 0.01]],		  	      
-          size                    = 1,
+    -- --soundHit           = "null",
+    -- --soundStart         = "null",
 
 
 
----------------------------------------------------------------
+    areaOfEffect = 1,
+    --physics
+    weaponVelocity = 450,
+    reloadtime = 800,
+    range = 900,
+    sprayAngle = 0,
+    tolerance = 0,
+    lineOfSight = true,
+    turret = true,
+    craterMult = 0,
+    PredictBoost = 0.6,
+    soundtrigger = 1,
 
-----------------------------------------------------------------
-	      ImpulseBoost=2.8,
-          impulseFactor      = 10,
-		  damage = {
-				default = 580,
-				HeavyArmor =480,
-				},	   
-		  
-		}
-return lowerkeys({[weaponName] = weaponDef})
+    --appearance
+    rgbColor = [[0.01 0.01 0.01]],
+    size = 1,
+
+
+
+    ---------------------------------------------------------------
+
+    ----------------------------------------------------------------
+    ImpulseBoost = 2.8,
+    impulseFactor = 10,
+    damage = {
+        default = 580,
+        HeavyArmor = 480,
+    },
+}
+return lowerkeys({ [weaponName] = weaponDef })

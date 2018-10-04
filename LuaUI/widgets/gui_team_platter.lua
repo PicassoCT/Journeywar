@@ -344,7 +344,14 @@ function widget:DrawWorldPreUnit()
   glColor(1, 1, 1, alpha)
 
   for _,unitID in ipairs(selectedUnits) do
-    local udid = 	unitCache[unitID].defID
+   local udid = 0
+			if unitCache[unitID]then
+				udid = 	unitCache[unitID].defID
+			else
+				udid = Spring.GetUnitDefID(unitID)
+			end
+			if not udid then break end
+			
     local radius = GetUnitDefRealRadius(udid)
     if (radius) then
       if (trackSlope and (not UnitDefs[udid].canFly)) then

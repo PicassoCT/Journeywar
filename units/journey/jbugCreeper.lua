@@ -2,8 +2,8 @@ local unitName = "jbugcreeper"
 local unitDef = {
 	objectName="jbug.s3o",
 	
-	name = "Bug",
-	Description 		 ="Short Range Creeper ",
+	name = "Ka'rell bug",
+	Description 		 ="fast, deadly Exobiotic Creeper <Scout Creeper> ",
 	
 	script 			 = "jgeobugscript.lua",
 	maxDamage = 250, 
@@ -48,7 +48,11 @@ local unitDef = {
 	
 	mass=950,
 	
-	
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
 	
 	corpse="bug",
 	

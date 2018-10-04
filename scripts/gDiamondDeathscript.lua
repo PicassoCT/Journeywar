@@ -1,53 +1,50 @@
-
 include "lib_OS.lua"
- include "lib_UnitScript.lua" 
+include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 
- include "lib_Build.lua" 
+include "lib_Build.lua"
 
 --HitByWeapon ( x, z, weaponDefID, damage ) -> nil | number newDamage 
 
-center=piece"center"
-swingCenter=piece"swingCenter"
-diamond=piece"diamond"
+center = piece "center"
+swingCenter = piece "swingCenter"
+diamond = piece "diamond"
 
 function script.Create()
-Hide(diamond)
-Turn(center,y_axis,y_axis,math.rad(math.random(-360,360)),0)
-Turn(swingCenter,y_axis,math.rad(-90),0)
-Turn(swingCenter,y_axis,math.rad(0),32)
-StartThread(Sfx)
-WaitForTurn(swingCenter,y_axis)
-StartThread(Impact)
+    Hide(diamond)
+    Turn(center, y_axis, y_axis, math.rad(math.random(-360, 360)), 0)
+    Turn(swingCenter, y_axis, math.rad(-90), 0)
+    Turn(swingCenter, y_axis, math.rad(0), 32)
+    StartThread(Sfx)
+    WaitForTurn(swingCenter, y_axis)
+    StartThread(Impact)
 end
 
-boolSFX=true
+boolSFX = true
 
-function Sfx ()
-	while boolSFX==true do 
-	EmitSfx(diamond,1024)
-	EmitSfx(diamond,1025)
-	Sleep(50)
-	end
+function Sfx()
+    while boolSFX == true do
+        EmitSfx(diamond, 1024)
+        EmitSfx(diamond, 1025)
+        Sleep(50)
+    end
 
---ImpactSfx
+    --ImpactSfx
 
-	for i=1,20 do
-	EmitSfx(diamond,1026)
-	Sleep(i*10)
-	end
-	
+    for i = 1, 20 do
+        EmitSfx(diamond, 1026)
+        Sleep(i * 10)
+    end
 end
 
 function Impact()
-x,y,z=Spring.GetUnitPosition(unitID)
- T= getAllInCircle(x,z,75,unitID)
- process(T, function(element) Spring.DestroyUnit(element)  end)
-
+    x, y, z = Spring.GetUnitPosition(unitID)
+    T = getAllInCircle(x, z, 75, unitID)
+    process(T, function(element) Spring.DestroyUnit(element,true,false) end)
 end
 
 
-function script.Killed(recentDamage,_)
-return 1
+function script.Killed(recentDamage, _)
+    return 1
 end
 

@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "test_glowplantfeature",
    blocking       = false,
-   category       = "cCorpse",
+   category       = "GCORPSE",
    damage            = 3000,
    description       = "Shader Test Plants",
    energy            = 12,

@@ -1,57 +1,55 @@
-local weaponName="jHiveHoundRocket"
-local weaponDef={
-name="jump",
-weaponType=[[MissileLauncher]],
+local weaponName = "jhivehoundrocket"
+local weaponDef = {
+    name = "Jump towards the Enemy",
+    weaponType = [[MissileLauncher]],
+    Accuracy = 2000,
 
-Accuracy=2000,
+    --Physic/flight path
+    range = 200,
+    reloadtime = 35,
+    weaponVelocity = 300,
+    startVelocity = 140,
+    weaponAcceleration = 50,
+    flightTime = 4.5,
+    BurnBlow = 0,
+    FixedLauncher = false,
+    dance = 0,
+    wobble = 0,
+    tolerance = 16000,
+    tracks = true,
+    Turnrate = 1900,
+    collideFriendly = false,
 
---Physic/flight path
-range=80,
-reloadtime=15,
-weaponVelocity=500,
-startVelocity=350,
-weaponAcceleration=100,
-flightTime=1.2,
-BurnBlow=0,
-FixedLauncher=false,
-dance=0,
-wobble=0,
+    --- -APPEARANCE
+    model = "jHiveHoundProj.s3o",
+    smokeTrail = false,
+  --  explosionGenerator = "custom:jvaryfootrail",
+  --  CegTag = "jvaryfootrail",
 
-tolerance=16000,
-tracks=false,
-Turnrate=16000,
-collideFriendly=true,
-
-----APPEARANCE
-model="jHiveHoundProj.s3o",
-smokeTrail=false,
-explosionGenerator=	"custom:dirt",	
---CegTag="smoketrail",
-
-----TARGETING
-turret=true,
-
-avoidFeature=true,
-avoidFriendly=true,
+    --- -TARGETING
+    turret = true,
+    cylinderTargeting = 100,
+    avoidFeature = true,
+    avoidFriendly = false,
 
 
---commandfire=true,
+    --commandfire=true,
 
-----DAMAGE
-damage={
-default=0,
-heavyarmor=0,
-},
-areaOfEffect=10,
-craterMult=0,
+    --- -DAMAGE
+    damage = {
+        default = 15,
+        heavyarmor = 5,
+    },
+    areaOfEffect = 10,
+    craterMult = 0,
 
---?FIXME***
-lineOfSight=false,
+    --?FIXME***
+    lineOfSight = true,
 
 
---sound
-soundHit="",
-soundStart="",
+    --sound
+    --soundHit="skinfantry/birdrockethit.ogg",
+    --soundStart="skinfantry/birdrocketstart.ogg",
 }
 
-return lowerkeys ({[weaponName]=weaponDef})
+return lowerkeys({ [weaponName] = weaponDef })

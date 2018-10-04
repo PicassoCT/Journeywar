@@ -16,7 +16,6 @@ function gadget:GetInfo()
 end
 
 
-
 --this gadget controlls the transmutation of several units - and spawns headcrabs upon crabshell impacts
 
 if (gadgetHandler:IsSyncedCode()) then
@@ -45,7 +44,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_Build.lua" 	)
 	
 	--Non Deterministic Randomness
-	FeatureTypeTable={"gproceduralfeature","gpillar"}
+	FeatureTypeTable={"gproceduralfeature","gpillar","ginfernalmachine"}
 	FeatureTypeMax=#FeatureTypeTable 	
 	boolFeatureType=math.ceil(math.random(1,FeatureTypeMax))
 	--Mission1-----------------------------------------------------------------------------------------
@@ -62,26 +61,18 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("LuaRules/Gadgets/jw_miniMission6.lua")
 	--Mission7--
 	VFS.Include("LuaRules/Gadgets/jw_miniMission7.lua")
+	
 	MissionMax=7
 	--<necessaryInfo>
 	teamTables={}
 	--contains StartPositions per Team
 	--1x--2z
 	--3 sideInfo
-	function addMission5()
-		MissionFunctionTable[5]={}
-		MissionFunctionTable[5][1]={}
-		MissionFunctionTable[5][1]=Misson5WhackTheFreeman
-		MissionFunctionTable[5][2]={}
-		MissionFunctionTable[5][2]=0
-	end
-	function addMission4()
-		MissionFunctionTable[4]={}
-		MissionFunctionTable[4][1]={}
-		MissionFunctionTable[4][1]=Mission4Crawler
-		MissionFunctionTable[4][2]={}
-		MissionFunctionTable[4][2]=0
-		
+
+	function addMission1()
+		MissionFunctionTable[1]={}
+		MissionFunctionTable[1][1]={}
+		MissionFunctionTable[1][1]=captationHornblow
 		
 	end
 	function addMission2()
@@ -97,13 +88,20 @@ if (gadgetHandler:IsSyncedCode()) then
 		MissionFunctionTable[3][2]=0
 		MissionFunctionTable[3][3]={}
 		MissionFunctionTable[3][3]=0
-		
 	end
-	function addMission1()
-		MissionFunctionTable[1]={}
-		MissionFunctionTable[1][1]={}
-		MissionFunctionTable[1][1]=captationHornblow
-		
+		function addMission4()
+		MissionFunctionTable[4]={}
+		MissionFunctionTable[4][1]={}
+		MissionFunctionTable[4][1]=Mission4Crawler
+		MissionFunctionTable[4][2]={}
+		MissionFunctionTable[4][2]=0		
+	end
+		function addMission5()
+		MissionFunctionTable[5]={}
+		MissionFunctionTable[5][1]={}
+		MissionFunctionTable[5][1]=Misson5WhackTheFreeman
+		MissionFunctionTable[5][2]={}
+		MissionFunctionTable[5][2]=0
 	end
 	
 	addMission1()
@@ -180,9 +178,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	if one > other then upper=one; lower=other else lower=one;upper=other end
 	itterator=math.floor(math.random(lower,upper)) 
 	
-	
-	
-	
 	currentMission=deMaRaVal(5)
 	if deMaRaVal(5)==1 then currentMission=1 end
 	if deMaRaVal(5)==3 then currentMission=3 end
@@ -196,10 +191,6 @@ if (gadgetHandler:IsSyncedCode()) then
 	--</necessaryInfo>
 	
 	local frameValue=15
-	
-	
-	
-	
 	
 	function gadget:GameFrame(frame)
 		if frame%frameValue == 0 then
@@ -261,10 +252,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				end
 			end
 			
-		end
-		
-		
-		
+		end		
 	end
 	
 	boolJustOnce=true
@@ -292,6 +280,5 @@ if (gadgetHandler:IsSyncedCode()) then
 				
 			end 
 		end	
-	end
-	
+	end	
 end

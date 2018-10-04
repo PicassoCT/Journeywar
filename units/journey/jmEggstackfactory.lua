@@ -1,7 +1,7 @@
 local unitName = "jmeggstack"
 local unitDef = {
 	name = "Eggstack",
-	Description = "Produces a limited amount of eggs",
+	Description = "grows construction Units from limitted amount of Eggs. <Construction Unit Factory>",
 	objectName = "jeggstack.s3o",
 	script = "jmobileEggstackscript.lua",
 	buildPic = "eggstack.png",
@@ -40,6 +40,11 @@ local unitDef = {
 	LeaveTracks = true, 
 	
 	Category = [[LAND]],
+		leaveTracks =true,
+	trackType ="jBuilding",
+	trackStrength=6,
+	trackWidth =92,
+	trackOffset =0,
 	
 	EnergyStorage = 0,
 	EnergyUse = 15,

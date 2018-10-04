@@ -1,8 +1,8 @@
 local unitName = "cgamagardener"
 
 local unitDef = {
-name = "GamaBurst Landscape Sterilization Unit",
-Description = "Cooking the Weed",
+name = "Gammagardener",
+Description = "Landscape gammasoaking sterilization Unit <Anti Energy Production Unit>",
 objectName = "gama.s3o",
 script = "cgamagardener.lua",
 buildPic = "cgama.png",
@@ -39,8 +39,10 @@ CanMove = true,
 CanPatrol = true,
 CanStop = true,
 LeaveTracks = true, 
-  trackType ="BIGFoot",
-
+	trackType ="BIGFoot",
+	 trackStrength=4,
+	trackWidth =16,
+	trackOffset =0,
 
 	  customParams = {},
  sfxtypes = {

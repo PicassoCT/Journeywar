@@ -1,0 +1,40 @@
+-- trail_ar2
+
+return {
+  ["explosiveproj"] = {
+ 
+            Bullet = {
+      air                = true,
+      class              = [[CSimpleParticleSystem]],
+      count              = 1,
+      ground             = true,
+      water              = false,
+      properties = {
+        airdrag            = 1,
+        colormap           = [[1.0 0.6 0.1 0.0025     1.0 0.6 0.1 0.0025      0 0 0 0.01]],
+        directional        = true,
+        emitrot            = 0,
+        emitrotspread      = 0,
+        emitvector         = [[dir]],
+        gravity            = [[0, 0, 0]],
+        numparticles       = 1,
+        particlelife       = 6,
+        particlelifespread = 0,
+        particlesize       = 0.5,
+        particlesizespread = 1,
+        particlespeed      = 1,
+        particlespeedspread = 0,
+        pos                = [[0r-0.15r0.15, 0r-0.15r0.15, 0r-0.15r0.15]],
+        sizegrowth         = [[0.6 r.35]],
+        sizemod            = 1.0,
+        texture            = [[bulletzip]],--pulseshot
+        useairlos          = false,
+      },
+    },
+ 
+       
+ 
+       
+  },
+ 
+}

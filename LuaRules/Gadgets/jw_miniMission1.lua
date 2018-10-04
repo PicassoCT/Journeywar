@@ -5,7 +5,7 @@
 
 --Mission1-----------------------------------------------------------------------------------------
 	
-	gateTypeTable=getTypeTable(UnitDefNames,{"fclvlone","fclvl2","citadell","jdarkgate"})
+	gateTypeTable=getTypeTable(UnitDefNames,{"fclvl1","fclvl2","citadell","jdarkgate"})
 	--Captain Hornblow #1
 	--teamID,leader,boolIsDead,boolIsAITeam,side,_,_,_=	Spring.GetTeamInfo(teamID)
 	function checkIfContainerisNearAGate(unitID)
@@ -29,7 +29,7 @@
 							if diceOfIce==1 then 
 								GG.UnitsToSpawn:PushCreateUnit("strider",x,y,z, 0,doubleTeamID ) 
 							elseif diceOfIce==2 then
-								GG.UnitsToSpawn:PushCreateUnit("crewarder",x,y,z, 0,doubleTeamID ) 
+								createRewardEvent(doubleTeamID)
 							else
 								GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x,y,z, 0,doubleTeamID ) 
 								GG.UnitsToSpawn:PushCreateUnit("cgamagardener",x+25,y,z, 0,doubleTeamID ) 

@@ -61,14 +61,15 @@ local unitDef = {
 	
 	
 	
-	
-	
 	weapons = {
-		
-		
-		[1]={name = "ceater",
-			onlyTargetCategory = [[LAND AIR WATER]],
+
+		[1]={name = "slicergun",
+			
+			onlyTargetCategory = [[LAND]],
 		},
+			[2]={name = "jbeanstalkshield",
+		},
+
 		
 	},
 	Category = [[LAND]],

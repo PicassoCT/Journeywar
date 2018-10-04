@@ -2,8 +2,8 @@ local unitName = "jCrabCreeper"
 local unitDef = {
 	objectName="jcrab.s3o",
 	
-	name = "Crab",
-	Description 		 ="Slow Tank Creeper ",
+	name = "Crustacian Creeper",
+	Description 		 ="slow, steady, deadly Crab Creeper <Tank Creeper>",
 	
 	script 			 = "jCrabScript.lua",
 	maxDamage = 2550, 
@@ -56,7 +56,11 @@ local unitDef = {
 	showNanoFrame =false,
 	energyStorage = 750,
 	
-	
+	 LeaveTracks = true, 
+	trackType ="jBug",
+	 trackStrength=2,
+	trackWidth =32,
+	trackOffset =0,
 	
 	customParams = {},
 	sfxtypes = {

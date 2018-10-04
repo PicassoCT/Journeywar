@@ -2,8 +2,8 @@ local unitName = "comendbonker"
 
 local unitDef = {
 maxdamage=650,
-  name               = "Underground Teleporter",
-  description = "Spawns a Com Ender if you press Activate twice",
+  name               = "Comender Mech Hangar",
+  description = "places you in a Mechanized Suit, if you agree twice < Hero Unit Construction Building>",
   objectName         = "comendbonker.s3o",
   	buildPic = "comEndBonker.dds",
     script = "comEndBonker.lua",
@@ -19,7 +19,7 @@ maxdamage=650,
 	buildCostEnergy = 900,
 	buildTime =82,
 	levelground=false,
-	
+	category = [[LAND BUILDING]],
 	explodeAs="cbonkerplasma",
 	selfDestructAs="cartdarkmat",
 	FootprintX = 6,

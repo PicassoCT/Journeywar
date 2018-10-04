@@ -1,8 +1,8 @@
 local unitName = "jfungiforrest"
 
 local unitDef = {
-name = "FungiForrest :",
-Description = "sprays highly infectious spores",
+name = "FungiForrest",
+Description = " distributes highly infectious Spores in a Area <Area Deny Trap>",
 objectName = "fungiforrest.s3o",
 script = "jFungiForrest.lua",
 buildPic = "jfungiforrest.png",

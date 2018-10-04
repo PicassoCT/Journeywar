@@ -2,7 +2,7 @@ local unitName = "conair"
 
 local unitDef = {
 	name = "Construction Aircraft",
-	Description = "builds your base, using up health",
+	Description = "builds buildings using its Hitpoints <Construction Air Unit>",
 	objectName = "conair.s3o",
 	script = "conairscript.lua",
 	buildPic = "conair.dds",
@@ -12,7 +12,7 @@ local unitDef = {
 	buildCostEnergy = 130,
 	buildTime = 6,
 	--Health
-	maxDamage = 175,
+	maxDamage = 200,
 	idleAutoHeal = 0,
 	--Movement
 	Acceleration = 0.5,

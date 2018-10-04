@@ -1,8 +1,8 @@
 local unitName = "bg"
 
 local unitDef = {
-	name = "Ground Trooper",
-	Description = "Combine Soldier",
+	name = "Inferno Trooper",
+	Description = "enhanced Soldier, carrying a Tatical Shield <Ground Assault Unit>",
 	objectName = "bg.s3o",
 	script = "bgscript.lua",
 	buildPic = "cbg.png",
@@ -66,6 +66,12 @@ local unitDef = {
 			onlyTargetCategory = [[ LAND AIR]],
 			mainDir=[[0 0 1]],--nerfed
 			maxAngleDif = 120,--nerfed
+			
+		},
+		[2]={name = "cbgrenade",
+			onlyTargetCategory = [[ LAND ]],
+			turret = true,
+			cameraShake = 0.5
 			
 		},
 	},

@@ -1,10 +1,10 @@
 local unitName = "cheadlauncher"
 local unitDef = {
-name = "HeadLauncher",
-Description = "Provokes Enemys into Melee",
-objectName = "hl.s3o",
-script = "jwHeadLaunchScript.lua",
-buildPic = "placeholder.png",
+name = "Headlauncher",
+Description = "provokes enemies into Melees. Withstands 3 enemies <Ground Harass Tank>",
+objectName = "cheadlauncher.s3o",
+script = "cHeadLaunchScript.lua",
+buildPic = "cheadlauncher.png",
 --cost
 buildCostMetal = 1100,
 buildCostEnergy = 560,
@@ -13,6 +13,9 @@ buildTime = 46,
 maxDamage = 3500,
 idleAutoHeal = 2,
 --Movement
+onOffable = true,
+ActivateWhenBuilt=1,
+
 Acceleration = 0.25,
 BrakeRate = 0.3,
 FootprintX = 3,
@@ -25,8 +28,6 @@ TurnRate = 100,
 nanocolor=[[0 0.9 0.9]],
 radardistance=150,
 sightDistance = 700,
-
-	
 
 CanBeAssisted = false,	
 
@@ -62,6 +63,9 @@ CanReclaim=false,
 
 weapons = {
 [1]={name  = "headlaunch",
+	onlyTargetCategory = [[LAND]],
+	},
+[2]={name  = "cimplantlaunch",
 	onlyTargetCategory = [[LAND]],
 	},
 		},

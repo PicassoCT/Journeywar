@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "cInfantryCorpse",
    blocking       = false,
-   category       = "cCorpse",
+   category       = "CCORPSE",
    damage            = 3000,
    description       = "Memento Mori",
    energy            = 12,

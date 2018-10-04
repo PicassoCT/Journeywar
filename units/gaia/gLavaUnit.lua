@@ -58,22 +58,7 @@ useSmoothMesh = false,
  
  
 Category = [[NOTARGET]],
---[[
-EnergyStorage = 0,
-	EnergyUse = 75,
-	MetalStorage = 0,
-	EnergyMake = 0, 
-	MakesMetal = 16, 
-	MetalMake = 0,	
-  acceleration           = 0,
 
-  activateWhenBuilt      = true,
- ]] 
-weapons = {
-[1]={name  = "glavaWeapon",
-	onlyTargetCategory = [[LAND]],
-	},
-},
 
 
 

@@ -1,7 +1,7 @@
 local unitName = "cWaterExtractor"
 local unitDef = {
 name = "Water Extractor",
-Description = "Pumps Water Offworld",
+Description = "pumps Water Offworld for a greater cause <Anti Terraform Building>",
 objectName = "cWaterExtractor.s3o",
 script = "c_WaterExtractor.lua",
 buildPic = "cwater.dds",
@@ -59,8 +59,8 @@ buildoptions =
 	{
 	"builux","condepot","scumslum","campole",
 	"efence","mestorage","buihoblock","geohive",
-	"buibaislum","buibaicity","buibaicity2","mdigg","mbuilux",
-	"fclvlone","fclvl2","bbind","cHopper",
+	"buibaislum","buibaicity","smconverter","mdigg","mbuilux",
+	"fclvl1","fclvl2","bbind","cHopper",
 	},
 	
 sounds = {

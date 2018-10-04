@@ -2,7 +2,7 @@ local unitName = "tiglil"
 
 local unitDef = {
 	name = "Tiger Lily",
-	Description = "TigerLily",
+	Description = "close Combatant with nano-structure solvent drenched Blades <Assault>",
 	objectName = "tigLil.s3o",
 	script = "tiglilscript.lua",
 	buildPic = "tiglil.png",

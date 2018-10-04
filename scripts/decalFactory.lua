@@ -1,16 +1,15 @@
-
 function waitForIt()
-Sleep(500)
- Spring.DestroyUnit (unitID,true,true)
+    Sleep(1)
+    Spring.DestroyUnit(unitID, false, true)
 end
 
 function script.Create()
-StartThread(waitForIt)
+    StartThread(waitForIt)
 end
 
 function script.Killed()
-	
 
+    return 0
 end
 
 

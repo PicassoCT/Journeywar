@@ -2,7 +2,7 @@ local unitName = "jfishswarm"
 
 local unitDef = {
 	name = "Fishswarm",
-	Description = "feeding upon those on Land and Water",
+	Description = "launches swarmmembers at air and sea towards the enemy <Water Air Assault> ",
 	objectName = "jFishSwarm.s3o",
 	script = "jFishSwarmScript.lua",
 	buildPic = "placeholder.png",
@@ -72,7 +72,7 @@ local unitDef = {
 	Category = [[WATER]],	
 	weapons = {
 		[1]={name = "jflyingfish",
-			onlyTargetCategory = [[LAND]],
+			onlyTargetCategory = [[LAND AIR]],
 		},
 		[2]={name = "jfishtorp",
 			onlyTargetCategory = [[WATER]],

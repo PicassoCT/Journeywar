@@ -1,234 +1,284 @@
-turnerpoint =piece "turnerpoint"
-energyorb =piece "energyorb"
-truster1=piece"truster1"
-truster2=piece"truster2"
-truster3=piece"truster3"
-truster4=piece"truster4"
-center=piece"center"
+include "createCorpse.lua"
+include "lib_OS.lua"
+include "lib_UnitScript.lua"
+include "lib_Animation.lua"
+include "lib_Build.lua"
+include "lib_jw.lua"
 
-turret1=piece"turret1"
-turret2=piece"turret2"
-turret3=piece"turret3"
-turret4=piece"turret4"
-Ground={}
-CHARGE_TOTAL=4200
-ChargeUp=0
 
-for i=1,6, 1 do
-Ground[i]={}
-name="grd"..i
-Ground[i]=piece(name)
 
+turnerpoint = piece "turnerpoint"
+energyorb = piece "energyorb"
+truster1 = piece "truster1"
+truster2 = piece "truster2"
+truster3 = piece "truster3"
+truster4 = piece "truster4"
+center = piece "center"
+
+turret1 = piece "turret1"
+turret2 = piece "turret2"
+turret3 = piece "turret3"
+turret4 = piece "turret4"
+Ground = {}
+CHARGE_TOTAL =  4200
+ChargeUp = 0
+SIG_DELAY= 2
+for i = 1, 6, 1 do
+    Ground[i] = {}
+    name = "grd" .. i
+    Ground[i] = piece(name)
 end
 
 
 function landSequoia()
-Turn(turnerpoint,x_axis,math.rad(0),3)
---Move(center,y_axis,-165,2)
-WaitForTurn(turnerpoint,x_axis)
---WaitForMove(center,y_axis)
-				
-				local x,y,z=Spring.GetUnitPosition (unitID)
-			    local teamID = Spring.GetUnitTeam (unitID)
-				mexID= Spring.CreateUnit("jsettledsequoia", x, y, z, 0, teamID) 
-				health=Spring.GetUnitHealth(unitID)
-				Spring.SetUnitHealth(mexID,health)	
-				Spring.DestroyUnit (unitID,false,true)
+    Turn(turnerpoint, x_axis, math.rad(0), 3)
+    --Move(center,y_axis,-165,2)
+    WaitForTurn(turnerpoint, x_axis)
 
---now we replace it with a flyingSequoia
-			
-
+    local x, y, z = Spring.GetUnitPosition(unitID)
+    local teamID = Spring.GetUnitTeam(unitID)
+	transformUnitInto(unitID, "jsettledsequoia")
+    --now we replace it with a flyingSequoia
 end
 
 
-boolOnlyOnce=true
-	function script.Activate()
-	--Spring.Echo("Activated")
-		if boolOnlyOnce==false then
-		boolOnlyOnce=true
-			StartThread(landSequoia)
-		end	
+boolOnlyOnce = true
+function script.Activate()
+    --Spring.Echo("Activated")
+    if boolOnlyOnce == false then
+        boolOnlyOnce = true
+        StartThread(landSequoia)
+    end
 
-	return 1
-	end
+    return 1
+end
 
-	function script.Deactivate()
-	
-		--SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533	
-	
-			return 0
-			end
+function script.Deactivate()
+
+    --SetUnitValue(COB.MAX_SPEED,340787)--sets the speed to 5,2 *65533
+
+    return 0
+end
 
 function destroyedUnit(dUIDefID)
-MetallCost=250--TODO getUnitType dependant costs
-EnergyCost=250--TODO getUnitType dependant costs
-Show(energyorb)
-Total=(MetallCost+EnergyCost)^0.5
-ChargeUp=ChargeUp+0.5
-end			
+    MetallCost = UnitDefs[dUIDefID].metalCost  or 250 --TODO getUnitType dependant costs
+    EnergyCost = UnitDefs[dUIDefID].energyCost or 250 --TODO getUnitType dependant costs
+    Show(energyorb)
+    Total = (MetallCost + EnergyCost) 
+    ChargeUp = ChargeUp + Total
+end
+
+
+function energyReactor()
+
+	while true do
+		Sleep(1000)
+		ChargeUp = ChargeUp + 10
+
+	end
+
+end
 
 function emitLight()
-Spin(energyorb,y_axis,math.rad(42),12)
-Spin(energyorb,z_axis,math.rad(22),12)
-Spin(energyorb,x_axis,math.rad(-22),12)
-	while(true)do
-	
-		while ChargeUp > 0 do
-		Sleep(25)
-		EmitSfx(energyorb,1026)
-		
-		end			
-	Sleep(1000)
-	end			
+    Spin(energyorb, y_axis, math.rad(42), 12)
+    Spin(energyorb, z_axis, math.rad(22), 12)
+    Spin(energyorb, x_axis, math.rad(-22), 12)
+    while (true) do
+
+        while ChargeUp > 0 do
+            Sleep(25)
+            EmitSfx(energyorb, 1026)
+        end
+        Sleep(1000)
+    end
 end
 
 function activator()
-Sleep(2000)
-boolOnlyOnce=false
-
+    Sleep(2000)
+    boolOnlyOnce = false
 end
 
 
 function script.Create()
-Hide(energyorb)
-			Turn(turnerpoint,x_axis,math.rad(-91),0)
-for i=1,6, 1 do
-Hide(Ground[i])
-end
-StartThread(emitLight)
-StartThread(activator)
-
-end
-
-
-function script.Killed(recentdamage,_)
-Spring.PlaySoundFile("sounds/jEtree/tree.wav")
-Sleep(2000)
-
-
-return 1
-
+	 StartThread(rampUpSpeed)
+    Hide(energyorb)
+    Turn(turnerpoint, x_axis, math.rad(-91), 0)
+    for i = 1, 6, 1 do
+        Hide(Ground[i])
+    end
+    StartThread(emitLight)
+    StartThread(activator)
+    StartThread(energyReactor)
 end
 
+
+function script.Killed(recentdamage, _)
+	setSpeedEnv(unitID,0)
+    Spring.PlaySoundFile("sounds/jEtree/tree.wav")
+	Spring.MoveCtrl.Enable(unitID,true)
+	x,y,z= Spring.GetUnitPiecePosDir(unitID, center)
+	gh=Spring.GetGroundHeight(x,z)
+	teamID= Spring.GetUnitTeam(unitID)
+	factor=0
+	while y > gh do
+		Spring.MoveCtrl.SetPosition(unitID,x, y*(1-factor) + gh*(factor),z)
+		factor=clamp(0,factor+0.01,1)
+		Sleep(10)
+	end
+    heapID = Spring.CreateUnit("jscrapheap_tree", x, gh, z, 1, Spring.GetGaiaTeam())
+	
+
+    return 1
+end
+
+function logUpToXInMSec(x,msec,targmsec)
+fact=math.max(0,math.min(1.718281828459045,msec/targmsec))
+return math.log(1+fact)*x
+end
+
+function rampUpSpeed()
+internalSpeed=0.1
+setSpeedEnv(unitID,internalSpeed)
+	while true do
+	oldHeading= Spring.GetUnitHeading(unitID)
+	Sleep(100)
+	newHeading= Spring.GetUnitHeading(unitID)
+	timeElapsed=0
+		while boolMoving==true and absDistance(oldHeading,newHeading) < 10 do
+			newHeading= Spring.GetUnitHeading(unitID)
+			setSpeedEnv(unitID,internalSpeed)
+			factor = logUpToXInMSec(0.025, timeElapsed,15000)
+			internalSpeed=math.min(1,internalSpeed+ factor)
+			Sleep(100)
+			timeElapsed=timeElapsed+100
+		end
+
+	internalSpeed=0.1
+	setSpeedEnv(unitID,internalSpeed)
+
+	end
+end
+
+boolMoving=false
 function script.StartMoving()
-
---Spring.Echo("Jseq_Starting to move")
+boolMoving=true
+Signal(SIG_DELAY)
+    --Spring.Echo("Jseq_Starting to move")
 end
-
+function delayedStop()
+Signal(SIG_DELAY)
+SetSignalMask(SIG_DELAY)
+Sleep(300)
+boolMoving=false
+end
 function script.StopMoving()
-
---Spring.Echo("Jseq_STOP")
-		
-		
+StartThread(delayedStop)
+    --Spring.Echo("Jseq_STOP")
 end
 
 -- The copypastated towers of the citadell
 
 
-function script.AimFromWeapon1() 
-	return podturret0 
+function script.AimFromWeapon1()
+    return podturret0
 end
 
 
 
 
-function script.QueryWeapon1() 
-return turret1
+function script.QueryWeapon1()
+    return turret1
 end
 
-function script.AimWeapon1( heading ,pitch)	
-	return true
+function script.AimWeapon1(heading, pitch)
+    return true
 end
 
-function script.FireWeapon2()	
-	return true
-end
---------------------------------------------------------------------------
---turret + two turret emiter
-
-
-function script.AimFromWeapon2() 
-	return turret2 
-end
-
-
-
-
-function script.QueryWeapon2() 
-return turret2
-end
-
-function script.AimWeapon2( heading ,pitch)	
-	return true
-end
-
-function script.FireWeapon2()	
-	return true
+function script.FireWeapon1()
+    return true
 end
 
 --------------------------------------------------------------------------
---turret + two turret emiter
-
-
-function script.AimFromWeapon3() 
-	return turret3 
+-- turret + two turret emiter
+function script.AimFromWeapon2()
+    return turret2
 end
 
 
 
 
-function script.QueryWeapon3() 
-return turret3
-
+function script.QueryWeapon2()
+    return turret2
 end
 
-function script.AimWeapon3( heading ,pitch)	
-	
-
-	return true
+function script.AimWeapon2(heading, pitch)
+    return true
 end
 
-function script.FireWeapon3()	
-	return true
+function script.FireWeapon2()
+    return true
+end
+
+--------------------------------------------------------------------------
+-- turret + two turret emiter
+function script.AimFromWeapon3()
+    return turret3
+end
+
+
+
+
+function script.QueryWeapon3()
+    return turret3
+end
+
+function script.AimWeapon3(heading, pitch)
+
+
+    return true
+end
+
+function script.FireWeapon3()
+    return true
 end
 
 -------------------------------------------------------------------------
---turret + two turret emiter
-
-
-function script.AimFromWeapon4() 
-	return turret4 
+-- turret + two turret emiter
+function script.AimFromWeapon4()
+    return turret4
 end
 
-function script.QueryWeapon4() 
-return turret4
+function script.QueryWeapon4()
+    return turret4
 end
 
-function script.AimWeapon4( heading ,pitch)	
+function script.AimWeapon4(heading, pitch)
 
-	return true
+    return true
 end
 
-function script.FireWeapon4()	
-	return true
+function script.FireWeapon4()
+    return true
+end
+-------------------------------------------------------------------------
+
+
+function script.AimFromWeapon5()
+    return energyorb
 end
 
-
-function script.AimFromWeapon5() 
-	return energyorb 
+function script.QueryWeapon5()
+    return energyorb
 end
 
-function script.QueryWeapon5() 
-return energyorb
-end
+function script.AimWeapon5(heading, pitch)
 
-function script.AimWeapon5( heading ,pitch)	
-
-	return (ChargeUp/CHARGE_TOTAL) > 1
+    return (ChargeUp / CHARGE_TOTAL) > 1
 end
 
 function script.FireWeapon5()
-Hide(energyorb)
-ChargeUp=0	
-	return true
+    Hide(energyorb)
+    ChargeUp = ChargeUp-CHARGE_TOTAL
+    return true
 end
+-------------------------------------------------------------------------

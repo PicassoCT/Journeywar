@@ -49,10 +49,10 @@ local unitDef = {
 	customParams = {},
 	sfxtypes = {
 		explosiongenerators = {
-			"custom:blacksphereexpanding",	 		
-			"custom:cawilduniverseappearsgalaxys",	 		
-			"custom:sunfx",	 		
-			"custom:orgbigbang" 		
+			"custom:cawilduniverseappearsgalaxys",	--1024 		
+			"custom:cawilduniverseappearsgalaxys",	 		--1025
+			"custom:sunfx",	 		--1026
+			"custom:orgbigbang" 		--1027
 			
 		},
 		

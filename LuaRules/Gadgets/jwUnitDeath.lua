@@ -24,8 +24,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	-- Configuration:
 	
 	numberOfButterflys=5
-	timeInMsTillRespawn=1500
-	circleRange=500
+	timeInMsTillRespawn=25000
+	circleRange=80
 	GoneForGood={}
 	--1 Counter
 	--2 FatherID
@@ -36,25 +36,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	jTree3RespawnTable={}
 	
-	function mergeButterflys(sTable)
-	
-	distanceTable={}
-	for k,kuid in ipairs(sTable)do
-		for i, iuid in ipairs(sTable) do
-		if i~=k then
-			distance=distanceUnitToUnit(sTable[k],sTable[i])
-			if  sTable[k] and sTable[i] and distance < ELIAHMERGEDISTANCE then
-					if not distanceTable[sTable[k]] then  distanceTable[sTable[k]] = 0 end
-				distanceTable[sTable[k]] = distanceTable[sTable[k]] +1
-				if distanceTable[sTable[k]] > 2 then
-					return sTable[k]
-				end
-			end
-		end
-		end
-	end
 
-	end
 	
 	function countSurvivors(jDeadEliahIndex)
 		local survivorCount=0			
@@ -77,30 +59,27 @@ if (gadgetHandler:IsSyncedCode()) then
 		--respawn then eliah
 		--none of the butterflys is- nil entry	
 
-		survivorCount, survivors = countSurvivors(jDeadEliahIndex)
-		
-		if survivorCount < 2 then
-			table.remove(GoneForGood,jDeadEliahIndex)
-			return
-		end
-		
-		spawnPointOfEliah = mergeButterflys(survivors)
+		survivorCount, survivors = countSurvivors(jDeadEliahIndex)		
+		spawnPointOfEliah = survivors[1]
 
 		if spawnPointOfEliah and Spring.ValidUnitID(spawnPointOfEliah)== true  then
 			x,y,z = Spring.GetUnitPosition(spawnPointOfEliah)
 			likeHisFathersFather=Spring.GetUnitTeam(spawnPointOfEliah)
 			id=Spring.CreateUnit("jeliah",x,y,z,0,likeHisFathersFather)
 			if id then
+				spawnCegAtUnit(id,"jeliahbirth",0, 0,0)
 				Spring.SetUnitExperience(id, GoneForGood[jDeadEliahIndex].stats.exp)
-			end
-			for index, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
+				healthPercent= clamp(0.125,#survivors/numberOfButterflys,1)
+				_,mhp=Spring.GetUnitHealth(id)
+				Spring.SetUnitHealth(id,mhp*healthPercent)
+			end			
+		end
+			
+		for index, id in pairs(GoneForGood[jDeadEliahIndex].butterflys) do
 				if Spring.GetUnitIsDead(id)==false then 
 					Spring.DestroyUnit(id,false,true)
 				end
 			end
-		end
-			
-	
 	
 		--Lets get this out of here before it starts to rot
 	end
@@ -125,7 +104,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			--decrease the time 
 			for i,val in ipairs(GoneForGood) do
 				if GoneForGood[i] and GoneForGood[i].stats then
-					GoneForGood[i].stats.ms=GoneForGood[i].stats.ms-intIntervall
+					GoneForGood[i].stats.ms=GoneForGood[i].stats.ms- (intIntervall*33)
 					--to avoid n² we do this onloop
 					if GoneForGood[i].stats.ms < 0 then
 						reIncarnateAfterTime(i)						
@@ -152,21 +131,22 @@ if (gadgetHandler:IsSyncedCode()) then
 	conAirDefID=UnitDefNames["conair"].id
 	
 	function inRandomRange(x,z,Range)
-		offx,offz= RotationMatrice(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
+		offx,offz= Rotate(0,Range, (math.random(0,360)+Spring.GetGameFrame())%360)
 		return x+offx,z+offz
 	end
 	
 	blooddecals={"blooddecalfactory","blooddecalfactory1","blooddecalfactory2","blooddecalfactory3","blooddecalfactory4"}
 	local spGetUnitPosition=Spring.GetUnitPosition
-	local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","advisor","zombie","bg2","jhivehoundmoma"})
-	local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","jcrabcreeper","jconroach","vort","jvaryfoo"})
+	local c_infantryTypeTable=getTypeTable(UnitDefNames,{"css","bg","gcivillian","zombie","bg3","bg2","jhivewulfmoma"})
+	local j_infantryTypeTable=getTypeTable(UnitDefNames,{"tiglil","skinfantry","advisor","jcrabcreeper","jconroach","vort","jvaryfoo"})
 	
-	function gadget:UnitDestroyed(unitID, unitDefID, teamID, attackerID, attackerDefID, attackerTeamID)
+	function gadget:UnitDestroyed(unitID, unitDefID, teamID)
+
 		if c_infantryTypeTable[unitDefID] then
 			x,y,z=spGetUnitPosition(unitID)
 			name="blooddecal".."factory"
 			if x then
-				Spring.CreateUnit(blooddecals[math.random(1,#blooddecals)],x,y,z,0,teamID)
+				 GG.UnitsToSpawn:PushCreateUnit(blooddecals[math.random(1,#blooddecals)],x,y,z,0,teamID)
 			end
 		end
 		
@@ -174,22 +154,28 @@ if (gadgetHandler:IsSyncedCode()) then
 			x,y,z=spGetUnitPosition(unitID)
 			if x then
 				if math.random(0,1)==1 then
-					Spring.CreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
+					GG.UnitsToSpawn:PushCreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
 				else
-					Spring.CreateUnit("blueblooddecalfactory2",x,y,z,0,teamID)
+					GG.UnitsToSpawn:PushCreateUnit("blueblooddecalfactory2",x,y,z,0,teamID)
 				end
 			end
 		end
 		
-		if unitDefID== conAirDefID and attackerID and teamID ~= attackerTeamID then
-			x,y,z=Spring.GetUnitPosition(unitID)
-			vx,vy,vz,vl=Spring.GetUnitVelocity(unitID)
+		if unitDefID == conAirDefID  then
+		
+		 attackerID = Spring.GetUnitLastAttacker(unitID)
+		 if attackerID then
+			attackerTeamID = Spring.GetUnitTeam(attackerID)
+				if attackerTeamID ~= teamID then
+					x,y,z=Spring.GetUnitPosition(unitID)
+					vx,vy,vz,vl=Spring.GetUnitVelocity(unitID)
+					
+					id=Spring.CreateUnit("cconaircontainer",x,y,z,0,teamID)
+					Spring.SetUnitNeutral(id,true)
 			
-			id=Spring.CreateUnit("cconaircontainer",x,y,z,0,teamID)
-			Spring.SetUnitVelocity(id,vx,vy,vz)
-			Spring.SetUnitNeutral(id,true)
-			Spring.SetUnitNoSelect(id,true)
-			
+					
+				end
+			end
 		end
 		
 		if unitDefID== eliahDefID then
@@ -205,11 +191,13 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 			GoneForGood[newIndex].butterflys={}
+			
 			for i=1,numberOfButterflys,1 do
-				tx,tz=inRandomRange(x,z,circleRange)
-				ty=Spring.GetGroundHeight(tx,tz)
-				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",tx,ty,tz,0,teamID)
-				Spring.SetUnitMoveGoal(GoneForGood[newIndex].butterflys[i],x,y,z)				
+
+				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",x,y+75,z,0,teamID)
+				Spring.GiveOrderToUnit(GoneForGood[newIndex].butterflys[i], CMD.MOVE, {x+math.random(250,512)*randSign(), y, z+math.random(250,512)*randSign()}, {"shift"})
+				Spring.GiveOrderToUnit(GoneForGood[newIndex].butterflys[i], CMD.MOVE, {x,y,z}, {"shift"})
+
 			end
 			
 			--spawnWithinCircle

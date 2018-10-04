@@ -1,10 +1,10 @@
 local unitName = "cwallbuilder"
 local unitDef = {
-	name = "WallBuilder",
-	Description = "Builds and Charges electric Fences",
+	name = "Wallbuilder",
+	Description = "builds and charges mobile Wall Units <Defense Construction Unit>",
 	objectName = "cWallBuilder.s3o",
 	script = "cWallBuilder.lua",
-	buildPic = "placeholder.png",
+	buildPic = "cwallbuilder.png",
 	--cost
 	buildCostMetal = 1100,
 	buildCostEnergy = 560,
@@ -61,7 +61,7 @@ local unitDef = {
 	SelfDestructAs="electric_explosion",
 	buildoptions = 
 	{
-		"efence","bonker","crailgun","geohive","chopper","combinedfeature","cdefusermine"
+		"efence","bonker","crailgun","geohive","chopper","cwatchpost","cdefusermine"
 	},
 	
 	NoWeapon=false,
@@ -74,6 +74,7 @@ local unitDef = {
 			"custom:electric_explosion",
 			"custom:sparkcloud",
 			"custom:cwallbuildlight",--28
+			"custom:cefencesplash"--29
 		},
 		
 	},

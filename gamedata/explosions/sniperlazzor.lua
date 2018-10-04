@@ -3,22 +3,25 @@
     return {
       ["sniperlazzor"] = {
 	
-	lazor = {
+	    bitmapmuzzleflame = {	
       air                = true,
-      class              = [[explspike]],
+      class              = [[CBitmapMuzzleFlame]],
       count              = 1,
       ground             = true,
+      underwater         = 1,
       water              = true,
       properties = {
-        alpha              = 1,
-        alphadecay         = 0.033333333333333333333333333333333,
-        color              = [[0.19,0.9,0.9]],
+        colormap           = [[0.1 0.2 0.5 0.004	0.1 0.2 0.5 0.004		0.1 0.2 0.5 0.0038]],
         dir                = [[dir]],
-        length             = 0.05,
-        width              = 0.1,
+        frontoffset        = 0.05,
+        fronttexture       = [[0]],
+        length             = 600,
+        sidetexture        = [[TouchGround]],
+        size               = 24,
+        sizegrowth         = 0,
+        ttl                = 5,
       },
-    },	
-	
+    },
 	
 	
 	  

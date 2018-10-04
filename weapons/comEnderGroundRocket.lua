@@ -1,57 +1,55 @@
-local weaponName="grocket"
-local weaponDef={
-name="Long Range Ground Rocket",
-weaponType=[[MissileLauncher]],
+local weaponName = "grocket"
+local weaponDef = {
+    name = "Long Range Ground Rocket",
+    weaponType = [[MissileLauncher]],
+    Accuracy = 2000,
 
-Accuracy=2000,
+    --Physic/flight path
+    range = 4095,
+    reloadtime = 1,
+    weaponVelocity = 1500,
+    startVelocity = 100,
+    weaponAcceleration = 250,
+    flightTime = 10.5,
+    BurnBlow = 2,
+    FixedLauncher = false,
+    dance = 5,
+    wobble = 14,
+    tolerance = 16000,
+    tracks = false,
+    Turnrate = 16000,
+    collideFriendly = true,
 
---Physic/flight path
-range=4095,
-reloadtime=0.001,
-weaponVelocity=1500,
-startVelocity=300,
-weaponAcceleration=250,
-flightTime=10.5,
-BurnBlow=2,
-FixedLauncher=false,
-dance=1,
-wobble=4,
+    --- -APPEARANCE
+    model = "cComEunguidedRProj.s3o",
+    smokeTrail = true,
+    --explosionGenerator="custom:redsmoke",
+    --CegTag="conairexaust",
 
-tolerance=16000,
-tracks=false,
-Turnrate=16000,
-collideFriendly=true,
+    --- -TARGETING
+    turret = true,
+    cylinderTargeting = 55.0,
+    avoidFeature = true,
+    avoidFriendly = true,
+    burst = 3,
+    burstrate = 0.02,
+    --commandfire=true,
 
-----APPEARANCE
-model="cComEunguidedRProj.s3o",
-smokeTrail=true,
---explosionGenerator="custom:redsmoke",
---CegTag="conairexaust",
+    --- -DAMAGE
+    damage = {
+        default = 10,
+        heavyarmor = 15,
+    },
+    areaOfEffect = 100,
+    craterMult = 0,
 
-----TARGETING
-	turret=true,
-	cylinderTargeting=55.0,
-	avoidFeature=true,
-	avoidFriendly=true,
-	burst=12,
-	burstrate=0.02,
---commandfire=true,
-
-----DAMAGE
-damage={
-default=150,
-heavyarmor=150,
-},
-areaOfEffect=100,
-craterMult=0,
-
---?FIXME***
-lineOfSight=true,
+    --?FIXME***
+    lineOfSight = true,
 
 
---sound
---soundHit="skinfantry/birdrockethit.wav",
---soundStart="skinfantry/birdrocketstart.wav",
+    --sound
+    soundHit = "skinfantry/birdrockethit.ogg",
+    soundStart = "skinfantry/birdrocketstart.ogg",
 }
 
-return lowerkeys ({[weaponName]=weaponDef})
+return lowerkeys({ [weaponName] = weaponDef })

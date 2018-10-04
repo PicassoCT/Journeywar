@@ -2,7 +2,7 @@ local weaponName="cnukegrenadelvl1"
 local weaponDef={
 name="GrenadeLauncher Lvl2",
 weaponType=[[Cannon]],
-description="Grenade",
+
 highTrajectory =1,
 
 

@@ -2,7 +2,7 @@
 local featureDef  =  {
    name           = "bgcorpse",
    blocking       = false,
-   category       = "cCorpse",
+   category       = "CCORPSE",
    damage            = 3000,
    description       = "M.I.A.",
    energy            = 12,

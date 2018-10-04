@@ -1,7 +1,7 @@
 local unitName = "ccomender"
 local unitDef = {
 	name = "ComEnder",
-	Description = "You in a armoured Suit - Memento Mori",
+	Description = "you in a armoured Suit. You live only once.< Avatar Unit>",
 	objectName = "cComEnder.s3o",
 	script = "cComEnderScript.lua",
 	buildPic = "placeholder.png",
@@ -50,7 +50,6 @@ local unitDef = {
 	trackOffset =0,
 	turnInPlace =true,
 	onoffable=true, --used for turning the electricity on/off
-	
 	Builder = true,
 	ShowNanoSpray = true,
 	CanBeAssisted = false,

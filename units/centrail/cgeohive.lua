@@ -1,9 +1,10 @@
 local unitName = "geohive"
 
 local unitDef = {
-  name               = "Sprawling Underground City",
+  name               = "Underground City",
+  Description = "rebuilds civilisation upon Destruction <Spawns Buildings> ",
   objectName         = "geohive.s3o",
-  buildPic = "placeholder.png",
+  buildPic = "cgeohive .png",
   script="cgeohive.lua",
    MaxDamage = 1500,
    MaxDamage = 1500,
@@ -25,7 +26,8 @@ local unitDef = {
 	MakesMetal = 0, 
 	MetalMake = 0,	
 	nanocolor=[[0 0.9 0.9]],
-
+	onoffable=true,
+	ActivateWhenBuilt=0,
 
 	explodeAs="cartdarkmat",
 	selfDestructAs= [[NOWEAPON]],

@@ -1,56 +1,50 @@
----http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
-local weaponName = "cwaterbombs" --this is the actually maschinegune of the blackguard
+--- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
+local weaponName = "cwaterbombs" --this is the actually maschinegune of the inferno trooper
 local weaponDef = {
-	      name                    = "Waterbombs",
-	      weaponType              = [[Cannon]],
-	      --damage
-	damage={
-default=150,
-heavyarmor=200,
-},
-areaOfEffect=100,
-craterMult=0,    
-	      areaOfEffect            = 28,
-		--  explosionGenerator="custom:AR2Impact",
-		--  cegTag="AR2Projectile",
-		--  texture1="empty",
-		  model="cwaterbomb.s3o",
-		  --physics
+    name = "Waterbombs",
+    weaponType = [[Cannon]],
+    --damage
+    damage = {
+        default = 150,
+        heavyarmor = 200,
+    },
+    areaOfEffect = 100,
+    craterMult = 0,
+    areaOfEffect = 28,
+    --  explosionGenerator="custom:AR2Impact",
+    --  cegTag="AR2Projectile",
+    --  texture1="empty",
+    model = "cwaterbomb.s3o",
+    --physics
 
-		  weaponVelocity          = 550,
-		  reloadtime              = 0.42,
-			range 					= 330,
-		  sprayAngle 				= 1000,
-		  accuracy 					=0.2,
-	      tolerance               = 5000,
-		  lineOfSight             = true,	      
-	      turret                  = true,
-	 
-		  groundbounce=true,
-		  WaterBounce=false,
-		   flighttime =20,
-		    NumBounce=1,
-			
+    weaponVelocity = 550,
+    reloadtime = 3.42,
+    range = 330,
+    sprayAngle = 1000,
+    accuracy = 0.2,
+    tolerance = 5000,
+    lineOfSight = true,
+    turret = true,
+    groundbounce = true,
+    WaterBounce = false,
+    flighttime = 20,
+    NumBounce = 0,
+    collideFriendly = true,
+    soundStart = "",
+    soundHit = "",
+    soundtrigger = 1,
+    --apperance
+    size = 0.1,
+    craterBoost = 3,
+    cylinderTargeting = 17.0,
+    edgeEffectiveness = 0.2,
+    --	explosionGenerator="custom:missile_explosion",
+    fireStarter = 0,
+    impulseFactor = 3.1,
 
-		collideFriendly = true,
-			soundStart         = "",
-			soundHit= "",
-		  soundtrigger=1,
-		  --apperance		  	      
-          size                    = 0.1,
-			
-		
-			craterBoost = 3,
-			cylinderTargeting = 17.0,
-			edgeEffectiveness = 0.2,
-		--	explosionGenerator="custom:missile_explosion",
-			fireStarter = 0,
-			impulseFactor = 3.1,
+    --interceptedByShieldType = 16,
+    myGravity = 0.2,
+    targetBorder = 0,
+}
 
-			--interceptedByShieldType = 16,
-			myGravity = 0.2,
-			targetBorder = 0,
-
-		  }
-		
-return lowerkeys({[weaponName] = weaponDef})
+return lowerkeys({ [weaponName] = weaponDef })

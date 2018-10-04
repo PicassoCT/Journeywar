@@ -3,7 +3,7 @@ local unitName = "choblock"
 local unitDef = {
 maxdamage=150,
   name               = "Hostage Block",
-  description = "Allows to put pressure on prisoners in PaxCentrails ",
+  description = "holds the relatives of a Pax Centrail Prisoner Hostage <Unit Controll Building>",
   objectName         = "buihoblock.s3o",
   script="chostageblockscript.lua",
   buildPic = "hoblock.dds",
@@ -18,10 +18,20 @@ maxdamage=150,
 	EnergyMake = 0, 
 	MakesMetal = 5, 
 	MetalMake = 0,	
+	category = [[LAND BUILDING]],
 nanocolor=[[0 0.9 0.9]],
-
+	canattack=true,
 	explodeAs="citadelldrone",
 	selfDestructAs="cartdarkmat", 
+		
+	weapons = {
+		[1]={name = "ccitadelltur",
+			onlyTargetCategory = [[LAND AIR]],
+		},
+		[2]={name = "ccitadelltur",
+			onlyTargetCategory = [[LAND AIR]],
+		}
+		},
 }
 
 return lowerkeys({ [unitName] = unitDef })

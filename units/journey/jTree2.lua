@@ -1,11 +1,11 @@
 local unitName = "jtree2"
 
 local unitDef = {
-	name = "Temptree",
-	Description = " Resistant to Radiation.",
+	name = "Future Tree",
+	Description = " Grows into a Dream Tree with Radiation <Energy>",
 	objectName = "jEtree2.s3o",
 	script = "jTree2.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtreeRad.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

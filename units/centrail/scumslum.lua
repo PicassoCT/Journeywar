@@ -1,7 +1,8 @@
 local unitName = "scumslum"
 
 local unitDef = {
-  name               = "Scumslum: Generates low Securitybudget (Energy)",
+  name               = "Scumslum",
+  Description = " adds Securitybudget to keep the new citizens in line <Security Production>",
   objectName         = "scumslum.s3o",
   	buildPic = "scumslum.dds",
   script= "cscumslum.lua",
@@ -17,7 +18,7 @@ local unitDef = {
 
 
 	MaxWaterDepth = 5,
-	category=[[LAND]],
+	category=[[LAND BUILDING]],
 	nanocolor=[[0 0.9 0.9]],
 	radardistance=0,
 	sightDistance = 500,

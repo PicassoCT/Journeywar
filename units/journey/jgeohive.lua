@@ -2,7 +2,7 @@ local unitName = "jgeohive"
 
 local unitDef = {
 	name = "Drone Hive",
-	Description = "Spawns Creepers who autoattack",
+	Description = "spawns A.I. controlled Creepers who autoattack <Creeper Factory>",
 	
 	objectName = "jgeohive.s3o",
 	script = "jgeohivescript.lua",

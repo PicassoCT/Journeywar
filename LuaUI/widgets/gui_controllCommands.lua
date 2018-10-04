@@ -6,11 +6,12 @@ function widget:GetInfo()
 		author = "PicassoCT",
 		date = "2016-6-2",
 		license = "GNU GPL, v2 or later",
-		layer = 253,
+		layer = 0,
 		enabled = false,
-		hidden= true,
+		hidden = true
 	}
 end
+
 --Shared Data
 local Chili
 local Button
@@ -20,194 +21,312 @@ local Panel
 local Image
 local Progressbar
 local screen0
-
 local testIrregular
-
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
 local controllCommand_window
+local activeCommand = 0
+
+targetCommands = VFS.Include("LuaUI/ressources/guiEnums.lua")
+VFS.Include("LuaUI/ressources/gui_helper.lua")
+---------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------
 
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
-updateCommandsSoon = false
+
+
+if not WG.SelectedCommand then WG.SelectedCommand ={} end
+playerID= Spring.GetMyPlayerID()
+if not WG.SelectedCommand[playerID] then WG.SelectedCommand[playerID] ={} end
+boolQueueOverride = false
+
 BaseCol={0.1,0.8,0.8,1}
 WeapCol={0.3,0.6,0.8,1}
 BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
-
-extendedCommands={}
-exttriStrip={}
-exttriStrip[1] ={		
-	{x= 0, y = 0},			
-	{x= 160, y = 40},
-	{x= 0, y = 80}
-}
-
-exttriStrip[2] ={
-	{x= 160, y = 0},
-	{x= 160, y = 80},			
-	{x= 0, y = 40},
-	
-}
-
-exttriStrip[3] ={
-	{x= 0, y = 0},			
-	{x= 160, y = 40},
-	{x= 0, y = 80}
-}	
-
-exttriStrip[4] ={		
-	{x= 100	, y = 15},
-	{x= 100	, y = 70},			
-	{x= 0	, y = 40},
-}	
-exttriStrip[5] ={
-	{x= 0, y = 0},			
-	{x= 100, y = 30},
-	{x= 0, y = 80},
-	{x= 100, y = 80},
-}
 extHoloTexCol={200/255, 239/255, 253/255, 1}	
-
-triStrip={}
 holoCommandCol={163/255, 229/255, 243/255, 0.75}	
 holoTextCol={200/255, 239/255, 253/255, 1}	
-backgroundCol={}
-for i=1, 9 do
-	triStrip[i] ={
-		{x= 80, y = 0},			
+backgroundColExtended={58/255, 172/255, 226/255, 0.75}	
+
+extendedCommands={}
+	extendedMenue={
+	[CMD.RECLAIM] ={},
+	[CMD.LOAD_UNITS]={},
+	[CMD.UNLOAD_UNITS]={},
+	[CMD.CLOAK]={},
+	[CMD.RESTORE] ={},
+	[CMD.OPT_SHIFT]={}
+}
+
+extendedMenue[CMD.RECLAIM] ={		
+		triStrip={{x= 0, y = 0},			
+		{x= 160, y = 40},
+	{x= 0, y = 80}},
+	backgroundCol=backgroundColExtended,
+	caption="RECLAIM",
+	callbackFunction=function()
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player] = CMD.RECLAIM 	
+	end
+}
+
+extendedMenue[CMD.LOAD_UNITS] ={
+		triStrip={	{x= 160, y = 0},
+		{x= 160, y = 80},			
+	{x= 0, y = 40}	},
+	backgroundCol=backgroundColExtended,
+	caption=	"LOAD",
+	callbackFunction=function()
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player] = CMD.LOAD_UNITS 			
+	end
+}
+extendedMenue[CMD.UNLOAD_UNITS] ={
+	triStrip={
+		{x= 160, y = 40},
+		{x= 160, y = 80},			
 		{x= 0, y = 0},
-		{x= 80, y = 70},						
-		{x= 0, y = 70},
-		{x= 0, y = 100},
-		
-		
-	}
-	backgroundCol[i]={35/255, 124/255, 166/255, 0.75}
-end
+	{x= 0, y = 40}	},
+	backgroundCol=backgroundColExtended,
+	caption=	"DROP",
+	callbackFunction=function()
+		player= Spring.GetMyPlayerID()
+		WG.SelectedCommand[player] = CMD.UNLOAD_UNITS 
+	end
+}
+
+extendedMenue[CMD.CLOAK] ={
+		triStrip={	{x= 0, y = 0},			
+		{x= 160, y = 40},
+	{x= 0, y = 80}},
+	backgroundCol=backgroundColExtended,
+	caption= "CLOAK",
+	callbackFunction=function()
+		Spring.Echo("Cloaking")
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)			
+			for i=1,#selectedUnits do
+				state = Spring.GetUnitStates(selectedUnits[i])
+				paramTable={}
+				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
+			end
+		end		
+	end
+}	
+
+extendedMenue[CMD.RESTORE] ={		
+		triStrip={	{x= 100	, y = 15},
+		{x= 100	, y = 70},			
+	{x= 0	, y = 40}},
+	backgroundCol=backgroundColExtended,
+	caption= "RESTORE",
+	callbackFunction=function()
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player] = CMD.RESTORE 
+	end
+}	
+extendedMenue[CMD.OPT_SHIFT] ={
+		triStrip={	{x= 0, y = 0},			
+		{x= 100, y = 30},
+		{x= 0, y = 80},
+	{x= 100, y = 80}},
+	backgroundCol=backgroundColExtended,
+	caption= "QUEUE",
+	callbackFunction=function(self,...)
+		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		boolQueueOverride = not boolQueueOverride
+	end
+}
+extendedMenue[CMD.OPT_SHIFT] ={
+		triStrip={
+		{x= 0, y = 0},			
+		{x= 100, y = 30},
+		{x= 0, y = 80},
+		{x= 100, y = 80}
+		},
+		 -- {x= "0%", y = "0%"},			
+		 -- {x= "100%", y = "30%"},
+		 -- {x= "0%", y = "80%"},
+		 -- {x= "100%", y = "80%"}},
+	backgroundCol=backgroundColExtended,
+	caption= "QUEUE",
+	callbackFunction=function(self,...)
+		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		boolQueueOverride = not boolQueueOverride
+	end
+}
+
+MainMenue={
+	[CMD.ATTACK]={},
+	[CMD.STOP]={},
+	[CMD.MOVE]={},
+	[CMD.FIRE_STATE]={},
+	[CMD.REPEAT]={},
+	[CMD.MOVE_STATE]={},
+	[CMD.REPAIR]={},
+	[CMD.PATROL]={}		
+}
+
+
 function getCommandTarget()
 	x,z=Spring.GetMouseState()
 	return Spring.TraceScreenRay(x,z)
 end
-function getCommandTable()
-	returnT={}
-	local alt, ctrl, shift, right = Spring.GetModKeyState()
+
+MainMenue[CMD.ATTACK] ={		
+		triStrip={{x= 80, y = 0},			
+		{x= 0, y = 0},
+		{x= 80, y = 70},						
+		{x= 0, y = 70},
+	{x= 0, y = 100}}	,
+	backgroundCol={163/255, 229/255, 243/255, 0.75},
+	caption=	"|ATTAC",
+}
+
+MainMenue[CMD.STOP] ={
+		triStrip={	{x= 70, y = -15},
+		{x= 0, y = 10},			
+		{x= 80, y = -5},
+		
+		{x= 0, y = 70},
+		{x= 80, y = 80},
+	{x= 70, y = 90}},
+	backgroundCol={58/255, 172/255, 226/255, 0.75}	,
+	caption="|STOP",	
+}			
+
+MainMenue[CMD.MOVE] ={
+		triStrip={		{x= 0, y = -20},			
+		{x= 80, y = 2.5},
+		{x= 0, y = 70},
+	{x= 80, y = 70}},
+	backgroundCol={35/255, 124/255, 166/255, 0.75}		,
+	caption=upByRow("|MOVE",2),
+}	
+
+MainMenue[CMD.FIRE_STATE] ={		
+		triStrip={		{x= 0, y = 0},	
+		{x= 80, y =0},
+		{x= 0, y = 70},
+	{x= 80, y = 70}},
+	backgroundCol={52/255, 167/255, 222/255, 0.75},
+	caption=upByRow("|FIRE\nSTATE",3),
+}	
+
+MainMenue[CMD.REPEAT] ={
+		triStrip={		{x= 0, y = -15},			
+		{x= 70, y =-15},
+		{x= 0, y = 90},
+	{x= 70, y = 110}},
+	backgroundCol={52/255, 167/255, 222/255, 0.75}	,
+	caption="|REPEAT ",
+}	
+
+MainMenue[CMD.MOVE_STATE] ={
+		triStrip={		{x= 0, y = 5},			
+		{x= 80, y =25},
+		{x= 0, y = 70},
+	{x= 80, y = 70}},
+	backgroundCol={35/255, 124/255, 166/255, 0.75},
+	caption= "MANOVEUR ",
+}	
+
+MainMenue[CMD.REPAIR] ={
+		triStrip={		{x= 0, y = 0},			
+		{x= 80, y = 0},
+		{x= 0, y = 70},
+	{x= 80, y = 48}},
+	backgroundCol={163/255, 229/255, 243/255, 0.75},
+	caption= upByRow("|REPAIR ",4),
+}	
+
+MainMenue[CMD.PATROL] ={
+		triStrip={		{x= 0, y = -20},			
+		{x= 70, y = -40},			
+		{x= -10, y = -10},			
+		{x= 80, y = -35},
+		{x= -10, y = 95},
+	{x= 80, y = 60}},
+	backgroundCol={52/255, 167/255, 222/255, 0.75},
+	caption=upByRow("|PATROL",4),
+}	
+
+
+MainMenue[CMD.GUARD] ={
+		triStrip={		{x= 0, y = 5},			
+		{x= 80, y = -25},
+		{x= 0, y = 70},
+	{x= 80, y = 70}},
+	backgroundCol={52/255, 167/255, 222/255, 0.75},
+	caption="|GUARD",
+}	
+
+MainMenue[CMD.ATTACK].callbackFunction= function()
+	Spring.Echo("Selected Attack")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.ATTACK 
 	
-	if alt then table.insert(returnT,"alt")end
-	if ctrl then table.insert(returnT,"ctrl")end
-	if shift then table.insert(returnT,"shift")end
-	if right then table.insert(returnT,"right")end
-	return returnT
 end
-triStrip[1] ={		
-	{x= 80, y = 0},			
-	{x= 0, y = 0},
-	{x= 80, y = 70},						
-	{x= 0, y = 70},
-	{x= 0, y = 100},
-}
-backgroundCol[1]={163/255, 229/255, 243/255, 0.75}	
-
-triStrip[2] ={
-	{x= 70, y = -15},
-	{x= 0, y = 10},			
-	{x= 80, y = -5},
-	
-	{x= 0, y = 70},
-	{x= 80, y = 80},
-	{x= 70, y = 90},
-}
-backgroundCol[2]={58/255, 172/255, 226/255, 0.75}					
-
-triStrip[3] ={
-	{x= 0, y = -20},			
-	{x= 80, y = 2.5},
-	{x= 0, y = 70},
-	{x= 80, y = 70},
-}	
-
-backgroundCol[3]={35/255, 124/255, 166/255, 0.75}		
-
-triStrip[4] ={		
-	{x= 0, y = 0},	
-	{x= 80, y =0},
-	{x= 0, y = 70},
-	{x= 80, y = 70},
-}	
-
-backgroundCol[4]={52/255, 167/255, 222/255, 0.75}	
-triStrip[5] ={
-	{x= 0, y = -15},			
-	{x= 70, y =-15},
-	{x= 0, y = 90},
-	{x= 70, y = 110},
-}	
-
-backgroundCol[5]={52/255, 167/255, 222/255, 0.75}	
-
-triStrip[6] ={
-	{x= 0, y = 5},			
-	{x= 80, y =25},
-	{x= 0, y = 70},
-	{x= 80, y = 70},
-}	
-backgroundCol[6]={35/255, 124/255, 166/255, 0.75}	
-
-triStrip[7] ={
-	{x= 0, y = 0},			
-	{x= 80, y = 0},
-	{x= 0, y = 70},
-	{x= 80, y = 48},
-}	
-backgroundCol[7]={163/255, 229/255, 243/255, 0.75}	
-
-triStrip[8] ={
-	{x= 0, y = -20},			
-	{x= 70, y = -40},			
-	{x= -10, y = -10},			
-	{x= 80, y = -35},
-	{x= -10, y = 95},
-	{x= 80, y = 60},
-}	
-backgroundCol[8]={52/255, 167/255, 222/255, 0.75}	
-
-triStrip[9] ={
-	{x= 0, y = 5},			
-	{x= 80, y = -25},
-	{x= 0, y = 70},
-	{x= 80, y = 70},
-}	
-backgroundCol[9]={52/255, 167/255, 222/255, 0.75}	
-
-function upByRow(str,num)
-	for i=1,num do
-		str=str.."\n"
+MainMenue[CMD.STOP].callbackFunction= function()
+	Spring.Echo("Selected STOP")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.STOP 
+end
+MainMenue[CMD.MOVE].callbackFunction= function() 
+	Spring.Echo("Selected Move")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.MOVE 
+end
+MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
+	selectedUnits =Spring.GetSelectedUnits()
+	if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
+		states = Spring.GetUnitStates(selectedUnits[1])
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
 	end
-	return str
 end
-eAttac		=1
-eStop		=2
-eMove		=3
-eFire		=4
-eRepeat		=5
-eManouver	=6
-eRepair		=7
-ePatrol		=8
-eGuard		=9
+MainMenue[CMD.REPEAT].callbackFunction= function() 
+	selectedUnits =Spring.GetSelectedUnits()
+	if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
+		states = Spring.GetUnitStates(selectedUnits[1])
+		boolRepeatActive = 0 
+		if not states["repeat"] then boolRepeatActive = 1 end
+		
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
+	end
+end
 
-caption={
-	[1]="|ATTAC",
-	[2]="|STOP",
-	[3]=upByRow("|MOVE",2),
-	[4]=upByRow("|FIRE\nSTATE",3),
-	[5]="|REPEAT ",
-	[6]="MANOVEUR ",
-	[7]=upByRow("|REPAIR ",4),
-	[8]=upByRow("|PATROL",4),
-	[9]="|GUARD",
-}
+MainMenue[CMD.MOVE_STATE].callbackFunction= function()
+	selectedUnits =Spring.GetSelectedUnits()
+	if selectedUnits then
+		states = Spring.GetUnitStates(selectedUnits[1])
+		Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
+	end
+end
+MainMenue[CMD.REPAIR].callbackFunction= function() 
+	Spring.Echo("Selected Repair")
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.REPAIR 
+end
+MainMenue[CMD.GUARD].callbackFunction= function() 	
+	Spring.Echo("Selected Guard")	
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.GUARD
+end
+
+MainMenue[CMD.PATROL].callbackFunction= function() 	
+	Spring.Echo("Selected Patrol")	
+	player= Spring.GetMyPlayerID()		
+	WG.SelectedCommand[player] = CMD.PATROL
+end
+
 
 
 controllCommand_window_height = "30%"
@@ -221,11 +340,6 @@ extendedCommand_window_positionY= "41%"
 extendedCommand_window_width= "10%"
 extendedCommand_window_height= "30%"
 
-		
-		
-		
-		
-		
 function widget:Initialize()
 	
 	
@@ -242,56 +356,19 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	
-function createHabanero(triStrip, caption, basCol, textCol, functionOnClick )
-	functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
-	
-	return 	Chili.HabaneroButton:New{
-		triStrip=triStrip	,
-		caption=caption,
+	function createHabanero(triStrip, caption, basCol, textCol, functionOnClick, Parent )
+		functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
 		
-		backgroundColor = basCol,
-		textColor = textCol, 
-		OnClick= { functionOnClick}
-	}
-end--main Constructors
-	extCallbackFunctions = {
-			[1]= function()
-				selectedUnits=spGetSelectedUnits();
-				if selectedUnits and #selectedUnits > 0 then
-					commandTable= getCommandTable()
-					typeParam, param = getCommandTarget()
-					for i=1,#selectedUnits do
-						Spring.GiveOrderToUnit(selectedUnits[i],CMD.RECLAIM, param, commandTable)
-					end
-				end
-			end,
-			[2]= function()Spring.Echo("Hi Drop")end,
-			[3]= function()Spring.Echo("Hi Cloak")end,
-			[4]= function()Spring.Echo("Hi Restore")end,
-			[5]= function()Spring.Echo("Hi QUEUE")end,
-
-			
+		return 	Chili.HabaneroButton:New{
+			triStrip=triStrip	,
+			name= caption,
+			caption=caption,
+			parent= Parent,
+			backgroundColor = basCol,
+			textColor = textCol, 
+			OnClick= { functionOnClick}
 		}
-		extcaption={
-			[1]="RECLAIM",
-			[2]="DROP\nLOAD",
-			[3]="CLOAK",		
-			[4]="RESTORE",		
-			[5]="QUEUE",		
-		}
-		
-	
-		for i= 1, 5 do
-
-			extendedCommands[i] = createHabanero(exttriStrip[i],
-			extcaption[i],
-			backgroundCol[2],
-			extHoloTexCol,
-			extCallbackFunctions[i]		
-			)		
-			extendedCommands[i].Init()
-		end
+	end
 	
 	extendedCommand_window = Window:New{
 		padding = {3,3,3,3,},
@@ -303,18 +380,18 @@ end--main Constructors
 		width = extendedCommand_window_width,
 		height =extendedCommand_window_height,
 		parent = screen0,
-		draggable = false,
-		tweakDraggable = false,
-		tweakResizable = false,
-		resizable = false,
-		dragUseGrip = false,
+		draggable = true,
+		tweakDraggable = true,
+		tweakResizable = true,
+		resizable = true,
+		dragUseGrip = true,
+		dockable = true,
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {
 			
 		},
-	}
-	
+	}	
 	
 	extendedCommand_Grid = Grid:New{
 		x= 0,
@@ -329,109 +406,158 @@ end--main Constructors
 		centerItems = false,
 		columns = 1,	
 		rows = 6,
-		name = 'UpgradeGrid',
+		name = 'extended Comand Grid',
 		width = '100%',
 		height = '100%',
-		
+		parent =extendedCommand_window,
 		minItemHeight =	 '21%',
 		maxItemHeight =	 '32%',
 		
 		color = {0,0,0,1},
 		
 		children = {
-					extendedCommands[1],
-					extendedCommands[2],
-					extendedCommands[3],
-					extendedCommands[4],
-					extendedCommands[5],
-					extendedCommands[6]
-					},
-		
-		}
-		
-extendedCommand_window:AddChild(extendedCommand_Grid)
-
-Habaneros={ }
-HabaneroCallbackFunctions={}
-HabaneroCallbackFunctions[eAttac]= function () end
-HabaneroCallbackFunctions[eStop]= function () end
-HabaneroCallbackFunctions[eMove]= function () end
-HabaneroCallbackFunctions[eFire]= function () end
-HabaneroCallbackFunctions[eRepeat]= function () end
-HabaneroCallbackFunctions[eManouver	]= function () end
-HabaneroCallbackFunctions[eRepair]= function () end
-HabaneroCallbackFunctions[ePatrol]= function () end
-HabaneroCallbackFunctions[eGuard]= function () end
-
-for i=1, 9 do
-	Habaneros[i] = createHabanero(triStrip[i],
-	caption[i],
-	backgroundCol[i],
-	holoTextCol,
-	HabaneroCallbackFunctions[i]		
-	)		
-	Habaneros[i].Init()
-end
-
-base_stack = Grid:New{
-	y = 20,
-	padding = {5,5,5,5},
-	itemPadding = {0, 0, 0, 0},
-	itemMargin = {0, 0, 0, 0},
-	width = '100%',
-	height = '100%',
-	resizeItems = true,	
-	autosize=true,		
-	orientation = 'vertical',
-	centerItems = false,
-	columns = 3,
-	rows= 3,
-	children={
-		Habaneros[eAttac],
-		Habaneros[eStop],
-		Habaneros[eMove],
-		Habaneros[eFire],
-		Habaneros[eRepeat],
-		Habaneros[eManouver	],
-		Habaneros[eRepair],
-		Habaneros[ePatrol],
-		Habaneros[eGuard],
-		
+		},		
 	}
-}
-
-
-
-controllCommand_window = Window:New{
-	padding = {3,3,3,3,},
-	dockable = true,
-	caption = '',
-	textColor = {0.9,1,1,0.7},
-	name = "controllCommand_window",
-	x = controllCommand_window_positionX, 
-	y = controllCommand_window_positionY,
-	width = controllCommand_window_width,
-	height = controllCommand_window_height,
-	parent = screen0,
-	draggable = false,
-	tweakDraggable = true,
-	tweakResizable = true,
-	resizable = false,
-	dragUseGrip = false,
-	--minWidth = 50,
-	--minHeight = 50,
-	color = {0,0,0,1},
 	
-	children = {			
-		base_stack,			
-	},
-}
+	for commandID,Option in pairs(extendedMenue) do
+		extendedCommands[commandID] = createHabanero(
+		Option.triStrip,
+		Option.caption,
+		Option.backgroundCol,
+		extHoloTexCol,
+		Option.callbackFunction,
+		extendedCommand_Grid
+		)		
+		extendedCommands[commandID]:Init()
+	end
+	
+
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.LOAD_UNITS])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.UNLOAD_UNITS])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.CLOAK])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.RESTORE])
+	extendedCommand_Grid:AddChild(extendedCommands[CMD.OPT_SHIFT])
+
+	extendedCommand_window:AddChild(extendedCommand_Grid)
+	
+	Habaneros={ }
+	
+		controllCommand_window = Window:New{
+		padding = {3,3,3,3,},
+		dockable = true,
+		caption = '',
+		textColor = {0.9,1,1,0.7},
+		name = "controllCommand_window",
+		x = controllCommand_window_positionX, 
+		y = controllCommand_window_positionY,
+		width = controllCommand_window_width,
+		height = controllCommand_window_height,
+		parent = screen0,
+		draggable = true,
+		tweakDraggable = true,
+		tweakResizable = true,
+		resizable = true,
+		dragUseGrip = true,
+		dockable = true,
+		--minWidth = 50,
+		--minHeight = 50,
+		color = {0,0,0,1},
+		
+		children = {			
+		},
+	}
+	
+local	base_stack = Grid:New{
+		y = 20,
+		padding = {5,5,5,5},
+		itemPadding = {0, 0, 0, 0},
+		itemMargin = {0, 0, 0, 0},
+		width = '100%',
+		height = '100%',
+		resizeItems = true,	
+		autosize=true,		
+		orientation = 'vertical',
+		centerItems = false,
+		columns = 3,
+		rows= 3,
+		parent =controllCommand_window,
+		children={			
+		}
+	}
+	
+	for comandID,MenueOption in pairs(MainMenue) do
+		Habaneros[comandID] = createHabanero(
+		MenueOption.triStrip,
+		MenueOption.caption,
+		MenueOption.backgroundCol,
+		holoTextCol,
+		MenueOption.callbackFunction,
+		base_stack
+		)		
+		Habaneros[comandID]:Init()
+	end
+	
+	base_stack:AddChild(Habaneros[CMD.ATTACK])
+	base_stack:AddChild(Habaneros[CMD.STOP])
+	base_stack:AddChild(Habaneros[CMD.MOVE])
+	base_stack:AddChild(Habaneros[CMD.FIRE_STATE])
+	base_stack:AddChild(Habaneros[CMD.REPEAT])
+	base_stack:AddChild(Habaneros[CMD.MOVE_STATE])
+	base_stack:AddChild(Habaneros[CMD.REPAIR])
+	base_stack:AddChild(Habaneros[CMD.PATROL])
+	base_stack:AddChild(Habaneros[CMD.GUARD])
+	
+
+	controllCommand_window:AddChild(controllCommand_window)
+	
 end
 
---subConstructors
-function widget:CommandsChanged()
+function widget:MousePress()
+	--	Spring.Echo("MousePress activated")
 end
 
---update functions
-function widget:GameFrame(f)
+function widgetHandler:MouseRelease(x, y, button)
+	local mo = self.mouseOwner
+	Spring.Echo("Mouse Owner: "..mo)
+	
+	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+	Spring.Echo("MouseRelease active")
+	if (not (lmb or mmb or rmb)) then
+		return false
+	end
+	
+	if lmb then
+		alt, ctrl, meta, shift =GetModKeys()
+		local x, y, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
+		command = 1
+		if WG.SelectedCommand[mo] then
+			command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
+		end
+		Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
+		
+		return true
+	end
+	
+	if rmb and rmb == true then
+		if WG.SelectedCommand[mo] then
+			for command, active in pairs(WG.SelectedCommand[mo]) do
+				if active == true then
+					selectedUnits=Spring.GetSelectedUnits();
+					if selectedUnits and #selectedUnits > 0 then
+						commandTable= getCommandTable(boolQueueOverride)
+						typeParam, param = getCommandTarget()
+						Spring.Echo("Giving Command " .. command)
+						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
+						WG.SelectedCommand[mo] = nil
+						break
+					end
+				end
+			end
+		end
+		
+		return true
+	end
+	
+	return true
 end

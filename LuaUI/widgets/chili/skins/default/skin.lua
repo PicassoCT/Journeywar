@@ -244,15 +244,27 @@ function _DrawBackground(obj)
   gl.Vertex(x+w, y+h)
 end
 
+function blend(a,b,factor)
+t={}
+for k,v in pairs(a) do
+t[k]= v*factor + b[k]*(1-factor)
+end
+return t
+end
+
 function _DrawHabaneroButtonBackground(obj)
   local triStrip =obj.triStrip
-  gl.Color(obj.backgroundColor)
   
 	for i=3, #triStrip, 1 do
-	 gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
-	 gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
-	 gl.Vertex(triStrip[i].x,  triStrip[i].y) 
-
+		if obj.startColour and obj.endColour then
+			factor =   math.max(0.0,math.min(1.0,i/#triStrip))
+			gl.Color(blend(obj.startColour,obj.endColour, factor))
+		else
+			  gl.Color(obj.backgroundColor)
+		end 
+				gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
+				gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
+				gl.Vertex(triStrip[i].x,  triStrip[i].y) 
 	end 
  end
 	 
@@ -313,10 +325,22 @@ function DrawHabaneroButton(obj)
   if (obj.caption) then
     local w = obj.width
     local h = obj.height
+	local bt= 2
 
-    obj.font:Print(obj.caption, w*0.5, h*0.5, "center", "center")
-  end
+		if obj.midPointX then
+			obj.font:Print(obj.caption, obj.midPointX, bt+obj.midPointY, "center", "center")
+		else
+			 obj.font:Print(obj.caption, w*0.5, h*0.5, "center", "center")
+		end
+	
+		-- if self.state.selected then
+			-- self.font:SetColor(oldColor)
+		-- end
+	end
 end
+	
+	
+
 
 function DrawButton(obj)
   gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawBackground, obj, obj.state)

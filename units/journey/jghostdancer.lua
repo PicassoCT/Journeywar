@@ -2,10 +2,10 @@ local unitName = "jghostdancer"
 
 local unitDef = {
 	name = "Ghost Dancer",
-	Description = "Scout and Radar Distortion Unit",
+	Description = "backtracks to alternative Timelines on Damage <Scout Harass>",
 	objectName = "ghostdancer.s3o",
 	script = "jghostdancer.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jghostdancer.png",
 	--cost
 	buildCostMetal = 280,
 	buildCostEnergy = 620,
@@ -35,6 +35,12 @@ local unitDef = {
 	CanStop = true,
 	selfDestructAs ="defaultweapon",
 	explodeAs = "defaultweapon",
+		
+	LeaveTracks = true, 
+	trackType ="jGhost",
+	 trackStrength=1,
+	trackWidth =32,
+	trackOffset =0,
 	
 	
 	onOffable=true,

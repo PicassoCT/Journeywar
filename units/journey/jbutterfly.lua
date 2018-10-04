@@ -1,8 +1,8 @@
 local unitName = "jbutterfly"
 
 local unitDef = {
-	name = "butterfly",
-	Description = "Unit respawns a Eliah",
+	name = "el 'Iah",
+	Description = " respawns the Eliah after enough time has passed <Assault>",
 	objectName = "jbutterfly.s3o",
 	script = "jbutterfly.lua",
 	buildPic = "placeholderj.png",
@@ -15,6 +15,7 @@ local unitDef = {
 	--Health
 	maxDamage = 350,
 	idleAutoHeal = 0,
+	AutoHeal = 0,
 	--Movement
 	Acceleration = 0.1,
 	BrakeRate = 1,
@@ -22,11 +23,11 @@ local unitDef = {
 	FootprintZ = 1,
 	TEDClass = [[VTOL]],
 	steeringmode = [[1]],
-	maneuverleashlength = 1380,
+	maneuverleashlength = 520,
 
 	turnRadius		 	= 8,
-	dontLand		 	= false,
-	MaxVelocity = 1,
+	dontLand		 	= true,
+	MaxVelocity = 3.141,
 	MaxWaterDepth = 0,
 	MovementClass = "Default2x2",
 	TurnRate = 150,
@@ -43,17 +44,19 @@ local unitDef = {
 	CanPatrol = true,
 	Canstop = false,
 	LeaveTracks = false, 
-	cruiseAlt=25,
+	CanLand= false,
+
 	CanFly = true,
-	ActivateWhenBuilt=1,
+	ActivateWhenBuilt=0,
 	maxBank=0.4,
 	myGravity =0.5,
 	mass = 1225,
-	canSubmerge = true,
+	canSubmerge = false,
 	useSmoothMesh =false,
 	collide = true,
 	crashDrag =0.1,
-	
+	airHoverFactor = 5,
+	cruiseAlt = 25,
 	Category = [[AIR]],
 }
 

@@ -1,7 +1,7 @@
 local unitName = "cmeatcolumn"
 
 local unitDef = {
-	name = "MeatColum",
+	name = "Meatcolumn",
 	Description = "That got to hurt ",
 	objectName = "cSlicerMeatColumn.s3o",
 	script = "slicerImpact.lua",
@@ -61,14 +61,6 @@ nanocolor=[[0.7 0 0.1]],
 
 Category = [[LAND]],
 
-weapons = {
-[1]={name  = "swiftProjectile",
-	onlyTargetCategory = [[LAND]],
-	},
-[2]={name  = "jswiftrapemark",
-	onlyTargetCategory = [[LAND]],
-	},	
-},
 }
 
 return lowerkeys({ [unitName] = unitDef })

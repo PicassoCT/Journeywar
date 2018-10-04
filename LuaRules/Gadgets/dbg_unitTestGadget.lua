@@ -1,185 +1,238 @@
---Gadget for stress/unitscript testing, made by Bluestone
---code deliberately not optimized!
-
 function gadget:GetInfo()
 	return {
 		name = "jw_unit-test",
-		desc = "SHUT THAT BLOODY BOUZOUKI UP!",
-		author = "Camembert, perhaps?",
+		desc = "Create eternal warfare",
+		author = "Picasso",
 		date = "SPAM/SPAM/SPAM/LOVELYSPAM",
 		version = "v0.1.ham.and.jam.and...",
 		license = "GPL spam v3.0 or later",
-		layer = -1, 
+		layer = 699,
+		handler = true,
 		enabled = false
 	}
 end
 
 
+	
+
 if gadgetHandler:IsSyncedCode() then
 	-------------------------------------
-	----------------SYNCED---------------
-	UnitList={"jshroudshrike","jmeconverter","cawilduniverseappears","jmovingfac2","ghohymen", "jvaryfoo","comendbonker","csniper","strider", "chedgehog", "paxcentrail","jmovingfac1","jviralfac","jsungodcattle","jabyss"}
+	-- Includes
+	VFS.Include('scripts/lib_UnitScript.lua')
+	VFS.Include('scripts/lib_jw.lua')
+	
+	---------------- SYNCED---------------
+	-- Every Tests consists of a preparation function, called once and returning the handed over persistancepackage
+	-- It also consists of a testFunction, which returns the testCompletness and the persistancepackage
+	
 	-- CONFIG --
+	UnitTest = {}
+	teamList = {}
+		 UnitNames = {"bg","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+				 "coperatrans","art","sentrynell","cheadlauncher","chunter",
+				-- "chunterchopper","cgunship","callygator",
+				 "paxcentrail",	"strider","ccrabsynth", "chunter",
+				 "sentry","bonker","crailgun","chopper",
+				 "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai",
+				 "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
+				"jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
+				 "vort", "jantart",	"jviralfac", "jfiredancer",
+				 "jhunter", "jvaryfoo",
+				 "jgalatea",
+				 --"jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
+	  }
+	-- UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+				-- "coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+				-- "chunterchopper","conair","csuborbital","cgunship","callygator",
+				-- "paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
+				-- "sentry","bonker","crailgun","chopper",
+				-- "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
+				-- "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
+				-- "jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
+				-- "vort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
+				-- "jhunter", "jvaryfoo",
+				-- "jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
+				-- "ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
+	-- }
+		UnitAmount = {
+				["bg"]=10,["ccontrain"]=1,["css"]=5,["mtw"]=5,["csniper"]=3,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
+				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
+				["chunterchopper"]=1,["conair"]=1,["csuborbital"]=1,["cgunship"]=1,["callygator"]=1,
+				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["strider"]=1,["ccrabsynth"]=1,["chunter"]=3,
+				["sentry"]=4,["bonker"]=1,["crailgun"]=1,["chopper"]=1,
+				["jhivewulfmoma"]=2,["jbeefeater"]=1,["hc"]=1,["zombie"]=1, ["jantart"]=1,["jatlantai"]=1,["jhoneypot"]=1,
+				["jglowworms"]=1,["jbeherith"]=1,["jeliah"]=1,["tiglil"]=5,["skinfantry"]=5,
+				["jshroudshrike"]=1,["jswiftspear"]=1, ["jtigeggnogg"]=1,["jskineggnogg"]=1,["jghostdancer"]=1,
+				["vort"]=3, ["jantart"]=2,	["jviralfac"]=1, ["jhoneypot"]=1,
+				["jhunter"]=3, ["jvaryfoo"]=1,["jfiredancer"]=4,
+				["jfireflower"]=1, ["jdragongrass"]=1, ["jbeehive"]=1, ["jswamp"]=1, ["jpoisonhive"]=1,	
+				["ggluemine"]=1,["jtree1"]=1, ["jgalatea"]=1,["jmotherofmercy"]=1,["jsempresequoia"]=1,["jrecycler"]=1,["jresistancewarrior"]=1,["jmadmax"]=1
+	}
 	
-	--mode
-	--fight=false simulates unit movement only, fight=true simulates fighting too
-	local fight = true
-	
-	--vars
-	--some of these are duplicated in unsynced
-	local unitSpamD = 1 --initial unit density (units per map square)
-	local runSteps = 22 --how many steps (at the end of each step, unitSpamD increases by 1)
-	local stepTime = 8 --minutes each step of settings is run for
-	
-	--other
-	local orderRate = 120 --average time an order is kept before being replaced
-	local pAirUnit = 0.0 --proportion of (extra) aircraft
-	
-	
-	------------
-	
-	numX = (Game.mapSizeX )-1
-	numZ = (Game.mapSizeZ)-1
-	mapX = numX
-	mapZ = numZ
-	local uSD = unitSpamD
-	local cmdTable = {CMD.MOVE, CMD.FIGHT, CMD.PATROL} 
-	local over = false
-	local unitDefIDTable = {}
-	local maxUnitDefIDs
-	
-	--------------------------------------
-	----------------Funcs-----------------
-	
-	UnitDefPairsTable={}
-	for	k,_ in pairs(UnitDefs) do
+	boolStartTest= true
+	HALF_MAP = math.ceil((Game.mapSizeZ/2 + Game.mapSizeX/2)/2)
 		
-		T={}
-		T.def=k
-		for	v,_ in pairs(UnitDefs) do
-			if math.random(0,1)==1 and math.random(0,1)==1 then
-				T[#T+1]=v
-			end
-		end
-		UnitDefPairsTable[#UnitDefPairsTable+1]=T
-	end
-	
-	function RandomCoord()
-		local x = math.random() * mapX
-		local z = math.random() * mapZ
-		return x,z
-	end
-	
-	function makeAPair(x,z,typdefid,typdefIDother,team,teamother)
-		randx,randz=math.random(-100,100),math.random(-100,100)
-		idA=Spring.CreateUnit(typdefid,x+randx,0,z+randz,1,team)
-		idB=Spring.CreateUnit(typdefIDother,x,0,z,1,teamother)
-		return idA,idB
-	end
-	
-	function RandomSquare()
-		local x = math.random(1,numX)
-		local z = math.random(1,numY)
-		return x,z
-	end
-	
-	function RandomCoordInSquare(sx,sz)
-		local x = 512 * sx + math.random(-512,512)
-		local z = 512 * sz + math.random(-512,512)
-		return x,z
-	end
-	
-	function RandomOrder()
-		local n = math.random(3)
-		return cmdTable[n]
-	end
-	
-	function RandomOrderToUnitPair(unitID, enemyID)
+	function getAIPlayer()
+		List = Spring.GetTeamList()
+		PlayerList = {}
+		AiList = {}
 		
-		if Spring.ValidUnitID(enemyID) then
-			local x,z = Spring.GetUnitPosition(enemyID)
-			local id = RandomOrder()
-			if Spring.ValidUnitID(unitID) then
-				y = Spring.GetGroundHeight(x,z)
-				Spring.GiveOrderToUnit(unitID,id,{x,y,z},{"meta"})
-			end
-		end
-	end
-	
-	
-	-----------------------------------------------
-	-----------------Calls-------------------------
-	
-	
-	function Over()
-		
-		
-		--remove all units
-		
-	end
-	
-	function destroyTable(T)
-		for i=1,#T,1 do
-			if Spring.GetUnitIsDead(T[i])==false then
-				Spring.DestroyUnit(T[i],false,true)
-			end
-		end
-	end	
-	itterator=1
-	i=1
-	idTable={}
-	boolCreateThem=false
-	teamList=Spring.GetTeamList()
-	tad=math.ceil(1,#teamList)
-	teamA=teamList[tad]
-	teamB=teamList[tad%#teamList+1]
-	
-	if teamA==teamB then Spring.Echo("dbg_unitTestGadget:: Same Team Selection ") end
-	
-	function gadget:GameFrame(n)
-		
-		if (n>0 and n%8000==0) then
-			destroyTable(idTable)
-			idTable={}
-			boolCreateThem=true
-			i=1
-		end
-		
-		if boolCreateThem==true and n% 18000 ==0 then
-			x,z=math.random(1,numX),math.random(1,numZ)
-			x,z=math.ceil(x),math.ceil(z)
-			--(x,z,typdefid,typdefIDother,team,teamother)
-			idA,idB=makeAPair(x,z,UnitDefPairsTable[itterator].def,UnitDefPairsTable[itterator][i],teamA,teamB)
-			RandomOrderToUnitPair(idA,idB)
-			table.insert(idTable, idA)
-			table.insert(idTable, idB)
-			i=i+1
-			if i==#UnitDefPairsTable[itterator] then
-				i=1
-				itterator=itterator+1	
+		for i = 1, #List do
+			teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier = Spring.GetTeamInfo(List[i])
+			if isAiTeam and isAiTeam == false then
+				PlayerList[#PlayerList+1] = List[i]
+			else
+				AiList[#AiList+1] = List[i]				
 			end
 		end
 		
-		if n ==900 then
-			teamList=Spring.GetTeamList()
-			gaiaTeamId=Spring.GetGaiaTeamID()
-			if GG.UnitsToSpawn then
-				tx,tz=Game.mapSizeX /math.max(4,#teamList), Game.mapSizeZ/math.max(4,#teamList)
-				
-				for i=1, #teamList do
-					if teamList[i] ~= gaiaTeamId then
-						x,z= tx*i,tz*i
-						
-						if x then
+		
+		return PlayerList,AiList
+	end
+	
+	 function gadget:RecvLuaMsg(msg, playerID)
+	 
+		start,ends= string.find(msg,"DBG:UNITTEST:Start")
+		if ends then
+			boolStartTest = true
+		end
+	 end
+	
+	function buildUnitsToTestList ()	
+		local journeyUnitList = getUnitCanBuildList(UnitDefNames["beanstalk"].id)
+		--echoUnitDefT(journeyUnitList)
+		local centrailUnitList= getUnitCanBuildList(UnitDefNames["citadell"].id)	
+		
+		
+		allUnitTypes= mergeDict(selectUnitDefs(journeyUnitList),selectUnitDefs(centrailUnitList))
+		
+		mobileUnits={}
+		process(allUnitTypes,
+		function(defID)
+			if defID and UnitDefs[defID].isImmobile == true then 
+				mobileUnits[defID] =defID
+			end
+		end		
+		)
+		
+		
+		
+		
+		return mobileUnits --mergeDict(mobileUnits, defBuildings)	
+	end
+	
+	
+	function generateGenericTests()
+		
+		selectedUnits = buildUnitsToTestList()
+		UnitsTotal = count( selectedUnits) or 0
+		
+		teamList, aiList = getAIPlayer()
+		-- ind= 1
+		-- if #teamList > 1 then ind =math.random(1, #teamList)end
+		spawnUnitsForTeam(1)
+		-- ind= 1
+		-- if #aiList > 1 then ind =math.random(1, #aiList)end
+		spawnUnitsForTeam(2)
+		
+	end
+	
+	function getRotatedPosition(index, x, z, mx, mz)	
+		x,z = Rotate(x,z, math.rad(index*15))
+		return math.ceil(mx + x), math.ceil(mz + z)
+	end
+	
+	function proportionalAmount()
+
+		total= 5000
+		for k,v in pairs(UnitAmount) do
+			
+			if UnitDefNames[k] and UnitDefNames[k].id and  UnitDefs[UnitDefNames[k].id].maxdamage  then
+			 hitPoints= UnitDefs[UnitDefNames[k].id].maxdamage 
+			
+			UnitAmount[k]= math.ceil(hitPoints/total)
+			end
+		end
+	end
+	GG.DebugIndex = 0
+	function spawnUnitsForTeam(teamID)
+		local teamID = teamID
+		
+		for i=1, #UnitNames do	
+			name = UnitNames[i]
+			if UnitDefNames[name]then 
+				local _defID = UnitDefNames[name].id
+				if _defID then
+					x,y,z=0,0,0
+					
+					GG.DebugIndex = GG.DebugIndex + 1		
+					local valueIndex= GG.DebugIndex
+					local circleFraction= math.ceil(GG.DebugIndex/#UnitNames)
+
+					
+					
+					local x,z = getRotatedPosition(valueIndex, circleFraction*100, valueIndex *25, HALF_MAP, HALF_MAP )
+					y= Spring.GetGroundHeight(x,z) 
+					
+					
+					UnitTest[#UnitTest + 1] = function()
+						Spring.Echo("Spawning "..name.." in "..Spring.GetGameFrame())
+						for k=1, UnitAmount[name] do
+							--echo(type(id))
+							id = Spring.CreateUnit(_defID, x, y +5 ,z, 1, teamID)
 							
-							for j=1,#UnitList,1 do
-								GG.UnitsToSpawn:PushCreateUnit(UnitList[j],x+(j-#UnitList/2)*50,0,z+(j-#UnitList/2)*50,0,teamList[i])
-							end
 							
+							Spring.SetUnitMoveGoal(id,randSign()*HALF_MAP+k,0,HALF_MAP)
+							Command(id, "move", { x =randSign()*HALF_MAP, y = 0, z = randSign()*HALF_MAP }, { "shift" })
+							Command(id, "move", { x =x, y = 0, z = z }, { "shift" })
 						end
 					end
+				end		
+			end		
+		end		
+		
+	end
+
+	
+	function gadget:Initialize()
+	  gadgetHandler.actionHandler.AddChatAction(gadget, "unittest", StartUnitTest, " : starts a unittest session")
+	end
+	
+	function initialize()
+		generateGenericTests()
+	end
+	
+	local index = 1
+	boolInitialized = false
+
+	function gadget:GameFrame(n)
+		if boolStartTest == true then
+			proportionalAmount()
+			if n % 400 == 0 then Spring.Echo("Starting Test") end
+			if boolInitialized == false then
+			initialize()
+			boolInitialized = true
+			end
+			if n > 400 and n % 30 == 0 then
+				if UnitTest[index] then
+					UnitTest[index]()
+					index = inc(index)
 				end
+			end
+			if index >= #UnitTest then
+				--boolStartTest= false
+				index= 1
 			end
 		end
 	end
+else
+	
+	local function StartUnitTest()
+		Spring.SendLuaRulesMsg("DBG:UNITTEST:Start")		
+	end
+	
+	function gadget:Initialize()
+	  gadgetHandler.actionHandler.AddChatAction(gadget, "unittest", StartUnitTest, " : starts a unittest session")
+	end
+
 end
