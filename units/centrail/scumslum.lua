@@ -1,7 +1,7 @@
 local unitName = "scumslum"
 
 local unitDef = {
-  name               = "Scumslum",
+  name               = "Highrise Securityhotspot",
   Description = " adds Securitybudget to keep the new citizens in line <Security Production>",
   objectName         = "scumslum.s3o",
   	buildPic = "scumslum.dds",
