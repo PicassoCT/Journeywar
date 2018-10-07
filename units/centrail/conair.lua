@@ -1,7 +1,7 @@
 local unitName = "conair"
 
 local unitDef = {
-	name = "Construction Aircraft",
+	name = "Construction Airsynth",
 	Description = "builds buildings using its Hitpoints <Construction Air Unit>",
 	objectName = "conair.s3o",
 	script = "conairscript.lua",
