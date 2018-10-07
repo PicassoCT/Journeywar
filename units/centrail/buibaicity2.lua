@@ -1,7 +1,7 @@
 local unitName = "smconverter"
 
 local unitDef = {
-	name = "Arcology",
+	name = "Full Citizen Arcology",
 	objectName = "buibaicity2.s3o",
 	description=" Converts Material to Security.  Generates Propaganda if set on fire by enemy < Security Material Converter Building>",
 	script ="cbuibaiCityArco.lua",
