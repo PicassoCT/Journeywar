@@ -1,7 +1,7 @@
 local unitName = "bonker"
 
 local unitDef = {
-name = "Bonker",
+name = "Plasmabunker",
 Description = "heavily fortified Ground and Anti-Air Outpost <Anti Air/Ground Building>",
 objectName = "bonker.s3o",
 script = "bonker.lua",
