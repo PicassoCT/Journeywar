@@ -146,7 +146,7 @@ function script.Create()
     --Hide(Portal)
     Spin(Portal, z_axis, math.rad(180), 0.01)
 
-    StartThread(testSwallowAnimation)
+   -- StartThread(testSwallowAnimation)
     StartThread(devourerLoop)
     StartThread(motionStateDetector)
     Turn(turbine1, y_axis, math.rad(-11), 0)
@@ -418,8 +418,8 @@ function swallowAnimation(victimID)
 						local u={}
 						u.x,u.y,u.z = Spring.GetUnitPosition(unitID)						
 						tPos = getNearestPositionOnCircle(v, Radius, u)
-						echo("uPos:", u)
-						echo("tPos:",tPos)
+					--	echo("uPos:", u)
+					--	echo("tPos:",tPos)
 						moveTowardsStartPosition(tPos ,2500)
                 
 						while (AnimationRunning_ms < totalAnimationTime) do
