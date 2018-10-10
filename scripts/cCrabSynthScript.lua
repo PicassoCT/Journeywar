@@ -127,6 +127,7 @@ end
 
 movsoundfile = "sounds/ccrabsynth/Moving.wav"
 deploysoundfile = "sounds/ccrabsynth/Deploy.ogg"
+deployShuttersoundfile = "sounds/ccrabsynth/Deploy2.ogg"
 
 
 crabunitdef = Spring.GetUnitDefID(unitID)
@@ -143,6 +144,10 @@ function MoveAnimation()
         elseif (boolDeployWanted == true and boolMoving == false) or boolDeployed == true then
             StartThread(PlaySoundByUnitDefID, crabunitdef, deploysoundfile, 1, 5000, 1)
             --Spring.Echo("AllreadyDeploayedState")
+				 for i=1,6 do
+					PlaySoundByUnitDefID( crabunitdef, deployShuttersoundfile, 1, 3000, 1)
+					if boolDeployWanted == false or boolMoving == true then break end
+				 end
             while (boolDeployWanted == true and boolMoving == false) or boolDeployed == true do
                 Sleep(100)
             end
