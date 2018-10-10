@@ -114,7 +114,9 @@ effectUnitDefs = {
 	bbind= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,10,0}, size=96, precision=22, strength = 0.003, repeatEffect=true}},
 	},
-	
+	buibaicity1= {
+		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,64,0}, size=80, precision=22, strength = 0.005, repeatEffect=true}}, 
+	},
 	
 	cgunship= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={-2,5,-31}, size=20, precision=22, strength = 0.015, repeatEffect=true}}, 
