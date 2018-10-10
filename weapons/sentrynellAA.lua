@@ -17,7 +17,7 @@ local weaponDef = {
     soundtrigger = true,
     collideFriendly = false,
     beamtime = 1, --0.01
-canAttackGround = false,
+	 canAttackGround = false,
     FireSubmersed = 0,
     impulseFactor = 0.1,
     largeBeamLaser = true,
@@ -45,8 +45,8 @@ canAttackGround = false,
     explosionGenerator = "custom:sentrynellimpact",
     tolerance = 250,
     damage = {
-        default = 450,
-        HeavyArmor = 25,
+        default = 550,
+        HeavyArmor = 150,
     },
 }
 
