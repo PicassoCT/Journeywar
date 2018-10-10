@@ -78,7 +78,7 @@ function fall(TableOfDamageDirections)
         deg = 0
     end
     --Turn Piece Towards)
-    Turn(TakingTheFall, y_axis, deg, 17)
+    Turn(TakingTheFall, y_axis- DirVariance, deg, 17)
     Explode(CrystallPieces[PieceAtRisk], SFX.SHATTER)
     Sleep(600)
     Explode(CrystallPieces[PieceAtRisk], SFX.SHATTER)
@@ -90,8 +90,6 @@ function fall(TableOfDamageDirections)
     for i = 1, 7 do
         if boolFixedDirection == false then
             Turn(TakingTheFall, x_axis, math.rad(90), speed)
-        else
-            Turn(TakingTheFall, x_axis, math.rad(90 - DirVariance), speed)
         end
         Sleep(3000)
         speed = speed ^ 2
@@ -101,12 +99,9 @@ function fall(TableOfDamageDirections)
     Sleep(600)
     --Shatter the Crystall
 
-
-    DropPieceToGround(unitID, TakingTheFall, 9.81, true, true)
-
-    WaitForMove(CrystallPieces[math.max(PieceAtRisk + 1, CrystallLength)], y_axis)
-    --
+       --
     for i = 1, PieceAtRisk do
+        Explode(CrystallPieces[i], SFX.SHATTER)
         Explode(CrystallPieces[i], SFX.SHATTER)
         --EmitSFX(CrystallPieces[i],1024)
     end
