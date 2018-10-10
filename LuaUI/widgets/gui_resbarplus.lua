@@ -45,7 +45,7 @@ pathEnergy="luaui/images/cres_energy.png"
 pathMetall="luaui/images/cres_metal.png"
 
 function setTeam()
-
+	
 	if teamid then
 		teamID, leader, isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier= Spring.GetTeamInfo(teamid)
 		if side and side ~= "" and type(side)== "string" then
@@ -55,13 +55,15 @@ function setTeam()
 				sideCombine= false
 			end			
 		end
+		--TODO DELME		
+		
 		
 		
 		if sideCombine==false then
 			pathEnergy= 'luaui/images/jres_energy.png' 
 			pathMetall= 'luaui/images/jres_metal.png' 
 		end
-
+		
 	end
 end
 
@@ -413,13 +415,13 @@ function DrawEbar(pct)
 end
 
 function DrawMbar(pct)
-
+	
 	local now=Spring.GetGameFrame()
 	
 	--now = (now % 3000)/3000 
 	--components[eMetallBar].tx2= math.ceil(components[eMetallBar].atx2*now)
 	--components[eMetallBar].tx1= math.ceil(components[eMetallBar].atx2*now)
-
+	
 	local mbarwidth=components[eMetallBar].tx2-components[eMetallBar].tx1
 	local drawwidth=pct*mbarwidth
 	--	Spring.Echo(pct)
@@ -435,11 +437,22 @@ function DrawMbar(pct)
 	local t1=(pngy-components[eMetallBar].ty2) /pngy
 	local s2=(components[eMetallBar].tx2 ) /pngx--bottom right bounding
 	local t2=(pngy-components[eMetallBar].ty1) /pngy
-	DrawTexRect(x1,y1,x2,y2,s1,t1	,s2,t2)
-	
+	if sideCombine == true then
+		DrawTexRect(x1+math.random(0,1)/3,y1,x2+math.random(0,1)/3,y2,s1,t1	,s2,t2)
+	else
+		if math.random(0,2)== 1 then
+			DrawTexRect(x1+math.random(0,5)/2,y1,x2+math.random(0,5)/2,y2,s1,t1	,s2,t2)
+		else
+			DrawTexRect(x1+math.random(0,5)/2,y1,
+			x2+math.random(0,5)/2,y2,
+			s2,t2
+			,s1,t1
+			)
+		end
+	end
 	gl_Texture(false)
 	
-		
+	
 	--	Spring.Echo(mglow)
 	DrawMShare(mshare)
 	
@@ -449,7 +462,7 @@ function DrawMbar(pct)
 		
 		
 		
-	
+		
 		if mglow >0 then
 			mglow=mglow -norm(now-gameframe)
 		end
@@ -463,7 +476,7 @@ function DrawMbar(pct)
 		end
 		gameframe=now
 		
-
+		
 	end	
 	
 	
@@ -608,10 +621,10 @@ function widget:DrawScreen()
 		
 		local curElevel,curEstore,curEpull,curEinc,curEexpense,curEshare,curEsent,curErecieved = Spring.GetTeamResources(myTeam, 'energy')
 		local curMlevel,curMstore,curMpull,curMinc,curMexpense,curMshare,curMsent,curMrecieved = Spring.GetTeamResources(myTeam, 'metal')
-				
+		
 		curElevel = math_floor(curElevel)
 		curMlevel = math_floor(curMlevel)
-				
+		
 		local curEpct = curElevel / curEstore
 		local curMpct = curMlevel / curMstore
 		
@@ -619,7 +632,7 @@ function widget:DrawScreen()
 		gl_Color(1, 1, 1, 1)
 		
 		--draw the main bar thingy
-
+		
 		DrawComponent(eGuiBase)
 		local t= Spring.GetGameSeconds()
 		
@@ -630,10 +643,10 @@ function widget:DrawScreen()
 				
 				esurge=esurge2
 				esurge2 = (esurge2 +1) % 8
-				if esurge2 < 4 then  esurge2 = 4 end			
+				if esurge2 < 4 then esurge2 = 4 end			
 				
 			end
-		
+			
 			DrawComponent(esurge)
 			DrawComponent(esurge2)
 			
@@ -656,7 +669,7 @@ function widget:DrawScreen()
 		DrawMbar(curMpct)
 		--drawcomponent
 		if sideCombine == false then
-		DrawComponent(eJourneyFlyingGhosts)
+			DrawComponent(eJourneyFlyingGhosts)
 		end
 		--TIME FOR TEXT
 		
