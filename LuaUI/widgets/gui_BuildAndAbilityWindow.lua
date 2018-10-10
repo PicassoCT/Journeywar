@@ -418,6 +418,10 @@ function widget:Initialize()
 end
 
 --subConstructors
+function widget:MouseRelease()
+	updateCommandsSoon = true	
+end
+
 function widget:CommandsChanged()		
 	updateCommandsSoon = true		
 end
@@ -484,6 +488,7 @@ function widget:GameFrame(f)
 		selectedUnits = spGetSelectedUnits()
 		
 		if not selectedUnits then 
+			onOffButton.caption = "-"
 			HideAllActiveAbilityElements()
 			resetStatusbars()
 			return 
@@ -507,31 +512,27 @@ function widget:GameFrame(f)
 		end
 		
 		updateAmmonitionBar(unitID)
+		onOffButton.caption = "ABILITY"
 		
-		
-		--adapt the button to unit
+		--adapt the button to unit commender
 		if unitTypeButtonMap[ud.name] then
 			--generate the Gui Specific by unittype
 			--Spring.Echo("Show typespeicific acitivty button")
 			unitTypeButtonMap[ud.name]()		
 			
 		elseif isUnitOnOffable(ud.name)== true then
-			--Spring.Echo("Show dfault acitivty button")
-			unitTypeButtonMap["default"]("default")
+		unitTypeButtonMap["default"]("default")
+		
+		
 			--Check for captionReplacement
 			if defaultCaptionByUnitType[ud.name] then
-				if onOffButton.caption== defaultCaptionByUnitType[ud.name].active then
+				if onOffButton.caption == defaultCaptionByUnitType[ud.name].active then
 					onOffButton.caption = defaultCaptionByUnitType[ud.name].passive 
 				else
 					onOffButton.caption = defaultCaptionByUnitType[ud.name].active 
 				end
-			else
-				onOffButton.caption = "ABILITY"
 			end
-		else
-			--Spring.Echo("Hide all Buttons")
-			--default no button
-			onOffButton.caption = "ABILITY"
+		else			
 			HideAllActiveAbilityElements()
 		end
 	end
