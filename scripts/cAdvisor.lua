@@ -149,25 +149,31 @@ end
 
 ox, oy, oz = Spring.GetUnitPosition(unitID)
 boolOnce = true
-numbers = { ["1"] = true, ["2"] = true, ["3"] = true, ["4"] = true, ["5"] = true, ["6"] = true, ["7"] = true, ["8"] = true, ["9"] = true }
+numbers = { 
+["0"] = true, 
+["1"] = true, 
+["2"] = true, 
+["3"] = true, 
+["4"] = true, 
+["5"] = true, 
+["6"] = true, 
+["7"] = true, 
+["8"] = true, 
+["9"] = true }
 advisorDef = Spring.GetUnitDefID(unitID)
 function reportForNeuralEnhancement()
 	strings = "Citizen Nr:"
-	PlaySoundByUnitDefID(advisorDef, "sounds/cadvisor/advisorreportA.ogg", 1, 1000, 1)
-	
-	unitidstring = "" .. unitID .. ""
+	PlaySoundByUnitDefID(advisorDef, "sounds/cadvisor/advisorreportA.ogg", 1, 1000, 1)	
+	unitidstring = tostring(unitID)
+
 	for i = 1, string.len(unitidstring) do
 		
-		c = string.sub(i, i)
-		-- Spring.Echo(c)
-		if numbers[c] then
+		local c = trim(string.sub(unitidstring, i, i))
+		Spring.Echo(c)
+		if c and numbers[c] then
 			-- do something with c
 			strings = strings .. c
-			success = false
-			while success == false do
-				success = PlaySoundByUnitDefID(advisorDef, "sounds/numbers/" .. c .. ".ogg", 1, 650, 1)
-				Sleep(500)
-			end
+			PlaySoundByUnitDefID(advisorDef, "sounds/numbers/" .. c .. ".ogg", 1, 650, 1)	
 		end
 	end
 	PlaySoundByUnitDefID(advisorDef, "sounds/cadvisor/advisorreportB.ogg", 1, 25000, 1)
