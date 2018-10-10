@@ -30,21 +30,21 @@ teamID = Spring.GetUnitTeam(unitID)
 
 eruptionArray = {}
 for i = 1, 18, 1 do
-    eruptionArray[i] = {}
+
     Emiters = "eruptionp" .. i
     eruptionArray[i] = piece(Emiters)
 end
 groundEmitters = {}
 
 for i = 1, 8, 1 do
-    groundEmitters[i] = {}
+
     Emiters = "EmitG" .. i
     groundEmitters[i] = piece(Emiters)
 end
 
 skyEmitters = {}
 for i = 1, 34, 1 do
-    skyEmitters[i] = {}
+
     Emiters = "EmitS" .. i
     skyEmitters[i] = piece(Emiters)
 end
@@ -160,7 +160,7 @@ function smokeOnTheHeight()
             EmitSfx(skyEmitters[i], 1026)
             y = math.random(0, 8)
             if y == 4 then
-                EmitSfx(skyEmitters[i], 1028)
+					 spawnCegAtPiece(unitID, skyEmitters[i],"volcanoashcloud")	                
             elseif y % 2 == 0 then
                 EmitSfx(skyEmitters[i], 1029)
             end
@@ -463,7 +463,11 @@ function volCanos()
 
     Move(center, y_axis, -40, 0.5)
     x, y, z = Spring.GetUnitPosition(unitID)
-    Spring.CreateFeature("lavafeature2", x, y, z)
+	 if math.random(0,2)== 2 then	 
+		Spring.CreateUnit("gpillar", x, y, z,0, teamID)
+	 else
+		Spring.CreateFeature("lavafeature2", x, y, z)
+	 end
     Spring.DestroyUnit(unitID, true, true)
 
     --Mountain collapses

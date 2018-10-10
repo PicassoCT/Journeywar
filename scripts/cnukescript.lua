@@ -485,12 +485,6 @@ function actualExplosion()
     StartThread(mushRoom)
     --StartThread(takeMeToTheCloudAbove)
 
-
-
-
-
-
-
     Sleep(10000)
 
     --Rising ExplosionCloud - Outward Moving Pyroclastics

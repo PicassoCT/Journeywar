@@ -16,7 +16,7 @@ end
 
 function getCegName()
 	echo("Cegspawn")
-	return "cawilduniverseappearsgalaxys", 30000
+	return "volcanoashcloud", 3000
 end
 center = piece "center"
 Quader04 = piece "Quader04"

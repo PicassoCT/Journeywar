@@ -361,6 +361,7 @@ function getPyroProofUnitTypeTable(UnitDefNamesContext)
     FireProofTypes[UnitDefNames["beanstalk"].id] = true
     FireProofTypes[UnitDefNames["jsungodcattle"].id] = true
     FireProofTypes[UnitDefNames["jtree3"].id] = true
+    FireProofTypes[UnitDefNames["gpillar"].id] = true
     FireProofTypes[UnitDefNames["glava"].id] = true
     FireProofTypes[UnitDefNames["gvolcano"].id] = true
     FireProofTypes[UnitDefNames["jhoneypot"].id] = true
