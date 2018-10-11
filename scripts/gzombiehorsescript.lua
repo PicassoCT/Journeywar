@@ -599,6 +599,7 @@ function resetPosition()
 end
 
 function dropDead()
+	  Sleep(800)
     while (true) do
 
 
