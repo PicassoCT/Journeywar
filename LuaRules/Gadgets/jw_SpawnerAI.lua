@@ -2,8 +2,8 @@
 
 function gadget:GetInfo()
     return {
-        name = "spawner",
-        desc = "Spawns Units",
+        name = "Spawner AI: Exobiotics",
+        desc = "Spawns Enemies",
         author = "Your Moma",
         date = "around since last tuesday",
         license = "GPOCNL - Gajop Pissed Off Cause Nonsense License ",
@@ -101,7 +101,7 @@ if (gadgetHandler:IsSyncedCode()) then
     end
 
     function randomSide()
-        if math.random(0, 1) == 1 then return "centrail" else return "journeyman" end
+        if math.random(0, 3) <  1 then return "centrail" else return "journeyman" end
     end
 
     spawnerAI = {}
@@ -116,9 +116,9 @@ if (gadgetHandler:IsSyncedCode()) then
                 typeAI = Spring.GetTeamLuaAI(teamID)
             end
 
-            --Spring.Echo("SpawnerAI::TeamInfo::" .. teamID, typeAI, leader, isDead, isAI, side)
-
-            if isAI and isAI == true and typeAI == "spawner" then
+           Spring.Echo("SpawnerAI::TeamInfo::" .. teamID, typeAI, leader, isDead, isAI, side)
+				
+            if isAI and isAI == true and typeAI == "Spawner AI: Exobiotics" then
                 spawnerAI[teamID] = side
                 if side ~= "journeyman" and side ~= "centrail" then
                     spawnerAI[teamID] = randomSide()

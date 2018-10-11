@@ -1,7 +1,7 @@
 local foo = {
 
 	{
-		name="spawner",
+		name="Spawner AI: Exobiotics",
 		desc="Spawns Opposing Forces that besiege you",
 	},
 }

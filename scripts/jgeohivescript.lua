@@ -33,7 +33,7 @@ function underground()
     for i = 1, #TablesOfPiecesGroups["root"] do
         pieceID = TablesOfPiecesGroups["sensor"][i]
         radVal = math.random(-360, 360)
-        ux, uy, uz = Spring.GetUnitPosition(unitID)
+
         boolUnderground = false
         while boolUnderground == false or radVal > radVal + 360 do
             WTurn(TablesOfPiecesGroups["root"][i], y_axis, math.rad(radVal), 0)
@@ -90,7 +90,7 @@ function spawner()
     local spGetUnitNearestEnemy = Spring.GetUnitNearestEnemy
     local spGetUnitPosition = Spring.GetUnitPosition
     local spSpawnCEG = Spring.SpawnCEG
-    local spCreateUnit = Spring.CreateUnit
+    local spCreateUnit = createUnit_TerrainTest
     local spSetUnitMoveGoal = Spring.SetUnitMoveGoal
     local spEmitSfx = EmitSfx
     local spSetUnitNoSelect = Spring.SetUnitNoSelect
@@ -264,7 +264,7 @@ function findBiggestCluster(team, times)
 end
 
 
-ax, ay, az = Spring.GetUnitPosition(unitID)
+
 --attack relentless the biggest cluster
 function PEAK(monsterID, enemyID, Time, mteam, factor)
     rVal = math.random(16, 64)
@@ -356,7 +356,7 @@ function BUILDUP(monsterID, enemyID, Time, mteam, factor)
     return dax, day, daz
 end
 
-ux, uy, uz = Spring.GetUnitPosition(unitID)
+
 function RELAX(monsterID, enemyID, Time, mteam, factor)
     if monsterID % math.random(45, 67) == 0 then
         ex, ey, ez = Spring.GetUnitPosition(enemyID)
@@ -447,6 +447,7 @@ function TargetOS()
         times = times + 5000
         AllUnitsUpdated = Spring.GetAllUnits()
 		AnzahlMonster =count(monsterTable)
+		tooRemove={}
 		
         if monsterTable and AnzahlMonster > 0 then
 
@@ -467,9 +468,17 @@ function TargetOS()
                             Command(monsterid, "go", { x = ex, y = ey, z = ez }, {})
                         end
                     end
-                end
+                else
+							if monsterid then
+								tooRemove[monsterid]= num
+							end
+					  end
 				Sleep(10)
             end
+			for id,num in pairs(tooRemove) do
+				table.remove(monsterTable,num)
+			end
+			
         end
     end
 end
