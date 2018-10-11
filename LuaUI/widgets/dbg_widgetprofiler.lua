@@ -21,7 +21,7 @@ local usePrefixedNames = true
 --------------------------------------------------------------------------------
 
 local callinStats       = {}
-
+local spGetLuaMemUsage = Spring.GetLuaMemUsage()  or function() return 0 end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
@@ -368,7 +368,7 @@ function DrawWidgetList(list,name,x,y,j)
 	return x,j
 end
 
-local lm,_,gm,_ =  Spring.GetLuaMemUsage()
+local lm,_,gm,_ =  spGetLuaMemUsage
 
 function widget:DrawScreen()
 	if not (next(callinStats)) then

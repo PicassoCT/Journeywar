@@ -39,7 +39,7 @@ local callinStats       = {}
 
 local spGetTimer = Spring.GetTimer
 local spDiffTimers = Spring.DiffTimers
-local spGetLuaMemUsage = Spring.GetLuaMemUsage
+local spGetLuaMemUsage = Spring.GetLuaMemUsage or function () return 0 end
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

@@ -9,8 +9,8 @@ function widget:GetInfo()
     date      = "Year of the Stallman 2017",
     license   = "GPL",
     layer     = 1,
-    enabled   = false  --  loaded by default?
-		hidden = true,
+    enabled   = false,  --  loaded by default?
+		hidden = true
   }
 end
 
