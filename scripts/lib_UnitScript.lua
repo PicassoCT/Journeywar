@@ -1105,6 +1105,18 @@ function waitTillComplete(unitID)
    
 	return bP ~=nil
 end
+
+function createUnit_TerrainTest(uType, x,y,z, orientation, teamID, acceptableIncline)
+
+loc_acceptableDecline= acceptableIncline or 0.50
+x,y,z,slope = Spring.GetGroundNormal(x,z)
+--Spring.Echo("createUnit_TerrainTest:"..slope.. " < ".. loc_acceptableDecline )
+
+	if slope < loc_acceptableDecline then
+		return Spring.CreateUnit(uType, x,y,z, orientation, teamID)
+	end
+
+end
 --======================================================================================
 --Section: Landscape/Pathing Getter/Setters
 --======================================================================================
@@ -3082,7 +3094,7 @@ function distanceUnitToUnit(idA, idB)
 	if not x then def = Spring.GetUnitDefID(idA); echo("distanceToUnit::Invalid Unit "..UnitDefs[def].name.." - no position recived") 
 		return 
 	end
-	if not xb then echo("distanceToUnit::Invalid Unit "..UnitDefs[Spring.GetUnitDefID(idB)].name.." - no position recived") 
+	if not xb and idB and Spring.GetUnitDefID(idB) then echo("distanceToUnit::Invalid Unit "..UnitDefs[Spring.GetUnitDefID(idB)].name.." - no position recived") 
 		return 
 	end
 	return distance(x, y, z, xb, yb, zb)
