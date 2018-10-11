@@ -22,6 +22,9 @@ function fromTimeToTime()
 end
 
 function script.Create()
+	teamID=Spring.GetUnitTeam(unitID)
+	x,y,z=Spring.GetUnitPosition(unitID)
+	GG.UnitsToSpawn:PushCreateUnit("gbeehiveplate",x,y,z,0,teamID)
     StartThread(fromTimeToTime)
 end
 
