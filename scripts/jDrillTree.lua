@@ -175,6 +175,10 @@ function thisIsTheEnd()
     end
 
 
+	while not x or not z and Spring.ValidUnitID(unitID) do
+		x,startHeigth,z= Spring.GetUnitPosition(unitID)
+		Sleep(500)
+	end
 
 	while (Spring.GetGroundHeight(x,z) < startHeigth + gameConfig.MaxDrillTreeHeigth) do
 		Sleep(500)	
