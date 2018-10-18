@@ -515,6 +515,7 @@ function getMapHeightDependantWaterlevel()
     if minExtreme - 70 < 0 then
         return 0.0005
     else
+		i= (minExtreme -70)
         x = math.log(i) / 3
         return math.min(3, math.max(x, 0.0005))
     end
