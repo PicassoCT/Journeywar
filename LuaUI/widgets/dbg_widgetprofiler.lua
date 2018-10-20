@@ -21,7 +21,8 @@ local usePrefixedNames = true
 --------------------------------------------------------------------------------
 
 local callinStats       = {}
-local spGetLuaMemUsage = Spring.GetLuaMemUsage()  or function() return 0 end
+local spGetLuaMemUsage = function() return 0 end
+if Spring.GetLuaMemUsage then spGetLuaMemUsage = Spring.GetLuaMemUsage end
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 

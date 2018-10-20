@@ -838,6 +838,12 @@ function getUnitMoveGoal(unitID)
 	end
 end
 
+function destroyUnitConditional(id, selfd, reclaimed )
+	if  doesUnitExistAlive(id) == true then
+		Spring.DestroyUnit(id,selfd,reclaimed)
+	end
+end
+
 function doesUnitExistAlive(id)
 	valid = Spring.ValidUnitID(id)
 	if valid == nil or valid == false then
