@@ -19,57 +19,57 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_UnitScript.lua")
 	VFS.Include("scripts/lib_jw.lua")
 	gaiaTeam = Spring.GetGaiaTeamID()
-	
-	local GOL = {}
-	
+
 	GooSizeSquare= 280
 	tickEverynthSecond= 1
 	tickEveryNthFrame= 30*tickEverynthSecond
 	
 	x_GridSize,z_GridSize = math.ceil(Game.mapSizeX/GooSizeSquare)-1, math.ceil(Game.mapSizeZ/GooSizeSquare)-1
 
-	GOL.Grid = {}
+	
 	grid_instance={}	
 	
-	GOL.live_cell = {alive = true, unitID = nil}
-	GOL.cell_dead = {alive = false}
-	GOL.random_cell = function (cell_index_x, cell_index_z)
+	local cell_alive = {alive = true, unitID = nil}
+	local cell_dead = {alive = false}
+	function random_cell (cell_index_x, cell_index_z)
 		if math.random(0,100) > 75 then 
-			local liveCellCopy = 	GOL.live_cell
+			local liveCellCopy = 	cell_alive
 			x,z = cell_index_x*GooSizeSquare, cell_index_z * GooSizeSquare
 			liveCellCopy.unitID = Spring.CreateUnit("greygoo",x,0,z, 1, gaiaTeam)
 			return liveCellCopy, true
 		else 
-			return GOL.cell_dead , false
+			return cell_dead , false
 		end
 	end
+
 	
-	GOL.cell_dead.next_state = function(alive_neighbours, cell_index_x, cell_index_z)
-		if alive_neighbours == 3 then
-			local liveCellCopy = 	GOL.live_cell
-			x,z = cell_index_x*GooSizeSquare, cell_index_z*GooSizeSquare
-			liveCellCopy.unitID = Spring.CreateUnit("greygoo",x,0,z, 1, gaiaTeam)
-			return liveCellCopy, true
-		else
-			return GOL.cell_dead, false
-		end
-	end
-	
-	GOL.live_cell.next_state = function(alive_neighbours, cell_index_x, cell_index_z)
-		if alive_neighbours >=2 and alive_neighbours <= 3 then
-			return GOL.live_cell, true
-		else
-			if grid_instance[cell_index_x][cell_index_z].unitID then
-				destroyUnitConditional(grid_instance[cell_index_x][cell_index_z].unitID, true, false)	
+	function next_state (boolAlive, alive_neighbours, cell_index_x, cell_index_z)
+	 if boolAlive then
+		Spring.Echo("Next State called for alive cell with "..alive_neighbours.." alive neighbours")
+			if alive_neighbours >=2 and alive_neighbours <= 3 then
+				return  cell_alive, true
+			else
+				if grid_instance[cell_index_x][cell_index_z].unitID then
+					destroyUnitConditional(grid_instance[cell_index_x][cell_index_z].unitID, true, false)	
+				end
+				return  cell_dead, false
 			end
-			return GOL.cell_dead, false
+		else
+			if alive_neighbours == 3 then
+				local liveCellCopy = 	 cell_alive
+				x,z = cell_index_x*GooSizeSquare, cell_index_z*GooSizeSquare
+				liveCellCopy.unitID = Spring.CreateUnit("greygoo",x,0,z, 1, gaiaTeam)
+				return liveCellCopy, true
+			else
+				return  cell_dead, false
+			end	
 		end
 	end
 	
 
 	
 	
-	GOL.Grid.count_live_neighbours = function(grid, x, y)
+	function count_live_neighbours(grid, x, y)
 		neighbour_positions = {
 			{-1,-1}, {0,-1}, {1,-1},
 			{-1,0}, {1,0},
@@ -80,7 +80,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			x_i, y_i = x+pos[1], y+pos[2]
 			
 			if x_i>=1 and y_i>=1 and x_i <= #grid[1] and y_i <= #grid then
-				if grid[y+pos[2]][x+pos[1]] == GOL.live_cell then
+				if grid[y+pos[2]][x+pos[1]].alive == true then
 					live_neighbour_count = live_neighbour_count + 1
 				end
 			end
@@ -89,29 +89,30 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	
-	GOL.Grid.evolve = function(grid)
-		new_grid = {}
+	function evolve()
+		local new_grid = {}
 		local boolAtleastOneAlive=false
-		for row_i, row in ipairs(grid) do
-			table.insert(new_grid, {})
+		for row_i, row in ipairs(grid_instance) do
+			new_grid[#new_grid+1]= {}
 			for cell_i, cell in ipairs(row) do
-				new_cell, stillAlive = cell.next_state( GOL.Grid.count_live_neighbours(grid, cell_i, row_i),row_i, cell_i )
-				table.insert(new_grid[row_i], new_cell)
+				new_cell, stillAlive = next_state(grid_instance[row_i][cell_i].alive, count_live_neighbours(grid_instance, cell_i, row_i),row_i, cell_i )
+				new_grid[row_i][cell_i]= new_cell
 				if stillAlive == true then boolAtleastOneAlive = true end
 			end
 		end
-		return new_grid, boolAtleastOneAlive
+		grid_instance= new_grid
+		return boolAtleastOneAlive
 	end
 	
 
-	GOL.Grid.random_grid = function(x, y)
+	function random_grid(x, y)
 	grid = {}
 		
 		for x_i = 1,x,1 do
-			table.insert(grid, {})
+			grid[x_i]={}
 			for y_i = 1,y,1 do
-				result = GOL.random_cell(x_i,y_i)
-				table.insert(grid[#grid], result)
+				grid[x_i][y_i]= random_cell(x_i,y_i)
+		
 			end
 		end
 		return grid
@@ -119,7 +120,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 
 	function gadget:Initialize()
-		grid_instance = GOL.Grid.random_grid(x_GridSize,z_GridSize)
+		grid_instance = random_grid(x_GridSize,z_GridSize)
 	end
 	
 	function gadget:GameFrame(frame)
@@ -129,7 +130,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	end
 	
 	function updateGameOfGoo(frame)
-		grid_instance, boolAtleastOneAlive = GOL.Grid.evolve(grid_instance)
+		boolAtleastOneAlive = evolve()
 		--if boolAtleastOneAlive == false then gadget:Shutdown() end
 	end
 	
@@ -138,7 +139,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			for x=1,x_GridSize do
 				for z=1,z_GridSize do
 					if grid_instance[x][z].unitID and  grid_instance[x][z].unitID == unitID then
-						grid_instance[x][z] = GOL.cell_dead
+						grid_instance[x][z] = cell_dead
 					end
 				end
 			end
