@@ -30,9 +30,31 @@ if (gadgetHandler:IsSyncedCode()) then
 	
     end
 	
+	persPack= {}
+	currentlyActiveObjective = {["start"]=true }
+	objectives={
+	["start"] = function(frame, framesSinceLastCall ) 
+		boolObjectiveCompleted=false
+		
+		
+		return boolObjectiveCompleted
+	end
+	
+	
+	
+	
+	}
 	function missionStateMachine(frame, framesSinceLastCall)
-	
-	
+		for objective, active in pairs(currentlyActiveObjective) down
+			if active == true then
+				currentlyActiveObjective[objective] = objectives[objectiv](frame, framesSinceLastCall)
+			end
+		end
+		for objective, active in pairs(currentlyActiveObjective) down
+			if active == false then
+				table.remove(currentlyActiveObjective, objective)
+			end
+		end
 	end
 
 

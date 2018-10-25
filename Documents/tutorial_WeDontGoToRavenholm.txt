@@ -1,0 +1,121 @@
+We dont go to Ravenholm.
+
+
+
+Abstracts:
+Senator Daridov	  - Exiled from his city-family, hates the slow-lifes and all who dwell in it.
+Senator Alynn     - Wants to observe your performance, secretly in a org that supports sentient life. Avoids the city by mission hopping.
+ComEnder		  - You in a suit
+Overwatch Trooper Yank - Fast batch - no "Memory Replacement" aka CityTime.
+							First helps humans, then implanted and send to the city. Afterwards a person collective.
+							
+							
+							
+							
+							
+
+- Implement a economic ressurection after the 7 hour war. Defeat patridiots.
+	- Build Scumslums, ComDepot, MeStorage and a Materialdiggester
+	- Secure Streets with Sentrys
+	- Patroll with mtw
+
+Defend against Exobiotics Insurgence (Errect a Efence)
+	- Advanced Units
+	
+- Defend against rebell attack
+	- Contact rebells
+
+-Headcrabshell Raveholm
+	- Smuggle people out
+
+- Administrator course 
+	Alynn tips to conceal your mind
+	
+	
+"Easy, easy. Let the Host-body time to accomodate your mind. There may still be side-effects, like
+the implanted ilusion of beeing a player of a game of sorts. Take your time."
+
+"Oh, please Senator Alynn, lets get on with it. Administrator, you will find in front of you a display of the battlefield.
+In the top right corner, you will find the meters for Security-budget and Material-budget. Both will become very important."
+
+"You are a cruel jerk, Daridov, Senator or not, always where, always will be."
+"I will spend literally, always in this farce, teaching slow-life, so yes, you are right."
+"We two are abstracts, that means persons without bodies, assigned to help you into your new administrive duties."
+
+"Which include a economic rejuvinjation of this hellhole after the first contact. How long did they last?"
+"7 hours."
+"Now thats impressive for a bunch of retarded mammals. 
+But thats the past- we are in charge, we terrorize them, they get liberated from our other armed forces, 
+they are eternally loyal, so buisness as usual, yadi,yadi,yada!"
+
+"Administrator, we need to economically rewive this location. Select the citadell, and click on the highrise security hotspot.
+<Build three of these buildings>."
+
+"Three, threethousand, monkey cages where they dwell, shit into the corners, 
+overbreed and blame us for everything wrong with the world. "
+
+[ObjectiveAccomplished]
+
+D"Now we have them housed and they produce problems, these problems - slightly overstated, allow us to draw Securitybudget form the Union."
+
+A"Its all about creative accounting, if you are part of a orgainsation this large. We still need transportation."
+
+D"What a nice euphemism. Yes, as you might have noticed, the building has used up health of the construction units. 
+One could say, they would give a arm and a legt to take one for the team. Oh, brave new world-"
+
+A"<We need a construction depot>, to serve as hub and support for further effort. Please use shift to queue that build order in with your citadel."
+[ObjectiveAccomplished]
+
+D"Anything we do not use, is usually given back to the empire, never to be seen again. <We could use a Storage building>."
+[ObjectiveAccomplished]
+
+A"We could use a break right now!"
+D"Not going to happen, we need to secure this whole affair. I recommend building sentrys and a farcaster. That way we can teleport troops in should need.."
+A"We wont need that."
+D"Yeah, 314 world is the charm.
+[ObjectiveAccomplished]
+
+D"So we secured our position and just in time. Some outland scouts of Overwatch just reported Exobiotic activity. Antlions."
+A"Wherever we go, they are already there. We need guards, sentrys and restrictors in thumper mode."
+D"Shaken by the waves, we will yet persist."
+[ObjectiveAccomplished]
+A"Administrator- i took the liberty to arrange for a undisturbed split second. Blink suprised and we shall both be cauterized. 
+Very soon patrols will be suggested- please use hunterchoppers and not gunships."
+
+D"We should errect a E-Fence and charge it with Wallbuilders. We can keep the close-combat bugs in check for a while. "
+A"If we bundle them with restrictors, scarying them off.."
+[ObjectiveAccomplished]
+
+D"I would recommend a gunship patroll into the wastelands. Identify all the hives and find out whats driving the anltions out."
+A"This sounds like overkill, but very well."
+[ObjectiveAccomplished]
+
+D "It seems that a local resistance group is using devices to drive the Antlions into a mating-stampede."
+A "We certainly need to give them a lesson. Engagments with the combine, are a one-time affair."
+[ObjectiveAccomplished]
+D "It seems the vehicles originate from a Research-Outpost. Destroy the Research-Outpost."
+A "Isnt that a little harsh. We do not know wether all involved are participating in the attack."
+D "Sheltering is enough for me. If your innocent, your flatmate better be too."
+[ObjectiveAccomplished]
+
+D "The enemy is in full retreat - to a nearby town called Ravenholm. They are heavily armed and well organized."
+A "We should let them run- investigations revealed, they only tryied to harvest antlion honey."
+
+D(Conspiracy- A is going soft on them again, very soon, i promise. I have a insider, who will motivate the rebells to stay in the town. His family is in the city, and for the deal he wants to be too).
+
+
+
+D "Only, endangered citizens and Centrail Personal in the effort, i recommend taking artillery and crabshell that town."
+
+A "Sidemission: Talk to the towns priest, a Pater Grigori"
+
+A "Help open a way to escape with restrictors"
+D "Shell them and prepare defenses for a stream of zombies."
+
+
+
+A "The Refugees will be wearing hc-helmets. Batterys, Codensators and a bucket."
+
+
+
+

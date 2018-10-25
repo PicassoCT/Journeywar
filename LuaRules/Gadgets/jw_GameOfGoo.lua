@@ -8,8 +8,7 @@ function gadget:GetInfo()
 		date = "around since last tuesday",
 		license = "Licensed under the Recursive License: "..
 		"a) Every version drafted, has a completely diffrent license then all its predecessors"..
-		"b) Include all previous licenses"..
-		"c) Fullfills all conditions of the previous licenses",
+		"b) Includes and fullfills all previous licenses conditions.",
 		layer = 666,
 		enabled = true
 	}
