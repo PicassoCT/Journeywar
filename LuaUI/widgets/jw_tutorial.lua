@@ -8,7 +8,7 @@ function widget:GetInfo()
 		date = "Jul 18, 2009",
 		license = "GNU GPL, v2 or later",
 		layer = 3,
-		enabled = (Spring.GetConfigInt("jwfirststartup",1)	< 3) -- loaded by default?
+		enabled = (Spring.GetConfigInt("jw_startupcounter",1)	< 3) -- loaded by default?
 	}
 end
 
@@ -187,10 +187,10 @@ end
 
 function widget:GameStart()
 	preProcesTutorialInfoTable()
-	val=Spring.GetConfigInt("jwfirststartup",1)	
-	Spring.SetConfigInt("jwfirststartup",val+1 )
 	
-	if Spring.GetSpectatingState() or Spring.IsReplay() or val > 2 then
+
+	
+	if Spring.GetSpectatingState() or Spring.IsReplay() or Spring.GetConfigInt("jw_startupcounter",1)	 > 2 then
 		widgetHandler:RemoveWidget()
 	end
 	
@@ -209,14 +209,14 @@ function widget:Initialize()
 	if Spring.GetGameFrame() > 0 then
 		preProcesTutorialInfoTable()
 		Spring.Echo("Reinitailizing tutorial")
-		Spring.SetConfigInt("jwfirststartup", 1 )
+		Spring.SetConfigInt("jw_startupcounter", Spring.GetConfigInt("jw_startupcounter",1) + 1 )
 	end
 end
 
 
 function widget:Shutdown()
 	Spring.Echo("Deactivated Tutorial - you can reactivate via the Widget-Manager (Press F11)")
-	Spring.SetConfigInt("jwfirststartup",3 )
+	Spring.SetConfigInt("jw_startupcounter",3 )
 	--set Tutorial once activated Variable
 	
 end

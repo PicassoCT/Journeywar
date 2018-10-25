@@ -1,21 +1,17 @@
 We dont go to Ravenholm.
 
 
-
-Abstracts:
-Senator Daridov	  - Exiled from his city-family, hates the slow-lifes and all who dwell in it.
-Senator Alynn     - Wants to observe your performance, secretly in a org that supports sentient life. Avoids the city by mission hopping.
-ComEnder		  - You in a suit
-Overwatch Trooper Yank - Fast batch - no "Memory Replacement" aka CityTime.
-							First helps humans, then implanted and send to the city. Afterwards a person collective.
+Actors:
+D Senator Daridov		 	- Exiled from his city-family, hates the slow-lifes and all who dwell in it.
+A Senator Alynn     		- Wants to observe your performance, secretly in a org that supports sentient life. Avoids the city by mission hopping.
+ComEnder		 		 	- You in a suit
+S Overwatch Trooper Sy 		- former Navy Seal in the seven hour war, family taken hostage.
+T 							- Targaroth, returned Sy from the city. Original Sy is now a abstract, body sold off in auction to personality collective.
 							
 							
-							
-							
-							
-
+Objectives:
 - Implement a economic ressurection after the 7 hour war. Defeat patridiots.
-	- Build Scumslums, ComDepot, MeStorage and a Materialdiggester
+	- Build 3 Scumslums, ComDepot, MeStorage and a Materialdiggester
 	- Secure Streets with Sentrys
 	- Patroll with mtw
 
@@ -32,36 +28,42 @@ Defend against Exobiotics Insurgence (Errect a Efence)
 	Alynn tips to conceal your mind
 	
 	
-"Easy, easy. Let the Host-body time to accomodate your mind. There may still be side-effects, like
-the implanted ilusion of beeing a player of a game of sorts. Take your time."
+A"Easy, easy. Give the Host-body time to accomodate the mind. There may still be residual side-effects, like
+the synthetic delusions of beeing a player in a game of sorts. Take your time."
 
-"Oh, please Senator Alynn, lets get on with it. Administrator, you will find in front of you a display of the battlefield.
-In the top right corner, you will find the meters for Security-budget and Material-budget. Both will become very important."
+D "Oh, please Senator Alynn, pity for the altitude-sick on Mt Aspiration? Get on with it. 
+Administrator, in the top right corner of the battlefield display, you will find the meters for Security-budget and Material-budget. 
+If you memorize them as the ressource you pay your bills with, you will get a treat later."
 
-"You are a cruel jerk, Daridov, Senator or not, always where, always will be."
-"I will spend literally, always in this farce, teaching slow-life, so yes, you are right."
-"We two are abstracts, that means persons without bodies, assigned to help you into your new administrive duties."
+A "Ever the cruel jerk, Daridov, Senator or not, always were, always will be."
+D "I literaly spend forever, stuck in this travesty of a job, teaching slow-lifeforms. Which may aswell know how much i despise them. Im sure we will al be best pals-"
+A "Administrator, we two are abstracts, fullcitizens without bodies, assigned to introduce you to the adminstration interfce and duties. Its nice to meet you."
+D "Squeeze the chumming up whore button, if you need more redundant information. Anyway, the glorious war is over- it lasted 0.29 percent of the planets rotation. Now lets hand out some shinys for retarded mamal-heroism, and start reorganizing this hellhole-"
+A "We want to help-"
+D "No, we want to terrorize into obedience, then use a sock-puppet to liberate them from our regime into loyalty. "
+A "Lets start it slow, we need to errect some buildings to house the population. Select the citadell and build 3 highrises and a storage unit."
+D "Lets give you short history of life. It adapts to the circumstances, and if burdend with partial intelligence, drags the circumstances down into the mud with it. Thus results the loop deformation."
+A "Ignore him, he is a bitter old bastard. Lets just complete the goals - notice how our building vehicles are used up in the construction process."
+[WaitForObjectiveAccomplished]
 
-"Which include a economic rejuvinjation of this hellhole after the first contact. How long did they last?"
-"7 hours."
-"Now thats impressive for a bunch of retarded mammals. 
-But thats the past- we are in charge, we terrorize them, they get liberated from our other armed forces, 
-they are eternally loyal, so buisness as usual, yadi,yadi,yada!"
+D "The loop deformation produces specialized adaption to the cycle of overpopulation, war, reconstitution, good-times. And its god-given, the law of guts, to stray from it, is heresy and any ruler to do so, is not in power for long. Good is to overproduce ressources against exponential growing consumption, evil is to prevent the loading of the civil-war-lottery with all the tickets they could print. We are evil, we are combine- and proud of it."
+A "Justification, its necessary if you do monstrous things. Remember the bridge over the ridge of Kol'Thor 4, Daridov?"
+D "Lets build a Condepot, so we can replenish our Constructor Units. As shrine to holy Alynn!"
+[WaitForObjectiveAccomplished]
 
-"Administrator, we need to economically rewive this location. Select the citadell, and click on the highrise security hotspot.
-<Build three of these buildings>."
+A "You dstroyed theire whole culture!"
+D "Theire culture consisted of a ritual civil war, since the dawn of time. We build a damn from bodies to theire temple and torched the whole affair. They now have peace, the quiet life. Im sure, theire children weap at night, because we took the chance to rot alive in some forsaken pit for the culture it brings."
+A "Notice, how the housed citizens allow us to recive security budget from the Universal Union." 
+D "Creative accounting from the comons, always a good way to stamp out meritocracy. We need to secure the streets- build sentrys and a watchtower"
 
-"Three, threethousand, monkey cages where they dwell, shit into the corners, 
-overbreed and blame us for everything wrong with the world. "
+[WaitForObjectiveAccomplished]
 
-[ObjectiveAccomplished]
+A "You may have noticed your funds fluctuating slightly- this is due to the dark-matter-reactor in the citadel, creating and consuming resources at a weak rate in regular intervals."
+D "Also note that the construction Units sacrificed themselves, for the glorious Centrail Confederacy, ehm Universal Union. One can loose track, on all those brave new worlds-"
 
-D"Now we have them housed and they produce problems, these problems - slightly overstated, allow us to draw Securitybudget form the Union."
+TODO _REWRITE CONTINU
 
-A"Its all about creative accounting, if you are part of a orgainsation this large. We still need transportation."
 
-D"What a nice euphemism. Yes, as you might have noticed, the building has used up health of the construction units. 
-One could say, they would give a arm and a legt to take one for the team. Oh, brave new world-"
 
 A"<We need a construction depot>, to serve as hub and support for further effort. Please use shift to queue that build order in with your citadel."
 [ObjectiveAccomplished]
@@ -101,13 +103,13 @@ D "Sheltering is enough for me. If your innocent, your flatmate better be too."
 D "The enemy is in full retreat - to a nearby town called Ravenholm. They are heavily armed and well organized."
 A "We should let them run- investigations revealed, they only tryied to harvest antlion honey."
 
-D(Conspiracy- A is going soft on them again, very soon, i promise. I have a insider, who will motivate the rebells to stay in the town. His family is in the city, and for the deal he wants to be too).
-
-
+D"Administrator, a word over the side-channel. Alynn, usually goes soft. She likes the Slow-life so much, she hops from mission to mission, to avoid
+visiting the city and getting some perspective. Its pathetic, but usefull. So, between us grown-ups, i have a insider, who will rile up the anti-citizens
+to make a last stand. I want you to prepare his reward- that is, ship his family to the citadell, so they can be transfered to the city."
 
 D "Only, endangered citizens and Centrail Personal in the effort, i recommend taking artillery and crabshell that town."
 
-A "Sidemission: Talk to the towns priest, a Pater Grigori"
+A "Sidemission: Send alk to the towns priest, a men named Grigori"
 
 A "Help open a way to escape with restrictors"
 D "Shell them and prepare defenses for a stream of zombies."
