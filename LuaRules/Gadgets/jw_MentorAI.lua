@@ -20,8 +20,8 @@ if (gadgetHandler:IsSyncedCode()) then
     VFS.Include("scripts/lib_jw.lua")
 
     gaiaTeam = Spring.GetGaiaTeamID()
-	tutorialMapName = "Ravenholm"
-   startscript = ""
+    tutorialMapName = "Ravenholm"
+    startscript = "TODO get startscript from singleplayerf	"
 
     function gadget:Initialize()
 		if not Game.mapName == tutorialMapName then
