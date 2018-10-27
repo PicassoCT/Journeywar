@@ -41,27 +41,35 @@ A "Administrator, we two are abstracts, fullcitizens without bodies, assigned to
 D "Squeeze the chumming up whore button, if you need more redundant information. Anyway, the glorious war is over- it lasted 0.29 percent of the planets rotation. Now lets hand out some shinys for retarded mamal-heroism, and start reorganizing this hellhole-"
 A "We want to help-"
 D "No, we want to terrorize into obedience, then use a sock-puppet to liberate them from our regime into loyalty. "
-A "Lets start it slow, we need to errect some buildings to house the population. Select the citadell and build 3 highrises and a storage unit."
-D "Lets give you short history of life. It adapts to the circumstances, and if burdend with partial intelligence, drags the circumstances down into the mud with it. Thus results the loop deformation."
-A "Ignore him, he is a bitter old bastard. Lets just complete the goals - notice how our building vehicles are used up in the construction process."
+A "Lets start it slow, we need to errect some buildings to house the population. Select the citadell and build 3 highrises and a storage unit. All the ressources we dont store, we basically give to the empire."
+D "Well, at least the hearthole knows how to have fun with them. Lets give you a short history of life -or as i call it - retardation-physics. It adapts to the circumstances, and if burdend with partial intelligence, drags the circumstances down into the mud with it. Thus results on all worlds - a loop deformation."
+A "Ignore this part, he is a bitter old bastard. Lets just complete the goals - notice how our building vehicles are used up in the construction process."
+["energy_economy"]
 [WaitForObjectiveAccomplished]
 
-D "The loop deformation produces specialized adaption to the cycle of overpopulation, war, reconstitution, good-times. And its god-given, the law of guts, to stray from it, is heresy and any ruler to do so, is not in power for long. Good is to overproduce ressources against exponential growing consumption, evil is to prevent the loading of the civil-war-lottery with all the tickets they could print. We are evil, we are combine- and proud of it."
+D "The loop deformation produces specialized adaption to the cycle of overpopulation, war, reconstitution, good-times. And its god-given, the law of guts, to stray from it, is heresy and any ruler to do so, is not in power for long. Thus all the chieftains, are just allowed to act within the bounds of the deformation. Good is to overproduce ressources against exponential growing consumption, evil is to prevent the loading of the civil-war-lottery with all the tickets they could print. We are evil, we are combine- and proud of it."
 A "Justification, its necessary if you do monstrous things. Remember the bridge over the ridge of Kol'Thor 4, Daridov?"
 D "Lets build a Condepot, so we can replenish our Constructor Units. As shrine to holy Alynn!"
+["condepot_construction"]
 [WaitForObjectiveAccomplished]
 
 A "You dstroyed theire whole culture!"
 D "Theire culture consisted of a ritual civil war, since the dawn of time. We build a damn from bodies to theire temple and torched the whole affair. They now have peace, the quiet life. Im sure, theire children weap at night, because we took the chance to rot alive in some forsaken pit for the culture it brings."
 A "Notice, how the housed citizens allow us to recive security budget from the Universal Union." 
 D "Creative accounting from the comons, always a good way to stamp out meritocracy. We need to secure the streets- build sentrys and a watchtower"
-
+["first_defense"]
 [WaitForObjectiveAccomplished]
 
 A "You may have noticed your funds fluctuating slightly- this is due to the dark-matter-reactor in the citadel, creating and consuming resources at a weak rate in regular intervals."
 D "Also note that the construction Units sacrificed themselves, for the glorious Centrail Confederacy, ehm Universal Union. One can loose track, on all those brave new worlds-"
 
-TODO _REWRITE CONTINU
+D "We need more heavy to create elements, everything up from carbon. Create three metalldiggester, and send them to mine up in the north of the city. And some guards - just do it."
+A "Define Hyprocasy, deriding cultures while scanning there artifacts for a profit in the city. Or would be harvesting ressources for a black hole be closer to the truth?"
+D "Multiple viewpoints that contradict, might sound insane, but they allow you to see them coming."
+["metalldigester"]
+[WaitForObjectiveAccomplished]
+
+TODO _REWRITE CONTINUs
 
 
 
