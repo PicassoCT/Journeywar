@@ -9,24 +9,7 @@ S Overwatch Trooper Sy 		- former Navy Seal in the seven hour war, family taken 
 T 							- Targaroth, returned Sy from the city. Original Sy is now a abstract, body sold off in auction to personality collective.
 							
 							
-Objectives:
-- Implement a economic ressurection after the 7 hour war. Defeat patridiots.
-	- Build 3 Scumslums, ComDepot, MeStorage and a Materialdiggester
-	- Secure Streets with Sentrys
-	- Patroll with mtw
 
-Defend against Exobiotics Insurgence (Errect a Efence)
-	- Advanced Units
-	
-- Defend against rebell attack
-	- Contact rebells
-
--Headcrabshell Raveholm
-	- Smuggle people out
-
-- Administrator course 
-	Alynn tips to conceal your mind
-	
 	
 A"Easy, easy. Give the Host-body time to accomodate the mind. There may still be residual side-effects, like
 the synthetic delusions of beeing a player in a game of sorts. Take your time."
@@ -80,10 +63,26 @@ D "You heard the hysteric one, get moving."
 ["antlion_defense"]
 [WaitForObjectiveAccomplished]
 
-A "There is a option, we are legally forced to tell you."
-D "Yes, you can leave the citadell, and enter the combat area, with your life at stake."
+A "There is a option, we are legally bound to inform you."
+D "Yes, you can leave the citadell, and enter the combat area, with your life at stake, by building a commender-dock. I highly recommend it- to become anhero. Seriously, build a unit-factory, this job is not easier by having more holes to breath through."
+A "A airbase would be nice too."
+["unit_factory_air_base"]
+[WaitForObjectiveAccomplished]
 
+A "Now we can telport units in from other worlds at a moments notice. Time to relax and enjoy life."
+D "All is easier, with some virtual drug-habbits, isn't it. And im the disgusting one."
+A "This world will be peacefull."
+D "Yeah, 314 world is the charm. Go out there and cut that infestation out. I wish we could download this degenerate into a commender."
 
+["kill_antlions]
+[WaitForObjectiveAccomplished]
+
+S "Overwatch here. The anltions where driven into a stampede by local insurgents, working from a Research station in the mountains and a town called 'Ravenholm'. Requesting further instructions."
+D "Well, its hunting-season then. Drive them back, kill everyone in the research station. Use artillery to shell the headcrab out of the town. At least this useless angel of virtual virtue is in her stupor far away."
+["shell_ravenholm"]
+[WaitForObjectiveAccomplished]
+
+D "Once you shell a town, you have to expect zombies."
 
 
 TODO_REWRITE 
@@ -91,8 +90,6 @@ TODO_REWRITE
 
 
 
-A"We could use a break right now!"
-D"Not going to happen, we need to secure this whole affair. I recommend building sentrys and a farcaster. That way we can teleport troops in should need.."
 A"We wont need that."
 D"Yeah, 314 world is the charm.
 [ObjectiveAccomplished]
