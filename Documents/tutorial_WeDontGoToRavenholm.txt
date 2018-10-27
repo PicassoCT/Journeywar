@@ -62,6 +62,9 @@ D "Creative accounting from the comons, always a good way to stamp out meritocra
 
 A "You may have noticed your funds fluctuating slightly- this is due to the dark-matter-reactor in the citadel, creating and consuming resources at a weak rate in regular intervals."
 D "Also note that the construction Units sacrificed themselves, for the glorious Centrail Confederacy, ehm Universal Union. One can loose track, on all those brave new worlds-"
+A "The citadel houses shield-generators, which can be used to protect a settlement, against intruders and enviromental hazards. It is - very expensive to use them. Give them a try."
+["activate_shield"]
+[WaitForObjectiveAccomplished]
 
 D "We need more heavy to create elements, everything up from carbon. Create three metalldiggester, and send them to mine up in the north of the city. And some guards - just do it."
 A "Define Hyprocasy, deriding cultures while scanning there artifacts for a profit in the city. Or would be harvesting ressources for a black hole be closer to the truth?"
@@ -69,15 +72,24 @@ D "Multiple viewpoints that contradict, might sound insane, but they allow you t
 ["metalldigester"]
 [WaitForObjectiveAccomplished]
 
-TODO _REWRITE CONTINUs
+D "Trouble steers outside the city.
+S "Overwatch reporting! We have multiple exobiotic infestations closing in on the city fronteer. Requesting backup!"
+D "The exobiotic pest, plaguing other centrail-dimensions, has already arrived, well hidden from our view- as just another form of hostile alien wildlife to migrate from the border dimensions."
+A "Antlions! We need defensetowers, and restrictors deployed as thumpers, to drive them back."
+D "You heard the hysteric one, get moving."
+["antlion_defense"]
+[WaitForObjectiveAccomplished]
+
+A "There is a option, we are legally forced to tell you."
+D "Yes, you can leave the citadell, and enter the combat area, with your life at stake."
 
 
 
-A"<We need a construction depot>, to serve as hub and support for further effort. Please use shift to queue that build order in with your citadel."
-[ObjectiveAccomplished]
 
-D"Anything we do not use, is usually given back to the empire, never to be seen again. <We could use a Storage building>."
-[ObjectiveAccomplished]
+TODO_REWRITE 
+
+
+
 
 A"We could use a break right now!"
 D"Not going to happen, we need to secure this whole affair. I recommend building sentrys and a farcaster. That way we can teleport troops in should need.."
