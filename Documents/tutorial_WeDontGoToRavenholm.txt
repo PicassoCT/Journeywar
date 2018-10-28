@@ -90,5 +90,5 @@ I want you to escort this truck with a men named grigori to ravenholm. He has pr
 D "A suprisingly large part seems to have escaped. Which is good, because they never mattered in the first place. 
    What mattered is finally having caught a traitor, who is in for mandatory memory replacement. Alynn, do you have any final words?"
 A "Long life the resistance?"
-D "What a suprise- we suspected you, ever since the vortigaunt uprising. But this here- was lousy even by your standards. Take her away."
-D "Administrator. I think we all learned a lesson here. Bring me those who escaped. All of them."
+D "Not a suprise- we suspected you, ever since the vortigaunt uprising. But to throw ones existence away, for so little a reward, i would almost call it suicide. Send her to the city for trial."
+D "As for you Adminis-traitor. I think we all learned a lesson here. I want you to find and bring me a men called Dr. Breen."
