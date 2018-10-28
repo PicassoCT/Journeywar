@@ -6,7 +6,7 @@ D Senator Daridov		 	- Exiled from his city-family, hates the slow-lifes and all
 A Senator Alynn     		- Wants to observe your performance, secretly in a org that supports sentient life. Avoids the city by mission hopping.
 				
 
-	
+["start"]	
 A"Easy, easy. Give the Host-body time to accomodate the mind. There may still be residual side-effects, like
 the delusions of beeing a player in a game of sorts. Take your time."
 

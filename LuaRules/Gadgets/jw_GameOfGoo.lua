@@ -26,12 +26,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	x_GridSize,z_GridSize = math.ceil(Game.mapSizeX/GooSizeSquare)-1, math.ceil(Game.mapSizeZ/GooSizeSquare)-1
 
 	
-	grid_instance={}	
-	
+local	grid_instance={}	
+	total=0
 	local cell_alive = {alive = true, unitID = nil}
 	local cell_dead = {alive = false}
 	function random_cell (cell_index_x, cell_index_z)
-		if math.random(0,100) > 75 then 
+		if math.random(0,100) < 35 and total < 16 then 
+		total= total+1
 			local liveCellCopy = 	cell_alive
 			x,z = cell_index_x*GooSizeSquare, cell_index_z * GooSizeSquare
 			liveCellCopy.unitID = Spring.CreateUnit("greygoo",x,0,z, 1, gaiaTeam)
@@ -43,13 +44,17 @@ if (gadgetHandler:IsSyncedCode()) then
 
 	
 	function next_state (boolAlive, alive_neighbours, cell_index_x, cell_index_z)
-	 if boolAlive then
+	 if boolAlive == true then
 		Spring.Echo("Next State called for alive cell with "..alive_neighbours.." alive neighbours")
 			if alive_neighbours >=2 and alive_neighbours <= 3 then
 				return  cell_alive, true
 			else
 				if grid_instance[cell_index_x][cell_index_z].unitID then
-					destroyUnitConditional(grid_instance[cell_index_x][cell_index_z].unitID, true, false)	
+					Spring.Echo("next_state::Destroy Alive Cell")
+					boolUnitDead = Spring.GetUnitIsDead(grid_instance[cell_index_x][cell_index_z].unitID)
+					if boolUnitDead and boolUnitDead == false then					
+						Spring.DestroyUnit(grid_instance[cell_index_x][cell_index_z].unitID, true, false)	
+					end
 				end
 				return  cell_dead, false
 			end
@@ -63,6 +68,7 @@ if (gadgetHandler:IsSyncedCode()) then
 				return  cell_dead, false
 			end	
 		end
+		return cell_dead, false
 	end
 	
 
@@ -91,11 +97,12 @@ if (gadgetHandler:IsSyncedCode()) then
 	function evolve()
 		local new_grid = {}
 		local boolAtleastOneAlive=false
-		for row_i, row in ipairs(grid_instance) do
+		for row_x, row in ipairs(grid_instance) do
 			new_grid[#new_grid+1]= {}
-			for cell_i, cell in ipairs(row) do
-				new_cell, stillAlive = next_state(grid_instance[row_i][cell_i].alive, count_live_neighbours(grid_instance, cell_i, row_i),row_i, cell_i )
-				new_grid[row_i][cell_i]= new_cell
+			for col_z, cell in ipairs(row) do
+				assert(grid_instance[row_x][col_z])
+				new_cell, stillAlive = next_state(grid_instance[row_x][col_z].alive , count_live_neighbours(grid_instance, row_x, col_z),row_x, col_z )
+				new_grid[row_x][col_z]= new_cell
 				if stillAlive == true then boolAtleastOneAlive = true end
 			end
 		end
