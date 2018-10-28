@@ -124,6 +124,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function gadget:GameFrame(frame)
 		if frame > 0 and frame % tickEveryNthFrame == 0 then
+		Spring.Echo("GameOfGoo Update")
 			updateGameOfGoo(frame)
 		end
 	end
