@@ -195,8 +195,8 @@ if (gadgetHandler:IsSyncedCode()) then
 	
 	function missionStateMachine(frame, framesSinceLastCall)
 		for objective, active in pairs(currentlyActiveObjective) do
-			if active == true then
-				currentlyActiveObjective[objective] = objectives[objectiv](frame, framesSinceLastCall)
+			if active == true  then
+				currentlyActiveObjective[objective] = objectives[objective](frame, framesSinceLastCall)
 			end
 		end
 		for objective, active in pairs(currentlyActiveObjective) do

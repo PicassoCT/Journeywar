@@ -18,45 +18,46 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("scripts/lib_UnitScript.lua")
 	VFS.Include("scripts/lib_jw.lua")
 	gaiaTeam = Spring.GetGaiaTeamID()
-
+	
 	GooSizeSquare= 280
 	tickEverynthSecond= 1
 	tickEveryNthFrame= 30*tickEverynthSecond
 	
 	x_GridSize,z_GridSize = math.ceil(Game.mapSizeX/GooSizeSquare)-1, math.ceil(Game.mapSizeZ/GooSizeSquare)-1
-
 	
-local	grid_instance={}	
+	
+	local	grid_instance={}	
 	total=0
 	local cell_alive = {alive = true, unitID = nil}
 	local cell_dead = {alive = false}
+	
 	function random_cell (cell_index_x, cell_index_z)
-		if math.random(0,100) < 35 and total < 16 then 
-		total= total+1
+		if math.random(0,100) < 35 and math.random(0,100) % 2 == 0 then --and total < 16 then 
+			total= total+1
 			local liveCellCopy = 	cell_alive
 			x,z = cell_index_x*GooSizeSquare, cell_index_z * GooSizeSquare
 			liveCellCopy.unitID = Spring.CreateUnit("greygoo",x,0,z, 1, gaiaTeam)
 			return liveCellCopy, true
 		else 
-			return cell_dead , false
+			local deadCellCopy = cell_dead
+			return deadCellCopy , false
 		end
 	end
-
 	
-	function next_state (boolAlive, alive_neighbours, cell_index_x, cell_index_z)
-	 if boolAlive == true then
-		Spring.Echo("Next State called for alive cell with "..alive_neighbours.." alive neighbours")
-			if alive_neighbours >=2 and alive_neighbours <= 3 then
-				return  cell_alive, true
+	
+	function next_state (boolAlive, alive_neighbours, cell_index_x, cell_index_z, orgCell)
+		if boolAlive == true then
+			Spring.Echo("Next State called for alive cell with "..alive_neighbours.." alive neighbours")
+			if alive_neighbours ==2 or alive_neighbours == 3 then
+				return orgCell, true
 			else
 				if grid_instance[cell_index_x][cell_index_z].unitID then
-					Spring.Echo("next_state::Destroy Alive Cell")
-					boolUnitDead = Spring.GetUnitIsDead(grid_instance[cell_index_x][cell_index_z].unitID)
-					if boolUnitDead and boolUnitDead == false then					
-						Spring.DestroyUnit(grid_instance[cell_index_x][cell_index_z].unitID, true, false)	
-					end
+					Spring.Echo("next_state::Destroy Alive Cell")					
+					Spring.DestroyUnit(grid_instance[cell_index_x][cell_index_z].unitID, false, false)	
+					
 				end
-				return  cell_dead, false
+				local deadCellCopy = cell_dead
+				return deadCellCopy, false
 			end
 		else
 			if alive_neighbours == 3 then
@@ -65,13 +66,13 @@ local	grid_instance={}
 				liveCellCopy.unitID = Spring.CreateUnit("greygoo",x,0,z, 1, gaiaTeam)
 				return liveCellCopy, true
 			else
-				return  cell_dead, false
+				return orgCell, false
 			end	
 		end
-		return cell_dead, false
+		return orgCell, false
 	end
 	
-
+	
 	
 	
 	function count_live_neighbours(grid, x, y)
@@ -101,7 +102,7 @@ local	grid_instance={}
 			new_grid[#new_grid+1]= {}
 			for col_z, cell in ipairs(row) do
 				assert(grid_instance[row_x][col_z])
-				new_cell, stillAlive = next_state(grid_instance[row_x][col_z].alive , count_live_neighbours(grid_instance, row_x, col_z),row_x, col_z )
+				new_cell, stillAlive = next_state(grid_instance[row_x][col_z].alive , count_live_neighbours(grid_instance, row_x, col_z),row_x, col_z, grid_instance[row_x][col_z] )
 				new_grid[row_x][col_z]= new_cell
 				if stillAlive == true then boolAtleastOneAlive = true end
 			end
@@ -110,28 +111,28 @@ local	grid_instance={}
 		return boolAtleastOneAlive
 	end
 	
-
+	
 	function random_grid(x, y)
-	grid = {}
+		grid = {}
 		
 		for x_i = 1,x,1 do
 			grid[x_i]={}
 			for y_i = 1,y,1 do
 				grid[x_i][y_i]= random_cell(x_i,y_i)
-		
+				
 			end
 		end
 		return grid
 	end
 	
-
+	
 	function gadget:Initialize()
 		grid_instance = random_grid(x_GridSize,z_GridSize)
 	end
 	
 	function gadget:GameFrame(frame)
 		if frame > 0 and frame % tickEveryNthFrame == 0 then
-		Spring.Echo("GameOfGoo Update")
+			Spring.Echo("GameOfGoo Update")
 			updateGameOfGoo(frame)
 		end
 	end
@@ -145,14 +146,14 @@ local	grid_instance={}
 		if (unitDefID == UnitDefNames["greygoo"].id) then
 			for x=1,x_GridSize do
 				for z=1,z_GridSize do
-					if grid_instance[x][z].unitID and  grid_instance[x][z].unitID == unitID then
+					if grid_instance[x][z].unitID and grid_instance[x][z].unitID == unitID then
 						grid_instance[x][z] = cell_dead
 					end
 				end
 			end
 		end 
 	end 
-
+	
 	
 	function gadget:Shutdown()
 		Spring.Echo("Greygoo Gadget Shutting down")
