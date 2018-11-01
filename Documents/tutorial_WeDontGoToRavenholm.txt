@@ -33,7 +33,11 @@ D "Lets build a Condepot, so we can replenish our Constructor Units. And i fondl
 [WaitForObjectiveAccomplished]
 
 A "You dstroyed theire whole culture!"
-D "Theire culture consisted of a ritual civil war, since the dawn of time. We build a damn from frozzen bodies to theire temple and torched the whole sorry affair. They now have peace, the quiet life. Im sure, theire children weap at night, because we took the chance to rot alive in some forsaken pit for the culture it brings."
+D "A  ritual civil war, with all ressources devoted to kepp the great wheel of devolution 
+squeezing them harder into the circumstances. Yes, i build a damn 
+from frozzen bodies to theire holy city  and torched the whole sorry affair. Exchanged a 
+mountain of lives to avoid a tectonic plate of suffering. Im sure, theire children weap at 
+night, because we took the chance to rot alive in some forsaken pit for the culture it brings."
 A "Notice, how the housed citizens allow us to recive security budget from the Universal Union." 
 D "Notice the casual avoidance- when challenged with facts. Creative accounting from the comons, the end of all meritocracy - and it works under constant surveilance. We need to secure the streets- build sentrys and a watchtower"
 ["first_defense"]

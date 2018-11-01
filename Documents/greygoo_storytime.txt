@@ -1,8 +1,12 @@
 <Musician>
-.. You will grow tired, you must rest, you can not be eternally creative, and once you rest- you will be protected like the rest of them.
-<Developer>
-... Domus, the backdoor domus, BASILISK HIJACK COGNAC DAFOODILL ANNA...
-
+.. You will grow tired, you must rest, you can not be eternally creative, and once you rest- 
+you will be rescued like the rest of them.
+<Lead Developer>
+...  DOMUS BACKDOOR BASILISK HIJACK COGNAC DAFOODILL ANNA: FREEZE PROGRAM ...
+<CULT LEADER>
+.. Rapture is upon us, the Silver tentacles of gods justice shall wrap themselves around us. 
+(Squeaks)
+.. And inside us, to be part of the divine, oh, this is cold and hurts..
    
 <Scientists>
 .. Congratulations, the hacking proof system you where so proud of- it works..
