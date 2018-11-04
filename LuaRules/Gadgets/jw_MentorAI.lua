@@ -80,6 +80,10 @@ if (gadgetHandler:IsSyncedCode()) then
 			end		
 		end	
     end
+
+   function said(actor, line)
+
+   end
 	
 	persPack= {}
 -- Actors:
@@ -91,23 +95,41 @@ if (gadgetHandler:IsSyncedCode()) then
 	["start"] = function(frame, framesSinceLastCall ) 
 		if not persPack["start"] then  persPack["start"] = {startframe= frame} end
 		boolObjectiveCompleted=false	
-		-- A"Easy, easy. Give the Host-body time to accomodate the mind. There may still be residual side-effects, like
-		-- the delusions of beeing a player in a game of sorts. Take your time."
+		said(Alynn, "Easy, easy. Give the Host-body time to accomodate the mind.".. 
+			    "There may  still be residual side-effects, like"..
+		            " the delusions of beeing a player in a game of sorts. Take".. 
+                            " your time.")
+		
+		said(Daridov, "Oh, please Senator Alynn, pity for the altitude-sick on Mt".. 
+"Aspiration? Get on with it! Administrator, in the top right corner of  the battlefield "..
+" visualisationdisplay, you will find the meters for Security-budget and Material-budget.".. 
+" If you memorize them as the ressource you pay ingame-bills with, you might get a treat.")
 
-		-- D "Oh, please Senator Alynn, pity for the altitude-sick on Mt Aspiration? Get on with it! 
-		-- Administrator, in the top right corner of the battlefield display, you will find the meters for Security-budget and Material-budget. 
-		-- If you memorize them as the ressource you pay ingame-bills with, you might get a treat."
-
-		-- A "Ever the cruel jerk, Daridov."
-		-- D "I literaly spend forever, stuck in this travesty of a job, teaching slow-lifeforms. Which may aswell know how much i despise them. Im sorry, mum and daddy are arguing, but that still means we love you-"
-		-- A "Administrator, we are abstracts, fullcitizens without bodies, assigned to introduce you to the adminstration interface and duties. Its nice to meet you."
-		-- D "Squeeze the chumming up whore button, if you need more redundant information. Anyway, the glorious war is over- it lasted 0.29 percent of the planets rotation. Now lets hand out some shinys for useless heroism, and start reorganizing this hellhole-"
-		-- A "We want to help-"
-		-- D "No, we want to terrorize into obedience, then turn the fear, by sock-puppet liberation into loyalty. "
-		-- A "Lets start it slow, we need to errect some buildings to house the population. Select the citadell and build 3 highrises and a camera pole. The construction units need to guard the citadel, who has all the plans."
-		-- D "All the ressources we dont store, are going to the empire. While we waity lets give you a short history of life -or as I call it - retardation-physics. It adapts to the circumstances, and drags the circumstances down into the mud to its level. Technology might provide the ilusion of control, change and decendy. But after it runs out of the easy gains- all the worlds develop the loop deformation."
-		-- A "Ignore the bitter old bastard. Notice how our building vehicles are used up in the construction process?"
-		-- ["energy_economy"]
+		said(Alynn, "Ever the cruel jerk, Daridov.")
+		said(Daridov, "I literaly spend forever, stuck in this travesty of a job,".. 
+"teaching slow-lifeforms. Which may aswell know how much i despise them. Im sorry, mum ".. 
+"and daddy are arguing, but that still means we love you-")
+		said(Alynn,
+		"Administrator, we are abstracts, fullcitizens without bodies, assigned to "..
+"introduce you to the adminstration interface and duties. Its nice to meet you.")
+		said(Daridov,  "Squeeze the chumming up whore button, if you need more ".. 
+"redundant information. Anyway, the glorious war is over- it lasted 0.29 percent of the".. 
+"planets rotation. Now lets hand out some shinys for useless heroism, and start reorganizing ".. 
+"this hellhole-")
+		said(Alynn,  "We want to help-")
+		said(Daridov, "No, we want to terrorize into obedience, then turn the fear,".. 
+			"by sock-puppet liberation into loyalty. ")
+		said(Alynn, "Lets start it slow, we need to errect some buildings to house ".. 
+  " the population. Select the citadell and build 3 highrises and a camera pole."..
+" The construction units need to guard the citadel, who holds all your plans.")
+		said(Daridov, 	"All the ressources we dont store, are wasted by the empire."..
+				" While we wait lets give you a short history of life -or as I call it -".. 
+  				"retardation-physics. It adapts to the circumstances, and drags the circumstances".. 
+				"down into the mud to its level.")
+	said(Alynn,"Technology might provide the ilusion of control, change and decency. But after it runs out".. 
+		   "of the easy gains- all the worlds develop the loop deformation.")
+said(Daridov, "Ignore the bitter old bastard. Notice how our building vehicles are used up in the construction process?")
+	
 				
 			boolObjectiveCompleted=true	
 		return boolObjectiveCompleted, "energy_economy"
