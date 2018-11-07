@@ -306,6 +306,21 @@ function getEggTypeTable(UnitDefNames)
 return retTab
 end
 
+function getScrapYardFeatures(FeatureDefNames)
+assert(FeatureDefNames)
+return {
+	[FeatureDefNames["cInfantryCorpse"].id]=true,
+	[FeatureDefNames["jbiocorpse"].id]=true,
+	[FeatureDefNames["bug"].id]=true,
+	[FeatureDefNames["honeypot"].id]=true,
+	[FeatureDefNames["jInfantryCorpse"].id]=true,
+	[FeatureDefNames["exconroach"].id]=true,
+	[FeatureDefNames["jskincorpse"].id]=true,
+	[FeatureDefNames["bgcorpse"].id]=true
+	}
+
+end
+
 function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     retTab = {
         [UnitDefNames["bg"].id] = UnitDefNames["jskineggnogg"].id,
@@ -489,6 +504,13 @@ function getCreeperTypeTable()
     return mergeDict( getJourneyCreeperTypeTable(),getCentrailCreeperTypeTable())
 end
 
+function getScrapYardDecalNames() 
+	return {
+	"battlefieldscrapdeca1",
+	"battlefieldscrapdeca2",
+	}
+
+end
 
 function getAbstractTypes(UnitDefNamesContext)
 	if not UnitDefNames then UnitDefNames = UnitDefNamesContext end

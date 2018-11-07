@@ -11,7 +11,7 @@ function gadget:GetInfo()
 		license = "GNU GPL, v2 or later",
 		layer = 0,
 		version = 1,
-		enabled = modOptions.minimission ==true
+		enabled = true
 	}
 end
 
@@ -68,6 +68,13 @@ if (gadgetHandler:IsSyncedCode()) then
 	--contains StartPositions per Team
 	--1x--2z
 	--3 sideInfo
+	
+		function gadget:Initialize()
+		if (not modOptions.minimission or modOptions.minimission ~= true)  then
+			Spring.Echo("Minimissions not active")
+			gadget:Shutdown()
+		end
+	end
 
 	function addMission1()
 		MissionFunctionTable[1]={}

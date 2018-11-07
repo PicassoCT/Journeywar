@@ -62,10 +62,18 @@ local options =
    
     },
   },
-     {
+   {
 	key		= "minimission",
 	name	= "Activate Minimissions",
 	desc	= "Activates In-Game Minimissions",
+	section	= 'modifiers',
+	type	= "bool",
+	def		= false,
+  },
+    {
+	key		= "boneyard",
+	name	= "Boneyard Mode",
+	desc	= "Dead Units Terraform the Terrain",
 	section	= 'modifiers',
 	type	= "bool",
 	def		= false,
