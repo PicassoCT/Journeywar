@@ -13,8 +13,8 @@ local barrelmovespeed = 5
 local SIG_WALK = 1 --signal for the walk animation thread
 local SIG_AIM = 2 --signal for the weapon aiming thread
 local boolSecondaryWeapon = false
-local boolReadyToFire = true
-local boolReadyToFire2 = true
+local boolReloadedAndReadyToFire = true
+local boolReloadedAndReadyToFire2 = true
 local boolSoundPlaying = false
 
 function script.Create()
@@ -78,12 +78,40 @@ function playChareUpSound()
     boolPlasmaReady = true
 end
 
-function script.AimWeapon2(heading, pitch)
+boolTimedOut=false
+function timeOutThread()
+boolTimedOut=false
+Sleep(7000)
+	if boolFiringDemanded== false then boolTimedOut = true end
 
-    if boolReadyToFire2 == true and boolSecondaryWeapon == true then
-        SetUnitValue(COB.MAX_SPEED, 1)
-        Move(artclaws, y_axis, -7, 3)
-        WaitForMove(artclaws, y_axis)
+end
+
+boolFiringDemanded = false
+boolInFiringPosition = false
+function speedWhileFiring()
+setSpeedEnv(unitID,1.0)
+	while true do
+	Sleep(250)
+		if boolFiringDemanded ==true and boolReloadedAndReadyToFire == false and boolReloadedAndReadyToFire == false then
+			Move(artclaws, y_axis, -7, 3)
+			WaitForMove(artclaws, y_axis)
+			setSpeedEnv(unitID,0.0)
+			boolInFiringPosition= true
+			StartThread(timeOutThread)
+		end
+		
+		if boolFiringDemanded == false and boolInFiringPosition== true and boolTimedOut == true then
+			Move(artclaws, y_axis, 0, 3)
+			WaitForMove(artclaws, y_axis)
+			setSpeedEnv(unitID,1.0)
+			boolInFiringPosition = false	
+		end
+	end
+end
+
+function script.AimWeapon2(heading, pitch)
+	  boolFiringDemanded = true
+    if boolInFiringPosition == true and boolReloadedAndReadyToFire2 == true and boolSecondaryWeapon == true then       
 
         if boolSoundOnlyOnce == false then
             boolSoundOnlyOnce = true
@@ -127,7 +155,8 @@ end
 function script.FireWeapon2()
     boolSoundOnlyOnce = false
     boolPlasmaReady = false
-    boolReadyToFire2 = false
+    boolReloadedAndReadyToFire2 = false
+	 boolFiringDemanded= false
 
     Move(artbarrel3, y_axis, -17, 45)
     WaitForMove(artbarrel3, y_axis)
@@ -148,8 +177,8 @@ function script.FireWeapon2()
     --WaitforMove(artbarrel3,y_axis)
     Move(artclaws, y_axis, 0, 6)
     WaitForMove(artclaws, y_axis)
-    boolReadyToFire2 = true
-    SetUnitValue(COB.MAX_SPEED, 163833)
+    boolReloadedAndReadyToFire2 = true
+    
 end
 
 ----------------------------------------------------------------------------------
@@ -167,12 +196,9 @@ end
 
 
 function script.AimWeapon1(heading, pitch)
-
-    if boolReadyToFire == true and boolSecondaryWeapon == false then
-        SetUnitValue(COB.MAX_SPEED, 1)
-        Move(artclaws, y_axis, -7, 3)
-        WaitForMove(artclaws, y_axis)
-
+		boolFiringDemanded = true
+    if boolInFiringPosition == true and  boolReloadedAndReadyToFire == true and boolSecondaryWeapon == false then
+    
         return true
     end
 
@@ -183,7 +209,8 @@ end
 
 
 function script.FireWeapon1()
-    boolReadyToFire = false
+    boolReloadedAndReadyToFire = false
+	 boolFiringDemanded= false
     Show(flare01)
     Explode(flare01, SFX.FIRE)
     Hide(flare01)
@@ -206,6 +233,5 @@ function script.FireWeapon1()
     --WaitforMove(artbarrel3,y_axis)
     Move(artclaws, y_axis, 0, 6)
     WaitForMove(artclaws, y_axis)
-    boolReadyToFire = true
-    SetUnitValue(COB.MAX_SPEED, 163833)
+    boolReloadedAndReadyToFire = true
 end

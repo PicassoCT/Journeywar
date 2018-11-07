@@ -34,6 +34,11 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
     timeTable = { soloGo = 0, backgroundGo = 0 }
 
     while true do
+		T= Spring.GetSelectedUnits()
+		boolSelected= false
+		process(T, function(id) if id == unitID then boolSelected = true end end)
+		
+		if boolSelected == true then 
         if GG.UnitDefSoundLock[unitdef] <= 0 then
             GG.UnitDefSoundLock[unitdef] = 1
             openerIndex = iRand(1, #dataTable.opener)
@@ -85,6 +90,7 @@ function playSoundScape_OS(path, dataTable, restIntervallMin, restIntervallMax, 
         else
             Sleep(500)
         end
+     end
 
         rest = iRand(restIntervallMin, restIntervallMax)
         Sleep(rest)
