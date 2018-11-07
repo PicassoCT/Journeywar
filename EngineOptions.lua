@@ -64,21 +64,28 @@ local options =
   },
    {
 	key		= "minimission",
-	name	= "Activate Minimissions",
-	desc	= "Activates In-Game Minimissions",
+	name	= "Minimissions mode",
+	desc	= "Activates In-Game Minimissions with objectives to fullfill during a Multiplayer/Bot-Game",
 	section	= 'modifiers',
 	type	= "bool",
 	def		= false,
   },
     {
 	key		= "boneyard",
-	name	= "Boneyard Mode",
-	desc	= "Dead Units Terraform the Terrain",
+	name	= "Boneyard mode",
+	desc	= "Dead Units Remains accumulate - terraforming the Terrain",
+	section	= 'modifiers',
+	type	= "bool",
+	def		= false,
+  }, 
+  {
+	key		= "gameofthrones",
+	name	= "Game of Thrones mode",
+	desc	= "Killing the enemy ComEnder or Abyss results in getting all his troops",
 	section	= 'modifiers',
 	type	= "bool",
 	def		= false,
   },
- 
   {
     key    = 'StartMetal',
     name   = 'Starting metal',

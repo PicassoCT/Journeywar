@@ -32,7 +32,7 @@ if gadgetHandler:IsSyncedCode() then
 --------------------------------------------------------------------------------
 
 	function gadget:Initialize()
-		if ( modOptions.boneyard == nil or modOptions.boneyard ~= true)  then
+		if ( Spring.GetModOptions().boneyard ~= "l")  then
 			gadget:Shutdown()
 		end
 	end

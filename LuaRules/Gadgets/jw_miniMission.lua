@@ -70,7 +70,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--3 sideInfo
 	
 		function gadget:Initialize()
-		if (not modOptions.minimission or modOptions.minimission ~= true)  then
+		if ( Spring.GetModOptions().minimission ~= "l")  then
 			Spring.Echo("Minimissions not active")
 			gadget:Shutdown()
 		end
