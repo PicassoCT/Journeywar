@@ -28,6 +28,7 @@ if (not gadgetHandler:IsSyncedCode()) then
     return false
 end
 
+
 local modOptions = Spring.GetModOptions()
 
 -- teamDeathMode possible values: "none", "teamzerounits" , "allyzerounits"
@@ -213,7 +214,7 @@ function gadget:GameFrame(frame)
 end
 
 function getAllUnitOfType(teamID, typeTable, baseTable)
-    Spring.Echo("JWGAMENDGADET::getAllUnitOfType")
+
     TlikeTable = {}
     if teamID then
         TlikeTable = {}
@@ -266,7 +267,7 @@ function sendUnitsToLaunchables(teamID)
 end
 
 function launchLaunchables(teamID, EscapeTable)
-filterTable = {}
+						filterTable = {}
                 filterTable[UnitDefNames["jmovingfac1"].id] = true
                 filterTable[UnitDefNames["jmovingfac2"].id] = true
                 filterTable[UnitDefNames["jmovingeggstack"].id] = true

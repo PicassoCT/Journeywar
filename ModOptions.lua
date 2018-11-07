@@ -39,22 +39,7 @@ local options = {
   },
 
 
-   {
-	key		= "minimission",
-	name	= "Activate Minimissions",
-	desc	= "Activates In-Game Minimissions",
-	section	= 'gamemode',
-	type	= "bool",
-	def		= false,
-  },
-  {
-	key		= "gameofthrones",
-	name	= "Activate Game of Thrones mode",
-	desc	= "Killing the enemy ComEnder or Abyss results in getting all his troops",
-	section	= 'gamemode',
-	type	= "bool",
-	def		= false,
-  },
+
  
     {
     key    = 'waterlevel',

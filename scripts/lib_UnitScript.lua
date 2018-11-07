@@ -788,6 +788,10 @@ function transferUnitStatusToUnit(unitID, targetID)
 	
 	Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
+
+function transferUnitTeam(id, targetTeam)
+	Spring.TransferUnit(id, targetTeam)
+end
 --> Create a Unit at Piece of another Unit
 function createUnitAtPiece(unitID, typeID, Piece, team)
 	x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(unitID, Piece)
@@ -1452,6 +1456,20 @@ end
 --======================================================================================
 --Section: Syntax additions and Tableoperations
 --======================================================================================
+function toBool(val)
+  local t = type(val)
+  if (t == 'nil') then
+    return false
+  elseif (t == 'boolean') then
+    return val
+  elseif (t == 'number') then
+    return (val ~= 0)
+  elseif (t == 'string') then
+    return ((val ~= '0') and (val ~= 'false'))
+  end
+  return false
+end
+
 
 function axToKey(axis)
 	if axis == 1 then return "x" end
