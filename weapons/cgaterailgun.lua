@@ -21,7 +21,7 @@ local weaponDef = {
     tolerance = 1000,
     tracks = false,
     Turnrate = 16000,
-    collideFriendly = true,
+
 
     --- -APPEARANCE
     model = "CGateProj.s3o",
@@ -35,7 +35,11 @@ local weaponDef = {
     cylinderTargeting = 50.0,
     avoidFeature = false,
     avoidFriendly = false, --artillery doesent know friend or foe, only worthwile targets
-
+	 avoidGround  = false,
+	 collideFriendly = false,
+	 collideFirebase  = false,
+	 collideNeutral = false,
+	 
 
     --commandfire=true,
 
