@@ -13,14 +13,16 @@ local barrelmovespeed = 5
 local SIG_WALK = 1 --signal for the walk animation thread
 local SIG_AIM = 2 --signal for the weapon aiming thread
 local boolSecondaryWeapon = false
-local boolReloadedAndReadyToFire = true
-local boolReloadedAndReadyToFire2 = true
+local boolHCReloadedAndReadyToFire = true
+local boolPlasmaReloadedAndReadyToFire = true
 local boolSoundPlaying = false
 
 function script.Create()
     --Spring.Echo "This was a Triumph! Im making a note here huge Success!"
     Hide(flare01)
     Hide(flare02)
+	StartThread(reloadHeadCrabs)
+	StartThread(speedManager)
 end
 
 function script.Killed(recentDamage, _)
@@ -72,7 +74,7 @@ end
 unitdef = Spring.GetUnitDefID(unitID)
 boolSoundOnlyOnce = false
 boolPlasmaReady = false
-function playChareUpSound()
+function playChargeUpSound()
     StartThread(PlaySoundByUnitDefID, unitdef, "sounds/cart/lnduo.wav", 1, 5000, 1, 0)
     Sleep(5000)
     boolPlasmaReady = true
@@ -82,17 +84,18 @@ boolTimedOut=false
 function timeOutThread()
 boolTimedOut=false
 Sleep(7000)
-	if boolFiringDemanded== false then boolTimedOut = true end
+	if boolFiringRequested== false then boolTimedOut = true end
 
 end
 
-boolFiringDemanded = false
+boolFiringRequested = false
 boolInFiringPosition = false
-function speedWhileFiring()
-setSpeedEnv(unitID,1.0)
+function speedManager()
+	setSpeedEnv(unitID,1.0)
+
 	while true do
 	Sleep(250)
-		if boolFiringDemanded ==true and boolReloadedAndReadyToFire == false and boolReloadedAndReadyToFire == false then
+		if boolFiringRequested == true and boolHCReloadedAndReadyToFire == false or boolPlasmaReloadedAndReadyToFire == false then
 			Move(artclaws, y_axis, -7, 3)
 			WaitForMove(artclaws, y_axis)
 			setSpeedEnv(unitID,0.0)
@@ -100,7 +103,7 @@ setSpeedEnv(unitID,1.0)
 			StartThread(timeOutThread)
 		end
 		
-		if boolFiringDemanded == false and boolInFiringPosition== true and boolTimedOut == true then
+		if boolFiringRequested == false and boolInFiringPosition== true and boolTimedOut == true then
 			Move(artclaws, y_axis, 0, 3)
 			WaitForMove(artclaws, y_axis)
 			setSpeedEnv(unitID,1.0)
@@ -109,15 +112,15 @@ setSpeedEnv(unitID,1.0)
 	end
 end
 
-function script.AimWeapon2(heading, pitch)
-	  boolFiringDemanded = true
-    if boolInFiringPosition == true and boolReloadedAndReadyToFire2 == true and boolSecondaryWeapon == true then       
-
         if boolSoundOnlyOnce == false then
             boolSoundOnlyOnce = true
-            StartThread(playChareUpSound)
+            
         end
 
+		
+function script.AimWeapon2(heading, pitch)
+	boolFiringRequested = true
+    if boolInFiringPosition == true and boolPlasmaReloadedAndReadyToFire == true and boolSecondaryWeapon == true then       
         return boolPlasmaReady
     end
 
@@ -148,15 +151,11 @@ function script.StopMoving()
     boolStop = true
 end
 
-
-
-
-
-function script.FireWeapon2()
-    boolSoundOnlyOnce = false
+function plasmaReload()
+	
     boolPlasmaReady = false
-    boolReloadedAndReadyToFire2 = false
-	 boolFiringDemanded= false
+    boolPlasmaReloadedAndReadyToFire = false
+	boolFiringRequested= false
 
     Move(artbarrel3, y_axis, -17, 45)
     WaitForMove(artbarrel3, y_axis)
@@ -167,18 +166,23 @@ function script.FireWeapon2()
 
     --Sleep(400)
     --RestorePieces()
-    Move(artclaws, y_axis, 0, 6)
-    WaitForMove(artclaws, y_axis)
+	StartThread(playChargeUpSound)
     Move(artbarrel, y_axis, 0, barrelmovespeed)
     WaitForMove(artbarrel, y_axis)
     Move(artbarrel2, y_axis, 0, barrelmovespeed)
     WaitForMove(artbarrel2, y_axis)
     Move(artbarrel3, y_axis, 0, barrelmovespeed)
     --WaitforMove(artbarrel3,y_axis)
-    Move(artclaws, y_axis, 0, 6)
-    WaitForMove(artclaws, y_axis)
-    boolReloadedAndReadyToFire2 = true
-    
+
+	boolPlasmaReloadedAndReadyToFire = true
+
+end
+
+
+
+function script.FireWeapon2()
+   StartThread(plasmaReload)
+   Sleep(5000)
 end
 
 ----------------------------------------------------------------------------------
@@ -196,8 +200,8 @@ end
 
 
 function script.AimWeapon1(heading, pitch)
-		boolFiringDemanded = true
-    if boolInFiringPosition == true and  boolReloadedAndReadyToFire == true and boolSecondaryWeapon == false then
+	boolFiringRequested = true
+    if boolInFiringPosition == true and  boolHCReloadedAndReadyToFire == true and boolSecondaryWeapon == false then
     
         return true
     end
@@ -205,12 +209,9 @@ function script.AimWeapon1(heading, pitch)
     return false
 end
 
-
-
-
-function script.FireWeapon1()
-    boolReloadedAndReadyToFire = false
-	 boolFiringDemanded= false
+function reloadHeadCrabs()
+    boolHCReloadedAndReadyToFire = false
+	 boolFiringRequested= false
     Show(flare01)
     Explode(flare01, SFX.FIRE)
     Hide(flare01)
@@ -233,5 +234,12 @@ function script.FireWeapon1()
     --WaitforMove(artbarrel3,y_axis)
     Move(artclaws, y_axis, 0, 6)
     WaitForMove(artclaws, y_axis)
-    boolReloadedAndReadyToFire = true
+    boolHCReloadedAndReadyToFire = true
+
+end
+
+
+function script.FireWeapon1()
+	StartThread(reloadHeadCrabs)
+	Sleep(5000)
 end

@@ -309,11 +309,11 @@ end
 function getScrapYardFeatures(FeatureDefNames)
 assert(FeatureDefNames)
 return {
-	[FeatureDefNames["cInfantryCorpse"].id]=true,
+	[FeatureDefNames["cinfantrycorpse"].id]=true,
 	[FeatureDefNames["jbiocorpse"].id]=true,
 	[FeatureDefNames["bug"].id]=true,
 	[FeatureDefNames["honeypot"].id]=true,
-	[FeatureDefNames["jInfantryCorpse"].id]=true,
+	[FeatureDefNames["jinfantrycorpse"].id]=true,
 	[FeatureDefNames["exconroach"].id]=true,
 	[FeatureDefNames["jskincorpse"].id]=true,
 	[FeatureDefNames["bgcorpse"].id]=true

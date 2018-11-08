@@ -390,6 +390,8 @@ function deployOnceComplete()
 end
 
 function script.Killed(recentDamage, _)
+	if boolFoldedBack== true then return 1 end
+
 	for i=1,#TableOfPieces do
 		Explode(TableOfPieces[i],SFX.FALL+SFX.NO_HEATCLOUD)
 		Explode(TableOfPieces[i],SFX.SHATTER)
@@ -1409,7 +1411,7 @@ function un_foldRailGun(boolReverse)
         Hide(RailGun)
     end
 end
-
+boolFoldedBack=false
 
 function watchForImpact()
     while not GG.FiringGateFotressTable or not GG.FiringGateFotressTable[teamid] do
@@ -1420,6 +1422,7 @@ function watchForImpact()
     end
     boolOnTheMove = true
     foldAnimation()
+	boolFoldedBack=true
     Spring.DestroyUnit(unitID, true, false)
 end
 
