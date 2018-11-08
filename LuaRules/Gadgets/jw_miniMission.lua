@@ -11,6 +11,7 @@ function gadget:GetInfo()
 		license = "GNU GPL, v2 or later",
 		layer = 0,
 		version = 1,
+		handler = true,
 		enabled = true
 	}
 end
@@ -70,7 +71,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--3 sideInfo
 	
 		function gadget:Initialize()
-		if ( Spring.GetModOptions().minimission ~= "l")  then
+		if ( Spring.GetModOptions().minimission ~= "l" and gadget.Shutdown)  then
 			Spring.Echo("Minimissions not active")
 			gadget:Shutdown()
 		end

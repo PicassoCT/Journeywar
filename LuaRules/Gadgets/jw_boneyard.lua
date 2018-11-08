@@ -9,6 +9,7 @@ function gadget:GetInfo()
     author    = "Picasso",
     date      = "Nov, 2009",
     license   = "GNU GPL, v2 or later",
+	handler = true,
     layer     = 0,
     enabled   = true  --  loaded by default?
   }
@@ -32,7 +33,7 @@ if gadgetHandler:IsSyncedCode() then
 --------------------------------------------------------------------------------
 
 	function gadget:Initialize()
-		if ( Spring.GetModOptions().boneyard ~= "l")  then
+		if ( Spring.GetModOptions().boneyard ~= "l" and gadget.Shutdown)  then
 			gadget:Shutdown()
 		end
 	end
