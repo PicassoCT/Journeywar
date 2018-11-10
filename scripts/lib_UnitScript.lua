@@ -607,13 +607,14 @@ end
 -->Returns a Unit from the Game without killing it
 function removeFromWorld(unit, offx, offy, offz)	 
 	hideUnit(unit)
+
 	--TODO - keepStates in general and commandqueu
 	pox, poy, poz = Spring.GetUnitPosition(unit)
 	Spring.SetUnitAlwaysVisible(unit, false)
 	Spring.SetUnitBlocking(unit, false, false, false)
 	Spring.SetUnitNoSelect(unit, true)
 	Spring.MoveCtrl.Enable(unit, true)
-	if offx then
+		if offx then
 		Spring.SetUnitPosition(unit, offx, offy, offz)
 	end
 end
@@ -651,11 +652,14 @@ end
 --> reveal a Unit 
 function showUnit(unit)
 	Spring.SetUnitCloak(unit, false, 1)
+	Spring.SetUnitLosState(unit,0, {los=true, prevLos=true, contRadar=true, radar=true})
 end
 
 --> hide a Unit
 function hideUnit(unit)
 	Spring.SetUnitCloak(unit, true, 4)
+	Spring.SetUnitLosState(unit,0, {los=false, prevLos=false, contRadar=false, radar=false})
+
 end
 
 --> GetDistanceNearestEnemy

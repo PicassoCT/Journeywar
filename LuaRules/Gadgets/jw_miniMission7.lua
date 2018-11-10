@@ -87,6 +87,8 @@ conditionlessOngoing = function() return false; end
 gameOver = function() return true; end
 function Misson7InFairAndLoveEverythingIsWar(frame)
 
+	 if true then return true end -- TODO Complete
+
     if not MissionFunctionTable[7][2] then MissionFunctionTable[7][2] = frame end
     if not MissionFunctionTable[7][3] then MissionFunctionTable[7][3] = eStateStart end
 	if not MissionFunctionTable[7].teamID then MissionFunctionTable[7].teamID =   getCombinePlayer() end

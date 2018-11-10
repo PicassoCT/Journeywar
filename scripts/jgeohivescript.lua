@@ -133,18 +133,17 @@ function spawner()
                 spSpawnCEG("dirt", x + randoval, y, z + randoval, 0, 1, 0, 50, 0)
                 dice = math.random(1, 4)
                 spawnedUnit = 0
+						typeToSpawn	= -1
                 if myDefID == jGeoHiveID then
-							if jtypeTable[dice] then
-								dice= 3
-							end
-                        spawnedUnit = spCreateUnit(jtypeTable[math.random(1,		#jtypeTable)], x + randoval, y, z + (randoval * sigNum), 0, teamID)
+							typeToSpawn= jtypeTable[math.random(1,		#jtypeTable)]
+						else
+							typeToSpawn= ctypeTable[math.random(1,		#ctypeTable)]
+					  end
+					  
+					   spawnedUnit = spCreateUnit(typeToSpawn, math.ceil(x + randoval), y, math.ceil(z + (randoval * sigNum)), 0, teamID)
 						
-                else
-							if ctypeTable[dice] then dice = 2 end
-							
-                        spawnedUnit = spCreateUnit(ctypeTable[math.random(1,		#ctypeTable)], x + randoval, y, z + (randoval * sigNum), 0, teamID)
-
-                end
+                       
+				
 
                 if spawnedUnit and Spring.ValidUnitID(spawnedUnit) == true then
                     spSetUnitNoSelect(spawnedUnit, true)

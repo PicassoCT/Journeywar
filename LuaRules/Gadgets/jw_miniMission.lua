@@ -12,7 +12,7 @@ function gadget:GetInfo()
 		layer = 0,
 		version = 1,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -62,8 +62,10 @@ if (gadgetHandler:IsSyncedCode()) then
 	VFS.Include("LuaRules/Gadgets/jw_miniMission6.lua")
 	--Mission7--
 	VFS.Include("LuaRules/Gadgets/jw_miniMission7.lua")
+	--Mission8-- Grey Goo
+	VFS.Include("LuaRules/Gadgets/jw_miniMission8.lua")
 	
-	MissionMax=7
+	MissionMax=8
 	--<necessaryInfo>
 	teamTables={}
 	--contains StartPositions per Team
@@ -104,7 +106,8 @@ if (gadgetHandler:IsSyncedCode()) then
 		MissionFunctionTable[4][2]={}
 		MissionFunctionTable[4][2]=0		
 	end
-		function addMission5()
+	
+	function addMission5()
 		MissionFunctionTable[5]={}
 		MissionFunctionTable[5][1]={}
 		MissionFunctionTable[5][1]=Misson5WhackTheFreeman
@@ -112,11 +115,36 @@ if (gadgetHandler:IsSyncedCode()) then
 		MissionFunctionTable[5][2]=0
 	end
 	
+	function addMission6()
+		MissionFunctionTable[6]={}
+		MissionFunctionTable[6][1]={}
+		MissionFunctionTable[6][1]=Misson6ResistanceIsFutile
+		MissionFunctionTable[6][2]={}
+		MissionFunctionTable[6][2]=0
+	end	
+	function addMission7()
+		MissionFunctionTable[7]={}
+		MissionFunctionTable[7][1]={}
+		MissionFunctionTable[7][1]=Misson7InFairAndLoveEverythingIsWar
+		MissionFunctionTable[7][2]={}
+		MissionFunctionTable[7][2]=0
+	end	
+	function addMission8()
+		MissionFunctionTable[8]={}
+		MissionFunctionTable[8][1]={}
+		MissionFunctionTable[8][1]=Misson8GreyGoo
+		MissionFunctionTable[8][2]={}
+		MissionFunctionTable[8][2]=0
+	end
+	
 	addMission1()
 	addMission2()
 	addMission3()
 	addMission4()
 	addMission5()
+	addMission6()
+	addMission7()
+	addMission8()
 	
 	for i=1,MissionMax do
 	if not MissionFunctionTable[i] then MissionFunctionTable[i]={} end
@@ -213,7 +241,7 @@ if (gadgetHandler:IsSyncedCode()) then
 					
 					if boolMissionInProgress== false then framesTillNextMission=framesTillNextMission-frameValue end
 					
-					--S-tart
+					--Start
 					
 					if framesTillNextMission <=0 then
 
