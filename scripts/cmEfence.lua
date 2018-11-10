@@ -65,6 +65,16 @@ function script.Create()
 	StartThread(moveAnimation, 4)
 	
 end
+function script.Activate()
+	transformUnitInto(unitID, "efence" )	
+    --Sleep(50)
+    return 1
+end
+
+function script.Deactivate()
+   
+    return 0
+end
 
 
 
