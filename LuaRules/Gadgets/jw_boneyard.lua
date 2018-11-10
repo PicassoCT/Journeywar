@@ -11,7 +11,7 @@ function gadget:GetInfo()
     license   = "GNU GPL, v2 or later",
 	handler = true,
     layer     = 0,
-    enabled   = true  --  loaded by default?
+    enabled   = (Spring.GetModOptions().boneyard ~= "l") or false  --  loaded by default?
   }
 end
 
@@ -48,20 +48,27 @@ if gadgetHandler:IsSyncedCode() then
 	local jw_features = getScrapYardFeatures(FeatureDefNames)
 		
 	function gadget:UnitCreated(unitID, unitDefID)
+
 		if jw_corpses[unitDefID] then
 			x,y,z = Spring.GetUnitPosition(unitID)
-			Spring.Destroy(unitID, true, false)
+
+			Spring.DestroyUnit(unitID, true, false)
 			 GG.UnitsToSpawn:PushCreateUnit(battleScarDecals[math.random(1,#battleScarDecals)],x,y,z,0,gaiaTeamID)
 		end
 	end	
 	
+	
 	function gadget:FeatureCreated(featureID, allyTeam)
 	featureID= Spring.GetFeatureDefID(featureID)
 		if jw_features[featureID] then
-			x,y,z = Spring.GetFeaturePosition(featureID)
+			x,y,z = Spring.GetFeaturePosition(featureID, true)
 			Spring.DestroyFeature(featureID, false, false)
 			GG.UnitsToSpawn:PushCreateUnit(battleScarDecals[math.random(1,#battleScarDecals)],x,y,z,0,gaiaTeamID)
 		end
+	end
+	
+	function gadget:Shutdown()
+	
 	end
 
 end

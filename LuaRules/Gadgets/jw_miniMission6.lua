@@ -25,6 +25,8 @@ function spawnResistance(nrOfCellPairs)
 	
 	
 	function Misson6ResistanceIsFutile(frame)
+	
+		if true then return true end -- TODO Complete
 		
 		--SetUp
 		if MissionFunctionTable[6][2]== nil then MissionFunctionTable[6][2]=frame end

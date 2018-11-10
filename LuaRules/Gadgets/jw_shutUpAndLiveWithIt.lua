@@ -36,6 +36,7 @@ function gadget:GameFrame(frame)
             GG.UnitsToSpawn = { PushCreateUnit = PushCreateUnit }
             for i = 1, #cur, 1 do
                 --	Spring.Echo(unpack(cur[i]))
+						assert(cur[i][4], "Z Missing "..cur[i][1])
                 Spring.CreateUnit(unpack(cur[i]))
             end
         end

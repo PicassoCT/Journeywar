@@ -16,10 +16,11 @@ end
 Elevator1 = piece "Elevator"
 Elevator2 = piece "Elevator2"
 center = piece "center"
-
+boolIsJourneydBuilding= UnitDefNames["gcivbuildjourn"].id == Spring.GetUnitDefID(unitID)
 function randDeg()
     return math.random(-360, 360)
 end
+
 
 hitPoints = Spring.GetUnitHealth(unitID)
 px, py, pz = Spring.GetUnitPosition(unitID)
@@ -104,20 +105,39 @@ function ElevatorScript()
     end
 end
 
+function wiggleTheGreen()
+	green1= piece"green1"
+	center=piece"center"
+	
+	while true do
+	equiTurn(center, green1, x_axis, math.random(1,3), 0.005)
+	spinRand(green1, 0.001,0.015,0.001)
+	WTurn(green1,y_axis, math.rad(7),0.005)
+	stopSpins(green1,0.005)
+	equiTurn(center, green1, x_axis, math.random(1,3)*-1, 0.005)
+	WTurn(green1,y_axis, math.rad(0),0.005)
+	end
+
+end
+
+
 boolAllreadyStarted = false
 function script.Create()
+	if boolIsJourneydBuilding == true then
+		StartThread(wiggleTheGreen)
+	end
 
-    NearestEnemy = Spring.GetUnitNearestEnemy(unitID)
+    -- NearestEnemy = Spring.GetUnitNearestEnemy(unitID)
     if NearestEnemy then
         teamid = Spring.GetUnitTeam(NearestEnemy)
         if teamid then
             _, _, _, _, side, _, _, _ = Spring.GetTeamInfo(teamid)
-            if side and string.lower(side) == "journeyman" and math.random(0, 1) == 1 then
-                px, py, pz = Spring.GetUnitPosition(unitID)
+            if side and string.lower(side) == "journeyman" and boolIsJourneydBuilding == false then
+					  px, py, pz = Spring.GetUnitPosition(unitID)
                 myTeamID = Spring.GetUnitTeam(unitID)
                 GG.UnitsToSpawn:PushCreateUnit("gcivbuildjourn", px, py, pz, 0, myTeamID)
                 Spring.DestroyUnit(unitID, false, true)
-            end
+				 end
         end
     end
 

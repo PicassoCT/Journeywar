@@ -186,11 +186,7 @@ function openGate()
         --Spring.Echo("openend")
     end
 
-    --Play Open Gate Sound
-
-
-
-    --Spring.Echo("endOpen")
+    SetUnitValue(COB.YARD_OPEN, 1)
 end
 
 function closeGate()
@@ -212,43 +208,51 @@ function closeGate()
     WaitForTurn(efencegat0, x_axis)
     Turn(efencegate, x_axis, math.rad(0), 3.5)
     WaitForTurn(efencegate, x_axis)
-
+    SetUnitValue(COB.YARD_OPEN, 0)
     --Spring.Echo("endclose")
 end
 
+function getAlliedUnitsNearby()
+	T= getInCircle(unitID,50, Spring.GetUnitTeam(unitID))
+	T= removeImmobileInT(T, UnitDefs)
+	process(T, function(id) if id ~= unitID then return id end end) 
+	return T
+end
+function checkForFriendlysNearby()
+	while true do
+		T= getAlliedUnitsNearby()
+		Spring.Echo(#T)
+		if #T > 0 then
+			StartThread(openGate)
+			
+			while (#getAlliedUnitsNearby() > 0 ) do 
+				Sleep(100)
+			end
+			
+		else
+			StartThread(closeGate)
+			while (#getAlliedUnitsNearby()  == 0 ) do 
+				Spring.Echo("Idling")
+				Sleep(100)
+			end
+		end	
+	
+	Sleep(500)
+	end
+
+
+end
 
 function script.Activate()
-    SetUnitValue(COB.YARD_OPEN, 1)
-    --SetUnitValue(COB.INBUILDSTANCE, 1)
-    Signal(SIG_CLOSE)
-    StartThread(openGate)
+	transformUnitInto(unitID, "mefence" )	
     --Sleep(50)
     return 1
 end
 
 function script.Deactivate()
-    SetUnitValue(COB.YARD_OPEN, 0)
-    --SetUnitValue(COB.YARD_OPEN, 0)
-    Signal(SIG_OPEN)
-    StartThread(closeGate)
-    --Sleep(50)
+   
     return 0
 end
-
-
--------- BUILDING---------
-function script.StopBuilding()
-end
-
--- function checkCharged()
--- while (true) do
--- Sleep(1200)
--- if boolImInCharge== true then
--- --	StartThread(openGate) --JustTestwise
--- ----Spring.Echo("Danger, Danger, High Voltage!")
--- end
--- end
--- end
 
 
 
@@ -259,20 +263,18 @@ function script.Create()
     teamID = Spring.GetUnitTeam(unitID)
 
 
-    GG.UnitsToSpawn:PushCreateUnit("cbuildanimation", x, y, z, 0, teamID)
+   -- GG.UnitsToSpawn:PushCreateUnit("cbuildanimation", x, y, z, 0, teamID)
 
 
     --</buildanimationscript>
     --StartThread(checkCharged)
     --StartThread(showALittleLight)
-    StartThread(closeGate)
+   
+    StartThread(checkForFriendlysNearby)
 end
 
 
 
-function script.StartBuilding(heading, pitch)
-    return true
-end
 
 
 
