@@ -62,7 +62,7 @@ function script.Create()
 	
 	--</buildanimationscript>
 	--StartThread(checkCharged)
-	StartThread(moveAnimation, 4)
+
 	
 end
 function script.Activate()
