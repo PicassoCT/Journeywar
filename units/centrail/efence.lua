@@ -30,9 +30,9 @@ local unitDef = {
 	CanReclaim=false,	
 	onOffable = true,
 	activateWhenBuilt=false,
-	
+	collisionVolumeTest = 1,
 	collisionvolumetype = "box",
-	collisionvolumescales = "70 45 15",
+	collisionvolumescales = "140 45 15",
 	collisionvolumeoffsets = "0 0 0",
 	
 	

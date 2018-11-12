@@ -21,6 +21,7 @@ HabaneroButton = Control:Inherit{
 	yMax = 1,
 	midPointX=0,
 	midPointY=0,
+	boolInFocus=false,
 
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
@@ -277,6 +278,15 @@ function HabaneroButton:MouseDown(...)
 	inherited.MouseDown(self, ...)
 	self:Invalidate()
 	return self
+end
+
+function HabaneroButton:MouseOver(...)
+
+	self.boolInFocus = true
+end
+
+function HabaneroButton:MouseOut(...)
+	self.boolInFocus = false
 end
 
 function HabaneroButton:MouseUp(...)
