@@ -50,12 +50,12 @@ BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
 extHoloTexCol={200/255, 239/255, 253/255, 1}	
-holoCommandCol={163/255, 229/255, 243/255, 0.75}	
+holoCommandCol={163/255, 229/255, 243/255, 0.65}	
 holoTextCol={200/255, 239/255, 253/255, 1}	
-backgroundColExtended={58/255, 172/255, 226/255, 0.75}	
+backgroundColExtended={0.2, 0.2, 0.4, 0.6} 
 
 extendedCommands={}
-	extendedMenue={
+extendedMenue={
 	[CMD.RECLAIM] ={},
 	[CMD.LOAD_UNITS]={},
 	[CMD.UNLOAD_UNITS]={},
@@ -64,17 +64,6 @@ extendedCommands={}
 	[CMD.OPT_SHIFT]={}
 }
 
-extendedMenue[CMD.RECLAIM] ={		
-		triStrip={{x= 0, y = 0},			
-		{x= 160, y = 40},
-	{x= 0, y = 80}},
-	backgroundColor=backgroundColExtended,
-	caption="RECLAIM",
-	callbackFunction=function()
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.RECLAIM 	
-	end
-}
 
 extendedMenue[CMD.LOAD_UNITS] ={
 		triStrip={	{x= 160, y = 0},
@@ -89,10 +78,10 @@ extendedMenue[CMD.LOAD_UNITS] ={
 }
 extendedMenue[CMD.UNLOAD_UNITS] ={
 	triStrip={
-		{x= 160, y = 40},
-		{x= 160, y = 80},			
 		{x= 0, y = 0},
-	{x= 0, y = 40}	},
+		{x= 160, y = 40},			
+		{x= 0, y = 80},
+	},
 	backgroundColor=backgroundColExtended,
 	caption=	"DROP",
 	callbackFunction=function()
@@ -102,9 +91,11 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 }
 
 extendedMenue[CMD.CLOAK] ={
-		triStrip={	{x= 0, y = 0},			
-		{x= 160, y = 40},
-	{x= 0, y = 80}},
+	triStrip={	
+		{x= 100, y = 5},			
+		{x= 0, y = 35},
+		{x= 100, y = 85},
+	{x= 0, y = 55}},
 	backgroundColor=backgroundColExtended,
 	caption= "CLOAK",
 	callbackFunction=function()
@@ -122,10 +113,28 @@ extendedMenue[CMD.CLOAK] ={
 	end
 }	
 
+extendedMenue[CMD.RECLAIM] ={		
+	triStrip={
+		{x= 0, y = 10},			
+		{x= 160, y = 60},
+		{x= 0, y = 70},
+		{x= 160, y = 70}		
+	},
+	backgroundColor=backgroundColExtended,
+	caption="RECLAIM",
+	callbackFunction=function()
+		player= Spring.GetMyPlayerID()		
+		WG.SelectedCommand[player] = CMD.RECLAIM 	
+	end
+}
+
 extendedMenue[CMD.RESTORE] ={		
-		triStrip={	{x= 100	, y = 15},
-		{x= 100	, y = 70},			
-	{x= 0	, y = 40}},
+	triStrip={	
+		{x= 0	, y = 20},
+		{x= 160	, y = 20},			
+		{x= 0	, y = 60},
+		{x= 160	, y = 60}		
+	},
 	backgroundColor=backgroundColExtended,
 	caption= "RESTORE",
 	callbackFunction=function()
@@ -134,8 +143,9 @@ extendedMenue[CMD.RESTORE] ={
 	end
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
-		triStrip={	{x= 0, y = 0},			
-		{x= 100, y = 30},
+	triStrip={	
+		{x= 0, y = 0},			
+		{x= 100, y = -10},
 		{x= 0, y = 80},
 	{x= 100, y = 80}},
 	backgroundColor=backgroundColExtended,
@@ -146,16 +156,13 @@ extendedMenue[CMD.OPT_SHIFT] ={
 	end
 }
 extendedMenue[CMD.OPT_SHIFT] ={
-		triStrip={
+	triStrip={
 		{x= 0, y = 0},			
 		{x= 100, y = 30},
 		{x= 0, y = 80},
-		{x= 100, y = 80}
-		},
-		 -- {x= "0%", y = "0%"},			
-		 -- {x= "100%", y = "30%"},
-		 -- {x= "0%", y = "80%"},
-		 -- {x= "100%", y = "80%"}},
+		{x= 100, y = 50}
+	},
+	
 	backgroundColor=backgroundColExtended,
 	caption= "QUEUE",
 	callbackFunction=function(self,...)
@@ -184,88 +191,96 @@ function getCommandTarget()
 end
 
 MainMenue[CMD.ATTACK] ={		
-		triStrip={{x= 80, y = 0},			
+	triStrip={
+		{x= 80, y = 0},			
 		{x= 0, y = 0},
 		{x= 80, y = 70},						
 		{x= 0, y = 70},
 	{x= 0, y = 100}}	,
-	backgroundColor={163/255, 229/255, 243/255, 0.75},
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+	focusColor={163/255, 229/255, 243/255, 0.75},
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=	"|ATTAC",
 }
 
 MainMenue[CMD.STOP] ={
-		triStrip={	{x= 70, y = -15},
+	triStrip={	
+		{x= 70, y = -15},
 		{x= 0, y = 10},			
 		{x= 80, y = -5},
 		
 		{x= 0, y = 70},
 		{x= 80, y = 80},
 	{x= 70, y = 90}},
-	backgroundColor={58/255, 172/255, 226/255, 0.75}	,
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+	focusColor={58/255, 172/255, 226/255, 0.75}	,
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|STOP",	
 }			
 
 MainMenue[CMD.MOVE] ={
-		triStrip={		{x= 0, y = -20},			
-		{x= 80, y = 2.5},
+	triStrip={		
+		{x= 0, y = -40},			
+		{x= 80, y = -10},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundColor={35/255, 124/255, 166/255, 0.75}		,
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+	focusColor={35/255, 124/255, 166/255, 0.75}		,
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|MOVE",2),
 }	
 
 MainMenue[CMD.FIRE_STATE] ={		
-		triStrip={		{x= 0, y = 0},	
+	triStrip={		
+		{x= 0, y = 0},	
 		{x= 80, y =0},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundColor={52/255, 167/255, 222/255, 0.75},
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+	focusColor={52/255, 167/255, 222/255, 0.75},
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|FIRE\nSTATE",3),
 }	
 
 MainMenue[CMD.REPEAT] ={
-		triStrip={		{x= 0, y = -15},			
+	triStrip={		
+		{x= 0, y = -15},			
 		{x= 70, y =-15},
 		{x= 0, y = 90},
 	{x= 70, y = 110}},
-	backgroundColor={52/255, 167/255, 222/255, 0.75}	,
-focusColor      = {0.1, 0.2, 0.3, 0.5},
+	focusColor={52/255, 167/255, 222/255, 0.75}	,
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|REPEAT ",
 }	
 
 MainMenue[CMD.MOVE_STATE] ={
-		triStrip={		{x= 0, y = 5},			
-		{x= 80, y =25},
-		{x= 0, y = 70},
-	{x= 80, y = 70}},
-		backgroundColor={35/255, 124/255, 166/255, 0.75},
-		focusColor      = {0.1, 0.2, 0.3, 0.5},
+	triStrip={		
+		{x= 0, y = -20},			
+		{x= 80, y =5},
+		{x= 0, y = 45},
+	{x= 80, y = 75}},
+	focusColor={35/255, 124/255, 166/255, 0.75},
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= "|MOVE\nMODE ",
 }	
 
 MainMenue[CMD.REPAIR] ={
-		triStrip={		{x= 0, y = 0},			
+	triStrip={		
+		{x= 0, y = 0},			
 		{x= 80, y = 0},
-		{x= 0, y = 70},
-	{x= 80, y = 48}},
-	backgroundColor={163/255, 229/255, 243/255, 0.75},
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+		{x= 0, y = 90},
+	{x= 80, y = 60}},
+	focusColor={163/255, 229/255, 243/255, 0.75},
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= upByRow("|REPAIR ",4),
 }	
 
 MainMenue[CMD.PATROL] ={
-		triStrip={		{x= 0, y = -20},			
-		{x= 70, y = -40},			
-		{x= -10, y = -10},			
-		{x= 80, y = -35},
-		{x= -10, y = 95},
-	{x= 80, y = 60}},
-	backgroundColor={52/255, 167/255, 222/255, 0.75},
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+	triStrip={		
+		{x= 0, y = 0},			
+		{x= 80, y = 0},			
+		{x= 0, y = 90},			
+		{x= 80, y = 90}
+		
+	},
+	focusColor={52/255, 167/255, 222/255, 0.75},
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|PATROL",4),
 }	
 
@@ -275,8 +290,8 @@ MainMenue[CMD.GUARD] ={
 		{x= 80, y = -25},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundColor={52/255, 167/255, 222/255, 0.75},
-	focusColor      = {0.1, 0.2, 0.3, 0.5},
+	focusColor={52/255, 167/255, 222/255, 0.75},
+	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|GUARD",
 }	
 
@@ -298,6 +313,7 @@ MainMenue[CMD.MOVE].callbackFunction= function()
 end
 MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
 	selectedUnits =Spring.GetSelectedUnits()
+	Spring.Echo("Firestate selected")
 	if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
 		states = Spring.GetUnitStates(selectedUnits[1])
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
@@ -316,7 +332,7 @@ end
 
 MainMenue[CMD.MOVE_STATE].callbackFunction= function()
 	selectedUnits =Spring.GetSelectedUnits()
-	if selectedUnits then
+	if selectedUnits and selectedUnits[1] then
 		states = Spring.GetUnitStates(selectedUnits[1])
 		Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
 	end
@@ -347,13 +363,13 @@ controllCommand_window_positionY = "70%"
 
 
 extendedCommand_window_positionX = "0%" 
-extendedCommand_window_positionY= "41%"
-extendedCommand_window_width= "10%"
-extendedCommand_window_height= "30%"
+extendedCommand_window_positionY= "36%"
+extendedCommand_window_width= "9%"
+extendedCommand_window_height= "35%"
 
 function widget:Initialize()
 	
-	--Spring.SendCommands("hideinterface  1")
+	--Spring.SendCommands("hideinterface 1")
 	-- setup Chili
 	Chili = WG.Chili
 	Button = Chili.Button
@@ -380,6 +396,7 @@ function widget:Initialize()
 			textColor = textCol, 
 			OnClick= { functionOnClick}
 		}
+		
 	end
 	
 	extendedCommand_window = Window:New{
@@ -436,7 +453,7 @@ function widget:Initialize()
 		Option.triStrip,
 		Option.caption,
 		Option.backgroundColor,
-		Option.focusColor,
+		holoCommandCol,
 		extHoloTexCol,
 		Option.callbackFunction,
 		extendedCommand_Grid
@@ -444,19 +461,19 @@ function widget:Initialize()
 		extendedCommands[commandID]:Init()
 	end
 	
-
+	
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.LOAD_UNITS])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.UNLOAD_UNITS])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.CLOAK])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.RESTORE])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.OPT_SHIFT])
-
+	
 	extendedCommand_window:AddChild(extendedCommand_Grid)
 	
 	Habaneros={ }
 	
-		controllCommand_window = Window:New{
+	controllCommand_window = Window:New{
 		padding = {3,3,3,3,},
 		dockable = true,
 		caption = '',
@@ -481,7 +498,7 @@ function widget:Initialize()
 		},
 	}
 	
-local	base_stack = Grid:New{
+	local	base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
 		itemPadding = {0, 0, 0, 0},
@@ -520,11 +537,7 @@ local	base_stack = Grid:New{
 	base_stack:AddChild(Habaneros[CMD.MOVE_STATE])
 	base_stack:AddChild(Habaneros[CMD.REPAIR])
 	base_stack:AddChild(Habaneros[CMD.PATROL])
-	base_stack:AddChild(Habaneros[CMD.GUARD])
-	
-
-	
-	
+	base_stack:AddChild(Habaneros[CMD.GUARD])	
 end
 
 function widget:MousePress()
@@ -577,6 +590,6 @@ function widgetHandler:MouseRelease(x, y, button)
 end
 
 function widget:Shutdown()
-Spring.SendCommands("hideinterface  0")
-
+	Spring.SendCommands("hideinterface 0")
+	
 end
