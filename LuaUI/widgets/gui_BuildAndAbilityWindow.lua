@@ -7,7 +7,7 @@ function widget:GetInfo()
 		date = "2011-6-2",
 		license = "GNU GPL, v2 or later",
 		layer = 256,
-		hidden= true,
+		hidden= false,
 		enabled = true,
 	}
 end
@@ -521,7 +521,7 @@ function widget:GameFrame(f)
 			unitTypeButtonMap[ud.name]()		
 			
 		elseif isUnitOnOffable(ud.name)== true then
-		unitTypeButtonMap["default"]("default")
+			unitTypeButtonMap["default"]("default")
 		
 		
 			--Check for captionReplacement
@@ -535,6 +535,11 @@ function widget:GameFrame(f)
 		else			
 			HideAllActiveAbilityElements()
 		end
+		
+		-- if hasBuildOptions[ud.id] then
+			-- expandBuildMenue()
+		-- end
+		
 	end
 		
 

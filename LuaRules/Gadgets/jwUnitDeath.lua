@@ -152,7 +152,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		
 		if j_infantryTypeTable[unitDefID] then
 			x,y,z=spGetUnitPosition(unitID)
-			if x then
+			if x and GG.UnitsToSpawn then
 				if math.random(0,1)==1 then
 					GG.UnitsToSpawn:PushCreateUnit("blueblooddecalfactory",x,y,z,0,teamID)
 				else

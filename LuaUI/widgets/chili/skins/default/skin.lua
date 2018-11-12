@@ -236,8 +236,11 @@ function _DrawBackground(obj)
   local y = 0
   local w = obj.width
   local h = obj.height
-
-  gl.Color(obj.backgroundColor)
+	
+  
+		gl.Color(obj.backgroundColor)
+ 
+  
   gl.Vertex(x,   y)
   gl.Vertex(x,   y+h)
   gl.Vertex(x+w, y)
@@ -258,9 +261,10 @@ function _DrawHabaneroButtonBackground(obj)
 	for i=3, #triStrip, 1 do
 		if obj.startColour and obj.endColour then
 			factor =   math.max(0.0,math.min(1.0,i/#triStrip))
-			gl.Color(blend(obj.startColour,obj.endColour, factor))
+			if  obj.boolInFocus == false then		gl.Color(blend(obj.startColour,obj.endColour, factor))		else	gl.Color(obj.focusColor) end
+		
 		else
-			  gl.Color(obj.backgroundColor)
+			if  obj.boolInFocus == false then		 gl.Color(obj.backgroundColor)		else	gl.Color(obj.focusColor) end
 		end 
 				gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
 				gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 

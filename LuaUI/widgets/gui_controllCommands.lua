@@ -7,8 +7,8 @@ function widget:GetInfo()
 		date = "2016-6-2",
 		license = "GNU GPL, v2 or later",
 		layer = 0,
-		enabled = false,
-		hidden = true
+		enabled = true,
+		hidden = false
 	}
 end
 
@@ -68,7 +68,7 @@ extendedMenue[CMD.RECLAIM] ={
 		triStrip={{x= 0, y = 0},			
 		{x= 160, y = 40},
 	{x= 0, y = 80}},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption="RECLAIM",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
@@ -80,7 +80,7 @@ extendedMenue[CMD.LOAD_UNITS] ={
 		triStrip={	{x= 160, y = 0},
 		{x= 160, y = 80},			
 	{x= 0, y = 40}	},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption=	"LOAD",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
@@ -93,7 +93,7 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 		{x= 160, y = 80},			
 		{x= 0, y = 0},
 	{x= 0, y = 40}	},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption=	"DROP",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()
@@ -105,7 +105,7 @@ extendedMenue[CMD.CLOAK] ={
 		triStrip={	{x= 0, y = 0},			
 		{x= 160, y = 40},
 	{x= 0, y = 80}},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption= "CLOAK",
 	callbackFunction=function()
 		Spring.Echo("Cloaking")
@@ -126,7 +126,7 @@ extendedMenue[CMD.RESTORE] ={
 		triStrip={	{x= 100	, y = 15},
 		{x= 100	, y = 70},			
 	{x= 0	, y = 40}},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption= "RESTORE",
 	callbackFunction=function()
 		player= Spring.GetMyPlayerID()		
@@ -138,10 +138,10 @@ extendedMenue[CMD.OPT_SHIFT] ={
 		{x= 100, y = 30},
 		{x= 0, y = 80},
 	{x= 100, y = 80}},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption= "QUEUE",
 	callbackFunction=function(self,...)
-		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		self.backgroundColor ={163/255, 229/255, 243/255, 0.75} 
 		boolQueueOverride = not boolQueueOverride
 	end
 }
@@ -156,10 +156,12 @@ extendedMenue[CMD.OPT_SHIFT] ={
 		 -- {x= "100%", y = "30%"},
 		 -- {x= "0%", y = "80%"},
 		 -- {x= "100%", y = "80%"}},
-	backgroundCol=backgroundColExtended,
+	backgroundColor=backgroundColExtended,
 	caption= "QUEUE",
 	callbackFunction=function(self,...)
-		self.backgroundCol ={163/255, 229/255, 243/255, 0.75} 
+		self.backgroundColor ={163/255, 229/255, 243/255, 0.75} 
+		self.focusColor ={0.2, 0.2, 0.4, 0.6} 
+		
 		boolQueueOverride = not boolQueueOverride
 	end
 }
@@ -187,7 +189,8 @@ MainMenue[CMD.ATTACK] ={
 		{x= 80, y = 70},						
 		{x= 0, y = 70},
 	{x= 0, y = 100}}	,
-	backgroundCol={163/255, 229/255, 243/255, 0.75},
+	backgroundColor={163/255, 229/255, 243/255, 0.75},
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption=	"|ATTAC",
 }
 
@@ -199,7 +202,8 @@ MainMenue[CMD.STOP] ={
 		{x= 0, y = 70},
 		{x= 80, y = 80},
 	{x= 70, y = 90}},
-	backgroundCol={58/255, 172/255, 226/255, 0.75}	,
+	backgroundColor={58/255, 172/255, 226/255, 0.75}	,
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption="|STOP",	
 }			
 
@@ -208,7 +212,8 @@ MainMenue[CMD.MOVE] ={
 		{x= 80, y = 2.5},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundCol={35/255, 124/255, 166/255, 0.75}		,
+	backgroundColor={35/255, 124/255, 166/255, 0.75}		,
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|MOVE",2),
 }	
 
@@ -217,7 +222,8 @@ MainMenue[CMD.FIRE_STATE] ={
 		{x= 80, y =0},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundCol={52/255, 167/255, 222/255, 0.75},
+	backgroundColor={52/255, 167/255, 222/255, 0.75},
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|FIRE\nSTATE",3),
 }	
 
@@ -226,7 +232,8 @@ MainMenue[CMD.REPEAT] ={
 		{x= 70, y =-15},
 		{x= 0, y = 90},
 	{x= 70, y = 110}},
-	backgroundCol={52/255, 167/255, 222/255, 0.75}	,
+	backgroundColor={52/255, 167/255, 222/255, 0.75}	,
+focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption="|REPEAT ",
 }	
 
@@ -235,8 +242,9 @@ MainMenue[CMD.MOVE_STATE] ={
 		{x= 80, y =25},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundCol={35/255, 124/255, 166/255, 0.75},
-	caption= "MANOVEUR ",
+		backgroundColor={35/255, 124/255, 166/255, 0.75},
+		focusColor      = {0.1, 0.2, 0.3, 0.5},
+	caption= "|MOVE\nMODE ",
 }	
 
 MainMenue[CMD.REPAIR] ={
@@ -244,7 +252,8 @@ MainMenue[CMD.REPAIR] ={
 		{x= 80, y = 0},
 		{x= 0, y = 70},
 	{x= 80, y = 48}},
-	backgroundCol={163/255, 229/255, 243/255, 0.75},
+	backgroundColor={163/255, 229/255, 243/255, 0.75},
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption= upByRow("|REPAIR ",4),
 }	
 
@@ -255,7 +264,8 @@ MainMenue[CMD.PATROL] ={
 		{x= 80, y = -35},
 		{x= -10, y = 95},
 	{x= 80, y = 60}},
-	backgroundCol={52/255, 167/255, 222/255, 0.75},
+	backgroundColor={52/255, 167/255, 222/255, 0.75},
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|PATROL",4),
 }	
 
@@ -265,7 +275,8 @@ MainMenue[CMD.GUARD] ={
 		{x= 80, y = -25},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	backgroundCol={52/255, 167/255, 222/255, 0.75},
+	backgroundColor={52/255, 167/255, 222/255, 0.75},
+	focusColor      = {0.1, 0.2, 0.3, 0.5},
 	caption="|GUARD",
 }	
 
@@ -342,7 +353,7 @@ extendedCommand_window_height= "30%"
 
 function widget:Initialize()
 	
-	
+	--Spring.SendCommands("hideinterface  1")
 	-- setup Chili
 	Chili = WG.Chili
 	Button = Chili.Button
@@ -356,7 +367,7 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	function createHabanero(triStrip, caption, basCol, textCol, functionOnClick, Parent )
+	function createHabanero(triStrip, caption, basCol, focusColor, textCol, functionOnClick, Parent )
 		functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
 		
 		return 	Chili.HabaneroButton:New{
@@ -365,6 +376,7 @@ function widget:Initialize()
 			caption=caption,
 			parent= Parent,
 			backgroundColor = basCol,
+			focusColor = focusColor,
 			textColor = textCol, 
 			OnClick= { functionOnClick}
 		}
@@ -423,7 +435,8 @@ function widget:Initialize()
 		extendedCommands[commandID] = createHabanero(
 		Option.triStrip,
 		Option.caption,
-		Option.backgroundCol,
+		Option.backgroundColor,
+		Option.focusColor,
 		extHoloTexCol,
 		Option.callbackFunction,
 		extendedCommand_Grid
@@ -490,7 +503,8 @@ local	base_stack = Grid:New{
 		Habaneros[comandID] = createHabanero(
 		MenueOption.triStrip,
 		MenueOption.caption,
-		MenueOption.backgroundCol,
+		MenueOption.backgroundColor,
+		MenueOption.focusColor,
 		holoTextCol,
 		MenueOption.callbackFunction,
 		base_stack
@@ -509,7 +523,7 @@ local	base_stack = Grid:New{
 	base_stack:AddChild(Habaneros[CMD.GUARD])
 	
 
-	controllCommand_window:AddChild(controllCommand_window)
+	
 	
 end
 
@@ -560,4 +574,9 @@ function widgetHandler:MouseRelease(x, y, button)
 	end
 	
 	return true
+end
+
+function widget:Shutdown()
+Spring.SendCommands("hideinterface  0")
+
 end

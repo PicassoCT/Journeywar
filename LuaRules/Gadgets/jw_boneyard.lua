@@ -31,7 +31,7 @@ if gadgetHandler:IsSyncedCode() then
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
-
+	gaiaTeamID = Spring.GetGaiaTeamID()
 	function gadget:Initialize()
 		if ( Spring.GetModOptions().boneyard ~= "l" and gadget.Shutdown)  then
 			gadget:Shutdown()
@@ -62,8 +62,12 @@ if gadgetHandler:IsSyncedCode() then
 	featureID= Spring.GetFeatureDefID(featureID)
 		if jw_features[featureID] then
 			x,y,z = Spring.GetFeaturePosition(featureID, true)
-			Spring.DestroyFeature(featureID, false, false)
-			GG.UnitsToSpawn:PushCreateUnit(battleScarDecals[math.random(1,#battleScarDecals)],x,y,z,0,gaiaTeamID)
+				if x and y and x ~= featureID and y ~= true then
+				Spring.DestroyFeature(featureID, false, false)
+				if z and GG.UnitsToSpawn then
+					GG.UnitsToSpawn:PushCreateUnit(battleScarDecals[math.random(1,#battleScarDecals)],x,y,z,0,gaiaTeamID)
+				end
+			end
 		end
 	end
 	

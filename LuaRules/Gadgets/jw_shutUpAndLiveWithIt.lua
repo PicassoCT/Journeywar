@@ -36,8 +36,13 @@ function gadget:GameFrame(frame)
             GG.UnitsToSpawn = { PushCreateUnit = PushCreateUnit }
             for i = 1, #cur, 1 do
                 --	Spring.Echo(unpack(cur[i]))
-						assert(cur[i][4], "Z Missing "..cur[i][1])
-                Spring.CreateUnit(unpack(cur[i]))
+						assert(cur[i][4], "Z missing in PushCreateUnit "..cur[i][1])
+						assert(cur[i][5], "teamID missing in PushCreateUnit "..cur[i][1])
+						 teamID, leader,  isDead, isAiTeam, side, allyTeam, customTeamKeys, incomeMultiplier = Spring.GetTeamInfo(cur[i][6])
+							
+						if teamID and isDead == false  then
+							Spring.CreateUnit(unpack(cur[i]))
+						end
             end
         end
 
