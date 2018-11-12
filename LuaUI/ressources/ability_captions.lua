@@ -26,8 +26,8 @@ return {
   ["comendbonker"]= {active="Conset&\nConfirm", passive="Repeat\nConfirmation"},
   ["sentrynell"]= {active="Activate\n Motionsensor", passive="Deactivate\n Motionsensor"},
   ["chivemind"]= {active="Hyper\n A.I.ctivity", passive="AI-Node\n Ready"},
-  ["efence"]= {active="Mobilize", passive=""},
-  ["mefence"]= {active="Deploy", passive=""},
+  ["efence"]= {active="Mobilize", passive="Mobile"},
+  ["mefence"]= {active="Deploy", passive="Stationary"},
   ["cgeohive"]= {active="Build\n Bait- \n buildings", passive="Spawn\n Cauterizer \n Drones"},
 
 --journeyman
