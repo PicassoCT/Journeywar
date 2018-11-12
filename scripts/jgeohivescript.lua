@@ -60,13 +60,13 @@ function setHivePiece()
         hivePiece = piece "center"
     end
 
-    x = math.random(0, 360)
+    rx = math.random(0, 360)
 
-    Turn(hivePiece, y_axis, math.rad(x), 0)
+    Turn(hivePiece, y_axis, math.rad(rx), 0)
 end
 
-function sanitizeCoords(x, y, z)
-    return x, y, z
+function sanitizeCoords(sx, sy, sz)
+    return sx, sy, sz
 end
 
 spawnCycleRestTime = 80000
@@ -90,12 +90,12 @@ function spawner()
     local spGetUnitNearestEnemy = Spring.GetUnitNearestEnemy
     local spGetUnitPosition = Spring.GetUnitPosition
     local spSpawnCEG = Spring.SpawnCEG
-    local spCreateUnit = createUnit_TerrainTest
+    local spCreateUnit = Spring.CreateUnit
     local spSetUnitMoveGoal = Spring.SetUnitMoveGoal
     local spEmitSfx = EmitSfx
     local spSetUnitNoSelect = Spring.SetUnitNoSelect
 
-    local x, y, z = Spring.GetUnitPosition(unitID)
+
 
 	jtypeTable={
 	"jhoneypot",
@@ -111,7 +111,8 @@ function spawner()
         --- -Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
         Sleep(spawnCycleRestTime)
         enemyID = Spring.GetUnitNearestEnemy(unitID)
-
+			x, y, z = Spring.GetUnitPosition(unitID)
+		
         if enemyID  then
             --EmitSfx(jgeohive,1024)
             ex, ey, ez = spGetUnitPosition(enemyID)
@@ -139,8 +140,9 @@ function spawner()
 						else
 							typeToSpawn= ctypeTable[math.random(1,		#ctypeTable)]
 					  end
-					  
-					   spawnedUnit = spCreateUnit(typeToSpawn, math.ceil(x + randoval), y, math.ceil(z + (randoval * sigNum)), 0, teamID)
+					  tx,tz= x + randoval, z + (randoval * sigNum)
+				
+					   spawnedUnit = spCreateUnit(typeToSpawn, tx, y, tz, 0, teamID)
 						
                        
 				
