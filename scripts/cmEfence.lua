@@ -50,8 +50,8 @@ end
 
 function script.StopMoving()
 	Signal(SIG_MOVE)
-	resetT(TableOfPieceGroups["Pillar"],7)
-	resetT(TableOfPieceGroups["Axis"],7)
+	resetT(TableOfPieceGroups["Pillar"],0.14)
+	resetT(TableOfPieceGroups["Axis"],0.14)
 end
 
 TableOfPieceGroups = {}
