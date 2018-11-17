@@ -92,7 +92,7 @@ function getDefenseBuildingTypeTable(UnitDefNames)
 	typeTable={
 		"sentry",
 		"crailgun",
-		"bonker",
+		"cbonker",
 		"chopper",
 		"jfireflower",
 		"jbonsai",
@@ -108,13 +108,13 @@ end
 function getCyberiziableUnitTypes()
 
 	typeTable={
-		"mtw",
+		"cspc",
 		"campro",
 		"csniper",
-		"restrictor",
+		"crestrictor",
 		"chunter",
 		"advisor",
-		"strider",
+		"cstrider",
 		"beherith",
 		"gseastar",
 		"zombie",
@@ -148,9 +148,9 @@ function getCentrailOverworldGateUnitTypeTable()
 		"cauterizer",
 		"bg3",
 		"campro",
-		"mtw",
+		"cspc",
 		"csniper",
-		"restrictor",
+		"crestrictor",
 		"chunter",
 		"advisor"
 		}
@@ -323,7 +323,7 @@ end
 
 function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     retTab = {
-        [UnitDefNames["bg"].id] = UnitDefNames["jskineggnogg"].id,
+        [UnitDefNames["cit"].id] = UnitDefNames["jskineggnogg"].id,
         [UnitDefNames["bg2"].id] = UnitDefNames["jtigeggnogg"].id,
         [UnitDefNames["bg3"].id] = UnitDefNames["jtigeggnogg"].id,
         [UnitDefNames["ccrabsynth"].id] = UnitDefNames["jcrabcreeper"].id,
@@ -406,11 +406,11 @@ end
 function getInfantryTypeTable()
 	if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
     Infantry = {}
-    Infantry[UnitDefNames["bg"].id] = true
+    Infantry[UnitDefNames["cit"].id] = true
     Infantry[UnitDefNames["bg2"].id] = true
     Infantry[UnitDefNames["bg3"].id] = true
-    Infantry[UnitDefNames["tiglil"].id] = true
-    Infantry[UnitDefNames["skinfantry"].id] = true
+    Infantry[UnitDefNames["jtiglil"].id] = true
+    Infantry[UnitDefNames["jskinfantry"].id] = true
     Infantry[UnitDefNames["jhivewulf"].id] = true
     Infantry[UnitDefNames["vort"].id] = true
     Infantry[UnitDefNames["css"].id] = true
@@ -568,7 +568,7 @@ function getGravityChangeReistantUnitTypeTable(UnitDefNames)
     TransportTable = {
         [UnitDefNames["jtree5"].id] = true,
         [UnitDefNames["vort"].id] = true,
-        [UnitDefNames["tiglil"].id] = true,
+        [UnitDefNames["jtiglil"].id] = true,
         [UnitDefNames["jghostdancer"].id] = true
     }
 
@@ -581,16 +581,16 @@ function getMirrorBubbleTransformationTable(UnitDefNames)
 UnitCycleCentrail={
 
 --level 1 circle
-["cgamagardener"] = "mtw",
-["mtw"] = "bg3",
-["bg3"] = "css",
-["bg2"] = "bg3",
-["bg1"] = "bg3",
+["cgamagardener"] = "cspc",
+["cspc"] = "cit3",
+["cit3"] = "css",
+["cit2"] = "cit3",
+["cit"] = "cit3",
 ["css"] = "campro",
-["campro"] = "restrictor",
-["restrictor"] = "csniper",
+["campro"] = "crestrictor",
+["crestrictor"] = "csniper",
 ["csniper"] = "advisor",
-["advisor"] = "tiglil",
+["advisor"] = "jtiglil",
 
 --level 2 circle
 ["cwallbuilder"] = "coperatrans",
@@ -601,7 +601,7 @@ UnitCycleCentrail={
 ["cheadlauncher"] = "jhoneypot",
 
 --level 3 circle
-["paxcentrail"]=  "cgatefort",
+["cpaxcentrail"]=  "cgatefort",
 ["cgatefort"]= "cnanorecon",
 ["cnanorecon"]= "strider",
 ["strider"] = "ccrabsynth",
@@ -612,8 +612,8 @@ UnitCycleCentrail={
 UnitCycleJourneyman={
 
 --level1 change cycle
-["tiglil"]="skinfantry",
-["skinfantry"]="tiglil",
+["jtiglil"]="jskinfantry",
+["jskinfantry"]="jtiglil",
 ["jghostdancer"]="jhivewulfmoma",
 ["jhivewulfmoma"]= "vort",
 ["vort"]= "jantart", 
@@ -634,7 +634,7 @@ UnitCycleJourneyman={
 [ "jmotherofmercy"]= "jsempresequoia",
 [ "jsempresequoia"]= "jrecycler",
 [ "jrecycler"]= "jsunshipwater",
-[ "jsunshipwater"]= "paxcentrail"
+[ "jsunshipwater"]= "cpaxcentrail"
 }
 return mergeDict(UnitCycleCentrail,UnitCycleJourneyman)
 end
@@ -643,11 +643,11 @@ end
 function getEquivalentMirrorTransformTypeTable(UnitDefNames)
 local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
     TransformationTable = {
-        [UnitDefNames["bg"].id] = UnitDefNames["skinfantry"].id,
-        [UnitDefNames["bg2"].id] = UnitDefNames["skinfantry"].id,
-        [UnitDefNames["bg3"].id] = UnitDefNames["skinfantry"].id,
-        [UnitDefNames["css"].id] = UnitDefNames["tiglil"].id,
-        [UnitDefNames["advisor"].id] = UnitDefNames["tiglil"].id,
+        [UnitDefNames["cit"].id] = UnitDefNames["jskinfantry"].id,
+        [UnitDefNames["bg2"].id] = UnitDefNames["jskinfantry"].id,
+        [UnitDefNames["bg3"].id] = UnitDefNames["jskinfantry"].id,
+        [UnitDefNames["css"].id] = UnitDefNames["jtiglil"].id,
+        [UnitDefNames["advisor"].id] = UnitDefNames["jtiglil"].id,
       
     }
 
@@ -666,11 +666,11 @@ function getRewardTable()
             ereward = 1000,
             mreward = 500
         },
-        [UnitDefNames["tiglil"].id] = {
+        [UnitDefNames["jtiglil"].id] = {
             ereward = 100,
             mreward = 100
         },
-        [UnitDefNames["skinfantry"].id] = {
+        [UnitDefNames["jskinfantry"].id] = {
             ereward = 100,
             mreward = 100
         },
@@ -696,7 +696,7 @@ function getRewardTable()
             mreward = 2000,
             ereward = 1000
         },
-        [UnitDefNames["bg"].id] = {
+        [UnitDefNames["cit"].id] = {
             ereward = 100,
             mreward = 100
         },

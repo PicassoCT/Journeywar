@@ -6,7 +6,7 @@ local unitDef = {
   description = "recycles retrieved Remains. <Scrap Recycling Building>",
   objectName         = "bbind.s3o",
   script = "bbind.lua",
-  buildPic = "industry.dds",
+  buildPic = "bbind.png",
 	EnergyUse = 5,
 	MetalUse = 5,
 	

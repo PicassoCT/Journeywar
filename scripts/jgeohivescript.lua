@@ -225,25 +225,23 @@ maxTuple = {
     val = 0
 }
 oldtime = -math.huge
+
 function findBiggestCluster(team, times)
 
-    if math.abs(times - oldtime) < 20000 then return maxTuple.x * 8, maxTuple.z * 8 end
-    oldtime = times
-
     mapX, mapZ = Spring.GetMetalMapSize()
-    local mapRepresentiv = makeTable(0, mapX, mapZ)
+    local mapRepresentiv = makeTable(0, mapX/16, mapZ/16)
     teamUnits = Spring.GetTeamUnits(team)
     maxTuple = {
         x = mapX / 2,
         z = mapZ / 2,
-        val = 0
+        val = -math.huge
     }
     if teamUnits then
         local spGetUnitPos = Spring.GetUnitPosition
         process(teamUnits,
             function(id)
                 ix, _, iz = spGetUnitPos(id)
-                ix, iz = math.ceil(ix / 8), math.ceil(iz / 8)
+                ix, iz = math.ceil(ix / 16), math.ceil(iz / 16)
                 if not mapRepresentiv[ix] then mapRepresentiv[ix] = {} end
                 if not mapRepresentiv[ix][iz] then mapRepresentiv[ix][iz] = 0 end
                 mapRepresentiv[ix][iz] = mapRepresentiv[ix][iz] + 1
@@ -261,20 +259,27 @@ function findBiggestCluster(team, times)
 		end
         end
     end
-    return maxTuple.x * 8, maxTuple.z * 8
+    return maxTuple.x * 16, maxTuple.z * 16
 end
 
 
 
 --attack relentless the biggest cluster
-function PEAK(monsterID, enemyID, Time, mteam, factor)
+oldFrame= 0
+storedClusterX, storedClusterZ =0,0
+function PEAK(monsterID, enemyID, Time, mteam, factor, frame)
     rVal = math.random(16, 64)
     rx, rz = drehMatrix(0, rVal, 0, 0, math.cos(factor * 2 * math.pi + monsterID) * 4 * math.pi)
     if math.random(0, 2) == 1 then
-        eteam = Spring.GetUnitTeam(enemyID)
-        ex, ez = findBiggestCluster(eteam, Time)
-        ex, ey, ez = sanitizeCoords(ex + rx, 0, ez + rz)
-        return ex, 0, ez
+			if oldFrame ~= frame then
+				oldFrame = frame 
+				
+				eteam = Spring.GetUnitTeam(enemyID)
+				ex, ez = findBiggestCluster(eteam, Time, Spring.GetGameFrame())
+				ex, ey, ez = sanitizeCoords(ex + rx, 0, ez + rz)
+				storedClusterX, storedClusterZ = ex, ez
+			end
+        return storedClusterX, 0, storedClusterZ
     else
 
         ex, ey, ez = Spring.GetUnitPosition(enemyID)
@@ -433,7 +438,7 @@ AllUnitsUpdated = {}
 State = "RELAX"
 function TargetOS()
 
-
+		Sleep(500)
     times = 0
     local spValidUnitID = Spring.GetUnitIsDead
 
@@ -457,12 +462,14 @@ function TargetOS()
                 --Spring.Echo("jgeohive:Switching from "..oldState.." to "..State)
                 oldState = State
             end
-
+				 gameframe = Spring.GetGameFrame()
+				 Spring.Echo("jgeohive::CurrentState:"..State)
+				 
             for num, monsterid in pairs(monsterTable) do
                 if monsterid and Spring.GetUnitIsDead(monsterid) == false then
                     enemyID = getNearestEnemy(monsterid)
                     if enemyID then
-                        ex, ey, ez = lfuncTable[State](monsterid, enemyID, times, teamID, times / totalTable[State])
+                        ex, ey, ez = lfuncTable[State](monsterid, enemyID, times, teamID, times / totalTable[State], gameframe)
                         if ex then
                             --Spring.Echo("jgeohive:Sending".. monsterid.." to state pos")
                             --StartThread(markPosOnMap,ex,ey,ez,"greenlight")

@@ -809,30 +809,30 @@ function createUnitAtUnit(teamID, typeID, otherID,ox,oy,oz)
 end
 
 --> Transforms a selected unit into another type
-function transformUnitInto(unitID, unitType, setVel, boolKill)
-	x, y, z = Spring.GetUnitPosition(unitID)
-	teamID = Spring.GetUnitTeam(unitID)
-	vx, vy, vz, vl = Spring.GetUnitVelocity(unitID)
-	rotx, roty, rotz = Spring.GetUnitRotation(unitID)
-	currHp, oldMaxHp = Spring.GetUnitHealth(unitID)
+function transformUnitInto(oldID, unitType, setVel, boolKill)
+	x, y, z = Spring.GetUnitPosition(oldID)
+	teamID = Spring.GetUnitTeam(oldID)
+	vx, vy, vz, vl = Spring.GetUnitVelocity(oldID)
+	rotx, roty, rotz = Spring.GetUnitRotation(oldID)
+	currHp, oldMaxHp = Spring.GetUnitHealth(oldID)
 	
 	id = Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0, 3)), teamID)
-	if id and vx and rotx then
-		
+	if id then
+		transferUnitStatusToUnit(oldID, id)
+		transferOrders(oldID, id)
 		Spring.SetUnitPosition(id, x, y, z)
-		if setVel then
-			Spring.SetUnitVelocity(id, vx * vl, vy * vl, vz * vl)
-		end
-		Spring.SetUnitRotation(id, rotx, roty, rotz)
 		
-		transferUnitStatusToUnit(unitID, id)
-		transferOrders(unitID, id)
-		Spring.DestroyUnit(unitID, false, true)
-		return id
+		if  vx and rotx then		
+			if setVel then
+				Spring.SetUnitVelocity(id, vx * vl, vy * vl, vz * vl)
+			end
+			Spring.SetUnitRotation(id, rotx, roty, rotz)
+		end
 	end
 	if not boolKill or boolKill == true then
-	Spring.DestroyUnit(unitID, false, true)
+		Spring.DestroyUnit(oldID, false, true)
 	end
+	
 	return id
 end
 
@@ -2295,7 +2295,12 @@ function echoT(T, layer)
 				Spring.Echo(Concated .. "boolean" .. ((T == true) and "True"))
 			elseif typus == "function" then
 				Spring.Echo(Concated .. "function: Result")
-				echoT(T(),layer)
+				resulT= T()
+				if type(resulT)=="table" then
+					echoT(resulT,layer)
+				else
+					echo(resulT)
+				end
 			end
 		end
 	end
@@ -2311,6 +2316,15 @@ function toString(element)
 	if typeE == "table" then return tableToString(element) end
 	
 	
+end
+
+function echoUnitDefs(unitDefNames)
+for k,v in pairs(unitDefNames) do
+	for key,values in pairs(v) do
+		echoT({key, values})
+	end
+end
+
 end
 
 function tableToString(tab)

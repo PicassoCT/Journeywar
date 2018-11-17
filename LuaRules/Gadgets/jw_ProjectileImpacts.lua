@@ -1135,7 +1135,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	--restrictor
+	--crestrictor
 	
 	UnitDamageFuncT[cRestrictorThumperID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		if weaponDefID == cRestrictorThumperID and Spring.ValidUnitID(attackerID) == true then

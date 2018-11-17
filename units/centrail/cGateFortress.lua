@@ -4,7 +4,7 @@ local unitDef = {
 	Description = "Fortress train travelling between Worlds <Heavy Defense Unit>",
 	objectName = "cGateFotress.s3o",
 	script = "cgatefotressscript.lua",
-	buildPic = "cgatefortress.png",
+	buildPic = "cgatefort.png",
 	RadarDistance = 25,
 	SightDistance = 200,
 	

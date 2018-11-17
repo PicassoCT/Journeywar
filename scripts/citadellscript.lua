@@ -203,7 +203,7 @@ function reInforCements()
                 spCreateUnit("contruck", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
                 for k = 1, 3 do
                     index = (index % #signOffset) + 1
-							bgID=  spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
+							bgID=  spCreateUnit("cit", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
 							StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
                 Sleep(50)
 					end
@@ -219,14 +219,14 @@ function reInforCements()
             spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 250, 0 + i, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
+               bgID= spCreateUnit("cit", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
 					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
 				end
             Sleep(50)
             spCreateUnit("conair", getFrameDepUnqOff(15) + dropPx, dropPy, dropPz + 340 + i, 0, teamID)
             for k = 1, 3 do
                 index = (index % #signOffset) + 1
-               bgID= spCreateUnit("bg", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
+               bgID= spCreateUnit("cit", getFrameDepUnqOff(15) + dropPx + signOffset[index].x, dropPy, dropPz + signOffset[index].z, 0, teamID)
 					StartThread(delayedSendBG,bgID, dropPx, dropPy,dropPz, k, 25)
 				end
             Sleep(100)
@@ -632,6 +632,7 @@ function script.Activate()
 end
 
 function script.Deactivate()
+
     Signal(SIG_DUST)
 
     for i = 1, 12, 1 do
@@ -645,6 +646,7 @@ function script.Deactivate()
 end
 TableOfPieceGroups={}
 function script.Create()
+
 	Hide(citaim)
 	TableOfPieceGroups = getPieceTableByNameGroups(false, true)
 	Spring.SetUnitNoSelect(unitID,true)

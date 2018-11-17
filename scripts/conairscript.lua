@@ -217,7 +217,7 @@ function updateBuildProgress()
 	end
 end
 
-local BGID = UnitDefNames["bg"].id
+local BGID = UnitDefNames["cit"].id
 function unitBuiltCheck()
 	--test if unit built is a soldier
 	while buildID == nil or buildID == -666 do

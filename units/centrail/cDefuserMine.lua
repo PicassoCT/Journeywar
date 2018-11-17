@@ -6,7 +6,7 @@ local unitDef = {
 
 	objectName = "cdefusormine.s3o",
 	script = "cdefusermine_script.lua",
-	buildPic = "cdefuserdart.png",
+	buildPic = "cdefusermine.png",
 
 
 	RadarDistance = 0,

@@ -1,4 +1,4 @@
-local unitName = "paxcentrail"
+local unitName = "cpaxcentrail"
 
 local unitDef = {
 	name = "Pax Centrail",

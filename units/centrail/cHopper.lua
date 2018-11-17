@@ -5,7 +5,7 @@ local unitDef = {
 	objectName = "cHopperMinefield.s3o",
 	Description =" blows up enemies <Short Range Defense Building>",
 	script ="cHopper.lua",
-	buildPic = "mines.dds",
+	buildPic = "chopper.png",
 	RadarDistance = 25,
 	SightDistance = 200,
 	

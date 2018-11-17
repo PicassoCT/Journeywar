@@ -1,4 +1,4 @@
-local unitName = "skinfantry"
+local unitName = "jskinfantry"
 
 local unitDef = {
 	name = "Skinfantry",

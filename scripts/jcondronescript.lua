@@ -96,7 +96,7 @@ function unitBuiltCheck()
     end
     local unitDefID = Spring.GetUnitDefID(buildID)
 
-    if unitDefID == UnitDefNames["bg"].id then
+    if unitDefID == UnitDefNames["cit"].id then
 
         return true
 

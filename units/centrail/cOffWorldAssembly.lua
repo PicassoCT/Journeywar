@@ -9,7 +9,7 @@ local unitDef = {
 	
 	objectName = "coffworldAssembly.s3o",
 	script = "cOffWorldAssemblyscript.lua",
-	buildPic = "cfc2.dds",
+	buildPic = "coffworldassembly.png",
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat",
 	
@@ -83,7 +83,7 @@ local unitDef = {
 	buildoptions = 
 	{		
 		"strider","ccrabsynth", "chunter",
-		"cauterizer","paxcentrail","cgatefort",
+		"cauterizer","cpaxcentrail","cgatefort",
 		"cnanorecon",
 	},
 	

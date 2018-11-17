@@ -57,13 +57,13 @@ TutorialInfoTable= {
 	
 	--fclvl1
 	
-	[UnitDefNames["mtw"].id] = {text =  "\a|Manned Transport Wagon\nBuilds and deploys Infantry or Flamethrower Synths"},
+	[UnitDefNames["cspc"].id] = {text =  "\a|Manned Transport Wagon\nBuilds and deploys Infantry or Flamethrower Synths"},
 	[UnitDefNames["advisor"].id] = {text = "\a|Advisor\nExtracts Information from captured Units"},
 	[UnitDefNames["campro"].id] = {text = "\a|Antimatter Projector\nFires energy expensive, slow -deadly Anti-Matter projectiles"},
-	[UnitDefNames["restrictor"].id] = {text = "\a|Restrictor Tank\nScout Tank with stationary Building Stunability"},
+	[UnitDefNames["crestrictor"].id] = {text = "\a|Restrictor Tank\nScout Tank with stationary Building Stunability"},
 	[UnitDefNames["csniper"].id] = {text = "\a|Sniper\n Longrange Hunter - Can drag Trophys to Industry."},
 	[UnitDefNames["css"].id] = {text = "\a|Combine Synth Soldiers\n Can torch flameable material"},
-	[UnitDefNames["bg"].id] = {text = "\a|Overwatch Infantry\nCan deploy tactical shields to reduce damage."},
+	[UnitDefNames["cit"].id] = {text = "\a|Overwatch Infantry\nCan deploy tactical shields to reduce damage."},
 	[UnitDefNames["cgamagardener"].id] = {text = "\a|Gammagardener\n Sterilizes Exobiotics Fauna in area with radiation."},
 	[UnitDefNames["coffworldassemblyseed"].id] = {text = "\a|Offworld Assembly Seed\n Create a new Offworld Assembly of forbidden units."},
 	
@@ -107,11 +107,11 @@ TutorialInfoTable= {
 	[UnitDefNames["buibaicity1"].id] = {text = "\a|Skyscraper\n Returns Insurance paid by the second last attacker"},
 	[UnitDefNames["crailgun"].id] = {text = "\a|Railgun\n Long range base defence"},
 	[UnitDefNames["sentry"].id] = {text = "\a|Sentry\n Rapid fire short range anti-infantry defence"},
-	[UnitDefNames["bonker"].id] = {text = "\a|Bunker\n Heavy Anti-Air fortification with medium range"},
+	[UnitDefNames["cbonker"].id] = {text = "\a|Bunker\n Heavy Anti-Air fortification with medium range"},
 	[UnitDefNames["chopper"].id] = {text = "\a|Hoppermines\n Personal Mines"},
 	[UnitDefNames["coverworldgate"].id] = {text = "\a|Overworldgate\n Autospawns expensive A.I. controlled troops"},
 	[UnitDefNames["comendbonker"].id] = {text = "\a|Comenderdock\n Spawns the Comender Hero Unit"},
-	[UnitDefNames["paxcentrail"].id] = {text = "\a|PaxCentrail\n Fullcitizen Prisoner Chaingang fighting for their familys survival"},
+	[UnitDefNames["cpaxcentrail"].id] = {text = "\a|PaxCentrail\n Fullcitizen Prisoner Chaingang fighting for their familys survival"},
 	[UnitDefNames["choblock"].id] = {text = "\a|Hostage Blocks\n Fullcitizen Dissenter familys taken hostage"},
 	
 	--Journeyman
@@ -123,9 +123,9 @@ TutorialInfoTable= {
 	[UnitDefNames["jconcaterpillar"].id] = {text = "\a|Roach\n Constructs buildings by sacrificing itself."},
 	[UnitDefNames["hc"].id] = {text = "\a|Headcrab\n Turn Infantry into zombies"},
 	[UnitDefNames["zombie"].id] = {text = "\a|Zombie\n Trying to eat the living"},
-	[UnitDefNames["skinfantry"].id]	 = {text = "\a|SkInfantry\n Able to Ambush.\n Reproduce with Experience by laying Eggs"},
+	[UnitDefNames["jskinfantry"].id]	 = {text = "\a|SkInfantry\n Able to Ambush.\n Reproduce with Experience by laying Eggs"},
 	[UnitDefNames["jskineggnogg"].id] = {text = "\a|SkInfantry Egg\n Grows into Skinfantry"},
-	[UnitDefNames["tiglil"].id] = {text =  "\a|Tigerlily \n Close Combatcreature with poisoned Nailbladeclaws"},
+	[UnitDefNames["jtiglil"].id] = {text =  "\a|Tigerlily \n Close Combatcreature with poisoned Nailbladeclaws"},
 	[UnitDefNames["jtigeggnogg"].id] = {text =  "\a|Tigerlily Egg\n Grows into a Tigerlily"},
 	[UnitDefNames["jmovingfac1"].id] = {text = "\a|Firstborn DNA-Weaver \n Gives birth to basic Units"},
 	[UnitDefNames["jbeherith"].id] = {text = "\a|Beherith \nAmphibious Island able to transport units and \ngo into a Amokstampede"},

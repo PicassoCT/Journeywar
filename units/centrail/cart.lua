@@ -1,11 +1,11 @@
-local unitName = "art"
+local unitName = "cart"
 
 local unitDef = {
 name = "Dark Matter Artillery",
 Description = "shells the (Head)crab out of the enemy <Long Range Artillery>",
 objectName = "art.s3o",
 script = "artscript.lua",
-buildPic = "cart.dds",
+buildPic = "cart.png",
 --cost
 moveState =0,
 buildCostMetal = 810,

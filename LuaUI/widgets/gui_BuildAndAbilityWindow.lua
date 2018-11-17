@@ -1,7 +1,7 @@
 
 function widget:GetInfo()
 	return {
-		name = "Abilitys, Upgrade & Build Gui",
+		name = "Abilitys, Upgrade & Build GUI",
 		desc = "Displays Special Abilitys & Buildoptions",
 		author = "PicassoCT",
 		date = "2011-6-2",
@@ -22,6 +22,7 @@ local Panel
 local Image
 local Progressbar
 local screen0
+local build_grid
 
 local boolShowUpgrade = false
 local elementsToHide={}
@@ -41,6 +42,7 @@ local ammo_bar	= {}
 local imageDirComands = 'luaui/images/commands/'
 local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 'states/on.png'}
 local selectedUnits = {}
+local unitImageDir = 'unitpics/'
 
 local spGetUnitDefID = Spring.GetUnitDefID
 local spGetSelectedUnits = Spring.GetSelectedUnits
@@ -49,6 +51,24 @@ updateCommandsSoon = false
 defaultCaptionByUnitType = VFS.Include('LuaUI/ressources/ability_captions.lua')
 
 local ability_window = {}
+local build_window = {}
+
+local ignoreCMDs = {
+    timewait=true,
+    deathwait=true,
+    squadwait=true,
+    gatherwait=true,
+    loadonto=true,
+}
+
+-- function addPercent(x, y, sign)
+	-- sign=sign or 1
+	-- x= tonumber(string.sub(x,'%',''))
+	-- y= tonumber(string.sub(y,'%',''))
+
+	-- result = x + sign*(y)
+	-- return result.."%"
+-- end
 
 ability_window.height = "23%"--180
 ability_window.height_numeric =180
@@ -57,12 +77,21 @@ ability_window.width_numeric = 115
 ability_window.positionX = "19%"
 ability_window.positionY = "77%"
 
-upgrade_window.height= "25%"
+upgrade_window.height= "20%"
 upgrade_window.height_numeric= 300
-upgrade_window.width= "40%"
+upgrade_window.width= "35%"
 upgrade_window.width_numeric= 300
-upgrade_window.positionX = "36%"
-upgrade_window.positionY = "80%"
+upgrade_window.positionX = "26%" -- addPercent(ability_window.positionX, ability_window.width) -- "36%"
+upgrade_window.positionY = "85%"
+
+build_window.height= "12.5%"
+build_window.height_numeric= 300
+build_window.width= "45%"
+build_window.width_numeric= 300
+build_window.positionX = upgrade_window.positionX
+build_window.positionY = "87.5%"
+build_window.rows = 2
+build_window.columns= 30 /build_window.rows
 
 local CentrailButtonBackground = {0.1,0.8,0.8,1}
 local CentrailTextColour = {0.8,1,1,1}
@@ -109,6 +138,37 @@ function widget:Initialize()
 			ButtonsTable["ability"]=SpecialAbilityButton
 			SpecialAbilityButton:Hide()
 		end
+		
+		build_grid = Chili.Grid:New{
+        name = "build_grid",
+        x = '0%',
+        y = '0%',
+        width = '100%',
+        height = '100%',
+        rows = build_window.rows,
+        columns = build_window.columns,        
+        padding = {0,0,0,0},
+    }
+	
+	build_window = Window:New{
+				padding = {3,3,3,3,},
+				dockable = true,
+				textColor = AbilityWindowTextColour,
+				name = "build_window",
+				x = build_window.positionX, 
+				y = build_window.positionY,
+				width = build_window.width,
+				height = build_window.height,
+				parent = screen0,
+				draggable = false,
+				tweakDraggable = false,
+				tweakResizable = false,
+				resizable = false,
+				dragUseGrip = false,
+				color = {0.1,0.7,0.85,0.42},
+				backgroundColor= {0.1,0.2,0.6,0.32},
+				children = {build_grid},
+			}
 		
 	end
 	
@@ -189,27 +249,93 @@ function widget:Initialize()
 		}
 	end
 	
-	function CreateUpgradeMenue ()
+	function UnitButton(cmd)
+    local uDID = -cmd.id
+    local unitDef = UnitDefs[uDID] 
+    local name = unitDef.name
+    
+    local image = Chili.Image:New{
+        name   = "unitImage_" .. name,
+        height = '100%', 
+        width = '100%',
+        file   = unitImageDir..(unitDef.name..".png" or 'placeholder.png'),
+         flip = false,
+    }
+    local button = Chili.Button:New{
+        name = "unitButton_" .. name,
+        cmdID = cmd.id,
+        caption = "",
+        children = {image},
+        padding = {0,0,0,0},
+        margin = {0,0,0,0},
+        OnMouseUp = {function (self,...) Spring.Echo(self.name) end},
+    }
+    build_grid:AddChild(button)
+end
+
+function ParseCmd(cmd)
+    if UnitDefNames[cmd.name] then
+        -- unit
+        UnitButton(cmd)
+    elseif #cmd.params > 1 then
+        -- state
+    --    StateButton(cmd)
+    else
+        -- order
+    --    OrderButton(cmd)
+    end
+end
+
+	function ParseBuildCmds()
+		-- clean out the grids & repopulate
+		build_grid:ClearChildren()
 		
-		upgrade_window = Window:New{
-			padding = {3,3,3,3,},
-			dockable = true,
-			textColor = AbilityWindowTextColour,
-			name = "upgrade_window",
-			x = upgrade_window.positionX, 
-			y = upgrade_window.positionY,
-			width = upgrade_window.width,
-			height = upgrade_window.height,
-			parent = screen0,
-			draggable = false,
-			tweakDraggable = false,
-			tweakResizable = false,
-			resizable = false,
-			dragUseGrip = false,
-			color = {0.1,0.7,0.85,0.42},
-			backgroundColor= {0.1,0.2,0.6,0.32},
-			children = {},
-		}
+		local cmds = Spring.GetActiveCmdDescs()
+		local haveCmd = false
+		for _,cmd in ipairs(cmds) do
+			if cmd.name ~= '' and not (ignoreCMDs[cmd.name] or ignoreCMDs[cmd.action]) then
+				haveCmd = true
+				ParseCmd(cmd)
+			end
+		end
+		
+		if haveCmd and build_window.hidden then build_window:Show() elseif not haveCmd and build_window.visible then build_window:Hide() end
+	end
+	
+	
+	function updateBuildMenue ()
+
+		
+		ParseBuildCmds()
+	
+	
+	end
+	
+	function CreateUpgradeMenue ()
+		if not screen0.upgrade_window then
+			upgrade_window = Window:New{
+				padding = {3,3,3,3,},
+				dockable = true,
+				textColor = AbilityWindowTextColour,
+				name = "upgrade_window",
+				x = upgrade_window.positionX, 
+				y = upgrade_window.positionY,
+				width = upgrade_window.width,
+				height = upgrade_window.height,
+				parent = screen0,
+				draggable = false,
+				tweakDraggable = false,
+				tweakResizable = false,
+				resizable = false,
+				dragUseGrip = false,
+				color = {0.1,0.7,0.85,0.42},
+				backgroundColor= {0.1,0.2,0.6,0.32},
+				children = {},
+			}
+		else
+			screen0.upgrade_window:Show()
+		end
+		
 		
 		BaseCol=CentrailButtonBackground
 		WeapCol={0.3,0.6,0.8,1}
@@ -303,11 +429,10 @@ function widget:Initialize()
 		if boolShowUpgrade == false then
 			boolShowUpgrade = true
 			upgrade_window:Show()
-			activeAbilityElements["ComEndUpgradeMenue"] = upgrade_window
 			
 		else 
 			boolShowUpgrade = false
-			if upgrade_Grid then
+			if upgrade_window then
 				upgrade_window:Hide()
 			end
 		end
@@ -316,10 +441,8 @@ function widget:Initialize()
 
 		
 	function HideAllActiveAbilityElements()
-		for k,element in pairs(activeAbilityElements) do
-			element:Hide()
-		end
-		activeAbilityElements={}
+		upgrade_window:Hide()
+
 	end
 	
 	function createAllButtons()
@@ -546,6 +669,9 @@ function widget:GameFrame(f)
 	if updateCommandsSoon == true and (f % 16 == 0) then
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
-
+	end
+	
+	if (f % 16 == 0 ) then
+		updateBuildMenue()
 	end
 end

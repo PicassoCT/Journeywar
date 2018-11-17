@@ -235,7 +235,7 @@ function script.Killed(recentDamage, maxHealth)
     teamID = Spring.GetUnitTeam(unitID)
     dropPx, dropPy, dropZ = Spring.GetUnitPosition(unitID)
     for i = 1, 4, 1 do
-        Spring.CreateUnit("bg", dropPx + 20, dropPy, dropZ + 90, 0, teamID)
+        Spring.CreateUnit("cit", dropPx + 20, dropPy, dropZ + 90, 0, teamID)
     end
     createCorpseCBuilding(unitID, recentDamage)
 

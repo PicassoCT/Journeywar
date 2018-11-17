@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Transports Hubbuildings Counterpart <Teleportation Building>",
 	objectName = "ctransitnode.s3o",
 	script = "transitnodeExit.lua",
-	buildPic = "Transithub.dds",
+	buildPic = "ctransithubb.png",
 	--cost
 	buildCostMetal = 950,
 	buildCostEnergy = 750,

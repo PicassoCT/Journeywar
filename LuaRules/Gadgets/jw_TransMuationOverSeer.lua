@@ -28,16 +28,16 @@ if (gadgetHandler:IsSyncedCode()) then
         [UnitDefNames["hc"].id] = { [UnitDefNames["gjmedbiogwaste"].id] = { unit = UnitDefNames["gzombiehorse"].id, killerTeam = true, }, },
         [UnitDefNames["hc"].id] = { [UnitDefNames["gjbigbiowaste"].id] = { unit = UnitDefNames["gzombiehorse"].id, killerTeam = true, }, },
         [UnitDefNames["hc"].id] = { [UnitDefNames["ghohymen"].id] = { unit = UnitDefNames["gzombiehorse"].id, killerTeam = true, }, },
-        [UnitDefNames["hc"].id] = { [UnitDefNames["bg"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
-        [UnitDefNames["hc"].id] = { [UnitDefNames["tiglil"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
+        [UnitDefNames["hc"].id] = { [UnitDefNames["cit"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
+        [UnitDefNames["hc"].id] = { [UnitDefNames["jtiglil"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
         [UnitDefNames["hc"].id] = { [UnitDefNames["css"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
-        [UnitDefNames["hc"].id] = { [UnitDefNames["skinfantry"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
+        [UnitDefNames["hc"].id] = { [UnitDefNames["jskinfantry"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
         [UnitDefNames["hc"].id] = { [UnitDefNames["gcivillian"].id] = { unit = UnitDefNames["zombie"].id, killerTeam = true, }, },
 
         --when a tank is destroyed (no matter by what) a dude escapes from it, like the technicans in C&C:
-        [ZOMBO] = { [UnitDefNames["restrictor"].id] = { unit = UnitDefNames["bg"].id, killerTeam = false, }, },
-        [ZOMBO] = { [UnitDefNames["mtw"].id] = { unit = UnitDefNames["bg"].id, killerTeam = false, }, },
-        --[ZOMBO] = {[UnitDefNames["ampro"].id] = {unit=UnitDefNames["bg"].id, killerTeam=false,}, } ,
+        [ZOMBO] = { [UnitDefNames["crestrictor"].id] = { unit = UnitDefNames["cit"].id, killerTeam = false, }, },
+        [ZOMBO] = { [UnitDefNames["cspc"].id] = { unit = UnitDefNames["cit"].id, killerTeam = false, }, },
+        --[ZOMBO] = {[UnitDefNames["ampro"].id] = {unit=UnitDefNames["cit"].id, killerTeam=false,}, } ,
 
         --jeep turns everything it kills into a new jeep (for its team)
         --[UnitDefNames["tpjeep"].id] = {unit=UnitDefNames["tpjeep"].id, killerTeam=true,} ,

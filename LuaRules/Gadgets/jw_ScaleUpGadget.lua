@@ -41,12 +41,12 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
     function gadget:UnitCreated(unitID, unitDefID, unitTeam)
-        if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id or
+        if DefTypeTable[unitDefID] then --unitDefID== UnitDefNames["jtiglil"].id or unitDefID== UnitDefNames["jskinfantry"].id or
             boolPulse = false
 			pulseScale = 0
             StartScale = 0.06
 			totalFrames = 0
-            --	if unitDefID== UnitDefNames["tiglil"].id or unitDefID== UnitDefNames["skinfantry"].id then StartScale=0.52 end
+            --	if unitDefID== UnitDefNames["jtiglil"].id or unitDefID== UnitDefNames["jskinfantry"].id then StartScale=0.52 end
 
             ScaleFactorProFrame = DefTypeTable[unitDefID] 
             ScaleUpLimit = 1

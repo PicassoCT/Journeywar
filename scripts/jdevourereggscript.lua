@@ -130,7 +130,7 @@ function buildAndDeployTroops()
 
 	for i=1, #TablesOfPiecesGroups["FPod"] do
 		Sleep(1000)
-		createUnitAtPiece(unitID, UnitDefNames["skinfantry"].id, TablesOfPiecesGroups["FPod"][i])
+		createUnitAtPiece(unitID, UnitDefNames["jskinfantry"].id, TablesOfPiecesGroups["FPod"][i])
 		Explode(TablesOfPiecesGroups["FPod"][i], SFX.SHATTER)
 		Hide(TablesOfPiecesGroups["FPod"][i])
 	end

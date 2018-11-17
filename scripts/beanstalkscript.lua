@@ -129,7 +129,7 @@ function spawny()
 	if total > 0 then
 		slice = math.ceil(math.random(1, 5))
 		px, py, pz, dx, dy, dz = Spring.GetUnitPiecePosDir(unitID, pumps[slice])
-		GG.UnitsToSpawn:PushCreateUnit("tiglil", px, py, pz, 0, teamID)
+		GG.UnitsToSpawn:PushCreateUnit("jtiglil", px, py, pz, 0, teamID)
 		total = total - 1
 	elseif boolOnce == true then
 		boolOnce = false
@@ -585,29 +585,29 @@ end
 nrOfReinforcements = 3
 firstWave = {
 	"jconroach",
-	"skinfantry",
-	"skinfantry",
-	"tiglil",
+	"jskinfantry",
+	"jskinfantry",
+	"jtiglil",
 	"jconroach",
-	"skinfantry",
-	"skinfantry",
-	"skinfantry",
+	"jskinfantry",
+	"jskinfantry",
+	"jskinfantry",
 	"jconroach",
-	"skinfantry",
-	"skinfantry",
-	"skinfantry",
+	"jskinfantry",
+	"jskinfantry",
+	"jskinfantry",
 }
 
 nextWave = {
 	"jconroach",
 	"jconroach",
-	"tiglil",
-	"tiglil",
-	"tiglil",
+	"jtiglil",
+	"jtiglil",
+	"jtiglil",
 	"jconroach",
-	"skinfantry",
-	"skinfantry",
-	"skinfantry"
+	"jskinfantry",
+	"jskinfantry",
+	"jskinfantry"
 }
 
 

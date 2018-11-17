@@ -73,7 +73,7 @@ local unitDef = {
 	
 	buildoptions = 
 	{
-		"bg",	
+		"cit",	
 	},
 	customParams = {},
 	sfxtypes = {

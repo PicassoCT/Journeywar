@@ -1,11 +1,11 @@
-local unitName = "restrictor"
+local unitName = "crestrictor"
 
 local unitDef = {
 name = "Restrictor",
 Description = "fast Scout. Stuns Enemy Buildings with Groundconcussion. <Scout Buff Unit>",
 objectName = "res.s3o",
 script = "cres.lua",
-buildPic = "crestrictor.dds",
+buildPic = "crestrictor.png",
 --cost
 buildCostMetal = 380,
 buildCostEnergy = 120,

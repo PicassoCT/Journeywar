@@ -1,7 +1,7 @@
 include "createCorpse.lua"
 include "lib_UnitScript.lua"
 
-local art = piece "art"
+local art = piece "cart"
 local ArtLoadtur = piece "ArtLoadtur"
 local artbarrel = piece "artbarrel"
 local artbarrel2 = piece "artbarrel2"

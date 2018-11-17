@@ -6,7 +6,7 @@ local unitDef = {
 	objectName = "skInfantry.s3o",
 	script = "skInfantry.lua",
 	buildPic = "skinfantry.png",
-	decoyFor = "skinfantry",
+	decoyFor = "jskinfantry",
 	
 	--cost
 	buildCostMetal = 110,

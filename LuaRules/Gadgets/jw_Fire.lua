@@ -29,7 +29,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
 
-    local isPanicAble = getTypeTable(UnitDefNames, { "hc", "bg", "bg2","bg3", "gcivillian", "skinfantry", "jconroach", "tiglil", "jbugcreeper", "jcrabcreeper", "jghostdancer", "jhivewulf" })
+    local isPanicAble = getTypeTable(UnitDefNames, { "hc", "cit", "bg2","bg3", "gcivillian", "jskinfantry", "jconroach", "jtiglil", "jbugcreeper", "jcrabcreeper", "jghostdancer", "jhivewulf" })
     function gadget:GameFrame(frame)
 
         if frame % disDance == 0 and GG.OnFire ~= nil then

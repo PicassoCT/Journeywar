@@ -1,11 +1,11 @@
-local unitName = "mtw"
+local unitName = "cspc"
 
 local unitDef = {
 	name = "Synth Personal Carrier",
 	Description = "Contains: - - - - -. Building:",
 	objectName = "mtw.s3o",
 	script = "mtw.lua",
-	buildPic = "cmtw.png",
+	buildPic = "cspc.png",
 	--cost
 	buildCostMetal = 550,
 	buildCostEnergy = 250,

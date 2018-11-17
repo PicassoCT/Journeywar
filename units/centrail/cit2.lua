@@ -1,11 +1,11 @@
-local unitName = "bg3"
+local unitName = "cit2"
 
 local unitDef = {
 	name = "Inferno Trooper",
-	Description = "full, involuntary enhanced, carrying a Tatical Shield <Assault Ground Unit>",
-	objectName = "bg3.s3o",
+	Description = "enhanced Soldier, carrying a Tatical Shield <Ground Assault Unit>",
+	objectName = "bg2.s3o",
 	script = "bgscript.lua",
-	buildPic = "cbg.png",
+	buildPic = "cit2.png",
 	
 	--cost
 	buildCostMetal = 105,
@@ -14,7 +14,7 @@ local unitDef = {
 	--Health
 	moveState =1,
 	fireState =2,
-	maxDamage = 341,
+	maxDamage = 240,
 	idleAutoHeal = 3,
 	onoffable=true,
 	ActivateWhenBuilt=0,
