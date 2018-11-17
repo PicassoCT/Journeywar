@@ -153,7 +153,7 @@ function growInStages()
     x, y, z = Spring.GetUnitPosition(unitID)
     Explode(eggStage3, SFX.SHATTER + SFX.NO_HEATCLOUD)
     Spring.DestroyUnit(unitID, false, true)
-    id = Spring.CreateUnit("skinfantry", x, y, z, 0, teamID)
+    id = Spring.CreateUnit("jskinfantry", x, y, z, 0, teamID)
 
     transferOrders(unitID, id)
     for i = 1, 12, 1 do

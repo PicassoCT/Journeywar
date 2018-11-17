@@ -4,7 +4,7 @@ name = "Water Extractor",
 Description = "pumps Water Offworld for a greater cause <Anti Terraform Building>",
 objectName = "cWaterExtractor.s3o",
 script = "c_WaterExtractor.lua",
-buildPic = "cwater.dds",
+buildPic = "cwaterextractor.png",
 --cost
 buildCostMetal = 100,
 buildCostEnergy = 12,

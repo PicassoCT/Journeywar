@@ -1,11 +1,11 @@
-local unitName = "advisor"
+local unitName = "cadvisor"
 
 local unitDef = {
 	name = "Advisor",
 	Description = "extracts Information from captured Enemys using PSI <Long Range Radar Unit/ Anti Air>",
 	objectName = "advisor.s3o",
 	script = "cAdvisor.lua",
-	buildPic = "advstalker.png",
+	buildPic = "cadvisor.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 450,

@@ -104,7 +104,7 @@ function OS_LOOP()
     StartThread(timing)
     Sleep(50)
 	baitType = {
-				UnitDefNames["bonker"].id,
+				UnitDefNames["cbonker"].id,
 				UnitDefNames["cdistrictnone"].id,
 				UnitDefNames["buibaicity1"].id,
 				UnitDefNames["cwatchpost"].id,

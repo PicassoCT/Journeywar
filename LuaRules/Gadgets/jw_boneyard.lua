@@ -11,7 +11,7 @@ function gadget:GetInfo()
     license   = "GNU GPL, v2 or later",
 	handler = true,
     layer     = 0,
-    enabled   = (Spring.GetModOptions().boneyard ~= "l") or false  --  loaded by default?
+    enabled   = false--(Spring.GetModOptions().boneyard ~= "l") or false  --  loaded by default?
   }
 end
 

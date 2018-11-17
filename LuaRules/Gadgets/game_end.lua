@@ -275,8 +275,8 @@ function launchLaunchables(teamID, EscapeTable)
 end
 function evacuateInfantry()
                filterTable = {}
-                filterTable[UnitDefNames["tiglil"].id] = true
-                filterTable[UnitDefNames["skinfantry"].id] = true
+                filterTable[UnitDefNames["jtiglil"].id] = true
+                filterTable[UnitDefNames["jskinfantry"].id] = true
                 infantryTable = getAllUnitOfType(teamID, filterTable)
                 sendInfantryToFuckTheSky(infantryTable, EscapeTable)
 end

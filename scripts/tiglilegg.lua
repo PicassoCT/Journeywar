@@ -136,7 +136,7 @@ function growInStages()
     --Release and Vannish
     x, y, z = Spring.GetUnitPosition(unitID)
     Spring.DestroyUnit(unitID, false, true)
-    id = Spring.CreateUnit("tiglil", x, y, z, 0, teamID)
+    id = Spring.CreateUnit("jtiglil", x, y, z, 0, teamID)
 
     transferOrders(unitID, id)
     for i = 1, 12, 1 do

@@ -61,7 +61,7 @@ local unitDef = {
 	SelfDestructAs="electric_explosion",
 	buildoptions = 
 	{
-		"efence","bonker","crailgun","geohive","chopper","cwatchpost","cdefusermine"
+		"efence","cbonker","crailgun","geohive","chopper","cwatchpost","cdefusermine"
 	},
 	
 	NoWeapon=false,

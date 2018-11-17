@@ -13,7 +13,7 @@ local depshield = piece "depshield"
 local bgbase = piece "bgbase"
 local bgtorso = piece "bgtorso"
 maxspeed = math.ceil(183492) --2.8*65533
-local turn_rate = UnitDefNames["bg"].turnRate
+local turn_rate = UnitDefNames["cit"].turnRate
 
 riotshield = piece "riotshield"
 local riotshield2 = piece "riotshield2"
@@ -43,8 +43,8 @@ local leg_movedistance = 10
 defID = Spring.GetUnitDefID(unitID)
 PiecesTable = getPieceTable(unitID)
 
-bgdefID = UnitDefNames["bg"].id
-boolCityTrooper = (defID == UnitDefNames["bg"].id)
+bgdefID = UnitDefNames["cit"].id
+boolCityTrooper = (defID == UnitDefNames["cit"].id)
 
 LArm = piece "LArm"
 RArm = piece "RArm"
@@ -939,7 +939,7 @@ end
 
 --- -death animation: fall over & explode
 TIGLILDAMAGE = 325
-bgID = UnitDefNames["bg"].id
+bgID = UnitDefNames["cit"].id
 function script.Killed(recentDamage, maxHealth)
      setSpeedEnv(unitID, 0, UnitDefs)
 

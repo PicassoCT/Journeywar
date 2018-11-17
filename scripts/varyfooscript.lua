@@ -1216,13 +1216,13 @@ end
 
 
 isInfantry = getTypeTable(UnitDefNames, {
-    "bg",
-    "bg2",
-    "bg3",
-    "vort",
-    "skinfantry",
+    "cit",
+    "cit2",
+    "cit3",
+    "jvort",
+    "jskinfantry",
     "css",
-    "tiglil",
+    "jtiglil",
     "gcivillian"
 })
 

@@ -6,7 +6,7 @@ local unitDef = {
 	objectName = "tigLil.s3o",
 	script = "tiglilscript.lua",
 	buildPic = "tiglil.png",
-	decoyFor = "tiglil",
+	decoyFor = "jtiglil",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 0,

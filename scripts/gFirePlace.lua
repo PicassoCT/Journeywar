@@ -28,8 +28,8 @@ function anybodyNearby()
     table.remove(T, unitID)
     if T and #T > 2 then
         local CompTable = {
-            [UnitDefNames["skinfantry"].id] = true,
-            [UnitDefNames["tiglil"].id] = true,
+            [UnitDefNames["jskinfantry"].id] = true,
+            [UnitDefNames["jtiglil"].id] = true,
             [UnitDefNames["vort"].id] = true
         }
         count = 0

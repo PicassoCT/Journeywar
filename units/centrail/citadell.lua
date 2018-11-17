@@ -65,7 +65,7 @@ local unitDef = {
 		"builux","bbind","coverworldgate",
 		"condepot","fclvl1","cairbase",
 		"cdistrictnone","ctransithub","buibaicity1",
-		"crailgun","sentry","bonker",
+		"crailgun","sentry","cbonker",
 		"cdefusermine",	"chopper","cwatchpost",
 		"efence","comendbonker","chivemind",
 		"citconair"

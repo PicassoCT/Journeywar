@@ -5,7 +5,7 @@ name = "Gammagardener",
 Description = "Landscape gammasoaking sterilization Unit <Anti Energy Production Unit>",
 objectName = "gama.s3o",
 script = "cgamagardener.lua",
-buildPic = "cgama.png",
+buildPic = "cgamagardener.png",
 --cost
 buildCostMetal = 550,
 buildCostEnergy = 250,

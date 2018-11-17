@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "builds a building, using its Hitpoints <Construction Air Unit>",
 	objectName = "conair.s3o",
 	script = "conairscript.lua",
-	buildPic = "conair.dds",
+	buildPic = "citconair.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 780,
@@ -77,7 +77,7 @@ local unitDef = {
 	
 	buildoptions = 
 	{
-		"bg",	
+		"cit",	
 	},
 	customParams = {},
 	sfxtypes = {

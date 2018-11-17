@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "orders first Level Units from a higher Dimension <Ground Unit Factory>",
 	
 	
-	buildPic = "cfc1.dds",
+	buildPic = "fclvl1.png",
 	objectName = "fclvlone.s3o",
 	script = "fclvlone.lua",
 	
@@ -74,8 +74,8 @@ local unitDef = {
 	buildoptions = 
 	{
 		"genupgrade","upgradefactory","cgamagardener",
-		"mtw","bg","css",
-		"campro", "restrictor","csniper",
+		"cspc","cit","css",
+		"campro", "crestrictor","csniper",
 		"advisor"
 	},
 	

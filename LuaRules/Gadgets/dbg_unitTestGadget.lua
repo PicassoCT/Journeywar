@@ -28,26 +28,26 @@ if gadgetHandler:IsSyncedCode() then
 	-- CONFIG --
 	UnitTest = {}
 	teamList = {}
-		 UnitNames = {"bg","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+		 UnitNames = {"cit","css","cspc","csniper","campro","cadvisor","cgamagardener","crestrictor",
 				 "coperatrans","art","sentrynell","cheadlauncher","chunter",
 				-- "chunterchopper","cgunship","callygator",
-				 "paxcentrail",	"strider","ccrabsynth", "chunter",
-				 "sentry","bonker","crailgun","chopper",
+				 "paxcentrail",	"cstrider","ccrabsynth", "chunter",
+				 "sentry","cbonker","crailgun","chopper",
 				 "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai",
-				 "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
+				 "jglowworms","jbeherith","jeliah","jtiglil","jskinfantry",
 				"jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
 				 "vort", "jantart",	"jviralfac", "jfiredancer",
 				 "jhunter", "jvaryfoo",
 				 "jgalatea",
 				 --"jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	  }
-	-- UnitNames = {"bg","ccontrain","css","mtw","csniper","campro","cadvisor","cgamagardener","restrictor",
+	-- UnitNames = {"cit","ccontrain","css","cspc","csniper","campro","cadvisor","cgamagardener","crestrictor",
 				-- "coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
 				-- "chunterchopper","conair","csuborbital","cgunship","callygator",
-				-- "paxcentrail","cgatefort","cnanorecon","chunter",	"strider","ccrabsynth", "chunter",
-				-- "sentry","bonker","crailgun","chopper",
+				-- "paxcentrail","cgatefort","cnanorecon","chunter",	"cstrider","ccrabsynth", "chunter",
+				-- "sentry","cbonker","crailgun","chopper",
 				-- "jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
-				-- "jglowworms","jbeherith","jeliah","tiglil","skinfantry",
+				-- "jglowworms","jbeherith","jeliah","jtiglil","jskinfantry",
 				-- "jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
 				-- "vort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
 				-- "jhunter", "jvaryfoo",
@@ -55,13 +55,13 @@ if gadgetHandler:IsSyncedCode() then
 				-- "ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
 	-- }
 		UnitAmount = {
-				["bg"]=10,["ccontrain"]=1,["css"]=5,["mtw"]=5,["csniper"]=3,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["restrictor"]=4,
+				["cit"]=10,["ccontrain"]=1,["css"]=5,["cspc"]=5,["csniper"]=3,["campro"]=3,["cadvisor"]=1,["cgamagardener"]=1,["crestrictor"]=4,
 				["coperatrans"]=1,["art"]=1,["sentrynell"]=3,["cwallbuilder"]=1,["cheadlauncher"]=1,
 				["chunterchopper"]=1,["conair"]=1,["csuborbital"]=1,["cgunship"]=1,["callygator"]=1,
-				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["strider"]=1,["ccrabsynth"]=1,["chunter"]=3,
-				["sentry"]=4,["bonker"]=1,["crailgun"]=1,["chopper"]=1,
+				["paxcentrail"]=1,["cgatefort"]=1,["cnanorecon"]=0,["chunter"]=1,	["cstrider"]=1,["ccrabsynth"]=1,["chunter"]=3,
+				["sentry"]=4,["cbonker"]=1,["crailgun"]=1,["chopper"]=1,
 				["jhivewulfmoma"]=2,["jbeefeater"]=1,["hc"]=1,["zombie"]=1, ["jantart"]=1,["jatlantai"]=1,["jhoneypot"]=1,
-				["jglowworms"]=1,["jbeherith"]=1,["jeliah"]=1,["tiglil"]=5,["skinfantry"]=5,
+				["jglowworms"]=1,["jbeherith"]=1,["jeliah"]=1,["jtiglil"]=5,["jskinfantry"]=5,
 				["jshroudshrike"]=1,["jswiftspear"]=1, ["jtigeggnogg"]=1,["jskineggnogg"]=1,["jghostdancer"]=1,
 				["vort"]=3, ["jantart"]=2,	["jviralfac"]=1, ["jhoneypot"]=1,
 				["jhunter"]=3, ["jvaryfoo"]=1,["jfiredancer"]=4,

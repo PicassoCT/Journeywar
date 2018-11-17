@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "advanced close-combat Warrior <Assault Unit>",
 	objectName = "jHunter.s3o",
 	script = "jhunterscript.lua",
-	buildPic = "hunter.png",
+	buildPic = "chunter.png",
 	--cost
 	buildCostMetal = 3500,
 	buildCostEnergy = 1200,

@@ -10,7 +10,7 @@ local flare02 = piece "flare02"
 local flare03 = piece "flare03"
 local flare = piece "flare"
 --define other pieces
-local body = piece "mtw"
+local body = piece "cspc"
 local mtwchain = piece "mtwchain"
 local mtwchain2 = piece "mtwchain2"
 local mtwthemwhe = piece "mtwthemwhe"
@@ -314,7 +314,7 @@ function spawnAUnit()
         --spawn a BG
         table.remove(passengerList, 1)
         if disDance() == true then
-            deployedID = Spring.CreateUnit("bg", sx, sy, sz, 0, teamID)
+            deployedID = Spring.CreateUnit("cit", sx, sy, sz, 0, teamID)
         else
 				if maRa()==true then
 					deployedID = Spring.CreateUnit("bg2", sx, sy, sz, 0, teamID)
@@ -358,7 +358,7 @@ function boolRessourcesBuildSoldier()
     currentLevel, storage, pull, income, expense, share, sent, received = Spring.GetTeamResources(teamID, "metal")
     ------ Spring.Echo(currentLevel)
 
-    unitCost = UnitDefNames["bg"].metalCost
+    unitCost = UnitDefNames["cit"].metalCost
 
 
     if currentLevel > unitCost then
