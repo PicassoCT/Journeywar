@@ -4,7 +4,7 @@ local unitDef = {
 	Description = "Center of Operations, plans and coordinates <Main Building>",
 	objectName = "citadell.s3o",
 	script = "citadellscript.lua",
-	buildPic = "citadell.dds",
+	buildPic = "citadell.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 12,
@@ -60,14 +60,14 @@ local unitDef = {
 	
 	buildoptions = 
 	{
-		"scumslum","mdigg","cwaterextractor",
-		"campole","mestorage","smconverter",
-		"builux","bbind","coverworldgate",
-		"condepot","fclvl1","cairbase",
+		"cscumslum","cmdigg","cwaterextractor",
+		"campole","cmestorage","csmconverter",
+		"cbuilux","cbbind","coverworldgate",
+		"condepot","cfclvl1","cairbase",
 		"cdistrictnone","ctransithub","buibaicity1",
-		"crailgun","sentry","cbonker",
+		"crailgun","csentry","cbonker",
 		"cdefusermine",	"chopper","cwatchpost",
-		"efence","comendbonker","chivemind",
+		"cefence","comendbonker","chivemind",
 		"citconair"
 	},
 	

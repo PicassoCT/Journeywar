@@ -1,11 +1,11 @@
-local unitName = "buibaicity1"
+local unitName = "cbuibaicity1"
 
 local unitDef = {
   name               = "Skyscrapers",
   objectName         = "buibaicity.s3o",
   description=" returns invested Money on Attack. Diverts Money from all but second-last Attacker. Upgrades Luxus Appartments nearby.<Economy Trap Building>",
   script ="cBuiBaiSky.lua",
-  buildPic = "buibaicity1.png",
+  buildPic = "cbuibaicity1.png",
 
   maxdamage=1400,
   idleAutoHeal=5,

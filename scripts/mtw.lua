@@ -317,9 +317,9 @@ function spawnAUnit()
             deployedID = Spring.CreateUnit("cit", sx, sy, sz, 0, teamID)
         else
 				if maRa()==true then
-					deployedID = Spring.CreateUnit("bg2", sx, sy, sz, 0, teamID)
+					deployedID = Spring.CreateUnit("cit2", sx, sy, sz, 0, teamID)
 				else
-				deployedID = Spring.CreateUnit("bg3", sx, sy, sz, 0, teamID)
+				deployedID = Spring.CreateUnit("cit3", sx, sy, sz, 0, teamID)
 				end
         end
         table.insert(deployedIDList, deployedID)

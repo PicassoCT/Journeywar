@@ -25,7 +25,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
     trampleDefTable = getTypeTable(UnitDefNames, {
-        "mdigg",
+        "cmdigg",
         "jbeherith",
         "ccomender"
     })

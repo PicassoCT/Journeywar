@@ -30,7 +30,7 @@ function widget:Initialize()
 	Chili = WG.Chili
 
 	-- we need a container that supports margin if the control inside uses margins
-	selection = Chili.ComboBox:New{items = { bg, bg2 }}
+	selection = Chili.ComboBox:New{items = { cit, cit2 }}
 	
 local	flameGraph = Chili.Grid:New{
 		parent = selectGridAndDisplay,

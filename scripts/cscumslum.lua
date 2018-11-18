@@ -42,8 +42,8 @@ ratio = 4
 
 
 
-mratio = 1 / ((UnitDefNames["scumslum"].metalCost / ratio) / (UnitDefNames["gcivillian"].metalCost / 2))
-eratio = 1 / ((UnitDefNames["scumslum"].energyCost / ratio) / (UnitDefNames["gcivillian"].energyCost / 2))
+mratio = 1 / ((UnitDefNames["cscumslum"].metalCost / ratio) / (UnitDefNames["gcivillian"].metalCost / 2))
+eratio = 1 / ((UnitDefNames["cscumslum"].energyCost / ratio) / (UnitDefNames["gcivillian"].energyCost / 2))
 
 
 hp, maxhp = Spring.GetUnitHealth(unitID)

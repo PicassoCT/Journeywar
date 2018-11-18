@@ -98,23 +98,23 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,0,0}, size=42, precision=22, strength = 0.001, repeatEffect=true}},
 	},
 	
-	fclvl1= {
+	cfclvl1= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,35,10}, size=42, precision=22, strength = 0.003, repeatEffect=true}},
 	},
 	cwaterextractor= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,116,0}, size=25, precision=22, strength = 0.015, repeatEffect=true}},
 		
 	},
-	advisor ={
+	cadvisor ={
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare1", onActive=false}}	,
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare2", onActive=false}}	,
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare3", onActive=false}}	,
 		{class='Ribbon', options={color={.1,.4,0.9,1}, width=2, size= 32, piece="flare4", onActive=false}}	,
 	},	
-	bbind= {
+	cbbind= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,10,0}, size=96, precision=22, strength = 0.003, repeatEffect=true}},
 	},
-	buibaicity1= {
+	cbuibaicity1= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,64,0}, size=80, precision=22, strength = 0.005, repeatEffect=true}}, 
 	},
 	
@@ -122,7 +122,7 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={-2,5,-31}, size=20, precision=22, strength = 0.015, repeatEffect=true}}, 
 	},
 	
-	mdigg= {
+	cmdigg= {
 		{class='ShieldJitter', options={delay=0,life=math.huge, pos={0,24,-20}, size=30, precision=22, strength = 0.005, repeatEffect=true}}, 
 	}, 
 	cdefusordart= {
@@ -188,7 +188,7 @@ effectUnitDefs = {
 		{class='ShieldJitter', options={life=math.huge, pos={0,35,0}, size=19.5, precision=22, strength = 0.001125, repeatEffect=true}},
 		
 	},
-	tiglil ={
+	jtiglil ={
 		{class='Ribbon', options={color={.1,.8,0.9,1}, width=3.5, piece="tlhairup", onActive=false}},
 	},
 	jghostdancer ={

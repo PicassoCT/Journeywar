@@ -1,10 +1,10 @@
-local unitName = "scumslum"
+local unitName = "cscumslum"
 
 local unitDef = {
   name               = "Highrise Securityhotspot",
   Description = " adds Securitybudget to keep the new citizens in line <Security Production>",
   objectName         = "scumslum.s3o",
-  	buildPic = "scumslum.dds",
+  	buildPic = "cscumslum.png",
   script= "cscumslum.lua",
 	buildCostMetal = 180,
 	buildCostEnergy = 90,

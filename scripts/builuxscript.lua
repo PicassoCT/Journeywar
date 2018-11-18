@@ -31,7 +31,7 @@ function upgraDDe()
         Sleep(6000)
     end
     local x, y, z = Spring.GetUnitPosition(unitID)
-    GG.UnitsToSpawn:PushCreateUnit("mbuilux", x, y, z, 0, teamID)
+    GG.UnitsToSpawn:PushCreateUnit("cmbuilux", x, y, z, 0, teamID)
     Spring.DestroyUnit(unitID, false, true)
 end
 

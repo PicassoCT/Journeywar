@@ -61,7 +61,7 @@ masterTable[1] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["smconverter"].id
+subTable[1] = UnitDefNames["csmconverter"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     true, true, true, true, true, true, true,
@@ -101,7 +101,7 @@ subTable[3] = "cdecFactoryStreetBig"
 subTable[4] = 380
 subTable[5] = true
 subTable[6] = 84
-subTable[7] = "buibait2" --testmessage
+subTable[7] = "cbuibait2" --testmessage
 masterTable[2] = subTable
 -------------------------------------------------------------------------
 -- table[3]=(string) DecalUnit --nil if no decal
@@ -113,7 +113,7 @@ masterTable[2] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["mbuilux"].id
+subTable[1] = UnitDefNames["cmbuilux"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, false, false, false, false, false, false,
@@ -215,7 +215,7 @@ masterTable[3] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["builux"].id
+subTable[1] = UnitDefNames["cbuilux"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, false, false, false, false, false, false,
@@ -256,7 +256,7 @@ subTable[3] = "cdecFactoryStreetSmall"
 subTable[4] = 180
 subTable[5] = true
 subTable[6] = 58
-subTable[7] = "builux" --testmessage
+subTable[7] = "cbuilux" --testmessage
 masterTable[4] = subTable
 -------------------------------------------------------------------------
 -- table[3]=(string) DecalUnit --nil if no decal
@@ -266,7 +266,7 @@ masterTable[4] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["scumslum"].id
+subTable[1] = UnitDefNames["cscumslum"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, false, false, false, false, false, false,
@@ -305,7 +305,7 @@ subTable[3] = nil
 subTable[4] = 100
 subTable[5] = true
 subTable[6] = 100
-subTable[7] = "scumslum" --testmessage
+subTable[7] = "cscumslum" --testmessage
 masterTable[5] = subTable
 -------------------------------------------------------------------------
 -- table[3]=(string) DecalUnit --nil if no decal
@@ -379,7 +379,7 @@ masterTable[6] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["buibaicity1"].id
+subTable[1] = UnitDefNames["cbuibaicity1"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, false, false, false, false, false, false,
@@ -491,7 +491,7 @@ subTable[3] = "cdecFactoryStreetSmall"
 subTable[4] = 40
 subTable[5] = true
 subTable[6] = 127
-subTable[7] = "buibaicity1" --testmessage
+subTable[7] = "cbuibaicity1" --testmessage
 masterTable[7] = subTable
 -------------------------------------------------------------------------
 subTable = {}
@@ -593,7 +593,7 @@ masterTable[9] = subTable
 -------------------------------------------------------------------------
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["fclvl1"].id
+subTable[1] = UnitDefNames["cfclvl1"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, true, true, true, true, true, false,
@@ -652,13 +652,13 @@ subTable[3] = nil
 subTable[4] = 50
 subTable[5] = true
 subTable[6] = 52
-subTable[7] = "fclvl1" --testmessage
+subTable[7] = "cfclvl1" --testmessage
 masterTable[10] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["fclvl2"].id
+subTable[1] = UnitDefNames["cfclvl2"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     true, true, true, false, true, true, true,
@@ -757,13 +757,13 @@ subTable[3] = nil
 subTable[4] = 500
 subTable[5] = true
 subTable[6] = 83
-subTable[7] = "fclvl2" --testmessage
+subTable[7] = "cfclvl2" --testmessage
 masterTable[11] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["efence"].id
+subTable[1] = UnitDefNames["cefence"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, false, false, true, false, false, false,
@@ -786,7 +786,7 @@ subTable[3] = nil
 subTable[4] = 1
 subTable[5] = false
 subTable[6] = 26
-subTable[7] = "efence" --testmessage
+subTable[7] = "cefence" --testmessage
 masterTable[12] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
@@ -815,13 +815,13 @@ subTable[3] = nil
 subTable[4] = 1
 subTable[5] = false
 subTable[6] = 14
-subTable[7] = "efence" --testmessage
+subTable[7] = "cefence" --testmessage
 masterTable[13] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["bbind"].id
+subTable[1] = UnitDefNames["cbbind"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     true, true, true, true, true, true, true,
@@ -868,7 +868,7 @@ subTable[3] = "bbinddecalfactory"
 subTable[4] = 1
 subTable[5] = false
 subTable[6] = 245
-subTable[7] = "bbind" --testmessage
+subTable[7] = "cbbind" --testmessage
 masterTable[14] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
@@ -879,7 +879,7 @@ masterTable[14] = subTable
 
 subTable = {}
 --table[1]=UnitDefID
-subTable[1] = UnitDefNames["mestorage"].id
+subTable[1] = UnitDefNames["cmestorage"].id
 --table[2]=(boolArray)buildPlan
 subTable[2] = {
     false, false, false, true, false, false, false,
@@ -981,7 +981,7 @@ subTable[3] = "cdecFactoryStreetSmall"
 subTable[4] = 160
 subTable[5] = true
 subTable[6] = 111
-subTable[7] = "mestorage" --testmessage
+subTable[7] = "cmestorage" --testmessage
 masterTable[15] = subTable
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------

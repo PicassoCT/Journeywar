@@ -1,11 +1,11 @@
-local unitName = "builux"
+local unitName = "cbuilux"
 
 local unitDef = {
 maxdamage=650,
   name               = "Luxery Appartments",
   description = "diverts Materialbudgets for orgys into your pocket. < Matter Production Building>",
   objectName         = "builux.s3o",
-  	buildPic = "builux.dds",
+  	buildPic = "cbuilux.png",
     script = "builuxscript.lua",
 	EnergyStorage = 200,
 	EnergyUse = 75,

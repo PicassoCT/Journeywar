@@ -17,7 +17,7 @@ function randShiftsignum(signum)
     return copy
 end
 
-ListOfPossibleBuildings = { "scumslum", "gcscrapheappeace", "galgoprop", "cdistrictnone", "campole", "scumslum", "galgoprop", "cdistrictnone", "gcscrapheappeace", "goldhut", "gapartmenta", "gapartmentb", "gapartmentc", "gchurch", "scumslum" }
+ListOfPossibleBuildings = { "cscumslum", "gcscrapheappeace", "galgoprop", "cdistrictnone", "campole", "cscumslum", "galgoprop", "cdistrictnone", "gcscrapheappeace", "goldhut", "gapartmenta", "gapartmentb", "gapartmentc", "gchurch", "cscumslum" }
 
 function spawnRavenholmCity17()
     cout("What happens in Ravenholm, stays in Ravenholm!")

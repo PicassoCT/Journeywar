@@ -29,7 +29,7 @@ if (gadgetHandler:IsSyncedCode()) then
     --------------------------------------------------------------------------------
 
     local UnitDefIDTable = {}
-    UnitDefIDTable[1] = UnitDefNames["efence"].id
+    UnitDefIDTable[1] = UnitDefNames["cefence"].id
     UnitDefIDTable[2] = UnitDefNames["beanstalk"].id
     UnitDefIDTable[3] = UnitDefNames["citadell"].id
     UnitDefIDTable[4] = UnitDefNames["cwallbuilder"].id
@@ -214,7 +214,7 @@ if (gadgetHandler:IsSyncedCode()) then
     electrifyAbleUnits = {}
 
     WALLBUILDERDEFID = UnitDefNames["cwallbuilder"].id
-    EFENCEDEFID = UnitDefNames["efence"].id
+    EFENCEDEFID = UnitDefNames["cefence"].id
     BEANSTALKDEFID = UnitDefNames["beanstalk"].id
     CITADELLDEFID = UnitDefNames["citadell"].id
 

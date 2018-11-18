@@ -57,10 +57,10 @@ terraformSpeed = 350,
 SelfDestructAs="electric_explosion",
 buildoptions = 
 	{
-	"builux","condepot","scumslum","campole",
-	"efence","mestorage","buihoblock","geohive",
-	"buibaislum","buibaicity","smconverter","mdigg","mbuilux",
-	"fclvl1","fclvl2","bbind","cHopper",
+	"cbuilux","condepot","cscumslum","campole",
+	"efence","cmestorage","buihoblock","gceohive",
+	"cbuibaislum","cbuibaicity","csmconverter","cmdigg","cmbuilux",
+	"cfclvl1","cfclvl2","cbbind","cHopper",
 	},
 	
 sounds = {

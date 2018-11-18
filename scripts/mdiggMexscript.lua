@@ -199,7 +199,7 @@ function waitingGame()
             if boolreVert == true and (Spring.ValidUnitID(unitID)) then
                 local x, y, z = Spring.GetUnitPosition(unitID)
                 local teamID = Spring.GetUnitTeam(unitID)
-                mexID = Spring.CreateUnit("mdigg", x, y, z, 0, teamID)
+                mexID = Spring.CreateUnit("cmdigg", x, y, z, 0, teamID)
                 health = Spring.GetUnitHealth(unitID)
                 Spring.SetUnitHealth(mexID, health)
                 Spring.DestroyUnit(unitID, false, true)

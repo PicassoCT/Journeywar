@@ -460,7 +460,7 @@ end
 
 sparedTable = {}
 sparedTable[UnitDefNames["contrain"].id] = true
-sparedTable[UnitDefNames["mdigg"].id] = true
+sparedTable[UnitDefNames["cmdigg"].id] = true
 sparedTable[UnitDefNames["mdiggmex"].id] = true
 sparedTable[UnitDefNames["contruck"].id] = true
 sparedTable[UnitDefNames["citadell"].id] = true

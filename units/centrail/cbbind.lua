@@ -1,4 +1,4 @@
-local unitName = "bbind"
+local unitName = "cbbind"
 
 local unitDef = {
 
@@ -6,7 +6,7 @@ local unitDef = {
   description = "recycles retrieved Remains. <Scrap Recycling Building>",
   objectName         = "bbind.s3o",
   script = "bbind.lua",
-  buildPic = "bbind.png",
+  buildPic = "cbbind.png",
 	EnergyUse = 5,
 	MetalUse = 5,
 	

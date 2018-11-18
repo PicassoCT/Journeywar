@@ -250,7 +250,7 @@ end
 function oneLuxBuildBlow(id, gameframe)
     x, y, z = spGetUnitPos(id)
     drawRectZone(x, y, z, 200, gameframe, 3)
-    result = Spring.getUnitsInRect(x - 100, z - 100, x + 100, z + 100, UnitDefNames["builux"].id, MissionFunctionTable[2][15], MissionFunctionTable)
+    result = Spring.getUnitsInRect(x - 100, z - 100, x + 100, z + 100, UnitDefNames["cbuilux"].id, MissionFunctionTable[2][15], MissionFunctionTable)
     if result then
         count = 0
         for i = 1, #result, 1 do

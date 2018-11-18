@@ -1,4 +1,4 @@
-local unitName = "vort"
+local unitName = "jvort"
 
 local unitDef = {
 	name = "Vortigaunt",

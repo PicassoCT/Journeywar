@@ -28,7 +28,7 @@ function isUnitAGangsta(BigAndBlack)
     if sirMayISeeYourIdPlease == nil then
         return false
     else
-        if sirMayISeeYourIdPlease == UnitDefNames["cdistrictnone"].id or sirMayISeeYourIdPlease == UnitDefNames["scumslum"].id then
+        if sirMayISeeYourIdPlease == UnitDefNames["cdistrictnone"].id or sirMayISeeYourIdPlease == UnitDefNames["cscumslum"].id then
             return true
         else
             return false

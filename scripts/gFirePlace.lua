@@ -30,7 +30,7 @@ function anybodyNearby()
         local CompTable = {
             [UnitDefNames["jskinfantry"].id] = true,
             [UnitDefNames["jtiglil"].id] = true,
-            [UnitDefNames["vort"].id] = true
+            [UnitDefNames["jvort"].id] = true
         }
         count = 0
         for i = 1, #T do
