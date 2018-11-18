@@ -1,4 +1,4 @@
-local unitName = "mbuilux"
+local unitName = "cmbuilux"
 
 local unitDef = {
 maxdamage=1200,
@@ -6,7 +6,7 @@ maxdamage=1200,
   objectName         = "mbuilux.s3o",
   description = "allocates more Materialbudget to the Fullcitizens.<Advanced Matter Production Building>",
   script = "mbuiluxscript.lua",
-  buildPic = "builux.dds",
+  buildPic = "cmbuilux.png",
 	buildCostMetal =  2400,
 	buildCostEnergy = 1800,
 	buildTime =40,

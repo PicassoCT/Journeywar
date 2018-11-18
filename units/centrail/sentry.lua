@@ -1,10 +1,10 @@
-local unitName = "sentry"
+local unitName = "csentry"
 local unitDef = {
 name = "Sentry",
 Description = "close Combat Defense turret <Ground Defense>",
 objectName = "sentry.s3o",
 script = "sentryscript.lua",
-buildPic = "sentry.dds",
+buildPic = "csentry.png",
 --cost
 buildCostMetal = 100,
 buildCostEnergy = 25,

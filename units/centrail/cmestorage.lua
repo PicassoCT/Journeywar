@@ -1,4 +1,4 @@
-local unitName = "mestorage"
+local unitName = "cmestorage"
 
 local unitDef = {
   maxdamage=600,
@@ -7,6 +7,7 @@ local unitDef = {
   objectName         = "mestorage.s3o",
   script= "mestoscript.lua",
    corpse             = "bgcorpse",
+   buildPic = "cmestorage.png",
   EnergyStorage = 750,
   
   buildCostMetal = 250,

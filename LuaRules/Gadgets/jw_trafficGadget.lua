@@ -185,7 +185,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 
     function gadget:UnitDamaged(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, projectileID, attackerID, attackerDefID, attackerTeam)
-        if UnitDefID == UnitDefNames["gcivilbuilding"].id or UnitDefID == UnitDefNames["gcivillian"].id or UnitDefID == UnitDefNames["scumslum"].id or UnitDefID == UnitDefNames["cspc"].id or attackerDefID == UnitDefNames["cspc"].id or attackerDefID == UnitDefNames["css"].id or attackerDefID == UnitDefNames["cit"].id and table.getn(GG.NewsDroneTable) > 0 then
+        if UnitDefID == UnitDefNames["gcivilbuilding"].id or UnitDefID == UnitDefNames["gcivillian"].id or UnitDefID == UnitDefNames["cscumslum"].id or UnitDefID == UnitDefNames["cspc"].id or attackerDefID == UnitDefNames["cspc"].id or attackerDefID == UnitDefNames["css"].id or attackerDefID == UnitDefNames["cit"].id and table.getn(GG.NewsDroneTable) > 0 then
             x, k, c = spGetPosition(unitID)
             for i = 1, 3, 1 do
                 if #GG.NewsDroneTable > 0 then

@@ -376,7 +376,7 @@ end
 function SideEffects()
     if not GG.BuiLuxUpgrade then GG.BuiLuxUpgrade = {} end
 
-    IdTable = { [UnitDefNames["builux"].id] = true }
+    IdTable = { [UnitDefNames["cbuilux"].id] = true }
     while true do
         --get builux nearby
         x, y, z = Spring.GetUnitPosition(unitID)

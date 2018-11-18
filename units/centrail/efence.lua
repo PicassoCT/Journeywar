@@ -1,11 +1,11 @@
-local unitName = "efence"
+local unitName = "cefence"
 
 local unitDef = {
 	name = "Efence",
 	Description= " chargeable electric Defensefence <Defense Trap>",
 	objectName = "efence.s3o",
 	script ="cEfence.lua",
-	buildPic = "efence.dds",
+	buildPic = "cefence.png",
 	RadarDistance = 0,
 	SightDistance = 100,
 	

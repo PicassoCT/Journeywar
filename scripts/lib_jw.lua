@@ -65,8 +65,8 @@ function getFactoryTypeTable(UnitDefNames, IWant)
 
 
     if IWant == "c" then
-        FactoryTypes[UnitDefNames["fclvl1"].id] = true
-        FactoryTypes[UnitDefNames["fclvl2"].id] = true
+        FactoryTypes[UnitDefNames["cfclvl1"].id] = true
+        FactoryTypes[UnitDefNames["cfclvl2"].id] = true
         FactoryTypes[UnitDefNames["condepot"].id] = true
         return FactoryTypes
     end
@@ -82,15 +82,15 @@ function getFactoryTypeTable(UnitDefNames, IWant)
     FactoryTypes[UnitDefNames["jtrafactory"].id] = true
     FactoryTypes[UnitDefNames["jtransportedeggstack"].id] = true
     FactoryTypes[UnitDefNames["jmovingfac1"].id] = true
-    FactoryTypes[UnitDefNames["fclvl1"].id] = true
-    FactoryTypes[UnitDefNames["fclvl2"].id] = true
+    FactoryTypes[UnitDefNames["cfclvl1"].id] = true
+    FactoryTypes[UnitDefNames["cfclvl2"].id] = true
     FactoryTypes[UnitDefNames["condepot"].id] = true
     return FactoryTypes
 end
 
 function getDefenseBuildingTypeTable(UnitDefNames)
 	typeTable={
-		"sentry",
+		"csentry",
 		"crailgun",
 		"cbonker",
 		"chopper",
@@ -324,8 +324,8 @@ end
 function getDreamTreeTransformUnitTypeTable(UnitDefNames)
     retTab = {
         [UnitDefNames["cit"].id] = UnitDefNames["jskineggnogg"].id,
-        [UnitDefNames["bg2"].id] = UnitDefNames["jtigeggnogg"].id,
-        [UnitDefNames["bg3"].id] = UnitDefNames["jtigeggnogg"].id,
+        [UnitDefNames["cit2"].id] = UnitDefNames["jtigeggnogg"].id,
+        [UnitDefNames["cit3"].id] = UnitDefNames["jtigeggnogg"].id,
         [UnitDefNames["ccrabsynth"].id] = UnitDefNames["jcrabcreeper"].id,
         [UnitDefNames["cgunship"].id] = UnitDefNames["jwatchbird"].id,
         [UnitDefNames["css"].id] = UnitDefNames["jfiredancer"].id,
@@ -596,8 +596,8 @@ UnitCycleCentrail={
 ["cwallbuilder"] = "coperatrans",
 ["coperatrans"]	= "cwallbuilder", 
 ["cwallbuilder"] = "art",	
-["art"] = "sentrynell",
-["sentrynell"] = "cheadlauncher",
+["cart"] = "csentrynell",
+["csentrynell"] = "cheadlauncher",
 ["cheadlauncher"] = "jhoneypot",
 
 --level 3 circle
@@ -616,7 +616,7 @@ UnitCycleJourneyman={
 ["jskinfantry"]="jtiglil",
 ["jghostdancer"]="jhivewulfmoma",
 ["jhivewulfmoma"]= "vort",
-["vort"]= "jantart", 
+["jvort"]= "jantart", 
 ["jantart"]="jhunter",
 ["jhunter"]= "cgamagardener",
 

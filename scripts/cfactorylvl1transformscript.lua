@@ -79,7 +79,7 @@ function upGradde()
         x, y, z = Spring.GetUnitPosition(unitID)
         teamID = Spring.GetUnitTeam(unitID)
         GG.UnitsToSpawn:PushCreateUnit("cbuildanimation", x, y, z, 0, teamID)
-        GG.UnitsToSpawn:PushCreateUnit("fclvl2", x, y, z, 0, teamID)
+        GG.UnitsToSpawn:PushCreateUnit("cfclvl2", x, y, z, 0, teamID)
     end
     Sleep(30000)
     Spring.DestroyUnit(unitID, false, true)

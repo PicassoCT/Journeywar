@@ -65,7 +65,7 @@ function slumbuilt(i, j, goTeamTardis, val)
 
 
             elseif diceBeNice == 1 or diceBeNice == 4 then
-                id = spCreateUnit("scumslum", i * val, 0, j * val, dir, goTeamTardis)
+                id = spCreateUnit("cscumslum", i * val, 0, j * val, dir, goTeamTardis)
                 Spring.SetUnitNoSelect(id, true)
                 spSetAlwaysVisible(id, true)
 
@@ -212,14 +212,14 @@ function Mission3City(frame)
                                 end
 
                             elseif nid == 2 then
-                                did = spCreateUnit("mbuilux", i * val, 0, j * val, dir, feamID)
+                                did = spCreateUnit("cmbuilux", i * val, 0, j * val, dir, feamID)
                                 if did then
                                     unitTable[#unitTable + 1] = did
                                     GG.Nodetable[i][j] = false
                                     spSetAlwaysVisible(did, true)
                                 end
                             elseif nid == 3 then
-                                did = spCreateUnit("smconverter", i * val, 0, j * val, dir, feamID)
+                                did = spCreateUnit("csmconverter", i * val, 0, j * val, dir, feamID)
                                 if did then
                                     unitTable[#unitTable + 1] = did
                                     GG.Nodetable[i][j] = false

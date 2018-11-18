@@ -5,7 +5,7 @@
 
 --Mission1-----------------------------------------------------------------------------------------
 	
-	gateTypeTable=getTypeTable(UnitDefNames,{"fclvl1","fclvl2","citadell","jdarkgate"})
+	gateTypeTable=getTypeTable(UnitDefNames,{"cfclvl1","cfclvl2","citadell","jdarkgate"})
 	--Captain Hornblow #1
 	--teamID,leader,boolIsDead,boolIsAITeam,side,_,_,_=	Spring.GetTeamInfo(teamID)
 	function checkIfContainerisNearAGate(unitID)

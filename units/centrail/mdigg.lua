@@ -1,11 +1,11 @@
-local unitName = "mdigg"
+local unitName = "cmdigg"
 
 local unitDef = {
 	name = "Metalldiggester",
 	Description = "mobile to drive towards Matter Ressource Locations <Matter Production Unit>",
 	objectName = "mdigg.s3o",
 	script = "mdigscript.lua",
-	buildPic = "mdigg.png",
+	buildPic = "cmdigg.png",
 	--cost
 	
 	buildCostMetal = 850,

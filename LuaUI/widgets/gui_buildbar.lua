@@ -659,7 +659,7 @@ function UpdateFactoryList()
   end
 end
 
-local efenceDefID= UnitDefNames["efence"].id
+local efenceDefID= UnitDefNames["cefence"].id
 
 --function widget:UnitFinished(unitID, unitDefID, unitTeam)
 function widget:UnitCreated(unitID, unitDefID, unitTeam)

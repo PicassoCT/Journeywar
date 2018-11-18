@@ -1,4 +1,4 @@
-local unitName = "fclvl2"
+local unitName = "cfclvl2"
 
 local unitDef = {
 	name = "Offworld Transfergate",
@@ -9,7 +9,7 @@ local unitDef = {
 	onoffable=false,
 	objectName = "fclvl2.s3o",
 	script = "fclvl2.lua",
-	buildPic = "cfc2.dds",
+	buildPic = "cfclvl2.png",
 	explodeAs="cartdarkmat",
 	selfDestructAs="cartdarkmat",
 	canBeAssisted =false,
@@ -77,7 +77,7 @@ local unitDef = {
 	buildoptions = 
 	{
 		"genupgrade","coffworldassemblyseed","cwallbuilder",
-		"coperatrans",	"art","sentrynell",
+		"coperatrans",	"cart","csentrynell",
 		"cheadlauncher",
 	},
 	

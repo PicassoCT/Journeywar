@@ -86,12 +86,12 @@ upgrade_window.positionY = "85%"
 
 build_window.height= "12.5%"
 build_window.height_numeric= 300
-build_window.width= "45%"
+build_window.width= "50%"
 build_window.width_numeric= 300
 build_window.positionX = upgrade_window.positionX
 build_window.positionY = "87.5%"
 build_window.rows = 2
-build_window.columns= 30 /build_window.rows
+build_window.columns= 34 /build_window.rows
 
 local CentrailButtonBackground = {0.1,0.8,0.8,1}
 local CentrailTextColour = {0.8,1,1,1}
@@ -123,21 +123,18 @@ function widget:Initialize()
 			name = unitDefID,
 			x = 5,
 			y = 100,
-			caption = 'UPGRADE',
+			caption = 'ABILITY',
 			width = 100,
 			height = 60,
 			backgroundColor = CentrailButtonBackground, 
 			textColor = CentrailTextColour,
 			OnClick = {
-				showComEndUpgradeMenue
+				onOffFunction
 			},
 		}
 		
 		stack_main:AddChild(SpecialAbilityButton)
-		if SpecialAbilityButton then
-			ButtonsTable["ability"]=SpecialAbilityButton
-			SpecialAbilityButton:Hide()
-		end
+
 		
 		build_grid = Chili.Grid:New{
         name = "build_grid",
@@ -414,7 +411,6 @@ end
 			clientHeight = 320,
 			children = 
 			{
-				showComEndUpgradeMenue()
 			},
 			
 		}
@@ -439,11 +435,7 @@ end
 	end
 	
 
-		
-	function HideAllActiveAbilityElements()
-		upgrade_window:Hide()
 
-	end
 	
 	function createAllButtons()
 		Create_OnOffButton()
@@ -551,29 +543,7 @@ end
 
 --update functions
 function widget:GameFrame(f)
-	
-	
-	function ShowOnOffButton(typeString)
-		if  not ButtonsTable[typeString] then typeString = "defaultOnOff" end
-		if  not ButtonsTable[typeString] then return end
 		
-
-		ButtonsTable[typeString]:Show()
-		activeAbilityElements[typeString]=ButtonsTable[typeString]
-	end
-	
-	local function ShowSpecialAbilityButton()
-
-		ButtonsTable["ability"]:Show()
-		activeAbilityElements["ability"]=ButtonsTable["ability"]
-	end
-	
-	local unitTypeButtonMap = {
-		--unitname --> Function Showing Button
-		["ccomender"]	 	= ShowSpecialAbilityButton,
-		["default"] 		= ShowOnOffButton
-	}
-	
 	function isUnitOnOffable(unitDefID_T)
 		local index = Spring.GetCmdDescIndex(CMD.ONOFF)
 		if index then
@@ -612,15 +582,16 @@ function widget:GameFrame(f)
 		
 		if not selectedUnits then 
 			onOffButton.caption = "-"
-			HideAllActiveAbilityElements()
+			upgrade_window:Hide()
 			resetStatusbars()
 			return 
 		end
 		
 		local unitID = selectedUnits[1]
 		if not unitID then 
-			onOffButton.caption = "ABILITY"
-			HideAllActiveAbilityElements()
+			SpecialAbilityButton.caption = "ABILITY"
+			SpecialAbilityButton:Hide()
+			upgrade_window:Hide()
 			resetStatusbars()
 			return 
 		end
@@ -635,34 +606,27 @@ function widget:GameFrame(f)
 		end
 		
 		updateAmmonitionBar(unitID)
-		onOffButton.caption = "ABILITY"
+		SpecialAbilityButton.caption = "ABILITY"
 		
 		--adapt the button to unit commender
-		if unitTypeButtonMap[ud.name] then
-			--generate the Gui Specific by unittype
-			--Spring.Echo("Show typespeicific acitivty button")
-			unitTypeButtonMap[ud.name]()		
-			
+		if ud.name == "ccomender" then
+			SpecialAbilityButton.caption = "UPGRADE"
+			SpecialAbilityButton.OnClick = showComEndUpgradeMenue
 		elseif isUnitOnOffable(ud.name)== true then
-			unitTypeButtonMap["default"]("default")
-		
-		
-			--Check for captionReplacement
 			if defaultCaptionByUnitType[ud.name] then
-				if onOffButton.caption == defaultCaptionByUnitType[ud.name].active then
-					onOffButton.caption = defaultCaptionByUnitType[ud.name].passive 
+				if SpecialAbilityButton.caption == defaultCaptionByUnitType[ud.name].active then
+					defaultCaptionByUnitType.caption = defaultCaptionByUnitType[ud.name].passive 
 				else
-					onOffButton.caption = defaultCaptionByUnitType[ud.name].active 
+					defaultCaptionByUnitType.caption = defaultCaptionByUnitType[ud.name].active 
 				end
+			else
+				SpecialAbilityButton.caption = "ABILITY"
+				SpecialAbilityButton.OnClick = onOffFunction
 			end
+			SpecialAbilityButton:Show()
 		else			
-			HideAllActiveAbilityElements()
+			SpecialAbilityButton:Hide()
 		end
-		
-		-- if hasBuildOptions[ud.id] then
-			-- expandBuildMenue()
-		-- end
-		
 	end
 		
 

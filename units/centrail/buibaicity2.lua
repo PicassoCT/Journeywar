@@ -1,11 +1,11 @@
-local unitName = "smconverter"
+local unitName = "csmconverter"
 
 local unitDef = {
 	name = "Full Citizen Arcology",
 	objectName = "buibaicity2.s3o",
 	description=" Converts Securitybudget to Material.  Generates Propaganda if set on fire by enemy <Material Security Converter Building>",
 	script ="cbuibaiCityArco.lua",
-	buildPic = "smconverter.png",
+	buildPic = "csmconverter.png",
 	maxdamage=1400,
 	EnergyUse = 175,
 	MetalStorage = 0,

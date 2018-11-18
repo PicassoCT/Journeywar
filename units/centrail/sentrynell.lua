@@ -1,11 +1,11 @@
-local unitName = "sentrynell"
+local unitName = "csentrynell"
 
 local unitDef = {
 name = "Sentrynell",
 Description = "heavy Anti Air Defense Unit. Deploys sentry once stopped. <Anti Air Defense Unit>",
 objectName = "sentrynell.s3o",
 script = "sentrynellscript.lua",
-buildPic = "sentrynell.dds",
+buildPic = "csentrynell.png",
 --cost
 buildCostMetal = 750,
 buildCostEnergy = 350,

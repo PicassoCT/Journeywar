@@ -426,23 +426,23 @@ function sentry_Spawn()
 
         if boolTimeOut == false then
             x1, y1 = drehMatrix(0, 300, zx, zy, heading)
-            sentryID1 = Spring.CreateUnit("sentry", y1, zz, x1, face, teamID)
+            sentryID1 = Spring.CreateUnit("csentry", y1, zz, x1, face, teamID)
 
 
             x2, y2 = drehMatrix(-100, 200, zx, zy, heading)
-            sentryID2 = Spring.CreateUnit("sentry", y2, zz, x2, face, teamID)
+            sentryID2 = Spring.CreateUnit("csentry", y2, zz, x2, face, teamID)
 
 
             x3, y3 = drehMatrix(100, 200, zx, zy, heading)
-            sentryID3 = Spring.CreateUnit("sentry", y3, zz, x3, face, teamID)
+            sentryID3 = Spring.CreateUnit("csentry", y3, zz, x3, face, teamID)
 
 
             x4, y4 = drehMatrix(-165, 125, zx, zy, heading)
-            sentryID4 = Spring.CreateUnit("sentry", y4, zz, x4, face, teamID)
+            sentryID4 = Spring.CreateUnit("csentry", y4, zz, x4, face, teamID)
 
 
             x5, y5 = drehMatrix(165, 125, zx, zy, heading)
-            sentryID5 = Spring.CreateUnit("sentry", y5, zz, x5, face, teamID)
+            sentryID5 = Spring.CreateUnit("csentry", y5, zz, x5, face, teamID)
 
             boolCalcSave = false
             boolTimeOut = true

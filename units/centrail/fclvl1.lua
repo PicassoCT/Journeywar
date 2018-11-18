@@ -1,11 +1,11 @@
-local unitName = "fclvl1"
+local unitName = "cfclvl1"
 
 local unitDef = {
 	name = "Farcaster",
 	Description = "orders first Level Units from a higher Dimension <Ground Unit Factory>",
 	
 	
-	buildPic = "fclvl1.png",
+	buildPic = "cfclvl1.png",
 	objectName = "fclvlone.s3o",
 	script = "fclvlone.lua",
 	

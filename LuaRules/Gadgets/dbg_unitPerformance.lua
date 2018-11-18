@@ -28,14 +28,14 @@ if gadgetHandler:IsSyncedCode() then
 	teamList = {}
 	
 	UnitNames = {"cit","ccontrain","css","cspc","csniper","campro","cadvisor","cgamagardener","crestrictor",
-				"coperatrans","art","sentrynell","cwallbuilder","cheadlauncher",
+				"coperatrans","cart","csentrynell","cwallbuilder","cheadlauncher",
 				"chunterchopper","conair","csuborbital","cgunship","callygator",
 				"paxcentrail","cgatefort","cnanorecon","chunter",	"cstrider","ccrabsynth", "chunter",
-				"sentry","cbonker","crailgun","chopper",
+				"csentry","cbonker","crailgun","chopper",
 				"jhivewulfmoma","jbeefeater","hc","zombie", "jantart","jatlantai","jhoneypot",
 				"jglowworms","jbeherith","jeliah","jtiglil","jskinfantry",
 				"jshroudshrike","jswiftspear", "jtigeggnogg","jskineggnogg","jghostdancer",
-				"vort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
+				"jvort", "jantart",	"jviralfac", "jhoneypot","jfiredancer",
 				"jhunter", "jvaryfoo",
 				"jfireflower", "jdragongrass", "jbeehive", "jswamp", "jpoisonhive",	
 				"ggluemine","jtree1", "jgalatea","jmotherofmercy","jsempresequoia","jrecycler","jresistancewarrior","jmadmax"
