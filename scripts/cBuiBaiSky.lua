@@ -50,7 +50,7 @@ end
 function SideEffects()
     if not GG.ScumSlumUpgrade then GG.ScumSlumUpgrade = {} end
 
-    IdTable = { [UnitDefNames["scumslum"].id] = true }
+    IdTable = { [UnitDefNames["cscumslum"].id] = true }
     while true do
         --get builux nearby
         x, y, z = Spring.GetUnitPosition(unitID)
