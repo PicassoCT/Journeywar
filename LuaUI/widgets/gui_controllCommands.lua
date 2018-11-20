@@ -27,7 +27,14 @@ local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 's
 local selectedUnits = {}
 local controllCommand_window
 local activeCommand = 0
-
+updateRequired = false
+local ignoreCMDs = {
+	timewait=true,
+	deathwait=true,
+	squadwait=true,
+	gatherwait=true,
+	loadonto=true,
+}
 targetCommands = VFS.Include("LuaUI/ressources/guiEnums.lua")
 VFS.Include("LuaUI/ressources/gui_helper.lua")
 ---------------------------------------------------------------------------------------
@@ -53,6 +60,17 @@ extHoloTexCol={200/255, 239/255, 253/255, 1}
 holoCommandCol={163/255, 229/255, 243/255, 0.65}	
 holoTextCol={200/255, 239/255, 253/255, 1}	
 backgroundColExtended={0.2, 0.2, 0.4, 0.6} 
+genericFocusColor={163/255, 229/255, 243/255, 0.75}
+
+function ActionCommand(self, x, y, button, mods) 
+	local index = Spring.GetCmdDescIndex(self.cmdID)
+	if index then
+		local left, right = (button == 1), (button == 3)
+		local alt, ctrl, meta, shift = mods.alt, mods.ctrl, mods.meta, mods.shift
+		Spring.SetActiveCommand(index, button, left, right, alt, ctrl, meta, shift)
+	end
+end
+
 
 extendedCommands={}
 extendedMenue={
@@ -69,12 +87,12 @@ extendedMenue[CMD.LOAD_UNITS] ={
 		triStrip={	{x= 160, y = 0},
 		{x= 160, y = 80},			
 	{x= 0, y = 40}	},
-	backgroundColor=backgroundColExtended,
+	
 	caption=	"LOAD",
-	callbackFunction=function()
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.LOAD_UNITS 			
-	end
+	active =false,
+	name= "orderbutton_load",
+	cmdID = CMD.LOAD_UNITS,
+	OnMouseUp = {ActionCommand}
 }
 extendedMenue[CMD.UNLOAD_UNITS] ={
 	triStrip={
@@ -82,12 +100,13 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 		{x= 160, y = 40},			
 		{x= 0, y = 80},
 	},
-	backgroundColor=backgroundColExtended,
+	
 	caption=	"DROP",
-	callbackFunction=function()
-		player= Spring.GetMyPlayerID()
-		WG.SelectedCommand[player] = CMD.UNLOAD_UNITS 
-	end
+	active =false,
+	cmdID = CMD.UNLOAD_UNITS ,
+	name= "orderbutton_unload",
+	OnMouseUp = {ActionCommand}
+	
 }
 
 extendedMenue[CMD.CLOAK] ={
@@ -96,7 +115,7 @@ extendedMenue[CMD.CLOAK] ={
 		{x= 0, y = 35},
 		{x= 100, y = 85},
 	{x= 0, y = 55}},
-	backgroundColor=backgroundColExtended,
+	
 	caption= "CLOAK",
 	callbackFunction=function()
 		Spring.Echo("Cloaking")
@@ -120,12 +139,12 @@ extendedMenue[CMD.RECLAIM] ={
 		{x= 0, y = 70},
 		{x= 160, y = 70}		
 	},
-	backgroundColor=backgroundColExtended,
+	
 	caption="RECLAIM",
-	callbackFunction=function()
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.RECLAIM 	
-	end
+	active =false,
+	cmdID = CMD.RECLAIM ,
+	name= "orderbutton_reclaim",
+	OnMouseUp = {ActionCommand}
 }
 
 extendedMenue[CMD.RESTORE] ={		
@@ -135,12 +154,12 @@ extendedMenue[CMD.RESTORE] ={
 		{x= 0	, y = 60},
 		{x= 160	, y = 60}		
 	},
-	backgroundColor=backgroundColExtended,
+	
 	caption= "RESTORE",
-	callbackFunction=function()
-		player= Spring.GetMyPlayerID()		
-		WG.SelectedCommand[player] = CMD.RESTORE 
-	end
+	active =false,
+	cmdID = CMD.RESTORE ,
+	name= "orderbutton_restore",
+	OnMouseUp = {ActionCommand}
 }	
 extendedMenue[CMD.OPT_SHIFT] ={
 	triStrip={	
@@ -148,30 +167,21 @@ extendedMenue[CMD.OPT_SHIFT] ={
 		{x= 100, y = -10},
 		{x= 0, y = 80},
 	{x= 100, y = 80}},
-	backgroundColor=backgroundColExtended,
-	caption= "QUEUE",
-	callbackFunction=function(self,...)
-		self.backgroundColor ={163/255, 229/255, 243/255, 0.75} 
-		boolQueueOverride = not boolQueueOverride
-	end
-}
-extendedMenue[CMD.OPT_SHIFT] ={
-	triStrip={
-		{x= 0, y = 0},			
-		{x= 100, y = 30},
-		{x= 0, y = 80},
-		{x= 100, y = 50}
-	},
 	
-	backgroundColor=backgroundColExtended,
 	caption= "QUEUE",
-	callbackFunction=function(self,...)
-		self.backgroundColor ={163/255, 229/255, 243/255, 0.75} 
-		self.focusColor ={0.2, 0.2, 0.4, 0.6} 
-		
-		boolQueueOverride = not boolQueueOverride
+	active = false,
+	cmdID = CMD.OPT_SHIFT ,
+	name= "orderbutton_optshift",
+	OnMouseUp=function(self,...)
+		if self.active == false then
+			self.backgroundColor=backgroundColExtended
+		else
+			self.backgroundColor ={163/255, 229/255, 243/255, 0.75}
+		end
+		self.active = not self.active
 	end
 }
+
 
 MainMenue={
 	[CMD.ATTACK]={},
@@ -200,20 +210,27 @@ MainMenue[CMD.ATTACK] ={
 	focusColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=	"|ATTAC",
+	active =false,
+	cmdID = CMD.ATTACK ,
+	name= "orderbutton_attack",
+	OnMouseUp = {ActionCommand}
 }
 
 MainMenue[CMD.STOP] ={
 	triStrip={	
 		{x= 70, y = -15},
 		{x= 0, y = 10},			
-		{x= 80, y = -5},
-		
+		{x= 80, y = -5},		
 		{x= 0, y = 70},
 		{x= 80, y = 80},
 	{x= 70, y = 90}},
 	focusColor={58/255, 172/255, 226/255, 0.75}	,
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|STOP",	
+	active =false,
+	cmdID = CMD.STOP ,
+	name= "orderbutton_stop",
+	OnMouseUp = {ActionCommand}
 }			
 
 MainMenue[CMD.MOVE] ={
@@ -225,6 +242,10 @@ MainMenue[CMD.MOVE] ={
 	focusColor={35/255, 124/255, 166/255, 0.75}		,
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|MOVE",2),
+	active =false,
+	cmdID = CMD.MOVE ,
+	name= "orderbutton_move",
+	OnMouseUp = {ActionCommand}
 }	
 
 MainMenue[CMD.FIRE_STATE] ={		
@@ -236,6 +257,10 @@ MainMenue[CMD.FIRE_STATE] ={
 	focusColor={52/255, 167/255, 222/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|FIRE\nSTATE",3),
+	active =false,
+	cmdID = CMD.MOVE ,
+	name= "statebutton_fire",
+	OnMouseUp = {ActionCommand}
 }	
 
 MainMenue[CMD.REPEAT] ={
@@ -247,6 +272,10 @@ MainMenue[CMD.REPEAT] ={
 	focusColor={52/255, 167/255, 222/255, 0.75}	,
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|REPEAT ",
+	active =false,
+	cmdID = CMD.REPEAT ,
+	name= "statebutton_repeat",
+	OnMouseUp = {ActionCommand}
 }	
 
 MainMenue[CMD.MOVE_STATE] ={
@@ -258,6 +287,10 @@ MainMenue[CMD.MOVE_STATE] ={
 	focusColor={35/255, 124/255, 166/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= "|MOVE\nMODE ",
+	active =false,
+	cmdID = CMD.MOVE_STATE ,
+	name= "statebutton_move",
+	OnMouseUp = {ActionCommand}
 }	
 
 MainMenue[CMD.REPAIR] ={
@@ -269,6 +302,10 @@ MainMenue[CMD.REPAIR] ={
 	focusColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= upByRow("|REPAIR ",4),
+	active =false,
+	cmdID = CMD.REPAIR ,
+	name= "orderbutton_repair",
+	OnMouseUp = {ActionCommand}
 }	
 
 MainMenue[CMD.PATROL] ={
@@ -276,12 +313,15 @@ MainMenue[CMD.PATROL] ={
 		{x= 0, y = 0},			
 		{x= 80, y = 0},			
 		{x= 0, y = 90},			
-		{x= 80, y = 90}
-		
+		{x= 80, y = 90}		
 	},
 	focusColor={52/255, 167/255, 222/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|PATROL",4),
+	active =false,
+	cmdID = CMD.PATROL ,
+	name= "orderbutton_patrol",
+	OnMouseUp = {ActionCommand}
 }	
 
 
@@ -290,69 +330,72 @@ MainMenue[CMD.GUARD] ={
 		{x= 80, y = -25},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	focusColor={52/255, 167/255, 222/255, 0.75},
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+
 	caption="|GUARD",
+	active =false,
+	cmdID = CMD.GUARD ,
+	name= "orderbutton_guard",
+	OnMouseUp = {ActionCommand}
 }	
 
-MainMenue[CMD.ATTACK].callbackFunction= function()
-	Spring.Echo("Selected Attack")
-	player= Spring.GetMyPlayerID()		
-	WG.SelectedCommand[player] = CMD.ATTACK 
-	
-end
-MainMenue[CMD.STOP].callbackFunction= function()
-	Spring.Echo("Selected STOP")
-	player= Spring.GetMyPlayerID()		
-	WG.SelectedCommand[player] = CMD.STOP 
-end
-MainMenue[CMD.MOVE].callbackFunction= function() 
-	Spring.Echo("Selected Move")
-	player= Spring.GetMyPlayerID()		
-	WG.SelectedCommand[player] = CMD.MOVE 
-end
-MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
-	selectedUnits =Spring.GetSelectedUnits()
-	Spring.Echo("Firestate selected")
-	if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
-		states = Spring.GetUnitStates(selectedUnits[1])
-		Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
-	end
-end
-MainMenue[CMD.REPEAT].callbackFunction= function() 
-	selectedUnits =Spring.GetSelectedUnits()
-	if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
-		states = Spring.GetUnitStates(selectedUnits[1])
-		boolRepeatActive = 0 
-		if not states["repeat"] then boolRepeatActive = 1 end
-		
-		Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
-	end
-end
+-- MainMenue[CMD.ATTACK].callbackFunction= function()
+-- Spring.Echo("Selected Attack")
+-- player= Spring.GetMyPlayerID()		
+-- WG.SelectedCommand[player] = CMD.ATTACK 
 
-MainMenue[CMD.MOVE_STATE].callbackFunction= function()
-	selectedUnits =Spring.GetSelectedUnits()
-	if selectedUnits and selectedUnits[1] then
-		states = Spring.GetUnitStates(selectedUnits[1])
-		Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
-	end
-end
-MainMenue[CMD.REPAIR].callbackFunction= function() 
-	Spring.Echo("Selected Repair")
-	player= Spring.GetMyPlayerID()		
-	WG.SelectedCommand[player] = CMD.REPAIR 
-end
-MainMenue[CMD.GUARD].callbackFunction= function() 	
-	Spring.Echo("Selected Guard")	
-	player= Spring.GetMyPlayerID()		
-	WG.SelectedCommand[player] = CMD.GUARD
-end
+-- end
+-- MainMenue[CMD.STOP].callbackFunction= function()
+-- Spring.Echo("Selected STOP")
+-- player= Spring.GetMyPlayerID()		
+-- WG.SelectedCommand[player] = CMD.STOP 
+-- end
+-- MainMenue[CMD.MOVE].callbackFunction= function() 
+-- Spring.Echo("Selected Move")
+-- player= Spring.GetMyPlayerID()		
+-- WG.SelectedCommand[player] = CMD.MOVE 
+-- end
+-- MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
+-- selectedUnits =Spring.GetSelectedUnits()
+-- Spring.Echo("Firestate selected")
+-- if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
+-- states = Spring.GetUnitStates(selectedUnits[1])
+-- Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
+-- end
+-- end
+-- MainMenue[CMD.REPEAT].callbackFunction= function() 
+-- selectedUnits =Spring.GetSelectedUnits()
+-- if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
+-- states = Spring.GetUnitStates(selectedUnits[1])
+-- boolRepeatActive = 0 
+-- if not states["repeat"] then boolRepeatActive = 1 end
 
-MainMenue[CMD.PATROL].callbackFunction= function() 	
-	Spring.Echo("Selected Patrol")	
-	player= Spring.GetMyPlayerID()		
-	WG.SelectedCommand[player] = CMD.PATROL
-end
+-- Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
+-- end
+-- end
+
+-- MainMenue[CMD.MOVE_STATE].callbackFunction= function()
+-- selectedUnits =Spring.GetSelectedUnits()
+-- if selectedUnits and selectedUnits[1] then
+-- states = Spring.GetUnitStates(selectedUnits[1])
+-- Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
+-- end
+-- end
+-- MainMenue[CMD.REPAIR].callbackFunction= function() 
+-- Spring.Echo("Selected Repair")
+-- player= Spring.GetMyPlayerID()		
+-- WG.SelectedCommand[player] = CMD.REPAIR 
+-- end
+-- MainMenue[CMD.GUARD].callbackFunction= function() 	
+-- Spring.Echo("Selected Guard")	
+-- player= Spring.GetMyPlayerID()		
+-- WG.SelectedCommand[player] = CMD.GUARD
+-- end
+
+-- MainMenue[CMD.PATROL].callbackFunction= function() 	
+-- Spring.Echo("Selected Patrol")	
+-- player= Spring.GetMyPlayerID()		
+-- WG.SelectedCommand[player] = CMD.PATROL
+-- end
 
 
 
@@ -383,17 +426,21 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	function createHabanero(triStrip, caption, basCol, focusColor, textCol, functionOnClick, Parent )
-		functionOnClick = functionOnClick or 	 function () Spring.Echo("The HabaneroButton"..caption .." is pressed into service") end
+	function createHabanero(HabaneroDescriptor,  Parent )
+		
+		
+		
+		functionOnClick = 	 function () Spring.Echo("The HabaneroButton"..HabaneroDescriptor.caption .." is pressed into service") end
 		
 		return 	Chili.HabaneroButton:New{
-			triStrip=triStrip	,
-			name= caption,
-			caption=caption,
+			triStrip=	HabaneroDescriptor.triStrip	,
+			name= HabaneroDescriptor.name,
+			caption= HabaneroDescriptor.caption,
 			parent= Parent,
-			backgroundColor = basCol,
-			focusColor = focusColor,
-			textColor = textCol, 
+			backgroundColor = HabaneroDescriptor.backgroundColor,
+			activeColor = HabaneroDescriptor.activeColor,
+			focusColor = HabaneroDescriptor.focusColor,
+			textColor = HabaneroDescriptor.textColor, 
 			OnClick= { functionOnClick}
 		}
 		
@@ -447,16 +494,22 @@ function widget:Initialize()
 		children = {
 		},		
 	}
+
 	
-	for commandID,Option in pairs(extendedMenue) do
+	--generic attributes
+	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
+		HabaneroDescriptor.backgroundColor= HabaneroDescriptor.backgroundColor or 	backgroundColExtended,
+		HabaneroDescriptor.passiveColor =	 HabaneroDescriptor.passiveColor or	 	backgroundColExtended,
+		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0,
+		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0,		
+		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol,
+		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor,
+	end
+	
+	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
 		extendedCommands[commandID] = createHabanero(
-		Option.triStrip,
-		Option.caption,
-		Option.backgroundColor,
-		holoCommandCol,
-		extHoloTexCol,
-		Option.callbackFunction,
-		extendedCommand_Grid
+		HabaneroDescriptor,
+		extendedCommand_Grid		
 		)		
 		extendedCommands[commandID]:Init()
 	end
@@ -516,14 +569,15 @@ function widget:Initialize()
 		}
 	}
 	
-	for comandID,MenueOption in pairs(MainMenue) do
+	--defaults
+	for comandID,MenueDescriptor in pairs(MainMenue) do
+		MenueDescriptor.focusColor = 	MenueDescriptor.focusColor  or	{52/255, 167/255, 222/255, 0.75}
+		MenueDescriptor.backgroundColor = 	MenueDescriptor.backgroundColor  or	 {0.1, 0.2, 0.3, 0.5}
+	end	
+	
+	for comandID,MenueDescriptor in pairs(MainMenue) do
 		Habaneros[comandID] = createHabanero(
-		MenueOption.triStrip,
-		MenueOption.caption,
-		MenueOption.backgroundColor,
-		MenueOption.focusColor,
-		holoTextCol,
-		MenueOption.callbackFunction,
+		MenueDescriptor,
 		base_stack
 		)		
 		Habaneros[comandID]:Init()
@@ -540,9 +594,8 @@ function widget:Initialize()
 	base_stack:AddChild(Habaneros[CMD.GUARD])	
 end
 
-function widget:MousePress()
-	--	Spring.Echo("MousePress activated")
-end
+
+
 
 function widgetHandler:MouseRelease(x, y, button)
 	local mo = self.mouseOwner
@@ -589,7 +642,46 @@ function widgetHandler:MouseRelease(x, y, button)
 	return true
 end
 
+function TraverseCmd(cmd)
+	extendedCommand_Grid
+	Habaneros
+	
+end
+
+function setAllHabanerosPassive()
+	
+end
+
+function widget:CommandsChanged()
+	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
+end
+
+function ParseCmds()
+	setAllPassive()
+	-- go over all menuebuttons and find them inside the active cmds 
+	--set either
+	--active
+	-- passive
+	--selected
+	--updateStateButtonsColoursAndCaption
+	
+	local cmds = Spring.GetActiveCmdDescs()
+	for _,cmd in ipairs(cmds) do
+		if cmd.name ~= '' and not (ignoreCMDs[cmd.name] or ignoreCMDs[cmd.action]) then
+			TraverseCmd(cmd)
+		end
+	end
+	
+end
+
+
+function widget:Update()
+	if updateRequired then
+		ParseCmds()
+		updateRequired = false
+	end
+end
+
 function widget:Shutdown()
 	Spring.SendCommands("hideinterface 0")
-	
 end
