@@ -22,6 +22,9 @@ HabaneroButton = Control:Inherit{
 	midPointX=0,
 	midPointY=0,
 	boolInFocus=false,
+	
+	numberOfStates= 0,
+	currentState = 0,
 
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
