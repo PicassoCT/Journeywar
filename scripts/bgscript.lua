@@ -401,7 +401,7 @@ idleFunc[#idleFunc+1] =  function (boolLeftRight)--weaponCheck
 		WaitForTurn(center,y_axis)
 		Signal(SIG_WALK)
 end
-bg3defid = UnitDefNames["bg3"].id
+bg3defid = UnitDefNames["cit3"].id
 
 function idle()
     Signal(SIG_IDLE)

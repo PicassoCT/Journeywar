@@ -10,7 +10,7 @@ local flare02 = piece "flare02"
 local flare03 = piece "flare03"
 local flare = piece "flare"
 --define other pieces
-local body = piece "cspc"
+local body = piece "mtw"
 local mtwchain = piece "mtwchain"
 local mtwchain2 = piece "mtwchain2"
 local mtwthemwhe = piece "mtwthemwhe"

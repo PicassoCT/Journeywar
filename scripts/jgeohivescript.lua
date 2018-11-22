@@ -90,7 +90,8 @@ function spawner()
     local spGetUnitNearestEnemy = Spring.GetUnitNearestEnemy
     local spGetUnitPosition = Spring.GetUnitPosition
     local spSpawnCEG = Spring.SpawnCEG
-    local spCreateUnit = Spring.CreateUnit
+    local spCreateUnit = createUnit_TerrainTest
+--Spring.CreateUnit
     local spSetUnitMoveGoal = Spring.SetUnitMoveGoal
     local spEmitSfx = EmitSfx
     local spSetUnitNoSelect = Spring.SetUnitNoSelect

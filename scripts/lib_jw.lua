@@ -146,7 +146,7 @@ end
 function getCentrailOverworldGateUnitTypeTable()
 	typeTable={
 		"cauterizer",
-		"bg3",
+		"cit3",
 		"campro",
 		"cspc",
 		"csniper",
@@ -252,7 +252,7 @@ function getFungiImuneUnitTypeTable()
     retTab[UnitDefNames["contrain"].id] = true
     retTab[UnitDefNames["jfungiforrest"].id] = true
     retTab[UnitDefNames["jtreel"].id] = true
-    retTab[UnitDefNames["vort"].id] = true
+    retTab[UnitDefNames["jvort"].id] = true
     retTab[UnitDefNames["cgamagardener"].id] = true
     retTab[UnitDefNames["beanstalk"].id] = true
     retTab[UnitDefNames["citadell"].id] = true
@@ -407,12 +407,12 @@ function getInfantryTypeTable()
 	if not UnitDefNames then UnitDefNames = getUnitDefNames(UnitDefs) end
     Infantry = {}
     Infantry[UnitDefNames["cit"].id] = true
-    Infantry[UnitDefNames["bg2"].id] = true
-    Infantry[UnitDefNames["bg3"].id] = true
+    Infantry[UnitDefNames["cit2"].id] = true
+    Infantry[UnitDefNames["cit3"].id] = true
     Infantry[UnitDefNames["jtiglil"].id] = true
     Infantry[UnitDefNames["jskinfantry"].id] = true
     Infantry[UnitDefNames["jhivewulf"].id] = true
-    Infantry[UnitDefNames["vort"].id] = true
+    Infantry[UnitDefNames["jvort"].id] = true
     Infantry[UnitDefNames["css"].id] = true
     return Infantry
 end
@@ -567,7 +567,7 @@ end
 function getGravityChangeReistantUnitTypeTable(UnitDefNames)
     TransportTable = {
         [UnitDefNames["jtree5"].id] = true,
-        [UnitDefNames["vort"].id] = true,
+        [UnitDefNames["jvort"].id] = true,
         [UnitDefNames["jtiglil"].id] = true,
         [UnitDefNames["jghostdancer"].id] = true
     }
@@ -615,7 +615,7 @@ UnitCycleJourneyman={
 ["jtiglil"]="jskinfantry",
 ["jskinfantry"]="jtiglil",
 ["jghostdancer"]="jhivewulfmoma",
-["jhivewulfmoma"]= "vort",
+["jhivewulfmoma"]= "jvort",
 ["jvort"]= "jantart", 
 ["jantart"]="jhunter",
 ["jhunter"]= "cgamagardener",
@@ -644,8 +644,8 @@ function getEquivalentMirrorTransformTypeTable(UnitDefNames)
 local UnitDefNames = UnitDefNames or getUnitDefNames(UnitDefs) 
     TransformationTable = {
         [UnitDefNames["cit"].id] = UnitDefNames["jskinfantry"].id,
-        [UnitDefNames["bg2"].id] = UnitDefNames["jskinfantry"].id,
-        [UnitDefNames["bg3"].id] = UnitDefNames["jskinfantry"].id,
+        [UnitDefNames["cit2"].id] = UnitDefNames["jskinfantry"].id,
+        [UnitDefNames["cit3"].id] = UnitDefNames["jskinfantry"].id,
         [UnitDefNames["css"].id] = UnitDefNames["jtiglil"].id,
         [UnitDefNames["advisor"].id] = UnitDefNames["jtiglil"].id,
       
@@ -678,7 +678,7 @@ function getRewardTable()
             ereward = 2000,
             mreward = 1000
         },
-        [UnitDefNames["vort"].id] = {},
+        [UnitDefNames["jvort"].id] = {},
         [UnitDefNames["jscrapheap_tree"].id] = {},
         [UnitDefNames["gcvehiccorpsemini"].id] = {
             mreward = 1000,
