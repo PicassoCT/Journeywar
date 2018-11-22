@@ -351,7 +351,7 @@ end
 			centerItems = true,
 			columns = 7,	
 			rows = 3,
-			name = 'UpgradeGrid',
+			name = 'upgrade_Grid',
 			width = 630,
 			height = 140,
 			

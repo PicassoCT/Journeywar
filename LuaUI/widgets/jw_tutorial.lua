@@ -106,7 +106,7 @@ TutorialInfoTable= {
 	[UnitDefNames["csmconverter"].id] = {text = "\a|Arcology\n Converts Security to Material\n Returns funds upon burning down in public."},
 	[UnitDefNames["cbuibaicity1"].id] = {text = "\a|Skyscraper\n Returns Insurance paid by the second last attacker"},
 	[UnitDefNames["crailgun"].id] = {text = "\a|Railgun\n Long range base defence"},
-	[UnitDefNames["sentry"].id] = {text = "\a|Sentry\n Rapid fire short range anti-infantry defence"},
+	[UnitDefNames["csentry"].id] = {text = "\a|Sentry\n Rapid fire short range anti-infantry defence"},
 	[UnitDefNames["cbonker"].id] = {text = "\a|Bunker\n Heavy Anti-Air fortification with medium range"},
 	[UnitDefNames["chopper"].id] = {text = "\a|Hoppermines\n Personal Mines"},
 	[UnitDefNames["coverworldgate"].id] = {text = "\a|Overworldgate\n Autospawns expensive A.I. controlled troops"},

@@ -1122,14 +1122,16 @@ end
 
 function createUnit_TerrainTest(uType, x,y,z, orientation, teamID, acceptableIncline)
 
-loc_acceptableDecline= acceptableIncline or 0.50
-x,y,z,slope = Spring.GetGroundNormal(x,z)
---Spring.Echo("createUnit_TerrainTest:"..slope.. " < ".. loc_acceptableDecline )
+loc_acceptableDecline= acceptableIncline or 0.45
+tx,ty,tz,slope = Spring.GetGroundNormal(x,z)
 
+	--Spring.Echo("createUnit_TerrainTest: slope = "..slope.. " < ".. loc_acceptableDecline )
 	if slope < loc_acceptableDecline then
+	
 		return Spring.CreateUnit(uType, x,y,z, orientation, teamID)
 	end
 
+		Spring.Echo("createUnit_TerrainTest:"..slope.. " > ".. loc_acceptableDecline )
 end
 --======================================================================================
 --Section: Landscape/Pathing Getter/Setters

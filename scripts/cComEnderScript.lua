@@ -1889,10 +1889,12 @@ end
 function script.HitByWeapon ( x, z, weaponDefID, damage )
 	StartThread(idleReset)
 	hp,maxHP= Spring.GetUnitHealth(unitID)
-	if damage > 40 and math.random(0,6)== 1 then
+	if maxHP and  damage > 40 and math.random(0,6)== 1 then
 		playDamageSound(damage,hp,maxHP)
 	end
-	jumpJetOnCritical(damage,hp,maxHP)
+	if maxHP then
+		jumpJetOnCritical(damage,hp,maxHP)
+	end
 	displayShieldDamage(damage)
 	
 	Weapons[eShotGun][10]= 	Weapons[eShotGun][10]+ damage

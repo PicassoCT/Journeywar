@@ -27,6 +27,7 @@ local onoffTexture = {imageDirComands .. 'states/off.png', imageDirComands .. 's
 local selectedUnits = {}
 local controllCommand_window
 local activeCommand = 0
+local	base_stack 
 updateRequired = false
 local ignoreCMDs = {
 	timewait=true,
@@ -61,6 +62,10 @@ holoCommandCol={163/255, 229/255, 243/255, 0.65}
 holoTextCol={200/255, 239/255, 253/255, 1}	
 backgroundColExtended={0.2, 0.2, 0.4, 0.6} 
 genericFocusColor={163/255, 229/255, 243/255, 0.75}
+stateTriColor = {{245/255,64/255,9/255, 0.6},
+				{24/255,238/255,191/255, 0.6},
+				{27/255,234/255,31/255, 0.6}
+				}
 
 function ActionCommand(self, x, y, button, mods) 
 	local index = Spring.GetCmdDescIndex(self.cmdID)
@@ -69,6 +74,64 @@ function ActionCommand(self, x, y, button, mods)
 		local alt, ctrl, meta, shift = mods.alt, mods.ctrl, mods.meta, mods.shift
 		Spring.SetActiveCommand(index, button, left, right, alt, ctrl, meta, shift)
 	end
+end
+
+function StateCommand(self,  x, y, button, mods)
+
+--
+--state out of how many States
+--Get Majority State of all seleceted Units, up that state by one and show
+-- update caption
+--Set Colour
+
+if self.name == "statebutton_cloak" then
+		selectedUnits=spGetSelectedUnits();
+		if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)			
+			for i=1,#selectedUnits do
+				state = Spring.GetUnitStates(selectedUnits[i])
+				paramTable={}
+				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
+			end
+		end		
+end
+	
+if self.name == "statebutton_fire" then
+	if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)			
+			for i=1,#selectedUnits do
+				state = Spring.GetUnitStates(selectedUnits[i])
+				paramTable={}
+				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
+			end
+		end		
+	self.caption = "|FIRE_STATE\n".. self.cmd.params[self.cmd.params[1] + 2]
+end	
+
+if self.name == "statebutton_move" then
+if selectedUnits and #selectedUnits > 0 then
+			commandTable= getCommandTable(boolQueueOverride)			
+			for i=1,#selectedUnits do
+				state = Spring.GetUnitStates(selectedUnits[i])
+				paramTable={}
+				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
+			end
+		end		
+end	
+
+if self.name == "statebutton_optshift" then
+
+end	
+
+if self.name == "statebutton_repeat" then
+
+end	
+
+
+
 end
 
 
@@ -115,21 +178,10 @@ extendedMenue[CMD.CLOAK] ={
 		{x= 0, y = 35},
 		{x= 100, y = 85},
 	{x= 0, y = 55}},
-	
+	name = "statebutton_cloak",
 	caption= "CLOAK",
-	callbackFunction=function()
-		Spring.Echo("Cloaking")
-		selectedUnits=spGetSelectedUnits();
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)			
-			for i=1,#selectedUnits do
-				state = Spring.GetUnitStates(selectedUnits[i])
-				paramTable={}
-				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
-			end
-		end		
-	end
+	OnMouseUp = {StateCommand}
+	
 }	
 
 extendedMenue[CMD.RECLAIM] ={		
@@ -164,22 +216,17 @@ extendedMenue[CMD.RESTORE] ={
 extendedMenue[CMD.OPT_SHIFT] ={
 	triStrip={	
 		{x= 0, y = 0},			
-		{x= 100, y = -10},
+		{x= 100, y = 25},
 		{x= 0, y = 80},
-	{x= 100, y = 80}},
+	{x= 100, y = 50}},
 	
 	caption= "QUEUE",
 	active = false,
 	cmdID = CMD.OPT_SHIFT ,
-	name= "orderbutton_optshift",
-	OnMouseUp=function(self,...)
-		if self.active == false then
-			self.backgroundColor=backgroundColExtended
-		else
-			self.backgroundColor ={163/255, 229/255, 243/255, 0.75}
-		end
-		self.active = not self.active
-	end
+	name= "statebutton_optshift",
+	OnMouseUp= {StateCommand}
+	
+	
 }
 
 
@@ -260,7 +307,7 @@ MainMenue[CMD.FIRE_STATE] ={
 	active =false,
 	cmdID = CMD.MOVE ,
 	name= "statebutton_fire",
-	OnMouseUp = {ActionCommand}
+	OnMouseUp = {StateCommand}
 }	
 
 MainMenue[CMD.REPEAT] ={
@@ -275,7 +322,7 @@ MainMenue[CMD.REPEAT] ={
 	active =false,
 	cmdID = CMD.REPEAT ,
 	name= "statebutton_repeat",
-	OnMouseUp = {ActionCommand}
+	OnMouseUp = {StateCommand}
 }	
 
 MainMenue[CMD.MOVE_STATE] ={
@@ -298,7 +345,7 @@ MainMenue[CMD.REPAIR] ={
 		{x= 0, y = 0},			
 		{x= 80, y = 0},
 		{x= 0, y = 90},
-	{x= 80, y = 60}},
+		{x= 80, y = 60}},
 	focusColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= upByRow("|REPAIR ",4),
@@ -337,66 +384,6 @@ MainMenue[CMD.GUARD] ={
 	name= "orderbutton_guard",
 	OnMouseUp = {ActionCommand}
 }	
-
--- MainMenue[CMD.ATTACK].callbackFunction= function()
--- Spring.Echo("Selected Attack")
--- player= Spring.GetMyPlayerID()		
--- WG.SelectedCommand[player] = CMD.ATTACK 
-
--- end
--- MainMenue[CMD.STOP].callbackFunction= function()
--- Spring.Echo("Selected STOP")
--- player= Spring.GetMyPlayerID()		
--- WG.SelectedCommand[player] = CMD.STOP 
--- end
--- MainMenue[CMD.MOVE].callbackFunction= function() 
--- Spring.Echo("Selected Move")
--- player= Spring.GetMyPlayerID()		
--- WG.SelectedCommand[player] = CMD.MOVE 
--- end
--- MainMenue[CMD.FIRE_STATE].callbackFunction= function() 
--- selectedUnits =Spring.GetSelectedUnits()
--- Spring.Echo("Firestate selected")
--- if selectedUnits and selectedUnits[1] and type(selectedUnits[1]) =="number"then
--- states = Spring.GetUnitStates(selectedUnits[1])
--- Spring.GiveOrderToUnitArray(selectedUnits, CMD.FIRE_STATE, {states.firestate % 3 + 1}, {})
--- end
--- end
--- MainMenue[CMD.REPEAT].callbackFunction= function() 
--- selectedUnits =Spring.GetSelectedUnits()
--- if selectedUnits and selectedUnits[1] and Spring.GetUnitStates then
--- states = Spring.GetUnitStates(selectedUnits[1])
--- boolRepeatActive = 0 
--- if not states["repeat"] then boolRepeatActive = 1 end
-
--- Spring.GiveOrderToUnitArray(selectedUnits, CMD.REPEAT, {[1] = boolRepeatActive}, {})
--- end
--- end
-
--- MainMenue[CMD.MOVE_STATE].callbackFunction= function()
--- selectedUnits =Spring.GetSelectedUnits()
--- if selectedUnits and selectedUnits[1] then
--- states = Spring.GetUnitStates(selectedUnits[1])
--- Spring.GiveOrderToUnitArray(selectedUnits, CMD.MOVE_STATE, {states.movestate % 3 + 1}, {})
--- end
--- end
--- MainMenue[CMD.REPAIR].callbackFunction= function() 
--- Spring.Echo("Selected Repair")
--- player= Spring.GetMyPlayerID()		
--- WG.SelectedCommand[player] = CMD.REPAIR 
--- end
--- MainMenue[CMD.GUARD].callbackFunction= function() 	
--- Spring.Echo("Selected Guard")	
--- player= Spring.GetMyPlayerID()		
--- WG.SelectedCommand[player] = CMD.GUARD
--- end
-
--- MainMenue[CMD.PATROL].callbackFunction= function() 	
--- Spring.Echo("Selected Patrol")	
--- player= Spring.GetMyPlayerID()		
--- WG.SelectedCommand[player] = CMD.PATROL
--- end
-
 
 
 controllCommand_window_height = "30%"
@@ -498,12 +485,12 @@ function widget:Initialize()
 	
 	--generic attributes
 	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
-		HabaneroDescriptor.backgroundColor= HabaneroDescriptor.backgroundColor or 	backgroundColExtended,
-		HabaneroDescriptor.passiveColor =	 HabaneroDescriptor.passiveColor or	 	backgroundColExtended,
-		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0,
-		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0,		
-		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol,
-		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor,
+		HabaneroDescriptor.backgroundColor= HabaneroDescriptor.backgroundColor or 	backgroundColExtended
+		HabaneroDescriptor.passiveColor =	 HabaneroDescriptor.passiveColor or	 	backgroundColExtended
+		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0
+		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0
+		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol
+		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor
 	end
 	
 	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
@@ -551,7 +538,7 @@ function widget:Initialize()
 		},
 	}
 	
-	local	base_stack = Grid:New{
+		base_stack = Grid:New{
 		y = 20,
 		padding = {5,5,5,5},
 		itemPadding = {0, 0, 0, 0},
@@ -643,13 +630,29 @@ function widgetHandler:MouseRelease(x, y, button)
 end
 
 function TraverseCmd(cmd)
-	extendedCommand_Grid
-	Habaneros
+	for i= 1, #extendedCommand_Grid.children do
+     if cmd.id == command then
+		
+		end
+	end	
+	
+	for i= 1, #base_stack.children do
+		if cmd.id == command then
+		
+		end
+	end
+	
 	
 end
 
 function setAllHabanerosPassive()
+	for i= 1, #extendedCommand_Grid.children do
+      extendedCommand_Grid.children[i].passive = true
+	end	
 	
+	for i= 1, #base_stack.children do
+		base_stack.children[i].passive = true
+	end
 end
 
 function widget:CommandsChanged()
@@ -657,7 +660,7 @@ function widget:CommandsChanged()
 end
 
 function ParseCmds()
-	setAllPassive()
+	setAllHabanerosPassive()
 	-- go over all menuebuttons and find them inside the active cmds 
 	--set either
 	--active
