@@ -423,12 +423,14 @@ function widget:Initialize()
 			triStrip=	HabaneroDescriptor.triStrip	,
 			name= HabaneroDescriptor.name,
 			caption= HabaneroDescriptor.caption,
+			cmdID = HabaneroDescriptor.cmdID,
 			parent= Parent,
 			backgroundColor = HabaneroDescriptor.backgroundColor,
 			activeColor = HabaneroDescriptor.activeColor,
 			focusColor = HabaneroDescriptor.focusColor,
 			textColor = HabaneroDescriptor.textColor, 
-			OnClick= { functionOnClick}
+			OnClick= { functionOnClick},
+			OnMouseUp = HabaneroDescriptor.OnMouseUp
 		}
 		
 	end
