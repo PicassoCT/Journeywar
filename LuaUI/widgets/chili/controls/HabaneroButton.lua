@@ -22,7 +22,7 @@ HabaneroButton = Control:Inherit{
 	midPointX=0,
 	midPointY=0,
 	boolInFocus=false,
-	
+	cmdID = 0,
 	numberOfStates= 0,
 	currentState = 0,
 
