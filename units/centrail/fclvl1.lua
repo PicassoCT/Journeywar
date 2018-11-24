@@ -76,7 +76,7 @@ local unitDef = {
 		"genupgrade","upgradefactory","cgamagardener",
 		"cspc","cit","css",
 		"campro", "crestrictor","csniper",
-		"advisor"
+		"cadvisor"
 	},
 	
 	customParams = {},

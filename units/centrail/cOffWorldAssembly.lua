@@ -82,7 +82,7 @@ local unitDef = {
 	workerTime = 1,
 	buildoptions = 
 	{		
-		"strider","ccrabsynth", "chunter",
+		"cstrider","ccrabsynth", "chunter",
 		"cauterizer","cpaxcentrail","cgatefort",
 		"cnanorecon",
 	},

@@ -64,7 +64,7 @@ local unitDef = {
 		"campole","cmestorage","csmconverter",
 		"cbuilux","cbbind","coverworldgate",
 		"condepot","cfclvl1","cairbase",
-		"cdistrictnone","ctransithub","buibaicity1",
+		"cdistrictnone","ctransithub","cbuibaicity1",
 		"crailgun","csentry","cbonker",
 		"cdefusermine",	"chopper","cwatchpost",
 		"cefence","comendbonker","chivemind",
