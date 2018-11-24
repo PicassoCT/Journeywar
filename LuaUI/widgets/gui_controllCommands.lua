@@ -595,46 +595,45 @@ end
 
 
 function widgetHandler:MouseRelease(x, y, button)
-	local mo = self.mouseOwner
-	Spring.Echo("Mouse Owner: "..mo)
+	-- local mo = self.mouseOwner
+
+	-- local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
+
+	-- if (not (lmb or mmb or rmb)) then
+		-- return false
+	-- end
 	
-	local mx, my, lmb, mmb, rmb = Spring.GetMouseState()
-	Spring.Echo("MouseRelease active")
-	if (not (lmb or mmb or rmb)) then
-		return false
-	end
-	
-	if lmb then
-		alt, ctrl, meta, shift =GetModKeys()
-		local x, y, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
-		command = 1
-		if WG.SelectedCommand[mo] then
-			command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
-		end
-		Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
+	-- if lmb then
+		-- alt, ctrl, meta, shift =GetModKeys()
+		-- local x, y, lmb, mmb, rmb, outsideSpring = Spring.GetMouseState()
+		-- command = 1
+		-- if WG.SelectedCommand[mo] then
+			-- command = Spring.GetCmdDescIndex(WG.SelectedCommand[mo])
+		-- end
+		-- Spring.SetActiveCommand(command, 1, lmb, rmb, alt, ctrl, meta, shift)
 		
-		return true
-	end
+		-- return true
+	-- end
 	
-	if rmb and rmb == true then
-		if WG.SelectedCommand[mo] then
-			for command, active in pairs(WG.SelectedCommand[mo]) do
-				if active == true then
-					selectedUnits=Spring.GetSelectedUnits();
-					if selectedUnits and #selectedUnits > 0 then
-						commandTable= getCommandTable(boolQueueOverride)
-						typeParam, param = getCommandTarget()
-						Spring.Echo("Giving Command " .. command)
-						Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
-						WG.SelectedCommand[mo] = nil
-						break
-					end
-				end
-			end
-		end
+	-- if rmb and rmb == true then
+		-- if WG.SelectedCommand[mo] then
+			-- for command, active in pairs(WG.SelectedCommand[mo]) do
+				-- if active == true then
+					-- selectedUnits=Spring.GetSelectedUnits();
+					-- if selectedUnits and #selectedUnits > 0 then
+						-- commandTable= getCommandTable(boolQueueOverride)
+						-- typeParam, param = getCommandTarget()
+						-- Spring.Echo("Giving Command " .. command)
+						-- Spring.GiveOrderToUnitArray(selectedUnits, command, param, commandTable)
+						-- WG.SelectedCommand[mo] = nil
+						-- break
+					-- end
+				-- end
+			-- end
+		-- end
 		
-		return true
-	end
+		-- return true
+	-- end
 	
 	return true
 end
