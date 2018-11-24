@@ -397,6 +397,27 @@ extendedCommand_window_positionY= "36%"
 extendedCommand_window_width= "9%"
 extendedCommand_window_height= "35%"
 
+function setDefaultCommandButtonAttributes()
+
+	--generic attributes
+	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
+		HabaneroDescriptor.backgroundColor= HabaneroDescriptor.backgroundColor or 	backgroundColExtended
+		HabaneroDescriptor.passiveColor =	 HabaneroDescriptor.passiveColor or	 	backgroundColExtended
+		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0
+		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0
+		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol
+		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor
+	end
+	
+		--defaults
+	for comandID,MenueDescriptor in pairs(MainMenue) do
+		MenueDescriptor.focusColor = 	MenueDescriptor.focusColor  or	{52/255, 167/255, 222/255, 0.75}
+		MenueDescriptor.backgroundColor = 	MenueDescriptor.backgroundColor  or	 {0.1, 0.2, 0.3, 0.5}
+	end	
+
+	
+end
+
 function widget:Initialize()
 	
 	--Spring.SendCommands("hideinterface 1")
@@ -485,15 +506,7 @@ function widget:Initialize()
 	}
 
 	
-	--generic attributes
-	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
-		HabaneroDescriptor.backgroundColor= HabaneroDescriptor.backgroundColor or 	backgroundColExtended
-		HabaneroDescriptor.passiveColor =	 HabaneroDescriptor.passiveColor or	 	backgroundColExtended
-		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0
-		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0
-		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol
-		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor
-	end
+	setDefaultCommandButtonAttributes()
 	
 	for commandID,HabaneroDescriptor in pairs(extendedMenue) do
 		extendedCommands[commandID] = createHabanero(
@@ -502,7 +515,6 @@ function widget:Initialize()
 		)		
 		extendedCommands[commandID]:Init()
 	end
-	
 	
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.LOAD_UNITS])
@@ -558,11 +570,7 @@ function widget:Initialize()
 		}
 	}
 	
-	--defaults
-	for comandID,MenueDescriptor in pairs(MainMenue) do
-		MenueDescriptor.focusColor = 	MenueDescriptor.focusColor  or	{52/255, 167/255, 222/255, 0.75}
-		MenueDescriptor.backgroundColor = 	MenueDescriptor.backgroundColor  or	 {0.1, 0.2, 0.3, 0.5}
-	end	
+
 	
 	for comandID,MenueDescriptor in pairs(MainMenue) do
 		Habaneros[comandID] = createHabanero(
