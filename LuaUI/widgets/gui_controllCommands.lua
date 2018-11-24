@@ -103,11 +103,11 @@ if self.name == "statebutton_fire" then
 			for i=1,#selectedUnits do
 				state = Spring.GetUnitStates(selectedUnits[i])
 				paramTable={}
-				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
+				if state and state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
 				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
 			end
 		end		
-	self.caption = "|FIRE_STATE\n".. self.cmd.params[self.cmd.params[1] + 2]
+	--self.caption = "|FIRE_STATE\n".. self.cmd.params[self.cmd.params[1] + 2]
 end	
 
 if self.name == "statebutton_move" then
@@ -438,7 +438,8 @@ function widget:Initialize()
 		
 		
 		
-		functionOnClick = 	 function () Spring.Echo("The HabaneroButton"..HabaneroDescriptor.caption .." is pressed into service") end
+		functionOnClick = 	 function () --Spring.Echo("The HabaneroButton"..HabaneroDescriptor.caption .." is pressed into service")
+		end
 		
 		return 	Chili.HabaneroButton:New{
 			triStrip=	HabaneroDescriptor.triStrip	,
@@ -513,7 +514,7 @@ function widget:Initialize()
 		HabaneroDescriptor,
 		extendedCommand_Grid		
 		)		
-		extendedCommands[commandID]:Init()
+		extendedCommands[commandID]:Init(true)
 	end
 	
 	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
@@ -577,7 +578,7 @@ function widget:Initialize()
 		MenueDescriptor,
 		base_stack
 		)		
-		Habaneros[comandID]:Init()
+		Habaneros[comandID]:Init(true)
 	end
 	
 	base_stack:AddChild(Habaneros[CMD.ATTACK])
@@ -639,14 +640,33 @@ function widgetHandler:MouseRelease(x, y, button)
 end
 
 function TraverseCmd(cmd)
+	bIsStateButton = false
+	bIsOrderButton = false
+	if UnitDefNames[cmd.name] then
+		-- UnitBuyButton
+    elseif #cmd.params > 1 then
+        -- state
+		bIsStateButton = true
+    else
+        -- order
+		bIsOrderButton = true
+    end
+	
+	if not bIsStateButton and not bIsOrderButton then return end
+
+
 	for i= 1, #extendedCommand_Grid.children do
-     if cmd.id == command then
-		
+	local command = extendedCommand_Grid.children[i]
+		if cmd.id == command.cmdID then
+			if bIsOrderButton == true then
+			end
+			if bIsStateButton == true then
+			end
 		end
 	end	
 	
 	for i= 1, #base_stack.children do
-		if cmd.id == command then
+		if if cmd.id == command.cmdID then
 		
 		end
 	end

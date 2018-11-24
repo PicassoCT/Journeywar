@@ -19,7 +19,7 @@ local includes = {
   "controls/window.lua",
   "controls/label.lua",
   "controls/button.lua",
-  "controls/HabaneroButton.lua",
+  "controls/habanero.lua",
   "controls/textbox.lua",
   "controls/checkbox.lua",
   "controls/trackbar.lua",
