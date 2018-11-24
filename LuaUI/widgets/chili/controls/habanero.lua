@@ -1,5 +1,5 @@
 --//=============================================================================
-
+VFS.Include(CHILI_DIRNAME .. "headers/borderlines.lua", nil, VFS.RAW_FIRST)
 --- HabaneroButton module
 
 --- HabaneroButton fields.
@@ -22,6 +22,7 @@ HabaneroButton = Control:Inherit{
 	midPointX=0,
 	midPointY=0,
 	boolInFocus=false,
+	boolRelativePixelSize = false,
 	cmdID = 0,
 	numberOfStates= 0,
 	currentState = 0,
@@ -46,37 +47,8 @@ function HabaneroButton:SetCaption(caption)
 end
 
 --//=============================================================================
-function Rotate(x, z, Rad)
-	if not Rad then return end
-	sinus = math.sin(Rad)
-	cosinus = math.cos(Rad)
-	
-	return x * cosinus + z * -sinus, x * sinus + z * cosinus
-end
 
 
-function HabaneroButton:Spiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
-	local strip = {}
-	totalReducePerStep= (1-reduceFactor)/Resolution
-	degPerRes =Degree/Resolution
-	
-	for i=1,Resolution do
-		--make a copy and 	--scale the new points
-		local copyPointA,copyPointB = startPointA, startPointB
-		copyPointA.x,copyPointA.y=(1-totalReducePerStep)* (copyPointA.x-CenterPoint.x),(1-totalReducePerStep)* (copyPointA.y-CenterPoint.y)
-		copyPointB.x,copyPointB.y=(1-totalReducePerStep)* (copyPointB.x-CenterPoint.x),(1-totalReducePerStep)* (copyPointB.y-CenterPoint.y)
-		-- rotate the Points 
-		copyPointA.x,copyPointA.y= Rotate(copyPointA.x,copyPointA.y,math.rad(degPerRes))
-		copyPointB.x,copyPointB.y= Rotate(copyPointB.x,copyPointB.y,math.rad(degPerRes))
-		-- move back into position
-		copyPointA.x,copyPointA.y=copyPointA.x +CenterPoint.x,copyPointA.y +CenterPoint.y
-		---draw two triangles into the strip
-		strip[#strip+1] = {x=startPointA.x ,y=startPointA.y}
-		strip[#strip+1] = {x=startPointB.x ,y=startPointB.y}
-		strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
-		strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
-	end
-end
 --//=============================================================================
 
 function HabaneroButton:DrawControl()
@@ -84,48 +56,57 @@ function HabaneroButton:DrawControl()
 end
 
 --//=============================================================================
-function getZeroScreen(self)
-while self.parent do
-self = self.parent
-end
-return self
+function getZeroScreen(this)
+	while this.parent do 	this = this.parent;	end
+	
+	return this
 end
 
---> gets the parents of the handed objects absolut size in pixel
-function getParentSize(self)
+function getRecursivePixelDimensions(this)
+	if this.parent then
+		if this.parent.width and this.parent.height then
+		typeWidth, typeHeight =   type(this.parent.width) , type(this.parent.height)
+		
+			if typeWidth == "string" and typeHeight == "string" then
+				factorWidth =  100/tonumber(string.sub(this.parent.width,'%%',''))
+				factorHeigth = 100/tonumber(string.sub(this.parent.heigth,'%%',''))
+				px,py = getRecursivePixelDimensions(this.parent)
+				return factorWidth* px, factorHeigth * py
+			else
+				return  this.parent.width, this.parent.height
+			end
+		end
+	end
+	
+return this.width, this.height
+end
+
+--> gets the parents of the handed objects absolut size in pixel, and the gridslotdimensions
+function getParentTotalSizePixel(self)
 	--debugging
 	zeroScreen = getZeroScreen(self)
 
 	--no parent
-	if not self.parent then error("No parent existing for HabaneroButton "..self.caption) end
+	if not self.parent then error("No parent existing for HabaneroButton "..self.caption); return end
 	
 	--self is root
 	if self == zeroScreen then
 		return zeroScreen.width, zeroScreen.height	
 	end
-	if self.width and self.height then
-		Spring.Echo("HabaneroButton:Selfsize"..self.name..":"..self.width.." / "..self.height	)
-		typeX,typeY=type(self.width),type(self.height)
-		
-		--self width exists as pixel value
-		if typeX == "number" and typeY == "number" then 
-			return self.width, self.height 
-		end
-		
-		--self width exists as percentage value
-		if typeX == "string" and typeY == "string" then 
-			dx,dy= getParentSize(self.parent)
-			fx,fy= stringPercentToScale(self.width), stringPercentToScale(self.heigth)
-			
-			return dx*fx, dy*fy
-		end
-	end	
+	
+	typeX,typeY=type(self.parent.width),type(self.parent.height)
+	rows,columns =  self.parent.rows or 1 , self.parent.columns or 1
+	
+	if typeX == "string" and typeY == "string" then
+		px,py = getRecursivePixelDimensions(self.parent)
+		return px, py, rows, columns
+	else
+		return self.parent.width, self.parent.height, rows, columns
+	end
+	
 end
 
---> converts a string percentage value into a number
-function stringPercentToScale(percent)
-	return	math.min(100.0,math.max(0.0,tonumber(string.gsub(string.gsub(percent,"%%","")," ",""),10)))/100
-end
+
 
 --> generates a trianglestrip from a outline
 function convertOutlineToTriStrip(outline)
@@ -147,43 +128,32 @@ function convertOutlineToTriStrip(outline)
 		ltriStrip[#ltriStrip+1]= {x=outline[1].x,y=outline[1].y}		
 end
 
-function getParentPercentage(self, dimX, dimZ)
-	return dimX/#self.parent.children, dimZ/#self.parent.children
+function getTriStripMaxDimensions()
+minx,miny,maxx,maxy = math.huge,math.huge,-math.huge,-math.huge
+
+	for i=1,table.getn(self.triStrip) do
+			local point= self.triStrip[i]	
+			
+			minx = math.min(minx,point.x)
+			miny = math.min(miny,point.y)
+			maxx = math.max(maxx,point.x)
+			maxy = math.min(maxy,point.y)
+	
+		end
+		
+	return maxx - minx, maxy - miny
 end
 
-function HabaneroButton:Init()
-	--Handle outline
-
-	if self.outline then
-		self.triStrip = convertOutlineToTriStrip(self.outline)		
-	end
-	
-	boolAbsoluteSize = (self.triStrip[1] and type(self.triStrip[1].x)== "number")
-	
-	self.xMin ,self.xMax =0,1
-	self.yMin ,self.yMax =0,1	
-	
-	totalPixelsX,totalPixelsY= getParentSize(self.parent) 
-	
-	if boolAbsoluteSize == false then	
-	Spring.Echo("HabaneroButton:AbsoluteSize:"..totalPixelsX.." / "..totalPixelsY)
-		
-		totalPixelsX,totalPixelsY=	getParentPercentage(self, totalPixelsX,totalPixelsY)
-	Spring.Echo("HabaneroButton:Buttonsize:"..totalPixelsX.." / "..totalPixelsY)
-	
+function scaleTriStrip(factorWidth, factorHeigth)
 		for i=1,table.getn(self.triStrip) do
 			local point= self.triStrip[i]		
-			point.x=stringPercentToScale(point.x)
-			point.y=stringPercentToScale(point.y)
-			-- limit	
-			
-			point.x = point.x *totalPixelsX
-			point.y = point.y *totalPixelsY	
+			point.x= point.x*factorWidth
+			point.y= point.y * factorHeigth
 			self.triStrip[i] = point		
 		end
-	end
-	
-	--computate the early out box
+end
+
+function generateEarlyOutBox()
 	for i=1,table.getn(self.triStrip) do
 		local point= self.triStrip[i]		
 		self.xMin = math.min(self.xMin ,point.x)
@@ -201,6 +171,37 @@ function HabaneroButton:Init()
 	
 	self.defaultWidth = xWidth
 	self.defaultHeight =yHeigth
+
+end
+
+
+function HabaneroButton:Init(bRelativePixelSize)
+	--Handle outline
+	if bRelativePixelSize then boolRelativePixelSize = bRelativePixelSize end
+
+	if self.outline then
+		self.triStrip = convertOutlineToTriStrip(self.outline)		
+	end
+	
+	self.xMin ,self.xMax =0,1
+	self.yMin ,self.yMax =0,1	
+	
+	totalPixelsX,totalPixelsY, rows, columns = getParentTotalSizePixel(self.parent) 
+	assert(totalPixelsX)
+	
+	if  boolRelativePixelSize == true then	
+		Spring.Echo("HabaneroButton:AbsoluteSize:"..totalPixelsX.." / "..totalPixelsY)
+			
+		buttonTotalX, buttonTotalY = getTriStripMaxDimensions(self.triStrip)
+		--Calculate the factors to scale the pixelvalues of the habanero
+		buttonFactorX, buttonFactorY = 1/((totalPixelsX/rows)/buttonTotalX), 1/((totalPixelsY/columns)/buttonTotalY)
+		
+		scaleTriStrip(buttonFactorX, buttonFactorY)
+		
+	end
+	
+	--computate the early out box
+	generateEarlyOutBox()
 	
 end
 --//=============================================================================

@@ -157,7 +157,7 @@ if (gadgetHandler:IsSyncedCode()) then
 	--units To be exempted from instantly lethal force
 	local lethalBuffExecption = getExemptFromLethalEffectsUnitTypeTable(UnitDefNames)
 	local gaiaTeamID = Spring.GetGaiaTeamID()
-	local skySraperDefID = UnitDefNames["buibaicity1"].id
+	local skySraperDefID = UnitDefNames["cbuibaicity1"].id
 	local cssDefID = UnitDefNames["css"].id
 	local gvolcanoDefID = UnitDefNames["gvolcano"].id
 	
