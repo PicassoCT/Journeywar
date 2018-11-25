@@ -413,7 +413,6 @@ function updateProgressBar(status)
     else
     end
 
-
     orgString = orgString .. passengerString..Description
 
 
@@ -424,7 +423,7 @@ function buildBG()
     boolIntBuild = true
     local currentLevel, storage, pull, income, expense, share, sent, received = Spring.GetTeamResources(teamID, "metal")
     ------ Spring.Echo(currentLevel)
-    unitCost = UnitDefNames.bg.metalCost
+    unitCost = UnitDefNames.cit.metalCost
     ------ Spring.Echo(unitCost)
     price = currentLevel - unitCost
     Spring.SetTeamResource(teamID, "m", price)

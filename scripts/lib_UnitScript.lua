@@ -1120,7 +1120,7 @@ end
 
 function createUnit_TerrainTest(uType, x,y,z, orientation, teamID, acceptableIncline)
 
-loc_acceptableDecline= acceptableIncline or 0.45
+loc_acceptableDecline= acceptableIncline or 0.35
 tx,ty,tz,slope = Spring.GetGroundNormal(x,z)
 
 	--Spring.Echo("createUnit_TerrainTest: slope = "..slope.. " < ".. loc_acceptableDecline )
@@ -1130,6 +1130,23 @@ tx,ty,tz,slope = Spring.GetGroundNormal(x,z)
 	end
 
 		Spring.Echo("createUnit_TerrainTest:"..slope.. " > ".. loc_acceptableDecline )
+end
+
+function breakUnitIntoProjectilePieces(id)
+	
+	explodeFunction = function()
+		T = getPieceTable(id)
+		for i=1,#T do
+			Spring.UnitScript.Explode(T[i],1 + 128)
+		end
+	end
+	
+	env = Spring.UnitScript.GetScriptEnv(id)		
+	if env then
+		Spring.UnitScript.CallAsUnit(id, explodeFunction)
+	end
+	
+	Spring.DestroyUnit(id,false, true)
 end
 --======================================================================================
 --Section: Landscape/Pathing Getter/Setters
