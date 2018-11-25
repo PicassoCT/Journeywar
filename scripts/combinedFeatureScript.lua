@@ -114,7 +114,19 @@ function fieldLoop()
         if math.random(0, 1) == 1 then Show(field1); Hide(field3) else Show(field3); Hide(field1) end
         if math.random(0, 2) == 1 then Show(field1); Show(field3) end
 
-        if math.random(0, 1) == 1 then Turn(field2, y_axis, math.rad(180), 0) else Turn(field2, y_axis, math.rad(0), 0) end
+			
+        if math.random(0, 1) == 1 then 
+				Turn(field2, x_axis, math.rad(0), 0)
+				if math.random(0, 1) == 1 then  Turn(field2, y_axis, math.rad(180), 0) else Turn(field2, y_axis, math.rad(0), 0) end
+			else
+				Turn(field2, x_axis, math.rad(180), 0) 
+				if math.random(0, 1) == 1 then Turn(field2, y_axis, math.rad(124), 0) else	Turn(field2, y_axis, math.rad(124 + 180), 0) 	end
+			end
+
+				
+
+		
+		
         if math.random(0, 1) == 0 then Turn(field3, y_axis, math.rad(180), 0) else Turn(field3, y_axis, math.rad(0), 0) end
         if math.random(0, 1) == 0 then Turn(field1, y_axis, math.rad(180), 0) else Turn(field1, y_axis, math.rad(0), 0) end
         if math.random(0, 1) == 0 then Turn(field3, z_axis, math.rad(180), 0) else Turn(field3, z_axis, math.rad(0), 0) end
