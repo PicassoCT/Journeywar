@@ -1,3 +1,15 @@
+Borderline = Control:Inherit{
+	classname= "Borderline",
+
+	
+	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
+	--triStrip should not be self-intersecting or incomplete
+	triStrip ={}
+}
+
+local this = Borderline
+local inherited = this.inherited
+
 
 function addATripStripTree()
 	-- slightly transparent white tree
@@ -17,8 +29,12 @@ function addATripStripTree()
 end
 
 
-function addMechanicalBorder()
+function addMechanicalBorder(grid)
 	-- traditional 2dimensional border for every button
+	for i=1, #grid.children do
+		createButtonBorder(grid.children[i], triStrip)
+	end
+	
 	-- around grid, add border-extension
 		-- on mouse near - extend
 		--on mouse away retract
@@ -31,10 +47,10 @@ borderLineFunctions["centrail"] =    addMechanicalBorder
 
 
 
-function Borderline:Spiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
+function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
 	local strip = {}
 	totalReducePerStep= (1-reduceFactor)/Resolution
-	degPerRes =Degree/Resolution
+	degPerRes = Degree/Resolution
 	
 	Rotate = function (x, z, Rad)
 				if not Rad then return end
@@ -61,18 +77,17 @@ function Borderline:Spiral(startPointA, startPointB, CenterPoint, Degree, reduce
 		strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
 		strip[#strip+1] = {x=copyPointA.x ,y=copyPointA.y}
 	end
+	return strip
 end
 
-function generateBorderline(typeString, habaneroGrid)
+function Borderline:generateBorderline(typeString, habaneroGrid)
 
 
 
 end
 
 
-function Borderline:initialize()
-
-		
+function Borderline:initialize()	
 
 
 end
