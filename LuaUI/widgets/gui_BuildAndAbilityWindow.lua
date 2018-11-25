@@ -61,15 +61,6 @@ local ignoreCMDs = {
     loadonto=true,
 }
 
--- function addPercent(x, y, sign)
-	-- sign=sign or 1
-	-- x= tonumber(string.sub(x,'%',''))
-	-- y= tonumber(string.sub(y,'%',''))
-
-	-- result = x + sign*(y)
-	-- return result.."%"
--- end
-
 ability_window.height = "23%"--180
 ability_window.height_numeric =180
 ability_window.width = "7%"--115
@@ -99,6 +90,15 @@ local AbilityWindowTextColour = {0.9,1,1,0.7}
 
 local JourneyButtonBackground = {0.1,0.8,0.8,1}
 local JourneyTextColour = {0.8,1,1,1}
+
+function ActionCommand(self, x, y, button, mods) 
+    local index = Spring.GetCmdDescIndex(self.cmdID)
+    if index then
+        local left, right = (button == 1), (button == 3)
+        local alt, ctrl, meta, shift = mods.alt, mods.ctrl, mods.meta, mods.shift
+        Spring.SetActiveCommand(index, button, left, right, alt, ctrl, meta, shift)
+    end
+end
 
 --main Constructors
 function widget:Initialize()
@@ -255,6 +255,7 @@ function widget:Initialize()
         name   = "unitImage_" .. name,
         height = '100%', 
         width = '100%',
+		   color ={1,1,1,0.75},
         file   = unitImageDir..(unitDef.name..".png" or 'placeholder.png'),
          flip = false,
     }
@@ -263,9 +264,11 @@ function widget:Initialize()
         cmdID = cmd.id,
         caption = "",
         children = {image},
+			backgroundColor = CentrailButtonBackground, 
         padding = {0,0,0,0},
-        margin = {0,0,0,0},
-        OnMouseUp = {function (self,...) Spring.Echo(self.name) end},
+        margin = {0,0,0,0},	
+		
+        OnMouseUp = {ActionCommand},
     }
     build_grid:AddChild(button)
 end

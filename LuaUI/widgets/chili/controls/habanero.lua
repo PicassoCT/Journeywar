@@ -1,5 +1,5 @@
 --//=============================================================================
-VFS.Include(CHILI_DIRNAME .. "headers/borderlines.lua", nil, VFS.RAW_FIRST)
+VFS.Include(CHILI_DIRNAME .. "headers/borderline.lua", nil, VFS.RAW_FIRST)
 --- HabaneroButton module
 
 --- HabaneroButton fields.
@@ -26,7 +26,13 @@ HabaneroButton = Control:Inherit{
 	cmdID = 0,
 	numberOfStates= 0,
 	currentState = 0,
-
+	boolActive= false,
+	boolBorder= false,
+	currentColor = {0,0,0,1},
+	--focusColor
+	--activeColor
+	--backgroundColor
+	--stateTriColor[3]
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
@@ -46,6 +52,15 @@ function HabaneroButton:SetCaption(caption)
 	self:Invalidate()
 end
 
+function HabaneroButton:FlipState(cmd)
+	if (self.boolActive == true) then self.boolActive = false else self.boolActive = true end
+end
+
+function HabaneroButton:SetActive( bActive )
+	self.boolActive = bActive
+	
+end
+
 --//=============================================================================
 
 
@@ -62,30 +77,47 @@ function getZeroScreen(this)
 	return this
 end
 
+function HabaneroButton:setCurrentColorByState()
+	if self.boolInFocus == true  then	
+		self.currentColor = self.focusColor
+	else
+		self.currentColor = self.backgroundColor
+	end
+	
+	if self.boolActive == true then
+		self.currentColor =  self.activeColor
+	end
+	
+	if string.find(self.caption, 'statebutton') then
+		self.currentColor = self.stateColors[1]
+	end
+		
+end
+
 function getRecursivePixelDimensions(this)
 	if this.parent then
 		if this.parent.width and this.parent.height then
-		typeWidth, typeHeight =   type(this.parent.width) , type(this.parent.height)
-		
+			typeWidth, typeHeight = type(this.parent.width) , type(this.parent.height)
+			
 			if typeWidth == "string" and typeHeight == "string" then
-				factorWidth =  100/tonumber(string.sub(this.parent.width,'%%',''))
+				factorWidth = 100/tonumber(string.sub(this.parent.width,'%%',''))
 				factorHeigth = 100/tonumber(string.sub(this.parent.heigth,'%%',''))
 				px,py = getRecursivePixelDimensions(this.parent)
 				return factorWidth* px, factorHeigth * py
 			else
-				return  this.parent.width, this.parent.height
+				return this.parent.width, this.parent.height
 			end
 		end
 	end
 	
-return this.width, this.height
+	return this.width, this.height
 end
 
 --> gets the parents of the handed objects absolut size in pixel, and the gridslotdimensions
 function getParentTotalSizePixel(self)
 	--debugging
 	zeroScreen = getZeroScreen(self)
-
+	
 	--no parent
 	if not self.parent then error("No parent existing for HabaneroButton "..self.caption); return end
 	
@@ -95,7 +127,7 @@ function getParentTotalSizePixel(self)
 	end
 	
 	typeX,typeY=type(self.parent.width),type(self.parent.height)
-	rows,columns =  self.parent.rows or 1 , self.parent.columns or 1
+	rows,columns = self.parent.rows or 1 , self.parent.columns or 1
 	
 	if typeX == "string" and typeY == "string" then
 		px,py = getRecursivePixelDimensions(self.parent)
@@ -122,38 +154,38 @@ function convertOutlineToTriStrip(outline)
 		ltriStrip[3*(i-1)+2]= {x=midPoint.x, y=midPoint.y}
 		ltriStrip[3*(i-1)+3]= {x=outline[i+1].x,y=outline[i+1].y}		
 	end
-		--close the triangle strip
-		ltriStrip[#ltriStrip+1] = {x=outline[#outline].x,y=outline[#outline].y}
-		ltriStrip[#ltriStrip+1]= {x=midPoint.x, y=midPoint.y}
-		ltriStrip[#ltriStrip+1]= {x=outline[1].x,y=outline[1].y}		
+	--close the triangle strip
+	ltriStrip[#ltriStrip+1] = {x=outline[#outline].x,y=outline[#outline].y}
+	ltriStrip[#ltriStrip+1]= {x=midPoint.x, y=midPoint.y}
+	ltriStrip[#ltriStrip+1]= {x=outline[1].x,y=outline[1].y}		
 end
 
-function getTriStripMaxDimensions()
-minx,miny,maxx,maxy = math.huge,math.huge,-math.huge,-math.huge
-
-	for i=1,table.getn(self.triStrip) do
-			local point= self.triStrip[i]	
-			
-			minx = math.min(minx,point.x)
-			miny = math.min(miny,point.y)
-			maxx = math.max(maxx,point.x)
-			maxy = math.min(maxy,point.y)
+function HabaneroButton:getTriStripMaxDimensions()
+	minx,miny,maxx,maxy = math.huge,math.huge,-math.huge,-math.huge
 	
-		end
+	for i=1,table.getn(self.triStrip) do
+		local point= self.triStrip[i]	
 		
+		minx = math.min(minx,point.x)
+		miny = math.min(miny,point.y)
+		maxx = math.max(maxx,point.x)
+		maxy = math.max(maxy,point.y)
+		
+	end
+	
 	return maxx - minx, maxy - miny
 end
 
-function scaleTriStrip(factorWidth, factorHeigth)
-		for i=1,table.getn(self.triStrip) do
-			local point= self.triStrip[i]		
-			point.x= point.x*factorWidth
-			point.y= point.y * factorHeigth
-			self.triStrip[i] = point		
-		end
+function scaleTriStrip(self, factorWidth, factorHeigth)
+	for i=1,table.getn(self.triStrip) do
+		local point= self.triStrip[i]		
+		point.x= point.x*factorWidth
+		point.y= point.y * factorHeigth
+		self.triStrip[i] = point		
+	end
 end
 
-function generateEarlyOutBox()
+function generateEarlyOutBox(self)
 	for i=1,table.getn(self.triStrip) do
 		local point= self.triStrip[i]		
 		self.xMin = math.min(self.xMin ,point.x)
@@ -171,14 +203,14 @@ function generateEarlyOutBox()
 	
 	self.defaultWidth = xWidth
 	self.defaultHeight =yHeigth
-
+	
 end
 
 
 function HabaneroButton:Init(bRelativePixelSize)
 	--Handle outline
 	if bRelativePixelSize then boolRelativePixelSize = bRelativePixelSize end
-
+	
 	if self.outline then
 		self.triStrip = convertOutlineToTriStrip(self.outline)		
 	end
@@ -186,23 +218,24 @@ function HabaneroButton:Init(bRelativePixelSize)
 	self.xMin ,self.xMax =0,1
 	self.yMin ,self.yMax =0,1	
 	
-	totalPixelsX,totalPixelsY, rows, columns = getParentTotalSizePixel(self.parent) 
-	assert(totalPixelsX)
+	totalPixelsX,totalPixelsY, rows, columns = getParentTotalSizePixel(self) 
 	
-	if  boolRelativePixelSize == true then	
-		Spring.Echo("HabaneroButton:AbsoluteSize:"..totalPixelsX.." / "..totalPixelsY)
-			
-		buttonTotalX, buttonTotalY = getTriStripMaxDimensions(self.triStrip)
-		--Calculate the factors to scale the pixelvalues of the habanero
-		buttonFactorX, buttonFactorY = 1/((totalPixelsX/rows)/buttonTotalX), 1/((totalPixelsY/columns)/buttonTotalY)
-		
-		scaleTriStrip(buttonFactorX, buttonFactorY)
-		
+	if boolRelativePixelSize == true then	
+	
+		buttonTotalX, buttonTotalY = self:getTriStripMaxDimensions(self.triStrip)
+			--Calculate the factors to scale the pixelvalues of the habanero
+		buttonFactorX, buttonFactorY = ((totalPixelsX/columns)/buttonTotalX), ((totalPixelsY/rows)/buttonTotalY)
+		scaleTriStrip(self, buttonFactorX, buttonFactorY)
+
+		buttonTotalX, buttonTotalY = self:getTriStripMaxDimensions(self.triStrip)
+
 	end
 	
 	--computate the early out box
-	generateEarlyOutBox()
-	
+	generateEarlyOutBox(self)
+	self:SetActive(false)
+	self:Show()
+	self:setCurrentColorByState()
 end
 --//=============================================================================
 --//=============================================================================
@@ -271,10 +304,8 @@ end
 --//=============================================================================
 
 
-function HabaneroButton:HitTest(x,y)
-	
-	return self:BruteForceTriStripTest(x,y)
-	
+function HabaneroButton:HitTest(x,y)	
+	return self:BruteForceTriStripTest(x,y)	
 end
 
 function HabaneroButton:MouseDown(...)
@@ -284,13 +315,14 @@ function HabaneroButton:MouseDown(...)
 	return self
 end
 
-function HabaneroButton:MouseOver(...)
-
+function HabaneroButton:MouseOver(...)	
 	self.boolInFocus = true
+	self:setCurrentColorByState()
 end
 
 function HabaneroButton:MouseOut(...)
 	self.boolInFocus = false
+	self:setCurrentColorByState()
 end
 
 function HabaneroButton:MouseUp(...)
@@ -298,8 +330,10 @@ function HabaneroButton:MouseUp(...)
 		self.state.pressed = false
 		inherited.MouseUp(self, ...)
 		self:Invalidate()
+		self:setCurrentColorByState()
 		return self
 	end
+	self:setCurrentColorByState()
 end
 
 --//=============================================================================
