@@ -5,7 +5,7 @@ local unitDef = {
   objectName         = "cRailGun.s3o",
   description= "powerfull, longrange base Defenses.<Long Range Defense Building>",
   script ="cRailGund.lua",
-  buildPic = "crailgun.dds",
+  buildPic = "crailgun.png",
   	RadarDistance = 25,
 	SightDistance = 200,
   

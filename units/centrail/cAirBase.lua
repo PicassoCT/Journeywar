@@ -7,7 +7,7 @@ local unitDef = {
 	
 	objectName = "cAirBase.s3o",
 	script = "cAirBaseScript.lua",
-	buildPic = "cairbase.dds",
+	buildPic = "cairbase.png",
 	
 	
 	

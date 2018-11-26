@@ -257,7 +257,7 @@ function widget:Initialize()
         width = '100%',
 		   color ={1,1,1,0.75},
         file   = unitImageDir..(unitDef.name..".png" or 'placeholder.png'),
-         flip = false,
+         flip = true,
     }
     local button = Chili.Button:New{
         name = "unitButton_" .. name,

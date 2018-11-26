@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "ground Assault Helicopter, drops bombs and waterbombs. <Air Ground Assault Unit>",
 	objectName = "chchopper.s3o",
 	script = "cHunterChopperScript.lua",
-	buildPic = "chunterchopper.dds",
+	buildPic = "chunterchopper.png",
 	
 	--cost
 	buildCostMetal = 260,

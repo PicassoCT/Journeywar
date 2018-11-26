@@ -26,7 +26,8 @@ HabaneroButton = Control:Inherit{
 	cmdID = 0,
 	numberOfStates= 0,
 	currentState = 0,
-	boolActive= false,
+	boolSelectable= false,
+	boolSelected = false,
 	boolBorder= false,
 	currentColor = {0,0,0,1},
 	--focusColor
@@ -53,12 +54,14 @@ function HabaneroButton:SetCaption(caption)
 end
 
 function HabaneroButton:FlipState(cmd)
-	if (self.boolActive == true) then self.boolActive = false else self.boolActive = true end
+	if (self.boolSelectable == true) then self.boolSelectable = false else self.boolSelectable = true end
 end
 
-function HabaneroButton:SetActive( bActive )
-	self.boolActive = bActive
-	
+function HabaneroButton:SetSelectable( bActive )
+	self.boolSelectable = bActive	
+end
+function HabaneroButton:SetSelected( bActive )
+	self.boolSelected = bActive	
 end
 
 --//=============================================================================
@@ -76,15 +79,25 @@ function getZeroScreen(this)
 	
 	return this
 end
-
+function mix(a,b,factor)
+return {
+[1]= a[1]*factor+b[1]*(1-factor),
+[2]=a[2]*factor+b[2]*(1-factor),
+[3]=a[3]*factor+b[3]*(1-factor),
+[4]=a[4]*factor+b[4]*(1-factor)}
+end
 function HabaneroButton:setCurrentColorByState()
+self.currentColor = self.backgroundColor
+
 	if self.boolInFocus == true  then	
 		self.currentColor = self.focusColor
-	else
-		self.currentColor = self.backgroundColor
+	end
+		
+	if self.boolSelectable == true  then
+		self.currentColor =  mix(self.activeColor,self.backgroundColor,0.5)
 	end
 	
-	if self.boolActive == true then
+	if self.boolSelected == true  then
 		self.currentColor =  self.activeColor
 	end
 	
@@ -170,7 +183,6 @@ function HabaneroButton:getTriStripMaxDimensions()
 		miny = math.min(miny,point.y)
 		maxx = math.max(maxx,point.x)
 		maxy = math.max(maxy,point.y)
-		
 	end
 	
 	return maxx - minx, maxy - miny
@@ -233,7 +245,7 @@ function HabaneroButton:Init(bRelativePixelSize)
 	
 	--computate the early out box
 	generateEarlyOutBox(self)
-	self:SetActive(false)
+	self:SetSelectable(false)
 	self:Show()
 	self:setCurrentColorByState()
 end

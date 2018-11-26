@@ -5,7 +5,7 @@ local unitDef = {
 	Description= " moving Wall <Mobile Wall>",
 	objectName = "mefence.s3o",
 	script ="cmEfence.lua",
-	buildPic = "efence.dds",
+	buildPic = "efence.png",
 	RadarDistance = 0,
 	SightDistance = 100,
 	

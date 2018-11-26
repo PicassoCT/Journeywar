@@ -4,7 +4,7 @@ local unitDef = {
 	Description = " 3.. 2... 1",
 	objectName = "jhunterdart.s3o",
 	script = "jhunterdart_script.lua",
-	buildPic = "placeholder.dds",
+	buildPic = "placeholder.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 25,

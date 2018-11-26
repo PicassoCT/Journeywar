@@ -4,7 +4,7 @@ name = "Construction Truck",
 Description = "builds buildings using up its Hitpoints. <Construction Unit>",
 objectName = "contruck.s3o",
 script = "conTruck.lua",
-buildPic = "contruck.dds",
+buildPic = "contruck.png",
 --cost
 buildCostMetal = 250,
 buildCostEnergy = 800,
