@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "supports construction & heals units, using up its Hitpoints. <Construction Unit>",
 	objectName = "conTrain.s3o",
 	script = "cConTrain.lua",
-	buildPic = "ccontrain.dds",
+	buildPic = "ccontrain.png",
 	--cost
 	buildCostMetal = 900,
 	buildCostEnergy = 800,

@@ -29,6 +29,7 @@ local controllCommand_window
 local activeCommand = 0
 local	base_stack 
 updateRequired = false
+
 local ignoreCMDs = {
 	timewait=true,
 	deathwait=true,
@@ -60,11 +61,14 @@ texCol={0,0,0,1}
 extHoloTexCol={200/255, 239/255, 253/255, 1}	
 holoCommandCol={163/255, 229/255, 243/255, 0.65}	
 holoTextCol={200/255, 239/255, 253/255, 1}	
+
 backgroundColExtended={0.2, 0.2, 0.4, 0.6} 
+genericActiveColor = {163/255, 229/255, 243/255, 0.5}
 genericFocusColor={163/255, 229/255, 243/255, 0.75}
-genericStateTriColor = {{245/255,64/255,9/255, 0.6},
-	{24/255,238/255,191/255, 0.6},
-	{27/255,234/255,31/255, 0.6}
+local genericStateTriColor = {
+	[1]={245/255,64/255,9/255, 0.6},
+	[2]={24/255,238/255,191/255, 0.6},
+	[3]={27/255,234/255,31/255, 0.6}
 }
 
 function ActionCommand(self, x, y, button, mods) 
@@ -131,19 +135,12 @@ function StateCommand(self, x, y, button, mods)
 	end	
 	
 	
+	
 	]]
 end
 
-
 extendedCommands={}
-extendedMenue={
-	[CMD.RECLAIM] ={},
-	[CMD.LOAD_UNITS]={},
-	[CMD.UNLOAD_UNITS]={},
-	[CMD.CLOAK]={},
-	[CMD.RESTORE] ={},
-	[CMD.OPT_SHIFT]={}
-}
+extendedMenue={}
 
 
 extendedMenue[CMD.LOAD_UNITS] ={
@@ -223,22 +220,9 @@ extendedMenue[CMD.OPT_SHIFT] ={
 	cmdID = CMD.OPT_SHIFT ,
 	name= "statebutton_optshift",
 	OnMouseUp= {StateCommand}
-	
-	
 }
 
-
-MainMenue={
-	[CMD.ATTACK]={},
-	[CMD.STOP]={},
-	[CMD.MOVE]={},
-	[CMD.FIRE_STATE]={},
-	[CMD.REPEAT]={},
-	[CMD.MOVE_STATE]={},
-	[CMD.REPAIR]={},
-	[CMD.PATROL]={}		
-}
-
+MainMenue={}
 
 function getCommandTarget()
 	x,z=Spring.GetMouseState()
@@ -403,15 +387,19 @@ function setDefaultCommandButtonAttributes()
 		HabaneroDescriptor.passiveColor =	 HabaneroDescriptor.passiveColor or	 	backgroundColExtended
 		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0
 		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0
+		
 		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol
 		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor
-		HabaneroDescriptor.stateColors = genericStateTriColor
+		HabaneroDescriptor.activeColor =	 genericActiveColor
+		HabaneroDescriptor.stateColors 		= genericStateTriColor
 	end
 	
 	--defaults
 	for comandID,MenueDescriptor in pairs(MainMenue) do
 		MenueDescriptor.focusColor = 	MenueDescriptor.focusColor or	{52/255, 167/255, 222/255, 0.75}
 		MenueDescriptor.backgroundColor = 	MenueDescriptor.backgroundColor or	 {0.1, 0.2, 0.3, 0.5}
+		MenueDescriptor.focusColor=		 MenueDescriptor.focusColor or		 		genericFocusColor
+		MenueDescriptor.activeColor =	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
 	end	
 	
@@ -617,11 +605,8 @@ function TraverseCmd(cmd)
 	for i= 1, #extendedCommand_Grid.children do
 		local command = extendedCommand_Grid.children[i]
 		if cmd.id == command.cmdID then
-			if bIsOrderButton == true then
-				extendedCommand_Grid.children[i]:SetActive(true)
-			end
-			if bIsStateButton == true then
-				extendedCommand_Grid.children[i]:SetActive(true)
+			if bIsOrderButton == true or bIsStateButton == true then
+				extendedCommand_Grid.children[i]:SetSelectable(true)
 			end
 		end
 	end		
@@ -629,13 +614,9 @@ function TraverseCmd(cmd)
 	for i= 1, #base_stack.children do
 		local command = base_stack.children[i]
 		if cmd.id == command.cmdID then
-			if bIsOrderButton == true then
-				base_stack.children[i]:SetActive(true)
+			if bIsOrderButton == true or bIsStateButton == true then
+				base_stack.children[i]:SetSelectable(true)
 			end
-			if bIsStateButton == true then
-				base_stack.children[i]:SetActive(true)
-			end
-			base_stack.children[i]:Show()
 		end
 	end	
 	
@@ -644,11 +625,11 @@ end
 
 function setAllHabanerosPassive()
 	for i= 1, #extendedCommand_Grid.children do
-		extendedCommand_Grid.children[i]:SetActive(false)
+		extendedCommand_Grid.children[i]:SetSelectable(false)
 	end	
 	
 	for i= 1, #base_stack.children do
-		base_stack.children[i]:SetActive(false)
+		base_stack.children[i]:SetSelectable(false)
 	end
 end
 
@@ -656,6 +637,9 @@ function widget:CommandsChanged()
 	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
 end
 
+function widget:SelectionChanged()
+	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
+end
 function ParseCmds()
 	setAllHabanerosPassive()
 	-- go over all menuebuttons and find them inside the active cmds 

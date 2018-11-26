@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "deployed Sharpshooter - can drag harpooned trophys to base <Long Range Ground Unit/ Recycleable Transporter>",
 	objectName = "csniper.s3o",
 	script = "csniper.lua",
-	buildPic = "csniper.dds",
+	buildPic = "csniper.png",
 	--cost
 	buildCostMetal = 600,
 	buildCostEnergy = 250,

@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "massive Landdestroyer firing miniature Universes <Heavy Assault Unit>",
 	objectName = "chedgehog.s3o",
 	script = "cHedgeHog.lua",
-	buildPic = "crestrictor.dds",
+	buildPic = "crestrictor.png",
 	--cost
 	buildCostMetal = 380,
 	buildCostEnergy = 120,

@@ -5,7 +5,7 @@ Category=[[LAND BUILDING]],
 
 --TEDClass = "PLANT",
 	script = "condepotscript.lua",
-	buildPic = "condepot.dds",
+	buildPic = "condepot.png",
   name               = "Construction Unit Depot ",
   objectName         = "condepot.s3o",
   	Description = "  builds Construction Units. Set to support the citadell. <Construction Unit Factory>",
