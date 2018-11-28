@@ -80,31 +80,32 @@ function getZeroScreen(this)
 	return this
 end
 function mix(a,b,factor)
-return {
-[1]= a[1]*factor+b[1]*(1-factor),
-[2]=a[2]*factor+b[2]*(1-factor),
-[3]=a[3]*factor+b[3]*(1-factor),
-[4]=a[4]*factor+b[4]*(1-factor)}
+	return {
+		[1]= a[1]*factor+b[1]*(1-factor),
+		[2]=a[2]*factor+b[2]*(1-factor),
+		[3]=a[3]*factor+b[3]*(1-factor),
+	[4]=a[4]*factor+b[4]*(1-factor)}
 end
-function HabaneroButton:setCurrentColorByState()
-self.currentColor = self.backgroundColor
 
-	if self.boolInFocus == true  then	
+function HabaneroButton:setCurrentColorByState()
+	self.currentColor = self.backgroundColor
+	
+	if self.boolInFocus == true then	
 		self.currentColor = self.focusColor
 	end
-		
-	if self.boolSelectable == true  then
-		self.currentColor =  mix(self.activeColor,self.backgroundColor,0.5)
+	
+	if self.boolSelectable == true then
+		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)
 	end
 	
-	if self.boolSelected == true  then
-		self.currentColor =  self.activeColor
+	if self.boolSelected == true then
+		self.currentColor = self.activeColor
 	end
 	
 	if string.find(self.caption, 'statebutton') then
 		self.currentColor = self.stateColors[1]
 	end
-		
+	
 end
 
 function getRecursivePixelDimensions(this)
@@ -233,14 +234,14 @@ function HabaneroButton:Init(bRelativePixelSize)
 	totalPixelsX,totalPixelsY, rows, columns = getParentTotalSizePixel(self) 
 	
 	if boolRelativePixelSize == true then	
-	
+		
 		buttonTotalX, buttonTotalY = self:getTriStripMaxDimensions(self.triStrip)
-			--Calculate the factors to scale the pixelvalues of the habanero
+		--Calculate the factors to scale the pixelvalues of the habanero
 		buttonFactorX, buttonFactorY = ((totalPixelsX/columns)/buttonTotalX), ((totalPixelsY/rows)/buttonTotalY)
 		scaleTriStrip(self, buttonFactorX, buttonFactorY)
-
+		
 		buttonTotalX, buttonTotalY = self:getTriStripMaxDimensions(self.triStrip)
-
+		
 	end
 	
 	--computate the early out box

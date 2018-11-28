@@ -761,6 +761,7 @@ end
 
 
 function widget:MouseRelease(x, y, button)
+
   if ( pressedFac == hoveredFac )and
      (pressedBOpt == hoveredBOpt)and
      (waypointMode<1)and

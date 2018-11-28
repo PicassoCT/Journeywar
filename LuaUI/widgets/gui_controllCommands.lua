@@ -8,7 +8,8 @@ function widget:GetInfo()
 		license = "GNU GPL, v2 or later",
 		layer = 0,
 		enabled = true,
-		hidden = false
+		hidden = false,
+		handler = true
 	}
 end
 
@@ -72,6 +73,7 @@ local genericStateTriColor = {
 }
 
 function ActionCommand(self, x, y, button, mods) 
+	self.boolSelected = true
 	local index = Spring.GetCmdDescIndex(self.cmdID)
 	if index then
 		local left, right = (button == 1), (button == 3)
@@ -580,11 +582,24 @@ function widget:Initialize()
 end
 
 
-
-
-function widgetHandler:MouseRelease(x, y, button)
+function forAllButtonsDo( functionToExecute )
+	local executable= functionToExecute
+	for i= 1, #extendedCommand_Grid.children do
+		extendedCommand_Grid.children[i] = executable(extendedCommand_Grid.children[i])
+	end		
 	
-	return true
+	for i= 1, #base_stack.children do
+		base_stack.children[i] = executable(base_stack.children[i])	
+	end	
+end
+
+function widgetHandler:MouseRelease(x, y, mButton)
+		-- Only left click
+		
+	if (mButton == 1) then 	
+		forAllButtonsDo(function(self) self.boolSelected = false; self:setCurrentColorByState(); return self; end)	
+	end
+	
 end
 
 function TraverseCmd(cmd)
@@ -623,15 +638,7 @@ function TraverseCmd(cmd)
 	
 end
 
-function setAllHabanerosPassive()
-	for i= 1, #extendedCommand_Grid.children do
-		extendedCommand_Grid.children[i]:SetSelectable(false)
-	end	
-	
-	for i= 1, #base_stack.children do
-		base_stack.children[i]:SetSelectable(false)
-	end
-end
+
 
 function widget:CommandsChanged()
 	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
@@ -641,7 +648,7 @@ function widget:SelectionChanged()
 	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
 end
 function ParseCmds()
-	setAllHabanerosPassive()
+	forAllButtonsDo(function(self) self:SetSelectable(false); return self; end)
 	-- go over all menuebuttons and find them inside the active cmds 
 	--set either
 	--active
