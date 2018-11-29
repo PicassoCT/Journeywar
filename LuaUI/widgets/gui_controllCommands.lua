@@ -507,16 +507,7 @@ function widget:Initialize()
 		)		
 		extendedCommands[commandID]:Init(true)
 	end
-	
-	extendedCommand_Grid:AddChild(extendedCommands[CMD.RECLAIM])
-	extendedCommand_Grid:AddChild(extendedCommands[CMD.LOAD_UNITS])
-	extendedCommand_Grid:AddChild(extendedCommands[CMD.UNLOAD_UNITS])
-	extendedCommand_Grid:AddChild(extendedCommands[CMD.CLOAK])
-	extendedCommand_Grid:AddChild(extendedCommands[CMD.RESTORE])
-	extendedCommand_Grid:AddChild(extendedCommands[CMD.OPT_SHIFT])
-	
-	extendedCommand_window:AddChild(extendedCommand_Grid)
-	
+		
 	Habaneros={ }
 	
 	controllCommand_window = Window:New{
@@ -559,9 +550,7 @@ function widget:Initialize()
 		children={			
 		}
 	}
-	
-	
-	
+		
 	for comandID,MenueDescriptor in pairs(MainMenue) do
 		Habaneros[comandID] = createHabanero(
 		MenueDescriptor,
@@ -570,15 +559,6 @@ function widget:Initialize()
 		Habaneros[comandID]:Init(true)
 	end
 	
-	base_stack:AddChild(Habaneros[CMD.ATTACK])
-	base_stack:AddChild(Habaneros[CMD.STOP])
-	base_stack:AddChild(Habaneros[CMD.MOVE])
-	base_stack:AddChild(Habaneros[CMD.FIRE_STATE])
-	base_stack:AddChild(Habaneros[CMD.REPEAT])
-	base_stack:AddChild(Habaneros[CMD.MOVE_STATE])
-	base_stack:AddChild(Habaneros[CMD.REPAIR])
-	base_stack:AddChild(Habaneros[CMD.PATROL])
-	base_stack:AddChild(Habaneros[CMD.GUARD])	
 end
 
 
