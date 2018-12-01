@@ -1,5 +1,6 @@
 return {
 --centrail 
+  ["ccomender"]= {active="UPGRADE \n Show", passive="UPGRADE \n Hide"},
   ["cadvisor"]= {active="Reeducate \n Citizen", passive="Request \nPending"},
   ["cbuilux"]= {active="Alarm On\n Retract\ninto\nGround", passive="Alarm \n Emerge\nfrom\nGround"},
   ["cmbuilux"]= {active="Alarm On\n Retract\ninto\nGround", passive="Alarm \n Emerge\nfrom\nGround"},

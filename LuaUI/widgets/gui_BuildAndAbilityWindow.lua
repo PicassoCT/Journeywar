@@ -26,8 +26,6 @@ local build_grid
 
 local boolShowUpgrade = false
 local elementsToHide={}
-local onOffButtonImage
-local onOffButton = {}
 local SpecialAbilityButton = {}
 local upgrade_Grid = {}
 local upgrade_window={}
@@ -117,6 +115,15 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
+		local onOffFunction = function()
+			-- local _,_,left,_,right = Spring.GetMouseState()
+			-- local alt,ctrl,meta,shift = Spring.GetModKeyState()
+			-- local index = Spring.GetCmdDescIndex(CMD.ONOFF)
+			-- if index then
+				-- Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
+			-- end
+		end
+	
 	
 	function Create_UpgradeButton()
 		SpecialAbilityButton = Button:New{
@@ -169,68 +176,8 @@ function widget:Initialize()
 		
 	end
 	
-	function Create_OnOffButton(side)
-		local buttonsize = 80
-		
-		local onOffFunction = function()
-			local _,_,left,_,right = Spring.GetMouseState()
-			local alt,ctrl,meta,shift = Spring.GetModKeyState()
-			local index = Spring.GetCmdDescIndex(CMD.ONOFF)
-			if index then
-				Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
-			end
-		end
-		
-		if not side or side == "centrail" then
-		
-			onOffButton = Button:New{
-			name = "onOffButton",
-			--tooltip = tooltip,
-			x = 5,
-			y = 100,
-			width = 100,
-			height = 60,			
-			backgroundColor = CentrailButtonBackground, 
-			textColor = CentrailTextColour,
-			parent= stack_main,
-			OnClick = { onOffFunction },
-		}
-		else 
-			onOffButton = 	Chili.HabaneroButton:New{
-			triStrip= Chili.HabaneroButton:Spiral(
-			{x=20,y=5}, 
-			{x=2,y=5}, 
-			{x=0,y=0}, 
-			50, 
-			0.3,
-			32
-			)	,
-			x = 5,
-			y = 100,
-			width = 100,
-			height = 60,			
-			backgroundColor = JourneyButtonBackground,
-			textColor = JourneyTextColour, 
-			OnClick= { onOffFunction}
-			}	
 
-		end
 
-		onOffButton.name = "onOffButton"
-		onOffButton.caption = "ABILITY"
-		
-		if stack_main.children[onOffButton] then 
-			stack_main.children[onOffButton] = onOffButton 
-		else
-			stack_main:AddChild(onOffButton)
-		end
-		
-		if onOffButton then
-			ButtonsTable["defaultOnOff"]=onOffButton						
-			onOffButton:Hide()
-		end
-	end
-	indexVarVal=1
 	
 	function createNewUpgradeButton(buttonwidth,buttonheigth,BaseCol, texCol, name)
 		buttonwidth= buttonwidth..'%'
@@ -441,7 +388,6 @@ end
 
 	
 	function createAllButtons()
-		Create_OnOffButton()
 		Create_UpgradeButton()
 		CreateUpgradeMenue()
 		
@@ -543,11 +489,7 @@ end
 function widget:CommandsChanged()		
 	updateCommandsSoon = true		
 end
-
---update functions
-function widget:GameFrame(f)
-		
-	function isUnitOnOffable(unitDefID_T)
+function isUnitOnOffable(unitDefID_T)
 		local index = Spring.GetCmdDescIndex(CMD.ONOFF)
 		if index then
 			return true
@@ -580,13 +522,21 @@ function widget:GameFrame(f)
 	end
 	
 	function UpdateAbilitiesWindow()
+		onOffFunction = function()
+			-- local _,_,left,_,right = Spring.GetMouseState()
+			-- local alt,ctrl,meta,shift = Spring.GetModKeyState()
+			-- local index = Spring.GetCmdDescIndex(CMD.ONOFF)
+			-- if index then
+				-- Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
+			-- end
+		end
 		
 		selectedUnits = spGetSelectedUnits()
 		
 		if not selectedUnits then 
-			onOffButton.caption = "-"
 			upgrade_window:Hide()
 			resetStatusbars()
+			
 			return 
 		end
 		
@@ -596,6 +546,7 @@ function widget:GameFrame(f)
 			SpecialAbilityButton:Hide()
 			upgrade_window:Hide()
 			resetStatusbars()
+		
 			return 
 		end
 		
@@ -609,30 +560,35 @@ function widget:GameFrame(f)
 		end
 		
 		updateAmmonitionBar(unitID)
-		SpecialAbilityButton.caption = "ABILITY"
+	
 		
-		--adapt the button to unit commender
-		if ud.name == "ccomender" then
-			SpecialAbilityButton.caption = "UPGRADE"
-			SpecialAbilityButton.OnClick = showComEndUpgradeMenue
-		elseif isUnitOnOffable(ud.name)== true then
-			if defaultCaptionByUnitType[ud.name] then
-				if SpecialAbilityButton.caption == defaultCaptionByUnitType[ud.name].active then
-					defaultCaptionByUnitType.caption = defaultCaptionByUnitType[ud.name].passive 
-				else
-					defaultCaptionByUnitType.caption = defaultCaptionByUnitType[ud.name].active 
+		if isUnitOnOffable(ud.name)== true then
+		SpecialAbilityButton:Show()
+				
+					boolUnitIsActive =	Spring.GetUnitIsActive (unitID)
+			
+				if boolUnitIsActive == true then
+					SpecialAbilityButton.caption = defaultCaptionByUnitType[ud.name].passive 
 				end
+				if boolUnitIsActive == false then 
+					SpecialAbilityButton.caption = defaultCaptionByUnitType[ud.name].active 
+				end
+		
+			if ud.name == "ccomender" then
+				SpecialAbilityButton.OnClick = showComEndUpgradeMenue
 			else
-				SpecialAbilityButton.caption = "ABILITY"
 				SpecialAbilityButton.OnClick = onOffFunction
 			end
-			SpecialAbilityButton:Show()
-		else			
-			SpecialAbilityButton:Hide()
+		else
+			SpecialAbilityButton:Hide()		
 		end
+
 	end
 		
 
+--update functions
+function widget:GameFrame(f)	
+	
 	if updateCommandsSoon == true and (f % 16 == 0) then
 		updateCommandsSoon = false
 		UpdateAbilitiesWindow()	
