@@ -73,6 +73,7 @@ local genericStateTriColor = {
 }
 
 function ActionCommand(self, x, y, button, mods) 
+
 	self.boolSelected = true
 	local index = Spring.GetCmdDescIndex(self.cmdID)
 	if index then
@@ -83,7 +84,7 @@ function ActionCommand(self, x, y, button, mods)
 end
 
 function StateCommand(self, x, y, button, mods)
-	ActionCommand(self, x, y, button, mods) 
+	--ActionCommand(self, x, y, button, mods) 
 	--
 	--state out of how many States
 	--Get Majority State of all seleceted Units, up that state by one and show
@@ -408,6 +409,10 @@ function setDefaultCommandButtonAttributes()
 	
 end
 
+function updateAllButtonsInside()
+	updateRequired = true
+end
+
 function widget:Initialize()
 	
 	--Spring.SendCommands("hideinterface 1")
@@ -424,12 +429,8 @@ function widget:Initialize()
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
 	
-	function createHabanero(HabaneroDescriptor, Parent )
+	function createHabanero(HabaneroDescriptor, Parent )		
 		
-		
-		
-		functionOnClick = 	 function () --Spring.Echo("The HabaneroButton"..HabaneroDescriptor.caption .." is pressed into service")
-		end
 		
 		return 	Chili.HabaneroButton:New{
 			triStrip=	HabaneroDescriptor.triStrip	,
@@ -442,7 +443,6 @@ function widget:Initialize()
 			focusColor = HabaneroDescriptor.focusColor,
 			textColor = HabaneroDescriptor.textColor, 
 			stateColors = HabaneroDescriptor.stateColors,
-			OnClick= { functionOnClick},
 			OnMouseUp = HabaneroDescriptor.OnMouseUp
 		}
 		
@@ -466,9 +466,9 @@ function widget:Initialize()
 		dockable = true,
 		color = {0.1,0.7,0.85,0.42},
 		backgroundColor= {0.1,0.2,0.6,0.32},
-		children = {
-			
+		children = {			
 		},
+		OnFocusUpdate = {updateAllButtonsInside}
 	}	
 	
 	extendedCommand_Grid = Grid:New{
@@ -573,6 +573,8 @@ function forAllButtonsDo( functionToExecute )
 	end	
 end
 
+
+
 function widgetHandler:MouseRelease(x, y, mButton)
 		-- Only left click
 		
@@ -614,19 +616,13 @@ function TraverseCmd(cmd)
 			end
 		end
 	end	
+
 	
-	
 end
 
 
 
-function widget:CommandsChanged()
-	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
-end
 
-function widget:SelectionChanged()
-	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
-end
 function ParseCmds()
 	forAllButtonsDo(function(self) self:SetSelectable(false); return self; end)
 	-- go over all menuebuttons and find them inside the active cmds 
@@ -643,11 +639,26 @@ function ParseCmds()
 		end
 	end
 	
+	forAllButtonsDo(function(self) self:setCurrentColorByState(); return self; end)
 end
 
+function widget:GameFrame(n)
+	if n % 16 == 0 then 
+		updateRequired= true
+	end
+end
+
+function widget:CommandsChanged()
+	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
+end
+
+function widget:SelectionChanged()
+	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
+end
 
 function widget:Update()
-	if updateRequired then
+
+	if updateRequired == true then
 		ParseCmds()
 		updateRequired = false
 	end
