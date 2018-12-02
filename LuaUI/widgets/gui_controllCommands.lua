@@ -65,9 +65,9 @@ holoCommandCol={163/255, 229/255, 243/255, 0.65}
 holoTextCol={200/255, 239/255, 253/255, 1}	
 
 backgroundColExtended={0.2, 0.2, 0.4, 0.6} 
-genericActiveColor = {163/255, 229/255, 243/255, 0.5}
-genericFocusColor={163/255, 229/255, 243/255, 0.75}
-local genericStateTriColor = {
+genericActiveColor = {163/255, 229/255, 243/255, 0.75}
+genericFocusColor={163/255, 229/255, 243/255, 0.5}
+genericStateTriColor = {
 	[1]={245/255,64/255,9/255, 0.6},
 	[2]={24/255,238/255,191/255, 0.6},
 	[3]={27/255,234/255,31/255, 0.6}
@@ -268,7 +268,7 @@ MainMenue[CMD.ATTACK] ={
 		{x= 80, y = 70},						
 		{x= 0, y = 70},
 	{x= 0, y = 100}}	,
-	focusColor={163/255, 229/255, 243/255, 0.75},
+	activeColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=	"|ATTAC",
 	
@@ -285,7 +285,7 @@ MainMenue[CMD.STOP] ={
 		{x= 0, y = 70},
 		{x= 80, y = 80},
 	{x= 70, y = 90}},
-	focusColor={58/255, 172/255, 226/255, 0.75}	,
+	activeColor={58/255, 172/255, 226/255, 0.75}	,
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|STOP",	
 	
@@ -300,7 +300,7 @@ MainMenue[CMD.MOVE] ={
 		{x= 80, y = -10},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	focusColor={35/255, 124/255, 166/255, 0.75}		,
+	activeColor={35/255, 124/255, 166/255, 0.75}		,
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|MOVE",2),
 	
@@ -315,7 +315,7 @@ MainMenue[CMD.FIRE_STATE] ={
 		{x= 80, y =0},
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
-	focusColor={52/255, 167/255, 222/255, 0.75},
+	activeColor={52/255, 167/255, 222/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|FIRE\nSTATE",3),
 	
@@ -330,7 +330,7 @@ MainMenue[CMD.REPEAT] ={
 		{x= 70, y =-15},
 		{x= 0, y = 90},
 	{x= 70, y = 110}},
-	focusColor={52/255, 167/255, 222/255, 0.75}	,
+	activeColor={52/255, 167/255, 222/255, 0.75}	,
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption="|REPEAT ",
 	
@@ -345,7 +345,7 @@ MainMenue[CMD.MOVE_STATE] ={
 		{x= 80, y =5},
 		{x= 0, y = 45},
 	{x= 80, y = 75}},
-	focusColor={35/255, 124/255, 166/255, 0.75},
+	activeColor={35/255, 124/255, 166/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= "|MOVE\nMODE ",
 	
@@ -360,7 +360,7 @@ MainMenue[CMD.REPAIR] ={
 		{x= 80, y = 0},
 		{x= 0, y = 90},
 	{x= 80, y = 60}},
-	focusColor={163/255, 229/255, 243/255, 0.75},
+	activeColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption= upByRow("|REPAIR ",4),
 	
@@ -376,7 +376,7 @@ MainMenue[CMD.PATROL] ={
 		{x= 0, y = 90},			
 		{x= 80, y = 90}		
 	},
-	focusColor={52/255, 167/255, 222/255, 0.75},
+	activeColor={52/255, 167/255, 222/255, 0.75},
 	backgroundColor = {0.1, 0.2, 0.3, 0.5},
 	caption=upByRow("|PATROL",4),
 	
@@ -421,8 +421,8 @@ function setDefaultCommandButtonAttributes()
 		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0
 		
 		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol
-		HabaneroDescriptor.focusColor=		 HabaneroDescriptor.focusColor or		 		genericFocusColor
-		HabaneroDescriptor.activeColor =	 genericActiveColor
+		HabaneroDescriptor.focusColor=		 genericFocusColor
+		HabaneroDescriptor.activeColor =	 HabaneroDescriptor.active or		  genericActiveColor		
 		HabaneroDescriptor.stateColors 		= genericStateTriColor
 	end
 	
@@ -430,8 +430,8 @@ function setDefaultCommandButtonAttributes()
 	for comandID,MenueDescriptor in pairs(MainMenue) do
 		MenueDescriptor.focusColor = 	MenueDescriptor.focusColor or	{52/255, 167/255, 222/255, 0.75}
 		MenueDescriptor.backgroundColor = 	MenueDescriptor.backgroundColor or	 {0.1, 0.2, 0.3, 0.5}
-		MenueDescriptor.focusColor=		 MenueDescriptor.focusColor or		 		genericFocusColor
-		MenueDescriptor.activeColor =	 genericActiveColor
+		MenueDescriptor.focusColor=		 	 		genericFocusColor
+		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
 	end	
 	
@@ -633,7 +633,6 @@ function TraverseCmd(cmd)
 		if cmd.id == command.cmdID then
 			if bIsOrderButton == true or bIsStateButton == true then
 				extendedCommand_Grid.children[i]:SetSelectable(true)
-				extendedCommand_Grid.children[i]:Show()
 			end
 		end
 	end		
@@ -643,7 +642,6 @@ function TraverseCmd(cmd)
 		if cmd.id == command.cmdID then
 			if bIsOrderButton == true or bIsStateButton == true then
 				base_stack.children[i]:SetSelectable(true)
-				base_stack.children[i]:Show()
 			end
 		end
 	end	
@@ -694,6 +692,7 @@ function widget:CommandsChanged()
 end
 
 function widget:SelectionChanged()
+	forAllButtonsDo(function(self) self:SetSelectable(false); self:SetSelected(false); return self; end)
 	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
 end
 

@@ -30,6 +30,11 @@ HabaneroButton = Control:Inherit{
 	boolSelected = false,
 	boolBorder= false,
 	currentColor = {0,0,0,1},
+	stateColors={
+	[1]={245/255,64/255,9/255, 0.6},
+	[2]={24/255,238/255,191/255, 0.6},
+	[3]={27/255,234/255,31/255, 0.6}
+},
 	--focusColor
 	--activeColor
 	--backgroundColor
@@ -95,8 +100,11 @@ function mix(a,b,factor)
 		[1]= a[1]*factor+b[1]*(1-factor),
 		[2]=a[2]*factor+b[2]*(1-factor),
 		[3]=a[3]*factor+b[3]*(1-factor),
-	[4]=a[4]*factor+b[4]*(1-factor)}
+		[4]=a[4]*factor+b[4]*(1-factor)
+		}
 end
+
+
 
 function HabaneroButton:setCurrentColorByState()
 	
@@ -114,8 +122,8 @@ function HabaneroButton:setCurrentColorByState()
 		self.currentColor = self.activeColor
 	end
 	
-	if self.boolSelectable == true and self.caption and string.find(self.caption, 'statebutton') then
-		self.currentColor = self.stateColors[math.max(1, math.min(numberOfStates,currentState))]
+	if self.boolSelectable == true and self.stateColors and string.find(self.caption, 'statebutton') then
+		self.currentColor = self.stateColors[math.max(1, math.min(self.numberOfStates,self.currentState))]
 	end
 	
 end
@@ -259,7 +267,6 @@ function HabaneroButton:Init(bRelativePixelSize)
 	--computate the early out box
 	generateEarlyOutBox(self)
 	self:SetSelectable(false)
---	self:Show()
 	self:setCurrentColorByState()
 end
 --//=============================================================================
@@ -350,6 +357,7 @@ end
 function HabaneroButton:MouseOut(...)
 	self.boolInFocus = false
 	self:setCurrentColorByState()
+	self:Invalidate()
 end
 
 function HabaneroButton:MouseUp(...)
