@@ -25,7 +25,7 @@ HabaneroButton = Control:Inherit{
 	boolRelativePixelSize = false,
 	cmdID = 0,
 	numberOfStates= 0,
-	currentState = 0,
+	currentState = 1,
 	boolSelectable= false,
 	boolSelected = false,
 	boolBorder= false,
@@ -59,9 +59,17 @@ end
 
 function HabaneroButton:SetSelectable( bActive )
 	self.boolSelectable = bActive	
+	self:setCurrentColorByState()
 end
 function HabaneroButton:SetSelected( bActive )
 	self.boolSelected = bActive	
+	self:setCurrentColorByState()
+end
+
+function HabaneroButton:SetState( State, StateMax )
+	self.numberOfStates = StateMax
+	self.currentState = (State % self.numberOfStates) + 1	
+	self:setCurrentColorByState()
 end
 
 --//=============================================================================
@@ -90,21 +98,21 @@ end
 function HabaneroButton:setCurrentColorByState()
 	
 	self.currentColor = self.backgroundColor
+		
+	if self.boolSelectable == true then
+		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)
+	end
 	
 	if self.boolInFocus == true then	
 		self.currentColor = self.focusColor
-	end
-	
-	if self.boolSelectable == true then
-		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)
 	end
 	
 	if self.boolSelected == true then
 		self.currentColor = self.activeColor
 	end
 	
-	if self.caption and string.find(self.caption, 'statebutton') then
-		self.currentColor = self.stateColors[1]
+	if self.boolSelectable == true and self.caption and string.find(self.caption, 'statebutton') then
+		self.currentColor = self.stateColors[math.max(1, math.min(numberOfStates,currentState))]
 	end
 	
 end

@@ -40,6 +40,7 @@ local ignoreCMDs = {
 }
 targetCommands = VFS.Include("LuaUI/ressources/guiEnums.lua")
 VFS.Include("LuaUI/ressources/gui_helper.lua")
+VFS.Include("scripts/lib_UnitScript.lua")
 ---------------------------------------------------------------------------------------
 
 
@@ -83,63 +84,91 @@ function ActionCommand(self, x, y, button, mods)
 	end
 end
 
+local boolGlobalShiftOverrideActive= false
+local boolOverrideShiftOn = false
 function StateCommand(self, x, y, button, mods)
-	--ActionCommand(self, x, y, button, mods) 
-	--
-	--state out of how many States
-	--Get Majority State of all seleceted Units, up that state by one and show
-	-- update caption
-	--Set Colour
-	--[[
-	if self.name == "statebutton_cloak" then
-		selectedUnits=spGetSelectedUnits();
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)			
-			for i=1,#selectedUnits do
-				state = Spring.GetUnitStates(selectedUnits[i])
-				paramTable={}
-				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
+
+  local opt = {}
+  if mods.alt   then push(opt,"alt")   end
+  if mods.ctrl  then push(opt,"ctrl")  end
+  if mods.meta  then push(opt,"meta")  end
+  if mods.shift then push(opt,"shift") end
+  
+  if boolOverrideShiftOn == true then mods.shift = boolOverrideShiftOn end
+
+
+	selectedUnits = Spring.GetSelectedUnits()
+	if not selectedUnits  then return end
+	
+	states = Spring.GetUnitStates([selectedUnits[1])	
+	
+	-- CLOAK
+	if self.cmdID == CMD.CLOAK and states.cloak then		
+		eCloaked = 1
+		self.caption = "REVEAL"
+		
+		if states.cloak = true  then 
+			eCloaked = 2 
+			self.caption = "CLOAK"
+		end
+		self:SetState( eCloaked , 2)	
+		state = Spring.GetUnitStates(selectedUnits[1])
+		paramTable={[1]=0}
+		if state.cloak == false then  paramTable={[1]=1};	end
+		
+			for i=1,#selectedUnits do	
+				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, opt)
 			end
-		end		
 	end
+
+	--FIRE_STATE
+	if self.cmdID == CMD.FIRE_STATE and states.firestate > -1 then
+		self:SetState( inc(states.firestate) , 3)
+		state = Spring.GetUnitStates(selectedUnits[1])			
+		paramTable={[1]= inc(state.firestate)%4}
+		stateCaption = {[0]="HOLD\nFIRE",[1]= "RETURN\nFIRE",[2]="FIRE\nAT\nWILL",[3]="FIRE\nAT\nNEUTRAL" }
+		self.caption = stateCaption[paramTable[1]]
+		
+		for i=1,#selectedUnits do			
+			Spring.GiveOrderToUnit(selectedUnits[i], CMD.FIRE_STATE, paramTable, opt)
+		end
+	end		
 	
-	if self.name == "statebutton_fire" then
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)			
-			for i=1,#selectedUnits do
-				state = Spring.GetUnitStates(selectedUnits[i])
-				paramTable={}
-				if state and state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
-			end
-		end		
-		--self.caption = "|FIRE_STATE\n".. self.cmd.params[self.cmd.params[1] + 2]
+	if self.cmdID == CMD.MOVE_STATE then
+		self:SetState( inc(states.movestate) , 3)
+		state = Spring.GetUnitStates(selectedUnits[1])			
+		paramTable={[1]= inc(state.movestate)%3}
+		stateCaption = {[0]="|HOLD\nPOSITION",[1]= "AREA\nDEFENSE",[2]="SEARCH\n&\nDESTROY"}
+		self.caption = stateCaption[paramTable[1]]
+		
+		for i=1,#selectedUnits do			
+			Spring.GiveOrderToUnit(selectedUnits[i], CMD.MOVE_STATE, paramTable, opt)
+		end
 	end	
 	
-	if self.name == "statebutton_move" then
-		if selectedUnits and #selectedUnits > 0 then
-			commandTable= getCommandTable(boolQueueOverride)			
-			for i=1,#selectedUnits do
-				state = Spring.GetUnitStates(selectedUnits[i])
-				paramTable={}
-				if state.cloak == true then paramTable={[1]=0};	else paramTable={[1]=1};	end
-				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, commandTable)
-			end
-		end		
-	end	
-	
+	--Modifier
 	if self.name == "statebutton_optshift" then
-		
+		boolGlobalShiftOverrideActive=true
+		boolOverrideShiftOn = not boolOverrideShiftOn
+		self:SetState( inc(states.optshift) , 1)
 	end	
 	
-	if self.name == "statebutton_repeat" then
+	if self.cmdID == CMD.REPEAT and states.repeat then		
+		eRepeat = 1
+		self.caption = "INFINITE\nCOMMAND"		
+		if states.repeat = true  then 
+			eRepeat = 2 
+			self.caption = "MONO\nCOMMAND"
+		end
+		self:SetState( inc(eRepeat) , 2)	
+		state = Spring.GetUnitStates(selectedUnits[1])
+		paramTable={[1]=0}
 		
-	end	
-	
-	
-	
-	]]
+		if state.repeat == false then  paramTable={[1]=1};	end		
+		for i=1,#selectedUnits do	
+			Spring.GiveOrderToUnit(selectedUnits[i], CMD.REPEAT, paramTable, opt)
+		end
+	end
 end
 
 extendedCommands={}
@@ -620,7 +649,17 @@ function TraverseCmd(cmd)
 	
 end
 
-
+local shiftKeyAscii = 15
+function widget:KeyReleased(key)
+	if key == shiftKeyAscii then
+	boolGlobalShiftOverrideActive =false
+	end
+end
+function widget:KeyPressed(key)
+	if key == shiftKeyAscii then
+	boolGlobalShiftOverrideActive =false
+	end
+end
 
 
 function ParseCmds()
