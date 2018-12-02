@@ -122,7 +122,8 @@ function HabaneroButton:setCurrentColorByState()
 		self.currentColor = self.activeColor
 	end
 	
-	if self.boolSelectable == true and self.stateColors and string.find(self.caption, 'statebutton') then
+	Spring.Echo(self.caption)
+	if string.find(self.caption, 'statebutton') then-- self.boolSelectable == true and self.stateColors and  
 		self.currentColor = self.stateColors[math.max(1, math.min(self.numberOfStates,self.currentState))]
 	end
 	
