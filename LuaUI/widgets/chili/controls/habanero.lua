@@ -60,16 +60,19 @@ end
 function HabaneroButton:SetSelectable( bActive )
 	self.boolSelectable = bActive	
 	self:setCurrentColorByState()
+	self:Invalidate()
 end
 function HabaneroButton:SetSelected( bActive )
 	self.boolSelected = bActive	
 	self:setCurrentColorByState()
+	self:Invalidate()
 end
 
 function HabaneroButton:SetState( State, StateMax )
 	self.numberOfStates = StateMax
 	self.currentState = (State % self.numberOfStates) + 1	
 	self:setCurrentColorByState()
+	self:Invalidate()
 end
 
 --//=============================================================================
@@ -103,7 +106,7 @@ function HabaneroButton:setCurrentColorByState()
 		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)
 	end
 	
-	if self.boolInFocus == true then	
+	if self.boolInFocus == true and self.boolSelectable == true  then	
 		self.currentColor = self.focusColor
 	end
 	
@@ -341,6 +344,7 @@ function HabaneroButton:MouseOver(...)
 	
 	self.boolInFocus = true
 	self:setCurrentColorByState()
+	self:Invalidate()
 end
 
 function HabaneroButton:MouseOut(...)

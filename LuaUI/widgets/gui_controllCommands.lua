@@ -100,16 +100,16 @@ function StateCommand(self, x, y, button, mods)
 	selectedUnits = Spring.GetSelectedUnits()
 	if not selectedUnits  then return end
 	
-	states = Spring.GetUnitStates([selectedUnits[1])	
+	states = Spring.GetUnitStates(selectedUnits[1])	
 	
 	-- CLOAK
 	if self.cmdID == CMD.CLOAK and states.cloak then		
 		eCloaked = 1
-		self.caption = "REVEAL"
+		self:SetCaption( "REVEAL")
 		
-		if states.cloak = true  then 
+		if states.cloak == true  then 
 			eCloaked = 2 
-			self.caption = "CLOAK"
+			self:SetCaption( "CLOAK")
 		end
 		self:SetState( eCloaked , 2)	
 		state = Spring.GetUnitStates(selectedUnits[1])
@@ -127,7 +127,7 @@ function StateCommand(self, x, y, button, mods)
 		state = Spring.GetUnitStates(selectedUnits[1])			
 		paramTable={[1]= inc(state.firestate)%4}
 		stateCaption = {[0]="HOLD\nFIRE",[1]= "RETURN\nFIRE",[2]="FIRE\nAT\nWILL",[3]="FIRE\nAT\nNEUTRAL" }
-		self.caption = stateCaption[paramTable[1]]
+		self:SetCaption( stateCaption[paramTable[1]])
 		
 		for i=1,#selectedUnits do			
 			Spring.GiveOrderToUnit(selectedUnits[i], CMD.FIRE_STATE, paramTable, opt)
@@ -139,7 +139,7 @@ function StateCommand(self, x, y, button, mods)
 		state = Spring.GetUnitStates(selectedUnits[1])			
 		paramTable={[1]= inc(state.movestate)%3}
 		stateCaption = {[0]="|HOLD\nPOSITION",[1]= "AREA\nDEFENSE",[2]="SEARCH\n&\nDESTROY"}
-		self.caption = stateCaption[paramTable[1]]
+		self:SetCaption( stateCaption[paramTable[1]])
 		
 		for i=1,#selectedUnits do			
 			Spring.GiveOrderToUnit(selectedUnits[i], CMD.MOVE_STATE, paramTable, opt)
@@ -153,18 +153,18 @@ function StateCommand(self, x, y, button, mods)
 		self:SetState( inc(states.optshift) , 1)
 	end	
 	
-	if self.cmdID == CMD.REPEAT and states.repeat then		
+	if self.cmdID == CMD.REPEAT and states["repeat"] then		
 		eRepeat = 1
-		self.caption = "INFINITE\nCOMMAND"		
-		if states.repeat = true  then 
+		self:SetCaption( "INFINITE\nCOMMAND")	
+		if states["repeat"] == true  then 
 			eRepeat = 2 
-			self.caption = "MONO\nCOMMAND"
+			self:SetCaption( "MONO\nCOMMAND")
 		end
 		self:SetState( inc(eRepeat) , 2)	
 		state = Spring.GetUnitStates(selectedUnits[1])
 		paramTable={[1]=0}
 		
-		if state.repeat == false then  paramTable={[1]=1};	end		
+		if state["repeat"] == false then  paramTable={[1]=1};	end		
 		for i=1,#selectedUnits do	
 			Spring.GiveOrderToUnit(selectedUnits[i], CMD.REPEAT, paramTable, opt)
 		end
@@ -633,6 +633,7 @@ function TraverseCmd(cmd)
 		if cmd.id == command.cmdID then
 			if bIsOrderButton == true or bIsStateButton == true then
 				extendedCommand_Grid.children[i]:SetSelectable(true)
+				extendedCommand_Grid.children[i]:Show()
 			end
 		end
 	end		
@@ -642,6 +643,7 @@ function TraverseCmd(cmd)
 		if cmd.id == command.cmdID then
 			if bIsOrderButton == true or bIsStateButton == true then
 				base_stack.children[i]:SetSelectable(true)
+				base_stack.children[i]:Show()
 			end
 		end
 	end	
@@ -682,7 +684,7 @@ function ParseCmds()
 end
 
 function widget:GameFrame(n)
-	if n % 16 == 0 then 
+	if n % 8 == 0 then 
 		updateRequired= true
 	end
 end
@@ -697,7 +699,7 @@ end
 
 function widget:Update()
 
-	if updateRequired == true then
+	if true or updateRequired == true then
 		ParseCmds()
 		updateRequired = false
 	end
