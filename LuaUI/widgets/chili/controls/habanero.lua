@@ -24,12 +24,14 @@ HabaneroButton = Control:Inherit{
 	boolInFocus=false,
 	boolRelativePixelSize = false,
 	cmdID = 0,
-	numberOfStates= 0,
+	numberOfStates= 3,
 	currentState = 1,
 	boolSelectable= false,
 	boolSelected = false,
 	boolBorder= false,
 	currentColor = {0,0,0,1},
+	selectedTextColor ={1,1,1,1},
+	unselectedTextColor ={0,0,0,1},
 	stateColors={
 	[1]={245/255,64/255,9/255, 0.6},
 	[2]={24/255,238/255,191/255, 0.6},
@@ -73,9 +75,17 @@ function HabaneroButton:SetSelected( bActive )
 	self:Invalidate()
 end
 
+function boolToNumber(bool)
+if type(bool) ~= "boolean" then return bool end
+if bool == true then return 1;else return 0 ;end
+end
+
 function HabaneroButton:SetState( State, StateMax )
+	State = boolToNumber(State)
+
 	self.numberOfStates = StateMax
-	self.currentState = (State % self.numberOfStates) + 1	
+	self.currentState = (State-1 % self.numberOfStates)+1
+	if self.currentState == 0 then self.currentState = 1 end
 	self:setCurrentColorByState()
 	self:Invalidate()
 end
@@ -104,14 +114,23 @@ function mix(a,b,factor)
 		}
 end
 
+function HabaneroButton:mixByStateFactor(self, factor, smallestStep)
+if #self.stateColors < 2 then return self.stateColors[1]end
+
+lowerStep= math.max(1,math.floor((factor*self.numberOfStates)/smallestStep))
+upperStep= math.min(math.ceil((factor*self.numberOfStates)/smallestStep), self.numberOfStates)
+	--Spring.Echo(lowerStep.."/"..upperStep)
+	return mix(self.stateColors[lowerStep],self.stateColors[upperStep], (factor-(lowerStep*smallestStep)/smallestStep))
+end
 
 
 function HabaneroButton:setCurrentColorByState()
-	
+	self.font.color = self.unselectedTextColor
 	self.currentColor = self.backgroundColor
 		
 	if self.boolSelectable == true then
-		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)
+		self.font.color = self.selectedTextColor	
+		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)	
 	end
 	
 	if self.boolInFocus == true and self.boolSelectable == true  then	
@@ -121,10 +140,13 @@ function HabaneroButton:setCurrentColorByState()
 	if self.boolSelected == true then
 		self.currentColor = self.activeColor
 	end
-	
-	Spring.Echo(self.caption)
-	if string.find(self.caption, 'statebutton') then-- self.boolSelectable == true and self.stateColors and  
-		self.currentColor = self.stateColors[math.max(1, math.min(self.numberOfStates,self.currentState))]
+
+	if string.find(self.name, 'statebutton') and self.boolSelectable == true then
+		index = math.max(1, math.min(self.numberOfStates,self.currentState))
+		factor= index/self.numberOfStates
+		
+		self.currentColor = self:mixByStateFactor(self, factor, #self.stateColors/self.numberOfStates)
+		--self.currentColor = mixByStateFactor(self, factor, self.numberOfStates, self.stateColors)
 	end
 	
 end

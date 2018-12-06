@@ -16,7 +16,7 @@ function widget:GetInfo()
     date      = "27 february 2015",
     license   = "MIT/x11",
     layer     = -9, 
-    enabled   = true  --  loaded by default?
+    enabled   = false  --  loaded by default?
   }
 end
 

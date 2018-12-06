@@ -60,11 +60,16 @@ WeapCol={0.3,0.6,0.8,1}
 BeanCol={0.3,0.6,0.8,0.6}
 UpgCol={0.1,0.5,0.6,1}
 texCol={0,0,0,1}
-extHoloTexCol={200/255, 239/255, 253/255, 1}	
-holoCommandCol={163/255, 229/255, 243/255, 0.65}	
-holoTextCol={200/255, 239/255, 253/255, 1}	
 
-backgroundColExtended={0.2, 0.2, 0.4, 0.6} 
+selectedTextColor=	 {160/255, 238/255, 255/255, 0.85}	
+unselectedTextColor= {1/255, 28/255, 75/255, 1}
+--selectedTextColor={math.random(0,255)/255, math.random(0,255)/255, math.random(0,255)/255, 1}	
+holoCommandCol={163/255, 229/255, 243/255, 0.65}	
+backgroundColExtended = {90/255, 174/255, 208/255, 0.5}
+--lowerMenueBackgroundCol={0/255, 43/255, 109/255, 0.45} 
+lowerMenueBackgroundCol={40/255, 121/255, 177/255, 0.4} 
+backgroundColExtended=lowerMenueBackgroundCol
+
 genericActiveColor = {163/255, 229/255, 243/255, 0.75}
 genericFocusColor={163/255, 229/255, 243/255, 0.5}
 genericStateTriColor = {
@@ -74,19 +79,24 @@ genericStateTriColor = {
 }
 
 function ActionCommand(self, x, y, button, mods) 
+		selectedUnits = Spring.GetSelectedUnits()
+		if not selectedUnits  or type(selectedUnits) ~= "table" or type(selectedUnits[1]) ~= "number" then Spring.Echo("Abort ActionCommand" );return end
+	
+		local index = Spring.GetCmdDescIndex(self.cmdID)
+		if index then
+			local left, right = (button == 1), (button == 3)
+			local alt, ctrl, meta, shift = mods.alt, mods.ctrl, mods.meta, mods.shift
+			Spring.SetActiveCommand(index, button, left, right, alt, ctrl, meta, shift)
+		end
+		self:SetSelected(true)
 
-	self.boolSelected = true
-	local index = Spring.GetCmdDescIndex(self.cmdID)
-	if index then
-		local left, right = (button == 1), (button == 3)
-		local alt, ctrl, meta, shift = mods.alt, mods.ctrl, mods.meta, mods.shift
-		Spring.SetActiveCommand(index, button, left, right, alt, ctrl, meta, shift)
-	end
 end
 
 local boolGlobalShiftOverrideActive= false
 local boolOverrideShiftOn = false
 function StateCommand(self, x, y, button, mods)
+	
+--	if not self.boolSelectable or self.boolSelectable == false then Spring.Echo("Non-Selectable");return end
 
   local opt = {}
   if mods.alt   then push(opt,"alt")   end
@@ -98,16 +108,19 @@ function StateCommand(self, x, y, button, mods)
 
 
 	selectedUnits = Spring.GetSelectedUnits()
-	if not selectedUnits  then return end
+	if not selectedUnits  or type(selectedUnits) ~= "table" or type(selectedUnits[1]) ~= "number" then return end
 	
 	states = Spring.GetUnitStates(selectedUnits[1])	
 	
 	-- CLOAK
+		
 	if self.cmdID == CMD.CLOAK and states.cloak then		
+	Spring.Echo("State Command Cloak")
 		eCloaked = 1
 		self:SetCaption( "REVEAL")
 		
 		if states.cloak == true  then 
+			
 			eCloaked = 2 
 			self:SetCaption( "CLOAK")
 		end
@@ -122,12 +135,15 @@ function StateCommand(self, x, y, button, mods)
 	end
 
 	--FIRE_STATE
-	if self.cmdID == CMD.FIRE_STATE and states.firestate > -1 then
-		self:SetState( inc(states.firestate) , 3)
+	
+	if self.cmdID == CMD.FIRE_STATE then --and states.firestate > -1 then
+		Spring.Echo("State Command FIRE_STATE"..states.firestate)
+		self:SetState( inc(states.firestate + 2) , 3)
 		state = Spring.GetUnitStates(selectedUnits[1])			
-		paramTable={[1]= inc(state.firestate)%4}
-		stateCaption = {[0]="HOLD\nFIRE",[1]= "RETURN\nFIRE",[2]="FIRE\nAT\nWILL",[3]="FIRE\nAT\nNEUTRAL" }
-		self:SetCaption( stateCaption[paramTable[1]])
+		paramTable={[1]= inc(state.firestate)%3}
+		
+		stateCaption = {[0]="|FIRE STATE \n HOLD\n FIRE",[1]= "|FIRE STATE \n RETURN\n FIRE",[2]="|FIRE STATE \n FIRE\n AT\n WILL",[3]="|FIRE STATE \n OPEN\n UP" }
+		self:SetCaption( upByRow(stateCaption[paramTable[1]],1))
 		
 		for i=1,#selectedUnits do			
 			Spring.GiveOrderToUnit(selectedUnits[i], CMD.FIRE_STATE, paramTable, opt)
@@ -135,10 +151,12 @@ function StateCommand(self, x, y, button, mods)
 	end		
 	
 	if self.cmdID == CMD.MOVE_STATE then
+
 		self:SetState( inc(states.movestate) , 3)
 		state = Spring.GetUnitStates(selectedUnits[1])			
 		paramTable={[1]= inc(state.movestate)%3}
-		stateCaption = {[0]="|HOLD\nPOSITION",[1]= "AREA\nDEFENSE",[2]="SEARCH\n&\nDESTROY"}
+			Spring.Echo("MoveState changed to ".. self.currentState)
+		stateCaption = {[0]="|MOVE MODE\nHOLD\nPOSITION",[1]= "|MOVE MODE\nAREA\nDEFENSE",[2]="|MOVE MODE\nSEARCH&\nDESTROY"}
 		self:SetCaption( stateCaption[paramTable[1]])
 		
 		for i=1,#selectedUnits do			
@@ -147,18 +165,19 @@ function StateCommand(self, x, y, button, mods)
 	end	
 	
 	--Modifier
-	if self.name == "statebutton_optshift" then
+	if self.name == "statebutton_optshift" and states.opt_shift then
 		boolGlobalShiftOverrideActive=true
 		boolOverrideShiftOn = not boolOverrideShiftOn
-		self:SetState( inc(states.optshift) , 1)
+		self:SetState( inc(states.opt_shift) , 1)
 	end	
+
+	if self.cmdID == CMD.REPEAT and states["repeat"] ~= nil then		
 	
-	if self.cmdID == CMD.REPEAT and states["repeat"] then		
 		eRepeat = 1
-		self:SetCaption( "INFINITE\nCOMMAND")	
+		self:SetCaption( "|REPEAT\nCOMMAND")	
 		if states["repeat"] == true  then 
 			eRepeat = 2 
-			self:SetCaption( "MONO\nCOMMAND")
+			self:SetCaption("MONO\nCOMMAND")
 		end
 		self:SetState( inc(eRepeat) , 2)	
 		state = Spring.GetUnitStates(selectedUnits[1])
@@ -178,10 +197,8 @@ extendedMenue={}
 extendedMenue[CMD.LOAD_UNITS] ={
 		triStrip={	{x = 160, y = 0},
 		{x = 160, y = 80},			
-	{x = 0, y = 40}	},
-	
-	caption =	"LOAD",
-	
+	{x = 0, y = 40}	},	
+	caption =	"LOAD",	
 	name = "orderbutton_load",
 	cmdID = CMD.LOAD_UNITS,
 	OnMouseUp = {ActionCommand}
@@ -193,8 +210,7 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 		{x= 0, y = 80},
 	},
 	
-	caption=	"DROP",
-	
+	caption=	"DROP",	
 	cmdID = CMD.UNLOAD_UNITS ,
 	name= "orderbutton_unload",
 	OnMouseUp = {ActionCommand}
@@ -203,22 +219,22 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 
 extendedMenue[CMD.CLOAK] ={
 	triStrip={	
-		{x= 100, y = 5},			
-		{x= 0, y = 35},
-		{x= 100, y = 85},
-	{x= 0, y = 55}},
+		{x= 100, y = 0},			
+		{x= 0, y = 30},
+		{x= 80, y = 85},
+		{x= 0, y = 55}},
 	name = "statebutton_cloak",
 	caption= "CLOAK",
-	OnMouseUp = {StateCommand}
-	
+	OnMouseUp = {StateCommand}	
 }	
 
 extendedMenue[CMD.RECLAIM] ={		
 	triStrip={
-		{x= 0, y = 10},			
-		{x= 160, y = 60},
+		{x= 0, y = 0},			
+		{x= 160, y = 20},
 		{x= 0, y = 70},
-		{x= 160, y = 70}		
+		{x= 160, y = 70},		
+		{x= 220, y = 70}		
 	},
 	
 	caption="RECLAIM",
@@ -230,10 +246,11 @@ extendedMenue[CMD.RECLAIM] ={
 
 extendedMenue[CMD.RESTORE] ={		
 	triStrip={	
-		{x= 0	, y = 20},
-		{x= 160	, y = 20},			
-		{x= 0	, y = 60},
-		{x= 160	, y = 60}		
+		{x= 0	, y = 10},
+		{x= 160	, y = 10},			
+		{x= 0	, y = 50},
+		{x= 180	, y = 50},		
+		{x= 220	, y = 60}		
 	},
 	
 	caption= "RESTORE",	
@@ -269,7 +286,7 @@ MainMenue[CMD.ATTACK] ={
 		{x= 0, y = 70},
 	{x= 0, y = 100}}	,
 	activeColor={163/255, 229/255, 243/255, 0.75},
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+	backgroundColor = lowerMenueBackgroundCol,
 	caption=	"|ATTAC",
 	
 	cmdID = CMD.ATTACK ,
@@ -286,7 +303,7 @@ MainMenue[CMD.STOP] ={
 		{x= 80, y = 80},
 	{x= 70, y = 90}},
 	activeColor={58/255, 172/255, 226/255, 0.75}	,
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+	backgroundColor = lowerMenueBackgroundCol,
 	caption="|STOP",	
 	
 	cmdID = CMD.STOP ,
@@ -301,7 +318,7 @@ MainMenue[CMD.MOVE] ={
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
 	activeColor={35/255, 124/255, 166/255, 0.75}		,
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+	backgroundColor = lowerMenueBackgroundCol,
 	caption=upByRow("|MOVE",2),
 	
 	cmdID = CMD.MOVE ,
@@ -316,10 +333,10 @@ MainMenue[CMD.FIRE_STATE] ={
 		{x= 0, y = 70},
 	{x= 80, y = 70}},
 	activeColor={52/255, 167/255, 222/255, 0.75},
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
-	caption=upByRow("|FIRE\nSTATE",3),
+	backgroundColor = lowerMenueBackgroundCol,
+	caption=upByRow("|FIRE STATE ",3),
 	
-	cmdID = CMD.MOVE ,
+	cmdID = CMD.FIRE_STATE ,
 	name= "statebutton_fire",
 	OnMouseUp = {StateCommand}
 }	
@@ -327,11 +344,11 @@ MainMenue[CMD.FIRE_STATE] ={
 MainMenue[CMD.REPEAT] ={
 	triStrip={		
 		{x= 0, y = -15},			
-		{x= 70, y =-15},
+		{x= 70, y =-85},
 		{x= 0, y = 90},
-	{x= 70, y = 110}},
+	{x= 70, y = 160}},
 	activeColor={52/255, 167/255, 222/255, 0.75}	,
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+	backgroundColor = lowerMenueBackgroundCol,
 	caption="|REPEAT ",
 	
 	cmdID = CMD.REPEAT ,
@@ -346,12 +363,12 @@ MainMenue[CMD.MOVE_STATE] ={
 		{x= 0, y = 45},
 	{x= 80, y = 75}},
 	activeColor={35/255, 124/255, 166/255, 0.75},
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
-	caption= "|MOVE\nMODE ",
+	backgroundColor = lowerMenueBackgroundCol,
+	caption= "|MOVE MODE\n\n ",
 	
 	cmdID = CMD.MOVE_STATE ,
 	name= "statebutton_move",
-	OnMouseUp = {ActionCommand}
+	OnMouseUp = {StateCommand}
 }	
 
 MainMenue[CMD.REPAIR] ={
@@ -361,7 +378,7 @@ MainMenue[CMD.REPAIR] ={
 		{x= 0, y = 90},
 	{x= 80, y = 60}},
 	activeColor={163/255, 229/255, 243/255, 0.75},
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+	backgroundColor = lowerMenueBackgroundCol,
 	caption= upByRow("|REPAIR ",4),
 	
 	cmdID = CMD.REPAIR ,
@@ -372,12 +389,12 @@ MainMenue[CMD.REPAIR] ={
 MainMenue[CMD.PATROL] ={
 	triStrip={		
 		{x= 0, y = 0},			
-		{x= 80, y = 0},			
+		{x= 80, y = 20},			
 		{x= 0, y = 90},			
 		{x= 80, y = 90}		
 	},
 	activeColor={52/255, 167/255, 222/255, 0.75},
-	backgroundColor = {0.1, 0.2, 0.3, 0.5},
+	backgroundColor = lowerMenueBackgroundCol,
 	caption=upByRow("|PATROL",4),
 	
 	cmdID = CMD.PATROL ,
@@ -390,7 +407,7 @@ MainMenue[CMD.GUARD] ={
 		triStrip={		{x= 0, y = 5},			
 		{x= 80, y = -25},
 		{x= 0, y = 70},
-	{x= 80, y = 70}},
+	{x= 80, y = 40}},
 	
 	caption="|GUARD",
 	
@@ -420,7 +437,8 @@ function setDefaultCommandButtonAttributes()
 		HabaneroDescriptor.numberOfStates =	 HabaneroDescriptor.numberOfStates or	 	 0
 		HabaneroDescriptor.currentState = 	 HabaneroDescriptor.currentState or 	 	0
 		
-		HabaneroDescriptor.textColor=		 HabaneroDescriptor.textColor or		 	extHoloTexCol
+		HabaneroDescriptor.selectedtextColor=		 HabaneroDescriptor.selectedTextColor or		 	selectedTextColor
+		HabaneroDescriptor.unselectedTextColor=		 HabaneroDescriptor.unselectedTextColor or		 	unselectedTextColor
 		HabaneroDescriptor.focusColor=		 genericFocusColor
 		HabaneroDescriptor.activeColor =	 HabaneroDescriptor.active or		  genericActiveColor		
 		HabaneroDescriptor.stateColors 		= genericStateTriColor
@@ -430,6 +448,8 @@ function setDefaultCommandButtonAttributes()
 	for comandID,MenueDescriptor in pairs(MainMenue) do
 		MenueDescriptor.focusColor = 	MenueDescriptor.focusColor or	{52/255, 167/255, 222/255, 0.75}
 		MenueDescriptor.backgroundColor = 	MenueDescriptor.backgroundColor or	 {0.1, 0.2, 0.3, 0.5}
+		MenueDescriptor.selectedTextColor=		 	 		MenueDescriptor.selectedTextColor or	selectedTextColor --selectedTextColor
+		MenueDescriptor.unselectedTextColor=		 MenueDescriptor.unselectedTextColor or	unselectedTextColor
 		MenueDescriptor.focusColor=		 	 		genericFocusColor
 		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
@@ -470,7 +490,9 @@ function widget:Initialize()
 			backgroundColor = HabaneroDescriptor.backgroundColor,
 			activeColor = HabaneroDescriptor.activeColor,
 			focusColor = HabaneroDescriptor.focusColor,
-			textColor = HabaneroDescriptor.textColor, 
+			textColor = HabaneroDescriptor.unselectedTextColor, 
+			selectedTextColor = HabaneroDescriptor.selectedTextColor, 
+			unselectedTextColor = HabaneroDescriptor.unselectedTextColor, 
 			stateColors = HabaneroDescriptor.stateColors,
 			OnMouseUp = HabaneroDescriptor.OnMouseUp
 		}
@@ -487,13 +509,13 @@ function widget:Initialize()
 		width = extendedCommand_window_width,
 		height =extendedCommand_window_height,
 		parent = screen0,
-		draggable = true,
+		draggable = false,
 		tweakDraggable = true,
 		tweakResizable = true,
 		resizable = true,
-		dragUseGrip = true,
+		dragUseGrip = false,
 		dockable = true,
-		color = {0.1,0.7,0.85,0.42},
+		color = {0.1,0.7,0.85,0},
 		backgroundColor= {0.1,0.2,0.6,0.32},
 		children = {			
 		},
@@ -550,13 +572,13 @@ function widget:Initialize()
 		width = controllCommand_window_width,
 		height = controllCommand_window_height,
 		parent = screen0,
-		draggable = true,
+		draggable = false,
 		tweakDraggable = true,
 		tweakResizable = true,
 		resizable = true,
-		dragUseGrip = true,
+		dragUseGrip = false,
 		dockable = true,
-		color = {0,0,0,1},
+		color = {0,0,0,0},
 		
 		children = {			
 		},
@@ -604,9 +626,9 @@ end
 
 
 
-function widgetHandler:MouseRelease(x, y, mButton)
+function widget:MouseRelease(x, y, mButton)
 		-- Only left click
-		
+		Spring.Echo(mButton)
 	if (mButton == 1) then 	
 		forAllButtonsDo(function(self) self.boolSelected = false; self:setCurrentColorByState(); return self; end)	
 	end
@@ -682,6 +704,7 @@ function ParseCmds()
 end
 
 function widget:GameFrame(n)
+
 	if n % 8 == 0 then 
 		updateRequired= true
 	end
@@ -689,20 +712,21 @@ end
 
 function widget:CommandsChanged()
 	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
+	selectedUnits= Spring.GetSelectedUnits()
+	if not selectedUnits or #selectedUnits < 1 then
+		forAllButtonsDo(function(self) self:SetSelectable(false); self:SetSelected(false); return self; end)
+	end
 end
 
-function widget:SelectionChanged()
-	forAllButtonsDo(function(self) self:SetSelectable(false); self:SetSelected(false); return self; end)
-	updateRequired = true -- the active cmd descs haven't changed yet; wait until the next widget:Update
-end
 
 function widget:Update()
 
-	if true or updateRequired == true then
+	if  updateRequired == true then
 		ParseCmds()
 		updateRequired = false
 	end
 end
+
 
 function widget:Shutdown()
 	Spring.SendCommands("hideinterface 0")
