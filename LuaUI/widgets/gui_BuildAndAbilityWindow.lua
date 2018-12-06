@@ -204,7 +204,7 @@ function widget:Initialize()
         width = '100%',
 		   color ={1,1,1,0.75},
         file   = unitImageDir..(unitDef.name..".png" or 'placeholder.png'),
-         flip = true,
+         flip = false,
     }
     local button = Chili.Button:New{
         name = "unitButton_" .. name,
@@ -567,12 +567,13 @@ function isUnitOnOffable(unitDefID_T)
 				
 					boolUnitIsActive =	Spring.GetUnitIsActive (unitID)
 			
+			if defaultCaptionByUnitType[ud.name] then
 				if boolUnitIsActive == true then
 					SpecialAbilityButton.caption = defaultCaptionByUnitType[ud.name].passive 
-				end
-				if boolUnitIsActive == false then 
+				else
 					SpecialAbilityButton.caption = defaultCaptionByUnitType[ud.name].active 
 				end
+			end
 		
 			if ud.name == "ccomender" then
 				SpecialAbilityButton.OnClick = showComEndUpgradeMenue

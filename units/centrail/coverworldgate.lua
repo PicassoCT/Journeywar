@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "spawns A.I. controlled Creepers who autoattack <Creeper Unit Factory>",
 	objectName = "cOverWorldTeleport.s3o",
 	script = "coverworldgatescript.lua",
-	buildPic = "portals.png",
+	buildPic = "portals.dds",
 	--cost
 	buildCostMetal = 1950,
 	buildCostEnergy = 1750,
