@@ -185,11 +185,12 @@ function DrawHabaneroButtonBorder(obj, state)
 	if obj.boolBorder == true then
 		local border = obj.border
 		local tripStrip = {}
-		
+	
+
 		if obj.borderType == "static" then
-			gl.Color(border.BaseFrameColor)				
+			gl.Color({1,0,0,0.5})--(border.BaseFrameColor)				
 		elseif obj.borderType == "organic" then
-			gl.Color(border.BaseFrameColor)
+			gl.Color({1,0,0,0.5})--(border.BaseFrameColor)		
 			border:update(Spring.GetGameFrame())				
 		end
 		
@@ -200,8 +201,8 @@ function DrawHabaneroButtonBorder(obj, state)
 			gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
 			gl.Vertex(triStrip[i].x, triStrip[i].y) 
 		end 
-		
 	end	
+
 end
 
 function DrawBackground(obj)
@@ -316,7 +317,7 @@ end
 
 function DrawHabaneroButton(obj)
 	gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBackground, obj, obj.state)
-	-- gl.BeginEnd(GL.TRIANGLE_STRIP, DrawHabaneroButtonBorder, obj, obj.state)
+	gl.BeginEnd(GL.TRIANGLE_STRIP, DrawHabaneroButtonBorder, obj)
 	
 	if (obj.caption) then
 		local w = obj.width

@@ -248,7 +248,10 @@ function ParseCmd(cmd)
     if UnitDefNames[cmd.name] then
         -- unit
         UnitButton(cmd)
+			return true
     end
+	
+return false
 end
 
 	function ParseBuildCmds()
@@ -256,24 +259,25 @@ end
 		build_grid:ClearChildren()
 		
 		local cmds = Spring.GetActiveCmdDescs()
-		local haveCmd = false
+		local haveBuildCmd = false
 		for _,cmd in ipairs(cmds) do
 			if cmd.name ~= '' and not (ignoreCMDs[cmd.name] or ignoreCMDs[cmd.action]) then
-				haveCmd = true
-				ParseCmd(cmd)
+		
+				result =ParseCmd(cmd)		
+				haveBuildCmd = haveBuildCmd or result				
 			end
 		end
 		
-		if haveCmd and build_window.hidden then build_window:Show() elseif not haveCmd and build_window.visible then build_window:Hide() end
+		if haveBuildCmd and build_window.hidden then 
+			build_window:Show()
+		elseif not haveBuildCmd and build_window.visible then 	
+			build_window:Hide() 
+		end
 	end
 	
 	
-	function updateBuildMenue ()
-
-		
-		ParseBuildCmds()
-	
-	
+	function updateBuildMenue ()		
+		ParseBuildCmds()	
 	end
 	
 	function CreateUpgradeMenue ()
@@ -563,8 +567,7 @@ function isUnitOnOffable(unitDefID_T)
 			updateExperienceBar(xp)
 		end
 		
-		updateAmmonitionBar(unitID)
-	
+		updateAmmonitionBar(unitID)	
 		
 		if isUnitOnOffable(ud.name)== true then
 		SpecialAbilityButton:Show()
