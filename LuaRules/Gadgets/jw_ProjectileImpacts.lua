@@ -695,6 +695,7 @@ if (gadgetHandler:IsSyncedCode()) then
 
 	end
 	
+	warpedBuildings = {}
 	UnitDamageFuncT[vortMarkerWeaponDefID] = function(unitID, unitDefID, unitTeam, damage, paralyzer, weaponDefID, attackerID, attackerDefID, attackerTeam)
 		--Stun Building
 
@@ -702,8 +703,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		gameFrame= Spring.GetGameFrame()
 		warpTimeFrames = math.max(5*30, maxHP) 
 		
-		boolStillAlive= true
-	
+		boolStillAlive= true	
 		
 		if not warpedBuildings[attackerID] 
 		or warpedBuildings[attackerID].target ~= unitID 
