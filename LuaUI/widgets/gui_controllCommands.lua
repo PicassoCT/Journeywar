@@ -95,7 +95,7 @@ end
 local boolGlobalShiftOverrideActive= false
 local boolOverrideShiftOn = false
 function StateCommand(self, x, y, button, mods)
-	
+	Spring.Echo("StateCommand:Cloak")
 --	if not self.boolSelectable or self.boolSelectable == false then Spring.Echo("Non-Selectable");return end
 
   local opt = {}
@@ -116,19 +116,18 @@ function StateCommand(self, x, y, button, mods)
 		
 	if self.cmdID == CMD.CLOAK and states.cloak then		
 	Spring.Echo("State Command Cloak")
-		eCloaked = 1
-		self:SetCaption( "REVEAL")
-		
-		if states.cloak == true  then 
-			
-			eCloaked = 2 
+	paramTable={[1]=0}
+	if state.cloak == false then  paramTable={[1]=1};	end
+	
+		if states.cloak == true  then 			 
 			self:SetCaption( "CLOAK")
+		else
+			self:SetCaption( "REVEAL")
 		end
-		self:SetState( eCloaked , 2)	
-		state = Spring.GetUnitStates(selectedUnits[1])
-		paramTable={[1]=0}
-		if state.cloak == false then  paramTable={[1]=1};	end
 		
+		self:SetState( paramTable[1] + 1 , 2)	
+		state = Spring.GetUnitStates(selectedUnits[1])
+	
 			for i=1,#selectedUnits do	
 				Spring.GiveOrderToUnit(selectedUnits[i], CMD.CLOAK, paramTable, opt)
 			end
@@ -138,7 +137,7 @@ function StateCommand(self, x, y, button, mods)
 	
 	if self.cmdID == CMD.FIRE_STATE then --and states.firestate > -1 then
 		Spring.Echo("State Command FIRE_STATE"..states.firestate)
-		self:SetState( inc(states.firestate + 2) , 3)
+		self:SetState( inc(states.firestate ) , 3)
 		state = Spring.GetUnitStates(selectedUnits[1])			
 		paramTable={[1]= inc(state.firestate)%3}
 		
@@ -172,18 +171,18 @@ function StateCommand(self, x, y, button, mods)
 	end	
 
 	if self.cmdID == CMD.REPEAT and states["repeat"] ~= nil then		
-	
-		eRepeat = 1
-		self:SetCaption( "|REPEAT\nCOMMAND")	
-		if states["repeat"] == true  then 
-			eRepeat = 2 
-			self:SetCaption("MONO\nCOMMAND")
-		end
-		self:SetState( inc(eRepeat) , 2)	
-		state = Spring.GetUnitStates(selectedUnits[1])
-		paramTable={[1]=0}
+		paramTable={[1]= 1 } 	
 		
-		if state["repeat"] == false then  paramTable={[1]=1};	end		
+		if states["repeat"] == true  then 
+			paramTable={[1]= 0 }	
+			self:SetCaption("|MONO\nCOMMAND")
+		else
+			self:SetCaption("|REPEAT\nCOMMAND")	
+		end
+		
+		self:SetState( 	paramTable[1] , 2)	
+		state = Spring.GetUnitStates(selectedUnits[1])
+
 		for i=1,#selectedUnits do	
 			Spring.GiveOrderToUnit(selectedUnits[i], CMD.REPEAT, paramTable, opt)
 		end
@@ -335,7 +334,7 @@ MainMenue[CMD.FIRE_STATE] ={
 	activeColor={52/255, 167/255, 222/255, 0.75},
 	backgroundColor = lowerMenueBackgroundCol,
 	caption=upByRow("|FIRE STATE ",3),
-	
+	stateOffset= 1,
 	cmdID = CMD.FIRE_STATE ,
 	name= "statebutton_fire",
 	OnMouseUp = {StateCommand}
@@ -349,7 +348,8 @@ MainMenue[CMD.REPEAT] ={
 	{x= 70, y = 160}},
 	activeColor={52/255, 167/255, 222/255, 0.75}	,
 	backgroundColor = lowerMenueBackgroundCol,
-	caption="|REPEAT ",
+	caption="|REPEAT\nCOMMAND",
+	stateOffset= 1,
 	
 	cmdID = CMD.REPEAT ,
 	name= "statebutton_repeat",
@@ -358,13 +358,14 @@ MainMenue[CMD.REPEAT] ={
 
 MainMenue[CMD.MOVE_STATE] ={
 	triStrip={		
-		{x= 0, y = -20},			
-		{x= 80, y =5},
-		{x= 0, y = 45},
-	{x= 80, y = 75}},
+			{x= 0, y = -20},			
+			{x= 80, y =5},
+			{x= 0, y = 45},
+			{x= 80, y = 75}},
 	activeColor={35/255, 124/255, 166/255, 0.75},
 	backgroundColor = lowerMenueBackgroundCol,
-	caption= "|MOVE MODE\n\n ",
+	caption= "|MOVE MODE\nSEARCH&\nDESTROY",
+	stateOffset= 1,
 	
 	cmdID = CMD.MOVE_STATE ,
 	name= "statebutton_move",

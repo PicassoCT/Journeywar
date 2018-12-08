@@ -1,10 +1,11 @@
 Borderline = Control:Inherit{
 	classname= "Borderline",
-
+	borderTypew = "static",
+	borderColor = {0,1,0,0.5},
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
-	triStrip ={}
+	triStrip ={},
 }
 
 local this = Borderline
@@ -28,7 +29,10 @@ function addATripStripTree()
 	
 end
 
+function Borderline:Update(gameframe)
 
+
+end
 function addMechanicalBorder(grid)
 	-- traditional 2dimensional border for every button
 	for i=1, #grid.children do
