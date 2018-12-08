@@ -62,7 +62,9 @@ function healingRest()
 					end,
 					function(id)
 						hp= Spring.GetUnitHealth(id)
-						Spring.SetUnitHealth(hp+5)
+						if hp then
+							Spring.SetUnitHealth(id, hp + 5)
+						end
 					end
 					)
 		Sleep(1000)

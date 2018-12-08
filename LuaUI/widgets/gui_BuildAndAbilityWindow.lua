@@ -114,15 +114,39 @@ function widget:Initialize()
 	Progressbar = Chili.Progressbar
 	Panel = Chili.Panel
 	screen0 = Chili.Screen0
+
 	
-		local onOffFunction = function()
-			-- local _,_,left,_,right = Spring.GetMouseState()
-			-- local alt,ctrl,meta,shift = Spring.GetModKeyState()
-			-- local index = Spring.GetCmdDescIndex(CMD.ONOFF)
-			-- if index then
-				-- Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
-			-- end
+	local	Ability_Upgrade_Function =function ()
+		
+	function onOffFunction ()
+			local _,_,left,_,right = Spring.GetMouseState()
+					local alt,ctrl,meta,shift = Spring.GetModKeyState()
+					local index = Spring.GetCmdDescIndex(CMD.ONOFF)
+					if index then
+						Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
+					end
+			end
+
+				selectedUnits = Spring.GetSelectedUnits()
+				
+				if not selectedUnits then return end
+						
+				local unitID = selectedUnits[1]
+				
+				if not unitID then 	return end
+				
+				local udid = Spring.GetUnitDefID(unitID)
+				local ud = UnitDefs[udid]
+				
+				boolIsOnOffable =  isUnitOnOffable(ud.name) 			
+				
+					if ud.name == "ccomender" then
+						showComEndUpgradeMenue()
+					elseif boolIsOnOffable == true then
+						onOffFunction()
+					end			
 		end
+
 	
 	
 	function Create_UpgradeButton()
@@ -136,7 +160,7 @@ function widget:Initialize()
 			backgroundColor = CentrailButtonBackground, 
 			textColor = CentrailTextColour,
 			OnClick = {
-				onOffFunction
+				Ability_Upgrade_Function
 			},
 		}
 		
@@ -224,12 +248,6 @@ function ParseCmd(cmd)
     if UnitDefNames[cmd.name] then
         -- unit
         UnitButton(cmd)
-    elseif #cmd.params > 1 then
-        -- state
-    --    StateButton(cmd)
-    else
-        -- order
-    --    OrderButton(cmd)
     end
 end
 
@@ -344,8 +362,7 @@ end
 		end
 	end
 	
-	function Create_UpgradeGrid()
-		
+	function Create_UpgradeGrid()		
 		upgradeButton = 	Chili.Window:New{
 			name = 'upgradeButton',
 			caption = "UPGRADES ",
@@ -359,29 +376,23 @@ end
 			parent = stack_main,
 			clientWidth = 430,
 			clientHeight = 320,
-			children = 
-			{
-			},
-			
+			children = {},			
 		}
 		if upgradeButton then
 			upgradeButton:Hide()
-		end
-		
+		end		
 	end
 	
 	function showComEndUpgradeMenue()	
 		
-		if boolShowUpgrade == false then
-			boolShowUpgrade = true
-			upgrade_window:Show()
-			
+		if boolShowUpgrade == false then			
+			upgrade_window:Show()			
 		else 
-			boolShowUpgrade = false
 			if upgrade_window then
 				upgrade_window:Hide()
 			end
-		end
+		end		
+		boolShowUpgrade = not true
 	end
 	
 
@@ -522,21 +533,13 @@ function isUnitOnOffable(unitDefID_T)
 	end
 	
 	function UpdateAbilitiesWindow()
-		onOffFunction = function()
-			-- local _,_,left,_,right = Spring.GetMouseState()
-			-- local alt,ctrl,meta,shift = Spring.GetModKeyState()
-			-- local index = Spring.GetCmdDescIndex(CMD.ONOFF)
-			-- if index then
-				-- Spring.SetActiveCommand(index,1,left,right,alt,ctrl,meta,shift)
-			-- end
-		end
 		
 		selectedUnits = spGetSelectedUnits()
 		
-		if not selectedUnits then 
+		if not selectedUnits and upgrade_window then 
 			upgrade_window:Hide()
 			resetStatusbars()
-			
+			SpecialAbilityButton:Invalidate()
 			return 
 		end
 		
@@ -544,15 +547,16 @@ function isUnitOnOffable(unitDefID_T)
 		if not unitID then 
 			SpecialAbilityButton.caption = "ABILITY"
 			SpecialAbilityButton:Hide()
+			SpecialAbilityButton:Invalidate()
 			upgrade_window:Hide()
 			resetStatusbars()
-		
+			
 			return 
 		end
 		
 		local udid = Spring.GetUnitDefID(unitID)
 		local ud = UnitDefs[udid]
-		if not ud then Spring.Echo("No Unitdef for Unit: "..unitID); return end
+		if not ud then return end
 		--update Unit Experience
 		xp= Spring.GetUnitExperience(unitID)
 		if xp then
@@ -564,26 +568,20 @@ function isUnitOnOffable(unitDefID_T)
 		
 		if isUnitOnOffable(ud.name)== true then
 		SpecialAbilityButton:Show()
-				
-					boolUnitIsActive =	Spring.GetUnitIsActive (unitID)
-			
+		
 			if defaultCaptionByUnitType[ud.name] then
+			boolUnitIsActive =	Spring.GetUnitIsActive (unitID)
 				if boolUnitIsActive == true then
 					SpecialAbilityButton.caption = defaultCaptionByUnitType[ud.name].passive 
 				else
 					SpecialAbilityButton.caption = defaultCaptionByUnitType[ud.name].active 
 				end
 			end
-		
-			if ud.name == "ccomender" then
-				SpecialAbilityButton.OnClick = showComEndUpgradeMenue
-			else
-				SpecialAbilityButton.OnClick = onOffFunction
-			end
 		else
 			SpecialAbilityButton:Hide()		
 		end
-
+		--Redraw
+		SpecialAbilityButton:Invalidate()
 	end
 		
 
