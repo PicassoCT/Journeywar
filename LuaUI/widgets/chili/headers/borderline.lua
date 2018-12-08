@@ -1,7 +1,10 @@
 Borderline = Control:Inherit{
 	classname= "Borderline",
-	borderTypew = "static",
+	borderType = "static",
 	borderColor = {0,1,0,0.5},
+	parent = {},
+	borderDistance = 5,
+	borderDiameter = 10,
 	
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
@@ -29,25 +32,6 @@ function addATripStripTree()
 	
 end
 
-function Borderline:Update(gameframe)
-
-
-end
-function addMechanicalBorder(grid)
-	-- traditional 2dimensional border for every button
-	for i=1, #grid.children do
-		createButtonBorder(grid.children[i], triStrip)
-	end
-	
-	-- around grid, add border-extension
-		-- on mouse near - extend
-		--on mouse away retract
-
-end
-
-borderLineFunctions = {}
-borderLineFunctions["journeyman"] =  addATripStripTree
-borderLineFunctions["centrail"] =    addMechanicalBorder
 
 
 
@@ -84,23 +68,33 @@ function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, re
 	return strip
 end
 
-function Borderline:generateBorderline(typeString, habaneroGrid)
+function addScaledPointPair(PointT, distance, diameter)
+	orgdist =math.sqrt(PointT[1]^2+ PointT[2]^2) 
+	factorBorder = distance/orgdist +1
+	factorBorder_Diameter = factorBorder + diameter/orgdist
+	return {x=PointT[1].x * factorBorder, y=PointT[1].y * factorBorder}, { x=PointT[1].x * factorBorder_Diameter, y= PointT[1].y * factorBorder_Diameter };
+end
 
+function Borderline:generateStaticBorder()
+	for i=1,#parent.triStrip do
+		index= #self.triStrip
+		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(parent.triStrip[i], self.borderDistance, self.borderDiameter)
+	end
+end
 
+function Borderline:generateOrganicBorder()
 
 end
 
+function Borderline:Initialize()	
+	if borderType == "static" then
+		 self:generateStaticBorder()
+	else
+		self:generateOrganicBorder()
+	end
+end
 
-function Borderline:initialize()	
-
+function Borderline:Update(frame)
 
 end
 
-function Borderline:update(frame)
-
-end
-
-function Borderline:draw()
-	self.update(Spring.GetGameFrame())
-
-end

@@ -586,6 +586,7 @@ function widget:Initialize()
 	}
 	
 	base_stack = Grid:New{
+		x= 0,
 		y = 20,
 		padding = {5,5,5,5},
 		itemPadding = {0, 0, 0, 0},
