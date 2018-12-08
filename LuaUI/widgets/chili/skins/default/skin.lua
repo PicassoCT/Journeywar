@@ -180,36 +180,28 @@ function normVector(vec)
 	return {x= vec.x/dist, y=vec.y/dist}
 end
 
-function DrawHabaneroButtonBorder(obj,state)
-	local triStrip =obj.triStrip
-	local bt = obj.borderThickness
-	local w = obj.width
-	local h = obj.height
+function DrawHabaneroButtonBorder(obj, state)
 	
-	
-	gl.Color((state.pressed and obj.borderColor2) or obj.borderColor)
-	for i=1,#triStrip-1, 1 do
+	if obj.boolBorder == true then
+		local border = obj.border
+		local tripStrip = {}
 		
-		vec={x=triStrip[i].x-triStrip[i+1].x,
-		y=triStrip[i].y-triStrip[i+1].y+w}
+		if obj.borderType == "static" then
+			gl.Color(border.BaseFrameColor)				
+		elseif obj.borderType == "organic" then
+			gl.Color(border.BaseFrameColor)
+			border:update(Spring.GetGameFrame())				
+		end
 		
-		perpVec=normVector({x=triStrip[i+1].y-triStrip[i+1].y, y=-1*(triStrip[i+1].x-triStrip[i+1].x)}) 
-		lowPA={x=triStrip[i].x+perpVec.x*bt, y=triStrip[i].y+perpVec.y*bt}
-		--calculate the perendicular
-		lowPB={x=triStrip[i].x+perpVec.x*bt* -1, y=triStrip[i].y+ perpVec.y*bt*-1}
-		upPA,upPB= lowPA,lowPB
-		upPA.x,upPA.y=lowPA.x + vec.x,lowPA.y +vec.y
-		upPB.x,upPB.y=lowPB.x + vec.x,lowPB.y +vec.y
-		--upper Triangle
-		gl.Vertex(-w+lowPA.x,lowPA.y	-h)
-		gl.Vertex(-w+lowPB.x,lowPB.y	-h)
-		gl.Vertex(-w+upPA.x,upPA.y 	 -h)
-		--lower Triangle
-		gl.Vertex(-w+lowPA.x,lowPA.y	-h)
-		gl.Vertex(-w+upPB.x,upPB.y	-h)
-		gl.Vertex(-w+upPA.x,upPA.y	-h)
-	end
-	
+		triStrip = border.triStrip	
+		for i=3, #triStrip, 1 do
+		
+			gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
+			gl.Vertex(triStrip[i-1].x,triStrip[i-1].y) 
+			gl.Vertex(triStrip[i].x, triStrip[i].y) 
+		end 
+		
+	end	
 end
 
 function DrawBackground(obj)

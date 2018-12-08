@@ -29,14 +29,16 @@ HabaneroButton = Control:Inherit{
 	boolSelectable= false,
 	boolSelected = false,
 	boolBorder= false,
+	borderTye= "static",
 	currentColor = {0,0,0,1},
 	selectedTextColor ={1,1,1,1},
 	unselectedTextColor ={0,0,0,1},
 	stateColors={
-	[1]={245/255,64/255,9/255, 0.6},
-	[2]={24/255,238/255,191/255, 0.6},
-	[3]={27/255,234/255,31/255, 0.6}
-},
+				[1]={245/255,64/255,9/255, 0.6},
+				[2]={24/255,238/255,191/255, 0.6},
+				[3]={27/255,234/255,31/255, 0.6}
+				},
+	stateOffset = 0,
 	--focusColor
 	--activeColor
 	--backgroundColor
@@ -81,11 +83,11 @@ if bool == true then return 1;else return 0 ;end
 end
 
 function HabaneroButton:SetState( State, StateMax )
-	State = boolToNumber(State)
+	State = boolToNumber(State) + self.stateOffset
 
 	self.numberOfStates = StateMax
-	self.currentState = (State-1 % self.numberOfStates)+1
-	if self.currentState == 0 then self.currentState = 1 end
+	self.currentState = ((State - 1 ) % self.numberOfStates)+1
+	
 	self:setCurrentColorByState()
 	self:Invalidate()
 end
@@ -115,14 +117,13 @@ function mix(a,b,factor)
 end
 
 function HabaneroButton:mixByStateFactor(self, factor, smallestStep)
-if #self.stateColors < 2 then return self.stateColors[1]end
+	if #self.stateColors < 2 then return self.stateColors[1]end
 
-lowerStep= math.max(1,math.floor((factor*self.numberOfStates)/smallestStep))
-upperStep= math.min(math.ceil((factor*self.numberOfStates)/smallestStep), self.numberOfStates)
-	--Spring.Echo(lowerStep.."/"..upperStep)
+	lowerStep= math.max(1,math.floor((factor*self.numberOfStates)/smallestStep))
+	upperStep= math.min(math.ceil((factor*self.numberOfStates)/smallestStep), self.numberOfStates)
+
 	return mix(self.stateColors[lowerStep],self.stateColors[upperStep], (factor-(lowerStep*smallestStep)/smallestStep))
 end
-
 
 function HabaneroButton:setCurrentColorByState()
 	self.font.color = self.unselectedTextColor
@@ -146,9 +147,7 @@ function HabaneroButton:setCurrentColorByState()
 		factor= index/self.numberOfStates
 		
 		self.currentColor = self:mixByStateFactor(self, factor, #self.stateColors/self.numberOfStates)
-		--self.currentColor = mixByStateFactor(self, factor, self.numberOfStates, self.stateColors)
 	end
-	
 end
 
 function getRecursivePixelDimensions(this)
@@ -263,7 +262,7 @@ function generateEarlyOutBox(self)
 end
 
 
-function HabaneroButton:Init(bRelativePixelSize)
+function HabaneroButton:Init(bRelativePixelSize, borderTypeOverride)
 	--Handle outline
 	if bRelativePixelSize then boolRelativePixelSize = bRelativePixelSize end
 	
@@ -285,6 +284,14 @@ function HabaneroButton:Init(bRelativePixelSize)
 		
 		buttonTotalX, buttonTotalY = self:getTriStripMaxDimensions(self.triStrip)
 		
+	end
+	
+	if self.boolBorder and self.boolBorder == true then
+		self.border = Borderline:New{
+							parent = {self},
+							bordertype = borderTypeOverride
+						}
+	
 	end
 	
 	--computate the early out box
