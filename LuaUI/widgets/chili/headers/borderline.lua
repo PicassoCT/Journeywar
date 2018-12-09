@@ -15,24 +15,6 @@ local this = Borderline
 local inherited = this.inherited
 
 
-function addATripStripTree()
-	-- slightly transparent white tree
-
-
-		-- get Points on Borderline
-	-- get CenterPoint
-	-- Add Edge Point
-		-- Add Circle point After 1/math.random( of the border line)
-		-- generate TriStrip
-		-- Ad Outside Line in 1 2 3 5 7 5 3 2 1 Pattern
-		
-		-- thread
-		-- On Mouse Closeness, cause Bloom - leaves, flowers, bulbs
-		-- slowly wither on distance, back to basic form - or small spiral
-	
-end
-
-
 
 
 function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
@@ -83,6 +65,22 @@ function Borderline:generateStaticBorder()
 end
 
 function Borderline:generateOrganicBorder()
+
+	
+	-- slightly transparent white tree
+
+
+		-- get Points on Borderline
+	-- get CenterPoint
+	-- Add Edge Point
+		-- Add Circle point After 1/math.random( of the border line)
+		-- generate TriStrip
+		-- Ad Outside Line in 1 2 3 5 7 5 3 2 1 Pattern
+		
+		-- thread
+		-- On Mouse Closeness, cause Bloom - leaves, flowers, bulbs
+		-- slowly wither on distance, back to basic form - or small spiral
+
 
 end
 

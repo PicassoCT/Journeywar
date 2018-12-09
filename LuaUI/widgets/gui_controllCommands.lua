@@ -414,7 +414,9 @@ MainMenue[CMD.GUARD] ={
 	
 	cmdID = CMD.GUARD ,
 	name= "orderbutton_guard",
-	OnMouseUp = {ActionCommand}
+	OnMouseUp = {ActionCommand},
+	boolBorder = true,
+	borderType = "static"
 }	
 
 
@@ -443,6 +445,7 @@ function setDefaultCommandButtonAttributes()
 		HabaneroDescriptor.focusColor=		 genericFocusColor
 		HabaneroDescriptor.activeColor =	 HabaneroDescriptor.active or		  genericActiveColor		
 		HabaneroDescriptor.stateColors 		= genericStateTriColor
+		HabaneroDescriptor.boolBorder 		= HabaneroDescriptor.boolBorder or false
 	end
 	
 	--defaults
@@ -454,6 +457,7 @@ function setDefaultCommandButtonAttributes()
 		MenueDescriptor.focusColor=		 	 		genericFocusColor
 		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
+		MenueDescriptor.boolBorder = MenueDescriptor.boolBorder or false
 	end	
 	
 	
