@@ -180,21 +180,21 @@ function normVector(vec)
 	return {x= vec.x/dist, y=vec.y/dist}
 end
 
-function _DrawHabaneroButtonBorder(obj, state)
-	
-	if obj.boolBorder == true then
-		local border = obj.border
-		local tripStrip = {}
-	
+function _DrawHabaneroButtonBorder(boolBorderActive, border, state)
 
-		if obj.borderType == "static" then
+	if boolBorderActive == true then
+	Spring.Echo("_DrawHabaneroButtonBorder")
+
+		local triStrip = border.triStrip	
+	
+	
+		if border.borderType == "static" then
 			gl.Color({1,0,0,0.5})--(border.BaseFrameColor)				
-		elseif obj.borderType == "organic" then
+		elseif border.borderType == "organic" then
 			gl.Color({1,0,0,0.5})--(border.BaseFrameColor)		
 			border:update(Spring.GetGameFrame())				
 		end
 		
-		triStrip = border.triStrip	
 		for i=3, #triStrip, 1 do
 		
 			gl.Vertex(triStrip[i-2].x,triStrip[i-2].y) 
@@ -317,7 +317,7 @@ end
 
 function DrawHabaneroButton(obj)
 	gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBackground, obj, obj.state)
-	gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBorder, obj)
+	gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBorder, obj.boolBorder , obj.borderline, obj.state)
 	
 	if (obj.caption) then
 		local w = obj.width

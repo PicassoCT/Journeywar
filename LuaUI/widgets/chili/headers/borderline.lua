@@ -1,11 +1,10 @@
-Borderline = Control:Inherit{
+Borderline = Object:Inherit{
 	classname= "Borderline",
 	borderType = "static",
 	borderColor = {0,1,0,0.5},
-	parent = {},
-	borderDistance = 5,
-	borderDiameter = 10,
-	
+	borderDistance = 0,
+	borderDiameter = 5,
+	button = "nil",
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
 	--triStrip should not be self-intersecting or incomplete
 	triStrip ={},
@@ -51,17 +50,24 @@ function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, re
 end
 
 function addScaledPointPair(PointT, distance, diameter)
-	orgdist =math.sqrt(PointT[1]^2+ PointT[2]^2) 
+	orgdist =math.sqrt(PointT.x^2+ PointT.y^2) 
 	factorBorder = distance/orgdist +1
 	factorBorder_Diameter = factorBorder + diameter/orgdist
-	return {x=PointT[1].x * factorBorder, y=PointT[1].y * factorBorder}, { x=PointT[1].x * factorBorder_Diameter, y= PointT[1].y * factorBorder_Diameter };
+	return {x=PointT.x * factorBorder, y=PointT.y * factorBorder}, { x=PointT.x * factorBorder_Diameter, y= PointT.y * factorBorder_Diameter };
 end
 
 function Borderline:generateStaticBorder()
-	for i=1,#parent.triStrip do
+Spring.Echo("Initialization Borderline 2")
+	assert(self.button ~= "nil")
+	for i=1,#self.button.triStrip do
+	Spring.Echo("Initialization Borderline 3")
 		index= #self.triStrip
-		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(parent.triStrip[i], self.borderDistance, self.borderDiameter)
+		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(self.button.triStrip[i], self.borderDistance, self.borderDiameter)
 	end
+	self.triStrip[#self.triStrip+1] = self.triStrip[1]
+	self.triStrip[#self.triStrip+1] = self.triStrip[2] 
+	
+	Spring.Echo("Initialization Borderline 4")
 end
 
 function Borderline:generateOrganicBorder()
@@ -84,8 +90,9 @@ function Borderline:generateOrganicBorder()
 
 end
 
-function Borderline:Initialize()	
-	if borderType == "static" then
+function Borderline:Init()	
+	if self.borderType == "static" then
+		Spring.Echo("Initialization Borderline 1")
 		 self:generateStaticBorder()
 	else
 		self:generateOrganicBorder()
@@ -94,5 +101,10 @@ end
 
 function Borderline:Update(frame)
 
+end
+
+
+function Borderline:HitTest(x,y)	
+	return self:BruteForceTriStripTest(x,y)	
 end
 

@@ -28,8 +28,7 @@ HabaneroButton = Control:Inherit{
 	currentState = 1,
 	boolSelectable= false,
 	boolSelected = false,
-	boolBorder= false,
-	borderTye= "static",
+
 	currentColor = {0,0,0,1},
 	selectedTextColor ={1,1,1,1},
 	unselectedTextColor ={0,0,0,1},
@@ -39,6 +38,10 @@ HabaneroButton = Control:Inherit{
 				[3]={27/255,234/255,31/255, 0.6}
 				},
 	stateOffset = 0,
+	
+	borderline ={},
+	boolBorder= false,
+
 	--focusColor
 	--activeColor
 	--backgroundColor
@@ -262,7 +265,7 @@ function generateEarlyOutBox(self)
 end
 
 
-function HabaneroButton:Init(bRelativePixelSize, borderTypeOverride)
+function HabaneroButton:Init(bRelativePixelSize)
 	--Handle outline
 	if bRelativePixelSize then boolRelativePixelSize = bRelativePixelSize end
 	
@@ -287,11 +290,14 @@ function HabaneroButton:Init(bRelativePixelSize, borderTypeOverride)
 	end
 	
 	if self.boolBorder and self.boolBorder == true then
-		self.border = Borderline:New{
-							parent = {self},
-							bordertype = borderTypeOverride
-						}
 	
+		self.borderline = Borderline:New{
+							bordertype =  "static",
+							button = self
+						}
+						
+					
+		self.borderline:Init()
 	end
 	
 	--computate the early out box

@@ -499,7 +499,9 @@ function widget:Initialize()
 			selectedTextColor = HabaneroDescriptor.selectedTextColor, 
 			unselectedTextColor = HabaneroDescriptor.unselectedTextColor, 
 			stateColors = HabaneroDescriptor.stateColors,
-			OnMouseUp = HabaneroDescriptor.OnMouseUp
+			OnMouseUp = HabaneroDescriptor.OnMouseUp,
+			boolBorder = HabaneroDescriptor.boolBorder,
+			borderType = HabaneroDescriptor.borderType
 		}
 		
 	end
