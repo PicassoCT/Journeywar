@@ -180,7 +180,7 @@ function normVector(vec)
 	return {x= vec.x/dist, y=vec.y/dist}
 end
 
-function DrawHabaneroButtonBorder(obj, state)
+function _DrawHabaneroButtonBorder(obj, state)
 	
 	if obj.boolBorder == true then
 		local border = obj.border
@@ -317,7 +317,7 @@ end
 
 function DrawHabaneroButton(obj)
 	gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBackground, obj, obj.state)
-	gl.BeginEnd(GL.TRIANGLE_STRIP, DrawHabaneroButtonBorder, obj)
+	gl.BeginEnd(GL.TRIANGLE_STRIP, _DrawHabaneroButtonBorder, obj)
 	
 	if (obj.caption) then
 		local w = obj.width
@@ -329,10 +329,6 @@ function DrawHabaneroButton(obj)
 		else
 			obj.font:Print(obj.caption, w*0.5, h*0.5, "center", "center")
 		end
-		
-		-- if self.state.selected then
-		-- self.font:SetColor(oldColor)
-		-- end
 	end
 end
 
