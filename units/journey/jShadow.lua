@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " swaps Position and reduces Speed if fired upon <Buff>",
 	objectName = "jShadow.s3o",
 	script = "jshadow.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jshadow.png",
 	--cost
 	buildCostMetal = 0,
 	buildCostEnergy = 0,

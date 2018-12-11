@@ -6,7 +6,7 @@ Description = "converts Light to Matter. <Matter Energy Conversion>",
 
 objectName = "jmeconverter.s3o",
 script = "jmeconverterscript.lua",
-buildPic = "placeholderj.png",
+buildPic = "jmeconverter.png",
 
 --cost
 buildCostMetal = 200,

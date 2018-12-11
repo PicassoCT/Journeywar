@@ -6,7 +6,7 @@ local unitDef = {
 	
 	objectName = "jDNACraddle.s3o",
 	script = "jMobileDNACraddleScript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jmovingfac2.png",
 	--cost
 	buildCostMetal = 850,
 	buildCostEnergy = 340,

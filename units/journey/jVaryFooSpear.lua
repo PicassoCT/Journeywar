@@ -4,7 +4,7 @@ local unitDef = {
 	Description = "From the bottom of hell i stab at thee",
 	objectName = "jvaryspear.s3o",
 	script = "varyfoospear_script.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jvaryfoospear.png",
 	--cost
 	buildCostMetal = 350,
 	buildCostEnergy = 150,

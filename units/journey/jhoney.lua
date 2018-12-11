@@ -7,6 +7,7 @@ local unitDef = {
 
   script 			 = "jhoneyscript.lua",
   maxDamage = 250, 
+	buildPic = "jhoneypot.png",
 
   MovementClass = "jcreeper",
   buildCostMetal =30,

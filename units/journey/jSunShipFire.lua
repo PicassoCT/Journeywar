@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "burns its way over the planets surface.<Super Weapon>",
 	objectName = "jSunShip.s3o",
 	script = "jsunshipfireScript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jsunshipfire.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 15,

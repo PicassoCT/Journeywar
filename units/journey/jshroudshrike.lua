@@ -6,7 +6,7 @@ local unitDef = {
 	
 	objectName = "jshroudshrike.s3o",
 	script = "jshroudshrikescript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jshroudshrike.png",
 	
 	--cost
 	buildCostMetal = 200,

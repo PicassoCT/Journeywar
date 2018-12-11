@@ -6,7 +6,7 @@ local unitDef = {
 	Description = "swallows a ocean, turns into a sun <Super Assault>",
 	objectName = "jSunShip.s3o",
 	script = "jsunshipwaterScript.lua",
-	buildPic = "placeholder.png",
+	buildPic = "jsunshipwater.png",
 	--cost
 	buildCostEnergy = 600,
 	buildCostMetal = 600,

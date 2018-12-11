@@ -6,7 +6,7 @@ local unitDef = {
   Description 		 = "Bites anything that comes close to the hive <Harass Land Unit>",
   script 			 = "jHiveWulfScript.lua",
   maxDamage = 450, 
-
+buildPic = "jhivewulf.png",
   MovementClass = "Default2x2",
   buildCostMetal =30,
   buildCostEnergy =200,

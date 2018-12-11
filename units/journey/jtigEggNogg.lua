@@ -6,7 +6,7 @@ Description = "Grows into a Tigerlily",
 
 objectName = "tigEggNogg.s3o",
 script = "tiglilegg.lua",
-buildPic = "tiglil.png",
+buildPic = "jtigeggnogg.png",
 
 
 	RadarDistance = 0,

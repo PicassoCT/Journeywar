@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "ground dominating Tree Ship <Air Fortress Unit>",
 	objectName = "jsequoia.s3o",
 	script = "sequoiascript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jsempresequoia.png",
 	--cost
 	buildCostMetal = 10000,
 	buildCostEnergy = 5000,

@@ -6,7 +6,7 @@ local unitDef = {
 	
 	objectName = "skinEggNogg.s3o",
 	script = "skinegg.lua",
-	buildPic = "skinfantry.png",
+	buildPic = "jskineggnogg.png",
 	
 	
 	RadarDistance = 0,

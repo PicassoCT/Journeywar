@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "close Combatant with nano-structure solvent drenched Blades <Assault>",
 	objectName = "tigLil.s3o",
 	script = "tiglilscript.lua",
-	buildPic = "tiglil.png",
+	buildPic = "jtiglil.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 0,

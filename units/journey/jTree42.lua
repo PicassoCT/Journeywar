@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " stores and returns Matter. Corrodes Units nearby. <Energy Storage>",
 	objectName = "jLtree2.s3o",
 	script = "jLtreescript.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtree4.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

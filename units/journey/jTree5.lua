@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "flips gravity - when under fire <Trap Energy>",
 	objectName = "jETree5.s3o",
 	script = "jTree5.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtree5.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

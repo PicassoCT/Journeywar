@@ -6,7 +6,7 @@ Description = "Grows into a Racedart",
 
 objectName = "jsuneggnogg.s3o",
 script = "jsuneggnoggscript.lua",
-buildPic = "placeholderj.png",
+buildPic = "jsuneggnogg.png",
 
 
 	RadarDistance = 0,

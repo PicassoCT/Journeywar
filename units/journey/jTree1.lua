@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "harvesting Light <Energy>",
 	objectName = "jETree1.s3o",
 	script = "jTree1.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtree1.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

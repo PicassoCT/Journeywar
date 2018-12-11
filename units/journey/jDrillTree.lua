@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "produces Matter. Slag is radioactive. <Matter Producer>",
 	objectName = "jDrillTree.s3o",
 	script = "jDrillTree.lua",
-	buildPic = "DrillTree.png",
+	buildPic = "jdrilltree.png",
 	--cost
 	buildCostMetal = 200,
 	buildCostEnergy = 50,

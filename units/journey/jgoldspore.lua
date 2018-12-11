@@ -5,7 +5,7 @@ name = "First Generation spore",
 Description = "will infect any Unit nearby of any type",
 objectName = "jgoldmushroom.s3o",
 script = "spore.lua",
-buildPic = "placeholderj.png",
+buildPic = "jgoldspore.png",
 --cost
 buildCostMetal = 600,
 buildCostEnergy = 250,

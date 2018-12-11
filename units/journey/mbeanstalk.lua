@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " unrooted Beanstalk, hovering from the Larange Point <Mainbuilding>",
 	objectName = "beanstalk.s3o",
 	script = "mbeanstalkscript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jbeanstalk.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 12,

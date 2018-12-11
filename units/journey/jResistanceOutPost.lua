@@ -6,7 +6,7 @@ Description = "invisible to the enemy. Depends on the Enemy Building its attache
 
 objectName = "jResistanceOut.s3o",
 script = "jResistanceOutpost.lua",
-buildPic = "placeholderj.png",
+buildPic = "jresistanceoutpost.png",
 --cost
 TEDClass = "PLANT",
 

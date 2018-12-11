@@ -35,7 +35,7 @@ local unitDef = {
 	Description = " rowdily ravaging in Revenge <Assault Harass Unit>",
 	objectName = "jmadMax.s3o",
 	script = "jmadmaxscript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jmadmax.png",
 	--cost
 	buildCostMetal = 350,
 	buildCostEnergy = 150,

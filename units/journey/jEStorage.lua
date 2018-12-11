@@ -4,7 +4,7 @@ name = "Light Depositorio",
 Description = " stores Energy, explodes violently. <Energy Storage>",
 objectName = "jEstorage.s3o",
 script = "jestoragescript.lua",
-buildPic = "jmestorage.png",
+buildPic = "jestorage.png",
 --cost
 
 buildCostMetal = 3000,

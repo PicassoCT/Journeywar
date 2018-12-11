@@ -4,7 +4,7 @@ local unitDef = {
 	Description = " Construction Exobiotic, using lifeforce to construct. <Heavy Construction Unit>",
 	objectName = "conbigfoot.s3o",
 	script = "conbigfoot.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jconcaterpillar.png",
 	--cost
 	buildCostMetal = 300,
 	buildCostEnergy = 900,

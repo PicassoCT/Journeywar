@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "launches swarmmembers at air and sea towards the enemy <Water Air Assault> ",
 	objectName = "jFishSwarm.s3o",
 	script = "jFishSwarmScript.lua",
-	buildPic = "placeholder.png",
+	buildPic = "jfishswarm.png",
 	--cost
 	buildCostEnergy = 600,
 	buildCostMetal = 600,

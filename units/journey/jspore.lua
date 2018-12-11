@@ -5,7 +5,7 @@ name = "Fungispore",
 Description = "will infect any Unit nearby of the same type",
 objectName = "jInfMuShroom.s3o",
 script = "spore.lua",
-buildPic = "placeholderj.png",
+buildPic = "jspore.png",
 --cost
 buildCostMetal = 600,
 buildCostEnergy = 250,
