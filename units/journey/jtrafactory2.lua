@@ -6,7 +6,7 @@ local unitDef = {
 	
 	objectName = "placeholder.s3o",
 	script = "jtransportedfactory2.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jtrafactory.png",
 	--cost
 	buildCostMetal = 200,
 	buildCostEnergy = 50,

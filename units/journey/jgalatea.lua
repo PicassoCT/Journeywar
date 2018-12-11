@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "amphibious Unit, doing Waterareadamage and laying Landeggs <Water Land Buff Unit>",
 	objectName = "jgalatea.s3o",
 	script = "jgalatescript.lua",
-	buildPic = "placeholder.png",
+	buildPic = "jgalatea.png",
 	levelGround =false,
 	--cost
 	buildCostMetal = 15,

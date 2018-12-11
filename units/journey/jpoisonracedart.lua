@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Poisons full recovering Units <Temporary Buff>",
 	objectName = "jPoisonRacedart.s3o",
 	script = "jracedartscript.lua",
-	buildPic = "jplaceholder.png",
+	buildPic = "jpoisonracedart.png",
 	--cost
 	buildCostMetal = 550,
 	buildCostEnergy = 250,

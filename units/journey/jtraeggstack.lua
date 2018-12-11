@@ -6,7 +6,7 @@ local unitDef = {
 	
 	objectName = "placeholder.s3o",
 	script = "jtransportedeggstackscript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jmeggstack.png",
 	
 	--cost
 	buildCostMetal = 200,

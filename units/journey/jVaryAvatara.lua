@@ -7,7 +7,7 @@ local unitDef = {
 
   script 			 = "jVaryTarascript.lua",
   maxDamage = 44550, 
-
+buildPic = "jvarytara.png",
   MovementClass = "jinfantry",
   buildCostMetal =30,
   buildCostEnergy =200,

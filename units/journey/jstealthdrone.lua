@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "stealthy Construction Exobiotic, using lifeforce to construct.<Construction>",
 	objectName = "condrone.s3o",
 	script = "jcondronescript.lua",
-	buildPic = "conair.png",
+	buildPic = "jstealthdrone.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 260,

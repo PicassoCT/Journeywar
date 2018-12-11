@@ -6,7 +6,7 @@ local unitDef = {
 	objectName = "jEthief.s3o",
 	script = "jethiefscript.lua",
 	--script = "pieceMaker.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jatlantai.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 2260,

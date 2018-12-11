@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "reduces Enemys Sight to near zero. <Jamming Unit>",
 	objectName = "jjam.s3o",
 	script = "jjamscript.lua",
-	buildPic = "jjam.png",
+	buildPic = "jjamforrest.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

@@ -5,7 +5,7 @@ name = "Resistance Warrior",
 Description = "fighting the man, to be a man <Assault>",
 objectName = "jResistanceWarrior.s3o",
 script = "jresistancewarrior.lua",
-buildPic = "placeholderj.png",
+buildPic = "jresistancewarrior.png",
 moveState =2,
 --cost
 buildCostMetal = 55,

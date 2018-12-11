@@ -4,7 +4,7 @@ name = "Watergate",
 Description = "floods the World via a Waterworldwormhole <Terraforming Unit>",
 objectName = "jWaterGate.s3o",
 script = "j_WaterGate.lua",
-buildPic = "watergate.png",
+buildPic = "jwatergate.png",
 --cost
 buildCostMetal = 100,
 buildCostEnergy = 12,

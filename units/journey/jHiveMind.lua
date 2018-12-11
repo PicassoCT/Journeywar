@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " sacrifices individuals for a godlike intellect <Buff Building>",
 	objectName = "jHiveMind.s3o",
 	script = "jHiveMindScript.lua",
-	buildPic = "jdragongrass.png",
+	buildPic = "jhivemind.png",
 	--cost
 	buildCostMetal = 950,
 	buildCostEnergy = 750,

@@ -5,7 +5,7 @@ name = "Sequoia ",
 Description = " landed, regenerating Treeship <Energy>",
 objectName = "jsequoia.s3o",
 script = "sequoiarestingscript.lua",
-buildPic = "placeholderj.png",
+buildPic = "jesempresequoia.png",
 --cost
 buildCostMetal = 100,
 buildCostEnergy = 50,

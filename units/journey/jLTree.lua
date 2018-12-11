@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " stores and returns Matter. Corrodes Units nearby. <Energy>",
 	objectName = "emptyObjectIsEmpty.s3o",
 	script = "jLspawnScript.lua",
-	buildPic = "jaccidtree.png",
+	buildPic = "jtreel.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

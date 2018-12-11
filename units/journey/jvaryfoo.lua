@@ -4,7 +4,7 @@ local unitDef = {
 	Description = " hungry, always so hungry, nibblin at the hoops <Assault>",
 	objectName = "varyFoo.s3o",
 	script = "varyfooscript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jvaryfoo.png",
 	--cost
 	buildCostMetal = 350,
 	buildCostEnergy = 150,

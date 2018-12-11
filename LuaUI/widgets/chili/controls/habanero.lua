@@ -289,10 +289,10 @@ function HabaneroButton:Init(bRelativePixelSize)
 		
 	end
 	
-	if self.boolBorder and self.boolBorder == true then
+	if true or self.boolBorder and self.boolBorder == true then
 	
 		self.borderline = Borderline:New{
-							bordertype =  "static",
+							borderType =  "static",
 							button = self
 						}
 						

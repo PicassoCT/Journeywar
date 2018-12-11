@@ -5,7 +5,7 @@ local unitName = "jracedart"
 	Description = "Shielded suicidal Anti-Building Unit <Anti Building>",
 	objectName = "jracedart.s3o",
 	script = "jracedartscript.lua",
-	buildPic = "jplaceholder.png",
+	buildPic = "jracedart.png",
 	--cost
 	buildCostMetal = 550,
 	buildCostEnergy = 250,

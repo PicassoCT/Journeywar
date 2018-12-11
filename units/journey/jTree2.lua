@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " Grows into a Dream Tree with Radiation <Energy>",
 	objectName = "jEtree2.s3o",
 	script = "jTree2.lua",
-	buildPic = "jtreeRad.png",
+	buildPic = "jtree2.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

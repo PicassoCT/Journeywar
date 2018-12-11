@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " fires Accid Ants Weddings at the Enemy <Long Range Artillery>",
 	objectName = "jantart.s3o",
 	script = "jantart.lua",
-	buildPic = "anthill.png",
+	buildPic = "jantart.png",
 	--cost
 	moveState =0,
 	buildCostMetal = 810,

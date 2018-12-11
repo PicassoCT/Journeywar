@@ -6,7 +6,7 @@ local unitDef = {
 	
 	objectName = "jharbour.s3o",
 	script = "jharbourscript.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jharbour.png",
 	
 	--cost
 	buildCostMetal = 200,

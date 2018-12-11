@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Infantry in Biosuits, using Shardgun and Birdrockets <Assault>",
 	objectName = "skInfantry.s3o",
 	script = "skInfantry.lua",
-	buildPic = "skinfantry.png",
+	buildPic = "jskinfantry.png",
 	--cost
 	buildCostMetal = 110,
 	buildCostEnergy = 350,

@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " Unrootable Mainbuilding. Constructs all other buildings.<Mainbuilding>",
 	objectName = "beanstalk.s3o",
 	script = "beanstalkscript.lua",
-	buildPic = "beanstalk.png",
+	buildPic = "jbeanstalk.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 12,

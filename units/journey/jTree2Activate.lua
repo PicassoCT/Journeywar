@@ -5,7 +5,7 @@ local unitDef = {
 	Description = " Resistant to Radiation. Converts biological Enemys. <Trap Energy>",
 	objectName = "jetree2.s3o",
 	script = "jTree2.lua",
-	buildPic = "jtree.png",
+	buildPic = "jtree2.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 50,

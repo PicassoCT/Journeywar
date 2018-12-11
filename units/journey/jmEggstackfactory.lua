@@ -4,7 +4,7 @@ local unitDef = {
 	Description = "grows construction Units from limitted amount of Eggs. <Construction Unit Factory>",
 	objectName = "jeggstack.s3o",
 	script = "jmobileEggstackscript.lua",
-	buildPic = "eggstack.png",
+	buildPic = "jmeggstack.png",
 	buildCostMetal = 200,
 	buildCostEnergy = 50,
 	

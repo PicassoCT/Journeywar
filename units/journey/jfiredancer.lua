@@ -5,7 +5,7 @@ name = "Firedancer",
 Description = "weaving Nanotics into AntiAir Fire. Creators of the CentrAIl <Anti Air Unit>",
 objectName = "jfiredancer.s3o",
 script = "jfiredancerscript.lua",
-buildPic = "placeholderj.png",
+buildPic = "jfiredancer.png",
 --cost
 buildCostMetal = 310,
 buildCostEnergy = 350,

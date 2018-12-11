@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "recycles enemy Units and remains from afar <Energy Sniper>",
 	objectName = "jRecycler.s3o",
 	script = "jrecyclerscript.lua",
-	buildPic = "jmotherofmercy.png",
+	buildPic = "jrecycler.png",
 	
 	
 	--cost

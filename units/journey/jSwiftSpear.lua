@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "rapes enemy units, impregnates them with little swiftspears <Sabotage/Assault>",
 	objectName = "swiftspear.s3o",
 	script = "swiftspear.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jswiftspear.png",
 	--cost
 	buildCostMetal = 100,
 	buildCostEnergy = 0,

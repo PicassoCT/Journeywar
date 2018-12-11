@@ -113,7 +113,7 @@ function getCyberiziableUnitTypes()
 		"csniper",
 		"crestrictor",
 		"chunter",
-		"advisor",
+		"cadvisor",
 		"cstrider",
 		"beherith",
 		"gseastar",
@@ -152,7 +152,7 @@ function getCentrailOverworldGateUnitTypeTable()
 		"csniper",
 		"crestrictor",
 		"chunter",
-		"advisor"
+		"cadvisor"
 	}
 	return getTypeTable(UnitDefNames, typeTable)
 	
@@ -329,7 +329,7 @@ function getDreamTreeTransformUnitTypeTable(UnitDefNames)
 		[UnitDefNames["ccrabsynth"].id] = UnitDefNames["jcrabcreeper"].id,
 		[UnitDefNames["cgunship"].id] = UnitDefNames["jwatchbird"].id,
 		[UnitDefNames["css"].id] = UnitDefNames["jfiredancer"].id,
-		[UnitDefNames["advisor"].id] = UnitDefNames["jghostdancer"].id,
+		[UnitDefNames["cadvisor"].id] = UnitDefNames["jghostdancer"].id,
 		[UnitDefNames["zombie"].id] = UnitDefNames["gcivillian"].id,
 		[UnitDefNames["chunter"].id] = UnitDefNames["jhunter"].id,
 		[UnitDefNames["gzombiehorse"].id] = UnitDefNames["ghohymen"].id,
@@ -589,8 +589,8 @@ function getMirrorBubbleTransformationTable(UnitDefNames)
 		["css"] = "campro",
 		["campro"] = "crestrictor",
 		["crestrictor"] = "csniper",
-		["csniper"] = "advisor",
-		["advisor"] = "jtiglil",
+		["csniper"] = "cadvisor",
+		["cadvisor"] = "jtiglil",
 		
 		--level 2 circle
 		["cwallbuilder"] = "coperatrans",
@@ -647,7 +647,7 @@ function getEquivalentMirrorTransformTypeTable(UnitDefNames)
 		[UnitDefNames["cit2"].id] = UnitDefNames["jskinfantry"].id,
 		[UnitDefNames["cit3"].id] = UnitDefNames["jskinfantry"].id,
 		[UnitDefNames["css"].id] = UnitDefNames["jtiglil"].id,
-		[UnitDefNames["advisor"].id] = UnitDefNames["jtiglil"].id,
+		[UnitDefNames["cadvisor"].id] = UnitDefNames["jtiglil"].id,
 		
 	}
 	

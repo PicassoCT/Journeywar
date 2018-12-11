@@ -6,7 +6,7 @@ local unitDef = {
 	objectName = "jwatchbird.s3o",
 	script = "jwatchbirdscript.lua",
 	--script = "pieceMaker.lua",
-	buildPic = "placeholderj.png",
+	buildPic = "jwatchbird.png",
 	--floater = true,
 	--cost
 	buildCostMetal = 2260,

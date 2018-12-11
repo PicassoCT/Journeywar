@@ -5,7 +5,7 @@ local unitDef = {
 	Description = "Single Cell Anti Air Accelerator Unit <Anti Air Buff>",
 	objectName = "jplanktoner.s3o",
 	script = "jplanktonerscript.lua",
-	buildPic = "placeholder.png",
+	buildPic = "jplanktoner.png",
 	--cost
 	buildCostEnergy = 600,
 	buildCostMetal = 600,

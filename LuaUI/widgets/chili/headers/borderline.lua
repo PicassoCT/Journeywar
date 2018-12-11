@@ -2,7 +2,7 @@ Borderline = Object:Inherit{
 	classname= "Borderline",
 	borderType = "static",
 	borderColor = {0,1,0,0.5},
-	borderDistance = 0,
+	borderDistance = 5,
 	borderDiameter = 5,
 	button = "nil",
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
