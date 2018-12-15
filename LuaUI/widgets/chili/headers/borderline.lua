@@ -13,7 +13,19 @@ Borderline = Object:Inherit{
 local this = Borderline
 local inherited = this.inherited
 
-
+function distance(x, y, z, xa, ya, za)
+	if type(x)== "table" then
+		return distance(x.x, x.y, x.z, y.x, y.y, y.z)
+	end
+	
+	if xa ~= nil and ya ~= nil and za ~= nil then
+		return math.sqrt((x - xa) ^ 2 + (y - ya) ^ 2 + (z - za) ^ 2)
+	elseif x ~= nil and y ~= nil and z ~= nil then
+		return math.sqrt(x * x + y * y + z * z)
+	else
+		return math.sqrt((x - y) ^ 2)
+	end
+end
 
 
 function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, reduceFactor, Resolution)
@@ -49,18 +61,30 @@ function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, re
 	return strip
 end
 
-function addScaledPointPair(copyPoint, distance, diameter)
+function addScaledPointPair(copyPoint, borderdistance, diameter, fixPoint)
 	local PointT = copyPoint
-	if math.abs(PointT.x) < 1 then PointT.x = 1 end
-	if math.abs(PointT.y) < 1 then PointT.y = 1 end
-	orgdist =math.sqrt(PointT.x^2+ PointT.y^2) 
+
+	vecOffset ={
+		x= PointT.x + fixPoint.x, 
+		y= PointT.y + fixPoint.y 
+	}
+	dist = distance(PointT, fixPoint)
+	relativeFactorDistance = borderdistance/dist
+	relativeFactordiameter = diameter/dist
 	
-	if math.abs(PointT.x) == 1 then PointT.x = 1 end
-	if math.abs(PointT.y) == 1 then PointT.y = 1 end
+	retPointInnerBorder ={}
+	retPointInnerBorder.x = vecOffset.x * (1+relativeFactorDistance)
+	retPointInnerBorder.y = vecOffset.y * (1+relativeFactorDistance)
+	retPointInnerBorder.x= retPointInnerBorder.x -fixPoint.x
+	retPointInnerBorder.y= retPointInnerBorder.y -fixPoint.y	
 	
-	factorBorder = distance/orgdist + 1
-	factorBorder_Diameter = factorBorder + diameter/orgdist
-	return {x=PointT.x * factorBorder, y=PointT.y * factorBorder}, { x=PointT.x * factorBorder_Diameter, y= PointT.y * factorBorder_Diameter };
+	retPointOuterBorder ={}
+	retPointOuterBorder.x =  vecOffset.x * (1+relativeFactorDistance+ relativeFactordiameter)
+	retPointOuterBorder.y =  vecOffset.y * (1+relativeFactorDistance+ relativeFactordiameter)
+	retPointOuterBorder.x = retPointOuterBorder.x -fixPoint.x
+	retPointOuterBorder.y = retPointOuterBorder.y -fixPoint.y	
+	
+	return retPointInnerBorder, retPointOuterBorder;
 end
 
 function convexhull(points)
@@ -108,10 +132,17 @@ function Borderline:generateStaticBorder()
 	local orgTriStripCopy = self.button.triStrip
 	local triStripCopy = convexhull(orgTriStripCopy)
 	
+	fictionalCenter={x=0,y=0}
+	for i=1,#triStripCopy do
+		fictionalCenter.x = fictionalCenter.x + triStripCopy[i].x/#triStripCopy
+		fictionalCenter.y = fictionalCenter.y + triStripCopy[i].y/#triStripCopy
+	end
+	
+	
 	for i=1,#triStripCopy do
 	Spring.Echo("Initialization Borderline 3")
 		index= #self.triStrip
-		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(triStripCopy[i], self.borderDistance, self.borderDiameter)
+		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(triStripCopy[i], self.borderDistance, self.borderDiameter, fictionalCenter)
 	end
 	self.triStrip[#self.triStrip+1] = self.triStrip[1]
 	self.triStrip[#self.triStrip+1] = self.triStrip[2] 
