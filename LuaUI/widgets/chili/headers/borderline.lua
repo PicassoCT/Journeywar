@@ -49,69 +49,20 @@ function Borderline:DrawSpiral(startPointA, startPointB, CenterPoint, Degree, re
 	return strip
 end
 
-function addScaledPointPair(copyPoint, distance, diameter)
-	local PointT = copyPoint
-	if math.abs(PointT.x) < 1 then PointT.x = 1 end
-	if math.abs(PointT.y) < 1 then PointT.y = 1 end
+function addScaledPointPair(PointT, distance, diameter)
 	orgdist =math.sqrt(PointT.x^2+ PointT.y^2) 
-	
-	if math.abs(PointT.x) == 1 then PointT.x = 1 end
-	if math.abs(PointT.y) == 1 then PointT.y = 1 end
-	
-	factorBorder = distance/orgdist + 1
+	factorBorder = distance/orgdist +1
 	factorBorder_Diameter = factorBorder + diameter/orgdist
 	return {x=PointT.x * factorBorder, y=PointT.y * factorBorder}, { x=PointT.x * factorBorder_Diameter, y= PointT.y * factorBorder_Diameter };
 end
 
-function convexhull(points)
-    local p = #points
-
-    local cross = function(p, q, r)
-        return (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y)
-    end
-
-    table.sort(points, function(a, b)
-        return a.x == b.x and a.y > b.y or a.x > b.x
-    end)
-
-    local lower = {}
-    for i = 1, p do
-        while (#lower >= 2 and cross(lower[#lower - 1], lower[#lower], points[i]) <= 0) do
-            table.remove(lower, #lower)
-        end
-
-        table.insert(lower, points[i])
-    end
-
-    local upper = {}
-    for i = p, 1, -1 do
-        while (#upper >= 2 and cross(upper[#upper - 1], upper[#upper], points[i]) <= 0) do
-            table.remove(upper, #upper)
-        end
-
-        table.insert(upper, points[i])
-    end
-
-    table.remove(upper, #upper)
-    table.remove(lower, #lower)
-    for _, point in ipairs(lower) do
-        table.insert(upper, point)
-    end
-
-    return upper
-end
-
-
 function Borderline:generateStaticBorder()
-	Spring.Echo("Initialization Borderline 2")
+Spring.Echo("Initialization Borderline 2")
 	assert(self.button ~= "nil")
-	local orgTriStripCopy = self.button.triStrip
-	local triStripCopy = convexhull(orgTriStripCopy)
-	
-	for i=1,#triStripCopy do
+	for i=1,#self.button.triStrip do
 	Spring.Echo("Initialization Borderline 3")
 		index= #self.triStrip
-		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(triStripCopy[i], self.borderDistance, self.borderDiameter)
+		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(self.button.triStrip[i], self.borderDistance, self.borderDiameter)
 	end
 	self.triStrip[#self.triStrip+1] = self.triStrip[1]
 	self.triStrip[#self.triStrip+1] = self.triStrip[2] 
