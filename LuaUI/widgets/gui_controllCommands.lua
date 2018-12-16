@@ -69,6 +69,7 @@ backgroundColExtended = {90/255, 174/255, 208/255, 0.5}
 --lowerMenueBackgroundCol={0/255, 43/255, 109/255, 0.45} 
 lowerMenueBackgroundCol={40/255, 121/255, 177/255, 0.4} 
 backgroundColExtended=lowerMenueBackgroundCol
+defaultBorderColor={0, 0, 0.1, 1}
 
 genericActiveColor = {163/255, 229/255, 243/255, 0.75}
 genericFocusColor={163/255, 229/255, 243/255, 0.5}
@@ -218,10 +219,13 @@ extendedMenue[CMD.UNLOAD_UNITS] ={
 
 extendedMenue[CMD.CLOAK] ={
 	triStrip={	
-		{x= 100, y = 0},			
-		{x= 0, y = 30},
-		{x= 80, y = 85},
-		{x= 0, y = 55}},
+		{x= 0, y = 20},
+		{x= 80, y = 0},			
+		{x= 0, y = 35},
+		{x= 80, y = 55},
+		{x= 100, y = 55},
+		
+		},
 	name = "statebutton_cloak",
 	caption= "CLOAK",
 	OnMouseUp = {StateCommand}	
@@ -283,7 +287,8 @@ MainMenue[CMD.ATTACK] ={
 		{x= 0, y = 0},
 		{x= 80, y = 70},						
 		{x= 0, y = 70},
-	{x= 0, y = 100}}	,
+	--	{x= 0, y = 100}
+		}	,
 	activeColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = lowerMenueBackgroundCol,
 	caption=	"|ATTAC",
@@ -377,7 +382,7 @@ MainMenue[CMD.REPAIR] ={
 		{x= 0, y = 0},			
 		{x= 80, y = 0},
 		{x= 0, y = 90},
-	{x= 80, y = 60}},
+		{x= 80, y = 60}},
 	activeColor={163/255, 229/255, 243/255, 0.75},
 	backgroundColor = lowerMenueBackgroundCol,
 	caption= upByRow("|REPAIR ",4),
@@ -405,18 +410,17 @@ MainMenue[CMD.PATROL] ={
 
 
 MainMenue[CMD.GUARD] ={
-		triStrip={		{x= 0, y = 5},			
+		triStrip={		
+		{x= 0, y = 5},			
 		{x= 80, y = -25},
 		{x= 0, y = 70},
-	{x= 80, y = 40}},
+		{x= 80, y = 40}},
 	
 	caption="|GUARD",
 	
 	cmdID = CMD.GUARD ,
 	name= "orderbutton_guard",
 	OnMouseUp = {ActionCommand},
-	boolBorder = true,
-	borderType = "static"
 }	
 
 
@@ -445,7 +449,9 @@ function setDefaultCommandButtonAttributes()
 		HabaneroDescriptor.focusColor=		 genericFocusColor
 		HabaneroDescriptor.activeColor =	 HabaneroDescriptor.active or		  genericActiveColor		
 		HabaneroDescriptor.stateColors 		= genericStateTriColor
-		HabaneroDescriptor.boolBorder 		= HabaneroDescriptor.boolBorder or false
+		HabaneroDescriptor.boolBorder 		= HabaneroDescriptor.boolBorder or true
+		HabaneroDescriptor.borderType 		= HabaneroDescriptor.borderType or "static"
+		HabaneroDescriptor.borderColor 		= HabaneroDescriptor.borderColor or  defaultBorderColor
 	end
 	
 	--defaults
@@ -457,7 +463,9 @@ function setDefaultCommandButtonAttributes()
 		MenueDescriptor.focusColor=		 	 		genericFocusColor
 		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
-		MenueDescriptor.boolBorder = MenueDescriptor.boolBorder or false
+		MenueDescriptor.boolBorder 		= MenueDescriptor.boolBorder or true
+		MenueDescriptor.borderType 		= MenueDescriptor.borderType or "static"
+		MenueDescriptor.borderColor 		= MenueDescriptor.borderColor or  defaultBorderColor
 	end	
 	
 	
@@ -501,7 +509,8 @@ function widget:Initialize()
 			stateColors = HabaneroDescriptor.stateColors,
 			OnMouseUp = HabaneroDescriptor.OnMouseUp,
 			boolBorder = HabaneroDescriptor.boolBorder,
-			borderType = HabaneroDescriptor.borderType
+			borderType = HabaneroDescriptor.borderType,
+			borderColor = HabaneroDescriptor.borderColor
 		}
 		
 	end

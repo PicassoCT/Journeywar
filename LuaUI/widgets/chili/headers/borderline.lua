@@ -1,8 +1,10 @@
+VFS.Include(CHILI_DIRNAME .. "headers/util.lua", nil, VFS.RAW_FIRST)
+
 Borderline = Object:Inherit{
 	classname= "Borderline",
 	borderType = "static",
-	borderColor = {0,1,0,0.5},
-	borderDistance = 1,
+	borderColor = {0, 0, 0.1, 1},
+	borderDistance = 0,
 	borderDiameter = 7 ,
 	button = "nil",
 	--Points in Order, Clockwise in local Coordinates - last coordinate is a Copy of the first
@@ -62,18 +64,23 @@ end
 
 
 
-function addScaledPointPair(prevPoint, copyPoint, nextPoint, borderdistance, diameter, fixPoint)
+function addScaledPointPair(copyPoint, normal, borderDistance, diameter)
+normal ={x= 0.5, y = 0.5} -- Having a fixed noraml aint normal - but on crytallized math it is
+
 	local PointT = copyPoint
 	if PointT.x  == 0 then PointT.x = 1 end
 	if PointT.z  == 0 then PointT.z = 1 end
 
 	orgdist =math.sqrt(PointT.x^2+ PointT.y^2) 
 	
-	
-	factorBorder = distance/orgdist + 1
-	factorBorder_Diameter = factorBorder + diameter/orgdist
-	return {x=PointT.x * factorBorder, y=PointT.y * factorBorder}, 
-			{ x=PointT.x * factorBorder_Diameter, y= PointT.y * factorBorder_Diameter };
+	return  { 
+			x = PointT.x + (normal.x* borderDistance), 
+			y = PointT.y + ((normal.y) * borderDistance)
+			}, 
+			{ 
+			x = PointT.x + (normal.x* ( borderDistance + diameter)),
+ 			y = PointT.y + (normal.y) * ( borderDistance + diameter)
+			}
 end
 
 function convexhull(points)
@@ -114,30 +121,95 @@ function convexhull(points)
     return upper
 end
 
+function b2CrossVectVect( a, b )
+        return a.x * b.y - a.y * b.x;
+end
+
+function getNormal(predecessorP, Point, succesorP)
+vec1,vec2 ={},{}
+vec1.x =  Point.x  - predecessorP.x 
+vec1.y =  Point.y  - predecessorP.y 
+
+vec2.x = succesorP.x - Point.x 
+vec2.y = succesorP.y - Point.y 
+
+return b2CrossVectVect(vec1,vec2)
+end
+
+function calculateNormal(i, triStripCopy)	
+	predecessor = i-1
+	succesor =i+1
+	if predecessor < 1 then predecessor = #triStripCopy end
+	if succesor > #triStripCopy then succesor = 1 end
+	
+	return getNormal(triStripCopy[predecessor],triStripCopy[i],triStripCopy[succesor])
+end
 
 function Borderline:generateStaticBorder()
-	Spring.Echo("Initialization Borderline 2")
+
 	assert(self.button ~= "nil")
 	local orgTriStripCopy = self.button.triStrip
 	local triStripCopy = convexhull(orgTriStripCopy)
 	
-
-	
 	for i=1,#triStripCopy do
-	Spring.Echo("Initialization Borderline 3")
 		index= #self.triStrip
-		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(triStripCopy[i], self.borderDistance, self.borderDiameter)
+
+		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(triStripCopy[i], calculateNormal(i,triStripCopy), self.borderDistance, self.borderDiameter)
 	end
 	self.triStrip[#self.triStrip+1] = self.triStrip[1]
 	self.triStrip[#self.triStrip+1] = self.triStrip[2] 
 	
+end
+
+function getCenterPoint(triStrip)
+	totalPoints= #triStrip
+	midPoint= {x=0,y=0}
+		for i=1,totalPoints do
+			midPoint.x = midPoint.x + triStrip[i].x
+			midPoint.y = midPoint.y + triStrip[i].y
+		end
+	return midPoint
+end
+
+function organicExpandTriStrip(triStrip, resolution, shiftformula, centerpoint)
+expandedStrip={}
+	for i=1,#triStrip do
+		predecessor,succesor = i-1, i+1
+		if predecessor < 1 then predecessor = #triStrip end
+		if succesor > #triStrip then succesor = 1 end
+			for r=1, resolution do
+				percentage= r/resolution
+				point = mixTable(triStrip[predecessor],triStrip[succesor], percentage)
+				
+				point = shiftformula(point, percentage, centerpoint)
+				expandedStrip[#expandedStrip + 1] = point		
+			end
+	end
 	
-	Spring.Echo("Initialization Borderline 4")
+	return expandedStrip
 end
 
 function Borderline:generateOrganicBorder()
-
+	assert(self.button ~= "nil")
+	local triStripCopy = convexhull(self.button.triStrip)
 	
+	centerP = getCenterPoint( self.button.triStrip)
+	shiftformula= function(point, factor, centerpoint)
+						vector = {x= point.x - centerpoint.x, y= point.y - centerpoint.y}
+						normalizeVector = math.sqrt(vector.x^2 + vector.y^2)
+						vector.x, vector.y = vector.x/normalizeVector, vector.y/normalizeVector
+						
+						distortionfactor = math.sin( factor * math.pi)* 15
+						--determinate the vector from the center
+						vector.x, vector.y = vector.x * distortionfactor, vector.y * distortionfactor
+						point.x,point.y = point.x + vector.x,point.y + vector.y
+					
+						return point
+					end
+	
+
+	self.triStrip = organicExpandTriStrip( triStripCopy,  16, shiftformula, centerP)
+
 	-- slightly transparent white tree
 
 
