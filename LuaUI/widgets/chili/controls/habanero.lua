@@ -1,5 +1,6 @@
 --//=============================================================================
 VFS.Include(CHILI_DIRNAME .. "headers/borderline.lua", nil, VFS.RAW_FIRST)
+VFS.Include(CHILI_DIRNAME .. "headers/util.lua", nil, VFS.RAW_FIRST)
 --- HabaneroButton module
 
 --- HabaneroButton fields.
@@ -41,6 +42,7 @@ HabaneroButton = Control:Inherit{
 	
 	borderline ={},
 	boolBorder= false,
+	borderColor = { 0, 0, 0.1, 1},
 
 	--focusColor
 	--activeColor
@@ -110,14 +112,7 @@ function getZeroScreen(this)
 	
 	return this
 end
-function mix(a,b,factor)
-	return {
-		[1]= a[1]*factor+b[1]*(1-factor),
-		[2]=a[2]*factor+b[2]*(1-factor),
-		[3]=a[3]*factor+b[3]*(1-factor),
-		[4]=a[4]*factor+b[4]*(1-factor)
-		}
-end
+
 
 function HabaneroButton:mixByStateFactor(self, factor, smallestStep)
 	if #self.stateColors < 2 then return self.stateColors[1]end
@@ -125,7 +120,7 @@ function HabaneroButton:mixByStateFactor(self, factor, smallestStep)
 	lowerStep= math.max(1,math.floor((factor*self.numberOfStates)/smallestStep))
 	upperStep= math.min(math.ceil((factor*self.numberOfStates)/smallestStep), self.numberOfStates)
 
-	return mix(self.stateColors[lowerStep],self.stateColors[upperStep], (factor-(lowerStep*smallestStep)/smallestStep))
+	return mixTable(self.stateColors[lowerStep],self.stateColors[upperStep], (factor-(lowerStep*smallestStep)/smallestStep))
 end
 
 function HabaneroButton:setCurrentColorByState()
@@ -289,11 +284,12 @@ function HabaneroButton:Init(bRelativePixelSize)
 		
 	end
 	
-	if true or self.boolBorder and self.boolBorder == true then
+	if  self.boolBorder and self.boolBorder == true then
 	
 		self.borderline = Borderline:New{
 							borderType =  "static",
-							button = self
+							button = self,
+							borderColor = self.borderColor
 						}
 						
 					

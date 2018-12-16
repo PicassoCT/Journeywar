@@ -495,6 +495,15 @@ function mixColors(c1, c2, a)
 	}
 end
 
+function mixTable(TA, TB, factor)
+	local T={}
+	for k,v in pairs(TA) do
+		T[k]= v*factor + TB[k]* (1-factor)
+	end
+	return T
+	
+end
+
 function color2incolor(r,g,b,a)
 	if type(r) == 'table' then
 		r,g,b,a = unpack4(r)
