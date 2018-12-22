@@ -251,7 +251,7 @@ function findBiggestCluster(team, times)
         for i = 1, #mapRepresentiv do
 		if mapRepresentiv[i] then
             for j = 1, #mapRepresentiv[i] do
-                if mapRepresentiv[i][j] > maxTuple.val then
+                if maxTuple.val and mapRepresentiv[i][j] > maxTuple.val then
                     maxTuple.val = mapRepresentiv[i][j]
                     maxTuple.x = i
                     maxTuple.z = j
