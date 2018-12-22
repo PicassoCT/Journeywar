@@ -70,6 +70,7 @@ backgroundColExtended = {90/255, 174/255, 208/255, 0.5}
 lowerMenueBackgroundCol={40/255, 121/255, 177/255, 0.4} 
 backgroundColExtended=lowerMenueBackgroundCol
 defaultBorderColor={0, 0, 0.1, 1}
+defaultJourneymanBorderColor={236/255, 229/255, 226/255, 0.856}
 
 genericActiveColor = {163/255, 229/255, 243/255, 0.75}
 genericFocusColor={163/255, 229/255, 243/255, 0.5}
@@ -464,8 +465,8 @@ function setDefaultCommandButtonAttributes()
 		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
 		MenueDescriptor.boolBorder 		= MenueDescriptor.boolBorder or true
-		MenueDescriptor.borderType 		= MenueDescriptor.borderType or "static"
-		MenueDescriptor.borderColor 		= MenueDescriptor.borderColor or  defaultBorderColor
+		MenueDescriptor.borderType 		= MenueDescriptor.borderType or "organic"
+		MenueDescriptor.borderColor 		= MenueDescriptor.borderColor or  defaultJourneymanBorderColor
 	end	
 	
 	
