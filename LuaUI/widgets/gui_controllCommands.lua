@@ -301,12 +301,13 @@ MainMenue[CMD.ATTACK] ={
 
 MainMenue[CMD.STOP] ={
 	triStrip={	
-		{x= 70, y = -15},
-		{x= 0, y = 10},			
-		{x= 80, y = -5},		
+		{x= 0, y = 10},	
 		{x= 0, y = 70},
+		{x= 70, y = -15},				
+		{x= 80, y = -5},		
 		{x= 80, y = 80},
-	{x= 70, y = 90}},
+		{x= 70, y = 90}
+		},
 	activeColor={58/255, 172/255, 226/255, 0.75}	,
 	backgroundColor = lowerMenueBackgroundCol,
 	caption="|STOP",	
@@ -465,7 +466,7 @@ function setDefaultCommandButtonAttributes()
 		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
 		MenueDescriptor.boolBorder 		= MenueDescriptor.boolBorder or true
-		MenueDescriptor.borderType 		= MenueDescriptor.borderType or "organic"
+		MenueDescriptor.borderType 		=  MenueDescriptor.borderType or "organic"
 		MenueDescriptor.borderColor 		= MenueDescriptor.borderColor or  defaultJourneymanBorderColor
 	end	
 	

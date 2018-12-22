@@ -178,51 +178,45 @@ function getCenterPoint(triStrip)
 end
 function organicExpandTriStrip(triStrip, resolution, shiftformula, centerpoint)
 expandedStrip={}
+buttonStrip={}
 
 	
 	for i=1,#triStrip do
 		predecessor,succesor = i-1, i+1
-		if predecessor < 1 then predecessor = #triStrip end
-		if succesor > #triStrip then succesor = 1 end
+		if predecessor < 1 then predecessor = 1 end
+		if succesor > #triStrip then succesor = #triStrip end
 		
 		if predecessor ~= succesor then
 			for r=1, resolution do
-
 				percentage= r/resolution
-				orgpoint = mixTable(triStrip[predecessor],triStrip[succesor], percentage)
-				innerP, outerP = shiftformula(orgpoint, percentage, centerpoint, 5 )
+				orgpoint = mixTable(triStrip[predecessor],triStrip[succesor], percentage, r)
+				innerP, outerP = shiftformula(orgpoint, percentage, centerpoint, 5 , r)
 				expandedStrip[#expandedStrip + 1] = innerP
+				buttonStrip[#buttonStrip + 1] = innerP
 				expandedStrip[#expandedStrip + 1] = outerP
 			end
 		end
 	end
 				
-	return expandedStrip
+	return expandedStrip, buttonStrip
 end
 function Borderline:generateOrganicBorder()
 	local triStripCopy = self.button.triStrip --convexhull(self.button.triStrip)
-	
+--	triStripCopy = convexhull(triStripCopy)
+
 	centerP = getCenterPoint( triStripCopy)
 	
-	shiftformula= function(point, factor, centerpoint,  distanceoutpx)
-						
-	
-						--pointCopy={}
-						--pointCopy.x = point.x +10
-						--pointCopy.y = point.y +10
-						--if true == true  then return point,pointCopy  end
-				
+	shiftformula= function(point, factor, centerpoint,  distanceoutpx, index)
+					
 					local	vector = {
 							x=   point.x - centerpoint.x,
 							y=   point.y - centerpoint.y
 						}
 						
-						
 						distancecenter = math.sqrt(vector.x^2 + vector.y^2)
 						borderscrolloutfactor=  (distanceoutpx/distancecenter)
-		
-						
-						distortionfactor =  math.sin( factor * math.pi)/2 + 0.75
+						distortionfactor =  math.sin( factor * math.pi)/4 + 0.75
+											
 						borderscrolloutfactor = borderscrolloutfactor +1
 											--determinate the vector from the center
 																local	outpoint ={}
@@ -232,15 +226,16 @@ function Borderline:generateOrganicBorder()
 								
 						vector.x = vector.x * distortionfactor + centerpoint.x
 						vector.y = vector.y * distortionfactor + centerpoint.y
-			
 						
 						return  vector, outpoint
 					
 					end
 	
 
-	self.triStrip = organicExpandTriStrip( triStripCopy,  16, shiftformula, centerP)
-
+	self.triStrip, self.button.triStrip = organicExpandTriStrip( triStripCopy,  16, shiftformula, centerP)
+	
+	self.button:Invalidate()
+	--self.button.triStrip = convexhull(self.button.triStrip)
 	-- slightly transparent white tree
 
 
