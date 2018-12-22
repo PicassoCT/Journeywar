@@ -482,7 +482,6 @@ function TargetOS()
 								tooRemove[monsterid]= num
 							end
 					  end
-				Sleep(10)
             end
 			for id,num in pairs(tooRemove) do
 				table.remove(monsterTable,num)
