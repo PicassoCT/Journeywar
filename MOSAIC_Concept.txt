@@ -1,5 +1,5 @@
-MOSAIC
-Modular Ordanance Strategic Assembled Intelligent Combat
+MOSAEC
+Modular Ordanance Stealth Assembly Espionage
 
 Antagon:
 - get Money from supression (destroyed buildings, cooperate explotation, local dictator police, religious frencys)
@@ -13,7 +13,7 @@ WalkDrones: ScanDrone, ComDrone, AntiPerson-MinefieldMother, Tankhunter, Sniperd
 Plane: ScanPlane, ComPlane, MineDrone, HunterDrone, Tomahawk, Stop-Go-Swarm
 
 Protagon:
-- get Money for proven dangers and attacks on allies - operatives discovering people who are close to the project
+- get Money for proven dangers and attacks on allies (aka local police and factorys) + operatives discovering people who are close to the project and hunting down cells
 - This party has to find and neutralize that threat
 
 
@@ -27,23 +27,10 @@ Plane: ScanPlane, ComPlane, MineDrone, HunterDrone, Tomahawk, Stop-Go-Swarm
 
 
 
-GameIdea:
+Game USPs:
 
-Line Of Communication (LASER / Electronic / Satellite/ Public / NFC) 
+Line Of Communication (LASER / Electronic / Satellite/ Public / NFC) - only humans continu there goals once out of line of communication
+
 Line Of Sight (Satellite/ Plane / Drone/ Video by LOC) - as longs a a Unit is observed its history of executed commands is visible to the observer
-
-
-Weapons:
-Automated Frontline:
-Drones, Intelligent, recombinable Ammonition & Assembler
-
-
-
-Operators:
-
-
-
-
- 
 
 
