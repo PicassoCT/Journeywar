@@ -183,16 +183,15 @@ end
 function _DrawHabaneroButtonBorder(boolBorderActive, border, state)
 
 	if boolBorderActive == true then
-	Spring.Echo("_DrawHabaneroButtonBorder")
+	--Spring.Echo("_DrawHabaneroButtonBorder")
 
-		local triStrip = border.triStrip	
-	
+		local triStrip = border.triStrip		
 	
 		if border.borderType == "static" then
-			gl.Color({1,0,0,0.5})--(border.BaseFrameColor)				
+			gl.Color(border.borderColor)--(border.BaseFrameColor)				
 		elseif border.borderType == "organic" then
-			gl.Color({1,0,0,0.5})--(border.BaseFrameColor)		
-			border:update(Spring.GetGameFrame())				
+			gl.Color(border.borderColor)--(border.BaseFrameColor)		
+			border:Update(Spring.GetGameFrame())				
 		end
 		
 		for i=3, #triStrip, 1 do
