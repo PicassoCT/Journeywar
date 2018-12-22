@@ -3,7 +3,7 @@ VFS.Include(CHILI_DIRNAME .. "headers/util.lua", nil, VFS.RAW_FIRST)
 Borderline = Object:Inherit{
 	classname= "Borderline",
 	borderType = "static",
-	borderColor = {0, 0, 0.1, 1},
+	borderColor = {0, 0, 0.1, 0.1},
 	borderDistance = 0,
 	borderDiameter = 7 ,
 	button = "nil",
@@ -65,7 +65,7 @@ end
 
 
 function addScaledPointPair(copyPoint, normal, borderDistance, diameter)
-normal ={x= 0.5, y = 0.5} -- Having a fixed noraml aint normal - but on crytallized math it is
+normal ={x= 0.5, y = 0.5} --TODO Remove&Replace Having a fixed noraml aint normal - but on crytallized math it is
 
 	local PointT = copyPoint
 	if PointT.x  == 0 then PointT.x = 1 end
@@ -151,15 +151,19 @@ function Borderline:generateStaticBorder()
 	local orgTriStripCopy = self.button.triStrip
 	local triStripCopy = convexhull(orgTriStripCopy)
 	
+	
 	for i=1,#triStripCopy do
 		index= #self.triStrip
 
 		self.triStrip[index+1],self.triStrip[index+2]= addScaledPointPair(triStripCopy[i], calculateNormal(i,triStripCopy), self.borderDistance, self.borderDiameter)
 	end
-	self.triStrip[#self.triStrip+1] = self.triStrip[1]
-	self.triStrip[#self.triStrip+1] = self.triStrip[2] 
+
 	
 end
+
+
+
+
 
 function getCenterPoint(triStrip)
 	totalPoints= #triStrip
@@ -168,43 +172,70 @@ function getCenterPoint(triStrip)
 			midPoint.x = midPoint.x + triStrip[i].x
 			midPoint.y = midPoint.y + triStrip[i].y
 		end
+	midPoint.x = midPoint.x/totalPoints
+	midPoint.y = midPoint.y /totalPoints
 	return midPoint
 end
-
 function organicExpandTriStrip(triStrip, resolution, shiftformula, centerpoint)
 expandedStrip={}
+
+	
 	for i=1,#triStrip do
 		predecessor,succesor = i-1, i+1
 		if predecessor < 1 then predecessor = #triStrip end
 		if succesor > #triStrip then succesor = 1 end
+		
+		if predecessor ~= succesor then
 			for r=1, resolution do
+
 				percentage= r/resolution
-				point = mixTable(triStrip[predecessor],triStrip[succesor], percentage)
-				
-				point = shiftformula(point, percentage, centerpoint)
-				expandedStrip[#expandedStrip + 1] = point		
+				orgpoint = mixTable(triStrip[predecessor],triStrip[succesor], percentage)
+				innerP, outerP = shiftformula(orgpoint, percentage, centerpoint, 5 )
+				expandedStrip[#expandedStrip + 1] = innerP
+				expandedStrip[#expandedStrip + 1] = outerP
 			end
+		end
 	end
-	
+				
 	return expandedStrip
 end
-
 function Borderline:generateOrganicBorder()
-	assert(self.button ~= "nil")
-	local triStripCopy = convexhull(self.button.triStrip)
+	local triStripCopy = self.button.triStrip --convexhull(self.button.triStrip)
 	
-	centerP = getCenterPoint( self.button.triStrip)
-	shiftformula= function(point, factor, centerpoint)
-						vector = {x= point.x - centerpoint.x, y= point.y - centerpoint.y}
-						normalizeVector = math.sqrt(vector.x^2 + vector.y^2)
-						vector.x, vector.y = vector.x/normalizeVector, vector.y/normalizeVector
+	centerP = getCenterPoint( triStripCopy)
+	
+	shiftformula= function(point, factor, centerpoint,  distanceoutpx)
 						
-						distortionfactor = math.sin( factor * math.pi)* 15
-						--determinate the vector from the center
-						vector.x, vector.y = vector.x * distortionfactor, vector.y * distortionfactor
-						point.x,point.y = point.x + vector.x,point.y + vector.y
+	
+						--pointCopy={}
+						--pointCopy.x = point.x +10
+						--pointCopy.y = point.y +10
+						--if true == true  then return point,pointCopy  end
+				
+					local	vector = {
+							x=   point.x - centerpoint.x,
+							y=   point.y - centerpoint.y
+						}
+						
+						
+						distancecenter = math.sqrt(vector.x^2 + vector.y^2)
+						borderscrolloutfactor=  (distanceoutpx/distancecenter)
+		
+						
+						distortionfactor =  math.sin( factor * math.pi)/2 + 0.75
+						borderscrolloutfactor = borderscrolloutfactor +1
+											--determinate the vector from the center
+																local	outpoint ={}
+
+						outpoint.x = vector.x * distortionfactor *  borderscrolloutfactor + centerpoint.x						
+						outpoint.y = vector.y * distortionfactor *  borderscrolloutfactor + centerpoint.y			
+								
+						vector.x = vector.x * distortionfactor + centerpoint.x
+						vector.y = vector.y * distortionfactor + centerpoint.y
+			
+						
+						return  vector, outpoint
 					
-						return point
 					end
 	
 
@@ -228,10 +259,11 @@ function Borderline:generateOrganicBorder()
 end
 
 function Borderline:Init()	
-	if self.borderType == "static" then
-		Spring.Echo("Initialization Borderline 1")
+	if  not self.borderType or self.borderType == "static" then
+	
 		 self:generateStaticBorder()
 	else
+		Spring.Echo("Initialization Organic Borderline 1")
 		self:generateOrganicBorder()
 	end
 end

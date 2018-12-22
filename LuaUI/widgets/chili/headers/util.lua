@@ -498,7 +498,7 @@ end
 function mixTable(TA, TB, factor)
 	local T={}
 	for k,v in pairs(TA) do
-		T[k]= v*factor + TB[k]* (1-factor)
+		T[k]= v * factor + TB[k]* (1 - factor)
 	end
 	return T
 	

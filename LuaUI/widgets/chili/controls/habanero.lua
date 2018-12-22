@@ -43,6 +43,7 @@ HabaneroButton = Control:Inherit{
 	borderline ={},
 	boolBorder= false,
 	borderColor = { 0, 0, 0.1, 1},
+	borderType = "static",
 
 	--focusColor
 	--activeColor
@@ -129,7 +130,7 @@ function HabaneroButton:setCurrentColorByState()
 		
 	if self.boolSelectable == true then
 		self.font.color = self.selectedTextColor	
-		self.currentColor = mix(self.activeColor, self.backgroundColor,0.5)	
+		self.currentColor = mixTable(self.activeColor, self.backgroundColor,0.5)	
 	end
 	
 	if self.boolInFocus == true and self.boolSelectable == true  then	
@@ -287,7 +288,7 @@ function HabaneroButton:Init(bRelativePixelSize)
 	if  self.boolBorder and self.boolBorder == true then
 	
 		self.borderline = Borderline:New{
-							borderType =  "static",
+							borderType = self.borderType,
 							button = self,
 							borderColor = self.borderColor
 						}
