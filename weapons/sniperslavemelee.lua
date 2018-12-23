@@ -14,7 +14,7 @@ local weaponDef = {
     lineOfSight = true,
     turret = true,
     craterMult = 0,
-    PredictBoost = 0.6,
+    PredictBoost = 0.3,
     soundtrigger = 1,
 
     --appearance
@@ -29,8 +29,8 @@ local weaponDef = {
     ImpulseBoost = 2.8,
     impulseFactor = 10,
     damage = {
-        default = 580,
-        HeavyArmor = 480,
+        default = 780,
+        HeavyArmor = 680,
     },
 }
 return lowerkeys({ [weaponName] = weaponDef })

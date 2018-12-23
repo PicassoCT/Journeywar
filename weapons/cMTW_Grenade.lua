@@ -4,7 +4,7 @@ local weaponDef = {
     name = "Grenade",
     highTrajectory = 1,
     --
-    weapontimer = 12,
+    weapontimer = 25,
     --
     --Physic/flight path
     range = 320,
@@ -12,7 +12,7 @@ local weaponDef = {
     weaponVelocity = 300,
     startVelocity = 250,
     weaponAcceleration = 200,
-    flightTime = 7.5,
+    flightTime = 17.5,
     BurnBlow = 0,
     FixedLauncher = false,
     dance = 0,
