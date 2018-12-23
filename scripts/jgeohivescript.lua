@@ -10,6 +10,8 @@ gaiaTeamID = Spring.GetGaiaTeamID()
 TablesOfPiecesGroups = getPieceTableByNameGroups(false, true)
 SIG_HIVE = 2
 
+local spGetUnitPosition =Spring.GetUnitPosition
+
 boolHiveAttacked = false
 function HiveAttacked()
     Signal(SIG_HIVE)
@@ -112,7 +114,7 @@ function spawner()
         --- -Spring.Echo("Im-on-it,im-on-it.. jesus christ those bugs are in a hurry to die!")
         Sleep(spawnCycleRestTime)
         enemyID = Spring.GetUnitNearestEnemy(unitID)
-			x, y, z = Spring.GetUnitPosition(unitID)
+			x, y, z = spGetUnitPosition(unitID)
 		
         if enemyID  then
             --EmitSfx(jgeohive,1024)
@@ -276,7 +278,7 @@ function PEAK(monsterID, enemyID, Time, mteam, factor, frame)
 				oldFrame = frame 
 				
 				eteam = Spring.GetUnitTeam(enemyID)
-				ex, ez = findBiggestCluster(eteam, Time, Spring.GetGameFrame())
+				ex, ez = findBiggestCluster(eteam, Time)
 				ex, ey, ez = sanitizeCoords(ex + rx, 0, ez + rz)
 				storedClusterX, storedClusterZ = ex, ez
 			end
@@ -301,7 +303,7 @@ end
 
 function PEAKFADE(monsterID, enemyID, Time, mteam, factor)
     if monsterID % math.random(12, 27) == 0 then
-        ex, ey, ez = Spring.GetUnitPosition(enemyID)
+        ex, ey, ez = spGetUnitPosition(enemyID)
         ex, ey, ez = sanitizeCoords(ex, ey, ez)
         return ex, ey, ez
     end
@@ -309,8 +311,8 @@ function PEAKFADE(monsterID, enemyID, Time, mteam, factor)
 	  if UnitsExist(monsterID, enemyID) == false then return nil end
 
     if distanceUnitToUnit(monsterID, enemyID) < 1024 then
-        ex, ey, ez = Spring.GetUnitPosition(enemyID)
-        mx, my, mz = Spring.GetUnitPosition(monsterID)
+        ex, ey, ez = spGetUnitPosition(enemyID)
+        mx, my, mz = spGetUnitPosition(monsterID)
         dx, dy, dz = mx - ex, my - ey, mz - ez
         dx, dy, dz = dx * math.pi, dy * math.pi, dz * math.pi
         ax, ay, az = sanitizeCoords(ex + dx, ey + dy, ez + dz)
@@ -464,7 +466,7 @@ function TargetOS()
                 oldState = State
             end
 				 gameframe = Spring.GetGameFrame()
-				 Spring.Echo("jgeohive::CurrentState:"..State)
+				-- Spring.Echo("jgeohive::CurrentState:"..State)
 				 
             for num, monsterid in pairs(monsterTable) do
                 if monsterid and Spring.GetUnitIsDead(monsterid) == false then
@@ -483,12 +485,34 @@ function TargetOS()
 							end
 					  end
             end
+
 			for id,num in pairs(tooRemove) do
 				table.remove(monsterTable,num)
+			end
+		
+			for num, monsterid in pairs(monsterTable) do
+				stuckDetector(monsterid)
 			end
 			
         end
     end
+end
+
+positionTable = {}
+function stuckDetector(monsterid)
+if not positionTable[monsterid] then positionTable[monsterid]= {x=0,z=0} end
+
+x,_,z = spGetUnitPosition(monsterid)
+
+	if x and z and  distance(x, positionTable[monsterid].x ) < 15 and distance(z, positionTable[monsterid].z ) < 15 then
+
+		defID = Spring.GetUnitDefID(monsterid)
+		mass = UnitDefs[defID].mass				
+		Spring.AddUnitImpulse(monsterid, math.min(2, mass/100) *math.random(-1,1), math.min(2, mass/100),  math.min(2, mass/100) *math.random(-1,1))
+		
+	end
+	
+positionTable[monsterid]= {x=x,z=z}
 end
 
 function aliveAndWell(id)

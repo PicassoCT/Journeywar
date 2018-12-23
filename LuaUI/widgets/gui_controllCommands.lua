@@ -466,8 +466,8 @@ function setDefaultCommandButtonAttributes()
 		MenueDescriptor.activeColor =	MenueDescriptor.activeColor or	 genericActiveColor
 		MenueDescriptor.stateColors = genericStateTriColor
 		MenueDescriptor.boolBorder 		= MenueDescriptor.boolBorder or true
-		MenueDescriptor.borderType 		=  MenueDescriptor.borderType or "organic"
-		MenueDescriptor.borderColor 		= MenueDescriptor.borderColor or  defaultJourneymanBorderColor
+		MenueDescriptor.borderType 		=  static --MenueDescriptor.borderType or "organic"
+		MenueDescriptor.borderColor 		= MenueDescriptor.borderColor or  defaultBorderColor-- defaultJourneymanBorderColor
 	end	
 	
 	

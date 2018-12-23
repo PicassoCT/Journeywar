@@ -184,10 +184,11 @@ buttonStrip={}
 	for i=1,#triStrip do
 		predecessor,succesor = i-1, i+1
 		if predecessor < 1 then predecessor = 1 end
-		if succesor > #triStrip then succesor = #triStrip end
+		if succesor > #triStrip then succesor = #triStrip  end
 		
 		if predecessor ~= succesor then
 			for r=1, resolution do
+			
 				percentage= r/resolution
 				orgpoint = mixTable(triStrip[predecessor],triStrip[succesor], percentage, r)
 				innerP, outerP = shiftformula(orgpoint, percentage, centerpoint, 5 , r)
@@ -202,7 +203,9 @@ buttonStrip={}
 end
 function Borderline:generateOrganicBorder()
 	local triStripCopy = self.button.triStrip --convexhull(self.button.triStrip)
---	triStripCopy = convexhull(triStripCopy)
+	
+
+	triStripCopy = convexhull(triStripCopy)
 
 	centerP = getCenterPoint( triStripCopy)
 	
@@ -232,8 +235,8 @@ function Borderline:generateOrganicBorder()
 					end
 	
 
-	self.triStrip, self.button.triStrip = organicExpandTriStrip( triStripCopy,  16, shiftformula, centerP)
-	
+	self.triStrip, _ = organicExpandTriStrip( triStripCopy,  16, shiftformula, centerP)
+	--self.button.triStrip = convexhull(self.triStrip)
 	self.button:Invalidate()
 	--self.button.triStrip = convexhull(self.button.triStrip)
 	-- slightly transparent white tree
