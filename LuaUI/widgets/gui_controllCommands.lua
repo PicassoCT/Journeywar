@@ -473,6 +473,8 @@ function setDefaultCommandButtonAttributes()
 	
 end
 
+
+
 function updateAllButtonsInside()
 	updateRequired = true
 end
