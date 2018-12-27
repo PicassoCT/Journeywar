@@ -498,6 +498,14 @@ function TargetOS()
     end
 end
 
+function delayedJump(randtime,monsterid)
+		Sleep(randtime)
+
+		defID = Spring.GetUnitDefID(monsterid)
+		mass = UnitDefs[defID].mass				
+		Spring.AddUnitImpulse(monsterid, math.min(2, mass/100) *math.random(-1,1), math.min(2, mass/100),  math.min(2, mass/100) *math.random(-1,1))
+end
+
 positionTable = {}
 function stuckDetector(monsterid)
 if not positionTable[monsterid] then positionTable[monsterid]= {x=0,z=0} end
@@ -505,11 +513,7 @@ if not positionTable[monsterid] then positionTable[monsterid]= {x=0,z=0} end
 x,_,z = spGetUnitPosition(monsterid)
 
 	if x and z and  distance(x, positionTable[monsterid].x ) < 15 and distance(z, positionTable[monsterid].z ) < 15 then
-
-		defID = Spring.GetUnitDefID(monsterid)
-		mass = UnitDefs[defID].mass				
-		Spring.AddUnitImpulse(monsterid, math.min(2, mass/100) *math.random(-1,1), math.min(2, mass/100),  math.min(2, mass/100) *math.random(-1,1))
-		
+		StartThread(delayedJump,math.random(1,100)*10,monsterid)	
 	end
 	
 positionTable[monsterid]= {x=x,z=z}
