@@ -16,10 +16,12 @@ end
 function widget:Initialize()
   widgetHandler:RegisterGlobal("LayoutButtons", DummyLayoutHandler)
 
-  --Spring.SendCommands("hideinterface  1")
+  -- Spring.SendCommands("hideinterface  1")
   --Spring.SendCommands("Console 0")
+
+  -- Spring.SendCommands("Console 0")  
   Spring.SendCommands("ResBar 0")
- -- Spring.SendCommands("ToolTip 0")
+  Spring.SendCommands("ToolTip 0")
   Spring.SendCommands("Clock 0")
   Spring.SendCommands("Info 0")
   Spring.SendCommands("Fps 0")
