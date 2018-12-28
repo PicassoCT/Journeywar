@@ -32,6 +32,13 @@ function sway(swayDeg)
 end
 maxStrength=5
 
+function script.HitByWeapon(x, z, weaponDefID, damage)
+	if GG.LandScapeT then
+		cx,cy,cz=Spring.GetUnitPosition(unitID)
+		GG.LandScapeT.setAreaEffect(cx,cz,EXITNGUISH_RADIUS,extinguishFire )
+	end
+end
+
 function Windy()
 	Sleep(8000)
 	while true do

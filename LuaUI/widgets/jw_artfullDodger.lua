@@ -95,6 +95,4 @@ end
  
  function widget:GameFrame(f)
 	rerootAroundUnits(f)
- 
  end
- 

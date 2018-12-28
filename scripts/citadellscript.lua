@@ -4,6 +4,7 @@ include "lib_UnitScript.lua"
 include "lib_Animation.lua"
 include "lib_Build.lua"
 include "lib_jw.lua"
+
 maxDamageSuicide=1200
 maxDistanceSuicideDamage=512
 SHIELDRADIUS = 850
@@ -1093,14 +1094,16 @@ function GetUnitImpulseByShield(cx, cy, cz, tx, ty, tz, strength)
     return strength * tx, strength * ty, strength * tz
 end
 
-function setAreaFireShielded(object)
-    object.boolShielded = true
-    return object
+function setAreaFireShielded(landscapeCell)
+    landscapeCell.boolShielded = true
+	  landscapeCell.boolBurning=false
+	  landscapeCell.Food= 0
+    return landscapeCell
 end
 
-function setAreaFireUnShielded(object)
-    object.boolShielded = false
-    return object
+function setAreaFireUnShielded(landscapeCell)
+    landscapeCell.boolShielded = false
+    return landscapeCell
 end
 
 boolShield = false
