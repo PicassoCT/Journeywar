@@ -350,12 +350,13 @@ function BUILDUP(monsterID, enemyID, Time, mteam, factor)
     allyID = Spring.GetUnitNearestAlly(enemyID)
     if not allyID or type(allyID) ~= "number" then return ex, ey, ez end
 
-    ex, ey, ez = Spring.GetUnitPosition(allyID)
+    ax, ay, az = Spring.GetUnitPosition(allyID)
     mx, my, mz = Spring.GetTeamStartPosition(mteam)
-
+	 if not ax then return ex, ey, ez end
+	
     waveFactor = factor + math.sin(factor * math.pi * 8) / 5
     limitedFactor = math.max(0.25, math.min(0.55, waveFactor))
-    vBlend = mix( makeVector(ex, ey, ez), makeVector(mx, my, mz),limitedFactor)
+    vBlend = mix( makeVector(ax, ay, az), makeVector(mx, my, mz),limitedFactor)
     randVal = math.random(96, 256)
     rx, rz = drehMatrix(0, randVal, 0, 0, math.sin(factor * 5 * math.pi) * 2 * math.pi + monsterID % (math.pi / 3))
     vBlend.x, vBlend.z = vBlend.x + rx, vBlend.z + rz
@@ -372,13 +373,15 @@ function RELAX(monsterID, enemyID, Time, mteam, factor)
         ex, ey, ez = sanitizeCoords(ex, ey, ez)
         return ex, ey, ez
     end
-
+	 typeOffset= Spring.GetUnitDefID(monsterID)*10
+	  
     mx, my, mz = Spring.GetTeamStartPosition(mteam)
-
+	 timesinFactor = math.sin(((Spring.GetGameFrame()+typeOffset)% 3000/3000)*math.pi)
+	 vBlend = mix(makeVector(mx,0,mz), makeVector(ux,0,uz), timesinFactor)
     randVal = math.max(64, 512 * factor) + (monsterID % 25)
     rx, rz = drehMatrix(0, randVal, 0, 0, math.sin(factor * 5 * math.pi) * 2 * math.pi + (monsterID % math.pi))
 
-    dax, day, daz = sanitizeCoords(mx + rx, my, mz + rz)
+    dax, day, daz = sanitizeCoords(vBlend.x + rx, 0, vBlend.z + rz)
     return dax, day, daz
 end
 

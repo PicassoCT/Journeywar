@@ -305,6 +305,14 @@ function getEggTypeTable(UnitDefNames)
 	}
 	return retTab
 end
+function getHandleableAmmonitionTable(UnitDefNames)
+	retTab = {
+		[UnitDefNames["cmtwgrenade"].id]=true,
+		[UnitDefNames["jhunterdart"].id]=true,
+		[UnitDefNames["chunterdart"].id]=true
+	}
+	return retTab
+end
 
 function getScrapYardFeatures(FeatureDefNames)
 	assert(FeatureDefNames)

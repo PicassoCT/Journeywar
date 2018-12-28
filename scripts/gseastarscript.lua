@@ -213,6 +213,7 @@ creeperTypeTable = getCreeperTypeTable()
 corpseTypeTable = getCorpseTypeTable()
 neutralTypeTable = getNeutralTypeTable()
 eggTypeTable = getEggTypeTable(UnitDefNames)
+handleAbleAmmonition = getHandleableAmmonitionTable(UnitDefNames)
 
 function FeedMe()
 	Sleep(13000)
@@ -229,7 +230,7 @@ function FeedMe()
 			T = process(T,
 			function(id)
 				uDefid = Spring.GetUnitDefID(id)
-				if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTypeTable[uDefid ]then
+				if id ~= unitID and uDefid ~= myDefID and neutralTypeTable[uDefid] or infantryTable[uDefid] or creeperTypeTable[uDefid] or corpseTypeTable[uDefid] or eggTypeTable[uDefid ] or handleAbleAmmonition[uDefid]then
 					return id
 				end
 			end,

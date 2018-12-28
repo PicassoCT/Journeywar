@@ -581,6 +581,7 @@ function resetPosition()
     Sleep(500)
     resetT(legsTable, 1, true, false)
     reset(kuttel, 3)
+	 Sleep(500)
     if math.random(0, 1) == 1 then
         Turn(kuttel, x_axis, math.rad(30), 60)
         Move(kuttel, y_axis, -15, 54)
