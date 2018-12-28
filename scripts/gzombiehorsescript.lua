@@ -628,11 +628,9 @@ function dropDead()
 			Sleep(Time)
 			reset(kuttel, 2)
 			Move(kuttel, y_axis, 0, 12)
-			while (true == Spring.UnitScript.IsInMove(kuttel, y_axis)) do
-				signum = signum * -1
-				waveATable(legsTable, x_axis, modFunction, signum, math.random(0.25, 1.2), math.random(0.5, 1), math.random(0.2, 1), false, 0)
-				Sleep(150)
-			end
+
+			Sleep(15000)
+	
 			
 			resetT(legsTable, 9, true, false)
 		end

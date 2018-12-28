@@ -609,10 +609,10 @@ function idleAnimationLoop()
     end
 
     body = AniT[AgeStage]["Body"]
-    while true do
-        breathOS(body, 1, 4, LegTable, 5, 60, 450, 1)
+
+        breathOS(body, 1, 4, LegTable, 5, 60, 450, 5)
         Sleep(100)
-    end
+
 end
 
 function incAndMod(it)
