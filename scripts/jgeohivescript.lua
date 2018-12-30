@@ -352,7 +352,7 @@ function BUILDUP(monsterID, enemyID, Time, mteam, factor)
 
     ax, ay, az = Spring.GetUnitPosition(allyID)
     mx, my, mz = Spring.GetTeamStartPosition(mteam)
-	 if not ax then return ex, ey, ez end
+	 if not ax or not mx then return ex, ey, ez end
 	
     waveFactor = factor + math.sin(factor * math.pi * 8) / 5
     limitedFactor = math.max(0.25, math.min(0.55, waveFactor))

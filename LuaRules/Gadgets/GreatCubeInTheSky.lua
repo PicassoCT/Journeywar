@@ -30,12 +30,12 @@ if not gadgetHandler:IsSyncedCode() then
 
 
 	--UNSYNCED
-	mapinfo =  VFS.Include('Map/MapInfo.lua', nil, VFSMODE) 
-	Spring.Echo("GreatCubeInTheSky::mapOptions")
-	echo(mapOptions)
+	-- mapinfo =  VFS.Include('Map/MapInfo.lua', nil, VFSMODE) 
+	-- Spring.Echo("GreatCubeInTheSky::mapOptions")
+	-- echo(mapOptions)
 	
-		boolSkyboxActive= true
-	if mapinfo and mapinfo.atmosphere and mapinfo.atmosphere.skyBox then
+	boolSkyboxActive= true
+	if math.random(0,1)==1 or mapinfo and mapinfo.atmosphere and mapinfo.atmosphere.skyBox then
 		boolSkyboxActive= false
 	end
 	
