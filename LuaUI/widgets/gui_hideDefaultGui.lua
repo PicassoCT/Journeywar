@@ -20,7 +20,7 @@ function widget:Initialize()
   --Spring.SendCommands("Console 0")
 
   -- Spring.SendCommands("Console 0")  
-  Spring.SendCommands("ResBar 0")
+  -- Spring.SendCommands("ResBar 0")
   Spring.SendCommands("ToolTip 0")
   Spring.SendCommands("Clock 0")
   Spring.SendCommands("Info 0")

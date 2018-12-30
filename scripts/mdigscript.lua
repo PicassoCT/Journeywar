@@ -51,8 +51,9 @@ boolOneThreadOnly = false
 --Created
 
 function script.Activate()
-
+	 Signal(SIG_WIP)
     boolDeploy = true
+	 StartThread( makeMex)
     return 1
 end
 
@@ -64,44 +65,11 @@ function script.Deactivate()
 end
 
 
-function delayedCheck()
-    SetSignalMask(SIG_MINE)
-    --- -Spring.Echo("Delayed Check Active")
-    boolShortStop = true
-    Sleep(512)
-    if boolShortStop == true then
-        boolLongStop = true
-    else
-        boolLongStop = false
-    end
-
-    if boolLongStop == true and boolDeploy == true and boolOneThreadOnly == false then
-        boolOneThreadOnly = true
-        Hide(mdigg)
-        Hide(mdwheelcenter)
-        Hide(mdwheell)
-        Hide(mdwheelr)
-        Hide(mdiggroup)
-        Hide(mdmeltingp)
-        Hide(mdprojecti)
-
-        makeMex()
-    end
-end
 
 local teamID = Spring.GetUnitTeam(unitID)
 --gets the Units Position, creates the Mex
 function makeMex()
-    local x, y, z = Spring.GetUnitPosition(unitID)
-
-    mexID = Spring.CreateUnit("mdiggMex", x, y, z, 0, teamID) --replace with your mex name
-    if (Spring.ValidUnitID(mexID)) == true then
-        health = Spring.GetUnitHealth(unitID)
-        Spring.SetUnitHealth(mexID, health)
-        Spring.DestroyUnit(unitID, false, true)
-    else
-        --Spring.Echo("You tried so tard, and yet you phailed, but in the end, it doesent really better!")
-    end
+		transformUnitInto(unitID, "mdiggMex")
 end
 
 function dirtEmit()
@@ -245,7 +213,7 @@ end
 
 function script.StopMoving()
     boolMoving = false
-    StartThread(delayedCheck)
+
     --- -Spring.Echo("Stoped Moving")
     boolShortStop = true
     Signal(SIG_WIP)

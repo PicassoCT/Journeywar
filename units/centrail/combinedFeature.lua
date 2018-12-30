@@ -28,7 +28,7 @@ local unitDef = {
 	--collisionVolumeTest = 1;
 	explodeAs="citadelldrone",
 	selfDestructAs="cartdarkmat", 
-	
+	MaxSlope = 50,	
 	
 	
 	sightDistance = 650,
