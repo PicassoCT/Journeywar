@@ -1,32 +1,32 @@
 local unitName = "cWaterExtractor"
 local unitDef = {
-name = "Water Extractor",
-Description = "pumps Water Offworld for a greater cause <Anti Terraform Building>",
-objectName = "cWaterExtractor.s3o",
-script = "c_WaterExtractor.lua",
-buildPic = "cwaterextractor.png",
---cost
-buildCostMetal = 100,
-buildCostEnergy = 12,
-buildTime = 5,
---Health
-maxDamage = 2500,
-idleAutoHeal = 5,
---Movement
-Acceleration = 0.25,
-BrakeRate = 0.3,
-FootprintX = 8,
-FootprintZ = 8,
-MaxSlope = 20,
-MaxVelocity = 3.0,
-MaxWaterDepth = 9000000,
-MovementClass = "Default2x2",
-TurnRate = 500,
-nanocolor=[[0 0.9 0.9]],
-radardistance=150,
-sightDistance = 700,
-
-EnergyStorage = 200,
+	name = "Water Extractor",
+	Description = "pumps Water Offworld for a greater cause <Anti Terraform Building>",
+	objectName = "cWaterExtractor.s3o",
+	script = "c_WaterExtractor.lua",
+	buildPic = "cwaterextractor.png",
+	--cost
+	buildCostMetal = 100,
+	buildCostEnergy = 12,
+	buildTime = 5,
+	--Health
+	maxDamage = 2500,
+	idleAutoHeal = 5,
+	--Movement
+	Acceleration = 0.25,
+	BrakeRate = 0.3,
+	FootprintX = 8,
+	FootprintZ = 8,
+	MaxSlope = 20,
+	MaxVelocity = 3.0,
+	MaxWaterDepth = 9000000,
+	MovementClass = "Default2x2",
+	TurnRate = 500,
+	nanocolor=[[0 0.9 0.9]],
+	radardistance=150,
+	sightDistance = 700,
+	
+	EnergyStorage = 200,
 	EnergyUse = 5,
 	EnergyMake =25,
 	MetalStorage = 0,
@@ -36,64 +36,64 @@ EnergyStorage = 200,
 	floater =true,
 	minWaterDepth =5,
 	waterline = 5,
---[[
-CanAttack = true,
-CanGuard = false,
-CanMove = false,
-CanPatrol = true,
-CanStop = true,
-LeaveTracks = false, 
-onoffable=true,
-activateWhenBuilt=true,
-Builder = true,
-ShowNanoSpray = true,
-CanBeAssisted = true,
-
-nanocolor="0 0 0", 
-CanReclaim=true,	
-workerTime = 0.002,
-buildDistance = 1200,
-terraformSpeed = 350,
-SelfDestructAs="electric_explosion",
-buildoptions = 
+	--[[
+	CanAttack = true,
+	CanGuard = false,
+	CanMove = false,
+	CanPatrol = true,
+	CanStop = true,
+	LeaveTracks = false, 
+	onoffable=true,
+	activateWhenBuilt=true,
+	Builder = true,
+	ShowNanoSpray = true,
+	CanBeAssisted = true,
+	
+	nanocolor="0 0 0", 
+	CanReclaim=true,	
+	workerTime = 0.002,
+	buildDistance = 1200,
+	terraformSpeed = 350,
+	SelfDestructAs="electric_explosion",
+	buildoptions = 
 	{
-	"cbuilux","condepot","cscumslum","campole",
-	"efence","cmestorage","buihoblock","gceohive",
-	"cbuibaislum","cbuibaicity","csmconverter","cmdigg","cmbuilux",
-	"cfclvl1","cfclvl2","cbbind","cHopper",
+		"cbuilux","condepot","cscumslum","campole",
+		"efence","cmestorage","buihoblock","gceohive",
+		"cbuibaislum","cbuibaicity","csmconverter","cmdigg","cmbuilux",
+		"cfclvl1","cfclvl2","cbbind","cHopper",
 	},
 	
-sounds = {
-   ["underattack"] =
-   {
-   [1]={name  = "citadell/citadellAlarm",
-	["id"] = 140,   			
-    ["volume"] = 5,
+	sounds = {
+		["underattack"] =
+		{
+			[1]={name = "citadell/citadellAlarm",
+				["id"] = 140, 			
+				["volume"] = 5,
+			},
+		}
 	},
-	}
+	]]	
+	explodeAs = "cartdarkmat",
+	customParams = {},
+	sfxtypes = {
+		explosiongenerators = {
+			"custom:factory_explosion",
+			"custom:dirt",
+			"custom:electric_explosion",
+			"custom:sparkcloud",--1027
+			"custom:citadellfire",
+			"custom:citadellcloud",--1029
+			"custom:portalstorm",
+			"custom:portalground",
+			"custom:cwaterext",
+			
 		},
-			]]	
-explodeAs = "cartdarkmat",
-	  customParams = {},
- sfxtypes = {
-    explosiongenerators = {
-	   "custom:factory_explosion",
-	   "custom:dirt",
-	   "custom:electric_explosion",
-	   "custom:sparkcloud",--1027
-	   "custom:citadellfire",
-	   "custom:citadellcloud",--1029
-	   "custom:portalstorm",
-	   "custom:portalground",
-	   "custom:cwaterext",
-	   
-					  },
+		
+	},
 	
-				},
-
-
-Category=[[LAND BUILDING]],	
-
-
+	
+	Category=[[LAND BUILDING]],	
+	
+	
 }
 return lowerkeys({ [unitName] = unitDef })
