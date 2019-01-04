@@ -3897,10 +3897,9 @@ function Debug(LineOfCode)
 end
 
 --> echos out strings
-function echo(stringToEcho, ...)
+function echo( stringToEcho, ...)
 	local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
-	
-	Spring.Echo(stringToEcho)
+	Spring.Echo(toString(stringToEcho))
 	if arg then
 		counter = 0
 		for k, v in ipairs(arg) do
