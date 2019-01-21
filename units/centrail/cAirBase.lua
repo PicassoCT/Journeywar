@@ -25,8 +25,6 @@ local unitDef = {
 	idleAutoHeal = 0,
 	--Movement
 	
-	FootprintX = 25,
-	FootprintZ = 25,
 	MaxSlope = 20,
 	
 	MaxWaterDepth = 20,

@@ -791,6 +791,16 @@ function transferUnitStatusToUnit(unitID, targetID)
 	Spring.SetUnitHealth(targetID, { health = hp, capture = cap, paralyze = para, build = bP })
 end
 
+function moveUnitToUnit(id , target, ox, oy, oz)
+ox, oy, oz= ox or 0, oy or 0, oz or 0
+x,y,z = Spring.GetUnitPosition(target)
+	if x then
+		Spring.SetUnitPosition(id, x + ox,y + oy ,z + oz )
+	return true
+	end
+return false
+end
+
 function transferUnitTeam(id, targetTeam)
 	Spring.TransferUnit(id, targetTeam)
 end
@@ -924,6 +934,15 @@ function getUnitBiggestPiece(unit, cache)
 	if cache then 	cache[defID] = biggestPieceSoFar end
 	return biggestPieceSoFar, cache or {}
 end
+
+function getUnitPieceByName(id, Name)
+pieceMap= Spring.GetUnitPieceMap(id)
+	
+	for name,number in pairs(pieceMap) do
+		if name == Name then return number end 
+	end
+end
+
 
 function getUnitPieceVolume(unit, Piece)
 	vx, vy, vz = Spring.GetUnitPieceCollisionVolumeD
@@ -2217,7 +2236,7 @@ function randDict(Dict)
 	anyElement=1
 	for k,v in pairs (Dict) do
 		anyElement = k
-		if index ==randElement then 
+		if index == randElement and k and v then 
 			return k,v
 		end
 		index=inc(index)
@@ -2336,12 +2355,11 @@ function toString(element)
 end
 
 function echoUnitDefs(unitDefNames)
-for k,v in pairs(unitDefNames) do
-	for key,values in pairs(v) do
-		echoT({key, values})
+	for k,v in pairs(unitDefNames) do
+		for key,values in pairs(v) do
+			echoT({key, values})
+		end
 	end
-end
-
 end
 
 function tableToString(tab)
@@ -3897,9 +3915,11 @@ function Debug(LineOfCode)
 end
 
 --> echos out strings
-function echo( stringToEcho, ...)
+function echo(stringToEcho, ...)
 	local arg = arg; if (not arg) then arg = { ... }; arg.n = #arg end
-	Spring.Echo(toString(stringToEcho))
+	if stringToEcho then
+		Spring.Echo(toString(stringToEcho))
+	end
 	if arg then
 		counter = 0
 		for k, v in ipairs(arg) do
