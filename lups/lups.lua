@@ -996,6 +996,7 @@ end
 
 
 local function Initialize()
+  Spring.Echo("Initializing Lups")
   LupsConfig = LoadConfig("./lups.cfg")
 
   --// set verbose level
@@ -1089,6 +1090,7 @@ local function Initialize()
   GG.Lups.Config = LupsConfig
 
   nilDispList = gl.CreateList(function() end)
+  Spring.Echo("Initializing Lups completed")
 end
 
 local function Shutdown()

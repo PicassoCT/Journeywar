@@ -1407,6 +1407,7 @@ function un_foldRailGun(boolReverse)
         WMove(RailGun, y_axis, 0, feed_speed)
         Show(Projectile)
     else
+		StartThread(PlaySoundByUnitDefID, unitdef, "sounds/cgatefort/RailGunPrepare.ogg", 1, 5000, 1, 0)
         WMove(RailGun, y_axis, -110 - 18, 0)
         Hide(RailGun)
     end
@@ -1427,13 +1428,14 @@ function watchForImpact()
 end
 
 function script.Activate()
-    Move(RailGun, y_axis, 0, 45)
+	StartThread(un_foldRailGun, true)
     boolActivateTravelling = true
     return 1
 end
 
 function script.Deactivate()
-    Move(RailGun, y_axis, -110 - 18, 75)
+	StartThread(un_foldRailGun, false)
+  
     boolActivateTravelling = false
     return 0
 end
@@ -1456,7 +1458,8 @@ function Weapon1fire()
     GG.FiringGateFotressTable[teamid][unitID] = true
     WMove(RailGun, y_axis, -110 - 18, 75)
     boolFireRailGun = false
-
+	StartThread(PlaySoundByUnitDefID, unitdef, "sounds/cgatefort/RailGunFire.ogg", 1, 5000, 1, 0)
+    
     return true
 end
 
