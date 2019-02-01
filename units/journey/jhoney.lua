@@ -69,8 +69,7 @@ Category = [[LAND]],
 	 customParams = {},
  sfxtypes = {
 				explosiongenerators = {
-				   "custom:bigbulletimpact",
-				  
+				   "custom:bigbulletimpact"
 				},
 				},
 				

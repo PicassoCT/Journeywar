@@ -33,6 +33,7 @@ local weaponDef = {
     turret = true,
     weaponType = [[LaserCannon]],
     weaponVelocity = 500,
+	soundHit = "cgatefortress/ImpulseImpact.ogg",
 }
 
 return lowerkeys({ [weaponName] = weaponDef })

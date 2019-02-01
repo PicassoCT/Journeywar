@@ -1123,18 +1123,21 @@ function getPieceMap(unitID)
 	return List 
 end
 
-function waitTillComplete(unitID)
-	while not buildProgress and hp ~= mHp do
-	hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-	Sleep(500)
-	end
+function waitTillComplete(id)
+	hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
+		repeat
+			hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
+			Sleep(500)
+		until buildProgress   
+
 	
-	while buildProgress and buildProgress < 0 do
-        hp, mHp, _, _, _, buildProgress = Spring.GetUnitHealth(unitID)
-        Sleep(500)
-   end
-   
-	return bP ~=nil
+	while buildProgress < 1.0 and  hp < mHp  do
+			hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
+
+		Sleep(500)
+	end
+
+	return buildProgress ~= nil
 end
 
 function createUnit_TerrainTest(uType, x,y,z, orientation, teamID, acceptableIncline)
@@ -2344,6 +2347,7 @@ end
 
 -->Generic to String
 function toString(element)
+	if not element then return "nil" end
 	typeE = type(element)
 	
 	if typeE == "boolean" then return boolToString(element) end
@@ -5345,7 +5349,7 @@ end
 --======================================================================================
 
 --> transfers Order from one Unit to another
-function transferOrders(originID, unitID)
+function transferOrders(originID, targetID)
 	
 	CommandTable = Spring.GetUnitCommands(originID)
 	first = false
@@ -5355,15 +5359,15 @@ function transferOrders(originID, unitID)
 				if first == false then
 					first = true
 					if cmd.id == CMD.MOVE then
-						Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, {})
+						Spring.GiveOrderToUnit(targetID, cmd.id, cmd.params, {})
 					elseif cmd.id == CMD.STOP then
-						Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+						Spring.GiveOrderToUnit(targetID, CMD.STOP, {}, {})
 					end
 				else
-					Spring.GiveOrderToUnit(unitID, cmd.id, cmd.params, { "shift" })
+					Spring.GiveOrderToUnit(targetID, cmd.id, cmd.params, { "shift" })
 				end
 			else
-				Spring.GiveOrderToUnit(unitID, CMD.STOP, {}, {})
+				Spring.GiveOrderToUnit(targetID, CMD.STOP, {}, {})
 			end
 		end
 	end
