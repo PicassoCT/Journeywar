@@ -1352,7 +1352,7 @@ if (gadgetHandler:IsSyncedCode()) then
 		end
 	end
 	
-	function gadget:ProjectileDestroyed(proID, proOwnerID)
+	function gadget:ProjectileDestroyed(proID)
 		
 		if constantWatchedProjectiles[proID] then
 			constantWatchedProjectiles[proID] = nil
