@@ -33,7 +33,7 @@ if (gadgetHandler:IsSyncedCode()) then
     local UnitsToCheck = {}
 
 
-    function gadget:UnitCreated(unitid, unitdefid, father)
+    function gadget:UnitCreated(unitid, unitdefid, unitTeam, father)
         if trampleDefTable[unitdefid] then
             Spring.Echo("Trample Tree Gadget unit registrated")
             UnitsToCheck[#UnitsToCheck + 1] = unitid
