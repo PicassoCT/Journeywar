@@ -781,10 +781,10 @@ function stunUnit(k, factor)
 end
 
 --> Transfer UnitStats
-function transferUnitStatusToUnit(unitID, targetID)
-	exP = Spring.GetUnitExperience(unitID)
-	hp, maxHP, para, cap, bP = Spring.GetUnitHealth(unitID)
-	newhp, newmaxHP, _, _, _ = Spring.GetUnitHealth(unitID)
+function transferUnitStatusToUnit(id, targetID)
+	exP = Spring.GetUnitExperience(id)
+	hp, maxHP, para, cap, bP = Spring.GetUnitHealth(id)
+	newhp, newmaxHP, _, _, _ = Spring.GetUnitHealth(targetID)
 	Spring.SetUnitExperience(targetID, exP)
 	
 	factor = 1 / (hp / maxHP)
@@ -807,26 +807,33 @@ function transferUnitTeam(id, targetTeam)
 	Spring.TransferUnit(id, targetTeam)
 end
 --> Create a Unit at Piece of another Unit
-function createUnitAtPiece(unitID, typeID, Piece, team)
-	x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(unitID, Piece)
-	teamID= team or Spring.GetUnitTeam(unitID)
+function createUnitAtPiece(id, typeID, Piece, team)
+	x,y,z,_,_,_ =Spring.GetUnitPiecePosDir(id, Piece)
+	teamID= team or Spring.GetUnitTeam(id)
 	return Spring.CreateUnit(typeID, x, y, z, math.ceil(math.random(0, 3)), teamID)
 end
 --> Create a Unit at another Unit
 function createUnitAtUnit(teamID, typeID, otherID,ox,oy,oz)
+ox,oy,oz= ox or 0,oy or 0,oz or 0
 	x,y,z,_,_,_ =Spring.GetUnitPosition(otherID)
 	return Spring.CreateUnit(typeID, x+ox, y+oy, z+oz, math.ceil(math.random(0, 3)), teamID)
 end
 
+function createUnitAtFeature(teamID, typeID, featureID,ox,oy,oz)
+	x,y,z,_,_,_ =Spring.GetFeaturePosition(featureID)
+	return Spring.CreateUnit(typeID, x+ox, y+oy, z+oz, math.ceil(math.random(0, 3)), teamID)
+end
+
 --> Transforms a selected unit into another type
-function transformUnitInto(oldID, unitType, setVel, boolKill)
+function transformUnitInto(oldID, unitType, setVel, boolKill, parentID, overWriteID)
 	x, y, z = Spring.GetUnitPosition(oldID)
 	teamID = Spring.GetUnitTeam(oldID)
 	vx, vy, vz, vl = Spring.GetUnitVelocity(oldID)
 	rotx, roty, rotz = Spring.GetUnitRotation(oldID)
 	currHp, oldMaxHp = Spring.GetUnitHealth(oldID)
 	
-	id = Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0, 3)), teamID)
+id = Spring.CreateUnit(unitType, x, y, z, math.ceil(math.random(0, 3)), teamID, false, false, overWriteID, parentID)
+
 	if id then
 		transferUnitStatusToUnit(oldID, id)
 		transferOrders(oldID, id)
@@ -5300,24 +5307,25 @@ end
 --======================================================================================
 
 --> consumes a resource if available 
-function consumeAvailableRessource(typeRessource, amount, teamID)
+function consumeAvailableRessource(typeRessource, amount, teamID, boolConsumeAllAvailable)
+boolConsumeAllAvailable= boolConsumeAllAvailable or false
 	
 	if "m" == string.lower(typeRessource) or "metal" == string.lower(typeRessource) then
 		currentLevel = Spring.GetTeamResources(teamID, "metal")
-		if amount > currentLevel then
+		if amount > currentLevel and boolConsumeAllAvailable == false then
 			return false
 		end
 		
-		if Spring.UseTeamResource(teamID, "metal", amount) then return true end
+		if Spring.UseTeamResource(teamID, "metal", math.min(amount,currentLevel)) then return true end
 	end
 	
 	if "energy" == string.lower(typeRessource) or "e" == string.lower(typeRessource) then
 		currentLevel = Spring.GetTeamResources(teamID, "energy")
-		if amount > currentLevel then
+		if amount > currentLevel and boolConsumeAllAvailable == false then
 			return false
 		end
 		
-		if Spring.UseTeamResource(teamID, "energy", amount) then return true end
+		if Spring.UseTeamResource(teamID, "energy", math.min(amount,currentLevel)) then return true end
 	end
 	return false
 end
