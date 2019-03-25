@@ -8,13 +8,13 @@ function widget:GetInfo()
     layer     = math.huge;
     enabled   = true,
     
-    hidden    = true, -- don't show in the widget selector
+    hidden    = false, -- don't show in the widget selector
     api       = true; -- load before all others?
   }
 end
 
 function widget:Initialize()
-  widgetHandler:RegisterGlobal("LayoutButtons", DummyLayoutHandler)
+  widgetHandler:RegisterGlobal("LayoutButtons", widgetHandler)
 
   -- Spring.SendCommands("hideinterface  1")
   --Spring.SendCommands("Console 0")
