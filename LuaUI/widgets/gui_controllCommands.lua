@@ -97,7 +97,7 @@ end
 local boolGlobalShiftOverrideActive= false
 local boolOverrideShiftOn = false
 function StateCommand(self, x, y, button, mods)
-	Spring.Echo("StateCommand:Cloak")
+	-- Spring.Echo("StateCommand:Cloak")
 --	if not self.boolSelectable or self.boolSelectable == false then Spring.Echo("Non-Selectable");return end
 
   local opt = {}
