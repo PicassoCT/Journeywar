@@ -464,6 +464,8 @@ function widgetHandler:LoadWidget(filename, fromZip)
   if (not success) then
     Spring.Echo('Failed to load: ' .. basename .. '  (' .. err .. ')')
     return nil
+  else
+	Spring.Echo('Loading widget: ' .. basename )
   end
   if (err == false) then
     return nil -- widget asked for a silent death
