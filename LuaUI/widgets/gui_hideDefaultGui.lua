@@ -33,7 +33,8 @@ local function DummyLayoutHandler(xIcons, yIcons, cmdCount, commands)
   widhetHandler.commands   = commands
   widhetHandler.commands.n = cmdCount
   widhetHandler:CommandsChanged()
-  return "", xIcons, yIcons, {}, {}, {}, {}, {}, {}, {}, {}
+  local iconList = {[1337]=9001}
+  return "", xIcons, yIcons, {}, {}, {}, {}, {}, {}, {}, iconList
 end
  
 function widget:GameSetup()
