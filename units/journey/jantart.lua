@@ -1,7 +1,7 @@
 local unitName = "jantart"
 
 local unitDef = {
-	name = "Anthill Artillery",
+	name = "Fireant anthillery",
 	Description = " fires Accid Ants Weddings at the Enemy <Long Range Artillery>",
 	objectName = "jantart.s3o",
 	script = "jantart.lua",

@@ -178,7 +178,7 @@ if (gadgetHandler:IsSyncedCode()) then
 			end
 		end
 		
-		if unitDefID== eliahDefID then
+		if unitDefID == eliahDefID then
 			--Spring.Echo("Eliah died")
 			--get the Position where he died
 			x,y,z=Spring.GetUnitPosition(unitID)
@@ -194,8 +194,10 @@ if (gadgetHandler:IsSyncedCode()) then
 			
 			for i=1,numberOfButterflys,1 do
 
-				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",x,y+75,z,0,teamID)
+				GoneForGood[newIndex].butterflys[i]=Spring.CreateUnit("jbutterfly",x,y + 75,z,0,teamID)
+				
 				Spring.GiveOrderToUnit(GoneForGood[newIndex].butterflys[i], CMD.MOVE, {x+math.random(250,512)*randSign(), y, z+math.random(250,512)*randSign()}, {"shift"})
+				
 				Spring.GiveOrderToUnit(GoneForGood[newIndex].butterflys[i], CMD.MOVE, {x,y,z}, {"shift"})
 
 			end

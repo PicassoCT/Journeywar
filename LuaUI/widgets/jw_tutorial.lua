@@ -151,11 +151,12 @@ TutorialInfoTable= {
 	----Buildings
 	
 	[UnitDefNames["beanstalk"].id] = {text = "\a|Beanstalk \n Creates other buildings. Needs a Eggstack to grow them out."},
+	[UnitDefNames["jmeconverter"].id] = {text = "\a|Circle of Life \n Converts energy to matter"},
 	[UnitDefNames["jnativevil"].id] = {text = "\a|Native Village \n Converts damage done by the enemy to light and matter"},
 	[UnitDefNames["jdrilltree"].id] = {text = "\a|Drilltree \n Digs deep to provide matter\n Creates constant high background radiation"},
 	[UnitDefNames["jtransportedeggstack"].id] = {text = "\a|Eggstack \n Gives birth to construction exobiotics"},
 	[UnitDefNames["jtree1"].id] = {text = "\a|Tree \n Collects light"},
-	[UnitDefNames["jtree5"].id] = {text = "\a|Skyhooktree \n Collects light, locally inverts Gravity "},
+	[UnitDefNames["jtree5"].id] = {text = "\a|Skyhooktree \n Collects light, locally inverts Gravity for Nutrients"},
 	[UnitDefNames["jtree2"].id] = {text = "\a|Dreamtree \n Collects light - thrives with radiation\nTransforms nearby units"},
 	[UnitDefNames["jtree3"].id] = {text = "\a|Watertree \n Collects light - regrows with delay after fire"},
 	[UnitDefNames["jtreel"].id] = {text = "\a|Accidtree \n Collects light, stores matter - corrodes all other live nearby"},
@@ -165,7 +166,7 @@ TutorialInfoTable= {
 	[UnitDefNames["jfireflower"].id] = {text = "\a|Fireflowers \n Sets itself ablaze if a enemy is nearby"},
 	[UnitDefNames["jdragongrass"].id] = {text = "\a|Dragongrass \n Injects a addicting drug into enemies"},
 	[UnitDefNames["jharbour"].id] = {text = "\a|Harbour \n Gives birh to water units"},
-	[UnitDefNames["jbeehive"].id] = {text = "\a|Beehive \n Defence using giant hornets"},
+	[UnitDefNames["jbeehive"].id] = {text = "\a|Hornethive \n Defence using giant hornets"},
 	[UnitDefNames["jfungiforrest"].id] = {text = "\a|Fungiforrest \n Fungiplague infect and kill timedelayed all of Unittype they come in contact with"},
 	[UnitDefNames["jviralfac"].id] = {text = "\a|Viralfactory \n Breeds spores that create Units from a distance"},
 	[UnitDefNames["jvaryfoo"].id] = {text = "\a|Varyfoos \n One Feeding, many Breeding, \n ever needing, all debleeding"},
