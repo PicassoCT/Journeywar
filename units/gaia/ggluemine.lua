@@ -2,7 +2,7 @@ local unitName = "ggluemine"
 local unitDef = {
 	objectName="jgluemine.s3o",
 	
-	name = "Glue",
+	name = "Gluegalore",
 	Description 		 =" lives longer closer to water",
 	
 	script 			 = "glueminescript.lua",

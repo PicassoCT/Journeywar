@@ -460,7 +460,7 @@ function ropeThread()
 	-- Resets the Trooper
 	
 	lastLoudness = getLoud(lastLoudness)
-	PlaySoundByUnitDefID(conairDefID, "sounds/conair/cConAir.wav", lastLoudness, 1000, 1, 0)
+	PlaySoundByUnitDefID(conairDefID, "sounds/conair/cConAir.wav", lastLoudness, 1000, 0.1, 0)
 	
 	
 	Turn(swingersClub, x_axis, math.rad(0), 150)
@@ -1006,7 +1006,7 @@ function script.Create()
 	Hide(bgdrop)
 	StartThread(landed)
 	lastLoudness = getLoud(lastLoudness)
-	StartThread(PlaySoundByUnitDefID, conairDefID, "sounds/conair/cConAir.wav", lastLoudness, 1000, 1, 0)
+	StartThread(PlaySoundByUnitDefID, conairDefID, "sounds/conair/cConAir.wav", lastLoudness, 1000, 0.1, 0)
 end
 
 _, maxhealth = Spring.GetUnitHealth(unitID)
@@ -1067,7 +1067,7 @@ function script.StartBuilding(heading, pitch)
 	
 	lastLoudness = getLoud(lastLoudness)
 	
-	StartThread(PlaySoundByUnitDefID, conairDefID, "sounds/conair/cConAir.wav", lastLoudness, 1000, 1, 0)
+	StartThread(PlaySoundByUnitDefID, conairDefID, "sounds/conair/cConAir.wav", lastLoudness, 1000, 0.1, 0)
 	
 	boolRopeRelease = false
 	Signal(SIG_HOVER)
