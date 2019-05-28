@@ -3841,7 +3841,7 @@ typeSize={
 	["number"] = function(id) return 8 end,
 	["boolean"] = function(id) return 1 end,
 	["string"] = function(id) return string.len(id) end,
-	["function"] = function(id) return string.len(string.dump(id)) end --Problematic: Function as string is compactor in opcode and exists only once per name)
+	["function"] = function(id) return 1; end --string.len(string.dump(id)) end --Problematic: Function as string is compactor in opcode and exists only once per name)
 }
 
 	if not Element then return 0 end
