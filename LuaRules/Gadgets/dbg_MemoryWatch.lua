@@ -8,13 +8,13 @@ function gadget:GetInfo()
 		license = "GPL4 ",
 		layer = 1,
 		handler = true,
-		enabled = false
+		enabled = true
 	}
 end
 
 if gadgetHandler:IsSyncedCode() then
-	TimeOfExecutionInMinutes= 25
-	TimeOfExecutionInFrames= 25*60*30
+	TimeOfExecutionInMinutes= 3
+	TimeOfExecutionInFrames= TimeOfExecutionInMinutes*60*30
 	-------------------------------------
 	-- Includes
 	VFS.Include('scripts/lib_UnitScript.lua')
@@ -64,6 +64,8 @@ if gadgetHandler:IsSyncedCode() then
 	
 		if frame % TimeOfExecutionInFrames  == 0 and GG then
 			echStats({"GG.Key", "Increase Percent"}, growthRate, 24, false)
+		end
+		if frame % TimeOfExecutionInFrames  == 1 and GG then
 			echStats({"Unit.id", "Increase Percent"}, growthRateEnv, 24, false)
 		end
 	end
