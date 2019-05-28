@@ -8,7 +8,7 @@ function gadget:GetInfo()
 		license = "GPL4 ",
 		layer = 1,
 		handler = true,
-		enabled = true
+		enabled = false
 	}
 end
 
@@ -19,6 +19,9 @@ if gadgetHandler:IsSyncedCode() then
 	-- Includes
 	VFS.Include('scripts/lib_UnitScript.lua')
 	VFS.Include('scripts/lib_jw.lua')
+	
+	--CodeMan could let it run without building units
+	-- Either specific units or gadgets related to units
 	
 	growthRate ={} --Key--SizeOfOld  ,GrowthRelativeToPreviousFrame
 	growthRateEnv ={} --Key--SizeOfOld  ,GrowthRelativeToPreviousFrame
