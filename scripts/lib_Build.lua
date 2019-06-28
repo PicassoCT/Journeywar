@@ -125,7 +125,7 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		mod=((i-1)%2+1)
 		bodyPieceName1="Leg"..i..mod --Uper Arm
 		bodyPieceName2="Leg"..i..mod.."l" --Lower Arm - Wheels
-		bodyPieceName3=bodyPieceName2 --the lower leg is the body piece on which we use as distance measure to ground 
+		bodyPieceName3="ArmPoM"..i..mod --the lower leg is the body piece on which we use as distance measure to ground 
 		ArmPieces[i]={}
 		
 		ArmPieces[i][1]=	piece(bodyPieceName1)
@@ -1018,21 +1018,24 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 	end
 	
 	function bd_alignLegsToGround()
-		if #ArmTable > 0 then
+		center = piece"center"
 
+			Spring.Echo(" ArmTable not empty ")
 			local spGetUnitPiecePos=Spring.GetUnitPiecePosition
 			oldMaxDif=99999
 			smallestIntervallSoFar=1	
 			
 			for i=1,360,6 do
+				Spring.Echo("Aligning to degree"..i)
 				Turn(center,x_axis,math.rad(i),0,true)
+				
 				
 				IntervallMax,IntervallMin=0,0
 				
-				for j=1,#ArmTable, 1 do
-					if ArmTable[j] and ArmTable[j][1] then
-						Turn(ArmTable[j][1],x_axis,math.rad(-1*i),0,true)
-						x,y,z=spGetUnitPiecePos(unitID,ArmTable[j][3])
+				for j=1, ArmMax, 1 do
+					if ArmPieces[j] and ArmPieces[j][1] then
+						Turn(ArmPieces[j][1],x_axis,math.rad(-1*i),0,true)
+						x,y,z=spGetUnitPiecePos(unitID,ArmPieces[j][3])
 						if y then
 							
 							if y < IntervallMin then IntervallMin=y end
@@ -1051,19 +1054,20 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 			h=0
 			y=math.huge
 			negVal=-1*smallestIntervallSoFar
-			for i=1,table.getn(ArmTable), 1 do
-				Turn(ArmTable[i][1],x_axis,math.rad(negVal),0,true)			
+			for i=1,table.getn(ArmPieces), 1 do
+				Turn(ArmPieces[i][1],x_axis,math.rad(negVal),0,true)			
 			end
 			Turn(center,x_axis,math.rad(smallestIntervallSoFar),0,true)			
 			WaitForTurn(center,x_axis)
 			
-			i=bd_findLowestOfSet(ArmTable)
+			i=bd_findLowestOfSet(ArmPieces)
 			_,centHeight,_=Spring.GetUnitPiecePosDir(unitID,center)
-			x,y,z=Spring.GetUnitPiecePosDir(unitID,ArmTable[i][3])
+			x,y,z=Spring.GetUnitPiecePosDir(unitID,ArmPieces[i][3])
 			
 			Move(center,y_axis,centHeight-y,0,true)		
 			offSetX=smallestIntervallSoFar
-		end
+			return smallestIntervallSoFar
+		
 	end
 		
 	function bd_processAddedArms()
@@ -1093,17 +1097,28 @@ function buildVehicle(center,Arm_Max,Leg_Max, Body_Double_Max,Head_Max, lDeco_Ma
 		end
 	end
 	
-	
+	Spring.Echo("bd_initVehicleCreation() reached")
 	bd_initVehicleCreation()
-	
+	 
+	Spring.Echo("bd_marshallVehicleGeneration() reached")
 	bd_marshallVehicleGeneration()
 	
-	bd_alignLegsToGround()
+	Spring.Echo("bd_alignLegsToGround() reached")
+	headCounterdegree = bd_alignLegsToGround()
 	
+	for k= 1, #DefPieces do 
+		Turn(DefPieces[k],x_axis,math.rad(-headCounterdegree),0,true)		
+	end	
+	for k= 1, #HeadPieces do 
+		Turn(HeadPieces[k],x_axis,math.rad(-headCounterdegree),0,true)		
+	end
+	
+	Spring.Echo("bd_processAddedArms() reached")
 	bd_processAddedArms()		
 	
 	return ActualActiveWeapons
 end
+
 CityPreFix={"new","old","los","north","las", "holy","mt.","st.", "cpt.", "el", "al", "pre","post"}
 CityMiddle ={"albany","albion","albury","aldgate","aldinga","alexandra","alexandria","alexandria","alice","allambie",
 "allansford","alpha","alphington","alpine","alroy","alstonville","alton","altona","altona","alvie",

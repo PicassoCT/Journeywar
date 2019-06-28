@@ -38,7 +38,7 @@ function confVehicle()
 		weaponSloT =   buildVehicle( center, 8, 8, 28, 4, 36, 16, 28 )	
 		Move(center,y_axis,50,0)
 
-		Sleep(250000 + math.random(100,1000))
+		Sleep(10000)
 		Move(center,y_axis,0,0)
 	end
 end
