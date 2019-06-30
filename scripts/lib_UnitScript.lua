@@ -1133,13 +1133,14 @@ end
 
 function waitTillComplete(id)
 	hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
+	Sleep(1)
 		repeat
 			hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
 			Sleep(500)
 		until buildProgress   
 
 	
-	while buildProgress < 1.0 and  hp < mHp  do
+	while buildProgress and buildProgress < 1.0 or  hp < mHp  do
 			hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
 
 		Sleep(500)
@@ -3108,6 +3109,7 @@ end
 
 -->returns the 2 norm of a vector
 function distance(x, y, z, xa, ya, za)
+	assert(x)
 	if type(x)== "table" then
 		return distance(x.x, x.y, x.z, y.x, y.y, y.z)
 	end
@@ -3839,7 +3841,7 @@ typeSize={
 	["number"] = function(id) return 8 end,
 	["boolean"] = function(id) return 1 end,
 	["string"] = function(id) return string.len(id) end,
-	["function"] = function(id) return 1; end --string.len(string.dump(id)) end --Problematic: Function as string is compactor in opcode and exists only once per name)
+	["function"] = function(id) return string.len(string.dump(id)) end --Problematic: Function as string is compactor in opcode and exists only once per name)
 }
 
 	if not Element then return 0 end
