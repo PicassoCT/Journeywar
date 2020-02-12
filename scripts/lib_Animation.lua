@@ -1325,7 +1325,7 @@ end
 
 
 function generateSknakeOnAPlaneDefaults(cPceDescLst)
-  for iNumerated, arm in ipairs(PceDescLst) do
+  for iNumerated, arm in pairs(PceDescLst) do
 
         if not arm.Piece then echo("libAnimation::snakeOnAPlane - No Valid Piece in Arm"); return end
 
