@@ -60,6 +60,39 @@ return process(Spring.GetTeamList(),
 end
 
 
+function getRandomPlayerName()
+	T =Spring.GetPlayerList()
+	local numberOfPlayers=#T
+	result={}
+	
+	for i=1,numberOfPlayers do
+		local name, bActive,spectator,_,_,_,_,_,_=Spring.GetPlayerInfo(T[i])
+		if string.len(name) > 1 and bActive == true  then
+			result[name]= name
+		end
+	end
+
+	return randDict(result)
+end
+
+
+--> get all Player Units in a Range around a unit
+function isPlayerUnitNearby(unitID, range)
+gaiaTeamID= Spring.GetGaiaTeamID()
+	T = getAllNearUnit(unitID, range)
+	if T then
+	T =	process(T,
+				function (id)
+					if Spring.GetUnitTeam(id) ~= gaiaTeamID then return id end
+				end
+				)
+				
+	if #T > 0 then return true, T end
+	end
+
+return false
+end
+
 --> Grabs every Unit in a circle, filters out the unitid or teamid if given
 function getAllInCircle(x, z, Range, unitID, teamid)
 	if not x or not z then
@@ -108,7 +141,17 @@ function getAllInSphere(x, y, z, Range, unitID, teamid)
 	return T
 end
 
-
+function isUnitEnemy(teamID, id)
+	eTeam = Spring.GetUnitTeam(id)
+	if eTeam then
+		if eTeam ~= Spring.GetGaiaTeamID() and eTeam ~= teamID then
+			return true
+		else
+			return false
+		end
+	end
+	
+end
 
 --> Removes Units of a Team from a table
 function removeUnitsOfTeam(TableOfUnits, teamid)
@@ -215,6 +258,15 @@ function setSpeedEnv(k, val)
 	if env then
 		udef = Spring.GetUnitDefID(k)
 		Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB.MAX_SPEED, math.ceil(UnitDefs[udef].speed * val * 2184.53))
+	end
+end
+
+--> Sets the Speed of a Unit
+function setUnitValueExternal(k, cobArgh, val)
+	env = Spring.UnitScript.GetScriptEnv(k)
+	
+	if env then
+		Spring.UnitScript.CallAsUnit(k, Spring.UnitScript.SetUnitValue, COB[cobArgh], val)
 	end
 end
 
@@ -629,7 +681,15 @@ function returnToWorld(unit, px, py, pz)
 	Spring.SetUnitNoSelect(unit, false)
 end
 
+--> 
+function showHide(id, bShow)
+	if bShow== true then
+		Show(id)
+	else
+		Hide(id)
+	end
 
+end
 --> Shows all Pieces of a a Unit in 
 function showAll(id)
 	if not unitID then unitID = id end
@@ -701,7 +761,7 @@ function getNearestGroundEnemy(id, UnitDefs)
 		--early out
 		eType = Spring.GetUnitDefID(ed)
 		
-		if UnitDef[eType].isAirUnit == false then return ed end
+		if UnitDefs[eType].isAirUnit == false then return ed end
 		eTeam = Spring.GetUnitTeam()
 		allUnitsOfTeam = Spring.GetTeamUnits(eTeam)
 		mindist = math.huge
@@ -713,7 +773,7 @@ function getNearestGroundEnemy(id, UnitDefs)
 			if ied ~= ed then
 				distUnit = distanceUnitToUnit(id, ied)
 				if distUnit and distUnit < mindist then
-					if UnitDef[Spring.GetUnitDefID(ied)].isAirUnit == false then
+					if UnitDefs[Spring.GetUnitDefID(ied)].isAirUnit == false then
 						mindist = distUnit
 						foundUnit = ied
 					end
@@ -778,6 +838,14 @@ function stunUnit(k, factor)
 	if hp then Spring.SetUnitHealth(k, { paralyze = hp * factor }) end
 end
 
+function transferStates(orgID, targID)
+State= Spring.GetUnitStates(orgID)
+	if State then
+	 setFireState(targID, State.firestate)
+	 setMoveState(targID, State.movestate)
+	end
+end
+
 --> Transfer UnitStats
 function transferUnitStatusToUnit(id, targetID)
 	exP = Spring.GetUnitExperience(id)
@@ -799,6 +867,31 @@ x,y,z = Spring.GetUnitPosition(target)
 	return true
 	end
 return false
+end
+
+function moveUnitToUnitPiece(id , target, Name)
+pieceID=Name
+	if type(Name)== "string" then
+		listOfPieces=Spring.GetUnitPieceMap(target)
+		if not listOfPieces[Name] then echo( "Unit "..UnitDefs[Spring.GetUnitDefID(target)].name.." has no piece called "..Name); return false; end;
+		pieceID= listOfPieces[Name]
+	end
+	
+x,y,z = Spring.GetUnitPiecePosDir(target, pieceID)
+	if x then
+		Spring.SetUnitPosition(id, x ,y  ,z  )
+	return true
+	end
+return false
+end
+
+
+function copyUnit(id, teamID)
+ox,oy,oz= ox or 0,oy or 0,oz or 0
+copyID =  createUnitAtUnit(teamID, Spring.GetUnitDefID(id), id,ox,oy,oz)
+transferUnitStatusToUnit(id, copyID)
+transferOrders(id, copyID)
+return copyID
 end
 
 function transferUnitTeam(id, targetTeam)
@@ -1731,10 +1824,11 @@ end
 
 
 function removeDictFromDict(dA, dB)
+	returnTable={}
 	for k, v in pairs(dA) do
-		dB[k] = nil
+		if not dB[k] then returnTable[k] = v end
 	end
-	return dB
+	return returnTable
 end
 
 
@@ -2240,21 +2334,27 @@ end
 
 -->Retrieves a random element from a Dictionary
 function randDict(Dict)
+	if not Dict then return end
 	if lib_boolDebug == true then
 		assert(type(Dict)=="table")
 	end
 	
-	randElement = math.random(1,count(Dict))
+	countDict= count(Dict)
+	randElement=1 
+	if countDict > 1 then
+		randElement = math.random(1,count(Dict))
+	end
+	
 	index= 1
-	anyElement=1
+	anyKey=1
 	for k,v in pairs (Dict) do
-		anyElement = k
+		anyKey = k
 		if index == randElement and k and v then 
 			return k,v
 		end
 		index=inc(index)
 	end
-	return anyElement
+	return anyElement, Dict[anyKey]
 end
 
 --> randomizes Table Entrys
@@ -2305,6 +2405,17 @@ function tableCopy(orig)
 	return copy
 end
 
+
+function sendMessage(Message, reciverID)
+if not GG.Messages then GG.Messages ={} end
+ GG.Messages[reciverID] = Message 
+end
+
+function recieveMessage( reciverID)
+if not GG.Messages then return end
+return  GG.Messages[reciverID]
+end
+
 --> Destroys A Table of Units
 function DestroyTable(T, boolSelfd, boolReclaimed, condFunction, unitID)
 	if T then
@@ -2324,6 +2435,20 @@ function explodeT(TableOfPieces, Conditions, StepSize)
 	end
 end
 
+--> Explodes a Table of Pieces 
+function explodeD(TableOfPieces, Conditions)
+	lStepSize = StepSize or 1
+	for num,pieces in pairs(TableOfPieces) do
+		Explode(pieces, Conditions)
+	end
+end
+
+function echoNFrames( str, frames)
+	if Spring.GetGameFrame()% frames == 0 then
+		echo(str)
+	end
+end
+
 --> Recursively Echo a Table out
 function echoT(T, layer)
 	local l = layer or 0
@@ -2332,7 +2457,7 @@ function echoT(T, layer)
 			Spring.Echo(stringBuilder( l, "-") .. "[]T:")
 			for k, v in pairs(T) do
 				Spring.Echo(stringBuilder( l, " ").."Key [\""..k.."\"]")					
-				echoT(T[k], l + 1)
+				echoT(T[k], l + string.len(k)+2)
 			end
 		else
 			Concated = stringBuilder( math.max(1, l) - 1, " ") .. "|-►"
@@ -2355,17 +2480,21 @@ function echoT(T, layer)
 	end
 end
 
+--> debugEchoT(
+
 -->Generic to String
 function toString(element)
 	if not element then return "nil" end
 	typeE = type(element)
 	
+	if typeE == "nil" then return "nil" end
 	if typeE == "boolean" then return boolToString(element) end
 	if typeE == "number" then return ""..element end
 	if typeE == "string" then return element end
 	if typeE == "table" then return tableToString(element) end
+	if typeE == "function" then return "function :"..elment.."()" end
 	
-	
+	return "Unknown Type in to String for ".. element	
 end
 
 function echoUnitDefs(unitDefNames)
@@ -2377,11 +2506,14 @@ function echoUnitDefs(unitDefNames)
 end
 
 function tableToString(tab)
+	if not tab then return "nil" end
 	PostFix = "}"
 	PreFix = "{"
 	conCat=""..PreFix
 	for key, value in pairs(tab) do
-		conCat= conCat.."["..toString(key).."] ="..toString(value)..","
+		if key and value then
+			conCat= conCat.."["..toString(key).."] ="..toString(value)..","
+		end
 	end
 	
 	return conCat..PostFix
@@ -2527,6 +2659,20 @@ validator = function(id)
 	if deadOrAlive and deadOrAlive == false then
 		return id
 	end
+end
+
+function contains(T, key)
+	if T[key] then 
+		return true 
+	end
+
+	for i=1,#T do
+		if T[i] and T[i] == key then
+			return true 
+		end
+	end
+
+	return false
 end
 
 --> takes a Table, and executes Function on it
@@ -3124,6 +3270,15 @@ function distance(x, y, z, xa, ya, za)
 	end
 end
 
+function getUnitVariable(unitID, varname)
+	
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+	
+	if env and env.varname then
+		return env.varname
+	end
+end
+
 function setParent(unitID, child)
 	
 	env = Spring.UnitScript.GetScriptEnv(child)
@@ -3380,6 +3535,17 @@ function say(LineNameTimeT, timeToShowMs, NameColour, TextColour, OptionString, 
 	
 end
 
+-- sums up a strings byte values
+function hashString(str, modulus)
+	x= 0
+	for i=1, string.len(str) do
+		x = x + str:byte(i)
+	end
+	modulus = modulus or (x +1)
+	return x % modulus
+end
+
+
 -->prepares large speaches for the release to the world
 function prepSpeach(Speach, Names, Limits, Alphas, DefaultSleepBylines)
 	--if only Speach 
@@ -3603,11 +3769,12 @@ function todoAssert(object, functionToPass, todoCheckNext)
 end
 
 
-function PieceLight(unitID, piecename, cegname)
+function PieceLight(unitID, piecename, cegname,delayTime)
+	delayTime= delayTime or 250
 	while true do
 		x, y, z = Spring.GetUnitPiecePosDir(unitID, piecename)
 		Spring.SpawnCEG(cegname, x, y + 10, z, 0, 1, 0, 50, 0)
-		Sleep(250)
+		Sleep(delayTime)
 	end
 end
 
@@ -3688,6 +3855,14 @@ function HideWrap(piecenr)
 	else
 		Hide(piecenr)
 	end
+end
+
+function randHide(T)
+process(T,
+	function(id)
+		if math.random(0,1)== 1 then Show(id) else Hide(id) end
+		end
+		)
 end
 
 function ShowWrap(piecenr)
@@ -4135,24 +4310,59 @@ function randTableFunc(Table)
 	return Table[randElement]()
 end
 
-function fairRandom(identifier, chance) --chance as factor 0.1 == 1 out of ten is a hit
-if not GG.FairRandom then  GG.FairRandom = {} end
-if not GG.FairRandom[identifier] then  GG.FairRandom[identifier] = { numberOfCalls=0, pattern = {}} end
+function deterministicElement(nr, Table )
+if #Table == 1 then return Table[1]end
 
-if GG.FairRandom[identifier].numberOfCalls == 0 then
-	-- new pattern
-	GG.FairRandom[identifier].pattern={}
-	quota = math.ceil(chance*10)
-	index=1
-	while quota > 0 do
-		index= (index+3) % 10
-		if not GG.FairRandom[identifier].pattern[index] then GG.FairRandom[identifier].pattern[index]= false end
-		if math.random(0,1)==1 and GG.FairRandom[identifier].pattern[index]== false then
-		GG.FairRandom[identifier].pattern[index]= true
-		quota= quota -1
+return Table[math.random(1, (nr % #Table) + 1)]
+end
+
+
+function randT(Table)
+	sizeOf = #Table 
+	if sizeOf == 0 then 
+		sizeOf = count(Table)
+		if sizeOf > 0 then
+			return randDict(Table)
+		end
+	
+	return end
+	if sizeOf == 1 then return Table[1] end
+
+	return Table[math.random(1,#Table)]
+end
+
+function fairRandom(identifier, diffDistance) --chance to get true
+if not GG.FairRandom then  GG.FairRandom = {} end
+if not GG.FairRandom[identifier] or  GG.FairRandom[identifier].numberOfCalls == 0  then  GG.FairRandom[identifier] = { numberOfCalls=0, pro = 0, contra= 0} end
+
+
+ diff = absDistance(GG.FairRandom[identifier].pro , GG.FairRandom[identifier].contra)
+GG.FairRandom[identifier].numberOfCalls = GG.FairRandom[identifier].numberOfCalls + 1
+
+ if diff > diffDistance then
+	if GG.FairRandom[identifier].pro <= GG.FairRandom[identifier].contra then
+		GG.FairRandom[identifier].pro = GG.FairRandom[identifier].pro +1
+		return true
+	else
+		GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
+		return false
+	end
+
+  else
+
+	minimum = math.min(GG.FairRandom[identifier].contra, GG.FairRandom[identifier].pro)
+	maximum = math.max(GG.FairRandom[identifier].contra, GG.FairRandom[identifier].pro)
+
+	if minimum == maximum then
+
+		if math.random(0,10) >  5 then
+			GG.FairRandom[identifier].pro = GG.FairRandom[identifier].pro +1
+			return true
+		else
+			GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
+			return false
 		end
 	end
-end
 
 GG.FairRandom[identifier].numberOfCalls=(GG.FairRandom[identifier].numberOfCalls +1) % 10
 
@@ -4491,11 +4701,11 @@ end
 -- for more recent implementations see lib_type
 
 function mix(vA, vB, fac)
+	if fac > 1 or fac < 0 then  assert(true==false) end
 	if type(vA) == "number" and type(vB) == "number" then
 		return (fac * vA +(1-fac) * vB)
 	end
 	
-	fac = math.min(1.0, math.max(0.0, fac))
 	return mixTable(vA,vB,fac)
 end
 
@@ -5362,6 +5572,9 @@ end
 
 --> transfers Order from one Unit to another
 function transferOrders(originID, targetID)
+	argtype1, argtype2 = type(originID), type(targetID)
+	echo(argtype1, argtype2) 
+	if not originID or not targetID then return end
 	
 	CommandTable = Spring.GetUnitCommands(originID)
 	first = false
@@ -5385,11 +5598,44 @@ function transferOrders(originID, targetID)
 	end
 end
 
+--> transfers Order from one Unit to another
+function transferAttackOrder(originID, targetID)
+	
+	CommandTable = Spring.GetUnitCommands(originID, 1)
+	if CommandTable and CommandTable[1] then
+	cmd = CommandTable[1]			
+		if cmd.id == CMD.ATTACK or cmd.id == CMD.FIGHT then
+			Spring.GiveOrderToUnit(targetID, cmd.id, cmd.params, {})
+		elseif cmd.id == CMD.STOP then
+			Spring.GiveOrderToUnit(targetID, CMD.STOP, {}, {})
+		end		
+	end
+
+end
+
+
+--> move away from another unit by distance*scalingfactor
+function runAwayFrom(id, horrorID, distanceToRun)
+	x,y,z = Spring.GetUnitPosition(id)
+	hx,hy,hz = Spring.GetUnitPosition(horrorID)
+
+	-- Compute Offset
+	hx,hz = (x-hx), ( z-hz)
+	maX= math.max(math.abs(hx),math.max(hz))
+	hx,hz= hx/maX, hz/maX
+	hx,hz = hx*distanceToRun, hz*distanceToRun
+	hx,hz = x + hx , z  + hz
+	Command( id, "stop", {},{})
+	Spring.SetUnitMoveGoal(id, hx, y, z)
+	-- Command( id, "go", {x = hx, y= y, z = hz},{})
+	-- Command( id, "go", {x = hx, y= y, z = hz},{"shift"})
+end
+
 function delayedCommand(id, command, target, option, framesToDelay)
 	
-	persPack={}
+	persPack={framesToDelay= framesToDelay}
 	function delay(evtID, frame, persPack, startFrame)
-		if frame >= startFrame +framesToDelay then
+		if frame >= startFrame + persPack.framesToDelay then
 			Command(id, command, target, option)
 			return nil, persPack
 		end
@@ -5397,13 +5643,22 @@ function delayedCommand(id, command, target, option, framesToDelay)
 		return frame+10, persPack
 	end
 	
-	GG.EventStream:CreateEvent(delayedCommand,
+	GG.EventStream:CreateEvent(delay,
 	persPack,
-	Spring.GetGameFrame() + framesToDelay)
+	Spring.GetGameFrame() + framesToDelay - 1)
 	
 end
+
+function isTransported(unitID)
+	transporterID = Spring.GetUnitTransporter(unitID)
+	return ( transporterID ~= nil)
+end
+
+
+
 -->Generic Simple Commands
-function Command(id, command, target, option)
+function Command(id, command, tarGet, option)
+	local target = tarGet
 	options = option or {}
 	--abort previous command
 	
@@ -5415,36 +5670,55 @@ function Command(id, command, target, option)
 	end
 	
 	if command == "attack" then
-		coords = { target.x, target.y, target.z }
-		Spring.SelectUnitArray({ [1] = id })
-		Spring.GiveOrder(CMD.FIGHT, coords, CMD.OPT_RIGHT + CMD.OPT_SHIFT)
-	end
+		coords={}
+		targetType = type(target)
+		
+		if targetType == "table" then
+			if #target == 1 then
+				Spring.GiveOrderToUnit(id, CMD.ATTACK, target, option)	
+				return				
+			end
+			
+			if target.x then
+				Spring.GiveOrderToUnit(id, CMD.ATTACK,  { target.x, target.y, target.z }, option)
+				return
+			else 
+				Spring.GiveOrderToUnit(id, CMD.ATTACK,  { target[1], target[2], target[3] }, option)
+				return
+			end			
+		end
+		
+		if targetType== "number" then
+			Spring.GiveOrderToUnit(id, CMD.ATTACK, {target}, option)	
+			return				
+		end
+	end		
+		
+
 	
-	if command == "repair" or command == "assist" then
-		Spring.GiveOrder(id, CMD.GUARD, { target }, { "shift" })
+	if command == "repair" or command == "assist" or command == "guard" then
+		Spring.GiveOrderToUnit(id, CMD.GUARD, { target }, { "shift" })
 	end
 	
 	if command == "go" then
 		Spring.GiveOrderToUnit(id, CMD.MOVE, { target.x, target.y, target.z }, options) --{"shift"}
-		return
+
 	end
 	
 	if command == "stop" then
 		Spring.GiveOrderToUnit(id, CMD.STOP, {}, {})
-		return
+
 	end
 	
 	if command == "setactive" then
 		if type(option)== "number" then
-	
-			Spring.GiveOrderToUnit(unitID, CMD.ONOFF, option,{})
-
+			Spring.GiveOrderToUnit(id, CMD.ONOFF, option,{})
 		else
 			currentState = GetUnitValue(COB.ACTIVATION)
 			if currentState == 0 then currentState = 1 else currentState = 0 end
 			SetUnitValue(COB.ACTIVATION, currentState)
 		end
-		return
+
 	end
 	
 	if command == "cloak" then
@@ -5452,35 +5726,47 @@ function Command(id, command, target, option)
 		if currentState == 0 then currentState = 1 else currentState = 0 end
 		
 		Spring.UnitScript.SetUnitValue(COB.CLOAKED, currentState)
-		
-		return
+	end
+
+end
+
+function getUnitValueEnv(unitID, ValueName)
+	env = Spring.UnitScript.GetScriptEnv(unitID)
+
+	if env and env.UnitScript.GetUnitValue then
+		local cob = env.UnitScript.COB
+		return Spring.UnitScript.CallAsUnit(unitID, Spring.UnitScript.GetUnitValue, cob[ValueName])
 	end
 end
 
-function setFireState(unitID, fireStateStr)
-states={ 
-		["holdfire"]=0,
-		["returnfire"]=1,
-		["fireatwill"]=2,
+function setFireState(unitID, fireState)
+if type(fireState)=="string" then
 
-}
-state=states[string.lower(fireStateStr)] or 0
+	states={ 
+			["holdfire"]= 0,
+			["returnfire"]=1,
+			["fireatwill"]=2,
 
-	Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {state}, {}) 
-
+	}
+	fireState=states[string.lower(fireStateStr)] or 0
 end
 
-function setMoveState(unitID, fireStateStr)
-states={ 
-		["holdposition"]=0,
-		["maneuver"]=1,
-		["roam"]=2,
+	Spring.GiveOrderToUnit(unitID, CMD.FIRE_STATE, {fireState}, {}) 
+end
 
-}
-state=states[string.lower(fireStateStr)] or 0
+function setMoveState(unitID, moveState)
+	if type(moveState)=="string" then
 
-	Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {state}, {}) 
+		states={ 
+				["holdposition"]=0,
+				["maneuver"]=1,
+				["roam"]=2,
 
+		}
+		moveState=states[string.lower(fireStateStr)] or 0
+	end
+	
+	Spring.GiveOrderToUnit(unitID, CMD.MOVE_STATE, {moveState}, {}) 
 end
 
 --======================================================================================
