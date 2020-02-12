@@ -77,7 +77,7 @@ function getAllInCircle(x, z, Range, unitID, teamid)
 	end
 	
 	if unitID and T and #T > 1 and type(unitID) == 'number' then
-		for num, id in ipairs(T) do
+		for num, id in pairs(T) do
 			if id == unitID then
 				table.remove(T, num)
 			end
@@ -101,7 +101,7 @@ function getAllInSphere(x, y, z, Range, unitID, teamid)
 	end
 	
 	if unitID and T and #T > 1 and type(unitID) == 'number' then
-		for num, id in ipairs(T) do
+		for num, id in pairs(T) do
 			if id == unitID then
 				table.remove(T, num)
 			end
@@ -894,6 +894,7 @@ function isAlive(unitid)
 	return false
 end
 
+-->lambda compatible filter function
 function confirmUnit(id)
 	if doesUnitExistAlive(id)== true then return id end
 end
@@ -2178,7 +2179,7 @@ function addTableTables(T, ...)
 	String = "T"
 	boolOneTimeNil = false
 	if arg then
-		for k, v in ipairs(arg) do
+		for k, v in pairs(arg) do
 			String = String .. "[" .. v .. "]"
 			
 			if boolOneTimeNil == false then
@@ -3938,7 +3939,7 @@ function echo(stringToEcho, ...)
 	end
 	if arg then
 		counter = 0
-		for k, v in ipairs(arg) do
+		for k, v in pairs(arg) do
 			if k and v then
 				if type(v) == "table" then
 					echoT(v)
@@ -5385,6 +5386,7 @@ function transferOrders(originID, targetID)
 		end
 	end
 end
+
 function delayedCommand(id, command, target, option, framesToDelay)
 	
 	persPack={}
@@ -5459,7 +5461,7 @@ end
 
 function setFireState(unitID, fireStateStr)
 states={ 
-		["holdfire"]=1,
+		["holdfire"]=0,
 		["returnfire"]=1,
 		["fireatwill"]=2,
 
@@ -5472,7 +5474,7 @@ end
 
 function setMoveState(unitID, fireStateStr)
 states={ 
-		["holdposition"]=1,
+		["holdposition"]=0,
 		["maneuver"]=1,
 		["roam"]=2,
 

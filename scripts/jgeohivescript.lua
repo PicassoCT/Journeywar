@@ -399,7 +399,7 @@ function getNearestEnemy(idID)
     minDistID = math.huge
 
     local spGetUnitTeam = Spring.GetUnitTeam
-    for _, id in ipairs(AllUnitsUpdated) do
+    for _, id in pairs(AllUnitsUpdated) do
         edTeam = spGetUnitTeam(id)
         if edTeam ~= teamID and edTeam ~= gaiaTeamID and id ~= idID then			
 				if UnitsExist(id, idID) == true then 

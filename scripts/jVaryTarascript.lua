@@ -96,7 +96,7 @@ function buildMoma(varyFooos)
 end
 
 function defendMoma(varyFooos)
-    for k, v in ipairs(AttachedUnits) do
+    for k, v in pairs(AttachedUnits) do
         Spring.UnitScript.DropUnit(k)
         AttachedUnits[k] = nil
     end

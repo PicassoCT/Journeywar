@@ -595,7 +595,7 @@ function sortPiecesByHeight(listOfPieces)
     lowestValue = math.huge
     heighestValue = -math.huge
 
-    for num, pieceNum in ipairs(listOfPieces) do
+    for num, pieceNum in pairs(listOfPieces) do
         px, py, pz = Spring.GetUnitPiecePosition(unitID, pieceNum)
         pieceHeigthMap[pieceNum] = math.ceil(py)
         bucketSortList[math.ceil(py)] = {}
