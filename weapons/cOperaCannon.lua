@@ -1,7 +1,8 @@
 --- http://springrts.com/wiki/Weapon_Variables#Cannon_.28Plasma.29_Visuals
 local weaponName = "cOperaCannon"
 local weaponDef = {
-    name = "cOperaCannon",
+    name = "Opera cannon",
+	description = "Its not over until the fat lady sings",
     weaponType = [[Cannon]],
     --damage
     damage = {
