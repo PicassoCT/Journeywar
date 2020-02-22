@@ -1228,17 +1228,21 @@ function getPieceMap(unitID)
 end
 
 function waitTillComplete(id)
+	if not id then return end
+	if  doesUnitExistAlive(id) == false then return end
 	hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
 	Sleep(1)
 		repeat
 			hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
 			Sleep(500)
-		until buildProgress   
+		until buildProgress  or doesUnitExistAlive(id) == false
 
+	if  doesUnitExistAlive(id) == false then return end
 	
 	while buildProgress and buildProgress < 1.0 or  hp < mHp  do
 			hp, mHp, pD, cP, buildProgress = Spring.GetUnitHealth(id)
-
+		
+		if not buildProgress then return buildProgress ~= nil end
 		Sleep(500)
 	end
 
@@ -3546,8 +3550,6 @@ function hashString(str, modulus)
 	modulus = modulus or (x +1)
 	return x % modulus
 end
-
-
 -->prepares large speaches for the release to the world
 function prepSpeach(Speach, Names, Limits, Alphas, DefaultSleepBylines)
 	--if only Speach 
@@ -3866,7 +3868,6 @@ process(T,
 		end
 		)
 end
-
 function ShowWrap(piecenr)
 	if lib_boolDebug == true then
 		if type(piecenr) == "string" then
@@ -4136,7 +4137,7 @@ function echo2DMap(tmap, squareSideDimension, valueSignMap)
 	
 	valueSignMap = valueSignMap or {
 		[0] = " ҉ ",
-		[false] = " ● ",
+		[false] = " �? ",
 		[true] = " "
 	}
 	
@@ -4372,6 +4373,65 @@ GG.FairRandom[identifier].numberOfCalls=(GG.FairRandom[identifier].numberOfCalls
 return  GG.FairRandom[identifier].pattern[(GG.FairRandom[identifier].numberOfCalls%10)]
 end
 
+
+function randT(Table)
+	sizeOf = #Table 
+	if sizeOf == 0 then 
+		sizeOf = count(Table)
+		if sizeOf > 0 then
+			return randDict(Table)
+		end
+	
+	return end
+	if sizeOf == 1 then return Table[1] end
+
+	return Table[math.random(1,#Table)]
+end
+
+function fairRandom(identifier, diffDistance) --chance to get true
+if not GG.FairRandom then  GG.FairRandom = {} end
+if not GG.FairRandom[identifier] or  GG.FairRandom[identifier].numberOfCalls == 0  then  GG.FairRandom[identifier] = { numberOfCalls=0, pro = 0, contra= 0} end
+
+
+ diff = absDistance(GG.FairRandom[identifier].pro , GG.FairRandom[identifier].contra)
+GG.FairRandom[identifier].numberOfCalls = GG.FairRandom[identifier].numberOfCalls + 1
+
+ if diff > diffDistance then
+	if GG.FairRandom[identifier].pro <= GG.FairRandom[identifier].contra then
+		GG.FairRandom[identifier].pro = GG.FairRandom[identifier].pro +1
+		return true
+	else
+		GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
+		return false
+	end
+
+  else
+
+	minimum = math.min(GG.FairRandom[identifier].contra, GG.FairRandom[identifier].pro)
+	maximum = math.max(GG.FairRandom[identifier].contra, GG.FairRandom[identifier].pro)
+
+	if minimum == maximum then
+
+		if math.random(0,10) >  5 then
+			GG.FairRandom[identifier].pro = GG.FairRandom[identifier].pro +1
+			return true
+		else
+			GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
+			return false
+		end
+	end
+
+	bResult=  ( math.random(0, maximum- minimum) ) > diff/2
+
+		if bResult == true then
+			GG.FairRandom[identifier].pro = GG.FairRandom[identifier].pro +1
+			return true
+		else
+			GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
+			return false
+		end
+  end
+end
 
 -->a Fairer random Function that selects of a table everyNthElement at least candidatesInInterval Number many elements
 function randFairT(T, candidatesInInterval, everyNthElement)
@@ -5599,7 +5659,6 @@ function transferOrders(originID, targetID)
 		end
 	end
 end
-
 --> transfers Order from one Unit to another
 function transferAttackOrder(originID, targetID)
 	
@@ -5632,7 +5691,6 @@ function runAwayFrom(id, horrorID, distanceToRun)
 	-- Command( id, "go", {x = hx, y= y, z = hz},{})
 	-- Command( id, "go", {x = hx, y= y, z = hz},{"shift"})
 end
-
 function delayedCommand(id, command, target, option, framesToDelay)
 	
 	persPack={framesToDelay= framesToDelay}
@@ -5650,14 +5708,10 @@ function delayedCommand(id, command, target, option, framesToDelay)
 	Spring.GetGameFrame() + framesToDelay - 1)
 	
 end
-
 function isTransported(unitID)
 	transporterID = Spring.GetUnitTransporter(unitID)
 	return ( transporterID ~= nil)
 end
-
-
-
 -->Generic Simple Commands
 function Command(id, command, tarGet, option)
 	local target = tarGet
@@ -5696,7 +5750,6 @@ function Command(id, command, tarGet, option)
 		end
 	end		
 		
-
 	
 	if command == "repair" or command == "assist" or command == "guard" then
 		Spring.GiveOrderToUnit(id, CMD.GUARD, { target }, { "shift" })
@@ -5739,6 +5792,7 @@ function getUnitValueEnv(unitID, ValueName)
 		local cob = env.UnitScript.COB
 		return Spring.UnitScript.CallAsUnit(unitID, Spring.UnitScript.GetUnitValue, cob[ValueName])
 	end
+
 end
 
 function setFireState(unitID, fireState)
@@ -5763,6 +5817,7 @@ function setMoveState(unitID, moveState)
 				["holdposition"]=0,
 				["maneuver"]=1,
 				["roam"]=2,
+
 
 		}
 		moveState=states[string.lower(fireStateStr)] or 0
