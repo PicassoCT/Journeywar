@@ -869,6 +869,16 @@ x,y,z = Spring.GetUnitPosition(target)
 return false
 end
 
+function moveUnitToUnitGrounded(id , target, ox, oy, oz)
+ox, oy, oz= ox or 0, oy or 0, oz or 0
+x,y,z = Spring.GetUnitPosition(target)
+	if x then
+		Spring.SetUnitPosition(id, x + ox, Spring.GetGroundHeight(x,z) + oy ,z + oz )
+	return true
+	end
+return false
+end
+
 function moveUnitToUnitPiece(id , target, Name)
 pieceID=Name
 	if type(Name)== "string" then
@@ -905,7 +915,8 @@ function createUnitAtPiece(id, typeID, Piece, team)
 end
 --> Create a Unit at another Unit
 function createUnitAtUnit(teamID, typeID, otherID,ox,oy,oz)
-ox,oy,oz= ox or 0,oy or 0,oz or 0
+	if isUnitAlive(otherID) == false then return end
+	ox,oy,oz= ox or 0,oy or 0,oz or 0
 	x,y,z,_,_,_ =Spring.GetUnitPosition(otherID)
 	return Spring.CreateUnit(typeID, x+ox, y+oy, z+oz, math.ceil(math.random(0, 3)), teamID)
 end
@@ -979,10 +990,15 @@ end
 
 -->Unit Verfication
 function isAlive(unitid)
-	validUnit = Spring.GetUnitIsDead(unitid)
-	if validUnit and validUnit == true then return true end
+	if not unitid then return false end
 	
-	return false
+	isDead = Spring.GetUnitIsDead(unitid)
+	if isDead == nil then return true end
+	
+	if isDead and isDead == true then return false end
+	
+	return true
+
 end
 
 -->lambda compatible filter function
@@ -1953,6 +1969,11 @@ function inherit(childClass, parent)
 	return copy
 end
 
+function inRange(mins, val, maxs)
+if val >= mins and val <= maxs then return true end
+
+return false
+end
 
 
 
@@ -2850,8 +2871,12 @@ end
 
 --> returns a Unique ID - upper limit is 565939020162275221
 function getUniqueID()
-	if not GG.GUID then GG.GUID = 0 end
-	GG.GUID = GG.GUID + 0.1 / math.pi
+	if not GG.GUID then GG.GUID = 1 end
+
+	repeat
+		GG.GUID = GG.GUID + 1
+	until Spring.ValidUnitID(GG.GUID) == false
+	
 	return GG.GUID
 end
 
@@ -3260,9 +3285,15 @@ end
 
 -->returns the 2 norm of a vector
 function distance(x, y, z, xa, ya, za)
-	assert(x)
+	if not x or not y then assert(true==false, "No value given to distance"); return nil ; end
+	
 	if type(x)== "table" then
+		if x.x then
 		return distance(x.x, x.y, x.z, y.x, y.y, y.z)
+		else
+		return distance(x[1], x[2], x[3], y[1], y[2], y[3])
+		end
+		
 	end
 	
 	if xa ~= nil and ya ~= nil and za ~= nil then
@@ -3331,6 +3362,8 @@ end
 
 -->returns the Distance between two units
 function distanceUnitToUnit(idA, idB)
+	assert(type(idA)=="number")
+	assert(type(idB)=="number")
 	
 	if lib_boolDebug == true then
 		if (not idA or type(idA) ~= "number") then echo("Not existing idA or not a number"); return nil; end
@@ -4111,17 +4144,19 @@ function echo(stringToEcho, ...)
 	if stringToEcho then
 		Spring.Echo(toString(stringToEcho))
 	end
+	if true then return end
+	
 	if arg then
-		counter = 0
 		for k, v in pairs(arg) do
-			if k and v then
+			if k then
+				keyString = "["..toString(k).."]"
 				if type(v) == "table" then
-					echoT(v)
+					Spring.Echo(keyString.."{")
+						echoT(v)
+					Spring.Echo("}")
 				else
-					Spring.Echo(toString(k) .. " " .. toString(v))
+					Spring.Echo(keyString .. "»" .. toString(v))
 				end
-			elseif k then
-				Spring.Echo(toString(k))
 			end
 		end
 	end
@@ -4365,10 +4400,16 @@ GG.FairRandom[identifier].numberOfCalls = GG.FairRandom[identifier].numberOfCall
 		end
 	end
 
-GG.FairRandom[identifier].numberOfCalls=(GG.FairRandom[identifier].numberOfCalls +1) % 10
+	bResult=  ( math.random(0, maximum- minimum) ) > diff/2
 
-
-return  GG.FairRandom[identifier].pattern[(GG.FairRandom[identifier].numberOfCalls%10)]
+		if bResult == true then
+			GG.FairRandom[identifier].pro = GG.FairRandom[identifier].pro +1
+			return true
+		else
+			GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
+			return false
+		end
+  end
 end
 
 
@@ -5636,7 +5677,7 @@ function transferOrders(originID, targetID)
 	echo(argtype1, argtype2) 
 	if not originID or not targetID then return end
 	
-	CommandTable = Spring.GetUnitCommands(originID)
+	CommandTable = Spring.GetUnitCommands(originID, -1)
 	first = false
 	if CommandTable then
 		for _, cmd in pairs(CommandTable) do
@@ -5979,22 +6020,32 @@ function cegDevil(cegname, x, y, z, rate, lifetimefunc, endofLifeFunc, boolStrob
 	end
 end
 
-function UnitThrowUnit(unitA, unitB, target,duration)
-dist= distanceUnitToPoint(unitA,target)
-posA= getUnitPositionV(unitA)
-midPoint= {
-			x= (posA.x+target.x)/2,
-			y= posA.y,
-			z= (posA.z+target.z)/2,			
-			}
-			
-while duration > 0 do
 
+--New Unsorted code
+--> shared Computation
 
-Sleep(33)
-duration= duration -33
+function sharedComputationResult( key, func, data, frameInterval, GameConfig)
+if not GG.SharedComputationResult then GG.SharedComputationResult=  {} end
+if not GG.SharedComputationResult[key] then GG.SharedComputationResult[key] =  {frame = Spring.GetGameFrame(), result = func(data, GameConfig)} end
+
+currentFrame = Spring.GetGameFrame()
+
+--recomputate sharedResults
+if GG.SharedComputationResult[key].frame + frameInterval < currentFrame then
+	GG.SharedComputationResult[key].result = func(data, GameConfig)
+	GG.SharedComputationResult[key].frame = currentFrame
 end
---TODO
 
+return GG.SharedComputationResult[key].result
 
+end
+
+function getBelowPow2( value)
+	n=2
+	it=1
+		while n < value do 
+			it= inc(it)
+			n= 2^it
+		end
+	return  it, n
 end
