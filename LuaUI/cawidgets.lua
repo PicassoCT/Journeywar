@@ -882,6 +882,8 @@ function widgetHandler:UpdateCallIn(name)
       ((name == 'RecvFromSynced') and actionHandler.HaveSyncAction())) then
     -- always assign these call-ins
     local selffunc = self[name]
+	if not selffunc then selffunc = function() Spring.Echo("Call In Function "..name.." was not given in UpdateCallIn. This is a stub.") end end
+
     _G[name] = function(...)
       return selffunc(self, ...)
     end
