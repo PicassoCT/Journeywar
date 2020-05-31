@@ -13,24 +13,7 @@ function widget:GetInfo()
   }
 end
  
- local handler = (widget and widgetHandler)
- local function dummylayouthandler(xIcons, yIcons, cmdCount, commands) --gets called on selection change
-    widgetHandler.commands = commands
-    widgetHandler.commands.n = cmdCount
-    widgetHandler:CommandsChanged() --call widget:CommandsChanged()
-    local iconList = {[1337]=9001}
-    local custom_cmdz = widgetHandler.customCommands
-    return "", xIcons, yIcons, {}, custom_cmdz, {}, {}, {}, {}, {}, iconList
-  end
-    
- local function hijacklayout()
 
-  handler:ConfigLayoutHandler(dummylayouthandler) --override default build/ordermenu layout
-  
-  handler:RegisterGlobal("LayoutButtons", dummylayouthandler)
- 
-  Spring.ForceLayoutUpdate()
-end
  
 function widget:Initialize() 
 
@@ -50,7 +33,7 @@ end
  
 
 function widget:GameSetup()
-  hijacklayout()
+
   -- sets status instantly to ready & hides the pre-game UI
   -- you might want/need to change this part & integrate it into your spawning gadget!
   return true, true
