@@ -20,6 +20,14 @@ function pwl() -- ???  (print widget list)
   end
 end
 
+local ORDER_VERSION = 8 --- change this to reset enabled/disabled widgets
+local DATA_VERSION = 9 -- change this to reset widget settings
+
+local vfs = VFS
+local vfsInclude = vfs.Include
+local vfsGame = vfs.GAME
+
+
 WG = {}
 Spring.Utilities = {}
 VFS.Include("LuaRules/Utilities/tablefunctions.lua")
@@ -46,7 +54,7 @@ local gl = gl
 local modShortUpper = Game.modShortName:upper()
 local ORDER_FILENAME     = LUAUI_DIRNAME .. 'Config/' .. modShortUpper .. '_order.lua'
 local CONFIG_FILENAME    = LUAUI_DIRNAME .. 'Config/' .. modShortUpper .. '_data.lua'
-local WIDGET_DIRNAME     = LUAUI_DIRNAME .. 'Widgets/'
+local WIDGET_DIRNAME     = LUAUI_DIRNAME .. 'widgets/'
 
 local HANDLER_BASENAME = "cawidgets.lua"
 local SELECTOR_BASENAME = 'selector.lua'
@@ -375,7 +383,7 @@ function widgetHandler:Initialize()
 
   -- Add ignorelist --
   local customkeys = select(10, Spring.GetPlayerInfo(Spring.GetMyPlayerID()))
-  if customkeys["ignored"] then
+  if type(customkeys)=="table" and customkeys["ignored"] then
     if string.find(customkeys["ignored"],",") then
       local newignorelist = string.gsub(customkeys["ignored"],","," ")
       Spring.Echo("Setting Serverside ignorelist: " .. newignorelist)
@@ -445,16 +453,18 @@ function widgetHandler:Initialize()
 end
 
 
-function widgetHandler:LoadWidget(filename, fromZip)
+function widgetHandler:LoadWidget(filename, _VFSMODE)
+  _VFSMODE = _VFSMODE or VFSMODE
   local basename = Basename(filename)
-  local text = VFS.LoadFile(filename, fromZip and VFS.ZIP or VFS.RAW)
+  local text = VFS.LoadFile(filename, _VFSMODE)
+
   if (text == nil) then
-    Spring.Echo('Failed to load: ' .. basename .. '  (missing file: ' .. filename ..')')
+    Spring.Log(HANDLER_BASENAME, LOG.ERROR, 'Failed to load: ' .. basename .. '  (missing file: ' .. filename ..')')
     return nil
   end
   local chunk, err = loadstring(text, filename)
   if (chunk == nil) then
-    Spring.Echo('Failed to load: ' .. basename .. '  (' .. err .. ')')
+    Spring.Log(HANDLER_BASENAME, LOG.ERROR, 'Failed to load: ' .. basename .. '  (' .. err .. ')')
     return nil
   end
   
@@ -464,8 +474,6 @@ function widgetHandler:LoadWidget(filename, fromZip)
   if (not success) then
     Spring.Echo('Failed to load: ' .. basename .. '  (' .. err .. ')')
     return nil
-  else
-	Spring.Echo('Loading widget: ' .. basename )
   end
   if (err == false) then
     return nil -- widget asked for a silent death
@@ -501,7 +509,15 @@ function widgetHandler:LoadWidget(filename, fromZip)
     knownInfo.author   = widget.whInfo.author
     knownInfo.basename = widget.whInfo.basename
     knownInfo.filename = widget.whInfo.filename
-    knownInfo.fromZip  = fromZip
+	knownInfo.alwaysStart = widget.whInfo.alwaysStart
+    knownInfo.fromZip  = true
+    if (_VFSMODE ~= VFS.ZIP) then
+      if (_VFSMODE == VFS.RAW_FIRST) then
+        knownInfo.fromZip = not VFS.FileExists(filename,VFS.RAW_ONLY)
+      else
+        knownInfo.fromZip = VFS.FileExists(filename,VFS.ZIP_ONLY)
+      end
+    end
     self.knownWidgets[name] = knownInfo
     self.knownCount = self.knownCount + 1
     self.knownChanged = true
@@ -515,10 +531,28 @@ function widgetHandler:LoadWidget(filename, fromZip)
 
   local info  = widget:GetInfo()
   local order = self.orderList[name]
-  if (((order ~= nil) and (order > 0)) or
+  
+  local enabled = ((order ~= nil) and (order > 0)) or
       ((order == nil) and  -- unknown widget
-       (info.enabled and ((not knownInfo.fromZip) or self.autoModWidgets)))) then
-    -- this will be an active widget
+       (info.enabled and ((not knownInfo.fromZip) or self.autoModWidgets))) or info.alwaysStart
+
+  -- experimental widget, disabled by default in stable
+  if info.experimental and isStable then
+    enabled = false
+  end
+
+  if resetWidgetDetailLevel and info.detailsDefault ~= nil then
+	if type(info.detailsDefault) == "table" then
+		enabled = info.detailsDefault[detailLevel] and true
+	elseif type(info.detailsDefault) == "number" then
+		enabled = detailLevel >= info.detailsDefault
+	elseif tonumber(info.detailsDefault) then
+		enabled = detailLevel >= tonumber(info.detailsDefault)
+	end
+  end
+
+  if (enabled) then
+	-- this will be an active widget
     if (order == nil) then
       self.orderList[name] = 12345  -- back of the pack
     else
@@ -530,7 +564,7 @@ function widgetHandler:LoadWidget(filename, fromZip)
     return nil
   end
 
-  -- load the config data  
+  -- load the config data
   local config = self.configData[name]
   if (widget.SetConfigData and config) then
     widget:SetConfigData(config)
@@ -538,7 +572,6 @@ function widgetHandler:LoadWidget(filename, fromZip)
     
   return widget
 end
-
 
 function widgetHandler:NewWidget()
   local widget = {}
