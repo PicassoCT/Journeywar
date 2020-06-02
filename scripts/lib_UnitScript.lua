@@ -34,7 +34,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 MA 02110-1301, USA.
 
 
-]] -- test
+
 
 -------------- DEBUG HEADER
 -- Central Debug Header Controlled in UnitScript
@@ -4374,6 +4374,7 @@ if not GG.FairRandom then  GG.FairRandom = {} end
 if not GG.FairRandom[identifier] or  GG.FairRandom[identifier].numberOfCalls == 0  then  GG.FairRandom[identifier] = { numberOfCalls=0, pro = 0, contra= 0} end
 
 
+
  diff = absDistance(GG.FairRandom[identifier].pro , GG.FairRandom[identifier].contra)
 GG.FairRandom[identifier].numberOfCalls = GG.FairRandom[identifier].numberOfCalls + 1
 
@@ -4385,6 +4386,7 @@ GG.FairRandom[identifier].numberOfCalls = GG.FairRandom[identifier].numberOfCall
 		GG.FairRandom[identifier].contra = GG.FairRandom[identifier].contra +1
 		return false
 	end
+
 
   else
 
