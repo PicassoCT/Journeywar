@@ -44,6 +44,7 @@ end
 --------------------------------------------------------------------------------
 
 if (not gl.CreateShader) then
+  Spring.Echo("Abort CustomUnitShadders due to no gl.CreateShader")
   return false
 end
 
