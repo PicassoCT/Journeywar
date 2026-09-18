@@ -1,7 +1,7 @@
 local unitName = "ginfernalmachine"
 
 local unitDef = {
-name = " ",
+name = "Infernal Machine",
 Description = " ",
 objectName = "gInfMachine.s3o",
 script = "gInfMachineScript.lua",

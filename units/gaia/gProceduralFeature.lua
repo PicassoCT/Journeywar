@@ -1,7 +1,7 @@
 local unitName = "gproceduralfeature"
 
 local unitDef = {
-name = " ",
+name = "Procedural Feature",
 Description = " ",
 objectName = "proceduralFeature.s3o",
 script = "gProceduralFeature.lua",
